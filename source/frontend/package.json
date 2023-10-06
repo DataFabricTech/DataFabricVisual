@@ -1,0 +1,43 @@
+{
+  "name": "nuxt-app",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build --dotenv .env.product",
+    "dev": "nuxt dev --dotenv .env.development",
+    "generate": "nuxt generate --dotenv .env.product",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxt/devtools": "latest",
+    "@nuxtjs/tailwindcss": "^6.8.0",
+    "nuxt": "^3.7.1"
+  },
+  "dependencies": {
+    "@nuxtjs/svg-sprite": "^1.0.2",
+    "@pinia/nuxt": "^0.4.11",
+    "esbuild": "^0.16.12",
+    "jsencrypt": "^3.3.2",
+    "lodash": "^4.17.21",
+    "pinia": "^2.1.6",
+    "prettier": "^2.2.1",
+    "vue-loader": "^17.2.2",
+    "vue3-cookies": "^1.0.6",
+    "@vue-final-modal/nuxt": "^1.0.0",
+    "vue-final-modal": "^4.4.5"
+  },
+  "overrides": {
+    "vue": "latest"
+  },
+  "browserslist": [
+    ">0.3%",
+    "not ie <= 10",
+    "last 3 version",
+    "Chrome >= 35",
+    "Firefox >= 38",
+    "Edge >= 10",
+    "Explorer >= 10",
+    "Safari >= 8",
+    "Opera >= 12"
+  ]
+}
