@@ -24,7 +24,12 @@
     "vue-loader": "^17.2.2",
     "vue3-cookies": "^1.0.6",
     "@vue-final-modal/nuxt": "^1.0.0",
-    "vue-final-modal": "^4.4.5"
+    "vue-final-modal": "^4.4.5",
+    "sass": "^1.66.1",
+    "sass-loader": "^13.3.2",
+    "stylelint": "^15.10.3",
+    "stylelint-config-prettier-scss": "^1.0.0",
+    "stylelint-config-standard-scss": "^9.0.0"
   },
   "overrides": {
     "vue": "latest"

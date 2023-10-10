@@ -25,10 +25,9 @@ export default defineNuxtConfig({
 
   // tailwind css 설정
   tailwindcss: {
-    cssPath: "~/assets/css/main.css",
     configPath: "tailwind.config",
   },
 
   // css 설정
-  css: ['vue-final-modal/style.css'],
+  css: ['vue-final-modal/style.css', "~/assets/css/main.scss"],
 });
