@@ -1,6 +1,26 @@
+// ------------------------------------------
 // file path
+// ------------------------------------------
 $img-path: "../images" !default;
 $font-path: "../fonts" !default;
 
+// ------------------------------------------
+// spacing
+// ------------------------------------------
+$spacing-2: 2px !default;
+$spacing-4: 4px !default;
+$spacing-8: 8px !default;
+$spacing-12: 12px !default;
+$spacing-16: 16px !default;
+$spacing-20: 20px !default;
+$spacing-24: 24px !default;
+$spacing-28: 28px !default;
+$spacing-32: 32px !default;
+
+// ------------------------------------------
 // border-radius
-$border-radius--temp: rem(2px) !default;
+// ------------------------------------------
+$border-radius-sm: 2px !default;
+$border-radius-md: 4px !default;
+$border-radius-lg: 12px !default;
+$border-radius-round: 50% !default;

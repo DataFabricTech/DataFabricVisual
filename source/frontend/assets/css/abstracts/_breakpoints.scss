@@ -1,33 +1,32 @@
 //-------------------------------------------
-// Desktop First인 경우, max-width
-// Mobile First인 경우, min-width
+// Desktop First인 경우, max-width OR Mobile First인 경우, min-width
 // ------------------------------------------
 $breakpoints: (
   //  Desktop (1280 ~ 1920)
   "breakpoint-xl":
-    (
-      max-width: rem(1920px)
-    ),
+  (
+    max-width: 1920px
+  ),
   //  large tablet (1024 ~ 1279)
   "breakpoint-lg":
-    (
-      max-width: rem(1279px)
-    ),
+  (
+    max-width: 1279px
+  ),
   //  small tablet (768 ~ 1023)
   "breakpoint-md":
-    (
-      max-width: rem(1023px)
-    ),
+  (
+    max-width: 1023px
+  ),
   //  small handset (480 ~ 767)
   "breakpoint-sm":
-    (
-      max-width: rem(767px)
-    ),
+  (
+    max-width: 767px
+  ),
   //  x-small handset (0 ~ 479)
   "breakpoint-xs":
-    (
-      max-width: rem(479px)
-    )
+  (
+    max-width: 479px
+  )
 ) !default;
 
 @mixin respond-to($breakpoint) {
@@ -35,14 +34,12 @@ $breakpoints: (
     @media screen and #{inspect(map-get($breakpoints, $breakpoint))} {
       @content;
     }
-  }
-
-  @else {
-    @warn "#{$breakpoint} 값이 올바르지 않습니다." + "#{map-keys($breakpoints)} 중에 선택해 주세요!";
+  } @else {
+    @warn "#{$breakpoint} 값이 올바르지 않습니다." + "#{map-keys($breakpoints)} 중에 선택해 주세요.";
   }
 }
 
-// Usage
+// * Usage *
 // .selector {
 //   color: red;
 

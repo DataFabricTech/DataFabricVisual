@@ -4,24 +4,21 @@
 @use "sass:math";
 
 $font-families: (
-	sans: unquote(
-			"'NotoSansKR', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', helvetica,'Apple SD Gothic Neo',sans-serif"
-	),
-	serif: unquote("'Georgia', Times, serif"),
+  sans: unquote(
+      "'NotoSansKR', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', helvetica,'Apple SD Gothic Neo',sans-serif"
+  ),
+  serif: unquote("'Georgia', Times, serif"),
 );
 
 @mixin font-family($name) {
   @if map-has-key($font-families, $name) {
     font-family: #{map-get($font-families, $name)};
-  }
-
-  @else {
+  } @else {
     @warn "#{$name} 값이 올바르지 않습니다."
   }
 }
 
-// Usage
-
+// * Usage *
 // html {
 //   @include font-family('serif');
 // }
@@ -30,27 +27,26 @@ $font-families: (
 //  Font Weight
 // ------------------------------------------
 $font-weights: (
-	"thin": 100,
-	"semilight": 200,
-	"light": 300,
-	"regular": 400,
-	"medium": 500,
-	"semibold": 600,
-	"bold": 700,
-	"extrabold": 800,
-	"black": 900
+  "thin": 100,
+  "semilight": 200,
+  "light": 300,
+  "regular": 400,
+  "medium": 500,
+  "semibold": 600,
+  "bold": 700,
+  "extrabold": 800,
+  "black": 900
 );
 
 @mixin font-weight($weight) {
   @if map-has-key($font-weights, $weight) {
     font-weight: #{map-get($font-weights, $weight)};
-  }
-
-  @else {
+  } @else {
     @warn "#{$weight} 값이 올바르지 않습니다."
   }
 }
 
+// * Usage *
 // html {
 //   @include font-weight('black');
 // }
@@ -58,26 +54,25 @@ $font-weights: (
 //-------------------------------------------
 //  Letter Spacing
 // ------------------------------------------
-// TODO: [퍼블리싱] 정리 필요
+// TODO: [디자인, 퍼블리싱] 정리 필요
 $letter-spacings: (
-	"standard": 0,
-	"narrow-xs": rem(-0.2px),
-	"narrow-sm": rem(-0.3px),
-	"narrow-md": rem(-0.5px),
-	"narrow-lg": rem(-1px),
-	"wide-lg": rem(1px)
+  "standard": 0,
+  "narrow-xs": -0.2px,
+  "narrow-sm": -0.3px,
+  "narrow-md": -0.5px,
+  "narrow-lg": -1px,
+  "wide-lg": 1px
 );
 
 @mixin letter-spacing($interval) {
   @if map-has-key($letter-spacings, $interval) {
     letter-spacing: #{map-get($letter-spacings, $interval)};
-  }
-
-  @else {
+  } @else {
     @warn "#{$interval} 값이 올바르지 않습니다."
   }
 }
 
+// * Usage *
 // html {
 //   @include letter-spacing('wide-lg');
 // }
@@ -95,52 +90,22 @@ $line-heights: (
 @mixin line-height($lh) {
   @if map-has-key($line-heights, $lh) {
     line-height: #{map-get($line-heights, $lh)};
-  }
-
-  @else {
+  } @else {
     @warn "#{$lh} 값이 올바르지 않습니다."
   }
 }
 
+// * Usage *
 // html {
 //   @include line-height('lg');
 // }
 
 //-------------------------------------------
-//  Font Size
+//  Font smoothing
 // ------------------------------------------
 // 두꺼운 서체에서 사용되는 font-smoothing
 @mixin font-smoothing {
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-// TODO: [퍼블리싱] 정리 필요
-$font-size-map: (
-	"76": 4.75rem,
-	"72": 4.5rem,
-	"54": 3.375rem,
-	"48": 3rem,
-	"36": 2.25rem,
-	"32": 2rem,
-	"30": 1.875rem,
-	"28": 1.75rem,
-	"24": 1.5rem,
-	"20": 1.25rem,
-	"18": 1.125rem,
-	"16": 1rem,
-	"15": 0.938rem,
-	"14": 0.875rem,
-	"13": 0.8125rem,
-	"12": 0.75rem,
-	"11": 0.6875rem,
-	"10": 0.625rem
-);
-
-@mixin font-size($size) {
-	@if map-has-key($font-size-map, $size) {
-		font-size: map-get($font-size-map, $size);
-	} @else {
-		@warn 'IRIS의 폰트 사이즈가 아닙니다! 10, 11, 12, 13, 14, 15, 16, 18, 20, 24, 28, 32, 36, 48, 54, 72, 76 중에서 사용해 주세요.';
-	}
-}

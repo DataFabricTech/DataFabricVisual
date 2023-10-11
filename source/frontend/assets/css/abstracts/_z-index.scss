@@ -1,6 +1,3 @@
-//-------------------------------------------
-//  Z-index
-// ------------------------------------------
 $z-indexes: (
   alert: 9000,
   modal: 8000,
@@ -15,15 +12,12 @@ $z-indexes: (
 @mixin z-index($layer) {
   @if map-has-key($z-indexes, $layer) {
     z-index: #{map-get($z-indexes, $layer)};
-  }
-
-  @else {
+  } @else {
     @warn "#{$layer} 값이 올바르지 않습니다."
   }
 }
 
-// Usage
-
+// * Usage *
 // .modal {
 //   @include z-index('alert');
 //  }

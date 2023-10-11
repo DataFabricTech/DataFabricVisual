@@ -1,37 +1,34 @@
+// tailwindCSS
 @import "tailwind/tailwind-css";
 
-@import "abstracts/size";
-@import "abstracts/spacing";
+// variables
 @import "abstracts/variables";
 
+// mixins
 @import "assets/css/abstracts/fonts";
 @import "assets/css/abstracts/z-index";
 @import "assets/css/abstracts/breakpoints";
 @import "assets/css/abstracts/box-shadow";
 @import "assets/css/abstracts/retina";
-@import "abstracts/mixins-helper";
-@import "abstracts/mixins-component";
+@import "assets/css/abstracts/mixins-helper";
 
+// base
 @import "base/reset";
-@import "base/font-face";
 @import "base/base";
 @import "base/classes";
 
+// components
 @import "components/badge";
 @import "components/button";
 @import "components/select";
 @import "components/tag";
 @import "components/text-input";
 
+// modules
 @import "modules/card";
 @import "modules/kebab-menu";
 
+// layouts
 @import "layout/modal";
 @import "layout/header";
 @import "layout/footer";
-
-html{
-
-  @include z-index('alert');
-
-}
