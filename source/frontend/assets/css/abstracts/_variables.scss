@@ -1,11 +1,39 @@
 // ------------------------------------------
-// file path
+// Path
 // ------------------------------------------
 $img-path: "../images" !default;
 $font-path: "../fonts" !default;
 
 // ------------------------------------------
-// spacing
+// Default Color
+// 테마 설정이 필요한 경우 set-color.scss / set-theme.scss에 작성할 것
+// ------------------------------------------
+// basic color
+$white: #fff !default;
+$black: #000 !default;
+$gray: #77889a !default;
+$light-gray: #dce1e8 !default;
+$purple: #6436EA !default;;
+$cyan: #007D79 !default;;
+$deep-red: #F5084F !default;;
+$yellow: #FFA800 !default;;
+
+// specific UI color
+$font-black: #333 !default;
+$font-gray: #60687a !default;
+
+$icon-gray: #77889a !default;
+
+// specific purpose color
+$support-01: #0747a6 !default;
+$support-02: #006644 !default;
+
+// Status color
+$focus: #ff0311 !default;
+$disabled: #f0f3f6 !default;
+
+// ------------------------------------------
+// Default Spacing
 // ------------------------------------------
 $spacing-2: 2px !default;
 $spacing-4: 4px !default;
@@ -18,7 +46,7 @@ $spacing-28: 28px !default;
 $spacing-32: 32px !default;
 
 // ------------------------------------------
-// border-radius
+// Default Size
 // ------------------------------------------
 $border-radius-sm: 2px !default;
 $border-radius-md: 4px !default;

@@ -10,11 +10,11 @@ $font-families: (
   serif: unquote("'Georgia', Times, serif"),
 );
 
-@mixin font-family($name) {
-  @if map-has-key($font-families, $name) {
-    font-family: #{map-get($font-families, $name)};
+@mixin font-family($family-name) {
+  @if map-has-key($font-families, $family-name) {
+    font-family: #{map-get($font-families, $family-name)};
   } @else {
-    @warn "#{$name} 값이 올바르지 않습니다."
+    @warn "#{$family-name} 값이 올바르지 않습니다."
   }
 }
 
@@ -64,11 +64,11 @@ $letter-spacings: (
   "wide-lg": 1px
 );
 
-@mixin letter-spacing($interval) {
-  @if map-has-key($letter-spacings, $interval) {
-    letter-spacing: #{map-get($letter-spacings, $interval)};
+@mixin letter-spacing($spacing) {
+  @if map-has-key($letter-spacings, $spacing) {
+    letter-spacing: #{map-get($letter-spacings, $spacing)};
   } @else {
-    @warn "#{$interval} 값이 올바르지 않습니다."
+    @warn "#{$spacing} 값이 올바르지 않습니다."
   }
 }
 

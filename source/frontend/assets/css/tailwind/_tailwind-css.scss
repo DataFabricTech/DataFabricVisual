@@ -9,7 +9,7 @@
   }
 
   html {
-    font-family: "'NotoSansKR', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', helvetica,'Apple SD Gothic Neo',sans-serif"
+    @include font-family('sans');
   }
 
   input:focus {

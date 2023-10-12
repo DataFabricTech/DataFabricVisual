@@ -1,0 +1,35 @@
+//-------------------------------------------
+// v-group, h-group
+//-------------------------------------------
+$directions: (
+  "vertical" : v,
+  "hozizontal" : h
+);
+
+@each $attr, $direction in $directions {
+  .#{$direction}-group {
+    @if $attr == 'vertical' {
+      @include flex-standard($vertical: flex-start, $direction: column);
+    } @else {
+      @include flex-standard($horizontal: flex-start);
+    }
+
+    gap: $spacing-4;
+  }
+}
+
+.ellipsis {
+  @include ellipsis;
+}
+
+.ellipsis-multi {
+  @include ellipsis-multi;
+}
+
+.hidden {
+  @include hidden;
+}
+
+.caption-out {
+  @include caption-out;
+}
