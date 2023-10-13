@@ -1,3 +1,6 @@
+// tailwindCSS
+@import "tailwind/tailwind-css";
+
 // variables
 @import "abstracts/variables";
 
@@ -13,9 +16,6 @@
 @import "assets/css/abstracts/box-shadow";
 @import "assets/css/abstracts/retina";
 @import "assets/css/abstracts/mixins-helper";
-
-// tailwindCSS
-@import "tailwind/tailwind-css";
 
 // base
 @import "base/reset";
@@ -37,3 +37,5 @@
 @import "layout/modal";
 @import "layout/header";
 @import "layout/footer";
+@import "layout/nav";
+@import "layout/snb";

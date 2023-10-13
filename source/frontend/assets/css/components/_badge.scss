@@ -1,3 +1,10 @@
-// ------------------------------------------
-// button, button-title, button-subtext
-// ------------------------------------------
+.badge {
+  @include flex-standard($display:inline-flex);
+  padding: $spacing-2 $spacing-4;
+  border-radius: $border-radius-sm;
+
+  &-title {
+    @include font-weight('medium');
+    font-size: 12px;
+  }
+}

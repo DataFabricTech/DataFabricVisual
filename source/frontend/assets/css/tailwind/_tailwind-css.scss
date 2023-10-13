@@ -9,7 +9,7 @@
   }
 
   html {
-    @include font-family('sans');
+    font-family: "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   }
 
   input:focus {

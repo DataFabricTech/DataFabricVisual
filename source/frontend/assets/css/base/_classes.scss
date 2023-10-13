@@ -33,3 +33,18 @@ $directions: (
 .caption-out {
   @include caption-out;
 }
+
+.svg-icon{
+  width: 20px;
+  height: 20px;
+}
+
+// TODO: [예시로 지울 것]
+.temp-img{
+  width: 200px;
+  height: 100px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-image: url("#{$img-path}/sample.png");
+}
+
