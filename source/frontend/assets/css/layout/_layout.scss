@@ -1,0 +1,17 @@
+ .l-inner{
+  @include flex-standard($horizontal: flex-start);
+  width: 1920px;
+  height: 100%;
+  padding: 0 $spacing-16;
+  gap: $spacing-32;
+}
+
+.l-nav {
+  @include flex-standard;
+  height: 40px;
+  background-color: $gray;
+
+  .l-inner {
+    justify-content: space-between;
+  }
+}

@@ -12,6 +12,10 @@
     font-family: "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   }
 
+  html, body, #__nuxt, #wrap{
+    height: 100%;
+  }
+
   input:focus {
     outline: none;
   }

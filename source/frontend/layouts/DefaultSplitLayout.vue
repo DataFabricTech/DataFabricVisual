@@ -1,24 +1,22 @@
 <template>
-  <div class="wrap">
+  <div id="wrap">
     <TheHeader></TheHeader>
-    <TheTab></TheTab>
     <main>
-      <TheCategorycategory></TheCategorycategory>
-      <slot />
+      <TheTab></TheTab>
+      <section>
+        <TheCategory></TheCategory>
+        <slot />
+      </section>
     </main>
-    <TheFooter></TheFooter>
   </div>
 </template>
 
 <script lang="ts">
-import Category from "./TheCategory.vue";
-import Header from "./TheHeader.vue";
-import TheHeader from "./TheHeader.vue";
-import TheCategory from "./TheCategory.vue";
-import TheFooter from "./TheFooter.vue";
-import TheTab from "./TheTab.vue";
+import TheCategory from "./DataFabric/TheCategory.vue";
+import TheHeader from "./DataFabric/TheHeader.vue";
+import TheTab from "./DataFabric/TheTab.vue";
 
 export default {
-  components: { TheTab, TheFooter, TheCategory, TheHeader, Header, Category }
+  components: { TheTab, TheCategory, TheHeader }
 };
 </script>

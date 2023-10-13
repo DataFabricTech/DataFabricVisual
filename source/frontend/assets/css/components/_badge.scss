@@ -4,7 +4,7 @@
   border-radius: $border-radius-sm;
 
   &-title {
-    @include font-weight('medium');
     font-size: 12px;
+    font-weight: 500;
   }
 }

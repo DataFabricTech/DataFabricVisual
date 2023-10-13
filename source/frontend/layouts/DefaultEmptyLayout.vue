@@ -1,13 +1,14 @@
 <template>
-  <div class="wrap">
+  <div id="wrap">
     <main>
-      <slot />
+      <section>
+        <slot />
+      </section>
     </main>
   </div>
 </template>
 
 <script lang="ts">
 
-export default {
-};
+export default {};
 </script>
