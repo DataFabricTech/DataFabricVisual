@@ -1,0 +1,25 @@
+.text-input {
+  position: relative;
+  background: #Fff;
+  width: 100%;
+  color: #212121;
+  border:1px solid #dce1e8;
+  font-weight: 400;
+  font-size: 14px;
+  height: 32px;
+  border-radius: 2px;
+  padding: 2px 12px;
+
+  &::placeholder {
+    font-weight: 300;
+    color: $font-gray;
+  }
+
+  &[disabled],
+  &[disabled]:hover,
+  &[disabled]:focus {
+    cursor: not-allowed;
+    background-color: #fff;
+    opacity: 0.5;
+  }
+}

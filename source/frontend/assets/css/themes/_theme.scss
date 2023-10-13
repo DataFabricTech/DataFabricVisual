@@ -2,10 +2,10 @@ $colors: (
   "black": #{$black},
   "white": #{$white},
   "gray": #{$gray},
-  "purple": #{$purple},
-  "deep-red": #{$deep-red},
-  "cyan": #{$cyan},
-  "yellow": #{$yellow},
+  "marker-yellow": #{$marker-yellow},
+  "marker-purple": #{$marker-purple},
+  "marker-cyan": #{$marker-cyan},
+  "marker-red": #{$marker-red},
 );
 
 @each $attr, $color in $colors {
