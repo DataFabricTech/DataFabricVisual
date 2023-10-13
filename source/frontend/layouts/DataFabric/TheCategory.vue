@@ -1,7 +1,6 @@
 <template>
   <div>
-    Layout: split
-    <slot />
+    Category
   </div>
 </template>
 

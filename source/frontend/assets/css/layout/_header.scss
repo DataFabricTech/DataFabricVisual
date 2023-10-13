@@ -1,0 +1,18 @@
+#header {
+  @include flex-standard;
+  height: 56px;
+  border-bottom: 1px solid $gray;
+}
+
+.header {
+  &-management {
+    @include flex-standard;
+    margin-left: auto;
+  }
+
+  &-setting {
+    @include flex-standard($horizontal: flex-start);
+    gap: $spacing-8;
+  }
+}
+

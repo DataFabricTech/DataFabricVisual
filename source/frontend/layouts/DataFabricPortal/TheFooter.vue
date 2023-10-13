@@ -1,8 +1,7 @@
 <template>
-  <div>
-    Layout: default
-    <slot />
-  </div>
+  <footer>
+    Footer
+  </footer>
 </template>
 
 <script setup lang="ts"></script>

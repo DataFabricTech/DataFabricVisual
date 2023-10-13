@@ -24,34 +24,6 @@ $font-families: (
 // }
 
 //-------------------------------------------
-//  Font Weight
-// ------------------------------------------
-$font-weights: (
-  "thin": 100,
-  "semilight": 200,
-  "light": 300,
-  "regular": 400,
-  "medium": 500,
-  "semibold": 600,
-  "bold": 700,
-  "extrabold": 800,
-  "black": 900
-);
-
-@mixin font-weight($weight) {
-  @if map-has-key($font-weights, $weight) {
-    font-weight: #{map-get($font-weights, $weight)};
-  } @else {
-    @warn "#{$weight} 값이 올바르지 않습니다."
-  }
-}
-
-// * Usage *
-// html {
-//   @include font-weight('black');
-// }
-
-//-------------------------------------------
 //  Letter Spacing
 // ------------------------------------------
 // TODO: [디자인, 퍼블리싱] 정리 필요
