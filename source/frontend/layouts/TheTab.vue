@@ -1,7 +1,6 @@
 <template>
   <div>
-    Layout: split
-    <slot />
+    Tab
   </div>
 </template>
 

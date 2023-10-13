@@ -1,8 +1,7 @@
 <template>
-  <div>
-    Layout: default
-    <slot />
-  </div>
+  <header id="header">
+    Header
+  </header>
 </template>
 
 <script setup lang="ts"></script>
