@@ -1,53 +1,81 @@
 <template>
-  <div class="layout-guide">
-    <table class="guide-table">
-      <caption>Component UI</caption>
-      <tbody>
-      <tr>
-        <th scope="row">Badge</th>
-        <td>
-          <baseBadge class="bg-purple">Badge</baseBadge>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">Button</th>
-        <td>
-          <div class="h-group">
-            <baseButton class="button-primary button-lg">
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton class="button-link">
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton class="button-sm">
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-icon button-negative button-lg">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="hidden">사용자 관리</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-icon button-normal">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="hidden">사용자 관리</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-icon button-secondary button-sm">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="hidden">사용자 관리</span>
-            </baseButton>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <th scope="row">Modal</th>
-        <td>
-          <baseButton @click="onClickOpen">
-            <span class="button-text">Modal Open</span>
-          </baseButton>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+<div class="layout-guide">
+  <div class="layout-guide-title">
+    <h1>Fabric UI Components</h1>
   </div>
+  <table class="guide-table">
+    <tbody>
+    <tr>
+      <th scope="row">Badge</th>
+    </tr>
+    <tr>
+      <td>
+        <div class="flex gap-2">
+          <baseBadge class="bg-marker-purple">Badge</baseBadge>
+          <baseBadge class="bg-marker-cyan">Badge</baseBadge>
+          <baseBadge class="bg-marker-red">Badge</baseBadge>
+          <baseBadge class="bg-marker-yellow">Badge</baseBadge>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Button</th>
+    </tr>
+    <tr>
+      <td>
+        <div class="h-group">
+          <baseButton class="button-primary button-lg">
+            <span class="button-text">Button</span>
+          </baseButton>
+          <baseButton class="button-link">
+            <span class="button-text">Button</span>
+          </baseButton>
+          <baseButton class="button-sm">
+            <span class="button-text">Button</span>
+          </baseButton>
+          <baseButton title="사용자 관리" class="button-icon button-negative button-lg">
+            <svg-icon name="user" class="svg-icon" />
+            <span class="hidden">사용자 관리</span>
+          </baseButton>
+          <baseButton title="사용자 관리" class="button-icon button-normal">
+            <svg-icon name="user" class="svg-icon" />
+            <span class="hidden">사용자 관리</span>
+          </baseButton>
+          <baseButton title="사용자 관리" class="button-icon button-secondary button-sm">
+            <svg-icon name="user" class="svg-icon" />
+            <span class="hidden">사용자 관리</span>
+          </baseButton>
+          </div>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Modal</th>
+    </tr>
+    <tr>
+      <td>
+        <baseButton @click="onClickOpen">Modal Open</baseButton>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Text-input</th>
+    </tr>
+    <tr>
+      <td class="col-sub">
+        <p style="width: 200px">default</p>
+        <p style="width: 200px">disabled</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="flex gap-2">
+          <baseTextinput style="width: 200px" placeholder="입력해주세요."></baseTextinput>
+          <baseTextinput style="width: 200px" disabled value="입력할 수 없습니다."></baseTextinput>
+        </div>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
   <modal v-model="show" title="Modal Sample">
     <template v-slot:body>
       ~ Modal is Here! Modal is Here! ~
