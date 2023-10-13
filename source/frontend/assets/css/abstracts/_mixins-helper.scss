@@ -13,9 +13,7 @@
 //-------------------------------------------
 @mixin ellipsis($width: null) {
   display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  @apply truncate;
 
   @if ($width) {
     width: $width;

@@ -13,10 +13,6 @@ $white: #fff !default;
 $black: #000 !default;
 $gray: #DCE1E8 !default;
 $light-gray: #dce1e8 !default;
-$purple: #6436EA !default;
-$cyan: #007D79 !default;
-$deep-red: #F5084F !default;
-$yellow: #FFA800 !default;
 $light-blue: #F7F9FC !default;
 
 // specific UI color
@@ -32,6 +28,12 @@ $support-02: #006644 !default;
 // Status color
 $focus: #ff0311 !default;
 $disabled: #f0f3f6 !default;
+
+// badge, tag color
+$marker-purple: #6436EA !default;
+$marker-cyan: #ADF0F0 !default;
+$marker-red: #F5084F !default;
+$marker-yellow: #FFA800 !default;
 
 // ------------------------------------------
 // Default Spacing
