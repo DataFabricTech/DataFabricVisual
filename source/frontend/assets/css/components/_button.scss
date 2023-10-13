@@ -1,0 +1,109 @@
+@mixin button-theme($bg-color, $hover-bg-color, $active-bg-color, $font-color, $border-color: false) {
+  background-color: $bg-color;
+  color: $font-color;
+
+  &:hover:not(:disabled) {
+    background-color: $hover-bg-color;
+  }
+
+  &:active:not(:disabled) {
+    background-color: $active-bg-color;
+  }
+
+  .svg-icon {
+    fill: $font-color;
+  }
+
+  @if ($border-color) {
+    border: 1px solid $border-color;
+  }
+}
+
+@mixin button-size($height, $padding, $icon-size, $font-size, $width: false, $gap: false) {
+  height: $height;
+  font-size: $font-size;
+  padding: $spacing-2 $padding;
+
+  .svg-icon {
+    width: $icon-size;
+    height: $icon-size;
+  }
+
+  @if ($gap) {
+    gap: $gap;
+  }
+
+  @if ($width) {
+    &.button-icon {
+      width: $width;
+    }
+  }
+}
+
+.button {
+  @include flex-standard;
+  height: 32px;
+  padding: $spacing-2 $spacing-12;
+  gap: $spacing-4;
+  font-size: 14px;
+  color: $font-black;
+  border-radius: $border-radius-sm;
+
+  &:disabled,
+  &:disabled:hover,
+  &:disabled:focus {
+    opacity: 0.25;
+    cursor: not-allowed;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: $light-gray;
+  }
+
+  &:active:not(:disabled) {
+    background-color: $gray;
+  }
+
+  &:focus-visible:not(:disabled) {
+    outline: 1px dashed $black;
+  }
+
+  .svg-icon {
+    fill: $icon-gray;
+  }
+
+  &.button-icon {
+    width: 32px;
+    padding: $spacing-2 $spacing-4
+  }
+
+  &-primary {
+    @include button-theme($primary, $hover-primary, $active-primary, $white);
+  }
+
+  &-secondary {
+    @include button-theme($secondary, $hover-secondary, $active-secondary, $white);
+  }
+
+  &-negative {
+    @include button-theme($negative, $hover-negative, $active-negative, $white);
+  }
+
+  &-normal {
+    @include button-theme($white, $light-gray, $gray, $font-black, $gray);
+  }
+
+  &-link {
+    @include button-theme($white, $light-gray, $gray, $font-black);
+    text-decoration: underline;
+  }
+
+  &-lg {
+    @include button-size($height: 40px, $padding: $spacing-16, $icon-size: 24px, $font-size: 15px, $width: 40px);
+  }
+
+  &-sm {
+    @include button-size($height: 24px, $padding: $spacing-4, $icon-size: 16px, $font-size: 12px, $width: 24px);
+  }
+}
+
