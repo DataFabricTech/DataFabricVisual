@@ -1,0 +1,43 @@
+// ------------------------------------------
+// 1. 컬러 변수와 디폴트 컬러 설정
+// ------------------------------------------
+$primary: var(--primary-color, #0c8ae5);
+$secondary: var(--secondary-color, #091f63);
+$negative: var(--negative-color, #eb1000);
+$hover-primary: var(--hover-primary-color, #33aaff);
+$hover-secondary: var(--hover-secondary-color, #294292);
+$hover-negative: var(--hover-negative-color, rgba(255, 16, 0, 0.8));
+$active-primary: var(--active-primary-color, #0080dc);
+$active-secondary: var(--active-secondary-color, #011451);
+$active-negative: var(--active-negative-color, #cc1e12);
+
+// ------------------------------------------
+// 2. 테마 이름(default..) - 테마 별 컬러 셋 (primary, secondary...)
+// ------------------------------------------
+$config: (
+  default:
+    (
+      primary: $primary,
+      secondary: $secondary,
+      negative: $negative,
+      hover-primary: $hover-primary,
+      hover-secondary: $hover-secondary,
+      hover-negative: $hover-negative,
+      active-primary: $active-primary,
+      active-secondary: $active-secondary,
+      active-negative: $active-negative
+    ),
+  // sample
+  dark:
+    (
+      primary: #0c8ae5,
+      secondary: $secondary,
+      negative: $negative,
+      hover-primary: $hover-primary,
+      hover-secondary: $hover-secondary,
+      hover-negative: $hover-negative,
+      active-primary: #0080dc,
+      active-secondary: $active-secondary,
+      active-negative: $active-negative
+    ),
+);

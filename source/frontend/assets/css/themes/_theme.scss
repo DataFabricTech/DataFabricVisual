@@ -1,0 +1,22 @@
+$colors: (
+  "black": #{$black},
+  "white": #{$white},
+  "gray": #{$gray},
+  "purple": #{$purple},
+  "deep-red": #{$deep-red},
+  "cyan": #{$cyan},
+  "yellow": #{$yellow},
+);
+
+@each $attr, $color in $colors {
+  .bg-#{$attr} {
+    background-color: $color;
+
+    @if $color == #{$white} {
+      color: $black;
+    } @else {
+      color: $white;
+    }
+  }
+}
+

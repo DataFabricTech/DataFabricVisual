@@ -1,0 +1,111 @@
+//-------------------------------------------
+//  Font Families
+// ------------------------------------------
+@use "sass:math";
+
+$font-families: (
+  sans: unquote(
+      "'NotoSansKR', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', helvetica,'Apple SD Gothic Neo',sans-serif"
+  ),
+  serif: unquote("'Georgia', Times, serif"),
+);
+
+@mixin font-family($family-name) {
+  @if map-has-key($font-families, $family-name) {
+    font-family: #{map-get($font-families, $family-name)};
+  } @else {
+    @warn "#{$family-name} 값이 올바르지 않습니다."
+  }
+}
+
+// * Usage *
+// html {
+//   @include font-family('serif');
+// }
+
+//-------------------------------------------
+//  Font Weight
+// ------------------------------------------
+$font-weights: (
+  "thin": 100,
+  "semilight": 200,
+  "light": 300,
+  "regular": 400,
+  "medium": 500,
+  "semibold": 600,
+  "bold": 700,
+  "extrabold": 800,
+  "black": 900
+);
+
+@mixin font-weight($weight) {
+  @if map-has-key($font-weights, $weight) {
+    font-weight: #{map-get($font-weights, $weight)};
+  } @else {
+    @warn "#{$weight} 값이 올바르지 않습니다."
+  }
+}
+
+// * Usage *
+// html {
+//   @include font-weight('black');
+// }
+
+//-------------------------------------------
+//  Letter Spacing
+// ------------------------------------------
+// TODO: [디자인, 퍼블리싱] 정리 필요
+$letter-spacings: (
+  "standard": 0,
+  "narrow-xs": -0.2px,
+  "narrow-sm": -0.3px,
+  "narrow-md": -0.5px,
+  "narrow-lg": -1px,
+  "wide-lg": 1px
+);
+
+@mixin letter-spacing($spacing) {
+  @if map-has-key($letter-spacings, $spacing) {
+    letter-spacing: #{map-get($letter-spacings, $spacing)};
+  } @else {
+    @warn "#{$spacing} 값이 올바르지 않습니다."
+  }
+}
+
+// * Usage *
+// html {
+//   @include letter-spacing('wide-lg');
+// }
+
+//-------------------------------------------
+//  Line Height
+// ------------------------------------------
+// TODO: [퍼블리싱] 정리 필요
+$line-heights: (
+  "lg": 1.5,
+  "md": 1.2,
+  "sm": 1
+);
+
+@mixin line-height($lh) {
+  @if map-has-key($line-heights, $lh) {
+    line-height: #{map-get($line-heights, $lh)};
+  } @else {
+    @warn "#{$lh} 값이 올바르지 않습니다."
+  }
+}
+
+// * Usage *
+// html {
+//   @include line-height('lg');
+// }
+
+//-------------------------------------------
+//  Font smoothing
+// ------------------------------------------
+// 두꺼운 서체에서 사용되는 font-smoothing
+@mixin font-smoothing {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+

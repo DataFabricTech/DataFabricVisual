@@ -1,0 +1,22 @@
+// ------------------------------------------
+//   0 - Base              ||  0
+// ------------------------------------------
+$box-shadow: rgba(119, 136, 154, 0.1);
+
+$box-shadows: (
+  default: $box-shadow,
+  // deep...
+);
+
+@mixin box-shadow($shadow) {
+  @if map-has-key($box-shadows, $shadow) {
+    box-shadow: #{map-get($box-shadows, $shadow)};
+  } @else {
+    @warn "#{$shadow} 값이 올바르지 않습니다." + "#{$box-shadows} 중에 하나로 선택해 주세요"
+  }
+}
+
+// * Usage *
+// .box {
+//  @include box-shadow('default');
+// }
