@@ -2,9 +2,7 @@
   <div id="wrap">
     <TheHeader></TheHeader>
     <main>
-      <section>
-        <slot />
-      </section>
+      <slot />
     </main>
     <TheFooter></TheFooter>
   </div>

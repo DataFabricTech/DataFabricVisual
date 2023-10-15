@@ -3,9 +3,7 @@
     <TheHeader></TheHeader>
     <main>
       <TheTab></TheTab>
-      <section>
-        <slot />
-      </section>
+      <slot />
     </main>
   </div>
 </template>

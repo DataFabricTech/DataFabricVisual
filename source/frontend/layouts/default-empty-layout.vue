@@ -1,9 +1,7 @@
- <template>
-   <div id="wrap">
+<template>
+  <div id="wrap">
     <main>
-      <section>
-        <slot />
-      </section>
+      <slot />
     </main>
   </div>
 </template>
