@@ -1,6 +1,16 @@
 <!-- 데이터모델 브라우저 - 상세 -->
 <template>
-  <h2 class="hidden">데이터모델 브라우저 상세</h2>
+  <div class="l-common">
+    <h2 class="hidden">데이터모델 브라우저 상세</h2>
+    <section>
+      <h3 class="hidden">데이터 요약정보</h3>
+      <!--      ...-->
+    </section>
+    <section>
+      <h3 class="hidden">데이터 기본정보</h3>
+      <!--      ...-->
+    </section>
+  </div>
 </template>
 <script lang="ts" setup>
 definePageMeta({
