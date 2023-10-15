@@ -1,4 +1,4 @@
-<!-- 저장소 등록 모달 -->
+<!-- 저장소 관리 > 연결정보 등록 Modal -->
 <template>
   <div class="v-group">
     <h3>저장소 관리 > 연결정보 등록 Step 1</h3>
@@ -23,7 +23,7 @@ import { ref } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 
 definePageMeta({
-  layout: "default-layout",
+  layout: "default-empty-layout",
 });
 
 const show1 = ref(false);
