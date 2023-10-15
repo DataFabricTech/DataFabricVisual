@@ -1,5 +1,5 @@
 <template>
-  <div class="l-nav">
+  <div class="l-tab">
     <div class="l-inner">
       <nav class="tab">
         <div class="tab-item is-selected">
