@@ -1,17 +1,45 @@
- .l-inner{
+.l-inner {
   @include flex-standard($horizontal: flex-start);
   width: 1920px;
   height: 100%;
   padding: 0 $spacing-16;
-  gap: $spacing-32;
 }
 
-.l-nav {
+.l-full {
+  height: calc(100% - 56px);
+
+  .l-tab + .l-split {
+    height: calc(100% - 40px);
+  }
+}
+
+.l-tab {
   @include flex-standard;
   height: 40px;
   background-color: $gray;
+}
 
-  .l-inner {
-    justify-content: space-between;
+.l-split {
+  @include flex-standard($vertical: flex-start, $horizontal: flex-start);
+  width: 1920px;
+  gap: $spacing-20;
+  padding: $spacing-20 $spacing-24 0 0;
+
+  .snb {
+    width: 474px;
+    height: 100%;
+    flex-shrink: 0;
   }
+
+  .l-contents {
+    height: 100%;
+  }
+}
+
+.l-common {
+
+}
+
+.l-contents {
+  flex-grow: 1;
 }
