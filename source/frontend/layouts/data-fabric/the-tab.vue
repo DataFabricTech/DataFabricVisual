@@ -1,33 +1,33 @@
 <template>
-  <div class="l-tab">
+  <div class="l-nav">
     <div class="l-inner justify-between">
-      <nav class="tab">
-        <div class="tab-item is-selected">
-          <button type="button" class="tab-button">
+      <nav class="nav">
+        <div class="nav-item is-selected">
+          <button type="button" class="nav-button">
             <svg-icon name="data" class="svg-icon" />
-            <span class="tab-title">데이터 모델 Browse</span>
+            <span class="nav-title">데이터 모델 Browse</span>
           </button>
-          <button type="button" class="tab-close-button">
+          <button type="button" class="nav-close-button">
             <svg-icon name="close" class="svg-icon" />
             <span class="hidden">닫기</span>
           </button>
         </div>
-        <div class="tab-item">
-          <button type="button" class="tab-button">
+        <div class="nav-item">
+          <button type="button" class="nav-button">
             <svg-icon name="data" class="svg-icon" />
-            <span class="tab-title">데이터 모델 Browse</span>
+            <span class="nav-title">데이터 모델 Browse</span>
           </button>
-          <button type="button" class="tab-close-button">
+          <button type="button" class="nav-close-button">
             <svg-icon name="close" class="svg-icon" />
             <span class="hidden">닫기</span>
           </button>
         </div>
-        <div class="tab-item">
-          <button type="button" class="tab-button">
+        <div class="nav-item">
+          <button type="button" class="nav-button">
             <svg-icon name="data" class="svg-icon" />
-            <span class="tab-title">데이터 모델 Browse</span>
+            <span class="nav-title">데이터 모델 Browse</span>
           </button>
-          <button type="button" class="tab-close-button">
+          <button type="button" class="nav-close-button">
             <svg-icon name="close" class="svg-icon" />
             <span class="hidden">닫기</span>
           </button>

@@ -1,138 +1,251 @@
 <template>
-<div class="layout-guide">
-  <div class="layout-guide-title">
-    <h1>Fabric UI Components</h1>
+  <div class="layout-guide">
+    <div class="layout-guide-title">
+      <h1>Fabric UI Components</h1>
+    </div>
+    <table class="guide-table">
+      <tbody>
+      <tr>
+        <th scope="row">Button</th>
+      </tr>
+      <tr>
+        <td>
+          <div class="v-group gap-3">
+            <div class="h-group">
+              <strong class="w-[100px] font-light text-[14px]">size: lg</strong>
+              <baseButton title="사용자 관리" class="button-primary button-lg">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-secondary button-lg">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-tertiary button-lg">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-negative">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-danger">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-normal">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-link button-sm">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-link-primary button-sm">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-link-negative button-sm">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-link-negative button-sm" disabled>
+                <svg-icon name="user" class="svg-icon" />
+                <span class="button-text">Disabled</span>
+              </baseButton>
+            </div>
+            <div class="h-group">
+              <strong class="w-[100px] font-light text-[14px]">size: md</strong>
+              <baseButton class="button-primary button-lg">
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton class="button-secondary button-lg">
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton class="button-tertiary button-lg">
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton class="button-negative">
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton class="button-danger">
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton class="button-normal">
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton class="button-link button-sm">
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton class="button-link-primary button-sm">
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton class="button-link-negative button-sm">
+                <span class="button-text">Button</span>
+              </baseButton>
+              <baseButton class="button-primary button-lg" disabled>
+                <span class="button-text">Disabled</span>
+              </baseButton>
+            </div>
+            <div class="h-group">
+              <strong class="w-[100px] font-light text-[14px]">size: sm</strong>
+              <baseButton title="사용자 관리" class="button-icon button-primary button-lg">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="hidden">사용자 관리</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-icon button-secondary button-lg">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="hidden">사용자 관리</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-icon button-tertiary button-lg">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="hidden">사용자 관리</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-icon button-negative">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="hidden">사용자 관리</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-icon button-danger">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="hidden">사용자 관리</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-icon button-normal">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="hidden">사용자 관리</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-icon button-link button-sm">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="hidden">사용자 관리</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-icon button-link-primary button-sm">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="hidden">사용자 관리</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-icon button-link-negative button-sm">
+                <svg-icon name="user" class="svg-icon" />
+                <span class="hidden">사용자 관리</span>
+              </baseButton>
+              <baseButton title="사용자 관리" class="button-icon button-normal" disabled>
+                <svg-icon name="user" class="svg-icon" />
+                <span class="hidden">사용자 관리</span>
+              </baseButton>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">Tab</th>
+      </tr>
+      <tr>
+        <td>
+          <div class="v-group gap-3">
+            <div class="h-group">
+              <strong class="w-[100px] font-light text-[14px]">class: nav</strong>
+              <nav class="nav">
+                <div class="nav-item is-selected">
+                  <button type="button" class="nav-button">
+                    <svg-icon name="data" class="svg-icon" />
+                    <span class="nav-title">데이터 모델 BrowserBrowserBrowser</span>
+                  </button>
+                  <button type="button" class="nav-close-button">
+                    <svg-icon name="close" class="svg-icon" />
+                    <span class="hidden">닫기</span>
+                  </button>
+                </div>
+                <div class="nav-item">
+                  <button type="button" class="nav-button">
+                    <svg-icon name="data" class="svg-icon" />
+                    <span class="nav-title">데이터 모델 A</span>
+                  </button>
+                  <button type="button" class="nav-close-button">
+                    <svg-icon name="close" class="svg-icon" />
+                    <span class="hidden">닫기</span>
+                  </button>
+                </div>
+                <div class="nav-item">
+                  <button type="button" class="nav-button">
+                    <svg-icon name="data" class="svg-icon" />
+                    <span class="nav-title">데이터 모델 B</span>
+                  </button>
+                  <button type="button" class="nav-close-button">
+                    <svg-icon name="close" class="svg-icon" />
+                    <span class="hidden">닫기</span>
+                  </button>
+                </div>
+              </nav>
+            </div>
+            <div class="h-group">
+              <strong class="w-[100px] font-light text-[14px]">class: tab</strong>
+              <div class="tab">
+                <ul class="tab-list">
+                  <li class="tab-item">
+                    <button type="button" class="tab-button is-selected">
+                      <span class="tab-title">기본정보</span>
+                    </button>
+                  </li>
+                  <li class="tab-item">
+                    <button type="button" class="tab-button">
+                      <span class="tab-title">프로파일링</span>
+                    </button>
+                  </li>
+                  <li class="tab-item">
+                    <button type="button" class="tab-button">
+                      <span class="tab-title">샘플데이터</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="h-group">
+              <strong class="w-[100px] font-light text-[14px]">class: fill-tab</strong>
+              <div class="fill-tab">
+                <ul class="fill-tab-list">
+                  <li class="fill-tab-item">
+                    <button type="button" class="fill-tab-button is-selected">
+                      <span class="fill-tab-title">카테고리</span>
+                    </button>
+                  </li>
+                  <li class="fill-tab-item">
+                    <button type="button" class="fill-tab-button">
+                      <span class="fill-tab-title">카탈로그</span>
+                    </button>
+                  </li>
+                  <li class="fill-tab-item">
+                    <button type="button" class="fill-tab-button">
+                      <span class="fill-tab-title">연결정보</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="h-group">
+              <strong class="w-[100px] font-light text-[14px]">class: round-tab</strong>
+              <div class="fill-tab">
+                <ul class="fill-tab-list">
+                  <li class="fill-tab-item">
+                    <button type="button" class="fill-tab-button is-selected">
+                      <span class="fill-tab-title">카테고리</span>
+                    </button>
+                  </li>
+                  <li class="fill-tab-item">
+                    <button type="button" class="fill-tab-button">
+                      <span class="fill-tab-title">카탈로그</span>
+                    </button>
+                  </li>
+                  <li class="fill-tab-item">
+                    <button type="button" class="fill-tab-button">
+                      <span class="fill-tab-title">연결정보</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
-  <table class="guide-table">
-    <tbody>
-    <tr>
-      <th scope="row">Button</th>
-    </tr>
-    <tr>
-      <td>
-        <div class="v-group gap-3">
-          <div class="h-group">
-            <baseButton title="사용자 관리" class="button-primary button-lg">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-secondary button-lg">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-tertiary button-lg">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-negative">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-danger">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-normal">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-link button-sm">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-link-primary button-sm">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-link-negative button-sm">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-link-negative button-sm" disabled>
-              <svg-icon name="user" class="svg-icon" />
-              <span class="button-text">Disabled</span>
-            </baseButton>
-          </div>
-          <div class="h-group">
-            <baseButton class="button-primary button-lg">
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton class="button-secondary button-lg">
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton class="button-tertiary button-lg">
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton class="button-negative">
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton class="button-danger">
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton class="button-normal">
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton class="button-link button-sm">
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton class="button-link-primary button-sm">
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton class="button-link-negative button-sm">
-              <span class="button-text">Button</span>
-            </baseButton>
-            <baseButton class="button-primary button-lg" disabled>
-              <span class="button-text">Disabled</span>
-            </baseButton>
-          </div>
-          <div class="h-group">
-            <baseButton title="사용자 관리" class="button-icon button-primary button-lg">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="hidden">사용자 관리</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-icon button-secondary button-lg">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="hidden">사용자 관리</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-icon button-tertiary button-lg">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="hidden">사용자 관리</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-icon button-negative">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="hidden">사용자 관리</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-icon button-danger">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="hidden">사용자 관리</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-icon button-normal">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="hidden">사용자 관리</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-icon button-link button-sm">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="hidden">사용자 관리</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-icon button-link-primary button-sm">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="hidden">사용자 관리</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-icon button-link-negative button-sm">
-              <svg-icon name="user" class="svg-icon" />
-              <span class="hidden">사용자 관리</span>
-            </baseButton>
-            <baseButton title="사용자 관리" class="button-icon button-normal" disabled>
-              <svg-icon name="user" class="svg-icon" />
-              <span class="hidden">사용자 관리</span>
-            </baseButton>
-          </div>
-        </div>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-</div>
 </template>
 <script lang="ts" setup></script>
 
