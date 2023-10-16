@@ -3,7 +3,6 @@
   font-size: $font-size;
 }
 
-
 .text-input {
   position: relative;
   padding: $spacing-2 $spacing-12;
@@ -25,9 +24,9 @@
     border-color: #aeb9ca;
   }
 
-  &[disabled],
-  &[disabled]:hover,
-  &[disabled]:focus {
+  &:disabled,
+  &:disabled:hover,
+  &:disabled:focus {
     cursor: not-allowed;
     background-color: #fff;
     opacity: 0.5;
@@ -42,9 +41,13 @@
   }
 
   &-lg {
-    @include text-input-size($height: 40px, $font-size: 16px);
+    @include text-input-size(40px, 16px);
   }
   &-sm {
-    @include text-input-size($height: 24px, $font-size: 12px);
+    @include text-input-size(24px, 12px);
   }
+}
+
+.label-hidden {
+  @include hidden;
 }

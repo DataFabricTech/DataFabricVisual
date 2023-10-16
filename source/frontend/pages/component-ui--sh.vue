@@ -80,7 +80,8 @@
     <tr>
       <td>
         <div class="flex gap-2">
-          <baseTextinput class="text-input-lg" style="width: 200px" placeholder="입력해주세요."></baseTextinput>
+          <baseTextinput id="input-ex-01" class="text-input-lg" style="width: 200px" placeholder="입력해주세요."></baseTextinput>
+          <label for="input-ex-01" class="label-hidden">lable</label>
           <baseTextinput style="width: 200px" disabled value="입력할 수 없습니다."></baseTextinput>
           <baseTextinput class="text-input-sm" style="width: 200px" readonly value="read only"></baseTextinput>
         </div>
@@ -99,8 +100,9 @@
     <tr>
       <td>
         <div class="flex gap-2">
-          <baseRadio id="radio-ex-01"></baseRadio>
-
+          <baseRadio class="radio-lg" style="width: 200px" id="radio-ex-01">radio</baseRadio>
+          <baseRadio style="width: 200px" id="radio-ex-02" checked>Radio</baseRadio>
+          <baseRadio class="radio-sm" style="width: 200px" id="radio-ex-03" disabled>라디오</baseRadio>
         </div>
       </td>
     </tr>
