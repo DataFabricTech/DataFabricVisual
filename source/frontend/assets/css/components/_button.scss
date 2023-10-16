@@ -1,25 +1,41 @@
-@mixin button-theme($bg-color, $hover-bg-color, $active-bg-color, $font-color, $border-color: false) {
+@mixin button-theme($bg-color, $hover-bg-color, $active-bg-color, $font-color, $border-color: null, $hover-font-color: null, $active-font-color: null) {
   background-color: $bg-color;
   color: $font-color;
 
+  @if ($border-color) {
+    border: 1px solid $border-color;
+  }
+
   &:hover:not(:disabled) {
     background-color: $hover-bg-color;
+
+    @if ($hover-font-color) {
+      color: $hover-font-color;
+
+      .svg-icon {
+        fill: $hover-font-color;
+      }
+    }
   }
 
   &:active:not(:disabled) {
     background-color: $active-bg-color;
+
+    @if ($active-font-color) {
+      color: $active-font-color;
+
+      .svg-icon {
+        fill: $active-font-color;
+      }
+    }
   }
 
   .svg-icon {
     fill: $font-color;
   }
-
-  @if ($border-color) {
-    border: 1px solid $border-color;
-  }
 }
 
-@mixin button-size($height, $padding, $icon-size, $font-size, $width: false, $gap: false) {
+@mixin button-size($height, $padding, $icon-size, $font-size, $width: null, $gap: null) {
   height: $height;
   font-size: $font-size;
   padding: $spacing-2 $padding;
@@ -85,6 +101,10 @@
     @include button-theme($secondary, $hover-secondary, $active-secondary, $white);
   }
 
+  &-tertiary {
+    @include button-theme($tertiary, $hover-tertiary, $active-tertiary, $white);
+  }
+
   &-negative {
     @include button-theme($negative, $hover-negative, $active-negative, $white);
   }
@@ -93,8 +113,22 @@
     @include button-theme($white, $light-gray, $gray, $font-black, $gray);
   }
 
+  &-danger {
+    @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $negative, $border-color: $negative);
+  }
+
   &-link {
-    @include button-theme($white, $light-gray, $gray, $font-black);
+    @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $font-gray, $hover-font-color: $light-gray, $active-font-color: $font-black);
+    text-decoration: underline;
+  }
+
+  &-link-primary {
+    @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $primary, $hover-font-color: $hover-primary, $active-font-color: $active-primary);
+    text-decoration: underline;
+  }
+
+  &-link-negative {
+    @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $negative, $hover-font-color: $hover-negative, $active-font-color: $active-negative);
     text-decoration: underline;
   }
 
