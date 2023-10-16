@@ -19,11 +19,20 @@
   background-color: $gray;
 }
 
+.l-common {
+  @include flex-standard;
+
+  .l-inner {
+    padding: $spacing-24;
+  }
+}
+
 .l-split {
-  @include flex-standard($vertical: flex-start, $horizontal: flex-start);
-  width: 1920px;
-  gap: $spacing-20;
-  padding: $spacing-20 $spacing-24 0 0;
+  @include flex-standard;
+
+  .l-inner {
+    padding: $spacing-20 $spacing-24 $spacing-20 0;
+  }
 
   .snb {
     width: 474px;
@@ -31,15 +40,11 @@
     flex-shrink: 0;
   }
 
-  .l-contents {
+  .main-content {
     height: 100%;
   }
 }
 
-.l-common {
-
-}
-
-.l-contents {
+.main-content {
   flex-grow: 1;
 }

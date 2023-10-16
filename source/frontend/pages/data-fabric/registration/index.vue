@@ -19,11 +19,11 @@
   </div>
 </template>
 <script lang="ts" setup>
-import { ref } from "@vue/reactivity";
-import { useRouter } from "vue-router";
+import {ref} from "@vue/reactivity";
+import {useRouter} from "vue-router";
 
 definePageMeta({
-  layout: "default-empty-layout",
+  layout: "default-tab-layout",
 });
 
 const show1 = ref(false);

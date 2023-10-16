@@ -1,6 +1,9 @@
 <template>
-  <h3>Sample</h3>
-dd
+  <div class="l-common">
+    <div class="l-inner">
+      <h2>Default Layout</h2>
+    </div>
+  </div>
 
 </template>
 <script lang="ts" setup>
