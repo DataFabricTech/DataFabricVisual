@@ -1,5 +1,5 @@
 // tailwindCSS
-@import "tailwind/tailwind-css";
+@import "./tailwind/tailwind-base";
 
 // variables
 @import "abstracts/variables";
@@ -10,15 +10,14 @@
 @import "./themes/theme.scss";
 
 // mixins
-@import "assets/css/abstracts/fonts";
-@import "assets/css/abstracts/z-index";
-@import "assets/css/abstracts/breakpoints";
-@import "assets/css/abstracts/box-shadow";
-@import "assets/css/abstracts/retina";
-@import "assets/css/abstracts/mixins-helper";
+@import "./abstracts/fonts";
+@import "./abstracts/z-index";
+@import "./abstracts/breakpoints";
+@import "./abstracts/box-shadow";
+@import "./abstracts/retina";
+@import "./abstracts/mixins-helper";
 
 // base
-@import "base/reset";
 @import "base/base";
 @import "base/classes";
 
@@ -44,3 +43,5 @@
 
 // base
 @import "base/status";
+
+@import "./tailwind/tailwind-utilities";

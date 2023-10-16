@@ -3,7 +3,7 @@
 /* reset */
 @layer base {
   * {
-    outline:none;
+    outline: none;
     margin: 0;
     padding: 0;
   }
@@ -12,7 +12,7 @@
     font-family: "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   }
 
-  html, body, #__nuxt, #wrap{
+  html, body, #__nuxt, #wrap {
     height: 100%;
   }
 

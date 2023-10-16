@@ -8,8 +8,8 @@
       <h5 class="modal-title">
         {{ title }}
       </h5>
-      <baseButton title="닫기">
-        <svg-icon name="close" class="svg-icon button-icon" />
+      <baseButton class="button-icon button-sm" title="닫기">
+        <svg-icon name="close" class="svg-icon" />
         <span class="hidden">닫기</span>
       </baseButton>
     </header>
@@ -24,7 +24,7 @@
     </div>
     <footer class="modal-footer">
       <slot name="foot">
-        <baseButton @click="emit('update:modelValue', false)">
+        <baseButton class="button-primary button-lg" @click="emit('update:modelValue', false)">
           <span class="button-text">다음</span>
         </baseButton>
       </slot>
