@@ -1,0 +1,11 @@
+.tag {
+  @include flex-standard($display:inline-flex);
+  gap: 2px;
+  height: 32px;
+  padding: 0 $spacing-8;
+  background: $disabled;
+  border-radius: $border-radius-sm;
+  color: $icon-gray;
+  font-size: 14px;
+  font-weight: 500;
+}

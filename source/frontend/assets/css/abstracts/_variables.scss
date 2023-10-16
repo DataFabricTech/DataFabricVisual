@@ -16,10 +16,13 @@ $light-gray: #dce1e8 !default;
 $light-blue: #F7F9FC !default;
 
 // specific UI color
-$font-black: #333 !default;
-$font-gray: #606974 !default;
+$font-black: #212121 !default;
+$font-gray-01: #606974 !default;
+$font-gray-02: #ABAFBA !default;
 
 $icon-gray: #77889a !default;
+
+$border: #dce1e8 !default;
 
 // specific purpose color
 $support-01: #0747a6 !default;
@@ -34,6 +37,7 @@ $marker-purple: #6436EA !default;
 $marker-cyan: #ADF0F0 !default;
 $marker-red: #F5084F !default;
 $marker-yellow: #FFA800 !default;
+$marker-gray: #a4a4a4 !default;
 
 // ------------------------------------------
 // Default Spacing

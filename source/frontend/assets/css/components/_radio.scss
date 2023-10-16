@@ -1,0 +1,58 @@
+//@mixin radio-size($height, $font-size) {
+//  height: $height;
+//  font-size: $font-size;
+//}
+.radio {
+  border:1px solid red
+}
+
+//.radio {
+//  position: relative;
+//
+//  &-input {
+//    @include hidden;
+//  }
+//
+//  &-label {
+//    @include flex-standard($display:inline-flex);
+//    position: relative;
+//    padding-left: $spacing-24;
+//    line-height: 24px;
+//    color: $font-gray-01;
+//    white-space: nowrap;
+//    user-select: none;
+//    cursor: pointer;
+//
+//    &:before {
+//      content: "";
+//      width: 17px;
+//      height: 17px;
+//      margin: $spacing-2;
+//      position: absolute;
+//      left: 0;
+//      top: 1px;
+//      background-color: transparent;
+//      border: 1px solid #005acd;
+//      border-radius: 50%;
+//    }
+//
+//    &:after {
+//      content: "";
+//      position: absolute;
+//      left: 7px;
+//      top: 8px;
+//      width: 7px;
+//      height: 7px;
+//      border-radius: 50%;
+//      background-color: $white;
+//    }
+//  }
+//
+//  &[disabled],
+//  &[disabled]:hover,
+//  &[disabled]:focus {
+//    cursor: not-allowed;
+//    opacity: 0.5;
+//  }
+//
+//}
