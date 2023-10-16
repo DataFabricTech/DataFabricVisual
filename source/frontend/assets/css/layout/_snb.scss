@@ -1,0 +1,6 @@
+.snb {
+  @include box-shadow('default');
+  padding: $spacing-2 + $spacing-8;
+  background-color: $white;
+  border: 1px solid $gray;
+}

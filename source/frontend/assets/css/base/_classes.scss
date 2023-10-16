@@ -34,14 +34,14 @@ $directions: (
   @include caption-out;
 }
 
-.svg-icon{
+.svg-icon {
   width: 20px;
   height: 20px;
   fill: $icon-gray;
 }
 
 // TODO: [예시로 지울 것]
-.temp-img{
+.temp-img {
   width: 200px;
   height: 100px;
   background-size: contain;

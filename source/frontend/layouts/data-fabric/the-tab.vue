@@ -1,6 +1,6 @@
 <template>
-  <div class="l-nav">
-    <div class="l-inner">
+  <div class="l-tab">
+    <div class="l-inner justify-between">
       <nav class="tab">
         <div class="tab-item is-selected">
           <button type="button" class="tab-button">

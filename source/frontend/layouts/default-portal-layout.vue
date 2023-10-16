@@ -2,17 +2,15 @@
   <div id="wrap">
     <TheHeader></TheHeader>
     <main>
-      <section>
-        <slot />
-      </section>
+      <slot />
     </main>
     <TheFooter></TheFooter>
   </div>
 </template>
 
 <script lang="ts">
-import TheFooter from "./DataFabricPortal/TheFooter.vue";
-import TheHeader from "./DataFabricPortal/TheHeader.vue";
+import TheFooter from "./data-fabric-portal/the-footer.vue";
+import TheHeader from "./data-fabric-portal/the-header.vue";
 
 export default {
   components: { TheHeader, TheFooter }

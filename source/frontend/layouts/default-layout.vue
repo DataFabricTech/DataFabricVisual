@@ -2,15 +2,13 @@
   <div id="wrap">
     <TheHeader></TheHeader>
     <main>
-      <section>
-        <slot />
-      </section>
+      <slot />
     </main>
   </div>
 </template>
 
 <script lang="ts">
-import TheHeader from "./DataFabric/TheHeader.vue";
+import TheHeader from "./data-fabric/the-header.vue";
 
 export default {
   components: { TheHeader }
