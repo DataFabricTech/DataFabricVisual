@@ -111,7 +111,7 @@
   }
 
   &-link {
-    @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $font-gray, $hover-font-color: $light-gray, $active-font-color: $font-black);
+    @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $font-gray-01, $hover-font-color: $light-gray, $active-font-color: $font-black);
     text-decoration: underline;
   }
 
