@@ -139,10 +139,25 @@
       <tr>
         <td>
           <div class="v-group gap-3">
+            <!--            Used Component-->
             <div class="h-group">
               <strong class="w-[100px] font-light text-[14px]">nav</strong>
               <BaseNav></BaseNav>
             </div>
+            <div class="h-group">
+              <strong class="w-[100px] font-light text-[14px]">tab</strong>
+              <BaseTab></BaseTab>
+            </div>
+            <div class="h-group">
+              <strong class="w-[100px] font-light text-[14px]">fill-tab</strong>
+              <BaseTab theme="fill-tab"></BaseTab>
+            </div>
+            <div class="h-group">
+              <strong class="w-[100px] font-light text-[14px]">round-tab</strong>
+              <BaseTab theme="round-tab" use-icon="true"></BaseTab>
+            </div>
+            <!--            Unused Component-->
+
             <div class="h-group">
               <strong class="w-[100px] font-light text-[14px]">tab</strong>
               <div class="tab">

@@ -105,6 +105,8 @@
   }
 
   &-title {
+    @include ellipsis;
+    width: calc(100% - 36px);
     font-size: 18px;
     font-weight: 500;
     color: #616161;
