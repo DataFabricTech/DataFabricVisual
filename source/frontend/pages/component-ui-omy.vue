@@ -231,6 +231,16 @@
           </div>
         </td>
       </tr>
+      <tr>
+        <th scope="row">Rating</th>
+      </tr>
+      <tr>
+        <td>
+          <div class="v-group gap-3">
+            <BaseRating></BaseRating>
+          </div>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>
