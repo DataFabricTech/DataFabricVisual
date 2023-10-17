@@ -1,14 +1,10 @@
 .badge {
-  @include flex-standard($display: inline-flex);
+  @include flex-standard($display:inline-flex);
   padding: $spacing-2 $spacing-4;
   border-radius: $border-radius-sm;
 
   &-title {
     font-size: 12px;
     font-weight: 500;
-  }
-
-  &.bg-marker-cyan {
-    color: #007D79;
   }
 }
