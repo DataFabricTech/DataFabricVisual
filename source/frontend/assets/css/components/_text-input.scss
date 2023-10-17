@@ -1,25 +1,52 @@
+@mixin text-input-size($height, $font-size) {
+  height: $height;
+  font-size: $font-size;
+}
+
 .text-input {
   position: relative;
-  background: #Fff;
+  padding: $spacing-2 $spacing-12;
   width: 100%;
-  color: #212121;
-  border: 1px solid #dce1e8;
+  height: 32px;
+  color: $font-black;
+  border:1px solid $border-gray;
   font-weight: 400;
   font-size: 14px;
-  height: 32px;
-  border-radius: 2px;
-  padding: 2px 12px;
+  background: $white;
+  border-radius: $border-radius-sm;
 
   &::placeholder {
     font-weight: 300;
-    color: $font-gray;
+    color: $font-gray-02;
   }
 
-  &[disabled],
-  &[disabled]:hover,
-  &[disabled]:focus {
+  &:hover:not(:disabled) {
+    border-color: #aeb9ca;
+  }
+
+  &:disabled,
+  &:disabled:hover,
+  &:disabled:focus {
     cursor: not-allowed;
-    background-color: #fff;
     opacity: 0.5;
   }
+
+  &[readonly],
+  &[readonly]:hover {
+    cursor: default;
+    border-color: $border-gray;
+    background-color: $readonly;
+    color: $font-gray-01;
+  }
+
+  &-lg {
+    @include text-input-size(40px, 16px);
+  }
+  &-sm {
+    @include text-input-size(24px, 12px);
+  }
+}
+
+.label-hidden {
+  @include hidden;
 }
