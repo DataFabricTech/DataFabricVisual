@@ -65,13 +65,6 @@
   color: $font-black;
   border-radius: $border-radius-sm;
 
-  &:disabled,
-  &:disabled:hover,
-  &:disabled:focus {
-    opacity: 0.25;
-    cursor: not-allowed;
-  }
-
   &:hover:not(:disabled) {
     background-color: $light-gray;
   }
