@@ -19,4 +19,13 @@
   input:focus {
     outline: none;
   }
+
+  button[type="button"], button[type="submit"], a[href], input[type="text"] {
+    &:disabled,
+    &:disabled:hover,
+    &:disabled:focus {
+      opacity: 0.25;
+      cursor: not-allowed;
+    }
+  }
 }
