@@ -10,7 +10,8 @@ export default defineNuxtConfig({
   // runtime에서 설정된 정보를 조회 가능
   runtimeConfig: {
     public: {
-      baseUrl: `${process.env.VITE_BASE_URL}${process.env.VITE_CONTEXT_PATH}`,
+      // baseUrl: `${process.env.VITE_CONTEXT_PATH}`,
+      baseUrl: ""
     },
   },
   // dev 서버 설정
@@ -20,9 +21,9 @@ export default defineNuxtConfig({
   },
 
   // context-path 설정
-  app: {
-    baseURL: `${process.env.VITE_CONTEXT_PATH}`,
-  },
+  // app: {
+  //   baseURL: `${process.env.VITE_CONTEXT_PATH}`,
+  // },
 
   // svg icon
   svgSprite: {
