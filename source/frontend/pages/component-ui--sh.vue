@@ -20,7 +20,7 @@
       </td>
     </tr>
     <tr>
-      <th scope="row">tag</th>
+      <th scope="row">Tag</th>
     </tr>
     <tr>
       <td>
@@ -82,9 +82,33 @@
       <td>
         <div class="flex gap-2">
           <baseTextInput id="input-ex-01" class="text-input-lg" style="width: 200px" placeholder="입력해주세요."></baseTextInput>
-          <label for="input-ex-01" class="label-hidden">lable</label>
-          <baseTextInput style="width: 200px" disabled value="입력할 수 없습니다."></baseTextInput>
-          <baseTextInput class="text-input-sm" style="width: 200px" readonly value="read only"></baseTextInput>
+          <label for="input-ex-01" class="hidden">lable</label>
+          <baseTextInput id="input-ex-02" style="width: 200px" disabled value="입력할 수 없습니다."></baseTextInput>
+          <label for="input-ex-02" class="hidden">lable</label>
+          <baseTextInput id="input-ex-03" class="text-input-sm" style="width: 200px" readonly value="read only"></baseTextInput>
+          <label for="input-ex-03" class="hidden">lable</label>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Textarea</th>
+    </tr>
+    <tr>
+      <td class="col-sub">
+        <p style="width: 200px">default</p>
+        <p style="width: 200px">disabled</p>
+        <p style="width: 200px">read-only</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="flex gap-2">
+          <baseTextarea id="area-ex-01" style="width: 200px" placeholder="입력해주세요."></baseTextarea>
+          <label for="area-ex-01" class="hidden">lable</label>
+          <baseTextarea id="area-ex-02" style="width: 200px" disabled value="입력할 수 없습니다."></baseTextarea>
+          <label for="area-ex-02" class="hidden">lable</label>
+          <baseTextarea id="area-ex-03" style="width: 200px" readonly value="read only"></baseTextarea>
+          <label for="area-ex-03" class="hidden">lable</label>
         </div>
       </td>
     </tr>
@@ -100,10 +124,51 @@
     </tr>
     <tr>
       <td>
-        <div class="flex gap-2">
+        <div class="flex gap-2 items-center">
           <baseRadio class="radio-lg" style="width: 200px" id="radio-ex-01">radio</baseRadio>
           <baseRadio style="width: 200px" id="radio-ex-02" checked>Radio</baseRadio>
           <baseRadio class="radio-sm" style="width: 200px" id="radio-ex-03" disabled>라디오</baseRadio>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Checkbox</th>
+    </tr>
+    <tr>
+      <td class="col-sub">
+        <p style="width: 200px">default</p>
+        <p style="width: 200px">checked</p>
+        <p style="width: 200px">indeterminate</p>
+        <p style="width: 200px">disabled</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="flex gap-2 items-center">
+          <baseCheckbox class="checkbox-lg" style="width: 200px" id="check-ex-01">checkbox</baseCheckbox>
+          <baseCheckbox style="width: 200px" id="check-ex-02" checked>Checkbox</baseCheckbox>
+          <baseCheckbox class="checkbox-indeterminate" style="width: 200px" id="check-ex-03">Checkbox</baseCheckbox>
+          <baseCheckbox class="checkbox-sm" style="width: 200px" id="check-ex-04" disabled>체크박스</baseCheckbox>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <th scope="row">Switch</th>
+    </tr>
+    <tr>
+      <td class="col-sub">
+        <p style="width: 200px">default</p>
+        <p style="width: 200px">label</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="flex gap-2 items-center">
+          <baseSwitch>switch</baseSwitch>
+          <div class="flex items-center ml-[155px]">
+            <span class="switch-text">label</span>
+            <baseSwitch class="switch-sm" disabled>switch</baseSwitch>
+          </div>
         </div>
       </td>
     </tr>

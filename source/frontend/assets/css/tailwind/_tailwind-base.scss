@@ -20,10 +20,12 @@
     outline: none;
   }
 
-  button[type="button"], button[type="submit"], a[href], input[type="text"] {
+  button[type="button"], button[type="submit"], a[href], input[type="text"], input[type="radio"], input[type="checkbox"],label, textarea {
     &:disabled,
     &:disabled:hover,
-    &:disabled:focus {
+    &:disabled:focus,
+    &:disabled + .radio-label,
+    &:disabled + .checkbox-label {
       opacity: 0.25;
       cursor: not-allowed;
     }
