@@ -67,7 +67,7 @@
 
   &-lg {
     .radio-label {
-    @include radio-size(28px, 15px, 28px);
+      @include radio-size(28px, 15px, 28px);
       &:before {
         content: "";
         width: 20px;
@@ -106,5 +106,4 @@
       }
     }
   }
-
 }

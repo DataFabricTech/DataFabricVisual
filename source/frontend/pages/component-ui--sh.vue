@@ -24,8 +24,9 @@
     </tr>
     <tr>
       <td>
-        <div class="flex gap-2">
-          <baseTag class="">단속위치</baseTag>
+        <div class="flex items-center gap-2">
+          <baseTag># 단속위치</baseTag>
+          <baseTag class="tag-removable">CCTV위치</baseTag>
         </div>
       </td>
     </tr>
@@ -80,10 +81,10 @@
     <tr>
       <td>
         <div class="flex gap-2">
-          <baseTextinput id="input-ex-01" class="text-input-lg" style="width: 200px" placeholder="입력해주세요."></baseTextinput>
+          <baseTextInput id="input-ex-01" class="text-input-lg" style="width: 200px" placeholder="입력해주세요."></baseTextInput>
           <label for="input-ex-01" class="label-hidden">lable</label>
-          <baseTextinput style="width: 200px" disabled value="입력할 수 없습니다."></baseTextinput>
-          <baseTextinput class="text-input-sm" style="width: 200px" readonly value="read only"></baseTextinput>
+          <baseTextInput style="width: 200px" disabled value="입력할 수 없습니다."></baseTextInput>
+          <baseTextInput class="text-input-sm" style="width: 200px" readonly value="read only"></baseTextInput>
         </div>
       </td>
     </tr>

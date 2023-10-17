@@ -10,7 +10,7 @@ $font-path: "../fonts" !default;
 // ------------------------------------------
 // basic color
 $white: #fff !default;
-$black: #000 !default;
+$black: #212121 !default;
 $gray: #DCE1E8 !default;
 $light-gray: #dce1e8 !default;
 $light-blue: #F7F9FC !default;
@@ -22,7 +22,7 @@ $font-gray-02: #ABAFBA !default;
 
 $icon-gray: #77889a !default;
 
-$border: #dce1e8 !default;
+$border-gray: #dce1e8 !default;
 
 // specific purpose color
 $support-01: #0747a6 !default;
@@ -31,6 +31,7 @@ $support-02: #006644 !default;
 // Status color
 $focus: #ff0311 !default;
 $disabled: #f0f3f6 !default;
+$readonly: #f4f4f4 !default;
 
 // badge, tag color
 $marker-purple: #6436EA !default;

@@ -9,7 +9,7 @@
   width: 100%;
   height: 32px;
   color: $font-black;
-  border:1px solid $border;
+  border:1px solid $border-gray;
   font-weight: 400;
   font-size: 14px;
   background: $white;
@@ -28,15 +28,14 @@
   &:disabled:hover,
   &:disabled:focus {
     cursor: not-allowed;
-    background-color: #fff;
     opacity: 0.5;
   }
 
   &[readonly],
   &[readonly]:hover {
     cursor: default;
-    border-color: $border;
-    background-color: #f4f4f4;
+    border-color: $border-gray;
+    background-color: $readonly;
     color: $font-gray-01;
   }
 
