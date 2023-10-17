@@ -140,7 +140,7 @@
         <td>
           <div class="v-group gap-3">
             <div class="h-group">
-              <strong class="w-[100px] font-light text-[14px]">class: nav</strong>
+              <strong class="w-[100px] font-light text-[14px]">nav</strong>
               <nav class="nav">
                 <div class="nav-item is-selected">
                   <button type="button" class="nav-button">
@@ -175,7 +175,7 @@
               </nav>
             </div>
             <div class="h-group">
-              <strong class="w-[100px] font-light text-[14px]">class: tab</strong>
+              <strong class="w-[100px] font-light text-[14px]">tab</strong>
               <div class="tab">
                 <ul class="tab-list">
                   <li class="tab-item">
@@ -193,11 +193,16 @@
                       <span class="tab-title">샘플데이터</span>
                     </button>
                   </li>
+                  <li class="tab-item">
+                    <button type="button" class="tab-button" disabled>
+                      <span class="tab-title">Disabled</span>
+                    </button>
+                  </li>
                 </ul>
               </div>
             </div>
             <div class="h-group">
-              <strong class="w-[100px] font-light text-[14px]">class: fill-tab</strong>
+              <strong class="w-[100px] font-light text-[14px]">fill-tab</strong>
               <div class="fill-tab">
                 <ul class="fill-tab-list">
                   <li class="fill-tab-item">
@@ -215,26 +220,40 @@
                       <span class="fill-tab-title">연결정보</span>
                     </button>
                   </li>
+                  <li class="fill-tab-item">
+                    <button type="button" class="fill-tab-button" disabled>
+                      <span class="fill-tab-title">Disabled</span>
+                    </button>
+                  </li>
                 </ul>
               </div>
             </div>
             <div class="h-group">
-              <strong class="w-[100px] font-light text-[14px]">class: round-tab</strong>
-              <div class="fill-tab">
-                <ul class="fill-tab-list">
-                  <li class="fill-tab-item">
-                    <button type="button" class="fill-tab-button is-selected">
-                      <span class="fill-tab-title">카테고리</span>
+              <strong class="w-[100px] font-light text-[14px]">round-tab</strong>
+              <div class="round-tab">
+                <ul class="round-tab-list">
+                  <li class="round-tab-item">
+                    <button type="button" class="round-tab-button is-selected">
+                      <svg-icon name="data" class="svg-icon" />
+                      <span class="round-tab-title">전체</span>
                     </button>
                   </li>
-                  <li class="fill-tab-item">
-                    <button type="button" class="fill-tab-button">
-                      <span class="fill-tab-title">카탈로그</span>
+                  <li class="round-tab-item">
+                    <button type="button" class="round-tab-button">
+                      <svg-icon name="data" class="svg-icon" />
+                      <span class="round-tab-title">데이터패브릭</span>
                     </button>
                   </li>
-                  <li class="fill-tab-item">
-                    <button type="button" class="fill-tab-button">
-                      <span class="fill-tab-title">연결정보</span>
+                  <li class="round-tab-item">
+                    <button type="button" class="round-tab-button">
+                      <svg-icon name="data" class="svg-icon" />
+                      <span class="round-tab-title">분석보고서</span>
+                    </button>
+                  </li>
+                  <li class="round-tab-item">
+                    <button type="button" class="round-tab-button" disabled>
+                      <svg-icon name="data" class="svg-icon" />
+                      <span class="round-tab-title">Disabled</span>
                     </button>
                   </li>
                 </ul>
