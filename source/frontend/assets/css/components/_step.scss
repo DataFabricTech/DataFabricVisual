@@ -1,0 +1,36 @@
+.step {
+  &-item {
+    display: flex;
+    align-items: center;
+    gap: $spacing-8;
+  }
+
+  &-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: $light-gray;
+  }
+
+  &-icon-text {
+    color: $white;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  &-title-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: $font-black;
+  }
+}
+
+.step-current {
+  .step-icon {
+    background-color: $support-01;
+    color: $white;
+  }
+}
