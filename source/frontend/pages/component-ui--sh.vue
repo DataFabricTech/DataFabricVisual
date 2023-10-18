@@ -159,24 +159,30 @@
           <td class="col-sub">
             <p style="width: 200px">default</p>
             <p style="width: 200px">label</p>
+            <p style="width: 200px">disabled</p>
           </td>
         </tr>
         <tr>
           <td>
             <div class="flex gap-2 items-center">
-                <baseSwitch >
-                  <template v-slot:hidden-text>
-                    hidden입니다
-                  </template>
-                </baseSwitch>
-                <baseSwitch style="margin-left: 155px" class="switch-sm label-switch">
-                  <template v-slot:switch-text>
-                    label
-                  </template>
-                  <template v-slot:hidden-text>
-                    hidden이여요
-                  </template>
-                </baseSwitch>
+              <baseSwitch >
+                <template v-slot:hidden-text>
+                  hidden입니다
+                </template>
+              </baseSwitch>
+              <baseSwitch style="margin-left: 155px" class="switch-sm label-switch">
+                <template v-slot:switch-text>
+                  label
+                </template>
+                <template v-slot:hidden-text>
+                  hidden이여요
+                </template>
+              </baseSwitch>
+              <baseSwitch style="margin-left: 135px" class="switch-sm label-switch switch-disabled">
+                <template v-slot:switch-text>
+                  label2
+                </template>
+              </baseSwitch>
             </div>
           </td>
         </tr>

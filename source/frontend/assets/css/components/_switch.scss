@@ -15,6 +15,14 @@
     color: $font-gray-01;
   }
 
+  &-disabled {
+    opacity: .25;
+    cursor: not-allowed;
+    .switch-switch {
+    pointer-events: none;
+    }
+  }
+
   &-input {
     display: none;
 
