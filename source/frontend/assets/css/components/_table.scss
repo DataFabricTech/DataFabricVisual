@@ -1,0 +1,29 @@
+.table-column,
+.table-row {
+  table {
+    td,
+    th {
+      width: unset;
+      padding: $spacing-2 $spacing-8;
+      color: $font-black;
+      vertical-align: middle;
+      border: 1px solid $border-gray;
+      text-align: left;
+    }
+
+    th {
+      font-size: 14px;
+      background-color: #EFEFEF;
+    }
+
+    td {
+      font-size: 14px;
+      background-color: $white;
+    }
+
+    tr {
+      height: 56px;
+    }
+  }
+}
+
