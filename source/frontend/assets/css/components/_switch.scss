@@ -35,6 +35,12 @@
         transform: translateX(22px);
       }
     }
+
+    &:focus-visible:not(:disabled) {
+      & + .switch-handle {
+        outline: 1px dashed #212121;
+      }
+    }
   }
 
   &-handle {

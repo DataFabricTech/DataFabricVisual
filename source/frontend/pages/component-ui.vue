@@ -10,14 +10,12 @@
       </tr>
       <tr>
         <td>
-          <div class="v-group gap-3">
-            <div class="h-group">
-              <baseBadge class="bg-marker-purple">Badge</baseBadge>
-              <baseBadge class="bg-marker-cyan">Badge</baseBadge>
-              <baseBadge class="bg-marker-red">Badge</baseBadge>
-              <baseBadge class="bg-marker-yellow">Badge</baseBadge>
-              <baseBadge class="bg-marker-gray">Badge</baseBadge>
-            </div>
+          <div class="h-group">
+          <baseBadge class="bg-marker-purple">Badge</baseBadge>
+          <baseBadge class="bg-marker-cyan">Badge</baseBadge>
+          <baseBadge class="bg-marker-red">Badge</baseBadge>
+          <baseBadge class="bg-marker-yellow">Badge</baseBadge>
+          <baseBadge class="bg-marker-gray">Badge</baseBadge>
           </div>
         </td>
       </tr>
@@ -26,7 +24,7 @@
       </tr>
       <tr>
         <td>
-          <div class="v-group gap-3">
+          <div class="v-group gap-5">
             <div class="h-group">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
               <baseButton title="사용자 관리" class="button-primary button-lg">
@@ -155,7 +153,7 @@
       </tr>
       <tr>
         <td>
-          <div class="v-group gap-3">
+          <div class="v-group gap-5">
             <div class="h-group gap-12">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
               <baseCheckbox class="checkbox-lg" id="lg-01">default</baseCheckbox>
@@ -191,7 +189,7 @@
       </tr>
       <tr>
         <td>
-          <div class="v-group gap-3">
+          <div class="v-group gap-5">
             <div class="h-group w-full">
               <strong class="w-[150px] font-light text-[14px] shrink-0">theme: normal</strong>
               <BaseNotification use-close>
@@ -258,7 +256,7 @@
       </tr>
       <tr>
         <td>
-          <div class="v-group gap-3">
+          <div class="v-group gap-5">
             <div class="h-group gap-12">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
               <baseRadio class="radio-lg" id="radio-lg-01">default</baseRadio>
@@ -285,8 +283,92 @@
       </tr>
       <tr>
         <td>
-          <div class="v-group gap-3">
+          <div class="v-group gap-5">
             <BaseRating></BaseRating>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">Select</th>
+      </tr>
+      <tr>
+        <td>
+          <div class="v-group gap-4">
+            <div class="h-group">
+              <strong class="w-[150px] font-light text-[14px]">size: lg</strong>
+              <baseSelect class="select-lg"></baseSelect>
+              <baseSelect class="select-lg is-disabled"></baseSelect>
+            </div>
+            <div class="h-group">
+              <strong class="w-[150px] font-light text-[14px]">size: default</strong>
+              <baseSelect></baseSelect>
+              <baseSelect class="is-disabled"></baseSelect>
+
+            </div>
+            <div class="h-group">
+              <strong class="w-[150px] font-light text-[14px]">size: sm</strong>
+              <baseSelect class="select-sm"></baseSelect>
+              <baseSelect class="select-sm is-disabled"></baseSelect>
+              <baseSelect class="select-sm is-open"></baseSelect>
+            </div>
+          </div>
+        </td>
+      </tr>
+
+      <tr>
+        <th scope="row">Step</th>
+      </tr>
+      <tr>
+        <td>
+          <div class="step">
+            <div class="step-item">
+              <div class="step-icon">
+                <span class="step-icon-text">
+                  1
+                </span>
+              </div>
+              <div class="step-title">
+                <span class="step-title-text">
+                  step
+                </span>
+              </div>
+            </div>
+            <div class="step-item is-current">
+              <div class="step-icon">
+              <span class="step-icon-text">
+                2
+              </span>
+              </div>
+              <div class="step-title">
+                <span class="step-title-text">
+                  step
+                </span>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-icon">
+                <span class="step-icon-text">
+                  3
+                </span>
+              </div>
+              <div class="step-title">
+                <span class="step-title-text">
+                  step
+                </span>
+              </div>
+            </div>
+            <div class="step-item">
+              <div class="step-icon">
+                <span class="step-icon-text">
+                  4
+                </span>
+              </div>
+              <div class="step-title">
+                <span class="step-title-text">
+                  step
+                </span>
+              </div>
+            </div>
           </div>
         </td>
       </tr>
@@ -295,7 +377,7 @@
       </tr>
       <tr>
         <td>
-          <div class="v-group gap-3">
+          <div class="v-group gap-5">
             <div class="h-group gap-12">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
               <baseSwitch checked>
@@ -350,7 +432,7 @@
       </tr>
       <tr>
         <td>
-          <div class="v-group gap-3">
+          <div class="v-group gap-5">
             <!--            Component 사용 -->
             <div class="h-group w-full">
               <strong class="w-[150px] font-light text-[14px] shrink-0">tab</strong>
@@ -455,11 +537,29 @@
       </tr>
 
       <tr>
+        <th scope="row">Table</th>
+      </tr>
+      <tr>
+        <td>
+
+          <div class="v-group gap-5">
+            <div class="h-group w-full">
+              <strong class="w-[150px] font-light text-[14px] shrink-0">type: column</strong>
+              <baseTableColumn></baseTableColumn>
+            </div>
+            <div class="h-group w-full">
+              <strong class="w-[150px] font-light text-[14px] shrink-0">type: row</strong>
+              <baseTableRow></baseTableRow>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
         <th scope="row">Tag</th>
       </tr>
       <tr>
         <td>
-          <div class="v-group gap-3">
+          <div class="v-group gap-5">
             <div class="h-group">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
               <baseTag># 단속위치</baseTag>
@@ -477,7 +577,7 @@
       </tr>
       <tr>
         <td>
-          <div class="v-group gap-3">
+          <div class="v-group gap-5">
             <div class="h-group">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
               <baseTextInput id="inp-lg-01" class="text-input-lg" placeholder="입력해주세요."></baseTextInput>
@@ -513,7 +613,7 @@
       </tr>
       <tr>
         <td>
-          <div class="v-group gap-3">
+          <div class="v-group gap-5">
             <div class="h-group">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
               <baseTextarea id="area-ex-01" placeholder="입력해주세요."></baseTextarea>
@@ -527,15 +627,67 @@
         </td>
       </tr>
 
-
+      <tr>
+        <th scope="row">Toggle button</th>
+      </tr>
       <tr>
         <td>
-          <baseButton @click="onClickOpen">Modal Open</baseButton>
+          <div class="v-group gap-5">
+            <div class="h-group">
+              <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
+              <baseToggleButton class="toggle-button-lg"></baseToggleButton>
+            </div>
+            <div class="h-group">
+              <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
+              <baseToggleButton></baseToggleButton>
+            </div>
+            <div class="h-group">
+              <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
+              <baseToggleButton class="toggle-button-sm"></baseToggleButton>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">Toggle button</th>
+      </tr>
+      <tr>
+        <td>
+          <div class="v-group gap-5">
+            <div class="h-group">
+              <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
+              <baseToggleButton class="toggle-button-lg"></baseToggleButton>
+            </div>
+            <div class="h-group">
+              <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
+              <baseToggleButton></baseToggleButton>
+            </div>
+            <div class="h-group">
+              <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
+              <baseToggleButton class="toggle-button-sm"></baseToggleButton>
+            </div>
+          </div>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="layout-guide-title">
+      <h1>Fabric UI Layouts</h1>
+    </div>
+    <table class="guide-table">
+      <tbody>
+      <tr>
+        <th scope="row">Modal</th>
+      </tr>
+      <tr>
+        <td>
+          <baseButton @click="onClickOpen" class="button-primary button-lg">Modal Open</baseButton>
         </td>
       </tr>
       </tbody>
     </table>
   </div>
+
   <modal v-model="show" title="Modal Sample">
     <template v-slot:body>
       ~ Modal is Here! Modal is Here! ~
