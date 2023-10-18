@@ -26,7 +26,39 @@
     font-style: normal;
   }
 
-  button[type="button"], button[type="submit"], a[href], input[type="text"], input[type="radio"], input[type="checkbox"],label, textarea {
+  input {
+    &[type="checkbox"], &[type="radio"] {
+      &:focus-visible:not(:disabled) {
+        & + label {
+          outline: 1px dashed #212121;
+        }
+      }
+    }
+
+    &[type="text"] {
+      &:focus-visible:not(:disabled):not(:read-only),
+      &:focus-visible:not(:read-only):not(:disabled) {
+        outline: 1px dashed #212121;
+      }
+    }
+  }
+
+  textarea {
+    &[type="text"] {
+      &:focus-visible:not(:disabled):not(:read-only),
+      &:focus-visible:not(:read-only):not(:disabled) {
+        outline: 1px dashed #212121;
+      }
+    }
+  }
+
+  button {
+    &:focus-visible:not(:disabled) {
+      outline: 1px dashed #212121;
+    }
+  }
+
+  button[type="button"], button[type="submit"], a[href], input[type="text"], input[type="radio"], input[type="checkbox"], label, textarea {
     &:disabled,
     &:disabled:hover,
     &:disabled:focus,

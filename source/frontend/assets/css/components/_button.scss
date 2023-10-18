@@ -73,9 +73,7 @@
     background-color: $gray;
   }
 
-  &:focus-visible:not(:disabled) {
-    outline: 1px dashed $black;
-  }
+
 
   .svg-icon {
     fill: $icon-gray;

@@ -1,6 +1,5 @@
 .select {
   position: relative;
-  flex-shrink: 0;
 
   &.is-open {
     .select-selector {
@@ -35,6 +34,7 @@
   &.is-disabled {
     .select-selector {
       &-button {
+        opacity: 0.25;
         cursor: not-allowed;
         box-shadow: none;
 
@@ -51,17 +51,10 @@
         }
 
         &:focus-visible:not(:disabled) {
-          border: none;
           box-shadow: none;
+          outline: none;
+          pointer-events: none;
         }
-      }
-
-      &-title {
-        color: $font-gray-01;
-      }
-
-      &-icon {
-        opacity: 0.5;
       }
     }
   }
@@ -97,7 +90,6 @@
     }
   }
 
-  // sm
   &-sm {
     .select-selector {
       height: 24px;
@@ -147,17 +139,12 @@
     border: 1px solid $light-gray;
     border-radius: $border-radius-sm;
 
-    &:hover {
+    &:hover:not(:disabled) {
       border-color: $icon-gray;
     }
 
     &:active:not(:disabled) {
       border-color: $tertiary;
-    }
-
-    &:focus-visible:not(:disabled) {
-      outline: 1px dashed $font-black;
-      box-shadow: none;
     }
   }
 
@@ -178,8 +165,7 @@
     pointer-events: none;
 
     &-button {
-      display: flex;
-      align-items: center;
+      @include flex-standard;
       position: absolute;
       top: 0;
       right: 0;
@@ -237,9 +223,6 @@
     flex: 1;
     height: 32px;
     padding: $spacing-4 $spacing-8;
-    &:focus-visible:not(:disabled) {
-      background-color: $light-blue;
-    }
   }
 
   .is-open {
