@@ -1,0 +1,27 @@
+$colors: (
+  "black": #{$black},
+  "white": #{$white},
+  "gray": #{$gray},
+  "marker-yellow": #{$marker-yellow},
+  "marker-purple": #{$marker-purple},
+  "marker-cyan": #{$marker-cyan},
+  "marker-red": #{$marker-red},
+  "marker-gray": #{$marker-gray},
+);
+
+@each $attr, $color in $colors {
+  .bg-#{$attr} {
+    background-color: $color;
+
+    @if $color == #{$white} {
+      color: $black;
+    }
+    @else if $color == #{$marker-cyan} {
+      color : #007D79;
+    }
+    @else {
+      color: $white;
+    }
+  }
+}
+

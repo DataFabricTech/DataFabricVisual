@@ -1,0 +1,61 @@
+// tailwindCSS
+@import "./tailwind/tailwind-base";
+
+// variables
+@import "abstracts/variables";
+
+// theme
+@import "./themes/set-color.scss";
+@import "./themes/set-theme.scss";
+@import "./themes/theme.scss";
+
+// mixins
+@import "./abstracts/fonts";
+@import "./abstracts/z-index";
+@import "./abstracts/breakpoints";
+@import "./abstracts/box-shadow";
+@import "./abstracts/retina";
+@import "./abstracts/mixins-helper";
+
+// base
+@import "base/base";
+@import "base/classes";
+
+// components
+@import "components/badge";
+@import "components/button";
+@import "components/nav";
+@import "components/notifiaction";
+@import "components/pagination";
+@import "components/rating";
+@import "components/select";
+@import "components/tab";
+@import "components/tag";
+@import "components/text-input";
+@import "components/step";
+@import "components/radio";
+@import "components/select";
+@import "components/toggle-button";
+@import "components/textarea";
+@import "components/radio";
+@import "components/checkbox";
+@import "components/table";
+@import "assets/css/components/switch";
+
+// modules
+@import "modules/card";
+@import "modules/kebab-menu";
+
+// layouts
+@import "layout/layout";
+@import "layout/modal";
+@import "layout/header";
+@import "layout/footer";
+@import "layout/snb";
+
+@import "pages/data-fabric";
+
+// base
+@import "base/status";
+
+@import "./tailwind/tailwind-utilities";

@@ -1,36 +1,42 @@
 <template>
   <vue-final-modal
-    class="flex justify-center items-center"
-    content-class="flex flex-col p-4 bg-white"
+    class="modal"
+    content-class="modal"
     @update:model-value="(val) => emit('update:modelValue', val)"
   >
-    <div class="modal__title">
-      <h1 v-if="title" class="text-2xl">
+    <header class="modal-header">
+      <h5 class="modal-title">
         {{ title }}
-      </h1>
+      </h5>
+      <baseButton class="button-icon button-sm" title="닫기">
+        <svg-icon name="close" class="svg-icon" />
+        <span class="hidden">닫기</span>
+      </baseButton>
+    </header>
+    <div class="modal-body">
+      <slot name="body">
+        <!-- 샘플코드 -->
+        <p>
+          Vue Final Modal is a renderless, stackable, detachable and lightweight
+          modal component.
+        </p>
+      </slot>
     </div>
-    <div class="modal__content">
-      <p v-if="contents">
-        {{ contents }}
-      </p>
-      <!-- 샘플코드 -->
-      <p>
-        Vue Final Modal is a renderless, stackable, detachable and lightweight
-        modal component.
-      </p>
-    </div>
-    <div class="modal__footer">
-      <button @click="emit('update:modelValue', false)">취소</button>
-    </div>
+    <footer class="modal-footer">
+      <slot name="foot">
+        <baseButton class="button-primary button-lg" @click="emit('update:modelValue', false)">
+          <span class="button-text">다음</span>
+        </baseButton>
+      </slot>
+    </footer>
   </vue-final-modal>
 </template>
 
 <script setup lang="ts">
-import {VueFinalModal} from "vue-final-modal";
+import { VueFinalModal } from "vue-final-modal";
 
 defineProps<{
   title?: string;
-  contents?: string;
 }>();
 
 const emit = defineEmits<{

@@ -1,0 +1,42 @@
+@mixin text-input-size($height, $font-size) {
+  height: $height;
+  font-size: $font-size;
+}
+
+.text-input {
+  position: relative;
+  padding: $spacing-2 $spacing-12;
+  width: 100%;
+  height: 32px;
+  color: $font-black;
+  border: 1px solid $border-gray;
+  font-weight: 400;
+  font-size: 14px;
+  background: $white;
+  border-radius: $border-radius-sm;
+
+  &::placeholder {
+    font-weight: 300;
+    color: $font-gray-02;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: #aeb9ca;
+  }
+
+  &[readonly],
+  &[readonly]:hover {
+    cursor: default;
+    border-color: $border-gray;
+    background-color: $readonly;
+    color: $font-gray-01;
+  }
+
+  &-lg {
+    @include text-input-size(40px, 16px);
+  }
+
+  &-sm {
+    @include text-input-size(24px, 12px);
+  }
+}

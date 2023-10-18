@@ -1,0 +1,23 @@
+$z-indexes: (
+  alert: 9000,
+  modal: 8000,
+  overlay: 7500,
+  dropdown: 7200,
+  tooltip: 7100,
+  header: 7000,
+  float: 1,
+  hidden: - 1,
+);
+
+@mixin z-index($layer) {
+  @if map-has-key($z-indexes, $layer) {
+    z-index: #{map-get($z-indexes, $layer)};
+  } @else {
+    @warn "#{$layer} 값이 올바르지 않습니다."
+  }
+}
+
+// * Usage *
+// .modal {
+//   @include z-index('alert');
+//  }

@@ -1,0 +1,149 @@
+@mixin button-theme($bg-color, $hover-bg-color, $active-bg-color, $font-color, $border-color: null, $hover-font-color: null, $active-font-color: null) {
+  background-color: $bg-color;
+  color: $font-color;
+
+  @if ($border-color) {
+    border: 1px solid $border-color;
+  }
+
+  &:hover:not(:disabled) {
+    background-color: $hover-bg-color;
+
+    @if ($hover-font-color) {
+      color: $hover-font-color;
+
+      .svg-icon {
+        fill: $hover-font-color;
+      }
+    }
+  }
+
+  &:active:not(:disabled) {
+    background-color: $active-bg-color;
+
+    @if ($active-font-color) {
+      color: $active-font-color;
+
+      .svg-icon {
+        fill: $active-font-color;
+      }
+    }
+  }
+
+  .svg-icon {
+    fill: $font-color;
+  }
+}
+
+@mixin button-size($height, $padding, $icon-size, $font-size, $width: null, $gap: null) {
+  height: $height;
+  font-size: $font-size;
+  padding: $spacing-2 $padding;
+
+  .svg-icon {
+    width: $icon-size;
+    height: $icon-size;
+  }
+
+  @if ($gap) {
+    gap: $gap;
+  }
+
+  @if ($width) {
+    &.button-icon {
+      width: $width;
+    }
+  }
+}
+
+.button {
+  @include flex-standard;
+  height: 32px;
+  padding: $spacing-2 $spacing-12;
+  gap: $spacing-4;
+  font-size: 14px;
+  color: $font-black;
+  border-radius: $border-radius-sm;
+
+  &:hover:not(:disabled) {
+    background-color: $light-gray;
+  }
+
+  &:active:not(:disabled) {
+    background-color: $gray;
+  }
+
+  &:focus-visible:not(:disabled) {
+    outline: 1px dashed $black;
+  }
+
+  .svg-icon {
+    fill: $icon-gray;
+  }
+
+  &.button-icon {
+    width: 32px;
+    padding: $spacing-2 $spacing-4
+  }
+
+  &-primary {
+    @include button-theme($primary, $hover-primary, $active-primary, $white);
+  }
+
+  &-secondary {
+    @include button-theme($secondary, $hover-secondary, $active-secondary, $white);
+  }
+
+  &-tertiary {
+    @include button-theme($tertiary, $hover-tertiary, $active-tertiary, $white);
+  }
+
+  &-negative {
+    @include button-theme($negative, $hover-negative, $active-negative, $white);
+  }
+
+  &-normal {
+    @include button-theme($white, $light-gray-02, $light-gray, $font-black, $light-gray);
+  }
+
+  &-danger {
+    @include button-theme($bg-color: $white, $hover-bg-color: rgba(255, 211, 210, 0.7), $active-bg-color: rgba(253, 179, 177, 0.7), $font-color: $negative, $border-color: $negative);
+  }
+
+  &-link {
+    @include button-theme($bg-color: transparent, $hover-bg-color: transparent, $active-bg-color: transparent, $font-color: $font-gray-01, $hover-font-color: $font-gray-02, $active-font-color: $font-black);
+    text-decoration: underline;
+  }
+
+  &-link-primary {
+    @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $primary, $hover-font-color: $hover-primary, $active-font-color: $active-primary);
+    text-decoration: underline;
+  }
+
+  &-link-negative {
+    @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $negative, $hover-font-color: $hover-negative, $active-font-color: $active-negative);
+    text-decoration: underline;
+  }
+
+  &-lg {
+    @include button-size($height: 40px, $padding: $spacing-16, $icon-size: 24px, $font-size: 15px, $width: 40px);
+  }
+
+  &-sm {
+    @include button-size($height: 24px, $padding: $spacing-4, $icon-size: 16px, $font-size: 12px, $width: 24px);
+
+    // TODO: -link 테마 아이콘 사이즈 다른 것 검토 필요
+    &.button-icon {
+      padding: $spacing-2;
+
+      &.button-link, &.button-link-primary, &.button-link-negative {
+
+        .svg-icon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,31 @@
+.modal {
+  @include flex-standard($direction: column);
+  background-color: $white;
+
+  &-header {
+    @include flex-standard($horizontal: space-between);
+    width: 100%;
+    height: 40px;
+    padding: 0 $spacing-12;
+    border-bottom: 1px solid $gray;
+  }
+
+  &-title {
+    font-size: 15px;
+    color: $font-gray-01;
+  }
+
+  &-body {
+    @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: cloumn);
+    width: 100%;
+    padding: $spacing-24;
+  }
+
+  &-footer {
+    @include flex-standard($horizontal: flex-end);
+    width: 100%;
+    height: 64px;
+    padding: 0 $spacing-12;
+    background-color: $light-blue;
+  }
+}
