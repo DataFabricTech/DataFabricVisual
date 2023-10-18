@@ -1,9 +1,8 @@
 <template>
   <!-- 현재 위치에서 클릭시 is-open 클래스 추가 -->
   <div class="select">
-    <div class="select-selector" role="combobox" :aria-expanded="isSelectOpen ? 'true':'false'"
-         aria-haspopup="true">
-      <button class="select-selector-button" type="button" :title="isSelectOpen? '닫기' : '열기'">
+    <div class="select-selector" role="combobox" aria-expanded="false" aria-haspopup="true">
+      <button class="select-selector-button" type="button" title="열기">
         <slot name="title">
           <span class="select-selector-title">선택하세요</span>
         </slot>
