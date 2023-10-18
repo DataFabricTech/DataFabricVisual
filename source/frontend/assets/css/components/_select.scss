@@ -80,7 +80,7 @@
         .svg-icon {
           width: 24px;
           height: 24px;
-          margin-top: -12px;
+          margin-top: -$spacing-12;
         }
       }
     }
@@ -110,7 +110,7 @@
           width: 16px;
           height: 16px;
           right: 8px;
-          margin-top: -8px;
+          margin-top: -$spacing-8;
         }
       }
 
@@ -196,8 +196,8 @@
 // select panel(dropdown)
 .select-container {
   @include box-shadow('default');
+  @include z-index('modal');
   display: none;
-  z-index: 8100;
   position: absolute;
   top: calc(100% + 2px);
   width: 100%;

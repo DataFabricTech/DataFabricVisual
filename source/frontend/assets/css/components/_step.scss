@@ -18,7 +18,7 @@
     @include flex-standard;
     width: 32px;
     height: 32px;
-    border-radius: 50%;
+    border-radius: $border-radius-round;
     background-color: $light-gray;
   }
 

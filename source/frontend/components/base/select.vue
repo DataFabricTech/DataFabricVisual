@@ -1,10 +1,6 @@
 <template>
-  <div
-    class="select"
-    :class="isSelectOpen ? 'is-open' : ''"
-    @click="isSelectOpen = !isSelectOpen"
-    v-click-outside="onClickOutside"
-  >
+  <!-- 현재 위치에서 클릭시 is-open 클래스 추가 -->
+  <div class="select">
     <div class="select-selector" role="combobox" :aria-expanded="isSelectOpen ? 'true':'false'"
          aria-haspopup="true">
       <button class="select-selector-button" type="button" :title="isSelectOpen? '닫기' : '열기'">
@@ -32,21 +28,7 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: "BaseSelect",
-  data() {
-    return {
-      isSelectOpen: false
-    };
-  },
-  computed: {
-  },
-  methods: {
-    onClickOutside() {
-      this.isSelectOpen = false;
-    }
-  }
-};
+<script setup lang="ts">
+
 </script>
 
