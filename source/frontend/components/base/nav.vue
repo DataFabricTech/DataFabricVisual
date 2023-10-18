@@ -1,12 +1,12 @@
 <template>
   <nav class="nav">
-<!--    현재 tab - is-selected-->
+    <!--        현재 위치인 경우 is-selected 클래스 추가 -->
     <div class="nav-item" :class="item.isSelected? 'is-selected' : ''" v-for="item in state.navList" :key="item.id">
       <button type="button" class="nav-button">
         <svg-icon name="data" class="svg-icon" />
         <span class="nav-title">{{ item.title }}</span>
       </button>
-      <button type="button" class="nav-close-button">
+      <button type="button" class="nav-close-button" title="닫기">
         <svg-icon name="close" class="svg-icon" />
         <span class="hidden">닫기</span>
       </button>

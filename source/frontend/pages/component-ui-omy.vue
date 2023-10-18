@@ -139,7 +139,7 @@
       <tr>
         <td>
           <div class="v-group gap-3">
-            <!--            Used Component-->
+            <!--            Component 사용 -->
             <div class="h-group">
               <strong class="w-[100px] font-light text-[14px]">nav</strong>
               <BaseNav></BaseNav>
@@ -156,7 +156,7 @@
               <strong class="w-[100px] font-light text-[14px]">round-tab</strong>
               <BaseTab theme="round-tab" use-icon="true"></BaseTab>
             </div>
-            <!--            Unused Component-->
+            <!--            Unused Component 미사용 -->
 
             <div class="h-group">
               <strong class="w-[100px] font-light text-[14px]">tab</strong>

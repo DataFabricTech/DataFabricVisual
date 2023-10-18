@@ -3,7 +3,7 @@
     <ul :class="props.theme + '-list'">
       <li :class="props.theme + '-item'" v-for="item in state.navList"
           :key="item.id">
-        <!--    현재 tab - is-selected-->
+        <!--        현재 위치인 경우 is-selected 클래스 추가 -->
         <button type="button" :class="[props.theme + '-button', item.isSelected ? 'is-selected':'']"
                 :disabled="item.disabled">
           <svg-icon v-if="props.useIcon" name="data" class="svg-icon" />
