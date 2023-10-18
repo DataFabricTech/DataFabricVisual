@@ -186,6 +186,46 @@
             </div>
           </td>
         </tr>
+        <tr>
+          <th scope="row">Context</th>
+        </tr>
+        <tr>
+          <td class="col-sub">
+            <p style="width: 200px">default</p>
+            <p style="width: 200px">width icon</p>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="flex gap-2 items-center">
+              <baseContext class="context-lg" style="width:150px;">
+                <template v-slot:menu-01>
+                  <span class="context-text">메뉴 이름</span>
+                </template>
+                <template v-slot:menu-02>
+                  <span class="context-text">이름이 길어지면 말줄임 처리</span>
+                </template>
+                <template v-slot:menu-03>
+                  <span class="context-text">disabled</span>
+                </template>
+              </baseContext>
+              <baseContext style="width:150px;margin-left: 50px">
+                <template v-slot:menu-01>
+                  <span class="context-text">연결정보 이름</span>
+                  <svg-icon name="string-ascending" class="svg-icon" />
+                </template>
+                <template v-slot:menu-02>
+                  <span class="context-text">연결정보 이름</span>
+                  <svg-icon name="string-descending" class="svg-icon" />
+                </template>
+                <template v-slot:menu-03>
+                  <span class="context-text">등록일자</span>
+                  <svg-icon name="date-descending" class="svg-icon" />
+                </template>
+              </baseContext>
+            </div>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
