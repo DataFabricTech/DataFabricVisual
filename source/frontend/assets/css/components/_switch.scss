@@ -18,8 +18,9 @@
   &-disabled {
     opacity: .25;
     cursor: not-allowed;
+
     .switch-switch {
-    pointer-events: none;
+      pointer-events: none;
     }
   }
 
