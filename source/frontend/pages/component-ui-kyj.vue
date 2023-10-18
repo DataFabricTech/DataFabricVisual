@@ -64,6 +64,27 @@
         </div>
       </td>
     </tr>
+    <tr>
+      <th scope="row">Select</th>
+    </tr>
+    <tr>
+      <td>
+        <div class="h-group gap-4">
+          <div class="v-group">
+            <strong class="w-[180px] font-light text-[14px]">size: lg</strong>
+            <baseSelect class="select-lg w-[100%]"></baseSelect>
+          </div>
+          <div class="v-group">
+            <strong class="w-[140px] font-light text-[14px]">size: md</strong>
+            <baseSelect class="select w-[100%]"></baseSelect>
+          </div>
+          <div class="v-group">
+            <strong class="w-[120px] font-light text-[14px]">size: sm</strong>
+            <baseSelect class="select-sm w-[100%]"></baseSelect>
+          </div>
+        </div>
+      </td>
+    </tr>
     </tbody>
   </table>
 </div>
