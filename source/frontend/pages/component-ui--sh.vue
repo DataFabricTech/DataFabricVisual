@@ -26,7 +26,7 @@
           <td>
             <div class="flex items-center gap-2">
               <baseTag># 단속위치</baseTag>
-              <baseTag class="tag-removable">CCTV위치</baseTag>
+              <baseTagRemovable>CCTV위치</baseTagRemovable>
             </div>
           </td>
         </tr>
@@ -164,8 +164,19 @@
         <tr>
           <td>
             <div class="flex gap-2 items-center">
-                <baseSwitch >switch</baseSwitch>
-                <baseSwitch style="margin-left: 155px" class="switch-sm label-switch">label</baseSwitch>
+                <baseSwitch >
+                  <template v-slot:hidden-text>
+                    hidden입니다
+                  </template>
+                </baseSwitch>
+                <baseSwitch style="margin-left: 155px" class="switch-sm label-switch">
+                  <template v-slot:switch-text>
+                    label
+                  </template>
+                  <template v-slot:hidden-text>
+                    hidden이여요
+                  </template>
+                </baseSwitch>
             </div>
           </td>
         </tr>
