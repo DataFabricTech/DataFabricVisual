@@ -1,0 +1,67 @@
+.toggle-button {
+  @include flex-standard;
+
+  .is-selected {
+    background-color: $primary;
+    border-color: $primary;
+
+    .toggle-button {
+      &-text {
+        color: $white;
+      }
+    }
+  }
+
+  &-item {
+    padding: $spacing-4 $spacing-8;
+    height: 32px;
+    margin: 0 0 0 -1px;
+    background-color: $white;
+    border: 1px solid $border-gray;
+
+    &:first-child {
+      border-top-left-radius: $border-radius-sm;
+      border-bottom-left-radius: $border-radius-sm;
+    }
+
+    &:last-child {
+      border-top-right-radius: $border-radius-sm;
+      border-bottom-right-radius: $border-radius-sm;
+    }
+
+    &:hover {
+      z-index: 1;
+      border-color: $primary;
+    }
+  }
+
+  &-text {
+    font-weight: 400;
+    font-size: 14px;
+    color: $font-gray-01;
+  }
+
+
+  // -------------------------
+  // Size
+  // -------------------------
+  &-sm {
+    .toggle-button-item {
+      @include button-size($height: 24px, $padding: $spacing-4, $icon-size: 16px, $font-size: 12px, $width: 24px);
+    }
+
+    .toggle-button-text {
+      font-size: 12px;
+    }
+  }
+
+  &-lg {
+    .toggle-button-item {
+      @include button-size($height: 40px, $padding: $spacing-16, $icon-size: 24px, $font-size: 15px, $width: 40px);
+    }
+
+    .toggle-button-text {
+      font-size: 16px;
+    }
+  }
+}

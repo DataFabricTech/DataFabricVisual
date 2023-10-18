@@ -85,6 +85,27 @@
         </div>
       </td>
     </tr>
+    <tr>
+      <th scope="row">toggle button</th>
+    </tr>
+    <tr>
+      <td>
+        <div class="v-group gap-4">
+          <div class="h-group">
+            <strong class="w-[100px] font-light text-[14px]">size: lg</strong>
+            <baseToggleButton class="toggle-button-lg"></baseToggleButton>
+          </div>
+          <div class="h-group">
+            <strong class="w-[100px] font-light text-[14px]">size: md</strong>
+            <baseToggleButton></baseToggleButton>
+          </div>
+          <div class="h-group">
+            <strong class="w-[100px] font-light text-[14px]">size: sm</strong>
+            <baseToggleButton class="toggle-button-sm"></baseToggleButton>
+          </div>
+        </div>
+      </td>
+    </tr>
     </tbody>
   </table>
 </div>
