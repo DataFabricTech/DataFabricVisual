@@ -5,7 +5,7 @@
       <slot name="switch-text"></slot>
     </span>
     <label class="switch-switch" :for="props.id">
-      <input class="switch-input" :id="props.id" type="checkbox">
+      <input class="switch-input" :id="props.id" type="checkbox" :disabled="props.disabled" :checked="props.checked">
       <span class="switch-handle"></span>
       <span class="hidden">
         <slot name="hidden-text"></slot>
@@ -18,6 +18,8 @@
 
 const props = defineProps({
   id: { type: String, default: null},
+  disabled: { type: Boolean, default: false },
+  checked: { type: Boolean, default: false },
 });
 
 </script>
