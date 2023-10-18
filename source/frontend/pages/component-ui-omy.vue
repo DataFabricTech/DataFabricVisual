@@ -139,41 +139,25 @@
       <tr>
         <td>
           <div class="v-group gap-3">
+            <!--            Component 사용 -->
             <div class="h-group">
               <strong class="w-[100px] font-light text-[14px]">nav</strong>
-              <nav class="nav">
-                <div class="nav-item is-selected">
-                  <button type="button" class="nav-button">
-                    <svg-icon name="data" class="svg-icon" />
-                    <span class="nav-title">데이터 모델 BrowserBrowserBrowser</span>
-                  </button>
-                  <button type="button" class="nav-close-button">
-                    <svg-icon name="close" class="svg-icon" />
-                    <span class="hidden">닫기</span>
-                  </button>
-                </div>
-                <div class="nav-item">
-                  <button type="button" class="nav-button">
-                    <svg-icon name="data" class="svg-icon" />
-                    <span class="nav-title">데이터 모델 A</span>
-                  </button>
-                  <button type="button" class="nav-close-button">
-                    <svg-icon name="close" class="svg-icon" />
-                    <span class="hidden">닫기</span>
-                  </button>
-                </div>
-                <div class="nav-item">
-                  <button type="button" class="nav-button">
-                    <svg-icon name="data" class="svg-icon" />
-                    <span class="nav-title">데이터 모델 B</span>
-                  </button>
-                  <button type="button" class="nav-close-button">
-                    <svg-icon name="close" class="svg-icon" />
-                    <span class="hidden">닫기</span>
-                  </button>
-                </div>
-              </nav>
+              <BaseNav></BaseNav>
             </div>
+            <div class="h-group">
+              <strong class="w-[100px] font-light text-[14px]">tab</strong>
+              <BaseTab></BaseTab>
+            </div>
+            <div class="h-group">
+              <strong class="w-[100px] font-light text-[14px]">fill-tab</strong>
+              <BaseTab theme="fill-tab"></BaseTab>
+            </div>
+            <div class="h-group">
+              <strong class="w-[100px] font-light text-[14px]">round-tab</strong>
+              <BaseTab theme="round-tab" use-icon="true"></BaseTab>
+            </div>
+            <!--            Unused Component 미사용 -->
+
             <div class="h-group">
               <strong class="w-[100px] font-light text-[14px]">tab</strong>
               <div class="tab">
@@ -259,6 +243,26 @@
                 </ul>
               </div>
             </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">Rating</th>
+      </tr>
+      <tr>
+        <td>
+          <div class="v-group gap-3">
+            <BaseRating></BaseRating>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">Pagination</th>
+      </tr>
+      <tr>
+        <td>
+          <div class="v-group gap-3">
+            <BasePagination></BasePagination>
           </div>
         </td>
       </tr>
