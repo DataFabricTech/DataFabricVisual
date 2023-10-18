@@ -3,6 +3,7 @@
   width: 100%;
   gap: $spacing-12;
   padding: $spacing-24;
+  background-color: #F7F8FA;
 
   &-icon {
     @include flex-standard;
@@ -31,17 +32,20 @@
     text-decoration: underline;
   }
 
+  &-normal {
+    background-color: #F7F8FA;
+  }
 
   &-info {
     background-color: #DEEBFF;
   }
 
-  &-warning {
-    background-color: #FFF5EA;
-  }
-
   &-success {
     background-color: #E3FCEF;
+  }
+
+  &-warning {
+    background-color: #FFF5EA;
   }
 
   &-error {

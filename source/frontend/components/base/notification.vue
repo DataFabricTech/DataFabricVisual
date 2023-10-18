@@ -1,17 +1,13 @@
 <template>
-  <div class="notification notification-warning">
+  <!--      기본: normal, 정보: info, 성공: success, 경고: warning, 에러: error (icon도 동일명)-->
+  <div class="notification" :class="'notification-'+props.theme">
     <div class="notification-icon">
-      <svg-icon name="warning" class="svg-icon"></svg-icon>
+      <svg-icon :name="props.theme" class="svg-icon"></svg-icon>
     </div>
     <div class="notification-contents">
-      <strong class="notification-title">
-        <em>연결정보 H</em>의 연결정보가 변동되어 데이터를 불러올 수 없습니다.
-      </strong>
-      <a href="#" class="notification-link">
-        바로가기
-      </a>
+      <slot></slot>
     </div>
-    <BaseButton class="button-icon button-link button-sm" title="닫기">
+    <BaseButton class="button-icon button-link button-sm" title="닫기" v-if="props.useClose">
       <span class="hidden">닫기</span>
       <svg-icon name="close" class="svg-icon"></svg-icon>
     </BaseButton>
@@ -19,5 +15,8 @@
 </template>
 
 <script setup lang="ts">
-
+const props = defineProps({
+  theme: { type: String, default: "normal" },
+  useClose: { type: Boolean, default: false }
+});
 </script>
