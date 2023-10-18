@@ -50,7 +50,7 @@
       top: 2px;
       background-color: transparent;
       border: 1px solid $primary;
-      border-radius: 50%;
+      border-radius: $border-radius-round;
     }
 
     &:after {
@@ -60,7 +60,7 @@
       top: 9px;
       width: 7px;
       height: 7px;
-      border-radius: 50%;
+      border-radius: $border-radius-round;
       background-color: $white;
     }
   }
