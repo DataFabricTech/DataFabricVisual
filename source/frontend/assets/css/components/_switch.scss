@@ -1,6 +1,6 @@
 .switch {
   @include flex-standard;
-  gap:$spacing-4;
+  gap: $spacing-4;
 
   &-switch {
     display: inline-block;
@@ -10,7 +10,6 @@
   }
 
   &-text {
-    display: none;
     font-size: 13px;
     color: $font-gray-01;
   }
@@ -64,7 +63,7 @@
   }
 
   &-sm {
-    .switch-switch{
+    .switch-switch {
       width: 36px;
       height: 18px;
     }
@@ -77,11 +76,6 @@
       left: 1.5px;
       height: 14px;
       width: 14px;
-    }
-  }
-  &.label-switch {
-    .switch-text {
-      display: block;
     }
   }
 }
