@@ -1,17 +1,11 @@
 .rating {
   @include flex-standard($horizontal: flex-start, $direction: row-reverse);
-  gap: $spacing-4;
 
   &-input {
-    clip: rect(0 0 0 0);
-    clip-path: inset(100%);
-    width: 1px;
-    height: 1px;
-    overflow: hidden;
-    position: absolute;
-    white-space: nowrap;
-    &:checked {
+    @include hidden;
 
+    &:checked,
+    &:hover:not(:disabled) {
       & ~ .rating-label {
         .svg-icon {
           path {
@@ -24,6 +18,9 @@
   }
 
   &-label {
+    padding: 0 $spacing-2;
+    cursor: pointer;
+
     .svg-icon {
       width: 20px;
       height: 20px;
