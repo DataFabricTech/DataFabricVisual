@@ -1,0 +1,54 @@
+.notification {
+  @include flex-standard($vertical: flex-start, $horizontal: flex-start);
+  width: 100%;
+  gap: $spacing-12;
+  padding: $spacing-24;
+  background-color: #F7F8FA;
+
+  &-icon {
+    @include flex-standard;
+
+    .svg-icon {
+      width: 22px;
+      height: 22px;
+    }
+  }
+
+  &-contents {
+    @include flex-standard($vertical: flex-start, $direction: column);
+    gap: $spacing-8;
+    flex-grow: 1;
+  }
+
+  &-title {
+    font-size: 14px;
+    color: $font-black;
+    font-weight: 400;
+  }
+
+  &-link {
+    font-size: 14px;
+    color: $primary;
+    text-decoration: underline;
+  }
+
+  &-normal {
+    background-color: #F7F8FA;
+  }
+
+  &-info {
+    background-color: #DEEBFF;
+  }
+
+  &-success {
+    background-color: #E3FCEF;
+  }
+
+  &-warning {
+    background-color: #FFF5EA;
+  }
+
+  &-error {
+    background-color: #FFEBE6;
+  }
+}
