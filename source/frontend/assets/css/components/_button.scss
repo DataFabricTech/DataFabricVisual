@@ -113,19 +113,16 @@
   &-link {
     @include button-theme($bg-color: transparent, $hover-bg-color: transparent, $active-bg-color: transparent, $font-color: $font-gray-01, $hover-font-color: $font-gray-02, $active-font-color: $font-black);
     text-decoration: underline;
-
   }
 
   &-link-primary {
     @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $primary, $hover-font-color: $hover-primary, $active-font-color: $active-primary);
     text-decoration: underline;
-
   }
 
   &-link-negative {
     @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $negative, $hover-font-color: $hover-negative, $active-font-color: $active-negative);
     text-decoration: underline;
-
   }
 
   &-lg {
