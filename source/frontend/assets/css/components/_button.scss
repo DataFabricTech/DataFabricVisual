@@ -103,15 +103,15 @@
   }
 
   &-normal {
-    @include button-theme($white, $light-gray, $gray, $font-black, $gray);
+    @include button-theme($white, $light-gray-02, $light-gray, $font-black, $light-gray);
   }
 
   &-danger {
-    @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $negative, $border-color: $negative);
+    @include button-theme($bg-color: $white, $hover-bg-color: rgba(255, 211, 210, 0.7), $active-bg-color: rgba(253, 179, 177, 0.7), $font-color: $negative, $border-color: $negative);
   }
 
   &-link {
-    @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $font-gray-01, $hover-font-color: $light-gray, $active-font-color: $font-black);
+    @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $font-gray-01, $hover-font-color: $font-gray-02, $active-font-color: $font-black);
     text-decoration: underline;
   }
 
