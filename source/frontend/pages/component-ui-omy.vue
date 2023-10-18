@@ -256,6 +256,16 @@
           </div>
         </td>
       </tr>
+      <tr>
+        <th scope="row">Pagination</th>
+      </tr>
+      <tr>
+        <td>
+          <div class="v-group gap-3">
+            <BasePagination></BasePagination>
+          </div>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>
