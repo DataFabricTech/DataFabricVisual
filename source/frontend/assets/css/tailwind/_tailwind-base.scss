@@ -10,6 +10,7 @@
 
   html {
     font-family: "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-weight: 400;
   }
 
   html, body, #__nuxt, #wrap {
@@ -18,6 +19,10 @@
 
   input:focus {
     outline: none;
+  }
+
+  em {
+    font-weight: 700;
   }
 
   button[type="button"], button[type="submit"], a[href], input[type="text"] {
