@@ -1,26 +1,50 @@
-.notification{
-  @include flex-standard($horizontal: flex-start);
+.notification {
+  @include flex-standard($vertical: flex-start, $horizontal: flex-start);
+  width: 100%;
   gap: $spacing-12;
   padding: $spacing-24;
 
-  &-icon{
-    width: 22px;
-    height: 22px;
+  &-icon {
+    @include flex-standard;
+
+    .svg-icon {
+      width: 22px;
+      height: 22px;
+    }
   }
 
-  &-contents{
+  &-contents {
     @include flex-standard($vertical: flex-start, $direction: column);
     gap: $spacing-8;
+    flex-grow: 1;
   }
 
-  &-title{
+  &-title {
     font-size: 14px;
     color: $font-black;
+    font-weight: 400;
   }
 
-  &-link{
+  &-link {
     font-size: 14px;
     color: $primary;
     text-decoration: underline;
+  }
+
+
+  &-info {
+    background-color: #DEEBFF;
+  }
+
+  &-warning {
+    background-color: #FFF5EA;
+  }
+
+  &-success {
+    background-color: #E3FCEF;
+  }
+
+  &-error {
+    background-color: #FFEBE6;
   }
 }

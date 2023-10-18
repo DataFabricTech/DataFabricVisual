@@ -266,6 +266,16 @@
           </div>
         </td>
       </tr>
+      <tr>
+        <th scope="row">Notification</th>
+      </tr>
+      <tr>
+        <td>
+          <div class="v-group gap-3">
+            <BaseNotification></BaseNotification>
+          </div>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>
