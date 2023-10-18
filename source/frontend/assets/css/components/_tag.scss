@@ -1,33 +1,27 @@
 .tag {
-  @include flex-standard;
-  gap: $spacing-8;
   height: 32px;
   padding: 0 $spacing-8;
   background: $disabled;
   border-radius: $border-radius-sm;
+  color: $icon-gray;
+  font-size: 14px;
+  font-weight: 500;
 
-  &-button {
-    color: $icon-gray;
-    font-size: 14px;
-    font-weight: 500;
-  }
 
-  .button-icon {
-    display: none;
-  }
+}
 
-  &-removable {
-    height: auto;
-    padding: $spacing-8;
-    border-radius: $border-radius-lg;
+.tag-removable {
+  @include flex-standard;
+  gap: $spacing-4;
+  height: 40px;
+  padding: 0 $spacing-8;
+  background: $disabled;
+  border-radius: $border-radius-lg;
 
-    .tag-button {
-      color: $black;
-      font-size: 16px;
-
-      & + .button-icon {
-        display: flex;
-      }
-    }
+  .tag {
+    height: 100%;
+    padding: 0;
+    color: $black;
+    font-size: 16px;
   }
 }
