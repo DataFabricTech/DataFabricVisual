@@ -106,15 +106,28 @@
         </div>
       </td>
     </tr>
+    <tr>
+      <th scope="row">table</th>
+    </tr>
+    <tr>
+      <td>
+        <div class="v-group gap-4">
+          <div class="h-group">
+            <strong class="w-[100px] font-light text-[14px]">type: coulumn</strong>
+            <baseTableColumn></baseTableColumn>
+          </div>
+          <div class="h-group">
+            <strong class="w-[100px] font-light text-[14px]">type: row</strong>
+            <baseTableRow></baseTableRow>
+          </div>
+        </div>
+      </td>
+    </tr>
     </tbody>
   </table>
 </div>
-  <modal v-model="show" title="Modal Sample">
-    <template v-slot:body>
-      ~ Modal is Here! Modal is Here! ~
-    </template>
-  </modal>
 </template>
+
 <script lang="ts" setup>
 import { ref } from "@vue/reactivity";
 import { useRouter } from "vue-router";
