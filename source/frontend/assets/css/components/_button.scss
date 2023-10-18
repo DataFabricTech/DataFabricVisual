@@ -111,18 +111,21 @@
   }
 
   &-link {
-    @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $font-gray-01, $hover-font-color: $font-gray-02, $active-font-color: $font-black);
+    @include button-theme($bg-color: transparent, $hover-bg-color: transparent, $active-bg-color: transparent, $font-color: $font-gray-01, $hover-font-color: $font-gray-02, $active-font-color: $font-black);
     text-decoration: underline;
+
   }
 
   &-link-primary {
     @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $primary, $hover-font-color: $hover-primary, $active-font-color: $active-primary);
     text-decoration: underline;
+
   }
 
   &-link-negative {
     @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $negative, $hover-font-color: $hover-negative, $active-font-color: $active-negative);
     text-decoration: underline;
+
   }
 
   &-lg {
@@ -131,6 +134,19 @@
 
   &-sm {
     @include button-size($height: 24px, $padding: $spacing-4, $icon-size: 16px, $font-size: 12px, $width: 24px);
+
+    // TODO: -link 테마 아이콘 사이즈 다른 것 검토 필요
+    &.button-icon {
+      padding: $spacing-2;
+
+      &.button-link, &.button-link-primary, &.button-link-negative {
+
+        .svg-icon {
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
   }
 }
 

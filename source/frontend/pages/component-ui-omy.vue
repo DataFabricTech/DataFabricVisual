@@ -154,7 +154,7 @@
             </div>
             <div class="h-group">
               <strong class="w-[100px] font-light text-[14px]">round-tab</strong>
-              <BaseTab theme="round-tab" use-icon="true"></BaseTab>
+              <BaseTab theme="round-tab" use-icon></BaseTab>
             </div>
             <!--            Unused Component 미사용 -->
 
@@ -263,6 +263,49 @@
         <td>
           <div class="v-group gap-3">
             <BasePagination></BasePagination>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">Notification</th>
+      </tr>
+      <tr>
+        <td>
+          <div class="v-group gap-3">
+            <BaseNotification use-close>
+              <strong class="notification-title">
+                <em>기본</em> Notification 입니다.
+              </strong>
+              <a href="#" class="notification-link">
+                바로가기
+              </a>
+            </BaseNotification>
+            <BaseNotification theme="info" use-close>
+              <strong class="notification-title">
+                <em>정보</em> Notification 입니다.
+              </strong>
+              <a href="#" class="notification-link">
+                바로가기
+              </a>
+            </BaseNotification>
+            <BaseNotification theme="success" use-close>
+              <strong class="notification-title">
+                <em>성공</em> Notification 입니다.
+              </strong>
+            </BaseNotification>
+            <BaseNotification theme="warning">
+              <strong class="notification-title">
+                <em>경고</em> Notification 입니다.
+              </strong>
+              <a href="#" class="notification-link">
+                바로가기
+              </a>
+            </BaseNotification>
+            <BaseNotification theme="error">
+              <strong class="notification-title">
+                <em>에러</em> Notification 입니다.
+              </strong>
+            </BaseNotification>
           </div>
         </td>
       </tr>
