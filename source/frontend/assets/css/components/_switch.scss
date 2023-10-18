@@ -1,8 +1,19 @@
 .switch {
-  display: inline-block;
-  position: relative;
-  width: 45px;
-  height: 22px;
+  @include flex-standard;
+  gap:$spacing-4;
+
+  &-switch {
+    display: inline-block;
+    position: relative;
+    width: 45px;
+    height: 22px;
+  }
+
+  &-text {
+    display: none;
+    font-size: 13px;
+    color: $font-gray-01;
+  }
 
   &-input {
     display: none;
@@ -11,6 +22,7 @@
     &:checked + .switch-handle {
       background-color: $primary;
       opacity: 1;
+
       &:before {
         transform: translateX(22px);
       }
@@ -43,12 +55,14 @@
   }
 
   &-sm {
-    width: 36px;
-    height: 18px;
+    .switch-switch{
+      width: 36px;
+      height: 18px;
+    }
 
     .switch-input:checked + .switch-handle:before {
-        transform: translateX(18px);
-      }
+      transform: translateX(18px);
+    }
 
     .switch-handle:before {
       left: 1.5px;
@@ -56,10 +70,11 @@
       width: 14px;
     }
   }
-
-  &-text {
-    font-size: 13px;
-    margin-right: $spacing-4;
-    color: $font-gray-01;
+  &.label-switch {
+    .switch-text {
+      display: block;
+    }
   }
 }
+
+
