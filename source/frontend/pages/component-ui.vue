@@ -11,11 +11,12 @@
       <tr>
         <td>
           <div class="h-group">
-          <baseBadge class="bg-marker-purple">Badge</baseBadge>
-          <baseBadge class="bg-marker-cyan">Badge</baseBadge>
-          <baseBadge class="bg-marker-red">Badge</baseBadge>
-          <baseBadge class="bg-marker-yellow">Badge</baseBadge>
-          <baseBadge class="bg-marker-gray">Badge</baseBadge>
+            <strong class="w-[150px] font-light text-[14px] shrink-0">type</strong>
+            <baseBadge class="bg-marker-purple">Badge</baseBadge>
+            <baseBadge class="bg-marker-cyan">Badge</baseBadge>
+            <baseBadge class="bg-marker-red">Badge</baseBadge>
+            <baseBadge class="bg-marker-yellow">Badge</baseBadge>
+            <baseBadge class="bg-marker-gray">Badge</baseBadge>
           </div>
         </td>
       </tr>
@@ -154,26 +155,32 @@
       <tr>
         <td>
           <div class="v-group gap-5">
-            <div class="h-group gap-12">
+            <div class="h-group">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
-              <baseCheckbox class="checkbox-lg" id="lg-01">default</baseCheckbox>
-              <baseCheckbox class="checkbox-lg" id="lg-02" checked>checked</baseCheckbox>
-              <baseCheckbox class="checkbox-lg checkbox-indeterminate" id="lg-03">indeterminate</baseCheckbox>
-              <baseCheckbox class="checkbox-lg" id="lg-04" disabled>disabled</baseCheckbox>
+              <div class="h-group gap-12">
+                <baseCheckbox class="checkbox-lg" id="lg-01">default</baseCheckbox>
+                <baseCheckbox class="checkbox-lg" id="lg-02" checked>checked</baseCheckbox>
+                <baseCheckbox class="checkbox-lg checkbox-indeterminate" id="lg-03">indeterminate</baseCheckbox>
+                <baseCheckbox class="checkbox-lg" id="lg-04" disabled>disabled</baseCheckbox>
+              </div>
             </div>
-            <div class="h-group gap-12">
-              <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
-              <baseCheckbox id="01">default</baseCheckbox>
-              <baseCheckbox id="02" checked>checked</baseCheckbox>
-              <baseCheckbox class="checkbox-indeterminate" id="03">indeterminate</baseCheckbox>
-              <baseCheckbox id="04" disabled>disabled</baseCheckbox>
+            <div class="h-group">
+                <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
+              <div class="h-group gap-12">
+                <baseCheckbox id="01">default</baseCheckbox>
+                <baseCheckbox id="02" checked>checked</baseCheckbox>
+                <baseCheckbox class="checkbox-indeterminate" id="03">indeterminate</baseCheckbox>
+                <baseCheckbox id="04" disabled>disabled</baseCheckbox>
+              </div>
             </div>
-            <div class="h-group gap-12">
-              <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
-              <baseCheckbox class="checkbox-sm" id="sm-01">default</baseCheckbox>
-              <baseCheckbox class="checkbox-sm" id="sm-02" checked>checked</baseCheckbox>
-              <baseCheckbox class="checkbox-sm checkbox-indeterminate" id="sm-03">indeterminate</baseCheckbox>
-              <baseCheckbox class="checkbox-sm" id="sm-04" disabled>disabled</baseCheckbox>
+            <div class="h-group">
+                <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
+              <div class="h-group gap-12">
+                <baseCheckbox class="checkbox-sm" id="sm-01">default</baseCheckbox>
+                <baseCheckbox class="checkbox-sm" id="sm-02" checked>checked</baseCheckbox>
+                <baseCheckbox class="checkbox-sm checkbox-indeterminate" id="sm-03">indeterminate</baseCheckbox>
+                <baseCheckbox class="checkbox-sm" id="sm-04" disabled>disabled</baseCheckbox>
+              </div>
             </div>
           </div>
         </td>
@@ -181,9 +188,15 @@
       <tr>
         <th scope="row">Nav</th>
       </tr>
-      <td>
-        <BaseNav></BaseNav>
-      </td>
+      <tr>
+        <td class="h-screen">
+          <div class="h-group">
+            <strong class="w-[150px] font-light text-[14px] shrink-0">type: browser</strong>
+            <BaseNav></BaseNav>
+          </div>
+        </td>
+      </tr>
+
       <tr>
         <th scope="row">Notification</th>
       </tr>
@@ -247,7 +260,10 @@
       </tr>
       <tr>
         <td>
-          <BasePagination></BasePagination>
+          <div class="h-group">
+            <strong class="w-[150px] font-light text-[14px] shrink-0">type: default</strong>
+            <BasePagination></BasePagination>
+          </div>
         </td>
       </tr>
 
@@ -257,23 +273,29 @@
       <tr>
         <td>
           <div class="v-group gap-5">
-            <div class="h-group gap-12">
+            <div class="h-group">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
-              <baseRadio class="radio-lg" id="radio-lg-01">default</baseRadio>
-              <baseRadio class="radio-lg" id="radio-lg-02" checked>checked</baseRadio>
-              <baseRadio class="radio-lg" id="radio-lg-03" disabled>disabled</baseRadio>
+              <div class="h-group gap-12">
+                <baseRadio class="radio-lg" id="radio-lg-01">default</baseRadio>
+                <baseRadio class="radio-lg" id="radio-lg-02" checked>checked</baseRadio>
+                <baseRadio class="radio-lg" id="radio-lg-03" disabled>disabled</baseRadio>
+              </div>
             </div>
-            <div class="h-group gap-12">
+            <div class="h-group">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
-              <baseRadio id="radio-01">default</baseRadio>
-              <baseRadio id="radio-02" checked>checked</baseRadio>
-              <baseRadio id="radio-03" disabled>disabled</baseRadio>
+              <div class="h-group gap-12">
+                <baseRadio id="radio-01">default</baseRadio>
+                <baseRadio id="radio-02" checked>checked</baseRadio>
+                <baseRadio id="radio-03" disabled>disabled</baseRadio>
+              </div>
             </div>
-            <div class="h-group gap-12">
+            <div class="h-group">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
-              <baseRadio class="radio-sm" id="radio-sm-01">default</baseRadio>
-              <baseRadio class="radio-sm" id="radio-sm-02" checked>checked</baseRadio>
-              <baseRadio class="radio-sm" id="radio-sm-03" disabled>disabled</baseRadio>
+              <div class="h-group gap-12">
+                <baseRadio class="radio-sm" id="radio-sm-01">default</baseRadio>
+                <baseRadio class="radio-sm" id="radio-sm-02" checked>checked</baseRadio>
+                <baseRadio class="radio-sm" id="radio-sm-03" disabled>disabled</baseRadio>
+              </div>
             </div>
           </div>
         </td>
@@ -378,50 +400,54 @@
       <tr>
         <td>
           <div class="v-group gap-5">
-            <div class="h-group gap-12">
+            <div class="h-group">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
-              <baseSwitch checked>
-                <template v-slot:hidden-text>
-                  hidden text
-                </template>
-              </baseSwitch>
-              <baseSwitch>
-                <template v-slot:switch-text>
-                  label
-                </template>
-                <template v-slot:hidden-text>
-                  hidden text
-                </template>
-              </baseSwitch>
-              <baseSwitch class="switch-disabled">
-                <template v-slot:switch-text>
-                  label
-                </template>
-                <template v-slot:hidden-text>
-                  hidden text
-                </template>
-              </baseSwitch>
+              <div class="h-group gap-12">
+                <baseSwitch checked>
+                  <template v-slot:hidden-text>
+                    hidden text
+                  </template>
+                </baseSwitch>
+                <baseSwitch>
+                  <template v-slot:switch-text>
+                    label
+                  </template>
+                  <template v-slot:hidden-text>
+                    hidden text
+                  </template>
+                </baseSwitch>
+                <baseSwitch class="switch-disabled">
+                  <template v-slot:switch-text>
+                    label
+                  </template>
+                  <template v-slot:hidden-text>
+                    hidden text
+                  </template>
+                </baseSwitch>
+              </div>
             </div>
-            <div class="h-group gap-12">
+            <div class="h-group">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
-              <baseSwitch class="switch-sm" checked>
-                <template v-slot:hidden-text>
-                  hidden
-                </template>
-              </baseSwitch>
-              <baseSwitch class="switch-sm">
-                <template v-slot:switch-text>
-                  label
-                </template>
-                <template v-slot:hidden-text>
-                  hidden
-                </template>
-              </baseSwitch>
-              <baseSwitch class="switch-sm switch-disabled">
-                <template v-slot:switch-text>
-                  label
-                </template>
-              </baseSwitch>
+              <div class="h-group gap-12">
+                <baseSwitch class="switch-sm" checked>
+                  <template v-slot:hidden-text>
+                    hidden
+                  </template>
+                </baseSwitch>
+                <baseSwitch class="switch-sm">
+                  <template v-slot:switch-text>
+                    label
+                  </template>
+                  <template v-slot:hidden-text>
+                    hidden
+                  </template>
+                </baseSwitch>
+                <baseSwitch class="switch-sm switch-disabled">
+                  <template v-slot:switch-text>
+                    label
+                  </template>
+                </baseSwitch>
+              </div>
             </div>
           </div>
         </td>
