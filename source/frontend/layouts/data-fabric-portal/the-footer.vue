@@ -1,6 +1,8 @@
 <template>
-  <footer>
+  <footer id="footer">
+    <div class="l-inner">
     Footer
+    </div>
   </footer>
 </template>
 
