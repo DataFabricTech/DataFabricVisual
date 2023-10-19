@@ -36,4 +36,12 @@ export default defineNuxtConfig({
 
   // css 설정
   css: ["vue-final-modal/style.css", "~/assets/css/style.scss"]
+
+/*  storybook: {
+    addons: [],
+    stories: ["~/components/!**!/!*.stories.js"],
+    modules: {
+      exclude: ["svg-sprite"]
+    }
+  }*/
 });
