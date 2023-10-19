@@ -1,0 +1,36 @@
+.search-field {
+  position: relative;
+  width: 520px;
+
+  .text-input {
+    height: 60px;
+    font-size: 22px;
+    padding: 0 110px 0 $spacing-16;
+
+    &::placeholder {
+      font-size: 22px;
+    }
+  }
+  .search-clear-button {
+    position: absolute;
+    top: 20%;
+    right: 65px;
+  }
+
+  .search-button {
+    position: absolute;
+    top: 1px;
+    left: 461px;
+    width: 58px;
+    height: 58px;
+    border-right: transparent;
+    border-top: transparent;
+    border-bottom: transparent;
+
+    .svg-icon {
+      fill: $icon-gray;
+      width: 36px;
+      height: 36px;
+    }
+  }
+}
