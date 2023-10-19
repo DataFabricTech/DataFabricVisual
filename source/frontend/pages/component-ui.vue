@@ -186,6 +186,75 @@
         </td>
       </tr>
       <tr>
+        <th scope="row">Context</th>
+      </tr>
+      <tr>
+        <td>
+          <div class="v-group gap-5">
+            <div class="h-group">
+              <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
+              <div class="h-group gap-12">
+                <baseContext class="context-lg" style="width:150px;">
+                  <template v-slot:menu-01>
+                    <span class="context-text">메뉴 이름</span>
+                  </template>
+                  <template v-slot:menu-02>
+                    <span class="context-text">이름이 길어지면 말줄임 처리</span>
+                  </template>
+                  <template v-slot:menu-03>
+                    <span class="context-text">disabled</span>
+                  </template>
+                </baseContext>
+                <baseContext class="context-lg" style="width:150px;">
+                  <template v-slot:menu-01>
+                    <span class="context-text">연결정보 이름</span>
+                    <svg-icon name="string-ascending" class="svg-icon" />
+                  </template>
+                  <template v-slot:menu-02>
+                    <span class="context-text">연결정보 이름</span>
+                    <svg-icon name="string-descending" class="svg-icon" />
+                  </template>
+                  <template v-slot:menu-03>
+                    <span class="context-text">등록일자</span>
+                    <svg-icon name="date-descending" class="svg-icon" />
+                  </template>
+                </baseContext>
+              </div>
+            </div>
+            <div class="h-group">
+              <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
+              <div class="h-group gap-12">
+                <baseContext style="width:150px;">
+                  <template v-slot:menu-01>
+                    <span class="context-text">메뉴 이름</span>
+                  </template>
+                  <template v-slot:menu-02>
+                    <span class="context-text">이름이 길어지면 말줄임 처리</span>
+                  </template>
+                  <template v-slot:menu-03>
+                    <span class="context-text">disabled</span>
+                  </template>
+                </baseContext>
+                <baseContext style="width:150px;">
+                  <template v-slot:menu-01>
+                    <span class="context-text">연결정보 이름</span>
+                    <svg-icon name="string-ascending" class="svg-icon" />
+                  </template>
+                  <template v-slot:menu-02>
+                    <span class="context-text">연결정보 이름</span>
+                    <svg-icon name="string-descending" class="svg-icon" />
+                  </template>
+                  <template v-slot:menu-03>
+                    <span class="context-text">등록일자</span>
+                    <svg-icon name="date-descending" class="svg-icon" />
+                  </template>
+                </baseContext>
+              </div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
         <th scope="row">Nav</th>
       </tr>
       <tr>
