@@ -1,0 +1,85 @@
+@mixin context-size($height, $min-width, $padding, $icon-size, $font-size) {
+  .context-list {
+    min-width: $min-width;
+
+    .context-button {
+      height: $height;
+      padding: $spacing-4 $padding;
+
+      .context-text {
+        font-size: $font-size;
+      }
+      .svg-icon {
+        width: $icon-size;
+        height: $icon-size;
+      }
+    }
+  }
+}
+
+.context{
+  @include box-shadow('overlay');
+  @include z-index('dropdown');
+  border-radius: $border-radius-sm;
+
+  &-list {
+    min-width: 130px;
+    padding: $spacing-4 0;
+    background: $white;
+  }
+
+  &-item {
+    @include flex-standard;
+    position: relative;
+
+    &.is-selected {
+      .context-text {
+        color: $primary;
+      }
+
+      .svg-icon {
+        fill: $primary;
+      }
+    }
+
+    &.is-disabled {
+      .context-button {
+        opacity: .25;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &-button {
+    @include ellipsis;
+    @include flex-standard;
+    flex: 1;
+    height: 32px;
+    padding: $spacing-4 $spacing-8;
+    background: transparent;
+    font-weight: 400;
+    line-height: 1.75;
+
+    &:hover {
+      background: $light-blue;
+    }
+
+    .svg-icon {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &-text {
+    @include ellipsis;
+    display: block;
+    flex-grow: 1;
+    color: $font-gray-01;
+    font-size: 13px;
+    text-align: left;
+  }
+
+  &-lg {
+    @include context-size(40px, 140px, $spacing-12, 20px, 14px)
+  }
+}

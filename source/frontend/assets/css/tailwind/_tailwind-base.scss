@@ -58,7 +58,11 @@
     }
   }
 
-  button[type="button"], button[type="submit"], a[href], input[type="text"], input[type="radio"], input[type="checkbox"], label, textarea {
+  ul, ol {
+    list-style: none;
+  }
+
+  button[type="button"], button[type="submit"], a[href], input[type="text"], input[type="radio"], input[type="checkbox"],label, textarea {
     &:disabled,
     &:disabled:hover,
     &:disabled:focus,
