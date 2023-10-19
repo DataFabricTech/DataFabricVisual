@@ -178,7 +178,7 @@
                   hidden이여요
                 </template>
               </baseSwitch>
-              <baseSwitch style="margin-left: 135px" class="switch-sm label-switch switch-disabled">
+              <baseSwitch style="margin-left: 135px" class="switch-sm label-switch is-disabled">
                 <template v-slot:switch-text>
                   label2
                 </template>
