@@ -648,27 +648,6 @@
           </div>
         </td>
       </tr>
-      <tr>
-        <th scope="row">Toggle button</th>
-      </tr>
-      <tr>
-        <td>
-          <div class="v-group gap-5">
-            <div class="h-group">
-              <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
-              <baseToggleButton class="toggle-button-lg"></baseToggleButton>
-            </div>
-            <div class="h-group">
-              <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
-              <baseToggleButton></baseToggleButton>
-            </div>
-            <div class="h-group">
-              <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
-              <baseToggleButton class="toggle-button-sm"></baseToggleButton>
-            </div>
-          </div>
-        </td>
-      </tr>
       </tbody>
     </table>
     <div class="layout-guide-title">
