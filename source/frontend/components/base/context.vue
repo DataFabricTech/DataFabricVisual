@@ -6,12 +6,12 @@
           <slot name="menu-01"></slot>
         </button>
       </li>
-      <li class="context-item context-item-selected">
+      <li class="context-item is-selected">
         <button class="context-button">
           <slot name="menu-02"></slot>
         </button>
       </li>
-      <li class="context-item context-item-disabled">
+      <li class="context-item is-disabled">
         <button class="context-button">
           <slot name="menu-03"></slot>
         </button>

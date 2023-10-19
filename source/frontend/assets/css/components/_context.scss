@@ -32,16 +32,17 @@
     @include flex-standard;
     position: relative;
 
-    &-selected {
+    &.is-selected {
       .context-text {
         color: $primary;
       }
+
       .svg-icon {
         fill: $primary;
       }
     }
 
-    &-disabled {
+    &.is-disabled {
       .context-button {
         opacity: .25;
         cursor: not-allowed;
