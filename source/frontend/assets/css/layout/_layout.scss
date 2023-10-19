@@ -8,12 +8,12 @@
 .l-full {
   height: calc(100% - 56px);
 
-  .l-tab + .l-split {
+  .l-nav + .l-split {
     height: calc(100% - 40px);
   }
 }
 
-.l-tab {
+.l-nav {
   @include flex-standard;
   height: 40px;
   background-color: $gray;

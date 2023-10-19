@@ -1,0 +1,111 @@
+@mixin radio-size($min-height, $font-size, $padding-left) {
+  min-height: $min-height;
+  font-size: $font-size;
+  padding-left: $padding-left;
+}
+
+.radio {
+  position: relative;
+
+  &-input {
+    @include hidden;
+
+    &:checked + .radio-label:before {
+      background-color: $primary;
+      border-color: $primary;
+    }
+
+    &:disabled + .radio-label {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  &-label {
+    @include flex-standard($display: inline-flex);
+    position: relative;
+    padding-left: $spacing-24;
+    min-height: 24px;
+    font-size: 14px;
+    line-height: 1.75;
+    font-weight: 400;
+    color: $font-gray-01;
+    white-space: nowrap;
+    user-select: none;
+    cursor: pointer;
+
+    &:before,
+    &:after {
+      box-sizing: border-box;
+      transition: all 70ms cubic-bezier(0, 0, 0.38, 0.9);
+    }
+
+    &:before {
+      content: "";
+      position: absolute;
+      width: 17px;
+      height: 17px;
+      margin: $spacing-2;
+      left: 0;
+      top: 2px;
+      background-color: transparent;
+      border: 1px solid $primary;
+      border-radius: $border-radius-round;
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 9px;
+      width: 7px;
+      height: 7px;
+      border-radius: $border-radius-round;
+      background-color: $white;
+    }
+  }
+
+  &-lg {
+    .radio-label {
+      @include radio-size(28px, 15px, 28px);
+
+      &:before {
+        content: "";
+        width: 20px;
+        height: 20px;
+        margin: $spacing-2;
+        top: 2px;
+        border-width: 2px;
+      }
+
+      &:after {
+        left: 8px;
+        top: 10px;
+        width: 8px;
+        height: 8px;
+      }
+    }
+  }
+
+  &-sm {
+    .radio-label {
+      @include radio-size(18px, 12px, 16px);
+
+      &:before {
+        content: "";
+        width: 12px;
+        height: 12px;
+        margin: 1px;
+        top: 3px;
+        border-width: 1px;
+      }
+
+      &:after {
+        left: 5px;
+        top: 8px;
+        width: 4px;
+        height: 4px;
+      }
+    }
+  }
+}

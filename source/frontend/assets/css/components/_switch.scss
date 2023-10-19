@@ -1,0 +1,89 @@
+.switch {
+  @include flex-standard;
+  gap: $spacing-4;
+
+  &-switch {
+    display: inline-block;
+    position: relative;
+    width: 45px;
+    height: 22px;
+  }
+
+  &-text {
+    font-size: 13px;
+    color: $font-gray-01;
+  }
+
+  &.is-disabled {
+    opacity: .25;
+    cursor: not-allowed;
+
+    .switch-switch {
+      pointer-events: none;
+    }
+  }
+
+  &-input {
+    display: none;
+
+    /* 스위치가 활성화(체크된 상태)되었을 때의 스타일 */
+    &:checked + .switch-handle {
+      background-color: $primary;
+      opacity: 1;
+
+      &:before {
+        transform: translateX(22px);
+      }
+    }
+
+    &:focus-visible:not(:disabled) {
+      & + .switch-handle {
+        outline: 1px dashed #212121;
+      }
+    }
+  }
+
+  &-handle {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: $icon-gray;
+    opacity: 0.5;
+    cursor: pointer;
+    border-radius: 16px;
+    transition: 0.4s;
+
+    &:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 2.5px;
+      bottom: 2px;
+      background-color: $white;
+      border-radius: $border-radius-round;
+      transition: 0.4s;
+    }
+  }
+
+  &-sm {
+    .switch-switch {
+      width: 36px;
+      height: 18px;
+    }
+
+    .switch-input:checked + .switch-handle:before {
+      transform: translateX(18px);
+    }
+
+    .switch-handle:before {
+      left: 1.5px;
+      height: 14px;
+      width: 14px;
+    }
+  }
+}
+
+

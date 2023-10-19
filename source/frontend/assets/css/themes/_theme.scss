@@ -6,6 +6,7 @@ $colors: (
   "marker-purple": #{$marker-purple},
   "marker-cyan": #{$marker-cyan},
   "marker-red": #{$marker-red},
+  "marker-gray": #{$marker-gray},
 );
 
 @each $attr, $color in $colors {
@@ -14,7 +15,11 @@ $colors: (
 
     @if $color == #{$white} {
       color: $black;
-    } @else {
+    }
+    @else if $color == #{$marker-cyan} {
+      color : #007D79;
+    }
+    @else {
       color: $white;
     }
   }
