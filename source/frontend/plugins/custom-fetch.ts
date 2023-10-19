@@ -1,5 +1,6 @@
 import {ofetch} from 'ofetch'
-import {useRuntimeConfig} from "nuxt/app";
+import { useRuntimeConfig } from "nuxt/app";
+import { ActiveLoader } from "vue-loading-overlay";
 
 export default defineNuxtPlugin((nuxtApp) => {
   globalThis.$fetch = ofetch.create({
@@ -12,12 +13,12 @@ export default defineNuxtPlugin((nuxtApp) => {
       hideLoader();
       let data = response._data;
 
-      if (data.hasOwnProperty("result") && data.result === 0) {
+      if (data.hasOwnProperty("code") && data.code !== 0) {
         errorResponse(data);
       } else if (data instanceof Blob && data.type) {
         const text = await data.text();
         let blobData = data.type.toLowerCase().includes("json") ? JSON.parse(text) : text;
-        if (blobData.hasOwnProperty("result") && blobData.result === 0) {
+        if (blobData.hasOwnProperty("code") && blobData.code !== 0) {
           errorResponse(blobData);
         } else {
           response._data = data;
@@ -28,22 +29,29 @@ export default defineNuxtPlugin((nuxtApp) => {
   })
 
   function errorResponse(data: any) {
-    let errorMessage = data.errorMessage;
+    let errorMessage = data.errMsg;
     if (errorMessage === null || errorMessage === "") {
       errorMessage = "시스템 오류가 발생 하였습니다.";
     }
-    alert(errorMessage);
+    console.error(errorMessage)
+    // TODO : system alert 사용시 로더 멈춤. 추후 errorAlert(개발) 적용 후 테스트 필요
+    // alert(errorMessage);
   }
 
+  let load: ActiveLoader;
   function showLoader() {
+    console.log(nuxtApp.$loading);
     try {
-      startLoader();
+      load = nuxtApp.$loading.show()
+      console.log(load);
     } catch (e) {}
   }
 
   function hideLoader() {
     try {
-      finishLoader();
+      setTimeout(() => {
+        load.hide()
+      }, 1000);
     } catch (e) {}
   }
 })

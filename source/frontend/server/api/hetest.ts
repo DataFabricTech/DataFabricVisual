@@ -8,7 +8,7 @@ export default defineEventHandler(() => {
     code: 0,
     errMsg: "",
     data: {
-      data: "ddd"
+      data: "hello - test"
     }
   };
   return res

@@ -5,11 +5,9 @@ interface response {
 }
 export default defineEventHandler(() => {
   const res: response = {
-    code: 0,
-    errMsg: "",
-    data: {
-      data: "ddd"
-    }
+    code: 401,
+    errMsg: "서버 에러",
+    data:null
   };
   return res
 })
