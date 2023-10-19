@@ -73,6 +73,33 @@
         </div>
       </td>
     </tr>
+    <tr>
+      <th scope="row">Loader</th>
+    </tr>
+    <tr>
+      <td class="col-sub">
+        <p>size : lg</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="w-[500px] h-[200px] border border-gray-300 relative">
+          <Loader class="loader-lg"></Loader>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td class="col-sub">
+        <p>size : md</p>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="w-[500px] h-[200px] border border-gray-300 relative">
+          <Loader class="loader-md"></Loader>
+        </div>
+      </td>
+    </tr>
     </tbody>
   </table>
 </div>
@@ -85,6 +112,7 @@
 <script lang="ts" setup>
 import { ref } from "@vue/reactivity";
 import { useRouter } from "vue-router";
+import Loader from "../layouts/loader/loader";
 
 const show = ref(false);
 const router = useRouter();

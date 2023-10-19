@@ -1,5 +1,5 @@
 <template>
-  <div class="loader-overlay">
+  <div class="overlay">
     <div class="loader" role="alert">
       <svg-icon class="loader-icon animate-spin" name="loader"/>
     </div>
