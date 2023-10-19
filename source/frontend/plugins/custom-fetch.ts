@@ -1,6 +1,6 @@
 import {ofetch} from 'ofetch'
 import { useRuntimeConfig } from "nuxt/app";
-import { ActiveLoader } from "vue-loading-overlay";
+import { ActiveLoader, useLoading } from "vue-loading-overlay";
 
 export default defineNuxtPlugin((nuxtApp) => {
   globalThis.$fetch = ofetch.create({
@@ -38,11 +38,12 @@ export default defineNuxtPlugin((nuxtApp) => {
     // alert(errorMessage);
   }
 
+  const $loading = useLoading();
   let load: ActiveLoader;
   function showLoader() {
-    console.log(nuxtApp.$loading);
     try {
-      load = nuxtApp.$loading.show()
+      // load = nuxtApp.$loading.show()
+      load = $loading.show();
       console.log(load);
     } catch (e) {}
   }
