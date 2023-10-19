@@ -670,6 +670,16 @@
           <baseButton @click="onClickOpen" class="button-primary button-lg">Modal Open</baseButton>
         </td>
       </tr>
+      <tr>
+        <th scope="row">footer</th>
+      </tr>
+      <tr>
+        <td>
+          <div >
+            <TheFooter></TheFooter>
+          </div>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>
@@ -683,6 +693,7 @@
 <script lang="ts" setup>
 import { ref } from "@vue/reactivity";
 import { useRouter } from "vue-router";
+import TheFooter from "../layouts/data-fabric-portal/the-footer"
 
 const show = ref(false);
 const router = useRouter();
