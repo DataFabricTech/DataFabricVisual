@@ -165,7 +165,7 @@
               </div>
             </div>
             <div class="h-group">
-                <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
+              <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
               <div class="h-group gap-12">
                 <baseCheckbox id="01">default</baseCheckbox>
                 <baseCheckbox id="02" checked>checked</baseCheckbox>
@@ -174,7 +174,7 @@
               </div>
             </div>
             <div class="h-group">
-                <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
+              <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
               <div class="h-group gap-12">
                 <baseCheckbox class="checkbox-sm" id="sm-01">default</baseCheckbox>
                 <baseCheckbox class="checkbox-sm" id="sm-02" checked>checked</baseCheckbox>
@@ -194,61 +194,13 @@
             <div class="h-group">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
               <div class="h-group gap-12">
-                <baseContext class="context-lg" style="width:150px;">
-                  <template v-slot:menu-01>
-                    <span class="context-text">메뉴 이름</span>
-                  </template>
-                  <template v-slot:menu-02>
-                    <span class="context-text">이름이 길어지면 말줄임 처리</span>
-                  </template>
-                  <template v-slot:menu-03>
-                    <span class="context-text">disabled</span>
-                  </template>
-                </baseContext>
-                <baseContext class="context-lg" style="width:150px;">
-                  <template v-slot:menu-01>
-                    <span class="context-text">연결정보 이름</span>
-                    <svg-icon name="string-ascending" class="svg-icon" />
-                  </template>
-                  <template v-slot:menu-02>
-                    <span class="context-text">연결정보 이름</span>
-                    <svg-icon name="string-descending" class="svg-icon" />
-                  </template>
-                  <template v-slot:menu-03>
-                    <span class="context-text">등록일자</span>
-                    <svg-icon name="date-descending" class="svg-icon" />
-                  </template>
-                </baseContext>
+                <baseContext class="context-lg w-[180px]"></baseContext>
               </div>
             </div>
             <div class="h-group">
               <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
               <div class="h-group gap-12">
-                <baseContext style="width:150px;">
-                  <template v-slot:menu-01>
-                    <span class="context-text">메뉴 이름</span>
-                  </template>
-                  <template v-slot:menu-02>
-                    <span class="context-text">이름이 길어지면 말줄임 처리</span>
-                  </template>
-                  <template v-slot:menu-03>
-                    <span class="context-text">disabled</span>
-                  </template>
-                </baseContext>
-                <baseContext style="width:150px;">
-                  <template v-slot:menu-01>
-                    <span class="context-text">연결정보 이름</span>
-                    <svg-icon name="string-ascending" class="svg-icon" />
-                  </template>
-                  <template v-slot:menu-02>
-                    <span class="context-text">연결정보 이름</span>
-                    <svg-icon name="string-descending" class="svg-icon" />
-                  </template>
-                  <template v-slot:menu-03>
-                    <span class="context-text">등록일자</span>
-                    <svg-icon name="date-descending" class="svg-icon" />
-                  </template>
-                </baseContext>
+                <baseContext class="w-[180px]"></baseContext>
               </div>
             </div>
           </div>
@@ -411,56 +363,7 @@
       </tr>
       <tr>
         <td>
-          <div class="step">
-            <div class="step-item">
-              <div class="step-icon">
-                <span class="step-icon-text">
-                  1
-                </span>
-              </div>
-              <div class="step-title">
-                <span class="step-title-text">
-                  step
-                </span>
-              </div>
-            </div>
-            <div class="step-item is-current">
-              <div class="step-icon">
-              <span class="step-icon-text">
-                2
-              </span>
-              </div>
-              <div class="step-title">
-                <span class="step-title-text">
-                  step
-                </span>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-icon">
-                <span class="step-icon-text">
-                  3
-                </span>
-              </div>
-              <div class="step-title">
-                <span class="step-title-text">
-                  step
-                </span>
-              </div>
-            </div>
-            <div class="step-item">
-              <div class="step-icon">
-                <span class="step-icon-text">
-                  4
-                </span>
-              </div>
-              <div class="step-title">
-                <span class="step-title-text">
-                  step
-                </span>
-              </div>
-            </div>
-          </div>
+          <BaseStep></BaseStep>
         </td>
       </tr>
       <tr>

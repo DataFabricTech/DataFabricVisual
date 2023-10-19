@@ -9,6 +9,7 @@
       .context-text {
         font-size: $font-size;
       }
+
       .svg-icon {
         width: $icon-size;
         height: $icon-size;
@@ -17,7 +18,7 @@
   }
 }
 
-.context{
+.context {
   @include box-shadow('overlay');
   @include z-index('dropdown');
   border-radius: $border-radius-sm;
@@ -31,23 +32,6 @@
   &-item {
     @include flex-standard;
     position: relative;
-
-    &.is-selected {
-      .context-text {
-        color: $primary;
-      }
-
-      .svg-icon {
-        fill: $primary;
-      }
-    }
-
-    &.is-disabled {
-      .context-button {
-        opacity: .25;
-        cursor: not-allowed;
-      }
-    }
   }
 
   &-button {
@@ -62,6 +46,16 @@
 
     &:hover {
       background: $light-blue;
+    }
+
+    &.is-selected {
+      .context-text {
+        color: $primary;
+      }
+
+      .svg-icon {
+        fill: $primary;
+      }
     }
 
     .svg-icon {
