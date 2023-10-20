@@ -1,3 +1,75 @@
-// ------------------------------------------
-// card card-badge card-title...
-// ------------------------------------------
+.card {
+  @include flex-standard($vertical: stretch);
+  @include box-shadow('default');
+  gap: $spacing-16;
+  min-height: 210px;
+  padding: $spacing-16 $spacing-20;
+  border: 1px solid $border-gray;
+
+  &-img {
+    @include flex-standard;
+    flex-shrink: 0;
+    width: 130px;
+
+    &-inner {
+      @include flex-standard;
+      width: 120px;
+      height: 120px;
+      border-radius: 25px;
+      border: 1px solid $base;
+
+      .svg-icon {
+        width: 60px;
+        height: 60px;
+        fill: $base;
+      }
+
+      img {
+        width: 60px;
+        height: auto;
+      }
+    }
+  }
+
+  &-contents {
+    @include flex-standard($horizontal: space-between, $vertical: flex-start, $direction: column);
+    flex-grow: 1;
+  }
+
+  &-title {
+    display: block;
+    font-size: 20px;
+    color: $font-black;
+    font-weight: 500;
+  }
+
+  &-detail{
+    font-size: 16px;
+    color: $font-black;
+  }
+
+  &-lg {
+    min-height: 236px;
+    padding: $spacing-24 96px $spacing-36 60px;
+    gap: $spacing-36;
+    .card{
+    }
+  }
+}
+
+.define {
+  @include flex-standard;
+  gap: $spacing-4;
+  font-size: 14px;
+  font-weight: 500;
+  color: $font-black;
+
+  &-term {
+    @include flex-standard;
+    gap: $spacing-2;
+
+    .svg-icon {
+      fill: $font-black;
+    }
+  }
+}
