@@ -57,3 +57,19 @@
   }
 }
 
+.define {
+  @include flex-standard;
+  gap: $spacing-4;
+  font-size: 14px;
+  font-weight: 500;
+  color: $font-black;
+
+  &-term {
+    @include flex-standard;
+    gap: $spacing-2;
+
+    .svg-icon {
+      fill: $font-black;
+    }
+  }
+}
