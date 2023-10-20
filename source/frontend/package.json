@@ -24,6 +24,7 @@
     "ag-grid-vue3": "^28.2.1",
     "dayjs": "^1.11.10",
     "esbuild": "^0.16.12",
+    "highcharts": "^11.1.0",
     "highcharts-vue": "^1.4.3",
     "install": "^0.13.0",
     "jsencrypt": "^3.3.2",
