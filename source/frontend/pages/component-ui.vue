@@ -14,8 +14,7 @@
           </tr>
           <tr>
             <td>
-              <div class="h-group">
-                <strong class="w-[150px] font-light text-[14px] shrink-0">type</strong>
+              <div class="h-group gap-2">
                 <baseBadge class="bg-marker-purple">Badge</baseBadge>
                 <baseBadge class="bg-marker-cyan">Badge</baseBadge>
                 <baseBadge class="bg-marker-red">Badge</baseBadge>
@@ -223,11 +222,8 @@
             <th scope="row">Nav</th>
           </tr>
           <tr>
-            <td class="h-screen">
-              <div class="h-group">
-                <strong class="w-[150px] font-light text-[14px] shrink-0">type: browser</strong>
+            <td>
                 <BaseNav></BaseNav>
-              </div>
             </td>
           </tr>
 
@@ -238,7 +234,7 @@
             <td>
               <div class="v-group gap-5">
                 <div class="h-group w-full">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">theme: normal</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">normal</strong>
                   <BaseNotification use-close>
                     <strong class="notification-title">
                       <em>기본</em> Notification 입니다.
@@ -249,7 +245,7 @@
                   </BaseNotification>
                 </div>
                 <div class="h-group w-full">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">theme: info</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">info</strong>
                   <BaseNotification theme="info" use-close>
                     <strong class="notification-title">
                       <em>정보</em> Notification 입니다.
@@ -260,7 +256,7 @@
                   </BaseNotification>
                 </div>
                 <div class="h-group w-full">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">theme: success</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">success</strong>
                   <BaseNotification theme="success" use-close>
                     <strong class="notification-title">
                       <em>성공</em> Notification 입니다.
@@ -268,7 +264,7 @@
                   </BaseNotification>
                 </div>
                 <div class="h-group w-full">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">theme: warning</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">warning</strong>
                   <BaseNotification theme="warning">
                     <strong class="notification-title">
                       <em>경고</em> Notification 입니다.
@@ -279,7 +275,7 @@
                   </BaseNotification>
                 </div>
                 <div class="h-group w-full">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">theme: error</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">error</strong>
                   <BaseNotification theme="error">
                     <strong class="notification-title">
                       <em>에러</em> Notification 입니다.
@@ -294,10 +290,7 @@
           </tr>
           <tr>
             <td>
-              <div class="h-group">
-                <strong class="w-[150px] font-light text-[14px] shrink-0">type: default</strong>
                 <BasePagination></BasePagination>
-              </div>
             </td>
           </tr>
 
@@ -582,11 +575,11 @@
 
               <div class="v-group gap-5">
                 <div class="h-group w-full">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: column</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">column</strong>
                   <baseTableColumn></baseTableColumn>
                 </div>
                 <div class="h-group w-full">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: row</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">row</strong>
                   <baseTableRow></baseTableRow>
                 </div>
               </div>
@@ -599,11 +592,11 @@
             <td>
               <div class="v-group gap-5">
                 <div class="h-group">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">default</strong>
                   <baseTag># 단속위치</baseTag>
                 </div>
                 <div class="h-group">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">category: removal</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: removal</strong>
                   <baseTagRemovable>CCTV위치</baseTagRemovable>
                 </div>
               </div>
@@ -651,9 +644,7 @@
           </tr>
           <tr>
             <td>
-              <div class="v-group gap-5">
                 <div class="h-group">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
                   <baseTextarea id="area-ex-01" placeholder="입력해주세요."></baseTextarea>
                   <label for="area-ex-01" class="hidden">lable</label>
                   <baseTextarea id="area-ex-02" disabled value="입력할 수 없습니다."></baseTextarea>
@@ -661,7 +652,6 @@
                   <baseTextarea id="area-ex-03" readonly value="read only"></baseTextarea>
                   <label for="area-ex-03" class="hidden">lable</label>
                 </div>
-              </div>
             </td>
           </tr>
 
@@ -794,7 +784,7 @@
                   </div>
                 </div>
                 <div class="h-group">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg<br /> type: icon</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
                   <div class="v-group">
                     <div class="toggle-token">
                       <BaseCheckbox name="toggle" id="toggle-01" checked>
@@ -827,7 +817,7 @@
                   </div>
                 </div>
                 <div class="h-group">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
                   <div class="v-group">
                     <div class="toggle-token toggle-token-sm">
                       <BaseCheckbox name="toggleSmI" id="toggle-sm-01" checked>
@@ -876,6 +866,48 @@
       <div class="inner">
         <table class="guide-table">
           <tbody>
+
+          <tr>
+            <th scope="row">Card</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="v-group gap-5">
+                <div class="h-group w-full">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0"> size: lg & base </strong>
+                  <Card class="card-lg">
+                    <template v-slot:img>
+                      <svg-icon class="svg-icon" name="data"></svg-icon>
+                    </template>
+                  </Card>
+                </div>
+                <div class="h-group w-full">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: default & primary</strong>
+                  <Card class="card-primary">
+                    <template v-slot:img>
+                      <img src="../assets/images/sample.png" alt="">
+                    </template>
+                  </Card>
+                </div>
+                <div class="h-group w-full">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: default & negative</strong>
+                  <Card class="card-negative">
+                    <template v-slot:img>
+                      <svg-icon class="svg-icon" name="data"></svg-icon>
+                    </template>
+                  </Card>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Kebab-menu</th>
+          </tr>
+          <tr>
+            <td>
+              <KebabMenu></KebabMenu>
+            </td>
+          </tr>
           <tr>
             <th scope="row">Modal</th>
           </tr>
@@ -885,11 +917,11 @@
             </td>
           </tr>
           <tr>
-            <th scope="row">Kebab-menu</th>
+            <th scope="row">Search filter</th>
           </tr>
           <tr>
             <td>
-              <KebabMenu></KebabMenu>
+                  <SearchFilter></SearchFilter>
             </td>
           </tr>
           </tbody>
