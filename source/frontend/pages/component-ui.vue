@@ -690,10 +690,11 @@
 
             </td>
           </tr>
-          <tr>
+          <!-- toggle-token으로 개선돼서 보류-->
+          <tr class="hidden">
             <th scope="row">Toggle button</th>
           </tr>
-          <tr>
+          <tr class="hidden">
             <td>
               <div class="v-group gap-5">
                 <div class="h-group">
