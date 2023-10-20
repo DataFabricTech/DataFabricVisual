@@ -639,11 +639,11 @@
                   <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
                   <div class="v-group">
                     <div class="toggle toggle-lg">
-                      <BaseRadio name="rlg" id="lg01">리스트형 보기</BaseRadio>
+                      <BaseRadio name="rlg" id="lg01" checked>리스트형 보기</BaseRadio>
                       <BaseRadio name="rlg" id="lg03">썸네일형 보기</BaseRadio>
                     </div>
                     <div class="toggle toggle-lg toggle-icon">
-                      <BaseRadio name="rlgI" id="lg-ic-01">
+                      <BaseRadio name="rlgI" id="lg-ic-01" checked>
                         <svg-icon name="bookmark" class="svg-icon"></svg-icon>
                       </BaseRadio>
                       <BaseRadio name="rlgI" id="lg-ic-03">
@@ -656,11 +656,11 @@
                   <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
                   <div class="v-group">
                     <div class="toggle">
-                      <BaseRadio name="r" id="01">리스트형 보기</BaseRadio>
-                      <BaseRadio name="r" id="03">썸네일형 보기</BaseRadio>
+                      <BaseRadio name="r" id="ic01" checked>리스트형 보기</BaseRadio>
+                      <BaseRadio name="r" id="ic03">썸네일형 보기</BaseRadio>
                     </div>
                     <div class="toggle toggle-icon">
-                      <BaseRadio name="rI" id="ic-01">
+                      <BaseRadio name="rI" id="ic-01" checked>
                         <svg-icon name="bookmark" class="svg-icon"></svg-icon>
                       </BaseRadio>
                       <BaseRadio name="rI" id="ic-03">
@@ -673,11 +673,11 @@
                   <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
                   <div class="v-group">
                     <div class="toggle toggle-sm">
-                      <BaseRadio name="rsm" id="sm01">리스트형 보기</BaseRadio>
+                      <BaseRadio name="rsm" id="sm01" checked>리스트형 보기</BaseRadio>
                       <BaseRadio name="rsm" id="sm03">썸네일형 보기</BaseRadio>
                     </div>
                     <div class="toggle toggle-sm toggle-icon">
-                      <BaseRadio name="rSmI" id="icsm-01">
+                      <BaseRadio name="rSmI" id="icsm-01" checked>
                         <svg-icon name="bookmark" class="svg-icon"></svg-icon>
                       </BaseRadio>
                       <BaseRadio name="rSmI" id="icsm-03">
