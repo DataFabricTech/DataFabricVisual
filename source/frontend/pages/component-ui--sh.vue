@@ -650,9 +650,15 @@
       </tr>
       <tr>
         <td>
-          <div class="v-group gap-5">
-            <SearchField></SearchField>
-          </div>
+          <SearchField></SearchField>
+        </td>
+      </tr>
+      <tr>
+        <th scope="row">Data-status</th>
+      </tr>
+      <tr>
+        <td>
+          <DataStatus></DataStatus>
         </td>
       </tr>
       </tbody>
@@ -675,7 +681,7 @@
       </tr>
       <tr>
         <td>
-          <div >
+          <div>
             <TheFooter></TheFooter>
           </div>
         </td>
