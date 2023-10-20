@@ -534,6 +534,33 @@
                     </ul>
                   </div>
                 </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">round-tab</strong>
+                  <div class="round-tab round-tab-sm">
+                    <ul class="round-tab-list">
+                      <li class="round-tab-item">
+                        <button type="button" class="round-tab-button is-selected">
+                          <span class="round-tab-title">전체</span>
+                        </button>
+                      </li>
+                      <li class="round-tab-item">
+                        <button type="button" class="round-tab-button">
+                          <span class="round-tab-title">데이터패브릭</span>
+                        </button>
+                      </li>
+                      <li class="round-tab-item">
+                        <button type="button" class="round-tab-button">
+                          <span class="round-tab-title">분석보고서</span>
+                        </button>
+                      </li>
+                      <li class="round-tab-item">
+                        <button type="button" class="round-tab-button" disabled>
+                          <span class="round-tab-title">Disabled</span>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </td>
           </tr>
@@ -643,10 +670,12 @@
                       <BaseRadio name="rlg" id="lg03">썸네일형 보기</BaseRadio>
                     </div>
                     <div class="toggle toggle-lg toggle-icon">
-                      <BaseRadio name="rlgI" id="lg-ic-01" checked>
+                      <BaseRadio name="rlgI" id="lg-ic-01" checked title="리스트형 보기">
+                        <span class="hidden">리스트형 보기</span>
                         <svg-icon name="list-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
-                      <BaseRadio name="rlgI" id="lg-ic-03">
+                      <BaseRadio name="rlgI" id="lg-ic-03" title="썸네일형 보기">
+                        <span class="hidden">썸네일형 보기</span>
                         <svg-icon name="thumbnail-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                     </div>
@@ -660,10 +689,12 @@
                       <BaseRadio name="r" id="ic03">썸네일형 보기</BaseRadio>
                     </div>
                     <div class="toggle toggle-icon">
-                      <BaseRadio name="rI" id="ic-01" checked>
+                      <BaseRadio name="rI" id="ic-01" checked title="리스트형 보기">
+                        <span class="hidden">리스트형 보기</span>
                         <svg-icon name="list-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
-                      <BaseRadio name="rI" id="ic-03">
+                      <BaseRadio name="rI" id="ic-03" title="썸네일형 보기">
+                        <span class="hidden">썸네일형 보기</span>
                         <svg-icon name="thumbnail-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                     </div>
@@ -677,10 +708,12 @@
                       <BaseRadio name="rsm" id="sm03">썸네일형 보기</BaseRadio>
                     </div>
                     <div class="toggle toggle-sm toggle-icon">
-                      <BaseRadio name="rSmI" id="icsm-01" checked>
+                      <BaseRadio name="rSmI" id="icsm-01" checked title="리스트형 보기">
+                        <span class="hidden">리스트형 보기</span>
                         <svg-icon name="list-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
-                      <BaseRadio name="rSmI" id="icsm-03">
+                      <BaseRadio name="rSmI" id="icsm-03" title="썸네일형 보기">
+                        <span class="hidden">썸네일형 보기</span>
                         <svg-icon name="thumbnail-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                     </div>
