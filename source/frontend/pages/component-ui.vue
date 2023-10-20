@@ -644,10 +644,10 @@
                     </div>
                     <div class="toggle toggle-lg toggle-icon">
                       <BaseRadio name="rlgI" id="lg-ic-01" checked>
-                        <svg-icon name="bookmark" class="svg-icon"></svg-icon>
+                        <svg-icon name="list-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                       <BaseRadio name="rlgI" id="lg-ic-03">
-                        <svg-icon name="bookmark" class="svg-icon"></svg-icon>
+                        <svg-icon name="thumbnail-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                     </div>
                   </div>
@@ -661,10 +661,10 @@
                     </div>
                     <div class="toggle toggle-icon">
                       <BaseRadio name="rI" id="ic-01" checked>
-                        <svg-icon name="bookmark" class="svg-icon"></svg-icon>
+                        <svg-icon name="list-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                       <BaseRadio name="rI" id="ic-03">
-                        <svg-icon name="bookmark" class="svg-icon"></svg-icon>
+                        <svg-icon name="thumbnail-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                     </div>
                   </div>
@@ -678,10 +678,10 @@
                     </div>
                     <div class="toggle toggle-sm toggle-icon">
                       <BaseRadio name="rSmI" id="icsm-01" checked>
-                        <svg-icon name="bookmark" class="svg-icon"></svg-icon>
+                        <svg-icon name="list-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                       <BaseRadio name="rSmI" id="icsm-03">
-                        <svg-icon name="bookmark" class="svg-icon"></svg-icon>
+                        <svg-icon name="thumbnail-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                     </div>
                   </div>
