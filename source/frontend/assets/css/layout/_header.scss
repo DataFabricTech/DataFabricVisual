@@ -1,6 +1,9 @@
 #header {
   @include flex-standard;
+  @include z-index('float');
+  position: fixed;
   height: 56px;
+  background-color: $white;
   border-bottom: 1px solid $gray;
 }
 

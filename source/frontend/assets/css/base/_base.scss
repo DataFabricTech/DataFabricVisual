@@ -2,5 +2,6 @@
 // SMACSS - class/id 사용 금지
 // ------------------------------------------
 #wrap {
-  min-width: 1920px
+  min-width: 1920px;
+  overflow-x: hidden;
 }

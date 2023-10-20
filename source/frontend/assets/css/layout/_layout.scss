@@ -6,15 +6,22 @@
 }
 
 .l-full {
-  height: calc(100% - 56px);
+  position: relative;
+  top: 56px;
+  height: 100%;
 
   .l-nav + .l-split {
+    @include flex-standard($vertical: flex-start, $direction:column);
+    position: relative;
+    top: 40px;
     height: calc(100% - 40px);
   }
 }
 
 .l-nav {
   @include flex-standard;
+  @include z-index('float');
+  position: fixed;
   height: 40px;
   background-color: $gray;
 }
@@ -30,18 +37,19 @@
 .l-split {
   @include flex-standard;
 
-  .l-inner {
-    padding: 0 $spacing-24 0 0;
-  }
-
   .snb {
+    position: fixed;
+    top: 96px;
+    left: 0;
     width: 318px;
-    height: 100%;
+    height: calc(100% - 96px);
     flex-shrink: 0;
   }
 
   .main-content {
+    width: calc(100% - 318px);
     height: 100%;
+    margin-left: auto;
   }
 }
 
