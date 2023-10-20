@@ -1,0 +1,12 @@
+.kebab-menu {
+  @include z-index('float');
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+
+.kebab-context {
+  position: absolute;
+  top: 12px;
+  left: calc(100% + 4px);
+}
