@@ -1,0 +1,91 @@
+.toggle-token {
+  @include flex-standard;
+
+  .checkbox {
+    margin: 0 0 0 -1px;
+
+    &:first-child {
+      .checkbox-label {
+        border-top-left-radius: $border-radius-sm;
+        border-bottom-left-radius: $border-radius-sm;
+      }
+    }
+
+    &:last-child {
+      .checkbox-label {
+        border-top-right-radius: $border-radius-sm;
+        border-bottom-right-radius: $border-radius-sm;
+      }
+    }
+
+    &-label {
+      height: 32px;
+      padding: 0 $spacing-12;
+      font-size: 14px;
+      background-color: $white;
+      color: $font-gray-01;
+      border: 1px solid $border-gray;
+
+      &:after,
+      &:before {
+        content: none;
+      }
+    }
+
+    &-input {
+
+      &:checked {
+        + .checkbox-label {
+          background-color: $primary;
+          border-color: $primary;
+          color: $white;
+
+          .svg-icon {
+            fill: $white;
+          }
+        }
+      }
+    }
+  }
+
+
+  &-lg {
+    .checkbox-label {
+      font-size: 15px;
+      padding: 0 $spacing-16;
+      height: 40px;
+    }
+  }
+
+  &-sm {
+    .checkbox-label {
+      font-size: 12px;
+      padding: 0 $spacing-8;
+      height: 24px;
+    }
+  }
+
+  &-icon {
+    .checkbox {
+      &-label {
+        width: 32px;
+        padding: 0 5px;
+        justify-content: center;
+      }
+    }
+
+    &.toggle-token-lg {
+      .checkbox-label {
+        width: 40px;
+        padding: 0 7px;
+      }
+    }
+
+    &.toggle-token-sm {
+      .checkbox-label {
+        width: 24px;
+        padding: 0 3px;
+      }
+    }
+  }
+}
