@@ -45,7 +45,7 @@
     }
   }
 
-  &-contents {
+  &-content {
     @include flex-standard($horizontal: space-between, $vertical: flex-start, $direction: column);
     flex-grow: 1;
   }

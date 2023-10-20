@@ -5,7 +5,7 @@
         <slot name="img"></slot>
       </div>
     </div>
-    <div class="card-contents">
+    <div class="card-content">
       <div class="h-group justify-between w-full">
         <div class="h-group gap-[8px]">
           <BaseBadge class="bg-marker-cyan">HDFS</BaseBadge>
