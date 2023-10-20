@@ -31,11 +31,11 @@
   @include flex-standard;
 
   .l-inner {
-    padding: $spacing-20 $spacing-24 $spacing-20 0;
+    padding: 0 $spacing-24 0 0;
   }
 
   .snb {
-    width: 474px;
+    width: 318px;
     height: 100%;
     flex-shrink: 0;
   }

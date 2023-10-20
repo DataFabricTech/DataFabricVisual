@@ -1,6 +1,5 @@
 .snb {
-  @include box-shadow('default');
+  @include flex-standard($vertical: flex-start);
   padding: $spacing-2 + $spacing-8;
-  background-color: $white;
-  border: 1px solid $gray;
+  background-color: $light-blue;
 }
