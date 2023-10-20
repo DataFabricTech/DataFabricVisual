@@ -55,8 +55,11 @@
 @import "layout/header";
 @import "layout/footer";
 @import "layout/snb";
+@import "layout/no-result";
 
-@import "pages/data-fabric";
+@import "pages/data-fabric/data-fabric";
+@import "pages/data-fabric/search";
+@import "pages/data-fabric-portal/data-fabric-portal";
 
 // base
 @import "base/status";

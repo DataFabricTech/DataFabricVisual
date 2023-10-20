@@ -6,6 +6,20 @@
   padding: $spacing-16 $spacing-20;
   border: 1px solid $border-gray;
 
+  &-list {
+    @include flex-standard($horizontal: flex-start, $direction: column);
+    width: 100%;
+    gap: $spacing-28;
+
+    & + .pagination {
+      margin-top: $spacing-28;
+    }
+  }
+
+  &-item {
+    width: 100%;
+  }
+
   &-img {
     @include flex-standard;
     flex-shrink: 0;
@@ -36,14 +50,18 @@
     flex-grow: 1;
   }
 
-  &-title {
+  &-link {
     display: block;
     font-size: 20px;
     color: $font-black;
     font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 
-  &-detail{
+  &-detail {
     font-size: 16px;
     color: $font-black;
   }
@@ -52,8 +70,6 @@
     min-height: 236px;
     padding: $spacing-24 96px $spacing-36 60px;
     gap: $spacing-36;
-    .card{
-    }
   }
 }
 

@@ -107,14 +107,29 @@
 
   &-title {
     @include ellipsis;
-    width: calc(100% - 36px);
+    flex-grow: 1;
     font-size: 18px;
     font-weight: 500;
     color: #616161;
   }
 
   .svg-icon {
+    flex-shrink: 0;
     width: 36px;
     height: 36px;
+  }
+
+  &-sm {
+    .round-tab {
+      &-list {
+        gap: $spacing-16;
+      }
+
+      &-button {
+        width: auto;
+        height: 40px;
+        border-radius: $border-radius-lg;
+      }
+    }
   }
 }

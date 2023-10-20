@@ -1,3 +1,4 @@
+// data fabric common
 .gnb {
   @include flex-standard($horizontal: flex-start);
 
@@ -27,3 +28,29 @@
     }
   }
 }
+
+.data-search {
+  @include flex-standard($horizontal: flex-start);
+  gap: $spacing-28;
+}
+
+.result-info {
+  @include flex-standard($horizontal: space-between);
+  width: 100%;
+}
+
+.result-summary {
+  font-size: 16px;
+  font-weight: 400;
+  color: $font-black;
+
+  em {
+    color: $primary;
+  }
+}
+
+.result-sort {
+  @include flex-standard($horizontal: flex-end);
+  gap: $spacing-12;
+}
+
