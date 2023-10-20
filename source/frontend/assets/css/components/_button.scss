@@ -108,6 +108,10 @@
     @include button-theme($bg-color: $white, $hover-bg-color: rgba(255, 211, 210, 0.7), $active-bg-color: rgba(253, 179, 177, 0.7), $font-color: $negative, $border-color: $negative);
   }
 
+  &-ghost {
+    @include button-theme($bg-color: $white, $hover-bg-color: #bfd7fa, $active-bg-color: #a9cefc, $font-color: $primary, $border-color: $border-gray);
+  }
+
   &-link {
     @include button-theme($bg-color: transparent, $hover-bg-color: transparent, $active-bg-color: transparent, $font-color: $font-gray-01, $hover-font-color: $font-gray-02, $active-font-color: $font-black);
     text-decoration: underline;

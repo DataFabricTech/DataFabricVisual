@@ -50,6 +50,9 @@
                   <baseButton class="button-normal button-lg">
                     <span class="button-text">Button</span>
                   </baseButton>
+                  <baseButton class="button-ghost button-lg">
+                    <span class="button-text">Button</span>
+                  </baseButton>
                   <baseButton class="button-danger button-lg">
                     <span class="button-text">Button</span>
                   </baseButton>
@@ -90,6 +93,9 @@
                   <baseButton class="button-normal">
                     <span class="button-text">Button</span>
                   </baseButton>
+                  <baseButton class="button-ghost">
+                    <span class="button-text">Button</span>
+                  </baseButton>
                   <baseButton class="button-danger">
                     <span class="button-text">Button</span>
                   </baseButton>
@@ -128,6 +134,9 @@
                     <span class="button-text">Button</span>
                   </baseButton>
                   <baseButton class="button-normal button-sm">
+                    <span class="button-text">Button</span>
+                  </baseButton>
+                  <baseButton class="button-ghost button-sm">
                     <span class="button-text">Button</span>
                   </baseButton>
                   <baseButton class="button-danger button-sm">
