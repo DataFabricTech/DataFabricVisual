@@ -1,10 +1,11 @@
 #footer {
   height: 96px;
   border-top: 1px solid $border-gray;
+  margin-top: $spacing-16;
+
   .l-inner {
     @include flex-standard($horizontal:space-between);
-    width: 100%;
-    padding: 0 $spacing-24;
+    margin: 0 auto;
 
     .footer-logo {
       width: 70px;
@@ -19,7 +20,7 @@
 
     .fnb {
       @include flex-standard;
-      gap: $spacing-12;
+      gap: $spacing-16;
 
       &-list {
         font-size: 14px;
