@@ -22,8 +22,6 @@
     "@storybook/vue3": "^7.5.0",
     "@storybook/vue3-vite": "^7.5.0",
     "nuxt": "^3.7.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "storybook": "^7.5.0",
     "storybook-addon-nuxt": "^1.3.3",
     "unplugin-auto-import": "^0.16.6",
