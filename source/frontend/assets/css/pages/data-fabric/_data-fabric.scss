@@ -31,7 +31,11 @@
 
 .data-search {
   @include flex-standard($horizontal: flex-start);
-  gap: $spacing-28;
+  gap: $spacing-16;
+}
+
+.data-search-filter {
+  width: 100%;
 }
 
 .result-info {

@@ -68,6 +68,19 @@
               </div>
             </td>
           </tr>
+          <tr>
+            <th scope="row">Search filter</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="v-group gap-5">
+                <div class="h-group w-full">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0"> size: lg <br />theme: default </strong>
+                  <SearchFilter></SearchFilter>
+                </div>
+              </div>
+            </td>
+          </tr>
           </tbody>
         </table>
       </div>
