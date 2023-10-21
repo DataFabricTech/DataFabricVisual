@@ -96,7 +96,30 @@
           <h3 class="portal-article-title">커뮤니티</h3>
           <p class="portal-article-text">공지사항 및 이용문의를 통해서 데이터패브릭 포털을 더 잘 이용할 수 있습니다. </p>
         </div>
-        <div class="portal-article-body"></div>
+        <div class="portal-article-body">
+          <div class="h-group h-full items-start">
+            <div class="notices">
+              <div class="flex justify-between items-center w-full">
+                <div class="title">공지사항</div>
+                <baseButton class="button-link-tertiary">더보기</baseButton>
+              </div>
+              <div class="notices-notifi">
+                <svg-icon name="speaker" class="svg-icon" />
+                <em>[서비스 안내]</em>
+                <span class="notices-notifi-text">분석 서비스를 위한 저작도구 신규 서비스 도입</span>
+              </div>
+            </div>
+            <div class="fnq">
+              <div class="flex justify-between items-center w-full">
+                <div class="title">
+                  자주하는 질문
+                  <em>FAQ</em>
+                </div>
+                <baseButton class="button-link-tertiary">더보기</baseButton>
+              </div>
+            </div>
+          </div>
+        </div>
       </article>
     </div>
   </section>

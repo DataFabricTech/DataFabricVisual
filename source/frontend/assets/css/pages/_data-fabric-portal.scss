@@ -123,7 +123,7 @@
         border:1px solid $border-gray;
 
         &:hover {
-          background: $white;
+          background: $light-gray-02;
         }
       }
 
@@ -163,6 +163,39 @@
        .button {
         width: 100%;
        }
+      }
+    }
+
+    .notices, .fnq {
+      @include flex-standard($direction: column);
+      flex:1;
+
+    }
+
+    .notices {
+      border-right: 1px solid $border-gray;
+      margin-right: $spacing-4;
+
+      &-notifi {
+        @include flex-standard;
+        padding: $spacing-8;
+        background: $light-blue-02;
+        border-radius: $border-radius-sm;
+        font-size: 12px;
+
+        .svg-icon {
+          flex-shrink: 0;
+          width: 16px;
+          height: 16px;
+        }
+
+        em {
+          flex-shrink: 0;
+        }
+
+        &-text {
+          @include ellipsis;
+        }
       }
     }
   }
