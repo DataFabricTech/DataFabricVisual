@@ -100,13 +100,38 @@
           <div class="h-group h-full items-start">
             <div class="notices">
               <div class="flex justify-between items-center w-full">
-                <div class="title">공지사항</div>
+                <div class="notices-title">공지사항</div>
                 <baseButton class="button-link-tertiary">더보기</baseButton>
               </div>
-              <div class="notices-notifi">
+              <div class="notices-notify">
                 <svg-icon name="speaker" class="svg-icon" />
-                <em>[서비스 안내]</em>
-                <span class="notices-notifi-text">분석 서비스를 위한 저작도구 신규 서비스 도입</span>
+                <div class="h-group">
+                  <em>[서비스 안내]</em>
+                  <span class="notices-notify-text">분석 서비스를 위한 저작도구 신규 서비스 도입</span>
+                </div>
+                <div class="paging">
+                  <ul class="paging-dots">
+                    <li class="dot">
+                      <button class="dot-button">1</button>
+                    </li>
+                    <li class="dot">
+                      <button class="dot-button">2</button>
+                    </li>
+                    <li class="dot">
+                      <button class="dot-button">3</button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="mt-6">
+                <ul class="notices-list">
+                  <li class="notices-item" v-for="index in 6">
+                    <baseBadge class="bg-marker-cyan">안내</baseBadge>
+                    <span class="notices-item-text">
+                      [신규 인프라] 이미지 지원 종료 안내(2023/09/26)
+                    </span>
+                  </li>
+                </ul>
               </div>
             </div>
             <div class="fnq">

@@ -175,26 +175,68 @@
     .notices {
       border-right: 1px solid $border-gray;
       margin-right: $spacing-4;
+      padding-right: $spacing-4;
 
-      &-notifi {
+      &-title {
+        color: $black;
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      &-notify {
         @include flex-standard;
         padding: $spacing-8;
+        position: relative;
+        height: 36px;
         background: $light-blue-02;
         border-radius: $border-radius-sm;
         font-size: 12px;
 
         .svg-icon {
           flex-shrink: 0;
-          width: 16px;
-          height: 16px;
+          width: 18px;
+          height: 18px;
         }
 
         em {
           flex-shrink: 0;
+          font-size: 13px;
         }
 
         &-text {
           @include ellipsis;
+          font-size: 13px;
+        }
+
+        .paging {
+          position: absolute;
+          bottom:-15px;
+
+          &-dots {
+            @include flex-standard;
+            gap: $spacing-8;
+
+            .dot {
+              width: 10px;
+              height: 10px;
+              background: $gray;
+              border-radius: $border-radius-round;
+            }
+          }
+        }
+      }
+
+      &-list {
+        @include flex-standard($direction: column);
+        gap: $spacing-8;
+      }
+      &-item {
+        @include flex-standard;
+        gap: $spacing-4;
+
+        &-text {
+          @include ellipsis;
+          color: $black;
         }
       }
     }
