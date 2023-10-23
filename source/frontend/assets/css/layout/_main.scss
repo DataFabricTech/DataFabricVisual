@@ -1,0 +1,24 @@
+// main
+#main {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 56px);
+  overflow-y: auto;
+}
+
+.main-content {
+  flex-grow: 1;
+}
+
+.main-search {
+  @include flex-standard($direction: column);
+  width: 100%;
+  height: 100%;
+  gap: $spacing-16;
+}
+
+.main-information {
+  @include flex-standard;
+  width: 100%;
+  gap: 6px;
+}

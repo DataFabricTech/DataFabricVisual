@@ -1,62 +1,53 @@
 #footer {
+  @include flex-standard($horizontal: space-between);
   height: 96px;
+  padding: 0 $spacing-16;
   border-top: 1px solid $border-gray;
-  margin-top: $spacing-16;
+}
 
-  .l-inner {
-    @include flex-standard($horizontal:space-between);
-    margin: 0 auto;
+.footer-logo {
+  width: 70px;
+  height: 70px;
 
-    .footer-logo {
-      width: 70px;
-      height: 70px;
+  &-link {
+    @include flex-standard;
+    width: 100%;
+    height: 100%;
+  }
+}
 
-      &-link {
-        @include flex-standard;
-        width: 100%;
-        height: 100%;
-      }
+.fnb {
+  @include flex-standard;
+  gap: $spacing-16;
+
+  &-item {
+    font-size: 14px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.copyright {
+  font-size: 13px;
+  color: $font-gray-02;
+}
+
+.sns {
+  @include flex-standard;
+  gap: $spacing-8;
+
+  &-link {
+    @include flex-standard;
+
+    &:hover {
+      background: $disabled;
     }
 
-    .fnb {
-      @include flex-standard;
-      gap: $spacing-16;
-
-      &-item {
-        font-size: 14px;
-
-        &:hover {
-          text-decoration: underline;
-        }
-      }
-
-    }
-
-    .copyright {
-      font-size: 13px;
-      color: $font-gray-02;
-    }
-
-    .sns {
-      @include flex-standard;
-      gap: $spacing-8;
-
-      &-link {
-        @include flex-standard;
-
-        &:hover {
-          background: $disabled;
-        }
-
-        .svg-icon {
-          width: 24px;
-          height: 24px;
-        }
-      }
-    }
-
-    .select-sm {
-      width: 120px;
+    .svg-icon {
+      width: 24px;
+      height: 24px;
     }
   }
 }

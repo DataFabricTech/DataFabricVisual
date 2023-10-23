@@ -1,5 +1,5 @@
 <template>
-  <div class="table-column">
+  <div class="table-col">
     <table>
       <caption class="caption-out">
         Description Column

@@ -1,7 +1,5 @@
 #header {
-  @include flex-standard;
-  height: 56px;
-  border-bottom: 1px solid $gray;
+  @include flex-standard($direction: column);
 }
 
 .header {
@@ -15,4 +13,3 @@
     gap: $spacing-8;
   }
 }
-
