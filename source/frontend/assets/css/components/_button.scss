@@ -122,6 +122,11 @@
     text-decoration: underline;
   }
 
+  &-link-tertiary {
+    @include button-theme($bg-color: transparent, $hover-bg-color: transparent, $active-bg-color: transparent, $font-color: $tertiary, $hover-font-color: $hover-tertiary, $active-font-color: $active-tertiary);
+    text-decoration: underline;
+  }
+
   &-link-negative {
     @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $negative, $hover-font-color: $hover-negative, $active-font-color: $active-negative);
     text-decoration: underline;
