@@ -829,8 +829,10 @@
           <tr>
             <td>
               <div class="h-group">
-                <strong class="w-[150px] font-light text-[14px] shrink-0">type: Search List</strong>
-                <baseListSearch class="w-[300px]"></baseListSearch>
+                <strong class="w-[150px] font-light text-[14px] shrink-0">type:  Checkable List</strong>
+                <baseListCheckable class="w-[300px]">
+                  title
+                </baseListCheckable>
               </div>
             </td>
           </tr>

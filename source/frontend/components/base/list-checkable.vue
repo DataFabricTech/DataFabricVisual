@@ -1,19 +1,23 @@
 <template>
   <div class="list">
     <div class="list-head">
-      <div class="list-head-title">저장소 유형</div>
+      <div class="list-head-title">
+        <slot class="list-head-title" options="title"></slot>
+      </div>
     </div>
     <div class="list-body">
-      <div class="list-options">
-        <baseCheckbox id="list-check-04">전체</baseCheckbox>
-        <div class="list-options-count">
-          <strong class="list-options-count-selected">0</strong>
-          <span>/</span>
-          <span class="list-options-count-all">
-          38
-          </span>
+      <slot name="options">
+        <div class="list-options">
+          <baseCheckbox id="list-check-04">전체</baseCheckbox>
+          <div class="list-options-count">
+            <strong class="list-options-count-selected">0</strong>
+            <span>/</span>
+            <span class="list-options-count-all">
+              38
+            </span>
+          </div>
         </div>
-      </div>
+      </slot>
       <ul class="list-list">
         <li class="list-item">
           <baseCheckbox id="list-check-01">default</baseCheckbox>

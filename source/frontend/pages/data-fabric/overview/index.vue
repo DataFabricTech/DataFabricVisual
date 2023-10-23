@@ -14,7 +14,7 @@
               </BaseButton>
               <BaseContext class="kebab-context" v-if="state.isOpen"></BaseContext>
             </div>
-            <BaseButton class="button-icon button-link button-sm" title="필터">
+            <BaseButton @click="onClickOpen" class="button-icon button-link button-sm" title="필터">
               <span class="hidden">필터</span>
               <svg-icon name="filter" class="svg-icon"></svg-icon>
             </BaseButton>
@@ -165,9 +165,39 @@
       </div>
     </div>
   </div>
+  <modal v-model="show" title="저장소 샘플">
+    <template v-slot:body>
+      <baseListCheckable class="w-[326px]">
+        저장소유형
+      </baseListCheckable>
+      <baseListCheckable class="w-[326px]">
+        연결 상태
+        <template v-slot:options>
+          <div class="list-options hidden"></div>
+        </template>
+      </baseListCheckable>
+    </template>
+    <template v-slot:foot>
+      <baseButton class="button-danger button-lg">
+        <span class="button-text">초기화</span>
+      </baseButton>
+      <div class="h-group ml-auto">
+        <baseButton class="button-normal button-lg">
+          <span class="button-text">취소</span>
+        </baseButton>
+        <baseButton class="button-primary button-lg">
+          <span class="button-text">다음</span>
+        </baseButton>
+      </div>
+    </template>
+  </modal>
 </template>
 
+
+
 <script lang="ts" setup>
+import { ref } from "@vue/reactivity";
+const show = ref(false);
 
 definePageMeta({
   layout: "default-tab-layout",
@@ -176,5 +206,9 @@ definePageMeta({
 const state = reactive({
   isOpen: false
 });
+
+function onClickOpen() {
+  show.value = !show.value;
+}
 </script>
 
