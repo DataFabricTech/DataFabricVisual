@@ -1,0 +1,45 @@
+.form {
+  @include flex-standard($horizontal: space-between);
+  width: 100%;
+
+  &-list {
+    @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
+    flex-grow: 1;
+    gap: $spacing-24;
+  }
+
+  &-item {
+    @include flex-standard($horizontal: flex-start);
+  }
+
+  &-label {
+    width: 100px;
+    flex-shrink: 0;
+  }
+
+  &-content {
+    @include flex-standard($horizontal: flex-start);
+    gap: $spacing-24;
+
+    .select {
+      width: 160px;
+    }
+  }
+
+  &-title {
+    font-size: 15px;
+    font-weight: 400;
+    color: $font-black;
+  }
+
+  &-action {
+    @include flex-standard($vertical: flex-end, $direction: column);
+    flex-shrink: 0;
+    gap: $spacing-16;
+
+
+    .button {
+      width: 120px;
+    }
+  }
+}
