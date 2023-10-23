@@ -2,7 +2,7 @@
 <template>
   <div class="l-split">
     <h2 class="hidden">저장소 관리</h2>
-    <div class="snb">
+    <div class="side-content">
       <h3 class="hidden">필터</h3>
       <div class="search-tree">
         <div class="v-group w-full">
