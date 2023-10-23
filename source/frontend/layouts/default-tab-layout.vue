@@ -1,7 +1,7 @@
 <template>
   <div id="wrap">
     <TheHeader></TheHeader>
-     <main class="l-full">
+    <main id="main">
       <TheTab></TheTab>
       <slot />
     </main>

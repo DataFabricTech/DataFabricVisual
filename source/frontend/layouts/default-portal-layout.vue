@@ -1,7 +1,7 @@
 <template>
   <div id="wrap">
     <TheHeader></TheHeader>
-    <main>
+    <main id="main">
       <slot />
     </main>
     <TheFooter></TheFooter>
