@@ -27,7 +27,7 @@
         </BaseButton>
       </div>
     </div>
-    <div class="main-content">
+    <section class="main-content">
       <div class="main-content-subject">
         <h3 class="main-content-title">Overview</h3>
         <BaseButton class="button-tertiary">
@@ -161,7 +161,7 @@
           </table>
         </div>
       </div>
-    </div>
+    </section>
   </div>
   <modal v-model="show" title="저장소 샘플">
     <template v-slot:body>
