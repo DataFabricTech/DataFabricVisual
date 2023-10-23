@@ -1,3 +1,19 @@
+.result-split {
+  @include flex-standard($vertical: stretch);
+  width: 100%;
+}
+
+.result-detail {
+  @include flex-standard($vertical: flex-start, $direction: column);
+  gap: $spacing-28;
+  flex-grow: 1;
+}
+
+.preview {
+  width: 878px;
+  flex-shrink: 0;
+}
+
 .category-name {
   @include flex-standard;
   height: 40px;
