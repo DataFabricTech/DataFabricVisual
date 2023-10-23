@@ -1,36 +1,56 @@
+@mixin search-field-size($height, $font-size, $padding, $clear-button-size, $search-button-size) {
+  .text-input {
+    height: $height;
+    font-size: $font-size;
+    padding-right: $padding;
+  }
+  .search-clear-button {
+    width: $clear-button-size;
+    height: $clear-button-size;
+    right: $clear-button-size;
+  }
+
+  .search-button {
+    width: $search-button-size;
+    height: $search-button-size;
+  }
+}
+
 .search-field {
   position: relative;
   width: 520px;
 
   .text-input {
-    height: 60px;
-    font-size: 22px;
-    padding: 0 110px 0 $spacing-16;
-
-    &::placeholder {
-      font-size: 22px;
-    }
+    padding-right: 65px;
   }
+
   .search-clear-button {
     position: absolute;
-    top: 20%;
-    right: 65px;
+    top: 0;
+    right: 32px;
   }
 
   .search-button {
     position: absolute;
     top: 1px;
-    left: 461px;
-    width: 58px;
-    height: 58px;
+    right: 1px;
+    width: 30px;
+    height: 30px;
     border-right: transparent;
     border-top: transparent;
     border-bottom: transparent;
+  }
 
-    .svg-icon {
-      fill: $icon-gray;
-      width: 36px;
-      height: 36px;
+  &-lg {
+    @include search-field-size(40px, 16px, 70px, 40px, 38px);
+  }
+
+  &-sm {
+    @include search-field-size(24px, 12px, 46px, 24px, 22px);
+    width: 100%;
+
+    .search-button, .search-clear-button {
+      top : 3px;
     }
   }
 }

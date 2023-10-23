@@ -22,7 +22,7 @@
       @include flex-standard;
       gap: $spacing-16;
 
-      &-list {
+      &-item {
         font-size: 14px;
 
         &:hover {

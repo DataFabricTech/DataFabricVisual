@@ -19,7 +19,7 @@
   }
 
   &-text {
-    font-size: 12px;
+    font-size: 13px;
     color: $black;
   }
 
@@ -30,7 +30,7 @@
     border: 1px solid $border-gray;
     border-radius: $border-radius-sm;
 
-    .data-ranking {
+    .ranking {
       padding: $spacing-8;
 
       &-list {
@@ -169,12 +169,23 @@
 
     .community {
       @include flex-standard($horizontal: flex-start);
-      width: 100%;
+      gap: $spacing-16;
+      width: calc(100% - 16px);
       height: 100%;
 
-      &-notices, &-fnq {
+      &-inner {
+        position: relative;
         width: 50%;
         height: 100%;
+
+        &:not(:last-child):before {
+          content: "";
+          position: absolute;
+          right: -8px;
+          height: 100%;
+          width: 1px;
+          background: $border-gray;
+        }
       }
 
       &-head {
@@ -182,18 +193,9 @@
         width: 100%;
       }
 
-      &-notices {
-        padding-right: $spacing-8;
-        border-right: 1px solid $border-gray;
-      }
-
-      &-fnq {
-        padding-left: $spacing-8;
-      }
-
       &-title {
         color: $black;
-        font-size: 15px;
+        font-size: 16px;
         font-weight: 700;
 
         em{
@@ -213,6 +215,7 @@
 
         &-link {
           @include ellipsis;
+          font-size: 15px;
           color: $black;
 
           &:hover {
@@ -245,6 +248,7 @@
     .notify {
       &-container {
         @include flex-standard($horizontal: flex-start);
+        gap:$spacing-2;
         overflow: hidden;
       }
 
@@ -259,16 +263,14 @@
 
       &-item {
         @include flex-standard;
-        margin-right: $spacing-2;
+        font-size: 13px;
 
         em {
           flex-shrink: 0;
-          font-size: 13px;
         }
       }
       &-text {
         @include ellipsis;
-        font-size: 13px;
       }
     }
 

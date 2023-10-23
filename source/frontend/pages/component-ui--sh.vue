@@ -650,7 +650,20 @@
       </tr>
       <tr>
         <td>
-          <SearchField></SearchField>
+          <div class="v-group gap-5">
+            <div class="h-group">
+              <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
+              <SearchField class="search-field-lg"></SearchField>
+            </div>
+            <div class="h-group">
+              <strong class="w-[150px] font-light text-[14px] shrink-0">size: md</strong>
+              <SearchField></SearchField>
+            </div>
+            <div class="h-group">
+              <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
+              <SearchField class="search-field-sm" style="width: 300px;"></SearchField>
+            </div>
+          </div>
         </td>
       </tr>
       <tr>

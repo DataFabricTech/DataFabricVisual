@@ -7,10 +7,10 @@
         </span>
         <div class="v-group gap-1">
           <ul class="fnb">
-            <li class="fnb-list">
+            <li class="fnb-item">
               <a href="#">이용약관</a>
             </li>
-            <li class="fnb-list">
+            <li class="fnb-item">
               <a href="#">개인정보처리방침</a>
             </li>
           </ul>
