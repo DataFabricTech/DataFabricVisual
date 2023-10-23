@@ -3,8 +3,8 @@
   <div class="l-common">
     <h2 class="hidden">데이터패브릭포털 검색</h2>
     <div class="l-inner">
-      <section>
-        <div class="v-group gap-4 items-center py-[175px]">
+      <section class="l-section">
+        <div class="v-group gap-4 items-center py-[175px] w-full">
           <SearchField class="search-field-lg"></SearchField>
           <diV class="h-group gap-5">
             <baseTag># CCTV위치</baseTag>
