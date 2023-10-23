@@ -43,7 +43,7 @@
               데이터모델 (6)
             </h4>
             <ul class="card-list">
-              <li class="card-item">
+              <li class="card-item is-selected">
                 <Card>
                   <template v-slot:img>
                     <svg-icon name="data" class="svg-icon"></svg-icon>
