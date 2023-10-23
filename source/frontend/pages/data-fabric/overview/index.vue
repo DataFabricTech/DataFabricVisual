@@ -7,10 +7,13 @@
       <div class="search-tree">
         <div class="v-group w-full">
           <div class="h-group ml-auto">
-            <BaseButton class="button-icon button-link button-sm" title="정렬">
-              <span class="hidden">정렬</span>
-              <svg-icon name="sort" class="svg-icon"></svg-icon>
-            </BaseButton>
+            <div class="kebab-menu">
+              <BaseButton @focus="state.isOpen=true" @blur="state.isOpen = false" class="button button-icon button-lg" title="열기" >
+                <span class="hidden">정렬 열기</span>
+                <svg-icon name="sort" class="svg-icon" />
+              </BaseButton>
+              <BaseContext class="kebab-context" v-if="state.isOpen"></BaseContext>
+            </div>
             <BaseButton class="button-icon button-link button-sm" title="필터">
               <span class="hidden">필터</span>
               <svg-icon name="filter" class="svg-icon"></svg-icon>
@@ -170,5 +173,8 @@ definePageMeta({
   layout: "default-tab-layout",
 });
 
+const state = reactive({
+  isOpen: false
+});
 </script>
 

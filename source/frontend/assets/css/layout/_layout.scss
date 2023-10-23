@@ -7,13 +7,13 @@
 
 .l-full {
   position: relative;
-  top: 56px;
+  padding-top: 56px;
   height: 100%;
 
   .l-nav + .l-split {
     @include flex-standard($vertical: flex-start, $direction:column);
     position: relative;
-    top: 40px;
+    padding-top: 40px;
     height: calc(100% - 40px);
   }
 }

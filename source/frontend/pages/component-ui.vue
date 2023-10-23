@@ -821,6 +821,19 @@
 
             </td>
           </tr>
+          <tr>
+            <td>
+              <th scope="row">List</th>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="h-group">
+                <strong class="w-[150px] font-light text-[14px] shrink-0">type: Search List</strong>
+                <baseListSearch class="w-[300px]"></baseListSearch>
+              </div>
+            </td>
+          </tr>
           </tbody>
         </table>
       </div>
