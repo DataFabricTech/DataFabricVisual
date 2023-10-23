@@ -1,12 +1,5 @@
 #header {
-  @include flex-standard;
-  @include z-index('float');
-  position: fixed;
-  width: 100%;
-  height: 56px;
-  top: 0;
-  background-color: $white;
-  border-bottom: 1px solid $gray;
+  @include flex-standard($direction: column);
 }
 
 .header {
@@ -20,4 +13,3 @@
     gap: $spacing-8;
   }
 }
-
