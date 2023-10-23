@@ -10,10 +10,6 @@
     @include flex-standard($horizontal: flex-start, $direction: column);
     width: 100%;
     gap: $spacing-28;
-
-    & + .pagination {
-      margin-top: $spacing-28;
-    }
   }
 
   &-item {
