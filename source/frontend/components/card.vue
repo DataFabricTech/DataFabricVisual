@@ -5,7 +5,7 @@
         <slot name="img"></slot>
       </div>
     </div>
-    <div class="card-contents">
+    <div class="card-content">
       <div class="h-group justify-between w-full">
         <div class="h-group gap-[8px]">
           <BaseBadge class="bg-marker-cyan">HDFS</BaseBadge>
@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="v-group">
-        <strong class="card-title">불법 주정차 구간 데이터</strong>
+        <a href="#" class="card-link" title="이동">불법 주정차 구간 데이터</a>
         <p class="card-detail">서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보</p>
       </div>
       <div class="h-group gap-[16px]">

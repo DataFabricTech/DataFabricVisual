@@ -16,7 +16,7 @@
   }
 
   &-body {
-    @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: cloumn);
+    @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
     width: 100%;
     padding: $spacing-24;
   }
