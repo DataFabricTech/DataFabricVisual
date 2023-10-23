@@ -5,9 +5,7 @@
       <section class="l-section gap-[20px]">
         <h3 class="hidden">데이터 검색</h3>
         <div class="data-search">
-          <!--            TODO: [퍼블리싱] search-field 대체 예정-->
-          <label for="inp01" class="hidden">데이터 검색</label>
-          <BaseTextInput id="inp01" class="w-[522px]"></BaseTextInput>
+          <SearchField></SearchField>
           <BaseButton class="button-icon button-normal" title="상세 검색">
             <span class="hidden">상세 검색</span>
             <svg-icon name="sort" class="svg-icon"></svg-icon>
@@ -83,6 +81,7 @@
   </div>
 </template>
 <script lang="ts" setup>
+
 definePageMeta({
   layout: "default-layout"
 });
