@@ -12,7 +12,7 @@
   }
 }
 
-.contents {
+.main-content {
   &-subject {
     @include flex-standard;
     padding: $spacing-12 $spacing-24;
@@ -27,7 +27,7 @@
     margin-right: auto;
   }
 
-  &-s-title {
+  &-subtitle {
     color: $font-black;
     font-size: 18px;
     font-weight: 500;
