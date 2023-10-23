@@ -28,14 +28,14 @@
       </div>
     </div>
     <section class="main-content">
-      <div class="main-content-subject">
-        <h3 class="main-content-title">Overview</h3>
+      <div class="page-subject">
+        <h3 class="page-title">Overview</h3>
         <BaseButton class="button-tertiary">
           <span class="button-text">데이터 모델 생성</span>
         </BaseButton>
       </div>
-      <div class="main-content-inner summary-info">
-        <h4 class="main-content-subtitle">요약 정보</h4>
+      <div class="page-content summary-info">
+        <h4 class="page-subtitle">요약 정보</h4>
         <div class="h-group w-full">
           <div class="summary-info-chartbox">차트</div>
           <div class="summary-info-chartbox">차트</div>
@@ -46,8 +46,8 @@
           <div class="summary-info-chartbox">차트</div>
         </div>
       </div>
-      <div class="main-content-inner">
-        <h4 class="main-content-subtitle">최근 등록/변경된 연결정보</h4>
+      <div class="page-content">
+        <h4 class="page-subtitle">최근 등록/변경된 연결정보</h4>
         <div class="table-col">
           <table>
             <caption class="caption-out">
@@ -106,8 +106,8 @@
           </table>
         </div>
       </div>
-      <div class="main-content-inner">
-        <h4 class="main-content-subtitle">히스토리</h4>
+      <div class="page-content">
+        <h4 class="page-subtitle">히스토리</h4>
         <div class="table-col">
           <table>
             <caption class="caption-out">
