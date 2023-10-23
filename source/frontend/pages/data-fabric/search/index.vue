@@ -1,18 +1,19 @@
 <template>
   <div class="l-common">
-    <h2 class="hidden">데이터패브릭 검색과 검색결과</h2>
+    <h2 class="hidden">데이터패브릭 검색</h2>
     <div class="l-inner flex-col">
       <section class="l-section gap-[20px]">
         <h3 class="hidden">데이터 검색</h3>
         <div class="data-search">
           <!--            TODO: [퍼블리싱] search-field 대체 예정-->
-          <BaseTextInput class="w-[522px]"></BaseTextInput>
-          <BaseButton class="button-icon button-normal" title="상세 검색" @click="state.isOpen = !state.isOpen">
+          <label for="inp01" class="hidden">데이터 검색</label>
+          <BaseTextInput id="inp01" class="w-[522px]"></BaseTextInput>
+          <BaseButton class="button-icon button-normal" title="상세 검색">
             <span class="hidden">상세 검색</span>
-            <svg-icon name="filter" class="svg-icon"></svg-icon>
+            <svg-icon name="sort" class="svg-icon"></svg-icon>
           </BaseButton>
         </div>
-        <div class="data-search-filter" v-if="state.isOpen">
+        <div class="data-search-filter">
           <SearchFilter></SearchFilter>
         </div>
       </section>
@@ -86,9 +87,6 @@ definePageMeta({
   layout: "default-layout"
 });
 
-const state = reactive({
-  isOpen: false
-});
 
 </script>
 
