@@ -60,13 +60,12 @@
 // layouts
 @import "layout/layout";
 @import "layout/modal";
+@import "layout/main";
 @import "layout/header";
 @import "layout/footer";
-@import "layout/snb";
+@import "layout/side-content";
 @import "layout/no-result";
 
-
-@import "pages/data-fabric-portal";
 @import "pages/data-fabric/data-fabric";
 @import "pages/data-fabric/search";
 @import "pages/data-fabric/overview";

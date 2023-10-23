@@ -3,5 +3,23 @@
 // ------------------------------------------
 #wrap {
   min-width: 1920px;
-  overflow-x: hidden;
+
+  &.is-have-tab {
+    #main {
+      height: calc(100% - 96px);
+    }
+  }
+
+  // TODO: [퍼블리싱] 데이터패브릭 메인 진행시 재검토
+  &.is-not-scroll {
+    #main {
+      overflow: hidden;
+      height: calc(100% - 192px);
+
+      .l-common,
+      .l-section {
+        flex-grow: 1;
+      }
+    }
+  }
 }
