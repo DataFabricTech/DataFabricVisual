@@ -5,6 +5,7 @@
   @include flex-standard($direction: column);
   gap: $spacing-12;
   flex: 1;
+  max-width: 700px;
 
   &-head {
     @include flex-standard($direction: column);
@@ -166,28 +167,68 @@
       }
     }
 
-    .notices, .fnq {
-      @include flex-standard($direction: column);
-      flex:1;
+    .community {
+      @include flex-standard($horizontal: flex-start);
+      width: 100%;
+      height: 100%;
 
-    }
+      &-notices, &-fnq {
+        width: 50%;
+        height: 100%;
+      }
 
-    .notices {
-      border-right: 1px solid $border-gray;
-      margin-right: $spacing-4;
-      padding-right: $spacing-4;
+      &-head {
+        @include flex-standard($horizontal: space-between);
+        width: 100%;
+      }
+
+      &-notices {
+        padding-right: $spacing-8;
+        border-right: 1px solid $border-gray;
+      }
+
+      &-fnq {
+        padding-left: $spacing-8;
+      }
 
       &-title {
         color: $black;
         font-size: 15px;
         font-weight: 700;
+
+        em{
+          color: $tertiary;
+        }
       }
 
+      &-list {
+        @include flex-standard($direction: column,$vertical: flex-start);
+        gap: 10px;
+      }
+
+      &-item {
+        @include flex-standard;
+        gap: $spacing-4;
+        width: 100%;
+
+        &-link {
+          @include ellipsis;
+          color: $black;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    .notices {
       &-notify {
         @include flex-standard;
-        padding: $spacing-8;
         position: relative;
         height: 36px;
+        padding: $spacing-8;
+        margin-top: $spacing-4;
         background: $light-blue-02;
         border-radius: $border-radius-sm;
         font-size: 12px;
@@ -207,36 +248,32 @@
           @include ellipsis;
           font-size: 13px;
         }
-
-        .paging {
-          position: absolute;
-          bottom:-15px;
-
-          &-dots {
-            @include flex-standard;
-            gap: $spacing-8;
-
-            .dot {
-              width: 10px;
-              height: 10px;
-              background: $gray;
-              border-radius: $border-radius-round;
-            }
-          }
-        }
       }
+    }
 
-      &-list {
-        @include flex-standard($direction: column);
+    .paging {
+      position: absolute;
+      bottom:-15px;
+
+      &-dots {
+        @include flex-standard;
         gap: $spacing-8;
       }
-      &-item {
-        @include flex-standard;
-        gap: $spacing-4;
 
-        &-text {
-          @include ellipsis;
-          color: $black;
+      .dot {
+        width: 10px;
+        height: 10px;
+        background: $gray;
+        border-radius: $border-radius-round;
+
+        &.is-active {
+          background: $tertiary;
+        }
+
+        &-button {
+          width: 100%;
+          cursor: pointer;
+          text-indent: -9999px;
         }
       }
     }

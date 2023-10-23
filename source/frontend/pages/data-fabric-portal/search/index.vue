@@ -4,7 +4,7 @@
     <section>
     <div class="v-group gap-4 items-center py-[175px]">
       <SearchField></SearchField>
-      <diV class="h-group gap-4">
+      <diV class="h-group gap-5">
         <baseTag># CCTV위치</baseTag>
         <baseTag># 주정차댠속</baseTag>
         <baseTag># 기후변화</baseTag>
@@ -97,21 +97,21 @@
           <p class="portal-article-text">공지사항 및 이용문의를 통해서 데이터패브릭 포털을 더 잘 이용할 수 있습니다. </p>
         </div>
         <div class="portal-article-body">
-          <div class="h-group h-full items-start">
-            <div class="notices">
-              <div class="flex justify-between items-center w-full">
-                <div class="notices-title">공지사항</div>
+          <div class="community">
+            <div class="community-notices">
+              <div class="community-head">
+                <div class="community-title">공지사항</div>
                 <baseButton class="button-link-tertiary">더보기</baseButton>
               </div>
               <div class="notices-notify">
                 <svg-icon name="speaker" class="svg-icon" />
-                <div class="h-group">
+                <a href="#" class="h-group">
                   <em>[서비스 안내]</em>
                   <span class="notices-notify-text">분석 서비스를 위한 저작도구 신규 서비스 도입</span>
-                </div>
+                </a>
                 <div class="paging">
                   <ul class="paging-dots">
-                    <li class="dot">
+                    <li class="dot is-active">
                       <button class="dot-button">1</button>
                     </li>
                     <li class="dot">
@@ -123,24 +123,33 @@
                   </ul>
                 </div>
               </div>
-              <div class="mt-6">
-                <ul class="notices-list">
-                  <li class="notices-item" v-for="index in 6">
+              <div class="mt-7">
+                <ul class="community-list">
+                  <li class="community-item" v-for="index in 6">
                     <baseBadge class="bg-marker-cyan">안내</baseBadge>
-                    <span class="notices-item-text">
+                    <a href="#" class="community-item-link">
                       [신규 인프라] 이미지 지원 종료 안내(2023/09/26)
-                    </span>
+                    </a>
                   </li>
                 </ul>
               </div>
             </div>
-            <div class="fnq">
-              <div class="flex justify-between items-center w-full">
-                <div class="title">
+            <div class="community-fnq">
+              <div class="community-head">
+                <div class="community-title">
                   자주하는 질문
                   <em>FAQ</em>
                 </div>
                 <baseButton class="button-link-tertiary">더보기</baseButton>
+              </div>
+              <div class="mt-4">
+                <ul class="community-list">
+                  <li class="community-item" v-for="index in 7">
+                    <a href="#" class="community-item-link">
+                      [서비스문의] 서비스 신규 신청은 어떻게 진행하면 될까요?
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
