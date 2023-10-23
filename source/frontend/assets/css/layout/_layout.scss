@@ -20,10 +20,11 @@
 }
 
 .l-common {
-  @include flex-standard;
+  @include flex-standard($direction: column);
 
   .l-inner {
     padding: $spacing-24;
+    gap: $spacing-28;
   }
 }
 
@@ -43,6 +44,11 @@
   .main-content {
     height: 100%;
   }
+}
+
+.l-section{
+  @include flex-standard($vertical: flex-start, $direction: column);
+  width: 100%;
 }
 
 .main-content {

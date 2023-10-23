@@ -1,0 +1,16 @@
+.search-filter {
+  width: 100%;
+  background-color: $white;
+  border: 1px solid $border-gray;
+
+  &-body {
+    padding: $spacing-20;
+  }
+
+  &-footer {
+    @include flex-standard($horizontal: space-between);
+    height: 64px;
+    padding: 0 $spacing-20;
+    border-top: 1px solid $border-gray;
+  }
+}
