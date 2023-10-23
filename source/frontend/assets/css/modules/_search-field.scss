@@ -49,8 +49,8 @@
     @include search-field-size(24px, 12px, 46px, 24px, 22px);
     width: 100%;
 
-    .search-button, .search-clear-button {
-      top : 3px;
+    .search-button,.search-clear-button {
+      top: 2.5px;
     }
   }
 }
