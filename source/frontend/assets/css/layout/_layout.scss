@@ -1,6 +1,6 @@
 .l-inner {
   @include flex-standard($horizontal: flex-start);
-  width: 1920px;
+  width: 100%;
   height: 100%;
   padding: 0 $spacing-16;
 }
@@ -22,6 +22,7 @@
   @include flex-standard;
   @include z-index('float');
   position: fixed;
+  width: 100%;
   height: 40px;
   background-color: $gray;
 }
