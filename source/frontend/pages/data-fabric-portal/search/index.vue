@@ -104,11 +104,19 @@
                 <baseButton class="button-link-tertiary">더보기</baseButton>
               </div>
               <div class="notices-notify">
-                <svg-icon name="speaker" class="svg-icon" />
-                <a href="#" class="h-group">
-                  <em>[서비스 안내]</em>
-                  <span class="notices-notify-text">분석 서비스를 위한 저작도구 신규 서비스 도입</span>
-                </a>
+                <div class="notify-container">
+                  <svg-icon name="speaker" class="svg-icon" />
+                  <div class="notify-wrapper">
+                    <a href="#" class="notify-item">
+                      <em>[서비스 안내]</em>
+                      <span class="notify-text">분석 서비스를 위한 저작도구 신규 서비스 도입</span>
+                    </a>
+                    <a href="#" class="notify-item">
+                      <em>[서비스 안내]</em>
+                      <span class="notify-text">분석 서비스를 위한 저작도구 신규 서비스 도입</span>
+                    </a>
+                  </div>
+                </div>
                 <div class="paging">
                   <ul class="paging-dots">
                     <li class="dot is-active">

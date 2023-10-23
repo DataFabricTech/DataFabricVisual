@@ -225,6 +225,7 @@
     .notices {
       &-notify {
         @include flex-standard;
+        gap:$spacing-4;
         position: relative;
         height: 36px;
         padding: $spacing-8;
@@ -238,16 +239,36 @@
           width: 18px;
           height: 18px;
         }
+      }
+    }
+
+    .notify {
+      &-container {
+        @include flex-standard($horizontal: flex-start);
+        overflow: hidden;
+      }
+
+      &-wrapper {
+        display: flex;
+        box-sizing: content-box;
+        height: 100%;
+        width: 100%;
+        transition-property: transform;
+        transform: translateZ(0);
+      }
+
+      &-item {
+        @include flex-standard;
+        margin-right: $spacing-2;
 
         em {
           flex-shrink: 0;
           font-size: 13px;
         }
-
-        &-text {
-          @include ellipsis;
-          font-size: 13px;
-        }
+      }
+      &-text {
+        @include ellipsis;
+        font-size: 13px;
       }
     }
 
