@@ -55,11 +55,24 @@
   }
 }
 
-.l-section{
+.l-section {
   @include flex-standard($vertical: flex-start, $direction: column);
   width: 100%;
 }
 
 .main-content {
   flex-grow: 1;
+}
+
+.main-search {
+  @include flex-standard($direction: column);
+  width: 100%;
+  gap: $spacing-16;
+  padding: 175px 0;
+}
+
+.main-information {
+  @include flex-standard;
+  width: 100%;
+  gap: 6px;
 }
