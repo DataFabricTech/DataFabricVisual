@@ -1,10 +1,7 @@
 .category-name {
   @include flex-standard;
-  height: 40px;
   padding: 0 $spacing-24;
-  font-size: 18px;
-  color: $font-gray-01;
-  border-radius: 10px;
-  border: 1px solid $border-gray;
+  font-size: 20px;
+  color: $font-black;
   user-select: none;
 }
