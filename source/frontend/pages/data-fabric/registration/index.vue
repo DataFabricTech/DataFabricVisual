@@ -18,19 +18,19 @@
               </li>
               <li class="storage-type-item is-selected">
                 <div class="storage-type-img">
-                  <img src="../../../assets/images/storage-type_02.png" alt="mariaDB">
+                  <img src="../../../assets/images/storage-type_02.png" alt="MySQL">
                 </div>
                 <span class="storage-type-title">MySQL</span>
               </li>
               <li class="storage-type-item is-disabled">
                 <div class="storage-type-img">
-                  <img src="../../../assets/images/storage-type_03.png" alt="mariaDB">
+                  <img src="../../../assets/images/storage-type_03.png" alt="PostgreSQL">
                 </div>
                 <span class="storage-type-title">PostgreSQL</span>
               </li>
               <li class="storage-type-item">
                 <div class="storage-type-img">
-                  <img src="../../../assets/images/storage-type_04.png" alt="mariaDB">
+                  <img src="../../../assets/images/storage-type_04.png" alt="Oracle">
                 </div>
                 <span class="storage-type-title">Oracle</span>
               </li>
@@ -42,39 +42,39 @@
               </li>
               <li class="storage-type-item">
                 <div class="storage-type-img">
-                  <img src="../../../assets/images/storage-type_06.png" alt="mariaDB">
+                  <img src="../../../assets/images/storage-type_06.png" alt="MinIO">
                 </div>
                 <span class="storage-type-title">MinIO</span>
               </li>
               <li class="storage-type-item">
                 <div class="storage-type-img">
-                  <img src="../../../assets/images/storage-type_07.png" alt="mariaDB">
+                  <img src="../../../assets/images/storage-type_07.png" alt="IRIS">
                 </div>
                 <span class="storage-type-title">IRIS</span>
               </li>
               <li class="storage-type-item">
                 <div class="storage-type-img">
-                  <img src="../../../assets/images/storage-type_08.png" alt="mariaDB">
+                  <img src="../../../assets/images/storage-type_08.png" alt="MongoDB">
                 </div>
                 <span class="storage-type-title">MongoDB</span>
               </li>
               <li class="storage-type-item">
                 <div class="storage-type-img">
-                  <img src="../../../assets/images/storage-type_06.png" alt="mariaDB">
+                  <img src="../../../assets/images/storage-type_06.png" alt="sample-01">
                 </div>
-                <span class="storage-type-title"></span>
+                <span class="storage-type-title">sample-01</span>
               </li>
               <li class="storage-type-item">
                 <div class="storage-type-img">
-                  <img src="../../../assets/images/storage-type_07.png" alt="mariaDB">
+                  <img src="../../../assets/images/storage-type_07.png" alt="sample-02">
                 </div>
-                <span class="storage-type-title"></span>
+                <span class="storage-type-title">sample-02</span>
               </li>
               <li class="storage-type-item">
                 <div class="storage-type-img">
-                  <img src="../../../assets/images/storage-type_08.png" alt="mariaDB">
+                  <img src="../../../assets/images/storage-type_08.png" alt="sample-03">
                 </div>
-                <span class="storage-type-title"></span>
+                <span class="storage-type-title">sample-01</span>
               </li>
             </ul>
           </div>

@@ -50,6 +50,7 @@
   &-item + .is-disabled {
     opacity: 0.5;
     cursor: not-allowed;
+
     img {
       filter: grayscale(100%);
     }
@@ -63,7 +64,4 @@
       color: $font-black;
     }
   }
-
-
-
 }
