@@ -1,6 +1,5 @@
-import {ofetch} from 'ofetch'
-import { useRuntimeConfig } from "nuxt/app";
-import { ActiveLoader, useLoading } from "vue-loading-overlay";
+import { ofetch } from "ofetch";
+import { defineNuxtPlugin, useNuxtApp, useRuntimeConfig } from "nuxt/app";
 
 export default defineNuxtPlugin((nuxtApp) => {
   globalThis.$fetch = ofetch.create({
@@ -25,34 +24,29 @@ export default defineNuxtPlugin((nuxtApp) => {
         }
       }
       response._data = data.data;
-    },
-  })
+    }
+  });
 
   function errorResponse(data: any) {
     let errorMessage = data.errMsg;
     if (errorMessage === null || errorMessage === "") {
       errorMessage = "시스템 오류가 발생 하였습니다.";
     }
-    console.error(errorMessage)
+    console.error(errorMessage);
     // TODO : system alert 사용시 로더 멈춤. 추후 errorAlert(개발) 적용 후 테스트 필요
     // alert(errorMessage);
   }
 
-  const $loading = useLoading();
-  let load: ActiveLoader;
+  const { $loader } = useNuxtApp();
   function showLoader() {
     try {
-      // load = nuxtApp.$loading.show()
-      load = $loading.show();
-      console.log(load);
+      $loader.start();
     } catch (e) {}
   }
 
   function hideLoader() {
     try {
-      setTimeout(() => {
-        load.hide()
-      }, 1000);
+      $loader.finish();
     } catch (e) {}
   }
-})
+});
