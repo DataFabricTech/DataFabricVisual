@@ -1,7 +1,7 @@
 <template>
-  <div id="wrap">
+  <div id="wrap" class="is-not-scroll">
     <TheHeader></TheHeader>
-    <main>
+    <main id="main">
       <slot />
     </main>
     <TheFooter></TheFooter>

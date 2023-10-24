@@ -1,1 +1,304 @@
- // data fabric portal common
+//-------------
+//search-field
+//-------------
+.portal-article {
+  @include flex-standard($direction: column);
+  gap: $spacing-12;
+  flex: 1;
+
+  &-head {
+    @include flex-standard($direction: column);
+    gap: $spacing-4;
+  }
+
+  &-title {
+    font-size: 20px;
+    color: $black;
+    font-weight: 600;
+  }
+
+  &-text {
+    font-size: 13px;
+    color: $black;
+  }
+
+  &-body {
+    width: 100%;
+    height: 320px;
+    padding: $spacing-8 $spacing-12;
+    border: 1px solid $border-gray;
+    border-radius: $border-radius-sm;
+  }
+}
+
+.ranking {
+  padding: $spacing-8;
+
+  &-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-8;
+  }
+
+  &-item {
+    &:not(:last-child) {
+      padding-bottom: $spacing-8 ;
+      border-bottom: 1px solid $border-gray;
+    }
+  }
+
+  &-link {
+    @include flex-standard($horizontal: flex-start);
+    gap: $spacing-12;
+
+    &:hover {
+      .data-ranking-title, .data-ranking-text {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &-num {
+    @include flex-standard;
+    flex: none;
+    width: 30px;
+    height: 30px;
+    background: $tertiary;
+    color: $white;
+    border-radius: $border-radius-sm;
+  }
+
+  &-description {
+    @include flex-standard($vertical: flex-start,$direction: column);
+    width: calc(100% - 42px);
+  }
+
+  &-title {
+    @include ellipsis;
+    width: 100%;
+    color: $black;
+    font-size: 13px;
+  }
+
+  &-text {
+    @include ellipsis;
+    width: 100%;
+    color: $font-gray-02;
+    font-size: 12px;
+  }
+}
+
+.swiper {
+  @include flex-standard($direction: column);
+  gap: $spacing-16;
+  position: relative;
+  height: 100%;
+  padding: $spacing-8 $spacing-16;
+
+  &-results {
+    @include flex-standard($horizontal: flex-end);
+    gap: $spacing-16;
+    width: 100%;
+
+    .results-page {
+      font-size: 13px;
+      color: $black;
+
+      em {
+        color: $tertiary;
+      }
+    }
+  }
+
+  &-container {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  &-pre-button, &-next-button {
+    position: absolute;
+    top: 45%;
+    height: 48px;
+    width: 25px;
+    padding: 0;
+    background: $white;
+    border:1px solid $border-gray;
+
+    &:hover {
+      background: $light-gray-02;
+    }
+  }
+
+  &-pre-button {
+    left: -13px;
+  }
+
+  &-next-button {
+    right: -13px;
+  }
+
+  &-wrapper {
+    position: relative;
+    display: flex;
+    box-sizing: content-box;
+    height: 100%;
+    width: 100%;
+    transition-property: transform;
+    transform: translateZ(0);
+  }
+
+  &-item {
+    @include flex-standard;
+    gap: $spacing-12;
+    width: 100%;
+    flex-shrink: 0;
+
+    &-title {
+      font-size: 16px;
+      color: $black;
+      font-weight: 600;
+    }
+    &-text {
+      font-size: 12px;
+      color: $font-gray-01;
+    }
+    .button {
+      width: 100%;
+    }
+  }
+}
+
+.community {
+  @include flex-standard($horizontal: flex-start);
+  gap: $spacing-16;
+  height: 100%;
+
+  &-inner {
+    position: relative;
+    width: calc(50% - 8px);
+    height: 100%;
+
+    &:not(:last-child):before {
+      content: "";
+      position: absolute;
+      right: -8px;
+      height: 100%;
+      width: 1px;
+      background: $border-gray;
+    }
+  }
+
+  &-head {
+    @include flex-standard($horizontal: space-between);
+    width: 100%;
+  }
+
+  &-title {
+    color: $black;
+    font-size: 16px;
+    font-weight: 700;
+
+    em{
+      color: $tertiary;
+    }
+  }
+
+  &-list {
+    @include flex-standard($direction: column,$vertical: flex-start);
+    gap: 10px;
+  }
+
+  &-item {
+    @include flex-standard;
+    gap: $spacing-4;
+    width: 100%;
+
+    &-link {
+      @include ellipsis;
+      font-size: 15px;
+      color: $black;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.notices {
+  &-notify {
+    @include flex-standard;
+    gap:$spacing-4;
+    position: relative;
+    height: 36px;
+    padding: $spacing-8;
+    margin-top: $spacing-4;
+    background: $light-blue-02;
+    border-radius: $border-radius-sm;
+    font-size: 12px;
+
+    .svg-icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+.notify {
+  &-container {
+    @include flex-standard($horizontal: flex-start);
+    gap:$spacing-2;
+    overflow: hidden;
+  }
+
+  &-wrapper {
+    display: flex;
+    box-sizing: content-box;
+    height: 100%;
+    width: 100%;
+    transition-property: transform;
+    transform: translateZ(0);
+  }
+
+  &-item {
+    @include flex-standard($horizontal: flex-start);
+    overflow: hidden;
+    font-size: 13px;
+
+    em {
+      flex-shrink: 0;
+    }
+  }
+
+  &-text{
+    white-space: nowrap;
+  }
+}
+
+.paging {
+  position: absolute;
+  bottom:-15px;
+
+  &-dots {
+    @include flex-standard;
+    gap: $spacing-8;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    background: $gray;
+    border-radius: $border-radius-round;
+
+    &.is-active {
+      background: $tertiary;
+    }
+
+    &-button {
+      width: 100%;
+      cursor: pointer;
+      text-indent: -9999px;
+    }
+  }
+}

@@ -13,15 +13,13 @@
         <span class="hidden">닫기</span>
       </baseButton>
     </header>
-    <div class="modal-body">
-      <slot name="body">
-        <!-- 샘플코드 -->
-        <p>
-          Vue Final Modal is a renderless, stackable, detachable and lightweight
-          modal component.
-        </p>
-      </slot>
-    </div>
+    <slot class="modal-body" name="body">
+      <!-- 샘플코드 -->
+      <p>
+        Vue Final Modal is a renderless, stackable, detachable and lightweight
+        modal component.
+      </p>
+    </slot>
     <footer class="modal-footer">
       <slot name="foot">
         <baseButton class="button-primary button-lg" @click="emit('update:modelValue', false)">

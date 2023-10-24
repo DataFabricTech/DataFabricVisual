@@ -42,7 +42,12 @@
 @import "components/toggle";
 @import "components/toggle-token";
 @import "components/toggle-button";
-@import "components/switch";
+@import "components/textarea";
+@import "components/radio";
+@import "components/checkbox";
+@import "components/table";
+@import "assets/css/components/list-checkable";
+@import "assets/css/components/switch";
 
 // modules
 @import "modules/card";
@@ -55,14 +60,15 @@
 // layouts
 @import "layout/layout";
 @import "layout/modal";
+@import "layout/main";
 @import "layout/header";
 @import "layout/footer";
-@import "layout/snb";
+@import "layout/side-content";
 @import "layout/no-result";
 
-@import "pages/data-fabric-portal";
 @import "pages/data-fabric/data-fabric";
 @import "pages/data-fabric/search";
+@import "pages/data-fabric/overview";
 @import "pages/data-fabric-portal/data-fabric-portal";
 
 // base
