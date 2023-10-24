@@ -1,7 +1,9 @@
 <template>
   <div id="wrap">
-    <TheHeader></TheHeader>
-    <main>
+    <header id="header">
+      <TheHeader></TheHeader>
+    </header>
+    <main id="main">
       <slot />
     </main>
   </div>

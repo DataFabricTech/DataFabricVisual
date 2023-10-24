@@ -1,0 +1,87 @@
+// data fabric common
+.gnb {
+  @include flex-standard($horizontal: flex-start);
+
+  &-item {
+    position: relative;
+
+    &:not(:first-child) {
+      &:before {
+        content: '';
+        position: absolute;
+        width: 1px;
+        height: 13px;
+        background-color: $gray;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+    }
+  }
+
+  &-button {
+    padding: 0 $spacing-12;
+    font-weight: 500;
+
+    &.is-selected {
+      color: $primary;
+    }
+  }
+}
+
+.page-subject {
+  @include flex-standard;
+  padding: $spacing-12 $spacing-24;
+  border-bottom: 1px solid $border-gray;
+  font-size: 20px;
+}
+
+.page-title {
+  color: $font-black;
+  font-size: 20px;
+  font-weight: 500;
+  margin-right: auto;
+}
+
+.page-subtitle {
+  color: $font-black;
+  font-size: 18px;
+  font-weight: 500;
+  margin-right: auto;
+}
+
+.page-article {
+  @include flex-standard($direction: column);
+  padding: $spacing-24;
+  gap: $spacing-16;
+}
+
+.data-search {
+  @include flex-standard($horizontal: flex-start);
+  gap: $spacing-16;
+}
+
+.data-search-filter {
+  width: 100%;
+}
+
+.result-info {
+  @include flex-standard($horizontal: space-between);
+  width: 100%;
+}
+
+.result-summary {
+  font-size: 16px;
+  font-weight: 400;
+  color: $font-black;
+
+  em {
+    color: $primary;
+  }
+}
+
+.result-sort {
+  @include flex-standard($horizontal: flex-end);
+  gap: $spacing-12;
+}
+

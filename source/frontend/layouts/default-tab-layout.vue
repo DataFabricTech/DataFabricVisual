@@ -1,8 +1,10 @@
 <template>
-  <div id="wrap">
-    <TheHeader></TheHeader>
-     <main class="l-full">
+  <div id="wrap" class="is-have-tab">
+    <header id="header">
+      <TheHeader></TheHeader>
       <TheTab></TheTab>
+    </header>
+    <main id="main">
       <slot />
     </main>
   </div>

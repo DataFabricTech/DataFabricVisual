@@ -2,5 +2,13 @@
 // SMACSS - class/id 사용 금지
 // ------------------------------------------
 #wrap {
-  min-width: 1920px
+  min-width: 1920px;
+  display: flex;
+  flex-direction: column;
+
+  &.is-have-tab {
+    #main {
+      height: calc(100% - 96px);
+    }
+  }
 }

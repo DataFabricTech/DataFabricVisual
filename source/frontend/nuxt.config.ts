@@ -10,8 +10,7 @@ export default defineNuxtConfig({
   // runtime에서 설정된 정보를 조회 가능
   runtimeConfig: {
     public: {
-      // baseUrl: `${process.env.VITE_CONTEXT_PATH}`,
-      baseUrl: ""
+      baseUrl: `${process.env.VITE_BASE_URL}${process.env.VITE_CONTEXT_PATH}`
     }
   },
   // dev 서버 설정
@@ -20,13 +19,22 @@ export default defineNuxtConfig({
     url: `${process.env.VITE_BASE_URL}${process.env.VITE_CONTEXT_PATH}`
   },
 
+  app: {
   // context-path 설정
-  // app: {
   //   baseURL: `${process.env.VITE_CONTEXT_PATH}`,
-  // },
-
-  // todo: 커스텀 불가
-  loading: "../components/global/loader/loader.vue",
+  // meta 정보 설정
+    head: {
+      meta: [
+        { name: "viewport", content: "width=device-width, initial-scale=1" },
+        { hid: "description", name: "description", content: "데이터 패브릭" },
+        { charset: "utf-8" }
+      ]
+      // link: [],
+      // style: [],
+      // script: [],
+      // noscript: []
+    }
+  },
 
   // svg icon
   svgSprite: {

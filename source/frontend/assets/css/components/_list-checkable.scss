@@ -1,0 +1,82 @@
+.list {
+  @include flex-standard($direction: column);
+  border: 1px solid $border-gray;
+  background-color: $white;
+  color: $font-gray-01;
+
+  &-list {
+    width: 100%;
+    height: 100%;
+  }
+
+  &-head {
+    width: 100%;
+    padding: $spacing-8;
+    background-color: $light-blue;
+
+    &-title {
+      @include ellipsis;
+      font-weight: 500;
+      color: $font-gray-01;
+      font-size: 14px;
+    }
+  }
+
+  &-body {
+    width: 100%;
+  }
+
+  &-options {
+    @include flex-standard;
+    height: 40px;
+    padding: $spacing-8;
+    border-bottom: 1px solid $border-gray
+  }
+
+  &-options-count {
+    @include flex-standard;
+    flex-shrink: 0;
+    margin-left: auto;
+    color: $font-gray-01;
+    font-size: 14px;
+  }
+
+  &-options-count-selected {
+    margin-right: $spacing-4;
+  }
+
+  &-options-count-all {
+    margin-left: $spacing-4;
+  }
+
+  &-item {
+    position: relative;
+    border-bottom: 1px solid $disabled;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    &:hover {
+      background-color: $light-blue;
+    }
+
+    .checkbox {
+      @include flex-standard($horizontal: flex-start);
+      height: 32px;
+      padding: $spacing-4 $spacing-8;
+    }
+
+    .checkbox-input:checked + .checkbox-label {
+      color: $primary;
+    }
+  }
+
+  .is-disabled {
+    cursor: not-allowed;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+}
