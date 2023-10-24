@@ -5,6 +5,7 @@
   min-height: 210px;
   padding: $spacing-16 $spacing-20;
   border: 1px solid $border-gray;
+  background: $white;
 
   &-list {
     @include flex-standard($horizontal: flex-start, $direction: column);

@@ -1,5 +1,5 @@
 //-------------
-//search-field
+//search
 //-------------
 .portal-article {
   @include flex-standard($direction: column);
@@ -188,7 +188,7 @@
     }
   }
 
-  &-head {
+  &-topbar {
     @include flex-standard($horizontal: space-between);
     width: 100%;
   }
@@ -304,4 +304,63 @@
       text-indent: -9999px;
     }
   }
+}
+
+.relate-keyword {
+  @include flex-standard;
+  gap: $spacing-24;
+
+  &-title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  &-list {
+    @include flex-standard;
+    gap: $spacing-8;
+  }
+
+  &-item {
+    font-size: 16px;
+    color: $font-gray-01;
+
+    .button {
+      border: none;
+    }
+  }
+}
+
+.portal-article {
+  .result-info {
+    justify-content: flex-start;
+    gap: $spacing-12;
+  }
+}
+
+.category {
+  &-container {
+    width: 100%;
+    background: $light-blue-02;
+    padding: $spacing-24;
+  }
+
+  &-wrapper {
+    & + & {
+      margin-top: $spacing-32;
+    }
+  }
+
+  &-topbar {
+    @include flex-standard($horizontal: space-between);
+    margin-bottom: 12px;
+  }
+
+  &-name {
+    justify-content: flex-start;
+  }
+}
+
+.result-more-button {
+  width: 300px;
+  border-radius: 35px;
 }
