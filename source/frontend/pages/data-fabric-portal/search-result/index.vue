@@ -95,6 +95,7 @@
                 </Card>
               </li>
             </ul>
+            <BasePagination></BasePagination>
           </div>
           <div class="category-wrapper">
             <div class="category-top-bar">
@@ -112,6 +113,7 @@
                 </Card>
               </li>
             </ul>
+            <BasePagination></BasePagination>
           </div>
         </div>
         <baseButton class="button-normal button-lg result-more-button">
@@ -140,6 +142,7 @@
                 </Card>
               </li>
             </ul>
+            <BasePagination></BasePagination>
           </div>
         </div>
         <baseButton class="button-normal button-lg result-more-button">
