@@ -5,7 +5,80 @@
     <baseButton class="button-lg button-primary" @click="onClickOpen1">모달 OPEN</baseButton>
     <modal v-model="show1" title="연결정보 등록 Step 1">
       <template v-slot:body>
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur aut, debitis doloribus ipsum possimus quae.
+        <div class="w-[900px] p-6">
+          <BaseStep></BaseStep>
+          <div class="storage-type">
+            <SearchField class="search-field-lg"></SearchField>
+            <ul class="storage-type-list">
+              <li class="storage-type-item">
+                <div class="storage-type-img">
+                  <img src="../../../assets/images/storage-type_01.png" alt="mariaDB">
+                </div>
+                <span class="storage-type-title">MariaDB</span>
+              </li>
+              <li class="storage-type-item is-selected">
+                <div class="storage-type-img">
+                  <img src="../../../assets/images/storage-type_02.png" alt="mariaDB">
+                </div>
+                <span class="storage-type-title">MySQL</span>
+              </li>
+              <li class="storage-type-item is-disabled">
+                <div class="storage-type-img">
+                  <img src="../../../assets/images/storage-type_03.png" alt="mariaDB">
+                </div>
+                <span class="storage-type-title">PostgreSQL</span>
+              </li>
+              <li class="storage-type-item">
+                <div class="storage-type-img">
+                  <img src="../../../assets/images/storage-type_04.png" alt="mariaDB">
+                </div>
+                <span class="storage-type-title">Oracle</span>
+              </li>
+              <li class="storage-type-item">
+                <div class="storage-type-img">
+                  <img src="../../../assets/images/storage-type_05.png" alt="mariaDB">
+                </div>
+                <span class="storage-type-title">Hadoop</span>
+              </li>
+              <li class="storage-type-item">
+                <div class="storage-type-img">
+                  <img src="../../../assets/images/storage-type_06.png" alt="mariaDB">
+                </div>
+                <span class="storage-type-title">MinIO</span>
+              </li>
+              <li class="storage-type-item">
+                <div class="storage-type-img">
+                  <img src="../../../assets/images/storage-type_07.png" alt="mariaDB">
+                </div>
+                <span class="storage-type-title">IRIS</span>
+              </li>
+              <li class="storage-type-item">
+                <div class="storage-type-img">
+                  <img src="../../../assets/images/storage-type_08.png" alt="mariaDB">
+                </div>
+                <span class="storage-type-title">MongoDB</span>
+              </li>
+              <li class="storage-type-item">
+                <div class="storage-type-img">
+                  <img src="../../../assets/images/storage-type_06.png" alt="mariaDB">
+                </div>
+                <span class="storage-type-title"></span>
+              </li>
+              <li class="storage-type-item">
+                <div class="storage-type-img">
+                  <img src="../../../assets/images/storage-type_07.png" alt="mariaDB">
+                </div>
+                <span class="storage-type-title"></span>
+              </li>
+              <li class="storage-type-item">
+                <div class="storage-type-img">
+                  <img src="../../../assets/images/storage-type_08.png" alt="mariaDB">
+                </div>
+                <span class="storage-type-title"></span>
+              </li>
+            </ul>
+          </div>
+        </div>
       </template>
     </modal>
 
