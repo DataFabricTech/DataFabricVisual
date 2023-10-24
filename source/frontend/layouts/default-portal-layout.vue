@@ -1,5 +1,5 @@
 <template>
-  <div id="wrap" class="is-not-scroll">
+  <div id="wrap">
     <TheHeader></TheHeader>
     <main id="main">
       <slot />
