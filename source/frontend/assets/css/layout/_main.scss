@@ -2,8 +2,9 @@
 #main {
   display: flex;
   flex-direction: column;
-  height: calc(100% - 56px);
+  flex-grow: 1;
   overflow-y: auto;
+  //height: calc(100% - 56px);
 }
 
 .main-content {
