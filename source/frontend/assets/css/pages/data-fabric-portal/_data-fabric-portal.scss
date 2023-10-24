@@ -188,7 +188,7 @@
     }
   }
 
-  &-topbar {
+  &-top-bar {
     @include flex-standard($horizontal: space-between);
     width: 100%;
   }
@@ -350,7 +350,7 @@
     }
   }
 
-  &-topbar {
+  &-top-bar {
     @include flex-standard($horizontal: space-between);
     margin-bottom: 12px;
   }

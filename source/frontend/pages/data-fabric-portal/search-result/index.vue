@@ -80,7 +80,7 @@
         </div>
         <div class="category-container">
           <div class="category-wrapper">
-            <div class="category-topbar">
+            <div class="category-top-bar">
               <h4 class="category-name">데이터모델 (6)</h4>
               <baseButton class="button-primary">
                 <span class="button-text">서비스 이동</span>
@@ -97,7 +97,7 @@
             </ul>
           </div>
           <div class="category-wrapper">
-            <div class="category-topbar">
+            <div class="category-top-bar">
               <h4 class="category-name">저장소 (5)</h4>
               <baseButton class="button-primary">
                 <span class="button-text">서비스 이동</span>
@@ -125,7 +125,7 @@
         </div>
         <div class="category-container">
           <div class="category-wrapper">
-            <div class="category-topbar">
+            <div class="category-top-bar">
               <h4 class="category-name">분석보고서 (25)</h4>
               <baseButton class="button-primary">
                 <span class="button-text">서비스 이동</span>
