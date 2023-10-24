@@ -89,10 +89,10 @@
                   <div class="swiper-item"></div>
                 </div>
               </div>
-              <baseButton class="swiper-pre-button button-icon button-link" title="이전">
+              <baseButton class="swiper-pre-button" title="이전">
                 <svg-icon name="arrow-left" class="svg-icon" />
               </baseButton>
-              <baseButton class="swiper-next-button button-icon button-link" title="다음">
+              <baseButton class="swiper-next-button" title="다음">
                 <svg-icon name="arrow-right" class="svg-icon" />
               </baseButton>
             </div>
@@ -116,6 +116,10 @@
                   <div class="notify-container">
                     <svg-icon name="speaker" class="svg-icon" />
                     <div class="notify-wrapper">
+                      <a href="#" class="notify-item">
+                        <em>[서비스 안내]</em>
+                        <span class="notify-text">분석 서비스를 위한 저작도구 신규 서비스 도입</span>
+                      </a>
                       <a href="#" class="notify-item">
                         <em>[서비스 안내]</em>
                         <span class="notify-text">분석 서비스를 위한 저작도구 신규 서비스 도입</span>

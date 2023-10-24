@@ -256,7 +256,7 @@
     display: flex;
     box-sizing: content-box;
     height: 100%;
-    width: 100%;
+    width: calc(100% - 18px);
     transition-property: transform;
     transform: translateZ(0);
   }
@@ -264,6 +264,8 @@
   &-item {
     @include flex-standard($horizontal: flex-start);
     overflow: hidden;
+    flex-shrink: 0;
+    width: 100%;
     font-size: 13px;
 
     em {
@@ -272,6 +274,7 @@
   }
 
   &-text{
+    @include ellipsis;
     white-space: nowrap;
   }
 }
