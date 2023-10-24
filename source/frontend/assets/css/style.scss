@@ -46,11 +46,12 @@
 @import "components/radio";
 @import "components/checkbox";
 @import "components/table";
-@import "assets/css/components/list-checkable";
-@import "assets/css/components/switch";
+@import "components/list-checkable";
+@import "components/switch";
 
 // modules
 @import "modules/card";
+@import "modules/card-simple";
 @import "modules/kebab-menu";
 @import "modules/search-field";
 @import "modules/search-filter";
@@ -67,6 +68,7 @@
 @import "layout/no-result";
 
 @import "pages/data-fabric/data-fabric";
+@import "pages/data-fabric/main";
 @import "pages/data-fabric/search";
 @import "pages/data-fabric/overview";
 @import "pages/data-fabric-portal/data-fabric-portal";
