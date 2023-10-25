@@ -43,7 +43,7 @@
         &:hover:focus {
           box-shadow: none;
           cursor: not-allowed;
-          border: 1px solid $light-gray;
+          border: 1px solid $gray;
         }
 
         &:focus {
@@ -136,7 +136,7 @@
     height: 100%;
     padding: $spacing-4 $spacing-32 $spacing-4 $spacing-12;
     background-color: $white;
-    border: 1px solid $light-gray;
+    border: 1px solid $gray;
     border-radius: $border-radius-sm;
 
     &:hover:not(:disabled) {
