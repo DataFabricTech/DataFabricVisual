@@ -3,12 +3,12 @@
   <div class="v-group">
     <h3>저장소 관리 > 연결정보 등록 Step 1</h3>
     <baseButton class="button-lg button-primary" @click="onClickOpen1">모달 OPEN</baseButton>
-    <modal v-model="show1" title="연결정보 등록 Step 1">
+    <modal v-model="show1" title="연결정보 등록">
       <template v-slot:body>
         <div class="w-[900px] p-6">
           <BaseStep></BaseStep>
           <div class="storage-type">
-            <SearchField class="search-field-lg"></SearchField>
+            <SearchField class="search-field-lg w-[440px]"></SearchField>
             <ul class="storage-type-list">
               <li class="storage-type-item">
                 <div class="storage-type-img">
@@ -16,12 +16,14 @@
                 </div>
                 <span class="storage-type-title">MariaDB</span>
               </li>
+              <!-- item 요소 선택시 is-selected 클래스 추가 필요 -->
               <li class="storage-type-item is-selected">
                 <div class="storage-type-img">
                   <img src="../../../assets/images/storage-type_02.png" alt="MySQL">
                 </div>
                 <span class="storage-type-title">MySQL</span>
               </li>
+              <!-- 필요시 is-disabled 사용가능 -->
               <li class="storage-type-item is-disabled">
                 <div class="storage-type-img">
                   <img src="../../../assets/images/storage-type_03.png" alt="PostgreSQL">
@@ -68,16 +70,26 @@
                 <div class="storage-type-img">
                   <img src="../../../assets/images/storage-type_07.png" alt="sample-02">
                 </div>
-                <span class="storage-type-title">sample-02</span>
+                <span class="storage-type-title">sample-02 타이틀이 길어질때 말줄임 처리</span>
               </li>
               <li class="storage-type-item">
                 <div class="storage-type-img">
                   <img src="../../../assets/images/storage-type_08.png" alt="sample-03">
                 </div>
-                <span class="storage-type-title">sample-01</span>
+                <span class="storage-type-title">sample-03</span>
               </li>
             </ul>
           </div>
+        </div>
+      </template>
+      <template v-slot:foot>
+        <baseButton class="button-normal button-lg">
+          <span class="button-text">취소</span>
+        </baseButton>
+        <div class="h-group ml-auto">
+          <baseButton class="button-primary button-lg">
+            <span class="button-text">다음</span>
+          </baseButton>
         </div>
       </template>
     </modal>
