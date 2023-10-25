@@ -14,7 +14,7 @@
       </div>
       <div class="main-information">
         <!-- TODO:[퍼블리싱] 데이터패브릭 메인과 ui가 동일할경우 클래스명 article로 통일  -->
-        <article class="portal-article w-2/6">
+        <article class="portal-article">
           <div class="portal-article-head">
             <h3 class="portal-article-title">데이터</h3>
             <p class="portal-article-text">다양한 신규/추천 데이터를 만나보세요.</p>
@@ -56,7 +56,7 @@
             </div>
           </div>
         </article>
-        <article class="portal-article w-2/6">
+        <article class="portal-article">
           <div class="portal-article-head">
             <h3 class="portal-article-title">서비스</h3>
             <p class="portal-article-text">데이터패브릭 포털은 다양한 서비스와 결합하여 최적의 환경을 제공합니다.</p>
@@ -98,7 +98,7 @@
             </div>
           </div>
         </article>
-        <article class="portal-article w-2/6">
+        <article class="portal-article">
           <div class="portal-article-head">
             <h3 class="portal-article-title">커뮤니티</h3>
             <p class="portal-article-text">

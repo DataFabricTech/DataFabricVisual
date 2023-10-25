@@ -1,10 +1,18 @@
-//-------------
-//search-field
-//-------------
+@keyframes textLoop {
+  0% {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    -webkit-transform: translate3d(-100%, 0, 0);
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
 .portal-article {
   @include flex-standard($direction: column);
+  width: calc(33.3333% - 24px);
   gap: $spacing-12;
-  flex: 1;
 
   &-head {
     @include flex-standard($direction: column);
@@ -297,19 +305,6 @@
     }
   }
 }
-
-
-@keyframes textLoop {
-  0% {
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    -webkit-transform: translate3d(-100%, 0, 0);
-    transform: translate3d(-100%, 0, 0);
-  }
-}
-
 
 .paging {
 
