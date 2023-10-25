@@ -104,11 +104,35 @@
         </article>
         <article class="main-article">
           <div class="main-article-head">
-            <h3 class="main-article-title">최근 분석중 데이터 모델</h3>
+            <h3 class="main-article-title">도메인 분류</h3>
             <BaseButton class="button-link-tertiary"><span class="button-text">더보기</span></BaseButton>
           </div>
           <div class="main-article-body">
             <ul class="domain-list">
+              <li class="domain-item">
+                <button class="domain-button" type="button">
+                  <svg-icon name="data" class="svg-icon"></svg-icon>
+                  <span class="domain-title">일반행정</span>
+                </button>
+              </li>
+              <li class="domain-item">
+                <button class="domain-button" type="button">
+                  <svg-icon name="data" class="svg-icon"></svg-icon>
+                  <span class="domain-title">일반행정</span>
+                </button>
+              </li>
+              <li class="domain-item">
+                <button class="domain-button" type="button">
+                  <svg-icon name="data" class="svg-icon"></svg-icon>
+                  <span class="domain-title">일반행정</span>
+                </button>
+              </li>
+              <li class="domain-item">
+                <button class="domain-button" type="button">
+                  <svg-icon name="data" class="svg-icon"></svg-icon>
+                  <span class="domain-title">일반행정</span>
+                </button>
+              </li>
               <li class="domain-item">
                 <button class="domain-button" type="button">
                   <svg-icon name="data" class="svg-icon"></svg-icon>
@@ -150,7 +174,7 @@
         </article>
         <article class="main-article">
           <div class="main-article-head">
-            <h3 class="main-article-title">추천 데이터 모델</h3>
+            <h3 class="main-article-title">북마크한 데이터 모델</h3>
             <BaseButton class="button-link-tertiary"><span class="button-text">더보기</span></BaseButton>
           </div>
           <div class="main-article-body">
