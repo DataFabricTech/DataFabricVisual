@@ -892,34 +892,88 @@
             </td>
           </tr>
           <tr>
+            <th scope="row">Card Simple</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="v-group gap-5">
+                <div class="h-group w-full">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0"> size: default </strong>
+                  <ul class="card-simple-list w-[500px]">
+                    <li class="card-simple-item">
+                      <CardSimple></CardSimple>
+                    </li>
+                    <li class="card-simple-item">
+                      <CardSimple></CardSimple>
+                    </li>
+                    <li class="card-simple-item">
+                      <CardSimple hasStatus></CardSimple>
+                    </li>
+                    <li class="card-simple-item">
+                      <CardSimple hasStatus></CardSimple>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
             <th scope="row">Card</th>
           </tr>
           <tr>
             <td>
               <div class="v-group gap-5">
                 <div class="h-group w-full">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0"> size: lg & base </strong>
-                  <Card class="card-lg">
-                    <template v-slot:img>
-                      <svg-icon class="svg-icon" name="data"></svg-icon>
-                    </template>
-                  </Card>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0"> size: lg </strong>
+                  <ul class="card-list w-[1100px]">
+                    <li class="card-item">
+                      <Card class="card-lg ">
+                        <template v-slot:img>
+                          <svg-icon class="svg-icon" name="data"></svg-icon>
+                        </template>
+                      </Card>
+                    </li>
+                    <li class="card-item">
+                      <Card class="card-lg card-primary">
+                        <template v-slot:img>
+                          <img src="../assets/images/sample.png" alt="">
+                        </template>
+                      </Card>
+                    </li>
+                    <li class="card-item">
+                      <Card class="card-lg card-negative">
+                        <template v-slot:img>
+                          <svg-icon class="svg-icon" name="data"></svg-icon>
+                        </template>
+                      </Card>
+                    </li>
+                  </ul>
                 </div>
                 <div class="h-group w-full">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: default & primary</strong>
-                  <Card class="card-primary">
-                    <template v-slot:img>
-                      <img src="../assets/images/sample.png" alt="">
-                    </template>
-                  </Card>
-                </div>
-                <div class="h-group w-full">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: default & negative</strong>
-                  <Card class="card-negative">
-                    <template v-slot:img>
-                      <svg-icon class="svg-icon" name="data"></svg-icon>
-                    </template>
-                  </Card>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
+                  <ul class="card-list w-[1100px]">
+                    <li class="card-item">
+                      <Card class=" ">
+                        <template v-slot:img>
+                          <svg-icon class="svg-icon" name="data"></svg-icon>
+                        </template>
+                      </Card>
+                    </li>
+                    <li class="card-item">
+                      <Card class=" card-primary">
+                        <template v-slot:img>
+                          <img src="../assets/images/sample.png" alt="">
+                        </template>
+                      </Card>
+                    </li>
+                    <li class="card-item">
+                      <Card class=" card-negative">
+                        <template v-slot:img>
+                          <svg-icon class="svg-icon" name="data"></svg-icon>
+                        </template>
+                      </Card>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </td>
