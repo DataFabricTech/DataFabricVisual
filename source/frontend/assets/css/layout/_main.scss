@@ -24,3 +24,19 @@
   width: 100%;
   gap: 44px $spacing-36;
 }
+
+.search-word {
+  @include flex-standard;
+  gap: $spacing-24;
+
+  &-title {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .button {
+    font-size: 16px;
+    color: $font-gray-01;
+    border: none;
+  }
+}

@@ -6,39 +6,29 @@
       <h3 class="hidden">데이터 검색</h3>
       <div class="main-search my-6">
         <SearchField class="search-field-lg"></SearchField>
-        <div class="relate-keyword">
-          <span class="relate-keyword-title">연관 검색어</span>
-          <ul class="relate-keyword-list">
-            <li class="relate-keyword-item">
-              <baseButton class="button-normal">
-                <span class="button-text">CCTV위치</span>
-              </baseButton>
-            </li>
-            <li class="relate-keyword-item">
-              <baseButton class="button-normal">
-                <span class="button-text">행정동별 주정차단속구간</span>
-              </baseButton>
-            </li>
-            <li class="relate-keyword-item">
-              <baseButton class="button-normal">
-                <span class="button-text">주정차단속민원</span>
-              </baseButton>
-            </li>
-            <li class="relate-keyword-item">
-              <baseButton class="button-normal">
-                <span class="button-text">CCTV민원현황</span>
-              </baseButton>
-            </li>
-          </ul>
+        <div class="search-word">
+          <span class="search-word-title">연관 검색어</span>
+          <div class="h-group">
+            <baseButton class="button-normal">
+              <span class="button-text">CCTV위치</span>
+            </baseButton>
+            <baseButton class="button-normal">
+              <span class="button-text">행정동별 주정차단속구간</span>
+            </baseButton>
+            <baseButton class="button-normal">
+              <span class="button-text">주정차단속민원</span>
+            </baseButton>
+            <baseButton class="button-normal">
+              <span class="button-text">CCTV민원현황</span>
+            </baseButton>
+          </div>
         </div>
       </div>
     </section>
     <section class="l-section gap-[28px]">
-      <div class="result-info justify-center">
-        <h3 class="result-summary text-2xl">
-          <em>“주정차CCTV 단속위치”</em> 검색결과는 <em>31</em>건 입니다.
-        </h3>
-      </div>
+      <h3 class="result-title">
+        <em>“주정차CCTV 단속위치”</em> 검색결과는 <em>31</em>건 입니다.
+      </h3>
       <div class="round-tab">
       <ul class="round-tab-list">
         <li class="round-tab-item">

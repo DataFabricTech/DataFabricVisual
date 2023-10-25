@@ -331,30 +331,6 @@
   }
 }
 
-.relate-keyword {
-  @include flex-standard;
-  gap: $spacing-24;
-
-  &-title {
-    font-size: 16px;
-    font-weight: 600;
-  }
-
-  &-list {
-    @include flex-standard;
-    gap: $spacing-8;
-  }
-
-  &-item {
-    font-size: 16px;
-    color: $font-gray-01;
-
-    .button {
-      border: none;
-    }
-  }
-}
-
 .portal-article {
   .result-info {
     gap: $spacing-12;
@@ -362,6 +338,16 @@
     .h-group {
       gap: $spacing-8;
     }
+  }
+}
+
+.result-title {
+  font-size: 24px;
+  width: 100%;
+  text-align: center;
+
+  em {
+    color: $tertiary;
   }
 }
 
