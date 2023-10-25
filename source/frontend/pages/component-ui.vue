@@ -889,7 +889,7 @@
               <div class="v-group gap-5">
                 <div class="h-group w-full">
                   <strong class="w-[150px] font-light text-[14px] shrink-0"> size: default </strong>
-                  <ul class="card-simple-list">
+                  <ul class="card-simple-list h-[450px]">
                     <li class="card-simple-item">
                       <CardSimple></CardSimple>
                     </li>

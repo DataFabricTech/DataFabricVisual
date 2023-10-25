@@ -1,13 +1,18 @@
 .card-simple {
   @include flex-standard($vertical: flex-start, $direction: column);
+  width: 100%;
   gap: $spacing-8;
 
   &-list {
-    width: 100%;
+    @include flex-standard($vertical: flex-start, $horizontal: space-between, $direction: column);
+    height: 100%;
   }
 
   &-item {
-    padding: $spacing-16 0;
+    @include flex-standard($horizontal: flex-start);
+    width: 100%;
+    height: 100%;
+    padding: $spacing-4 0;
 
     &:not(:last-child) {
       border-bottom: 1px solid $border-gray;
@@ -15,14 +20,15 @@
   }
 
   &-title {
+    @include ellipsis(100%);
     @include line-height('md');
-    display: block;
     font-size: 20px;
     color: $font-black;
     font-weight: 500;
   }
 
   &-detail {
+    @include ellipsis(100%);
     @include line-height('md');
     font-size: 16px;
     color: $font-black;
