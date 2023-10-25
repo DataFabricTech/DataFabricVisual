@@ -20,6 +20,10 @@
           <BaseButton class="button-normal">
             <span class="button-text">다운로드 요청</span>
           </BaseButton>
+          <!-- TODO:[개발] 저장소 카드일 경우 hidden 해제 -->
+          <div class="card-status hidden">
+            <baseBadge class="bg-marker-gray">Inactive(Disconnected)</baseBadge>
+          </div>
           <KebabMenu></KebabMenu>
         </div>
       </div>
