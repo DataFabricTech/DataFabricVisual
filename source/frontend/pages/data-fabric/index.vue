@@ -5,12 +5,15 @@
     <section class="l-section flex-grow">
       <div class="main-search">
         <SearchField class="search-field-lg"></SearchField>
-        <diV class="h-group gap-5">
-          <baseTag># CCTV위치</baseTag>
-          <baseTag># 주정차댠속</baseTag>
-          <baseTag># 기후변화</baseTag>
-          <baseTag># 안심지역</baseTag>
-        </diV>
+        <div class="search-word">
+          <strong class="search-word-title">최근 검색어</strong>
+          <div class="h-group gap-5">
+            <baseTag># CCTV위치</baseTag>
+            <baseTag># 주정차댠속</baseTag>
+            <baseTag># 기후변화</baseTag>
+            <baseTag># 안심지역</baseTag>
+          </div>
+        </div>
       </div>
       <div class="main-information">
         <!-- TODO:[퍼블리싱] 데이터패브릭 메인과 ui가 동일할경우 클래스명 article로 통일  -->

@@ -1,5 +1,5 @@
 <template>
-  <div class="card is-simple">
+  <div class="card card-simple">
     <div class="card-content">
       <div class="h-group justify-between w-full">
         <div class="h-group gap-[8px]">
