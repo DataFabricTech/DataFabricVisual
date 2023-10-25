@@ -1,0 +1,100 @@
+.main-article {
+  @include flex-standard($direction: column);
+  width: calc(33.3333% - 24px);
+  gap: $spacing-8;
+
+  &-head {
+    @include flex-standard($horizontal: space-between);
+    width: 100%;
+    gap: $spacing-4;
+  }
+
+  &-title {
+    font-size: 20px;
+    color: $black;
+    font-weight: 600;
+  }
+
+  &-text {
+    font-size: 13px;
+    color: $black;
+  }
+
+  &-body {
+    width: 100%;
+    height: 310px;
+    padding: $spacing-8;
+    border: 1px solid $border-gray;
+    border-radius: $border-radius-sm;
+  }
+}
+
+.update-info {
+  @include flex-standard($vertical: center, $direction: column);
+  position: relative;
+  width: 100%;
+  height: 100%;
+  gap: $spacing-4;
+
+  &:before {
+    content: '';
+    background-color: $border-gray;
+    width: 1px;
+    height: 85%;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &-title {
+    font-size: 14px;
+    color: $font-black;
+  }
+}
+
+.domain {
+  &-list {
+    @include flex-standard($vertical: stretch, $horizontal: flex-start);
+    position: relative;
+    gap: $spacing-24 $spacing-12;
+    flex-wrap: wrap;
+    height: 100%;
+
+    &:before {
+      content: '';
+      background-color: $border-gray;
+      height: 1px;
+      width: 95%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &-item {
+    @include flex-standard;
+    width: calc(20% - 10px);
+  }
+
+  &-button {
+    @include flex-standard($direction: column);
+    gap: $spacing-16;
+    width: 100%;
+    height: 100%;
+
+    .svg-icon {
+      width: 48px;
+      height: 48px;
+      fill: $secondary;
+    }
+
+  }
+
+  &-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: $font-gray-01;
+  }
+}
