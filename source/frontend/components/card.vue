@@ -3,33 +3,29 @@
     <div class="card-content">
       <div class="h-group justify-between w-full">
         <div class="h-group gap-[8px]">
-          <BaseBadge class="bg-marker-cyan">HDFS</BaseBadge>
-          <BaseBadge class="bg-marker-purple">공간</BaseBadge>
-          <BaseBadge class="bg-marker-red">MariaDB</BaseBadge>
-          <BaseBadge class="bg-marker-yellow">Table</BaseBadge>
+          <BaseBadge class="bg-marker-cyan">{{ model.storageInfo.storageType }}</BaseBadge>
+          <BaseBadge class="bg-marker-purple">{{ model.domain }}</BaseBadge>
+          <!--TODO: 기획 및 API 명세서 fix 되면 코드 수정 -->
+<!--          <BaseBadge v-for="(item, index) in model.tags" :class="badgeClass[index % badgeClass.length]">{{ item }}</BaseBadge>-->
         </div>
         <div class="h-group gap-[16px]">
-          <BaseButton class="button-link-primary">
+          <BaseButton class="button-link-primary" @click="preview">
             <span class="button-text">미리보기</span>
           </BaseButton>
-          <BaseButton class="button-normal">
-            <span class="button-text">다운로드 요청</span>
+          <BaseButton class="button-normal" @click="download">
+            <span class="button-text">
+              {{ downloadStatus }}
+            </span>
           </BaseButton>
           <KebabMenu></KebabMenu>
         </div>
       </div>
       <div class="v-group w-full">
-        <a href="#" class="card-link" title="이동">불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터</a>
-        <p class="card-detail">서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보</p>
+        <a href="#" class="card-link" title="이동" @click="$emit('click', model.id)">{{ model.name }}</a>
+        <p class="card-detail">{{ model.description }}</p>
       </div>
       <div class="h-group gap-[16px]">
-        <BaseTag>#확정단속일시</BaseTag>
-        <BaseTag>#확정단속 위도</BaseTag>
-        <BaseTag>#확정단속 경도</BaseTag>
-        <BaseTag>#법정동 코드</BaseTag>
-        <BaseTag>#단속위치</BaseTag>
-        <BaseTag>#기준일자</BaseTag>
-        <BaseTag>#법정동 주소</BaseTag>
+        <BaseTag v-for="item in model.tags">#{{ item }}</BaseTag>
       </div>
       <div class="h-group justify-between w-full">
         <div class="h-group gap-[16px]">
@@ -39,7 +35,7 @@
               수정일자:
             </dt>
             <dd class="define-desc">
-              2023-09-22
+              {{ model.updatedAt }}
             </dd>
           </dl>
           <dl class="define">
@@ -48,7 +44,7 @@
               소유자:
             </dt>
             <dd class="define-desc">
-              root
+              {{ model.creator }}
             </dd>
           </dl>
         </div>
@@ -59,7 +55,7 @@
               <span class="hidden">조회수</span>
             </dt>
             <dd class="define-desc">
-              390
+              {{ model.statInfo.access }}
             </dd>
           </dl>
           <dl class="define">
@@ -68,7 +64,7 @@
               <span class="hidden">평균 평점</span>
             </dt>
             <dd class="define-desc">
-              390
+              {{ model.statInfo.rating.toFixed(1) }}
             </dd>
           </dl>
           <dl class="define">
@@ -77,7 +73,7 @@
               <span class="hidden">북마크수</span>
             </dt>
             <dd class="define-desc">
-              390
+              {{ model.statInfo.favorite }}
             </dd>
           </dl>
           <dl class="define">
@@ -86,7 +82,7 @@
               <span class="hidden">다운로드수</span>
             </dt>
             <dd class="define-desc">
-              390
+              {{ model.statInfo.download }}
             </dd>
           </dl>
         </div>
@@ -96,5 +92,47 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
+import { defineProps, defineEmits } from "vue/dist/vue";
 
+const props = defineProps({
+  model: {
+    type: Object,
+    default: {
+      id: 111,
+      name: "불법 주정차 구간 데이터",
+      description: "서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보",
+      tags: ["tag1", 'tag2', 'tag3', 'tag4', 'tag5'],
+      storageInfo: {
+        storageType: "HDFS"
+      },
+      domain: "공간",
+      updatedAt: "2023-09-22",
+    }
+  }
+});
+const emit = defineEmits(['preview', 'download', 'click']);
+const badgeClass = ["bg-marker-purple", "bg-marker-red", "bg-marker-yellow"]
+const downloadStatus = computed(() => {
+  switch (props.model.downloadInfo.status) {
+    case 1:
+      return '다운로드 요청';
+    case 2:
+      return '다운로드 중';
+    case 3:
+      return '다운로드 가능';
+    default:
+      return ''
+  }
+})
+function preview() {
+  emit('preview', props.model.id)
+}
+function download() {
+  let downloadInfo = {
+    id: props.model.id,
+    uri: props.model.downloadInfo.uri
+  }
+  emit('download', downloadInfo)
+}
 </script>
