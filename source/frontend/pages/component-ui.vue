@@ -882,6 +882,16 @@
         <table class="guide-table">
           <tbody>
           <tr>
+            <th scope="row">Ag-grid</th>
+          </tr>
+          <tr>
+            <td>
+              <ag-grid-vue style="width: 550px; height: 300px" class="ag-theme-alpine" :gridOptions="gridOptions"
+                           :columnDefs="columnDefs" :rowData="rowData">
+              </ag-grid-vue>
+            </td>
+          </tr>
+          <tr>
             <th scope="row">Card Simple</th>
           </tr>
           <tr>
@@ -1036,9 +1046,30 @@
 <script lang="ts" setup>
 import { ref } from "@vue/reactivity";
 import { useRouter } from "vue-router";
+import { sample } from "../composables/sample";
+import { AgGridVue } from "ag-grid-vue3";
 
+const sampleData = sample();
 const show = ref(false);
 const router = useRouter();
+const gridOptions = {
+  headerHeight: 56,
+  rowHeight: 56,
+  // sort 설정 시 추가할 것
+  unSortIcon: true
+};
+
+// sort 예시 추가
+const columnDefs = [
+  { headerName: "Make", field: "make", sortable: true },
+  { headerName: "Model", field: "model" },
+  { headerName: "Price", field: "price", sortable: true }
+];
+const rowData = [
+  { make: "Toyota", model: "Celica", price: 35000 },
+  { make: "Ford", model: "Mondeo", price: 32000 },
+  { make: "Porsche", model: "Boxster", price: 72000 }
+];
 
 function onClickOpen() {
   show.value = !show.value;
@@ -1047,7 +1078,6 @@ function onClickOpen() {
 function onClickMain() {
   router.push("/main");
 }
-
 
 </script>
 
