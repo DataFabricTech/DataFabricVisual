@@ -5,6 +5,12 @@
   gap: $spacing-16;
   background-color: $light-blue;
 
+  &-title {
+    font-size: 16px;
+    color: $font-black;
+    font-weight: 500;
+  }
+
   &-list {
     @include flex-standard($horizontal: flex-start);
     flex-wrap: wrap;
@@ -17,14 +23,18 @@
   }
 
   &-item  {
-    @include flex-standard($direction: column);
     width: calc(25% - 36px);
     height: 160px;
-    padding: $spacing-16;
-    gap: $spacing-8;
-    background-color: $white;
     border: 1px solid $border-gray;
     border-radius: 4px;
+
+    &-title {
+      @include ellipsis;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      color: $font-black;
+    }
   }
 
   &-item:hover,
@@ -38,6 +48,14 @@
     }
   }
 
+  &-button {
+    @include flex-standard($direction: column);
+    width: 100%;
+    height: 100%;
+    padding: $spacing-16;
+    gap: $spacing-8;
+  }
+
   &-img {
     @include flex-standard;
     flex-grow: 1;
@@ -45,14 +63,6 @@
     img {
       max-width: 90%;
     }
-  }
-
-  &-title {
-    @include ellipsis;
-    width: 100%;
-    text-align: center;
-    font-size: 14px;
-    color: $font-black;
   }
 
   &-item + .is-disabled {
