@@ -223,7 +223,7 @@
           </tr>
           <tr>
             <td>
-                <BaseNav></BaseNav>
+              <BaseNav></BaseNav>
             </td>
           </tr>
 
@@ -290,7 +290,7 @@
           </tr>
           <tr>
             <td>
-                <BasePagination></BasePagination>
+              <BasePagination></BasePagination>
             </td>
           </tr>
 
@@ -644,14 +644,14 @@
           </tr>
           <tr>
             <td>
-                <div class="h-group">
-                  <baseTextarea id="area-ex-01" placeholder="입력해주세요."></baseTextarea>
-                  <label for="area-ex-01" class="hidden">lable</label>
-                  <baseTextarea id="area-ex-02" disabled value="입력할 수 없습니다."></baseTextarea>
-                  <label for="area-ex-02" class="hidden">lable</label>
-                  <baseTextarea id="area-ex-03" readonly value="read only"></baseTextarea>
-                  <label for="area-ex-03" class="hidden">lable</label>
-                </div>
+              <div class="h-group">
+                <baseTextarea id="area-ex-01" placeholder="입력해주세요."></baseTextarea>
+                <label for="area-ex-01" class="hidden">lable</label>
+                <baseTextarea id="area-ex-02" disabled value="입력할 수 없습니다."></baseTextarea>
+                <label for="area-ex-02" class="hidden">lable</label>
+                <baseTextarea id="area-ex-03" readonly value="read only"></baseTextarea>
+                <label for="area-ex-03" class="hidden">lable</label>
+              </div>
             </td>
           </tr>
 
@@ -855,13 +855,13 @@
           </tr>
           <tr>
             <td>
-              <th scope="row">List</th>
+            <th scope="row">List</th>
             </td>
           </tr>
           <tr>
             <td>
               <div class="h-group">
-                <strong class="w-[150px] font-light text-[14px] shrink-0">type:  Checkable List</strong>
+                <strong class="w-[150px] font-light text-[14px] shrink-0">type: Checkable List</strong>
                 <baseListCheckable class="w-[300px]">
                   title
                 </baseListCheckable>
@@ -881,7 +881,16 @@
       <div class="inner">
         <table class="guide-table">
           <tbody>
-
+          <tr>
+            <th scope="row">Ag-grid</th>
+          </tr>
+          <tr>
+            <td>
+              <ag-grid-vue style="width: 550px; height: 300px" class="ag-theme-alpine" :gridOptions="gridOptions"
+                           :columnDefs="columnDefs" :rowData="rowData">
+              </ag-grid-vue>
+            </td>
+          </tr>
           <tr>
             <th scope="row">Card</th>
           </tr>
@@ -965,7 +974,7 @@
           </tr>
           <tr>
             <td>
-                  <SearchFilter></SearchFilter>
+              <SearchFilter></SearchFilter>
             </td>
           </tr>
           </tbody>
@@ -983,9 +992,30 @@
 <script lang="ts" setup>
 import { ref } from "@vue/reactivity";
 import { useRouter } from "vue-router";
+import { sample } from "../composables/sample";
+import { AgGridVue } from "ag-grid-vue3";
 
+const sampleData = sample();
 const show = ref(false);
 const router = useRouter();
+const gridOptions = {
+  headerHeight: 56,
+  rowHeight: 56,
+  // sort 설정 시 추가할 것
+  unSortIcon: true
+};
+
+// sort 예시 추가
+const columnDefs = [
+  { headerName: "Make", field: "make", sortable: true },
+  { headerName: "Model", field: "model" },
+  { headerName: "Price", field: "price", sortable: true }
+];
+const rowData = [
+  { make: "Toyota", model: "Celica", price: 35000 },
+  { make: "Ford", model: "Mondeo", price: 32000 },
+  { make: "Porsche", model: "Boxster", price: 72000 }
+];
 
 function onClickOpen() {
   show.value = !show.value;
@@ -994,7 +1024,6 @@ function onClickOpen() {
 function onClickMain() {
   router.push("/main");
 }
-
 
 </script>
 
