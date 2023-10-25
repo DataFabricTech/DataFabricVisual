@@ -1,6 +1,6 @@
 <template>
   <div class="card">
-    <div class="card-img">
+    <div class="card-img" v-if="props.hasImg">
       <div class="card-img-inner">
         <slot name="img"></slot>
       </div>
@@ -101,4 +101,7 @@
 </template>
 
 <script setup lang="ts">
+const props = defineProps({
+  hasImg: { type: Boolean, default: false },
+});
 </script>
