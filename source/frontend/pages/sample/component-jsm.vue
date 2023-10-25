@@ -1,17 +1,20 @@
 <template>
-  <tab-bar></tab-bar>
-  <alert></alert>
+  <div class="l-common">
+    <tab-bar></tab-bar>
+    <alert></alert>
 
-  <br>
-  <span> 단일 날짜 선택 : </span><date-picker v-model:modelValue="date"></date-picker>
-  <br>
-  <span> 기간 날짜 선택 : </span><date-picker v-model:modelValue="dateRange"></date-picker>
-  <br>
-  <highcharts style="width: 500px; height: 200px" :options="chartOptions"> </highcharts>
+    <br>
+    <span> 단일 날짜 선택 : </span><date-picker v-model:modelValue="date"></date-picker>
+    <br>
+    <span> 기간 날짜 선택 : </span><date-picker v-model:modelValue="dateRange"></date-picker>
+    <br>
+    <highcharts style="width: 500px; height: 200px" :options="chartOptions"> </highcharts>
 
-  <ag-grid-vue style="width: 500px; height: 200px" class="ag-theme-alpine" :columnDefs="columnDefs" :rowData="rowData">
-  </ag-grid-vue>
-  <p>composables test : {{ sampleData }}</p>
+    <ag-grid-vue style="width: 550px; height: 300px" class="ag-theme-alpine" :gridOptions="gridOptions"
+                 :columnDefs="columnDefs" :rowData="rowData">
+    </ag-grid-vue>
+    <p>composables test : {{ sampleData }}</p>
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -20,9 +23,11 @@ import TabBar from "../../components/project/tab-bar.vue";
 import Alert from "../../components/common/alert.vue";
 import DatePicker from "../../components/common/date-picker/date-picker.vue";
 
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
 import { AgGridVue } from "ag-grid-vue3";
+
+definePageMeta({
+  layout: "default-layout"
+});
 
 const sampleData = sample();
 
@@ -37,10 +42,18 @@ const chartOptions = {
   ]
 };
 
+const gridOptions = {
+  headerHeight: 56,
+  rowHeight: 56,
+  // sort 설정 시 추가할 것
+  unSortIcon: true
+};
+
+// sort 예시 추가
 const columnDefs = [
-  { headerName: "Make", field: "make" },
+  { headerName: "Make", field: "make", sortable: true },
   { headerName: "Model", field: "model" },
-  { headerName: "Price", field: "price" }
+  { headerName: "Price", field: "price", sortable: true }
 ];
 const rowData = [
   { make: "Toyota", model: "Celica", price: 35000 },
