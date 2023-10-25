@@ -19,7 +19,7 @@
           <div class="card-status hidden">
             <baseBadge class="bg-marker-gray">Inactive(Disconnected)</baseBadge>
           </div>
-          <KebabMenu></KebabMenu>
+          <KebabMenu class="is-bottom"></KebabMenu>
         </div>
       </div>
       <div class="v-group w-full">
