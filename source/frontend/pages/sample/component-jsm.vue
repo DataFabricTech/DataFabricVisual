@@ -5,7 +5,7 @@
     <date-picker></date-picker>
     <highcharts style="width: 500px; height: 200px" :options="chartOptions"></highcharts>
 
-    <ag-grid-vue style="width: 400px; height: 300px" class="ag-theme-alpine" :gridOptions="gridOptions"
+    <ag-grid-vue style="width: 550px; height: 300px" class="ag-theme-alpine" :gridOptions="gridOptions"
                  :columnDefs="columnDefs" :rowData="rowData">
     </ag-grid-vue>
     <p>composables test : {{ sampleData }}</p>
