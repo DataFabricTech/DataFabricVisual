@@ -4,9 +4,9 @@
     <alert></alert>
 
     <br>
-    <span> 단일 날짜 선택 : </span><date-picker v-model:modelValue="date"></date-picker>
+    <span> 단일 날짜 선택</span><date-picker v-model:modelValue="date"></date-picker>
     <br>
-    <span> 기간 날짜 선택 : </span><date-picker v-model:modelValue="dateRange"></date-picker>
+    <span> 기간 날짜 선택</span><date-picker v-model:modelValue="dateRange"></date-picker>
     <br>
     <highcharts style="width: 500px; height: 200px" :options="chartOptions"> </highcharts>
 
