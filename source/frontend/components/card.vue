@@ -1,10 +1,5 @@
 <template>
   <div class="card">
-    <div class="card-img" v-if="props.hasImg">
-      <div class="card-img-inner">
-        <slot name="img"></slot>
-      </div>
-    </div>
     <div class="card-content">
       <div class="h-group justify-between w-full">
         <div class="h-group gap-[8px]">
@@ -23,9 +18,9 @@
           <KebabMenu></KebabMenu>
         </div>
       </div>
-      <div class="v-group">
-        <a href="#" class="card-link" title="이동">불법 주정차 구간 데이터</a>
-        <p class="card-detail">서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보</p>
+      <div class="v-group w-full">
+        <a href="#" class="card-link" title="이동">불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터</a>
+        <p class="card-detail">서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보</p>
       </div>
       <div class="h-group gap-[16px]">
         <BaseTag>#확정단속일시</BaseTag>
@@ -101,7 +96,5 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  hasImg: { type: Boolean, default: false },
-});
+
 </script>

@@ -79,25 +79,13 @@
           <div class="main-article-body">
             <ul class="card-simple-list">
               <li class="card-simple-item">
-                <CardSimple class="w-3/6"></CardSimple>
-                <div class="update-info w-3/6">
-                  <BaseBadge class="bg-marker-gray">Inactive(Disconnexted)</BaseBadge>
-                  <span class="update-info-title">수정일자 2023-09-22</span>
-                </div>
+                <CardSimple hasStatus></CardSimple>
               </li>
               <li class="card-simple-item">
-                <CardSimple class="w-3/6"></CardSimple>
-                <div class="update-info w-3/6">
-                  <BaseBadge class="bg-marker-gray">Inactive(Disconnexted)</BaseBadge>
-                  <span class="update-info-title">수정일자 2023-09-22</span>
-                </div>
+                <CardSimple hasStatus></CardSimple>
               </li>
               <li class="card-simple-item">
-                <CardSimple class="w-3/6"></CardSimple>
-                <div class="update-info w-3/6">
-                  <BaseBadge class="bg-marker-gray">Inactive(Disconnexted)</BaseBadge>
-                  <span class="update-info-title">수정일자 2023-09-22</span>
-                </div>
+                <CardSimple hasStatus></CardSimple>
               </li>
             </ul>
           </div>

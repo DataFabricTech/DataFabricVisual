@@ -889,7 +889,7 @@
               <div class="v-group gap-5">
                 <div class="h-group w-full">
                   <strong class="w-[150px] font-light text-[14px] shrink-0"> size: default </strong>
-                  <ul class="card-simple-list h-[450px]">
+                  <ul class="card-simple-list w-[500px]">
                     <li class="card-simple-item">
                       <CardSimple></CardSimple>
                     </li>
@@ -897,10 +897,10 @@
                       <CardSimple></CardSimple>
                     </li>
                     <li class="card-simple-item">
-                      <CardSimple></CardSimple>
+                      <CardSimple hasStatus></CardSimple>
                     </li>
                     <li class="card-simple-item">
-                      <CardSimple></CardSimple>
+                      <CardSimple hasStatus></CardSimple>
                     </li>
                   </ul>
                 </div>
@@ -915,7 +915,7 @@
               <div class="v-group gap-5">
                 <div class="h-group w-full">
                   <strong class="w-[150px] font-light text-[14px] shrink-0"> size: lg </strong>
-                  <ul class="card-list">
+                  <ul class="card-list w-[1100px]">
                     <li class="card-item">
                       <Card class="card-lg ">
                         <template v-slot:img>
@@ -941,7 +941,7 @@
                 </div>
                 <div class="h-group w-full">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
-                  <ul class="card-list">
+                  <ul class="card-list w-[1100px]">
                     <li class="card-item">
                       <Card class=" ">
                         <template v-slot:img>
