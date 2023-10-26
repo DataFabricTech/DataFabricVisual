@@ -1,9 +1,9 @@
 <template>
   <div class="search-filter">
     <div class="search-filter-body">
-      <form action="" class="form">
-        <ul class="form-list">
-          <li class="form-item">
+      <form action="" class="form flex-row items-center">
+        <div class="form-list">
+          <div class="form-item">
             <div class="form-label">
               <strong class="form-title">검색어</strong>
             </div>
@@ -12,8 +12,8 @@
               <label for="01" class="hidden">검색어</label>
               <BaseTextInput id="01" class="w-[522px] text-input-lg"></BaseTextInput>
             </div>
-          </li>
-          <li class="form-item">
+          </div>
+          <div class="form-item">
             <div class="form-label">
               <strong class="form-title">기간 선택</strong>
             </div>
@@ -21,24 +21,24 @@
               <BaseSelect class="select-lg"></BaseSelect>
               <!--            TODO: [퍼블리싱] datepicker 추가 예정-->
             </div>
-          </li>
-          <li class="form-item">
+          </div>
+          <div class="form-item">
             <div class="form-label">
               <strong class="form-title">연결정보</strong>
             </div>
             <div class="form-content">
               <BaseSelect class="select-lg"></BaseSelect>
             </div>
-          </li>
-          <li class="form-item">
+          </div>
+          <div class="form-item">
             <div class="form-label">
               <strong class="form-title">도메인</strong>
             </div>
             <div class="form-content">
               <BaseSelect class="select-lg"></BaseSelect>
             </div>
-          </li>
-          <li class="form-item">
+          </div>
+          <div class="form-item">
             <div class="form-label">
               <strong class="form-title">데이터모델</strong>
             </div>
@@ -47,8 +47,8 @@
               <BaseSelect class="select-lg"></BaseSelect>
               <BaseSelect class="select-lg"></BaseSelect>
             </div>
-          </li>
-        </ul>
+          </div>
+        </div>
         <div class="form-action">
           <BaseButton class=" button-lg button-primary">
             <span class="button-text">검색</span>
