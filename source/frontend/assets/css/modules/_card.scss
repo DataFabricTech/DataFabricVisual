@@ -4,6 +4,7 @@
   gap: $spacing-16;
   padding: $spacing-16 $spacing-20;
   border: 1px solid $border-gray;
+  background: $white;
 
   &-list {
     @include flex-standard($horizontal: flex-start, $direction: column);
@@ -68,6 +69,11 @@
   &-lg {
     padding: $spacing-24 96px $spacing-36 60px;
     gap: $spacing-36;
+
+  }
+
+  &-status {
+    @include flex-standard;
   }
 
   &.card-simple {

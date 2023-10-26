@@ -200,7 +200,7 @@
     gap: $spacing-4;
   }
 
-  &-head {
+  &-top-bar {
     @include flex-standard($horizontal: space-between);
     width: 100%;
   }
@@ -307,7 +307,6 @@
 }
 
 .paging {
-
   &-dots {
     @include flex-standard;
     gap: $spacing-8;
@@ -330,3 +329,78 @@
     }
   }
 }
+
+.portal-article {
+  .result-info {
+    gap: $spacing-12;
+
+    .h-group {
+      gap: $spacing-8;
+    }
+  }
+}
+
+.result-title {
+  font-size: 24px;
+  width: 100%;
+  text-align: center;
+  padding-bottom: $spacing-12;
+
+  em {
+    color: $tertiary;
+  }
+}
+
+.category {
+  &-article {
+    @include flex-standard($direction: column);
+    gap: $spacing-12;
+    width: 100%;
+  }
+
+  &-container {
+    width: 100%;
+    padding: $spacing-24;
+    background: $light-blue-02;
+
+    .pagination {
+      margin-top: $spacing-16;
+    }
+
+    .v-group + .v-group {
+      margin-top: $spacing-32;
+    }
+  }
+
+  &-top-bar {
+    @include flex-standard($horizontal: space-between);
+    width: 100%;
+  }
+
+  &-name {
+    justify-content: flex-start;
+  }
+
+  &-anchor {
+    @include flex-standard($horizontal: flex-start);
+    width: 100%;
+    gap: $spacing-16;
+    padding: $spacing-12 0;
+
+    .anchor {
+      text-decoration: underline;
+      font-size: 15px;
+      color: $font-gray-01;
+
+      &:first-child {
+        color: $tertiary;
+      }
+    }
+  }
+}
+
+.result-more-button {
+width: 300px;
+border-radius: 35px;
+}
+

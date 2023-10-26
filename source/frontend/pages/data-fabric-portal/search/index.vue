@@ -89,10 +89,10 @@
                   <div class="swiper-item"></div>
                 </div>
               </div>
-              <baseButton class="swiper-pre-button button-icon button-link" title="이전">
+              <baseButton class="swiper-pre-button" title="이전">
                 <svg-icon name="arrow-left" class="svg-icon" />
               </baseButton>
-              <baseButton class="swiper-next-button button-icon button-link" title="다음">
+              <baseButton class="swiper-next-button" title="다음">
                 <svg-icon name="arrow-right" class="svg-icon" />
               </baseButton>
             </div>
@@ -108,7 +108,7 @@
           <div class="portal-article-body">
             <div class="community">
               <div class="community-inner">
-                <div class="community-head">
+                <div class="community-top-bar">
                   <div class="community-title">공지사항</div>
                   <baseButton class="button-link-tertiary">더보기</baseButton>
                 </div>
@@ -162,7 +162,7 @@
                 </div>
               </div>
               <div class="community-inner">
-                <div class="community-head">
+                <div class="community-top-bar">
                   <div class="community-title">
                     자주하는 질문
                     <em>FAQ</em>
