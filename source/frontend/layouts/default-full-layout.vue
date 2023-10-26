@@ -1,5 +1,5 @@
 <template>
-  <div id="wrap">
+  <div id="wrap" class="is-full">
     <TheHeader></TheHeader>
     <main id="main">
       <slot />

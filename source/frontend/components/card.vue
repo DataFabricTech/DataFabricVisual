@@ -17,7 +17,11 @@
               {{ downloadStatus }}
             </span>
           </BaseButton>
-          <KebabMenu></KebabMenu>
+          <!-- TODO:[개발] 저장소 카드일 경우 hidden 해제 -->
+          <div class="card-status hidden">
+            <baseBadge class="bg-marker-gray">Inactive(Disconnected)</baseBadge>
+          </div>
+          <KebabMenu class="is-bottom"></KebabMenu>
         </div>
       </div>
       <div class="v-group w-full">

@@ -1,8 +1,6 @@
 #footer {
-  @include flex-standard($horizontal: space-between);
-  height: 96px;
-  padding: 0 $spacing-16;
-  border-top: 1px solid $border-gray;
+  @include flex-standard;
+
 }
 
 .footer-logo {

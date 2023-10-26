@@ -10,11 +10,18 @@
 
 .l-nav {
   @include flex-standard($horizontal: space-between);
-  @include z-index("float");
   width: 100%;
   height: 40px;
   padding: 0 $spacing-16;
   background-color: $gray;
+}
+
+.l-footer {
+  @include flex-standard($horizontal: space-between);
+  width: 100%;
+  height: 96px;
+  padding: 0 $spacing-16;
+  border-top: 1px solid $border-gray;
 }
 
 .l-common {
