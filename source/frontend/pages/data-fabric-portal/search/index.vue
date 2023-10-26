@@ -113,52 +113,52 @@
                   <baseButton class="button-link-tertiary">더보기</baseButton>
                 </div>
                 <div class="community-body">
-                <div class="special-notify">
-                  <div class="special-notify-inner">
-                    <svg-icon name="speaker" class="svg-icon" />
-                    <div class="flow">
-                      <div class="flow-group">
-                        <div class="flow-item">
-                          <a href="#" class="flow-link">
-                            <em>[서비스 안내]</em>
-                            분석 서비스를 위한 저작도구 신규 서비스 도입
-                          </a>
-                        </div>
-                        <div class="flow-item">
-                          <a href="#" class="flow-link">
-                            <em>[서비스 안내]</em>
-                            분석 서비스를 위한 저작도구 신규 서비스 도입
-                          </a>
-                        </div>
-                        <div class="flow-item">
-                          <a href="#" class="flow-link">
-                            <em>[서비스 안내]</em>
-                            분석 서비스를 위한 저작도구 신규 서비스 도입
-                          </a>
+                  <div class="special-notify">
+                    <div class="special-notify-inner">
+                      <svg-icon name="speaker" class="svg-icon" />
+                      <div class="flow">
+                        <div class="flow-group">
+                          <div class="flow-item">
+                            <a href="#" class="flow-link">
+                              <em>[서비스 안내]</em>
+                              분석 서비스를 위한 저작도구 신규 서비스 도입
+                            </a>
+                          </div>
+                          <div class="flow-item">
+                            <a href="#" class="flow-link">
+                              <em>[서비스 안내]</em>
+                              분석 서비스를 위한 저작도구 신규 서비스 도입
+                            </a>
+                          </div>
+                          <div class="flow-item">
+                            <a href="#" class="flow-link">
+                              <em>[서비스 안내]</em>
+                              분석 서비스를 위한 저작도구 신규 서비스 도입
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <div class="paging">
+                      <ul class="paging-dots">
+                        <li class="dot is-active">
+                          <button class="dot-button">1</button>
+                        </li>
+                        <li class="dot">
+                          <button class="dot-button">2</button>
+                        </li>
+                        <li class="dot">
+                          <button class="dot-button">3</button>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-                  <div class="paging">
-                    <ul class="paging-dots">
-                      <li class="dot is-active">
-                        <button class="dot-button">1</button>
-                      </li>
-                      <li class="dot">
-                        <button class="dot-button">2</button>
-                      </li>
-                      <li class="dot">
-                        <button class="dot-button">3</button>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
                   <ul class="community-list">
                     <li class="community-item" v-for="index in 6">
                       <baseBadge class="bg-marker-cyan">안내</baseBadge>
                       <a href="#" class="community-item-link"> [신규 인프라] 이미지 지원 종료 안내(2023/09/26) </a>
                     </li>
-                </ul>
+                  </ul>
                 </div>
               </div>
               <div class="community-inner">
@@ -186,8 +186,10 @@
     </section>
   </div>
 </template>
+
 <script lang="ts" setup>
 definePageMeta({
-  layout: "default-portal-layout"
+  layout: "default-portal-full-layout"
 });
+
 </script>

@@ -3,6 +3,27 @@
   position: relative;
   width: 40px;
   height: 40px;
+
+  &.is-left {
+    .kebab-context {
+      right: calc(100% + 4px);
+      left: auto;
+    }
+  }
+
+  &.is-bottom {
+    .kebab-context {
+      top: calc(100% + 4px);
+      right: 8px;
+      left: auto;
+    }
+  }
+}
+
+.kebab-button{
+  &.is-selected, &.is-selected:hover:not(:disabled){
+    background-color: #{$light-gray-02};
+  }
 }
 
 .kebab-context {
