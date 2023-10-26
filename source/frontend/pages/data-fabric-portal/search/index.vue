@@ -65,7 +65,7 @@
             <div class="swiper">
               <div class="swiper-results">
                 <span class="results-page">
-                  <em>1</em>
+                  <em class="color-tertiary">1</em>
                   / 5
                 </span>
                 <baseButton title="재생" class="button-sm button-icon button-link">
@@ -120,19 +120,19 @@
                         <div class="flow-group">
                           <div class="flow-item">
                             <a href="#" class="flow-link">
-                              <em>[서비스 안내]</em>
+                              <em class="color-tertiary">[서비스 안내]</em>
                               분석 서비스를 위한 저작도구 신규 서비스 도입
                             </a>
                           </div>
                           <div class="flow-item">
                             <a href="#" class="flow-link">
-                              <em>[서비스 안내]</em>
+                              <em class="color-tertiary">[서비스 안내]</em>
                               분석 서비스를 위한 저작도구 신규 서비스 도입
                             </a>
                           </div>
                           <div class="flow-item">
                             <a href="#" class="flow-link">
-                              <em>[서비스 안내]</em>
+                              <em class="color-tertiary">[서비스 안내]</em>
                               분석 서비스를 위한 저작도구 신규 서비스 도입
                             </a>
                           </div>
@@ -165,7 +165,7 @@
                 <div class="community-top-bar">
                   <div class="community-title">
                     자주하는 질문
-                    <em>FAQ</em>
+                    <em class="color-tertiary">FAQ</em>
                   </div>
                   <baseButton class="button-link-tertiary">더보기</baseButton>
                 </div>
