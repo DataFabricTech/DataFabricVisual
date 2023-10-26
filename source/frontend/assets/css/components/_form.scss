@@ -1,5 +1,5 @@
 .form {
-  @include flex-standard($direction: column);
+  @include flex-standard($direction: column, $vertical: flex-start);
   width: 100%;
   gap: $spacing-16;
 

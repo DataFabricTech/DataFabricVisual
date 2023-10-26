@@ -1,7 +1,7 @@
 <template>
   <div class="search-filter">
     <div class="search-filter-body">
-      <form action="" class="form flex-row">
+      <form action="" class="form flex-row items-center">
         <div class="form-list">
           <div class="form-item">
             <div class="form-label">

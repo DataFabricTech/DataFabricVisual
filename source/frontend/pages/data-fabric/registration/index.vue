@@ -7,10 +7,10 @@
       <template v-slot:body>
         <div class="modal-body w-[900px] p-6 items-center">
           <BaseStep></BaseStep>
-          <div class="step-info storage-type">
-            <h4 class="storage-type-title">저장소 유형 선택</h4>
+          <div class="step-info">
+            <h4 class="step-info-title">저장소 유형 선택</h4>
             <SearchField class="search-field-lg w-[440px]"></SearchField>
-            <ul class="storage-type-list">
+            <ul class="storage-type">
               <li class="storage-type-item">
                 <button class="storage-type-button">
                   <div class="storage-type-img">
@@ -164,7 +164,7 @@
                         <label for="input-ex-03" class="hidden">lable</label>
                         <BaseTextInput id="input-ex-03" class="w-[222px] text-input-lg" placeholder="Key를 입력해주세요."></BaseTextInput>
                         <label for="input-ex-04" class="hidden">lable</label>
-                        <BaseTextInput id="input-ex-04" class="w-[480px] text-input-lg" placeholder="Value를 입력해주세요."></BaseTextInput>
+                        <BaseTextInput id="input-ex-04" class="w-[460px] text-input-lg" placeholder="Value를 입력해주세요."></BaseTextInput>
                         <baseButton class="button-icon button-ghost button-lg">
                           <svg-icon name="plus" class="svg-icon" />
                           <span class="hidden">추가</span>
@@ -174,7 +174,7 @@
                         <label for="input-ex-05" class="hidden">lable</label>
                         <BaseTextInput id="input-ex-05" class="w-[222px] text-input-lg" placeholder="Key를 입력해주세요."></BaseTextInput>
                         <label for="input-ex-06" class="hidden">lable</label>
-                        <BaseTextInput id="input-ex-06" class="w-[480px] text-input-lg" placeholder="Value를 입력해주세요."></BaseTextInput>
+                        <BaseTextInput id="input-ex-06" class="w-[460px] text-input-lg" placeholder="Value를 입력해주세요."></BaseTextInput>
                         <baseButton class="button-icon button-danger button-lg">
                           <svg-icon name="minus" class="svg-icon" />
                           <span class="hidden">삭제</span>
