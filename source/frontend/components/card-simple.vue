@@ -14,6 +14,7 @@
     </div>
     <div class="card-content" v-if="props.hasStatus">
       <div class="update-info">
+        <!-- TODO 데이터 연결상태 리턴값에 따라 클래스 및 명칭 변경 -->
         <BaseBadge class="bg-marker-gray">Inactive(Disconnexted)</BaseBadge>
         <span class="update-info-title">수정일자 {{ model.updatedAt }}</span>
       </div>

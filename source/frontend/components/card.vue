@@ -18,6 +18,7 @@
             </span>
           </BaseButton>
           <div :class="cardMode === true ? 'card-status' : 'card-status hidden'">
+            <!-- TODO: 데이터 연결상태 리턴값에 따라 클래스 및 명칭 변경 -->
             <baseBadge class="bg-marker-gray">Inactive(Disconnected)</baseBadge>
           </div>
           <KebabMenu class="is-bottom"></KebabMenu>
