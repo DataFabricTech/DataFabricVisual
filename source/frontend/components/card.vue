@@ -99,20 +99,33 @@
 import { computed } from 'vue'
 import { defineProps, defineEmits } from "vue/dist/vue";
 
+interface ModelType {
+  id: string;
+  name: string;
+  description: string;
+  tags: string[];
+  storageInfo: {
+    storageType: string;
+  };
+  domain: string;
+  updatedAt: string;
+  creator: string;
+  statInfo: {
+    access: number;
+    rating: number;
+    favorite: number;
+    download: number;
+  };
+  downloadInfo: {
+    status: number,
+    uri: string
+  }
+}
+
 const props = defineProps({
   model: {
-    type: Object,
-    default: {
-      id: 111,
-      name: "불법 주정차 구간 데이터",
-      description: "서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보",
-      tags: ["tag1", 'tag2', 'tag3', 'tag4', 'tag5'],
-      storageInfo: {
-        storageType: "HDFS"
-      },
-      domain: "공간",
-      updatedAt: "2023-09-22",
-    }
+    type: Object as () => ModelType,
+    required: true
   }
 });
 const emit = defineEmits(['preview', 'download', 'click']);
