@@ -122,7 +122,7 @@ const downloadStatus = computed(() => {
     case 3:
       return '다운로드 가능';
     default:
-      return ''
+      return '다운로드'
   }
 })
 function preview() {
