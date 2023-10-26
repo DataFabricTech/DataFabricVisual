@@ -1,7 +1,5 @@
 // Button.stories.ts
-
 import type { Meta, StoryObj } from '@storybook/vue3';
-
 import BaseButton from './button.vue';
 
 const meta: Meta<typeof BaseButton> = {
@@ -12,23 +10,19 @@ const meta: Meta<typeof BaseButton> = {
 export default meta;
 type Story = StoryObj<typeof BaseButton>;
 
-/*
- *👇 Render functions are a framework specific feature to allow you control on how the component renders.
- * See https://storybook.js.org/docs/vue/api/csf
- * to learn how to use render functions.
- */
 export const Primary: Story = {
   render: (args) => ({
     components: { BaseButton },
+    template: `<BaseButton v-bind="args" v-on="$props">${args.message}</BaseButton>`,
     setup() {
       return { args };
-    },
-    template: '<BaseButton v-bind="args" v-on="$props">button test</BaseButton>'
+    }
   }),
   args: {
+    message : "버튼!!!!",
     type: "button",
     title: "title",
-    disabled: true
+    disabled: false
   },
   argTypes: { onClick: { action: "clicked" } }
 };
