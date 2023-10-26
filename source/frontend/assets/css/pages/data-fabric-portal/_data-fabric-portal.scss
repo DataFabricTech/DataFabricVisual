@@ -374,6 +374,7 @@
 
   &-top-bar {
     @include flex-standard($horizontal: space-between);
+    width: 100%;
   }
 
   &-name {
