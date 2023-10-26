@@ -188,6 +188,6 @@
 </template>
 <script lang="ts" setup>
 definePageMeta({
-  layout: "default-layout"
+  layout: "default-full-layout"
 });
 </script>

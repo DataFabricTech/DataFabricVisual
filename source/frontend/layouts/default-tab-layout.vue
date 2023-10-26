@@ -1,9 +1,7 @@
 <template>
   <div id="wrap" class="is-have-tab">
-    <header id="header">
-      <TheHeader></TheHeader>
-      <TheTab></TheTab>
-    </header>
+    <TheHeader></TheHeader>
+    <TheTab></TheTab>
     <main id="main">
       <slot />
     </main>
