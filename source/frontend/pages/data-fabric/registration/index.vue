@@ -124,7 +124,76 @@
         <div class="w-[900px] p-6">
           <BaseStep></BaseStep>
           <div class="storage-type">
-            <h4>기본 정보 입력</h4>
+            <form action="" class="form form-vertical">
+              <div class="form-list">
+                <h4 class="form-list-title">기본정보 입력</h4>
+                <div class="form-item">
+                  <div class="form-label">
+                    <strong class="form-title">저장소 유형</strong>
+                  </div>
+                  <div class="form-content">
+                    <p class="form-text">MySQL</p>
+                  </div>
+                </div>
+                <div class="form-item">
+                  <div class="form-label">
+                    <strong class="form-title">연결정보 이름</strong>
+                    <span class="form-label-accent">*</span>
+                  </div>
+                  <div class="form-content">
+                    <label for="input-ex-01" class="hidden">연결정보 이름</label>
+                    <BaseTextInput id="input-ex-01" class="w-[522px] text-input-lg" placeholder="이름을 입력해주세요."></BaseTextInput>
+                  </div>
+                </div>
+                <div class="form-item w-full">
+                  <div class="form-label">
+                    <strong class="form-title">연결정보 설명</strong>
+                  </div>
+                  <div class="form-content w-full">
+                    <label for="input-ex-02" class="hidden">연결정보 설명</label>
+                    <baseTextarea id="input-ex-02" class="w-full h-48" placeholder="내용을 입력해주세요."></baseTextarea>
+                  </div>
+                </div>
+                <h4 class="form-list-title">사용자 추가 정보 입력</h4>
+                <div class="form-item">
+                  <div class="form-content">
+                    <div class="v-group gap-2">
+                      <div class="h-group gap-2">
+                        <label for="input-ex-03" class="hidden">lable</label>
+                        <BaseTextInput id="input-ex-03" class="w-[222px] text-input-lg" placeholder="Key를 입력해주세요."></BaseTextInput>
+                        <label for="input-ex-04" class="hidden">lable</label>
+                        <BaseTextInput id="input-ex-04" class="w-[480px] text-input-lg" placeholder="Value를 입력해주세요."></BaseTextInput>
+                        <baseButton class="button-icon button-ghost button-lg">
+                          <svg-icon name="plus" class="svg-icon" />
+                          <span class="hidden">추가</span>
+                        </baseButton>
+                      </div>
+                      <div class="h-group gap-2">
+                        <label for="input-ex-05" class="hidden">lable</label>
+                        <BaseTextInput id="input-ex-05" class="w-[222px] text-input-lg" placeholder="Key를 입력해주세요."></BaseTextInput>
+                        <label for="input-ex-06" class="hidden">lable</label>
+                        <BaseTextInput id="input-ex-06" class="w-[480px] text-input-lg" placeholder="Value를 입력해주세요."></BaseTextInput>
+                        <baseButton class="button-icon button-danger button-lg">
+                          <svg-icon name="minus" class="svg-icon" />
+                          <span class="hidden">삭제</span>
+                        </baseButton>
+                        <baseButton class="button-icon button-ghost button-lg">
+                          <svg-icon name="plus" class="svg-icon" />
+                          <span class="hidden">추가</span>
+                        </baseButton>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <h4 class="form-list-title">Tag 입력</h4>
+                <div class="form-item w-full">
+                  <div class="form-content w-full">
+                    <label for="input-ex-07" class="hidden">Tag 입력</label>
+                    <BaseTextInput id="area-ex-07" class="w-full text-input-lg" placeholder="Tag를 입력해주세요."></BaseTextInput>
+                  </div>
+                </div>
+              </div>
+            </form>
           </div>
         </div>
       </template>
@@ -133,6 +202,9 @@
           <span class="button-text">취소</span>
         </baseButton>
         <div class="h-group ml-auto">
+          <baseButton class="button-ghost button-lg">
+            <span class="button-text">이전</span>
+          </baseButton>
           <baseButton class="button-primary button-lg">
             <span class="button-text">다음</span>
           </baseButton>

@@ -219,6 +219,23 @@
             </td>
           </tr>
           <tr>
+            <th scope="row">form</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="v-group gap-10">
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: horizontal</strong>
+                  <baseFormHorizontal></baseFormHorizontal>
+                </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: vertical</strong>
+                  <baseFormVertical></baseFormVertical>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
             <th scope="row">Nav</th>
           </tr>
           <tr>

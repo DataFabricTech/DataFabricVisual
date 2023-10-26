@@ -2,19 +2,49 @@
   @include flex-standard($horizontal: space-between);
   width: 100%;
 
+  &-vertical {
+    .form-item {
+      @include flex-standard($vertical: flex-start, $direction: column);
+      gap: $spacing-12;}
+
+    .form-label {
+      width: 100%;
+    }
+  }
+
   &-list {
     @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
     flex-grow: 1;
-    gap: $spacing-24;
+
+    &-title {
+      font-size: 16px;
+      color: $font-black;
+      font-weight: 500;
+    }
+  }
+
+  &-list-title + &-item {
+    margin-top: $spacing-16;
   }
 
   &-item {
     @include flex-standard($horizontal: flex-start);
   }
 
+  &-item:not(:last-child) {
+    margin-bottom: $spacing-24;
+  }
+
   &-label {
     width: 100px;
     flex-shrink: 0;
+
+    &-accent {
+      font-size: 12px;
+      color: $negative;
+      font-weight: 500;
+      margin-left: $spacing-4;
+    }
   }
 
   &-content {
@@ -27,6 +57,12 @@
   }
 
   &-title {
+    font-size: 15px;
+    font-weight: 400;
+    color: $font-gray-01;
+  }
+
+  &-text {
     font-size: 15px;
     font-weight: 400;
     color: $font-black;

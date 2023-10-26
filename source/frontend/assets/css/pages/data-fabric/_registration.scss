@@ -1,5 +1,7 @@
 .storage-type {
-  @include flex-standard($direction: column, $vertical:flex-start);
+  @include flex-standard($direction: column, $vertical:flex-start, $horizontal: flex-start);
+  max-height: 530px;
+  overflow: auto;
   padding: $spacing-16;
   margin-top: $spacing-24;
   gap: $spacing-16;
