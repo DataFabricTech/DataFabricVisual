@@ -1,6 +1,8 @@
 <template>
   <div id="wrap" class="is-full">
-    <TheHeader></TheHeader>
+    <header id="header">
+      <TheHeader></TheHeader>
+    </header>
     <main id="main">
       <slot />
     </main>
