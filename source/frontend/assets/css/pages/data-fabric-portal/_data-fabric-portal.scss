@@ -111,10 +111,6 @@
     .results-page {
       font-size: 13px;
       color: $black;
-
-      em {
-        color: $tertiary;
-      }
     }
   }
 
@@ -217,10 +213,6 @@
     color: $font-black;
     font-size: 16px;
     font-weight: 700;
-
-    em {
-      color: $tertiary;
-    }
   }
 
   &-list {
@@ -299,10 +291,6 @@
     font-size: 13px;
     font-weight: 400;
     white-space: nowrap;
-
-    em {
-      font-weight: 700;
-    }
   }
 }
 
@@ -327,27 +315,6 @@
       cursor: pointer;
       text-indent: -9999px;
     }
-  }
-}
-
-.portal-article {
-  .result-info {
-    gap: $spacing-12;
-
-    .h-group {
-      gap: $spacing-8;
-    }
-  }
-}
-
-.result-title {
-  font-size: 24px;
-  width: 100%;
-  text-align: center;
-  padding-bottom: $spacing-12;
-
-  em {
-    color: $tertiary;
   }
 }
 
@@ -380,27 +347,5 @@
   &-name {
     justify-content: flex-start;
   }
-
-  &-anchor {
-    @include flex-standard($horizontal: flex-start);
-    width: 100%;
-    gap: $spacing-16;
-    padding: $spacing-12 0;
-
-    .anchor {
-      text-decoration: underline;
-      font-size: 15px;
-      color: $font-gray-01;
-
-      &:first-child {
-        color: $tertiary;
-      }
-    }
-  }
-}
-
-.result-more-button {
-width: 300px;
-border-radius: 35px;
 }
 

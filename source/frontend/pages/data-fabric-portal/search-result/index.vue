@@ -27,7 +27,7 @@
     </section>
     <section class="l-section gap-[28px]">
       <h3 class="result-title">
-        <em>“주정차CCTV 단속위치”</em> 검색결과는 <em>31</em>건 입니다.
+        <em class="color-tertiary">“주정차CCTV 단속위치”</em> 검색결과는 <em class="color-tertiary">31</em>건 입니다.
       </h3>
       <div class="flex justify-center w-full">
         <div class="round-tab">
@@ -67,20 +67,20 @@
       </div>
       <div class="v-group gap-[36px] px-4 w-full">
         <article class="category-article">
-          <div class="category-anchor" id="all">
-            <a class="anchor" title="이동" href="#all">전체 (16)</a>
-            <a class="anchor" title="이동" href="#data-model">데이터모델 (6)</a>
-            <a class="anchor" title="이동" href="#repository">저장소 (5)</a>
-            <a class="anchor" title="이동" href="#domain">도메인 (5)</a>
+          <div class="anchor" id="all">
+            <a class="anchor-link" title="이동" href="#all">전체 (16)</a>
+            <a class="anchor-link" title="이동" href="#data-model">데이터모델 (6)</a>
+            <a class="anchor-link" title="이동" href="#repository">저장소 (5)</a>
+            <a class="anchor-link" title="이동" href="#domain">도메인 (5)</a>
           </div>
           <div class="result-info">
-            <div class="h-group">
+            <div class="h-group gap-[20px]">
               <strong class="result-summary-title">데이터 패브릭</strong>
-              <strong class="result-summary">검색 결과는 <em>4</em>건 입니다.</strong>
+              <strong class="result-summary">검색 결과는 <em class="color-tertiary">4</em>건 입니다.</strong>
             </div>
-            <div class="h-group">
-              <baseSelect></baseSelect>
-              <baseSelect></baseSelect>
+            <div class="result-sort">
+              <BaseSelect class="select-lg"></BaseSelect>
+              <BaseSelect class="select-lg"></BaseSelect>
             </div>
           </div>
           <div class="category-container">
@@ -127,9 +127,9 @@
         </article>
         <article class="category-article">
           <div class="result-info">
-            <div class="h-group">
+            <div class="h-group gap-[20px]">
               <strong class="result-summary-title">데이터 패브릭</strong>
-              <strong class="result-summary">검색 결과는 <em>4</em>건 입니다.</strong>
+              <strong class="result-summary">검색 결과는 <em class="color-tertiary">4</em>건 입니다.</strong>
             </div>
             <div class="h-group">
               <baseSelect></baseSelect>
@@ -157,7 +157,7 @@
 
           </div>
         </div>
-        <baseButton class="button-normal button-lg result-more-button">
+        <baseButton class="button-normal button-lg result-more-button w-[300px] rounded-[35px]">
           <span class="button-text">검색결과 더보기</span>
         </baseButton>
       </article>
