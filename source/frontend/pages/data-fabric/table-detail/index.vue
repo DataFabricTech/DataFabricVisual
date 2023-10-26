@@ -1,27 +1,33 @@
 <!-- 저장소 관리 테이블상세-->
 <template>
   <div class="l-split">
-    <h2 class="hidden">데이터/테이블 상세</h2>
+    <h2 class="hidden">저장소 관리</h2>
     <div class="side-content">
       <h3 class="hidden">필터</h3>
       <div class="v-group w-full">
-        <div class="h-group ml-auto">
-          <div class="kebab-menu">
-            <BaseButton
-              @focus="state.isOpen = true"
-              @blur="state.isOpen = false"
-              class="button button-icon button-lg"
-              title="열기"
-            >
-              <span class="hidden">정렬 열기</span>
-              <svg-icon name="sort" class="svg-icon" />
-            </BaseButton>
-            <BaseContext class="kebab-context" v-if="state.isOpen"></BaseContext>
-          </div>
-          <BaseButton @click="onClickOpen" class="button-icon button-link button-sm" title="필터">
-            <span class="hidden">필터</span>
-            <svg-icon name="filter" class="svg-icon"></svg-icon>
+        <div class="h-group justify-between w-full">
+          <BaseButton class="button-icon button-link button-sm" title="초기화">
+            <span class="hidden">초기화</span>
+            <svg-icon name="reset" class="svg-icon"></svg-icon>
           </BaseButton>
+          <div class="h-group">
+            <div class="kebab-menu">
+              <BaseButton
+                @focus="state.isOpen = true"
+                @blur="state.isOpen = false"
+                class="button button-icon button-lg"
+                title="열기"
+              >
+                <span class="hidden">정렬 열기</span>
+                <svg-icon name="sort" class="svg-icon" />
+              </BaseButton>
+              <BaseContext class="kebab-context" v-if="state.isOpen"></BaseContext>
+            </div>
+            <BaseButton @click="onClickOpen" class="button-icon button-link button-sm" title="필터">
+              <span class="hidden">필터</span>
+              <svg-icon name="filter" class="svg-icon"></svg-icon>
+            </BaseButton>
+          </div>
         </div>
         <baseTextInput></baseTextInput>
       </div>
@@ -96,137 +102,89 @@
       </BaseButton>
     </div>
     <section class="main-content">
-      <div class="page-subject">
-        <h3 class="page-title">Overview</h3>
-        <BaseButton class="button-tertiary">
-          <span class="button-text">데이터 모델 생성</span>
-        </BaseButton>
-      </div>
       <article class="page-article">
-        <h4 class="page-subtitle">요약 정보</h4>
-        <div class="h-group w-full gap-[16px]">
-          <div class="chartbox">차트</div>
-          <div class="chartbox">차트</div>
-          <div class="chartbox">차트</div>
+        <div class="h-group justify-end w-full">
+          <BaseSwitch>
+            <template v-slot:switch-text>데이터 모델 생성</template>
+            <template v-slot:hidden-text>데이터 모델 생성</template>
+          </BaseSwitch>
         </div>
-        <div class="h-group w-full gap-[16px]">
-          <div class="chartbox">차트</div>
-          <div class="chartbox">차트</div>
-        </div>
+        <Card class="w-full"></Card>
       </article>
       <article class="page-article">
-        <h4 class="page-subtitle">최근 등록/변경된 연결정보</h4>
-        <div class="table-col w-full">
-          <table class="w-full">
-            <caption class="caption-out">
-              Description Column
-            </caption>
-            <thead>
-              <tr>
-                <!-- 세로 => col, 가로 => row -->
-                <th scope="col">연결정보 이름</th>
-                <th scope="col">데이터 저장소 유형</th>
-                <th scope="col">상태</th>
-                <th scope="col">소유자(등록자)</th>
-                <th scope="col">등록일시</th>
-                <th scope="col">변경일시</th>
-                <th scope="col">내용</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>연결정보 H</td>
-                <td>MySQL</td>
-                <td>Inactive</td>
-                <td>User A</td>
-                <td>2023-01-02 12:13:14</td>
-                <td>2023-01-05 12:13:14</td>
-                <td>수정</td>
-              </tr>
-              <tr>
-                <td>연결정보 H</td>
-                <td>MySQL</td>
-                <td>Inactive</td>
-                <td>User A</td>
-                <td>2023-01-02 12:13:14</td>
-                <td>2023-01-05 12:13:14</td>
-                <td>수정</td>
-              </tr>
-              <tr>
-                <td>연결정보 H</td>
-                <td>MySQL</td>
-                <td>Inactive</td>
-                <td>User A</td>
-                <td>2023-01-02 12:13:14</td>
-                <td>2023-01-05 12:13:14</td>
-                <td>수정</td>
-              </tr>
-              <tr>
-                <td>연결정보 H</td>
-                <td>MySQL</td>
-                <td>Inactive</td>
-                <td>User A</td>
-                <td>2023-01-02 12:13:14</td>
-                <td>2023-01-05 12:13:14</td>
-                <td>수정</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="tab">
+          <ul class="tab-list">
+            <li class="tab-item">
+              <button type="button" class="tab-button is-selected">
+                <span class="tab-title">Overview</span>
+              </button>
+            </li>
+            <li class="tab-item">
+              <button type="button" class="tab-button">
+                <span class="tab-title">Data</span>
+              </button>
+            </li>
+            <li class="tab-item">
+              <button type="button" class="tab-button">
+                <span class="tab-title">Query</span>
+              </button>
+            </li>
+          </ul>
         </div>
-      </article>
-      <article class="page-article">
-        <h4 class="page-subtitle">히스토리</h4>
-        <div class="table-col w-full">
-          <table class="w-full">
-            <caption class="caption-out">
-              Description Column
-            </caption>
-            <thead>
-              <tr>
-                <!-- 세로 => col, 가로 => row -->
-                <th scope="col">이벤트 발생 시간</th>
-                <th scope="col">이벤트</th>
-                <th scope="col">연결정보 이름</th>
-                <th scope="col">데이터 저장소 유형</th>
-                <th scope="col">소유자(등록자)</th>
-                <th scope="col">내용</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>2023-01-05 12:13:14</td>
-                <td>연결 끊김</td>
-                <td>연결정보 H</td>
-                <td>MySQL</td>
-                <td>User A</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>2023-01-05 12:13:14</td>
-                <td>연결 끊김</td>
-                <td>연결정보 H</td>
-                <td>MySQL</td>
-                <td>User A</td>
-                <td>자동 등록 데이터 xx</td>
-              </tr>
-              <tr>
-                <td>2023-01-05 12:13:14</td>
-                <td>연결 끊김</td>
-                <td>연결정보 H</td>
-                <td>MySQL</td>
-                <td>User A</td>
-                <td>자동 등록 데이터 xx</td>
-              </tr>
-              <tr>
-                <td>2023-01-05 12:13:14</td>
-                <td>연결 끊김</td>
-                <td>연결정보 H</td>
-                <td>MySQL</td>
-                <td>User A</td>
-                <td>자동 등록 데이터 xx</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="v-group gap-9 p-6 w-full">
+          <div class="v-group gap-6 w-full">
+            <h4 class="page-subtitle">Summary</h4>
+            <div class="h-group gap-8 w-full">
+              <dl class="data-status" v-for="index in 3" >
+                <dt class="data-status-label">
+                  <svg-icon name="data" class="svg-icon"/>
+                  <span class="data-status-name">Connected Data</span>
+                </dt>
+                <dd class="data-status-num">8</dd>
+              </dl>
+            </div>
+          </div>
+          <div class="v-group gap-6 w-full">
+            <h4 class="page-subtitle">연관된 데이터 모델</h4>
+            <div class="card-container">
+              <ul class="card-simple-list">
+                <li class="card-simple-item" v-for="index in 3">
+                  <CardSimple></CardSimple>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="v-group gap-6 w-full">
+            <h4 class="page-subtitle">Structure</h4>
+            <div class="table-col w-full">
+              <table class="w-full">
+                <caption class="caption-out">
+                  Description Column
+                </caption>
+                <thead>
+                <tr>
+                  <!-- 세로 => col, 가로 => row -->
+                  <th scope="col">Field</th>
+                  <th scope="col">Description</th>
+                  <th scope="col">Labels</th>
+                  <th scope="col">Tags</th>
+                  <th scope="col">...</th>
+                  <th scope="col">...</th>
+                </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="index in 6">
+                    <td>acute_long_term_care_beds 1</td>
+                    <td>필드설명</td>
+                    <td>라벨정보</td>
+                    <td>태그정보</td>
+                    <td>...</td>
+                    <td>...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </article>
     </section>
@@ -273,3 +231,4 @@ function onClickOpen() {
   show.value = !show.value;
 }
 </script>
+

@@ -6,6 +6,14 @@
   border: 1px solid $border-gray;
   background: $white;
 
+  &-container {
+    width: 100%;
+    height: 310px;
+    padding: $spacing-8;
+    border: 1px solid $border-gray;
+    border-radius: $border-radius-sm;
+  }
+
   &-list {
     @include flex-standard($horizontal: flex-start, $direction: column);
     width: 100%;
