@@ -1,9 +1,7 @@
 <template>
   <div class="list">
     <div class="list-head">
-      <div class="list-head-title">
-        <slot class="list-head-title" options="title"></slot>
-      </div>
+      <slot name="title"></slot>
     </div>
     <div class="list-body">
       <slot name="options">
