@@ -17,8 +17,7 @@
               {{ downloadStatus }}
             </span>
           </BaseButton>
-          <!-- TODO:[개발] 저장소 카드일 경우 hidden 해제 -->
-          <div class="card-status hidden">
+          <div :class="cardMode === true ? 'card-status' : 'card-status hidden'">
             <baseBadge class="bg-marker-gray">Inactive(Disconnected)</baseBadge>
           </div>
           <KebabMenu class="is-bottom"></KebabMenu>
@@ -126,6 +125,10 @@ const props = defineProps({
   model: {
     type: Object as () => ModelType,
     required: true
+  },
+  cardMode: {
+    type: Boolean,
+    default: false
   }
 });
 const emit = defineEmits(['preview', 'download', 'click']);
