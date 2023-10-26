@@ -1,7 +1,7 @@
 <template>
   <form action="" class="form">
+    <h4 class="form-subject">가로유형 폼 타이틀</h4>
     <div class="form-list">
-      <h4 class="form-list-title">가로유형 폼 타이틀</h4>
       <div class="form-item">
         <div class="form-label">
           <strong class="form-title">label</strong>

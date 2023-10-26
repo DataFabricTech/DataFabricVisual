@@ -1,6 +1,7 @@
 .form {
-  @include flex-standard($horizontal: space-between);
+  @include flex-standard($direction: column);
   width: 100%;
+  gap: $spacing-16;
 
   &-vertical {
     .form-item {
@@ -11,28 +12,21 @@
       width: 100%;
     }
   }
-
-  &-list {
-    @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
-    flex-grow: 1;
-
-    &-title {
-      font-size: 16px;
-      color: $font-black;
-      font-weight: 500;
-    }
+  &-subject {
+    font-size: 16px;
+    color: $font-black;
+    font-weight: 500;
+    margin-right: auto;
   }
 
-  &-list-title + &-item {
-    margin-top: $spacing-16;
+  &-list {
+    @include flex-standard($vertical: flex-start, $direction: column);
+    flex-grow: 1;
+    gap: $spacing-24;
   }
 
   &-item {
     @include flex-standard($horizontal: flex-start);
-  }
-
-  &-item:not(:last-child) {
-    margin-bottom: $spacing-24;
   }
 
   &-label {
@@ -48,7 +42,7 @@
   }
 
   &-content {
-    @include flex-standard($horizontal: flex-start);
+    @include flex-standard;
     gap: $spacing-24;
 
     .select {

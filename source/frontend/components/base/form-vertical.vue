@@ -1,7 +1,7 @@
 <template>
   <form action="" class="form form-vertical">
+    <h4 class="form-subject">세로유형 폼 타이틀</h4>
     <div class="form-list">
-      <h4 class="form-list-title">세로유형 폼 타이틀</h4>
       <div class="form-item">
         <div class="form-label">
           <strong class="form-title">label</strong>

@@ -1,12 +1,14 @@
-.storage-type {
-  @include flex-standard($direction: column, $vertical:flex-start, $horizontal: flex-start);
+.step-info {
+  @include flex-standard($direction: column, $vertical: flex-start, $horizontal: flex-start);
   max-height: 530px;
   overflow: auto;
   padding: $spacing-16;
   margin-top: $spacing-24;
   gap: $spacing-16;
   background-color: $light-blue;
+}
 
+.storage-type{
   &-title {
     font-size: 16px;
     color: $font-black;
@@ -45,7 +47,7 @@
     background-color: $light-blue;
     border: 1px solid $tertiary;
 
-    .storage-type-title {
+    .storage-type-item-title {
       color: $tertiary;
     }
   }

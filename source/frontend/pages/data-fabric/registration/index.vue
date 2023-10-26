@@ -5,9 +5,9 @@
     <baseButton class="button-lg button-primary" @click="onClickOpen1">모달 OPEN</baseButton>
     <modal v-model="show1" title="연결정보 등록">
       <template v-slot:body>
-        <div class="w-[900px] p-6">
+        <div class="modal-body w-[900px] p-6 items-center">
           <BaseStep></BaseStep>
-          <div class="storage-type">
+          <div class="step-info storage-type">
             <h4 class="storage-type-title">저장소 유형 선택</h4>
             <SearchField class="search-field-lg w-[440px]"></SearchField>
             <ul class="storage-type-list">
@@ -121,12 +121,12 @@
     <baseButton class="button-lg button-primary" @click="onClickOpen2">모달 OPEN</baseButton>
     <modal v-model="show2" title="연결정보 등록">
       <template v-slot:body>
-        <div class="w-[900px] p-6">
+        <div class="modal-body w-[900px] p-6 items-center">
           <BaseStep></BaseStep>
-          <div class="storage-type">
+          <div class="step-info">
             <form action="" class="form form-vertical">
-              <div class="form-list">
-                <h4 class="form-list-title">기본정보 입력</h4>
+              <h4 class="form-subject">기본정보 입력</h4>
+              <div class="form-list w-full">
                 <div class="form-item">
                   <div class="form-label">
                     <strong class="form-title">저장소 유형</strong>
@@ -154,7 +154,9 @@
                     <baseTextarea id="input-ex-02" class="w-full h-48" placeholder="내용을 입력해주세요."></baseTextarea>
                   </div>
                 </div>
-                <h4 class="form-list-title">사용자 추가 정보 입력</h4>
+              </div>
+              <h4 class="form-subject">사용자 추가 정보 입력</h4>
+              <div class="form-list">
                 <div class="form-item">
                   <div class="form-content">
                     <div class="v-group gap-2">
@@ -185,12 +187,14 @@
                     </div>
                   </div>
                 </div>
-                <h4 class="form-list-title">Tag 입력</h4>
+              </div>
+              <h4 class="form-subject">Tag 입력</h4>
+              <div class="form-list w-full">
                 <div class="form-item w-full">
-                  <div class="form-content w-full">
-                    <label for="input-ex-07" class="hidden">Tag 입력</label>
-                    <BaseTextInput id="area-ex-07" class="w-full text-input-lg" placeholder="Tag를 입력해주세요."></BaseTextInput>
-                  </div>
+                    <div class="form-content w-full">
+                      <label for="input-ex-07" class="hidden">Tag 입력</label>
+                      <BaseTextInput id="area-ex-07" class="w-full text-input-lg" placeholder="Tag를 입력해주세요."></BaseTextInput>
+                    </div>
                 </div>
               </div>
             </form>
