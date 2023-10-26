@@ -1,33 +1,27 @@
-<!-- 저장소 관리 Overview-->
+<!-- 저장소 관리 테이블상세-->
 <template>
   <div class="l-split">
-    <h2 class="hidden">저장소 관리</h2>
+    <h2 class="hidden">데이터/테이블 상세</h2>
     <div class="side-content">
       <h3 class="hidden">필터</h3>
       <div class="v-group w-full">
-        <div class="h-group justify-between w-full">
-          <BaseButton class="button-icon button-link button-sm" title="초기화">
-            <span class="hidden">초기화</span>
-            <svg-icon name="reset" class="svg-icon"></svg-icon>
-          </BaseButton>
-          <div class="h-group">
-            <div class="kebab-menu">
-              <BaseButton
-                @focus="state.isOpen = true"
-                @blur="state.isOpen = false"
-                class="button button-icon button-lg"
-                title="열기"
-              >
-                <span class="hidden">정렬 열기</span>
-                <svg-icon name="sort" class="svg-icon" />
-              </BaseButton>
-              <BaseContext class="kebab-context" v-if="state.isOpen"></BaseContext>
-            </div>
-            <BaseButton @click="onClickOpen" class="button-icon button-link button-sm" title="필터">
-              <span class="hidden">필터</span>
-              <svg-icon name="filter" class="svg-icon"></svg-icon>
+        <div class="h-group ml-auto">
+          <div class="kebab-menu">
+            <BaseButton
+              @focus="state.isOpen = true"
+              @blur="state.isOpen = false"
+              class="button button-icon button-lg"
+              title="열기"
+            >
+              <span class="hidden">정렬 열기</span>
+              <svg-icon name="sort" class="svg-icon" />
             </BaseButton>
+            <BaseContext class="kebab-context" v-if="state.isOpen"></BaseContext>
           </div>
+          <BaseButton @click="onClickOpen" class="button-icon button-link button-sm" title="필터">
+            <span class="hidden">필터</span>
+            <svg-icon name="filter" class="svg-icon"></svg-icon>
+          </BaseButton>
         </div>
         <baseTextInput></baseTextInput>
       </div>
