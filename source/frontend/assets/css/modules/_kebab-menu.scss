@@ -22,7 +22,7 @@
 
 .kebab-button{
   &.is-selected, &.is-selected:hover:not(:disabled){
-    background-color: #{$light-gray-02};
+    background-color: #{$light-gray};
   }
 }
 
