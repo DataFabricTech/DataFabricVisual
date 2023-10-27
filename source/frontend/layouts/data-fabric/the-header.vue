@@ -1,5 +1,4 @@
 <template>
-  <header id="header">
     <div class="l-header">
       <h1 class="logo">
         데이터 패브릭
@@ -46,7 +45,6 @@
         </BaseButton>
       </div>
     </div>
-  </header>
 </template>
 
 <script setup lang="ts"></script>

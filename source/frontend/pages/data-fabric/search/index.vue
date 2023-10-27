@@ -1,8 +1,8 @@
 <template>
   <div class="l-common">
-    <h2 class="hidden">데이터패브릭 검색</h2>
+    <h2 class="hidden">데이터패브릭 검색목록</h2>
     <section class="l-section gap-[20px]">
-      <h3 class="hidden">데이터 검색</h3>
+      <h3 class="hidden">검색</h3>
       <div class="data-search">
         <SearchField></SearchField>
         <BaseButton class="button-icon button-normal" title="상세 검색" @click="state.isOpen = !state.isOpen">

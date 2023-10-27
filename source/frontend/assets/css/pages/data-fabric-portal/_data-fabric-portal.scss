@@ -201,7 +201,7 @@
     width: 100%;
   }
 
-  &-body{
+  &-body {
     width: 100%;
     height: 100%;
     display: flex;
@@ -326,17 +326,12 @@
   }
 
   &-container {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     padding: $spacing-24;
     background: $light-blue-02;
-
-    .pagination {
-      margin-top: $spacing-16;
-    }
-
-    .v-group + .v-group {
-      margin-top: $spacing-32;
-    }
+    gap: $spacing-32;
   }
 
   &-top-bar {

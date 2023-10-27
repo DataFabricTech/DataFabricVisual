@@ -2,7 +2,7 @@
 <template>
   <div class="l-split">
     <h2 class="hidden">저장소 관리</h2>
-    <div class="side-content">
+    <section class="l-side">
       <h3 class="hidden">필터</h3>
       <div class="v-group w-full">
         <div class="h-group ml-auto">
@@ -94,8 +94,8 @@
       <BaseButton class="button-normal button-lg ml-auto">
         <span class="button-text">연결정보 등록</span>
       </BaseButton>
-    </div>
-    <section class="main-content">
+    </section>
+    <section class="l-split-section">
       <div class="page-subject">
         <h3 class="page-title">Overview</h3>
         <BaseButton class="button-tertiary">

@@ -27,6 +27,7 @@
 
   &-item {
     @include flex-standard($horizontal: flex-start);
+    width: 100%;
   }
 
   &-label {
@@ -42,10 +43,12 @@
   }
 
   &-content {
-    @include flex-standard;
+    @include flex-standard($horizontal: flex-start);
+    flex-grow: 1;
     gap: $spacing-24;
 
     .select {
+      flex-shrink: 0;
       width: 160px;
     }
   }
