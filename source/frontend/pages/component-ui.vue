@@ -871,17 +871,27 @@
             </td>
           </tr>
           <tr>
-            <td>
             <th scope="row">List</th>
-            </td>
           </tr>
           <tr>
             <td>
-              <div class="h-group">
-                <strong class="w-[150px] font-light text-[14px] shrink-0">type: Checkable List</strong>
-                <baseListCheckable class="w-[300px]">
-                  title
-                </baseListCheckable>
+              <div class="v-group gap-5">
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: Checkable List - title</strong>
+                  <baseListCheckable class="w-[300px]">
+                    <template v-slot:head>
+                      <div class="list-head">
+                        <div class="list-head-title">
+                          title
+                        </div>
+                      </div>
+                    </template>
+                  </baseListCheckable>
+                </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: Checkable List - no title</strong>
+                  <baseListCheckable class="w-[300px]"> </baseListCheckable>
+                </div>
               </div>
             </td>
           </tr>

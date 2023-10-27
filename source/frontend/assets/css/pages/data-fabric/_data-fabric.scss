@@ -28,6 +28,12 @@
   }
 }
 
+.page-group {
+  @include flex-standard($direction: column);
+  gap: $spacing-24;
+  width: 100%;
+}
+
 .page-subject {
   @include flex-standard;
   padding: $spacing-12 $spacing-24;

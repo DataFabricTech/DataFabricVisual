@@ -5,23 +5,29 @@
     <section class="l-side">
       <h3 class="hidden">필터</h3>
       <div class="v-group w-full">
-        <div class="h-group ml-auto">
-          <div class="kebab-menu">
-            <BaseButton
-              @focus="state.isOpen = true"
-              @blur="state.isOpen = false"
-              class="button button-icon button-lg"
-              title="열기"
-            >
-              <span class="hidden">정렬 열기</span>
-              <svg-icon name="sort" class="svg-icon" />
-            </BaseButton>
-            <BaseContext class="kebab-context" v-if="state.isOpen"></BaseContext>
-          </div>
-          <BaseButton @click="onClickOpen" class="button-icon button-link button-sm" title="필터">
-            <span class="hidden">필터</span>
-            <svg-icon name="filter" class="svg-icon"></svg-icon>
+        <div class="h-group justify-between w-full">
+          <BaseButton class="button-icon button-link button-sm" title="초기화">
+            <span class="hidden">초기화</span>
+            <svg-icon name="reset" class="svg-icon"></svg-icon>
           </BaseButton>
+          <div class="h-group">
+            <div class="kebab-menu">
+              <BaseButton
+                @focus="state.isOpen = true"
+                @blur="state.isOpen = false"
+                class="button button-icon button-lg"
+                title="열기"
+              >
+                <span class="hidden">정렬 열기</span>
+                <svg-icon name="sort" class="svg-icon" />
+              </BaseButton>
+              <BaseContext class="kebab-context" v-if="state.isOpen"></BaseContext>
+            </div>
+            <BaseButton @click="onClickOpen" class="button-icon button-link button-sm" title="필터">
+              <span class="hidden">필터</span>
+              <svg-icon name="filter" class="svg-icon"></svg-icon>
+            </BaseButton>
+          </div>
         </div>
         <baseTextInput></baseTextInput>
       </div>
@@ -233,9 +239,23 @@
   </div>
   <modal v-model="show" title="저장소 샘플">
     <template v-slot:body>
-      <baseListCheckable class="w-[326px]"> 저장소유형 </baseListCheckable>
       <baseListCheckable class="w-[326px]">
-        연결 상태
+        <template v-slot:head>
+          <div class="list-head">
+            <div class="list-head-title">
+              저장소 유형
+            </div>
+          </div>
+        </template>
+      </baseListCheckable>
+      <baseListCheckable class="w-[326px]">
+        <template v-slot:head>
+          <div class="list-head">
+            <div class="list-head-title">
+              연결 상태
+            </div>
+          </div>
+        </template>
         <template v-slot:options>
           <div class="list-options hidden"></div>
         </template>
