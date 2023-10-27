@@ -97,7 +97,7 @@
         <br />
         <br />
       </div>
-      <BaseButton class="button-normal button-lg ml-auto">
+      <BaseButton class="button-ghost button-lg ml-auto shrink-0">
         <span class="button-text">연결정보 등록</span>
       </BaseButton>
     </div>
