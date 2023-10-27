@@ -21,32 +21,16 @@
 .context {
   @include box-shadow('overlay');
   @include z-index('dropdown');
+  @include list-style('context');
   border-radius: $border-radius-sm;
 
   &-list {
     min-width: 130px;
-    padding: $spacing-4 0;
-    background: $white;
-  }
-
-  &-item {
-    @include flex-standard;
-    position: relative;
   }
 
   &-button {
-    @include ellipsis;
-    @include flex-standard;
-    flex: 1;
-    height: 32px;
     padding: $spacing-4 $spacing-8;
-    background: transparent;
-    font-weight: 400;
     line-height: 1.75;
-
-    &:hover {
-      background: $light-blue;
-    }
 
     &.is-selected {
       .context-text {
@@ -65,12 +49,9 @@
   }
 
   &-text {
-    @include ellipsis;
-    display: block;
-    flex-grow: 1;
     color: $font-gray-01;
     font-size: 13px;
-    text-align: left;
+
   }
 
   &-lg {

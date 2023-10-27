@@ -9,6 +9,35 @@
 }
 
 //-------------------------------------------
+// list 공통 스타일 정의
+//-------------------------------------------
+@mixin list-style($class-prefix) {
+  .#{$class-prefix}-list {
+    background: $white;
+  }
+
+  .#{$class-prefix}-item {
+    @include flex-standard;
+
+    &:hover:not(:disabled) {
+      background-color: $light-blue;
+    }
+  }
+
+  .#{$class-prefix}-button {
+    @include flex-standard($horizontal: space-between);
+    width: 100%;
+    height: 32px;
+  }
+
+  .#{$class-prefix}-text {
+    @include ellipsis;
+    text-align: left;
+    font-weight: 500;
+  }
+}
+
+//-------------------------------------------
 // 한 줄 말줄임
 //-------------------------------------------
 @mixin ellipsis($width: null) {
