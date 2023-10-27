@@ -1,9 +1,8 @@
-<!-- 저장소 관리 테이블상세-->
 <template>
   <div class="l-split">
-    <h2 class="hidden">저장소 관리</h2>
-    <div class="side-content">
-      <h3 class="hidden">필터</h3>
+    <h2 class="hidden">데이터 상세</h2>
+    <section class="l-side">
+      <h3 class="hidden">연결정보 목록</h3>
       <div class="v-group w-full">
         <div class="h-group justify-between w-full">
           <BaseButton class="button-icon button-link button-sm" title="초기화">
@@ -100,8 +99,9 @@
       <BaseButton class="button-ghost button-lg ml-auto shrink-0">
         <span class="button-text">연결정보 등록</span>
       </BaseButton>
-    </div>
-    <section class="main-content">
+    </section>
+    <section class="l-split-section">
+      <h3 class="hidden">선택된 데이터 정보</h3>
       <article class="page-article">
         <div class="h-group justify-end w-full">
           <BaseSwitch>

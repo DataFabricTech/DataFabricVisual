@@ -3,7 +3,7 @@
   <div class="l-split">
     <h2 class="hidden">저장소 관리</h2>
     <section class="l-side">
-      <h3 class="hidden">필터</h3>
+      <h3 class="hidden">연결정보 목록</h3>
       <div class="v-group w-full">
         <div class="h-group justify-between w-full">
           <BaseButton class="button-icon button-link button-sm" title="초기화">
