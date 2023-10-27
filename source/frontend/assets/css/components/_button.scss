@@ -66,7 +66,7 @@
   border-radius: $border-radius-sm;
 
   &:hover:not(:disabled) {
-    background-color: $light-gray;
+     background-color: $gray;
   }
 
   &:active:not(:disabled) {
@@ -101,11 +101,15 @@
   }
 
   &-normal {
-    @include button-theme($white, $light-gray-02, $light-gray, $font-black, $light-gray);
+    @include button-theme($white, $light-gray, $gray, $font-black, $gray);
   }
 
   &-danger {
     @include button-theme($bg-color: $white, $hover-bg-color: rgba(255, 211, 210, 0.7), $active-bg-color: rgba(253, 179, 177, 0.7), $font-color: $negative, $border-color: $negative);
+  }
+
+  &-ghost {
+    @include button-theme($bg-color: $white, $hover-bg-color: #bfd7fa, $active-bg-color: #a9cefc, $font-color: $primary, $border-color: $border-gray);
   }
 
   &-link {
@@ -115,6 +119,11 @@
 
   &-link-primary {
     @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $primary, $hover-font-color: $hover-primary, $active-font-color: $active-primary);
+    text-decoration: underline;
+  }
+
+  &-link-tertiary {
+    @include button-theme($bg-color: transparent, $hover-bg-color: transparent, $active-bg-color: transparent, $font-color: $tertiary, $hover-font-color: $hover-tertiary, $active-font-color: $active-tertiary);
     text-decoration: underline;
   }
 

@@ -1,7 +1,9 @@
 #header {
-  @include flex-standard;
+  @include z-index('header');
+  @include flex-standard($direction: column);
+  position: sticky;
+  top: 0;
   height: 56px;
-  border-bottom: 1px solid $gray;
 }
 
 .header {

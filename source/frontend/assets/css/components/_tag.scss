@@ -1,4 +1,6 @@
 .tag {
+  @include flex-standard;
+  flex-shrink: 0;
   height: 32px;
   padding: 0 $spacing-8;
   background: $disabled;
