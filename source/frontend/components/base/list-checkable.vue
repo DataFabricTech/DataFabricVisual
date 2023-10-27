@@ -1,8 +1,6 @@
 <template>
   <div class="list">
-    <div class="list-head">
-      <slot name="title"></slot>
-    </div>
+    <slot name="head"></slot>
     <div class="list-body">
       <slot name="options">
         <div class="list-options">
