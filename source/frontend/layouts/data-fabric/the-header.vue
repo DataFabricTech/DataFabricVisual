@@ -1,5 +1,4 @@
 <template>
-  <header id="header">
     <div class="l-header">
       <h1 class="logo">
         데이터 패브릭
@@ -30,6 +29,9 @@
         <BaseButton class="button-primary">
           <span class="button-text">데이터 모델 생성</span>
         </BaseButton>
+        <BaseButton class="button-primary">
+          <span class="button-text">데이터 모델뷰 생성</span>
+        </BaseButton>
       </div>
       <div class="header-management">
         <BaseButton class="button-icon">
@@ -46,7 +48,6 @@
         </BaseButton>
       </div>
     </div>
-  </header>
 </template>
 
 <script setup lang="ts"></script>

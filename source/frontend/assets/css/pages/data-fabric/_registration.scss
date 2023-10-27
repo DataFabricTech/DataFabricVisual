@@ -13,7 +13,40 @@
     color: $font-black;
     font-weight: 500;
   }
+
+  &-inner {
+    @include flex-standard($direction: column, $horizontal: flex-start);
+    max-height: 430px;
+    overflow: auto;
+    background-color: $white;
+    padding: $spacing-16;
+    border: 1px solid $border-gray;
+    gap: $spacing-16;
+  }
 }
+
+.description {
+  @include flex-standard($direction: column, $vertical: flex-start, $horizontal: flex-start);
+  gap: $spacing-16;
+
+  dl {
+    @include flex-standard;
+
+    dt {
+      width: 130px;
+      color: $font-black;
+    }
+
+    dt, dd {
+      font-size: 15px;
+    }
+
+    dd {
+      color: $font-gray-01;
+    }
+  }
+}
+
 
 .storage-type {
   @include flex-standard($horizontal: flex-start);

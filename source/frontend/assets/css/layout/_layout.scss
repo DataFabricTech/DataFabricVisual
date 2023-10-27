@@ -16,6 +16,13 @@
   background-color: $gray;
 }
 
+.l-side {
+  @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
+  gap: $spacing-12;
+  padding: $spacing-2 + $spacing-8;
+  background-color: $light-blue;
+}
+
 .l-footer {
   @include flex-standard($horizontal: space-between);
   width: 100%;
@@ -34,16 +41,20 @@
   @include flex-standard($vertical: flex-start);
   height: 100%;
 
-  .side-content {
+  .l-side {
     width: 318px;
     height: 100%;
     flex-shrink: 0;
   }
 
-  .main-content {
+  .l-split-section {
     overflow-y: auto;
     height: 100%;
   }
+}
+
+.l-split-section {
+  flex-grow: 1;
 }
 
 .l-section {
@@ -51,9 +62,3 @@
   width: 100%;
 }
 
-// default 너비 없어지면서 필요가 없어짐 추후 정리
-.l-inner {
-  @include flex-standard($horizontal: flex-start);
-  width: 100%;
-  padding: 0 $spacing-16;
-}

@@ -6,7 +6,6 @@
 
   &-list {
     width: 100%;
-    height: 100%;
   }
 
   &-head {
@@ -70,6 +69,26 @@
     .checkbox-input:checked + .checkbox-label {
       color: $primary;
     }
+  }
+
+  &-button {
+    @include flex-standard($horizontal: flex-start);
+    width: 100%;
+    height: 32px;
+    gap: $spacing-8;
+
+    .svg-icon {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &-text {
+    @include ellipsis;
+    text-align: left;
+    font-size: 15px;
+    color: $font-black;
   }
 
   .is-disabled {
