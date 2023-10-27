@@ -215,6 +215,101 @@
         </div>
       </template>
     </modal>
+
+    <h3>저장소 관리 > 연결정보 등록 Step 3</h3>
+    <baseButton class="button-lg button-primary" @click="onClickOpen3">모달 OPEN</baseButton>
+    <modal v-model="show3" title="연결정보 등록">
+      <template v-slot:body>
+        <div class="modal-body w-[900px] p-6 items-center">
+          <BaseStep></BaseStep>
+          <div class="step-info">
+            <h4 class="step-info-title">상세 정보 입력</h4>
+            <div class="description">
+              <dl>
+                <dt>저장소 유형</dt>
+                <dd>MySQL</dd>
+              </dl>
+              <dl>
+                <dt>연결정보 이름</dt>
+                <dd>MySQL_DB</dd>
+              </dl>
+            </div>
+            <div class="step-info-inner w-full">
+              <form action="" class="form">
+                <div class="form-list w-full">
+                  <div class="form-item w-full">
+                    <div class="form-label">
+                      <strong class="form-title">host</strong>
+                      <span class="form-label-accent">*</span>
+                    </div>
+                    <div class="form-content w-full">
+                      <label for="input-ex-01" class="hidden">host</label>
+                      <BaseTextInput id="input-ex-01" class="w-full text-input-lg" placeholder="내용을 입력해주세요."></BaseTextInput>
+                    </div>
+                  </div>
+                  <div class="form-item w-full">
+                    <div class="form-label">
+                      <strong class="form-title">port</strong>
+                      <span class="form-label-accent">*</span>
+                    </div>
+                    <div class="form-content w-full">
+                      <label for="input-ex-02" class="hidden">port</label>
+                      <BaseTextInput id="input-ex-02" class="w-full text-input-lg" placeholder="내용을 입력해주세요."></BaseTextInput>
+                    </div>
+                  </div>
+                  <div class="form-item w-full">
+                    <div class="form-label">
+                      <strong class="form-title">database</strong>
+                      <span class="form-label-accent">*</span>
+                    </div>
+                    <div class="form-content w-full">
+                      <label for="input-ex-03" class="hidden">database</label>
+                      <BaseTextInput id="input-ex-03" class="w-full text-input-lg" placeholder="내용을 입력해주세요."></BaseTextInput>
+                    </div>
+                  </div>
+                  <div class="form-item w-full">
+                    <div class="form-label">
+                      <strong class="form-title">user</strong>
+                      <span class="form-label-accent">*</span>
+                    </div>
+                    <div class="form-content w-full">
+                      <label for="input-ex-04" class="hidden">user</label>
+                      <BaseTextInput id="input-ex-04" class="w-full text-input-lg" placeholder="내용을 입력해주세요."></BaseTextInput>
+                    </div>
+                  </div>
+                  <div class="form-item w-full">
+                    <div class="form-label">
+                      <strong class="form-title">password</strong>
+                      <span class="form-label-accent">*</span>
+                    </div>
+                    <div class="form-content w-full">
+                      <label for="input-ex-05" class="hidden">password</label>
+                      <BaseTextInput id="input-ex-05" class="w-full text-input-lg" placeholder="내용을 입력해주세요."></BaseTextInput>
+                    </div>
+                  </div>
+                </div>
+              </form>
+              <baseButton class="button-ghost button-lg ml-auto">
+                <span class="button-text">연결 테스트</span>
+              </baseButton>
+            </div>
+          </div>
+        </div>
+      </template>
+      <template v-slot:foot>
+        <baseButton class="button-normal button-lg">
+          <span class="button-text">취소</span>
+        </baseButton>
+        <div class="h-group ml-auto">
+          <baseButton class="button-ghost button-lg">
+            <span class="button-text">이전</span>
+          </baseButton>
+          <baseButton class="button-primary button-lg">
+            <span class="button-text">다음</span>
+          </baseButton>
+        </div>
+      </template>
+    </modal>
   </div>
 </template>
 <script lang="ts" setup>
@@ -227,6 +322,7 @@ definePageMeta({
 
 const show1 = ref(false);
 const show2 = ref(false);
+const show3 = ref(false);
 const router = useRouter();
 
 function onClickOpen1() {
@@ -235,6 +331,10 @@ function onClickOpen1() {
 
 function onClickOpen2() {
   show2.value = !show2.value;
+}
+
+function onClickOpen3() {
+  show3.value = !show3.value;
 }
 
 function onClickMain() {
