@@ -878,7 +878,7 @@
               <div class="v-group gap-5">
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">type: Checkable List - title</strong>
-                  <baseListCheckable class="w-[300px]">
+                  <baseList class="w-[300px]">
                     <template v-slot:head>
                       <div class="list-head">
                         <div class="list-head-title">
@@ -886,11 +886,11 @@
                         </div>
                       </div>
                     </template>
-                  </baseListCheckable>
+                  </baseList>
                 </div>
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">type: Checkable List - no title</strong>
-                  <baseListCheckable class="w-[300px]"> </baseListCheckable>
+                  <baseList class="w-[300px]"> </baseList>
                 </div>
               </div>
             </td>

@@ -239,7 +239,7 @@
   </div>
   <modal v-model="show" title="저장소 샘플">
     <template v-slot:body>
-      <baseListCheckable class="w-[326px]">
+      <baseList class="w-[326px]">
         <template v-slot:head>
           <div class="list-head">
             <div class="list-head-title">
@@ -247,8 +247,8 @@
             </div>
           </div>
         </template>
-      </baseListCheckable>
-      <baseListCheckable class="w-[326px]">
+      </baseList>
+      <baseList class="w-[326px]">
         <template v-slot:head>
           <div class="list-head">
             <div class="list-head-title">
@@ -259,7 +259,7 @@
         <template v-slot:options>
           <div class="list-options hidden"></div>
         </template>
-      </baseListCheckable>
+      </baseList>
     </template>
     <template v-slot:foot>
       <baseButton class="button-danger button-lg">
