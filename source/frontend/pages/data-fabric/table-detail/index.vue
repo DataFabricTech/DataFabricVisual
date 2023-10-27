@@ -132,7 +132,7 @@
           </ul>
         </div>
         <div class="v-group gap-9 p-6 w-full">
-          <div class="v-group gap-6 w-full">
+          <div class="page-group">
             <h4 class="page-subtitle">Summary</h4>
             <div class="h-group gap-8 w-full">
               <dl class="data-status" v-for="index in 3" >
@@ -144,7 +144,7 @@
               </dl>
             </div>
           </div>
-          <div class="v-group gap-6 w-full">
+          <div class="page-group">
             <h4 class="page-subtitle">연관된 데이터 모델</h4>
             <div class="card-container">
               <ul class="card-simple-list">
@@ -154,7 +154,7 @@
               </ul>
             </div>
           </div>
-          <div class="v-group gap-6 w-full">
+          <div class="page-group">
             <h4 class="page-subtitle">Structure</h4>
             <div class="table-col w-full">
               <table class="w-full">
