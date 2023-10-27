@@ -2,7 +2,7 @@
   @include flex-standard($direction: column, $vertical: flex-start, $horizontal: flex-start);
   width: 100%;
   max-height: 530px;
-  overflow: hidden;
+  overflow: auto;
   padding: $spacing-16;
   margin-top: $spacing-24;
   gap: $spacing-16;
