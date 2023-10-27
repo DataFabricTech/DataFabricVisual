@@ -289,7 +289,7 @@
                   </div>
                 </div>
               </form>
-              <baseButton class="button-ghost button-lg ml-auto">
+              <baseButton class="button-ghost button-lg ml-auto flex-shrink-0">
                 <span class="button-text">연결 테스트</span>
               </baseButton>
             </div>
