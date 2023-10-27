@@ -191,9 +191,23 @@
   </div>
   <modal v-model="show" title="저장소 샘플">
     <template v-slot:body>
-      <baseListCheckable class="w-[326px]"> 저장소유형 </baseListCheckable>
       <baseListCheckable class="w-[326px]">
-        연결 상태
+        <template v-slot:head>
+          <div class="list-head">
+            <div class="list-head-title">
+              저장소 유형
+            </div>
+          </div>
+        </template>
+      </baseListCheckable>
+      <baseListCheckable class="w-[326px]">
+        <template v-slot:head>
+          <div class="list-head">
+            <div class="list-head-title">
+              연결 상태
+            </div>
+          </div>
+        </template>
         <template v-slot:options>
           <div class="list-options hidden"></div>
         </template>
