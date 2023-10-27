@@ -3,10 +3,6 @@
   flex-direction: column;
 }
 
-.l-split-section {
-  flex-grow: 1;
-}
-
 .main-search {
   @include flex-standard($direction: column);
   width: 100%;

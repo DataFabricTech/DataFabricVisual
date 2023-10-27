@@ -23,7 +23,6 @@
   background-color: $light-blue;
 }
 
-
 .l-footer {
   @include flex-standard($horizontal: space-between);
   width: 100%;
@@ -54,14 +53,12 @@
   }
 }
 
+.l-split-section {
+  flex-grow: 1;
+}
+
 .l-section {
   @include flex-standard($vertical: flex-start, $direction: column);
   width: 100%;
 }
 
-// default 너비 없어지면서 필요가 없어짐 추후 정리
-.l-inner {
-  @include flex-standard($horizontal: flex-start);
-  width: 100%;
-  padding: 0 $spacing-16;
-}
