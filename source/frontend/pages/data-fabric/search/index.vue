@@ -55,13 +55,13 @@
         </div>
       </div>
       <div class="l-preview">
-        <div class="v-group justify-start gap-[36px] w-full">
+        <div class="preview-main">
           <article class="category-article ">
             <div class="category-top-bar">
               <h4 class="category-name" id="data-model">데이터모델 (6)</h4>
             </div>
             <ul class="card-list">
-              <li class="card-item">
+              <li class="card-item is-selected">
                 <Card class="card-primary">
                   <template v-slot:img>
                     <svg-icon name="data" class="svg-icon"></svg-icon>

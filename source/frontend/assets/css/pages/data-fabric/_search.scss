@@ -1,12 +1,18 @@
 .preview {
   @include flex-standard($horizontal: flex-start, $direction: column);
-  position: absolute;
-  right: 0;
   width: 40%;
-  top: 0;
-  //bottom: 0;
   background-color: $white;
   border: 1px solid $gray;
+
+  &-main {
+    @include flex-standard($horizontal: flex-start, $direction: column);
+    gap: $spacing-36;
+    width: 60%;
+
+    &:only-child {
+      width: 100%;
+    }
+  }
 
   &-header {
     @include flex-standard($horizontal: space-between);
@@ -31,7 +37,7 @@
     padding: $spacing-8;
   }
 
-  &-article{
+  &-article {
     @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
     gap: $spacing-12;
     width: 100%;
