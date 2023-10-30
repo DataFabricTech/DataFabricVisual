@@ -3,8 +3,8 @@
     <div class="card-content">
       <div class="h-group justify-between w-full">
         <div class="h-group gap-[8px]">
-          <BaseBadge class="bg-marker-cyan">{{ model.storageInfo.storageType }}</BaseBadge>
-          <BaseBadge class="bg-marker-purple">{{ model.domain }}</BaseBadge>
+          <BaseBadge class="bg-marker-cyan">{{ props.model.storageInfo.storageType }}</BaseBadge>
+          <BaseBadge class="bg-marker-purple">{{ props.model.domain }}</BaseBadge>
           <!--TODO: 기획 및 API 명세서 fix 되면 코드 수정 -->
 <!--          <BaseBadge v-for="(item, index) in model.tags" :class="badgeClass[index % badgeClass.length]">{{ item }}</BaseBadge>-->
         </div>
@@ -17,7 +17,7 @@
               {{ downloadStatus }}
             </span>
           </BaseButton>
-          <div :class="cardMode === true ? 'card-status' : 'card-status hidden'">
+          <div :class="props.cardMode === true ? 'card-status' : 'card-status hidden'">
             <!-- TODO: 데이터 연결상태 리턴값에 따라 클래스 및 명칭 변경 -->
             <baseBadge class="bg-marker-gray">Inactive(Disconnected)</baseBadge>
           </div>
@@ -25,11 +25,11 @@
         </div>
       </div>
       <div class="v-group w-full">
-        <a href="#" class="card-link" title="이동" @click="$emit('click', model.id)">{{ model.name }}</a>
-        <p class="card-detail">{{ model.description }}</p>
+        <a href="#" class="card-link" title="이동" @click="$emit('click', props.model.id)">{{ props.model.name }}</a>
+        <p class="card-detail">{{ props.model.description }}</p>
       </div>
       <div class="h-group gap-[16px]">
-        <BaseTag v-for="item in model.tags">#{{ item }}</BaseTag>
+        <BaseTag v-for="item in props.model.tags">#{{ item }}</BaseTag>
       </div>
       <div class="h-group justify-between w-full">
         <div class="h-group gap-[16px]">
@@ -39,7 +39,7 @@
               수정일자:
             </dt>
             <dd class="define-desc">
-              {{ model.updatedAt }}
+              {{ props.model.updatedAt }}
             </dd>
           </dl>
           <dl class="define">
@@ -48,7 +48,7 @@
               소유자:
             </dt>
             <dd class="define-desc">
-              {{ model.creator }}
+              {{ props.model.creator }}
             </dd>
           </dl>
         </div>
@@ -59,7 +59,7 @@
               <span class="hidden">조회수</span>
             </dt>
             <dd class="define-desc">
-              {{ model.statInfo.access }}
+              {{ props.model.statInfo.access }}
             </dd>
           </dl>
           <dl class="define">
@@ -68,7 +68,7 @@
               <span class="hidden">평균 평점</span>
             </dt>
             <dd class="define-desc">
-              {{ model.statInfo.rating.toFixed(1) }}
+              {{ props.model.statInfo.rating.toFixed(1) }}
             </dd>
           </dl>
           <dl class="define">
@@ -77,7 +77,7 @@
               <span class="hidden">북마크수</span>
             </dt>
             <dd class="define-desc">
-              {{ model.statInfo.favorite }}
+              {{ props.model.statInfo.favorite }}
             </dd>
           </dl>
           <dl class="define">
@@ -86,7 +86,7 @@
               <span class="hidden">다운로드수</span>
             </dt>
             <dd class="define-desc">
-              {{ model.statInfo.download }}
+              {{ props.model.statInfo.download }}
             </dd>
           </dl>
         </div>
@@ -97,7 +97,6 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { defineProps, defineEmits } from "vue/dist/vue";
 
 interface ModelType {
   id: string;
@@ -125,8 +124,8 @@ interface ModelType {
 const props = defineProps({
   model: {
     type: Object as () => ModelType,
-    default: {
-      id: 111,
+    default: () => ({
+      id: "111",
       name: "불법 주정차 구간 데이터",
       description: "서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보",
       tags: ["tag1", 'tag2', 'tag3', 'tag4', 'tag5'],
@@ -146,7 +145,7 @@ const props = defineProps({
         status: 2,
         uri: "uri"
       }
-    }
+    })
   },
   cardMode: {
     type: Boolean,
