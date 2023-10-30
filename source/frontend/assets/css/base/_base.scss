@@ -1,12 +1,25 @@
-// ------------------------------------------
-// SMACSS - class/id 사용 금지
-// ------------------------------------------
 #wrap {
-  min-width: 1920px;
+  min-width: 1280px;
   display: flex;
   flex-direction: column;
 
+
+  &.is-full {
+    height: 100%;
+
+    #main {
+      flex-grow: 1;
+    }
+  }
+
   &.is-have-tab {
+    height: 100%;
+
+    #header {
+      height: auto;
+      position: static;
+    }
+
     #main {
       height: calc(100% - 96px);
     }

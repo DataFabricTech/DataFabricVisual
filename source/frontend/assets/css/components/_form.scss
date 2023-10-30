@@ -1,27 +1,54 @@
 .form {
-  @include flex-standard($horizontal: space-between);
+  @include flex-standard($direction: column, $vertical: flex-start);
   width: 100%;
+  gap: $spacing-16;
+
+  &-vertical {
+    .form-item {
+      @include flex-standard($vertical: flex-start, $direction: column);
+      gap: $spacing-12;}
+
+    .form-label {
+      width: 100%;
+    }
+  }
+  &-subject {
+    font-size: 16px;
+    color: $font-black;
+    font-weight: 500;
+    margin-right: auto;
+  }
 
   &-list {
-    @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
+    @include flex-standard($vertical: flex-start, $direction: column);
     flex-grow: 1;
     gap: $spacing-24;
   }
 
   &-item {
     @include flex-standard($horizontal: flex-start);
+    width: 100%;
   }
 
   &-label {
     width: 100px;
     flex-shrink: 0;
+
+    &-accent {
+      font-size: 12px;
+      color: $negative;
+      font-weight: 500;
+      margin-left: $spacing-4;
+    }
   }
 
   &-content {
     @include flex-standard($horizontal: flex-start);
+    flex-grow: 1;
     gap: $spacing-24;
 
     .select {
+      flex-shrink: 0;
       width: 160px;
     }
   }
@@ -30,6 +57,12 @@
     font-size: 15px;
     font-weight: 400;
     color: $font-black;
+  }
+
+  &-text {
+    font-size: 15px;
+    font-weight: 400;
+    color: $font-gray-01;
   }
 
   &-action {

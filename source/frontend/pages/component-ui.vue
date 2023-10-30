@@ -219,11 +219,28 @@
             </td>
           </tr>
           <tr>
+            <th scope="row">form</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="v-group gap-10">
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: horizontal</strong>
+                  <baseFormHorizontal></baseFormHorizontal>
+                </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: vertical</strong>
+                  <baseFormVertical></baseFormVertical>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
             <th scope="row">Nav</th>
           </tr>
           <tr>
             <td>
-                <BaseNav></BaseNav>
+              <BaseNav></BaseNav>
             </td>
           </tr>
 
@@ -290,7 +307,7 @@
           </tr>
           <tr>
             <td>
-                <BasePagination></BasePagination>
+              <BasePagination></BasePagination>
             </td>
           </tr>
 
@@ -644,14 +661,14 @@
           </tr>
           <tr>
             <td>
-                <div class="h-group">
-                  <baseTextarea id="area-ex-01" placeholder="입력해주세요."></baseTextarea>
-                  <label for="area-ex-01" class="hidden">lable</label>
-                  <baseTextarea id="area-ex-02" disabled value="입력할 수 없습니다."></baseTextarea>
-                  <label for="area-ex-02" class="hidden">lable</label>
-                  <baseTextarea id="area-ex-03" readonly value="read only"></baseTextarea>
-                  <label for="area-ex-03" class="hidden">lable</label>
-                </div>
+              <div class="h-group">
+                <baseTextarea id="area-ex-01" placeholder="입력해주세요."></baseTextarea>
+                <label for="area-ex-01" class="hidden">lable</label>
+                <baseTextarea id="area-ex-02" disabled value="입력할 수 없습니다."></baseTextarea>
+                <label for="area-ex-02" class="hidden">lable</label>
+                <baseTextarea id="area-ex-03" readonly value="read only"></baseTextarea>
+                <label for="area-ex-03" class="hidden">lable</label>
+              </div>
             </td>
           </tr>
 
@@ -854,17 +871,27 @@
             </td>
           </tr>
           <tr>
-            <td>
-              <th scope="row">List</th>
-            </td>
+            <th scope="row">List</th>
           </tr>
           <tr>
             <td>
-              <div class="h-group">
-                <strong class="w-[150px] font-light text-[14px] shrink-0">type:  Checkable List</strong>
-                <baseListCheckable class="w-[300px]">
-                  title
-                </baseListCheckable>
+              <div class="v-group gap-5">
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: Checkable List - title</strong>
+                  <baseList class="w-[300px]">
+                    <template v-slot:head>
+                      <div class="list-head">
+                        <div class="list-head-title">
+                          title
+                        </div>
+                      </div>
+                    </template>
+                  </baseList>
+                </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: Checkable List - no title</strong>
+                  <baseList class="w-[300px]"> </baseList>
+                </div>
               </div>
             </td>
           </tr>
@@ -881,7 +908,42 @@
       <div class="inner">
         <table class="guide-table">
           <tbody>
-
+          <tr>
+            <th scope="row">Ag-grid</th>
+          </tr>
+          <tr>
+            <td>
+              <ag-grid-vue style="width: 550px; height: 300px" class="ag-theme-alpine" :gridOptions="gridOptions"
+                           :columnDefs="columnDefs" :rowData="rowData">
+              </ag-grid-vue>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Card Simple</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="v-group gap-5">
+                <div class="h-group w-full">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0"> size: default </strong>
+                  <ul class="card-simple-list w-[500px]">
+                    <li class="card-simple-item">
+                      <CardSimple></CardSimple>
+                    </li>
+                    <li class="card-simple-item">
+                      <CardSimple></CardSimple>
+                    </li>
+                    <li class="card-simple-item">
+                      <CardSimple hasStatus></CardSimple>
+                    </li>
+                    <li class="card-simple-item">
+                      <CardSimple hasStatus></CardSimple>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </td>
+          </tr>
           <tr>
             <th scope="row">Card</th>
           </tr>
@@ -889,28 +951,56 @@
             <td>
               <div class="v-group gap-5">
                 <div class="h-group w-full">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0"> size: lg & base </strong>
-                  <Card class="card-lg">
-                    <template v-slot:img>
-                      <svg-icon class="svg-icon" name="data"></svg-icon>
-                    </template>
-                  </Card>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0"> size: lg </strong>
+                  <ul class="card-list w-[1100px]">
+                    <li class="card-item">
+                      <Card class="card-lg ">
+                        <template v-slot:img>
+                          <svg-icon class="svg-icon" name="data"></svg-icon>
+                        </template>
+                      </Card>
+                    </li>
+                    <li class="card-item">
+                      <Card class="card-lg card-primary">
+                        <template v-slot:img>
+                          <img src="../assets/images/sample.png" alt="">
+                        </template>
+                      </Card>
+                    </li>
+                    <li class="card-item">
+                      <Card class="card-lg card-negative">
+                        <template v-slot:img>
+                          <svg-icon class="svg-icon" name="data"></svg-icon>
+                        </template>
+                      </Card>
+                    </li>
+                  </ul>
                 </div>
                 <div class="h-group w-full">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: default & primary</strong>
-                  <Card class="card-primary">
-                    <template v-slot:img>
-                      <img src="../assets/images/sample.png" alt="">
-                    </template>
-                  </Card>
-                </div>
-                <div class="h-group w-full">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: default & negative</strong>
-                  <Card class="card-negative">
-                    <template v-slot:img>
-                      <svg-icon class="svg-icon" name="data"></svg-icon>
-                    </template>
-                  </Card>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
+                  <ul class="card-list w-[1100px]">
+                    <li class="card-item">
+                      <Card class=" ">
+                        <template v-slot:img>
+                          <svg-icon class="svg-icon" name="data"></svg-icon>
+                        </template>
+                      </Card>
+                    </li>
+                    <li class="card-item">
+                      <Card class=" card-primary">
+                        <template v-slot:img>
+                          <img src="../assets/images/sample.png" alt="">
+                        </template>
+                      </Card>
+                    </li>
+                    <li class="card-item">
+                      <Card class=" card-negative">
+                        <template v-slot:img>
+                          <svg-icon class="svg-icon" name="data"></svg-icon>
+                        </template>
+                      </Card>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </td>
@@ -965,7 +1055,7 @@
           </tr>
           <tr>
             <td>
-                  <SearchFilter></SearchFilter>
+              <SearchFilter></SearchFilter>
             </td>
           </tr>
           </tbody>
@@ -983,9 +1073,30 @@
 <script lang="ts" setup>
 import { ref } from "@vue/reactivity";
 import { useRouter } from "vue-router";
+import { sample } from "../composables/sample";
+import { AgGridVue } from "ag-grid-vue3";
 
+const sampleData = sample();
 const show = ref(false);
 const router = useRouter();
+const gridOptions = {
+  headerHeight: 56,
+  rowHeight: 56,
+  // sort 설정 시 추가할 것
+  unSortIcon: true
+};
+
+// sort 예시 추가
+const columnDefs = [
+  { headerName: "Make", field: "make", sortable: true },
+  { headerName: "Model", field: "model" },
+  { headerName: "Price", field: "price", sortable: true }
+];
+const rowData = [
+  { make: "Toyota", model: "Celica", price: 35000 },
+  { make: "Ford", model: "Mondeo", price: 32000 },
+  { make: "Porsche", model: "Boxster", price: 72000 }
+];
 
 function onClickOpen() {
   show.value = !show.value;
@@ -994,7 +1105,6 @@ function onClickOpen() {
 function onClickMain() {
   router.push("/main");
 }
-
 
 </script>
 

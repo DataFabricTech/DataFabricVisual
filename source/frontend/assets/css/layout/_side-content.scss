@@ -1,6 +1,0 @@
-.side-content {
-  @include flex-standard($vertical: flex-start, $direction: column);
-  gap: $spacing-12;
-  padding: $spacing-2 + $spacing-8;
-  background-color: $light-blue;
-}

@@ -2,9 +2,17 @@
   @include flex-standard($vertical: stretch);
   @include box-shadow('default');
   gap: $spacing-16;
-  min-height: 210px;
   padding: $spacing-16 $spacing-20;
   border: 1px solid $border-gray;
+  background: $white;
+
+  &-container {
+    width: 100%;
+    height: auto;
+    padding: $spacing-8;
+    border: 1px solid $border-gray;
+    border-radius: $border-radius-sm;
+  }
 
   &-list {
     @include flex-standard($horizontal: flex-start, $direction: column);
@@ -16,6 +24,7 @@
     width: 100%;
   }
 
+  // 추후 사용할수도 있어서 보류
   &-img {
     @include flex-standard;
     flex-shrink: 0;
@@ -42,12 +51,14 @@
   }
 
   &-content {
-    @include flex-standard($horizontal: space-between, $vertical: flex-start, $direction: column);
+    @include flex-standard($horizontal: flex-start, $vertical: flex-start, $direction: column);
+    gap: 8px;
     flex-grow: 1;
+    width: 100%;
   }
 
   &-link {
-    display: block;
+    @include ellipsis(100%);
     font-size: 20px;
     color: $font-black;
     font-weight: 500;
@@ -58,14 +69,34 @@
   }
 
   &-detail {
+    @include ellipsis(100%);
     font-size: 16px;
     color: $font-black;
   }
 
   &-lg {
-    min-height: 236px;
     padding: $spacing-24 96px $spacing-36 60px;
     gap: $spacing-36;
+
+  }
+
+  &-status {
+    @include flex-standard;
+  }
+
+  &.card-simple {
+    width: 100%;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+
+    .card {
+      &-content {
+        &:not(:only-child) {
+          width: 50%;
+        }
+      }
+    }
   }
 }
 
@@ -82,6 +113,23 @@
 
     .svg-icon {
       fill: $font-black;
+    }
+  }
+}
+
+.card-simple {
+  &-list {
+    @include flex-standard($vertical: flex-start, $horizontal: center, $direction: column);
+    height: 100%;
+  }
+
+  &-item {
+    @include flex-standard($horizontal: flex-start);
+    width: 100%;
+    padding: $spacing-4 0;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $border-gray;
     }
   }
 }

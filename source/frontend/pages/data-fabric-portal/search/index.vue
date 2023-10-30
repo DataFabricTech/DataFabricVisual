@@ -14,7 +14,7 @@
       </div>
       <div class="main-information">
         <!-- TODO:[퍼블리싱] 데이터패브릭 메인과 ui가 동일할경우 클래스명 article로 통일  -->
-        <article class="portal-article w-2/6">
+        <article class="portal-article">
           <div class="portal-article-head">
             <h3 class="portal-article-title">데이터</h3>
             <p class="portal-article-text">다양한 신규/추천 데이터를 만나보세요.</p>
@@ -41,10 +41,10 @@
                     <span class="ranking-num" :key="index">{{ index }}</span>
                     <div class="ranking-description">
                       <span class="ranking-title"
-                        >국세청_사업자등록정보 진위확인 및 상태조회 서비스서비스서비스서비스</span
+                      >국세청_사업자등록정보 진위확인 및 상태조회 서비스서비스서비스서비스</span
                       >
                       <span class="ranking-text"
-                        >세청에서 제공하는 사업자등록정보 진위확인 및 사업자등록 상태조회 상태조회</span
+                      >세청에서 제공하는 사업자등록정보 진위확인 및 사업자등록 상태조회 상태조회</span
                       >
                     </div>
                   </a>
@@ -56,7 +56,7 @@
             </div>
           </div>
         </article>
-        <article class="portal-article w-2/6">
+        <article class="portal-article">
           <div class="portal-article-head">
             <h3 class="portal-article-title">서비스</h3>
             <p class="portal-article-text">데이터패브릭 포털은 다양한 서비스와 결합하여 최적의 환경을 제공합니다.</p>
@@ -65,7 +65,7 @@
             <div class="swiper">
               <div class="swiper-results">
                 <span class="results-page">
-                  <em>1</em>
+                  <em class="color-tertiary">1</em>
                   / 5
                 </span>
                 <baseButton title="재생" class="button-sm button-icon button-link">
@@ -89,16 +89,16 @@
                   <div class="swiper-item"></div>
                 </div>
               </div>
-              <baseButton class="swiper-pre-button button-icon button-link" title="이전">
+              <baseButton class="swiper-pre-button" title="이전">
                 <svg-icon name="arrow-left" class="svg-icon" />
               </baseButton>
-              <baseButton class="swiper-next-button button-icon button-link" title="다음">
+              <baseButton class="swiper-next-button" title="다음">
                 <svg-icon name="arrow-right" class="svg-icon" />
               </baseButton>
             </div>
           </div>
         </article>
-        <article class="portal-article w-2/6">
+        <article class="portal-article">
           <div class="portal-article-head">
             <h3 class="portal-article-title">커뮤니티</h3>
             <p class="portal-article-text">
@@ -108,35 +108,51 @@
           <div class="portal-article-body">
             <div class="community">
               <div class="community-inner">
-                <div class="community-head">
+                <div class="community-top-bar">
                   <div class="community-title">공지사항</div>
                   <baseButton class="button-link-tertiary">더보기</baseButton>
                 </div>
-                <div class="notices-notify">
-                  <div class="notify-container">
-                    <svg-icon name="speaker" class="svg-icon" />
-                    <div class="notify-wrapper">
-                      <a href="#" class="notify-item">
-                        <em>[서비스 안내]</em>
-                        <span class="notify-text">분석 서비스를 위한 저작도구 신규 서비스 도입</span>
-                      </a>
+                <div class="community-body">
+                  <div class="special-notify">
+                    <div class="special-notify-inner">
+                      <svg-icon name="speaker" class="svg-icon" />
+                      <div class="flow">
+                        <div class="flow-group">
+                          <div class="flow-item">
+                            <a href="#" class="flow-link">
+                              <em class="color-tertiary">[서비스 안내]</em>
+                              분석 서비스를 위한 저작도구 신규 서비스 도입
+                            </a>
+                          </div>
+                          <div class="flow-item">
+                            <a href="#" class="flow-link">
+                              <em class="color-tertiary">[서비스 안내]</em>
+                              분석 서비스를 위한 저작도구 신규 서비스 도입
+                            </a>
+                          </div>
+                          <div class="flow-item">
+                            <a href="#" class="flow-link">
+                              <em class="color-tertiary">[서비스 안내]</em>
+                              분석 서비스를 위한 저작도구 신규 서비스 도입
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="paging">
+                      <ul class="paging-dots">
+                        <li class="dot is-active">
+                          <button class="dot-button">1</button>
+                        </li>
+                        <li class="dot">
+                          <button class="dot-button">2</button>
+                        </li>
+                        <li class="dot">
+                          <button class="dot-button">3</button>
+                        </li>
+                      </ul>
                     </div>
                   </div>
-                  <div class="paging">
-                    <ul class="paging-dots">
-                      <li class="dot is-active">
-                        <button class="dot-button">1</button>
-                      </li>
-                      <li class="dot">
-                        <button class="dot-button">2</button>
-                      </li>
-                      <li class="dot">
-                        <button class="dot-button">3</button>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-                <div class="mt-7">
                   <ul class="community-list">
                     <li class="community-item" v-for="index in 6">
                       <baseBadge class="bg-marker-cyan">안내</baseBadge>
@@ -146,14 +162,14 @@
                 </div>
               </div>
               <div class="community-inner">
-                <div class="community-head">
+                <div class="community-top-bar">
                   <div class="community-title">
                     자주하는 질문
-                    <em>FAQ</em>
+                    <em class="color-tertiary">FAQ</em>
                   </div>
                   <baseButton class="button-link-tertiary">더보기</baseButton>
                 </div>
-                <div class="mt-0.5">
+                <div class="community-body">
                   <ul class="community-list">
                     <li class="community-item" v-for="index in 8">
                       <a href="#" class="community-item-link">
@@ -170,8 +186,10 @@
     </section>
   </div>
 </template>
+
 <script lang="ts" setup>
 definePageMeta({
-  layout: "default-portal-layout"
+  layout: "default-portal-full-layout"
 });
+
 </script>

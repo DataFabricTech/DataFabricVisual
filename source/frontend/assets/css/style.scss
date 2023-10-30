@@ -1,4 +1,4 @@
-// tailwindCSS
+// tailwindCSS Reset
 @import "./tailwind/tailwind-base";
 
 // variables
@@ -46,8 +46,8 @@
 @import "components/radio";
 @import "components/checkbox";
 @import "components/table";
-@import "assets/css/components/list-checkable";
-@import "assets/css/components/switch";
+@import "components/list";
+@import "components/switch";
 
 // modules
 @import "modules/card";
@@ -56,22 +56,27 @@
 @import "modules/search-filter";
 @import "modules/data-status";
 
-
 // layouts
 @import "layout/layout";
 @import "layout/modal";
 @import "layout/main";
 @import "layout/header";
 @import "layout/footer";
-@import "layout/side-content";
 @import "layout/no-result";
 
+// pages
+@import "pages/common";
 @import "pages/data-fabric/data-fabric";
-@import "pages/data-fabric/search";
+@import "pages/data-fabric/main";
 @import "pages/data-fabric/overview";
+@import "pages/data-fabric/registration";
 @import "pages/data-fabric-portal/data-fabric-portal";
 
-// base
+// vendors
+@import "vendors/ag-theme-alpine";
+
+// status
 @import "base/status";
 
+// tailwindCSS Utility Class
 @import "./tailwind/tailwind-utilities";
