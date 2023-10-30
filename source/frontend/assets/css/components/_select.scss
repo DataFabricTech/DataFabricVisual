@@ -194,16 +194,17 @@
   overflow: auto;
 
   &-list {
-    background-color: $white;
+    //background-color: $white;
+    @include list-style('select-container');
   }
 
   &-item {
-    @include flex-standard;
-    &:hover:not(:disabled) {
-      background-color: $light-blue;
-    }
+    //@include flex-standard;
+    //&:hover:not(:disabled) {
+    //  background-color: $light-blue;
+    //}
     &:active:not(:disabled) {
-      background-color: $light-blue;
+      //background-color: $light-blue;
 
       .select-container-text {
         color: $tertiary;
@@ -212,14 +213,14 @@
   }
 
   &-text {
-    @include ellipsis;
-    font-size: 14px;
+    //@include ellipsis;
+    //font-size: 14px;
     font-weight: 500;
     color: $font-black;
   }
 
   &-button {
-    @include flex-standard($horizontal: flex-start);
+    //@include flex-standard($horizontal: flex-start);
     flex: 1;
     height: 32px;
     padding: $spacing-4 $spacing-8;

@@ -22,12 +22,16 @@
     &:hover:not(:disabled) {
       background-color: $light-blue;
     }
+
+    &:active:not(:disabled) {
+      background-color: $light-blue;
+    }
   }
 
   .#{$class-prefix}-button {
     @include flex-standard($horizontal: space-between);
     width: 100%;
-    height: 32px;
+    //height: 32px;
   }
 
   .#{$class-prefix}-text {
