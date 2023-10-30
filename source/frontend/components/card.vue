@@ -24,7 +24,9 @@
       </div>
       <div class="v-group w-full">
         <a href="#" class="card-link" title="이동">불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터불법 주정차 구간 데이터</a>
+        <baseTextInput placeholder="연결정보 이름 영역입니다." class="hidden"></baseTextInput>
         <p class="card-detail">서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보</p>
+        <baseTextInput placeholder="연결정보 설명 영역입니다." class="hidden"></baseTextInput>
       </div>
       <div class="h-group gap-[16px]">
         <BaseTag>#확정단속일시</BaseTag>
@@ -35,6 +37,7 @@
         <BaseTag>#기준일자</BaseTag>
         <BaseTag>#법정동 주소</BaseTag>
       </div>
+      <baseTextInput placeholder="태그 영역입니다." class="hidden"></baseTextInput>
       <div class="h-group justify-between w-full">
         <div class="h-group gap-[16px]">
           <dl class="define">
