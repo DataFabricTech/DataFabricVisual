@@ -9,9 +9,6 @@
       <div class="inner">
         <table class="guide-table">
           <tbody>
-
-
-
           <tr>
             <th scope="row">Context</th>
           </tr>

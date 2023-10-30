@@ -29,8 +29,6 @@
   }
 
   &-button {
-    padding: $spacing-4 $spacing-8;
-    height: 32px;
     line-height: 1.75;
 
     &.is-selected {
@@ -42,20 +40,20 @@
         fill: $primary;
       }
     }
-
-    .svg-icon {
-      width: 18px;
-      height: 18px;
-    }
   }
 
   &-text {
     color: $font-gray-01;
-    font-size: 13px;
-
   }
 
-  &-lg {
-    @include context-size(40px, 140px, $spacing-12, 20px, 14px)
+  &.context-lg {
+    @include list-style('context', 'lg');
+    .context-list {
+      min-width: 140px;
+    }
   }
+  &.context-sm {
+    @include list-style('context', 'sm');
+  }
+
 }

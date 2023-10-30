@@ -11,7 +11,7 @@
 //-------------------------------------------
 // list 공통 스타일 정의
 //-------------------------------------------
-@mixin list-style($class-prefix) {
+@mixin list-style($class-prefix, $size: null) {
   .#{$class-prefix}-list {
     background: $white;
   }
@@ -31,7 +31,36 @@
   .#{$class-prefix}-button {
     @include flex-standard($horizontal: space-between);
     width: 100%;
-    //height: 32px;
+
+    @if $size == 'lg' {
+      height: 40px;
+      padding: $spacing-4 $spacing-12;
+      font-size: 15px;
+
+      .svg-icon {
+        width: 20px;
+        height: 20px;
+      }
+    } @else if $size == 'sm' {
+      height: 24px;
+      padding: $spacing-4 $spacing-4;
+      font-size: 13px;
+
+      .svg-icon {
+        width: 16px;
+        height: 16px;
+      }
+    } @else {
+      // 기본 크기 스타일
+      height: 32px;
+      padding: $spacing-4 $spacing-8;
+      font-size: 14px;
+
+      .svg-icon {
+        width: 18px;
+        height: 18px;
+      }
+    }
   }
 
   .#{$class-prefix}-text {
@@ -39,7 +68,9 @@
     text-align: left;
     font-weight: 500;
   }
+
 }
+
 
 //-------------------------------------------
 // 한 줄 말줄임
