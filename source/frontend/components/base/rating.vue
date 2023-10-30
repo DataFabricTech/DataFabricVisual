@@ -22,7 +22,6 @@
 
 <script setup lang="ts">
 import { ref, defineProps, defineEmits, onMounted } from "vue";
-import { v4 as uuidv4 } from "uuid";
 const props = defineProps({
   star: {
     type: Number || null,
@@ -35,11 +34,11 @@ const props = defineProps({
 });
 const emit = defineEmits(['change'])
 const stars = [
-  { id: uuidv4(), value: 5, title: "최고에요" },
-  { id: uuidv4(), value: 4, title: "좋아요" },
-  { id: uuidv4(), value: 3, title: "괜찮아요" },
-  { id: uuidv4(), value: 2, title: "그저그래요" },
-  { id: uuidv4(), value: 1, title: "별로에요" },
+  { id: Math.random(), value: 5, title: "최고에요" },
+  { id: Math.random(), value: 4, title: "좋아요" },
+  { id: Math.random(), value: 3, title: "괜찮아요" },
+  { id: Math.random(), value: 2, title: "그저그래요" },
+  { id: Math.random(), value: 1, title: "별로에요" },
 ]
 const selectedRating = ref(0);
 function clickRating(star: number) {
