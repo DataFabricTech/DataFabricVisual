@@ -62,3 +62,10 @@
   width: 100%;
 }
 
+.l-preview{
+  @include flex-standard($vertical: flex-start);
+  position: relative;
+  padding-right: calc(40% + 12px);
+  width: 100%;
+  gap: $spacing-12;
+}
