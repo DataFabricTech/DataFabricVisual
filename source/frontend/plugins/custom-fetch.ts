@@ -1,5 +1,5 @@
 import { ofetch } from "ofetch";
-import { defineNuxtPlugin, useNuxtApp, useRuntimeConfig } from "nuxt/app";
+import { defineNuxtPlugin, useRuntimeConfig } from "nuxt/app";
 
 export default defineNuxtPlugin((nuxtApp) => {
   globalThis.$fetch = ofetch.create({
@@ -33,20 +33,18 @@ export default defineNuxtPlugin((nuxtApp) => {
       errorMessage = "시스템 오류가 발생 하였습니다.";
     }
     console.error(errorMessage);
-    // TODO : system alert 사용시 로더 멈춤. 추후 errorAlert(개발) 적용 후 테스트 필요
-    // alert(errorMessage);
+    alert(errorMessage);
   }
 
-  const { $loader } = useNuxtApp();
   function showLoader() {
     try {
-      $loader.start();
+      nuxtApp.$loader.start();
     } catch (e) {}
   }
 
   function hideLoader() {
     try {
-      $loader.finish();
+      nuxtApp.$loader.finish();
     } catch (e) {}
   }
 });

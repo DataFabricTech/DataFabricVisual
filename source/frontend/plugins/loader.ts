@@ -9,6 +9,10 @@ export default defineNuxtPlugin((nuxtApp) => {
   // nuxtApp.vueApp.component("loading", Loader);
   nuxtApp.vueApp.use(LoadingPlugin);
 
+  const count = ref(0);
+  let load: ActiveLoader|null;
+  let timerId = 0;
+
   // slot 테스트
   /*const vnode = h("div", { ariaLive: "assertive", class: "loader loader--lg", role: "alert" }, [
     h(
@@ -26,6 +30,8 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   const loading = useLoading(
     {
+      // active: isLoading,
+      // canCancel: true,
       // 디자인 세팅
       // color: '#000000',
       // loader: 'spinner',
@@ -42,31 +48,34 @@ export default defineNuxtPlugin((nuxtApp) => {
     }
   );
 
-  const count = ref(0);
-  let load: ActiveLoader;
   function start() {
-    console.log("LOADER START - " + count.value);
     if (count.value === 0) {
-      console.log("LOADER show - " + count.value);
-      load = loading.show();
+      if (!load) {
+        load = loading.show();
+      }
     }
-    count.value++;
+    count.value ++;
   }
 
   function finish() {
-    console.log("LOADER finish - " + count.value);
-    count.value--;
+    count.value --;
     if (count.value > 0) {
       return;
     }
-    setTimeout(() => {
-      console.log("LOADER HIDE - " + count.value);
-      load.hide();
+
+    if (timerId) {
+      clearTimeout(timerId);
+    }
+    timerId = setTimeout(() => {
+      if (load) {
+        load!.hide();
+        load = null;
+      }
       count.value = 0;
-    }, 1000);
+    }, 300);
   }
 
-  let loader = {
+  const loader = {
     loading,
     start,
     finish
