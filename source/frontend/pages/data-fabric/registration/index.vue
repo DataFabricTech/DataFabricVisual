@@ -310,11 +310,179 @@
         </div>
       </template>
     </modal>
+
+    <h3>저장소 관리 > 연결정보 등록 Step 4</h3>
+    <baseButton class="button-lg button-primary" @click="onClickOpen4">모달 OPEN</baseButton>
+    <modal v-model="show4" title="연결정보 등록">
+      <template v-slot:body>
+        <div class="modal-body w-[900px] p-6 items-center">
+          <BaseStep></BaseStep>
+          <div class="step-info">
+            <h4 class="step-info-title">추가 정보 입력</h4>
+            <div class="v-group w-full gap-2">
+              <baseSwitch>
+                <template v-slot:switch-text>
+                  데이터 자동 추가 설정
+                </template>
+              </baseSwitch>
+              <div class="table-col w-full">
+                <table class="w-full">
+                  <caption class="caption-out">
+                    Description Column
+                  </caption>
+                  <thead>
+                  <tr>
+                    <!-- 세로 => col, 가로 => row -->
+                    <th scope="col">항목</th>
+                    <th scope="col">내용</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>Datetime</td>
+                    <td>
+                      <DatePicker
+                        v-model:modelValue="args.dateRange"
+                        :type="args.rangeType">
+                      </DatePicker>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Data Name</td>
+                    <td>
+                      <baseTextInput></baseTextInput>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Format / Size</td>
+                    <td>
+                      <div class="v-group">
+                        <div class="h-group">
+                          <baseCheckbox id="lg-01">
+                            table
+                          </baseCheckbox>
+                          <baseTextInput class="w-[100px]"></baseTextInput>
+                          <span class="color-font-gray-01">row</span>
+                        </div>
+                        <div class="h-group">
+                          <baseCheckbox id="lg-02">
+                            column
+                          </baseCheckbox>
+                          <baseTextInput class="w-[100px]"></baseTextInput>
+                          <span class="color-font-gray-01">length</span>
+                        </div>
+                      </div>
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <baseButton class="button-ghost button-icon m-auto">
+                        <svg-icon name="plus" class="svg-icon" />
+                        <span class="hidden">추가</span>
+                      </baseButton>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="v-group w-full gap-2">
+              <baseSwitch>
+                <template v-slot:switch-text>
+                  동기화 설정
+                </template>
+              </baseSwitch>
+              <div class="table-col w-full">
+                <table class="w-full">
+                  <caption class="caption-out">
+                    Description Column
+                  </caption>
+                  <thead>
+                  <tr>
+                    <!-- 세로 => col, 가로 => row -->
+                    <th scope="col">항목</th>
+                    <th scope="col">내용</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>동기화 주기</td>
+                    <td>
+                      <div class="v-group">
+                        <baseSelect></baseSelect>
+                        <div class="h-group">
+                          <baseRadio id="radio-lg-01"></baseRadio>
+                          <baseTextInput class="w-[100px]"></baseTextInput>
+                          <span>일 마다</span>
+                        </div>
+                        <div class="h-group">
+                          <baseRadio id="radio-lg-02"></baseRadio>
+                          <div class="toggle-token">
+                            <BaseCheckbox name="toggleLg" id="toggle-lg-01" checked>
+                              월요일
+                            </BaseCheckbox>
+                            <BaseCheckbox name="toggleLg" id="toggle-lg-02">
+                              화요일
+                            </BaseCheckbox>
+                            <BaseCheckbox name="toggleLg" id="toggle-lg-03">
+                              수요일
+                            </BaseCheckbox>
+                            <BaseCheckbox name="toggleLg" id="toggle-lg-04">
+                              목요일
+                            </BaseCheckbox>
+                            <BaseCheckbox name="toggleLg" id="toggle-lg-05">
+                              금요일
+                            </BaseCheckbox>
+                            <BaseCheckbox name="toggleLg" id="toggle-lg-06">
+                              토요일
+                            </BaseCheckbox>
+                            <BaseCheckbox name="toggleLg" id="toggle-lg-07">
+                              일요일
+                            </BaseCheckbox>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>동기화 시작 일시</td>
+                    <td>
+                      <DatePicker>
+                      </DatePicker>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </template>
+      <template v-slot:foot>
+        <baseButton class="button-normal button-lg">
+          <span class="button-text">취소</span>
+        </baseButton>
+        <div class="h-group ml-auto">
+          <baseButton class="button-ghost button-lg">
+            <span class="button-text">이전</span>
+          </baseButton>
+          <baseButton class="button-primary button-lg">
+            <span class="button-text">다음</span>
+          </baseButton>
+        </div>
+      </template>
+    </modal>
   </div>
 </template>
 <script lang="ts" setup>
 import {ref} from "@vue/reactivity";
 import {useRouter} from "vue-router";
+import DatePicker from "../../../components/common/date-picker/date-picker.vue";
+
+const meta: Meta<typeof DatePicker> = {
+  component: DatePicker,
+};
 
 definePageMeta({
   layout: "default-tab-layout",
@@ -323,7 +491,16 @@ definePageMeta({
 const show1 = ref(false);
 const show2 = ref(false);
 const show3 = ref(false);
+const show4 = ref(false);
 const router = useRouter();
+
+let args = {
+  date: "2023-11-22",
+  dateRange: ["2023-11-10", "2023-11-22"],
+  // storybook 에 object 형식으로 뜸
+  dateType: "time",
+  rangeType: "datetime"
+};
 
 function onClickOpen1() {
   show1.value = !show1.value;
@@ -335,6 +512,10 @@ function onClickOpen2() {
 
 function onClickOpen3() {
   show3.value = !show3.value;
+}
+
+function onClickOpen4() {
+  show4.value = !show4.value;
 }
 
 function onClickMain() {
