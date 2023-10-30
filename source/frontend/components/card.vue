@@ -31,9 +31,9 @@
         <baseTextInput placeholder="연결정보 설명 영역입니다." class="hidden"></baseTextInput>
       </div>
       <div class="h-group gap-[16px]">
+        <baseTextInput placeholder="태그 영역입니다." class="hidden"></baseTextInput>
         <BaseTag v-for="item in model.tags">#{{ item }}</BaseTag>
       </div>
-      <baseTextInput placeholder="태그 영역입니다." class="hidden"></baseTextInput>
       <div class="h-group justify-between w-full">
         <div class="h-group gap-[16px]">
           <dl class="define">
