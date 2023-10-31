@@ -342,6 +342,7 @@
                   </tr>
                   </thead>
                   <tbody>
+                    <!-- 플러스 항목 추가시 여기서부터 <tr> 반복됩니다 -->
                     <tr>
                       <td colspan="2">
                         <div class="h-group w-full gap-2">
@@ -483,6 +484,10 @@
                   <caption class="caption-out">
                     Description Column
                   </caption>
+                  <colgroup>
+                    <col width="150px">
+                    <col>
+                  </colgroup>
                   <thead>
                   <tr>
                     <!-- 세로 => col, 가로 => row -->
@@ -552,6 +557,10 @@
                   <caption class="caption-out">
                     Description Column
                   </caption>
+                  <colgroup>
+                    <col width="150px">
+                    <col>
+                  </colgroup>
                   <thead>
                   <tr>
                     <!-- 세로 => col, 가로 => row -->
