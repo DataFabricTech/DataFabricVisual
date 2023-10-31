@@ -974,6 +974,7 @@
                         </template>
                       </Card>
                     </li>
+
                   </ul>
                 </div>
                 <div class="h-group w-full">
@@ -995,6 +996,13 @@
                     </li>
                     <li class="card-item">
                       <Card class=" card-negative">
+                        <template v-slot:img>
+                          <svg-icon class="svg-icon" name="data"></svg-icon>
+                        </template>
+                      </Card>
+                    </li>
+                    <li class="card-item">
+                      <Card class="is-modify">
                         <template v-slot:img>
                           <svg-icon class="svg-icon" name="data"></svg-icon>
                         </template>

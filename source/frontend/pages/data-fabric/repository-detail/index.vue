@@ -101,9 +101,10 @@
       </BaseButton>
     </section>
     <section class="l-split-section">
-      <h3 class="hidden">선택된 데이터 정보</h3>
-      <article class="page-article">
-        <div class="card-top-bar">
+        <div class="page-subject">
+          <h3 class="page-title">
+            <span class="hidden">선택된 데이터 정보</span>
+          </h3>
           <div class="h-group gap-2">
             <baseButton class="button-normal">
               <svg-icon class="svg-icon" name="pen"></svg-icon>
@@ -112,35 +113,23 @@
             <baseButton class="button-normal">
               <span class="button-text">권한 설정</span>
             </baseButton>
+            <baseButton class="button-danger">
+              <span class="button-text">삭제</span>
+            </baseButton>
           </div>
-          <baseButton class="button-danger">
-            <span class="button-text">삭제</span>
-          </baseButton>
         </div>
+      <article class="page-article">
         <Card class="w-full"></Card>
       </article>
       <article class="page-article">
-        <div class="tab">
-          <ul class="tab-list">
-            <li class="tab-item">
-              <button type="button" class="tab-button">
-                <span class="tab-title">상태 정보</span>
-              </button>
-            </li>
-            <li class="tab-item">
-              <button type="button" class="tab-button is-selected">
-                <span class="tab-title">기본 정보</span>
-              </button>
-            </li>
-            <li class="tab-item">
-              <button type="button" class="tab-button">
-                <span class="tab-title">수집 정보</span>
-              </button>
-            </li>
-          </ul>
+        <div class="anchor">
+          <a class="anchor-link" title="이동" href="#status-info">상태 정보</a>
+          <a class="anchor-link" title="이동" href="#default-info">기본 정보</a>
+          <a class="anchor-link" title="이동" href="#collect-info">수집 정보</a>
         </div>
         <div class="v-group gap-9 p-6 w-full">
           <div class="page-group">
+            <h4 class="page-subtitle" id="defult-info">기본 정보</h4>
             <div class="table-col w-full">
               <table class="w-full">
                 <caption class="caption-out">
@@ -256,6 +245,10 @@
                 </tbody>
               </table>
             </div>
+          </div>
+          <div class="page-group">
+            <h4 class="page-subtitle" id="collect-info">수집 정보</h4>
+            <div class="w-full bg-gray-200 h-[500px]"></div>
           </div>
         </div>
       </article>

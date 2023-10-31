@@ -56,25 +56,6 @@
   @include flex-standard($direction: column);
   padding: $spacing-24;
   gap: $spacing-16;
-
-  .card-top-bar {
-    @include flex-standard($horizontal: flex-end);
-    width: 100%;
-    gap: $spacing-16;
-
-    .button-danger {
-      position: relative;
-
-      &:before {
-        content: "";
-        position: absolute;
-        left: -9px;
-        width: 1px;
-        height: 16px;
-        background: $border-gray;
-      }
-    }
-  }
 }
 
 .data-search {
