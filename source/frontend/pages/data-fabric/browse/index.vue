@@ -24,38 +24,167 @@
             </li>
           </ul>
         </div>
-        <div class="side-wrapper">
-          <h4 class="hidden">카테고리 목록</h4>
-          <ul class="list-list p-2">
-            <li class="list-item">
-              <button class="list-button" type="button">
-                <svg-icon class="svg-icon" name="object-list"></svg-icon>
-                <span class="list-text">전체 데이터 모델</span></button>
-            </li>
-            <li class="list-item">
-              <button class="list-button" type="button">
-                <svg-icon class="svg-icon" name="data"></svg-icon>
-                <span class="list-text">내가 등록한 모델</span></button>
-            </li>
-            <li class="list-item">
-              <button class="list-button" type="button">
-                <svg-icon class="svg-icon" name="bookmark"></svg-icon>
-                <span class="list-text">북마크한 모델</span></button>
-            </li>
-            <li class="list-item">
-              <button class="list-button" type="button">
-                <svg-icon class="svg-icon" name="write"></svg-icon>
-                <span class="list-text">최근 분석 데이터 모델</span></button>
-            </li>
-            <li class="list-item">
-              <button class="list-button" type="button">
-                <svg-icon class="svg-icon" name="time"></svg-icon>
-                <span class="list-text">최근 조회한 데이터 모델</span></button>
-            </li>
-          </ul>
-        </div>
-        <div class="side-wrapper">
-          <h4 class="hidden">나의 카테고리</h4>
+        <div class="side-content">
+          <div class="side-wrapper">
+            <h4 class="hidden">카테고리 목록</h4>
+            <div class="list border-none">
+              <ul class="list-list p-2">
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="object-list"></svg-icon>
+                    <span class="list-text">전체 데이터 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="data"></svg-icon>
+                    <span class="list-text">내가 등록한 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="bookmark"></svg-icon>
+                    <span class="list-text">북마크한 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="write"></svg-icon>
+                    <span class="list-text">최근 분석 데이터 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="time"></svg-icon>
+                    <span class="list-text">최근 조회한 데이터 모델</span></button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="side-wrapper">
+            <h4 class="hidden">나의 카테고리</h4>
+            <div class="list border-none">
+              <ul class="list-list p-2">
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="object-list"></svg-icon>
+                    <span class="list-text">전체 데이터 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="data"></svg-icon>
+                    <span class="list-text">내가 등록한 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="bookmark"></svg-icon>
+                    <span class="list-text">북마크한 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="write"></svg-icon>
+                    <span class="list-text">최근 분석 데이터 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="time"></svg-icon>
+                    <span class="list-text">최근 조회한 데이터 모델</span></button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="side-wrapper">
+            <h4 class="hidden">나의 카테고리</h4>
+            <div class="list border-none">
+              <ul class="list-list p-2">
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="object-list"></svg-icon>
+                    <span class="list-text">전체 데이터 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="data"></svg-icon>
+                    <span class="list-text">내가 등록한 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="bookmark"></svg-icon>
+                    <span class="list-text">북마크한 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="write"></svg-icon>
+                    <span class="list-text">최근 분석 데이터 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="time"></svg-icon>
+                    <span class="list-text">최근 조회한 데이터 모델</span></button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="side-wrapper">
+            <h4 class="hidden">나의 카테고리</h4>
+            <div class="list border-none">
+              <ul class="list-list p-2">
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="object-list"></svg-icon>
+                    <span class="list-text">전체 데이터 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="data"></svg-icon>
+                    <span class="list-text">내가 등록한 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="bookmark"></svg-icon>
+                    <span class="list-text">북마크한 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="write"></svg-icon>
+                    <span class="list-text">최근 분석 데이터 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="time"></svg-icon>
+                    <span class="list-text">최근 조회한 데이터 모델</span></button>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="side-wrapper">
+            <h4 class="hidden">나의 카테고리</h4>
+            <div class="list border-none">
+              <ul class="list-list p-2">
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="object-list"></svg-icon>
+                    <span class="list-text">전체 데이터 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="data"></svg-icon>
+                    <span class="list-text">내가 등록한 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="bookmark"></svg-icon>
+                    <span class="list-text">북마크한 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="write"></svg-icon>
+                    <span class="list-text">최근 분석 데이터 모델</span></button>
+                </li>
+                <li class="list-item">
+                  <button class="list-button" type="button">
+                    <svg-icon class="svg-icon" name="time"></svg-icon>
+                    <span class="list-text">최근 조회한 데이터 모델</span></button>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </section>

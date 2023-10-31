@@ -1,7 +1,14 @@
 .side-container {
+  @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
   width: 100%;
   height: 100%;
   background-color: $white;
+}
+
+.side-content {
+  flex-grow: 1;
+  width: 100%;
+  overflow-y: auto
 }
 
 .search-word {
