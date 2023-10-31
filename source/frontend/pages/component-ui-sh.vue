@@ -27,11 +27,15 @@
                     <baseContext class="w-[180px]"></baseContext>
                   </div>
                 </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
+                  <div class="h-group gap-12">
+                    <baseContext class="context-sm w-[180px]"></baseContext>
+                  </div>
+                </div>
               </div>
             </td>
           </tr>
-
-
           <tr>
             <th scope="row">Select</th>
           </tr>
@@ -47,7 +51,7 @@
                   <strong class="w-[150px] font-light text-[14px]">size: default</strong>
                   <baseSelect class=""></baseSelect>
                   <baseSelect class="is-disabled"></baseSelect>
-
+                  <baseSelectSearch></baseSelectSearch>
                 </div>
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px]">size: sm</strong>
@@ -55,10 +59,15 @@
                   <baseSelect class="select-sm is-disabled"></baseSelect>
                   <baseSelect class="select-sm is-open"></baseSelect>
                 </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px]">select-checkbox</strong>
+                  <baseSelectCheckbox class="select-lg is-open"></baseSelectCheckbox>
+                  <baseSelectCheckbox class="is-open"></baseSelectCheckbox>
+                  <baseSelectCheckbox class="select-sm is-open"></baseSelectCheckbox>
+                </div>
               </div>
             </td>
           </tr>
-
           <tr>
             <th scope="row">List</th>
           </tr>

@@ -11,7 +11,7 @@
 //-------------------------------------------
 // list 공통 스타일 정의
 //-------------------------------------------
-@mixin list-style($class-prefix, $size: null) {
+@mixin list-style($class-prefix, $size: null, $checkbox: null) {
   .#{$class-prefix}-list {
     background: $white;
   }
@@ -26,9 +26,19 @@
     &:active:not(:disabled) {
       background-color: $light-blue;
     }
+    .checkbox {
+      @if $size == 'lg' {
+        @extend .checkbox-lg;
+      } @else if $size == 'sm' {
+        @extend .checkbox-sm;
+      }
+      .checkbox-input:checked + .checkbox-label {
+        color: $primary;
+      }
+    }
   }
 
-  .#{$class-prefix}-button {
+  .#{$class-prefix}-button, .checkbox {
     @include flex-standard($horizontal: space-between);
     width: 100%;
 
@@ -68,7 +78,6 @@
     text-align: left;
     font-weight: 500;
   }
-
 }
 
 

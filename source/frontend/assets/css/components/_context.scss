@@ -1,22 +1,22 @@
-@mixin context-size($height, $min-width, $padding, $icon-size, $font-size) {
-  .context-list {
-    min-width: $min-width;
-
-    .context-button {
-      height: $height;
-      padding: $spacing-4 $padding;
-
-      .context-text {
-        font-size: $font-size;
-      }
-
-      .svg-icon {
-        width: $icon-size;
-        height: $icon-size;
-      }
-    }
-  }
-}
+//@mixin context-size($height, $min-width, $padding, $icon-size, $font-size) {
+//  .context-list {
+//    min-width: $min-width;
+//
+//    .context-button {
+//      height: $height;
+//      padding: $spacing-4 $padding;
+//
+//      .context-text {
+//        font-size: $font-size;
+//      }
+//
+//      .svg-icon {
+//        width: $icon-size;
+//        height: $icon-size;
+//      }
+//    }
+//  }
+//}
 
 .context {
   @include box-shadow('overlay');
@@ -48,6 +48,7 @@
 
   &.context-lg {
     @include list-style('context', 'lg');
+
     .context-list {
       min-width: 140px;
     }
@@ -55,5 +56,4 @@
   &.context-sm {
     @include list-style('context', 'sm');
   }
-
 }

@@ -79,14 +79,7 @@
     }
 
     .select-container {
-      &-button {
-        height: 40px;
-        padding: $spacing-4 $spacing-12;
-      }
-
-      &-text {
-        font-size: 14px;
-      }
+      @include list-style('select-container', 'lg');
     }
   }
 
@@ -112,15 +105,7 @@
     }
 
     .select-container {
-
-      &-button {
-        padding: $spacing-2 $spacing-4;
-        height: 24px;
-      }
-
-      &-text {
-        font-size: 12px;
-      }
+      @include list-style('select-container', 'sm');
     }
   }
 }
@@ -128,6 +113,27 @@
 .select-selector {
   position: relative;
   height: 32px;
+
+  &-input {
+    height: 100%;
+    .text-input {
+      padding: $spacing-4 $spacing-32 $spacing-4 $spacing-12;
+
+    }
+  }
+
+  &-close-button {
+    position: absolute;
+    top: 0;
+    right: 8px;
+    transform: none;
+
+    &:hover:not(:disabled) {
+      .svg-icon {
+        fill: $icon-gray;
+      }
+    }
+  }
 
 
   &-button {
