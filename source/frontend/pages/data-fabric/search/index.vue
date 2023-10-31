@@ -199,7 +199,7 @@
 </template>
 <script lang="ts" setup>
 definePageMeta({
-  layout: "default-tab-layout"
+  layout: "default-layout"
 });
 
 const state = reactive({
