@@ -1,10 +1,6 @@
 <template>
   <div class="list">
-    <div class="list-head">
-      <div class="list-head-title">
-        <slot class="list-head-title" options="title"></slot>
-      </div>
-    </div>
+    <slot name="head"></slot>
     <div class="list-body">
       <slot name="options">
         <div class="list-options">

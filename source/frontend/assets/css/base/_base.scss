@@ -1,5 +1,5 @@
 #wrap {
-  min-width: 1920px;
+  min-width: 1280px;
   display: flex;
   flex-direction: column;
 
@@ -12,13 +12,8 @@
     }
   }
 
-  &.is-have-tab {
+  &.is-split-full {
     height: 100%;
-
-    #header {
-      height: auto;
-      position: static;
-    }
 
     #main {
       height: calc(100% - 96px);

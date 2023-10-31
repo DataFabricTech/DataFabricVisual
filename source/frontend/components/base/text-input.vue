@@ -1,17 +1,23 @@
 <template>
-  <input class="text-input" :id="props.id" :type="props.type" :disabled="props.disabled" :placeholder="props.placeholder" :value="modelValue"
-         @input="$emit('update:modelValue', $event.target.value)">
+  <input
+    class="text-input"
+    :id="props.id"
+    :type="props.type"
+    :value="modelValue"
+    :disabled="props.disabled"
+    :placeholder="props.placeholder"
+    @input="$emit('update:modelValue', $event.target.value)"
+  >
 </template>
 
 <script setup lang="ts">
-defineEmits(['update:modelValue'])
-
+import { defineProps } from "vue";
 const props = defineProps({
   id: { type: String, default: null},
   type: { type: String, default: "text" },
+  modelValue: { type: String, default: null },
   placeholder: { type: String, default: null },
   disabled: { type: Boolean, default: false },
-  modelValue: {type: String, default:null},
 });
 
 </script>

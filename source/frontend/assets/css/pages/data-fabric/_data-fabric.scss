@@ -19,13 +19,16 @@
   }
 
   &-button {
+    @include button-theme($bg-color: transparent, $hover-bg-color: transparent, $active-bg-color: transparent, $font-color: $font-black, $hover-font-color: $primary, $active-font-color: $active-primary);
     padding: 0 $spacing-12;
     font-weight: 500;
-
-    &.is-selected {
-      color: $primary;
-    }
   }
+}
+
+.page-group {
+  @include flex-standard($direction: column);
+  gap: $spacing-24;
+  width: 100%;
 }
 
 .page-subject {
