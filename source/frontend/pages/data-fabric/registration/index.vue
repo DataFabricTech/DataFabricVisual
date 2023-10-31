@@ -111,7 +111,7 @@
         </baseButton>
         <div class="h-group ml-auto">
           <baseButton class="button-primary button-lg">
-            <span class="button-text">다음</span>
+            <span class="button-text">저장</span>
           </baseButton>
         </div>
       </template>
@@ -574,7 +574,7 @@
                   <tr>
                     <td>Port</td>
                     <td>
-                      <baseTextInput></baseTextInput>
+                      <baseTextInput placeholder="port를 입력하세요"></baseTextInput>
                     </td>
                   </tr>
                   <tr>
