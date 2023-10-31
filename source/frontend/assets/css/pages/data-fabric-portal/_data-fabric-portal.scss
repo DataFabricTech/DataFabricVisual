@@ -318,29 +318,4 @@
   }
 }
 
-.category {
-  &-article {
-    @include flex-standard($direction: column);
-    gap: $spacing-12;
-    width: 100%;
-  }
-
-  &-container {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: $spacing-24;
-    background: $light-blue-02;
-    gap: $spacing-32;
-  }
-
-  &-top-bar {
-    @include flex-standard($horizontal: space-between);
-    width: 100%;
-  }
-
-  &-name {
-    justify-content: flex-start;
-  }
-}
 
