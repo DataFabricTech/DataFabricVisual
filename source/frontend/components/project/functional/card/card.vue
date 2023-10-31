@@ -26,9 +26,12 @@
       </div>
       <div class="v-group w-full">
         <a href="#" class="card-link" title="이동" @click="$emit('click', props.model.id)">{{ props.model.name }}</a>
+        <baseTextInput placeholder="연결정보 이름 영역입니다." class="hidden"></baseTextInput>
         <p class="card-detail">{{ props.model.description }}</p>
+        <baseTextInput placeholder="연결정보 설명 영역입니다." class="hidden"></baseTextInput>
       </div>
       <div class="h-group gap-[16px]">
+        <baseTextInput placeholder="태그 영역입니다." class="hidden"></baseTextInput>
         <BaseTag v-for="item in props.model.tags">#{{ item }}</BaseTag>
       </div>
       <div class="h-group justify-between w-full">
