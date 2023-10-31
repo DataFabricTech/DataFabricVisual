@@ -6,6 +6,14 @@ export default defineNuxtConfig({
   ssr: false,
   pages: true,
   modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@nuxtjs/svg-sprite"],
+  components: [
+    {
+      path: '~/components/project',
+    },
+    {
+      path: '~/components/'
+    },
+  ],
 
   // runtime에서 설정된 정보를 조회 가능
   runtimeConfig: {
