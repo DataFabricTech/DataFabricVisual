@@ -32,7 +32,8 @@
 }
 
 .page-subject {
-  @include flex-standard;
+  @include flex-standard($horizontal: space-between);
+  width: 100%;
   padding: $spacing-12 $spacing-24;
   border-bottom: 1px solid $border-gray;
   font-size: 20px;
@@ -42,7 +43,6 @@
   color: $font-black;
   font-size: 20px;
   font-weight: 500;
-  margin-right: auto;
 }
 
 .page-subtitle {
@@ -56,6 +56,7 @@
   @include flex-standard($direction: column);
   padding: $spacing-24;
   gap: $spacing-16;
+  width: 100%;
 }
 
 .data-search {
