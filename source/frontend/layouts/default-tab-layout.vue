@@ -1,5 +1,5 @@
 <template>
-  <div id="wrap" class="is-have-tab">
+  <div id="wrap" class="is-split-full">
     <header id="header">
       <TheHeader></TheHeader>
       <TheTab></TheTab>
