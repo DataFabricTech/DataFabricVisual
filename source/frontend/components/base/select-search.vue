@@ -4,7 +4,8 @@
     <div class="select-selector" role="combobox" aria-expanded="false" aria-haspopup="true">
 <!-- TODO:[개발] 1. default는 select-selector-button 스타일 display:block / select-selector-input, select-selector-close-button 스타일 display:none;
                 2.text-input 전환시 select-selector-button 스타일 display:none; 위 두개는 display:block처리
-                3. select-lg 일 경우 baseTextInput도 text-input-lg / select-sm 일 경우 text-input-sm 적용 필요-->
+                3. select-lg 일 경우 baseTextInput도 text-input-lg / select-sm 일 경우 text-input-sm 적용 필요
+                4.select-lg 일 경우 select-selector-close-button에 button-lg 클래스 추가 / sm도 동일-->
       <button class="select-selector-button" style="display: none;" type="button" title="열기">
         <slot name="title">
           <span class="select-selector-title">선택하세요</span>
