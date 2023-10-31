@@ -77,16 +77,25 @@
         }
       }
     }
+    .select-selector-input {
+      .text-input {
+        @extend .text-input-lg;
+        padding-right: $spacing-36;
+      }
+    }
+
+    .select-selector-close-button {
+      width: 24px;
+      height: 24px;
+
+      .svg-icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
 
     .select-container {
-      &-button {
-        height: 40px;
-        padding: $spacing-4 $spacing-12;
-      }
-
-      &-text {
-        font-size: 14px;
-      }
+      @include list-style('select-container', 'lg');
     }
   }
 
@@ -111,16 +120,26 @@
       }
     }
 
+    .select-selector-input {
+      .text-input {
+        @extend .text-input-sm;
+        padding-left: $spacing-8;
+        padding-right: $spacing-24;
+      }
+    }
+
+    .select-selector-close-button {
+      width: 16px;
+      height: 16px;
+
+      .svg-icon{
+        width: 16px;
+        height: 16px;
+      }
+    }
+
     .select-container {
-
-      &-button {
-        padding: $spacing-2 $spacing-4;
-        height: 24px;
-      }
-
-      &-text {
-        font-size: 12px;
-      }
+      @include list-style('select-container', 'sm');
     }
   }
 }
@@ -128,6 +147,36 @@
 .select-selector {
   position: relative;
   height: 32px;
+
+  &-input {
+    height: 100%;
+
+    .text-input {
+      padding: $spacing-4 $spacing-32 $spacing-4 $spacing-12;
+    }
+  }
+
+  &-close-button {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    padding:0;
+
+    .svg-icon {
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover:not(:disabled) {
+      background: transparent;
+
+      .svg-icon {
+        fill: $icon-gray;
+      }
+    }
+  }
 
 
   &-button {
@@ -194,35 +243,21 @@
   overflow: auto;
 
   &-list {
-    background-color: $white;
+    @include list-style('select-container');
   }
 
-  &-item {
-    @include flex-standard;
-    &:hover:not(:disabled) {
-      background-color: $light-blue;
-    }
-    &:active:not(:disabled) {
-      background-color: $light-blue;
-
-      .select-container-text {
-        color: $tertiary;
-      }
+  &-item:active:not(:disabled) {
+    .select-container-text {
+      color: $tertiary;
     }
   }
 
   &-text {
-    @include ellipsis;
-    font-size: 14px;
-    font-weight: 500;
     color: $font-black;
   }
 
   &-button {
-    @include flex-standard($horizontal: flex-start);
     flex: 1;
-    height: 32px;
-    padding: $spacing-4 $spacing-8;
   }
 
   .is-open {

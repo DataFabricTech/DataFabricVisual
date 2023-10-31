@@ -9,7 +9,7 @@
       </li>
       <li class="context-item">
         <button class="context-button" type="button">
-          <span class="context-text">이름이 길어지면 말줄임</span>
+          <span class="context-text">이름이 길어지면 말줄임 말줄임 말줄임</span>
         </button>
       </li>
       <li class="context-item">
