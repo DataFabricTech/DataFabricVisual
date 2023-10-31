@@ -129,7 +129,7 @@
         </div>
         <div class="v-group gap-9 p-6 w-full">
           <div class="page-group">
-            <h4 class="page-subtitle" id="defult-info">기본 정보</h4>
+            <h4 class="page-subtitle" id="default-info">기본 정보</h4>
             <div class="table-col w-full">
               <table class="w-full">
                 <caption class="caption-out">
