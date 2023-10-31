@@ -77,16 +77,18 @@
         }
       }
     }
+
     .select-selector-input {
       .text-input {
-        @extend .text-input-lg;
         padding-right: $spacing-36;
+        font-size: 16px;
       }
     }
 
     .select-selector-close-button {
       width: 24px;
       height: 24px;
+      top: 8px;
 
       .svg-icon {
         width: 24px;
@@ -122,17 +124,18 @@
 
     .select-selector-input {
       .text-input {
-        @extend .text-input-sm;
         padding-left: $spacing-8;
         padding-right: $spacing-24;
+        font-size: 12px;
       }
     }
 
     .select-selector-close-button {
       width: 16px;
       height: 16px;
+      top: 5px;
 
-      .svg-icon{
+      .svg-icon {
         width: 16px;
         height: 16px;
       }
@@ -152,6 +155,7 @@
     height: 100%;
 
     .text-input {
+      height: 100%;
       padding: $spacing-4 $spacing-32 $spacing-4 $spacing-12;
     }
   }
@@ -162,12 +166,7 @@
     right: 8px;
     width: 20px;
     height: 20px;
-    padding:0;
-
-    .svg-icon {
-      width: 20px;
-      height: 20px;
-    }
+    padding: 0;
 
     &:hover:not(:disabled) {
       background: transparent;
