@@ -77,6 +77,22 @@
         }
       }
     }
+    .select-selector-input {
+      .text-input {
+        @extend .text-input-lg;
+        padding-right: $spacing-36;
+      }
+    }
+
+    .select-selector-close-button {
+      width: 24px;
+      height: 24px;
+
+      .svg-icon {
+        width: 24px;
+        height: 24px;
+      }
+    }
 
     .select-container {
       @include list-style('select-container', 'lg');
@@ -104,6 +120,24 @@
       }
     }
 
+    .select-selector-input {
+      .text-input {
+        @extend .text-input-sm;
+        padding-left: $spacing-8;
+        padding-right: $spacing-24;
+      }
+    }
+
+    .select-selector-close-button {
+      width: 16px;
+      height: 16px;
+
+      .svg-icon{
+        width: 16px;
+        height: 16px;
+      }
+    }
+
     .select-container {
       @include list-style('select-container', 'sm');
     }
@@ -116,19 +150,28 @@
 
   &-input {
     height: 100%;
+
     .text-input {
       padding: $spacing-4 $spacing-32 $spacing-4 $spacing-12;
-
     }
   }
 
   &-close-button {
     position: absolute;
-    top: 0;
+    top: 6px;
     right: 8px;
-    transform: none;
+    width: 20px;
+    height: 20px;
+    padding:0;
+
+    .svg-icon {
+      width: 20px;
+      height: 20px;
+    }
 
     &:hover:not(:disabled) {
+      background: transparent;
+
       .svg-icon {
         fill: $icon-gray;
       }
