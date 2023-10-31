@@ -61,6 +61,7 @@
               <h4 class="category-name" id="data-model">데이터모델 (6)</h4>
             </div>
             <ul class="card-list">
+              <!--              선택된 데이터모델 is-selected 클래스 추가-->
               <li class="card-item is-selected">
                 <Card class="card-primary">
                   <template v-slot:img>
@@ -143,6 +144,7 @@
             </div>
           </article>
         </div>
+        <!--        미리보기 - 아래 컨텐츠가 Toggle-->
         <div class="preview">
           <header class="preview-header">
             <h5 class="preview-title">
