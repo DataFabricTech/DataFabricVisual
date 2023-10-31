@@ -93,11 +93,7 @@
               </div>
               <ul class="card-list">
                 <li class="card-item" v-for="index in 3">
-                  <Card class="card-primary">
-                    <template v-slot:img>
-                      <svg-icon class="svg-icon" name="data"></svg-icon>
-                    </template>
-                  </Card>
+                  <Card></Card>
                 </li>
               </ul>
               <BasePagination></BasePagination>
@@ -111,11 +107,7 @@
               </div>
               <ul class="card-list">
                 <li class="card-item" v-for="index in 3">
-                  <Card class="card-primary">
-                    <template v-slot:img>
-                      <svg-icon class="svg-icon" name="data"></svg-icon>
-                    </template>
-                  </Card>
+                  <Card></Card>
                 </li>
               </ul>
               <BasePagination></BasePagination>
@@ -146,11 +138,7 @@
             </div>
             <ul class="card-list">
               <li class="card-item" v-for="index in 3">
-                <Card class="card-primary">
-                  <template v-slot:img>
-                    <svg-icon class="svg-icon" name="data"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
             </ul>
             <BasePagination></BasePagination>

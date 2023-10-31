@@ -63,74 +63,34 @@
             <ul class="card-list">
               <!--              선택된 데이터모델 is-selected 클래스 추가-->
               <li class="card-item is-selected">
-                <Card class="card-primary">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-negative">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-primary">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-negative">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-primary">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-negative">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-primary">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-negative">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-primary">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-negative">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
             </ul>
             <BasePagination></BasePagination>
