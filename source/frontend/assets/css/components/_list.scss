@@ -4,71 +4,74 @@
   border: 1px solid $border-gray;
   color: $font-gray-01;
 
-  &-list {
-    width: 100%;
-  }
+  .list {
+    &-list {
+      width: 100%;
+    }
 
-  &-head {
-    width: 100%;
-    padding: $spacing-8;
-    background-color: $light-blue;
+    &-head {
+      width: 100%;
+      padding: $spacing-8;
+      background-color: $light-blue;
 
-    &-title {
-      @include ellipsis;
-      font-weight: 500;
+      &-title {
+        @include ellipsis;
+        font-weight: 500;
+        color: $font-gray-01;
+        font-size: 14px;
+      }
+    }
+
+    &-body {
+      width: 100%;
+    }
+
+    &-options {
+      @include flex-standard;
+      height: 40px;
+      border-bottom: 1px solid $border-gray
+    }
+
+    &-options-count {
+      @include flex-standard;
+      flex-shrink: 0;
+      margin-left: auto;
+      padding-right: $spacing-8;
       color: $font-gray-01;
       font-size: 14px;
     }
-  }
 
-  &-body {
-    width: 100%;
-  }
-
-  &-options {
-    @include flex-standard;
-    height: 40px;
-    border-bottom: 1px solid $border-gray
-  }
-
-  &-options-count {
-    @include flex-standard;
-    flex-shrink: 0;
-    margin-left: auto;
-    padding-right: $spacing-8;
-    color: $font-gray-01;
-    font-size: 14px;
-  }
-
-  &-options-count-selected {
-    margin-right: $spacing-4;
-  }
-
-  &-options-count-all {
-    margin-left: $spacing-4;
-  }
-
-  &-item {
-    position: relative;
-    border-bottom: 1px solid $disabled;
-
-    &:last-child {
-      border-bottom: 0;
+    &-options-count-selected {
+      margin-right: $spacing-4;
     }
-  }
 
-  &-button {
-    gap: $spacing-8;
-
-    .svg-icon {
-      flex-shrink: 0;
-      width: 24px;
-      height: 24px;
+    &-options-count-all {
+      margin-left: $spacing-4;
     }
-  }
 
-  &-text {
-    color: $font-black;
+    &-item {
+      position: relative;
+      border-bottom: 1px solid $disabled;
+
+      &:last-child {
+        border-bottom: 0;
+      }
+    }
+
+    &-button {
+      justify-content: flex-start;
+      gap: $spacing-8;
+
+      .svg-icon {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    &-text {
+      color: $font-black;
+    }
   }
 
   .is-disabled {
