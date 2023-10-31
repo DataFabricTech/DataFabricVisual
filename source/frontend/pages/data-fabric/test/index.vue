@@ -8,8 +8,8 @@
   </div>
 </template>
 <script lang="ts" setup>
-import MainSearch from "../../components/project/data-fabric/main/main-search.vue";
-import MainCard from "../../components/project/data-fabric/main/main-card.vue";
+import MainSearch from "../../../components/project/data-fabric/main/main-search.vue";
+import MainCard from "../../../components/project/data-fabric/main/main-card.vue";
 definePageMeta({
   layout: "default-full-layout"
 });
