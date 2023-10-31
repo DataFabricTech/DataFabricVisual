@@ -43,33 +43,36 @@
                     <svg-icon name="user" class="svg-icon" />
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton class="button-negative button-lg">
+                  <baseButton class="button-negative button-lg button-icon" title="button">
+                    <svg-icon name="user" class="svg-icon" />
+                    <span class="hidden">BUTTON</span>
+                  </baseButton>
+                  <baseButton class="button-normal button-lg button-icon" title="button">
+                    <svg-icon name="user" class="svg-icon" />
+                    <span class="hidden">BUTTON</span>
+                  </baseButton>
+                  <baseButton class="button-ghost button-lg button-icon" title="button">
+                    <svg-icon name="user" class="svg-icon" />
+                    <span class="hidden">BUTTON</span>
+                  </baseButton>
+                  <baseButton class="button-danger button-lg button-icon" title="button">
+                    <svg-icon name="user" class="svg-icon" />
+                    <span class="hidden">BUTTON</span>
+                  </baseButton>
+                  <baseButton class="button-link button-lg">
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton class="button-normal button-lg">
+                  <baseButton class="button-link-primary button-lg">
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton class="button-ghost button-lg">
+                  <baseButton class="button-link-negative button-lg">
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton class="button-danger button-lg">
+                  <baseButton class="button-link-tertiary button-lg">
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton title="사용자 관리" class="button-icon button-link button-lg">
-                    <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">사용자 관리</span>
-                  </baseButton>
-                  <baseButton title="사용자 관리" class="button-icon button-link-primary button-lg">
-                    <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">사용자 관리</span>
-                  </baseButton>
-                  <baseButton title="사용자 관리" class="button-icon button-link-negative button-lg">
-                    <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">사용자 관리</span>
-                  </baseButton>
-                  <baseButton title="사용자 관리" class="button-icon button-link-primary button-lg" disabled>
-                    <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">Disabled</span>
+                  <baseButton class="button-link-tertiary button-lg" disabled>
+                    <span class="button-text">Button</span>
                   </baseButton>
                 </div>
                 <div class="h-group">
@@ -86,76 +89,82 @@
                     <svg-icon name="user" class="svg-icon" />
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton class="button-negative">
+                  <baseButton class="button-negative button-icon" title="button">
+                    <svg-icon name="user" class="svg-icon" />
+                    <span class="hidden">BUTTON</span>
+                  </baseButton>
+                  <baseButton class="button-normal button-icon" title="button">
+                    <svg-icon name="user" class="svg-icon" />
+                    <span class="hidden">BUTTON</span>
+                  </baseButton>
+                  <baseButton class="button-ghost button-icon" title="button">
+                    <svg-icon name="user" class="svg-icon" />
+                    <span class="hidden">BUTTON</span>
+                  </baseButton>
+                  <baseButton class="button-danger button-icon" title="button">
+                    <svg-icon name="user" class="svg-icon" />
+                    <span class="hidden">BUTTON</span>
+                  </baseButton>
+                  <baseButton class="button-link">
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton class="button-normal">
+                  <baseButton class="button-link-primary">
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton class="button-ghost">
+                  <baseButton class="button-link-negative">
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton class="button-danger">
+                  <baseButton class="button-link-tertiary">
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton title="사용자 관리" class="button-icon button-link">
-                    <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">사용자 관리</span>
-                  </baseButton>
-                  <baseButton title="사용자 관리" class="button-icon button-link-primary">
-                    <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">사용자 관리</span>
-                  </baseButton>
-                  <baseButton title="사용자 관리" class="button-icon button-link-negative">
-                    <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">사용자 관리</span>
-                  </baseButton>
-                  <baseButton title="사용자 관리" class="button-primary" disabled>
-                    <svg-icon name="user" class="svg-icon" />
-                    <span class="button-text">Disabled</span>
+                  <baseButton class="button-link-tertiary" disabled>
+                    <span class="button-text">Button</span>
                   </baseButton>
                 </div>
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
-                  <baseButton title="사용자 관리" class="button-primary button-sm">
+                  <baseButton title="button-sm 사용자 관리" class="button-primary">
                     <svg-icon name="user" class="svg-icon" />
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton title="사용자 관리" class="button-secondary button-sm">
+                  <baseButton title="button-sm 사용자 관리" class="button-secondary">
                     <svg-icon name="user" class="svg-icon" />
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton title="사용자 관리" class="button-tertiary button-sm">
+                  <baseButton title="button-sm 사용자 관리" class="button-tertiary">
                     <svg-icon name="user" class="svg-icon" />
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton class="button-negative button-sm">
+                  <baseButton class="button-sm button-negative button-icon" title="button">
+                    <svg-icon name="user" class="svg-icon" />
+                    <span class="hidden">BUTTON</span>
+                  </baseButton>
+                  <baseButton class="button-sm button-normal button-icon" title="button">
+                    <svg-icon name="user" class="svg-icon" />
+                    <span class="hidden">BUTTON</span>
+                  </baseButton>
+                  <baseButton class="button-sm button-ghost button-icon" title="button">
+                    <svg-icon name="user" class="svg-icon" />
+                    <span class="hidden">BUTTON</span>
+                  </baseButton>
+                  <baseButton class="button-sm button-danger button-icon" title="button">
+                    <svg-icon name="user" class="svg-icon" />
+                    <span class="hidden">BUTTON</span>
+                  </baseButton>
+                  <baseButton class="button-sm button-link">
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton class="button-normal button-sm">
+                  <baseButton class="button-sm button-link-primary">
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton class="button-ghost button-sm">
+                  <baseButton class="button-sm button-link-negative">
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton class="button-danger button-sm">
+                  <baseButton class="button-sm button-link-tertiary">
                     <span class="button-text">Button</span>
                   </baseButton>
-                  <baseButton title="사용자 관리" class="button-icon button-link button-sm">
-                    <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">사용자 관리</span>
-                  </baseButton>
-                  <baseButton title="사용자 관리" class="button-icon button-link-primary button-sm">
-                    <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">사용자 관리</span>
-                  </baseButton>
-                  <baseButton title="사용자 관리" class="button-icon button-link-negative button-sm">
-                    <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">사용자 관리</span>
-                  </baseButton>
-                  <baseButton title="사용자 관리" class="button-danger button-sm" disabled>
-                    <svg-icon name="user" class="svg-icon" />
-                    <span class="button-text">Disabled</span>
+                  <baseButton class="button-sm button-link-tertiary" disabled>
+                    <span class="button-text">Button</span>
                   </baseButton>
                 </div>
               </div>
@@ -213,6 +222,42 @@
                   <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
                   <div class="h-group gap-12">
                     <baseContext class="w-[180px]"></baseContext>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">date time picker</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="v-group gap-5">
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: time picker</strong>
+                  <div class="h-group gap-12">
+                    <DatePicker
+                      v-model:modelValue="args.date"
+                      :type="args.dateType">
+                    </DatePicker>
+                  </div>
+                </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: date picker</strong>
+                  <div class="h-group gap-12">
+                    <DatePicker
+                      v-model:modelValue="args.date"
+                      :type="args.date">
+                    </DatePicker>
+                  </div>
+                </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: date time range picker</strong>
+                  <div class="h-group gap-12">
+                    <DatePicker
+                      v-model:modelValue="args.dateRange"
+                      :type="args.rangeType">
+                    </DatePicker>
                   </div>
                 </div>
               </div>
@@ -1055,6 +1100,7 @@ import { ref } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 import { sample } from "../composables/sample";
 import { AgGridVue } from "ag-grid-vue3";
+import DatePicker from "../components/common/date-picker/date-picker.vue";
 
 const sampleData = sample();
 const show = ref(false);
@@ -1077,6 +1123,18 @@ const rowData = [
   { make: "Ford", model: "Mondeo", price: 32000 },
   { make: "Porsche", model: "Boxster", price: 72000 }
 ];
+
+const meta: Meta<typeof DatePicker> = {
+  component: DatePicker,
+};
+
+let args = {
+  date: "2023-11-22",
+  dateRange: ["2023-11-10", "2023-11-22"],
+  // storybook 에 object 형식으로 뜸
+  dateType: "time",
+  rangeType: "datetime"
+};
 
 function onClickOpen() {
   show.value = !show.value;
