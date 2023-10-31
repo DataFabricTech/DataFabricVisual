@@ -325,11 +325,15 @@
                   데이터 자동 추가 설정
                 </template>
               </baseSwitch>
-              <div class="table-col w-full">
-                <table class="w-full">
+              <div class="w-full table-col">
+                <table class="w-full table-nesting">
                   <caption class="caption-out">
                     Description Column
                   </caption>
+                  <colgroup>
+                    <col width="129px">
+                    <col>
+                  </colgroup>
                   <thead>
                   <tr>
                     <!-- 세로 => col, 가로 => row -->
@@ -338,51 +342,132 @@
                   </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>Datetime</td>
-                    <td>
-                      <DatePicker
-                        v-model:modelValue="args.dateRange"
-                        :type="args.rangeType">
-                      </DatePicker>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Data Name</td>
-                    <td>
-                      <baseTextInput></baseTextInput>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Format / Size</td>
-                    <td>
-                      <div class="v-group">
-                        <div class="h-group">
-                          <baseCheckbox id="lg-01">
-                            table
-                          </baseCheckbox>
-                          <baseTextInput class="w-[100px]"></baseTextInput>
-                          <span class="color-font-gray-01">row</span>
+                    <tr>
+                      <td colspan="2">
+                        <div class="h-group w-full gap-2">
+                          <table class="w-full">
+                            <colgroup>
+                              <col width="120px">
+                              <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                              <td>Datetime</td>
+                              <td>
+                                <div class="h-group">
+                                  <baseSelect></baseSelect>
+                                  <DatePicker
+                                    v-model:modelValue="args.dateRange"
+                                    :type="args.rangeType">
+                                  </DatePicker>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Data Name</td>
+                              <td>
+                                <baseTextInput placeholder="정규 표현식을 입력하세요(50자이내)"></baseTextInput>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Type / Size</td>
+                              <td>
+                                <div class="v-group">
+                                  <div class="h-group">
+                                    <baseCheckbox id="lg-01">
+                                      table
+                                    </baseCheckbox>
+                                    <baseTextInput class="w-[100px]"></baseTextInput>
+                                    <span>row</span>
+                                  </div>
+                                  <div class="h-group">
+                                    <baseCheckbox id="lg-02">
+                                      column
+                                    </baseCheckbox>
+                                    <baseTextInput class="w-[100px]"></baseTextInput>
+                                    <span>length</span>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                            </tbody>
+                          </table>
+                          <div class="h-group">
+                            <baseButton class="button-icon button-danger" disabled>
+                              <svg-icon name="minus" class="svg-icon" />
+                              <span class="hidden">삭제</span>
+                            </baseButton>
+                            <baseButton class="button-icon button-ghost">
+                              <svg-icon name="plus" class="svg-icon" />
+                              <span class="hidden">추가</span>
+                            </baseButton>
+                          </div>
                         </div>
-                        <div class="h-group">
-                          <baseCheckbox id="lg-02">
-                            column
-                          </baseCheckbox>
-                          <baseTextInput class="w-[100px]"></baseTextInput>
-                          <span class="color-font-gray-01">length</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td colspan="2">
+                        <div class="h-group w-full gap-2">
+                          <table class="w-full">
+                            <colgroup>
+                              <col width="120px">
+                              <col>
+                            </colgroup>
+                            <tbody>
+                            <tr>
+                              <td>Datetime</td>
+                              <td>
+                                <div class="h-group">
+                                  <baseSelect></baseSelect>
+                                  <DatePicker
+                                    v-model:modelValue="args.dateRange"
+                                    :type="args.rangeType">
+                                  </DatePicker>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Data Name</td>
+                              <td>
+                                <baseTextInput placeholder="정규 표현식을 입력하세요(50자이내)"></baseTextInput>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>Type / Size</td>
+                              <td>
+                                <div class="v-group">
+                                  <div class="h-group">
+                                    <baseCheckbox id="lg-01">
+                                      table
+                                    </baseCheckbox>
+                                    <baseTextInput class="w-[100px]"></baseTextInput>
+                                    <span>row</span>
+                                  </div>
+                                  <div class="h-group">
+                                    <baseCheckbox id="lg-02">
+                                      column
+                                    </baseCheckbox>
+                                    <baseTextInput class="w-[100px]"></baseTextInput>
+                                    <span>length</span>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                            </tbody>
+                          </table>
+                          <div class="h-group">
+                            <baseButton class="button-icon button-danger">
+                              <svg-icon name="minus" class="svg-icon" />
+                              <span class="hidden">삭제</span>
+                            </baseButton>
+                            <baseButton class="button-icon button-ghost">
+                              <svg-icon name="plus" class="svg-icon" />
+                              <span class="hidden">추가</span>
+                            </baseButton>
+                          </div>
                         </div>
-                      </div>
-
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="2">
-                      <baseButton class="button-ghost button-icon m-auto">
-                        <svg-icon name="plus" class="svg-icon" />
-                        <span class="hidden">추가</span>
-                      </baseButton>
-                    </td>
-                  </tr>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -450,6 +535,76 @@
                     <td>
                       <DatePicker>
                       </DatePicker>
+                    </td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="v-group w-full gap-2">
+              <baseSwitch>
+                <template v-slot:switch-text>
+                  모니터링 설정
+                </template>
+              </baseSwitch>
+              <div class="table-col w-full">
+                <table class="w-full">
+                  <caption class="caption-out">
+                    Description Column
+                  </caption>
+                  <thead>
+                  <tr>
+                    <!-- 세로 => col, 가로 => row -->
+                    <th scope="col">항목</th>
+                    <th scope="col">내용</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <td>Protocol</td>
+                    <td>
+                      <div class="h-group">
+                        <baseRadio id="radio-lg-03">TCP</baseRadio>
+                        <baseRadio id="radio-lg-04">UDP</baseRadio>
+                        <baseRadio id="radio-lg-05">ICMP</baseRadio>
+                        <baseRadio id="radio-lg-06">SQL</baseRadio>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Port</td>
+                    <td>
+                      <baseTextInput></baseTextInput>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Timeout</td>
+                    <td>
+                      <div class="h-group">
+                        <baseRadio id="radio-lg-01"></baseRadio>
+                        <baseTextInput class="w-[70px]"></baseTextInput>
+                        <span>초(sec)</span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>정상 임계 값</td>
+                    <td>
+                      <div class="h-group">
+                        <baseRadio id="radio-lg-01"></baseRadio>
+                        <baseTextInput class="w-[70px]"></baseTextInput>
+                        <span>회(sec)</span>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>비정상 임계 값</td>
+                    <td>
+                      <div class="h-group">
+                        <baseRadio id="radio-lg-01"></baseRadio>
+                        <baseTextInput class="w-[70px]"></baseTextInput>
+                        <span>회(sec)</span>
+                      </div>
                     </td>
                   </tr>
                   </tbody>

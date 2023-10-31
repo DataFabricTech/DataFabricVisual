@@ -219,6 +219,42 @@
             </td>
           </tr>
           <tr>
+            <th scope="row">date time picker</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="v-group gap-5">
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: time picker</strong>
+                  <div class="h-group gap-12">
+                    <DatePicker
+                      v-model:modelValue="args.date"
+                      :type="args.dateType">
+                    </DatePicker>
+                  </div>
+                </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: date picker</strong>
+                  <div class="h-group gap-12">
+                    <DatePicker
+                      v-model:modelValue="args.date"
+                      :type="args.date">
+                    </DatePicker>
+                  </div>
+                </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: date time range picker</strong>
+                  <div class="h-group gap-12">
+                    <DatePicker
+                      v-model:modelValue="args.dateRange"
+                      :type="args.rangeType">
+                    </DatePicker>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
             <th scope="row">form</th>
           </tr>
           <tr>
@@ -1075,6 +1111,7 @@ import { ref } from "@vue/reactivity";
 import { useRouter } from "vue-router";
 import { sample } from "../composables/sample";
 import { AgGridVue } from "ag-grid-vue3";
+import DatePicker from "../components/common/date-picker/date-picker.vue";
 
 const sampleData = sample();
 const show = ref(false);
@@ -1097,6 +1134,18 @@ const rowData = [
   { make: "Ford", model: "Mondeo", price: 32000 },
   { make: "Porsche", model: "Boxster", price: 72000 }
 ];
+
+const meta: Meta<typeof DatePicker> = {
+  component: DatePicker,
+};
+
+let args = {
+  date: "2023-11-22",
+  dateRange: ["2023-11-10", "2023-11-22"],
+  // storybook 에 object 형식으로 뜸
+  dateType: "time",
+  rangeType: "datetime"
+};
 
 function onClickOpen() {
   show.value = !show.value;
