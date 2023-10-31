@@ -6,7 +6,7 @@
       <nav>
         <ul class="gnb">
           <li class="gnb-item">
-            <button class="gnb-button is-selected" type="button">
+            <button class="gnb-button" type="button">
               데이터 모델 Browse
             </button>
           </li>
