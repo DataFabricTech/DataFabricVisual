@@ -51,7 +51,8 @@ $color-themes: (
         "primary": #{$primary},
         "secondary": #{$secondary},
         "tertiary": #{$tertiary},
-        "negative": #{$negative}
+        "negative": #{$negative},
+        "font-gray-01": #{$font-gray-01}
 );
 
 @each $attr, $theme in $color-themes {
