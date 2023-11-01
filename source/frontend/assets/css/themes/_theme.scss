@@ -1,27 +1,63 @@
-$colors: (
-  "black": #{$black},
-  "white": #{$white},
-  "gray": #{$gray},
-  "marker-yellow": #{$marker-yellow},
-  "marker-purple": #{$marker-purple},
-  "marker-cyan": #{$marker-cyan},
-  "marker-red": #{$marker-red},
-  "marker-gray": #{$marker-gray},
+// badge
+$themes: (
+        "black": #{$black},
+        "white": #{$white},
+        "gray": #{$gray},
+        "marker-yellow": #{$marker-yellow},
+        "marker-purple": #{$marker-purple},
+        "marker-cyan": #{$marker-cyan},
+        "marker-red": #{$marker-red},
+        "marker-gray": #{$marker-gray},
 );
 
-@each $attr, $color in $colors {
+@each $attr, $theme in $themes {
   .bg-#{$attr} {
-    background-color: $color;
+    background-color: $theme;
 
-    @if $color == #{$white} {
+    @if $theme == #{$white} {
       color: $black;
-    }
-    @else if $color == #{$marker-cyan} {
-      color : #007D79;
-    }
-    @else {
+    } @else if $theme == #{$marker-cyan} {
+      color: #007D79;
+    } @else {
       color: $white;
     }
+  }
+}
+
+// card
+$card-themes: (
+        "base": #{$base},
+        "primary": #{$primary},
+        "secondary": #{$secondary},
+        "tertiary": #{$tertiary},
+        "negative": #{$negative}
+);
+
+@each $attr, $theme in $card-themes {
+  .card-#{$attr} {
+    .card-img-inner {
+      border: 1px solid $theme;
+
+      .svg-icon {
+        fill: $theme;
+      }
+    }
+  }
+}
+
+// color
+$color-themes: (
+        "base": #{$base},
+        "primary": #{$primary},
+        "secondary": #{$secondary},
+        "tertiary": #{$tertiary},
+        "negative": #{$negative},
+        "font-gray-01": #{$font-gray-01}
+);
+
+@each $attr, $theme in $color-themes {
+  .color-#{$attr} {
+    color: $theme;
   }
 }
 

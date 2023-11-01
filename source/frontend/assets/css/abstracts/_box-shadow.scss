@@ -5,6 +5,7 @@ $box-shadow: rgba(0, 0, 0, 0.25);
 
 $box-shadows: (
         default: 0px 4px 4px 0px $box-shadow,
+        overlay: 0px 4px 8px 0px rgba(206, 211, 217, 0.7),
   // deep...
 );
 

@@ -14,7 +14,7 @@
     color: $font-gray-01;
   }
 
-  &-disabled {
+  &.is-disabled {
     opacity: .25;
     cursor: not-allowed;
 
@@ -33,6 +33,12 @@
 
       &:before {
         transform: translateX(22px);
+      }
+    }
+
+    &:focus-visible:not(:disabled) {
+      & + .switch-handle {
+        outline: 1px dashed #212121;
       }
     }
   }

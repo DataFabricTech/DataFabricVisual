@@ -14,7 +14,7 @@
     }
   }
 
-  &-contents {
+  &-content {
     @include flex-standard($vertical: flex-start, $direction: column);
     gap: $spacing-8;
     flex-grow: 1;

@@ -1,3 +1,152 @@
-// ------------------------------------------
-// card card-badge card-title...
-// ------------------------------------------
+.card {
+  @include flex-standard($vertical: stretch);
+  @include box-shadow('default');
+  gap: $spacing-16;
+  padding: $spacing-16 $spacing-20;
+  border: 1px solid $border-gray;
+  background: $white;
+
+  &-container {
+    width: 100%;
+    height: auto;
+    padding: $spacing-8;
+    border: 1px solid $border-gray;
+    border-radius: $border-radius-sm;
+  }
+
+  &.is-modify {
+    .text-input {
+      display: block;
+    }
+    .card-link, .card-detail, .tag {
+      display: none;
+    }
+  }
+
+  &-list {
+    @include flex-standard($horizontal: flex-start, $direction: column);
+    width: 100%;
+    gap: $spacing-28;
+  }
+
+  &-item {
+    width: 100%;
+
+
+    &.is-selected {
+      .card {
+        border: 2px solid $primary;
+      }
+    }
+  }
+
+  // 추후 사용할수도 있어서 보류
+  &-img {
+    @include flex-standard;
+    flex-shrink: 0;
+    width: 130px;
+
+    &-inner {
+      @include flex-standard;
+      width: 120px;
+      height: 120px;
+      border-radius: 25px;
+      border: 1px solid $base;
+
+      .svg-icon {
+        width: 60px;
+        height: 60px;
+        fill: $base;
+      }
+
+      img {
+        width: 60px;
+        height: auto;
+      }
+    }
+  }
+
+  &-content {
+    @include flex-standard($horizontal: flex-start, $vertical: flex-start, $direction: column);
+    gap: 8px;
+    flex-grow: 1;
+    width: 100%;
+  }
+
+  &-link {
+    @include ellipsis(100%);
+    font-size: 20px;
+    color: $font-black;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &-detail {
+    @include ellipsis(100%);
+    font-size: 16px;
+    color: $font-black;
+  }
+
+  &-lg {
+    padding: $spacing-24 96px $spacing-36 60px;
+    gap: $spacing-36;
+
+  }
+
+  &-status {
+    @include flex-standard;
+  }
+
+  &.card-simple {
+    width: 100%;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+
+    .card {
+      &-content {
+        &:not(:only-child) {
+          width: 50%;
+        }
+      }
+    }
+  }
+}
+
+.define {
+  @include flex-standard;
+  gap: $spacing-4;
+  font-size: 14px;
+  font-weight: 500;
+  color: $font-black;
+
+  &-term {
+    @include flex-standard;
+    position: relative;
+    gap: $spacing-2;
+
+    .svg-icon {
+      fill: $font-black;
+    }
+  }
+}
+
+.card-simple {
+  &-list {
+    @include flex-standard($vertical: flex-start, $horizontal: center, $direction: column);
+    height: 100%;
+  }
+
+  &-item {
+    @include flex-standard($horizontal: flex-start);
+    width: 100%;
+    padding: $spacing-4 0;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $border-gray;
+    }
+  }
+}

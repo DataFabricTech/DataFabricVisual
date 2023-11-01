@@ -1,4 +1,4 @@
-.table-column,
+.table-col,
 .table-row {
   table {
     td,
@@ -27,3 +27,8 @@
   }
 }
 
+.table-nesting {
+  td {
+    padding: $spacing-8 !important;
+  }
+}

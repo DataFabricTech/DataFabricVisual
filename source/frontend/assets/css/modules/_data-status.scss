@@ -1,0 +1,31 @@
+.data-status {
+  @include flex-standard($horizontal: space-between);
+  min-width: 200px;
+  height: 80px;
+  padding: 0 $spacing-36;
+  border-radius: $border-radius-sm;
+  background: $light-blue;
+  flex: 1;
+
+  &-label {
+    @include flex-standard;
+    gap: $spacing-12;
+
+    .svg-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .data-status-name {
+      color: $icon-gray;
+      font-size: 16px;
+      font-weight: 500;
+    }
+  }
+
+  &-num {
+    color:$black;
+    font-size: 20px;
+    font-weight: 600;
+  }
+}

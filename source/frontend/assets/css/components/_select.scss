@@ -1,6 +1,5 @@
 .select {
   position: relative;
-  flex-shrink: 0;
 
   &.is-open {
     .select-selector {
@@ -35,6 +34,7 @@
   &.is-disabled {
     .select-selector {
       &-button {
+        opacity: 0.25;
         cursor: not-allowed;
         box-shadow: none;
 
@@ -43,7 +43,7 @@
         &:hover:focus {
           box-shadow: none;
           cursor: not-allowed;
-          border: 1px solid $light-gray;
+          border: 1px solid $gray;
         }
 
         &:focus {
@@ -51,17 +51,10 @@
         }
 
         &:focus-visible:not(:disabled) {
-          border: none;
           box-shadow: none;
+          outline: none;
+          pointer-events: none;
         }
-      }
-
-      &-title {
-        color: $font-gray-01;
-      }
-
-      &-icon {
-        opacity: 0.5;
       }
     }
   }
@@ -85,19 +78,29 @@
       }
     }
 
-    .select-container {
-      &-button {
-        height: 40px;
-        padding: $spacing-4 $spacing-12;
+    .select-selector-input {
+      .text-input {
+        padding-right: $spacing-36;
+        font-size: 16px;
       }
+    }
 
-      &-text {
-        font-size: 14px;
+    .select-selector-close-button {
+      width: 24px;
+      height: 24px;
+      top: 8px;
+
+      .svg-icon {
+        width: 24px;
+        height: 24px;
       }
+    }
+
+    .select-container {
+      @include list-style('select-container', 'lg');
     }
   }
 
-  // sm
   &-sm {
     .select-selector {
       height: 24px;
@@ -119,16 +122,27 @@
       }
     }
 
-    .select-container {
-
-      &-button {
-        padding: $spacing-2 $spacing-4;
-        height: 24px;
-      }
-
-      &-text {
+    .select-selector-input {
+      .text-input {
+        padding-left: $spacing-8;
+        padding-right: $spacing-24;
         font-size: 12px;
       }
+    }
+
+    .select-selector-close-button {
+      width: 16px;
+      height: 16px;
+      top: 5px;
+
+      .svg-icon {
+        width: 16px;
+        height: 16px;
+      }
+    }
+
+    .select-container {
+      @include list-style('select-container', 'sm');
     }
   }
 }
@@ -137,6 +151,32 @@
   position: relative;
   height: 32px;
 
+  &-input {
+    height: 100%;
+
+    .text-input {
+      height: 100%;
+      padding: $spacing-4 $spacing-32 $spacing-4 $spacing-12;
+    }
+  }
+
+  &-close-button {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    padding: 0;
+
+    &:hover:not(:disabled) {
+      background: transparent;
+
+      .svg-icon {
+        fill: $icon-gray;
+      }
+    }
+  }
+
 
   &-button {
     @include flex-standard($horizontal: flex-start);
@@ -144,20 +184,15 @@
     height: 100%;
     padding: $spacing-4 $spacing-32 $spacing-4 $spacing-12;
     background-color: $white;
-    border: 1px solid $light-gray;
+    border: 1px solid $gray;
     border-radius: $border-radius-sm;
 
-    &:hover {
+    &:hover:not(:disabled) {
       border-color: $icon-gray;
     }
 
     &:active:not(:disabled) {
       border-color: $tertiary;
-    }
-
-    &:focus-visible:not(:disabled) {
-      outline: 1px dashed $font-black;
-      box-shadow: none;
     }
   }
 
@@ -178,8 +213,7 @@
     pointer-events: none;
 
     &-button {
-      display: flex;
-      align-items: center;
+      @include flex-standard;
       position: absolute;
       top: 0;
       right: 0;
@@ -208,38 +242,21 @@
   overflow: auto;
 
   &-list {
-    background-color: $white;
+    @include list-style('select-container');
   }
 
-  &-item {
-    @include flex-standard;
-    &:hover:not(:disabled) {
-      background-color: $light-blue;
-    }
-    &:active:not(:disabled) {
-      background-color: $light-blue;
-
-      .select-container-text {
-        color: $tertiary;
-      }
+  &-item:active:not(:disabled) {
+    .select-container-text {
+      color: $tertiary;
     }
   }
 
   &-text {
-    @include ellipsis;
-    font-size: 14px;
-    font-weight: 500;
     color: $font-black;
   }
 
   &-button {
-    @include flex-standard($horizontal: flex-start);
     flex: 1;
-    height: 32px;
-    padding: $spacing-4 $spacing-8;
-    &:focus-visible:not(:disabled) {
-      background-color: $light-blue;
-    }
   }
 
   .is-open {

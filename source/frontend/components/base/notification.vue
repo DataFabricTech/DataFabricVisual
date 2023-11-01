@@ -4,11 +4,11 @@
     <div class="notification-icon">
       <svg-icon :name="props.theme" class="svg-icon"></svg-icon>
     </div>
-    <div class="notification-contents">
+    <div class="notification-content">
       <slot></slot>
     </div>
     <BaseButton class="button-icon button-link button-sm" title="닫기" v-if="props.useClose">
-      <span class="hidden">닫기</span>
+      <span class="hidden-text">닫기</span>
       <svg-icon name="close" class="svg-icon"></svg-icon>
     </BaseButton>
   </div>
