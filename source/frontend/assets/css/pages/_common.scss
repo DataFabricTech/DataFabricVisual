@@ -11,6 +11,10 @@
   overflow-y: auto
 }
 
+.side-wrapper{
+  position: relative;
+}
+
 .search-word {
   @include flex-standard;
   gap: $spacing-24;
