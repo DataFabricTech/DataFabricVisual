@@ -26,9 +26,12 @@
       </div>
       <div class="v-group w-full">
         <a href="#" class="card-link" title="이동" @click="$emit('click', props.model.id)">{{ props.model.name }}</a>
+        <baseTextInput placeholder="연결정보 이름 영역입니다." class="hidden"></baseTextInput>
         <p class="card-detail">{{ props.model.description }}</p>
+        <baseTextInput placeholder="연결정보 설명 영역입니다." class="hidden"></baseTextInput>
       </div>
       <div class="h-group gap-[16px]">
+        <baseTextInput placeholder="태그 영역입니다." class="hidden"></baseTextInput>
         <BaseTag v-for="item in props.model.tags">#{{ item }}</BaseTag>
       </div>
       <div class="h-group justify-between w-full">
@@ -56,7 +59,7 @@
           <dl class="define">
             <dt class="define-term">
               <svg-icon class="svg-icon" name="eye"></svg-icon>
-              <span class="hidden">조회수</span>
+              <span class="hidden-text">조회수</span>
             </dt>
             <dd class="define-desc">
               {{ props.model.statInfo.access }}
@@ -65,7 +68,7 @@
           <dl class="define">
             <dt class="define-term">
               <svg-icon class="svg-icon" name="rating-fill"></svg-icon>
-              <span class="hidden">평균 평점</span>
+              <span class="hidden-text">평균 평점</span>
             </dt>
             <dd class="define-desc">
               {{ props.model.statInfo.rating.toFixed(1) }}
@@ -74,7 +77,7 @@
           <dl class="define">
             <dt class="define-term">
               <svg-icon class="svg-icon" name="bookmark"></svg-icon>
-              <span class="hidden">북마크수</span>
+              <span class="hidden-text">북마크수</span>
             </dt>
             <dd class="define-desc">
               {{ props.model.statInfo.favorite }}
@@ -83,7 +86,7 @@
           <dl class="define">
             <dt class="define-term">
               <svg-icon class="svg-icon" name="download"></svg-icon>
-              <span class="hidden">다운로드수</span>
+              <span class="hidden-text">다운로드수</span>
             </dt>
             <dd class="define-desc">
               {{ props.model.statInfo.download }}

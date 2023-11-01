@@ -3,13 +3,13 @@
     <ul class="pagination-list">
       <li>
         <BaseButton class="button-icon pagination-button" title="첫 페이지로 이동" @click="movePage(0)">
-          <span class="hidden">첫 페이지로 이동</span>
+          <span class="hidden-text">첫 페이지로 이동</span>
           <svg-icon aria-hidden="true" class="svg-icon" name="arrow-double-left"></svg-icon>
         </BaseButton>
       </li>
       <li>
         <BaseButton class="button-icon pagination-button" title="이전 페이지로 이동" @click="movePage(selectedPage - 1)">
-          <span class="hidden">이전 페이지로 이동</span>
+          <span class="hidden-text">이전 페이지로 이동</span>
           <svg-icon aria-hidden="true" class="svg-icon" name="arrow-left"></svg-icon>
         </BaseButton>
       </li>
@@ -24,13 +24,13 @@
       </li>
       <li>
         <BaseButton class="button-icon pagination-button" title="다음 페이지로 이동" @click="movePage(selectedPage + 1)">
-          <span class="hidden">다음 페이지로 이동</span>
+          <span class="hidden-text">다음 페이지로 이동</span>
           <svg-icon aria-hidden="true" class="svg-icon" name="arrow-right"></svg-icon>
         </BaseButton>
       </li>
       <li>
         <BaseButton class="button-icon pagination-button" title="마지막 페이지로 이동" @click="movePage(totalPage - 1)">
-          <span class="hidden">마지막 페이지로 이동</span>
+          <span class="hidden-text">마지막 페이지로 이동</span>
           <svg-icon aria-hidden="true" class="svg-icon" name="arrow-double-right"></svg-icon>
         </BaseButton>
       </li>

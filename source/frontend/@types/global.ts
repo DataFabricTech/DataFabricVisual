@@ -1,2 +1,1 @@
-export type PickerType = "date" | "datetime" | "year" | "month" | "time" | "week";
-export type PickerDateType = Array<String> | String;
+// 전역 타입 설정 파일

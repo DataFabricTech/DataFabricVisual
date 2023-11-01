@@ -1,13 +1,13 @@
 <!-- 저장소 관리 Overview-->
 <template>
   <div class="l-split">
-    <h2 class="hidden">저장소 관리</h2>
+    <h2 class="hidden-text">저장소 관리</h2>
     <section class="l-side">
-      <h3 class="hidden">연결정보 목록</h3>
+      <h3 class="hidden-text">연결정보 목록</h3>
       <div class="v-group w-full">
         <div class="h-group justify-between w-full">
           <BaseButton class="button-icon button-link button-sm" title="초기화">
-            <span class="hidden">초기화</span>
+            <span class="hidden-text">초기화</span>
             <svg-icon name="reset" class="svg-icon"></svg-icon>
           </BaseButton>
           <div class="h-group">
@@ -18,13 +18,13 @@
                 class="button button-icon button-lg"
                 title="열기"
               >
-                <span class="hidden">정렬 열기</span>
+                <span class="hidden-text">정렬 열기</span>
                 <svg-icon name="sort" class="svg-icon" />
               </BaseButton>
               <BaseContext class="kebab-context" v-if="state.isOpen"></BaseContext>
             </div>
             <BaseButton @click="onClickOpen" class="button-icon button-link button-sm" title="필터">
-              <span class="hidden">필터</span>
+              <span class="hidden-text">필터</span>
               <svg-icon name="filter" class="svg-icon"></svg-icon>
             </BaseButton>
           </div>
