@@ -1,17 +1,18 @@
 <template>
   <div :class="toggle === false ? 'select' : 'select is-open'" @click="openToggle">
     <div class="select-selector" role="combobox" aria-expanded="false" aria-haspopup="true">
-      <button class="select-selector-button" type="button" title="열기">
+      <button class="select-selector-button" type="button" title="열기" v-if="!props.isSearch">
         <slot name="title">
           <span class="select-selector-title">{{ props.isCheck ? setCheckTitle : setSelectTitle }}</span>
         </slot>
+        <!-- computed 로 처리 -->
         <span class="hidden">선택</span>
         <svg-icon class="svg-icon select-selector-icon" name="chevron-down-medium" aria-hidden="true"></svg-icon>
       </button>
-      <div class="select-selector-input" style="display: none">
+      <div class="select-selector-input" :style="props.isSearch ? '' : 'display: none'">
         <baseTextInput class="text-input" type="text" placeholder="검색어 입력"></baseTextInput>
       </div>
-      <baseButton class="select-selector-close-button" style="display: none">
+      <baseButton class="select-selector-close-button" :style="props.isSearch ? '' : 'display: none'">
         <svg-icon class="svg-icon" name="chevron-up-medium" aria-hidden="true"></svg-icon>
       </baseButton>
     </div>
@@ -43,6 +44,9 @@
 
 <script setup lang="ts">
 import { ref, computed, defineProps, defineEmits } from "vue";
+const SELECT = "선택"
+const MULTI_SELECT = "다중 선택"
+const ALL = "전체"
 
 interface data {
   [key: string]: any;
@@ -63,13 +67,17 @@ const props = defineProps({
   },
   title: {
     type: String,
-    default: "선택"
+    default: SELECT
   },
   isReset: {
     type: Boolean,
     default: false
   },
   isCheck: {
+    type: Boolean,
+    default: false
+  },
+  isSearch: {
     type: Boolean,
     default: false
   },
@@ -86,7 +94,7 @@ const toggle = ref(false);
 const select = ref(null);
 const checkList :any = ref([]);
 const isAllCheck = ref(false);
-const checkMsg = ref("선택");
+const checkMsg = ref(SELECT);
 function openToggle() {
   toggle.value = !toggle.value
 }
@@ -104,7 +112,6 @@ const setSelectTitle = computed(() => {
   const defaultItem = props.data[0];
   clickItem(defaultItem);
   return defaultItem[props.dataKey];
-
 });
 /**
  * 체크 셀렉트 박스일 경우 선택 값
@@ -112,9 +119,9 @@ const setSelectTitle = computed(() => {
 const setCheckTitle = computed(() => {
   const length = checkList.value.length;
   if (length === props.data?.length) {
-    return "전체";
+    return ALL;
   } else if (length >= 2 && length < props.data?.length) {
-    return `다중 선택(${length})`;
+    return MULTI_SELECT + `(${length})`;
   } else if (length === 1) {
     for(let item of props.data) {
       if(item[props.dataValue] === checkList.value[0]) {
@@ -122,7 +129,7 @@ const setCheckTitle = computed(() => {
       }
     }
   } else if (length === 0) {
-    return "선택";
+    return SELECT;
   }
 })
 /**
@@ -141,7 +148,7 @@ const clickItem = (item: data) => {
 function checkAll(checked: boolean) {
   isAllCheck.value = checked;
   checkList.value = checked ? props.data.map(item => item[props.dataValue]) : [];
-  checkMsg.value = checked ? "전체" : "선택";
+  checkMsg.value = checked ? ALL : SELECT;
 }
 
 /**
