@@ -23,7 +23,7 @@ import 'vue-datepicker-next/locale/ko'; // 로케일 설정
 import { PropType, defineProps, computed } from "vue";
 
 import dayjs from "dayjs";
-import { PickerDateType, PickerType } from "../../../@types/global";
+import { PickerDateType, PickerType } from "/@types/global";
 import _ from "lodash";
 
 const DATE_FORMAT = {
