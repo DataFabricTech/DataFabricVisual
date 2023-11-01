@@ -407,8 +407,41 @@
               <div class="v-group gap-4">
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px]">size: lg</strong>
-                  <baseSelect class="select-lg"></baseSelect>
+                  <baseSelect class="select-lg is-open"></baseSelect>
                   <baseSelect class="select-lg is-disabled"></baseSelect>
+                  <!--  TODO:[개발]text-input 전환시 select-selector-button 스타일 display:none; / 두개는 display:block처리 -->
+                  <div class="select select-lg">
+                    <div class="select-selector" role="combobox" aria-expanded="false" aria-haspopup="true">
+                      <button class="select-selector-button" style="display: none" type="button" title="열기">
+                        <slot name="title">
+                          <span class="select-selector-title">선택하세요</span>
+                        </slot>
+                        <span class="hidden">선택</span>
+                        <svg-icon class="svg-icon select-selector-icon" name="chevron-down-medium" aria-hidden="true"></svg-icon>
+                      </button>
+                      <div class="select-selector-input">
+                        <baseTextInput class="text-input" type="text" placeholder="검색어 입력"></baseTextInput>
+                      </div>
+                      <baseButton class="select-selector-close-button">
+                        <svg-icon class="svg-icon" name="chevron-up-medium" aria-hidden="true"></svg-icon>
+                      </baseButton>
+                    </div>
+                    <div class="select-container" id="select-01">
+                      <ul class="select-container-list" role="listbox">
+                        <li class="select-container-item">
+                          <baseCheckbox class="checkbox-indeterminate" role="option">전체</baseCheckbox>
+                        </li>
+                        <li class="select-container-item">
+                          <baseCheckbox role="option">item 01</baseCheckbox>
+                        </li>
+                        <li class="select-container-item">
+                          <button class="select-container-button" type="button" role="option">
+                            <span class="select-container-text">item 02</span>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px]">size: default</strong>
