@@ -59,11 +59,10 @@
 
 .l-section {
   @include flex-standard($vertical: flex-start, $direction: column);
-
   width: 100%;
 }
 
-.l-preview{
+.l-preview {
   @include flex-standard($vertical: flex-start);
   width: 100%;
   gap: $spacing-12;
