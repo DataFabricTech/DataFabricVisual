@@ -14,6 +14,7 @@
           <span class="button-text">취소</span>
         </baseButton>
         <slot>
+          <!-- 경고, 에러에서는 button-primary 대신 button-negative 클래스로 대체되어야 합니다. -->
           <baseButton class="button-lg button-primary">
             <span class="button-text">확인</span>
           </baseButton>

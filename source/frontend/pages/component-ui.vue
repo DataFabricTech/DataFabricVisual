@@ -16,8 +16,8 @@
             <td>
               <div class="v-group gap-5">
                 <div class="h-group gap-2">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">normal</strong>
-                  <commonAlert></commonAlert>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">default</strong>
+                  <commonAlert theme="default"></commonAlert>
                 </div>
                 <div class="h-group gap-2">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">info</strong>
