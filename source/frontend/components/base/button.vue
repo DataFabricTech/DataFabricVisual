@@ -4,7 +4,7 @@
     :type="props.type"
     :title="props.title"
     :id="checkSubmitType ? props.submitId : null"
-    :disabled="props.disabled"
+    :disabled="pDisabled"
     @click="handleClick($event)"
     @mousedown="mouseDown($event)"
   >
@@ -25,7 +25,9 @@ const props = defineProps({
 const checkSubmitType = computed(() => {
   return props.type === "submit" && props.submitId !== "";
 });
-
+const pDisabled = computed(() => {
+  return props.disabled;
+})
 const emit = defineEmits<{
   (e: "click", evt: PointerEvent): void;
   (e: "mousedown", evt: MouseEvent): void;
