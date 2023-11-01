@@ -1,6 +1,6 @@
 .data-status {
   @include flex-standard($horizontal: space-between);
-  min-width: 320px;
+  min-width: 200px;
   height: 80px;
   padding: 0 $spacing-36;
   border-radius: $border-radius-sm;

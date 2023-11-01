@@ -12,11 +12,11 @@
       <div class="result-sort">
         <div class="toggle toggle-icon toggle-lg">
           <BaseRadio name="rI" id="ic-01">
-            <span class="hidden">리스트형 보기</span>
+            <span class="hidden-text">리스트형 보기</span>
             <svg-icon name="list-view" class="svg-icon"></svg-icon>
           </BaseRadio>
           <BaseRadio name="rI" id="ic-03">
-            <span class="hidden">썸네일형 보기</span>
+            <span class="hidden-text">썸네일형 보기</span>
             <svg-icon name="thumbnail-view" class="svg-icon"></svg-icon>
           </BaseRadio>
         </div>
@@ -118,11 +118,11 @@
       <div class="preview">
         <header class="preview-header">
           <h5 class="preview-title">
-            <span class="hidden">데이터 상세 정보</span>
+            <span class="hidden-text">데이터 상세 정보</span>
           </h5>
           <baseButton class="button-icon button-sm" title="닫기">
             <svg-icon name="close" class="svg-icon" />
-            <span class="hidden">닫기</span>
+            <span class="hidden-text">닫기</span>
           </baseButton>
         </header>
         <div class="preview-body">

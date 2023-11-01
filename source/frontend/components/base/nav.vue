@@ -8,7 +8,7 @@
       </button>
       <button type="button" class="nav-close-button" title="닫기">
         <svg-icon name="close" class="svg-icon" />
-        <span class="hidden">닫기</span>
+        <span class="hidden-text">닫기</span>
       </button>
     </div>
   </nav>

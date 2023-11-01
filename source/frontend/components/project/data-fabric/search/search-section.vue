@@ -1,10 +1,10 @@
 <template>
   <section class="l-section gap-[20px]">
-    <h3 class="hidden">검색</h3>
+    <h3 class="hidden-text">검색</h3>
     <div class="data-search">
       <SearchField></SearchField>
       <BaseButton class="button-icon button-normal" title="상세 검색" @click="state.isOpen = !state.isOpen">
-        <span class="hidden">상세 검색</span>
+        <span class="hidden-text">상세 검색</span>
         <svg-icon name="sort" class="svg-icon"></svg-icon>
       </BaseButton>
       <div class="search-word ml-4">

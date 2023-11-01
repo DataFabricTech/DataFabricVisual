@@ -45,19 +45,19 @@
                   </baseButton>
                   <baseButton class="button-negative button-lg button-icon" title="button">
                     <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">BUTTON</span>
+                    <span class="hidden-text">BUTTON</span>
                   </baseButton>
                   <baseButton class="button-normal button-lg button-icon" title="button">
                     <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">BUTTON</span>
+                    <span class="hidden-text">BUTTON</span>
                   </baseButton>
                   <baseButton class="button-ghost button-lg button-icon" title="button">
                     <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">BUTTON</span>
+                    <span class="hidden-text">BUTTON</span>
                   </baseButton>
                   <baseButton class="button-danger button-lg button-icon" title="button">
                     <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">BUTTON</span>
+                    <span class="hidden-text">BUTTON</span>
                   </baseButton>
                   <baseButton class="button-link button-lg">
                     <span class="button-text">Button</span>
@@ -91,19 +91,19 @@
                   </baseButton>
                   <baseButton class="button-negative button-icon" title="button">
                     <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">BUTTON</span>
+                    <span class="hidden-text">BUTTON</span>
                   </baseButton>
                   <baseButton class="button-normal button-icon" title="button">
                     <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">BUTTON</span>
+                    <span class="hidden-text">BUTTON</span>
                   </baseButton>
                   <baseButton class="button-ghost button-icon" title="button">
                     <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">BUTTON</span>
+                    <span class="hidden-text">BUTTON</span>
                   </baseButton>
                   <baseButton class="button-danger button-icon" title="button">
                     <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">BUTTON</span>
+                    <span class="hidden-text">BUTTON</span>
                   </baseButton>
                   <baseButton class="button-link">
                     <span class="button-text">Button</span>
@@ -137,19 +137,19 @@
                   </baseButton>
                   <baseButton class="button-sm button-negative button-icon" title="button">
                     <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">BUTTON</span>
+                    <span class="hidden-text">BUTTON</span>
                   </baseButton>
                   <baseButton class="button-sm button-normal button-icon" title="button">
                     <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">BUTTON</span>
+                    <span class="hidden-text">BUTTON</span>
                   </baseButton>
                   <baseButton class="button-sm button-ghost button-icon" title="button">
                     <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">BUTTON</span>
+                    <span class="hidden-text">BUTTON</span>
                   </baseButton>
                   <baseButton class="button-sm button-danger button-icon" title="button">
                     <svg-icon name="user" class="svg-icon" />
-                    <span class="hidden">BUTTON</span>
+                    <span class="hidden-text">BUTTON</span>
                   </baseButton>
                   <baseButton class="button-sm button-link">
                     <span class="button-text">Button</span>
@@ -707,29 +707,29 @@
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
                   <baseTextInput id="inp-lg-01" class="text-input-lg" placeholder="입력해주세요."></baseTextInput>
-                  <label for="inp-lg-01" class="hidden">label</label>
+                  <label for="inp-lg-01" class="hidden-text">label</label>
                   <baseTextInput class="text-input-lg" id="inp-lg-02" disabled value="입력할 수 없습니다."></baseTextInput>
-                  <label for="inp-lg-02" class="hidden">label</label>
+                  <label for="inp-lg-02" class="hidden-text">label</label>
                   <baseTextInput id="inp-lg-03" class="text-input-lg" readonly value="read only"></baseTextInput>
-                  <label for="inp-lg-03" class="hidden">label</label>
+                  <label for="inp-lg-03" class="hidden-text">label</label>
                 </div>
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
                   <baseTextInput id="inp-01" placeholder="입력해주세요."></baseTextInput>
-                  <label for="inp-01" class="hidden">label</label>
+                  <label for="inp-01" class="hidden-text">label</label>
                   <baseTextInput id="inp-02" disabled value="입력할 수 없습니다."></baseTextInput>
-                  <label for="inp-02" class="hidden">label</label>
+                  <label for="inp-02" class="hidden-text">label</label>
                   <baseTextInput id="inp-03" readonly value="read only"></baseTextInput>
-                  <label for="inp-03" class="hidden">label</label>
+                  <label for="inp-03" class="hidden-text">label</label>
                 </div>
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
                   <baseTextInput id="inp-sm-01" class="text-input-sm" placeholder="입력해주세요."></baseTextInput>
-                  <label for="inp-sm-01" class="hidden">label</label>
+                  <label for="inp-sm-01" class="hidden-text">label</label>
                   <baseTextInput id="inp-sm-02" class="text-input-sm" disabled value="입력할 수 없습니다."></baseTextInput>
-                  <label for="inp-sm-02" class="hidden">label</label>
+                  <label for="inp-sm-02" class="hidden-text">label</label>
                   <baseTextInput id="inp-sm-03" class="text-input-sm" readonly value="read only"></baseTextInput>
-                  <label for="inp-sm-03" class="hidden">label</label>
+                  <label for="inp-sm-03" class="hidden-text">label</label>
                 </div>
               </div>
             </td>
@@ -741,11 +741,11 @@
             <td>
               <div class="h-group">
                 <baseTextarea id="area-ex-01" placeholder="입력해주세요."></baseTextarea>
-                <label for="area-ex-01" class="hidden">lable</label>
+                <label for="area-ex-01" class="hidden-text">lable</label>
                 <baseTextarea id="area-ex-02" disabled value="입력할 수 없습니다."></baseTextarea>
-                <label for="area-ex-02" class="hidden">lable</label>
+                <label for="area-ex-02" class="hidden-text">lable</label>
                 <baseTextarea id="area-ex-03" readonly value="read only"></baseTextarea>
-                <label for="area-ex-03" class="hidden">lable</label>
+                <label for="area-ex-03" class="hidden-text">lable</label>
               </div>
             </td>
           </tr>
@@ -765,11 +765,11 @@
                     </div>
                     <div class="toggle toggle-lg toggle-icon">
                       <BaseRadio name="rlgI" id="lg-ic-01" checked title="리스트형 보기">
-                        <span class="hidden">리스트형 보기</span>
+                        <span class="hidden-text">리스트형 보기</span>
                         <svg-icon name="list-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                       <BaseRadio name="rlgI" id="lg-ic-03" title="썸네일형 보기">
-                        <span class="hidden">썸네일형 보기</span>
+                        <span class="hidden-text">썸네일형 보기</span>
                         <svg-icon name="thumbnail-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                     </div>
@@ -784,11 +784,11 @@
                     </div>
                     <div class="toggle toggle-icon">
                       <BaseRadio name="rI" id="ic-01" checked title="리스트형 보기">
-                        <span class="hidden">리스트형 보기</span>
+                        <span class="hidden-text">리스트형 보기</span>
                         <svg-icon name="list-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                       <BaseRadio name="rI" id="ic-03" title="썸네일형 보기">
-                        <span class="hidden">썸네일형 보기</span>
+                        <span class="hidden-text">썸네일형 보기</span>
                         <svg-icon name="thumbnail-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                     </div>
@@ -803,11 +803,11 @@
                     </div>
                     <div class="toggle toggle-sm toggle-icon">
                       <BaseRadio name="rSmI" id="icsm-01" checked title="리스트형 보기">
-                        <span class="hidden">리스트형 보기</span>
+                        <span class="hidden-text">리스트형 보기</span>
                         <svg-icon name="list-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                       <BaseRadio name="rSmI" id="icsm-03" title="썸네일형 보기">
-                        <span class="hidden">썸네일형 보기</span>
+                        <span class="hidden-text">썸네일형 보기</span>
                         <svg-icon name="thumbnail-view" class="svg-icon"></svg-icon>
                       </BaseRadio>
                     </div>
@@ -818,10 +818,10 @@
             </td>
           </tr>
           <!-- toggle-token으로 개선돼서 보류-->
-          <tr class="hidden">
+          <tr class="hidden-text">
             <th scope="row">Toggle button</th>
           </tr>
-          <tr class="hidden">
+          <tr class="hidden-text">
             <td>
               <div class="v-group gap-5">
                 <div class="h-group">
