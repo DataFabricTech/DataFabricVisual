@@ -7,7 +7,7 @@
     <label class="switch-switch" :for="props.id">
       <input class="switch-input" :id="props.id" type="checkbox" :disabled="props.disabled" :checked="props.checked">
       <span class="switch-handle"></span>
-      <span class="hidden">
+      <span class="hidden-text">
         <slot name="hidden-text"></slot>
       </span>
     </label>

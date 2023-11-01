@@ -1,6 +1,6 @@
 <template>
   <div class="l-common flex-grow">
-    <h2 class="hidden">데이터패브릭</h2>
+    <h2 class="hidden-text">데이터패브릭</h2>
     <section class="l-section flex-grow">
       <MainSearch></MainSearch>
       <MainCard></MainCard>

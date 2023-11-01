@@ -8,7 +8,7 @@
   position: relative;
 
   &-input {
-    @include hidden;
+    @include hidden-text;
 
     &:checked + .radio-label:before {
       background-color: $primary;
