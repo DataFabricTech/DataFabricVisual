@@ -17,3 +17,47 @@
   }
 }
 
+.lnb {
+  @include box-shadow('overlay');
+  position: absolute;
+  top: 56px;
+  right: 111px;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-12;
+  width: 430px;
+  height: auto;
+  padding: $spacing-20;
+  background: $white;
+  border-radius: $border-radius-sm;
+
+  &-top-bar {
+    @include flex-standard($horizontal: space-between);
+  }
+
+  &-list {
+    @include flex-standard($vertical: flex-start);
+    flex-wrap: wrap;
+    gap: $spacing-12;
+    overflow-y: auto;
+    max-height: 163px;
+    width: 100%;
+    padding: $spacing-12 0;
+    border: 1px solid $border-gray;
+    border-radius: $border-radius-sm;
+  }
+
+  &-link {
+    @include flex-standard;
+    width: 110px;
+    height: 50px;
+    background: $light-gray;
+    color: $black;
+    font-size: 14px;
+
+    &:hover {
+      border:1px solid $black;
+    }
+  }
+}
+
