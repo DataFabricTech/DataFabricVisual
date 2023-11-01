@@ -58,7 +58,8 @@
     "vue-datepicker-next": "^1.0.3",
     "vue-final-modal": "^4.4.5",
     "vue-loader": "^17.2.2",
-    "vue3-cookies": "^1.0.6"
+    "vue3-cookies": "^1.0.6",
+    "vue3-treeview": "^0.4.1"
   },
   "overrides": {
     "vue": "latest"
