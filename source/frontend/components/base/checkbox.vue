@@ -1,7 +1,17 @@
 <template>
   <div class="checkbox">
-    <input class="checkbox-input" type="checkbox" :id="props.id" :name="props.name" :disabled="props.disabled" :checked="props.checked">
-    <label :for="props.id" class="checkbox-label"><slot></slot></label>
+    <input
+      class="checkbox-input"
+      type="checkbox"
+      :id="props.id"
+      :name="props.name"
+      :disabled="props.disabled"
+      :checked="props.checked"
+      @change="$emit('change', $event.target.checked)"
+    >
+    <label :for="props.id" class="checkbox-label">
+      <slot></slot>
+    </label>
   </div>
 </template>
 
