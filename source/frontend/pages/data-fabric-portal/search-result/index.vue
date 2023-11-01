@@ -85,8 +85,8 @@
           </div>
           <div class="category-container">
             <div class="v-group gap-[16px]">
-              <div class="category-top-bar">
-                <h4 class="category-name" id="data-model">데이터모델 (6)</h4>
+              <div class="category-subject">
+                <h4 class="category-title" id="data-model">데이터모델 (6)</h4>
                 <baseButton class="button-primary">
                   <span class="button-text">서비스 이동</span>
                 </baseButton>
@@ -99,8 +99,8 @@
               <BasePagination></BasePagination>
             </div>
             <div class="v-group gap-[16px]">
-              <div class="category-top-bar">
-                <h4 class="category-name" id="repository">저장소 (5)</h4>
+              <div class="category-subject">
+                <h4 class="category-title" id="repository">저장소 (5)</h4>
                 <baseButton class="button-primary">
                   <span class="button-text">서비스 이동</span>
                 </baseButton>
@@ -130,8 +130,8 @@
           </div>
         <div class="category-container">
           <div class="v-group gap-[16px]">
-            <div class="category-top-bar">
-              <h4 class="category-name">분석보고서 (25)</h4>
+            <div class="category-subject">
+              <h4 class="category-title"> 분석보고서 (25)</h4>
               <baseButton class="button-primary">
                 <span class="button-text">서비스 이동</span>
               </baseButton>
