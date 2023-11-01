@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script lang="ts">
 import TheHeader from "./data-fabric/the-header.vue";
 import TheTab from "./data-fabric/the-tab.vue";
 

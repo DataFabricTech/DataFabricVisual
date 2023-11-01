@@ -1116,6 +1116,16 @@
               <SearchFilter></SearchFilter>
             </td>
           </tr>
+          <tr>
+            <th scope="row">Scroll Top</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="relative">
+                <ScrollTop></ScrollTop>
+              </div>
+            </td>
+          </tr>
           </tbody>
         </table>
       </div>
