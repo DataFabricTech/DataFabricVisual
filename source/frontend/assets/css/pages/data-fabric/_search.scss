@@ -1,7 +1,67 @@
-.category-name {
-  @include flex-standard;
-  padding: 0 $spacing-24;
-  font-size: 20px;
-  color: $font-black;
-  user-select: none;
+.preview {
+  @include flex-standard($horizontal: flex-start, $direction: column);
+  width: 40%;
+  background-color: $white;
+  border: 1px solid $gray;
+
+  &-main {
+    @include flex-standard($horizontal: flex-start, $direction: column);
+    gap: $spacing-36;
+    width: 60%;
+
+    &:only-child {
+      width: 100%;
+    }
+  }
+
+  &-header {
+    @include flex-standard($horizontal: space-between);
+    flex-shrink: 0;
+    width: 100%;
+    height: 40px;
+    padding: 0 $spacing-8;
+    border-bottom: 1px solid $gray;
+  }
+
+  &-title {
+    font-size: 15px;
+    color: $font-gray-01;
+  }
+
+  &-body {
+    @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
+    overflow-y: auto;
+    gap: $spacing-20;
+    flex-grow: 1;
+    width: 100%;
+    padding: $spacing-8;
+  }
+
+  &-article {
+    @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
+    gap: $spacing-12;
+    width: 100%;
+  }
+
+  &-card {
+    @include flex-standard($horizontal: flex-start);
+    flex-shrink: 0;
+    width: 100%;
+    height: 110px;
+    padding: $spacing-4 $spacing-16;
+    background-color: $light-gray;
+  }
+
+  &-footer {
+    @include flex-standard;
+    flex-shrink: 0;
+    width: 100%;
+    height: 64px;
+    padding: 0 $spacing-8;
+    background-color: $light-blue;
+  }
+
+  .list {
+    border: 0;
+  }
 }

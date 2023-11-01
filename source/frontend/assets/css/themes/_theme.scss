@@ -45,3 +45,19 @@ $card-themes: (
   }
 }
 
+// color
+$color-themes: (
+        "base": #{$base},
+        "primary": #{$primary},
+        "secondary": #{$secondary},
+        "tertiary": #{$tertiary},
+        "negative": #{$negative},
+        "font-gray-01": #{$font-gray-01}
+);
+
+@each $attr, $theme in $color-themes {
+  .color-#{$attr} {
+    color: $theme;
+  }
+}
+

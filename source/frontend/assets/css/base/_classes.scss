@@ -26,8 +26,8 @@ $directions: (
   @include ellipsis-multi;
 }
 
-.hidden {
-  @include hidden;
+.hidden-text {
+  @include hidden-text;
 }
 
 .caption-out {
@@ -38,14 +38,5 @@ $directions: (
   width: 20px;
   height: 20px;
   fill: $icon-gray;
-}
-
-// TODO: [예시로 지울 것]
-.temp-img {
-  width: 200px;
-  height: 100px;
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-image: url("#{$img-path}/sample.png");
 }
 

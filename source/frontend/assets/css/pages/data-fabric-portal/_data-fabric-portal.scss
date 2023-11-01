@@ -111,10 +111,6 @@
     .results-page {
       font-size: 13px;
       color: $black;
-
-      em {
-        color: $tertiary;
-      }
     }
   }
 
@@ -200,12 +196,12 @@
     gap: $spacing-4;
   }
 
-  &-head {
+  &-top-bar {
     @include flex-standard($horizontal: space-between);
     width: 100%;
   }
 
-  &-body{
+  &-body {
     width: 100%;
     height: 100%;
     display: flex;
@@ -217,10 +213,6 @@
     color: $font-black;
     font-size: 16px;
     font-weight: 700;
-
-    em {
-      color: $tertiary;
-    }
   }
 
   &-list {
@@ -299,15 +291,10 @@
     font-size: 13px;
     font-weight: 400;
     white-space: nowrap;
-
-    em {
-      font-weight: 700;
-    }
   }
 }
 
 .paging {
-
   &-dots {
     @include flex-standard;
     gap: $spacing-8;
@@ -330,3 +317,5 @@
     }
   }
 }
+
+

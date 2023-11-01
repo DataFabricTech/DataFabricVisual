@@ -8,7 +8,7 @@
   position: relative;
 
   &-input {
-    @include hidden;
+    @include hidden-text;
 
     &:checked + .radio-label:before {
       background-color: $primary;
@@ -49,7 +49,7 @@
       left: 0;
       top: 2px;
       background-color: transparent;
-      border: 1px solid $primary;
+      border: 1px solid $icon-gray;
       border-radius: $border-radius-round;
     }
 
@@ -107,5 +107,9 @@
         height: 4px;
       }
     }
+  }
+
+  & ~ span {
+    color: $font-gray-01;
   }
 }

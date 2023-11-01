@@ -1,7 +1,7 @@
 <!-- 데이터패브릭포털 - 검색 -->
 <template>
   <div class="l-common flex-grow">
-    <h2 class="hidden">데이터패브릭포털 검색</h2>
+    <h2 class="hidden-text">데이터패브릭포털 검색</h2>
     <section class="l-section flex-grow">
       <div class="main-search">
         <SearchField class="search-field-lg"></SearchField>
@@ -65,7 +65,7 @@
             <div class="swiper">
               <div class="swiper-results">
                 <span class="results-page">
-                  <em>1</em>
+                  <em class="color-tertiary">1</em>
                   / 5
                 </span>
                 <baseButton title="재생" class="button-sm button-icon button-link">
@@ -89,10 +89,10 @@
                   <div class="swiper-item"></div>
                 </div>
               </div>
-              <baseButton class="swiper-pre-button button-icon button-link" title="이전">
+              <baseButton class="swiper-pre-button" title="이전">
                 <svg-icon name="arrow-left" class="svg-icon" />
               </baseButton>
-              <baseButton class="swiper-next-button button-icon button-link" title="다음">
+              <baseButton class="swiper-next-button" title="다음">
                 <svg-icon name="arrow-right" class="svg-icon" />
               </baseButton>
             </div>
@@ -108,64 +108,64 @@
           <div class="portal-article-body">
             <div class="community">
               <div class="community-inner">
-                <div class="community-head">
+                <div class="community-top-bar">
                   <div class="community-title">공지사항</div>
                   <baseButton class="button-link-tertiary">더보기</baseButton>
                 </div>
                 <div class="community-body">
-                <div class="special-notify">
-                  <div class="special-notify-inner">
-                    <svg-icon name="speaker" class="svg-icon" />
-                    <div class="flow">
-                      <div class="flow-group">
-                        <div class="flow-item">
-                          <a href="#" class="flow-link">
-                            <em>[서비스 안내]</em>
-                            분석 서비스를 위한 저작도구 신규 서비스 도입
-                          </a>
-                        </div>
-                        <div class="flow-item">
-                          <a href="#" class="flow-link">
-                            <em>[서비스 안내]</em>
-                            분석 서비스를 위한 저작도구 신규 서비스 도입
-                          </a>
-                        </div>
-                        <div class="flow-item">
-                          <a href="#" class="flow-link">
-                            <em>[서비스 안내]</em>
-                            분석 서비스를 위한 저작도구 신규 서비스 도입
-                          </a>
+                  <div class="special-notify">
+                    <div class="special-notify-inner">
+                      <svg-icon name="speaker" class="svg-icon" />
+                      <div class="flow">
+                        <div class="flow-group">
+                          <div class="flow-item">
+                            <a href="#" class="flow-link">
+                              <em class="color-tertiary">[서비스 안내]</em>
+                              분석 서비스를 위한 저작도구 신규 서비스 도입
+                            </a>
+                          </div>
+                          <div class="flow-item">
+                            <a href="#" class="flow-link">
+                              <em class="color-tertiary">[서비스 안내]</em>
+                              분석 서비스를 위한 저작도구 신규 서비스 도입
+                            </a>
+                          </div>
+                          <div class="flow-item">
+                            <a href="#" class="flow-link">
+                              <em class="color-tertiary">[서비스 안내]</em>
+                              분석 서비스를 위한 저작도구 신규 서비스 도입
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <div class="paging">
+                      <ul class="paging-dots">
+                        <li class="dot is-active">
+                          <button class="dot-button">1</button>
+                        </li>
+                        <li class="dot">
+                          <button class="dot-button">2</button>
+                        </li>
+                        <li class="dot">
+                          <button class="dot-button">3</button>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-                  <div class="paging">
-                    <ul class="paging-dots">
-                      <li class="dot is-active">
-                        <button class="dot-button">1</button>
-                      </li>
-                      <li class="dot">
-                        <button class="dot-button">2</button>
-                      </li>
-                      <li class="dot">
-                        <button class="dot-button">3</button>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
                   <ul class="community-list">
                     <li class="community-item" v-for="index in 6">
                       <baseBadge class="bg-marker-cyan">안내</baseBadge>
                       <a href="#" class="community-item-link"> [신규 인프라] 이미지 지원 종료 안내(2023/09/26) </a>
                     </li>
-                </ul>
+                  </ul>
                 </div>
               </div>
               <div class="community-inner">
-                <div class="community-head">
+                <div class="community-top-bar">
                   <div class="community-title">
                     자주하는 질문
-                    <em>FAQ</em>
+                    <em class="color-tertiary">FAQ</em>
                   </div>
                   <baseButton class="button-link-tertiary">더보기</baseButton>
                 </div>
@@ -186,8 +186,10 @@
     </section>
   </div>
 </template>
+
 <script lang="ts" setup>
 definePageMeta({
-  layout: "default-portal-layout"
+  layout: "default-portal-full-layout"
 });
+
 </script>
