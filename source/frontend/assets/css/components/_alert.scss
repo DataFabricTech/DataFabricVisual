@@ -1,0 +1,62 @@
+.alert {
+  @include box-shadow('overlay');
+  @include z-index('alert');
+  display: flex;
+  flex-direction: column;
+  border-radius: $border-radius-sm;
+  min-width: 280px;
+  max-width: 520px;
+
+  &-body {
+    @include flex-standard($vertical: flex-start);
+    gap: $spacing-8;
+    padding: $spacing-32 $spacing-40;
+    background-color: $white;
+  }
+
+  &-contents {
+    @include flex-standard($direction: column);
+    flex-grow: 1;
+    padding-top: $spacing-2;
+  }
+
+  &-text {
+    @include line-height('lg');
+    @include letter-spacing("narrow-sm");
+    font-size: 14px;
+    color: $font-gray-01;
+    word-break: keep-all;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-y: auto;
+  }
+
+  &-foot {
+    @include flex-standard;
+    background-color: $light-blue;
+    padding: $spacing-8;
+
+    .button + .button,
+    div + div,
+    .modal-foot-main-buttons div + div {
+      margin-left: $spacing-4;
+    }
+
+    .alert-foot-main-buttons {
+      @include flex-standard;
+      margin-left: auto;
+    }
+  }
+
+  &-default {
+    .svg-icon {
+      display: none;
+    }
+  }
+
+  .svg-icon {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+}
