@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   pages: true,
-  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@nuxtjs/svg-sprite"],
+  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt"],
 
   // runtime에서 설정된 정보를 조회 가능
   runtimeConfig: {
@@ -47,5 +47,10 @@ export default defineNuxtConfig({
   },
 
   // css 설정
-  css: ["vue-final-modal/style.css", "~/assets/css/style.scss"]
+  css: ["vue-final-modal/style.css", "~/assets/css/style.scss"],
+  lodash : {
+    prefix: '_',
+    prefixSkip: ['string'],
+    upperAfterPrefix: false,
+  }
 });
