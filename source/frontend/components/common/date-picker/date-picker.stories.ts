@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/vue3";
 import DatePicker from "./date-picker.vue";
 import { action } from "@storybook/addon-actions";
-import { DateType } from "../../../components/common/date-picker/date-picker";
+import { DateType } from "./date-picker.ts";
 
 const meta: Meta<typeof DatePicker> = {
   component: DatePicker

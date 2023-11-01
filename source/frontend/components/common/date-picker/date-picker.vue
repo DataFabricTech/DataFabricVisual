@@ -22,11 +22,11 @@
 import Picker from "vue-datepicker-next";
 import "vue-datepicker-next/index.css";
 import "vue-datepicker-next/locale/ko"; // 로케일 설정 파일
-import { PropType, computed } from "vue";
+import { computed, PropType } from "vue";
 
-import dayjs from "dayjs";
-import { DateType, PickerType, DateFormat } from "./date-picker";
-import _ from "lodash";
+import { DateFormat, DateType, PickerType } from "./date-picker";
+
+const dayjs = useDayjs();
 
 // note: 로케일 변경 시 로케일 파일 impoㄱt 필요
 const langString = "ko";
@@ -59,11 +59,11 @@ const props = defineProps({
     type: String,
     default: null
   },
-  disableStartValue: {
+  enabledStartValue: {
     type: String,
     default: null
   },
-  disableEndValue: {
+  enabledEndValue: {
     type: String,
     default: null
   }
@@ -78,18 +78,18 @@ const dateFormat = computed(() => {
   return props.format || DateFormat[formatKey];
 });
 const dateValue = computed(() => {
-  if (!props.modelValue || _.isEmpty(props.modelValue)) {
+  if (!props.modelValue || _isEmpty(props.modelValue)) {
     return null;
   }
   return range.value
-    ? [setDay(props.modelValue[0] as string), setDay(props.modelValue[1] as string)]
-    : setDay(props.modelValue as string);
+    ? [setDay(props.modelValue[0] as string, dateFormat.value), setDay(props.modelValue[1] as string, dateFormat.value)]
+    : setDay(props.modelValue as string, dateFormat.value);
 });
 
 const emit = defineEmits(["update:modelValue"]);
 
-function setDay(value: string | Date | null) {
-  return dayjs(value).format(dateFormat.value);
+function setDay(value: string | Date | null, format: DateFormat) {
+  return dayjs(value).format(format);
 }
 
 /**
@@ -97,9 +97,11 @@ function setDay(value: string | Date | null) {
  * @param date
  */
 function disabledDate(date: Date) {
-  const newDate = setDay(date);
-  const startValue = setDay(props.disableStartValue);
-  const endValue = setDay(props.disableEndValue);
+  // NOTE : 문제점 datetime 일 경우 해당 날짜가 지정이 되지 않음.
+  const newFormat = dateFormat.value === DateFormat.DATETIME ? DateFormat.DATE : dateFormat.value;
+  const newDate = setDay(date, newFormat);
+  const startValue = setDay(props.enabledStartValue, newFormat);
+  const endValue = setDay(props.enabledEndValue, newFormat);
 
   const isStartValueValid = dayjs(startValue, dateFormat.value).isValid();
   const isEndValueValid = dayjs(endValue, dateFormat.value).isValid();
@@ -120,15 +122,15 @@ function disabledDate(date: Date) {
  * @param time
  */
 function disabledTime(time: Date) {
-  const timeFormat = DateFormat.TIME;
-
-  const newTime = dayjs(time).format(timeFormat);
-  const startValue = dayjs(props.disableStartValue).format(timeFormat);
-  const endValue = dayjs(props.disableEndValue).format(timeFormat);
+  // NOTE:
+  const timeFormat = dateFormat.value === DateFormat.TIME ? DateFormat.TIME : DateFormat.DATETIME;
+  const newTime = setDay(time, timeFormat);
+  const startValue = setDay(props.enabledStartValue, timeFormat);
+  const endValue = setDay(props.enabledEndValue, timeFormat);
 
   // NOTE: dayjs의 isValid로 유효성 검사 불가.
-  const isStartValueValid = !_.isNaN(Date.parse(props.disableStartValue));
-  const isEndValueValid = !_.isNaN(Date.parse(props.disableEndValue));
+  const isStartValueValid = !_isNaN(Date.parse(props.enabledStartValue));
+  const isEndValueValid = !_isNaN(Date.parse(props.enabledEndValue));
 
   if (isStartValueValid && isEndValueValid) {
     return newTime < startValue || newTime > endValue;
