@@ -2,7 +2,7 @@
   @include flex-standard($horizontal: flex-start, $direction: row-reverse);
 
   &-input {
-    @include hidden;
+    @include hidden-text;
 
     &:checked,
     &:hover:not(:disabled) {

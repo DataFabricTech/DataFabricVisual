@@ -9,7 +9,7 @@
             </div>
             <div class="form-content">
               <BaseSelect class="select-lg"></BaseSelect>
-              <label for="01" class="hidden">검색어</label>
+              <label for="01" class="hidden-text">검색어</label>
               <BaseTextInput id="01" class="max-w-[522px] text-input-lg"></BaseTextInput>
             </div>
           </div>
