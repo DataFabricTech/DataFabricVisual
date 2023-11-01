@@ -10,10 +10,35 @@
     <br>
     <highcharts style="width: 500px; height: 200px" :options="chartOptions"> </highcharts>
 
-    <ag-grid-vue style="width: 550px; height: 300px" class="ag-theme-alpine" :gridOptions="gridOptions"
-                 :columnDefs="columnDefs" :rowData="rowData">
+    <ag-grid-vue
+      style="width: 550px; height: 300px"
+      class="ag-theme-alpine"
+      :gridOptions="gridOptions"
+      :columnDefs="columnDefs"
+      :rowData="rowData"
+    >
     </ag-grid-vue>
     <p>composables test : {{ sampleData }}</p>
+
+    <baseButton class="button-lg button-primary" @click="onClickOpen">모달 OPEN</baseButton>
+    <modal title="연결정보 등록" name="modal-test">
+      <template v-slot:body>
+        <span>모달테스트 모달테스트 모달테스트 모달테스트 모달테스트 </span>
+        <span>모달테스트</span>
+        <span>모달테스트</span>
+        <span>모달테스트</span>
+      </template>
+      <template v-slot:foot>
+        <baseButton class="button-normal button-lg" @click="onClickClose">
+          <span class="button-text">취소</span>
+        </baseButton>
+        <div class="h-group ml-auto">
+          <baseButton class="button-primary button-lg" @click="onClickClose">
+            <span class="button-text">확인</span>
+          </baseButton>
+        </div>
+      </template>
+    </modal>
   </div>
 </template>
 
@@ -24,15 +49,22 @@ import Alert from "/components/common/alert.vue";
 import DatePicker from "/components/common/date-picker/date-picker.vue";
 
 import { AgGridVue } from "ag-grid-vue3";
+import { useNuxtApp } from "nuxt/app";
+import Modal from "../../components/common/modal/modal.vue";
 
 definePageMeta({
   layout: "default-layout"
 });
-
-const sampleData = sample();
-
 const date = ref("2023-11-22");
 const dateRange = ref(["2023-11-11", "2023-11-22"]);
+
+const { $vfm } = useNuxtApp();
+function onClickOpen() {
+  $vfm.open("modal-test");
+}
+function onClickClose() {
+  $vfm.close("modal-test");
+}
 
 const chartOptions = {
   series: [
@@ -60,4 +92,5 @@ const rowData = [
   { make: "Ford", model: "Mondeo", price: 32000 },
   { make: "Porsche", model: "Boxster", price: 72000 }
 ];
+const sampleData = sample();
 </script>

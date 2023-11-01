@@ -59,7 +59,7 @@
           <dl class="define">
             <dt class="define-term">
               <svg-icon class="svg-icon" name="eye"></svg-icon>
-              <span class="hidden">조회수</span>
+              <span class="hidden-text">조회수</span>
             </dt>
             <dd class="define-desc">
               {{ props.model.statInfo.access }}
@@ -68,7 +68,7 @@
           <dl class="define">
             <dt class="define-term">
               <svg-icon class="svg-icon" name="rating-fill"></svg-icon>
-              <span class="hidden">평균 평점</span>
+              <span class="hidden-text">평균 평점</span>
             </dt>
             <dd class="define-desc">
               {{ props.model.statInfo.rating.toFixed(1) }}
@@ -77,7 +77,7 @@
           <dl class="define">
             <dt class="define-term">
               <svg-icon class="svg-icon" name="bookmark"></svg-icon>
-              <span class="hidden">북마크수</span>
+              <span class="hidden-text">북마크수</span>
             </dt>
             <dd class="define-desc">
               {{ props.model.statInfo.favorite }}
@@ -86,7 +86,7 @@
           <dl class="define">
             <dt class="define-term">
               <svg-icon class="svg-icon" name="download"></svg-icon>
-              <span class="hidden">다운로드수</span>
+              <span class="hidden-text">다운로드수</span>
             </dt>
             <dd class="define-desc">
               {{ props.model.statInfo.download }}

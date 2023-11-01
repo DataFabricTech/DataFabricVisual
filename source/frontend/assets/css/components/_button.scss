@@ -58,6 +58,7 @@
 
 .button {
   @include flex-standard;
+  position: relative;
   height: 32px;
   padding: $spacing-2 $spacing-12;
   gap: $spacing-4;

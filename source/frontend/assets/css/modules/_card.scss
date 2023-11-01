@@ -125,6 +125,7 @@
 
   &-term {
     @include flex-standard;
+    position: relative;
     gap: $spacing-2;
 
     .svg-icon {

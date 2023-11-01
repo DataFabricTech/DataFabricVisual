@@ -1,9 +1,9 @@
 <!-- 데이터패브릭포털 - 검색 -->
 <template>
   <div class="l-common">
-    <h2 class="hidden">데이터패브릭포털 검색</h2>
+    <h2 class="hidden-text">데이터패브릭포털 검색</h2>
     <section class="l-section">
-      <h3 class="hidden">데이터 검색</h3>
+      <h3 class="hidden-text">데이터 검색</h3>
       <div class="main-search min-h-[240px]">
         <SearchField class="search-field-lg"></SearchField>
         <div class="search-word">

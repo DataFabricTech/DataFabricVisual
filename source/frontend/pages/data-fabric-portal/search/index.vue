@@ -1,7 +1,7 @@
 <!-- 데이터패브릭포털 - 검색 -->
 <template>
   <div class="l-common flex-grow">
-    <h2 class="hidden">데이터패브릭포털 검색</h2>
+    <h2 class="hidden-text">데이터패브릭포털 검색</h2>
     <section class="l-section flex-grow">
       <div class="main-search">
         <SearchField class="search-field-lg"></SearchField>

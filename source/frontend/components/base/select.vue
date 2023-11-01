@@ -6,7 +6,7 @@
         <slot name="title">
           <span class="select-selector-title">선택하세요</span>
         </slot>
-        <span class="hidden">선택</span>
+        <span class="hidden-text">선택</span>
         <svg-icon class="svg-icon select-selector-icon" name="chevron-down-medium" aria-hidden="true"></svg-icon>
       </button>
       <div class="select-selector-input" style="display: none">
