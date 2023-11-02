@@ -10,7 +10,7 @@
         <svg-icon class="svg-icon select-selector-icon" name="chevron-down-medium" aria-hidden="true"></svg-icon>
       </button>
       <div class="select-selector-input" :style="props.isSearch ? '' : 'display: none'">
-        <baseTextInput class="text-input" type="text" placeholder="검색어 입력"></baseTextInput>
+        <baseTextInput class="text-input" type="text" placeholder="검색어 입력" v-model="keyword"></baseTextInput>
       </div>
       <baseButton class="select-selector-close-button" :style="props.isSearch ? '' : 'display: none'">
         <svg-icon class="svg-icon" name="chevron-up-medium" aria-hidden="true"></svg-icon>
@@ -19,9 +19,14 @@
     <div class="select-container" id="select-01">
       <ul class="select-container-list" role="listbox">
         <li class="select-container-item" v-if="props.isCheck">
-          <baseCheckbox class="checkbox-indeterminate" role="option" @change="checkAll" :id="'checkAll'" :checked="isAllCheck">전체</baseCheckbox>
+          <baseCheckbox
+            class="checkbox-indeterminate"
+            role="option"
+            @change="checkAll"
+            :id="'checkAll'"
+            :checked="isAllCheck">전체</baseCheckbox>
         </li>
-        <li class="select-container-item" v-if="props.isCheck" v-for="(item, index) in props.data">
+        <li class="select-container-item" v-if="props.isCheck" v-for="(item, index) in selectData">
           <baseCheckbox
             role="option"
             :id="index + props.checkBoxId.toString()"
@@ -32,7 +37,7 @@
             @change="(checked) => checkData(checked, item, index)"
           ></baseCheckbox>
         </li>
-        <li class="select-container-item" v-if="!props.isCheck" v-for="(item, index) in props.data">
+        <li class="select-container-item" v-if="!props.isCheck" v-for="(item, index) in selectData">
           <button class="select-container-button" type="button" role="option" @click="clickItem(item)">
             <span class="select-container-text">{{ item[dataKey] }}</span>
           </button>
@@ -43,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, defineProps, defineEmits } from "vue";
+import { ref, computed, defineProps, defineEmits, onMounted } from "vue";
 const SELECT = "선택"
 const MULTI_SELECT = "다중 선택"
 const ALL = "전체"
@@ -54,7 +59,7 @@ interface data {
 }
 const props = defineProps({
   data: {
-    type: Array,
+    type: Array as () => Array<data>,
     default: null,
   },
   dataKey: {
@@ -90,11 +95,17 @@ const emit = defineEmits<{
   select: [data: any]
 }>()
 
+const selectData = ref<data[]>([]);
 const toggle = ref(false);
 const select = ref(null);
 const checkList :any = ref([]);
 const isAllCheck = ref(false);
 const checkMsg = ref(SELECT);
+const keyword = ref();
+
+/**
+ * 토글  open - close
+ */
 function openToggle() {
   toggle.value = !toggle.value
 }
@@ -109,10 +120,11 @@ const setSelectTitle = computed(() => {
   if (!props.isCheck && select.value !== null) {
     return select.value;
   }
-  const defaultItem = props.data[0];
+  const defaultItem : data = props.data[0];
   clickItem(defaultItem);
   return defaultItem[props.dataKey];
 });
+
 /**
  * 체크 셀렉트 박스일 경우 선택 값
  */
@@ -132,12 +144,25 @@ const setCheckTitle = computed(() => {
     return SELECT;
   }
 })
+
 /**
- * 일반 셀렉트 박스 선택 기능
+ * 검색 있는 셀렉트 박스일 경우
+ * keyword 감지해서 셀렉트박스 데이터 변경
+ */
+watch(() => keyword.value,
+  (newVal: string, oldVal: string) => {
+    if (newVal != oldVal) {
+      selectData.value = props.data.filter(item => item[props.dataKey].includes(keyword.value));
+    }
+  }
+);
+
+/**
+ * 검색 있는 셀렉트 박스일 경우 || 그 외 셀렉트 박스일 경우
  * @param item
  */
 const clickItem = (item: data) => {
-  select.value = item[props.dataKey];
+  props.isSearch ? (keyword.value = item[props.dataKey]) : (select.value = item[props.dataKey]);
   emit('select', item[props.dataValue]);
 };
 
@@ -169,4 +194,13 @@ function checkData(checked: boolean, item: data, index: number) {
   isAllCheck.value = checkList.value.length == props.data?.length
   emit('select', checkList.value);
 }
+
+/**
+ * props.data = selectData
+ */
+onMounted(() => {
+  if(props.data != null) {
+    selectData.value = props.data
+  }
+})
 </script>
