@@ -69,9 +69,8 @@ const props = defineProps({
     type: String,
     default: "value",
   },
-  title: {
-    type: String,
-    default: SELECT
+  defaultValue: {
+    default: null
   },
   isReset: {
     type: Boolean,
@@ -142,10 +141,19 @@ const setTitle = computed(() => {
  */
 const setSelectTitle = computed(() => {
   if (props.data === null) {
-    return props.title;
+    return null;
   }
   if (!props.isCheck && select.value !== null) {
     return select.value;
+  }
+
+  /**
+   * 디폴트 값 있을때 title 및 emit 처리
+   */
+  if(props.defaultValue != null) {
+    let select = props.data.filter(item => item[props.dataValue] === props.defaultValue)[0];
+    clickItem(select);
+    return select[props.dataKey]
   }
   const defaultItem : data = props.data[0];
   clickItem(defaultItem);
@@ -232,6 +240,14 @@ function checkData(checked: boolean, item: data, index: number) {
 onMounted(() => {
   if(props.data != null) {
     selectData.value = props.data
+  }
+  /**
+   * 검색 셀렉트 박스일 경우 디폴트 값이 있을때
+   */
+  if(props.isSearch && props.defaultValue) {
+    let select = props.data.filter(item => item[props.dataValue] === props.defaultValue)[0];
+    keyword.value = select[props.dataKey]
+    emit('select', select[props.dataValue]);
   }
 })
 </script>
