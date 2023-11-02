@@ -10,7 +10,7 @@
     </div>
     <div class="alert-foot">
       <div class="alert-foot-main-buttons">
-        <baseButton>
+        <baseButton class="button-lg button-normal">
           <span class="button-text">취소</span>
         </baseButton>
         <slot>
