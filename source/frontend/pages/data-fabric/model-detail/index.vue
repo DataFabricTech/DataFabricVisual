@@ -347,8 +347,10 @@
       </div>
     </section>
   </div>
+  <ScrollTop></ScrollTop>
 </template>
 <script lang="ts" setup>
+
 definePageMeta({
   layout: "default-layout"
 });
