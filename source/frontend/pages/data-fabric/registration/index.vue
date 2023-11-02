@@ -642,7 +642,7 @@
 <script lang="ts" setup>
 import {ref} from "@vue/reactivity";
 import {useRouter} from "vue-router";
-import DatePicker from "../../../components/common/date-picker/date-picker.vue";
+import DatePicker from "/components/common/date-picker/date-picker.vue";
 
 const meta: Meta<typeof DatePicker> = {
   component: DatePicker,

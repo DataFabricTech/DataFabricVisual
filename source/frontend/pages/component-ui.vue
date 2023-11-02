@@ -1141,9 +1141,9 @@
 <script lang="ts" setup>
 import { ref } from "@vue/reactivity";
 import { useRouter } from "vue-router";
-import { sample } from "../composables/sample";
+import { sample } from "/composables/sample";
 import { AgGridVue } from "ag-grid-vue3";
-import DatePicker from "../components/common/date-picker/date-picker.vue";
+import DatePicker from "/components/common/date-picker/date-picker.vue";
 
 const sampleData = sample();
 const show = ref(false);
