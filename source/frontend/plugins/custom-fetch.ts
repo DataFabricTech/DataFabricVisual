@@ -12,7 +12,10 @@ export default defineNuxtPlugin((nuxtApp) => {
       hideLoader();
       let data = response._data;
 
-      if (data.hasOwnProperty("code") && data.code !== 0) {
+      if (!data.code) {
+        // TODO. 여기가 문제!!
+        return;
+      }else if (data.hasOwnProperty("code") && data.code !== 0) {
         errorResponse(data);
       } else if (data instanceof Blob && data.type) {
         const text = await data.text();
