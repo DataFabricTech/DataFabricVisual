@@ -9,8 +9,8 @@
         바로가기
       </a>
     </BaseNotification>
-    <section class="l-section gap-[16px]">
-      <div class="page-subject">
+    <section class="l-section">
+      <div class="page-subject border-none">
         <h3 class="page-title">
           <span class="hidden-text">TODO: [개발] '데이터 모델 이름'이 들어가야 합니다.</span></h3>
         <div class="h-group">
