@@ -99,7 +99,6 @@ const toggle = ref(false);
 const select = ref(null);
 const checkList :any = ref([]);
 const isAllCheck = ref(false);
-const checkMsg = ref(SELECT);
 const keyword = ref<string | null>(null);
 const textInputMode = ref(false)
 
@@ -206,7 +205,6 @@ const clickItem = (item: data) => {
 function checkAll(checked: boolean) {
   isAllCheck.value = checked;
   checkList.value = checked ? props.data.map(item => item[props.dataValue]) : [];
-  checkMsg.value = checked ? ALL : SELECT;
 }
 
 /**
