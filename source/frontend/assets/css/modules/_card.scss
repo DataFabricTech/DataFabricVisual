@@ -125,6 +125,7 @@
 
   &-term {
     @include flex-standard;
+    position: relative;
     gap: $spacing-2;
 
     .svg-icon {
@@ -136,6 +137,7 @@
 .card-simple {
   &-list {
     @include flex-standard($vertical: flex-start, $horizontal: center, $direction: column);
+    width: 100%;
     height: 100%;
   }
 

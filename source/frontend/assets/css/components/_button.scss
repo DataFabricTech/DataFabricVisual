@@ -58,6 +58,7 @@
 
 .button {
   @include flex-standard;
+  position: relative;
   height: 32px;
   padding: $spacing-2 $spacing-12;
   gap: $spacing-4;
@@ -118,7 +119,7 @@
   }
 
   &-link-primary {
-    @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $primary, $hover-font-color: $hover-primary, $active-font-color: $active-primary);
+    @include button-theme($bg-color: transparent, $hover-bg-color: transparent, $active-bg-color: transparent, $font-color: $primary, $hover-font-color: $hover-primary, $active-font-color: $active-primary);
     text-decoration: underline;
   }
 
@@ -128,7 +129,7 @@
   }
 
   &-link-negative {
-    @include button-theme($bg-color: $white, $hover-bg-color: $white, $active-bg-color: $white, $font-color: $negative, $hover-font-color: $hover-negative, $active-font-color: $active-negative);
+    @include button-theme($bg-color: transparent, $hover-bg-color: transparent, $active-bg-color: transparent, $font-color: $negative, $hover-font-color: $hover-negative, $active-font-color: $active-negative);
     text-decoration: underline;
   }
 
