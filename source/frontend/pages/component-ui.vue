@@ -1121,8 +1121,8 @@
           </tr>
           <tr>
             <td>
-              <div class="relative">
-                <ScrollTop></ScrollTop>
+              <div class="relative h-10">
+                <ScrollTop style="position: absolute;left: 0;bottom: 0;"></ScrollTop>
               </div>
             </td>
           </tr>

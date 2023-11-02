@@ -1,18 +1,19 @@
 .scroll-top {
   @include box-shadow('default');
+  @include z-index('header');
   position: fixed;
   bottom: 20px;
   right: 20px;
   width: 50px;
   height: 50px;
-  //padding: 10px 10px;
   background-color: $tertiary;
   border: none;
   border-radius: $border-radius-round;
 
   .svg-icon {
     fill: $white;
-
+    width: 25px;
+    height: 25px;
   }
 
   &:hover:not(:disabled) {
