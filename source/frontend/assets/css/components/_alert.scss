@@ -36,14 +36,9 @@
     background-color: $light-blue;
     padding: $spacing-8;
 
-    .button + .button,
-    div + div,
-    .modal-foot-main-buttons div + div {
-      margin-left: $spacing-4;
-    }
-
-    .alert-foot-main-buttons {
+    &-main-buttons {
       @include flex-standard;
+      gap: $spacing-4;
       margin-left: auto;
     }
   }
