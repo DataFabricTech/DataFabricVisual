@@ -2,7 +2,7 @@ import { ofetch } from "ofetch";
 import { defineNuxtPlugin, useRuntimeConfig } from "nuxt/app";
 
 export default defineNuxtPlugin((nuxtApp) => {
-  globalThis.$fetch = ofetch.create({
+  const api = ofetch.create({
     async onRequest({ request, options }) {
       showLoader();
       options.baseURL = useRuntimeConfig().public.baseUrl;
@@ -12,10 +12,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       hideLoader();
       let data = response._data;
 
-      if (!data.code) {
-        // TODO. 여기가 문제!!
-        return;
-      }else if (data.hasOwnProperty("code") && data.code !== 0) {
+      if (data.hasOwnProperty("code") && data.code !== 0) {
         errorResponse(data);
       } else if (data instanceof Blob && data.type) {
         const text = await data.text();
@@ -23,7 +20,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         if (blobData.hasOwnProperty("code") && blobData.code !== 0) {
           errorResponse(blobData);
         } else {
-          response._data = data;
+          return;
         }
       }
       response._data = data.data;
@@ -49,5 +46,10 @@ export default defineNuxtPlugin((nuxtApp) => {
     try {
       nuxtApp.$loader.finish();
     } catch (e) {}
+  }
+  return {
+    provide: {
+      api
+    }
   }
 });
