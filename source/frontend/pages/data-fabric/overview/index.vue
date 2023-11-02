@@ -109,6 +109,16 @@
         </BaseButton>
       </div>
       <article class="page-article">
+        <BaseNotification theme="warning" use-close>
+          <strong class="notification-title">
+            연결정보가 변동되어 데이터모델 정보 를 다운로드 받을 수 없습니다.
+          </strong>
+          <a href="#" class="notification-link">
+            바로가기
+          </a>
+        </BaseNotification>
+      </article>
+      <article class="page-article">
         <h4 class="page-subtitle">요약 정보</h4>
         <div class="h-group w-full gap-[16px]">
           <div class="chartbox">차트</div>

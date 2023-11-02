@@ -10,6 +10,43 @@
         <table class="guide-table">
           <tbody>
           <tr>
+            <th scope="row">Alert</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="v-group gap-5">
+                <div class="h-group gap-2">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">default</strong>
+                  <commonAlert theme="default"></commonAlert>
+                </div>
+                <div class="h-group gap-2">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">info</strong>
+                  <commonAlert theme="info"></commonAlert>
+                </div>
+                <div class="h-group gap-2">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">success</strong>
+                  <commonAlert theme="success"></commonAlert>
+                </div>
+                <div class="h-group gap-2">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">warning</strong>
+                  <commonAlert theme="warning">
+                    <baseButton class="button-lg button-negative">
+                      <span class="button-text">확인</span>
+                    </baseButton>
+                  </commonAlert>
+                </div>
+                <div class="h-group gap-2">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">error</strong>
+                  <commonAlert theme="error">
+                    <baseButton class="button-lg button-negative">
+                      <span class="button-text">확인</span>
+                    </baseButton>
+                  </commonAlert>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
             <th scope="row">Badge</th>
           </tr>
           <tr>
@@ -416,7 +453,7 @@
                         <slot name="title">
                           <span class="select-selector-title">선택하세요</span>
                         </slot>
-                        <span class="hidden">선택</span>
+                        <span class="hidden-text">선택</span>
                         <svg-icon class="svg-icon select-selector-icon" name="chevron-down-medium" aria-hidden="true"></svg-icon>
                       </button>
                       <div class="select-selector-input">
