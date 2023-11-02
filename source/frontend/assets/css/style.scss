@@ -7,7 +7,6 @@
 // theme
 @import "./themes/set-color.scss";
 @import "./themes/set-theme.scss";
-@import "./themes/theme.scss";
 
 // mixins
 @import "./abstracts/fonts";
@@ -19,7 +18,6 @@
 
 // base
 @import "base/base";
-@import "base/classes";
 
 // components
 @import "components/badge";
@@ -55,6 +53,7 @@
 @import "modules/search-field";
 @import "modules/search-filter";
 @import "modules/data-status";
+@import "modules/review";
 
 // layouts
 @import "layout/layout";
@@ -76,8 +75,10 @@
 // vendors
 @import "vendors/ag-theme-alpine";
 
-// status
+// class
 @import "base/status";
+@import "base/classes";
+@import "./themes/theme.scss";
 
 // tailwindCSS Utility Class
 @import "./tailwind/tailwind-utilities";

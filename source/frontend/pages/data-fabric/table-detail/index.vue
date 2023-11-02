@@ -101,16 +101,15 @@
       </BaseButton>
     </section>
     <section class="l-split-section">
-      <h3 class="hidden-text">선택된 데이터 정보</h3>
-        <div class="page-subject">
-          <h3 class="page-title">
-            <span class="hidden-text">선택된 데이터 정보</span>
-          </h3>
-          <BaseSwitch>
-            <template v-slot:switch-text>데이터 모델 생성</template>
-            <template v-slot:hidden-text>데이터 모델 생성</template>
-          </BaseSwitch>
-        </div>
+      <div class="page-subject">
+        <h3 class="page-title">
+          <span class="hidden-text">선택된 데이터 정보</span>
+        </h3>
+        <BaseSwitch>
+          <template v-slot:switch-text>데이터 모델 생성</template>
+          <template v-slot:hidden-text>데이터 모델 생성</template>
+        </BaseSwitch>
+      </div>
       <article class="page-article">
         <Card class="w-full"></Card>
       </article>
@@ -126,9 +125,9 @@
             <div class="page-group">
               <h4 class="page-subtitle">Summary</h4>
               <div class="h-group gap-8 w-full">
-                <dl class="data-status" v-for="index in 3" >
+                <dl class="data-status" v-for="index in 3">
                   <dt class="data-status-label">
-                    <svg-icon name="data" class="svg-icon"/>
+                    <svg-icon name="data" class="svg-icon" />
                     <span class="data-status-name">Connected Data</span>
                   </dt>
                   <dd class="data-status-num">8</dd>
@@ -164,14 +163,14 @@
                   </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="index in 6">
-                      <td>acute_long_term_care_beds 1</td>
-                      <td>필드설명</td>
-                      <td>라벨정보</td>
-                      <td>태그정보</td>
-                      <td>...</td>
-                      <td>...</td>
-                    </tr>
+                  <tr v-for="index in 6">
+                    <td>acute_long_term_care_beds 1</td>
+                    <td>필드설명</td>
+                    <td>라벨정보</td>
+                    <td>태그정보</td>
+                    <td>...</td>
+                    <td>...</td>
+                  </tr>
                   </tbody>
                 </table>
               </div>
@@ -236,6 +235,7 @@
 
 <script lang="ts" setup>
 import { ref } from "@vue/reactivity";
+
 const show = ref(false);
 
 definePageMeta({

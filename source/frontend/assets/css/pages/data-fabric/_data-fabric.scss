@@ -54,7 +54,7 @@
 
 .page-article {
   @include flex-standard($direction: column);
-  //padding: $spacing-24;
+  padding: $spacing-24;
   gap: $spacing-16;
   width: 100%;
 }

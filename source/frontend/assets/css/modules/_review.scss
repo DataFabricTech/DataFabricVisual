@@ -1,0 +1,72 @@
+.review {
+  @include flex-standard($vertical: flex-start, $direction: column);
+  gap: $spacing-8;
+  width: 100%;
+
+  &-header {
+    @include flex-standard($horizontal: flex-start);
+    gap: $spacing-8;
+  }
+
+  &-body {
+    width: 100%;
+    padding: $spacing-12 $spacing-16;
+    border-radius: $border-radius-sm;
+    background-color: $light-gray;
+  }
+
+  &-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: $font-black;
+  }
+
+  &-count {
+    font-size: 14px;
+    font-weight: 500;
+    color: $font-gray-01;
+  }
+
+  &-detail {
+    font-size: 14px;
+    font-weight: 500;
+    color: $font-black;
+  }
+
+  &-id {
+    font-size: 12px;
+    font-weight: 500;
+    color: $font-black;
+  }
+
+  &-setting {
+    @include flex-standard($horizontal: space-between);
+    padding-bottom: $spacing-12;
+    margin-bottom: $spacing-12;
+    border-bottom: 1px solid $border-gray
+  }
+
+  &-rating {
+    @include flex-standard;
+    gap: $spacing-8;
+  }
+
+  &-score {
+    font-size: 15px;
+    color: $font-black;
+  }
+
+  &-textarea {
+    position: relative;
+    margin-bottom: $spacing-16;
+    font-size: 0;
+  }
+
+  &-limit {
+    position: absolute;
+    bottom: $spacing-8;
+    right: $spacing-8;
+    font-size: 14px;
+    color: $font-gray-02;
+  }
+}
