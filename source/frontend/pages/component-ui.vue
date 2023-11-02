@@ -1153,6 +1153,16 @@
               <SearchFilter></SearchFilter>
             </td>
           </tr>
+          <tr>
+            <th scope="row">Scroll Top</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="relative h-10">
+                <ScrollTop style="position: absolute;left: 0;bottom: 0;"></ScrollTop>
+              </div>
+            </td>
+          </tr>
           </tbody>
         </table>
       </div>
