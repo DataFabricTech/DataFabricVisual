@@ -23,7 +23,8 @@
             role="option"
             @change="checkAll"
             :id="'checkAll'"
-            :checked="isAllCheck">전체</baseCheckbox>
+            :checked="isAllCheck"
+          >전체</baseCheckbox>
         </li>
         <li class="select-container-item" v-if="props.isCheck" v-for="(item, index) in selectData">
           <baseCheckbox
