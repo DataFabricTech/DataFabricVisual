@@ -311,14 +311,14 @@
       </template>
     </modal>
 
-    <h3>저장소 관리 > 연결정보 등록 Step 4</h3>
+    <h3>저장소 관리 > 수집 정보 등록 Step 4</h3>
     <baseButton class="button-lg button-primary" @click="onClickOpen4">모달 OPEN</baseButton>
     <modal v-model="show4" title="연결정보 등록">
       <template v-slot:body>
         <div class="modal-body w-[900px] p-6 items-center">
           <BaseStep></BaseStep>
           <div class="step-info">
-            <h4 class="step-info-title">추가 정보 입력</h4>
+            <h4 class="step-info-title">수집 정보 입력</h4>
             <div class="v-group w-full gap-2">
               <baseSwitch>
                 <template v-slot:switch-text>
@@ -375,18 +375,14 @@
                               <td>
                                 <div class="v-group">
                                   <div class="h-group">
-                                    <baseCheckbox id="lg-01">
-                                      table
-                                    </baseCheckbox>
+                                    <strong class="pr-2">(table)</strong>
+                                    <span class="color-font-gray-01">최소</span>
                                     <baseTextInput class="w-[100px]"></baseTextInput>
                                     <span>row</span>
-                                  </div>
-                                  <div class="h-group">
-                                    <baseCheckbox id="lg-02">
-                                      column
-                                    </baseCheckbox>
+                                    <span class="px-2">~</span>
+                                    <span>최대</span>
                                     <baseTextInput class="w-[100px]"></baseTextInput>
-                                    <span>length</span>
+                                    <span>row</span>
                                   </div>
                                 </div>
                               </td>
@@ -438,18 +434,14 @@
                               <td>
                                 <div class="v-group">
                                   <div class="h-group">
-                                    <baseCheckbox id="lg-01">
-                                      table
-                                    </baseCheckbox>
+                                    <strong class="pr-2">(table)</strong>
+                                    <span class="color-font-gray-01">최소</span>
                                     <baseTextInput class="w-[100px]"></baseTextInput>
                                     <span>row</span>
-                                  </div>
-                                  <div class="h-group">
-                                    <baseCheckbox id="lg-02">
-                                      column
-                                    </baseCheckbox>
+                                    <span class="px-2">~</span>
+                                    <span>최대</span>
                                     <baseTextInput class="w-[100px]"></baseTextInput>
-                                    <span>length</span>
+                                    <span>row</span>
                                   </div>
                                 </div>
                               </td>

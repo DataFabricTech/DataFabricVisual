@@ -39,4 +39,8 @@
   &-sm {
     @include text-input-size(24px, 12px);
   }
+
+  & ~ span {
+    color: $font-gray-01;
+  }
 }
