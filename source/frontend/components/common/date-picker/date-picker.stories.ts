@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from "@storybook/vue3";
 import DatePicker from "./date-picker.vue";
 import { action } from "@storybook/addon-actions";
-import { PickerDateType } from "../../../@types/global";
+import { DateType } from "./date-picker.ts";
 
 const meta: Meta<typeof DatePicker> = {
   component: DatePicker
@@ -32,7 +32,7 @@ export const Primary: Story = {
       return { args };
     },
     methods: {
-      onUpdateDate(value: PickerDateType) {
+      onUpdateDate(value: DateType) {
         action("clicked")(value);
       }
     }

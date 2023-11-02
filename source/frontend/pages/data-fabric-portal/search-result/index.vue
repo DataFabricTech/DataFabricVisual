@@ -1,9 +1,9 @@
 <!-- 데이터패브릭포털 - 검색 -->
 <template>
   <div class="l-common">
-    <h2 class="hidden">데이터패브릭포털 검색</h2>
+    <h2 class="hidden-text">데이터패브릭포털 검색</h2>
     <section class="l-section">
-      <h3 class="hidden">데이터 검색</h3>
+      <h3 class="hidden-text">데이터 검색</h3>
       <div class="main-search min-h-[240px]">
         <SearchField class="search-field-lg"></SearchField>
         <div class="search-word">
@@ -85,8 +85,8 @@
           </div>
           <div class="category-container">
             <div class="v-group gap-[16px]">
-              <div class="category-top-bar">
-                <h4 class="category-name" id="data-model">데이터모델 (6)</h4>
+              <div class="category-subject">
+                <h4 class="category-title" id="data-model">데이터모델 (6)</h4>
                 <baseButton class="button-primary">
                   <span class="button-text">서비스 이동</span>
                 </baseButton>
@@ -99,8 +99,8 @@
               <BasePagination></BasePagination>
             </div>
             <div class="v-group gap-[16px]">
-              <div class="category-top-bar">
-                <h4 class="category-name" id="repository">저장소 (5)</h4>
+              <div class="category-subject">
+                <h4 class="category-title" id="repository">저장소 (5)</h4>
                 <baseButton class="button-primary">
                   <span class="button-text">서비스 이동</span>
                 </baseButton>
@@ -130,8 +130,8 @@
           </div>
         <div class="category-container">
           <div class="v-group gap-[16px]">
-            <div class="category-top-bar">
-              <h4 class="category-name">분석보고서 (25)</h4>
+            <div class="category-subject">
+              <h4 class="category-title"> 분석보고서 (25)</h4>
               <baseButton class="button-primary">
                 <span class="button-text">서비스 이동</span>
               </baseButton>

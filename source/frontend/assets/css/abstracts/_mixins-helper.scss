@@ -11,7 +11,7 @@
 //-------------------------------------------
 // list 공통 스타일 정의
 //-------------------------------------------
-@mixin list-style($class-prefix, $size: null, $checkbox: null) {
+@mixin list-style($class-prefix, $size: null) {
   .#{$class-prefix}-list {
     background: $white;
   }
@@ -111,7 +111,7 @@
 //-------------------------------------------
 // 숨김
 //-------------------------------------------
-@mixin hidden {
+@mixin hidden-text {
   position: absolute;
   width: 1px;
   height: 1px;

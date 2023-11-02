@@ -6,7 +6,7 @@
           <span class="select-selector-title">{{ props.isCheck ? setCheckTitle : setSelectTitle }}</span>
         </slot>
         <!-- computed 로 처리 -->
-        <span class="hidden">선택</span>
+        <span class="hidden-text">선택</span>
         <svg-icon class="svg-icon select-selector-icon" name="chevron-down-medium" aria-hidden="true"></svg-icon>
       </button>
       <div class="select-selector-input" :style="props.isSearch ? '' : 'display: none'">

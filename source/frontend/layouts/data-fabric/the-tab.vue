@@ -8,7 +8,7 @@
         </button>
         <button type="button" class="nav-close-button">
           <svg-icon name="close" class="svg-icon" />
-          <span class="hidden">닫기</span>
+          <span class="hidden-text">닫기</span>
         </button>
       </div>
       <div class="nav-item">
@@ -18,7 +18,7 @@
         </button>
         <button type="button" class="nav-close-button">
           <svg-icon name="close" class="svg-icon" />
-          <span class="hidden">닫기</span>
+          <span class="hidden-text">닫기</span>
         </button>
       </div>
       <div class="nav-item">
@@ -28,7 +28,7 @@
         </button>
         <button type="button" class="nav-close-button">
           <svg-icon name="close" class="svg-icon" />
-          <span class="hidden">닫기</span>
+          <span class="hidden-text">닫기</span>
         </button>
       </div>
     </nav>

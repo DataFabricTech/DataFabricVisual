@@ -44,6 +44,7 @@
 
   &-content {
     @include flex-standard($horizontal: flex-start);
+    position: relative;
     flex-grow: 1;
     gap: $spacing-24;
 

@@ -26,8 +26,8 @@ $directions: (
   @include ellipsis-multi;
 }
 
-.hidden {
-  @include hidden;
+.hidden-text {
+  @include hidden-text;
 }
 
 .caption-out {
