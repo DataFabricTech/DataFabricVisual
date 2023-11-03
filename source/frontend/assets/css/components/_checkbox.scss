@@ -8,7 +8,7 @@
   position: relative;
 
   &-input {
-    @include hidden;
+     @include hidden-text;
     top: 4px;
     left: 2px;
 
@@ -113,7 +113,7 @@
 
     &.checkbox-indeterminate .checkbox-input + .checkbox-label:after,
     .checkbox-input:indeterminate + .checkbox-label:after {
-      ttop: 9px;
+      top: 9px;
       left: 7px;
       width: 10px;
       border-left-width: 0;
@@ -150,5 +150,9 @@
       border-left-width: 0;
       border-bottom-width: 2px;
     }
+  }
+
+  & ~ span {
+    color: $font-gray-01;
   }
 }

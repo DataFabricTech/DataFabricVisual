@@ -10,7 +10,7 @@
       </h5>
       <baseButton class="button-icon button-sm" title="닫기">
         <svg-icon name="close" class="svg-icon" />
-        <span class="hidden">닫기</span>
+        <span class="hidden-text">닫기</span>
       </baseButton>
     </header>
     <slot class="modal-body" name="body">

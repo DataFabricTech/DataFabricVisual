@@ -1,12 +1,12 @@
 <template>
   <div class="l-common">
-    <h2 class="hidden">데이터패브릭 검색목록</h2>
+    <h2 class="hidden-text">데이터패브릭 검색목록</h2>
     <section class="l-section gap-[20px]">
-      <h3 class="hidden">검색</h3>
+      <h3 class="hidden-text">검색</h3>
       <div class="data-search">
         <SearchField></SearchField>
         <BaseButton class="button-icon button-normal" title="상세 검색" @click="state.isOpen = !state.isOpen">
-          <span class="hidden">상세 검색</span>
+          <span class="hidden-text">상세 검색</span>
           <svg-icon name="sort" class="svg-icon"></svg-icon>
         </BaseButton>
         <div class="search-word ml-4">
@@ -42,11 +42,11 @@
         <div class="result-sort">
           <div class="toggle toggle-icon toggle-lg">
             <BaseRadio name="rI" id="ic-01">
-              <span class="hidden">리스트형 보기</span>
+              <span class="hidden-text">리스트형 보기</span>
               <svg-icon name="list-view" class="svg-icon"></svg-icon>
             </BaseRadio>
             <BaseRadio name="rI" id="ic-03">
-              <span class="hidden">썸네일형 보기</span>
+              <span class="hidden-text">썸네일형 보기</span>
               <svg-icon name="thumbnail-view" class="svg-icon"></svg-icon>
             </BaseRadio>
           </div>
@@ -57,87 +57,47 @@
       <div class="l-preview">
         <div class="preview-main">
           <article class="category-article ">
-            <div class="category-top-bar">
-              <h4 class="category-name" id="data-model">데이터모델 (6)</h4>
+            <div class="category-subject">
+              <h4 class="category-title" id="data-model">데이터모델 (6)</h4>
             </div>
             <ul class="card-list">
               <!--              선택된 데이터모델 is-selected 클래스 추가-->
               <li class="card-item is-selected">
-                <Card class="card-primary">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-negative">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-primary">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-negative">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-primary">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-negative">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-primary">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-negative">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-primary">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
               <li class="card-item">
-                <Card class="card-negative">
-                  <template v-slot:img>
-                    <svg-icon name="data" class="svg-icon"></svg-icon>
-                  </template>
-                </Card>
+                <Card></Card>
               </li>
             </ul>
             <BasePagination></BasePagination>
           </article>
           <article class="category-article">
-            <div class="category-top-bar">
-              <h4 class="category-name" id="data-model">데이터모델 (6)</h4>
+            <div class="category-subject">
+              <h4 class="category-title" id="data-model">데이터모델 (6)</h4>
             </div>
             <div class="no-result">
               <storng class="no-result-title">검색 결과가 없습니다.</storng>
@@ -148,11 +108,11 @@
         <div class="preview">
           <header class="preview-header">
             <h5 class="preview-title">
-              <span class="hidden">데이터 상세 정보</span>
+              <span class="hidden-text">데이터 상세 정보</span>
             </h5>
             <baseButton class="button-icon button-sm" title="닫기">
               <svg-icon name="close" class="svg-icon" />
-              <span class="hidden">닫기</span>
+              <span class="hidden-text">닫기</span>
             </baseButton>
           </header>
           <div class="preview-body">

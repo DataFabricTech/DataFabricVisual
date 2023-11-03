@@ -1,94 +1,77 @@
 .list {
   @include flex-standard($direction: column);
+  @include list-style('list');
   border: 1px solid $border-gray;
-  background-color: $white;
   color: $font-gray-01;
 
-  &-list {
-    width: 100%;
-  }
+  .list {
+    &-list {
+      width: 100%;
+    }
 
-  &-head {
-    width: 100%;
-    padding: $spacing-8;
-    background-color: $light-blue;
+    &-head {
+      width: 100%;
+      padding: $spacing-8;
+      background-color: $light-blue;
 
-    &-title {
-      @include ellipsis;
-      font-weight: 500;
+      &-title {
+        @include ellipsis;
+        font-weight: 500;
+        color: $font-gray-01;
+        font-size: 14px;
+      }
+    }
+
+    &-body {
+      width: 100%;
+    }
+
+    &-options {
+      @include flex-standard;
+      height: 40px;
+      border-bottom: 1px solid $border-gray
+    }
+
+    &-options-count {
+      @include flex-standard;
+      flex-shrink: 0;
+      margin-left: auto;
+      padding-right: $spacing-8;
       color: $font-gray-01;
       font-size: 14px;
     }
-  }
 
-  &-body {
-    width: 100%;
-  }
-
-  &-options {
-    @include flex-standard;
-    height: 40px;
-    padding: $spacing-8;
-    border-bottom: 1px solid $border-gray
-  }
-
-  &-options-count {
-    @include flex-standard;
-    flex-shrink: 0;
-    margin-left: auto;
-    color: $font-gray-01;
-    font-size: 14px;
-  }
-
-  &-options-count-selected {
-    margin-right: $spacing-4;
-  }
-
-  &-options-count-all {
-    margin-left: $spacing-4;
-  }
-
-  &-item {
-    position: relative;
-    border-bottom: 1px solid $disabled;
-
-    &:last-child {
-      border-bottom: 0;
+    &-options-count-selected {
+      margin-right: $spacing-4;
     }
 
-    &:hover {
-      background-color: $light-blue;
+    &-options-count-all {
+      margin-left: $spacing-4;
     }
 
-    .checkbox {
-      @include flex-standard($horizontal: flex-start);
-      height: 32px;
-      padding: $spacing-4 $spacing-8;
+    &-item {
+      position: relative;
+      border-bottom: 1px solid $disabled;
+
+      &:last-child {
+        border-bottom: 0;
+      }
     }
 
-    .checkbox-input:checked + .checkbox-label {
-      color: $primary;
+    &-button {
+      justify-content: flex-start;
+      gap: $spacing-8;
+
+      .svg-icon {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+      }
     }
-  }
 
-  &-button {
-    @include flex-standard($horizontal: flex-start);
-    width: 100%;
-    height: 32px;
-    gap: $spacing-8;
-
-    .svg-icon {
-      flex-shrink: 0;
-      width: 24px;
-      height: 24px;
+    &-text {
+      color: $font-black;
     }
-  }
-
-  &-text {
-    @include ellipsis;
-    text-align: left;
-    font-size: 15px;
-    color: $font-black;
   }
 
   .is-disabled {
