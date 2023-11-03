@@ -358,8 +358,13 @@
                                 <div class="h-group">
                                   <baseSelect></baseSelect>
                                   <DatePicker
-                                    v-model:modelValue="args.dateRange"
-                                    :type="args.rangeType">
+                                    v-model:modelValue="args.date"
+                                    :type="args.date">
+                                  </DatePicker>
+                                  <span class="px-2 color-font-gray-01">~</span>
+                                  <DatePicker
+                                    v-model:modelValue="args.date"
+                                    :type="args.date">
                                   </DatePicker>
                                 </div>
                               </td>
