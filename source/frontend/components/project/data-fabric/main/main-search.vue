@@ -19,6 +19,12 @@
 import { fabricMainStore } from "../../../../store/data-fabric/main/main";
 import { storeToRefs } from "pinia";
 
+const store = fabricMainStore();
+const { searchKeyword } = store;
+let {
+  keyword,
+} = storeToRefs(store);
+
 // 간편 검색
 async function mainKeyword(key) {
   // 입력받은 keyword값 스토어에 저장
@@ -35,10 +41,5 @@ async function mainKeyword(key) {
   window.open(link);
 };
 
-const store = fabricMainStore();
-const { searchKeyword } = store;
-let {
-  keyword,
-} = storeToRefs(store);
 
 </script>
