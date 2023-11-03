@@ -1,12 +1,7 @@
 <template>
-  <div :class="toggle === false ? 'select' : 'select is-open'" @click="openToggle">
-    <div class="select-selector" role="combobox" aria-expanded="false" aria-haspopup="true" @click="openTextInput">
-      <button
-        class="select-selector-button"
-        type="button"
-        title="열기"
-        :style="props.isSearch && textInputMode ? 'display: none' : ''"
-      >
+  <div :class="toggle === false ? 'select' : 'select is-open'">
+    <div class="select-selector" role="combobox" aria-expanded="false" aria-haspopup="true" @click="controlToggle">
+      <button class="select-selector-button" type="button" title="열기" v-if="!(props.isSearch && textInputMode)">
         <slot name="title">
           <span class="select-selector-title">{{ setTitle }}</span>
         </slot>
@@ -22,12 +17,7 @@
           autofocus
         ></baseTextInput>
       </div>
-      <baseButton
-        class="select-selector-close-button"
-        :style="props.isSearch && textInputMode ? '' : 'display: none'"
-        v-if="textInputMode"
-        @click="controlAllToggle"
-      >
+      <baseButton class="select-selector-close-button" v-if="props.isSearch && textInputMode" @click="controlAllToggle">
         <svg-icon class="svg-icon" name="chevron-up-medium" aria-hidden="true"></svg-icon>
       </baseButton>
     </div>
@@ -46,7 +36,7 @@
         <li class="select-container-item" v-if="props.isCheck" v-for="(item, index) in selectData">
           <baseCheckbox
             role="option"
-            :id="index + props.checkBoxId.toString()"
+            :id="props.checkBoxId.toString() + index"
             :name="item[dataKey]"
             :value="item[dataValue]"
             :checked="checkList.includes(item[dataValue])"
@@ -75,29 +65,44 @@ interface data {
   value: any;
 }
 const props = defineProps({
+  /**
+   * select 리스트 데이터 값
+   */
   data: {
     type: Array as () => Array<data>,
     default: null
   },
+  /**
+   * data의 key 값
+   */
   dataKey: {
     type: String,
     default: "key"
   },
+  /**
+   * data value 값
+   */
   dataValue: {
     type: String,
     default: "value"
   },
+  /**
+   * select 에 지정된 값
+   * (selectedValue)
+   */
   defaultValue: {
     default: null
   },
-  isReset: {
-    type: Boolean,
-    default: false
-  },
+  /**
+   * checkbox select
+   */
   isCheck: {
     type: Boolean,
     default: false
   },
+  /**
+   * 검색용 select
+   */
   isSearch: {
     type: Boolean,
     default: false
@@ -122,19 +127,25 @@ const textInputMode = ref(false);
 /**
  * 토글  open - close
  */
-function openToggle() {
+function controlToggle() {
+  console.log("controlToggle");
   toggle.value = !toggle.value;
+  if (props.isSearch) {
+    controlTextInput();
+  }
 }
 
 /**
  * 검색창 open - close
  */
-function openTextInput() {
+function controlTextInput() {
+  console.log("controlTextInput");
   textInputMode.value = !textInputMode.value;
 }
 function controlAllToggle() {
-  openToggle();
-  openTextInput();
+  console.log("controlAllToggle");
+  controlToggle();
+  controlTextInput();
 }
 function doNothing() {}
 
@@ -158,24 +169,9 @@ const setTitle = computed(() => {
  * 일반 셀렉트 박스일 경우 선택 값
  */
 const setSelectTitle = computed(() => {
-  if (props.data === null) {
-    return null;
-  }
-  if (!props.isCheck && select.value !== null) {
+  if (select.value != null) {
     return select.value;
   }
-
-  /**
-   * 디폴트 값 있을때 title 및 emit 처리
-   */
-  if (props.defaultValue != null) {
-    let select = props.data.filter((item) => item[props.dataValue] === props.defaultValue)[0];
-    clickItem(select);
-    return select[props.dataKey];
-  }
-  const defaultItem: data = props.data[0];
-  clickItem(defaultItem);
-  return defaultItem[props.dataKey];
 });
 
 /**
@@ -183,18 +179,18 @@ const setSelectTitle = computed(() => {
  */
 const setCheckTitle = computed(() => {
   const length = checkList.value.length;
-  if (length === props.data?.length) {
+  if (isAllCheck.value) {
     return ALL;
-  } else if (length >= 2 && length < props.data?.length) {
-    return MULTI_SELECT + `(${length})`;
-  } else if (length === 1) {
-    for (let item of props.data) {
-      if (item[props.dataValue] === checkList.value[0]) {
-        return item[props.dataKey];
-      }
+  } else {
+    switch (length) {
+      case 0:
+        return SELECT;
+      case 1:
+        let item: data | undefined = props.data.find((item) => item[props.dataValue] === checkList.value[0]);
+        return item != undefined ? item[props.dataKey] : null;
+      default:
+        return MULTI_SELECT + `(${length})`;
     }
-  } else if (length === 0) {
-    return SELECT;
   }
 });
 
@@ -222,6 +218,10 @@ const clickItem = (item: data) => {
   } else {
     select.value = item[props.dataKey];
   }
+
+  if (toggle.value) {
+    controlToggle();
+  }
   emit("select", item[props.dataValue]);
 };
 
@@ -232,6 +232,7 @@ const clickItem = (item: data) => {
 function checkAll(checked: boolean) {
   isAllCheck.value = checked;
   checkList.value = checked ? props.data.map((item) => item[props.dataValue]) : [];
+  emit("select", checkList.value);
 }
 
 /**
@@ -261,12 +262,25 @@ onMounted(() => {
     selectData.value = props.data;
   }
   /**
+   * 일반 셀렉트 박스 일 경우 title 및 emit 처리
+   */
+  if (!props.isSearch && !props.isCheck) {
+    let defaultItem: data | undefined =
+      props.defaultValue == null
+        ? props.data[0]
+        : props.data.find((item) => item[props.dataValue] === props.defaultValue);
+    if (defaultItem !== undefined) {
+      clickItem(defaultItem);
+    }
+  }
+  /**
    * 검색 셀렉트 박스일 경우 디폴트 값이 있을때
    */
   if (props.isSearch && props.defaultValue) {
-    let select = props.data.filter((item) => item[props.dataValue] === props.defaultValue)[0];
-    keyword.value = select[props.dataKey];
-    emit("select", select[props.dataValue]);
+    let defaultItem: data | undefined = props.data.find((item) => item[props.dataValue] === props.defaultValue);
+    if (defaultItem !== undefined) {
+      clickItem(defaultItem);
+    }
   }
 });
 </script>
