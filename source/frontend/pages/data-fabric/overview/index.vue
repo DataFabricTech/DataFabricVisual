@@ -121,13 +121,51 @@
       <article class="page-article">
         <h4 class="page-subtitle">요약 정보</h4>
         <div class="h-group w-full gap-[16px]">
-          <div class="chartbox">차트</div>
-          <div class="chartbox">차트</div>
-          <div class="chartbox">차트</div>
+          <div class="chartbox">
+            <h4 class="mr-auto">차트</h4>
+          </div>
+          <div class="chartbox">
+            <h4 class="mr-auto">차트</h4>
+          </div>
+          <div class="chartbox">
+            <h4 class="mr-auto">연결정보 응답시간</h4>
+            <div class="connection-info">
+              <dl>
+                <dt>연결정보 C</dt>
+                <hr>
+                <dd>24.10 sec</dd>
+              </dl>
+              <dl>
+                <dt>연결정보 C</dt>
+                <hr>
+                <dd>24.10 sec</dd>
+              </dl>
+              <dl>
+                <dt>연결정보 C</dt>
+                <hr>
+                <dd>24.10 sec</dd>
+              </dl>
+              <dl>
+                <dt>연결정보 C</dt>
+                <hr>
+                <dd>24.10 sec</dd>
+              </dl>
+              <dl>
+                <dt>연결정보 C</dt>
+                <hr>
+                <dd>24.10 sec</dd>
+              </dl>
+            </div>
+
+          </div>
         </div>
         <div class="h-group w-full gap-[16px]">
-          <div class="chartbox">차트</div>
-          <div class="chartbox">차트</div>
+          <div class="chartbox">
+            <h4 class="mr-auto">차트</h4>
+          </div>
+          <div class="chartbox">
+            <h4 class="mr-auto">차트</h4>
+          </div>
         </div>
       </article>
       <article class="page-article">

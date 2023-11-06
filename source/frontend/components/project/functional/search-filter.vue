@@ -19,7 +19,11 @@
             </div>
             <div class="form-content">
               <BaseSelect class="select-lg"></BaseSelect>
-              <!--            TODO: [퍼블리싱] datepicker 추가 예정-->
+              <DatePicker
+                v-model:modelValue="args.dateRange"
+                :type="args.rangeType"
+                class="date-picker">
+              </DatePicker>
             </div>
           </div>
           <div class="form-item">
@@ -72,4 +76,20 @@
 </template>
 
 <script setup lang="ts">
+
+import DatePicker from "/components/common/date-picker/date-picker.vue";
+
+
+const meta: Meta<typeof DatePicker> = {
+  component: DatePicker,
+};
+
+let args = {
+  date: "2023-11-22",
+  dateRange: ["2023-11-10", "2023-11-22"],
+  // storybook 에 object 형식으로 뜸
+  dateType: "time",
+  rangeType: "date"
+};
+
 </script>
