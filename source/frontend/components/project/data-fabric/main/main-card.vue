@@ -165,7 +165,7 @@
 </template>
 <script lang="ts" setup>
 
-import { fabricMainStore } from "../../../../store/data-fabric/main/main";
+import { fabricMainStore } from "/store/data-fabric/main/main";
 import { storeToRefs } from "pinia";
 
 const store = fabricMainStore();
