@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useNuxtApp } from "nuxt/app";
 export const fabricMainStore = defineStore("fabricMain",() => {
 
   // keyword 값
@@ -211,6 +212,43 @@ export const fabricMainStore = defineStore("fabricMain",() => {
       },
     }
 
+  // 1') 신규 데이터 Response값 객체 선언 (임시)
+  const responseSimpleCard_newData = reactive([
+      {
+        model: {
+          name: '1불법 주정차 구간 데이터1',
+          description: '서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보',
+          updatedAt: '2023-09-22',
+          domain: '1공간',
+          storageInfo: {
+            storageType: 'HDFS'
+          }
+        }
+      },
+    {
+      model: {
+        name: '2불법 주정차 구간 데이터2',
+        description: '서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보',
+        updatedAt: '2023-09-22',
+        domain: '2공간',
+        storageInfo: {
+          storageType: 'HDFS'
+        }
+      }
+    },
+    {
+      model: {
+        name: '3불법 주정차 구간 데이터3',
+        description: '서울시에서 수집되고 있는 불법 주정차 차량 단속 이력 정보',
+        updatedAt: '2023-09-22',
+        domain: '3공간',
+        storageInfo: {
+          storageType: 'HDFS'
+        }
+      }
+    }
+    ]);
+
   // 단순 키워드 검색을 위한 API호출
   async function searchKeyword() {
     // 간편검색 request object 생성
@@ -238,9 +276,25 @@ export const fabricMainStore = defineStore("fabricMain",() => {
     return searchResultList.data;
   }
 
+  // 최근 등록일자 기준 필터를 가진 API 호출 - request를 3개만 하면 됨.
+  async function simpleCardContent_newData(requestSimpleCard_newData: any) {
+
+    await useNuxtApp().$api("/portal/v1/search", {
+      method: "POST",
+      body: requestSimpleCard_newData
+    })
+    // TODO : 추후 API붙이면, Back 단 처리
+    // .then((res) => )
+    // TODO : 임시 response값을 리턴 -> 실제 response를 리턴하도록 한다.
+    return responseSimpleCard_newData;
+
+  };
+
   return {
     keyword,
     searchResultList,
-    searchKeyword
-  };
+    responseSimpleCard_newData,
+    searchKeyword,
+    simpleCardContent_newData
+  }
 });
