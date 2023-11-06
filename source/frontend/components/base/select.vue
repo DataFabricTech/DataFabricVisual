@@ -8,7 +8,7 @@
         <span class="hidden-text">선택</span>
         <svg-icon class="svg-icon select-selector-icon" name="chevron-down-medium" aria-hidden="true"></svg-icon>
       </button>
-      <div class="select-selector-input" v-if="props.isSearch && textInputMode" @click.stop="doNothing">
+      <div class="select-selector-input" v-if="props.isSearch && textInputMode" @click.stop="openAllToggle">
         <baseTextInput
           class="text-input"
           type="text"
@@ -144,7 +144,7 @@ function controlToggle() {
 function controlTextInput() {
   textInputMode.value = !textInputMode.value;
 }
-function doNothing() {
+function openAllToggle() {
   toggle.value = true;
   textInputMode.value = true;
 }
