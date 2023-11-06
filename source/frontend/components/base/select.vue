@@ -31,7 +31,7 @@
           <baseCheckbox
             class="checkbox-indeterminate"
             role="option"
-            :id="'checkAll'"
+            :id="'checkAll' + checkBoxId"
             :checked="isAllCheck"
             @change="checkAll"
             >전체</baseCheckbox
@@ -40,7 +40,7 @@
         <li class="select-container-item" v-if="props.isCheck" v-for="(item, index) in selectData">
           <baseCheckbox
             role="option"
-            :id="props.checkBoxId.toString() + index"
+            :id="checkBoxId + index"
             :name="item[dataKey]"
             :value="item[dataValue]"
             :checked="checkList.includes(item[dataValue])"
@@ -110,16 +110,13 @@ const props = defineProps({
   isSearch: {
     type: Boolean,
     default: false
-  },
-  checkBoxId: {
-    type: Number,
-    default: Math.random()
   }
 });
 const emit = defineEmits<{
   select: [data: any];
 }>();
 
+const checkBoxId = ref(Math.random().toString());
 const selectData = ref<data[]>([]);
 const toggle = ref(false);
 const select = ref(null);
