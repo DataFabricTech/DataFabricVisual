@@ -17,7 +17,11 @@
           autofocus
         ></baseTextInput>
       </div>
-      <baseButton class="select-selector-close-button" v-if="props.isSearch && textInputMode" @click="controlAllToggle">
+      <baseButton
+        class="select-selector-close-button"
+        v-if="props.isSearch && textInputMode"
+        @click.stop="controlToggle"
+      >
         <svg-icon class="svg-icon" name="chevron-up-medium" aria-hidden="true"></svg-icon>
       </baseButton>
     </div>
@@ -27,9 +31,9 @@
           <baseCheckbox
             class="checkbox-indeterminate"
             role="option"
-            @change="checkAll"
             :id="'checkAll'"
             :checked="isAllCheck"
+            @change="checkAll"
             >전체</baseCheckbox
           >
         </li>
@@ -128,7 +132,6 @@ const textInputMode = ref(false);
  * 토글  open - close
  */
 function controlToggle() {
-  console.log("controlToggle");
   toggle.value = !toggle.value;
   if (props.isSearch) {
     controlTextInput();
@@ -139,15 +142,12 @@ function controlToggle() {
  * 검색창 open - close
  */
 function controlTextInput() {
-  console.log("controlTextInput");
   textInputMode.value = !textInputMode.value;
 }
-function controlAllToggle() {
-  console.log("controlAllToggle");
-  controlToggle();
-  controlTextInput();
+function doNothing() {
+  toggle.value = true;
+  textInputMode.value = true;
 }
-function doNothing() {}
 
 /**
  * 셀렉트 박스 선택 값
@@ -186,7 +186,7 @@ const setCheckTitle = computed(() => {
       case 0:
         return SELECT;
       case 1:
-        let item: data | undefined = props.data.find((item) => item[props.dataValue] === checkList.value[0]);
+        let item: data | undefined = findDataValue(checkList.value[0]);
         return item != undefined ? item[props.dataKey] : null;
       default:
         return MULTI_SELECT + `(${length})`;
@@ -211,10 +211,9 @@ watch(
  * 검색 있는 셀렉트 박스일 경우 || 그 외 셀렉트 박스일 경우
  * @param item
  */
-const clickItem = (item: data) => {
+function clickItem(item: data) {
   if (props.isSearch) {
     keyword.value = item[props.dataKey];
-    textInputMode.value = false;
   } else {
     select.value = item[props.dataKey];
   }
@@ -222,8 +221,11 @@ const clickItem = (item: data) => {
   if (toggle.value) {
     controlToggle();
   }
+  if (props.isSearch) {
+    textInputMode.value = false;
+  }
   emit("select", item[props.dataValue]);
-};
+}
 
 /**
  * 체크 셀렉트 박스 전체 선택 기능
@@ -254,9 +256,10 @@ function checkData(checked: boolean, item: data, index: number) {
   emit("select", checkList.value);
 }
 
-/**
- * props.data = selectData
- */
+const findDataValue = (data: any): data | undefined => {
+  return props.data.find((item) => item[props.dataValue] === data);
+};
+
 onMounted(() => {
   if (props.data != null) {
     selectData.value = props.data;
@@ -265,10 +268,7 @@ onMounted(() => {
    * 일반 셀렉트 박스 일 경우 title 및 emit 처리
    */
   if (!props.isSearch && !props.isCheck) {
-    let defaultItem: data | undefined =
-      props.defaultValue == null
-        ? props.data[0]
-        : props.data.find((item) => item[props.dataValue] === props.defaultValue);
+    let defaultItem: data | undefined = props.defaultValue == null ? props.data[0] : findDataValue(props.defaultValue);
     if (defaultItem !== undefined) {
       clickItem(defaultItem);
     }
@@ -277,7 +277,7 @@ onMounted(() => {
    * 검색 셀렉트 박스일 경우 디폴트 값이 있을때
    */
   if (props.isSearch && props.defaultValue) {
-    let defaultItem: data | undefined = props.data.find((item) => item[props.dataValue] === props.defaultValue);
+    let defaultItem: data | undefined = findDataValue(props.defaultValue);
     if (defaultItem !== undefined) {
       clickItem(defaultItem);
     }
