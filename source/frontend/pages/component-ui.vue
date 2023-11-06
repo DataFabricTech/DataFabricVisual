@@ -1024,6 +1024,37 @@
             </td>
           </tr>
           <tr>
+            <td>
+              <div class="v-group gap-5">
+                <div class="h-group gap-3">
+                  <!-- directive -->
+                  <a v-tooltip.top="tooltipMassage">Directive Tooltip</a>
+                  <!-- component - placement (top, bottom, right, left, ...) -->
+                  <VTooltip placement="bottom">
+                    <a>Component Tooltip</a>
+                    <template #popper>
+                      {{ tooltipMassage }}
+                    </template>
+                  </VTooltip>
+                  <!-- component - other component -->
+                  <VTooltip>
+                    <a>Component Tooltip</a>
+                    <template #popper>
+                      <baseTooltip class="tooltip-top" style="position: relative">
+                        <template v-slot:title>
+                          tooltip title
+                        </template>
+                        <template v-slot:text>
+                          tooltip text
+                        </template>
+                      </baseTooltip>
+                    </template>
+                  </VTooltip>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
             <th scope="row">List</th>
           </tr>
           <tr>
@@ -1254,6 +1285,8 @@ let args = {
   dateType: "time",
   rangeType: "datetime"
 };
+
+const tooltipMassage = ref(`You have ${3} new messages.`);
 
 function onClickOpen() {
   show.value = !show.value;
