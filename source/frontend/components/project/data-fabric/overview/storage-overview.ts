@@ -6,6 +6,7 @@ export interface Overview {
   storageStatusCount: ChartObject;
   storageStatistics: ChartAxis;
   storageDataCount: ChartAxis;
+  storageResponseTime: Array<Object>
   history: Grid;
   event: Grid;
 }

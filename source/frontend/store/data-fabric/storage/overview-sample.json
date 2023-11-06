@@ -90,6 +90,23 @@
     }
   ],
   "storageOverview": {
+    "storageResponseTime": [
+      {
+        "id": "storage-id-01",
+        "name": "IRIS",
+        "responseTime": 0.1
+      },
+      {
+        "id": "storage-id-02",
+        "name": "MySQL",
+        "responseTime": 0.2
+      },
+      {
+        "id": "storage-id-03",
+        "name": "Postgre",
+        "responseTime": 0.3
+      }
+    ],
     "storageTypeCount": {
       "series": [
         {

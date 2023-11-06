@@ -2,9 +2,9 @@
   <section class="l-split-section">
     <div class="page-subject">
       <h3 class="page-title">Overview</h3>
-<!--      <BaseButton class="button-tertiary">-->
-<!--        <span class="button-text">데이터 모델 생성</span>-->
-<!--      </BaseButton>-->
+      <!--      <BaseButton class="button-tertiary">-->
+      <!--        <span class="button-text">데이터 모델 생성</span>-->
+      <!--      </BaseButton>-->
     </div>
     <article class="page-article">
       <!-- TODO: (개발) notification 받은 후 개발 -->
@@ -29,32 +29,11 @@
         <!--  연결정보 응답시간 -->
         <div class="chartbox">
           <h4 class="mr-auto">연결정보 응답시간</h4>
-          <!-- TODO: (개발) 연결정보 개발 -->
           <div class="connection-info">
-            <dl>
-              <dt>연결정보 C</dt>
-              <hr>
-              <dd>24.10 sec</dd>
-            </dl>
-            <dl>
-              <dt>연결정보 C</dt>
-              <hr>
-              <dd>24.10 sec</dd>
-            </dl>
-            <dl>
-              <dt>연결정보 C</dt>
-              <hr>
-              <dd>24.10 sec</dd>
-            </dl>
-            <dl>
-              <dt>연결정보 C</dt>
-              <hr>
-              <dd>24.10 sec</dd>
-            </dl>
-            <dl>
-              <dt>연결정보 C</dt>
-              <hr>
-              <dd>24.10 sec</dd>
+            <dl v-for="(item, key) in storage.overview.storageResponseTime" :key="key">
+              <dt>{{item.name}}</dt>
+              <hr />
+              <dd>{{item.responseTime}} sec</dd>
             </dl>
           </div>
         </div>
@@ -79,8 +58,8 @@
           style="width: 100%; height: 230px"
           class="ag-theme-alpine"
           :gridOptions="DEFAULT_GRID_OPTION"
-          :columnDefs="grid.event.colDefs"
-          :rowData="grid.event.rowData"
+          :columnDefs="storage.overview.event.colDefs"
+          :rowData="storage.overview.event.rowData"
           @grid-ready="onEventGridReady"
         >
         </ag-grid-vue>
@@ -93,8 +72,8 @@
           style="width: 100%; height: 230px"
           class="ag-theme-alpine"
           :gridOptions="DEFAULT_GRID_OPTION"
-          :columnDefs="grid.history.colDefs"
-          :rowData="grid.history.rowData"
+          :columnDefs="storage.overview.history.colDefs"
+          :rowData="storage.overview.history.rowData"
           @grid-ready="onHistoryGridReady"
         >
         </ag-grid-vue>
@@ -104,15 +83,14 @@
 </template>
 <script lang="ts" setup>
 import { AgGridVue } from "ag-grid-vue3";
-import { useStorageStore } from "~/store/data-fabric/storage/storage";
+import { useOverviewStore } from "~/store/data-fabric/storage/storage";
 import type { Overview } from "~/components/project/data-fabric/overview/storage-overview";
-import type { Grid } from "~/@types/global";
 
-const { getOverview, getStorageEvent } = useStorageStore();
+const { getOverview, getStorageEvent } = useOverviewStore();
 
 const DEFAULT_BAR_CHART_OPTION = {
   chart: {
-    type: "column",
+    type: "column"
   },
   title: {
     text: null
@@ -127,9 +105,9 @@ const DEFAULT_BAR_CHART_OPTION = {
   xAxis: {
     title: {
       text: "연결정보",
-      align:"high",
+      align: "high",
       margin: 0
-    },
+    }
   },
   legend: {
     enabled: true
@@ -170,7 +148,7 @@ const DEFAULT_GRID_OPTION = {
 
 const storage: {
   overview: Overview;
-  events: Array<Object>
+  events: Array<Object>;
 } = reactive({
   overview: {
     storageTypeCount: {
@@ -187,6 +165,7 @@ const storage: {
       categories: [],
       series: []
     },
+    storageResponseTime: [],
     history: {
       colDefs: [],
       rowData: []
@@ -206,11 +185,13 @@ const chart: {
   storageStatusCount: Object;
   storageStatistics: Object;
   storageDataCount: Object;
+  storageResponseTime: Array<Object>;
 } = reactive({
   storageTypeCount: {},
   storageStatusCount: {},
   storageStatistics: {},
-  storageDataCount: {}
+  storageDataCount: {},
+  storageResponseTime: []
 });
 setChartData();
 
@@ -246,7 +227,7 @@ function setChartData() {
   chart.storageDataCount = _merge(
     {
       xAxis: {
-        categories: storage.overview.storageDataCount.categories,
+        categories: storage.overview.storageDataCount.categories
       },
       yAxis: {
         title: {
@@ -262,30 +243,18 @@ function setChartData() {
     },
     DEFAULT_BAR_CHART_OPTION
   );
+
+  chart.storageResponseTime = storage.overview.storageResponseTime;
 }
 
 const grid: {
-  history: Grid;
-  event: Grid;
   historyGridApi: any;
   eventGridApi: any;
 } = reactive({
-  history: {
-    rowData: [],
-    colDefs: []
-  },
-  event: {
-    rowData: [],
-    colDefs: []
-  },
   historyGridApi: null,
   eventGridApi: null
 });
-setGridData();
-function setGridData() {
-  grid.history = storage.overview.history;
-  grid.event = storage.overview.event;
-}
+
 function onHistoryGridReady(params: any) {
   grid.historyGridApi = params.api;
   grid.historyGridApi.sizeColumnsToFit();

@@ -2,8 +2,8 @@
 <template>
   <div class="l-split">
     <h2 class="hidden-text">저장소 관리</h2>
-    <storage-overview></storage-overview>
     <storage-tree></storage-tree>
+    <storage-overview></storage-overview>
   </div>
 
   <storage-filter-popup></storage-filter-popup>
@@ -13,5 +13,10 @@
 definePageMeta({
   layout: "default-tab-layout"
 });
+const {$vfm} = useNuxtApp();
+onMounted(() => {
+$vfm.open("storage-filter-popup")
+
+})
 
 </script>

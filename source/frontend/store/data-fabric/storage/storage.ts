@@ -78,9 +78,36 @@ const DEFAULT_FILTER: StorageFilter = {
   storageType: [],
   status: []
 };
+
 /**
- * Storage 관련
- * TODO: 추후 API 서버 연동 후 개발
+ * Storage - Overview 화면 관련
+ */
+export const useOverviewStore = defineStore("overview", () => {
+  /**
+   * Overview - 연결정보 변경사항(얼럿) 목록 조회
+   * TODO: API 연동 (API 미정)
+   */
+  function getStorageEvent() {
+    return OverviewSample.storageEvent;
+  }
+
+  /**
+   * Overview - 차트, 그리드 등 목록 조회
+   * TODO: API 연동 (/overview)
+   */
+  function getOverview() {
+    return OverviewSample.storageOverview;
+  }
+  return {
+    getStorageEvent,
+    getOverview
+  };
+})
+
+
+
+/**
+ * Storage - 연결정보 목록 관련
  */
 export const useStorageStore = defineStore("storage", () => {
   const {$api} = useNuxtApp();
@@ -133,37 +160,39 @@ export const useStorageStore = defineStore("storage", () => {
     return storage.items;
   })
 
+  /**
+   * 연결정보 목록 정렬
+   * TODO: 연결정보 API 재조회
+   * @param data
+   */
   function changeListBySort(data: any) {
     storage.selectedSort = data;
   }
+
+  /**
+   * 연결정보 목록 조회 초기화
+   * TODO: 연결정보 목록 API 재조회
+   */
   function resetSearch() {
     storage.selectedSort = DEFAULT_SORT;
     // NOTE: v-model로 해당 값을 사용중인데 원본 Defulat_filter까지 변경되어있음
-    storage.filter = DEFAULT_FILTER;
+    storage.filter = _.cloneDeep(DEFAULT_FILTER);
   }
+
+  /**
+   * 연결정보 목록 조회
+   * TODO: API 연동 (/search)
+   */
   function getStorage() {
-    // return $api(`${STORAGE_BASE_URL}/search`, {
-    //   method: "POST",
-    //   // body: search
-    // });
     storage.items = OverviewSample.storages;
   }
-  function getStorageEvent() {
-    // return $api(`${STORAGE_BASE_URL}/event`);
-    return OverviewSample.storageEvent;
-  }
-  function getOverview() {
-    // return $api(`${STORAGE_BASE_URL}/overview`);
-    return OverviewSample.storageOverview;
-  }
+
   return {
     storage,
     storageList,
     storageSortList,
     changeListBySort,
     resetSearch,
-    getStorage,
-    getStorageEvent,
-    getOverview
+    getStorage
   };
 })
