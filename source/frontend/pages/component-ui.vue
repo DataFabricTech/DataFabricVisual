@@ -982,7 +982,45 @@
                   </div>
                 </div>
               </div>
-
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Tooltip</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="v-group gap-5">
+                <div class="h-group gap-3">
+                  <baseTooltip class="tooltip-bottom" style="position: relative">
+                    <template v-slot:title>
+                      tooltip title
+                    </template>
+                    <template v-slot:text>
+                      tooltip text
+                    </template>
+                  </baseTooltip>
+                  <baseTooltip class="tooltip-top" style="position: relative">
+                    <template v-slot:title>
+                      tooltip title
+                    </template>
+                    <template v-slot:text>
+                      tooltip text
+                    </template>
+                  </baseTooltip>
+                  <baseTooltip class="tooltip-right" style="position: relative">
+                    <template v-slot:text>
+                      only tooltip text
+                      <br>
+                      tooltip text
+                    </template>
+                  </baseTooltip>
+                  <baseTooltip class="tooltip-left" style="position: relative">
+                    <template v-slot:title>
+                      only tooltip title
+                    </template>
+                  </baseTooltip>
+                </div>
+              </div>
             </td>
           </tr>
           <tr>
@@ -1181,6 +1219,7 @@ import { useRouter } from "vue-router";
 import { sample } from "/composables/sample";
 import { AgGridVue } from "ag-grid-vue3";
 import DatePicker from "/components/common/date-picker/date-picker.vue";
+import Tooltip from "#build/components/base/tooltip.vue";
 
 const sampleData = sample();
 const show = ref(false);
