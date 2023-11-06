@@ -10,6 +10,20 @@
         <table class="guide-table">
           <tbody>
           <tr>
+            <th scope="row">tree</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="v-group gap-5">
+                <div class="h-group gap-2">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">default</strong>
+                    <CommonTree v-bind="args" v-on="$props">
+                    </CommonTree>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
             <th scope="row">Alert</th>
           </tr>
           <tr>
@@ -1181,6 +1195,8 @@ import { useRouter } from "vue-router";
 import { sample } from "/composables/sample";
 import { AgGridVue } from "ag-grid-vue3";
 import DatePicker from "/components/common/date-picker/date-picker.vue";
+import Tree from "/components/common/tree/tree.vue";
+import { Meta } from "@storybook/vue3";
 
 const sampleData = sample();
 const show = ref(false);
@@ -1206,14 +1222,83 @@ const rowData = [
 
 const meta: Meta<typeof DatePicker> = {
   component: DatePicker,
-};
+}
 
-let args = {
+const args = {
   date: "2023-11-22",
   dateRange: ["2023-11-10", "2023-11-22"],
-  // storybook 에 object 형식으로 뜸
   dateType: "time",
-  rangeType: "datetime"
+  rangeType: "datetime",
+  node: {
+    id1: {
+      text: "text1",
+      children: ["id11", "id12"],
+    },
+    id11: {
+      text: "text11",
+    },
+    id12: {
+      text: "text12",
+    },
+    id2: {
+      text: "text2",
+    },
+    id3: {
+      text: "text3",
+      children: ["id31"],
+      state: {
+        opened: true
+      }
+    },
+    id31: {
+      text: "text31",
+      children: ["id311", "id312", "id313"],
+      state: {
+        opened: true,
+      }
+    },
+    id311: {
+      text: "text311",
+      state: {
+        checked: true
+      }
+    },
+    id312: {
+      text: "text312",
+      state: {
+        disabled: true,
+        checked: true
+      }
+    },
+    id313: {
+      text: "text313",
+      state: {
+        editable: true
+      }
+    },
+    id4: {
+      text: "text4",
+    },
+  },
+  config: {
+    "roots": ["id1", "id2", "id3"],
+    openedIcon: {
+      type: "shape",
+      stroke: "black",
+      strokeWidth: 3,
+      viewBox: "0 0 24 24",
+      draw: "M 2 12 L 22 12",
+    },
+    closedIcon: {
+      type: "shape",
+      stroke: "black",
+      strokeWidth: 3,
+      viewBox: "0 0 24 24",
+      draw: `M 12 2 L 12 22 M 2 12 L 22 12`,
+    },
+    checkboxes: true,
+    editable: true
+  }
 };
 
 function onClickOpen() {
