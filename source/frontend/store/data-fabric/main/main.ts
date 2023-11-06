@@ -260,7 +260,7 @@ export const fabricMainStore = defineStore("fabricMain",() => {
         }
       }
     };
-    await $fetch("/portal/v1/search", {
+    await useNuxtApp().$api("/portal/v1/search", {
       method: "POST",
       body: searchObj
     })
