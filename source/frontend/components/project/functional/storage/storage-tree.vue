@@ -3,7 +3,7 @@
     <h3 class="hidden-text">연결정보 목록</h3>
     <div class="v-group w-full">
       <div class="h-group justify-between w-full">
-        <BaseButton class="button-icon button-link button-sm" title="초기화" @click="onResetStorage">
+        <BaseButton class="button-icon button-link button-sm" title="초기화" @click="resetSearch">
           <span class="hidden-text">초기화</span>
           <svg-icon name="reset" class="svg-icon"></svg-icon>
         </BaseButton>
@@ -13,7 +13,12 @@
               <span class="hidden-text">정렬 열기</span>
               <svg-icon name="sort" class="svg-icon" />
             </BaseButton>
-            <BaseContext class="kebab-context" v-if="state.isOpen" :items="storageSortList" @click="onClickSort"></BaseContext>
+            <BaseContext
+              class="kebab-context"
+              v-if="state.isOpen"
+              :items="storageSortList"
+              @click="onClickSort"
+            ></BaseContext>
           </div>
           <BaseButton class="button-icon button-link button-sm" title="필터" @click="onClickOpen">
             <span class="hidden-text">필터</span>
@@ -25,7 +30,7 @@
     </div>
     <div class="search-tree">
       <template v-for="(item, key) in storageList" :key="key">
-        <BaseButton class="button button-lg " v-if="item.show">
+        <BaseButton class="button button-lg" v-if="item.show">
           <span class="button-text">{{ item.name }}</span>
         </BaseButton>
       </template>
@@ -41,24 +46,18 @@ import type { StorageSortContextItem } from "~/components/project/data-fabric/ov
 import { useStorageStore } from "~/store/data-fabric/storage/storage";
 import { storeToRefs } from "pinia";
 
-
 const store = useStorageStore();
 const { storage, storageSortList, storageList } = storeToRefs(store);
-const { getStorage, changeListBySort , resetSearch}  = store;
+const { getStorage, setSort, resetSearch } = store;
 // api 호출
 getStorage();
-
-function onResetStorage() {
-  resetSearch();
-}
 
 const state = reactive({
   isOpen: false
 });
-
 function onClickSort(item: StorageSortContextItem) {
   state.isOpen = false;
-  changeListBySort(item)
+  setSort(item);
 }
 
 const { $vfm } = useNuxtApp();

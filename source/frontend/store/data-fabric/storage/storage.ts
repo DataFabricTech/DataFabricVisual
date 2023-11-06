@@ -1,12 +1,15 @@
 import { defineStore } from "pinia";
 import OverviewSample from "./overview-sample.json"
-import _ from "lodash";
 import {
   StorageFilter,
   StorageItem,
-  StorageSortContextItem
+  StorageSortContextItem, StorageTypeItem
 } from "~/components/project/data-fabric/overview/storage-overview";
 const STORAGE_BASE_URL = "/storage/v1"
+const DEFAULT_STATUS_LIST = [
+  { id: "connection", value: "CONNECTED", name: "연결됨" },
+  { id: "disconnection", value: "DISCONNECTED", name: "연결 안됨" }
+];
 
 const DEFAULT_SORT_LIST: Array<StorageSortContextItem> = [
   {
@@ -73,11 +76,6 @@ const DEFAULT_SORT: StorageSortContextItem = {
   type: "name",
   direction: "asc"
 }
-const DEFAULT_FILTER: StorageFilter = {
-  name: "",
-  storageType: [],
-  status: []
-};
 
 /**
  * Storage - Overview 화면 관련
@@ -110,13 +108,14 @@ export const useOverviewStore = defineStore("overview", () => {
  * Storage - 연결정보 목록 관련
  */
 export const useStorageStore = defineStore("storage", () => {
-  const {$api} = useNuxtApp();
+  const { $api } = useNuxtApp();
   const storage: {
     items: Array<StorageItem>;
+    types: Array<StorageTypeItem>;
+    statusTypes: Array<Object>;
     filter: StorageFilter;
     selectedSort: StorageSortContextItem;
     sortList: Array<StorageSortContextItem>;
-    storeType: Array<Object>
   } = reactive({
     items: [
       {
@@ -128,6 +127,13 @@ export const useStorageStore = defineStore("storage", () => {
         show: true
       }
     ],
+    types: [
+      {
+        name: "",
+        value: "",
+        checked: false
+      }
+    ],
     filter: {
       name: "",
       storageType: [],
@@ -135,7 +141,7 @@ export const useStorageStore = defineStore("storage", () => {
     },
     selectedSort: DEFAULT_SORT,
     sortList: DEFAULT_SORT_LIST,
-    storeType: [],
+    statusTypes: DEFAULT_STATUS_LIST
   });
 
   const storageSortList = computed(() => {
@@ -144,29 +150,48 @@ export const useStorageStore = defineStore("storage", () => {
       el.selected = el.id === storage.selectedSort.id;
       return el;
     });
+
     return storage.sortList;
-  })
+  });
 
   const storageList = computed(() => {
     // 정렬
-    storage.items = _.orderBy(storage.items, storage.selectedSort.type, storage.selectedSort.direction);
+    storage.items = _orderBy(storage.items, storage.selectedSort.type, storage.selectedSort.direction);
 
+    // 필터
     const filterText = storage.filter.name.toLowerCase();
-    // 필터 - 텍스트
-    _.map(storage.items, el =>{
-        el.show = el.name.toLowerCase().includes(filterText);
-        return el;
-    })
+    _map(storage.items, (el) => {
+      el.show =
+        el.name.toLowerCase().includes(filterText) &&
+        storage.filter.storageType.includes(el.storageType) &&
+        storage.filter.status.includes(el.status);
+      return el;
+    });
     return storage.items;
-  })
+  });
+
+  const initTypeFilter = computed(() => {
+    return _map(storage.types, "value");
+  });
+
+  const initStatusFilter = computed(() => {
+    return _map(storage.statusTypes, "value");
+  });
 
   /**
    * 연결정보 목록 정렬
    * TODO: 연결정보 API 재조회
    * @param data
    */
-  function changeListBySort(data: any) {
+  function setSort(data: any) {
     storage.selectedSort = data;
+  }
+  function setStorageTypeFilter(data: any) {
+    storage.filter.storageType = data;
+  }
+
+  function setStatusFilter(data: any) {
+    storage.filter.status = data;
   }
 
   /**
@@ -175,8 +200,17 @@ export const useStorageStore = defineStore("storage", () => {
    */
   function resetSearch() {
     storage.selectedSort = DEFAULT_SORT;
-    // NOTE: v-model로 해당 값을 사용중인데 원본 Defulat_filter까지 변경되어있음
-    storage.filter = _.cloneDeep(DEFAULT_FILTER);
+    storage.filter.name= "";
+    initPopupFilter();
+  }
+
+  /**
+   * 연결정보 필터 > 저장소 타입 목록 조회
+   * TODO: API 연동 (미정)
+   */
+  function getStorageType() {
+    storage.types = OverviewSample.storageTypes;
+    initPopupFilter();
   }
 
   /**
@@ -184,14 +218,27 @@ export const useStorageStore = defineStore("storage", () => {
    * TODO: API 연동 (/search)
    */
   function getStorage() {
+    getStorageType();
     storage.items = OverviewSample.storages;
+  }
+
+  /**
+   * 연결정보 필터 > 저장소 타입 목록 초기값 설정
+   */
+  function initPopupFilter() {
+    storage.filter.storageType = initTypeFilter.value;
+    storage.filter.status = initStatusFilter.value;
   }
 
   return {
     storage,
     storageList,
     storageSortList,
-    changeListBySort,
+    initTypeFilter,
+    initStatusFilter,
+    setSort,
+    setStorageTypeFilter,
+    setStatusFilter,
     resetSearch,
     getStorage
   };

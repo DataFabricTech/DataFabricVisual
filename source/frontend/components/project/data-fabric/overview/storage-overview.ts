@@ -23,6 +23,11 @@ export interface StorageItem {
   crdDate: string,
   show: boolean
 }
+export interface StorageTypeItem {
+  name: string,
+  value: any,
+  checked: boolean
+}
 export interface StorageFilter {
   name: string,
   storageType: Array<string>,

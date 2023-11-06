@@ -1,31 +1,45 @@
 {
   "storageTypes": [
     {
+      "id": "storage-type-iris",
       "name": "IRIS",
+      "value": "IRIS",
       "checked": false
     },
     {
+      "id": "storage-type-postgresql",
+      "value": "PostgreSQL",
       "name": "PostgreSQL",
       "checked": false
     },
     {
+      "id": "storage-type-mysql",
       "name": "MySQL",
+      "value": "MySQL",
       "checked": false
     },
     {
+      "id": "storage-type-oracle",
+      "value": "Oracle",
       "name": "Oracle",
       "checked": false
     },
     {
+      "id": "storage-type-minio",
+      "value": "MinIO",
       "name": "MinIO",
       "checked": false
     },
     {
+      "id": "storage-type-mariadb",
       "name": "MariaDB",
+      "value": "MariaDB",
       "checked": false
     },
     {
+      "id": "storage-type-hdfs",
       "name": "HDFS",
+      "value": "HDFS",
       "checked": false
     }
   ],
@@ -57,7 +71,7 @@
     {
       "id": "storage-id-04",
       "name": "MinIO",
-      "storageType": "ObjectStorage",
+      "storageType": "HDFS",
       "status": "DISCONNECTED",
       "crdDate": "2021-09-01",
       "show": true
@@ -66,7 +80,7 @@
       "id": "storage-id-05",
       "name": "Hadoop",
       "storageType": "HDFS",
-      "status": "ERROR",
+      "status": "CONNECTED",
       "crdDate": "2021-01-01",
       "show": true
     }

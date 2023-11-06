@@ -13,10 +13,4 @@
 definePageMeta({
   layout: "default-tab-layout"
 });
-const {$vfm} = useNuxtApp();
-onMounted(() => {
-$vfm.open("storage-filter-popup")
-
-})
-
 </script>
