@@ -17,6 +17,7 @@
   &.is-modify {
     .text-input {
       display: block;
+      width: 50%;
     }
     .card-link, .card-detail, .tag {
       display: none;

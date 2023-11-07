@@ -30,8 +30,16 @@
         <p class="card-detail">{{ props.model.description }}</p>
         <baseTextInput placeholder="연결정보 설명 영역입니다." class="hidden"></baseTextInput>
       </div>
-      <div class="h-group gap-[16px]">
-        <baseTextInput placeholder="태그 영역입니다." class="hidden"></baseTextInput>
+      <div class="h-group gap-[16px] w-full">
+        <div class="h-group grow">
+          <baseTextInput placeholder="태그 영역입니다." class="hidden"></baseTextInput>
+          <VTooltip class="tooltip" placement="top-start">
+            <svg-icon class="svg-icon" name="help-outline"></svg-icon>
+            <template #popper>
+              {{ tooltipMassage }}
+            </template>
+          </VTooltip>
+        </div>
         <BaseTag v-for="item in props.model.tags">#{{ item }}</BaseTag>
       </div>
       <div class="h-group justify-between w-full">
@@ -100,6 +108,7 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
+import { ref } from "@vue/reactivity";
 
 interface ModelType {
   id: string;
@@ -155,6 +164,7 @@ const props = defineProps({
     default: false
   }
 });
+const tooltipMassage = ref(`태그 추가 시 콤마(,)로 구분해주세요.`);
 const emit = defineEmits(['preview', 'download', 'click']);
 const badgeClass = ["bg-marker-purple", "bg-marker-red", "bg-marker-yellow"]
 const downloadStatus = computed(() => {

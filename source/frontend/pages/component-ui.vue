@@ -989,68 +989,14 @@
           </tr>
           <tr>
             <td>
-              <div class="v-group gap-5">
-                <div class="h-group gap-3">
-                  <baseTooltip class="tooltip-bottom" style="position: relative">
-                    <template v-slot:title>
-                      tooltip title
-                    </template>
-                    <template v-slot:text>
-                      tooltip text
-                    </template>
-                  </baseTooltip>
-                  <baseTooltip class="tooltip-top" style="position: relative">
-                    <template v-slot:title>
-                      tooltip title
-                    </template>
-                    <template v-slot:text>
-                      tooltip text
-                    </template>
-                  </baseTooltip>
-                  <baseTooltip class="tooltip-right" style="position: relative">
-                    <template v-slot:text>
-                      only tooltip text
-                      <br>
-                      tooltip text
-                    </template>
-                  </baseTooltip>
-                  <baseTooltip class="tooltip-left" style="position: relative">
-                    <template v-slot:title>
-                      only tooltip title
-                    </template>
-                  </baseTooltip>
-                </div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div class="v-group gap-5">
-                <div class="h-group gap-3">
-                  <!-- directive -->
-                  <a v-tooltip.top="tooltipMassage">Directive Tooltip</a>
-                  <!-- component - placement (top, bottom, right, left, ...) -->
-                  <VTooltip placement="bottom">
-                    <a>Component Tooltip</a>
-                    <template #popper>
-                      {{ tooltipMassage }}
-                    </template>
-                  </VTooltip>
-                  <!-- component - other component -->
-                  <VTooltip>
-                    <a>Component Tooltip</a>
-                    <template #popper>
-                      <baseTooltip class="tooltip-top" style="position: relative">
-                        <template v-slot:title>
-                          tooltip title
-                        </template>
-                        <template v-slot:text>
-                          tooltip text
-                        </template>
-                      </baseTooltip>
-                    </template>
-                  </VTooltip>
-                </div>
+              <div class="h-group">
+                <!-- VTooltip - placement (top, bottom, right, left, ...) -->
+                <VTooltip class="tooltip" placement="top-start">
+                  <svg-icon class="svg-icon" name="help-outline"></svg-icon>
+                  <template #popper>
+                    {{ tooltipMassage }}
+                  </template>
+                </VTooltip>
               </div>
             </td>
           </tr>
@@ -1250,7 +1196,7 @@ import { useRouter } from "vue-router";
 import { sample } from "/composables/sample";
 import { AgGridVue } from "ag-grid-vue3";
 import DatePicker from "/components/common/date-picker/date-picker.vue";
-import Tooltip from "#build/components/base/tooltip.vue";
+import Tooltip from "/components/base/tooltip.vue";
 
 const sampleData = sample();
 const show = ref(false);
@@ -1286,7 +1232,7 @@ let args = {
   rangeType: "datetime"
 };
 
-const tooltipMassage = ref(`You have ${3} new messages.`);
+const tooltipMassage = ref(`태그 추가 시 콤마(,)로 구분해주세요.`);
 
 function onClickOpen() {
   show.value = !show.value;
