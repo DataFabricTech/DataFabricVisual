@@ -7,7 +7,6 @@
 // theme
 @import "./themes/set-color.scss";
 @import "./themes/set-theme.scss";
-@import "./themes/theme.scss";
 
 // mixins
 @import "./abstracts/fonts";
@@ -19,13 +18,14 @@
 
 // base
 @import "base/base";
-@import "base/classes";
 
 // components
+@import "components/alert";
 @import "components/badge";
 @import "components/button";
 @import "components/checkbox";
 @import "components/context";
+@import "components/date-picker";
 @import "components/form";
 @import "components/nav";
 @import "components/notifiaction";
@@ -55,6 +55,8 @@
 @import "modules/search-field";
 @import "modules/search-filter";
 @import "modules/data-status";
+@import "modules/review";
+@import "modules/scroll-top";
 
 // layouts
 @import "layout/layout";
@@ -76,8 +78,10 @@
 // vendors
 @import "vendors/ag-theme-alpine";
 
-// status
+// class
 @import "base/status";
+@import "base/classes";
+@import "./themes/theme.scss";
 
 // tailwindCSS Utility Class
 @import "./tailwind/tailwind-utilities";

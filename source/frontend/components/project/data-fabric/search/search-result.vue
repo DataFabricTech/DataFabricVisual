@@ -27,8 +27,8 @@
     <div class="l-preview">
       <div class="preview-main">
         <article class="category-article ">
-          <div class="category-top-bar">
-            <h4 class="category-name" id="data-model">데이터모델 (6)</h4>
+          <div class="category-subject">
+            <h4 class="category-title" id="data-model">데이터모델 (6)</h4>
           </div>
           <ul class="card-list">
             <!--              선택된 데이터모델 is-selected 클래스 추가-->
@@ -106,8 +106,8 @@
           <BasePagination></BasePagination>
         </article>
         <article class="category-article">
-          <div class="category-top-bar">
-            <h4 class="category-name" id="data-model">데이터모델 (6)</h4>
+          <div class="category-subject">
+            <h4 class="category-title" id="data-model">데이터모델 (6)</h4>
           </div>
           <div class="no-result">
             <storng class="no-result-title">검색 결과가 없습니다.</storng>
@@ -152,7 +152,7 @@
           </article>
           <article class="preview-article">
             <BaseTab></BaseTab>
-            <ul class="card-simple-list w-full">
+            <ul class="card-simple-list">
               <li class="card-simple-item" v-for="index in 3">
                 <CardSimple></CardSimple>
               </li>

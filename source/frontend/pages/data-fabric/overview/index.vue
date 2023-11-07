@@ -109,15 +109,63 @@
         </BaseButton>
       </div>
       <article class="page-article">
+        <BaseNotification theme="warning" use-close>
+          <strong class="notification-title">
+            연결정보가 변동되어 데이터모델 정보 를 다운로드 받을 수 없습니다.
+          </strong>
+          <a href="#" class="notification-link">
+            바로가기
+          </a>
+        </BaseNotification>
+      </article>
+      <article class="page-article">
         <h4 class="page-subtitle">요약 정보</h4>
         <div class="h-group w-full gap-[16px]">
-          <div class="chartbox">차트</div>
-          <div class="chartbox">차트</div>
-          <div class="chartbox">차트</div>
+          <div class="chartbox">
+            <h4 class="mr-auto">차트</h4>
+          </div>
+          <div class="chartbox">
+            <h4 class="mr-auto">차트</h4>
+          </div>
+          <div class="chartbox">
+            <h4 class="mr-auto">연결정보 응답시간</h4>
+            <div class="connection-info">
+              <dl>
+                <dt>연결정보 C</dt>
+                <hr>
+                <dd>24.10 sec</dd>
+              </dl>
+              <dl>
+                <dt>연결정보 C</dt>
+                <hr>
+                <dd>24.10 sec</dd>
+              </dl>
+              <dl>
+                <dt>연결정보 C</dt>
+                <hr>
+                <dd>24.10 sec</dd>
+              </dl>
+              <dl>
+                <dt>연결정보 C</dt>
+                <hr>
+                <dd>24.10 sec</dd>
+              </dl>
+              <dl>
+                <dt>연결정보 C</dt>
+                <hr>
+                <dd>24.10 sec</dd>
+              </dl>
+            </div>
+
+          </div>
         </div>
         <div class="h-group w-full gap-[16px]">
-          <div class="chartbox">차트</div>
-          <div class="chartbox">차트</div>
+          <div class="chartbox">
+            <h4 class="mr-auto">차트</h4>
+          </div>
+          <div class="chartbox">
+            <h4 class="mr-auto">차트</h4>
+          </div>
         </div>
       </article>
       <article class="page-article">

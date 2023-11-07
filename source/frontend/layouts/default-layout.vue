@@ -7,14 +7,12 @@
     <main id="main">
       <slot />
     </main>
+    <ModalsContainer/>
   </div>
 </template>
 
 <script lang="ts" setup>
-import TheHeader from "./data-fabric/the-header.vue";
-import TheTab from "./data-fabric/the-tab.vue";
-
-export default {
-  components: { TheHeader, TheTab }
-};
+import TheHeader from "/layouts/data-fabric/the-header.vue";
+import TheTab from "/layouts/data-fabric/the-tab.vue";
+import { ModalsContainer } from "vue-final-modal";
 </script>
