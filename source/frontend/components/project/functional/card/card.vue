@@ -30,9 +30,9 @@
         <p class="card-detail">{{ props.model.description }}</p>
         <baseTextInput placeholder="연결정보 설명 영역입니다." class="hidden"></baseTextInput>
       </div>
-      <div class="h-group gap-[16px] w-full">
-        <div class="h-group grow">
-          <baseTextInput placeholder="태그 영역입니다." class="hidden"></baseTextInput>
+      <div class="h-group gap-[16px]">
+        <div class="input-wrapper hidden">
+          <baseTextInput placeholder="태그 영역입니다." class="w-96"></baseTextInput>
           <VTooltip class="tooltip" placement="top-start">
             <svg-icon class="svg-icon" name="help-outline"></svg-icon>
             <template #popper>

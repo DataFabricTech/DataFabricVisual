@@ -15,10 +15,15 @@
   }
 
   &.is-modify {
-    .text-input {
+    .input-wrapper, .text-input {
       display: block;
-      width: 50%;
     }
+
+    .input-wrapper {
+      @include flex-standard;
+      gap: $spacing-8;
+    }
+
     .card-link, .card-detail, .tag {
       display: none;
     }
