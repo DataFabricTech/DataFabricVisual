@@ -110,10 +110,18 @@ const props = defineProps({
   isSearch: {
     type: Boolean,
     default: false
+  },
+  /**
+   * 체크박스일 때 타이틀을 지정해줘야 하는 경우
+   */
+  defaultTitle: {
+    type: String,
+    default: SELECT
   }
 });
 const emit = defineEmits<{
   select: [data: any];
+  getName: [data: any];
 }>();
 
 const checkBoxId = ref(Math.random().toString());
@@ -121,6 +129,7 @@ const selectData = ref<data[]>([]);
 const toggle = ref(false);
 const select = ref(null);
 const checkList: any = ref([]);
+const nameList: any = ref([]);
 const isAllCheck = ref(false);
 const keyword = ref<string | null>(null);
 const textInputMode = ref(false);
@@ -166,9 +175,10 @@ const setTitle = computed(() => {
  * 일반 셀렉트 박스일 경우 선택 값
  */
 const setSelectTitle = computed(() => {
-  if (select.value != null) {
-    return select.value;
+  if (select.value == null) {
+    return SELECT;
   }
+  return select.value;
 });
 
 /**
@@ -181,7 +191,7 @@ const setCheckTitle = computed(() => {
   } else {
     switch (length) {
       case 0:
-        return SELECT;
+        return props.defaultTitle;
       case 1:
         let item: data | undefined = findDataValue(checkList.value[0]);
         return item != undefined ? item[props.dataKey] : null;
@@ -231,7 +241,9 @@ function clickItem(item: data) {
 function checkAll(checked: boolean) {
   isAllCheck.value = checked;
   checkList.value = checked ? props.data.map((item) => item[props.dataValue]) : [];
+  nameList.value = checked ? props.data.map((item) => item[props.dataKey]) : [];
   emit("select", checkList.value);
+  emit("getName", nameList.value);
 }
 
 /**
@@ -243,14 +255,20 @@ function checkAll(checked: boolean) {
 function checkData(checked: boolean, item: data, index: number) {
   if (checked) {
     checkList.value.push(item[props.dataValue]);
+    nameList.value.push(item[props.dataValue]);
   } else {
     let indexToRemove = checkList.value.indexOf(item[props.dataValue]);
     if (indexToRemove !== -1) {
       checkList.value.splice(indexToRemove, 1);
     }
+    let indexToRemoveNames = nameList.value.indexOf(item[props.dataKey]);
+    if (indexToRemoveNames !== -1) {
+      nameList.value.splice(indexToRemoveNames, 1);
+    }
   }
-  isAllCheck.value = checkList.value.length == props.data?.length;
+  isAllCheck.value = checkList.value.length === props.data?.length;
   emit("select", checkList.value);
+  emit("getName", nameList.value);
 }
 
 const findDataValue = (data: any): data | undefined => {
@@ -279,5 +297,6 @@ onMounted(() => {
       clickItem(defaultItem);
     }
   }
+  //TODO: 검색 체크박스 일 경우 디폴트 값 있을 때 기능 개발
 });
 </script>
