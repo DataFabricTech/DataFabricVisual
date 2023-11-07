@@ -5,12 +5,10 @@
       @search="mainKeyword"
       ></SearchField>
     <div class="search-word">
+      {{ recentTagList }}
       <strong class="search-word-title">최근 검색어</strong>
-      <div class="h-group gap-5">
-        <baseTag># CCTV위치</baseTag>
-        <baseTag># 주정차댠속</baseTag>
-        <baseTag># 기후변화</baseTag>
-        <baseTag># 안심지역</baseTag>
+      <div class="h-group gap-5" v-for="(tag, index) in recentTagList" :key="index">
+        <tag-removable>{{ tag }}</tag-removable>
       </div>
     </div>
   </div>
@@ -18,13 +16,26 @@
 <script lang="ts" setup>
 import { fabricMainStore } from "/store/data-fabric/main/main";
 import { storeToRefs } from "pinia";
+import { onMounted } from "vue";
+import TagRemovable from "/components/base/tag-removable.vue";
 
 const store = fabricMainStore();
-const { searchKeyword } = store;
+const { searchKeyword, insertRecentSearch } = store;
 let {
   keyword,
 } = storeToRefs(store);
 
+// 최근 검색어 res값 받는 객체선언
+let recentTagList = reactive([]);
+
+onMounted(() => {
+  // 최근 검색어 API함수 호출
+  insertRecentSearch()
+    .then((res: any) => {
+      recentTagList = res.recentSearches;
+    })
+  //TODO : 태그내용 데이터바인딩 문제 해결
+})
 // 간편 검색
 async function mainKeyword(key) {
   // 입력받은 keyword값 스토어에 저장
@@ -33,13 +44,18 @@ async function mainKeyword(key) {
   await searchKeyword()
     .then((data: any) => {
     console.log("data : ", data);
-  })
+    // TODO : 검색이 완료되었으니, 또다시 최근 검색어 API 를 호출한다.
+    })
+  // await insertRecentSearch()
+  //   .then((data: any) => {
+  //     console.log("데이터 : ", data);
+  //
+  //   })
   // TODO : 추후 router로 페이지 전환 처리로 변경될 예정
   // "검색결과 페이지"로 이동
-  var link = "/data-fabric/development-search";
-  location.href=link;
-  window.open(link);
+  // var link = "/data-fabric/development-search";
+  // location.href=link;
+  // window.open(link);
+
 };
-
-
 </script>

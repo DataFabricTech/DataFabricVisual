@@ -290,10 +290,27 @@ export const fabricMainStore = defineStore("fabricMain",() => {
 
   };
 
+  const recentSearchResonse = {
+    'code': '200',
+    'data': {
+      'recentSearches': ['모비젠', '데이터', '데이터패브릭']
+    }
+  };
+
+  // 최근 검색어를 호출하여 최근 검색키워드 저장하는 API호출 함수
+  async function insertRecentSearch() {
+    await useNuxtApp().$api("/portal/v1/recent-searches",{
+      method: "GET"
+    })
+    return recentSearchResonse.data;
+  }
+
   return {
     keyword,
     searchResultList,
     responseSimpleCard_newData,
+    recentSearchResonse,
+    insertRecentSearch,
     searchKeyword,
     simpleCardContent_newData
   }
