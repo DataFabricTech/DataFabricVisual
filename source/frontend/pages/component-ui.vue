@@ -767,6 +767,29 @@
             </td>
           </tr>
           <tr>
+            <th scope="row">Text-input(removable)</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="v-group gap-5">
+                <div class="h-group">
+                  <strong class="">size: lg</strong>
+                  <div class="text-input-group text-input-group-lg">
+                    <span class="text-input-group-icon">
+                      <svg-icon class="svg-icon" name="search"></svg-icon>
+                    </span>
+                    <baseTextInput id="inp-group-lg"></baseTextInput>
+                    <Basebutton class="text-input-group-clear-button" title="초기화">
+                      <svg-icon class="svg-icon" name="close"></svg-icon>
+                    </Basebutton>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+
+          <tr>
             <th scope="row">Textarea</th>
           </tr>
           <tr>
@@ -1137,32 +1160,32 @@
           <tr>
             <th scope="row">Search-field</th>
           </tr>
-          <tr>
-            <td>
-              <div class="v-group gap-5">
-                <div class="h-group">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
-                  <SearchField class="search-field-lg"></SearchField>
-                </div>
-                <div class="h-group">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: md</strong>
-                  <SearchField></SearchField>
-                </div>
-                <div class="h-group">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
-                  <SearchField class="search-field-sm" style="width: 300px;"></SearchField>
-                </div>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <th scope="row">Search filter</th>
-          </tr>
-          <tr>
-            <td>
-              <SearchFilter></SearchFilter>
-            </td>
-          </tr>
+<!--          <tr>-->
+<!--            <td>-->
+<!--              <div class="v-group gap-5">-->
+<!--                <div class="h-group">-->
+<!--                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>-->
+<!--                  <SearchField class="search-field-lg"></SearchField>-->
+<!--                </div>-->
+<!--                <div class="h-group">-->
+<!--                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: md</strong>-->
+<!--                  <SearchField></SearchField>-->
+<!--                </div>-->
+<!--                <div class="h-group">-->
+<!--                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>-->
+<!--                  <SearchField class="search-field-sm" style="width: 300px;"></SearchField>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </td>-->
+<!--          </tr>-->
+<!--          <tr>-->
+<!--            <th scope="row">Search filter</th>-->
+<!--          </tr>-->
+<!--          <tr>-->
+<!--            <td>-->
+<!--              <SearchFilter></SearchFilter>-->
+<!--            </td>-->
+<!--          </tr>-->
           <tr>
             <th scope="row">Scroll Top</th>
           </tr>
@@ -1191,7 +1214,6 @@ import { useRouter } from "vue-router";
 import { sample } from "/composables/sample";
 import { AgGridVue } from "ag-grid-vue3";
 import DatePicker from "/components/common/date-picker/date-picker.vue";
-import Tooltip from "/components/base/tooltip.vue";
 
 const sampleData = sample();
 const show = ref(false);
