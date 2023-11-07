@@ -52,7 +52,7 @@
 import { useStorageStore } from "~/store/data-fabric/storage/storage";
 
 const store = useStorageStore();
-const { storage, initTypeFilter, initStatusFilter, setStorageTypeFilter, setStatusFilter } = store;
+const { storage, setStorageTypeFilter, setStatusFilter } = store;
 
 const filter: {
   status: Array<string>;
@@ -66,8 +66,8 @@ const filter: {
  * 필터 초기화 - 초기값(전체 선택 값)으로 복구
  */
 function initFilter() {
-  filter.types = initTypeFilter;
-  filter.status = initStatusFilter;
+  filter.types = _map(storage.types, "value");
+  filter.status = _map(storage.statusTypes, "value");
 }
 
 /**

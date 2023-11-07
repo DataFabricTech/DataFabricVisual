@@ -9,13 +9,13 @@
         </BaseButton>
         <div class="h-group">
           <div class="kebab-menu">
-            <BaseButton @focus="state.isOpen = true" class="button button-icon button-lg" title="열기">
+            <BaseButton @focus="isOpen = true" class="button button-icon button-lg" title="열기">
               <span class="hidden-text">정렬 열기</span>
               <svg-icon name="sort" class="svg-icon" />
             </BaseButton>
             <BaseContext
               class="kebab-context"
-              v-if="state.isOpen"
+              v-if="isOpen"
               :items="storageSortList"
               @click="onClickSort"
             ></BaseContext>
@@ -49,14 +49,14 @@ import { storeToRefs } from "pinia";
 const store = useStorageStore();
 const { storage, storageSortList, storageList } = storeToRefs(store);
 const { getStorage, setSort, resetSearch } = store;
-// api 호출
-getStorage();
 
-const state = reactive({
-  isOpen: false
+onMounted(() => {
+  getStorage();
 });
+
+const isOpen = ref(false);
 function onClickSort(item: StorageSortContextItem) {
-  state.isOpen = false;
+  isOpen.value = false;
   setSort(item);
 }
 

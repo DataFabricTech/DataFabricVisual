@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import OverviewSample from "./overview-sample.json"
 import {
+  Overview,
   StorageFilter,
   StorageItem,
   StorageSortContextItem, StorageTypeItem
@@ -81,12 +82,55 @@ const DEFAULT_SORT: StorageSortContextItem = {
  * Storage - Overview 화면 관련
  */
 export const useOverviewStore = defineStore("overview", () => {
+  const storage: {
+    overview: Overview;
+    events: Array<any>;
+  } = reactive({
+    overview: {
+      storageTypeCount: {
+        series: []
+      },
+      storageStatusCount: {
+        series: []
+      },
+      storageStatistics: {
+        categories: [],
+        series: []
+      },
+      storageDataCount: {
+        categories: [],
+        series: []
+      },
+      storageResponseTime: [],
+      history: {
+        colDefs: [],
+        rowData: []
+      },
+      event: {
+        colDefs: [],
+        rowData: []
+      }
+    },
+    events: []
+  });
+  const storageEvent = computed(() => {
+    // TODO: API 확인 후 변경 필요
+    return _map(storage.events, (item) => {
+      const link = `/repository-detail?id=${item.id}`
+      return {
+        theme: item.theme,
+        useClose: true,
+        link: link,
+        message: item.description
+      }
+    });
+  });
   /**
    * Overview - 연결정보 변경사항(얼럿) 목록 조회
    * TODO: API 연동 (API 미정)
    */
   function getStorageEvent() {
-    return OverviewSample.storageEvent;
+    storage.events = OverviewSample.storageEvent;
   }
 
   /**
@@ -94,9 +138,11 @@ export const useOverviewStore = defineStore("overview", () => {
    * TODO: API 연동 (/overview)
    */
   function getOverview() {
-    return OverviewSample.storageOverview;
+    storage.overview = OverviewSample.storageOverview;
   }
   return {
+    storage,
+    storageEvent,
     getStorageEvent,
     getOverview
   };
@@ -170,14 +216,6 @@ export const useStorageStore = defineStore("storage", () => {
     return storage.items;
   });
 
-  const initTypeFilter = computed(() => {
-    return _map(storage.types, "value");
-  });
-
-  const initStatusFilter = computed(() => {
-    return _map(storage.statusTypes, "value");
-  });
-
   /**
    * 연결정보 목록 정렬
    * TODO: 연결정보 API 재조회
@@ -233,16 +271,14 @@ export const useStorageStore = defineStore("storage", () => {
    * 연결정보 필터 > 저장소 타입 목록 초기값 설정
    */
   function initPopupFilter() {
-    storage.filter.storageType = initTypeFilter.value;
-    storage.filter.status = initStatusFilter.value;
+    storage.filter.storageType = _map(storage.types, "value");
+    storage.filter.status = _map(storage.statusTypes, "value");
   }
 
   return {
     storage,
     storageList,
     storageSortList,
-    initTypeFilter,
-    initStatusFilter,
     setSort,
     setStorageTypeFilter,
     setStatusFilter,

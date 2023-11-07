@@ -7,7 +7,7 @@
       <!--      </BaseButton>-->
     </div>
     <article class="page-article">
-      <notification :messages="storage.events"></notification>
+      <notification :messages="storageEvent"></notification>
     </article>
     <article class="page-article">
       <h4 class="page-subtitle">요약 정보</h4>
@@ -15,18 +15,18 @@
         <!-- 데이터 저장소 유형 요약 -->
         <div class="chartbox">
           <h4 class="mr-auto">데이터 저장소 유형 요약</h4>
-          <highcharts style="width: 100%; height: 100%" :options="chart.storageTypeCount"> </highcharts>
+          <highcharts style="width: 100%; height: 100%" :options="storageTypeCount"> </highcharts>
         </div>
         <!-- 연결정보 상태 요약 -->
         <div class="chartbox">
           <h4 class="mr-auto">연결정보 상태 요약</h4>
-          <highcharts style="width: 100%; height: 100%" :options="chart.storageStatusCount"> </highcharts>
+          <highcharts style="width: 100%; height: 100%" :options="storageStatusCount"> </highcharts>
         </div>
         <!--  연결정보 응답시간 -->
         <div class="chartbox">
           <h4 class="mr-auto">연결정보 응답시간</h4>
           <div class="connection-info">
-            <dl v-for="(item, key) in storage.overview.storageResponseTime" :key="key">
+            <dl v-for="(item, key) in storageResponseTime" :key="key">
               <dt>{{ item.name }}</dt>
               <hr />
               <dd>{{ item.responseTime }} sec</dd>
@@ -38,12 +38,12 @@
         <!-- 데이터 모델 조회 순위 -->
         <div class="chartbox">
           <h4 class="mr-auto">데이터 모델 조회 순위</h4>
-          <highcharts style="width: 100%; height: 100%" :options="chart.storageStatistics"> </highcharts>
+          <highcharts style="width: 100%; height: 100%" :options="storageStatistics"> </highcharts>
         </div>
         <!-- 데이터 모델 등록 현황-->
         <div class="chartbox">
           <h4 class="mr-auto">데이터 모델 등록 현황</h4>
-          <highcharts style="width: 100%; height: 100%" :options="chart.storageDataCount"> </highcharts>
+          <highcharts style="width: 100%; height: 100%" :options="storageDataCount"> </highcharts>
         </div>
       </div>
     </article>
@@ -53,7 +53,6 @@
         <ag-grid-vue
           style="width: 100%; height: 230px"
           class="ag-theme-alpine"
-          :gridOptions="DEFAULT_GRID_OPTION"
           :columnDefs="storage.overview.event.colDefs"
           :rowData="storage.overview.event.rowData"
           @grid-ready="onEventGridReady"
@@ -67,7 +66,6 @@
         <ag-grid-vue
           style="width: 100%; height: 230px"
           class="ag-theme-alpine"
-          :gridOptions="DEFAULT_GRID_OPTION"
           :columnDefs="storage.overview.history.colDefs"
           :rowData="storage.overview.history.rowData"
           @grid-ready="onHistoryGridReady"
@@ -80,10 +78,11 @@
 <script lang="ts" setup>
 import { AgGridVue } from "ag-grid-vue3";
 import { useOverviewStore } from "~/store/data-fabric/storage/storage";
-import type { Overview } from "~/components/project/data-fabric/storage/overview/storage-overview";
-import type { INotificationProp } from "~/components/project/functional/notification/notification";
+import { storeToRefs } from "pinia";
 
-const { getOverview, getStorageEvent } = useOverviewStore();
+const store = useOverviewStore();
+const { getOverview, getStorageEvent } = store;
+const { storage, storageEvent } = storeToRefs(store);
 
 const DEFAULT_BAR_CHART_OPTION = {
   chart: {
@@ -136,94 +135,38 @@ const DEFAULT_PIE_CHART_OPTION = {
     enabled: false
   }
 };
+
+// NOTE: Grid-Option이 공유 될 시 하나의 그리드로 인식 됨
 const DEFAULT_GRID_OPTION = {
   // headerHeight: 56,
 };
 
-const storage: {
-  overview: Overview;
-  events: Array<INotificationProp>;
-} = reactive({
-  overview: {
-    storageTypeCount: {
-      series: []
-    },
-    storageStatusCount: {
-      series: []
-    },
-    storageStatistics: {
-      categories: [],
-      series: []
-    },
-    storageDataCount: {
-      categories: [],
-      series: []
-    },
-    storageResponseTime: [],
-    history: {
-      colDefs: [],
-      rowData: []
-    },
-    event: {
-      colDefs: [],
-      rowData: []
-    }
-  },
-  events: []
+onMounted(() => {
+  getOverview();
+  getStorageEvent();
 });
-storage.overview = getOverview();
-
-const storageEvent = computed(() => {
-  const eventList = getStorageEvent();
-
-  // TODO: API 확인 후 변경 필요
-  return _map(eventList, (item) => {
-    const link = `/repository-detail?id=${item.id}`
-    return {
-      theme: item.theme,
-      useClose: true,
-      link: link,
-      message: item.description
-    }
-  });
-});
-
-storage.events = storageEvent.value;
-
-const chart: {
-  storageTypeCount: Object;
-  storageStatusCount: Object;
-  storageStatistics: Object;
-  storageDataCount: Object;
-  storageResponseTime: Array<Object>;
-} = reactive({
-  storageTypeCount: {},
-  storageStatusCount: {},
-  storageStatistics: {},
-  storageDataCount: {},
-  storageResponseTime: []
-});
-setChartData();
-
-function setChartData() {
-  chart.storageTypeCount = _merge(
+const storageTypeCount = computed(() => {
+  return _merge(
     {
-      series: storage.overview.storageTypeCount.series
+      series: storage.value.overview.storageTypeCount.series
     },
     DEFAULT_PIE_CHART_OPTION
   );
-
-  chart.storageStatusCount = _merge(
+});
+const storageStatusCount = computed(() => {
+  return _merge(
     {
-      series: storage.overview.storageStatusCount.series
+      series: storage.value.overview.storageStatusCount.series
     },
     DEFAULT_PIE_CHART_OPTION
   );
+});
 
-  chart.storageStatistics = _merge(
+const storageStatistics = computed(() => {
+  return _merge(
     {
       xAxis: {
-        categories: storage.overview.storageStatistics.categories
+        categories: storage.value.overview.storageStatistics.categories
       },
       yAxis: {
         title: {
@@ -233,14 +176,17 @@ function setChartData() {
       legend: {
         enabled: false
       },
-      series: storage.overview.storageStatistics.series
+      series: storage.value.overview.storageStatistics.series
     },
     DEFAULT_BAR_CHART_OPTION
   );
-  chart.storageDataCount = _merge(
+});
+
+const storageDataCount = computed(() => {
+  return _merge(
     {
       xAxis: {
-        categories: storage.overview.storageDataCount.categories
+        categories: storage.value.overview.storageDataCount.categories
       },
       yAxis: {
         title: {
@@ -255,13 +201,15 @@ function setChartData() {
       legend: {
         enabled: true
       },
-      series: storage.overview.storageDataCount.series
+      series: storage.value.overview.storageDataCount.series
     },
     DEFAULT_BAR_CHART_OPTION
   );
+});
 
-  chart.storageResponseTime = storage.overview.storageResponseTime;
-}
+const storageResponseTime = computed(() => {
+  return storage.value.overview.storageResponseTime;
+});
 
 const grid: {
   historyGridApi: any;
