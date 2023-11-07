@@ -19,7 +19,13 @@
             </div>
             <div class="form-content">
               <BaseSelect class="select-lg" :data="props.dateData" @select="setDateData"></BaseSelect>
-              <DatePicker class="date-picker" v-model="range" @update:modelValue="updateDate" :type="'date'">
+              <DatePicker
+                class="date-picker"
+                v-model="range"
+                @update:modelValue="updateDate"
+                :type="'date'"
+                :disabled="datePickerDisabled"
+              >
               </DatePicker>
               <div class="toggle">
                 <BaseRadio name="toggleDate" id="toggle-today" :value="TODAY" @change="changeDateRange">
@@ -241,6 +247,7 @@ const emit = defineEmits(["search", "reset", "close"]);
 
 const keyword = ref(null);
 const range: Ref<Array<string>> = ref([]);
+const datePickerDisabled = ref(false);
 const detailSearch = reactive({
   DATA_NAME: "",
   DATA_TYPE: "",
@@ -298,6 +305,7 @@ function updateDate(date: any) {
  * @param dateRange
  */
 function changeDateRange(dateRange: string) {
+  datePickerDisabled.value = false;
   let today = new Date();
   switch (dateRange) {
     case "TODAY":
@@ -316,6 +324,9 @@ function changeDateRange(dateRange: string) {
       range.value[0] = formatDate(moment(today).subtract(1, "years"));
       break;
     case "ALL":
+      range.value = [];
+      datePickerDisabled.value = true;
+      break;
   }
 }
 
