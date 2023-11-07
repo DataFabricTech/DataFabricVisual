@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
   pages: true,
-  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt", "floating-vue/nuxt"],
+  modules: ["@nuxtjs/tailwindcss", "@pinia/nuxt", "@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt"],
   components: [
     {
       path: "~/components/project",
@@ -14,6 +14,10 @@ export default defineNuxtConfig({
     },
     {
       path: "~/components/",
+      extensions: [".vue"]
+    },
+    {
+      path: "~/components/common",
       extensions: [".vue"]
     }
   ],
