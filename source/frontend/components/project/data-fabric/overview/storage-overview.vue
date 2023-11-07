@@ -7,11 +7,7 @@
       <!--      </BaseButton>-->
     </div>
     <article class="page-article">
-      <!-- TODO: (개발) notification 받은 후 개발 -->
-      <BaseNotification theme="warning" use-close>
-        <strong class="notification-title"> 연결정보가 변동되어 데이터모델 정보 를 다운로드 받을 수 없습니다. </strong>
-        <a href="#" class="notification-link"> 바로가기 </a>
-      </BaseNotification>
+      <notification :messages="storage.events"></notification>
     </article>
     <article class="page-article">
       <h4 class="page-subtitle">요약 정보</h4>
@@ -31,9 +27,9 @@
           <h4 class="mr-auto">연결정보 응답시간</h4>
           <div class="connection-info">
             <dl v-for="(item, key) in storage.overview.storageResponseTime" :key="key">
-              <dt>{{item.name}}</dt>
+              <dt>{{ item.name }}</dt>
               <hr />
-              <dd>{{item.responseTime}} sec</dd>
+              <dd>{{ item.responseTime }} sec</dd>
             </dl>
           </div>
         </div>
@@ -85,6 +81,8 @@
 import { AgGridVue } from "ag-grid-vue3";
 import { useOverviewStore } from "~/store/data-fabric/storage/storage";
 import type { Overview } from "~/components/project/data-fabric/overview/storage-overview";
+import type { INotificationProp } from "~/components/project/functional/notification/notification";
+import { NotificationType } from "~/components/project/functional/notification/notification";
 
 const { getOverview, getStorageEvent } = useOverviewStore();
 
@@ -148,7 +146,7 @@ const DEFAULT_GRID_OPTION = {
 
 const storage: {
   overview: Overview;
-  events: Array<Object>;
+  events: Array<INotificationProp>;
 } = reactive({
   overview: {
     storageTypeCount: {
@@ -178,7 +176,24 @@ const storage: {
   events: []
 });
 storage.overview = getOverview();
-storage.events = getStorageEvent();
+
+const storageEvent = computed(() => {
+  const eventList = getStorageEvent();
+
+  // TODO: API 확인 후 변경 필요
+  return _map(eventList, (item) => {
+    const theme = item.eventType === "DISCONNECTED" ? NotificationType.error : NotificationType.confirm;
+    const link = `/repository-detail?id=${item.id}`
+    return {
+      theme: theme,
+      useClose: true,
+      link: link,
+      message: item.description
+    }
+  });
+});
+
+storage.events = storageEvent.value;
 
 const chart: {
   storageTypeCount: Object;

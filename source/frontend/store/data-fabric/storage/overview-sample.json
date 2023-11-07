@@ -87,20 +87,44 @@
   ],
   "storageEvent": [
     {
-      "msg": "연결정보가 변동되어 데이터모델 정보를 다운로드 받을 수 없습니다 11 ",
-      "storage-id": "ec54626f-5dcc-4060-9540-a8bc830c04e7"
+      "time": {
+        "strDateTime": "2021-01-01 12:00:11",
+        "utcTime": 1609459200000
+      },
+      "id": "storage-id-01",
+      "name": "IRIS",
+      "eventType": "DISCONNECTED",
+      "description": "연결정보가 변동되어 데이터모델 정보를 다운로드 받을 수 없습니다 11 "
     },
     {
-      "msg": "연결정보가 변동되어 데이터모델 정보를 다운로드 받을 수 없습니다 22",
-      "storage-id": "0ff566bd-50d5-4da0-90e2-7f16ce96fd7c"
+      "time": {
+        "strDateTime": "2021-01-01 12:19:11",
+        "utcTime": 1609459200000
+      },
+      "name": "MariaDB",
+      "eventType": "DISCONNECTED",
+      "description": "연결정보가 변동되어 데이터모델 정보를 다운로드 받을 수 없습니다 2 ",
+      "id": "0ff566bd-50d5-4da0-90e2-7f16ce96fd7c"
     },
     {
-      "msg": "연결정보가 변동되어 데이터모델 정보를 다운로드 받을 수 없습니다 33",
-      "storage-id": "8b252bcf-34aa-4f44-9d68-2b0714547780"
+      "time": {
+        "strDateTime": "2021-01-01 12:11:11",
+        "utcTime": 1609459200000
+      },
+      "id": "storage-id-03",
+      "name": "Postgre",
+      "eventType": "DISCONNECTED",
+      "description": "연결정보가 변동되어 데이터모델 정보를 다운로드 받을 수 없습니다 3 "
     },
     {
-      "msg": "연결정보가 변동되어 데이터모델 정보를 다운로드 받을 수 없습니다 44",
-      "storage-id": "18c9354a-0383-41ad-930a-0f0f70942d01"
+      "id": "storage-id-02",
+      "name": "MySQL",
+      "time": {
+        "strDateTime": "2021-01-01 12:35:11",
+        "utcTime": 1609459200000
+      },
+      "eventType": "DISCONNECTED",
+      "description": "연결정보가 변동되어 데이터모델 정보를 다운로드 받을 수 없습니다 4 "
     }
   ],
   "storageOverview": {
