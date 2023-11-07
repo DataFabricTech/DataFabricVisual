@@ -16,7 +16,7 @@ const props = defineProps({
   id: { type: String, default: null},
   type: { type: String, default: "text" },
   modelValue: { type: String, default: null },
-  placeholder: { type: String, default: null },
+  placeholder: { type: String, default: '검색어를 입력하세요.' },
   disabled: { type: Boolean, default: false },
 });
 
