@@ -9,13 +9,14 @@
         </BaseButton>
         <div class="h-group">
           <div class="kebab-menu">
-            <BaseButton @focus="isOpen = true" class="button button-icon button-lg" title="열기">
+            <BaseButton @click="isOpen = true" class="button button-icon button-lg" title="열기">
               <span class="hidden-text">정렬 열기</span>
               <svg-icon name="sort" class="svg-icon" />
             </BaseButton>
             <BaseContext
-              class="kebab-context"
               v-if="isOpen"
+              v-on-click-outside="() => isOpen = false"
+              class="kebab-context"
               :items="storageSortList"
               @click="onClickSort"
             ></BaseContext>
@@ -45,6 +46,7 @@ import { useNuxtApp } from "nuxt/app";
 import type { StorageSortContextItem } from "~/components/project/data-fabric/storage/overview/storage-overview";
 import { useStorageStore } from "~/store/data-fabric/storage/storage";
 import { storeToRefs } from "pinia";
+import { vOnClickOutside } from "@vueuse/components";
 
 const store = useStorageStore();
 const { storage, storageSortList, storageList } = storeToRefs(store);
