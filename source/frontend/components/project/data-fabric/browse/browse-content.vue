@@ -15,7 +15,8 @@
     <div class="result-info">
       <h4 class="result-summary-title">
         "<em class="color-tertiary">{{ filter.keyword }}</em
-        >"검색 결과는 <em class="color-tertiary">4</em>건 입니다.
+        >"검색 결과는 <em class="color-tertiary">{{ dataModelList.length }}</em
+        >건 입니다.
       </h4>
       <div class="result-sort">
         <BaseSelect class="select-lg" :data="$constants.FILTER.SORT" @select="setSort"></BaseSelect>
@@ -23,8 +24,8 @@
       </div>
     </div>
     <ul class="card-list">
-      <li class="card-item" v-for="index in 3">
-        <Card></Card>
+      <li class="card-item" v-for="dataModel in dataModelList">
+        <Card :model="dataModel"></Card>
       </li>
     </ul>
     <BasePagination @click="setPage"></BasePagination>
@@ -32,8 +33,13 @@
 </template>
 
 <script lang="ts" setup>
+import { storeToRefs } from "pinia";
+import { dataModelStore } from "/store/data-fabric/browse/dataModel";
 import $constants from "/utils/constants";
 
+const store = dataModelStore();
+const { getDataModelList } = store;
+const { dataModelList } = storeToRefs(store);
 const state = reactive({
   isOpen: true
 });
