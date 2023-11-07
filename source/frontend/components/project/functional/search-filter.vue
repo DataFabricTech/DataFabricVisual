@@ -24,6 +24,26 @@
                 :type="args.rangeType"
                 class="date-picker">
               </DatePicker>
+              <div class="toggle">
+                <BaseRadio name="toggleDate" id="toggle-today" checked>
+                  오늘
+                </BaseRadio>
+                <BaseRadio name="toggleDate" id="toggle-week">
+                  7일
+                </BaseRadio>
+                <BaseRadio name="toggleDate" id="toggle-month-1">
+                  1개월
+                </BaseRadio>
+                <BaseRadio name="toggleDate" id="toggle-month-3">
+                  3개월
+                </BaseRadio>
+                <BaseRadio name="toggleDate" id="toggle-year">
+                  1년
+                </BaseRadio>
+                <BaseRadio name="toggleDate" id="toggle-all">
+                  전체
+                </BaseRadio>
+              </div>
             </div>
           </div>
           <div class="form-item">

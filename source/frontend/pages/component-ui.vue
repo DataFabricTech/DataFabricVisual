@@ -982,7 +982,22 @@
                   </div>
                 </div>
               </div>
-
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Tooltip</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="h-group">
+                <!-- VTooltip - placement (top, bottom, right, left, ...) -->
+                <VTooltip class="tooltip" placement="top-start">
+                  <svg-icon class="svg-icon" name="help-outline"></svg-icon>
+                  <template #popper>
+                    {{ tooltipMassage }}
+                  </template>
+                </VTooltip>
+              </div>
             </td>
           </tr>
           <tr>
@@ -1181,6 +1196,7 @@ import { useRouter } from "vue-router";
 import { sample } from "/composables/sample";
 import { AgGridVue } from "ag-grid-vue3";
 import DatePicker from "/components/common/date-picker/date-picker.vue";
+import Tooltip from "/components/base/tooltip.vue";
 
 const sampleData = sample();
 const show = ref(false);
@@ -1215,6 +1231,8 @@ let args = {
   dateType: "time",
   rangeType: "datetime"
 };
+
+const tooltipMassage = ref(`태그 추가 시 콤마(,)로 구분해주세요.`);
 
 function onClickOpen() {
   show.value = !show.value;
