@@ -2,10 +2,9 @@
   <!-- Select, Rating -->
   <div class="form-content">
     <BaseRating @change="setStar" :star="3.0" :disabled="true"></BaseRating>
-    <base-rating @change="setStar2"></base-rating> {{ rating2 }}
+    <BaseRating @change="setStar" :star="4.0" :disabled="true"></BaseRating>
+    <base-rating @change="setStar2"></base-rating><base-rating @change="setStar"></base-rating>
   </div>
-
-  <div></div>
 
   <!--Model 상세 -->
   <!-- Response Data 확인 후 수정 필요 -->
@@ -18,14 +17,21 @@
   <h1>체크박스 셀렉트, 검색가능한 셀렉트, 일반 셀렉트</h1>
   <div class="form-content">
     <!--    <BaseSelect class="select-lg" :data="keywordData" :is-check="true"></BaseSelect>-->
+    <!--    <BaseSelect-->
+    <!--      class="select-lg"-->
+    <!--      :data="keywordData"-->
+    <!--      :is-search="true"-->
+    <!--      :default-value="'content'"-->
+    <!--      @select="selectBbb"-->
+    <!--    ></BaseSelect>-->
+    <!--    <BaseSelect class="select-lg" :data="keywordData" :is-check="true" @select="selectBbb"></BaseSelect>-->
     <BaseSelect
       class="select-lg"
       :data="keywordData"
-      :is-search="true"
-      :default-value="'content'"
+      :default-value="'title2'"
       @select="selectBbb"
+      :is-search="true"
     ></BaseSelect>
-    <BaseSelect class="select-lg" :data="keywordData"></BaseSelect>
   </div>
 
   <!-- 검색 필터 -->
@@ -35,10 +41,12 @@
   </BaseButton>
   <SearchFilter
     :toggle="toggle"
-    :keyword-data="keywordData"
-    :date-data="dateData"
     :connection-data="connectionData"
+    :connection-type-data="connectionTypeData"
     :domain-data="domainData"
+    :model-type-data="modelTypeData"
+    :model-form-data="modelFormData"
+    :model-format-data="modelFormatData"
     @search="search"
     @reset="reset"
     @close="closeToggle"
@@ -52,16 +60,12 @@
     :total-elements="99"
     :per-page="7"
   ></base-pagination>
-  <base-button class="">TEST</base-button>
-  <BaseSelect :data="keywordData"></BaseSelect>
+  <!--  <base-button class="">TEST</base-button>-->
+  <!--  <BaseSelect :data="keywordData"></BaseSelect>-->
 </template>
 
 <script lang="ts" setup>
 function selectBbb(val: any) {
-  console.log(val);
-}
-
-function checkBoxTest(val) {
   console.log(val);
 }
 
@@ -125,13 +129,35 @@ const connectionData = [
   { key: "postgres", value: "postgres" },
   { key: "mySql", value: "mySql" }
 ];
-const domainData = [
-  { key: "domain1", value: 1 },
-  { key: "domain2", value: 2 },
-  { key: "domain3", value: 3 },
-  { key: "domain4", value: 4 }
+const connectionTypeData = [
+  { key: "postgreszzzz", value: "postgreszzzz" },
+  { key: "mySqlzzzz", value: "mySqlzzzz" }
 ];
-const toggle = ref(true);
+const domainData = [
+  { key: "domain1", value: "domain1" },
+  { key: "domain2", value: "domain2" },
+  { key: "domain3", value: "domain3" },
+  { key: "domain4", value: "domain4" }
+];
+const modelTypeData = [
+  { key: "modelTypeData1", value: "modelTypeData1" },
+  { key: "modelTypeData2", value: "modelTypeData2" },
+  { key: "modelTypeData3", value: "modelTypeData3" },
+  { key: "modelTypeData4", value: "modelTypeData4" }
+];
+const modelFormData = [
+  { key: "modelFormData1", value: "modelFormData1" },
+  { key: "modelFormData2", value: "modelFormData2" },
+  { key: "modelFormData3", value: "modelFormData3" },
+  { key: "modelFormData4", value: "modelFormData4" }
+];
+const modelFormatData = [
+  { key: "modelFormatData1", value: "modelFormatData1" },
+  { key: "modelFormatData2", value: "modelFormatData2" },
+  { key: "modelFormatData3", value: "modelFormatData3" },
+  { key: "modelFormatData4", value: "modelFormatData4" }
+];
+const toggle = ref(false);
 function download(data: string) {
   console.log(data);
 }
@@ -149,6 +175,7 @@ function reset(data: object) {
 }
 function closeToggle(data: boolean) {
   toggle.value = data;
+  console.log(toggle.value);
 }
 function openToggle() {
   toggle.value = true;
