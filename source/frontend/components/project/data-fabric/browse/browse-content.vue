@@ -3,31 +3,31 @@
   <article class="page-article items-start">
     <h4 class="hidden-text">검색</h4>
     <div class="data-search">
-      <SearchField></SearchField>
+      <SearchField @search="searchField" @reset="resetField"></SearchField>
       <BaseButton class="button-icon button-normal" title="상세 검색" @click="state.isOpen = !state.isOpen">
         <span class="hidden-text">상세 검색</span>
         <svg-icon name="sort" class="svg-icon"></svg-icon>
       </BaseButton>
     </div>
-    <SearchFilter v-if="state.isOpen"></SearchFilter>
+    <SearchFilter v-if="state.isOpen" :toggle="state.isOpen" @close="closeSearchFilter"></SearchFilter>
   </article>
-
   <article class="page-article">
     <div class="result-info">
       <h4 class="result-summary-title">
-        "<em class="color-tertiary">키워드</em>"검색 결과는 <em class="color-tertiary">4</em>건 입니다.
+        "<em class="color-tertiary">{{ filter.keyword }}</em
+        >"검색 결과는 <em class="color-tertiary">4</em>건 입니다.
       </h4>
       <div class="result-sort">
-        <BaseSelect class="select-lg" :data="$constants.FILTER.SORT"></BaseSelect>
-        <BaseSelect class="select-lg" :data="$constants.FILTER.PAGE"></BaseSelect>
+        <BaseSelect class="select-lg" :data="$constants.FILTER.SORT" @select="setSort"></BaseSelect>
+        <BaseSelect class="select-lg" :data="$constants.FILTER.PAGE" @select="setPageSize"></BaseSelect>
       </div>
     </div>
     <ul class="card-list">
-      <li class="card-item" v-for="index in 10">
+      <li class="card-item" v-for="index in 3">
         <Card></Card>
       </li>
     </ul>
-    <BasePagination></BasePagination>
+    <BasePagination @click="setPage"></BasePagination>
   </article>
 </template>
 
@@ -37,4 +37,32 @@ import $constants from "/utils/constants";
 const state = reactive({
   isOpen: true
 });
+const filter: {
+  keyword: string | null;
+} = reactive({
+  keyword: null
+});
+const page: {
+  size: number;
+  selectPage: number;
+} = reactive({
+  size: 10,
+  selectPage: 0
+});
+function closeSearchFilter(close: boolean) {
+  state.isOpen = close;
+}
+function searchField(value: string) {
+  filter.keyword = value;
+}
+function resetField(value: null) {
+  filter.keyword = value;
+}
+function setPageSize(pageSize: number) {
+  page.size = pageSize;
+}
+function setPage(pageNum: number) {
+  page.selectPage = pageNum;
+}
+function setSort(data: any) {}
 </script>
