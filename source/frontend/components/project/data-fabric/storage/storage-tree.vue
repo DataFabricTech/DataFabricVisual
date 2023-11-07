@@ -42,7 +42,7 @@
 </template>
 <script lang="ts" setup>
 import { useNuxtApp } from "nuxt/app";
-import type { StorageSortContextItem } from "~/components/project/data-fabric/overview/storage-overview";
+import type { StorageSortContextItem } from "~/components/project/data-fabric/storage/overview/storage-overview";
 import { useStorageStore } from "~/store/data-fabric/storage/storage";
 import { storeToRefs } from "pinia";
 

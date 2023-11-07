@@ -80,9 +80,8 @@
 <script lang="ts" setup>
 import { AgGridVue } from "ag-grid-vue3";
 import { useOverviewStore } from "~/store/data-fabric/storage/storage";
-import type { Overview } from "~/components/project/data-fabric/overview/storage-overview";
+import type { Overview } from "~/components/project/data-fabric/storage/overview/storage-overview";
 import type { INotificationProp } from "~/components/project/functional/notification/notification";
-import { NotificationType } from "~/components/project/functional/notification/notification";
 
 const { getOverview, getStorageEvent } = useOverviewStore();
 
