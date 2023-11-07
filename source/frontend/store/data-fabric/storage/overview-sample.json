@@ -92,9 +92,10 @@
         "utcTime": 1609459200000
       },
       "id": "storage-id-01",
+      "theme": "error",
       "name": "IRIS",
       "eventType": "DISCONNECTED",
-      "description": "연결정보가 변동되어 데이터모델 정보를 다운로드 받을 수 없습니다 11 "
+      "description": "연결정보 \"IRIS\"가 변동되어 데이터를 불러올 수 없습니다."
     },
     {
       "time": {
@@ -103,8 +104,9 @@
       },
       "name": "MariaDB",
       "eventType": "DISCONNECTED",
-      "description": "연결정보가 변동되어 데이터모델 정보를 다운로드 받을 수 없습니다 2 ",
-      "id": "0ff566bd-50d5-4da0-90e2-7f16ce96fd7c"
+      "theme": "warning",
+      "description": "\"MariaDB\" 등록된 연결정보가 없습니다.",
+      "id": "storage-id-02"
     },
     {
       "time": {
@@ -112,19 +114,10 @@
         "utcTime": 1609459200000
       },
       "id": "storage-id-03",
-      "name": "Postgre",
+      "name": "Postgre연결",
+      "theme": "error",
       "eventType": "DISCONNECTED",
-      "description": "연결정보가 변동되어 데이터모델 정보를 다운로드 받을 수 없습니다 3 "
-    },
-    {
-      "id": "storage-id-02",
-      "name": "MySQL",
-      "time": {
-        "strDateTime": "2021-01-01 12:35:11",
-        "utcTime": 1609459200000
-      },
-      "eventType": "DISCONNECTED",
-      "description": "연결정보가 변동되어 데이터모델 정보를 다운로드 받을 수 없습니다 4 "
+      "description": "연결정보 \"Postgre연결\"이 데이터를 불러오는데 실패하였습니다."
     }
   ],
   "storageOverview": {

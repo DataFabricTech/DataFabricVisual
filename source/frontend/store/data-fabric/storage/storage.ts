@@ -5,7 +5,7 @@ import {
   StorageItem,
   StorageSortContextItem, StorageTypeItem
 } from "~/components/project/data-fabric/overview/storage-overview";
-const STORAGE_BASE_URL = "/storage/v1"
+const STORAGE_BASE_URL = "http://192.168.107.28:35080/storage/v1"
 const DEFAULT_STATUS_LIST = [
   { id: "connection", value: "CONNECTED", name: "연결됨" },
   { id: "disconnection", value: "DISCONNECTED", name: "연결 안됨" }
@@ -157,7 +157,6 @@ export const useStorageStore = defineStore("storage", () => {
   const storageList = computed(() => {
     // 정렬
     storage.items = _orderBy(storage.items, storage.selectedSort.type, storage.selectedSort.direction);
-
     // 필터
     const filterText = storage.filter.name.toLowerCase();
     _map(storage.items, (el) => {
@@ -167,6 +166,7 @@ export const useStorageStore = defineStore("storage", () => {
         storage.filter.status.includes(el.status);
       return el;
     });
+
     return storage.items;
   });
 
@@ -219,7 +219,14 @@ export const useStorageStore = defineStore("storage", () => {
    */
   function getStorage() {
     getStorageType();
+    const dayjs = useDayjs();
     storage.items = OverviewSample.storages;
+
+    // 화면에 맞게 데이터 형식, 속성 변경
+    _map(storage.items, (el) => {
+      el.crdDate = dayjs(el.crdDate).format("YYYY-MM-DD hh:mm:ss");
+      return el;
+    });
   }
 
   /**

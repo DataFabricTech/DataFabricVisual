@@ -107,9 +107,6 @@ const DEFAULT_BAR_CHART_OPTION = {
       margin: 0
     }
   },
-  legend: {
-    enabled: true
-  },
   tooltip: {
     enable: true
   },
@@ -182,10 +179,9 @@ const storageEvent = computed(() => {
 
   // TODO: API 확인 후 변경 필요
   return _map(eventList, (item) => {
-    const theme = item.eventType === "DISCONNECTED" ? NotificationType.error : NotificationType.confirm;
     const link = `/repository-detail?id=${item.id}`
     return {
-      theme: theme,
+      theme: item.theme,
       useClose: true,
       link: link,
       message: item.description
@@ -235,6 +231,9 @@ function setChartData() {
           text: "(계)"
         }
       },
+      legend: {
+        enabled: false
+      },
       series: storage.overview.storageStatistics.series
     },
     DEFAULT_BAR_CHART_OPTION
@@ -253,6 +252,9 @@ function setChartData() {
         column: {
           stacking: "normal"
         }
+      },
+      legend: {
+        enabled: true
       },
       series: storage.overview.storageDataCount.series
     },
