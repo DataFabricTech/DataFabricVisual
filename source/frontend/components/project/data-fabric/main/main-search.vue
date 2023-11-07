@@ -5,9 +5,8 @@
       @search="mainKeyword"
       ></SearchField>
     <div class="search-word">
-      {{ recentTagList }}
       <strong class="search-word-title">최근 검색어</strong>
-      <div class="h-group gap-5" v-for="(tag, index) in recentTagList" :key="index">
+      <div class="h-group gap-5" v-for="(tag, index) in reactiveRecentTagList" :key="index">
         <tag-removable>{{ tag }}</tag-removable>
       </div>
     </div>
@@ -26,13 +25,14 @@ let {
 } = storeToRefs(store);
 
 // 최근 검색어 res값 받는 객체선언
-let recentTagList = reactive([]);
+let recentTagList = ref([]);
+let reactiveRecentTagList = reactive(recentTagList);
 
 onMounted(() => {
   // 최근 검색어 API함수 호출
   insertRecentSearch()
     .then((res: any) => {
-      recentTagList = res.recentSearches;
+      recentTagList.value = res.recentSearches;
     })
   //TODO : 태그내용 데이터바인딩 문제 해결
 })
