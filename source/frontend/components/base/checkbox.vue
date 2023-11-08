@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits } from "vue/dist/vue";
+import { defineEmits } from "vue";
 
 const props = defineProps({
   id: { type: String || Number, default: null },
