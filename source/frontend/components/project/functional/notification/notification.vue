@@ -5,23 +5,44 @@
       <svg-icon :name="currentMessage.theme as string" class="svg-icon"></svg-icon>
     </div>
     <div class="notification-content">
-      <div v-html="currentMessage.message" />
+      <div class="notification-body">
+        <div class="notification-message">
+          <p class="notification-text" v-html="currentMessage.message" />
+        </div>
+        <base-button v-if="currentMessage.useClose" class="button-icon button-link button-sm" title="닫기" @click="onClose">
+          <span class="hidden-text">닫기</span>
+          <svg-icon class="svg-icon" name="close"></svg-icon>
+        </base-button>
+      </div>
+      <div class="notification-footer">
+        <a href="#" class="notification-link">
+          바로가기
+        </a>
+        <div class="h-group">
+          <base-button :disabled="currentIndex === 0" class="button-link no-underline" @click="onPrev">
+            &lt;
+          </base-button>
+          <div class="notification-page-num">
+            <!-- 현재 페이지일떄 활성화 클래스 is-current 추가 -->
+            <span class="is-current">1</span>
+            <span>/</span>
+            <span>4</span>
+          </div>
+          <base-button
+            :disabled="currentIndex === Object.keys(props.messages).length - 1"
+            class="button-link no-underline"
+            @click="onNext"
+          >
+            &gt;
+          </base-button>
+
+          <base-button class="button-link button-sm" @click="onRefresh">
+            <span class="hidden-text">동기화</span>
+            <svg-icon class="svg-icon" name="update"></svg-icon>
+          </base-button>
+        </div>
+      </div>
     </div>
-    <base-button v-if="currentMessage.useClose" class="button-icon button-link button-sm" title="닫기" @click="onClose">
-      <span>닫기</span>
-      <svg-icon class="svg-icon" name="close"></svg-icon>
-    </base-button>
-    <base-button :disabled="currentIndex === 0" class="button-icon button-link button-sm" @click="onPrev">
-      <span> &lt; </span>
-    </base-button>
-    <base-button
-      :disabled="currentIndex === Object.keys(props.messages).length - 1"
-      class="button-icon button-link button-sm"
-      @click="onNext"
-    >
-      <span> &gt; </span>
-    </base-button>
-    <base-button @click="onRefresh">@</base-button>
   </div>
 </template>
 

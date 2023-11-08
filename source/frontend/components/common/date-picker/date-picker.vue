@@ -22,9 +22,10 @@
 import Picker from "vue-datepicker-next";
 import "vue-datepicker-next/index.css";
 import "vue-datepicker-next/locale/ko"; // 로케일 설정 파일
-import { computed, PropType } from "vue";
-
-import { DateFormat, DateType, PickerType } from "./date-picker";
+import { computed } from "vue";
+// NOTE: propType import 시 type으로 지정해야함
+import type { PropType } from "vue";
+import { DateFormat, PickerType } from "./date-picker";
 
 const dayjs = useDayjs();
 
@@ -32,7 +33,7 @@ const dayjs = useDayjs();
 const langString = "ko";
 const props = defineProps({
   modelValue: {
-    type: [Array, String] as PropType<DateType>,
+    type: [Array, String],
     default: ""
   },
   format: {
