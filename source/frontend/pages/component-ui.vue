@@ -333,12 +333,8 @@
             <td>
               <div class="v-group gap-5">
                 <div class="h-group w-full">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">개발 컴포넌트</strong>
-                  <notification :messages="args"/>
-                </div>
-                <div class="h-group w-full">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">normal</strong>
-                  <BaseNotification use-close>
+                  <BaseNotification use-close page-trans link>
                     <p class="notification-text">
                       <em>기본</em> Notification 입니다.
                     </p>
@@ -346,7 +342,7 @@
                 </div>
                 <div class="h-group w-full">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">info</strong>
-                  <BaseNotification theme="info" use-close>
+                  <BaseNotification theme="info" use-close link>
                     <p class="notification-text">
                       <em>정보</em> Notification 입니다.
                     </p>
