@@ -1,9 +1,26 @@
 .notification {
   @include flex-standard($vertical: flex-start, $horizontal: flex-start);
-  width: 100%;
-  gap: $spacing-12;
   padding: $spacing-24;
   background-color: #F7F8FA;
+  width: 100%;
+  gap: $spacing-12;
+
+  &-content {
+    @include flex-standard($vertical: flex-start, $direction: column);
+    width: 100%;
+    gap: $spacing-8;
+  }
+
+  &-body {
+    @include flex-standard($vertical: flex-start, $horizontal: flex-start);
+    width: 100%;
+    gap: $spacing-12;
+  }
+
+  &-footer {
+    @include flex-standard($horizontal: space-between);
+    width: 100%;
+  }
 
   &-icon {
     @include flex-standard;
@@ -14,22 +31,33 @@
     }
   }
 
-  &-content {
+  &-message {
     @include flex-standard($vertical: flex-start, $direction: column);
-    gap: $spacing-8;
     flex-grow: 1;
   }
 
-  &-title {
+  &-text {
+    flex-shrink: 0;
+    color: $font-gray-01;
     font-size: 14px;
-    color: $font-black;
-    font-weight: 400;
   }
 
   &-link {
     font-size: 14px;
     color: $primary;
     text-decoration: underline;
+  }
+
+  &-page-num {
+    @include flex-standard;
+    font-size: 12px;
+    gap: $spacing-4;
+    color: $font-gray-01;
+
+    .is-current {
+      color: $font-black;
+      font-weight: 700;
+    }
   }
 
   &-normal {

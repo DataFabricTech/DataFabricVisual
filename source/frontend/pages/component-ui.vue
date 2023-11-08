@@ -348,51 +348,42 @@
               <div class="v-group gap-5">
                 <div class="h-group w-full">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">normal</strong>
-                  <BaseNotification use-close>
-                    <strong class="notification-title">
+                  <BaseNotification use-close page-trans link>
+                    <p class="notification-text">
                       <em>기본</em> Notification 입니다.
-                    </strong>
-                    <a href="#" class="notification-link">
-                      바로가기
-                    </a>
+                    </p>
                   </BaseNotification>
                 </div>
                 <div class="h-group w-full">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">info</strong>
-                  <BaseNotification theme="info" use-close>
-                    <strong class="notification-title">
+                  <BaseNotification theme="info" use-close link>
+                    <p class="notification-text">
                       <em>정보</em> Notification 입니다.
-                    </strong>
-                    <a href="#" class="notification-link">
-                      바로가기
-                    </a>
+                    </p>
                   </BaseNotification>
                 </div>
                 <div class="h-group w-full">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">success</strong>
                   <BaseNotification theme="success" use-close>
-                    <strong class="notification-title">
+                    <p class="notification-text">
                       <em>성공</em> Notification 입니다.
-                    </strong>
+                    </p>
                   </BaseNotification>
                 </div>
                 <div class="h-group w-full">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">warning</strong>
                   <BaseNotification theme="warning">
-                    <strong class="notification-title">
+                    <p class="notification-text">
                       <em>경고</em> Notification 입니다.
-                    </strong>
-                    <a href="#" class="notification-link">
-                      바로가기
-                    </a>
+                    </p>
                   </BaseNotification>
                 </div>
                 <div class="h-group w-full">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">error</strong>
                   <BaseNotification theme="error">
-                    <strong class="notification-title">
+                    <p class="notification-text">
                       <em>에러</em> Notification 입니다.
-                    </strong>
+                    </p>
                   </BaseNotification>
                 </div>
               </div>

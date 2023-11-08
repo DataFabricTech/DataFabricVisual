@@ -74,7 +74,20 @@ const props = defineProps({
    */
   data: {
     type: Array as () => Array<data>,
-    default: null
+    default: [
+      {
+        key: "선택1",
+        value: 10
+      },
+      {
+        key: "선택2",
+        value: 20
+      },
+      {
+        key: "선택3",
+        value: 50
+      }
+    ]
   },
   /**
    * data의 key 값
