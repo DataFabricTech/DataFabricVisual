@@ -13,6 +13,7 @@
       width: 100%;
       padding: $spacing-8;
       background-color: $light-blue;
+      gap: $spacing-2;
 
       &-title {
         @include ellipsis;

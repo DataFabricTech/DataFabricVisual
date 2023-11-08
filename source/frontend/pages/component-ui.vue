@@ -1063,19 +1063,28 @@
             <td>
               <div class="v-group gap-5">
                 <div class="h-group">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: Checkable List - title</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: Search List</strong>
                   <baseList class="w-[300px]">
                     <template v-slot:head>
                       <div class="list-head">
                         <div class="list-head-title">
                           title
                         </div>
+                        <div class="text-input-group">
+                          <span class="text-input-icon">
+                            <svg-icon class="svg-icon" name="search"></svg-icon>
+                          </span>
+                          <baseTextInput id="inp-group" value="CCTV"></baseTextInput>
+                          <Basebutton class="text-input-clear-button button-icon button-link" title="초기화">
+                            <svg-icon class="svg-icon" name="close"></svg-icon>
+                          </Basebutton>
+                        </div>
                       </div>
                     </template>
                   </baseList>
                 </div>
                 <div class="h-group">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: Checkable List - no title</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: Checkable List</strong>
                   <baseList class="w-[300px]"></baseList>
                 </div>
               </div>
