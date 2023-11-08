@@ -16,6 +16,15 @@
         <template v-slot:head>
           <div class="list-head">
             <div class="list-head-title">저장소 유형</div>
+            <div class="text-input-group">
+              <span class="text-input-icon">
+                <svg-icon class="svg-icon" name="search"></svg-icon>
+              </span>
+              <baseTextInput id="inp-group" value="" placeholder="검색어를 입력하세요."></baseTextInput>
+              <Basebutton class="text-input-clear-button button-icon button-link" title="초기화">
+                <svg-icon class="svg-icon" name="close"></svg-icon>
+              </Basebutton>
+            </div>
           </div>
         </template>
       </base-checkbox-list>
