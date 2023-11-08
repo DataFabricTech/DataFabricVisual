@@ -1,0 +1,309 @@
+{
+  "storageTypes": [
+    {
+      "id": "storage-type-iris",
+      "name": "IRIS",
+      "value": "IRIS",
+      "checked": false
+    },
+    {
+      "id": "storage-type-postgresql",
+      "value": "PostgreSQL",
+      "name": "PostgreSQL",
+      "checked": false
+    },
+    {
+      "id": "storage-type-mysql",
+      "name": "MySQL",
+      "value": "MySQL",
+      "checked": false
+    },
+    {
+      "id": "storage-type-oracle",
+      "value": "Oracle",
+      "name": "Oracle",
+      "checked": false
+    },
+    {
+      "id": "storage-type-minio",
+      "value": "MinIO",
+      "name": "MinIO",
+      "checked": false
+    },
+    {
+      "id": "storage-type-mariadb",
+      "name": "MariaDB",
+      "value": "MariaDB",
+      "checked": false
+    },
+    {
+      "id": "storage-type-hdfs",
+      "name": "HDFS",
+      "value": "HDFS",
+      "checked": false
+    }
+  ],
+  "storages": [
+    {
+      "id": "storage-id-01",
+      "name": "IRIS",
+      "storageType": "IRIS",
+      "status": "CONNECTED",
+      "crdDate": "2021-04-01",
+      "show": true
+    },
+    {
+      "id": "storage-id-02",
+      "name": "MariaDB",
+      "storageType": "MariaDB",
+      "status": "CONNECTED",
+      "crdDate": "2021-06-01",
+      "show": true
+    },
+    {
+      "id": "storage-id-03",
+      "name": "MySQL",
+      "storageType": "MySQL",
+      "status": "DISCONNECTED",
+      "crdDate": "2021-08-01",
+      "show": true
+    },
+    {
+      "id": "storage-id-04",
+      "name": "MinIO",
+      "storageType": "HDFS",
+      "status": "DISCONNECTED",
+      "crdDate": "2021-09-01",
+      "show": true
+    },
+    {
+      "id": "storage-id-05",
+      "name": "Hadoop",
+      "storageType": "HDFS",
+      "status": "CONNECTED",
+      "crdDate": "2021-01-01",
+      "show": true
+    }
+  ],
+  "storageEvent": [
+    {
+      "time": {
+        "strDateTime": "2021-01-01 12:00:11",
+        "utcTime": 1609459200000
+      },
+      "id": "storage-id-01",
+      "theme": "error",
+      "name": "IRIS",
+      "eventType": "DISCONNECTED",
+      "description": "연결정보 \"IRIS\"가 변동되어 데이터를 불러올 수 없습니다."
+    },
+    {
+      "time": {
+        "strDateTime": "2021-01-01 12:19:11",
+        "utcTime": 1609459200000
+      },
+      "name": "MariaDB",
+      "eventType": "DISCONNECTED",
+      "theme": "warning",
+      "description": "\"MariaDB\" 등록된 연결정보가 없습니다.",
+      "id": "storage-id-02"
+    },
+    {
+      "time": {
+        "strDateTime": "2021-01-01 12:11:11",
+        "utcTime": 1609459200000
+      },
+      "id": "storage-id-03",
+      "name": "Postgre연결",
+      "theme": "error",
+      "eventType": "DISCONNECTED",
+      "description": "연결정보 \"Postgre연결\"이 데이터를 불러오는데 실패하였습니다."
+    }
+  ],
+  "storageOverview": {
+    "storageResponseTime": [
+      {
+        "id": "storage-id-01",
+        "name": "IRIS",
+        "responseTime": 0.1
+      },
+      {
+        "id": "storage-id-02",
+        "name": "MySQL",
+        "responseTime": 0.2
+      },
+      {
+        "id": "storage-id-03",
+        "name": "Postgre",
+        "responseTime": 0.3
+      }
+    ],
+    "storageTypeCount": {
+      "series": [
+        {
+          "data": [
+            {
+              "name": "IRIS",
+              "y": 100
+            },
+            {
+              "name": "HDFS",
+              "y": 200
+            },
+            {
+              "name": "MySQL",
+              "y": 300
+            },
+            {
+              "name": "PostgreSQL",
+              "y": 400
+            }
+          ]
+        }
+      ]
+    },
+    "storageStatusCount": {
+      "series": [
+        {
+          "data": [
+            {
+              "name": "CONNECTED",
+              "y": 1000
+            },
+            {
+              "name": "DISCONNECTED",
+              "y": 20
+            },
+            {
+              "name": "ERROR",
+              "y": 3
+            }
+          ]
+        }
+      ]
+    },
+    "storageStatistics": {
+      "categories": ["IRIS", "HDFS", "MySQL", "PostgreSQL"],
+      "series": [
+        {
+          "name": "AccessCount",
+          "data": [100, 200, 300, 400]
+        }
+      ]
+    },
+    "storageDataCount": {
+      "categories": ["IRIS", "HDFS", "MySQL", "PostgreSQL"],
+      "series": [
+        {
+          "name": "Total",
+          "data": [1000, 2000, 3000, 4000]
+        },
+        {
+          "name": "Registered",
+          "data": [900, 1800, 2700, 3600]
+        }
+      ]
+    },
+    "history": {
+      "colDefs": [
+        {
+          "headerName": "시간",
+          "field": "time"
+        },
+        {
+          "headerName": "아이디",
+          "field": "id"
+        },
+        {
+          "headerName": "이름",
+          "field": "name"
+        },
+        {
+          "headerName": "사용자",
+          "field": "user"
+        },
+        {
+          "headerName": "종류",
+          "field": "cmd"
+        },
+        {
+          "headerName": "내용",
+          "field": "modifiedInfo"
+        }
+      ],
+      "rowData": [
+        {
+          "time": "2021-01-01 00:00:00.000",
+          "id": "storage-id01",
+          "name": "IRIS",
+          "user": "admin",
+          "cmd": "CREATE",
+          "modifiedInfo": "additionalOptions.TimeZone=Asia/Seoul"
+        },
+        {
+          "time": "2021-01-01 00:00:00.000",
+          "id": "storage-id01",
+          "name": "IRIS",
+          "user": "admin",
+          "cmd": "UPDATE",
+          "modifiedInfo": "additionalOptions.TimeZone=Asia/Seoul"
+        },
+        {
+          "time": "2021-01-01 00:00:00.000",
+          "id": "storage-id01",
+          "name": "IRIS",
+          "user": "admin",
+          "cmd": "DELETE",
+          "modifiedInfo": "additionalOptions.TimeZone=Asia/Seoul"
+        }
+      ]
+    },
+    "event": {
+      "colDefs": [
+        {
+          "headerName": "시간",
+          "field": "time"
+        },
+        {
+          "headerName": "아이디",
+          "field": "id"
+        },
+        {
+          "headerName": "이름",
+          "field": "name"
+        },
+        {
+          "headerName": "종류",
+          "field": "eventType"
+        },
+        {
+          "headerName": "내용",
+          "field": "description"
+        }
+      ],
+      "rowData": [
+        {
+          "time": "2021-01-01 00:00:00.000",
+          "id": "storage-id01",
+          "name": "IRIS",
+          "eventType": "CONNECTED",
+          "description": "저장소 연결 성공"
+        },
+        {
+          "time": "2021-01-01 00:00:00.000",
+          "id": "storage-id01",
+          "name": "IRIS",
+          "eventType": "DISCONNECTED",
+          "description": "저장소 연결 해제"
+        },
+        {
+          "time": "2021-01-01 00:00:00.000",
+          "id": "storage-id01",
+          "name": "IRIS",
+          "eventType": "ERROR",
+          "description": "저장소 연결 실패"
+        }
+      ]
+    }
+  }
+}
