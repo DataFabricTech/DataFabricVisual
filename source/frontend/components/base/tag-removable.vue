@@ -1,5 +1,5 @@
 <template>
-  <div class="tag-removable" :disabled="disable">
+  <div class="tag-removable">
     <button class="tag">
       <slot></slot>
     </button>
@@ -11,12 +11,13 @@
 
 <script setup lang="ts">
 const emit = defineEmits(['close']);
-let disable = ref('false');
+
+const props = defineProps({
+  indexValue: {
+    type: Number
+  }
+})
 function closeTag() {
-  disable.value = 'true';
-  console.log("show값 ? ", disable);
-  emit('close')
+  emit('close', props.indexValue);
 }
-
 </script>
-

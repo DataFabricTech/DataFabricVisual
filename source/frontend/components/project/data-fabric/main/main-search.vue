@@ -6,8 +6,10 @@
       ></SearchField>
     <div class="search-word">
       <strong class="search-word-title">최근 검색어</strong>
-      <div class="h-group gap-5" v-for="(tag, index) in reactiveRecentTagList" :key="index">
-        <tag-removable>{{ tag }}</tag-removable>
+      <div class="h-group gap-5" v-for="(tag, index) in recentTagList" :key="index" >
+        <tag-removable
+          :indexValue="index"
+          @close="closeTag">{{ tag }}</tag-removable>
       </div>
     </div>
   </div>
@@ -26,16 +28,23 @@ let {
 
 // 최근 검색어 res값 받는 객체선언
 let recentTagList = ref([]);
-let reactiveRecentTagList = reactive(recentTagList);
+// let reactiveRecentTagList = reactive(recentTagList);
+
+// 최근검색어 닫기를 눌렀을 때 발생하는 함수
+// TODO : 최근검색어 삭제 API가 없는 경우로, 본 개발에 수정될 예정
+function closeTag(indexValue) {
+  recentTagList.value.splice(indexValue,1);
+  // console.log("recentTagList : 상태확인 : ", recentTagList);
+}
 
 onMounted(() => {
   // 최근 검색어 API함수 호출
   insertRecentSearch()
     .then((res: any) => {
-      recentTagList.value = res.recentSearches;
+      recentTagList.value = res.recentSearches.slice(0,5); // 5개만 보이도록 slice
     })
-  //TODO : 태그내용 데이터바인딩 문제 해결
 })
+
 // 간편 검색
 async function mainKeyword(key) {
   // 입력받은 keyword값 스토어에 저장
@@ -56,6 +65,5 @@ async function mainKeyword(key) {
   // var link = "/data-fabric/development-search";
   // location.href=link;
   // window.open(link);
-
 };
 </script>

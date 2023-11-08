@@ -293,7 +293,7 @@ export const fabricMainStore = defineStore("fabricMain",() => {
   const recentSearchResonse = {
     'code': '200',
     'data': {
-      'recentSearches': ['모비젠', '데이터', '데이터패브릭']
+      'recentSearches': ['모비젠', '데이터', '데이터패브릭','스토어', '코드리뷰', '미비점']
     }
   };
 
