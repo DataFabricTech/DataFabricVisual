@@ -777,6 +777,71 @@
             </td>
           </tr>
           <tr>
+            <th scope="row">Text-input(removable)</th>
+          </tr>
+          <tr>
+            <td>
+              <div class="v-group gap-5">
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
+                  <div class="text-input-group text-input-group-lg">
+                    <span class="text-input-icon">
+                      <svg-icon class="svg-icon" name="search"></svg-icon>
+                    </span>
+                    <baseTextInput id="inp-group-lg" placeholder="검색어 입력"></baseTextInput>
+                    <Basebutton class="text-input-clear-button button-icon button-link" title="초기화">
+                      <svg-icon class="svg-icon" name="close"></svg-icon>
+                    </Basebutton>
+                  </div>
+                  <div class="text-input-group text-input-group-lg is-disabled">
+                    <span class="text-input-icon">
+                      <svg-icon class="svg-icon" name="search"></svg-icon>
+                    </span>
+                    <baseTextInput id="inp-group-lg" placeholder="검색어 입력" disabled></baseTextInput>
+                    <Basebutton class="text-input-clear-button button-icon button-link" title="초기화">
+                      <svg-icon class="svg-icon" name="close"></svg-icon>
+                    </Basebutton>
+                  </div>
+                </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
+                  <div class="text-input-group">
+                    <span class="text-input-icon">
+                      <svg-icon class="svg-icon" name="search"></svg-icon>
+                    </span>
+                    <baseTextInput id="inp-group" value="CCTV"></baseTextInput>
+                    <Basebutton class="text-input-clear-button button-icon button-link" title="초기화">
+                      <svg-icon class="svg-icon" name="close"></svg-icon>
+                    </Basebutton>
+                  </div>
+                  <div class="text-input-group is-disabled">
+                    <span class="text-input-icon">
+                      <svg-icon class="svg-icon" name="search"></svg-icon>
+                    </span>
+                    <baseTextInput id="inp-group" value="CCTV" disabled></baseTextInput>
+                    <Basebutton class="text-input-clear-button button-icon button-link" title="초기화">
+                      <svg-icon class="svg-icon" name="close"></svg-icon>
+                    </Basebutton>
+                  </div>
+                </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
+                  <div class="text-input-group text-input-group-sm">
+                    <span class="text-input-icon">
+                      <svg-icon class="svg-icon" name="search"></svg-icon>
+                    </span>
+                    <baseTextInput id="inp-group"></baseTextInput>
+                    <Basebutton class="text-input-clear-button button-icon button-link" title="초기화">
+                      <svg-icon class="svg-icon" name="close"></svg-icon>
+                    </Basebutton>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+
+
+          <tr>
             <th scope="row">Textarea</th>
           </tr>
           <tr>
