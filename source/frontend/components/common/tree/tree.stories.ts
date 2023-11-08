@@ -101,6 +101,8 @@ export const Secondary: Story = {
       },
       id311: {
         text: "text311",
+        title: "before",
+        icon: "close",
         state: {
           checked: true
         }
