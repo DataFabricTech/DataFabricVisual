@@ -28,13 +28,12 @@ let {
 
 // 최근 검색어 res값 받는 객체선언
 let recentTagList = ref([]);
-// let reactiveRecentTagList = reactive(recentTagList);
 
 // 최근검색어 닫기를 눌렀을 때 발생하는 함수
 // TODO : 최근검색어 삭제 API가 없는 경우로, 본 개발에 수정될 예정
 function closeTag(indexValue) {
   recentTagList.value.splice(indexValue,1);
-  // console.log("recentTagList : 상태확인 : ", recentTagList);
+  // console.log("recentTagList 상태확인 : ", recentTagList);
 }
 
 onMounted(() => {
