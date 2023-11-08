@@ -1,21 +1,27 @@
 <script setup lang="ts">
+import { onMounted } from "vue";
 import treeview from "vue3-treeview";
 import "vue3-treeview/dist/style.css";
 
 export interface Props {
-  node?: any,
+  nodes?: any,
   config?: any
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  node: {},
+  nodes: {},
   config: { "roots": [] }
+})
+
+onMounted(() => {
+  console.log("nodes", props.nodes);
+  console.log("nodes", props.config);
 })
 </script>
 
 <template>
   <div>
-    <treeview :nodes="node" :config="config"></treeview>
+    <treeview :nodes="nodes" :config="config"></treeview>
   </div>
 </template>
 
