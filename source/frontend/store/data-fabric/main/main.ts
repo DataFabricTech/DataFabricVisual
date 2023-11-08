@@ -213,7 +213,7 @@ export const fabricMainStore = defineStore("fabricMain",() => {
     }
 
   // 1') 신규 데이터 Response값 객체 선언 (임시)
-  const responseSimpleCard_newData = reactive([
+  const simpleCardResponseData = reactive([
       {
         model: {
           name: '1불법 주정차 구간 데이터1',
@@ -277,23 +277,23 @@ export const fabricMainStore = defineStore("fabricMain",() => {
   }
 
   // 최근 등록일자 기준 필터를 가진 API 호출 - request를 3개만 하면 됨.
-  async function simpleCardContent_newData(requestSimpleCard_newData: any) {
+  async function simpleCardListContent(requestSimpleCardNewData: any) {
 
     await useNuxtApp().$api("/portal/v1/search", {
       method: "POST",
-      body: requestSimpleCard_newData
+      body: requestSimpleCardNewData
     })
     // TODO : 추후 API붙이면, Back 단 처리
     // .then((res) => )
     // TODO : 임시 response값을 리턴 -> 실제 response를 리턴하도록 한다.
-    return responseSimpleCard_newData;
+    return simpleCardResponseData;
 
   };
 
   const recentSearchResonse = {
     'code': '200',
     'data': {
-      'recentSearches': ['모비젠', '데이터', '데이터패브릭','스토어', '코드리뷰', '미비점']
+      'recentSearches': []
     }
   };
 
@@ -308,10 +308,10 @@ export const fabricMainStore = defineStore("fabricMain",() => {
   return {
     keyword,
     searchResultList,
-    responseSimpleCard_newData,
+    simpleCardResponseData,
     recentSearchResonse,
     insertRecentSearch,
     searchKeyword,
-    simpleCardContent_newData
+    simpleCardListContent
   }
 });

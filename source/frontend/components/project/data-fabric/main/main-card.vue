@@ -8,7 +8,7 @@
       </div>
       <div class="main-article-body">
         <ul class="card-simple-list">
-          <li class="card-simple-item" v-for="simpleCard in simpleCardList_newData">
+          <li class="card-simple-item" v-for="simpleCard in simpleCardNewData">
             <CardSimple
             :model="simpleCard.model"></CardSimple>
           </li>
@@ -169,16 +169,16 @@ import { fabricMainStore } from "/store/data-fabric/main/main";
 import { storeToRefs } from "pinia";
 
 const store = fabricMainStore();
-const { simpleCardContent_newData } = store;
+const { simpleCardListContent } = store;
 const {
-  responseSimpleCard_newData
+  simpleCardResponseData
 } = storeToRefs(store);
 
 // 1) 신규데이터를 기준으로한 sorting 파라미터 선언
 let param = 'createdAt';
 
 // requestbody 값 설정
-const requestSimpleCard_newData = ({
+const requestSimpleCardNewData = ({
   keyword: '',
   pageable: {
     sort: [
@@ -197,12 +197,12 @@ const requestSimpleCard_newData = ({
 
 // monuted되면, 카드리스트의 내용을 가져오기 위한 함수 호출
 onMounted(() =>
-  simpleCardContent_newData(requestSimpleCard_newData)
+  simpleCardListContent(requestSimpleCardNewData)
 )
 
 // response로 받는 리스트 선언
-let simpleCardList_newData = reactive([]);
+let simpleCardNewData = reactive([]);
 // TODO : 추후 API response값이 들어오면, 수정할 예정
-simpleCardList_newData = responseSimpleCard_newData;
+simpleCardNewData = simpleCardResponseData;
 
 </script>
