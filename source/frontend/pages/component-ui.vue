@@ -10,20 +10,6 @@
         <table class="guide-table">
           <tbody>
           <tr>
-            <th scope="row">tree</th>
-          </tr>
-          <tr>
-            <td>
-              <div class="v-group gap-5">
-                <div class="h-group gap-2">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">default</strong>
-                    <Tree :nodes="treeNodes" :config="treeConfig">
-                    </Tree>
-                </div>
-              </div>
-            </td>
-          </tr>
-          <tr>
             <th scope="row">Alert</th>
           </tr>
           <tr>
@@ -1246,6 +1232,15 @@
               <div class="relative h-10">
                 <ScrollTop style="position: absolute;left: 0;bottom: 0;"></ScrollTop>
               </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">tree</th>
+          </tr>
+          <tr>
+            <td>
+              <Tree :nodes="treeNodes" :config="treeConfig">
+              </Tree>
             </td>
           </tr>
           </tbody>
