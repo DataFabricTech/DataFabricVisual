@@ -9,7 +9,7 @@
         <svg-icon name="sort" class="svg-icon"></svg-icon>
       </BaseButton>
     </div>
-    <SearchFilter v-if="state.isOpen" :toggle="state.isOpen" @close="closeSearchFilter"></SearchFilter>
+    <SearchFilter :toggle="state.isOpen" @close="closeSearchFilter"></SearchFilter>
   </article>
   <article class="page-article">
     <div class="result-info">
@@ -25,10 +25,15 @@
     </div>
     <ul class="card-list">
       <li class="card-item" v-for="dataModel in dataModelList">
-        <Card :model="dataModel"></Card>
+        <Card :model="dataModel" @download="onRequestDownload(dataModel.id)" @click="moveDetailPage"></Card>
       </li>
     </ul>
-    <BasePagination @click="setPage"></BasePagination>
+    <BasePagination
+      :total-elements="pageable.totalSize"
+      :page-size="pageable.size"
+      :current-page="pageable.selectPage"
+      @click="setPage"
+    ></BasePagination>
   </article>
 </template>
 
@@ -38,8 +43,8 @@ import { dataModelStore } from "/store/data-fabric/browse/dataModel";
 import $constants from "/utils/constants";
 
 const store = dataModelStore();
-const { getDataModelList } = store;
-const { dataModelList } = storeToRefs(store);
+const { getDataModelList, requestDownload } = store;
+const { pageable, dataModelList } = storeToRefs(store);
 const state = reactive({
   isOpen: true
 });
@@ -71,4 +76,12 @@ function setPage(pageNum: number) {
   page.selectPage = pageNum;
 }
 function setSort(data: any) {}
+
+function moveDetailPage(id: string) {
+  console.log(id);
+}
+async function onRequestDownload(id: string) {
+  await requestDownload(id);
+  await getDataModelList();
+}
 </script>
