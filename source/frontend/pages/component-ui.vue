@@ -773,13 +773,55 @@
             <td>
               <div class="v-group gap-5">
                 <div class="h-group">
-                  <strong class="">size: lg</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
                   <div class="text-input-group text-input-group-lg">
-                    <span class="text-input-group-icon">
+                    <span class="text-input-icon">
                       <svg-icon class="svg-icon" name="search"></svg-icon>
                     </span>
-                    <baseTextInput id="inp-group-lg"></baseTextInput>
-                    <Basebutton class="text-input-group-clear-button" title="초기화">
+                    <baseTextInput id="inp-group-lg" placeholder="검색어 입력"></baseTextInput>
+                    <Basebutton class="text-input-clear-button button-icon button-link" title="초기화">
+                      <svg-icon class="svg-icon" name="close"></svg-icon>
+                    </Basebutton>
+                  </div>
+                  <div class="text-input-group text-input-group-lg is-disabled">
+                    <span class="text-input-icon">
+                      <svg-icon class="svg-icon" name="search"></svg-icon>
+                    </span>
+                    <baseTextInput id="inp-group-lg" placeholder="검색어 입력" disabled></baseTextInput>
+                    <Basebutton class="text-input-clear-button button-icon button-link" title="초기화">
+                      <svg-icon class="svg-icon" name="close"></svg-icon>
+                    </Basebutton>
+                  </div>
+                </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: default</strong>
+                  <div class="text-input-group">
+                    <span class="text-input-icon">
+                      <svg-icon class="svg-icon" name="search"></svg-icon>
+                    </span>
+                    <baseTextInput id="inp-group" value="CCTV"></baseTextInput>
+                    <Basebutton class="text-input-clear-button button-icon button-link" title="초기화">
+                      <svg-icon class="svg-icon" name="close"></svg-icon>
+                    </Basebutton>
+                  </div>
+                  <div class="text-input-group is-disabled">
+                    <span class="text-input-icon">
+                      <svg-icon class="svg-icon" name="search"></svg-icon>
+                    </span>
+                    <baseTextInput id="inp-group" value="CCTV" disabled></baseTextInput>
+                    <Basebutton class="text-input-clear-button button-icon button-link" title="초기화">
+                      <svg-icon class="svg-icon" name="close"></svg-icon>
+                    </Basebutton>
+                  </div>
+                </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
+                  <div class="text-input-group text-input-group-sm">
+                    <span class="text-input-icon">
+                      <svg-icon class="svg-icon" name="search"></svg-icon>
+                    </span>
+                    <baseTextInput id="inp-group"></baseTextInput>
+                    <Basebutton class="text-input-clear-button button-icon button-link" title="초기화">
                       <svg-icon class="svg-icon" name="close"></svg-icon>
                     </Basebutton>
                   </div>
@@ -1160,32 +1202,32 @@
           <tr>
             <th scope="row">Search-field</th>
           </tr>
-<!--          <tr>-->
-<!--            <td>-->
-<!--              <div class="v-group gap-5">-->
-<!--                <div class="h-group">-->
-<!--                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>-->
-<!--                  <SearchField class="search-field-lg"></SearchField>-->
-<!--                </div>-->
-<!--                <div class="h-group">-->
-<!--                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: md</strong>-->
-<!--                  <SearchField></SearchField>-->
-<!--                </div>-->
-<!--                <div class="h-group">-->
-<!--                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>-->
-<!--                  <SearchField class="search-field-sm" style="width: 300px;"></SearchField>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </td>-->
-<!--          </tr>-->
-<!--          <tr>-->
-<!--            <th scope="row">Search filter</th>-->
-<!--          </tr>-->
-<!--          <tr>-->
-<!--            <td>-->
-<!--              <SearchFilter></SearchFilter>-->
-<!--            </td>-->
-<!--          </tr>-->
+          <tr>
+            <td>
+              <div class="v-group gap-5">
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: lg</strong>
+                  <SearchField class="search-field-lg"></SearchField>
+                </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: md</strong>
+                  <SearchField></SearchField>
+                </div>
+                <div class="h-group">
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">size: sm</strong>
+                  <SearchField class="search-field-sm" style="width: 300px;"></SearchField>
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">Search filter</th>
+          </tr>
+          <tr>
+            <td>
+              <SearchFilter></SearchFilter>
+            </td>
+          </tr>
           <tr>
             <th scope="row">Scroll Top</th>
           </tr>
