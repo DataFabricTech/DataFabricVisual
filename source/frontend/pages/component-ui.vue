@@ -17,31 +17,31 @@
               <div class="v-group gap-5">
                 <div class="h-group gap-2">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">default</strong>
-                  <commonAlert theme="default"></commonAlert>
+                  <alert theme="default"></alert>
                 </div>
                 <div class="h-group gap-2">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">info</strong>
-                  <commonAlert theme="info"></commonAlert>
+                  <alert theme="info"></alert>
                 </div>
                 <div class="h-group gap-2">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">success</strong>
-                  <commonAlert theme="success"></commonAlert>
+                  <alert theme="success"></alert>
                 </div>
                 <div class="h-group gap-2">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">warning</strong>
-                  <commonAlert theme="warning">
+                  <alert theme="warning">
                     <baseButton class="button-lg button-negative">
                       <span class="button-text">확인</span>
                     </baseButton>
-                  </commonAlert>
+                  </alert>
                 </div>
                 <div class="h-group gap-2">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">error</strong>
-                  <commonAlert theme="error">
+                  <alert theme="error">
                     <baseButton class="button-lg button-negative">
                       <span class="button-text">확인</span>
                     </baseButton>
-                  </commonAlert>
+                  </alert>
                 </div>
               </div>
             </td>
