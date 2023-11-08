@@ -14,14 +14,21 @@
     border-radius: $border-radius-sm;
   }
 
+  .input-tag {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-8;
+    margin: 0;
+  }
+
   &.is-modify {
-    .input-wrapper, .text-input {
+    .text-input {
       display: block;
     }
 
-    .input-wrapper {
-      @include flex-standard;
-      gap: $spacing-8;
+    .input-tag {
+      display: flex;
     }
 
     .card-link, .card-detail, .tag {
