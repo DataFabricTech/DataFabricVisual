@@ -9,6 +9,7 @@ definePageMeta({
 
 const nodes = ref<{ [key: string]: Node }>({
   id1: {
+    isRoot: true,
     text: "text1",
     children: ["id11", "id12"]
   },
@@ -19,9 +20,11 @@ const nodes = ref<{ [key: string]: Node }>({
     text: "text12"
   },
   id2: {
+    isRoot: true,
     text: "text2"
   },
   id3: {
+    isRoot: true,
     text: "text3",
     children: ["id31"],
     state: {
@@ -104,7 +107,10 @@ onMounted(() => {
     <h3>Tree 2</h3>
     <Tree v-if="false" :is-config-mode="true" :nodes="nodes" :config="config"></Tree>
     <h3>Tree 3</h3>
-    <Tree v-if="true" :nodes="nodes" :roots="config.roots" :checkboxes="true" :addable="true" @save="onSave"
+    <Tree v-if="false" :nodes="nodes" :roots="config.roots" :checkboxes="true" :addable="true" @save="onSave"
+          @delete="onDelete"></Tree>
+    <h3>Tree 4</h3>
+    <Tree v-if="true" :nodes="nodes" :checkboxes="true" :addable="true" @save="onSave"
           @delete="onDelete"></Tree>
   </div>
 </template>

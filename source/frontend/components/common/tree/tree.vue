@@ -25,6 +25,8 @@ export interface Node {
   icon?: string;
 }
 
+export interface Nodes { [index: string]: Node }
+
 export interface Icon {
   type?: string;
   width?: number;
@@ -55,7 +57,7 @@ export interface Config {
 
 export interface Props {
   isConfigMode?: boolean,
-  nodes?: { [key: string]: Node },
+  nodes?: Nodes,
   config?: Config,
   roots?: string[],
   checkboxes?: boolean,
@@ -65,7 +67,7 @@ export interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   isConfigMode: false,
-  nodes: Node => ({
+  nodes: Nodes => ({
     node1: {
       text: "Node 1",
       isRoot: true
@@ -81,7 +83,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(["save", "delete"]);
 
-const treeNoses = ref<{ [key: string]: Node }>({
+const treeNoses = ref<Nodes>({
   node1: {
     text: "Node 1",
   }});
@@ -107,29 +109,46 @@ const treeConfig = ref<Config>({
 const nodeIconBefore = ref("");
 const nodeIconAfter = ref("");
 
+function setNodes(nodes:Nodes) {
+  let roots :string[] = [];
+  for (let key in nodes) {
+    console.log("setNodes - key:", key, nodes[key]);
+    const node = nodes[key];
+    if (node.isRoot) {
+      roots.push(key);
+    }
+  }
+
+  treeNoses.value = nodes;
+  setConfig("roots", roots);
+}
+
 function setConfig(key: string, value: any) {
-  console.log("setConfig key:", key, "-", value);
+  console.log("setConfig - key:", key, "-", value);
   treeConfig.value[key] = value;
-  console.log("treeConfig:", treeConfig.value);
+  // console.log("treeConfig:", treeConfig.value);
 }
 
 onMounted(() => {
   console.log("tree: onMounted - isConfigMode:", props.isConfigMode);
 
   const isConfigMode = props.isConfigMode;
-  for (let key in props) {
-    console.log("props -", key, props[key]);
+  for (const key in props) {
+    console.log("prop -", key, props[key]);
     if (key !== "isConfigMode") {
       if (key === "nodes" && props.nodes) {
-        treeNoses.value = props.nodes;
-        console.log("set props - key:", key);
+        // console.log("set nodes -", key);
+        // treeNoses.value = props.nodes;
+        setNodes(props.nodes);
       } else if (key === "config" && props.config) {
         if (isConfigMode) {
+          console.log("set config -", key);
           treeConfig.value = props.config;
-          console.log("set props - key:", key);
         }
       } else if (!isConfigMode) {
-        setConfig(key, props[key]);
+        if (key !== "roots" || (Array.isArray(props[key]) && props[key].length > 0)) {
+          setConfig(key, props[key]);
+        }
       }
     }
   }
