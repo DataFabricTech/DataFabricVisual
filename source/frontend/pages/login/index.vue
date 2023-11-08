@@ -1,0 +1,54 @@
+<template>
+  <div id="wrap" class="is-full">
+    <main id="main" class="login">
+      <div class="login-inner">
+        <div class="login-logo">
+          <h1 class="text-2xl font-bold">DATA Fabric</h1>
+        </div>
+          <form action="" class="form login-form">
+            <div class="form-list">
+              <div class="form-item">
+                <div class="form-label">
+                  <strong class="form-title">아이디</strong>
+                </div>
+                <div class="form-content">
+                  <label for="id-input" class="hidden-text">아이디</label>
+                  <BaseTextInput id="id-input" class="text-input-lg"></BaseTextInput>
+                </div>
+              </div>
+              <div class="form-item">
+                <div class="form-label">
+                  <strong class="form-title">패스워드</strong>
+                </div>
+                <div class="form-content relative">
+                  <label for="pw-input" class="hidden-text">패스워드</label>
+                  <BaseTextInput id="pw-input" type="password" class="text-input-lg"></BaseTextInput>
+                  <!--  TODO:[개발] 패스워드 보기/숨기기 구현 필요 (숨길시 icon name="eye-hide"로 title="패스워드 숨기기"로 변경) -->
+                  <baseButton class="button-icon button-sm button-link pw-eye-button" title="패스워드 보기">
+                    <svg-icon class="svg-icon" name="eye" />
+                  </baseButton>
+                </div>
+              </div>
+              <div class="form-item">
+                <div class="form-content">
+                  <BaseCheckbox class="checkbox-lg" id="check-id-save">아이디 저장</BaseCheckbox>
+                </div>
+              </div>
+              <baseButton class="button-primary button-lg w-full">로그인</baseButton>
+            </div>
+          </form>
+          <div class="member-buttons">
+            <baseButton class="button-sm button-link">아이디/패스워드 찾기</baseButton>
+            <baseButton class="button-sm button-link">회원가입</baseButton>
+          </div>
+      </div>
+    </main>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "index.vue"
+};
+</script>
+

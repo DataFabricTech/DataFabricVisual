@@ -1,0 +1,39 @@
+.login {
+  align-items: center;
+  justify-content: center;
+
+  &-inner {
+    @include flex-standard($direction: column);
+    gap: $spacing-24;
+  }
+
+  &-form {
+    .text-input {
+      width: 280px;
+    }
+  }
+}
+
+.member-buttons {
+  @include flex-standard;
+  gap: $spacing-12;
+  width: 100%;
+
+  .button {
+    position: relative;
+
+    &:not(:last-child):after {
+      position: absolute;
+      content: "";
+      right: -6px;
+      width: 1px;
+      height: 8px;
+      background: $border-gray;
+    }
+  }
+}
+
+.pw-eye-button {
+  position: absolute;
+  right: 6px;
+}
