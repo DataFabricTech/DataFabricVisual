@@ -176,8 +176,8 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, defineEmits, defineProps, Ref } from "vue";
-import moment from "moment";
-const FORMAT = "yyyy-MM-DD";
+import dayjs from "dayjs";
+const FORMAT = "YYYY-MM-DD";
 const TODAY = "TODAY";
 const ALL = "ALL";
 const WEEK = "WEEK";
@@ -285,7 +285,7 @@ const emit = defineEmits(["search", "reset", "close"]);
 
 const keyword = ref(null);
 const date: {
-  range: string[] | null[];
+  range: string[];
   disabled: boolean;
   default: string;
 } = reactive({
@@ -368,19 +368,19 @@ function changeDateRange(dateRange: string) {
   date.range[1] = formatDate(today);
   switch (dateRange) {
     case "TODAY":
-      date.range[0] = formatDate(moment(today));
+      date.range[0] = formatDate(dayjs(today));
       break;
     case "WEEK":
-      date.range[0] = formatDate(moment(today).subtract(1, "weeks"));
+      date.range[0] = formatDate(dayjs(today).subtract(1, "weeks"));
       break;
     case "1MONTH":
-      date.range[0] = formatDate(moment(today).subtract(1, "months"));
+      date.range[0] = formatDate(dayjs(today).subtract(1, "months"));
       break;
     case "3MONTH":
-      date.range[0] = formatDate(moment(today).subtract(3, "months"));
+      date.range[0] = formatDate(dayjs(today).subtract(3, "months"));
       break;
     case "YEAR":
-      date.range[0] = formatDate(moment(today).subtract(1, "years"));
+      date.range[0] = formatDate(dayjs(today).subtract(1, "years"));
       break;
     case "ALL":
       date.range = [];
@@ -492,14 +492,13 @@ function setModelFormatTags(data: []) {
  * 데이트 포맷
  * @param date
  */
-const formatDate = (date: Date | object): string => {
-  const momentDate = moment(date);
-  return momentDate.format(FORMAT);
+const formatDate = (date: Date): string => {
+  return dayjs(date).format(FORMAT);
 };
 
 onMounted(() => {
   let today = new Date();
-  let threeMonthsAgo = moment(today).subtract(3, "months");
+  let threeMonthsAgo = dayjs(today).subtract(3, "months");
   date.range.push(formatDate(threeMonthsAgo));
   date.range.push(formatDate(new Date()));
 });
