@@ -14,7 +14,8 @@ const emit = defineEmits(['close']);
 
 const props = defineProps({
   indexValue: {
-    type: Number
+    type: Number,
+    default: 0
   }
 })
 function closeTag() {
