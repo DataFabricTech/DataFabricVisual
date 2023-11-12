@@ -1,5 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import { resolve } from "path";
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
@@ -13,7 +12,16 @@ export default defineNuxtConfig({
       pathPrefix: false
     },
     {
+      path: "~/components/common",
+      extensions: [".vue"],
+      pathPrefix: false
+    },
+    {
       path: "~/components/",
+      extensions: [".vue"]
+    },
+    {
+      path: "~/components/common",
       extensions: [".vue"]
     }
   ],
@@ -59,6 +67,8 @@ export default defineNuxtConfig({
 
   // css 설정
   css: ["vue-final-modal/style.css", "~/assets/css/style.scss"],
+
+  // TODO : "_." 를 prefix로 설정시 동작 X. 추후 2차 개발 시 논의 후 prefix 변경이 필요
   lodash: {
     prefix: "_",
     prefixSkip: ["string"],

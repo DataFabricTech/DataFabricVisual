@@ -15,7 +15,7 @@
       </div>
       <div class="alert-foot">
         <div class="alert-foot-main-buttons">
-          <div class="alert__foot-main-buttons">
+          <div class="alert-foot-main-buttons">
             <base-button class="button-lg button-normal" v-if="props.type === AlertType.confirm" @click="onCancel">
               <span class="button-text">취소</span>
             </base-button>

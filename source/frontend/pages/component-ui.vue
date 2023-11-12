@@ -10,20 +10,6 @@
         <table class="guide-table">
           <tbody>
           <tr>
-            <th scope="row">tree</th>
-          </tr>
-          <tr>
-            <td>
-              <div class="v-group gap-5">
-                <div class="h-group gap-2">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">default</strong>
-                    <Tree :nodes="treeNodes" :config="treeConfig">
-                    </Tree>
-                </div>
-              </div>
-            </td>
-          </tr>
-          <tr>
             <th scope="row">Alert</th>
           </tr>
           <tr>
@@ -31,31 +17,31 @@
               <div class="v-group gap-5">
                 <div class="h-group gap-2">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">default</strong>
-                  <commonAlert theme="default"></commonAlert>
+                  <alert theme="default"></alert>
                 </div>
                 <div class="h-group gap-2">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">info</strong>
-                  <commonAlert theme="info"></commonAlert>
+                  <alert theme="info"></alert>
                 </div>
                 <div class="h-group gap-2">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">success</strong>
-                  <commonAlert theme="success"></commonAlert>
+                  <alert theme="success"></alert>
                 </div>
                 <div class="h-group gap-2">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">warning</strong>
-                  <commonAlert theme="warning">
+                  <alert theme="warning">
                     <baseButton class="button-lg button-negative">
                       <span class="button-text">확인</span>
                     </baseButton>
-                  </commonAlert>
+                  </alert>
                 </div>
                 <div class="h-group gap-2">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">error</strong>
-                  <commonAlert theme="error">
+                  <alert theme="error">
                     <baseButton class="button-lg button-negative">
                       <span class="button-text">확인</span>
                     </baseButton>
-                  </commonAlert>
+                  </alert>
                 </div>
               </div>
             </td>
@@ -1077,19 +1063,28 @@
             <td>
               <div class="v-group gap-5">
                 <div class="h-group">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: Checkable List - title</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: Search List</strong>
                   <baseList class="w-[300px]">
                     <template v-slot:head>
                       <div class="list-head">
                         <div class="list-head-title">
                           title
                         </div>
+                        <div class="text-input-group">
+                          <span class="text-input-icon">
+                            <svg-icon class="svg-icon" name="search"></svg-icon>
+                          </span>
+                          <baseTextInput id="inp-group" value="CCTV"></baseTextInput>
+                          <Basebutton class="text-input-clear-button button-icon button-link" title="초기화">
+                            <svg-icon class="svg-icon" name="close"></svg-icon>
+                          </Basebutton>
+                        </div>
                       </div>
                     </template>
                   </baseList>
                 </div>
                 <div class="h-group">
-                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: Checkable List - no title</strong>
+                  <strong class="w-[150px] font-light text-[14px] shrink-0">type: Checkable List</strong>
                   <baseList class="w-[300px]"></baseList>
                 </div>
               </div>
@@ -1246,6 +1241,15 @@
               <div class="relative h-10">
                 <ScrollTop style="position: absolute;left: 0;bottom: 0;"></ScrollTop>
               </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">tree</th>
+          </tr>
+          <tr>
+            <td>
+              <Tree :nodes="treeNodes" :config="treeConfig">
+              </Tree>
             </td>
           </tr>
           </tbody>
