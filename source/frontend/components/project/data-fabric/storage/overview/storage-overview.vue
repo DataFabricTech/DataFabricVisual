@@ -50,12 +50,14 @@
     <article class="page-article">
       <h4 class="page-subtitle">최근 등록/변경된 연결정보</h4>
       <div class="table-col w-full">
+        <!--        TODO: [개발] ag-grid에 스타일 옵션 추가 필요-->
         <ag-grid-vue
           style="width: 100%; height: 230px"
           class="ag-theme-alpine"
           :columnDefs="storage.overview.event.colDefs"
           :rowData="storage.overview.event.rowData"
           @grid-ready="onEventGridReady"
+          :gridOptions="gridOptions"
         >
         </ag-grid-vue>
       </div>
@@ -63,12 +65,14 @@
     <article class="page-article">
       <h4 class="page-subtitle">히스토리</h4>
       <div class="table-col w-full">
+        <!--        TODO: [개발] ag-grid에 스타일 옵션 추가 필요-->
         <ag-grid-vue
           style="width: 100%; height: 230px"
           class="ag-theme-alpine"
           :columnDefs="storage.overview.history.colDefs"
           :rowData="storage.overview.history.rowData"
           @grid-ready="onHistoryGridReady"
+          :gridOptions="gridOptions"
         >
         </ag-grid-vue>
       </div>
@@ -83,6 +87,11 @@ import { storeToRefs } from "pinia";
 const store = useOverviewStore();
 const { getOverview, getStorageEvent } = store;
 const { storage, storageEvent } = storeToRefs(store);
+
+const gridOptions = {
+  headerHeight: 56,
+  rowHeight: 56
+};
 
 const DEFAULT_BAR_CHART_OPTION = {
   chart: {
@@ -223,6 +232,7 @@ function onHistoryGridReady(params: any) {
   grid.historyGridApi = params.api;
   grid.historyGridApi.sizeColumnsToFit();
 }
+
 function onEventGridReady(params: any) {
   grid.eventGridApi = params.api;
   grid.eventGridApi.sizeColumnsToFit();
