@@ -1,10 +1,11 @@
 .main-article {
-  @include flex-standard($direction: column);
+  @include flex-standard($horizontal: flex-start, $direction: column);
   width: calc(33.3333% - 24px);
   gap: $spacing-8;
 
   &-head {
     @include flex-standard($horizontal: space-between);
+    flex-shrink: 0;
     width: 100%;
     gap: $spacing-4;
   }
@@ -21,8 +22,8 @@
   }
 
   &-body {
+    flex-grow: 1;
     width: 100%;
-    height: 310px;
     padding: $spacing-8;
     border: 1px solid $border-gray;
     border-radius: $border-radius-sm;

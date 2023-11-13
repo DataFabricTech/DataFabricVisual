@@ -12,7 +12,7 @@
 }
 
 .main-information {
-  @include flex-standard;
+  @include flex-standard($vertical: stretch);
   flex-wrap: wrap;
   width: 100%;
   gap: 44px $spacing-36;
