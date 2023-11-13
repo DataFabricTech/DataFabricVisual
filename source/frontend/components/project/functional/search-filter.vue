@@ -20,14 +20,14 @@
             <div class="form-content">
               <BaseSelect class="select-lg" :data="props.dateData" @select="setDateData"></BaseSelect>
               <DatePicker
-                class="date-picker"
+                class="date-picker date-picker-lg"
                 v-model="date.range"
                 :type="'date'"
                 :disabled="date.disabled"
                 @update:modelValue="updateDate"
               >
               </DatePicker>
-              <div class="toggle">
+              <div class="toggle toggle-lg">
                 <BaseRadio
                   name="toggleDate"
                   id="toggle-today"
