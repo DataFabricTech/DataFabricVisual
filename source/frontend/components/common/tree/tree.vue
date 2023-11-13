@@ -15,6 +15,8 @@ export interface State {
   isLoading: boolean;
 }
 
+type NodeKey = "text" | "children" | "state" | "isRoot" | "title" | "icon";
+
 export interface Node {
   text: string;
   children?: string[];
@@ -25,7 +27,9 @@ export interface Node {
   icon?: string;
 }
 
-export interface Nodes { [index: string]: Node }
+export interface Nodes {
+  [index: string]: Node;
+}
 
 export interface Icon {
   type?: string;
@@ -71,7 +75,8 @@ const props = withDefaults(defineProps<Props>(), {
     node1: {
       text: "Node 1",
       isRoot: true
-    }}),
+    }
+  }),
   config: Config => ({
     roots: ["node1"]
   }),
@@ -81,12 +86,13 @@ const props = withDefaults(defineProps<Props>(), {
   addable: false
 });
 
-const emit = defineEmits(["save", "delete"]);
+const emit = defineEmits(["save", "delete", "node-click"]);
 
 const treeNoses = ref<Nodes>({
   node1: {
-    text: "Node 1",
-  }});
+    text: "Node 1"
+  }
+});
 const treeConfig = ref<Config>({
   roots: ["node1"],
   openedIcon: {
@@ -105,12 +111,12 @@ const treeConfig = ref<Config>({
   },
   checkboxes: false,
   editable: true
-})
+});
 const nodeIconBefore = ref("");
 const nodeIconAfter = ref("");
 
-function setNodes(nodes:Nodes) {
-  let roots :string[] = [];
+function setNodes(nodes: Nodes) {
+  let roots: string[] = [];
   for (let key in nodes) {
     console.log("setNodes - key:", key, nodes[key]);
     const node = nodes[key];
@@ -127,6 +133,24 @@ function setConfig(key: string, value: any) {
   console.log("setConfig - key:", key, "-", value);
   treeConfig.value[key] = value;
   // console.log("treeConfig:", treeConfig.value);
+}
+
+// event
+function click(e: any) {
+  console.log("click", e);
+}
+
+function nodeChecked(e: any) {
+  console.log("nodeChecked", e);
+}
+
+function nodeUnchecked(e: any) {
+  console.log("nodeUnchecked", e);
+}
+
+function nodeFocus(e: any) {
+  console.log("nodeFocus", e);
+  emit("node-click", e.id);
 }
 
 onMounted(() => {
@@ -157,7 +181,8 @@ onMounted(() => {
 
 <template>
   <div>
-    <treeview :nodes="treeNoses" :config="treeConfig">
+    <treeview :nodes="treeNoses" :config="treeConfig" @click="click" @nodeChecked="nodeChecked"
+              @nodeUnchecked="nodeUnchecked" @nodeFocus="nodeFocus">
 
       <template #before-input="props">
         <svg-icon v-if="props.node.icon" :name="props.node.icon" class="svg-icon" />

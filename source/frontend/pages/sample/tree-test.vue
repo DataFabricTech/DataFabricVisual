@@ -92,6 +92,10 @@ function onDelete(value: Node) {
   console.log("delete:", value);
 }
 
+function nodeClick(nodeId: string) {
+  console.log("nodeClick:", nodeId);
+}
+
 onMounted(() => {
   // console.log("nodes:", nodes);
   // console.log("config:", config);
@@ -110,7 +114,7 @@ onMounted(() => {
     <Tree v-if="false" :nodes="nodes" :roots="config.roots" :checkboxes="true" :addable="true" @save="onSave"
           @delete="onDelete"></Tree>
     <h3>Tree 4</h3>
-    <Tree v-if="true" :nodes="nodes" :checkboxes="true" :addable="true" @save="onSave"
+    <Tree v-if="true" :nodes="nodes" :checkboxes="true" @node-click="nodeClick" @save="onSave"
           @delete="onDelete"></Tree>
   </div>
 </template>
