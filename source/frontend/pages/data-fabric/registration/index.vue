@@ -358,11 +358,13 @@
                                 <div class="h-group">
                                   <baseSelect></baseSelect>
                                   <DatePicker
+                                    class="date-picker"
                                     v-model:modelValue="args.date"
                                     :type="args.date">
                                   </DatePicker>
                                   <span class="px-2 color-font-gray-01">~</span>
                                   <DatePicker
+                                    class="date-picker"
                                     v-model:modelValue="args.date"
                                     :type="args.date">
                                   </DatePicker>
@@ -422,6 +424,7 @@
                                 <div class="h-group">
                                   <baseSelect></baseSelect>
                                   <DatePicker
+                                    class="date-picker"
                                     v-model:modelValue="args.dateRange"
                                     :type="args.rangeType">
                                   </DatePicker>
@@ -535,8 +538,7 @@
                   <tr>
                     <td>동기화 시작 일시</td>
                     <td>
-                      <DatePicker>
-                      </DatePicker>
+                      <DatePicker class="date-picker"></DatePicker>
                     </td>
                   </tr>
                   </tbody>

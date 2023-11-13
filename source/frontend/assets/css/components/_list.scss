@@ -82,4 +82,8 @@
       background-color: transparent;
     }
   }
+
+  &-lg{
+    @include list-style('list', 'lg');
+  }
 }
