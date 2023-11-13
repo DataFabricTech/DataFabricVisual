@@ -21,25 +21,63 @@
               <BaseSelect class="select-lg" :data="props.dateData" @select="setDateData"></BaseSelect>
               <DatePicker
                 class="date-picker"
-                v-model="range"
-                @update:modelValue="updateDate"
+                v-model="date.range"
                 :type="'date'"
-                :disabled="datePickerDisabled"
+                :disabled="date.disabled"
+                @update:modelValue="updateDate"
               >
               </DatePicker>
               <div class="toggle">
-                <BaseRadio name="toggleDate" id="toggle-today" :value="TODAY" @change="changeDateRange">
+                <BaseRadio
+                  name="toggleDate"
+                  id="toggle-today"
+                  :value="TODAY"
+                  :checked="date.default === TODAY"
+                  @change="changeDateRange"
+                >
                   오늘
                 </BaseRadio>
-                <BaseRadio name="toggleDate" id="toggle-week" :value="WEEK" @change="changeDateRange">7일</BaseRadio>
-                <BaseRadio name="toggleDate" id="toggle-month-1" :value="ONE_MONTH" @change="changeDateRange"
+                <BaseRadio
+                  name="toggleDate"
+                  id="toggle-week"
+                  :value="WEEK"
+                  :checked="date.default === WEEK"
+                  @change="changeDateRange"
+                  >7일</BaseRadio
+                >
+                <BaseRadio
+                  name="toggleDate"
+                  id="toggle-month-1"
+                  :value="ONE_MONTH"
+                  :checked="date.default === ONE_MONTH"
+                  @change="changeDateRange"
                   >1개월
                 </BaseRadio>
-                <BaseRadio name="toggleDate" id="toggle-month-3" :value="THREE_MONTH" @change="changeDateRange">
+                <BaseRadio
+                  name="toggleDate"
+                  id="toggle-month-3"
+                  :value="THREE_MONTH"
+                  :checked="date.default === THREE_MONTH"
+                  @change="changeDateRange"
+                >
                   3개월
                 </BaseRadio>
-                <BaseRadio name="toggleDate" id="toggle-year" :value="YEAR" @change="changeDateRange">1년</BaseRadio>
-                <BaseRadio name="toggleDate" id="toggle-all" :value="ALL" @change="changeDateRange">전체</BaseRadio>
+                <BaseRadio
+                  name="toggleDate"
+                  id="toggle-year"
+                  :value="YEAR"
+                  :checked="date.default === YEAR"
+                  @change="changeDateRange"
+                  >1년</BaseRadio
+                >
+                <BaseRadio
+                  name="toggleDate"
+                  id="toggle-all"
+                  :value="ALL"
+                  :checked="date.default === ALL"
+                  @change="changeDateRange"
+                  >전체</BaseRadio
+                >
               </div>
             </div>
           </div>
@@ -138,8 +176,8 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, defineEmits, defineProps, Ref } from "vue";
-import moment from "moment";
-const FORMAT = "yyyy-MM-DD";
+import dayjs from "dayjs";
+const FORMAT = "YYYY-MM-DD";
 const TODAY = "TODAY";
 const ALL = "ALL";
 const WEEK = "WEEK";
@@ -246,9 +284,28 @@ const props = defineProps({
 const emit = defineEmits(["search", "reset", "close"]);
 
 const keyword = ref(null);
+const date: {
+  range: string[];
+  disabled: boolean;
+  default: string;
+} = reactive({
+  range: [],
+  disabled: false,
+  default: THREE_MONTH
+});
 const range: Ref<Array<string>> = ref([]);
-const datePickerDisabled = ref(false);
-const detailSearch = reactive({
+const detailSearch: {
+  DATA_NAME: string;
+  DATA_TYPE: string;
+  DATA_FORMAT: string;
+  CATEGORY: string;
+  TAG: string;
+  STORAGE_TYPE: string;
+  CONNECTOR_NAME: string;
+  CREATOR: string;
+  START_DATE: string | null;
+  END_DATE: string | null;
+} = reactive({
   DATA_NAME: "",
   DATA_TYPE: "",
   DATA_FORMAT: "",
@@ -292,12 +349,12 @@ function setDateData(data: string) {
 
 /**
  * DatePicker
- * @param date
+ * @param data
  */
-function updateDate(date: any) {
-  range.value = date;
-  detailSearch.START_DATE = date[0];
-  detailSearch.END_DATE = date[1];
+function updateDate(data: any) {
+  date.range = data;
+  detailSearch.START_DATE = data[0];
+  detailSearch.END_DATE = data[1];
 }
 
 /**
@@ -305,28 +362,38 @@ function updateDate(date: any) {
  * @param dateRange
  */
 function changeDateRange(dateRange: string) {
-  datePickerDisabled.value = false;
+  date.disabled = false;
+  date.default = dateRange;
   let today = new Date();
+  date.range[1] = formatDate(today);
   switch (dateRange) {
     case "TODAY":
-      range.value[0] = formatDate(moment(today));
+      date.range[0] = formatDate(dayjs(today));
       break;
     case "WEEK":
-      range.value[0] = formatDate(moment(today).subtract(1, "weeks"));
+      date.range[0] = formatDate(dayjs(today).subtract(1, "weeks"));
       break;
     case "1MONTH":
-      range.value[0] = formatDate(moment(today).subtract(1, "months"));
+      date.range[0] = formatDate(dayjs(today).subtract(1, "months"));
       break;
     case "3MONTH":
-      range.value[0] = formatDate(moment(today).subtract(3, "months"));
+      date.range[0] = formatDate(dayjs(today).subtract(3, "months"));
       break;
     case "YEAR":
-      range.value[0] = formatDate(moment(today).subtract(1, "years"));
+      date.range[0] = formatDate(dayjs(today).subtract(1, "years"));
       break;
     case "ALL":
-      range.value = [];
-      datePickerDisabled.value = true;
+      date.range = [];
+      date.disabled = true;
       break;
+  }
+
+  if (date.range.length === 0) {
+    detailSearch.START_DATE = null;
+    detailSearch.END_DATE = null;
+  } else {
+    detailSearch.START_DATE = date.range[0];
+    detailSearch.END_DATE = date.range[1];
   }
 }
 
@@ -425,15 +492,14 @@ function setModelFormatTags(data: []) {
  * 데이트 포맷
  * @param date
  */
-const formatDate = (date: Date | object) => {
-  const momentDate = moment(date);
-  return momentDate.format(FORMAT);
+const formatDate = (date: Date): string => {
+  return dayjs(date).format(FORMAT);
 };
 
 onMounted(() => {
   let today = new Date();
-  let threeMonthsAgo = moment(today).subtract(3, "months");
-  range.value.push(formatDate(threeMonthsAgo));
-  range.value.push(formatDate(new Date()));
+  let threeMonthsAgo = dayjs(today).subtract(3, "months");
+  date.range.push(formatDate(threeMonthsAgo));
+  date.range.push(formatDate(new Date()));
 });
 </script>

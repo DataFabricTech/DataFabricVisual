@@ -15,10 +15,10 @@
         </BaseButton>
       </div>
       <div class="notification-footer">
-        <a href="#" class="notification-link">
+        <a href="#" class="notification-link" v-if="props.link">
           바로가기
         </a>
-        <div class="h-group">
+        <div class="h-group ml-auto" v-if="props.pageTrans">
           <base-button class="button-link no-underline">
             &lt;
           </base-button>
@@ -44,6 +44,8 @@
 <script setup lang="ts">
 const props = defineProps({
   theme: { type: String, default: "normal" },
-  useClose: { type: Boolean, default: false }
+  useClose: { type: Boolean, default: false },
+  pageTrans: { type: Boolean, default: false },
+  link: { type: Boolean, default: false }
 });
 </script>
