@@ -8,7 +8,7 @@ export default meta;
 
 type Story = StoryObj<typeof Tree>;
 export const Primary: Story = {
-  render: (args) => ({
+  render: (args:any) => ({
     components: { Tree },
     setup() {
       return { args };
@@ -16,7 +16,7 @@ export const Primary: Story = {
     template: `<Tree v-bind="args" v-on="$props"></Tree>`
   }),
   args: {
-    node: {
+    nodes: {
       id1: {
         text: "text1",
         children: ["id11", "id12"],
@@ -57,13 +57,13 @@ export const Primary: Story = {
       },
     },
     config: {
-      "roots": ["id1", "id2", "id3"]
+      roots: ["id1", "id2", "id3"]
     }
   }
 };
 
 export const Secondary: Story = {
-  render: (args) => ({
+  render: (args:any) => ({
     components: { Tree },
     setup() {
       return { args };
@@ -71,7 +71,7 @@ export const Secondary: Story = {
     template: `<Tree v-bind="args" v-on="$props"></Tree>`
   }),
   args: {
-    node: {
+    nodes: {
       id1: {
         text: "text1",
         children: ["id11", "id12"],
@@ -101,6 +101,8 @@ export const Secondary: Story = {
       },
       id311: {
         text: "text311",
+        title: "before",
+        icon: "close",
         state: {
           checked: true
         }
@@ -123,7 +125,7 @@ export const Secondary: Story = {
       },
     },
     config: {
-      "roots": ["id1", "id2", "id3"],
+      roots: ["id1", "id2", "id3"],
       openedIcon: {
         type: "shape",
         stroke: "black",
