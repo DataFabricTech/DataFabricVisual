@@ -108,7 +108,7 @@
 
   &.card-simple {
     width: 100%;
-    padding: 0;
+    padding: $spacing-8 $spacing-12;
     border: none;
     box-shadow: none;
 
@@ -150,7 +150,6 @@
   &-item {
     @include flex-standard($horizontal: flex-start);
     width: 100%;
-    padding: $spacing-4 0;
 
     &:not(:last-child) {
       border-bottom: 1px solid $border-gray;
