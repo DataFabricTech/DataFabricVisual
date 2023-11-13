@@ -15,25 +15,11 @@
   }
 
   .input-tag {
-    display: none;
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: $spacing-8;
     margin: 0;
-  }
-
-  &.is-modify {
-    .text-input {
-      display: block;
-    }
-
-    .input-tag {
-      display: flex;
-    }
-
-    .card-link, .card-detail, .tag {
-      display: none;
-    }
   }
 
   &-list {

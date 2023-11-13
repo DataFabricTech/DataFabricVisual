@@ -8,20 +8,18 @@
           <form action="" class="form login-form">
             <div class="form-list">
               <div class="form-item">
-                <div class="form-label">
-                  <strong class="form-title">아이디</strong>
-                </div>
+                <label for="id-input" class="form-label">
+                  <span  class="form-title">아이디</span>
+                </label>
                 <div class="form-content">
-                  <label for="id-input" class="hidden-text">아이디</label>
                   <BaseTextInput id="id-input" class="text-input-lg" placeholder=""></BaseTextInput>
                 </div>
               </div>
               <div class="form-item">
-                <div class="form-label">
-                  <strong class="form-title">패스워드</strong>
-                </div>
+                <label for="pw-input" class="form-label">
+                  <span class="form-title">패스워드</span>
+                </label>
                 <div class="form-content relative">
-                  <label for="pw-input" class="hidden-text">패스워드</label>
                   <BaseTextInput id="pw-input" type="password" class="text-input-lg pr-8" placeholder=""></BaseTextInput>
                   <!--  TODO:[개발] 패스워드 보기/숨기기 구현 필요 (숨길시 icon name="eye-hide"로 title="패스워드 숨기기"로 변경) -->
                   <baseButton class="button-icon button-sm button-link pw-toggle" title="패스워드 보기">
@@ -34,7 +32,8 @@
                   <BaseCheckbox class="checkbox-lg" id="check-id-save">아이디 저장</BaseCheckbox>
                 </div>
               </div>
-              <span class="text-red-500 hidden" role="alert">아이디 또는 비밀번호를 확인해주세요</span>
+              <!--  TODO:[개발] v-if로 상황에 따라 보이게 개발 필요 -->
+              <span class="text-red-500" role="alert">아이디 또는 비밀번호를 확인해주세요</span>
               <baseButton class="button-primary button-lg w-full">로그인</baseButton>
             </div>
           </form>
