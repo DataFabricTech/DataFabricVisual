@@ -25,13 +25,15 @@
         </div>
       </div>
       <div class="v-group w-full">
+        <!-- TODO:[개발] text-input,input-tag 생략 / 수정시 text-input,input-tag출력 및 card-link,card-detail,tag 생략  -->
         <a href="#" class="card-link" title="이동" @click="$emit('click', props.model.id)">{{ props.model.name }}</a>
-        <baseTextInput placeholder="연결정보 이름 영역입니다." class="hidden"></baseTextInput>
+        <baseTextInput placeholder="연결정보 이름 영역입니다."></baseTextInput>
         <p class="card-detail">{{ props.model.description }}</p>
-        <baseTextInput placeholder="연결정보 설명 영역입니다." class="hidden"></baseTextInput>
+        <baseTextInput placeholder="연결정보 설명 영역입니다."></baseTextInput>
       </div>
       <div class="h-group gap-[16px]">
-        <div class="input-wrapper hidden">
+        <BaseTag v-for="item in props.model.tags">#{{ item }}</BaseTag>
+        <div class="input-tag">
           <baseTextInput placeholder="태그 영역입니다." class="w-96"></baseTextInput>
           <VTooltip class="tooltip" placement="top-start">
             <svg-icon class="svg-icon" name="help-outline"></svg-icon>
@@ -40,7 +42,6 @@
             </template>
           </VTooltip>
         </div>
-        <BaseTag v-for="item in props.model.tags">#{{ item }}</BaseTag>
       </div>
       <div class="h-group justify-between w-full">
         <div class="h-group gap-[16px]">
