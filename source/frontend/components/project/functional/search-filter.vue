@@ -175,7 +175,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, defineEmits, defineProps, Ref } from "vue";
+import { ref, reactive, onMounted, defineEmits, defineProps } from "vue";
 import dayjs from "dayjs";
 const FORMAT = "YYYY-MM-DD";
 const TODAY = "TODAY";
@@ -293,7 +293,7 @@ const date: {
   disabled: false,
   default: THREE_MONTH
 });
-const range: Ref<Array<string>> = ref([]);
+const range: ref<Array<string>> = ref([]);
 const detailSearch: {
   DATA_NAME: string;
   DATA_TYPE: string;
