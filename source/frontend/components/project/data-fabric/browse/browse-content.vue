@@ -25,7 +25,12 @@
     </div>
     <ul class="card-list">
       <li class="card-item" v-for="dataModel in dataModelList">
-        <Card :model="dataModel" @download="onRequestDownload(dataModel.id)" @click="moveDetailPage"></Card>
+        <Card
+          :model="dataModel"
+          @download="onRequestDownload(dataModel.id)"
+          @click="moveDetailPage"
+          @update="updateCard"
+        ></Card>
       </li>
     </ul>
     <BasePagination
@@ -79,6 +84,9 @@ function setSort(data: any) {}
 
 function moveDetailPage(id: string) {
   console.log(id);
+}
+function updateCard(data: object) {
+  console.log(data);
 }
 async function onRequestDownload(id: string) {
   await requestDownload(id);
