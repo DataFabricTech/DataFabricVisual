@@ -3,7 +3,7 @@
     <main id="main" class="login">
       <div class="login-inner">
         <div class="login-logo">
-          <h1 class="text-2xl font-bold">DATA Fabric</h1>
+          <h1 class="text-2xl font-bold">데이터 패브릭</h1>
         </div>
           <form action="" class="form login-form">
             <div class="form-list">
@@ -13,7 +13,7 @@
                 </div>
                 <div class="form-content">
                   <label for="id-input" class="hidden-text">아이디</label>
-                  <BaseTextInput id="id-input" class="text-input-lg"></BaseTextInput>
+                  <BaseTextInput id="id-input" class="text-input-lg" placeholder=""></BaseTextInput>
                 </div>
               </div>
               <div class="form-item">
@@ -22,9 +22,9 @@
                 </div>
                 <div class="form-content relative">
                   <label for="pw-input" class="hidden-text">패스워드</label>
-                  <BaseTextInput id="pw-input" type="password" class="text-input-lg"></BaseTextInput>
+                  <BaseTextInput id="pw-input" type="password" class="text-input-lg pr-8" placeholder=""></BaseTextInput>
                   <!--  TODO:[개발] 패스워드 보기/숨기기 구현 필요 (숨길시 icon name="eye-hide"로 title="패스워드 숨기기"로 변경) -->
-                  <baseButton class="button-icon button-sm button-link pw-eye-button" title="패스워드 보기">
+                  <baseButton class="button-icon button-sm button-link pw-toggle" title="패스워드 보기">
                     <svg-icon class="svg-icon" name="eye" />
                   </baseButton>
                 </div>
@@ -34,10 +34,11 @@
                   <BaseCheckbox class="checkbox-lg" id="check-id-save">아이디 저장</BaseCheckbox>
                 </div>
               </div>
+              <span class="text-red-500 hidden" role="alert">아이디 또는 비밀번호를 확인해주세요</span>
               <baseButton class="button-primary button-lg w-full">로그인</baseButton>
             </div>
           </form>
-          <div class="member-buttons">
+          <div class="login-options">
             <baseButton class="button-sm button-link">아이디/패스워드 찾기</baseButton>
             <baseButton class="button-sm button-link">회원가입</baseButton>
           </div>

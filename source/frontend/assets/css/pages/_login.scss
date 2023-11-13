@@ -4,36 +4,37 @@
 
   &-inner {
     @include flex-standard($direction: column);
-    gap: $spacing-24;
+    gap: $spacing-40;
+    padding: $spacing-32;
   }
 
   &-form {
     .text-input {
-      width: 280px;
+      width: 250px;
+    }
+  }
+
+  &-options {
+    @include flex-standard;
+    gap: $spacing-12;
+    width: 100%;
+
+    .button {
+      position: relative;
+
+      &:not(:last-child):after {
+        position: absolute;
+        content: "";
+        right: -6px;
+        width: 1px;
+        height: 8px;
+        background: $border-gray;
+      }
     }
   }
 }
 
-.member-buttons {
-  @include flex-standard;
-  gap: $spacing-12;
-  width: 100%;
-
-  .button {
-    position: relative;
-
-    &:not(:last-child):after {
-      position: absolute;
-      content: "";
-      right: -6px;
-      width: 1px;
-      height: 8px;
-      background: $border-gray;
-    }
-  }
-}
-
-.pw-eye-button {
+.pw-toggle {
   position: absolute;
   right: 6px;
 }
