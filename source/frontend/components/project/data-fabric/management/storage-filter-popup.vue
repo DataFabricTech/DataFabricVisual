@@ -58,7 +58,7 @@
   </modal>
 </template>
 <script lang="ts" setup>
-import { useStorageStore } from "~/store/data-fabric/storage/storage";
+import { useStorageStore } from "~/store/data-fabric/management/storage";
 
 const store = useStorageStore();
 const { storage, setStorageTypeFilter, setStatusFilter } = store;

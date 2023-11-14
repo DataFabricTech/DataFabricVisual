@@ -81,7 +81,7 @@
 </template>
 <script lang="ts" setup>
 import { AgGridVue } from "ag-grid-vue3";
-import { useOverviewStore } from "~/store/data-fabric/storage/storage";
+import { useOverviewStore } from "~/store/data-fabric/management/storage";
 import { storeToRefs } from "pinia";
 
 const store = useOverviewStore();

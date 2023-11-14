@@ -47,8 +47,8 @@
 </template>
 <script lang="ts" setup>
 import { useNuxtApp } from "nuxt/app";
-import type { StorageSortContextItem } from "~/components/project/data-fabric/storage/overview/storage-overview";
-import { useStorageStore } from "~/store/data-fabric/storage/storage";
+import type { StorageSortContextItem } from "~/components/project/data-fabric/management/overview/storage-overview";
+import { useStorageStore } from "~/store/data-fabric/management/storage";
 import { storeToRefs } from "pinia";
 import { vOnClickOutside } from "@vueuse/components";
 
