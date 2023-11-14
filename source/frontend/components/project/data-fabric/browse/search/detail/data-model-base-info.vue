@@ -84,7 +84,7 @@
     </div>
     <h4 class="page-subtitle">샘플데이터</h4>
     <div class="table-row w-full">
-      <baseTableColumn :headers="sample.headers" :rows="sample.rows"></baseTableColumn>
+      <baseTableColumn class="sample-data-table" :headers="sample.headers" :rows="sample.rows"></baseTableColumn>
     </div>
   </article>
 </template>
