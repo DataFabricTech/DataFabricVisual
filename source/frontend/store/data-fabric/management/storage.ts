@@ -5,7 +5,7 @@ import {
   StorageFilter,
   StorageItem,
   StorageSortContextItem, StorageTypeItem
-} from "~/components/project/data-fabric/storage/overview/storage-overview";
+} from "~/components/project/data-fabric/management/overview/storage-overview";
 const STORAGE_BASE_URL = "http://192.168.107.28:35080/storage/v1"
 const DEFAULT_STATUS_LIST = [
   { id: "connection", value: "CONNECTED", name: "연결됨" },
@@ -140,9 +140,14 @@ export const useOverviewStore = defineStore("overview", () => {
   function getOverview() {
     storage.overview = OverviewSample.storageOverview;
   }
+
+  function changeOverview() {
+    storage.overview = OverviewSample.nStorageOverview;
+  }
   return {
     storage,
     storageEvent,
+    changeOverview,
     getStorageEvent,
     getOverview
   };
@@ -250,6 +255,7 @@ export const useStorageStore = defineStore("storage", () => {
     storage.types = OverviewSample.storageTypes;
     initPopupFilter();
   }
+  const dayjs = useDayjs();
 
   /**
    * 연결정보 목록 조회
@@ -257,7 +263,6 @@ export const useStorageStore = defineStore("storage", () => {
    */
   function getStorage() {
     getStorageType();
-    const dayjs = useDayjs();
     storage.items = OverviewSample.storages;
 
     // 화면에 맞게 데이터 형식, 속성 변경
@@ -275,6 +280,16 @@ export const useStorageStore = defineStore("storage", () => {
     storage.filter.status = _map(storage.statusTypes, "value");
   }
 
+  function changeStorage() {
+    storage.items = OverviewSample.nStorages;
+
+    // 화면에 맞게 데이터 형식, 속성 변경
+    _map(storage.items, (el) => {
+      el.crdDate = dayjs(el.crdDate).format("YYYY-MM-DD hh:mm:ss");
+      return el;
+    });
+  }
+
   return {
     storage,
     storageList,
@@ -283,6 +298,7 @@ export const useStorageStore = defineStore("storage", () => {
     setStorageTypeFilter,
     setStatusFilter,
     resetSearch,
-    getStorage
+    getStorage,
+    changeStorage
   };
 })

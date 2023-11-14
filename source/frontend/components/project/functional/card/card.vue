@@ -7,17 +7,18 @@
           <BaseBadge class="bg-marker-purple">{{ props.model.domain }}</BaseBadge>
         </div>
         <div class="h-group gap-[16px]">
-          <BaseButton class="button-link-primary" @click="preview">
+          <BaseButton class="button-link-primary" v-if="props.showPreviewBtn" @click="preview">
             <span class="button-text">미리보기</span>
           </BaseButton>
-          <BaseButton class="button-normal" @click="download">
+          <BaseButton class="button-normal" v-if="!props.showConnectInfo" @click="download">
             <span class="button-text">
               {{ downloadStatus }}
             </span>
           </BaseButton>
-          <div :class="props.cardMode === true ? 'card-status' : 'card-status hidden'">
-            <!-- TODO: 데이터 연결상태 리턴값에 따라 클래스 및 명칭 변경 -->
-            <baseBadge class="bg-marker-gray">Inactive(Disconnected)</baseBadge>
+          <div v-if="props.showConnectInfo">
+            <baseBadge :class="isConnected(props.model.status) ? 'bg-marker-cyan' : 'bg-marker-gray'">
+              {{ isConnected(props.model.status) ? "Connected" : "Inactive(Disconnected)" }}</baseBadge
+            >
           </div>
           <KebabMenu class="is-bottom"></KebabMenu>
         </div>
@@ -50,7 +51,7 @@
           </VTooltip>
         </div>
       </div>
-      <div class="h-group justify-between w-full">
+      <div :class="props.showInfoComplex ? 'v-group justify-between w-full' : 'h-group justify-between w-full'">
         <div class="h-group gap-[16px]">
           <dl class="define">
             <dt class="define-term">
@@ -71,7 +72,7 @@
             </dd>
           </dl>
         </div>
-        <div class="h-group gap-[30px]">
+        <div class="h-group gap-[30px]" v-if="props.showStatistics">
           <dl class="define">
             <dt class="define-term">
               <svg-icon class="svg-icon" name="eye"></svg-icon>
@@ -153,6 +154,7 @@ const props = defineProps({
       storageInfo: {
         storageType: "HDFS"
       },
+      status: "CONNECTED",
       domain: "공간",
       lastModifiedAt: {
         strDateTime: "2023-11-20 13:30:40.123",
@@ -174,7 +176,19 @@ const props = defineProps({
       }
     })
   },
-  cardMode: {
+  showConnectInfo: {
+    type: Boolean,
+    default: false
+  },
+  showStatistics: {
+    type: Boolean,
+    default: true
+  },
+  showPreviewBtn: {
+    type: Boolean,
+    default: true
+  },
+  showInfoComplex: {
     type: Boolean,
     default: false
   },
@@ -186,18 +200,21 @@ const props = defineProps({
 const tagList = ref("");
 const tooltipMassage = ref(`태그 추가 시 콤마(,)로 구분해주세요.`);
 const emit = defineEmits(["preview", "download", "click", "update"]);
-const downloadStatus = computed(() => {
-  switch (props.model.downloadInfo.status) {
-    case 1:
-      return "다운로드 요청";
-    case 2:
-      return "다운로드 중";
-    case 3:
-      return "다운로드 가능";
-    default:
-      return "다운로드";
-  }
-});
+const computedStatus = (property: string) => {
+  computed(() => {
+    switch (props.model?.[property]) {
+      case 1:
+        return "다운로드 요청";
+      case 2:
+        return "다운로드 중";
+      case 3:
+        return "다운로드 가능";
+      default:
+        return "다운로드";
+    }
+  });
+};
+computedStatus("downloadInfo.status");
 function preview() {
   emit("preview", props.model.id);
 }
@@ -208,6 +225,10 @@ function download() {
   };
   emit("download", downloadInfo);
 }
+
+const isConnected = (value: string) => {
+  return value === "CONNECTED";
+};
 const watchAndUpdate = (property: string) => {
   watch(
     () => props.model?.[property],
