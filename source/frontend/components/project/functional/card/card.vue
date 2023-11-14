@@ -7,7 +7,7 @@
           <BaseBadge class="bg-marker-purple">{{ props.model.domain }}</BaseBadge>
         </div>
         <div class="h-group gap-[16px]">
-          <BaseButton class="button-link-primary" @click="preview">
+          <BaseButton class="button-link-primary" v-if="props.showPreviewBtn" @click="preview">
             <span class="button-text">미리보기</span>
           </BaseButton>
           <BaseButton class="button-normal" @click="download">
@@ -15,7 +15,7 @@
               {{ downloadStatus }}
             </span>
           </BaseButton>
-          <div :class="props.cardMode === true ? 'card-status' : 'card-status hidden'">
+          <div v-if="props.showConnectInfo">
             <!-- TODO: 데이터 연결상태 리턴값에 따라 클래스 및 명칭 변경 -->
             <baseBadge class="bg-marker-gray">Inactive(Disconnected)</baseBadge>
           </div>
@@ -50,7 +50,7 @@
           </VTooltip>
         </div>
       </div>
-      <div class="h-group justify-between w-full">
+      <div :class="props.showInfoComplex ? 'v-group justify-between w-full' : 'h-group justify-between w-full'">
         <div class="h-group gap-[16px]">
           <dl class="define">
             <dt class="define-term">
@@ -71,7 +71,7 @@
             </dd>
           </dl>
         </div>
-        <div class="h-group gap-[30px]">
+        <div class="h-group gap-[30px]" v-if="props.showStatistics">
           <dl class="define">
             <dt class="define-term">
               <svg-icon class="svg-icon" name="eye"></svg-icon>
@@ -174,7 +174,19 @@ const props = defineProps({
       }
     })
   },
-  cardMode: {
+  showConnectInfo: {
+    type: Boolean,
+    default: false
+  },
+  showStatistics: {
+    type: Boolean,
+    default: true
+  },
+  showPreviewBtn: {
+    type: Boolean,
+    default: true
+  },
+  showInfoComplex: {
     type: Boolean,
     default: false
   },
