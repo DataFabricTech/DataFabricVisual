@@ -176,7 +176,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, defineEmits, defineProps } from "vue";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 const FORMAT = "YYYY-MM-DD";
 const TODAY = "TODAY";
 const ALL = "ALL";
@@ -487,7 +487,7 @@ function setModelFormatTags(data: []) {
  * 데이트 포맷
  * @param date
  */
-const formatDate = (date: Date): string => {
+const formatDate = (date: Date | Dayjs): string => {
   return dayjs(date).format(FORMAT);
 };
 onMounted(async () => {
