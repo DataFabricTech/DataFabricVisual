@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits } from "vue";
+import { defineProps, defineEmits } from "vue";
 const props = defineProps({
   id: { type: String, default: null },
   name: { type: String, default: null },

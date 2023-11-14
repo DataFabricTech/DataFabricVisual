@@ -20,14 +20,14 @@
             <div class="form-content">
               <BaseSelect class="select-lg" :data="props.dateData" @select="setDateData"></BaseSelect>
               <DatePicker
-                class="date-picker"
+                class="date-picker date-picker-lg"
                 v-model="date.range"
                 :type="'date'"
                 :disabled="date.disabled"
                 @update:modelValue="updateDate"
               >
               </DatePicker>
-              <div class="toggle">
+              <div class="toggle toggle-lg">
                 <BaseRadio
                   name="toggleDate"
                   id="toggle-today"
@@ -175,7 +175,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, defineEmits, defineProps, Ref } from "vue";
+import { ref, reactive, onMounted, defineEmits, defineProps } from "vue";
 import dayjs from "dayjs";
 const FORMAT = "YYYY-MM-DD";
 const TODAY = "TODAY";
@@ -293,7 +293,7 @@ const date: {
   disabled: false,
   default: THREE_MONTH
 });
-const range: Ref<Array<string>> = ref([]);
+const range: ref<Array<string>> = ref([]);
 const detailSearch: {
   DATA_NAME: string;
   DATA_TYPE: string;
