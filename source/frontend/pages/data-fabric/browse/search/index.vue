@@ -79,55 +79,56 @@
             </div>
           </article>
         </div>
+        <preview></preview>
         <!--        미리보기 - 아래 컨텐츠가 Toggle-->
-        <div class="preview">
-          <header class="preview-header">
-            <h5 class="preview-title">
-              <span class="hidden-text">데이터 상세 정보</span>
-            </h5>
-            <baseButton class="button-icon button-sm" title="닫기">
-              <svg-icon name="close" class="svg-icon" />
-              <span class="hidden-text">닫기</span>
-            </baseButton>
-          </header>
-          <div class="preview-body">
-            <BaseNotification theme="warning">
-              <strong class="notification-title">
-                연결정보가 변동되어 데이터모델 정보 를 다운로드 받을 수 없습니다.
-              </strong>
-            </BaseNotification>
-            <div class="preview-card">
-              <CardSimple class="bg-[#f5f5f5]"></CardSimple>
-            </div>
-            <article class="preview-article">
-              <BaseTab></BaseTab>
-              <baseTableRow></baseTableRow>
-            </article>
-            <article class="preview-article">
-              <BaseTab></BaseTab>
-              <baseTableColumn></baseTableColumn>
-            </article>
-            <article class="preview-article">
-              <BaseTab></BaseTab>
-              <baseTableColumn></baseTableColumn>
-            </article>
-            <article class="preview-article">
-              <BaseTab></BaseTab>
-              <div class="chartbox"></div>
-            </article>
-            <article class="preview-article">
-              <BaseTab></BaseTab>
-              <ul class="card-simple-list w-full">
-                <li class="card-simple-item" v-for="index in 3">
-                  <CardSimple></CardSimple>
-                </li>
-              </ul>
-            </article>
-          </div>
-          <footer class="preview-footer">
-            <baseButton class="button-lg button-link"><span class="button-text">소유자에게 문의하기</span></baseButton>
-          </footer>
-        </div>
+<!--        <div class="preview">-->
+<!--          <header class="preview-header">-->
+<!--            <h5 class="preview-title">-->
+<!--              <span class="hidden-text">데이터 상세 정보</span>-->
+<!--            </h5>-->
+<!--            <baseButton class="button-icon button-sm" title="닫기">-->
+<!--              <svg-icon name="close" class="svg-icon" />-->
+<!--              <span class="hidden-text">닫기</span>-->
+<!--            </baseButton>-->
+<!--          </header>-->
+<!--          <div class="preview-body">-->
+<!--            <BaseNotification theme="warning">-->
+<!--              <strong class="notification-title">-->
+<!--                연결정보가 변동되어 데이터모델 정보 를 다운로드 받을 수 없습니다.-->
+<!--              </strong>-->
+<!--            </BaseNotification>-->
+<!--            <div class="preview-card">-->
+<!--              <CardSimple class="bg-[#f5f5f5]"></CardSimple>-->
+<!--            </div>-->
+<!--            <article class="preview-article">-->
+<!--              <BaseTab></BaseTab>-->
+<!--              <baseTableRow></baseTableRow>-->
+<!--            </article>-->
+<!--            <article class="preview-article">-->
+<!--              <BaseTab></BaseTab>-->
+<!--              <baseTableColumn></baseTableColumn>-->
+<!--            </article>-->
+<!--            <article class="preview-article">-->
+<!--              <BaseTab></BaseTab>-->
+<!--              <baseTableColumn></baseTableColumn>-->
+<!--            </article>-->
+<!--            <article class="preview-article">-->
+<!--              <BaseTab></BaseTab>-->
+<!--              <div class="chartbox"></div>-->
+<!--            </article>-->
+<!--            <article class="preview-article">-->
+<!--              <BaseTab></BaseTab>-->
+<!--              <ul class="card-simple-list w-full">-->
+<!--                <li class="card-simple-item" v-for="index in 3">-->
+<!--                  <CardSimple></CardSimple>-->
+<!--                </li>-->
+<!--              </ul>-->
+<!--            </article>-->
+<!--          </div>-->
+<!--          <footer class="preview-footer">-->
+<!--            <baseButton class="button-lg button-link"><span class="button-text">소유자에게 문의하기</span></baseButton>-->
+<!--          </footer>-->
+<!--        </div>-->
       </div>
     </section>
   </div>
@@ -138,6 +139,7 @@
 // });
 import { storeToRefs } from "pinia";
 import { fabricMainStore } from "/store/data-fabric/main/main";
+import Preview from "/components/project/data-fabric/search/preview/preview.vue";
 
 const store = fabricMainStore();
 const {  } = store;
@@ -159,6 +161,9 @@ function viewPreview() {
   //
 
 };
+
+//TODO : v-if로 미리보기 클릭시,  emit받아서 ...
+
 
 const cardList = [
   {
