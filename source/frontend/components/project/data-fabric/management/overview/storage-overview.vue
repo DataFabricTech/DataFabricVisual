@@ -72,7 +72,7 @@
           :columnDefs="storage.overview.history.colDefs"
           :rowData="storage.overview.history.rowData"
           @grid-ready="onHistoryGridReady"
-          :gridOptions="gridOptions"
+          :gridOptions="gridOptions2"
         >
         </ag-grid-vue>
       </div>
@@ -89,6 +89,10 @@ const { getOverview, getStorageEvent } = store;
 const { storage, storageEvent } = storeToRefs(store);
 
 const gridOptions = {
+  headerHeight: 56,
+  rowHeight: 56
+};
+const gridOptions2 = {
   headerHeight: 56,
   rowHeight: 56
 };
