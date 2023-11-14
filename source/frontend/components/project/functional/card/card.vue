@@ -255,8 +255,5 @@ onMounted(() => {
   if (props.isUpdate && props.model?.tags) {
     tagList.value = props.model.tags.join(",");
   }
-  if (props.showConnectInfo) {
-    props.showPreviewBtn = false;
-  }
 });
 </script>
