@@ -5,8 +5,6 @@
         <div class="h-group gap-[8px]">
           <BaseBadge class="bg-marker-cyan">{{ props.model.storageInfo.storageType }}</BaseBadge>
           <BaseBadge class="bg-marker-purple">{{ props.model.domain }}</BaseBadge>
-          <!--TODO: 기획 및 API 명세서 fix 되면 코드 수정 -->
-          <!--          <BaseBadge v-for="(item, index) in model.tags" :class="badgeClass[index % badgeClass.length]">{{ item }}</BaseBadge>-->
         </div>
         <div class="h-group gap-[16px]">
           <BaseButton class="button-link-primary" @click="preview">
@@ -60,7 +58,7 @@
               수정일자:
             </dt>
             <dd class="define-desc">
-              {{ props.model.updatedAt }}
+              {{ props.model.lastModifiedAt.strDateTime }}
             </dd>
           </dl>
           <dl class="define">
@@ -69,7 +67,7 @@
               소유자:
             </dt>
             <dd class="define-desc">
-              {{ props.model.creator }}
+              {{ props.model.createdBy.name }}
             </dd>
           </dl>
         </div>
@@ -80,7 +78,7 @@
               <span class="hidden-text">조회수</span>
             </dt>
             <dd class="define-desc">
-              {{ props.model.statInfo.access }}
+              {{ props.model.statistics.accessCount }}
             </dd>
           </dl>
           <dl class="define">
@@ -89,7 +87,7 @@
               <span class="hidden-text">평균 평점</span>
             </dt>
             <dd class="define-desc">
-              {{ props.model.statInfo.rating.toFixed(1) }}
+              {{ props.model.statistics.avgResponseTime.toFixed(1) }}
             </dd>
           </dl>
           <dl class="define">
@@ -98,7 +96,7 @@
               <span class="hidden-text">북마크수</span>
             </dt>
             <dd class="define-desc">
-              {{ props.model.statInfo.favorite }}
+              {{ props.model.statistics.bookMarkCount }}
             </dd>
           </dl>
           <dl class="define">
@@ -107,7 +105,7 @@
               <span class="hidden-text">다운로드수</span>
             </dt>
             <dd class="define-desc">
-              {{ props.model.statInfo.download }}
+              {{ props.model.statistics.downloadCount }}
             </dd>
           </dl>
         </div>
@@ -120,6 +118,7 @@
 import { computed, onMounted } from "vue";
 import { ref } from "@vue/reactivity";
 
+/** TODO: 모델 타입 인터페이스 구현 */
 interface ModelType {
   id: string;
   name: string;
@@ -155,17 +154,23 @@ const props = defineProps({
         storageType: "HDFS"
       },
       domain: "공간",
-      updatedAt: "2023-09-22",
-      creator: "강이정",
-      statInfo: {
-        access: 111,
-        rating: 2.5,
-        favorite: 333,
-        download: 444
+      lastModifiedAt: {
+        strDateTime: "2023-11-20 13:30:40.123",
+        utcTime: 1606824000000
+      },
+      createdBy: {
+        id: "user-id01",
+        name: "user-name01"
+      },
+      statistics: {
+        accessCount: 1000,
+        downloadCount: 10,
+        bookMarkCount: 20,
+        avgResponseTime: 1.2
       },
       downloadInfo: {
         status: 2,
-        uri: "uri"
+        link: "uri"
       }
     })
   },
@@ -181,7 +186,6 @@ const props = defineProps({
 const tagList = ref("");
 const tooltipMassage = ref(`태그 추가 시 콤마(,)로 구분해주세요.`);
 const emit = defineEmits(["preview", "download", "click", "update"]);
-const badgeClass = ["bg-marker-purple", "bg-marker-red", "bg-marker-yellow"];
 const downloadStatus = computed(() => {
   switch (props.model.downloadInfo.status) {
     case 1:
