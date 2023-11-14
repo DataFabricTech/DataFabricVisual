@@ -1,0 +1,987 @@
+{
+  "connection-overview" : {
+    "id": "asdf",
+    "name": "서초 데이터",
+    "tags": ["서초구", "gis"],
+    "connection-status": "CONNECTED",
+    "description": "서초구 데이터 정보",
+    "storageType": "PostgreSQL",
+    "domain": "TABLE",
+    "status": {},
+    "default": {
+      "colDefs": [
+        {
+          "field": "item",
+          "headerName": "항목"
+        },
+        {
+          "field": "content",
+          "headerName": "내용"
+        }
+      ],
+      "rows": [
+        {
+          "item": "database",
+          "content": "PostgresSQL"
+        },
+        {
+          "item": "host",
+          "content": "datafabric.com"
+        },
+        {
+          "item": "port",
+          "content": "3456"
+        },
+        {
+          "item": "user",
+          "content": "root"
+        },
+        {
+          "item": "password",
+          "content": "****"
+        },
+        {
+          "item": "최초 등록 정보",
+          "content": "root / 2023-11-14 13:12:11.123"
+        },
+        {
+          "item": "최종 수정 정보",
+          "content": "root / 2023-11-14 13:12:11.123"
+        },
+        {
+          "item": "데이터 자동 추가 설정",
+          "content": "on"
+        },
+        {
+          "item": "동기화 설정",
+          "content": "on"
+        },
+        {
+          "item": "모니터링 설정",
+          "content": "on"
+        },
+        {
+          "item": "권한 설정",
+          "content": "on"
+        },
+        {
+          "item": "기타 입력",
+          "content": "서초 데이터 확인"
+        }
+      ]
+    },
+    "advanced": {},
+    "createdBy": {
+      "id": "user-id01",
+      "name": "user-name01"
+    },
+    "createdAt": {
+      "strDateTime": "2023-11-14 13:12:11.123",
+      "utcTime": 1606824000000
+    },
+    "lastModifiedBy": {
+      "id": "user-id01",
+      "name": "user-name01"
+    },
+    "lastModifiedAt": {
+      "strDateTime": "2023-11-14 13:12:11.123",
+      "utcTime": 1606824000000
+    }
+  },
+  "tables": [
+    {
+      "table-name": "TB_INFO_AREA",
+      "id": "uuid-123jasdf-123jasd8",
+      "name": "서초구 보호구역 정보",
+      "description": "어린이/노인/장애인 보호구역 정보",
+      "dataType": "STRUCTURED",
+      "dataFormat": "TABLE",
+      "status": "CONNECTED",
+      "systemMeta": [
+        {
+          "key": "ROWS",
+          "value": "3406"
+        },
+        {
+          "key": "COLUMNS",
+          "value": "21"
+        },
+        {
+          "key": "생성된 데이터 모델",
+          "value": "22"
+        }
+      ],
+      "tags":[
+        "보호구역", "지역정보"
+      ],
+      "sampleData": {
+        "link": "http://datafabric.mobigen.com/sample/id-90123"
+      },
+      "downloadInfo": {
+        "status": 0,
+        "link": "http://datafabric.mobigen.com/download/id-90123"
+      },
+      "dataLocation": [
+        {
+          "storageId": "1b6c8550-a7f8-4c96-9d17-cd10770ace87",
+          "databaseName": "datafabric",
+          "tableName": "tb_info_area",
+          "description": "",
+          "createdBy": {
+            "id": "user-id01",
+            "name": "user-name01"
+          },
+          "createdAt": {
+            "strDateTime": "2023-11-14 8:00:00.000"
+          },
+          "lastModifiedBy": {
+            "id": "user-id01",
+            "name": "user-name01"
+          },
+          "lastModifiedAt": {
+            "strDateTime": "2023-11-14 8:00:00.000"
+          },
+          "type": "PostgreSQL"
+        }
+      ],
+      "dataStructure": {
+        "colDefs": [
+          {
+            "field": "name",
+            "headerName": "Name"
+          },
+          {
+            "field": "columnType",
+            "headerName": "Data Type"
+          },
+          {
+            "field": "length",
+            "headerName": "Length"
+          },
+          {
+            "field": "defaultValue",
+            "headerName": "Default"
+          },
+          {
+            "field": "description",
+            "headerName": "Comment"
+          }
+        ],
+        "rows" : [
+          {
+            "order": 1,
+            "name": "snct_seq",
+            "columnType" : "INTEGER",
+            "length": 4,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 2,
+            "name": "reg_dt",
+            "columnType" : "TEXT",
+            "length": 10,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 3,
+            "name": "max_spd",
+            "columnType" : "TEXT",
+            "length": 3,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 4,
+            "name": "max_spd_org",
+            "columnType" : "TEXT",
+            "length": 3,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 5,
+            "name": "cctv_cnt",
+            "columnType" : "INTEGER",
+            "length": 4,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 6,
+            "name": "fclty_nm",
+            "columnType" : "TEXT",
+            "length": 150,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 7,
+            "name": "sido_nm",
+            "columnType" : "TEXT",
+            "length": 150,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 8,
+            "name": "road_wdt",
+            "columnType" : "TEXT",
+            "length": 150,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 9,
+            "name": "cctv_yn",
+            "columnType" : "TEXT",
+            "length": 2,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 10,
+            "name": "addr",
+            "columnType" : "TEXT",
+            "length": 150,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 11,
+            "name": "laddr",
+            "columnType" : "TEXT",
+            "length": 150,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 12,
+            "name": "pol_nm",
+            "columnType" : "TEXT",
+            "length": 150,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 13,
+            "name": "sigun_cd",
+            "columnType" : "TEXT",
+            "length": 10,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 14,
+            "name": "sigun_nm",
+            "columnType" : "TEXT",
+            "length": 100,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 15,
+            "name": "x",
+            "columnType" : "REAL",
+            "length": 4,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 16,
+            "name": "y",
+            "columnType" : "REAL",
+            "length": 4,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 17,
+            "name": "gov_nm",
+            "columnType" : "TEXT",
+            "length": 100,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 18,
+            "name": "gov_tel",
+            "columnType" : "TEXT",
+            "length": 50,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 19,
+            "name": "fclty_ty",
+            "columnType" : "TEXT",
+            "length": 5,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 20,
+            "name": "geom",
+            "columnType" : "TEXT",
+            "length": 1024,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 21,
+            "name": "data_type",
+            "columnType" : "TEXT",
+            "length": 50,
+            "defaultValue": "",
+            "description": ""
+          }
+        ]
+      },
+      "permission": {
+        "read": true,
+        "write": true
+      },
+      "ratingAndComments": {
+        "avgRating": 4.5,
+        "ratingAndComment": [
+          {
+            "id": "comment-id-01",
+            "time": {
+              "strDateTime": "2023-11-20 12:10:20"
+            },
+            "user": {
+              "id": "user-id01",
+              "name": "user-name01"
+            },
+            "rating": 5,
+            "comment": "서초구 어린이 보호구역"
+          },
+          {
+            "id": "comment-id-02",
+            "time": {
+              "strDateTime": "2023-11-20 12:10:20"
+            },
+            "user": {
+              "id": "user-id01",
+              "name": "user-name01"
+            },
+            "rating": 3,
+            "comment": "서초구 보호구역 정보"
+          }
+        ]
+      },
+      "statistics": {
+        "accessCount": 1000,
+        "downloadCount": 10,
+        "bookMarkCount": 20,
+        "avgResponseTime": 1.2
+      },
+      "createdBy": {
+        "id": "user-id01",
+        "name": "user-name01"
+      },
+      "createdAt": {
+        "strDateTime": "2023-01-20 13:12:11.123",
+        "utcTime": 1606824000000
+      },
+      "lastModifiedBy": {
+        "id": "user-id01",
+        "name": "user-name01"
+      },
+      "lastModifiedAt": {
+        "strDateTime": "2023-11-20 13:30:40.123",
+        "utcTime": 1606824000000
+      }
+    },
+    {
+      "table-name":"TB_SEOCHO_50M_GRID_AREA",
+      "id": "uuid-123jasdf-1223asd8",
+      "name": "50미터 격자정보 + 보호구역 정보",
+      "description": "50미터 격자별로 포함되어 있는 보호구역 SEQ번호와 보호구역 개수, CCTV 설치대수",
+      "dataType": "STRUCTURED",
+      "dataFormat": "TABLE",
+      "status": "CONNECTED",
+      "systemMeta": [
+        {
+          "key": "ROWS",
+          "value": "824"
+        },
+        {
+          "key": "COLUMNS",
+          "value": "13"
+        },
+        {
+          "key": "생성된 데이터 모델",
+          "value": "43"
+        }
+      ],
+      "tags":[
+        "CCTV", "보호구역"
+      ],
+      "sampleData": {
+        "link": "http://datafabric.mobigen.com/sample/id-90123"
+      },
+      "downloadInfo": {
+        "status": 0,
+        "link": "http://datafabric.mobigen.com/download/id-90123"
+      },
+      "dataLocation": [
+        {
+          "storageId": "1b6c8550-a7f8-4c96-9d17-cd10770ace87",
+          "databaseName": "datafabric",
+          "tableName": "tb_seocho_50m_grid_area",
+          "description": "",
+          "createdBy": {
+            "id": "user-id01",
+            "name": "user-name01"
+          },
+          "createdAt": {
+            "strDateTime": "2023-11-14 8:00:00.000"
+          },
+          "lastModifiedBy": {
+            "id": "user-id01",
+            "name": "user-name01"
+          },
+          "lastModifiedAt": {
+            "strDateTime": "2023-11-14 8:00:00.000"
+          },
+          "type": "PostgreSQL"
+        }
+      ],
+      "dataStructure": {
+        "colDefs": [
+          {
+            "field": "name",
+            "headerName": "Name"
+          },
+          {
+            "field": "columnType",
+            "headerName": "Data Type"
+          },
+          {
+            "field": "length",
+            "headerName": "Length"
+          },
+          {
+            "field": "defaultValue",
+            "headerName": "Default"
+          },
+          {
+            "field": "description",
+            "headerName": "Comment"
+          }
+        ],
+        "rows" : [
+          {
+            "order": 1,
+            "name": "s_geom",
+            "columnType" : "TEXT",
+            "length": 2147483647,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 2,
+            "name": "wkt",
+            "columnType" : "TEXT",
+            "length": 2147483647,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 3,
+            "name": "gid",
+            "columnType" : "TEXT",
+            "length": 50,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 4,
+            "name": "gid_skt",
+            "columnType" : "INTEGER",
+            "length": 4,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 5,
+            "name": "sig_nm",
+            "columnType" : "TEXT",
+            "length": 50,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 6,
+            "name": "sig_nms",
+            "columnType" : "TEXT",
+            "length": 50,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 7,
+            "name": "sig_count",
+            "columnType" : "INTEGER",
+            "length": 4,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 8,
+            "name": "보호구역_seq",
+            "columnType" : "TEXT",
+            "length": 2147483647,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 9,
+            "name": "보호구역_cctv대수",
+            "columnType" : "INTEGER",
+            "length": 8,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 10,
+            "name": "overlap_area_cnt",
+            "columnType" : "INTEGER",
+            "length": 8,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 11,
+            "name": "insert_time",
+            "columnType" : "TEXT",
+            "length": 19,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 12,
+            "name": "��ȣ����_seq",
+            "columnType" : "TEXT",
+            "length": 17,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 13,
+            "name": "��ȣ����_cctv���",
+            "columnType" : "INTEGER",
+            "length": 4,
+            "defaultValue": "",
+            "description": ""
+          }
+        ]
+      },
+      "permission": {
+        "read": true,
+        "write": true
+      },
+      "ratingAndComments": {
+        "avgRating": 4.5,
+        "ratingAndComment": [
+          {
+            "id": "comment-id-01",
+            "time": {
+              "strDateTime": "2023-11-20 12:10:20"
+            },
+            "user": {
+              "id": "user-id01",
+              "name": "user-name01"
+            },
+            "rating": 5,
+            "comment": "서초구 어린이 보호구역"
+          },
+          {
+            "id": "comment-id-02",
+            "time": {
+              "strDateTime": "2023-11-20 12:10:20"
+            },
+            "user": {
+              "id": "user-id01",
+              "name": "user-name01"
+            },
+            "rating": 3,
+            "comment": "서초구 보호구역 정보"
+          }
+        ]
+      },
+      "statistics": {
+        "accessCount": 1000,
+        "downloadCount": 10,
+        "bookMarkCount": 20,
+        "avgResponseTime": 1.2
+      },
+      "createdBy": {
+        "id": "user-id01",
+        "name": "user-name01"
+      },
+      "createdAt": {
+        "strDateTime": "2023-01-20 13:12:11.123",
+        "utcTime": 1606824000000
+      },
+      "lastModifiedBy": {
+        "id": "user-id01",
+        "name": "user-name01"
+      },
+      "lastModifiedAt": {
+        "strDateTime": "2023-11-20 13:30:40.123",
+        "utcTime": 1606824000000
+      }
+    },
+    {
+      "table-name": "TB_STATS_MM_P_VOC_AREA",
+      "id": "uuid-321jasdf-sdfjasd8",
+      "name": "서초구 월단위 보호구역별 주정차 민원 건수 통계",
+      "description": "서초구 월단위 보호구역별 주정차 민원 건수 통계",
+      "dataType": "STRUCTURED",
+      "dataFormat": "TABLE",
+      "status": "CONNECTED",
+      "systemMeta": [
+        {
+          "key": "ROWS",
+          "value": "100"
+        },
+        {
+          "key": "COLUMNS",
+          "value": "7"
+        },
+        {
+          "key": "생성된 데이터 모델",
+          "value": "33"
+        }
+      ],
+      "tags": [
+        "보호구역", "주정차"
+      ],
+      "sampleData": {
+        "link": "http://datafabric.mobigen.com/sample/id-90123"
+      },
+      "downloadInfo": {
+        "status": 0,
+        "link": "http://datafabric.mobigen.com/download/id-90123"
+      },
+      "dataLocation": [
+        {
+          "storageId": "1b6c8550-a7f8-4c96-9d17-cd10770ace87",
+          "databaseName": "datafabric",
+          "tableName": "tb_stats_mm_p_voc_area",
+          "description": "",
+          "createdBy": {
+            "id": "user-id01",
+            "name": "user-name01"
+          },
+          "createdAt": {
+            "strDateTime": "2023-11-14 8:00:00.000"
+          },
+          "lastModifiedBy": {
+            "id": "user-id01",
+            "name": "user-name01"
+          },
+          "lastModifiedAt": {
+            "strDateTime": "2023-11-14 8:00:00.000"
+          },
+          "type": "PostgreSQL"
+        }
+      ],
+      "dataStructure": {
+        "colDefs": [
+          {
+            "field": "name",
+            "headerName": "Name"
+          },
+          {
+            "field": "columnType",
+            "headerName": "Data Type"
+          },
+          {
+            "field": "length",
+            "headerName": "Length"
+          },
+          {
+            "field": "defaultValue",
+            "headerName": "Default"
+          },
+          {
+            "field": "description",
+            "headerName": "Comment"
+          }
+        ],
+        "rows" : [
+          {
+            "order": 1,
+            "name": "yyyy",
+            "columnType" : "INTEGER",
+            "length": 4,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 2,
+            "name": "mm",
+            "columnType" : "INTEGER",
+            "length": 4,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 3,
+            "name": "행정동",
+            "columnType" : "TEXT",
+            "length": 4,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 4,
+            "name": "구역구분",
+            "columnType" : "TEXT",
+            "length": 7,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 5,
+            "name": "보호구역id",
+            "columnType" : "INTEGER",
+            "length": 4,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 6,
+            "name": "구역명",
+            "columnType" : "TEXT",
+            "length": 15,
+            "defaultValue": "",
+            "description": ""
+          },
+          {
+            "order": 7,
+            "name": "건",
+            "columnType" : "INTEGER",
+            "length": 4,
+            "defaultValue": "",
+            "description": ""
+          }
+        ]
+      },
+      "permission": {
+        "read": true,
+        "write": true
+      },
+      "ratingAndComments": {
+        "avgRating": 5,
+        "ratingAndComment": [
+          {
+            "id": "comment-id-01",
+            "time": {
+              "strDateTime": "2023-11-20 12:10:20"
+            },
+            "user": {
+              "id": "user-id01",
+              "name": "user-name01"
+            },
+            "rating": 5,
+            "comment": "서초구 보호구역"
+          }
+        ]
+      },
+      "statistics": {
+        "accessCount": 1000,
+        "downloadCount": 10,
+        "bookMarkCount": 20,
+        "avgResponseTime": 1.2
+      },
+      "createdBy": {
+        "id": "user-id01",
+        "name": "user-name01"
+      },
+      "createdAt": {
+        "strDateTime": "2023-11-14 8:00:00.000"
+      },
+      "lastModifiedBy": {
+        "id": "user-id01",
+        "name": "user-name01"
+      },
+      "lastModifiedAt": {
+        "strDateTime": "2023-11-14 8:00:00.000"
+      }
+    },
+    {
+      "table-name": "TB_HISTORY_CCTV_ANALYSIS",
+      "id": "uuid-321jasdf-123jasd8",
+      "name": "CCTV 분석결과 이력",
+      "description": "",
+      "dataType": "STRUCTURED",
+      "dataFormat": "TABLE",
+      "status": "CONNECTED",
+      "systemMeta": [
+        {
+          "key": "ROWS",
+          "value": "10000"
+        },
+        {
+          "key": "COLUMNS",
+          "value": "31"
+        },
+        {
+          "key": "생성된 데이터 모델",
+          "value": "43244"
+        }
+      ],
+      "tags": [ ],
+      "sampleData": {
+        "link": "http://datafabric.mobigen.com/sample/id-90123"
+      },
+      "downloadInfo": {
+        "status": 0,
+        "link": "http://datafabric.mobigen.com/download/id-90123"
+      },
+      "dataLocation": [
+        {
+          "storageId": "1b6c8550-a7f8-4c96-9d17-cd10770ace87",
+          "databaseName": "datafabric",
+          "tableName": "tb_history_cctv_analysis",
+          "description": "",
+          "createdBy": {
+            "id": "user-id01",
+            "name": "user-name01"
+          },
+          "createdAt": {
+            "strDateTime": "2023-11-14 8:00:00.000"
+          },
+          "lastModifiedBy": {
+            "id": "user-id01",
+            "name": "user-name01"
+          },
+          "lastModifiedAt": {
+            "strDateTime": "2023-11-14 8:00:00.000"
+          },
+          "type": "PostgreSQL"
+        }
+      ],
+      "permission": {
+        "read": true,
+        "write": true
+      },
+      "ratingAndComments": {
+        "avgRating": 5,
+        "ratingAndComment": [
+          {
+            "id": "comment-id-01",
+            "time": {
+              "strDateTime": "2023-11-20 12:10:20"
+            },
+            "user": {
+              "id": "user-id01",
+              "name": "user-name01"
+            },
+            "rating": 5,
+            "comment": "서초구 보호구역"
+          }
+        ]
+      },
+      "statistics": {
+        "accessCount": 1000,
+        "downloadCount": 10,
+        "bookMarkCount": 20,
+        "avgResponseTime": 1.2
+      },
+      "createdBy": {
+        "id": "user-id01",
+        "name": "user-name01"
+      },
+      "createdAt": {
+        "strDateTime": "2023-11-14 8:00:00.000"
+      },
+      "lastModifiedBy": {
+        "id": "user-id01",
+        "name": "user-name01"
+      },
+      "lastModifiedAt": {
+        "strDateTime": "2023-11-14 8:00:00.000"
+      }
+    },
+    {
+      "table-name":"DM_ACC_INFO",
+      "id": "uuid-111asdff-123jasd8",
+      "name": "DM_ACC_INFO",
+      "description": "이벤트로 인한 교통 유의 지점 안내문구 및 교통 이벤트 유형코드",
+      "dataType": "STRUCTURED",
+      "dataFormat": "TABLE",
+      "status": "CONNECTED",
+      "systemMeta": [
+        {
+          "key": "ROWS",
+          "value": "0"
+        },
+        {
+          "key": "COLUMNS",
+          "value": "11"
+        },
+        {
+          "key": "생성된 데이터 모델",
+          "value": "22"
+        }
+      ],
+      "tags": [ ],
+      "sampleData": {},
+      "downloadInfo": {},
+      "dataLocation": [
+        {
+          "storageId": "1b6c8550-a7f8-4c96-9d17-cd10770ace87",
+          "databaseName": "datafabric",
+          "tableName": "dm_acc_info",
+          "description": "",
+          "createdBy": {
+            "id": "user-id01",
+            "name": "user-name01"
+          },
+          "createdAt": {
+            "strDateTime": "2023-11-14 8:00:00.000"
+          },
+          "lastModifiedBy": {
+            "id": "user-id01",
+            "name": "user-name01"
+          },
+          "lastModifiedAt": {
+            "strDateTime": "2023-11-14 8:00:00.000"
+          },
+          "type": "PostgreSQL"
+        }
+      ],
+      "permission": {
+        "read": true,
+        "write": true
+      },
+      "ratingAndComments": { 	},
+      "statistics": {
+        "accessCount": 1,
+        "downloadCount": 0,
+        "bookMarkCount": 0,
+        "avgResponseTime": 0
+      },
+      "createdBy": {
+        "id": "user-id01",
+        "name": "user-name01"
+      },
+      "createdAt": {
+        "strDateTime": "2023-11-14 8:00:00.000"
+      },
+      "lastModifiedBy": {
+        "id": "user-id01",
+        "name": "user-name01"
+      },
+      "lastModifiedAt": {
+        "strDateTime": "2023-11-14 8:00:00.000"
+      }
+    }
+  ]
+}
