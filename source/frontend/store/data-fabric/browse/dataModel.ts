@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { reactive } from "vue";
 export const dataModelStore = defineStore("dataModel", () => {
-  const pageable = reactive({
+  let pageable = reactive({
     size: 10,
     totalSize: 1200,
     selectPage: 2,
