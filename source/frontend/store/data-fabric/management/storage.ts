@@ -5,7 +5,7 @@ import {
   StorageFilter,
   StorageItem,
   StorageSortContextItem, StorageTypeItem
-} from "~/components/project/data-fabric/storage/overview/storage-overview";
+} from "~/components/project/data-fabric/management/overview/storage-overview";
 const STORAGE_BASE_URL = "http://192.168.107.28:35080/storage/v1"
 const DEFAULT_STATUS_LIST = [
   { id: "connection", value: "CONNECTED", name: "연결됨" },
