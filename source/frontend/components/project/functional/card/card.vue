@@ -10,14 +10,15 @@
           <BaseButton class="button-link-primary" v-if="props.showPreviewBtn" @click="preview">
             <span class="button-text">미리보기</span>
           </BaseButton>
-          <BaseButton class="button-normal" @click="download">
+          <BaseButton class="button-normal" v-if="!props.showConnectInfo" @click="download">
             <span class="button-text">
               {{ downloadStatus }}
             </span>
           </BaseButton>
           <div v-if="props.showConnectInfo">
-            <!-- TODO: 데이터 연결상태 리턴값에 따라 클래스 및 명칭 변경 -->
-            <baseBadge class="bg-marker-gray">Inactive(Disconnected)</baseBadge>
+            <baseBadge :class="isConnected(props.model.status) ? 'bg-marker-cyan' : 'bg-marker-gray'">
+              {{ isConnected(props.model.status) ? "Connected" : "Inactive(Disconnected)" }}</baseBadge
+            >
           </div>
           <KebabMenu class="is-bottom"></KebabMenu>
         </div>
@@ -153,6 +154,7 @@ const props = defineProps({
       storageInfo: {
         storageType: "HDFS"
       },
+      status: "CONNECTED",
       domain: "공간",
       lastModifiedAt: {
         strDateTime: "2023-11-20 13:30:40.123",
@@ -220,6 +222,10 @@ function download() {
   };
   emit("download", downloadInfo);
 }
+
+const isConnected = (value: string) => {
+  return value === "CONNECTED";
+};
 const watchAndUpdate = (property: string) => {
   watch(
     () => props.model?.[property],
@@ -248,6 +254,9 @@ watchAndUpdate("description");
 onMounted(() => {
   if (props.isUpdate && props.model?.tags) {
     tagList.value = props.model.tags.join(",");
+  }
+  if (props.showConnectInfo) {
+    props.showPreviewBtn = false;
   }
 });
 </script>
