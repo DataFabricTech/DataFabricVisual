@@ -39,7 +39,7 @@
         <h4 class="page-subtitle">연관 데이터 모델</h4>
         <ul class="card-list">
           <li class="card-item" v-for="index in 2">
-            <Card></Card>
+            <Card :show-preview-btn="false" :show-statistics="false"></Card>
           </li>
         </ul>
       </div>
@@ -47,7 +47,7 @@
         <h4 class="page-subtitle">추천 데이터 모델</h4>
         <ul class="card-list">
           <li class="card-item" v-for="index in 2">
-            <Card></Card>
+            <Card :show-preview-btn="false" :show-statistics="false"></Card>
           </li>
         </ul>
       </div>
