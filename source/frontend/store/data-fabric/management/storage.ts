@@ -138,7 +138,7 @@ export const useOverviewStore = defineStore("overview", () => {
    * TODO: API 연동 (/overview)
    */
   function getOverview() {
-    storage.overview = OverviewSample.storageOverview;
+    storage.overview = OverviewSample.nStorageOverview;
   }
   return {
     storage,
@@ -258,7 +258,7 @@ export const useStorageStore = defineStore("storage", () => {
   function getStorage() {
     getStorageType();
     const dayjs = useDayjs();
-    storage.items = OverviewSample.storages;
+    storage.items = OverviewSample.nStorages;
 
     // 화면에 맞게 데이터 형식, 속성 변경
     _map(storage.items, (el) => {

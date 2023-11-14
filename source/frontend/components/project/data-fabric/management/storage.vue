@@ -10,13 +10,21 @@
       </BaseSwitch>
     </div>
     <article class="page-article">
-      <Card class="w-full"></Card>
+      <Card
+        class="w-full"
+        :model="tableInfoData"
+        :show-info-complex="true"
+        :show-statistics="false"
+        :show-preview-btn="false"
+        :showConnectInfo="true"
+      ></Card>
     </article>
     <article class="page-article">
       <div class="anchor">
-        <a class="anchor-link" title="이동" href="#overview">overview</a>
-        <a class="anchor-link" title="이동" href="#data">data</a>
-        <a class="anchor-link" title="이동" href="#query">query</a>
+        <!-- TODO: 1차 개발에서 제외. 추후 개발-->
+        <!--        <a class="anchor-link" title="이동" href="#overview">overview</a>-->
+        <!--        <a class="anchor-link" title="이동" href="#data">data</a>-->
+        <!--        <a class="anchor-link" title="이동" href="#query">query</a>-->
       </div>
       <div class="v-group gap-12 p-6 w-full">
         <div class="v-group gap-9 w-full">
@@ -24,74 +32,117 @@
           <div class="page-group">
             <h4 class="page-subtitle">Summary</h4>
             <div class="h-group gap-8 w-full">
-              <dl class="data-status" v-for="index in 3">
+              <dl class="data-status" v-for="item in storage.currStorage.systemMeta" :key="item">
                 <dt class="data-status-label">
                   <svg-icon name="data" class="svg-icon" />
-                  <span class="data-status-name">Connected Data</span>
+                  <span class="data-status-name">{{ item.key }}</span>
                 </dt>
-                <dd class="data-status-num">8</dd>
+                <dd class="data-status-num">{{ item.value }}</dd>
               </dl>
             </div>
           </div>
           <div class="page-group">
-            <h4 class="page-subtitle">연관된 데이터 모델</h4>
+            <h4 class="page-subtitle">생성된 데이터 모델</h4>
             <div class="card-container">
               <ul class="card-simple-list">
-                <li class="card-simple-item" v-for="index in 3">
-                  <CardSimple></CardSimple>
-                </li>
+                <Card
+                  class="w-full"
+                  :model="createdData"
+                  :show-info-complex="true"
+                  :show-preview-btn="false"
+                  :showConnectInfo="true"
+                ></Card>
               </ul>
             </div>
           </div>
-          <div class="page-group">
+          <div class="page-group" v-if="storage.currStorage.dataStructure">
             <h4 class="page-subtitle">Structure</h4>
             <div class="table-col w-full">
-              <table class="w-full">
-                <caption class="caption-out">
-                  Description Column
-                </caption>
-                <thead>
-                <tr>
-                  <!-- 세로 => col, 가로 => row -->
-                  <th scope="col">Field</th>
-                  <th scope="col">Description</th>
-                  <th scope="col">Labels</th>
-                  <th scope="col">Tags</th>
-                  <th scope="col">...</th>
-                  <th scope="col">...</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="index in 6">
-                  <td>acute_long_term_care_beds 1</td>
-                  <td>필드설명</td>
-                  <td>라벨정보</td>
-                  <td>태그정보</td>
-                  <td>...</td>
-                  <td>...</td>
-                </tr>
-                </tbody>
-              </table>
+              <ag-grid-vue
+                style="width: 100%; height: 430px"
+                class="ag-theme-alpine"
+                :columnDefs="storage.currStorage.dataStructure?.colDefs"
+                :rowData="storage.currStorage.dataStructure?.rows"
+                :gridOptions="gridOptions"
+                @grid-ready="onGridReady"
+              >
+              </ag-grid-vue>
             </div>
           </div>
         </div>
-        <div class="v-group gap-9 w-full">
-          <h4 class="page-title" id="data">data</h4>
-          <div class="page-group">
-            <div class="w-full bg-gray-200 h-[500px]"></div>
-          </div>
-        </div>
-        <div class="v-group gap-9 w-full">
-          <h4 class="page-title" id="query">query</h4>
-          <div class="page-group">
-            <div class="w-full bg-gray-200 h-[500px]"></div>
-          </div>
-        </div>
+        <!--        <div class="v-group gap-9 w-full">-->
+        <!--          <h4 class="page-title" id="data">data</h4>-->
+        <!--          <div class="page-group">-->
+        <!--            <div class="w-full bg-gray-200 h-[500px]"></div>-->
+        <!--          </div>-->
+        <!--        </div>-->
+        <!--        <div class="v-group gap-9 w-full">-->
+        <!--          <h4 class="page-title" id="query">query</h4>-->
+        <!--          <div class="page-group">-->
+        <!--            <div class="w-full bg-gray-200 h-[500px]"></div>-->
+        <!--          </div>-->
+        <!--        </div>-->
       </div>
-
     </article>
   </section>
 </template>
 
 <script lang="ts" setup>
+import StorageSample from "~/store/data-fabric/management/storage-sample.json";
+import { AgGridVue } from "ag-grid-vue3";
+const gridOptions = {
+  headerHeight: 56,
+  rowHeight: 56
+};
+
+const route = useRoute();
+const queryId = route.query.id;
+
+const storage: {
+  list: Array<any>;
+  currStorage: Object;
+} = reactive({
+  list: [],
+  currStorage: {}
+});
+initData();
+function initData() {
+  storage.list = StorageSample.tables;
+  storage.currStorage = _find(storage.list, { id: queryId });
+  if (!storage.currStorage) {
+    alert("존재하지 않는 페이지입니다.");
+  }
+}
+function onGridReady(params) {
+  params.api.sizeColumnsToFit();
+}
+const createdData = computed(() => {
+  return {
+    name: storage.currStorage.name,
+    description: storage.currStorage.description,
+    lastModifiedAt: storage.currStorage.lastModifiedAt,
+    domain: storage.currStorage.dataFormat,
+    createdBy: storage.currStorage.createdBy,
+    storageInfo: {
+      storageType: storage.currStorage.dataLocation[0].type
+    },
+    status: storage.currStorage.status,
+    tags: storage.currStorage.tage,
+    statistics: storage.currStorage.statistics
+  };
+});
+const tableInfoData = computed(() => {
+  const data = storage.currStorage.dataLocation[0];
+  return {
+    name: data.tableName,
+    description: `서초 데이터 > ${data.databaseName}`,
+    createdBy: data.createdBy,
+    lastModifiedAt: data.lastModifiedAt,
+    domain: storage.currStorage.dataFormat,
+    storageInfo: {
+      storageType: data.type
+    },
+    status: storage.currStorage.status
+  };
+});
 </script>
