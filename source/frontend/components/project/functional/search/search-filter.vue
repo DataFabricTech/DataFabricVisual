@@ -295,25 +295,21 @@ const date: {
 });
 const range: ref<Array<string>> = ref([]);
 const detailSearch: {
-  DATA_NAME: string;
+  KEYWORD_TYPE: string;
+  DATE_TYPE: string;
+  CONNECTOR_NAME: string;
+  STORAGE_TYPE: string;
   DATA_TYPE: string;
   DATA_FORMAT: string;
-  CATEGORY: string;
-  TAG: string;
-  STORAGE_TYPE: string;
-  CONNECTOR_NAME: string;
-  CREATOR: string;
   START_DATE: string | null;
   END_DATE: string | null;
 } = reactive({
-  DATA_NAME: "",
+  KEYWORD_TYPE: "",
+  DATE_TYPE: "",
+  CONNECTOR_NAME: "",
+  STORAGE_TYPE: "",
   DATA_TYPE: "",
   DATA_FORMAT: "",
-  CATEGORY: "",
-  TAG: "",
-  STORAGE_TYPE: "",
-  CONNECTOR_NAME: "",
-  CREATOR: "",
   START_DATE: "",
   END_DATE: ""
 });
@@ -336,7 +332,7 @@ const tags: {
  * @param data
  */
 function setKeywordData(data: string) {
-  detailSearch.DATA_NAME = data;
+  detailSearch.KEYWORD_TYPE = data;
 }
 
 /**
@@ -410,7 +406,7 @@ function selectConnection(data: string) {
  * @param data
  */
 function selectConnectionType(data: string) {
-  console.log(data);
+  detailSearch.STORAGE_TYPE = data;
 }
 /**
  * 도메인 선택
@@ -433,7 +429,7 @@ function selectModelTypeData(value: any) {
  * @param value
  */
 function selectModelFormData(value: any) {
-  console.log(value);
+  detailSearch.DATA_TYPE = value;
 }
 
 /**
@@ -441,7 +437,7 @@ function selectModelFormData(value: any) {
  * @param value
  */
 function selectModelFormatData(value: any) {
-  console.log(value);
+  detailSearch.DATA_FORMAT = value;
 }
 
 /**
@@ -449,7 +445,6 @@ function selectModelFormatData(value: any) {
  */
 function search() {
   let search = { keyword: keyword.value, detailSearch };
-
   emit("search", search);
 }
 
@@ -495,8 +490,10 @@ function setModelFormatTags(data: []) {
 const formatDate = (date: Date): string => {
   return dayjs(date).format(FORMAT);
 };
+onMounted(async () => {
+  let url = "/portal/v1/searchItems";
+  let searchItems = await $fetch(url);
 
-onMounted(() => {
   let today = new Date();
   let threeMonthsAgo = dayjs(today).subtract(3, "months");
   date.range.push(formatDate(threeMonthsAgo));
