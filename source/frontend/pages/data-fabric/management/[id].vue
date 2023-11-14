@@ -16,8 +16,8 @@ definePageMeta({
 const route = useRoute();
 
 const component = {
-  overview: resolveComponent("storage-overview"),
-  // repository: resolveComponent("repository")
+  connection: resolveComponent("connection"),
+  storage: resolveComponent("storage")
 };
 
 const getComponent = computed(() => {
