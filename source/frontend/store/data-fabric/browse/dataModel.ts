@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { reactive } from "vue";
 export const dataModelStore = defineStore("dataModel", () => {
-  let pageable = reactive({
+  const pageable = reactive({
     size: 10,
     totalSize: 1200,
     selectPage: 2,
@@ -77,8 +77,7 @@ export const dataModelStore = defineStore("dataModel", () => {
   ]);
 
   function setPageable(pageParam: object) {
-    pageable.size = pageParam.size;
-    pageable.selectPage = pageParam.selectPage;
+    _.merge(pageParam, pageable);
   }
   async function getDataModelList() {
     let res = {
@@ -99,7 +98,7 @@ export const dataModelStore = defineStore("dataModel", () => {
     // );
     // totalMonthWorkingTime.value = res.data;
     dataModelList.value = res.data.contents;
-    pageable = res.data.pageable.page;
+    _.merge(res.data.pageable.page, pageable);
   }
 
   function requestDownload(id: string) {
