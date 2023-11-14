@@ -27,7 +27,7 @@ let {
 } = storeToRefs(store);
 
 // 최근 검색어 res값 받는 객체선언
-let recentTagList = ref([]);
+let recentTagList = (['cctv위치', '불법 주정차', '서초구', '보호구역']);
 
 // 최근검색어 닫기를 눌렀을 때 발생하는 함수
 // TODO : 최근검색어 삭제 API가 없는 경우로, 본 개발에 수정될 예정
@@ -59,10 +59,15 @@ async function mainKeyword(key) {
   //     console.log("데이터 : ", data);
   //
   //   })
-  // TODO : 추후 router로 페이지 전환 처리로 변경될 예정
-  // "검색결과 페이지"로 이동
+
+  // TODO : 수정 예정, 시연용으로, 임시 설정
   // var link = "/data-fabric/development-search";
-  // location.href=link;
-  // window.open(link);
+  var link = "/data-fabric/browse/search";
+  const router = useRouter();
+  router.push({
+    path: link,
+    query:
+      { keyword : key}
+  });
 };
 </script>

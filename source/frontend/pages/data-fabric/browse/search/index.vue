@@ -4,7 +4,8 @@
     <section class="l-section gap-[20px]">
       <h3 class="hidden-text">검색</h3>
       <div class="data-search">
-        <SearchField></SearchField>
+        <SearchField
+        :keyword="keyword"></SearchField>
         <BaseButton class="button-icon button-normal" title="상세 검색" @click="state.isOpen = !state.isOpen">
           <span class="hidden-text">상세 검색</span>
           <svg-icon name="sort" class="svg-icon"></svg-icon>
@@ -27,7 +28,7 @@
           </div>
         </div>
       </div>
-      <SearchFilter v-if="state.isOpen"></SearchFilter>
+<!--      <SearchFilter v-if="state.isOpen"></SearchFilter>-->
     </section>
     <section class="l-section gap-[28px]">
       <div class="anchor" id="all">
@@ -37,7 +38,7 @@
         <a class="anchor-link" title="이동" href="#domain">도메인 (5)</a>
       </div>
       <div class="result-info">
-        <h3 class="result-summary-title">"<em class="color-tertiary">키워드</em>"검색 결과는 <em class="color-tertiary">4</em>건
+        <h3 class="result-summary-title">"<em class="color-tertiary">{{ keyword }}</em>"검색 결과는 <em class="color-tertiary">4</em>건
           입니다.</h3>
         <div class="result-sort">
           <div class="toggle toggle-icon toggle-lg">
@@ -61,36 +62,10 @@
               <h4 class="category-title" id="data-model">데이터모델 (6)</h4>
             </div>
             <ul class="card-list">
-              <!--              선택된 데이터모델 is-selected 클래스 추가-->
-              <li class="card-item is-selected">
-                <Card></Card>
-              </li>
-              <li class="card-item">
-                <Card></Card>
-              </li>
-              <li class="card-item">
-                <Card></Card>
-              </li>
-              <li class="card-item">
-                <Card></Card>
-              </li>
-              <li class="card-item">
-                <Card></Card>
-              </li>
-              <li class="card-item">
-                <Card></Card>
-              </li>
-              <li class="card-item">
-                <Card></Card>
-              </li>
-              <li class="card-item">
-                <Card></Card>
-              </li>
-              <li class="card-item">
-                <Card></Card>
-              </li>
-              <li class="card-item">
-                <Card></Card>
+              <li class="card-item" v-for="card in cardList">
+                <Card
+                :model="card"
+                @preview="viewPreview"></Card>
               </li>
             </ul>
             <BasePagination></BasePagination>
@@ -158,11 +133,145 @@
   </div>
 </template>
 <script lang="ts" setup>
-definePageMeta({
-  layout: "default-layout"
-});
+// definePageMeta({
+//   layout: "default-layout"
+// });
+import { storeToRefs } from "pinia";
+import { fabricMainStore } from "/store/data-fabric/main/main";
+
+const store = fabricMainStore();
+const {  } = store;
+let {
+  keyword,
+} = storeToRefs(store);
 
 const state = reactive({
   isOpen: true
 });
+
+onMounted(() => {
+ const keyValue = useRoute().query;
+  keyword.value =  keyValue['keyword'];
+})
+
+// TODO : 미리보기
+function viewPreview() {
+  //
+
+};
+
+const cardList = [
+  {
+    id: "111",
+    name: "서초구 보호구역 정보",
+    description: "어린이/노인/장애인 보호구역 정보",
+    tags: ["보호구역", "지역정보"],
+    storageInfo: {
+      storageType: "PostgreSQL"
+    },
+    domain: "복지",
+    lastModifiedAt: {
+      strDateTime: "2023-01-06 12:03:06",
+      utcTime: 1606824000000
+    },
+    createdBy: {
+      id: "root",
+      name: "플랫폼연구팀"
+    },
+    statistics: {
+      accessCount: 390,
+      downloadCount: 50,
+      bookMarkCount: 50,
+      avgResponseTime: 4.5
+    },
+    downloadInfo: {
+      status: 1,
+      link: "uri"
+    }
+  },
+    {
+      id: "222",
+      name: "50미터 격자정보 + 보호구역 정보",
+      description: "50미터 격자별로 포함되어 있는 보호구역 SEQ번호와 보호구역 개수, CCTV 설치대수",
+      tags: ["CCTV", "보호구역"],
+      storageInfo: {
+        storageType: "PostgreSQL"
+      },
+      domain: "복지",
+      lastModifiedAt: {
+        strDateTime: "2023-01-06 12:03:06",
+        utcTime: 1606824000000
+      },
+      createdBy: {
+        id: "root",
+        name: "플랫폼연구팀"
+      },
+      statistics: {
+        accessCount: 390,
+        downloadCount: 50,
+        bookMarkCount: 50,
+        avgResponseTime: 4.5
+      },
+      downloadInfo: {
+        status: 2,
+        link: "uri"
+      }
+    },
+    {
+      id: "333",
+      name: "서초구 월단위 보호구역별 주정차 민원 건수 통계",
+      description: "서초구 보호구역에 대한 월단위 민원 건수 및 통계",
+      tags: ["보호구역", "주정차"],
+      storageInfo: {
+        storageType: "PostgreSQL"
+      },
+      domain: "민원",
+      lastModifiedAt: {
+        strDateTime: "2023-01-06 12:03:06",
+        utcTime: 1606824000000
+      },
+      createdBy: {
+        id: "root",
+        name: "플랫폼연구팀"
+      },
+      statistics: {
+        accessCount: 390,
+        downloadCount: 50,
+        bookMarkCount: 50,
+        avgResponseTime: 4.5
+      },
+      downloadInfo: {
+        status: 3,
+        link: "uri"
+      }
+    },
+    {
+      id: "444",
+      name: "법정동 코드 정보",
+      description: "법정동 코드 정보",
+      tags: [""],
+      storageInfo: {
+        storageType: "MinIO"
+      },
+      domain: "민원",
+      lastModifiedAt: {
+        strDateTime: "2023-01-06 12:03:06",
+        utcTime: 1606824000000
+      },
+      createdBy: {
+        id: "root",
+        name: "플랫폼연구팀"
+      },
+      statistics: {
+        accessCount: 390,
+        downloadCount: 50,
+        bookMarkCount: 50,
+        avgResponseTime: 4.5
+      },
+      downloadInfo: {
+        status: 3,
+        link: "uri"
+      }
+    }
+]
 </script>
