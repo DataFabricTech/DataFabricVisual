@@ -200,18 +200,21 @@ const props = defineProps({
 const tagList = ref("");
 const tooltipMassage = ref(`태그 추가 시 콤마(,)로 구분해주세요.`);
 const emit = defineEmits(["preview", "download", "click", "update"]);
-const downloadStatus = computed(() => {
-  switch (props.model.downloadInfo.status) {
-    case 1:
-      return "다운로드 요청";
-    case 2:
-      return "다운로드 중";
-    case 3:
-      return "다운로드 가능";
-    default:
-      return "다운로드";
-  }
-});
+const computedStatus = (property: string) => {
+  computed(() => {
+    switch (props.model?.[property]) {
+      case 1:
+        return "다운로드 요청";
+      case 2:
+        return "다운로드 중";
+      case 3:
+        return "다운로드 가능";
+      default:
+        return "다운로드";
+    }
+  });
+};
+computedStatus("downloadInfo.status");
 function preview() {
   emit("preview", props.model.id);
 }
