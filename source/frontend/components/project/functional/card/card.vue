@@ -4,16 +4,14 @@
       <div class="h-group justify-between w-full">
         <div class="h-group gap-[8px]">
           <BaseBadge class="bg-marker-cyan">{{ props.model.storageInfo.storageType }}</BaseBadge>
-          <BaseBadge class="bg-marker-purple">{{ props.model.domain }}</BaseBadge>
+          <BaseBadge :class="domainClass(props.model.domain)">{{ props.model.domain }}</BaseBadge>
         </div>
         <div class="h-group gap-[16px]">
           <BaseButton class="button-link-primary" v-if="props.showPreviewBtn" @click="preview">
             <span class="button-text">미리보기</span>
           </BaseButton>
           <BaseButton class="button-normal" v-if="!props.showConnectInfo" @click="download">
-            <span class="button-text">
-              {{ downloadStatus }}
-            </span>
+            <span class="button-text"> 다운로드 요청 </span>
           </BaseButton>
           <div v-if="props.showConnectInfo">
             <baseBadge :class="isConnected(props.model.status) ? 'bg-marker-cyan' : 'bg-marker-gray'">
@@ -40,7 +38,7 @@
         ></baseTextInput>
       </div>
       <div class="h-group gap-[16px]">
-        <BaseTag v-for="item in props.model.tags" v-if="!props.isUpdate">#{{ item }}</BaseTag>
+        <BaseTag v-for="item in props.model.tags" v-if="!props.isUpdate || item">#{{ item }}</BaseTag>
         <div class="input-tag" v-if="props.isUpdate">
           <baseTextInput placeholder="태그 영역입니다." class="w-96" v-model="tagList"></baseTextInput>
           <VTooltip class="tooltip" placement="top-start">
@@ -67,9 +65,7 @@
               <svg-icon name="user" class="svg-icon"></svg-icon>
               소유자:
             </dt>
-            <dd class="define-desc">
-              {{ props.model.createdBy.name }}
-            </dd>
+            <dd class="define-desc">{{ props.model.createdBy.name }}(플랫폼연구팀)</dd>
           </dl>
         </div>
         <div class="h-group gap-[30px]" v-if="props.showStatistics">
@@ -200,21 +196,44 @@ const props = defineProps({
 const tagList = ref("");
 const tooltipMassage = ref(`태그 추가 시 콤마(,)로 구분해주세요.`);
 const emit = defineEmits(["preview", "download", "click", "update"]);
-const computedStatus = (property: string) => {
-  computed(() => {
-    switch (props.model?.[property]) {
-      case 1:
-        return "다운로드 요청";
-      case 2:
-        return "다운로드 중";
-      case 3:
-        return "다운로드 가능";
-      default:
-        return "다운로드";
-    }
-  });
-};
-computedStatus("downloadInfo.status");
+
+// const computedStatus = (property: string) => {
+//   computed(() => {
+//     switch (props.model?.[property]) {
+//       case 1:
+//         downloadStatus.value = "다운로드 요청";
+//         break;
+//       case 2:
+//         downloadStatus.value = "다운로드 중";
+//         break;
+//       case 3:
+//         downloadStatus.value = "다운로드 가능";
+//         break;
+//       default:
+//         downloadStatus.value = "다운로드";
+//         break;
+//     }
+//   });
+// };
+// if (props.model?.downloadInfo) {
+//   console.log("dkaafklds");
+//   computedStatus("downloadInfo.status");
+//   console.log(downloadStatus.value);
+// }
+
+// const downloadStatus = computed(() => {
+//   switch (props.model?.downloadInfo.status) {
+//     case 1:
+//       return "다운로드 요청";
+//     case 2:
+//       return "다운로드 중";
+//     case 3:
+//       return "다운로드 가능";
+//     default:
+//       return "다운로드";
+//   }
+// });
+
 function preview() {
   emit("preview");
 }
@@ -253,9 +272,21 @@ const watchAndUpdate = (property: string) => {
 };
 watchAndUpdate("name");
 watchAndUpdate("description");
+const domainClass = (domain: string) => {
+  switch (domain) {
+    case "지도":
+      return "bg-marker-red";
+    case "교통":
+      return "bg-marker-purple";
+    case "복지":
+      return "bg-marker-purple";
+    case "민원":
+      return "bg-marker-yellow";
+  }
+};
 
 onMounted(() => {
-  if (props.isUpdate && props.model?.tags) {
+  if (props.model?.tags) {
     tagList.value = props.model.tags.join(",");
   }
 });
