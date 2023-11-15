@@ -8,7 +8,4 @@
 <script lang="ts" setup>
 import SearchSection from "/components/project/data-fabric/search/search-section.vue";
 import SearchResult from "/components/project/data-fabric/search/search-result.vue";
-definePageMeta({
-  layout: "default-layout"
-});
 </script>

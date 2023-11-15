@@ -2,7 +2,7 @@
   <div id="wrap" class="is-split-full">
     <header id="header">
       <TheHeader></TheHeader>
-      <TheTab></TheTab>
+<!--      <TheTab></TheTab>-->
     </header>
     <main id="main">
       <slot />

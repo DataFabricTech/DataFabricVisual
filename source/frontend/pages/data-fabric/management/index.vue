@@ -14,6 +14,6 @@
 import StorageRegistration from "~/components/project/data-fabric/management/storage-registration.vue";
 
 definePageMeta({
-  layout: "default-tab-layout"
+  layout: "default-split-layout"
 });
 </script>
