@@ -95,25 +95,27 @@
           <form action="" class="form form-vertical">
             <h4 class="form-subject">{{ title }}</h4>
             <div class="form-list w-full">
-              <div class="form-item">
-                <div class="form-label">
+              <div class="form-item !flex-row !items-center">
+                <div class="form-label !w-auto">
                   <strong class="form-title">저장소 유형</strong>
                 </div>
                 <div class="form-content">
                   <p class="form-text">PostgreSQL</p>
                 </div>
               </div>
-              <div class="form-item">
-                <div class="form-label">
+              <div class="form-item !flex-row !items-center">
+                <div class="form-label !w-auto">
                   <strong class="form-title">Drive 선택</strong>
                 </div>
                 <div class="form-content">
-                  <BaseRadio checked></BaseRadio>
-                  <BaseSelect class="select-lg" :data="dataDriveSelect"></BaseSelect>
-                  <BaseRadio></BaseRadio>
-                  <baseButton class="button-primary button-lg">
-                    <span class="button-text">직접선택</span>
-                  </baseButton>
+                  <div class="h-group">
+                    <BaseRadio checked></BaseRadio>
+                    <BaseSelect class="select-lg" :data="dataDriveSelect"></BaseSelect>
+                    <BaseRadio></BaseRadio>
+                    <baseButton class="button-primary button-lg">
+                      <span class="button-text">직접선택</span>
+                    </baseButton>
+                  </div>
                 </div>
               </div>
               <div class="form-item">
