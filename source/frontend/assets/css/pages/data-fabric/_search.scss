@@ -32,6 +32,7 @@
 
   &-body {
     @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
+    height: 1050px;
     overflow-y: auto;
     gap: $spacing-20;
     flex-grow: 1;
