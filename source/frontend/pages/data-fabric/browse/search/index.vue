@@ -52,8 +52,7 @@
             </BaseRadio>
           </div>
           <BaseSelect
-            class="select-lg"
-            :data[0]="state.selectone"></BaseSelect>
+            class="select-lg"></BaseSelect>
           <BaseSelect class="select-lg"></BaseSelect>
         </div>
       </div>
@@ -82,7 +81,8 @@
           </article>
         </div>
         <preview
-          v-if= state.isPreview></preview>
+          v-if= state.isPreview
+          @close="closePreview"></preview>
         <!--        미리보기 - 아래 컨텐츠가 Toggle-->
 <!--        <div class="preview">-->
 <!--          <header class="preview-header">-->
@@ -166,8 +166,10 @@ function viewPreview() {
   state.isPreview = true;
 };
 
-//TODO : preview컴포넌트에서 x를 클릭시 emit 으로 온 것을 받아서 닫기 처리 (이때, 미리보기가 토글형식인지 확인)
-
+// 미리보기 닫기
+function closePreview() {
+  state.isPreview = false;
+}
 
 const cardList = [
   {
