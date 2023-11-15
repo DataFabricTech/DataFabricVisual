@@ -12,4 +12,8 @@
 
 <script lang="ts" setup>
 import StorageRegistration from "~/components/project/data-fabric/management/storage-registration.vue";
+
+definePageMeta({
+  layout: "default-tab-layout"
+});
 </script>

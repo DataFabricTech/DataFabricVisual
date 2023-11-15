@@ -111,9 +111,9 @@
                   <BaseRadio checked></BaseRadio>
                   <BaseSelect class="select-lg" :data="dataDriveSelect"></BaseSelect>
                   <BaseRadio></BaseRadio>
-                  <baseButton class="button-primary button-lg">
+                  <BaseButton class="button-primary button-lg">
                     <span class="button-text">직접선택</span>
-                  </baseButton>
+                  </BaseButton>
                 </div>
               </div>
               <div class="form-item">
@@ -150,10 +150,10 @@
                       <label for="input-ex-04" class="hidden-text">lable</label>
                       <BaseTextInput id="input-ex-04" class="w-[460px] text-input-lg"
                                      placeholder="Value를 입력해주세요."></BaseTextInput>
-                      <baseButton class="button-icon button-ghost button-lg">
+                      <BaseButton class="button-icon button-ghost button-lg">
                         <svg-icon name="plus" class="svg-icon" />
                         <span class="hidden-text">추가</span>
-                      </baseButton>
+                      </BaseButton>
                     </div>
                     <!--<div class="h-group gap-2">
                       <label for="input-ex-05" class="hidden-text">lable</label>
@@ -162,14 +162,14 @@
                       <label for="input-ex-06" class="hidden-text">lable</label>
                       <BaseTextInput id="input-ex-06" class="w-[460px] text-input-lg"
                                      placeholder="Value를 입력해주세요."></BaseTextInput>
-                      <baseButton class="button-icon button-danger button-lg">
+                      <BaseButton class="button-icon button-danger button-lg">
                         <svg-icon name="minus" class="svg-icon" />
                         <span class="hidden-text">삭제</span>
-                      </baseButton>
-                      <baseButton class="button-icon button-ghost button-lg">
+                      </BaseButton>
+                      <BaseButton class="button-icon button-ghost button-lg">
                         <svg-icon name="plus" class="svg-icon" />
                         <span class="hidden-text">추가</span>
-                      </baseButton>
+                      </BaseButton>
                     </div>-->
                   </div>
                 </div>
@@ -260,19 +260,19 @@
                 </div>
               </div>
             </form>
-            <baseButton class="button-ghost button-lg ml-auto flex-shrink-0" @click="clickConnection">
+            <BaseButton class="button-ghost button-lg ml-auto flex-shrink-0" @click="clickConnection">
               <span class="button-text">연결 테스트</span>
-            </baseButton>
+            </BaseButton>
           </div>
         </div>
         <div class="step-info" v-show="step === 4">
           <h4 class="step-info-title">{{ title }}</h4>
           <div class="v-group w-full gap-2">
-            <baseSwitch>
+            <BaseSwitch checked>
               <template v-slot:switch-text>
                 데이터 자동 추가 설정
               </template>
-            </baseSwitch>
+            </BaseSwitch>
             <div class="w-full table-col">
               <table class="w-full table-nesting">
                 <caption class="caption-out">
@@ -304,7 +304,7 @@
                           <td>Datetime</td>
                           <td>
                             <div class="h-group">
-                              <baseSelect></baseSelect>
+                              <BaseSelect :data="args.dateSelect"></BaseSelect>
                               <DatePicker
                                 class="date-picker"
                                 v-model:modelValue="args.date"
@@ -322,7 +322,7 @@
                         <tr>
                           <td>Data Name</td>
                           <td>
-                            <baseTextInput placeholder="정규 표현식을 입력하세요(50자이내)"></baseTextInput>
+                            <BaseTextInput placeholder="정규 표현식을 입력하세요(50자이내)"></BaseTextInput>
                           </td>
                         </tr>
                         <tr>
@@ -332,11 +332,11 @@
                               <div class="h-group">
                                 <strong class="pr-2">(table)</strong>
                                 <span class="color-font-gray-01">최소</span>
-                                <baseTextInput class="w-[100px]"></baseTextInput>
+                                <BaseTextInput class="w-[100px]" :placeholder="args.placeholder"></BaseTextInput>
                                 <span>row</span>
                                 <span class="px-2">~</span>
                                 <span>최대</span>
-                                <baseTextInput class="w-[100px]"></baseTextInput>
+                                <BaseTextInput class="w-[100px]" :placeholder="args.placeholder"></BaseTextInput>
                                 <span>row</span>
                               </div>
                             </div>
@@ -345,19 +345,19 @@
                         </tbody>
                       </table>
                       <div class="h-group">
-                        <baseButton class="button-icon button-danger" disabled>
+                        <BaseButton class="button-icon button-danger" disabled>
                           <svg-icon name="minus" class="svg-icon" />
                           <span class="hidden-text">삭제</span>
-                        </baseButton>
-                        <baseButton class="button-icon button-ghost">
+                        </BaseButton>
+                        <BaseButton class="button-icon button-ghost">
                           <svg-icon name="plus" class="svg-icon" />
                           <span class="hidden-text">추가</span>
-                        </baseButton>
+                        </BaseButton>
                       </div>
                     </div>
                   </td>
                 </tr>
-                <tr>
+                <!--<tr>
                   <td colspan="2">
                     <div class="h-group w-full gap-2">
                       <table class="w-full">
@@ -370,7 +370,7 @@
                           <td>Datetime</td>
                           <td>
                             <div class="h-group">
-                              <baseSelect></baseSelect>
+                              <BaseSelect></BaseSelect>
                               <DatePicker
                                 class="date-picker"
                                 v-model:modelValue="args.dateRange"
@@ -382,7 +382,7 @@
                         <tr>
                           <td>Data Name</td>
                           <td>
-                            <baseTextInput placeholder="정규 표현식을 입력하세요(50자이내)"></baseTextInput>
+                            <BaseTextInput placeholder="정규 표현식을 입력하세요(50자이내)"></BaseTextInput>
                           </td>
                         </tr>
                         <tr>
@@ -392,11 +392,11 @@
                               <div class="h-group">
                                 <strong class="pr-2">(table)</strong>
                                 <span class="color-font-gray-01">최소</span>
-                                <baseTextInput class="w-[100px]"></baseTextInput>
+                                <BaseTextInput class="w-[100px]"></BaseTextInput>
                                 <span>row</span>
                                 <span class="px-2">~</span>
                                 <span>최대</span>
-                                <baseTextInput class="w-[100px]"></baseTextInput>
+                                <BaseTextInput class="w-[100px]"></BaseTextInput>
                                 <span>row</span>
                               </div>
                             </div>
@@ -405,28 +405,28 @@
                         </tbody>
                       </table>
                       <div class="h-group">
-                        <baseButton class="button-icon button-danger">
+                        <BaseButton class="button-icon button-danger">
                           <svg-icon name="minus" class="svg-icon" />
                           <span class="hidden-text">삭제</span>
-                        </baseButton>
-                        <baseButton class="button-icon button-ghost">
+                        </BaseButton>
+                        <BaseButton class="button-icon button-ghost">
                           <svg-icon name="plus" class="svg-icon" />
                           <span class="hidden-text">추가</span>
-                        </baseButton>
+                        </BaseButton>
                       </div>
                     </div>
                   </td>
-                </tr>
+                </tr>-->
                 </tbody>
               </table>
             </div>
           </div>
           <div class="v-group w-full gap-2">
-            <baseSwitch>
+            <BaseSwitch checked>
               <template v-slot:switch-text>
                 동기화 설정
               </template>
-            </baseSwitch>
+            </BaseSwitch>
             <div class="table-col w-full">
               <table class="w-full">
                 <caption class="caption-out">
@@ -448,16 +448,16 @@
                   <td>동기화 주기</td>
                   <td>
                     <div class="v-group">
-                      <baseSelect></baseSelect>
+                      <BaseSelect :data="args.periodSelect"></BaseSelect>
                       <div class="h-group">
-                        <baseRadio id="radio-lg-01"></baseRadio>
-                        <baseTextInput class="w-[100px]"></baseTextInput>
+                        <BaseRadio id="radio-lg-01"></BaseRadio>
+                        <BaseTextInput class="w-[100px]" :placeholder="args.placeholder"></BaseTextInput>
                         <span>일 마다</span>
                       </div>
                       <div class="h-group">
-                        <baseRadio id="radio-lg-02"></baseRadio>
+                        <BaseRadio id="radio-lg-02" checked></BaseRadio>
                         <div class="toggle-token">
-                          <BaseCheckbox name="toggleLg" id="toggle-lg-01" checked>
+                          <BaseCheckbox name="toggleLg" id="toggle-lg-01">
                             월요일
                           </BaseCheckbox>
                           <BaseCheckbox name="toggleLg" id="toggle-lg-02">
@@ -466,16 +466,16 @@
                           <BaseCheckbox name="toggleLg" id="toggle-lg-03">
                             수요일
                           </BaseCheckbox>
-                          <BaseCheckbox name="toggleLg" id="toggle-lg-04">
+                          <BaseCheckbox name="toggleLg" id="toggle-lg-04" checked>
                             목요일
                           </BaseCheckbox>
-                          <BaseCheckbox name="toggleLg" id="toggle-lg-05">
+                          <BaseCheckbox name="toggleLg" id="toggle-lg-05" checked>
                             금요일
                           </BaseCheckbox>
                           <BaseCheckbox name="toggleLg" id="toggle-lg-06">
                             토요일
                           </BaseCheckbox>
-                          <BaseCheckbox name="toggleLg" id="toggle-lg-07">
+                          <BaseCheckbox name="toggleLg" id="toggle-lg-07" checked>
                             일요일
                           </BaseCheckbox>
                         </div>
@@ -494,11 +494,11 @@
             </div>
           </div>
           <div class="v-group w-full gap-2">
-            <baseSwitch>
+            <BaseSwitch checked>
               <template v-slot:switch-text>
                 모니터링 설정
               </template>
-            </baseSwitch>
+            </BaseSwitch>
             <div class="table-col w-full">
               <table class="w-full">
                 <caption class="caption-out">
@@ -520,25 +520,25 @@
                   <td>Protocol</td>
                   <td>
                     <div class="h-group">
-                      <baseRadio id="radio-lg-03">TCP</baseRadio>
-                      <baseRadio id="radio-lg-04">UDP</baseRadio>
-                      <baseRadio id="radio-lg-05">ICMP</baseRadio>
-                      <baseRadio id="radio-lg-06">SQL</baseRadio>
+                      <BaseRadio id="radio-lg-03" checked>TCP</BaseRadio>
+                      <BaseRadio id="radio-lg-04">UDP</BaseRadio>
+                      <BaseRadio id="radio-lg-05">ICMP</BaseRadio>
+                      <BaseRadio id="radio-lg-06">SQL</BaseRadio>
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td>Port</td>
                   <td>
-                    <baseTextInput placeholder="port를 입력하세요"></baseTextInput>
+                    <BaseTextInput placeholder="port를 입력하세요"></BaseTextInput>
                   </td>
                 </tr>
                 <tr>
                   <td>Timeout</td>
                   <td>
                     <div class="h-group">
-                      <baseRadio id="radio-lg-01"></baseRadio>
-                      <baseTextInput class="w-[70px]"></baseTextInput>
+<!--                      <BaseRadio id="radio-lg-01"></BaseRadio>-->
+                      <BaseTextInput class="w-[70px]" :placeholder="args.placeholder"></BaseTextInput>
                       <span>초(sec)</span>
                     </div>
                   </td>
@@ -547,8 +547,8 @@
                   <td>정상 임계 값</td>
                   <td>
                     <div class="h-group">
-                      <baseRadio id="radio-lg-01"></baseRadio>
-                      <baseTextInput class="w-[70px]"></baseTextInput>
+<!--                      <BaseRadio id="radio-lg-01"></BaseRadio>-->
+                      <BaseTextInput class="w-[70px]" :placeholder="args.placeholder"></BaseTextInput>
                       <span>회(sec)</span>
                     </div>
                   </td>
@@ -557,8 +557,8 @@
                   <td>비정상 임계 값</td>
                   <td>
                     <div class="h-group">
-                      <baseRadio id="radio-lg-01"></baseRadio>
-                      <baseTextInput class="w-[70px]"></baseTextInput>
+<!--                      <BaseRadio id="radio-lg-01"></BaseRadio>-->
+                      <BaseTextInput class="w-[70px]" :placeholder="args.placeholder"></BaseTextInput>
                       <span>회(sec)</span>
                     </div>
                   </td>
@@ -571,19 +571,19 @@
       </div>
     </template>
     <template v-slot:foot>
-      <baseButton class="button-normal button-lg" @click="clickClose">
+      <BaseButton class="button-normal button-lg" @click="clickClose">
         <span class="button-text">취소</span>
-      </baseButton>
+      </BaseButton>
       <div class="h-group ml-auto">
-        <baseButton class="button-ghost button-lg" v-show="step !== 1" @click="clickPrev">
+        <BaseButton class="button-ghost button-lg" v-show="step !== 1" @click="clickPrev">
           <span class="button-text">이전</span>
-        </baseButton>
-        <baseButton class="button-primary button-lg" v-show="step !== 4" @click="clickNext">
+        </BaseButton>
+        <BaseButton class="button-primary button-lg" v-show="step !== 4" @click="clickNext">
           <span class="button-text">다음</span>
-        </baseButton>
-        <baseButton class="button-primary button-lg" v-show="step === 4" @click="clickSave">
+        </BaseButton>
+        <BaseButton class="button-primary button-lg" v-show="step === 4" @click="clickSave">
           <span class="button-text">저장</span>
-        </baseButton>
+        </BaseButton>
       </div>
     </template>
   </modal>
@@ -594,11 +594,14 @@ import { ref } from "vue";
 const { $vfm } = useNuxtApp();
 
 let args = {
-  date: "2023-11-22",
-  dateRange: ["2023-11-10", "2023-11-22"],
+  date: "2023-11-01",
+  dateRange: ["2023-11-01", "2023-11-15"],
   // storybook 에 object 형식으로 뜸
   dateType: "time",
-  rangeType: "datetime"
+  rangeType: "datetime",
+  dateSelect: [{ key: "범위 설정", value: "범위 설정" }],
+  periodSelect: [{ key: "일(Day)", value: "일(Day)" }],
+  placeholder: ""
 };
 
 // modal
