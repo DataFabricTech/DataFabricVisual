@@ -108,6 +108,8 @@
 
     .card {
       &-content {
+        min-height: auto;
+
         &:not(:only-child) {
           width: 50%;
         }
