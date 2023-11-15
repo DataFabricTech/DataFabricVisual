@@ -49,7 +49,7 @@
           </VTooltip>
         </div>
       </div>
-      <div :class="props.showInfoComplex ? 'v-group justify-between w-full' : 'h-group justify-between w-full'">
+      <div :class="props.showInfoComplex ? 'v-group justify-between w-full' : 'h-group justify-between w-full mt-auto'">
         <div class="h-group gap-[16px]">
           <dl class="define">
             <dt class="define-term">
