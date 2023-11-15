@@ -137,9 +137,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-// definePageMeta({
-//   layout: "default-layout"
-// });
 import { storeToRefs } from "pinia";
 import { fabricMainStore } from "/store/data-fabric/main/main";
 import Preview from "/components/project/data-fabric/search/preview/preview.vue";

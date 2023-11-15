@@ -11,7 +11,7 @@
 
 <script lang="ts" setup>
 definePageMeta({
-  layout: "default-tab-layout"
+  layout: "default-split-layout"
 });
 
 const route = useRoute();
