@@ -2,7 +2,7 @@
   <article class="category-article">
     <div class="category-subject is-vertical">
       <h3 class="category-title color-primary">기본 정보</h3>
-      <p class="category-description">데이터 모델 상세 설명 영역 (작성된 값이 있는 경우 출력 되는 영역임)</p>
+      <p class="category-description"></p>
     </div>
     <h4 class="page-subtitle">메타 정보</h4>
     <div class="table-row w-full">
@@ -81,22 +81,22 @@
       </table>
     </div>
     <div class="category-subject is-vertical">
-      <h3 class="category-title color-primary">샘플데이ㅣ</h3>
-      <p class="category-description">데이터 모델 상세 설명 영역 (작성된 값이 있는 경우 출력 되는 영역임)</p>
+      <h3 class="category-title color-primary">샘플데이터</h3>
+      <p class="category-description"></p>
     </div>
     <div class="table-row w-full">
       <baseTableColumn class="sample-data-table" :headers="sample.headers" :rows="sample.rows"></baseTableColumn>
     </div>
     <div class="category-subject is-vertical">
       <h3 class="category-title color-primary">프로파일링</h3>
-      <p class="category-description">데이터 모델 상세 설명 영역 (작성된 값이 있는 경우 출력 되는 영역임)</p>
+      <p class="category-description"></p>
     </div>
     <div class="table-row w-full">
       <baseTableColumn :headers="profiling.headers" :rows="profiling.rows"></baseTableColumn>
     </div>
     <div class="category-subject is-vertical">
       <h3 class="category-title color-primary">Knowledge Graph</h3>
-      <!--      <p class="category-description">데이터 모델 상세 설명 영역 (작성된 값이 있는 경우 출력 되는 영역임)</p>-->
+      <p class="category-description"></p>
       <img src="@/assets/images/sample-graph.png" :width="1100" style="margin-left: auto; margin-right: auto" />
     </div>
     <!--    <h4 class="page-subtitle">연관데이터 모델</h4>-->
