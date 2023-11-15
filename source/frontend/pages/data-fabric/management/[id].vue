@@ -10,6 +10,10 @@
 </template>
 
 <script lang="ts" setup>
+definePageMeta({
+  layout: "default-tab-layout"
+});
+
 const route = useRoute();
 
 const component = {

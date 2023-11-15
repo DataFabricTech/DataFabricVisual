@@ -2,7 +2,6 @@
 import { onMounted, ref } from "vue";
 import treeview from "vue3-treeview";
 import "vue3-treeview/dist/style.css";
-import { defineEmits } from "vue/dist/vue";
 
 export interface State {
   opened: boolean;
