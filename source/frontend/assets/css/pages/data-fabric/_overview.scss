@@ -4,6 +4,18 @@
   width: 100%;
   padding: $spacing-8;
   background-color: $white;
+
+  .tree {
+    padding-top: $spacing-4;
+
+    .tree-level {
+      width: 100%;
+    }
+
+    .input-wrapper {
+      overflow: hidden;
+    }
+  }
 }
 
 .chartbox {

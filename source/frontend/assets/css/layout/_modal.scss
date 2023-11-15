@@ -1,6 +1,10 @@
 .modal {
   @include flex-standard($direction: column);
-  background-color: $white;
+
+  &-inner{
+    @include flex-standard($direction: column);
+    background-color: $white;
+  }
 
   &-header {
     @include flex-standard($horizontal: space-between);

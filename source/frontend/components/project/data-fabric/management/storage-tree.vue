@@ -30,7 +30,7 @@
       <baseTextInput v-model:model-value="storage.filter.name" placeholder="연결정보 이름을 입력하세요"></baseTextInput>
     </div>
     <div class="search-tree">
-      <div class="list list-lg h-full" >
+      <div class="list list-lg h-full justify-start" >
         <!--<ul class="list-list h-full">
           <li class="list-item" v-for="(item, key) in storageList" :key="key">
             <button class="list-button" v-if="item.show">
@@ -38,7 +38,7 @@
             </button>
           </li>
         </ul>-->
-        <Tree :nodes="nodes" @node-click="nodeClick"></Tree>
+        <Tree :nodes="nodes" @node-click="nodeClick" class="w-full"></Tree>
       </div>
     </div>
     <BaseButton class="button-normal button-lg ml-auto" @click="openReg">
@@ -52,7 +52,7 @@ import type { StorageSortContextItem } from "~/components/project/data-fabric/ma
 import { useStorageStore } from "~/store/data-fabric/management/storage";
 import { storeToRefs } from "pinia";
 import { vOnClickOutside } from "@vueuse/components";
-import { Nodes } from "~/components/common/tree/tree.vue";
+// import { Nodes } from "~/components/common/tree/tree.vue";
 
 const store = useStorageStore();
 const { storage, storageSortList, storageList } = storeToRefs(store);
@@ -78,7 +78,7 @@ function openReg() {
 }
 
 // tree
-const nodes = ref<Nodes>({
+const nodes = ref<any>({
   id01: {
     isRoot: true,
     text: "fabric 개인 Minio 저장소",
