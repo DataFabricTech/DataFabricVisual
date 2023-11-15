@@ -4,7 +4,7 @@
       <h5 class="preview-title">
         <span class="hidden-text">데이터 상세 정보</span>
       </h5>
-      <baseButton class="button-icon button-sm" title="닫기" onclick="onClose">
+      <baseButton class="button-icon button-sm" title="닫기" @click="onClose">
         <svg-icon name="close" class="svg-icon" />
         <span class="hidden-text">닫기</span>
       </baseButton>
