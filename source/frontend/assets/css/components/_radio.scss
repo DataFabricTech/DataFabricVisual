@@ -10,9 +10,17 @@
   &-input {
     @include hidden-text;
 
-    &:checked + .radio-label:before {
-      background-color: $primary;
-      border-color: $primary;
+    &:checked {
+      & + .radio-label:before {
+        background-color: $primary;
+        border-color: $primary;
+      }
+
+      &:hover:not(:disabled) {
+        & + .radio-label:before {
+          border-color: $primary;
+        }
+      }
     }
 
     &:disabled + .radio-label {
@@ -62,6 +70,12 @@
       height: 7px;
       border-radius: $border-radius-round;
       background-color: $white;
+    }
+
+    &:hover:not(:disabled) {
+      &:before {
+        border-color: $hover;
+      }
     }
   }
 

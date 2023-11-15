@@ -2,7 +2,6 @@
 import { onMounted, ref } from "vue";
 import treeview from "vue3-treeview";
 import "vue3-treeview/dist/style.css";
-import { defineEmits } from "vue/dist/vue";
 
 export interface State {
   opened: boolean;
@@ -25,6 +24,7 @@ export interface Node {
   isRoot?: boolean;
   title?: string;
   icon?: string;
+  data?: any;
 }
 
 export interface Nodes {
@@ -150,7 +150,7 @@ function nodeUnchecked(e: any) {
 
 function nodeFocus(e: any) {
   console.log("nodeFocus", e);
-  emit("node-click", e.id);
+  emit("node-click", e.data);
 }
 
 onMounted(() => {

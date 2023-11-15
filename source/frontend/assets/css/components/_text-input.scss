@@ -39,7 +39,7 @@
   }
 
   &:hover:not(:disabled) {
-    border-color: #aeb9ca;
+    border-color: $hover;
   }
 
   &[readonly],

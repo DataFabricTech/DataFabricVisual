@@ -273,28 +273,34 @@
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">type: time picker</strong>
                   <div class="h-group gap-12">
-                    <DatePicker
-                      v-model:modelValue="args.date"
-                      :type="args.dateType">
-                    </DatePicker>
+                    <div class="date-picker">
+                      <DatePicker
+                        v-model:modelValue="args.date"
+                        :type="args.dateType">
+                      </DatePicker>
+                    </div>
                   </div>
                 </div>
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">type: date picker</strong>
                   <div class="h-group gap-12">
-                    <DatePicker
-                      v-model:modelValue="args.date"
-                      :type="args.date">
-                    </DatePicker>
+                    <div class="date-picker">
+                      <DatePicker
+                        v-model:modelValue="args.date"
+                        :type="args.date">
+                      </DatePicker>
+                    </div>
                   </div>
                 </div>
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">type: date time range picker</strong>
                   <div class="h-group gap-12">
-                    <DatePicker
-                      v-model:modelValue="args.dateRange"
-                      :type="args.rangeType">
-                    </DatePicker>
+                    <div class="date-picker">
+                      <DatePicker
+                        v-model:modelValue="args.dateRange"
+                        :type="args.rangeType">
+                      </DatePicker>
+                    </div>
                   </div>
                 </div>
               </div>
