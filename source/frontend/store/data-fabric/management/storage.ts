@@ -161,23 +161,31 @@ export const useOverviewStore = defineStore("overview", () => {
 export const useStorageStore = defineStore("storage", () => {
   const { $api } = useNuxtApp();
   const storage: {
-    items: Array<StorageItem>;
+    items: Object;
     types: Array<StorageTypeItem>;
     statusTypes: Array<Object>;
     filter: StorageFilter;
     selectedSort: StorageSortContextItem;
     sortList: Array<StorageSortContextItem>;
   } = reactive({
-    items: [
-      {
-        id: "",
-        name: "",
-        storageType: "",
-        status: "",
-        crdDate: "",
-        show: true
+    items: {
+      test: {
+        text: "",
+        icon: "",
+        data: {
+          id: "",
+          name: "",
+          storageType: "",
+          status: "",
+          crdDate: "",
+          show: true
+        },
+        state: {
+          opened: true
+        },
+        children: []
       }
-    ],
+    },
     types: [
       {
         name: "",
@@ -207,17 +215,18 @@ export const useStorageStore = defineStore("storage", () => {
 
   const storageList = computed(() => {
     // 정렬
-    storage.items = _orderBy(storage.items, storage.selectedSort.type, storage.selectedSort.direction);
-    // 필터
-    const filterText = storage.filter.name.toLowerCase();
-    _map(storage.items, (el) => {
-      el.show =
-        el.name.toLowerCase().includes(filterText) &&
-        storage.filter.storageType.includes(el.storageType) &&
-        storage.filter.status.includes(el.status);
-      return el;
-    });
+    // storage.items = _orderBy(storage.items, storage.selectedSort.type, storage.selectedSort.direction);
+    // // 필터
+    // const filterText = storage.filter.name.toLowerCase();
+    // _map(storage.items, (el) => {
+    //   el.show =
+    //     el.name.toLowerCase().includes(filterText) &&
+    //     storage.filter.storageType.includes(el.storageType) &&
+    //     storage.filter.status.includes(el.status);
+    //   return el;
+    // });
 
+    console.log("storageList = ", storage.items);
     return storage.items;
   });
 
@@ -263,13 +272,13 @@ export const useStorageStore = defineStore("storage", () => {
    */
   function getStorage() {
     getStorageType();
-    storage.items = OverviewSample.storages;
+    storage.items = OverviewSample.nStorages;
 
     // 화면에 맞게 데이터 형식, 속성 변경
-    _map(storage.items, (el) => {
-      el.crdDate = dayjs(el.crdDate).format("YYYY-MM-DD hh:mm:ss");
-      return el;
-    });
+    // _map(storage.items, (el) => {
+    //   el.crdDate = dayjs(el.crdDate).format("YYYY-MM-DD hh:mm:ss");
+    //   return el;
+    // });
   }
 
   /**
@@ -281,13 +290,13 @@ export const useStorageStore = defineStore("storage", () => {
   }
 
   function changeStorage() {
-    storage.items = OverviewSample.nStorages;
+    storage.items = OverviewSample.storages;
 
     // 화면에 맞게 데이터 형식, 속성 변경
-    _map(storage.items, (el) => {
-      el.crdDate = dayjs(el.crdDate).format("YYYY-MM-DD hh:mm:ss");
-      return el;
-    });
+    // _map(storage.items, (el) => {
+    //   el.crdDate = dayjs(el.crdDate).format("YYYY-MM-DD hh:mm:ss");
+    //   return el;
+    // });
   }
 
   return {
