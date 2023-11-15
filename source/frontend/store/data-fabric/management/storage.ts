@@ -290,7 +290,7 @@ export const useStorageStore = defineStore("storage", () => {
   }
 
   function changeStorage() {
-    storage.items = OverviewSample.nStorages;
+    storage.items = OverviewSample.storages;
 
     // 화면에 맞게 데이터 형식, 속성 변경
     // _map(storage.items, (el) => {

@@ -590,8 +590,14 @@
 </template>
 <script lang="ts" setup>
 import { ref } from "vue";
+import { useOverviewStore, useStorageStore } from "~/store/data-fabric/management/storage";
 
 const { $vfm } = useNuxtApp();
+
+const store1 = useStorageStore();
+const store2 = useOverviewStore();
+const { changeStorage } = store1;
+const { changeOverview } = store2;
 
 let args = {
   date: "2023-11-01",
@@ -607,6 +613,7 @@ let args = {
 // modal
 const step = ref(1);
 const obj = reactive({ step });
+const emit = defineEmits(["save"]);
 
 const titles = ["저장소 유형 선택", "기본 정보 입력", "상세 정보 입력", "추가 정보 입력"];
 const title = computed(() => {
@@ -656,6 +663,10 @@ function clickSave() {
   console.log("save");
   alert("저장되었습니다.");
   step.value = 1;
+  // emit("save");
+  changeStorage();
+  changeOverview();
+
   $vfm.close("storage-registration");
 }
 
