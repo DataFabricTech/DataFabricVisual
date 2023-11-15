@@ -51,7 +51,9 @@
               <svg-icon name="thumbnail-view" class="svg-icon"></svg-icon>
             </BaseRadio>
           </div>
-          <BaseSelect class="select-lg"></BaseSelect>
+          <BaseSelect
+            class="select-lg"
+            :data[0]="state.selectone"></BaseSelect>
           <BaseSelect class="select-lg"></BaseSelect>
         </div>
       </div>
@@ -79,7 +81,8 @@
             </div>
           </article>
         </div>
-        <preview></preview>
+        <preview
+          v-if= state.isPreview></preview>
         <!--        미리보기 - 아래 컨텐츠가 Toggle-->
 <!--        <div class="preview">-->
 <!--          <header class="preview-header">-->
@@ -148,7 +151,9 @@ let {
 } = storeToRefs(store);
 
 const state = reactive({
-  isOpen: true
+  isOpen: true,
+  isPreview: false,
+  selectone: "수정일순"
 });
 
 onMounted(() => {
@@ -156,13 +161,12 @@ onMounted(() => {
   keyword.value =  keyValue['keyword'];
 })
 
-// TODO : 미리보기
+// card컴포넌트내에 emit시 실행되는 함수
 function viewPreview() {
-  //
-
+  state.isPreview = true;
 };
 
-//TODO : v-if로 미리보기 클릭시,  emit받아서 ...
+//TODO : preview컴포넌트에서 x를 클릭시 emit 으로 온 것을 받아서 닫기 처리 (이때, 미리보기가 토글형식인지 확인)
 
 
 const cardList = [
