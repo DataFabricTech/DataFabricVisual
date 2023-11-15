@@ -1,14 +1,30 @@
 <!-- 저장소 관리 > 연결정보 등록 Modal -->
 <template>
   <div class="v-group">
-    <h3>저장소 관리 > 연결정보 등록 Step 1</h3>
-    <baseButton class="button-lg button-primary" @click="onClickOpen1">모달 OPEN</baseButton>
-    <modal v-model="show1" title="연결정보 등록">
+    <h3>저장소 관리 > 연결정보 등록</h3>
+    <baseButton class="button-lg button-primary" @click="clickOpen">모달 OPEN</baseButton>
+
+    <modal v-model="showModal" title="연결정보 등록">
       <template v-slot:body>
         <div class="modal-body w-[900px] p-6 items-center">
-          <BaseStep></BaseStep>
-          <div class="step-info">
-            <h4 class="step-info-title">저장소 유형 선택</h4>
+          <!--<BaseStep :step="obj" :testTitle="obj.toString()"></BaseStep>-->
+          <div class="step">
+            <div class="step-item" v-for="(item, index) in titles"
+                 :key="index" :class="[index + 1 === step ? 'is-current':'']">
+              <div class="step-icon">
+                <span class="step-icon-text">
+                  {{ index + 1 }}
+                </span>
+              </div>
+              <div class="step-title">
+                <span class="step-title-text">
+                  {{ item }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="step-info" v-show="step === 1">
+            <h4 class="step-info-title">{{ title }}</h4>
             <SearchField class="search-field-lg w-[440px]"></SearchField>
             <ul class="storage-type">
               <li class="storage-type-item">
@@ -103,29 +119,9 @@
               </li>
             </ul>
           </div>
-        </div>
-      </template>
-      <template v-slot:foot>
-        <baseButton class="button-normal button-lg">
-          <span class="button-text">취소</span>
-        </baseButton>
-        <div class="h-group ml-auto">
-          <baseButton class="button-primary button-lg">
-            <span class="button-text">저장</span>
-          </baseButton>
-        </div>
-      </template>
-    </modal>
-
-    <h3>저장소 관리 > 연결정보 등록 Step 2</h3>
-    <baseButton class="button-lg button-primary" @click="onClickOpen2">모달 OPEN</baseButton>
-    <modal v-model="show2" title="연결정보 등록">
-      <template v-slot:body>
-        <div class="modal-body w-[900px] p-6 items-center">
-          <BaseStep></BaseStep>
-          <div class="step-info">
+          <div class="step-info" v-show="step === 2">
             <form action="" class="form form-vertical">
-              <h4 class="form-subject">기본정보 입력</h4>
+              <h4 class="form-subject">{{ title }}</h4>
               <div class="form-list w-full">
                 <div class="form-item">
                   <div class="form-label">
@@ -142,7 +138,8 @@
                   </div>
                   <div class="form-content">
                     <label for="input-ex-01" class="hidden-text">연결정보 이름</label>
-                    <BaseTextInput id="input-ex-01" class="w-[522px] text-input-lg" placeholder="이름을 입력해주세요."></BaseTextInput>
+                    <BaseTextInput id="input-ex-01" class="w-[522px] text-input-lg"
+                                   placeholder="이름을 입력해주세요."></BaseTextInput>
                   </div>
                 </div>
                 <div class="form-item w-full">
@@ -162,9 +159,11 @@
                     <div class="v-group gap-2">
                       <div class="h-group gap-2">
                         <label for="input-ex-03" class="hidden-text">lable</label>
-                        <BaseTextInput id="input-ex-03" class="w-[222px] text-input-lg" placeholder="Key를 입력해주세요."></BaseTextInput>
+                        <BaseTextInput id="input-ex-03" class="w-[222px] text-input-lg"
+                                       placeholder="Key를 입력해주세요."></BaseTextInput>
                         <label for="input-ex-04" class="hidden-text">lable</label>
-                        <BaseTextInput id="input-ex-04" class="w-[460px] text-input-lg" placeholder="Value를 입력해주세요."></BaseTextInput>
+                        <BaseTextInput id="input-ex-04" class="w-[460px] text-input-lg"
+                                       placeholder="Value를 입력해주세요."></BaseTextInput>
                         <baseButton class="button-icon button-ghost button-lg">
                           <svg-icon name="plus" class="svg-icon" />
                           <span class="hidden-text">추가</span>
@@ -172,9 +171,11 @@
                       </div>
                       <div class="h-group gap-2">
                         <label for="input-ex-05" class="hidden-text">lable</label>
-                        <BaseTextInput id="input-ex-05" class="w-[222px] text-input-lg" placeholder="Key를 입력해주세요."></BaseTextInput>
+                        <BaseTextInput id="input-ex-05" class="w-[222px] text-input-lg"
+                                       placeholder="Key를 입력해주세요."></BaseTextInput>
                         <label for="input-ex-06" class="hidden-text">lable</label>
-                        <BaseTextInput id="input-ex-06" class="w-[460px] text-input-lg" placeholder="Value를 입력해주세요."></BaseTextInput>
+                        <BaseTextInput id="input-ex-06" class="w-[460px] text-input-lg"
+                                       placeholder="Value를 입력해주세요."></BaseTextInput>
                         <baseButton class="button-icon button-danger button-lg">
                           <svg-icon name="minus" class="svg-icon" />
                           <span class="hidden-text">삭제</span>
@@ -191,39 +192,17 @@
               <h4 class="form-subject">Tag 입력</h4>
               <div class="form-list w-full">
                 <div class="form-item w-full">
-                    <div class="form-content w-full">
-                      <label for="input-ex-07" class="hidden-text">Tag 입력</label>
-                      <BaseTextInput id="area-ex-07" class="w-full text-input-lg" placeholder="Tag를 입력해주세요."></BaseTextInput>
-                    </div>
+                  <div class="form-content w-full">
+                    <label for="input-ex-07" class="hidden-text">Tag 입력</label>
+                    <BaseTextInput id="area-ex-07" class="w-full text-input-lg"
+                                   placeholder="Tag를 입력해주세요."></BaseTextInput>
+                  </div>
                 </div>
               </div>
             </form>
           </div>
-        </div>
-      </template>
-      <template v-slot:foot>
-        <baseButton class="button-normal button-lg">
-          <span class="button-text">취소</span>
-        </baseButton>
-        <div class="h-group ml-auto">
-          <baseButton class="button-ghost button-lg">
-            <span class="button-text">이전</span>
-          </baseButton>
-          <baseButton class="button-primary button-lg">
-            <span class="button-text">다음</span>
-          </baseButton>
-        </div>
-      </template>
-    </modal>
-
-    <h3>저장소 관리 > 연결정보 등록 Step 3</h3>
-    <baseButton class="button-lg button-primary" @click="onClickOpen3">모달 OPEN</baseButton>
-    <modal v-model="show3" title="연결정보 등록">
-      <template v-slot:body>
-        <div class="modal-body w-[900px] p-6 items-center">
-          <BaseStep></BaseStep>
-          <div class="step-info">
-            <h4 class="step-info-title">상세 정보 입력</h4>
+          <div class="step-info" v-show="step === 3">
+            <h4 class="step-info-title">{{ title }}</h4>
             <div class="description">
               <dl>
                 <dt>저장소 유형</dt>
@@ -244,7 +223,8 @@
                     </div>
                     <div class="form-content w-full">
                       <label for="input-ex-01" class="hidden-text">host</label>
-                      <BaseTextInput id="input-ex-01" class="w-full text-input-lg" placeholder="내용을 입력해주세요."></BaseTextInput>
+                      <BaseTextInput id="input-ex-01" class="w-full text-input-lg"
+                                     placeholder="내용을 입력해주세요."></BaseTextInput>
                     </div>
                   </div>
                   <div class="form-item w-full">
@@ -254,7 +234,8 @@
                     </div>
                     <div class="form-content w-full">
                       <label for="input-ex-02" class="hidden-text">port</label>
-                      <BaseTextInput id="input-ex-02" class="w-full text-input-lg" placeholder="내용을 입력해주세요."></BaseTextInput>
+                      <BaseTextInput id="input-ex-02" class="w-full text-input-lg"
+                                     placeholder="내용을 입력해주세요."></BaseTextInput>
                     </div>
                   </div>
                   <div class="form-item w-full">
@@ -264,7 +245,8 @@
                     </div>
                     <div class="form-content w-full">
                       <label for="input-ex-03" class="hidden-text">database</label>
-                      <BaseTextInput id="input-ex-03" class="w-full text-input-lg" placeholder="내용을 입력해주세요."></BaseTextInput>
+                      <BaseTextInput id="input-ex-03" class="w-full text-input-lg"
+                                     placeholder="내용을 입력해주세요."></BaseTextInput>
                     </div>
                   </div>
                   <div class="form-item w-full">
@@ -274,7 +256,8 @@
                     </div>
                     <div class="form-content w-full">
                       <label for="input-ex-04" class="hidden-text">user</label>
-                      <BaseTextInput id="input-ex-04" class="w-full text-input-lg" placeholder="내용을 입력해주세요."></BaseTextInput>
+                      <BaseTextInput id="input-ex-04" class="w-full text-input-lg"
+                                     placeholder="내용을 입력해주세요."></BaseTextInput>
                     </div>
                   </div>
                   <div class="form-item w-full">
@@ -284,7 +267,8 @@
                     </div>
                     <div class="form-content w-full">
                       <label for="input-ex-05" class="hidden-text">password</label>
-                      <BaseTextInput id="input-ex-05" class="w-full text-input-lg" placeholder="내용을 입력해주세요."></BaseTextInput>
+                      <BaseTextInput id="input-ex-05" class="w-full text-input-lg"
+                                     placeholder="내용을 입력해주세요."></BaseTextInput>
                     </div>
                   </div>
                 </div>
@@ -294,31 +278,8 @@
               </baseButton>
             </div>
           </div>
-        </div>
-      </template>
-      <template v-slot:foot>
-        <baseButton class="button-normal button-lg">
-          <span class="button-text">취소</span>
-        </baseButton>
-        <div class="h-group ml-auto">
-          <baseButton class="button-ghost button-lg">
-            <span class="button-text">이전</span>
-          </baseButton>
-          <baseButton class="button-primary button-lg">
-            <span class="button-text">다음</span>
-          </baseButton>
-        </div>
-      </template>
-    </modal>
-
-    <h3>저장소 관리 > 수집 정보 등록 Step 4</h3>
-    <baseButton class="button-lg button-primary" @click="onClickOpen4">모달 OPEN</baseButton>
-    <modal v-model="show4" title="연결정보 등록">
-      <template v-slot:body>
-        <div class="modal-body w-[900px] p-6 items-center">
-          <BaseStep></BaseStep>
-          <div class="step-info">
-            <h4 class="step-info-title">수집 정보 입력</h4>
+          <div class="step-info" v-show="step === 4">
+            <h4 class="step-info-title">{{ title }}</h4>
             <div class="v-group w-full gap-2">
               <baseSwitch>
                 <template v-slot:switch-text>
@@ -342,133 +303,133 @@
                   </tr>
                   </thead>
                   <tbody>
-                    <!-- 플러스 항목 추가시 여기서부터 <tr> 반복됩니다 -->
-                    <tr>
-                      <td colspan="2">
-                        <div class="h-group w-full gap-2">
-                          <table class="w-full">
-                            <colgroup>
-                              <col width="120px">
-                              <col>
-                            </colgroup>
-                            <tbody>
-                            <tr>
-                              <td>Datetime</td>
-                              <td>
+                  <!-- 플러스 항목 추가시 여기서부터 <tr> 반복됩니다 -->
+                  <tr>
+                    <td colspan="2">
+                      <div class="h-group w-full gap-2">
+                        <table class="w-full">
+                          <colgroup>
+                            <col width="120px">
+                            <col>
+                          </colgroup>
+                          <tbody>
+                          <tr>
+                            <td>Datetime</td>
+                            <td>
+                              <div class="h-group">
+                                <baseSelect></baseSelect>
+                                <DatePicker
+                                  class="date-picker"
+                                  v-model:modelValue="args.date"
+                                  :type="args.date">
+                                </DatePicker>
+                                <span class="px-2 color-font-gray-01">~</span>
+                                <DatePicker
+                                  class="date-picker"
+                                  v-model:modelValue="args.date"
+                                  :type="args.date">
+                                </DatePicker>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Data Name</td>
+                            <td>
+                              <baseTextInput placeholder="정규 표현식을 입력하세요(50자이내)"></baseTextInput>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Type / Size</td>
+                            <td>
+                              <div class="v-group">
                                 <div class="h-group">
-                                  <baseSelect></baseSelect>
-                                  <DatePicker
-                                    class="date-picker"
-                                    v-model:modelValue="args.date"
-                                    :type="args.date">
-                                  </DatePicker>
-                                  <span class="px-2 color-font-gray-01">~</span>
-                                  <DatePicker
-                                    class="date-picker"
-                                    v-model:modelValue="args.date"
-                                    :type="args.date">
-                                  </DatePicker>
+                                  <strong class="pr-2">(table)</strong>
+                                  <span class="color-font-gray-01">최소</span>
+                                  <baseTextInput class="w-[100px]"></baseTextInput>
+                                  <span>row</span>
+                                  <span class="px-2">~</span>
+                                  <span>최대</span>
+                                  <baseTextInput class="w-[100px]"></baseTextInput>
+                                  <span>row</span>
                                 </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Data Name</td>
-                              <td>
-                                <baseTextInput placeholder="정규 표현식을 입력하세요(50자이내)"></baseTextInput>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Type / Size</td>
-                              <td>
-                                <div class="v-group">
-                                  <div class="h-group">
-                                    <strong class="pr-2">(table)</strong>
-                                    <span class="color-font-gray-01">최소</span>
-                                    <baseTextInput class="w-[100px]"></baseTextInput>
-                                    <span>row</span>
-                                    <span class="px-2">~</span>
-                                    <span>최대</span>
-                                    <baseTextInput class="w-[100px]"></baseTextInput>
-                                    <span>row</span>
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            </tbody>
-                          </table>
-                          <div class="h-group">
-                            <baseButton class="button-icon button-danger" disabled>
-                              <svg-icon name="minus" class="svg-icon" />
-                              <span class="hidden-text">삭제</span>
-                            </baseButton>
-                            <baseButton class="button-icon button-ghost">
-                              <svg-icon name="plus" class="svg-icon" />
-                              <span class="hidden-text">추가</span>
-                            </baseButton>
-                          </div>
+                              </div>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                        <div class="h-group">
+                          <baseButton class="button-icon button-danger" disabled>
+                            <svg-icon name="minus" class="svg-icon" />
+                            <span class="hidden-text">삭제</span>
+                          </baseButton>
+                          <baseButton class="button-icon button-ghost">
+                            <svg-icon name="plus" class="svg-icon" />
+                            <span class="hidden-text">추가</span>
+                          </baseButton>
                         </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="2">
-                        <div class="h-group w-full gap-2">
-                          <table class="w-full">
-                            <colgroup>
-                              <col width="120px">
-                              <col>
-                            </colgroup>
-                            <tbody>
-                            <tr>
-                              <td>Datetime</td>
-                              <td>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <div class="h-group w-full gap-2">
+                        <table class="w-full">
+                          <colgroup>
+                            <col width="120px">
+                            <col>
+                          </colgroup>
+                          <tbody>
+                          <tr>
+                            <td>Datetime</td>
+                            <td>
+                              <div class="h-group">
+                                <baseSelect></baseSelect>
+                                <DatePicker
+                                  class="date-picker"
+                                  v-model:modelValue="args.dateRange"
+                                  :type="args.rangeType">
+                                </DatePicker>
+                              </div>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Data Name</td>
+                            <td>
+                              <baseTextInput placeholder="정규 표현식을 입력하세요(50자이내)"></baseTextInput>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Type / Size</td>
+                            <td>
+                              <div class="v-group">
                                 <div class="h-group">
-                                  <baseSelect></baseSelect>
-                                  <DatePicker
-                                    class="date-picker"
-                                    v-model:modelValue="args.dateRange"
-                                    :type="args.rangeType">
-                                  </DatePicker>
+                                  <strong class="pr-2">(table)</strong>
+                                  <span class="color-font-gray-01">최소</span>
+                                  <baseTextInput class="w-[100px]"></baseTextInput>
+                                  <span>row</span>
+                                  <span class="px-2">~</span>
+                                  <span>최대</span>
+                                  <baseTextInput class="w-[100px]"></baseTextInput>
+                                  <span>row</span>
                                 </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Data Name</td>
-                              <td>
-                                <baseTextInput placeholder="정규 표현식을 입력하세요(50자이내)"></baseTextInput>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>Type / Size</td>
-                              <td>
-                                <div class="v-group">
-                                  <div class="h-group">
-                                    <strong class="pr-2">(table)</strong>
-                                    <span class="color-font-gray-01">최소</span>
-                                    <baseTextInput class="w-[100px]"></baseTextInput>
-                                    <span>row</span>
-                                    <span class="px-2">~</span>
-                                    <span>최대</span>
-                                    <baseTextInput class="w-[100px]"></baseTextInput>
-                                    <span>row</span>
-                                  </div>
-                                </div>
-                              </td>
-                            </tr>
-                            </tbody>
-                          </table>
-                          <div class="h-group">
-                            <baseButton class="button-icon button-danger">
-                              <svg-icon name="minus" class="svg-icon" />
-                              <span class="hidden-text">삭제</span>
-                            </baseButton>
-                            <baseButton class="button-icon button-ghost">
-                              <svg-icon name="plus" class="svg-icon" />
-                              <span class="hidden-text">추가</span>
-                            </baseButton>
-                          </div>
+                              </div>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                        <div class="h-group">
+                          <baseButton class="button-icon button-danger">
+                            <svg-icon name="minus" class="svg-icon" />
+                            <span class="hidden-text">삭제</span>
+                          </baseButton>
+                          <baseButton class="button-icon button-ghost">
+                            <svg-icon name="plus" class="svg-icon" />
+                            <span class="hidden-text">추가</span>
+                          </baseButton>
                         </div>
-                      </td>
-                    </tr>
+                      </div>
+                    </td>
+                  </tr>
                   </tbody>
                 </table>
               </div>
@@ -623,15 +584,18 @@
         </div>
       </template>
       <template v-slot:foot>
-        <baseButton class="button-normal button-lg">
+        <baseButton class="button-normal button-lg" @click="clickClose">
           <span class="button-text">취소</span>
         </baseButton>
         <div class="h-group ml-auto">
-          <baseButton class="button-ghost button-lg">
+          <baseButton class="button-ghost button-lg" v-show="step !== 1" @click="clickPrev">
             <span class="button-text">이전</span>
           </baseButton>
-          <baseButton class="button-primary button-lg">
+          <baseButton class="button-primary button-lg" v-show="step !== 4" @click="clickNext">
             <span class="button-text">다음</span>
+          </baseButton>
+          <baseButton class="button-primary button-lg" v-show="step === 4" @click="clickSave">
+            <span class="button-text">저장</span>
           </baseButton>
         </div>
       </template>
@@ -639,23 +603,13 @@
   </div>
 </template>
 <script lang="ts" setup>
-import {ref} from "@vue/reactivity";
-import {useRouter} from "vue-router";
-import DatePicker from "/components/common/date-picker/date-picker.vue";
-
-const meta: Meta<typeof DatePicker> = {
-  component: DatePicker,
-};
+import { ref } from "vue";
 
 definePageMeta({
-  layout: "default-tab-layout",
+  layout: "default-tab-layout"
 });
 
-const show1 = ref(false);
-const show2 = ref(false);
-const show3 = ref(false);
-const show4 = ref(false);
-const router = useRouter();
+const showModal = ref(false);
 
 let args = {
   date: "2023-11-22",
@@ -665,24 +619,50 @@ let args = {
   rangeType: "datetime"
 };
 
-function onClickOpen1() {
-  show1.value = !show1.value;
+function clickOpen() {
+  showModal.value = true;
+  step.value = 1;
 }
 
-function onClickOpen2() {
-  show2.value = !show2.value;
+// modal
+const step = ref(1);
+const obj = reactive({ step });
+
+const titles = ["저장소 유형 선택", "기본 정보 입력", "상세 정보 입력", "추가 정보 입력"];
+const title = computed(() => {
+  return titles.at(step.value - 1);
+});
+
+function addStep() {
+  obj.step++;
 }
 
-function onClickOpen3() {
-  show3.value = !show3.value;
+function subStep() {
+  obj.step--;
 }
 
-function onClickOpen4() {
-  show4.value = !show4.value;
+function clickClose() {
+  console.log("close");
+  showModal.value = false;
 }
 
-function onClickMain() {
-  router.push("/main");
+function clickPrev() {
+  console.log("prev");
+  if (obj.step > 1) {
+    subStep();
+  }
 }
 
+function clickNext() {
+  console.log("next");
+  if (obj.step < 4) {
+    addStep();
+  }
+}
+
+function clickSave() {
+  console.log("save");
+  alert("저장되었습니다.");
+  showModal.value = false;
+}
 </script>
