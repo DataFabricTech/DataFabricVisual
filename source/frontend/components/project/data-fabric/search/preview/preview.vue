@@ -4,7 +4,7 @@
       <h5 class="preview-title">
         <span class="hidden-text">데이터 상세 정보</span>
       </h5>
-      <baseButton class="button-icon button-sm" title="닫기">
+      <baseButton class="button-icon button-sm" title="닫기" @click="onClose">
         <svg-icon name="close" class="svg-icon" />
         <span class="hidden-text">닫기</span>
       </baseButton>
@@ -54,6 +54,14 @@
 </template>
 
 <script setup lang="ts">
+const emits = defineEmits<{
+  (e: "close"): void;
+}>();
+
+function onClose() {
+  emits("close");
+}
+
 const cardSimpleModel = reactive({
   name: "서초구 보호구역 정보",
   description: "어린이/노인/장애인 보호구역 정보",

@@ -7,9 +7,12 @@
   </div>
 
   <storage-filter-popup></storage-filter-popup>
+  <storage-registration></storage-registration>
 </template>
 
 <script lang="ts" setup>
+import StorageRegistration from "~/components/project/data-fabric/management/storage-registration.vue";
+
 definePageMeta({
   layout: "default-tab-layout"
 });
