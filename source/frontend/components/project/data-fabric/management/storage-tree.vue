@@ -31,7 +31,7 @@
     </div>
     <div class="search-tree">
       <div class="list list-lg">
-        <Tree :nodes="storageList" @node-click="nodeClick"></Tree>
+        <Tree :nodes="storageList" @node-click="nodeClick" class="w-full"></Tree>
       </div>
     </div>
     <BaseButton class="button-normal button-lg ml-auto" @click="openReg">
