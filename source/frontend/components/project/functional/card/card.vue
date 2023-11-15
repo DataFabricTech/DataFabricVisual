@@ -216,7 +216,7 @@ const computedStatus = (property: string) => {
 };
 computedStatus("downloadInfo.status");
 function preview() {
-  emit("preview", props.model.id);
+  emit("preview");
 }
 function download() {
   let downloadInfo = {
