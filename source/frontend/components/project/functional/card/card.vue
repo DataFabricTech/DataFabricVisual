@@ -286,7 +286,7 @@ const domainClass = (domain: string) => {
 };
 
 onMounted(() => {
-  if (props.isUpdate && props.model?.tags) {
+  if (props.model?.tags) {
     tagList.value = props.model.tags.join(",");
   }
 });

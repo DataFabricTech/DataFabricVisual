@@ -25,9 +25,11 @@
           </tr>
           <tr>
             <th scope="row">도메인</th>
-            <td>-</td>
+            <td v-if="props.isEdit"><base-text-input :placeholder="'입력해주세요'" /></td>
+            <td v-if="!props.isEdit">-</td>
             <th scope="row">갱신주기</th>
-            <td>-</td>
+            <td v-if="props.isEdit"><base-text-input :placeholder="'입력해주세요'" /></td>
+            <td v-if="!props.isEdit">-</td>
           </tr>
           <tr>
             <th scope="row">인코딩 정보</th>
@@ -78,13 +80,13 @@
         </tbody>
       </table>
     </div>
-    <h4 class="page-subtitle">프로파일링</h4>
-    <div class="table-row w-full">
-      <baseTableColumn :headers="profiling.headers" :rows="profiling.rows"></baseTableColumn>
-    </div>
     <h4 class="page-subtitle">샘플데이터</h4>
     <div class="table-row w-full">
       <baseTableColumn class="sample-data-table" :headers="sample.headers" :rows="sample.rows"></baseTableColumn>
+    </div>
+    <h4 class="page-subtitle">프로파일링</h4>
+    <div class="table-row w-full">
+      <baseTableColumn :headers="profiling.headers" :rows="profiling.rows"></baseTableColumn>
     </div>
   </article>
 </template>
@@ -95,6 +97,10 @@ import { AgGridVue } from "ag-grid-vue3";
 const props = defineProps({
   model: {
     type: Object
+  },
+  isEdit: {
+    type: Boolean,
+    default: false
   }
 });
 

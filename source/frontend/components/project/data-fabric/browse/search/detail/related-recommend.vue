@@ -118,7 +118,7 @@ const recomendModel = [
   },
   {
     name: "CCTV 설치 주소 및 위경도 정보",
-    description: " ",
+    description: "-",
     tags: ["CCTV", "주소", "GIS"],
     storageInfo: {
       storageType: "PostgreSQL"

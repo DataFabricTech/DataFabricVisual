@@ -11,20 +11,20 @@
           <span class="hidden-text">TODO: [개발] '데이터 모델 이름'이 들어가야 합니다.</span>
         </h3>
         <div class="h-group">
-          <BaseButton class="button-normal">
+          <BaseButton class="button-normal" v-if="!state.isEdit" @click="editDataModel">
             <svg-icon name="edit" class="svg-icon" />
             <span class="button-text">수정</span>
           </BaseButton>
-          <BaseButton class="button-primary">
+          <BaseButton class="button-primary" v-if="state.isEdit" @click="editDataModel">
             <svg-icon name="save" class="svg-icon" />
             <span class="button-text">저장</span>
           </BaseButton>
-          <BaseButton class="button-danger">
+          <BaseButton class="button-danger" v-if="state.isEdit">
             <span class="button-text">초기화</span>
           </BaseButton>
         </div>
       </div>
-      <Card class="card-lg w-full" :model="model" :show-connect-info="true"></Card>
+      <Card class="card-lg w-full" :model="model" :show-preview-btn="false" :is-update="state.isEdit"></Card>
     </section>
     <section class="l-section gap-[16px]">
       <div class="anchor">
@@ -33,7 +33,7 @@
         <a class="anchor-link" title="이동" href="#collect-info">수집 정보</a>
       </div>
       <div class="v-group gap-[48px] px-4 w-full">
-        <DataModelBaseInfo :model="model"></DataModelBaseInfo>
+        <DataModelBaseInfo :model="model" :is-edit="state.isEdit"></DataModelBaseInfo>
         <RelatedRecommend></RelatedRecommend>
         <RatingComment :review="model.ratingAndComments"></RatingComment>
       </div>
@@ -43,18 +43,26 @@
 </template>
 <script lang="ts" setup>
 const state = reactive({
-  isOpen: true
+  isOpen: true,
+  isEdit: false
 });
+
+function editDataModel() {
+  state.isEdit = !state.isEdit;
+}
+
 const model = {
   id: "uuid-123jasdf-123jasd8",
   name: "서초구 보호구역 정보",
-  description: "",
+  description: "어린이/노인/장애인 보호구역 정보",
   dataType: "STRUCTURED",
   dataFormat: "TABLE",
   status: "CONNECTED",
   storageInfo: {
     storageType: "HDFS"
   },
+  tags: ["보호구역", "지역정보"],
+  domain: "복지",
   systemMeta: [
     {
       key: "ROWS",
