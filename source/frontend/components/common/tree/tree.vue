@@ -25,6 +25,7 @@ export interface Node {
   isRoot?: boolean;
   title?: string;
   icon?: string;
+  data?: any;
 }
 
 export interface Nodes {
@@ -150,7 +151,7 @@ function nodeUnchecked(e: any) {
 
 function nodeFocus(e: any) {
   console.log("nodeFocus", e);
-  emit("node-click", e.id);
+  emit("node-click", e.data);
 }
 
 onMounted(() => {
