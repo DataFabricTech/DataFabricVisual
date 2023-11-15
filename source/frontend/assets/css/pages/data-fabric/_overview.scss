@@ -5,6 +5,12 @@
   padding: $spacing-8;
   background-color: $white;
 
+  .list {
+    justify-content: flex-start;
+    height: 100%;
+    overflow-y: auto;
+  }
+
   .tree {
     padding-top: $spacing-4;
 

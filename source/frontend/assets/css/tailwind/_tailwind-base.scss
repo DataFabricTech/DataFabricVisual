@@ -62,7 +62,7 @@
     list-style: none;
   }
 
-  button[type="button"], button[type="submit"], a[href], input[type="text"], input[type="radio"], input[type="checkbox"],label, textarea {
+  button[type="button"], button[type="submit"], a[href], input[type="text"], input[type="radio"], input[type="checkbox"], label, textarea {
     &:disabled,
     &:disabled:hover,
     &:disabled:focus,
@@ -71,5 +71,9 @@
       opacity: 0.25;
       cursor: not-allowed;
     }
+  }
+
+  strong {
+    font-weight: 400;
   }
 }

@@ -30,7 +30,7 @@
       <baseTextInput v-model:model-value="storage.filter.name" placeholder="연결정보 이름을 입력하세요"></baseTextInput>
     </div>
     <div class="search-tree">
-      <div class="list list-lg h-full justify-start" >
+      <div class="list list-lg" >
         <!--<ul class="list-list h-full">
           <li class="list-item" v-for="(item, key) in storageList" :key="key">
             <button class="list-button" v-if="item.show">
