@@ -52,15 +52,19 @@
               <svg-icon name="thumbnail-view" class="svg-icon"></svg-icon>
             </BaseRadio>
           </div>
-          <BaseSelect class="select-lg"></BaseSelect>
-          <BaseSelect class="select-lg"></BaseSelect>
+          <BaseSelect
+            :data="sortContents"
+            class="select-lg"></BaseSelect>
+          <BaseSelect
+            :data="viewContentNum"
+            class="select-lg"></BaseSelect>
         </div>
       </div>
       <div class="l-preview">
         <div class="preview-main">
           <article class="category-article">
             <div class="category-subject">
-              <h4 class="category-title" id="data-model">데이터모델 (6)</h4>
+              <h4 class="category-title" id="data-model">데이터모델 (4)</h4>
             </div>
             <ul class="card-list">
               <li class="card-item" v-for="card in cardList">
@@ -71,7 +75,7 @@
           </article>
           <article class="category-article">
             <div class="category-subject">
-              <h4 class="category-title" id="data-model">데이터모델 (6)</h4>
+              <h4 class="category-title" id="data-model">데이터모델 (0)</h4>
             </div>
             <div class="no-result">
               <storng class="no-result-title">검색 결과가 없습니다.</storng>
@@ -147,8 +151,19 @@ let { keyword } = storeToRefs(store);
 const state = reactive({
   isOpen: true,
   isPreview: false,
-  selectone: "수정일순"
 });
+
+const sortContents = reactive([
+  {key: "수정일 최근순"},
+  {key:"두번째"},
+  {key: "세번째"}
+]);
+const viewContentNum = reactive([
+  {key: "10개씩 보기"},
+  {key:"20개씩 보기"},
+  {key: "30개씩 보기"}
+]);
+
 
 onMounted(() => {
   const keyValue = useRoute().query;
