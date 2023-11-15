@@ -96,8 +96,11 @@ const gridOptions = {
 };
 
 const route = useRoute();
-const queryId = route.query.id;
-
+watch(() => route.query.id,
+  (nValue) => {
+    initData(nValue);
+  }
+)
 const storage: {
   list: Array<any>;
   currStorage: Object;
@@ -105,12 +108,15 @@ const storage: {
   list: [],
   currStorage: {}
 });
-initData();
-function initData() {
+initData(route.query.id);
+const router = useRouter();
+function initData(value) {
   storage.list = StorageSample.tables;
-  storage.currStorage = _find(storage.list, { id: queryId });
+  storage.currStorage = _find(storage.list, { id: value });
   if (!storage.currStorage) {
     alert("존재하지 않는 페이지입니다.");
+    // router.back();
+    return;
   }
 }
 function onGridReady(params) {

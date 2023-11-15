@@ -152,8 +152,7 @@ function nodeFocus(e: any) {
   console.log("nodeFocus", e);
   emit("node-click", e.data);
 }
-
-onMounted(() => {
+function setData() {
   console.log("tree: onMounted - isConfigMode:", props.isConfigMode);
 
   const isConfigMode = props.isConfigMode;
@@ -176,7 +175,18 @@ onMounted(() => {
       }
     }
   }
+}
+onMounted(() => {
+  setData();
 });
+
+watch(
+  () => props.nodes,
+  () => {
+    setData();
+  }
+);
+
 </script>
 
 <template>
