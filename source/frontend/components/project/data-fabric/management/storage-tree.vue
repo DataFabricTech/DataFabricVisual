@@ -30,11 +30,15 @@
       <baseTextInput v-model:model-value="storage.filter.name" placeholder="연결정보 이름을 입력하세요"></baseTextInput>
     </div>
     <div class="search-tree">
-      <template v-for="(item, key) in storageList" :key="key">
-        <BaseButton class="button button-lg" v-if="item.show">
-          <span class="button-text">{{ item.name }}</span>
-        </BaseButton>
-      </template>
+      <div class="list list-lg h-full">
+        <ul class="list-list h-full">
+          <li class="list-item" v-for="(item, key) in storageList" :key="key">
+            <button class="list-button" v-if="item.show">
+              <span class="button-text">{{ item.name }}</span>
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
     <BaseButton class="button-normal button-lg ml-auto">
       <span class="button-text">연결정보 등록</span>
@@ -43,8 +47,8 @@
 </template>
 <script lang="ts" setup>
 import { useNuxtApp } from "nuxt/app";
-import type { StorageSortContextItem } from "~/components/project/data-fabric/storage/overview/storage-overview";
-import { useStorageStore } from "~/store/data-fabric/storage/storage";
+import type { StorageSortContextItem } from "~/components/project/data-fabric/management/overview/storage-overview";
+import { useStorageStore } from "~/store/data-fabric/management/storage";
 import { storeToRefs } from "pinia";
 import { vOnClickOutside } from "@vueuse/components";
 

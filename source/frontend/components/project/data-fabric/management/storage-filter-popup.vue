@@ -45,7 +45,7 @@
   </modal>
 </template>
 <script lang="ts" setup>
-import { useStorageStore } from "~/store/data-fabric/storage/storage";
+import { useStorageStore } from "~/store/data-fabric/management/storage";
 import type { BaseCheckBoxListItem } from "~/components/base/checkbox-list";
 
 const store = useStorageStore();

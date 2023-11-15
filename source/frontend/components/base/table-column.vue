@@ -5,45 +5,32 @@
         Description Column
       </caption>
       <thead>
-      <tr>
-        <!-- 세로 => col, 가로 => row -->
-        <th scope="col">HEAD</th>
-        <th scope="col">HEAD2</th>
-        <th scope="col">HEAD3</th>
-        <th scope="col">HEAD4</th>
-      </tr>
+        <tr>
+          <th v-for="header in props.headers" :key="header" scope="col">{{ header }}</th>
+        </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>Description1-1</td>
-        <td>Description1-2</td>
-        <td>Description1-3</td>
-        <td>Description1-4</td>
-      </tr>
-      <tr>
-        <td>Description-1</td>
-        <td>Description-2</td>
-        <td>Description-3</td>
-        <td>Description-4</td>
-      </tr>
-      <tr>
-        <td>Description-1</td>
-        <td>Description-2</td>
-        <td>Description-3</td>
-        <td>Description-4</td>
-      </tr>
-      <tr>
-        <td>Description-1</td>
-        <td>Description-2</td>
-        <td>Description-3</td>
-        <td>Description-4</td>
-      </tr>
+        <tr v-for="rows in props.rows" :key="rows">
+          <td v-for="col in rows">{{ col }}</td>
+        </tr>
       </tbody>
     </table>
   </div>
 </template>
 
-
 <script setup lang="ts">
-
+const props = defineProps({
+  headers: {
+    type: Array,
+    default: () => ["Head1", "Head2"]
+  },
+  rows: {
+    type: Array,
+    default: () => [
+      [1, 2],
+      [3, 4],
+      [5, 6]
+    ]
+  }
+});
 </script>

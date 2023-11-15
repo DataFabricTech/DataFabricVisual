@@ -20,14 +20,14 @@
             <div class="form-content">
               <BaseSelect class="select-lg" :data="props.dateData" @select="setDateData"></BaseSelect>
               <DatePicker
-                class="date-picker"
+                class="date-picker date-picker-lg"
                 v-model="date.range"
                 :type="'date'"
                 :disabled="date.disabled"
                 @update:modelValue="updateDate"
               >
               </DatePicker>
-              <div class="toggle">
+              <div class="toggle toggle-lg">
                 <BaseRadio
                   name="toggleDate"
                   id="toggle-today"
@@ -175,8 +175,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, defineEmits, defineProps, Ref } from "vue";
-import dayjs from "dayjs";
+import { ref, reactive, onMounted, defineEmits, defineProps } from "vue";
+import dayjs, { Dayjs } from "dayjs";
 const FORMAT = "YYYY-MM-DD";
 const TODAY = "TODAY";
 const ALL = "ALL";
@@ -293,27 +293,23 @@ const date: {
   disabled: false,
   default: THREE_MONTH
 });
-const range: Ref<Array<string>> = ref([]);
+const range: ref<Array<string>> = ref([]);
 const detailSearch: {
-  DATA_NAME: string;
+  KEYWORD_TYPE: string;
+  DATE_TYPE: string;
+  CONNECTOR_NAME: string;
+  STORAGE_TYPE: string;
   DATA_TYPE: string;
   DATA_FORMAT: string;
-  CATEGORY: string;
-  TAG: string;
-  STORAGE_TYPE: string;
-  CONNECTOR_NAME: string;
-  CREATOR: string;
   START_DATE: string | null;
   END_DATE: string | null;
 } = reactive({
-  DATA_NAME: "",
+  KEYWORD_TYPE: "",
+  DATE_TYPE: "",
+  CONNECTOR_NAME: "",
+  STORAGE_TYPE: "",
   DATA_TYPE: "",
   DATA_FORMAT: "",
-  CATEGORY: "",
-  TAG: "",
-  STORAGE_TYPE: "",
-  CONNECTOR_NAME: "",
-  CREATOR: "",
   START_DATE: "",
   END_DATE: ""
 });
@@ -336,7 +332,7 @@ const tags: {
  * @param data
  */
 function setKeywordData(data: string) {
-  detailSearch.DATA_NAME = data;
+  detailSearch.KEYWORD_TYPE = data;
 }
 
 /**
@@ -410,7 +406,7 @@ function selectConnection(data: string) {
  * @param data
  */
 function selectConnectionType(data: string) {
-  console.log(data);
+  detailSearch.STORAGE_TYPE = data;
 }
 /**
  * 도메인 선택
@@ -433,7 +429,7 @@ function selectModelTypeData(value: any) {
  * @param value
  */
 function selectModelFormData(value: any) {
-  console.log(value);
+  detailSearch.DATA_TYPE = value;
 }
 
 /**
@@ -441,7 +437,7 @@ function selectModelFormData(value: any) {
  * @param value
  */
 function selectModelFormatData(value: any) {
-  console.log(value);
+  detailSearch.DATA_FORMAT = value;
 }
 
 /**
@@ -449,7 +445,6 @@ function selectModelFormatData(value: any) {
  */
 function search() {
   let search = { keyword: keyword.value, detailSearch };
-
   emit("search", search);
 }
 
@@ -492,11 +487,13 @@ function setModelFormatTags(data: []) {
  * 데이트 포맷
  * @param date
  */
-const formatDate = (date: Date): string => {
+const formatDate = (date: Date | Dayjs): string => {
   return dayjs(date).format(FORMAT);
 };
+onMounted(async () => {
+  let url = "/portal/v1/searchItems";
+  let searchItems = await $fetch(url);
 
-onMounted(() => {
   let today = new Date();
   let threeMonthsAgo = dayjs(today).subtract(3, "months");
   date.range.push(formatDate(threeMonthsAgo));

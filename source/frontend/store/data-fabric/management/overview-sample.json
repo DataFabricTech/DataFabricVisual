@@ -1,0 +1,413 @@
+{
+  "storageTypes": [
+    {
+      "id": "storage-type-iris",
+      "name": "IRIS",
+      "value": "IRIS",
+      "checked": false
+    },
+    {
+      "id": "storage-type-postgresql",
+      "value": "PostgreSQL",
+      "name": "PostgreSQL",
+      "checked": false
+    },
+    {
+      "id": "storage-type-mysql",
+      "name": "MySQL",
+      "value": "MySQL",
+      "checked": false
+    },
+    {
+      "id": "storage-type-oracle",
+      "value": "Oracle",
+      "name": "Oracle",
+      "checked": false
+    },
+    {
+      "id": "storage-type-minio",
+      "value": "MinIO",
+      "name": "MinIO",
+      "checked": false
+    },
+    {
+      "id": "storage-type-mariadb",
+      "name": "MariaDB",
+      "value": "MariaDB",
+      "checked": false
+    },
+    {
+      "id": "storage-type-hdfs",
+      "name": "HDFS",
+      "value": "HDFS",
+      "checked": false
+    }
+  ],
+  "storages": [
+    {
+      "id": "storage-id-01",
+      "name": "fabric 개인 Minio 저장소",
+      "storageType": "MinIO",
+      "status": "CONNECTED",
+      "crdDate": "2023-11-14",
+      "show": true
+    }
+  ],
+
+  "nStorages": [
+    {
+      "id": "storage-id-01",
+      "name": "fabric 개인 Minio 저장소",
+      "storageType": "MinIO",
+      "status": "CONNECTED",
+      "crdDate": "2023-11-14",
+      "show": true
+    },
+    {
+      "id": "storage-id-02",
+      "name": "서초 데이터",
+      "storageType": "PostgreSQL",
+      "status": "CONNECTED",
+      "crdDate": "2023-11-15",
+      "show": true
+    }
+  ],
+  "storageEvent": [
+    {
+      "time": {
+        "strDateTime": "2023-11-11 12:11:11",
+        "utcTime": 1609459200000
+      },
+      "id": "storage-id-01",
+      "theme": "error",
+      "name": "fabric 개인 Minio 저장소",
+      "eventType": "DISCONNECTED",
+      "description": "연결정보 \"fabric 개인 Minio 저장소\"가 변동되어 데이터를 불러올 수 없습니다."
+    },
+    {
+      "time": {
+        "strDateTime": "2023-11-11 12:11:11",
+        "utcTime": 1609459200000
+      },
+      "id": "storage-id-03",
+      "name": "fabric 개인 Minio 저장소",
+      "theme": "error",
+      "eventType": "DISCONNECTED",
+      "description": "연결정보 \"fabric 개인 Minio 저장소\"이 데이터를 불러오는데 실패하였습니다."
+    }
+  ],
+  "storageOverview": {
+    "storageResponseTime": [
+      {
+        "id": "storage-id-01",
+        "name": "fabric 개인 Minio 저장소",
+        "responseTime": 0.1
+      }
+    ],
+    "storageTypeCount": {
+      "series": [
+        {
+          "data": [
+            {
+              "name": "MinIO",
+              "y": 400
+            }
+          ]
+        }
+      ]
+    },
+    "storageStatusCount": {
+      "series": [
+        {
+          "data": [
+            {
+              "name": "CONNECTED",
+              "y": 1000
+            }
+          ]
+        }
+      ]
+    },
+    "storageStatistics": {
+      "categories": ["fabric 개인 Minio 저장소"],
+      "series": [
+        {
+          "name": "AccessCount",
+          "data": [100]
+        }
+      ]
+    },
+    "storageDataCount": {
+      "categories": ["fabric 개인 Minio 저장소"],
+      "series": [
+        {
+          "name": "Total",
+          "data": [200]
+        },
+        {
+          "name": "Registered",
+          "data": [180]
+        }
+      ]
+    },
+    "history": {
+      "colDefs": [
+        {
+          "headerName": "시간",
+          "field": "time"
+        },
+        {
+          "headerName": "아이디",
+          "field": "id"
+        },
+        {
+          "headerName": "이름",
+          "field": "name"
+        },
+        {
+          "headerName": "사용자",
+          "field": "user"
+        },
+        {
+          "headerName": "종류",
+          "field": "cmd"
+        },
+        {
+          "headerName": "내용",
+          "field": "modifiedInfo"
+        }
+      ],
+      "rowData": [
+        {
+          "time": "2021-01-01 00:00:00.000",
+          "id": "storage-id01",
+          "name": "fabric 개인 Minio 저장소",
+          "user": "admin",
+          "cmd": "CREATE",
+          "modifiedInfo": ""
+        },
+        {
+          "time": "2021-01-01 00:00:00.000",
+          "id": "storage-id01",
+          "name": "fabric 개인 Minio 저장소",
+          "user": "admin",
+          "cmd": "UPDATE",
+          "modifiedInfo": "additionalOptions.TimeZone=Asia/Seoul"
+        }
+      ]
+    },
+    "event": {
+      "colDefs": [
+        {
+          "headerName": "연결정보 이름",
+          "field": "name"
+        },
+        {
+          "headerName": "저장소 유형",
+          "field": "type"
+        },
+        {
+          "headerName": "저장소 상태",
+          "field": "status"
+        },
+        {
+          "headerName": "소유자",
+          "field": "id"
+        },
+        {
+          "headerName": "등록일시",
+          "field": "createDate"
+        },
+        {
+          "headerName": "수정일시",
+          "field": "updateDate"
+        },
+        {
+          "headerName": "내용",
+          "field": "description"
+        }
+      ],
+      "rowData": [
+        {
+          "id": "storage-id01",
+          "name": "fabric 개인 Minio 저장소",
+          "type": "MinIO",
+          "status": "CONNECTED",
+          "createDate": "2023-11-14 00:00:00.000",
+          "updateDate": "2023-11-14 00:00:00.000",
+          "description": "저장소 등록"
+        }
+      ]
+    }
+  },
+  "nStorageOverview": {
+    "storageResponseTime": [
+      {
+        "id": "storage-id-01",
+        "name": "fabric 개인 Minio 저장소",
+        "responseTime": 0.1
+      },
+      {
+        "id": "storage-id-01",
+        "name": "서초 데이터",
+        "responseTime": 0.1
+      }
+    ],
+    "storageTypeCount": {
+      "series": [
+        {
+          "data": [
+            {
+              "name": "MinIO",
+              "y": 40
+            },
+            {
+              "name": "PostgreSQL",
+              "y": 10
+            }
+          ]
+        }
+      ]
+    },
+    "storageStatusCount": {
+      "series": [
+        {
+          "data": [
+            {
+              "name": "CONNECTED",
+              "y": 1000
+            }
+          ]
+        }
+      ]
+    },
+    "storageStatistics": {
+      "categories": ["fabric 개인 Minio 저장소", "서초 데이터"],
+      "series": [
+        {
+          "name": "AccessCount",
+          "data": [100, 10]
+        }
+      ]
+    },
+    "storageDataCount": {
+      "categories": ["fabric 개인 Minio 저장소", "서초 데이터"],
+      "series": [
+        {
+          "name": "Total",
+          "data": [200, 300]
+        },
+        {
+          "name": "Registered",
+          "data": [180, 100]
+        }
+      ]
+    },
+    "history": {
+      "colDefs": [
+        {
+          "headerName": "시간",
+          "field": "time"
+        },
+        {
+          "headerName": "아이디",
+          "field": "id"
+        },
+        {
+          "headerName": "이름",
+          "field": "name"
+        },
+        {
+          "headerName": "사용자",
+          "field": "user"
+        },
+        {
+          "headerName": "종류",
+          "field": "cmd"
+        },
+        {
+          "headerName": "내용",
+          "field": "modifiedInfo"
+        }
+      ],
+      "rowData": [
+        {
+          "time": "2021-01-01 00:00:00.000",
+          "id": "storage-id01",
+          "name": "서초 데이터",
+          "user": "admin",
+          "cmd": "CREATE",
+          "modifiedInfo": ""
+        },
+        {
+          "time": "2021-01-01 00:00:00.000",
+          "id": "storage-id01",
+          "name": "fabric 개인 Minio 저장소",
+          "user": "admin",
+          "cmd": "CREATE",
+          "modifiedInfo": ""
+        },
+        {
+          "time": "2021-01-01 00:00:00.000",
+          "id": "storage-id01",
+          "name": "fabric 개인 Minio 저장소",
+          "user": "admin",
+          "cmd": "UPDATE",
+          "modifiedInfo": "additionalOptions.TimeZone=Asia/Seoul"
+        }
+      ]
+    },
+    "event": {
+      "colDefs": [
+        {
+          "headerName": "연결정보 이름",
+          "field": "name"
+        },
+        {
+          "headerName": "저장소 유형",
+          "field": "type"
+        },
+        {
+          "headerName": "저장소 상태",
+          "field": "status"
+        },
+        {
+          "headerName": "소유자",
+          "field": "id"
+        },
+        {
+          "headerName": "등록일시",
+          "field": "createDate"
+        },
+        {
+          "headerName": "수정일시",
+          "field": "updateDate"
+        },
+        {
+          "headerName": "내용",
+          "field": "description"
+        }
+      ],
+      "rowData": [
+        {
+          "id": "storage-id00",
+          "name": "서초 데이터",
+          "type": "PostgreSQL",
+          "status": "CONNECTED",
+          "createDate": "2023-11-14 00:00:00.000",
+          "updateDate": "2023-11-14 00:00:00.000",
+          "description": "저장소 등록"
+        },
+        {
+          "id": "storage-id01",
+          "name": "fabric 개인 Minio 저장소",
+          "type": "MinIO",
+          "status": "CONNECTED",
+          "createDate": "2023-11-14 00:00:00.000",
+          "updateDate": "2023-11-14 00:00:00.000",
+          "description": "저장소 등록"
+        }
+      ]
+    }
+  }
+}

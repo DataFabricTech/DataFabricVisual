@@ -57,6 +57,10 @@
   padding: $spacing-24;
   gap: $spacing-16;
   width: 100%;
+
+  &:empty {
+    padding: 0;
+  }
 }
 
 .data-search {
