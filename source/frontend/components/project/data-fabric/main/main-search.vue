@@ -27,7 +27,7 @@ let {
 } = storeToRefs(store);
 
 // 최근 검색어 res값 받는 객체선언
-let recentTagList = (['cctv위치', '불법 주정차', '서초구', '보호구역']);
+let recentTagList = (['CCTV위치', '불법 주정차', '서초구', '보호구역']);
 
 // 최근검색어 닫기를 눌렀을 때 발생하는 함수
 // TODO : 최근검색어 삭제 API가 없는 경우로, 본 개발에 수정될 예정
