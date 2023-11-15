@@ -25,11 +25,11 @@
           </tr>
           <tr>
             <th scope="row">도메인</th>
-            <td v-if="props.isEdit"><base-text-input :placeholder="'입력해주세요'" /></td>
-            <td v-if="!props.isEdit">-</td>
+            <td v-if="props.isEdit"><base-text-input v-model="keyword" :placeholder="'입력해주세요'" /></td>
+            <td v-if="!props.isEdit">{{ keyword }}</td>
             <th scope="row">갱신주기</th>
-            <td v-if="props.isEdit"><base-text-input :placeholder="'입력해주세요'" /></td>
-            <td v-if="!props.isEdit">-</td>
+            <td v-if="props.isEdit"><base-text-input v-model="renewal" :placeholder="'입력해주세요'" /></td>
+            <td v-if="!props.isEdit">{{ renewal }}</td>
           </tr>
           <tr>
             <th scope="row">인코딩 정보</th>
@@ -80,20 +80,35 @@
         </tbody>
       </table>
     </div>
-    <h4 class="page-subtitle">샘플데이터</h4>
+    <div class="category-subject is-vertical">
+      <h3 class="category-title color-primary">샘플데이ㅣ</h3>
+      <p class="category-description">데이터 모델 상세 설명 영역 (작성된 값이 있는 경우 출력 되는 영역임)</p>
+    </div>
     <div class="table-row w-full">
       <baseTableColumn class="sample-data-table" :headers="sample.headers" :rows="sample.rows"></baseTableColumn>
     </div>
-    <h4 class="page-subtitle">프로파일링</h4>
+    <div class="category-subject is-vertical">
+      <h3 class="category-title color-primary">프로파일링</h3>
+      <p class="category-description">데이터 모델 상세 설명 영역 (작성된 값이 있는 경우 출력 되는 영역임)</p>
+    </div>
     <div class="table-row w-full">
       <baseTableColumn :headers="profiling.headers" :rows="profiling.rows"></baseTableColumn>
     </div>
+    <div class="category-subject is-vertical">
+      <h3 class="category-title color-primary">Knowledge Graph</h3>
+      <!--      <p class="category-description">데이터 모델 상세 설명 영역 (작성된 값이 있는 경우 출력 되는 영역임)</p>-->
+      <img src="@/assets/images/sample-graph.png" :width="1100" style="margin-left: auto; margin-right: auto" />
+    </div>
+    <!--    <h4 class="page-subtitle">연관데이터 모델</h4>-->
+    <!--    <div class="no-result h-[200px]">-->
+    <!--      <storng class="no-result-title">표시할 데이터 모델이 없습니다.</storng>-->
+    <!--    </div>-->
   </article>
 </template>
 
 <script lang="ts" setup>
-import { AgGridVue } from "ag-grid-vue3";
-
+const keyword = ref("-");
+const renewal = ref("-");
 const props = defineProps({
   model: {
     type: Object
