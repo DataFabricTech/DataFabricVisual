@@ -50,4 +50,11 @@
     </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+
+
+const router = useRouter();
+function onClickManagement() {
+  router.push({ path: "/data-fabric/management" });
+}
+</script>

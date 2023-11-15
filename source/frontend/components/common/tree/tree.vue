@@ -2,7 +2,7 @@
 import { onMounted, ref } from "vue";
 import treeview from "vue3-treeview";
 import "vue3-treeview/dist/style.css";
-import { defineEmits } from "vue/dist/vue";
+import { defineEmits } from "vue";
 
 export interface State {
   opened: boolean;
@@ -153,8 +153,7 @@ function nodeFocus(e: any) {
   console.log("nodeFocus", e);
   emit("node-click", e.data);
 }
-
-onMounted(() => {
+function setData() {
   console.log("tree: onMounted - isConfigMode:", props.isConfigMode);
 
   const isConfigMode = props.isConfigMode;
@@ -177,7 +176,18 @@ onMounted(() => {
       }
     }
   }
+}
+onMounted(() => {
+  setData();
 });
+
+watch(
+  () => props.nodes,
+  () => {
+    setData();
+  }
+);
+
 </script>
 
 <template>
