@@ -1,10 +1,10 @@
 <template>
   <div class="l-common">
     <h2 class="hidden-text">데이터모델 상세</h2>
-    <BaseNotification theme="warning">
-      <strong class="notification-title"> 연결정보가 변동되어 데이터모델 정보 를 다운로드 받을 수 없습니다. </strong>
-      <a href="#" class="notification-link"> 바로가기 </a>
-    </BaseNotification>
+    <!--    <BaseNotification theme="warning">-->
+    <!--      <strong class="notification-title"> 연결정보가 변동되어 데이터모델 정보 를 다운로드 받을 수 없습니다. </strong>-->
+    <!--      <a href="#" class="notification-link"> 바로가기 </a>-->
+    <!--    </BaseNotification>-->
     <section class="l-section">
       <div class="page-subject border-none">
         <h3 class="page-title">
