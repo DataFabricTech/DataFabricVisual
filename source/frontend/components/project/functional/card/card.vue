@@ -114,34 +114,11 @@
 <script setup lang="ts">
 import { computed, onMounted, defineEmits } from "vue";
 import { ref } from "@vue/reactivity";
-
-/** TODO: 모델 타입 인터페이스 구현 */
-interface ModelType {
-  id: string;
-  name: string;
-  description: string;
-  tags: string[];
-  storageInfo: {
-    storageType: string;
-  };
-  domain: string;
-  updatedAt: string;
-  creator: string;
-  statInfo: {
-    access: number;
-    rating: number;
-    favorite: number;
-    download: number;
-  };
-  downloadInfo: {
-    status: number;
-    uri: string;
-  };
-}
+import type { DataModel } from "~/components/project/functional/card/dataModel";
 
 const props = defineProps({
   model: {
-    type: Object as () => ModelType,
+    type: Object as () => DataModel,
     default: () => ({
       id: "111",
       name: "불법 주정차 구간 데이터",
