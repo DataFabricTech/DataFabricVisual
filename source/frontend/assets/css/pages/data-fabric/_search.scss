@@ -8,11 +8,6 @@
     @include flex-standard($horizontal: flex-start, $direction: column);
     gap: $spacing-36;
     flex-grow: 1;
-    //width: 100%;
-
-    //&:only-child {
-    //  width: 100%;
-    //}
   }
 
   &-header {
@@ -49,16 +44,16 @@
       margin-top: $spacing-12;
     }
 
-    .table-row, .table-col {
-      width: 100%;
-      max-width: 100%;
-      overflow: auto;
+    .table-col {
       max-height: 350px;
+    }
+
+    .table-row {
+      width: 100%;
 
       table {
         width: 100%;
-        max-width: 100%;
-        table-layout:fixed;
+        table-layout: fixed;
 
         th{
           width: 150px;
