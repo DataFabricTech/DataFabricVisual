@@ -1,29 +1,13 @@
 <template>
   <div :class="toggle === false ? 'select' : 'select is-open'">
     <div class="select-selector" role="combobox" aria-expanded="false" aria-haspopup="true" @click="controlToggle">
-      <button class="select-selector-button" type="button" title="열기" v-if="!(props.isSearch && textInputMode)">
+      <button class="select-selector-button" type="button" title="열기">
         <slot name="title">
           <span class="select-selector-title">{{ setTitle }}</span>
         </slot>
         <span class="hidden-text">선택</span>
         <svg-icon class="svg-icon select-selector-icon" name="chevron-down-medium" aria-hidden="true"></svg-icon>
       </button>
-      <div class="select-selector-input" v-if="props.isSearch && textInputMode" @click.stop="openAllToggle">
-        <baseTextInput
-          class="text-input"
-          type="text"
-          placeholder="검색어 입력"
-          v-model="keyword"
-          autofocus
-        ></baseTextInput>
-      </div>
-      <baseButton
-        class="select-selector-close-button"
-        v-if="props.isSearch && textInputMode"
-        @click.stop="controlToggle"
-      >
-        <svg-icon class="svg-icon" name="chevron-up-medium" aria-hidden="true"></svg-icon>
-      </baseButton>
     </div>
     <div class="select-container" id="select-01">
       <ul class="select-container-list" role="listbox">
@@ -115,13 +99,6 @@ const props = defineProps({
     default: false
   },
   /**
-   * 검색용 select
-   */
-  isSearch: {
-    type: Boolean,
-    default: false
-  },
-  /**
    * 체크박스일 때 타이틀을 지정해줘야 하는 경우
    */
   defaultTitle: {
@@ -141,28 +118,12 @@ const select = ref(null);
 const checkList: any = ref([]);
 const nameList: any = ref([]);
 const isAllCheck = ref(false);
-const keyword = ref<string | null>(null);
-const textInputMode = ref(false);
 
 /**
  * 토글  open - close
  */
 function controlToggle() {
   toggle.value = !toggle.value;
-  if (props.isSearch) {
-    controlTextInput();
-  }
-}
-
-/**
- * 검색창 open - close
- */
-function controlTextInput() {
-  textInputMode.value = !textInputMode.value;
-}
-function openAllToggle() {
-  toggle.value = true;
-  textInputMode.value = true;
 }
 
 /**
@@ -171,12 +132,6 @@ function openAllToggle() {
 const setTitle = computed(() => {
   if (props.isCheck) {
     return setCheckTitle.value;
-  }
-  if (props.isSearch) {
-    if (keyword.value !== null) {
-      return keyword.value;
-    }
-    return SELECT;
   }
   return setSelectTitle.value;
 });
@@ -234,34 +189,14 @@ watch(
 );
 
 /**
- * 검색 있는 셀렉트 박스일 경우
- * keyword 감지해서 셀렉트박스 데이터 변경
- */
-watch(
-  () => keyword.value,
-  (newVal: string | null, oldVal: string | null) => {
-    if (newVal != oldVal) {
-      selectData.value = props.data.filter((item) => item[props.dataKey].includes(keyword.value));
-    }
-  }
-);
-
-/**
  * 검색 있는 셀렉트 박스일 경우 || 그 외 셀렉트 박스일 경우
  * @param item
  */
 function clickItem(item: Select) {
-  if (props.isSearch) {
-    keyword.value = item[props.dataKey];
-  } else {
-    select.value = item[props.dataKey];
-  }
+  select.value = item[props.dataKey];
 
   if (toggle.value) {
     controlToggle();
-  }
-  if (props.isSearch) {
-    textInputMode.value = false;
   }
   emit("select", item[props.dataValue]);
 }
@@ -325,18 +260,9 @@ onMounted(() => {
   /**
    * 일반 셀렉트 박스 일 경우 title 및 emit 처리
    */
-  if (!props.isSearch && !props.isCheck) {
+  if (!props.isCheck) {
     let defaultItem: Select | undefined =
       props.defaultValue == null ? props.data[0] : findDataValue(props.defaultValue);
-    if (defaultItem !== undefined) {
-      clickItem(defaultItem);
-    }
-  }
-  /**
-   * 검색 셀렉트 박스일 경우 디폴트 값이 있을때
-   */
-  if (props.isSearch && props.defaultValue) {
-    let defaultItem: Select | undefined = findDataValue(props.defaultValue);
     if (defaultItem !== undefined) {
       clickItem(defaultItem);
     }
