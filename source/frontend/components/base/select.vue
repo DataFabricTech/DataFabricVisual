@@ -59,21 +59,18 @@
 </template>
 
 <script setup lang="ts">
+import type { Select } from "~/components/base/select";
 import { ref, computed, defineProps, defineEmits, onMounted } from "vue";
 const SELECT = "선택";
 const MULTI_SELECT = "다중 선택";
 const ALL = "전체";
 
-interface data {
-  [key: string]: any;
-  value: any;
-}
 const props = defineProps({
   /**
    * select 리스트 데이터 값
    */
   data: {
-    type: Array as () => Array<data>,
+    type: Array as () => Array<Select>,
     default: [
       {
         key: "선택1",
@@ -138,7 +135,7 @@ const emit = defineEmits<{
 }>();
 
 const checkBoxId = ref(Math.random().toString());
-const selectData = ref<data[]>([]);
+const selectData = ref<Select[]>([]);
 const toggle = ref(false);
 const select = ref(null);
 const checkList: any = ref([]);
@@ -206,7 +203,7 @@ const setCheckTitle = computed(() => {
       case 0:
         return props.defaultTitle;
       case 1:
-        let item: data | undefined = findDataValue(checkList.value[0]);
+        let item: Select | undefined = findDataValue(checkList.value[0]);
         return item != undefined ? item[props.dataKey] : null;
       default:
         return MULTI_SELECT + `(${length})`;
@@ -231,7 +228,7 @@ watch(
  * 검색 있는 셀렉트 박스일 경우 || 그 외 셀렉트 박스일 경우
  * @param item
  */
-function clickItem(item: data) {
+function clickItem(item: Select) {
   if (props.isSearch) {
     keyword.value = item[props.dataKey];
   } else {
@@ -265,7 +262,7 @@ function checkAll(checked: boolean) {
  * @param item
  * @param index
  */
-function checkData(checked: boolean, item: data, index: number) {
+function checkData(checked: boolean, item: Select, index: number) {
   if (checked) {
     checkList.value.push(item[props.dataValue]);
     nameList.value.push(item[props.dataValue]);
@@ -284,7 +281,7 @@ function checkData(checked: boolean, item: data, index: number) {
   emit("getName", nameList.value);
 }
 
-const findDataValue = (data: any): data | undefined => {
+const findDataValue = (data: any): Select | undefined => {
   return props.data.find((item) => item[props.dataValue] === data);
 };
 
@@ -296,7 +293,8 @@ onMounted(() => {
    * 일반 셀렉트 박스 일 경우 title 및 emit 처리
    */
   if (!props.isSearch && !props.isCheck) {
-    let defaultItem: data | undefined = props.defaultValue == null ? props.data[0] : findDataValue(props.defaultValue);
+    let defaultItem: Select | undefined =
+      props.defaultValue == null ? props.data[0] : findDataValue(props.defaultValue);
     if (defaultItem !== undefined) {
       clickItem(defaultItem);
     }
@@ -305,7 +303,7 @@ onMounted(() => {
    * 검색 셀렉트 박스일 경우 디폴트 값이 있을때
    */
   if (props.isSearch && props.defaultValue) {
-    let defaultItem: data | undefined = findDataValue(props.defaultValue);
+    let defaultItem: Select | undefined = findDataValue(props.defaultValue);
     if (defaultItem !== undefined) {
       clickItem(defaultItem);
     }
