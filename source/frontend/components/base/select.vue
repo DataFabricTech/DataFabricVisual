@@ -212,6 +212,28 @@ const setCheckTitle = computed(() => {
 });
 
 /**
+ * 검색 필터에서 초기화 버튼 클릭시 초기화 처리
+ */
+watch(
+  () => props.defaultValue,
+  (newVal: any | null, oldVal: any | null) => {
+    if (newVal != oldVal) {
+      if (props.isCheck) {
+        if (Array.isArray(newVal) && !newVal.length) resetCheckData();
+        else {
+          //TODO: 검색 체크박스 일 경우 디폴트 값 있을 때 기능 개발
+        }
+      } else {
+        let defaultItem: Select | undefined = findDataValue(props.defaultValue);
+        if (defaultItem !== undefined) {
+          clickItem(defaultItem);
+        }
+      }
+    }
+  }
+);
+
+/**
  * 검색 있는 셀렉트 박스일 경우
  * keyword 감지해서 셀렉트박스 데이터 변경
  */
@@ -281,6 +303,17 @@ function checkData(checked: boolean, item: Select, index: number) {
   emit("getName", nameList.value);
 }
 
+/**
+ * 체크 셀렉트 박스 리셋
+ */
+function resetCheckData() {
+  checkList.value = [];
+  nameList.value = [];
+  isAllCheck.value = false;
+  emit("select", checkList.value);
+  emit("getName", nameList.value);
+}
+
 const findDataValue = (data: any): Select | undefined => {
   return props.data.find((item) => item[props.dataValue] === data);
 };
@@ -308,6 +341,5 @@ onMounted(() => {
       clickItem(defaultItem);
     }
   }
-  //TODO: 검색 체크박스 일 경우 디폴트 값 있을 때 기능 개발
 });
 </script>
