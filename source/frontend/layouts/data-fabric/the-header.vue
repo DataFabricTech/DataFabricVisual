@@ -46,7 +46,7 @@ const menus = [
   },
   {
     key: "management",
-    label: "저장소 관리",
+    label: "연결정보 관리",
     link: "/data-fabric/management"
   },
   {
