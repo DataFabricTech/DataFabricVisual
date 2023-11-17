@@ -17,21 +17,9 @@
   <h1>체크박스 셀렉트, 검색가능한 셀렉트, 일반 셀렉트</h1>
   <div class="form-content">
     <!--    <BaseSelect class="select-lg" :data="keywordData" :is-check="true"></BaseSelect>-->
-    <!--    <BaseSelect-->
-    <!--      class="select-lg"-->
-    <!--      :data="keywordData"-->
-    <!--      :is-search="true"-->
-    <!--      :default-value="'content'"-->
-    <!--      @select="selectBbb"-->
-    <!--    ></BaseSelect>-->
+    <BaseSelect class="select-lg" :data="keywordData" :default-value="'content'" @select="selectBbb"></BaseSelect>
     <!--    <BaseSelect class="select-lg" :data="keywordData" :is-check="true" @select="selectBbb"></BaseSelect>-->
-    <BaseSelect
-      class="select-lg"
-      :data="keywordData"
-      :default-value="'title2'"
-      @select="selectBbb"
-      :is-search="true"
-    ></BaseSelect>
+    <BaseSelect class="select-lg" :data="keywordData" :default-value="'title2'" @select="selectBbb"></BaseSelect>
   </div>
 
   <!-- 검색 필터 -->
@@ -170,9 +158,7 @@ function clickModel(data: string) {
 function search(data: object) {
   console.log(data);
 }
-function reset(data: object) {
-  console.log(data);
-}
+function reset(data: object) {}
 function closeToggle(data: boolean) {
   toggle.value = data;
   console.log(toggle.value);

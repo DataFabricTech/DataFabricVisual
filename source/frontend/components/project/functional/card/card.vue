@@ -149,22 +149,37 @@ const props = defineProps({
       }
     })
   },
+  /**
+   * 연결 정보
+   */
   showConnectInfo: {
     type: Boolean,
     default: false
   },
+  /**
+   * 별점, 조회수, 다운로드, 북마크 정보
+   */
   showStatistics: {
     type: Boolean,
     default: true
   },
+  /**
+   * 미리보기 버튼
+   */
   showPreviewBtn: {
     type: Boolean,
     default: true
   },
+  /**
+   * 01. 리스트 축소형
+   */
   showInfoComplex: {
     type: Boolean,
     default: false
   },
+  /**
+   * 수정
+   */
   isUpdate: {
     type: Boolean,
     default: false
