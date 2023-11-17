@@ -1,17 +1,13 @@
 <template>
-  <div class="l-common flex-grow">
-    <h2 class="hidden-text">데이터패브릭</h2>
-    <section class="l-section flex-grow">
-      <MainSearch></MainSearch>
-      <MainCard></MainCard>
+  <div class="l-split">
+    <h2 class="hidden-text">데이터모델 Browse</h2>
+    <section class="l-side">
+      <BrowseFilter></BrowseFilter>
+    </section>
+    <section class="l-split-section">
+      <BrowseContent></BrowseContent>
     </section>
   </div>
 </template>
 
-<script lang="ts" setup>
-import MainSearch from "/components/project/data-fabric/main/main-search.vue";
-import MainCard from "/components/project/data-fabric/main/main-card.vue";
-definePageMeta({
-  layout: "default-full-layout"
-});
-</script>
+<script lang="ts" setup></script>

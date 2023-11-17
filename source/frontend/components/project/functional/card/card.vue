@@ -128,7 +128,7 @@ const props = defineProps({
         storageType: "HDFS"
       },
       status: "CONNECTED",
-      domain: "공간",
+      domain: "교통",
       lastModifiedAt: {
         strDateTime: "2023-11-20 13:30:40.123",
         utcTime: 1606824000000
