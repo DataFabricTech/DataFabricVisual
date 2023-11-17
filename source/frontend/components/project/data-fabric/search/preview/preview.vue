@@ -10,9 +10,9 @@
       </baseButton>
     </header>
     <div class="preview-body">
-      <BaseNotification theme="warning">
-        <strong class="notification-title"> 연결정보가 변동되어 데이터모델 정보 를 다운로드 받을 수 없습니다. </strong>
-      </BaseNotification>
+      <!--      <BaseNotification theme="warning">-->
+      <!--        <strong class="notification-title"> 연결정보가 변동되어 데이터모델 정보 를 다운로드 받을 수 없습니다. </strong>-->
+      <!--      </BaseNotification>-->
       <div class="preview-card">
         <CardSimple class="bg-[#f5f5f5]" :model="cardSimpleModel" :has-status="false"></CardSimple>
       </div>

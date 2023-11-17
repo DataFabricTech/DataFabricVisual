@@ -6,9 +6,9 @@
       <!--        <span class="button-text">데이터 모델 생성</span>-->
       <!--      </BaseButton>-->
     </div>
-    <article class="page-article">
-      <notification :messages="storageEvent"></notification>
-    </article>
+    <!--    <article class="page-article">-->
+    <!--      <notification :messages="storageEvent"></notification>-->
+    <!--    </article>-->
     <article class="page-article">
       <h4 class="page-subtitle">요약 정보</h4>
       <div class="h-group w-full gap-[16px]">
