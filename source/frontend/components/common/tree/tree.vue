@@ -2,7 +2,6 @@
 import { onMounted, ref } from "vue";
 import treeview from "vue3-treeview";
 import "vue3-treeview/dist/style.css";
-import { defineEmits } from "vue/dist/vue";
 
 export interface State {
   opened: boolean;
@@ -25,6 +24,7 @@ export interface Node {
   isRoot?: boolean;
   title?: string;
   icon?: string;
+  data?: any;
 }
 
 export interface Nodes {
@@ -71,14 +71,9 @@ export interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   isConfigMode: false,
-  nodes: Nodes => ({
-    node1: {
-      text: "Node 1",
-      isRoot: true
-    }
-  }),
+  nodes: Nodes => ({}),
   config: Config => ({
-    roots: ["node1"]
+    roots: [],
   }),
   roots: () => [],
   checkboxes: false,
@@ -88,13 +83,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const emit = defineEmits(["save", "delete", "node-click"]);
 
-const treeNoses = ref<Nodes>({
-  node1: {
-    text: "Node 1"
-  }
-});
+const treeNoses = ref<Nodes>({});
 const treeConfig = ref<Config>({
-  roots: ["node1"],
+  roots: [],
   openedIcon: {
     type: "shape",
     stroke: "black",
@@ -110,13 +101,14 @@ const treeConfig = ref<Config>({
     draw: `M 12 2 L 12 22 M 2 12 L 22 12`
   },
   checkboxes: false,
-  editable: true
+  editable: false
 });
+
 const nodeIconBefore = ref("");
 const nodeIconAfter = ref("");
 
 function setNodes(nodes: Nodes) {
-  let roots: string[] = [];
+  let roots: any = [];
   for (let key in nodes) {
     console.log("setNodes - key:", key, nodes[key]);
     const node = nodes[key];
@@ -126,13 +118,18 @@ function setNodes(nodes: Nodes) {
   }
 
   treeNoses.value = nodes;
+  // console.log("[treeNoses]:", treeNoses.value);
   setConfig("roots", roots);
 }
 
 function setConfig(key: string, value: any) {
+  if (key === "addable") {
+    return;
+  }
+
   console.log("setConfig - key:", key, "-", value);
   treeConfig.value[key] = value;
-  // console.log("treeConfig:", treeConfig.value);
+  // console.log("[treeConfig]:", treeConfig.value);
 }
 
 // event
@@ -150,24 +147,29 @@ function nodeUnchecked(e: any) {
 
 function nodeFocus(e: any) {
   console.log("nodeFocus", e);
-  emit("node-click", e.id);
+  emit("node-click", e.data);
 }
 
-onMounted(() => {
-  console.log("tree: onMounted - isConfigMode:", props.isConfigMode);
+function initData() {
+  console.log("initData");
+  treeNoses.value = {};
+  treeConfig.value.roots = [];
+}
+
+function setData() {
+  console.log("setData - isConfigMode:", props.isConfigMode);
 
   const isConfigMode = props.isConfigMode;
   for (const key in props) {
     console.log("prop -", key, props[key]);
     if (key !== "isConfigMode") {
       if (key === "nodes" && props.nodes) {
-        // console.log("set nodes -", key);
-        // treeNoses.value = props.nodes;
         setNodes(props.nodes);
       } else if (key === "config" && props.config) {
         if (isConfigMode) {
           console.log("set config -", key);
           treeConfig.value = props.config;
+          // console.log("[treeConfig]:", treeConfig.value);
         }
       } else if (!isConfigMode) {
         if (key !== "roots" || (Array.isArray(props[key]) && props[key].length > 0)) {
@@ -176,7 +178,27 @@ onMounted(() => {
       }
     }
   }
+}
+
+function refreshData() {
+  console.log("tree: refreshData");
+  initData();
+  setTimeout(setData, 100);
+
+}
+
+onMounted(() => {
+  console.log("mounted");
+  setData();
 });
+
+watch(
+  () => props.nodes,
+  () => {
+    refreshData();
+  }
+);
+
 </script>
 
 <template>
