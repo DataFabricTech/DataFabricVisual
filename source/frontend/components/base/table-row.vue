@@ -22,7 +22,16 @@ const props = defineProps({
       {
         title: "테스트",
         content: "테스트 12345"
+      },
+      {
+        title: "테스트",
+        content: "테스트 12345"
+      },
+      {
+        title: "테스트",
+        content: "테스트 12345"
       }
+
     ]
   }
 });

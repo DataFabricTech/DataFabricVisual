@@ -85,14 +85,14 @@
       <p class="category-description"></p>
     </div>
     <div class="table-row w-full">
-      <baseTableColumn class="sample-data-table" :headers="sample.headers" :rows="sample.rows"></baseTableColumn>
+      <baseTableColumn class="table-scroll max-h-[700px]" :headers="sample.headers" :rows="sample.rows"></baseTableColumn>
     </div>
     <div class="category-subject is-vertical">
       <h3 class="category-title color-primary">프로파일링</h3>
       <p class="category-description"></p>
     </div>
     <div class="table-row w-full">
-      <baseTableColumn :headers="profiling.headers" :rows="profiling.rows"></baseTableColumn>
+      <baseTableColumn class="table-scroll max-h-[700px]" :headers="profiling.headers" :rows="profiling.rows"></baseTableColumn>
     </div>
     <div class="category-subject is-vertical">
       <h3 class="category-title color-primary">Knowledge Graph</h3>
