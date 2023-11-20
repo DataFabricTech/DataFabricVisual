@@ -22,14 +22,15 @@
 const props = defineProps({
   headers: {
     type: Array,
-    default: () => ["Head1", "Head2"]
+    default: () => ["Head-title-1", "Head-title-2", "Head-title-3"]
   },
   rows: {
     type: Array,
     default: () => [
-      [1, 2],
-      [3, 4],
-      [5, 6]
+      [1, 2, 3],
+      [4, 5, 6],
+      [7, 8, 9],
+      [10, 11, 12],
     ]
   }
 });

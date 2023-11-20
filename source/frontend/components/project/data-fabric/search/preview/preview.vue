@@ -22,15 +22,15 @@
       </article>
       <article class="preview-article">
         <BaseTab :tabs="[{ title: '스키마정보', isSelected: true }]"></BaseTab>
-        <baseTableColumn :headers="scheme.headers" :rows="scheme.rows"></baseTableColumn>
+        <baseTableColumn class="table-scroll" :headers="scheme.headers" :rows="scheme.rows"></baseTableColumn>
       </article>
       <article class="preview-article">
         <BaseTab :tabs="[{ title: '샘플데이터', isSelected: true }]"></BaseTab>
-        <baseTableColumn :headers="sample.headers" :rows="sample.rows"></baseTableColumn>
+        <baseTableColumn class="table-scroll" :headers="sample.headers" :rows="sample.rows"></baseTableColumn>
       </article>
       <article class="preview-article">
         <BaseTab :tabs="[{ title: '데이터프로파일링', isSelected: true }]"></BaseTab>
-        <baseTableColumn :headers="profiling.headers" :rows="profiling.rows"></baseTableColumn>
+        <baseTableColumn class="table-scroll" :headers="profiling.headers" :rows="profiling.rows"></baseTableColumn>
       </article>
       <article class="preview-article">
         <BaseTab :tabs="[{ title: '지식그래프 (Knowledge graph)', isSelected: true }]"></BaseTab>

@@ -88,21 +88,7 @@
       width: 100%;
 
       th {
-        width : 250px;
-      }
-    }
-
-    .sample-data-table {
-      overflow: auto;
-      max-height: 700px;
-
-      table {
-        table-layout: fixed;
-
-        td {
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
+        width : 220px;
       }
     }
   }
