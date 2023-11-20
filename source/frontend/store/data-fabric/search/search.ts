@@ -1,6 +1,3 @@
-// import { defineStore } from "pinia";
-// import
-
 import { defineStore } from "pinia";
 import { useNuxtApp } from "nuxt/app";
 
@@ -184,14 +181,93 @@ export const fabricSearchStore = defineStore("fabricSearch", () => {
   const responseDetailFilterContents = {
     "code": "200",
     "data": {
-      "KEYWORD_TYPE": ["전체", "데이터 모델명", "태그", "소유자"],
-      "DATE_TYPE": ["전체", "최근 수정 일자", "최근 등록 일자"],
-      "CONNECTOR_NAME": ["전체", "연결 정보 이름 A", "연결 정보 이름 B"],
-      "STORAGE_TYPE": ["전체", "PostgreSQL", "MariaDB", "Mysql"],
-      "DATA_TYPE": ["전체", "DataModel"],
-      "DATA_FORMAT": ["전체", "Table"]
+      "KEYWORD_TYPE": [
+        {
+          key: "전체",
+          value: 1
+        },
+        {
+          key: "데이터 모델명",
+          value: 2
+        },
+        {
+          key: "태그",
+          value: 3
+        },
+        {
+          key: "소유자",
+          value: 4
+        }
+      ],
+      "DATE_TYPE": [
+        {
+          key: "전체",
+          value: 1
+        },
+        {
+          key: "최근 수정 일자",
+          value: 2
+        },
+        {
+          key: "최근 등록 일자",
+          value: 3
+        },
+      ],
+      "CONNECTOR_NAME": [
+        {
+          key: "전체",
+          value: 1
+        },
+        {
+          key: "연결 정보 이름 A",
+          value: 2
+        },
+        {
+          key: "연결 정보 이름 B",
+          value: 3
+        },
+      ],
+      "STORAGE_TYPE": [
+        {
+          key: "전체",
+          value: 1
+        },
+        {
+          key: "PostgreSQL",
+          value: 2
+        },
+        {
+          key: "MariaDB",
+          value: 3
+        },
+        {
+          key: "Mysql",
+          value: 4
+        },
+      ],
+      "DATA_TYPE": [
+        {
+          key: "전체",
+          value: 1
+        },
+        {
+          key: "DataModel",
+          value: 2
+        },
+      ],
+      "DATA_FORMAT": [
+        {
+          key: "전체",
+          value: 1
+        },
+        {
+          key: "Table",
+          value: 2
+        },
+      ]
     }
   }
+
   // 페이지 로드시에 상세 검색 목록을 가져오는 API
   async function searchItems() {
     await useNuxtApp().$api("/portal/v1/searchItems", {
