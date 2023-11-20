@@ -83,6 +83,14 @@
     @include flex-standard($direction: column);
     gap: $spacing-16;
     width: 100%;
+
+    table {
+      width: 100%;
+
+      th {
+        width : 220px;
+      }
+    }
   }
 
   &-container {

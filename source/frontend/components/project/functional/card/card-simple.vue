@@ -4,7 +4,7 @@
       <div class="h-group justify-between w-full">
         <div class="h-group gap-[8px]">
           <BaseBadge class="bg-marker-cyan">{{ props.model.storageInfo.storageType }}</BaseBadge>
-          <BaseBadge class="bg-marker-purple">{{ props.model.domain }}</BaseBadge>
+          <BaseBadge class="bg-marker-purple" v-if="props.model?.domain">{{ props.model.domain }}</BaseBadge>
         </div>
       </div>
       <div class="v-group w-full">
@@ -14,8 +14,9 @@
     </div>
     <div class="card-content" v-if="props.hasStatus">
       <div class="update-info">
-        <!-- TODO 데이터 연결상태 리턴값에 따라 클래스 및 명칭 변경 -->
-        <BaseBadge class="bg-marker-gray">Inactive(Disconnexted)</BaseBadge>
+        <baseBadge :class="isConnected(props.model.status) ? 'bg-marker-cyan' : 'bg-marker-gray'">
+          {{ isConnected(props.model.status) ? "Connected" : "Inactive(Disconnected)" }}</baseBadge
+        >
         <span class="update-info-title">수정일자 {{ props.model.updatedAt }}</span>
       </div>
     </div>
@@ -37,8 +38,13 @@ const props = defineProps({
       domain: '공간',
       storageInfo: {
         storageType: 'HDFS'
-      }
+      },
+      status: "CONNECTED"
     })
   }
 });
+
+const isConnected = (value: string) => {
+  return value === "CONNECTED";
+};
 </script>

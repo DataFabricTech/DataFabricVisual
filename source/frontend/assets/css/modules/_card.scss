@@ -14,19 +14,12 @@
     border-radius: $border-radius-sm;
   }
 
-  &.is-modify {
-    .input-wrapper, .text-input {
-      display: block;
-    }
-
-    .input-wrapper {
-      @include flex-standard;
-      gap: $spacing-8;
-    }
-
-    .card-link, .card-detail, .tag {
-      display: none;
-    }
+  .input-tag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-8;
+    margin: 0;
   }
 
   &-list {
@@ -77,6 +70,7 @@
     gap: 8px;
     flex-grow: 1;
     width: 100%;
+    min-height: 175px;
   }
 
   &-link {
@@ -114,6 +108,8 @@
 
     .card {
       &-content {
+        min-height: auto;
+
         &:not(:only-child) {
           width: 50%;
         }

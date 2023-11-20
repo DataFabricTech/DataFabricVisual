@@ -6,24 +6,43 @@
       ></SearchField>
     <div class="search-word">
       <strong class="search-word-title">최근 검색어</strong>
-      <div class="h-group gap-5">
-        <baseTag># CCTV위치</baseTag>
-        <baseTag># 주정차댠속</baseTag>
-        <baseTag># 기후변화</baseTag>
-        <baseTag># 안심지역</baseTag>
+      <div class="h-group gap-5" v-for="(tag, index) in recentTagList" :key="index" >
+        <tag-removable
+          :indexValue="index"
+          @close="closeTag">{{ tag }}</tag-removable>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { fabricMainStore } from "../../../../store/data-fabric/main/main";
+import { fabricMainStore } from "/store/data-fabric/main/main";
 import { storeToRefs } from "pinia";
+import { onMounted } from "vue";
+import TagRemovable from "/components/base/tag-removable.vue";
 
 const store = fabricMainStore();
-const { searchKeyword } = store;
+const { searchKeyword, insertRecentSearch } = store;
 let {
   keyword,
 } = storeToRefs(store);
+
+// 최근 검색어 res값 받는 객체선언
+let recentTagList = (['CCTV위치', '불법 주정차', '서초구', '보호구역']);
+
+// 최근검색어 닫기를 눌렀을 때 발생하는 함수
+// TODO : 최근검색어 삭제 API가 없는 경우로, 본 개발에 수정될 예정
+function closeTag(indexValue) {
+  recentTagList.value.splice(indexValue,1);
+  // console.log("recentTagList 상태확인 : ", recentTagList);
+}
+
+onMounted(() => {
+  // 최근 검색어 API함수 호출
+  insertRecentSearch()
+    .then((res: any) => {
+      recentTagList.value = res.recentSearches.slice(0,5); // 5개만 보이도록 slice
+    })
+})
 
 // 간편 검색
 async function mainKeyword(key) {
@@ -33,13 +52,22 @@ async function mainKeyword(key) {
   await searchKeyword()
     .then((data: any) => {
     console.log("data : ", data);
-  })
-  // TODO : 추후 router로 페이지 전환 처리로 변경될 예정
-  // "검색결과 페이지"로 이동
-  var link = "/data-fabric/development-search";
-  location.href=link;
-  window.open(link);
+    // TODO : 검색이 완료되었으니, 또다시 최근 검색어 API 를 호출한다.
+    })
+  // await insertRecentSearch()
+  //   .then((data: any) => {
+  //     console.log("데이터 : ", data);
+  //
+  //   })
+
+  // TODO : 수정 예정, 시연용으로, 임시 설정
+  // var link = "/data-fabric/development-search";
+  var link = "/data-fabric/browse/search";
+  const router = useRouter();
+  router.push({
+    path: link,
+    query:
+      { keyword : key}
+  });
 };
-
-
 </script>

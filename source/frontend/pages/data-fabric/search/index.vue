@@ -158,9 +158,6 @@
   </div>
 </template>
 <script lang="ts" setup>
-definePageMeta({
-  layout: "default-layout"
-});
 
 const state = reactive({
   isOpen: true

@@ -8,7 +8,6 @@
   &-content {
     @include flex-standard($vertical: flex-start, $direction: column);
     width: 100%;
-    gap: $spacing-8;
   }
 
   &-body {
@@ -20,6 +19,11 @@
   &-footer {
     @include flex-standard($horizontal: space-between);
     width: 100%;
+    margin-top: $spacing-8;
+
+    &:empty {
+      margin-top: 0;
+    }
   }
 
   &-icon {

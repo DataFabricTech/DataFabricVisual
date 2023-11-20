@@ -273,28 +273,34 @@
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">type: time picker</strong>
                   <div class="h-group gap-12">
-                    <DatePicker
-                      v-model:modelValue="args.date"
-                      :type="args.dateType">
-                    </DatePicker>
+                    <div class="date-picker">
+                      <DatePicker
+                        v-model:modelValue="args.date"
+                        :type="args.dateType">
+                      </DatePicker>
+                    </div>
                   </div>
                 </div>
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">type: date picker</strong>
                   <div class="h-group gap-12">
-                    <DatePicker
-                      v-model:modelValue="args.date"
-                      :type="args.date">
-                    </DatePicker>
+                    <div class="date-picker">
+                      <DatePicker
+                        v-model:modelValue="args.date"
+                        :type="args.date">
+                      </DatePicker>
+                    </div>
                   </div>
                 </div>
                 <div class="h-group">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">type: date time range picker</strong>
                   <div class="h-group gap-12">
-                    <DatePicker
-                      v-model:modelValue="args.dateRange"
-                      :type="args.rangeType">
-                    </DatePicker>
+                    <div class="date-picker">
+                      <DatePicker
+                        v-model:modelValue="args.dateRange"
+                        :type="args.rangeType">
+                      </DatePicker>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -699,11 +705,17 @@
               <div class="v-group gap-5">
                 <div class="h-group w-full">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">column</strong>
-                  <baseTableColumn></baseTableColumn>
+                  <div class="h-group gap-12 items-start">
+                    <baseTableColumn ></baseTableColumn>
+                    <baseTableColumn class="table-scroll" style="max-height: 200px;"></baseTableColumn>
+                  </div>
                 </div>
                 <div class="h-group w-full">
                   <strong class="w-[150px] font-light text-[14px] shrink-0">row</strong>
-                  <baseTableRow></baseTableRow>
+                  <div class="h-group gap-12 items-start">
+                    <baseTableRow></baseTableRow>
+                    <baseTableRow class="table-scroll" style="max-height: 130px;"></baseTableRow>
+                  </div>
                 </div>
               </div>
             </td>

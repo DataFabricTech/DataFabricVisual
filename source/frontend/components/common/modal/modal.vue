@@ -1,7 +1,7 @@
 <template>
   <vue-final-modal
     class="modal"
-    content-class="modal"
+    content-class="modal-inner"
     :modal-id="props.name"
     :background="clickOutside"
     @beforeOpen="onBeforeOpen"
