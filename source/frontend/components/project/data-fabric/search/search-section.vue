@@ -34,6 +34,7 @@
       :model-type-data="STORAGE_TYPE"
       :model-form-data="DATA_TYPE"
       :model-format-data="DATA_FORMAT"
+      @search="detailSearch"
       ></SearchFilter>
   </section>
 </template>
@@ -90,6 +91,10 @@ onMounted(()=> {
 function isDetailForm(val : Boolean) {
   state.closeSearchField = !val;
   state.isDetailFilter = val;
+}
+
+function detailSearch(searchData : any) {
+  console.log("결과값? :", searchData);
 }
 
 //TODO : 추후 페이지 전환을 위한 입력값 받기
