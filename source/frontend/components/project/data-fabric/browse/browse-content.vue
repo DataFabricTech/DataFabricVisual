@@ -23,8 +23,8 @@
         >건 입니다.
       </h4>
       <div class="result-sort">
-        <BaseSelect class="select-lg" :data="$constants.FILTER.SORT" @select="setSort"></BaseSelect>
-        <BaseSelect class="select-lg" :data="$constants.FILTER.PAGE" @select="setPageSize"></BaseSelect>
+        <BaseSelect class="select-lg" :data="$constants.FILTER.SORT" @selected="setSort"></BaseSelect>
+        <BaseSelect class="select-lg" :data="$constants.FILTER.PAGE" @selected="setPageSize"></BaseSelect>
       </div>
     </div>
     <ul class="card-list">

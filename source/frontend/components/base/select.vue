@@ -10,31 +10,34 @@
       </button>
     </div>
     <div class="select-container" id="select-01">
-      <ul class="select-container-list" role="listbox">
-        <li class="select-container-item" v-if="props.isCheck">
-          <baseCheckbox
-            class="checkbox-indeterminate"
+      <ul class="select-container-list" role="listbox" v-if="props.isCheck">
+        <li class="select-container-item">
+          <BaseCheckbox
+            :class="allCheckClass"
             role="option"
-            :id="'checkAll' + checkBoxId"
+            :id="checkBoxId + '_all'"
             :checked="isAllCheck"
             @change="checkAll"
-            >전체</baseCheckbox
+          >전체
+          </BaseCheckbox
           >
         </li>
-        <li class="select-container-item" v-if="props.isCheck" v-for="(item, index) in selectData">
-          <baseCheckbox
+        <li class="select-container-item" v-for="(item, index) in selectData" :key="index">
+          <BaseCheckbox
             role="option"
-            :id="checkBoxId + index"
-            :name="item[dataKey]"
+            :id="checkBoxId + '_' + index"
+            :name="item[dataName]"
             :value="item[dataValue]"
-            :checked="checkList.includes(item[dataValue])"
+            :checked="selectedList.includes(item[dataValue])"
             :disabled="false"
-            @change="(checked) => checkData(checked, item, index)"
-          ></baseCheckbox>
+            @change="(checked) => checkItem(item, checked)"
+          ></BaseCheckbox>
         </li>
-        <li class="select-container-item" v-if="!props.isCheck" v-for="(item, index) in selectData">
+      </ul>
+      <ul class="select-container-list" role="listbox" v-else>
+        <li class="select-container-item" v-for="(item, index) in selectData" :key="index">
           <button class="select-container-button" type="button" role="option" @click="clickItem(item)">
-            <span class="select-container-text">{{ item[dataKey] }}</span>
+            <span class="select-container-text">{{ item[dataName] }}</span>
           </button>
         </li>
       </ul>
@@ -44,7 +47,8 @@
 
 <script setup lang="ts">
 import type { Select } from "~/components/base/select";
-import { ref, computed, defineProps, defineEmits, onMounted } from "vue";
+import { computed, defineEmits, defineProps, onMounted, ref } from "vue";
+
 const SELECT = "선택";
 const MULTI_SELECT = "다중 선택";
 const ALL = "전체";
@@ -71,9 +75,9 @@ const props = defineProps({
     ]
   },
   /**
-   * data의 key 값
+   * data의 표시 값
    */
-  dataKey: {
+  dataName: {
     type: String,
     default: "key"
   },
@@ -92,32 +96,88 @@ const props = defineProps({
     default: null
   },
   /**
-   * checkbox select
-   */
-  isCheck: {
-    type: Boolean,
-    default: false
-  },
-  /**
    * 체크박스일 때 타이틀을 지정해줘야 하는 경우
    */
   defaultTitle: {
     type: String,
     default: SELECT
+  },
+  modelValue: {
+    type: Array,
+    default: null
+  },
+  /**
+   * checkbox select
+   */
+  isCheck: {
+    type: Boolean,
+    default: false
   }
 });
 const emit = defineEmits<{
-  select: [data: any];
-  getName: [data: any];
+  selected: [data: any];
+  selectedName: [data: any];
+  "update:modelValue": [data: any];
 }>();
 
 const checkBoxId = ref(Math.random().toString());
 const selectData = ref<Select[]>([]);
 const toggle = ref(false);
-const select = ref(null);
-const checkList: any = ref([]);
+const selectedList = ref<string[]>([]);
 const nameList: any = ref([]);
-const isAllCheck = ref(false);
+
+/**
+ * 셀렉트 박스 선택 값
+ */
+const setTitle = computed(() => {
+  if (props.isCheck) {
+    // 체크 셀렉트 박스일 경우 선택 값
+    if (isAllCheck.value) {
+      return ALL;
+    } else {
+      const length = selectedList.value.length;
+      switch (length) {
+        case 0:
+          return props.defaultTitle ? props.defaultTitle : SELECT;
+        case 1:
+          let item: Select | undefined = findDataValue(selectedList.value.at(0));
+          return item ? item[props.dataName] : null;
+        default:
+          return MULTI_SELECT + `(${length})`;
+      }
+    }
+  } else {
+    // 일반 셀렉트 박스일 경우 선택 값
+    if (selectedList.value && selectedList.value.length > 0) {
+      let item: Select | undefined = findDataValue(selectedList.value.at(0));
+      return item ? item[props.dataName] : null;
+    } else {
+      return props.defaultTitle ? props.defaultTitle : SELECT;
+    }
+  }
+});
+
+const isAllCheck = computed(() => {
+  return selectedList.value.length === props.data?.length;
+});
+
+const allCheckClass = computed(() => {
+  return selectedList.value.length === props.data?.length || selectedList.value.length === 0 ? "" : "checkbox-indeterminate";
+});
+
+/**
+ * 검색 필터에서 초기화 버튼 클릭시 초기화 처리
+ */
+watch(
+  () => props.modelValue,
+  (newVal: any | null, oldVal: any | null) => {
+    if (newVal != oldVal) {
+      if (!newVal || (<Select[]>newVal).length === 0) {
+        setSelect(null);
+      }
+    }
+  }
+);
 
 /**
  * 토글  open - close
@@ -127,126 +187,94 @@ function controlToggle() {
 }
 
 /**
- * 셀렉트 박스 선택 값
+ * 체크 셀렉트 박스 전체 선택 기능
+ * @param checked
  */
-const setTitle = computed(() => {
-  if (props.isCheck) {
-    return setCheckTitle.value;
-  }
-  return setSelectTitle.value;
-});
-
-/**
- * 일반 셀렉트 박스일 경우 선택 값
- */
-const setSelectTitle = computed(() => {
-  if (select.value == null) {
-    return SELECT;
-  }
-  return select.value;
-});
-
-/**
- * 체크 셀렉트 박스일 경우 선택 값
- */
-const setCheckTitle = computed(() => {
-  const length = checkList.value.length;
-  if (isAllCheck.value) {
-    return ALL;
-  } else {
-    switch (length) {
-      case 0:
-        return props.defaultTitle;
-      case 1:
-        let item: Select | undefined = findDataValue(checkList.value[0]);
-        return item != undefined ? item[props.dataKey] : null;
-      default:
-        return MULTI_SELECT + `(${length})`;
-    }
-  }
-});
-
-/**
- * 검색 필터에서 초기화 버튼 클릭시 초기화 처리
- */
-watch(
-  () => props.defaultValue,
-  (newVal: any | null, oldVal: any | null) => {
-    if (newVal != oldVal) {
-      if (props.isCheck) {
-        if (Array.isArray(newVal) && !newVal.length) resetCheckData();
-        else {
-          //TODO: 검색 체크박스 일 경우 디폴트 값 있을 때 기능 개발
-        }
-      } else {
-        let defaultItem: Select | undefined = findDataValue(props.defaultValue);
-        if (defaultItem !== undefined) {
-          clickItem(defaultItem);
-        }
-      }
-    }
-  }
-);
+function checkAll(checked: boolean) {
+  selectedList.value = checked ? props.data.map((item) => item[props.dataValue]) : [];
+  nameList.value = checked ? props.data.map((item) => item[props.dataName]) : [];
+  emitEvent();
+  emitEvent("name");
+}
 
 /**
  * 검색 있는 셀렉트 박스일 경우 || 그 외 셀렉트 박스일 경우
  * @param item
  */
 function clickItem(item: Select) {
-  select.value = item[props.dataKey];
+  selectedList.value = [item[props.dataValue]];
 
-  if (toggle.value) {
-    controlToggle();
-  }
-  emit("select", item[props.dataValue]);
-}
-
-/**
- * 체크 셀렉트 박스 전체 선택 기능
- * @param checked
- */
-function checkAll(checked: boolean) {
-  isAllCheck.value = checked;
-  checkList.value = checked ? props.data.map((item) => item[props.dataValue]) : [];
-  nameList.value = checked ? props.data.map((item) => item[props.dataKey]) : [];
-  emit("select", checkList.value);
-  emit("getName", nameList.value);
+  toggle.value = false;
+  emitEvent();
 }
 
 /**
  * 체크 셀렉트 박스 선택 기능
  * @param checked
  * @param item
- * @param index
  */
-function checkData(checked: boolean, item: Select, index: number) {
+function checkItem(item: Select, checked: boolean = true) {
   if (checked) {
-    checkList.value.push(item[props.dataValue]);
-    nameList.value.push(item[props.dataValue]);
+    selectedList.value.push(item[props.dataValue]);
+    nameList.value.push(item[props.dataName]);
   } else {
-    let indexToRemove = checkList.value.indexOf(item[props.dataValue]);
-    if (indexToRemove !== -1) {
-      checkList.value.splice(indexToRemove, 1);
+    let indexToRemove = selectedList.value.indexOf(item[props.dataValue]);
+    if (indexToRemove > -1) {
+      selectedList.value.splice(indexToRemove, 1);
     }
-    let indexToRemoveNames = nameList.value.indexOf(item[props.dataKey]);
-    if (indexToRemoveNames !== -1) {
+    let indexToRemoveNames = nameList.value.indexOf(item[props.dataName]);
+    if (indexToRemoveNames > -1) {
       nameList.value.splice(indexToRemoveNames, 1);
     }
   }
-  isAllCheck.value = checkList.value.length === props.data?.length;
-  emit("select", checkList.value);
-  emit("getName", nameList.value);
+
+  emitEvent();
+  emitEvent("name");
 }
 
-/**
- * 체크 셀렉트 박스 리셋
- */
-function resetCheckData() {
-  checkList.value = [];
-  nameList.value = [];
-  isAllCheck.value = false;
-  emit("select", checkList.value);
-  emit("getName", nameList.value);
+function emitEvent(type: string | null = null) {
+  if (props.modelValue === null) {
+    if (props.isCheck) {
+      if (type === "name") {
+        emit("selectedName", nameList.value);
+      } else {
+        emit("selected", selectedList.value);
+      }
+    } else {
+      emit("selected", selectedList.value.at(0));
+    }
+  } else {
+    let value = [];
+    for (let key of selectedList.value) {
+      let item: Select | undefined = findDataValue(key);
+      if (item) {
+        value.push(item);
+      }
+    }
+    emit("update:modelValue", value);
+  }
+}
+
+function setSelect(value: string | null) {
+  let selectValue = value ? value : props.defaultValue;
+  let item: Select | undefined = selectValue ? findDataValue(selectValue) : props.data[0];
+  if (!item) {
+    return;
+  }
+
+  if (props.isCheck) {
+    selectedList.value = [item[props.dataValue]];
+    nameList.value = [item[props.dataName]];
+    emitEvent();
+    emitEvent("name");
+  } else {
+    selectedList.value = [item[props.dataValue]];
+    emitEvent();
+  }
+}
+
+function setDefault() {
+  setSelect(props.defaultValue);
 }
 
 const findDataValue = (data: any): Select | undefined => {
@@ -260,12 +288,6 @@ onMounted(() => {
   /**
    * 일반 셀렉트 박스 일 경우 title 및 emit 처리
    */
-  if (!props.isCheck) {
-    let defaultItem: Select | undefined =
-      props.defaultValue == null ? props.data[0] : findDataValue(props.defaultValue);
-    if (defaultItem !== undefined) {
-      clickItem(defaultItem);
-    }
-  }
+  setDefault();
 });
 </script>

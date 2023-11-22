@@ -12,7 +12,7 @@
                 class="select-lg"
                 :data="props.keywordData"
                 :default-value="defaultValue.keyword"
-                @select="setKeywordData"
+                @selected="setKeywordData"
               ></BaseSelect>
               <label for="01" class="hidden-text">검색어</label>
               <BaseTextInput id="01" class="max-w-[522px] text-input-lg" v-model="keyword"></BaseTextInput>
@@ -27,7 +27,7 @@
                 class="select-lg"
                 :data="props.dateData"
                 :default-value="defaultValue.date"
-                @select="setDateData"
+                @selected="setDateData"
               ></BaseSelect>
               <DatePicker
                 class="date-picker date-picker-lg"
@@ -62,8 +62,8 @@
                 :data="props.connectionData"
                 :default-value="defaultValue.connection"
                 :default-title="'연결정보 선택'"
-                @select="selectConnection"
-                @getName="setConnectionTags"
+                @selected="selectConnection"
+                @selected-name="setConnectionTags"
               ></BaseSelect>
               <BaseSelect
                 class="select-lg"
@@ -71,7 +71,7 @@
                 :data="props.connectionTypeData"
                 :default-value="defaultValue.connectionType"
                 :default-title="'유형선택'"
-                @select="selectConnectionType"
+                @selected="selectConnectionType"
               ></BaseSelect>
             </div>
           </div>
@@ -85,8 +85,8 @@
                 :is-check="true"
                 :data="props.domainData"
                 :default-value="defaultValue.domain"
-                @select="selectDomain"
-                @getName="setDomainTags"
+                @selected="selectDomain"
+                @selected-name="setDomainTags"
               ></BaseSelect>
             </div>
           </div>
@@ -101,8 +101,8 @@
                 :data="props.modelTypeData"
                 :default-title="'유형선택'"
                 :default-value="defaultValue.modelType"
-                @select="selectModelTypeData"
-                @getName="setModelTypeTags"
+                @selected="selectModelTypeData"
+                @selected-name="setModelTypeTags"
               ></BaseSelect>
               <BaseSelect
                 class="select-lg"
@@ -110,8 +110,8 @@
                 :data="props.modelFormData"
                 :default-title="'형식선택'"
                 :default-value="defaultValue.modelForm"
-                @select="selectModelFormData"
-                @getName="setModelFormTags"
+                @selected="selectModelFormData"
+                @selected-name="setModelFormTags"
               ></BaseSelect>
               <BaseSelect
                 class="select-lg"
@@ -119,7 +119,7 @@
                 :data="props.modelFormatData"
                 :default-title="'포맷선택'"
                 :default-value="defaultValue.modelFormat"
-                @select="selectModelFormatData"
+                @selected="selectModelFormatData"
                 @getName="setModelFormatTags"
               ></BaseSelect>
             </div>

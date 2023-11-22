@@ -124,8 +124,8 @@
               <strong class="result-summary">검색 결과는 <em class="color-tertiary">4</em>건 입니다.</strong>
             </div>
             <div class="h-group">
-              <baseSelect></baseSelect>
-              <baseSelect></baseSelect>
+              <BaseSelect></BaseSelect>
+              <BaseSelect></BaseSelect>
             </div>
           </div>
         <div class="category-container">
