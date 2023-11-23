@@ -33,7 +33,7 @@
           </a>
         </div>
         <div class="h-group gap-1">
-          <baseSelect class="select-sm w-[120px]"></baseSelect>
+          <BaseSelect class="select-sm w-[120px]"></BaseSelect>
           <baseButton class="button-primary button-sm">이동</baseButton>
         </div>
       </div>

@@ -8,7 +8,12 @@
               <strong class="form-title">검색어</strong>
             </div>
             <div class="form-content">
-              <BaseSelect class="select-lg" :data="props.keywordData" @select="setKeywordData"></BaseSelect>
+              <BaseSelect
+                class="select-lg"
+                :data="props.keywordData"
+                :default-value="defaultValue.keyword"
+                @selected="setKeywordData"
+              ></BaseSelect>
               <label for="01" class="hidden-text">검색어</label>
               <BaseTextInput id="01" class="max-w-[522px] text-input-lg" v-model="keyword"></BaseTextInput>
             </div>
@@ -18,7 +23,12 @@
               <strong class="form-title">기간 선택</strong>
             </div>
             <div class="form-content">
-              <BaseSelect class="select-lg" :data="props.dateData" @select="setDateData"></BaseSelect>
+              <BaseSelect
+                class="select-lg"
+                :data="props.dateData"
+                :default-value="defaultValue.date"
+                @selected="setDateData"
+              ></BaseSelect>
               <DatePicker
                 class="date-picker date-picker-lg"
                 v-model="date.range"
@@ -29,55 +39,15 @@
               </DatePicker>
               <div class="toggle toggle-lg">
                 <BaseRadio
+                  v-for="dateRadio in dateRadioList"
                   name="toggleDate"
-                  id="toggle-today"
-                  :value="TODAY"
-                  :checked="date.default === TODAY"
+                  :id="dateRadio.id"
+                  :value="dateRadio.value"
+                  :checked="date.default === dateRadio.value"
                   @change="changeDateRange"
                 >
-                  오늘
+                  {{ dateRadio.name }}
                 </BaseRadio>
-                <BaseRadio
-                  name="toggleDate"
-                  id="toggle-week"
-                  :value="WEEK"
-                  :checked="date.default === WEEK"
-                  @change="changeDateRange"
-                  >7일</BaseRadio
-                >
-                <BaseRadio
-                  name="toggleDate"
-                  id="toggle-month-1"
-                  :value="ONE_MONTH"
-                  :checked="date.default === ONE_MONTH"
-                  @change="changeDateRange"
-                  >1개월
-                </BaseRadio>
-                <BaseRadio
-                  name="toggleDate"
-                  id="toggle-month-3"
-                  :value="THREE_MONTH"
-                  :checked="date.default === THREE_MONTH"
-                  @change="changeDateRange"
-                >
-                  3개월
-                </BaseRadio>
-                <BaseRadio
-                  name="toggleDate"
-                  id="toggle-year"
-                  :value="YEAR"
-                  :checked="date.default === YEAR"
-                  @change="changeDateRange"
-                  >1년</BaseRadio
-                >
-                <BaseRadio
-                  name="toggleDate"
-                  id="toggle-all"
-                  :value="ALL"
-                  :checked="date.default === ALL"
-                  @change="changeDateRange"
-                  >전체</BaseRadio
-                >
               </div>
             </div>
           </div>
@@ -90,16 +60,18 @@
                 class="select-lg"
                 :is-check="true"
                 :data="props.connectionData"
+                :default-value="defaultValue.connection"
                 :default-title="'연결정보 선택'"
-                @select="selectConnection"
-                @getName="setConnectionTags"
+                @selected="selectConnection"
+                @selected-name="setConnectionTags"
               ></BaseSelect>
               <BaseSelect
                 class="select-lg"
                 :is-check="true"
                 :data="props.connectionTypeData"
+                :default-value="defaultValue.connectionType"
                 :default-title="'유형선택'"
-                @select="selectConnectionType"
+                @selected="selectConnectionType"
               ></BaseSelect>
             </div>
           </div>
@@ -112,8 +84,9 @@
                 class="select-lg"
                 :is-check="true"
                 :data="props.domainData"
-                @select="selectDomain"
-                @getName="setDomainTags"
+                :default-value="defaultValue.domain"
+                @selected="selectDomain"
+                @selected-name="setDomainTags"
               ></BaseSelect>
             </div>
           </div>
@@ -127,23 +100,26 @@
                 :is-check="true"
                 :data="props.modelTypeData"
                 :default-title="'유형선택'"
-                @select="selectModelTypeData"
-                @getName="setModelTypeTags"
+                :default-value="defaultValue.modelType"
+                @selected="selectModelTypeData"
+                @selected-name="setModelTypeTags"
               ></BaseSelect>
               <BaseSelect
                 class="select-lg"
                 :is-check="true"
                 :data="props.modelFormData"
                 :default-title="'형식선택'"
-                @select="selectModelFormData"
-                @getName="setModelFormTags"
+                :default-value="defaultValue.modelForm"
+                @selected="selectModelFormData"
+                @selected-name="setModelFormTags"
               ></BaseSelect>
               <BaseSelect
                 class="select-lg"
                 :is-check="true"
                 :data="props.modelFormatData"
                 :default-title="'포맷선택'"
-                @select="selectModelFormatData"
+                :default-value="defaultValue.modelFormat"
+                @selected="selectModelFormatData"
                 @getName="setModelFormatTags"
               ></BaseSelect>
             </div>
@@ -176,6 +152,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, onMounted, defineEmits, defineProps } from "vue";
+import type { Select } from "~/components/base/select";
 import dayjs, { Dayjs } from "dayjs";
 const FORMAT = "YYYY-MM-DD";
 const TODAY = "TODAY";
@@ -194,7 +171,7 @@ const props = defineProps({
    * 검색어 ALL
    */
   keywordData: {
-    type: Array,
+    type: Array as () => Array<Select>,
     default: [
       {
         key: "전체",
@@ -218,7 +195,7 @@ const props = defineProps({
    * 기간 선택 select
    */
   dateData: {
-    type: Array,
+    type: Array as () => Array<Select>,
     default: [
       {
         key: "전체",
@@ -242,42 +219,42 @@ const props = defineProps({
    * 연결 정보 select
    */
   connectionData: {
-    type: Array,
+    type: Array as () => Array<Select>,
     default: null
   },
   /**
    * 연결 정보 유형 선택 select
    */
   connectionTypeData: {
-    type: Array,
+    type: Array as () => Array<Select>,
     default: null
   },
   /**
    * 도메인 select
    */
   domainData: {
-    type: Array,
+    type: Array as () => Array<Select>,
     default: null
   },
   /**
    * 데이터 모델 유형 select
    */
   modelTypeData: {
-    type: Array,
+    type: Array as () => Array<Select>,
     default: null
   },
   /**
    * 데이터 모델 형식 select
    */
   modelFormData: {
-    type: Array,
+    type: Array as () => Array<Select>,
     default: null
   },
   /**
    * 데이터 모델 포맷 select
    */
   modelFormatData: {
-    type: Array,
+    type: Array as () => Array<Select>,
     default: null
   }
 });
@@ -326,7 +303,45 @@ const tags: {
   modelForm: [],
   modelFormat: []
 });
-
+const defaultValue: {
+  keyword: any | null;
+  date: any | null;
+  connection: any | null;
+  connectionType: any | null;
+  domain: any | null;
+  modelType: any | null;
+  modelForm: any | null;
+  modelFormat: any | null;
+} = reactive({
+  keyword: null,
+  date: null,
+  connection: null,
+  connectionType: null,
+  domain: null,
+  modelType: null,
+  modelForm: null,
+  modelFormat: null
+});
+const dateRadioList = [
+  { id: "toggle-today", value: TODAY, name: "오늘" },
+  { id: "toggle-week", value: WEEK, name: "7일" },
+  { id: "toggle-month-1", value: ONE_MONTH, name: "1개월" },
+  {
+    id: "toggle-month-3",
+    value: THREE_MONTH,
+    name: "3개월"
+  },
+  {
+    id: "toggle-year",
+    value: YEAR,
+    name: "1년"
+  },
+  {
+    id: "toggle-all",
+    value: ALL,
+    name: "전체"
+  }
+];
 /**
  * 검색어 select
  * @param data
@@ -451,11 +466,24 @@ function search() {
 /**
  * 초기화
  */
-function reset() {
+async function reset() {
+  await resetDefaultValue(defaultValue);
   keyword.value = null;
   emit("reset", detailSearch);
+  changeDateRange(THREE_MONTH);
+  defaultValue.keyword = props.keywordData[0].value;
+  defaultValue.date = props.dateData[0].value;
 }
 
+function resetDefaultValue(defaultValue: any | null) {
+  for (const key in defaultValue) {
+    if (key === "connection" || "connectionType" || "domain" || "modelType" || "modelForm" || "modelFormat") {
+      defaultValue[key] = [];
+    } else {
+      defaultValue[key] = null;
+    }
+  }
+}
 /**
  * 토글 관련
  */

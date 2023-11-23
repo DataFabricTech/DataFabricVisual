@@ -11,7 +11,7 @@
             <span class="button-text">미리보기</span>
           </BaseButton>
           <BaseButton class="button-normal" v-if="!props.showConnectInfo" @click="download">
-            <span class="button-text"> 다운로드 요청 </span>
+            <span class="button-text">{{ downloadStatus }} </span>
           </BaseButton>
           <div v-if="props.showConnectInfo">
             <baseBadge :class="isConnected(props.model.status) ? 'bg-marker-cyan' : 'bg-marker-gray'">
@@ -112,36 +112,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from "vue";
+import { computed, onMounted, defineEmits } from "vue";
 import { ref } from "@vue/reactivity";
-
-/** TODO: 모델 타입 인터페이스 구현 */
-interface ModelType {
-  id: string;
-  name: string;
-  description: string;
-  tags: string[];
-  storageInfo: {
-    storageType: string;
-  };
-  domain: string;
-  updatedAt: string;
-  creator: string;
-  statInfo: {
-    access: number;
-    rating: number;
-    favorite: number;
-    download: number;
-  };
-  downloadInfo: {
-    status: number;
-    uri: string;
-  };
-}
+import type { DataModel } from "~/components/project/functional/card/dataModel";
 
 const props = defineProps({
   model: {
-    type: Object as () => ModelType,
+    type: Object as () => DataModel,
     default: () => ({
       id: "111",
       name: "불법 주정차 구간 데이터",
@@ -151,7 +128,7 @@ const props = defineProps({
         storageType: "HDFS"
       },
       status: "CONNECTED",
-      domain: "공간",
+      domain: "교통",
       lastModifiedAt: {
         strDateTime: "2023-11-20 13:30:40.123",
         utcTime: 1606824000000
@@ -172,22 +149,37 @@ const props = defineProps({
       }
     })
   },
+  /**
+   * 연결 정보
+   */
   showConnectInfo: {
     type: Boolean,
     default: false
   },
+  /**
+   * 별점, 조회수, 다운로드, 북마크 정보
+   */
   showStatistics: {
     type: Boolean,
     default: true
   },
+  /**
+   * 미리보기 버튼
+   */
   showPreviewBtn: {
     type: Boolean,
     default: true
   },
+  /**
+   * 01. 리스트 축소형
+   */
   showInfoComplex: {
     type: Boolean,
     default: false
   },
+  /**
+   * 수정
+   */
   isUpdate: {
     type: Boolean,
     default: false
@@ -197,48 +189,26 @@ const tagList = ref("");
 const tooltipMassage = ref(`태그 추가 시 콤마(,)로 구분해주세요.`);
 const emit = defineEmits(["preview", "download", "click", "update"]);
 
-// const computedStatus = (property: string) => {
-//   computed(() => {
-//     switch (props.model?.[property]) {
-//       case 1:
-//         downloadStatus.value = "다운로드 요청";
-//         break;
-//       case 2:
-//         downloadStatus.value = "다운로드 중";
-//         break;
-//       case 3:
-//         downloadStatus.value = "다운로드 가능";
-//         break;
-//       default:
-//         downloadStatus.value = "다운로드";
-//         break;
-//     }
-//   });
-// };
-// if (props.model?.downloadInfo) {
-//   console.log("dkaafklds");
-//   computedStatus("downloadInfo.status");
-//   console.log(downloadStatus.value);
-// }
-
-// const downloadStatus = computed(() => {
-//   switch (props.model?.downloadInfo.status) {
-//     case 1:
-//       return "다운로드 요청";
-//     case 2:
-//       return "다운로드 중";
-//     case 3:
-//       return "다운로드 가능";
-//     default:
-//       return "다운로드";
-//   }
-// });
+const downloadStatus = computed(() => {
+  if (props.model?.downloadInfo) {
+    switch (props.model?.downloadInfo.status) {
+      case 1:
+        return "다운로드 요청";
+      case 2:
+        return "다운로드 중";
+      case 3:
+        return "다운로드 가능";
+      default:
+        return "다운로드";
+    }
+  }
+});
 
 function preview() {
   emit("preview");
 }
 function download() {
-  let downloadInfo = {
+  let downloadInfo: object = {
     id: props.model.id,
     uri: props.model.downloadInfo.uri
   };
