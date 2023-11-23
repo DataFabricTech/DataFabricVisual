@@ -20,6 +20,27 @@
     <BaseSelect class="select-lg" :data="keywordData" :default-value="'content'" @select="selectBbb"></BaseSelect>
     <!--    <BaseSelect class="select-lg" :data="keywordData" :is-check="true" @select="selectBbb"></BaseSelect>-->
     <BaseSelect class="select-lg" :data="keywordData" :default-value="'title2'" @select="selectBbb"></BaseSelect>
+    <!-- lyj test-->
+    <BaseSelect class="select-lg" @selected="selectBbb"
+                :data="keywordData"
+                default-value="title2"
+                :is-check="false"
+                default-title="선택해"
+    ></BaseSelect>
+    <BaseSelect class="select-lg" @selected="selectBbb"
+                :data="keywordData"
+                default-value="title2"
+                :is-check="true"
+                default-title="선택해"
+    ></BaseSelect>
+    <BaseSelect class="select-lg" @selected="selectBbb"
+                :data="keywordData"
+                default-value="title2"
+                default-title="선택해"
+                v-model="selectedData"
+    ></BaseSelect>
+    <BaseButton @click="clickReset">RESET</BaseButton>
+    <!-- lyj test-->
   </div>
 
   <!-- 검색 필터 -->
@@ -53,9 +74,25 @@
 </template>
 
 <script lang="ts" setup>
+import { Select } from "~/components/base/select";
+
+const selectedData =ref<Select[]>([]);
+
 function selectBbb(val: any) {
-  console.log(val);
+  console.log("select - selected data:", val);
 }
+
+function clickReset() {
+  console.log("select - reset");
+  selectedData.value = [];
+}
+
+watch(
+  () => selectedData.value,
+  (nValue, oValue) => {
+    console.log("select - change data :", nValue);
+  }
+);
 
 const options = [
   { id: "opt555", value: 5, title: "최고에요" },
