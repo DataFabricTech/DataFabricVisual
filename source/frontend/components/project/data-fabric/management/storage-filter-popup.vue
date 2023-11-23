@@ -8,31 +8,18 @@
   >
     <template v-slot:body>
       <base-checkbox-list
+        title="저장소 유형"
         class="w-[326px]"
-        :items="storage.types"
-        :checked-items="filter.types"
+        :items="data.typeList"
+        :use-search-filter="true"
         @change="filter.types = $event"
       >
-        <template v-slot:head>
-          <div class="list-head">
-            <div class="list-head-title">저장소 유형</div>
-            <div class="text-input-group">
-              <span class="text-input-icon">
-                <svg-icon class="svg-icon" name="search"></svg-icon>
-              </span>
-              <baseTextInput id="inp-group" value="" placeholder="검색어를 입력하세요."></baseTextInput>
-              <Basebutton class="text-input-clear-button button-icon button-link" title="초기화">
-                <svg-icon class="svg-icon" name="close"></svg-icon>
-              </Basebutton>
-            </div>
-          </div>
-        </template>
       </base-checkbox-list>
       <base-checkbox-list
         class="w-[326px]"
+        title="연결 상태"
         :enable-check-all="false"
-        :items="storage.statusTypes"
-        :checked-items="filter.status"
+        :items="data.statusTypeList"
         @change="filter.status = $event"
       >
         <template v-slot:head>
@@ -59,6 +46,7 @@
 </template>
 <script lang="ts" setup>
 import { useStorageStore } from "~/store/data-fabric/management/storage";
+import type { BaseCheckBoxListItem } from "~/components/base/checkbox-list";
 
 const store = useStorageStore();
 const { storage, setStorageTypeFilter, setStatusFilter } = store;
@@ -66,10 +54,63 @@ const { storage, setStorageTypeFilter, setStatusFilter } = store;
 const filter: {
   status: Array<string>;
   types: Array<string>;
+  typeText: string;
 } = reactive({
   status: [],
-  types: []
+  types: [],
+  typeText: ""
 });
+
+const data: {
+  typeList: Array<BaseCheckBoxListItem>;
+  statusTypeList: Array<BaseCheckBoxListItem>;
+} = reactive({
+  typeList: [],
+  statusTypeList : []
+});
+
+watch(
+  () => storage.filter.storageType,
+  (nValue, oValue) => {
+    if (_isEqual(nValue, oValue)) {
+      return;
+    }
+    makeStorageTypeList();
+  },
+  { immediate: true, deep: true }
+);
+watch(
+  () => storage.filter.status,
+  (nValue, oValue) => {
+    if (_isEqual(nValue, oValue)) {
+      return;
+    }
+    makeStatusTypeList();
+  },
+  { immediate: true, deep: true }
+);
+
+/**
+ * 저장소 유형 원본 데이터 생성
+ */
+function makeStorageTypeList() {
+  data.typeList = _map(storage.types, (item) => {
+    const findItem = _includes(storage.filter.storageType, item.value);
+    item.checked = findItem;
+    return item;
+  });
+}
+
+/**
+ * 연결상태 원본 데이터 생성
+ */
+function makeStatusTypeList() {
+  data.statusTypeList = _map(storage.statusTypes, (item) => {
+    const findItem = _includes(storage.filter.status, item.value);
+    item.checked = findItem;
+    return item;
+  });
+}
 
 /**
  * 필터 초기화 - 초기값(전체 선택 값)으로 복구
