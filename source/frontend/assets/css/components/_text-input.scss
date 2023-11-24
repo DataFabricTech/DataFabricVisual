@@ -3,6 +3,24 @@
   font-size: $font-size;
 }
 
+@mixin text-input-group-size($size:null, $icon-size) {
+  .text-input {
+    @if $size == 'lg' {
+      @extend .text-input-lg;
+    } @else if $size == 'sm' {
+      @extend .text-input-sm;
+    }
+  }
+  .text-input-icon {
+    width: $icon-size;
+    height: $icon-size;
+  }
+  .text-input-clear-button {
+    width: $icon-size;
+    height: $icon-size;
+  }
+}
+
 .text-input {
   position: relative;
   padding: $spacing-2 $spacing-12;
@@ -21,7 +39,7 @@
   }
 
   &:hover:not(:disabled) {
-    border-color: #aeb9ca;
+    border-color: $hover;
   }
 
   &[readonly],
@@ -38,5 +56,66 @@
 
   &-sm {
     @include text-input-size(24px, 12px);
+  }
+
+  & ~ span {
+    color: $font-gray-01;
+  }
+
+  &-group {
+    position: relative;
+
+    .text-input {
+      padding: 0 $spacing-36;
+    }
+
+    &-lg {
+      @include text-input-group-size('lg', 20px);
+    }
+
+    &-sm {
+      @include text-input-group-size('sm', 14px);
+    }
+
+    &.is-disabled {
+      cursor: not-allowed;
+
+      .text-input-clear-button, .text-input-icon {
+        opacity: .5;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 8px;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    z-index: 1;
+
+    .svg-icon {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &-clear-button {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 18px;
+    height: 18px;
+    transform: translateY(-50%);
+    z-index: 1;
+    cursor: pointer;
+
+    .svg-icon {
+      width: 100%;
+      height: 100%;
+    }
   }
 }

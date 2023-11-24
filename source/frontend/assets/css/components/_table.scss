@@ -27,6 +27,20 @@
   }
 }
 
+.table-scroll {
+  overflow: auto;
+  max-width: 100%;
+
+  table {
+    table-layout: fixed;
+
+    td {
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
 .table-nesting {
   td {
     padding: $spacing-8 !important;

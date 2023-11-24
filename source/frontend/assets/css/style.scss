@@ -7,7 +7,6 @@
 // theme
 @import "./themes/set-color.scss";
 @import "./themes/set-theme.scss";
-@import "./themes/theme.scss";
 
 // mixins
 @import "./abstracts/fonts";
@@ -19,13 +18,14 @@
 
 // base
 @import "base/base";
-@import "base/classes";
 
 // components
+@import "components/alert";
 @import "components/badge";
 @import "components/button";
 @import "components/checkbox";
 @import "components/context";
+@import "components/date-picker";
 @import "components/form";
 @import "components/nav";
 @import "components/notifiaction";
@@ -39,6 +39,7 @@
 @import "components/tag";
 @import "components/textarea";
 @import "components/text-input";
+@import "components/tree";
 @import "components/toggle";
 @import "components/toggle-token";
 @import "components/toggle-button";
@@ -48,6 +49,8 @@
 @import "components/table";
 @import "components/list";
 @import "components/switch";
+@import "components/tooltip";
+
 
 // modules
 @import "modules/card";
@@ -55,6 +58,8 @@
 @import "modules/search-field";
 @import "modules/search-filter";
 @import "modules/data-status";
+@import "modules/review";
+@import "modules/scroll-top";
 
 // layouts
 @import "layout/layout";
@@ -66,6 +71,7 @@
 
 // pages
 @import "pages/common";
+@import "pages/login";
 @import "pages/data-fabric/data-fabric";
 @import "pages/data-fabric/main";
 @import "pages/data-fabric/search";
@@ -76,8 +82,10 @@
 // vendors
 @import "vendors/ag-theme-alpine";
 
-// status
+// class
 @import "base/status";
+@import "base/classes";
+@import "./themes/theme.scss";
 
 // tailwindCSS Utility Class
 @import "./tailwind/tailwind-utilities";

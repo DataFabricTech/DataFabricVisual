@@ -41,7 +41,7 @@ const state = reactive({
     {
       id: 4,
       num: 4,
-      title: "추가 정보 입력",
+      title: "수집 정보 입력",
       isCurrent: false
     }
   ]

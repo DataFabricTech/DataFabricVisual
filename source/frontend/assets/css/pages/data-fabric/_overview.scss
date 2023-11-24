@@ -4,11 +4,57 @@
   width: 100%;
   padding: $spacing-8;
   background-color: $white;
+
+  .list {
+    justify-content: flex-start;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  .tree {
+    padding-top: $spacing-4;
+
+    .tree-level {
+      width: 100%;
+    }
+
+    .input-wrapper {
+      overflow: hidden;
+    }
+  }
 }
 
 .chartbox {
+  @include flex-standard($horizontal: flex-start, $direction: column);
   background-color: $light-blue;
   width: 100%;
   height: 308px;
   padding: $spacing-16;
+  gap: $spacing-16;
+
+  .connection-info {
+    @include flex-standard($direction: column);
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    padding: $spacing-16 $spacing-24;
+
+    dl {
+      @include flex-standard;
+      width: 100%;
+      gap: $spacing-8;
+    }
+
+    dt, dd {
+      flex-shrink: 0;
+      font-size: 15px;
+      color: $font-gray-01;
+    }
+
+    hr {
+      border: 1px solid $border-gray;
+      width: 100%;
+    }
+
+  }
 }

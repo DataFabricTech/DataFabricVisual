@@ -13,5 +13,3 @@ export const enum DateFormat {
   MONTH = "YYYY-MM",
   TIME = "HH:mm:ss"
 };
-
-export type DateType = Array<String> | String;

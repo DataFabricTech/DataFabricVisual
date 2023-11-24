@@ -11,6 +11,10 @@
   overflow-y: auto
 }
 
+.side-wrapper {
+  position: relative;
+}
+
 .search-word {
   @include flex-standard;
   gap: $spacing-24;
@@ -79,6 +83,14 @@
     @include flex-standard($direction: column);
     gap: $spacing-16;
     width: 100%;
+
+    table {
+      width: 100%;
+
+      th {
+        width : 220px;
+      }
+    }
   }
 
   &-container {
@@ -90,16 +102,27 @@
     gap: $spacing-32;
   }
 
-  &-top-bar {
+  &-subject {
     @include flex-standard($horizontal: space-between);
     width: 100%;
+
+    &.is-vertical{
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $spacing-8;
+      margin-bottom: $spacing-12;
+    }
   }
 
-  &-name {
+  &-title {
     @include flex-standard($horizontal: flex-start);
-    padding: 0 $spacing-24;
-    font-size: 20px;
     color: $font-black;
-    user-select: none;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  &-description{
+    color: $font-gray-01;
+    font-size: 15px;
   }
 }

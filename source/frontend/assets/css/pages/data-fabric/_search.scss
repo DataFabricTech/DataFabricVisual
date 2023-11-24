@@ -1,17 +1,13 @@
 .preview {
   @include flex-standard($horizontal: flex-start, $direction: column);
-  width: 40%;
+  width: 600px;
   background-color: $white;
   border: 1px solid $gray;
 
   &-main {
     @include flex-standard($horizontal: flex-start, $direction: column);
     gap: $spacing-36;
-    width: 60%;
-
-    &:only-child {
-      width: 100%;
-    }
+    flex-grow: 1;
   }
 
   &-header {
@@ -24,12 +20,14 @@
   }
 
   &-title {
-    font-size: 15px;
-    color: $font-gray-01;
+    font-size: 18px;
+    font-weight: 600;
+    color: $primary;
   }
 
   &-body {
     @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
+    height: 1050px;
     overflow-y: auto;
     gap: $spacing-20;
     flex-grow: 1;
@@ -41,6 +39,30 @@
     @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
     gap: $spacing-12;
     width: 100%;
+
+    &:not(:last-child) {
+      margin-top: $spacing-12;
+    }
+
+    .table-col {
+      max-height: 350px;
+    }
+
+    .table-row {
+      width: 100%;
+
+      table {
+        width: 100%;
+        table-layout: fixed;
+
+        th{
+          width: 150px;
+        }
+        td {
+          width: 100%;
+        }
+      }
+    }
   }
 
   &-card {

@@ -10,9 +10,17 @@
   &-input {
     @include hidden-text;
 
-    &:checked + .radio-label:before {
-      background-color: $primary;
-      border-color: $primary;
+    &:checked {
+      & + .radio-label:before {
+        background-color: $primary;
+        border-color: $primary;
+      }
+
+      &:hover:not(:disabled) {
+        & + .radio-label:before {
+          border-color: $primary;
+        }
+      }
     }
 
     &:disabled + .radio-label {
@@ -63,6 +71,12 @@
       border-radius: $border-radius-round;
       background-color: $white;
     }
+
+    &:hover:not(:disabled) {
+      &:before {
+        border-color: $hover;
+      }
+    }
   }
 
   &-lg {
@@ -75,7 +89,6 @@
         height: 20px;
         margin: $spacing-2;
         top: 2px;
-        border-width: 2px;
       }
 
       &:after {

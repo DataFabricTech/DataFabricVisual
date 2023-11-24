@@ -1,5 +1,11 @@
 <template>
-  <vue-final-modal class="modal" content-class="modal" :modal-id="props.name">
+  <vue-final-modal
+    class="modal"
+    content-class="modal-inner"
+    :modal-id="props.name"
+    :background="clickOutside"
+    @beforeOpen="onBeforeOpen"
+  >
     <header class="modal-header">
       <slot name="head">
         <h5 class="modal-title">
@@ -27,15 +33,35 @@ import { VueFinalModal } from "vue-final-modal";
 import { useNuxtApp } from "nuxt/app";
 const { $vfm } = useNuxtApp();
 
-const props = defineProps<{
-  title?: string;
-  name?: string;
-}>();
-
+const props = defineProps({
+  title: {
+    type: String,
+    default: ""
+  },
+  name: {
+    type: String,
+    default: ""
+  },
+  useClickOutside: {
+    type: Boolean,
+    default: true
+  }
+});
+const clickOutside = computed(() => {
+  let result = props.useClickOutside ? "non-interactive" : "interactive";
+  console.log("useClickOutside", result);
+  return result;
+});
 function onClose() {
-  $vfm.close(props.name);
+  emit("close");
+}
+function onBeforeOpen() {
+  emit("before-open");
 }
 const emit = defineEmits<{
   (e: "confirm"): void;
+  (e: "close"): void;
+  (e: "before-open"): void;
+  (e: "clickOutside"): void;
 }>();
 </script>

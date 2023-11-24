@@ -20,6 +20,11 @@
     </ag-grid-vue>
     <p>composables test : {{ sampleData }}</p>
 
+
+    <baseButton class="button-primary button-lg" @click="onClickApi">
+      <span class="button-text">API test</span>
+    </baseButton>
+
     <baseButton class="button-lg button-primary" @click="onClickOpen">모달 OPEN</baseButton>
     <modal title="연결정보 등록" name="modal-test">
       <template v-slot:body>
@@ -43,10 +48,9 @@
 </template>
 
 <script lang="ts" setup>
-import { sample } from "../../composables/sample";
-import TabBar from "../../components/project/tab-bar.vue";
-import Alert from "../../components/common/alert.vue";
-import DatePicker from "../../components/common/date-picker/date-picker.vue";
+import { sample } from "~/composables/sample";
+import TabBar from "/components/project/functional/tab-bar/tab-bar.vue";
+import Alert from "/components/common/alert.vue";
 
 import { AgGridVue } from "ag-grid-vue3";
 import { useNuxtApp } from "nuxt/app";
@@ -58,7 +62,7 @@ definePageMeta({
 const date = ref("2023-11-22");
 const dateRange = ref(["2023-11-11", "2023-11-22"]);
 
-const { $vfm } = useNuxtApp();
+const { $vfm, $api } = useNuxtApp();
 function onClickOpen() {
   $vfm.open("modal-test");
 }
@@ -73,6 +77,10 @@ const chartOptions = {
     }
   ]
 };
+async function onClickApi() {
+  const data = await $api("/api/hello");
+  console.log(data);
+}
 
 const gridOptions = {
   headerHeight: 56,

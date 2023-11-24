@@ -8,17 +8,25 @@
   position: relative;
 
   &-input {
-     @include hidden-text;
+    @include hidden-text;
     top: 4px;
     left: 2px;
 
-    &:checked + .checkbox-label:before {
-      background-color: $primary;
-      border-color: $primary;
-    }
+    &:checked {
+      & + .checkbox-label:before {
+        background-color: $primary;
+        border-color: $primary;
+      }
 
-    &:checked + .checkbox-label:after {
-      transform: scale(1) rotate(-45deg);
+      & + .checkbox-label:after {
+        transform: scale(1) rotate(-45deg);
+      }
+
+      & + .checkbox-label:hover:not(:disabled) {
+         &:before{
+          border-color: $primary;
+        }
+      }
     }
   }
 
@@ -66,6 +74,12 @@
       transform: scale(0) rotate(-45deg);
       transform-origin: bottom right;
     }
+
+    &:hover:not(:disabled) {
+      &:before {
+        border-color: $hover;
+      }
+    }
   }
 
   &-indeterminate {
@@ -100,7 +114,6 @@
         height: 20px;
         margin: $spacing-2;
         top: 2px;
-        border-width: 2px;
       }
 
       &:after {

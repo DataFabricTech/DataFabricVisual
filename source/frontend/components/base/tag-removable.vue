@@ -4,10 +4,21 @@
       <slot></slot>
     </button>
     <button class="button button-icon button-sm">
-      <svg-icon name="close" class="svg-icon" />
+      <svg-icon name="close" class="svg-icon" @click="closeTag"/>
     </button>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const emit = defineEmits(['close']);
 
+const props = defineProps({
+  indexValue: {
+    type: Number,
+    default: 0
+  }
+})
+function closeTag() {
+  emit('close', props.indexValue);
+}
+</script>
