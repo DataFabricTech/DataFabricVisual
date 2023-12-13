@@ -1,0 +1,69 @@
+.l-header {
+  @include flex-standard($horizontal: flex-start);
+  width: 100%;
+  height: 56px;
+  padding: 0 $spacing-16;
+  gap: $spacing-32;
+  background-color: $white;
+  border-bottom: 1px solid $gray;
+}
+
+.l-nav {
+  @include flex-standard($horizontal: space-between);
+  width: 100%;
+  height: 40px;
+  padding: 0 $spacing-16;
+  background-color: $gray;
+}
+
+.l-side {
+  @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
+  gap: $spacing-12;
+  padding: $spacing-2 + $spacing-8;
+  background-color: $light-blue;
+}
+
+.l-footer {
+  @include flex-standard($horizontal: space-between);
+  width: 100%;
+  height: 96px;
+  padding: 0 $spacing-16;
+  border-top: 1px solid $border-gray;
+}
+
+.l-common {
+  @include flex-standard($direction: column);
+  padding: $spacing-24;
+  gap: $spacing-28;
+}
+
+.l-split {
+  @include flex-standard($vertical: flex-start);
+  height: 100%;
+
+  .l-side {
+    width: 318px;
+    height: 100%;
+    flex-shrink: 0;
+  }
+
+  .l-split-section {
+    overflow-y: auto;
+    height: 100%;
+  }
+}
+
+.l-split-section {
+  flex-grow: 1;
+}
+
+.l-section {
+  @include flex-standard($vertical: flex-start, $direction: column);
+  width: 100%;
+}
+
+.l-preview {
+  @include flex-standard($vertical: flex-start);
+  width: 100%;
+  gap: $spacing-12;
+}

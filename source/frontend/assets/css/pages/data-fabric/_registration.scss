@@ -1,0 +1,121 @@
+.step-info {
+  @include flex-standard($direction: column, $vertical: flex-start, $horizontal: flex-start);
+  width: 100%;
+  max-height: 530px;
+  overflow: auto;
+  padding: $spacing-16;
+  margin-top: $spacing-24;
+  gap: $spacing-16;
+  background-color: $light-blue;
+
+  &-title {
+    font-size: 16px;
+    color: $font-black;
+    font-weight: 500;
+  }
+
+  &-inner {
+    @include flex-standard($direction: column, $horizontal: flex-start);
+    max-height: 430px;
+    overflow: auto;
+    background-color: $white;
+    padding: $spacing-16;
+    border: 1px solid $border-gray;
+    gap: $spacing-16;
+  }
+}
+
+.description {
+  @include flex-standard($direction: column, $vertical: flex-start, $horizontal: flex-start);
+  gap: $spacing-16;
+
+  dl {
+    @include flex-standard;
+
+    dt {
+      width: 130px;
+      color: $font-black;
+    }
+
+    dt, dd {
+      font-size: 15px;
+    }
+
+    dd {
+      color: $font-gray-01;
+    }
+  }
+}
+
+
+.storage-type {
+  @include flex-standard($horizontal: flex-start);
+  flex-wrap: wrap;
+  height: 430px;
+  padding: $spacing-36 0 $spacing-36 $spacing-36;
+  gap: 36px;
+  overflow: auto;
+  background-color: $white;
+  border: 1px solid $border-gray;
+
+  &-item  {
+    width: calc(25% - 36px);
+    height: 160px;
+    border: 1px solid $border-gray;
+    border-radius: 4px;
+
+    &-title {
+      @include ellipsis;
+      width: 100%;
+      text-align: center;
+      font-size: 14px;
+      color: $font-black;
+    }
+  }
+
+  &-item:hover,
+  &-item:active,
+  &-item + .is-selected {
+    background-color: $light-blue;
+    border: 1px solid $tertiary;
+
+    .storage-type-item-title {
+      color: $tertiary;
+    }
+  }
+
+  &-button {
+    @include flex-standard($direction: column);
+    width: 100%;
+    height: 100%;
+    padding: $spacing-16;
+    gap: $spacing-8;
+  }
+
+  &-img {
+    @include flex-standard;
+    flex-grow: 1;
+
+    img {
+      max-width: 90%;
+    }
+  }
+
+  &-item + .is-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    img {
+      filter: grayscale(100%);
+    }
+  }
+
+  &-item + .is-disabled:hover {
+    border: 1px solid $border-gray;
+    background-color: $white;
+
+    .storage-type-item-title {
+      color: $font-black;
+    }
+  }
+}

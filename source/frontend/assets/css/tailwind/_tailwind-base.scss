@@ -1,0 +1,79 @@
+@tailwind base;
+
+/* reset */
+@layer base {
+  * {
+    outline: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    font-family: "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    font-weight: 400;
+  }
+
+  html, body, #__nuxt {
+    height: 100%;
+  }
+
+  input:focus {
+    outline: none;
+  }
+
+  em {
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  input {
+    &[type="checkbox"], &[type="radio"] {
+      &:focus-visible:not(:disabled) {
+        & + label {
+          outline: 1px dashed #212121;
+        }
+      }
+    }
+
+    &[type="text"] {
+      &:focus-visible:not(:disabled):not(:read-only),
+      &:focus-visible:not(:read-only):not(:disabled) {
+        border-color: #4DAEFF;
+      }
+    }
+  }
+
+  textarea {
+    &[type="text"] {
+      &:focus-visible:not(:disabled):not(:read-only),
+      &:focus-visible:not(:read-only):not(:disabled) {
+        border-color: #4DAEFF;
+      }
+    }
+  }
+
+  button {
+    &:focus-visible:not(:disabled) {
+      outline: 1px dashed #212121;
+    }
+  }
+
+  ul, ol {
+    list-style: none;
+  }
+
+  button[type="button"], button[type="submit"], a[href], input[type="text"], input[type="radio"], input[type="checkbox"], label, textarea {
+    &:disabled,
+    &:disabled:hover,
+    &:disabled:focus,
+    &:disabled + .radio-label,
+    &:disabled + .checkbox-label {
+      opacity: 0.25;
+      cursor: not-allowed;
+    }
+  }
+
+  strong {
+    font-weight: 400;
+  }
+}

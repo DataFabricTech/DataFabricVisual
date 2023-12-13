@@ -1,0 +1,26 @@
+.pagination {
+  width: 100%;
+
+  &-list {
+    @include flex-standard;
+  }
+
+  &-button {
+    &:hover:not(:disabled) {
+      background-color: $light-blue;
+    }
+
+    &.is-selected {
+      background-color: $primary;
+      color: $white;
+
+      .svg-icon {
+        fill: $white;
+      }
+
+      &:hover:not(:disabled) {
+        background-color: $hover-primary;
+      }
+    }
+  }
+}

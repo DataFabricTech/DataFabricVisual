@@ -1,0 +1,89 @@
+.preview {
+  @include flex-standard($horizontal: flex-start, $direction: column);
+  width: 600px;
+  background-color: $white;
+  border: 1px solid $gray;
+
+  &-main {
+    @include flex-standard($horizontal: flex-start, $direction: column);
+    gap: $spacing-36;
+    flex-grow: 1;
+  }
+
+  &-header {
+    @include flex-standard($horizontal: space-between);
+    flex-shrink: 0;
+    width: 100%;
+    height: 40px;
+    padding: 0 $spacing-8;
+    border-bottom: 1px solid $gray;
+  }
+
+  &-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: $primary;
+  }
+
+  &-body {
+    @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
+    height: 1050px;
+    overflow-y: auto;
+    gap: $spacing-20;
+    flex-grow: 1;
+    width: 100%;
+    padding: $spacing-8;
+  }
+
+  &-article {
+    @include flex-standard($vertical: flex-start, $horizontal: flex-start, $direction: column);
+    gap: $spacing-12;
+    width: 100%;
+
+    &:not(:last-child) {
+      margin-top: $spacing-12;
+    }
+
+    .table-col {
+      max-height: 350px;
+    }
+
+    .table-row {
+      width: 100%;
+
+      table {
+        width: 100%;
+        table-layout: fixed;
+
+        th{
+          width: 150px;
+        }
+        td {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  &-card {
+    @include flex-standard($horizontal: flex-start);
+    flex-shrink: 0;
+    width: 100%;
+    height: 110px;
+    padding: $spacing-4 $spacing-16;
+    background-color: $light-gray;
+  }
+
+  &-footer {
+    @include flex-standard;
+    flex-shrink: 0;
+    width: 100%;
+    height: 64px;
+    padding: 0 $spacing-8;
+    background-color: $light-blue;
+  }
+
+  .list {
+    border: 0;
+  }
+}

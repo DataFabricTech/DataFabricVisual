@@ -1,0 +1,41 @@
+
+.context {
+  @include box-shadow('overlay');
+  @include z-index('dropdown');
+  @include list-style('context');
+  border-radius: $border-radius-sm;
+
+  &-list {
+    min-width: 130px;
+  }
+
+  &-button {
+    line-height: 1.75;
+
+    &.is-selected {
+      .context-text {
+        color: $primary;
+      }
+
+      .svg-icon {
+        fill: $primary;
+      }
+    }
+  }
+
+  &-text {
+    color: $font-gray-01;
+  }
+
+  &.context-lg {
+    @include list-style('context', 'lg');
+
+    .context-list {
+      min-width: 140px;
+    }
+  }
+
+  &.context-sm {
+    @include list-style('context', 'sm');
+  }
+}

@@ -1,0 +1,30 @@
+.textarea {
+  padding: $spacing-4 $spacing-12;
+  width: 100%;
+  min-width: 120px;
+  min-height: 40px;
+  color: $font-black;
+  border: 1px solid $border-gray;
+  font-weight: 400;
+  font-size: 14px;
+  background: $white;
+  border-radius: $border-radius-sm;
+  resize: vertical;
+
+  &::placeholder {
+    font-weight: 300;
+    color: $font-gray-02;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: $hover;
+  }
+
+  &[readonly],
+  &[readonly]:hover {
+    cursor: default;
+    border-color: $border-gray;
+    background-color: $readonly;
+    color: $font-gray-01;
+  }
+}

@@ -1,0 +1,11 @@
+.badge {
+  @include flex-standard($display: inline-flex);
+  flex-shrink: 0;
+  padding: $spacing-2 $spacing-4;
+  border-radius: $border-radius-sm;
+
+  &-title {
+    font-size: 12px;
+    font-weight: 500;
+  }
+}

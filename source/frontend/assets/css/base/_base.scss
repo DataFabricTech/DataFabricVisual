@@ -1,0 +1,22 @@
+#wrap {
+  min-width: 1280px;
+  display: flex;
+  flex-direction: column;
+
+
+  &.is-full {
+    height: 100%;
+
+    #main {
+      flex-grow: 1;
+    }
+  }
+
+  &.is-split-full {
+    height: 100%;
+
+    #main {
+      height: calc(100% - 56px);
+    }
+  }
+}

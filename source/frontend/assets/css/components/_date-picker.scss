@@ -1,0 +1,35 @@
+.date-picker {
+  .mx-datepicker-range {
+    width: 200px;
+  }
+
+  .mx-icon-clear, .mx-icon-calendar {
+    color: $icon-gray;
+
+    &:hover:not(:disabled) {
+      color: $hover;
+    }
+  }
+
+  .mx-input {
+    height: 32px;
+    color: $font-gray-01;
+    border: 1px solid $border-gray;
+    border-radius: $border-radius-sm;
+    box-shadow: none;
+
+    &:hover:not(:disabled) {
+      border-color: $hover;
+    }
+
+    &:focus {
+      border-color: $tertiary;
+    }
+  }
+
+  &-lg {
+    .mx-input {
+      height: 40px;
+    }
+  }
+}
