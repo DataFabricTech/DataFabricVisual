@@ -10,7 +10,7 @@ Keycloak
 Keycloak 실행방법
 ========
 
-To get help configuring Keycloak via the CLI, run:
+Keycloak를 구성하는 도움말을 보려면 다음 실행
 
 on Linux/Unix:
 
@@ -20,7 +20,7 @@ on Windows:
 
     $ bin\kc.bat
 
-To try Keycloak out in development mode, run: 
+개발 모드로 실행 
 
 on Linux/Unix:
 
@@ -30,6 +30,7 @@ on Windows:
 
     $ bin\kc.bat start-dev
 
-After the server boots, open http://localhost:8080 in your web browser. The welcome page will indicate that the server is running.
 
-To get started, check out the [configuration guides](https://www.keycloak.org/guides#server).
+서버 부팅된 후 별도 포트 설정을 하지 않았다면 웹 브라우저에서 http://localhost:8080 오픈.
+
+Keycloak 서버 구성 시 해당 문서 확인 필요 [configuration guides](https://www.keycloak.org/guides#server).
