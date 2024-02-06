@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   devtools: {enabled: true},
 
-  modules: ['nuxt-lodash', 'dayjs-nuxt'],
+  modules: ['@nuxtjs/storybook', 'nuxt-lodash', 'dayjs-nuxt'],
 
   plugins: [
     {src: '~/plugins/highcharts-vue', mode: 'client'},
