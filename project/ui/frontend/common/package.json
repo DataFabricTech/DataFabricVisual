@@ -7,9 +7,12 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "storybook": "storybook dev --port 6006",
+    "build-storybook": "storybook build"
   },
   "devDependencies": {
+    "@nuxtjs/storybook": "7.0.0",
     "autoprefixer": "^10.4.17",
     "npm": "^10.4.0",
     "nuxt": "^3.10.0",
@@ -18,7 +21,19 @@
     "sass-loader": "^14.1.0",
     "tailwindcss": "^3.4.1",
     "vue": "^3.4.15",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "storybook": "7.6.7",
+    "@types/node": "^18.17.5",
+    "@storybook/vue3": "7.6.7",
+    "@storybook-vue/nuxt": "0.2.1",
+    "@storybook/addon-links": "7.6.7",
+    "@storybook/builder-vite": "7.6.7",
+    "@storybook/addon-essentials": "7.6.7",
+    "@storybook/addon-interactions": "7.6.7",
+    "@storybook/testing-library": "^0.2.0",
+    "@storybook/blocks": "7.6.7"
   },
   "dependencies": {
     "ag-grid-community": "^28.2.1",
