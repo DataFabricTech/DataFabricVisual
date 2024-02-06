@@ -42,6 +42,7 @@ li {
   float: left;
   color: white;
   font-size: 30px;
+  color: black;
 }
 
 li:hover {

@@ -12,10 +12,17 @@ export default defineNuxtConfig({
   ],
 
   css: [
+    '~/assets/css/main.scss',
     'vue-final-modal/style.css',
     'ag-grid-community/dist/styles/ag-grid.css',
     'ag-grid-community/dist/styles/ag-theme-alpine.css'
   ],
+  postcss: {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  },
 
   lodash: {
     prefix: '$_', // lodash 함수에 붙일 접두사
