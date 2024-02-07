@@ -11,6 +11,13 @@ export default defineNuxtConfig({
     {src: "~/plugins/vue-datepicker-next", mode: "client"}
   ],
 
+  components: [
+    {
+      path: "~/components",
+      pathPrefix: false
+    },
+  ],
+
   css: [
     '~/assets/css/main.scss',
     'vue-final-modal/style.css',

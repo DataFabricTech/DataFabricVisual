@@ -1,1 +1,1 @@
-project/ui/frontend/common/.prettierignorenode_modules/**
+node_modules/**
