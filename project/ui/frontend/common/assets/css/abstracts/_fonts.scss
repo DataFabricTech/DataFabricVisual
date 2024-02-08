@@ -1,0 +1,146 @@
+$font-families: (
+        pretandard:
+        unquote(
+                        "'pretandard', 'Segoe UI', 'Open Sans', 'Helvetica Neue'"
+        ),
+        mono:
+        unquote(
+                        "'Consolas', 'Menlo', 'Courier', 'monospace'"
+        )
+);
+
+@mixin font-family($family-name) {
+  @if map-has-key($font-families, $family-name) {
+    font-family: #{map-get($font-families, $family-name)};
+  } @else {
+    @warn "#{$family-name} 값이 올바르지 않습니다.";
+  }
+}
+
+// * Usage *
+// html {
+//   @include font-family('sans');
+// }
+
+//-------------------------------------------
+//  Font Size
+// ------------------------------------------
+@mixin font-size($size) {
+  @if $size == 'heading-40' {
+    font-size: 40px;
+    line-height: 48px;
+  }
+  @else if $size == 'heading-32' {
+    font-size: 32px;
+    line-height: 40px;
+  }
+  @else if $size == 'heading-24' {
+    font-size: 24px;
+    line-height: 32px;
+  }
+  @else if $size == 'title-20' {
+    font-size: 20px;
+    line-height: 28px;
+  }
+  @else if $size == 'title-18' {
+    font-size: 18px;
+    line-height: 24px;
+  }
+  @else if $size == 'title-16' {
+    font-size: 16px;
+    line-height: 24px;
+  }
+  @else if $size == 'label-15' {
+    font-size: 15px;
+    line-height: 24px;
+  }
+  @else if $size == 'label-14' {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  @else if $size == 'label-13' {
+    font-size: 13px;
+    line-height: 20px;
+  }
+  @else if $size == 'label-12' {
+    font-size: 12px;
+    line-height: 18px;
+  }
+  @else if $size == 'body-15' {
+    font-size: 15px;
+    line-height: 24px;
+  }
+  @else if $size == 'body-14' {
+    font-size: 14px;
+    line-height: 20px;
+  }
+  @else if $size == 'body-13' {
+    font-size: 13px;
+    line-height: 20px;
+  }
+  @else if $size == 'body-12' {
+    font-size: 12px;
+    line-height: 18px;
+  }
+  @else {
+    @warn "#{$size} 값이 올바르지 않습니다.";
+  }
+}
+
+//-------------------------------------------
+//  Letter Spacing
+// ------------------------------------------
+// TODO: [디자인, 퍼블리싱] 정리 필요
+$letter-spacings: (
+        "standard": 0,
+        "narrow-xs": -0.2px,
+        "narrow-sm": -0.3px,
+        "narrow-md": -0.5px,
+        "narrow-lg": -1px,
+        "wide-lg": 1px
+);
+
+@mixin letter-spacing($spacing) {
+  @if map-has-key($letter-spacings, $spacing) {
+    letter-spacing: #{map-get($letter-spacings, $spacing)};
+  } @else {
+    @warn "#{$spacing} 값이 올바르지 않습니다.";
+  }
+}
+
+// * Usage *
+// html {
+//   @include letter-spacing('wide-lg');
+// }
+
+//-------------------------------------------
+//  Line Height
+// ------------------------------------------
+// TODO: [퍼블리싱] 정리 필요
+$line-heights: (
+        "lg": 1.5,
+        "md": 1.2,
+        "sm": 1
+);
+
+@mixin line-height($lh) {
+  @if map-has-key($line-heights, $lh) {
+    line-height: #{map-get($line-heights, $lh)};
+  } @else {
+    @warn "#{$lh} 값이 올바르지 않습니다.";
+  }
+}
+
+// * Usage *
+// html {
+//   @include line-height('lg');
+// }
+
+//-------------------------------------------
+//  Font smoothing
+// ------------------------------------------
+// 두꺼운 서체에서 사용되는 font-smoothing
+@mixin font-smoothing {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

@@ -1,0 +1,68 @@
+.guide-section {
+  padding: $spacing-64 $spacing-48;
+}
+
+.section-title {
+  margin-bottom: $spacing-24;
+  font-size: 24px;
+  color: $primary-500;
+  text-align: start;
+}
+
+.test {
+  display: flex;
+  gap: 16px;
+
+  li {
+    width: 100px;
+    height: 50px;
+
+    $color_list: (
+            #{$primary-500},
+            #{$secondary-500},
+            #{$info-500},
+            #{$warning-500},
+            #{$error-500},
+            #{$neutral-500}
+    );
+
+    @for $i from 1 through length($color_list) {
+      &:nth-child(#{$i}) {
+        background-color: nth($color_list, $i);
+      }
+    }
+  }
+
+  &.shadows {
+    gap: $spacing-24;
+
+    li {
+      padding-top: 35px;
+      width: 200px;
+      height: 100px;
+      text-align: center;
+      color:$neutral-500;
+      background-color: $neutral-100;
+
+      @for $i from 1 through length($box-shadows) {
+        &:nth-child(#{$i}) {
+          @include box-shadow(nth(map-keys($box-shadows), $i));
+        }
+      }
+    }
+  }
+}
+.guide-typo {
+  &:nth-child(1) {
+    @include font-size('heading-40');
+  }
+  &:nth-child(2) {
+    @include font-size('heading-32');
+  }
+  &:nth-child(3) {
+    @include font-size('heading-24');
+  }
+  &:nth-child(3) {
+    @include font-size('title-20');
+  }
+}
