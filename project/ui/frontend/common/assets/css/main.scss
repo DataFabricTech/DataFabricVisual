@@ -1,3 +1,31 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+// theme
+@import "./themes/set-color.scss";
+@import "./themes/set-theme.scss";
+
+// variables
+@import "abstracts/variables";
+
+// mixins
+@import "./abstracts/fonts";
+@import "./abstracts/z-index";
+@import "./abstracts/breakpoints";
+@import "./abstracts/box-shadow";
+@import "./abstracts/retina";
+@import "./abstracts/mixins-helper";
+
+// tailwindCSS Reset
+@import "./tailwind/tailwind-base";
+
+// base
+@import "base/base";
+
+// pages
+@import "./pages/design-guide.scss";
+
+// class
+@import "base/status";
+@import "base/classes";
+@import "./themes/theme.scss";
+
+// tailwindCSS Utility Class
+@import "./tailwind/tailwind-utilities";
