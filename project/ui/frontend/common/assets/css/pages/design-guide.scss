@@ -52,17 +52,28 @@
     }
   }
 }
+
+$font-sizes: (
+  'heading-40',
+  'heading-32',
+  'heading-24',
+  'title-20',
+  'title-18',
+  'title-16',
+  'label-15',
+  'label-14',
+  'label-13',
+  'label-12',
+  'body-15',
+  'body-14',
+  'body-13',
+  'body-12'
+);
+
 .guide-typo {
-  &:nth-child(1) {
-    @include font-size('heading-40');
-  }
-  &:nth-child(2) {
-    @include font-size('heading-32');
-  }
-  &:nth-child(3) {
-    @include font-size('heading-24');
-  }
-  &:nth-child(3) {
-    @include font-size('title-20');
+  @for $i from 1 through length($font-sizes) {
+    &:nth-child(#{$i}) {
+      @include font-size(nth($font-sizes, $i));
+    }
   }
 }
