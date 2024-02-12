@@ -26,10 +26,13 @@
     <section class="guide-section">
       <h2 class="section-title">typography</h2>
       <div class="">
-        <p class="guide-typo">데이터패브릭에서 제작한 모든 서비스와 문서에는 Pretendard 폰트를 사용합니다.</p>
-        <p class="guide-typo">데이터패브릭에서 제작한 모든 서비스와 문서에는 Pretendard 폰트를 사용합니다.</p>
-        <p class="guide-typo">데이터패브릭에서 제작한 모든 서비스와 문서에는 Pretendard 폰트를 사용합니다.</p>
-        <p class="guide-typo">데이터패브릭에서 제작한 모든 서비스와 문서에는 Pretendard 폰트를 사용합니다.</p>
+        <p class="guide-typo" v-for="index in 14" :key="index">데이터패브릭에서 제작한 모든 서비스와 문서에는 Pretendard 폰트를 사용합니다.</p>
+      </div>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Icongraphy</h2>
+      <div class="">
+        <span class="guide-icon">데이터패브릭에서 제작한 모든 서비스와 문서에는 Pretendard 폰트를 사용합니다.</span>
       </div>
     </section>
 
