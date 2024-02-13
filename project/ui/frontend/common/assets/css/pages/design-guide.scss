@@ -11,7 +11,7 @@
 
 .test {
   display: flex;
-  gap: 16px;
+  gap: $spacing-16;
 
   li {
     width: 100px;
@@ -37,7 +37,7 @@
     gap: $spacing-24;
 
     li {
-      padding-top: 35px;
+      padding-top: $spacing-36;
       width: 200px;
       height: 100px;
       text-align: center;
@@ -53,27 +53,69 @@
   }
 }
 
-$font-sizes: (
-  'heading-40',
-  'heading-32',
-  'heading-24',
-  'title-20',
-  'title-18',
-  'title-16',
-  'label-15',
-  'label-14',
-  'label-13',
-  'label-12',
-  'body-15',
-  'body-14',
-  'body-13',
-  'body-12'
-);
-
 .guide-typo {
+  $font-sizes: (
+          'heading-40',
+          'heading-32',
+          'heading-24',
+          'title-20',
+          'title-18',
+          'title-16',
+          'label-15',
+          'label-14',
+          'label-13',
+          'label-12',
+          'body-15',
+          'body-14',
+          'body-13',
+          'body-12'
+  );
+
   @for $i from 1 through length($font-sizes) {
     &:nth-child(#{$i}) {
       @include font-size(nth($font-sizes, $i));
+    }
+  }
+  &:not(:first-child) {
+    margin-top: $spacing-20;
+  }
+}
+
+.guide-icon {
+  $icon-sizes: (
+  'xs',
+  'sm',
+  'md',
+  'lg',
+  'xl'
+  );
+
+  @for $i from 1 through length($icon-sizes) {
+    &:nth-child(#{$i}) {
+      @include svg-icon(nth($icon-sizes, $i));
+    }
+  }
+  &:not(:first-child) {
+    margin-left: $spacing-36;
+  }
+
+  &:last-child {
+    @extend .svg-icon-primary;
+  }
+}
+
+.link-buttons {
+  @include flex-standard($horizontal: flex-start);
+  gap: $spacing-16;
+
+  button{
+    border-radius: $border-radius;
+    padding: 0 $spacing-8;
+    height: 32px;
+    color: $secondary-500;
+
+    &:hover {
+      background: $secondary-100;
     }
   }
 }
