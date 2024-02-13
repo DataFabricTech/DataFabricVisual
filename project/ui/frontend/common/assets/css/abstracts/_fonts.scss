@@ -29,58 +29,72 @@ $font-families: (
   @if $size == 'heading-40' {
     font-size: 40px;
     line-height: 48px;
+    font-weight: 600;
   }
   @else if $size == 'heading-32' {
     font-size: 32px;
     line-height: 40px;
+    font-weight: 600;
   }
   @else if $size == 'heading-24' {
     font-size: 24px;
     line-height: 32px;
+    font-weight: 600;
   }
   @else if $size == 'title-20' {
     font-size: 20px;
     line-height: 28px;
+    font-weight: 600;
   }
   @else if $size == 'title-18' {
     font-size: 18px;
     line-height: 24px;
+    font-weight: 600;
   }
   @else if $size == 'title-16' {
     font-size: 16px;
     line-height: 24px;
+    font-weight: 600;
   }
   @else if $size == 'label-15' {
     font-size: 15px;
     line-height: 24px;
+    font-weight: 500;
   }
   @else if $size == 'label-14' {
     font-size: 14px;
     line-height: 20px;
+    font-weight: 500;
   }
   @else if $size == 'label-13' {
     font-size: 13px;
     line-height: 20px;
+    font-weight: 500;
   }
   @else if $size == 'label-12' {
     font-size: 12px;
     line-height: 18px;
+    font-weight: 500;
   }
   @else if $size == 'body-15' {
     font-size: 15px;
     line-height: 24px;
+    font-weight: 400;
   }
   @else if $size == 'body-14' {
     font-size: 14px;
     line-height: 20px;
+    font-weight: 400;
   }
   @else if $size == 'body-13' {
     font-size: 13px;
     line-height: 20px;
+    font-weight: 400;
   }
   @else if $size == 'body-12' {
     font-size: 12px;
     line-height: 18px;
+    font-weight: 400;
   }
   @else {
     @warn "#{$size} 값이 올바르지 않습니다.";
