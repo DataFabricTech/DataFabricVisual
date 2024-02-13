@@ -19,13 +19,14 @@
 // base
 @import "base/base";
 
-// pages
-@import "./pages/design-guide.scss";
-
 // class
 @import "base/status";
 @import "base/classes";
+@import "base/set-icon";
 @import "./themes/theme.scss";
+
+// pages
+@import "./pages/design-guide.scss";
 
 // tailwindCSS Utility Class
 @import "./tailwind/tailwind-utilities";
