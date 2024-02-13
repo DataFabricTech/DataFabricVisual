@@ -1,14 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  devtools: {enabled: true},
+  devtools: { enabled: true },
 
-  modules: ['@nuxtjs/storybook', 'nuxt-lodash', 'dayjs-nuxt'],
+  modules: ['@nuxtjs/storybook', "@nuxtjs/svg-sprite", 'nuxt-lodash', 'dayjs-nuxt'],
 
   plugins: [
-    {src: '~/plugins/highcharts-vue', mode: 'client'},
-    {src: '~/plugins/vue-final-modal', mode: 'client'},
-    {src: '~/plugins/ag-grid-vue', mode: 'client'},
-    {src: "~/plugins/vue-datepicker-next", mode: "client"}
+    { src: '~/plugins/highcharts-vue', mode: 'client' },
+    { src: '~/plugins/vue-final-modal', mode: 'client' },
+    { src: '~/plugins/ag-grid-vue', mode: 'client' },
+    { src: "~/plugins/vue-datepicker-next", mode: "client" }
   ],
 
   components: [
@@ -58,7 +58,12 @@ export default defineNuxtConfig({
       'toArray',
       'toObject'
     ],
-    defaultLocale: 'ko',
-    defaultTimezone: 'Asia/Seoul',
+    defaultLocale: "ko",
+    defaultTimezone: "Asia/Seoul"
+  },
+
+  // svg icon
+  svgSprite: {
+    // input: "~/assets/images/icon"
   }
 })
