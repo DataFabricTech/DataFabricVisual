@@ -1,0 +1,32 @@
+// svg-icon 사이즈 정의
+@mixin svg-icon($size) {
+  $sizes: (
+          xs: 16px,
+          sm: 20px,
+          md: 24px,
+          lg: 28px,
+          xl: 32px
+  );
+
+  $width: map-get($sizes, $size);
+  $height: $width;
+
+  width: $width;
+  height: $height;
+}
+
+.svg-icon {
+  @include svg-icon('sm');
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  fill: $neutral-500;
+
+  &-primary {
+    fill: $primary-500;
+  }
+
+  &-secondary {
+    fill: $secondary-500;
+  }
+}
