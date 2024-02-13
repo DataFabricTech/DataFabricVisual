@@ -19,7 +19,7 @@
 //-------------------------------------------
 @mixin list-style($class-prefix, $size: null) {
   .#{$class-prefix}-list {
-    background: $white;
+    background: $neutral-0;
   }
 
   .#{$class-prefix}-item {
@@ -54,16 +54,14 @@
       font-size: 15px;
 
       .svg-icon {
-        width: 20px;
-        height: 20px;
+        @include icon-size('sm');
       }
     } @else if $size == "sm" {
       height: 24px;
       font-size: 13px;
 
       .svg-icon {
-        width: 16px;
-        height: 16px;
+        @include icon-size('xs');
       }
     } @else {
       // 기본 크기 스타일
@@ -71,8 +69,7 @@
       font-size: 14px;
 
       .svg-icon {
-        width: 18px;
-        height: 18px;
+        @include icon-size(18px);
       }
     }
   }

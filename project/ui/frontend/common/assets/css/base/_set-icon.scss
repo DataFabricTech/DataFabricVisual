@@ -1,5 +1,5 @@
-// svg-icon 사이즈 정의
-@mixin svg-icon($size) {
+// svg-icon 사이즈 믹스인
+@mixin icon-size($size) {
   $sizes: (
           xs: 16px,
           sm: 20px,
@@ -8,19 +8,42 @@
           xl: 32px
   );
 
-  $width: map-get($sizes, $size);
-  $height: $width;
+  $width: null;
+  $height: null;
+
+  @if type-of($size) == number {
+    $width: $size;
+    $height: $size;
+  }
+
+  @else if map-has-key($sizes, $size) {
+    $width: map-get($sizes, $size);
+    $height: $width;
+  }
+
+  @else {
+    $width: $size;
+    $height: $size;
+  }
 
   width: $width;
   height: $height;
 }
 
+// * Usage *
+// .svg-icon {
+//   @include icon-size('sm'); or
+//   @include icon-size(40px);
+//  }
+
 .svg-icon {
-  @include svg-icon('sm');
+  @include icon-size('sm');
   display: inline-block;
   vertical-align: middle;
   flex-shrink: 0;
   fill: $neutral-500;
+
+  // TODO: [퍼블리싱] 추후 아이콘 컬러 제한적 사용시 컬러도 믹스인(icon-color) 추가 할 것
 
   &-primary {
     fill: $primary-500;

@@ -81,7 +81,7 @@
   }
 }
 
-.guide-icon {
+.icon-home {
   $icon-sizes: (
   'xs',
   'sm',
@@ -92,16 +92,22 @@
 
   @for $i from 1 through length($icon-sizes) {
     &:nth-child(#{$i}) {
-      @include svg-icon(nth($icon-sizes, $i));
+      @include icon-size(nth($icon-sizes, $i));
     }
   }
   &:not(:first-child) {
     margin-left: $spacing-36;
   }
 
-  &:last-child {
+  &:nth-child(3) {
     @extend .svg-icon-primary;
   }
+}
+
+.icon-trash {
+  @include icon-size(40px);
+  margin-left: $spacing-36;
+  fill: $error-500;
 }
 
 .link-buttons {
