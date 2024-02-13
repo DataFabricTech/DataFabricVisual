@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  modules: ["nuxt-lodash", "dayjs-nuxt"],
+  modules: ["@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt"],
 
   plugins: [
     { src: "~/plugins/highcharts-vue", mode: "client" },
@@ -60,5 +60,10 @@ export default defineNuxtConfig({
     ],
     defaultLocale: "ko",
     defaultTimezone: "Asia/Seoul"
+  },
+
+  // svg icon
+  svgSprite: {
+    // input: "~/assets/images/icon"
   }
 });
