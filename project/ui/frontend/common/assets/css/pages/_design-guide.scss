@@ -41,7 +41,7 @@
       width: 200px;
       height: 100px;
       text-align: center;
-      color:$neutral-500;
+      color: $neutral-500;
       background-color: $neutral-100;
 
       @for $i from 1 through length($box-shadows) {
@@ -76,6 +76,7 @@
       @include font-size(nth($font-sizes, $i));
     }
   }
+
   &:not(:first-child) {
     margin-top: $spacing-20;
   }
@@ -83,11 +84,11 @@
 
 .icon-home {
   $icon-sizes: (
-  'xs',
-  'sm',
-  'md',
-  'lg',
-  'xl'
+          'xs',
+          'sm',
+          'md',
+          'lg',
+          'xl'
   );
 
   @for $i from 1 through length($icon-sizes) {
@@ -95,6 +96,7 @@
       @include icon-size(nth($icon-sizes, $i));
     }
   }
+
   &:not(:first-child) {
     margin-left: $spacing-36;
   }
@@ -114,7 +116,7 @@
   @include flex-standard($horizontal: flex-start);
   gap: $spacing-16;
 
-  button{
+  button {
     border-radius: $border-radius;
     padding: 0 $spacing-8;
     height: 32px;

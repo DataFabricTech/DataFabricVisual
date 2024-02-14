@@ -14,14 +14,10 @@
   @if type-of($size) == number {
     $width: $size;
     $height: $size;
-  }
-
-  @else if map-has-key($sizes, $size) {
+  } @else if map-has-key($sizes, $size) {
     $width: map-get($sizes, $size);
     $height: $width;
-  }
-
-  @else {
+  } @else {
     $width: $size;
     $height: $size;
   }

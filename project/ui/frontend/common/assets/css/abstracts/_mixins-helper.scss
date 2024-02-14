@@ -32,12 +32,14 @@
     &:active:not(:disabled) {
       background-color: $light-blue;
     }
+
     .checkbox {
       @if $size == "lg" {
         @extend .checkbox-lg;
       } @else if $size == "sm" {
         @extend .checkbox-sm;
       }
+
       .checkbox-input:checked + .checkbox-label {
         color: $primary;
       }
