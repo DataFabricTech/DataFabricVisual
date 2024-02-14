@@ -2,7 +2,12 @@
 export default {
   content: [],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'pretandard': ['Pretendard','Segoe UI', 'Open Sans', 'Helvetica Neue'],
+        'mono': ['Consolas', 'Menlo', 'Courier', 'monospace']
+      },
+    }
   },
   plugins: [],
 }
