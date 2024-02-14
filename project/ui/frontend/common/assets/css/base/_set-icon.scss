@@ -36,20 +36,33 @@
 //   @include icon-size(40px);
 //  }
 
+
+// 컬러 믹스인 (임시)
+@mixin icon-color($color) {
+  fill: $color;
+  color: $color;
+}
+
+// * Usage *
+// .svg-icon {
+//   @include icon-color($primary-500);
+//  }
+
+
 .svg-icon {
   @include icon-size('sm');
+  @include icon-color($neutral-500);
   display: inline-block;
   vertical-align: middle;
   flex-shrink: 0;
-  fill: $neutral-500;
 
   // TODO: [퍼블리싱] 추후 아이콘 컬러 제한적 사용시 컬러도 믹스인(icon-color) 추가 할 것
 
   &-primary {
-    fill: $primary-500;
+    @include icon-color($primary-500);
   }
 
   &-secondary {
-    fill: $secondary-500;
+    @include icon-color($secondary-500);
   }
 }
