@@ -106,8 +106,8 @@
 
 .icon-trash {
   @include icon-size(40px);
+  @include icon-color($error-500);
   margin-left: $spacing-36;
-  fill: $error-500;
 }
 
 .link-buttons {
