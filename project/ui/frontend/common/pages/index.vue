@@ -36,9 +36,6 @@
         <svg-icon class="svg-icon icon-trash" name="trash"></svg-icon>
       </div>
     </section>
-
-
-
     <section class="guide-section">
       <h2 class="section-title">components</h2>
       <div class="link-buttons">
@@ -63,31 +60,7 @@
 </template>
 
 <script setup lang="ts">
-
 </script>
 
 <style lang="css" scoped>
-
-
-/*ul {*/
-/*  list-style: none;*/
-/*  margin: 0;*/
-/*  padding: 0;*/
-/*  display: flex;*/
-/*}*/
-
-/*li {*/
-/*  margin-right: 10px;*/
-/*  padding: 0;*/
-/*  border: 0;*/
-/*  float: left;*/
-/*  color: white;*/
-/*  font-size: 30px;*/
-/*  color: black;*/
-/*}*/
-
-/*li:hover {*/
-/*  background-color: #98E0AD;*/
-/*  color: black;*/
-/*}*/
 </style>
