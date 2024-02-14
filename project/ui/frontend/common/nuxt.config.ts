@@ -64,6 +64,6 @@ export default defineNuxtConfig({
 
   // svg icon
   svgSprite: {
-    // input: "~/assets/images/icon"
+    input: "~/assets/images/icon"
   }
 });
