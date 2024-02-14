@@ -1,9 +1,9 @@
 // theme
-@import "./themes/set-color.scss";
-@import "./themes/set-theme.scss";
+@import "./themes/set-color";
+@import "./themes/set-theme";
 
 // variables
-@import "abstracts/variables";
+@import "./abstracts/variables";
 
 // mixins
 @import "./abstracts/fonts";
@@ -17,16 +17,16 @@
 @import "./tailwind/tailwind-base";
 
 // base
-@import "base/base";
+@import "./base/base";
 
 // class
-@import "base/status";
-@import "base/classes";
-@import "base/set-icon";
-@import "./themes/theme.scss";
+@import "./base/status";
+@import "./base/classes";
+@import "./base/set-icon";
+@import "./themes/theme";
 
 // pages
-@import "./pages/design-guide.scss";
+@import "./pages/design-guide";
 
 // tailwindCSS Utility Class
 @import "./tailwind/tailwind-utilities";
