@@ -8,7 +8,5 @@
 </script>
 
 <style lang="scss" scoped>
-.test {
-  color: $primary-300;
-}
+
 </style>
