@@ -16,4 +16,5 @@ export default defineNuxtPlugin(({ vueApp }) => {
   });
 
   vueApp.use(i18n);
+  vueApp.config.globalProperties.gt = vueApp.config.globalProperties.$t;
 });

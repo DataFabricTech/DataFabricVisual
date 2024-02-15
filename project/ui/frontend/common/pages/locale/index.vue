@@ -2,7 +2,7 @@
   <div>
     <h1>Locale</h1>
     <div>{{ t("showDate") }}</div>
-    <div>{{ $t("common") }}</div>
+    <div>{{ gt("common") }}</div>
   </div>
 </template>
 
