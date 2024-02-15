@@ -1,4 +1,14 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json"
+  "extends": "./.nuxt/tsconfig.json",
+  "compilerOptions": {
+    // 사용되지 않는 로컬 변수에 대한 경고를 발생
+    "noUnusedLocals": true,
+    // 사용되지 않는 함수 매개변수에 대한 경고를 발생
+    "noUnusedParameters": true,
+    // 함수에서 반환되는 값이 누락된 경우 경고를 발생
+    "noImplicitReturns": true,
+    // 메서드가 부모 클래스에서 정의된 메서드를 명시적으로 재정의(override)하지 않으면 경고를 발생
+    "noImplicitOverride": true
+  }
 }

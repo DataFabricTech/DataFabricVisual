@@ -8,7 +8,6 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@pinia/nuxt",
     // "@nuxtjs/svg-sprite",
-    "@nuxtjs/i18n",
     "nuxt-lodash",
     "dayjs-nuxt",
   ],
@@ -81,14 +80,5 @@ export default defineNuxtConfig({
     prefix: "$_",
     prefixSkip: ["string"],
     upperAfterPrefix: false,
-  },
-  i18n: {
-    // locales: [{ code: "ko", iso: "ko-KR", file: "ko.json" }],
-    // defaultLocale: "ko",
-    // vueI18n: {
-    //   fallbackLocale: "ko",
-    // },
-    // langDir: "locales/",
-    // vueI18nLoader: true,
-  },
+  }
 });
