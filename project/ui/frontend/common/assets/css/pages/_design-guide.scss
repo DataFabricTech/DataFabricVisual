@@ -1,0 +1,129 @@
+.guide-section {
+  padding: $spacing-64 $spacing-48;
+}
+
+.section-title {
+  margin-bottom: $spacing-24;
+  font-size: 24px;
+  color: $primary-500;
+  text-align: start;
+}
+
+.test {
+  display: flex;
+  gap: $spacing-16;
+
+  li {
+    width: 100px;
+    height: 50px;
+
+    $color_list: (
+            #{$primary-500},
+            #{$secondary-500},
+            #{$info-500},
+            #{$warning-500},
+            #{$error-500},
+            #{$neutral-500}
+    );
+
+    @for $i from 1 through length($color_list) {
+      &:nth-child(#{$i}) {
+        background-color: nth($color_list, $i);
+      }
+    }
+  }
+
+  &.shadows {
+    gap: $spacing-24;
+
+    li {
+      padding-top: $spacing-36;
+      width: 200px;
+      height: 100px;
+      text-align: center;
+      color: $neutral-500;
+      background-color: $neutral-100;
+
+      @for $i from 1 through length($box-shadows) {
+        &:nth-child(#{$i}) {
+          @include box-shadow(nth(map-keys($box-shadows), $i));
+        }
+      }
+    }
+  }
+}
+
+.guide-typo {
+  $font-sizes: (
+          'heading-40',
+          'heading-32',
+          'heading-24',
+          'title-20',
+          'title-18',
+          'title-16',
+          'label-15',
+          'label-14',
+          'label-13',
+          'label-12',
+          'body-15',
+          'body-14',
+          'body-13',
+          'body-12'
+  );
+
+  @for $i from 1 through length($font-sizes) {
+    &:nth-child(#{$i}) {
+      @include font-size(nth($font-sizes, $i));
+    }
+  }
+
+  &:not(:first-child) {
+    margin-top: $spacing-20;
+  }
+}
+
+.icon-home {
+  $icon-sizes: (
+          'xs',
+          'sm',
+          'md',
+          'lg',
+          'xl'
+  );
+
+  @for $i from 1 through length($icon-sizes) {
+    &:nth-child(#{$i}) {
+      @include icon-size(nth($icon-sizes, $i));
+    }
+  }
+
+  &:not(:first-child) {
+    margin-left: $spacing-36;
+  }
+
+  &:nth-child(3) {
+    @extend .svg-icon-primary;
+  }
+}
+
+.icon-trash {
+  @include icon-size(40px);
+  @include icon-color($error-500);
+  margin-left: $spacing-36;
+}
+
+.link-buttons {
+  @include flex-standard($horizontal: flex-start);
+  gap: $spacing-16;
+
+  button {
+    border-radius: $border-radius;
+    padding: 0 $spacing-8;
+    height: 32px;
+    color: $secondary-500;
+
+    &:hover {
+      background: $secondary-100;
+    }
+  }
+}

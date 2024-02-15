@@ -1,0 +1,16 @@
+@mixin retina-respond-to($image) {
+  @media (min--moz-device-pixel-ratio: 2),
+  (-o-min-device-pixel-ratio: 2/1),
+  (-webkit-min-device-pixel-ratio: 2),
+  (min-device-pixel-ratio: 2),
+  (min-resolution: 2dppx) {
+    /* on retina, use image that's scaled by 2 */
+    background-image: url($image);
+  }
+}
+
+// * Usage *
+// .logo {
+//   background: url("logo.png") no-repeat;
+//   @include retina-respond-to("logo2x.png");
+// }
