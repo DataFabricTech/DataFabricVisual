@@ -1,0 +1,211 @@
+@mixin button-status($color: #{$neutral-0}, $bg, $border: transparent, $color-hover:  #{$neutral-0}, $bg-hover,$border-hover: transparent, $color-active: #{$neutral-0}, $bg-active,$border-active: transparent) {
+  color: $color;
+  background-color: $bg;
+  border: 1px solid $border;
+
+  &:hover:not(:disabled) {
+    color: $color-hover;
+    background-color: $bg-hover;
+    border-color: $border-hover;
+
+    .svg-icon {
+      @include icon-color($color-hover);
+    }
+  }
+
+  &:active:not(:disabled) {
+    color: $color-active;
+    background-color: $bg-active;
+    border-color: $border-active;
+
+    .svg-icon {
+      @include icon-color($color-active);
+    }
+  }
+  .svg-icon {
+    @include icon-color($color);
+  }
+}
+
+@mixin button-size($height: 32px, $gap: #{$spacing-4}, $padding: 6px, $font-size: 13px, $icon-xs: false) {
+  padding: 0 $padding;
+  height: $height;
+  gap: $gap;
+  font-size: $font-size;
+  @if $icon-xs {
+    .svg-icon {
+      @include icon-size('xs');
+    }
+  }
+}
+
+.button {
+  @include flex-standard;
+  @include button-size;
+  border-radius: $border-radius-4;
+  font-weight: 500;
+
+  &:disabled {
+    color: $neutral-300;
+    background-color: $neutral-100;
+    cursor: not-allowed;
+
+    .svg-icon {
+      @include icon-color($neutral-300);
+    }
+  }
+
+  &-lg {
+    @include button-size($height: 36px, $padding: #{$spacing-8}, $font-size: 14px);
+  }
+
+  &-sm {
+    @include button-size($height: 28px, $gap: 2px, $font-size: 12px, $icon-xs: true);
+  }
+
+  //TODO: [퍼블리싱] 좀 더 쉽게 테마 별로 선언할 수 있는 방식 고민 필요 ...
+  &-primary {
+    @include button-status($bg: $primary-500, $bg-hover: $primary-300, $bg-active: $primary-700);
+
+    &-stroke {
+      @include button-status($color: $primary-500, $bg: $neutral-0, $border: $primary-500, $color-hover: $primary-500, $bg-hover: $primary-100, $color-active: $primary-500, $bg-active: $primary-100, $border-active: $primary-500);
+    }
+
+    &-lighter {
+      @include button-status($color: $primary-500, $bg: $primary-100, $color-hover: $primary-500, $bg-hover: $neutral-0, $border-hover: $primary-500, $color-active: $primary-500, $bg-active: $primary-100, $border-active: $primary-500);
+    }
+
+    &-ghost {
+      @include button-status($color: $primary-500, $bg: $neutral-0, $color-hover: $primary-500, $bg-hover: $primary-100, $color-active: $neutral-0, $bg-active: $primary-300);
+    }
+  }
+
+  &-secondary {
+    @include button-status($bg: $secondary-500, $bg-hover: $secondary-300, $bg-active: $secondary-700);
+
+    &-stroke {
+      @include button-status($color: $secondary-500, $bg: $neutral-0, $border: $secondary-500, $color-hover: $secondary-500, $bg-hover: $secondary-100, $color-active: $secondary-500, $bg-active: $secondary-100, $border-active: $secondary-500);
+    }
+
+    &-lighter {
+      @include button-status($color: $secondary-500, $bg: $secondary-100, $color-hover: $secondary-500, $bg-hover: $neutral-0, $border-hover: $secondary-500, $color-active: $secondary-500, $bg-active: $secondary-100, $border-active: $secondary-500);
+    }
+
+    &-ghost {
+      @include button-status($color: $secondary-500, $bg: $neutral-0, $color-hover: $secondary-500, $bg-hover: $secondary-100, $color-active: $neutral-0, $bg-active: $secondary-300);
+    }
+  }
+
+  &-error {
+    @include button-status($bg: $error-500, $bg-hover: $error-300, $bg-active: $error-700);
+
+    &-stroke {
+      @include button-status($color: $error-500, $bg: $neutral-0, $border: $error-500, $color-hover: $error-500, $bg-hover: $error-100, $color-active: $error-500, $bg-active: $error-100, $border-active: $error-500);
+    }
+
+    &-lighter {
+      @include button-status($color: $error-500, $bg: $error-100, $color-hover: $error-500, $bg-hover: $neutral-0, $border-hover: $error-500, $color-active: $error-500, $bg-active: $error-100, $border-active: $error-500);
+    }
+
+    &-ghost {
+      @include button-status($color: $error-500, $bg: $neutral-0, $color-hover: $error-500, $bg-hover: $error-100, $color-active: $neutral-0, $bg-active: $error-300);
+    }
+  }
+
+  &-neutral {
+    @include button-status($color: $neutral-0, $bg: $neutral-800, $color-hover: $neutral-0, $bg-hover: $neutral-500, $color-active: $neutral-0, $bg-active: $neutral-800);
+
+    &-stroke {
+      @include button-status($color: $neutral-800, $bg: $neutral-0, $border: $neutral-200, $color-hover: $neutral-800, $bg-hover: $neutral-100, $color-active: $neutral-800, $bg-active: $neutral-100, $border-active: $neutral-800);
+    }
+
+    &-lighter {
+      @include button-status($color: $neutral-800, $bg: $neutral-100, $color-hover: $neutral-800, $bg-hover: $neutral-0, $border-hover: $neutral-100, $color-active: $neutral-800, $bg-active: $neutral-100, $border-active: $neutral-800);
+    }
+
+    &-ghost {
+      @include button-status($color: $neutral-800, $bg: $neutral-0, $color-hover: $neutral-800, $bg-hover: $neutral-100, $color-active: $neutral-0, $bg-active: $neutral-300);
+    }
+  }
+}
+
+@mixin link-button-status($color: #{$neutral-500}, $color-hover:  #{$neutral-500},$color-active: #{$neutral-700}) {
+  color: $color;
+
+  &:hover:not(:disabled) {
+    color: $color-hover;
+
+    .svg-icon {
+      @include icon-color($color-hover);
+    }
+  }
+
+  &:active:not(:disabled) {
+    color: $color-active;
+
+    .svg-icon {
+      @include icon-color($color-active);
+    }
+  }
+  .svg-icon {
+    @include icon-color($color);
+  }
+}
+
+@mixin link-button-size($gap: #{$spacing-4},$font-size: 14px, $icon-xs: false) {
+  gap: $gap;
+  font-size: $font-size;
+  @if $icon-xs {
+    .svg-icon {
+      @include icon-size('xs');
+    }
+  }
+}
+
+.link-button {
+  @include flex-standard;
+  @include link-button-size;
+  @include link-button-status;
+  font-weight: 500;
+
+  &:disabled {
+    color: $neutral-200;
+    cursor: not-allowed;
+
+    .svg-icon {
+      @include icon-color($neutral-200);
+    }
+  }
+
+  &:hover:not(:disabled) {
+    text-decoration: underline;
+  }
+
+  &:active:not(:disabled) {
+    text-decoration: underline;
+  }
+
+  &-sm {
+    @include link-button-size($gap: #{$spacing-2}, $font-size: 12px, $icon-xs: true);
+  }
+
+  &-black{
+    @include link-button-status($color: #{$neutral-900}, $color-hover:  #{$neutral-900},$color-active: #{$neutral-900});
+  }
+
+  &-support{
+    @include link-button-status($color: #{$info-500}, $color-hover:  #{$info-500},$color-active: #{$info-700});
+  }
+
+  &-error{
+    @include link-button-status($color: #{$error-500}, $color-hover:  #{$error-500},$color-active: #{$error-700});
+  }
+
+  &-underline{
+    text-decoration: underline;
+  }
+}
+
+.icon-button {
+
+}
