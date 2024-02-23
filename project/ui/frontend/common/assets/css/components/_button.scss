@@ -79,7 +79,7 @@
   }
 
   // Icon Button Custom
-  &:has(> .hidden-text) {
+  &:has(.hidden-text) {
     @include icon-button-size;
     padding: 0;
 

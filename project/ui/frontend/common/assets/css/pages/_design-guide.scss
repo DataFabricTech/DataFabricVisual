@@ -1,5 +1,4 @@
 // TODO: [퍼블리싱] 디자인 가이드 페이지 검토 필요 (뎁스 별 디자인..)
-// TODO: [퍼블리싱] TailwindCSS 유틸리티 적용이 안됨..
 .guide-section {
   padding: $spacing-64 $spacing-48;
 }
@@ -19,15 +18,6 @@
 
 .group-title {
   @include font-size('title-16');
-}
-
-.guide-article {
-  margin-bottom: $spacing-40;
-}
-
-.guide-group {
-  @include flex-standard($vertical: flex-start, $direction: column);
-  gap: $spacing-20;
 }
 
 .test {
