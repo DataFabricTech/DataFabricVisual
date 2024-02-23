@@ -1,12 +1,23 @@
+// TODO: [퍼블리싱] 디자인 가이드 페이지 검토 필요 (뎁스 별 디자인..)
 .guide-section {
   padding: $spacing-64 $spacing-48;
 }
 
 .section-title {
+  @include font-size('heading-24');
   margin-bottom: $spacing-24;
-  font-size: 24px;
   color: $primary-500;
   text-align: start;
+}
+
+.section-subtitle {
+  @include font-size('title-20');
+  margin-bottom: $spacing-16;
+  font-size: 20px;
+}
+
+.group-title {
+  @include font-size('title-16');
 }
 
 .test {
@@ -117,7 +128,7 @@
   gap: $spacing-16;
 
   button {
-    border-radius: $border-radius;
+    border-radius: $border-radius-2;
     padding: 0 $spacing-8;
     height: 32px;
     color: $secondary-500;
