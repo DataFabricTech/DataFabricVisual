@@ -1,4 +1,4 @@
-@mixin button-color($color: #{$neutral-0}, $bg, $border: transparent, $color-hover:  null, $bg-hover: null,$border-hover: null, $color-active: null, $bg-active: null,$border-active: null) {
+@mixin button-color($color: $neutral-0, $bg, $border: transparent, $color-hover:  null, $bg-hover: null,$border-hover: null, $color-active: null, $bg-active: null,$border-active: null) {
   color: $color;
   background-color: $bg;
   border: 1px solid $border;
@@ -71,7 +71,7 @@
 
   // Size
   &-lg {
-    @include button-size($height: 36px, $padding: #{$spacing-8}, $font-size: 14px);
+    @include button-size($height: 36px, $padding: $spacing-8, $font-size: 14px);
   }
 
   &-sm {
@@ -184,7 +184,7 @@
   }
 }
 
-@mixin link-button-size($gap: #{$spacing-4},$font-size: 14px, $icon-size: 'sm') {
+@mixin link-button-size($gap: $spacing-4,$font-size: 14px, $icon-size: 'sm') {
   gap: $gap;
   font-size: $font-size;
 
