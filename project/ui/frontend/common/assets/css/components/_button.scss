@@ -65,10 +65,11 @@
     }
   }
 
-  .button-icon{
+  .button-icon {
     @include icon-size('sm');
   }
 
+  // Size
   &-lg {
     @include button-size($height: 36px, $padding: #{$spacing-8}, $font-size: 14px);
   }
@@ -77,25 +78,25 @@
     @include button-size($height: 28px, $gap: 2px, $font-size: 12px, $icon-xs: true);
   }
 
-  // Icon Button
+  // Icon Button Custom
   &:has(> .hidden-text) {
     @include icon-button-size;
     padding: 0;
 
-    &.button{
-      &-xl{
+    &.button {
+      &-xl {
         @include icon-button-size($size: 36px, $icon-size: 24px);
       }
 
-      &-lg{
+      &-lg {
         @include icon-button-size($size: 32px, $icon-size: 24px);
       }
 
-      &-sm{
+      &-sm {
         @include icon-button-size($size: 24px, $icon-size: 18px);
       }
 
-      &-xs{
+      &-xs {
         @include icon-button-size($size: 20px, $icon-size: 16px);
       }
     }
@@ -107,7 +108,7 @@
     @include button-color($bg: $primary-500, $bg-hover: $primary-300, $bg-active: $primary-700);
 
     &-stroke {
-      @include button-color($color: $primary-500, $bg: $neutral-0, $border: $primary-500,  $bg-hover: $primary-100, $border-hover: $primary-100,  $border-active: $primary-500);
+      @include button-color($color: $primary-500, $bg: $neutral-0, $border: $primary-500, $bg-hover: $primary-100, $border-hover: $primary-100, $border-active: $primary-500);
     }
 
     &-lighter {
@@ -123,7 +124,7 @@
     @include button-color($bg: $secondary-500, $bg-hover: $secondary-300, $bg-active: $secondary-700);
 
     &-stroke {
-      @include button-color($color: $secondary-500, $bg: $neutral-0, $border: $secondary-500, $bg-hover: $secondary-100,$border-hover: $secondary-100, $border-active: $secondary-500);
+      @include button-color($color: $secondary-500, $bg: $neutral-0, $border: $secondary-500, $bg-hover: $secondary-100, $border-hover: $secondary-100, $border-active: $secondary-500);
     }
 
     &-lighter {
@@ -139,7 +140,7 @@
     @include button-color($bg: $error-500, $bg-hover: $error-300, $bg-active: $error-700);
 
     &-stroke {
-      @include button-color($color: $error-500, $bg: $neutral-0, $border: $error-500, $bg-hover: $error-100,$border-hover: $error-100, $color-active: $error-500, $border-active: $error-500);
+      @include button-color($color: $error-500, $bg: $neutral-0, $border: $error-500, $bg-hover: $error-100, $border-hover: $error-100, $color-active: $error-500, $border-active: $error-500);
     }
 
     &-lighter {
@@ -155,11 +156,11 @@
     @include button-color($color: $neutral-0, $bg: $neutral-800, $bg-hover: $neutral-500, $bg-active: $neutral-800);
 
     &-stroke {
-      @include button-color($color: $neutral-800, $bg: $neutral-0, $border: $neutral-200, $bg-hover: $neutral-100,$border-hover: $neutral-100, $border-active: $neutral-800);
+      @include button-color($color: $neutral-800, $bg: $neutral-0, $border: $neutral-200, $bg-hover: $neutral-100, $border-hover: $neutral-100, $border-active: $neutral-800);
     }
 
     &-lighter {
-      @include button-color($color: $neutral-800, $bg: $neutral-100, $bg-hover: $neutral-0, $border-hover: $neutral-100,$bg-active: $neutral-100, $border-active: $neutral-800);
+      @include button-color($color: $neutral-800, $bg: $neutral-100, $bg-hover: $neutral-0, $border-hover: $neutral-100, $bg-active: $neutral-100, $border-active: $neutral-800);
     }
 
     &-ghost {
@@ -198,8 +199,8 @@
   @include link-button-color($color: $neutral-500, $color-active: $neutral-700);
   font-weight: 500;
 
-  .button-icon{
-    @include icon-size('sm');
+  &:hover:not(:disabled) {
+    text-decoration: underline;
   }
 
   &:disabled {
@@ -211,14 +212,16 @@
     }
   }
 
-  &:hover:not(:disabled) {
-    text-decoration: underline;
+  .button-icon {
+    @include icon-size('sm');
   }
 
+  // Size
   &-sm {
     @include link-button-size($gap: $spacing-2, $font-size: 12px, $icon-size: 'xs');
   }
 
+  // Color Theme
   &-black {
     @include link-button-color($color: $neutral-900, $color-active: $neutral-900);
   }
