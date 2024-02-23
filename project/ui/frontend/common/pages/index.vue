@@ -31,7 +31,7 @@
     </section>
     <section class="guide-section">
       <h2 class="section-title">icongraphy</h2>
-      <div class="h-group">
+      <div class="h-group gap-4">
         <svg-icon name="home" v-for="index in 5" :key="index" class="svg-icon icon-home"></svg-icon>
         <svg-icon class="svg-icon icon-trash" name="trash"></svg-icon>
       </div>
@@ -43,9 +43,9 @@
           Button
         </h3>
         <div class="flex flex-col align-center gap-5">
-          <div class="v-group">
+          <div class="v-group gap-3">
             <h4 class="group-title">Primary</h4>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-primary button-lg" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -72,7 +72,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-primary" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -99,7 +99,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-primary button-sm" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -127,9 +127,9 @@
               </button>
             </div>
           </div>
-          <div class="v-group">
+          <div class="v-group gap-3">
             <h4 class="group-title">Secondary</h4>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-secondary button-lg" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -151,7 +151,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-secondary" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -173,7 +173,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-secondary button-sm" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -196,9 +196,9 @@
               </button>
             </div>
           </div>
-          <div class="v-group">
+          <div class="v-group gap-3">
             <h4 class="group-title">Error</h4>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-error button-lg" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -220,7 +220,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-error" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -242,7 +242,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-error button-sm" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -265,9 +265,9 @@
               </button>
             </div>
           </div>
-          <div class="v-group">
+          <div class="v-group gap-3">
             <h4 class="group-title">Neutral</h4>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-neutral button-lg" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -289,7 +289,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-neutral" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -311,7 +311,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-neutral button-sm" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -341,9 +341,9 @@
           Icon Button
         </h3>
         <div class="flex flex-col align-center gap-5">
-          <div class="v-group">
+          <div class="v-group gap-3">
             <h4 class="group-title">Primary</h4>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-primary button-xl" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -365,7 +365,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-primary button-lg" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -387,7 +387,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-primary" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -409,7 +409,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-primary button-sm" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -431,7 +431,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-primary button-xs" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -454,9 +454,9 @@
               </button>
             </div>
           </div>
-          <div class="v-group">
+          <div class="v-group gap-3">
             <h4 class="group-title">Secondary</h4>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-secondary button-xl" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -474,7 +474,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-secondary button-lg" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -492,7 +492,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-secondary" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -510,7 +510,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-secondary button-sm" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -528,7 +528,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-secondary button-xs" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -547,9 +547,9 @@
               </button>
             </div>
           </div>
-          <div class="v-group">
+          <div class="v-group gap-3">
             <h4 class="group-title">Error</h4>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-error button-xl" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -567,7 +567,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-error button-lg" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -585,7 +585,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-error" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -603,7 +603,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-error button-sm" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -621,7 +621,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-error button-xs" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -640,9 +640,9 @@
               </button>
             </div>
           </div>
-          <div class="v-group">
+          <div class="v-group gap-3">
             <h4 class="group-title">Neutral</h4>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-neutral button-xl" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -660,7 +660,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-neutral button-lg" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -678,7 +678,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-neutral" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -696,7 +696,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-neutral button-sm" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -714,7 +714,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="button button-neutral button-xs" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -740,9 +740,9 @@
           Link Button
         </h3>
         <div class="flex flex-col align-center gap-5">
-          <div class="v-group">
+          <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="link-button" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -769,7 +769,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="link-button link-button-sm" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -797,9 +797,9 @@
               </button>
             </div>
           </div>
-          <div class="v-group">
+          <div class="v-group gap-3">
             <h4 class="group-title">Underline</h4>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="link-button link-button-underline" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -826,7 +826,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="h-group">
+            <div class="h-group gap-4">
               <button class="link-button link-button-sm link-button-underline" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
