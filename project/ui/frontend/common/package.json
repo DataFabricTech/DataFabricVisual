@@ -14,6 +14,7 @@
   "devDependencies": {
     "@nuxtjs/storybook": "7.0.0",
     "@nuxtjs/svg-sprite": "^1.0.2",
+    "@nuxtjs/tailwindcss": "^6.11.4",
     "@storybook-vue/nuxt": "0.2.1",
     "@storybook/addon-essentials": "7.6.7",
     "@storybook/addon-interactions": "7.6.7",
@@ -26,13 +27,11 @@
     "autoprefixer": "^10.4.17",
     "npm": "^10.4.0",
     "nuxt": "^3.10.0",
-    "postcss": "^8.4.34",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "sass": "^1.70.0",
     "sass-loader": "^14.1.0",
     "storybook": "7.6.7",
-    "tailwindcss": "^3.4.1",
     "vue": "^3.4.15",
     "vue-i18n": "^9.9.1",
     "vue-router": "^4.2.5"
@@ -47,5 +46,16 @@
     "prettier": "^3.2.4",
     "vue-datepicker-next": "^1.0.3",
     "vue-final-modal": "^4.5.3"
-  }
+  },
+  "browserslist": [
+    ">0.3%",
+    "not ie <= 10",
+    "last 3 version",
+    "Chrome >= 35",
+    "Firefox >= 38",
+    "Edge >= 10",
+    "Explorer >= 10",
+    "Safari >= 8",
+    "Opera >= 12"
+  ]
 }

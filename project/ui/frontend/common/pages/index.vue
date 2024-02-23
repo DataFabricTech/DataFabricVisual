@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Fabric-design</h1>
+    <h1 class="text-3xl font-bold underline">Fabric-design</h1>
     <section class="guide-section">
       <h2 class="section-title">color system</h2>
       <ol class="test">
@@ -38,11 +38,11 @@
     </section>
     <section class="guide-section">
       <h2 class="section-title">Button</h2>
-      <article class="guide-article">
+      <article class="mb-10">
         <h3 class="section-subtitle">
           Button
         </h3>
-        <div class="guide-group">
+        <div class="flex flex-col align-center gap-5">
           <div class="v-group">
             <h4 class="group-title">Primary</h4>
             <div class="h-group">
@@ -336,11 +336,11 @@
           </div>
         </div>
       </article>
-      <article class="guide-article">
+      <article class="mb-10">
         <h3 class="section-subtitle">
           Icon Button
         </h3>
-        <div class="guide-group">
+        <div class="flex flex-col align-center gap-5">
           <div class="v-group">
             <h4 class="group-title">Primary</h4>
             <div class="h-group">
@@ -735,11 +735,11 @@
           </div>
         </div>
       </article>
-      <article class="guide-article">
+      <article class="mb-10">
         <h3 class="section-subtitle">
           Link Button
         </h3>
-        <div class="guide-group">
+        <div class="flex flex-col align-center gap-5">
           <div class="v-group">
             <h4 class="group-title">Default</h4>
             <div class="h-group">
