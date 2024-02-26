@@ -21,12 +21,16 @@
 
 // class
 @import "./base/status";
-@import "./base/classes";
 @import "./base/set-icon";
 @import "./themes/theme";
 
 // components
 @import "./components/button";
+@import "../../components/extends/notification/Notification";
+@import "../../components/extends/inline-notification/InlineNotification";
+
+// modules
+@import "./modules/capsule-pagincation";
 
 // pages
 @import "./pages/design-guide";
