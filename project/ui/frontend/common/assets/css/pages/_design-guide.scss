@@ -124,7 +124,7 @@
 }
 
 .link-buttons {
-  @include flex-standard($horizontal: flex-start);
+  @include flex($horizontal: flex-start);
   gap: $spacing-16;
 
   button {

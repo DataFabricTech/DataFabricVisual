@@ -1,0 +1,42 @@
+@mixin inline-notification-color($color: null, $icon-color: null) {
+  .inline-notification {
+    &-detail {
+      color: $color;
+    }
+
+    &-icon {
+      @include icon-color($icon-color);
+    }
+  }
+}
+
+.inline-notification {
+  @include flex;
+  gap: $spacing-4;
+
+  &-icon {
+    @include icon-color($neutral-400);
+    @include icon-size('xs');
+  }
+
+  &-detail {
+    font-size: 12px;
+    color: $neutral-800
+  }
+
+  &-info {
+    @include inline-notification-color($color: $info-700, $icon-color: $info-500);
+  }
+
+  &-warning {
+    @include inline-notification-color($color: $warning-700, $icon-color: $warning-500);
+  }
+
+  &-success {
+    @include inline-notification-color($color: $success-700, $icon-color: $success-500);
+  }
+
+  &-error {
+    @include inline-notification-color($color: $error-700, $icon-color: $error-500);
+  }
+}

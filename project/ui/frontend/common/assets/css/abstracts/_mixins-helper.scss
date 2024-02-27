@@ -1,8 +1,7 @@
-// TODO: [퍼블리싱] 변수 재정의 및 리팩토링
 //-------------------------------------------
 // flex 상하 좌우 정렬
 //-------------------------------------------
-@mixin flex-standard(
+@mixin flex(
   $display: flex,
   $vertical: center,
   $horizontal: center,
@@ -12,75 +11,6 @@
   align-items: $vertical;
   justify-content: $horizontal;
   flex-direction: $direction;
-}
-
-//-------------------------------------------
-// list 공통 스타일 정의
-//-------------------------------------------
-@mixin list-style($class-prefix, $size: null) {
-  .#{$class-prefix}-list {
-    background: $neutral-0;
-  }
-
-  .#{$class-prefix}-item {
-    @include flex-standard;
-
-    &:hover:not(:disabled) {
-      background-color: $light-blue;
-    }
-
-    &:active:not(:disabled) {
-      background-color: $light-blue;
-    }
-
-    .checkbox {
-      @if $size == "lg" {
-        @extend .checkbox-lg;
-      } @else if $size == "sm" {
-        @extend .checkbox-sm;
-      }
-
-      .checkbox-input:checked + .checkbox-label {
-        color: $primary;
-      }
-    }
-  }
-
-  .#{$class-prefix}-button,
-  .checkbox {
-    @include flex-standard($horizontal: space-between);
-    width: 100%;
-
-    @if $size == "lg" {
-      height: 40px;
-      font-size: 15px;
-
-      .svg-icon {
-        @include icon-size('sm');
-      }
-    } @else if $size == "sm" {
-      height: 24px;
-      font-size: 13px;
-
-      .svg-icon {
-        @include icon-size('xs');
-      }
-    } @else {
-      // 기본 크기 스타일
-      height: 32px;
-      font-size: 14px;
-
-      .svg-icon {
-        @include icon-size(18px);
-      }
-    }
-  }
-
-  .#{$class-prefix}-text {
-    @include ellipsis;
-    text-align: left;
-    font-weight: 500;
-  }
 }
 
 //-------------------------------------------

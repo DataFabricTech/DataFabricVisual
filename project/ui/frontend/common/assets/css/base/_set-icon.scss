@@ -51,14 +51,4 @@
   display: inline-block;
   vertical-align: middle;
   flex-shrink: 0;
-
-  // TODO: [퍼블리싱] 추후 아이콘 컬러 제한적 사용시 컬러도 믹스인(icon-color) 추가 할 것
-
-  &-primary {
-    @include icon-color($primary-500);
-  }
-
-  &-secondary {
-    @include icon-color($secondary-500);
-  }
 }

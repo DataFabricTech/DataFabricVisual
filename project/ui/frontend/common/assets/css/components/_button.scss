@@ -50,7 +50,7 @@
 }
 
 .button {
-  @include flex-standard;
+  @include flex;
   @include button-size($gap: 4px);
   border-radius: $border-radius-4;
   font-weight: 500;
@@ -164,7 +164,7 @@
     }
 
     &-ghost {
-      @include button-color($color: $neutral-800, $bg: $neutral-0, $bg-hover: $neutral-100, $color-active: $neutral-0, $bg-active: $neutral-300);
+      @include button-color($color: $neutral-800, $bg: transparent, $bg-hover: $neutral-100, $color-active: $neutral-0, $bg-active: $neutral-300);
     }
   }
 }
@@ -194,7 +194,7 @@
 }
 
 .link-button {
-  @include flex-standard;
+  @include flex;
   @include link-button-size;
   @include link-button-color($color: $neutral-500, $color-active: $neutral-700);
   font-weight: 500;

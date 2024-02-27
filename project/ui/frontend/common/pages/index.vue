@@ -24,7 +24,7 @@
     <section class="guide-section">
       <h2 class="section-title">typography</h2>
       <div class="">
-        <p class="guide-typo" v-for="index in 14" :key="index">
+        <p v-for="index in 14" :key="index" class="guide-typo">
           데이터패브릭에서 제작한 모든 서비스와 문서에는 Pretendard 폰트를 사용합니다.
         </p>
       </div>
@@ -32,7 +32,7 @@
     <section class="guide-section">
       <h2 class="section-title">icongraphy</h2>
       <div class="h-group gap-4">
-        <svg-icon name="home" v-for="index in 5" :key="index" class="svg-icon icon-home"></svg-icon>
+        <svg-icon v-for="index in 5" :key="index" class="svg-icon icon-home" name="home"></svg-icon>
         <svg-icon class="svg-icon icon-trash" name="trash"></svg-icon>
       </div>
     </section>
@@ -66,7 +66,7 @@
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
-              <button class="button button-primary-ghost button-lg" type="button" disabled>
+              <button class="button button-primary-ghost button-lg" disabled type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
@@ -93,7 +93,7 @@
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
-              <button class="button button-primary-ghost" type="button" disabled>
+              <button class="button button-primary-ghost" disabled type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
@@ -120,7 +120,7 @@
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
-              <button class="button button-primary-ghost button-sm" type="button" disabled>
+              <button class="button button-primary-ghost button-sm" disabled type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
@@ -360,7 +360,7 @@
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
-              <button class="button button-primary-ghost button-xl" type="button" disabled>
+              <button class="button button-primary-ghost button-xl" disabled type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
@@ -382,7 +382,7 @@
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
-              <button class="button button-primary-ghost button-lg" type="button" disabled>
+              <button class="button button-primary-ghost button-lg" disabled type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
@@ -404,7 +404,7 @@
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
-              <button class="button button-primary-ghost" type="button" disabled>
+              <button class="button button-primary-ghost" disabled type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
@@ -426,7 +426,7 @@
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
-              <button class="button button-primary-ghost button-sm" type="button" disabled>
+              <button class="button button-primary-ghost button-sm" disabled type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
@@ -448,7 +448,7 @@
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
-              <button class="button button-primary-ghost button-xs" type="button" disabled>
+              <button class="button button-primary-ghost button-xs" disabled type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
@@ -763,7 +763,7 @@
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
-              <button class="link-button link-button-error" type="button" disabled>
+              <button class="link-button link-button-error" disabled type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
@@ -790,7 +790,7 @@
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
-              <button class="link-button link-button-error link-button-sm" type="button" disabled>
+              <button class="link-button link-button-error link-button-sm" disabled type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
@@ -820,7 +820,7 @@
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
-              <button class="link-button link-button-error link-button-underline" type="button" disabled>
+              <button class="link-button link-button-error link-button-underline" disabled type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
@@ -847,11 +847,127 @@
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
-              <button class="link-button link-button-error link-button-sm link-button-underline" type="button" disabled>
+              <button class="link-button link-button-error link-button-sm link-button-underline" disabled type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Notification</h2>
+      <article class="mb-10">
+        <h3 class="section-subtitle">
+          Inline Notification
+        </h3>
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">Default</h4>
+            <div class="h-group gap-4">
+              <InlineNotification></InlineNotification>
+            </div>
+            <h4 class="group-title">Info</h4>
+            <div class="h-group gap-4">
+              <InlineNotification class="inline-notification-info"></InlineNotification>
+            </div>
+            <h4 class="group-title">Warning</h4>
+            <div class="h-group gap-4">
+              <InlineNotification class="inline-notification-warning"></InlineNotification>
+            </div>
+            <h4 class="group-title">Info</h4>
+            <div class="h-group gap-4">
+              <InlineNotification class="inline-notification-success"></InlineNotification>
+            </div>
+            <h4 class="group-title">Error</h4>
+            <div class="h-group gap-4">
+              <InlineNotification class="inline-notification-error"></InlineNotification>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="mb-10">
+        <h3 class="section-subtitle">
+          Basic Notification
+        </h3>
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">Default</h4>
+            <div class="h-group gap-4">
+              <Notification></Notification>
+            </div>
+            <h4 class="group-title">Default - success 아이콘</h4>
+            <div class="h-group gap-4">
+              <Notification
+                :notification-type="'info'"></Notification>
+            </div>
+            <h4 class="group-title">Default - success 아이콘</h4>
+            <div class="h-group gap-4">
+              <Notification
+                :notification-type="'warning'"></Notification>
+            </div>
+            <h4 class="group-title">Default - success 아이콘</h4>
+            <div class="h-group gap-4">
+              <Notification
+                :notification-type="'success'"></Notification>
+            </div>
+            <h4 class="group-title">Default - success 아이콘</h4>
+            <div class="h-group gap-4">
+              <Notification
+                :notification-type="'error'"></Notification>
+            </div>
+            <h4 class="group-title">Info</h4>
+            <div class="h-group gap-4">
+              <Notification class="notification-info"></Notification>
+            </div>
+            <h4 class="group-title">Warning</h4>
+            <div class="h-group gap-4">
+              <Notification class="notification-warning"></Notification>
+            </div>
+            <h4 class="group-title">Info</h4>
+            <div class="h-group gap-4">
+              <Notification class="notification-success"></Notification>
+            </div>
+            <h4 class="group-title">Error</h4>
+            <div class="h-group gap-4">
+              <Notification class="notification-error"></Notification>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="mb-10">
+        <h3 class="section-subtitle">
+          Extends Notification
+        </h3>
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">Default</h4>
+            <div class="h-group gap-4">
+              <Notification :isExtends="true" class="w-96"></Notification>
+            </div>
+            <h4 class="group-title">Default - success 아이콘</h4>
+            <div class="h-group gap-4">
+              <Notification
+                :isExtends="true"
+                :notification-type="'primary'" class="w-96"></Notification>
+            </div>
+            <h4 class="group-title">Info</h4>
+            <div class="h-group gap-4">
+              <Notification :isExtends="true" class="w-96 notification-info"></Notification>
+            </div>
+            <h4 class="group-title">Warning</h4>
+            <div class="h-group gap-4">
+              <Notification :isExtends="true" class="w-96 notification-warning"></Notification>
+            </div>
+            <h4 class="group-title">Info</h4>
+            <div class="h-group gap-4">
+              <Notification :isExtends="true" class="w-96 notification-success"></Notification>
+            </div>
+            <h4 class="group-title">Error</h4>
+            <div class="h-group gap-4">
+              <Notification :isExtends="true" class="w-96 notification-error"></Notification>
             </div>
           </div>
         </div>
@@ -873,7 +989,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import { shallowRef } from "vue";
 // 1. 컴포넌트 등록
 // ex) 컴포넌트명 AgGrid / 컴포넌트명 규칙: 폴더명 ag-grid -> AgGrid, `-` 로 연결된 부분은 대문자로 연결
@@ -883,6 +999,8 @@ import Highcharts from "~/pages/highcharts/index.vue";
 import Locale from "~/pages/locale/index.vue";
 import VueDatepickerNext from "~/pages/vue-datepicker-next/index.vue";
 import VueFinalModal from "~/pages/vue-final-modal/index.vue";
+import Notification from "../components/extends/notification/Notification.vue";
+import InlineNotification from "../components/extends/inline-notification/InlineNotification.vue";
 
 const currentComponent = shallowRef(Dayjs);
 
@@ -893,7 +1011,9 @@ const components: any = {
   Highcharts,
   Locale,
   VueDatepickerNext,
-  VueFinalModal
+  VueFinalModal,
+  Notification,
+  InlineNotification
 };
 
 function clickMenu(menu: string) {
