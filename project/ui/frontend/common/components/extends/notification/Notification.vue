@@ -9,7 +9,7 @@
       </button>
     </div>
     <div v-if="isExtends" class="notification-content">
-      <a class="link-button link-button-underline ml-[28px]" href="#none">바로가기</a>
+      <a class="link-button link-button-underline ml-7" href="#none">바로가기</a>
       <div class="capsule-pagination ml-auto">
         <button class="button button-neutral-ghost button-xs" type="button">
           <span class="hidden-text">이전 페이지로 이동</span>

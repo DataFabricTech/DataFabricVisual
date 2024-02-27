@@ -945,29 +945,29 @@
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
             <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-[400px]"></Notification>
+              <Notification :isExtends="true" class="w-96"></Notification>
             </div>
             <h4 class="group-title">Default - success 아이콘</h4>
             <div class="h-group gap-4">
               <Notification
                 :isExtends="true"
-                :notification-type="'primary'" class="w-[400px]"></Notification>
+                :notification-type="'primary'" class="w-96"></Notification>
             </div>
             <h4 class="group-title">Info</h4>
             <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-[400px] notification-info"></Notification>
+              <Notification :isExtends="true" class="w-96 notification-info"></Notification>
             </div>
             <h4 class="group-title">Warning</h4>
             <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-[400px] notification-warning"></Notification>
+              <Notification :isExtends="true" class="w-96 notification-warning"></Notification>
             </div>
             <h4 class="group-title">Info</h4>
             <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-[400px] notification-success"></Notification>
+              <Notification :isExtends="true" class="w-96 notification-success"></Notification>
             </div>
             <h4 class="group-title">Error</h4>
             <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-[400px] notification-error"></Notification>
+              <Notification :isExtends="true" class="w-96 notification-error"></Notification>
             </div>
           </div>
         </div>
