@@ -1,4 +1,4 @@
-<template>
+<template xmlns="http://www.w3.org/1999/html">
   <div>
     <h1 class="text-3xl font-bold underline">Fabric-design</h1>
     <section class="guide-section">
@@ -974,6 +974,93 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Badge</h2>
+      <article class="mb-10">
+        <h3 class="section-subtitle">
+          default
+        </h3>
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">filled</h4>
+            <div class="h-group gap-4">
+              <Badge class="badge-red"></Badge>
+              <Badge class="badge-yellow"></Badge>
+              <Badge class="badge-green"></Badge>
+              <Badge class="badge-blue"></Badge>
+              <Badge :isIcon="true" class="badge-purple"></Badge>
+              <Badge :isIcon="true" class="badge-gray"></Badge>
+              <Badge :isIcon="true" class="badge-primary"></Badge>
+              <Badge :isIcon="true" class="badge-secondary"></Badge>
+            </div>
+            <h4 class="group-title">lighter</h4>
+            <div class="h-group gap-4">
+              <Badge :isIcon="true" class="badge-red-lighter"></Badge>
+              <Badge :isIcon="true" class="badge-yellow-lighter"></Badge>
+              <Badge :isIcon="true" class="badge-green-lighter"></Badge>
+              <Badge :isIcon="true" class="badge-blue-lighter"></Badge>
+              <Badge class="badge-purple-lighter"></Badge>
+              <Badge class="badge-gray-lighter"></Badge>
+              <Badge class="badge-primary-lighter"></Badge>
+              <Badge class="badge-secondary-lighter"></Badge>
+            </div>
+            <h4 class="group-title">stroke</h4>
+            <div class="h-group gap-4">
+              <Badge class="badge-red-stroke"></Badge>
+              <Badge :isIcon="true" class="badge-yellow-stroke"></Badge>
+              <Badge class="badge-green-stroke"></Badge>
+              <Badge :isIcon="true" class="badge-blue-stroke"></Badge>
+              <Badge class="badge-purple-stroke"></Badge>
+              <Badge :isIcon="true" class="badge-gray-stroke"></Badge>
+              <Badge class="badge-primary-stroke"></Badge>
+              <Badge :isIcon="true" class="badge-secondary-stroke"></Badge>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="mb-10">
+        <h3 class="section-subtitle">
+          only icon
+        </h3>
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">filled</h4>
+            <div class="h-group gap-4">
+              <Badge :isIcon="true" class="icon-badge badge-red"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-yellow"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-green"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-blue"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-purple"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-gray"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-primary"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-secondary"></Badge>
+            </div>
+            <h4 class="group-title">lighter</h4>
+            <div class="h-group gap-4">
+              <Badge :isIcon="true" class="icon-badge badge-red-lighter"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-yellow-lighter"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-green-lighter"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-blue-lighter"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-purple-lighter"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-gray-lighter"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-primary-lighter"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-secondary-lighter"></Badge>
+            </div>
+            <h4 class="group-title">stroke</h4>
+            <div class="h-group gap-4">
+              <Badge :isIcon="true" class="icon-badge badge-red-stroke"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-yellow-stroke"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-green-stroke"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-blue-stroke"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-purple-stroke"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-gray-stroke"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-primary-stroke"></Badge>
+              <Badge :isIcon="true" class="icon-badge badge-secondary-stroke"></Badge>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">components</h2>
       <div class="link-buttons">
         <!-- 3. 메뉴 버튼 추가 @click="clickMenu('컴포넌트명')" -->
@@ -986,6 +1073,7 @@
       </div>
       <div></div>
     </section>
+
   </div>
 </template>
 
@@ -1001,6 +1089,8 @@ import VueDatepickerNext from "~/pages/vue-datepicker-next/index.vue";
 import VueFinalModal from "~/pages/vue-final-modal/index.vue";
 import Notification from "../components/extends/notification/Notification.vue";
 import InlineNotification from "../components/extends/inline-notification/InlineNotification.vue";
+import Badge from "../components/extends/badge/badge.vue";
+
 
 const currentComponent = shallowRef(Dayjs);
 
@@ -1013,7 +1103,8 @@ const components: any = {
   VueDatepickerNext,
   VueFinalModal,
   Notification,
-  InlineNotification
+  InlineNotification,
+  Badge
 };
 
 function clickMenu(menu: string) {
