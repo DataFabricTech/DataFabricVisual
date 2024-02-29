@@ -9,20 +9,20 @@
 }
 
 
-.badge{
+.badge {
   @include flex;
   gap: $spacing-2;
   height: 20px;
   padding: 0 $spacing-4;
   border-radius: $border-radius-2;
 
-    &-icon {
-      @include icon-size(14px);
-    }
+  &-icon {
+    @include icon-size(14px);
+  }
 
-    &-text{
+  &-text {
     @include font-size('label-12');
-    }
+  }
 
   &.icon-badge {
     padding: $spacing-2;
