@@ -11,6 +11,7 @@
       & + .checkbox-label {
 
         &::before {
+          box-shadow: none;
           background-color: $primary-500;
           border-color: $primary-500;
         }
@@ -68,6 +69,7 @@
         cursor: not-allowed;
 
         &::before {
+          box-shadow: none;
           border-color: $neutral-200;
           background-color: $neutral-200;
         }
@@ -102,7 +104,7 @@
     }
 
     &::before {
-      //@include box-shadow('sm');
+      @include box-shadow('sm');
       content: "";
       display: block;
       width: 18px;
