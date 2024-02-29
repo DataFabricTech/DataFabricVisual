@@ -1,130 +1,82 @@
+$input-classes: checkbox, radio;
 
-.checkbox {
+@each $input in $input-classes {
+  .#{$input} {
+    position: relative;
+    @include flex($vertical: flex-start);
 
-  &-input {
+    &-input {
+      @include hidden-text;
+    }
 
-    &:indeterminate {
+    &-label {
+      @include flex($horizontal: flex-start);
+      color: $neutral-800;
+      white-space: nowrap;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
 
-      & + .checkbox-label {
+      &:hover::before {
+        border-color: $neutral-400;
+      }
 
-        &::before {
-          background-color: $primary-500;
-          border-color: $primary-500;
-        }
+      &:active::before {
+        border-color: $primary-500;
+        background-color: $primary-100;
+      }
 
-        &::after {
-          transform: scale(1) rotate(0deg);
-          top: 6px;
-          left: 4px;
-          width: 10px;
-          border-left-width: 0;
-          border-bottom-width: 2px;
-          border-color: $neutral-0;
-        }
+      &::before,
+      &::after {
+        box-sizing: border-box;
+      }
 
-        &:hover::before {
-          background-color: $primary-700;
-          border-color: $primary-700;
-        }
+      &::before {
+        @include box-shadow('sm');
+        content: "";
+        display: block;
+        width: 18px;
+        height: 18px;
+        margin-right: $spacing-8;
+        background-color: $neutral-0;
+        border: 1px solid $neutral-200;
+      }
 
-        &:active::before {
-          background-color: $primary-900;
-          border-color: $primary-900;
-        }
+      &::after {
+        content: "";
+        position: absolute;
+        background: none;
+        transform: scale(0) rotate(-45deg);
+        transform-origin: bottom right;
       }
     }
-  }
 
-  &-label {
-
-    &::before {
-      border-radius: $border-radius-2
+    &-subtext {
+      margin-left: $spacing-2;
+      color: $neutral-500;
+      font-size: 14px;
+      font-weight: 400;
     }
 
-    &::after {
-      left: 5px;
-      top: 2px;
-      width: 10px;
-      height: 6px;
-      border-left: 2px solid $neutral-0;
-      border-bottom: 2px solid $neutral-0;
-    }
-  }
+    &-sm {
+      .#{$input} {
 
+        &-label {
+          font-size: 12px;
 
-  // -------------------------
-  // 부분 선택
-  // -------------------------
-  &-indeterminate .checkbox-input {
-    &:checked {
-      & + .checkbox-label {
-
-        &::before {
-          background-color: $primary-500;
-          border-color: $primary-500;
-        }
-
-        &::after {
-          transform: scale(1) rotate(0deg);
-          top: 6px;
-          left: 4px;
-          width: 10px;
-          border-left-width: 0;
-          border-bottom-width: 2px;
-          border-color: $neutral-0;
-        }
-
-        &:hover::before {
-          background-color: $primary-700;
-          border-color: $primary-700;
-        }
-
-        &:active::before {
-          background-color: $primary-900;
-          border-color: $primary-900;
-        }
-      }
-    }
-  }
-
-  &-sm {
-    .checkbox {
-      &-input {
-        &:indeterminate {
-          & + .checkbox-label {
-            &::after {
-              top: 5px;
-              left: 4px;
-              width: 8px;
-            }
+          &::before {
+            margin-right: 6px;
+            width: 16px;
+            height: 16px;
           }
         }
 
-      }
-
-      &-label {
-        &::after {
-          left: 4px;
-          top: 1px;
-          width: 9px;
-          height: 5px;
+        &-subtext {
+          font-size: 12px;
         }
+
       }
     }
-
-    &.checkbox.checkbox-indeterminate .checkbox-input {
-      &:checked {
-        & + .checkbox-label {
-
-          &::after {
-            top: 5px;
-            left: 4px;
-            width: 8px;
-          }
-        }
-      }
-    }
-
   }
 }
 
