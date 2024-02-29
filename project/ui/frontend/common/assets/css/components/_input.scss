@@ -1,0 +1,203 @@
+$input-classes: checkbox, radio;
+
+@each $input in $input-classes {
+  .#{$input} {
+    position: relative;
+    @include flex($vertical: flex-start);
+
+    &-input {
+      @include hidden-text;
+      top: 0;
+      left: 0;
+
+      &:checked {
+        & + label {
+          &::before {
+            box-shadow: none;
+            background-color: $primary-500;
+            border-color: $primary-500;
+          }
+
+          &:hover::before {
+            background-color: $primary-700;
+            border-color: $primary-700;
+          }
+
+          &:active::before {
+            background-color: $primary-900;
+            border-color: $primary-900;
+          }
+        }
+      }
+    }
+
+    &-label {
+      @include flex($horizontal: flex-start);
+      color: $neutral-800;
+      white-space: nowrap;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+
+      &:hover::before {
+        border-color: $neutral-400;
+      }
+
+      &:active::before {
+        border-color: $primary-500;
+        background-color: $primary-100;
+      }
+
+      &::before,
+      &::after {
+        box-sizing: border-box;
+      }
+
+      &::before {
+        @include box-shadow('sm');
+        content: "";
+        display: block;
+        width: 18px;
+        height: 18px;
+        margin-right: $spacing-8;
+        background-color: $neutral-0;
+        border: 1px solid $neutral-200;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        background: none;
+        transform-origin: bottom right;
+      }
+    }
+
+    &-subtext {
+      margin-left: $spacing-2;
+      color: $neutral-500;
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    &-sm {
+      .#{$input} {
+
+        &-label {
+          font-size: 12px;
+
+          &::before {
+            margin-right: 6px;
+            width: 16px;
+            height: 16px;
+          }
+        }
+
+        &-subtext {
+          font-size: 12px;
+        }
+
+      }
+    }
+  }
+}
+
+//// -------------------------
+//// checkbox-toggle
+//// -------------------------
+//.checkbox-toggle {
+//  display: flex;
+//  align-items: center;
+//
+//  .checkbox {
+//    margin: 0 0 0 -1px;
+//    &:first-child {
+//      .checkbox-label {
+//        border-top-left-radius: $border-radius--sm;
+//        border-bottom-left-radius: $border-radius--sm;
+//      }
+//    }
+//    &:last-child {
+//      .checkbox-label {
+//        border-top-right-radius: $border-radius--sm;
+//        border-bottom-right-radius: $border-radius--sm;
+//      }
+//    }
+//    &-label {
+//      @include font-size("14");
+//      @include line-height("fit");
+//      height: 32px;
+//      padding: 0 4px;
+//      background-color: $neutral-500;
+//      color: $neutral-900;
+//      border: 1px solid $neutral-500;
+//
+//      &:after,
+//      &:before {
+//        content: none;
+//      }
+//    }
+//    &-input {
+//      &:hover:not(:disabled) {
+//        + .checkbox-label {
+//          border-color: $primary-500;
+//        }
+//      }
+//
+//      &:checked {
+//        + .checkbox-label {
+//          z-index: z("float");
+//          background-color: $primary-500;
+//          border-color: $primary-500;
+//          color: $neutral-900;
+//          .checkbox-icon {
+//            fill: $neutral-500;
+//          }
+//        }
+//      }
+//
+//      &:checked:focus-visible:not(:disabled) {
+//        + .checkbox-label {
+//          outline: 1px dashed $neutral-900;
+//        }
+//      }
+//    }
+//
+//    &-lg {
+//      .checkbox-label {
+//        @include font-size("16");
+//        padding: 0 4px;
+//        height: 50px;
+//      }
+//    }
+//
+//    &-sm {
+//      .checkbox-label {
+//        @include font-size("12");
+//        padding: 0 4px;
+//        height: 50px;
+//      }
+//    }
+//  }
+//
+//  &-icon {
+//    .checkbox {
+//      &-label {
+//        width: 32px;
+//        padding: 0 5px;
+//        justify-content: center;
+//      }
+//      &-lg {
+//        .checkbox-label {
+//          width: 40px;
+//          padding: 0 7px;
+//        }
+//      }
+//      &-sm {
+//        .checkbox-label {
+//          width: 24px;
+//          padding: 0 3px;
+//        }
+//      }
+//    }
+//  }
+//}

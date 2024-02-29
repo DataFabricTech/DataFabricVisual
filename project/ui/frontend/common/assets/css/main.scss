@@ -21,12 +21,25 @@
 
 // class
 @import "./base/status";
-@import "./base/classes";
 @import "./base/set-icon";
 @import "./themes/theme";
+
+// components
+@import "./components/button";
+@import "./components/input";
+@import "./components/checkbox";
+@import "./components/radio";
+@import "./components/switch";
+@import "../../components/extends/notification/Notification";
+@import "../../components/extends/inline-notification/InlineNotification";
+
+// modules
+@import "./modules/capsule-pagincation";
 
 // pages
 @import "./pages/design-guide";
 
 // tailwindCSS Utility Class
 @import "./tailwind/tailwind-utilities";
+
+@import "./base/classes";

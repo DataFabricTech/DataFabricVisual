@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  modules: ["@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt"],
+  modules: ["@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt", "@nuxtjs/tailwindcss"],
 
   plugins: [
     { src: "~/plugins/highcharts-vue", mode: "client" },
@@ -24,11 +24,11 @@ export default defineNuxtConfig({
     "ag-grid-community/dist/styles/ag-grid.css",
     "ag-grid-community/dist/styles/ag-theme-alpine.css"
   ],
-  postcss: {
-    plugins: {
-      tailwindcss: {},
-      autoprefixer: {}
-    }
+
+  tailwindcss: {
+    cssPath: false,
+    exposeConfig: true,
+    viewer: true
   },
 
   lodash: {

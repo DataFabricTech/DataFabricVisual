@@ -1,4 +1,4 @@
-// TODO: [퍼블리싱] 변수 재정의 및 리팩토링
+// h-group & v-group
 $directions: (
         "vertical": v,
         "hozizontal": h
@@ -7,10 +7,31 @@ $directions: (
 @each $attr, $direction in $directions {
   .#{$direction}-group {
     @if $attr == "vertical" {
-      @include flex-standard($vertical: flex-start, $direction: column);
+      @include flex($vertical: flex-start, $direction: column);
     } @else {
-      @include flex-standard($horizontal: flex-start);
+      @include flex($horizontal: flex-start);
     }
+  }
+}
+
+// color themes - 아이콘 / 텍스트 주요 컬러 테마
+$theme-colors: (
+        "neutral": #{$neutral-400},
+        "primary": #{$primary-500},
+        "secondary": #{$secondary-500},
+        "info": #{$info-500},
+        "success": #{$success-500},
+        "warning": #{$warning-500},
+        "error": #{$error-500},
+);
+
+@each $attr, $color in $theme-colors {
+  .svg-icon-#{$attr} {
+    @include icon-color($color);
+  }
+
+  .color-#{$attr} {
+    color: $color;
   }
 }
 
@@ -30,3 +51,8 @@ $directions: (
   @include caption-out;
 }
 
+// check & radio 를 묶는 group
+.input-group {
+  @include flex();
+  gap: $spacing-16;
+}

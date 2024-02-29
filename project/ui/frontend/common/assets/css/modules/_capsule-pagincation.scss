@@ -1,0 +1,27 @@
+.capsule-pagination {
+  @include flex;
+  gap: $spacing-4;
+
+  .description {
+    @include flex;
+    gap: $spacing-4;
+
+    dd {
+      @include flex;
+      font-size: 12px;
+      color: $neutral-800;
+
+      &:not(.is-description-selected) {
+        gap: $spacing-4;
+
+        &:before {
+          content: '/';
+        }
+      }
+    }
+
+    .is-description-selected {
+      font-weight: 500;
+    }
+  }
+}
