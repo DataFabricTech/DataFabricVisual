@@ -1001,53 +1001,6 @@
         </div>
       </article>
       <article class="mb-10">
-        <h3 class="section-subtitle">Toggle Checkbox</h3>
-        <div class="flex flex-col align-center gap-5">
-          <div class="v-group gap-3">
-            <div class="h-group gap-4">
-              <div class="input-group">
-                <div class="checkbox">
-                  <input type="checkbox" id="checkbox" class="checkbox-input" />
-                  <label for="checkbox" class="checkbox-label">
-                    오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span></label
-                  >
-                </div>
-                <div class="checkbox">
-                  <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
-                  <label for="checkbox2" class="checkbox-label">
-                    오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span></label
-                  >
-                </div>
-                <div class="checkbox checkbox-indeterminate">
-                  <input type="checkbox" id="checkbox3" class="checkbox-input" />
-                  <label for="checkbox3" class="checkbox-label"> 오늘 하루 그만보기 </label>
-                </div>
-              </div>
-            </div>
-            <div class="h-group gap-4">
-              <div class="input-group">
-                <div class="checkbox checkbox-sm">
-                  <input type="checkbox" id="checkboxsm" class="checkbox-input" />
-                  <label for="checkboxsm" class="checkbox-label">
-                    오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span></label
-                  >
-                </div>
-                <div class="checkbox checkbox-sm">
-                  <input type="checkbox" id="checkboxsm2" class="checkbox-input" disabled />
-                  <label for="checkboxsm2" class="checkbox-label">
-                    오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span></label
-                  >
-                </div>
-                <div class="checkbox checkbox-indeterminate checkbox-sm">
-                  <input type="checkbox" id="checkboxsm3" class="checkbox-input" />
-                  <label for="checkboxsm3" class="checkbox-label"> 오늘 하루 그만보기 </label>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="mb-10">
         <h3 class="section-subtitle">Switch</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
@@ -1117,49 +1070,6 @@
               </div>
               <div class="radio radio-sm">
                 <input type="radio" id="radiosm3" class="radio-input" name="radio2" />
-                <label for="radiosm3" class="radio-label"> 오늘 하루 그만보기 </label>
-              </div>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="mb-10">
-        <h3 class="section-subtitle">Toggle Radio</h3>
-        <div class="flex flex-col align-center gap-5">
-          <div class="v-group gap-3">
-            <div class="input-group">
-              <div class="radio">
-                <input type="radio" id="radio" class="radio-input" />
-                <label for="radio" class="radio-label">
-                  오늘 하루 그만보기 <span class="radio-subtext">(Optional)</span></label
-                >
-              </div>
-              <div class="radio">
-                <input type="radio" id="radio2" class="radio-input" disabled />
-                <label for="radio2" class="radio-label">
-                  오늘 하루 그만보기 <span class="radio-subtext">(Optional)</span></label
-                >
-              </div>
-              <div class="radio">
-                <input type="radio" id="radio3" class="radio-input" />
-                <label for="radio3" class="radio-label"> 오늘 하루 그만보기 </label>
-              </div>
-            </div>
-            <div class="input-group">
-              <div class="radio radio-sm">
-                <input type="radio" id="radiosm" class="radio-input" />
-                <label for="radiosm" class="radio-label">
-                  오늘 하루 그만보기 <span class="radio-subtext">(Optional)</span></label
-                >
-              </div>
-              <div class="radio radio-sm">
-                <input type="radio" id="radiosm2" class="radio-input" disabled />
-                <label for="radiosm2" class="radio-label">
-                  오늘 하루 그만보기 <span class="radio-subtext">(Optional)</span></label
-                >
-              </div>
-              <div class="radio radio-sm">
-                <input type="radio" id="radiosm3" class="radio-input" />
                 <label for="radiosm3" class="radio-label"> 오늘 하루 그만보기 </label>
               </div>
             </div>
