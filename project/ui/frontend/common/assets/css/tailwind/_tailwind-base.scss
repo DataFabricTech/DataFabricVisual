@@ -62,6 +62,32 @@
     text-decoration: none;
   }
 
+  input[type="checkbox"], input[type="radio"] {
+
+    &:focus-visible {
+      & + label {
+        outline: 1px dashed $neutral-900;
+      }
+    }
+
+    &:disabled {
+      & + label {
+        color: $neutral-300;
+        cursor: not-allowed;
+
+        &::before {
+          box-shadow: none;
+          border-color: $neutral-200;
+          background-color: $neutral-200;
+        }
+
+        span {
+          color: $neutral-300;
+        }
+      }
+    }
+  }
+
   a:active,
   a:hover {
     text-decoration: none;
