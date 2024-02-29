@@ -39,9 +39,7 @@
     <section class="guide-section">
       <h2 class="section-title">Button</h2>
       <article class="mb-10">
-        <h3 class="section-subtitle">
-          Button
-        </h3>
+        <h3 class="section-subtitle">Button</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Primary</h4>
@@ -337,9 +335,7 @@
         </div>
       </article>
       <article class="mb-10">
-        <h3 class="section-subtitle">
-          Icon Button
-        </h3>
+        <h3 class="section-subtitle">Icon Button</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Primary</h4>
@@ -736,9 +732,7 @@
         </div>
       </article>
       <article class="mb-10">
-        <h3 class="section-subtitle">
-          Link Button
-        </h3>
+        <h3 class="section-subtitle">Link Button</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
@@ -860,9 +854,7 @@
     <section class="guide-section">
       <h2 class="section-title">Notification</h2>
       <article class="mb-10">
-        <h3 class="section-subtitle">
-          Inline Notification
-        </h3>
+        <h3 class="section-subtitle">Inline Notification</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
@@ -889,9 +881,7 @@
         </div>
       </article>
       <article class="mb-10">
-        <h3 class="section-subtitle">
-          Basic Notification
-        </h3>
+        <h3 class="section-subtitle">Basic Notification</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
@@ -900,23 +890,19 @@
             </div>
             <h4 class="group-title">Default - success 아이콘</h4>
             <div class="h-group gap-4">
-              <Notification
-                :notification-type="'info'"></Notification>
+              <Notification :notification-type="'info'"></Notification>
             </div>
             <h4 class="group-title">Default - success 아이콘</h4>
             <div class="h-group gap-4">
-              <Notification
-                :notification-type="'warning'"></Notification>
+              <Notification :notification-type="'warning'"></Notification>
             </div>
             <h4 class="group-title">Default - success 아이콘</h4>
             <div class="h-group gap-4">
-              <Notification
-                :notification-type="'success'"></Notification>
+              <Notification :notification-type="'success'"></Notification>
             </div>
             <h4 class="group-title">Default - success 아이콘</h4>
             <div class="h-group gap-4">
-              <Notification
-                :notification-type="'error'"></Notification>
+              <Notification :notification-type="'error'"></Notification>
             </div>
             <h4 class="group-title">Info</h4>
             <div class="h-group gap-4">
@@ -938,9 +924,7 @@
         </div>
       </article>
       <article class="mb-10">
-        <h3 class="section-subtitle">
-          Extends Notification
-        </h3>
+        <h3 class="section-subtitle">Extends Notification</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
@@ -949,9 +933,7 @@
             </div>
             <h4 class="group-title">Default - success 아이콘</h4>
             <div class="h-group gap-4">
-              <Notification
-                :isExtends="true"
-                :notification-type="'primary'" class="w-96"></Notification>
+              <Notification :isExtends="true" :notification-type="'primary'" class="w-96"></Notification>
             </div>
             <h4 class="group-title">Info</h4>
             <div class="h-group gap-4">
@@ -968,6 +950,128 @@
             <h4 class="group-title">Error</h4>
             <div class="h-group gap-4">
               <Notification :isExtends="true" class="w-96 notification-error"></Notification>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Checkbox</h2>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Basic Checkbox</h3>
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <div class="input-group">
+              <div class="checkbox">
+                <input type="checkbox" id="checkbox" class="checkbox-input" />
+                <label for="checkbox" class="checkbox-label">
+                  오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span></label
+                >
+              </div>
+              <div class="checkbox">
+                <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
+                <label for="checkbox2" class="checkbox-label">
+                  오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span></label
+                >
+              </div>
+              <div class="checkbox checkbox-indeterminate">
+                <input type="checkbox" id="checkbox3" class="checkbox-input" />
+                <label for="checkbox3" class="checkbox-label"> 오늘 하루 그만보기 </label>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="checkbox checkbox-sm">
+                <input type="checkbox" id="checkboxsm" class="checkbox-input" />
+                <label for="checkboxsm" class="checkbox-label">
+                  오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span></label
+                >
+              </div>
+              <div class="checkbox checkbox-sm">
+                <input type="checkbox" id="checkboxsm2" class="checkbox-input" disabled />
+                <label for="checkboxsm2" class="checkbox-label">
+                  오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span></label
+                >
+              </div>
+              <div class="checkbox checkbox-indeterminate checkbox-sm">
+                <input type="checkbox" id="checkboxsm3" class="checkbox-input" />
+                <label for="checkboxsm3" class="checkbox-label"> 오늘 하루 그만보기 </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Switch</h3>
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <div class="h-group gap-4">
+              <div class="switch">
+                <input type="checkbox" id="sw" class="switch-input" />
+                <label for="sw" class="switch-label">
+                  Label
+                  <div class="switch-control"></div>
+                </label>
+              </div>
+              <div class="switch">
+                <input type="checkbox" id="sw2" class="switch-input" checked/>
+                <label for="sw2" class="switch-label">
+                  Label
+                  <div class="switch-control"></div>
+                </label>
+              </div>
+              <div class="switch">
+                <input type="checkbox" id="sw3" class="switch-input" disabled/>
+                <label for="sw3" class="switch-label">
+                  Label
+                  <div class="switch-control"></div>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Radio</h2>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Basic Radio</h3>
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <div class="input-group">
+              <div class="radio">
+                <input type="radio" id="radio" class="radio-input" name="radio1" />
+                <label for="radio" class="radio-label">
+                  오늘하루 그만보기 <span class="radio-subtext">(Optional)</span></label
+                >
+              </div>
+              <div class="radio">
+                <input type="radio" id="radio2" class="radio-input" disabled name="radio1" />
+                <label for="radio2" class="radio-label">
+                  오늘 하루 그만보기 <span class="radio-subtext">(Optional)</span></label
+                >
+              </div>
+              <div class="radio">
+                <input type="radio" id="radio3" class="radio-input" name="radio1" />
+                <label for="radio3" class="radio-label"> 오늘 하루 그만보기 </label>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="radio radio-sm">
+                <input type="radio" id="radiosm" class="radio-input" name="radio2" />
+                <label for="radiosm" class="radio-label">
+                  오늘 하루 그만보기 <span class="radio-subtext">(Optional)</span></label
+                >
+              </div>
+              <div class="radio radio-sm">
+                <input type="radio" id="radiosm2" class="radio-input" disabled name="radio2" />
+                <label for="radiosm2" class="radio-label">
+                  오늘 하루 그만보기 <span class="radio-subtext">(Optional)</span></label
+                >
+              </div>
+              <div class="radio radio-sm">
+                <input type="radio" id="radiosm3" class="radio-input" name="radio2" />
+                <label for="radiosm3" class="radio-label"> 오늘 하루 그만보기 </label>
+              </div>
             </div>
           </div>
         </div>

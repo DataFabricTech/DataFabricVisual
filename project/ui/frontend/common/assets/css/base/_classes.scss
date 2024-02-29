@@ -51,3 +51,8 @@ $theme-colors: (
   @include caption-out;
 }
 
+// check & radio 를 묶는 group
+.input-group {
+  @include flex();
+  gap: $spacing-16;
+}
