@@ -7,6 +7,49 @@ $input-classes: checkbox, radio;
 
     &-input {
       @include hidden-text;
+
+      &:focus-visible {
+        & + label {
+          outline: 1px dashed $neutral-900;
+        }
+      }
+
+      &:checked {
+        & + label {
+          &::before {
+            box-shadow: none;
+            background-color: $primary-500;
+            border-color: $primary-500;
+          }
+
+          &:hover::before {
+            background-color: $primary-700;
+            border-color: $primary-700;
+          }
+
+          &:active::before {
+            background-color: $primary-900;
+            border-color: $primary-900;
+          }
+        }
+      }
+
+      &:disabled {
+        & + label {
+          color: $neutral-300;
+          cursor: not-allowed;
+
+          &::before {
+            box-shadow: none;
+            border-color: $neutral-200;
+            background-color: $neutral-200;
+          }
+
+          .radio-subtext {
+            color: $neutral-300;
+          }
+        }
+      }
     }
 
     &-label {
@@ -46,7 +89,6 @@ $input-classes: checkbox, radio;
         content: "";
         position: absolute;
         background: none;
-        transform: scale(0) rotate(-45deg);
         transform-origin: bottom right;
       }
     }

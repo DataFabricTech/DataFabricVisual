@@ -55,11 +55,6 @@
   button:focus-visible,
   input:focus-visible {
     outline: 1px dashed $neutral-900;
-
-    & + .checkbox-label,
-    & + .radio-label {
-      outline: 1px dashed $neutral-900;
-    }
   }
 
   a {

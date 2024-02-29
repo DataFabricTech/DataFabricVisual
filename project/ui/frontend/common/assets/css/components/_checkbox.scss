@@ -2,6 +2,11 @@
 .checkbox {
 
   &-input {
+    &:checked + label {
+      &::after {
+        transform: scale(1) rotate(-45deg);
+      }
+    }
 
     &:indeterminate {
 
@@ -48,6 +53,7 @@
       height: 6px;
       border-left: 2px solid $neutral-0;
       border-bottom: 2px solid $neutral-0;
+      transform: scale(0) rotate(-45deg);
     }
   }
 
