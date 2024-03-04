@@ -961,7 +961,7 @@
         <h3 class="section-subtitle">Basic Checkbox</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
-            <div class="input-group">
+            <div class="element-group">
               <div class="checkbox">
                 <input type="checkbox" id="checkbox" class="checkbox-input" />
                 <label for="checkbox" class="checkbox-label">
@@ -979,7 +979,7 @@
                 <label for="checkbox3" class="checkbox-label"> 오늘 하루 그만보기 </label>
               </div>
             </div>
-            <div class="input-group">
+            <div class="element-group">
               <div class="checkbox checkbox-sm">
                 <input type="checkbox" id="checkboxsm" class="checkbox-input" />
                 <label for="checkboxsm" class="checkbox-label">
@@ -1037,7 +1037,7 @@
         <h3 class="section-subtitle">Basic Radio</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
-            <div class="input-group">
+            <div class="element-group">
               <div class="radio">
                 <input type="radio" id="radio" class="radio-input" name="radio1" />
                 <label for="radio" class="radio-label">
@@ -1055,7 +1055,7 @@
                 <label for="radio3" class="radio-label"> 오늘 하루 그만보기 </label>
               </div>
             </div>
-            <div class="input-group">
+            <div class="element-group">
               <div class="radio radio-sm">
                 <input type="radio" id="radiosm" class="radio-input" name="radio2" />
                 <label for="radiosm" class="radio-label">
