@@ -55,6 +55,12 @@
   border: 0;
 }
 
+@mixin hidden-input {
+  @include hidden-text;
+  top: 0;
+  left: 0;
+}
+
 //-------------------------------------------
 // table caption 숨김
 //-------------------------------------------

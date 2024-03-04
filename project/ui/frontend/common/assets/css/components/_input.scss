@@ -6,9 +6,7 @@ $input-classes: checkbox, radio;
     @include flex($vertical: flex-start);
 
     &-input {
-      @include hidden-text;
-      top: 0;
-      left: 0;
+      @include hidden-input;
 
       &:checked {
         & + label {

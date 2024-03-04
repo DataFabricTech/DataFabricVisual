@@ -1030,6 +1030,54 @@
           </div>
         </div>
       </article>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Button-Group</h3>
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">Basic</h4>
+            <div class="h-group gap-4">
+              <div class="v-group gap-3">
+                <div class="button-group button-group-lg">
+                  <input type="checkbox" id="button-group" class="button-group-input" name="button-group1" checked />
+                  <label for="button-group" class="button-group-label">
+                    Toggle
+                  </label>
+                  <input type="checkbox" id="button-group2" class="button-group-input" name="button-group1" checked/>
+                  <label for="button-group2" class="button-group-label">
+                    Toggle
+                  </label>
+                  <input type="checkbox" id="button-group9" class="button-group-input" name="button-group1" />
+                  <label for="button-group9" class="button-group-label">
+                    Toggle
+                  </label>
+                  <input type="checkbox" id="button-group3" class="button-group-input" name="button-group1" />
+                  <label for="button-group3" class="button-group-label">
+                    Toggle
+                  </label>
+                </div>
+                <div class="button-group">
+                  <input type="checkbox" id="button-groupsm" class="button-group-input" name="button-group2" checked />
+                  <label for="button-groupsm" class="button-group-label">
+                    Toggle
+                  </label>
+                  <input type="checkbox" id="button-groupsm2" class="button-group-input" name="button-group2" />
+                  <label for="button-groupsm2" class="button-group-label">
+                    Toggle
+                  </label>
+                  <input type="checkbox" id="button-groupsm6" class="button-group-input" name="button-group2" />
+                  <label for="button-groupsm6" class="button-group-label">
+                    Toggle
+                  </label>
+                  <input type="checkbox" id="button-groupsm3" class="button-group-input" name="button-group2" checked/>
+                  <label for="button-groupsm3" class="button-group-label">
+                    Toggle
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
     </section>
     <section class="guide-section">
       <h2 class="section-title">Radio</h2>
@@ -1039,7 +1087,7 @@
           <div class="v-group gap-3">
             <div class="element-group">
               <div class="radio">
-                <input type="radio" id="radio" class="radio-input" name="radio1" />
+                <input type="radio" id="radio" class="radio-input" name="radio1" checked/>
                 <label for="radio" class="radio-label">
                   오늘하루 그만보기 <span class="radio-subtext">(Optional)</span></label
                 >
@@ -1057,7 +1105,7 @@
             </div>
             <div class="element-group">
               <div class="radio radio-sm">
-                <input type="radio" id="radiosm" class="radio-input" name="radio2" />
+                <input type="radio" id="radiosm" class="radio-input" name="radio2" checked />
                 <label for="radiosm" class="radio-label">
                   오늘 하루 그만보기 <span class="radio-subtext">(Optional)</span></label
                 >
@@ -1071,6 +1119,139 @@
               <div class="radio radio-sm">
                 <input type="radio" id="radiosm3" class="radio-input" name="radio2" />
                 <label for="radiosm3" class="radio-label"> 오늘 하루 그만보기 </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Toggle</h3>
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">Basic</h4>
+            <div class="h-group gap-4">
+              <div class="v-group gap-3">
+                <div class="toggle toggle-lg">
+                  <input type="radio" id="toggle" class="toggle-input" name="toggle1" checked />
+                  <label for="toggle" class="toggle-label">
+                    <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                    Toggle
+                  </label>
+                  <input type="radio" id="toggle2" class="toggle-input" name="toggle1" />
+                  <label for="toggle2" class="toggle-label">
+                    <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                    Toggle
+                  </label>
+                  <input type="radio" id="toggle3" class="toggle-input" name="toggle1" />
+                  <label for="toggle3" class="toggle-label">
+                    <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                    Toggle
+                  </label>
+                </div>
+                <div class="toggle">
+                  <input type="radio" id="togglesm" class="toggle-input" name="toggle2" checked />
+                  <label for="togglesm" class="toggle-label">
+                    <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                    Toggle
+                  </label>
+                  <input type="radio" id="togglesm2" class="toggle-input" name="toggle2" />
+                  <label for="togglesm2" class="toggle-label">
+                    <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                    Toggle
+                  </label>
+                  <input type="radio" id="togglesm3" class="toggle-input" name="toggle2" />
+                  <label for="togglesm3" class="toggle-label">
+                    <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                    Toggle
+                  </label>
+                </div>
+              </div>
+            </div>
+            <h4 class="group-title">Primary</h4>
+            <div class="h-group gap-4">
+              <div class="v-group gap-3">
+                <div class="toggle toggle-lg toggle-primary">
+                  <input type="radio" id="toggleprimary" class="toggle-input" name="toggle3" checked />
+                  <label for="toggleprimary" class="toggle-label">
+                    <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                    Toggle
+                  </label>
+                  <input type="radio" id="toggleprimary2" class="toggle-input" name="toggle3" />
+                  <label for="toggleprimary2" class="toggle-label">
+                    <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                    Toggle
+                  </label>
+                  <input type="radio" id="toggleprimary3" class="toggle-input" name="toggle3" />
+                  <label for="toggleprimary3" class="toggle-label">
+                    <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                    Toggle
+                  </label>
+                </div>
+                <div class="toggle toggle-primary">
+                  <input type="radio" id="toggleprimarysm" class="toggle-input" name="toggle4" checked />
+                  <label for="toggleprimarysm" class="toggle-label">
+                    <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                    Toggle
+                  </label>
+                  <input type="radio" id="toggleprimarysm2" class="toggle-input" name="toggle4" />
+                  <label for="toggleprimarysm2" class="toggle-label">
+                    <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                    Toggle
+                  </label>
+                  <input type="radio" id="toggleprimarysm3" class="toggle-input" name="toggle4" />
+                  <label for="toggleprimarysm3" class="toggle-label">
+                    <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                    Toggle
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Button-Group</h3>
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">Basic</h4>
+            <div class="h-group gap-4">
+              <div class="v-group gap-3">
+                <div class="button-group button-group-lg">
+                  <input type="radio" id="button-groupprimary" class="button-group-input" name="button-group3" checked />
+                  <label for="button-groupprimary" class="button-group-label">
+                    Toggle
+                  </label>
+                  <input type="radio" id="button-groupprimary2" class="button-group-input" name="button-group3" />
+                  <label for="button-groupprimary2" class="button-group-label">
+                    Toggle
+                  </label>
+                  <input type="radio" id="button-groupprimary8" class="button-group-input" name="button-group3" />
+                  <label for="button-groupprimary8" class="button-group-label">
+                    Toggle
+                  </label>
+                  <input type="radio" id="button-groupprimary3" class="button-group-input" name="button-group3" />
+                  <label for="button-groupprimary3" class="button-group-label">
+                    Toggle
+                  </label>
+                </div>
+                <div class="button-group">
+                  <input type="radio" id="button-groupprimarysm" class="button-group-input" name="button-group4" checked />
+                  <label for="button-groupprimarysm" class="button-group-label">
+                    Toggle
+                  </label>
+                  <input type="radio" id="button-groupprimarysm6" class="button-group-input" name="button-group4" checked />
+                  <label for="button-groupprimarysm6" class="button-group-label">
+                    Toggle
+                  </label>
+                  <input type="radio" id="button-groupprimarysm2" class="button-group-input" name="button-group4" />
+                  <label for="button-groupprimarysm2" class="button-group-label">
+                    Toggle
+                  </label>
+                  <input type="radio" id="button-groupprimarysm3" class="button-group-input" name="button-group4" />
+                  <label for="button-groupprimarysm3" class="button-group-label">
+                    Toggle
+                  </label>
+                </div>
               </div>
             </div>
           </div>
@@ -1253,91 +1434,6 @@
               <div class="badge badge-secondary-stroke">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-            </div>
-          </div>
-        </div>
-      </article>
-    </section>
-    <section class="guide-section">
-      <h2 class="section-title">Toggle (Radio)</h2>
-      <article class="mb-10">
-        <h3 class="section-subtitle">Basic</h3>
-        <div class="flex flex-col align-center gap-5">
-          <div class="v-group gap-3">
-            <div class="toggle toggle-lg">
-              <input type="radio" id="toggle" class="toggle-input" name="toggle1" checked />
-              <label for="toggle" class="toggle-label">
-                <svg-icon class="toggle-icon" name="trash"></svg-icon>
-                Toggle
-              </label>
-              <input type="radio" id="toggle2" class="toggle-input" name="toggle1" />
-              <label for="toggle2" class="toggle-label">
-                <svg-icon class="toggle-icon" name="trash"></svg-icon>
-                Toggle
-              </label>
-              <input type="radio" id="toggle3" class="toggle-input" name="toggle1" />
-              <label for="toggle3" class="toggle-label">
-                <svg-icon class="toggle-icon" name="trash"></svg-icon>
-                Toggle
-              </label>
-            </div>
-            <div class="toggle">
-              <input type="radio" id="togglesm" class="toggle-input" name="toggle2" checked />
-              <label for="togglesm" class="toggle-label">
-                <svg-icon class="toggle-icon" name="trash"></svg-icon>
-                Toggle
-              </label>
-              <input type="radio" id="togglesm2" class="toggle-input" name="toggle2" />
-              <label for="togglesm2" class="toggle-label">
-                <svg-icon class="toggle-icon" name="trash"></svg-icon>
-                Toggle
-              </label>
-              <input type="radio" id="togglesm3" class="toggle-input" name="toggle2" />
-              <label for="togglesm3" class="toggle-label">
-                <svg-icon class="toggle-icon" name="trash"></svg-icon>
-                Toggle
-              </label>
-            </div>
-          </div>
-        </div>
-      </article>
-      <article class="mb-10">
-        <h3 class="section-subtitle">Primary</h3>
-        <div class="flex flex-col align-center gap-5">
-          <div class="v-group gap-3">
-            <div class="toggle toggle-lg toggle-primary">
-              <input type="radio" id="toggleprimary" class="toggle-input" name="toggle3" checked />
-              <label for="toggleprimary" class="toggle-label">
-                <svg-icon class="toggle-icon" name="trash"></svg-icon>
-                Toggle
-              </label>
-              <input type="radio" id="toggleprimary2" class="toggle-input" name="toggle3" />
-              <label for="toggleprimary2" class="toggle-label">
-                <svg-icon class="toggle-icon" name="trash"></svg-icon>
-                Toggle
-              </label>
-              <input type="radio" id="toggleprimary3" class="toggle-input" name="toggle3" />
-              <label for="toggleprimary3" class="toggle-label">
-                <svg-icon class="toggle-icon" name="trash"></svg-icon>
-                Toggle
-              </label>
-            </div>
-            <div class="toggle toggle-primary">
-              <input type="radio" id="toggleprimarysm" class="toggle-input" name="toggle4" checked />
-              <label for="toggleprimarysm" class="toggle-label">
-                <svg-icon class="toggle-icon" name="trash"></svg-icon>
-                Toggle
-              </label>
-              <input type="radio" id="toggleprimarysm2" class="toggle-input" name="toggle4" />
-              <label for="toggleprimarysm2" class="toggle-label">
-                <svg-icon class="toggle-icon" name="trash"></svg-icon>
-                Toggle
-              </label>
-              <input type="radio" id="toggleprimarysm3" class="toggle-input" name="toggle4" />
-              <label for="toggleprimarysm3" class="toggle-label">
-                <svg-icon class="toggle-icon" name="trash"></svg-icon>
-                Toggle
-              </label>
             </div>
           </div>
         </div>
