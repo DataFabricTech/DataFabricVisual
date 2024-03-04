@@ -1078,6 +1078,31 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Pagination</h2>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Basic Pagination</h3>
+        <div class="flex flex-col align-center gap-5">
+          <Pagination
+              :totalCount="60"
+              :perPage="10"
+              :currentPageNumber="4"
+              @change="checkCurrentPage"
+          ></Pagination>
+        </div>
+      </article>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Numerous Pagination</h3>
+        <div class="flex flex-col align-center gap-5">
+          <Pagination
+              :totalCount="100"
+              :perPage="10"
+              :currentPageNumber="1"
+              @change="checkCurrentPage"
+          ></Pagination>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">components</h2>
       <div class="link-buttons">
         <!-- 3. 메뉴 버튼 추가 @click="clickMenu('컴포넌트명')" -->
@@ -1105,6 +1130,7 @@ import VueDatepickerNext from "~/pages/vue-datepicker-next/index.vue";
 import VueFinalModal from "~/pages/vue-final-modal/index.vue";
 import Notification from "../components/extends/notification/Notification.vue";
 import InlineNotification from "../components/extends/inline-notification/InlineNotification.vue";
+import Pagination from "../components/extends/pagination/Pagination.vue";
 
 const currentComponent = shallowRef(Dayjs);
 
@@ -1117,11 +1143,16 @@ const components: any = {
   VueDatepickerNext,
   VueFinalModal,
   Notification,
-  InlineNotification
+  InlineNotification,
+  Pagination
 };
 
 function clickMenu(menu: string) {
   currentComponent.value = components[menu];
+}
+
+function checkCurrentPage(item: number): void {
+  console.log('Emit currentPageNumber: ', item)
 }
 </script>
 
