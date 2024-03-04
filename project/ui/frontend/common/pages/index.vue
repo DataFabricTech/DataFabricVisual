@@ -33,13 +33,13 @@
       <h2 class="section-title">icongraphy</h2>
       <div class="h-group gap-4">
         <svg-icon v-for="index in 5" :key="index" class="svg-icon icon-home" name="home"></svg-icon>
-        <svg-icon class="svg-icon icon-trash" name="trash"></svg-icon>
+        <svg-icon class="svg-icon" name="trash"></svg-icon>
       </div>
     </section>
     <section class="guide-section">
       <h2 class="section-title">Button</h2>
       <article class="mb-10">
-        <h3 class="section-subtitle">Button</h3>
+        <h3 class="section-subtitle">Basic</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Primary</h4>
@@ -335,7 +335,7 @@
         </div>
       </article>
       <article class="mb-10">
-        <h3 class="section-subtitle">Icon Button</h3>
+        <h3 class="section-subtitle">Icon</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Primary</h4>
@@ -732,7 +732,7 @@
         </div>
       </article>
       <article class="mb-10">
-        <h3 class="section-subtitle">Link Button</h3>
+        <h3 class="section-subtitle">Link</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
@@ -881,7 +881,7 @@
         </div>
       </article>
       <article class="mb-10">
-        <h3 class="section-subtitle">Basic Notification</h3>
+        <h3 class="section-subtitle">Basic</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
@@ -924,7 +924,7 @@
         </div>
       </article>
       <article class="mb-10">
-        <h3 class="section-subtitle">Extends Notification</h3>
+        <h3 class="section-subtitle">Extends</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
@@ -958,7 +958,7 @@
     <section class="guide-section">
       <h2 class="section-title">Checkbox</h2>
       <article class="mb-10">
-        <h3 class="section-subtitle">Basic Checkbox</h3>
+        <h3 class="section-subtitle">Basic</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <div class="element-group">
@@ -1013,14 +1013,14 @@
                 </label>
               </div>
               <div class="switch">
-                <input type="checkbox" id="sw2" class="switch-input" checked/>
+                <input type="checkbox" id="sw2" class="switch-input" checked />
                 <label for="sw2" class="switch-label">
                   Label
                   <div class="switch-control"></div>
                 </label>
               </div>
               <div class="switch">
-                <input type="checkbox" id="sw3" class="switch-input" disabled/>
+                <input type="checkbox" id="sw3" class="switch-input" disabled />
                 <label for="sw3" class="switch-label">
                   Label
                   <div class="switch-control"></div>
@@ -1034,7 +1034,7 @@
     <section class="guide-section">
       <h2 class="section-title">Radio</h2>
       <article class="mb-10">
-        <h3 class="section-subtitle">Basic Radio</h3>
+        <h3 class="section-subtitle">Basic</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <div class="element-group">
@@ -1259,6 +1259,91 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Toggle (Radio)</h2>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Basic</h3>
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <div class="toggle toggle-lg">
+              <input type="radio" id="toggle" class="toggle-input" name="toggle1" checked />
+              <label for="toggle" class="toggle-label">
+                <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                Toggle
+              </label>
+              <input type="radio" id="toggle2" class="toggle-input" name="toggle1" />
+              <label for="toggle2" class="toggle-label">
+                <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                Toggle
+              </label>
+              <input type="radio" id="toggle3" class="toggle-input" name="toggle1" />
+              <label for="toggle3" class="toggle-label">
+                <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                Toggle
+              </label>
+            </div>
+            <div class="toggle">
+              <input type="radio" id="togglesm" class="toggle-input" name="toggle2" checked />
+              <label for="togglesm" class="toggle-label">
+                <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                Toggle
+              </label>
+              <input type="radio" id="togglesm2" class="toggle-input" name="toggle2" />
+              <label for="togglesm2" class="toggle-label">
+                <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                Toggle
+              </label>
+              <input type="radio" id="togglesm3" class="toggle-input" name="toggle2" />
+              <label for="togglesm3" class="toggle-label">
+                <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                Toggle
+              </label>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Primary</h3>
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <div class="toggle toggle-lg toggle-primary">
+              <input type="radio" id="toggleprimary" class="toggle-input" name="toggle3" checked />
+              <label for="toggleprimary" class="toggle-label">
+                <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                Toggle
+              </label>
+              <input type="radio" id="toggleprimary2" class="toggle-input" name="toggle3" />
+              <label for="toggleprimary2" class="toggle-label">
+                <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                Toggle
+              </label>
+              <input type="radio" id="toggleprimary3" class="toggle-input" name="toggle3" />
+              <label for="toggleprimary3" class="toggle-label">
+                <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                Toggle
+              </label>
+            </div>
+            <div class="toggle toggle-primary">
+              <input type="radio" id="toggleprimarysm" class="toggle-input" name="toggle4" checked />
+              <label for="toggleprimarysm" class="toggle-label">
+                <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                Toggle
+              </label>
+              <input type="radio" id="toggleprimarysm2" class="toggle-input" name="toggle4" />
+              <label for="toggleprimarysm2" class="toggle-label">
+                <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                Toggle
+              </label>
+              <input type="radio" id="toggleprimarysm3" class="toggle-input" name="toggle4" />
+              <label for="toggleprimarysm3" class="toggle-label">
+                <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                Toggle
+              </label>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">components</h2>
       <div class="link-buttons">
         <!-- 3. 메뉴 버튼 추가 @click="clickMenu('컴포넌트명')" -->
@@ -1271,7 +1356,6 @@
       </div>
       <div></div>
     </section>
-
   </div>
 </template>
 
@@ -1288,7 +1372,6 @@ import VueFinalModal from "~/pages/vue-final-modal/index.vue";
 import Notification from "../components/extends/notification/Notification.vue";
 import InlineNotification from "../components/extends/inline-notification/InlineNotification.vue";
 
-
 const currentComponent = shallowRef(Dayjs);
 
 // 2. 컴포넌트를 객체에 저장
@@ -1300,7 +1383,7 @@ const components: any = {
   VueDatepickerNext,
   VueFinalModal,
   Notification,
-  InlineNotification,
+  InlineNotification
 };
 
 function clickMenu(menu: string) {
