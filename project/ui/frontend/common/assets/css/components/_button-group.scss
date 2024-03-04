@@ -1,0 +1,99 @@
+// -------------------------
+// Toggle Button
+// -------------------------
+.toggle-button {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  &__item {
+    @include button-normalize;
+    @include stable-padding($spacing-3xs, $spacing-sm);
+    height: $default-height-32;
+    margin: 0 0 0 -1px;
+    background-color: $ui-02;
+    border: 1px solid $ui-04;
+
+    &:first-child {
+      border-top-left-radius: $border-radius--sm;
+      border-bottom-left-radius: $border-radius--sm;
+    }
+
+    &:last-child {
+      border-top-right-radius: $border-radius--sm;
+      border-bottom-right-radius: $border-radius--sm;
+    }
+
+    &:hover {
+      z-index: 1;
+      border-color: $primary;
+    }
+
+    &--selected {
+      background-color: $primary;
+      border-color: $primary;
+
+      .toggle-button {
+        &__text {
+          color: $text-04;
+        }
+      }
+
+      .svg-icon {
+        fill: $ui-02;
+      }
+    }
+  }
+
+  &__text {
+    @include font-weight("medium");
+    @include font-size("14");
+    @include letter-spacing("narrow-md");
+    @include line-height("fit");
+    color: $text-02;
+  }
+
+  // -------------------------
+  // theme
+  // -------------------------
+  &--icon {
+    .toggle-button__item {
+      @include button--icon(6px, 20px);
+    }
+  }
+
+  // -------------------------
+  // Size
+  // -------------------------
+  &--sm {
+    .toggle-button__item {
+      @include button--sm;
+    }
+
+    .toggle-button__text {
+      @include font-size("12");
+    }
+
+    &.toggle-button--icon {
+      .toggle-button__item {
+        @include button--icon(4px, 16px);
+      }
+    }
+  }
+
+  &--lg {
+    .toggle-button__item {
+      @include button--lg;
+    }
+
+    .toggle-button__text {
+      @include font-size("16");
+    }
+
+    &.toggle-button--icon {
+      .toggle-button__item {
+        @include button--icon(8px, 24px);
+      }
+    }
+  }
+}
