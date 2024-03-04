@@ -888,19 +888,19 @@
             <div class="h-group gap-4">
               <Notification></Notification>
             </div>
-            <h4 class="group-title">Default - success 아이콘</h4>
+            <h4 class="group-title">Info 아이콘</h4>
             <div class="h-group gap-4">
               <Notification :notification-type="'info'"></Notification>
             </div>
-            <h4 class="group-title">Default - success 아이콘</h4>
+            <h4 class="group-title">Warning 아이콘</h4>
             <div class="h-group gap-4">
               <Notification :notification-type="'warning'"></Notification>
             </div>
-            <h4 class="group-title">Default - success 아이콘</h4>
+            <h4 class="group-title">Success 아이콘</h4>
             <div class="h-group gap-4">
               <Notification :notification-type="'success'"></Notification>
             </div>
-            <h4 class="group-title">Default - success 아이콘</h4>
+            <h4 class="group-title">Error 아이콘</h4>
             <div class="h-group gap-4">
               <Notification :notification-type="'error'"></Notification>
             </div>
@@ -931,9 +931,21 @@
             <div class="h-group gap-4">
               <Notification :isExtends="true" class="w-96"></Notification>
             </div>
-            <h4 class="group-title">Default - success 아이콘</h4>
+            <h4 class="group-title">Info 아이콘</h4>
             <div class="h-group gap-4">
-              <Notification :isExtends="true" :notification-type="'primary'" class="w-96"></Notification>
+              <Notification :isExtends="true" :notification-type="'info'" class="w-96"></Notification>
+            </div>
+            <h4 class="group-title">Warning 아이콘</h4>
+            <div class="h-group gap-4">
+              <Notification :isExtends="true" :notification-type="'warning'" class="w-96"></Notification>
+            </div>
+            <h4 class="group-title">Success 아이콘</h4>
+            <div class="h-group gap-4">
+              <Notification :isExtends="true" :notification-type="'success'" class="w-96"></Notification>
+            </div>
+            <h4 class="group-title">Error 아이콘</h4>
+            <div class="h-group gap-4">
+              <Notification :isExtends="true" :notification-type="'error'" class="w-96"></Notification>
             </div>
             <h4 class="group-title">Info</h4>
             <div class="h-group gap-4">

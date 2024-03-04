@@ -24,13 +24,16 @@
 @import "./base/set-icon";
 @import "./themes/theme";
 
-// components
+// Design Component
 @import "./components/button";
 @import "./components/input";
 @import "./components/checkbox";
 @import "./components/radio";
 @import "./components/switch";
+
+// Develop Component
 @import "../../components/extends/notification/Notification";
+@import "../../components/extends/pagination/Pagination";
 @import "../../components/extends/inline-notification/InlineNotification";
 
 // modules
