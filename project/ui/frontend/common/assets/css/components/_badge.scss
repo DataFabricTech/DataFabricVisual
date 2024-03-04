@@ -24,13 +24,6 @@
     @include font-size('label-12');
   }
 
-  &.icon-badge {
-    padding: $spacing-2;
-
-    .badge-text {
-      display: none;
-    }
-  }
 
   // Color Theme
   &-red {

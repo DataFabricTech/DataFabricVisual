@@ -1080,85 +1080,179 @@
     <section class="guide-section">
       <h2 class="section-title">Badge</h2>
       <article class="mb-10">
-        <h3 class="section-subtitle">
-          default
-        </h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">filled</h4>
             <div class="h-group gap-4">
-              <Badge class="badge-red"></Badge>
-              <Badge class="badge-yellow"></Badge>
-              <Badge class="badge-green"></Badge>
-              <Badge class="badge-blue"></Badge>
-              <Badge :isIcon="true" class="badge-purple"></Badge>
-              <Badge :isIcon="true" class="badge-gray"></Badge>
-              <Badge :isIcon="true" class="badge-primary"></Badge>
-              <Badge :isIcon="true" class="badge-secondary"></Badge>
+              <div class="badge badge-red">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-yellow">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-green">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-blue">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-purple">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-gray">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-primary">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-secondary">
+                <p class="badge-text">badge</p>
+              </div>
+            </div>
+            <div class="h-group gap-4">
+              <div class="badge badge-red">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-yellow">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-green">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-blue">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-purple">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-gray">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-primary">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-secondary">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
             </div>
             <h4 class="group-title">lighter</h4>
             <div class="h-group gap-4">
-              <Badge :isIcon="true" class="badge-red-lighter"></Badge>
-              <Badge :isIcon="true" class="badge-yellow-lighter"></Badge>
-              <Badge :isIcon="true" class="badge-green-lighter"></Badge>
-              <Badge :isIcon="true" class="badge-blue-lighter"></Badge>
-              <Badge class="badge-purple-lighter"></Badge>
-              <Badge class="badge-gray-lighter"></Badge>
-              <Badge class="badge-primary-lighter"></Badge>
-              <Badge class="badge-secondary-lighter"></Badge>
+              <div class="badge badge-red-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+                <span class="hidden-text">아이콘 뱃지 설명</span>
+              </div>
+              <div class="badge badge-yellow-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-green-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-blue-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-purple-lighter">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-gray-lighter">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-primary-lighter">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-secondary-lighter">
+                <p class="badge-text">badge</p>
+              </div>
+            </div>
+            <div class="h-group gap-4">
+              <div class="badge badge-red-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-yellow-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-green-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-blue-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-purple-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-gray-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-primary-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-secondary-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
             </div>
             <h4 class="group-title">stroke</h4>
             <div class="h-group gap-4">
-              <Badge class="badge-red-stroke"></Badge>
-              <Badge :isIcon="true" class="badge-yellow-stroke"></Badge>
-              <Badge class="badge-green-stroke"></Badge>
-              <Badge :isIcon="true" class="badge-blue-stroke"></Badge>
-              <Badge class="badge-purple-stroke"></Badge>
-              <Badge :isIcon="true" class="badge-gray-stroke"></Badge>
-              <Badge class="badge-primary-stroke"></Badge>
-              <Badge :isIcon="true" class="badge-secondary-stroke"></Badge>
+              <div class="badge badge-red-stroke">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-yellow-stroke">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-green-stroke">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-blue-stroke">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-purple-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-gray-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-primary-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-secondary-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
             </div>
-          </div>
-        </div>
-      </article>
-      <article class="mb-10">
-        <h3 class="section-subtitle">
-          only icon
-        </h3>
-        <div class="flex flex-col align-center gap-5">
-          <div class="v-group gap-3">
-            <h4 class="group-title">filled</h4>
             <div class="h-group gap-4">
-              <Badge :isIcon="true" class="icon-badge badge-red"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-yellow"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-green"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-blue"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-purple"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-gray"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-primary"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-secondary"></Badge>
-            </div>
-            <h4 class="group-title">lighter</h4>
-            <div class="h-group gap-4">
-              <Badge :isIcon="true" class="icon-badge badge-red-lighter"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-yellow-lighter"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-green-lighter"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-blue-lighter"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-purple-lighter"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-gray-lighter"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-primary-lighter"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-secondary-lighter"></Badge>
-            </div>
-            <h4 class="group-title">stroke</h4>
-            <div class="h-group gap-4">
-              <Badge :isIcon="true" class="icon-badge badge-red-stroke"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-yellow-stroke"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-green-stroke"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-blue-stroke"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-purple-stroke"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-gray-stroke"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-primary-stroke"></Badge>
-              <Badge :isIcon="true" class="icon-badge badge-secondary-stroke"></Badge>
+              <div class="badge badge-red-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-yellow-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-green-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-blue-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-purple-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-gray-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-primary-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge icon-badge badge-secondary-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
             </div>
           </div>
         </div>
@@ -1193,7 +1287,6 @@ import VueDatepickerNext from "~/pages/vue-datepicker-next/index.vue";
 import VueFinalModal from "~/pages/vue-final-modal/index.vue";
 import Notification from "../components/extends/notification/Notification.vue";
 import InlineNotification from "../components/extends/inline-notification/InlineNotification.vue";
-import Badge from "../components/extends/badge/badge.vue";
 
 
 const currentComponent = shallowRef(Dayjs);
@@ -1208,7 +1301,6 @@ const components: any = {
   VueFinalModal,
   Notification,
   InlineNotification,
-  Badge
 };
 
 function clickMenu(menu: string) {
