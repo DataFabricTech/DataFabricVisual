@@ -24,6 +24,9 @@
     @include font-size('label-12');
   }
 
+  &:not(:has(.badge-text)){
+    padding: $spacing-2;
+  }
 
   // Color Theme
   &-red {

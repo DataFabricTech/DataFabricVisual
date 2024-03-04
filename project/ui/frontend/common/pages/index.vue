@@ -1117,25 +1117,25 @@
               <div class="badge badge-red">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-yellow">
+              <div class="badge badge-yellow">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-green">
+              <div class="badge badge-green">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-blue">
+              <div class="badge badge-blue">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-purple">
+              <div class="badge badge-purple">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-gray">
+              <div class="badge badge-gray">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-primary">
+              <div class="badge badge-primary">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-secondary">
+              <div class="badge badge-secondary">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
             </div>
@@ -1175,25 +1175,25 @@
               <div class="badge badge-red-lighter">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-yellow-lighter">
+              <div class="badge badge-yellow-lighter">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-green-lighter">
+              <div class="badge badge-green-lighter">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-blue-lighter">
+              <div class="badge badge-blue-lighter">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-purple-lighter">
+              <div class="badge badge-purple-lighter">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-gray-lighter">
+              <div class="badge badge-gray-lighter">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-primary-lighter">
+              <div class="badge badge-primary-lighter">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-secondary-lighter">
+              <div class="badge badge-secondary-lighter">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
             </div>
@@ -1232,25 +1232,25 @@
               <div class="badge badge-red-stroke">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-yellow-stroke">
+              <div class="badge badge-yellow-stroke">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-green-stroke">
+              <div class="badge badge-green-stroke">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-blue-stroke">
+              <div class="badge badge-blue-stroke">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-purple-stroke">
+              <div class="badge badge-purple-stroke">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-gray-stroke">
+              <div class="badge badge-gray-stroke">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-primary-stroke">
+              <div class="badge badge-primary-stroke">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
-              <div class="badge icon-badge badge-secondary-stroke">
+              <div class="badge badge-secondary-stroke">
                 <svg-icon class="badge-icon" name="folder"></svg-icon>
               </div>
             </div>
