@@ -1259,6 +1259,64 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Tag</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">Stroke</h4>
+            <div class="h-group gap-4">
+              <div class="tag tag-primary">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-primary is-selected">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-primary is-disabled">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </div>
+            <div class="h-group gap-4">
+              <div class="tag tag-primary-lighter">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-primary-lighter is-selected">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </div>
+            <div class="h-group gap-4">
+              <div class="tag tag-neutral">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-neutral is-selected">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">components</h2>
       <div class="link-buttons">
         <!-- 3. 메뉴 버튼 추가 @click="clickMenu('컴포넌트명')" -->
