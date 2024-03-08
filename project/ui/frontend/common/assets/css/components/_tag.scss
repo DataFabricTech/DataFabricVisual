@@ -1,4 +1,4 @@
-@mixin tag-color($color, $bg, $border: transparent, $box-shadows: false, $color-hover: null, $bg-hover: null,$border-hover: null, $color-selected: null, $bg-selected: null,$border-selected: null){
+@mixin tag-color($color, $bg, $border: transparent, $box-shadows: false, $color-hover: null, $bg-hover: null,$border-hover: null, $color-selected: null, $bg-selected: null,$border-selected: null) {
   background-color: $bg;
   border: 1px solid $border;
 
@@ -18,7 +18,7 @@
     background-color: $bg-hover;
     border-color: $border-hover;
 
-    .tag-link{
+    .tag-link {
       color: $color-hover;
     }
 
@@ -53,7 +53,6 @@
   &-link {
     @include font-size('label-14');
     cursor: pointer;
-
   }
 
   &-delete-button {
@@ -122,7 +121,7 @@
 
   //Color Theme
   &-primary {
-     @include tag-color($color: $primary-500, $bg: $neutral-0, $border: $neutral-200, $box-shadows: true, $border-hover: $primary-300, $bg-selected: $primary-100, $border-selected: $primary-500);
+    @include tag-color($color: $primary-500, $bg: $neutral-0, $border: $neutral-200, $box-shadows: true, $border-hover: $primary-300, $bg-selected: $primary-100, $border-selected: $primary-500);
 
     &-lighter {
       @include tag-color($color: $primary-500, $bg: $primary-100, $border-hover: $primary-500, $color-selected: $neutral-0, $bg-selected: $primary-500);

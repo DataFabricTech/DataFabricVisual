@@ -1013,14 +1013,14 @@
                 </label>
               </div>
               <div class="switch">
-                <input type="checkbox" id="sw2" class="switch-input" checked/>
+                <input type="checkbox" id="sw2" class="switch-input" checked />
                 <label for="sw2" class="switch-label">
                   Label
                   <div class="switch-control"></div>
                 </label>
               </div>
               <div class="switch">
-                <input type="checkbox" id="sw3" class="switch-input" disabled/>
+                <input type="checkbox" id="sw3" class="switch-input" disabled />
                 <label for="sw3" class="switch-label">
                   Label
                   <div class="switch-control"></div>
@@ -1263,7 +1263,7 @@
       <article class="mb-10">
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
-            <h4 class="group-title">Stroke</h4>
+            <h4 class="group-title">Primary</h4>
             <div class="h-group gap-4">
               <div class="tag tag-primary">
                 <a class="tag-link">TAG</a>
@@ -1285,6 +1285,27 @@
               </div>
             </div>
             <div class="h-group gap-4">
+              <div class="tag tag-primary tag-sm">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-primary tag-sm is-selected">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-primary tag-sm is-disabled">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </div>
+            <h4 class="group-title">Lighter</h4>
+            <div class="h-group gap-4">
               <div class="tag tag-primary-lighter">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
@@ -1299,15 +1320,48 @@
               </div>
             </div>
             <div class="h-group gap-4">
+              <div class="tag tag-primary-lighter tag-sm">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-primary-lighter tag-sm is-selected">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </div>
+            <h4 class="group-title">Neutral</h4>
+            <div class="h-group gap-4">
               <div class="tag tag-neutral">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
               <div class="tag tag-neutral is-selected">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </div>
+            <div class="h-group gap-4">
+              <div class="tag tag-neutral tag-sm">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-neutral tag-sm is-selected">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
@@ -1358,7 +1412,7 @@ const components: any = {
   VueDatepickerNext,
   VueFinalModal,
   Notification,
-  InlineNotification,
+  InlineNotification
 };
 
 function clickMenu(menu: string) {
