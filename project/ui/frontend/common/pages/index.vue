@@ -1268,18 +1268,21 @@
               <div class="tag tag-primary">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
               <div class="tag tag-primary is-selected">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
               <div class="tag tag-primary is-disabled">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
@@ -1288,18 +1291,21 @@
               <div class="tag tag-primary tag-sm">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
               <div class="tag tag-primary tag-sm is-selected">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
               <div class="tag tag-primary tag-sm is-disabled">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
@@ -1309,12 +1315,14 @@
               <div class="tag tag-primary-lighter">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
               <div class="tag tag-primary-lighter is-selected">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
@@ -1323,12 +1331,14 @@
               <div class="tag tag-primary-lighter tag-sm">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
               <div class="tag tag-primary-lighter tag-sm is-selected">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
@@ -1371,6 +1381,17 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Breadcrumb</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <Breadcrumb></Breadcrumb>
+            <Breadcrumb class="breadcrumb-slash"></Breadcrumb>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">components</h2>
       <div class="link-buttons">
         <!-- 3. 메뉴 버튼 추가 @click="clickMenu('컴포넌트명')" -->
@@ -1399,7 +1420,7 @@ import VueDatepickerNext from "~/pages/vue-datepicker-next/index.vue";
 import VueFinalModal from "~/pages/vue-final-modal/index.vue";
 import Notification from "../components/extends/notification/Notification.vue";
 import InlineNotification from "../components/extends/inline-notification/InlineNotification.vue";
-
+import Breadcrumb from "../components/base/breadcrumb/Breadcrumb.vue";
 
 const currentComponent = shallowRef(Dayjs);
 
@@ -1412,7 +1433,8 @@ const components: any = {
   VueDatepickerNext,
   VueFinalModal,
   Notification,
-  InlineNotification
+  InlineNotification,
+  Breadcrumb
 };
 
 function clickMenu(menu: string) {
