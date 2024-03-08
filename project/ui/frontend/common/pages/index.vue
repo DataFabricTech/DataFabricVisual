@@ -1115,6 +1115,187 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Badge</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">filled</h4>
+            <div class="h-group gap-4">
+              <div class="badge badge-red">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-yellow">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-green">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-blue">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-purple">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-gray">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-primary">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-secondary">
+                <p class="badge-text">badge</p>
+              </div>
+            </div>
+            <div class="h-group gap-4">
+              <div class="badge badge-red">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-yellow">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-green">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-blue">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-purple">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-gray">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-primary">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-secondary">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+            </div>
+            <h4 class="group-title">lighter</h4>
+            <div class="h-group gap-4">
+              <div class="badge badge-red-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+                <span class="hidden-text">아이콘 뱃지 설명</span>
+              </div>
+              <div class="badge badge-yellow-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-green-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-blue-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-purple-lighter">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-gray-lighter">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-primary-lighter">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-secondary-lighter">
+                <p class="badge-text">badge</p>
+              </div>
+            </div>
+            <div class="h-group gap-4">
+              <div class="badge badge-red-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-yellow-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-green-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-blue-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-purple-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-gray-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-primary-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-secondary-lighter">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+            </div>
+            <h4 class="group-title">stroke</h4>
+            <div class="h-group gap-4">
+              <div class="badge badge-red-stroke">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-yellow-stroke">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-green-stroke">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-blue-stroke">
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-purple-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-gray-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-primary-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+              <div class="badge badge-secondary-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+                <p class="badge-text">badge</p>
+              </div>
+            </div>
+            <div class="h-group gap-4">
+              <div class="badge badge-red-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-yellow-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-green-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-blue-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-purple-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-gray-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-primary-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+              <div class="badge badge-secondary-stroke">
+                <svg-icon class="badge-icon" name="folder"></svg-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">components</h2>
       <div class="link-buttons">
         <!-- 3. 메뉴 버튼 추가 @click="clickMenu('컴포넌트명')" -->
@@ -1127,6 +1308,7 @@
       </div>
       <div></div>
     </section>
+
   </div>
 </template>
 
@@ -1143,6 +1325,7 @@ import VueFinalModal from "~/pages/vue-final-modal/index.vue";
 import Notification from "../components/extends/notification/Notification.vue";
 import InlineNotification from "../components/extends/inline-notification/InlineNotification.vue";
 import Pagination from "../components/extends/pagination/Pagination.vue";
+
 
 const currentComponent = shallowRef(Dayjs);
 
