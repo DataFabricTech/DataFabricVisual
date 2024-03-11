@@ -1309,14 +1309,14 @@
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
-              <div class="tag tag-primary is-selected">
+              <div class="tag tag-primary is-tag-selected">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
                   <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
-              <div class="tag tag-primary is-disabled">
+              <div class="tag tag-primary is-tag-disabled">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
                   <span class="hidden-text">삭제</span>
@@ -1332,14 +1332,14 @@
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
-              <div class="tag tag-primary tag-sm is-selected">
+              <div class="tag tag-primary tag-sm is-tag-selected">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
                   <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
-              <div class="tag tag-primary tag-sm is-disabled">
+              <div class="tag tag-primary tag-sm is-tag-disabled">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
                   <span class="hidden-text">삭제</span>
@@ -1356,7 +1356,7 @@
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
-              <div class="tag tag-primary-lighter is-selected">
+              <div class="tag tag-primary-lighter is-tag-selected">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
                   <span class="hidden-text">삭제</span>
@@ -1372,7 +1372,7 @@
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
-              <div class="tag tag-primary-lighter tag-sm is-selected">
+              <div class="tag tag-primary-lighter tag-sm is-tag-selected">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
                   <span class="hidden-text">삭제</span>
@@ -1389,7 +1389,7 @@
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
-              <div class="tag tag-neutral is-selected">
+              <div class="tag tag-neutral is-tag-selected">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
                   <span class="hidden-text">삭제</span>
@@ -1405,7 +1405,7 @@
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
               </div>
-              <div class="tag tag-neutral tag-sm is-selected">
+              <div class="tag tag-neutral tag-sm is-tag-selected">
                 <a class="tag-link">TAG</a>
                 <button class="tag-delete-button">
                   <span class="hidden-text">삭제</span>

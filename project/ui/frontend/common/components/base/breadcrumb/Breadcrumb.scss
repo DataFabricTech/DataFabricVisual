@@ -17,7 +17,7 @@
       height: 18px;
     }
 
-    &.is-selected {
+    &.is-breadcrumb-selected {
       .svg-icon {
         @include icon-color($neutral-800);
       }

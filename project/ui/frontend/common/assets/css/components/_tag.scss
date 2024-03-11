@@ -27,7 +27,7 @@
     }
   }
 
-  &.is-selected, &.is-selected:hover {
+  &.is-tag-selected, &.is-tag-selected:hover {
     color: $color-selected;
     background-color: $bg-selected;
     border-color: $border-selected;
@@ -79,7 +79,7 @@
     }
   }
 
-  &.is-disabled, &.is-disabled:hover:has(.tag-delete-button:hover) {
+  &.is-tag-disabled, &.is-tag-disabled:hover:has(.tag-delete-button:hover) {
     border: none;
     box-shadow: none;
     background: $neutral-100;
