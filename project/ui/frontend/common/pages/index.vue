@@ -1300,7 +1300,16 @@
       <article class="mb-10">
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
-            <input class="text-input" placeholder="placeholder"/>
+            <h4 class="group-title">default</h4>
+            <div class="h-group gap-4">
+              <label class="hidden-text" for="text-input-example">label</label>
+              <input id="text-input-example" class="text-input" placeholder="placeholder"/>
+              <div class="v-group">
+                <label class="hidden-text" for="text-input-example-2">label</label>
+                <input id="text-input-example-2" class="text-input" placeholder="placeholder"/>
+                <inline-notification class="inline-notification-info"></inline-notification>
+              </div>
+            </div>
           </div>
         </div>
       </article>

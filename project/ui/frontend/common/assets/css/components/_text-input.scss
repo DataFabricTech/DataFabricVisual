@@ -18,10 +18,21 @@
   &:focus {
     background: $neutral-0;
     border: 1px solid $secondary-500;
+    box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
   }
 
-  &:user-invalid {
-    border: 1px solid $error-500;
+  &:read-only {
+    border: none;
+    color: $neutral-900;
+    background: $neutral-100;
   }
 
+  &-group {
+    @include flex;
+    gap: $spacing-6;
+  }
+
+  & + .inline-notification {
+    margin-top: $spacing-4;
+  }
 }
