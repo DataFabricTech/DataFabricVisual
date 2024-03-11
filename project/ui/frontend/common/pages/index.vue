@@ -1296,6 +1296,16 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Text Input</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <input class="text-input" placeholder="placeholder"/>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">components</h2>
       <div class="link-buttons">
         <!-- 3. 메뉴 버튼 추가 @click="clickMenu('컴포넌트명')" -->

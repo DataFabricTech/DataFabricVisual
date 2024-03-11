@@ -53,7 +53,7 @@
 
   a:focus-visible,
   button:focus-visible,
-  input:focus-visible,
+  input:focus-visible:not(:focus),
   div[tabindex="0"]:focus-visible {
     outline: 1px dashed $neutral-900;
   }
