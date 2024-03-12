@@ -1,3 +1,3 @@
-export interface NavigateionEvents {
+export interface NavigationEvents {
   onChange(value: string | number): void;
 }
