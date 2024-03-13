@@ -1,4 +1,4 @@
-@mixin text-input-size($font-size: body-14, $size: 32px, $right-padding: $spacing-6, $left-padding: $spacing-8, $icon-size: 18px) {
+@mixin text-input-size($font-size: body-14, $size: 32px, $right-padding: $spacing-6, $left-padding: $spacing-8) {
   @include font-size($font-size);
   height: $size;
   padding: 0 $right-padding 0 $left-padding;
@@ -6,10 +6,36 @@
   &::placeholder {
     @include font-size($font-size);
   }
+}
 
-  & + .text-input-icon {
-    @include icon-size($icon-size)
-  }
+@mixin text-input-group-size($input-right: 60px, $clear-button-size: xs, $clear-button-right: 38px, $icon-size: 18px, $search-button-size: 32px) {
+  //.text-input {
+  //  @extend .text-input-#{$input-size};
+  //}
+    &:has(.text-input-clear-button + .text-input-search-button) {
+      .text-input {
+        padding-right: $input-right;
+      }
+    }
+
+    .text-input-clear-button {
+      @extend .button-#{$clear-button-size};
+    }
+
+    &:has(.text-input-search-button) {
+      .text-input-clear-button {
+        right: $clear-button-right;
+      }
+    }
+
+    .text-input-icon {
+      @include icon-size($icon-size);
+    }
+
+    .text-input-search-button {
+      width: $search-button-size;
+      height: $search-button-size - 2px;
+    }
 }
 
 .text-input {
@@ -32,7 +58,7 @@
     border: 1px solid $secondary-500;
     box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
 
-    & + .text-input-icon {
+    & ~ .text-input-icon {
       @include icon-color($primary-500);
     }
   }
@@ -47,23 +73,26 @@
       color: $neutral-300;
     }
 
-    & + .text-input-icon {
+    & ~ .text-input-icon {
       @include icon-color($neutral-300);
     }
   }
 
   &-group {
+    @include text-input-group-size;
     position: relative;
 
     .text-input-icon {
       @include icon-color($neutral-600);
+      //dd
+      //@include icon-size(18px);
       position: absolute;
       left: 8px;
       top: 50%;
       transform: translateY(-50%);
     }
 
-    .button-neutral-ghost {
+    .text-input-clear-button {
       position: absolute;
       right: 6px;
       top: 50%;
@@ -80,16 +109,105 @@
       }
     }
 
-    &:has(.button-neutral-ghost) {
+    &:has(.text-input-clear-button) {
       .text-input {
         padding-right: $spacing-32;
       }
     }
+
+    .text-input-search-button {
+      position: absolute;
+      right: 1px;
+      top: 50%;
+      //dd
+      //width: 32px;
+      //height: 30px;
+      transform: translateY(-50%);
+      border-left: 1px solid $neutral-200;
+      border-radius: 0 $border-radius-4 $border-radius-4 0;
+
+      .button-icon {
+        @include icon-size('md');
+      }
+    }
+    //dd
+    //&:has(.text-input-search-button) {
+    //  .text-input-clear-button {
+    //    right: 38px;
+    //  }
+    //}
+//dd
+//    &:has(.text-input-clear-button + .text-input-search-button) {
+//      .text-input {
+//        padding-right: 60px;
+//      }
+//    }
+
+    //text-input-group size
+    &.text-input-group-lg {
+      @include text-input-group-size($input-right: 72px, $clear-button-size: sm, $clear-button-right: 38px, $icon-size: 18px, $search-button-size: 32px);
+      .text-input {
+        @extend .text-input-lg;
+      }
+
+      //&:has(.text-input-clear-button + .text-input-search-button) {
+      //  .text-input {
+      //    padding-right: 72px;
+      //  }
+      //}
+      //
+      //.text-input-clear-button {
+      //  @extend .button-sm;
+      //}
+
+      &:has(.text-input-search-button) {
+        .text-input-clear-button {
+          right: 42px;
+        }
+      }
+
+      .text-input-icon {
+        @include icon-size('sm');
+      }
+
+      .text-input-search-button {
+        width: 36px;
+        height: 34px;
+      }
+    }
+
+    &-sm {
+      .text-input {
+        @extend .text-input-sm;
+      }
+
+      &:has(.text-input-clear-button + .text-input-search-button) {
+        .text-input {
+          padding-right: 54px;
+        }
+      }
+
+      &:has(.text-input-search-button) {
+        .text-input-clear-button {
+          right: 32px;
+        }
+      }
+
+      .text-input-search-button {
+        width: 28px;
+        height: 26px;
+
+        .button-icon {
+          @include icon-size('sm');
+        }
+      }
+    }
   }
 
-  // Size
+
+  // text-input Size
   &-lg {
-    @include text-input-size($size: 36px, $right-padding: $spacing-8, $left-padding: 10px, $icon-size: 20px)
+    @include text-input-size($size: 36px, $right-padding: $spacing-8, $left-padding: 10px)
   }
 
   &-sm {
