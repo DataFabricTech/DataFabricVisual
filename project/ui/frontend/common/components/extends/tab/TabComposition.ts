@@ -1,10 +1,10 @@
 import { Ref, ref } from "vue";
 import { TabProps } from "@/components/extends/tab/TabProps";
 import { NavigationFunctionality } from "@/components/extends/common/interfaces/functions/Navigation.interface";
-import { NavigateionEvents } from "@/components/extends/common/interfaces/events/Navigation.interface";
+import { NavigationEvents } from "@/components/extends/common/interfaces/events/Navigation.interface";
 const INDEX = "index";
 
-interface TabComposition extends TabProps, NavigationFunctionality, NavigateionEvents {
+interface TabComposition extends TabProps, NavigationFunctionality, NavigationEvents {
   currentIndex: Ref<number>;
   changeCurrentTabClass(index: number): boolean;
 }
