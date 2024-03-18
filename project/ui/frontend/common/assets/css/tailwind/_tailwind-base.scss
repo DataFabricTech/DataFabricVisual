@@ -71,8 +71,9 @@
     }
 
     &:disabled {
-      & + label {
-        color: $neutral-300;
+      & + label,
+      & + label:hover {
+        color: $neutral-300 !important;
         cursor: not-allowed;
 
         &::before {
@@ -81,8 +82,12 @@
           background-color: $neutral-200;
         }
 
+        svg {
+          color: $neutral-300 !important;
+        }
+
         span {
-          color: $neutral-300;
+          color: $neutral-300 !important;
         }
       }
     }
