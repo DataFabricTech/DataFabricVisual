@@ -16,15 +16,21 @@
   border: 1px solid $neutral-200;
 
   &-content {
-    @include flex($horizontal: space-between);
+    @include flex($vertical: flex-start, $horizontal: space-between);
     gap: $spacing-8;
+
+    &:only-child{
+      align-items: center;
+    }
   }
 
   &-icon {
     @include icon-size('sm');
+    flex-shrink: 0;
   }
 
   &-detail {
+    flex-grow: 1;
     font-size: 14px;
     color: $neutral-800
   }

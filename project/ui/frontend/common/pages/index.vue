@@ -888,19 +888,19 @@
             <div class="h-group gap-4">
               <Notification></Notification>
             </div>
-            <h4 class="group-title">Default - success 아이콘</h4>
+            <h4 class="group-title">Info 아이콘</h4>
             <div class="h-group gap-4">
               <Notification :notification-type="'info'"></Notification>
             </div>
-            <h4 class="group-title">Default - success 아이콘</h4>
+            <h4 class="group-title">Warning 아이콘</h4>
             <div class="h-group gap-4">
               <Notification :notification-type="'warning'"></Notification>
             </div>
-            <h4 class="group-title">Default - success 아이콘</h4>
+            <h4 class="group-title">Sucess 아이콘</h4>
             <div class="h-group gap-4">
               <Notification :notification-type="'success'"></Notification>
             </div>
-            <h4 class="group-title">Default - success 아이콘</h4>
+            <h4 class="group-title">Error 아이콘</h4>
             <div class="h-group gap-4">
               <Notification :notification-type="'error'"></Notification>
             </div>
@@ -931,9 +931,21 @@
             <div class="h-group gap-4">
               <Notification :isExtends="true" class="w-96"></Notification>
             </div>
-            <h4 class="group-title">Default - success 아이콘</h4>
+            <h4 class="group-title">Info 아이콘</h4>
             <div class="h-group gap-4">
               <Notification :isExtends="true" :notification-type="'primary'" class="w-96"></Notification>
+            </div>
+            <h4 class="group-title">Warning 아이콘</h4>
+            <div class="h-group gap-4">
+              <Notification :isExtends="true" :notification-type="'warning'" class="w-96"></Notification>
+            </div>
+            <h4 class="group-title">Success 아이콘</h4>
+            <div class="h-group gap-4">
+              <Notification :isExtends="true" :notification-type="'success'" class="w-96"></Notification>
+            </div>
+            <h4 class="group-title">Error 아이콘</h4>
+            <div class="h-group gap-4">
+              <Notification :isExtends="true" :notification-type="'error'" class="w-96"></Notification>
             </div>
             <h4 class="group-title">Info</h4>
             <div class="h-group gap-4">
@@ -1265,6 +1277,31 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Pagination</h2>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Basic Pagination</h3>
+        <div class="flex flex-col align-center gap-5">
+          <Pagination
+              :totalCount="60"
+              :perPage="10"
+              :currentPageNumber="4"
+              @change="checkCurrentPage"
+          ></Pagination>
+        </div>
+      </article>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Numerous Pagination</h3>
+        <div class="flex flex-col align-center gap-5">
+          <Pagination
+              :totalCount="100"
+              :perPage="10"
+              :currentPageNumber="1"
+              @change="checkCurrentPage"
+          ></Pagination>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">Badge</h2>
       <article class="mb-10">
         <div class="flex flex-col align-center gap-5">
@@ -1446,6 +1483,139 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Tag</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">Primary</h4>
+            <div class="h-group gap-4">
+              <div class="tag tag-primary">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-primary is-tag-selected">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-primary is-tag-disabled">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </div>
+            <div class="h-group gap-4">
+              <div class="tag tag-primary tag-sm">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-primary tag-sm is-tag-selected">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-primary tag-sm is-tag-disabled">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </div>
+            <h4 class="group-title">Lighter</h4>
+            <div class="h-group gap-4">
+              <div class="tag tag-primary-lighter">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-primary-lighter is-tag-selected">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </div>
+            <div class="h-group gap-4">
+              <div class="tag tag-primary-lighter tag-sm">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-primary-lighter tag-sm is-tag-selected">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </div>
+            <h4 class="group-title">Neutral</h4>
+            <div class="h-group gap-4">
+              <div class="tag tag-neutral">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-neutral is-tag-selected">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </div>
+            <div class="h-group gap-4">
+              <div class="tag tag-neutral tag-sm">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="tag tag-neutral tag-sm is-tag-selected">
+                <a class="tag-link">TAG</a>
+                <button class="tag-delete-button">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Breadcrumb</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <Breadcrumb></Breadcrumb>
+            <Breadcrumb class="breadcrumb-slash"></Breadcrumb>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">components</h2>
       <div class="link-buttons">
         <!-- 3. 메뉴 버튼 추가 @click="clickMenu('컴포넌트명')" -->
@@ -1473,6 +1643,7 @@ import VueDatepickerNext from "~/pages/vue-datepicker-next/index.vue";
 import VueFinalModal from "~/pages/vue-final-modal/index.vue";
 import Notification from "../components/extends/notification/Notification.vue";
 import InlineNotification from "../components/extends/inline-notification/InlineNotification.vue";
+import Breadcrumb from "../components/base/breadcrumb/Breadcrumb.vue";
 
 const currentComponent = shallowRef(Dayjs);
 
@@ -1485,11 +1656,16 @@ const components: any = {
   VueDatepickerNext,
   VueFinalModal,
   Notification,
-  InlineNotification
+  InlineNotification,
+  Breadcrumb
 };
 
 function clickMenu(menu: string) {
   currentComponent.value = components[menu];
+}
+
+function checkCurrentPage(item: number): void {
+  console.log('Emit currentPageNumber: ', item)
 }
 </script>
 
