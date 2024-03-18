@@ -14,6 +14,10 @@
         border-color: $primary-500
       }
     }
+
+    &:disabled + label {
+      background-color: $neutral-100;
+    }
   }
 
   &-label {
@@ -28,7 +32,7 @@
     border-right: none;
 
     &:hover {
-      color: $neutral-800;
+      background-color: $neutral-100;
     }
 
     &:nth-child(2) {
