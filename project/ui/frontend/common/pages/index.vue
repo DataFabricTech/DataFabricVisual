@@ -66,7 +66,7 @@
               </button>
               <button class="button button-primary-ghost button-lg" disabled type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-                <span class="button-title">Button</span>
+                <span class="button-title">Disabled</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
@@ -93,7 +93,7 @@
               </button>
               <button class="button button-primary-ghost" disabled type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-                <span class="button-title">Button</span>
+                <span class="button-title">Disabled</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
@@ -120,7 +120,7 @@
               </button>
               <button class="button button-primary-ghost button-sm" disabled type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-                <span class="button-title">Button</span>
+                <span class="button-title">Disabled</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
@@ -759,7 +759,7 @@
               </button>
               <button class="link-button link-button-error" disabled type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-                <span class="button-title">Button</span>
+                <span class="button-title">Disabled</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
@@ -786,7 +786,7 @@
               </button>
               <button class="link-button link-button-error link-button-sm" disabled type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-                <span class="button-title">Button</span>
+                <span class="button-title">Disabled</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
@@ -816,7 +816,7 @@
               </button>
               <button class="link-button link-button-error link-button-underline" disabled type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-                <span class="button-title">Button</span>
+                <span class="button-title">Disabled</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
@@ -843,7 +843,7 @@
               </button>
               <button class="link-button link-button-error link-button-sm link-button-underline" disabled type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-                <span class="button-title">Button</span>
+                <span class="button-title">Disabled</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
@@ -1022,7 +1022,7 @@
               <div class="switch">
                 <input type="checkbox" id="sw3" class="switch-input" disabled />
                 <label for="sw3" class="switch-label">
-                  Label
+                  Disabled
                   <div class="switch-control"></div>
                 </label>
               </div>
@@ -1039,39 +1039,25 @@
               <div class="v-group gap-3">
                 <div class="button-group button-group-lg">
                   <input type="checkbox" id="button-group" class="button-group-input" name="button-group1" checked />
-                  <label for="button-group" class="button-group-label">
-                    Toggle
-                  </label>
-                  <input type="checkbox" id="button-group2" class="button-group-input" name="button-group1" checked/>
-                  <label for="button-group2" class="button-group-label">
-                    Toggle
-                  </label>
+                  <label for="button-group" class="button-group-label"> Toggle </label>
+                  <input type="checkbox" id="button-group2" class="button-group-input" name="button-group1" checked />
+                  <label for="button-group2" class="button-group-label"> Toggle </label>
                   <input type="checkbox" id="button-group9" class="button-group-input" name="button-group1" />
-                  <label for="button-group9" class="button-group-label">
-                    Toggle
-                  </label>
+                  <label for="button-group9" class="button-group-label"> Toggle </label>
                   <input type="checkbox" id="button-group3" class="button-group-input" name="button-group1" />
-                  <label for="button-group3" class="button-group-label">
-                    Toggle
-                  </label>
+                  <label for="button-group3" class="button-group-label"> Toggle </label>
+                  <input type="checkbox" id="button-group4" class="button-group-input" name="button-group1" disabled />
+                  <label for="button-group4" class="button-group-label"> Disabled </label>
                 </div>
                 <div class="button-group">
                   <input type="checkbox" id="button-groupsm" class="button-group-input" name="button-group2" checked />
-                  <label for="button-groupsm" class="button-group-label">
-                    Toggle
-                  </label>
+                  <label for="button-groupsm" class="button-group-label"> Toggle </label>
                   <input type="checkbox" id="button-groupsm2" class="button-group-input" name="button-group2" />
-                  <label for="button-groupsm2" class="button-group-label">
-                    Toggle
-                  </label>
+                  <label for="button-groupsm2" class="button-group-label"> Toggle </label>
                   <input type="checkbox" id="button-groupsm6" class="button-group-input" name="button-group2" />
-                  <label for="button-groupsm6" class="button-group-label">
-                    Toggle
-                  </label>
-                  <input type="checkbox" id="button-groupsm3" class="button-group-input" name="button-group2" checked/>
-                  <label for="button-groupsm3" class="button-group-label">
-                    Toggle
-                  </label>
+                  <label for="button-groupsm6" class="button-group-label"> Toggle </label>
+                  <input type="checkbox" id="button-groupsm3" class="button-group-input" name="button-group2" checked />
+                  <label for="button-groupsm3" class="button-group-label"> Toggle </label>
                 </div>
               </div>
             </div>
@@ -1087,7 +1073,7 @@
           <div class="v-group gap-3">
             <div class="element-group">
               <div class="radio">
-                <input type="radio" id="radio" class="radio-input" name="radio1" checked/>
+                <input type="radio" id="radio" class="radio-input" name="radio1" checked />
                 <label for="radio" class="radio-label">
                   오늘하루 그만보기 <span class="radio-subtext">(Optional)</span></label
                 >
@@ -1147,6 +1133,11 @@
                     <svg-icon class="toggle-icon" name="trash"></svg-icon>
                     Toggle
                   </label>
+                  <input type="radio" id="toggle4" class="toggle-input" name="toggle1" disabled />
+                  <label for="toggle4" class="toggle-label">
+                    <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                    Disabled
+                  </label>
                 </div>
                 <div class="toggle">
                   <input type="radio" id="togglesm" class="toggle-input" name="toggle2" checked />
@@ -1186,6 +1177,11 @@
                     <svg-icon class="toggle-icon" name="trash"></svg-icon>
                     Toggle
                   </label>
+                  <input type="radio" id="toggleprimary4" class="toggle-input" name="toggle3" disabled />
+                  <label for="toggleprimary4" class="toggle-label">
+                    <svg-icon class="toggle-icon" name="trash"></svg-icon>
+                    Disabled
+                  </label>
                 </div>
                 <div class="toggle toggle-primary">
                   <input type="radio" id="toggleprimarysm" class="toggle-input" name="toggle4" checked />
@@ -1217,40 +1213,50 @@
             <div class="h-group gap-4">
               <div class="v-group gap-3">
                 <div class="button-group button-group-lg">
-                  <input type="radio" id="button-groupprimary" class="button-group-input" name="button-group3" checked />
-                  <label for="button-groupprimary" class="button-group-label">
-                    Toggle
-                  </label>
+                  <input
+                    type="radio"
+                    id="button-groupprimary"
+                    class="button-group-input"
+                    name="button-group3"
+                    checked
+                  />
+                  <label for="button-groupprimary" class="button-group-label"> Toggle </label>
                   <input type="radio" id="button-groupprimary2" class="button-group-input" name="button-group3" />
-                  <label for="button-groupprimary2" class="button-group-label">
-                    Toggle
-                  </label>
+                  <label for="button-groupprimary2" class="button-group-label"> Toggle </label>
                   <input type="radio" id="button-groupprimary8" class="button-group-input" name="button-group3" />
-                  <label for="button-groupprimary8" class="button-group-label">
-                    Toggle
-                  </label>
+                  <label for="button-groupprimary8" class="button-group-label"> Toggle </label>
                   <input type="radio" id="button-groupprimary3" class="button-group-input" name="button-group3" />
-                  <label for="button-groupprimary3" class="button-group-label">
-                    Toggle
-                  </label>
+                  <label for="button-groupprimary3" class="button-group-label"> Toggle </label>
+                  <input
+                    type="radio"
+                    id="button-groupprimary4"
+                    class="button-group-input"
+                    name="button-group3"
+                    disabled
+                  />
+                  <label for="button-groupprimary4" class="button-group-label"> Disabled </label>
                 </div>
                 <div class="button-group">
-                  <input type="radio" id="button-groupprimarysm" class="button-group-input" name="button-group4" checked />
-                  <label for="button-groupprimarysm" class="button-group-label">
-                    Toggle
-                  </label>
-                  <input type="radio" id="button-groupprimarysm6" class="button-group-input" name="button-group4" checked />
-                  <label for="button-groupprimarysm6" class="button-group-label">
-                    Toggle
-                  </label>
+                  <input
+                    type="radio"
+                    id="button-groupprimarysm"
+                    class="button-group-input"
+                    name="button-group4"
+                    checked
+                  />
+                  <label for="button-groupprimarysm" class="button-group-label"> Toggle </label>
+                  <input
+                    type="radio"
+                    id="button-groupprimarysm6"
+                    class="button-group-input"
+                    name="button-group4"
+                    checked
+                  />
+                  <label for="button-groupprimarysm6" class="button-group-label"> Toggle </label>
                   <input type="radio" id="button-groupprimarysm2" class="button-group-input" name="button-group4" />
-                  <label for="button-groupprimarysm2" class="button-group-label">
-                    Toggle
-                  </label>
+                  <label for="button-groupprimarysm2" class="button-group-label"> Toggle </label>
                   <input type="radio" id="button-groupprimarysm3" class="button-group-input" name="button-group4" />
-                  <label for="button-groupprimarysm3" class="button-group-label">
-                    Toggle
-                  </label>
+                  <label for="button-groupprimarysm3" class="button-group-label"> Toggle </label>
                 </div>
               </div>
             </div>
