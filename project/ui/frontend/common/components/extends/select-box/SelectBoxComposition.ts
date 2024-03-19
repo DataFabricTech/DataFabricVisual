@@ -20,7 +20,7 @@ export function SelectBoxComposition(
 
   if (!props.data.length) {
     // @ts-ignore
-    props.data.push({ [props.labelKey]: props.nodataMsg, [props.valueKey]: undefined });
+    props.data.push({ [props.labelKey]: props.nodataMsg, [props.valueKey]: null });
   }
 
   const onSelect: (value: string | number) => void = (value) => {
