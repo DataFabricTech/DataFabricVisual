@@ -29,7 +29,8 @@ const props = withDefaults(defineProps<SelectBoxProps>(), {
   selectedItem: undefined,
   disabledList: () => [],
   disabledAll: false,
-  nodataMsg: "데이터가 없습니다."
+  nodataMsg: "데이터가 없습니다.",
+  isFirstSelectedEvent: true,
 });
 
 const emit = defineEmits<{ (e: "select", option: number | string): void }>();

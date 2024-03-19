@@ -22,6 +22,7 @@ export function SelectBoxComposition(
     // @ts-ignore
     props.data.push({ [props.labelKey]: props.nodataMsg, [props.valueKey]: undefined });
   }
+
   const onSelect: (value: string | number) => void = (value) => {
     onselect(value);
   };
@@ -55,11 +56,23 @@ export function SelectBoxComposition(
 
   if (props.selectedItem !== undefined) {
     // props.selectedItem이 undefined 아닐 때, 해당 값이 props.data 배열에 포함되어 있는지 확인
-    const foundItem = props.data?.find((option) => option[props.valueKey] === props.selectedItem);
+    const foundItem = props.data?.find((option) =>
+        option[props.valueKey] === props.selectedItem);
     if (foundItem) {
       // foundItem의 값이 존재할 경우
-      selectItem(foundItem);
+      const value = foundItem[props.valueKey];
+      selectedLabel.value = foundItem[props.labelKey].toString();
+      selectedValue = value; // 선택된 값을 selectedValue로 저장
     }
+  }
+
+  if(props.isFirstSelectedEvent) {
+      const selectedOption = props.selectedItem && props.data?.find((option) =>
+          option[props.valueKey] === props.selectedItem);
+      if (selectedOption) {
+        // foundItem의 값이 존재할 경우
+        selectItem(selectedOption);
+      }
   }
 
   return { ...props, isShowBox, selectedLabel, selectItem, toggleList, isDisabled, isActive, closeDropdown, onSelect };
