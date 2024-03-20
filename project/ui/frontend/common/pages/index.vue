@@ -1282,10 +1282,10 @@
         <h3 class="section-subtitle">Basic Pagination</h3>
         <div class="flex flex-col align-center gap-5">
           <Pagination
-              :totalCount="60"
-              :perPage="10"
-              :currentPageNumber="4"
-              @change="checkCurrentPage"
+            :totalCount="60"
+            :perPage="10"
+            :currentPageNumber="4"
+            @change="checkCurrentPage"
           ></Pagination>
         </div>
       </article>
@@ -1293,10 +1293,10 @@
         <h3 class="section-subtitle">Numerous Pagination</h3>
         <div class="flex flex-col align-center gap-5">
           <Pagination
-              :totalCount="100"
-              :perPage="10"
-              :currentPageNumber="1"
-              @change="checkCurrentPage"
+            :totalCount="100"
+            :perPage="10"
+            :currentPageNumber="1"
+            @change="checkCurrentPage"
           ></Pagination>
         </div>
       </article>
@@ -1624,27 +1624,27 @@
             <div class="flex gap-6 items-start">
               <div class="v-group gap-4">
                 <label class="hidden-text" for="text-input-example">label</label>
-                <input id="text-input-example" class="text-input text-input-lg" placeholder="placeholder"/>
+                <input id="text-input-example" class="text-input text-input-lg" placeholder="placeholder" />
                 <label class="hidden-text" for="text-input-example-3">label</label>
-                <input id="text-input-example-3" class="text-input text-input-lg" placeholder="placeholder" disabled/>
-                <div class="text-input-group text-input-group-lg">
+                <input id="text-input-example-3" class="text-input text-input-lg" placeholder="placeholder" disabled />
+                <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-4">label</label>
-                  <input id="text-input-example-4" class="text-input" placeholder="prefix icon"/>
+                  <input id="text-input-example-4" class="text-input text-input-lg" placeholder="prefix icon" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
                 </div>
-                <div class="text-input-group text-input-group-lg">
+                <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-4">label</label>
-                  <input id="text-input-example-4" class="text-input" placeholder="button"/>
-                  <button class="text-input-clear-button button button-neutral-ghost" type="button">
+                  <input id="text-input-example-4" class="text-input text-input-lg" placeholder="button" />
+                  <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="close"></svg-icon>
                   </button>
                 </div>
-                <div class="text-input-group text-input-group-lg">
+                <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-4">label</label>
-                  <input id="text-input-example-4" class="text-input" value="prefix icon + button"/>
+                  <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
-                  <button class="text-input-clear-button button button-neutral-ghost" type="button">
+                  <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="close"></svg-icon>
                   </button>
@@ -1652,27 +1652,27 @@
               </div>
               <div class="v-group gap-4">
                 <label class="hidden-text" for="text-input-example">label</label>
-                <input id="text-input-example" class="text-input" placeholder="placeholder"/>
+                <input id="text-input-example" class="text-input" placeholder="placeholder" />
                 <label class="hidden-text" for="text-input-example-3">label</label>
-                <input id="text-input-example-3" class="text-input" placeholder="placeholder" disabled/>
+                <input id="text-input-example-3" class="text-input" placeholder="placeholder" disabled />
                 <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-4">label</label>
-                  <input id="text-input-example-4" class="text-input" placeholder="prefix icon"/>
+                  <input id="text-input-example-4" class="text-input" placeholder="prefix icon" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
                 </div>
                 <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-5">label</label>
-                  <input id="text-input-example-5" class="text-input" placeholder="button"/>
-                  <button class="text-input-clear-button button button-neutral-ghost" type="button">
+                  <input id="text-input-example-5" class="text-input" placeholder="button" />
+                  <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="close"></svg-icon>
                   </button>
                 </div>
                 <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-6">label</label>
-                  <input id="text-input-example-6" class="text-input" value="prefix icon + button"/>
+                  <input id="text-input-example-6" class="text-input" value="prefix icon + button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
-                  <button class="text-input-clear-button button button-neutral-ghost" type="button">
+                  <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="close"></svg-icon>
                   </button>
@@ -1680,27 +1680,27 @@
               </div>
               <div class="v-group gap-4">
                 <label class="hidden-text" for="text-input-example">label</label>
-                <input id="text-input-example" class="text-input text-input-sm" placeholder="placeholder"/>
+                <input id="text-input-example" class="text-input text-input-sm" placeholder="placeholder" />
                 <label class="hidden-text" for="text-input-example-7">label</label>
-                <input id="text-input-example-7" class="text-input text-input-sm" placeholder="placeholder" disabled/>
+                <input id="text-input-example-7" class="text-input text-input-sm" placeholder="placeholder" disabled />
                 <div class="text-input-group text-input-group-sm">
                   <label class="hidden-text" for="text-input-example-8">label</label>
-                  <input id="text-input-example-8" class="text-input" placeholder="prefix icon"/>
+                  <input id="text-input-example-8" class="text-input" placeholder="prefix icon" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
                 </div>
                 <div class="text-input-group text-input-group-sm">
                   <label class="hidden-text" for="text-input-example-9">label</label>
-                  <input id="text-input-example-9" class="text-input" placeholder="button"/>
-                  <button class="text-input-clear-button button button-neutral-ghost" type="button">
+                  <input id="text-input-example-9" class="text-input" placeholder="button" />
+                  <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="close"></svg-icon>
                   </button>
                 </div>
                 <div class="text-input-group text-input-group-sm">
                   <label class="hidden-text" for="text-input-example-10">label</label>
-                  <input id="text-input-example-10" class="text-input" value="prefix icon + button"/>
+                  <input id="text-input-example-10" class="text-input" value="prefix icon + button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
-                  <button class="text-input-clear-button button button-neutral-ghost" type="button">
+                  <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="close"></svg-icon>
                   </button>
@@ -1710,11 +1710,11 @@
             <h4 class="group-title">search button</h4>
             <div class="flex gap-6 items-start">
               <div class="v-group gap-4">
-                <div class="text-input-group text-input-group-lg">
+                <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-11">label</label>
-                  <input id="text-input-example-11" class="text-input" value="prefix icon + button"/>
+                  <input id="text-input-example-11" class="text-input text-input-lg" value="prefix icon + button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
-                  <button class="text-input-clear-button button button-neutral-ghost" type="button">
+                  <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="close"></svg-icon>
                   </button>
@@ -1727,9 +1727,9 @@
               <div class="v-group gap-4">
                 <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-11">label</label>
-                  <input id="text-input-example-11" class="text-input" value="prefix icon + button"/>
+                  <input id="text-input-example-11" class="text-input" value="prefix icon + button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
-                  <button class="text-input-clear-button button button-neutral-ghost" type="button">
+                  <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="close"></svg-icon>
                   </button>
@@ -1742,15 +1742,54 @@
               <div class="v-group gap-4">
                 <div class="text-input-group text-input-group-sm">
                   <label class="hidden-text" for="text-input-example-11">label</label>
-                  <input id="text-input-example-11" class="text-input" value="prefix icon + button"/>
+                  <input id="text-input-example-11" class="text-input text-input-sm" value="prefix icon + button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
-                  <button class="text-input-clear-button button button-neutral-ghost" type="button">
+                  <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="close"></svg-icon>
                   </button>
                   <button class="text-input-search-button button button-neutral-ghost">
                     <span class="hidden-text">검색</span>
                     <svg-icon class="button-icon" name="search"></svg-icon>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <h4 class="group-title">password</h4>
+            <div class="flex gap-6 items-start">
+              <div class="v-group gap-4">
+                <div class="text-input-group">
+                  <label class="hidden-text" for="text-input-example-11">label</label>
+                  <input type="password" id="text-input-example-11" class="text-input text-input-lg"
+                         placeholder="password" />
+                  <svg-icon class="text-input-icon" name="lock-locked"></svg-icon>
+                  <button class="text-input-action-button button button-neutral-ghost button-md" type="button">
+                    <span class="hidden-text">패스워드 보기</span>
+                    <svg-icon class="button-icon" name="eye"></svg-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="v-group gap-4">
+                <div class="text-input-group">
+                  <label class="hidden-text" for="text-input-example-11">label</label>
+                  <input type="password" id="text-input-example-11" class="text-input" placeholder="password"
+                         required />
+                  <svg-icon class="text-input-icon" name="lock-locked"></svg-icon>
+                  <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <span class="hidden-text">패스워드 보기</span>
+                    <svg-icon class="button-icon" name="eye"></svg-icon>
+                  </button>
+                </div>
+              </div>
+              <div class="v-group gap-4">
+                <div class="text-input-group text-input-group-sm">
+                  <label class="hidden-text" for="text-input-example-11">label</label>
+                  <input type="password" id="text-input-example-11" class="text-input text-input-sm"
+                         placeholder="password" />
+                  <svg-icon class="text-input-icon" name="lock-locked"></svg-icon>
+                  <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
+                    <span class="hidden-text">패스워드 보기</span>
+                    <svg-icon class="button-icon" name="eye"></svg-icon>
                   </button>
                 </div>
               </div>
@@ -1809,7 +1848,7 @@ function clickMenu(menu: string) {
 }
 
 function checkCurrentPage(item: number): void {
-  console.log('Emit currentPageNumber: ', item)
+  console.log("Emit currentPageNumber: ", item);
 }
 </script>
 
