@@ -6,6 +6,8 @@
     :selectedItem="selectedItem"
     :placeholder="placeholder"
     :isFirstSelectedEvent="isFirstCheckedEvent"
+    :nodataMsg="nodataMsg"
+    :noSearchMsg="noSearchMsg"
     @select="selectItem"
   >
   </combo-box>
@@ -17,7 +19,8 @@ import ComboBox from "@/components/extends/combo-box/ComboBox.vue";
 const isFirstCheckedEvent: boolean = true;
 
 const placeholder = "입력해주세요";
-
+const nodataMsg = "데이터가 존재하지 않습니다.";
+const noSearchMsg = "검색한 데이터 결과가 존재하지 않습니다.";
 const options: { [key: string]: string | number }[] = [
   {
     label: "option1",

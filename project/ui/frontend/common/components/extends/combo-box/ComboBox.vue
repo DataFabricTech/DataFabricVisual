@@ -34,6 +34,7 @@ const props = withDefaults(defineProps<ComboBoxProps>(), {
   disabledList: () => [],
   disabledAll: false,
   nodataMsg: "데이터가 없습니다.",
+  noSearchMsg: "검색 결과가 없습니다.",
   placeholder: "입력",
   isFirstSelectedEvent: true
 });

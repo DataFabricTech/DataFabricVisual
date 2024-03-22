@@ -4,5 +4,5 @@ export interface ComboBoxProps extends SelectProps {
   placeholder?: string;
   // disabled?: boolean;
   nodataMsg?: string;
-  // noSearchMsg?: string;
+  noSearchMsg?: string;
 }

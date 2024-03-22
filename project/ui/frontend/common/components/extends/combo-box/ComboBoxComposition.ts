@@ -6,6 +6,7 @@ import { Ref, ref, computed, ComputedRef } from "vue";
 interface ComboBoxComposition extends ComboBoxProps, SelectFunctionality, SelectEvents {
   isShowBox: Ref<boolean>;
   selectedLabel: Ref<string>;
+  filteredOptions: ComputedRef<any>;
   isActive(value: string | number): boolean;
   closeDropdown(): void;
 }
@@ -18,10 +19,23 @@ export function ComboboxComposition(
   const selectedLabel: Ref<string> = ref<string>("");
   let selectedValue: string | number | undefined = props.selectedItem;
   const filteredOptions: ComputedRef<any> = computed(() => {
-    if (selectedLabel.value) {
-      return props.data.filter((option) => option[props.labelKey].includes(selectedLabel.value));
-    } else {
+    if (!selectedLabel.value) {
+      // 검색어가 없는 경우, 모든 데이터를 반환
       return props.data;
+    } else {
+      const filterResult = props.data.filter((option) => option[props.labelKey].includes(selectedLabel.value));
+      if (filterResult.length === 0) {
+        // 검색 결과가 없는 경우, noSearchMsg를 포함하는 객체를 배열로 반환
+        return [
+          {
+            [props.labelKey]: props.noSearchMsg,
+            [props.valueKey]: null
+          }
+        ];
+      } else {
+        // 검색 결과가 있는 경우, 해당 결과를 반환
+        return filterResult;
+      }
     }
   });
 
