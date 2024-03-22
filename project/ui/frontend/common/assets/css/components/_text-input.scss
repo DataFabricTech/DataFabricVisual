@@ -46,7 +46,9 @@
     }
   }
 
-  &:disabled {
+  &[disabled],
+  &[disabled]:hover,
+  &[disabled]:focus {
     color: $neutral-300;
     background: $neutral-100;
     box-shadow: none;
@@ -81,6 +83,9 @@
     @include text-input-size($font-size: body-13, $size: 28px, $right-padding: $spacing-6, $left-padding: $spacing-8, $search-icon-size: sm)
   }
 
+  // -------------------------
+  // text-input group
+  // -------------------------
   &-group {
     position: relative;
 
@@ -93,6 +98,7 @@
     }
 
     .text-input-action-button {
+      @include z-index('float');
       position: absolute;
       right: 6px;
       top: 50%;
@@ -116,6 +122,7 @@
     }
 
     .text-input-search-button {
+      @include z-index('float');
       position: absolute;
       right: 1px;
       top: 50%;
