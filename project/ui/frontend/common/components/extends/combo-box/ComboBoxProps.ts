@@ -2,7 +2,7 @@ import { SelectProps } from "@/components/extends/common/interfaces/props/Select
 
 export interface ComboBoxProps extends SelectProps {
   placeholder?: string;
-  // disabled?: boolean;
+  disabled?: boolean;
   nodataMsg?: string;
   noSearchMsg?: string;
 }

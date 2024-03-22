@@ -5,6 +5,7 @@
       @click="toggleList"
       v-model="selectedLabel"
       :placeholder="placeholder"
+      :disabled="disabled"
       style="width: 100%; height: 100%"
     />
     <ul v-show="isShowBox">
@@ -32,7 +33,7 @@ const props = withDefaults(defineProps<ComboBoxProps>(), {
   iconKey: "icon",
   selectedItem: undefined,
   disabledList: () => [],
-  disabledAll: false,
+  disabled: false,
   nodataMsg: "데이터가 없습니다.",
   noSearchMsg: "검색 결과가 없습니다.",
   placeholder: "입력",
@@ -55,6 +56,7 @@ const {
   selectItem,
   isDisabled,
   placeholder,
+  disabled,
   isActive,
   closeDropdown
 } = ComboboxComposition(props, onSelect);
