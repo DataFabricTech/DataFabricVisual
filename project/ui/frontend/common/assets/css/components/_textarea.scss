@@ -1,0 +1,58 @@
+.textarea {
+  @include box-shadow('sm');
+  @include font-size('body-14');
+  width: 100%;
+  padding: $spacing-12;
+  border-radius: $border-radius-4;
+  border: 1px solid $neutral-200;
+  color: $neutral-900;
+  resize: vertical;
+
+  &::placeholder {
+    color: $neutral-400;
+  }
+
+  &:hover {
+    background: $neutral-100;
+  }
+
+  &:focus:not(:invalid),
+  &:active:not(:invalid) {
+    background: $neutral-0;
+    border: 1px solid $secondary-500;
+    box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
+  }
+
+  &[disabled],
+  &[disabled]:hover,
+  &[disabled]:focus {
+    color: $neutral-300;
+    background: $neutral-100;
+    box-shadow: none;
+    border: none;
+    cursor: not-allowed;
+    resize: none;
+
+    &::placeholder {
+      color: $neutral-300;
+    }
+  }
+
+  &[readonly],
+  &[readonly]:hover,
+  &[readonly]:focus {
+    background: $neutral-100;
+    color: $neutral-900;
+    box-shadow: none;
+    border: none;
+  }
+
+  //text-input 값 오류 스타일 (추후 수정 가능성)
+  &:invalid {
+    border: 1px solid $error-500;
+  }
+
+  &.is-textarea-fixed {
+    resize: none;
+  }
+}

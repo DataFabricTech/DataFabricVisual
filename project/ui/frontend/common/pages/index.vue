@@ -1712,7 +1712,7 @@
               <div class="v-group gap-4">
                 <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-11">label</label>
-                  <input id="text-input-example-11" class="text-input text-input-lg" value="prefix icon + button" />
+                  <input id="text-input-example-11" class="text-input text-input-lg" value="search button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
                   <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
                     <span class="hidden-text">지우기</span>
@@ -1727,7 +1727,7 @@
               <div class="v-group gap-4">
                 <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-11">label</label>
-                  <input id="text-input-example-11" class="text-input" value="prefix icon + button" />
+                  <input id="text-input-example-11" class="text-input" placeholder="search button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
                   <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
                     <span class="hidden-text">지우기</span>
@@ -1742,7 +1742,7 @@
               <div class="v-group gap-4">
                 <div class="text-input-group text-input-group-sm">
                   <label class="hidden-text" for="text-input-example-11">label</label>
-                  <input id="text-input-example-11" class="text-input text-input-sm" value="prefix icon + button" />
+                  <input id="text-input-example-11" class="text-input text-input-sm" value="search button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
                   <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
                     <span class="hidden-text">지우기</span>
@@ -1794,6 +1794,21 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Textarea</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3 w-72">
+            <h4 class="group-title">default</h4>
+            <textarea class="textarea" cols="33"></textarea>
+            <textarea class="textarea" placeholder="placeholder"></textarea>
+            <textarea class="textarea" readonly>readonly style</textarea>
+            <textarea class="textarea" disabled>disabled style</textarea>
+            <textarea class="textarea is-textarea-fixed">resize none</textarea>
           </div>
         </div>
       </article>
