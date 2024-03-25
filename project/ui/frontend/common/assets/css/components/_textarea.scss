@@ -1,0 +1,24 @@
+.textarea {
+  width: 100%;
+  padding: $spacing-12;
+  resize: vertical;
+
+  &[disabled],
+  &[disabled]:hover,
+  &[disabled]:focus {
+    resize: none;
+  }
+
+  &[readonly],
+  &[readonly]:hover,
+  &[readonly]:focus {
+    background: $neutral-100;
+    color: $neutral-900;
+    box-shadow: none;
+    border: none;
+  }
+
+  &.is-textarea-fixed {
+    resize: none;
+  }
+}
