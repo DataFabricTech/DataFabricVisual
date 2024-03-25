@@ -24,6 +24,7 @@
     "@storybook/testing-library": "^0.2.0",
     "@storybook/vue3": "7.6.7",
     "@types/node": "^18.17.5",
+    "@vueuse/components": "^10.8.0",
     "autoprefixer": "^10.4.17",
     "npm": "^10.4.0",
     "nuxt": "^3.10.0",
