@@ -1,4 +1,4 @@
-@mixin text-input-size($font-size: body-14, $size: 32px, $right-padding: $spacing-6, $left-padding: $spacing-8, $search-icon-size: md, $input-icon-size: 18px) {
+@mixin text-input-size($font-size:null , $size: 32px, $right-padding: $spacing-6, $left-padding: $spacing-8, $search-icon-size: md, $input-icon-size: 18px) {
   @include font-size($font-size);
   height: $size;
   padding: 0 $right-padding 0 $left-padding;
@@ -23,24 +23,8 @@
 
 .text-input {
   @include text-input-size;
-  @include box-shadow('sm');
-  border-radius: $border-radius-4;
-  border: 1px solid $neutral-200;
-  color: $neutral-900;
-
-  &::placeholder {
-    color: $neutral-400;
-  }
-
-  &:hover {
-    background: $neutral-100;
-  }
 
   &:focus:not(:invalid) {
-    background: $neutral-0;
-    border: 1px solid $secondary-500;
-    box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
-
     & ~ .text-input-icon {
       @include icon-color($primary-500);
     }
@@ -49,16 +33,6 @@
   &[disabled],
   &[disabled]:hover,
   &[disabled]:focus {
-    color: $neutral-300;
-    background: $neutral-100;
-    box-shadow: none;
-    border: none;
-    cursor: not-allowed;
-
-    &::placeholder {
-      color: $neutral-300;
-    }
-
     & ~ .text-input-icon {
       @include icon-color($neutral-300);
     }
@@ -67,11 +41,6 @@
     & ~ .text-input-search-button {
       cursor: not-allowed;
     }
-  }
-
-  //text-input 값 오류 스타일 (추후 수정 가능성)
-  &:invalid {
-    border: 1px solid $error-500;
   }
 
   // text-input Size
