@@ -9,6 +9,10 @@
       style="width: 100%; height: 100%"
     />
     <ul v-show="isShowBox">
+      <li v-if="props.data.length === 0">{{ props.nodataMsg }}</li>
+      <li v-if="filteredOptions.length === 0 && props.data.length > 0">
+        {{ props.noSearchMsg }}
+      </li>
       <li
         v-for="(option, index) in filteredOptions"
         :key="index"

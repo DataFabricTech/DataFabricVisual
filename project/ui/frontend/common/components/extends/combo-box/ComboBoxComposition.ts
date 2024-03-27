@@ -23,25 +23,9 @@ export function ComboboxComposition(
       // 검색어가 없는 경우, 모든 데이터를 반환
       return props.data;
     } else {
-      const filterResult = props.data.filter((option) => option[props.labelKey].includes(selectedLabel.value));
-      if (filterResult.length === 0) {
-        // 검색 결과가 없는 경우, noSearchMsg를 포함하는 객체를 배열로 반환
-        return [
-          {
-            [props.labelKey]: props.noSearchMsg,
-            [props.valueKey]: null
-          }
-        ];
-      } else {
-        // 검색 결과가 있는 경우, 해당 결과를 반환
-        return filterResult;
-      }
+      return props.data.filter((option) => (option[props.labelKey] + "").includes(selectedLabel.value));
     }
   });
-
-  if (!props.data.length) {
-    props.data.push({ [props.labelKey]: props.nodataMsg, [props.valueKey]: null });
-  }
 
   const onSelect: (value: string | number) => void = (value) => {
     onselect(value);
