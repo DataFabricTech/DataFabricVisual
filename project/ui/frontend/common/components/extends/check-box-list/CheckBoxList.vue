@@ -33,7 +33,7 @@ function onChange(value: (string | number)[]) {
   emit("change", value);
 }
 
-const { data, labelKey, valueKey, checkboxList, changeList, isDisabled } = CheckBoxListComposition(props, onChange);
+const { data, labelKey, checkboxList, changeList } = CheckBoxListComposition(props, onChange);
 </script>
 
 <style lang="scss" scoped>
