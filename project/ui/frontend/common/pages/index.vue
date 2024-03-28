@@ -1814,6 +1814,69 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">table</h2>
+      <article class="mb-10">
+        <div class="v-group gap-3">
+          <div class="v-group gap-3">
+            <h4 class="group-title">Horizontal</h4>
+            <table>
+              <colgroup>
+                <col style="width: 15%;">
+                <col style="width: 35%;">
+                <col style="width: 15%;">
+                <col style="width: 35%;">
+              </colgroup>
+              <tr>
+                <th>Header Cell</th>
+                <td colspan="3">Row Cell</td>
+              </tr>
+              <tr>
+                <th>Header Cell</th>
+                <td>There are many variations of passages of Lorem Ipsum available, but the  majority have suffered alteration in some form, by injected humour</td>
+                <th>Header Cell</th>
+                <td>is simply dummy text of the printing and typesetting industry. Lorem  Ipsum has been the industry's standard dummy text ever since the 1500s is simply dummy text of the printing and typesetting industry. Lorem  Ipsum has been the industry's standard dummy text ever since the 1500s
+                  is simply dummy text of the printing and typesetting industry. Lorem  Ipsum has been the industry's standard dummy text ever since thstandard dummy text ever since the 1500s</td>
+              </tr>
+              <tr>
+                <th>Header Cell</th>
+                <td>Row Cell</td>
+                <th>Header Cell</th>
+                <td>Row Cell</td>
+              </tr>
+              <tr>
+                <th>Header Cell</th>
+                <td>Row Cell</td>
+                <th>Header Cell</th>
+                <td>Row Cell</td>
+              </tr>
+            </table>
+            <h4 class="group-title">Vertical</h4>
+            <table>
+              <colgroup>
+                <col style="width: 25%;">
+                <col style="width: 25%;">
+                <col style="width: 25%;">
+                <col style="width: 25%;">
+              </colgroup>
+              <tr>
+                <th>Header Cell</th>
+                <th>Header Cell</th>
+                <th>Header Cell</th>
+                <th>Header Cell</th>
+              </tr>
+              <tr>
+                <td>There are many variations of passages of Lorem Ipsum available, but the  majority have suffered alteration in some form, by injected humour</td>
+                <td>is simply dummy text of the printing and typesetting industry. Lorem  Ipsum has been the industry's standard dummy text ever since the 1500s is simply dummy text of the printing and typesetting industry. Lorem  Ipsum has been the industry's standard dummy text ever since the 1500s
+                  is simply dummy text of the printing and typesetting industry. Lorem  Ipsum has been the industry's standard dummy text ever since thstandard dummy text ever since the 1500s</td>
+                <td>Row Cell</td>
+                <td>Row Cell</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">components</h2>
       <div class="link-buttons">
         <!-- 3. 메뉴 버튼 추가 @click="clickMenu('컴포넌트명')" -->
