@@ -11,7 +11,7 @@
           :disabled="option.disabled"
           :checked="option.checked"
         />
-        <label :for="option.id">{{ option[labelKey] }}</label>
+        <label :for="option.id">{{ option.label }}</label>
       </span>
     </div>
   </client-only>
