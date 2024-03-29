@@ -1,3 +1,3 @@
 export interface CheckEvents {
-  onChange(value: any): void;
+  onChange(value: string | number): void;
 }

@@ -29,7 +29,7 @@ export function RadioGroupComposition(
       };
     });
   });
-  const onChange: (value: any) => void = (value) => {
+  const onChange: (value: string | number) => void = (value) => {
     onchange(value);
   };
 
@@ -45,7 +45,7 @@ export function RadioGroupComposition(
   }
 
   // 사용자가 라디오 버튼 중 하나를 선택했을 때 호출되는 함수
-  const changeGroup: (item: any) => void = (item) => {
+  const changeGroup: (item: { [key: string]: string | number }) => void = (item) => {
     onChange(item.value);
   };
   const isDisabled: (value: string | number) => boolean = (value) => {
