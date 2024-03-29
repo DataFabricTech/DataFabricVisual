@@ -1814,7 +1814,7 @@
       </article>
     </section>
     <section class="guide-section">
-      <h2 class="section-title">table</h2>
+      <h2 class="section-title">Table</h2>
       <article class="mb-10">
         <div class="v-group gap-3">
           <div class="v-group gap-3">
@@ -1872,6 +1872,379 @@
                 <td>Row Cell</td>
               </tr>
             </table>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Form</h2>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Vertical</h3>
+        <div class="flex flex-col gap-5">
+          <div class="form form-lg w-[400px]">
+            <div class="form-head">
+              <p3 class="form-title">Form title</p3>
+            </div>
+            <div class="form-body">
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail flex flex-col">
+                  <div class="text-input-group">
+                    <label class="hidden-text" for="text-input-example-4">label</label>
+                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
+                    <svg-icon class="text-input-icon" name="user"></svg-icon>
+                    <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">지우기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </div>
+                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <div class="element-group">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox" class="checkbox-input" />
+                      <label for="checkbox" class="checkbox-label">
+                        label</label
+                      >
+                    </div>
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
+                      <label for="checkbox2" class="checkbox-label">
+                        label</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <textarea class="textarea" rows="5"></textarea>
+                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form form-vertical w-[400px]">
+            <div class="form-head">
+              <p3 class="form-title">Form title</p3>
+            </div>
+            <div class="form-body">
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail flex flex-col">
+                  <div class="text-input-group">
+                    <label class="hidden-text" for="text-input-example-4">label</label>
+                    <input id="text-input-example-4" class="text-input" value="prefix icon + button" />
+                    <svg-icon class="text-input-icon" name="user"></svg-icon>
+                    <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">지우기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </div>
+                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <div class="element-group">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox" class="checkbox-input" />
+                      <label for="checkbox" class="checkbox-label">
+                        label</label
+                      >
+                    </div>
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
+                      <label for="checkbox2" class="checkbox-label">
+                        label</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <textarea class="textarea" rows="5"></textarea>
+                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form form-vertical form-sm w-[400px]">
+            <div class="form-head">
+              <p3 class="form-title">Form title</p3>
+            </div>
+            <div class="form-body">
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail flex flex-col">
+                  <div class="text-input-group">
+                    <label class="hidden-text" for="text-input-example-4">label</label>
+                    <input id="text-input-example-4" class="text-input text-input-sm" value="prefix icon + button" />
+                    <svg-icon class="text-input-icon" name="user"></svg-icon>
+                    <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">지우기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </div>
+                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <div class="element-group">
+                    <div class="checkbox checkbox-sm">
+                      <input type="checkbox" id="checkbox" class="checkbox-input" />
+                      <label for="checkbox" class="checkbox-label">
+                        label</label
+                      >
+                    </div>
+                    <div class="checkbox checkbox-sm">
+                      <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
+                      <label for="checkbox2" class="checkbox-label">
+                        label</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <textarea class="textarea" rows="5"></textarea>
+                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Horizontal</h3>
+        <div class="flex flex-col gap-5">
+          <div class="form form-horizontal form-lg w-[538px]">
+            <div class="form-head">
+              <p3 class="form-title">Form title</p3>
+            </div>
+            <div class="form-body">
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail flex flex-col">
+                  <div class="text-input-group">
+                    <label class="hidden-text" for="text-input-example-4">label</label>
+                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
+                    <svg-icon class="text-input-icon" name="user"></svg-icon>
+                    <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">지우기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </div>
+                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <div class="element-group">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox" class="checkbox-input" />
+                      <label for="checkbox" class="checkbox-label">
+                        label</label
+                      >
+                    </div>
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
+                      <label for="checkbox2" class="checkbox-label">
+                        label</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <textarea class="textarea" rows="5"></textarea>
+                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form form-horizontal w-[538px]">
+            <div class="form-head">
+              <p3 class="form-title">Form title</p3>
+            </div>
+            <div class="form-body">
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail flex flex-col">
+                  <div class="text-input-group">
+                    <label class="hidden-text" for="text-input-example-4">label</label>
+                    <input id="text-input-example-4" class="text-input" value="prefix icon + button" />
+                    <svg-icon class="text-input-icon" name="user"></svg-icon>
+                    <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">지우기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </div>
+                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <div class="element-group">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox" class="checkbox-input" />
+                      <label for="checkbox" class="checkbox-label">
+                        label</label
+                      >
+                    </div>
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
+                      <label for="checkbox2" class="checkbox-label">
+                        label</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <textarea class="textarea" rows="5"></textarea>
+                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form form-horizontal form-sm w-[538px]">
+            <div class="form-head">
+              <p3 class="form-title">Form title</p3>
+            </div>
+            <div class="form-body">
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail flex flex-col">
+                  <div class="text-input-group">
+                    <label class="hidden-text" for="text-input-example-4">label</label>
+                    <input id="text-input-example-4" class="text-input text-input-sm" value="prefix icon + button" />
+                    <svg-icon class="text-input-icon" name="user"></svg-icon>
+                    <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">지우기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </div>
+                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <div class="element-group">
+                    <div class="checkbox checkbox-sm">
+                      <input type="checkbox" id="checkbox" class="checkbox-input" />
+                      <label for="checkbox" class="checkbox-label">
+                        label</label
+                      >
+                    </div>
+                    <div class="checkbox checkbox-sm">
+                      <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
+                      <label for="checkbox2" class="checkbox-label">
+                        label</label
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <textarea class="textarea" rows="5"></textarea>
+                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </article>

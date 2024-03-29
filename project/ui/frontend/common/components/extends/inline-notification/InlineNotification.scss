@@ -11,7 +11,7 @@
 }
 
 .inline-notification {
-  @include flex;
+  @include flex($horizontal: flex-start);
   gap: $spacing-4;
 
   &-icon {
