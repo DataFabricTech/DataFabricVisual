@@ -39,11 +39,13 @@ const props = withDefaults(defineProps<RadioGroupProps>(), {
   radioGroup: () => []
 });
 
+// TODO : props.name 값이 없을 경우 즉, 사용자가 주지 않았을 경우 UUID로 생성하여 Default값으로 줄 것.
+
 const emit = defineEmits<{ (e: "change", item: string | number): void }>();
 function onChange(value: string | number) {
   emit("change", value);
 }
-const { data, labelKey, radioGroup, changeGroup } = RadioGroupComposition(props, onChange);
+const { radioGroup, changeGroup } = RadioGroupComposition(props, onChange);
 </script>
 
 <style lang="scss" scoped>
