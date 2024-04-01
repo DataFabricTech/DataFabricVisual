@@ -5,7 +5,7 @@
         <input
           type="radio"
           :id="option.id"
-          name="radioGroup"
+          :name="props.name"
           :value="option.value"
           @change="changeGroup(option)"
           :disabled="option.disabled"
@@ -38,8 +38,6 @@ const props = withDefaults(defineProps<RadioGroupProps>(), {
   isFirstCheckedEvent: true,
   radioGroup: () => []
 });
-
-// TODO : props.name 값이 없을 경우 즉, 사용자가 주지 않았을 경우 UUID로 생성하여 Default값으로 줄 것.
 
 const emit = defineEmits<{ (e: "change", item: string | number): void }>();
 function onChange(value: string | number) {

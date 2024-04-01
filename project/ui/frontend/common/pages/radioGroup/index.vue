@@ -3,7 +3,7 @@
     :data="options"
     label-key="label"
     value-key="value"
-    name="radioGroup"
+    :name="nameValue"
     @change="checkItem"
     :disabledList="disabledList"
     :checkedItem="checkedItem"
@@ -19,12 +19,15 @@
 //   messages
 // });
 import RadioGroup from "~/components/extends/radio-group/RadioGroup.vue";
+import { uuid } from "vue3-uuid";
 
 const disabledList: (string | number)[] = ["option44"];
-// 기본 선택한 값을 전달하는 이벤트 사용 여부
+
 const isFirstSelectedEvent: boolean = true;
 
-let checkedItem: string | number = "option4";
+let nameValue = ref("");
+
+let checkedItem: string | number = "option22";
 
 const options: object[] = [
   {
@@ -56,6 +59,9 @@ const checkItem = (val: string | number) => {
 onBeforeMount(() => {
   if (disabledList.includes(checkedItem)) {
     checkedItem = "";
+  }
+  if (nameValue.value.length <= 0) {
+    nameValue.value = uuid.v4();
   }
 });
 </script>

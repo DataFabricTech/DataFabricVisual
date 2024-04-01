@@ -1,5 +1,5 @@
-import { SelectProps } from "~/components/extends/common/interfaces/props/Select.interface";
+import { CheckProps } from "~/components/extends/common/interfaces/props/Check.interface";
 
-export interface RadioGroupProps extends SelectProps {
+export interface RadioGroupProps extends CheckProps {
   checkedItem?: string | number;
 }
