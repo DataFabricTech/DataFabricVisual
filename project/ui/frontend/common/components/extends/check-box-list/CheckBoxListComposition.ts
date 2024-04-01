@@ -6,12 +6,12 @@ import { CheckEvents } from "~/components/extends/common/interfaces/events/Check
 
 export interface CheckBoxListComposition extends CheckBoxListProps, CheckFunctionality, CheckEvents {
   checkboxList: ComputedRef<any>;
-  changeList(option: any): void;
+  changeList(option: string | number): void;
 }
 
 export function CheckBoxListComposition(
   props: CheckBoxListProps,
-  onchange: (value: any) => void
+  onchangeList: (option: (string | number)[]) => void
 ): CheckBoxListComposition {
   const checkboxList: ComputedRef<any> = computed(() => {
     const labelKey: string = props.labelKey;
@@ -29,14 +29,17 @@ export function CheckBoxListComposition(
       };
     });
   });
-  const onChange: (value: any) => void = (value) => {
-    onchange(value);
+  // @ts-ignore
+  // NOTE: onChange 이벤트는 지금은 사용 안함.
+  const onChange: (value: string | number) => void = (value: string | number) => {};
+  const onChangeList: (value: (string | number)[]) => void = (value) => {
+    onchangeList(value);
   };
-  const changeList: (option: any) => void = () => {
+  const changeList: () => void = () => {
     const checkedValues = checkboxList.value
-      .filter((item: { checked: any }) => item.checked)
-      .map((item: { value: any }) => item.value);
-    onChange(checkedValues);
+      .filter((item: { checked: boolean }) => item.checked)
+      .map((item: { value: string | number }) => item.value);
+    onChangeList(checkedValues);
   };
 
   if (props.isFirstSelectedEvent) {
@@ -45,7 +48,7 @@ export function CheckBoxListComposition(
     );
     if (selectedOptions.length > 0) {
       const selectedValues = selectedOptions.map((item) => item[props.valueKey]);
-      onChange(selectedValues);
+      onChangeList(selectedValues);
     } else {
       console.warn("선택된 값이 목록에 없거나 disabledList 목록에 선택한 값이 존재합니다.");
     }
@@ -61,6 +64,7 @@ export function CheckBoxListComposition(
     checkboxList,
     changeList,
     onChange,
+    onChangeList,
     isDisabled
   };
 }
