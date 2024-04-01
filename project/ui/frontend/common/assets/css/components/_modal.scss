@@ -1,0 +1,68 @@
+.modal-fixed {
+  @include flex;
+}
+
+.modal {
+  @include box-shadow('lg');
+  display: flex;
+  flex-direction: column;
+  background: $neutral-0;
+  border-radius: $border-radius-12;
+
+  &-head {
+    display: flex;
+    justify-content: space-between;
+    padding: $spacing-20 $spacing-20 $spacing-12;
+
+    &-text {
+      display: flex;
+      align-items: center;
+      gap: $spacing-4;
+    }
+
+    &-title {
+      @include font-size('title-16');
+    }
+
+    &-subtitle {
+      @include font-size('body-15');
+      color: $neutral-500;
+    }
+
+  }
+
+  &-foot {
+    padding: $spacing-20 $spacing-20 $spacing-12;
+
+    &-button-group {
+      display: flex;
+      gap: $spacing-8;
+      align-items: center;
+    }
+
+  }
+
+  &-lg {
+    width: 900px;
+
+    .modal-body {
+      padding: $spacing-48;
+    }
+  }
+
+  &-md {
+    width: 620px;
+
+    .modal-body {
+      padding: $spacing-32;
+    }
+  }
+
+  &-md {
+    width: 480px;
+
+    .modal-body {
+      padding: $spacing-16;
+    }
+  }
+}
