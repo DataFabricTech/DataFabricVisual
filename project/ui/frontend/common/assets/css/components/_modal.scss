@@ -3,6 +3,7 @@
 }
 
 .modal {
+  @include z-index('modal');
   @include box-shadow('lg');
   display: flex;
   flex-direction: column;
@@ -12,6 +13,7 @@
 
   &-head {
     @include flex($horizontal: space-between);
+    flex-shrink: 0;
     padding: $spacing-20 $spacing-20 $spacing-12;
 
     &-text {
@@ -31,23 +33,29 @@
   }
 
   &-body {
+    @include flex($direction: column);
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
     padding: $spacing-32;
-
   }
 
   &-foot {
-    @include flex($horizontal: space-between);
+    display: flex;
+    align-items: center;
     padding: $spacing-20 $spacing-20 $spacing-12;
 
-    &-buttons {
-      @include flex($horizontal: flex-end);
+    &-main-buttons {
+      display: flex;
       gap: $spacing-8;
-      width: 100%;
+      margin-left: auto;
     }
   }
 
   &-full-button {
-    .modal-foot {
+    .modal-foot-main-buttons {
+      width: 100%;
+
       .button {
         flex-grow: 1;
       }

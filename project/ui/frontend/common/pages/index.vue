@@ -1817,7 +1817,7 @@
       <h2 class="section-title">Modal</h2>
       <article class="mb-10">
         <div class="flex flex-col align-center gap-5">
-          <div class="v-group gap-6 w-72">
+          <div class="v-group gap-6">
             <h4 class="group-title">default</h4>
             <div class="modal modal-lg">
               <div class="modal-head">
@@ -1834,7 +1834,7 @@
                 <input class="text-input text-input-lg w-full">
               </div>
               <div class="modal-foot">
-                <div class="modal-foot-buttons">
+                <div class="modal-foot-main-buttons">
                   <button class="button button-ghost button-lg">
                     취소
                   </button>
@@ -1859,7 +1859,7 @@
                 <input class="text-input text-input-lg w-full">
               </div>
               <div class="modal-foot">
-                <div class="modal-foot-buttons">
+                <div class="modal-foot-main-buttons">
                   <button class="button button-ghost button-lg">
                     취소
                   </button>
@@ -1890,7 +1890,7 @@
                     오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span>
                   </label>
                 </div>
-                <div class="modal-foot-buttons">
+                <div class="modal-foot-main-buttons">
                   <button class="button button-ghost button-lg">
                     취소
                   </button>
