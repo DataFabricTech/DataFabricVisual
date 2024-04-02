@@ -11,36 +11,36 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <VueFinalModal
-    class="modal-fixed"
-    content-class="modal modal-md"
-    overlay-transition="vfm-fade"
-    content-transition="vfm-fade"
-  >
-    <div class="modal-head">
-      <div class="modal-head-text">
-        <span class="modal-head-title">insert modal title here</span>
-        <span class="modal-head-subtitle">Sub title</span>
-      </div>
-      <button class="button link-button button-sm" type="button">
-        <span class="hidden-text">닫기</span>
-        <svg-icon class="button-icon" name="close"></svg-icon>
-      </button>
-    </div>
-    <div class="modal-body">
-      <slot />
-    </div>
-    <div class="modal-foot">
-      <div class="modal-foot-button-group">
-        <button class="button button-ghost button-lg">
-          취소
-        </button>
-        <button class="button button-primary button-lg">
-          확인
+    <VueFinalModal
+      class="modal-fixed"
+      content-class="modal"
+      overlay-transition="vfm-fade"
+      content-transition="vfm-fade"
+    >
+      <div class="modal-head">
+        <div class="modal-head-text">
+          <span class="modal-head-title">{{ title }}</span>
+          <span class="modal-head-subtitle">Sub title</span>
+        </div>
+        <button class="button link-button button-sm" type="button">
+          <span class="hidden-text">닫기</span>
+          <svg-icon class="button-icon" name="close"></svg-icon>
         </button>
       </div>
-    </div>
-  </VueFinalModal>
+      <div class="modal-body">
+        <slot />
+      </div>
+      <div class="modal-foot">
+        <div class="modal-foot-buttons modal-foot-buttons-full">
+          <button class="button button-ghost button-lg">
+            취소
+          </button>
+          <button class="button button-primary button-lg">
+            확인
+          </button>
+        </div>
+      </div>
+    </VueFinalModal>
 </template>
 
 <style>

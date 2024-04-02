@@ -1814,6 +1814,97 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Modal</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-6 w-72">
+            <h4 class="group-title">default</h4>
+            <div class="modal modal-lg">
+              <div class="modal-head">
+                <div class="modal-head-text">
+                  <span class="modal-head-title">insert modal title here</span>
+                  <span class="modal-head-subtitle">Sub title</span>
+                </div>
+                <button class="button link-button button-sm" type="button">
+                  <span class="hidden-text">닫기</span>
+                  <svg-icon class="button-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input class="text-input text-input-lg w-full">
+              </div>
+              <div class="modal-foot">
+                <div class="modal-foot-buttons">
+                  <button class="button button-ghost button-lg">
+                    취소
+                  </button>
+                  <button class="button button-primary button-lg">
+                    확인
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="modal modal-full-button">
+              <div class="modal-head">
+                <div class="modal-head-text">
+                  <span class="modal-head-title">insert modal title here</span>
+                  <span class="modal-head-subtitle">Sub title</span>
+                </div>
+                <button class="button link-button button-sm" type="button">
+                  <span class="hidden-text">닫기</span>
+                  <svg-icon class="button-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input class="text-input text-input-lg w-full">
+              </div>
+              <div class="modal-foot">
+                <div class="modal-foot-buttons">
+                  <button class="button button-ghost button-lg">
+                    취소
+                  </button>
+                  <button class="button button-primary button-lg">
+                    확인
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="modal modal-sm">
+              <div class="modal-head">
+                <div class="modal-head-text">
+                  <span class="modal-head-title">insert modal title here</span>
+                  <span class="modal-head-subtitle">Sub title</span>
+                </div>
+                <button class="button link-button button-sm" type="button">
+                  <span class="hidden-text">닫기</span>
+                  <svg-icon class="button-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input class="text-input text-input-lg w-full">
+              </div>
+              <div class="modal-foot">
+                <div class="checkbox">
+                  <input type="checkbox" id="today" class="checkbox-input" />
+                  <label for="today" class="checkbox-label">
+                    오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span>
+                  </label>
+                </div>
+                <div class="modal-foot-buttons">
+                  <button class="button button-ghost button-lg">
+                    취소
+                  </button>
+                  <button class="button button-primary button-lg">
+                    확인
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">components</h2>
       <div class="link-buttons">
         <!-- 3. 메뉴 버튼 추가 @click="clickMenu('컴포넌트명')" -->

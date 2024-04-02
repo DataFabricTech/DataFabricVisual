@@ -6,12 +6,12 @@
   @include box-shadow('lg');
   display: flex;
   flex-direction: column;
+  width: 620px;
   background: $neutral-0;
   border-radius: $border-radius-12;
 
   &-head {
-    display: flex;
-    justify-content: space-between;
+    @include flex($horizontal: space-between);
     padding: $spacing-20 $spacing-20 $spacing-12;
 
     &-text {
@@ -28,19 +28,32 @@
       @include font-size('body-15');
       color: $neutral-500;
     }
+  }
+
+  &-body {
+    padding: $spacing-32;
 
   }
 
   &-foot {
+    @include flex($horizontal: space-between);
     padding: $spacing-20 $spacing-20 $spacing-12;
 
-    &-button-group {
-      display: flex;
+    &-buttons {
+      @include flex($horizontal: flex-end);
       gap: $spacing-8;
-      align-items: center;
+      width: 100%;
     }
-
   }
+
+  &-full-button {
+    .modal-foot {
+      .button {
+        flex-grow: 1;
+      }
+    }
+  }
+
 
   &-lg {
     width: 900px;
@@ -50,15 +63,7 @@
     }
   }
 
-  &-md {
-    width: 620px;
-
-    .modal-body {
-      padding: $spacing-32;
-    }
-  }
-
-  &-md {
+  &-sm {
     width: 480px;
 
     .modal-body {
