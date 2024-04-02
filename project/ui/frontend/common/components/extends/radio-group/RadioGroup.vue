@@ -27,12 +27,13 @@
 
 import { RadioGroupProps } from "~/components/extends/radio-group/RadioGroupProps";
 import { RadioGroupComposition } from "~/components/extends/radio-group/RadioGroupComposition";
+import { uuid } from "vue3-uuid";
 
 const props = withDefaults(defineProps<RadioGroupProps>(), {
   data: () => [],
   labelKey: "label",
   valueKey: "value",
-  name: "radioGroup",
+  name: uuid.v4(),
   checkedItem: "",
   disabledList: () => [],
   isFirstCheckedEvent: true,

@@ -25,7 +25,7 @@ const disabledList: (string | number)[] = ["option44"];
 
 const isFirstSelectedEvent: boolean = true;
 
-let nameValue = ref("");
+const nameValue: string = "name";
 
 let checkedItem: string | number = "option22";
 
@@ -59,9 +59,6 @@ const checkItem = (val: string | number) => {
 onBeforeMount(() => {
   if (disabledList.includes(checkedItem)) {
     checkedItem = "";
-  }
-  if (nameValue.value.length <= 0) {
-    nameValue.value = uuid.v4();
   }
 });
 </script>
