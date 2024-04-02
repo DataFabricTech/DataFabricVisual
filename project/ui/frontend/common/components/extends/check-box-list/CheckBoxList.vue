@@ -9,7 +9,7 @@
         :disabled="option.disabled"
         v-model="option.checked"
       />
-      <label :for="option.id"> {{ option[labelKey] }} </label>
+      <label :for="option.id"> {{ option.label }} </label>
     </div>
   </client-only>
 </template>
@@ -33,7 +33,7 @@ function onChange(value: (string | number)[]) {
   emit("change", value);
 }
 
-const { data, labelKey, checkboxList, changeList } = CheckBoxListComposition(props, onChange);
+const { checkboxList, changeList } = CheckBoxListComposition(props, onChange);
 </script>
 
 <style lang="scss" scoped>
