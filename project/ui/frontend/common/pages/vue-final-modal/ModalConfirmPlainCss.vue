@@ -13,7 +13,7 @@ const emit = defineEmits<{
 <template>
     <VueFinalModal
       class="modal-fixed"
-      content-class="modal"
+      content-class="modal modal-p-32"
       overlay-transition="vfm-fade"
       content-transition="vfm-fade"
     >

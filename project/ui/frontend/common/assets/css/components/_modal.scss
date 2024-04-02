@@ -14,7 +14,7 @@
   &-head {
     @include flex($horizontal: space-between);
     flex-shrink: 0;
-    padding: $spacing-20 $spacing-20 $spacing-12;
+    padding: $spacing-16 $spacing-16 $spacing-12;
 
     &-text {
       display: flex;
@@ -37,13 +37,12 @@
     flex-grow: 1;
     width: 100%;
     height: 100%;
-    padding: $spacing-32;
   }
 
   &-foot {
     display: flex;
     align-items: center;
-    padding: $spacing-20 $spacing-20 $spacing-12;
+    padding: $spacing-16 $spacing-16 $spacing-12;
 
     &-main-buttons {
       display: flex;
@@ -62,20 +61,30 @@
     }
   }
 
+  $modal-size-map: (
+          "xl": 1180px,
+          "lg": 900px,
+          "sm": 480px,
+          "xs": 350px,
+  );
 
-  &-lg {
-    width: 900px;
-
-    .modal-body {
-      padding: $spacing-48;
+  @each $value, $size in $modal-size-map {
+    &-#{$value} {
+      width: $size;
     }
   }
 
-  &-sm {
-    width: 480px;
+  $modal-padding-map: (
+          "16": 16px,
+          "32": 32px,
+          "48": 48px
+  );
 
-    .modal-body {
-      padding: $spacing-16;
+  @each $value, $padding in $modal-padding-map {
+    &-p-#{$value} {
+      .modal-body {
+        padding: $padding;
+      }
     }
   }
 }
