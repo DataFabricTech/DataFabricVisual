@@ -20,7 +20,7 @@
   }
 
   &-detail {
-    font-size: 12px;
+    @include font-size('body-12');
     color: $neutral-800
   }
 

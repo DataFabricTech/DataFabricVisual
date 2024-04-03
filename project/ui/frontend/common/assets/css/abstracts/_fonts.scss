@@ -47,7 +47,7 @@ $font-families: (
   } @else if $size == 'label-15' {
     @include font-custom-size($font-size: 15px, $line-height: 24px, $font-weight: 600)
   } @else if $size == 'label-14' {
-    @include font-custom-size($font-weight: 600)
+    @include font-custom-size($font-size: 14px, $font-weight: 600)
   } @else if $size == 'label-13' {
     @include font-custom-size($font-size: 13px, $font-weight: 600)
   } @else if $size == 'label-12' {
