@@ -75,9 +75,9 @@
   }
 
   $modal-padding-map: (
-          "16": 16px,
-          "32": 32px,
-          "48": 48px
+          "16": $spacing-16,
+          "32": $spacing-32,
+          "48": $spacing-48
   );
 
   @each $value, $padding in $modal-padding-map {

@@ -31,7 +31,7 @@ const emit = defineEmits<{
         <slot />
       </div>
       <div class="modal-foot">
-        <div class="modal-foot-buttons modal-foot-buttons-full">
+        <div class="modal-foot-main-buttons">
           <button class="button button-ghost button-lg">
             취소
           </button>

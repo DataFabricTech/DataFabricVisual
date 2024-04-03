@@ -854,9 +854,17 @@
     <section class="guide-section">
       <h2 class="section-title">Alert</h2>
       <article class="mb-10">
-        <div class="v-group gap-3">
+        <div class="v-group gap-5">
           <h4 class="group-title">Default</h4>
           <Alert></Alert>
+          <h4 class="group-title">Info</h4>
+          <Alert class="alert-info"></Alert>
+          <h4 class="group-title">Warning</h4>
+          <Alert class="alert-warning"></Alert>
+          <h4 class="group-title">Success</h4>
+          <Alert class="alert-success"></Alert>
+          <h4 class="group-title">error</h4>
+          <Alert class="alert-error"></Alert>
         </div>
       </article>
     </section>
