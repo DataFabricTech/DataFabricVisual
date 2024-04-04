@@ -1,5 +1,6 @@
 @mixin text-input-size($font-size:null , $size: 32px, $right-padding: $spacing-6, $left-padding: $spacing-8, $search-icon-size: md, $input-icon-size: 18px) {
   @include font-size($font-size);
+  width: 100%;
   height: $size;
   padding: 0 $right-padding 0 $left-padding;
 
@@ -131,5 +132,9 @@
         right: 32px;
       }
     }
+  }
+
+  &-group ~ .inline-notification {
+    margin-top: $spacing-4;
   }
 }
