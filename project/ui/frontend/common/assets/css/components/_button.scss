@@ -274,7 +274,6 @@
   @include flex;
   @include link-button-size;
   @include link-button-color($color: $neutral-500, $color-active: $neutral-700);
-  //font-weight: 500;
 
   &:hover:not(:disabled) {
     text-decoration: underline;

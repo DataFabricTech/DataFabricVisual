@@ -23,3 +23,7 @@
     resize: none;
   }
 }
+
+.textarea ~ .inline-notification {
+  margin-top: $spacing-4;
+}
