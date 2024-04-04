@@ -1,14 +1,16 @@
 <template>
-  <div class="notification">
-    <div class="notification-content">
-      <svg-icon :class="'svg-icon-' + notificationType" class="notification-icon" name="info"></svg-icon>
-      <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+  <div class="notification-box">
+    <div class="notification-box-group">
+      <div class="notification">
+        <svg-icon :class="'svg-icon-' + notificationType" class="notification-icon" name="info"></svg-icon>
+        <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+      </div>
       <button class="button button-neutral-ghost button-xs ml-auto" type="button">
         <span class="hidden-text">닫기</span>
         <svg-icon class="button-icon" name="close"></svg-icon>
       </button>
     </div>
-    <div v-if="isExtends" class="notification-content">
+    <div v-if="isExtends" class="notification-box-group">
       <a class="link-button link-button-underline ml-7" href="#none">바로가기</a>
       <div class="capsule-pagination ml-auto">
         <button class="button button-neutral-ghost button-xs" type="button">
