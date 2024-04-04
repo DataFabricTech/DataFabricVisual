@@ -21,9 +21,9 @@
   &-foot {
     display: flex;
     align-items: center;
-    padding: $spacing-16 $spacing-16 $spacing-12;
+    padding: $spacing-12 $spacing-16 $spacing-16;
 
-    &-main-buttons {
+    &-group {
       display: flex;
       gap: $spacing-8;
       margin-left: auto;

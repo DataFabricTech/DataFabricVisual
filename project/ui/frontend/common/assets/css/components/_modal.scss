@@ -40,24 +40,21 @@
   }
 
   &-foot {
-    display: flex;
-    align-items: center;
-    padding: $spacing-16 $spacing-16 $spacing-12;
+    @include flex($horizontal: space-between);
+    gap: $spacing-8;
+    padding: $spacing-12 $spacing-16 $spacing-16;
 
-    &-main-buttons {
+    &-group {
       display: flex;
       gap: $spacing-8;
-      margin-left: auto;
-    }
-  }
 
-  &-full-button {
-    .modal-foot-main-buttons {
-      width: 100%;
-
-      .button {
-        flex-grow: 1;
+      &:only-child {
+        margin-left: auto;
       }
+    }
+
+    > .button {
+      flex: 1;
     }
   }
 
@@ -74,13 +71,13 @@
     }
   }
 
-  $modal-padding-map: (
+  $modal-body-padding-map: (
           "16": $spacing-16,
           "32": $spacing-32,
           "48": $spacing-48
   );
 
-  @each $value, $padding in $modal-padding-map {
+  @each $value, $padding in $modal-body-padding-map {
     &-p-#{$value} {
       .modal-body {
         padding: $padding;

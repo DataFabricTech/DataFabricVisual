@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="alert-foot">
-      <div class="modal-foot-main-buttons">
+      <div class="alert-foot-group">
         <button class="button button-ghost button-lg">
           취소
         </button>

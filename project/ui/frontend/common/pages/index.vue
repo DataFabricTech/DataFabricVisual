@@ -1851,7 +1851,7 @@
                 <input class="text-input text-input-lg w-full">
               </div>
               <div class="modal-foot">
-                <div class="modal-foot-main-buttons">
+                <div class="modal-foot-group">
                   <button class="button button-ghost button-lg">
                     취소
                   </button>
@@ -1861,7 +1861,7 @@
                 </div>
               </div>
             </div>
-            <div class="modal modal-full-button modal-p-48">
+            <div class="modal modal-p-48">
               <div class="modal-head">
                 <div class="modal-head-text">
                   <span class="modal-head-title">insert modal title heredd</span>
@@ -1876,14 +1876,12 @@
                 <input class="text-input text-input-lg w-full">
               </div>
               <div class="modal-foot">
-                <div class="modal-foot-main-buttons">
                   <button class="button button-ghost button-lg">
                     취소
                   </button>
                   <button class="button button-primary button-lg">
                     확인
                   </button>
-                </div>
               </div>
             </div>
             <div class="modal modal-sm modal-p-32">
@@ -1907,7 +1905,7 @@
                     오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span>
                   </label>
                 </div>
-                <div class="modal-foot-main-buttons">
+                <div class="modal-foot-group">
                   <button class="button button-ghost button-lg">
                     취소
                   </button>
