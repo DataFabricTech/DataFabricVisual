@@ -871,115 +871,114 @@
     <section class="guide-section">
       <h2 class="section-title">Notification</h2>
       <article class="mb-10">
-        <h3 class="section-subtitle">Inline Notification</h3>
+        <h3 class="section-subtitle">Notification</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
             <div class="h-group gap-4">
-              <InlineNotification></InlineNotification>
+              <div class="notification">
+                <svg-icon class="notification-icon" name="info"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
+              <div class="notification notification-sm">
+                <svg-icon class="notification-icon" name="info"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
             </div>
             <h4 class="group-title">Info</h4>
             <div class="h-group gap-4">
-              <InlineNotification class="inline-notification-info"></InlineNotification>
+              <div class="notification notification-info">
+                <svg-icon class="notification-icon" name="info"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
+              <div class="notification notification-sm notification-info">
+                <svg-icon class="notification-icon" name="info"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
             </div>
             <h4 class="group-title">Warning</h4>
             <div class="h-group gap-4">
-              <InlineNotification class="inline-notification-warning"></InlineNotification>
+              <div class="notification notification-warning">
+                <svg-icon class="notification-icon" name="warning"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
+              <div class="notification notification-sm notification-warning">
+                <svg-icon class="notification-icon" name="warning"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
             </div>
             <h4 class="group-title">Info</h4>
             <div class="h-group gap-4">
-              <InlineNotification class="inline-notification-success"></InlineNotification>
+              <div class="notification notification-success">
+                <svg-icon class="notification-icon" name="success"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
+              <div class="notification notification-sm notification-success">
+                <svg-icon class="notification-icon" name="success"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
             </div>
             <h4 class="group-title">Error</h4>
             <div class="h-group gap-4">
-              <InlineNotification class="inline-notification-error"></InlineNotification>
+              <div class="notification notification-error">
+                <svg-icon class="notification-icon" name="error"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
+              <div class="notification notification-sm notification-error">
+                <svg-icon class="notification-icon" name="error"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
             </div>
           </div>
         </div>
       </article>
       <article class="mb-10">
-        <h3 class="section-subtitle">Basic</h3>
+        <h3 class="section-subtitle">Notification Box</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
-            <div class="h-group gap-4">
-              <Notification></Notification>
-            </div>
+            <Notification></Notification>
             <h4 class="group-title">Info 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :notification-type="'info'"></Notification>
-            </div>
+            <Notification :notification-type="'info'"></Notification>
             <h4 class="group-title">Warning 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :notification-type="'warning'"></Notification>
-            </div>
+            <Notification :notification-type="'warning'"></Notification>
             <h4 class="group-title">Sucess 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :notification-type="'success'"></Notification>
-            </div>
+            <Notification :notification-type="'success'"></Notification>
             <h4 class="group-title">Error 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :notification-type="'error'"></Notification>
-            </div>
+            <Notification :notification-type="'error'"></Notification>
             <h4 class="group-title">Info</h4>
-            <div class="h-group gap-4">
-              <Notification class="notification-info"></Notification>
-            </div>
+            <Notification class="notification-box-info"></Notification>
             <h4 class="group-title">Warning</h4>
-            <div class="h-group gap-4">
-              <Notification class="notification-warning"></Notification>
-            </div>
+            <Notification class="notification-box-warning"></Notification>
             <h4 class="group-title">Info</h4>
-            <div class="h-group gap-4">
-              <Notification class="notification-success"></Notification>
-            </div>
+            <Notification class="notification-box-success"></Notification>
             <h4 class="group-title">Error</h4>
-            <div class="h-group gap-4">
-              <Notification class="notification-error"></Notification>
-            </div>
+            <Notification class="notification-box-error"></Notification>
           </div>
         </div>
       </article>
       <article class="mb-10">
-        <h3 class="section-subtitle">Extends</h3>
+        <h3 class="section-subtitle">Notification Box Extends</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-96"></Notification>
-            </div>
+            <Notification :isExtends="true" class="w-96"></Notification>
             <h4 class="group-title">Info 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" :notification-type="'primary'" class="w-96"></Notification>
-            </div>
+            <Notification :isExtends="true" :notification-type="'info'" class="w-96"></Notification>
             <h4 class="group-title">Warning 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" :notification-type="'warning'" class="w-96"></Notification>
-            </div>
+            <Notification :isExtends="true" :notification-type="'warning'" class="w-96"></Notification>
             <h4 class="group-title">Success 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" :notification-type="'success'" class="w-96"></Notification>
-            </div>
+            <Notification :isExtends="true" :notification-type="'success'" class="w-96"></Notification>
             <h4 class="group-title">Error 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" :notification-type="'error'" class="w-96"></Notification>
-            </div>
+            <Notification :isExtends="true" :notification-type="'error'" class="w-96"></Notification>
             <h4 class="group-title">Info</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-96 notification-info"></Notification>
-            </div>
+            <Notification :isExtends="true" class="w-96 notification-box-info"></Notification>
             <h4 class="group-title">Warning</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-96 notification-warning"></Notification>
-            </div>
+            <Notification :isExtends="true" class="w-96 notification-box-warning"></Notification>
             <h4 class="group-title">Info</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-96 notification-success"></Notification>
-            </div>
+            <Notification :isExtends="true" class="w-96 notification-box-success"></Notification>
             <h4 class="group-title">Error</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-96 notification-error"></Notification>
-            </div>
+            <Notification :isExtends="true" class="w-96 notification-box-error"></Notification>
           </div>
         </div>
       </article>
@@ -1298,23 +1297,13 @@
       <article class="mb-10">
         <h3 class="section-subtitle">Basic Pagination</h3>
         <div class="flex flex-col align-center gap-5">
-          <Pagination
-            :totalCount="60"
-            :perPage="10"
-            :currentPageNumber="4"
-            @change="checkCurrentPage"
-          ></Pagination>
+          <Pagination :totalCount="60" :perPage="10" :currentPageNumber="4" @change="checkCurrentPage"></Pagination>
         </div>
       </article>
       <article class="mb-10">
         <h3 class="section-subtitle">Numerous Pagination</h3>
         <div class="flex flex-col align-center gap-5">
-          <Pagination
-            :totalCount="100"
-            :perPage="10"
-            :currentPageNumber="1"
-            @change="checkCurrentPage"
-          ></Pagination>
+          <Pagination :totalCount="100" :perPage="10" :currentPageNumber="1" @change="checkCurrentPage"></Pagination>
         </div>
       </article>
     </section>
@@ -1777,8 +1766,12 @@
               <div class="v-group gap-4">
                 <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-11">label</label>
-                  <input type="password" id="text-input-example-11" class="text-input text-input-lg"
-                         placeholder="password" />
+                  <input
+                    type="password"
+                    id="text-input-example-11"
+                    class="text-input text-input-lg"
+                    placeholder="password"
+                  />
                   <svg-icon class="text-input-icon" name="lock-locked"></svg-icon>
                   <button class="text-input-action-button button button-neutral-ghost button-md" type="button">
                     <span class="hidden-text">패스워드 보기</span>
@@ -1789,8 +1782,13 @@
               <div class="v-group gap-4">
                 <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-11">label</label>
-                  <input type="password" id="text-input-example-11" class="text-input" placeholder="password"
-                         required />
+                  <input
+                    type="password"
+                    id="text-input-example-11"
+                    class="text-input"
+                    placeholder="password"
+                    required
+                  />
                   <svg-icon class="text-input-icon" name="lock-locked"></svg-icon>
                   <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
                     <span class="hidden-text">패스워드 보기</span>
@@ -1801,8 +1799,12 @@
               <div class="v-group gap-4">
                 <div class="text-input-group text-input-group-sm">
                   <label class="hidden-text" for="text-input-example-11">label</label>
-                  <input type="password" id="text-input-example-11" class="text-input text-input-sm"
-                         placeholder="password" />
+                  <input
+                    type="password"
+                    id="text-input-example-11"
+                    class="text-input text-input-sm"
+                    placeholder="password"
+                  />
                   <svg-icon class="text-input-icon" name="lock-locked"></svg-icon>
                   <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
                     <span class="hidden-text">패스워드 보기</span>
@@ -1927,10 +1929,10 @@
             <h4 class="group-title">Horizontal</h4>
             <table>
               <colgroup>
-                <col style="width: 15%;">
-                <col style="width: 35%;">
-                <col style="width: 15%;">
-                <col style="width: 35%;">
+                <col style="width: 15%" />
+                <col style="width: 35%" />
+                <col style="width: 15%" />
+                <col style="width: 35%" />
               </colgroup>
               <tr>
                 <th>Header Cell</th>
@@ -1938,10 +1940,18 @@
               </tr>
               <tr>
                 <th>Header Cell</th>
-                <td>There are many variations of passages of Lorem Ipsum available, but the  majority have suffered alteration in some form, by injected humour</td>
+                <td>
+                  There are many variations of passages of Lorem Ipsum available, but the majority have suffered
+                  alteration in some form, by injected humour
+                </td>
                 <th>Header Cell</th>
-                <td>is simply dummy text of the printing and typesetting industry. Lorem  Ipsum has been the industry's standard dummy text ever since the 1500s is simply dummy text of the printing and typesetting industry. Lorem  Ipsum has been the industry's standard dummy text ever since the 1500s
-                  is simply dummy text of the printing and typesetting industry. Lorem  Ipsum has been the industry's standard dummy text ever since thstandard dummy text ever since the 1500s</td>
+                <td>
+                  is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+                  standard dummy text ever since the 1500s is simply dummy text of the printing and typesetting
+                  industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s is simply dummy
+                  text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text
+                  ever since thstandard dummy text ever since the 1500s
+                </td>
               </tr>
               <tr>
                 <th>Header Cell</th>
@@ -1959,10 +1969,10 @@
             <h4 class="group-title">Vertical</h4>
             <table>
               <colgroup>
-                <col style="width: 25%;">
-                <col style="width: 25%;">
-                <col style="width: 25%;">
-                <col style="width: 25%;">
+                <col style="width: 25%" />
+                <col style="width: 25%" />
+                <col style="width: 25%" />
+                <col style="width: 25%" />
               </colgroup>
               <tr>
                 <th>Header Cell</th>
@@ -1971,9 +1981,17 @@
                 <th>Header Cell</th>
               </tr>
               <tr>
-                <td>There are many variations of passages of Lorem Ipsum available, but the  majority have suffered alteration in some form, by injected humour</td>
-                <td>is simply dummy text of the printing and typesetting industry. Lorem  Ipsum has been the industry's standard dummy text ever since the 1500s is simply dummy text of the printing and typesetting industry. Lorem  Ipsum has been the industry's standard dummy text ever since the 1500s
-                  is simply dummy text of the printing and typesetting industry. Lorem  Ipsum has been the industry's standard dummy text ever since thstandard dummy text ever since the 1500s</td>
+                <td>
+                  There are many variations of passages of Lorem Ipsum available, but the majority have suffered
+                  alteration in some form, by injected humour
+                </td>
+                <td>
+                  is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+                  standard dummy text ever since the 1500s is simply dummy text of the printing and typesetting
+                  industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s is simply dummy
+                  text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text
+                  ever since thstandard dummy text ever since the 1500s
+                </td>
                 <td>Row Cell</td>
                 <td>Row Cell</td>
               </tr>
@@ -2008,7 +2026,10 @@
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
-                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
                 </div>
               </div>
               <div class="form-item">
@@ -2021,15 +2042,11 @@
                   <div class="element-group">
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox" class="checkbox-input" />
-                      <label for="checkbox" class="checkbox-label">
-                        label</label
-                      >
+                      <label for="checkbox" class="checkbox-label"> label</label>
                     </div>
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
-                      <label for="checkbox2" class="checkbox-label">
-                        label</label
-                      >
+                      <label for="checkbox2" class="checkbox-label"> label</label>
                     </div>
                   </div>
                 </div>
@@ -2042,7 +2059,10 @@
                 </label>
                 <div class="form-detail">
                   <textarea class="textarea" rows="5"></textarea>
-                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2068,7 +2088,10 @@
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
-                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
                 </div>
               </div>
               <div class="form-item">
@@ -2081,15 +2104,11 @@
                   <div class="element-group">
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox" class="checkbox-input" />
-                      <label for="checkbox" class="checkbox-label">
-                        label</label
-                      >
+                      <label for="checkbox" class="checkbox-label"> label</label>
                     </div>
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
-                      <label for="checkbox2" class="checkbox-label">
-                        label</label
-                      >
+                      <label for="checkbox2" class="checkbox-label"> label</label>
                     </div>
                   </div>
                 </div>
@@ -2102,7 +2121,10 @@
                 </label>
                 <div class="form-detail">
                   <textarea class="textarea" rows="5"></textarea>
-                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2128,7 +2150,10 @@
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
-                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
                 </div>
               </div>
               <div class="form-item">
@@ -2141,15 +2166,11 @@
                   <div class="element-group">
                     <div class="checkbox checkbox-sm">
                       <input type="checkbox" id="checkbox" class="checkbox-input" />
-                      <label for="checkbox" class="checkbox-label">
-                        label</label
-                      >
+                      <label for="checkbox" class="checkbox-label"> label</label>
                     </div>
                     <div class="checkbox checkbox-sm">
                       <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
-                      <label for="checkbox2" class="checkbox-label">
-                        label</label
-                      >
+                      <label for="checkbox2" class="checkbox-label"> label</label>
                     </div>
                   </div>
                 </div>
@@ -2162,7 +2183,10 @@
                 </label>
                 <div class="form-detail">
                   <textarea class="textarea" rows="5"></textarea>
-                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2193,7 +2217,10 @@
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
-                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
                 </div>
               </div>
               <div class="form-item">
@@ -2206,15 +2233,11 @@
                   <div class="element-group">
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox" class="checkbox-input" />
-                      <label for="checkbox" class="checkbox-label">
-                        label</label
-                      >
+                      <label for="checkbox" class="checkbox-label"> label</label>
                     </div>
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
-                      <label for="checkbox2" class="checkbox-label">
-                        label</label
-                      >
+                      <label for="checkbox2" class="checkbox-label"> label</label>
                     </div>
                   </div>
                 </div>
@@ -2227,7 +2250,10 @@
                 </label>
                 <div class="form-detail">
                   <textarea class="textarea" rows="5"></textarea>
-                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2253,7 +2279,10 @@
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
-                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
                 </div>
               </div>
               <div class="form-item">
@@ -2266,15 +2295,11 @@
                   <div class="element-group">
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox" class="checkbox-input" />
-                      <label for="checkbox" class="checkbox-label">
-                        label</label
-                      >
+                      <label for="checkbox" class="checkbox-label"> label</label>
                     </div>
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
-                      <label for="checkbox2" class="checkbox-label">
-                        label</label
-                      >
+                      <label for="checkbox2" class="checkbox-label"> label</label>
                     </div>
                   </div>
                 </div>
@@ -2287,7 +2312,10 @@
                 </label>
                 <div class="form-detail">
                   <textarea class="textarea" rows="5"></textarea>
-                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2313,7 +2341,10 @@
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
-                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
                 </div>
               </div>
               <div class="form-item">
@@ -2326,15 +2357,11 @@
                   <div class="element-group">
                     <div class="checkbox checkbox-sm">
                       <input type="checkbox" id="checkbox" class="checkbox-input" />
-                      <label for="checkbox" class="checkbox-label">
-                        label</label
-                      >
+                      <label for="checkbox" class="checkbox-label"> label</label>
                     </div>
                     <div class="checkbox checkbox-sm">
                       <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
-                      <label for="checkbox2" class="checkbox-label">
-                        label</label
-                      >
+                      <label for="checkbox2" class="checkbox-label"> label</label>
                     </div>
                   </div>
                 </div>
@@ -2347,7 +2374,10 @@
                 </label>
                 <div class="form-detail">
                   <textarea class="textarea" rows="5"></textarea>
-                  <InlineNotification class="inline-notification-error"></InlineNotification>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2382,7 +2412,6 @@ import Locale from "~/pages/locale/index.vue";
 import VueDatepickerNext from "~/pages/vue-datepicker-next/index.vue";
 import VueFinalModal from "~/pages/vue-final-modal/index.vue";
 import Notification from "../components/extends/notification/Notification.vue";
-import InlineNotification from "../components/extends/inline-notification/InlineNotification.vue";
 import Breadcrumb from "../components/base/breadcrumb/Breadcrumb.vue";
 
 const currentComponent = shallowRef(Dayjs);
@@ -2396,7 +2425,6 @@ const components: any = {
   VueDatepickerNext,
   VueFinalModal,
   Notification,
-  InlineNotification,
   Breadcrumb
 };
 

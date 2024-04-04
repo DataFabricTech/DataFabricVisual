@@ -28,6 +28,7 @@
 @import "./components/badge";
 @import "./components/button";
 @import "./components/input";
+@import "./components/notification";
 @import "./components/textarea";
 @import "./components/text-input";
 @import "./components/checkbox";
@@ -40,13 +41,11 @@
 @import "./components/table";
 @import "./components/form";
 
-
 // Develop Component
 @import "../../components/base/breadcrumb/Breadcrumb";
 @import "../../components/base/alert/alert";
 @import "../../components/extends/notification/Notification";
 @import "../../components/extends/pagination/Pagination";
-@import "../../components/extends/inline-notification/InlineNotification";
 
 // modules
 @import "./modules/capsule-pagincation";
