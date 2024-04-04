@@ -1836,7 +1836,7 @@
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-6">
             <h4 class="group-title">default</h4>
-            <div class="modal modal-lg modal-p-16">
+            <div class="modal modal-lg modal-padding-16">
               <div class="modal-head">
                 <div class="modal-head-text">
                   <span class="modal-head-title">insert modal title here</span>
@@ -1861,7 +1861,7 @@
                 </div>
               </div>
             </div>
-            <div class="modal modal-p-48">
+            <div class="modal modal-padding-48">
               <div class="modal-head">
                 <div class="modal-head-text">
                   <span class="modal-head-title">insert modal title heredd</span>
@@ -1884,7 +1884,7 @@
                   </button>
               </div>
             </div>
-            <div class="modal modal-sm modal-p-32">
+            <div class="modal modal-sm modal-padding-32">
               <div class="modal-head">
                 <div class="modal-head-text">
                   <span class="modal-head-title">insert modal title here</span>

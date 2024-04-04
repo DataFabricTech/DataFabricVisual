@@ -71,14 +71,14 @@
     }
   }
 
-  $modal-body-padding-map: (
+  $modal-padding-map: (
           "16": $spacing-16,
           "32": $spacing-32,
           "48": $spacing-48
   );
 
-  @each $value, $padding in $modal-body-padding-map {
-    &-p-#{$value} {
+  @each $value, $padding in $modal-padding-map {
+    &-padding-#{$value} {
       .modal-body {
         padding: $padding;
       }

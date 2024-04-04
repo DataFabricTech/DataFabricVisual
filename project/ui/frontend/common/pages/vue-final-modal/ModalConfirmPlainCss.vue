@@ -13,7 +13,7 @@ const emit = defineEmits<{
 <template>
     <VueFinalModal
       class="modal-fixed"
-      content-class="modal modal-p-32"
+      content-class="modal modal-padding-32"
       overlay-transition="vfm-fade"
       content-transition="vfm-fade"
     >
@@ -31,7 +31,7 @@ const emit = defineEmits<{
         <slot />
       </div>
       <div class="modal-foot">
-        <div class="modal-foot-main-buttons">
+        <div class="modal-foot-group">
           <button class="button button-ghost button-lg">
             취소
           </button>
