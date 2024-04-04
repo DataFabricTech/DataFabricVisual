@@ -41,7 +41,6 @@
   }
 
   &-label {
-
     &::before {
       border-radius: $border-radius-2
     }
@@ -109,6 +108,7 @@
       }
 
       &-label {
+
         &::after {
           left: 4px;
           top: 1px;

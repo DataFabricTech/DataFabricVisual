@@ -4,10 +4,6 @@
   height: $size;
   padding: 0 $right-padding 0 $left-padding;
 
-  &::placeholder {
-    @include font-size($font-size);
-  }
-
   & ~ .text-input-search-button {
     width: $size;
     height: $size - 2px;

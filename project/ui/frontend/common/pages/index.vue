@@ -852,6 +852,23 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Alert</h2>
+      <article class="mb-10">
+        <div class="v-group gap-5">
+          <h4 class="group-title">Default</h4>
+          <Alert></Alert>
+          <h4 class="group-title">Info</h4>
+          <Alert class="alert-info"></Alert>
+          <h4 class="group-title">Warning</h4>
+          <Alert class="alert-warning"></Alert>
+          <h4 class="group-title">Success</h4>
+          <Alert class="alert-success"></Alert>
+          <h4 class="group-title">error</h4>
+          <Alert class="alert-error"></Alert>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">Notification</h2>
       <article class="mb-10">
         <h3 class="section-subtitle">Inline Notification</h3>
@@ -1809,6 +1826,95 @@
             <textarea class="textarea" readonly>readonly style</textarea>
             <textarea class="textarea" disabled>disabled style</textarea>
             <textarea class="textarea is-textarea-fixed">resize none</textarea>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Modal</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-6">
+            <h4 class="group-title">default</h4>
+            <div class="modal modal-lg modal-padding-16">
+              <div class="modal-head">
+                <div class="modal-head-text">
+                  <span class="modal-head-title">insert modal title here</span>
+                  <span class="modal-head-subtitle">Sub title</span>
+                </div>
+                <button class="button link-button button-sm" type="button">
+                  <span class="hidden-text">닫기</span>
+                  <svg-icon class="button-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input class="text-input text-input-lg w-full">
+              </div>
+              <div class="modal-foot">
+                <div class="modal-foot-group">
+                  <button class="button button-ghost button-lg">
+                    취소
+                  </button>
+                  <button class="button button-primary button-lg">
+                    확인
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="modal modal-padding-48">
+              <div class="modal-head">
+                <div class="modal-head-text">
+                  <span class="modal-head-title">insert modal title heredd</span>
+                  <span class="modal-head-subtitle">Sub title</span>
+                </div>
+                <button class="button link-button button-sm" type="button">
+                  <span class="hidden-text">닫기</span>
+                  <svg-icon class="button-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input class="text-input text-input-lg w-full">
+              </div>
+              <div class="modal-foot">
+                  <button class="button button-ghost button-lg">
+                    취소
+                  </button>
+                  <button class="button button-primary button-lg">
+                    확인
+                  </button>
+              </div>
+            </div>
+            <div class="modal modal-sm modal-padding-32">
+              <div class="modal-head">
+                <div class="modal-head-text">
+                  <span class="modal-head-title">insert modal title here</span>
+                  <span class="modal-head-subtitle">Sub title</span>
+                </div>
+                <button class="button link-button button-sm" type="button">
+                  <span class="hidden-text">닫기</span>
+                  <svg-icon class="button-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input class="text-input text-input-lg w-full">
+              </div>
+              <div class="modal-foot">
+                <div class="checkbox">
+                  <input type="checkbox" id="today" class="checkbox-input" />
+                  <label for="today" class="checkbox-label">
+                    오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span>
+                  </label>
+                </div>
+                <div class="modal-foot-group">
+                  <button class="button button-ghost button-lg">
+                    취소
+                  </button>
+                  <button class="button button-primary button-lg">
+                    확인
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </article>
