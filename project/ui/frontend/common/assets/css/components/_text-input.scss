@@ -1,11 +1,11 @@
 @mixin text-input-size($font-size:null , $size: 32px, $right-padding: $spacing-6, $left-padding: $spacing-8, $search-icon-size: md, $input-icon-size: 18px) {
-  font-size: $font-size;
+  @include font-size($font-size);
   width: 100%;
   height: $size;
   padding: 0 $right-padding 0 $left-padding;
 
   &::placeholder {
-    font-size: $font-size;
+    @include font-size($font-size);
   }
 
   & ~ .text-input-search-button {
@@ -50,7 +50,7 @@
   }
 
   &-sm {
-    @include text-input-size($font-size: 13px, $size: 28px, $right-padding: $spacing-6, $left-padding: $spacing-8, $search-icon-size: sm)
+    @include text-input-size($font-size: '13', $size: 28px, $right-padding: $spacing-6, $left-padding: $spacing-8, $search-icon-size: sm)
   }
 
   // -------------------------

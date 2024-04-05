@@ -80,7 +80,7 @@ $input-field-classes: text-input, textarea;
       .#{$input} {
 
         &-label {
-          font-size: 12px;
+          @include font-size('12');
 
           &::before {
             margin-right: 6px;

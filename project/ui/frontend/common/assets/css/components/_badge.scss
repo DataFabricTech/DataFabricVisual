@@ -21,7 +21,7 @@
   }
 
   &-text {
-    font-size: 12px;
+    @include font-size('12');
     font-weight: 600;
   }
 

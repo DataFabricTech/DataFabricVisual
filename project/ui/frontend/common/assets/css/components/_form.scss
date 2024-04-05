@@ -30,13 +30,13 @@
   }
 
   &-title {
-    font-size: 18px;
+    @include font-size('18');
     font-weight: 600;
   }
 
   &-sm {
     .form-title {
-      font-size: 16px;
+      @include font-size('16');
     }
   }
 
@@ -60,7 +60,7 @@
 
   &-label {
     @include flex($horizontal: flex-start);
-    font-size: 14px;
+    @include font-size('14');
     font-weight: 600;
     color: $neutral-800;
 

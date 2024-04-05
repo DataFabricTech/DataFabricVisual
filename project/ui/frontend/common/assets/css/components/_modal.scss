@@ -23,12 +23,12 @@
     }
 
     &-title {
-      font-size: 16px;
+      @include font-size('16');
       font-weight: 600;
     }
 
     &-subtitle {
-      font-size: 15px;
+      @include font-size('15');
       font-weight: 400;
       color: $neutral-500;
     }
