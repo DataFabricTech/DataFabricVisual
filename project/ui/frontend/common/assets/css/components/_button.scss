@@ -262,9 +262,11 @@
   }
 }
 
-@mixin link-button-size($gap: $spacing-4,$font-size: '14', $icon-size: 'sm') {
+@mixin link-button-size($gap: $spacing-4,$font-size: null, $icon-size: 'sm') {
   gap: $gap;
-  @include font-size($font-size);
+  @if $font-size != null {
+    @include font-size($font-size);
+  }
 
   .button-icon {
     @include icon-size($icon-size);
