@@ -27,7 +27,7 @@
 
   &-label {
     @include flex;
-    @include font-size('body-12');
+    font-size: 12px;
     gap: $spacing-12;
     color: $neutral-500;
     cursor: pointer;

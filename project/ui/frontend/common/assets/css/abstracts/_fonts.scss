@@ -22,46 +22,16 @@ $font-families: (
 //   @include font-family('sans');
 // }
 
+
 //-------------------------------------------
-//  Font Size
+//  Heading (추후 수정 예정)
 // ------------------------------------------
-@mixin font-custom-size($font-size: null, $line-height: null, $font-weight: null) {
-  font-size: $font-size;
-  line-height: $line-height;
-  font-weight: $font-weight
+// heading size : 40px,32px,24px
+
+@mixin heading($size) {
+  font-size: $size;
+  line-height: 1.2;
+  font-weight: 700;
 }
 
-@mixin font-size($size) {
-  @if $size == 'heading-40' {
-    @include font-custom-size($font-size: 40px, $line-height: 48px, $font-weight: 700)
-  } @else if $size == 'heading-32' {
-    @include font-custom-size($font-size: 32px, $line-height: 40px, $font-weight: 700)
-  } @else if $size == 'heading-24' {
-    @include font-custom-size($font-size: 24px, $line-height: 32px, $font-weight: 700)
-  } @else if $size == 'title-20' {
-    @include font-custom-size($font-size: 20px, $line-height: 28px, $font-weight: 700)
-  } @else if $size == 'title-18' {
-    @include font-custom-size($font-size: 18px, $line-height: 24px, $font-weight: 600)
-  } @else if $size == 'title-16' {
-    @include font-custom-size($font-size: 16px, $line-height: 24px, $font-weight: 600)
-  } @else if $size == 'label-15' {
-    @include font-custom-size($font-size: 15px, $line-height: 24px, $font-weight: 600)
-  } @else if $size == 'label-14' {
-    @include font-custom-size($font-size: 14px, $font-weight: 600)
-  } @else if $size == 'label-13' {
-    @include font-custom-size($font-size: 13px, $font-weight: 600)
-  } @else if $size == 'label-12' {
-    @include font-custom-size($font-size: 12px, $line-height: 18px, $font-weight: 600)
-  } @else if $size == 'body-15' {
-    @include font-custom-size($font-size: 15px, $line-height: 24px)
-  } @else if $size == 'body-13' {
-    @include font-custom-size($font-size: 13px)
-  } @else if $size == 'body-12' {
-    @include font-custom-size($font-size: 12px, $line-height: 18px)
-  } @else if $size == 'body-14' {
-    @warn "body-14는 이미 정의된 베이스 스타일과 동일합니다.";
-  } @else {
-    @warn "#{$size} 값이 올바르지 않습니다.";
-  }
-}
 

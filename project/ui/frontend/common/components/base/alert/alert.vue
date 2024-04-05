@@ -1,8 +1,8 @@
 <template>
   <div class="alert">
     <div class="alert-body">
+      <!-- TODO: [개발] 얼럿 유형에 따른 적절한 노티피케이션 유형 출력      -->
       <div class="notification">
-        <!-- TODO: [개발] 상태에 따른 아이콘 출력      -->
         <svg-icon class="notification-icon" name="info"></svg-icon>
         <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
       </div>

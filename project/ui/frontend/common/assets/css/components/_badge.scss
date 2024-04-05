@@ -21,7 +21,8 @@
   }
 
   &-text {
-    @include font-size('label-12');
+    font-size: 12px;
+    font-weight: 600;
   }
 
   &:not(:has(.badge-text)){

@@ -12,10 +12,10 @@
     flex-grow: 1;
     width: 100%;
     height: 100%;
-
-    .notification-icon {
-      @include icon-color($neutral-500);
-    }
+    //
+    //.notification-icon {
+    //  @include icon-color($neutral-500);
+    //}
   }
 
   &-foot {
@@ -30,18 +30,18 @@
     }
   }
 
-  $alert-type-map: (
-          "info": $info-500,
-          "warning": $warning-500,
-          "success": $success-500,
-          "error": $error-500,
-  );
-
-  @each $value, $color in $alert-type-map {
-    &-#{$value} {
-      .notification-icon {
-        @include icon-color($color);
-      }
-    }
-  }
+  //$alert-type-map: (
+  //        "info": $info-500,
+  //        "warning": $warning-500,
+  //        "success": $success-500,
+  //        "error": $error-500,
+  //);
+  //
+  //@each $value, $color in $alert-type-map {
+  //  &-#{$value} {
+  //    .notification-icon {
+  //      @include icon-color($color);
+  //    }
+  //  }
+  //}
 }

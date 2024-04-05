@@ -39,11 +39,11 @@
   }
 }
 
-@mixin button-size($height: 32px, $gap: null, $padding: 6px, $font-size: label-13, $icon-xs: false) {
+@mixin button-size($height: 32px, $gap: null, $padding: 6px, $font-size: 13px, $icon-xs: false) {
   height: $height;
   gap: $gap;
   padding: 0 $padding;
-  @include font-size($font-size);
+  font-size: $font-size;
   @if $icon-xs {
     .button-icon {
       @include icon-size('xs');
@@ -63,6 +63,7 @@
 .button {
   @include button;
   @include button-size($gap: 4px);
+  font-weight: 600;
 
   &:disabled {
 
@@ -77,11 +78,11 @@
 
   // Size
   &-lg {
-    @include button-size($height: 36px, $font-size: label-14, $padding: $spacing-8);
+    @include button-size($height: 36px, $font-size: 14px, $padding: $spacing-8);
   }
 
   &-sm {
-    @include button-size($height: 28px, $gap: 2px, $font-size: label-12, $icon-xs: true);
+    @include button-size($height: 28px, $gap: 2px, $font-size: 12px, $icon-xs: true);
   }
 
   // Color Theme
@@ -261,9 +262,9 @@
   }
 }
 
-@mixin link-button-size($gap: $spacing-4,$font-size: label-14, $icon-size: 'sm') {
+@mixin link-button-size($gap: $spacing-4,$font-size: 14px, $icon-size: 'sm') {
   gap: $gap;
-  @include font-size($font-size);
+  font-size: $font-size;
 
   .button-icon {
     @include icon-size($icon-size);
@@ -274,6 +275,7 @@
   @include flex;
   @include link-button-size;
   @include link-button-color($color: $neutral-500, $color-active: $neutral-700);
+  font-weight: 600;
 
   &:hover:not(:disabled) {
     text-decoration: underline;
@@ -294,7 +296,7 @@
 
   // Size
   &-sm {
-    @include link-button-size($gap: $spacing-2, $font-size: label-12, $icon-size: 'xs');
+    @include link-button-size($gap: $spacing-2, $font-size: 12px, $icon-size: 'xs');
   }
 
   // Color Theme
