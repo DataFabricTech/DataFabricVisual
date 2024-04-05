@@ -1850,16 +1850,12 @@
                 </button>
               </div>
               <div class="modal-body">
-                <input class="text-input text-input-lg w-full">
+                <input class="text-input text-input-lg w-full" />
               </div>
               <div class="modal-foot">
                 <div class="modal-foot-group">
-                  <button class="button button-ghost button-lg">
-                    취소
-                  </button>
-                  <button class="button button-primary button-lg">
-                    확인
-                  </button>
+                  <button class="button button-ghost button-lg">취소</button>
+                  <button class="button button-primary button-lg">확인</button>
                 </div>
               </div>
             </div>
@@ -1875,15 +1871,11 @@
                 </button>
               </div>
               <div class="modal-body">
-                <input class="text-input text-input-lg w-full">
+                <input class="text-input text-input-lg w-full" />
               </div>
               <div class="modal-foot">
-                  <button class="button button-ghost button-lg">
-                    취소
-                  </button>
-                  <button class="button button-primary button-lg">
-                    확인
-                  </button>
+                <button class="button button-ghost button-lg">취소</button>
+                <button class="button button-primary button-lg">확인</button>
               </div>
             </div>
             <div class="modal modal-sm modal-padding-32">
@@ -1898,7 +1890,7 @@
                 </button>
               </div>
               <div class="modal-body">
-                <input class="text-input text-input-lg w-full">
+                <input class="text-input text-input-lg w-full" />
               </div>
               <div class="modal-foot">
                 <div class="checkbox">
@@ -1908,12 +1900,8 @@
                   </label>
                 </div>
                 <div class="modal-foot-group">
-                  <button class="button button-ghost button-lg">
-                    취소
-                  </button>
-                  <button class="button button-primary button-lg">
-                    확인
-                  </button>
+                  <button class="button button-ghost button-lg">취소</button>
+                  <button class="button button-primary button-lg">확인</button>
                 </div>
               </div>
             </div>
@@ -2385,18 +2373,51 @@
         </div>
       </article>
     </section>
+    <!-- 개발 완료 목록 -->
     <section class="guide-section">
-      <h2 class="section-title">components</h2>
-      <div class="link-buttons">
-        <!-- 3. 메뉴 버튼 추가 @click="clickMenu('컴포넌트명')" -->
-        <button @click="clickMenu('Dayjs')">Dayjs</button>
-        <button @click="clickMenu('Highcharts')">HighCharts</button>
-        <button @click="clickMenu('VueFinalModal')">Vue Final Modal</button>
-        <button @click="clickMenu('AgGrid')">Ag-Grid</button>
-        <button @click="clickMenu('VueDatepickerNext')">Vue Datepicker Nuxt</button>
-        <button @click="clickMenu('Locale')">Locale</button>
-      </div>
-      <div></div>
+      <h2 class="section-title">개발 UI</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3 w-72">
+            <h4 class="group-title">Select</h4>
+            <nuxt-link :to="'/selectbox'" class="button button-primary button-lg">
+              <span class="button-text">Select 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">Checkbox List</h4>
+            <nuxt-link :to="'/checkboxList'" class="button button-primary button-lg">
+              <span class="button-text">Checkbox List 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">Combobox</h4>
+            <nuxt-link :to="'/combobox'" class="button button-primary button-lg">
+              <span class="button-text">Combobox 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">Step & Tab</h4>
+            <nuxt-link :to="'/components/navigation'" class="button button-primary button-lg">
+              <span class="button-text">Step / Tab 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">ag-grid</h4>
+            <nuxt-link :to="'/ag-grid'" class="button button-primary button-lg">
+              <span class="button-text">ag-grid 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">Today</h4>
+            <nuxt-link :to="'/dayjs'" class="button button-primary button-lg">
+              <span class="button-text">Today 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">DatePicker</h4>
+            <nuxt-link :to="'/vue-datepicker-next'" class="button button-primary button-lg">
+              <span class="button-text">datepicker 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">Highcharts</h4>
+            <nuxt-link :to="'/highcharts'" class="button button-primary button-lg">
+              <span class="button-text">highcharts 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">Modal</h4>
+            <nuxt-link :to="'/vue-final-modal'" class="button button-primary button-lg">
+              <span class="button-text">modal 예시 이동</span>
+            </nuxt-link>
+          </div>
+        </div>
+      </article>
     </section>
   </div>
 </template>
