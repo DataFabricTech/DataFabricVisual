@@ -50,7 +50,6 @@
 
 <script lang="ts" setup>
 import { useNuxtApp } from "nuxt/app";
-
 const { $vfm } = useNuxtApp();
 
 function openModal() {

@@ -1,0 +1,75 @@
+@mixin form-horizontal($size: 32px) {
+  .form-item {
+    @include flex($vertical: flex-start, $direction: row);
+  }
+
+  .form-label {
+    @include flex($horizontal: flex-start);
+    @include ellipsis-multi($line-height: $size, $lines: 1);
+    width: 33.333333%;
+  }
+  .form-detail {
+    min-height: $size;
+  }
+}
+
+.form {
+  @include flex($vertical: flex-start, $direction: column);
+  gap: $spacing-20;
+
+  &-horizontal {
+    @include form-horizontal;
+  }
+
+  &-horizontal.form-lg {
+    @include form-horizontal($size: 36px);
+  }
+
+  &-horizontal.form-sm {
+    @include form-horizontal($size: 28px);
+  }
+
+  &-title {
+    @include font-size('title-18');
+  }
+
+  &-sm {
+    .form-title {
+      @include font-size('title-16');
+    }
+  }
+
+  &-body {
+    @include flex($direction: column);
+    width: 100%;
+    gap: $spacing-20;
+  }
+
+  &-item {
+    @include flex($vertical: flex-start, $direction: column);
+    width: 100%;
+    gap: $spacing-4;
+  }
+
+  &-detail {
+    @include flex($vertical: flex-start, $direction: column);
+    flex: 1;
+    width: 100%;
+  }
+
+  &-label {
+    @include flex($horizontal: flex-start);
+    @include font-size('label-14');
+    color: $neutral-800;
+
+    .required {
+      font-weight: 400;
+      color: $error-500;
+    }
+
+    .sub-label {
+      font-weight: 400;
+      color: $neutral-500;
+    }
+  }
+}
