@@ -22,14 +22,6 @@
       </ol>
     </section>
     <section class="guide-section">
-      <h2 class="section-title">typography</h2>
-      <div class="">
-        <p v-for="index in 14" :key="index" class="guide-typo">
-          데이터패브릭에서 제작한 모든 서비스와 문서에는 Pretendard 폰트를 사용합니다.
-        </p>
-      </div>
-    </section>
-    <section class="guide-section">
       <h2 class="section-title">icongraphy</h2>
       <div class="h-group gap-4">
         <svg-icon v-for="index in 5" :key="index" class="svg-icon icon-home" name="home"></svg-icon>
@@ -857,14 +849,6 @@
         <div class="v-group gap-5">
           <h4 class="group-title">Default</h4>
           <Alert></Alert>
-          <h4 class="group-title">Info</h4>
-          <Alert class="alert-info"></Alert>
-          <h4 class="group-title">Warning</h4>
-          <Alert class="alert-warning"></Alert>
-          <h4 class="group-title">Success</h4>
-          <Alert class="alert-success"></Alert>
-          <h4 class="group-title">error</h4>
-          <Alert class="alert-error"></Alert>
         </div>
       </article>
     </section>
@@ -1656,7 +1640,7 @@
                   </button>
                 </div>
               </div>
-              <div class="v-group gap-4">
+              <div class="v-group gap-5">
                 <label class="hidden-text" for="text-input-example">label</label>
                 <input id="text-input-example" class="text-input" placeholder="placeholder" />
                 <label class="hidden-text" for="text-input-example-3">label</label>
@@ -1684,27 +1668,27 @@
                   </button>
                 </div>
               </div>
-              <div class="v-group gap-4">
+              <div class="v-group gap-6">
                 <label class="hidden-text" for="text-input-example">label</label>
                 <input id="text-input-example" class="text-input text-input-sm" placeholder="placeholder" />
                 <label class="hidden-text" for="text-input-example-7">label</label>
                 <input id="text-input-example-7" class="text-input text-input-sm" placeholder="placeholder" disabled />
-                <div class="text-input-group text-input-group-sm">
+                <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-8">label</label>
-                  <input id="text-input-example-8" class="text-input" placeholder="prefix icon" />
+                  <input id="text-input-example-8" class="text-input text-input-sm" placeholder="prefix icon" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
                 </div>
-                <div class="text-input-group text-input-group-sm">
+                <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-9">label</label>
-                  <input id="text-input-example-9" class="text-input" placeholder="button" />
+                  <input id="text-input-example-9" class="text-input text-input-sm" placeholder="button" />
                   <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="close"></svg-icon>
                   </button>
                 </div>
-                <div class="text-input-group text-input-group-sm">
+                <div class="text-input-group ">
                   <label class="hidden-text" for="text-input-example-10">label</label>
-                  <input id="text-input-example-10" class="text-input" value="prefix icon + button" />
+                  <input id="text-input-example-10" class="text-input text-input-sm" value="prefix icon + button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
                   <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
                     <span class="hidden-text">지우기</span>
@@ -1746,7 +1730,7 @@
                 </div>
               </div>
               <div class="v-group gap-4">
-                <div class="text-input-group text-input-group-sm">
+                <div class="text-input-group ">
                   <label class="hidden-text" for="text-input-example-11">label</label>
                   <input id="text-input-example-11" class="text-input text-input-sm" value="search button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -1797,7 +1781,7 @@
                 </div>
               </div>
               <div class="v-group gap-4">
-                <div class="text-input-group text-input-group-sm">
+                <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-11">label</label>
                   <input
                     type="password"

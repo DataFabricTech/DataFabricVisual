@@ -30,12 +30,13 @@
   }
 
   &-title {
-    @include font-size('title-18');
+    @include font-size('18');
+    font-weight: 600;
   }
 
   &-sm {
     .form-title {
-      @include font-size('title-16');
+      @include font-size('16');
     }
   }
 
@@ -59,7 +60,8 @@
 
   &-label {
     @include flex($horizontal: flex-start);
-    @include font-size('label-14');
+    @include font-size('14');
+    font-weight: 600;
     color: $neutral-800;
 
     .required {

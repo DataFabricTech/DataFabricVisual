@@ -23,7 +23,6 @@
 
   &-detail {
     flex-grow: 1;
-    font-size: 14px;
     color: $neutral-800
   }
 
@@ -36,7 +35,7 @@
       }
 
       &-detail {
-        font-size: 12px;
+        @include font-size('12');
       }
     }
   }

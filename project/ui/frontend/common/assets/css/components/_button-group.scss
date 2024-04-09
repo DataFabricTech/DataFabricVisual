@@ -22,7 +22,8 @@
 
   &-label {
     @include flex($horizontal: flex-start);
-    @include font-size('label-12');
+    @include font-size('12');
+    font-weight: 600;
     height: 24px;
     padding: 0 $spacing-8;
     color: $neutral-700;
@@ -52,7 +53,7 @@
   &-lg {
     .button-group {
       &-label {
-        @include font-size('label-13');
+        @include font-size('13');
         height: 32px;
         padding: 0 $spacing-12;
       }
