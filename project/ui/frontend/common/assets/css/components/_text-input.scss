@@ -2,7 +2,7 @@
   @if $font-size != null {
     @include font-size($font-size);
   }
-  width: 100%;
+  //width: 100%;
   height: $size;
   padding: 0 $right-padding 0 $left-padding;
 

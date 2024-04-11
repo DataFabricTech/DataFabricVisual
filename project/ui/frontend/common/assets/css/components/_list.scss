@@ -1,0 +1,69 @@
+//-------------------------------------------
+// select, dropdown 공통 스타일 정의
+//-------------------------------------------
+@mixin list-style($class-prefix, $size: null) {
+  .#{$class-prefix}-list {
+    @include box-shadow('md');
+    border-radius: $border-radius-4;
+    background: $neutral-0;
+
+  }
+
+  .#{$class-prefix}-item {
+    @include flex;
+
+    &:hover:not(:disabled) {
+      background-color: $neutral-100;
+    }
+
+    &:active:not(:disabled) {
+      //background-color: $light-blue;
+    }
+
+    .checkbox {
+      @if $size == "sm" {
+        @extend .checkbox-sm;
+      }
+
+      .checkbox-input:checked + .checkbox-label {
+        color: $primary-500;
+      }
+    }
+  }
+
+  .#{$class-prefix}-item-button {
+    @include flex($horizontal: space-between);
+    gap: $spacing-6;
+    width: 100%;
+
+    @if $size == "lg" {
+      height: 36px;
+
+      .svg-icon {
+        @include icon-size('sm');
+      }
+    } @else if $size == "sm" {
+      @include font-size('13');
+      height: 28px;
+
+      .svg-icon {
+        @include icon-size('xs');
+      }
+    } @else {
+
+      // 기본 크기 스타일
+      height: 32px;
+      padding: 0 $spacing-6 0 $spacing-8;
+
+      .svg-icon {
+        @include icon-size(18px);
+      }
+    }
+  }
+
+  .#{$class-prefix}-text {
+    @include ellipsis;
+    color: $neutral-700;
+    text-align: left;
+  }
+}

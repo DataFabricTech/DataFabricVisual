@@ -1,16 +1,17 @@
 <template>
-  <div class="select-box" style="width: 300px; height: 30px" v-on-click-outside="closeDropdown">
-    <button @click="toggleList" style="width: 100%; height: 100%" :disabled="disabledAll">
-      {{ selectedLabel }}
+  <div class="select" style="width:200px;" v-on-click-outside="closeDropdown">
+    <button class="select-button" @click="toggleList" :disabled="disabledAll">
+      <span class="select-button-text">{{ selectedLabel }}</span>
+      <svg-icon class="svg-icon select-control" name="chevron-down-medium"></svg-icon>
     </button>
-    <ul v-show="isShowBox">
-      <li
+    <ul class="select-list" v-show="isShowBox">
+      <li class="select-item"
         v-for="(option, index) in data"
         :key="index"
         @click="selectItem(option)"
         :class="[{ 'disabled-option': isDisabled(option[valueKey]) }, { active: isActive(option[valueKey]) }]"
       >
-        {{ option[labelKey] }}
+        <button class="select-item-button">{{ option[labelKey] }}</button>
       </li>
     </ul>
   </div>
@@ -53,17 +54,4 @@ const {
 </script>
 
 <style>
-.select-box {
-  background-color: #9ca3af;
-}
-
-.disabled-option {
-  pointer-events: none;
-  opacity: 0.5;
-}
-
-.active {
-  color: burlywood;
-  font-weight: bold;
-}
 </style>
