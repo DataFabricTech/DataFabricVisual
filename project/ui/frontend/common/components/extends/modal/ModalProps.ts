@@ -1,5 +1,5 @@
 export interface ModalProps {
-  modalId: string;
+  modalId: string | number | symbol;
   modalClass: string;
   displayDirective: "if" | "show" | "visible";
   hideOverlay: boolean;
