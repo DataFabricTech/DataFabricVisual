@@ -1,69 +1,98 @@
 //-------------------------------------------
-// select, dropdown 공통 스타일 정의
+// select, dropdown, list 공통 스타일 정의
 //-------------------------------------------
-@mixin list-style($class-prefix, $size: null) {
-  .#{$class-prefix}-list {
+$list-classes: list, dropdown, select;
+
+@mixin list-style($list-classes) {
+  .#{$list-classes}-list {
+    @include z-index('dropdown');
     @include box-shadow('md');
+    position: absolute;
+    padding: $spacing-2 0;
     border-radius: $border-radius-4;
     background: $neutral-0;
-
   }
 
-  .#{$class-prefix}-item {
-    @include flex;
+  .#{$list-classes}-item {
+    @include flex($horizontal: flex-start);
+    padding: 0 $spacing-6 0 $spacing-8;
+
+    .checkbox {
+      flex-grow: 1;
+      justify-content: flex-start;
+    }
+
+    &-button {
+      @include ellipsis;
+      @include flex;
+      gap: $spacing-6;
+      width: 100%;
+
+      &:active:not(:disabled) {
+        color: $primary-500;
+
+        .svg-icon {
+          @include icon-color($primary-500);
+        }
+
+        .#{$list-classes}-item-button-text {
+          color: $primary-500;
+        }
+      }
+
+      .svg-icon {
+        @include icon-size(18px);
+      }
+
+      &-text {
+        @include ellipsis;
+        flex-grow: 1;
+        color: $neutral-700;
+        text-align: left;
+      }
+    }
 
     &:hover:not(:disabled) {
       background-color: $neutral-100;
     }
 
-    &:active:not(:disabled) {
-      //background-color: $light-blue;
-    }
-
-    .checkbox {
-      @if $size == "sm" {
-        @extend .checkbox-sm;
+    &.#{$list-classes}-item-negative {
+      .svg-icon {
+        @include icon-color($error-500);
       }
 
-      .checkbox-input:checked + .checkbox-label {
+      .#{$list-classes}-item-button-text {
+        color: $error-500;
+      }
+    }
+
+    &.#{$list-classes}-item-negative:active,
+    &.is-#{$list-classes}-item-selected,
+    &.is-#{$list-classes}-item-selected:hover {
+      border-radius: $border-radius-4;
+      background: $primary-100;
+      border: 1px solid $primary-300;
+
+      .svg-icon {
+        @include icon-color($primary-500);
+      }
+
+      .#{$list-classes}-item-button-text {
         color: $primary-500;
       }
-    }
-  }
 
-  .#{$class-prefix}-item-button {
-    @include flex($horizontal: space-between);
-    gap: $spacing-6;
-    width: 100%;
+      &.#{$list-classes}-item-negative {
+        background: $error-100;
+        border: none;
 
-    @if $size == "lg" {
-      height: 36px;
+        .svg-icon {
+          @include icon-color($error-500);
+        }
 
-      .svg-icon {
-        @include icon-size('sm');
-      }
-    } @else if $size == "sm" {
-      @include font-size('13');
-      height: 28px;
-
-      .svg-icon {
-        @include icon-size('xs');
-      }
-    } @else {
-
-      // 기본 크기 스타일
-      height: 32px;
-      padding: 0 $spacing-6 0 $spacing-8;
-
-      .svg-icon {
-        @include icon-size(18px);
+        .#{$list-classes}-item-button-text {
+          color: $error-500;
+        }
       }
     }
-  }
-
-  .#{$class-prefix}-text {
-    @include ellipsis;
-    color: $neutral-700;
-    text-align: left;
   }
 }

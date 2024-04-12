@@ -1,21 +1,62 @@
+@mixin select-size($font-size: null, $size: 32px, $gap: $spacing-6, $right-padding: $spacing-6, $left-padding: $spacing-8, $icon-size: 18px) {
+  height: $size;
+
+  .select-button {
+    gap: $gap;
+    padding: 0 $right-padding 0 $left-padding;
+
+    .select-button-icon {
+      @include icon-size($icon-size);
+    }
+
+    .select-button-title {
+      @if $font-size != null {
+        @include font-size($font-size);
+      }
+    }
+  }
+
+  .select-item {
+    height: $size;
+
+    &-button {
+      > .svg-icon {
+        @include icon-size($icon-size);
+      }
+
+      &-text {
+        @if $font-size != null {
+          @include font-size($font-size);
+        }
+      }
+    }
+  }
+}
+
+
 .select {
   @include list-style('select');
+  @include select-size;
   position: relative;
 
   &-button {
-    @include flex($horizontal:flex-start);
-    gap: $spacing-6;
+    @include flex($horizontal: flex-start);
     width: 100%;
-    height: 32px;
-    padding: 0 $spacing-6 0 $spacing-8;
+    height: 100%;
     background: $neutral-0;
     border: 1px solid $neutral-200;
     border-radius: $border-radius-4;
 
-    &-text {
+
+    &-title {
+      @include ellipsis;
       color: $neutral-900;
       text-align: left;
       flex-grow: 1;
+    }
+
+    .select-button-indicator {
+      @include icon-size(18px);
     }
 
     &:hover:not(:disabled) {
@@ -26,35 +67,81 @@
       background: $neutral-0;
       border: 1px solid $secondary-500;
       box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
+    }
+  }
 
-      .select-control {
-        transform: rotate(-180deg);
-      }
+  &.is-select-selected {
+    .select-button-title {
+      color: $primary-500;
+    }
+
+    .select-button-icon {
+      @include icon-color($primary-500);
+
+    }
+
+    .select-button-indicator {
+      transform: rotate(-180deg);
     }
 
   }
 
-  //&.is-select-selected {
-  //  .select-button {
-  //    background: $neutral-0;
-  //    border: 1px solid $secondary-500;
-  //    box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
-  //  }
-  //}
-
   &[disabled],
   &[disabled]:hover,
   &[disabled]:focus {
-    color: $neutral-300;
-    background: $neutral-100;
-    border: none;
-    cursor: not-allowed;
+    .select-button {
+      background: $neutral-100;
+      border: none;
+      box-shadow: none;
+      cursor: not-allowed;
+
+      &-title {
+        color: $neutral-300;
+      }
+
+      &-icon,
+      &-indicator {
+        @include icon-color($neutral-300);
+      }
+    }
   }
 
   &-list {
-    position: absolute;
     width: 100%;
-    margin-top: $spacing-6;
-    padding: $spacing-2 0;
+    margin-top: $spacing-4;
+
+  }
+
+  &-clean {
+    .select-button {
+      border: none;
+
+      &:focus:not(:disabled) {
+        border: 1px solid $primary-500;
+        box-shadow: none;
+      }
+    }
+
+    &.is-select-selected {
+      .select-button {
+        border: none;
+        background: $primary-100;
+      }
+    }
+  }
+
+  // Size
+  &-lg {
+    @include select-size($size: 36px, $right-padding: $spacing-8, $left-padding: 10px, $icon-size: sm);
+  }
+
+  &-sm {
+    @include select-size($font-size: '13', $size: 28px, $gap: $spacing-4, $right-padding: $spacing-6, $left-padding: $spacing-8);
+
+    .select-item {
+      .checkbox {
+        @extend .checkbox-sm;
+      }
+    }
   }
 }

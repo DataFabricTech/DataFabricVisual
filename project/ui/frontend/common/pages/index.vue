@@ -1817,6 +1817,41 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Select</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">default</h4>
+            <div class="flex gap-6 items-start">
+              <div class="v-group gap-4">
+                <select-box class="select-lg"></select-box>
+                <select-box class="select-lg" disabled></select-box>
+              </div>
+              <div class="v-group gap-5">
+                <select-box class="is-select-selected"></select-box>
+              </div>
+              <div class="v-group gap-6">
+                <select-box class="select-sm"></select-box>
+              </div>
+            </div>
+            <h4 class="group-title">clean</h4>
+            <div class="flex gap-6 items-start">
+              <div class="v-group gap-4">
+                <select-box class="select-clean select-lg"></select-box>
+                <select-box class="select-lg" disabled></select-box>
+              </div>
+              <div class="v-group gap-4">
+
+              </div>
+              <div class="v-group gap-4">
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">Modal</h2>
       <article class="mb-10">
         <div class="flex flex-col align-center gap-5">
@@ -2418,6 +2453,8 @@ import VueDatepickerNext from "~/pages/vue-datepicker-next/index.vue";
 import VueFinalModal from "~/pages/vue-final-modal/index.vue";
 import Notification from "../components/extends/notification/Notification.vue";
 import Breadcrumb from "../components/base/breadcrumb/Breadcrumb.vue";
+import SelectBox from "../components/extends/select-box/SelectBox.vue";
+
 
 const currentComponent = shallowRef(Dayjs);
 
@@ -2427,6 +2464,7 @@ const components: any = {
   Dayjs,
   Highcharts,
   Locale,
+  SelectBox,
   VueDatepickerNext,
   VueFinalModal,
   Notification,
@@ -2439,6 +2477,28 @@ function clickMenu(menu: string) {
 
 function checkCurrentPage(item: number): void {
   console.log("Emit currentPageNumber: ", item);
+}
+
+const isFirstCheckedEvent:boolean = true;
+
+const options: { [key: string]: string | number }[] = [
+  {
+    label: "option1",
+    value: "option11",
+  },
+  {
+    label: "option2",
+    value: "option22",
+  },
+  {
+    label: "option3",
+    value: "option33",
+  }
+]
+
+const selectedItem = "";
+function selectItem(item:string | number) {
+  console.log(item)
 }
 </script>
 
