@@ -9,41 +9,24 @@
       :esc-to-close="true"
       :hide-overlay="false"
       :modal-id="'modal1'"
+      :modal-position="{ top: '500px', left: '100px' }"
       :overlay-transition="'vfm-slide-down'"
+      :title="'모달 1번 테스트'"
+      @cancel="closeModal1"
+      @confirm="closeModal1"
     >
-      <template v-slot:head><span>header</span></template>
-      <template v-slot:body>
-        <span>body</span>
-        <span>기본 모달입니다.</span>
-      </template>
-      <template v-slot:foot>
-        <span>footer</span>
-        <button class="button" @click="">Confirm</button>
-      </template>
     </Modal>
 
     <Modal
       :background="'interactive'"
       :click-to-close="true"
-      :content-class="''"
-      :content-transition="'vfm-slide-right'"
       :display-directive="'show'"
       :drag-and-resize="true"
       :esc-to-close="true"
       :hide-overlay="false"
       :modal-id="'modal2'"
-      :overlay-transition="'vfm-slide-down'"
+      :title="'모달 2번 테스트'"
     >
-      <template v-slot:head><span>header</span></template>
-      <template v-slot:body>
-        <span>body</span><br />
-        <span>드래그 되는 모달입니다.</span> <br />
-        <span>리사이즈도 되는 모달입니다.</span>
-      </template>
-      <template v-slot:foot>
-        <span>footer</span>
-        <button class="button" @click="">Confirm</button>
-      </template>
     </Modal>
   </div>
 </template>
@@ -55,6 +38,11 @@ const { $vfm } = useNuxtApp();
 
 function openModal() {
   $vfm.open("modal1");
+}
+
+function closeModal1(id: string | number | symbol) {
+  $vfm.close(id);
+  console.log(id);
 }
 
 function openModal2() {

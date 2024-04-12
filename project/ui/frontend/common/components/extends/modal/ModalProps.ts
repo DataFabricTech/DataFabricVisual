@@ -6,19 +6,17 @@ export interface ModalProps {
   overlayTransition: "vfm-fade" | "vfm-slide-down" | "vfm-slide-up" | "vfm-slide-right" | "vfm-slide-left";
   contentTransition: "vfm-fade" | "vfm-slide-down" | "vfm-slide-up" | "vfm-slide-right" | "vfm-slide-left";
   overlayClass: object | any[] | string;
-  contentClass: object | any[] | string;
   clickToClose: boolean;
   escToClose: boolean;
   background: "interactive" | "non-interactive";
   lockScroll: boolean;
   swipeToClose: "none" | "up" | "right" | "down" | "left";
-  dragAndResize: boolean;
-  modalElementPosition: Position;
+  modalPosition: Position;
+  title: string | null;
+  subTitle: string | null;
 }
 
 export interface Position {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
+  left: string;
+  top: string;
 }

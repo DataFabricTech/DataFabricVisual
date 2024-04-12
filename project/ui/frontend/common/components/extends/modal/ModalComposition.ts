@@ -1,27 +1,38 @@
-import { ModalProps, Position } from "@/components/extends/modal/ModalProps";
-import { Ref } from "vue";
+import { ModalProps, Position } from "./ModalProps";
+import { ComputedRef, Ref } from "vue";
+import { useNuxtApp } from "nuxt/app";
+import _ from "lodash";
 
 interface ModalComposition extends ModalProps {
   position: Ref<Position>;
+
+  dynamicModalClass(): ComputedRef<String>;
+
+  dynamicModalPosition(): ComputedRef<String>;
 }
 
 export function ModalComposition(props: ModalProps): ModalComposition {
-  const position: Position = {
-    width: 0,
-    height: 0,
-    top: 0,
-    left: 0
-  };
-  const dragResize = (newPosition: Position): void => {
-    position.width = newPosition.width;
-    position.height = newPosition.height;
-    position.top = newPosition.top;
-    position.left = newPosition.left;
-  };
-  onMounted(() => {
-    if (props.modalElementPosition && props.dragAndResize) {
-      Object.assign(position, props.modalElementPosition);
+  const { $vfm } = useNuxtApp();
+
+  const dynamicModalClass: ComputedRef<String> = computed(() => {
+    if (_.isNil(props.modalPosition)) {
+      return "modal-fixed";
+    } else {
+      return "";
     }
   });
-  return { ...props, position, dragResize };
+
+  const dynamicModalPosition: ComputedRef<String> = computed(() => {
+    if (props.modalPosition !== undefined) {
+      const { top, left } = props.modalPosition;
+      return `modal; position: absolute; top: ${top};left: ${left}; `;
+    } else {
+      return "";
+    }
+  });
+  const closeModal = (modalId: string | number | symbol): void => {
+    $vfm.close(modalId);
+  };
+
+  return { ...props, dynamicModalClass, dynamicModalPosition, closeModal };
 }
