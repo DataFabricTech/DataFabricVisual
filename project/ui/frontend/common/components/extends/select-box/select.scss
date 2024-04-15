@@ -35,7 +35,6 @@
 
 
 .select {
-  @include list-style('select');
   @include select-size;
   position: relative;
 
@@ -47,7 +46,6 @@
     border: 1px solid $neutral-200;
     border-radius: $border-radius-4;
 
-
     &-title {
       @include ellipsis;
       color: $neutral-900;
@@ -55,35 +53,42 @@
       flex-grow: 1;
     }
 
-    .select-button-indicator {
-      @include icon-size(18px);
-    }
-
     &:hover:not(:disabled) {
       background: $neutral-100;
     }
 
-    &:focus:not(:disabled) {
+    &:active:not(:disabled) {
       background: $neutral-0;
       border: 1px solid $secondary-500;
       box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
     }
   }
 
-  &.is-select-selected {
-    .select-button-title {
-      color: $primary-500;
+  .select-indicator {
+    @include icon-size(18px);
+  }
+
+  &.is-select-open {
+    .select-button {
+      border: 1px solid $secondary-500;
+      box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
+
+      &-title {
+        color: $primary-500;
+      }
+
+      &-icon {
+        @include icon-color($primary-500);
+      }
     }
 
-    .select-button-icon {
-      @include icon-color($primary-500);
-
-    }
-
-    .select-button-indicator {
+    .select-indicator {
       transform: rotate(-180deg);
     }
 
+    .select-list {
+      display: block;
+    }
   }
 
   &[disabled],
@@ -100,31 +105,39 @@
       }
 
       &-icon,
-      &-indicator {
+      .select-indicator {
         @include icon-color($neutral-300);
       }
+    }
+  }
+
+  //값 오류 스타일 (추후 수정 가능성)
+  &.is-select-invalid {
+    .select-button {
+      border: 1px solid $error-500;
     }
   }
 
   &-list {
     width: 100%;
     margin-top: $spacing-4;
-
+    display: none;
   }
 
   &-clean {
     .select-button {
       border: none;
 
-      &:focus:not(:disabled) {
+      &:active:not(:disabled) {
         border: 1px solid $primary-500;
         box-shadow: none;
       }
     }
 
-    &.is-select-selected {
+    &.is-select-open {
       .select-button {
         border: none;
+        box-shadow: none;
         background: $primary-100;
       }
     }

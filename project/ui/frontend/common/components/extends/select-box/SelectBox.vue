@@ -1,13 +1,16 @@
 <template>
+  <!-- TODO: [게빌]select 오픈시 class="select is-select-open" 클래스 추가
+  (open시에는 select-list가 보이게 스타일 처리 했습니다.인라인스타일은 생략해주세요.)-->
   <div class="select" style="width:200px;" v-on-click-outside="closeDropdown">
     <button class="select-button" @click="toggleList" :disabled="disabledAll">
       <svg-icon class="svg-icon select-button-icon" name="setting"></svg-icon>
       <span class="select-button-title">{{ selectedLabel }}</span>
-      <svg-icon class="svg-icon select-button-indicator" name="chevron-down-medium"></svg-icon>
+      <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
     </button>
     <!-- TODO: [개발]
          1.select가 disabled상태일 경우 select-list가 열리지 않아야 함
          2.선택시 class="select-item select-item-selected"클래스 추가
+         3.컴포넌트명 select-box -> select로 변경
         -->
     <ul class="select-list" v-show="isShowBox">
       <li class="select-item"

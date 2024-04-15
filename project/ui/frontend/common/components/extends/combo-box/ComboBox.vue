@@ -1,25 +1,38 @@
+<!-- TODO: [게빌]컴포넌트명 combo-box -> select-search로 변경-->
 <template>
-  <div class="combo-box" style="width: 300px; height: 30px" v-on-click-outside="closeDropdown">
+  <div class="select select-search" v-on-click-outside="closeDropdown">
     <input
+      class="text-input"
       type="text"
       @click="toggleList"
       v-model="selectedLabel"
       :placeholder="placeholder"
       :disabled="disabled"
-      style="width: 100%; height: 100%"
     />
-    <ul v-show="isShowBox">
-      <li v-if="props.data.length === 0">{{ props.nodataMsg }}</li>
-      <li v-if="filteredOptions.length === 0 && props.data.length > 0">
-        {{ props.noSearchMsg }}
+    <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
+    <ul class="select-list" v-show="isShowBox">
+      <li class="select-item" v-if="props.data.length === 0">
+        <div class="notification notification-sm">
+          <svg-icon class="notification-icon" name="error"></svg-icon>
+          <p class="notification-detail">{{ props.nodataMsg }}</p>
+        </div>
       </li>
-      <li
-        v-for="(option, index) in filteredOptions"
-        :key="index"
-        @click="selectItem(option)"
-        :class="[{ 'disabled-option': isDisabled(option[valueKey]) }, { active: isActive(option[valueKey]) }]"
+      <li class="select-item" v-if="filteredOptions.length === 0 && props.data.length > 0">
+        <div class="notification notification-sm notification-error">
+          <svg-icon class="notification-icon" name="error"></svg-icon>
+          <p class="notification-detail">{{ props.noSearchMsg }}</p>
+        </div>
+      </li>
+      <li class="select-item"
+          v-for="(option, index) in filteredOptions"
+          :key="index"
+          @click="selectItem(option)"
+          :class="[{ 'disabled-option': isDisabled(option[valueKey]) }, { 'is-select-item-selected': isActive(option[valueKey]) }]"
       >
-        {{ option[labelKey] }}
+        <button class="select-item-button">
+
+          <span class="select-item-button-text">{{ option[labelKey] }}</span>
+        </button>
       </li>
     </ul>
   </div>
@@ -40,11 +53,12 @@ const props = withDefaults(defineProps<ComboBoxProps>(), {
   disabled: false,
   nodataMsg: "데이터가 없습니다.",
   noSearchMsg: "검색 결과가 없습니다.",
-  placeholder: "입력",
+  placeholder: "검색",
   isFirstSelectedEvent: true
 });
 
 const emit = defineEmits<{ (e: "select", option: number | string): void }>();
+
 function onSelect(value: string | number) {
   emit("select", value);
 }

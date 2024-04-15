@@ -3,8 +3,8 @@
 //-------------------------------------------
 $list-classes: list, dropdown, select;
 
-@mixin list-style($list-classes) {
-  .#{$list-classes}-list {
+@each $list in $list-classes {
+  .#{$list}-list {
     @include z-index('dropdown');
     @include box-shadow('md');
     position: absolute;
@@ -13,13 +13,18 @@ $list-classes: list, dropdown, select;
     background: $neutral-0;
   }
 
-  .#{$list-classes}-item {
+  .#{$list}-item {
     @include flex($horizontal: flex-start);
     padding: 0 $spacing-6 0 $spacing-8;
+    border-radius: $border-radius-4;
 
     .checkbox {
       flex-grow: 1;
       justify-content: flex-start;
+    }
+
+    &:hover:not(:disabled) {
+      background-color: $neutral-100;
     }
 
     &-button {
@@ -52,24 +57,19 @@ $list-classes: list, dropdown, select;
       }
     }
 
-    &:hover:not(:disabled) {
-      background-color: $neutral-100;
-    }
-
-    &.#{$list-classes}-item-negative {
+    &.#{$list}-item-negative {
       .svg-icon {
         @include icon-color($error-500);
       }
 
-      .#{$list-classes}-item-button-text {
+      .#{$list}-item-button-text {
         color: $error-500;
       }
     }
 
-    &.#{$list-classes}-item-negative:active,
-    &.is-#{$list-classes}-item-selected,
-    &.is-#{$list-classes}-item-selected:hover {
-      border-radius: $border-radius-4;
+    &.#{$list}-item-negative:active,
+    &.is-#{$list}-item-selected,
+    &.is-#{$list}-item-selected:hover {
       background: $primary-100;
       border: 1px solid $primary-300;
 
@@ -77,11 +77,11 @@ $list-classes: list, dropdown, select;
         @include icon-color($primary-500);
       }
 
-      .#{$list-classes}-item-button-text {
+      .#{$list}-item-button-text {
         color: $primary-500;
       }
 
-      &.#{$list-classes}-item-negative {
+      &.#{$list}-item-negative {
         background: $error-100;
         border: none;
 
@@ -89,7 +89,7 @@ $list-classes: list, dropdown, select;
           @include icon-color($error-500);
         }
 
-        .#{$list-classes}-item-button-text {
+        .#{$list}-item-button-text {
           color: $error-500;
         }
       }

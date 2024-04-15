@@ -1827,12 +1827,8 @@
                 <select-box class="select-lg"></select-box>
                 <select-box class="select-lg" disabled></select-box>
               </div>
-              <div class="v-group gap-5">
-                <select-box class="is-select-selected"></select-box>
-              </div>
-              <div class="v-group gap-6">
+                <select-box class="is-select-open"></select-box>
                 <select-box class="select-sm"></select-box>
-              </div>
             </div>
             <h4 class="group-title">clean</h4>
             <div class="flex gap-6 items-start">
@@ -1840,13 +1836,34 @@
                 <select-box class="select-clean select-lg"></select-box>
                 <select-box class="select-lg" disabled></select-box>
               </div>
-              <div class="v-group gap-4">
-
+                <select-box class="select-clean is-select-open"></select-box>
+                <select-box class="select-sm select-clean is-select-invalid"></select-box>
+            </div>
+            <h4 class="group-title">Select-search</h4>
+            <div class="flex gap-6 items-start">
+              <div class="v-group gap-8">
+                <combo-box class="select-lg"></combo-box>
+                <combo-box class="select-lg is-select-open"></combo-box>
               </div>
-              <div class="v-group gap-4">
-
+              <div class="v-group gap-8">
+                <combo-box></combo-box>
+                <combo-box class="is-select-open"></combo-box>
+              </div>
+              <div class="v-group gap-8">
+                <combo-box class="select-sm"></combo-box>
+                <combo-box class="select-sm is-select-open"></combo-box>
               </div>
             </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Dropdown</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+
           </div>
         </div>
       </article>
@@ -1857,7 +1874,7 @@
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-6">
             <h4 class="group-title">default</h4>
-            <div class="modal modal-lg modal-padding-16">
+            <div class="modal modal-padding-16"  style="width:350px">
               <div class="modal-head">
                 <div class="modal-head-text">
                   <span class="modal-head-title">insert modal title here</span>
@@ -1878,7 +1895,7 @@
                 </div>
               </div>
             </div>
-            <div class="modal modal-padding-48">
+            <div class="modal modal-padding-48" style="width:480px">
               <div class="modal-head">
                 <div class="modal-head-text">
                   <span class="modal-head-title">insert modal title heredd</span>
@@ -1897,7 +1914,7 @@
                 <button class="button button-primary button-lg">확인</button>
               </div>
             </div>
-            <div class="modal modal-sm modal-padding-32">
+            <div class="modal modal-padding-32" style="width:620px">
               <div class="modal-head">
                 <div class="modal-head-text">
                   <span class="modal-head-title">insert modal title here</span>
