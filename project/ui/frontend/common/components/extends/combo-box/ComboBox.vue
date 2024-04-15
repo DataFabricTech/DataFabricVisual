@@ -30,7 +30,6 @@
           :class="[{ 'disabled-option': isDisabled(option[valueKey]) }, { 'is-select-item-selected': isActive(option[valueKey]) }]"
       >
         <button class="select-item-button">
-
           <span class="select-item-button-text">{{ option[labelKey] }}</span>
         </button>
       </li>

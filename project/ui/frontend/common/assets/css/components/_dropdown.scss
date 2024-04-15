@@ -1,0 +1,37 @@
+@mixin dropdown-size($font-size: null, $size: 32px, $icon-size: 18px) {
+  .dropdown-item {
+    height: $size;
+
+    &-button {
+      > .svg-icon {
+        @include icon-size($icon-size);
+      }
+
+      &-text {
+        @if $font-size != null {
+          @include font-size($font-size);
+        }
+      }
+    }
+  }
+}
+
+.dropdown {
+  @include dropdown-size;
+  @include z-index('dropdown');
+
+  // Size
+  &-lg {
+    @include dropdown-size($size: 36px, $icon-size: sm);
+  }
+
+  &-sm {
+    @include dropdown-size($font-size: '13', $size: 28px);
+
+    .select-item {
+      .checkbox {
+        @extend .checkbox-sm;
+      }
+    }
+  }
+}

@@ -1827,8 +1827,8 @@
                 <select-box class="select-lg"></select-box>
                 <select-box class="select-lg" disabled></select-box>
               </div>
-                <select-box class="is-select-open"></select-box>
-                <select-box class="select-sm"></select-box>
+              <select-box class="is-select-open"></select-box>
+              <select-box class="select-sm"></select-box>
             </div>
             <h4 class="group-title">clean</h4>
             <div class="flex gap-6 items-start">
@@ -1836,8 +1836,8 @@
                 <select-box class="select-clean select-lg"></select-box>
                 <select-box class="select-lg" disabled></select-box>
               </div>
-                <select-box class="select-clean is-select-open"></select-box>
-                <select-box class="select-sm select-clean is-select-invalid"></select-box>
+              <select-box class="select-clean is-select-open"></select-box>
+              <select-box class="select-sm select-clean is-select-invalid"></select-box>
             </div>
             <h4 class="group-title">Select-search</h4>
             <div class="flex gap-6 items-start">
@@ -1862,7 +1862,50 @@
       <h2 class="section-title">Dropdown</h2>
       <article class="mb-10">
         <div class="flex flex-col align-center gap-5">
-          <div class="v-group gap-3">
+          <div class="v-group">
+            <button class="button button-lg button-neutral-ghost">
+              <svg-icon class="button-icon" name="kebab-menu"></svg-icon>
+            </button>
+            <div class="h-group gap-5">
+              <div class="dropdown dropdown-lg" >
+                <ul class="dropdown-list" style="position: static">
+                  <li class="dropdown-item">
+                    <button class="dropdown-item-button">
+                      <span class="dropdown-item-button-text">드롭다운 아이템</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <button class="dropdown-item-button">
+                      <span class="dropdown-item-button-text">드롭다운 아이템</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <button class="dropdown-item-button">
+                      <span class="dropdown-item-button-text">드롭다운 아이템</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <div class="dropdown" >
+                <ul class="dropdown-list" style="position: static">
+                  <li class="dropdown-item">
+                    <button class="dropdown-item-button">
+                      <span class="dropdown-item-button-text">드롭다운 아이템</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <button class="dropdown-item-button">
+                      <span class="dropdown-item-button-text">드롭다운 아이템</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <button class="dropdown-item-button">
+                      <span class="dropdown-item-button-text">드롭다운 아이템</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
 
           </div>
         </div>
@@ -1874,7 +1917,7 @@
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-6">
             <h4 class="group-title">default</h4>
-            <div class="modal modal-padding-16"  style="width:350px">
+            <div class="modal modal-padding-16" style="width:350px">
               <div class="modal-head">
                 <div class="modal-head-text">
                   <span class="modal-head-title">insert modal title here</span>
@@ -2496,26 +2539,27 @@ function checkCurrentPage(item: number): void {
   console.log("Emit currentPageNumber: ", item);
 }
 
-const isFirstCheckedEvent:boolean = true;
+const isFirstCheckedEvent: boolean = true;
 
 const options: { [key: string]: string | number }[] = [
   {
     label: "option1",
-    value: "option11",
+    value: "option11"
   },
   {
     label: "option2",
-    value: "option22",
+    value: "option22"
   },
   {
     label: "option3",
-    value: "option33",
+    value: "option33"
   }
-]
+];
 
 const selectedItem = "";
-function selectItem(item:string | number) {
-  console.log(item)
+
+function selectItem(item: string | number) {
+  console.log(item);
 }
 </script>
 
