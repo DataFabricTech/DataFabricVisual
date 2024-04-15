@@ -1,22 +1,20 @@
 export interface ModalProps {
   modalId: string | number | symbol;
-  modalClass: string;
+  modalClass?: string;
   displayDirective: "if" | "show" | "visible";
-  hideOverlay: boolean;
+  hideOverlay?: boolean;
   overlayTransition: "vfm-fade" | "vfm-slide-down" | "vfm-slide-up" | "vfm-slide-right" | "vfm-slide-left";
   contentTransition: "vfm-fade" | "vfm-slide-down" | "vfm-slide-up" | "vfm-slide-right" | "vfm-slide-left";
-  overlayClass: object | any[] | string;
+  overlayClass?: object | any[] | string;
   clickToClose: boolean;
   escToClose: boolean;
   background: "interactive" | "non-interactive";
   lockScroll: boolean;
   swipeToClose: "none" | "up" | "right" | "down" | "left";
-  modalPosition: Position;
-  title: string | null;
-  subTitle: string | null;
-}
-
-export interface Position {
-  left: string;
-  top: string;
+  top?: number;
+  left?: number;
+  width: number;
+  height: number;
+  title?: string;
+  subTitle?: string;
 }

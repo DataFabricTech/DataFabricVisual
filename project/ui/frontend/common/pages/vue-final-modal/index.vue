@@ -9,9 +9,10 @@
       :esc-to-close="true"
       :hide-overlay="false"
       :modal-id="'modal1'"
-      :modal-position="{ top: '500px', left: '100px' }"
       :overlay-transition="'vfm-slide-down'"
       :title="'모달 1번 테스트'"
+      :top="800"
+      :width="200"
       @cancel="closeModal1"
       @confirm="closeModal1"
     >
@@ -27,6 +28,9 @@
       :modal-id="'modal2'"
       :title="'모달 2번 테스트'"
     >
+      <template v-slot:body>
+        <div>testtesttetesttesttesttesttesttesttesttesttestteststtesttest</div>
+      </template>
     </Modal>
   </div>
 </template>
@@ -42,7 +46,6 @@ function openModal() {
 
 function closeModal1(id: string | number | symbol) {
   $vfm.close(id);
-  console.log(id);
 }
 
 function openModal2() {

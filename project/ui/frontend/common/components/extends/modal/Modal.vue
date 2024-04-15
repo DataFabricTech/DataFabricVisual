@@ -32,8 +32,7 @@
       </button>
     </div>
     <div class="modal-body">
-      <slot />
-      <p>test</p>
+      <slot name="body" />
     </div>
     <div class="modal-foot">
       <div class="modal-foot-group">
@@ -53,20 +52,16 @@ import { ModalComposition } from "./ModalComposition";
 const { $vfm } = useNuxtApp();
 const props = withDefaults(defineProps<ModalProps>(), {
   modalId: undefined,
-  modalClass: undefined,
   displayDirective: "if",
-  hideOverlay: undefined,
   overlayTransition: "vfm-fade",
   contentTransition: "vfm-fade",
-  overlayClass: undefined,
   clickToClose: true,
   escToClose: true,
   background: "non-interactive",
   lockScroll: true,
   swipeToClose: "none",
-  modalPosition: undefined,
-  title: null,
-  subTitle: null
+  width: 620,
+  height: 180
 });
 
 const emit = defineEmits<{
@@ -92,8 +87,10 @@ const {
   background,
   lockScroll,
   swipeToClose,
-  modalPosition,
-  position,
+  top,
+  left,
+  width,
+  height,
   title,
   subTitle,
   dynamicModalClass,
