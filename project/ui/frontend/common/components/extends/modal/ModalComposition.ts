@@ -24,7 +24,7 @@ export function ModalComposition(props: ModalProps): ModalComposition {
 
   const dynamicModalPosition: ComputedRef<String> = computed(() => {
     if (props.top !== undefined || props.left !== undefined) {
-      return `modal; position: absolute; top: ${getDocumentSize().top}px; left: ${getDocumentSize().left}px `;
+      return `modal; position: absolute; top: ${modalPosition.top}px; left: ${modalPosition.left}px `;
     } else {
       return "";
     }
@@ -33,6 +33,8 @@ export function ModalComposition(props: ModalProps): ModalComposition {
     $vfm.close(modalId);
   };
 
+  const modalPosition = reactive<{ top: number | null; left: number | null }>({ top: null, left: null });
+
   function getDocumentSize() {
     let documentSize = {
       width: window.innerWidth || document.body.clientWidth,
@@ -40,32 +42,28 @@ export function ModalComposition(props: ModalProps): ModalComposition {
     };
     let maxHeight = documentSize.height;
     let maxWidth = documentSize.width;
-    let modalTop = props.top ?? (documentSize.height! - props.height) / 2;
-    let modalLeft = props.left ?? (documentSize.width! - props.width) / 2;
+    modalPosition.top = props.top ?? (documentSize.height! - props.height) / 2;
+    modalPosition.left = props.left ?? (documentSize.width! - props.width) / 2;
     if (props.top) {
       maxHeight = documentSize.height! - props.height;
       if (props.top > maxHeight) {
-        modalTop = maxHeight;
+        modalPosition.top = maxHeight;
       } else if (props.top < 0) {
-        modalTop = 0;
+        modalPosition.top = 0;
       } else {
-        modalTop = props.top;
+        modalPosition.top = props.top;
       }
     }
     if (props.left) {
       maxWidth = documentSize.width! - props.width;
       if (props.left < maxWidth) {
-        modalLeft = maxWidth;
+        modalPosition.left = maxWidth;
       } else if (props.left < 0) {
-        modalLeft = 0;
+        modalPosition.left = 0;
       } else {
-        modalLeft = props.left;
+        modalPosition.left = props.left;
       }
     }
-    return {
-      top: modalTop,
-      left: modalLeft
-    };
   }
 
   onMounted(() => {
