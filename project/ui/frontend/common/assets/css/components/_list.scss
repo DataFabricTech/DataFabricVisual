@@ -1,98 +1,39 @@
-//-------------------------------------------
-// select, dropdown, list 공통 스타일 정의
-//-------------------------------------------
-$list-classes: list, dropdown, select;
+@mixin list-size($font-size: '13', $size: 36px, $icon-size: 18px) {
+  .list-item {
+    height: $size;
 
-@each $list in $list-classes {
-  .#{$list}-list {
-    @include z-index('dropdown');
-    @include box-shadow('md');
-    position: absolute;
-    padding: $spacing-2 0;
-    border-radius: $border-radius-4;
-    background: $neutral-0;
+    .svg-icon {
+      @include icon-size($icon-size);
+    }
+
+    &-button-text {
+      @include font-size($font-size);
+    }
+  }
+}
+
+.list {
+  @include list-size;
+  z-index: auto;
+  box-shadow: none;
+  border-color: $neutral-200;
+
+  &-button-group {
+    @include flex;
+
   }
 
-  .#{$list}-item {
-    @include flex($horizontal: flex-start);
-    padding: 0 $spacing-6 0 $spacing-8;
-    border-radius: $border-radius-4;
+  &-search {
+    height: 100%;
+    padding: $spacing-8;
+    border-bottom: 1px solid $neutral-200;
+  }
 
-    .checkbox {
-      flex-grow: 1;
-      justify-content: flex-start;
-    }
+  &-item-button-text {
+    font-weight: 600;
+  }
 
-    &:hover:not(:disabled) {
-      background-color: $neutral-100;
-    }
-
-    &-button {
-      @include ellipsis;
-      @include flex;
-      gap: $spacing-6;
-      width: 100%;
-
-      &:active:not(:disabled) {
-        color: $primary-500;
-
-        .svg-icon {
-          @include icon-color($primary-500);
-        }
-
-        .#{$list-classes}-item-button-text {
-          color: $primary-500;
-        }
-      }
-
-      .svg-icon {
-        @include icon-size(18px);
-      }
-
-      &-text {
-        @include ellipsis;
-        flex-grow: 1;
-        color: $neutral-700;
-        text-align: left;
-      }
-    }
-
-    &.#{$list}-item-negative {
-      .svg-icon {
-        @include icon-color($error-500);
-      }
-
-      .#{$list}-item-button-text {
-        color: $error-500;
-      }
-    }
-
-    &.#{$list}-item-negative:active,
-    &.is-#{$list}-item-selected,
-    &.is-#{$list}-item-selected:hover {
-      background: $primary-100;
-      border: 1px solid $primary-300;
-
-      .svg-icon {
-        @include icon-color($primary-500);
-      }
-
-      .#{$list}-item-button-text {
-        color: $primary-500;
-      }
-
-      &.#{$list}-item-negative {
-        background: $error-100;
-        border: none;
-
-        .svg-icon {
-          @include icon-color($error-500);
-        }
-
-        .#{$list}-item-button-text {
-          color: $error-500;
-        }
-      }
-    }
+  &.list-lg {
+    @include list-size($font-size: '14', $size: 40px, $icon-size: sm);
   }
 }

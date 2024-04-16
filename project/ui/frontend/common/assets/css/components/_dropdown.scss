@@ -18,7 +18,7 @@
 
 .dropdown {
   @include dropdown-size;
-  @include z-index('dropdown');
+  position: absolute;
 
   // Size
   &-lg {
@@ -28,7 +28,7 @@
   &-sm {
     @include dropdown-size($font-size: '13', $size: 28px);
 
-    .select-item {
+    .dropdown-item {
       .checkbox {
         @extend .checkbox-sm;
       }

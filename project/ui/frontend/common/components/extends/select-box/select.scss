@@ -15,22 +15,6 @@
       }
     }
   }
-
-  .select-item {
-    height: $size;
-
-    &-button {
-      > .svg-icon {
-        @include icon-size($icon-size);
-      }
-
-      &-text {
-        @if $font-size != null {
-          @include font-size($font-size);
-        }
-      }
-    }
-  }
 }
 
 
@@ -118,15 +102,15 @@
     }
   }
 
-  &-list {
+  .dropdown {
+    //display: none;
     width: 100%;
     margin-top: $spacing-4;
-    display: none;
   }
 
   &-clean {
     .select-button {
-      border: none;
+      border-color: transparent;
 
       &:active:not(:disabled) {
         border: 1px solid $primary-500;
@@ -135,8 +119,9 @@
     }
 
     &.is-select-open {
-      .select-button {
-        border: none;
+      .select-button,
+      .select-button:active {
+        border-color: transparent;
         box-shadow: none;
         background: $primary-100;
       }
@@ -146,15 +131,17 @@
   // Size
   &-lg {
     @include select-size($size: 36px, $right-padding: $spacing-8, $left-padding: 10px, $icon-size: sm);
+
+    .dropdown {
+      @extend .dropdown-lg;
+    }
   }
 
   &-sm {
     @include select-size($font-size: '13', $size: 28px, $gap: $spacing-4, $right-padding: $spacing-6, $left-padding: $spacing-8);
 
-    .select-item {
-      .checkbox {
-        @extend .checkbox-sm;
-      }
+    .dropdown {
+      @extend .dropdown-sm;
     }
   }
 }

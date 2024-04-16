@@ -1824,34 +1824,34 @@
             <h4 class="group-title">default</h4>
             <div class="flex gap-6 items-start">
               <div class="v-group gap-4">
-                <select-box class="select-lg"></select-box>
-                <select-box class="select-lg" disabled></select-box>
+                <select-box class="select-lg w-64"></select-box>
+                <select-box class="select-lg w-64" disabled></select-box>
               </div>
-              <select-box class="is-select-open"></select-box>
-              <select-box class="select-sm"></select-box>
+              <select-box class="is-select-open w-64"></select-box>
+              <select-box class="select-sm w-64"></select-box>
             </div>
             <h4 class="group-title">clean</h4>
             <div class="flex gap-6 items-start">
               <div class="v-group gap-4">
-                <select-box class="select-clean select-lg"></select-box>
-                <select-box class="select-lg" disabled></select-box>
+                <select-box class="select-clean select-lg w-64"></select-box>
+                <select-box class="select-lg w-64" disabled></select-box>
               </div>
-              <select-box class="select-clean is-select-open"></select-box>
-              <select-box class="select-sm select-clean is-select-invalid"></select-box>
+              <select-box class="select-clean is-select-open w-64"></select-box>
+              <select-box class="select-sm select-clean is-select-invalid w-64"></select-box>
             </div>
             <h4 class="group-title">Select-search</h4>
             <div class="flex gap-6 items-start">
               <div class="v-group gap-8">
-                <combo-box class="select-lg"></combo-box>
-                <combo-box class="select-lg is-select-open"></combo-box>
+                <combo-box class="select-lg w-64"></combo-box>
+                <combo-box class="select-lg is-select-open w-64"></combo-box>
               </div>
               <div class="v-group gap-8">
-                <combo-box></combo-box>
-                <combo-box class="is-select-open"></combo-box>
+                <combo-box class=" w-64"></combo-box>
+                <combo-box class="is-select-open w-64"></combo-box>
               </div>
               <div class="v-group gap-8">
-                <combo-box class="select-sm"></combo-box>
-                <combo-box class="select-sm is-select-open"></combo-box>
+                <combo-box class="select-sm w-64"></combo-box>
+                <combo-box class="select-sm is-select-open w-64"></combo-box>
               </div>
             </div>
           </div>
@@ -1867,46 +1867,273 @@
               <svg-icon class="button-icon" name="kebab-menu"></svg-icon>
             </button>
             <div class="h-group gap-5">
-              <div class="dropdown dropdown-lg" >
+              <div class="dropdown dropdown-lg" style="position: static">
                 <ul class="dropdown-list" style="position: static">
                   <li class="dropdown-item">
                     <button class="dropdown-item-button">
-                      <span class="dropdown-item-button-text">드롭다운 아이템</span>
+                      <span class="dropdown-item-button-text">dropdown item</span>
                     </button>
                   </li>
                   <li class="dropdown-item">
                     <button class="dropdown-item-button">
-                      <span class="dropdown-item-button-text">드롭다운 아이템</span>
+                      <svg-icon class="svg-icon" name="user"></svg-icon>
+                      <span class="dropdown-item-button-text">dropdown item</span>
                     </button>
                   </li>
                   <li class="dropdown-item">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox-drop" class="checkbox-input" />
+                      <label for="checkbox-drop" class="checkbox-label">
+                        Checkbox
+                        <span class="checkbox-subtext">(Optional)</span>
+                      </label>
+                    </div>
+                    <button class="button button-neutral-ghost button-xs">
+                      <span class="hidden-text">닫기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </li>
+                  <li class="dropdown-item dropdown-item-negative">
                     <button class="dropdown-item-button">
-                      <span class="dropdown-item-button-text">드롭다운 아이템</span>
+                      <svg-icon class="svg-icon" name="trash"></svg-icon>
+                      <span class="dropdown-item-button-text">삭제</span>
                     </button>
                   </li>
                 </ul>
               </div>
-              <div class="dropdown" >
+              <div class="dropdown" style="position: static">
                 <ul class="dropdown-list" style="position: static">
                   <li class="dropdown-item">
                     <button class="dropdown-item-button">
-                      <span class="dropdown-item-button-text">드롭다운 아이템</span>
+                      <span class="dropdown-item-button-text">dropdown item</span>
                     </button>
                   </li>
                   <li class="dropdown-item">
                     <button class="dropdown-item-button">
-                      <span class="dropdown-item-button-text">드롭다운 아이템</span>
+                      <svg-icon class="svg-icon" name="user"></svg-icon>
+                      <span class="dropdown-item-button-text">dropdown item</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox-drop" class="checkbox-input" />
+                      <label for="checkbox-drop" class="checkbox-label">
+                        Checkbox
+                        <span class="checkbox-subtext">(Optional)</span>
+                      </label>
+                    </div>
+                    <button class="button button-neutral-ghost button-xs">
+                      <span class="hidden-text">닫기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </li>
+                  <li class="dropdown-item dropdown-item-negative">
+                    <button class="dropdown-item-button">
+                      <svg-icon class="svg-icon" name="trash"></svg-icon>
+                      <span class="dropdown-item-button-text">삭제</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <div class="dropdown dropdown-sm" style="position: static">
+                <ul class="dropdown-list">
+                  <li class="dropdown-item">
+                    <button class="dropdown-item-button">
+                      <span class="dropdown-item-button-text">dropdown item</span>
                     </button>
                   </li>
                   <li class="dropdown-item">
                     <button class="dropdown-item-button">
-                      <span class="dropdown-item-button-text">드롭다운 아이템</span>
+                      <svg-icon class="svg-icon" name="user"></svg-icon>
+                      <span class="dropdown-item-button-text">dropdown item</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox-drop" class="checkbox-input" />
+                      <label for="checkbox-drop" class="checkbox-label">
+                        Checkbox
+                        <span class="checkbox-subtext">(Optional)</span>
+                      </label>
+                    </div>
+                    <button class="button button-neutral-ghost button-xs">
+                      <span class="hidden-text">닫기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </li>
+                  <li class="dropdown-item dropdown-item-negative">
+                    <button class="dropdown-item-button">
+                      <svg-icon class="svg-icon" name="trash"></svg-icon>
+                      <span class="dropdown-item-button-text">삭제</span>
                     </button>
                   </li>
                 </ul>
               </div>
             </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">List</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-6">
+            <div class="list list-lg">
+              <div class="list-search">
+                <div class="text-input-group">
+                  <label class="hidden-text" for="text-input-example-11">label</label>
+                  <input id="text-input-example-11" class="text-input text-input-lg" value="search button" />
+                  <svg-icon class="text-input-icon" name="user"></svg-icon>
+                  <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <span class="hidden-text">지우기</span>
+                    <svg-icon class="button-icon" name="close"></svg-icon>
+                  </button>
+                  <button class="text-input-search-button button button-neutral-ghost">
+                    <span class="hidden-text">검색</span>
+                    <svg-icon class="button-icon" name="search"></svg-icon>
+                  </button>
+                </div>
+              </div>
+              <ul class="list-list">
+                <li class="list-item">
+                  <button class="list-item-button">
+                    <span class="list-item-button-text">list item</span>
+                  </button>
+                </li>
+                <li class="list-item">
+                  <button class="list-item-button">
+                    <svg-icon class="svg-icon" name="home"></svg-icon>
+                    <span class="list-item-button-text">list item</span>
+                  </button>
+                </li>
+                <li class="list-item">
+                  <button class="list-item-button">
+                    <svg-icon class="svg-icon" name="home"></svg-icon>
+                    <span class="list-item-button-text">list item</span>
+                  </button>
+                  <div class="list-button-group">
+                    <button class="button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">복사</span>
+                      <svg-icon class="button-icon" name="copy"></svg-icon>
+                    </button>
+                    <button class="button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">수정</span>
+                      <svg-icon class="button-icon" name="pen"></svg-icon>
+                    </button>
+                    <button class="button button-error-ghost button-sm" type="button">
+                      <span class="hidden-text">삭제</span>
+                      <svg-icon class="button-icon" name="trash"></svg-icon>
+                    </button>
+                  </div>
+                </li>
+                <li class="list-item">
+                  <div class="checkbox">
+                    <input type="checkbox" id="checkbox-list" class="checkbox-input" />
+                    <label for="checkbox-list" class="checkbox-label">
+                      Checkbox
+                      <span class="checkbox-subtext">(Optional)</span>
+                    </label>
+                  </div>
+                </li>
+                <li class="list-item">
+                  <label class="hidden-text" for="text-input-modify">label</label>
+                  <input id="text-input-modify" class="text-input" placeholder="placeholder" />
+                  <div class="list-button-group">
+                    <button class="button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">복사</span>
+                      <svg-icon class="button-icon" name="copy"></svg-icon>
+                    </button>
+                    <button class="button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">수정</span>
+                      <svg-icon class="button-icon" name="pen"></svg-icon>
+                    </button>
+                    <button class="button button-error-ghost button-sm" type="button">
+                      <span class="hidden-text">삭제</span>
+                      <svg-icon class="button-icon" name="trash"></svg-icon>
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="list">
+              <div class="list-search">
+                <div class="text-input-group">
+                  <label class="hidden-text" for="text-input-example-11">label</label>
+                  <input id="text-input-example-11" class="text-input" value="search button" />
+                  <svg-icon class="text-input-icon" name="user"></svg-icon>
+                  <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <span class="hidden-text">지우기</span>
+                    <svg-icon class="button-icon" name="close"></svg-icon>
+                  </button>
+                  <button class="text-input-search-button button button-neutral-ghost">
+                    <span class="hidden-text">검색</span>
+                    <svg-icon class="button-icon" name="search"></svg-icon>
+                  </button>
+                </div>
+              </div>
+              <ul class="list-list">
+                <li class="list-item">
+                  <button class="list-item-button">
+                    <span class="list-item-button-text">list item</span>
+                  </button>
+                </li>
+                <li class="list-item">
+                  <button class="list-item-button">
+                    <svg-icon class="svg-icon" name="home"></svg-icon>
+                    <span class="list-item-button-text">list item</span>
+                  </button>
+                </li>
+                <li class="list-item">
+                  <button class="list-item-button">
+                    <svg-icon class="svg-icon" name="home"></svg-icon>
+                    <span class="list-item-button-text">list item</span>
+                  </button>
+                  <div class="list-button-group">
+                    <button class="button button-neutral-ghost button-xs" type="button">
+                      <span class="hidden-text">복사</span>
+                      <svg-icon class="button-icon" name="copy"></svg-icon>
+                    </button>
+                    <button class="button button-neutral-ghost button-xs" type="button">
+                      <span class="hidden-text">수정</span>
+                      <svg-icon class="button-icon" name="pen"></svg-icon>
+                    </button>
+                    <button class="button button-error-ghost button-xs" type="button">
+                      <span class="hidden-text">삭제</span>
+                      <svg-icon class="button-icon" name="trash"></svg-icon>
+                    </button>
+                  </div>
+                </li>
+                <li class="list-item">
+                  <div class="checkbox checkbox-sm">
+                    <input type="checkbox" id="checkbox-list" class="checkbox-input" />
+                    <label for="checkbox-list" class="checkbox-label">
+                      Checkbox
+                      <span class="checkbox-subtext">(Optional)</span>
+                    </label>
+                  </div>
+                </li>
+                <li class="list-item">
+                  <label class="hidden-text" for="text-input-modify">label</label>
+                  <input id="text-input-modify" class="text-input text-input-sm" placeholder="placeholder" />
+                  <div class="list-button-group">
+                    <button class="button button-neutral-ghost button-xs" type="button">
+                      <span class="hidden-text">복사</span>
+                      <svg-icon class="button-icon" name="copy"></svg-icon>
+                    </button>
+                    <button class="button button-neutral-ghost button-xs" type="button">
+                      <span class="hidden-text">수정</span>
+                      <svg-icon class="button-icon" name="pen"></svg-icon>
+                    </button>
+                    <button class="button button-error-ghost button-xs" type="button">
+                      <span class="hidden-text">삭제</span>
+                      <svg-icon class="button-icon" name="trash"></svg-icon>
+                    </button>
+                  </div>
+                </li>
 
+              </ul>
+            </div>
           </div>
         </div>
       </article>

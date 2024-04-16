@@ -1,0 +1,117 @@
+//-------------------------------------------
+// dropdown, list 공통 스타일 정의
+//-------------------------------------------
+$list-classes: list, dropdown;
+
+@each $lists in $list-classes {
+  .#{$lists} {
+    @include z-index('dropdown');
+    @include box-shadow('md');
+    border-radius: $border-radius-4;
+    border: 1px solid $neutral-100;
+    background: $neutral-0;
+
+    &-list {
+      padding: $spacing-2 0;
+
+      .#{$lists}-item {
+        @include flex($horizontal: flex-start);
+        gap: $spacing-6;
+        padding: 0 $spacing-6 0 $spacing-8;
+        border-radius: $border-radius-4;
+
+        .checkbox {
+          overflow: hidden;
+          width: 100%;
+          flex-grow: 1;
+          justify-content: flex-start;
+        }
+
+        &:hover:not(:disabled) {
+          background-color: $neutral-100;
+        }
+
+        &-button {
+          @include ellipsis;
+          @include flex;
+          gap: $spacing-6;
+          width: 100%;
+
+          &:active:not(:disabled) {
+            color: $primary-500;
+
+            .svg-icon {
+              @include icon-color($primary-500);
+            }
+
+            .#{$lists}-item-button-text {
+              color: $primary-500;
+            }
+          }
+
+          .svg-icon {
+            @include icon-size(18px);
+          }
+
+          &-text {
+            @include ellipsis;
+            flex-grow: 1;
+            color: $neutral-700;
+            text-align: left;
+          }
+        }
+
+        &.#{$lists}-item-negative {
+          .svg-icon {
+            @include icon-color($error-500);
+          }
+
+          .#{$lists}-item-button-text {
+            color: $error-500;
+          }
+        }
+
+        &.#{$lists}-item-negative:hover,
+        &.#{$lists}-item-negative:active {
+          background: $error-100;
+          border: none;
+
+          .svg-icon {
+            @include icon-color($error-500);
+          }
+
+          .#{$lists}-item-button-text {
+            color: $error-500;
+          }
+        }
+
+        &.is-#{$lists}-item-selected,
+        &.is-#{$lists}-item-selected:hover {
+          background: $primary-100;
+          border: 1px solid $primary-300;
+
+          .svg-icon {
+            @include icon-color($primary-500);
+          }
+
+          .#{$lists}-item-button-text {
+            color: $primary-500;
+          }
+
+          &.#{$lists}-item-negative {
+            background: $error-100;
+            border: none;
+
+            .svg-icon {
+              @include icon-color($error-500);
+            }
+
+            .#{$lists}-item-button-text {
+              color: $error-500;
+            }
+          }
+        }
+      }
+    }
+  }
+}

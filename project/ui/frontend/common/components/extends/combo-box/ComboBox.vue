@@ -10,30 +10,33 @@
       :disabled="disabled"
     />
     <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
-    <ul class="select-list" v-show="isShowBox">
-      <li class="select-item" v-if="props.data.length === 0">
-        <div class="notification notification-sm">
-          <svg-icon class="notification-icon" name="error"></svg-icon>
-          <p class="notification-detail">{{ props.nodataMsg }}</p>
-        </div>
-      </li>
-      <li class="select-item" v-if="filteredOptions.length === 0 && props.data.length > 0">
-        <div class="notification notification-sm notification-error">
-          <svg-icon class="notification-icon" name="error"></svg-icon>
-          <p class="notification-detail">{{ props.noSearchMsg }}</p>
-        </div>
-      </li>
-      <li class="select-item"
-          v-for="(option, index) in filteredOptions"
-          :key="index"
-          @click="selectItem(option)"
-          :class="[{ 'disabled-option': isDisabled(option[valueKey]) }, { 'is-select-item-selected': isActive(option[valueKey]) }]"
-      >
-        <button class="select-item-button">
-          <span class="select-item-button-text">{{ option[labelKey] }}</span>
-        </button>
-      </li>
-    </ul>
+    <div class="dropdown" v-show="isShowBox">
+      <ul class="dropdown-list">
+        <li class="dropdown-item" v-if="props.data.length === 0">
+          <div class="notification notification-sm">
+            <svg-icon class="notification-icon" name="error"></svg-icon>
+            <p class="notification-detail">{{ props.nodataMsg }}</p>
+          </div>
+        </li>
+        <li class="dropdown-item" v-if="filteredOptions.length === 0 && props.data.length > 0">
+          <div class="notification notification-sm notification-error">
+            <svg-icon class="notification-icon" name="error"></svg-icon>
+            <p class="notification-detail">{{ props.noSearchMsg }}</p>
+          </div>
+        </li>
+        <li class="dropdown-item"
+            v-for="(option, index) in filteredOptions"
+            :key="index"
+            @click="selectItem(option)"
+            :class="[{ 'disabled-option': isDisabled(option[valueKey]) }, { 'is-select-item-selected': isActive(option[valueKey]) }]"
+        >
+          <button class="dropdown-item-button">
+            <span class="dropdown-item-button-text">{{ option[labelKey] }}</span>
+          </button>
+        </li>
+      </ul>
+    </div>
+
   </div>
 </template>
 
