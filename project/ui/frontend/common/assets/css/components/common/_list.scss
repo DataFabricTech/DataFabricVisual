@@ -68,6 +68,10 @@ $list-classes: menu, dropdown;
         }
       }
 
+      .button {
+        flex-shrink: 0;
+      }
+
       &.#{$list}-item-negative {
         .svg-icon {
           @include icon-color($error-500);
