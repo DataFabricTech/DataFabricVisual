@@ -1,19 +1,19 @@
-@mixin list-size($font-size: '13', $size: 36px, $icon-size: 18px) {
-  .list-item {
+@mixin menu-size($font-size: '13', $size: 36px, $icon-size: 18px) {
+  .menu-item {
     height: $size;
 
     .svg-icon {
       @include icon-size($icon-size);
     }
 
-    &-button-text {
+    .menu-text {
       @include font-size($font-size);
     }
   }
 }
 
-.list {
-  @include list-size;
+.menu {
+  @include menu-size;
   z-index: auto;
   box-shadow: none;
   border-color: $neutral-200;
@@ -29,11 +29,11 @@
     border-bottom: 1px solid $neutral-200;
   }
 
-  &-item-button-text {
+  &-text {
     font-weight: 600;
   }
 
-  &.list-lg {
-    @include list-size($font-size: '14', $size: 40px, $icon-size: sm);
+  &-lg {
+    @include menu-size($font-size: '14', $size: 40px, $icon-size: sm);
   }
 }

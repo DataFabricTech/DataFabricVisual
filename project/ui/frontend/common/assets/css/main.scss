@@ -27,9 +27,9 @@
 // Design Component
 @import "./components/badge";
 @import "./components/button";
-@import "./components/input";
-@import "assets/css/components/lists";
-@import "assets/css/components/list";
+@import "./components/common/input";
+@import "assets/css/components/common/list";
+@import "assets/css/components/menu";
 @import "./components/notification";
 @import "./components/textarea";
 @import "./components/text-input";

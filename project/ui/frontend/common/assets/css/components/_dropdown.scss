@@ -2,12 +2,12 @@
   .dropdown-item {
     height: $size;
 
-    &-button {
+    .dropdown-button {
       > .svg-icon {
         @include icon-size($icon-size);
       }
 
-      &-text {
+      .dropdown-text {
         @if $font-size != null {
           @include font-size($font-size);
         }
@@ -23,6 +23,12 @@
   // Size
   &-lg {
     @include dropdown-size($size: 36px, $icon-size: sm);
+
+    .dropdown-item {
+      .checkbox-label::after {
+        top: 9px;
+      }
+    }
   }
 
   &-sm {
@@ -31,6 +37,10 @@
     .dropdown-item {
       .checkbox {
         @extend .checkbox-sm;
+
+        .checkbox-label::after {
+          top: 5px;
+        }
       }
     }
   }

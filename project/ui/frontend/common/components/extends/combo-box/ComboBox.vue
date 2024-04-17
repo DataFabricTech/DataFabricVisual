@@ -1,20 +1,23 @@
-<!-- TODO: [게빌]컴포넌트명 combo-box -> select-search로 변경-->
+<!-- TODO: [개발]컴포넌트명 combo-box -> select-search로 변경-->
 <template>
-  <div class="select select-search" v-on-click-outside="closeDropdown">
-    <input
-      class="text-input"
-      type="text"
-      @click="toggleList"
-      v-model="selectedLabel"
-      :placeholder="placeholder"
-      :disabled="disabled"
-    />
-    <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
+  <div class="select select-search" v-on-click-outside="closeDropdown" @click="toggleList" style="width:200px">
+    <div class="text-input-group">
+      <label class="hidden-text" for="select-search-ex"></label>
+      <input
+        id="select-search-ex"
+        class="text-input"
+        type="text"
+        v-model="selectedLabel"
+        :placeholder="placeholder"
+        :disabled="disabled"
+      />
+      <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
+    </div>
     <div class="dropdown" v-show="isShowBox">
       <ul class="dropdown-list">
         <li class="dropdown-item" v-if="props.data.length === 0">
           <div class="notification notification-sm">
-            <svg-icon class="notification-icon" name="error"></svg-icon>
+            <svg-icon class="notification-icon" name="info"></svg-icon>
             <p class="notification-detail">{{ props.nodataMsg }}</p>
           </div>
         </li>
@@ -28,10 +31,10 @@
             v-for="(option, index) in filteredOptions"
             :key="index"
             @click="selectItem(option)"
-            :class="[{ 'disabled-option': isDisabled(option[valueKey]) }, { 'is-select-item-selected': isActive(option[valueKey]) }]"
+            :class="[{ 'disabled-option': isDisabled(option[valueKey]) }, { 'is-dropdown-item-selected': isActive(option[valueKey]) }]"
         >
-          <button class="dropdown-item-button">
-            <span class="dropdown-item-button-text">{{ option[labelKey] }}</span>
+          <button class="dropdown-button">
+            <span class="dropdown-text">{{ option[labelKey] }}</span>
           </button>
         </li>
       </ul>

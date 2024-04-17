@@ -1,5 +1,5 @@
 <template>
-  <!-- TODO: [게빌]select 오픈시 class="select is-select-open" 클래스 추가
+  <!-- TODO: [개발]select 오픈시 class="select is-select-open" 클래스 추가
   (open시에는 select-list가 보이게 스타일 처리 했습니다.인라인스타일은 생략해주세요.)-->
   <div class="select" v-on-click-outside="closeDropdown">
     <button class="select-button" @click="toggleList" :disabled="disabledAll">
@@ -20,9 +20,9 @@
             @click="selectItem(option)"
             :class="[{ 'disabled-option': isDisabled(option[valueKey]) }, { 'is-dropdown-item-selected': isActive(option[valueKey]) }]"
         >
-          <button class="dropdown-item-button">
+          <button class="dropdown-button">
             <svg-icon class="svg-icon" name="setting"></svg-icon>
-            <span class="dropdown-item-button-text">{{ option[labelKey] }}</span>
+            <span class="dropdown-text">{{ option[labelKey] }}</span>
           </button>
           <button class="button button-neutral-ghost button-xs">
             <span class="hidden-text">닫기</span>
@@ -45,9 +45,9 @@
           </div>
         </li>
         <li class="dropdown-item dropdown-item-negative">
-          <button class="dropdown-item-button">
+          <button class="dropdown-button">
             <svg-icon class="svg-icon" name="trash"></svg-icon>
-            <span class="dropdown-item-button-text">삭제</span>
+            <span class="dropdown-text">삭제</span>
           </button>
         </li>
       </ul>
