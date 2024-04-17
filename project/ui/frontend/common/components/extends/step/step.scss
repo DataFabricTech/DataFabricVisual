@@ -1,0 +1,25 @@
+.step {
+  @include flex($horizontal: space-between);
+
+  &-item {
+    @include flex($direction: column);
+    gap: $spacing-4;
+
+    &:after:not(:last-child) {
+      content: "";
+      width: 100%;
+      height: 3px;
+      padding: 0 $spacing-12;
+      background: $primary-500;
+
+    }
+  }
+
+  &-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: $border-radius-round;
+    background: $primary-500;
+  }
+
+}

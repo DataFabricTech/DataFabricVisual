@@ -1,17 +1,21 @@
 <template>
-  <div class="step-container">
+  <div class="step" style="width:350px">
     <div
       v-for="(item, index) in data"
       @click="clickStep(index)"
-      class="flex-item"
+      class="step-item"
     >
-      <div>
-        <span :class="{ 'current-step': changeCurrentStepClass(index) }">
+      <div class="step-icon">
+
+      </div>
+      <span class="step-title" :class="{ 'current-step': changeCurrentStepClass(index) }">
           {{ item[labelKey] }}
         </span>
-      </div>
     </div>
-    <slot :name="data[currentIndex][valueKey]"></slot>
+  </div>
+
+
+  <slot :name="data[currentIndex][valueKey]"></slot>
     <div v-if="showBtn">
       <button @click="move(currentIndex - 1)" :disabled="currentIndex === 0">
         이전</button
@@ -22,7 +26,6 @@
       다음
     </button>
     </div>
-  </div>
 </template>
 
 <script lang="ts" setup>
