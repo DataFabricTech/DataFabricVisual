@@ -20,6 +20,13 @@
   @include dropdown-size;
   position: absolute;
 
+  .dropdown-item {
+    .checkbox-label::after {
+      top: 7px;
+    }
+
+  }
+
   // Size
   &-lg {
     @include dropdown-size($size: 36px, $icon-size: sm);

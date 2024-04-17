@@ -23,6 +23,12 @@
 
   }
 
+  &-item {
+    .checkbox-label::after {
+      top: 10px;
+    }
+  }
+
   &-search {
     height: 100%;
     padding: $spacing-8;
@@ -35,5 +41,7 @@
 
   &-lg {
     @include menu-size($font-size: '14', $size: 40px, $icon-size: sm);
+
+
   }
 }

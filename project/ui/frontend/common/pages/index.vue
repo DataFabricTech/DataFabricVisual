@@ -2029,8 +2029,8 @@
                 </li>
                 <li class="menu-item">
                   <div class="checkbox">
-                    <input type="checkbox" id="checkbox-list" class="checkbox-input" />
-                    <label for="checkbox-list" class="checkbox-label">
+                    <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
+                    <label for="checkbox-menu" class="checkbox-label">
                       Checkbox
                       <span class="checkbox-subtext">(Optional)</span>
                     </label>
@@ -2106,8 +2106,8 @@
                 </li>
                 <li class="menu-item">
                   <div class="checkbox checkbox-sm">
-                    <input type="checkbox" id="checkbox-list" class="checkbox-input" />
-                    <label for="checkbox-list" class="checkbox-label">
+                    <input type="checkbox" id="checkbox-menu-2" class="checkbox-input" />
+                    <label for="checkbox-menu-2" class="checkbox-label">
                       Checkbox
                       <span class="checkbox-subtext">(Optional)</span>
                     </label>
