@@ -1595,6 +1595,57 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Step</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <div class="step" style="width:350px">
+              <div class="step-item">
+                <div class="step-mark">
+                  <div class="step-circle">
+                    <span class="step-number">1</span>
+                  </div>
+                </div>
+                <p class="step-title">
+                  Step
+                </p>
+              </div>
+              <div class="step-item">
+                <div class="step-mark">
+                  <div class="step-circle">
+                    <span class="step-number">2</span>
+                  </div>
+                </div>
+                <p class="step-title">
+                  Step
+                </p>
+              </div>
+              <div class="step-item is-step-item-selected">
+                <div class="step-mark">
+                  <div class="step-circle">
+                    <span class="step-number">3</span>
+                  </div>
+                </div>
+                <p class="step-title">
+                  Step
+                </p>
+              </div>
+              <div class="step-item">
+                <div class="step-mark">
+                  <div class="step-circle">
+                    <span class="step-number">4</span>
+                  </div>
+                </div>
+                <p class="step-title">
+                  Step
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">Breadcrumb</h2>
       <article class="mb-10">
         <div class="flex flex-col align-center gap-5">

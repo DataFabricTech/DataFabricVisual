@@ -50,13 +50,6 @@
   border-radius: $border-radius-15;
   transition: background-color 0.2s;
 
-  &:before {
-    content: "";
-    width: 18px;
-    height: 18px;
-    background: red;
-  }
-
   &-link {
     @include font-size('13');
     font-weight: 600;

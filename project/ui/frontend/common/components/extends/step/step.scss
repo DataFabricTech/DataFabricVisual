@@ -1,25 +1,69 @@
 .step {
-  @include flex($horizontal: space-between);
+  @include flex($horizontal: space-between,$vertical: baseline);
+
 
   &-item {
     @include flex($direction: column);
     gap: $spacing-4;
+    position: relative;
 
-    &:after:not(:last-child) {
-      content: "";
-      width: 100%;
-      height: 3px;
-      padding: 0 $spacing-12;
-      background: $primary-500;
-
+    &:not(:last-child) {
+      flex: 1 0 auto;
     }
+
+
+    &:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -28px;
+      top: 16px;
+      box-sizing: border-box;
+      display: block;
+      width: calc(100% - 56px);
+      margin: 0 $spacing-12;
+      border-top: 2px solid $neutral-200;
+    }
+
+    &.is-step-item-selected {
+      .step-circle {
+        border-color: $primary-500;
+        box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
+
+      }
+      .step-number {
+        color: $primary-500;
+      }
+    }
+
   }
 
-  &-icon {
+  &-mark {
+    @include flex;
+  }
+
+  &-circle {
+    flex-shrink: 0;
     width: 32px;
     height: 32px;
+    padding-top: $spacing-4;
     border-radius: $border-radius-round;
-    background: $primary-500;
+    background: $neutral-0;
+    border: 2px solid $neutral-200;
+    text-align: center;
+  }
+
+  &-number {
+    @include font-size('13');
+    color: $neutral-300;
+    font-weight: 700;
+  }
+
+  &-title {
+    @include font-size('13');
+    padding-left: 3px;
+    font-weight: 600;
+    color: $neutral-400;
+    //max-width: 30px;
   }
 
 }
