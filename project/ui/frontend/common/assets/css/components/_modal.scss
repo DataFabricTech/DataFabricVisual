@@ -7,7 +7,7 @@
   @include box-shadow('lg');
   display: flex;
   flex-direction: column;
-  width: 620px;
+  //width: 620px;
   background: $neutral-0;
   border-radius: $border-radius-12;
 
@@ -57,19 +57,6 @@
 
     > .button {
       flex: 1;
-    }
-  }
-
-  $modal-size-map: (
-          "xl": 1180px,
-          "lg": 900px,
-          "sm": 480px,
-          "xs": 350px,
-  );
-
-  @each $value, $size in $modal-size-map {
-    &-#{$value} {
-      width: $size;
     }
   }
 
