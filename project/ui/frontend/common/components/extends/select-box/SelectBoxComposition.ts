@@ -15,7 +15,7 @@ export function SelectBoxComposition(
   onselect: (value: string | number) => void
 ): SelectBoxComposition {
   const isShowBox: Ref<boolean> = ref<boolean>(false);
-  const selectedLabel: Ref<string> = ref<string>("선택");
+  const selectedLabel: Ref<string> = ref<string>("선택하세요");
   let selectedValue: string | number | undefined = props.selectedItem;
 
   if (!props.data.length) {

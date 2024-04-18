@@ -1817,12 +1817,333 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Select</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">default</h4>
+            <div class="flex gap-6 items-start">
+              <div class="v-group gap-4">
+                <select-box class="select-lg w-64"></select-box>
+                <select-box class="select-lg w-64" disabled></select-box>
+              </div>
+              <select-box class="is-select-open w-64"></select-box>
+              <select-box class="select-sm w-64"></select-box>
+            </div>
+            <h4 class="group-title">clean</h4>
+            <div class="flex gap-6 items-start">
+              <div class="v-group gap-4">
+                <select-box class="select-clean select-lg w-64"></select-box>
+                <select-box class="select-lg w-64" disabled></select-box>
+              </div>
+              <select-box class="select-clean is-select-open w-64"></select-box>
+              <select-box class="select-sm select-clean is-select-invalid w-64"></select-box>
+            </div>
+            <h4 class="group-title">Select-search</h4>
+            <div class="flex gap-6 items-start">
+              <div class="v-group gap-8">
+                <combo-box class="select-lg w-64"></combo-box>
+                <combo-box class="select-lg is-select-open w-64"></combo-box>
+              </div>
+              <div class="v-group gap-8">
+                <combo-box class=" w-64"></combo-box>
+                <combo-box class="is-select-open w-64"></combo-box>
+              </div>
+              <div class="v-group gap-8">
+                <combo-box class="select-sm w-64"></combo-box>
+                <combo-box class="select-sm is-select-open w-64"></combo-box>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Dropdown</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group">
+            <button class="button button-lg button-neutral-ghost">
+              <svg-icon class="button-icon" name="kebab-menu"></svg-icon>
+            </button>
+            <div class="h-group gap-5">
+              <div class="dropdown dropdown-lg" style="position: static">
+                <ul class="dropdown-list" style="position: static">
+                  <li class="dropdown-item">
+                    <button class="dropdown-button">
+                      <span class="dropdown-text">dropdown item</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <button class="dropdown-button">
+                      <svg-icon class="svg-icon" name="user"></svg-icon>
+                      <span class="dropdown-text">dropdown item</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox-drop" class="checkbox-input" />
+                      <label for="checkbox-drop" class="checkbox-label">
+                        Checkbox
+                        <span class="checkbox-subtext">(Optional)</span>
+                      </label>
+                    </div>
+                    <button class="button button-neutral-ghost button-xs">
+                      <span class="hidden-text">닫기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </li>
+                  <li class="dropdown-item dropdown-item-negative">
+                    <button class="dropdown-button">
+                      <svg-icon class="svg-icon" name="trash"></svg-icon>
+                      <span class="dropdown-text">삭제</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <div class="dropdown" style="position: static">
+                <ul class="dropdown-list" style="position: static">
+                  <li class="dropdown-item">
+                    <button class="dropdown-button">
+                      <span class="dropdown-text">dropdown item</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <button class="dropdown-button">
+                      <svg-icon class="svg-icon" name="user"></svg-icon>
+                      <span class="dropdown-text">dropdown item</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox-drop-2" class="checkbox-input" />
+                      <label for="checkbox-drop-2" class="checkbox-label">
+                        Checkbox
+                        <span class="checkbox-subtext">(Optional)</span>
+                      </label>
+                    </div>
+                    <button class="button button-neutral-ghost button-xs">
+                      <span class="hidden-text">닫기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </li>
+                  <li class="dropdown-item dropdown-item-negative">
+                    <button class="dropdown-button">
+                      <svg-icon class="svg-icon" name="trash"></svg-icon>
+                      <span class="dropdown-text">삭제</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <div class="dropdown dropdown-sm" style="position: static">
+                <ul class="dropdown-list">
+                  <li class="dropdown-item">
+                    <button class="dropdown-button">
+                      <span class="dropdown-text">dropdown item</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <button class="dropdown-button">
+                      <svg-icon class="svg-icon" name="user"></svg-icon>
+                      <span class="dropdown-text">dropdown item</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox-drop-3" class="checkbox-input" />
+                      <label for="checkbox-drop-3" class="checkbox-label">
+                        Checkbox
+                        <span class="checkbox-subtext">(Optional)</span>
+                      </label>
+                    </div>
+                    <button class="button button-neutral-ghost button-xs">
+                      <span class="hidden-text">닫기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </li>
+                  <li class="dropdown-item dropdown-item-negative">
+                    <button class="dropdown-button">
+                      <svg-icon class="svg-icon" name="trash"></svg-icon>
+                      <span class="dropdown-text">삭제</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Menu</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-6">
+            <div class="menu menu-lg">
+              <div class="menu-search">
+                <div class="text-input-group">
+                  <label class="hidden-text" for="text-input-example-11">label</label>
+                  <input id="text-input-example-11" class="text-input text-input-lg" value="search button" />
+                  <svg-icon class="text-input-icon" name="user"></svg-icon>
+                  <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <span class="hidden-text">지우기</span>
+                    <svg-icon class="button-icon" name="close"></svg-icon>
+                  </button>
+                  <button class="text-input-search-button button button-neutral-ghost">
+                    <span class="hidden-text">검색</span>
+                    <svg-icon class="button-icon" name="search"></svg-icon>
+                  </button>
+                </div>
+              </div>
+              <ul class="menu-list">
+                <li class="menu-item">
+                  <button class="menu-button">
+                    <span class="menu-text">menu item</span>
+                  </button>
+                </li>
+                <li class="menu-item">
+                  <button class="menu-button">
+                    <svg-icon class="svg-icon" name="home"></svg-icon>
+                    <span class="menu-text">menu item</span>
+                  </button>
+                </li>
+                <li class="menu-item">
+                  <button class="menu-button">
+                    <svg-icon class="svg-icon" name="home"></svg-icon>
+                    <span class="menu-text">menu item</span>
+                  </button>
+                  <div class="menu-button-group">
+                    <button class="button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">복사</span>
+                      <svg-icon class="button-icon" name="copy"></svg-icon>
+                    </button>
+                    <button class="button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">수정</span>
+                      <svg-icon class="button-icon" name="pen"></svg-icon>
+                    </button>
+                    <button class="button button-error-ghost button-sm" type="button">
+                      <span class="hidden-text">삭제</span>
+                      <svg-icon class="button-icon" name="trash"></svg-icon>
+                    </button>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <div class="checkbox">
+                    <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
+                    <label for="checkbox-menu" class="checkbox-label">
+                      Checkbox
+                      <span class="checkbox-subtext">(Optional)</span>
+                    </label>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <label class="hidden-text" for="text-input-modify">label</label>
+                  <input id="text-input-modify" class="text-input" placeholder="placeholder" />
+                  <div class="menu-button-group">
+                    <button class="button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">복사</span>
+                      <svg-icon class="button-icon" name="copy"></svg-icon>
+                    </button>
+                    <button class="button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">수정</span>
+                      <svg-icon class="button-icon" name="pen"></svg-icon>
+                    </button>
+                    <button class="button button-error-ghost button-sm" type="button">
+                      <span class="hidden-text">삭제</span>
+                      <svg-icon class="button-icon" name="trash"></svg-icon>
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="menu">
+              <div class="menu-search">
+                <div class="text-input-group">
+                  <label class="hidden-text" for="text-input-example-11">label</label>
+                  <input id="text-input-example-11" class="text-input" value="search button" />
+                  <svg-icon class="text-input-icon" name="user"></svg-icon>
+                  <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <span class="hidden-text">지우기</span>
+                    <svg-icon class="button-icon" name="close"></svg-icon>
+                  </button>
+                  <button class="text-input-search-button button button-neutral-ghost">
+                    <span class="hidden-text">검색</span>
+                    <svg-icon class="button-icon" name="search"></svg-icon>
+                  </button>
+                </div>
+              </div>
+              <ul class="menu-list">
+                <li class="menu-item">
+                  <button class="menu-button">
+                    <span class="menu-text">menu item</span>
+                  </button>
+                </li>
+                <li class="menu-item">
+                  <button class="menu-button">
+                    <svg-icon class="svg-icon" name="home"></svg-icon>
+                    <span class="menu-text">menu item</span>
+                  </button>
+                </li>
+                <li class="menu-item">
+                  <button class="menu-button">
+                    <svg-icon class="svg-icon" name="home"></svg-icon>
+                    <span class="menu-text">menu item</span>
+                  </button>
+                  <div class="menu-button-group">
+                    <button class="button button-neutral-ghost button-xs" type="button">
+                      <span class="hidden-text">복사</span>
+                      <svg-icon class="button-icon" name="copy"></svg-icon>
+                    </button>
+                    <button class="button button-neutral-ghost button-xs" type="button">
+                      <span class="hidden-text">수정</span>
+                      <svg-icon class="button-icon" name="pen"></svg-icon>
+                    </button>
+                    <button class="button button-error-ghost button-xs" type="button">
+                      <span class="hidden-text">삭제</span>
+                      <svg-icon class="button-icon" name="trash"></svg-icon>
+                    </button>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <div class="checkbox checkbox-sm">
+                    <input type="checkbox" id="checkbox-menu-2" class="checkbox-input" />
+                    <label for="checkbox-menu-2" class="checkbox-label">
+                      Checkbox
+                      <span class="checkbox-subtext">(Optional)</span>
+                    </label>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <label class="hidden-text" for="text-input-modify">label</label>
+                  <input id="text-input-modify" class="text-input text-input-sm" placeholder="placeholder" />
+                  <div class="menu-button-group">
+                    <button class="button button-neutral-ghost button-xs" type="button">
+                      <span class="hidden-text">복사</span>
+                      <svg-icon class="button-icon" name="copy"></svg-icon>
+                    </button>
+                    <button class="button button-neutral-ghost button-xs" type="button">
+                      <span class="hidden-text">수정</span>
+                      <svg-icon class="button-icon" name="pen"></svg-icon>
+                    </button>
+                    <button class="button button-error-ghost button-xs" type="button">
+                      <span class="hidden-text">삭제</span>
+                      <svg-icon class="button-icon" name="trash"></svg-icon>
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">Modal</h2>
       <article class="mb-10">
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-6">
             <h4 class="group-title">default</h4>
-            <div class="modal modal-lg modal-padding-16">
+            <div class="modal modal-padding-16" style="width:350px">
               <div class="modal-head">
                 <div class="modal-head-text">
                   <span class="modal-head-title">insert modal title here</span>
@@ -1843,7 +2164,7 @@
                 </div>
               </div>
             </div>
-            <div class="modal modal-padding-48">
+            <div class="modal modal-padding-48" style="width:480px">
               <div class="modal-head">
                 <div class="modal-head-text">
                   <span class="modal-head-title">insert modal title heredd</span>
@@ -1862,7 +2183,7 @@
                 <button class="button button-primary button-lg">확인</button>
               </div>
             </div>
-            <div class="modal modal-sm modal-padding-32">
+            <div class="modal modal-padding-32" style="width:620px">
               <div class="modal-head">
                 <div class="modal-head-text">
                   <span class="modal-head-title">insert modal title here</span>
@@ -2418,6 +2739,8 @@ import VueDatepickerNext from "~/pages/vue-datepicker-next/index.vue";
 import VueFinalModal from "~/pages/vue-final-modal/index.vue";
 import Notification from "../components/extends/notification/Notification.vue";
 import Breadcrumb from "../components/base/breadcrumb/Breadcrumb.vue";
+import SelectBox from "../components/extends/select-box/SelectBox.vue";
+
 
 const currentComponent = shallowRef(Dayjs);
 
@@ -2427,6 +2750,7 @@ const components: any = {
   Dayjs,
   Highcharts,
   Locale,
+  SelectBox,
   VueDatepickerNext,
   VueFinalModal,
   Notification,
@@ -2439,6 +2763,29 @@ function clickMenu(menu: string) {
 
 function checkCurrentPage(item: number): void {
   console.log("Emit currentPageNumber: ", item);
+}
+
+const isFirstCheckedEvent: boolean = true;
+
+const options: { [key: string]: string | number }[] = [
+  {
+    label: "option1",
+    value: "option11"
+  },
+  {
+    label: "option2",
+    value: "option22"
+  },
+  {
+    label: "option3",
+    value: "option33"
+  }
+];
+
+const selectedItem = "";
+
+function selectItem(item: string | number) {
+  console.log(item);
 }
 </script>
 

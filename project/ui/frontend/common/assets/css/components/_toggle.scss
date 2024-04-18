@@ -55,7 +55,7 @@
       }
 
       &-icon {
-        @include icon-size(20px);
+        @include icon-size('sm');
       }
     }
   }

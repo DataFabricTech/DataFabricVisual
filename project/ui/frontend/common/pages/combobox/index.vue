@@ -23,7 +23,7 @@ const isFirstCheckedEvent: boolean = true;
 const placeholder = "입력해주세요";
 const nodataMsg = "데이터가 존재하지 않습니다.";
 const noSearchMsg = "검색한 데이터 결과가 존재하지 않습니다.";
-const disabled = true;
+const disabled = false;
 const disabledList = ["option33"];
 const options: { [key: string]: string | number }[] = [
   {
