@@ -24,7 +24,8 @@
       </template>
     </Step>
     <h1>Step dotted</h1>
-    <Step
+    <!--  TODO: [개발] 작성중인 현재 페이지만 is-step-item-selected 클래스 추가되야하고 완료된 스텝은 is-step-item-selected 스타일이 해제돼야함  -->
+    <Step class="step-dotted"
       :data="stepOptions2"
       :label-key="'label'"
       :value-key="'value'"
