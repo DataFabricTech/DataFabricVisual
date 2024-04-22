@@ -98,3 +98,101 @@ const {
   switchDateTimePanel
 } = DatepickerComposition(props);
 </script>
+
+<style lang="scss">
+.mx-datepicker-main {
+  font-family: 'pretandard', 'Segoe UI', 'Open Sans', 'Helvetica Neue';
+}
+
+.mx-datepicker-popup {
+  box-shadow: 1px 6px 5px 0px rgba(162, 171, 181, 0.15);
+}
+
+.mx-btn-current-year,
+.mx-btn-current-month,
+.mx-calendar-header-label {
+  font-weight: 600;
+}
+
+.mx-calendar-header-label {
+  height: 28px;
+
+  .mx-btn-text {
+    color: #525866;
+
+    &:hover {
+      color: #525866;
+      text-decoration: underline;
+    }
+
+    &:not(:first-child) {
+      margin-left: 4px;
+    }
+  }
+
+
+}
+
+
+.mx-btn-text {
+  padding: 0;
+}
+
+.mx-btn-icon {
+  &-double-left,
+  &-double-right,
+  &-left,
+  &-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 28px;
+    width: 28px;
+    margin-top: 3px;
+
+    &:hover:not(:disabled) {
+      background: #F4F6F9;
+    }
+
+    &:active:not(:disabled) {
+      background: #BABFC8;
+    }
+
+
+    & > i {
+      width: 100%;
+      color: #525866;
+
+
+    }
+  }
+
+}
+.mx-icon-double-left:before,.mx-icon-left:before {
+  left: 12px;
+}
+.mx-icon-right:before {
+  left: 8px;
+}
+
+.mx-table-date {
+  th {
+    font-weight: 600;
+    color: #525866;
+  }
+  .cell.not-current-month {
+    color: #DBE0E8;
+  }
+}
+
+.mx-calendar-content .cell:hover{
+  background: #F4F6F9;
+}
+
+.mx-calendar-content .cell.active {
+  background: #188AB0;
+  color: #fff;
+}
+
+
+</style>
