@@ -1,0 +1,39 @@
+.datepicker {
+  &.mx-datepicker {
+    width: 100%;
+
+    &.disabled {
+      .mx-input {
+        border: 1px solid $neutral-200;
+        background: $neutral-100;
+        color: $neutral-300;
+      }
+    }
+  }
+
+  .mx-input {
+    border: 1px solid $neutral-200;
+    color: $neutral-700;
+    box-shadow: none;
+
+    &::placeholder {
+      color: $neutral-400;
+    }
+
+    &:hover:not(:disabled) {
+      background: $neutral-100;
+      border: 1px solid $neutral-200;
+    }
+
+    &:focus:not(:disabled) {
+      background: $neutral-0;
+      border: 1px solid $secondary-500;
+      box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
+    }
+  }
+
+.mx-icon-calendar {
+  color: $neutral-500;
+}
+}
+
