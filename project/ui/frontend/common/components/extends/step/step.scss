@@ -3,7 +3,9 @@
   min-width: 250px;
   width: 100%;
 
-  &-section {
+  &-item {
+    @include flex($direction: column);
+    gap: $spacing-4;
     position: relative;
     flex: 1;
     padding: 0 $spacing-8;
@@ -19,8 +21,8 @@
       border-top: 2px solid $neutral-200;
     }
 
-    &.is-step-section-complete {
-      .step-circle {
+    &.is-step-item-complete {
+      .step-button {
         background: $primary-500;
         border-color: transparent;
       }
@@ -36,15 +38,14 @@
       &:not(:last-child):before {
         border-color: $primary-500;
       }
-    }
-  }
 
-  &-item {
-    @include flex($direction: column);
-    gap: $spacing-4;
+      .step-title {
+        color: $primary-500;
+      }
+    }
 
     &.is-step-item-selected {
-      .step-circle {
+      .step-button {
         border-color: $primary-500;
         box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
       }
@@ -53,15 +54,15 @@
         color: $primary-500;
       }
     }
+
+    .step-title {
+      color: $primary-500;
+    }
   }
 
   &-button {
     @include flex;
     flex-shrink: 0;
-  }
-
-  &-circle {
-    @include flex;
     width: 32px;
     height: 32px;
     border-radius: $border-radius-round;
@@ -95,11 +96,10 @@
     height: 100%;
 
     .step-item {
+      align-items: flex-start;
       gap: $spacing-8;
       flex-direction: row;
-    }
 
-    .step-section {
       &:not(:last-child):before {
         @include z-index('hidden');
         top: auto;
@@ -111,14 +111,22 @@
         border-left: 2px solid $neutral-200;
       }
 
-      &.is-step-section-complete:not(:last-child):before {
+      &:last-child {
+        flex-grow: 0;
+      }
+
+      &.is-step-item-complete:not(:last-child):before {
         border-color: $primary-500;
       }
+    }
+
+    .step-title {
+      margin-top: $spacing-6;
     }
   }
 
   &-dotted {
-    .step-section:not(:last-child):before {
+    .step-item:not(:last-child):before {
       border-style: dotted;
     }
   }

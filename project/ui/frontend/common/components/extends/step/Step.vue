@@ -1,18 +1,14 @@
 <template>
   <div class="step-container" style="width:450px">
     <div class="step">
-      <!--  TODO: [개발] 작성완료시 다음으로 넘어갈시 해당 페이지는 is-step-section-complete 클래스 추가 -->
-      <div class="step-section" v-for="(item, index) in data"
-           @click="clickStep(index)">
-        <div class="step-item" :class="{ 'is-step-item-selected': changeCurrentStepClass(index) }">
-          <button class="step-mark">
-            <div class="step-circle">
-              <p class="step-number">1</p>
-              <svg-icon class="step-icon" name="checkmark"></svg-icon>
-            </div>
-          </button>
-          <span class="step-title">{{ item[labelKey] }}</span>
-        </div>
+      <!--  TODO: [개발] 작성완료후 다음으로 넘어갈시 해당 페이지는 is-step-item-complete 클래스 추가 -->
+      <div class="step-item" v-for="(item, index) in data"
+           @click="clickStep(index)" :class="{ 'is-step-item-selected': changeCurrentStepClass(index) }">
+        <button class="step-button">
+          <p class="step-number">1</p>
+          <svg-icon class="step-icon" name="checkmark"></svg-icon>
+        </button>
+        <span class="step-title">{{ item[labelKey] }}</span>
       </div>
     </div>
 
