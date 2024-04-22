@@ -1595,6 +1595,140 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Step</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">default</h4>
+            <div class="step" style="width:450px">
+              <div class="step-item is-step-item-complete">
+                <button class="step-button">
+                  <p class="step-number">1</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">step</span>
+              </div>
+              <div class="step-item is-step-item-complete">
+                <button class="step-button">
+                  <p class="step-number">2</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">step</span>
+              </div>
+              <div class="step-item is-step-item-selected">
+                <button class="step-button">
+                  <p class="step-number">3</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">stepstep</span>
+              </div>
+              <div class="step-item">
+                <button class="step-button">
+                  <p class="step-number">4</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">step</span>
+              </div>
+            </div>
+            <h4 class="group-title">dotted</h4>
+            <div class="step step-dotted" style="width:450px">
+              <div class="step-item is-step-item-complete">
+                <button class="step-button">
+                  <p class="step-number">1</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">step</span>
+              </div>
+              <div class="step-item is-step-item-complete">
+                <button class="step-button">
+                  <p class="step-number">2</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">step</span>
+              </div>
+              <div class="step-item is-step-item-selected">
+                <button class="step-button">
+                  <p class="step-number">3</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">stepstep</span>
+              </div>
+              <div class="step-item">
+                <button class="step-button">
+                  <p class="step-number">4</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">step</span>
+              </div>
+            </div>
+            <h4 class="group-title">Vertical</h4>
+            <div class="h-group gap-4">
+              <div class="step step-vertical" style="height:350px">
+                <div class="step-item is-step-item-complete">
+                  <button class="step-button">
+                    <p class="step-number">1</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">step</span>
+                </div>
+                <div class="step-item is-step-item-complete">
+                  <button class="step-button">
+                    <p class="step-number">2</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">step</span>
+                </div>
+                <div class="step-item is-step-item-selected">
+                  <button class="step-button">
+                    <p class="step-number">3</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">stepstep</span>
+                </div>
+                <div class="step-item">
+                  <button class="step-button">
+                    <p class="step-number">4</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">step</span>
+                </div>
+              </div>
+              <div class="step step-vertical step-dotted" style="height:350px">
+                <div class="step-item is-step-item-complete">
+                  <button class="step-button">
+                    <p class="step-number">1</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">step</span>
+                </div>
+                <div class="step-item is-step-item-complete">
+                  <button class="step-button">
+                    <p class="step-number">2</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">step</span>
+                </div>
+                <div class="step-item is-step-item-selected">
+                  <button class="step-button">
+                    <p class="step-number">3</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">stepstep</span>
+                </div>
+                <div class="step-item">
+                  <button class="step-button">
+                    <p class="step-number">4</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">step</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">Breadcrumb</h2>
       <article class="mb-10">
         <div class="flex flex-col align-center gap-5">
