@@ -53,6 +53,7 @@
     height: 28px;
 
     .mx-btn-text {
+      padding: 0;
       color: $neutral-500;
 
       &:hover {
@@ -64,11 +65,6 @@
         margin-left: $spacing-4;
       }
     }
-  }
-
-
-  .mx-btn-text {
-    padding: 0;
   }
 
   .mx-btn-icon {
@@ -96,7 +92,8 @@
     }
   }
 
-  .mx-icon-double-left:before, .mx-icon-left:before {
+  .mx-icon-double-left:before,
+  .mx-icon-left:before {
     left: 12px;
   }
 
