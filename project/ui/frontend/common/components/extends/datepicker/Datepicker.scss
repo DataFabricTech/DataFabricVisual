@@ -38,4 +38,170 @@
 }
 
 
+.mx-datepicker-main.mx-datepicker-popup {
+  @include font-family('pretandard');
+  @include box-shadow('md');
 
+  .mx-btn-current-year,
+  .mx-btn-current-month,
+  .mx-calendar-header-label {
+    font-weight: 600;
+  }
+
+  .mx-calendar-header-label {
+    color: $neutral-500;
+    height: 28px;
+
+    .mx-btn-text {
+      color: $neutral-500;
+
+      &:hover {
+        color: $neutral-500;
+        text-decoration: underline;
+      }
+
+      &:not(:first-child) {
+        margin-left: $spacing-4;
+      }
+    }
+  }
+
+
+  .mx-btn-text {
+    padding: 0;
+  }
+
+  .mx-btn-icon {
+    &-double-left,
+    &-double-right,
+    &-left,
+    &-right {
+      @include flex;
+      height: 28px;
+      width: 28px;
+      margin-top: 3px;
+
+      &:hover:not(:disabled) {
+        background: $neutral-100;
+      }
+
+      &:active:not(:disabled) {
+        background: $neutral-300;
+      }
+
+      & > i {
+        width: 100%;
+        color: $neutral-500;
+      }
+    }
+  }
+
+  .mx-icon-double-left:before, .mx-icon-left:before {
+    left: 12px;
+  }
+
+  .mx-icon-right:before {
+    left: 8px;
+  }
+
+  .mx-table-date {
+    th {
+      font-weight: 600;
+      color: $neutral-500;
+    }
+
+    .cell.not-current-month {
+      color: $neutral-200;
+
+      &:hover {
+        background: $neutral-0;
+      }
+
+      &.active,
+      &.in-range {
+        background: $neutral-100;
+        color: $neutral-200;
+      }
+    }
+  }
+
+  .mx-calendar-content .cell {
+    color: $neutral-500;
+
+    &:hover {
+      background: $neutral-100;
+    }
+
+    &.active {
+      background: $secondary-500;
+      color: $neutral-0;
+    }
+
+    &.in-range,
+    &.hover-in-range {
+      background: $secondary-100;
+      color: $secondary-700;
+    }
+
+    &.disabled {
+      background: $neutral-100;
+      color: $neutral-200;
+    }
+  }
+
+  .mx-datepicker-footer {
+    border-top: 1px solid $neutral-200;
+  }
+
+  .mx-datepicker-btn-confirm {
+    border-color: $secondary-500;
+    color: $secondary-500;
+
+    &:hover {
+      background: $secondary-100;
+      color: $secondary-500;
+      border-color: transparent;
+    }
+
+    &:active {
+      border-color: $secondary-500;
+    }
+  }
+
+  .mx-btn-text {
+    @include font-size('14');
+    color: $neutral-500;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+      color: $neutral-500;
+    }
+
+    &:active {
+      color: $neutral-700;
+    }
+  }
+
+  .mx-time-content {
+    height: 230px;
+  }
+
+  .mx-time-column .mx-time-item {
+    color: $neutral-500;
+
+    &:hover {
+      background: $neutral-100;
+    }
+
+    &.active {
+      color: $secondary-500;
+      font-weight: 400;
+    }
+
+    &.disabled {
+      background: $neutral-100;
+      color: $neutral-200;
+    }
+  }
+}
