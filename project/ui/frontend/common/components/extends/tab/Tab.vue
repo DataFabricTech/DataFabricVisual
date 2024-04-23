@@ -1,19 +1,25 @@
 <template>
-  <div class="flex-container">
-    <div
-      v-for="(item, index) in data"
-      @click="move(index)"
-      class="flex-tab"
-      :class="{ 'disabled-tab': isDisabled(item[valueKey]) }"
-    >
-      <div>
-        <span :class="{ 'current-tab': changeCurrentTabClass(index) }">
+  <div class="tab">
+    <ul class="tab-list">
+      <li
+        class="tab-item"
+        v-for="(item, index) in data"
+        @click="move(index)"
+        :class="{
+    'is-tab-item-disabled': isDisabled(item[valueKey]),
+    'is-tab-item-selected': changeCurrentTabClass(index)
+  }"
+      >
+        <button class="tab-button">
           {{ item[labelKey] }}
-        </span>
-      </div>
+        </button>
+      </li>
+    </ul>
+    <div class="tab-contents">
+      <slot :name="data[currentIndex][valueKey]"></slot>
     </div>
   </div>
-  <slot :name="data[currentIndex][valueKey]"></slot>
+
 </template>
 
 <script setup lang="ts">
@@ -44,27 +50,4 @@ const { data, labelKey, valueKey, currentIndex, move, isDisabled, changeCurrentT
 </script>
 
 <style lang="css">
-.flex-container {
-  display: flex;
-  /* Add your flex container styles here */
-}
-
-.flex-tab {
-  cursor: pointer;
-  padding: 30px;
-  border: 1px solid #ccc;
-  background-color: #f5f5f5;
-  /* Add your tab styles here */
-}
-
-.current-tab {
-  color: deepskyblue;
-  border: 5px;
-}
-
-.disabled-tab {
-  pointer-events: none;
-  opacity: 0.5; /* 비활성화된 탭의 투명도를 조절할 수 있습니다. */
-  /* 여기에 추가적인 스타일을 적용할 수 있습니다. */
-}
 </style>

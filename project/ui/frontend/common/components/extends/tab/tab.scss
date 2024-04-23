@@ -1,0 +1,67 @@
+.tab {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &-list {
+    display: flex;
+    height: 52px;
+    width: 100%;
+  }
+
+  &-item {
+    flex: 1;
+    border: 1px solid $neutral-200;
+    border-bottom-color: $primary-500;
+    background: $neutral-100;
+
+    &:not(:last-child) {
+      border-right-width: 0;
+    }
+
+    &.is-tab-item-selected {
+      background: $neutral-0;
+      border-right-width: 1px;
+      border-color: $primary-500;
+      border-bottom: transparent;
+
+      .tab-button {
+        color: $primary-500;
+
+        &:active {
+          background: $primary-100;
+        }
+      }
+    }
+
+    &.is-tab-item-disabled {
+      background: $neutral-100;
+
+      .tab-button {
+        color: $neutral-200;
+
+        &:active {
+          background: $neutral-100;
+        }
+      }
+    }
+  }
+
+  &-button {
+    @include font-size('16');
+    @include flex;
+    width: 100%;
+    height: 100%;
+    color: $neutral-400;
+    font-weight: 600;
+
+    &:active {
+      background: $neutral-200;
+    }
+  }
+
+  //추후 수정 예정
+  &-contents {
+    padding: $spacing-16;
+  }
+}

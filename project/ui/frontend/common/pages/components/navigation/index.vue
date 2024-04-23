@@ -51,7 +51,7 @@
 
     <h1>Tab Example</h1>
     <h3>type: string || Emit : {{ currentTab }}</h3>
-    <Tab
+    <Tab style="width:450px"
       :data="tabOptions"
       :label-key="'label'"
       :value-key="'value'"
