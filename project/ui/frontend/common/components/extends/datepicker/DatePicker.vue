@@ -129,8 +129,6 @@ const {
       margin-left: 4px;
     }
   }
-
-
 }
 
 
@@ -168,9 +166,11 @@ const {
   }
 
 }
-.mx-icon-double-left:before,.mx-icon-left:before {
+
+.mx-icon-double-left:before, .mx-icon-left:before {
   left: 12px;
 }
+
 .mx-icon-right:before {
   left: 8px;
 }
@@ -180,19 +180,83 @@ const {
     font-weight: 600;
     color: #525866;
   }
+
   .cell.not-current-month {
     color: #DBE0E8;
+
+    &:hover {
+      background: #fff;
+    }
+
+    &.active,
+    &.in-range {
+      background: #F4F6F9;
+      color: #DBE0E8;
+    }
   }
 }
 
-.mx-calendar-content .cell:hover{
-  background: #F4F6F9;
+.mx-calendar-content .cell {
+  color: #525866;
+
+  &:hover {
+    background: #F4F6F9;
+  }
+
+  &.active {
+    background: #188AB0;
+    color: #fff;
+  }
+
+  &.in-range {
+    background: #E4F6FB;
+    color: #115F79;
+  }
 }
 
-.mx-calendar-content .cell.active {
-  background: #188AB0;
-  color: #fff;
+.mx-datepicker-footer {
+  border-top: 1px solid #DBE0E8;
 }
 
+.mx-datepicker-btn-confirm {
+  border-color: #188AB0;
+  color: #188AB0;
+
+  &:hover {
+    background: #E4F6FB;
+    color: #188AB0;
+    border-color: transparent;
+  }
+
+  &:active {
+    border-color: #188AB0;
+  }
+}
+
+.mx-btn-text {
+  color: #525866;
+  font-size: 14px;
+  font-weight: 500;
+  &:hover {
+    text-decoration: underline;
+    color: #525866;
+  }
+  &:active {
+    color: #2B3440;
+  }
+}
+
+.mx-time-column .mx-time-item {
+  color: #525866;
+
+  &:hover {
+    background: #F4F6F9;
+  }
+
+  &.active {
+    color: #188AB0;
+    font-weight: 400;
+  }
+}
 
 </style>
