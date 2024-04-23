@@ -40,7 +40,6 @@
 <script lang="ts" setup>
 import DatePicker from "vue-datepicker-next";
 import "vue-datepicker-next/index.css";
-import "../../../assets/css/main.scss";
 import { DatepickerComposition } from "./DatepickerComposition";
 import { DatepickerProps } from "./DatepickerProps";
 
