@@ -37,7 +37,7 @@
   }
 }
 
-
+//datepicker popup 스타일
 .mx-datepicker-main.mx-datepicker-popup {
   @include font-family('pretandard');
   @include box-shadow('md');
@@ -92,13 +92,32 @@
     }
   }
 
-  .mx-icon-double-left:before,
+  .mx-icon-double-left {
+    &:before {
+      left: 9px;
+    }
+
+    &:after {
+      left: -6px;
+    }
+  }
+
+  .mx-icon-double-right {
+    &:before {
+      left: 6px;
+    }
+
+    &:after {
+      left: -9px;
+    }
+  }
+
   .mx-icon-left:before {
-    left: 12px;
+    left: 7px;
   }
 
   .mx-icon-right:before {
-    left: 8px;
+    left: 4px;
   }
 
   .mx-table-date {
@@ -124,6 +143,10 @@
 
   .mx-calendar-content .cell {
     color: $neutral-500;
+
+    &.today {
+      color: $secondary-500;
+    }
 
     &:hover {
       background: $neutral-100;
