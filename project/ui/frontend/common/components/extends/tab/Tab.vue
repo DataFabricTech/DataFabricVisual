@@ -11,7 +11,7 @@
   }"
       >
         <button class="tab-button">
-          {{ item[labelKey] }}
+          <p class="tab-button-text">{{ item[labelKey] }}</p>
         </button>
       </li>
     </ul>

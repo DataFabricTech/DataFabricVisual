@@ -1,31 +1,29 @@
 .tab {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  flex-grow: 1;
 
   &-list {
     display: flex;
     height: 52px;
-    width: 100%;
   }
 
   &-item {
     flex: 1;
     border: 1px solid $neutral-200;
     border-bottom-color: $primary-500;
-    background: $neutral-100;
 
     &:not(:last-child) {
       border-right-width: 0;
     }
 
     &.is-tab-item-selected {
-      background: $neutral-0;
       border-right-width: 1px;
       border-color: $primary-500;
       border-bottom: transparent;
 
       .tab-button {
+        background: $neutral-0;
         color: $primary-500;
 
         &:active {
@@ -35,9 +33,9 @@
     }
 
     &.is-tab-item-disabled {
-      background: $neutral-100;
-
       .tab-button {
+        cursor: not-allowed;
+        background: $neutral-100;
         color: $neutral-200;
 
         &:active {
@@ -48,10 +46,13 @@
   }
 
   &-button {
+    @include ellipsis;
     @include font-size('16');
     @include flex;
     width: 100%;
     height: 100%;
+    padding: 0 $spacing-48;
+    background: $neutral-100;
     color: $neutral-400;
     font-weight: 600;
 
