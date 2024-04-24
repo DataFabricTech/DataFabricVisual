@@ -9,7 +9,7 @@
   }
 
   &-item {
-    flex: 1;
+    flex: 1 1 100%;
     border: 1px solid $neutral-200;
     border-bottom-color: $primary-500;
 
@@ -46,7 +46,6 @@
   }
 
   &-button {
-    @include ellipsis;
     @include font-size('16');
     @include flex;
     width: 100%;
@@ -54,10 +53,15 @@
     padding: 0 $spacing-48;
     background: $neutral-100;
     color: $neutral-400;
-    font-weight: 600;
 
     &:active {
       background: $neutral-200;
+    }
+
+    &-text {
+      @include ellipsis;
+      font-weight: 600;
+
     }
   }
 
