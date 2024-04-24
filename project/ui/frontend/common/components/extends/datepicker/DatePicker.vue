@@ -2,6 +2,7 @@
   <div>
     <ClientOnly>
       <DatePicker
+        class="datepicker"
         :clearable="clearable"
         :confirm="confirm"
         :confirm-text="confirmText"
