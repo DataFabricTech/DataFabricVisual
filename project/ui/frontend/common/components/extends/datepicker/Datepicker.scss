@@ -41,6 +41,7 @@
 .mx-datepicker-main.mx-datepicker-popup {
   @include font-family('pretandard');
   @include box-shadow('md');
+  margin-top: 6px;
 
   .mx-btn-current-year,
   .mx-btn-current-month,
