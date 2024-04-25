@@ -1,4 +1,77 @@
 // TODO: [퍼블리싱] 디자인 가이드 페이지 검토 필요 (뎁스 별 디자인..)
+.guide {
+  @include flex($vertical: flex-start);
+  position: relative;
+  height: 100vh;
+
+  &-container {
+    height: 100%;
+    margin: 0 auto;
+  }
+  &-lnb {
+    position: fixed;
+    left: 0;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    width: 230px;
+    height: 100%;
+    background: $primary-900;
+  }
+
+  .lnb-top-container {
+    padding: $spacing-32 0 $spacing-32 $spacing-24;
+  }
+
+  .lnb-logo-link {
+    @include font-size('24');
+    color: $neutral-0;
+
+    span:first-child {
+      font-weight: 600;
+    }
+
+    span:last-child {
+      margin-left: $spacing-4;
+    }
+  }
+  .lnb-bottom-container {
+    padding: $spacing-24;
+
+    .lnb-list + .lnb-list {
+      margin-top: $spacing-32;
+    }
+
+    .lnb-item {
+      &-title {
+        height: 32px;
+        color: $primary-100;
+        font-weight: 600;
+      }
+    }
+    .sub-item {
+
+      &-link {
+        display: flex;
+        align-items: center;
+        height: 28px;
+        width: 100%;
+        color: $neutral-0;
+
+        &:hover {
+          color: $primary-300;
+        }
+      }
+    }
+  }
+
+  &-main {
+    //height: 100%;
+    //overflow-y: auto;
+    padding:88px 40px 120px 200px;
+    width: 1236px;
+  }
+}
 .guide-section {
   padding: $spacing-64 $spacing-48;
 }
@@ -110,5 +183,11 @@
     &:hover {
       background: $secondary-100;
     }
+  }
+}
+
+@media only screen and (max-width: 1400px) {
+  .guide-main {
+    padding-left: 320px;
   }
 }
