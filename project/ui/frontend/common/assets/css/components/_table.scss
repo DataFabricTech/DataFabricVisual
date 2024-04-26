@@ -1,0 +1,21 @@
+table {
+  border: 1px solid $neutral-200;
+
+  caption {
+    @include caption-out;
+  }
+
+  th, td {
+    padding: $spacing-12;
+    border-right: 1px solid $neutral-200;
+    border-bottom: 1px solid $neutral-200;
+    color: $neutral-700;
+  }
+  th {
+    background-color: $neutral-100;
+    text-align: left;
+  }
+  td {
+    background-color: $neutral-0;
+  }
+}

@@ -39,7 +39,8 @@
   }
 
   &-link {
-    @include font-size('label-13');
+    font-size: 13px;
+    font-weight: 600;
     color: $neutral-500;
 
     &:hover {
