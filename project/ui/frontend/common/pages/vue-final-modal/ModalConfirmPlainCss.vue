@@ -1,61 +1,48 @@
 <script setup lang="ts">
-import {VueFinalModal} from 'vue-final-modal'
+import { VueFinalModal } from "vue-final-modal";
 
 defineProps<{
   title?: string
-}>()
+}>();
 
 const emit = defineEmits<{
-  (e: 'confirm'): void
-}>()
+  (e: "confirm"): void
+}>();
 </script>
 
 <template>
-  <VueFinalModal
-      class="confirm-modal"
-      content-class="confirm-modal-content"
+    <VueFinalModal
+      class="modal-fixed"
+      content-class="modal modal-padding-32"
       overlay-transition="vfm-fade"
       content-transition="vfm-fade"
-  >
-    <h1>{{ title }}</h1>
-    <slot/>
-    <button @click="emit('confirm')">
-      Confirm
-    </button>
-  </VueFinalModal>
+    >
+      <div class="modal-head">
+        <div class="modal-head-text">
+          <span class="modal-head-title">{{ title }}</span>
+          <span class="modal-head-subtitle">Sub title</span>
+        </div>
+        <button class="button link-button button-sm" type="button">
+          <span class="hidden-text">닫기</span>
+          <svg-icon class="button-icon" name="close"></svg-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <slot />
+      </div>
+      <div class="modal-foot">
+        <div class="modal-foot-group">
+          <button class="button button-ghost button-lg">
+            취소
+          </button>
+          <button class="button button-primary button-lg">
+            확인
+          </button>
+        </div>
+      </div>
+    </VueFinalModal>
 </template>
 
 <style>
-.confirm-modal {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
 
-.confirm-modal-content {
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  background: #fff;
-  border-radius: 0.5rem;
-}
-
-.confirm-modal-content > * + * {
-  margin: 0.5rem 0;
-}
-
-.confirm-modal-content h1 {
-  font-size: 1.375rem;
-}
-
-.confirm-modal-content button {
-  margin: 0.25rem 0 0 auto;
-  padding: 0 8px;
-  border: 1px solid;
-  border-radius: 0.5rem;
-}
-
-.dark .confirm-modal-content {
-  background: #000;
-}
 </style>

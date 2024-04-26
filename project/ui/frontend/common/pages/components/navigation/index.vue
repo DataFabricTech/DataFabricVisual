@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>Step Example</h1>
+    <h1>Step default</h1>
     <Step
       :data="stepOptions"
       :label-key="'label'"
@@ -23,7 +23,9 @@
         <div>스텝 4444</div>
       </template>
     </Step>
-    <Step
+    <h1>Step dotted</h1>
+    <!--  TODO: [개발] 작성중인 현재 페이지만 is-step-item-selected 클래스 추가돼야하고 완료된 스텝은 is-step-item-selected 스타일이 해제돼야함  -->
+    <Step class="step-dotted"
       :data="stepOptions2"
       :label-key="'label'"
       :value-key="'value'"
@@ -89,20 +91,20 @@ import { ref } from "vue";
  * STEP
  */
 const stepOptions = [
-  { label: "Step1", value: "Step1" },
-  { label: "Step2", value: "Step2" },
-  { label: "Step3", value: "Step3" },
-  { label: "Step4", value: "Step4" },
+  { label: "Step", value: "Step1" },
+  { label: "Step", value: "Step2" },
+  { label: "Step", value: "Step3" },
+  { label: "Step", value: "Step4" },
 ];
 const currentStep = ref(2);
 function changeStep(value: number) {
   currentStep.value = value;
 }
 const stepOptions2 = [
-  { label: "Step1", value: "Step1" },
-  { label: "Step2", value: "Step2" },
-  { label: "Step3", value: "Step3" },
-  { label: "Step4", value: "Step4" },
+  { label: "Step", value: "Step1" },
+  { label: "Step", value: "Step2" },
+  { label: "Step", value: "Step3" },
+  { label: "Step", value: "Step4" },
 ];
 const currentStep2 = ref();
 currentStep2.value = "Step1";

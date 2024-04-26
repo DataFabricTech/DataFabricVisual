@@ -1,10 +1,6 @@
 <template>
   <div>
-    <h1>
-      Vue Final Modal
-    </h1>
     <button @click="open">Open Modal</button>
-
     <ModalsContainer />
   </div>
 </template>
@@ -16,13 +12,13 @@ import ModalConfirmPlainCss from './ModalConfirmPlainCss.vue';
 const { open, close } = useModal({
   component: ModalConfirmPlainCss,
   attrs: {
-    title: 'Hello World!',
+    title: 'insert modal title here',
     onConfirm() {
       close()
     },
   },
   slots: {
-    default: '<p>The content of the modal</p>',
+    default: '<p>medium size modal</p>',
   },
 })
 </script>

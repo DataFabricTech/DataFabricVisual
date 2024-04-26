@@ -51,7 +51,8 @@
   transition: background-color 0.2s;
 
   &-link {
-    @include font-size('label-14');
+    @include font-size('13');
+    font-weight: 600;
     cursor: pointer;
   }
 
@@ -105,7 +106,7 @@
     padding: 0 $spacing-8;
 
     .tag-link {
-      @include font-size('label-12');
+      @include font-size('12');
     }
 
     .tag-delete-button {
