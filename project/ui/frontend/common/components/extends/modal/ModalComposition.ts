@@ -40,10 +40,12 @@ export function ModalComposition(props: ModalProps): ModalComposition {
       width: window.innerWidth || document.body.clientWidth,
       height: window.innerHeight || document.body.clientHeight
     };
+
     let maxHeight = documentSize.height;
     let maxWidth = documentSize.width;
     modalPosition.top = props.top ?? (documentSize.height! - props.height) / 2;
     modalPosition.left = props.left ?? (documentSize.width! - props.width) / 2;
+
     if (props.top) {
       maxHeight = documentSize.height! - props.height;
       if (props.top > maxHeight) {
@@ -54,6 +56,7 @@ export function ModalComposition(props: ModalProps): ModalComposition {
         modalPosition.top = props.top;
       }
     }
+
     if (props.left) {
       maxWidth = documentSize.width! - props.width;
       if (props.left < maxWidth) {
