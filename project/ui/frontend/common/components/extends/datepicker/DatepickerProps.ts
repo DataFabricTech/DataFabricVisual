@@ -1,5 +1,4 @@
 export interface DatepickerProps {
-  modelValue: string[] | string;
   type?: "date" | "datetime" | "year" | "month" | "time" | "week";
   range?: boolean;
   format?: string;
@@ -21,4 +20,8 @@ export interface DatepickerProps {
   minuteOptions?: number[];
   secondOptions?: number[];
   showTimePanel?: boolean;
+}
+
+export interface DatePickerPropsWithModelValue extends DatepickerProps {
+  modelValue: string[] | string;
 }

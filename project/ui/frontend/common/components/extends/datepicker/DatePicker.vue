@@ -2,7 +2,6 @@
   <div>
     <ClientOnly>
       <DatePicker
-        class="datepicker"
         :clearable="clearable"
         :confirm="confirm"
         :confirm-text="confirmText"
@@ -23,8 +22,9 @@
         :show-time-panel="dateTimePanel"
         :title-format="titleFormat"
         :type="type"
-        :value="modelValue"
+        :value="props.modelValue"
         :value-type="valueType"
+        class="datepicker"
         @update:value="emit('update:modelValue', $event)"
       >
         <template v-if="isPanelVisible()" #footer>
@@ -41,10 +41,9 @@
 import DatePicker from "vue-datepicker-next";
 import "vue-datepicker-next/index.css";
 import { DatepickerComposition } from "./DatepickerComposition";
-import { DatepickerProps } from "./DatepickerProps";
+import { DatePickerPropsWithModelValue } from "./DatepickerProps";
 
-const dayjs = useDayjs();
-const props = withDefaults(defineProps<DatepickerProps>(), {
+const props = withDefaults(defineProps<DatePickerPropsWithModelValue>(), {
   modelValue: "",
   type: "date",
   range: false,
