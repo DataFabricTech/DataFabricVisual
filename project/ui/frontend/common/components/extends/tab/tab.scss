@@ -20,7 +20,7 @@
     &.is-tab-item-selected {
       border-right-width: 1px;
       border-color: $primary-500;
-      border-bottom: transparent;
+      border-bottom-color: transparent;
 
       .tab-button {
         background: $neutral-0;
