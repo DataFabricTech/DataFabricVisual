@@ -66,34 +66,70 @@
   }
 
   &-main {
-    //height: 100%;
-    //overflow-y: auto;
     padding:88px 40px 120px 200px;
-    width: 1236px;
+    width: 1400px;
   }
 }
 .guide-section {
-  padding: $spacing-64 $spacing-48;
+  width: 100%;
+  padding: 0 $spacing-48 $spacing-64 ;
+  margin: 0 auto;
 }
 
 .section-title {
-  font-size: 24px;
+  margin-bottom: $spacing-48;
+  line-height: 100%;
+  font-size: 40px;
   font-weight: 700;
-  margin-bottom: $spacing-24;
   color: $primary-500;
   text-align: start;
 }
 
+.section-type {
+  color: $neutral-400;
+  margin-bottom: $spacing-4;
+}
+
+.section-summary {
+  color: $neutral-800;
+  font-size: 18px;
+  line-height: 1.8;
+}
+
 .section-subtitle {
-  font-size: 20px;
+  color: $neutral-800;
+  font-size: 24px;
   font-weight: 700;
   margin-bottom: $spacing-16;
   font-size: 20px;
+  margin: $spacing-64 0 $spacing-32;
+
 }
 
 .group-title {
-  font-size: 16px;
+  font-size: 18px;
+  color: $neutral-800;
   font-weight: 600;
+  margin-bottom: $spacing-12;
+}
+
+.group-description {
+  width: 33.33%;
+  color: $neutral-500;
+}
+
+.group-summary {
+  line-height:1.8;
+}
+
+.section-figure {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-12;
+  flex-grow: 1;
+  border: 1px dotted $neutral-200;
+  padding: 32px;
+  border-radius: $border-radius-8;
 }
 
 .test {

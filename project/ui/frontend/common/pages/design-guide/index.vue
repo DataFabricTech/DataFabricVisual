@@ -2,17 +2,14 @@
   <div id="app" class="guide">
     <guide-lnb></guide-lnb>
     <div class="guide-container">
-      <main class="guide-main">
-        <router-view></router-view>
-<!--        <guide-button></guide-button>-->
-      </main>
+      <guide-main></guide-main>
     </div>
   </div>
 </template>
 
 <script setup>
-import GuideLnb from "../design-guide/pages/guide-lnb/guide-lnb.vue";
-// import GuideButton from "./pages/button/guide-button.vue"
+import GuideLnb from "../design-guide/layouts/guide-lnb.vue";
+import GuideMain from "../design-guide/layouts/guide-main.vue"
 
 </script>
 

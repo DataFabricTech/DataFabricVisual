@@ -37,10 +37,10 @@
               <a class="sub-item-link" href="#">Badge</a>
             </li>
             <li class="sub-item">
-              <a class="sub-item-link" href="#">Breadcrumbs</a>
+              <a class="sub-item-link" href="#guide-breadcrumb">Breadcrumb</a>
             </li>
             <li class="sub-item">
-              <router-link to="/guide-button" class="sub-item-link">Button</router-link>
+              <a href="#guide-button" class="sub-item-link">Button</a>
             </li>
             <li class="sub-item">
               <a class="sub-item-link" href="#">Button group</a>
@@ -55,10 +55,9 @@
   </nav>
 </template>
 
-<script>
-export default {
-  name: "guide-lnb"
-};
+
+<script setup>
+
 </script>
 
 <style scoped>
