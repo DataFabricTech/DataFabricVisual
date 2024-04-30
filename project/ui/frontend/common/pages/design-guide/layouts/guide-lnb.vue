@@ -34,7 +34,7 @@
               <a class="sub-item-link" href="#">Alert</a>
             </li>
             <li class="sub-item">
-              <a class="sub-item-link" href="#">Badge</a>
+              <a class="sub-item-link" href="#guide-badge">Badge</a>
             </li>
             <li class="sub-item">
               <a class="sub-item-link" href="#guide-breadcrumb">Breadcrumb</a>
@@ -43,10 +43,43 @@
               <a href="#guide-button" class="sub-item-link">Button</a>
             </li>
             <li class="sub-item">
-              <a class="sub-item-link" href="#">Button group</a>
+              <a class="sub-item-link" href="#guide-button-group">Button group</a>
             </li>
             <li class="sub-item">
-              <a class="sub-item-link" href="#">Checkbox</a>
+              <a class="sub-item-link" href="#guide-checkbox">Checkbox</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-datepicker">Datepicker</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-dropdown">Dropdown</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-form">Form</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-menu">Menu</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-loading">Loading</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-modal">Modal</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-notification">Notification</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-pagination">Pagination</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-radio">Radio</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-select">Select</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-table">Table</a>
             </li>
           </ul>
         </li>

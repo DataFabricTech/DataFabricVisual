@@ -36,7 +36,25 @@
     }
   }
   .lnb-bottom-container {
+    overflow-y: auto;
     padding: $spacing-24;
+
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background: rgb(255,255,255,35%);
+
+      &:hover {
+        background: rgb(255,255,255,40%);
+      }
+    }
 
     .lnb-list + .lnb-list {
       margin-top: $spacing-32;
@@ -45,7 +63,7 @@
     .lnb-item {
       &-title {
         height: 32px;
-        color: $primary-100;
+        color: $secondary-300;
         font-weight: 600;
       }
     }
@@ -54,7 +72,7 @@
       &-link {
         display: flex;
         align-items: center;
-        height: 28px;
+        height: 32px;
         width: 100%;
         color: $neutral-0;
 
@@ -72,7 +90,7 @@
 }
 .guide-section {
   width: 100%;
-  padding: 0 $spacing-48 $spacing-64 ;
+  padding: 0 $spacing-48 96px ;
   margin: 0 auto;
 }
 
@@ -125,7 +143,7 @@
 .section-figure {
   display: flex;
   flex-direction: column;
-  gap: $spacing-12;
+  gap: $spacing-16;
   flex-grow: 1;
   border: 1px dotted $neutral-200;
   padding: 32px;

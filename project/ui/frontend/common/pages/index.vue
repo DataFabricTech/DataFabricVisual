@@ -32,7 +32,7 @@
       <h2 class="section-title">Button</h2>
       <article class="mb-10">
         <h3 class="section-subtitle">Basic</h3>
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Primary</h4>
             <div class="h-group gap-4">
@@ -328,7 +328,7 @@
       </article>
       <article class="mb-10">
         <h3 class="section-subtitle">Icon</h3>
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Primary</h4>
             <div class="h-group gap-4">
@@ -725,7 +725,7 @@
       </article>
       <article class="mb-10">
         <h3 class="section-subtitle">Link</h3>
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
             <div class="h-group gap-4">
@@ -856,7 +856,7 @@
       <h2 class="section-title">Notification</h2>
       <article class="mb-10">
         <h3 class="section-subtitle">Notification</h3>
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
             <div class="h-group gap-4">
@@ -918,7 +918,7 @@
       </article>
       <article class="mb-10">
         <h3 class="section-subtitle">Notification Box</h3>
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
             <Notification></Notification>
@@ -943,7 +943,7 @@
       </article>
       <article class="mb-10">
         <h3 class="section-subtitle">Notification Box Extends</h3>
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
             <Notification :isExtends="true" class="w-96"></Notification>
@@ -971,7 +971,7 @@
       <h2 class="section-title">Checkbox</h2>
       <article class="mb-10">
         <h3 class="section-subtitle">Basic</h3>
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <div class="element-group">
               <div class="checkbox">
@@ -1014,7 +1014,7 @@
       </article>
       <article class="mb-10">
         <h3 class="section-subtitle">Switch</h3>
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <div class="h-group gap-4">
               <div class="switch">
@@ -1044,7 +1044,7 @@
       </article>
       <article class="mb-10">
         <h3 class="section-subtitle">Button-Group</h3>
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Basic</h4>
             <div class="h-group gap-4">
@@ -1081,7 +1081,7 @@
       <h2 class="section-title">Radio</h2>
       <article class="mb-10">
         <h3 class="section-subtitle">Basic</h3>
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <div class="element-group">
               <div class="radio">
@@ -1124,7 +1124,7 @@
       </article>
       <article class="mb-10">
         <h3 class="section-subtitle">Toggle</h3>
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Basic</h4>
             <div class="h-group gap-4">
@@ -1219,7 +1219,7 @@
       </article>
       <article class="mb-10">
         <h3 class="section-subtitle">Button-Group</h3>
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Basic</h4>
             <div class="h-group gap-4">
@@ -1280,13 +1280,13 @@
       <h2 class="section-title">Pagination</h2>
       <article class="mb-10">
         <h3 class="section-subtitle">Basic Pagination</h3>
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <Pagination :totalCount="60" :perPage="10" :currentPageNumber="4" @change="checkCurrentPage"></Pagination>
         </div>
       </article>
       <article class="mb-10">
         <h3 class="section-subtitle">Numerous Pagination</h3>
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <Pagination :totalCount="100" :perPage="10" :currentPageNumber="1" @change="checkCurrentPage"></Pagination>
         </div>
       </article>
@@ -1294,7 +1294,7 @@
     <section class="guide-section">
       <h2 class="section-title">Badge</h2>
       <article class="mb-10">
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">filled</h4>
             <div class="h-group gap-4">
@@ -1475,7 +1475,7 @@
     <section class="guide-section">
       <h2 class="section-title">Tag</h2>
       <article class="mb-10">
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Primary</h4>
             <div class="h-group gap-4">
@@ -1597,7 +1597,7 @@
     <section class="guide-section">
       <h2 class="section-title">Step</h2>
       <article class="mb-10">
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">default</h4>
             <div class="step" style="width:450px">
@@ -1731,7 +1731,7 @@
     <section class="guide-section">
       <h2 class="section-title">Breadcrumb</h2>
       <article class="mb-10">
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <Breadcrumb></Breadcrumb>
             <Breadcrumb class="breadcrumb-slash"></Breadcrumb>
@@ -1742,7 +1742,7 @@
     <section class="guide-section">
       <h2 class="section-title">Text Input</h2>
       <article class="mb-10">
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">default</h4>
             <div class="flex gap-6 items-start">
@@ -1938,7 +1938,7 @@
     <section class="guide-section">
       <h2 class="section-title">Textarea</h2>
       <article class="mb-10">
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3 w-72">
             <h4 class="group-title">default</h4>
             <textarea class="textarea" cols="33"></textarea>
@@ -1953,7 +1953,7 @@
     <section class="guide-section">
       <h2 class="section-title">Select</h2>
       <article class="mb-10">
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">default</h4>
             <div class="flex gap-6 items-start">
@@ -1995,7 +1995,7 @@
     <section class="guide-section">
       <h2 class="section-title">Dropdown</h2>
       <article class="mb-10">
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group">
             <button class="button button-lg button-neutral-ghost">
               <svg-icon class="button-icon" name="kebab-menu"></svg-icon>
@@ -2111,7 +2111,7 @@
     <section class="guide-section">
       <h2 class="section-title">Menu</h2>
       <article class="mb-10">
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-6">
             <div class="menu menu-lg">
               <div class="menu-search">
@@ -2274,7 +2274,7 @@
     <section class="guide-section">
       <h2 class="section-title">Modal</h2>
       <article class="mb-10">
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-6">
             <h4 class="group-title">default</h4>
             <div class="modal modal-padding-16" style="width:350px">
@@ -2816,7 +2816,7 @@
     <section class="guide-section">
       <h2 class="section-title">개발 UI</h2>
       <article class="mb-10">
-        <div class="flex flex-col align-center gap-5">
+        <div class="flex flex-col gap-5">
           <div class="v-group gap-3 w-72">
             <h4 class="group-title">Select</h4>
             <nuxt-link :to="'/selectbox'" class="button button-primary button-lg">

@@ -3,15 +3,15 @@
     <p class="section-type">Component</p>
     <h2 class="section-title">Button</h2>
     <p class="section-summary">
-      버튼은 사용자가 클릭하거나 터치 할 때 발생할 동작을 나타내며 사용자의 성공적 작업 수행을 위해 Button에 따른 시각적 계층 구조에 차이를 둬야 합니다. 계층 구조에 따른 스타일 가이드를 유의하며,
+      버튼은 사용자가 클릭하거나 터치 할 때 발생할 동작을 나타내며 사용자의 성공적 작업 수행을 위해 버튼에 따른 시각적 계층 구조에 차이를 둬야 합니다. 계층 구조에 따른 스타일 가이드를 유의하며,
       임의 스타일 추가 및 사용은 제한합니다.
     </p>
     <article class="mb-10">
       <h3 class="section-subtitle">Appearance</h3>
-      <div class="flex flex-col align-center">
-        <div class="flex gap-8 mb-12">
+      <div class="flex flex-col">
+        <div class="flex gap-8 mb-14">
           <figure class="section-figure">
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-primary button-lg" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -32,13 +32,8 @@
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
-              <button class="button button-primary-ghost button-lg" disabled type="button">
-                <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-                <span class="button-title">Disabled</span>
-                <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
-              </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-primary" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -59,13 +54,9 @@
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
-              <button class="button button-primary-ghost" disabled type="button">
-                <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-                <span class="button-title">Disabled</span>
-                <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
-              </button>
+
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-primary button-sm" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -86,11 +77,6 @@
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
-              <button class="button button-primary-ghost button-sm" disabled type="button">
-                <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-                <span class="button-title">Disabled</span>
-                <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
-              </button>
             </div>
           </figure>
           <div class="group-description">
@@ -101,9 +87,9 @@
             </p>
           </div>
         </div>
-        <div class="flex gap-8 mb-12 ">
+        <div class="flex gap-8 mb-14">
           <figure class="section-figure">
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-secondary button-lg" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -125,7 +111,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-secondary" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -147,7 +133,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-secondary button-sm" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -179,9 +165,9 @@
           </div>
         </div>
 
-        <div class="flex gap-8 mb-12 ">
+        <div class="flex gap-8 mb-14">
           <figure class="section-figure">
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-error button-lg" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -203,7 +189,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-error" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -225,7 +211,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-error button-sm" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -255,9 +241,9 @@
             </p>
           </div>
         </div>
-        <div class="flex gap-8 mb-12 ">
+        <div class="flex gap-8 mb-14 ">
           <figure class="section-figure">
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-neutral button-lg" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -279,7 +265,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-neutral" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -301,7 +287,7 @@
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-neutral button-sm" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -336,10 +322,10 @@
     </article>
     <article class="mb-10">
       <h3 class="section-subtitle">Only Icon</h3>
-      <div class="flex flex-col align-center">
+      <div class="flex flex-col">
         <div class="flex gap-8 mb-14">
           <figure class="section-figure">
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-primary button-xl" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -356,10 +342,7 @@
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
-              <button class="button button-primary-ghost button-xl" disabled type="button">
-                <span class="hidden-text">휴지통으로 이동</span>
-                <svg-icon class="button-icon" name="trash"></svg-icon>
-              </button>
+
               <button class="button button-secondary button-xl" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -377,7 +360,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-primary button-lg" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -394,10 +377,7 @@
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
-              <button class="button button-primary-ghost button-lg" disabled type="button">
-                <span class="hidden-text">휴지통으로 이동</span>
-                <svg-icon class="button-icon" name="trash"></svg-icon>
-              </button>
+
               <button class="button button-secondary button-lg" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -415,7 +395,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-primary" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -432,10 +412,7 @@
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
-              <button class="button button-primary-ghost" disabled type="button">
-                <span class="hidden-text">휴지통으로 이동</span>
-                <svg-icon class="button-icon" name="trash"></svg-icon>
-              </button>
+
               <button class="button button-secondary" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -453,7 +430,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-primary button-sm" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -470,10 +447,7 @@
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
-              <button class="button button-primary-ghost button-sm" disabled type="button">
-                <span class="hidden-text">휴지통으로 이동</span>
-                <svg-icon class="button-icon" name="trash"></svg-icon>
-              </button>
+
               <button class="button button-secondary button-sm" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -491,7 +465,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-primary button-xs" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -508,10 +482,7 @@
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
-              <button class="button button-primary-ghost button-xs" disabled type="button">
-                <span class="hidden-text">휴지통으로 이동</span>
-                <svg-icon class="button-icon" name="trash"></svg-icon>
-              </button>
+
               <button class="button button-secondary button-xs" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -531,7 +502,7 @@
             </div>
 
 
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-error button-xl" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -565,7 +536,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-error button-lg" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -599,7 +570,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-error" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -633,7 +604,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-error button-sm" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -667,7 +638,7 @@
                 <svg-icon class="button-icon" name="trash"></svg-icon>
               </button>
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="button button-error button-xs" type="button">
                 <span class="hidden-text">휴지통으로 이동</span>
                 <svg-icon class="button-icon" name="trash"></svg-icon>
@@ -712,10 +683,10 @@
     </article>
     <article class="mb-10">
       <h3 class="section-subtitle">Link</h3>
-      <div class="flex flex-col align-center">
+      <div class="flex flex-col">
         <div class="flex gap-8 mb-14">
           <figure class="section-figure">
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="link-button" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -736,13 +707,9 @@
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
-              <button class="link-button link-button-error" disabled type="button">
-                <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-                <span class="button-title">Disabled</span>
-                <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
-              </button>
+
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="link-button link-button-sm" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -763,11 +730,6 @@
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
-              <button class="link-button link-button-error link-button-sm" disabled type="button">
-                <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-                <span class="button-title">Disabled</span>
-                <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
-              </button>
             </div>
           </figure>
           <div class="group-description">
@@ -779,7 +741,7 @@
         </div>
         <div class="flex gap-8 mb-14">
           <figure class="section-figure">
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="link-button link-button-underline" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -800,13 +762,9 @@
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
-              <button class="link-button link-button-error link-button-underline" disabled type="button">
-                <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-                <span class="button-title">Disabled</span>
-                <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
-              </button>
+
             </div>
-            <div class="flex align-center justify-center gap-4">
+            <div class="flex justify-center gap-4">
               <button class="link-button link-button-sm link-button-underline" type="button">
                 <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
                 <span class="button-title">Button</span>
@@ -827,11 +785,6 @@
                 <span class="button-title">Button</span>
                 <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
               </button>
-              <button class="link-button link-button-error link-button-sm link-button-underline" disabled type="button">
-                <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
-                <span class="button-title">Disabled</span>
-                <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
-              </button>
             </div>
           </figure>
           <div class="group-description">
@@ -843,6 +796,43 @@
         </div>
       </div>
     </article>
+    <article class="mb-10">
+      <h3 class="section-subtitle">Status</h3>
+      <div class="flex flex-col">
+        <div class="flex gap-8 mb-14">
+          <figure class="section-figure">
+            <div class="flex justify-center gap-4">
+              <button class="button button-primary-ghost button-lg" disabled type="button">
+                <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
+                <span class="button-title">Disabled</span>
+                <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
+              </button>
+              <button class="button button-primary-ghost button-xl" disabled type="button">
+                <span class="hidden-text">휴지통으로 이동</span>
+                <svg-icon class="button-icon" name="trash"></svg-icon>
+              </button>
+              <button class="link-button link-button-error" disabled type="button">
+                <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
+                <span class="button-title">Disabled</span>
+                <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
+              </button>
+              <button class="link-button link-button-error link-button-underline" disabled type="button">
+                <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
+                <span class="button-title">Disabled</span>
+                <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
+              </button>
+            </div>
+          </figure>
+          <div class="group-description">
+            <h4 class="group-title">Disabled</h4>
+            <p class="group-summary">
+              사용자는 버튼을 선택할 수 없는 상태입니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </article>
+
   </section>
 </template>
 

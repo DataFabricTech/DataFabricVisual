@@ -6,9 +6,9 @@
       브레드크럼은 사이트나 앱에서 사용자의 위치를 보여주는데 사용되는 네비게이션 시스템입니다.
     </p>
     <article class="mb-10">
-      <h3 class="section-subtitle">Default</h3>
-      <div class="flex flex-col align-center">
-        <div class="flex gap-8 mb-12">
+      <h3 class="section-subtitle">Basic</h3>
+      <div class="flex flex-col">
+        <div class="flex gap-8 mb-14">
           <figure class="section-figure items-center">
             <Breadcrumb></Breadcrumb>
           </figure>
@@ -22,8 +22,8 @@
     </article>
     <article class="mb-10">
       <h3 class="section-subtitle">Slash</h3>
-      <div class="flex flex-col align-center">
-        <div class="flex gap-8 mb-12">
+      <div class="flex flex-col">
+        <div class="flex gap-8 mb-14">
           <figure class="section-figure items-center">
             <Breadcrumb class="breadcrumb-slash"></Breadcrumb>
           </figure>
