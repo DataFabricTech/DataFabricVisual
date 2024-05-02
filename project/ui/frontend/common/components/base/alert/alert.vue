@@ -9,7 +9,7 @@
     </div>
     <div class="alert-foot">
       <div class="alert-foot-group">
-        <button class="button button-ghost button-lg">취소</button>
+        <button class="button button-neutral-ghost button-lg">취소</button>
         <!-- TODO: [개발] warning,error 유형은 .button-error로 출력 -->
         <button class="button button-primary button-lg">확인</button>
       </div>

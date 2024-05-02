@@ -8,6 +8,7 @@
     height: 100%;
     margin: 0 auto;
   }
+
   &-lnb {
     position: fixed;
     left: 0;
@@ -35,6 +36,7 @@
       margin-left: $spacing-4;
     }
   }
+
   .lnb-bottom-container {
     overflow-y: auto;
     padding: $spacing-24;
@@ -49,10 +51,10 @@
 
     &::-webkit-scrollbar-thumb {
       border-radius: 10px;
-      background: rgb(255,255,255,35%);
+      background: rgb(255, 255, 255, 35%);
 
       &:hover {
-        background: rgb(255,255,255,40%);
+        background: rgb(255, 255, 255, 40%);
       }
     }
 
@@ -67,6 +69,7 @@
         font-weight: 600;
       }
     }
+
     .sub-item {
 
       &-link {
@@ -84,13 +87,14 @@
   }
 
   &-main {
-    padding:88px 40px 120px 200px;
+    padding: 88px 40px 120px 200px;
     width: 1400px;
   }
 }
+
 .guide-section {
   width: 100%;
-  padding: 0 $spacing-48 96px ;
+  padding: 0 $spacing-48 96px;
   margin: 0 auto;
 }
 
@@ -112,16 +116,37 @@
   color: $neutral-800;
   font-size: 18px;
   line-height: 1.8;
+
 }
 
 .section-subtitle {
+  margin: $spacing-64 0 $spacing-32;
   color: $neutral-800;
   font-size: 24px;
   font-weight: 700;
-  margin-bottom: $spacing-16;
   font-size: 20px;
-  margin: $spacing-64 0 $spacing-32;
+}
 
+.group-description {
+  width: 33.33%;
+  color: $neutral-500;
+
+  ul {
+    list-style: disc;
+    list-style-position: inside;
+
+    li {
+      margin-top: $spacing-4;
+    }
+  }
+
+  code {
+    @include font-size('13');
+    padding: 0 $spacing-4;
+    border-radius: $border-radius-4;
+    border: 1px solid $neutral-200;
+    background: $neutral-100;
+  }
 }
 
 .group-title {
@@ -131,13 +156,8 @@
   margin-bottom: $spacing-12;
 }
 
-.group-description {
-  width: 33.33%;
-  color: $neutral-500;
-}
-
 .group-summary {
-  line-height:1.8;
+  line-height: 1.8;
 }
 
 .section-figure {

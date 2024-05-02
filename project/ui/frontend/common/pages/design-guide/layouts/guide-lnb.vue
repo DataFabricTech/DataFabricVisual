@@ -31,7 +31,7 @@
               <a class="sub-item-link" href="#">Accordion</a>
             </li>
             <li class="sub-item">
-              <a class="sub-item-link" href="#">Alert</a>
+              <a class="sub-item-link" href="#guide-alert">Alert</a>
             </li>
             <li class="sub-item">
               <a class="sub-item-link" href="#guide-badge">Badge</a>
