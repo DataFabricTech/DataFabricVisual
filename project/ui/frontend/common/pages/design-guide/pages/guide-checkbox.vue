@@ -3,8 +3,9 @@
     <p class="section-type">Component</p>
     <h2 class="section-title">Checkbox</h2>
     <p class="section-summary">
-      체크박스는 대부분의 경우 사용자가 여러 선택 사항(0개, 1개 또는 여러 개)을 선택할 수 있는 방법을 제공하기 위해 사용됩니다. 또한, 특정 약관과 서비스에 동의하는 것을 나타내는 방법으로도 사용될 수
-      있습니다.</p>
+      체크박스는 사용자가 여러 선택 사항(0개, 1개 또는 여러 개)을 선택할 수 있는 방법을 제공하기 위해 사용됩니다. 또한, 특정 약관과 서비스에 동의하는 것을 나타내는 방법으로도 사용될 수
+      있습니다.
+    </p>
     <article class="mb-10">
       <h3 class="section-subtitle">Basic</h3>
       <div class="flex flex-col ">

@@ -79,7 +79,25 @@
               <a class="sub-item-link" href="#guide-select">Select</a>
             </li>
             <li class="sub-item">
+              <a class="sub-item-link" href="#guide-tab">Tab</a>
+            </li>
+            <li class="sub-item">
               <a class="sub-item-link" href="#guide-table">Table</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-tag">Tag</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-text-input">Text Input</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-textarea">Textarea</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-toggle-button">Toggle Button</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-toggle-switch">Toggle Switch</a>
             </li>
           </ul>
         </li>

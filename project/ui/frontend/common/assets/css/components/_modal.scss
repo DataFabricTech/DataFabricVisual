@@ -1,4 +1,5 @@
 .modal-fixed {
+  z-index: 8001;
   @include flex;
 }
 
@@ -55,8 +56,10 @@
       }
     }
 
-    > .button {
-      flex: 1;
+    &:has(> .button + .button) {
+      .button {
+        flex: 1;
+      }
     }
   }
 

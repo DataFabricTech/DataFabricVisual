@@ -24,6 +24,11 @@
     }
   }
 
+  &-normal {
+    @include notification-box-color($bg: $neutral-100, $border: $neutral-300, $icon-color: $neutral-400);
+    @include box-shadow('sm');
+  }
+
   &-info {
     @include notification-box-color($bg: $info-100, $border: $info-300, $icon-color: $info-500);
     @include box-shadow('sm');
