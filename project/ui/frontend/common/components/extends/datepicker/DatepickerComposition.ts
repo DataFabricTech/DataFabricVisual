@@ -11,7 +11,7 @@ interface DatepickerComposition extends DatepickerProps {
 
   isPanelVisible(): boolean;
 
-  switchDateTimePanel(): boolean;
+  switchDateTimePanel(): void;
 }
 
 export function DatepickerComposition(props: DatepickerProps): DatepickerComposition {

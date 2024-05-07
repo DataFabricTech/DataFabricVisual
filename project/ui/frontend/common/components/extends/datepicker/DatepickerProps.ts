@@ -12,8 +12,8 @@ export interface DatepickerProps {
   confirmText?: string;
   multiple?: boolean;
   disabled?: boolean;
-  disabledDateRange?: string[] | null;
-  disabledTimeRange?: string[] | null;
+  disabledDateRange?: (string | null)[] | null;
+  disabledTimeRange?: (string | null)[] | null;
   titleFormat?: string;
   separator?: string;
   hourOptions?: number[];

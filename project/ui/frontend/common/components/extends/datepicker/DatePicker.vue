@@ -64,7 +64,7 @@ const props = withDefaults(defineProps<DatepickerProps>(), {
   showTimePanel: false
 });
 const emit = defineEmits(["update:modelValue"]);
-const modelValue: ModelRef<string | string[]> = defineModel<string | string[]>({ default: "" });
+const modelValue: ModelRef<string | string[] | null> = defineModel<string | string[] | null>({ default: "" });
 
 const {
   type,
@@ -80,14 +80,11 @@ const {
   confirmText,
   multiple,
   disabled,
-  disabledDateRange,
-  disabledTimeRange,
   titleFormat,
   separator,
   hourOptions,
   minuteOptions,
   secondOptions,
-  showTimePanel,
   dateTimePanel,
   disabledDate,
   disabledTime,
