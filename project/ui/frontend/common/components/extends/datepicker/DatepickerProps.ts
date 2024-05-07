@@ -21,7 +21,3 @@ export interface DatepickerProps {
   secondOptions?: number[];
   showTimePanel?: boolean;
 }
-
-export interface DatePickerPropsWithModelValue extends DatepickerProps {
-  modelValue: string[] | string;
-}

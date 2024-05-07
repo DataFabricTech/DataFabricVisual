@@ -22,7 +22,7 @@
         :show-time-panel="dateTimePanel"
         :title-format="titleFormat"
         :type="type"
-        :value="props.modelValue"
+        :value="modelValue"
         :value-type="valueType"
         class="datepicker"
         @update:value="emit('update:modelValue', $event)"
@@ -41,10 +41,10 @@
 import DatePicker from "vue-datepicker-next";
 import "vue-datepicker-next/index.css";
 import { DatepickerComposition } from "./DatepickerComposition";
-import { DatePickerPropsWithModelValue } from "./DatepickerProps";
+import { DatepickerProps } from "./DatepickerProps";
+import { defineModel, ModelRef } from "vue";
 
-const props = withDefaults(defineProps<DatePickerPropsWithModelValue>(), {
-  modelValue: "",
+const props = withDefaults(defineProps<DatepickerProps>(), {
   type: "date",
   range: false,
   format: "YYYY-MM-DD",
@@ -64,9 +64,9 @@ const props = withDefaults(defineProps<DatePickerPropsWithModelValue>(), {
   showTimePanel: false
 });
 const emit = defineEmits(["update:modelValue"]);
+const modelValue: ModelRef<string | string[]> = defineModel<string | string[]>({ default: "" });
 
 const {
-  modelValue,
   type,
   range,
   format,
