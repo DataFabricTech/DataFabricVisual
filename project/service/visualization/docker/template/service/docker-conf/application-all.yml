@@ -1,0 +1,167 @@
+spring:
+  profiles:
+    active: prod
+
+  web:
+    locale: ko
+    resources:
+      chain:
+        compressed: true
+        cache: true
+      add-mappings: true
+
+  output:
+    ansi:
+      enabled: detect
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+
+  primary:
+    datasource:
+      hikari:
+        idle-timeout: 10000
+        maximum-pool-size: 10
+        minimum-idle: 5
+        pool-name: BaseHikariPool
+        jdbc-url: jdbc:postgresql://postgres-svc:5432/postgres?currentSchema=gdf
+        username: root
+        password: biris.manse
+        driver-class-name: org.postgresql.Driver
+    hibernate:
+      property:
+        "[hibernate.dialect]": org.hibernate.dialect.PostgreSQLDialect
+        "[hibernate.show_sql]": true
+        "[hibernate.format_sql]": true
+        "[hibernate.hbm2ddl.auto]": none
+        "[hibernate.cache.use_second_level_cache]": false
+        "[hibernate.cache.use_query_cache]": false
+        "[hibernate.globally_quoted_identifiers]": true
+
+  h2:
+    console:
+      enabled: true
+
+  flyway:
+    baseline-on-migrate: true
+    baseline-version: 0
+    enabled: false
+    locations: classpath:db/migration
+
+logging:
+  level:
+    root: info
+    com:
+      mobigen: debug
+
+server:
+  port: 8003
+  servlet:
+    session:
+      timeout: 7200
+      cookie:
+        name: dp-public-session-id
+    encoding:
+      charset: UTF-8
+    context-path: /public
+  compression:
+    enabled: true
+  tomcat:
+    uri-encoding: UTF-8
+    redirect-context-root: false
+  error:
+    whitelabel:
+      enabled: false
+    path: /error
+
+i18n:
+  basenames: i18n/messages, i18n/exception, i18n/validation
+
+http-client-configuration:
+  max-total: 300
+  default-max-per-route: 50
+  default-keep-alive-duration: -1
+  connection-reqeust-timeout: 3000
+  connection-timeout: 3000
+  socket-timeout: -1
+  idle-timeout: 60
+
+#sentry:
+#  dsn: https://c10f0211c0bb41af973f1f5ebf7fda60@o924939.ingest.sentry.io/6044951
+#  traces-sample-rate: 1
+#  logging:
+#    enabled: off
+
+# 사용자 정의 설정들
+properties:
+  core:
+    security:
+      ignores: /css/**, /fonts/**, /img/**, /js/**, /_nuxt/**, /favicon.ico
+      permit-alls: /** #, /h2-console/**, /error, /test, /api/**, /auth/**
+      redirect-url: /
+      iframe-option: disable #disable, same-origin, deny
+      csrf: false
+      cors:
+        pattern: "/**" #/auth/**
+        allowed-origins: "*" #http://server-name:port
+        allowed-methods: "*" #PUT,DELETE,GET,POST ...
+        allowed-headers: "*" #Context-Type, ...
+        allow-credentials: true
+      same-site: Lax #None, Lax, Strict
+  iris:
+    token:
+      name: x-access-token
+      secret: jwt-secrect-b-iris
+      max-age: 3600
+  idp:
+    version: v1.0.0
+    server:
+      keycloak: http://keycloak-svc:8080
+      stat: http://dp-stat-svc:8005
+    keycloak:
+      url: "${properties.idp.server.keycloak}/auth"
+      realm: IRIS-Data-Portal
+      client-id: IRIS-Data-Portal-Client
+      client-secret: M9ioKECnQuzG47SLQhLiqPIVX8TCVU20 # token secret key
+    token:
+      key: Authorization # Cookie | Header
+      idp-mapping-key: idp
+      access-token: access_token
+      refresh-token: refresh_token
+      secret-key: KLOsEX5yps_3t5nVL0fzO8upoEO79Zz2fW3R3ncrH11Lrz6S-uQ8i9p2rY9pZyBUIXOodyWxXkNUhyYC5xAG2w
+    stat-service:
+      url: "${properties.idp.server.stat}/stat-service"
+    public:
+      map:
+        client-id: taz7pd7m6v
+      weather:
+        service-key: 07MTllJDI60QeKe1a2aKbpt5aLhUsQO2EO1vU8ilKRmBIaQYvx0HTyhRzRb9bPRJeTfHwg03rdw2mSnTr2obAg==
+        url: http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst
+        air-url: https://api.odcloud.kr/api/RltmArpltnInforInqireSvrc/v1/getMsrstnAcctoRltmMesureDnsty
+        num-of-rows: 180 # 기상청 날씨 정보 최저,최고 기온 API 위한 row 수
+        nx: 61 # 서초구 x좌표
+        ny: 125 # 서초구 y좌표
+        station-name: 서초구
+      cctv:
+        key: 2USirVnliwGHWK6LcLVg7xziu6hv7RpcuZrhJ17YG8hxIIbAwOpGgdu8Ke32
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  primary:
+    datasource:
+      hikari:
+        jdbc-url: jdbc:postgresql://postgres-svc:5432/postgres?currentSchema=gdf
+        username: root
+        password: biris.manse
