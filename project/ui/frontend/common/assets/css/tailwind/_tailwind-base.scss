@@ -106,4 +106,9 @@
     border-collapse: collapse;
     border-spacing: 0;
   }
+
+  ::selection {
+    background: $secondary-500;
+    color: #fff;
+  }
 }

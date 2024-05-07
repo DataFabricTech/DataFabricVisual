@@ -32,11 +32,10 @@ $input-field-classes: text-input, textarea;
 
     &-label {
       @include flex($horizontal: flex-start);
+      font-weight: 600;
       color: $neutral-800;
       white-space: nowrap;
       cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
 
       &:hover::before {
         border-color: $neutral-400;
@@ -73,16 +72,15 @@ $input-field-classes: text-input, textarea;
 
     &-subtext {
       margin-left: $spacing-2;
-      color: $neutral-500;
-      font-size: 14px;
       font-weight: 400;
+      color: $neutral-500;
     }
 
     &-sm {
       .#{$input} {
 
         &-label {
-          font-size: 12px;
+          @include font-size('12');
 
           &::before {
             margin-right: 6px;
@@ -90,11 +88,6 @@ $input-field-classes: text-input, textarea;
             height: 16px;
           }
         }
-
-        &-subtext {
-          font-size: 12px;
-        }
-
       }
     }
   }
@@ -103,6 +96,7 @@ $input-field-classes: text-input, textarea;
 @each $field in $input-field-classes {
   .#{$field} {
     @include box-shadow('sm');
+    width: 100%;
     border-radius: $border-radius-4;
     border: 1px solid $neutral-200;
     color: $neutral-900;

@@ -1,5 +1,5 @@
 .textarea {
-  width: 100%;
+  min-height: 48px;
   padding: $spacing-12;
   resize: vertical;
 
@@ -21,4 +21,8 @@
   &.is-textarea-fixed {
     resize: none;
   }
+}
+
+.textarea ~ .notification {
+  margin-top: $spacing-4;
 }

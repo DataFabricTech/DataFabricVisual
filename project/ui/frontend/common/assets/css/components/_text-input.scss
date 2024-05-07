@@ -1,10 +1,14 @@
-@mixin text-input-size($font-size:null , $size: 32px, $right-padding: $spacing-6, $left-padding: $spacing-8, $search-icon-size: md, $input-icon-size: 18px) {
-  @include font-size($font-size);
+@mixin text-input-size($font-size: null , $size: 32px, $right-padding: $spacing-6, $left-padding: $spacing-8, $search-icon-size: md, $input-icon-size: 18px) {
+  @if $font-size != null {
+    @include font-size($font-size);
+  }
   height: $size;
   padding: 0 $right-padding 0 $left-padding;
 
   &::placeholder {
-    @include font-size($font-size);
+    @if $font-size != null {
+      @include font-size($font-size);
+    }
   }
 
   & ~ .text-input-search-button {
@@ -49,7 +53,7 @@
   }
 
   &-sm {
-    @include text-input-size($font-size: body-13, $size: 28px, $right-padding: $spacing-6, $left-padding: $spacing-8, $search-icon-size: sm)
+    @include text-input-size($font-size: '13', $size: 28px, $right-padding: $spacing-6, $left-padding: $spacing-8, $search-icon-size: sm)
   }
 
   // -------------------------
@@ -84,7 +88,7 @@
       }
     }
 
-    &:has(.text-input-action-button) {
+    &:has(.text-input-action-button, .svg-icon) {
       .text-input {
         padding-right: $spacing-32;
       }
@@ -131,5 +135,9 @@
         right: 32px;
       }
     }
+  }
+
+  &-group ~ .notification {
+    margin-top: $spacing-4;
   }
 }

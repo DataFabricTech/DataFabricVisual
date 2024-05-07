@@ -1,11 +1,27 @@
 <template>
-    <select-box
+  <div class="sample">
+  <select-box class="select-lg"
     :data="options"
     label-key="label"
     value-key="value"
     :selectedItem="selectedItem"
     :isFirstSelectedEvent= isFirstCheckedEvent
     @select="selectItem"></select-box>
+  <select-box
+    :data="options"
+    label-key="label"
+    value-key="value"
+    :selectedItem="selectedItem"
+    :isFirstSelectedEvent= isFirstCheckedEvent
+    @select="selectItem"></select-box>
+    <select-box class="select-sm"
+      :data="options"
+      label-key="label"
+      value-key="value"
+      :selectedItem="selectedItem"
+      :isFirstSelectedEvent= isFirstCheckedEvent
+      @select="selectItem"></select-box>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -15,7 +31,7 @@ const isFirstCheckedEvent:boolean = true;
 
 const options: { [key: string]: string | number }[] = [
     {
-        label: "option1",
+        label: "option1option1option1option1option1",
         value: "option11",
     },
     {
@@ -35,5 +51,9 @@ function selectItem(item:string | number) {
 </script>
 
 <style scoped>
-
+.sample {
+  display: flex;
+  gap: 8px;
+  padding: 30px;
+}
 </style>

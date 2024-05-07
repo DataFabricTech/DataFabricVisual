@@ -22,14 +22,6 @@
       </ol>
     </section>
     <section class="guide-section">
-      <h2 class="section-title">typography</h2>
-      <div class="">
-        <p v-for="index in 14" :key="index" class="guide-typo">
-          데이터패브릭에서 제작한 모든 서비스와 문서에는 Pretendard 폰트를 사용합니다.
-        </p>
-      </div>
-    </section>
-    <section class="guide-section">
       <h2 class="section-title">icongraphy</h2>
       <div class="h-group gap-4">
         <svg-icon v-for="index in 5" :key="index" class="svg-icon icon-home" name="home"></svg-icon>
@@ -852,117 +844,125 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Alert</h2>
+      <article class="mb-10">
+        <div class="v-group gap-5">
+          <h4 class="group-title">Default</h4>
+          <Alert></Alert>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">Notification</h2>
       <article class="mb-10">
-        <h3 class="section-subtitle">Inline Notification</h3>
+        <h3 class="section-subtitle">Notification</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
             <div class="h-group gap-4">
-              <InlineNotification></InlineNotification>
+              <div class="notification">
+                <svg-icon class="notification-icon" name="info"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
+              <div class="notification notification-sm">
+                <svg-icon class="notification-icon" name="info"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
             </div>
             <h4 class="group-title">Info</h4>
             <div class="h-group gap-4">
-              <InlineNotification class="inline-notification-info"></InlineNotification>
+              <div class="notification notification-info">
+                <svg-icon class="notification-icon" name="info"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
+              <div class="notification notification-sm notification-info">
+                <svg-icon class="notification-icon" name="info"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
             </div>
             <h4 class="group-title">Warning</h4>
             <div class="h-group gap-4">
-              <InlineNotification class="inline-notification-warning"></InlineNotification>
+              <div class="notification notification-warning">
+                <svg-icon class="notification-icon" name="warning"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
+              <div class="notification notification-sm notification-warning">
+                <svg-icon class="notification-icon" name="warning"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
             </div>
             <h4 class="group-title">Info</h4>
             <div class="h-group gap-4">
-              <InlineNotification class="inline-notification-success"></InlineNotification>
+              <div class="notification notification-success">
+                <svg-icon class="notification-icon" name="success"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
+              <div class="notification notification-sm notification-success">
+                <svg-icon class="notification-icon" name="success"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
             </div>
             <h4 class="group-title">Error</h4>
             <div class="h-group gap-4">
-              <InlineNotification class="inline-notification-error"></InlineNotification>
+              <div class="notification notification-error">
+                <svg-icon class="notification-icon" name="error"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
+              <div class="notification notification-sm notification-error">
+                <svg-icon class="notification-icon" name="error"></svg-icon>
+                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+              </div>
             </div>
           </div>
         </div>
       </article>
       <article class="mb-10">
-        <h3 class="section-subtitle">Basic</h3>
+        <h3 class="section-subtitle">Notification Box</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
-            <div class="h-group gap-4">
-              <Notification></Notification>
-            </div>
+            <Notification></Notification>
             <h4 class="group-title">Info 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :notification-type="'info'"></Notification>
-            </div>
+            <Notification :notification-type="'info'"></Notification>
             <h4 class="group-title">Warning 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :notification-type="'warning'"></Notification>
-            </div>
+            <Notification :notification-type="'warning'"></Notification>
             <h4 class="group-title">Sucess 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :notification-type="'success'"></Notification>
-            </div>
+            <Notification :notification-type="'success'"></Notification>
             <h4 class="group-title">Error 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :notification-type="'error'"></Notification>
-            </div>
+            <Notification :notification-type="'error'"></Notification>
             <h4 class="group-title">Info</h4>
-            <div class="h-group gap-4">
-              <Notification class="notification-info"></Notification>
-            </div>
+            <Notification class="notification-box-info"></Notification>
             <h4 class="group-title">Warning</h4>
-            <div class="h-group gap-4">
-              <Notification class="notification-warning"></Notification>
-            </div>
+            <Notification class="notification-box-warning"></Notification>
             <h4 class="group-title">Info</h4>
-            <div class="h-group gap-4">
-              <Notification class="notification-success"></Notification>
-            </div>
+            <Notification class="notification-box-success"></Notification>
             <h4 class="group-title">Error</h4>
-            <div class="h-group gap-4">
-              <Notification class="notification-error"></Notification>
-            </div>
+            <Notification class="notification-box-error"></Notification>
           </div>
         </div>
       </article>
       <article class="mb-10">
-        <h3 class="section-subtitle">Extends</h3>
+        <h3 class="section-subtitle">Notification Box Extends</h3>
         <div class="flex flex-col align-center gap-5">
           <div class="v-group gap-3">
             <h4 class="group-title">Default</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-96"></Notification>
-            </div>
+            <Notification :isExtends="true" class="w-96"></Notification>
             <h4 class="group-title">Info 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" :notification-type="'primary'" class="w-96"></Notification>
-            </div>
+            <Notification :isExtends="true" :notification-type="'info'" class="w-96"></Notification>
             <h4 class="group-title">Warning 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" :notification-type="'warning'" class="w-96"></Notification>
-            </div>
+            <Notification :isExtends="true" :notification-type="'warning'" class="w-96"></Notification>
             <h4 class="group-title">Success 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" :notification-type="'success'" class="w-96"></Notification>
-            </div>
+            <Notification :isExtends="true" :notification-type="'success'" class="w-96"></Notification>
             <h4 class="group-title">Error 아이콘</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" :notification-type="'error'" class="w-96"></Notification>
-            </div>
+            <Notification :isExtends="true" :notification-type="'error'" class="w-96"></Notification>
             <h4 class="group-title">Info</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-96 notification-info"></Notification>
-            </div>
+            <Notification :isExtends="true" class="w-96 notification-box-info"></Notification>
             <h4 class="group-title">Warning</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-96 notification-warning"></Notification>
-            </div>
+            <Notification :isExtends="true" class="w-96 notification-box-warning"></Notification>
             <h4 class="group-title">Info</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-96 notification-success"></Notification>
-            </div>
+            <Notification :isExtends="true" class="w-96 notification-box-success"></Notification>
             <h4 class="group-title">Error</h4>
-            <div class="h-group gap-4">
-              <Notification :isExtends="true" class="w-96 notification-error"></Notification>
-            </div>
+            <Notification :isExtends="true" class="w-96 notification-box-error"></Notification>
           </div>
         </div>
       </article>
@@ -1281,23 +1281,13 @@
       <article class="mb-10">
         <h3 class="section-subtitle">Basic Pagination</h3>
         <div class="flex flex-col align-center gap-5">
-          <Pagination
-            :totalCount="60"
-            :perPage="10"
-            :currentPageNumber="4"
-            @change="checkCurrentPage"
-          ></Pagination>
+          <Pagination :totalCount="60" :perPage="10" :currentPageNumber="4" @change="checkCurrentPage"></Pagination>
         </div>
       </article>
       <article class="mb-10">
         <h3 class="section-subtitle">Numerous Pagination</h3>
         <div class="flex flex-col align-center gap-5">
-          <Pagination
-            :totalCount="100"
-            :perPage="10"
-            :currentPageNumber="1"
-            @change="checkCurrentPage"
-          ></Pagination>
+          <Pagination :totalCount="100" :perPage="10" :currentPageNumber="1" @change="checkCurrentPage"></Pagination>
         </div>
       </article>
     </section>
@@ -1605,6 +1595,140 @@
       </article>
     </section>
     <section class="guide-section">
+      <h2 class="section-title">Step</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">default</h4>
+            <div class="step" style="width:450px">
+              <div class="step-item is-step-item-complete">
+                <button class="step-button">
+                  <p class="step-number">1</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">step</span>
+              </div>
+              <div class="step-item is-step-item-complete">
+                <button class="step-button">
+                  <p class="step-number">2</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">step</span>
+              </div>
+              <div class="step-item is-step-item-selected">
+                <button class="step-button">
+                  <p class="step-number">3</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">stepstep</span>
+              </div>
+              <div class="step-item">
+                <button class="step-button">
+                  <p class="step-number">4</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">step</span>
+              </div>
+            </div>
+            <h4 class="group-title">dotted</h4>
+            <div class="step step-dotted" style="width:450px">
+              <div class="step-item is-step-item-complete">
+                <button class="step-button">
+                  <p class="step-number">1</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">step</span>
+              </div>
+              <div class="step-item is-step-item-complete">
+                <button class="step-button">
+                  <p class="step-number">2</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">step</span>
+              </div>
+              <div class="step-item is-step-item-selected">
+                <button class="step-button">
+                  <p class="step-number">3</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">stepstep</span>
+              </div>
+              <div class="step-item">
+                <button class="step-button">
+                  <p class="step-number">4</p>
+                  <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                </button>
+                <span class="step-title">step</span>
+              </div>
+            </div>
+            <h4 class="group-title">Vertical</h4>
+            <div class="h-group gap-4">
+              <div class="step step-vertical" style="height:350px">
+                <div class="step-item is-step-item-complete">
+                  <button class="step-button">
+                    <p class="step-number">1</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">step</span>
+                </div>
+                <div class="step-item is-step-item-complete">
+                  <button class="step-button">
+                    <p class="step-number">2</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">step</span>
+                </div>
+                <div class="step-item is-step-item-selected">
+                  <button class="step-button">
+                    <p class="step-number">3</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">stepstep</span>
+                </div>
+                <div class="step-item">
+                  <button class="step-button">
+                    <p class="step-number">4</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">step</span>
+                </div>
+              </div>
+              <div class="step step-vertical step-dotted" style="height:350px">
+                <div class="step-item is-step-item-complete">
+                  <button class="step-button">
+                    <p class="step-number">1</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">step</span>
+                </div>
+                <div class="step-item is-step-item-complete">
+                  <button class="step-button">
+                    <p class="step-number">2</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">step</span>
+                </div>
+                <div class="step-item is-step-item-selected">
+                  <button class="step-button">
+                    <p class="step-number">3</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">stepstep</span>
+                </div>
+                <div class="step-item">
+                  <button class="step-button">
+                    <p class="step-number">4</p>
+                    <svg-icon class="step-icon" name="checkmark"></svg-icon>
+                  </button>
+                  <span class="step-title">step</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
       <h2 class="section-title">Breadcrumb</h2>
       <article class="mb-10">
         <div class="flex flex-col align-center gap-5">
@@ -1650,7 +1774,7 @@
                   </button>
                 </div>
               </div>
-              <div class="v-group gap-4">
+              <div class="v-group gap-5">
                 <label class="hidden-text" for="text-input-example">label</label>
                 <input id="text-input-example" class="text-input" placeholder="placeholder" />
                 <label class="hidden-text" for="text-input-example-3">label</label>
@@ -1678,27 +1802,27 @@
                   </button>
                 </div>
               </div>
-              <div class="v-group gap-4">
+              <div class="v-group gap-6">
                 <label class="hidden-text" for="text-input-example">label</label>
                 <input id="text-input-example" class="text-input text-input-sm" placeholder="placeholder" />
                 <label class="hidden-text" for="text-input-example-7">label</label>
                 <input id="text-input-example-7" class="text-input text-input-sm" placeholder="placeholder" disabled />
-                <div class="text-input-group text-input-group-sm">
+                <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-8">label</label>
-                  <input id="text-input-example-8" class="text-input" placeholder="prefix icon" />
+                  <input id="text-input-example-8" class="text-input text-input-sm" placeholder="prefix icon" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
                 </div>
-                <div class="text-input-group text-input-group-sm">
+                <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-9">label</label>
-                  <input id="text-input-example-9" class="text-input" placeholder="button" />
+                  <input id="text-input-example-9" class="text-input text-input-sm" placeholder="button" />
                   <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="close"></svg-icon>
                   </button>
                 </div>
-                <div class="text-input-group text-input-group-sm">
+                <div class="text-input-group ">
                   <label class="hidden-text" for="text-input-example-10">label</label>
-                  <input id="text-input-example-10" class="text-input" value="prefix icon + button" />
+                  <input id="text-input-example-10" class="text-input text-input-sm" value="prefix icon + button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
                   <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
                     <span class="hidden-text">지우기</span>
@@ -1740,7 +1864,7 @@
                 </div>
               </div>
               <div class="v-group gap-4">
-                <div class="text-input-group text-input-group-sm">
+                <div class="text-input-group ">
                   <label class="hidden-text" for="text-input-example-11">label</label>
                   <input id="text-input-example-11" class="text-input text-input-sm" value="search button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -1760,8 +1884,12 @@
               <div class="v-group gap-4">
                 <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-11">label</label>
-                  <input type="password" id="text-input-example-11" class="text-input text-input-lg"
-                         placeholder="password" />
+                  <input
+                    type="password"
+                    id="text-input-example-11"
+                    class="text-input text-input-lg"
+                    placeholder="password"
+                  />
                   <svg-icon class="text-input-icon" name="lock-locked"></svg-icon>
                   <button class="text-input-action-button button button-neutral-ghost button-md" type="button">
                     <span class="hidden-text">패스워드 보기</span>
@@ -1772,8 +1900,13 @@
               <div class="v-group gap-4">
                 <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-11">label</label>
-                  <input type="password" id="text-input-example-11" class="text-input" placeholder="password"
-                         required />
+                  <input
+                    type="password"
+                    id="text-input-example-11"
+                    class="text-input"
+                    placeholder="password"
+                    required
+                  />
                   <svg-icon class="text-input-icon" name="lock-locked"></svg-icon>
                   <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
                     <span class="hidden-text">패스워드 보기</span>
@@ -1782,10 +1915,14 @@
                 </div>
               </div>
               <div class="v-group gap-4">
-                <div class="text-input-group text-input-group-sm">
+                <div class="text-input-group">
                   <label class="hidden-text" for="text-input-example-11">label</label>
-                  <input type="password" id="text-input-example-11" class="text-input text-input-sm"
-                         placeholder="password" />
+                  <input
+                    type="password"
+                    id="text-input-example-11"
+                    class="text-input text-input-sm"
+                    placeholder="password"
+                  />
                   <svg-icon class="text-input-icon" name="lock-locked"></svg-icon>
                   <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
                     <span class="hidden-text">패스워드 보기</span>
@@ -1814,17 +1951,912 @@
       </article>
     </section>
     <section class="guide-section">
-      <h2 class="section-title">components</h2>
-      <div class="link-buttons">
-        <!-- 3. 메뉴 버튼 추가 @click="clickMenu('컴포넌트명')" -->
-        <button @click="clickMenu('Dayjs')">Dayjs</button>
-        <button @click="clickMenu('Highcharts')">HighCharts</button>
-        <button @click="clickMenu('VueFinalModal')">Vue Final Modal</button>
-        <button @click="clickMenu('AgGrid')">Ag-Grid</button>
-        <button @click="clickMenu('VueDatepickerNext')">Vue Datepicker Nuxt</button>
-        <button @click="clickMenu('Locale')">Locale</button>
-      </div>
-      <div></div>
+      <h2 class="section-title">Select</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3">
+            <h4 class="group-title">default</h4>
+            <div class="flex gap-6 items-start">
+              <div class="v-group gap-4">
+                <select-box class="select-lg w-64"></select-box>
+                <select-box class="select-lg w-64" disabled></select-box>
+              </div>
+              <select-box class="is-select-open w-64"></select-box>
+              <select-box class="select-sm w-64"></select-box>
+            </div>
+            <h4 class="group-title">clean</h4>
+            <div class="flex gap-6 items-start">
+              <div class="v-group gap-4">
+                <select-box class="select-clean select-lg w-64"></select-box>
+                <select-box class="select-lg w-64" disabled></select-box>
+              </div>
+              <select-box class="select-clean is-select-open w-64"></select-box>
+              <select-box class="select-sm select-clean is-select-invalid w-64"></select-box>
+            </div>
+            <h4 class="group-title">Select-search</h4>
+            <div class="flex gap-6 items-start">
+              <div class="v-group gap-8">
+                <combo-box class="select-lg w-64"></combo-box>
+                <combo-box class="select-lg is-select-open w-64"></combo-box>
+              </div>
+              <div class="v-group gap-8">
+                <combo-box class=" w-64"></combo-box>
+                <combo-box class="is-select-open w-64"></combo-box>
+              </div>
+              <div class="v-group gap-8">
+                <combo-box class="select-sm w-64"></combo-box>
+                <combo-box class="select-sm is-select-open w-64"></combo-box>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Dropdown</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group">
+            <button class="button button-lg button-neutral-ghost">
+              <svg-icon class="button-icon" name="kebab-menu"></svg-icon>
+            </button>
+            <div class="h-group gap-5">
+              <div class="dropdown dropdown-lg" style="position: static">
+                <ul class="dropdown-list" style="position: static">
+                  <li class="dropdown-item">
+                    <button class="dropdown-button">
+                      <span class="dropdown-text">dropdown item</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <button class="dropdown-button">
+                      <svg-icon class="svg-icon" name="user"></svg-icon>
+                      <span class="dropdown-text">dropdown item</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox-drop" class="checkbox-input" />
+                      <label for="checkbox-drop" class="checkbox-label">
+                        Checkbox
+                        <span class="checkbox-subtext">(Optional)</span>
+                      </label>
+                    </div>
+                    <button class="button button-neutral-ghost button-xs">
+                      <span class="hidden-text">닫기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </li>
+                  <li class="dropdown-item dropdown-item-negative">
+                    <button class="dropdown-button">
+                      <svg-icon class="svg-icon" name="trash"></svg-icon>
+                      <span class="dropdown-text">삭제</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <div class="dropdown" style="position: static">
+                <ul class="dropdown-list" style="position: static">
+                  <li class="dropdown-item">
+                    <button class="dropdown-button">
+                      <span class="dropdown-text">dropdown item</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <button class="dropdown-button">
+                      <svg-icon class="svg-icon" name="user"></svg-icon>
+                      <span class="dropdown-text">dropdown item</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox-drop-2" class="checkbox-input" />
+                      <label for="checkbox-drop-2" class="checkbox-label">
+                        Checkbox
+                        <span class="checkbox-subtext">(Optional)</span>
+                      </label>
+                    </div>
+                    <button class="button button-neutral-ghost button-xs">
+                      <span class="hidden-text">닫기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </li>
+                  <li class="dropdown-item dropdown-item-negative">
+                    <button class="dropdown-button">
+                      <svg-icon class="svg-icon" name="trash"></svg-icon>
+                      <span class="dropdown-text">삭제</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <div class="dropdown dropdown-sm" style="position: static">
+                <ul class="dropdown-list">
+                  <li class="dropdown-item">
+                    <button class="dropdown-button">
+                      <span class="dropdown-text">dropdown item</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <button class="dropdown-button">
+                      <svg-icon class="svg-icon" name="user"></svg-icon>
+                      <span class="dropdown-text">dropdown item</span>
+                    </button>
+                  </li>
+                  <li class="dropdown-item">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox-drop-3" class="checkbox-input" />
+                      <label for="checkbox-drop-3" class="checkbox-label">
+                        Checkbox
+                        <span class="checkbox-subtext">(Optional)</span>
+                      </label>
+                    </div>
+                    <button class="button button-neutral-ghost button-xs">
+                      <span class="hidden-text">닫기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </li>
+                  <li class="dropdown-item dropdown-item-negative">
+                    <button class="dropdown-button">
+                      <svg-icon class="svg-icon" name="trash"></svg-icon>
+                      <span class="dropdown-text">삭제</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Menu</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-6">
+            <div class="menu menu-lg">
+              <div class="menu-search">
+                <div class="text-input-group">
+                  <label class="hidden-text" for="text-input-example-11">label</label>
+                  <input id="text-input-example-11" class="text-input text-input-lg" value="search button" />
+                  <svg-icon class="text-input-icon" name="user"></svg-icon>
+                  <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <span class="hidden-text">지우기</span>
+                    <svg-icon class="button-icon" name="close"></svg-icon>
+                  </button>
+                  <button class="text-input-search-button button button-neutral-ghost">
+                    <span class="hidden-text">검색</span>
+                    <svg-icon class="button-icon" name="search"></svg-icon>
+                  </button>
+                </div>
+              </div>
+              <ul class="menu-list">
+                <li class="menu-item">
+                  <button class="menu-button">
+                    <span class="menu-text">menu item</span>
+                  </button>
+                </li>
+                <li class="menu-item">
+                  <button class="menu-button">
+                    <svg-icon class="svg-icon" name="home"></svg-icon>
+                    <span class="menu-text">menu item</span>
+                  </button>
+                </li>
+                <li class="menu-item">
+                  <button class="menu-button">
+                    <svg-icon class="svg-icon" name="home"></svg-icon>
+                    <span class="menu-text">menu item</span>
+                  </button>
+                  <div class="menu-button-group">
+                    <button class="button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">복사</span>
+                      <svg-icon class="button-icon" name="copy"></svg-icon>
+                    </button>
+                    <button class="button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">수정</span>
+                      <svg-icon class="button-icon" name="pen"></svg-icon>
+                    </button>
+                    <button class="button button-error-ghost button-sm" type="button">
+                      <span class="hidden-text">삭제</span>
+                      <svg-icon class="button-icon" name="trash"></svg-icon>
+                    </button>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <div class="checkbox">
+                    <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
+                    <label for="checkbox-menu" class="checkbox-label">
+                      Checkbox
+                      <span class="checkbox-subtext">(Optional)</span>
+                    </label>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <label class="hidden-text" for="text-input-modify">label</label>
+                  <input id="text-input-modify" class="text-input" placeholder="placeholder" />
+                  <div class="menu-button-group">
+                    <button class="button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">복사</span>
+                      <svg-icon class="button-icon" name="copy"></svg-icon>
+                    </button>
+                    <button class="button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">수정</span>
+                      <svg-icon class="button-icon" name="pen"></svg-icon>
+                    </button>
+                    <button class="button button-error-ghost button-sm" type="button">
+                      <span class="hidden-text">삭제</span>
+                      <svg-icon class="button-icon" name="trash"></svg-icon>
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="menu">
+              <div class="menu-search">
+                <div class="text-input-group">
+                  <label class="hidden-text" for="text-input-example-11">label</label>
+                  <input id="text-input-example-11" class="text-input" value="search button" />
+                  <svg-icon class="text-input-icon" name="user"></svg-icon>
+                  <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <span class="hidden-text">지우기</span>
+                    <svg-icon class="button-icon" name="close"></svg-icon>
+                  </button>
+                  <button class="text-input-search-button button button-neutral-ghost">
+                    <span class="hidden-text">검색</span>
+                    <svg-icon class="button-icon" name="search"></svg-icon>
+                  </button>
+                </div>
+              </div>
+              <ul class="menu-list">
+                <li class="menu-item">
+                  <button class="menu-button">
+                    <span class="menu-text">menu item</span>
+                  </button>
+                </li>
+                <li class="menu-item">
+                  <button class="menu-button">
+                    <svg-icon class="svg-icon" name="home"></svg-icon>
+                    <span class="menu-text">menu item</span>
+                  </button>
+                </li>
+                <li class="menu-item">
+                  <button class="menu-button">
+                    <svg-icon class="svg-icon" name="home"></svg-icon>
+                    <span class="menu-text">menu item</span>
+                  </button>
+                  <div class="menu-button-group">
+                    <button class="button button-neutral-ghost button-xs" type="button">
+                      <span class="hidden-text">복사</span>
+                      <svg-icon class="button-icon" name="copy"></svg-icon>
+                    </button>
+                    <button class="button button-neutral-ghost button-xs" type="button">
+                      <span class="hidden-text">수정</span>
+                      <svg-icon class="button-icon" name="pen"></svg-icon>
+                    </button>
+                    <button class="button button-error-ghost button-xs" type="button">
+                      <span class="hidden-text">삭제</span>
+                      <svg-icon class="button-icon" name="trash"></svg-icon>
+                    </button>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <div class="checkbox checkbox-sm">
+                    <input type="checkbox" id="checkbox-menu-2" class="checkbox-input" />
+                    <label for="checkbox-menu-2" class="checkbox-label">
+                      Checkbox
+                      <span class="checkbox-subtext">(Optional)</span>
+                    </label>
+                  </div>
+                </li>
+                <li class="menu-item">
+                  <label class="hidden-text" for="text-input-modify">label</label>
+                  <input id="text-input-modify" class="text-input text-input-sm" placeholder="placeholder" />
+                  <div class="menu-button-group">
+                    <button class="button button-neutral-ghost button-xs" type="button">
+                      <span class="hidden-text">복사</span>
+                      <svg-icon class="button-icon" name="copy"></svg-icon>
+                    </button>
+                    <button class="button button-neutral-ghost button-xs" type="button">
+                      <span class="hidden-text">수정</span>
+                      <svg-icon class="button-icon" name="pen"></svg-icon>
+                    </button>
+                    <button class="button button-error-ghost button-xs" type="button">
+                      <span class="hidden-text">삭제</span>
+                      <svg-icon class="button-icon" name="trash"></svg-icon>
+                    </button>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Modal</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-6">
+            <h4 class="group-title">default</h4>
+            <div class="modal modal-padding-16" style="width:350px">
+              <div class="modal-head">
+                <div class="modal-head-text">
+                  <span class="modal-head-title">insert modal title here</span>
+                  <span class="modal-head-subtitle">Sub title</span>
+                </div>
+                <button class="button link-button button-sm" type="button">
+                  <span class="hidden-text">닫기</span>
+                  <svg-icon class="button-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input class="text-input text-input-lg w-full" />
+              </div>
+              <div class="modal-foot">
+                <div class="modal-foot-group">
+                  <button class="button button-ghost button-lg">취소</button>
+                  <button class="button button-primary button-lg">확인</button>
+                </div>
+              </div>
+            </div>
+            <div class="modal modal-padding-48" style="width:480px">
+              <div class="modal-head">
+                <div class="modal-head-text">
+                  <span class="modal-head-title">insert modal title heredd</span>
+                  <span class="modal-head-subtitle">Sub title</span>
+                </div>
+                <button class="button link-button button-sm" type="button">
+                  <span class="hidden-text">닫기</span>
+                  <svg-icon class="button-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input class="text-input text-input-lg w-full" />
+              </div>
+              <div class="modal-foot">
+                <button class="button button-ghost button-lg">취소</button>
+                <button class="button button-primary button-lg">확인</button>
+              </div>
+            </div>
+            <div class="modal modal-padding-32" style="width:620px">
+              <div class="modal-head">
+                <div class="modal-head-text">
+                  <span class="modal-head-title">insert modal title here</span>
+                  <span class="modal-head-subtitle">Sub title</span>
+                </div>
+                <button class="button link-button button-sm" type="button">
+                  <span class="hidden-text">닫기</span>
+                  <svg-icon class="button-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input class="text-input text-input-lg w-full" />
+              </div>
+              <div class="modal-foot">
+                <div class="checkbox">
+                  <input type="checkbox" id="today" class="checkbox-input" />
+                  <label for="today" class="checkbox-label">
+                    오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span>
+                  </label>
+                </div>
+                <div class="modal-foot-group">
+                  <button class="button button-ghost button-lg">취소</button>
+                  <button class="button button-primary button-lg">확인</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Table</h2>
+      <article class="mb-10">
+        <div class="v-group gap-3">
+          <div class="v-group gap-3">
+            <h4 class="group-title">Horizontal</h4>
+            <table>
+              <colgroup>
+                <col style="width: 15%" />
+                <col style="width: 35%" />
+                <col style="width: 15%" />
+                <col style="width: 35%" />
+              </colgroup>
+              <tr>
+                <th>Header Cell</th>
+                <td colspan="3">Row Cell</td>
+              </tr>
+              <tr>
+                <th>Header Cell</th>
+                <td>
+                  There are many variations of passages of Lorem Ipsum available, but the majority have suffered
+                  alteration in some form, by injected humour
+                </td>
+                <th>Header Cell</th>
+                <td>
+                  is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+                  standard dummy text ever since the 1500s is simply dummy text of the printing and typesetting
+                  industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s is simply dummy
+                  text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text
+                  ever since thstandard dummy text ever since the 1500s
+                </td>
+              </tr>
+              <tr>
+                <th>Header Cell</th>
+                <td>Row Cell</td>
+                <th>Header Cell</th>
+                <td>Row Cell</td>
+              </tr>
+              <tr>
+                <th>Header Cell</th>
+                <td>Row Cell</td>
+                <th>Header Cell</th>
+                <td>Row Cell</td>
+              </tr>
+            </table>
+            <h4 class="group-title">Vertical</h4>
+            <table>
+              <colgroup>
+                <col style="width: 25%" />
+                <col style="width: 25%" />
+                <col style="width: 25%" />
+                <col style="width: 25%" />
+              </colgroup>
+              <tr>
+                <th>Header Cell</th>
+                <th>Header Cell</th>
+                <th>Header Cell</th>
+                <th>Header Cell</th>
+              </tr>
+              <tr>
+                <td>
+                  There are many variations of passages of Lorem Ipsum available, but the majority have suffered
+                  alteration in some form, by injected humour
+                </td>
+                <td>
+                  is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+                  standard dummy text ever since the 1500s is simply dummy text of the printing and typesetting
+                  industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s is simply dummy
+                  text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text
+                  ever since thstandard dummy text ever since the 1500s
+                </td>
+                <td>Row Cell</td>
+                <td>Row Cell</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </article>
+    </section>
+    <section class="guide-section">
+      <h2 class="section-title">Form</h2>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Vertical</h3>
+        <div class="flex flex-col gap-5">
+          <div class="form form-lg w-[400px]">
+            <div class="form-head">
+              <p3 class="form-title">Form title</p3>
+            </div>
+            <div class="form-body">
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail flex flex-col">
+                  <div class="text-input-group">
+                    <label class="hidden-text" for="text-input-example-4">label</label>
+                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
+                    <svg-icon class="text-input-icon" name="user"></svg-icon>
+                    <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">지우기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </div>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <div class="element-group">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox" class="checkbox-input" />
+                      <label for="checkbox" class="checkbox-label"> label</label>
+                    </div>
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
+                      <label for="checkbox2" class="checkbox-label"> label</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <textarea class="textarea" rows="5"></textarea>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form form-vertical w-[400px]">
+            <div class="form-head">
+              <p3 class="form-title">Form title</p3>
+            </div>
+            <div class="form-body">
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail flex flex-col">
+                  <div class="text-input-group">
+                    <label class="hidden-text" for="text-input-example-4">label</label>
+                    <input id="text-input-example-4" class="text-input" value="prefix icon + button" />
+                    <svg-icon class="text-input-icon" name="user"></svg-icon>
+                    <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">지우기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </div>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <div class="element-group">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox" class="checkbox-input" />
+                      <label for="checkbox" class="checkbox-label"> label</label>
+                    </div>
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
+                      <label for="checkbox2" class="checkbox-label"> label</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <textarea class="textarea" rows="5"></textarea>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form form-vertical form-sm w-[400px]">
+            <div class="form-head">
+              <p3 class="form-title">Form title</p3>
+            </div>
+            <div class="form-body">
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail flex flex-col">
+                  <div class="text-input-group">
+                    <label class="hidden-text" for="text-input-example-4">label</label>
+                    <input id="text-input-example-4" class="text-input text-input-sm" value="prefix icon + button" />
+                    <svg-icon class="text-input-icon" name="user"></svg-icon>
+                    <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">지우기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </div>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <div class="element-group">
+                    <div class="checkbox checkbox-sm">
+                      <input type="checkbox" id="checkbox" class="checkbox-input" />
+                      <label for="checkbox" class="checkbox-label"> label</label>
+                    </div>
+                    <div class="checkbox checkbox-sm">
+                      <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
+                      <label for="checkbox2" class="checkbox-label"> label</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <textarea class="textarea" rows="5"></textarea>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+      <article class="mb-10">
+        <h3 class="section-subtitle">Horizontal</h3>
+        <div class="flex flex-col gap-5">
+          <div class="form form-horizontal form-lg w-[538px]">
+            <div class="form-head">
+              <p3 class="form-title">Form title</p3>
+            </div>
+            <div class="form-body">
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail flex flex-col">
+                  <div class="text-input-group">
+                    <label class="hidden-text" for="text-input-example-4">label</label>
+                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
+                    <svg-icon class="text-input-icon" name="user"></svg-icon>
+                    <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">지우기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </div>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <div class="element-group">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox" class="checkbox-input" />
+                      <label for="checkbox" class="checkbox-label"> label</label>
+                    </div>
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
+                      <label for="checkbox2" class="checkbox-label"> label</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <textarea class="textarea" rows="5"></textarea>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form form-horizontal w-[538px]">
+            <div class="form-head">
+              <p3 class="form-title">Form title</p3>
+            </div>
+            <div class="form-body">
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail flex flex-col">
+                  <div class="text-input-group">
+                    <label class="hidden-text" for="text-input-example-4">label</label>
+                    <input id="text-input-example-4" class="text-input" value="prefix icon + button" />
+                    <svg-icon class="text-input-icon" name="user"></svg-icon>
+                    <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">지우기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </div>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <div class="element-group">
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox" class="checkbox-input" />
+                      <label for="checkbox" class="checkbox-label"> label</label>
+                    </div>
+                    <div class="checkbox">
+                      <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
+                      <label for="checkbox2" class="checkbox-label"> label</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <textarea class="textarea" rows="5"></textarea>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form form-horizontal form-sm w-[538px]">
+            <div class="form-head">
+              <p3 class="form-title">Form title</p3>
+            </div>
+            <div class="form-body">
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail flex flex-col">
+                  <div class="text-input-group">
+                    <label class="hidden-text" for="text-input-example-4">label</label>
+                    <input id="text-input-example-4" class="text-input text-input-sm" value="prefix icon + button" />
+                    <svg-icon class="text-input-icon" name="user"></svg-icon>
+                    <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">지우기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </div>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <div class="element-group">
+                    <div class="checkbox checkbox-sm">
+                      <input type="checkbox" id="checkbox" class="checkbox-input" />
+                      <label for="checkbox" class="checkbox-label"> label</label>
+                    </div>
+                    <div class="checkbox checkbox-sm">
+                      <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
+                      <label for="checkbox2" class="checkbox-label"> label</label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  label
+                  <span class="required">*</span>
+                  <span class="sub-label">(sublabel)</span>
+                </label>
+                <div class="form-detail">
+                  <textarea class="textarea" rows="5"></textarea>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+    <!-- 개발 완료 목록 -->
+    <section class="guide-section">
+      <h2 class="section-title">개발 UI</h2>
+      <article class="mb-10">
+        <div class="flex flex-col align-center gap-5">
+          <div class="v-group gap-3 w-72">
+            <h4 class="group-title">Select</h4>
+            <nuxt-link :to="'/selectbox'" class="button button-primary button-lg">
+              <span class="button-text">Select 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">Checkbox List</h4>
+            <nuxt-link :to="'/checkboxList'" class="button button-primary button-lg">
+              <span class="button-text">Checkbox List 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">Combobox</h4>
+            <nuxt-link :to="'/combobox'" class="button button-primary button-lg">
+              <span class="button-text">Combobox 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">Step & Tab</h4>
+            <nuxt-link :to="'/components/navigation'" class="button button-primary button-lg">
+              <span class="button-text">Step / Tab 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">ag-grid</h4>
+            <nuxt-link :to="'/ag-grid'" class="button button-primary button-lg">
+              <span class="button-text">ag-grid 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">Today</h4>
+            <nuxt-link :to="'/dayjs'" class="button button-primary button-lg">
+              <span class="button-text">Today 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">DatePicker</h4>
+            <nuxt-link :to="'/vue-datepicker-next'" class="button button-primary button-lg">
+              <span class="button-text">datepicker 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">Highcharts</h4>
+            <nuxt-link :to="'/highcharts'" class="button button-primary button-lg">
+              <span class="button-text">highcharts 예시 이동</span>
+            </nuxt-link>
+            <h4 class="group-title">Modal</h4>
+            <nuxt-link :to="'/vue-final-modal'" class="button button-primary button-lg">
+              <span class="button-text">modal 예시 이동</span>
+            </nuxt-link>
+          </div>
+        </div>
+      </article>
     </section>
   </div>
 </template>
@@ -1840,8 +2872,9 @@ import Locale from "~/pages/locale/index.vue";
 import VueDatepickerNext from "~/pages/vue-datepicker-next/index.vue";
 import VueFinalModal from "~/pages/vue-final-modal/index.vue";
 import Notification from "../components/extends/notification/Notification.vue";
-import InlineNotification from "../components/extends/inline-notification/InlineNotification.vue";
 import Breadcrumb from "../components/base/breadcrumb/Breadcrumb.vue";
+import SelectBox from "../components/extends/select-box/SelectBox.vue";
+
 
 const currentComponent = shallowRef(Dayjs);
 
@@ -1851,10 +2884,10 @@ const components: any = {
   Dayjs,
   Highcharts,
   Locale,
+  SelectBox,
   VueDatepickerNext,
   VueFinalModal,
   Notification,
-  InlineNotification,
   Breadcrumb
 };
 
@@ -1864,6 +2897,29 @@ function clickMenu(menu: string) {
 
 function checkCurrentPage(item: number): void {
   console.log("Emit currentPageNumber: ", item);
+}
+
+const isFirstCheckedEvent: boolean = true;
+
+const options: { [key: string]: string | number }[] = [
+  {
+    label: "option1",
+    value: "option11"
+  },
+  {
+    label: "option2",
+    value: "option22"
+  },
+  {
+    label: "option3",
+    value: "option33"
+  }
+];
+
+const selectedItem = "";
+
+function selectItem(item: string | number) {
+  console.log(item);
 }
 </script>
 

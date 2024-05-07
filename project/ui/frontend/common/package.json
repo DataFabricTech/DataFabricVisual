@@ -46,7 +46,8 @@
     "nuxt-lodash": "^2.5.3",
     "prettier": "^3.2.4",
     "vue-datepicker-next": "^1.0.3",
-    "vue-final-modal": "^4.5.3"
+    "vue-final-modal": "^4.5.3",
+    "vue3-uuid": "^1.0.0"
   },
   "browserslist": [
     ">0.3%",

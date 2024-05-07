@@ -1,4 +1,4 @@
-@mixin notification-color($bg: null, $border: null, $icon-color: null) {
+@mixin notification-box-color($bg: null, $border: null, $icon-color: null) {
   background-color: $bg;
   border-color: $border;
   .notification-icon {
@@ -6,7 +6,7 @@
   }
 }
 
-.notification {
+.notification-box {
   @include flex($direction: column, $vertical: stretch);
   @include box-shadow('md');
   gap: $spacing-8;
@@ -15,43 +15,32 @@
   border-radius: $border-radius-4;
   border: 1px solid $neutral-200;
 
-  &-content {
+  &-group {
     @include flex($vertical: flex-start, $horizontal: space-between);
     gap: $spacing-8;
 
-    &:only-child{
+    &:only-child {
       align-items: center;
     }
   }
 
-  &-icon {
-    @include icon-size('sm');
-    flex-shrink: 0;
-  }
-
-  &-detail {
-    flex-grow: 1;
-    font-size: 14px;
-    color: $neutral-800
-  }
-
   &-info {
-    @include notification-color($bg: $info-100, $border: $info-300, $icon-color: $info-500);
+    @include notification-box-color($bg: $info-100, $border: $info-300, $icon-color: $info-500);
     @include box-shadow('sm');
   }
 
   &-warning {
-    @include notification-color($bg: $warning-100, $border: $warning-300, $icon-color: $warning-500);
+    @include notification-box-color($bg: $warning-100, $border: $warning-300, $icon-color: $warning-500);
     @include box-shadow('sm');
   }
 
   &-success {
-    @include notification-color($bg: $success-100, $border: $success-300, $icon-color: $success-500);
+    @include notification-box-color($bg: $success-100, $border: $success-300, $icon-color: $success-500);
     @include box-shadow('sm');
   }
 
   &-error {
-    @include notification-color($bg: $error-100, $border: $error-300, $icon-color: $error-500);
+    @include notification-box-color($bg: $error-100, $border: $error-300, $icon-color: $error-500);
     @include box-shadow('sm');
   }
 }

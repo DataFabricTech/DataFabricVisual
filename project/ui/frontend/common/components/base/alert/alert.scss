@@ -1,0 +1,47 @@
+.alert {
+  @include z-index('alert');
+  @include box-shadow('xl');
+  display: flex;
+  flex-direction: column;
+  min-width: 380px;
+  background: $neutral-0;
+  border-radius: $border-radius-4;
+
+  &-body {
+    padding: $spacing-20;
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    //
+    //.notification-icon {
+    //  @include icon-color($neutral-500);
+    //}
+  }
+
+  &-foot {
+    display: flex;
+    align-items: center;
+    padding: $spacing-12 $spacing-16 $spacing-16;
+
+    &-group {
+      display: flex;
+      gap: $spacing-8;
+      margin-left: auto;
+    }
+  }
+
+  //$alert-type-map: (
+  //        "info": $info-500,
+  //        "warning": $warning-500,
+  //        "success": $success-500,
+  //        "error": $error-500,
+  //);
+  //
+  //@each $value, $color in $alert-type-map {
+  //  &-#{$value} {
+  //    .notification-icon {
+  //      @include icon-color($color);
+  //    }
+  //  }
+  //}
+}
