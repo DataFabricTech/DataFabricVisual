@@ -17,7 +17,7 @@ interface DatepickerComposition extends DatepickerProps {
 export function DatepickerComposition(props: DatepickerProps): DatepickerComposition {
   const DATETIME = "datetime";
   const dayjs = useDayjs();
-  const disabledDate: (date: Date) => boolean = (date) => {
+  const disabledDate: (date: Date) => boolean = (date: Date): boolean => {
     if (_.isNil(props.disabledDateRange)) {
       return false;
     }
@@ -35,8 +35,8 @@ export function DatepickerComposition(props: DatepickerProps): DatepickerComposi
     if (!validateDate(start, end)) {
       return false;
     }
-    let startDateTime = start === null ? null : `${dayjs(date).format("YYYY-MM-DD")} ${start}`;
-    let endDateTime = end === null ? null : `${dayjs(date).format("YYYY-MM-DD")} ${end}`;
+    let startDateTime: string | null = start === null ? null : `${dayjs(date).format("YYYY-MM-DD")} ${start}`;
+    let endDateTime: string | null = end === null ? null : `${dayjs(date).format("YYYY-MM-DD")} ${end}`;
     return calculateRange(date, startDateTime, endDateTime);
   };
   const validateDate = (start: string | null | undefined, end: string | null | undefined): boolean => {

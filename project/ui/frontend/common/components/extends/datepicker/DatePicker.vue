@@ -25,7 +25,8 @@
         :value="modelValue"
         :value-type="valueType"
         class="datepicker"
-        @update:value="updateDate($event)"
+        @change="emit('change', $event)"
+        @update:value="emit('update:modelValue', $event)"
       >
         <template v-if="isPanelVisible()" #footer>
           <button class="mx-btn mx-btn-text" @click="switchDateTimePanel">
@@ -65,11 +66,6 @@ const props = withDefaults(defineProps<DatepickerProps>(), {
 });
 const emit = defineEmits(["update:modelValue", "change"]);
 const modelValue: ModelRef<string | string[] | null> = defineModel<string | string[] | null>({ default: "" });
-
-const updateDate = (e: unknown) => {
-  emit("update:modelValue", e);
-  emit("change", modelValue);
-};
 
 const {
   type,
