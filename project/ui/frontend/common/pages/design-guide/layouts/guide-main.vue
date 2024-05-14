@@ -1,5 +1,6 @@
 <template>
   <main class="guide-main">
+    <GuideColor  id="guide-color"/>
     <GuideAlert  id="guide-alert"/>
     <GuideBadge  id="guide-badge"/>
     <GuideBreadcrumb  id="guide-breadcrumb"/>
@@ -25,6 +26,7 @@
 </template>
 
 <script setup>
+import GuideColor from "../pages/guide-color.vue";
 import GuideAlert from "../pages/guide-alert.vue";
 import GuideBadge from "../pages/guide-badge.vue";
 import GuideButton from "../pages/guide-button.vue";

@@ -12,7 +12,7 @@
           <p class="lnb-item-title">Foundation</p>
           <ul class="sub-list">
             <li class="sub-item">
-              <a class="sub-item-link" href="#">color</a>
+              <a class="sub-item-link" href="#guide-alert">color</a>
             </li>
             <li class="sub-item">
               <a class="sub-item-link" href="#">Typography</a>
