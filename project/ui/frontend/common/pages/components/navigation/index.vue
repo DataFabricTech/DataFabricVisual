@@ -52,6 +52,7 @@
     <h1>Tab Example</h1>
     <h3>type: string || Emit : {{ currentTab }}</h3>
     <Tab
+      class="tab-line"
       :data="tabOptions"
       :label-key="'label'"
       :value-key="'value'"
@@ -72,7 +73,7 @@
         <div>수원시</div>
       </template>
     </Tab>
-
+    </div>
     <h3>type: number || Emit : {{ currentTab2 }}</h3>
     <Tab
       :data="tabOptions2"
@@ -82,7 +83,6 @@
       :current-item-type="'index'"
       @change="changeTab2"
     ></Tab>
-  </div>
 </template>
 
 <script setup lang="ts">
