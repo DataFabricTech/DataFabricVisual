@@ -15,6 +15,9 @@
 .menu {
   @include menu-size;
   z-index: auto;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
   box-shadow: none;
   border-color: $neutral-200;
 

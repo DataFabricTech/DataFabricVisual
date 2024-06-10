@@ -12,10 +12,10 @@
     flex-grow: 1;
     width: 100%;
     height: 100%;
-    //
-    //.notification-icon {
-    //  @include icon-color($neutral-500);
-    //}
+
+    .notification-detail {
+      @include icon-color($neutral-800);
+    }
   }
 
   &-foot {
