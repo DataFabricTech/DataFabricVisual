@@ -1,0 +1,90 @@
+
+.toggle {
+  @include flex;
+  position: relative;
+  padding: $spacing-2;
+  background-color: $neutral-100;
+  border-radius: $border-radius-4;
+
+  &-input {
+    @include hidden-input;
+
+    &:checked {
+      & + label {
+        background-color: $neutral-0;
+        color: $neutral-800;
+
+        .toggle-icon {
+          @include icon-color($neutral-800);
+        }
+      }
+    }
+  }
+
+  &-label {
+    @include font-size('12');
+    @include flex($horizontal: flex-start);
+    height: 24px;
+    padding: 0 $spacing-8;
+    gap: $spacing-4;
+    border-radius: $border-radius-4;
+    color: $neutral-400;
+    font-weight: 600;
+    cursor: pointer;
+
+    &:hover {
+      color: $neutral-800;
+
+      .toggle-icon {
+        @include icon-color($neutral-800);
+      }
+    }
+  }
+
+  &-icon {
+    @include icon-size(18px);
+    @include icon-color($neutral-400);
+  }
+
+  &-lg {
+    .toggle {
+      &-label {
+        @include font-size('14');
+        height: 32px;
+        padding: 0 $spacing-12;
+      }
+
+      &-icon {
+        @include icon-size('sm');
+      }
+    }
+  }
+
+  &-primary {
+    .toggle {
+      &-input {
+        &:checked {
+          & + label {
+            background-color: $primary-500;
+            color: $neutral-0;
+
+            .toggle-icon {
+              @include icon-color($neutral-0);
+            }
+          }
+        }
+      }
+
+      &-label {
+
+        &:hover {
+          color: $primary-500;
+
+          .toggle-icon {
+            @include icon-color($primary-500);
+          }
+        }
+      }
+    }
+  }
+}

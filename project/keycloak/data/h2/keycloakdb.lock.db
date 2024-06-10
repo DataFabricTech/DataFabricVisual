@@ -1,0 +1,6 @@
+#FileLock
+#Fri Feb 02 09:42:10 KST 2024
+server=172.16.0.74\:51743
+hostName=172.16.0.74
+method=file
+id=18d674411331fc94dbf476ac0f11c5256a877ed2c8d

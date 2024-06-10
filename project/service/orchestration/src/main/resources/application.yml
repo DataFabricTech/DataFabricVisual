@@ -1,0 +1,147 @@
+spring:
+  profiles:
+    active: local
+  web:
+    locale: ko
+    resources:
+      chain:
+        compressed: true
+        cache: true
+      add-mappings: true
+
+  output:
+    ansi:
+      enabled: detect
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+
+  # H2 Console: /h2-console
+  primary:
+    datasource:
+      hikari:
+        idle-timeout: 10000
+        maximum-pool-size: 10
+        minimum-idle: 5
+        pool-name: BaseHikariPool
+        jdbc-url: jdbc:h2:mem:testdb;MODE=MySQL;INIT=runscript from 'classpath:/config/h2_initialize.sql'
+        username: sa
+        password:
+        driver-class-name: org.h2.Driver
+    hibernate:
+      property:
+        "[hibernate.dialect]": org.hibernate.dialect.H2Dialect
+        "[hibernate.show_sql]": true
+        "[hibernate.format_sql]": true
+        "[hibernate.hbm2ddl.auto]": none
+        "[hibernate.cache.use_second_level_cache]": false
+        "[hibernate.cache.use_query_cache]": false
+        "[hibernate.globally_quoted_identifiers]": true
+  # 개발 서버 생성 시 수정
+#  primary:
+#    datasource:
+#      hikari:
+#        idle-timeout: 10000
+#        maximum-pool-size: 10
+#        minimum-idle: 5
+#        pool-name: BaseHikariPool
+#        jdbc-url: jdbc:postgresql://192.168.107.13:30002/postgres?currentSchema=idp
+#        username: root
+#        password: biris.manse
+#        driver-class-name: org.postgresql.Driver
+#    hibernate:
+#      property:
+#        "[hibernate.dialect]": org.hibernate.dialect.PostgreSQLDialect
+#        "[hibernate.show_sql]": true
+#        "[hibernate.format_sql]": true
+#        "[hibernate.hbm2ddl.auto]": none
+#        "[hibernate.cache.use_second_level_cache]": false
+#        "[hibernate.cache.use_query_cache]": false
+#        "[hibernate.globally_quoted_identifiers]": true
+  h2:
+    console:
+      enabled: true
+
+logging:
+  level:
+    root: info
+    com:
+      mobigen: debug
+
+server:
+  port: 8001
+  servlet:
+    session:
+      timeout: 7200
+      cookie:
+        name: msf-session-id
+    encoding:
+      charset: UTF-8
+    context-path: /
+  compression:
+    enabled: true
+  tomcat:
+    uri-encoding: UTF-8
+  error:
+    whitelabel:
+      enabled: false
+    path: /error
+
+i18n:
+  basenames: i18n/messages, i18n/exception, i18n/validation
+
+http-client-configuration:
+  max-total: 300
+  default-max-per-route: 50
+  default-keep-alive-duration: -1
+  connection-reqeust-timeout: 3000
+  connection-timeout: 3000
+  socket-timeout: -1
+  idle-timeout: 60
+
+#sentry:
+#  dsn: https://c10f0211c0bb41af973f1f5ebf7fda60@o924939.ingest.sentry.io/6044951
+#  traces-sample-rate: 1
+#  logging:
+#    enabled: off
+
+# 사용자 정의 설정들
+properties:
+  iris:
+    security:
+      ignores: /css/**, /fonts/**, /img/**, /js/**, /favicon.ico
+      permit-alls: /**, /h2-console/**, /sample/public-key, /sample/authenticate, /error, /test, /api/**
+      redirect-url: /
+      iframe-option: disable #disable, same-origin, deny
+      csrf: true
+      cors:
+        pattern: /** #/auth/**
+        allowed-origins: http://localhost:3000 #"*" #http://server-name:port
+        allowed-methods: "*" #PUT,DELETE,GET,POST ...
+        allowed-headers: "*" #Context-Type, ...
+        allow-credentials: true
+      same-site: Lax #None, Lax, Strict
+    token:
+      access-token: access_token
+      refresh-token: refresh_token
+      secret: jwt-secrect-b-iris # Keycloak "HS256" 알고리즘 secret 값
+    keycloak:
+      url: http://192.168.107.13:30003/auth
+      realm: IRIS-Data-Portal
+      client-id: IRIS-Data-Portal-Client
+      client-secret: M9ioKECnQuzG47SLQhLiqPIVX8TCVU20 # token secret key
+    route:
+      locales: ko,en,zh,ja
+    auth:
+      rsa-enabled: true
+    test:
+      username: root
+      password: "!Biris.test202"

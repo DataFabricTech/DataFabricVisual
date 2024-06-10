@@ -1,0 +1,134 @@
+
+.checkbox {
+
+  &-input {
+    &:checked + label {
+      &::after {
+        transform: scale(1) rotate(-45deg);
+      }
+    }
+
+    &:indeterminate {
+
+      & + .checkbox-label {
+
+        &::before {
+          background-color: $primary-500;
+          border-color: $primary-500;
+        }
+
+        &::after {
+          transform: scale(1) rotate(0deg);
+          top: 6px;
+          left: 4px;
+          width: 10px;
+          border-left-width: 0;
+          border-bottom-width: 2px;
+          border-color: $neutral-0;
+        }
+
+        &:hover::before {
+          background-color: $primary-700;
+          border-color: $primary-700;
+        }
+
+        &:active::before {
+          background-color: $primary-900;
+          border-color: $primary-900;
+        }
+      }
+    }
+  }
+
+  &-label {
+    &::before {
+      border-radius: $border-radius-2
+    }
+
+    &::after {
+      left: 5px;
+      top: 2px;
+      width: 10px;
+      height: 6px;
+      border-left: 2px solid $neutral-0;
+      border-bottom: 2px solid $neutral-0;
+      transform: scale(0) rotate(-45deg);
+    }
+  }
+
+
+  // -------------------------
+  // 부분 선택
+  // -------------------------
+  &-indeterminate .checkbox-input {
+    &:checked {
+      & + .checkbox-label {
+
+        &::before {
+          background-color: $primary-500;
+          border-color: $primary-500;
+        }
+
+        &::after {
+          transform: scale(1) rotate(0deg);
+          top: 6px;
+          left: 4px;
+          width: 10px;
+          border-left-width: 0;
+          border-bottom-width: 2px;
+          border-color: $neutral-0;
+        }
+
+        &:hover::before {
+          background-color: $primary-700;
+          border-color: $primary-700;
+        }
+
+        &:active::before {
+          background-color: $primary-900;
+          border-color: $primary-900;
+        }
+      }
+    }
+  }
+
+  &-sm {
+    .checkbox {
+      &-input {
+        &:indeterminate {
+          & + .checkbox-label {
+            &::after {
+              top: 5px;
+              left: 4px;
+              width: 8px;
+            }
+          }
+        }
+
+      }
+
+      &-label {
+
+        &::after {
+          left: 4px;
+          top: 1px;
+          width: 9px;
+          height: 5px;
+        }
+      }
+    }
+
+    &.checkbox.checkbox-indeterminate .checkbox-input {
+      &:checked {
+        & + .checkbox-label {
+
+          &::after {
+            top: 5px;
+            left: 4px;
+            width: 8px;
+          }
+        }
+      }
+    }
+  }
+}

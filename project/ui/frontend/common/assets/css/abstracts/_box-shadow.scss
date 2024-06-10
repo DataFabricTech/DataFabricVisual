@@ -1,0 +1,19 @@
+$box-shadows: (
+        sm: 0px 1px 2px 0px rgba(162, 171, 181, 0.40),
+        md: 1px 6px 5px 0px rgba(162, 171, 181, 0.15),
+        lg: 0px 16px 20px 0px rgba(162, 171, 181, 0.3),
+        xl: 0px 15px 30px 0px rgba(124, 127, 132, 1)
+);
+
+@mixin box-shadow($shadow) {
+  @if map-has-key($box-shadows, $shadow) {
+    box-shadow: #{map-get($box-shadows, $shadow)};
+  } @else {
+    @warn "#{$shadow} 값이 올바르지 않습니다." + "#{$box-shadows} 중에 하나로 선택해 주세요";
+  }
+}
+
+// * Usage *
+// .box {
+//  @include box-shadow('sm');
+// }

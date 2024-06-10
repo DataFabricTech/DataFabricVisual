@@ -1,0 +1,320 @@
+@mixin button {
+  @include flex;
+  border-radius: $border-radius-4;
+  font-weight: 600;
+
+  &:disabled {
+    color: $neutral-300;
+    background-color: $neutral-100;
+    cursor: not-allowed;
+  }
+}
+
+@mixin button-color($color: $neutral-0, $bg, $border: transparent, $color-hover:  null, $bg-hover: null,$border-hover: null, $color-active: null, $bg-active: null,$border-active: null) {
+  color: $color;
+  background-color: $bg;
+  border: 1px solid $border;
+
+  &:hover:not(:disabled) {
+    color: $color-hover;
+    background-color: $bg-hover;
+    border-color: $border-hover;
+
+    .button-icon {
+      @include icon-color($color-hover);
+    }
+  }
+
+  &:active:not(:disabled) {
+    color: $color-active;
+    background-color: $bg-active;
+    border-color: $border-active;
+
+    .button-icon {
+      @include icon-color($color-active);
+    }
+  }
+  .button-icon {
+    @include icon-color($color);
+  }
+}
+
+@mixin button-size($height: 32px, $gap: null, $padding: 6px, $font-size: '13', $icon-xs: false) {
+  height: $height;
+  gap: $gap;
+  padding: 0 $padding;
+  @include font-size($font-size);
+  @if $icon-xs {
+    .button-icon {
+      @include icon-size('xs');
+    }
+  }
+}
+
+@mixin icon-button-size($size: 28px, $icon-size: 20px) {
+  width: $size;
+  height: $size;
+  .button-icon {
+    width: $icon-size;
+    height: $icon-size;
+  }
+}
+
+.button {
+  @include button;
+  @include button-size($gap: 4px);
+  font-weight: 600;
+
+  &:disabled {
+
+    .button-icon {
+      @include icon-color($neutral-300);
+    }
+  }
+
+  .button-icon {
+    @include icon-size('sm');
+  }
+
+  // Size
+  &-lg {
+    @include button-size($height: 36px, $font-size: '14', $padding: $spacing-8);
+  }
+
+  &-sm {
+    @include button-size($height: 28px, $gap: 2px, $font-size: '12', $icon-xs: true);
+  }
+
+  // Color Theme
+  &-primary {
+    @include button-color($bg: $primary-500, $bg-hover: $primary-300, $bg-active: $primary-700);
+
+    &-stroke {
+      @include button-color($color: $primary-500, $bg: $neutral-0, $border: $primary-500, $bg-hover: $primary-100, $border-hover: $primary-100, $border-active: $primary-500);
+    }
+
+    &-lighter {
+      @include button-color($color: $primary-500, $bg: $primary-100, $bg-hover: $neutral-0, $border-hover: $primary-500, $bg-active: $primary-100);
+    }
+
+    &-ghost {
+      @include button-color($color: $primary-500, $bg: $neutral-0, $bg-hover: $primary-100, $color-active: $neutral-0, $bg-active: $primary-300);
+    }
+  }
+
+  &-secondary {
+    @include button-color($bg: $secondary-500, $bg-hover: $secondary-300, $bg-active: $secondary-700);
+
+    &-stroke {
+      @include button-color($color: $secondary-500, $bg: $neutral-0, $border: $secondary-500, $bg-hover: $secondary-100, $border-hover: $secondary-100, $border-active: $secondary-500);
+    }
+
+    &-lighter {
+      @include button-color($color: $secondary-500, $bg: $secondary-100, $bg-hover: $neutral-0, $border-hover: $secondary-500, $bg-active: $secondary-100);
+    }
+
+    &-ghost {
+      @include button-color($color: $secondary-500, $bg: $neutral-0, $bg-hover: $secondary-100, $color-active: $neutral-0, $bg-active: $secondary-300);
+    }
+  }
+
+  &-error {
+    @include button-color($bg: $error-500, $bg-hover: $error-300, $bg-active: $error-700);
+
+    &-stroke {
+      @include button-color($color: $error-500, $bg: $neutral-0, $border: $error-500, $bg-hover: $error-100, $border-hover: $error-100, $color-active: $error-500, $border-active: $error-500);
+    }
+
+    &-lighter {
+      @include button-color($color: $error-500, $bg: $error-100, $bg-hover: $neutral-0, $border-hover: $error-500, $bg-active: $error-100);
+    }
+
+    &-ghost {
+      @include button-color($color: $error-500, $bg: $neutral-0, $bg-hover: $error-100, $color-active: $neutral-0, $bg-active: $error-300);
+    }
+  }
+
+  &-neutral {
+    @include button-color($color: $neutral-0, $bg: $neutral-800, $bg-hover: $neutral-500, $bg-active: $neutral-800);
+
+    &-stroke {
+      @include button-color($color: $neutral-800, $bg: $neutral-0, $border: $neutral-200, $bg-hover: $neutral-100, $border-hover: $neutral-100, $border-active: $neutral-800);
+    }
+
+    &-lighter {
+      @include button-color($color: $neutral-800, $bg: $neutral-100, $bg-hover: $neutral-0, $border-hover: $neutral-100, $bg-active: $neutral-100, $border-active: $neutral-800);
+    }
+
+    &-ghost {
+      @include button-color($color: $neutral-800, $bg: transparent, $bg-hover: $neutral-100, $color-active: $neutral-0, $bg-active: $neutral-300);
+    }
+  }
+
+  // Icon Button Custom
+  &:has(.hidden-text) {
+    @include icon-button-size;
+    padding: 0;
+
+    &.button {
+      &-xl {
+        @include icon-button-size($size: 36px, $icon-size: 24px);
+      }
+
+      &-lg {
+        @include icon-button-size($size: 32px, $icon-size: 24px);
+      }
+
+      &-sm {
+        @include icon-button-size($size: 24px, $icon-size: 18px);
+      }
+
+      &-xs {
+        @include icon-button-size($size: 20px, $icon-size: 16px);
+      }
+
+      // icon neutral 별도 Theme
+      &-neutral {
+        background-color: $neutral-500;
+
+        &:hover:not(:disabled) {
+          background-color: $neutral-400;
+        }
+
+        &:active:not(:disabled) {
+          background-color: $neutral-500;
+        }
+
+        &-stroke {
+          &:hover:not(:disabled) {
+            .button-icon {
+              @include icon-color($neutral-500);
+            }
+          }
+
+          &:active:not(:disabled) {
+            border-color: $neutral-500;
+
+            .button-icon {
+              @include icon-color($neutral-500);
+            }
+          }
+
+          .button-icon {
+            @include icon-color($neutral-500);
+          }
+        }
+
+        &-lighter {
+          &:hover:not(:disabled) {
+            .button-icon {
+              @include icon-color($neutral-500);
+            }
+          }
+
+          &:active:not(:disabled) {
+            border-color: $neutral-500;
+
+            .button-icon {
+              @include icon-color($neutral-500);
+            }
+          }
+
+          .button-icon {
+            @include icon-color($neutral-500);
+          }
+        }
+
+        &-ghost {
+
+          &:hover:not(:disabled) {
+            .button-icon {
+              @include icon-color($neutral-500);
+            }
+          }
+
+          &:active:not(:disabled) {
+            .button-icon {
+              @include icon-color($neutral-0);
+            }
+          }
+
+          .button-icon {
+            @include icon-color($neutral-500);
+          }
+        }
+      }
+    }
+  }
+}
+
+@mixin link-button-color($color: null, $color-active: null) {
+  color: $color;
+
+  &:active:not(:disabled) {
+    color: $color-active;
+
+    .button-icon {
+      @include icon-color($color-active);
+    }
+  }
+  .button-icon {
+    @include icon-color($color);
+  }
+}
+
+@mixin link-button-size($gap: $spacing-4,$font-size: null, $icon-size: 'sm') {
+  gap: $gap;
+  @if $font-size != null {
+    @include font-size($font-size);
+  }
+
+  .button-icon {
+    @include icon-size($icon-size);
+  }
+}
+
+.link-button {
+  @include flex;
+  @include link-button-size;
+  @include link-button-color($color: $neutral-500, $color-active: $neutral-700);
+  font-weight: 600;
+
+  &:hover:not(:disabled) {
+    text-decoration: underline;
+  }
+
+  &:disabled {
+    color: $neutral-200;
+    cursor: not-allowed;
+
+    .button-icon {
+      @include icon-color($neutral-200);
+    }
+  }
+
+  .button-icon {
+    @include icon-size('sm');
+  }
+
+  // Size
+  &-sm {
+    @include link-button-size($gap: $spacing-2, $font-size: '12', $icon-size: 'xs');
+  }
+
+  // Color Theme
+  &-black {
+    @include link-button-color($color: $neutral-900, $color-active: $neutral-900);
+  }
+
+  &-support {
+    @include link-button-color($color: $info-500, $color-active: $info-700);
+  }
+
+  &-error {
+    @include link-button-color($color: $error-500, $color-active: $error-700);
+  }
+
+  &-underline {
+    text-decoration: underline;
+  }
+}

@@ -1,0 +1,143 @@
+@mixin text-input-size($font-size: null , $size: 32px, $right-padding: $spacing-6, $left-padding: $spacing-8, $search-icon-size: md, $input-icon-size: 18px) {
+  @if $font-size != null {
+    @include font-size($font-size);
+  }
+  height: $size;
+  padding: 0 $right-padding 0 $left-padding;
+
+  &::placeholder {
+    @if $font-size != null {
+      @include font-size($font-size);
+    }
+  }
+
+  & ~ .text-input-search-button {
+    width: $size;
+    height: $size - 2px;
+
+    .button-icon {
+      @include icon-size($search-icon-size);
+    }
+  }
+
+  & ~ .text-input-icon {
+    @include icon-size($input-icon-size);
+  }
+}
+
+.text-input {
+  @include text-input-size;
+
+  &:focus:not(:invalid) {
+    & ~ .text-input-icon {
+      @include icon-color($primary-500);
+    }
+  }
+
+  &[disabled],
+  &[disabled]:hover,
+  &[disabled]:focus {
+    & ~ .text-input-icon {
+      @include icon-color($neutral-300);
+    }
+
+    & ~ .text-input-action-button,
+    & ~ .text-input-search-button {
+      cursor: not-allowed;
+    }
+  }
+
+  // text-input Size
+  &-lg {
+    @include text-input-size($size: 36px, $right-padding: $spacing-8, $left-padding: 10px, $input-icon-size: sm)
+  }
+
+  &-sm {
+    @include text-input-size($font-size: '13', $size: 28px, $right-padding: $spacing-6, $left-padding: $spacing-8, $search-icon-size: sm)
+  }
+
+  // -------------------------
+  // text-input group
+  // -------------------------
+  &-group {
+    position: relative;
+
+    .text-input-icon {
+      @include icon-color($neutral-600);
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .text-input-action-button {
+      @include z-index('float');
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    &:has(.text-input-icon) {
+      .text-input {
+        padding-left: $spacing-32;
+
+        &:placeholder-shown + .text-input-icon {
+          @include icon-color($neutral-400);
+        }
+      }
+    }
+
+    &:has(.text-input-action-button, .svg-icon) {
+      .text-input {
+        padding-right: $spacing-32;
+      }
+    }
+
+    .text-input-search-button {
+      @include z-index('float');
+      position: absolute;
+      right: 1px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-left: 1px solid $neutral-200;
+      border-radius: 0 $border-radius-4 $border-radius-4 0;
+    }
+
+    &:has(.text-input-search-button) {
+      .text-input-action-button {
+        right: 38px;
+      }
+    }
+
+    &:has(.text-input-action-button + .text-input-search-button) {
+      .text-input {
+        padding-right: $spacing-64;
+
+        &.text-input-lg {
+          padding-right: 72px;
+        }
+
+        &.text-input-sm {
+          padding-right: $spacing-56;
+        }
+      }
+    }
+
+    &:has(.text-input-lg ~ .text-input-search-button) {
+      .text-input-action-button {
+        right: 42px;
+      }
+    }
+
+    &:has(.text-input-sm ~ .text-input-search-button) {
+      .text-input-action-button {
+        right: 32px;
+      }
+    }
+  }
+
+  &-group ~ .notification {
+    margin-top: $spacing-4;
+  }
+}
