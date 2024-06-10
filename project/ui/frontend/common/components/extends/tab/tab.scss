@@ -1,7 +1,6 @@
 .tab {
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
 
   &-list {
     display: flex;
@@ -61,7 +60,47 @@
     &-text {
       @include ellipsis;
       font-weight: 600;
+    }
+  }
 
+  &.tab-line {
+    width: fit-content;
+
+    .tab-list {
+      height: auto;
+      gap: $spacing-16;
+      border-bottom: 2px solid $neutral-200;
+
+    }
+
+    .tab-item {
+      border: none;
+
+      &.is-tab-item-selected {
+        position: relative;
+        &:before {
+          position: absolute;
+          content: '';
+          height: 2px;
+          width: 100%;
+          bottom: -2px;
+          background: $primary-500;
+        }
+      }
+    }
+
+    .tab-button {
+      gap: $spacing-4;
+      background: transparent;
+      padding: $spacing-12 0;
+
+      &:active {
+        background: transparent;
+      }
+
+      &-text {
+        font-weight: 400;
+      }
     }
   }
 
