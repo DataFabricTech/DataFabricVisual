@@ -1,0 +1,79 @@
+.modal-fixed {
+  z-index: 8001;
+  @include flex;
+}
+
+.modal {
+  @include z-index('modal');
+  @include box-shadow('lg');
+  display: flex;
+  flex-direction: column;
+  //width: 620px;
+  background: $neutral-0;
+  border-radius: $border-radius-12;
+
+  &-head {
+    @include flex($horizontal: space-between);
+    flex-shrink: 0;
+    padding: $spacing-16 $spacing-16 $spacing-12;
+
+    &-text {
+      display: flex;
+      align-items: center;
+      gap: $spacing-4;
+    }
+
+    &-title {
+      @include font-size('16');
+      font-weight: 600;
+    }
+
+    &-subtitle {
+      @include font-size('15');
+      font-weight: 400;
+      color: $neutral-500;
+    }
+  }
+
+  &-body {
+    @include flex($direction: column);
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+  }
+
+  &-foot {
+    @include flex($horizontal: space-between);
+    gap: $spacing-8;
+    padding: $spacing-12 $spacing-16 $spacing-16;
+
+    &-group {
+      display: flex;
+      gap: $spacing-8;
+
+      &:only-child {
+        margin-left: auto;
+      }
+    }
+
+    &:has(> .button + .button) {
+      .button {
+        flex: 1;
+      }
+    }
+  }
+
+  $modal-padding-map: (
+          "16": $spacing-16,
+          "32": $spacing-32,
+          "48": $spacing-48
+  );
+
+  @each $value, $padding in $modal-padding-map {
+    &-padding-#{$value} {
+      .modal-body {
+        padding: $padding;
+      }
+    }
+  }
+}

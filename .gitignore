@@ -135,8 +135,8 @@ nbdist/
 
 ### IRIS Web Development Framework
 # docker build
-/dist-source/
-/dist-docker/
-/docker/target/
+**/dist-source/
+**/dist-docker/
+**/docker/target/
 
 # nuxt build

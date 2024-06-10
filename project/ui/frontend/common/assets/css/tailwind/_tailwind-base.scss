@@ -15,7 +15,10 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
     letter-spacing: 0;
+    scroll-behavior: smooth;
   }
 
   article,
@@ -47,13 +50,15 @@
 
   a:focus,
   button:focus,
-  input:focus {
+  input:focus,
+  textarea:focus {
     outline: none;
   }
 
   a:focus-visible,
   button:focus-visible,
-  input:focus-visible {
+  input:focus-visible:not(:focus),
+  div[tabindex="0"]:focus-visible {
     outline: 1px dashed $neutral-900;
   }
 
@@ -70,8 +75,9 @@
     }
 
     &:disabled {
-      & + label {
-        color: $neutral-300;
+      & + label,
+      & + label:hover {
+        color: $neutral-300 !important;
         cursor: not-allowed;
 
         &::before {
@@ -80,8 +86,12 @@
           background-color: $neutral-200;
         }
 
+        svg {
+          color: $neutral-300 !important;
+        }
+
         span {
-          color: $neutral-300;
+          color: $neutral-300 !important;
         }
       }
     }
@@ -96,5 +106,10 @@
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
+  }
+
+  ::selection {
+    background: $secondary-500;
+    color: #fff;
   }
 }

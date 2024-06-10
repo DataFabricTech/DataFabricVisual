@@ -22,67 +22,47 @@ $font-families: (
 //   @include font-family('sans');
 // }
 
+// TODO: [퍼블리싱] 믹스인/변수 재정의 및 리팩토링
 //-------------------------------------------
-//  Font Size
+//  Heading
+// ------------------------------------------
+// heading size : 40px,32px,24px
+
+//@mixin heading($size) {
+//  font-size: $size;
+//  line-height: 1.2;
+//  font-weight: 700;
+//}
+
+//-------------------------------------------
+//  font-size + line-height
 // ------------------------------------------
 @mixin font-size($size) {
-  @if $size == 'heading-40' {
-    font-size: 40px;
-    line-height: 48px;
-    font-weight: 600;
-  } @else if $size == 'heading-32' {
-    font-size: 32px;
-    line-height: 40px;
-    font-weight: 600;
-  } @else if $size == 'heading-24' {
-    font-size: 24px;
-    line-height: 32px;
-    font-weight: 600;
-  } @else if $size == 'title-20' {
-    font-size: 20px;
-    line-height: 28px;
-    font-weight: 600;
-  } @else if $size == 'title-18' {
-    font-size: 18px;
-    line-height: 24px;
-    font-weight: 600;
-  } @else if $size == 'title-16' {
-    font-size: 16px;
-    line-height: 24px;
-    font-weight: 600;
-  } @else if $size == 'label-15' {
-    font-size: 15px;
-    line-height: 24px;
-    font-weight: 500;
-  } @else if $size == 'label-14' {
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: 500;
-  } @else if $size == 'label-13' {
-    font-size: 13px;
-    line-height: 20px;
-    font-weight: 500;
-  } @else if $size == 'label-12' {
-    font-size: 12px;
-    line-height: 18px;
-    font-weight: 500;
-  } @else if $size == 'body-15' {
-    font-size: 15px;
-    line-height: 24px;
-    font-weight: 400;
-  } @else if $size == 'body-14' {
-    font-size: 14px;
-    line-height: 20px;
-    font-weight: 400;
-  } @else if $size == 'body-13' {
-    font-size: 13px;
-    line-height: 20px;
-    font-weight: 400;
-  } @else if $size == 'body-12' {
-    font-size: 12px;
-    line-height: 18px;
-    font-weight: 400;
+  $font-size: (
+          "12": (font-size: 12px, line-height: 18px),
+          "13": (font-size: 13px, line-height: 20px),
+          "14": (font-size: 14px, line-height: 20px),
+          "15": (font-size: 15px, line-height: 24px),
+          "16": (font-size: 16px, line-height: 24px),
+          "18": (font-size: 18px, line-height: 24px),
+          "20": (font-size: 20px, line-height: 28px),
+          "24": (font-size: 24px, line-height: 32px),
+          "32": (font-size: 32px, line-height: 40px),
+          "40": (font-size: 40px, line-height: 48px)
+  );
+
+  @if map-has-key($font-size, $size) {
+    $properties: map-get($font-size, $size);
+    font-size: map-get($properties, font-size);
+    line-height: map-get($properties, line-height);
   } @else {
-    @warn "#{$size} 값이 올바르지 않습니다.";
+    @warn '지정된 폰트 크기가 아닙니다. 다시 한번 확인해주세요.';
   }
 }
+
+// * Usage *
+// html {
+//   @include font-size('13');
+// }
+
+

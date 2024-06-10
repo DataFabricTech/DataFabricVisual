@@ -24,6 +24,7 @@
     "@storybook/testing-library": "^0.2.0",
     "@storybook/vue3": "7.6.7",
     "@types/node": "^18.17.5",
+    "@vueuse/components": "^10.8.0",
     "autoprefixer": "^10.4.17",
     "npm": "^10.4.0",
     "nuxt": "^3.10.0",
@@ -45,7 +46,9 @@
     "nuxt-lodash": "^2.5.3",
     "prettier": "^3.2.4",
     "vue-datepicker-next": "^1.0.3",
-    "vue-final-modal": "^4.5.3"
+    "vue-final-modal": "^4.5.3",
+    "vue3-drag-resize": "^2.0.5",
+    "vue3-uuid": "^1.0.0"
   },
   "browserslist": [
     ">0.3%",

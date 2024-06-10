@@ -1,3 +1,15 @@
+@mixin button {
+  @include flex;
+  border-radius: $border-radius-4;
+  font-weight: 600;
+
+  &:disabled {
+    color: $neutral-300;
+    background-color: $neutral-100;
+    cursor: not-allowed;
+  }
+}
+
 @mixin button-color($color: $neutral-0, $bg, $border: transparent, $color-hover:  null, $bg-hover: null,$border-hover: null, $color-active: null, $bg-active: null,$border-active: null) {
   color: $color;
   background-color: $bg;
@@ -27,12 +39,11 @@
   }
 }
 
-@mixin button-size($height: 32px, $gap: null, $padding: 6px, $font-size: 13px, $icon-xs: false) {
+@mixin button-size($height: 32px, $gap: null, $padding: 6px, $font-size: '13', $icon-xs: false) {
   height: $height;
   gap: $gap;
   padding: 0 $padding;
-  font-size: $font-size;
-
+  @include font-size($font-size);
   @if $icon-xs {
     .button-icon {
       @include icon-size('xs');
@@ -50,15 +61,11 @@
 }
 
 .button {
-  @include flex;
+  @include button;
   @include button-size($gap: 4px);
-  border-radius: $border-radius-4;
-  font-weight: 500;
+  font-weight: 600;
 
   &:disabled {
-    color: $neutral-300;
-    background-color: $neutral-100;
-    cursor: not-allowed;
 
     .button-icon {
       @include icon-color($neutral-300);
@@ -71,36 +78,11 @@
 
   // Size
   &-lg {
-    @include button-size($height: 36px, $padding: $spacing-8, $font-size: 14px);
+    @include button-size($height: 36px, $font-size: '14', $padding: $spacing-8);
   }
 
   &-sm {
-    @include button-size($height: 28px, $gap: 2px, $font-size: 12px, $icon-xs: true);
-  }
-
-  // Icon Button Custom
-  &:has(.hidden-text) {
-    @include icon-button-size;
-    padding: 0;
-
-    &.button {
-      &-xl {
-        @include icon-button-size($size: 36px, $icon-size: 24px);
-      }
-
-      &-lg {
-        @include icon-button-size($size: 32px, $icon-size: 24px);
-      }
-
-      &-sm {
-        @include icon-button-size($size: 24px, $icon-size: 18px);
-      }
-
-      &-xs {
-        @include icon-button-size($size: 20px, $icon-size: 16px);
-      }
-    }
-
+    @include button-size($height: 28px, $gap: 2px, $font-size: '12', $icon-xs: true);
   }
 
   // Color Theme
@@ -167,6 +149,102 @@
       @include button-color($color: $neutral-800, $bg: transparent, $bg-hover: $neutral-100, $color-active: $neutral-0, $bg-active: $neutral-300);
     }
   }
+
+  // Icon Button Custom
+  &:has(.hidden-text) {
+    @include icon-button-size;
+    padding: 0;
+
+    &.button {
+      &-xl {
+        @include icon-button-size($size: 36px, $icon-size: 24px);
+      }
+
+      &-lg {
+        @include icon-button-size($size: 32px, $icon-size: 24px);
+      }
+
+      &-sm {
+        @include icon-button-size($size: 24px, $icon-size: 18px);
+      }
+
+      &-xs {
+        @include icon-button-size($size: 20px, $icon-size: 16px);
+      }
+
+      // icon neutral 별도 Theme
+      &-neutral {
+        background-color: $neutral-500;
+
+        &:hover:not(:disabled) {
+          background-color: $neutral-400;
+        }
+
+        &:active:not(:disabled) {
+          background-color: $neutral-500;
+        }
+
+        &-stroke {
+          &:hover:not(:disabled) {
+            .button-icon {
+              @include icon-color($neutral-500);
+            }
+          }
+
+          &:active:not(:disabled) {
+            border-color: $neutral-500;
+
+            .button-icon {
+              @include icon-color($neutral-500);
+            }
+          }
+
+          .button-icon {
+            @include icon-color($neutral-500);
+          }
+        }
+
+        &-lighter {
+          &:hover:not(:disabled) {
+            .button-icon {
+              @include icon-color($neutral-500);
+            }
+          }
+
+          &:active:not(:disabled) {
+            border-color: $neutral-500;
+
+            .button-icon {
+              @include icon-color($neutral-500);
+            }
+          }
+
+          .button-icon {
+            @include icon-color($neutral-500);
+          }
+        }
+
+        &-ghost {
+
+          &:hover:not(:disabled) {
+            .button-icon {
+              @include icon-color($neutral-500);
+            }
+          }
+
+          &:active:not(:disabled) {
+            .button-icon {
+              @include icon-color($neutral-0);
+            }
+          }
+
+          .button-icon {
+            @include icon-color($neutral-500);
+          }
+        }
+      }
+    }
+  }
 }
 
 @mixin link-button-color($color: null, $color-active: null) {
@@ -184,9 +262,11 @@
   }
 }
 
-@mixin link-button-size($gap: $spacing-4,$font-size: 14px, $icon-size: 'sm') {
+@mixin link-button-size($gap: $spacing-4,$font-size: null, $icon-size: 'sm') {
   gap: $gap;
-  font-size: $font-size;
+  @if $font-size != null {
+    @include font-size($font-size);
+  }
 
   .button-icon {
     @include icon-size($icon-size);
@@ -197,7 +277,7 @@
   @include flex;
   @include link-button-size;
   @include link-button-color($color: $neutral-500, $color-active: $neutral-700);
-  font-weight: 500;
+  font-weight: 600;
 
   &:hover:not(:disabled) {
     text-decoration: underline;
@@ -218,7 +298,7 @@
 
   // Size
   &-sm {
-    @include link-button-size($gap: $spacing-2, $font-size: 12px, $icon-size: 'xs');
+    @include link-button-size($gap: $spacing-2, $font-size: '12', $icon-size: 'xs');
   }
 
   // Color Theme
