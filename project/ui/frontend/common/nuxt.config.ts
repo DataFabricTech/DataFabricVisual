@@ -4,12 +4,11 @@ export default defineNuxtConfig({
 
   modules: ["@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt", "@nuxtjs/tailwindcss"],
 
-  "plugins": [
+  plugins: [
     { src: "~/plugins/highcharts-vue", mode: "client" },
     { src: "~/plugins/vue-final-modal", mode: "client" },
     { src: "~/plugins/ag-grid-vue", mode: "client" },
-    { src: "~/plugins/vue-datepicker-next", mode: "client" },
-    { src: "~/plugins/vue-drag-resize", mode: "client" }
+    { src: "~/plugins/vue-datepicker-next", mode: "client" }
   ],
 
   components: [
