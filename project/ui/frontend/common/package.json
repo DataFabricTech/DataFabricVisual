@@ -9,7 +9,8 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "storybook": "storybook dev --port 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "lint:scss": "stylelint '**/*.{css,scss}' --fix"
   },
   "devDependencies": {
     "@nuxtjs/storybook": "7.0.0",
@@ -33,6 +34,9 @@
     "sass": "^1.77.6",
     "sass-loader": "^14.2.1",
     "storybook": "7.6.7",
+    "stylelint": "^16.6.1",
+    "stylelint-config-standard-scss": "^13.1.0",
+    "stylelint-scss": "^6.3.1",
     "vue": "^3.4.29",
     "vue-i18n": "^9.13.1",
     "vue-router": "^4.3.3"
