@@ -5,14 +5,15 @@
 -->
 <template>
   <button
-      :class="checkSubmitType ? null : 'button'"
-      :type="props.type"
-      :title="props.title"
-      :id="checkSubmitType ? props.submitId : null"
-      :disabled="pDisabled"
-      @click="handleClick($event)"
-      @mousedown="mouseDown($event)"
+    :class="checkSubmitType ? null : 'button'"
+    :type="props.type"
+    :title="props.title"
+    :id="checkSubmitType ? props.submitId : null"
+    :disabled="pDisabled"
+    @click="handleClick($event)"
+    @mousedown="mouseDown($event)"
   >
+    <h1>베이스 버튼</h1>
     <slot></slot>
   </button>
 </template>
@@ -32,7 +33,7 @@ const checkSubmitType = computed(() => {
 });
 const pDisabled = computed(() => {
   return props.disabled;
-})
+});
 const emit = defineEmits<{
   (e: "click", evt: PointerEvent): void;
   (e: "mousedown", evt: MouseEvent): void;

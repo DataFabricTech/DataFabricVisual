@@ -8,8 +8,10 @@ baseDir=$(pwd)
 source scripts/env.sh
 
 srcDir=$baseDir
-frontDir=$baseDir/source/ui/data-fabric
+frontDir=$baseDir/ui/data-fabric
 distDir=$baseDir/dist-source
+# /DataFabricVisual/project/source/server -> BaseDir
+# /source/ui/data-fabric
 
 # Node 버전 확인
 function checkNode() {
@@ -47,18 +49,19 @@ function checkJava() {
     fi
 
     if [[ "$_java" ]]; then
-        # ex) openjdk version "1.8.0_292"
-        java_ver=$(java -version 2>&1 | awk -F '"' '/version/ {print $2}')
-        java_ver_major=$(echo $java_ver | awk -F '.' '{split($0, var, "."); print $1"."$2}')
-
-        if [[ "$java_ver_major" != "${DEP_JAVA_VER}" ]]; then
-            echo "Need Java version ${DEP_JAVA_VER}. Current version is ${java_ver}" 1>&2;
-            exit 1;
+        # ex) openjdk version "17.0.1" 또는 "1.8.0_292"
+        java_ver=$("$_java" -version 2>&1 | awk -F[\".] '/version/ {print $2}')
+        echo "Java Major version ${java_ver}"
+        if [[ "$java_ver" != "$DEP_JAVA_VER" ]]; then
+            echo "Need Java version ${DEP_JAVA_VER}. Current version is ${java_ver}" 1>&2
+            exit 1
         else
             echo "Current java version is ${java_ver}"
         fi
     fi
 }
+
+
 
 
 function clear() {

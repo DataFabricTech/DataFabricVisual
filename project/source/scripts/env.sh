@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 서비스 ID
-SERVICE_ID="orchestration"
+SERVICE_ID="data-fabric"
 
 # Home path (in docker container)
 CONTAINER_HOME="/home/docker"
