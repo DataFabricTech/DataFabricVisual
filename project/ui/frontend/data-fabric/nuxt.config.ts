@@ -72,6 +72,7 @@ export default defineNuxtConfig({
 
   // css 설정
   css: [
+    "~/assets/css/main.scss",
     "vue-final-modal/style.css",
     // "~/assets/css/style.scss"
   ],
