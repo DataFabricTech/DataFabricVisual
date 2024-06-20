@@ -1,6 +1,7 @@
 
 .button-group {
   @include flex;
+
   position: relative;
   background-color: $neutral-0;
 
@@ -23,6 +24,7 @@
   &-label {
     @include flex($horizontal: flex-start);
     @include font-size('12');
+
     font-weight: 600;
     height: 24px;
     padding: 0 $spacing-8;
@@ -43,9 +45,6 @@
     &:last-child {
       border-top-right-radius: $border-radius-4;
       border-bottom-right-radius: $border-radius-4;
-    }
-
-    &:last-child {
       border-right: 1px solid $neutral-200;
     }
   }
@@ -54,6 +53,7 @@
     .button-group {
       &-label {
         @include font-size('13');
+
         height: 32px;
         padding: 0 $spacing-12;
       }

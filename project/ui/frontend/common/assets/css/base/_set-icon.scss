@@ -7,7 +7,6 @@
           lg: 28px,
           xl: 32px
   );
-
   $width: null;
   $height: null;
 
@@ -48,6 +47,7 @@
 .svg-icon {
   @include icon-size('sm');
   @include icon-color($neutral-500);
+
   display: inline-block;
   vertical-align: middle;
   flex-shrink: 0;

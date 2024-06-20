@@ -2,6 +2,7 @@
   @if $font-size != null {
     @include font-size($font-size);
   }
+
   height: $size;
   padding: 0 $right-padding 0 $left-padding;
 
@@ -64,6 +65,7 @@
 
     .text-input-icon {
       @include icon-color($neutral-600);
+
       position: absolute;
       left: 8px;
       top: 50%;
@@ -72,6 +74,7 @@
 
     .text-input-action-button {
       @include z-index('float');
+
       position: absolute;
       right: 6px;
       top: 50%;
@@ -96,6 +99,7 @@
 
     .text-input-search-button {
       @include z-index('float');
+
       position: absolute;
       right: 1px;
       top: 50%;

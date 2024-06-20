@@ -1,12 +1,13 @@
-//-------------------------------------------
+// -------------------------------------------
 // dropdown, menu 공통 스타일 정의
-//-------------------------------------------
+// -------------------------------------------
 $list-classes: menu, dropdown;
 
 @each $list in $list-classes {
   .#{$list} {
     @include z-index('dropdown');
     @include box-shadow('md');
+
     border-radius: $border-radius-4;
     border: 1px solid $neutral-100;
     background: $neutral-0;
@@ -17,6 +18,7 @@ $list-classes: menu, dropdown;
 
     .#{$list}-item {
       @include flex($horizontal: flex-start);
+
       gap: $spacing-6;
       padding: 0 $spacing-6 0 $spacing-8;
 
@@ -40,6 +42,7 @@ $list-classes: menu, dropdown;
       .#{$list}-button {
         @include ellipsis;
         @include flex;
+
         gap: $spacing-6;
         width: 100%;
         height: 100%;
@@ -62,6 +65,7 @@ $list-classes: menu, dropdown;
 
         .#{$list}-text {
           @include ellipsis;
+
           flex-grow: 1;
           color: $neutral-700;
           text-align: left;
@@ -124,14 +128,16 @@ $list-classes: menu, dropdown;
         }
       }
     }
+
     &.#{$list}-lg {
       .#{$list}-item {
         padding-left: 10px;
       }
     }
+
     &.#{$list}-sm {
       .#{$list}-button {
-        gap:$spacing-4;
+        gap: $spacing-4;
       }
     }
   }

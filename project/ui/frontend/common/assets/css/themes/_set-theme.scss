@@ -5,6 +5,7 @@
   @if map-has-key($map, $object) {
     @return map-get(map-get($map, $object), $style);
   }
+
   @warn "해당 ´#{$object} 는 변수가 없습니다.";
   @return null;
 }
@@ -23,37 +24,31 @@
   --neutral-700: #{setColor($config, $key, neutral-700)};
   --neutral-800: #{setColor($config, $key, neutral-800)};
   --neutral-900: #{setColor($config, $key, neutral-900)};
-
   --primary-100: #{setColor($config, $key, primary-100)};
   --primary-300: #{setColor($config, $key, primary-300)};
   --primary-500: #{setColor($config, $key, primary-500)};
   --primary-700: #{setColor($config, $key, primary-700)};
   --primary-900: #{setColor($config, $key, primary-900)};
-
   --secondary-100: #{setColor($config, $key, secondary-100)};
   --secondary-300: #{setColor($config, $key, secondary-300)};
   --secondary-500: #{setColor($config, $key, secondary-500)};
   --secondary-700: #{setColor($config, $key, secondary-700)};
   --secondary-900: #{setColor($config, $key, secondary-900)};
-
   --info-100: #{setColor($config, $key, info-100)};
   --info-300: #{setColor($config, $key, info-300)};
   --info-500: #{setColor($config, $key, info-500)};
   --info-700: #{setColor($config, $key, info-700)};
   --info-900: #{setColor($config, $key, info-900)};
-
   --success-100: #{setColor($config, $key, success-100)};
   --success-300: #{setColor($config, $key, success-300)};
   --success-500: #{setColor($config, $key, success-500)};
   --success-700: #{setColor($config, $key, success-700)};
   --success-900: #{setColor($config, $key, success-900)};
-
   --warning-100: #{setColor($config, $key, warning-100)};
   --warning-300: #{setColor($config, $key, warning-300)};
   --warning-500: #{setColor($config, $key, warning-500)};
   --warning-700: #{setColor($config, $key, warning-700)};
   --warning-900: #{setColor($config, $key, warning-900)};
-
   --error-100: #{setColor($config, $key, error-100)};
   --error-300: #{setColor($config, $key, error-300)};
   --error-500: #{setColor($config, $key, error-500)};

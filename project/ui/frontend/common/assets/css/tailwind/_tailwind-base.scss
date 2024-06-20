@@ -12,6 +12,7 @@
 
   html {
     @include font-family(pretandard);
+
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 400;
@@ -40,12 +41,15 @@
     quotes: none;
   }
 
-  blockquote:before,
-  blockquote:after,
-  q:before,
-  q:after {
-    content: "";
+  blockquote::before,
+  blockquote::after,
+  q::before,
+  q::after {
     content: none;
+  }
+
+  a {
+    text-decoration: none;
   }
 
   a:focus,
@@ -62,12 +66,7 @@
     outline: 1px dashed $neutral-900;
   }
 
-  a {
-    text-decoration: none;
-  }
-
   input[type="checkbox"], input[type="radio"] {
-
     &:focus-visible {
       & + label {
         outline: 1px dashed $neutral-900;

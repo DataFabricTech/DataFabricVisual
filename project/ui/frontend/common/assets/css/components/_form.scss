@@ -6,8 +6,10 @@
   .form-label {
     @include flex($horizontal: flex-start);
     @include ellipsis-multi($line-height: $size, $lines: 1);
-    width: 33.333333%;
+
+    width: 33.33%;
   }
+
   .form-detail {
     min-height: $size;
   }
@@ -15,6 +17,7 @@
 
 .form {
   @include flex($vertical: flex-start, $direction: column);
+
   gap: $spacing-20;
 
   &-horizontal {
@@ -31,6 +34,7 @@
 
   &-title {
     @include font-size('18');
+
     font-weight: 600;
   }
 
@@ -42,18 +46,21 @@
 
   &-body {
     @include flex($direction: column);
+
     width: 100%;
     gap: $spacing-20;
   }
 
   &-item {
     @include flex($vertical: flex-start, $direction: column);
+
     width: 100%;
     gap: $spacing-4;
   }
 
   &-detail {
     @include flex($vertical: flex-start, $direction: column);
+
     flex: 1;
     width: 100%;
   }
@@ -61,6 +68,7 @@
   &-label {
     @include flex($horizontal: flex-start);
     @include font-size('14');
+
     font-weight: 600;
     color: $neutral-800;
 

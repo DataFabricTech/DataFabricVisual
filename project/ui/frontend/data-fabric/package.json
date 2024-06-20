@@ -7,7 +7,8 @@
     "dev": "nuxt dev --dotenv .env.development",
     "generate": "nuxt generate --dotenv .env.product",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "lint:scss": "stylelint '**/*.{css,scss}' --fix"
   },
   "dependencies": {
     "@nuxt/devtools": "^1.3.3",
@@ -30,6 +31,10 @@
   "devDependencies": {
     "sass": "^1.77.6",
     "sass-loader": "^14.2.1",
+    "stylelint": "^16.6.1",
+    "stylelint-config-recommended-scss": "^14.0.0",
+    "stylelint-config-standard-scss": "^13.1.0",
+    "stylelint-scss": "^6.3.1",
     "vue-i18n": "^9.13.1"
   },
   "browserslist": [

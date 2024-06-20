@@ -1,6 +1,7 @@
 @mixin notification-box-color($bg: null, $border: null, $icon-color: null) {
   background-color: $bg;
   border-color: $border;
+
   .notification-icon {
     @include icon-color($icon-color);
   }
@@ -9,6 +10,7 @@
 .notification-box {
   @include flex($direction: column, $vertical: stretch);
   @include box-shadow('md');
+
   gap: $spacing-8;
   padding: $spacing-12;
   background-color: $neutral-0;
@@ -17,6 +19,7 @@
 
   &-group {
     @include flex($vertical: flex-start, $horizontal: space-between);
+
     gap: $spacing-8;
 
     &:only-child {

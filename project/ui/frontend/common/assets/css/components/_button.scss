@@ -1,5 +1,6 @@
 @mixin button {
   @include flex;
+
   border-radius: $border-radius-4;
   font-weight: 600;
 
@@ -14,6 +15,10 @@
   color: $color;
   background-color: $bg;
   border: 1px solid $border;
+
+  .button-icon {
+    @include icon-color($color);
+  }
 
   &:hover:not(:disabled) {
     color: $color-hover;
@@ -34,16 +39,15 @@
       @include icon-color($color-active);
     }
   }
-  .button-icon {
-    @include icon-color($color);
-  }
 }
 
 @mixin button-size($height: 32px, $gap: null, $padding: 6px, $font-size: '13', $icon-xs: false) {
   height: $height;
   gap: $gap;
   padding: 0 $padding;
+
   @include font-size($font-size);
+
   @if $icon-xs {
     .button-icon {
       @include icon-size('xs');
@@ -54,6 +58,7 @@
 @mixin icon-button-size($size: 28px, $icon-size: 20px) {
   width: $size;
   height: $size;
+
   .button-icon {
     width: $icon-size;
     height: $icon-size;
@@ -63,17 +68,17 @@
 .button {
   @include button;
   @include button-size($gap: 4px);
+
   font-weight: 600;
-
-  &:disabled {
-
-    .button-icon {
-      @include icon-color($neutral-300);
-    }
-  }
 
   .button-icon {
     @include icon-size('sm');
+  }
+
+  &:disabled {
+    .button-icon {
+      @include icon-color($neutral-300);
+    }
   }
 
   // Size
@@ -153,6 +158,7 @@
   // Icon Button Custom
   &:has(.hidden-text) {
     @include icon-button-size;
+
     padding: 0;
 
     &.button {
@@ -185,6 +191,10 @@
         }
 
         &-stroke {
+          .button-icon {
+            @include icon-color($neutral-500);
+          }
+
           &:hover:not(:disabled) {
             .button-icon {
               @include icon-color($neutral-500);
@@ -197,14 +207,14 @@
             .button-icon {
               @include icon-color($neutral-500);
             }
-          }
-
-          .button-icon {
-            @include icon-color($neutral-500);
           }
         }
 
         &-lighter {
+          .button-icon {
+            @include icon-color($neutral-500);
+          }
+
           &:hover:not(:disabled) {
             .button-icon {
               @include icon-color($neutral-500);
@@ -218,13 +228,12 @@
               @include icon-color($neutral-500);
             }
           }
-
-          .button-icon {
-            @include icon-color($neutral-500);
-          }
         }
 
         &-ghost {
+          .button-icon {
+            @include icon-color($neutral-500);
+          }
 
           &:hover:not(:disabled) {
             .button-icon {
@@ -237,10 +246,6 @@
               @include icon-color($neutral-0);
             }
           }
-
-          .button-icon {
-            @include icon-color($neutral-500);
-          }
         }
       }
     }
@@ -250,6 +255,10 @@
 @mixin link-button-color($color: null, $color-active: null) {
   color: $color;
 
+  .button-icon {
+    @include icon-color($color);
+  }
+
   &:active:not(:disabled) {
     color: $color-active;
 
@@ -257,13 +266,11 @@
       @include icon-color($color-active);
     }
   }
-  .button-icon {
-    @include icon-color($color);
-  }
 }
 
 @mixin link-button-size($gap: $spacing-4,$font-size: null, $icon-size: 'sm') {
   gap: $gap;
+
   @if $font-size != null {
     @include font-size($font-size);
   }
@@ -277,10 +284,11 @@
   @include flex;
   @include link-button-size;
   @include link-button-color($color: $neutral-500, $color-active: $neutral-700);
+
   font-weight: 600;
 
-  &:hover:not(:disabled) {
-    text-decoration: underline;
+  .button-icon {
+    @include icon-size('sm');
   }
 
   &:disabled {
@@ -292,8 +300,8 @@
     }
   }
 
-  .button-icon {
-    @include icon-size('sm');
+  &:hover:not(:disabled) {
+    text-decoration: underline;
   }
 
   // Size

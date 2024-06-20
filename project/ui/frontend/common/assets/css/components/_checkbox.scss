@@ -1,5 +1,20 @@
 
 .checkbox {
+  &-label {
+    &::before {
+      border-radius: $border-radius-2
+    }
+
+    &::after {
+      left: 5px;
+      top: 2px;
+      width: 10px;
+      height: 6px;
+      border-left: 2px solid $neutral-0;
+      border-bottom: 2px solid $neutral-0;
+      transform: scale(0) rotate(-45deg);
+    }
+  }
 
   &-input {
     &:checked + label {
@@ -9,9 +24,7 @@
     }
 
     &:indeterminate {
-
       & + .checkbox-label {
-
         &::before {
           background-color: $primary-500;
           border-color: $primary-500;
@@ -40,22 +53,6 @@
     }
   }
 
-  &-label {
-    &::before {
-      border-radius: $border-radius-2
-    }
-
-    &::after {
-      left: 5px;
-      top: 2px;
-      width: 10px;
-      height: 6px;
-      border-left: 2px solid $neutral-0;
-      border-bottom: 2px solid $neutral-0;
-      transform: scale(0) rotate(-45deg);
-    }
-  }
-
 
   // -------------------------
   // 부분 선택
@@ -63,7 +60,6 @@
   &-indeterminate .checkbox-input {
     &:checked {
       & + .checkbox-label {
-
         &::before {
           background-color: $primary-500;
           border-color: $primary-500;
@@ -94,6 +90,15 @@
 
   &-sm {
     .checkbox {
+      &-label {
+        &::after {
+          left: 4px;
+          top: 1px;
+          width: 9px;
+          height: 5px;
+        }
+      }
+
       &-input {
         &:indeterminate {
           & + .checkbox-label {
@@ -104,24 +109,12 @@
             }
           }
         }
-
-      }
-
-      &-label {
-
-        &::after {
-          left: 4px;
-          top: 1px;
-          width: 9px;
-          height: 5px;
-        }
       }
     }
 
     &.checkbox.checkbox-indeterminate .checkbox-input {
       &:checked {
         & + .checkbox-label {
-
           &::after {
             top: 5px;
             left: 4px;
