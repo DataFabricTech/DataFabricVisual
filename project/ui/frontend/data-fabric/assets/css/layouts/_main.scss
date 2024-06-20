@@ -1,0 +1,18 @@
+#main {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding-top: 50px;
+  background: $neutral-100;
+}
+
+.l-split {
+  display: flex;
+}
+.l-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+
+

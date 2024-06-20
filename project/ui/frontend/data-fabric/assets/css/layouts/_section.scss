@@ -1,0 +1,13 @@
+#section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-left: 48px;
+}
+
+
+.section-grid {
+  flex-direction: row;
+  padding: $spacing-16 $spacing-20;
+  gap: $spacing-24;
+}
