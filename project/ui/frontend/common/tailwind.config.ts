@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        'pretandard': ['Pretendard','Segoe UI', 'Open Sans', 'Helvetica Neue'],
+        'pretendard': ['Pretendard','Segoe UI', 'Open Sans', 'Helvetica Neue'],
         'mono': ['Consolas', 'Menlo', 'Courier', 'monospace']
       },
     }
