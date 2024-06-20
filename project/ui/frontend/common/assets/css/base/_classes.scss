@@ -52,6 +52,7 @@ $theme-colors: (
 }
 
  .element-group {
-  @include flex();
+  @include flex;
+
   gap: $spacing-16;
 }

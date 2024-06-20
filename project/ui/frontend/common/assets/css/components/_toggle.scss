@@ -1,6 +1,7 @@
 
 .toggle {
   @include flex;
+
   position: relative;
   padding: $spacing-2;
   background-color: $neutral-100;
@@ -24,6 +25,7 @@
   &-label {
     @include font-size('12');
     @include flex($horizontal: flex-start);
+
     height: 24px;
     padding: 0 $spacing-8;
     gap: $spacing-4;
@@ -50,6 +52,7 @@
     .toggle {
       &-label {
         @include font-size('14');
+
         height: 32px;
         padding: 0 $spacing-12;
       }
@@ -76,7 +79,6 @@
       }
 
       &-label {
-
         &:hover {
           color: $primary-500;
 

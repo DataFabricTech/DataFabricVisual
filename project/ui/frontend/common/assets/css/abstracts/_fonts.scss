@@ -23,18 +23,18 @@ $font-families: (
 // }
 
 // TODO: [퍼블리싱] 믹스인/변수 재정의 및 리팩토링
-//-------------------------------------------
+// -------------------------------------------
 //  Heading
 // ------------------------------------------
 // heading size : 40px,32px,24px
 
-//@mixin heading($size) {
+// @mixin heading($size) {
 //  font-size: $size;
 //  line-height: 1.2;
 //  font-weight: 700;
-//}
+// }
 
-//-------------------------------------------
+// -------------------------------------------
 //  font-size + line-height
 // ------------------------------------------
 @mixin font-size($size) {
@@ -53,6 +53,7 @@ $font-families: (
 
   @if map-has-key($font-size, $size) {
     $properties: map-get($font-size, $size);
+
     font-size: map-get($properties, font-size);
     line-height: map-get($properties, line-height);
   } @else {

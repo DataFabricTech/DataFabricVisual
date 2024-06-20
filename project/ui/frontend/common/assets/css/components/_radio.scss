@@ -9,7 +9,6 @@
   }
 
   &-label {
-
     &::before {
       border-radius: $border-radius-round
     }
@@ -28,7 +27,6 @@
   &-sm {
     .radio {
       &-label {
-
         &::after {
           left: 2px;
           top: 3px;

@@ -1,16 +1,18 @@
 .step {
   @include flex($vertical: flex-start);
+
   min-width: 250px;
   width: 100%;
 
   &-item {
     @include flex($direction: column);
+
     gap: $spacing-4;
     position: relative;
     flex: 1;
     padding: 0 $spacing-8;
 
-    &:not(:last-child):before {
+    &:not(:last-child)::before {
       content: "";
       position: absolute;
       top: 15px;
@@ -35,7 +37,7 @@
         display: block;
       }
 
-      &:not(:last-child):before {
+      &:not(:last-child)::before {
         border-color: $primary-500;
       }
 
@@ -53,6 +55,7 @@
       .step-number {
         color: $primary-500;
       }
+
       .step-title {
         color: $primary-500;
       }
@@ -61,6 +64,7 @@
 
   &-button {
     @include flex;
+
     flex-shrink: 0;
     width: 32px;
     height: 32px;
@@ -71,6 +75,7 @@
 
   &-number {
     @include font-size('13');
+
     color: $neutral-300;
     font-weight: 700;
   }
@@ -78,11 +83,13 @@
   &-icon {
     @include icon-size('md');
     @include icon-color($neutral-0);
+
     display: none;
   }
 
   &-title {
     @include font-size('13');
+
     width: 100%;
     font-weight: 600;
     color: $neutral-400;
@@ -99,8 +106,9 @@
       gap: $spacing-8;
       flex-direction: row;
 
-      &:not(:last-child):before {
+      &:not(:last-child)::before {
         @include z-index('hidden');
+
         top: auto;
         left: 23px;
         right: auto;
@@ -114,7 +122,7 @@
         flex-grow: 0;
       }
 
-      &.is-step-item-complete:not(:last-child):before {
+      &.is-step-item-complete:not(:last-child)::before {
         border-color: $primary-500;
       }
     }
@@ -125,7 +133,7 @@
   }
 
   &-dotted {
-    .step-item:not(:last-child):before {
+    .step-item:not(:last-child)::before {
       border-style: dotted;
     }
   }

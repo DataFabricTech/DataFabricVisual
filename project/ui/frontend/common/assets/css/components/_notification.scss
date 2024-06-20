@@ -12,12 +12,14 @@
 
 .notification {
   @include flex;
+
   gap: $spacing-8;
 
 
   &-icon {
     @include icon-color($neutral-400);
     @include icon-size('sm');
+
     flex-shrink: 0;
   }
 

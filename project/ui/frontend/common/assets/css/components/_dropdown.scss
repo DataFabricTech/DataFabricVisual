@@ -18,6 +18,7 @@
 
 .dropdown {
   @include dropdown-size;
+
   position: absolute;
 
   .dropdown-item {

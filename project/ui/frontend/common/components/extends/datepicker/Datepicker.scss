@@ -37,10 +37,11 @@
   }
 }
 
-//datepicker popup 스타일
+// datepicker popup 스타일
 .mx-datepicker-main.mx-datepicker-popup {
   @include font-family('pretandard');
   @include box-shadow('md');
+
   margin-top: 6px;
 
   .mx-btn-current-year,
@@ -74,6 +75,7 @@
     &-left,
     &-right {
       @include flex;
+
       height: 28px;
       width: 28px;
       margin-top: 3px;
@@ -94,30 +96,30 @@
   }
 
   .mx-icon-double-left {
-    &:before {
+    &::before {
       left: 9px;
     }
 
-    &:after {
+    &::after {
       left: -6px;
     }
   }
 
   .mx-icon-double-right {
-    &:before {
+    &::before {
       left: 6px;
     }
 
-    &:after {
+    &::after {
       left: -9px;
     }
   }
 
-  .mx-icon-left:before {
+  .mx-icon-left::before {
     left: 7px;
   }
 
-  .mx-icon-right:before {
+  .mx-icon-right::before {
     left: 4px;
   }
 
@@ -191,6 +193,7 @@
 
   .mx-btn-text {
     @include font-size('14');
+
     color: $neutral-500;
     font-weight: 500;
 

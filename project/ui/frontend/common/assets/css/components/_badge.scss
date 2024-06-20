@@ -11,6 +11,7 @@
 
 .badge {
   @include flex;
+
   gap: $spacing-2;
   height: 20px;
   padding: 0 $spacing-4;
@@ -22,6 +23,7 @@
 
   &-text {
     @include font-size('12');
+
     font-weight: 600;
   }
 

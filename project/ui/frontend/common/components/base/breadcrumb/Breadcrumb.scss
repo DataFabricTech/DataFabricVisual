@@ -4,11 +4,13 @@
 
   &-list {
     @include flex;
+
     gap: $spacing-32;
   }
 
   &-item {
     @include flex;
+
     position: relative;
     gap: $spacing-6;
 
@@ -28,7 +30,7 @@
       }
     }
 
-    &:not(:last-child):after {
+    &:not(:last-child)::after {
       content: url("../../assets/images/icon/chevron-right-medium.svg");
       position: absolute;
       left: 100%;
@@ -50,7 +52,7 @@
 
   &.breadcrumb-slash {
     .breadcrumb-item {
-      &:not(:last-child):after {
+      &:not(:last-child)::after {
         content: url("../../assets/images/icon/slash.svg");
       }
     }
