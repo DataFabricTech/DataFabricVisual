@@ -7,7 +7,7 @@ export default defineNuxtConfig({
   modules: [
     "@nuxtjs/tailwindcss",
     "@pinia/nuxt",
-    // "@nuxtjs/svg-sprite",
+    "@nuxtjs/svg-sprite",
     "nuxt-lodash",
     "dayjs-nuxt",
   ],
