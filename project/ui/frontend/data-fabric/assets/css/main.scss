@@ -2,12 +2,13 @@
 @import "../../../common/assets/css/main";
 
 // layouts
-// layout
+@import "./layouts/common";
 @import "./layouts/header";
 @import "./layouts/sidebar";
 @import "./layouts/main";
 @import "./layouts/section";
 
 // pages
+@import "./pages/card";
 @import "./pages/login";
 @import "./pages/data-list";

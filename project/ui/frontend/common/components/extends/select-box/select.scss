@@ -20,12 +20,10 @@
 
 .select {
   @include select-size;
-
   position: relative;
 
   &-button {
     @include flex($horizontal: flex-start);
-
     width: 100%;
     height: 100%;
     background: $neutral-0;
@@ -112,6 +110,15 @@
   }
 
   &-clean {
+
+    .select-button {
+      background: transparent;
+
+      &:active:not(:disabled) {
+        background: transparent;
+
+      }
+    }
     .select-button {
       border-color: transparent;
 

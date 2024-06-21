@@ -8,11 +8,23 @@
   border-bottom: 1px solid $neutral-200;
 }
 
-.result {
-  padding: $spacing-16 $spacing-20;
-
-  &-top-bar {
-    @include flex($horizontal:space-between);
-    margin-bottom: $spacing-12;
-  }
+.data-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
+
+.card {
+  flex: 1;
+}
+
+.pagination {
+  margin-top: $spacing-12;
+}
+
+.side-preview {
+  width: 500px;
+  background: #fff;
+}
+
+

@@ -1,6 +1,6 @@
 <template>
   <header id="header">
-    <div class="header-layout">
+    <div class="l-between">
       <div class="header-search">
         <h1 class="logo">
           <a href="#" class="logo-link" title="메인 이동">
@@ -11,7 +11,6 @@
         <div class="text-input-group">
           <label class="hidden-text" for="data-list-example">label</label>
           <input id="data-list-example" class="text-input" placeholder="검색어 입력" />
-          <svg-icon class="text-input-icon" name="user"></svg-icon>
           <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
             <span class="hidden-text">지우기</span>
             <svg-icon class="button-icon" name="close"></svg-icon>

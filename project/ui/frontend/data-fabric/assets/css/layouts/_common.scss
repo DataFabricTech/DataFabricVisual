@@ -1,0 +1,17 @@
+//.l- class
+
+.l-split {
+  display: flex;
+  gap: $spacing-24;
+  flex-grow: 1;
+}
+
+.l-between {
+  @include flex($horizontal:space-between);
+}
+
+.l-top-bar {
+  @include flex($horizontal:space-between);
+  margin-bottom: $spacing-12;
+  flex-shrink: 0;
+}

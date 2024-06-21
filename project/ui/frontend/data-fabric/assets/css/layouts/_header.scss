@@ -1,14 +1,11 @@
 #header {
+  @include z-index('header');
   position: fixed;
   width: 100%;
   height: 50px;
   padding: $spacing-8 $spacing-16;
   background: $neutral-0;
-  border: 1px solid $neutral-200;
-
-  .header-layout {
-    @include flex($horizontal:space-between);
-  }
+  border-bottom: 1px solid $neutral-200;
 
   .header-search {
     @include flex;

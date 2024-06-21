@@ -1,6 +1,6 @@
 #sidebar {
   z-index: 1;
-  position: absolute;
+  position: fixed;
   display: flex;
   flex-shrink: 0;
   width: 48px;
@@ -36,6 +36,10 @@
         left: 1px;
         background: $neutral-0;
       }
+    }
+
+    &:not(:first-child) {
+      margin-top: $spacing-6;
     }
   }
 
