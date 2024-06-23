@@ -10,7 +10,9 @@ export default defineNuxtConfig({
     "@nuxtjs/svg-sprite",
     "nuxt-lodash",
     "dayjs-nuxt",
+    '@pinia/nuxt',
   ],
+
   // runtime에서 설정된 정보를 조회 가능
   runtimeConfig: {
     public: {
@@ -81,5 +83,13 @@ export default defineNuxtConfig({
     prefix: "$_",
     prefixSkip: ["string"],
     upperAfterPrefix: false,
-  }
+  },
+
+  pinia: {
+    autoImports: [
+      // automatically imports `defineStore`
+      "defineStore", // import { defineStore } from 'pinia'
+      ["defineStore", "definePiniaStore"], // import { defineStore as definePiniaStore } from 'pinia'
+    ],
+  },
 });

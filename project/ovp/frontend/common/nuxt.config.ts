@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  modules: ["@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt", "@nuxtjs/tailwindcss"],
+  modules: ["@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt", "@nuxtjs/tailwindcss", '@pinia/nuxt'],
 
   plugins: [
     { src: "~/plugins/highcharts-vue", mode: "client" },
@@ -65,5 +65,13 @@ export default defineNuxtConfig({
   // svg icon
   svgSprite: {
     input: "~/assets/images/icon"
-  }
+  },
+
+  pinia: {
+    autoImports: [
+      // automatically imports `defineStore`
+      "defineStore", // import { defineStore } from 'pinia'
+      ["defineStore", "definePiniaStore"], // import { defineStore as definePiniaStore } from 'pinia'
+    ],
+  },
 });
