@@ -1,0 +1,51 @@
+@mixin menu-size($font-size: '13', $size: 36px, $icon-size: 18px) {
+  .menu-item {
+    height: $size;
+
+    .svg-icon {
+      @include icon-size($icon-size);
+    }
+
+    .menu-text {
+      @include font-size($font-size);
+    }
+  }
+}
+
+.menu {
+  @include menu-size;
+
+  z-index: auto;
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  box-shadow: none;
+  border-color: $neutral-200;
+
+  &-button-group {
+    @include flex;
+
+  }
+
+  &-item {
+    .checkbox-label::after {
+      top: 10px;
+    }
+  }
+
+  &-search {
+    height: 100%;
+    padding: $spacing-8;
+    border-bottom: 1px solid $neutral-200;
+  }
+
+  &-text {
+    font-weight: 600;
+  }
+
+  &-lg {
+    @include menu-size($font-size: '14', $size: 40px, $icon-size: sm);
+
+
+  }
+}

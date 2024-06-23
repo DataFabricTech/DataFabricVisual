@@ -1,0 +1,60 @@
+@mixin notifiation-color($color: null, $icon-color: null) {
+  .notification {
+    &-detail {
+      color: $color;
+    }
+
+    &-icon {
+      @include icon-color($icon-color);
+    }
+  }
+}
+
+.notification {
+  @include flex;
+
+  gap: $spacing-8;
+
+
+  &-icon {
+    @include icon-color($neutral-400);
+    @include icon-size('sm');
+
+    flex-shrink: 0;
+  }
+
+  &-detail {
+    flex-grow: 1;
+    color: $neutral-800
+  }
+
+  &-sm {
+    gap: $spacing-4;
+
+    .notification {
+      &-icon {
+        @include icon-size('xs');
+      }
+
+      &-detail {
+        @include font-size('12');
+      }
+    }
+  }
+
+  &-info {
+    @include notifiation-color($color: $info-700, $icon-color: $info-500);
+  }
+
+  &-warning {
+    @include notifiation-color($color: $warning-700, $icon-color: $warning-500);
+  }
+
+  &-success {
+    @include notifiation-color($color: $success-700, $icon-color: $success-500);
+  }
+
+  &-error {
+    @include notifiation-color($color: $error-700, $icon-color: $error-500);
+  }
+}

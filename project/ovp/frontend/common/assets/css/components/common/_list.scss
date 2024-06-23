@@ -1,0 +1,144 @@
+// -------------------------------------------
+// dropdown, menu 공통 스타일 정의
+// -------------------------------------------
+$list-classes: menu, dropdown;
+
+@each $list in $list-classes {
+  .#{$list} {
+    @include z-index('dropdown');
+    @include box-shadow('md');
+
+    border-radius: $border-radius-4;
+    border: 1px solid $neutral-100;
+    background: $neutral-0;
+
+    &-list {
+      padding: $spacing-2 0;
+    }
+
+    .#{$list}-item {
+      @include flex($horizontal: flex-start);
+
+      gap: $spacing-6;
+      padding: 0 $spacing-6 0 $spacing-8;
+
+
+      .checkbox {
+        overflow: hidden;
+        flex-grow: 1;
+        justify-content: flex-start;
+        width: 100%;
+        height: 100%;
+
+        &-label {
+          height: 100%;
+        }
+      }
+
+      &:hover:not(:disabled) {
+        background-color: $neutral-100;
+      }
+
+      .#{$list}-button {
+        @include ellipsis;
+        @include flex;
+
+        gap: $spacing-6;
+        width: 100%;
+        height: 100%;
+
+        &:active:not(:disabled) {
+          color: $primary-500;
+
+          .svg-icon {
+            @include icon-color($primary-500);
+          }
+
+          .#{$list}-text {
+            color: $primary-500;
+          }
+        }
+
+        .svg-icon {
+          @include icon-size(18px);
+        }
+
+        .#{$list}-text {
+          @include ellipsis;
+
+          flex-grow: 1;
+          color: $neutral-700;
+          text-align: left;
+        }
+      }
+
+      .button {
+        flex-shrink: 0;
+      }
+
+      &.#{$list}-item-negative {
+        .svg-icon {
+          @include icon-color($error-500);
+        }
+
+        .#{$list}-text {
+          color: $error-500;
+        }
+
+        &:hover,
+        & > .#{$list}-button:active {
+          background: $error-100;
+          border: none;
+
+          .svg-icon {
+            @include icon-color($error-500);
+          }
+
+          .#{$list}-text {
+            color: $error-500;
+          }
+        }
+      }
+
+      &.is-#{$list}-item-selected,
+      &.is-#{$list}-item-selected:hover {
+        background: $primary-100;
+        border: 1px solid $primary-300;
+        border-radius: $border-radius-4;
+
+        .svg-icon {
+          @include icon-color($primary-500);
+        }
+
+        .#{$list}-text {
+          color: $primary-500;
+        }
+
+        &.#{$list}-item-negative {
+          background: $error-100;
+          border: none;
+
+          .svg-icon {
+            @include icon-color($error-500);
+          }
+
+          .#{$list}text {
+            color: $error-500;
+          }
+        }
+      }
+    }
+
+    &.#{$list}-lg {
+      .#{$list}-item {
+        padding-left: 10px;
+      }
+    }
+
+    &.#{$list}-sm {
+      .#{$list}-button {
+        gap: $spacing-4;
+      }
+    }
+  }
+}

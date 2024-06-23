@@ -1,0 +1,34 @@
+.pagination {
+  @include flex;
+
+  gap: $spacing-4;
+
+  &-list {
+    @include flex;
+  }
+
+  &-button {
+    @include button;
+
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  &-icon-button.button {
+    width: 32px;
+    height: 32px;
+  }
+
+  &-ellipsis {
+    @include flex;
+
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
+  }
+
+  &-icon {
+    @include icon-size('sm');
+  }
+}

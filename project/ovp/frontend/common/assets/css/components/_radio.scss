@@ -1,0 +1,40 @@
+
+.radio {
+  &-input {
+    &:checked + label {
+      &::after {
+        transform: scale(1);
+      }
+    }
+  }
+
+  &-label {
+    &::before {
+      border-radius: $border-radius-round
+    }
+
+    &::after {
+      top: 3.5px;
+      left: 2px;
+      width: 14px;
+      height: 14px;
+      border-radius: $border-radius-round;
+      border: 2px solid $neutral-0;
+      transform: scale(0);
+    }
+  }
+
+  &-sm {
+    .radio {
+      &-label {
+        &::after {
+          left: 2px;
+          top: 3px;
+          width: 12px;
+          height: 12px;
+        }
+      }
+    }
+
+  }
+}

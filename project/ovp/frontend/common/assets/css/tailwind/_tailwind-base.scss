@@ -1,0 +1,114 @@
+@tailwind base;
+
+/* reset */
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-sizing: border-box;
+    vertical-align: baseline;
+  }
+
+  html {
+    @include font-family(pretandard);
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0;
+    scroll-behavior: smooth;
+  }
+
+  article,
+  aside,
+  details,
+  figcaption,
+  figure,
+  footer,
+  header,
+  hgroup,
+  menu,
+  nav,
+  section {
+    display: block;
+  }
+
+  blockquote,
+  q {
+    quotes: none;
+  }
+
+  blockquote::before,
+  blockquote::after,
+  q::before,
+  q::after {
+    content: none;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  a:focus,
+  button:focus,
+  input:focus,
+  textarea:focus {
+    outline: none;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible:not(:focus),
+  div[tabindex="0"]:focus-visible {
+    outline: 1px dashed $neutral-900;
+  }
+
+  input[type="checkbox"], input[type="radio"] {
+    &:focus-visible {
+      & + label {
+        outline: 1px dashed $neutral-900;
+      }
+    }
+
+    &:disabled {
+      & + label,
+      & + label:hover {
+        color: $neutral-300 !important;
+        cursor: not-allowed;
+
+        &::before {
+          box-shadow: none;
+          border-color: $neutral-200;
+          background-color: $neutral-200;
+        }
+
+        svg {
+          color: $neutral-300 !important;
+        }
+
+        span {
+          color: $neutral-300 !important;
+        }
+      }
+    }
+  }
+
+  a:active,
+  a:hover {
+    text-decoration: none;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+
+  ::selection {
+    background: $secondary-500;
+    color: #fff;
+  }
+}
