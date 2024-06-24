@@ -8,7 +8,10 @@
 @import "./layouts/main";
 @import "./layouts/section";
 
+
+//conmponent
+@import "./component/card";
+
 // pages
-@import "./pages/card";
 @import "./pages/login";
 @import "./pages/data-list";
