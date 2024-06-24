@@ -8,26 +8,18 @@
   border-bottom: 1px solid $neutral-200;
 }
 
-.section-contents {
-  height: calc(100% - 48px);
-}
-
-.l-split {
-  height: calc(100% - 48px);
-}
-
 .data-page {
   display: flex;
   flex-direction: column;
   width: 100%;
-}
 
-.card {
-  flex: 1;
-}
+  .card {
+    flex: 1;
+  }
 
-.pagination {
-  margin-top: $spacing-12;
+  .pagination {
+    margin-top: $spacing-12;
+  }
 }
 
 .preview {

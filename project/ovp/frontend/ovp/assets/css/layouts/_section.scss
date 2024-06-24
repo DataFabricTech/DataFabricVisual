@@ -3,6 +3,12 @@
   display: flex;
   flex-direction: column;
   margin-left: 48px;
+
+  &:has(.filters) {
+    .section-contents {
+      height: calc(100% - 48px);
+    }
+  }
 }
 
 

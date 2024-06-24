@@ -14,4 +14,9 @@
   @include flex($horizontal: space-between);
   margin-bottom: $spacing-12;
   flex-shrink: 0;
+
+  & + .l-split {
+    height: calc(100% - 48px);
+  }
 }
+
