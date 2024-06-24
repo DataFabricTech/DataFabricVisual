@@ -10,7 +10,7 @@
   background-color: $primary-500;
 
   .sidebar-layout {
-    @include flex($direction:column, $horizontal:space-between);
+    @include flex($direction: column, $horizontal: space-between);
     padding: $spacing-24 0 $spacing-8;
     width: 100%;
     height: 100%;
@@ -44,7 +44,7 @@
   }
 
   .sidebar-button {
-    @include flex($horizontal:flex-start);
+    @include flex($horizontal: flex-start);
     gap: $spacing-12;
     width: 100%;
     height: 40px;

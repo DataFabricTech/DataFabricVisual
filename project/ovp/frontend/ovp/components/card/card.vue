@@ -2,7 +2,7 @@
   <div class="card">
     <div class="card-function">
       <div class="card-model">
-        <img class="card-model-img" src="../assets/images/common/resource.jpg"></img>
+        <img class="card-model-img" src=""></img>
         <div class="breadcrumb">
           <ul class="breadcrumb-list">
             <li class="breadcrumb-item">

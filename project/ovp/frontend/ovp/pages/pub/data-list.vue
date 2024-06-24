@@ -75,7 +75,7 @@
             </div>
             <div class="preview">
               <div class="ml-auto">
-                <button class="button button-neutral-ghost button-sm" style="border:1px solid #ccc">
+                <button class="button button-neutral-ghost button-sm">
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                   <span class="hidden-text">닫기</span>
                 </button>
@@ -109,7 +109,7 @@
                   </div>
                   <div class="h-group gap-2.5 flex-wrap">
                     <div class="tag tag-primary tag-sm" v-for="tag in 8" :key="tag">
-                      <a class="tag-link">DATA-tag</a>
+                      <a class="tag-link" href="#">DATA-tag</a>
                     </div>
                   </div>
                 </div>
