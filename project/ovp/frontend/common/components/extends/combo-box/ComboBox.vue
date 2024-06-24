@@ -1,7 +1,7 @@
 <!-- TODO: [개발]컴포넌트명 combo-box -> select-search로 변경-->
 <template>
   <div class="select select-search" v-on-click-outside="closeDropdown" @click="toggleList" style="width:200px">
-    <div class="text-input-group">
+    <div class="search-group">
       <label class="hidden-text" for="select-search-ex"></label>
       <input
         id="select-search-ex"

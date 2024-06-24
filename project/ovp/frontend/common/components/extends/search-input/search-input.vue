@@ -1,8 +1,8 @@
 <template>
   <!-- TODO: [개발]text-input-icon은 on/off 필요 -->
-  <div class="text-input-group">
+  <div class="search-group">
     <label class="hidden-text" for="data-list-example">label</label>
-    <svg-icon class="text-input-icon" name="user"></svg-icon>
+    <svg-icon class="svg-icon text-input-icon" name="user"></svg-icon>
     <input id="data-list-example" class="text-input" placeholder="검색어 입력" />
     <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
       <span class="hidden-text">지우기</span>
@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  name: "SearchInput"
+  name: "search-input"
 };
 </script>
 

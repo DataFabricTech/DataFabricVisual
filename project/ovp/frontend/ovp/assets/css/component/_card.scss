@@ -41,6 +41,7 @@
   }
 
   &-desc {
+    flex: 1 0 auto;
     color: $neutral-500;
   }
 
@@ -71,7 +72,8 @@
     }
   }
 
-  &:hover {
+  &:hover,
+  &.is-card-selected{
     border: 1px solid $secondary-500;
     box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
   }

@@ -12,8 +12,8 @@
           <figure class="section-figure">
             <div class="flex justify-center gap-4">
               <div class="menu menu-lg">
-                <div class="menu-search">
-                  <div class="text-input-group">
+                <div class="menu-head">
+                  <div class="search-group">
                     <label class="hidden-text" for="text-input-example-11">label</label>
                     <input id="text-input-example-11" class="text-input text-input-lg" value="search button" />
                     <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -100,8 +100,8 @@
                 </ul>
               </div>
               <div class="menu">
-                <div class="menu-search">
-                  <div class="text-input-group">
+                <div class="menu-head">
+                  <div class="search-group">
                     <label class="hidden-text" for="text-input-example-11">label</label>
                     <input id="text-input-example-11" class="text-input" value="search button" />
                     <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -201,8 +201,8 @@
         <figure class="section-figure">
           <div class="flex justify-center gap-4">
             <div class="menu menu-lg">
-              <div class="menu-search">
-                <div class="text-input-group">
+              <div class="menu-head">
+                <div class="search-group">
                   <label class="hidden-text" for="text-input-example-11">label</label>
                   <input id="text-input-example-11" class="text-input text-input-lg" value="search button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -288,8 +288,8 @@
               </ul>
             </div>
             <div class="menu">
-              <div class="menu-search">
-                <div class="text-input-group">
+              <div class="menu-head">
+                <div class="search-group">
                   <label class="hidden-text" for="text-input-example-11">label</label>
                   <input id="text-input-example-11" class="text-input" value="search button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>

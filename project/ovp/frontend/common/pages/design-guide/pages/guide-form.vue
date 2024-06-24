@@ -21,7 +21,7 @@
                     <span class="sub-label">(sublabel)</span>
                   </label>
                   <div class="form-detail flex flex-col">
-                    <div class="text-input-group">
+                    <div class="search-group">
                       <label class="hidden-text" for="text-input-example-4">label</label>
                       <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
                       <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -83,7 +83,7 @@
                     <span class="sub-label">(sublabel)</span>
                   </label>
                   <div class="form-detail flex flex-col">
-                    <div class="text-input-group">
+                    <div class="search-group">
                       <label class="hidden-text" for="text-input-example-4">label</label>
                       <input id="text-input-example-4" class="text-input text-input-sm" value="prefix icon + button" />
                       <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -159,7 +159,7 @@
                     <span class="sub-label">(sublabel)</span>
                   </label>
                   <div class="form-detail flex flex-col">
-                    <div class="text-input-group">
+                    <div class="search-group">
                       <label class="hidden-text" for="text-input-example-4">label</label>
                       <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
                       <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -221,7 +221,7 @@
                     <span class="sub-label">(sublabel)</span>
                   </label>
                   <div class="form-detail flex flex-col">
-                    <div class="text-input-group">
+                    <div class="search-group">
                       <label class="hidden-text" for="text-input-example-4">label</label>
                       <input id="text-input-example-4" class="text-input" value="prefix icon + button" />
                       <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -283,7 +283,7 @@
                     <span class="sub-label">(sublabel)</span>
                   </label>
                   <div class="form-detail flex flex-col">
-                    <div class="text-input-group">
+                    <div class="search-group">
                       <label class="hidden-text" for="text-input-example-4">label</label>
                       <input id="text-input-example-4" class="text-input text-input-sm" value="prefix icon + button" />
                       <svg-icon class="text-input-icon" name="user"></svg-icon>

@@ -33,7 +33,7 @@
     }
   }
 
-  &-search {
+  &-head {
     height: 100%;
     padding: $spacing-8;
     border-bottom: 1px solid $neutral-200;
@@ -45,7 +45,7 @@
 
   &-lg {
     @include menu-size($font-size: '14', $size: 40px, $icon-size: sm);
-
-
   }
 }
+
+

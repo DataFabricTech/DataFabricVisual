@@ -11,12 +11,12 @@
               <input id="text-input-example" class="text-input text-input-lg" placeholder="placeholder" />
               <label class="hidden-text" for="text-input-example-3">label</label>
               <input id="text-input-example-3" class="text-input text-input-lg" placeholder="placeholder" disabled />
-              <div class="text-input-group">
+              <div class="search-group">
                 <label class="hidden-text" for="text-input-example-4">label</label>
                 <input id="text-input-example-4" class="text-input text-input-lg" placeholder="prefix icon" />
                 <svg-icon class="text-input-icon" name="user"></svg-icon>
               </div>
-              <div class="text-input-group">
+              <div class="search-group">
                 <label class="hidden-text" for="text-input-example-4">label</label>
                 <input id="text-input-example-4" class="text-input text-input-lg" placeholder="button" />
                 <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
@@ -24,7 +24,7 @@
                   <svg-icon class="button-icon" name="close"></svg-icon>
                 </button>
               </div>
-              <div class="text-input-group">
+              <div class="search-group">
                 <label class="hidden-text" for="text-input-example-4">label</label>
                 <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
                 <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -39,12 +39,12 @@
               <input id="text-input-example" class="text-input" placeholder="placeholder" />
               <label class="hidden-text" for="text-input-example-3">label</label>
               <input id="text-input-example-3" class="text-input" placeholder="placeholder" disabled />
-              <div class="text-input-group">
+              <div class="search-group">
                 <label class="hidden-text" for="text-input-example-4">label</label>
                 <input id="text-input-example-4" class="text-input" placeholder="prefix icon" />
                 <svg-icon class="text-input-icon" name="user"></svg-icon>
               </div>
-              <div class="text-input-group">
+              <div class="search-group">
                 <label class="hidden-text" for="text-input-example-5">label</label>
                 <input id="text-input-example-5" class="text-input" placeholder="button" />
                 <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
@@ -52,7 +52,7 @@
                   <svg-icon class="button-icon" name="close"></svg-icon>
                 </button>
               </div>
-              <div class="text-input-group">
+              <div class="search-group">
                 <label class="hidden-text" for="text-input-example-6">label</label>
                 <input id="text-input-example-6" class="text-input" value="prefix icon + button" />
                 <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -67,12 +67,12 @@
               <input id="text-input-example" class="text-input text-input-sm" placeholder="placeholder" />
               <label class="hidden-text" for="text-input-example-7">label</label>
               <input id="text-input-example-7" class="text-input text-input-sm" placeholder="placeholder" disabled />
-              <div class="text-input-group">
+              <div class="search-group">
                 <label class="hidden-text" for="text-input-example-8">label</label>
                 <input id="text-input-example-8" class="text-input text-input-sm" placeholder="prefix icon" />
                 <svg-icon class="text-input-icon" name="user"></svg-icon>
               </div>
-              <div class="text-input-group">
+              <div class="tsearch-group">
                 <label class="hidden-text" for="text-input-example-9">label</label>
                 <input id="text-input-example-9" class="text-input text-input-sm" placeholder="button" />
                 <button class="text-input-action-button button button-neutral-ghost button-xs" type="button">
@@ -80,7 +80,7 @@
                   <svg-icon class="button-icon" name="close"></svg-icon>
                 </button>
               </div>
-              <div class="text-input-group ">
+              <div class="search-group">
                 <label class="hidden-text" for="text-input-example-10">label</label>
                 <input id="text-input-example-10" class="text-input text-input-sm" value="prefix icon + button" />
                 <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -94,7 +94,7 @@
           <h4 class="group-title">search button</h4>
           <div class="flex gap-6 items-start">
             <div class="v-group gap-4">
-              <div class="text-input-group">
+              <div class="search-group">
                 <label class="hidden-text" for="text-input-example-11">label</label>
                 <input id="text-input-example-11" class="text-input text-input-lg" value="search button" />
                 <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -109,7 +109,7 @@
               </div>
             </div>
             <div class="v-group gap-4">
-              <div class="text-input-group">
+              <div class="search-group">
                 <label class="hidden-text" for="text-input-example-11">label</label>
                 <input id="text-input-example-11" class="text-input" placeholder="search button" />
                 <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -124,7 +124,7 @@
               </div>
             </div>
             <div class="v-group gap-4">
-              <div class="text-input-group ">
+              <div class="search-group">
                 <label class="hidden-text" for="text-input-example-11">label</label>
                 <input id="text-input-example-11" class="text-input text-input-sm" value="search button" />
                 <svg-icon class="text-input-icon" name="user"></svg-icon>
@@ -142,7 +142,7 @@
           <h4 class="group-title">password</h4>
           <div class="flex gap-6 items-start">
             <div class="v-group gap-4">
-              <div class="text-input-group">
+              <div class="search-group">
                 <label class="hidden-text" for="text-input-example-11">label</label>
                 <input
                   type="password"
@@ -158,7 +158,7 @@
               </div>
             </div>
             <div class="v-group gap-4">
-              <div class="text-input-group">
+              <div class="search-group">
                 <label class="hidden-text" for="text-input-example-11">label</label>
                 <input
                   type="password"
@@ -175,7 +175,7 @@
               </div>
             </div>
             <div class="v-group gap-4">
-              <div class="text-input-group">
+              <div class="search-group">
                 <label class="hidden-text" for="text-input-example-11">label</label>
                 <input
                   type="password"

@@ -56,92 +56,94 @@
   &-sm {
     @include text-input-size($font-size: '13', $size: 28px, $right-padding: $spacing-6, $left-padding: $spacing-8, $search-icon-size: sm)
   }
+}
 
-  // -------------------------
-  // text-input group
-  // -------------------------
-  &-group {
-    position: relative;
+// -------------------------
+// text-input group
+// -------------------------
+.search-group {
+  position: relative;
 
-    .text-input-icon {
-      @include icon-color($neutral-600);
+  .text-input-icon {
+    @include icon-color($neutral-600);
 
-      position: absolute;
-      left: 8px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 
-    .text-input-action-button {
-      @include z-index('float');
+  .text-input-action-button {
+    @include z-index('float');
 
-      position: absolute;
-      right: 6px;
-      top: 50%;
-      transform: translateY(-50%);
-    }
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
 
-    &:has(.text-input-icon) {
-      .text-input {
-        padding-left: $spacing-32;
+  &:has(.text-input-icon) {
+    .text-input {
+      padding-left: $spacing-32;
 
-        &:placeholder-shown + .text-input-icon {
-          @include icon-color($neutral-400);
-        }
-      }
-    }
-
-    &:has(.text-input-action-button, .svg-icon) {
-      .text-input {
-        padding-right: $spacing-32;
-      }
-    }
-
-    .text-input-search-button {
-      @include z-index('float');
-
-      position: absolute;
-      right: 1px;
-      top: 50%;
-      transform: translateY(-50%);
-      border-left: 1px solid $neutral-200;
-      border-radius: 0 $border-radius-4 $border-radius-4 0;
-    }
-
-    &:has(.text-input-search-button) {
-      .text-input-action-button {
-        right: 38px;
-      }
-    }
-
-    &:has(.text-input-action-button + .text-input-search-button) {
-      .text-input {
-        padding-right: $spacing-64;
-
-        &.text-input-lg {
-          padding-right: 72px;
-        }
-
-        &.text-input-sm {
-          padding-right: $spacing-56;
-        }
-      }
-    }
-
-    &:has(.text-input-lg ~ .text-input-search-button) {
-      .text-input-action-button {
-        right: 42px;
-      }
-    }
-
-    &:has(.text-input-sm ~ .text-input-search-button) {
-      .text-input-action-button {
-        right: 32px;
+      &:placeholder-shown + .text-input-icon {
+        @include icon-color($neutral-400);
       }
     }
   }
 
-  &-group ~ .notification {
+  &:has(.text-input-action-button, .svg-icon) {
+    .text-input {
+      padding-right: $spacing-32;
+    }
+  }
+
+  .text-input-search-button {
+    @include z-index('float');
+
+    position: absolute;
+    right: 1px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 1px solid $neutral-200;
+    border-radius: 0 $border-radius-4 $border-radius-4 0;
+  }
+
+  &:has(.text-input-search-button) {
+    .text-input-action-button {
+      right: 38px;
+    }
+  }
+
+  &:has(.text-input-action-button + .text-input-search-button) {
+    .text-input {
+      padding-right: $spacing-64;
+
+      &.text-input-lg {
+        padding-right: 72px;
+      }
+
+      &.text-input-sm {
+        padding-right: $spacing-56;
+      }
+    }
+  }
+
+  &:has(.text-input-lg ~ .text-input-search-button) {
+    .text-input-action-button {
+      right: 42px;
+    }
+  }
+
+  &:has(.text-input-sm ~ .text-input-search-button) {
+    .text-input-action-button {
+      right: 32px;
+    }
+  }
+
+  & ~ .notification {
     margin-top: $spacing-4;
   }
 }
+
+
