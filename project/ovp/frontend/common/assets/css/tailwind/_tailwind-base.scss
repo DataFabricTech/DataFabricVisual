@@ -142,6 +142,10 @@
     border-spacing: 0;
   }
 
+  em {
+    font-style: normal;
+  }
+
   ::selection {
     background: $secondary-500;
     color: #fff;

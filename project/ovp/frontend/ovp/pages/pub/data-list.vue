@@ -31,7 +31,7 @@
         </div>
         <div class="section-contents">
           <div class="l-top-bar">
-            <span>총 <strong class="primary">68건</strong>의 검색 결과가 있습니다.</span>
+            <strong>총 <em class="primary">68건</em>의 검색 결과가 있습니다.</strong>
             <div class="h-group gap-1">
               <div class="select select-clean">
                 <button class="select-button">
@@ -67,9 +67,9 @@
           </div>
           <div class="l-split">
             <div class="data-page">
-              <div class="v-group gap-4 grow">
-                <Card class="is-card-selected"></Card>
-                <Card v-for="card in 2" :key="card"></Card>
+              <div class="data-list">
+                <ResourceBox class="is-resource-box-selected"></ResourceBox>
+                <ResourceBox v-for="card in 9" :key="card"></ResourceBox>
               </div>
               <Pagination :totalCount="60" :perPage="10" :currentPageNumber="4" @change="checkCurrentPage"></Pagination>
             </div>
@@ -107,7 +107,7 @@
                   <div class="preview-title">
                     태그
                   </div>
-                  <div class="h-group gap-2.5 flex-wrap">
+                  <div class="preview-group">
                     <div class="tag tag-primary tag-sm" v-for="tag in 8" :key="tag">
                       <a class="tag-link" href="#">DATA-tag</a>
                     </div>
@@ -117,7 +117,7 @@
                   <div class="preview-title">
                     용어
                   </div>
-                  <div class="h-group gap-2.5 flex-wrap">
+                  <div class="preview-group">
                     <div class="tag tag-primary tag-sm">
                       <a class="tag-link">관련 용어</a>
                     </div>
@@ -175,13 +175,13 @@
 import Header from "../layouts/header.vue";
 import Sidebar from "../layouts/sidebar.vue";
 import Pagination from "../../common/components/extends/pagination/Pagination.vue";
-import Card from "../../ovp/components/card/card.vue";
+import ResourceBox from "../../ovp/components/resource-box/resource-box.vue";
 import MenuSearch from "../../ovp/components/menu-search/menu-search.vue";
 
 
 export default {
   name: "data-list",
-  components: { Sidebar, Header, Pagination, Card }
+  components: { Sidebar, Header, Pagination, ResourceBox }
 };
 </script>
 

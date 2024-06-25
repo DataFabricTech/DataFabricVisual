@@ -16,7 +16,7 @@
           </span>
         <div class="profile-text">root</div>
         <button class="button button-sm button-neutral-ghost">
-          <svg-icon name="chevron-down-medium"></svg-icon>
+          <svg-icon class="svg-icon" name="chevron-down-medium"></svg-icon>
           <span class="hidden-text">내 메뉴</span>
         </button>
         <div class="dropdown" style="top: 40px;right: 16px;">

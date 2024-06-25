@@ -8,24 +8,36 @@
   border-bottom: 1px solid $neutral-200;
 }
 
+//.l-split:has(.data-page + .preview) {
+//  .data-page {
+//    width: calc(100% - 500px);
+//  }
+//}
+
 .data-page {
+  overflow-y: hidden;
   display: flex;
   flex-direction: column;
   width: 100%;
-
-  .card {
-    flex: 1;
-  }
 
   .pagination {
     margin-top: $spacing-12;
   }
 }
 
+.data-list {
+  @include flex($direction:column, $horizontal: flex-start, $vertical: flex-start);
+  overflow-y: auto;
+  gap: $spacing-16;
+  flex-grow: 1;
+
+}
+
 .preview {
   @include flex($direction: column, $horizontal: flex-start, $vertical: flex-start);
   @include box-shadow('sm');
   overflow-y: auto;
+  flex-shrink: 0;
   height: 100%;
   width: 500px;
   padding: $spacing-16;
@@ -73,6 +85,13 @@
     &:hover {
       text-decoration: underline;
     }
+  }
+
+  &-group {
+    display: flex;
+    align-items: center;
+    gap: $spacing-8;
+    flex-wrap: wrap;
   }
 
   &-schema {

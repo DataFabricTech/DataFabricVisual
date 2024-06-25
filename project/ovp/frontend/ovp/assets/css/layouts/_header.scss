@@ -7,39 +7,39 @@
   background: $neutral-0;
   border-bottom: 1px solid $neutral-200;
 
-  .header-search {
-    @include flex;
-    gap: $spacing-24;
-  }
-
-  .logo {
-    @include font-size('18');
-    font-weight: 700;
-  }
-
   .search-group {
     width: 330px;
   }
+}
 
-  .profile {
+.header-search {
+  @include flex;
+  gap: $spacing-24;
+}
+
+.logo {
+  @include font-size('18');
+  font-weight: 700;
+}
+
+.profile {
+  @include flex;
+  gap: $spacing-8;
+
+  &-avatar {
     @include flex;
-    gap: $spacing-8;
+    width: 32px;
+    height: 32px;
+    border-radius: $border-radius-round;
+    // 임시스타일
+    background: $primary-300;
+  }
 
-    &-avatar {
-      @include flex;
-      width: 32px;
-      height: 32px;
-      border-radius: $border-radius-round;
-      // 임시스타일
-      background: $primary-300;
-    }
-
-    &-img {
-      display: flex;
-      flex: 1 1 100%;
-      width: 100%;
-      height: 100%;
-      border-radius: $border-radius-round;
-    }
+  &-img {
+    display: flex;
+    flex: 1 1 100%;
+    width: 100%;
+    height: 100%;
+    border-radius: $border-radius-round;
   }
 }

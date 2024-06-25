@@ -1,4 +1,4 @@
-.card {
+.resource-box {
   @include flex($direction:column, $vertical:flex-start);
   @include box-shadow('sm');
   gap: $spacing-4;
@@ -19,7 +19,7 @@
     @include flex;
     gap: $spacing-8;
 
-    &-img {
+    & > img {
       width: 32px;
       height: 32px;
     }
@@ -41,7 +41,8 @@
   }
 
   &-desc {
-    flex: 1 0 auto;
+    @include ellipsis;
+    width: 100%;
     color: $neutral-500;
   }
 
@@ -49,14 +50,14 @@
     @include flex;
     gap: $spacing-24;
     margin-top: $spacing-12;
+  }
 
-    &-list {
-      @include flex;
-      gap:$spacing-16;
-      color: $neutral-700;
-    }
+  &-list {
+    @include flex;
+    gap:$spacing-16;
+    color: $neutral-700;
 
-    &-title {
+    dt{
       position: relative;
 
       &::after {
@@ -73,7 +74,7 @@
   }
 
   &:hover,
-  &.is-card-selected{
+  &.is-resource-box-selected{
     border: 1px solid $secondary-500;
     box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
   }
