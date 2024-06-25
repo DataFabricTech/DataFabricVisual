@@ -6,9 +6,9 @@
         v-for="(item, index) in data"
         @click="move(index)"
         :class="{
-    'is-tab-item-disabled': isDisabled(item[valueKey]),
-    'is-tab-item-selected': changeCurrentTabClass(index)
-  }"
+          'is-tab-item-disabled': isDisabled(item[valueKey]),
+          'is-tab-item-selected': changeCurrentTabClass(index)
+        }"
       >
         <button class="tab-button">
           <p class="tab-button-text">{{ item[labelKey] }}</p>
@@ -19,12 +19,11 @@
       <slot :name="data[currentIndex][valueKey]"></slot>
     </div>
   </div>
-
 </template>
 
 <script setup lang="ts">
 import { TabProps } from "~/components/extends/tab/TabProps";
-import { TabComposition } from "@/components/extends/tab/TabComposition";
+import { TabComposition } from "./TabComposition";
 
 const INDEX = "index";
 
@@ -49,5 +48,4 @@ const { data, labelKey, valueKey, currentIndex, move, isDisabled, changeCurrentT
 );
 </script>
 
-<style lang="css">
-</style>
+<style lang="css"></style>
