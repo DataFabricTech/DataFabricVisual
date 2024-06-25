@@ -79,7 +79,7 @@ logging:
       mobigen: debug
 
 server:
-  port: 8001
+  port: 8080
   servlet:
     session:
       timeout: 7200
@@ -117,7 +117,7 @@ http-client-configuration:
 
 # 사용자 정의 설정들
 properties:
-  iris:
+  framework:
     security:
       ignores: /css/**, /fonts/**, /img/**, /js/**, /favicon.ico
       permit-alls: /**, /h2-console/**, /sample/public-key, /sample/authenticate, /error, /test, /api/**
@@ -135,11 +135,6 @@ properties:
       access-token: access_token
       refresh-token: refresh_token
       secret: jwt-secrect-b-iris # Keycloak "HS256" 알고리즘 secret 값
-    keycloak:
-      url: http://192.168.107.13:30003/auth
-      realm: IRIS-Data-Portal
-      client-id: IRIS-Data-Portal-Client
-      client-secret: M9ioKECnQuzG47SLQhLiqPIVX8TCVU20 # token secret key
     route:
       locales: ko,en,zh,ja
     auth:
