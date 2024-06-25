@@ -79,7 +79,7 @@ logging:
       mobigen: debug
 
 server:
-  port: 8001
+  port: 8080
   servlet:
     session:
       timeout: 7200
