@@ -8,6 +8,7 @@
       v-model="inputValue"
       @keyup.enter="setSearchValue(inputValue)"
       @change="!isSearchInputDefaultType ? setSearchValue(inputValue) : ''"
+      @input="!isSearchInputDefaultType ? setSearchValue(inputValue) : ''"
       :placeholder="placeholder"
       :disabled="disabled"
       :isSearchInputDefaultType="isSearchInputDefaultType"
