@@ -177,11 +177,10 @@ import Header from "../layouts/header.vue";
 import Sidebar from "../layouts/sidebar.vue";
 import Pagination from "../../common/components/extends/pagination/Pagination.vue";
 import ResourceBox from "../../ovp/components/resource-box/resource-box.vue";
-import MenuSearch from "../../ovp/components/menu-search/menu-search.vue";
 
 
 export default {
-  name: "data-list",
+  name: "search",
   components: { Sidebar, Header, Pagination, ResourceBox }
 };
 </script>
