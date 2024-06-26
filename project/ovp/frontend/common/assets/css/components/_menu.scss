@@ -33,7 +33,7 @@
     }
   }
 
-  &-search {
+  &-head {
     height: 100%;
     padding: $spacing-8;
     border-bottom: 1px solid $neutral-200;
@@ -45,7 +45,29 @@
 
   &-lg {
     @include menu-size($font-size: '14', $size: 40px, $icon-size: sm);
-
-
   }
 }
+
+.menu-search {
+  position: absolute;
+  min-width: 200px;
+
+  .menu-list {
+    max-height: 165px;
+    overflow-y: auto;
+  }
+
+  .menu-foot {
+    display: flex;
+    align-items: center;
+    padding: $spacing-8 $spacing-12;
+
+    &-group {
+      display: flex;
+      gap: $spacing-8;
+      margin-left: auto;
+    }
+  }
+}
+
+

@@ -1,0 +1,112 @@
+.filters {
+  @include flex($horizontal: flex-start);
+  gap: $spacing-16;
+  width: 100%;
+  height: 48px;
+  padding: $spacing-8 $spacing-20;
+  background: $neutral-0;
+  border-bottom: 1px solid $neutral-200;
+}
+
+.data-page {
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .pagination {
+    margin-top: $spacing-12;
+  }
+}
+
+.data-list {
+  @include flex($direction:column, $horizontal: flex-start, $vertical: flex-start);
+  overflow-y: auto;
+  gap: $spacing-16;
+  flex-grow: 1;
+  -ms-overflow-style: none;  /* Internet Explorer and Edge */
+  scrollbar-width: none;  /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none; /*(Chrome, Safari) */
+  }
+}
+
+.preview {
+  @include flex($direction: column, $horizontal: flex-start, $vertical: flex-start);
+  @include box-shadow('sm');
+  overflow-y: auto;
+  flex-shrink: 0;
+  height: 100%;
+  width: 500px;
+  padding: $spacing-16;
+  background: $neutral-0;
+  border-radius: $border-radius-4;
+
+  &-contents {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-32;
+    width: 100%;
+  }
+
+  &-item {
+    @include flex($direction: column, $vertical: flex-start);
+    gap: $spacing-16;
+
+  }
+
+  &-title {
+    @include font-size('16');
+    width: 100%;
+    font-weight: 600;
+
+    &:after {
+      display: block;
+      position: relative;
+      content: "";
+      top: 7px;
+      width: 100%;
+      height: 1px;
+      background: $neutral-200;
+    }
+  }
+
+  &-desc {
+    color: $neutral-500;
+  }
+
+  &-link {
+    word-break: break-word;
+    text-decoration: underline;
+    color: $secondary-500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &-group {
+    display: flex;
+    align-items: center;
+    gap: $spacing-8;
+    flex-wrap: wrap;
+  }
+
+  &-schema {
+    width: 100%;
+    padding: $spacing-8 $spacing-12;
+    background: $primary-100;
+    border-radius: $border-radius-4;
+  }
+}
+
+.schema-title {
+  font-weight: 600;
+  @include font-size('15');
+}
+.schema-subtitle {
+  color: $neutral-400;
+}
+
+
