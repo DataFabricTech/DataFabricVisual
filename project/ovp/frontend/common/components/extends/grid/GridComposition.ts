@@ -1,20 +1,28 @@
 import { GridProps } from "@/components/extends/grid/GridProps";
 import buttonRenderer from "./grid-units/ButtonRenderer.vue";
-import { ComputedRef } from "vue";
+import valFuncRenderer from "./grid-units/ValFuncRenderer.vue";
+import htmlRenderer from "./grid-units/HtmlRenderer.vue";
+import { ComputedRef, Ref, ref } from "vue";
+import _ from "lodash";
 
 export interface GridComposition extends GridProps {
-  gridApi: any;
+  gridApi: Ref<any>;
   getDefs(): any[];
   onGridReady(params: object): void;
 }
 
 export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): GridComposition {
+  const rowId: string | number | undefined = props.rowId || "id";
+  const selectedNodes: any[] = props.selectedNodes || [];
+  const buttons: any[] = props.buttons || [];
+  const columnRender: object = props.columnRender || [];
+
   const gridApi = ref(null);
   const onGridReady: (params: { api: any }) => void = (params: { api: any }) => {
     gridApi.value = params.api;
 
     params.api.forEachNode((node: any) => {
-      if (props.selectedNodes.includes(node.data[props.rowId])) {
+      if (selectedNodes.includes(node.data[rowId])) {
         node.setSelected(true);
       }
     });
@@ -25,18 +33,15 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
   };
 
   const columnWidthList: ComputedRef<any> = computed(() => {
-    const widthList: any = props.columnWidthList ?? [];
-    return widthList.length < 1
-      ? Array(props.columnDefs.length + Object.keys(props.buttons).length).fill(100)
-      : props.columnWidthList;
+    return props.columnWidthList?.length ? props.columnWidthList : [];
   });
 
   const getDefs: () => any[] = () => {
     // step1. button 설정을 columnDefsObject 형식으로 변환
-    props.buttons.forEach((btnEl) => {
+    buttons.forEach((btnEl: any, bI: number) => {
       const btnObj = {
         headerName: btnEl.headerText,
-        field: `${BTN_FIELD_CONST}${btnEl.rendererKey}`,
+        field: `${BTN_FIELD_CONST}${bI}`,
         cellRenderer: buttonRenderer
       };
 
@@ -44,12 +49,11 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
         Object.assign(btnObj, {
           cellRenderer: buttonRenderer,
           cellRendererParams: {
-            rowId: props.rowId,
+            rowId: rowId,
             type: btnEl.type,
             icon: btnEl.icon || "",
             onClickRenderer: btnEl.fn,
-            onOffKeys: btnEl.useOnOffOpt ? btnEl.selectedData[btnEl.rendererKey] : [],
-            rendererKey: btnEl.rendererKey
+            onOffKeys: btnEl.type === "onOff" ? btnEl.selectedData : []
           }
         });
       }
@@ -57,12 +61,33 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
       props.columnDefs.splice(btnEl.order - 1, 0, btnObj);
     });
 
-    props.columnDefs.map((el: any, eI: number) => {
-      if (columnWidthList.value[eI] !== "auto") {
+    // props.columnDefs에 renderer 설정한게 있으면 적용한다.
+    if (Object.keys(columnRender).length > 0) {
+      _.forOwn(columnRender, (obj: any, key: string) => {
+        const defs = _.find(props.columnDefs, { field: key });
+
+        if (obj.type === "valFunc") {
+          defs.cellRenderer = valFuncRenderer;
+          defs.cellRendererParams = {
+            fn: obj.fn
+          };
+        }
+        if (obj.type === "html") {
+          defs.cellRenderer = htmlRenderer;
+          defs.cellRendererParams = {
+            fn: obj.fn
+          };
+        }
+      });
+    }
+
+    // width 지정한 게 있으면 반영한다.
+    if (columnWidthList.value.length > 0) {
+      props.columnDefs.map((el: any, eI: number) => {
         el.width = columnWidthList.value[eI];
-      }
-      return el;
-    });
+        return el;
+      });
+    }
 
     const checkboxDefs: any[] = [];
     // step2. 첫번째 column 에 checkbox 를 추가해준다.

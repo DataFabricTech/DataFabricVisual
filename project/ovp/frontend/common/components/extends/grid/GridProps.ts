@@ -1,15 +1,17 @@
 export interface GridProps {
-  rowId: string;
+  rowId?: string;
   class?: string;
   style?: string;
   columnDefs: any[];
   rowData: any[];
 
-  useRowCheckBox: boolean;
+  useRowCheckBox?: boolean;
 
-  buttons: any[];
-  selectedNodes: any[];
-  columnWidthList: any[];
+  buttons?: any[];
+  selectedNodes?: any[];
+  columnWidthList?: any[];
 
-  setColumnFit: boolean;
+  setColumnFit?: boolean;
+
+  columnRender?: object;
 }

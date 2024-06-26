@@ -9,12 +9,36 @@
       :rowData="rowData"
       rowId="id"
       :useRowCheckBox="true"
-      :selectedNodes="selectedNodes"
-      :column-width-list="[100, 100, 'auto', 100, 100, 100, 100]"
+      :column-width-list="[100, 100, 200, 100, 100, 100, 100]"
       :setColumnFit="true"
+      :columnRender="{
+        make: {
+          type: 'valFunc',
+          fn: (val: any) => {
+            return `preFix - ${val}`;
+          }
+        },
+        model: {
+          type: 'html',
+          fn: (val: any) => {
+            return `<div style='display: ruby;'><img src='https://flags.fmcdn.net/data/flags/mini/de.png' > - ${val}</img></div>`;
+          }
+        },
+        price: {
+          type: 'html',
+          fn: (val: any) => {
+            // fa, svg 는 안먹음. 변환 된 걸로 넣어야 함.
+            return `<div style='display: ruby;'>
+                   <svg style='width:20px; height:20px;' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
+                   <!--!Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+                   <path d='M62.4 53.9C56.8 37.1 38.6 28.1 21.9 33.6S-3.9 57.4 1.6 74.1L51.6 224H32c-17.7 0-32 14.3-32 32s14.3 32 32 32H72.9l56.7 170.1c4.5 13.5 17.4 22.4 31.6 21.9s26.4-10.4 29.8-24.2L233 288h46L321 455.8c3.4 13.8 15.6 23.7 29.8 24.2s27.1-8.4 31.6-21.9L439.1 288H480c17.7 0 32-14.3 32-32s-14.3-32-32-32H460.4l50-149.9c5.6-16.8-3.5-34.9-20.2-40.5s-34.9 3.5-40.5 20.2L392.9 224H329L287 56.2C283.5 42 270.7 32 256 32s-27.5 10-31 24.2L183 224h-64L62.4 53.9zm78 234.1H167l-11.4 45.6L140.4 288zM249 224l7-28.1 7 28.1H249zm96 64h26.6l-15.2 45.6L345 288z'/>
+                   </svg>
+                   ${val}</div>`;
+          }
+        }
+      }"
       :buttons="[
         {
-          rendererKey: 'bookmark',
           headerText: '북마크',
           rendererType: 'button',
           type: 'onOff',
@@ -22,28 +46,17 @@
             on: 'fa-solid fa-bookmark',
             off: 'fa-regular fa-bookmark'
           },
-          useOnOffOpt: true,
-          selectedData: selectedData,
+          selectedData: bookmarkSelected,
           order: 2,
           fn: bookmarkClick
         },
         {
-          rendererKey: 'edit',
           headerText: '수정',
           rendererType: 'button',
           type: 'icon',
           icon: 'edit',
           order: 4,
           fn: editClick
-        },
-        {
-          rendererKey: 'delete',
-          headerText: '삭제',
-          rendererType: 'button',
-          type: 'button',
-          icon: 'delete',
-          order: 5,
-          fn: deleteClick
         }
       ]"
       @cell-clicked="cellClicked"
@@ -87,8 +100,8 @@ const rowData = [
 
 const selectedNodes = [10, 11, 12];
 
-const selectedData = ref({});
-selectedData.value.bookmark = [1, 4, 5];
+const bookmarkSelected = ref<Array<string | number>>([]);
+bookmarkSelected.value = [1, 4, 5];
 
 // cell click 동작 -> buttons 항목 및 checkbox 항목은 click 이벤트가 동작하지 않음.
 const cellClicked = (params: object) => {
@@ -100,21 +113,16 @@ const rowClicked = (params: object) => {
 };
 
 // 노드 '북마크' 버튼 클릭시 - buttons : bookmarkClick
-const bookmarkClick = ({ data }: { data: object }) => {
-  if (selectedData.value.bookmark.includes(data.id)) {
-    selectedData.value.bookmark = selectedData.value.bookmark.filter((item: any) => item !== data.id);
+const bookmarkClick = ({ data }: { data: { id: string | number } }) => {
+  if (bookmarkSelected.value.includes(data.id)) {
+    bookmarkSelected.value = bookmarkSelected.value.filter((item: any) => item !== data.id);
   } else {
-    selectedData.value.bookmark.push(data.id);
+    bookmarkSelected.value.push(data.id);
   }
 };
 
 // 노드 '수정' 버튼 클릭시 - buttons : editClick
 const editClick = (param: object) => {
-  console.log(param);
-};
-
-// 노드 '삭제' 버튼 클릭시 - buttons : deleteClick
-const deleteClick = (param: object) => {
   console.log(param);
 };
 

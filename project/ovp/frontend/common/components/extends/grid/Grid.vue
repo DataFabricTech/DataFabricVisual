@@ -11,10 +11,6 @@
     @grid-ready="onGridReady"
     @selectionChanged="selectionChanged"
   ></ag-grid-vue>
-
-  <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
-    <svg-icon class="button-icon" name="close"></svg-icon>
-  </button>
 </template>
 
 <script setup lang="ts">
@@ -26,8 +22,12 @@ import { GridComposition } from "@/components/extends/grid/GridComposition";
 const BTN_FIELD_CONST = "AG_GRID_";
 
 const props = withDefaults(defineProps<GridProps>(), {
+  class: "",
+  style: "",
   rowId: "id",
   setColumnFit: false,
+  useRowCheckBox: false,
+  buttons: () => [],
   selectedNodes: () => [],
   columnWidthList: () => []
 });
@@ -69,7 +69,7 @@ const selectionChanged = (params: { api: any }) => {
 
 const { onGridReady, getDefs } = GridComposition(props, BTN_FIELD_CONST);
 
-const gridColumnDefs = ref<any[]>([]);
+const gridColumnDefs: Ref<any[]> = ref([]);
 gridColumnDefs.value = getDefs();
 </script>
 
