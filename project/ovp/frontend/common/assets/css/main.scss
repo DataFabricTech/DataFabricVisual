@@ -44,8 +44,7 @@
 @import "./components/table";
 @import "./components/form";
 @import "./components/search-input";
-
-
+@import "./components/common/input-group";
 // Develop Component
 @import "../../components/base/breadcrumb/Breadcrumb";
 @import "../../components/base/alert/alert";
@@ -56,7 +55,6 @@
 @import "../../components/extends/combo-box/select-search";
 @import "../../components/extends/step/step";
 @import "../../components/extends/tab/tab";
-
 
 // modules
 @import "./modules/capsule-pagincation";
