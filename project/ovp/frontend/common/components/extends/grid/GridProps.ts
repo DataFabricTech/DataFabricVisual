@@ -1,8 +1,13 @@
 export interface GridProps {
+  rowId: string;
   class?: string;
-  style?: string | undefined;
+  style?: string;
   columnDefs: any[];
   rowData: any[];
 
-  buttons: { [key: string]: any };
+  useRowCheckBox: boolean;
+
+  buttons: any[];
+  selectedNodes: any[];
+  columnWidthList: any[];
 }
