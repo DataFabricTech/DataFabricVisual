@@ -31,6 +31,7 @@
   }
 
   &-title {
+    @include ellipsis;
     @include font-size('18');
     font-weight: 600;
     color: $neutral-700;
@@ -78,4 +79,35 @@
     border: 1px solid $secondary-500;
     box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
   }
+}
+
+.resource-box-full {
+  border-right: none;
+  border-left: none;
+  border-radius: 0;
+  border-top: 2px solid $secondary-500;
+  border-bottom: 1px solid $neutral-200;
+  box-shadow: none;
+  cursor: default;
+
+  &:hover {
+    border-right: none;
+    border-left: none;
+    border-top: 2px solid $secondary-500;
+    border-bottom: 1px solid $neutral-200;
+    box-shadow: none;
+  }
+
+  .resource-box-desc,
+  .resource-box-title {
+    white-space: normal;
+  }
+
+  .resource-box-title:hover {
+    text-decoration: none;
+  }
+}
+
+.resource-box-short {
+
 }

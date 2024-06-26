@@ -21,3 +21,7 @@ table {
     background-color: $neutral-0;
   }
 }
+
+.search-input + table {
+  margin-top: $spacing-8;
+}

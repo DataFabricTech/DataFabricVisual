@@ -1,0 +1,15 @@
+.data-detail {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-12;
+  padding: $spacing-16 0;
+
+  .search-input {
+    width: 350px;
+  }
+}
+
+.knowledge {
+  width: 60%;
+  border:1px solid $neutral-200 ;
+}
