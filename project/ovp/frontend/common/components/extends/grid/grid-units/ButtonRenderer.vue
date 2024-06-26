@@ -1,8 +1,9 @@
 <template>
   <div>
-    <div v-if="params.rendererKey === 'bookmark'">
+    <div v-if="params.type === 'onOff'">
       <button @click="handleClick">
-        {{ params.onOffKeys[params.rendererKey].includes(params.data[params.rowId]) }}
+        <fa v-if="params.onOffKeys.includes(params.data[params.rowId])" :icon="params.icon.on" />
+        <fa v-else :icon="params.icon.off" />
       </button>
     </div>
     <div v-else>

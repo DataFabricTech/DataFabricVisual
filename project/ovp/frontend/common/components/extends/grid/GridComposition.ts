@@ -19,7 +19,9 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
       }
     });
 
-    // params.api.sizeColumnsToFit();
+    if (props.setColumnFit) {
+      params.api.sizeColumnsToFit();
+    }
   };
 
   const columnWidthList: ComputedRef<any> = computed(() => {
@@ -38,7 +40,7 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
         cellRenderer: buttonRenderer
       };
 
-      if (btnEl.type === "button" || btnEl.type === "icon") {
+      if (btnEl.rendererType === "button") {
         Object.assign(btnObj, {
           cellRenderer: buttonRenderer,
           cellRendererParams: {
@@ -46,7 +48,7 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
             type: btnEl.type,
             icon: btnEl.icon || "",
             onClickRenderer: btnEl.fn,
-            onOffKeys: btnEl.useOnOffOpt ? btnEl.selectedData : [],
+            onOffKeys: btnEl.useOnOffOpt ? btnEl.selectedData[btnEl.rendererKey] : [],
             rendererKey: btnEl.rendererKey
           }
         });

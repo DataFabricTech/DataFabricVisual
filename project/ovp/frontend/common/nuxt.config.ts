@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  modules: ["@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt", "@nuxtjs/tailwindcss", '@pinia/nuxt'],
+  modules: ["@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt", "@nuxtjs/tailwindcss", "@pinia/nuxt"],
 
   plugins: [
     { src: "~/plugins/highcharts-vue", mode: "client" },
@@ -22,7 +22,8 @@ export default defineNuxtConfig({
     "~/assets/css/main.scss",
     "vue-final-modal/style.css",
     "ag-grid-community/dist/styles/ag-grid.css",
-    "ag-grid-community/dist/styles/ag-theme-alpine.css"
+    "ag-grid-community/dist/styles/ag-theme-alpine.css",
+    "@fortawesome/fontawesome-svg-core/styles.css"
   ],
 
   tailwindcss: {
@@ -71,7 +72,7 @@ export default defineNuxtConfig({
     autoImports: [
       // automatically imports `defineStore`
       "defineStore", // import { defineStore } from 'pinia'
-      ["defineStore", "definePiniaStore"], // import { defineStore as definePiniaStore } from 'pinia'
-    ],
-  },
+      ["defineStore", "definePiniaStore"] // import { defineStore as definePiniaStore } from 'pinia'
+    ]
+  }
 });

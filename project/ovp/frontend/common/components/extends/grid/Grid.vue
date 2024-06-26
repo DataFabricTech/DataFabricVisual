@@ -27,6 +27,7 @@ const BTN_FIELD_CONST = "AG_GRID_";
 
 const props = withDefaults(defineProps<GridProps>(), {
   rowId: "id",
+  setColumnFit: false,
   selectedNodes: () => [],
   columnWidthList: () => []
 });

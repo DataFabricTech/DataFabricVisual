@@ -1,6 +1,7 @@
 <template>
   <div>
     <h1>Ag-Grid</h1>
+
     <agGrid
       class="ag-theme-alpine ag-theme-quartz"
       :style="`width: 1500px; height: 1000px`"
@@ -9,13 +10,18 @@
       rowId="id"
       :useRowCheckBox="true"
       :selectedNodes="selectedNodes"
-      :column-width-list="[50, 100, 'auto', 100, 100, 100, 100]"
+      :column-width-list="[100, 100, 'auto', 100, 100, 100, 100]"
+      :setColumnFit="true"
       :buttons="[
         {
           rendererKey: 'bookmark',
           headerText: '북마크',
-          type: 'icon',
-          icon: 'bookmark',
+          rendererType: 'button',
+          type: 'onOff',
+          icon: {
+            on: 'fa-solid fa-bookmark',
+            off: 'fa-regular fa-bookmark'
+          },
           useOnOffOpt: true,
           selectedData: selectedData,
           order: 2,
@@ -24,6 +30,7 @@
         {
           rendererKey: 'edit',
           headerText: '수정',
+          rendererType: 'button',
           type: 'icon',
           icon: 'edit',
           order: 4,
@@ -32,6 +39,7 @@
         {
           rendererKey: 'delete',
           headerText: '삭제',
+          rendererType: 'button',
           type: 'button',
           icon: 'delete',
           order: 5,

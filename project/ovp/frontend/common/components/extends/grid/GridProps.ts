@@ -10,4 +10,6 @@ export interface GridProps {
   buttons: any[];
   selectedNodes: any[];
   columnWidthList: any[];
+
+  setColumnFit: boolean;
 }
