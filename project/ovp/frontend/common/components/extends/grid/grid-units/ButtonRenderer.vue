@@ -1,20 +1,23 @@
 <template>
-  <div>
-    <div v-if="params.type === 'onOff'">
-      <button @click="handleClick">
-        <fa v-if="params.onOffKeys.includes(params.data[params.rowId])" :icon="params.icon.on" />
-        <fa v-else :icon="params.icon.off" />
-      </button>
-    </div>
-    <div v-else>
-      <button v-if="params.type === 'button'" @click="handleClick">
-        {{ params.buttonText }}
-      </button>
+  <div v-if="params.type === 'onOff'">
+    <button @click="handleClick">
+      <fa v-if="params.onOffKeys.includes(params.data[params.rowId])" :icon="params.icon.on" />
+      <fa v-else :icon="params.icon.off" />
+    </button>
+  </div>
+  <div v-else>
+    <button
+      v-if="params.type === 'button'"
+      class="button button-primary-lighter button-lg"
+      type="button"
+      @click="handleClick"
+    >
+      <span class="button-title">{{ params.buttonText }}</span>
+    </button>
 
-      <button v-else-if="params.type === 'icon'" @click="handleClick">
-        <fa :icon="params.icon" />
-      </button>
-    </div>
+    <button v-else-if="params.type === 'icon'" @click="handleClick">
+      <fa :icon="params.icon" />
+    </button>
   </div>
 </template>
 

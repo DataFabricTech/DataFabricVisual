@@ -9,6 +9,7 @@
       :rowData="rowData"
       rowId="id"
       :useRowCheckBox="true"
+      :selectedNodes="[10, 11, 12]"
       :column-width-list="[100, 100, 200, 100, 100, 100, 100]"
       :setColumnFit="true"
       :columnRender="{
@@ -59,11 +60,11 @@
           fn: editClick
         },
         {
-          headerText: '수정',
+          headerText: '삭제',
           rendererType: 'button',
           type: 'button',
-          icon: 'edit',
-          order: 4,
+          buttonText: '삭제',
+          order: 5,
           fn: editClick
         }
       ]"
@@ -106,8 +107,6 @@ const rowData = [
   { id: 18, make: "Porsche", model: "Boxter", price: 72000 }
 ];
 
-const selectedNodes = [10, 11, 12];
-
 const bookmarkSelected = ref<Array<string | number>>([]);
 bookmarkSelected.value = [1, 4, 5];
 
@@ -134,8 +133,9 @@ const editClick = (param: object) => {
   console.log(param);
 };
 
-const selectionChanged = () => {
-  // console.log(params);
+// checkbox 선택시 목록 리턴
+const selectionChanged = (params: any[]) => {
+  console.log(params);
 };
 </script>
 

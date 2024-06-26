@@ -2,11 +2,9 @@ import { GridProps } from "@/components/extends/grid/GridProps";
 import buttonRenderer from "./grid-units/ButtonRenderer.vue";
 import valFuncRenderer from "./grid-units/ValFuncRenderer.vue";
 import htmlRenderer from "./grid-units/HtmlRenderer.vue";
-import { ComputedRef, Ref, ref } from "vue";
 import _ from "lodash";
 
 export interface GridComposition extends GridProps {
-  gridApi: Ref<any>;
   getDefs(): any[];
   onGridReady(params: object): void;
 }
@@ -17,10 +15,7 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
   const buttons: any[] = props.buttons || [];
   const columnRender: object = props.columnRender || [];
 
-  const gridApi = ref(null);
   const onGridReady: (params: { api: any }) => void = (params: { api: any }) => {
-    gridApi.value = params.api;
-
     params.api.forEachNode((node: any) => {
       if (selectedNodes.includes(node.data[rowId])) {
         node.setSelected(true);
@@ -32,7 +27,7 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
     }
   };
 
-  const columnWidthList: ComputedRef<any> = computed(() => {
+  const columnWidthList: any = computed(() => {
     return props.columnWidthList?.length ? props.columnWidthList : [];
   });
 
@@ -52,6 +47,7 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
             rowId: rowId,
             type: btnEl.type,
             icon: btnEl.icon || "",
+            buttonText: btnEl.buttonText || "",
             onClickRenderer: btnEl.fn,
             onOffKeys: btnEl.type === "onOff" ? btnEl.selectedData : []
           }
@@ -107,7 +103,6 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
 
   return {
     ...props,
-    gridApi,
     onGridReady,
     getDefs
   };
