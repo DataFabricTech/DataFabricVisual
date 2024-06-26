@@ -1,5 +1,7 @@
+
 .button-group {
   @include flex;
+
   position: relative;
   background-color: $neutral-0;
 
@@ -10,14 +12,8 @@
       & + label {
         background-color: $primary-500;
         color: $neutral-0;
-        border-color: $primary-500;
-
-        .svg-icon {
-          @include icon-color($neutral-0);
-        }
+        border-color: $primary-500
       }
-
-
     }
 
     &:disabled + label {
@@ -27,11 +23,11 @@
 
   &-label {
     @include flex($horizontal: flex-start);
-    @include font-size('13');
+    @include font-size('12');
 
     font-weight: 600;
-    height: 32px;
-    padding: 0 $spacing-12;
+    height: 24px;
+    padding: 0 $spacing-8;
     color: $neutral-700;
     cursor: pointer;
     border: 1px solid $neutral-200;
@@ -51,26 +47,15 @@
       border-bottom-right-radius: $border-radius-4;
       border-right: 1px solid $neutral-200;
     }
-
-    .svg-icon {
-      @include icon-size('sm');
-    }
   }
 
-  &:has(.hidden-text) {
-
-    label {
-      padding: 0 $spacing-6;
-    }
-  }
-
-  &-sm {
+  &-lg {
     .button-group {
       &-label {
-        @include font-size('12');
+        @include font-size('13');
 
-        height: 28px;
-        padding: 0 $spacing-8;
+        height: 32px;
+        padding: 0 $spacing-12;
       }
     }
   }
