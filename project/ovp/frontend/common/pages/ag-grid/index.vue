@@ -54,6 +54,14 @@
           headerText: '수정',
           rendererType: 'button',
           type: 'icon',
+          icon: 'fa-regular fa-pen-to-square',
+          order: 4,
+          fn: editClick
+        },
+        {
+          headerText: '수정',
+          rendererType: 'button',
+          type: 'button',
           icon: 'edit',
           order: 4,
           fn: editClick

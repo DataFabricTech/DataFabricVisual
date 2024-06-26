@@ -11,7 +11,9 @@
         {{ params.buttonText }}
       </button>
 
-      <button v-else-if="params.type === 'icon'" @click="handleClick">ICON {{ params.buttonText }}</button>
+      <button v-else-if="params.type === 'icon'" @click="handleClick">
+        <fa :icon="params.icon" />
+      </button>
     </div>
   </div>
 </template>
