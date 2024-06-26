@@ -7,14 +7,10 @@
   background: $neutral-0;
   border-bottom: 1px solid $neutral-200;
 
-  .search-group {
+  .search-input {
     width: 330px;
+    margin-left: $spacing-24;
   }
-}
-
-.header-search {
-  @include flex;
-  gap: $spacing-24;
 }
 
 .logo {

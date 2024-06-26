@@ -1,16 +1,14 @@
 <template>
   <header id="header">
-    <div class="l-between">
-      <div class="header-search">
-        <h1 class="logo">
-          <a href="#" class="logo-link" title="메인 이동">
-            Open VDAP Portal
-            <span class="hidden-text">logo</span>
-          </a>
-        </h1>
-        <SearchInput></SearchInput>
-      </div>
-      <div class="profile">
+    <div class="h-group">
+      <h1 class="logo">
+        <a href="#" class="logo-link" title="메인 이동">
+          Open VDAP Portal
+          <span class="hidden-text">logo</span>
+        </a>
+      </h1>
+      <SearchInput></SearchInput>
+      <div class="profile ml-auto">
           <span class="profile-avatar">
             <img class="profile-img" src="" alt="프로필 이미지">
           </span>

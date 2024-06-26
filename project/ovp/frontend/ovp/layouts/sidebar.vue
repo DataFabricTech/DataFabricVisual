@@ -1,6 +1,6 @@
 <template>
-  <div id="sidebar">
-    <div class="sidebar-layout">
+  <nav id="sidebar">
+    <div class="l-sidebar">
       <ul class="sidebar-list">
         <li class="sidebar-item is-sidebar-item-selected">
           <button class="sidebar-button">
@@ -38,7 +38,7 @@
         </li>
       </ul>
     </div>
-  </div>
+  </nav>
 </template>
 
 <script>

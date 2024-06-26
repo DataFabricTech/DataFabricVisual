@@ -2,6 +2,7 @@
   <div class="wrap">
     <Header />
     <main id="main">
+      <h2 class="hidden-text">데이터 목록</h2>
       <Sidebar></Sidebar>
       <section id="section">
         <div class="filters">
