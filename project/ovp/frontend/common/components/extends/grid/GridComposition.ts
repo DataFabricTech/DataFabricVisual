@@ -8,7 +8,7 @@ export interface GridComposition extends GridProps {
   onGridReady(params: object): void;
 }
 
-export function GridComposition(props: GridProps): GridComposition {
+export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): GridComposition {
   const gridApi = ref(null);
   const onGridReady: (params: { api: any }) => void = (params: { api: any }) => {
     gridApi.value = params.api;
@@ -34,7 +34,7 @@ export function GridComposition(props: GridProps): GridComposition {
     props.buttons.forEach((btnEl) => {
       const btnObj = {
         headerName: btnEl.headerText,
-        field: `AG_GRID_${btnEl.rendererKey}`,
+        field: `${BTN_FIELD_CONST}${btnEl.rendererKey}`,
         cellRenderer: buttonRenderer
       };
 

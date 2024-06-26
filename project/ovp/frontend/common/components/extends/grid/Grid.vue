@@ -23,6 +23,8 @@ import { AgGridVue } from "ag-grid-vue3";
 import { GridProps } from "@/components/extends/grid/GridProps";
 import { GridComposition } from "@/components/extends/grid/GridComposition";
 
+const BTN_FIELD_CONST = "AG_GRID_";
+
 const props = withDefaults(defineProps<GridProps>(), {
   rowId: "id",
   selectedNodes: () => [],
@@ -44,7 +46,7 @@ const cellClicked = ({
   data: object;
   column: { colDef: { field: any } };
 }) => {
-  if (column.colDef.field.includes("AG_GRID_")) {
+  if (column.colDef.field.includes(BTN_FIELD_CONST)) {
     // field 명에 AG_GRID_ 가 들어가있는 field 는 button 이나 icon 으로 click event 를 처리한 cell 이기 때문에
     // row event 를 실행하지 않는다.
     return;
@@ -64,7 +66,7 @@ const selectionChanged = (params: { api: any }) => {
   emit("selectionChanged", params.api.getSelectedRows());
 };
 
-const { onGridReady, getDefs } = GridComposition(props);
+const { onGridReady, getDefs } = GridComposition(props, BTN_FIELD_CONST);
 
 const gridColumnDefs = ref<any[]>([]);
 gridColumnDefs.value = getDefs();
