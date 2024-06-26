@@ -9,8 +9,7 @@
 
 <script setup>
 import GuideLnb from "../design-guide/layouts/guide-lnb.vue";
-import GuideMain from "../design-guide/layouts/guide-main.vue"
-
+import GuideMain from "../design-guide/layouts/guide-main.vue";
 </script>
 
 <style lang="css" scoped></style>
