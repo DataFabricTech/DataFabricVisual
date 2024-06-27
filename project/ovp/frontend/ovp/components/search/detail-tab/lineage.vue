@@ -1,7 +1,29 @@
 <template>
-  <section>탭 - 데이터리니지</section>
+  <LineageGraph :lineageData="lineageData"></LineageGraph>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import LineageGraph from "~/components/search/lineage-graph.vue";
 
-<style lang="scss" scoped></style>
+const rawNodes = [
+  { id: "root", name: "Root", fqn: "/path/to/root" },
+  { id: "child1", name: "Child 1", fqn: "/path/to/child1" },
+  { id: "child2", name: "Child 2", fqn: "/path/to/child2" },
+  { id: "child1-1", name: "Child 1-1", fqn: "/path/to/child1-1" },
+  { id: "child1-2", name: "Child 1-2", fqn: "/path/to/child1-2" },
+  { id: "child2-1", name: "Child 2-1", fqn: "/path/to/child2-1" },
+];
+
+const rawEdges = [
+  { fromId: "root", toId: "child1" },
+  { fromId: "root", toId: "child2" },
+  { fromId: "child1", toId: "child1-1" },
+  { fromId: "child1", toId: "child1-2" },
+  { fromId: "child2", toId: "child2-1" },
+];
+
+const lineageData = { nodes: rawNodes, edges: rawEdges };
+</script>
+
+<style scoped>
+</style>
