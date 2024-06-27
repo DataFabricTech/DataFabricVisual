@@ -2,6 +2,9 @@ import { Ref, ref } from "vue";
 import { TabProps } from "@/components/extends/tab/TabProps";
 import { NavigationFunctionality } from "@/components/extends/common/interfaces/functions/Navigation.interface";
 import { NavigationEvents } from "@/components/extends/common/interfaces/events/Navigation.interface";
+
+import _ from "lodash";
+
 const INDEX = "index";
 
 interface TabComposition extends TabProps, NavigationFunctionality, NavigationEvents {
@@ -11,13 +14,22 @@ interface TabComposition extends TabProps, NavigationFunctionality, NavigationEv
 
 export function TabComposition(props: TabProps, onchange: (value: string | number) => void): TabComposition {
   const currentIndex: Ref<number> = ref<number>(0);
+
+  if (props.currentItemType === INDEX) {
+    if (typeof props.currentItem === "number") {
+      currentIndex.value = props.currentItem;
+    }
+  } else {
+    currentIndex.value = _.findIndex(props.data, ["value", props.currentItem]);
+  }
+
   const move: (index: number) => void = (index) => {
     currentIndex.value = index;
 
     if (props.currentItemType === INDEX) {
       onChange(index);
     } else {
-      let clickedValue: string | number = (props.data?.[index] as any)?.[props.valueKey];
+      const clickedValue: string | number = (props.data?.[index] as any)?.[props.valueKey];
       onChange(clickedValue);
     }
   };
@@ -35,5 +47,7 @@ export function TabComposition(props: TabProps, onchange: (value: string | numbe
     onchange(value);
   };
 
-  return { ...props, currentIndex, move, isDisabled, changeCurrentTabClass, onChange };
+  const toggleList: () => void = () => {};
+
+  return { ...props, currentIndex, move, isDisabled, toggleList, changeCurrentTabClass, onChange };
 }
