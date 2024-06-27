@@ -18,7 +18,7 @@
 import { AgGridVue } from "ag-grid-vue3";
 
 import { GridProps } from "@/components/extends/grid/GridProps";
-import { GridComposition } from "@/components/extends/grid/GridComposition";
+import { GridComposition } from "./GridComposition";
 
 const BTN_FIELD_CONST = "AG_GRID_";
 
