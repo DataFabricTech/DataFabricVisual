@@ -6,8 +6,7 @@
     :show-owner="true"
     :show-category="true"
     :use-data-nm-link="false"
-    :show-edit-icon="true"
-    :is-edit-mode="false"
+    :editable="true"
   />
   <detail-default />
   <Tab

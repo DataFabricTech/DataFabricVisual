@@ -6,6 +6,5 @@ import type {
 export interface ResourceBoxProps extends ResourceBoxCommonProps {
   dataObj: DataModel;
 
-  showEditIcon?: boolean;
-  isEditMode?: boolean;
+  editable?: boolean;
 }
