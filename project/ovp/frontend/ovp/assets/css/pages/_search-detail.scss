@@ -1,15 +1,43 @@
 .data-detail {
+  overflow:hidden;
   display: flex;
   flex-direction: column;
   gap: $spacing-12;
+  height: 100%;
   padding: $spacing-16 0;
 
-  .search-input {
-    width: 350px;
+  &-list {
+    @include flex($direction: column, $horizontal: flex-start);
+    gap: $spacing-12;
+    height: 100%;
+    overflow-y: auto;
   }
+}
+
+.resource-box-full + .tab {
+  margin-top: $spacing-32;
+  flex-grow: 1;
+
+  .tab-button {
+    padding: 0;
+  }
+
+  .tab-contents {
+    height: 100%;
+  }
+}
+
+.interaction-buttons {
+  @include flex;
+  gap: $spacing-8;
+  position: absolute;
+  right: 32px;
+  top: 32px;
 }
 
 .knowledge {
   width: 60%;
-  border:1px solid $neutral-200 ;
+  height: 100%;
+  border: 1px solid $neutral-200;
 }
+

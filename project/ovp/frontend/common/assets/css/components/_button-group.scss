@@ -16,8 +16,6 @@
           @include icon-color($neutral-0);
         }
       }
-
-
     }
 
     &:disabled + label {
@@ -29,6 +27,7 @@
     @include flex($horizontal: flex-start);
     @include font-size('13');
 
+    gap: $spacing-2;
     font-weight: 600;
     height: 32px;
     padding: 0 $spacing-12;
@@ -36,10 +35,6 @@
     cursor: pointer;
     border: 1px solid $neutral-200;
     border-right: none;
-
-    &:hover {
-      background-color: $neutral-100;
-    }
 
     &:nth-child(2) {
       border-top-left-radius: $border-radius-4;
@@ -52,13 +47,16 @@
       border-right: 1px solid $neutral-200;
     }
 
+    &:hover {
+      background-color: $neutral-100;
+    }
+
     .svg-icon {
       @include icon-size('sm');
     }
   }
 
   &:has(.hidden-text) {
-
     label {
       padding: 0 $spacing-6;
     }
@@ -71,7 +69,23 @@
 
         height: 28px;
         padding: 0 $spacing-8;
+
+        .svg-icon {
+          @include icon-size(18px);
+        }
       }
+    }
+  }
+
+  .count-text {
+    &:after {
+      content: "";
+      position: relative;
+      display: inline-block;
+      background: $neutral-200;
+      width: 1px;
+      height: 10px;
+      margin: 0 $spacing-8;
     }
   }
 }
