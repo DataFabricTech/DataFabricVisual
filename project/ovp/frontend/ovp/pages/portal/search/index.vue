@@ -65,7 +65,12 @@
             <div class="data-page">
               <div class="data-list">
                 <!--  목록형 보기-->
-                <resource-box-list />
+                <resource-box-list
+                  :data-list="data"
+                  :use-list-checkbox="false"
+                  @previewClick="previewClick"
+                  @modelNmClick="modelNmClick"
+                />
                 <!--  그래프혇 보기 - resource-box-list 안에 resource-box가 존재-->
                 <custom-knowledge-graph />
                 <Pagination
@@ -90,8 +95,83 @@ import Header from "@/layouts/header.vue";
 import Sidebar from "@/layouts/sidebar.vue";
 import Pagination from "@extends/pagination/Pagination.vue";
 
+let data: any[] = [
+  {
+    id: "1",
+    serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
+    depth: ["1depth", "2depth", "3depth", "데이터모델"],
+    firModelNm: "최초 데이터모델 명",
+    modelNm: "Model Name",
+    modelDesc:
+      "데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. ",
+    owner: "장소라",
+    category: "카테고리",
+  },
+  {
+    id: "2",
+    serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
+    depth: ["1depth", "2depth", "3depth", "데이터모델"],
+    firModelNm: "최초 데이터모델 명",
+    modelNm: "Model Name",
+    modelDesc:
+      "데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. ",
+    owner: "장소라",
+    category: "카테고리",
+  },
+  {
+    id: "3",
+    serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
+    depth: ["1depth", "2depth", "3depth", "데이터모델"],
+    firModelNm: "최초 데이터모델 명",
+    modelNm: "Model Name",
+    modelDesc:
+      "데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. ",
+    owner: "장소라",
+    category: "카테고리",
+  },
+  {
+    id: "4",
+    serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
+    depth: ["1depth", "2depth", "3depth", "데이터모델"],
+    firModelNm: "최초 데이터모델 명",
+    modelNm: "Model Name",
+    modelDesc:
+      "데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. ",
+    owner: "장소라",
+    category: "카테고리",
+  },
+  {
+    id: "5",
+    serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
+    depth: ["1depth", "2depth", "3depth", "데이터모델"],
+    firModelNm: "최초 데이터모델 명",
+    modelNm: "Model Name",
+    modelDesc:
+      "데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. ",
+    owner: "장소라",
+    category: "카테고리",
+  },
+  {
+    id: "6",
+    serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
+    depth: ["1depth", "2depth", "3depth", "데이터모델"],
+    firModelNm: "최초 데이터모델 명",
+    modelNm: "Model Name",
+    modelDesc:
+      "데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. ",
+    owner: "장소라",
+    category: "카테고리",
+  },
+];
+
 const checkCurrentPage = (item: number) => {
   console.log("check", item);
+};
+const previewClick = (id: string | number) => {
+  console.log(`previewClick : ${id}`);
+};
+const modelNmClick = (id: string | number) => {
+  console.log(`modelNmClick : ${id}`);
 };
 </script>
 
