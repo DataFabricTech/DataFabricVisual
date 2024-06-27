@@ -10,7 +10,7 @@ export default defineNuxtConfig({
     "@nuxtjs/svg-sprite",
     "nuxt-lodash",
     "dayjs-nuxt",
-    '@pinia/nuxt',
+    "@pinia/nuxt",
   ],
 
   // runtime에서 설정된 정보를 조회 가능
@@ -49,10 +49,10 @@ export default defineNuxtConfig({
   alias: {
     // common 컴포넌트 별칭
     "@extends": fileURLToPath(
-      new URL("../common/components/extends", import.meta.url)
+      new URL("../common/components/extends", import.meta.url),
     ),
     "@base": fileURLToPath(
-      new URL("../common/components/base", import.meta.url)
+      new URL("../common/components/base", import.meta.url),
     ),
     // common 디자인 요소 별칭
     "@assets": fileURLToPath(new URL("../common/assets", import.meta.url)),
@@ -76,6 +76,8 @@ export default defineNuxtConfig({
   css: [
     "~/assets/css/main.scss",
     "vue-final-modal/style.css",
+    "ag-grid-community/dist/styles/ag-grid.css",
+    "ag-grid-community/dist/styles/ag-theme-alpine.css",
     // "~/assets/css/style.scss"
   ],
 
