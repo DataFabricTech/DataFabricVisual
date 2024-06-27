@@ -1,5 +1,5 @@
 <template>
-  <resource-box />
+  <detail-default />
   <Tab
     :data="filteredTabs"
     :label-key="'label'"
@@ -16,7 +16,7 @@
 import _ from "lodash";
 import { ref, shallowRef } from "vue";
 import Tab from "@extends/tab/Tab.vue";
-import ResourceBox from "@/components/search/common/resource-box.vue";
+import DetailDefault from "@/components/search/detail-default.vue";
 import DefaultInfo from "@/components/search/detail-tab/default-info.vue";
 import Schema from "@/components/search/detail-tab/schema.vue";
 import Sample from "@/components/search/detail-tab/sample.vue";
