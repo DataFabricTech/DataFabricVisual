@@ -28,7 +28,7 @@
 </template>
 
 <script setup lang="ts">
-import ResourceBox from "~/components/search/resource-box/resource-box.vue";
+import ResourceBox from "~/components/common/resource-box/resource-box.vue";
 
 import type { ResourceBoxListProps } from "./resource-box-list-props";
 import { defineEmits } from "vue";
