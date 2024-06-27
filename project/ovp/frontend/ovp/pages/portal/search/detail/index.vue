@@ -27,7 +27,7 @@ import KnowledgeGraph from "@/components/search/detail-tab/knowledge-graph.vue";
 import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
 
 // tabfilter 객체 정의 (예시로 tables 값을 포함)
-const tabfilter = ref({ tables: false });
+const tabfilter = ref({ tables: true });
 
 // computed 속성으로 filteredTabs 정의
 const filteredTabs = computed(() => {
