@@ -1,5 +1,5 @@
 <template>
-  <div class="text-input-group">
+  <div class="search-input">
     <svg-icon class="text-input-icon svg-icon" name="search" v-if="!isSearchInputDefaultType"></svg-icon>
     <label class="hidden-text" for="searchInp">label</label>
     <input
@@ -14,7 +14,7 @@
       :isSearchInputDefaultType="isSearchInputDefaultType"
     />
     <button
-      class="text-input-action-button button button-neutral-ghost button-xs"
+      class="search-input-action-button button button-neutral-ghost button-xs"
       type="button"
       @click="clearSearchValue"
     >
@@ -22,7 +22,7 @@
       <svg-icon class="button-icon" name="close"></svg-icon>
     </button>
     <button
-      class="text-input-search-button button button-neutral-ghost"
+      class="search-input-button button button-neutral-ghost"
       @click="setSearchValue(inputValue)"
       v-if="isSearchInputDefaultType"
     >
