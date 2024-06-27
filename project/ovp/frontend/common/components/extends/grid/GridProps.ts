@@ -6,6 +6,7 @@ export interface GridProps {
   rowData: any[];
 
   useRowCheckBox?: boolean;
+  useColumnResize?: boolean;
 
   buttons?: any[];
   selectedNodes?: any[];

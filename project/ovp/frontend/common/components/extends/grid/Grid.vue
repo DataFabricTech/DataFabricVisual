@@ -10,6 +10,7 @@
     @rowClicked="rowClicked"
     @grid-ready="onGridReady"
     @selectionChanged="selectionChanged"
+    @grid-size-changed="onGridSizeChanged"
   ></ag-grid-vue>
 </template>
 
@@ -27,6 +28,7 @@ const props = withDefaults(defineProps<GridProps>(), {
   rowId: "id",
   setColumnFit: false,
   useRowCheckBox: false,
+  useColumnResize: false,
   buttons: () => [],
   selectedNodes: () => [],
   columnWidthList: () => []
@@ -67,7 +69,7 @@ const selectionChanged = (params: { api: any }) => {
   emit("selectionChanged", params.api.getSelectedRows());
 };
 
-const { onGridReady, getDefs } = GridComposition(props, BTN_FIELD_CONST);
+const { onGridReady, getDefs, onGridSizeChanged } = GridComposition(props, BTN_FIELD_CONST);
 
 const gridColumnDefs: Ref<any[]> = ref([]);
 gridColumnDefs.value = getDefs();

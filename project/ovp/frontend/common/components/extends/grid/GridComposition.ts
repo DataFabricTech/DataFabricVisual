@@ -7,6 +7,7 @@ import _ from "lodash";
 export interface GridComposition extends GridProps {
   getDefs(): any[];
   onGridReady(params: object): void;
+  onGridSizeChanged(params: any): void;
 }
 
 export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): GridComposition {
@@ -24,6 +25,12 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
 
     if (props.setColumnFit) {
       params.api.sizeColumnsToFit();
+    }
+  };
+
+  const onGridSizeChanged = ({ api }: { api: any }) => {
+    if (props.useColumnResize) {
+      api.sizeColumnsToFit();
     }
   };
 
@@ -104,6 +111,7 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
   return {
     ...props,
     onGridReady,
-    getDefs
+    getDefs,
+    onGridSizeChanged
   };
 }
