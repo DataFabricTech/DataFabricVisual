@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import SearchInput from "../../common/components/extends/search-input/search-input.vue";
+import SearchInput from "../../common/components/extends/search-input/SearchInput.vue";
 
 export default {
   name: "header",
