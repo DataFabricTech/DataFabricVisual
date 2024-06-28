@@ -71,6 +71,7 @@
           </div>
         </div>
       </div>
+      <!--        TODO: [개발] url기능 사용하지 않을 수 있다. 기획 검토 중 -->
       <div class="preview-item" v-if="!isStructuredModelType">
         <div class="preview-title">상세 설명</div>
         <div class="preview-desc">
@@ -79,7 +80,6 @@
       </div>
       <div class="preview-item" v-if="!isStructuredModelType">
         <div class="preview-title">URL</div>
-        <!--        TODO: [개발] 페이지 이동이 없어질 수 있음 -->
         <a
           :href="previewData.modelInfo.url"
           class="preview-link"
