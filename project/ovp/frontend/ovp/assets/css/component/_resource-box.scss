@@ -59,6 +59,7 @@
     color: $neutral-700;
 
     dt {
+      flex-shrink: 0;
       position: relative;
 
       &::after {
@@ -81,6 +82,33 @@
   &.is-resource-box-selected {
     border: 1px solid $secondary-500;
     box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
+  }
+
+  &-modify {
+    width: 100%;
+    display: flex;
+    gap: $spacing-4;
+
+    &:has(.resource-box-desc) {
+      display: inline;
+
+      .resource-box-desc {
+        display: inline;
+        vertical-align: top;
+      }
+
+      .button {
+        display: inline;
+        padding-left: 2.5px;
+        margin-left: $spacing-4;
+      }
+    }
+
+    &:has(.textarea) {
+      flex-direction: column;
+      align-items: flex-end;
+      gap: $spacing-8;
+    }
   }
 }
 
@@ -111,6 +139,3 @@
   }
 }
 
-.resource-box-short {
-
-}

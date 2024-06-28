@@ -6,7 +6,6 @@ $list-classes: menu, dropdown;
 @each $list in $list-classes {
   .#{$list} {
     @include z-index('dropdown');
-    @include box-shadow('md');
 
     border-radius: $border-radius-4;
     border: 1px solid $neutral-100;

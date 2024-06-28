@@ -6,7 +6,8 @@
     @include box-shadow('sm');
   }
 
-  .tag-link {
+  .tag-link,
+  .tag-text {
     color: $color;
   }
 
@@ -18,7 +19,8 @@
     background-color: $bg-hover;
     border-color: $border-hover;
 
-    .tag-link {
+    .tag-link,
+    .tag-text {
       color: $color-hover;
     }
 
@@ -32,7 +34,8 @@
     background-color: $bg-selected;
     border-color: $border-selected;
 
-    .tag-link {
+    .tag-link,
+    .tag-text {
       color: $color-selected;
     }
 
@@ -51,7 +54,8 @@
   border-radius: $border-radius-15;
   transition: background-color 0.2s;
 
-  &-link {
+  &-link,
+  &-text {
     @include font-size('13');
 
     font-weight: 600;
@@ -74,7 +78,8 @@
     background: $error-100;
     border: 1px solid $error-500;
 
-    .tag-link {
+    .tag-link,
+    .tag-text {
       color: $error-500;
     }
 
@@ -89,7 +94,8 @@
     background: $neutral-100;
     cursor: not-allowed;
 
-    .tag-link {
+    .tag-link,
+    .tag-text {
       color: $neutral-300;
       cursor: not-allowed;
     }
@@ -108,7 +114,8 @@
     height: 24px;
     padding: 0 $spacing-8;
 
-    .tag-link {
+    .tag-link,
+    .tag-text {
       @include font-size('12');
     }
 

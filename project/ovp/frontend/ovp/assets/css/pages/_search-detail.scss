@@ -1,5 +1,4 @@
 .data-detail {
-  overflow:hidden;
   display: flex;
   flex-direction: column;
   gap: $spacing-12;
@@ -10,6 +9,7 @@
     @include flex($direction: column, $horizontal: flex-start);
     gap: $spacing-12;
     height: 100%;
+    padding: $spacing-4;
     overflow-y: auto;
   }
 }
@@ -35,9 +35,74 @@
   top: 32px;
 }
 
-.knowledge {
-  width: 60%;
-  height: 100%;
-  border: 1px solid $neutral-200;
+//----------------------------
+//데이터 상세 > 탭 페이지
+//----------------------------
+.data-detail-group {
+  display: flex;
+  gap: $spacing-12;
+
+  &:has(.knowledge) {
+    overflow: hidden;
+    max-height: 680px;
+
+    .knowledge {
+      width: 60%;
+      height: 100%;
+      //임시 스타일
+      border: 1px solid $neutral-200;
+    }
+  }
+
+  &:has(.profiling) {
+    flex-direction: column;
+    height: 100%;
+
+    .profiling {
+      width: 100%;
+      height: 100%;
+      min-height: 350px;
+      //임시 스타일
+      border: 1px solid $neutral-200;
+    }
+  }
+
+  .data-detail-list {
+    overflow-y: auto;
+    width: 40%;
+  }
 }
+
+.lineage {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 680px;
+  //임시 스타일
+  border: 1px solid $neutral-200;
+  background: $neutral-100;
+
+  .filters {
+    z-index: 0;
+    position: absolute;
+    border: none;
+    background: transparent;
+  }
+
+  .preview {
+    @include box-shadow('lg');
+    position: absolute;
+    right: 0;
+    width: 375px;
+
+    &-title:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+
+
+
 
