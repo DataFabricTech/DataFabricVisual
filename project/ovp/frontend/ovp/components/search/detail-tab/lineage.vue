@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import LineageGraph from "~/components/search/lineage-graph.vue";
+import LineageGraph from "~/components/search/lineage/lineage-graph.vue";
 
 const rawNodes = [
   { id: "root", name: "Root", fqn: "/path/to/root" },
