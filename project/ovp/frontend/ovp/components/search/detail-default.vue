@@ -1,5 +1,5 @@
 <template>
-  <resource-box />
+  <!--  <resource-box />-->
   <div>
     <div>소유자</div>
     <div>카테고리</div>
@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import ResourceBox from "@/components/search/common/resource-box.vue";
+// import ResourceBox from "@/components/search/common/resource-box.vue";
 
 const recommendCount = ref(0); // 추천수
 const nonRecommendCount = ref(0); // 비추천수
