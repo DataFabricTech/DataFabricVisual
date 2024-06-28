@@ -2,13 +2,14 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  modules: ["@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt", "@nuxtjs/tailwindcss", '@pinia/nuxt'],
+  modules: ["@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt", "@nuxtjs/tailwindcss", "@pinia/nuxt"],
 
   plugins: [
     { src: "~/plugins/highcharts-vue", mode: "client" },
     { src: "~/plugins/vue-final-modal", mode: "client" },
     { src: "~/plugins/ag-grid-vue", mode: "client" },
-    { src: "~/plugins/vue-datepicker-next", mode: "client" }
+    { src: "~/plugins/vue-datepicker-next", mode: "client" },
+    { src: "~/plugins/code-mirror", mode: "client" }
   ],
 
   components: [
@@ -22,7 +23,8 @@ export default defineNuxtConfig({
     "~/assets/css/main.scss",
     "vue-final-modal/style.css",
     "ag-grid-community/dist/styles/ag-grid.css",
-    "ag-grid-community/dist/styles/ag-theme-alpine.css"
+    "ag-grid-community/dist/styles/ag-theme-alpine.css",
+    "@fortawesome/fontawesome-svg-core/styles.css"
   ],
 
   tailwindcss: {
@@ -71,7 +73,7 @@ export default defineNuxtConfig({
     autoImports: [
       // automatically imports `defineStore`
       "defineStore", // import { defineStore } from 'pinia'
-      ["defineStore", "definePiniaStore"], // import { defineStore as definePiniaStore } from 'pinia'
-    ],
-  },
+      ["defineStore", "definePiniaStore"] // import { defineStore as definePiniaStore } from 'pinia'
+    ]
+  }
 });
