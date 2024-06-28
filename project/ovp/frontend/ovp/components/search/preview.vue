@@ -48,9 +48,8 @@
             v-for="(tag, index) in previewData.tags"
             :key="index"
           >
-            <a class="tag-link" @click="console.log('태그 상세로 이동')">{{
-              tag.name
-            }}</a>
+            <!--            TODO: [개발] url 생성 후 수정 필요 -->
+            <a class="tag-link" :href="tag.category">{{ tag.name }}</a>
           </div>
         </div>
       </div>
@@ -62,7 +61,8 @@
             v-for="(glossary, index) in previewData.glossaries"
             :key="index"
           >
-            <a class="tag-link" @click="console.log('용어 상세로 이동')">{{
+            <!--            TODO: [개발] url 생성 후 수정 필요 -->
+            <a class="tag-link" :href="glossary.category">{{
               glossary.name
             }}</a>
           </div>
