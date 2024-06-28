@@ -11,7 +11,10 @@
     </div>
     <div class="preview-contents">
       <div class="preview-item">
-        <div class="preview-title">{{ previewData.modelInfo.model.name }}</div>
+        <!--        TODO: [개발] 추후 해당 모델 페이지로 이동하는 url 추가 필요-->
+        <a href="javascript:void(0)" class="preview-title">{{
+          previewData.modelInfo.model.name
+        }}</a>
         <div class="preview-desc">{{ previewData.modelInfo.model.desc }}</div>
         <table>
           <colgroup>
@@ -48,8 +51,7 @@
             v-for="(tag, index) in previewData.tags"
             :key="index"
           >
-            <!--            TODO: [개발] url 생성 후 수정 필요 -->
-            <a class="tag-link" :href="tag.category">{{ tag.name }}</a>
+            <a class="tag-link" href="javascript:void(0)">{{ tag.name }}</a>
           </div>
         </div>
       </div>
@@ -61,8 +63,7 @@
             v-for="(glossary, index) in previewData.glossaries"
             :key="index"
           >
-            <!--            TODO: [개발] url 생성 후 수정 필요 -->
-            <a class="tag-link" :href="glossary.category">{{
+            <a class="tag-link" href="javascript:void(0)">{{
               glossary.name
             }}</a>
           </div>
@@ -76,7 +77,12 @@
       </div>
       <div class="preview-item" v-if="!isStructuredModelType">
         <div class="preview-title">URL</div>
-        <a href="#" class="preview-link">
+        <!--        TODO: [개발] 페이지 이동이 없어질 수 있음 -->
+        <a
+          :href="previewData.modelInfo.url"
+          class="preview-link"
+          target="_blank"
+        >
           {{ checkEmptyValues(previewData.modelInfo.url) }}
         </a>
       </div>
