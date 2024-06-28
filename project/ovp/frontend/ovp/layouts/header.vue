@@ -17,7 +17,7 @@
           <svg-icon class="svg-icon" name="chevron-down-medium"></svg-icon>
           <span class="hidden-text">내 메뉴</span>
         </button>
-        <div class="dropdown" style="top: 40px;right: 16px;">
+        <div class="dropdown" style="top: 40px; right: 16px; display: none">
           <ul class="dropdown-list">
             <li class="dropdown-item">
               <button class="dropdown-button">

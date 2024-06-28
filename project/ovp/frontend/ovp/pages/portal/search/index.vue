@@ -82,7 +82,10 @@
               </div>
             </div>
             <!--  우측 미리보기-->
-            <preview :preview-data="previewData"></preview>
+            <preview
+              :preview-data="previewData"
+              @change="getPreviewCloseStatus"
+            ></preview>
           </div>
         </div>
       </section>
@@ -94,6 +97,95 @@
 import Header from "@/layouts/header.vue";
 import Sidebar from "@/layouts/sidebar.vue";
 import Pagination from "@extends/pagination/Pagination.vue";
+
+// sample preview data (추후 preview 파일에서 API를 받아오도록 변경할수도 있음)
+const previewData: object = {
+  // 공통
+  modelType: "structured", // "structured" or "unstructured"  (정형/비정형)
+  tags: [
+    {
+      name: "태그1",
+      category: "tags_group_01",
+    },
+    {
+      name: "태그2",
+      category: "tags_group_02",
+    },
+    {
+      name: "태그3",
+      category: "tags_group_03",
+    },
+    {
+      name: "태그4",
+      category: "tags_group_04",
+    },
+  ],
+  glossaries: [
+    {
+      name: "용어1",
+      category: "glossary_group_01",
+    },
+    {
+      name: "용어2",
+      category: "glossary_group_02",
+    },
+    {
+      name: "용어3",
+      category: "glossary_group_03",
+    },
+    {
+      name: "용어4",
+      category: "glossary_group_04",
+    },
+  ],
+
+  modelInfo: {
+    model: {
+      name: "모델 명",
+      desc: "모델 설명",
+      cnt: 100000,
+      // 정형 only
+      tableType: "View", // "View"  or "Regular"
+      // 비정형 only
+      ext: "PDF",
+    },
+    // 정형 only
+    columns: [
+      {
+        name: "idx",
+        dataType: "varchar",
+        desc: "varchar 타입의 uuid 컬럼",
+        constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+      },
+      {
+        name: "idx1",
+        dataType: "varchar1",
+        desc: "varchar 타입의 uuid 컬럼2",
+        constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+      },
+      {
+        name: "idx2",
+        dataType: "varchar2",
+        desc: "     ",
+        constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+      },
+      {
+        name: "idx3",
+        dataType: "varchar3",
+        desc: "varchar 타입의 uuid 컬럼3",
+        constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+      },
+    ],
+    // 비정형 only
+    details: "비정형 데이터 하단에 표시되는 상세설명 어쩌고저쩌고",
+    url: "http://192.168.105.26:8585/api/v1/tables/df2.test_db.test_db.Employee_Job_Details/tableProfile/latest",
+  },
+};
+
+// 미리보기의 닫기 버튼 클릭했을 때, 좌측 리소스박스 선택된 상태를 비활성화 시켜야해서 emit 추가 (option 불필요 할수도 있음)
+const getPreviewCloseStatus = (option: boolean) => {
+  console.log("isPreviewClosed?", option);
+};
 
 let data: any[] = [
   {
