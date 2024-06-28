@@ -51,6 +51,7 @@
             v-for="(tag, index) in previewData.tags"
             :key="index"
           >
+            <!--            TODO: [퍼블리싱] a 요소 외에 새로운 요소 추가 후 적용 예정-->
             <a class="tag-link" href="javascript:void(0)">{{ tag.name }}</a>
           </div>
         </div>
@@ -63,6 +64,7 @@
             v-for="(glossary, index) in previewData.glossaries"
             :key="index"
           >
+            <!--            TODO: [퍼블리싱] a 요소 외에 새로운 요소 추가 후 적용 예정-->
             <a class="tag-link" href="javascript:void(0)">{{
               glossary.name
             }}</a>
