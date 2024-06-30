@@ -2,7 +2,15 @@
 @import "../../../common/assets/css/main";
 
 // layouts
+@import "./layouts/common";
 @import "./layouts/header";
+@import "./layouts/sidebar";
+@import "./layouts/main";
+@import "./layouts/section";
+
+//conmponent
+@import "./component/resource-box";
 
 // pages
-@import "./pages/login";
+@import "./pages/submit-form";
+@import "./pages/data-list";

@@ -12,16 +12,16 @@
           <figure class="section-figure">
             <div class="flex justify-center gap-4">
               <div class="menu menu-lg">
-                <div class="menu-search">
-                  <div class="text-input-group">
+                <div class="menu-head">
+                  <div class="search-input">
                     <label class="hidden-text" for="text-input-example-11">label</label>
                     <input id="text-input-example-11" class="text-input text-input-lg" value="search button" />
                     <svg-icon class="text-input-icon" name="user"></svg-icon>
-                    <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
                       <span class="hidden-text">지우기</span>
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
-                    <button class="text-input-search-button button button-neutral-ghost">
+                    <button class="search-input-button button button-neutral-ghost">
                       <span class="hidden-text">검색</span>
                       <svg-icon class="button-icon" name="search"></svg-icon>
                     </button>
@@ -100,16 +100,16 @@
                 </ul>
               </div>
               <div class="menu">
-                <div class="menu-search">
-                  <div class="text-input-group">
+                <div class="menu-head">
+                  <div class="search-input">
                     <label class="hidden-text" for="text-input-example-11">label</label>
                     <input id="text-input-example-11" class="text-input" value="search button" />
                     <svg-icon class="text-input-icon" name="user"></svg-icon>
-                    <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
                       <span class="hidden-text">지우기</span>
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
-                    <button class="text-input-search-button button button-neutral-ghost">
+                    <button class="search-input-button button button-neutral-ghost">
                       <span class="hidden-text">검색</span>
                       <svg-icon class="button-icon" name="search"></svg-icon>
                     </button>
@@ -201,16 +201,16 @@
         <figure class="section-figure">
           <div class="flex justify-center gap-4">
             <div class="menu menu-lg">
-              <div class="menu-search">
-                <div class="text-input-group">
+              <div class="menu-head">
+                <div class="search-input">
                   <label class="hidden-text" for="text-input-example-11">label</label>
                   <input id="text-input-example-11" class="text-input text-input-lg" value="search button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
-                  <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                  <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="close"></svg-icon>
                   </button>
-                  <button class="text-input-search-button button button-neutral-ghost">
+                  <button class="search-input-button button button-neutral-ghost">
                     <span class="hidden-text">검색</span>
                     <svg-icon class="button-icon" name="search"></svg-icon>
                   </button>
@@ -288,16 +288,16 @@
               </ul>
             </div>
             <div class="menu">
-              <div class="menu-search">
-                <div class="text-input-group">
+              <div class="menu-head">
+                <div class="search-input">
                   <label class="hidden-text" for="text-input-example-11">label</label>
                   <input id="text-input-example-11" class="text-input" value="search button" />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
-                  <button class="text-input-action-button button button-neutral-ghost button-sm" type="button">
+                  <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="close"></svg-icon>
                   </button>
-                  <button class="text-input-search-button button button-neutral-ghost">
+                  <button class="search-input-button button button-neutral-ghost">
                     <span class="hidden-text">검색</span>
                     <svg-icon class="button-icon" name="search"></svg-icon>
                   </button>
