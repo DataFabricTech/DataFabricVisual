@@ -179,6 +179,7 @@
               </div>
             </div>
           </div>
+          <!-- TODO: [개발] 탭 컴포넌트 적용 (임포트시 오류 발생)  -->
           <div class="tab mt-8">
             <ul class="tab-list">
               <li class="tab-item is-tab-item-selected">
@@ -224,7 +225,7 @@
             </ul>
             <div class="tab-contents">
               <div class="data-detail">
-                <!--  기본정보 탭  -->
+                <!--  기본정보 탭 시작-->
                 <table style="display: none">
                   <colgroup>
                     <col style="width: 20%" />
@@ -332,7 +333,6 @@
                                     Checkbox3
                                   </label>
                                 </div>
-
                               </li>
                               <li class="menu-item">
                                 <div class="checkbox">
@@ -365,7 +365,8 @@
                     </td>
                   </tr>
                 </table>
-                <!--  스키마, 샘플데이터 탭  -->
+                <!--  기본정보 탭 끝-->
+                <!--  스키마, 샘플데이터 탭 시작 -->
                 <table style="display: none">
                   <colgroup>
                     <col style="width: 20%" />
@@ -387,7 +388,8 @@
                   </tr>
                   </tbody>
                 </table>
-                <!--  프로파일링 탭  -->
+                <!--  스키마, 샘플데이터 탭 끝-->
+                <!--  프로파일링 탭 시작 -->
                 <div class="data-detail-group" style="display: none">
                   <div class="search-input search-input-lg w-96">
                     <label class="hidden-text" for="text-input-example-4">label</label>
@@ -403,10 +405,16 @@
                     프로파일링
                   </div>
                 </div>
+                <!--  프로파일링 탭 끝-->
                 <!--  TODO: [퍼블리싱] 리니지, code-box,knowledge graph 개발 후 스타일 적용 예정 -->
-                <!--  쿼리 탭 -->
+                <!--  쿼리 탭 시작-->
+                <div class="query" v-for="query in 2" :key="query">
+                  <div class="query-date">2024-06-07 00:00:00</div>
+                  <div class="code-box"></div>
+                </div>
+                <!--  쿼리 탭 끝-->
                 <!--  데이터리니지 탭 시작-->
-                <div class="lineage">
+                <div class="lineage" style="display: none">
                   <div class="filters">
                     <div class="select select-clean">
                       <button class="select-button">
@@ -515,16 +523,28 @@
                       </div>
                     </div>
                   </div>
-                  <div class="v-group">
-
+                  <div class="lineage-control">
+                    <button class="button button-lg button-neutral-stroke lineage-control-zoom-in" type="button">
+                      <span class="hidden-text">확대</span>
+                      <svg-icon class="button-icon" name="plus"></svg-icon>
+                    </button>
+                    <button class="button button-lg button-neutral-stroke lineage-control-zoom-out" type="button">
+                      <span class="hidden-text">축소</span>
+                      <svg-icon class="button-icon" name="minus"></svg-icon>
+                    </button>
+                    <button class="button button-lg button-neutral-stroke mt-2" type="button">
+                      <span class="hidden-text">원좌표</span>
+                      <svg-icon class="button-icon" name="target-lock"></svg-icon>
+                    </button>
                   </div>
                 </div>
                 <!--  데이터리니지 탭 끝-->
-                <!--  knowledge graph  -->
+                <!--  knowledge graph 탭 시작 -->
                 <div class="data-detail-group" style="display: none">
                   <div class="knowledge">knowledge</div>
                   <div class="data-detail-list">
-                    <div class="resource-box resource-box-short" v-for="card in 10" :key="card">
+                    <!-- TODO: [개발] resource-box 시작 컴포넌트화  -->
+                    <div class="resource-box" v-for="card in 10" :key="card">
                       <div class="resource-box-function">
                         <div class="resource-box-model">
                           <img src="" alt="" />
@@ -546,10 +566,40 @@
                       <a href="#" class="resource-box-title" title="상세 보기">세종특별자치시 상하수도요금표</a>
                       <span class="resource-box-desc">한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다</span>
                     </div>
+                    <!-- resource-box 끝  -->
                   </div>
                 </div>
-                <!--  추천 데이터모델 탭 -->
-
+                <!--  knowledge graph 탭 끝 -->
+                <!--  추천 데이터모델 탭 시작-->
+                  <div class="data-detail-group" style="display: none">
+                    <div class="recommend"  v-for="group in 4" :key="group">
+                      <!-- TODO: [개발] resource-box 시작 컴포넌트화  -->
+                      <div class="resource-box" v-for="card in 2" :key="card">
+                        <div class="resource-box-function">
+                          <div class="resource-box-model">
+                            <img src="" alt="" />
+                            <div class="breadcrumb">
+                              <ul class="breadcrumb-list">
+                                <li class="breadcrumb-item">
+                                  <a href="#" class="breadcrumb-link">1depth</a>
+                                </li>
+                                <li class="breadcrumb-item">
+                                  <a href="#" class="breadcrumb-link">2depth</a>
+                                </li>
+                                <li class="breadcrumb-item is-breadcrumb-selected">
+                                  <a href="#" class="breadcrumb-link">데이터 모델</a>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                        <a href="#" class="resource-box-title" title="상세 보기">세종특별자치시 상하수도요금표</a>
+                        <span class="resource-box-desc">한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다</span>
+                      </div>
+                      <!-- resource-box 끝  -->
+                    </div>
+                  </div>
+                <!--  추천 데이터모델 탭 끝-->
               </div>
             </div>
           </div>

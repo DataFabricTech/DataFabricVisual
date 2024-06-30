@@ -1,19 +1,3 @@
-.data-detail {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-12;
-  height: 100%;
-  padding: $spacing-16 0;
-
-  &-list {
-    @include flex($direction: column, $horizontal: flex-start);
-    gap: $spacing-12;
-    height: 100%;
-    padding: $spacing-4;
-    overflow-y: auto;
-  }
-}
-
 .resource-box-full + .tab {
   margin-top: $spacing-32;
   flex-grow: 1;
@@ -35,8 +19,24 @@
   top: 32px;
 }
 
+.data-detail {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-12;
+  height: 100%;
+  padding: $spacing-16 0;
+
+  &-list {
+    @include flex($direction: column, $horizontal: flex-start);
+    gap: $spacing-12;
+    height: 100%;
+    padding: $spacing-4;
+    overflow-y: auto;
+  }
+}
+
 //----------------------------
-//데이터 상세 > 탭 페이지
+//데이터 상세 - 탭 페이지
 //----------------------------
 .data-detail-group {
   display: flex;
@@ -51,6 +51,11 @@
       height: 100%;
       //임시 스타일
       border: 1px solid $neutral-200;
+      background: $neutral-100;
+    }
+
+    .data-detail-list {
+      width: 40%;
     }
   }
 
@@ -64,12 +69,46 @@
       min-height: 350px;
       //임시 스타일
       border: 1px solid $neutral-200;
+      background: $neutral-100;
     }
   }
 
-  .data-detail-list {
+  &:has(.recommend) {
+    flex-direction: column;
+    width: 100%;
+
+    .recommend {
+      display: flex;
+      gap: $spacing-12;
+
+      .resource-box {
+        width: 50%;
+      }
+    }
+  }
+}
+
+.query {
+  display: flex;
+  flex-direction: column;
+
+  &-date {
+    padding: $spacing-12 $spacing-16;
+    color: $neutral-700;
+    background: $neutral-100;
+  }
+
+  & + & {
+    margin-top: $spacing-24;
+  }
+
+  .code-box {
+    @include box-shadow('sm');
+
     overflow-y: auto;
-    width: 40%;
+    width: 100%;
+    min-height: 250px;
+    border: 1px solid $neutral-100;
   }
 }
 
@@ -98,6 +137,28 @@
 
     &-title:hover {
       text-decoration: underline;
+    }
+  }
+
+  &-control {
+    @include flex($direction: column);
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+
+    .button-neutral-stroke:hover {
+      border: 1px solid $neutral-200;
+    }
+
+    &-zoom-in {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-width: 0;
+    }
+
+    &-zoom-out {
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
     }
   }
 }
