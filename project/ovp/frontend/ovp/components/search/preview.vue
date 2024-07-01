@@ -1,5 +1,5 @@
 <template>
-  <div class="preview" v-if="!isPreviewClosed">
+  <div class="preview" v-if="isShowPreview">
     <div class="ml-auto">
       <button
         class="button button-neutral-ghost button-sm"
@@ -115,7 +115,7 @@ import { computed } from "vue";
 
 interface Props {
   previewData: any;
-  isPreviewClosed: boolean;
+  isShowPreview: boolean;
 }
 
 const props = defineProps<Props>();
