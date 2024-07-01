@@ -21,10 +21,12 @@
 .select {
   @include select-size;
   @include z-index('float');
+
   position: relative;
 
   &-button {
     @include flex($horizontal: flex-start);
+
     width: 100%;
     height: 100%;
     background: $neutral-0;
@@ -106,6 +108,7 @@
 
   .menu-search {
     @include box-shadow('md');
+
     margin-top: $spacing-4;
   }
 
@@ -115,7 +118,6 @@
   }
 
   &-clean {
-
     .select-button {
       background: transparent;
 
@@ -124,6 +126,7 @@
 
       }
     }
+
     .select-button {
       border-color: transparent;
 

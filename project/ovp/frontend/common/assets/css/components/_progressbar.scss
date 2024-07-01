@@ -27,22 +27,24 @@
 
   &::-webkit-progress-value {
     @include z-index('float');
+
     height: 100%;
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
-    background-color: $info-500;
+    background-color: $info-300;
   }
 
   &-gage {
     @include z-index('float');
+
     height: 100%;
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
-    background-color: $info-500;
+    background-color: $info-300;
   }
 
   &-text {
@@ -53,17 +55,14 @@
     transform: translate(-50%, -50%);
     color: $neutral-0;
   }
-  // progressbar type
-  &-normal {
-    @include progress-theme($secondary-500);
-  }
 
+  // progressbar type
   &-critical {
-    @include progress-theme($error-500);
+    @include progress-theme($error-300);
   }
 
   &-major {
-    @include progress-theme($success-500);
+    @include progress-theme($success-300);
   }
 
   &-sm {

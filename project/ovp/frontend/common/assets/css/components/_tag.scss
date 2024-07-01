@@ -59,6 +59,9 @@
     @include font-size('13');
 
     font-weight: 600;
+  }
+
+  &-link {
     cursor: pointer;
   }
 

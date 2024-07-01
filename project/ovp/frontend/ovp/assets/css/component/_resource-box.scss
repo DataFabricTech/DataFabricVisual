@@ -1,6 +1,7 @@
 .resource-box {
   @include flex($direction: column, $vertical: flex-start);
   @include box-shadow('sm');
+
   gap: $spacing-4;
   width: 100%;
   padding: $spacing-16;
@@ -11,12 +12,14 @@
 
   &-function {
     @include flex($horizontal: space-between);
+
     width: 100%;
     margin-bottom: $spacing-12;
   }
 
   &-model {
     @include flex;
+
     gap: $spacing-8;
 
     & > img {
@@ -27,12 +30,14 @@
 
   &-contents {
     @include flex($direction: column, $vertical: flex-start);
+
     gap: $spacing-4;
   }
 
   &-title {
     @include ellipsis;
     @include font-size('18');
+
     font-weight: 600;
     color: $neutral-700;
 
@@ -43,18 +48,21 @@
 
   &-desc {
     @include ellipsis;
+
     width: 100%;
     color: $neutral-500;
   }
 
   &-info {
     @include flex;
+
     gap: $spacing-24;
     margin-top: $spacing-12;
   }
 
   &-list {
     @include flex;
+
     gap: $spacing-16;
     color: $neutral-700;
 
@@ -84,7 +92,7 @@
     box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
   }
 
-  &-modify {
+  &-group {
     width: 100%;
     display: flex;
     gap: $spacing-4;

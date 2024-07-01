@@ -96,6 +96,7 @@ $input-field-classes: text-input, textarea;
 
   .#{$input}-button {
     @include flex;
+
     position: relative;
     background-color: $neutral-0;
 
@@ -157,7 +158,7 @@ $input-field-classes: text-input, textarea;
     }
 
     .count-text {
-      &:after {
+      &::after {
         content: "";
         position: relative;
         display: inline-block;

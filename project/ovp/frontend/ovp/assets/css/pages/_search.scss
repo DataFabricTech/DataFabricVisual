@@ -2,6 +2,7 @@
 
 .filters {
   @include flex($horizontal: flex-start);
+
   gap: $spacing-16;
   width: 100%;
   height: 48px;
@@ -23,6 +24,7 @@
 
 .data-list {
   @include flex($direction:column, $horizontal: flex-start, $vertical: flex-start);
+
   overflow-y: auto;
   gap: $spacing-16;
   flex-grow: 1;
@@ -30,13 +32,14 @@
   scrollbar-width: none;  /* Firefox */
 
   &::-webkit-scrollbar {
-    display: none; /*(Chrome, Safari) */
+    display: none; /* (Chrome, Safari) */
   }
 }
 
 .preview {
   @include flex($direction: column, $horizontal: flex-start, $vertical: flex-start);
   @include box-shadow('sm');
+
   overflow-y: auto;
   flex-shrink: 0;
   height: 100%;
@@ -54,16 +57,18 @@
 
   &-item {
     @include flex($direction: column, $vertical: flex-start);
+
     gap: $spacing-16;
 
   }
 
   &-title {
     @include font-size('16');
+
     width: 100%;
     font-weight: 600;
 
-    &:after {
+    &::after {
       display: block;
       position: relative;
       content: "";
@@ -105,8 +110,10 @@
 
 .schema-title {
   font-weight: 600;
+
   @include font-size('15');
 }
+
 .schema-subtitle {
   color: $neutral-400;
 }

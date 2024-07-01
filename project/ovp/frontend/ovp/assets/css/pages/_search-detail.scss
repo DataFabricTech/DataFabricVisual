@@ -18,6 +18,7 @@
 
 .interaction-buttons {
   @include flex;
+
   gap: $spacing-8;
   position: absolute;
   right: 32px;
@@ -33,6 +34,7 @@
 
   &-list {
     @include flex($direction: column, $horizontal: flex-start);
+
     gap: $spacing-12;
     height: 100%;
     padding: $spacing-4;
@@ -55,6 +57,7 @@
       width: 60%;
       height: 100%;
       min-height: 680px;
+
       //임시 스타일
       border: 1px solid $neutral-200;
       background: $neutral-100;
@@ -72,6 +75,7 @@
 
     .profiling {
       overflow: auto;
+
       //임시 스타일
       min-height: 350px;
       border: 1px solid $neutral-200;
@@ -124,6 +128,7 @@
   width: 100%;
   height: 100%;
   min-height: 680px;
+
   //임시 스타일
   border: 1px solid $neutral-200;
   background: $neutral-100;
@@ -137,6 +142,7 @@
 
   .preview {
     @include box-shadow('lg');
+
     position: absolute;
     right: 0;
     width: 375px;
@@ -148,6 +154,7 @@
 
   &-control {
     @include flex($direction: column);
+
     position: absolute;
     bottom: 16px;
     left: 16px;

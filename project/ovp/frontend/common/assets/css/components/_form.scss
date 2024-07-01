@@ -85,6 +85,7 @@
 
   &-foot {
     @include flex($direction: column);
+
     width: 100%;
     gap: $spacing-12;
 
@@ -94,6 +95,7 @@
 
     &-group {
       @include flex($horizontal: space-between);
+
       width: 100%;
     }
   }
