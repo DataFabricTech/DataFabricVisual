@@ -58,8 +58,8 @@
 
 <script setup lang="ts">
 import { vOnClickOutside } from "@vueuse/components";
-import { SelectBoxProps } from "@/components/extends/select-box/SelectBoxProps";
-import { SelectBoxComposition } from "@/components/extends/select-box/SelectBoxComposition";
+import { SelectBoxProps } from "./SelectBoxProps";
+import { SelectBoxComposition } from "./SelectBoxComposition";
 import CheckBoxList from "@/components/extends/check-box-list/CheckBoxList.vue";
 
 const props = withDefaults(defineProps<SelectBoxProps>(), {
