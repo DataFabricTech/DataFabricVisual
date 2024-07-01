@@ -1,0 +1,44 @@
+.card-list {
+  @include flex($horizontal:flex-start);
+
+  flex-wrap: wrap;
+  gap: $spacing-24;
+  align-items: stretch;
+
+  .card-item {
+    @include flex;
+
+    width: calc(25% - 24px);
+    padding: 40px 32px;
+    background-color: $neutral-0;
+    border: 1px solid $neutral-200;
+    border-radius: $spacing-8;
+
+    image {
+      width: 54px;
+      height: 54px;
+    }
+
+    a {
+      @include flex;
+
+      gap: 48px;
+    }
+  }
+
+  .card-item:hover {
+    @include box-shadow('md');
+
+    border: 1px solid $primary-300;
+  }
+
+  .card-title {
+    @include font-size('18');
+
+    color: $neutral-800;
+  }
+
+  .card-content {
+    color: $neutral-500;
+  }
+}
