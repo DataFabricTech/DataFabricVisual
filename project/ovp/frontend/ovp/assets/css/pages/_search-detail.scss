@@ -1,6 +1,11 @@
 .resource-box-full + .tab {
   margin-top: $spacing-32;
   flex-grow: 1;
+  height: 100%;
+
+  .tab-list {
+    flex-shrink: 0;
+  }
 
   .tab-button {
     padding: 0;
@@ -44,11 +49,12 @@
 
   &:has(.knowledge) {
     overflow: hidden;
-    max-height: 680px;
+    height: 100%;
 
     .knowledge {
       width: 60%;
       height: 100%;
+      min-height: 680px;
       //임시 스타일
       border: 1px solid $neutral-200;
       background: $neutral-100;
@@ -56,6 +62,7 @@
 
     .data-detail-list {
       width: 40%;
+      height: 100%;
     }
   }
 
@@ -64,10 +71,9 @@
     height: 100%;
 
     .profiling {
-      width: 100%;
-      height: 100%;
-      min-height: 350px;
+      overflow: auto;
       //임시 스타일
+      min-height: 350px;
       border: 1px solid $neutral-200;
       background: $neutral-100;
     }
@@ -94,7 +100,7 @@
 
   &-date {
     padding: $spacing-12 $spacing-16;
-    color: $neutral-700;
+    color: $neutral-500;
     background: $neutral-100;
   }
 
