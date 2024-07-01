@@ -18,6 +18,7 @@ interface MenuSearchComposition extends MenuSearchProps, SelectFunctionality, Se
   onResetSearchText(): void;
   onCancelSelect(value: any, checked: boolean): void;
   onSelectListData(value: any, checked: boolean): void;
+  checkSearchResult(): void;
   onApply(): void;
   onReset(): void;
   onCancel(): void;
@@ -214,6 +215,15 @@ export function MenuSearchComposition(
       return item;
     });
   };
+  const checkSearchResult : () => void = () => {
+    console.log("checkSearchResult");
+    const findSelectedItem = _.every(selectedListData.value, {isShow: false});
+    const findListItem = _.every(listData.value, {isShow: false});
+
+    console.log(findSelectedItem);
+    console.log(findListItem);
+    return findSelectedItem && findListItem && searchLabel;
+  };
 
   const onApply: () => void = () => {
     // 원본 데이터로 변경
@@ -271,6 +281,7 @@ export function MenuSearchComposition(
     onSelectListData,
     onCancelSelect,
     onSearchText,
-    onResetSearchText
+    onResetSearchText,
+    checkSearchResult
   };
 }
