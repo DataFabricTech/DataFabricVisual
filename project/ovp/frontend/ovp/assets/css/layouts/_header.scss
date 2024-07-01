@@ -1,5 +1,6 @@
 #header {
   @include z-index('header');
+
   position: fixed;
   width: 100%;
   height: 50px;
@@ -15,18 +16,22 @@
 
 .logo {
   @include font-size('18');
+
   font-weight: 700;
 }
 
 .profile {
   @include flex;
+
   gap: $spacing-8;
 
   &-avatar {
     @include flex;
+
     width: 32px;
     height: 32px;
     border-radius: $border-radius-round;
+
     // 임시스타일
     background: $primary-300;
   }

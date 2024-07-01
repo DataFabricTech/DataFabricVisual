@@ -73,6 +73,9 @@
               <a class="sub-item-link" href="#guide-pagination">Pagination</a>
             </li>
             <li class="sub-item">
+              <a class="sub-item-link" href="#guide-progressbar">Progress Bar</a>
+            </li>
+            <li class="sub-item">
               <a class="sub-item-link" href="#guide-radio">Radio</a>
             </li>
             <li class="sub-item">

@@ -1,4 +1,5 @@
 <template>
+<!--  TODO: [개발] 상세페이지에서 .resource-box-full 클래스 추가 -->
   <div class="resource-box" :class="props.class" @click="previewClick">
     <div class="resource-box-function">
       <div class="resource-box-model">

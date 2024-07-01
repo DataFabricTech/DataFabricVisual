@@ -18,6 +18,7 @@
 
 .dropdown {
   @include dropdown-size;
+  @include box-shadow('md');
 
   position: absolute;
 

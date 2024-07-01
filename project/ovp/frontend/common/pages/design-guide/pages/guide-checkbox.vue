@@ -56,6 +56,54 @@
         </div>
       </div>
     </article>
+    <article class="mb-10">
+      <h3 class="section-subtitle">Button</h3>
+      <div class="flex flex-col ">
+        <div class="flex gap-8 mb-14">
+          <figure class="section-figure">
+            <div class="flex justify-center gap-4">
+              <div class="checkbox-button">
+                <input type="checkbox" id="checkbox-btn-01" class="checkbox-button-input" />
+                <label for="checkbox-btn-01" class="checkbox-button-label">checkbox button</label>
+              </div>
+              <div class="checkbox-button">
+                <input type="checkbox" id="checkbox-btn-02" class="checkbox-button-input" disabled/>
+                <label for="checkbox-btn-02" class="checkbox-button-label">checkbox button</label>
+              </div>
+              <div class="checkbox-button">
+                <input type="checkbox" id="checkbox-btn-03" class="checkbox-button-input" checked/>
+                <label for="checkbox-btn-03" class="checkbox-button-label">
+                <svg-icon class="svg-icon" name="user"></svg-icon>
+                  checkbox button
+                </label>
+              </div>
+            </div>
+            <div class="flex justify-center gap-4">
+              <div class="checkbox-button checkbox-button-sm">
+                <input type="checkbox" id="checkbox-btn-sm-01" class="checkbox-button-input" />
+                <label for="checkbox-btn-sm-01" class="checkbox-button-label">checkbox button</label>
+              </div>
+              <div class="checkbox-button checkbox-button-sm">
+                <input type="checkbox" id="checkbox-btn-sm-02" class="checkbox-button-input" disabled/>
+                <label for="checkbox-btn-sm-02" class="checkbox-button-label">checkbox button</label>
+              </div>
+              <div class="checkbox-button checkbox-button-sm">
+                <input type="checkbox" id="checkbox-btn-sm-03" class="checkbox-button-input" checked/>
+                <label for="checkbox-btn-sm-03" class="checkbox-button-label">
+                  <svg-icon class="svg-icon" name="user"></svg-icon>
+                  checkbox button
+                </label>
+              </div>
+            </div>
+          </figure>
+          <div class="group-description">
+            <p class="group-summary">
+              주요 버튼(Primary Buttons)은 페이지 키 액션에 사용하는 Button으로 한 페이지에 한 번만 사용합니다.
+            </p>
+          </div>
+        </div>
+      </div>
+    </article>
   </section>
 </template>
 

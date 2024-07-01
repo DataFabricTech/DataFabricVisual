@@ -1,0 +1,182 @@
+.resource-box-full + .tab {
+  margin-top: $spacing-32;
+  flex-grow: 1;
+  height: 100%;
+
+  .tab-list {
+    flex-shrink: 0;
+  }
+
+  .tab-button {
+    padding: 0;
+  }
+
+  .tab-contents {
+    height: 100%;
+  }
+}
+
+.interaction-buttons {
+  @include flex;
+
+  gap: $spacing-8;
+  position: absolute;
+  right: 32px;
+  top: 32px;
+}
+
+.data-detail {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-12;
+  height: 100%;
+  padding: $spacing-16 0;
+
+  &-list {
+    @include flex($direction: column, $horizontal: flex-start);
+
+    gap: $spacing-12;
+    height: 100%;
+    padding: $spacing-4;
+    overflow-y: auto;
+  }
+}
+
+//----------------------------
+//데이터 상세 - 탭 페이지
+//----------------------------
+.data-detail-group {
+  display: flex;
+  gap: $spacing-12;
+
+  &:has(.knowledge) {
+    overflow: hidden;
+    height: 100%;
+
+    .knowledge {
+      width: 60%;
+      height: 100%;
+      min-height: 680px;
+
+      //임시 스타일
+      border: 1px solid $neutral-200;
+      background: $neutral-100;
+    }
+
+    .data-detail-list {
+      width: 40%;
+      height: 100%;
+    }
+  }
+
+  &:has(.profiling) {
+    flex-direction: column;
+    height: 100%;
+
+    .profiling {
+      overflow: auto;
+
+      //임시 스타일
+      min-height: 350px;
+      border: 1px solid $neutral-200;
+      background: $neutral-100;
+    }
+  }
+
+  &:has(.recommend) {
+    flex-direction: column;
+    width: 100%;
+
+    .recommend {
+      display: flex;
+      gap: $spacing-12;
+
+      .resource-box {
+        width: 50%;
+      }
+    }
+  }
+}
+
+.query {
+  display: flex;
+  flex-direction: column;
+
+  &-date {
+    padding: $spacing-12 $spacing-16;
+    color: $neutral-500;
+    background: $neutral-100;
+  }
+
+  & + & {
+    margin-top: $spacing-24;
+  }
+
+  .code-box {
+    @include box-shadow('sm');
+
+    overflow-y: auto;
+    width: 100%;
+    min-height: 250px;
+    border: 1px solid $neutral-100;
+  }
+}
+
+.lineage {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 680px;
+
+  //임시 스타일
+  border: 1px solid $neutral-200;
+  background: $neutral-100;
+
+  .filters {
+    z-index: 0;
+    position: absolute;
+    border: none;
+    background: transparent;
+  }
+
+  .preview {
+    @include box-shadow('lg');
+
+    position: absolute;
+    right: 0;
+    width: 375px;
+
+    &-title:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &-control {
+    @include flex($direction: column);
+
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+
+    .button-neutral-stroke:hover {
+      border: 1px solid $neutral-200;
+    }
+
+    &-zoom-in {
+      border-bottom-right-radius: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-width: 0;
+    }
+
+    &-zoom-out {
+      border-top-right-radius: 0;
+      border-top-left-radius: 0;
+    }
+  }
+}
+
+
+
+
+

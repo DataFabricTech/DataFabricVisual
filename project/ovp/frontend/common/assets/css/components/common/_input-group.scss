@@ -14,7 +14,7 @@ $input-group-classes: text-input-group, search-input;
     }
 
     .#{$group}-action-button {
-      @include z-index('float');
+      //@include z-index('float');
 
       position: absolute;
       right: 6px;
