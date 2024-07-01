@@ -15,46 +15,42 @@
           <!--  상단 검색 결과 & 우측 필터-->
           <div class="l-top-bar">
             <strong
-              >총 <em class="primary">68건</em>의 검색 결과가 있습니다.</strong
+              >검색 결과는 <em class="primary">{{ data.length }}</em
+              >건 입니다.</strong
             >
             <div class="h-group gap-1">
-              <div class="select select-clean">
-                <button class="select-button">
-                  <span class="select-button-title">인기많은순 ↓</span>
-                  <svg-icon
-                    class="svg-icon select-indicator"
-                    name="chevron-down-medium"
-                  ></svg-icon>
-                </button>
-              </div>
-              <div class="select select-clean">
-                <button class="select-button">
-                  <span class="select-button-title">10개씩 보기</span>
-                  <svg-icon
-                    class="svg-icon select-indicator"
-                    name="chevron-down-medium"
-                  ></svg-icon>
-                </button>
-              </div>
+              <select-box
+                class="select-clean"
+                :data="options"
+                label-key="label"
+                value-key="value"
+                :selectedItem="selectedItem"
+                :isFirstSelectedEvent="isFirstCheckedEvent"
+                @select="selectItem"
+              ></select-box>
               <div class="button-group">
                 <input
                   type="radio"
-                  id="button-groupprimary"
+                  id="listView"
                   class="button-group-input"
                   name="button-group3"
+                  value="listView"
+                  v-model="viewType"
                   checked
                 />
-                <label for="button-groupprimary" class="button-group-label">
+                <label for="listView" class="button-group-label">
                   <svg-icon class="svg-icon" name="list"></svg-icon>
                   <span class="hidden-text">리스트보기</span>
                 </label>
                 <input
                   type="radio"
-                  id="button-groupprimary2"
+                  id="graphView"
                   class="button-group-input"
                   name="button-group3"
+                  value="graphView"
+                  v-model="viewType"
                 />
-                <label for="button-groupprimary2" class="button-group-label">
+                <label for="graphView" class="button-group-label">
                   <svg-icon class="svg-icon" name="knowleage-graph"></svg-icon>
                   <span class="hidden-text">시각화 보기</span>
                 </label>
@@ -66,6 +62,7 @@
               <div class="data-list">
                 <!--  목록형 보기-->
                 <resource-box-list
+                  v-if="viewType === 'listView'"
                   :data-list="data"
                   :use-list-checkbox="false"
                   :show-owner="true"
@@ -74,18 +71,13 @@
                   @modelNmClick="modelNmClick"
                 />
                 <!--  그래프혇 보기 - resource-box-list 안에 resource-box가 존재-->
-                <custom-knowledge-graph />
-                <Pagination
-                  :totalCount="60"
-                  :perPage="10"
-                  :currentPageNumber="4"
-                  @change="checkCurrentPage"
-                ></Pagination>
+                <custom-knowledge-graph v-if="viewType === 'graphView'" />
               </div>
             </div>
             <!--  우측 미리보기-->
             <preview
               :preview-data="previewData"
+              :isPreviewClosed="isPreviewClosed"
               @change="getPreviewCloseStatus"
             ></preview>
           </div>
@@ -98,100 +90,518 @@
 <script setup lang="ts">
 import Header from "@/layouts/header.vue";
 import Sidebar from "@/layouts/sidebar.vue";
-import Pagination from "@extends/pagination/Pagination.vue";
+import SelectBox from "@extends/select-box/SelectBox.vue";
 
-// sample preview data (추후 preview 파일에서 API를 받아오도록 변경할수도 있음)
-const previewData: object = {
-  // 공통
-  modelType: "structured", // "structured" or "unstructured"  (정형/비정형)
-  tags: [
-    {
-      name: "태그1",
-      category: "tags_group_01",
-    },
-    {
-      name: "태그2",
-      category: "tags_group_02",
-    },
-    {
-      name: "태그3",
-      category: "tags_group_03",
-    },
-    {
-      name: "태그4",
-      category: "tags_group_04",
-    },
-  ],
-  glossaries: [
-    {
-      name: "용어1",
-      category: "glossary_group_01",
-    },
-    {
-      name: "용어2",
-      category: "glossary_group_02",
-    },
-    {
-      name: "용어3",
-      category: "glossary_group_03",
-    },
-    {
-      name: "용어4",
-      category: "glossary_group_04",
-    },
-  ],
+const viewType = ref("listView");
 
-  modelInfo: {
-    model: {
-      name: "모델 명",
-      desc: "모델 설명",
-      cnt: 100000,
-      // 정형 only
-      tableType: "View", // "View"  or "Regular"
-      // 비정형 only
-      ext: "PDF",
-    },
-    // 정형 only
-    columns: [
+const originPreviewData: any[] = [
+  {
+    // 공통
+    id: 1,
+    modelType: "structured", // "structured" or "unstructured"  (정형/비정형)
+    tags: [
       {
-        name: "idx",
-        dataType: "varchar",
-        desc: "varchar 타입의 uuid 컬럼",
-        constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        name: "태그1",
+        category: "tags_group_01",
       },
       {
-        name: "idx1",
-        dataType: "varchar1",
-        desc: "varchar 타입의 uuid 컬럼2",
-        constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        name: "태그2",
+        category: "tags_group_02",
       },
       {
-        name: "idx2",
-        dataType: "varchar2",
-        desc: "     ",
-        constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        name: "태그3",
+        category: "tags_group_03",
       },
       {
-        name: "idx3",
-        dataType: "varchar3",
-        desc: "varchar 타입의 uuid 컬럼3",
-        constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        name: "태그4",
+        category: "tags_group_04",
       },
     ],
-    // 비정형 only
-    details: "비정형 데이터 하단에 표시되는 상세설명 어쩌고저쩌고",
-    url: "http://192.168.105.26:8585/api/v1/tables/df2.test_db.test_db.Employee_Job_Details/tableProfile/latest",
-  },
-};
+    glossaries: [
+      {
+        name: "용어1",
+        category: "glossary_group_01",
+      },
+      {
+        name: "용어2",
+        category: "glossary_group_02",
+      },
+      {
+        name: "용어3",
+        category: "glossary_group_03",
+      },
+      {
+        name: "용어4",
+        category: "glossary_group_04",
+      },
+    ],
 
-// 미리보기의 닫기 버튼 클릭했을 때, 좌측 리소스박스 선택된 상태를 비활성화 시켜야해서 emit 추가 (option 불필요 할수도 있음)
-const getPreviewCloseStatus = (option: boolean) => {
-  console.log("isPreviewClosed?", option);
-};
+    modelInfo: {
+      model: {
+        name: "모델 명1",
+        desc: "모델 설명",
+        cnt: 100000,
+        // 정형 only
+        tableType: "View", // "View"  or "Regular"
+        // 비정형 only
+        ext: "PDF",
+      },
+      // 정형 only
+      columns: [
+        {
+          name: "idx",
+          dataType: "varchar",
+          desc: "varchar 타입의 uuid 컬럼",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx1",
+          dataType: "varchar1",
+          desc: "varchar 타입의 uuid 컬럼2",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx2",
+          dataType: "varchar2",
+          desc: "     ",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx3",
+          dataType: "varchar3",
+          desc: "varchar 타입의 uuid 컬럼3",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+      ],
+      // 비정형 only
+      details: "비정형 데이터 하단에 표시되는 상세설명 어쩌고저쩌고",
+      url: "http://192.168.105.26:8585/api/v1/tables/df2.test_db.test_db.Employee_Job_Details/tableProfile/latest",
+    },
+  },
+  {
+    // 공통
+    id: 2,
+    modelType: "unstructured", // "structured" or "unstructured"  (정형/비정형)
+    tags: [
+      {
+        name: "태그1",
+        category: "tags_group_01",
+      },
+      {
+        name: "태그2",
+        category: "tags_group_02",
+      },
+      {
+        name: "태그3",
+        category: "tags_group_03",
+      },
+      {
+        name: "태그4",
+        category: "tags_group_04",
+      },
+    ],
+    glossaries: [
+      {
+        name: "용어1",
+        category: "glossary_group_01",
+      },
+      {
+        name: "용어2",
+        category: "glossary_group_02",
+      },
+      {
+        name: "용어3",
+        category: "glossary_group_03",
+      },
+      {
+        name: "용어4",
+        category: "glossary_group_04",
+      },
+    ],
+
+    modelInfo: {
+      model: {
+        name: "모델 명2",
+        desc: "모델 설명",
+        cnt: 100000,
+        // 정형 only
+        tableType: "View", // "View"  or "Regular"
+        // 비정형 only
+        ext: "PDF",
+      },
+      // 정형 only
+      columns: [
+        {
+          name: "idx",
+          dataType: "varchar",
+          desc: "varchar 타입의 uuid 컬럼",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx1",
+          dataType: "varchar1",
+          desc: "varchar 타입의 uuid 컬럼2",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx2",
+          dataType: "varchar2",
+          desc: "     ",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx3",
+          dataType: "varchar3",
+          desc: "varchar 타입의 uuid 컬럼3",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+      ],
+      // 비정형 only
+      details: "비정형 데이터 하단에 표시되는 상세설명 어쩌고저쩌고",
+      url: "http://192.168.105.26:8585/api/v1/tables/df2.test_db.test_db.Employee_Job_Details/tableProfile/latest",
+    },
+  },
+  {
+    // 공통
+    id: 3,
+    modelType: "unstructured", // "structured" or "unstructured"  (정형/비정형)
+    tags: [
+      {
+        name: "태그1",
+        category: "tags_group_01",
+      },
+      {
+        name: "태그2",
+        category: "tags_group_02",
+      },
+      {
+        name: "태그3",
+        category: "tags_group_03",
+      },
+      {
+        name: "태그4",
+        category: "tags_group_04",
+      },
+    ],
+    glossaries: [
+      {
+        name: "용어1",
+        category: "glossary_group_01",
+      },
+      {
+        name: "용어2",
+        category: "glossary_group_02",
+      },
+      {
+        name: "용어3",
+        category: "glossary_group_03",
+      },
+      {
+        name: "용어4",
+        category: "glossary_group_04",
+      },
+    ],
+
+    modelInfo: {
+      model: {
+        name: "모델 명3",
+        desc: "모델 설명",
+        cnt: 100000,
+        // 정형 only
+        tableType: "View", // "View"  or "Regular"
+        // 비정형 only
+        ext: "PDF",
+      },
+      // 정형 only
+      columns: [
+        {
+          name: "idx",
+          dataType: "varchar",
+          desc: "varchar 타입의 uuid 컬럼",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx1",
+          dataType: "varchar1",
+          desc: "varchar 타입의 uuid 컬럼2",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx2",
+          dataType: "varchar2",
+          desc: "     ",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx3",
+          dataType: "varchar3",
+          desc: "varchar 타입의 uuid 컬럼3",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+      ],
+      // 비정형 only
+      details: "비정형 데이터 하단에 표시되는 상세설명 어쩌고저쩌고",
+      url: "http://192.168.105.26:8585/api/v1/tables/df2.test_db.test_db.Employee_Job_Details/tableProfile/latest",
+    },
+  },
+  {
+    // 공통
+    id: 4,
+    modelType: "structured", // "structured" or "unstructured"  (정형/비정형)
+    tags: [
+      {
+        name: "태그1",
+        category: "tags_group_01",
+      },
+      {
+        name: "태그2",
+        category: "tags_group_02",
+      },
+      {
+        name: "태그3",
+        category: "tags_group_03",
+      },
+      {
+        name: "태그4",
+        category: "tags_group_04",
+      },
+    ],
+    glossaries: [
+      {
+        name: "용어1",
+        category: "glossary_group_01",
+      },
+      {
+        name: "용어2",
+        category: "glossary_group_02",
+      },
+      {
+        name: "용어3",
+        category: "glossary_group_03",
+      },
+      {
+        name: "용어4",
+        category: "glossary_group_04",
+      },
+    ],
+
+    modelInfo: {
+      model: {
+        name: "모델 명4",
+        desc: "모델 설명",
+        cnt: 100000,
+        // 정형 only
+        tableType: "View", // "View"  or "Regular"
+        // 비정형 only
+        ext: "PDF",
+      },
+      // 정형 only
+      columns: [
+        {
+          name: "idx",
+          dataType: "varchar",
+          desc: "varchar 타입의 uuid 컬럼",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx1",
+          dataType: "varchar1",
+          desc: "varchar 타입의 uuid 컬럼2",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx2",
+          dataType: "varchar2",
+          desc: "     ",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx3",
+          dataType: "varchar3",
+          desc: "varchar 타입의 uuid 컬럼3",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+      ],
+      // 비정형 only
+      details: "비정형 데이터 하단에 표시되는 상세설명 어쩌고저쩌고",
+      url: "http://192.168.105.26:8585/api/v1/tables/df2.test_db.test_db.Employee_Job_Details/tableProfile/latest",
+    },
+  },
+  {
+    // 공통
+    id: 5,
+    modelType: "structured", // "structured" or "unstructured"  (정형/비정형)
+    tags: [
+      {
+        name: "태그1",
+        category: "tags_group_01",
+      },
+      {
+        name: "태그2",
+        category: "tags_group_02",
+      },
+      {
+        name: "태그3",
+        category: "tags_group_03",
+      },
+      {
+        name: "태그4",
+        category: "tags_group_04",
+      },
+    ],
+    glossaries: [
+      {
+        name: "용어1",
+        category: "glossary_group_01",
+      },
+      {
+        name: "용어2",
+        category: "glossary_group_02",
+      },
+      {
+        name: "용어3",
+        category: "glossary_group_03",
+      },
+      {
+        name: "용어4",
+        category: "glossary_group_04",
+      },
+    ],
+
+    modelInfo: {
+      model: {
+        name: "모델 명5",
+        desc: "모델 설명",
+        cnt: 100000,
+        // 정형 only
+        tableType: "View", // "View"  or "Regular"
+        // 비정형 only
+        ext: "PDF",
+      },
+      // 정형 only
+      columns: [
+        {
+          name: "idx",
+          dataType: "varchar",
+          desc: "varchar 타입의 uuid 컬럼",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx1",
+          dataType: "varchar1",
+          desc: "varchar 타입의 uuid 컬럼2",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx2",
+          dataType: "varchar2",
+          desc: "     ",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx3",
+          dataType: "varchar3",
+          desc: "varchar 타입의 uuid 컬럼3",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+      ],
+      // 비정형 only
+      details: "비정형 데이터 하단에 표시되는 상세설명 어쩌고저쩌고",
+      url: "http://192.168.105.26:8585/api/v1/tables/df2.test_db.test_db.Employee_Job_Details/tableProfile/latest",
+    },
+  },
+  {
+    // 공통
+    id: 6,
+    modelType: "unstructured", // "structured" or "unstructured"  (정형/비정형)
+    tags: [
+      {
+        name: "태그1",
+        category: "tags_group_01",
+      },
+      {
+        name: "태그2",
+        category: "tags_group_02",
+      },
+      {
+        name: "태그3",
+        category: "tags_group_03",
+      },
+      {
+        name: "태그4",
+        category: "tags_group_04",
+      },
+    ],
+    glossaries: [
+      {
+        name: "용어1",
+        category: "glossary_group_01",
+      },
+      {
+        name: "용어2",
+        category: "glossary_group_02",
+      },
+      {
+        name: "용어3",
+        category: "glossary_group_03",
+      },
+      {
+        name: "용어4",
+        category: "glossary_group_04",
+      },
+    ],
+
+    modelInfo: {
+      model: {
+        name: "모델 명6",
+        desc: "모델 설명",
+        cnt: 100000,
+        // 정형 only
+        tableType: "View", // "View"  or "Regular"
+        // 비정형 only
+        ext: "PDF",
+      },
+      // 정형 only
+      columns: [
+        {
+          name: "idx",
+          dataType: "varchar",
+          desc: "varchar 타입의 uuid 컬럼",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx1",
+          dataType: "varchar1",
+          desc: "varchar 타입의 uuid 컬럼2",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx2",
+          dataType: "varchar2",
+          desc: "     ",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+        {
+          name: "idx3",
+          dataType: "varchar3",
+          desc: "varchar 타입의 uuid 컬럼3",
+          constraint: "NULL", // "PRIMARY_KEY", "FOREIGN_KEY", "UNIQUE", "SORT_KEY", "DIST_KEY", "NULL" or "NOT_NULL"
+        },
+      ],
+      // 비정형 only
+      details: "비정형 데이터 하단에 표시되는 상세설명 어쩌고저쩌고",
+      url: "http://192.168.105.26:8585/api/v1/tables/df2.test_db.test_db.Employee_Job_Details/tableProfile/latest",
+    },
+  },
+];
+
+let previewData = ref({});
+
+const isPreviewClosed = ref(true);
 
 let data: any[] = [
   {
-    id: "1",
+    id: 1,
     serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
     depth: ["1depth", "2depth", "3depth", "데이터모델"],
     firModelNm: "최초 데이터모델 명",
@@ -202,7 +612,7 @@ let data: any[] = [
     category: "Domain",
   },
   {
-    id: "2",
+    id: 2,
     serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
     depth: ["1depth", "2depth", "3depth", "데이터모델"],
     firModelNm: "최초 데이터모델 명",
@@ -213,7 +623,7 @@ let data: any[] = [
     category: "Domain",
   },
   {
-    id: "3",
+    id: 3,
     serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
     depth: ["1depth", "2depth", "3depth", "데이터모델"],
     firModelNm: "최초 데이터모델 명",
@@ -224,7 +634,7 @@ let data: any[] = [
     category: "Domain",
   },
   {
-    id: "4",
+    id: 4,
     serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
     depth: ["1depth", "2depth", "3depth", "데이터모델"],
     firModelNm: "최초 데이터모델 명",
@@ -235,7 +645,7 @@ let data: any[] = [
     category: "Domain",
   },
   {
-    id: "5",
+    id: 5,
     serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
     depth: ["1depth", "2depth", "3depth", "데이터모델"],
     firModelNm: "최초 데이터모델 명",
@@ -246,7 +656,7 @@ let data: any[] = [
     category: "Domain",
   },
   {
-    id: "6",
+    id: 6,
     serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
     depth: ["1depth", "2depth", "3depth", "데이터모델"],
     firModelNm: "최초 데이터모델 명",
@@ -258,12 +668,61 @@ let data: any[] = [
   },
 ];
 
-const checkCurrentPage = (item: number) => {
-  console.log("check", item);
+// select-box
+const isFirstCheckedEvent: boolean = true;
+
+const options: { [key: string]: string | number }[] = [
+  {
+    label: "추천 많은 순 ↓",
+    value: "option1",
+  },
+  {
+    label: "추천 많은 순 ↑",
+    value: "option2",
+  },
+  {
+    label: "이름순 ↓",
+    value: "option3",
+  },
+  {
+    label: "이름순 ↑",
+    value: "option4",
+  },
+  {
+    label: "마지막 업데이 순 ↓",
+    value: "option5",
+  },
+  {
+    label: "마지막 업데이트 순 ↑",
+    value: "option6",
+  },
+];
+
+const selectedItem = "option1";
+
+const selectItem = (item: string | number) => {
+  console.log(item);
 };
-const previewClick = (id: string | number) => {
+
+// TODO: [개발] 좌측 목록에서 id를 받아서, preview 컴포넌트에 id 쿼리만 받아와서 데이터를 뿌려줄 수 있다고 전달 받음 (즉 해당 코드 수정될 수 있음)
+const setPreviewData = (id: number) => {
+  originPreviewData.forEach((data) => {
+    if (data.id === id) {
+      previewData.value = data;
+    }
+  });
+};
+
+const getPreviewCloseStatus = (option: boolean) => {
+  isPreviewClosed.value = option;
+};
+
+const previewClick = (id: number) => {
   console.log(`previewClick : ${id}`);
+  setPreviewData(id);
+  isPreviewClosed.value = false;
 };
+
 const modelNmClick = (id: string | number) => {
   console.log(`modelNmClick : ${id}`);
 };
