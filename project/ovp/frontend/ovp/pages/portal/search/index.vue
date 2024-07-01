@@ -78,7 +78,7 @@
             <!--  우측 미리보기-->
             <preview
               :preview-data="previewData"
-              :isPreviewClosed="isPreviewClosed"
+              :isShowPreview="isShowPreview"
               @change="getPreviewCloseStatus"
             ></preview>
           </div>
@@ -93,6 +93,7 @@ import Header from "@/layouts/header.vue";
 import Sidebar from "@/layouts/sidebar.vue";
 import SelectBox from "@extends/select-box/SelectBox.vue";
 
+// Preview
 const viewType = ref("listView");
 
 const originPreviewData: any[] = [
@@ -598,7 +599,8 @@ const originPreviewData: any[] = [
 
 let previewData = ref({});
 
-const isPreviewClosed = ref(true);
+const isShowPreview = ref(false);
+
 // Resource-box
 let setSelectedStyle = ref(false);
 
@@ -671,7 +673,7 @@ let data: any[] = [
   },
 ];
 
-// select-box
+// Select-box
 const isFirstCheckedEvent: boolean = true;
 
 const options: { [key: string]: string | number }[] = [
@@ -703,6 +705,7 @@ const options: { [key: string]: string | number }[] = [
 
 const selectedItem = "option1";
 
+// METHODS
 const selectItem = (item: string | number) => {
   console.log(item);
 };
@@ -717,14 +720,13 @@ const setPreviewData = (id: number) => {
 };
 
 const getPreviewCloseStatus = (option: boolean) => {
-  isPreviewClosed.value = option;
+  isShowPreview.value = option;
   setSelectedStyle.value = false;
 };
 
 const previewClick = (id: number) => {
-  console.log(`previewClick : ${id}`);
   setPreviewData(id);
-  isPreviewClosed.value = false;
+  isShowPreview.value = true;
   setSelectedStyle.value = true;
 };
 
