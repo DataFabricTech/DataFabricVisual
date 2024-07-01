@@ -13,7 +13,10 @@
 
     <resource-box
       :class="[
-        { 'is-resource-box-selected': selectedResourceBoxId === dataObj.id },
+        {
+          'is-resource-box-selected':
+            selectedResourceBoxId === dataObj.id && setSelectedStyle,
+        },
         props.class,
       ]"
       :data-obj="dataObj"
@@ -42,6 +45,7 @@ const props = withDefaults(defineProps<ResourceBoxListProps>(), {
   useFirModelNm: false,
   useListCheckbox: false,
   useDataNmLink: true,
+  setSelectedStyle: false,
 });
 
 const emit = defineEmits<{

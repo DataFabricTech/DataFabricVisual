@@ -67,6 +67,7 @@
                   :use-list-checkbox="false"
                   :show-owner="true"
                   :show-category="true"
+                  :set-selected-style="setSelectedStyle"
                   @previewClick="previewClick"
                   @modelNmClick="modelNmClick"
                 />
@@ -598,6 +599,8 @@ const originPreviewData: any[] = [
 let previewData = ref({});
 
 const isPreviewClosed = ref(true);
+// Resource-box
+let setSelectedStyle = ref(false);
 
 let data: any[] = [
   {
@@ -715,12 +718,14 @@ const setPreviewData = (id: number) => {
 
 const getPreviewCloseStatus = (option: boolean) => {
   isPreviewClosed.value = option;
+  setSelectedStyle.value = false;
 };
 
 const previewClick = (id: number) => {
   console.log(`previewClick : ${id}`);
   setPreviewData(id);
   isPreviewClosed.value = false;
+  setSelectedStyle.value = true;
 };
 
 const modelNmClick = (id: string | number) => {

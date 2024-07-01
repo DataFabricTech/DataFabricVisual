@@ -7,4 +7,5 @@ export interface ResourceBoxListProps extends ResourceBoxCommonProps {
   dataList: DataModel[];
 
   useListCheckbox?: boolean;
+  setSelectedStyle: boolean;
 }
