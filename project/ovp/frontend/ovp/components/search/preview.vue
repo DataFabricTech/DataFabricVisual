@@ -111,18 +111,20 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+
 interface Props {
   previewData: any;
+  isPreviewClosed: boolean;
 }
 
 const props = defineProps<Props>();
 
-const isStructuredModelType: boolean =
-  props.previewData.modelType === "structured";
+const isStructuredModelType = computed(() => {
+  return props.previewData.modelType === "structured";
+});
 
 const emit = defineEmits<{ (e: "change", option: boolean): void }>();
-
-const isPreviewClosed = ref(false);
 
 const checkEmptyValues = (value: string | number) => {
   let removedWhitespaceString: string | null = null;
@@ -141,7 +143,6 @@ const checkEmptyValues = (value: string | number) => {
 };
 
 const setPreviewClose = (option: boolean) => {
-  isPreviewClosed.value = option;
   emit("change", option);
 };
 </script>
