@@ -16,5 +16,5 @@ export interface ResourceBoxCommonProps {
   useFirModelNm?: boolean;
   useDataNmLink?: boolean;
 
-  class?: string;
+  class?: any;
 }
