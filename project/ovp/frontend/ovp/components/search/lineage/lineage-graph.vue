@@ -1,16 +1,11 @@
 <template>
   <div class="cytoscape-container">
     <div ref="cyContainer" class="cytoscape-graph"></div>
-    <div class="controls">
-      <button @click="zoomIn">Zoom In</button>
-      <button @click="zoomOut">Zoom Out</button>
-      <button @click="resetView">Reset View</button>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, watch} from "vue";
+import {ref, onMounted, watch, defineExpose} from "vue";
 import cytoscape from "cytoscape";
 import dagre from "cytoscape-dagre";
 import cytoscapeNodeHtmlLabel from "cytoscape-node-html-label";
@@ -22,7 +17,7 @@ import type {
   CytoscapeNodeStyle,
   CytoscapeEdgeStyle
 } from "./lineage";
-import lineageStyle from "./lineageStyle";
+import lineageStyle from "./lineage-style";
 
 // dagre layout 유형 등록
 cytoscape.use(dagre);
@@ -43,6 +38,8 @@ const tpl = (data: NodeData) => {  // 라벨 템플릿 정의 메서드
 const props = defineProps<{
   lineageData: { nodes: RawNodeData[]; edges: RawEdgeData[] };
 }>();
+
+const emit = defineEmits<{ (e: "change", nodeData: NodeData): void }>();
 
 const transformData = (
     nodes: RawNodeData[],
@@ -134,7 +131,7 @@ const initializeCytoscape = (data: CytoscapeElement[]) => {
 };
 
 const handleNodeClick = (nodeData: NodeData) => {
-  console.log("Node clicked:", nodeData);
+  emit("change", nodeData);
 };
 
 const zoomIn = () => {
@@ -157,6 +154,15 @@ const resetView = () => {
   }
 };
 
+// 리니지 초기화
+const reset = () => {
+
+  //TODO: 필터 선택 상태 초기화
+
+  const data = transformData(props.lineageData.nodes, props.lineageData.edges);
+  initializeCytoscape(data);
+}
+
 onMounted(() => {
   const data = transformData(props.lineageData.nodes, props.lineageData.edges);
   initializeCytoscape(data);
@@ -173,11 +179,18 @@ watch(
     },
     {deep: true},
 );
+
+defineExpose({
+  zoomIn,
+  zoomOut,
+  resetView,
+  reset
+});
 </script>
 
 <style lang="scss" scoped>
 .cytoscape-container {
-  width: 100%;
+  width: 80%;
   height: 600px;
   border: 1px solid #ccc;
   position: relative; /* 상대 위치 */
@@ -188,19 +201,4 @@ watch(
   height: 100%;
 }
 
-.controls {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 10;
-}
-
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
-}
 </style>
