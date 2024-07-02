@@ -1,0 +1,79 @@
+{
+  "modelInfo": {
+    "id": "",
+    "fqn": "",
+    "depth": "",
+    "firDataNm": "",
+    "modelNm": "",
+    "modelDesc": "",
+    "owners": {
+      "id": "userId",
+      "name": "hong gil dong"
+    },
+    "category": {
+      "description": "test_data_model",
+      "displayName": "test_data_model",
+      "id": "73dca105-e216-4856-9e0b-863112949bb3",
+      "name": "test_data_model"
+    },
+    "iconSrc": ""
+  },
+  "cntInfo": {
+    "bookmarked": 0,
+    "upVotes": 0,
+    "downVotes": 0
+  },
+  "basicInfo": {
+    "type": "view",
+    "columnsCnt": 7,
+    "rowsCnt": 105,
+    "tags": [
+      {
+        "id": "tag01",
+        "name": "Tag 01"
+      },
+      {
+        "id": "tag02",
+        "name": "Tag 02"
+      }
+    ],
+    "glossary": [
+      {
+        "id": "glossary01",
+        "name": "Glossary 01"
+      },
+      {
+        "id": "glossary02",
+        "name": "Glossary 02"
+      }
+    ]
+  },
+  "schema": [],
+  "sample": {
+    "columns": [
+      "project_id",
+      "project_name",
+      "start_date",
+      "end_date",
+      "budget"
+    ],
+    "rows": [[1, "프로젝트 알파", "2021-01-01", "2021-12-31", 100000.0]]
+  },
+  "profiling": [
+    {
+      "name": "employee_id",
+      "dataType": "INT",
+      "dataLength": 1,
+      "dataTypeDisplay": "int",
+      "description": "ㅅㄷㄴㅅ!!!",
+      "fullyQualifiedName": "df2.test_db.test_db.Employee.employee_id",
+      "constraint": "PRIMARY_KEY",
+      "profile": {
+        "valuesCount": 40,
+        "nullProportion": 0,
+        "uniqueProportion": 1,
+        "distinctProportion": 1
+      }
+    }
+  ]
+}
