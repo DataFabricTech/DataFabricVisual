@@ -4,11 +4,21 @@
   display: flex;
   flex-grow: 1;
 
-  .split-page {
+  .work-list {
+    overflow: hidden;
+    width: 330px;
+    border-right: 1px solid $neutral-200;
+  }
+
+  .work-page {
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+  }
 
+  .work-list,
+  .work-page {
     .l-top-bar {
       padding: $spacing-8 $spacing-12;
       border-bottom: 1px solid $neutral-200;
@@ -33,6 +43,7 @@
 
 .l-top-bar {
   @include flex($horizontal: space-between);
+  width: 100%;
   flex-shrink: 0;
 
   & + .l-split {
@@ -49,14 +60,5 @@
   height: 100%;
 }
 
-.l-panel {
-  overflow: hidden;
-  width: 330px;
-  border-right: 1px solid $neutral-200;
 
-  .l-top-bar {
-    padding: $spacing-8 $spacing-12;
-    border-bottom: 1px solid $neutral-200;
-  }
-}
 

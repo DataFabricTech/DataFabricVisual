@@ -1,15 +1,6 @@
 //데이터 목록 페이ㅣ지
 
-.filters {
-  @include flex($horizontal: flex-start);
 
-  gap: $spacing-16;
-  width: 100%;
-  height: 48px;
-  padding: $spacing-8 $spacing-20;
-  background: $neutral-0;
-  border-bottom: 1px solid $neutral-200;
-}
 
 .data-page {
   overflow-y: hidden;

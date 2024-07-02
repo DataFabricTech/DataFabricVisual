@@ -1,6 +1,6 @@
 <template>
   <!--  상단 필터 & 초기화-->
-  <div class="filters">
+  <div class="section-top-bar">
     <!--  template v-for -->
     <filter-item :data="filters" @reset-filters="resetFilters" />
   </div>

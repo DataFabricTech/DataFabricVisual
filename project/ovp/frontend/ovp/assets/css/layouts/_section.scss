@@ -4,7 +4,7 @@
   flex-direction: column;
   margin-left: 48px;
 
-  .filters + .section-contents {
+  .section-top-bar + .section-contents {
     height: calc(100% - 48px);
   }
 }
@@ -17,7 +17,12 @@
 }
 
 .section-top-bar {
-  padding: 10px $spacing-8;
+  @include flex($horizontal: flex-start);
+
+  gap: $spacing-16;
+  width: 100%;
+  height: 48px;
+  padding: 0 $spacing-8;
   background: $neutral-0;
   border-bottom: 1px solid $neutral-200;
 }
@@ -28,8 +33,8 @@
   flex-direction: column;
   height: 100%;
   padding: $spacing-16 $spacing-20;
-}
 
-.section-top-bar + .section-contents {
-  padding: 0;
+  &-p-0 {
+    padding: 0;
+  }
 }
