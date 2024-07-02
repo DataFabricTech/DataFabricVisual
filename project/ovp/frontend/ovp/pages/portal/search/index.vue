@@ -61,7 +61,7 @@
               </div>
             </div>
           </div>
-          <div class="l-split">
+          <div class="l-split mt-3">
             <div class="data-page">
               <div class="data-list">
                 <!--  목록형 보기-->

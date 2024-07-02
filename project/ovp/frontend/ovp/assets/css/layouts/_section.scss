@@ -16,10 +16,20 @@
   gap: $spacing-24;
 }
 
+.section-top-bar {
+  padding: 10px $spacing-8;
+  background: $neutral-0;
+  border-bottom: 1px solid $neutral-200;
+}
+
 .section-contents {
   position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
   padding: $spacing-16 $spacing-20;
+}
+
+.section-top-bar + .section-contents {
+  padding: 0;
 }

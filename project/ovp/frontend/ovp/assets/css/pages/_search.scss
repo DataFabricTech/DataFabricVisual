@@ -108,6 +108,10 @@
   }
 }
 
+.data-page + .preview {
+  margin-left: $spacing-24;
+}
+
 .schema-title {
   font-weight: 600;
 
