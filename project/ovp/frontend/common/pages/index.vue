@@ -59,6 +59,10 @@
             <nuxt-link :to="'/vue-final-modal'" class="button button-primary button-lg">
               <span class="button-text">modal 예시 이동</span>
             </nuxt-link>
+            <h4 class="group-title">Menu Search</h4>
+            <nuxt-link :to="'/menu-search'" class="button button-primary button-lg">
+              <span class="button-text">menu-search 예시 이동</span>
+            </nuxt-link>
           </div>
         </div>
       </article>
