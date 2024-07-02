@@ -35,7 +35,7 @@ import type { ResourceBoxListProps } from "./resource-box-list-props";
 import { defineEmits } from "vue";
 
 const selectedList: Ref<Array<string | number>> = ref([]);
-const selectedResourceBoxId = ref("");
+const selectedResourceBoxId: Ref<string | number> = ref("");
 
 const props = withDefaults(defineProps<ResourceBoxListProps>(), {
   usePrvBtn: true,
