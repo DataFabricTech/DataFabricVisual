@@ -1,51 +1,71 @@
 <template>
-  <!-- TODO: class - 페이지 별로 resource-box 의 형태가 달라, 퍼블 단계에서 클리스 처리할때 사용 -->
-  <!-- TODO: click - box 영역 전부를 선택해야 해서 이렇게 처리 -->
-  <section :class="props.class" @click="previewClick">
-    <img :src="props.dataObj.serviceIcon" />
-    <div>
-      <ul>
-        <li v-for="(item, index) in props.dataObj.depth" :key="index">
-          {{ item }}
-        </li>
-      </ul>
-    </div>
-    <div>
-      <div v-if="useFirModelNm">{{ props.dataObj.firModelNm }}</div>
-
-      <!-- 데이터 모델 명 링크 옵션 처리-->
-      <template v-if="props.useDataNmLink">
-        <div @click="modelNmClick">{{ props.dataObj.modelNm }}</div>
-      </template>
-      <template v-else>
-        <div>{{ props.dataObj.modelNm }}</div>
-      </template>
-
-      <div v-if="isEditMode.modelDesc || false">
-        <!-- TODO: 수정 기능 -->
-        <input :value="newValue.modelDesc" />
-        <button @click="editCancel('modelDesc')">취소</button>
-        <button @click="editDone('modelDesc')">확인</button>
-      </div>
-      <div v-else>
-        {{ props.dataObj.modelDesc }}
-        <div class="custom-fa" v-if="props.editable">
-          <fa @click="editIconClick('modelDesc')" icon="fa-solid fa-pen" />
+<!--  TODO: [개발] 상세페이지에서 .resource-box-full 클래스 추가 -->
+  <div class="resource-box" :class="props.class" @click="previewClick">
+    <div class="resource-box-function">
+      <div class="resource-box-model">
+        <img :src="props.dataObj.serviceIcon" />
+        <div class="breadcrumb">
+          <ul class="breadcrumb-list">
+            <li
+              class="breadcrumb-item"
+              v-for="(item, index) in props.dataObj.depth"
+              :key="index"
+            >
+              <a class="breadcrumb-link">{{ item }}</a>
+            </li>
+          </ul>
         </div>
       </div>
-
-      <div v-if="props.showOwner">{{ props.dataObj.owner }}</div>
-      <div v-if="props.showCategory">{{ props.dataObj.category }}</div>
     </div>
-  </section>
+
+    <!-- TODO : 퍼블 첫번째 데이터 명 -->
+    <div v-if="useFirModelNm">{{ props.dataObj.firModelNm }}</div>
+
+    <template v-if="props.useDataNmLink">
+      <a
+        href="javascript:void(0);"
+        class="resource-box-title"
+        title="상세 보기"
+        @click="modelNmClick"
+        >{{ props.dataObj.modelNm }}</a
+      >
+    </template>
+    <template v-else>
+      <div>{{ props.dataObj.modelNm }}</div>
+    </template>
+
+    <!-- TODO: 수정 기능 구현 & 퍼블 -->
+    <template v-if="isEditMode.modelDesc">
+      <input :value="newValue.modelDesc" />
+      <button @click="editCancel('modelDesc')">취소</button>
+      <button @click="editDone('modelDesc')">확인</button>
+    </template>
+    <template v-else>
+      <span class="resource-box-desc">{{ props.dataObj.modelDesc }}</span>
+      <div class="custom-fa" v-if="props.editable">
+        <fa @click="editIconClick('modelDesc')" icon="fa-solid fa-pen" />
+      </div>
+    </template>
+    <div class="resource-box-info">
+      <dl v-if="props.showOwner" class="resource-box-list">
+        <dt>소유자</dt>
+        <dd>{{ props.dataObj.owner }}</dd>
+      </dl>
+      <dl v-if="props.showCategory" class="resource-box-list">
+        <dt>도메인</dt>
+        <dd>{{ props.dataObj.category }}</dd>
+      </dl>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { defineEmits } from "vue";
+import type { DataModel } from "./resource-box-common-props";
 import type { ResourceBoxProps } from "./resource-box-props";
 
 const isEditMode = ref<Record<string, boolean>>({});
-const newValue = ref<Record<string, boolean>>({});
+const newValue = ref<Record<string, any>>({});
 
 const props = withDefaults(defineProps<ResourceBoxProps>(), {
   useDataNmLink: false,
@@ -66,7 +86,7 @@ const modelNmClick = () => {
   emit("modelNmClick", props.dataObj.id);
 };
 
-const editIconClick = (key: any) => {
+const editIconClick = (key: keyof DataModel) => {
   newValue.value[key] = props.dataObj[key];
   isEditMode.value[key] = true;
 };
@@ -80,10 +100,6 @@ const editDone = (key: string) => {
 </script>
 
 <style lang="scss" scoped>
-img {
-  width: 50px;
-  height: 50px;
-}
 .custom-fa {
   width: 30px;
   height: 30px;

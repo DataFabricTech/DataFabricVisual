@@ -13,6 +13,7 @@
     <guide-modal id="guide-modal" />
     <guide-notification id="guide-notification" />
     <guide-pagination id="guide-pagination" />
+    <guide-progressbar id="guide-progressbar" />
     <guide-radio id="guide-radio" />
     <guide-select id="guide-select" />
     <guide-tab id="guide-tab" />
@@ -48,6 +49,7 @@ import GuideTextarea from "../pages/guide-textarea.vue";
 import GuideTextInput from "../pages/guide-text-input.vue";
 import GuideToggleButton from "../pages/guide-toggle-button.vue";
 import GuideToggleSwitch from "../pages/guide-toggle-switch.vue";
+import GuideProgressbar from "../pages/guide-progressbar.vue";
 </script>
 
 <style scoped></style>

@@ -1,9 +1,9 @@
 <template>
-  <div class="preview" v-if="!isPreviewClosed">
+  <div class="preview" v-if="isShowPreview">
     <div class="ml-auto">
       <button
         class="button button-neutral-ghost button-sm"
-        @click="setPreviewClose(true)"
+        @click="setPreviewClose(false)"
       >
         <svg-icon class="svg-icon" name="close"></svg-icon>
         <span class="hidden-text">닫기</span>
@@ -51,8 +51,7 @@
             v-for="(tag, index) in previewData.tags"
             :key="index"
           >
-            <!--            TODO: [퍼블리싱] a 요소 외에 새로운 요소 추가 후 적용 예정-->
-            <a class="tag-link" href="javascript:void(0)">{{ tag.name }}</a>
+            <span class="tag-text">{{ tag.name }}</span>
           </div>
         </div>
       </div>
@@ -64,10 +63,9 @@
             v-for="(glossary, index) in previewData.glossaries"
             :key="index"
           >
-            <!--            TODO: [퍼블리싱] a 요소 외에 새로운 요소 추가 후 적용 예정-->
-            <a class="tag-link" href="javascript:void(0)">{{
+            <span class="tag-text">{{
               glossary.name
-            }}</a>
+            }}</span>
           </div>
         </div>
       </div>
@@ -111,18 +109,20 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from "vue";
+
 interface Props {
   previewData: any;
+  isShowPreview: boolean;
 }
 
 const props = defineProps<Props>();
 
-const isStructuredModelType: boolean =
-  props.previewData.modelType === "structured";
+const isStructuredModelType = computed(() => {
+  return props.previewData.modelType === "structured";
+});
 
 const emit = defineEmits<{ (e: "change", option: boolean): void }>();
-
-const isPreviewClosed = ref(false);
 
 const checkEmptyValues = (value: string | number) => {
   let removedWhitespaceString: string | null = null;
@@ -141,7 +141,6 @@ const checkEmptyValues = (value: string | number) => {
 };
 
 const setPreviewClose = (option: boolean) => {
-  isPreviewClosed.value = option;
   emit("change", option);
 };
 </script>
