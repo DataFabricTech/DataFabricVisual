@@ -133,13 +133,6 @@
   border: 1px solid $neutral-200;
   background: $neutral-100;
 
-  .filters {
-    z-index: 0;
-    position: absolute;
-    border: none;
-    background: transparent;
-  }
-
   .preview {
     @include box-shadow('lg');
 
@@ -174,6 +167,15 @@
       border-top-left-radius: 0;
     }
   }
+}
+
+.filters {
+  @include flex($horizontal: flex-start);
+  z-index: 0;
+  position: absolute;
+  gap: $spacing-16;
+  width: 100%;
+  padding: $spacing-8 $spacing-20;
 }
 
 
