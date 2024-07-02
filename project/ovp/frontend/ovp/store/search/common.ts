@@ -1,14 +1,13 @@
 export interface filters {
-  domains: any[];
-  owners: any[];
-  tags: any[];
-  service: any[];
-  database: any[];
-  schema: any[];
-  column: any[];
-  tableType: any[];
+  domains: { text: string; data: any[] };
+  owners: { text: string; data: any[] };
+  tags: { text: string; data: any[] };
+  service: { text: string; data: any[] };
+  database: { text: string; data: any[] };
+  schema: { text: string; data: any[] };
+  column: { text: string; data: any[] };
+  tableType: { text: string; data: any[] };
 }
-
 export interface details {
   modelInfo: {
     id: string;
@@ -37,12 +36,12 @@ export interface details {
 
   basicInfo: {
     type: string;
-    columnCnt: number;
+    columnsCnt: number;
     rowsCnt: number;
     tags: any[];
     glossary: any[];
   };
-  schema: [];
+  schema: any[];
   sample: {
     columns: string[];
     rows: any[];
@@ -53,13 +52,20 @@ export interface details {
   // recommendModel: [];
 }
 
-import resJson from "./res.json";
+export interface searchResult {
+  data: any[];
+  totalCount: number;
+}
+
 import previewJson from "./preview.json";
+import listResult from "./listResult.json";
+import detailsJson from "./details.json";
 
 export const useSearchCommonStore = defineStore("searchCommon", () => {
   // filter 정보
-  const filters: Ref<any> = ref({});
-  const details: Ref<any> = ref({});
+  const filters: Ref<filters> = ref({} as filters);
+  const searchResult: Ref<searchResult> = ref({} as searchResult);
+  const details: Ref<details> = ref({} as details);
   const previewData: Ref<any> = ref({
     modelInfo: {
       model: {
@@ -68,9 +74,15 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     },
   });
 
-  const getSearchDefaults = async () => {
+  const getSearchCommonData = async () => {
     // TODO: 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
-    filters.value = resJson;
+    filters.value = listResult.filters;
+    searchResult.value = listResult.data;
+  };
+
+  const getSearchDetails = async () => {
+    // TODO: 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
+    details.value = detailsJson;
   };
 
   const getPreviewData = async () => {
@@ -79,9 +91,11 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
   return {
     filters,
+    searchResult,
     details,
     previewData,
-    getSearchDefaults,
+    getSearchCommonData,
+    getSearchDetails,
     getPreviewData,
   };
 });

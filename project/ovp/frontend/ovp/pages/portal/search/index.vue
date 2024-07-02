@@ -8,8 +8,7 @@
         <!--  상단 필터 & 초기화-->
         <div class="filters">
           <!--  template v-for -->
-          <filter-item :data="filter" />
-          <div>초기화</div>
+          <filter-item :data="filters" @reset-filters="resetFilters" />
         </div>
         <div class="section-contents">
           <!--  상단 검색 결과 & 우측 필터-->
@@ -66,7 +65,7 @@
               <div class="data-list">
                 <!--  목록형 보기-->
                 <resource-box-list
-                  :data-list="data"
+                  :data-list="searchResult.data"
                   :use-list-checkbox="false"
                   :show-owner="true"
                   :show-category="true"
@@ -85,6 +84,7 @@
             </div>
             <!--  우측 미리보기-->
             <preview
+              :isShowPreview="false"
               :preview-data="previewData"
               @change="getPreviewCloseStatus"
             ></preview>
@@ -104,89 +104,18 @@ import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 
 const searchCommonStore = useSearchCommonStore();
-const { getSearchDefaults, getPreviewData } = searchCommonStore;
-const { filters, previewData } = storeToRefs(searchCommonStore);
+const { getSearchCommonData, getPreviewData } = searchCommonStore;
+const { filters, searchResult, previewData } = storeToRefs(searchCommonStore);
 
 onMounted(async () => {
   // 목록정보 loading
-  await getSearchDefaults();
+  await getSearchCommonData();
 });
-
-// sample preview data (추후 preview 파일에서 API를 받아오도록 변경할수도 있음)
 
 // 미리보기의 닫기 버튼 클릭했을 때, 좌측 리소스박스 선택된 상태를 비활성화 시켜야해서 emit 추가 (option 불필요 할수도 있음)
 const getPreviewCloseStatus = (option: boolean) => {
   console.log("isPreviewClosed?", option);
 };
-
-let data: any[] = [
-  {
-    id: "1",
-    serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
-    depth: ["1depth", "2depth", "3depth", "데이터모델"],
-    firModelNm: "최초 데이터모델 명",
-    modelNm: "세종특별자치시 상하수도요금표",
-    modelDesc:
-      "한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다",
-    owner: "Owner",
-    category: "Domain",
-  },
-  {
-    id: "2",
-    serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
-    depth: ["1depth", "2depth", "3depth", "데이터모델"],
-    firModelNm: "최초 데이터모델 명",
-    modelNm: "세종특별자치시 상하수도요금표",
-    modelDesc:
-      "한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다",
-    owner: "Owner",
-    category: "Domain",
-  },
-  {
-    id: "3",
-    serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
-    depth: ["1depth", "2depth", "3depth", "데이터모델"],
-    firModelNm: "최초 데이터모델 명",
-    modelNm: "세종특별자치시 상하수도요금표",
-    modelDesc:
-      "한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다",
-    owner: "Owner",
-    category: "Domain",
-  },
-  {
-    id: "4",
-    serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
-    depth: ["1depth", "2depth", "3depth", "데이터모델"],
-    firModelNm: "최초 데이터모델 명",
-    modelNm: "세종특별자치시 상하수도요금표",
-    modelDesc:
-      "한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다",
-    owner: "Owner",
-    category: "Domain",
-  },
-  {
-    id: "5",
-    serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
-    depth: ["1depth", "2depth", "3depth", "데이터모델"],
-    firModelNm: "최초 데이터모델 명",
-    modelNm: "세종특별자치시 상하수도요금표",
-    modelDesc:
-      "한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다",
-    owner: "Owner",
-    category: "Domain",
-  },
-  {
-    id: "6",
-    serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
-    depth: ["1depth", "2depth", "3depth", "데이터모델"],
-    firModelNm: "최초 데이터모델 명",
-    modelNm: "세종특별자치시 상하수도요금표",
-    modelDesc:
-      "한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다",
-    owner: "Owner",
-    category: "Domain",
-  },
-];
 
 const checkCurrentPage = (item: number) => {
   console.log("check", item);
@@ -197,6 +126,9 @@ const previewClick = async (id: string | number) => {
 };
 const modelNmClick = (id: string | number) => {
   console.log(`modelNmClick : ${id}`);
+};
+const resetFilters = () => {
+  console.log("resetFilters");
 };
 </script>
 
