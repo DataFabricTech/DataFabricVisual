@@ -8,6 +8,7 @@ export interface filters {
   column: { text: string; data: any[] };
   tableType: { text: string; data: any[] };
 }
+
 export interface details {
   modelInfo: {
     id: string;
@@ -76,6 +77,13 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     },
   });
 
+  // DATA
+  const viewType: Ref<string> = ref<string>("listView");
+  const isShowPreview: Ref<boolean> = ref<boolean>(false);
+  const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
+  const searchResultLength: Ref<number> = ref<number>(0);
+
+  // METHODS
   const getSearchCommonData = async () => {
     // TODO: 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
     filters.value = listResult.filters;
@@ -96,6 +104,10 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     searchResult,
     details,
     previewData,
+    viewType,
+    isShowPreview,
+    isBoxSelectedStyle,
+    searchResultLength,
     getSearchCommonData,
     getSearchDetails,
     getPreviewData,
