@@ -47,6 +47,8 @@ export interface details {
     rows: any[];
   };
   profiling: any[];
+
+  // TODO : 처리방법 고려 (별도로 조회할껀지 확인 필요)
   // query: [];
   // lineage: {};
   // recommendModel: [];
