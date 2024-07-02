@@ -59,9 +59,9 @@ export interface searchResult {
   totalCount: number;
 }
 
-import previewJson from "./preview.json";
-import listResult from "./listResult.json";
-import detailsJson from "./details.json";
+import previewJson from "./samples/preview.json";
+import listResult from "./samples/listResult.json";
+import detailsJson from "./samples/details.json";
 
 export const useSearchCommonStore = defineStore("searchCommon", () => {
   // filter 정보
