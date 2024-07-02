@@ -5,7 +5,7 @@
   flex-grow: 1;
 
   .work-list {
-    overflow: hidden;
+    //overflow: hidden;
     width: 330px;
     border-right: 1px solid $neutral-200;
   }
@@ -28,10 +28,12 @@
 
 .section-contents:has(.l-split + .l-split) {
   .l-split {
-    height: 50%;
-
     &:first-child {
+      height: 60%;
       border-bottom: 1px solid $neutral-200;
+    }
+    &:last-child {
+      height: 40%;
     }
   }
 }
