@@ -23,7 +23,8 @@
                   @previewClick="previewClick"
                   @modelNmClick="modelNmClick"
                 />
-                <div ref="scrollTrigger"></div>
+                <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+                <!--                TODO: [퍼블리싱] loader UI 컴포넌트 추가 및 로딩 위치 검토 필요 -->
                 <div
                   id="loader"
                   style="
@@ -102,8 +103,8 @@ const resetFilters = () => {
 
 // Intersection Observer
 // 박스 아이템 디폴트 개수
-const boxItemDefaultCount: number = 5;
-// 데이터 변화 시 최초 시작 값
+const boxItemDefaultCount: number = 10;
+// 데이터 변화 시 시작 값
 let changingInitialCount: number = 0;
 // 누적될 목록 데이터
 const searchResultData = ref<Array<any>>([]);
@@ -131,9 +132,9 @@ const setIntersectionObserver = () => {
 
       const loader = document.getElementById("loader");
 
-      // 2-2
+      // 2-2. 목록 개수가 boxItemDefaultCount(10개) 이상이면 실행
       entries.forEach((entry) => {
-        // 3-1. scrollTrigger 가 뷰포트에 교차하는 순간에 실행한다.
+        // 3-1. scrollTrigger 가 뷰포트에 교차하는 시점(threshold)에 실행한다.
         if (entry.isIntersecting) {
           changingInitialCount += boxItemDefaultCount;
           if (loader) {
@@ -145,7 +146,7 @@ const setIntersectionObserver = () => {
             if (loader) {
               loader.style.display = "none";
             }
-          }, 2000);
+          }, 1000);
           // 3-2. scrollTrigger 가 뷰포트에 교차하지 않으면 실행한다.
         } else {
           if (loader) {
@@ -161,16 +162,16 @@ const setIntersectionObserver = () => {
     },
   );
 
-  // 1. 내가 지정한 요소 (scrollTrigger)가 존재하면, intersection Observer를 실행한다.
+  // 1. 관찰할 요소 (scrollTrigger)가 존재하면, intersection Observer를 실행한다.
   if (scrollTrigger.value) {
     intersectionOb.observe(scrollTrigger.value);
   }
 };
 
 onMounted(async () => {
-  // 목록정보 loading
   await getSearchCommonData();
   searchResultLength.value = searchResult.value.data.length;
+
   setIntersectionObserver();
   setSearchResultData(changingInitialCount);
 });
