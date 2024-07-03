@@ -1,0 +1,74 @@
+{
+  "domains": {
+    "text": "카테고리",
+    "data": [
+      { "id": "d1", "text": "도메인1" },
+      { "id": "d2", "text": "도메인2" },
+      { "id": "d3", "text": "도메인3" }
+    ]
+  },
+  "owners": {
+    "text": "소유자",
+    "data": [
+      { "id": "o1", "text": "소유자1" },
+      { "id": "o2", "text": "소유자2" },
+      { "id": "o2", "text": "소유자2" }
+    ]
+  },
+  "tags": {
+    "text": "태그",
+    "data": [
+      { "id": "tag1", "text": "태그1" },
+      { "id": "tag2", "text": "태그2" },
+      { "id": "tag3", "text": "태그3" }
+    ]
+  },
+  "service": {
+    "text": "서비스",
+    "data": [
+      { "id": "service1", "text": "서비스1" },
+      { "id": "service2", "text": "서비스2" },
+      { "id": "service3", "text": "서비스3" }
+    ]
+  },
+  "serviceType": {
+    "text": "서비스타입",
+    "data": [
+      { "id": "serviceType1", "text": "서비스타입1" },
+      { "id": "serviceType2", "text": "서비스타입2" },
+      { "id": "serviceType3", "text": "서비스타입3" }
+    ]
+  },
+  "database": {
+    "text": "데이터베이스",
+    "data": [
+      { "id": "database1", "text": "데이터베이스1" },
+      { "id": "database2", "text": "데이터베이스2" },
+      { "id": "database3", "text": "데이터베이스3" }
+    ]
+  },
+  "schema": {
+    "text": "스키마",
+    "data": [
+      { "id": "schema1", "text": "스키마1" },
+      { "id": "schema2", "text": "스키마2" },
+      { "id": "schema3", "text": "스키마3" }
+    ]
+  },
+  "column": {
+    "text": "컬럼",
+    "data": [
+      { "id": "column1", "text": "컬럼1" },
+      { "id": "column2", "text": "컬럼2" },
+      { "id": "column3", "text": "컬럼3" }
+    ]
+  },
+  "tableType": {
+    "text": "테이블타입",
+    "data": [
+      { "id": "tabletype1", "text": "테이블타입1" },
+      { "id": "tabletype2", "text": "테이블타입2" },
+      { "id": "tabletype3", "text": "테이블타입3" }
+    ]
+  }
+}

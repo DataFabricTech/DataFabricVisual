@@ -7,9 +7,7 @@
   <div class="section-contents">
     <!--  상단 검색 결과 & 우측 필터-->
     <div class="l-top-bar">
-      <strong
-        >총 <em class="primary">68건</em>의 검색 결과가 있습니다.</strong
-      >
+      <strong>총 <em class="primary">68건</em>의 검색 결과가 있습니다.</strong>
       <div class="h-group gap-1">
         <div class="select select-clean">
           <button class="select-button">
@@ -59,7 +57,7 @@
         <div class="data-list">
           <!--  목록형 보기-->
           <resource-box-list
-            :data-list="searchResult.data"
+            :data-list="searchResult.data || []"
             :use-list-checkbox="false"
             :show-owner="true"
             :show-category="true"
@@ -93,12 +91,14 @@ import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 
 const searchCommonStore = useSearchCommonStore();
-const { getSearchCommonData, getPreviewData } = searchCommonStore;
+const { getSearchList, getFilters, getPreviewData } = searchCommonStore;
 const { filters, searchResult, previewData } = storeToRefs(searchCommonStore);
 
-onMounted(async () => {
+onMounted(() => {
+  // filter loading
+  getFilters();
   // 목록정보 loading
-  await getSearchCommonData();
+  getSearchList();
 });
 
 // 미리보기의 닫기 버튼 클릭했을 때, 좌측 리소스박스 선택된 상태를 비활성화 시켜야해서 emit 추가 (option 불필요 할수도 있음)

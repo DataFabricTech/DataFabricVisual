@@ -62,6 +62,7 @@ export interface searchResult {
 import previewJson from "./samples/preview.json";
 import listResult from "./samples/listResult.json";
 import detailsJson from "./samples/details.json";
+import filtersJson from "./samples/filters.json";
 
 export const useSearchCommonStore = defineStore("searchCommon", () => {
   // filter 정보
@@ -76,10 +77,14 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     },
   });
 
-  const getSearchCommonData = async () => {
+  const getSearchList = async () => {
     // TODO: 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
-    filters.value = listResult.filters;
     searchResult.value = listResult.data;
+  };
+
+  const getFilters = async () => {
+    // TODO: 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
+    filters.value = filtersJson;
   };
 
   const getSearchDetails = async () => {
@@ -96,7 +101,8 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     searchResult,
     details,
     previewData,
-    getSearchCommonData,
+    getFilters,
+    getSearchList,
     getSearchDetails,
     getPreviewData,
   };
