@@ -3,7 +3,7 @@
 /* reset */
 @layer base {
   @font-face {
-    font-family: 'Pretendard';
+    font-family: Pretendard;
     font-weight: 400;
     font-style: normal;
     src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular.eot');
@@ -15,7 +15,7 @@
   }
 
   @font-face {
-    font-family: 'Pretendard';
+    font-family: Pretendard;
     font-weight: 600;
     font-style: normal;
     src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-SemiBold.eot');
@@ -27,7 +27,7 @@
   }
 
   @font-face {
-    font-family: 'Pretendard';
+    font-family: Pretendard;
     font-weight: 700;
     font-style: normal;
     src: url('https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Bold.eot');
@@ -48,6 +48,7 @@
 
   html {
     @include font-family(pretendard);
+
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-weight: 400;

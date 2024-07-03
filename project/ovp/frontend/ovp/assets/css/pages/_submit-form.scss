@@ -1,0 +1,55 @@
+.submit-form {
+  @include flex($direction: column);
+
+  height: 100%;
+  gap: $spacing-48;
+  background-color: $primary-100;
+
+  &-logo {
+    @include font-size('40');
+
+    font-weight: 700;
+    color: $neutral-700;
+  }
+
+  &-title {
+    @include font-size('24');
+
+    font-weight: 700;
+    color: $primary-500;
+  }
+
+  &-desc {
+    @include font-size('13');
+
+    position: relative;
+    padding-top: $spacing-16;
+    color: $neutral-500;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 1px;
+      top: 8px;
+      left: 0;
+      background-color: $neutral-200;
+
+    }
+  }
+
+  &-form {
+    @include flex($vertical: flex-start, $direction: column);
+    @include box-shadow('lg');
+
+    width: 420px;
+    padding: $spacing-48 $spacing-36;
+    background-color: $neutral-0;
+    border-radius: $border-radius-12;
+
+    .form {
+      width: 100%;
+      padding-top: $spacing-32;
+    }
+  }
+}

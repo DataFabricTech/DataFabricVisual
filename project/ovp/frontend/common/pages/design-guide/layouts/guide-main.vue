@@ -1,27 +1,28 @@
 <template>
   <main class="guide-main">
-    <GuideColor  id="guide-color"/>
-    <GuideAlert  id="guide-alert"/>
-    <GuideBadge  id="guide-badge"/>
-    <GuideBreadcrumb  id="guide-breadcrumb"/>
-    <GuideButton  id="guide-button"/>
-    <GuideButtonGroup  id="guide-button-group"/>
-    <GuideCheckbox  id="guide-checkbox"/>
-    <GuideDropdown  id="guide-dropdown"/>
-    <GuideForm  id="guide-form"/>
-    <GuideMenu  id="guide-menu"/>
-    <GuideModal  id="guide-modal"/>
-    <GuideNotification  id="guide-notification"/>
-    <GuidePagination  id="guide-pagination"/>
-    <GuideRadio  id="guide-radio"/>
-    <GuideSelect  id="guide-select"/>
-    <GuideTab  id="guide-tab"/>
-    <GuideTable  id="guide-table"/>
-    <GuideTag id="guide-tag"/>
-    <GuideTextarea id="guide-textarea"/>
-    <GuideTextInput id="guide-text-input"/>
-    <GuideToggleButton id="guide-toggle-button"/>
-    <GuideToggleSwitch id="guide-toggle-switch"/>
+    <guide-color id="guide-color" />
+    <guide-alert id="guide-alert" />
+    <guide-badge id="guide-badge" />
+    <guide-breadcrumb id="guide-breadcrumb" />
+    <guide-button id="guide-button" />
+    <guide-button-group id="guide-button-group" />
+    <guide-checkbox id="guide-checkbox" />
+    <guide-dropdown id="guide-dropdown" />
+    <guide-form id="guide-form" />
+    <guide-menu id="guide-menu" />
+    <guide-modal id="guide-modal" />
+    <guide-notification id="guide-notification" />
+    <guide-pagination id="guide-pagination" />
+    <guide-progressbar id="guide-progressbar" />
+    <guide-radio id="guide-radio" />
+    <guide-select id="guide-select" />
+    <guide-tab id="guide-tab" />
+    <guide-table id="guide-table" />
+    <guide-tag id="guide-tag" />
+    <guide-textarea id="guide-textarea" />
+    <guide-text-input id="guide-text-input" />
+    <guide-toggle-button id="guide-toggle-button" />
+    <guide-toggle-switch id="guide-toggle-switch" />
   </main>
 </template>
 
@@ -37,20 +38,18 @@ import GuideDropdown from "../pages/guide-dropdown.vue";
 import GuideForm from "../pages/guide-form.vue";
 import GuideMenu from "../pages/guide-menu.vue";
 import GuideModal from "../pages/guide-modal.vue";
-import GuideNotification from "../pages/guide-Notification.vue";
+import GuideNotification from "../pages/guide-notification.vue";
 import GuidePagination from "../pages/guide-pagination.vue";
 import GuideRadio from "../pages/guide-radio.vue";
 import GuideSelect from "../pages/guide-select.vue";
 import GuideTab from "../pages/guide-tab.vue";
-import GuideTable from  "../pages/guide-table.vue"
+import GuideTable from "../pages/guide-table.vue";
 import GuideTag from "../pages/guide-tag.vue";
 import GuideTextarea from "../pages/guide-textarea.vue";
 import GuideTextInput from "../pages/guide-text-input.vue";
 import GuideToggleButton from "../pages/guide-toggle-button.vue";
 import GuideToggleSwitch from "../pages/guide-toggle-switch.vue";
-
+import GuideProgressbar from "../pages/guide-progressbar.vue";
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
