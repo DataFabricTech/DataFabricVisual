@@ -108,6 +108,7 @@
   .menu-search {
     @include box-shadow('md');
 
+    width: 100%;
     margin-top: $spacing-4;
   }
 
