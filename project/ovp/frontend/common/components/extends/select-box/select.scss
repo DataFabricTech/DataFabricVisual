@@ -20,7 +20,7 @@
 
 .select {
   @include select-size;
-  @include z-index('float');
+  //@include z-index('float');
   position: relative;
 
   &-button {
