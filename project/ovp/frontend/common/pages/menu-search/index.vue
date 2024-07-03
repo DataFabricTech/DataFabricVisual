@@ -41,7 +41,7 @@ const multiple_sample_data : Ref<any> =  ref({
     },
     {
       id: "4",
-      name: "DDD"
+      name: "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
     },
   ],
   selectedItems: [
@@ -75,7 +75,7 @@ const single_sample_data : Ref<any> =  ref({
     },
     {
       id: "4",
-      name: "DDD"
+      name: "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD"
     },
   ],
   selectedItems: {

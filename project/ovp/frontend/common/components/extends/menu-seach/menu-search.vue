@@ -65,6 +65,10 @@
           </button>
         </div>
       </div>
+
+      <div class="menu-item" v-if="checkSearchResult()">
+        <span> {{ props.noSearchMsg }} </span>
+      </div>
     </div>
     <div class="menu-foot">
       <button class="button button-error-ghost" @click="onReset">초기화</button>
@@ -126,6 +130,7 @@ const {
   onApply,
   onReset,
   onCancel,
+  checkSearchResult
 } = MenuSearchComposition(props, applyData, cancelData);
 
 // emit 생성

@@ -177,12 +177,12 @@ export function MenuSearchComposition(
   const searchList : (value: string) => void = (value) => {
     // 검색 로직. -> 현재 데이터 목록을 변경하지 않고 검색 결과를 출력해야함.
     selectedListData.value = selectedListData.value.map(item => {
-      item.isShow = (item.label + "").includes(value);
+      item.isShow = ((item.label + "").toLowerCase()).includes(value.toLowerCase());
       return item;
     });
 
     listData.value = listData.value.map(item => {
-      item.isShow = (item.label + "").includes(value);
+      item.isShow = ((item.label + "").toLowerCase()).includes(value.toLowerCase());
       return item;
     });
   };
