@@ -11,6 +11,19 @@
     .menu-data {
       height: calc(100% - 49px);
     }
+
+    .tab{
+      height: 100%;
+    }
+
+    .tab-button-text {
+      @include font-size('14');
+    }
+
+    .tab-contents {
+      height: calc(100% - 62px);
+      padding:$spacing-8 0 0 0;
+    }
   }
 
   .work-page {
@@ -20,6 +33,7 @@
     flex-grow: 1;
 
     .code-box {
+      overflow: auto;
       flex-grow: 1;
     }
   }

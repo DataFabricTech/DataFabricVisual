@@ -1,0 +1,22 @@
+.data-summary {
+  @include flex($horizontal: flex-start);
+  gap: $spacing-4;
+  font-weight: 500;
+  white-space: nowrap;
+  margin-bottom: $spacing-8;
+
+  &-title {
+    color: $neutral-700;
+  }
+
+  &-name {
+    @include ellipsis;
+    color: $secondary-500;
+  }
+
+  &-text {
+    @include font-size('12');
+    font-weight: 400;
+    color: $neutral-400;
+  }
+}

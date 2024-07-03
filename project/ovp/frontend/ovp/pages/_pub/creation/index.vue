@@ -197,7 +197,77 @@
     </div>
     <div class="l-split">
       <div class="work-list">
+        <!-- TODO: [개발] tab 컴포넌트  -->
+        <div class="tab tab-line">
+          <ul class="tab-list">
+            <li class="tab-item is-tab-item-selected">
+              <button class="tab-button">
+                <p class="tab-button-text">샘플데이터</p>
+              </button>
+            </li>
+            <li class="tab-item">
+              <button class="tab-button">
+                <p class="tab-button-text">데이터 프로파일링</p>
+              </button>
+            </li>
+          </ul>
+          <div class="tab-contents">
+            <div class="data-summary">
+              <span class="data-summary-title">데이터 모델 요약</span>
+              <span class="data-summary-name">데이터 모델 길어지면 말줄임 합니다</span>
+              <span class="data-summary-text">(소유자)</span>
+            </div>
+            <div class="table-scroll" style="height: 95%">
+              <table>
+                <thead>
+                <tr>
+                  <th>NAME</th>
+                  <th>DATA TYPE</th>
+                  <th>NAME</th>
+                  <th>DATA TYPE</th>
+                  <th>NAME</th>
+                  <th>DATA TYPE</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                </tr>
+                <tr>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                </tr>
+                <tr>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                </tr>
+                <tr>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
 
+          </div>
+        </div>
       </div>
       <div class="panel-contents">
         <div class="data-result">
@@ -212,12 +282,14 @@
 import Header from "../layouts/header.vue";
 import Sidebar from "../layouts/sidebar.vue";
 import SelectBox from "../../../../common/components/extends/select-box/SelectBox.vue";
+// import Tab from "../../../../common/components/extends/tab/Tab.vue";
 
 
 export default {
   name: "creation",
   components: { Sidebar, Header, SelectBox }
 };
+
 </script>
 
 <style scoped>

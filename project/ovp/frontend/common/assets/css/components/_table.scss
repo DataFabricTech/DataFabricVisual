@@ -25,3 +25,8 @@ table {
 .search-input + table {
   margin-top: $spacing-8;
 }
+
+.table-scroll {
+  overflow: auto;
+  height: 100%;
+}
