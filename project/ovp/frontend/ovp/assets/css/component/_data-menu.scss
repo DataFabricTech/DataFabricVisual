@@ -22,7 +22,22 @@
   }
 
   .menu-item {
+    background: #F7F9FC;
+    border-radius: $border-radius-4;
     border:1px solid $neutral-200;
+
+    &:not(:first-child) {
+      margin-top: $spacing-4;
+    }
+
+    .menu-data-icon {
+      @include icon-size('sm');
+      margin-right: $spacing-8;
+    }
+
+    .checkbox-label::after {
+      top: 8px;
+    }
   }
 
 }

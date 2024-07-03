@@ -40,56 +40,103 @@
           <ul class="menu-list">
             <li class="menu-item">
               <div class="checkbox">
-                <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
-                <label for="checkbox-menu" class="checkbox-label">
-                  Checkbox
-                  <span class="checkbox-subtext">(Optional)</span>
-                </label>
-              </div>
-            </li>
-            <li class="menu-item">
-              <div class="checkbox">
-                <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
-                <label for="checkbox-menu" class="checkbox-label">
-                  Checkbox
-                  <span class="checkbox-subtext">(Optional)</span>
-                </label>
-              </div>
-            </li>
-            <li class="menu-item">
-              <div class="checkbox">
-                <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
-                <label for="checkbox-menu" class="checkbox-label">
-                  Checkbox
-                  <span class="checkbox-subtext">(Optional)</span>
+                <input type="checkbox" id="checkbox-menu-01" class="checkbox-input" />
+                <label for="checkbox-menu-01" class="checkbox-label">
+                  <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                  데이터 모델
+                  <span class="checkbox-subtext">(소유자)</span>
                 </label>
               </div>
               <div class="menu-button-group">
-
+                <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환 -->
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag-fill"></svg-icon>
+                </button>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                </button>
               </div>
             </li>
             <li class="menu-item">
               <div class="checkbox">
-                <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
-                <label for="checkbox-menu" class="checkbox-label">
-                  Checkbox
-                  <span class="checkbox-subtext">(Optional)</span>
+                <input type="checkbox" id="checkbox-menu-02" class="checkbox-input" />
+                <label for="checkbox-menu-02" class="checkbox-label">
+                  <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                  데이터 모델
+                  <span class="checkbox-subtext">(소유자)</span>
                 </label>
               </div>
               <div class="menu-button-group">
-
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
+                </button>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                </button>
+              </div>
+            </li>
+            <li class="menu-item">
+              <div class="checkbox checkbox-sm">
+                <input type="checkbox" id="checkbox-menu-03" class="checkbox-input" />
+                <label for="checkbox-menu-03" class="checkbox-label">
+                  <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                  <span class="menu-text">데이터 모델</span>
+                  <span class="checkbox-subtext">(소유자)</span>
+                </label>
+              </div>
+              <div class="menu-button-group">
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
+                </button>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                </button>
+              </div>
+            </li>
+            <li class="menu-item">
+              <div class="checkbox checkbox-sm">
+                <input type="checkbox" id="checkbox-menu-04" class="checkbox-input" />
+                <label for="checkbox-menu-04" class="checkbox-label">
+                  <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                  데이터 모델
+                  <span class="checkbox-subtext">(소유자)</span>
+                </label>
+              </div>
+              <div class="menu-button-group">
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
+                </button>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                </button>
               </div>
             </li>
             <li class="menu-item">
               <div class="checkbox">
-                <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
-                <label for="checkbox-menu" class="checkbox-label">
-                  Checkbox
-                  <span class="checkbox-subtext">(Optional)</span>
+                <input type="checkbox" id="checkbox-menu-05" class="checkbox-input" />
+                <label for="checkbox-menu-05" class="checkbox-label">
+                  <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                  데이터 모델
+                  <span class="checkbox-subtext">(소유자)</span>
                 </label>
               </div>
               <div class="menu-button-group">
-
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
+                </button>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                </button>
               </div>
             </li>
           </ul>

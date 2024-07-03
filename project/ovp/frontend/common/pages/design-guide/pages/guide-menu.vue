@@ -200,7 +200,7 @@
       <div class="flex gap-8 mb-14">
         <figure class="section-figure">
           <div class="flex justify-center gap-4">
-            <div class="menu menu-lg">
+            <div class="menu menu-lg" style="width:300px">
               <div class="menu-head">
                 <div class="search-input">
                   <label class="hidden-text" for="text-input-example-11">label</label>
@@ -221,7 +221,7 @@
                   <div class="checkbox">
                     <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
                     <label for="checkbox-menu" class="checkbox-label">
-                      Checkbox
+                      <span class="menu-text">Checkbox</span>
                       <span class="checkbox-subtext">(Optional)</span>
                     </label>
                   </div>
@@ -230,7 +230,7 @@
                   <div class="checkbox">
                     <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
                     <label for="checkbox-menu" class="checkbox-label">
-                      Checkbox
+                      <span class="menu-text">CheckboxCheckboxCheckboxCheckboxCheckboxCheckbox</span>
                       <span class="checkbox-subtext">(Optional)</span>
                     </label>
                   </div>
@@ -239,7 +239,7 @@
                   <div class="checkbox">
                     <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
                     <label for="checkbox-menu" class="checkbox-label">
-                      Checkbox
+                      <span class="menu-text">CheckboxCheckboxCheckboxCheckboxCheckboxCheckbox</span>
                       <span class="checkbox-subtext">(Optional)</span>
                     </label>
                   </div>
@@ -262,7 +262,7 @@
                   <div class="checkbox">
                     <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
                     <label for="checkbox-menu" class="checkbox-label">
-                      Checkbox
+                      <span class="menu-text">Checkbox</span>
                       <span class="checkbox-subtext">(Optional)</span>
                     </label>
                   </div>
