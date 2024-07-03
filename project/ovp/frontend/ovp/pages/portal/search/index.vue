@@ -1,6 +1,6 @@
 <template>
   <!--  상단 필터 & 초기화-->
-  <div class="filters">
+  <div class="section-top-bar">
     <!--  template v-for -->
     <filter-item :data="filters" @reset-filters="resetFilters" />
   </div>
@@ -54,7 +54,7 @@
         </div>
       </div>
     </div>
-    <div class="l-split">
+    <div class="l-split mt-3">
       <div class="data-page">
         <div class="data-list">
           <!--  목록형 보기-->
