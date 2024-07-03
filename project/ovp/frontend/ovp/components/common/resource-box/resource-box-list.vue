@@ -15,7 +15,7 @@
       :class="[
         {
           'is-resource-box-selected':
-            selectedResourceBoxId === dataObj.id && isBoxSelectedStyle,
+            isBoxSelectedStyle && selectedResourceBoxId === dataObj.id,
         },
         props.class,
       ]"
