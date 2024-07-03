@@ -1,6 +1,6 @@
 <template>
-  <div class="select select-clean">
-    <button class="select-button button-lg" style="width: 360px" @click="onClickOpenMenuSearch">
+  <div class="select select-clean select-sm" >
+    <button class="select-button" @click="onClickOpenMenuSearch">
       <span class="select-button-title">{{props.title}}</span>
       <div class="badge badge-primary-lighter">
         <p class="badge-text">{{selectedListData.length}}</p>

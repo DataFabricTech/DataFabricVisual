@@ -1,5 +1,5 @@
 <template>
-  <div class="sample">
+  <div class="sample" >
     <h1> 메뉴 선택 - 버튼 컴포넌트 예시</h1>
     <div class="button-container">
       <menu-search-button
@@ -96,6 +96,7 @@ const changeSingle : (value : any[] | {}) => void = (value) => {
 
 <style scoped>
 .sample {
+  width: 360px;
   display: flex;
   flex-direction: column;
   gap: 16px;

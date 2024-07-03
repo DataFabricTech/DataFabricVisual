@@ -1,5 +1,5 @@
 <template>
-  <div class="menu menu-search">
+  <div class="menu menu-search" style="width: 100%">
     <div class="menu-head">
       <!-- 검색 기능 -->
       <div class="search-input">
@@ -27,7 +27,7 @@
     <div class="menu-list">
       <!-- 선택 리스트 -->
       <div v-for="(item, index) in selectedListData" :key="item.value + index">
-        <div class="menu-item" v-if="item.isShow">
+        <div class="menu-item" :class="{'is-menu-item-selected': !props.isMulti}" v-if="item.isShow">
           <div class="checkbox" v-if="isMulti">
             <input
               type="checkbox"
@@ -37,12 +37,12 @@
               @input="onCancelSelect(item, $event.target.checked)"
             />
             <label :for="'menu-search-selected-' + item.value" class="checkbox-label">
-              {{ item.label }}
+              <span class="menu-text">{{ item.label }}</span>
             </label>
           </div>
-          <div class="select-single" v-else @click="onCancelSelect(item, false)">
-            <span>{{ item.label }}</span>
-          </div>
+          <button class="menu-button" v-else @click="onCancelSelect(item, false)">
+            <span class="menu-text">{{ item.label }}</span>
+          </button>
         </div>
       </div>
       <!-- 일반 리스트 -->
@@ -57,12 +57,12 @@
               @input="onSelectListData(item, $event.target.checked)"
             />
             <label :for="'menu-search-data-' + item.value" class="checkbox-label">
-              {{ item.label }}
+              <span class="menu-text">{{ item.label }}</span>
             </label>
           </div>
-          <div v-else @click="onSelectListData(item, true)">
-            <span>{{ item.label }}</span>
-          </div>
+          <button class="menu-button" v-else @click="onSelectListData(item, true)">
+            <span class="menu-text">{{ item.label }}</span>
+          </button>
         </div>
       </div>
     </div>
