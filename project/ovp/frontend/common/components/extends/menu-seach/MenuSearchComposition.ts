@@ -1,7 +1,7 @@
 import { SelectFunctionality } from "@/components/extends/common/interfaces/functions/Select.interface";
 import { SelectEvents } from "~/components/extends/common/interfaces/events/Select.interface";
 import { MenuSearchProps } from "~/components/extends/menu-seach/MenuSearchProps";
-import { ref, Ref, watch } from "vue";
+import { ref, Ref } from "vue";
 import _ from "lodash";
 
 export interface MenuSearchItemImpl {
@@ -29,59 +29,44 @@ export function MenuSearchComposition(
   applyData: (value: MenuSearchItemImpl | MenuSearchItemImpl[]) => void,
   cancelData: () => void
 ): MenuSearchComposition {
-  /**
-   * 선택 리스트에서 선택 여부 확인
-   * @param item
-   */
   const isCheckedData: (item: any) => boolean = (item) => {
-    const itemId = item[props.idKey];
+    const itemId = item[props.valueKey];
     const originData = Array.isArray(props.selectedItems) ? props.selectedItems : [props.selectedItems];
-    const findItem = _.find(originData as [], {[props.idKey]: itemId});
+    const findItem = _.find(originData as [], { [props.valueKey]: itemId });
     return !!findItem;
   };
 
-  // 원본 리스트
   const originListData: Ref<any> = ref([]);
   const listData: Ref<any[]> = ref([]);
 
-  // 선택 리스트
-  const originSelectedListData: Ref<any> = ref([]);
-  const selectedListData: Ref<any[]> = ref([]);
-
-  /**
-   * 원본 리스트 생성
-   */
-  const setListData : () => void = () => {
-    const result =  props.data.map(item => {
+  const setListData: () => void = () => {
+    const result = props.data.map(item => {
       const isChecked = isCheckedData(item);
       return {
-        id: item[props.idKey],
         label: item[props.labelKey],
         value: item[props.valueKey],
-        isChecked: isChecked,
-        isShow: true
+        isChecked: isChecked, // 체크 여부
+        isShow: true // 검색 처리
       };
     });
-    // 원본 복사
     originListData.value = _.cloneDeep(result);
     listData.value = result;
   };
 
-  /**
-   * 선택 리스트 생성
-   */
-  const setSelectedListData : () => void = () => {
-    const result = props.data.map(item => {
+  const originSelectedListData: Ref<any> = ref([]);
+  const selectedListData: Ref<any[]> = ref([]);
+
+  const setSelectedListData: () => void = () => {
+    const originData = Array.isArray(props.selectedItems) ? props.selectedItems : [props.selectedItems];
+    const result = originData.map(item => {
       const isChecked = isCheckedData(item);
       return {
-        id: item[props.idKey],
         label: item[props.labelKey],
         value: item[props.valueKey],
-        isChecked: isChecked,
-        isShow: true
+        isChecked: isChecked, // 체크 여부
+        isShow: true // 검색 처리
       };
     });
-    // 원본 복사
     originSelectedListData.value = _.cloneDeep(result);
     selectedListData.value = result;
   };
@@ -90,17 +75,8 @@ export function MenuSearchComposition(
   /**
    * 선택 리스트 값이 변경되면 일반 리스트의 속성값도 변경되야하므로 다중 watch
    */
-  watch (
-    () => [props.selectedItems, props.data],
-    () => {
-      setListData();
-      setSelectedListData();
-    },
-    {
-      deep: true,
-      immediate: true
-    }
-  );
+  setListData();
+  setSelectedListData();
 
   /**
    * 선택 리스트 삭제
@@ -108,10 +84,12 @@ export function MenuSearchComposition(
    * @param checked
    */
   const onCancelSelectData: (value: any, checked: boolean) => void = (value, checked) => {
-    value.isChecked = checked;
+    // 선택 항목 삭제
+    _.remove(selectedListData.value, (item) => item.value === value.value);
 
+    // 원본 리스트 checked 추가
     listData.value = listData.value.map(item => {
-      if (item.id === value.id) {
+      if (item.value === value.value) {
         return {
           ...item,
           isChecked: checked,
@@ -130,7 +108,6 @@ export function MenuSearchComposition(
     const checkedData = props.isMulti ? checked : false;
     onCancelSelectData(value, checkedData);
   };
-
   /**
    * 아이템 선택
    * @param value
@@ -138,14 +115,10 @@ export function MenuSearchComposition(
    */
   const onSelectData : (value: any, checked: boolean) => void = (value, checked) => {
     value.isChecked = checked;
-    selectedListData.value = selectedListData.value.map(item => {
-      if (item.id === value.id) {
-        return {
-          ...item,
-          isChecked: checked
-        };
-      }
-      return item;
+
+    selectedListData.value.push({
+      ...value,
+      isChecked: true
     });
   };
 
@@ -155,32 +128,28 @@ export function MenuSearchComposition(
    * @param checked
    */
   const onSelectListData : (value: any, checked: boolean) => void = (value, checked) => {
+    // 다중 처리 이벤트
     if (props.isMulti) {
       onSelectData(value, checked);
       return;
     }
 
+    // 단일 처리 이벤트
     const checkSelectedList = selectedListData.value.find(item => item.isChecked);
     if (checkSelectedList) {
+      listData.value = listData.value.map((item) => {
+        if (item.value === checkSelectedList.value) {
+          return {
+            ...item,
+            isChecked: false,
+          };
+        }
+        return item;
+      });
       // 선택된 값이 있다면 해당 값 삭제 후 현재 값 checked
-      value.isChecked = checked;
-      selectedListData.value = selectedListData.value.map(item => {
-        const itemChecked = item.id === value.id;
-        return {
-          ...item,
-          isChecked: itemChecked
-        };
-      });
-      listData.value = listData.value.map(item => {
-        const itemChecked = item.id === value.id;
-        return {
-          ...item,
-          isChecked: itemChecked
-        };
-      });
-    } else {
-      onSelectData(value, true);
+      selectedListData.value = [];
     }
+    onSelectData(value, true);
   };
 
   const searchLabel: Ref<string> = ref<string>("");
@@ -211,32 +180,33 @@ export function MenuSearchComposition(
       item.isShow = (item.label + "").includes(value);
       return item;
     });
-    listData.value = selectedListData.value.map(item => {
+
+    listData.value = listData.value.map(item => {
       item.isShow = (item.label + "").includes(value);
       return item;
     });
   };
+
   const checkSearchResult : () => void = () => {
-    console.log("checkSearchResult");
     const findSelectedItem = _.every(selectedListData.value, {isShow: false});
     const findListItem = _.every(listData.value, {isShow: false});
 
-    console.log(findSelectedItem);
-    console.log(findListItem);
     return findSelectedItem && findListItem && searchLabel;
   };
 
   const onApply: () => void = () => {
     // 원본 데이터로 변경
     const mapData = _.cloneDeep(selectedListData).value
-      .filter(item => item.isChecked)
       .map(item => {
         return {
           [props.labelKey]: item.label,
           [props.valueKey]: item.value,
-          [props.idKey]: item.id,
         };
       });
+
+    // 적용된 값을 origin에 저장
+    originSelectedListData.value = _.cloneDeep(selectedListData.value);
+    originListData.value =  _.cloneDeep(listData.value);
 
     const result = props.isMulti ? mapData : mapData[0];
     applyData(result);
@@ -246,6 +216,7 @@ export function MenuSearchComposition(
     listData.value =  _.cloneDeep(originListData.value);
   };
   const onCancel: () => void = () => {
+    onReset();
     cancelData();
   };
 

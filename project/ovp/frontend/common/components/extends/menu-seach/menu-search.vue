@@ -1,5 +1,5 @@
 <template>
-  <div class="menu menu-search" v-on-click-outside="onCancel">
+  <div class="menu menu-search">
     <div class="menu-head">
       <!-- 검색 기능 -->
       <div class="search-input">
@@ -25,17 +25,18 @@
       </div>
     </div>
     <div class="menu-list">
-      <div v-for="(item, key) in selectedListData" :key="key">
-        <div class="menu-item" v-if="item.isChecked && item.isShow">
+      <!-- 선택 리스트 -->
+      <div v-for="(item, index) in selectedListData" :key="item.value + index">
+        <div class="menu-item" v-if="item.isShow">
           <div class="checkbox" v-if="isMulti">
             <input
               type="checkbox"
-              :id="'menu-search-selected-' + item.id"
               class="checkbox-input"
+              :id="'menu-search-selected-' + item.value"
               :checked="item.isChecked"
               @input="onCancelSelect(item, $event.target.checked)"
             />
-            <label :for="'menu-search-selected-' + item.id" class="checkbox-label">
+            <label :for="'menu-search-selected-' + item.value" class="checkbox-label">
               {{ item.label }}
             </label>
           </div>
@@ -45,17 +46,17 @@
         </div>
       </div>
       <!-- 일반 리스트 -->
-      <div v-for="(item, key) in listData" :key="key">
+      <div v-for="(item, index) in listData" :key="index">
         <div class="menu-item" v-if="!item.isChecked && item.isShow">
           <div class="checkbox" v-if="isMulti">
             <input
               type="checkbox"
-              :id="'menu-search-data-' + item.id"
               class="checkbox-input"
+              :id="'menu-search-data-' + item.value"
               :checked="item.isChecked"
               @input="onSelectListData(item, $event.target.checked)"
             />
-            <label :for="'menu-search-data-' + item.id" class="checkbox-label">
+            <label :for="'menu-search-data-' + item.value" class="checkbox-label">
               {{ item.label }}
             </label>
           </div>
@@ -63,9 +64,6 @@
             <span>{{ item.label }}</span>
           </div>
         </div>
-      </div>
-      <div class="menu-item" v-if="checkSearchResult()">
-        <span> {{ props.noSearchMsg }} </span>
       </div>
     </div>
     <div class="menu-foot">
@@ -82,7 +80,6 @@ import { MenuSearchProps } from "~/components/extends/menu-seach/MenuSearchProps
 import {
   MenuSearchItemImpl, MenuSearchComposition
 } from "~/components/extends/menu-seach/MenuSearchComposition";
-import { vOnClickOutside } from "@vueuse/components";
 
 const props = withDefaults(defineProps<MenuSearchProps>(), {
   data: () => [],
@@ -129,7 +126,6 @@ const {
   onApply,
   onReset,
   onCancel,
-  checkSearchResult,
 } = MenuSearchComposition(props, applyData, cancelData);
 
 // emit 생성

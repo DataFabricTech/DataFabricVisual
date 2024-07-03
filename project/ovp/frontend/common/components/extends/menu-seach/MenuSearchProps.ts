@@ -2,7 +2,6 @@ import { SelectProps } from "@/components/extends/common/interfaces/props/Select
 
 export interface MenuSearchProps extends SelectProps {
   selectedItems: { [key: string]: string | number }[] | { [key: string]: string | number };
-  idKey: string;
 
   nodataMsg?: string;
   noSearchMsg?: string;

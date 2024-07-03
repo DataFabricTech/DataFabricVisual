@@ -12,13 +12,13 @@
         <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
       </button>
       <menu-search
-        v-if="multiple_sample_data.isShow"
+        v-on-click-outside="() => multiple_sample_data.isShow = false"
+        v-show="multiple_sample_data.isShow"
         :data="multiple_sample_data.data"
         :selected-items="multiple_sample_data.selectedItems"
         :is-multi="true"
         label-key="name"
         value-key="id"
-        id-key="id"
         @cancel="onClickOpenMenuSearch"
         @multiple-change="changeMultiple"
       ></menu-search>
@@ -33,12 +33,12 @@
         <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
       </button>
       <menu-search
-        v-if="single_sample_data.isShow"
+        v-on-click-outside="() => single_sample_data.isShow = false"
+        v-show="single_sample_data.isShow"
         :data="single_sample_data.data"
         :selected-items="single_sample_data.selectedItems"
         label-key="name"
         value-key="id"
-        id-key="id"
         @cancel="onClickOpenMenuSearch_2"
         @single-change="changeSingle"
       ></menu-search>
@@ -47,6 +47,7 @@
 </template>
 
 <script setup lang="ts">
+import { vOnClickOutside } from "@vueuse/components";
 import { ref, Ref } from "vue";
 const multiple_sample_data : Ref<any> =  ref({
   isShow: false,
@@ -113,7 +114,7 @@ const onClickOpenMenuSearch: () => void = () => {
   multiple_sample_data.value.isShow = !multiple_sample_data.value.isShow;
 };
 const changeMultiple : (value : any[] | {}) => void = (value) => {
-  multiple_sample_data.value.selectedItems = value;
+  console.log("changeMultiple", value);
   onClickOpenMenuSearch();
 }
 
@@ -121,7 +122,7 @@ const onClickOpenMenuSearch_2: () => void = () => {
   single_sample_data.value.isShow = !single_sample_data.value.isShow;
 };
 const changeSingle : (value : any[] | {}) => void = (value) => {
-  single_sample_data.value.selectedItems = value;
+  console.log("changeSingle", value);
   onClickOpenMenuSearch_2();
 }
 
