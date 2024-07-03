@@ -7,13 +7,18 @@
 @import "./layouts/sidebar";
 @import "./layouts/main";
 @import "./layouts/section";
+@import "./layouts/no-result";
+
 
 
 //conmponent
 @import "./component/resource-box";
+@import "./component/data-menu";
+
 
 // pages
 @import "./pages/submit-form";
+@import "./pages/governance";
 @import "./pages/search";
 @import "./pages/search-detail";
 

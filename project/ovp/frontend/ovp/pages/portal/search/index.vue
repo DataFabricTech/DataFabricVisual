@@ -1,69 +1,57 @@
 <template>
-  <div class="wrap">
-    <Header />
-    <main id="main">
-      <h2 class="hidden-text">데이터 목록</h2>
-      <Sidebar></Sidebar>
-      <section id="section">
-        <!--  상단 필터 & 초기화-->
-        <div class="filters">
-          <filter-item :data="filters" @reset-filters="resetFilters" />
-        </div>
-        <div class="section-contents">
-          <top-bar></top-bar>
-          <div class="l-split">
-            <div class="data-page" style="position: relative">
-              <div class="data-list" v-if="viewType === 'listView'">
-                <resource-box-list
-                  :data-list="searchResultData"
-                  :use-list-checkbox="false"
-                  :show-owner="true"
-                  :show-category="true"
-                  :is-box-selected-style="isBoxSelectedStyle"
-                  @previewClick="previewClick"
-                  @modelNmClick="modelNmClick"
-                />
-                <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
-                <!--                TODO: [퍼블리싱] loader UI 컴포넌트 추가 및 로딩 위치 검토 필요 -->
-                <div
-                  id="loader"
-                  style="
-                    display: none;
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background-color: rgba(255, 255, 255, 0.5);
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 20px;
-                    color: #333;
-                  "
-                >
-                  loader
-                </div>
-              </div>
-              <div class="data-list" v-if="viewType === 'graphView'">
-                <custom-knowledge-graph />
-              </div>
-            </div>
-            <preview
-              v-if="viewType === 'listView'"
-              :isShowPreview="isShowPreview"
-              :preview-data="previewData"
-              @change="getPreviewCloseStatus"
-            ></preview>
+  <div class="section-top-bar">
+   <filter-item :data="filters" @reset-filters="resetFilters" />
+  </div>
+  <div class="section-contents">
+    <top-bar></top-bar>
+    <div class="l-split mt-3">
+      <div class="data-page" style="position: relative">
+        <div class="data-list" v-if="viewType === 'listView'">
+          <resource-box-list
+            :data-list="searchResultData"
+            :use-list-checkbox="false"
+            :show-owner="true"
+            :show-category="true"
+            :is-box-selected-style="isBoxSelectedStyle"
+            @previewClick="previewClick"
+            @modelNmClick="modelNmClick"
+          />
+          <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+          <!--                TODO: [퍼블리싱] loader UI 컴포넌트 추가 및 로딩 위치 검토 필요 -->
+          <div
+            id="loader"
+            style="
+              display: none;
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(255, 255, 255, 0.5);
+              align-items: center;
+              justify-content: center;
+              font-size: 20px;
+              color: #333;
+            "
+          >
+            loader
           </div>
         </div>
-      </section>
-    </main>
+        <div class="data-list" v-if="viewType === 'graphView'">
+          <custom-knowledge-graph />
+        </div>
+      </div>
+      <preview
+        v-if="viewType === 'listView'"
+        :isShowPreview="isShowPreview"
+        :preview-data="previewData"
+        @change="getPreviewCloseStatus"
+      ></preview>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import Header from "@/layouts/header.vue";
-import Sidebar from "@/layouts/sidebar.vue";
 import TopBar from "./top-bar.vue";
 import { useSearchCommonStore } from "@/store/search/common";
 import { onMounted } from "vue";
