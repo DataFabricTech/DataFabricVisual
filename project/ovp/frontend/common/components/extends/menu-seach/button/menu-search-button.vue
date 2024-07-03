@@ -1,5 +1,5 @@
 <template>
-  <div class="select select-clean" style="z-index: 999">
+  <div class="select select-clean">
     <button class="select-button button-lg" style="width: 360px" @click="onClickOpenMenuSearch">
       <span class="select-button-title">{{props.title}}</span>
       <div class="badge badge-primary-lighter">
@@ -8,7 +8,7 @@
       <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
     </button>
     <menu-search
-      v-on-click-outside="() => isShow = false"
+      v-on-click-outside="() => {isShow = false}"
       v-show="isShow"
       :data="props.data"
       :selected-items="selectedListData"
@@ -63,17 +63,13 @@ const applyData : (value: MenuSearchItemImpl | MenuSearchItemImpl[]) => void  = 
     emit("single-change", value as MenuSearchItemImpl);
   }
 }
-const cancelData : () => void = () => {
-  emit("cancel")
-}
-
 
 const {
   isShow,
   selectedListData,
   onClickOpenMenuSearch,
   changeMenuSearch
-} = MenuSearchButtonComposition(props, applyData, cancelData);
+} = MenuSearchButtonComposition(props, applyData);
 </script>
 
 <style scoped>

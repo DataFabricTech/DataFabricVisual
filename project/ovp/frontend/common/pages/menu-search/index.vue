@@ -1,7 +1,7 @@
 <template>
   <div class="sample">
     <h1> 메뉴 선택 - 버튼 컴포넌트 예시</h1>
-    <div>
+    <div class="button-container">
       <menu-search-button
         :data="single_sample_data.data"
         :selected-items="single_sample_data.selectedItems"
@@ -26,7 +26,6 @@
 <script setup lang="ts">
 import { ref, Ref } from "vue";
 const multiple_sample_data : Ref<any> =  ref({
-  isShow: false,
   data: [
     {
       id: "1",
@@ -61,7 +60,6 @@ const multiple_sample_data : Ref<any> =  ref({
   ]
 });
 const single_sample_data : Ref<any> =  ref({
-  isShow: false,
   data: [
     {
       id: "1",
@@ -86,20 +84,12 @@ const single_sample_data : Ref<any> =  ref({
   },
 });
 
-const onClickOpenMenuSearch: () => void = () => {
-  multiple_sample_data.value.isShow = !multiple_sample_data.value.isShow;
-};
 const changeMultiple : (value : any[] | {}) => void = (value) => {
   console.log("changeMultiple", value);
-  onClickOpenMenuSearch();
 }
 
-const onClickOpenMenuSearch_2: () => void = () => {
-  single_sample_data.value.isShow = !single_sample_data.value.isShow;
-};
 const changeSingle : (value : any[] | {}) => void = (value) => {
   console.log("changeSingle", value);
-  onClickOpenMenuSearch_2();
 }
 
 </script>
@@ -107,7 +97,15 @@ const changeSingle : (value : any[] | {}) => void = (value) => {
 <style scoped>
 .sample {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: 16px;
   padding: 30px;
+}
+
+.button-container,
+.tag-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 </style>
