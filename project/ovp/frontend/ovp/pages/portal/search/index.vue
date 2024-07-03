@@ -1,12 +1,12 @@
 <template>
   <div class="section-top-bar">
-   <filter-item :data="filters" @reset-filters="resetFilters" />
+    <filter-item :data="filters" @reset-filters="resetFilters" />
   </div>
   <div class="section-contents">
     <top-bar></top-bar>
     <div class="l-split mt-3">
       <div class="data-page" style="position: relative">
-        <div class="data-list" v-if="viewType === 'listView'">
+        <div id="dataList" class="data-list" v-if="viewType === 'listView'">
           <resource-box-list
             :data-list="searchResultData"
             :use-list-checkbox="false"
@@ -144,9 +144,9 @@ const setIntersectionObserver = () => {
       });
     },
     {
-      root: null,
-      rootMargin: "0px",
-      threshold: 0.2,
+      root: document.getElementById("dataList"),
+      rootMargin: "16px",
+      threshold: 0,
     },
   );
 
