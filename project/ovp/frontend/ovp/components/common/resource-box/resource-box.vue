@@ -1,5 +1,6 @@
 <template>
-<!--  TODO: [개발] 상세페이지에서 .resource-box-full 클래스 추가 -->
+  <!--  TODO: [개발] 상세페이지에서 .resource-box-full 클래스 추가 -->
+  <!--  링크 동작 없는 경우, is-resource-box-no-action 클래스 추가 -->
   <div class="resource-box" :class="props.class" @click="previewClick">
     <div class="resource-box-function">
       <div class="resource-box-model">
