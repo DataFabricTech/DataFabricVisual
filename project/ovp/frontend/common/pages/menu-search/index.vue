@@ -1,53 +1,29 @@
 <template>
   <div class="sample">
-    <div class="select select-clean">
-      <div v-for="(item, key) in multiple_sample_data.selectedItems" :key="key">
-        <span> {{item.name}} </span>
-      </div>
-      <button class="select-button button-lg" style="width: 360px" @click="onClickOpenMenuSearch">
-        <span class="select-button-title">다중 카테고리</span>
-        <div class="badge badge-primary-lighter">
-          <p class="badge-text">10</p>
-        </div>
-        <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
-      </button>
-      <menu-search
-        v-on-click-outside="() => multiple_sample_data.isShow = false"
-        v-show="multiple_sample_data.isShow"
-        :data="multiple_sample_data.data"
-        :selected-items="multiple_sample_data.selectedItems"
-        :is-multi="true"
-        label-key="name"
-        value-key="id"
-        @cancel="onClickOpenMenuSearch"
-        @multiple-change="changeMultiple"
-      ></menu-search>
-    </div>
-
-    <div class="select select-clean">
-      <button class="select-button button-lg" style="width: 360px" @click="onClickOpenMenuSearch_2">
-        <span class="select-button-title">단일 카테고리</span>
-        <div class="badge badge-primary-lighter">
-          <p class="badge-text">10</p>
-        </div>
-        <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
-      </button>
-      <menu-search
-        v-on-click-outside="() => single_sample_data.isShow = false"
-        v-show="single_sample_data.isShow"
+    <h1> 메뉴 선택 - 버튼 컴포넌트 예시</h1>
+    <div>
+      <menu-search-button
         :data="single_sample_data.data"
         :selected-items="single_sample_data.selectedItems"
         label-key="name"
         value-key="id"
-        @cancel="onClickOpenMenuSearch_2"
+        title="단일 선택"
         @single-change="changeSingle"
-      ></menu-search>
+      ></menu-search-button>
+      <menu-search-button
+        :data="multiple_sample_data.data"
+        :selected-items="multiple_sample_data.selectedItems"
+        label-key="name"
+        value-key="id"
+        title="다중 선택"
+        :is-multi="true"
+        @multiple-change="changeMultiple"
+      ></menu-search-button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { vOnClickOutside } from "@vueuse/components";
 import { ref, Ref } from "vue";
 const multiple_sample_data : Ref<any> =  ref({
   isShow: false,
