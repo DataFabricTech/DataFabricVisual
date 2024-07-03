@@ -99,7 +99,7 @@
                   </li>
                 </ul>
               </div>
-              <div class="menu">
+              <div class="menu" style="width:300px">
                 <div class="menu-head">
                   <div class="search-input">
                     <label class="hidden-text" for="text-input-example-11">label</label>
@@ -118,7 +118,7 @@
                 <ul class="menu-list">
                   <li class="menu-item">
                     <button class="menu-button">
-                      <span class="menu-text">menu item</span>
+                      <span class="menu-text">menu itemmenu itemmenu itemmenu itemmenu itemmenu item</span>
                     </button>
                   </li>
                   <li class="menu-item">
@@ -150,7 +150,7 @@
                   <li class="menu-item">
                     <button class="menu-button">
                       <svg-icon class="svg-icon" name="home"></svg-icon>
-                      <span class="menu-text">menu item</span>
+                      <span class="menu-text">menu itemmenu itemmenu itemmenu itemmenu item</span>
                     </button>
                     <div class="menu-button-group">
                       <button class="button button-neutral-ghost button-xs" type="button">
@@ -287,7 +287,7 @@
                 </li>
               </ul>
             </div>
-            <div class="menu">
+            <div class="menu" style="width:300px">
               <div class="menu-head">
                 <div class="search-input">
                   <label class="hidden-text" for="text-input-example-11">label</label>
@@ -308,7 +308,7 @@
                   <div class="checkbox checkbox-sm">
                     <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
                     <label for="checkbox-menu" class="checkbox-label">
-                      Checkbox
+                      <span class="menu-text">CheckboxCheckboxCheckboxCheckboxCheckbox</span>
                     </label>
                   </div>
                 </li>
@@ -316,7 +316,8 @@
                   <div class="checkbox checkbox-sm">
                     <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
                     <label for="checkbox-menu" class="checkbox-label">
-                      Checkbox
+                      <span class="menu-text">Checkbox</span>
+                      <span class="checkbox-subtext">(Optional)</span>
                     </label>
                   </div>
                 </li>
@@ -324,7 +325,8 @@
                   <div class="checkbox checkbox-sm">
                     <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
                     <label for="checkbox-menu" class="checkbox-label">
-                      Checkbox
+                      <span class="menu-text">Checkbox</span>
+                      <span class="checkbox-subtext">(Optional)</span>
                     </label>
                   </div>
                   <div class="menu-button-group">
@@ -346,7 +348,7 @@
                   <div class="checkbox checkbox-sm">
                     <input type="checkbox" id="checkbox-menu-2" class="checkbox-input" />
                     <label for="checkbox-menu-2" class="checkbox-label">
-                      Checkbox
+                      <span class="menu-text">Checkbox</span>
                       <span class="checkbox-subtext">(Optional)</span>
                     </label>
                   </div>

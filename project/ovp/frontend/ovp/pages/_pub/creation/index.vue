@@ -9,10 +9,10 @@
     <div class="l-split">
       <div class="work-list">
         <div class="l-top-bar">
-          <span class="">선택된 데이터 모델 (0)</span>
+          <span class="font-semibold">선택된 데이터 모델 (0)</span>
           <button class="button button-secondary-stroke">추가</button>
         </div>
-        <div class="menu menu-data">
+        <div class="menu menu-data menu-lg">
           <div class="menu-head">
             <div class="h-group">
               <div class="search-input">
@@ -43,15 +43,15 @@
                 <input type="checkbox" id="checkbox-menu-01" class="checkbox-input" />
                 <label for="checkbox-menu-01" class="checkbox-label">
                   <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                  데이터 모델
+                  <span class="menu-text">데이터 모델</span>
                   <span class="checkbox-subtext">(소유자)</span>
                 </label>
               </div>
               <div class="menu-button-group">
-                <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환 -->
+                <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환/icon에 .secondary 클래스 추가 -->
                 <button class="button button-neutral-ghost button-sm">
                   <span class="hidden-text">북마크</span>
-                  <svg-icon class="svg-icon" name="tag-fill"></svg-icon>
+                  <svg-icon class="svg-icon secondary" name="tag-fill"></svg-icon>
                 </button>
                 <button class="button button-neutral-ghost button-sm">
                   <span class="hidden-text">북마크</span>
@@ -64,7 +64,7 @@
                 <input type="checkbox" id="checkbox-menu-02" class="checkbox-input" />
                 <label for="checkbox-menu-02" class="checkbox-label">
                   <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                  데이터 모델
+                  <span class="menu-text">데이터 모델</span>
                   <span class="checkbox-subtext">(소유자)</span>
                 </label>
               </div>
@@ -80,7 +80,7 @@
               </div>
             </li>
             <li class="menu-item">
-              <div class="checkbox checkbox-sm">
+              <div class="checkbox">
                 <input type="checkbox" id="checkbox-menu-03" class="checkbox-input" />
                 <label for="checkbox-menu-03" class="checkbox-label">
                   <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
@@ -100,11 +100,11 @@
               </div>
             </li>
             <li class="menu-item">
-              <div class="checkbox checkbox-sm">
+              <div class="checkbox">
                 <input type="checkbox" id="checkbox-menu-04" class="checkbox-input" />
                 <label for="checkbox-menu-04" class="checkbox-label">
                   <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                  데이터 모델
+                  <span class="menu-text">데이터 모델데이터 모델데이터 모델데이터 모델</span>
                   <span class="checkbox-subtext">(소유자)</span>
                 </label>
               </div>
@@ -124,7 +124,47 @@
                 <input type="checkbox" id="checkbox-menu-05" class="checkbox-input" />
                 <label for="checkbox-menu-05" class="checkbox-label">
                   <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                  데이터 모델
+                  <span class="menu-text">데이터 모델</span>
+                  <span class="checkbox-subtext">(소유자)</span>
+                </label>
+              </div>
+              <div class="menu-button-group">
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
+                </button>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                </button>
+              </div>
+            </li>
+            <li class="menu-item">
+              <div class="checkbox">
+                <input type="checkbox" id="checkbox-menu-06" class="checkbox-input" />
+                <label for="checkbox-menu-06" class="checkbox-label">
+                  <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                  <span class="menu-text">데이터 모델</span>
+                  <span class="checkbox-subtext">(소유자)</span>
+                </label>
+              </div>
+              <div class="menu-button-group">
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
+                </button>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                </button>
+              </div>
+            </li>
+            <li class="menu-item">
+              <div class="checkbox">
+                <input type="checkbox" id="checkbox-menu-07" class="checkbox-input" />
+                <label for="checkbox-menu-07" class="checkbox-label">
+                  <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                  <span class="menu-text">데이터 모델</span>
                   <span class="checkbox-subtext">(소유자)</span>
                 </label>
               </div>
@@ -144,10 +184,15 @@
       </div>
       <div class="work-page">
         <div class="l-top-bar">
-          <span class="">선택된 데이터 모델 (0)</span>
-          <button class="button button-secondary-stroke">추가</button>
+          <button class="button button-neutral-stroke">
+            <svg-icon class="svg-icon" name="play"></svg-icon>
+            실행
+          </button>
+          <button class="button button-error-lighter">초기화</button>
         </div>
-        <div class="data-fusion"></div>
+        <div class="code-box">
+          code-box
+        </div>
       </div>
     </div>
     <div class="l-split">

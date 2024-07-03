@@ -5,9 +5,12 @@
   flex-grow: 1;
 
   .work-list {
-    //overflow: hidden;
     width: 330px;
     border-right: 1px solid $neutral-200;
+
+    .menu-data {
+      height: calc(100% - 49px);
+    }
   }
 
   .work-page {
@@ -15,6 +18,10 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+
+    .code-box {
+      flex-grow: 1;
+    }
   }
 
   .work-list,

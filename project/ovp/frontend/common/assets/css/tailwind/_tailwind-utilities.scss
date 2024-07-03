@@ -3,6 +3,10 @@
 
 @layer utilities {
   .primary {
-    color: $primary-500;
+    @include icon-color($primary-500);
+  }
+
+  .secondary {
+    @include icon-color($secondary-500);
   }
 }
