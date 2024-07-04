@@ -1,6 +1,12 @@
 <template>
-  <!--  링크 동작 없는 경우, is-resource-box-no-action 클래스 추가 -->
-  <div class="resource-box" :class="props.class" @click="previewClick">
+  <div
+    :class="[
+      'resource-box',
+      props.class,
+      { 'is-resource-box-no-action': !props.usePrvBtn }, // preview 기능을 사용하지 않는 경우, 해당 class 를 추가해야함.
+    ]"
+    @click="previewClick"
+  >
     <div class="resource-box-function">
       <div class="resource-box-model">
         <img :src="props.dataObj.serviceIcon" />
