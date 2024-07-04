@@ -1,7 +1,7 @@
 <template>
   <resource-box
     :data-obj="resourceBoxObj"
-    class=""
+    class="resource-box-full"
     :use-fir-model-nm="true"
     :show-owner="true"
     :show-category="true"
