@@ -140,5 +140,5 @@ properties:
     auth:
       rsa-enabled: true
     test:
-      username: root
-      password: "!Biris.test202"
+      username: admin
+      password: admin

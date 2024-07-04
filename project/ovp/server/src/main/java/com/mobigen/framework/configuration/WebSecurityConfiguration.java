@@ -1,5 +1,6 @@
 package com.mobigen.framework.configuration;
 
+import com.mobigen.framework.security.LocalLoginFilter;
 import com.mobigen.framework.utility.FrameworkProperties;
 import com.mobigen.framework.utility.Token;
 import com.mobigen.framework.security.JwtAuthenticationEntryPoint;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -27,6 +29,7 @@ import java.util.Arrays;
 public class WebSecurityConfiguration {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final LocalLoginFilter localLoginFilter;
     private final Token token;
 
 
@@ -96,7 +99,9 @@ public class WebSecurityConfiguration {
         }
 
         // add JWT token filter
-        return http.build();
+        return http
+                .addFilterBefore(localLoginFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean

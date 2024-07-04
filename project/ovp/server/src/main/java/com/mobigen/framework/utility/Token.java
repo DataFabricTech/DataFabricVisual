@@ -195,34 +195,6 @@ public class Token {
     }
 
     /**
-     * 개발용으로 로컬 호스트 일때 무조건 세션 생성
-     *
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    public User localLogin(HttpServletRequest request, HttpServletResponse response) {
-        String remoteHost = request.getRemoteHost();
-        User user = null;
-        switch (remoteHost) {
-            case "localhost":
-            case "0:0:0:0:0:0:0:1":
-            case "127.0.0.1":
-                // TODO: OVP에서 open metadata로 연동 필요
-//                String userName = properties.getTest().getUsername();
-//                String password = properties.getTest().getPassword();
-//                Map<String, Object> tokenMap = keycloakAPI.login(userName, password);
-//                addTokenToResponse(response, tokenMap);
-                break;
-            default:
-                break;
-        }
-
-        return user;
-    }
-
-    /**
      * RSA 공개키 발급
      * @param request
      * @return

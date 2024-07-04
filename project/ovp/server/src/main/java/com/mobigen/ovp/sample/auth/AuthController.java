@@ -1,6 +1,7 @@
 package com.mobigen.ovp.sample.auth;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
+import com.mobigen.framework.utility.Token;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,10 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 @RestController
 public class AuthController {
+    private final Token token;
     private final AuthService authService;
+
+    private final static String PASSWORD_KEY = "password";
     /**
      * 로그인 - 토큰 발급
      * @param request
@@ -28,6 +32,9 @@ public class AuthController {
     @ResponseJsonResult(errorMessage = "로그인 실패")
     @PostMapping("/login")
     public Object login(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> param) throws Exception {
+        String decryptPasswd = token.decryptRSAString(request, (String) param.get(PASSWORD_KEY));
+        param.put(PASSWORD_KEY, decryptPasswd);
+
         return authService.login(request, response, param);
     }
 
