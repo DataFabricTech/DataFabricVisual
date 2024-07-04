@@ -3,14 +3,14 @@ package com.mobigen.ovp.sample;
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @Slf4j
 @RequestMapping("/api/sample")
-@Controller
+@RestController
 @RequiredArgsConstructor
 public class SampleController {
     private final SampleService sampleService;
