@@ -1,17 +1,15 @@
 <template>
-  <!--  셀렉트 + 드롭다운 메뉴로 구성-->
-  <div class="select select-clean" v-for="(filter, fI) in props.data" :key="fI">
-    <button class="select-button">
-      <span class="select-button-title">{{ filter.text }}</span>
-      <div class="badge badge-primary-lighter">
-        <p class="badge-text">{{ filter.data.length }}</p>
-      </div>
-      <svg-icon
-        class="svg-icon select-indicator"
-        name="chevron-down-medium"
-      ></svg-icon>
-    </button>
-  </div>
+  <template v-for="(filter, fI) in props.data" :key="fI">
+    <menu-search-button
+      :data="filter.data"
+      :selected-items="[]"
+      label-key="text"
+      value-key="id"
+      :title="filter.text"
+      :is-multi="true"
+      @multiple-change="changeMultiple"
+    ></menu-search-button>
+  </template>
   <button
     class="button button-error-lighter button-sm"
     type="button"
@@ -20,15 +18,17 @@
     <svg-icon class="button-icon" name="reset"></svg-icon>
     <span class="button-title">초기화</span>
   </button>
-
-  <!-- TODO: menu-search component 추가-->
 </template>
 
 <script setup lang="ts">
-import { defineEmits } from "vue";
+import { defineEmits, ref } from "vue";
+import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
 
 const props = defineProps({
-  data: { type: Object, default: () => {} },
+  data: {
+    type: Object,
+    default: () => {},
+  },
 });
 
 const emit = defineEmits<{
@@ -44,6 +44,10 @@ const resetFilters = () => {
 // const filterSelected = () => {
 //   emit("filterSelected");
 // };
+
+const changeMultiple: (value: any[] | {}) => void = (value) => {
+  console.log("changeMultiple", value);
+};
 </script>
 
 <style lang="scss" scoped></style>
