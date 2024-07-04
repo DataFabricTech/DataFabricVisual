@@ -1,6 +1,6 @@
 <template>
   <div class="section-top-bar">
-    <filter-item :data="filters" @reset-filters="resetFilters" />
+    <data-filter :data="filters" @reset-filters="resetFilters"></data-filter>
   </div>
   <div class="section-contents">
     <top-bar></top-bar>
