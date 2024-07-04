@@ -76,7 +76,7 @@
               </button>
             </div>
           </div>
-          <div class="v-group gap-2">
+          <div class="v-group gap-2 mt-8">
             <div class="search-input w-[541px]">
               <label class="hidden-text" for="text-input-example-11">label</label>
               <input id="text-input-example-11" class="text-input" placeholder="검색어 입력" />
