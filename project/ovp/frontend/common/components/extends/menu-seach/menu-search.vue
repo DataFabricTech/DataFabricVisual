@@ -80,10 +80,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { MenuSearchProps } from "~/components/extends/menu-seach/MenuSearchProps";
+import { MenuSearchProps } from "./MenuSearchProps";
 import {
   MenuSearchItemImpl, MenuSearchComposition
-} from "~/components/extends/menu-seach/MenuSearchComposition";
+} from "./MenuSearchComposition";
 
 const props = withDefaults(defineProps<MenuSearchProps>(), {
   data: () => [],
