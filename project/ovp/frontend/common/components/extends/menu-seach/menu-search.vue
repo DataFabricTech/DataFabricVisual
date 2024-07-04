@@ -37,7 +37,7 @@
               @input="onCancelSelect(item, $event.target.checked)"
             />
             <label :for="'menu-search-selected-' + item.value" class="checkbox-label">
-              <span class="menu-text">{{ item.label }}</span>
+              <span class="checkbox-text">{{ item.label }}</span>
             </label>
           </div>
           <button class="menu-button" v-else @click="onCancelSelect(item, false)">
@@ -57,7 +57,7 @@
               @input="onSelectListData(item, $event.target.checked)"
             />
             <label :for="'menu-search-data-' + item.value" class="checkbox-label">
-              <span class="menu-text">{{ item.label }}</span>
+              <span class="checkbox-text">{{ item.label }}</span>
             </label>
           </div>
           <button class="menu-button" v-else @click="onSelectListData(item, true)">

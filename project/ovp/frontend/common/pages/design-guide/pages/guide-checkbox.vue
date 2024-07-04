@@ -47,6 +47,12 @@
               <label for="checkboxsm3" class="checkbox-label"> 오늘 하루 그만보기 </label>
             </div>
           </div>
+                  <span class="checkbox-text"> 오늘 하루 그만보기 </span>
+                  <span class="checkbox-text"> 오늘 하루 그만보기 </span>
+                  <span class="checkbox-text"> 오늘 하루 그만보기 </span>
+                  <span class="checkbox-text"> 오늘 하루 그만보기 </span>
+                  <span class="checkbox-text"> 오늘 하루 그만보기 </span>
+                  <span class="checkbox-text"> 오늘 하루 그만보기 </span>
           </figure>
           <div class="group-description">
             <p class="group-summary">

@@ -8,6 +8,7 @@
         @change="checked($event, dataObj.id)"
       />
       <label :for="`resource_box_list_${index}`" class="checkbox-label">
+        <span class="checkbox-text"> </span>
       </label>
     </div>
 
