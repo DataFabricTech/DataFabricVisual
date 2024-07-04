@@ -35,17 +35,6 @@
   </div>
 </template>
 
-<script>
-import Header from "../layouts/header.vue";
-import Sidebar from "../layouts/sidebar.vue";
-
-
-export default {
-  name: "search",
-  components: { Sidebar, Header }
-};
-</script>
-
 <style scoped>
 
 </style>

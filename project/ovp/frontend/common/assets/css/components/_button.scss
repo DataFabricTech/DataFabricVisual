@@ -3,6 +3,8 @@
 
   border-radius: $border-radius-4;
   font-weight: 600;
+  flex-shrink: 0;
+
 
   &:disabled {
     color: $neutral-300;

@@ -6,7 +6,7 @@
 
   .work-list {
     overflow: hidden;
-    width: 330px;
+    flex: 0 0 310px;
     border-right: 1px solid $neutral-200;
   }
 
@@ -23,6 +23,10 @@
       padding: $spacing-8 $spacing-12;
       border-bottom: 1px solid $neutral-200;
     }
+  }
+
+  .work-contents {
+    padding: $spacing-16;
   }
 }
 
