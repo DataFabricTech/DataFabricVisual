@@ -27,6 +27,10 @@
         <svg-icon class="button-icon" name="copy"></svg-icon>
         링크
       </button>
+      <button class="button button-error-stroke button-sm">
+        <svg-icon class="button-icon" name="trash"></svg-icon>
+        삭제
+      </button>
     </div>
     <div class="resource-box resource-box-full">
       <div class="resource-box-function">
