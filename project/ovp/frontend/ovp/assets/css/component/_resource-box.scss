@@ -65,6 +65,7 @@
 
     gap: $spacing-16;
     color: $neutral-700;
+    white-space: nowrap;
 
     dt {
       flex-shrink: 0;
@@ -107,7 +108,7 @@
     display: flex;
     gap: $spacing-4;
 
-    &:has(.resource-box-desc) {
+    &:has(.resource-box-desc + .button) {
       display: inline;
 
       .resource-box-desc {
