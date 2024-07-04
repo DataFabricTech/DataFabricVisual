@@ -1,8 +1,8 @@
 <template>
-
-  <div style="display: flex; flex-direction: row">
-    <div style="overflow: hidden; flex-grow: 1">
-      <agGrid
+  <div class="data-detail">
+    <div style="display: flex; flex-direction: row">
+      <div style="overflow: hidden; flex-grow: 1">
+        <agGrid
           class="ag-theme-alpine ag-theme-quartz"
           :style="`width: 80%; height: 500px`"
           :columnDefs="columnDefs"
@@ -10,7 +10,9 @@
           rowId="id"
           :useRowCheckBox="false"
           :setColumnFit="true"
-          :useColumnResize="true"></agGrid>
+          :useColumnResize="true"
+        ></agGrid>
+      </div>
     </div>
   </div>
 </template>
@@ -22,7 +24,7 @@ const columnDefs = [
   { headerName: "ID", field: "id" },
   { headerName: "Make", field: "make" },
   { headerName: "Model", field: "model" },
-  { headerName: "Price", field: "price" }
+  { headerName: "Price", field: "price" },
 ];
 
 const rowData = [
@@ -43,7 +45,7 @@ const rowData = [
   { id: 15, make: "Porsche", model: "Boxter", price: 72000 },
   { id: 16, make: "Toyota", model: "Celica", price: 35000 },
   { id: 17, make: "Ford", model: "Mondeo", price: 32000 },
-  { id: 18, make: "Porsche", model: "Boxter", price: 72000 }
+  { id: 18, make: "Porsche", model: "Boxter", price: 72000 },
 ];
 </script>
 

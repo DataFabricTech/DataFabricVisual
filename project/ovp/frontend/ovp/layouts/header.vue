@@ -9,9 +9,9 @@
       </h1>
       <SearchInput></SearchInput>
       <div class="profile ml-auto">
-          <span class="profile-avatar">
-            <img class="profile-img" src="" alt="프로필 이미지">
-          </span>
+        <span class="profile-avatar">
+          <img class="profile-img" src="" alt="프로필 이미지" />
+        </span>
         <div class="profile-text">root</div>
         <button class="button button-sm button-neutral-ghost">
           <svg-icon class="svg-icon" name="chevron-down-medium"></svg-icon>
@@ -51,17 +51,8 @@
   </header>
 </template>
 
-<script>
-import SearchInput from "../../common/components/extends/search-input/SearchInput.vue";
-
-export default {
-  name: "header",
-  components: {
-    SearchInput
-  }
-};
+<script setup lang="ts">
+import SearchInput from "@extends/search-input/SearchInput.vue";
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
