@@ -2,9 +2,7 @@
   <div class="resource-box-group">
     <!-- 수정모드 -->
     <template v-if="isEditMode">
-      <label class="hidden-text" for="description-modify"
-        >데이터 모델 설명 입력</label
-      >
+      <label class="hidden-text" for="description-modify">내용 입력</label>
       <slot name="edit-slot"></slot>
       <div class="h-group gap-2 shrink-0" v-if="useEditButtons">
         <button
