@@ -84,7 +84,7 @@ server:
     session:
       timeout: 7200
       cookie:
-        name: msf-session-id
+        name: ovp-session-id
     encoding:
       charset: UTF-8
     context-path: /
@@ -120,10 +120,10 @@ properties:
   framework:
     security:
       ignores: /css/**, /fonts/**, /img/**, /js/**, /favicon.ico
-      permit-alls: /**, /h2-console/**, /sample/public-key, /sample/authenticate, /error, /test, /api/**
+      permit-alls: /h2-console/**, /error, /test, /api/auth/iag/**, /api/auth/login/**, /api/sample/** # /**, /h2-console/**,
       redirect-url: /
       iframe-option: disable #disable, same-origin, deny
-      csrf: true
+      csrf: false
       cors:
         pattern: /** #/auth/**
         allowed-origins: http://localhost:3300/ #"*" #http://server-name:port
@@ -132,8 +132,8 @@ properties:
         allow-credentials: true
       same-site: Lax #None, Lax, Strict
     token:
-      access-token: access_token
-      refresh-token: refresh_token
+      access-token: accessToken
+      refresh-token: refreshToken
       secret: jwt-secrect-b-iris # Keycloak "HS256" 알고리즘 secret 값
     route:
       locales: ko,en,zh,ja
