@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -50,11 +52,13 @@ public class LocalLoginFilter extends OncePerRequestFilter {
         if (!isLocal(request)
                 || request.getRequestURI().contains("/api/auth")
                 || StringUtils.hasText(token.getAccessTokenByRequest(request))) {
+            log.info("로컬 로그인 진행 X");
             filterChain.doFilter(request, response);
             return;
         }
 
         // 로컬 로그인 진행
+        log.info("로컬 로그인 진행");
         Map<String, Object> loginBody = new HashMap<>();
         loginBody.put("email", frameworkProperties.getTest().getUsername());
         loginBody.put("password", frameworkProperties.getTest().getPassword());
@@ -66,6 +70,8 @@ public class LocalLoginFilter extends OncePerRequestFilter {
             }
 
             HttpServletRequest wrappedRequest = createWrappedRequestWithCookies(request, tokenResult);
+            RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(wrappedRequest));
+
             token.addTokenToResponse(response, tokenResult);
 
             filterChain.doFilter(wrappedRequest, response);
