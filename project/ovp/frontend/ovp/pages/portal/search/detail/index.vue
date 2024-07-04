@@ -1,24 +1,29 @@
 <template>
-  <resource-box
-    :data-obj="resourceBoxObj"
-    class=""
-    :use-fir-model-nm="true"
-    :show-owner="true"
-    :show-category="true"
-    :use-data-nm-link="false"
-    :editable="true"
-  />
-  <detail-default />
-  <Tab
-    :data="filteredTabs"
-    :label-key="'label'"
-    :value-key="'value'"
-    :current-item="currentTab"
-    current-item-type="value"
-    @change="changeTab"
-  />
-  <!-- 동적 컴포넌트 사용 -->
-  <component :is="currentComponent" />
+  <div class="section-contents bg-white">
+    <detail-default />
+    <resource-box
+      class="resource-box-full"
+      :data-obj="resourceBoxObj"
+      :use-fir-model-nm="true"
+      :use-data-nm-link="true"
+      :show-owner="true"
+      :show-category="true"
+      :editable="true"
+    />
+    <Tab
+      class="mt-8"
+      :data="filteredTabs"
+      :label-key="'label'"
+      :value-key="'value'"
+      :current-item="initTabValue"
+      current-item-type="value"
+      @change="changeTab"
+    >
+      <template #[currentTab]>
+        <component :is="currentComponent" />
+      </template>
+    </Tab>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -62,7 +67,8 @@ const tabOptions = [
   { label: "추천 데이터 모델", value: 8, component: RecommendModel },
 ];
 
-const currentTab = ref(1);
+const initTabValue: Ref<any> = ref(1);
+const currentTab: Ref<any> = ref(1);
 const currentComponent: Component = shallowRef(DefaultInfo);
 
 let resourceBoxObj: any = {
@@ -70,14 +76,15 @@ let resourceBoxObj: any = {
   serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
   depth: ["1depth", "2depth", "3depth", "데이터모델"],
   firModelNm: "최초 데이터모델 명",
-  modelNm: "Model Name",
+  modelNm: "세종특별자치시 상하수도요금표",
   modelDesc:
-    "데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. ",
-  owner: "장소라",
-  category: "카테고리",
+    "한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다",
+  owner: "Owner",
+  category: "Domain",
 };
 
 function changeTab(item: number | string) {
+  currentTab.value = item;
   currentComponent.value = _.find(tabOptions, ["value", item])?.component;
 }
 </script>
