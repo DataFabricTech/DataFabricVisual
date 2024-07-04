@@ -30,7 +30,7 @@
             <div class="checkbox">
               <input type="checkbox" id="checkbox-menu-1" class="checkbox-input" />
               <label for="checkbox-menu-1" class="checkbox-label">
-                Checkbox1
+                <span class="checkbox-text"> Checkbox1 </span>
               </label>
             </div>
           </li>
@@ -38,7 +38,7 @@
             <div class="checkbox">
               <input type="checkbox" id="checkbox-menu-2" class="checkbox-input" />
               <label for="checkbox-menu-2" class="checkbox-label">
-                Checkbox2
+                <span class="checkbox-text"> Checkbox1 </span>
               </label>
             </div>
           </li>
@@ -46,7 +46,7 @@
             <div class="checkbox">
               <input type="checkbox" id="checkbox-menu-3" class="checkbox-input" />
               <label for="checkbox-menu-3" class="checkbox-label">
-                Checkbox3
+                <span class="checkbox-text"> Checkbox1 </span>
               </label>
             </div>
 
@@ -55,7 +55,7 @@
             <div class="checkbox">
               <input type="checkbox" id="checkbox-menu-4" class="checkbox-input" />
               <label for="checkbox-menu-4" class="checkbox-label">
-                Checkbox4
+                <span class="checkbox-text"> Checkbox1 </span>
               </label>
             </div>
           </li>
@@ -63,7 +63,7 @@
             <div class="checkbox">
               <input type="checkbox" id="checkbox-menu-5" class="checkbox-input" />
               <label for="checkbox-menu-5" class="checkbox-label">
-                Checkbox5
+                <span class="checkbox-text"> Checkbox1 </span>
               </label>
             </div>
           </li>
