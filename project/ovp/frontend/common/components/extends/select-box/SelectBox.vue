@@ -33,7 +33,16 @@
           <div class="checkbox">
             <input type="checkbox" id="checkbox-select" class="checkbox-input" />
             <label for="checkbox-select" class="checkbox-label">
-              Checkbox <span class="checkbox-subtext">(Optional)</span>
+              <span class="checkbox-text">Checkbox</span>
+              <span class="checkbox-subtext">(Optional)</span>
+            </label>
+          </div>
+        </li>
+        <li class="dropdown-item">
+          <div class="checkbox">
+            <input type="checkbox" id="checkbox-select2" class="checkbox-input" />
+            <label for="checkbox-select2" class="checkbox-label">
+              <span class="checkbox-text">CheckboxCheckboxCheckboxCheckbox</span>
             </label>
           </div>
         </li>

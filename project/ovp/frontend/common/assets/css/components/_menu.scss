@@ -15,7 +15,7 @@
 .menu {
   @include menu-size;
 
-  z-index: auto;
+  //z-index: auto;
   display: flex;
   flex-direction: column;
   height: fit-content;

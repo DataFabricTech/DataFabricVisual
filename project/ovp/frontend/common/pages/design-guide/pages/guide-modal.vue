@@ -194,7 +194,8 @@
                     <div class="checkbox">
                       <input type="checkbox" id="today" class="checkbox-input" />
                       <label for="today" class="checkbox-label">
-                        오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span>
+                        <span class="checkbox-text"> 오늘 하루 그만보기 </span>
+                        <span class="checkbox-subtext">(Optional)</span>
                       </label>
                     </div>
                     <div class="modal-foot-group">
