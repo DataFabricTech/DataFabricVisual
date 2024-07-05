@@ -25,10 +25,10 @@
 <script setup lang="ts">
 import { vOnClickOutside } from "@vueuse/components";
 
-import { MenuSearchButtonProps } from "~/components/extends/menu-seach/button/MenuSearchButtonProps";
-import { MenuSearchItemImpl } from "~/components/extends/menu-seach/MenuSearchComposition";
-import { MenuSearchButtonComposition } from "~/components/extends/menu-seach/button/MenuSearchButtonComposition";
-
+import { MenuSearchItemImpl } from "../MenuSearchComposition";
+import { MenuSearchButtonComposition } from "./MenuSearchButtonComposition";
+import { MenuSearchButtonProps } from "./MenuSearchButtonProps";
+import MenuSearch from "../menu-search.vue"
 const props = withDefaults(defineProps<MenuSearchButtonProps>(), {
   data: () => [],
   labelKey: "label",

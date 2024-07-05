@@ -75,9 +75,10 @@ export function MenuSearchComposition(
   /**
    * 선택 리스트 값이 변경되면 일반 리스트의 속성값도 변경되야하므로 다중 watch
    */
-  setListData();
-  setSelectedListData();
-
+  watchEffect(() => {
+    setListData();
+    setSelectedListData();
+  });
   /**
    * 선택 리스트 삭제
    * @param value
