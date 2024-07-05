@@ -9,7 +9,8 @@ import org.springframework.web.service.annotation.PostExchange;
 @HttpExchange("https://jsonplaceholder.typicode.com/")
 public interface SampleClient {
     @GetExchange("/users")
-    Object getUsers();
-    @PostExchange("/asdf-asdfasdfasdfasdfa")
+    Object getSampleApi();
+
+    @PostExchange("/test-error")
     Object getErrorApi();
 }

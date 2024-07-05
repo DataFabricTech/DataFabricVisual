@@ -82,11 +82,11 @@ public class WebSecurityConfiguration {
         // Set unauthorized requests exception handler
         http.exceptionHandling((exception) -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
 
-        // Set permissions on endpoints
-        http.authorizeHttpRequests((auth) -> auth.requestMatchers(properties.getSecurity().getPermitAlls())
-                .permitAll()
-                .anyRequest()
-                .authenticated());
+        http.authorizeHttpRequests((auth) -> auth
+                .requestMatchers("http://localhost:8080/api**").permitAll() // localhost에 대한 모든 요청 허용
+                .requestMatchers(properties.getSecurity().getPermitAlls()).permitAll()
+                .anyRequest().authenticated()
+        );
 
         // set iframe option
         switch (properties.getSecurity().getIframeOption()) {
