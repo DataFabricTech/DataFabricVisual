@@ -60,6 +60,10 @@ export interface searchResult {
   totalCount: number;
 }
 
+export interface SelectedFilters {
+  [key: string]: string[];
+}
+
 import previewJson from "./samples/preview.json";
 import listResult from "./samples/listResult.json";
 import detailsJson from "./samples/details.json";
@@ -76,6 +80,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       },
     },
   });
+  const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
 
   // DATA
   const viewType: Ref<string> = ref<string>("listView");
@@ -104,6 +109,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     searchResult,
     details,
     previewData,
+    selectedFilters,
     viewType,
     isShowPreview,
     isBoxSelectedStyle,

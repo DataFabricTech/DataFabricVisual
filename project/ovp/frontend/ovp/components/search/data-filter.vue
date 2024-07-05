@@ -1,5 +1,5 @@
 <template>
-  <template v-for="(filter, fI) in props.data" :key="fI">
+  <template v-for="(filter, title, FI) in props.data" :key="FI">
     <menu-search-button
       :data="filter.data"
       :selected-items="[]"
@@ -7,7 +7,7 @@
       value-key="id"
       :title="filter.text"
       :is-multi="true"
-      @multiple-change="changeMultiple"
+      @multiple-change="changeMultiple($event, title)"
     ></menu-search-button>
   </template>
   <button
@@ -21,8 +21,14 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits, ref } from "vue";
+import { defineEmits } from "vue";
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
+import { useSearchCommonStore } from "@/store/search/common";
+import { storeToRefs } from "pinia";
+import _ from "lodash";
+
+const searchCommonStore = useSearchCommonStore();
+const { selectedFilters } = storeToRefs(searchCommonStore);
 
 const props = defineProps({
   data: {
@@ -40,13 +46,19 @@ const emit = defineEmits<{
 const resetFilters = () => {
   emit("resetFilters");
 };
-// TODO : menu-search 구현 완료 되면 아래 기능 구현 -> menu-search 선택함에 따라 index.vue 단으로 옮기기
-// const filterSelected = () => {
-//   emit("filterSelected");
-// };
 
-const changeMultiple: (value: any[] | {}) => void = (value) => {
-  console.log("changeMultiple", value);
+const changeMultiple: (value: any[] | {}, title: any) => void = (
+  value: any[] | {},
+  title: string,
+) => {
+  let selectedIds = _.map(value, "id");
+  if (selectedIds.length === 0) {
+    delete selectedFilters.value[title];
+  } else {
+    selectedFilters.value[title] = selectedIds;
+  }
+
+  console.log("selectedFilters", selectedFilters.value);
 };
 </script>
 
