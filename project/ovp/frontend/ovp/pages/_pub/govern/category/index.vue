@@ -76,7 +76,7 @@
               </button>
             </div>
           </div>
-          <div class="v-group gap-2 mt-8">
+          <div class="l-top-bar">
             <div class="search-input w-[541px]">
               <label class="hidden-text" for="text-input-example-11">label</label>
               <input id="text-input-example-11" class="text-input" placeholder="검색어 입력" />
@@ -182,7 +182,6 @@
                 </div>
                 <!-- resource-box 끝 -->
               </div>
-              <Pagination :totalCount="60" :perPage="10" :currentPageNumber="4" @change="checkCurrentPage"></Pagination>
             </div>
             <div class="preview">
               <div class="ml-auto">
@@ -286,9 +285,5 @@
 
 </style>
 <script>
-import Pagination from "../../common/components/extends/pagination/Pagination.vue";
-export default {
-  name: "category",
-  components: { Pagination }
-};
+
 </script>
