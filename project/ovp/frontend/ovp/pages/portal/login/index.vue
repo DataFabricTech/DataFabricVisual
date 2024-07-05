@@ -1,9 +1,9 @@
 <template>
-  <submitBox :show-login="true" :show-pw-reset="false"></submitBox>
+  <login></login>
 </template>
 
 <script setup lang="ts">
-import submitBox from "@/components/login/submit-box.vue";
+import login from "@/components/login/login.vue";
 </script>
 
 <style lang="scss" scoped></style>

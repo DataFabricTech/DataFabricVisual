@@ -1,7 +1,7 @@
 <template>
-  <submitBox :show-login="false" :show-pw-reset="true"></submitBox>
+  <pwReset></pwReset>
 </template>
 <script setup lang="ts">
-import submitBox from "@/components/login/submit-box.vue";
+import pwReset from "@/components/login/pw-reset.vue";
 </script>
 <style lang="scss" scoped></style>
