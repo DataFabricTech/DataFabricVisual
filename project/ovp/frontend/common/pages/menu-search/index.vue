@@ -19,6 +19,18 @@
         :is-multi="true"
         @multiple-change="changeMultiple"
       ></menu-search-button>
+
+      <br/>
+      <menu-search-button
+        :data="multiple_sample_data2.data"
+        :selected-items="multiple_sample_data2.selectedItems"
+        label-key="name"
+        value-key="id"
+        title="다중 선택 - 초기화"
+        :is-multi="true"
+        @multiple-change="changeMultiple2"
+      ></menu-search-button>
+      <button class="button button-secondary" @click="onClickChangData">값 변경</button>
     </div>
   </div>
 </template>
@@ -83,9 +95,50 @@ const single_sample_data : Ref<any> =  ref({
     name: "BBB"
   },
 });
+const multiple_sample_data2 : Ref<any> =  ref({
+  data: [
+    {
+      id: "1",
+      name: "AAA"
+    },
+    {
+      id: "2",
+      name: "BBB"
+    },
+    {
+      id: "3",
+      name: "CCC"
+    },
+    {
+      id: "4",
+      name: "DDD"
+    },
+  ],
+  selectedItems: [
+    {
+      id: "1",
+      name: "AAA"
+    },
+    {
+      id: "2",
+      name: "BBB"
+    },
+    {
+      id: "3",
+      name: "CCC"
+    },
+  ]
+});
 
 const changeMultiple : (value : any[] | {}) => void = (value) => {
   console.log("changeMultiple", value);
+}
+const changeMultiple2 : (value : any[] | {}) => void = (value) => {
+  console.log("changeMultiple", value);
+}
+const onClickChangData : (value : any[] | {}) => void = (value) => {
+  multiple_sample_data2.value.selectedItems = [];
+  console.log("onClickChangData", value);
 }
 
 const changeSingle : (value : any[] | {}) => void = (value) => {

@@ -18,7 +18,9 @@ export function MenuSearchButtonComposition(
     selectedListData.value = Array.isArray(props.selectedItems) ? props.selectedItems : [props.selectedItems];
   };
 
-  setSelectedListData();
+  watchEffect(() => {
+    setSelectedListData();
+  });
 
   const isShow: Ref<boolean> = ref(false);
   const onClickOpenMenuSearch: () => void = () => {
