@@ -9,7 +9,7 @@
           <div class="form-body">
             <div class="form-item" v-show="showLogin">
               <label for="inpId" class="form-label">
-                {{t("login.idOrEmail")}}
+                {{ t("login.idOrEmail") }}
               </label>
               <div class="form-detail flex flex-col">
                 <div class="text-input-group w-full">
@@ -24,7 +24,7 @@
                 </div>
                 <div class="notification notification-sm notification-error" v-show="isErrorEmailOrId">
                   <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">{{emailOrIdErrorMessage}}</p>
+                  <p class="notification-detail">{{ emailOrIdErrorMessage }}</p>
                 </div>
               </div>
             </div>
@@ -57,7 +57,7 @@
                 <div class="notification notification-sm notification-error" v-show="isErrorPassword">
                   <svg-icon class="notification-icon" name="error"></svg-icon>
                   <p class="notification-detail">
-                    {{passwordErrorMessage}}
+                    {{ passwordErrorMessage }}
                   </p>
                 </div>
               </div>
@@ -129,7 +129,7 @@
           </div>
           <div class="form-foot">
             <button class="button button-primary button-lg" type="button" v-show="showLogin" @click="login">
-              {{t("login.login")}}
+              {{ t("login.login") }}
             </button>
             <button class="button button-primary button-lg" type="button" v-show="showPwReset">
               확인
@@ -174,12 +174,12 @@
 <script setup lang="ts">
 import _ from "lodash";
 import RSA from "rsajs";
-import { useI18n } from "vue-i18n";
+import {useI18n} from "vue-i18n";
 import messages from "./index.json";
-import {loginStore} from "../../store/login/index";
-import { useRouter } from "vue-router";
+import {loginStore} from "@/store/login/index";
+import {useRouter} from "vue-router";
 
-const { t } = useI18n({
+const {t} = useI18n({
   messages
 });
 const router = useRouter();
@@ -209,13 +209,13 @@ const login = async () => {
 
   // validation check
 
-  if(_.isEmpty(id)) {
+  if (_.isEmpty(id)) {
     isErrorEmailOrId.value = true;
     emailOrIdErrorMessage.value = t("login.validation.emailOrId.empty");
     return
   }
 
-  if(_.isEmpty(password)) {
+  if (_.isEmpty(password)) {
     isErrorPassword.value = true;
     passwordErrorMessage.value = t("login.validation.password.empty");
     return
@@ -229,9 +229,9 @@ const login = async () => {
   const store = loginStore();
   const isloginSuccess = store.loginReq(param);
 
-  if(isloginSuccess) {
+  if (isloginSuccess) {
     // TODO: 로그인 성공 시 메인 화면으로 이동..
-    router.push("search") // 임시 경로
+    router.push("/") // 임시 경로
   } else {
     isErrorEmailOrId.value = true;
     isErrorPassword.value = true;
@@ -247,7 +247,7 @@ const loginValidationReset = () => {
 }
 
 const isHidePw = () => {
-  inpType.value = inpType.value === 'password' ? 'text':'password';
+  inpType.value = inpType.value === 'password' ? 'text' : 'password';
 }
 
 const getEncryptString = (param) => {
