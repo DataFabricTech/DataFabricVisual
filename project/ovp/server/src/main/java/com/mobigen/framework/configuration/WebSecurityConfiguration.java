@@ -1,5 +1,6 @@
 package com.mobigen.framework.configuration;
 
+import com.mobigen.framework.security.LocalLoginFilter;
 import com.mobigen.framework.utility.FrameworkProperties;
 import com.mobigen.framework.utility.Token;
 import com.mobigen.framework.security.JwtAuthenticationEntryPoint;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -27,6 +29,7 @@ import java.util.Arrays;
 public class WebSecurityConfiguration {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final LocalLoginFilter localLoginFilter;
     private final Token token;
 
 
@@ -79,11 +82,11 @@ public class WebSecurityConfiguration {
         // Set unauthorized requests exception handler
         http.exceptionHandling((exception) -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
 
-        // Set permissions on endpoints
-        http.authorizeHttpRequests((auth) -> auth.requestMatchers(properties.getSecurity().getPermitAlls())
-                .permitAll()
-                .anyRequest()
-                .authenticated());
+        http.authorizeHttpRequests((auth) -> auth
+                .requestMatchers("http://localhost:8080/api**").permitAll() // localhost에 대한 모든 요청 허용
+                .requestMatchers(properties.getSecurity().getPermitAlls()).permitAll()
+                .anyRequest().authenticated()
+        );
 
         // set iframe option
         switch (properties.getSecurity().getIframeOption()) {
@@ -96,7 +99,9 @@ public class WebSecurityConfiguration {
         }
 
         // add JWT token filter
-        return http.build();
+        return http
+                .addFilterBefore(localLoginFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
