@@ -21,15 +21,16 @@
       </div>
       <!--  TODO: [퍼블리싱] ag-grid 개발 후 스타일 적용 예정 -->
       <div class="profiling">
-        <grid
+        <agGrid
           class="ag-theme-alpine ag-theme-quartz"
           :style="`width: 100%; height: 500px`"
           :columnDefs="COLUMN_DEFS"
-          :rowData="filteredRowData"
+          :rowData="rowData"
           rowId="id"
           :column-width-list="[100, 100, 100, 100, 100, 100]"
           :setColumnFit="true"
           :useColumnResize="true"
+          :quickFilterText="keyword"
           :column-render="{
             null: {
               type: 'html',
@@ -51,33 +52,20 @@
             },
           }"
         >
-        </grid>
+        </agGrid>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import Grid from "../../../../common/components/extends/grid/Grid.vue";
+import agGrid from "@extends/grid/Grid.vue";
 import type { ColDef } from "ag-grid-community";
 
 const keyword = ref("");
 const clearInput = (): void => {
   keyword.value = "";
 };
-const filteredRowData = computed(() => {
-  if (!keyword.value.trim()) {
-    return rowData.value;
-  }
-  const lowerCaseSearchText = keyword.value.trim().toLowerCase();
-  return rowData.value.filter((item) =>
-    Object.values(item).some(
-      (val) =>
-        typeof val === "string" &&
-        val.toLowerCase().includes(lowerCaseSearchText),
-    ),
-  );
-});
 
 const COLUMN_DEFS: ColDef[] = [
   { headerName: "NAME", field: "name", sortable: true },
