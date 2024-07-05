@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-import submitBox from "../../../components/login/submit-box.vue"
+import submitBox from "@/components/login/submit-box.vue"
 </script>
 
 <style lang="scss" scoped></style>
