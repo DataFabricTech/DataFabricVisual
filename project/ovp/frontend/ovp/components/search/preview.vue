@@ -3,7 +3,7 @@
     <div class="ml-auto">
       <button
         class="button button-neutral-ghost button-sm"
-        @click="setPreviewClose(true)"
+        @click="setPreviewClose(false)"
       >
         <svg-icon class="svg-icon" name="close"></svg-icon>
         <span class="hidden-text">닫기</span>

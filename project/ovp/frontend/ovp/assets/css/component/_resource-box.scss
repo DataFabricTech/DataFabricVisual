@@ -65,6 +65,7 @@
 
     gap: $spacing-16;
     color: $neutral-700;
+    white-space: nowrap;
 
     dt {
       flex-shrink: 0;
@@ -92,12 +93,22 @@
     box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
   }
 
+  &.is-resource-box-no-action {
+    cursor: default;
+    border-color: $neutral-200
+  }
+
+  &.is-resource-box-no-action.is-resource-box-selected {
+    border-color: $neutral-200;
+    @include box-shadow('sm');
+  }
+
   &-group {
     width: 100%;
     display: flex;
     gap: $spacing-4;
 
-    &:has(.resource-box-desc) {
+    &:has(.resource-box-desc + .button) {
       display: inline;
 
       .resource-box-desc {

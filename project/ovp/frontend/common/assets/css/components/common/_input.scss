@@ -57,6 +57,7 @@ $input-field-classes: text-input, textarea;
         @include box-shadow('sm');
 
         content: "";
+        flex-shrink: 0;
         display: block;
         width: 18px;
         height: 18px;
@@ -71,9 +72,23 @@ $input-field-classes: text-input, textarea;
         background: none;
         transform-origin: bottom right;
       }
+
+      &:not(:has(.checkbox-subtext)) {
+        .checkbox-text {
+          @include ellipsis;
+        }
+      }
+    }
+
+    &-text {
+      font-weight: 600;
+      color: $neutral-800;
+
     }
 
     &-subtext {
+      @include ellipsis;
+      
       margin-left: $spacing-2;
       font-weight: 400;
       color: $neutral-500;

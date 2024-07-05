@@ -20,8 +20,7 @@
 
 .select {
   @include select-size;
-  @include z-index('float');
-
+  //@include z-index('float');
   position: relative;
 
   &-button {
@@ -109,6 +108,7 @@
   .menu-search {
     @include box-shadow('md');
 
+    width: 100%;
     margin-top: $spacing-4;
   }
 

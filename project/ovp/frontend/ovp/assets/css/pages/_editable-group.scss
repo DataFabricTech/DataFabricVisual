@@ -1,0 +1,26 @@
+//컨텐츠 편집이 가능한 공통 UI
+.editable-group {
+  @include flex($horizontal: flex-start);
+  width: 100%;
+  gap: $spacing-4;
+
+  &:has(.editable-group-desc) {
+    display: inline;
+  }
+
+  &:has(.textarea) {
+    @include flex($direction: column, $vertical: flex-end);
+    gap: $spacing-8;
+  }
+
+  &-title {
+    @include font-size('15');
+    color: $secondary-500;
+    font-weight: 600;
+  }
+
+  &-desc + .button {
+    display: inline-flex;
+    vertical-align: top;
+  }
+}

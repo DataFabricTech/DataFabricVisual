@@ -8,12 +8,16 @@
         @change="checked($event, dataObj.id)"
       />
       <label :for="`resource_box_list_${index}`" class="checkbox-label">
+        <span class="checkbox-text"> </span>
       </label>
     </div>
 
     <resource-box
       :class="[
-        { 'is-resource-box-selected': selectedResourceBoxId === dataObj.id },
+        {
+          'is-resource-box-selected':
+            isBoxSelectedStyle && selectedResourceBoxId === dataObj.id,
+        },
         props.class,
       ]"
       :data-obj="dataObj"
@@ -35,13 +39,14 @@ import type { ResourceBoxListProps } from "./resource-box-list-props";
 import { defineEmits } from "vue";
 
 const selectedList: Ref<Array<string | number>> = ref([]);
-const selectedResourceBoxId = ref("");
+const selectedResourceBoxId: Ref<string | number> = ref("");
 
 const props = withDefaults(defineProps<ResourceBoxListProps>(), {
   usePrvBtn: true,
   useFirModelNm: false,
   useListCheckbox: false,
   useDataNmLink: true,
+  isBoxSelectedStyle: false,
 });
 
 const emit = defineEmits<{
