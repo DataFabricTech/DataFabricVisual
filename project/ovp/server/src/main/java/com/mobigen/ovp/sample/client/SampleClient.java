@@ -1,16 +1,19 @@
 package com.mobigen.ovp.sample.client;
 
-import com.mobigen.framework.utility.restful.AutoRegisterApi;
-import org.springframework.web.service.annotation.GetExchange;
-import org.springframework.web.service.annotation.HttpExchange;
-import org.springframework.web.service.annotation.PostExchange;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
-@AutoRegisterApi
-@HttpExchange("https://jsonplaceholder.typicode.com/")
+import java.net.URI;
+
+@FeignClient(name = "SampleClient", url = "https://jsonplaceholder.typicode.com/")
 public interface SampleClient {
-    @GetExchange("/users")
+    @GetMapping("/users")
     Object getSampleApi();
 
-    @PostExchange("/test-error")
+    @PostMapping("/test-error")
     Object getErrorApi();
+
+    @GetMapping("")
+    Object getDynamicAPI(URI baseUri);
 }

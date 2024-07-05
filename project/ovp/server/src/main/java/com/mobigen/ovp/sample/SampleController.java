@@ -1,7 +1,6 @@
 package com.mobigen.ovp.sample;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.MultiValueMap;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SampleController {
     private final SampleService sampleService;
     /**
-     * Sample : HTTP Interface 사용 예시
+     * Sample : OpenFeign 사용 예시
      * @return
      */
     @ResponseJsonResult
@@ -30,7 +29,7 @@ public class SampleController {
     }
 
     /**
-     * Sample : HTTP Interface 사용 예시 - API 오류
+     * Sample : OpenFeign 사용 예시 - API 오류
      * @return
      */
     @ResponseJsonResult
@@ -41,12 +40,12 @@ public class SampleController {
     }
 
     /**
-     * Sample : HTTP Interface 사용 예시 - 동적 URL 사용 가능
+     * Sample : OpenFeign 사용 예시 - 동적 URL 사용
      * @return
      */
     @ResponseJsonResult
-    @GetMapping("/test")
-    public Object getApi() {
+    @GetMapping("/dynamic-api")
+    public Object getApi() throws Exception {
         return sampleService.getDynamicAPI();
     }
 
@@ -85,14 +84,13 @@ public class SampleController {
 
     /**
      * Open Metadata - 사용자 목록 조회
-     * @param request
      * @return
      * @throws Exception
      */
     @ResponseJsonResult(errorMessage = "Open-metadata 사용자 목록 조회 오류")
     @GetMapping("/open-metadata/user/list")
-    public Object getUsers(HttpServletRequest request) throws Exception {
-        return sampleService.getUsers(request);
+    public Object getUsers() throws Exception {
+        return sampleService.getUsers();
     }
 
     /**

@@ -142,3 +142,5 @@ properties:
     test:
       username: admin
       password: admin
+  ovp:
+    open-metadata-url: http://192.168.105.26:8585/api/v1

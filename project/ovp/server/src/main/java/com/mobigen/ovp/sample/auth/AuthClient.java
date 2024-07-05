@@ -1,15 +1,13 @@
 package com.mobigen.ovp.sample.auth;
 
-import com.mobigen.framework.utility.restful.AutoRegisterApi;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.service.annotation.HttpExchange;
-import org.springframework.web.service.annotation.PostExchange;
 
 import java.util.Map;
 
-@AutoRegisterApi
-@HttpExchange("http://192.168.105.26:8585/api/v1/users")
+@FeignClient(name = "AuthClient", url = "${properties.ovp.open-metadata-url}")
 public interface AuthClient {
-    @PostExchange("/login")
+    @PostMapping("/users/login")
     Map<String, Object> login(@RequestBody Map<String, Object> params) throws Exception;
 }
