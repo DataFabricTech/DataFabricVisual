@@ -62,4 +62,8 @@ public class AuthService {
 
         return rsa.encryptRSA((String) param.get(PASSWORD_KEY), rsa.getKeyPair().getPublic());
     }
+
+    public Object getPublicKey(HttpServletRequest request) {
+        return token.generateRSAPublicKey(request);
+    }
 }

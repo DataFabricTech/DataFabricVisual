@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,5 +49,18 @@ public class AuthController {
     @PostMapping("/login/encrypt-passwd")
     public Object getEncryptPasswd(HttpServletRequest request, @RequestBody Map<String, Object> param) {
         return authService.getEncryptPassword(request, param);
+    }
+
+
+    /**
+     * 로그인 RSA 공개키 반환
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/login/public-key")
+    public Object publicKey(HttpServletRequest request) {
+        return authService.getPublicKey(request);
     }
 }
