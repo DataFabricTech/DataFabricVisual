@@ -1,4 +1,4 @@
-\<template>
+<template>
   <div class="wrap is-wrap-height-full">
     <div class="submit-form">
       <h1 class="submit-form-logo">LOGO</h1>
@@ -14,9 +14,9 @@
               <div class="form-detail flex flex-col">
                 <div class="text-input-group w-full">
                   <input
-                      id="inpName"
-                      class="text-input text-input-lg"
-                      placeholder="이름 입력"
+                    id="inpName"
+                    class="text-input text-input-lg"
+                    placeholder="이름 입력"
                   />
                 </div>
                 <div class="notification notification-sm notification-error">
@@ -33,9 +33,9 @@
               <div class="form-detail flex flex-col">
                 <div class="text-input-group w-full">
                   <input
-                      id="inpEmail"
-                      class="text-input text-input-lg"
-                      placeholder="이메일 입력"
+                    id="inpEmail"
+                    class="text-input text-input-lg"
+                    placeholder="이메일 입력"
                   />
                 </div>
                 <div class="notification notification-sm notification-error">
@@ -52,13 +52,13 @@
               <div class="form-detail flex flex-col">
                 <div class="text-input-group w-full">
                   <input
-                      id="inpPw"
-                      class="text-input text-input-lg"
-                      placeholder="비밀번호 입력"
+                    id="inpPw"
+                    class="text-input text-input-lg"
+                    placeholder="비밀번호 입력"
                   />
                   <button
-                      class="text-input-group-action-button button button-neutral-ghost button-sm"
-                      type="button"
+                    class="text-input-group-action-button button button-neutral-ghost button-sm"
+                    type="button"
                   >
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="eye"></svg-icon>
@@ -80,13 +80,13 @@
               <div class="form-detail flex flex-col">
                 <div class="text-input-group w-full">
                   <input
-                      id="inpPw"
-                      class="text-input text-input-lg"
-                      placeholder="비밀번호 입력"
+                    id="inpPw"
+                    class="text-input text-input-lg"
+                    placeholder="비밀번호 입력"
                   />
                   <button
-                      class="text-input-group-action-button button button-neutral-ghost button-sm"
-                      type="button"
+                    class="text-input-group-action-button button button-neutral-ghost button-sm"
+                    type="button"
                   >
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="eye"></svg-icon>
@@ -115,7 +115,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss" scoped></style>

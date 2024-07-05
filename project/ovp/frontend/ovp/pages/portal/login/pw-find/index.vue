@@ -17,9 +17,9 @@
               <div class="form-detail flex flex-col">
                 <div class="text-input-group w-full">
                   <input
-                      id="inpEmail"
-                      class="text-input text-input-lg"
-                      placeholder="이메일 입력"
+                    id="inpEmail"
+                    class="text-input text-input-lg"
+                    placeholder="이메일 입력"
                   />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
                 </div>
@@ -46,7 +46,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <style lang="scss" scoped></style>
