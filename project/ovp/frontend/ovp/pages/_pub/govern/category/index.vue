@@ -100,7 +100,7 @@
               </div>
             </div>
           </div>
-          <div class="l-split mt-3">
+          <div class="l-resource-box l-split mt-3">
             <div class="data-page">
               <div class="data-list">
                 <!-- TODO: [개발] resource-box 시작 컴포넌트화  -->

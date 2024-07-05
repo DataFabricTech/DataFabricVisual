@@ -4,6 +4,10 @@
   display: flex;
   flex-grow: 1;
 
+  &:has(.work-contents) {
+    height: calc(100% - 48px);
+  }
+
   .work-list {
     overflow: hidden;
     flex: 0 0 310px;
@@ -26,6 +30,8 @@
   }
 
   .work-contents {
+    @include flex($direction: column, $vertical: null, $horizontal: null);
+    overflow: auto;
     padding: $spacing-16;
 
     .l-top-bar {
@@ -34,6 +40,10 @@
       margin-top: $spacing-32;
       padding: 0;
       border: 0;
+    }
+
+    .l-resource-box {
+      height: 894px;
     }
   }
 }
