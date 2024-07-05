@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import RSA from "rsajs";
 
 export const loginStore = defineStore("login", () => {
   const { $api } = useNuxtApp();
@@ -8,13 +9,22 @@ export const loginStore = defineStore("login", () => {
 
   const getPublicKey = async () => {
     // @ts-ignore
-    return (publicKey.value = await $api(`/api/login/public-key`));
+    return (publicKey.value = await $api(`/api/login/public-key`))
+      .then((res: any) => {
+        return res;
+      })
+      .catch((err: any) => {
+        console.log(err);
+      });
   };
 
   const loginReq = async (param: any) => {
-    // @ts-ignore
+    const publicKey = getPublicKey();
+    const rsa = new RSA();
+    rsa.setKey(publicKey);
+    param.password = rsa.encrypt(param);
 
-    // TODO: 서버 개발되면 주석 해제 예상
+    // TODO: 서버 개발 후 주석 해제
     // return isloginSuccess.value = await $api('/api/login', {
     //     method : 'POST',
     //     body: param
