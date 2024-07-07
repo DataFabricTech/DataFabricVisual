@@ -156,7 +156,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       switch (key) {
         case "owners":
         case "service":
-          setQueryFilterByDepth(key, value, ".displayName.keyword");
           setBoolObj.value = setQueryFilterByDepth(
             key,
             value,
@@ -167,30 +166,15 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
         case "database":
         case "databaseSchema":
         case "columns":
-          setQueryFilterByDepth(key, value, ".name.keyword");
-          setBoolObj.value = setQueryFilterByDepth(
-            key,
-            value,
-            ".displayName.keyword",
-          );
+          setBoolObj.value = setQueryFilterByDepth(key, value, ".name.keyword");
           queryFilter.value.query.bool.must.push(setBoolObj.value);
           break;
         case "tags":
-          setQueryFilterByDepth(key, value, ".tagFQN");
-          setBoolObj.value = setQueryFilterByDepth(
-            key,
-            value,
-            ".displayName.keyword",
-          );
+          setBoolObj.value = setQueryFilterByDepth(key, value, ".tagFQN");
           queryFilter.value.query.bool.must.push(setBoolObj.value);
           break;
         default:
-          setQueryFilterByDepth(key, value, "");
-          setBoolObj.value = setQueryFilterByDepth(
-            key,
-            value,
-            ".displayName.keyword",
-          );
+          setBoolObj.value = setQueryFilterByDepth(key, value, "");
           queryFilter.value.query.bool.must.push(setBoolObj.value);
       }
     }
