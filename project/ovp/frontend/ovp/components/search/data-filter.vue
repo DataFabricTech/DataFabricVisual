@@ -1,13 +1,13 @@
 <template>
-  <template v-for="(filter, title, FI) in props.data" :key="FI">
+  <template v-for="(filter, keyName, FI) in props.data" :key="FI">
     <menu-search-button
       :data="filter.data"
-      :selected-items="[]"
+      :selected-items="selectedFilterItems"
       label-key="text"
       value-key="id"
       :title="filter.text"
       :is-multi="true"
-      @multiple-change="changeMultiple($event, title)"
+      @multiple-change="changeMultiple($event, keyName)"
     ></menu-search-button>
   </template>
   <button
@@ -21,13 +21,14 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits } from "vue";
+import { ref } from "vue";
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
 import { useSearchCommonStore } from "@/store/search/common";
 import { storeToRefs } from "pinia";
 import _ from "lodash";
 
 const searchCommonStore = useSearchCommonStore();
+const { setQueryFilter } = searchCommonStore;
 const { selectedFilters } = storeToRefs(searchCommonStore);
 
 const props = defineProps({
@@ -37,28 +38,28 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits<{
-  (e: "resetFilters"): void;
-  // TODO : menu-search 구현 완료 되면 아래 기능 구현 -> menu-search 선택함에 따라 index.vue 단으로 옮기기
-  // (e: "filterSelected", params: object): void;
-}>();
+const selectedFilterItems: Ref<any> = ref([]);
 
 const resetFilters = () => {
-  emit("resetFilters");
+  selectedFilterItems.value = [];
+  selectedFilters.value = {};
+
+  setQueryFilter();
 };
 
-const changeMultiple: (value: any[] | {}, title: any) => void = (
+const changeMultiple: (value: any[] | {}, keyName: any) => void = (
   value: any[] | {},
-  title: string,
+  keyName: string,
 ) => {
   let selectedIds = _.map(value, "id");
+
   if (selectedIds.length === 0) {
-    delete selectedFilters.value[title];
+    delete selectedFilters.value[keyName];
   } else {
-    selectedFilters.value[title] = selectedIds;
+    selectedFilters.value[keyName] = selectedIds;
   }
 
-  console.log("selectedFilters", selectedFilters.value);
+  setQueryFilter();
 };
 </script>
 

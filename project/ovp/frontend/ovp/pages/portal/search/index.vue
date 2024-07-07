@@ -1,6 +1,6 @@
 <template>
   <div class="section-top-bar">
-    <data-filter :data="filters" @reset-filters="resetFilters"></data-filter>
+    <data-filter :data="filters"></data-filter>
   </div>
   <div class="section-contents">
     <top-bar></top-bar>
@@ -95,15 +95,12 @@ const modelNmClick = (id: string | number) => {
   console.log(`modelNmClick : ${id}`);
 };
 
-const resetFilters = () => {
-  console.log("resetFilters");
-};
-
 // TODO: 데이터 테스트 임시 코드, 나중에 제거
 export interface searchResult {
   data: any[];
   totalCount: number;
 }
+
 const searchResult: Ref<searchResult> = ref({} as searchResult);
 
 // TODO: intersection observer 옵션이 부족해 보임. 데이터가 1000가 넘으면 UI가 버벅거림.
