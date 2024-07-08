@@ -3,8 +3,8 @@
     <menu-search-button
       :data="filter.data"
       :selected-items="selectedFilterItems"
-      label-key="text"
-      value-key="id"
+      label-key="key"
+      value-key="key"
       :title="filter.text"
       :is-multi="true"
       @multiple-change="changeMultiple($event, keyName)"

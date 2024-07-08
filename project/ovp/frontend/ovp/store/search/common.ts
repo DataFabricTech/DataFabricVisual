@@ -1,12 +1,17 @@
-export interface filters {
-  domains: { text: string; data: any[] };
-  owners: { text: string; data: any[] };
-  tags: { text: string; data: any[] };
-  service: { text: string; data: any[] };
-  database: { text: string; data: any[] };
-  schema: { text: string; data: any[] };
-  column: { text: string; data: any[] };
-  tableType: { text: string; data: any[] };
+export interface Filter {
+  text: string;
+  data: any[];
+}
+export interface Filters {
+  domains: Filter;
+  "owner.displayName.keyword": Filter;
+  "tags.tagFQN": Filter;
+  "service.displayName.keyword": Filter;
+  serviceType: Filter;
+  "database.displayName.keyword": Filter;
+  "databaseSchema.displayName.keyword": Filter;
+  "columns.name.keyword": Filter;
+  tableType: Filter;
 }
 
 export interface details {
@@ -87,12 +92,39 @@ export interface QueryFilter {
 }
 
 import previewJson from "./samples/preview.json";
-import listResult from "./samples/listResult.json";
 import detailsJson from "./samples/details.json";
 
 export const useSearchCommonStore = defineStore("searchCommon", () => {
+  const { $api } = useNuxtApp();
+
+  // filters 초기값 부여 (text 처리)
+  const createDefaultFilters = (): Filters => {
+    return {
+      domains: { text: "카테고리", data: [] },
+      "owner.displayName.keyword": { text: "소유자", data: [] },
+      "tags.tagFQN": { text: "태그", data: [] },
+      "service.displayName.keyword": {
+        text: "서비스",
+        data: [],
+      },
+      serviceType: {
+        text: "서비스타입",
+        data: [],
+      },
+      "database.displayName.keyword": {
+        text: "데이터베이스",
+        data: [],
+      },
+      "databaseSchema.displayName.keyword": {
+        text: "스키마",
+        data: [],
+      },
+      "columns.name.keyword": { text: "컬럼", data: [] },
+      tableType: { text: "테이블타입", data: [] },
+    };
+  };
   // filter 정보
-  const filters: Ref<filters> = ref({} as filters);
+  const filters = ref<Filters>(createDefaultFilters());
   const searchResult: Ref<searchResult> = ref({} as searchResult);
   const details: Ref<details> = ref({} as details);
   const previewData: Ref<any> = ref({
@@ -111,10 +143,29 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const searchResultLength: Ref<number> = ref<number>(0);
 
   // METHODS
-  const getSearchCommonData = async () => {
-    // TODO: 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
-    filters.value = listResult.filters;
-    searchResult.value = listResult.data;
+  const getSearchList = async (params: object) => {
+    const { totalCount, data } = await $api(`/api/search/list`, params);
+    searchResult.value = data;
+    searchResultLength.value = totalCount;
+  };
+  const getFilters = async () => {
+    const data = await $api(`/api/search/filters`);
+
+    // 사용할 필터를 정리
+    const useFilters: string[] = [
+      "domains",
+      "owner.displayName.keyword",
+      "tags.tagFQN",
+      "service.displayName.keyword",
+      "serviceType",
+      "database.displayName.keyword",
+      "databaseSchema.displayName.keyword",
+      "columns.name.keyword",
+      "tableType",
+    ];
+    useFilters.forEach((key: string) => {
+      (filters.value as any)[key].data = data[key];
+    });
   };
 
   const getSearchDetails = async () => {
@@ -193,7 +244,8 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     isShowPreview,
     isBoxSelectedStyle,
     searchResultLength,
-    getSearchCommonData,
+    getSearchList,
+    getFilters,
     getSearchDetails,
     getPreviewData,
     setQueryFilter,
