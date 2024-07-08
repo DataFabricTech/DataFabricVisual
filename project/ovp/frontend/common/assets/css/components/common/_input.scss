@@ -87,8 +87,6 @@ $input-field-classes: text-input, textarea;
     }
 
     &-subtext {
-      @include ellipsis;
-      
       margin-left: $spacing-2;
       font-weight: 400;
       color: $neutral-500;

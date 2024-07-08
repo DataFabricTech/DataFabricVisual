@@ -29,6 +29,7 @@
                 <svg-icon class="svg-icon" name="reset"></svg-icon>
               </button>
             </div>
+            <!-- 컨텐츠 넘침은 무시하고 작업해주세요.  -->
             <div class="filters">
               <div class="h-group">
                 <select-box class="select-clean select-sm"></select-box>
@@ -40,7 +41,7 @@
           <ul class="menu-list">
             <li class="menu-item">
               <div class="checkbox">
-                <input type="checkbox" id="checkbox-menu-01" class="checkbox-input" />
+                <input type="checkbox" id="checkbox-menu-01" class="checkbox-input" checked />
                 <label for="checkbox-menu-01" class="checkbox-label">
                   <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
                   <span class="menu-text">데이터 모델</span>
@@ -54,7 +55,7 @@
                   <svg-icon class="svg-icon secondary" name="tag-fill"></svg-icon>
                 </button>
                 <button class="button button-neutral-ghost button-sm">
-                  <span class="hidden-text">북마크</span>
+                  <span class="hidden-text">메뉴보기</span>
                   <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
                 </button>
               </div>
@@ -94,7 +95,7 @@
                   <svg-icon class="svg-icon" name="tag"></svg-icon>
                 </button>
                 <button class="button button-neutral-ghost button-sm">
-                  <span class="hidden-text">북마크</span>
+                  <span class="hidden-text">메뉴보기</span>
                   <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
                 </button>
               </div>
@@ -114,7 +115,7 @@
                   <svg-icon class="svg-icon" name="tag"></svg-icon>
                 </button>
                 <button class="button button-neutral-ghost button-sm">
-                  <span class="hidden-text">북마크</span>
+                  <span class="hidden-text">메뉴보기</span>
                   <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
                 </button>
               </div>
@@ -134,7 +135,7 @@
                   <svg-icon class="svg-icon" name="tag"></svg-icon>
                 </button>
                 <button class="button button-neutral-ghost button-sm">
-                  <span class="hidden-text">북마크</span>
+                  <span class="hidden-text">메뉴보기</span>
                   <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
                 </button>
               </div>
@@ -154,7 +155,7 @@
                   <svg-icon class="svg-icon" name="tag"></svg-icon>
                 </button>
                 <button class="button button-neutral-ghost button-sm">
-                  <span class="hidden-text">북마크</span>
+                  <span class="hidden-text">메뉴보기</span>
                   <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
                 </button>
               </div>
@@ -174,7 +175,27 @@
                   <svg-icon class="svg-icon" name="tag"></svg-icon>
                 </button>
                 <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">메뉴보기</span>
+                  <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                </button>
+              </div>
+            </li>
+            <li class="menu-item">
+              <div class="checkbox">
+                <input type="checkbox" id="checkbox-menu-07" class="checkbox-input" />
+                <label for="checkbox-menu-07" class="checkbox-label">
+                  <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                  <span class="menu-text">데이터 모델</span>
+                  <span class="checkbox-subtext">(소유자)</span>
+                </label>
+              </div>
+              <div class="menu-button-group">
+                <button class="button button-neutral-ghost button-sm">
                   <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
+                </button>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">메뉴보기</span>
                   <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
                 </button>
               </div>
@@ -190,6 +211,7 @@
           </button>
           <button class="button button-error-lighter">초기화</button>
         </div>
+        <!-- TODO: [퍼블리싱] code-box 적용 후 스타일 수정 확인 필요 -->
         <div class="code-box">
           code-box
         </div>
@@ -217,7 +239,7 @@
               <span class="data-summary-name">데이터 모델 길어지면 말줄임 합니다</span>
               <span class="data-summary-text">(소유자)</span>
             </div>
-            <div class="table-scroll" style="height: 95%">
+            <div class="table-scroll">
               <table>
                 <thead>
                 <tr>
@@ -250,7 +272,7 @@
                   <td>항목</td>
                   <td>항목</td>
                   <td>항목</td>
-                  <td>항목</td>
+                  <td>항목항목항목항목항목항목항목항목</td>
                   <td>항목</td>
                   <td>항목</td>
                 </tr>
@@ -269,9 +291,92 @@
           </div>
         </div>
       </div>
-      <div class="panel-contents">
-        <div class="data-result">
-
+      <div class="work-page">
+        <div class="l-top-bar py-3">
+          <div class="h-group gap-2">
+            <span class="font-semibold">실행 결과</span>
+            <!-- TODO: [개발] 실행 성공시 .badge-green으로 변경-->
+            <div class="badge badge-red">
+              <svg-icon class="badge-icon" name="error"></svg-icon>
+              <p class="badge-text">error</p>
+            </div>
+          </div>
+          <div class="result-info">
+            <div class="h-group gap-3">
+              <div class="badge badge-secondary-lighter">
+                <p class="badge-text">실행시간</p>
+              </div>
+              <span>103ms</span>
+            </div>
+            <div class="h-group gap-3">
+              <div class="badge badge-secondary-lighter">
+                <p class="badge-text">실행시각</p>
+              </div>
+              <span>2024-06-05 13:23:53</span>
+            </div>
+            <div class="h-group gap-3">
+              <div class="badge badge-secondary-lighter">
+                <p class="badge-text">레코드 수</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- TODO: [개발] 실행 성공시-->
+        <div class="result">
+          <table>
+            <thead>
+            <tr>
+              <th>NAME</th>
+              <th>DATA TYPE</th>
+              <th>NAME</th>
+              <th>DATA TYPE</th>
+              <th>NAME</th>
+              <th>DATA TYPE</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+            </tr>
+            <tr>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+            </tr>
+            <tr>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목항목항목항목항목항목항목항목</td>
+              <td>항목</td>
+              <td>항목</td>
+            </tr>
+            <tr>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- TODO: [개발] 실행 error의 경우-->
+        <div class="result result-error" style="display: none">
+          <p>
+            Line 1 ~ 6 : Unknown error. ( TableNotExistsError() [/*+ LOCATION ( PARTITION >= '20240605131200' AND
+            PARTITION <= '20240605131500' ) */ SELECT CATEGORY, BOUNDARY,SIDO_ENG, SIDO_KOR G_CO FROM ROOT.DTST limit
+            5000;] )
+          </p>
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 // common
-@import "../../../common/assets/css/main";
+@import "../../../common/assets/css/base";
 
 // layouts
 @import "./layouts/common";
@@ -8,8 +8,6 @@
 @import "./layouts/main";
 @import "./layouts/section";
 @import "./layouts/no-result";
-
-
 
 //conmponent
 @import "./component/resource-box";
@@ -24,4 +22,6 @@
 @import "./pages/search-detail";
 @import "./pages/creation";
 @import "./pages/editable-group";
+
+@import "../../../common/assets/css/utility";
 
