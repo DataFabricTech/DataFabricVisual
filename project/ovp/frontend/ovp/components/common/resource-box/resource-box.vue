@@ -38,6 +38,8 @@
     >
       <template #edit-slot>
         <input
+          required
+          value="세종특별자치시 상하수도요금"
           id="title-modify"
           class="text-input w-2/4"
           v-model="newData.modelNm"
@@ -51,7 +53,7 @@
             class="resource-box-title"
             title="상세 보기"
             @click.stop="modelNmClick"
-            >{{ props.dataObj.modelNm }}</a
+          >{{ props.dataObj.modelNm }}</a
           >
         </template>
         <template v-else>
@@ -147,7 +149,7 @@ const newValue = ref<Record<string, any>>({});
 
 const props = withDefaults(defineProps<ResourceBoxProps>(), {
   useDataNmLink: false,
-  editable: false,
+  editable: false
 });
 
 const emit = defineEmits<{

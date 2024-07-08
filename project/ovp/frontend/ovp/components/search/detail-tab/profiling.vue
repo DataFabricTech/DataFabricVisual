@@ -35,19 +35,20 @@
             null: {
               type: 'html',
               fn: (val: any) => {
-                return `<progress id='bar-gage-02' class='progressbar progressbar-major' value=${val} max='100'></progress>`;
+                return `
+    <div>${val}<progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
               },
             },
             unique: {
               type: 'html',
               fn: (val: any) => {
-                return `<progress id='bar-gage-02' class='progressbar progressbar-major' value=${val} max='100'></progress>`;
+                return `<progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress>`;
               },
             },
             distinct: {
               type: 'html',
               fn: (val: any) => {
-                return `<progress id='bar-gage-02' class='progressbar progressbar-major' value=${val} max='100'></progress>`;
+                return `<progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress>`;
               },
             },
           }"
