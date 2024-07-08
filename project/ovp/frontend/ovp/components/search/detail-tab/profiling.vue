@@ -36,7 +36,7 @@
               type: 'html',
               fn: (val: any) => {
                 return `
-    <div>${val}<progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
+    <div class='v-group'><span class='progressbar-text'>${val}</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
               },
             },
             unique: {
