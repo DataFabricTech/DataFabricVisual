@@ -102,7 +102,7 @@
             </div>
           </div>
 
-          <div class="h-group gap-2.5">
+          <div class="editable-group">
             <div class="tag tag-primary tag-sm">
               <span class="tag-text">tag</span>
             </div>
@@ -114,7 +114,7 @@
               <svg-icon class="button-icon" name="pen"></svg-icon>
             </button>
           </div>
-          <div class="h-group gap-2.5">
+          <div class="editable-group">
             <!-- TODO: [개발] 수정버튼 클릭시 select 활성화  -->
             <div class="select select-clean">
               <button class="select-button">
