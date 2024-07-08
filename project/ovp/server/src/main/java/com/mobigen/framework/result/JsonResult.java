@@ -15,12 +15,12 @@ public class JsonResult {
 	private int result = RESULT_FAIL;
 	private String errorMessage = "";
 	private Object data = null;
-	
+
 	public JsonResult(Object value) {
 		this.setData(value);
 	}
-	
-	
+
+
 	public void setErrorMessage(String errorMessage) {
 		this.errorMessage = errorMessage;
 		this.result = RESULT_FAIL;
@@ -43,6 +43,6 @@ public class JsonResult {
 	public void setData(Object data) {
 		this.data = data;
 		this.result = RESULT_SUCCESS;
-		log.error("setData {}", data);
+		log.info("setData {}", data);
 	}
 }
