@@ -102,13 +102,6 @@ const multiple_sample_data2 : Ref<any> =  ref({
 const changeMultiple : (value : any[] | {}) => void = (value) => {
   console.log("changeMultiple", value);
 }
-const changeMultiple2 : (value : any[] | {}) => void = (value) => {
-  console.log("changeMultiple", value);
-}
-const onClickChangData : (value : any[] | {}) => void = (value) => {
-  multiple_sample_data2.value.selectedItems = [];
-  console.log("onClickChangData", value);
-}
 
 const onClickChangData : (value : any[] | {}) => void = (value) => {
   multiple_sample_selected_data.value = [];
