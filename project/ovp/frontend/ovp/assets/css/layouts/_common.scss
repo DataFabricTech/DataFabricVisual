@@ -31,13 +31,14 @@
 
   .work-contents {
     @include flex($direction: column, $vertical: null, $horizontal: null);
+    height: 100%;
     overflow: auto;
+    gap: $spacing-32;
     padding: $spacing-16;
 
     .l-top-bar {
       @include flex($vertical: flex-start, $direction: column);
       gap: $spacing-8;
-      margin-top: $spacing-32;
       padding: 0;
       border: 0;
     }
