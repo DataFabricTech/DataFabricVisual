@@ -60,6 +60,32 @@ export interface searchResult {
   totalCount: number;
 }
 
+export interface SelectedFilters {
+  [key: string]: string[];
+}
+
+interface SingleKeyObj {
+  [key: string]: Ref<string>;
+}
+
+interface KeyObj {
+  term: SingleKeyObj;
+}
+
+interface BoolObj {
+  bool: {
+    should: any[];
+  };
+}
+
+export interface QueryFilter {
+  query: {
+    bool: {
+      must: any[];
+    };
+  };
+}
+
 import previewJson from "./samples/preview.json";
 import listResult from "./samples/listResult.json";
 import detailsJson from "./samples/details.json";
@@ -76,6 +102,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       },
     },
   });
+  const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
 
   // DATA
   const viewType: Ref<string> = ref<string>("listView");
@@ -99,11 +126,69 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     // TODO: 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
     previewData.value = previewJson;
   };
+
+  const setQueryFilterByDepth = (key: string, value: any, suffix: string) => {
+    const setTermObj: Ref<any[]> = ref<any[]>([]);
+    const setBoolObj: Ref<BoolObj> = ref<BoolObj>({
+      bool: { should: [] },
+    });
+
+    for (const item of value) {
+      const setKeyObj: Ref<KeyObj> = ref<KeyObj>({
+        term: { [`${key}${suffix}`]: ref(item) },
+      });
+
+      setTermObj.value.push(setKeyObj.value);
+    }
+    setBoolObj.value.bool.should = setTermObj.value;
+    return setBoolObj.value;
+  };
+
+  const setQueryFilter = () => {
+    const queryFilter: Ref<QueryFilter> = ref({
+      query: { bool: { must: [] } },
+    });
+    const setBoolObj: Ref<object> = ref<object>({});
+
+    for (const key in selectedFilters.value) {
+      const value = selectedFilters.value[key];
+
+      switch (key) {
+        case "owners":
+        case "service":
+          setBoolObj.value = setQueryFilterByDepth(
+            key,
+            value,
+            ".displayName.keyword",
+          );
+          queryFilter.value.query.bool.must.push(setBoolObj.value);
+          break;
+        case "database":
+        case "databaseSchema":
+        case "columns":
+          setBoolObj.value = setQueryFilterByDepth(key, value, ".name.keyword");
+          queryFilter.value.query.bool.must.push(setBoolObj.value);
+          break;
+        case "tags":
+          setBoolObj.value = setQueryFilterByDepth(key, value, ".tagFQN");
+          queryFilter.value.query.bool.must.push(setBoolObj.value);
+          break;
+        default:
+          setBoolObj.value = setQueryFilterByDepth(key, value, "");
+          queryFilter.value.query.bool.must.push(setBoolObj.value);
+      }
+    }
+
+    // TODO: 서버 연동 후 queryFilter Request 필요
+    console.log("queryFilter: ", queryFilter.value);
+  };
+
   return {
     filters,
     searchResult,
     details,
     previewData,
+    selectedFilters,
     viewType,
     isShowPreview,
     isBoxSelectedStyle,
@@ -111,5 +196,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getSearchCommonData,
     getSearchDetails,
     getPreviewData,
+    setQueryFilter,
   };
 });

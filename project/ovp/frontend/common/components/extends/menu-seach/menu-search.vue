@@ -18,10 +18,6 @@
           <span class="hidden-text">지우기</span>
           <svg-icon class="button-icon" name="close"></svg-icon>
         </button>
-        <button class="search-input-button button button-neutral-ghost">
-          <span class="hidden-text">검색</span>
-          <svg-icon class="button-icon" name="search"></svg-icon>
-        </button>
       </div>
     </div>
     <div class="menu-list">
