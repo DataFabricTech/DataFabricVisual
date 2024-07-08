@@ -8,12 +8,16 @@
         @change="checked($event, dataObj.id)"
       />
       <label :for="`resource_box_list_${index}`" class="checkbox-label">
+        <span class="checkbox-text"> </span>
       </label>
     </div>
 
     <resource-box
       :class="[
-        { 'is-resource-box-selected': selectedResourceBoxId === dataObj.id },
+        {
+          'is-resource-box-selected':
+            isBoxSelectedStyle && selectedResourceBoxId === dataObj.id,
+        },
         props.class,
       ]"
       :data-obj="dataObj"
@@ -42,6 +46,7 @@ const props = withDefaults(defineProps<ResourceBoxListProps>(), {
   useFirModelNm: false,
   useListCheckbox: false,
   useDataNmLink: true,
+  isBoxSelectedStyle: false,
 });
 
 const emit = defineEmits<{

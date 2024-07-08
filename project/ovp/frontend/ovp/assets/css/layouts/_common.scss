@@ -4,8 +4,13 @@
   display: flex;
   flex-grow: 1;
 
+  &:has(.work-contents) {
+    height: calc(100% - 48px);
+  }
+
   .work-list {
-    width: 330px;
+    //overflow: hidden;
+    flex: 0 0 310px;
     border-right: 1px solid $neutral-200;
 
     .menu-data {
@@ -45,6 +50,24 @@
       border-bottom: 1px solid $neutral-200;
     }
   }
+
+  .work-contents {
+    @include flex($direction: column, $vertical: null, $horizontal: null);
+    overflow: auto;
+    padding: $spacing-16;
+
+    .l-top-bar {
+      @include flex($vertical: flex-start, $direction: column);
+      gap: $spacing-8;
+      margin-top: $spacing-32;
+      padding: 0;
+      border: 0;
+    }
+
+    .l-resource-box {
+      height: 894px;
+    }
+  }
 }
 
 .section-contents:has(.l-split + .l-split) {
@@ -58,6 +81,7 @@
     }
   }
 }
+
 
 .l-between {
   @include flex($horizontal: space-between);

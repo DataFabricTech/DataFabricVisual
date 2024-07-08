@@ -72,17 +72,23 @@ public class Token {
             return JsonResult.RESULT_FAIL;
         }
 
-        token.forEach((key, value) -> {
-            ResponseCookie tokenCookie = ResponseCookie
-                    .from(properties.getToken().getAccessToken(), (String) token.get(properties.getToken().getAccessToken()))
-                    .path("/")
-                    .sameSite(properties.getSecurity().getSameSite())
-                    .build();
+        ResponseCookie accessTokenCookie = ResponseCookie
+                .from(properties.getToken().getAccessToken(), (String) token.get(properties.getToken().getAccessToken()))
+                .path("/")
+                .sameSite(properties.getSecurity().getSameSite())
+                .build();
 
-            // NOTE: Set_Cookie로 쿠키값이 적용이 안되는 경우가 있어 COOKIE 설정도 같이 해줌
-            response.addHeader(HttpHeaders.SET_COOKIE, tokenCookie.toString());
-            response.setHeader(HttpHeaders.COOKIE, tokenCookie.toString());
-        });
+        ResponseCookie refreshTokenCookie = ResponseCookie
+                .from(properties.getToken().getRefreshToken(), (String) token.get(properties.getToken().getRefreshToken()))
+                .path("/")
+                .sameSite(properties.getSecurity().getSameSite())
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
+        // NOTE: Set_Cookie로 쿠키값이 적용이 안되는 경우가 있어 COOKIE 설정도 같이 해줌
+        response.setHeader(HttpHeaders.COOKIE, accessTokenCookie.toString());
+        response.setHeader(HttpHeaders.COOKIE, refreshTokenCookie.toString());
         return JsonResult.RESULT_SUCCESS;
     }
 
@@ -186,34 +192,6 @@ public class Token {
                 .roleCode(jwt.getClaim("roleCode").asString())
                 .roleName(jwt.getClaim("roleName").asString())
                 .xAccessToken(accessToken).build();
-    }
-
-    /**
-     * 개발용으로 로컬 호스트 일때 무조건 세션 생성
-     *
-     * @param request
-     * @param response
-     * @return
-     * @throws Exception
-     */
-    public User localLogin(HttpServletRequest request, HttpServletResponse response) {
-        String remoteHost = request.getRemoteHost();
-        User user = null;
-        switch (remoteHost) {
-            case "localhost":
-            case "0:0:0:0:0:0:0:1":
-            case "127.0.0.1":
-                // TODO: OVP에서 open metadata로 연동 필요
-//                String userName = properties.getTest().getUsername();
-//                String password = properties.getTest().getPassword();
-//                Map<String, Object> tokenMap = keycloakAPI.login(userName, password);
-//                addTokenToResponse(response, tokenMap);
-                break;
-            default:
-                break;
-        }
-
-        return user;
     }
 
     /**

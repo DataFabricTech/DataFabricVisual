@@ -11,42 +11,50 @@
       <div class="flex flex-col ">
         <div class="flex gap-8 mb-14">
           <figure class="section-figure">
-          <div class="flex justify-center gap-4">
-            <div class="checkbox">
-              <input type="checkbox" id="checkbox" class="checkbox-input" />
-              <label for="checkbox" class="checkbox-label">
-                오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span></label
-              >
+            <div class="flex justify-center gap-4">
+              <div class="checkbox">
+                <input type="checkbox" id="checkbox" class="checkbox-input" />
+                <label for="checkbox" class="checkbox-label">
+                  <span class="checkbox-text"> 오늘 하루 그만보기 </span>
+                  <span class="checkbox-subtext">(Optional)</span></label
+                >
+              </div>
+              <div class="checkbox">
+                <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
+                <label for="checkbox2" class="checkbox-label">
+                  <span class="checkbox-text"> 오늘 하루 그만보기 </span>
+                  <span class="checkbox-subtext">(Optional)</span></label
+                >
+              </div>
+              <div class="checkbox checkbox-indeterminate">
+                <input type="checkbox" id="checkbox3" class="checkbox-input" checked />
+                <label for="checkbox3" class="checkbox-label">
+                  <span class="checkbox-text"> 오늘 하루 그만보기 </span>
+                </label>
+              </div>
             </div>
-            <div class="checkbox">
-              <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
-              <label for="checkbox2" class="checkbox-label">
-                오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span></label
-              >
+            <div class="flex justify-center gap-4">
+              <div class="checkbox checkbox-sm">
+                <input type="checkbox" id="checkboxsm" class="checkbox-input" />
+                <label for="checkboxsm" class="checkbox-label">
+                  <span class="checkbox-text"> 오늘 하루 그만보기 </span>
+                  <span class="checkbox-subtext">(Optional)</span></label
+                >
+              </div>
+              <div class="checkbox checkbox-sm">
+                <input type="checkbox" id="checkboxsm2" class="checkbox-input" disabled />
+                <label for="checkboxsm2" class="checkbox-label">
+                  <span class="checkbox-text"> 오늘 하루 그만보기 </span>
+                  <span class="checkbox-subtext">(Optional)</span></label
+                >
+              </div>
+              <div class="checkbox checkbox-indeterminate checkbox-sm">
+                <input type="checkbox" id="checkboxsm3" class="checkbox-input" checked />
+                <label for="checkboxsm3" class="checkbox-label">
+                  <span class="checkbox-text"> 오늘 하루 그만보기 </span>
+                </label>
+              </div>
             </div>
-            <div class="checkbox checkbox-indeterminate">
-              <input type="checkbox" id="checkbox3" class="checkbox-input" checked/>
-              <label for="checkbox3" class="checkbox-label"> 오늘 하루 그만보기 </label>
-            </div>
-          </div>
-          <div class="flex justify-center gap-4">
-            <div class="checkbox checkbox-sm">
-              <input type="checkbox" id="checkboxsm" class="checkbox-input" />
-              <label for="checkboxsm" class="checkbox-label">
-                오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span></label
-              >
-            </div>
-            <div class="checkbox checkbox-sm">
-              <input type="checkbox" id="checkboxsm2" class="checkbox-input" disabled />
-              <label for="checkboxsm2" class="checkbox-label">
-                오늘 하루 그만보기 <span class="checkbox-subtext">(Optional)</span></label
-              >
-            </div>
-            <div class="checkbox checkbox-indeterminate checkbox-sm">
-              <input type="checkbox" id="checkboxsm3" class="checkbox-input" checked/>
-              <label for="checkboxsm3" class="checkbox-label"> 오늘 하루 그만보기 </label>
-            </div>
-          </div>
           </figure>
           <div class="group-description">
             <p class="group-summary">

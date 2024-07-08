@@ -14,6 +14,7 @@
 //conmponent
 @import "./component/resource-box";
 @import "./component/data-menu";
+@import "./component/common";
 
 
 // pages
@@ -22,4 +23,5 @@
 @import "./pages/search";
 @import "./pages/search-detail";
 @import "./pages/creation";
+@import "./pages/editable-group";
 

@@ -30,6 +30,7 @@ $list-classes: menu, dropdown;
         height: 100%;
 
         &-label {
+          overflow: hidden;
           width: 100%;
           height: 100%;
 
@@ -75,8 +76,6 @@ $list-classes: menu, dropdown;
         color: $neutral-700;
         text-align: left;
       }
-
-
 
       .button {
         flex-shrink: 0;
