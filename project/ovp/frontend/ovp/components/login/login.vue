@@ -14,7 +14,7 @@
                     id="inpId"
                     class="text-input text-input-lg"
                     placeholder="아이디 또는 이메일 입력"
-                    v-model="loginId"
+                    v-model="loginEmailOrId"
                   />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
                 </div>
@@ -101,7 +101,7 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-const loginId = ref("");
+const loginEmailOrId = ref("");
 const loginPassword = ref("");
 
 const emailOrIdErrorMessage = ref("");
@@ -113,7 +113,7 @@ const isErrorPassword = ref(false);
 const inpType = ref("password");
 
 const login = async () => {
-  let id = loginId.value;
+  let id = loginEmailOrId.value;
   let password = loginPassword.value;
 
   loginValidationReset();
@@ -133,24 +133,25 @@ const login = async () => {
   }
 
   let param = {
-    id: id,
+    email: id,
     password: password,
   };
 
   const store = loginStore();
   const isloginSuccess = store.loginReq(param);
 
-  if (isloginSuccess) {
-    // TODO: 로그인 성공 시 메인 화면으로 이동.
-    router.push("/"); // 임시 경로
-  } else {
-    isErrorEmailOrId.value = true;
-    isErrorPassword.value = true;
-
-    // TODO: 서버에서 받은 에러 메시지 처리
-    passwordErrorMessage.value = "아이디 및 비밀번호가 유효하지 않습니다.";
-    emailOrIdErrorMessage.value = "아이디 및 비밀번호가 유효하지 않습니다.";
-  }
+  console.log("isloginSuccess: ", isloginSuccess);
+  // if (isloginSuccess) {
+  //   // TODO: 로그인 성공 시 메인 화면으로 이동.
+  //   router.push("/"); // 임시 경로
+  // } else {
+  //   isErrorEmailOrId.value = true;
+  //   isErrorPassword.value = true;
+  //
+  //   // TODO: 서버에서 받은 에러 메시지 처리
+  //   passwordErrorMessage.value = "아이디 및 비밀번호가 유효하지 않습니다.";
+  //   emailOrIdErrorMessage.value = "아이디 및 비밀번호가 유효하지 않습니다.";
+  // }
 };
 
 const loginValidationReset = () => {

@@ -9,33 +9,33 @@ export const loginStore = defineStore("login", () => {
 
   const getPublicKey = async () => {
     // @ts-ignore
-    return (publicKey.value = await $api(`/api/login/public-key`))
+    publicKey.value = await $api(`/api/auth/login/public-key`);
+  };
+
+  const loginReq = async (param: any) => {
+    await getPublicKey();
+    console.log("publicKey: ", publicKey.value);
+    const rsa = new RSA();
+    rsa.setKey(publicKey.value);
+    param.password = rsa.encrypt(param);
+
+    console.log("param확인: ", param);
+
+    // TODO: 서버 개발 후 주석 해제
+    // @ts-ignore
+    return (isloginSuccess.value = await $api(`/api/auth/login`, {
+      method: "POST",
+      body: param,
+    })
       .then((res: any) => {
         return res;
       })
       .catch((err: any) => {
-        console.log(err);
-      });
-  };
-
-  const loginReq = async (param: any) => {
-    const publicKey = getPublicKey();
-    const rsa = new RSA();
-    rsa.setKey(publicKey);
-    param.password = rsa.encrypt(param);
-
-    // TODO: 서버 개발 후 주석 해제
-    // return isloginSuccess.value = await $api('/api/login', {
-    //     method : 'POST',
-    //     body: param
-    // }).then((res: any) => {
-    //     return res;
-    // }).catch((err: any) => {
-    //     console.log("err: ", err);
-    // });
+        console.log("err: ", err);
+      }));
 
     // 임시 -> 삭제 예정
-    return (isloginSuccess.value = true);
+    //return (isloginSuccess.value = true);
   };
 
   return {
