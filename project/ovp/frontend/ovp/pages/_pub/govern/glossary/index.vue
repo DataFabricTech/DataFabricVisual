@@ -212,6 +212,7 @@
                 <li class="tab-item">
                   <button class="tab-button">
                     <p class="tab-button-text">활동사항</p>
+                    <span class="tab-button-count">20</span>
                   </button>
                 </li>
               </ul>
