@@ -4,7 +4,7 @@
       <div style="overflow: hidden; flex-grow: 1">
         <agGrid
           class="ag-theme-alpine ag-theme-quartz"
-          :style="`width: 80%; height: 500px`"
+          :style="`width: 100%; height: 500px`"
           :columnDefs="columnDefs"
           :rowData="rowData"
           rowId="id"
