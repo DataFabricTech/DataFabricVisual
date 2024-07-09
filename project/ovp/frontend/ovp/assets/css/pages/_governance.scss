@@ -80,6 +80,10 @@
     font-size: 13px;
   }
 
+  .tag {
+    flex-shrink: 0;
+  }
+
   &-contents {
     @include flex($horizontal: flex-start);
     width: 100%;
@@ -93,10 +97,6 @@
 
     &:has(.tag) {
       gap: $spacing-8;
-    }
-
-    .tag {
-      flex-shrink: 0;
     }
 
     .diff {
@@ -116,31 +116,31 @@
         color: $neutral-500;
       }
     }
+  }
 
-    .creation-info {
-      @include flex;
-      gap: $spacing-16;
+  .creation-info {
+    @include flex;
+    gap: $spacing-16;
 
-      &-item {
-        @include flex($direction: row, $vertical: flex-start);
-        gap: $spacing-12;
-      }
+    &-item {
+      @include flex($direction: row, $vertical: flex-start);
+      gap: $spacing-12;
+    }
 
-      &-label, &-value {
-        color: $neutral-500;
-        font-size: 13px;
-      }
+    &-label, &-value {
+      color: $neutral-500;
+      font-size: 13px;
+    }
 
-      &-value {
-        position: relative;
-        padding-left: $spacing-4;
+    &-value {
+      position: relative;
+      padding-left: $spacing-4;
 
-        &::before {
-          content: '•';
-          position: absolute;
-          left: -7px;
-          color: gray;
-        }
+      &::before {
+        content: '•';
+        position: absolute;
+        left: -7px;
+        color: gray;
       }
     }
   }

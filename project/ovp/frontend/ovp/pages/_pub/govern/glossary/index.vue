@@ -50,7 +50,7 @@
 
       </div>
       <!-- 용어사전 상세 -->
-      <div class="work-page" style="display: block">
+      <div class="work-page">
         <div class="l-top-bar">
           <div class="editable-group">
             <span class="editable-group-title">용어사전 01</span>
@@ -282,9 +282,9 @@
                   <div class="activity-info-head">
                     <p class="activity-info-title">
                       <strong>admin</strong>
-                      <span>added</span>
+                      added
                       <strong>Tags</strong>
-                      <span>for</span>
+                      for
                       <strong>용어사전01</strong>
                     </p>
                     <span class="activity-info-ago">3 days ago</span>
@@ -312,9 +312,9 @@
                   <div class="activity-info-head">
                     <p class="activity-info-title">
                       <strong>admin</strong>
-                      <span>added</span>
+                      added
                       <strong>Tags</strong>
-                      <span>for</span>
+                      for
                       <strong>용어사전01</strong>
                     </p>
                     <span class="activity-info-ago">3 days ago</span>
@@ -335,9 +335,9 @@
                   <div class="activity-info-head">
                     <p class="activity-info-title">
                       <strong>admin</strong>
-                      <span>updated</span>
+                      updated
                       <strong>Description</strong>
-                      <span>for</span>
+                      for
                       <strong>용어사전01</strong>
                     </p>
                     <span class="activity-info-ago">3 days ago</span>
@@ -359,9 +359,9 @@
                   <div class="activity-info-head">
                     <p class="activity-info-title">
                       <strong>admin</strong>
-                      <span>updated</span>
+                      updated
                       <strong>Description</strong>
-                      <span>for</span>
+                      for
                       <strong>용어사전01</strong>
                     </p>
                     <span class="activity-info-ago">3 days ago</span>
