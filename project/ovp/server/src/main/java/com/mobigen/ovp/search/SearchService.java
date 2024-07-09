@@ -84,7 +84,7 @@ public class SearchService {
                 Map<String, Object> source = (Map<String, Object>) hit.get("_source");
                 Map<String, Object> modifiedSource = new HashMap<>();
 
-                modifiedSource.put("id", source.get("key"));
+                modifiedSource.put("id", source.get("id"));
                 // TODO : ICON 처리 완료되면 아래 코드 수정 필요
                 modifiedSource.put("serviceIcon", "");
                 modifiedSource.put("depth", source.get("fullyQualifiedName").toString().split("\\."));
