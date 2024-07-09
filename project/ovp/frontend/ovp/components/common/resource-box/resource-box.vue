@@ -97,13 +97,29 @@
           <dl v-if="props.showOwner" class="resource-box-list">
             <dt>소유자</dt>
             <!-- TODO : [개발] 수정 component-->
-            <dd>수정태그 여기에</dd>
+            <dd>
+              <div class="select select-clean is-select-open">
+                <button class="select-button" @click="editDone('owner')">
+                  <span class="select-title">{{ newData.owner.value }}</span>
+                  <svg-icon
+                    class="svg-icon select-indicator"
+                    name="chevron-down-medium"
+                  ></svg-icon>
+                </button>
+                <menu-search
+                  :data="props.ownerList"
+                  :selected-items="[newData.owner]"
+                  @single-change="changeOwner"
+                  @cancel="editOwnerCategory('owner')"
+                ></menu-search>
+              </div>
+            </dd>
           </dl>
         </template>
         <template #view-slot>
           <dl v-if="props.showOwner" class="resource-box-list">
             <dt>소유자</dt>
-            <dd>{{ props.dataObj.owner }}</dd>
+            <dd>{{ newData.owner.value }}</dd>
           </dl>
         </template>
       </resource-box-edit-part>
@@ -122,13 +138,29 @@
           <!-- TODO : [개발] 수정 component-->
           <dl v-if="props.showCategory" class="resource-box-list">
             <dt>도메인</dt>
-            <dd>수정태그 여기에</dd>
+            <dd>
+              <div class="select select-clean is-select-open">
+                <button class="select-button" @click="editDone('category')">
+                  <span class="select-title">{{ newData.category.value }}</span>
+                  <svg-icon
+                    class="svg-icon select-indicator"
+                    name="chevron-down-medium"
+                  ></svg-icon>
+                </button>
+                <menu-search
+                  :data="props.categoryList"
+                  :selected-items="[newData.category]"
+                  @single-change="changeCategory"
+                  @cancel="editOwnerCategory('category')"
+                ></menu-search>
+              </div>
+            </dd>
           </dl>
         </template>
         <template #view-slot>
           <dl v-if="props.showCategory" class="resource-box-list">
             <dt>도메인</dt>
-            <dd>{{ props.dataObj.category }}</dd>
+            <dd>{{ newData.category.value }}</dd>
           </dl>
         </template>
       </resource-box-edit-part>
@@ -140,6 +172,7 @@
 import { defineEmits } from "vue";
 import type { ResourceBoxProps } from "./resource-box-props";
 import ResourceBoxEditPart from "./resource-box-edit-part.vue";
+import menuSearch from "@extends/menu-seach/menu-search.vue";
 
 const isEditMode = ref<Record<string, boolean>>({});
 const newData = ref<Record<string, any>>({});
@@ -149,7 +182,7 @@ const props = withDefaults(defineProps<ResourceBoxProps>(), {
   useDataNmLink: false,
   editable: false,
 });
-
+newData.value = props.dataObj;
 const emit = defineEmits<{
   (e: "previewClick", id: string | number): void;
   (e: "modelNmClick", id: string | number): void;
@@ -175,10 +208,24 @@ const editCancel = (key: string) => {
 };
 const editDone = (key: string) => {
   console.log(`${key} : ${newValue.value[key]}`);
+  isEditMode.value[key] = !isEditMode.value[key];
 };
 const editInput = (key: string, event: Event) => {
   const target = event.target as HTMLInputElement;
   console.log(`${key} : ${target.value}`);
+};
+const editOwnerCategory = (key: string) => {
+  isEditMode.value[key] = false;
+};
+const changeOwner = (val: object) => {
+  newData.value.owner = val;
+  const key = "owner";
+  isEditMode.value[key] = !isEditMode.value[key];
+};
+const changeCategory = (val: object) => {
+  newData.value.category = val;
+  const key = "category";
+  isEditMode.value[key] = !isEditMode.value[key];
 };
 </script>
 

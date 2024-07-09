@@ -5,8 +5,8 @@ export interface DataModel {
   firModelNm: string;
   modelNm: string;
   modelDesc: string;
-  owner: string;
-  category: string;
+  owner: { [key: string]: string };
+  category: { [key: string]: string };
 }
 
 export interface ResourceBoxCommonProps {

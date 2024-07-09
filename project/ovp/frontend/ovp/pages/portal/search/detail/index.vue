@@ -9,6 +9,8 @@
       :show-owner="true"
       :show-category="true"
       :editable="true"
+      :owner-list="ownerList"
+      :category-list="categoryList"
     />
     <Tab
       class="mt-8"
@@ -79,14 +81,29 @@ let resourceBoxObj: any = {
   modelNm: "세종특별자치시 상하수도요금표",
   modelDesc:
     "한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다",
-  owner: "Owner",
-  category: "Domain",
+  owner: { label: "Owner 01", value: "Owner 01" },
+  category: { label: "Domain 01", value: "Domain 01" },
 };
 
 function changeTab(item: number | string) {
   currentTab.value = item;
   currentComponent.value = _.find(tabOptions, ["value", item])?.component;
 }
+
+const ownerList = [
+  { label: "Owner 01", value: "Owner 01" },
+  { label: "Owner 02", value: "Owner 02" },
+  { label: "Owner 03", value: "Owner 03" },
+  { label: "Owner 04", value: "Owner 04" },
+  { label: "Owner 05", value: "Owner 05" },
+];
+const categoryList = [
+  { label: "Domain 01", value: "Domain 01" },
+  { label: "Domain 02", value: "Domain 02" },
+  { label: "Domain 03", value: "Domain 03" },
+  { label: "Domain 04", value: "Domain 04" },
+  { label: "Domain 05", value: "Domain 05" },
+];
 </script>
 
 <style lang="scss" scoped></style>
