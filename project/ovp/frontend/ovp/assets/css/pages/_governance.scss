@@ -1,5 +1,5 @@
 .card {
-  @include flex($horizontal:flex-start, $vertical: stretch);
+  @include flex($horizontal: flex-start, $vertical: stretch);
 
   flex-wrap: wrap;
   gap: $spacing-24;
@@ -49,7 +49,7 @@
   margin-top: $spacing-8;
 
   &-item {
-    @include flex($direction: row, $horizontal:flex-start, $vertical: flex-start);
+    @include flex($direction: row, $horizontal: flex-start, $vertical: flex-start);
     gap: $spacing-16;
     padding: $spacing-20 $spacing-16;
   }
@@ -98,50 +98,50 @@
     &:has(.tag) {
       gap: $spacing-8;
     }
+  }
+}
 
-    .diff {
-      &-added {
-        padding: $spacing-4;
-        background-color: $warning-100;
-        color: $warning-500;
-        font-weight: 600;
-      }
-
-      &-removed {
-        text-decoration: line-through;
-        color: $neutral-400;
-      }
-
-      &-description {
-        color: $neutral-500;
-      }
-    }
+.diff {
+  &-added {
+    padding: $spacing-4;
+    background-color: $warning-100;
+    color: $warning-500;
+    font-weight: 600;
   }
 
-  .creation-info {
-    @include flex;
-    gap: $spacing-16;
+  &-removed {
+    text-decoration: line-through;
+    color: $neutral-400;
+  }
 
-    &-item {
-      @include flex($direction: row, $vertical: flex-start);
-      gap: $spacing-12;
-    }
+  &-description {
+    color: $neutral-500;
+  }
+}
 
-    &-label, &-value {
-      color: $neutral-500;
-      font-size: 13px;
-    }
+.creation-info {
+  @include flex;
+  gap: $spacing-16;
 
-    &-value {
-      position: relative;
-      padding-left: $spacing-4;
+  &-item {
+    @include flex($direction: row, $vertical: flex-start);
+    gap: $spacing-12;
+  }
 
-      &::before {
-        content: '•';
-        position: absolute;
-        left: -7px;
-        color: gray;
-      }
+  &-label, &-value {
+    color: $neutral-500;
+    font-size: 13px;
+  }
+
+  &-value {
+    position: relative;
+    padding-left: $spacing-4;
+
+    &::before {
+      content: '•';
+      position: absolute;
+      left: -7px;
+      color: gray;
     }
   }
 }
