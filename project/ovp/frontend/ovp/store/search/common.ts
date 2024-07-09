@@ -87,7 +87,6 @@ export interface QueryFilter {
   };
 }
 
-import _ from "lodash";
 import previewJson from "./samples/preview.json";
 import detailsJson from "./samples/details.json";
 
