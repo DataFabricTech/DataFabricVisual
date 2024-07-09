@@ -11,7 +11,7 @@
         :data="options"
         label-key="label"
         value-key="value"
-        :selectedItem="selectedItem"
+        :selectedItem="`${sortKey}_${sortKeyOpt}`"
         :isFirstSelectedEvent="isFirstCheckedEvent"
         @select="selectItem"
       ></select-box>
@@ -51,17 +51,21 @@ import { useSearchCommonStore } from "@/store/search/common";
 import { storeToRefs } from "pinia";
 import SelectBox from "@extends/select-box/SelectBox.vue";
 import CONSTANTS from "~/constants/constants";
+import _ from "lodash";
 
 const searchCommonStore = useSearchCommonStore();
-const { viewType, searchResultLength } = storeToRefs(searchCommonStore);
+const { setSortInfo } = searchCommonStore;
+const { viewType, searchResultLength, sortKey, sortKeyOpt } =
+  storeToRefs(searchCommonStore);
 
 const options: { [key: string]: string | number }[] = CONSTANTS.SORT_FILTER;
 const isFirstCheckedEvent: boolean = true;
-const selectedItem = "totalVotes_desc";
 
 // 선택한 key 값 전달
 const selectItem = (item: string | number) => {
-  console.log(item);
+  if (!_.isUndefined(item) && typeof item === "string") {
+    setSortInfo(item);
+  }
 };
 </script>
 
