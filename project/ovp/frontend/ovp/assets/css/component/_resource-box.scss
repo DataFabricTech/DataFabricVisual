@@ -34,7 +34,7 @@
     gap: $spacing-4;
   }
 
-  &-title {
+  .editable-group-title {
     @include ellipsis;
     @include font-size('18');
 
@@ -45,12 +45,17 @@
       text-decoration: underline;
     }
   }
-
-  &-desc {
+  .editable-group-desc {
     @include ellipsis;
 
     width: 100%;
     color: $neutral-500;
+  }
+
+
+  &-initial-name {
+    @include font-size('13');
+    color: $neutral-400;
   }
 
   &-info {
@@ -102,23 +107,6 @@
     border-color: $neutral-200;
     @include box-shadow('sm');
   }
-
-  .editable-group {
-    &:has(.resource-box-desc + .button) {
-      display: inline;
-
-      .resource-box-desc {
-        display: inline;
-        vertical-align: top;
-      }
-
-      .button {
-        display: inline;
-        padding-left: 2.5px;
-        margin-left: $spacing-4;
-      }
-    }
-  }
 }
 
 .resource-box-full {
@@ -138,12 +126,13 @@
     box-shadow: none;
   }
 
-  .resource-box-desc,
-  .resource-box-title {
+  .editable-group-desc,
+  .editable-group-title {
     white-space: normal;
+    display: inline;
   }
 
-  .resource-box-title:hover {
+  .editable-group-title:hover {
     text-decoration: none;
   }
 }

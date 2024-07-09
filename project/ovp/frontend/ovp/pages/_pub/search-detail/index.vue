@@ -51,16 +51,16 @@
           </div>
         </div>
       </div>
-      <!--  TODO: [개발] 1.<a>였던 resource-box-title 요소를 상세페이지에서는 <h3>로 변경 필요
+      <!--  TODO: [개발] 1.<a>였던 editable-group-title 요소를 상세페이지에서는 <h3>로 변경 필요
          2. 수정시 .resource-box-요소와 button 및 input요소와 button 상위로 div.resource-box-group이 와야합니다.-->
-      <div class="resource-box-group">
-        <h3 class="resource-box-title">세종특별자치시 상하수도요금표</h3>
+      <div class="editable-group">
+        <h3 class="editable-group-title">세종특별자치시 상하수도요금표</h3>
         <button class="button button-neutral-ghost button-sm" type="button">
           <span class="hidden-text">수정</span>
           <svg-icon class="button-icon" name="pen"></svg-icon>
         </button>
       </div>
-      <div class="resource-box-group">
+      <div class="editable-group">
         <lable class="hidden-text" for="title-modify">데이터 모델 이름 입력</lable>
         <input id="title-modify" class="text-input w-2/4" />
         <div class="h-group gap-2 shrink-0">
@@ -72,14 +72,14 @@
           </button>
         </div>
       </div>
-      <div class="resource-box-group">
-        <span class="resource-box-desc">한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다</span>
+      <div class="editable-group">
+        <span class="editable-group-desc">한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다</span>
         <button class="button button-neutral-ghost button-sm" type="button">
           <span class="hidden-text">수정</span>
           <svg-icon class="button-icon " name="pen"></svg-icon>
         </button>
       </div>
-      <div class="resource-box-group">
+      <div class="editable-group">
         <lable class="hidden-text" for="description-modify">데이터 모델 설명 입력</lable>
         <textarea id="description-modify" class="textarea"></textarea>
         <div class="h-group gap-2">
@@ -92,7 +92,7 @@
         </div>
       </div>
       <div class="resource-box-info">
-        <div class="resource-box-group">
+        <div class="editable-group">
           <dl class="resource-box-list">
             <dt>소유자</dt>
             <dd>Owner</dd>
@@ -102,7 +102,7 @@
             <svg-icon class="button-icon" name="pen"></svg-icon>
           </button>
         </div>
-        <div class="resource-box-group">
+        <div class="editable-group">
           <dl class="resource-box-list">
             <dt>소유자</dt>
             <dd>
@@ -165,7 +165,7 @@
             </dd>
           </dl>
         </div>
-        <div class="resource-box-group">
+        <div class="editable-group">
           <dl class="resource-box-list">
             <dt>도메인</dt>
             <dd>Domain</dd>
@@ -224,7 +224,7 @@
       <div class="tab-contents">
         <div class="data-detail">
           <!--  기본정보 탭 시작-->
-          <table style="display: none">
+          <table>
             <colgroup>
               <col style="width: 20%" />
               <col />
@@ -261,7 +261,7 @@
             <tr>
               <th>용어</th>
               <td>
-                <div class="h-group gap-2.5">
+                <div class="editable-group">
                   <div class="tag tag-primary tag-sm">
                     <span class="tag-text">tag</span>
                   </div>
@@ -273,7 +273,7 @@
                     <svg-icon class="button-icon" name="pen"></svg-icon>
                   </button>
                 </div>
-                <div class="h-group gap-2.5">
+                <div class="editable-group">
                   <!-- TODO: [개발] 수정버튼 클릭시 select 활성화  -->
                   <div class="select select-clean">
                     <button class="select-button">
@@ -561,8 +561,8 @@
                     </div>
                   </div>
                 </div>
-                <a href="#" class="resource-box-title" title="상세 보기">세종특별자치시 상하수도요금표</a>
-                <span class="resource-box-desc">한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다</span>
+                <a href="#" class="editable-group-title" title="상세 보기">세종특별자치시 상하수도요금표</a>
+                <span class="editable-group-desc">한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다</span>
               </div>
               <!-- resource-box 끝  -->
             </div>
@@ -591,8 +591,8 @@
                     </div>
                   </div>
                 </div>
-                <a href="#" class="resource-box-title" title="상세 보기">세종특별자치시 상하수도요금표</a>
-                <span class="resource-box-desc">한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다</span>
+                <a href="#" class="editable-group-title" title="상세 보기">세종특별자치시 상하수도요금표</a>
+                <span class="editable-group-desc">한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다</span>
               </div>
               <!-- resource-box 끝  -->
             </div>

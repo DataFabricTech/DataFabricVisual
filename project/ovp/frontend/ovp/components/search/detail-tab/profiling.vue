@@ -19,7 +19,6 @@
           <svg-icon class="button-icon" name="close"></svg-icon>
         </button>
       </div>
-      <!--  TODO: [퍼블리싱] ag-grid 개발 후 스타일 적용 예정 -->
       <div class="profiling">
         <agGrid
           class="ag-theme-alpine ag-theme-quartz"

@@ -20,7 +20,7 @@
       <tr>
         <th>태그</th>
         <td>
-          <div class="h-group gap-2.5" v-if="!editTagsMode">
+          <div class="editable-group" v-if="!editTagsMode">
             <div class="tag tag-primary tag-sm" v-for="tag in modelInfo.tags">
               <span class="tag-text">{{ tag.label }}</span>
             </div>
@@ -33,7 +33,7 @@
               <svg-icon class="button-icon" name="pen"></svg-icon>
             </button>
           </div>
-          <div class="h-group gap-2.5" v-if="editTagsMode">
+          <div class="editable-group" v-if="editTagsMode">
             <div class="select select-clean">
               <button class="select-button" @click.stop="editTags">
                 <div
@@ -68,7 +68,7 @@
       <tr>
         <th>용어</th>
         <td>
-          <div class="h-group gap-2.5" v-if="!editTermsMode">
+          <div class="editable-group" v-if="!editTermsMode">
             <div class="tag tag-primary tag-sm" v-for="term in modelInfo.terms">
               <span class="tag-text">{{ term.label }}</span>
             </div>
@@ -81,7 +81,7 @@
               <svg-icon class="button-icon" name="pen"></svg-icon>
             </button>
           </div>
-          <div class="h-group gap-2.5" v-if="editTermsMode">
+          <div class="editable-group" v-if="editTermsMode">
             <div class="select select-clean">
               <button class="select-button" @click.stop="editTerms">
                 <div

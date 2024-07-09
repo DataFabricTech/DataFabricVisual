@@ -54,6 +54,7 @@
 
   .select-indicator {
     @include icon-size(18px);
+    margin-left: auto;
   }
 
   &.is-select-open {
