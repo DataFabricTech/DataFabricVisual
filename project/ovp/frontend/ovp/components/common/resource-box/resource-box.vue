@@ -17,7 +17,7 @@
               v-for="(item, index) in props.dataObj.depth"
               :key="index"
             >
-              <a class="breadcrumb-link">{{ item }}</a>
+              <span class="breadcrumb-text">{{ item }}</span>
             </li>
           </ul>
         </div>

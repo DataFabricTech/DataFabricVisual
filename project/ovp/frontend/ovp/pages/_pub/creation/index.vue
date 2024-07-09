@@ -35,9 +35,10 @@
               <div class="h-group">
                 <select-box class="select-clean select-sm"></select-box>
                 <select-box class="select-clean select-sm"></select-box>
+                <select-box class="select-clean select-sm"></select-box>
               </div>
               <!-- 정렬(인기많은순) select -->
-              <select-box class="select-sm"></select-box>
+              <select-box class="select-sm w-full"></select-box>
             </div>
           </div>
           <ul class="menu-list">
