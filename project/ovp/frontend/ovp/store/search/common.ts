@@ -2,6 +2,7 @@ export interface Filter {
   text: string;
   data: any[];
 }
+
 export interface Filters {
   domains: Filter;
   "owner.displayName.keyword": Filter;
@@ -178,7 +179,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     previewData.value = previewJson;
   };
 
-  const setQueryFilterByDepth = (key: string, value: any, suffix: string) => {
+  const setQueryFilterByDepth = (key: string, value: any) => {
     const setTermObj: Ref<any[]> = ref<any[]>([]);
     const setBoolObj: Ref<BoolObj> = ref<BoolObj>({
       bool: { should: [] },
@@ -186,7 +187,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
 
     for (const item of value) {
       const setKeyObj: Ref<KeyObj> = ref<KeyObj>({
-        term: { [`${key}${suffix}`]: ref(item) },
+        term: { [`${key}`]: ref(item) },
       });
 
       setTermObj.value.push(setKeyObj.value);
@@ -203,31 +204,8 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
 
     for (const key in selectedFilters.value) {
       const value = selectedFilters.value[key];
-
-      switch (key) {
-        case "owners":
-        case "service":
-          setBoolObj.value = setQueryFilterByDepth(
-            key,
-            value,
-            ".displayName.keyword",
-          );
-          queryFilter.value.query.bool.must.push(setBoolObj.value);
-          break;
-        case "database":
-        case "databaseSchema":
-        case "columns":
-          setBoolObj.value = setQueryFilterByDepth(key, value, ".name.keyword");
-          queryFilter.value.query.bool.must.push(setBoolObj.value);
-          break;
-        case "tags":
-          setBoolObj.value = setQueryFilterByDepth(key, value, ".tagFQN");
-          queryFilter.value.query.bool.must.push(setBoolObj.value);
-          break;
-        default:
-          setBoolObj.value = setQueryFilterByDepth(key, value, "");
-          queryFilter.value.query.bool.must.push(setBoolObj.value);
-      }
+      setBoolObj.value = setQueryFilterByDepth(key, value);
+      queryFilter.value.query.bool.must.push(setBoolObj.value);
     }
 
     // TODO: 서버 연동 후 queryFilter Request 필요

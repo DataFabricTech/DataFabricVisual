@@ -51,7 +51,7 @@ const changeMultiple: (value: any[] | {}, keyName: any) => void = (
   value: any[] | {},
   keyName: string,
 ) => {
-  let selectedIds = _.map(value, "id");
+  let selectedIds = _.map(value, "key");
 
   if (selectedIds.length === 0) {
     delete selectedFilters.value[keyName];
