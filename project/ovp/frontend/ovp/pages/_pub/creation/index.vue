@@ -342,7 +342,7 @@
         <div class="l-top-bar py-3">
           <div class="h-group gap-2">
             <span class="font-semibold">실행 결과</span>
-            <!-- TODO: [개발] 실행 성공시 .badge-green으로 변경-->
+            <!-- TODO: [개발] 실행 성공시 .badge-green으로 변경, icon name="checkmark"로 변경-->
             <div class="badge badge-red">
               <svg-icon class="badge-icon" name="error"></svg-icon>
               <p class="badge-text">error</p>
