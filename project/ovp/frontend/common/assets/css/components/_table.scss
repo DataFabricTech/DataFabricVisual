@@ -6,6 +6,11 @@ table {
     @include caption-out;
   }
 
+  &.align-center th,
+  &.align-center td {
+    text-align: center;
+  }
+
   th, td {
     padding: $spacing-12;
     border-right: 1px solid $neutral-200;
@@ -24,6 +29,30 @@ table {
   td {
     background-color: $neutral-0;
   }
+
+  .button-group {
+    @include flex();
+    gap: $spacing-16;
+
+    .button {
+      position: relative;
+    }
+
+    .button:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 50%;
+      background-color: $neutral-200;
+    }
+  }
+}
+
+.l-top-bar + table {
+  margin-top: $spacing-8;
 }
 
 .search-input + table {

@@ -64,6 +64,40 @@ const single_sample_selected_data : Ref<any> =  ref({
   id: "2",
   name: "BBB"
 });
+const multiple_sample_data2 : Ref<any> =  ref({
+  data: [
+    {
+      id: "1",
+      name: "AAA"
+    },
+    {
+      id: "2",
+      name: "BBB"
+    },
+    {
+      id: "3",
+      name: "CCC"
+    },
+    {
+      id: "4",
+      name: "DDD"
+    },
+  ],
+  selectedItems: [
+    {
+      id: "1",
+      name: "AAA"
+    },
+    {
+      id: "2",
+      name: "BBB"
+    },
+    {
+      id: "3",
+      name: "CCC"
+    },
+  ]
+});
 
 const changeMultiple : (value : any[] | {}) => void = (value) => {
   console.log("changeMultiple", value);
