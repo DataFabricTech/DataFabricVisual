@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, watch, defineExpose} from "vue";
+import { ref, onMounted, watch, defineExpose } from "vue";
 import cytoscape from "cytoscape";
 import dagre from "cytoscape-dagre";
 import cytoscapeNodeHtmlLabel from "cytoscape-node-html-label";
@@ -15,7 +15,7 @@ import type {
   NodeData,
   CytoscapeElement,
   CytoscapeNodeStyle,
-  CytoscapeEdgeStyle
+  CytoscapeEdgeStyle,
 } from "./lineage";
 import lineageStyle from "./lineage-style";
 
@@ -26,7 +26,8 @@ cytoscapeNodeHtmlLabel(cytoscape);
 let cyContainer = ref(null);
 let cyRef = null;
 
-const tpl = (data: NodeData) => {  // 라벨 템플릿 정의 메서드
+const tpl = (data: NodeData) => {
+  // 라벨 템플릿 정의 메서드
   return `<div style="display: flex; justify-content: center; align-items: center; text-align:center; color:white; background-color:#666; padding:5px; border: 2px solid #000; border-radius:5px; font-size:12px; width: 100px; height: 40px;">
             <div>
               ${data.path}<br/>
@@ -42,8 +43,8 @@ const props = defineProps<{
 const emit = defineEmits<{ (e: "change", nodeData: NodeData): void }>();
 
 const transformData = (
-    nodes: RawNodeData[],
-    edges: RawEdgeData[],
+  nodes: RawNodeData[],
+  edges: RawEdgeData[],
 ): CytoscapeElement[] => {
   const transformedNodes = nodes.map((node) => ({
     data: {
@@ -63,7 +64,7 @@ const transformData = (
   return [...transformedNodes, ...transformedEdges];
 };
 
-const style: (CytoscapeNodeStyle | CytoscapeEdgeStyle)[] = lineageStyle
+const style: (CytoscapeNodeStyle | CytoscapeEdgeStyle)[] = lineageStyle;
 
 const initializeCytoscape = (data: CytoscapeElement[]) => {
   if (cyContainer.value) {
@@ -76,7 +77,7 @@ const initializeCytoscape = (data: CytoscapeElement[]) => {
         rankDir: "LR",
         nodeSep: 50, // 노드 간격 설정
         edgeSep: 20, // 엣지 간의 간격 설정
-        rankSep: 100 // 각 계층간의 간격 설정
+        rankSep: 100, // 각 계층간의 간격 설정
       },
       userZoomingEnabled: false, // 마우스 스크롤 zoom in/out 설정
     };
@@ -94,7 +95,7 @@ const initializeCytoscape = (data: CytoscapeElement[]) => {
           halignBox: "center", // 라벨을 포함하는 박스의 수평 정렬 설정
           valignBox: "center", // 라벨을 포함하는 박스의 수직 정렬 설정
           cssClass: "",
-          tpl
+          tpl,
         },
       ]);
     }
@@ -123,7 +124,7 @@ const initializeCytoscape = (data: CytoscapeElement[]) => {
       }
     });
 
-    cyRef.on('tap', 'node', (event) => {
+    cyRef.on("tap", "node", (event) => {
       const node = event.target;
       handleNodeClick(node.data());
     });
@@ -156,12 +157,9 @@ const resetView = () => {
 
 // 리니지 초기화
 const reset = () => {
-
-  //TODO: 필터 선택 상태 초기화
-
   const data = transformData(props.lineageData.nodes, props.lineageData.edges);
   initializeCytoscape(data);
-}
+};
 
 onMounted(() => {
   const data = transformData(props.lineageData.nodes, props.lineageData.edges);
@@ -169,22 +167,22 @@ onMounted(() => {
 });
 
 watch(
-    () => props.lineageData,
-    (newLineageData) => {
-      if (cyRef) {
-        cyRef.destroy(); // 이전 cyRef 제거
-      }
-      const newData = transformData(newLineageData.nodes, newLineageData.edges);
-      initializeCytoscape(newData);
-    },
-    {deep: true},
+  () => props.lineageData,
+  (newLineageData) => {
+    if (cyRef) {
+      cyRef.destroy(); // 이전 cyRef 제거
+    }
+    const newData = transformData(newLineageData.nodes, newLineageData.edges);
+    initializeCytoscape(newData);
+  },
+  { deep: true },
 );
 
 defineExpose({
   zoomIn,
   zoomOut,
   resetView,
-  reset
+  reset,
 });
 </script>
 
@@ -192,7 +190,6 @@ defineExpose({
 .cytoscape-container {
   width: 80%;
   height: 600px;
-  border: 1px solid #ccc;
   position: relative; /* 상대 위치 */
 }
 
@@ -200,5 +197,4 @@ defineExpose({
   width: 100%;
   height: 100%;
 }
-
 </style>
