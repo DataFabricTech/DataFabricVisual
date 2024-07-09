@@ -126,7 +126,7 @@
         gap: $spacing-12;
       }
 
-      dt, dd {
+      &-label, &-value {
         color: $neutral-500;
         font-size: 13px;
       }
