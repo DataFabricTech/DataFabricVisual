@@ -43,3 +43,104 @@
     color: $neutral-500;
   }
 }
+
+//거버넌스 - 활동사항 탭 스타일
+.activity-info {
+  margin-top: $spacing-8;
+
+  &-item {
+    @include flex($direction: row, $horizontal:flex-start, $vertical: flex-start);
+    gap: $spacing-16;
+    padding: $spacing-20 $spacing-16;
+  }
+
+  &-item:not(:last-child) {
+    border-bottom: 1px solid $neutral-200;
+  }
+
+  &-wrap {
+    @include flex($direction: column, $vertical: flex-start);
+    gap: $spacing-12;
+    width: 100%;
+  }
+
+  &-head {
+    @include flex;
+    width: 100%;
+  }
+
+  &-title {
+    @include flex;
+    gap: $spacing-4;
+  }
+
+  &-ago {
+    margin-left: auto;
+    color: $neutral-400;
+    font-size: 13px;
+  }
+
+  &-contents {
+    @include flex($horizontal: flex-start);
+    width: 100%;
+    padding: $spacing-12;
+    border: 1px solid $neutral-200;
+
+    &.is-column {
+      @include flex($direction: column, $horizontal: flex-start, $vertical: flex-start);
+      gap: $spacing-4;
+    }
+
+    &:has(.tag) {
+      gap: $spacing-8;
+    }
+
+    .tag {
+      flex-shrink: 0;
+    }
+
+    .diff {
+      &-added {
+        padding: $spacing-4;
+        background-color: $warning-100;
+        color: $warning-500;
+        font-weight: 600;
+      }
+
+      &-removed {
+        text-decoration: line-through;
+        color: $neutral-400;
+      }
+
+      &-description {
+        color: $neutral-500;
+      }
+    }
+
+    .creation-info {
+      @include flex;
+      gap: $spacing-16;
+
+      .h-group {
+        gap: $spacing-12;
+      }
+
+      span {
+        color: $neutral-500;
+        font-size: 13px;
+      }
+
+      &-value {
+        position: relative;
+        padding-left: $spacing-4;
+
+        &::before {
+          content: '•';
+          position: absolute;
+          left: -7px;
+          color: gray;
+        }
+      }
+    }
+  }
+}

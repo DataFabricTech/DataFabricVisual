@@ -101,6 +101,7 @@
               </button>
             </div>
           </div>
+
           <div class="editable-group">
             <div class="tag tag-primary tag-sm">
               <span class="tag-text">tag</span>
@@ -113,7 +114,6 @@
               <svg-icon class="button-icon" name="pen"></svg-icon>
             </button>
           </div>
-          <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
           <div class="editable-group">
             <!-- TODO: [개발] 수정버튼 클릭시 select 활성화  -->
             <div class="select select-clean">
@@ -217,7 +217,6 @@
                 </li>
               </ul>
             </div>
-            <!--  용어 탭 시작  -->
             <div class="l-top-bar">
               <button class="button button-secondary ml-auto">용어추가</button>
             </div>
@@ -261,123 +260,6 @@
                 </td>
               </tr>
             </table>
-            <!--  용어 탭 끝  -->
-            <!--  활동사항 탭 시작-->
-            <ul class="activity-info">
-              <li class="activity-info-item">
-                <div class="profile">
-                  <span class="profile-avatar">
-                    <image class="profile-img" alt="프로필 이미지"></image>
-                  </span>
-                </div>
-                <div class="activity-info-wrap">
-                  <div class="activity-info-head">
-                    <p class="activity-info-title">
-                      <strong>admin</strong>
-                      <span>added</span>
-                      <strong>Tags</strong>
-                      <span>for</span>
-                      <strong>용어사전01</strong>
-                    </p>
-                    <span class="activity-info-ago">3 days ago</span>
-                  </div>
-                  <div class="activity-info-contents">
-                    <div class="tag tag-primary tag-sm">
-                      <a class="tag-link">태그01</a>
-                    </div>
-                    <div class="tag tag-primary tag-sm">
-                      <a class="tag-link">태그01</a>
-                    </div>
-                    <div class="tag tag-primary tag-sm">
-                      <a class="tag-link">태그01</a>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li class="activity-info-item">
-                <div class="profile">
-                  <span class="profile-avatar">
-                    <image class="profile-img" alt="프로필 이미지"></image>
-                  </span>
-                </div>
-                <div class="activity-info-wrap">
-                  <div class="activity-info-head">
-                    <p class="activity-info-title">
-                      <strong>admin</strong>
-                      <span>added</span>
-                      <strong>Tags</strong>
-                      <span>for</span>
-                      <strong>용어사전01</strong>
-                    </p>
-                    <span class="activity-info-ago">3 days ago</span>
-                  </div>
-                  <div class="activity-info-contents">
-                    <span>Updated owner : admin changed to </span>
-                    <span class="diff-added">ADMIN</span>
-                  </div>
-                </div>
-              </li>
-              <li class="activity-info-item">
-                <div class="profile">
-                  <span class="profile-avatar">
-                    <image class="profile-img" alt="프로필 이미지"></image>
-                  </span>
-                </div>
-                <div class="activity-info-wrap">
-                  <div class="activity-info-head">
-                    <p class="activity-info-title">
-                      <strong>admin</strong>
-                      <span>updated</span>
-                      <strong>Description</strong>
-                      <span>for</span>
-                      <strong>용어사전01</strong>
-                    </p>
-                    <span class="activity-info-ago">3 days ago</span>
-                  </div>
-                  <div class="activity-info-contents">
-                    <span>디스크립션</span>
-                    <span class="diff-removed">수정</span>
-                    <span class="diff-added">_01</span>
-                  </div>
-                </div>
-              </li>
-              <li class="activity-info-item">
-                <div class="profile">
-                  <span class="profile-avatar">
-                    <image class="profile-img" alt="프로필 이미지"></image>
-                  </span>
-                </div>
-                <div class="activity-info-wrap">
-                  <div class="activity-info-head">
-                    <p class="activity-info-title">
-                      <strong>admin</strong>
-                      <span>updated</span>
-                      <strong>Description</strong>
-                      <span>for</span>
-                      <strong>용어사전01</strong>
-                    </p>
-                    <span class="activity-info-ago">3 days ago</span>
-                  </div>
-                  <div class="activity-info-contents is-column">
-                    <strong>용어사전 01</strong>
-                    <span class="diff-description">
-                    용어사전 설명입니다.
-                    </span>
-                    <div class="creation-info">
-                      <div class="h-group">
-                        <span class="creation-info-label">소유자</span>
-                        <span class="creation-info-value">없음</span>
-                      </div>
-                      <div class="h-group">
-                        <span class="creation-info-label">도메인</span>
-                        <span class="creation-info-value">없음</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <!--  활동사항 탭 끝-->
           </div>
         </div>
       </div>
