@@ -61,7 +61,7 @@ import { IntersectionObserverHandler } from "@/utils/intersection-observer";
 import TopBar from "./top-bar.vue";
 
 const searchCommonStore = useSearchCommonStore();
-const { getSearchCommonData, getPreviewData } = searchCommonStore;
+const { getSearchList, getFilters, getPreviewData } = searchCommonStore;
 const {
   filters,
   // searchResult,
@@ -69,7 +69,6 @@ const {
   viewType,
   isShowPreview,
   isBoxSelectedStyle,
-  searchResultLength,
 } = storeToRefs(searchCommonStore);
 
 const getPreviewCloseStatus = (option: boolean) => {
@@ -167,9 +166,10 @@ onBeforeMount(async () => {
 });
 
 onMounted(async () => {
-  await getSearchCommonData();
-  // TODO: searchResultLength 는 store 에서 데이터를 요청해서 응답했을 때 store에서 셋팅해야 함.
-  searchResultLength.value = searchResult.value.data.length;
+  // TODO : queryParams : 목록 조회 조건 param
+  const queryParams = {};
+  await getSearchList(queryParams);
+  await getFilters();
 
   // intersection observer instance 생성
   intersectionHandler = new IntersectionObserverHandler(
