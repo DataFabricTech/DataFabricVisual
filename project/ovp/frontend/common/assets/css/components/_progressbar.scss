@@ -47,8 +47,16 @@
     background-color: $info-300;
   }
 
+  // % 표기
+  &-group {
+    @include flex($direction: column, $vertical: flex-end);
+    gap: $spacing-2;
+  }
+
   &-text {
-    line-height: 24px;
+    @include font-size('13');
+    font-size: 13px;
+    color: $neutral-500;
   }
 
   // progressbar type

@@ -1,19 +1,14 @@
 <template>
   <div class="data-detail">
-    <div style="display: flex; flex-direction: row">
-      <div style="overflow: hidden; flex-grow: 1">
-        <agGrid
-          class="ag-theme-alpine ag-theme-quartz"
-          :style="`width: 80%; height: 500px`"
-          :columnDefs="columnDefs"
-          :rowData="rowData"
-          rowId="id"
-          :useRowCheckBox="false"
-          :setColumnFit="true"
-          :useColumnResize="true"
-        ></agGrid>
-      </div>
-    </div>
+    <agGrid
+      class="ag-theme-alpine ag-theme-quartz"
+      :columnDefs="columnDefs"
+      :rowData="rowData"
+      rowId="id"
+      :useRowCheckBox="false"
+      :setColumnFit="true"
+      :useColumnResize="true"
+    ></agGrid>
   </div>
 </template>
 

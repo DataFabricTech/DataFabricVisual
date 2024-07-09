@@ -2,7 +2,6 @@
   <div class="data-detail">
     <agGrid
       class="ag-theme-alpine ag-theme-quartz"
-      :style="`width: 100%; height: 500px`"
       :columnDefs="COLUMN_DEFS"
       :rowData="rowData"
       rowId="id"

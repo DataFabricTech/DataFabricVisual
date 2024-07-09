@@ -23,7 +23,6 @@
       <div class="profiling">
         <agGrid
           class="ag-theme-alpine ag-theme-quartz"
-          :style="`width: 100%; height: 500px`"
           :columnDefs="COLUMN_DEFS"
           :rowData="rowData"
           rowId="id"
@@ -36,19 +35,21 @@
               type: 'html',
               fn: (val: any) => {
                 return `
-    <div class='v-group'><span class='progressbar-text'>${val}</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
+    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
               },
             },
             unique: {
               type: 'html',
               fn: (val: any) => {
-                return `<progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress>`;
+                return `
+    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
               },
             },
             distinct: {
               type: 'html',
               fn: (val: any) => {
-                return `<progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress>`;
+                return `
+    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
               },
             },
           }"

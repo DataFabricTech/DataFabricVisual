@@ -1,0 +1,21 @@
+.ag-theme-alpine.ag-theme-quartz {
+  flex-grow: 1;
+}
+
+.ag-theme-alpine.ag-theme-quartz .ag-root .ag-header{
+  background-color: $neutral-100;
+  border-color: $neutral-200;
+}
+
+.ag-theme-alpine.ag-theme-quartz .ag-root-wrapper {
+  border-color: transparent;
+}
+
+.ag-theme-alpine.ag-theme-quartz .ag-root-wrapper .ag-row-hover:not(.ag-full-width-row)::before {
+  background-color: #F7F9FC;
+}
+
+
+.ag-theme-alpine.ag-theme-quartz .ag-ltr .ag-cell-focus:not(.ag-cell-range-selected):focus-within {
+  border: none;
+}
