@@ -95,8 +95,6 @@ public class SearchService {
                 String owner = "";
                 if (source.get("owner") != null) {
                     Map<String, Object> onwerObj = (Map<String, Object>) source.get("owner");
-                    System.out.println(onwerObj);
-                    System.out.println(onwerObj.get("displayName"));
                     owner = onwerObj.get("displayName").toString();
                 }
                 modifiedSource.put("owner", owner);
@@ -104,8 +102,6 @@ public class SearchService {
                 String domain = "";
                 if (source.get("domain") != null) {
                     Map<String, Object> domainObj = (Map<String, Object>) source.get("domain");
-                    System.out.println(domainObj);
-                    System.out.println(domainObj.get("displayName"));
                     domain = domainObj.get("displayName").toString();
                 }
                 modifiedSource.put("category", domain);
