@@ -1,0 +1,6 @@
+.grid-content {
+  @include flex($direction:column);
+  gap: $spacing-8;
+  background-color: $neutral-0;
+  min-height: 340px;
+}

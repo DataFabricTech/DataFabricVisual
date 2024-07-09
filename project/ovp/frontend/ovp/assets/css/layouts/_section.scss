@@ -9,13 +9,6 @@
   }
 }
 
-
-.section-grid {
-  flex-direction: row;
-  padding: $spacing-16 $spacing-20;
-  gap: $spacing-24;
-}
-
 .section-top-bar {
   @include flex($horizontal: flex-start);
 
@@ -37,5 +30,13 @@
   //TODO: [퍼블리싱] 추후 삭제하고 쓰인 곳에 .p-0 사용할 것
   &-p-0 {
     padding: 0;
+  }
+
+  &-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    height: 100%;
+    gap: $spacing-16;
   }
 }

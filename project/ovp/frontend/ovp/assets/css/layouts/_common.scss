@@ -1,5 +1,4 @@
 //.l- class
-
 .l-split {
   display: flex;
   flex-grow: 1;
@@ -9,7 +8,6 @@
   }
 
   .work-list {
-    //overflow: hidden;
     width: 310px;
     flex: 0 0 310px;
     border-right: 1px solid $neutral-200;
