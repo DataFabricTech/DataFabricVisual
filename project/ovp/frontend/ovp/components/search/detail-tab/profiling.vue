@@ -19,11 +19,9 @@
           <svg-icon class="button-icon" name="close"></svg-icon>
         </button>
       </div>
-      <!--  TODO: [퍼블리싱] ag-grid 개발 후 스타일 적용 예정 -->
       <div class="profiling">
         <agGrid
           class="ag-theme-alpine ag-theme-quartz"
-          :style="`width: 100%; height: 500px`"
           :columnDefs="COLUMN_DEFS"
           :rowData="rowData"
           rowId="id"
@@ -35,19 +33,22 @@
             null: {
               type: 'html',
               fn: (val: any) => {
-                return `<progress id='bar-gage-02' class='progressbar progressbar-major' value=${val} max='100'></progress>`;
+                return `
+    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
               },
             },
             unique: {
               type: 'html',
               fn: (val: any) => {
-                return `<progress id='bar-gage-02' class='progressbar progressbar-major' value=${val} max='100'></progress>`;
+                return `
+    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
               },
             },
             distinct: {
               type: 'html',
               fn: (val: any) => {
-                return `<progress id='bar-gage-02' class='progressbar progressbar-major' value=${val} max='100'></progress>`;
+                return `
+    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
               },
             },
           }"

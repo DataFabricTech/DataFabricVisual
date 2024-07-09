@@ -49,6 +49,10 @@
 
     width: 100%;
     gap: $spacing-20;
+
+    .text-input ~ .notification {
+      margin-top: $spacing-4;
+    }
   }
 
   &-item {

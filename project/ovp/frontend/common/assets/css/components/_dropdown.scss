@@ -1,6 +1,10 @@
-@mixin dropdown-size($font-size: null, $size: 32px, $icon-size: 18px) {
+@mixin dropdown-size($font-size: null, $size: 32px, $icon-size: 18px, $padding-right: $spacing-8) {
   .dropdown-item {
     height: $size;
+
+    &:not(:has(.button-neutral-ghost)) {
+      padding-right: $padding-right;
+    }
 
     .dropdown-button {
       > .svg-icon {
@@ -30,12 +34,11 @@
     &-line {
       border-top: 1px solid $neutral-100;
     }
-
   }
 
   // Size
   &-lg {
-    @include dropdown-size($size: 36px, $icon-size: sm);
+    @include dropdown-size($size: 36px, $icon-size: sm, $padding-right: 10px);
 
     .dropdown-item {
       .checkbox-label::after {

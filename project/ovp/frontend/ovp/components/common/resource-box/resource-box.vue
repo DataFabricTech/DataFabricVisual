@@ -23,9 +23,7 @@
         </div>
       </div>
     </div>
-
-    <!-- TODO : [퍼블] 첫번째 데이터 명 -->
-    <div v-if="useFirModelNm">{{ props.dataObj.firModelNm }}</div>
+    <div class="resource-box-initial-name" v-if="useFirModelNm">{{ props.dataObj.firModelNm }}</div>
 
     <resource-box-edit-part
       partKey="modelNm"
@@ -38,6 +36,8 @@
     >
       <template #edit-slot>
         <input
+          required
+          value="세종특별자치시 상하수도요금"
           id="title-modify"
           class="text-input w-2/4"
           v-model="newData.modelNm"
@@ -48,14 +48,14 @@
         <template v-if="props.useDataNmLink">
           <a
             href="javascript:void(0);"
-            class="resource-box-title"
+            class="editable-group-title"
             title="상세 보기"
             @click.stop="modelNmClick"
-            >{{ props.dataObj.modelNm }}</a
+          >{{ props.dataObj.modelNm }}</a
           >
         </template>
         <template v-else>
-          <h3 class="resource-box-title">{{ props.dataObj.modelNm }}</h3>
+          <h3 class="editable-group-title">{{ props.dataObj.modelNm }}</h3>
         </template>
       </template>
     </resource-box-edit-part>
@@ -78,7 +78,7 @@
         ></textarea>
       </template>
       <template #view-slot>
-        <span class="resource-box-desc">{{ props.dataObj.modelDesc }}</span>
+        <span class="editable-group-desc">{{ props.dataObj.modelDesc }}</span>
       </template>
     </resource-box-edit-part>
 
@@ -147,7 +147,7 @@ const newValue = ref<Record<string, any>>({});
 
 const props = withDefaults(defineProps<ResourceBoxProps>(), {
   useDataNmLink: false,
-  editable: false,
+  editable: false
 });
 
 const emit = defineEmits<{

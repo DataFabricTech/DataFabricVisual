@@ -34,7 +34,8 @@
   }
 
   &-head {
-    height: 100%;
+    flex-shrink: 0;
+    //height: 100%;
     padding: $spacing-8;
     border-bottom: 1px solid $neutral-200;
   }

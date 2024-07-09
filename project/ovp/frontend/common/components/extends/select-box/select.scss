@@ -21,6 +21,7 @@
 .select {
   @include select-size;
   //@include z-index('float');
+
   position: relative;
 
   &-button {
@@ -53,6 +54,7 @@
 
   .select-indicator {
     @include icon-size(18px);
+    margin-left: auto;
   }
 
   &.is-select-open {
@@ -113,6 +115,7 @@
   }
 
   .dropdown {
+    min-width: 200px;
     width: 100%;
     margin-top: $spacing-4;
   }

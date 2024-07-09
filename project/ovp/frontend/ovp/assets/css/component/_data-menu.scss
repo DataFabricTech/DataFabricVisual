@@ -1,8 +1,44 @@
-.data-menu {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-8;
-  padding: $spacing-8;
+.menu-data {
+    border: none;
 
+  .search-input {
+    flex-grow: 1;
+  }
 
+  .filters {
+    @include flex($horizontal: space-between);
+    gap: 0;
+    position: static;
+    padding: 0;
+    margin-top: $spacing-8;
+
+    .select-button {
+      padding: 0 $spacing-4;
+    }
+  }
+
+  .menu-head {
+    border-bottom: none;
+  }
+
+  .menu-list {
+    overflow-y: auto;
+    flex-grow: 1;
+    padding: $spacing-2 $spacing-8;
+  }
+
+  .menu-item {
+    background: #F7F9FC;
+    border-radius: $border-radius-4;
+    border:1px solid $neutral-200;
+
+    &:not(:first-child) {
+      margin-top: $spacing-4;
+    }
+
+    .menu-data-icon {
+      @include icon-size('md');
+      margin-right: $spacing-8;
+    }
+  }
 }

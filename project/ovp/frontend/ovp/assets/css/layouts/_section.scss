@@ -34,6 +34,7 @@
   height: 100%;
   padding: $spacing-16 $spacing-20;
 
+  //TODO: [퍼블리싱] 추후 삭제하고 쓰인 곳에 .p-0 사용할 것
   &-p-0 {
     padding: 0;
   }

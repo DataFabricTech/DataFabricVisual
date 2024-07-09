@@ -1,0 +1,41 @@
+.data-summary {
+  @include flex($horizontal: flex-start);
+  gap: $spacing-4;
+  font-weight: 500;
+  white-space: nowrap;
+  margin-bottom: $spacing-8;
+  padding: 0 $spacing-8;
+
+  &-title {
+    color: $neutral-700;
+  }
+
+  &-name {
+    @include ellipsis;
+    color: $secondary-500;
+  }
+
+  &-text {
+    @include font-size('12');
+    font-weight: 400;
+    color: $neutral-400;
+  }
+}
+
+.result-info {
+  @include flex($horizontal: space-between);
+  width: 655px;
+}
+
+.result {
+  overflow-y: auto;
+  height: 100%;
+  background: $success-100;
+
+  &-error {
+    @include font-size('13');
+    padding: $spacing-8 $spacing-12;
+    color: $error-500;
+    background: $error-100;
+  }
+}

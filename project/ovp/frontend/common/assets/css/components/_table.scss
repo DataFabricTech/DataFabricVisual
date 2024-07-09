@@ -1,4 +1,5 @@
 table {
+  width: 100%;
   border: 1px solid $neutral-200;
 
   caption {
@@ -15,6 +16,9 @@ table {
     border-right: 1px solid $neutral-200;
     border-bottom: 1px solid $neutral-200;
     color: $neutral-700;
+    vertical-align: middle;
+    overflow-wrap: break-word;
+    word-break: keep-all;
   }
 
   th {
@@ -53,4 +57,13 @@ table {
 
 .search-input + table {
   margin-top: $spacing-8;
+}
+
+.table-scroll {
+  overflow: auto;
+  height: 100%;
+
+  td {
+    word-break: break-all;
+  }
 }

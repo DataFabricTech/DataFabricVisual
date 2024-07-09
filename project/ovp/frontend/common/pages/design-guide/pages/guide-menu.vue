@@ -99,7 +99,7 @@
                   </li>
                 </ul>
               </div>
-              <div class="menu">
+              <div class="menu" style="width:300px">
                 <div class="menu-head">
                   <div class="search-input">
                     <label class="hidden-text" for="text-input-example-11">label</label>
@@ -118,7 +118,7 @@
                 <ul class="menu-list">
                   <li class="menu-item">
                     <button class="menu-button">
-                      <span class="menu-text">menu item</span>
+                      <span class="menu-text">menu itemmenu itemmenu itemmenu itemmenu itemmenu item</span>
                     </button>
                   </li>
                   <li class="menu-item">
@@ -150,7 +150,7 @@
                   <li class="menu-item">
                     <button class="menu-button">
                       <svg-icon class="svg-icon" name="home"></svg-icon>
-                      <span class="menu-text">menu item</span>
+                      <span class="menu-text">menu itemmenu itemmenu itemmenu itemmenu item</span>
                     </button>
                     <div class="menu-button-group">
                       <button class="button button-neutral-ghost button-xs" type="button">
@@ -200,7 +200,7 @@
       <div class="flex gap-8 mb-14">
         <figure class="section-figure">
           <div class="flex justify-center gap-4">
-            <div class="menu menu-lg">
+            <div class="menu menu-lg" style="width:300px">
               <div class="menu-head">
                 <div class="search-input">
                   <label class="hidden-text" for="text-input-example-11">label</label>
@@ -287,7 +287,7 @@
                 </li>
               </ul>
             </div>
-            <div class="menu">
+            <div class="menu" style="width:300px">
               <div class="menu-head">
                 <div class="search-input">
                   <label class="hidden-text" for="text-input-example-11">label</label>

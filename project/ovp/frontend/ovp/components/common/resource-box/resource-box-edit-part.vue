@@ -1,5 +1,5 @@
 <template>
-  <div class="resource-box-group">
+  <div class="editable-group">
     <!-- 수정모드 -->
     <template v-if="isEditMode">
       <label class="hidden-text" for="description-modify">내용 입력</label>
@@ -35,6 +35,13 @@
         </button>
       </template>
     </template>
+  </div>
+  <!-- TODO : [개발] text-input > 미입력시에만 적용이 필요합니다. -->
+  <div class="notification notification-error">
+    <svg-icon class="notification-icon" name="error"></svg-icon>
+    <p class="notification-detail">
+      얼럿 메세지를 입력해주세요.
+    </p>
   </div>
 </template>
 

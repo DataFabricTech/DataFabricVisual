@@ -74,12 +74,10 @@
     height: 100%;
 
     .profiling {
+      display: flex;
       overflow: auto;
-
-      //임시 스타일
+      height: 100%;
       min-height: 350px;
-      border: 1px solid $neutral-200;
-      background: $neutral-100;
     }
   }
 
