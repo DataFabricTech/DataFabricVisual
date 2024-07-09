@@ -121,11 +121,12 @@
       @include flex;
       gap: $spacing-16;
 
-      .h-group {
+      &-item {
+        @include flex($direction: row, $vertical: flex-start);
         gap: $spacing-12;
       }
 
-      span {
+      dt, dd {
         color: $neutral-500;
         font-size: 13px;
       }

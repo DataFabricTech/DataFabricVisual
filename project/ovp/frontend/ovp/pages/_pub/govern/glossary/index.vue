@@ -372,14 +372,14 @@
                     용어사전 설명입니다.
                     </span>
                     <div class="creation-info">
-                      <div class="h-group">
-                        <span class="creation-info-label">소유자</span>
-                        <span class="creation-info-value">없음</span>
-                      </div>
-                      <div class="h-group">
-                        <span class="creation-info-label">도메인</span>
-                        <span class="creation-info-value">없음</span>
-                      </div>
+                      <dl class="creation-info-item">
+                        <dt class="creation-info-label">소유자</dt>
+                        <dd class="creation-info-value">없음</dd>
+                      </dl>
+                      <dl class="creation-info-item">
+                        <dt class="creation-info-label">도메인</dt>
+                        <dd class="creation-info-value">없음</dd>
+                      </dl>
                     </div>
                   </div>
                 </div>
