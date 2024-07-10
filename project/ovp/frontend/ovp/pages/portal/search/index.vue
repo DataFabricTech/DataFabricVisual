@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 import { storeToRefs } from "pinia";
 import { useSearchCommonStore } from "@/store/search/common";
 import { IntersectionObserverHandler } from "@/utils/intersection-observer";
@@ -123,7 +123,19 @@ const getDataCallback = async (count: number, loader: HTMLElement | null) => {
   }
 };
 
+// 초기화 등을 통해서 from 값이 0 이 된다면, intersectionHandler 에 해당 값을 반영해줘야함.
+watch(
+  () => from.value,
+  (newFromVal: number) => {
+    if (intersectionHandler !== null && newFromVal === 0) {
+      intersectionHandler.updateChangingInitialCount(newFromVal);
+    }
+  },
+  { deep: true },
+);
+
 onMounted(async () => {
+  await getSearchList();
   await getFilters();
 
   // intersection observer instance 생성
