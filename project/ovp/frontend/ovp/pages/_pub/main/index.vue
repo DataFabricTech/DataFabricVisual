@@ -1,6 +1,6 @@
 <template>
   <!--  TODO: [개발] 권한 없는 메뉴 진입시 -->
-  <div class="section-contents" style="diplay:none;">
+  <div class="section-contents" style="display:none;">
     <div class="no-result no-result-lg">
       <svg-icon class="svg-icon" name="denied"></svg-icon>
       <div class="no-result-group">
