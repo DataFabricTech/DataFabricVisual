@@ -2,6 +2,7 @@ export interface Filter {
   text: string;
   data: any[];
 }
+
 export interface Filters {
   domains: Filter;
   "owner.displayName.keyword": Filter;
@@ -58,11 +59,6 @@ export interface details {
   // query: [];
   // lineage: {};
   // recommendModel: [];
-}
-
-export interface searchResult {
-  data: any[];
-  totalCount: number;
 }
 
 export interface SelectedFilters {
@@ -125,7 +121,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
   // filter 정보
   const filters = ref<Filters>(createDefaultFilters());
-  const searchResult: Ref<searchResult> = ref({} as searchResult);
+  const searchResult: Ref<any[]> = ref([]);
   const details: Ref<details> = ref({} as details);
   const previewData: Ref<any> = ref({
     modelInfo: {
@@ -135,6 +131,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     },
   });
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
+  const queryFilter: Ref<QueryFilter> = ref({
+    query: { bool: { must: [] } },
+  });
 
   // DATA
   const viewType: Ref<string> = ref<string>("listView");
@@ -142,10 +141,36 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
   const searchResultLength: Ref<number> = ref<number>(0);
 
+  // List Query data
+  const from: Ref<number> = ref<number>(0);
+  const size: Ref<number> = ref<number>(100);
+  const sortKey: Ref<string> = ref<string>("totalVotes");
+  const sortKeyOpt: Ref<string> = ref<string>("desc");
+
+  const getSearchListQuery = () => {
+    const params: any = {
+      // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
+      // eslint 예외 제외 코드 추가.
+      // eslint-disable-next-line id-length
+      q: "", // TODO : header 에서 검색어 입력한거 처리
+      index: "table_search_index,container_search_index",
+      from: from.value,
+      size: size.value,
+      deleted: false,
+      query_filter: JSON.stringify(queryFilter.value),
+      sort_field: sortKey.value,
+      sort_order: sortKeyOpt.value,
+    };
+    return new URLSearchParams(params);
+  };
   // METHODS
-  const getSearchList = async (params: object) => {
-    const { totalCount, data } = await $api(`/api/search/list`, params);
-    searchResult.value = data;
+  const getSearchList = async () => {
+    const { totalCount, data } = await $api(
+      `/api/search/list?${getSearchListQuery()}`,
+    );
+
+    // 조회한 데이터 누적
+    searchResult.value = searchResult.value.concat(data);
     searchResultLength.value = totalCount;
   };
   const getFilters = async () => {
@@ -178,7 +203,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     previewData.value = previewJson;
   };
 
-  const setQueryFilterByDepth = (key: string, value: any, suffix: string) => {
+  const setQueryFilterByDepth = (key: string, value: any) => {
     const setTermObj: Ref<any[]> = ref<any[]>([]);
     const setBoolObj: Ref<BoolObj> = ref<BoolObj>({
       bool: { should: [] },
@@ -186,7 +211,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
 
     for (const item of value) {
       const setKeyObj: Ref<KeyObj> = ref<KeyObj>({
-        term: { [`${key}${suffix}`]: ref(item) },
+        term: { [`${key}`]: ref(item) },
       });
 
       setTermObj.value.push(setKeyObj.value);
@@ -196,45 +221,51 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
 
   const setQueryFilter = () => {
-    const queryFilter: Ref<QueryFilter> = ref({
+    queryFilter.value = {
       query: { bool: { must: [] } },
-    });
+    };
     const setBoolObj: Ref<object> = ref<object>({});
 
     for (const key in selectedFilters.value) {
       const value = selectedFilters.value[key];
-
-      switch (key) {
-        case "owners":
-        case "service":
-          setBoolObj.value = setQueryFilterByDepth(
-            key,
-            value,
-            ".displayName.keyword",
-          );
-          queryFilter.value.query.bool.must.push(setBoolObj.value);
-          break;
-        case "database":
-        case "databaseSchema":
-        case "columns":
-          setBoolObj.value = setQueryFilterByDepth(key, value, ".name.keyword");
-          queryFilter.value.query.bool.must.push(setBoolObj.value);
-          break;
-        case "tags":
-          setBoolObj.value = setQueryFilterByDepth(key, value, ".tagFQN");
-          queryFilter.value.query.bool.must.push(setBoolObj.value);
-          break;
-        default:
-          setBoolObj.value = setQueryFilterByDepth(key, value, "");
-          queryFilter.value.query.bool.must.push(setBoolObj.value);
-      }
+      setBoolObj.value = setQueryFilterByDepth(key, value);
+      queryFilter.value.query.bool.must.push(setBoolObj.value);
     }
 
-    // TODO: 서버 연동 후 queryFilter Request 필요
-    console.log("queryFilter: ", queryFilter.value);
+    const isEmptyData = searchResult.value.length < 10;
+
+    // filter 값이 변경 되면, 조건을 리셋한다.
+    resetReloadList();
+
+    // TODO : intersection-observer 가 catch 하지 못할때의 데이터 로딩 처리 필요
+    // 확인한 내용으로는 filter 를 선택하여 목록의 갯수가 N개일때, filter 를 재조정 했을때 intersection-observer가 callback 함수를 실행하지 않아 목록을 더이상 갱신할 수 없는 부분이 있음.
+    // 그래서 N개 목록인 경우, 데이터 조회를 여기서 해준다.
+    // 기준은 10으로 잡음. 정확한 수치 알수 없음. 갯수 기준은 화면에 표시되는 갯수 기준 인것 같음. 확대/축소에 따라 다름.
+    if (isEmptyData) {
+      getSearchList();
+    }
+  };
+  const resetReloadList = () => {
+    // 조건이 변경되었기 때문에, 목록의 start 값을 0으로, 기 조회하여 누적되어있는 데이터 목록도 리셋한다.
+    // 다만 데이터 조회는 index.vue 페이지에서 intersection observer 에서 하기 때문에 여기서는 조회하지 않는다.
+    from.value = 0;
+    searchResult.value = [];
+  };
+  const setSortInfo = (item: string) => {
+    const items = item.split("_");
+    sortKey.value = items.shift() ?? ""; // undefined 오류 예외처리
+    sortKeyOpt.value = items.pop() ?? "";
+    resetReloadList();
+  };
+  const setScrollFrom = (count: number) => {
+    from.value = count;
   };
 
   return {
+    from,
+    size,
+    sortKey,
+    sortKeyOpt,
     filters,
     searchResult,
     details,
@@ -249,5 +280,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getSearchDetails,
     getPreviewData,
     setQueryFilter,
+    setSortInfo,
+    setScrollFrom,
   };
 });

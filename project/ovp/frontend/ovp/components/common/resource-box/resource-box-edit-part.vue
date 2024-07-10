@@ -37,11 +37,9 @@
     </template>
   </div>
   <!-- TODO : [개발] text-input > 미입력시에만 적용이 필요합니다. -->
-  <div class="notification notification-error">
+  <div class="notification notification-error" v-if="false">
     <svg-icon class="notification-icon" name="error"></svg-icon>
-    <p class="notification-detail">
-      얼럿 메세지를 입력해주세요.
-    </p>
+    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
   </div>
 </template>
 

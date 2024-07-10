@@ -19,6 +19,17 @@
       height: 18px;
     }
 
+    &:last-child {
+      .svg-icon {
+        @include icon-color($neutral-800);
+      }
+
+      .breadcrumb-text {
+        font-weight: 600;
+        color: $neutral-800;
+      }
+    }
+
     &.is-breadcrumb-selected {
       .svg-icon {
         @include icon-color($neutral-800);
@@ -40,13 +51,16 @@
     }
   }
 
-  &-link {
+  &-link,
+  &-text {
     font-size: 13px;
-    font-weight: 600;
-    color: $neutral-500;
+    font-weight: 500;
+    color: $neutral-600;
 
-    &:hover {
-      text-decoration: underline;
+    &-link {
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 
