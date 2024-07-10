@@ -52,7 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from "vue";
+import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useSearchCommonStore } from "@/store/search/common";
 import { IntersectionObserverHandler } from "@/utils/intersection-observer";
@@ -62,8 +62,13 @@ import { useRouter } from "nuxt/app";
 const router = useRouter();
 
 const searchCommonStore = useSearchCommonStore();
-const { getSearchList, getFilters, getPreviewData, setScrollFrom } =
-  searchCommonStore;
+const {
+  getSearchList,
+  getFilters,
+  getPreviewData,
+  setScrollFrom,
+  setIntersectionHandler,
+} = searchCommonStore;
 const {
   from,
   size,
@@ -116,6 +121,7 @@ const loaderId = "loader";
 let intersectionHandler: IntersectionObserverHandler | null = null;
 // 스크롤 이동시 데이터 로딩 시점에 실행되는 callback
 const getDataCallback = async (count: number, loader: HTMLElement | null) => {
+  console.log(`callback ${count}`);
   // loader start
   if (loader) {
     loader.style.display = "flex";
@@ -131,19 +137,8 @@ const getDataCallback = async (count: number, loader: HTMLElement | null) => {
   }
 };
 
-// 초기화 등을 통해서 from 값이 0 이 된다면, intersectionHandler 에 해당 값을 반영해줘야함.
-watch(
-  () => from.value,
-  (newFromVal: number) => {
-    if (intersectionHandler !== null && newFromVal === 0) {
-      intersectionHandler.updateChangingInitialCount(newFromVal);
-    }
-  },
-  { deep: true },
-);
-
 onMounted(async () => {
-  await getSearchList();
+  await getSearchList(false);
   await getFilters();
 
   // intersection observer instance 생성
@@ -155,6 +150,9 @@ onMounted(async () => {
     size.value,
     getDataCallback,
   );
+
+  // from 값 변경에 따른 동작을 store 에서 하고 있기 때문에 intersectionHandler 변수를 store 에 저장해둔다.
+  setIntersectionHandler(intersectionHandler);
 });
 
 onBeforeUnmount(() => {

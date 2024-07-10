@@ -7,7 +7,7 @@
           <span class="hidden-text">logo</span>
         </a>
       </h1>
-      <SearchInput></SearchInput>
+      <SearchInput @searchBtnClick="searchBtnClick"></SearchInput>
       <div class="profile ml-auto">
         <span class="profile-avatar">
           <img class="profile-img" src="" alt="프로필 이미지" />
@@ -53,6 +53,14 @@
 
 <script setup lang="ts">
 import SearchInput from "@extends/search-input/SearchInput.vue";
+
+import { useSearchCommonStore } from "~/store/search/common";
+const searchCommonStore = useSearchCommonStore();
+const { setSearchKeyword } = searchCommonStore;
+
+const searchBtnClick = (value: string) => {
+  setSearchKeyword(value);
+};
 </script>
 
 <style scoped></style>

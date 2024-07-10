@@ -23,7 +23,7 @@
     </button>
     <button
       class="search-input-button button button-neutral-ghost"
-      @click="setSearchValue(inputValue)"
+      @click="setBtnClick(inputValue)"
       v-if="isSearchInputDefaultType"
     >
       <span class="hidden-text">검색</span>
@@ -41,10 +41,17 @@ const props = withDefaults(defineProps<SearchInputProps>(), {
   disabled: false
 });
 
-const emit = defineEmits<{ (e: "search", value: string): void }>();
+const emit = defineEmits<{
+  (e: "search", value: string): void;
+  (e: "searchBtnClick", value: string): void;
+}>();
 
 const setSearchValue = (value: string) => {
-  value !== "" ? emit("search", value) : window.location.reload();
+  emit("search", value);
+};
+
+const setBtnClick = (value: string) => {
+  emit("searchBtnClick", value);
 };
 
 const { inputValue, clearSearchValue } = SearchInputComposition(props);

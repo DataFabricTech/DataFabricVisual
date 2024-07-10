@@ -47,8 +47,7 @@ export class IntersectionObserverHandler {
 
   // 목록이 reset 될때 (ex, filter 초기화 등) handler changingInitialCount 를 update 해준다.
   public updateChangingInitialCount(newChangingInitialCount: number) {
-    this.changingInitialCount =
-      newChangingInitialCount - this.boxItemDefaultCount;
+    this.changingInitialCount = newChangingInitialCount;
   }
 
   public disconnect() {
