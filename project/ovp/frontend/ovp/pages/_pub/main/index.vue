@@ -1,14 +1,14 @@
 <template>
   <!--  TODO: [개발] 권한 없는 메뉴 진입시 -->
-<!--  <div class="section-contents" style="">-->
-<!--    <div class="no-result no-result-lg">-->
-<!--      <svg-icon class="svg-icon" name="denied"></svg-icon>-->
-<!--      <div class="no-result-group">-->
-<!--        <span class="no-result-title">접근할 수 없습니다.</span>-->
-<!--        <span class="no-result-desc">권한을 얻으려면 관리자에게 문의하세요.</span>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
+  <div class="section-contents" style="diplay:none;">
+    <div class="no-result no-result-lg">
+      <svg-icon class="svg-icon" name="denied"></svg-icon>
+      <div class="no-result-group">
+        <span class="no-result-title">접근할 수 없습니다.</span>
+        <span class="no-result-desc">권한을 얻으려면 관리자에게 문의하세요.</span>
+      </div>
+    </div>
+  </div>
   <div class="section-contents">
     <div class="l-split">
       <div class="main-content">
