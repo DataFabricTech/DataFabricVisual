@@ -13,6 +13,7 @@ export interface Filters {
   "databaseSchema.displayName.keyword": Filter;
   "columns.name.keyword": Filter;
   tableType: Filter;
+  [key: string]: { text: string; data: any[] }; // 인덱스 시그니처 추가
 }
 
 export interface details {
@@ -189,7 +190,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       "tableType",
     ];
     useFilters.forEach((key: string) => {
-      (filters.value as any)[key].data = data[key];
+      (filters.value as Filters)[key].data = data[key];
     });
   };
   const getFilter = async (filterKey: string) => {
@@ -211,7 +212,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
         },
       ],
     };
-    (filters.value as any)[filterKey].data = data[filterKey];
+    (filters.value as Filters)[filterKey].data = data[filterKey];
   };
 
   const getSearchDetails = async () => {
