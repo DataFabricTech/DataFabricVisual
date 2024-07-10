@@ -91,6 +91,7 @@ public class SearchService {
                 modifiedSource.put("firModelNm", source.get("displayName"));
                 modifiedSource.put("modelNm", source.get("name"));
                 modifiedSource.put("modelDesc", source.get("description"));
+                modifiedSource.put("fqn", source.get("fullyQualifiedName"));
 
                 String owner = "";
                 if (source.get("owner") != null) {

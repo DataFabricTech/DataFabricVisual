@@ -58,6 +58,8 @@ import { useSearchCommonStore } from "@/store/search/common";
 import { IntersectionObserverHandler } from "@/utils/intersection-observer";
 
 import TopBar from "./top-bar.vue";
+import { useRouter } from "nuxt/app";
+const router = useRouter();
 
 const searchCommonStore = useSearchCommonStore();
 const { getSearchList, getFilters, getPreviewData, setScrollFrom } =
@@ -92,8 +94,14 @@ const previewClick = async (id: string | number) => {
   currentPreviewId = id;
 };
 
-const modelNmClick = (id: string | number) => {
-  console.log(`modelNmClick : ${id}`);
+const modelNmClick = (data: { id: string; fqn: string }) => {
+  router.push({
+    path: "/portal/search/detail",
+    query: {
+      id: data.id,
+      fqn: data.fqn,
+    },
+  });
 };
 
 // TODO: intersection observer 옵션이 부족해 보임. 데이터가 1000가 넘으면 UI가 버벅거림.
