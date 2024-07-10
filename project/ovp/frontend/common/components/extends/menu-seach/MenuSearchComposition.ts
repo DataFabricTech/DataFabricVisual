@@ -213,11 +213,17 @@ export function MenuSearchComposition(
     applyData(result);
   };
   const onReset: () => void = () => {
-    selectedListData.value = _.cloneDeep(originSelectedListData.value);
-    listData.value =  _.cloneDeep(originListData.value);
+    selectedListData.value = [];
+    listData.value = listData.value.map(item => {
+      return {
+        ...item,
+        isChecked: false,
+      };
+    });
   };
   const onCancel: () => void = () => {
-    onReset();
+    selectedListData.value = _.cloneDeep(originSelectedListData.value);
+    listData.value =  _.cloneDeep(originListData.value);
     cancelData();
   };
 
