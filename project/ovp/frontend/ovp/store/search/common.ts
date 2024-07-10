@@ -192,6 +192,27 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       (filters.value as any)[key].data = data[key];
     });
   };
+  const getFilter = async (filterKey: string) => {
+    // TODO : 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
+    // const data = await $api(`/api/search/filter?filterKey=${filterKey}`);
+    const data: any = {
+      serviceType: [
+        {
+          key: "N_mariadb",
+        },
+        {
+          key: "N_bigquery",
+        },
+        {
+          key: "N_mysql",
+        },
+        {
+          key: "N_glue",
+        },
+      ],
+    };
+    (filters.value as any)[filterKey].data = data[filterKey];
+  };
 
   const getSearchDetails = async () => {
     // TODO: 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
@@ -276,6 +297,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     isBoxSelectedStyle,
     searchResultLength,
     getSearchList,
+    getFilter,
     getFilters,
     getSearchDetails,
     getPreviewData,
