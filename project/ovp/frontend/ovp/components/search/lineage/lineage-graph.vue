@@ -124,15 +124,13 @@ const initializeCytoscape = (data: CytoscapeElement[]) => {
       }
     });
 
-    cyRef.on("tap", "node", (event) => {
-      const node = event.target;
-      handleNodeClick(node.data());
-    });
+    cyRef.on("tap", "node", handleNodeClick);
   }
 };
 
-const handleNodeClick = (nodeData: NodeData) => {
-  emit("change", nodeData);
+const handleNodeClick = (event) => {
+  const node = event.target;
+  emit("change", node.data());
 };
 
 const zoomIn = () => {
@@ -166,17 +164,22 @@ onMounted(() => {
   initializeCytoscape(data);
 });
 
-watch(
-  () => props.lineageData,
-  (newLineageData) => {
-    if (cyRef) {
-      cyRef.destroy(); // 이전 cyRef 제거
-    }
-    const newData = transformData(newLineageData.nodes, newLineageData.edges);
-    initializeCytoscape(newData);
-  },
-  { deep: true },
-);
+watchEffect(() => {
+  const newLineageData = props.lineageData;
+  if (cyRef) {
+    cyRef.off("tap", "node", handleNodeClick); // 기존 이벤트 해제
+    cyRef.destroy(); // 이전 cyRef 제거
+  }
+  const newData = transformData(newLineageData.nodes, newLineageData.edges);
+  initializeCytoscape(newData);
+});
+
+onBeforeUnmount(() => {
+  if (cyRef) {
+    cyRef.off("tap", "node", handleNodeClick); // 컴포넌트가 제거될 때 이벤트 해제
+    cyRef.destroy();
+  }
+});
 
 defineExpose({
   zoomIn,
