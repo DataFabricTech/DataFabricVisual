@@ -11,7 +11,7 @@
         @single-change="changeSingle"
       ></menu-search-button>
       <menu-search-button
-        :data="sample_data"
+        :data="multiple_sample_data2"
         :selected-items="multiple_sample_selected_data"
         label-key="name"
         value-key="id"
@@ -20,6 +20,18 @@
         @multiple-change="changeMultiple"
       ></menu-search-button>
       <button class="button button-secondary" @click="onClickChangData">값 변경</button>
+
+      <br/>
+      <menu-search-button
+        :data="multiple_sample_data2"
+        :selected-items="[]"
+        label-key="name"
+        value-key="id"
+        title="버튼 클릭 이벤트"
+        :is-multi="true"
+        @open="onOpenMenuSearch"
+        @multiple-change="changeMultiple"
+      ></menu-search-button>
     </div>
   </div>
 </template>
@@ -45,6 +57,43 @@ const sample_data : Ref<any> =  ref([
     },
   ]
 );
+const multiple_sample_data2 : Ref<any> =  ref([
+  {
+    id: "1",
+    name: "AAA"
+  },
+  {
+    id: "2",
+    name: "BBB"
+  },
+  {
+    id: "3",
+    name: "CCC"
+  },
+  {
+    id: "4",
+    name: "DDD"
+  },
+]);
+const multiple_sample_new_data =  [
+  {
+    id: "1",
+    name: "QQQ"
+  },
+  {
+    id: "2",
+    name: "WWW"
+  },
+  {
+    id: "3",
+    name: "EEE"
+  },
+  {
+    id: "4",
+    name: "RRR"
+  },
+];
+
 const multiple_sample_selected_data: Ref<any> = ref([
   {
     id: "1",
@@ -64,40 +113,6 @@ const single_sample_selected_data : Ref<any> =  ref({
   id: "2",
   name: "BBB"
 });
-const multiple_sample_data2 : Ref<any> =  ref({
-  data: [
-    {
-      id: "1",
-      name: "AAA"
-    },
-    {
-      id: "2",
-      name: "BBB"
-    },
-    {
-      id: "3",
-      name: "CCC"
-    },
-    {
-      id: "4",
-      name: "DDD"
-    },
-  ],
-  selectedItems: [
-    {
-      id: "1",
-      name: "AAA"
-    },
-    {
-      id: "2",
-      name: "BBB"
-    },
-    {
-      id: "3",
-      name: "CCC"
-    },
-  ]
-});
 
 const changeMultiple : (value : any[] | {}) => void = (value) => {
   console.log("changeMultiple", value);
@@ -106,6 +121,10 @@ const changeMultiple : (value : any[] | {}) => void = (value) => {
 const onClickChangData : (value : any[] | {}) => void = (value) => {
   multiple_sample_selected_data.value = [];
   console.log("onClickChangData", value);
+}
+const onOpenMenuSearch : () => void = () => {
+  multiple_sample_data2.value = multiple_sample_new_data;
+  console.log("onClickChangData", multiple_sample_data2);
 }
 
 const changeSingle : (value : any[] | {}) => void = (value) => {

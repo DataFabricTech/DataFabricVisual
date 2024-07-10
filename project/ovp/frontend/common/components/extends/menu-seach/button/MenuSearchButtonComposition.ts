@@ -6,12 +6,14 @@ interface MenuSearchButtonComposition extends MenuSearchButtonProps {
   isShow: Ref<boolean>;
   selectedListData: Ref<any[]>;
   onClickOpenMenuSearch(): void;
+  onCancel(): void;
   changeMenuSearch(value : any[] | {}): void;
 }
 
 export function MenuSearchButtonComposition(
   props: MenuSearchButtonProps,
   applyData: (value: MenuSearchItemImpl | MenuSearchItemImpl[]) => void,
+  openMenuSearch: () => void
 ): MenuSearchButtonComposition {
   const selectedListData: Ref<any[]> = ref([]);
   const setSelectedListData: () => void = () => {
@@ -25,6 +27,11 @@ export function MenuSearchButtonComposition(
   const isShow: Ref<boolean> = ref(false);
   const onClickOpenMenuSearch: () => void = () => {
     isShow.value = !isShow.value;
+    openMenuSearch();
+  };
+
+  const onCancel: () => void = () => {
+    isShow.value = false;
   };
 
   const changeMenuSearch : (value : any[] | {}) => void = (value) => {
@@ -38,6 +45,7 @@ export function MenuSearchButtonComposition(
     isShow,
     selectedListData,
     changeMenuSearch,
-    onClickOpenMenuSearch
+    onClickOpenMenuSearch,
+    onCancel
   };
 }

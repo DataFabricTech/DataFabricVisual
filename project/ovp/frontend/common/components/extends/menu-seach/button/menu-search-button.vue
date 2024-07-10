@@ -15,7 +15,7 @@
       :is-multi="props.isMulti"
       :label-key="props.labelKey"
       :value-key="props.valueKey"
-      @cancel="onClickOpenMenuSearch"
+      @cancel="onCancel"
       @multiple-change="changeMenuSearch"
       @single-change="changeMenuSearch"
     ></menu-search>
@@ -53,6 +53,7 @@ const props = withDefaults(defineProps<MenuSearchButtonProps>(), {
 const emit = defineEmits<{
   (e: "single-change", value: MenuSearchItemImpl): void
   (e: "multiple-change", value: MenuSearchItemImpl[]): void
+  (e: "open"): void
   (e: "cancel"): void
 }>()
 
@@ -64,12 +65,19 @@ const applyData : (value: MenuSearchItemImpl | MenuSearchItemImpl[]) => void  = 
   }
 }
 
+const openMenuSearch : () => void  = () => {
+  if (isShow) {
+    emit("open")
+  }
+}
+
 const {
   isShow,
   selectedListData,
+  onCancel,
   onClickOpenMenuSearch,
   changeMenuSearch
-} = MenuSearchButtonComposition(props, applyData);
+} = MenuSearchButtonComposition(props, applyData, openMenuSearch);
 </script>
 
 <style scoped>
