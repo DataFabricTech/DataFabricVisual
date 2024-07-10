@@ -156,13 +156,13 @@
                         <div class="breadcrumb">
                           <ul class="breadcrumb-list">
                             <li class="breadcrumb-item">
-                              <span class="breadcrumb-link">1depth</span>
+                              <span class="breadcrumb-text">1depth</span>
                             </li>
                             <li class="breadcrumb-item">
-                              <span class="breadcrumb-link">2depth</span>
+                              <span class="breadcrumb-text">2depth</span>
                             </li>
                             <li class="breadcrumb-item is-breadcrumb-selected">
-                              <span class="breadcrumb-link">데이터 모델</span>
+                              <span class="breadcrumb-text">데이터 모델</span>
                             </li>
                           </ul>
                         </div>
