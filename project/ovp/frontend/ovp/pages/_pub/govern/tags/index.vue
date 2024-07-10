@@ -4,7 +4,7 @@
       <h3 class="title">분류</h3>
     </div>
   </div>
-  <div class="section-contents section-contents-p-0 bg-white">
+  <div class="section-contents p-0 bg-white">
     <div class="l-split">
       <div class="work-list">
         <div class="l-top-bar">

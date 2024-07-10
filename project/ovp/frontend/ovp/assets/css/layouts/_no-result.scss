@@ -1,6 +1,31 @@
 .no-result {
   @include flex($direction:column);
+  gap: $spacing-24;
   width: 100%;
   height: 100%;
-  white-space: nowrap
+  white-space: nowrap;
+
+  &-lg {
+    .svg-icon {
+      @include icon-size(120px);
+    }
+
+    .no-result-title {
+      @include font-size('18');
+      color: $neutral-800;
+      font-weight: 600;
+    }
+
+    .no-result-desc {
+      @include font-size('15');
+      color: $neutral-500;
+    }
+  }
+
+  &-group {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: $spacing-12;
+  }
 }
