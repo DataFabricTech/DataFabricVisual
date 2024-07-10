@@ -73,7 +73,16 @@
   }
 }
 
-.section-contents:has(.l-split + .l-split) {
+.section-contents:has(.main-content + .main-content) {
+  gap: $spacing-16;
+  height: auto;
+
+  .l-split {
+    gap: $spacing-16;
+  }
+}
+
+.section-contents:has(.work-list + .work-page) {
   .l-split {
     &:first-child {
       height: 60%;
@@ -85,7 +94,6 @@
     }
   }
 }
-
 
 .l-between {
   @include flex($horizontal: space-between);

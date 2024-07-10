@@ -1,13 +1,13 @@
-.grid-content {
+.main-content {
   @include flex($direction:column, $horizontal:flex-start);
-  width: 100%;
+  width: 50%;
   gap: $spacing-8;
   background-color: $neutral-0;
-  min-height: 567px;
+  min-height: 640px;
   padding: 0 $spacing-12 $spacing-12;
 
   &-title {
-    @include font-size('16');
+    @include font-size('18');
     font-weight: 600;
     color: $neutral-800;
 

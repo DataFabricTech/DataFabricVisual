@@ -27,11 +27,4 @@
   height: 100%;
   padding: $spacing-16 $spacing-20;
   background: $neutral-100;
-
-  &-grid{
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    height: auto;
-    gap: $spacing-16;
-  }
 }
