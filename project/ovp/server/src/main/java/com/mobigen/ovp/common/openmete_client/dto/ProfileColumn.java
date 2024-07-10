@@ -7,6 +7,5 @@ public class ProfileColumn {
     private String name;
     private String dataTypeDisplay;
     private String description = "";
-    private String description = "";
     private Profile profile;
 }
