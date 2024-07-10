@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 @Slf4j
 @Service
@@ -111,5 +112,51 @@ public class SearchService {
             return null;
         }).filter(Objects::nonNull).collect(Collectors.toList());
         return modifiedList;
+    }
+
+
+    /**
+     * Open Metadata - 탐색 목록 미리보기
+     *
+     * @return
+     * @throws Exception
+     */
+    public Object getSearchPreview(String fqn) throws Exception {
+        Map<String, Object> result = searchClient.getSearchPreview(fqn);
+
+        String name = (String) result.get("name");
+        String description = (String) result.get("description");
+        String tableType = (String) result.get("tableType");
+        List<Map<String, Object>> tags = (List<Map<String, Object>>) result.get("tags");
+        List<Map<String, Object>> tagList = new ArrayList<>();
+
+        for (Map<String, Object> tag : tags) {
+            String tagSource = (String) tag.get("source");
+            String tagName = (String) tag.get("name");
+            String tagFQN = (String) tag.get("tagFQN");
+            log.info("tagSource: {}, tagName: {}, tagFQN: {}", tagSource, tagName, tagFQN);
+
+            Map<String, Object> tagMap = new HashMap<>();
+            tagMap.put("name", tagName);
+            tagMap.put("category", tagFQN);
+
+            tagList.add(tagMap);
+        }
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("name", name);
+        model.put("desc", description);
+        model.put("tableType", tableType);
+
+        Map<String, Object> modelInfo = new HashMap<>();
+        modelInfo.put("model", model);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("modelInfo", modelInfo);
+        resultMap.put("tags", tagList);
+
+        log.info("resultMap {}", resultMap);
+
+        return searchClient.getSearchPreview(fqn);
     }
 }

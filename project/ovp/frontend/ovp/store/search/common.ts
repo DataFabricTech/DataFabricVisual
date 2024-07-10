@@ -87,7 +87,6 @@ export interface QueryFilter {
   };
 }
 
-import previewJson from "./samples/preview.json";
 import detailsJson from "./samples/details.json";
 
 export const useSearchCommonStore = defineStore("searchCommon", () => {
@@ -200,7 +199,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
 
   const getPreviewData = async () => {
     // TODO: 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
-    previewData.value = previewJson;
+    const fqn: string = "df2.test_db.test_db.Active_Employees"; // 실제 fqn 값을 여기에 설정합니다.
+    const data: any = await $api(`/api/search/preview/${fqn}`);
+    previewData.value = data;
   };
 
   const setQueryFilterByDepth = (key: string, value: any) => {
