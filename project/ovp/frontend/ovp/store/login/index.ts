@@ -6,40 +6,46 @@ export const loginStore = defineStore("login", () => {
 
   const publicKey = ref("");
   const isloginSuccess = ref(false);
+  const errorMessage = ref("");
 
   const getPublicKey = async () => {
-    // @ts-ignore
-    return (publicKey.value = await $api(`/api/login/public-key`))
+    publicKey.value = await $api(`/api/auth/login/public-key`)
       .then((res: any) => {
-        return res;
+        return res.data;
       })
       .catch((err: any) => {
-        console.log(err);
+        console.log("err: ", err);
       });
   };
 
-  const loginReq = async (param: any) => {
-    const publicKey = getPublicKey();
+  async function getLoginSuccessState(param: any) {
+    await getPublicKey();
     const rsa = new RSA();
-    rsa.setKey(publicKey);
-    param.password = rsa.encrypt(param);
+    rsa.setKey(publicKey.value);
+    param.password = rsa.encrypt(param.password);
 
-    // TODO: 서버 개발 후 주석 해제
-    // return isloginSuccess.value = await $api('/api/login', {
-    //     method : 'POST',
-    //     body: param
-    // }).then((res: any) => {
-    //     return res;
-    // }).catch((err: any) => {
-    //     console.log("err: ", err);
-    // });
-
-    // 임시 -> 삭제 예정
-    return (isloginSuccess.value = true);
-  };
+    await $api(`/api/auth/login`, {
+      method: "POST",
+      body: param,
+    })
+      .then((res: any) => {
+        if (res.result === 1) {
+          isloginSuccess.value = true;
+        } else {
+          isloginSuccess.value = false;
+          errorMessage.value = res.errorMessage;
+        }
+      })
+      .catch((err: any) => {
+        console.log("err: ", err);
+      });
+  }
 
   return {
+    publicKey,
+    isloginSuccess,
+    errorMessage,
     getPublicKey,
-    loginReq,
+    getLoginSuccessState,
   };
 });
