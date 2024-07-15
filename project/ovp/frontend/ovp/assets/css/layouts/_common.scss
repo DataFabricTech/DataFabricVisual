@@ -77,13 +77,13 @@
     height: calc(100% - 48px);
   }
 
-  .l-split + .l-split {
-    &:nth-child(1) {
+  &:has(.l-split + .l-split){
+    .l-split:nth-child(1) {
       height: 60%;
       border-bottom: 1px solid $neutral-200;
     }
 
-    &:nth-child(2) {
+    .l-split:nth-child(2) {
       height: 40%;
     }
   }
