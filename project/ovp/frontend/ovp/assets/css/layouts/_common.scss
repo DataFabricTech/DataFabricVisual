@@ -48,7 +48,6 @@
   .work-list,
   .work-page {
     .l-top-bar {
-      //padding: $spacing-8 $spacing-12;
       border-bottom: 1px solid $neutral-200;
     }
   }
@@ -73,6 +72,23 @@
   }
 }
 
+.section-contents:has(.work-list + .work-page) {
+  .l-split:only-of-type {
+    height: calc(100% - 48px);
+  }
+
+  .l-split + .l-split {
+    &:nth-child(1) {
+      height: 60%;
+      border-bottom: 1px solid $neutral-200;
+    }
+
+    &:nth-child(2) {
+      height: 40%;
+    }
+  }
+}
+
 .section-contents:has(.main-content + .main-content) {
   gap: $spacing-16;
   height: auto;
@@ -82,18 +98,6 @@
   }
 }
 
-.section-contents:has(.work-list + .work-page) {
-  .l-split {
-    &:first-child {
-      height: 60%;
-      border-bottom: 1px solid $neutral-200;
-    }
-
-    &:last-child {
-      height: 40%;
-    }
-  }
-}
 
 .l-between {
   @include flex($horizontal: space-between);
@@ -107,7 +111,7 @@
 
   & + .l-split {
     flex-grow: 1;
-    height: calc(100% - 48px);
+    height: calc(100% - 60px);
   }
 }
 
