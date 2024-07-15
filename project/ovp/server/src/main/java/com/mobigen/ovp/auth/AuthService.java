@@ -125,7 +125,7 @@ public class AuthService {
         validateEmailNotInUse((String) param.get(USER_ID_KEY));
 
         // 2. 사용자 기본 역할 조회
-        List<String> userRoles = getUserRoles();
+        List<String> userRoles = userRoleService.getUserRolesIdList();
 
         // 3. Admin 계정으로 로그인
         HttpHeaders adminAuthorizationHeader = adminLoginHeader();
@@ -161,22 +161,6 @@ public class AuthService {
         if (checkEmail) {
             throw new Exception("이미 사용중인 이메일입니다.");
         }
-    }
-
-    /**
-     * 회원가입 > OMD 사용자 역할 ID 조회
-     *
-     * @return
-     * @throws Exception
-     */
-    private List<String> getUserRoles() throws Exception {
-        UserRoleEntity user = userRoleService.getUserRoleCode();
-        if (user == null) {
-            throw new Exception("사용자 역할 조회 오류. 관리자에게 문의하세요.");
-        }
-        List<String> userRoles = new ArrayList<>();
-        userRoles.add(user.getOmdRoleId());
-        return userRoles;
     }
 
     /**
