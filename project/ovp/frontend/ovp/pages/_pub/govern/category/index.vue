@@ -348,6 +348,7 @@
       </div>
     </div>
   </div>
+  <!--  TODO: Modal 카테고리 추가-->
   <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModal">
     <div class="modal modal-padding-16" style="width: 480px">
       <div class="modal-head">
