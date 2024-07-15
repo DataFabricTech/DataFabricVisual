@@ -1,4 +1,4 @@
-package com.mobigen.ovp.sample.auth;
+package com.mobigen.ovp.auth;
 
 import com.mobigen.framework.utility.RSA;
 import com.mobigen.framework.utility.Token;

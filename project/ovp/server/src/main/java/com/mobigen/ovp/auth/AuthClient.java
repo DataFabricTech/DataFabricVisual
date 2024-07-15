@@ -1,4 +1,4 @@
-package com.mobigen.ovp.sample.auth;
+package com.mobigen.ovp.auth;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
