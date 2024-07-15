@@ -20,7 +20,7 @@
           <div class="group-description">
             <h4 class="group-title">Default</h4>
             <p class="group-summary">
-              주요 버튼(Primary Buttons)은 페이지 키 액션에 사용하는 Button으로 한 페이지에 한 번만 사용합니다.
+              기본 loader입니다.
             </p>
           </div>
         </div>
@@ -35,7 +35,7 @@
           <div class="group-description">
             <h4 class="group-title">Simple</h4>
             <p class="group-summary">
-              주요 버튼(Primary Buttons)은 페이지 키 액션에 사용하는 Button으로 한 페이지에 한 번만 사용합니다.
+              심플한 느낌의 loader입니다.
             </p>
           </div>
         </div>
@@ -61,9 +61,9 @@
             </div>
           </figure>
           <div class="group-description">
-            <h4 class="group-title">button</h4>
+            <h4 class="group-title">Button</h4>
             <p class="group-summary">
-              주요 버튼(Primary Buttons)은 페이지 키 액션에 사용하는 Button으로 한 페이지에 한 번만 사용합니다.
+              버튼 타입의 loader입니다.
             </p>
           </div>
         </div>
