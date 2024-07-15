@@ -128,35 +128,62 @@ public class SearchService {
         String description = (String) result.get("description");
         String tableType = (String) result.get("tableType");
         List<Map<String, Object>> tags = (List<Map<String, Object>>) result.get("tags");
+        List<Map<String, Object>> columns = (List<Map<String, Object>>) result.get("columns");
+
         List<Map<String, Object>> tagList = new ArrayList<>();
+        List<Map<String, Object>> glossaryList = new ArrayList<>();
+        List<Map<String, Object>> columList = new ArrayList<>();
 
         for (Map<String, Object> tag : tags) {
-            String tagSource = (String) tag.get("source");
             String tagName = (String) tag.get("name");
             String tagFQN = (String) tag.get("tagFQN");
-            log.info("tagSource: {}, tagName: {}, tagFQN: {}", tagSource, tagName, tagFQN);
+            String tagSource = (String) tag.get("source");
 
             Map<String, Object> tagMap = new HashMap<>();
             tagMap.put("name", tagName);
             tagMap.put("category", tagFQN);
 
-            tagList.add(tagMap);
+            if ("Glossary".equals(tagSource)) {
+                glossaryList.add(tagMap);
+            } else {
+                tagList.add(tagMap);
+            }
+        }
+
+        for (Map<String, Object> column : columns) {
+            String columnName = (String) column.get("name");
+            String columnDataType = (String) column.get("dataType");
+            String columnDesc = (String) column.get("description");
+            String columnConstraint = (String) column.get("constraint");
+
+            Map<String, Object> columnMap = new HashMap<>();
+            columnMap.put("name", columnName);
+            columnMap.put("dataType", columnDataType);
+            columnMap.put("desc", columnDesc);
+            columnMap.put("constraint", columnConstraint);
+
+            columList.add(columnMap);
         }
 
         Map<String, Object> model = new HashMap<>();
         model.put("name", name);
         model.put("desc", description);
         model.put("tableType", tableType);
+        model.put("cnt", columList.size());
 
         Map<String, Object> modelInfo = new HashMap<>();
         modelInfo.put("model", model);
+        modelInfo.put("columns", columList);
 
         Map<String, Object> resultMap = new HashMap<>();
+        // TODO: modelType 정보 불러오기 필요 "structured" || "unstructured" (현재 확인 불가)
+        resultMap.put("modelType", "structured");
         resultMap.put("modelInfo", modelInfo);
+        resultMap.put("glossaries", glossaryList);
         resultMap.put("tags", tagList);
 
-        log.info("resultMap {}", resultMap);
+        // TODO: 비정형 API 불러오기 필요 details & url & model.ext (현재 확인 불가)
 
-        return searchClient.getSearchPreview(fqn);
+        return resultMap;
     }
 }
