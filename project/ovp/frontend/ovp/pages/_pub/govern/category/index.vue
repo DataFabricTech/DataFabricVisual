@@ -405,13 +405,13 @@
         </div>
       </div>
       <div class="modal-foot">
-        <button
-          class="button button-neutral-ghost button-lg"
-          @click="showModal = false"
-        >
-          취소
-        </button>
         <div class="modal-foot-group">
+          <button
+            class="button button-neutral-ghost button-lg"
+            @click="showModal = false"
+          >
+            취소
+          </button>
           <button class="button button-primary button-lg">저장</button>
         </div>
       </div>
