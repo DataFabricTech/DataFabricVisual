@@ -1,16 +1,11 @@
 <template>
   <div class="cytoscape-container">
     <div ref="cyContainer" class="cytoscape-graph"></div>
-    <div class="controls">
-      <button @click="zoomIn">Zoom In</button>
-      <button @click="zoomOut">Zoom Out</button>
-      <button @click="resetView">Reset View</button>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import {ref, onMounted, watch} from "vue";
+import { ref, onMounted, watch, defineExpose } from "vue";
 import cytoscape from "cytoscape";
 import dagre from "cytoscape-dagre";
 import cytoscapeNodeHtmlLabel from "cytoscape-node-html-label";
@@ -20,9 +15,9 @@ import type {
   NodeData,
   CytoscapeElement,
   CytoscapeNodeStyle,
-  CytoscapeEdgeStyle
+  CytoscapeEdgeStyle,
 } from "./lineage";
-import lineageStyle from "./lineageStyle";
+import lineageStyle from "./lineage-style";
 
 // dagre layout 유형 등록
 cytoscape.use(dagre);
@@ -31,7 +26,8 @@ cytoscapeNodeHtmlLabel(cytoscape);
 let cyContainer = ref(null);
 let cyRef = null;
 
-const tpl = (data: NodeData) => {  // 라벨 템플릿 정의 메서드
+const tpl = (data: NodeData) => {
+  // 라벨 템플릿 정의 메서드
   return `<div style="display: flex; justify-content: center; align-items: center; text-align:center; color:white; background-color:#666; padding:5px; border: 2px solid #000; border-radius:5px; font-size:12px; width: 100px; height: 40px;">
             <div>
               ${data.path}<br/>
@@ -44,9 +40,11 @@ const props = defineProps<{
   lineageData: { nodes: RawNodeData[]; edges: RawEdgeData[] };
 }>();
 
+const emit = defineEmits<{ (e: "change", nodeData: NodeData): void }>();
+
 const transformData = (
-    nodes: RawNodeData[],
-    edges: RawEdgeData[],
+  nodes: RawNodeData[],
+  edges: RawEdgeData[],
 ): CytoscapeElement[] => {
   const transformedNodes = nodes.map((node) => ({
     data: {
@@ -66,7 +64,7 @@ const transformData = (
   return [...transformedNodes, ...transformedEdges];
 };
 
-const style: (CytoscapeNodeStyle | CytoscapeEdgeStyle)[] = lineageStyle
+const style: (CytoscapeNodeStyle | CytoscapeEdgeStyle)[] = lineageStyle;
 
 const initializeCytoscape = (data: CytoscapeElement[]) => {
   if (cyContainer.value) {
@@ -79,7 +77,7 @@ const initializeCytoscape = (data: CytoscapeElement[]) => {
         rankDir: "LR",
         nodeSep: 50, // 노드 간격 설정
         edgeSep: 20, // 엣지 간의 간격 설정
-        rankSep: 100 // 각 계층간의 간격 설정
+        rankSep: 100, // 각 계층간의 간격 설정
       },
       userZoomingEnabled: false, // 마우스 스크롤 zoom in/out 설정
     };
@@ -97,7 +95,7 @@ const initializeCytoscape = (data: CytoscapeElement[]) => {
           halignBox: "center", // 라벨을 포함하는 박스의 수평 정렬 설정
           valignBox: "center", // 라벨을 포함하는 박스의 수직 정렬 설정
           cssClass: "",
-          tpl
+          tpl,
         },
       ]);
     }
@@ -126,15 +124,13 @@ const initializeCytoscape = (data: CytoscapeElement[]) => {
       }
     });
 
-    cyRef.on('tap', 'node', (event) => {
-      const node = event.target;
-      handleNodeClick(node.data());
-    });
+    cyRef.on("tap", "node", handleNodeClick);
   }
 };
 
-const handleNodeClick = (nodeData: NodeData) => {
-  console.log("Node clicked:", nodeData);
+const handleNodeClick = (event) => {
+  const node = event.target;
+  emit("change", node.data());
 };
 
 const zoomIn = () => {
@@ -157,50 +153,51 @@ const resetView = () => {
   }
 };
 
+// 리니지 초기화
+const reset = () => {
+  const data = transformData(props.lineageData.nodes, props.lineageData.edges);
+  initializeCytoscape(data);
+};
+
 onMounted(() => {
   const data = transformData(props.lineageData.nodes, props.lineageData.edges);
   initializeCytoscape(data);
 });
 
-watch(
-    () => props.lineageData,
-    (newLineageData) => {
-      if (cyRef) {
-        cyRef.destroy(); // 이전 cyRef 제거
-      }
-      const newData = transformData(newLineageData.nodes, newLineageData.edges);
-      initializeCytoscape(newData);
-    },
-    {deep: true},
-);
+watchEffect(() => {
+  const newLineageData = props.lineageData;
+  if (cyRef) {
+    cyRef.off("tap", "node", handleNodeClick); // 기존 이벤트 해제
+    cyRef.destroy(); // 이전 cyRef 제거
+  }
+  const newData = transformData(newLineageData.nodes, newLineageData.edges);
+  initializeCytoscape(newData);
+});
+
+onBeforeUnmount(() => {
+  if (cyRef) {
+    cyRef.off("tap", "node", handleNodeClick); // 컴포넌트가 제거될 때 이벤트 해제
+    cyRef.destroy();
+  }
+});
+
+defineExpose({
+  zoomIn,
+  zoomOut,
+  resetView,
+  reset,
+});
 </script>
 
 <style lang="scss" scoped>
 .cytoscape-container {
-  width: 100%;
+  width: 80%;
   height: 600px;
-  border: 1px solid #ccc;
   position: relative; /* 상대 위치 */
 }
 
 .cytoscape-graph {
   width: 100%;
   height: 100%;
-}
-
-.controls {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 10;
-}
-
-button {
-  padding: 10px 20px;
-  font-size: 16px;
-  cursor: pointer;
 }
 </style>
