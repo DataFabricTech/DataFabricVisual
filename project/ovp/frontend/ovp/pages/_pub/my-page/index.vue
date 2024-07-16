@@ -114,12 +114,12 @@
                     <div class="breadcrumb">
                       <ul class="breadcrumb-list">
                         <li class="breadcrumb-item">
-                          <span href="#" class="breadcrumb-text">1depth</span>
+                          <span class="breadcrumb-text">1depth</span>
                         </li>
                         <li class="breadcrumb-item">
                           <span class="breadcrumb-text">2depth</span>
                         </li>
-                        <li class="breadcrumb-item is-breadcrumb-selected">
+                        <li class="breadcrumb-item">
                           <span class="breadcrumb-text">데이터 모델</span>
                         </li>
                       </ul>
@@ -177,7 +177,7 @@
                 </div>
                 <div class="preview-group">
                   <div class="tag tag-primary tag-sm" v-for="tag in 8" :key="tag">
-                    <a class="tag-link" href="#">DATA-tag</a>
+                    <span class="tag-text">tag</span>
                   </div>
                 </div>
               </div>
@@ -187,7 +187,7 @@
                 </div>
                 <div class="preview-group">
                   <div class="tag tag-primary tag-sm">
-                    <a class="tag-link">관련 용어</a>
+                    <span class="tag-text">관련 용어</span>
                   </div>
                 </div>
               </div>
