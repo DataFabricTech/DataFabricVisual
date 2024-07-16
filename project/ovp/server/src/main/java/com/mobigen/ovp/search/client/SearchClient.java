@@ -15,7 +15,4 @@ public interface SearchClient {
 
     @GetMapping("/search/query")
     Map<String, Object> getSearchList(@RequestParam MultiValueMap<String, String> params) throws Exception;
-
-    @GetMapping("/tables/{fqn}/tableProfile/latest")
-    Map<String, Object> getSearchPreview(@PathVariable String fqn) throws Exception;
 }
