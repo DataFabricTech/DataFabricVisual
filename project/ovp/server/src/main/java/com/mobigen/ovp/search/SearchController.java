@@ -58,7 +58,7 @@ public class SearchController {
      */
     @ResponseJsonResult(errorMessage = "미리보기 조회 오류")
     @GetMapping("/preview/{fqn}")
-    public Object getSearchPreview(@PathVariable("fqn") String fqn) throws Exception {
+    public Object getSearchPreview(@PathVariable("fqn") String fqn) {
         return searchService.getSearchPreview(fqn);
     }
 }

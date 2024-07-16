@@ -1,6 +1,7 @@
 package com.mobigen.ovp.search;
 
 import com.mobigen.ovp.search.client.SearchClient;
+import com.mobigen.ovp.common.openmete_client.TablesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class SearchService {
     private final SearchClient searchClient;
+    private final TablesClient tablesClient;
 
     private Map<String, Object> convertAggregations(Map<String, Object> response) {
         Map<String, Object> aggregations = (Map<String, Object>) response.get("aggregations");
@@ -121,8 +123,8 @@ public class SearchService {
      * @return
      * @throws Exception
      */
-    public Object getSearchPreview(String fqn) throws Exception {
-        Map<String, Object> result = searchClient.getSearchPreview(fqn);
+    public Object getSearchPreview(String fqn) {
+        Map<String, Object> result = tablesClient.getSearchPreview(fqn);
 
         String name = (String) result.get("name");
         String description = (String) result.get("description");
