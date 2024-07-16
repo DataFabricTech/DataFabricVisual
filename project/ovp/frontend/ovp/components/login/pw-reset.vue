@@ -111,6 +111,7 @@
 import _ from "lodash";
 import { useRouter } from "vue-router";
 import { loginStore } from "~/store/login";
+import { pwRegex, pwRegexErrorMsg } from "~/utils/constant";
 const store = loginStore();
 const { isPwChangeSuccess, errorMessage } = storeToRefs(store);
 const { getPwChangeSuccessState } = store;
@@ -135,18 +136,6 @@ const submit = async () => {
   let pw = newPassword.value;
   let cpw = confirmPassword.value;
 
-  /*  NOTE
-   *  비밀번호 유효성을 검사하는 정규 표현식
-      기준:
-      1. 최소 8자, 최대 56자
-      2. 대문자 (A-Z) 하나 이상 포함
-      3. 소문자 (a-z) 하나 이상 포함
-      4. 숫자 (0-9) 하나 이상 포함
-      5. 특수문자 (#?!@$%^&*-) 하나 이상 포함
-   * */
-  const reg =
-    /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,56}$/;
-
   passwordValidationReset();
 
   // validation check
@@ -157,10 +146,9 @@ const submit = async () => {
     return;
   }
 
-  if (!reg.test(pw)) {
+  if (!pwRegex.test(pw)) {
     isErrorPw.value = true;
-    pwErrorMessage.value =
-      "비밀번호는 최소 8자, 최대56자여야 하며 대문자(AZ), 소문자(az), 숫자, 특수문자(예:!,%,@ 또는 #등)를 하나 이상 포함해야 합니다.";
+    pwErrorMessage.value = pwRegexErrorMsg;
     return;
   }
 
