@@ -55,6 +55,19 @@
         width: 100%;
       }
     }
+    .tab {
+      width: 100%;
+
+      &-list {
+        height: 40px;
+      }
+
+      &-button {
+        @include font-size('14');
+        height: 40px;
+
+      }
+    }
   }
 
   &-foot {

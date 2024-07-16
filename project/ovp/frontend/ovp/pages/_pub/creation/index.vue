@@ -10,7 +10,7 @@
       <div class="work-list">
         <div class="l-top-bar">
           <span class="font-semibold">선택된 데이터 모델 (0)</span>
-          <button class="button button-secondary-stroke">추가</button>
+          <button class="button button-secondary-stroke" @click="showModalAdd = true">추가</button>
         </div>
         <div class="menu menu-data menu-lg">
           <div class="menu-head">
@@ -525,6 +525,49 @@
       </div>
     </div>
   </div>
+  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModalAdd">
+    <div class="modal" style="width:900px">
+      <div class="modal-head">
+        <div class="modal-head-text">
+          <span class="modal-head-title">데이터 모델 추가</span>
+        </div>
+        <button class="button link-button button-sm" type="button" @click="showModalAdd = false">
+          <span class="hidden-text">닫기</span>
+          <svg-icon class="button-icon" name="close"></svg-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="l-split transfer">
+
+        </div>
+        <div class="tab">
+          <ul class="tab-list">
+            <li class="tab-item is-tab-item-selected">
+              <button class="tab-button">
+                <p class="tab-button-text">샘플데이터</p>
+              </button>
+            </li>
+            <li class="tab-item">
+              <button class="tab-button">
+                <p class="tab-button-text">데이터 프로파일링</p>
+              </button>
+            </li>
+            <li class="tab-item">
+              <button class="tab-button">
+                <p class="tab-button-text">연관 데이터</p>
+              </button>
+            </li>
+          </ul>
+          <div class="tab-contents"></div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <div class="modal-foot-group">
+          <button class="button button-primary button-lg">확인</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -537,6 +580,9 @@ export default {
   data() {
     return {
       showModalSave: false
+    };
+    return {
+      showModalAdd: false
     };
   }
 };
