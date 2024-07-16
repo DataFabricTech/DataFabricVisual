@@ -7,7 +7,7 @@
           <span class="hidden-text">logo</span>
         </a>
       </h1>
-      <SearchInput @searchBtnClick="searchBtnClick"></SearchInput>
+      <SearchInput @onClickSearch="onClickSearch"></SearchInput>
       <div class="profile ml-auto">
         <span class="profile-avatar">
           <img class="profile-img" src="" alt="프로필 이미지" />
@@ -58,7 +58,7 @@ import { useSearchCommonStore } from "~/store/search/common";
 const searchCommonStore = useSearchCommonStore();
 const { setSearchKeyword } = searchCommonStore;
 
-const searchBtnClick = (value: string) => {
+const onClickSearch = (value: string) => {
   setSearchKeyword(value);
 };
 </script>
