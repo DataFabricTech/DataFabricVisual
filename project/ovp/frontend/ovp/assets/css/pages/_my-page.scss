@@ -5,7 +5,7 @@
   padding: $spacing-16;
   border-bottom: 1px solid $neutral-200;
 
-  .profile-text {
+  .profile-name {
     @include font-size('16');
     font-weight: 600;
     color: $neutral-800;
@@ -48,10 +48,10 @@
   gap: $spacing-16;
   color: $neutral-600;
 
-  &-list {
+  .profile-list {
     @include flex;
 
-    dt {
+    .profile-title {
       flex-shrink: 0;
       position: relative;
       width: 75px;

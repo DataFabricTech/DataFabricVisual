@@ -1,7 +1,7 @@
 <template>
   <div class="section-contents bg-white">
     <div class="interaction-buttons">
-      <button class="button button-neutral-stroke button-sm" @click="showModalPwChange = true">
+      <button class="button button-neutral-stroke" @click="showModalPwChange = true">
         비밀번호 변경
       </button>
     </div>
@@ -11,7 +11,7 @@
       </span>
       <div class="profile-group">
         <div class="editable-group">
-          <span class="profile-text">root</span>
+          <span class="profile-name">root</span>
           <button class="button button-neutral-ghost button-sm" type="button">
             <span class="hidden-text">수정</span>
             <svg-icon class="button-icon" name="pen"></svg-icon>
@@ -30,13 +30,13 @@
             </button>
           </div>
         </div>
-        <dl class="profile-group-list">
-          <dt>이메일</dt>
-          <dd>admin@mobigen.com</dd>
-        </dl>
-        <dl class="profile-group-list">
-          <dt>역할</dt>
-          <dd>
+        <div class="profile-list">
+          <div class="profile-title">이메일</div>
+          <div>admin@mobigen.com</div>
+        </div>
+        <div class="profile-list">
+          <div class="profile-title">역할</div>
+          <div>
             <div class="editable-group">
               <span>사용자</span>
               <button class="button button-neutral-ghost button-sm" type="button">
@@ -44,11 +44,11 @@
                 <svg-icon class="button-icon" name="pen"></svg-icon>
               </button>
             </div>
-          </dd>
-        </dl>
-        <dl class="profile-group-list">
-          <dt>역할</dt>
-          <dd>
+          </div>
+        </div>
+        <div class="profile-list">
+          <div class="profile-title">역할</div>
+          <div>
             <!-- TODO : [개발] 수정시 스위치 활성화-->
             <div class="switch">
               <input type="checkbox" id="manager-sw" class="switch-input" />
@@ -57,8 +57,8 @@
                 <div class="switch-control"></div>
               </label>
             </div>
-          </dd>
-        </dl>
+          </div>
+        </div>
         <div class="editable-group">
           <span class="editable-group-desc">계정에 대한 설명영역입니다.</span>
           <button class="button button-neutral-ghost button-sm" type="button">
