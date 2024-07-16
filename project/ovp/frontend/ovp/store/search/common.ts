@@ -139,9 +139,8 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
 
   // List Query data
   let searchKeyword: string = "";
-  const SIZE_CNT = 10;
   const from: Ref<number> = ref<number>(0);
-  const size: Ref<number> = ref<number>(SIZE_CNT);
+  const size: Ref<number> = ref<number>(100);
   const sortKey: Ref<string> = ref<string>("totalVotes");
   const sortKeyOpt: Ref<string> = ref<string>("desc");
 
