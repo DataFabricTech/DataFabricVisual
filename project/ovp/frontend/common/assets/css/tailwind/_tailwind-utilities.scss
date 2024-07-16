@@ -8,4 +8,8 @@
   .secondary {
     @include icon-color($secondary-500);
   }
+
+  .bg-neutral-100 {
+    background-color: $neutral-100;
+  }
 }
