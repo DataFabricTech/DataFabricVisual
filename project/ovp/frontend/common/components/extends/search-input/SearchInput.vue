@@ -45,7 +45,6 @@ const emit = defineEmits<{
   (e: "onClickSearch", value: string): void;
   (e: "onChange", value: string): void;
   (e: "onInput", value: string): void;
-  (e: "onSearch", value: string): void;
 }>();
 
 const onClickSearch = () => {
