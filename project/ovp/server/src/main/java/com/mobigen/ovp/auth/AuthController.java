@@ -67,6 +67,18 @@ public class AuthController {
     }
 
     /**
+     * 회원가입 > 이메일 중복 검사
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PostMapping("/sign-up/check-email")
+    public Object checkDuplicateEmail(@RequestBody Map<String, Object> param) throws Exception {
+        return authService.checkDuplicateEmail((String) param.get("email"));
+    }
+    /**
      * 로그인 > RSA 암호화를 위한 공개키 발급 및 암호화 비밀번호 반환  - Test 코드
      *
      * @param request

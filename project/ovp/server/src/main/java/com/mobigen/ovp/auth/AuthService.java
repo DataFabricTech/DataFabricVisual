@@ -121,13 +121,10 @@ public class AuthService {
         String decryptPasswd = token.decryptRSAString(request, (String) param.get(PASSWORD_KEY));
         param.put(PASSWORD_KEY, decryptPasswd);
 
-        // 1. 이메일 중복 확인
-        validateEmailNotInUse((String) param.get(USER_ID_KEY));
-
-        // 2. 사용자 기본 역할 조회
+        // 1. 사용자 기본 역할 조회
         List<String> userRoles = userRoleService.getUserRolesIdList();
 
-        // 3. Admin 계정으로 로그인
+        // 2. Admin 계정으로 로그인
         HttpHeaders adminAuthorizationHeader = adminLoginHeader();
 
         Map<String, Object> paramMap = new HashMap<>();
@@ -141,26 +138,11 @@ public class AuthService {
         paramMap.put("isBot", false);
 
 
-        // 4. 회원가입 API 호출 + DB 저장
+        // 3. 회원가입 API 호출 + DB 저장
         Map<String, Object> signUpResult = singUpAPI(adminAuthorizationHeader, paramMap);
         saveUserToDatabase(signUpResult, adminAuthorizationHeader);
 
         return null;
-    }
-
-    /**
-     * 회원가입 > 이메일 중복 확인
-     *
-     * @param email : 이메일 정보
-     * @throws Exception
-     */
-    private void validateEmailNotInUse(String email) throws Exception {
-        Map<String, Object> checkEmailParam = new HashMap<>();
-        checkEmailParam.put(USER_ID_KEY, email);
-        boolean checkEmail = authClient.checkEmailInUse(checkEmailParam);
-        if (checkEmail) {
-            throw new Exception("이미 사용중인 이메일입니다.");
-        }
     }
 
     /**
@@ -200,5 +182,18 @@ public class AuthService {
             log.error(e.getMessage(), e);
             throw new Exception("회원가입 실패. 관리자에게 문의하세요");
         }
+    }
+
+    /**
+     * 회원가입 > 이메일 중복 검사
+     *
+     * @param email : 이메일 정보
+     * @throws Exception
+     */
+    public boolean checkDuplicateEmail(String email) throws Exception {
+        Map<String, Object> checkEmailParam = new HashMap<>();
+        checkEmailParam.put(USER_ID_KEY, email);
+
+        return authClient.checkEmailInUse(checkEmailParam);
     }
 }
