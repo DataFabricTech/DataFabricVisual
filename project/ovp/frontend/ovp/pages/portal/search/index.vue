@@ -63,11 +63,12 @@ const router = useRouter();
 
 const searchCommonStore = useSearchCommonStore();
 const {
-  getSearchList,
+  addSearchList,
   getFilters,
   getPreviewData,
   setScrollFrom,
   setIntersectionHandler,
+  updateIntersectionHandler,
 } = searchCommonStore;
 const {
   from,
@@ -99,12 +100,13 @@ const previewClick = async (id: string | number) => {
   currentPreviewId = id;
 };
 
-const modelNmClick = (data: { id: string; fqn: string }) => {
+const modelNmClick = (data: object) => {
+  const { id, fqn } = data as { id: string; fqn: string };
   router.push({
     path: "/portal/search/detail",
     query: {
-      id: data.id,
-      fqn: data.fqn,
+      id: id,
+      fqn: fqn,
     },
   });
 };
@@ -121,16 +123,16 @@ const loaderId = "loader";
 let intersectionHandler: IntersectionObserverHandler | null = null;
 // 스크롤 이동시 데이터 로딩 시점에 실행되는 callback
 const getDataCallback = async (count: number, loader: HTMLElement | null) => {
-  console.log(`callback ${count}`);
   // loader start
   if (loader) {
     loader.style.display = "flex";
   }
 
-  // 데이터 조회
-  // 조회 쿼리는 store 에서 처리.
   setScrollFrom(count);
-  await getSearchList();
+  updateIntersectionHandler(count);
+
+  // 데이터 조회 : 쿼리는 store 에서 처리.
+  await addSearchList();
 
   if (loader) {
     loader.style.display = "none";
@@ -138,7 +140,11 @@ const getDataCallback = async (count: number, loader: HTMLElement | null) => {
 };
 
 onMounted(async () => {
-  await getSearchList(false);
+  // top-bar 에서 select box (sort) 값이 변경되면 목록을 조회하라는 코드가 구현되어 있는데,
+  // select box 가 화면 맨 처음에 뿌릴때 값을 초기에 1번 셋팅하는 부분에서 목록 조회가 이뤄짐.
+  // 중복 호출을 피하기 위해서 여기서는 목록 데이터를 조회하지 않음.
+  // await getSearchList();
+
   await getFilters();
 
   // intersection observer instance 생성

@@ -56,10 +56,14 @@ import SearchInput from "@extends/search-input/SearchInput.vue";
 
 import { useSearchCommonStore } from "~/store/search/common";
 const searchCommonStore = useSearchCommonStore();
-const { setSearchKeyword } = searchCommonStore;
+const { setSearchKeyword, resetReloadList } = searchCommonStore;
 
 const onClickSearch = (value: string) => {
+  // 검색어 셋팅
   setSearchKeyword(value);
+
+  // 항목 갱신
+  resetReloadList();
 };
 </script>
 

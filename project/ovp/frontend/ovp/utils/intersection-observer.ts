@@ -45,9 +45,24 @@ export class IntersectionObserverHandler {
     });
   }
 
-  // 목록이 reset 될때 (ex, filter 초기화 등) handler changingInitialCount 를 update 해준다.
+  /**
+   * 목록이 갱신되었을때 netChangingInitialCount 를 reset 해주는 fn.
+   * @param newChangingInitialCount
+   */
   public updateChangingInitialCount(newChangingInitialCount: number) {
     this.changingInitialCount = newChangingInitialCount;
+  }
+
+  /**
+   * 목록이 갱신되었을때 scroll 을 첫번째 항목으로 보내는 fn.
+   */
+  public scrollToFirElement() {
+    const rootEl: any = this.observer.root;
+
+    if (rootEl.children.length > 0) {
+      const firChildEl: any = rootEl.firstElementChild;
+      rootEl.scrollTop = firChildEl.offsetTop;
+    }
   }
 
   public disconnect() {
