@@ -61,9 +61,9 @@ public class AuthController {
      * @throws Exception
      */
     @ResponseJsonResult
-    @PostMapping("/join")
-    public Object join(HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
-        return authService.join(request, param);
+    @PostMapping("/sign-up")
+    public Object signUpUser(HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
+        return authService.signUpUser(request, param);
     }
 
     /**

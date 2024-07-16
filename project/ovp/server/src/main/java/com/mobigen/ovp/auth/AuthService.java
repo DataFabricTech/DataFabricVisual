@@ -116,7 +116,7 @@ public class AuthService {
      * @return
      * @throws Exception
      */
-    public Object join(HttpServletRequest request, Map<String, Object> param) throws Exception {
+    public Object signUpUser(HttpServletRequest request, Map<String, Object> param) throws Exception {
         // 0. 비밀번호 복호화
         String decryptPasswd = token.decryptRSAString(request, (String) param.get(PASSWORD_KEY));
         param.put(PASSWORD_KEY, decryptPasswd);
@@ -142,8 +142,8 @@ public class AuthService {
 
 
         // 4. 회원가입 API 호출 + DB 저장
-        Map<String, Object> joinResult = joinAPI(adminAuthorizationHeader, paramMap);
-        saveUserToDatabase(joinResult, adminAuthorizationHeader);
+        Map<String, Object> signUpResult = singUpAPI(adminAuthorizationHeader, paramMap);
+        saveUserToDatabase(signUpResult, adminAuthorizationHeader);
 
         return null;
     }
@@ -171,9 +171,9 @@ public class AuthService {
      * @return
      * @throws Exception
      */
-    private Map<String, Object> joinAPI(HttpHeaders adminAuthorizationHeader, Map<String, Object> paramMap) throws Exception {
+    private Map<String, Object> singUpAPI(HttpHeaders adminAuthorizationHeader, Map<String, Object> paramMap) throws Exception {
         try {
-            return authClient.join(adminAuthorizationHeader, paramMap);
+            return authClient.signUpUser(adminAuthorizationHeader, paramMap);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new Exception("회원가입 실패. 관리자에게 문의하세요");
@@ -183,20 +183,20 @@ public class AuthService {
     /**
      * 회원가입 > User DB 저장
      *
-     * @param joinResult : OMD 서버에 저장된 사용자 정보
+     * @param signUpResult : OMD 서버에 저장된 사용자 정보
      * @param adminAuthorizationHeader : 관리자 토큰 헤더
      * @throws Exception : 저장 시 Exception이 발생되면 OMD 서버에 저장된 User 정보도 삭제
      */
-    private void saveUserToDatabase(Map<String, Object> joinResult, HttpHeaders adminAuthorizationHeader) throws Exception {
+    private void saveUserToDatabase(Map<String, Object> signUpResult, HttpHeaders adminAuthorizationHeader) throws Exception {
         try {
             userRepository.save(new UserEntity(
-                    (String) joinResult.get("id"),
-                    (String) joinResult.get("name"),
-                    (String) joinResult.get(USER_ID_KEY),
+                    (String) signUpResult.get("id"),
+                    (String) signUpResult.get("name"),
+                    (String) signUpResult.get(USER_ID_KEY),
                     UserRole.USER
             ));
         } catch (Exception e) {
-            authClient.deleteUser(adminAuthorizationHeader, (String) joinResult.get("id"), true, false);
+            authClient.deleteUser(adminAuthorizationHeader, (String) signUpResult.get("id"), true, false);
             log.error(e.getMessage(), e);
             throw new Exception("회원가입 실패. 관리자에게 문의하세요");
         }

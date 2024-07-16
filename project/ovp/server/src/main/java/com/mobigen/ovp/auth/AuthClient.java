@@ -20,7 +20,7 @@ public interface AuthClient {
     boolean checkEmailInUse(@RequestBody Map<String, Object> params) throws Exception;
 
     @PostMapping("/users")
-    Map<String, Object> join(@RequestHeader HttpHeaders headers, @RequestBody Map<String, Object> params) throws Exception;
+    Map<String, Object> signUpUser(@RequestHeader HttpHeaders headers, @RequestBody Map<String, Object> params) throws Exception;
 
     @DeleteMapping("/users/{name}")
     void deleteUser(@RequestHeader HttpHeaders headers,
