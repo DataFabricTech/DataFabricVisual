@@ -1,7 +1,7 @@
 <template>
   <div class="section-contents bg-white">
     <div class="interaction-buttons">
-      <button class="button button-neutral-stroke button-sm">
+      <button class="button button-neutral-stroke button-sm" @click="showModalPwChange = true">
         비밀번호 변경
       </button>
     </div>
@@ -16,6 +16,19 @@
             <span class="hidden-text">수정</span>
             <svg-icon class="button-icon" name="pen"></svg-icon>
           </button>
+        </div>
+        <!-- TODO : [개발] 수정시 인풋 활성화-->
+        <div class="editable-group">
+          <lable class="hidden-text" for="profile-name-modify">프로필 이름 입력</lable>
+          <input id="profile-name-modify" class="text-input w-1/4" />
+          <div class="h-group gap-2 shrink-0">
+            <button class="button button-neutral-lighter button-sm" type="button">
+              취소
+            </button>
+            <button class="button button-primary-lighter button-sm" type="button">
+              완료
+            </button>
+          </div>
         </div>
         <dl class="profile-group-list">
           <dt>이메일</dt>
@@ -52,6 +65,19 @@
             <span class="hidden-text">수정</span>
             <svg-icon class="button-icon " name="pen"></svg-icon>
           </button>
+        </div>
+        <!-- TODO : [개발] 수정시 textarea 활성화-->
+        <div class="editable-group w-2/4">
+          <lable class="hidden-text" for="profile-description-modify">계정 설명 수정</lable>
+          <textarea id="profile-description-modify" class="textarea"></textarea>
+          <div class="h-group gap-1">
+            <button class="button button-neutral-stroke" type="button">
+              취소
+            </button>
+            <button class="button button-primary-lighter" type="button">
+              완료
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -217,11 +243,81 @@
       </div>
     </div>
   </div>
+  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModalPwChange">
+    <div class="modal modal-padding-16" style="width:350px">
+      <div class="modal-head">
+        <div class="modal-head-text">
+          <span class="modal-head-title">비밀번호 변경</span>
+        </div>
+        <button class="button link-button button-sm" type="button" @click="showModalPwChange = false">
+          <span class="hidden-text">닫기</span>
+          <svg-icon class="button-icon" name="close"></svg-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form form-lg">
+          <div class="form-body">
+            <div class="form-item">
+              <label for="new-password" class="form-label">
+                신규 비밀번호
+                <span class="required">*</span>
+              </label>
+              <div class="form-detail">
+                <div class="search-input">
+                <input id="new-password" class="text-input text-input-lg" type="password" placeholder="비밀번호 입력" />
+                  <!-- TODO : [개발] 비밀번호 보기와 보기해제 on/off 필요(hidden-text와 아이콘 체인지)-->
+                  <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <span class="hidden-text">비밀번호 보기 해제</span>
+                    <svg-icon class="button-icon" name="eye-hide"></svg-icon>
+                  </button>
+                </div>
+                <div class="notification notification-sm notification-error">
+                  <svg-icon class="notification-icon" name="error"></svg-icon>
+                  <p class="notification-detail">안내문구 출력</p>
+                </div>
+              </div>
+            </div>
+            <div class="form-item">
+              <label for="password-check" class="form-label">
+                비밀번호 확인
+                <span class="required">*</span>
+              </label>
+              <div class="form-detail">
+                <div class="search-input">
+                  <input id="password-check" class="text-input text-input-lg" type="password" placeholder="비밀번호 확인" />
+                  <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <span class="hidden-text">비밀번호 보기</span>
+                    <svg-icon class="button-icon" name="eye"></svg-icon>
+                  </button>
+                </div>
+                  <div class="notification notification-sm notification-error">
+                  <svg-icon class="notification-icon" name="error"></svg-icon>
+                  <p class="notification-detail">안내문구 출력</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <div class="modal-foot-group">
+          <button class="button button-neutral-ghost button-lg">취소</button>
+          <button class="button button-primary button-lg">저장</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script>
 export default {
-  name: "my-page"
+  name: "my-page",
+  data() {
+    return {
+      showModalPwChange: false
+    };
+  }
 };
 </script>
 
