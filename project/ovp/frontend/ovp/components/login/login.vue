@@ -23,7 +23,7 @@
                   v-show="isErrorEmailOrId"
                 >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">{{ emailOrIdErrorMessage }}</p>
+                  <p class="notification-detail">{{ emailOrIdErrorMsg }}</p>
                 </div>
               </div>
             </div>
@@ -57,7 +57,7 @@
                 >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
                   <p class="notification-detail">
-                    {{ passwordErrorMessage }}
+                    {{ passwordErrorMsg }}
                   </p>
                 </div>
               </div>
@@ -107,8 +107,8 @@ const router = useRouter();
 const loginEmailOrId = ref("");
 const loginPassword = ref("");
 
-const emailOrIdErrorMessage = ref("");
-const passwordErrorMessage = ref("");
+const emailOrIdErrorMsg = ref("");
+const passwordErrorMsg = ref("");
 
 const isErrorEmailOrId = ref(false);
 const isErrorPassword = ref(false);
@@ -125,13 +125,13 @@ const login = async () => {
 
   if (_.isEmpty(id)) {
     isErrorEmailOrId.value = true;
-    emailOrIdErrorMessage.value = "사용자 아이디를 입력하세요.";
+    emailOrIdErrorMsg.value = "사용자 아이디를 입력하세요.";
     return;
   }
 
   if (_.isEmpty(password)) {
     isErrorPassword.value = true;
-    passwordErrorMessage.value = "사용자 비밀번호를 입력하세요.";
+    passwordErrorMsg.value = "사용자 비밀번호를 입력하세요.";
     return;
   }
 
@@ -145,11 +145,8 @@ const login = async () => {
   if (isloginSuccess.value) {
     router.push("/");
   } else {
-    isErrorEmailOrId.value = true;
-    isErrorPassword.value = true;
-
-    passwordErrorMessage.value = errorMessage.value;
-    emailOrIdErrorMessage.value = errorMessage.value;
+    // TODO: 추후 컴포넌트로 교체 예정
+    alert(errorMessage.value);
   }
 };
 
