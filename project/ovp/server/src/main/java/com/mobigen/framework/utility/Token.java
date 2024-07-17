@@ -135,13 +135,29 @@ public class Token {
      * @param accessToken
      * @return
      */
-    public boolean isExpiredToken(String accessToken) {
-        DecodedJWT decodedJWT = decodedJWT(accessToken);
+    public boolean isExpiredTokenWithSecretKey(String accessToken) {
+        DecodedJWT decodedJWT = decodedJWTWithSecretKey(accessToken);
         if (decodedJWT == null) {
             return true;
         }
 
         Date expiration = decodedJWT.getExpiresAt();
+        return Optional.ofNullable(expiration).map(date -> date.before(new Date())).orElse(true);
+    }
+
+    /**
+     * Token Expired 상태 검증
+     * @param accessToken
+     * @return
+     */
+    public boolean isExpiredToken(String accessToken) {
+        // JWT 디코딩
+        DecodedJWT decodedJWT = JWT.decode(accessToken);
+
+        // 페이로드의 클레임 확인
+        Date expiration = decodedJWT.getExpiresAt();
+
+        // 만료 여부 확인
         return Optional.ofNullable(expiration).map(date -> date.before(new Date())).orElse(true);
     }
 
@@ -161,7 +177,7 @@ public class Token {
      * @param accessToken
      * @return
      */
-    public DecodedJWT decodedJWT (String accessToken) {
+    public DecodedJWT decodedJWTWithSecretKey(String accessToken) {
         try {
             byte[] secretKey = Base64.getUrlDecoder().decode(properties.getToken().getSecret());
             Algorithm algorithm = Algorithm.HMAC256(Base64.getUrlDecoder().decode(secretKey));
@@ -181,7 +197,7 @@ public class Token {
      * @throws Exception
      */
     public User getUserByXAccessToken(String accessToken) {
-        DecodedJWT jwt = decodedJWT(accessToken);
+        DecodedJWT jwt = decodedJWTWithSecretKey(accessToken);
         if (jwt == null) {
             return null;
         }

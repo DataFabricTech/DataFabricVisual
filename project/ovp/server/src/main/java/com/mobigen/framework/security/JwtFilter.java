@@ -43,7 +43,7 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 // Token 확인
                 String xAccessToken = token.getAccessTokenByRequest(request);
-                if (token.isExpiredToken(xAccessToken)) {
+                if (token.isExpiredTokenWithSecretKey(xAccessToken)) {
                     token.deleteTokens(request, response);
                 }
             } catch (Exception e) {
