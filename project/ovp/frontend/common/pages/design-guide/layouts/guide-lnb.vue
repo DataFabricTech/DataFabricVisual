@@ -28,7 +28,7 @@
           <p class="lnb-item-title">Component</p>
           <ul class="sub-list">
             <li class="sub-item">
-              <a class="sub-item-link" href="#">Accordion</a>
+              <a class="sub-item-link" href="#guide-accordion">Accordion</a>
             </li>
             <li class="sub-item">
               <a class="sub-item-link" href="#guide-alert">Alert</a>

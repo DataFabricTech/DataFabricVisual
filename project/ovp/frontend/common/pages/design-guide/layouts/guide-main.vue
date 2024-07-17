@@ -1,6 +1,7 @@
 <template>
   <main class="guide-main">
     <guide-color id="guide-color" />
+    <guide-accordion id="guide-accordion" />
     <guide-alert id="guide-alert" />
     <guide-badge id="guide-badge" />
     <guide-breadcrumb id="guide-breadcrumb" />
@@ -29,6 +30,7 @@
 
 <script setup>
 import GuideColor from "../pages/guide-color.vue";
+import GuideAccordion from "../pages/guide-accordion.vue";
 import GuideAlert from "../pages/guide-alert.vue";
 import GuideBadge from "../pages/guide-badge.vue";
 import GuideButton from "../pages/guide-button.vue";
