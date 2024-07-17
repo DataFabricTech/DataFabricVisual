@@ -37,6 +37,13 @@
     }
 
     .menu-data-icon {
+      @include icon-size('sm');
+      margin-right: $spacing-4;
+    }
+  }
+
+  &.menu-lg {
+    .menu-data-icon {
       @include icon-size('md');
       margin-right: $spacing-8;
     }

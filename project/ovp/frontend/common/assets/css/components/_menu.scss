@@ -9,6 +9,10 @@
     .menu-text {
       @include font-size($font-size);
     }
+
+    .menu-subtext {
+      @include font-size($font-size);
+    }
   }
 }
 
@@ -42,6 +46,12 @@
 
   &-text {
     font-weight: 600;
+  }
+
+  &-subtext {
+    margin-left: $spacing-2;
+    font-weight: 400;
+    color: $neutral-500;
   }
 
   &-lg {

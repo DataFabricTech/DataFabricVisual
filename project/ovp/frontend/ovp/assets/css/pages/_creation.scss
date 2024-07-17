@@ -39,3 +39,70 @@
     background: $error-100;
   }
 }
+
+//데이터모델추가 모달 스타일
+.data-add {
+  @include flex($direction:column, $horizontal:flex-start);
+  overflow-y: scroll;
+  gap: $spacing-12;
+  width: 100%;
+  height: 500px;
+  padding: $spacing-16;
+
+  .tab-contents {
+    height: calc(100% - 36px);
+    max-height: 448px;
+
+
+
+    .knowledge{
+      flex-grow: 4;
+      height: 380px;
+      border: 1px solid $neutral-200;
+    }
+
+    .data-summary {
+      padding: 0;
+    }
+
+    .data-list {
+      flex-grow: 1;
+    }
+  }
+}
+
+//transfer 스타일
+// 컴포넌트로 분기될 경우 디폴트/모달 스타일 구별해야 함
+.transfer {
+  display: flex;
+  height: 320px;
+
+  .menu-data {
+    height: calc(100% - 40px);
+  }
+
+  &-box {
+    width: 400px;
+    border: 1px solid $neutral-200;
+  }
+
+  &-handle {
+    @include flex($direction: column);
+    gap: $spacing-8;
+    padding: $spacing-12;
+
+  }
+
+  &-head {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 $spacing-16;
+    border-bottom: 1px solid $neutral-200;
+    font-weight: 600;
+  }
+
+  .tab-line {
+    width: 100%;
+  }
+}
