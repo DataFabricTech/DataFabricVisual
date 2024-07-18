@@ -22,6 +22,54 @@
   }
 }
 
+.profiling-detail {
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-8;
+  padding: 0 $spacing-8 $spacing-8;
+  margin-bottom: $spacing-8;
+  height: 100%;
+
+  .select {
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  &-title {
+    @include font-size('13');
+    color: $neutral-500;
+    font-weight: 600;
+  }
+
+  dl {
+    @include font-size('13');
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-8;
+    padding: 0 $spacing-8;
+  }
+
+  dt {
+    color: $neutral-800;
+  }
+
+  dd {
+    @include font-size('12');
+    margin-left: $spacing-4;
+    color: $neutral-500;
+  }
+
+  .profiling-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-8;
+    padding: $spacing-8;
+    border: 1px solid $neutral-200;
+    border-radius: $border-radius-4;
+  }
+}
+
 .result-info {
   @include flex($horizontal: space-between);
   width: 655px;
@@ -42,7 +90,7 @@
 
 //데이터모델추가 모달 스타일
 .data-add {
-  @include flex($direction:column, $horizontal:flex-start);
+  @include flex($direction: column, $horizontal: flex-start);
   overflow-y: scroll;
   gap: $spacing-12;
   width: 100%;
@@ -54,8 +102,7 @@
     max-height: 448px;
 
 
-
-    .knowledge{
+    .knowledge {
       flex-grow: 4;
       height: 380px;
       border: 1px solid $neutral-200;
@@ -76,13 +123,18 @@
 .transfer {
   display: flex;
   height: 320px;
+  width: 100%;
 
   .menu-data {
     height: calc(100% - 40px);
+
+    .menu-item .checkbox-label::after {
+      top: 9px;
+    }
   }
 
   &-box {
-    width: 400px;
+    width: 47%;
     border: 1px solid $neutral-200;
   }
 

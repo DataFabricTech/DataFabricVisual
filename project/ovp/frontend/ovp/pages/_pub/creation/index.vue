@@ -282,7 +282,7 @@
               <span class="data-summary-text">(소유자)</span>
             </div>
             <!-- 샘플데이터 탭 시작 -->
-            <div class="table-scroll" style="display: none" >
+            <div class="table-scroll" style="display: none">
               <table>
                 <thead>
                 <tr>
@@ -331,25 +331,28 @@
               </table>
             </div>
             <!-- 샘플데이터 탭 끝 -->
-            <div class="v-group">
-              <span>컬럼 상세</span>
-              <select-box></select-box>
-              <dl>
-                <dt>DATA TYPE</dt>
-                <dd>integer</dd>
-              </dl>
-              <dl>
-                <dt>Null %</dt>
-                <dd>0%</dd>
-              </dl>
-              <dl>
-                <dt>Null %</dt>
-                <dd>0%</dd>
-              </dl>
-              <dl>
-                <dt>Null %</dt>
-                <dd>0%</dd>
-              </dl>
+            <!-- 데이터 프로파일링 탭 시작 -->
+            <div class="profiling-detail">
+              <span class="profiling-detail-title">컬럼 상세</span>
+              <select-box class="select-sm"></select-box>
+              <div class="profiling-list v-group">
+                <dl>
+                  <dt>DATA TYPE</dt>
+                  <dd>integer</dd>
+                </dl>
+                <dl>
+                  <dt>Null %</dt>
+                  <dd>0%</dd>
+                </dl>
+                <dl>
+                  <dt>Null %</dt>
+                  <dd>0%</dd>
+                </dl>
+                <dl>
+                  <dt>Null %</dt>
+                  <dd>0%</dd>
+                </dl>
+              </div>
             </div>
             <!-- 결과 없을 시 no-result 표시 -->
             <div class="no-result" style="display: none">
@@ -490,7 +493,8 @@
                 데이터 모델 설명
               </label>
               <div class="form-detail">
-               <textarea id="data-model-save-description" class="textarea h-28" placeholder="데이터 모델 설명을 입력하세요."></textarea>
+                <textarea id="data-model-save-description" class="textarea h-28"
+                          placeholder="데이터 모델 설명을 입력하세요."></textarea>
               </div>
             </div>
             <div class="form-item">
@@ -624,162 +628,14 @@
                         <span class="hidden-text">메뉴보기</span>
                         <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
                       </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
                     </div>
                   </li>
-                  <li class="menu-item">
+                  <li class="menu-item" v-for="menu in 6" :key="menu">
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox-menu-02" class="checkbox-input" />
                       <label for="checkbox-menu-02" class="checkbox-label">
                         <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
                         <span class="checkbox-text">데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon class="svg-icon" name="tag"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">메뉴보기</span>
-                        <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-menu-03" class="checkbox-input" />
-                      <label for="checkbox-menu-03" class="checkbox-label">
-                        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                        <span class="checkbox-text">데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon class="svg-icon" name="tag"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">메뉴보기</span>
-                        <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-menu-04" class="checkbox-input" />
-                      <label for="checkbox-menu-04" class="checkbox-label">
-                        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                        <span class="menu-text">데이터 모델데이터 모델데이터 모델데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon class="svg-icon" name="tag"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">메뉴보기</span>
-                        <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-menu-05" class="checkbox-input" />
-                      <label for="checkbox-menu-05" class="checkbox-label">
-                        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                        <span class="menu-text">데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon class="svg-icon" name="tag"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">메뉴보기</span>
-                        <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-menu-06" class="checkbox-input" />
-                      <label for="checkbox-menu-06" class="checkbox-label">
-                        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                        <span class="menu-text">데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon class="svg-icon" name="tag"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">메뉴보기</span>
-                        <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-menu-07" class="checkbox-input" />
-                      <label for="checkbox-menu-07" class="checkbox-label">
-                        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                        <span class="menu-text">데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon class="svg-icon" name="tag"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">메뉴보기</span>
-                        <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-menu-07" class="checkbox-input" />
-                      <label for="checkbox-menu-07" class="checkbox-label">
-                        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                        <span class="menu-text">데이터 모델</span>
                         <span class="checkbox-subtext">(소유자)</span>
                       </label>
                     </div>
@@ -871,37 +727,9 @@
                         <span class="hidden-text">메뉴보기</span>
                         <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
                       </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
                     </div>
                   </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-menu-02" class="checkbox-input" />
-                      <label for="checkbox-menu-02" class="checkbox-label">
-                        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                        <span class="checkbox-text">데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon class="svg-icon" name="tag"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">메뉴보기</span>
-                        <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="menu-item">
+                  <li class="menu-item" v-for="menu in 6" :key="menu">
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox-menu-03" class="checkbox-input" />
                       <label for="checkbox-menu-03" class="checkbox-label">
@@ -918,130 +746,6 @@
                       <button class="button button-neutral-ghost button-sm">
                         <span class="hidden-text">메뉴보기</span>
                         <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-menu-04" class="checkbox-input" />
-                      <label for="checkbox-menu-04" class="checkbox-label">
-                        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                        <span class="menu-text">데이터 모델데이터 모델데이터 모델데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon class="svg-icon" name="tag"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">메뉴보기</span>
-                        <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-menu-05" class="checkbox-input" />
-                      <label for="checkbox-menu-05" class="checkbox-label">
-                        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                        <span class="menu-text">데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon class="svg-icon" name="tag"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">메뉴보기</span>
-                        <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-menu-06" class="checkbox-input" />
-                      <label for="checkbox-menu-06" class="checkbox-label">
-                        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                        <span class="menu-text">데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon class="svg-icon" name="tag"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">메뉴보기</span>
-                        <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-menu-07" class="checkbox-input" />
-                      <label for="checkbox-menu-07" class="checkbox-label">
-                        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                        <span class="menu-text">데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon class="svg-icon" name="tag"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">메뉴보기</span>
-                        <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-menu-07" class="checkbox-input" />
-                      <label for="checkbox-menu-07" class="checkbox-label">
-                        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                        <span class="menu-text">데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon class="svg-icon" name="tag"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">메뉴보기</span>
-                        <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                      </button>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
                       </button>
                     </div>
                   </li>
@@ -1145,7 +849,7 @@
               <div class="l-split" style="display: none">
                 <div class="knowledge">knowledge</div>
                 <div class="data-list">
-                  <div class="menu menu-data w-full"  style="display: none">
+                  <div class="menu menu-data w-full" style="display: none">
                     <ul class="menu-list">
                       <li class="menu-item is-menu-item-selected">
                         <button class="menu-button">
