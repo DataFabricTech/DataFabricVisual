@@ -111,7 +111,7 @@
 import _ from "lodash";
 import { useRouter } from "vue-router";
 import { loginStore } from "~/store/login";
-import { pwRegex, pwRegexErrorMsg } from "~/utils/constant";
+import { PWREGEX, PWREGEX_ERROR_MSG } from "~/utils/constant";
 const store = loginStore();
 const { isPwChangeSuccess, errorMessage } = storeToRefs(store);
 const { getPwChangeSuccessState } = store;
@@ -146,9 +146,9 @@ const submit = async () => {
     return;
   }
 
-  if (!pwRegex.test(pw)) {
+  if (!PWREGEX.test(pw)) {
     isErrorPw.value = true;
-    pwErrorMessage.value = pwRegexErrorMsg;
+    pwErrorMessage.value = PWREGEX_ERROR_MSG;
     return;
   }
 
