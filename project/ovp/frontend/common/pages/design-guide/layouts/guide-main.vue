@@ -23,6 +23,7 @@
     <guide-text-input id="guide-text-input" />
     <guide-toggle-button id="guide-toggle-button" />
     <guide-toggle-switch id="guide-toggle-switch" />
+    <guide-loading id="guide-loading" />
   </main>
 </template>
 
@@ -50,6 +51,8 @@ import GuideTextInput from "../pages/guide-text-input.vue";
 import GuideToggleButton from "../pages/guide-toggle-button.vue";
 import GuideToggleSwitch from "../pages/guide-toggle-switch.vue";
 import GuideProgressbar from "../pages/guide-progressbar.vue";
+import GuideLoading from "../pages/guide-loading.vue";
+
 </script>
 
 <style scoped></style>

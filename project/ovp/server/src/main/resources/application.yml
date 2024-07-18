@@ -25,8 +25,10 @@ spring:
     multipart:
       max-file-size: 1024MB
       max-request-size: 1024MB
+  jpa:
+    hibernate:
+      ddl-auto: validate
 
-  # H2 Console: /h2-console
   primary:
     datasource:
       hikari:
@@ -34,40 +36,19 @@ spring:
         maximum-pool-size: 10
         minimum-idle: 5
         pool-name: BaseHikariPool
-        jdbc-url: jdbc:h2:mem:testdb;MODE=MySQL;INIT=runscript from 'classpath:/config/h2_initialize.sql'
-        username: sa
-        password:
-        driver-class-name: org.h2.Driver
+        jdbc-url: jdbc:postgresql://192.168.105.26:5432/postgres?currentSchema=ovp
+        username: postgres
+        password: postgres
+        driver-class-name: org.postgresql.Driver
     hibernate:
       property:
-        "[hibernate.dialect]": org.hibernate.dialect.H2Dialect
+        "[hibernate.dialect]": org.hibernate.dialect.PostgreSQLDialect
         "[hibernate.show_sql]": true
         "[hibernate.format_sql]": true
         "[hibernate.hbm2ddl.auto]": none
         "[hibernate.cache.use_second_level_cache]": false
         "[hibernate.cache.use_query_cache]": false
         "[hibernate.globally_quoted_identifiers]": true
-  # 개발 서버 생성 시 수정
-#  primary:
-#    datasource:
-#      hikari:
-#        idle-timeout: 10000
-#        maximum-pool-size: 10
-#        minimum-idle: 5
-#        pool-name: BaseHikariPool
-#        jdbc-url: jdbc:postgresql://192.168.107.13:30002/postgres?currentSchema=idp
-#        username: root
-#        password: biris.manse
-#        driver-class-name: org.postgresql.Driver
-#    hibernate:
-#      property:
-#        "[hibernate.dialect]": org.hibernate.dialect.PostgreSQLDialect
-#        "[hibernate.show_sql]": true
-#        "[hibernate.format_sql]": true
-#        "[hibernate.hbm2ddl.auto]": none
-#        "[hibernate.cache.use_second_level_cache]": false
-#        "[hibernate.cache.use_query_cache]": false
-#        "[hibernate.globally_quoted_identifiers]": true
   h2:
     console:
       enabled: true

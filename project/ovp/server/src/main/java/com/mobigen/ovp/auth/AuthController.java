@@ -1,4 +1,4 @@
-package com.mobigen.ovp.sample.auth;
+package com.mobigen.ovp.auth;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.framework.utility.Token;
@@ -19,10 +19,11 @@ import java.util.Map;
 @RequestMapping("/api/auth")
 @RestController
 public class AuthController {
+    private static final String PASSWORD_KEY = "password";
+
     private final Token token;
     private final AuthService authService;
 
-    private final static String PASSWORD_KEY = "password";
     /**
      * 로그인 - 토큰 발급
      * @param request
@@ -36,24 +37,12 @@ public class AuthController {
         String decryptPasswd = token.decryptRSAString(request, (String) param.get(PASSWORD_KEY));
         param.put(PASSWORD_KEY, decryptPasswd);
 
-        return authService.login(request, response, param);
+        return authService.login(response, param);
     }
 
     /**
-     * RSA 암호화를 위한 공개키 발급 및 암호화 비밀번호 반환  - Test 코드
-     * @param request
-     * @param param
-     * @return
-     */
-    @ResponseJsonResult
-    @PostMapping("/login/encrypt-passwd")
-    public Object getEncryptPasswd(HttpServletRequest request, @RequestBody Map<String, Object> param) {
-        return authService.getEncryptPassword(request, param);
-    }
-
-
-    /**
-     * 로그인 RSA 공개키 반환
+     * 로그인 > RSA 공개키 반환
+     *
      * @param request
      * @return
      * @throws Exception
@@ -62,5 +51,43 @@ public class AuthController {
     @GetMapping("/login/public-key")
     public Object publicKey(HttpServletRequest request) {
         return authService.getPublicKey(request);
+    }
+
+    /**
+     * 회원가입
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PostMapping("/sign-up")
+    public Object signUpUser(HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
+        return authService.signUpUser(request, param);
+    }
+
+    /**
+     * 회원가입 > 이메일 중복 검사
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PostMapping("/sign-up/check-email")
+    public Object checkDuplicateEmail(@RequestBody Map<String, Object> param) throws Exception {
+        return authService.checkDuplicateEmail((String) param.get("email"));
+    }
+    /**
+     * 로그인 > RSA 암호화를 위한 공개키 발급 및 암호화 비밀번호 반환  - Test 코드
+     *
+     * @param request
+     * @param param
+     * @return
+     */
+    @ResponseJsonResult
+    @PostMapping("/login/encrypt-passwd")
+    public Object getEncryptPasswd(HttpServletRequest request, @RequestBody Map<String, Object> param) {
+        return authService.getEncryptPassword(request, param);
     }
 }

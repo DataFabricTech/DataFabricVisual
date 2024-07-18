@@ -2,7 +2,7 @@ package com.mobigen.framework.security;
 
 import com.mobigen.framework.utility.FrameworkProperties;
 import com.mobigen.framework.utility.Token;
-import com.mobigen.ovp.sample.auth.AuthService;
+import com.mobigen.ovp.auth.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
