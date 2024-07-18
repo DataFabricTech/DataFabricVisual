@@ -37,7 +37,7 @@
       </div>
     </div>
   </div>
-  <!--  TODO: Modal 카테고리 추가-->
+  <!--  TODO: Modal 카테고리 추가  -->
   <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModal">
     <div class="modal modal-padding-0" style="width: 900px">
       <div class="modal-head">
@@ -55,8 +55,8 @@
       </div>
       <div class="modal-body">
         <!-- <Step></Step> -->
-        <div class="service-type" style="display: none">
-          <!-- Step 01 / 시작 -->
+        <!-- Step 01 / 시작 div.service-type display:none을 해제해주세요. -->
+        <div class="service-type" style="display: block">
           <ul class="service-type-list">
             <li class="service-type-item">
               <div class="service-type-img">
@@ -105,8 +105,60 @@
           </ul>
         </div>
         <!-- Step 01 / 끝 -->
-        <!-- Step 02 / 시작 -->
-        <div class="service-form">
+
+        <!-- Step 02 / 시작 div.service-form display:none을 해제해주세요. -->
+        <div class="service-form" style="display: none">
+          <div class="service-form-summary">
+            <label for="" class="form-label">
+              선택된 서비스 타입
+            </label>
+            <div class="form-detail">
+              <img src="../../../../assets/images/storage-type_06.png" alt="MinIO">
+              <p class="form-detail-text">(MinIO)</p>
+            </div>
+          </div>
+          <div class="form form-vertical">
+            <div class="form-body">
+              <div class="form-item">
+                <label for="" class="form-label">
+                  서비스 이름
+                  <span class="required">*</span>
+                </label>
+                <div class="form-detail flex flex-col">
+                  <div class="search-input">
+                    <label class="hidden-text" for="text-input-example-4">label</label>
+                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
+                    <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">지우기</span>
+                      <svg-icon class="button-icon" name="close"></svg-icon>
+                    </button>
+                  </div>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="form-item">
+                <label for="" class="form-label">
+                  서비스 설명
+                </label>
+                <div class="form-detail">
+                  <textarea name="" id="" cols="30" rows="5" class="textarea">
+                  </textarea>
+                  <div class="notification notification-sm notification-error">
+                    <svg-icon class="notification-icon" name="error"></svg-icon>
+                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Step 02 / 끝 -->
+
+        <!-- Step 03 / 시작 div.service-form display:none을 해제해주세요. -->
+        <div class="service-form" style="display: none">
           <div class="service-form-summary">
             <label for="" class="form-label">
               선택된 서비스 타입
@@ -413,41 +465,22 @@
                       </div>
                       <div class="form-detail">
                         <p>CA Certificate</p>
-                        <div class="h-group gap-3">
-                          <button class="button button-neutral-stroke button-lg">
-                            <svg-icon class="button-icon" name="upload"></svg-icon>
-                            <span class="button-title">File Upload</span>
-                          </button>
-                        </div>
+                        <Upload></Upload>
                       </div>
                       <div class="form-detail">
-                        <p>CA Certificate</p>
-                        <div class="h-group gap-3">
-                          <button class="button button-neutral-stroke button-lg" disabled>
-                            <svg-icon class="button-icon" name="upload"></svg-icon>
-                            <span class="button-title">File Upload</span>
-                          </button>
-                          <Loading class="loader-xs" :hideText="true"></Loading>
-                        </div>
+                        <p>SSL Certificate</p>
+                        <Upload class="upload-loading"
+                                :isLoadingVisible="true"
+                                :isLoadedVisible="false"
+                                :isDisabled="true">
+                        </Upload>
                       </div>
                       <div class="form-detail">
-                        <p>CA Certificate</p>
-                        <div class="h-group gap-3">
-                          <div class="upload">
-                            <input type="file">
-                            <button class="button button-neutral-stroke button-lg">
-                              <svg-icon class="button-icon" name="upload"></svg-icon>
-                              <span class="button-title">File Upload</span>
-                            </button>
-                          </div>
-                          <div class="h-group gap-2">
-                            <p class="upload-file-name">파일명.cst</p>
-                            <button class="button link-button button-sm">
-                              <span class="hidden-text">닫기</span>
-                              <svg-icon class="button-icon" name="close"></svg-icon>
-                            </button>
-                          </div>
-                        </div>
+                        <p>SSL Key</p>
+                        <Upload class="upload-loaded"
+                                :isLoadingVisible="false"
+                                :isLoadedVisible="true">
+                        </Upload>
                       </div>
                     </div>
                   </template>
@@ -456,17 +489,40 @@
             </div>
           </div>
         </div>
-        <!-- Step 02 / 끝 -->
-
+        <!-- Step 03 / 끝 -->
+        <div class="connect-test">
+          <button class="button button-secondary-stroke button-lg">
+            <span class="button-title">연결테스트</span>
+          </button>
+          <!-- 연결중/ Loading 연결중일때 연결테스트 버튼 disabled 처리 필요 -->
+          <Loading class="loader-xs" :hideText="true"></Loading>
+          <!-- 연결 실패/ notification -->
+          <div class="notification notification-sm notification-error">
+            <svg-icon class="notification-icon" name="error"></svg-icon>
+            <p class="notification-detail">연결 테스트에 실패했습니다.<br>
+              connection exception (err: java.lang.NullPointerException)
+            </p>
+          </div>
+          <!-- 연결 성공/ notification -->
+          <div class="notification notification-sm notification-success">
+            <svg-icon class="notification-icon" name="success"></svg-icon>
+            <p class="notification-detail">연결 테스트에 성공했습니다.</p>
+          </div>
+        </div>
       </div>
       <div class="modal-foot">
-        <div class="modal-foot-group">
-          <button
+        <button
             class="button button-neutral-ghost button-lg"
             @click="showModal = false"
-          >
-            취소
-          </button>
+        >
+          취소
+        </button>
+        <div class="modal-foot-group">
+          <div class="notification notification-sm notification-error">
+            <svg-icon class="notification-icon" name="error"></svg-icon>
+            <p class="notification-detail">유효성 검사 문구가 출력됩니다.</p>
+          </div>
+          <button class="button button-primary-stroke button-lg">이전</button>
           <button class="button button-primary button-lg">다음</button>
         </div>
       </div>
@@ -475,22 +531,22 @@
 </template>
 
 <style scoped></style>
+
 <script>
 import { defineComponent } from "vue";
-import Step from "../../../../../common/components/extends/step/Step.vue";
-import MenuSearch from "@extends/menu-seach/menu-search.vue";
+import Step from "@extends/step/Step.vue";
 import Accordion from "@base/accordion/Accordion.vue";
 import SelectBox from "@extends/select-box/SelectBox.vue";
 import Loading from "@base/loading/loading.vue";
-
+import Upload from "@base/upload/upload.vue";
 
 export default defineComponent({
   components: {
     Step,
-    MenuSearch,
     Accordion,
     SelectBox,
-    Loading
+    Loading,
+    Upload
   },
   data() {
     return {
