@@ -54,7 +54,16 @@
         </button>
       </div>
       <div class="modal-body">
-        <!-- <Step></Step> -->
+         <Step
+             :data="stepOptions"
+             :label-key="'label'"
+             :value-key="'value'"
+             :current-item="currentStep"
+             :current-item-type="'index'"
+             :comparison="'equal'"
+             @change="changeStep"
+             style="width: 100%">
+         </Step>
         <!-- Step 01 / 시작 -->
         <div class="service-type" style="display: block">
           <ul class="service-type-list">
@@ -533,26 +542,22 @@
 
 <style scoped></style>
 
-<script>
-import { defineComponent } from "vue";
+<script setup lang="ts">
 import Step from "@extends/step/Step.vue";
 import Accordion from "@base/accordion/Accordion.vue";
 import SelectBox from "@extends/select-box/SelectBox.vue";
 import Loading from "@base/loading/loading.vue";
 import Upload from "@base/upload/upload.vue";
 
-export default defineComponent({
-  components: {
-    Step,
-    Accordion,
-    SelectBox,
-    Loading,
-    Upload
-  },
-  data() {
-    return {
-      showModal: false,
-    };
-  },
-});
+const stepOptions = [
+  { label: "서비스 타입 선택", value: "Step1" },
+  { label: "서비스 컨피그 입력", value: "Step2" },
+  { label: "연결 세부 정보 입력", value: "Step3" }
+];
+const currentStep = ref(2);
+function changeStep(value: number) {
+  currentStep.value = value;
+}
+const showModal = ref(false)
+
 </script>
