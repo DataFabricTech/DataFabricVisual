@@ -102,6 +102,9 @@
             <li class="sub-item">
               <a class="sub-item-link" href="#guide-toggle-switch">Toggle Switch</a>
             </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-upload">Upload</a>
+            </li>
           </ul>
         </li>
       </ul>
