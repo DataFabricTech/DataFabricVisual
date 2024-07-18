@@ -6,7 +6,8 @@
         id="button-radio-count"
         class="button-group-input"
         name="button-group2"
-        checked
+        :checked="recommendCount === 1"
+        @click="recommendCountAdd"
       />
       <label for="button-radio-count" class="button-group-label">
         <svg-icon class="svg-icon" name="thumbs-up"></svg-icon>
@@ -18,6 +19,8 @@
         id="button-radio-count-2"
         class="button-group-input"
         name="button-group2"
+        :checked="nonRecommendCount === 1"
+        @click="nonRecommendCountAdd"
       />
       <label for="button-radio-count-2" class="button-group-label">
         <svg-icon class="svg-icon" name="thumbs-down"></svg-icon>
@@ -30,7 +33,8 @@
         type="checkbox"
         id="checkbox3"
         class="checkbox-button-input"
-        checked
+        :checked="bookmarkCount === 1"
+        @click="bookmarkCountAdd"
       />
       <label for="checkbox3" class="checkbox-button-label">
         <svg-icon class="svg-icon" name="tag"></svg-icon>
@@ -76,18 +80,20 @@
 const recommendCount = ref(0); // 추천수
 const nonRecommendCount = ref(0); // 비추천수
 const bookmarkCount = ref(0); // 북마크수
-//
-// function recommendCountAdd() {
-//   recommendCount.value = recommendCount.value + 1;
-// }
-// function nonRecommendCountAdd() {
-//   nonRecommendCount.value = nonRecommendCount.value + 1;
-// }
-// function bookmarkCountAdd() {
-//   bookmarkCount.value = bookmarkCount.value + 1;
-// }
+
+function recommendCountAdd() {
+  recommendCount.value = recommendCount.value === 1 ? 0 : 1;
+  if (nonRecommendCount.value === 1) nonRecommendCount.value = 0;
+}
+function nonRecommendCountAdd() {
+  nonRecommendCount.value = nonRecommendCount.value === 1 ? 0 : 1;
+  if (recommendCount.value === 1) recommendCount.value = 0;
+}
+function bookmarkCountAdd() {
+  bookmarkCount.value = bookmarkCount.value === 1 ? 0 : 1;
+}
 function copyLink() {
-  // TODO : 상세 URL 클립보드 복사
+  navigator.clipboard.writeText(window.location.href);
 }
 </script>
 

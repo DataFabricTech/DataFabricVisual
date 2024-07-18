@@ -28,7 +28,7 @@ import { storeToRefs } from "pinia";
 import _ from "lodash";
 
 const searchCommonStore = useSearchCommonStore();
-const { setQueryFilter } = searchCommonStore;
+const { resetReloadList } = searchCommonStore;
 const { selectedFilters } = storeToRefs(searchCommonStore);
 
 const props = defineProps({
@@ -44,7 +44,7 @@ const resetFilters = () => {
   selectedFilterItems.value = [];
   selectedFilters.value = {};
 
-  setQueryFilter();
+  resetReloadList();
 };
 
 const changeMultiple: (value: any[] | {}, keyName: any) => void = (
@@ -59,7 +59,7 @@ const changeMultiple: (value: any[] | {}, keyName: any) => void = (
     selectedFilters.value[keyName] = selectedIds;
   }
 
-  setQueryFilter();
+  resetReloadList();
 };
 </script>
 

@@ -23,7 +23,9 @@
         </div>
       </div>
     </div>
-    <div class="resource-box-initial-name" v-if="useFirModelNm">{{ props.dataObj.firModelNm }}</div>
+    <div class="resource-box-initial-name" v-if="useFirModelNm">
+      {{ props.dataObj.firModelNm }}
+    </div>
 
     <resource-box-edit-part
       partKey="modelNm"
@@ -51,7 +53,7 @@
             class="editable-group-title"
             title="상세 보기"
             @click.stop="modelNmClick"
-          >{{ props.dataObj.modelNm }}</a
+            >{{ props.dataObj.modelNm }}</a
           >
         </template>
         <template v-else>
@@ -147,12 +149,12 @@ const newValue = ref<Record<string, any>>({});
 
 const props = withDefaults(defineProps<ResourceBoxProps>(), {
   useDataNmLink: false,
-  editable: false
+  editable: false,
 });
 
 const emit = defineEmits<{
   (e: "previewClick", id: string | number): void;
-  (e: "modelNmClick", id: string | number): void;
+  (e: "modelNmClick", data: object): void;
 }>();
 
 const previewClick = () => {
@@ -161,7 +163,7 @@ const previewClick = () => {
   }
 };
 const modelNmClick = () => {
-  emit("modelNmClick", props.dataObj.id);
+  emit("modelNmClick", props.dataObj);
 };
 
 const editIconClick = (key: string) => {
