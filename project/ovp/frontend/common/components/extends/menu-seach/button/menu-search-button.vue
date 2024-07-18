@@ -2,14 +2,13 @@
   <div class="select select-clean select-sm" >
     <button class="select-button" @click="onClickOpenMenuSearch">
       <span class="select-button-title">{{props.title}}</span>
-      <div class="badge badge-primary-lighter">
+      <div class="badge badge-primary-lighter" v-if="selectedListData.length > 0">
         <p class="badge-text">{{selectedListData.length}}</p>
       </div>
       <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
     </button>
     <menu-search
-      v-on-click-outside="() => {isShow = false}"
-      v-show="isShow"
+      :is-show="isShow"
       :data="props.data"
       :selected-items="selectedListData"
       :is-multi="props.isMulti"
@@ -23,12 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import { vOnClickOutside } from "@vueuse/components";
-
 import { MenuSearchItemImpl } from "../MenuSearchComposition";
 import { MenuSearchButtonComposition } from "./MenuSearchButtonComposition";
 import { MenuSearchButtonProps } from "./MenuSearchButtonProps";
 import MenuSearch from "../menu-search.vue"
+
 const props = withDefaults(defineProps<MenuSearchButtonProps>(), {
   data: () => [],
   labelKey: "label",
