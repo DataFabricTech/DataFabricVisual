@@ -13,20 +13,7 @@
             <Accordion></Accordion>
           </figure>
           <div class="group-description">
-            <h4 class="group-title">Normal</h4>
-            <p class="group-summary">
-              기본적인 상태 알림에 사용합니다.
-            </p>
-          </div>
-        </div>
-        <div class="flex gap-8 mb-14">
-          <figure class="section-figure items-center">
-          </figure>
-          <div class="group-description">
-            <h4 class="group-title">Info</h4>
-            <p class="group-summary">
-              normal타입보다 중요한 정보를 알릴 때 사용됩니다.
-            </p>
+            <h4 class="group-title">Default</h4>
           </div>
         </div>
       </div>
