@@ -1,5 +1,5 @@
 import { TreeProps, TreeViewItem } from "./TreeProps";
-import { uuid } from "vue-uuid";
+import { uuid } from "vue3-uuid";
 import _ from "lodash";
 
 export interface TreeComposition extends TreeProps {

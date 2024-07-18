@@ -71,7 +71,6 @@
     "vue-codemirror6": "^1.3.2",
     "vue-datepicker-next": "^1.0.3",
     "vue-final-modal": "^4.5.4",
-    "vue-uuid": "^3.0.0",
     "vue3-tree-vue": "^2.0.10",
     "vue3-uuid": "^1.0.0"
   },
