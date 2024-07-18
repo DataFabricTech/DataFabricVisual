@@ -84,7 +84,7 @@
                 class="button button-primary-ghost button-sm"
                 type="button"
               >
-                <nuxt-link :to="'/portal/login/join'"> 회원가입 </nuxt-link>
+                <nuxt-link :to="'/portal/login/sign-up'"> 회원가입 </nuxt-link>
               </button>
             </div>
           </div>
