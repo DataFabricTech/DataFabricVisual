@@ -1,3 +1,5 @@
+import { IntersectionObserverHandler } from "~/utils/intersection-observer";
+
 export interface Filter {
   text: string;
   data: any[];
@@ -54,11 +56,6 @@ export interface details {
     rows: any[];
   };
   profiling: any[];
-
-  // TODO : 처리방법 고려 (별도로 조회할껀지 확인 필요)
-  // query: [];
-  // lineage: {};
-  // recommendModel: [];
 }
 
 export interface SelectedFilters {
@@ -91,6 +88,8 @@ import detailsJson from "./samples/details.json";
 
 export const useSearchCommonStore = defineStore("searchCommon", () => {
   const { $api } = useNuxtApp();
+
+  let intersectionHandler: IntersectionObserverHandler | null = null;
 
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
@@ -130,9 +129,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     },
   });
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
-  const queryFilter: Ref<QueryFilter> = ref({
-    query: { bool: { must: [] } },
-  });
 
   // DATA
   const viewType: Ref<string> = ref<string>("listView");
@@ -141,6 +137,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const searchResultLength: Ref<number> = ref<number>(0);
 
   // List Query data
+  let searchKeyword: string = "";
   const from: Ref<number> = ref<number>(0);
   const size: Ref<number> = ref<number>(100);
   const sortKey: Ref<string> = ref<string>("totalVotes");
@@ -151,42 +148,46 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
       // eslint 예외 제외 코드 추가.
       // eslint-disable-next-line id-length
-      q: "", // TODO : header 에서 검색어 입력한거 처리
+      q: searchKeyword,
       index: "table_search_index,container_search_index",
       from: from.value,
       size: size.value,
       deleted: false,
-      query_filter: JSON.stringify(queryFilter.value),
+      query_filter: JSON.stringify(getQueryFilter()),
       sort_field: sortKey.value,
       sort_order: sortKeyOpt.value,
     };
     return new URLSearchParams(params);
   };
   // METHODS
-  const getSearchList = async () => {
-    const { totalCount, data } = await $api(
-      `/api/search/list?${getSearchListQuery()}`,
-    );
-
-    // 조회한 데이터 누적
+  const getSearchListAPI = async () => {
+    const { data } = await $api(`/api/search/list?${getSearchListQuery()}`);
+    return data;
+  };
+  /**
+   * 데이터 조회 -> 누적
+   */
+  const addSearchList = async () => {
+    const { data, totalCount } = await getSearchListAPI();
     searchResult.value = searchResult.value.concat(data);
     searchResultLength.value = totalCount;
   };
-  const getFilters = async () => {
-    const data = await $api(`/api/search/filters`);
 
-    // 사용할 필터를 정리
-    const useFilters: string[] = [
-      "domains",
-      "owner.displayName.keyword",
-      "tags.tagFQN",
-      "service.displayName.keyword",
-      "serviceType",
-      "database.displayName.keyword",
-      "databaseSchema.displayName.keyword",
-      "columns.name.keyword",
-      "tableType",
-    ];
+  /**
+   * 데이터 조회 -> 갱신
+   */
+  const getSearchList = async () => {
+    const { data, totalCount } = await getSearchListAPI();
+    searchResult.value = data;
+    searchResultLength.value = totalCount;
+  };
+  const getFilters = async () => {
+    const { data } = await $api(`/api/search/filters`);
+
+    // 기본값 기준 사용할 필터 key 를 정리
+    const defaultFilters = createDefaultFilters();
+    const useFilters = Object.keys(defaultFilters);
+
     useFilters.forEach((key: string) => {
       (filters.value as any)[key].data = data[key];
     });
@@ -220,45 +221,50 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     return setBoolObj.value;
   };
 
-  const setQueryFilter = () => {
-    queryFilter.value = {
+  const getQueryFilter = () => {
+    const queryFilter: QueryFilter = {
       query: { bool: { must: [] } },
     };
-    const setBoolObj: Ref<object> = ref<object>({});
+    let setBoolObj: object = {};
 
     for (const key in selectedFilters.value) {
       const value = selectedFilters.value[key];
-      setBoolObj.value = setQueryFilterByDepth(key, value);
-      queryFilter.value.query.bool.must.push(setBoolObj.value);
+      setBoolObj = setQueryFilterByDepth(key, value);
+      queryFilter.query.bool.must.push(setBoolObj);
     }
-
-    const isEmptyData = searchResult.value.length < 10;
-
-    // filter 값이 변경 되면, 조건을 리셋한다.
-    resetReloadList();
-
-    // TODO : intersection-observer 가 catch 하지 못할때의 데이터 로딩 처리 필요
-    // 확인한 내용으로는 filter 를 선택하여 목록의 갯수가 N개일때, filter 를 재조정 했을때 intersection-observer가 callback 함수를 실행하지 않아 목록을 더이상 갱신할 수 없는 부분이 있음.
-    // 그래서 N개 목록인 경우, 데이터 조회를 여기서 해준다.
-    // 기준은 10으로 잡음. 정확한 수치 알수 없음. 갯수 기준은 화면에 표시되는 갯수 기준 인것 같음. 확대/축소에 따라 다름.
-    if (isEmptyData) {
-      getSearchList();
-    }
+    return queryFilter;
   };
+
+  /**
+   * 목록 reset
+   * 목록을 '갱신'하는 경우, from 값을 항상 0으로 주어야 하기 때문에 fn 하나로 묶어서 처리.
+   */
   const resetReloadList = () => {
-    // 조건이 변경되었기 때문에, 목록의 start 값을 0으로, 기 조회하여 누적되어있는 데이터 목록도 리셋한다.
-    // 다만 데이터 조회는 index.vue 페이지에서 intersection observer 에서 하기 때문에 여기서는 조회하지 않는다.
-    from.value = 0;
-    searchResult.value = [];
+    setScrollFrom(0);
+    updateIntersectionHandler(0);
+    getSearchList();
   };
   const setSortInfo = (item: string) => {
     const items = item.split("_");
     sortKey.value = items.shift() ?? ""; // undefined 오류 예외처리
     sortKeyOpt.value = items.pop() ?? "";
-    resetReloadList();
   };
   const setScrollFrom = (count: number) => {
     from.value = count;
+  };
+  const updateIntersectionHandler = (count: number) => {
+    if (count < 1) {
+      if (intersectionHandler !== null) {
+        intersectionHandler.updateChangingInitialCount(from.value);
+        intersectionHandler.scrollToFirElement();
+      }
+    }
+  };
+  const setSearchKeyword = (keyword: string) => {
+    searchKeyword = keyword;
+  };
+  const setIntersectionHandler = (ih: any) => {
+    intersectionHandler = ih;
   };
 
   return {
@@ -275,12 +281,16 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     isShowPreview,
     isBoxSelectedStyle,
     searchResultLength,
+    addSearchList,
     getSearchList,
     getFilters,
     getSearchDetails,
     getPreviewData,
-    setQueryFilter,
     setSortInfo,
     setScrollFrom,
+    setSearchKeyword,
+    setIntersectionHandler,
+    resetReloadList,
+    updateIntersectionHandler,
   };
 });
