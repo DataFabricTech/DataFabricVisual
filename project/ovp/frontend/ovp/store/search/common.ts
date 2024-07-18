@@ -15,6 +15,7 @@ export interface Filters {
   "databaseSchema.displayName.keyword": Filter;
   "columns.name.keyword": Filter;
   tableType: Filter;
+  [key: string]: { text: string; data: any[] }; // 인덱스 시그니처 추가
 }
 
 export interface details {
@@ -189,8 +190,29 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     const useFilters = Object.keys(defaultFilters);
 
     useFilters.forEach((key: string) => {
-      (filters.value as any)[key].data = data[key];
+      (filters.value as Filters)[key].data = data[key];
     });
+  };
+  const getFilter = async (filterKey: string) => {
+    // TODO : 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
+    // const data = await $api(`/api/search/filter?filterKey=${filterKey}`);
+    const data: any = {
+      serviceType: [
+        {
+          key: "N_mariadb",
+        },
+        {
+          key: "N_bigquery",
+        },
+        {
+          key: "N_mysql",
+        },
+        {
+          key: "N_glue",
+        },
+      ],
+    };
+    (filters.value as Filters)[filterKey].data = data[filterKey];
   };
 
   const getSearchDetails = async () => {
@@ -283,6 +305,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     searchResultLength,
     addSearchList,
     getSearchList,
+    getFilter,
     getFilters,
     getSearchDetails,
     getPreviewData,
