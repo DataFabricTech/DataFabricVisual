@@ -15,8 +15,10 @@
                 <div class="text-input-group w-full">
                   <input
                     id="inpNewResetPw"
+                    :type="inNewPwType"
                     class="text-input text-input-lg"
                     placeholder="비밀번호 입력"
+                    v-model="newPassword"
                   />
                   <svg-icon
                     class="text-input-icon"
@@ -25,15 +27,19 @@
                   <button
                     class="text-input-group-action-button button button-neutral-ghost button-sm"
                     type="button"
+                    @click="isHideNewPw"
                   >
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="eye"></svg-icon>
                   </button>
                 </div>
-                <div class="notification notification-sm notification-error">
+                <div
+                  class="notification notification-sm notification-error"
+                  v-show="isErrorPw"
+                >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
                   <p class="notification-detail">
-                    사용자 비밀번호를 입력하세요.
+                    {{ pwErrorMessage }}
                   </p>
                 </div>
               </div>
@@ -47,8 +53,10 @@
                 <div class="text-input-group w-full">
                   <input
                     id="inpResetPw"
+                    :type="inCpwType"
                     class="text-input text-input-lg"
                     placeholder="비밀번호 확인"
+                    v-model="confirmPassword"
                   />
                   <svg-icon
                     class="text-input-icon"
@@ -57,22 +65,30 @@
                   <button
                     class="text-input-group-action-button button button-neutral-ghost button-sm"
                     type="button"
+                    @click="isHideCpw"
                   >
                     <span class="hidden-text">지우기</span>
                     <svg-icon class="button-icon" name="eye"></svg-icon>
                   </button>
                 </div>
-                <div class="notification notification-sm notification-error">
+                <div
+                  class="notification notification-sm notification-error"
+                  v-show="isErrorCpw"
+                >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
                   <p class="notification-detail">
-                    사용자 비밀번호를 입력하세요.
+                    {{ cpwErrorMessage }}
                   </p>
                 </div>
               </div>
             </div>
           </div>
           <div class="form-foot">
-            <button class="button button-primary button-lg" type="button">
+            <button
+              class="button button-primary button-lg"
+              type="button"
+              @click="submit"
+            >
               확인
             </button>
             <div class="form-foot-group">
@@ -91,7 +107,84 @@
     </div>
   </div>
 </template>
-<script setup lang="ts"></script>
-<style lang="scss" scoped>
-/* @import "./index.scss"; */
-</style>
+<script setup lang="ts">
+import _ from "lodash";
+import { useRouter } from "vue-router";
+import { loginStore } from "~/store/login";
+import { PWREGEX, PWREGEX_ERROR_MSG } from "~/utils/constant";
+const store = loginStore();
+const { isPwChangeSuccess, errorMessage } = storeToRefs(store);
+const { getPwChangeSuccessState } = store;
+
+const route = useRoute();
+const router = useRouter();
+const uuid = route.params.uuid;
+
+const newPassword = ref("");
+const confirmPassword = ref("");
+
+const pwErrorMessage = ref("");
+const cpwErrorMessage = ref("");
+
+const isErrorPw = ref(false);
+const isErrorCpw = ref(false);
+
+const inNewPwType = ref("password");
+const inCpwType = ref("password");
+
+const submit = async () => {
+  let pw = newPassword.value;
+  let cpw = confirmPassword.value;
+
+  passwordValidationReset();
+
+  // validation check
+
+  if (_.isEmpty(pw)) {
+    isErrorPw.value = true;
+    pwErrorMessage.value = "새로운 비밀번호를 입력하세요.";
+    return;
+  }
+
+  if (!PWREGEX.test(pw)) {
+    isErrorPw.value = true;
+    pwErrorMessage.value = PWREGEX_ERROR_MSG;
+    return;
+  }
+
+  if (_.isEmpty(cpw) || !_.isEqual(pw, cpw)) {
+    isErrorCpw.value = true;
+    cpwErrorMessage.value = "비밀번호가 일치 하지 않습니다.";
+    return;
+  }
+
+  let param = {
+    confirmPassword: cpw,
+    newPassword: pw,
+  };
+
+  // TODO: 서버 개발 완료 후 주석 해제 및 테스트
+  // await getPwChangeSuccessState(param, uuid);
+
+  // TODO: 서버 개발 완료 후 주석 해제 및 테스트
+  // if (isPwChangeSuccess.value) {
+  //   alert("비밀번호가 변경되었습니다.");
+  //   router.push("/portal/login");
+  // } else {
+  //   alert(errorMessage.value);
+  // }
+};
+
+const passwordValidationReset = () => {
+  isErrorCpw.value = false;
+  isErrorPw.value = false;
+};
+
+const isHideNewPw = () => {
+  inNewPwType.value = inNewPwType.value === "password" ? "text" : "password";
+};
+const isHideCpw = () => {
+  inCpwType.value = inCpwType.value === "password" ? "text" : "password";
+};
+</script>
+<style lang="scss" scoped></style>

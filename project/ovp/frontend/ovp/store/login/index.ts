@@ -5,6 +5,7 @@ export const loginStore = defineStore("login", () => {
   const { $api } = useNuxtApp();
 
   const publicKey = ref("");
+  const isPwChangeSuccess = ref(false);
   const isloginSuccess = ref(false);
   const errorMessage = ref("");
 
@@ -41,13 +42,37 @@ export const loginStore = defineStore("login", () => {
       });
   }
 
+  async function getPwChangeSuccessState(param: any, uuid: any) {
+    await getPublicKey();
+    const rsa = new RSA();
+    rsa.setKey(publicKey.value);
+    param.newPassword = rsa.encrypt(param.newPassword);
+    param.confirmPassword = rsa.encrypt(param.confirmPassword);
+
+    await $api("/api/auth/change-passwd", {
+      params: { UUID: uuid },
+      method: "POST",
+      body: param,
+    })
+      .then((res: any) => {
+        if (res.result === 1) {
+          isPwChangeSuccess.value = true;
+        } else {
+          isPwChangeSuccess.value = false;
+          errorMessage.value = res.errorMessage;
+        }
+      })
+      .catch((err: any) => {
+        console.log("err: ", err);
+      });
+  }
+
   async function checkDuplicateEmail(param: any) {
     return $api(`/api/auth/sign-up/check-email`, {
       method: "POST",
       body: param,
     });
   }
-
 
   async function signUpUser(param: any) {
     await getPublicKey();
@@ -67,7 +92,8 @@ export const loginStore = defineStore("login", () => {
     errorMessage,
     getPublicKey,
     getLoginSuccessState,
+    getPwChangeSuccessState,
     signUpUser,
-    checkDuplicateEmail
+    checkDuplicateEmail,
   };
 });
