@@ -167,15 +167,6 @@
   }
 }
 
-.filters {
-  @include flex($horizontal: flex-start);
-  z-index: 0;
-  position: absolute;
-  gap: $spacing-16;
-  width: 100%;
-  padding: $spacing-8 $spacing-20;
-}
-
 
 
 

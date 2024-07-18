@@ -28,6 +28,10 @@ table {
 
   td {
     background-color: $neutral-0;
+
+    &:has(.resource-box-table) {
+      padding: 0;
+    }
   }
 
   .button-group {

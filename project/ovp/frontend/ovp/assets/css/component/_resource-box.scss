@@ -137,3 +137,31 @@
   }
 }
 
+.resource-box-table {
+  border: none;
+  box-shadow: none;
+  padding: $spacing-8 $spacing-12;
+
+  .resource-box-model > img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .resource-box-function {
+    margin-bottom: 0;
+  }
+
+  .editable-group-title {
+    @include font-size('14');
+    width: 100%;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  &:hover {
+    cursor: default;
+  }
+}
+
