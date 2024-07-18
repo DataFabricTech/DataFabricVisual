@@ -21,4 +21,7 @@ public interface TablesClient {
 
     @GetMapping("/{fqn}/tableProfile/latest")
     TableProfile getTableProfile(@PathVariable("fqn") String fqn);
+
+    @GetMapping("/{fqn}/tableProfile/latest")
+    Map<String, Object> getSearchPreview(@PathVariable("fqn") String fqn);
 }

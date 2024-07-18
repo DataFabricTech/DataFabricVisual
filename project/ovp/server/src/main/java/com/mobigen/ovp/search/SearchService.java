@@ -1,6 +1,7 @@
 package com.mobigen.ovp.search;
 
 import com.mobigen.ovp.search.client.SearchClient;
+import com.mobigen.ovp.common.openmete_client.TablesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -12,12 +13,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class SearchService {
     private final SearchClient searchClient;
+    private final TablesClient tablesClient;
 
     private Map<String, Object> convertAggregations(Map<String, Object> response) {
         Map<String, Object> aggregations = (Map<String, Object>) response.get("aggregations");
@@ -91,6 +94,7 @@ public class SearchService {
                 modifiedSource.put("firModelNm", source.get("displayName"));
                 modifiedSource.put("modelNm", source.get("name"));
                 modifiedSource.put("modelDesc", source.get("description"));
+                modifiedSource.put("fqn", source.get("fullyQualifiedName"));
 
                 String owner = "";
                 if (source.get("owner") != null) {
@@ -111,5 +115,78 @@ public class SearchService {
             return null;
         }).filter(Objects::nonNull).collect(Collectors.toList());
         return modifiedList;
+    }
+
+
+    /**
+     * Open Metadata - 탐색 목록 미리보기
+     *
+     * @return
+     * @throws Exception
+     */
+    public Object getSearchPreview(String fqn) {
+        Map<String, Object> result = tablesClient.getSearchPreview(fqn);
+
+        String name = (String) result.get("name");
+        String description = (String) result.get("description");
+        String tableType = (String) result.get("tableType");
+        List<Map<String, Object>> tags = (List<Map<String, Object>>) result.get("tags");
+        List<Map<String, Object>> columns = (List<Map<String, Object>>) result.get("columns");
+
+        List<Map<String, Object>> tagList = new ArrayList<>();
+        List<Map<String, Object>> glossaryList = new ArrayList<>();
+        List<Map<String, Object>> columList = new ArrayList<>();
+
+        for (Map<String, Object> tag : tags) {
+            String tagName = (String) tag.get("name");
+            String tagFQN = (String) tag.get("tagFQN");
+            String tagSource = (String) tag.get("source");
+
+            Map<String, Object> tagMap = new HashMap<>();
+            tagMap.put("name", tagName);
+            tagMap.put("category", tagFQN);
+
+            if ("Glossary".equals(tagSource)) {
+                glossaryList.add(tagMap);
+            } else {
+                tagList.add(tagMap);
+            }
+        }
+
+        for (Map<String, Object> column : columns) {
+            String columnName = (String) column.get("name");
+            String columnDataType = (String) column.get("dataType");
+            String columnDesc = (String) column.get("description");
+            String columnConstraint = (String) column.get("constraint");
+
+            Map<String, Object> columnMap = new HashMap<>();
+            columnMap.put("name", columnName);
+            columnMap.put("dataType", columnDataType);
+            columnMap.put("desc", columnDesc);
+            columnMap.put("constraint", columnConstraint);
+
+            columList.add(columnMap);
+        }
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("name", name);
+        model.put("desc", description);
+        model.put("tableType", tableType);
+        model.put("cnt", columList.size());
+
+        Map<String, Object> modelInfo = new HashMap<>();
+        modelInfo.put("model", model);
+        modelInfo.put("columns", columList);
+
+        Map<String, Object> resultMap = new HashMap<>();
+        // TODO: modelType 정보 불러오기 필요 "structured" || "unstructured" (현재 확인 불가)
+        resultMap.put("modelType", "structured");
+        resultMap.put("modelInfo", modelInfo);
+        resultMap.put("glossaries", glossaryList);
+        resultMap.put("tags", tagList);
+
+        // TODO: 비정형 API 불러오기 필요 details & url & model.ext (현재 확인 불가)
+
+        return resultMap;
     }
 }
