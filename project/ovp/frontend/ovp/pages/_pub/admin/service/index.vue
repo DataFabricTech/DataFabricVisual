@@ -55,7 +55,7 @@
       </div>
       <div class="modal-body">
         <!-- <Step></Step> -->
-        <!-- Step 01 / 시작 div.service-type display:none을 해제해주세요. -->
+        <!-- Step 01 / 시작 -->
         <div class="service-type" style="display: block">
           <ul class="service-type-list">
             <li class="service-type-item">
@@ -489,7 +489,7 @@
             </div>
           </div>
         </div>
-        <!-- Step 03 / 끝 -->
+        <!-- 연결 정보 테스트/ step 03에서만 노출됩니다. 1,2 단계에서는 hidden -->
         <div class="connect-test">
           <button class="button button-secondary-stroke button-lg">
             <span class="button-title">연결테스트</span>
@@ -509,6 +509,7 @@
             <p class="notification-detail">연결 테스트에 성공했습니다.</p>
           </div>
         </div>
+        <!-- Step 03 / 끝 -->
       </div>
       <div class="modal-foot">
         <button
