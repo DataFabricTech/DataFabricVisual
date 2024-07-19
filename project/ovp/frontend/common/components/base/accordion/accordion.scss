@@ -22,8 +22,8 @@
   .svg-icon {
     transition: transform 0.3s;
   }
+}
 
-  .svg-icon.is-open {
-    transform: rotate(180deg);
-  }
+.is-accordion-open .svg-icon {
+  transform: rotate(180deg);
 }

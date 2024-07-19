@@ -68,48 +68,62 @@
         <div class="service-type" style="display: block">
           <ul class="service-type-list">
             <li class="service-type-item">
-              <div class="service-type-img">
-                <img src="../../../../assets/images/storage-type_06.png" alt="MinIO">
-              </div>
-              <span class="service-type-title">MinIO</span>
+              <button class="service-type-button">
+                <div class="service-type-img">
+                  <img src="../../../../assets/images/storage-type_06.png" alt="MinIO">
+                </div>
+                <span class="service-type-title">MinIO</span>
+              </button>
             </li>
-            <!-- item 요소 선택시 is-selected 클래스 추가 필요 -->
-            <li class="service-type-item is-selected">
-              <div class="service-type-img">
-                <img src="../../../../assets/images/storage-type_02.png" alt="MySQL">
-              </div>
-              <span class="service-type-title">MySQL</span>
+            <!-- item 요소 선택시 is-service-type-selected 클래스 추가 필요 -->
+            <li class="service-type-item is-service-type-selected">
+              <button class="service-type-button">
+                <div class="service-type-img">
+                  <img src="../../../../assets/images/storage-type_02.png" alt="MySQL">
+                </div>
+                <span class="service-type-title">MySQL</span>
+              </button>
             </li>
             <li class="service-type-item">
-              <div class="service-type-img">
-                <img src="../../../../assets/images/storage-type_01.png" alt="mariaDB">
-              </div>
-              <span class="service-type-title">MariaDB</span>
+              <button class="service-type-button">
+                <div class="service-type-img">
+                  <img src="../../../../assets/images/storage-type_01.png" alt="mariaDB">
+                </div>
+                <span class="service-type-title">MariaDB</span>
+              </button>
             </li>
             <!-- 필요시 is-disabled 사용가능 -->
             <li class="service-type-item is-disabled">
-              <div class="service-type-img">
-                <img src="../../../../assets/images/storage-type_03.png" alt="PostgreSQL">
-              </div>
-              <span class="service-type-title">PostgreSQL</span>
+              <button class="service-type-button">
+                <div class="service-type-img">
+                  <img src="../../../../assets/images/storage-type_03.png" alt="PostgreSQL">
+                </div>
+                <span class="service-type-title">PostgreSQL</span>
+              </button>
             </li>
             <li class="service-type-item">
-              <div class="service-type-img">
-                <img src="../../../../assets/images/storage-type_04.png" alt="Oracle">
-              </div>
-              <span class="service-type-title">Oracle</span>
+              <button class="service-type-button">
+                <div class="service-type-img">
+                  <img src="../../../../assets/images/storage-type_04.png" alt="Oracle">
+                </div>
+                <span class="service-type-title">Oracle</span>
+              </button>
             </li>
             <li class="service-type-item">
-              <div class="service-type-img">
-                <img src="../../../../assets/images/storage-type_01.png" alt="mariaDB">
-              </div>
-              <span class="service-type-title">mariaDB</span>
+              <button class="service-type-button">
+                <div class="service-type-img">
+                  <img src="../../../../assets/images/storage-type_01.png" alt="mariaDB">
+                </div>
+                <span class="service-type-title">mariaDB</span>
+              </button>
             </li>
             <li class="service-type-item">
-              <div class="service-type-img">
-                <img src="../../../../assets/images/storage-type_06.png" alt="MinIO">
-              </div>
-              <span class="service-type-title">MinIO</span>
+              <button class="service-type-button">
+                <div class="service-type-img">
+                  <img src="../../../../assets/images/storage-type_06.png" alt="MinIO">
+                </div>
+                <span class="service-type-title">MinIO</span>
+              </button>
             </li>
           </ul>
         </div>
