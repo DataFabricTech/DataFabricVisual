@@ -59,6 +59,7 @@ import { IntersectionObserverHandler } from "@/utils/intersection-observer";
 
 import TopBar from "./top-bar.vue";
 import { useRouter } from "nuxt/app";
+
 const router = useRouter();
 
 const searchCommonStore = useSearchCommonStore();
@@ -89,12 +90,13 @@ const getPreviewCloseStatus = (option: boolean) => {
 
 let currentPreviewId: string | number = "";
 
-const previewClick = async (id: string | number) => {
+const previewClick = async (data: object) => {
+  const { id, fqn } = data as { id: string; fqn: string };
   if (id === currentPreviewId) {
     return;
   }
 
-  await getPreviewData();
+  await getPreviewData(fqn);
   isShowPreview.value = true;
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;
