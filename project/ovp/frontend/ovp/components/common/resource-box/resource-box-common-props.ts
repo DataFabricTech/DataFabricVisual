@@ -7,6 +7,7 @@ export interface DataModel {
   modelDesc: string;
   owner: string;
   category: string;
+  [key: string]: string | number | string[];
 }
 
 export interface ResourceBoxCommonProps {

@@ -52,16 +52,24 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, watch } from "vue";
+import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useSearchCommonStore } from "@/store/search/common";
 import { IntersectionObserverHandler } from "@/utils/intersection-observer";
 
 import TopBar from "./top-bar.vue";
+import { useRouter } from "nuxt/app";
+const router = useRouter();
 
 const searchCommonStore = useSearchCommonStore();
-const { getSearchList, getFilters, getPreviewData, setScrollFrom } =
-  searchCommonStore;
+const {
+  addSearchList,
+  getFilters,
+  getPreviewData,
+  setScrollFrom,
+  setIntersectionHandler,
+  updateIntersectionHandler,
+} = searchCommonStore;
 const {
   from,
   size,
@@ -92,8 +100,15 @@ const previewClick = async (id: string | number) => {
   currentPreviewId = id;
 };
 
-const modelNmClick = (id: string | number) => {
-  console.log(`modelNmClick : ${id}`);
+const modelNmClick = (data: object) => {
+  const { id, fqn } = data as { id: string; fqn: string };
+  router.push({
+    path: "/portal/search/detail",
+    query: {
+      id: id,
+      fqn: fqn,
+    },
+  });
 };
 
 // TODO: intersection observer 옵션이 부족해 보임. 데이터가 1000가 넘으면 UI가 버벅거림.
@@ -113,29 +128,23 @@ const getDataCallback = async (count: number, loader: HTMLElement | null) => {
     loader.style.display = "flex";
   }
 
-  // 데이터 조회
-  // 조회 쿼리는 store 에서 처리.
   setScrollFrom(count);
-  await getSearchList();
+  updateIntersectionHandler(count);
+
+  // 데이터 조회 : 쿼리는 store 에서 처리.
+  await addSearchList();
 
   if (loader) {
     loader.style.display = "none";
   }
 };
 
-// 초기화 등을 통해서 from 값이 0 이 된다면, intersectionHandler 에 해당 값을 반영해줘야함.
-watch(
-  () => from.value,
-  (newFromVal: number) => {
-    if (intersectionHandler !== null && newFromVal === 0) {
-      intersectionHandler.updateChangingInitialCount(newFromVal);
-    }
-  },
-  { deep: true },
-);
-
 onMounted(async () => {
-  await getSearchList();
+  // top-bar 에서 select box (sort) 값이 변경되면 목록을 조회하라는 코드가 구현되어 있는데,
+  // select box 가 화면 맨 처음에 뿌릴때 값을 초기에 1번 셋팅하는 부분에서 목록 조회가 이뤄짐.
+  // 중복 호출을 피하기 위해서 여기서는 목록 데이터를 조회하지 않음.
+  // await getSearchList();
+
   await getFilters();
 
   // intersection observer instance 생성
@@ -147,6 +156,9 @@ onMounted(async () => {
     size.value,
     getDataCallback,
   );
+
+  // from 값 변경에 따른 동작을 store 에서 하고 있기 때문에 intersectionHandler 변수를 store 에 저장해둔다.
+  setIntersectionHandler(intersectionHandler);
 });
 
 onBeforeUnmount(() => {

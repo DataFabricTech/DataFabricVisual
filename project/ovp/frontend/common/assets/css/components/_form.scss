@@ -16,7 +16,7 @@
 }
 
 .form {
-  @include flex($vertical: flex-start, $direction: column);
+  @include flex($vertical: flex-start, $horizontal: flex-start, $direction: column);
 
   gap: $spacing-20;
 
@@ -45,7 +45,7 @@
   }
 
   &-body {
-    @include flex($direction: column);
+    @include flex($direction: column, $horizontal: flex-start, $vertical: flex-start);
 
     width: 100%;
     gap: $spacing-20;
