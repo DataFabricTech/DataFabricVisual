@@ -18,8 +18,11 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 로컬 로그인 기능
@@ -48,14 +51,23 @@ public class LocalLoginFilter extends OncePerRequestFilter {
         log.info("localLoginFilter");
 
         // 로컬 확인 + 로그인/인증 API 확인 + 토큰 여부 확인
-        // TODO : 토큰 유효성 검사 확인
-        if (!isLocal(request)
-                || request.getRequestURI().contains("/api/auth")
-                || StringUtils.hasText(token.getAccessTokenByRequest(request))) {
+
+        boolean isApiAuthRequest = request.getRequestURI().contains("/api/auth");
+        boolean isNotLocalRequest = !Boolean.TRUE.equals(isLocal(request));
+        if (isNotLocalRequest || isApiAuthRequest) {
             log.info("로컬 로그인 진행 X");
             filterChain.doFilter(request, response);
             return;
         }
+
+        // NOTE: 토큰 유효성 검사 확인 -> 토큰 실패 유효성 실패 시 삭제 후 로컬 로그인 진행
+        String accessToken = token.getAccessTokenByRequest(request);
+        if (StringUtils.hasText(accessToken) && !token.isExpiredToken(accessToken)) {
+            log.info("로컬 로그인 진행 X");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
 
         // 로컬 로그인 진행
         log.info("로컬 로그인 진행");
@@ -99,16 +111,18 @@ public class LocalLoginFilter extends OncePerRequestFilter {
                 if (existingCookies == null) {
                     existingCookies = new Cookie[0];
                 }
+                List<Cookie> filteredCookies = Arrays.stream(existingCookies)
+                        .filter(cookie -> !cookie.getName().equals(accessTokenKey) && !cookie.getName().equals(refreshTokenKey))
+                        .collect(Collectors.toList());
+
 
                 Cookie accessTokenCookie = createCookie(accessTokenKey, (String) tokenResult.get(accessTokenKey));
                 Cookie refreshTokenCookie = createCookie(refreshTokenKey, (String) tokenResult.get(refreshTokenKey));
 
-                Cookie[] newCookies = new Cookie[existingCookies.length + 2];
-                System.arraycopy(existingCookies, 0, newCookies, 0, existingCookies.length);
-                newCookies[existingCookies.length] = accessTokenCookie;
-                newCookies[existingCookies.length + 1] = refreshTokenCookie;
+                filteredCookies.add(accessTokenCookie);
+                filteredCookies.add(refreshTokenCookie);
 
-                return newCookies;
+                return filteredCookies.toArray(new Cookie[0]);
             }
         };
     }
