@@ -92,8 +92,8 @@
                 <span class="service-type-title">MariaDB</span>
               </button>
             </li>
-            <!-- 필요시 is-disabled 사용가능 -->
-            <li class="service-type-item is-disabled">
+            <!-- 필요시 is-service-type-disabled 사용가능 -->
+            <li class="service-type-item is-service-type-disabled">
               <button class="service-type-button">
                 <div class="service-type-img">
                   <img src="../../../../assets/images/storage-type_03.png" alt="PostgreSQL">
