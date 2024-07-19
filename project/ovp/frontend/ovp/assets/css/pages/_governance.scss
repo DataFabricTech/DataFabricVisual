@@ -150,6 +150,7 @@
   display: flex;
   flex-direction: column;
   max-height: 400px;
+  gap: $spacing-8;
   width: 100%;
 
   .table-scroll {
@@ -158,5 +159,32 @@
 
   table {
     table-layout: fixed;
+  }
+}
+
+.table-data {
+  @include flex($direction: column, $vertical: flex-start);
+  gap: $spacing-4;
+  width: 100%;
+  padding: $spacing-8 $spacing-12;
+
+  .l-between {
+    width: 100%;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+    margin-right: $spacing-8;
+    flex-shrink: 0;
+  }
+
+
+  &-title {
+    @include ellipsis;
+    @include font-size('15');
+    width: 100%;
+    font-weight: 600;
+    color: $neutral-700;
   }
 }

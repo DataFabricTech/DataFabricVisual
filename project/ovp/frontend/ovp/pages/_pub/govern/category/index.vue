@@ -38,7 +38,7 @@
           <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
           <div class="editable-group">
             <lable class="hidden-text" for="title-modify"
-              >카테고리 이름 수정
+            >카테고리 이름 수정
             </lable>
             <input id="title-modify" class="text-input w-4/5" />
             <div class="h-group gap-1">
@@ -62,7 +62,7 @@
           </div>
           <div class="editable-group">
             <span class="editable-group-desc"
-              >GDPR special category data is personal information of data
+            >GDPR special category data is personal information of data
               subjects that is especially sensitive, the exposure of which could
               significantly impact the rights and freedoms of data subjects and
               potentially be used against them for unlawful
@@ -76,7 +76,7 @@
           <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
           <div class="editable-group">
             <lable class="hidden-text" for="description-modify"
-              >카테고리 설명 수정
+            >카테고리 설명 수정
             </lable>
             <textarea
               id="description-modify"
@@ -96,7 +96,7 @@
             <div class="l-top-bar">
               <div class="search-input w-[541px]">
                 <label class="hidden-text" for="text-input-example-11"
-                  >label</label
+                >label</label
                 >
                 <input
                   id="text-input-example-11"
@@ -164,10 +164,10 @@
                       </div>
                     </div>
                     <a href="#" class="editable-group-title" title="상세 보기"
-                      >세종특별자치시 상하수도요금표</a
+                    >세종특별자치시 상하수도요금표</a
                     >
                     <span class="editable-group-desc"
-                      >한국교통안전공단에서 교통카드를 이용한 대중교통 사용시
+                    >한국교통안전공단에서 교통카드를 이용한 대중교통 사용시
                       1회 이용요금 평균을 조사한 결과
                       입니다.한국교통안전공단에서 교통카드를 이용한 대중교통
                       사용시 1회 이용요금 평균을 조사한 결과
@@ -224,10 +224,10 @@
                       </div>
                     </div>
                     <a href="#" class="editable-group-title" title="상세 보기"
-                      >세종특별자치시 상하수도요금표</a
+                    >세종특별자치시 상하수도요금표</a
                     >
                     <span class="editable-group-desc"
-                      >한국교통안전공단에서 교통카드를 이용한 대중교통 사용시
+                    >한국교통안전공단에서 교통카드를 이용한 대중교통 사용시
                       1회 이용요금 평균을 조사한 결과
                       입니다.한국교통안전공단에서 교통카드를 이용한 대중교통
                       사용시 1회 이용요금 평균을 조사한 결과
@@ -435,7 +435,7 @@
               <svg-icon class="button-icon" name="close"></svg-icon>
             </button>
           </div>
-          <div class="filters my-2">
+          <div class="filters">
             <div class="select select-clean">
               <button class="select-button">
                 <span class="select-button-title">소유자</span>
@@ -465,172 +465,179 @@
               <span class="button-title">초기화</span>
             </button>
           </div>
-          <span class="mb-2">선택 <strong class="primary">0개</strong></span>
-            <div class="table-scroll">
-              <table>
-                <colgroup>
-                  <col style="width: 10%" />
-                  <col />
-                </colgroup>
-                <thead>
-                <tr>
-                  <th>
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-all-select" class="checkbox-input" checked />
-                      <label for="checkbox-all-select" class="checkbox-label">
-                        <span class="hidden-text"> 전체 선택 </span>
-                      </label>
-                    </div>
-                  </th>
-                  <th class="text-center">데이터 모델 정보</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                  <td>
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-01-data" class="checkbox-input" />
-                      <label for="checkbox-01-data" class="checkbox-label">
-                        <span class="hidden-text"> 첫번째 데이터 모델 </span>
-                      </label>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="resource-box resource-box-table">
-                      <div class="resource-box-function">
-                        <div class="resource-box-model">
-                          <img />
-                          <div class="breadcrumb">
-                            <ul class="breadcrumb-list">
-                              <li class="breadcrumb-item">
-                                <span class="breadcrumb-text">1depth</span>
-                              </li>
-                              <li class="breadcrumb-item">
-                                <span class="breadcrumb-text">2depth</span>
-                              </li>
-                              <li class="breadcrumb-item">
-                                <span class="breadcrumb-text">데이터 모델</span>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                        <button class="button link-button-support button-sm">상세보기</button>
+          <span>선택 <strong class="primary">0개</strong></span>
+          <div class="table-scroll">
+            <table>
+              <colgroup>
+                <col style="width: 10%" />
+                <col />
+              </colgroup>
+              <thead>
+              <tr>
+                <th>
+                  <div class="checkbox">
+                    <input type="checkbox" id="checkbox-all-select" class="checkbox-input" checked />
+                    <label for="checkbox-all-select" class="checkbox-label">
+                      <span class="hidden-text"> 전체 선택 </span>
+                    </label>
+                  </div>
+                </th>
+                <th class="text-center">데이터 모델 정보</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>
+                  <div class="checkbox">
+                    <input type="checkbox" id="checkbox-01-data" class="checkbox-input" />
+                    <label for="checkbox-01-data" class="checkbox-label">
+                      <span class="hidden-text"> 첫번째 데이터 모델 </span>
+                    </label>
+                  </div>
+                </td>
+                <td>
+                  <div class="table-data">
+                    <div class="l-between">
+                      <div class="breadcrumb">
+                        <ul class="breadcrumb-list">
+                          <li class="breadcrumb-item">
+                            <span class="breadcrumb-text">1depth</span>
+                          </li>
+                          <li class="breadcrumb-item">
+                            <span class="breadcrumb-text">2depth</span>
+                          </li>
+                          <li class="breadcrumb-item">
+                            <span class="breadcrumb-text">데이터 모델</span>
+                          </li>
+                        </ul>
                       </div>
-                      <span class="editable-group-title">세종특별자치시 상하수도요금표</span>
+                      <button class="button link-button-support button-sm">상세보기</button>
                     </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-01-data" class="checkbox-input" />
-                      <label for="checkbox-01-data" class="checkbox-label">
-                        <span class="hidden-text"> 첫번째 데이터 모델 </span>
-                      </label>
+                    <div class="h-group w-full">
+                      <img src="" />
+                      <span class="table-data-title">세종특별자치시 상하수도요금표</span>
                     </div>
-                  </td>
-                  <td>
-                    <div class="resource-box resource-box-table">
-                      <div class="resource-box-function">
-                        <div class="resource-box-model">
-                          <img />
-                          <div class="breadcrumb">
-                            <ul class="breadcrumb-list">
-                              <li class="breadcrumb-item">
-                                <span class="breadcrumb-text">1depth</span>
-                              </li>
-                              <li class="breadcrumb-item">
-                                <span class="breadcrumb-text">2depth</span>
-                              </li>
-                              <li class="breadcrumb-item">
-                                <span class="breadcrumb-text">데이터 모델</span>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                        <button class="button link-button-support button-sm">상세보기</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="checkbox">
+                    <input type="checkbox" id="checkbox-01-data" class="checkbox-input" />
+                    <label for="checkbox-01-data" class="checkbox-label">
+                      <span class="hidden-text"> 첫번째 데이터 모델 </span>
+                    </label>
+                  </div>
+                </td>
+                <td>
+                  <div class="table-data">
+                    <div class="l-between">
+                      <div class="breadcrumb">
+                        <ul class="breadcrumb-list">
+                          <li class="breadcrumb-item">
+                            <span class="breadcrumb-text">1depth</span>
+                          </li>
+                          <li class="breadcrumb-item">
+                            <span class="breadcrumb-text">2depth</span>
+                          </li>
+                          <li class="breadcrumb-item">
+                            <span class="breadcrumb-text">데이터 모델</span>
+                          </li>
+                        </ul>
                       </div>
-                      <span class="editable-group-title">세종특별자치시 상하수도요금표세종특별자치시 상하수도요금표>세종특별자치시 상하수도요금표</span>
+                      <button class="button link-button-support button-sm">상세보기</button>
                     </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-01-data" class="checkbox-input" />
-                      <label for="checkbox-01-data" class="checkbox-label">
-                        <span class="hidden-text"> 첫번째 데이터 모델 </span>
-                      </label>
+                    <div class="h-group w-full">
+                      <img src="" />
+                      <span class="table-data-title">세종특별자치시 상하수도요금표상하수도요금표상하수도요금표상하수도요금표상하수도요금표</span>
                     </div>
-                  </td>
-                  <td>
-                    <div class="resource-box resource-box-table">
-                      <div class="resource-box-function">
-                        <div class="resource-box-model">
-                          <img />
-                          <div class="breadcrumb">
-                            <ul class="breadcrumb-list">
-                              <li class="breadcrumb-item">
-                                <span class="breadcrumb-text">1depth</span>
-                              </li>
-                              <li class="breadcrumb-item">
-                                <span class="breadcrumb-text">2depth</span>
-                              </li>
-                              <li class="breadcrumb-item">
-                                <span class="breadcrumb-text">데이터 모델</span>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                        <button class="button link-button-support button-sm">상세보기</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="checkbox">
+                    <input type="checkbox" id="checkbox-01-data" class="checkbox-input" />
+                    <label for="checkbox-01-data" class="checkbox-label">
+                      <span class="hidden-text"> 첫번째 데이터 모델 </span>
+                    </label>
+                  </div>
+                </td>
+                <td>
+                  <div class="table-data">
+                    <div class="l-between">
+                      <div class="breadcrumb">
+                        <ul class="breadcrumb-list">
+                          <li class="breadcrumb-item">
+                            <span class="breadcrumb-text">1depth</span>
+                          </li>
+                          <li class="breadcrumb-item">
+                            <span class="breadcrumb-text">2depth</span>
+                          </li>
+                          <li class="breadcrumb-item">
+                            <span class="breadcrumb-text">데이터 모델</span>
+                          </li>
+                        </ul>
                       </div>
-                      <span class="editable-group-title">세종특별자치시 상하수도요금표</span>
+                      <button class="button link-button-support button-sm">상세보기</button>
                     </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <div class="checkbox">
-                      <input type="checkbox" id="checkbox-01-data" class="checkbox-input" />
-                      <label for="checkbox-01-data" class="checkbox-label">
-                        <span class="hidden-text"> 첫번째 데이터 모델 </span>
-                      </label>
+                    <div class="h-group w-full">
+                      <img src="" />
+                      <span class="table-data-title">세종특별자치시 상하수도요금표</span>
                     </div>
-                  </td>
-                  <td>
-                    <div class="resource-box resource-box-table">
-                      <div class="resource-box-function">
-                        <div class="resource-box-model">
-                          <img />
-                          <div class="breadcrumb">
-                            <ul class="breadcrumb-list">
-                              <li class="breadcrumb-item">
-                                <span class="breadcrumb-text">1depth</span>
-                              </li>
-                              <li class="breadcrumb-item">
-                                <span class="breadcrumb-text">2depth</span>
-                              </li>
-                              <li class="breadcrumb-item">
-                                <span class="breadcrumb-text">데이터 모델</span>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                        <button class="button link-button-support button-sm">상세보기</button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="checkbox">
+                    <input type="checkbox" id="checkbox-01-data" class="checkbox-input" />
+                    <label for="checkbox-01-data" class="checkbox-label">
+                      <span class="hidden-text"> 첫번째 데이터 모델 </span>
+                    </label>
+                  </div>
+                </td>
+                <td>
+                  <div class="table-data">
+                    <div class="l-between">
+                      <div class="breadcrumb">
+                        <ul class="breadcrumb-list">
+                          <li class="breadcrumb-item">
+                            <span class="breadcrumb-text">1depth</span>
+                          </li>
+                          <li class="breadcrumb-item">
+                            <span class="breadcrumb-text">2depth</span>
+                          </li>
+                          <li class="breadcrumb-item">
+                            <span class="breadcrumb-text">데이터 모델</span>
+                          </li>
+                        </ul>
                       </div>
-                      <span class="editable-group-title">세종특별자치시 상하수도요금표</span>
+                      <button class="button link-button-support button-sm">상세보기</button>
                     </div>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
+                    <div class="h-group w-full">
+                      <img src="" />
+                      <span class="table-data-title">세종특별자치시 상하수도요금표</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- 결과 없을 시 no-result 표시 -->
+          <div class="no-result" style="display: none">
+            <div class="notification">
+              <svg-icon class="notification-icon" name="info"></svg-icon>
+              <p class="notification-detail">정보가 없습니다.</p>
             </div>
+          </div>
         </div>
       </div>
       <div class="modal-foot">
         <div class="modal-foot-group">
           <button class="button button-neutral-ghost button-lg" @click="showModalModelAdd = false">취소</button>
-          <button class="button button-primary button-lg">선택</button>
+          <button class="button button-primary button-lg" disabled>선택</button>
         </div>
       </div>
     </div>
@@ -648,10 +655,8 @@ export default defineComponent({
   data() {
     return {
       showModal: false,
-    };
-    return {
       showModalModelAdd: false
     };
-  },
+  }
 });
 </script>

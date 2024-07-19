@@ -29,7 +29,7 @@ table {
   td {
     background-color: $neutral-0;
 
-    &:has(.resource-box-table) {
+    &:has(.table-data) {
       padding: 0;
     }
   }
