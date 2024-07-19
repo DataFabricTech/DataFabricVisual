@@ -6,9 +6,9 @@
       id="searchInp"
       class="text-input"
       v-model="inputValue"
-      @keyup.enter="setSearchValue(inputValue)"
-      @change="setSearchValue(inputValue)"
-      @input="setSearchValue(inputValue)"
+      @keyup.enter="onClickSearch"
+      @change="onChange"
+      @input="onInput"
       :placeholder="placeholder"
       :disabled="disabled"
       :isSearchInputDefaultType="isSearchInputDefaultType"
@@ -23,7 +23,7 @@
     </button>
     <button
       class="search-input-button button button-neutral-ghost"
-      @click="setSearchValue(inputValue)"
+      @click="onClickSearch"
       v-if="isSearchInputDefaultType"
     >
       <span class="hidden-text">검색</span>
@@ -41,10 +41,20 @@ const props = withDefaults(defineProps<SearchInputProps>(), {
   disabled: false
 });
 
-const emit = defineEmits<{ (e: "search", value: string): void }>();
+const emit = defineEmits<{
+  (e: "onClickSearch", value: string): void;
+  (e: "onChange", value: string): void;
+  (e: "onInput", value: string): void;
+}>();
 
-const setSearchValue = (value: string) => {
-  value !== "" ? emit("search", value) : window.location.reload();
+const onClickSearch = () => {
+  emit("onClickSearch", inputValue.value);
+};
+const onChange = () => {
+  emit("onChange", inputValue.value);
+};
+const onInput = () => {
+  emit("onInput", inputValue.value);
 };
 
 const { inputValue, clearSearchValue } = SearchInputComposition(props);

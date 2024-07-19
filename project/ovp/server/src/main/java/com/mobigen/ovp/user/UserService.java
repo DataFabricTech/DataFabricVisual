@@ -34,4 +34,14 @@ public class UserService {
 
         return (List<Map<String, Object>>) result.get("data");
     }
+
+    /**
+     * 사용자 > 토큰을 통한 사용자 세부 정보 출력
+     *
+     * @return
+     * @throws Exception
+     */
+    public Object getUserInfo() throws Exception {
+        return userClient.getUserInfo();
+    }
 }

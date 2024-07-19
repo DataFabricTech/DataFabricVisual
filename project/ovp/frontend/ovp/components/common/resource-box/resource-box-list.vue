@@ -51,15 +51,15 @@ const props = withDefaults(defineProps<ResourceBoxListProps>(), {
 
 const emit = defineEmits<{
   (e: "previewClick", id: string | number): void;
-  (e: "modelNmClick", id: string | number): void;
+  (e: "modelNmClick", data: object): void;
   (e: "checkedValueChanged", ids: any[]): void;
 }>();
 const previewClick = (id: string | number) => {
   selectedResourceBoxId.value = id;
   emit("previewClick", id);
 };
-const modelNmClick = (id: string | number) => {
-  emit("modelNmClick", id);
+const modelNmClick = (data: object) => {
+  emit("modelNmClick", data);
 };
 
 const checked = ($evt: Event, id: string | number) => {
