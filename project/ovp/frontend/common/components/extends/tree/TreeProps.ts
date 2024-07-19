@@ -6,11 +6,11 @@ export interface TreeViewItem {
   parentId: string;
   children: TreeViewItem[];
 
-  // NOTY: isCheckable 이 false 일때, checked key 를 node 에 포함할 경우, vue3-tree-vue 에서 오류를 발생시킴.
+  // NOTE: isCheckable 이 false 일때, checked key 를 node 에 포함할 경우, vue3-tree-vue 에서 오류를 발생시킴.
   checked?: boolean;
   selected: boolean;
   expanded: boolean;
-  disabled: boolean; // When disabled, an item can neither be selected or checked
+  disabled: boolean;
   meta?: any; // provides meta-data of any type per node.
 }
 
