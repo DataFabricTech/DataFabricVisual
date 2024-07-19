@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.security.PrivateKey;
@@ -29,8 +31,8 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class Token {
-    private final FrameworkProperties properties;
     private static final String PRIVATE_KEY = "private-key";
+    private final FrameworkProperties properties;
 
     /**
      * Request에서 AccessToken, RefreshToken 추출
@@ -53,10 +55,10 @@ public class Token {
         Cookie[] cookies = Optional.ofNullable(request.getCookies()).orElse(new Cookie[0]);
         Arrays.stream(cookies)
                 .filter(this::isTokenCookie)
-                .forEach(cookie -> {
-                    cookie.setMaxAge(0);
-                    cookie.setPath("/");
-                    response.addCookie(cookie);
+                .forEach(co -> {
+                    co.setMaxAge(0);
+                    co.setPath("/");
+                    response.addCookie(co);
                 });
     }
 
@@ -197,17 +199,13 @@ public class Token {
      * @throws Exception
      */
     public User getUserByXAccessToken(String accessToken) {
-        DecodedJWT jwt = decodedJWTWithSecretKey(accessToken);
-        if (jwt == null) {
-            return null;
-        }
+        DecodedJWT jwt = JWT.decode(accessToken);
 
         return User.builder()
-                .userId(jwt.getClaim("userId").asString())
-                .userPass(jwt.getClaim("encryptPass").asString())
-                .roleCode(jwt.getClaim("roleCode").asString())
-                .roleName(jwt.getClaim("roleName").asString())
-                .xAccessToken(accessToken).build();
+                .userId(jwt.getClaim("email").asString())
+                .roles(jwt.getClaim("roles").asList(String.class))
+                .email(jwt.getClaim("email").asString())
+                .build();
     }
 
     /**
@@ -222,7 +220,7 @@ public class Token {
         HttpSession session = request.getSession();
         session.setAttribute(PRIVATE_KEY, rsa.getKeyPair().getPrivate());
 
-        log.info("GENERATE public-key: " + publicKey);
+        log.info("GENERATE public-key: {}", publicKey);
         return publicKey;
     }
 
@@ -238,5 +236,17 @@ public class Token {
 
         RSA rsa = new RSA();
         return rsa.decryptRSA(encrypted, privateKey);
+    }
+
+
+    /**
+     * Security 인증 토큰 생성
+     *
+     * @param token
+     * @return
+     */
+    public Authentication getAuthentication(String token) {
+        User user = getUserByXAccessToken(token);
+        return new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
     }
 }
