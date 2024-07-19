@@ -1,5 +1,6 @@
 package com.mobigen.ovp.user;
 
+import com.mobigen.ovp.user.dto.UserInfoDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,4 +13,7 @@ import java.util.Map;
 public interface UserClient {
     @GetMapping("/users")
     Map<String, Object> getUsers(@RequestHeader HttpHeaders headers, @RequestParam Map<String, Object> param) throws Exception;
+
+    @GetMapping("/users/loggedInUser")
+    UserInfoDTO getUserInfo() throws Exception;
 }

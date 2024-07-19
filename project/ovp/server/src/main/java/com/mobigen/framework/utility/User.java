@@ -19,7 +19,6 @@ public class User implements UserDetails {
     private String userId;
     private List<String> roles;
     private String email;
-    private boolean isBot;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
