@@ -15,6 +15,7 @@ export interface Filters {
   "databaseSchema.displayName.keyword": Filter;
   "columns.name.keyword": Filter;
   tableType: Filter;
+
   [key: string]: { text: string; data: any[] }; // 인덱스 시그니처 추가
 }
 
@@ -220,8 +221,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     details.value = detailsJson;
   };
 
-  const getPreviewData = async () => {
-    const fqn: string = "df2.test_db.test_db.Active_Employees"; // 실제 fqn 값을 여기에 설정합니다.
+  const getPreviewData = async (fqn: string) => {
     const data: any = await $api(`/api/search/preview/${fqn}`);
     previewData.value = data.data;
   };
