@@ -19,7 +19,7 @@ $input-group-classes: text-input-group, search-input;
       position: absolute;
       right: 6px;
       top: 50%;
-      transform: translateY(-50%);
+      transform: translateY(calc(-50% + 10px));
     }
 
     &:has(.text-input-icon) {
@@ -67,4 +67,8 @@ $input-group-classes: text-input-group, search-input;
   }
 }
 
-
+.text-input-group {
+  display: flex;
+  width: 100%;
+  gap: $spacing-8;
+}

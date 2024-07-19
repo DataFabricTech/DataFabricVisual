@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts" setup>
-import { StepProps } from "@/components/extends/step/StepProps";
+import { StepProps } from "./StepProps";
 import { StepComposition } from "./StepComposition";
 
 const INDEX = "index";
