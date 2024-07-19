@@ -54,7 +54,7 @@ import CONSTANTS from "~/constants/constants";
 import _ from "lodash";
 
 const searchCommonStore = useSearchCommonStore();
-const { setSortInfo } = searchCommonStore;
+const { setSortInfo, resetReloadList } = searchCommonStore;
 const { viewType, searchResultLength, sortKey, sortKeyOpt } =
   storeToRefs(searchCommonStore);
 
@@ -65,6 +65,9 @@ const isFirstCheckedEvent: boolean = true;
 const selectItem = (item: string | number) => {
   if (!_.isUndefined(item) && typeof item === "string") {
     setSortInfo(item);
+
+    // 항목 갱신
+    resetReloadList();
   }
 };
 </script>

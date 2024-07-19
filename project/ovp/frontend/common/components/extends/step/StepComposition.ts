@@ -2,7 +2,7 @@ import { Ref, ref } from "vue";
 import { StepProps } from "@/components/extends/step/StepProps";
 import { NavigationFunctionality } from "@/components/extends/common/interfaces/functions/Navigation.interface";
 import { NavigationEvents } from "@/components/extends/common/interfaces/events/Navigation.interface";
-import { ComparisonOperator } from "@/components/extends/step/ComparisonOperator";
+import { ComparisonOperator } from "./ComparisonOperator";
 const INDEX = "index";
 interface StepComposition extends StepProps, NavigationFunctionality, NavigationEvents {
   currentIndex: Ref<number>;

@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-@EnableJpaRepositories(basePackages = {"com.mobigen.framework"},
+@EnableJpaRepositories(basePackages = {"com.mobigen"},
     entityManagerFactoryRef = "primaryEntityManager",
     transactionManagerRef = "primaryTransactionManager")
 public class DatabaseConfiguration {

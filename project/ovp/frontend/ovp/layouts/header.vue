@@ -7,7 +7,7 @@
           <span class="hidden-text">logo</span>
         </a>
       </h1>
-      <SearchInput></SearchInput>
+      <SearchInput @onClickSearch="onClickSearch"></SearchInput>
       <div class="profile ml-auto">
         <span class="profile-avatar">
           <img class="profile-img" src="" alt="프로필 이미지" />
@@ -53,6 +53,18 @@
 
 <script setup lang="ts">
 import SearchInput from "@extends/search-input/SearchInput.vue";
+
+import { useSearchCommonStore } from "~/store/search/common";
+const searchCommonStore = useSearchCommonStore();
+const { setSearchKeyword, resetReloadList } = searchCommonStore;
+
+const onClickSearch = (value: string) => {
+  // 검색어 셋팅
+  setSearchKeyword(value);
+
+  // 항목 갱신
+  resetReloadList();
+};
 </script>
 
 <style scoped></style>
