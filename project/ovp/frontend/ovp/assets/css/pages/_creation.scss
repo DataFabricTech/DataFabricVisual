@@ -158,3 +158,11 @@
     width: 100%;
   }
 }
+
+.accordion-group {
+  display: flex;
+  flex-direction: column;
+  padding: $spacing-8;
+  gap: $spacing-8;
+  height: calc(100% - 40px);
+}

@@ -19,7 +19,6 @@
 .menu {
   @include menu-size;
 
-  //z-index: auto;
   display: flex;
   flex-direction: column;
   height: fit-content;
@@ -39,7 +38,6 @@
 
   &-head {
     flex-shrink: 0;
-    //height: 100%;
     padding: $spacing-8;
     border-bottom: 1px solid $neutral-200;
   }
