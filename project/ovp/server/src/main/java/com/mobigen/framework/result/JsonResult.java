@@ -43,6 +43,5 @@ public class JsonResult {
 	public void setData(Object data) {
 		this.data = data;
 		this.result = RESULT_SUCCESS;
-		log.info("setData {}", data);
 	}
 }

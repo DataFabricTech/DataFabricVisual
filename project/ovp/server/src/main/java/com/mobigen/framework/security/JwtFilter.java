@@ -6,26 +6,28 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Component
 @Slf4j
+@AllArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private Token token;
-    private String[] ignores;
-    private AntPathMatcher pathMatcher = new AntPathMatcher();
-
-    public JwtFilter(Token token, FrameworkProperties properties) {
-        this.token = token;
-        this.ignores = properties.getSecurity().getIgnores();
-    }
+    private FrameworkProperties properties;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getRequestURI();
+        String[] ignores = properties.getSecurity().getIgnores();
+        AntPathMatcher pathMatcher = new AntPathMatcher();
         for (String item : ignores) {
             if (pathMatcher.match(item, path)) {
                 return true;
@@ -42,9 +44,14 @@ public class JwtFilter extends OncePerRequestFilter {
         if (!shouldNotFilter(request)) {
             try {
                 // Token 확인
-                String xAccessToken = token.getAccessTokenByRequest(request);
-                if (token.isExpiredToken(xAccessToken)) {
+                String accessToken = token.getAccessTokenByRequest(request);
+
+                if (StringUtils.hasText(accessToken) && !token.isExpiredToken(accessToken)) {
                     token.deleteTokens(request, response);
+                    // Spring Security 인증 처리
+                    var authentication = token.getAuthentication(accessToken);
+                    log.info("Spring Security token 처리 {}", authentication);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());
