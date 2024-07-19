@@ -26,11 +26,11 @@ import { defineEmits } from "vue";
 import type { EditableGroupProps } from "./EditableGroupProps";
 
 const props = withDefaults(defineProps<EditableGroupProps>(), {
-  partKey: "",
   useEditButtons: true,
-  editable: false,
-  isEditMode: false
+  editable: false
 });
+
+const isEditMode = ref(false);
 
 const emit = defineEmits<{
   (e: "editCancel", id: string): void;
@@ -39,13 +39,16 @@ const emit = defineEmits<{
 }>();
 
 const cancelClick = () => {
-  emit("editCancel", props.partKey);
+  isEditMode.value = false;
+  emit("editCancel");
 };
 const doneClick = () => {
-  emit("editDone", props.partKey);
+  isEditMode.value = false;
+  emit("editDone");
 };
 const editIconClick = () => {
-  emit("editIcon", props.partKey);
+  isEditMode.value = true;
+  emit("editIcon");
 };
 </script>
 
