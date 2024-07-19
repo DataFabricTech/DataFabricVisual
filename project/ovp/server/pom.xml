@@ -192,7 +192,7 @@
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-httpclient</artifactId>
-            <version>11.9</version>
+            <version>13.3</version>
         </dependency>
     </dependencies>
 

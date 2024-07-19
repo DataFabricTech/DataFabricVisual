@@ -20,6 +20,6 @@ public interface SampleClient {
     @GetMapping("")
     Object getDynamicAPI(URI baseUri);
 
-    @PatchMapping(value = "posts/1",consumes = "application/json-patch+json")
+    @PatchMapping(value = "posts/1")
     Object usePatchApi(@RequestBody Map<String, Object> params);
 }
