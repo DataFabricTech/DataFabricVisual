@@ -32,7 +32,7 @@
             :firExpandAll="true"
             :show-open-all-btn="true"
             :show-close-all-btn="true"
-            :use-draggable="false"
+            :use-draggable="true"
             mode="view"
             :dropValidator="dropValidator"
             @onItemSelected="onNodeClicked"
@@ -572,20 +572,33 @@ const addChild = (newNode: TreeViewItem) => {
   // TODO : modal 창 띄워서 노드 추가 API  호출
   console.log(`자식노드 추가 ${JSON.stringify(newNode)}`);
 };
+
+const droppedNode: Ref<TreeViewItem> = ref<TreeViewItem>(<TreeViewItem>{});
 const dropValidator = (
   thisNode: TreeViewItem,
   targetNode: TreeViewItem,
+  newNode: TreeViewItem,
 ): boolean => {
   console.log(`drop validator`);
   console.log(`선택한 노드 ${JSON.stringify(thisNode)}`);
   console.log(`타겟 노드 ${JSON.stringify(targetNode)}`);
+  console.log(`타겟 노드 ${JSON.stringify(newNode)}`);
+
+  let isValid = false;
   // 조건 1: targetNode 에 데이터 모델이 설정되어 있으면 drop 불가능
   // TODO : targetNode 기준 데이터 모델 설정 여부 조회하는 API 호출
 
   // 조건 2: thisNode에 데이터 모델이 설정되어 있으면 targetNode 는 하위 노드일때만 가능.
   // TODO : thisNode 기준 데이터 모델 설정 여부 조회하는 API 호출 -> 2-1
   // TODO : 2-1 에서 thisNode에 데이터 모델이 설정되어 있는 경우, targetNode.children 에 값이 없는 노드여야 함.
-  return true;
+
+  // 조건 만족시
+  isValid = true;
+
+  droppedNode.value = newNode;
+  // TODO : isValid 가 true 면 update API 호출
+
+  return isValid;
 };
 </script>
 

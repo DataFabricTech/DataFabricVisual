@@ -4,7 +4,7 @@ import _ from "lodash";
 
 export interface TreeComposition extends TreeProps {
   treeItems: Ref<TreeViewItem[]>;
-  createNewTreeItem(parentId: string, name?: string, desc?: string, order?: number): TreeViewItem;
+  createNewTreeItem(parentId: string, id?: string, name?: string, desc?: string, order?: number): TreeViewItem;
   openAll(): void;
   closeAll(): void;
   dropValidatorHandler: any;
@@ -14,14 +14,15 @@ export function TreeComposition(props: TreeProps): TreeComposition {
   const treeItems: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
   treeItems.value = props.items;
 
-  const createNewTreeItem: (parentId: string, name?: string, desc?: string, order?: number) => TreeViewItem = (
-    parentId,
-    name,
-    desc,
-    order
-  ) => {
+  const createNewTreeItem: (
+    parentId: string,
+    id?: string,
+    name?: string,
+    desc?: string,
+    order?: number
+  ) => TreeViewItem = (parentId, id, name, desc, order) => {
     return {
-      id: uuid.v4(),
+      id: id || uuid.v4(),
       name: name || "",
       desc: desc || "",
       order: order || 0,
@@ -51,7 +52,36 @@ export function TreeComposition(props: TreeProps): TreeComposition {
     updateAllNode(treeItems.value, "expanded", false);
   };
 
+  const findAncestors = (items: any[], targetId: string): string[] => {
+    const parentIds: string[] = [];
+
+    const findParents = (nodes: any[], targetId: string, parents: string[]): boolean => {
+      for (const node of nodes) {
+        if (node.id === targetId) {
+          parentIds.push(...parents);
+          return true;
+        }
+        if (node.children && node.children.length > 0) {
+          if (findParents(node.children, targetId, [...parents, node.id])) {
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+
+    findParents(items, targetId, []);
+    return parentIds;
+  };
+
   const dropValidator = (thisNode: TreeViewItem, targetNode: TreeViewItem) => {
+    // 부모노드는 자기 후손 노드로 drop 할수없음.
+    // targetNode 기준 부모노드 List 를 조회해서 thisNode 의 id 가 있는지 확인 필요함.
+    const parentIds = findAncestors(treeItems.value, targetNode.id);
+    if (parentIds.includes(thisNode.id)) {
+      return false;
+    }
+
     // TODO: confirm 창 구현 완료 되면 여기서 처리 필요함.
     /**
      * title : 카테고리 이동
@@ -59,7 +89,10 @@ export function TreeComposition(props: TreeProps): TreeComposition {
      * response가 true 일 때만, props.dropValidator 진행.
      */
 
-    return props.dropValidator(thisNode, targetNode);
+    const newNode = _.cloneDeep(thisNode);
+    newNode.parentId = targetNode.id;
+
+    return props.dropValidator(thisNode, targetNode, newNode);
   };
   // vue3-tree-vue 에서는 dropValidator 이 undefined 일때만 drag/drop 이 동작하지 않음.
   const dropValidatorHandler: any = props.useDraggable ? dropValidator : undefined;
