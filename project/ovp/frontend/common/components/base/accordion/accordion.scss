@@ -24,6 +24,14 @@
   }
 }
 
-.is-accordion-open .svg-icon {
+.is-accordion-open .accordion-head-icon {
   transform: rotate(180deg);
+}
+
+.accordion-list {
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-8;
+  width: 100%;
 }

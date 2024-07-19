@@ -59,6 +59,24 @@
     .search-input {
       width: 100%;
     }
+
+    .tab {
+      width: 100%;
+      flex-grow: 1;
+
+      &-list {
+        height: 36px;
+      }
+
+      &-button {
+        @include font-size('13');
+        height: 36px;
+      }
+
+      &-contents {
+        padding: $spacing-8;
+      }
+    }
   }
 
   &-foot {
