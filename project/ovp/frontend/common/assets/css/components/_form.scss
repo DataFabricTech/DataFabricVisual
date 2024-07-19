@@ -34,8 +34,14 @@
 
   &-title {
     @include font-size('18');
-
     font-weight: 600;
+    margin-top: $spacing-16;
+  }
+
+  &-sub-title {
+    @include font-size('16');
+    font-weight: 600;
+    margin: $spacing-20 0 $spacing-8;
   }
 
   &-sm {
@@ -48,7 +54,6 @@
     @include flex($direction: column, $horizontal: flex-start, $vertical: flex-start);
 
     width: 100%;
-    gap: $spacing-20;
 
     .text-input ~ .notification {
       margin-top: $spacing-4;
@@ -60,6 +65,14 @@
 
     width: 100%;
     gap: $spacing-4;
+  }
+
+  &-item:not(:last-child) {
+    margin-bottom: $spacing-20;
+  }
+
+  .text-input-group .form-item {
+    margin-bottom: 0;
   }
 
   &-detail {
@@ -74,7 +87,7 @@
     @include font-size('14');
 
     font-weight: 600;
-    color: $neutral-800;
+    color: $neutral-700;
 
     .required {
       font-weight: 400;
