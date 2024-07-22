@@ -5,19 +5,6 @@
     flex-grow: 1;
   }
 
-  .filters {
-    @include flex($direction: column, $vertical: flex-start);
-    gap: $spacing-4;
-    margin-top: $spacing-8;
-
-    .select-button {
-      padding: 0 $spacing-4;
-    }
-  }
-
-  .menu-head {
-    border-bottom: none;
-  }
 
   .menu-list {
     overflow-y: auto;

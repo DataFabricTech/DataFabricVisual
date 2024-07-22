@@ -133,12 +133,7 @@
   background-size: 10px 10px;
 
   .filters {
-    @include flex($horizontal: flex-start);
     @include z-index('float');
-    position: absolute;
-    gap: $spacing-16;
-    width: 100%;
-    padding: $spacing-8 $spacing-20;
   }
 
 
