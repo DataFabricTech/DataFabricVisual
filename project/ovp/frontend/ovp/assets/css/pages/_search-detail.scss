@@ -126,14 +126,26 @@
   width: 100%;
   height: 100%;
   min-height: 680px;
-
-  //임시 스타일
   border: 1px solid $neutral-200;
-  background: $neutral-100;
+  background-repeat: repeat;
+  background-color: #fff;
+  background-image: linear-gradient(to bottom, transparent, transparent 15%, #fff 10%), linear-gradient(to right, $neutral-300, $neutral-300 15%, #fff 10%);
+  background-size: 10px 10px;
+
+  .filters {
+    @include flex($horizontal: flex-start);
+    @include z-index('float');
+    position: absolute;
+    gap: $spacing-16;
+    width: 100%;
+    padding: $spacing-8 $spacing-20;
+  }
+
 
   .preview {
     @include box-shadow('lg');
 
+    z-index: 2;
     position: absolute;
     right: 0;
     width: 375px;
@@ -167,14 +179,6 @@
   }
 }
 
-.filters {
-  @include flex($horizontal: flex-start);
-  z-index: 0;
-  position: absolute;
-  gap: $spacing-16;
-  width: 100%;
-  padding: $spacing-8 $spacing-20;
-}
 
 
 
