@@ -78,6 +78,7 @@ public class AuthController {
     public Object checkDuplicateEmail(@RequestBody Map<String, Object> param) throws Exception {
         return authService.checkDuplicateEmail((String) param.get("email"));
     }
+
     /**
      * 로그인 > RSA 암호화를 위한 공개키 발급 및 암호화 비밀번호 반환  - Test 코드
      *
@@ -90,4 +91,16 @@ public class AuthController {
     public Object getEncryptPasswd(HttpServletRequest request, @RequestBody Map<String, Object> param) {
         return authService.getEncryptPassword(request, param);
     }
+
+    /**
+     * 비밀번호 > 비밀번호 재설정 메일 전송
+     *
+     * @return
+     */
+    @ResponseJsonResult
+    @PostMapping("/login/password/send-mail")
+    public Object sendMail(HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
+        return authService.sendMail(request, (String) param.get("email"));
+    }
+
 }

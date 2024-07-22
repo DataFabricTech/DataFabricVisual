@@ -52,7 +52,22 @@ spring:
   h2:
     console:
       enabled: true
-
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: datafabric.test
+    password: ukpcbqzuqlpdmwpi # 개인 계정이므로 배포 시 변경 필요
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          debug: true
 logging:
   level:
     root: info
@@ -125,3 +140,7 @@ properties:
       password: admin
   ovp:
     open-metadata-url: http://192.168.105.26:8585/api/v1
+    mail:
+      valid_time: 60
+      redirect_url: /portal/login/pw-reset
+      title: "Open-Vdap-Platform  비밀번호 재 설정"

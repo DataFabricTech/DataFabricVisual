@@ -3,10 +3,11 @@ package com.mobigen.ovp.auth;
 import com.mobigen.framework.utility.FrameworkProperties;
 import com.mobigen.framework.utility.RSA;
 import com.mobigen.framework.utility.Token;
+import com.mobigen.ovp.common.EmailUtil;
+import com.mobigen.ovp.common.OvpProperties;
 import com.mobigen.ovp.user.UserRoleService;
 import com.mobigen.ovp.user.entity.UserEntity;
 import com.mobigen.ovp.user.entity.UserRole;
-import com.mobigen.ovp.user.entity.UserRoleEntity;
 import com.mobigen.ovp.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,12 +16,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
 
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -32,8 +34,11 @@ public class AuthService {
     private final Token token;
     private final AuthClient authClient;
     private final FrameworkProperties frameworkProperties;
+    private final OvpProperties ovpProperties;
     private final UserRoleService userRoleService;
     private final UserRepository userRepository;
+    private final PwResetRepository pwResetRepository;
+    private final EmailUtil emailUtil;
 
     /**
      * 로그인 - 토큰 발급 후 쿠키 설정
@@ -195,5 +200,41 @@ public class AuthService {
         checkEmailParam.put(USER_ID_KEY, email);
 
         return authClient.checkEmailInUse(checkEmailParam);
+    }
+
+    public Object sendMail(HttpServletRequest request, String email) throws Exception {
+        // 1-1. 이메일 유효성 검증
+        boolean checkedEmailValidation = EmailUtil.isValidEmail(email);
+        if (!checkedEmailValidation) {
+            throw new Exception("이메일이 유효하지 않습니다.");
+        }
+
+        // 1-2. 이메일 사용 여부 검증
+        boolean checkedEmailInUse = this.checkDuplicateEmail(email);
+        if (!checkedEmailInUse) {
+            throw new Exception("등록된 이메일이 아닙니다.");
+        }
+
+        // NOTE: 로컬 호스트일 경우 Client 서버로 HOST 설정 / 배포 시 화면이랑 같이 묶여 배포되기 때문에 배포시에는 상관없음.
+        String host = Boolean.TRUE.equals(token.isLocal(request))
+                ? "http://localhost:3300"
+                : request.getRequestURL().toString().replace(request.getRequestURI(), "");
+
+        String id = UUID.randomUUID().toString();
+        Context context = new Context();
+        context.setVariable("url", host + ovpProperties.getMail().getRedirectUrl());
+        context.setVariable("token", id);
+        context.setVariable("validationTime", ovpProperties.getMail().getValidTime());
+        boolean sendEmail = emailUtil.sendHTMLMail(email, ovpProperties.getMail().getTitle(), context,"ovp_pwReset");
+
+        // Email 전송 성공 시 DB에 데이터 저장
+        if (sendEmail) {
+            PwResetEntity pwResetEntity = new PwResetEntity();
+            pwResetEntity.setId(id);
+            pwResetEntity.setEmail(email);
+            pwResetEntity.setValidTime(ovpProperties.getMail().getValidTime());
+            pwResetRepository.save(pwResetEntity);
+        }
+        return null;
     }
 }
