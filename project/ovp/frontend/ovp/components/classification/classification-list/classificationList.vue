@@ -48,7 +48,7 @@
   <classification-create v-if="showModalClas == true" @close-modal="closeModalClas"></classification-create>
 </template>
 <script setup lang="ts">
-import classificationCreate from "~/components/classification/modal/classification-create.vue"
+import classificationCreate from "@/components/classification/modal/classification-create.vue"
 
 const showModalClas = ref(false);
 

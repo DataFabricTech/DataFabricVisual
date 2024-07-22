@@ -13,8 +13,8 @@
 </template>
 
 <script setup lang="ts">
-import ClassificationList from "~/components/classification/classification-list/classificationList.vue";
-import ClassificationListModify from "~/components/classification/classification-list/classificationList-modify.vue";
+import ClassificationList from "@/components/classification/classification-list/classificationList.vue";
+import ClassificationListModify from "@/components/classification/classification-list/classificationList-modify.vue";
 
 </script>
 
