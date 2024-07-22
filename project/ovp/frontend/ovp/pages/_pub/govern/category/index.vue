@@ -465,7 +465,7 @@
               <span class="button-title">초기화</span>
             </button>
           </div>
-          <span>선택 <strong class="primary">0개</strong></span>
+          <strong>선택 <em class="primary">0개</em></strong>
           <div class="table-scroll">
             <table>
               <colgroup>
