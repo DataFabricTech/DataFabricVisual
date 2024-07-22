@@ -1,5 +1,4 @@
 $input-group-classes: text-input-group, search-input;
-$item-group-classes: radio-group, checkbox-group, button-group, tag-group;
 
 @each $group in $input-group-classes {
   .#{$group} {
@@ -72,12 +71,4 @@ $item-group-classes: radio-group, checkbox-group, button-group, tag-group;
   display: flex;
   width: 100%;
   gap: $spacing-8;
-}
-
-@each $group in $item-group-classes {
-  .#{$group} {
-    display: flex;
-    width: 100%;
-    gap: $spacing-8;
-  }
 }
