@@ -3,7 +3,7 @@
     <!-- edit 모드 -->
     <template v-if="isEditMode">
       <slot name="edit-slot"></slot>
-      <div class="h-group gap-2 shrink-0" v-if="useEditButtons">
+      <div class="h-group gap-2 shrink-0">
         <button class="button button-neutral-lighter button-sm" type="button" @click="cancelClick">취소</button>
         <button class="button button-primary-lighter button-sm" type="button" @click="doneClick">완료</button>
       </div>
@@ -26,7 +26,6 @@ import { defineEmits } from "vue";
 import type { EditableGroupProps } from "./EditableGroupProps";
 
 const props = withDefaults(defineProps<EditableGroupProps>(), {
-  useEditButtons: true,
   editable: false
 });
 
