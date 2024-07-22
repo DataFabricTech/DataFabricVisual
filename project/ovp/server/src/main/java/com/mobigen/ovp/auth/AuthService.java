@@ -23,7 +23,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -153,6 +152,114 @@ public class AuthService {
     }
 
     /**
+     * 회원가입 > 이메일 중복 검사
+     *
+     * @param email : 이메일 정보
+     * @throws Exception
+     */
+    public boolean checkDuplicateEmail(String email) throws Exception {
+        Map<String, Object> checkEmailParam = new HashMap<>();
+        checkEmailParam.put(USER_ID_KEY, email);
+
+        return authClient.checkEmailInUse(checkEmailParam);
+    }
+
+    /**
+     * 비밀번호 > 비밀번호 재설정 메일 전송
+     *
+     * @param request
+     * @param email
+     * @return
+     * @throws Exception
+     */
+    public Object sendMail(HttpServletRequest request, String email) throws Exception {
+        // 1-1. 이메일 유효성 검증
+        boolean checkedEmailValidation = EmailUtil.isValidEmail(email);
+        if (!checkedEmailValidation) {
+            throw new Exception("이메일이 유효하지 않습니다.");
+        }
+
+        // 1-2. 이메일 사용 여부 검증
+        boolean checkedEmailInUse = this.checkDuplicateEmail(email);
+        if (!checkedEmailInUse) {
+            throw new Exception("등록된 이메일이 아닙니다.");
+        }
+
+        String host = determineHost(request);
+        String id = UUID.randomUUID().toString();
+        Context context = prepareEmailContext(host, id);
+
+        boolean sendEmail = emailUtil.sendHTMLMail(email, ovpProperties.getMail().getTitle(), context,"ovp_pwReset");
+
+        // Email 전송 성공 시 DB에 데이터 저장
+        if (sendEmail) {
+            savePwResetEntity(email, id);
+        }
+        return null;
+    }
+
+    /**
+     * 비밀번호 > 비밀번호 재설정 - 고유링크
+     *
+     * @param id
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    public boolean changePasswordByUniqueLink(String id, Map<String, Object> param) throws Exception {
+        // 1. 링크 유효성 확인
+        PwResetEntity pwResetData = pwResetRepository.findById(id).orElseThrow(() -> new Exception("링크가 유효하지 않습니다."));
+
+        // 2. 시간 유효성 확인
+        if (isLinkExpired(pwResetData)) {
+            throw new Exception("링크가 유효하지 않습니다.");
+        }
+
+        // 1. 사용자 입력값 검증
+        String confirmPassword = (String) param.get("confirmPassword");
+        String newPassword = (String) param.get("newPassword");
+        if (!newPassword.equals(confirmPassword)) {
+            throw new Exception("비밀번호가 일치 하지 않습니다.");
+        }
+
+        param.put("username", pwResetData.getUserName());
+
+        boolean isChange = changePassword(param);
+        if (isChange) {
+            pwResetRepository.deleteById(id);
+        }
+        return isChange;
+    }
+
+    /**
+     * 비밀번호 > 비밀번호 재설정 API
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    public boolean changePassword(Map<String, Object> param) throws Exception {
+        param.put("requestType", "USER");
+
+        // 1. 사용자 입력값 검증
+        String confirmPassword = (String) param.get("confirmPassword");
+        String newPassword = (String) param.get("newPassword");
+        if (!newPassword.equals(confirmPassword)) {
+            throw new Exception("비밀번호가 일치 하지 않습니다.");
+        }
+
+        // 2. 비밀번호 변경
+        try {
+            HttpHeaders adminAuthorizationHeader = adminLoginHeader();
+            authClient.changePassword(adminAuthorizationHeader, param);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
      * 회원가입 > OMD 서버 회원가입 API 통신
      *
      * @param adminAuthorizationHeader : 관리자 토큰 헤더
@@ -192,106 +299,60 @@ public class AuthService {
     }
 
     /**
-     * 회원가입 > 이메일 중복 검사
+     * 비밀번호 > 비밀번호 재설정 - 고유링크 유효성 검사
      *
-     * @param email : 이메일 정보
-     * @throws Exception
+     * @param pwResetEntity
+     * @return
      */
-    public boolean checkDuplicateEmail(String email) throws Exception {
-        Map<String, Object> checkEmailParam = new HashMap<>();
-        checkEmailParam.put(USER_ID_KEY, email);
-
-        return authClient.checkEmailInUse(checkEmailParam);
+    private boolean isLinkExpired(PwResetEntity pwResetEntity) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expirationTime = pwResetEntity.getCreateDate()
+                .plusMinutes(Long.parseLong(pwResetEntity.getValidTime()));
+        return expirationTime.isBefore(now);
     }
 
-    public Object sendMail(HttpServletRequest request, String email) throws Exception {
-        // 1-1. 이메일 유효성 검증
-        boolean checkedEmailValidation = EmailUtil.isValidEmail(email);
-        if (!checkedEmailValidation) {
-            throw new Exception("이메일이 유효하지 않습니다.");
-        }
 
-        // 1-2. 이메일 사용 여부 검증
-        boolean checkedEmailInUse = this.checkDuplicateEmail(email);
-        if (!checkedEmailInUse) {
-            throw new Exception("등록된 이메일이 아닙니다.");
-        }
-
-        // NOTE: 로컬 호스트일 경우 Client 서버로 HOST 설정 / 배포 시 화면이랑 같이 묶여 배포되기 때문에 배포시에는 상관없음.
-        String host = Boolean.TRUE.equals(token.isLocal(request))
+    /**
+     * 비밀번호 > 비밀번호 재설정 링크 생성
+     * - NOTE: 로컬 호스트일 경우 Client 서버로 HOST 설정 / 배포 시 화면이랑 같이 묶여 배포되기 때문에 배포시에는 상관없음
+     *
+     * @param request
+     * @return
+     */
+    private String determineHost(HttpServletRequest request) {
+        return Boolean.TRUE.equals(token.isLocal(request))
                 ? "http://localhost:3300"
                 : request.getRequestURL().toString().replace(request.getRequestURI(), "");
+    }
 
-        String id = UUID.randomUUID().toString();
+    /**
+     * 비밀번호 > 비밀번호 재설정 HTML Context 설정
+     * @param host
+     * @param id
+     * @return
+     */
+    private Context prepareEmailContext(String host, String id) {
         Context context = new Context();
         context.setVariable("url", host + ovpProperties.getMail().getRedirectUrl());
         context.setVariable("token", id);
         context.setVariable("validationTime", ovpProperties.getMail().getValidTime());
-        boolean sendEmail = emailUtil.sendHTMLMail(email, ovpProperties.getMail().getTitle(), context,"ovp_pwReset");
-
-        // Email 전송 성공 시 DB에 데이터 저장
-        if (sendEmail) {
-            // 이메일을 통해 UserName 찾기
-            Optional<UserEntity> user = userRepository.findByEmail(email);
-            if (!user.isPresent()) {
-                throw new Exception("등록된 이메일이 아닙니다.");
-            }
-
-            PwResetEntity pwResetEntity = new PwResetEntity();
-            pwResetEntity.setId(id);
-            pwResetEntity.setEmail(email);
-            pwResetEntity.setEmail(email);
-            pwResetEntity.setUserName(user.get().getName());
-            pwResetEntity.setValidTime(ovpProperties.getMail().getValidTime());
-            pwResetRepository.save(pwResetEntity);
-        }
-        return null;
+        return context;
     }
 
-    public boolean changePasswordByUniqueLink(String id, Map<String, Object> param) throws Exception {
-        // 1. 링크 유효성 확인
-        Optional<PwResetEntity> pwResetData = pwResetRepository.findById(id);
-        if (!pwResetData.isPresent()) {
-            throw new Exception("링크가 유효하지 않습니다.");
-        }
+    /**
+     * 비밀번호 > 비밀번호 재설정 DB 저장
+     * @param email
+     * @param id
+     * @throws Exception
+     */
+    private void savePwResetEntity(String email, String id) throws Exception {
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new Exception("등록된 이메일이 아닙니다."));
 
-        // 2. 시간 유효성 확인
-        LocalDateTime now = LocalDateTime.now();
-        // 링크 만료 시간 추출
-        LocalDateTime expirationTime = pwResetData.get().getCreateDate().plusMinutes(Long.parseLong(pwResetData.get().getValidTime()));
-        boolean checkedValidDate = Optional.ofNullable(expirationTime)
-                .map(date -> date.isBefore(now))
-                .orElse(true);
-        if (checkedValidDate) {
-            throw new Exception("링크가 유효하지 않습니다.");
-        }
-
-        param.put("username", pwResetData.get().getUserName());
-
-        boolean isChange = changePassword(param);
-        if (isChange) {
-            pwResetRepository.deleteById(id);
-        }
-        return isChange;
-    }
-
-    public boolean changePassword(Map<String, Object> param) throws Exception {
-        param.put("requestType", "USER");
-
-        // 1. 사용자 입력값 검증
-        String confirmPassword = (String) param.get("confirmPassword");
-        String newPassword = (String) param.get("newPassword");
-        if (!newPassword.equals(confirmPassword)) {
-            throw new Exception("비밀번호가 일치 하지 않습니다.");
-        }
-
-        // 2. 비밀번호 변경
-        try {
-            HttpHeaders adminAuthorizationHeader = adminLoginHeader();
-            authClient.changePassword(adminAuthorizationHeader, param);
-        } catch (Exception e) {
-            return false;
-        }
-        return true;
+        PwResetEntity pwResetEntity = new PwResetEntity();
+        pwResetEntity.setId(id);
+        pwResetEntity.setEmail(email);
+        pwResetEntity.setUserName(user.getName());
+        pwResetEntity.setValidTime(ovpProperties.getMail().getValidTime());
+        pwResetRepository.save(pwResetEntity);
     }
 }
