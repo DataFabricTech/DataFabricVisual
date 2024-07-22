@@ -78,6 +78,12 @@ $input-field-classes: text-input, textarea;
           @include ellipsis;
         }
       }
+
+      &:has(.hidden-text) {
+        &::before {
+          margin-right: 0;
+        }
+      }
     }
 
     &-text {
