@@ -18,10 +18,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -229,12 +231,53 @@ public class AuthService {
 
         // Email 전송 성공 시 DB에 데이터 저장
         if (sendEmail) {
+            // 이메일을 통해 UserName 찾기
+            Optional<UserEntity> user = userRepository.findByEmail(email);
+            if (!user.isPresent()) {
+                throw new Exception("등록된 이메일이 아닙니다.");
+            }
+
             PwResetEntity pwResetEntity = new PwResetEntity();
             pwResetEntity.setId(id);
             pwResetEntity.setEmail(email);
+            pwResetEntity.setEmail(email);
+            pwResetEntity.setUserName(user.get().getName());
             pwResetEntity.setValidTime(ovpProperties.getMail().getValidTime());
             pwResetRepository.save(pwResetEntity);
         }
+        return null;
+    }
+
+    public Object changePasswordByUniqueLink(String id, Map<String, Object> param) throws Exception {
+        // 1. 링크 유효성 확인
+        Optional<PwResetEntity> pwResetData = pwResetRepository.findById(id);
+        if (!pwResetData.isPresent()) {
+            throw new Exception("링크가 유효하지 않습니다.");
+        }
+
+        // 2. 시간 유효성 확인
+        LocalDateTime now = LocalDateTime.now();
+        // 링크 만료 시간 추출
+        LocalDateTime expirationTime = pwResetData.get().getCreateDate().plusMinutes(Long.parseLong(pwResetData.get().getValidTime()));
+        boolean checkedValidDate = Optional.ofNullable(expirationTime)
+                .map(date -> date.isBefore(now))
+                .orElse(true);
+        if (checkedValidDate) {
+            throw new Exception("링크가 유효하지 않습니다.");
+        }
+
+        // 3. 사용자 입력값 검증
+        String confirmPassword = (String) param.get("confirmPassword");
+        String newPassword = (String) param.get("newPassword");
+        if (!newPassword.equals(confirmPassword)) {
+            throw new Exception("비밀번호가 일치 하지 않습니다.");
+        }
+        param.put("requestType", "USER");
+        param.put("username", pwResetData.get().getUserName());
+
+        HttpHeaders adminAuthorizationHeader = adminLoginHeader();
+
+        authClient.changePassword(adminAuthorizationHeader, param);
         return null;
     }
 }

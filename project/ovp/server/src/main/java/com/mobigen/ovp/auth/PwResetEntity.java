@@ -36,4 +36,7 @@ public class PwResetEntity {
     @Column(name = "valid_time", nullable = false, length = 10)
     private String validTime;
 
+    @NotNull
+    @Column(name = "user_name", nullable = false, length = 50)
+    private String userName;
 }
