@@ -6,9 +6,9 @@ interface User {
   displayName: string;
 }
 
-import userJson from "./samples/user.json";
-
 export const useUserStore = defineStore("userStore", () => {
+  const { $api } = useNuxtApp();
+
   const user: Ref<User> = ref({
     role: "",
     id: "",
@@ -18,11 +18,9 @@ export const useUserStore = defineStore("userStore", () => {
   });
 
   const getUserInfo = async () => {
-    // TODO: [개발] API 전달 받으면 변경 필요
-    // const data: any = await $api(`/api/search/preview/${fqn}`);
-    const data: any = await userJson;
+    const data: any = await $api(`/api/user/info`);
 
-    user.value = data;
+    user.value = data.data;
     console.log("User 정보: ", user.value);
   };
 
