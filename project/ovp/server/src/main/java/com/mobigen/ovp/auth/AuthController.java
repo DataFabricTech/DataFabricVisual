@@ -92,8 +92,12 @@ public class AuthController {
     }
 
     /**
+     * 비밀번호 재설정 > 메일 전송
      *
+     * @param request
+     * @param param
      * @return
+     * @throws Exception
      */
     @ResponseJsonResult
     @PostMapping("/login/password/send-mail")
@@ -103,7 +107,7 @@ public class AuthController {
 
 
     /**
-     * 비밀번호 > 비밀번호 재설정 - 고유링크
+     * 비밀번호 재설정 > 고유링크 생성 및 DB 저장
      *
      * @param request
      * @param id
@@ -119,7 +123,7 @@ public class AuthController {
     }
 
     /**
-     * 비밀번호 > 비밀번호 재설정 API
+     * 비밀번호 재설정 API
      *
      * @return
      */

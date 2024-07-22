@@ -18,6 +18,8 @@ public class OvpProperties {
     public static class MailProperties {
         private String validTime;
         private String redirectUrl;
+        private String redirectErrorUrl;
+        private String href;
         private String title;
     }
 }

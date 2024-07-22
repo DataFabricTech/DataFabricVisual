@@ -3,7 +3,7 @@ package com.mobigen.ovp.auth;
 import com.mobigen.framework.utility.FrameworkProperties;
 import com.mobigen.framework.utility.RSA;
 import com.mobigen.framework.utility.Token;
-import com.mobigen.ovp.common.EmailUtil;
+import com.mobigen.ovp.email.EmailUtil;
 import com.mobigen.ovp.common.OvpProperties;
 import com.mobigen.ovp.user.UserRoleService;
 import com.mobigen.ovp.user.entity.UserEntity;
@@ -18,7 +18,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
-import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -165,7 +164,7 @@ public class AuthService {
     }
 
     /**
-     * 비밀번호 > 비밀번호 재설정 메일 전송
+     * 비밀번호 재설정 > 메일 전송
      *
      * @param request
      * @param email
@@ -185,7 +184,7 @@ public class AuthService {
             throw new Exception("등록된 이메일이 아닙니다.");
         }
 
-        String host = determineHost(request);
+        String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
         String id = UUID.randomUUID().toString();
         Context context = prepareEmailContext(host, id);
 
@@ -199,7 +198,7 @@ public class AuthService {
     }
 
     /**
-     * 비밀번호 > 비밀번호 재설정 - 고유링크
+     * 비밀번호 재설정 > 고유링크 생성 및 DB 저장
      *
      * @param id
      * @param param
@@ -211,7 +210,7 @@ public class AuthService {
         PwResetEntity pwResetData = pwResetRepository.findById(id).orElseThrow(() -> new Exception("링크가 유효하지 않습니다."));
 
         // 2. 시간 유효성 확인
-        if (isLinkExpired(pwResetData)) {
+        if (EmailUtil.isLinkExpiredWithValidTime(pwResetData.getValidTime(), pwResetData.getCreateDate())) {
             throw new Exception("링크가 유효하지 않습니다.");
         }
 
@@ -298,49 +297,23 @@ public class AuthService {
         }
     }
 
-    /**
-     * 비밀번호 > 비밀번호 재설정 - 고유링크 유효성 검사
-     *
-     * @param pwResetEntity
-     * @return
-     */
-    private boolean isLinkExpired(PwResetEntity pwResetEntity) {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime expirationTime = pwResetEntity.getCreateDate()
-                .plusMinutes(Long.parseLong(pwResetEntity.getValidTime()));
-        return expirationTime.isBefore(now);
-    }
-
 
     /**
-     * 비밀번호 > 비밀번호 재설정 링크 생성
-     * - NOTE: 로컬 호스트일 경우 Client 서버로 HOST 설정 / 배포 시 화면이랑 같이 묶여 배포되기 때문에 배포시에는 상관없음
-     *
-     * @param request
-     * @return
-     */
-    private String determineHost(HttpServletRequest request) {
-        return Boolean.TRUE.equals(token.isLocal(request))
-                ? "http://localhost:3300"
-                : request.getRequestURL().toString().replace(request.getRequestURI(), "");
-    }
-
-    /**
-     * 비밀번호 > 비밀번호 재설정 HTML Context 설정
+     * 비밀번호 재설정 > HTML Context 설정
      * @param host
      * @param id
      * @return
      */
     private Context prepareEmailContext(String host, String id) {
         Context context = new Context();
-        context.setVariable("url", host + ovpProperties.getMail().getRedirectUrl());
+        context.setVariable("url", host + ovpProperties.getMail().getHref());
         context.setVariable("token", id);
         context.setVariable("validationTime", ovpProperties.getMail().getValidTime());
         return context;
     }
 
     /**
-     * 비밀번호 > 비밀번호 재설정 DB 저장
+     * 비밀번호 재설정 > 링크 DB 저장
      * @param email
      * @param id
      * @throws Exception

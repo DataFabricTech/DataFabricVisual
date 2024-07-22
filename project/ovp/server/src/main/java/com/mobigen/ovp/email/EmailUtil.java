@@ -1,4 +1,4 @@
-package com.mobigen.ovp.common;
+package com.mobigen.ovp.email;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -11,6 +11,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.regex.Pattern;
 
 @Slf4j
@@ -22,6 +23,19 @@ public class EmailUtil {
     private final JavaMailSender mailSender;
 
     /**
+     * 이메일 시간 유효성 검증
+     *
+     * @param minute
+     * @param time
+     * @return
+     */
+    public static boolean isLinkExpiredWithValidTime(String minute, LocalDateTime time) {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime expirationTime = time.plusMinutes(Long.parseLong(minute));
+        return expirationTime.isBefore(now);
+    }
+
+    /**
      * 메일 유효성 검증
      *
      * @param emailAddress
@@ -31,6 +45,14 @@ public class EmailUtil {
         return emailAddress != null && !emailAddress.trim().isEmpty() && Pattern.matches(PATTERN_EMAIL, emailAddress);
     }
 
+    /**
+     * HTML 형식의 이메일 전송
+     * @param to
+     * @param subject
+     * @param context
+     * @param resource
+     * @return
+     */
     public boolean sendHTMLMail(String to, String subject, Context context, String resource) {
         try {
             MimeMessage message = mailSender.createMimeMessage();
