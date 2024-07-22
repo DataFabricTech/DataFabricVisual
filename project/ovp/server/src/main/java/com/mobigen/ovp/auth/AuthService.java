@@ -248,7 +248,7 @@ public class AuthService {
         return null;
     }
 
-    public Object changePasswordByUniqueLink(String id, Map<String, Object> param) throws Exception {
+    public boolean changePasswordByUniqueLink(String id, Map<String, Object> param) throws Exception {
         // 1. 링크 유효성 확인
         Optional<PwResetEntity> pwResetData = pwResetRepository.findById(id);
         if (!pwResetData.isPresent()) {
@@ -266,18 +266,32 @@ public class AuthService {
             throw new Exception("링크가 유효하지 않습니다.");
         }
 
-        // 3. 사용자 입력값 검증
+        param.put("username", pwResetData.get().getUserName());
+
+        boolean isChange = changePassword(param);
+        if (isChange) {
+            pwResetRepository.deleteById(id);
+        }
+        return isChange;
+    }
+
+    public boolean changePassword(Map<String, Object> param) throws Exception {
+        param.put("requestType", "USER");
+
+        // 1. 사용자 입력값 검증
         String confirmPassword = (String) param.get("confirmPassword");
         String newPassword = (String) param.get("newPassword");
         if (!newPassword.equals(confirmPassword)) {
             throw new Exception("비밀번호가 일치 하지 않습니다.");
         }
-        param.put("requestType", "USER");
-        param.put("username", pwResetData.get().getUserName());
 
-        HttpHeaders adminAuthorizationHeader = adminLoginHeader();
-
-        authClient.changePassword(adminAuthorizationHeader, param);
-        return null;
+        // 2. 비밀번호 변경
+        try {
+            HttpHeaders adminAuthorizationHeader = adminLoginHeader();
+            authClient.changePassword(adminAuthorizationHeader, param);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 }

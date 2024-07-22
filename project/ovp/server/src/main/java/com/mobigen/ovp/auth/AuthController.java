@@ -35,10 +35,8 @@ public class AuthController {
     @ResponseJsonResult(errorMessage = "로그인 실패")
     @PostMapping("/login")
     public Object login(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> param) throws Exception {
-        String decryptPasswd = token.decryptRSAString(request, (String) param.get(PASSWORD_KEY));
-        param.put(PASSWORD_KEY, decryptPasswd);
-
-        return authService.login(response, param);
+        Map<String, Object> newParam = decryptRsaPasswordWithParam(request, param);
+        return authService.login(response, newParam);
     }
 
     /**
@@ -112,7 +110,38 @@ public class AuthController {
      */
     @ResponseJsonResult
     @PostMapping("/login/password/change/{id}")
-    public Object changePasswordByUniqueLink(@PathVariable String id, @RequestBody Map<String, Object> param) throws Exception {
-        return authService.changePasswordByUniqueLink(id, param);
+    public Object changePasswordByUniqueLink(HttpServletRequest request, @PathVariable String id, @RequestBody Map<String, Object> param) throws Exception {
+        Map<String, Object> newParam = decryptRsaPasswordWithParam(request, param);
+        return authService.changePasswordByUniqueLink(id, newParam);
+    }
+
+    /**
+     * 비밀번호 > 비밀번호 재설정 - 고유링크
+     *
+     * @return
+     */
+    @ResponseJsonResult
+    @PostMapping("/login/password/change")
+    public Object changePassword(HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
+        Map<String, Object> newParam = decryptRsaPasswordWithParam(request, param);
+        return authService.changePassword(newParam);
+    }
+
+    /**
+     * 비밀번호 복호화
+     *
+     * @param request
+     * @param param
+     * @return
+     */
+    private Map<String, Object> decryptRsaPasswordWithParam(HttpServletRequest request, Map<String, Object> param) {
+        for (Map.Entry<String, Object> entry : param.entrySet()) {
+            String key = entry.getKey();
+            if ("newPassword".equals(key) || "confirmPassword".equals(key) || PASSWORD_KEY.equals(key)) {
+                String decryptedValue = token.decryptRSAString(request, (String) entry.getValue());
+                param.put(key, decryptedValue);
+            }
+        }
+        return param;
     }
 }
