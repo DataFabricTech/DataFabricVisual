@@ -131,12 +131,7 @@
   background-color: #fff;
   background-image: linear-gradient(to bottom, transparent, transparent 15%, #fff 10%), linear-gradient(to right, $neutral-300, $neutral-300 15%, #fff 10%);
   background-size: 10px 10px;
-
-  .filters {
-    @include z-index('float');
-  }
-
-
+  
   .preview {
     @include box-shadow('lg');
 
