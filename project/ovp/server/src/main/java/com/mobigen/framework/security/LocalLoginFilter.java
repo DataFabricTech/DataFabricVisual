@@ -36,23 +36,13 @@ public class LocalLoginFilter extends OncePerRequestFilter {
     private Token token;
     private FrameworkProperties frameworkProperties;
 
-    /**
-     * 개발 > 로컬 호스트 확인
-     * @param request
-     * @return
-     */
-    private Boolean isLocal(HttpServletRequest request) {
-        String remoteHost = request.getRemoteHost();
-        return "localhost".equals(remoteHost) || "0:0:0:0:0:0:0:1".equals(remoteHost) || "127.0.0.1".equals(remoteHost);
-    }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("localLoginFilter");
 
         // 로컬 확인 + 로그인/인증 API 확인 + 토큰 여부 확인
         boolean isApiAuthRequest = request.getRequestURI().contains("/api/auth");
-        boolean isNotLocalRequest = !Boolean.TRUE.equals(isLocal(request));
+        boolean isNotLocalRequest = !Boolean.TRUE.equals(token.isLocal(request));
         if (isNotLocalRequest || isApiAuthRequest) {
             log.info("로컬 로그인 진행 X");
             filterChain.doFilter(request, response);

@@ -249,4 +249,14 @@ public class Token {
         User user = getUserByXAccessToken(token);
         return new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
     }
+
+    /**
+     * 개발 > 로컬 호스트 확인
+     * @param request
+     * @return
+     */
+    public Boolean isLocal(HttpServletRequest request) {
+        String remoteHost = request.getRemoteHost();
+        return "localhost".equals(remoteHost) || "0:0:0:0:0:0:0:1".equals(remoteHost) || "127.0.0.1".equals(remoteHost);
+    }
 }
