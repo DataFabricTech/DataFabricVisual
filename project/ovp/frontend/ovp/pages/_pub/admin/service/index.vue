@@ -16,6 +16,49 @@
             서비스 추가
           </button>
         </div>
+        <div class="menu menu-data menu-lg">
+          <div class="menu-head">
+            <div class="h-group">
+              <div class="search-input">
+                <label class="hidden-text" for="data-menu-search">데이터 모델 검색</label>
+                <input id="data-menu-search" class="text-input" placeholder="검색어 입력" />
+                <svg-icon class="text-input-icon" name="search"></svg-icon>
+                <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                  <span class="hidden-text">지우기</span>
+                  <svg-icon class="button-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <button class="button button-neutral-ghost">
+                <span class="hidden-text">리셋</span>
+                <svg-icon class="svg-icon" name="reset"></svg-icon>
+              </button>
+            </div>
+          </div>
+          <ul class="menu-list">
+            <li class="menu-item is-menu-item-selected">
+              <button class="menu-button">
+                <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                <span class="menu-text">서비스A</span>
+                <span class="menu-subtext">(소유자)</span>
+              </button>
+            </li>
+            <li class="menu-item" v-for="menu in 6" :key="menu">
+              <button class="menu-button">
+                <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                <span class="menu-text">서비스F</span>
+                <span class="menu-subtext">(소유자)</span>
+              </button>
+            </li>
+          </ul>
+          <!-- 결과 없을 시 no-result 표시 -->
+          <div class="no-result" style="display: none">
+            <div class="notification">
+              <svg-icon class="notification-icon" name="info"></svg-icon>
+              <p class="notification-detail">선택된 데이터 모델이 없습니다.</p>
+            </div>
+          </div>
+        </div>
+
         <!-- 결과 없을 시 no-result 표시 / 기본 .work-page로 컨텐츠 표시 -->
         <div class="no-result" style="display: none">
           <div class="notification">
@@ -25,6 +68,13 @@
         </div>
       </div>
       <div class="work-page">
+        <div class="l-top-bar">
+          <div class="h-group gap-2">
+            <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+            <h4 class="service-title">서비스A</h4>
+          </div>
+          <button class="button button-error-lighter">삭제</button>
+        </div>
         <div class="work-contents">
           <div>
             <div class="tab tab-line">
@@ -61,13 +111,17 @@
                 <col style="width: 25%" />
               </colgroup>
               <tr>
-                <th>용어</th>
-                <th>설명</th>
-                <th>관리</th>
+                <th>이름</th>
+                <th>유형</th>
+                <th>스케줄</th>
+                <th>현황</th>
+                <th>동작</th>
               </tr>
               <tr>
-                <td></td>
-                <td></td>
+                <td>pgv2_metadata_ingestion</td>
+                <td>metadata</td>
+                <td>00***</td>
+                <td>Success</td>
                 <td>
                   <div class="button-group">
                     <button class="button button button-secondary-stroke">
@@ -76,10 +130,18 @@
                     <button class="button button button-error-stroke">
                       삭제
                     </button>
+                    <button class="button button button-error-stroke">
+                      종료
+                    </button>
+                    <button class="button button button-error-stroke">
+                      로그
+                    </button>
                   </div>
                 </td>
               </tr>
               <tr>
+                <td></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td>
