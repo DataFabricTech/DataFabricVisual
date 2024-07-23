@@ -132,27 +132,8 @@
     }
   }
 
-  // 추후 수정 예정
   &-contents {
     padding: $spacing-16;
   }
 }
 
-.tab-top-bar {
-  .tab-line {
-    width: 100%;
-    background: $neutral-0;
-
-    .tab-list {
-      gap: $spacing-8;
-    }
-
-    .tab-item {
-      flex: 0 0 auto;
-    }
-
-    .tab-button {
-      padding: $spacing-12;
-    }
-  }
-}

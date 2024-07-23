@@ -18,6 +18,23 @@
   padding: 0 $spacing-8;
   background: $neutral-0;
   border-bottom: 1px solid $neutral-200;
+
+  .tab-line {
+    width: 100%;
+    background: $neutral-0;
+
+    .tab-list {
+      gap: $spacing-8;
+    }
+
+    .tab-item {
+      flex: 0 0 auto;
+    }
+
+    .tab-button {
+      padding: $spacing-12;
+    }
+  }
 }
 
 .section-contents {
