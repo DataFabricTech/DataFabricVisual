@@ -3,7 +3,6 @@ package com.mobigen.ovp.search_detail;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Columns;
 import com.mobigen.ovp.common.openmete_client.dto.ProfileColumn;
-import com.mobigen.ovp.search_detail.dto.request.DataModelDetailRequest;
 import com.mobigen.ovp.search_detail.dto.response.DataModelSampleDataResponse;
 import com.mobigen.ovp.search_detail.dto.response.DataModelDetailResponse;
 import lombok.RequiredArgsConstructor;
