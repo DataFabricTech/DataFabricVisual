@@ -74,7 +74,7 @@
         ></textarea>
       </template>
       <template #view-slot>
-        <p class="editable-group-desc">{{ newData.modelDesc }}</p>
+        <span class="editable-group-desc">{{ newData.modelDesc }}</span>
       </template>
     </editable-group>
 
