@@ -7,6 +7,10 @@
   .section-top-bar + .section-contents {
     height: calc(100% - 48px);
   }
+
+  .section-top-bar + .section-top-bar + .section-contents {
+    height: calc(100% - 98px);
+  }
 }
 
 .section-top-bar {
@@ -18,6 +22,12 @@
   padding: 0 $spacing-8;
   background: $neutral-0;
   border-bottom: 1px solid $neutral-200;
+
+  &-tab {
+    padding: 0;
+    height: 50px;
+    border: none;
+  }
 
   .tab-line {
     width: 100%;

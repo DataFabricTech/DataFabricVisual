@@ -4,7 +4,7 @@
       <h3 class="title">서비스</h3>
     </div>
   </div>
-  <div class="section-top-bar p-0 h-auto">
+  <div class="section-top-bar section-top-bar-tab">
     <div class="tab tab-line">
       <ul class="tab-list">
         <li class="tab-item is-tab-item-selected">
