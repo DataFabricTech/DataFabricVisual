@@ -1,4 +1,5 @@
 import { IntersectionObserverHandler } from "~/utils/intersection-observer";
+import _ from "lodash";
 
 export interface Filter {
   text: string;
@@ -121,6 +122,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
   // filter 정보
   const filters = ref<Filters>(createDefaultFilters());
+  // TODO : [개발] 탐색 - 목록 페이지 tab 구현 완료 되면 currentTab 부분 변수 맞춰서 수정 필요.
+    const currentTab: Ref<string> = ref("table");
+
   const searchResult: Ref<any[]> = ref([]);
   const details: Ref<details> = ref({} as details);
   const previewData: Ref<any> = ref({
@@ -141,25 +145,42 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   // List Query data
   let searchKeyword: string = "";
   const from: Ref<number> = ref<number>(0);
-  const size: Ref<number> = ref<number>(100);
+  const size: Ref<number> = ref<number>(20);
   const sortKey: Ref<string> = ref<string>("totalVotes");
   const sortKeyOpt: Ref<string> = ref<string>("desc");
 
   const getSearchListQuery = () => {
+    const queryFilter = getQueryFilter();
     const params: any = {
       // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
       // eslint 예외 제외 코드 추가.
       // eslint-disable-next-line id-length
       q: searchKeyword,
-      index: "table_search_index,container_search_index",
+      index: currentTab.value, // table or storage or model -> tab
       from: from.value,
       size: size.value,
       deleted: false,
-      query_filter: JSON.stringify(getQueryFilter()),
+      query_filter: JSON.stringify(queryFilter),
       sort_field: sortKey.value,
       sort_order: sortKeyOpt.value,
+      trino_query: JSON.stringify(getTorinoQuery(queryFilter)),
     };
     return new URLSearchParams(params);
+  };
+  const getTorinoQuery = (queryFilter: QueryFilter) => {
+    const trinoFilter: QueryFilter = {
+      query: {
+        bool: {
+          must: [{ bool: { should: [{ term: { serviceType: "trino" } }] } }],
+        },
+      },
+    };
+    const trinoMustArray = trinoFilter.query.bool.must;
+    queryFilter.query.bool.must = _.concat(
+      queryFilter.query.bool.must,
+      trinoMustArray,
+    );
+    return queryFilter;
   };
   // METHODS
   const getSearchListAPI = async () => {
@@ -171,7 +192,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
    */
   const addSearchList = async () => {
     const { data, totalCount } = await getSearchListAPI();
-    searchResult.value = searchResult.value.concat(data);
+    searchResult.value = searchResult.value.concat(data[currentTab.value]);
     searchResultLength.value = totalCount;
   };
 
@@ -180,7 +201,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
    */
   const getSearchList = async () => {
     const { data, totalCount } = await getSearchListAPI();
-    searchResult.value = data;
+    searchResult.value = data[currentTab.value];
     searchResultLength.value = totalCount;
   };
   const getFilters = async () => {
@@ -294,6 +315,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     size,
     sortKey,
     sortKeyOpt,
+    currentTab,
     filters,
     searchResult,
     details,
