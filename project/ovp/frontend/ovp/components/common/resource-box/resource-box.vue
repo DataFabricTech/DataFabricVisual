@@ -28,6 +28,7 @@
     </div>
 
     <editable-group
+      compKey="modelNm"
       :editable="props.editable"
       @editCancel="editCancel"
       @editDone="editDone"
@@ -59,6 +60,7 @@
     </editable-group>
 
     <editable-group
+      compKey="modelDesc"
       :editable="props.editable"
       @editCancel="editCancel"
       @editDone="editDone"
@@ -80,6 +82,7 @@
 
     <div class="resource-box-info">
       <editable-group
+        :compKey="ownerKey"
         :parent-edit-mode="isEditMode[ownerKey]"
         :editable="props.editable"
         :useEditButtons="false"
@@ -123,6 +126,7 @@
       </editable-group>
 
       <editable-group
+        :compKey="categoryKey"
         :parent-edit-mode="isEditMode[categoryKey]"
         :editable="props.editable"
         :useEditButtons="false"
@@ -220,11 +224,11 @@ const modelNmClick = () => {
   emit("modelNmClick", props.dataObj);
 };
 
-const editCancel = () => {
-  tempData.value = newData.value;
+const editCancel = (key: string) => {
+  tempData.value[key] = newData.value[key];
 };
-const editDone = () => {
-  newData.value = tempData.value;
+const editDone = (key: string) => {
+  newData.value[key] = tempData.value[key];
   emit("editDone", newData.value);
 };
 

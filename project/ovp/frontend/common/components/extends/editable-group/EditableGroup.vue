@@ -45,18 +45,18 @@ watch(
 );
 
 const emit = defineEmits<{
-  (e: "editCancel"): void;
-  (e: "editDone"): void;
+  (e: "editCancel", key: string): void;
+  (e: "editDone", key: string): void;
   (e: "editIcon"): void;
 }>();
 
 const cancelClick = () => {
   isEditMode.value = false;
-  emit("editCancel");
+  emit("editCancel", props.compKey);
 };
 const doneClick = () => {
   isEditMode.value = false;
-  emit("editDone");
+  emit("editDone", props.compKey);
 };
 const editIconClick = () => {
   isEditMode.value = true;
