@@ -52,8 +52,8 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @DeleteMapping("/{id}")
-    public void deleteGlossary(@PathVariable UUID id) {
-        glossaryService.deleteGlossary(id);
+    public Object deleteGlossary(@PathVariable UUID id) {
+        return glossaryService.deleteGlossary(id);
     }
 
     /**
@@ -85,8 +85,8 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @DeleteMapping("/terms/{id}")
-    public void deleteGlossaryTerm(@PathVariable UUID id) {
-        glossaryService.deleteGlossaryTerm(id);
+    public Object deleteGlossaryTerm(@PathVariable UUID id) {
+        return glossaryService.deleteGlossaryTerm(id);
     }
 
     /**

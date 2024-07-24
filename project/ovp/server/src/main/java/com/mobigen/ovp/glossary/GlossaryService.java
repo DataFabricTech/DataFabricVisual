@@ -8,6 +8,8 @@ import com.mobigen.ovp.glossary.client.dto.terms.GlossaryTerms;
 import com.mobigen.ovp.glossary.client.response.GlossaryActivities;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -43,9 +45,11 @@ public class GlossaryService {
     /**
      * 용어 사전 삭제
      * @param id
+     * @return
      */
-    public void deleteGlossary(UUID id) {
-        glossaryClient.deleteGlossary(id, true, true);
+    public int deleteGlossary(UUID id) {
+        ResponseEntity<Void> response = glossaryClient.deleteGlossary(id, true, true);
+        return response.getStatusCode() == HttpStatus.OK ? 1 : 0;
     }
 
     /**
@@ -70,9 +74,11 @@ public class GlossaryService {
     /**
      * 용어 삭제
      * @param id
+     * @return
      */
-    public void deleteGlossaryTerm(UUID id) {
-        glossaryClient.deleteGlossaryTerms(id, true, true);
+    public int deleteGlossaryTerm(UUID id) {
+        ResponseEntity<Void> response = glossaryClient.deleteGlossaryTerms(id, true, true);
+        return response.getStatusCode() == HttpStatus.OK ? 1 : 0;
     }
 
     /**
