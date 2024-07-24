@@ -1,0 +1,147 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <title>임시 비밀번호 안내</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+  <div style="width: 100%; padding-top: 40px; padding-bottom: 140px">
+    <table cellpadding="0" cellspacing="0" width="775" bgcolor="#ffffff" align="center" style="
+        font-family: -apple-system, BlinkMacSystemFont, Roboto, RobotoDraft,
+          '맑은고딕', Malgun Gothic, Sans-serif;
+        margin-left: auto;
+        margin-right: auto;
+        border-collapse: collapse;
+        border-spacing: 0;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #dce1e8;
+        text-size-adjust: 100%;
+      ">
+      <tbody>
+        <tr>
+          <td>
+            <table cellpadding="0" cellspacing="0" width="100%" border="0" bgcolor="#ffffff" style="
+                font-family: -apple-system, BlinkMacSystemFont, Roboto,
+                  RobotoDraft, '맑은고딕', Malgun Gothic, Sans-serif;
+                border-collapse: collapse;
+                border-spacing: 0;
+                text-size-adjust: 100%;
+              ">
+              <tbody>
+                <tr>
+                  <td height="54" colspan="3"></td>
+                </tr>
+                <tr>
+                  <td width="36"></td>
+                  <td style="
+                      font-size: 32px;
+                      color: #212121;
+                      font-weight: 700;
+                      letter-spacing: 1px;
+                    " align="center">
+                    비밀번호 재설정
+                  </td>
+                  <td width="36"></td>
+                </tr>
+                <tr>
+                  <td height="10" colspan="3"></td>
+                </tr>
+                <tr>
+                  <td width="36"></td>
+                  <td style="font-size: 18px; font-weight: 500; color: #212121">
+                  </td>
+                  <td width="36"></td>
+                </tr>
+                <tr>
+                  <td height="26" colspan="3"></td>
+                </tr>
+                <tr>
+                  <td width="36"></td>
+                  <td style="font-size: 15px; font-weight: 400; color: #606974; line-height: 24px;"  align="center">
+                    귀하는 계정 비밀번호를 재설정하도록 요청하셨습니다. <br />
+                    비밀번호 재설정 하려면 아래 비밀번호 재설정 버튼을 클릭하십시오.
+                  </td>
+                  <td width="36"></td>
+                </tr>
+                <tr>
+                  <td height="29" colspan="3"></td>
+                </tr>
+                <tr>
+                  <td width="36"></td>
+                  <td height="48" align="center">
+                    <a target="_blank"
+                       th:href="@{|${url}/${token}|}"
+                       style="
+                        display: inline-block;
+                        padding: 14.5px 60px;
+                        height: 100%;
+                        background-color: #005acd;
+                        border-radius: 2px;
+                        color: #ffffff;
+                        text-decoration: none;
+                        font-size: 16px;
+                        font-weight: 600;
+                        box-sizing: border-box;
+                        line-height: 24px;
+                      ">
+                      비밀번호 재설정
+                    </a>
+                  </td>
+                  <td width="36"></td>
+                </tr>
+
+                <tr>
+                  <td height="29" colspan="3"></td>
+                </tr>
+                <tr>
+                  <td width="36"></td>
+                  <td style="font-size: 15px; font-weight: 400; color: #606974; line-height: 24px;"  align="center">
+                    보안을 위해 위의 링크는 <span th:text="${validationTime}">10</span>분 동안만 유효합니다. <br />
+                    비밀번호 변경을 본인이 요청하지 않는 경우, 본 이메일은 무시하십시오.
+                  </td>
+                  <td width="36"></td>
+                </tr>
+                <tr>
+                  <td height="50" colspan="3"></td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <table cellpadding="0" cellspacing="0" width="100%" border="0" bgcolor="#F7F9FC" style="
+                font-family: -apple-system, BlinkMacSystemFont, Roboto,
+                  RobotoDraft, '맑은고딕', Malgun Gothic, Sans-serif;
+                border-collapse: collapse;
+                border-spacing: 0;
+                text-size-adjust: 100%;
+              ">
+              <tfoot>
+                <tr>
+                  <td height="32" colspan="3"></td>
+                </tr>
+                <tr>
+                  <td width="36"></td>
+                  <td style="font-size: 12px; color: #77889a; font-weight: 400">
+                    메일은 발신전용으로 회신 되지 않습니다.
+                  </td>
+                  <td width="36"></td>
+                </tr>
+                <tr>
+                  <td height="32" colspan="3"></td>
+                </tr>
+              </tfoot>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+
+</html>

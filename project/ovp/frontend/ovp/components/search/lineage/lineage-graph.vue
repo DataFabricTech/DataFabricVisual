@@ -28,11 +28,19 @@ let cyRef = null;
 
 const tpl = (data: NodeData) => {
   // 라벨 템플릿 정의 메서드
-  return `<div style="display: flex; justify-content: center; align-items: center; text-align:center; color:white; background-color:#666; padding:5px; border: 2px solid #000; border-radius:5px; font-size:12px; width: 100px; height: 40px;">
-            <div>
-              ${data.path}<br/>
-              ${data.label}
-            </div>
+  return `<div class="cytoscape-box" style="
+  font-family: 'pretendard', 'Segoe UI', 'Open Sans', 'Helvetica Neue';
+  width: 100px;
+  height: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background-color: #fff;
+  outline: none;
+  border-radius: 4px">
+            <div style="font-size: 8px;font-weight: 300; color: #31353f; line-height: 1.2;">${data.path}</div>
+            <div style="color: #2b3440; font-size: 11px; line-height: 1.6; ">${data.label}</div>
           </div>`;
 };
 
@@ -190,14 +198,5 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.cytoscape-container {
-  width: 80%;
-  height: 600px;
-  position: relative; /* 상대 위치 */
-}
-
-.cytoscape-graph {
-  width: 100%;
-  height: 100%;
-}
+@import "./lineage-graph";
 </style>
