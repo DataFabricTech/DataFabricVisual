@@ -164,15 +164,15 @@ const submit = async () => {
   };
 
   // TODO: 서버 개발 완료 후 주석 해제 및 테스트
-  // await getPwChangeSuccessState(param, uuid);
+  await getPwChangeSuccessState(param, uuid);
 
   // TODO: 서버 개발 완료 후 주석 해제 및 테스트
-  // if (isPwChangeSuccess.value) {
-  //   alert("비밀번호가 변경되었습니다.");
-  //   router.push("/portal/login");
-  // } else {
-  //   alert(errorMessage.value);
-  // }
+  if (isPwChangeSuccess.value) {
+    alert("비밀번호가 변경되었습니다.");
+    router.push("/portal/login");
+  } else {
+    alert(errorMessage.value);
+  }
 };
 
 const passwordValidationReset = () => {

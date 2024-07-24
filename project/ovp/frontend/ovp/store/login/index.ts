@@ -49,7 +49,7 @@ export const loginStore = defineStore("login", () => {
     param.newPassword = rsa.encrypt(param.newPassword);
     param.confirmPassword = rsa.encrypt(param.confirmPassword);
 
-    await $api("/api/auth/change-passwd", {
+    await $api("/api/auth/login/password/change", {
       params: { UUID: uuid },
       method: "POST",
       body: param,
@@ -89,6 +89,7 @@ export const loginStore = defineStore("login", () => {
   return {
     publicKey,
     isloginSuccess,
+    isPwChangeSuccess,
     errorMessage,
     getPublicKey,
     getLoginSuccessState,
