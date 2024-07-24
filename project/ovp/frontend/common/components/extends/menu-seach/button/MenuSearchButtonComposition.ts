@@ -3,7 +3,7 @@ import { MenuSearchButtonProps } from "~/components/extends/menu-seach/button/Me
 import { ref, Ref } from "vue";
 
 interface MenuSearchButtonComposition extends MenuSearchButtonProps {
-  isShow: Ref<boolean>;
+  isMenuSearchShow: Ref<boolean>;
   selectedListData: Ref<any[]>;
   onClickOpenMenuSearch(): void;
   onCancel(): void;
@@ -24,14 +24,14 @@ export function MenuSearchButtonComposition(
     setSelectedListData();
   });
 
-  const isShow: Ref<boolean> = ref(false);
+  const isMenuSearchShow: Ref<boolean> = ref(false);
   const onClickOpenMenuSearch: () => void = () => {
-    isShow.value = !isShow.value;
+    isMenuSearchShow.value = !isMenuSearchShow.value;
     openMenuSearch();
   };
 
   const onCancel: () => void = () => {
-    isShow.value = false;
+    isMenuSearchShow.value = false;
   };
 
   const changeMenuSearch : (value : any[] | {}) => void = (value) => {
@@ -42,7 +42,7 @@ export function MenuSearchButtonComposition(
 
   return {
     ...props,
-    isShow,
+    isMenuSearchShow,
     selectedListData,
     changeMenuSearch,
     onClickOpenMenuSearch,

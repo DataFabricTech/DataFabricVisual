@@ -8,7 +8,7 @@
       <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
     </button>
     <menu-search
-      :is-show="isShow"
+      :is-show="isMenuSearchShow"
       :data="props.data"
       :selected-items="selectedListData"
       :is-multi="props.isMulti"
@@ -64,13 +64,13 @@ const applyData : (value: MenuSearchItemImpl | MenuSearchItemImpl[]) => void  = 
 }
 
 const openMenuSearch : () => void  = () => {
-  if (isShow) {
+  if (isMenuSearchShow) {
     emit("open")
   }
 }
 
 const {
-  isShow,
+  isMenuSearchShow,
   selectedListData,
   onCancel,
   onClickOpenMenuSearch,

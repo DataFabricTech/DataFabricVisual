@@ -136,6 +136,7 @@ const changeSingle : (value : any[] | {}) => void = (value) => {
 <style scoped>
 .sample {
   width: 360px;
+  height: 1500px;
   display: flex;
   flex-direction: column;
   gap: 16px;
