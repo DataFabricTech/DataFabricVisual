@@ -116,7 +116,7 @@ public class SearchService {
     }
 
     private Map<String, Object> getTableList(MultiValueMap<String, String> params) throws Exception {
-        // 화면에 표시되는 tab 의 항목의 데이터만 조회되면 되기 때문에 해당 tab 이 아닌 경우, 0,0 으로 조회한다.
+        // 화면에 표시되는 tab 의 항목의 데이터만 조회되면 되기 때문에 해당 tab 이 아닌 경우, 0건 으로 조회한다.
         if (!params.getFirst("index").equals("table")) {
             params.set("size", "0");
         }
