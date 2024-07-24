@@ -130,8 +130,8 @@ public class AuthController {
      * @throws Exception
      */
     @ResponseJsonResult
-    @PostMapping("/login/password/change/check-id/{id}")
-    public Object checkIdInChangePassword(@PathVariable String id) throws Exception {
+    @GetMapping("/login/password/change/check-id/{id}")
+    public Object checkIdInChangePassword(@PathVariable String id) {
         return authService.checkIdInChangePassword(id);
     }
 

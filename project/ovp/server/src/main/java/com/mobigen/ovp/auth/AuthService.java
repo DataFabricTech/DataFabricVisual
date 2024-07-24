@@ -231,7 +231,7 @@ public class AuthService {
         return isChange;
     }
     /**
-     * 비밀번호 재설정 > 고유링크 생성 및 DB 저장
+     * 비밀번호 재설정 > 고유링크 유효성 확인
      *
      * @param id
      * @return
@@ -239,7 +239,12 @@ public class AuthService {
      */
     public boolean checkIdInChangePassword(String id) {
         Optional<PwResetEntity> pwResetDataOpt = pwResetRepository.findById(id);
-        return pwResetDataOpt.isPresent();
+        boolean checkedData = pwResetDataOpt.isPresent();
+        if (!checkedData) {
+            return false;
+        }
+
+        return !EmailUtil.isLinkExpiredWithValidTime(pwResetDataOpt.get().getValidTime(), pwResetDataOpt.get().getCreateDate());
     }
 
     /**
