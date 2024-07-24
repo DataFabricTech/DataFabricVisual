@@ -7,6 +7,7 @@ export const loginStore = defineStore("login", () => {
   const publicKey = ref("");
   const isPwChangeSuccess = ref(false);
   const isloginSuccess = ref(false);
+  const isLinkValid = ref(false);
   const errorMessage = ref("");
 
   const getPublicKey = async () => {
@@ -49,8 +50,7 @@ export const loginStore = defineStore("login", () => {
     param.newPassword = rsa.encrypt(param.newPassword);
     param.confirmPassword = rsa.encrypt(param.confirmPassword);
 
-    await $api("/api/auth/change-passwd", {
-      params: { UUID: uuid },
+    await $api(`/api/auth/login/password/change/${uuid}`, {
       method: "POST",
       body: param,
     })
@@ -61,6 +61,16 @@ export const loginStore = defineStore("login", () => {
           isPwChangeSuccess.value = false;
           errorMessage.value = res.errorMessage;
         }
+      })
+      .catch((err: any) => {
+        console.log("err: ", err);
+      });
+  }
+
+  async function getLinkValidState(id: any) {
+    await $api(`/api/auth/login/password/change/check-id/${id}`)
+      .then((res: any) => {
+        isLinkValid.value = res.data;
       })
       .catch((err: any) => {
         console.log("err: ", err);
@@ -89,10 +99,13 @@ export const loginStore = defineStore("login", () => {
   return {
     publicKey,
     isloginSuccess,
+    isPwChangeSuccess,
+    isLinkValid,
     errorMessage,
     getPublicKey,
     getLoginSuccessState,
     getPwChangeSuccessState,
+    getLinkValidState,
     signUpUser,
     checkDuplicateEmail,
   };
