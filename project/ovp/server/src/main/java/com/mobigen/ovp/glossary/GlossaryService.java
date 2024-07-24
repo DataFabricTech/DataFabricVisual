@@ -47,9 +47,13 @@ public class GlossaryService {
      * @param id
      * @return
      */
-    public int deleteGlossary(UUID id) {
+    public int deleteGlossary(UUID id) throws Exception {
         ResponseEntity<Void> response = glossaryClient.deleteGlossary(id, true, true);
-        return response.getStatusCode() == HttpStatus.OK ? 1 : 0;
+        if(response.getStatusCode() == HttpStatus.OK ) {
+            return 1;
+        } else {
+            throw new Exception();
+        }
     }
 
     /**
@@ -76,9 +80,13 @@ public class GlossaryService {
      * @param id
      * @return
      */
-    public int deleteGlossaryTerm(UUID id) {
+    public int deleteGlossaryTerm(UUID id) throws Exception {
         ResponseEntity<Void> response = glossaryClient.deleteGlossaryTerms(id, true, true);
-        return response.getStatusCode() == HttpStatus.OK ? 1 : 0;
+        if (response.getStatusCode() == HttpStatus.OK) {
+            return 1;
+        } else {
+            throw new Exception();
+        }
     }
 
     /**
