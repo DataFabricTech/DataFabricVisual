@@ -123,6 +123,19 @@ public class AuthController {
     }
 
     /**
+     * 비밀번호 재설정 > 고유링크 유효성 확인
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PostMapping("/login/password/change/check-id/{id}")
+    public Object checkIdInChangePassword(@PathVariable String id) throws Exception {
+        return authService.checkIdInChangePassword(id);
+    }
+
+    /**
      * 비밀번호 재설정 API
      *
      * @return
