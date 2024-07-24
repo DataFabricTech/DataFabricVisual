@@ -11,7 +11,7 @@
           </nuxt-link>
         </li>
         <li class="sidebar-item">
-          <nuxt-link :to="'/portal/addmodel'" class="sidebar-button">
+          <nuxt-link :to="''" class="sidebar-button">
             <div class="sidebar-icon">
               <svg-icon name="chart-multitype" class="svg-icon"></svg-icon>
             </div>
@@ -19,7 +19,7 @@
           </nuxt-link>
         </li>
         <li class="sidebar-item">
-          <nuxt-link :to="'/portal/govern'" class="sidebar-button">
+          <nuxt-link :to="''" class="sidebar-button">
             <div class="sidebar-icon">
               <svg-icon name="governance" class="svg-icon"></svg-icon>
             </div>
@@ -29,7 +29,7 @@
       </ul>
       <ul class="sidebar-list">
         <li>
-          <nuxt-link :to="'/portal/management'" class="sidebar-button">
+          <nuxt-link :to="''" class="sidebar-button">
             <div class="sidebar-icon">
               <svg-icon name="custom-tune" class="svg-icon"></svg-icon>
             </div>
