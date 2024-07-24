@@ -1,3 +1,5 @@
+import { storeToRefs } from "pinia";
+import { useSearchCommonStore } from "../search/common";
 import sampleData from "./samples/sampleData.json";
 
 interface DataModel {
@@ -15,6 +17,10 @@ interface DataModel {
 
 export const useMainStore = defineStore("mainStore", () => {
   // const { $api } = useNuxtApp();
+
+  const searchCommonStore = useSearchCommonStore();
+  const { getSearchList } = searchCommonStore;
+  const { searchResult } = storeToRefs(searchCommonStore);
 
   const recentQuestData: Ref<DataModel[]> = ref([]);
   const bookmarkData: Ref<DataModel[]> = ref([]);
@@ -59,7 +65,8 @@ export const useMainStore = defineStore("mainStore", () => {
   };
 
   const getUpVotesData = async () => {
-    await getDataList(SAMPLE_DATA, isUpVotesDataNoInfo, upVotesData);
+    await getSearchList();
+    await getDataList(searchResult.value, isUpVotesDataNoInfo, upVotesData);
 
     console.log("추천 많은 데이터 API 불러오기", upVotesData.value);
   };
