@@ -22,6 +22,7 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -228,6 +229,22 @@ public class AuthService {
             pwResetRepository.deleteById(id);
         }
         return isChange;
+    }
+    /**
+     * 비밀번호 재설정 > 고유링크 유효성 확인
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public boolean checkIdInChangePassword(String id) {
+        Optional<PwResetEntity> pwResetDataOpt = pwResetRepository.findById(id);
+        boolean checkedData = pwResetDataOpt.isPresent();
+        if (!checkedData) {
+            return false;
+        }
+
+        return !EmailUtil.isLinkExpiredWithValidTime(pwResetDataOpt.get().getValidTime(), pwResetDataOpt.get().getCreateDate());
     }
 
     /**
