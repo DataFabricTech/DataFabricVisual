@@ -1,5 +1,6 @@
 package com.mobigen.ovp.email;
 
+import java.util.Optional;
 import com.mobigen.framework.utility.Token;
 import com.mobigen.ovp.auth.PwResetEntity;
 import com.mobigen.ovp.auth.PwResetRepository;
@@ -25,16 +26,19 @@ public class EmailService {
      * @return
      * @throws Exception
      */
-    public Object redirectPwRest(HttpServletRequest request, String id) throws Exception {
-        // 1. 링크 유효성 확인
-        PwResetEntity pwResetData = pwResetRepository.findById(id).orElseThrow(() -> new Exception("링크가 유효하지 않습니다."));
-
+    public Object redirectPwRest(HttpServletRequest request, String id) {
         String host = determineHost(request);
         StringBuilder redirectUrl = new StringBuilder();
         redirectUrl.append("redirect:").append(host);
 
+        // 1. 링크 유효성 확인
+        Optional<PwResetEntity> pwResetData = pwResetRepository.findById(id);
+        if (!pwResetData.isPresent()) {
+            redirectUrl.append(ovpProperties.getMail().getRedirectErrorUrl());
+            return redirectUrl;
+        }
         // 2. 메일 시간 유효성 검증
-        if (EmailUtil.isLinkExpiredWithValidTime(pwResetData.getValidTime(), pwResetData.getCreateDate())) {
+        if (EmailUtil.isLinkExpiredWithValidTime(pwResetData.get().getValidTime(), pwResetData.get().getCreateDate())) {
             redirectUrl.append(ovpProperties.getMail().getRedirectErrorUrl());
         } else {
             redirectUrl.append(ovpProperties.getMail().getRedirectUrl()).append("/").append(id);
