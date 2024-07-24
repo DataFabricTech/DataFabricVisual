@@ -153,13 +153,13 @@ const props = withDefaults(defineProps<ResourceBoxProps>(), {
 });
 
 const emit = defineEmits<{
-  (e: "previewClick", id: string | number): void;
+  (e: "previewClick", data: object): void;
   (e: "modelNmClick", data: object): void;
 }>();
 
 const previewClick = () => {
   if (props.usePrvBtn) {
-    emit("previewClick", props.dataObj.id);
+    emit("previewClick", props.dataObj);
   }
 };
 const modelNmClick = () => {
