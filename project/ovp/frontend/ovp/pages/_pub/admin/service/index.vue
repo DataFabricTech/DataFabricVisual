@@ -48,8 +48,8 @@
             </div>
             <div class="l-top-bar">
               <button
-                  class="button button-secondary ml-auto"
-                  @click="showModalCollection = true"
+                class="button button-secondary ml-auto"
+                @click="showModalCollection = true"
               >
                 수집추가
               </button>
@@ -116,23 +116,27 @@
         </button>
       </div>
       <div class="modal-body">
-         <Step
-             :data="stepOptions"
-             :label-key="'label'"
-             :value-key="'value'"
-             :current-item="currentStep"
-             :current-item-type="'index'"
-             :comparison="'equal'"
-             @change="changeStep"
-             style="width: 100%">
-         </Step>
+        <Step
+          :data="stepOptions"
+          :label-key="'label'"
+          :value-key="'value'"
+          :current-item="currentStep"
+          :current-item-type="'index'"
+          :comparison="'equal'"
+          @change="changeStep"
+          style="width: 100%"
+        >
+        </Step>
         <!-- Step 01 / 시작 -->
         <div class="service-type" style="display: block">
           <ul class="service-type-list">
             <li class="service-type-item">
               <button class="service-type-button">
                 <div class="service-type-img">
-                  <img src="../../../../assets/images/storage-type_06.png" alt="MinIO">
+                  <img
+                    src="../../../../assets/images/storage-type_06.png"
+                    alt="MinIO"
+                  />
                 </div>
                 <span class="service-type-title">MinIO</span>
               </button>
@@ -141,7 +145,10 @@
             <li class="service-type-item is-service-type-selected">
               <button class="service-type-button">
                 <div class="service-type-img">
-                  <img src="../../../../assets/images/storage-type_02.png" alt="MySQL">
+                  <img
+                    src="../../../../assets/images/storage-type_02.png"
+                    alt="MySQL"
+                  />
                 </div>
                 <span class="service-type-title">MySQL</span>
               </button>
@@ -149,7 +156,10 @@
             <li class="service-type-item">
               <button class="service-type-button">
                 <div class="service-type-img">
-                  <img src="../../../../assets/images/storage-type_01.png" alt="mariaDB">
+                  <img
+                    src="../../../../assets/images/storage-type_01.png"
+                    alt="mariaDB"
+                  />
                 </div>
                 <span class="service-type-title">MariaDB</span>
               </button>
@@ -158,7 +168,10 @@
             <li class="service-type-item is-service-type-disabled">
               <button class="service-type-button">
                 <div class="service-type-img">
-                  <img src="../../../../assets/images/storage-type_03.png" alt="PostgreSQL">
+                  <img
+                    src="../../../../assets/images/storage-type_03.png"
+                    alt="PostgreSQL"
+                  />
                 </div>
                 <span class="service-type-title">PostgreSQL</span>
               </button>
@@ -166,7 +179,10 @@
             <li class="service-type-item">
               <button class="service-type-button">
                 <div class="service-type-img">
-                  <img src="../../../../assets/images/storage-type_04.png" alt="Oracle">
+                  <img
+                    src="../../../../assets/images/storage-type_04.png"
+                    alt="Oracle"
+                  />
                 </div>
                 <span class="service-type-title">Oracle</span>
               </button>
@@ -174,7 +190,10 @@
             <li class="service-type-item">
               <button class="service-type-button">
                 <div class="service-type-img">
-                  <img src="../../../../assets/images/storage-type_01.png" alt="mariaDB">
+                  <img
+                    src="../../../../assets/images/storage-type_01.png"
+                    alt="mariaDB"
+                  />
                 </div>
                 <span class="service-type-title">mariaDB</span>
               </button>
@@ -182,7 +201,10 @@
             <li class="service-type-item">
               <button class="service-type-button">
                 <div class="service-type-img">
-                  <img src="../../../../assets/images/storage-type_06.png" alt="MinIO">
+                  <img
+                    src="../../../../assets/images/storage-type_06.png"
+                    alt="MinIO"
+                  />
                 </div>
                 <span class="service-type-title">MinIO</span>
               </button>
@@ -194,11 +216,12 @@
         <!-- Step 02 / 시작 div.service-form display:none을 해제해주세요. -->
         <div class="service-form" style="display: none">
           <div class="service-form-summary">
-            <label for="" class="form-label">
-              선택된 서비스 타입
-            </label>
+            <label for="" class="form-label"> 선택된 서비스 타입 </label>
             <div class="form-detail">
-              <img src="../../../../assets/images/storage-type_06.png" alt="MinIO">
+              <img
+                src="../../../../assets/images/storage-type_06.png"
+                alt="MinIO"
+              />
               <p class="form-detail-text">(MinIO)</p>
             </div>
           </div>
@@ -211,29 +234,40 @@
                 </label>
                 <div class="form-detail flex flex-col">
                   <div class="search-input">
-                    <label class="hidden-text" for="text-input-example-4">label</label>
-                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                    <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <label class="hidden-text" for="text-input-example-4"
+                      >label</label
+                    >
+                    <input
+                      id="text-input-example-4"
+                      class="text-input text-input-lg"
+                      value="prefix icon + button"
+                    />
+                    <button
+                      class="search-input-action-button button button-neutral-ghost button-sm"
+                      type="button"
+                    >
                       <span class="hidden-text">지우기</span>
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="form-item">
-                <label for="" class="form-label">
-                  서비스 설명
-                </label>
+                <label for="" class="form-label"> 서비스 설명 </label>
                 <div class="form-detail">
                   <textarea name="" id="" cols="30" rows="5" class="textarea">
                   </textarea>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -245,11 +279,12 @@
         <!-- Step 03 / 시작 div.service-form display:none을 해제해주세요. -->
         <div class="service-form" style="display: none">
           <div class="service-form-summary">
-            <label for="" class="form-label">
-              선택된 서비스 타입
-            </label>
+            <label for="" class="form-label"> 선택된 서비스 타입 </label>
             <div class="form-detail">
-              <img src="../../../../assets/images/storage-type_06.png" alt="MinIO">
+              <img
+                src="../../../../assets/images/storage-type_06.png"
+                alt="MinIO"
+              />
               <p class="form-detail-text">(MinIO)</p>
             </div>
           </div>
@@ -259,105 +294,148 @@
             </div>
             <div class="form-body">
               <div class="form-item">
-                <label for="" class="form-label">
-                  Access Key ID
-                </label>
+                <label for="" class="form-label"> Access Key ID </label>
                 <div class="form-detail flex flex-col">
                   <div class="search-input">
-                    <label class="hidden-text" for="text-input-example-4">label</label>
-                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                    <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <label class="hidden-text" for="text-input-example-4"
+                      >label</label
+                    >
+                    <input
+                      id="text-input-example-4"
+                      class="text-input text-input-lg"
+                      value="prefix icon + button"
+                    />
+                    <button
+                      class="search-input-action-button button button-neutral-ghost button-sm"
+                      type="button"
+                    >
                       <span class="hidden-text">지우기</span>
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="form-item">
-                <label for="" class="form-label">
-                  Secret Key
-                </label>
+                <label for="" class="form-label"> Secret Key </label>
                 <div class="form-detail flex flex-col">
                   <div class="search-input">
-                    <label class="hidden-text" for="text-input-example-4">label</label>
-                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                    <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <label class="hidden-text" for="text-input-example-4"
+                      >label</label
+                    >
+                    <input
+                      id="text-input-example-4"
+                      class="text-input text-input-lg"
+                      value="prefix icon + button"
+                    />
+                    <button
+                      class="search-input-action-button button button-neutral-ghost button-sm"
+                      type="button"
+                    >
                       <span class="hidden-text">지우기</span>
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="form-item">
-                <label for="" class="form-label">
-                  Session Token
-                </label>
+                <label for="" class="form-label"> Session Token </label>
                 <div class="form-detail flex flex-col">
                   <div class="search-input">
-                    <label class="hidden-text" for="text-input-example-4">label</label>
-                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                    <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <label class="hidden-text" for="text-input-example-4"
+                      >label</label
+                    >
+                    <input
+                      id="text-input-example-4"
+                      class="text-input text-input-lg"
+                      value="prefix icon + button"
+                    />
+                    <button
+                      class="search-input-action-button button button-neutral-ghost button-sm"
+                      type="button"
+                    >
                       <span class="hidden-text">지우기</span>
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="form-item">
-                <label for="" class="form-label">
-                  Region
-                </label>
+                <label for="" class="form-label"> Region </label>
                 <div class="form-detail flex flex-col">
                   <div class="search-input">
-                    <label class="hidden-text" for="text-input-example-4">label</label>
-                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                    <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <label class="hidden-text" for="text-input-example-4"
+                      >label</label
+                    >
+                    <input
+                      id="text-input-example-4"
+                      class="text-input text-input-lg"
+                      value="prefix icon + button"
+                    />
+                    <button
+                      class="search-input-action-button button button-neutral-ghost button-sm"
+                      type="button"
+                    >
                       <span class="hidden-text">지우기</span>
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="form-item">
-                <label for="" class="form-label">
-                  Endpoint URL
-                </label>
+                <label for="" class="form-label"> Endpoint URL </label>
                 <div class="form-detail flex flex-col">
                   <div class="search-input">
-                    <label class="hidden-text" for="text-input-example-4">label</label>
-                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                    <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <label class="hidden-text" for="text-input-example-4"
+                      >label</label
+                    >
+                    <input
+                      id="text-input-example-4"
+                      class="text-input text-input-lg"
+                      value="prefix icon + button"
+                    />
+                    <button
+                      class="search-input-action-button button button-neutral-ghost button-sm"
+                      type="button"
+                    >
                       <span class="hidden-text">지우기</span>
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="form-item form-item-expand">
                 <div class="form-label-group">
-                  <label for="" class="form-label">
-                    Bucket Names
-                  </label>
+                  <label for="" class="form-label"> Bucket Names </label>
                   <button class="button button-primary button-sm" type="button">
                     <span class="hidden-text">추가</span>
                     <svg-icon class="button-icon" name="plus"></svg-icon>
@@ -366,11 +444,19 @@
                 <div class="form-detail">
                   <div class="form-delete-group">
                     <div class="search-input">
-                      <label for="text-input-example-4">Bucket Names 0
+                      <label for="text-input-example-4"
+                        >Bucket Names 0
                         <span class="required">*</span>
                       </label>
-                      <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                      <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <input
+                        id="text-input-example-4"
+                        class="text-input text-input-lg"
+                        value="prefix icon + button"
+                      />
+                      <button
+                        class="search-input-action-button button button-neutral-ghost button-sm"
+                        type="button"
+                      >
                         <span class="hidden-text">지우기</span>
                         <svg-icon class="button-icon" name="close"></svg-icon>
                       </button>
@@ -382,17 +468,27 @@
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
                 <div class="form-detail">
                   <div class="form-delete-group">
                     <div class="search-input">
-                      <label for="text-input-example-4">Bucket Names 1
+                      <label for="text-input-example-4"
+                        >Bucket Names 1
                         <span class="required">*</span>
                       </label>
-                      <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                      <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                      <input
+                        id="text-input-example-4"
+                        class="text-input text-input-lg"
+                        value="prefix icon + button"
+                      />
+                      <button
+                        class="search-input-action-button button button-neutral-ghost button-sm"
+                        type="button"
+                      >
                         <span class="hidden-text">지우기</span>
                         <svg-icon class="button-icon" name="close"></svg-icon>
                       </button>
@@ -404,22 +500,25 @@
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="form-item">
                 <Accordion>
-                  <template #title>
-                    MinIO Connection Advanced Config
-                  </template>
+                  <template #title> MinIO Connection Advanced Config</template>
                   <template #body>
                     <div class="form-item form-item-expand">
                       <div class="form-label-group">
                         <label for="" class="form-label">
                           Connection Options
                         </label>
-                        <button class="button button-primary button-sm" type="button">
+                        <button
+                          class="button button-primary button-sm"
+                          type="button"
+                        >
                           <span class="hidden-text">추가</span>
                           <svg-icon class="button-icon" name="plus"></svg-icon>
                         </button>
@@ -428,34 +527,73 @@
                         <div class="form-delete-group">
                           <div class="text-input-group">
                             <div class="search-input">
-                              <label for="text-input-example-4" class="hidden-text">
+                              <label
+                                for="text-input-example-4"
+                                class="hidden-text"
+                              >
                                 Connection Options
                               </label>
-                              <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                              <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                              <input
+                                id="text-input-example-4"
+                                class="text-input text-input-lg"
+                                value="prefix icon + button"
+                              />
+                              <button
+                                class="search-input-action-button button button-neutral-ghost button-sm"
+                                type="button"
+                              >
                                 <span class="hidden-text">지우기</span>
-                                <svg-icon class="button-icon" name="close"></svg-icon>
+                                <svg-icon
+                                  class="button-icon"
+                                  name="close"
+                                ></svg-icon>
                               </button>
                             </div>
                             <div class="search-input">
-                              <label for="text-input-example-4" class="hidden-text">
+                              <label
+                                for="text-input-example-4"
+                                class="hidden-text"
+                              >
                                 Connection Options
                               </label>
-                              <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                              <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                              <input
+                                id="text-input-example-4"
+                                class="text-input text-input-lg"
+                                value="prefix icon + button"
+                              />
+                              <button
+                                class="search-input-action-button button button-neutral-ghost button-sm"
+                                type="button"
+                              >
                                 <span class="hidden-text">지우기</span>
-                                <svg-icon class="button-icon" name="close"></svg-icon>
+                                <svg-icon
+                                  class="button-icon"
+                                  name="close"
+                                ></svg-icon>
                               </button>
                             </div>
                           </div>
-                          <button class="button button-ghost button-sm" type="button">
+                          <button
+                            class="button button-ghost button-sm"
+                            type="button"
+                          >
                             <span class="hidden-text">삭제</span>
-                            <svg-icon class="button-icon" name="close"></svg-icon>
+                            <svg-icon
+                              class="button-icon"
+                              name="close"
+                            ></svg-icon>
                           </button>
                         </div>
-                        <div class="notification notification-sm notification-error">
-                          <svg-icon class="notification-icon" name="error"></svg-icon>
-                          <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                        <div
+                          class="notification notification-sm notification-error"
+                        >
+                          <svg-icon
+                            class="notification-icon"
+                            name="error"
+                          ></svg-icon>
+                          <p class="notification-detail">
+                            얼럿 메세지를 입력해주세요.
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -464,7 +602,10 @@
                         <label for="" class="form-label">
                           Connection Options
                         </label>
-                        <button class="button button-primary button-sm" type="button">
+                        <button
+                          class="button button-primary button-sm"
+                          type="button"
+                        >
                           <span class="hidden-text">추가</span>
                           <svg-icon class="button-icon" name="plus"></svg-icon>
                         </button>
@@ -473,75 +614,151 @@
                         <div class="form-delete-group">
                           <div class="text-input-group">
                             <div class="search-input">
-                              <label for="text-input-example-4" class="hidden-text">
+                              <label
+                                for="text-input-example-4"
+                                class="hidden-text"
+                              >
                                 Connection Options
                               </label>
-                              <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                              <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                              <input
+                                id="text-input-example-4"
+                                class="text-input text-input-lg"
+                                value="prefix icon + button"
+                              />
+                              <button
+                                class="search-input-action-button button button-neutral-ghost button-sm"
+                                type="button"
+                              >
                                 <span class="hidden-text">지우기</span>
-                                <svg-icon class="button-icon" name="close"></svg-icon>
+                                <svg-icon
+                                  class="button-icon"
+                                  name="close"
+                                ></svg-icon>
                               </button>
                             </div>
                             <div class="search-input">
-                              <label for="text-input-example-4" class="hidden-text">
+                              <label
+                                for="text-input-example-4"
+                                class="hidden-text"
+                              >
                                 Connection Options
                               </label>
-                              <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                              <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                              <input
+                                id="text-input-example-4"
+                                class="text-input text-input-lg"
+                                value="prefix icon + button"
+                              />
+                              <button
+                                class="search-input-action-button button button-neutral-ghost button-sm"
+                                type="button"
+                              >
                                 <span class="hidden-text">지우기</span>
-                                <svg-icon class="button-icon" name="close"></svg-icon>
+                                <svg-icon
+                                  class="button-icon"
+                                  name="close"
+                                ></svg-icon>
                               </button>
                             </div>
                           </div>
-                          <button class="button button-ghost button-sm" type="button">
+                          <button
+                            class="button button-ghost button-sm"
+                            type="button"
+                          >
                             <span class="hidden-text">삭제</span>
-                            <svg-icon class="button-icon" name="close"></svg-icon>
+                            <svg-icon
+                              class="button-icon"
+                              name="close"
+                            ></svg-icon>
                           </button>
                         </div>
-                        <div class="notification notification-sm notification-error">
-                          <svg-icon class="notification-icon" name="error"></svg-icon>
-                          <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                        <div
+                          class="notification notification-sm notification-error"
+                        >
+                          <svg-icon
+                            class="notification-icon"
+                            name="error"
+                          ></svg-icon>
+                          <p class="notification-detail">
+                            얼럿 메세지를 입력해주세요.
+                          </p>
                         </div>
                       </div>
                       <div class="form-detail">
                         <div class="form-delete-group">
                           <div class="text-input-group">
                             <div class="search-input">
-                              <label for="text-input-example-4" class="hidden-text">
+                              <label
+                                for="text-input-example-4"
+                                class="hidden-text"
+                              >
                                 Connection Options
                               </label>
-                              <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                              <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                              <input
+                                id="text-input-example-4"
+                                class="text-input text-input-lg"
+                                value="prefix icon + button"
+                              />
+                              <button
+                                class="search-input-action-button button button-neutral-ghost button-sm"
+                                type="button"
+                              >
                                 <span class="hidden-text">지우기</span>
-                                <svg-icon class="button-icon" name="close"></svg-icon>
+                                <svg-icon
+                                  class="button-icon"
+                                  name="close"
+                                ></svg-icon>
                               </button>
                             </div>
                             <div class="search-input">
-                              <label for="text-input-example-4" class="hidden-text">
+                              <label
+                                for="text-input-example-4"
+                                class="hidden-text"
+                              >
                                 Connection Options
                               </label>
-                              <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                              <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                              <input
+                                id="text-input-example-4"
+                                class="text-input text-input-lg"
+                                value="prefix icon + button"
+                              />
+                              <button
+                                class="search-input-action-button button button-neutral-ghost button-sm"
+                                type="button"
+                              >
                                 <span class="hidden-text">지우기</span>
-                                <svg-icon class="button-icon" name="close"></svg-icon>
+                                <svg-icon
+                                  class="button-icon"
+                                  name="close"
+                                ></svg-icon>
                               </button>
                             </div>
                           </div>
-                          <button class="button button-ghost button-sm" type="button">
+                          <button
+                            class="button button-ghost button-sm"
+                            type="button"
+                          >
                             <span class="hidden-text">삭제</span>
-                            <svg-icon class="button-icon" name="close"></svg-icon>
+                            <svg-icon
+                              class="button-icon"
+                              name="close"
+                            ></svg-icon>
                           </button>
                         </div>
-                        <div class="notification notification-sm notification-error">
-                          <svg-icon class="notification-icon" name="error"></svg-icon>
-                          <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                        <div
+                          class="notification notification-sm notification-error"
+                        >
+                          <svg-icon
+                            class="notification-icon"
+                            name="error"
+                          ></svg-icon>
+                          <p class="notification-detail">
+                            얼럿 메세지를 입력해주세요.
+                          </p>
                         </div>
                       </div>
                     </div>
                     <div class="form-item">
-                      <label class="form-label">
-                        Connection Schema
-                      </label>
+                      <label class="form-label"> Connection Schema </label>
                       <select-box class="select-lg w-full"></select-box>
                     </div>
                     <div class="form-item form-item-upload">
@@ -554,17 +771,21 @@
                       </div>
                       <div class="form-detail">
                         <p>SSL Certificate</p>
-                        <Upload class="upload-loading"
-                                :isLoadingVisible="true"
-                                :isLoadedVisible="false"
-                                :isDisabled="true">
+                        <Upload
+                          class="upload-loading"
+                          :isLoadingVisible="true"
+                          :isLoadedVisible="false"
+                          :isDisabled="true"
+                        >
                         </Upload>
                       </div>
                       <div class="form-detail">
                         <p>SSL Key</p>
-                        <Upload class="upload-loaded"
-                                :isLoadingVisible="false"
-                                :isLoadedVisible="true">
+                        <Upload
+                          class="upload-loaded"
+                          :isLoadingVisible="false"
+                          :isLoadedVisible="true"
+                        >
                         </Upload>
                       </div>
                     </div>
@@ -580,11 +801,12 @@
             <span class="button-title">연결테스트</span>
           </button>
           <!-- 연결중/ Loading 연결중일때 연결테스트 버튼 disabled 처리 필요 -->
-          <Loading class="loader-xs" :hideText="true"></Loading>
+          <Loading class="loader-xs" :use-hidden-text="true"></Loading>
           <!-- 연결 실패/ notification -->
           <div class="notification notification-sm notification-error">
             <svg-icon class="notification-icon" name="error"></svg-icon>
-            <p class="notification-detail">연결 테스트에 실패했습니다.<br>
+            <p class="notification-detail">
+              연결 테스트에 실패했습니다.<br />
               connection exception (err: java.lang.NullPointerException)
             </p>
           </div>
@@ -598,8 +820,8 @@
       </div>
       <div class="modal-foot">
         <button
-            class="button button-neutral-ghost button-lg"
-            @click="showModal = false"
+          class="button button-neutral-ghost button-lg"
+          @click="showModal = false"
         >
           취소
         </button>
@@ -618,7 +840,9 @@
     <div class="modal modal-padding-0" style="width: 620px">
       <div class="modal-head">
         <div class="modal-head-text">
-          <span class="modal-head-title">메타 데이터, 프로파일러 수집 추가</span>
+          <span class="modal-head-title"
+            >메타 데이터, 프로파일러 수집 추가</span
+          >
         </div>
         <button
           class="button link-button button-sm"
@@ -631,35 +855,45 @@
       </div>
       <div class="modal-body">
         <Step
-            :data="stepOptions2"
-            :label-key="'label'"
-            :value-key="'value'"
-            :current-item="currentStep"
-            :current-item-type="'index'"
-            :comparison="'equal'"
-            @change="changeStep"
-            style="width: 100%">
+          :data="stepOptions2"
+          :label-key="'label'"
+          :value-key="'value'"
+          :current-item="currentStep"
+          :current-item-type="'index'"
+          :comparison="'equal'"
+          @change="changeStep"
+          style="width: 100%"
+        >
         </Step>
         <!-- Step 01 / 시작  -->
         <div class="service-form" style="display: block">
           <div class="form form-vertical">
             <div class="form-body">
               <div class="form-item">
-                <label for="" class="form-label">
-                  Name
-                </label>
+                <label for="" class="form-label"> Name </label>
                 <div class="form-detail flex flex-col">
                   <div class="search-input">
-                    <label class="hidden-text" for="text-input-example-4">label</label>
-                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                    <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <label class="hidden-text" for="text-input-example-4"
+                      >label</label
+                    >
+                    <input
+                      id="text-input-example-4"
+                      class="text-input text-input-lg"
+                      value="prefix icon + button"
+                    />
+                    <button
+                      class="search-input-action-button button button-neutral-ghost button-sm"
+                      type="button"
+                    >
                       <span class="hidden-text">지우기</span>
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -667,7 +901,11 @@
                 <label for="" class="form-label">Enable Debug Log</label>
                 <div class="form-detail">
                   <div class="switch">
-                    <input type="checkbox" id="manager-sw" class="switch-input" />
+                    <input
+                      type="checkbox"
+                      id="manager-sw"
+                      class="switch-input"
+                    />
                     <label for="manager-sw" class="switch-label">
                       <div class="switch-control"></div>
                     </label>
@@ -676,45 +914,64 @@
               </div>
               <h3 class="form-sub-title">Container Filter Pattern</h3>
               <div class="form-item">
-                <label for="" class="form-label">
-                  Includes
-                </label>
+                <label for="" class="form-label"> Includes </label>
                 <div class="form-detail flex flex-col">
                   <div class="search-input">
-                    <label class="hidden-text" for="text-input-example-4">label</label>
-                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                    <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <label class="hidden-text" for="text-input-example-4"
+                      >label</label
+                    >
+                    <input
+                      id="text-input-example-4"
+                      class="text-input text-input-lg"
+                      value="prefix icon + button"
+                    />
+                    <button
+                      class="search-input-action-button button button-neutral-ghost button-sm"
+                      type="button"
+                    >
                       <span class="hidden-text">지우기</span>
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="form-item">
-                <label for="" class="form-label">
-                  Excludes
-                </label>
+                <label for="" class="form-label"> Excludes </label>
                 <div class="form-detail flex flex-col">
                   <div class="search-input">
-                    <label class="hidden-text" for="text-input-example-4">label</label>
-                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                    <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <label class="hidden-text" for="text-input-example-4"
+                      >label</label
+                    >
+                    <input
+                      id="text-input-example-4"
+                      class="text-input text-input-lg"
+                      value="prefix icon + button"
+                    />
+                    <button
+                      class="search-input-action-button button button-neutral-ghost button-sm"
+                      type="button"
+                    >
                       <span class="hidden-text">지우기</span>
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="form-item">
-                <label for="" class="form-label">Storage Metadata Configuration Source
+                <label for="" class="form-label"
+                  >Storage Metadata Configuration Source
                 </label>
                 <div class="form-detail">
                   <select-box class="select-lg w-full"></select-box>
@@ -725,7 +982,11 @@
                 <label for="" class="form-label">Mark Deleted Containers</label>
                 <div class="form-detail">
                   <div class="switch">
-                    <input type="checkbox" id="manager-sw" class="switch-input" />
+                    <input
+                      type="checkbox"
+                      id="manager-sw"
+                      class="switch-input"
+                    />
                     <label for="manager-sw" class="switch-label">
                       <div class="switch-control"></div>
                     </label>
@@ -734,40 +995,58 @@
               </div>
               <h4 class="form-sub-title">Table Filter Pattern</h4>
               <div class="form-item">
-                <label for="" class="form-label">
-                  Includes
-                </label>
+                <label for="" class="form-label"> Includes </label>
                 <div class="form-detail flex flex-col">
                   <div class="search-input">
-                    <label class="hidden-text" for="text-input-example-4">label</label>
-                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                    <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <label class="hidden-text" for="text-input-example-4"
+                      >label</label
+                    >
+                    <input
+                      id="text-input-example-4"
+                      class="text-input text-input-lg"
+                      value="prefix icon + button"
+                    />
+                    <button
+                      class="search-input-action-button button button-neutral-ghost button-sm"
+                      type="button"
+                    >
                       <span class="hidden-text">지우기</span>
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
               </div>
               <div class="form-item">
-                <label for="" class="form-label">
-                  Excludes
-                </label>
+                <label for="" class="form-label"> Excludes </label>
                 <div class="form-detail flex flex-col">
                   <div class="search-input">
-                    <label class="hidden-text" for="text-input-example-4">label</label>
-                    <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                    <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                    <label class="hidden-text" for="text-input-example-4"
+                      >label</label
+                    >
+                    <input
+                      id="text-input-example-4"
+                      class="text-input text-input-lg"
+                      value="prefix icon + button"
+                    />
+                    <button
+                      class="search-input-action-button button button-neutral-ghost button-sm"
+                      type="button"
+                    >
                       <span class="hidden-text">지우기</span>
                       <svg-icon class="button-icon" name="close"></svg-icon>
                     </button>
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -775,7 +1054,11 @@
                 <label for="" class="form-label">Enable Debug Log</label>
                 <div class="form-detail">
                   <div class="switch">
-                    <input type="checkbox" id="manager-sw" class="switch-input" />
+                    <input
+                      type="checkbox"
+                      id="manager-sw"
+                      class="switch-input"
+                    />
                     <label for="manager-sw" class="switch-label">
                       <div class="switch-control"></div>
                     </label>
@@ -786,7 +1069,11 @@
                 <label for="" class="form-label">Mark Deleted Tables</label>
                 <div class="form-detail">
                   <div class="switch">
-                    <input type="checkbox" id="manager-sw" class="switch-input" />
+                    <input
+                      type="checkbox"
+                      id="manager-sw"
+                      class="switch-input"
+                    />
                     <label for="manager-sw" class="switch-label">
                       <div class="switch-control"></div>
                     </label>
@@ -794,10 +1081,16 @@
                 </div>
               </div>
               <div class="form-item">
-                <label for="" class="form-label">Mark Deleted Stored Procedures</label>
+                <label for="" class="form-label"
+                  >Mark Deleted Stored Procedures</label
+                >
                 <div class="form-detail">
                   <div class="switch">
-                    <input type="checkbox" id="manager-sw" class="switch-input" />
+                    <input
+                      type="checkbox"
+                      id="manager-sw"
+                      class="switch-input"
+                    />
                     <label for="manager-sw" class="switch-label">
                       <div class="switch-control"></div>
                     </label>
@@ -812,39 +1105,60 @@
                   </template>
                   <template #body>
                     <div class="form-item">
-                      <label class="form-label">
-                        Sample Data Rows Count
-                      </label>
+                      <label class="form-label"> Sample Data Rows Count </label>
                       <div class="search-input">
-                        <label class="hidden-text" for="text-input-example-4">label</label>
-                        <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                        <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                        <label class="hidden-text" for="text-input-example-4"
+                          >label</label
+                        >
+                        <input
+                          id="text-input-example-4"
+                          class="text-input text-input-lg"
+                          value="prefix icon + button"
+                        />
+                        <button
+                          class="search-input-action-button button button-neutral-ghost button-sm"
+                          type="button"
+                        >
                           <span class="hidden-text">지우기</span>
                           <svg-icon class="button-icon" name="close"></svg-icon>
                         </button>
                       </div>
                     </div>
                     <div class="form-item">
-                      <label class="form-label">
-                        Thread Count
-                      </label>
+                      <label class="form-label"> Thread Count </label>
                       <div class="search-input">
-                        <label class="hidden-text" for="text-input-example-4">label</label>
-                        <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                        <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                        <label class="hidden-text" for="text-input-example-4"
+                          >label</label
+                        >
+                        <input
+                          id="text-input-example-4"
+                          class="text-input text-input-lg"
+                          value="prefix icon + button"
+                        />
+                        <button
+                          class="search-input-action-button button button-neutral-ghost button-sm"
+                          type="button"
+                        >
                           <span class="hidden-text">지우기</span>
                           <svg-icon class="button-icon" name="close"></svg-icon>
                         </button>
                       </div>
                     </div>
                     <div class="form-item">
-                      <label class="form-label">
-                        Timeout (In Sec.)
-                      </label>
+                      <label class="form-label"> Timeout (In Sec.) </label>
                       <div class="search-input">
-                        <label class="hidden-text" for="text-input-example-4">label</label>
-                        <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                        <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                        <label class="hidden-text" for="text-input-example-4"
+                          >label</label
+                        >
+                        <input
+                          id="text-input-example-4"
+                          class="text-input text-input-lg"
+                          value="prefix icon + button"
+                        />
+                        <button
+                          class="search-input-action-button button button-neutral-ghost button-sm"
+                          type="button"
+                        >
                           <span class="hidden-text">지우기</span>
                           <svg-icon class="button-icon" name="close"></svg-icon>
                         </button>
@@ -865,8 +1179,7 @@
                 <!-- 항목 선택 전 None -->
                 <div class="text-input-group">
                   <div class="form-item">
-                    <label for="" class="form-label">Every
-                    </label>
+                    <label for="" class="form-label">Every </label>
                     <div class="form-detail">
                       <select-box class="select-lg w-full"></select-box>
                     </div>
@@ -875,24 +1188,22 @@
                 <!-- Minute, Hour, Day, Week.. -->
                 <div class="text-input-group">
                   <div class="form-item">
-                    <label for="" class="form-label">Every
-                    </label>
+                    <label for="" class="form-label">Every </label>
                     <div class="form-detail">
                       <select-box class="select-lg w-full"></select-box>
                     </div>
                   </div>
                   <div class="form-item">
-                    <label for="" class="form-label">Miniute
-                    </label>
+                    <label for="" class="form-label">Miniute </label>
                     <div class="form-detail">
                       <DatePicker
-                          v-model="time"
-                          :confirm="true"
-                          :format="'HH:mm'"
-                          style="width: 100%"
-                          type="time"
-                          value-type="format"
-                          @change="changeDate"
+                        v-model="time"
+                        :confirm="true"
+                        :format="'HH:mm'"
+                        style="width: 100%"
+                        type="time"
+                        value-type="format"
+                        @change="changeDate"
                       ></DatePicker>
                     </div>
                   </div>
@@ -900,37 +1211,93 @@
                 <!-- Day 단일 선택 -->
                 <div class="text-input-group">
                   <div class="form-item">
-                    <label for="" class="form-label">Every
-                    </label>
+                    <label for="" class="form-label">Every </label>
                     <div class="form-detail">
                       <select-box class="select-lg w-full"></select-box>
                     </div>
                   </div>
                   <div class="form-item">
-                    <label for="" class="form-label">Day
-                    </label>
+                    <label for="" class="form-label">Day </label>
                     <div class="form-detail">
                       <div class="button-group">
                         <input
-                            type="radio"
-                            id="button-groupprimarysm1"
-                            class="button-group-input"
-                            name="button-group4"
-                            checked
+                          type="radio"
+                          id="button-groupprimarysm1"
+                          class="button-group-input"
+                          name="button-group4"
+                          checked
                         />
-                        <label for="button-groupprimarysm1" class="button-group-label">SUN</label>
-                        <input type="radio" id="button-groupprimarysm2" class="button-group-input" name="button-group4" />
-                        <label for="button-groupprimarysm2" class="button-group-label">MON</label>
-                        <input type="radio" id="button-groupprimarysm3" class="button-group-input" name="button-group4" />
-                        <label for="button-groupprimarysm3" class="button-group-label">TUE</label>
-                        <input type="radio" id="button-groupprimarysm4" class="button-group-input" name="button-group4" />
-                        <label for="button-groupprimarysm4" class="button-group-label">WED</label>
-                        <input type="radio" id="button-groupprimarysm5" class="button-group-input" name="button-group4" />
-                        <label for="button-groupprimarysm5" class="button-group-label">THU</label>
-                        <input type="radio" id="button-groupprimarysm6" class="button-group-input" name="button-group4" />
-                        <label for="button-groupprimarysm6" class="button-group-label">FRI</label>
-                        <input type="radio" id="button-groupprimarysm7" class="button-group-input" name="button-group4" />
-                        <label for="button-groupprimarysm7" class="button-group-label">SAT</label>
+                        <label
+                          for="button-groupprimarysm1"
+                          class="button-group-label"
+                          >SUN</label
+                        >
+                        <input
+                          type="radio"
+                          id="button-groupprimarysm2"
+                          class="button-group-input"
+                          name="button-group4"
+                        />
+                        <label
+                          for="button-groupprimarysm2"
+                          class="button-group-label"
+                          >MON</label
+                        >
+                        <input
+                          type="radio"
+                          id="button-groupprimarysm3"
+                          class="button-group-input"
+                          name="button-group4"
+                        />
+                        <label
+                          for="button-groupprimarysm3"
+                          class="button-group-label"
+                          >TUE</label
+                        >
+                        <input
+                          type="radio"
+                          id="button-groupprimarysm4"
+                          class="button-group-input"
+                          name="button-group4"
+                        />
+                        <label
+                          for="button-groupprimarysm4"
+                          class="button-group-label"
+                          >WED</label
+                        >
+                        <input
+                          type="radio"
+                          id="button-groupprimarysm5"
+                          class="button-group-input"
+                          name="button-group4"
+                        />
+                        <label
+                          for="button-groupprimarysm5"
+                          class="button-group-label"
+                          >THU</label
+                        >
+                        <input
+                          type="radio"
+                          id="button-groupprimarysm6"
+                          class="button-group-input"
+                          name="button-group4"
+                        />
+                        <label
+                          for="button-groupprimarysm6"
+                          class="button-group-label"
+                          >FRI</label
+                        >
+                        <input
+                          type="radio"
+                          id="button-groupprimarysm7"
+                          class="button-group-input"
+                          name="button-group4"
+                        />
+                        <label
+                          for="button-groupprimarysm7"
+                          class="button-group-label"
+                          >SAT</label
+                        >
                       </div>
                     </div>
                   </div>
@@ -938,21 +1305,30 @@
                 <!-- Custom -->
                 <div class="text-input-group">
                   <div class="form-item">
-                    <label for="" class="form-label">Every
-                    </label>
+                    <label for="" class="form-label">Every </label>
                     <div class="form-detail">
                       <select-box class="select-lg w-full"></select-box>
                     </div>
                   </div>
                   <div class="form-item">
-                    <label for="" class="form-label">Cron
+                    <label for="" class="form-label"
+                      >Cron
                       <span class="required">*</span>
                     </label>
                     <div class="form-detail">
                       <div class="search-input">
-                        <label class="hidden-text" for="text-input-example-4">label</label>
-                        <input id="text-input-example-4" class="text-input text-input-lg" value="prefix icon + button" />
-                        <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                        <label class="hidden-text" for="text-input-example-4"
+                          >label</label
+                        >
+                        <input
+                          id="text-input-example-4"
+                          class="text-input text-input-lg"
+                          value="prefix icon + button"
+                        />
+                        <button
+                          class="search-input-action-button button button-neutral-ghost button-sm"
+                          type="button"
+                        >
                           <span class="hidden-text">지우기</span>
                           <svg-icon class="button-icon" name="close"></svg-icon>
                         </button>
@@ -963,22 +1339,30 @@
                 <!-- 설정한 스케쥴 구간 정보 출력 -->
                 <div class="notification notification-sm notification-success">
                   <svg-icon class="notification-icon" name="success"></svg-icon>
-                  <p class="notification-detail">Scheduled to run every hour 0 minute past the hour
+                  <p class="notification-detail">
+                    Scheduled to run every hour 0 minute past the hour
                   </p>
                 </div>
               </div>
               <div class="form-item">
-                <label for="" class="form-label">
-                  Number of Retries
-                </label>
+                <label for="" class="form-label"> Number of Retries </label>
                 <div class="form-detail flex flex-col">
                   <div class="search-input">
-                    <label class="hidden-text" for="text-input-example-4">label</label>
-                    <input id="text-input-example-4" type="number" class="text-input text-input-lg" value="prefix icon + button" />
+                    <label class="hidden-text" for="text-input-example-4"
+                      >label</label
+                    >
+                    <input
+                      id="text-input-example-4"
+                      type="number"
+                      class="text-input text-input-lg"
+                      value="prefix icon + button"
+                    />
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                    <p class="notification-detail">
+                      얼럿 메세지를 입력해주세요.
+                    </p>
                   </div>
                 </div>
               </div>
@@ -989,8 +1373,8 @@
       </div>
       <div class="modal-foot">
         <button
-            class="button button-neutral-ghost button-lg"
-            @click="showModal = false"
+          class="button button-neutral-ghost button-lg"
+          @click="showModal = false"
         >
           취소
         </button>
@@ -1016,20 +1400,22 @@ import DatePicker from "@extends/datepicker/DatePicker.vue";
 const stepOptions = [
   { label: "서비스 타입 선택", value: "Step1" },
   { label: "서비스 컨피그 입력", value: "Step2" },
-  { label: "연결 세부 정보 입력", value: "Step3" }
+  { label: "연결 세부 정보 입력", value: "Step3" },
 ];
 
 const stepOptions2 = [
   { label: "컨피그 수집", value: "Step1" },
-  { label: "스케쥴 구간 설정", value: "Step2" }
+  { label: "스케쥴 구간 설정", value: "Step2" },
 ];
 
 const currentStep = ref(2);
+
 function changeStep(value: number) {
   currentStep.value = value;
 }
-const showModal = ref(false)
-const showModalCollection = ref(false)
+
+const showModal = ref(false);
+const showModalCollection = ref(false);
 
 const changeDate = (v) => {
   console.log(v);

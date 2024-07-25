@@ -8,7 +8,7 @@
       </button>
     </div>
     <div v-if="isLoadingVisible" class="upload-status">
-      <Loading class="loader-xs" :hideText="true"></Loading>
+      <Loading class="loader-xs" :use-hidden-text="true"></Loading>
     </div>
     <div v-if="isLoadedVisible" class="upload-status">
       <p class="upload-file-name">파일명.cst</p>
