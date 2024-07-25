@@ -4,7 +4,6 @@ import {
   MenuSearchTypeCompositionImpl,
   MenuSearchTypeComposition
 } from "~/components/extends/menu-seach/type/MenuSearchTypeComposition";
-import _ from "lodash";
 
 interface MenuSearchTagComposition extends MenuSearchTypeCompositionImpl {
   onDeleteTag(value: any): void;
