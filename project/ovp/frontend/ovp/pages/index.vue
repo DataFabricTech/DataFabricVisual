@@ -119,7 +119,7 @@ const loader = ref<HTMLElement | null>(null);
 const router = useRouter();
 
 const searchCommonStore = useSearchCommonStore();
-const { selectItem } = searchCommonStore;
+const { setSortFilter } = searchCommonStore;
 
 const mainCommonStore = useMainStore();
 const {
@@ -140,8 +140,8 @@ const {
 } = storeToRefs(mainCommonStore);
 
 const setSearchConditionUrl = (item: string) => {
-  selectItem(item);
-  router.push("/portal/search");
+  setSortFilter(item);
+  router.push({ path: `/portal/search` });
 };
 
 const modelNmClick = (data: object) => {

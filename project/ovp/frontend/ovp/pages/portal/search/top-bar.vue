@@ -13,7 +13,7 @@
         value-key="value"
         :selectedItem="`${sortKey}_${sortKeyOpt}`"
         :isFirstSelectedEvent="isFirstCheckedEvent"
-        @select="selectItem"
+        @select="setSortFilter"
       ></select-box>
       <div class="button-group">
         <input
@@ -53,7 +53,7 @@ import SelectBox from "@extends/select-box/SelectBox.vue";
 import CONSTANTS from "~/constants/constants";
 
 const searchCommonStore = useSearchCommonStore();
-const { selectItem } = searchCommonStore;
+const { setSortFilter } = searchCommonStore;
 const { viewType, searchResultLength, sortKey, sortKeyOpt } =
   storeToRefs(searchCommonStore);
 

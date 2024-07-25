@@ -273,7 +273,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     sortKeyOpt.value = items.pop() ?? "";
   };
 
-  const selectItem = (item: string | number = "totalVotes_desc") => {
+  const setSortFilter = (item: string | number = "totalVotes_desc") => {
     if (!_.isUndefined(item) && typeof item === "string") {
       setSortInfo(item);
 
@@ -321,7 +321,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getSearchDetails,
     getPreviewData,
     setSortInfo,
-    selectItem,
+    setSortFilter,
     setScrollFrom,
     setSearchKeyword,
     setIntersectionHandler,
