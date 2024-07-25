@@ -1,4 +1,5 @@
 import { IntersectionObserverHandler } from "~/utils/intersection-observer";
+import _ from "lodash";
 
 export interface Filter {
   text: string;
@@ -271,6 +272,16 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     sortKey.value = items.shift() ?? ""; // undefined 오류 예외처리
     sortKeyOpt.value = items.pop() ?? "";
   };
+
+  const selectItem = (item: string | number = "totalVotes_desc") => {
+    if (!_.isUndefined(item) && typeof item === "string") {
+      setSortInfo(item);
+
+      // 항목 갱신
+      resetReloadList();
+    }
+  };
+
   const setScrollFrom = (count: number) => {
     from.value = count;
   };
@@ -310,6 +321,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getSearchDetails,
     getPreviewData,
     setSortInfo,
+    selectItem,
     setScrollFrom,
     setSearchKeyword,
     setIntersectionHandler,

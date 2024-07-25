@@ -51,25 +51,14 @@ import { useSearchCommonStore } from "@/store/search/common";
 import { storeToRefs } from "pinia";
 import SelectBox from "@extends/select-box/SelectBox.vue";
 import CONSTANTS from "~/constants/constants";
-import _ from "lodash";
 
 const searchCommonStore = useSearchCommonStore();
-const { setSortInfo, resetReloadList } = searchCommonStore;
+const { selectItem } = searchCommonStore;
 const { viewType, searchResultLength, sortKey, sortKeyOpt } =
   storeToRefs(searchCommonStore);
 
 const options: { [key: string]: string | number }[] = CONSTANTS.SORT_FILTER;
 const isFirstCheckedEvent: boolean = true;
-
-// 선택한 key 값 전달
-const selectItem = (item: string | number) => {
-  if (!_.isUndefined(item) && typeof item === "string") {
-    setSortInfo(item);
-
-    // 항목 갱신
-    resetReloadList();
-  }
-};
 </script>
 
 <style lang="scss" scoped></style>
