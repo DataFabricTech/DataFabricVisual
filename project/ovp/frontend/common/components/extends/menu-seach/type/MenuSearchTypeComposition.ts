@@ -1,20 +1,21 @@
 import { MenuSearchItemImpl } from "~/components/extends/menu-seach/MenuSearchComposition";
-import { MenuSearchButtonProps } from "~/components/extends/menu-seach/button/MenuSearchButtonProps";
+import { MenuSearchTypeProps } from "~/components/extends/menu-seach/type/MenuSearchTypeProps";
 import { ref, Ref } from "vue";
 
-interface MenuSearchButtonComposition extends MenuSearchButtonProps {
+export interface MenuSearchTypeCompositionImpl extends MenuSearchTypeProps {
   isMenuSearchShow: Ref<boolean>;
   selectedListData: Ref<any[]>;
   onClickOpenMenuSearch(): void;
   onCancel(): void;
   changeMenuSearch(value : any[] | {}): void;
+  applySelectedData(value : any[] | {}): void;
 }
 
-export function MenuSearchButtonComposition(
-  props: MenuSearchButtonProps,
+export function MenuSearchTypeComposition(
+  props: MenuSearchTypeProps,
   applyData: (value: MenuSearchItemImpl | MenuSearchItemImpl[]) => void,
   openMenuSearch: () => void
-): MenuSearchButtonComposition {
+): MenuSearchTypeCompositionImpl {
   const selectedListData: Ref<any[]> = ref([]);
   const setSelectedListData: () => void = () => {
     selectedListData.value = Array.isArray(props.selectedItems) ? props.selectedItems : [props.selectedItems];
@@ -35,9 +36,13 @@ export function MenuSearchButtonComposition(
   };
 
   const changeMenuSearch : (value : any[] | {}) => void = (value) => {
+    applySelectedData(value);
+    onClickOpenMenuSearch();
+  };
+
+  const applySelectedData : (value : any[] | {}) => void = (value) => {
     selectedListData.value = props.isMulti ? value as [] : [value];
     applyData(value);
-    onClickOpenMenuSearch();
   };
 
   return {
@@ -45,6 +50,7 @@ export function MenuSearchButtonComposition(
     isMenuSearchShow,
     selectedListData,
     changeMenuSearch,
+    applySelectedData,
     onClickOpenMenuSearch,
     onCancel
   };
