@@ -1,4 +1,5 @@
-table {
+table,
+.table {
   width: 100%;
   border: 1px solid $neutral-200;
 
@@ -6,9 +7,23 @@ table {
     @include caption-out;
   }
 
-  &.align-center th,
-  &.align-center td {
-    text-align: center;
+  $table-align-map: (
+          "left": left,
+          "center": center,
+          "right": right
+  );
+
+  @each $value, $align in $table-align-map {
+    &-align-#{$value} {
+      td {
+        text-align: $align;
+      }
+    }
+
+    th.align-#{$value},
+    td.align-#{$value} {
+      text-align: $align;
+    }
   }
 
   th, td {
@@ -23,7 +38,6 @@ table {
 
   th {
     background-color: $neutral-100;
-    text-align: left;
   }
 
   td {

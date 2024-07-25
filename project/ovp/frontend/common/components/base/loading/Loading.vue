@@ -1,5 +1,5 @@
 <template>
-  <div class="loader">
+  <div class="loader" role="alert" aria-live="assertive">
     <div v-if="useLoaderOverlay" class="overlay"></div>
     <div class="loader-group">
       <div class="loader-spinner"></div>
