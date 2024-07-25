@@ -4,14 +4,14 @@ import RSA from "rsajs";
 export const loginStore = defineStore("login", () => {
   const { $api } = useNuxtApp();
 
-  const publicKey = ref("");
+  let publicKey = "";
   const isPwChangeSuccess = ref(false);
   const isloginSuccess = ref(false);
   const isLinkValid = ref(false);
   const errorMessage = ref("");
 
   const getPublicKey = async () => {
-    publicKey.value = await $api(`/api/auth/login/public-key`)
+    publicKey = await $api(`/api/auth/login/public-key`)
       .then((res: any) => {
         return res.data;
       })
@@ -23,7 +23,7 @@ export const loginStore = defineStore("login", () => {
   async function getLoginSuccessState(param: any) {
     await getPublicKey();
     const rsa = new RSA();
-    rsa.setKey(publicKey.value);
+    rsa.setKey(publicKey);
     param.password = rsa.encrypt(param.password);
 
     await $api(`/api/auth/login`, {
@@ -46,7 +46,7 @@ export const loginStore = defineStore("login", () => {
   async function getPwChangeSuccessState(param: any, uuid: any) {
     await getPublicKey();
     const rsa = new RSA();
-    rsa.setKey(publicKey.value);
+    rsa.setKey(publicKey);
     param.newPassword = rsa.encrypt(param.newPassword);
     param.confirmPassword = rsa.encrypt(param.confirmPassword);
 
@@ -87,7 +87,7 @@ export const loginStore = defineStore("login", () => {
   async function signUpUser(param: any) {
     await getPublicKey();
     const rsa = new RSA();
-    rsa.setKey(publicKey.value);
+    rsa.setKey(publicKey);
     param.password = rsa.encrypt(param.password);
 
     return $api(`/api/auth/sign-up`, {
@@ -97,7 +97,6 @@ export const loginStore = defineStore("login", () => {
   }
 
   return {
-    publicKey,
     isloginSuccess,
     isPwChangeSuccess,
     isLinkValid,

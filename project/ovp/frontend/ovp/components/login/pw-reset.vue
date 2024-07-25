@@ -132,16 +132,14 @@ const isErrorCpw = ref(false);
 const inNewPwType = ref("password");
 const inCpwType = ref("password");
 
-onBeforeMount(async () => {
-  if (!_.isUndefined(uuid)) {
-    // 서버에 고유링크 유효성 확인
-    await getLinkValidState(uuid);
-    if (!isLinkValid.value) {
-      // TODO 에러페이지 퍼블리싱 되면 교체 예정
-      router.push("/portal/error");
-    }
+if (!_.isUndefined(uuid)) {
+  // 서버에 고유링크 유효성 확인
+  await getLinkValidState(uuid);
+  if (!isLinkValid.value) {
+    // TODO 에러페이지 퍼블리싱 되면 교체 예정
+    router.push("/portal/error");
   }
-});
+}
 
 const submit = async () => {
   let pw = newPassword.value;
