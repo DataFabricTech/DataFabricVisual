@@ -145,12 +145,13 @@ const setSearchConditionUrl = (item: string) => {
 };
 
 const modelNmClick = (data: object) => {
-  const { id, fqn } = data as { id: string; fqn: string };
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
   router.push({
     path: "/portal/search/detail",
     query: {
       id: id,
       fqn: fqn,
+      type: type,
     },
   });
 };
