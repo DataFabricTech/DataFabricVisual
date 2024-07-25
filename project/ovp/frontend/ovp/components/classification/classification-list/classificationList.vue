@@ -7,7 +7,7 @@
       </button>
     </div>
     <!-- 데이터 로딩이 완료될 때까지 아무것도 표시하지 않음 -->
-    <div v-if="!isLoaded">
+    <div v-if="!props.isLoaded">
       <!-- 로딩 중일 때는 아무것도 표시하지 않음 -->
     </div>
     <!-- 데이터 로딩 후 분류 목록 또는 "등록된 정보가 없습니다." 메시지 표시 -->
@@ -34,26 +34,27 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { defineProps, ref } from "vue";
 import { storeToRefs } from "pinia";
 import classificationCreate from "@/components/classification/modal/classification-create.vue";
 import { classificationStore } from "@/store/classification/index";
 
+const useClassificationStore = classificationStore();
+const { classificationList } = storeToRefs(useClassificationStore);
+
 const showModalClas = ref(false);
-const isLoaded = ref(false);
 
 const closeModalClas = () => {
   showModalClas.value = !showModalClas.value;
 }
 
-const useClassificationStore = classificationStore();
-const { classificationList } = storeToRefs(useClassificationStore);
-const { getClassificationList } = useClassificationStore;
-
-onMounted(async () => {
-  await getClassificationList(); // API 호출
-  isLoaded.value = true; // 데이터 로딩 완료
+const props = defineProps({
+  isLoaded: {
+    type: Boolean,
+    default: false
+  }
 });
+
 </script>
 
 <style scoped></style>
