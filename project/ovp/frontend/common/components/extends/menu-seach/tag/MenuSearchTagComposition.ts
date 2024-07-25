@@ -22,7 +22,9 @@ export function MenuSearchTagComposition(
    * @param value
    */
   const onDeleteTag: (value: any) => void = (value) => {
-    _.remove(composition.selectedListData.value, (item) => item[props.valueKey] === value[props.valueKey]);
+    composition.selectedListData.value = composition.selectedListData.value.filter(
+      (item) => item[props.valueKey] !== value[props.valueKey]
+    );
     composition.applySelectedData(composition.selectedListData.value);
   };
 
