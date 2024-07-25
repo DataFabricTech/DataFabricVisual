@@ -19,31 +19,37 @@ export const useMainStore = defineStore("mainStore", () => {
   // const { $api } = useNuxtApp();
 
   const searchCommonStore = useSearchCommonStore();
-  const { getSearchList } = searchCommonStore;
+  const { getSearchList, setSortInfo } = searchCommonStore;
   const { searchResult } = storeToRefs(searchCommonStore);
 
   const recentQuestData: Ref<DataModel[]> = ref([]);
   const bookmarkData: Ref<DataModel[]> = ref([]);
   const upVotesData: Ref<DataModel[]> = ref([]);
-  const myData: Ref<DataModel[]> = ref([]);
+  const lastUpdatedData: Ref<DataModel[]> = ref([]);
 
   const isRecentQuestDataNoInfo: Ref<boolean> = ref(false);
   const isBookmarkDataNoInfo: Ref<boolean> = ref(false);
   const isUpVotesDataNoInfo: Ref<boolean> = ref(false);
-  const isMyDataNoInfo: Ref<boolean> = ref(false);
+  const isLastUpdatedData: Ref<boolean> = ref(false);
 
   // TODO: [개발] 임시 코드로 추후 삭제 예정
   const SAMPLE_DATA = sampleData.data.data as DataModel[];
   const SLICE_SIZE = 3;
 
   const getDataList = async (
-    apiCall: Ref<DataModel[]>,
+    apiCall: Ref<string | DataModel[]>,
     dataStatus: Ref<boolean>,
     dataList: Ref<DataModel[]>,
   ) => {
-    // TODO[개발] API 개발 후 적용 예정
-    // const data: any = await $api(`${apiCall}`);
-    const data: any[] = await apiCall;
+    let data: any[] = [];
+
+    if (typeof apiCall === "object") {
+      data = await apiCall;
+    } else {
+      // TODO[개발] API 개발 후 적용 예정
+      // data = await $api(`${apiCall}`);
+      console.log("api 전달");
+    }
 
     if (data.length === 0) {
       dataStatus.value = true;
@@ -59,36 +65,43 @@ export const useMainStore = defineStore("mainStore", () => {
   };
 
   const getBookmarkData = async () => {
-    await getDataList(SAMPLE_DATA, isBookmarkDataNoInfo, bookmarkData);
+    await getDataList(
+      "/api/search/filters",
+      isBookmarkDataNoInfo,
+      bookmarkData,
+    );
 
     console.log("북마크 한 데이터 API 불러오기", bookmarkData.value);
   };
 
   const getUpVotesData = async () => {
+    await setSortInfo("totalVotes_desc");
     await getSearchList();
     await getDataList(searchResult.value, isUpVotesDataNoInfo, upVotesData);
 
-    console.log("추천 많은 데이터 API 불러오기", upVotesData.value);
+    console.log("추천 많은 순 데이터 API 불러오기", upVotesData.value);
   };
 
-  const getMyData = async () => {
-    await getDataList(SAMPLE_DATA, isMyDataNoInfo, myData);
+  const getLastUpdatedData = async () => {
+    await setSortInfo("updatedAt_desc");
+    await getSearchList();
+    await getDataList(searchResult.value, isLastUpdatedData, lastUpdatedData);
 
-    console.log("나의 데이터 API 불러오기", myData.value);
+    console.log("최근 업데이트 데이터 API 불러오기", lastUpdatedData.value);
   };
 
   return {
     recentQuestData,
     bookmarkData,
     upVotesData,
-    myData,
+    lastUpdatedData,
     isRecentQuestDataNoInfo,
     isBookmarkDataNoInfo,
     isUpVotesDataNoInfo,
-    isMyDataNoInfo,
+    isLastUpdatedData,
     getRecentQuestData,
     getBookmarkData,
     getUpVotesData,
-    getMyData,
+    getLastUpdatedData,
   };
 });

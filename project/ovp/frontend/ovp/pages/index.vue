@@ -1,50 +1,172 @@
 <template>
-  <section>
-    <h2>DATA Fabric</h2>
-    {{ gt("common") }}
-
-    <button
-      class="button button-secondary"
-      type="button"
-      id="button1"
-      @click="onClickSampleAPI()"
-    >
-      API 연동
-    </button>
-    {{result1}}
-
-    <button
-      class="button button-secondary"
-      type="button"
-      id=""button1
-      @click="onClickErrorAPI()"
-    >
-      API 연동 - error 처리
-    </button>
-    {{result2}}
-  </section>
+  <div class="section-contents">
+    <div ref="loader" class="loader-wrap" style="display: none">
+      <Loading :use-loader-overlay="true" class="loader-lg"></Loading>
+    </div>
+    <div class="l-split">
+      <div class="main-content">
+        <div class="l-top-bar">
+          <span class="main-content-title">최근 탐색 데이터</span>
+        </div>
+        <div class="no-result" v-if="isRecentQuestDataNoInfo">
+          <div class="notification">
+            <svg-icon class="notification-icon" name="info"></svg-icon>
+            <p class="notification-detail">출력할 정보가 없습니다.</p>
+          </div>
+        </div>
+        <resource-box-list
+          v-else
+          :data-list="recentQuestData"
+          :use-list-checkbox="false"
+          :show-owner="true"
+          :show-category="true"
+          :is-box-selected-style="false"
+          @modelNmClick="modelNmClick"
+        />
+      </div>
+      <div class="main-content">
+        <div class="l-top-bar">
+          <span class="main-content-title">북마크 한 데이터</span>
+          <!--         TODO: [개발] 마이페이지 > 나의 북마크 리스트 이동-->
+          <button class="button link-button-support">
+            <span class="button-title">모두 보기</span>
+          </button>
+        </div>
+        <div class="no-result" v-if="isBookmarkDataNoInfo">
+          <div class="notification">
+            <svg-icon class="notification-icon" name="info"></svg-icon>
+            <p class="notification-detail">출력할 정보가 없습니다.</p>
+          </div>
+        </div>
+        <resource-box-list
+          v-else
+          :data-list="bookmarkData"
+          :use-list-checkbox="false"
+          :show-owner="true"
+          :show-category="true"
+          :is-box-selected-style="false"
+          @modelNmClick="modelNmClick"
+        />
+      </div>
+    </div>
+    <div class="l-split">
+      <div class="main-content">
+        <div class="l-top-bar">
+          <span class="main-content-title">추천 많은 데이터</span>
+          <button
+            class="button link-button-support"
+            @click="setSearchConditionUrl('totalVotes_desc')"
+          >
+            <span class="button-title">모두 보기</span>
+          </button>
+        </div>
+        <div class="no-result" v-if="isUpVotesDataNoInfo">
+          <div class="notification">
+            <svg-icon class="notification-icon" name="info"></svg-icon>
+            <p class="notification-detail">출력할 정보가 없습니다.</p>
+          </div>
+        </div>
+        <resource-box-list
+          v-else
+          :data-list="upVotesData"
+          :use-list-checkbox="false"
+          :show-owner="true"
+          :show-category="true"
+          :is-box-selected-style="false"
+          @modelNmClick="modelNmClick"
+        />
+      </div>
+      <div class="main-content">
+        <div class="l-top-bar">
+          <span class="main-content-title">최근 업데이트 데이터</span>
+          <button
+            class="button link-button-support"
+            @click="setSearchConditionUrl('updatedAt_desc')"
+          >
+            <span class="button-title">모두 보기</span>
+          </button>
+        </div>
+        <div class="no-result" v-if="isLastUpdatedData">
+          <div class="notification">
+            <svg-icon class="notification-icon" name="info"></svg-icon>
+            <p class="notification-detail">출력할 정보가 없습니다.</p>
+          </div>
+        </div>
+        <resource-box-list
+          v-else
+          :data-list="lastUpdatedData"
+          :use-list-checkbox="false"
+          :show-owner="true"
+          :show-category="true"
+          :is-box-selected-style="false"
+          @modelNmClick="modelNmClick"
+        />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { useI18n } from "vue-i18n";
-import messages from "./index.json";
+import { ref, onMounted } from "vue";
+import { storeToRefs } from "pinia";
+import { useMainStore } from "@/store/main/mainStore";
+import { useSearchCommonStore } from "@/store/search/common";
+import { useRouter } from "nuxt/app";
+import Loading from "@base/loading/Loading.vue";
 
-const { t } = useI18n({
-  messages
+const loader = ref<HTMLElement | null>(null);
+
+const router = useRouter();
+
+const searchCommonStore = useSearchCommonStore();
+const { selectItem } = searchCommonStore;
+
+const mainCommonStore = useMainStore();
+const {
+  getRecentQuestData,
+  getBookmarkData,
+  getUpVotesData,
+  getLastUpdatedData,
+} = mainCommonStore;
+const {
+  recentQuestData,
+  bookmarkData,
+  upVotesData,
+  lastUpdatedData,
+  isRecentQuestDataNoInfo,
+  isBookmarkDataNoInfo,
+  isUpVotesDataNoInfo,
+  isLastUpdatedData,
+} = storeToRefs(mainCommonStore);
+
+const setSearchConditionUrl = (item: string) => {
+  selectItem(item);
+  router.push("/portal/search");
+};
+
+const modelNmClick = (data: object) => {
+  const { id, fqn } = data as { id: string; fqn: string };
+  router.push({
+    path: "/portal/search/detail",
+    query: {
+      id: id,
+      fqn: fqn,
+    },
+  });
+};
+
+onMounted(async () => {
+  if (loader.value) {
+    loader.value.style.display = "block";
+  }
+  await getRecentQuestData();
+  await getBookmarkData();
+  await getLastUpdatedData();
+  await getUpVotesData();
+  if (loader.value) {
+    loader.value.style.display = "none";
+  }
 });
-const result1 = ref("");
-const result2 = ref("");
-
-const { $api } = useNuxtApp();
-const onClickSampleAPI = async () => {
-  result1.value = await $api(`/api/sample`);
-};
-
-const onClickErrorAPI = async () => {
-  result2.value = await $api(`/api/sample/errorMessage/anno`);
-};
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style scoped></style>
