@@ -118,7 +118,7 @@ const { getPwChangeSuccessState, getLinkValidState } = store;
 
 const route = useRoute();
 const router = useRouter();
-const uuid = route.params.uuid;
+const uuid = route.query.id;
 
 const newPassword = ref("");
 const confirmPassword = ref("");
@@ -137,7 +137,7 @@ onBeforeMount(async () => {
     // 서버에 고유링크 유효성 확인
     await getLinkValidState(uuid);
     if (!isLinkValid.value) {
-      // TODO: 에러페이지 퍼블리싱 되면 교체 예정
+      // TODO 에러페이지 퍼블리싱 되면 교체 예정
       router.push("/portal/error");
     }
   }
