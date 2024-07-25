@@ -12,14 +12,15 @@
     }
 
     .no-result-title {
-      @include font-size('18');
+      @include font-size('28');
       color: $neutral-800;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .no-result-desc {
-      @include font-size('15');
+      @include font-size('18');
       color: $neutral-500;
+      text-align: center;
     }
   }
 
@@ -27,6 +28,10 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    gap: $spacing-12;
+    gap: $spacing-16;
+  }
+
+  &-bg {
+    background-color: $neutral-100;
   }
 }

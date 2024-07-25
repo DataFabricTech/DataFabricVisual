@@ -1,21 +1,22 @@
 import { MenuSearchItemImpl } from "~/components/extends/menu-seach/MenuSearchComposition";
-import { MenuSearchButtonProps } from "~/components/extends/menu-seach/button/MenuSearchButtonProps";
+import { MenuSearchTypeProps } from "~/components/extends/menu-seach/type/MenuSearchTypeProps";
 import { ref, Ref } from "vue";
 
-interface MenuSearchButtonComposition extends MenuSearchButtonProps {
-  isShow: Ref<boolean>;
+export interface MenuSearchTypeCompositionImpl extends MenuSearchTypeProps {
+  isMenuSearchShow: Ref<boolean>;
   selectedListData: Ref<any[]>;
   onClickOpenMenuSearch(): void;
   onCancel(): void;
   changeMenuSearch(value: any[] | {}): void;
+  applySelectedData(value: any[] | {}): void;
 }
 
-export function MenuSearchButtonComposition(
-  props: MenuSearchButtonProps,
+export function MenuSearchTypeComposition(
+  props: MenuSearchTypeProps,
   applyData: (value: MenuSearchItemImpl | MenuSearchItemImpl[]) => void,
   openMenuSearch: () => void,
   panelClosed: () => void
-): MenuSearchButtonComposition {
+): MenuSearchTypeCompositionImpl {
   const selectedListData: Ref<any[]> = ref([]);
   const setSelectedListData: () => void = () => {
     selectedListData.value = Array.isArray(props.selectedItems) ? props.selectedItems : [props.selectedItems];
@@ -25,25 +26,29 @@ export function MenuSearchButtonComposition(
     setSelectedListData();
   });
 
-  const isShow: Ref<boolean> = ref(false);
+  const isMenuSearchShow: Ref<boolean> = ref(false);
   const onClickOpenMenuSearch: () => void = () => {
-    isShow.value = !isShow.value;
+    isMenuSearchShow.value = !isMenuSearchShow.value;
     openMenuSearch();
   };
 
   const onCancel: () => void = () => {
-    isShow.value = false;
+    isMenuSearchShow.value = false;
   };
 
   const changeMenuSearch: (value: any[] | {}) => void = (value) => {
+    applySelectedData(value);
+    onClickOpenMenuSearch();
+  };
+
+  const applySelectedData: (value: any[] | {}) => void = (value) => {
     selectedListData.value = props.isMulti ? (value as []) : [value];
     applyData(value);
-    onClickOpenMenuSearch();
   };
 
   // 선택 panel 이 닫힐때, 이벤트 처리
   watch(
-    () => isShow.value,
+    () => isMenuSearchShow.value,
     (newVal) => {
       if (!newVal) {
         panelClosed();
@@ -53,9 +58,10 @@ export function MenuSearchButtonComposition(
 
   return {
     ...props,
-    isShow,
+    isMenuSearchShow,
     selectedListData,
     changeMenuSearch,
+    applySelectedData,
     onClickOpenMenuSearch,
     onCancel
   };
