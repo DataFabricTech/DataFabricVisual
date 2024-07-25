@@ -3,7 +3,7 @@
     <div class="l-sidebar">
       <ul class="sidebar-list">
         <li class="sidebar-item is-sidebar-item-selected">
-          <nuxt-link :to="'/portal/main'" class="sidebar-button">
+          <nuxt-link :to="'/'" class="sidebar-button">
             <div class="sidebar-icon">
               <svg-icon name="explore" class="svg-icon"></svg-icon>
             </div>
