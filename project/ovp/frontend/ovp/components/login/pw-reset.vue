@@ -113,12 +113,12 @@ import { useRouter } from "vue-router";
 import { loginStore } from "~/store/login";
 import { PWREGEX, PWREGEX_ERROR_MSG } from "~/utils/constant";
 const store = loginStore();
-const { isPwChangeSuccess, errorMessage } = storeToRefs(store);
-const { getPwChangeSuccessState } = store;
+const { isPwChangeSuccess, isLinkValid, errorMessage } = storeToRefs(store);
+const { getPwChangeSuccessState, getLinkValidState } = store;
 
 const route = useRoute();
 const router = useRouter();
-const uuid = route.params.uuid;
+const uuid = route.query.id;
 
 const newPassword = ref("");
 const confirmPassword = ref("");
@@ -131,6 +131,15 @@ const isErrorCpw = ref(false);
 
 const inNewPwType = ref("password");
 const inCpwType = ref("password");
+
+if (!_.isUndefined(uuid)) {
+  // 서버에 고유링크 유효성 확인
+  await getLinkValidState(uuid);
+  if (!isLinkValid.value) {
+    // TODO 에러페이지 퍼블리싱 되면 교체 예정
+    router.push("/portal/error");
+  }
+}
 
 const submit = async () => {
   let pw = newPassword.value;
@@ -163,16 +172,14 @@ const submit = async () => {
     newPassword: pw,
   };
 
-  // TODO: 서버 개발 완료 후 주석 해제 및 테스트
-  // await getPwChangeSuccessState(param, uuid);
+  await getPwChangeSuccessState(param, uuid);
 
-  // TODO: 서버 개발 완료 후 주석 해제 및 테스트
-  // if (isPwChangeSuccess.value) {
-  //   alert("비밀번호가 변경되었습니다.");
-  //   router.push("/portal/login");
-  // } else {
-  //   alert(errorMessage.value);
-  // }
+  if (isPwChangeSuccess.value) {
+    alert("비밀번호가 변경되었습니다.");
+    router.push("/portal/login");
+  } else {
+    alert(errorMessage.value);
+  }
 };
 
 const passwordValidationReset = () => {
