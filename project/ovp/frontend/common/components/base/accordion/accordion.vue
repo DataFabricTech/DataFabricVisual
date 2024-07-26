@@ -7,9 +7,21 @@
       <svg-icon class="accordion-head-icon svg-icon"
                 name="chevron-down-medium"></svg-icon>
     </button>
+    <transition name="accordion"
+                @before-enter="beforeEnter" @enter="enter"
+                @before-leave="beforeLeave" @leave="leave">
     <div v-if="isAccordionOpen" class="accordion-body">
-      <slot name="body">Default body content</slot>
+      <slot name="body">
+          Default body content<br>
+          Default body content<br>
+          Default body content<br>
+          Default body content<br>
+          Default body content<br>
+          Default body content<br>
+          Default body content<br>
+      </slot>
     </div>
+    </transition>
   </div>
 </template>
 
@@ -21,6 +33,24 @@ const isAccordionOpen = ref(false);
 const toggleAccordion = () => {
   isAccordionOpen.value = !isAccordionOpen.value;
 };
+
+const beforeEnter = (el) => {
+  el.style.height = '0';
+};
+
+const enter = (el) => {
+  el.style.height = el.scrollHeight + 'px';
+};
+
+const beforeLeave = (el) => {
+  el.style.height = el.scrollHeight + 'px';
+};
+
+const leave = (el) => {
+  el.style.height = '0';
+};
+
+
 </script>
 
 <style lang="scss" scoped>
