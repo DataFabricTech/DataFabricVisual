@@ -16,6 +16,7 @@
   }
 
   .menu-item {
+    position: relative;
     background: #F7F9FC;
     border-radius: $border-radius-4;
     border: 1px solid $neutral-200;
@@ -31,9 +32,11 @@
   }
 
   &.menu-lg {
-    .menu-data-icon {
-      @include icon-size('md');
-      margin-right: $spacing-8;
+    .menu-item {
+      .menu-data-icon {
+        @include icon-size('md');
+        margin-right: $spacing-8;
+      }
     }
   }
 }
