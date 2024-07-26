@@ -81,9 +81,9 @@ public class SearchService {
         Map<String, Object> dataMap = new HashMap<>();
 
         List<Map<String, Object>> responseList = List.of(
-                getTableList(params),
-                getStorageList(params),
-                getModelList(params)
+                getTableList(new LinkedMultiValueMap<>(params)),
+                getStorageList(new LinkedMultiValueMap<>(params)),
+                getModelList(new LinkedMultiValueMap<>(params))
         );
 
         List<String> keys = List.of("table", "storage", "model");
@@ -147,16 +147,19 @@ public class SearchService {
     private Object convertSearchData(Object hits) {
         List<Map<String, Object>> list = (List<Map<String, Object>>) hits;
         List<Map<String, Object>> modifiedList = list.stream().map(hit -> {
+            String index = hit.get("_index").toString().equals("table_search_index") ? "table" : "storage";
             if (hit.containsKey("_source")) {
                 Map<String, Object> source = (Map<String, Object>) hit.get("_source");
                 Map<String, Object> modifiedSource = new HashMap<>();
+
+                modifiedSource.put("type", index.equals("table") && source.get("serviceType").equals("Trino") ? "model" : "table");
 
                 modifiedSource.put("id", source.get("id"));
                 // TODO : ICON 처리 완료되면 아래 코드 수정 필요
                 modifiedSource.put("serviceIcon", "");
                 modifiedSource.put("depth", source.get("fullyQualifiedName").toString().split("\\."));
-                modifiedSource.put("firModelNm", source.get("displayName"));
-                modifiedSource.put("modelNm", source.get("name"));
+                modifiedSource.put("firModelNm", source.get("name"));
+                modifiedSource.put("modelNm", source.get("displayName"));
                 modifiedSource.put("modelDesc", source.get("description"));
                 modifiedSource.put("fqn", source.get("fullyQualifiedName"));
 
@@ -180,7 +183,6 @@ public class SearchService {
         }).filter(Objects::nonNull).collect(Collectors.toList());
         return modifiedList;
     }
-
 
     /**
      * Open Metadata - 탐색 목록 미리보기

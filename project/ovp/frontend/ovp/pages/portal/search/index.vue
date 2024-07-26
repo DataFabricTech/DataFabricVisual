@@ -103,10 +103,11 @@ const previewClick = async (data: object) => {
 };
 
 const modelNmClick = (data: object) => {
-  const { id, fqn } = data as { id: string; fqn: string };
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
   router.push({
     path: "/portal/search/detail",
     query: {
+      type: type,
       id: id,
       fqn: fqn,
     },
