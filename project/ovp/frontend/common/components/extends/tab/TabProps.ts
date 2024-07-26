@@ -3,4 +3,5 @@ import { NavigationProps } from "@/components/extends/common/interfaces/props/Na
 // tab Props를 위한 interface
 export interface TabProps extends NavigationProps {
   tabSize?: number;
+  useTabContents?: boolean;
 }

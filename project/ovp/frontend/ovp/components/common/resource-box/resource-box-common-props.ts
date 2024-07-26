@@ -1,4 +1,5 @@
 export interface DataModel {
+  type: string;
   id: string | number;
   serviceIcon: string;
   depth: string[];
