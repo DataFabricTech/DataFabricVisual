@@ -198,12 +198,8 @@
                   <svg-icon class="button-icon" name="close"></svg-icon>
                 </button>
               </div>
-              <button
-                class="button button-secondary"
-                @click="showModalCollection = true"
-              >
-                수집추가
-              </button>
+              <!--  TODO: [개발] 수집추가 모달을 메타데이터 수집추가, 프로파일러 수집추가 드롭다운 메뉴에 추가 필요, dropdown의 위치를 right:0으로 조정 필요  -->
+              <select-box class="" @click="showModalCollection = true">수집추가</select-box>
             </div>
             <table class="mt-3">
               <colgroup>
