@@ -1,7 +1,7 @@
 <template>
-  <!--  용어 탭 시작  -->
   <div class="l-top-bar">
-    <button class="button button-secondary ml-auto" @click="showModal = true">
+    <!-- TODO 모달 용어 추가 -->
+    <button class="button button-secondary ml-auto" @click="showModalPwChange">
       용어추가
     </button>
   </div>
@@ -16,28 +16,29 @@
       <th>설명</th>
       <th>관리</th>
     </tr>
-    <tr>
-      <td>용어 01</td>
-      <td>용어에 대한 설명입니다.</td>
+    <tr v-for="term in terms">
+      <td>{{ term.displayName }}</td>
+      <td>{{ term.description }}</td>
       <td>
         <div class="button-group">
-          <button class="button button button-secondary-stroke">편집</button>
-          <button class="button button button-error-stroke">삭제</button>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td>용어 02</td>
-      <td>용어에 대한 설명입니다.</td>
-      <td>
-        <div class="button-group">
-          <button class="button button button-secondary-stroke">편집</button>
+          <button
+            class="button button button-secondary-stroke"
+            @click="openEditTermComponent('term')"
+          >
+            편집
+          </button>
+          <!-- TODO: 삭제 모달 -->
           <button class="button button button-error-stroke">삭제</button>
         </div>
       </td>
     </tr>
   </table>
-  <!--  용어 탭 끝  -->
-  <modal-glossary></modal-glossary>
+  <modal-glossary :modal-id="''"></modal-glossary>
 </template>
-<script setup lang="ts"></script>
+
+<script setup lang="ts">
+import { useGlossaryStore } from "@/store/glossary";
+const { terms, openEditTermComponent } = useGlossaryStore();
+
+const showModalPwChange: () => void = () => {};
+</script>
