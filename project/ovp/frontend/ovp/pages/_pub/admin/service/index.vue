@@ -177,7 +177,7 @@
               </colgroup>
               <tr>
                 <th>구분</th>
-                <th>이름</th>
+                <th class="align-center">이름</th>
                 <th>설명</th>
                 <th>소유자</th>
                 <th>USAGE</th>
@@ -227,8 +227,8 @@
                 <th>이름</th>
                 <th>유형</th>
                 <th>스케줄</th>
-                <th>현황</th>
-                <th>동작</th>
+                <th class="align-center">현황</th>
+                <th class="align-center">동작</th>
               </tr>
               <tr>
                 <td>pgv2_metadata_ingestion</td>
