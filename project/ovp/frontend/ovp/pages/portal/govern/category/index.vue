@@ -101,7 +101,7 @@
               </button>
             </div>
           </div>
-          <div>
+          <div v-if="modelList.length > 0">
             <div class="l-top-bar">
               <div class="search-input w-[541px]">
                 <label class="hidden-text" for="text-input-example-11"
