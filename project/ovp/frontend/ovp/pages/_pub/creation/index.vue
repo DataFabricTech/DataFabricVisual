@@ -5,6 +5,7 @@
       <button class="button button-primary w-20" @click="showModalSave = true">저장</button>
     </div>
   </div>
+
   <div class="section-contents p-0 bg-white">
     <div class="l-split">
       <div class="work-list">

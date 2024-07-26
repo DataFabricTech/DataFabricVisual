@@ -4,7 +4,23 @@
       <h3 class="title">서비스</h3>
     </div>
   </div>
-  <div class="section-contents p-0 bg-white">
+  <div class="section-top-bar p-0 h-auto">
+    <div class="tab tab-line">
+      <ul class="tab-list">
+        <li class="tab-item">
+          <button class="tab-button">
+            <p class="tab-button-text">overview</p>
+          </button>
+        </li>
+        <li class="tab-item is-tab-item-selected">
+          <button class="tab-button">
+            <p class="tab-button-text">서비스</p>
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="section-contents p-0 bg-white overflow-auto">
     <div class="l-split">
       <div class="work-list">
         <div class="l-top-bar">
