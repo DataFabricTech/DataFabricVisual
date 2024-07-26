@@ -1,7 +1,7 @@
 <template>
   <div class="section-top-bar">
     <div class="l-top-bar">
-      <select-box class="select-clean select-lg"></select-box>
+      <h4 class="title">데이터 모델 생성</h4>
       <button class="button button-primary w-20" @click="showModalSave = true">저장</button>
     </div>
   </div>
@@ -483,6 +483,7 @@
       </div>
     </div>
   </div>
+<!--  TODO: [개발] modal width:480px height:532px   -->
   <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalSave">
     <div class="modal modal-padding-16" style="width:480px">
       <div class="modal-head">
@@ -573,7 +574,7 @@
       </div>
     </div>
   </div>
-  <!-- TODO: [개발] modal width값 900px  -->
+  <!-- TODO: [개발] modal width:900px height:616px -->
   <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalAdd">
     <div class="modal" style="width:900px">
       <div class="modal-head">

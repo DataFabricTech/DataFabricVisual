@@ -93,7 +93,7 @@
       </tr>
     </table>
   </div>
-  <!--  TODO: Modal 카테고리 추가  -->
+  <!--  TODO: Modal 카테고리 추가  width:480px height:516px-->
   <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModal">
     <div class="modal modal-padding-16" style="width: 480px">
       <div class="modal-head">

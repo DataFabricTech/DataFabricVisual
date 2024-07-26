@@ -373,7 +373,7 @@
       </div>
     </div>
   </div>
-  <!--  TODO: Modal 카테고리 추가  -->
+  <!--  TODO: Modal 카테고리 추가  width: 900px;height: 674px; -->
   <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModal">
     <div class="modal modal-padding-0" style="width: 900px">
       <div class="modal-head">
@@ -900,6 +900,7 @@
       </div>
     </div>
   </div>
+<!-- TODO: [개발]  width:620px,height:622px-->
   <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalCollection">
     <div class="modal modal-padding-0" style="width: 620px">
       <div class="modal-head">
@@ -1298,6 +1299,7 @@
       </div>
     </div>
   </div>
+  <!-- TODO: [개발]  width:620px,height:580px-->
   <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalLog">
     <div class="modal modal-padding-16" style="width: 620px">
       <div class="modal-head">
