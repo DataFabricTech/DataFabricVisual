@@ -6,6 +6,7 @@
 .modal-fixed {
   @include flex;
   z-index: 8001;
+  background-color: rgba(36, 46, 61, 0.35);
 }
 
 .modal {
