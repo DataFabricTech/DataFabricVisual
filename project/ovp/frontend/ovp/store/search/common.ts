@@ -1,5 +1,6 @@
 import { usePagingStore } from "~/store/common/paging";
 import _ from "lodash";
+import { computed } from "vue";
 
 export const FILTER_KEYS = {
   CATEGORY: "domains",
@@ -80,7 +81,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
   // filter 정보
   const filters = ref<Filters>(createDefaultFilters());
-  // TODO : [개발] 탐색 - 목록 페이지 tab 구현 완료 되면 currentTab 부분 변수 맞춰서 수정 필요.
   const currentTab: Ref<string> = ref("table");
   const searchResult: Ref<any[]> = ref([]);
   const previewData: Ref<any> = ref({
@@ -102,6 +102,12 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   let searchKeyword: string = "";
   const sortKey: Ref<string> = ref<string>("totalVotes");
   const sortKeyOpt: Ref<string> = ref<string>("desc");
+  const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
+
+  // Computed
+  const currentTabLive: Ref<string> = computed(() => {
+    return currentTab.value;
+  });
 
   const getSearchListQuery = () => {
     const queryFilter = getQueryFilter();
@@ -158,6 +164,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     const { data, totalCount } = await getSearchListAPI();
     searchResult.value = data[currentTab.value];
     searchResultLength.value = totalCount;
+    isSearchResultNoData.value = searchResult.value.length === 0 ? true : false;
   };
   const getFilters = async () => {
     const { data } = await $api(`/api/search/filters`);
@@ -261,6 +268,11 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     searchKeyword = keyword;
   };
 
+  const changeTab = (item: string) => {
+    currentTab.value = item;
+    resetReloadList();
+  };
+
   return {
     sortKey,
     sortKeyOpt,
@@ -273,6 +285,8 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     isShowPreview,
     isBoxSelectedStyle,
     searchResultLength,
+    currentTabLive,
+    isSearchResultNoData,
     addSearchList,
     getSearchList,
     getFilter,
@@ -281,5 +295,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     setSortInfo,
     setSearchKeyword,
     resetReloadList,
+    changeTab,
   };
 });

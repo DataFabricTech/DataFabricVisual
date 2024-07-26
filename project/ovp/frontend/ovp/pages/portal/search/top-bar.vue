@@ -2,8 +2,8 @@
   <!--  상단 검색 결과 & 우측 필터-->
   <div class="l-top-bar">
     <strong
-      >총 <em class="primary">{{ searchResultLength }}개</em>의 검색 결과가
-      있습니다.</strong
+      >총 <em class="primary">{{ searchResultLength[currentTabLive] }}개</em>의
+      검색 결과가 있습니다.</strong
     >
     <div class="h-group gap-1">
       <select-box
@@ -55,7 +55,7 @@ import _ from "lodash";
 
 const searchCommonStore = useSearchCommonStore();
 const { setSortInfo, resetReloadList } = searchCommonStore;
-const { viewType, searchResultLength, sortKey, sortKeyOpt } =
+const { viewType, searchResultLength, sortKey, sortKeyOpt, currentTabLive } =
   storeToRefs(searchCommonStore);
 
 const options: { [key: string]: string | number }[] = CONSTANTS.SORT_FILTER;
