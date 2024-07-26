@@ -16,7 +16,13 @@
   }
 
   &-body {
+    overflow: hidden;
     padding: $spacing-8 $spacing-12;
+    transition: 150ms ease-out;
+  }
+
+  &-body > * {
+    height: unset !important;
   }
 
   .svg-icon {

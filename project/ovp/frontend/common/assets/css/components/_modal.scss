@@ -42,7 +42,7 @@
   }
 
   &-body {
-    @include flex($direction: column);
+    @include flex($direction: column, $horizontal: flex-start);
 
     flex-grow: 1;
     width: 100%;

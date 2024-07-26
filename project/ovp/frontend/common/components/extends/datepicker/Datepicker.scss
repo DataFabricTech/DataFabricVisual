@@ -41,6 +41,7 @@
 .mx-datepicker-main.mx-datepicker-popup {
   @include font-family('pretendard');
   @include box-shadow('md');
+  @include z-index('alert');
 
   margin-top: 6px;
 

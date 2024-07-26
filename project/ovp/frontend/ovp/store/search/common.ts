@@ -1,4 +1,5 @@
 import { IntersectionObserverHandler } from "~/utils/intersection-observer";
+import _ from "lodash";
 
 export interface Filter {
   text: string;
@@ -15,48 +16,8 @@ export interface Filters {
   "databaseSchema.displayName.keyword": Filter;
   "columns.name.keyword": Filter;
   tableType: Filter;
+
   [key: string]: { text: string; data: any[] }; // 인덱스 시그니처 추가
-}
-
-export interface details {
-  modelInfo: {
-    id: string;
-    fqn: string;
-    depth: string;
-    firDataNm: string;
-    modelNm: string;
-    modelDesc: string;
-    owners: {
-      id: string;
-      name: string;
-    };
-    category: {
-      description: string;
-      displayName: string;
-      id: string;
-      name: string;
-    };
-    iconSrc: string;
-  };
-  cntInfo: {
-    upVotes: number;
-    downVotes: number;
-    bookmarked: number;
-  };
-
-  basicInfo: {
-    type: string;
-    columnsCnt: number;
-    rowsCnt: number;
-    tags: any[];
-    glossary: any[];
-  };
-  schema: any[];
-  sample: {
-    columns: string[];
-    rows: any[];
-  };
-  profiling: any[];
 }
 
 export interface SelectedFilters {
@@ -84,8 +45,6 @@ export interface QueryFilter {
     };
   };
 }
-
-import detailsJson from "./samples/details.json";
 
 export const useSearchCommonStore = defineStore("searchCommon", () => {
   const { $api } = useNuxtApp();
@@ -120,8 +79,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
   // filter 정보
   const filters = ref<Filters>(createDefaultFilters());
+  // TODO : [개발] 탐색 - 목록 페이지 tab 구현 완료 되면 currentTab 부분 변수 맞춰서 수정 필요.
+  const currentTab: Ref<string> = ref("table");
   const searchResult: Ref<any[]> = ref([]);
-  const details: Ref<details> = ref({} as details);
   const previewData: Ref<any> = ref({
     modelInfo: {
       model: {
@@ -140,25 +100,43 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   // List Query data
   let searchKeyword: string = "";
   const from: Ref<number> = ref<number>(0);
-  const size: Ref<number> = ref<number>(100);
+  const size: Ref<number> = ref<number>(20);
   const sortKey: Ref<string> = ref<string>("totalVotes");
   const sortKeyOpt: Ref<string> = ref<string>("desc");
 
   const getSearchListQuery = () => {
+    const queryFilter = getQueryFilter();
     const params: any = {
       // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
       // eslint 예외 제외 코드 추가.
       // eslint-disable-next-line id-length
       q: searchKeyword,
-      index: "table_search_index,container_search_index",
+      index: currentTab.value, // table or storage or model -> tab
       from: from.value,
       size: size.value,
       deleted: false,
-      query_filter: JSON.stringify(getQueryFilter()),
+      query_filter: JSON.stringify(queryFilter),
       sort_field: sortKey.value,
       sort_order: sortKeyOpt.value,
+      trino_query: JSON.stringify(getTrinoQuery(queryFilter)),
     };
     return new URLSearchParams(params);
+  };
+  const getTrinoQuery = (queryFilter: QueryFilter) => {
+    // query 구현을 backend 에서 하려니까 코드가 너무 복잡해져서 front 에 해서 넘겨서 처리.
+    const trinoFilter: QueryFilter = {
+      query: {
+        bool: {
+          must: [{ bool: { should: [{ term: { serviceType: "trino" } }] } }],
+        },
+      },
+    };
+    const trinoMustArray = trinoFilter.query.bool.must;
+    queryFilter.query.bool.must = _.concat(
+      queryFilter.query.bool.must,
+      trinoMustArray,
+    );
+    return queryFilter;
   };
   // METHODS
   const getSearchListAPI = async () => {
@@ -170,7 +148,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
    */
   const addSearchList = async () => {
     const { data, totalCount } = await getSearchListAPI();
-    searchResult.value = searchResult.value.concat(data);
+    searchResult.value = searchResult.value.concat(data[currentTab.value]);
     searchResultLength.value = totalCount;
   };
 
@@ -179,7 +157,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
    */
   const getSearchList = async () => {
     const { data, totalCount } = await getSearchListAPI();
-    searchResult.value = data;
+    searchResult.value = data[currentTab.value];
     searchResultLength.value = totalCount;
   };
   const getFilters = async () => {
@@ -215,13 +193,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     (filters.value as Filters)[filterKey].data = data[filterKey];
   };
 
-  const getSearchDetails = async () => {
-    // TODO: 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
-    details.value = detailsJson;
-  };
-
-  const getPreviewData = async () => {
-    const fqn: string = "df2.test_db.test_db.Active_Employees"; // 실제 fqn 값을 여기에 설정합니다.
+  const getPreviewData = async (fqn: string) => {
     const data: any = await $api(`/api/search/preview/${fqn}`);
     previewData.value = data.data;
   };
@@ -294,9 +266,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     size,
     sortKey,
     sortKeyOpt,
+    currentTab,
     filters,
     searchResult,
-    details,
     previewData,
     selectedFilters,
     viewType,
@@ -307,7 +279,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getSearchList,
     getFilter,
     getFilters,
-    getSearchDetails,
     getPreviewData,
     setSortInfo,
     setScrollFrom,

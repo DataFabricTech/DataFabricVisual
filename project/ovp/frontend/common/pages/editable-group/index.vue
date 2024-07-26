@@ -8,7 +8,6 @@
           <label class="hidden-text" for="title-modify">text input 입력</label>
           <input
             v-model="newData.title"
-            @input="editInput($event)"
             placeholder="모델 설명에 대한 영역입니다."
             required
             id="title-modify"
@@ -27,7 +26,6 @@
           <textarea
             class="textarea"
             v-model="newData.description"
-            @input="editInput($event)"
             placeholder="모델 설명에 대한 영역입니다."
             required
             id="textarea-modify"
@@ -76,12 +74,6 @@ const defaultData = ref<Record<string, any>>({
 // 변경될 데이터
 const newData = ref<Record<string, any>>(_.cloneDeep(defaultData.value));
 
-const editInput = (event: Event) => {
-  // Input event
-  const target = event.target as HTMLInputElement | HTMLTextAreaElement;
-  console.log(`event: ${target.value}`);
-};
-
 const editIconClick = () => {
   // Button Click event
   console.log(`icon event`);
@@ -89,7 +81,7 @@ const editIconClick = () => {
 
 const editCancel = () => {
   // Cancel event
-  newData.value = defaultData.value;
+  newData.value = _.cloneDeep(defaultData.value);
   console.log(`cancel event`);
 };
 
@@ -99,7 +91,6 @@ const editDone = () => {
 
   defaultData.value = _.cloneDeep(newData.value);
 
-  // TODO: [개발] 적용/완료 버튼 클릭 시 API 전달 필요
   console.log("defaultData", defaultData.value);
   console.log("newData: ", newData.value);
 };

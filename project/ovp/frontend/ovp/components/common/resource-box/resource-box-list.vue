@@ -50,13 +50,14 @@ const props = withDefaults(defineProps<ResourceBoxListProps>(), {
 });
 
 const emit = defineEmits<{
-  (e: "previewClick", id: string | number): void;
+  (e: "previewClick", data: object): void;
   (e: "modelNmClick", data: object): void;
   (e: "checkedValueChanged", ids: any[]): void;
 }>();
-const previewClick = (id: string | number) => {
+const previewClick = (data: object) => {
+  const { id } = data as { id: string };
   selectedResourceBoxId.value = id;
-  emit("previewClick", id);
+  emit("previewClick", data);
 };
 const modelNmClick = (data: object) => {
   emit("modelNmClick", data);

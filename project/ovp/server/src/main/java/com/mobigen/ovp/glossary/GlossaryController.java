@@ -50,10 +50,10 @@ public class GlossaryController {
      * 용어 사전 삭제
      * @param id
      */
-    @ResponseJsonResult
+    @ResponseJsonResult(errorMessage = "Open-metadata 용어 사전 삭제 오류")
     @DeleteMapping("/{id}")
-    public void deleteGlossary(@PathVariable UUID id) {
-        glossaryService.deleteGlossary(id);
+    public Object deleteGlossary(@PathVariable UUID id) throws Exception {
+        return glossaryService.deleteGlossary(id);
     }
 
     /**
@@ -83,10 +83,10 @@ public class GlossaryController {
      * 용어 삭제
      * @param id
      */
-    @ResponseJsonResult
+    @ResponseJsonResult(errorMessage = "Open-metadata 용어 삭제 오류")
     @DeleteMapping("/terms/{id}")
-    public void deleteGlossaryTerm(@PathVariable UUID id) {
-        glossaryService.deleteGlossaryTerm(id);
+    public Object deleteGlossaryTerm(@PathVariable UUID id) throws Exception {
+        return glossaryService.deleteGlossaryTerm(id);
     }
 
     /**

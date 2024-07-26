@@ -5,6 +5,7 @@ import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivityResponse;
 import com.mobigen.ovp.glossary.client.dto.glossary.GlossaryResponse;
 import com.mobigen.ovp.glossary.client.dto.terms.GlossaryTermsResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -43,7 +44,7 @@ public interface GlossaryClient {
      * @return
      */
     @DeleteMapping("/glossaries/{id}")
-    void deleteGlossary(@PathVariable UUID id,
+    ResponseEntity<Void> deleteGlossary(@PathVariable UUID id,
                         @RequestParam(defaultValue = "true") Boolean recursive,
                         @RequestParam(defaultValue = "true") Boolean hardDelete);
 
@@ -69,9 +70,10 @@ public interface GlossaryClient {
      * @param id
      * @param recursive
      * @param hardDelete
+     * @return
      */
     @DeleteMapping("/glossaryTerms/{id}")
-    void deleteGlossaryTerms(@PathVariable UUID id,
+    ResponseEntity<Void> deleteGlossaryTerms(@PathVariable UUID id,
                             @RequestParam(defaultValue = "true") boolean recursive,
                             @RequestParam(defaultValue = "true") boolean hardDelete);
 
