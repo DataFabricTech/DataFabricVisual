@@ -117,12 +117,13 @@ const previewClick = async (data: object) => {
 };
 
 const modelNmClick = (data: object) => {
-  const { id, fqn } = data as { id: string; fqn: string };
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
   router.push({
     path: "/portal/search/detail",
     query: {
       id: id,
       fqn: fqn,
+      type: type,
     },
   });
 };
@@ -156,18 +157,15 @@ const getDataCallback = async (count: number, loader: HTMLElement | null) => {
 };
 
 const tabOptions = [
-  { label: "테이블", value: "table" },
-  { label: "스토리지", value: "storage" },
-  { label: "융합모델", value: "model" },
+  { label: "테이블", value: "table", type: "table" },
+  { label: "스토리지", value: "storage", type: "storage" },
+  { label: "융합모델", value: "model", type: "model" },
 ];
 
 const currentTab = ref();
 currentTab.value = "table";
 
-function changeTab(item: number | string) {
-  currentTab.value = item;
-  console.log("item", item);
-}
+function changeTab(item: number | string) {}
 
 onMounted(async () => {
   // top-bar 에서 select box (sort) 값이 변경되면 목록을 조회하라는 코드가 구현되어 있는데,
