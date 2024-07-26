@@ -362,7 +362,7 @@
     </div>
   </div>
   <!--  TODO: Modal 카테고리 추가  -->
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModal">
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModal">
     <div class="modal modal-padding-0" style="width: 900px">
       <div class="modal-head">
         <div class="modal-head-text">
@@ -888,7 +888,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModalCollection">
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalCollection">
     <div class="modal modal-padding-0" style="width: 620px">
       <div class="modal-head">
         <div class="modal-head-text">
@@ -1286,7 +1286,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModalLog">
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalLog">
     <div class="modal modal-padding-16" style="width: 620px">
       <div class="modal-head">
         <div class="modal-head-text">

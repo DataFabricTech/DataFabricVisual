@@ -171,7 +171,7 @@
     </div>
   </div>
   <!--  TODO: Modal 분류 추가-->
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModalClas">
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalClas">
     <div class="modal modal-padding-16" style="width: 480px">
       <div class="modal-head">
         <div class="modal-head-text">
@@ -240,7 +240,7 @@
     </div>
   </div>
   <!--  TODO: Modal 태그 추가-->
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModalTag">
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalTag">
     <div class="modal modal-padding-16" style="width: 480px">
       <div class="modal-head">
         <div class="modal-head-text">
@@ -309,7 +309,7 @@
     </div>
   </div>
   <!--  TODO: Modal 태그 수정-->
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModalTagModify">
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalTagModify">
     <div class="modal modal-padding-16" style="width: 480px">
       <div class="modal-head">
         <div class="modal-head-text">

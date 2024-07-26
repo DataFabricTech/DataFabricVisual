@@ -243,7 +243,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModalPwChange">
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalPwChange">
     <div class="modal modal-padding-16" style="width:350px">
       <div class="modal-head">
         <div class="modal-head-text">

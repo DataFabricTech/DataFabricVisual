@@ -1056,7 +1056,7 @@
     </div>
   </div>
   <!--  TODO: Modal 용어사전 추가-->
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModalDic">
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalDic">
     <div class="modal modal-padding-16" style="width: 480px">
       <div class="modal-head">
         <div class="modal-head-text">
@@ -1146,7 +1146,7 @@
     </div>
   </div>
   <!--  TODO: Modal 용어 추가-->
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModal">
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModal">
     <div class="modal modal-padding-16" style="width: 480px">
       <div class="modal-head">
         <div class="modal-head-text">

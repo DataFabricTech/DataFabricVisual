@@ -461,7 +461,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModalSave">
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalSave">
     <div class="modal modal-padding-16" style="width:480px">
       <div class="modal-head">
         <div class="modal-head-text">
@@ -551,7 +551,7 @@
       </div>
     </div>
   </div>
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModalAdd">
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalAdd">
     <div class="modal" style="width:900px">
       <div class="modal-head">
         <div class="modal-head-text">
