@@ -108,6 +108,12 @@ export const loginStore = defineStore("login", () => {
       body: param,
     });
   }
+  async function sendMailForPasswordReset(param: any) {
+    return $api(`/api/auth/login/password/send-mail`, {
+      method: "POST",
+      body: param,
+    });
+  }
 
   return {
     isloginSuccess,
@@ -121,5 +127,6 @@ export const loginStore = defineStore("login", () => {
     getLinkValidState,
     signUpUser,
     checkDuplicateEmail,
+    sendMailForPasswordReset,
   };
 });
