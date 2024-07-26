@@ -38,13 +38,15 @@ public class MyPageService {
         Map<String, Object> openMetaUserInfo = myPageClient.getUserInfo(fqn, params);
 
         Map<String, Object> newUserInfo = new HashMap<>();
-        newUserInfo.put("id", openMetaUserInfo.get("id"));
+        String id = (String) openMetaUserInfo.get("id");
+
+        newUserInfo.put("id", id);
         newUserInfo.put("description", openMetaUserInfo.get("description"));
         newUserInfo.put("displayName", openMetaUserInfo.get("displayName"));
         newUserInfo.put("email", openMetaUserInfo.get("email"));
         newUserInfo.put("isAdmin", openMetaUserInfo.get("isAdmin"));
 
-        Optional<UserEntity> dbUserinfo = (Optional<UserEntity>) userService.getUserInfo((String) openMetaUserInfo.get("id"));
+        Optional<UserEntity> dbUserinfo = (Optional<UserEntity>) userService.getUserInfo(id);
         UserEntity userEntity = dbUserinfo.get();
         newUserInfo.put("role", userEntity.getUserRole().toString());
 
