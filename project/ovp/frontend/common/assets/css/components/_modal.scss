@@ -2,6 +2,7 @@
   background-color: rgba(36, 46, 61, 0.35);
 }
 
+// 퍼블리싱 전용 스타일
 .modal-fixed {
   @include flex;
   z-index: 8001;
