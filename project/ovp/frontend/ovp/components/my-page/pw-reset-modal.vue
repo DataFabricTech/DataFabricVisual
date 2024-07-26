@@ -1,8 +1,4 @@
 <template>
-  <!--  <div class="modal-overlay vfm&#45;&#45;fixed vfm&#45;&#45;inset" v-if="showModalPwChange">-->
-  <!--    -->
-  <!--    -->
-  <!--  </div>-->
   <Modal
     title="비밀번호 변경"
     class="modal modal-padding-16"
@@ -13,7 +9,9 @@
     contentTransition="vfm-fade"
     :clickToClose="true"
     :escToClose="true"
-    :width="350"
+    :width="700"
+    :height="600"
+    :top="700"
     :lockScroll="false"
     swipeToClose="none"
     @cancel="onCancel"
@@ -21,63 +19,7 @@
   >
     <template v-slot:body>
       <div class="form form-lg">
-        <div class="form-body">
-          <div class="form-item">
-            <label for="new-password" class="form-label">
-              신규 비밀번호
-              <span class="required">*</span>
-            </label>
-            <div class="form-detail">
-              <div class="search-input">
-                <input
-                  id="new-password"
-                  class="text-input text-input-lg"
-                  type="password"
-                  placeholder="비밀번호 입력"
-                />
-                <!-- TODO : [개발] 비밀번호 보기와 보기해제 on/off 필요(hidden-text와 아이콘 체인지)-->
-                <button
-                  class="search-input-action-button button button-neutral-ghost button-sm"
-                  type="button"
-                >
-                  <span class="hidden-text">비밀번호 보기 해제</span>
-                  <svg-icon class="button-icon" name="eye-hide"></svg-icon>
-                </button>
-              </div>
-              <div class="notification notification-sm notification-error">
-                <svg-icon class="notification-icon" name="error"></svg-icon>
-                <p class="notification-detail">안내문구 출력</p>
-              </div>
-            </div>
-          </div>
-          <div class="form-item">
-            <label for="password-check" class="form-label">
-              비밀번호 확인
-              <span class="required">*</span>
-            </label>
-            <div class="form-detail">
-              <div class="search-input">
-                <input
-                  id="password-check"
-                  class="text-input text-input-lg"
-                  type="password"
-                  placeholder="비밀번호 확인"
-                />
-                <button
-                  class="search-input-action-button button button-neutral-ghost button-sm"
-                  type="button"
-                >
-                  <span class="hidden-text">비밀번호 보기</span>
-                  <svg-icon class="button-icon" name="eye"></svg-icon>
-                </button>
-              </div>
-              <div class="notification notification-sm notification-error">
-                <svg-icon class="notification-icon" name="error"></svg-icon>
-                <p class="notification-detail">안내문구 출력</p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <pw-reset :composition="composition"></pw-reset>
       </div>
     </template>
   </Modal>
@@ -85,13 +27,16 @@
 
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
+import { loginStore } from "~/store/login";
+import { PasswordComposition } from "~/components/login/PasswordComposition";
+import { useNuxtApp } from "nuxt/app";
+import { useRouter } from "#vue-router";
 
-const onCancel = () => {
-  console.log("onCancel");
-};
-const onConfirm = () => {
-  console.log("onConfirm");
-};
+const composition = PasswordComposition();
+const router = useRouter();
+const store = loginStore();
+const { $vfm } = useNuxtApp();
+const { getPwChangeInMypage } = store;
 
 const props = defineProps({
   modalId: {
@@ -99,6 +44,33 @@ const props = defineProps({
     required: true,
   },
 });
+
+const onCancel = () => {
+  composition.resetValues();
+  $vfm.close(props.modalId);
+};
+
+const onConfirm = async () => {
+  if (!composition.isValidatePwReset()) {
+    return;
+  }
+  console.log("onSubmit");
+  // TODO: 화면에 저장된 로그인 사용자 정보를 가져와야함. -> user store 개발 이후 적용 필요
+  let param = composition.getPwResetParam();
+  param = {
+    ...param,
+    username: "js06m12",
+  };
+
+  const result = await getPwChangeInMypage(param);
+  if (result.result === 1) {
+    alert("비밀번호가 변경되었습니다.");
+    onCancel();
+    router.push("/portal/login");
+  } else {
+    alert(result.errorMessage.value);
+  }
+};
 </script>
 
 <style scoped></style>
