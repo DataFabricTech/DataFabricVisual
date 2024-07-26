@@ -70,19 +70,12 @@
           <div class="no-result" style="display: none">
             <div class="notification">
               <svg-icon class="notification-icon" name="info"></svg-icon>
-              <p class="notification-detail">선택된 데이터 모델이 없습니다.</p>
+              <p class="notification-detail">등록된 서비스가 없습니다.</p>
             </div>
           </div>
         </div>
-        <!-- 결과 없을 시 no-result 표시 / 기본 .work-page로 컨텐츠 표시 -->
-        <div class="no-result" style="display: none">
-          <div class="notification">
-            <svg-icon class="notification-icon" name="info"></svg-icon>
-            <p class="notification-detail">등록된 정보가 없습니다.</p>
-          </div>
-        </div>
       </div>
-      <div class="work-page">
+      <div class="work-page" >
         <div class="l-top-bar">
           <div class="h-group gap-2">
             <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
@@ -369,6 +362,13 @@
             </div>
           </div>
           <!-- 연결정보 탭 끝 -->
+        </div>
+      </div>
+      <!-- 결과 없을 시 no-result 표시 / 기본 .work-page로 컨텐츠 표시 -->
+      <div class="no-result" style="display: none">
+        <div class="notification">
+          <svg-icon class="notification-icon" name="info"></svg-icon>
+          <p class="notification-detail">등록된 서비스가 없습니다.</p>
         </div>
       </div>
     </div>
