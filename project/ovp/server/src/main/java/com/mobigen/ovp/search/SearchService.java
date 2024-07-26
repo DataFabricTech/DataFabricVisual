@@ -1,5 +1,7 @@
 package com.mobigen.ovp.search;
 
+import com.mobigen.ovp.common.ModelConvertUtil;
+import com.mobigen.ovp.common.entity.ModelIndex;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +14,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
 public class SearchService {
     private final SearchClient searchClient;
     private final TablesClient tablesClient;
+    private final ModelConvertUtil modelConvertUtil;
 
     private Map<String, Object> convertAggregations(Map<String, Object> response) {
         Map<String, Object> aggregations = (Map<String, Object>) response.get("aggregations");
@@ -109,7 +111,7 @@ public class SearchService {
             if (totalObj != null) {
                 resultMap.put("totalCount", totalObj.get("value"));
             }
-            resultMap.put("data", convertSearchData(data.get("hits")));
+            resultMap.put("data", modelConvertUtil.convertSearchDataList(data.get("hits")));
         }
 
         return resultMap;
@@ -120,7 +122,7 @@ public class SearchService {
         if (!params.getFirst("index").equals("table")) {
             params.set("size", "0");
         }
-        params.set("index", "table_search_index");
+        params.set("index", ModelIndex.table.name());
         return getList(params);
     }
 
@@ -128,7 +130,7 @@ public class SearchService {
         if (!params.getFirst("index").equals("storage")) {
             params.set("size", "0");
         }
-        params.set("index", "container_search_index");
+        params.set("index", ModelIndex.container.name());
         return getList(params);
     }
 
@@ -136,7 +138,7 @@ public class SearchService {
         if (!params.getFirst("index").equals("model")) {
             params.set("size", "0");
         }
-        params.set("index", "all");
+        params.set("index", ModelIndex.all.name());
         params.set("query_filter", params.getFirst("trino_query").toString());
         params.remove("trino_query");
 
@@ -144,45 +146,7 @@ public class SearchService {
         return getList(params);
     }
 
-    private Object convertSearchData(Object hits) {
-        List<Map<String, Object>> list = (List<Map<String, Object>>) hits;
-        List<Map<String, Object>> modifiedList = list.stream().map(hit -> {
-            String index = hit.get("_index").toString().equals("table_search_index") ? "table" : "storage";
-            if (hit.containsKey("_source")) {
-                Map<String, Object> source = (Map<String, Object>) hit.get("_source");
-                Map<String, Object> modifiedSource = new HashMap<>();
 
-                modifiedSource.put("type", source.get("serviceType").toString().toLowerCase().equals("trino") ? "model" : "table");
-
-                modifiedSource.put("id", source.get("id"));
-                // TODO : ICON 처리 완료되면 아래 코드 수정 필요
-                modifiedSource.put("serviceIcon", "");
-                modifiedSource.put("depth", source.get("fullyQualifiedName").toString().split("\\."));
-                modifiedSource.put("firModelNm", source.get("name"));
-                modifiedSource.put("modelNm", source.get("displayName"));
-                modifiedSource.put("modelDesc", source.get("description"));
-                modifiedSource.put("fqn", source.get("fullyQualifiedName"));
-
-                String owner = "";
-                if (source.get("owner") != null) {
-                    Map<String, Object> onwerObj = (Map<String, Object>) source.get("owner");
-                    owner = onwerObj.get("displayName").toString();
-                }
-                modifiedSource.put("owner", owner);
-
-                String domain = "";
-                if (source.get("domain") != null) {
-                    Map<String, Object> domainObj = (Map<String, Object>) source.get("domain");
-                    domain = domainObj.get("displayName").toString();
-                }
-                modifiedSource.put("category", domain);
-
-                return modifiedSource;
-            }
-            return null;
-        }).filter(Objects::nonNull).collect(Collectors.toList());
-        return modifiedList;
-    }
 
     /**
      * Open Metadata - 탐색 목록 미리보기

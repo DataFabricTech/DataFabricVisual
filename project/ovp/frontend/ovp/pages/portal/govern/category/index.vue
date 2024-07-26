@@ -26,7 +26,7 @@
         </div>
         <div class="tree p-3">
           <tree-vue
-            :items="items"
+            :items="categories"
             :isCheckable="false"
             :hideGuideLines="false"
             :firExpandAll="true"
@@ -52,9 +52,9 @@
           </div>
           <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
           <div class="editable-group">
-            <lable class="hidden-text" for="title-modify"
+            <label class="hidden-text" for="title-modify"
               >카테고리 이름 수정
-            </lable>
+            </label>
             <input id="title-modify" class="text-input w-4/5" />
             <div class="h-group gap-1">
               <button class="button button-neutral-stroke" type="button">
@@ -84,9 +84,9 @@
           </div>
           <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
           <div class="editable-group">
-            <lable class="hidden-text" for="description-modify"
+            <label class="hidden-text" for="description-modify"
               >카테고리 설명 수정
-            </lable>
+            </label>
             <textarea
               id="description-modify"
               class="textarea"
@@ -145,128 +145,15 @@
             <div class="l-resource-box l-split mt-3">
               <div class="data-page">
                 <div class="data-list">
-                  <!-- TODO: [개발] resource-box 시작 컴포넌트화  -->
-                  <div
-                    class="resource-box resource-box is-resource-box-selected"
-                  >
-                    <div class="resource-box-function">
-                      <div class="resource-box-model">
-                        <div class="checkbox">
-                          <input
-                            type="checkbox"
-                            id="checkbox-menu-2"
-                            class="checkbox-input"
-                          />
-                          <label for="checkbox-menu-2" class="checkbox-label">
-                          </label>
-                        </div>
-                        <img src="" alt="" />
-                        <div class="breadcrumb">
-                          <ul class="breadcrumb-list">
-                            <li class="breadcrumb-item">
-                              <span class="breadcrumb-link">1depth</span>
-                            </li>
-                            <li class="breadcrumb-item">
-                              <span class="breadcrumb-link">2depth</span>
-                            </li>
-                            <li class="breadcrumb-item is-breadcrumb-selected">
-                              <span class="breadcrumb-link">데이터 모델</span>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    <a href="#" class="editable-group-title" title="상세 보기"
-                      >세종특별자치시 상하수도요금표</a
-                    >
-                    <span class="editable-group-desc"
-                      >한국교통안전공단에서 교통카드를 이용한 대중교통 사용시
-                      1회 이용요금 평균을 조사한 결과
-                      입니다.한국교통안전공단에서 교통카드를 이용한 대중교통
-                      사용시 1회 이용요금 평균을 조사한 결과
-                      입니다한국교통안전공단에서 교통카드를 이용한 대중교통
-                      사용시 1회 이용요금 평균을 조사한 결과
-                      입니다한국교통안전공단에서 교통카드를 이용한 대중교통
-                      사용시 1회 이용요금 평균을 조사한 결과
-                      입니다한국교통안전공단에서 교통카드를 이용한 대중교통
-                      사용시 1회 이용요금 평균을 조사한 결과
-                      입니다한국교통안전공단에서 교통카드를 이용한 대중교통
-                      사용시 1회 이용요금 평균을 조사한 결과
-                      입니다한국교통안전공단에서 교통카드를 이용한 대중교통
-                      사용시 1회 이용요금 평균을 조사한 결과 입니다</span
-                    >
-                    <div class="resource-box-info">
-                      <dl class="resource-box-list">
-                        <dt>소유자</dt>
-                        <dd>Owner</dd>
-                      </dl>
-                      <dl class="resource-box-list">
-                        <dt>카테고리</dt>
-                        <dd>Domain</dd>
-                      </dl>
-                    </div>
-                  </div>
-                  <!-- resource-box 끝 -->
-                  <!-- resource-box 시작 -->
-                  <div class="resource-box" v-for="card in 9" :key="card">
-                    <div class="resource-box-function">
-                      <div class="resource-box-model">
-                        <div class="checkbox">
-                          <input
-                            type="checkbox"
-                            id="checkbox-menu-3"
-                            class="checkbox-input"
-                          />
-                          <label for="checkbox-menu-3" class="checkbox-label">
-                          </label>
-                        </div>
-                        <img src="" alt="" />
-                        <div class="breadcrumb">
-                          <ul class="breadcrumb-list">
-                            <li class="breadcrumb-item">
-                              <span class="breadcrumb-text">1depth</span>
-                            </li>
-                            <li class="breadcrumb-item">
-                              <span class="breadcrumb-text">2depth</span>
-                            </li>
-                            <li class="breadcrumb-item is-breadcrumb-selected">
-                              <span class="breadcrumb-text">데이터 모델</span>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                    <a href="#" class="editable-group-title" title="상세 보기"
-                      >세종특별자치시 상하수도요금표</a
-                    >
-                    <span class="editable-group-desc"
-                      >한국교통안전공단에서 교통카드를 이용한 대중교통 사용시
-                      1회 이용요금 평균을 조사한 결과
-                      입니다.한국교통안전공단에서 교통카드를 이용한 대중교통
-                      사용시 1회 이용요금 평균을 조사한 결과
-                      입니다한국교통안전공단에서 교통카드를 이용한 대중교통
-                      사용시 1회 이용요금 평균을 조사한 결과
-                      입니다한국교통안전공단에서 교통카드를 이용한 대중교통
-                      사용시 1회 이용요금 평균을 조사한 결과
-                      입니다한국교통안전공단에서 교통카드를 이용한 대중교통
-                      사용시 1회 이용요금 평균을 조사한 결과
-                      입니다한국교통안전공단에서 교통카드를 이용한 대중교통
-                      사용시 1회 이용요금 평균을 조사한 결과
-                      입니다한국교통안전공단에서 교통카드를 이용한 대중교통
-                      사용시 1회 이용요금 평균을 조사한 결과 입니다</span
-                    >
-                    <div class="resource-box-info">
-                      <dl class="resource-box-list">
-                        <dt>소유자</dt>
-                        <dd>Owner</dd>
-                      </dl>
-                      <dl class="resource-box-list">
-                        <dt>카테고리</dt>
-                        <dd>Domain</dd>
-                      </dl>
-                    </div>
-                  </div>
-                  <!-- resource-box 끝 -->
+                  <resource-box-list
+                    :data-list="modelList"
+                    :use-list-checkbox="true"
+                    :show-owner="true"
+                    :show-category="true"
+                    :is-box-selected-style="false"
+                    @previewClick="previewClick"
+                    @modelNmClick="modelNmClick"
+                  />
                 </div>
               </div>
               <div class="preview">
@@ -432,122 +319,15 @@
 import TreeVue from "@extends/tree/Tree.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
+import { storeToRefs } from "pinia";
+import { useGovernCategoryStore } from "~/store/governance/Category";
+const categoryStore = useGovernCategoryStore();
+
+const { getCategories, getModelByCategoryId } = categoryStore;
+const { categories, modelList } = storeToRefs(categoryStore);
+
 const showModal = ref(false);
 
-const items: any[] = [
-  {
-    id: "58615558-f39c-46d9-b5f3-d7884b1e25dd",
-    name: "카테고리 01",
-    order: 1,
-    desc: "카테고리 01 설명",
-    parentId: "root",
-    expanded: false,
-    selected: false,
-    disabled: false,
-    children: [],
-  },
-  {
-    id: "19b89e77-6a1c-4214-8a86-433878949b74",
-    name: "카테고리 02",
-    order: 2,
-    desc: "카테고리 02 설명",
-    parentId: "root",
-    expanded: false,
-    selected: false,
-    disabled: false,
-    children: [
-      {
-        id: "c111b158-47cb-419c-a6b1-0a29eab162b9",
-        name: "카테고리 02 - 01",
-        order: 1,
-        desc: "카테고리 02 - 01 설명",
-        parentId: "19b89e77-6a1c-4214-8a86-433878949b74",
-        expanded: false,
-        selected: false,
-        disabled: false,
-        children: [],
-      },
-      {
-        id: "f96f792a-5f55-46a0-ab29-586a221afa2f",
-        name: "카테고리 02 - 02",
-        order: 2,
-        desc: "카테고리 02 - 02 설명",
-        parentId: "19b89e77-6a1c-4214-8a86-433878949b74",
-        expanded: false,
-        selected: false,
-        disabled: false,
-        children: [],
-      },
-      {
-        id: "76b2bda2-31a3-4f7d-927a-c2ddd6354741",
-        name: "카테고리 02 - 03",
-        order: 3,
-        desc: "카테고리 02 - 03 설명",
-        parentId: "19b89e77-6a1c-4214-8a86-433878949b74",
-        expanded: false,
-        selected: false,
-        disabled: false,
-        children: [
-          {
-            id: "868928fc-4be3-46a3-8f07-95b516a59b92",
-            name: "카테고리 02 - 03 - 01",
-            order: 1,
-            desc: "카테고리 02 - 03 - 01 설명",
-            expanded: false,
-            selected: false,
-            disabled: false,
-            children: [],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: "3b738522-3f7b-4e0e-9457-fdbfaab11524",
-    name: "카테고리 03",
-    order: 3,
-    desc: "카테고리 03 설명",
-    parentId: "root",
-    expanded: false,
-    selected: false,
-    disabled: false,
-    children: [],
-  },
-  {
-    id: "e65fa255-98d6-4b5c-ac9e-b517e235ab07",
-    name: "카테고리 04",
-    order: 4,
-    desc: "카테고리 04 설명",
-    parentId: "root",
-    expanded: false,
-    selected: false,
-    disabled: false,
-    children: [],
-  },
-  {
-    id: "6fb83657-2a41-4100-8193-5df10cce6e9e",
-    name: "카테고리 05",
-    order: 5,
-    desc: "카테고리 05 설명",
-    parentId: "root",
-    expanded: false,
-    selected: false,
-    disabled: false,
-    children: [
-      {
-        id: "4911b731-8573-4b74-a082-4cb7aa9a0c2f",
-        name: "카테고리 05 - 01",
-        order: 1,
-        desc: "카테고리 05 - 01 설명",
-        parentId: "6fb83657-2a41-4100-8193-5df10cce6e9e",
-        expanded: false,
-        selected: false,
-        disabled: false,
-        children: [],
-      },
-    ],
-  },
-];
 const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
   id: "",
   name: "",
@@ -561,6 +341,9 @@ const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
 });
 const onNodeClicked = (node: TreeViewItem) => {
   selectedNode.value = node;
+  // 선택한 노드 기준 모델 목록을 조회한다.
+  // TODO : [개발] 카테고리 중 최 하위 카테고리가 아닌 경우 모델목록 조회하지 않음.
+  getModelByCategoryId(node.id);
 };
 const addSibling = (newNode: TreeViewItem) => {
   // 형제 노드 추가
@@ -582,15 +365,18 @@ const dropValidator = (
   console.log(`drop validator`);
   console.log(`선택한 노드 ${JSON.stringify(thisNode)}`);
   console.log(`타겟 노드 ${JSON.stringify(targetNode)}`);
-  console.log(`타겟 노드 ${JSON.stringify(newNode)}`);
+  console.log(`갱신에 사용할 노드 데이터  ${JSON.stringify(newNode)}`);
+  // TODO : [개발] 갱신에 사용할 노드 데이터는 '타겟노드' 의 'parentId'를 수정 처리한 노드로 데이터 수정시 사용함.
 
   let isValid = false;
   // 조건 1: targetNode 에 데이터 모델이 설정되어 있으면 drop 불가능
-  // TODO : targetNode 기준 데이터 모델 설정 여부 조회하는 API 호출
+  // TODO : [개발] targetNode 기준 데이터 모델 설정 여부 조회하는 API 호출
 
   // 조건 2: thisNode에 데이터 모델이 설정되어 있으면 targetNode 는 하위 노드일때만 가능.
-  // TODO : thisNode 기준 데이터 모델 설정 여부 조회하는 API 호출 -> 2-1
+  // TODO : [개발] thisNode 기준 데이터 모델 설정 여부 조회하는 API 호출 -> 2-1
   // TODO : 2-1 에서 thisNode에 데이터 모델이 설정되어 있는 경우, targetNode.children 에 값이 없는 노드여야 함.
+
+  // TODO : [개발] 이전 형제노드들, 새 형제노드들 order 갱신 처리 해줘야함.
 
   // 조건 만족시
   isValid = true;
@@ -600,6 +386,16 @@ const dropValidator = (
 
   return isValid;
 };
+
+const previewClick = async (data: object) => {
+  console.log("previewClick");
+};
+
+const modelNmClick = (data: object) => {
+  console.log("modelClick");
+};
+
+await getCategories();
 </script>
 
 <style scoped></style>
