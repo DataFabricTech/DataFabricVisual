@@ -2,7 +2,20 @@
   <div class="section-top-bar">
     <data-filter :data="filters"></data-filter>
   </div>
-  <div class="section-contents">
+  <div class="section-top-bar section-top-bar-tab">
+    <Tab
+      class="tab-line"
+      :data="tabOptions"
+      :label-key="'label'"
+      :value-key="'value'"
+      :current-item="currentTab"
+      :current-item-type="'value'"
+      :use-tab-contents="false"
+      @change="changeTab"
+    >
+    </Tab>
+  </div>
+  <div class="section-contents overflow-auto">
     <top-bar></top-bar>
     <div class="l-split mt-3">
       <div class="data-page" style="position: relative">
@@ -17,7 +30,6 @@
             @modelNmClick="modelNmClick"
           />
           <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
-          <!--                TODO: [퍼블리싱] loader UI 컴포넌트 추가 및 로딩 위치 검토 필요 -->
           <div
             id="loader"
             style="
@@ -34,7 +46,7 @@
               color: #333;
             "
           >
-            loader
+            <Loading class="loader-lg" :hide-text="false"></Loading>
           </div>
         </div>
         <div class="data-list" v-if="viewType === 'graphView'">
@@ -52,10 +64,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useSearchCommonStore } from "@/store/search/common";
 import { IntersectionObserverHandler } from "@/utils/intersection-observer";
+import Loading from "@base/loading/Loading.vue";
+import Tab from "@extends/tab/Tab.vue";
 
 import TopBar from "./top-bar.vue";
 import { useRouter } from "nuxt/app";
@@ -103,12 +117,14 @@ const previewClick = async (data: object) => {
 };
 
 const modelNmClick = (data: object) => {
-  const { id, fqn } = data as { id: string; fqn: string };
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
   router.push({
     path: "/portal/search/detail",
     query: {
+      type: type,
       id: id,
       fqn: fqn,
+      type: type,
     },
   });
 };
@@ -140,6 +156,17 @@ const getDataCallback = async (count: number, loader: HTMLElement | null) => {
     loader.style.display = "none";
   }
 };
+
+const tabOptions = [
+  { label: "테이블", value: "table", type: "table" },
+  { label: "스토리지", value: "storage", type: "storage" },
+  { label: "융합모델", value: "model", type: "model" },
+];
+
+const currentTab = ref();
+currentTab.value = "table";
+
+function changeTab(item: number | string) {}
 
 onMounted(async () => {
   // top-bar 에서 select box (sort) 값이 변경되면 목록을 조회하라는 코드가 구현되어 있는데,
