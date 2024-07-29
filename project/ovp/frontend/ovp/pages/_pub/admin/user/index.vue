@@ -22,7 +22,7 @@
         사용자 추가
       </button>
     </div>
-    <table class="table table-align-center">
+    <table class="table">
       <colgroup>
         <col style="width: 15%" />
         <col style="width: 15%" />
@@ -30,16 +30,16 @@
         <col style="width: 15%" />
       </colgroup>
       <tr>
-        <th>사용자 이름</th>
-        <th>역할</th>
-        <th class="align-left">설명</th>
-        <th>관리</th>
+        <th class="align-center">사용자 이름</th>
+        <th class="align-center">역할</th>
+        <th>설명</th>
+        <th class="align-center">관리</th>
       </tr>
       <tr>
         <td>
           <a href="" class="link-button link-button link-button-underline">홍길동</a>
         </td>
-        <td>사용자</td>
+        <td class="align-center">사용자</td>
         <td class="align-left">사용자에 대한 설명 입니다.</td>
         <td>
           <div class="button-group">
@@ -53,7 +53,7 @@
         <td>
           <a href="" class="link-button link-button link-button-underline">홍길동</a>
         </td>
-        <td>관리자</td>
+        <td class="align-center">관리자</td>
         <td class="align-left">사용자에 대한 설명 입니다.</td>
         <td>
           <div class="button-group">
@@ -67,7 +67,7 @@
         <td>
           <a href="" class="link-button link-button link-button-underline">홍길동</a>
         </td>
-        <td>사용자</td>
+        <td class="align-center">사용자</td>
         <td class="align-left">사용자에 대한 설명 입니다.</td>
         <td>
           <div class="button-group">
@@ -81,7 +81,7 @@
         <td>
           <a href="" class="link-button link-button link-button-underline">홍길동</a>
         </td>
-        <td>관리자</td>
+        <td class="align-center">관리자</td>
         <td class="align-left">사용자에 대한 설명 입니다.</td>
         <td>
           <div class="button-group">
@@ -93,8 +93,8 @@
       </tr>
     </table>
   </div>
-  <!--  TODO: Modal 카테고리 추가  -->
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModal">
+  <!--  TODO: Modal 카테고리 추가  width:480px height:516px-->
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModal">
     <div class="modal modal-padding-16" style="width: 480px">
       <div class="modal-head">
         <div class="modal-head-text">

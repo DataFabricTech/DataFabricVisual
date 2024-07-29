@@ -22,6 +22,11 @@ $input-group-classes: text-input-group, search-input;
       transform: translateY(calc(-50% + 10px));
     }
 
+    label.hidden-text ~ .button,
+    &:not(:has(label)) .button {
+      transform: translateY(-50%);
+    }
+
     &:has(.text-input-icon) {
       .text-input {
         padding-left: $spacing-32;
