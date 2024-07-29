@@ -12,9 +12,10 @@ interface MenuSearchTagComposition extends MenuSearchTypeCompositionImpl {
 export function MenuSearchTagComposition(
   props: MenuSearchTypeProps,
   applyData: (value: MenuSearchItemImpl | MenuSearchItemImpl[]) => void,
-  openMenuSearch: () => void
+  openMenuSearch: () => void,
+  panelClosed: () => void
 ): MenuSearchTagComposition {
-  const composition = MenuSearchTypeComposition(props, applyData, openMenuSearch);
+  const composition = MenuSearchTypeComposition(props, applyData, openMenuSearch, panelClosed);
 
   /**
    * Tag 삭제

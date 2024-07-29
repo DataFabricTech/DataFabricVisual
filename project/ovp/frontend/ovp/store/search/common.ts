@@ -1,5 +1,18 @@
 import { IntersectionObserverHandler } from "~/utils/intersection-observer";
+
 import _ from "lodash";
+
+export const FILTER_KEYS = {
+  CATEGORY: "domains",
+  OWNER: "owner.displayName.keyword",
+  TAGS: "tags.tagFQN",
+  SERVICE: "service.displayName.keyword",
+  SERVICE_TYPE: "serviceType",
+  DATABASE: "database.displayName.keyword",
+  DATABASE_SCHEMA: "databaseSchema.displayName.keyword",
+  COLUMNS: "columns.name.keyword",
+  TABLE_TYPE: "tableType",
+} as const;
 
 export interface Filter {
   text: string;
@@ -7,15 +20,15 @@ export interface Filter {
 }
 
 export interface Filters {
-  domains: Filter;
-  "owner.displayName.keyword": Filter;
-  "tags.tagFQN": Filter;
-  "service.displayName.keyword": Filter;
-  serviceType: Filter;
-  "database.displayName.keyword": Filter;
-  "databaseSchema.displayName.keyword": Filter;
-  "columns.name.keyword": Filter;
-  tableType: Filter;
+  [FILTER_KEYS.CATEGORY]: Filter;
+  [FILTER_KEYS.OWNER]: Filter;
+  [FILTER_KEYS.TAGS]: Filter;
+  [FILTER_KEYS.SERVICE]: Filter;
+  [FILTER_KEYS.SERVICE_TYPE]: Filter;
+  [FILTER_KEYS.DATABASE]: Filter;
+  [FILTER_KEYS.DATABASE_SCHEMA]: Filter;
+  [FILTER_KEYS.COLUMNS]: Filter;
+  [FILTER_KEYS.TABLE_TYPE]: Filter;
 
   [key: string]: { text: string; data: any[] }; // 인덱스 시그니처 추가
 }
@@ -54,27 +67,15 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
     return {
-      domains: { text: "카테고리", data: [] },
-      "owner.displayName.keyword": { text: "소유자", data: [] },
-      "tags.tagFQN": { text: "태그", data: [] },
-      "service.displayName.keyword": {
-        text: "서비스",
-        data: [],
-      },
-      serviceType: {
-        text: "서비스타입",
-        data: [],
-      },
-      "database.displayName.keyword": {
-        text: "데이터베이스",
-        data: [],
-      },
-      "databaseSchema.displayName.keyword": {
-        text: "스키마",
-        data: [],
-      },
-      "columns.name.keyword": { text: "컬럼", data: [] },
-      tableType: { text: "테이블타입", data: [] },
+      [FILTER_KEYS.CATEGORY]: { text: "카테고리", data: [] },
+      [FILTER_KEYS.OWNER]: { text: "소유자", data: [] },
+      [FILTER_KEYS.TAGS]: { text: "태그", data: [] },
+      [FILTER_KEYS.SERVICE]: { text: "서비스", data: [] },
+      [FILTER_KEYS.SERVICE_TYPE]: { text: "서비스타입", data: [] },
+      [FILTER_KEYS.DATABASE]: { text: "데이터베이스", data: [] },
+      [FILTER_KEYS.DATABASE_SCHEMA]: { text: "스키마", data: [] },
+      [FILTER_KEYS.COLUMNS]: { text: "컬럼", data: [] },
+      [FILTER_KEYS.TABLE_TYPE]: { text: "테이블타입", data: [] },
     };
   };
   // filter 정보
@@ -174,8 +175,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const getFilter = async (filterKey: string) => {
     // TODO : 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
     // const data = await $api(`/api/search/filter?filterKey=${filterKey}`);
+
     const data: any = {
-      serviceType: [
+      "owner.displayName.keyword": [
         {
           key: "N_mariadb",
         },
@@ -187,6 +189,20 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
         },
         {
           key: "N_glue",
+        },
+      ],
+      domains: [
+        {
+          key: "N_category1",
+        },
+        {
+          key: "N_category2",
+        },
+        {
+          key: "N_category3",
+        },
+        {
+          key: "N_category",
         },
       ],
     };
