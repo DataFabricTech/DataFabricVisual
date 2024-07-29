@@ -68,9 +68,7 @@
     @include search-input-size($size: 28px, $search-icon-size: sm);
   }
 
-  label.hidden-text ~ .button {
-    transform: translateY(-50%);
-  }
+
 
   .required {
     color: $error-500;

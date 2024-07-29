@@ -3,7 +3,7 @@
     <h1>Vue Final Modal</h1>
     <button @click="openModal">Open Modal</button>
     <button @click="openModal2">Open Modal2</button>
-
+    <!-- TODO: [개발] width값 적용 안되고 있음. 확인 필요 -->
     <Modal
       :content-transition="'vfm-slide-right'"
       :esc-to-close="true"
@@ -12,7 +12,7 @@
       :overlay-transition="'vfm-slide-down'"
       :title="'모달 1번 테스트'"
       :top="800"
-      :width="200"
+      :width="1000"
       @cancel="closeModal1"
       @confirm="closeModal1"
     >

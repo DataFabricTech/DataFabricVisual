@@ -3,7 +3,13 @@
     <h1>메뉴 선택 - Editable Group 컴포넌트 예시</h1>
     <div class="v-group gap-[20px]">
       <!--      예시-1. text input-->
-      <editable-group :editable="true" @editCancel="editCancel" @editDone="editDone" @editIcon="editIconClick">
+      <editable-group
+        compKey="title"
+        :editable="true"
+        @editCancel="editCancel"
+        @editDone="editDone"
+        @editIcon="editIconClick"
+      >
         <template #edit-slot>
           <label class="hidden-text" for="title-modify">text input 입력</label>
           <input
@@ -20,7 +26,13 @@
       </editable-group>
 
       <!--      예시-2. textarea -->
-      <editable-group :editable="true" @editCancel="editCancel" @editDone="editDone" @editIcon="editIconClick">
+      <editable-group
+        compKey="description"
+        :editable="true"
+        @editCancel="editCancel"
+        @editDone="editDone"
+        @editIcon="editIconClick"
+      >
         <template #edit-slot>
           <label class="hidden-text" for="textarea-modify">textarea 입력</label>
           <textarea
@@ -37,7 +49,13 @@
       </editable-group>
 
       <!--      예시-3. checkbox -->
-      <editable-group :editable="true" @editCancel="editCancel" @editDone="editDone" @editIcon="editIconClick">
+      <editable-group
+        compKey="check"
+        :editable="true"
+        @editCancel="editCancel"
+        @editDone="editDone"
+        @editIcon="editIconClick"
+      >
         <template #edit-slot>
           <div class="h-group">
             <div class="switch">
@@ -79,17 +97,17 @@ const editIconClick = () => {
   console.log(`icon event`);
 };
 
-const editCancel = () => {
+const editCancel = (key: string) => {
   // Cancel event
-  newData.value = _.cloneDeep(defaultData.value);
+  newData.value[key] = defaultData.value[key];
   console.log(`cancel event`);
 };
 
-const editDone = () => {
+const editDone = (key: string) => {
   // Done event
   console.log(`done event`);
 
-  defaultData.value = _.cloneDeep(newData.value);
+  defaultData.value[key] = newData.value[key];
 
   console.log("defaultData", defaultData.value);
   console.log("newData: ", newData.value);

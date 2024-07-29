@@ -57,6 +57,7 @@ const emit = defineEmits<{
   (e: "multiple-change", value: MenuSearchItemImpl[]): void;
   (e: "open"): void;
   (e: "cancel"): void;
+  (e: "close"): void;
 }>();
 
 const applyData: (value: MenuSearchItemImpl | MenuSearchItemImpl[]) => void = (value) => {
@@ -72,9 +73,13 @@ const openMenuSearch: () => void = () => {
     emit("open");
   }
 };
+// panel 이 닫힐때 동작함.
+const panelClosed = () => {
+  emit("close");
+};
 
 const { isMenuSearchShow, selectedListData, onCancel, onDeleteTag, onClickOpenMenuSearch, changeMenuSearch } =
-  MenuSearchTagComposition(props, applyData, openMenuSearch);
+  MenuSearchTagComposition(props, applyData, openMenuSearch, panelClosed);
 </script>
 
 <style scoped></style>

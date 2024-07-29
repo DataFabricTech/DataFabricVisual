@@ -1,13 +1,13 @@
 <template>
   <div class="section-contents bg-white">
     <div class="interaction-buttons">
-      <button class="button button-neutral-stroke" @click="showModalPwChange = true">
+      <button class="button button-neutral-stroke" @click="showModalPwChange">
         비밀번호 변경
       </button>
     </div>
     <div class="profile-box">
       <span class="profile-avatar">
-        <img class="profile-img" alt="프로필 이미지"/>
+        <img class="profile-img" alt="프로필 이미지" />
       </span>
       <div class="profile-group">
         <div class="editable-group">
@@ -19,13 +19,21 @@
         </div>
         <!-- TODO : [개발] 수정시 인풋 활성화-->
         <div class="editable-group">
-          <lable class="hidden-text" for="profile-name-modify">프로필 이름 입력</lable>
+          <label class="hidden-text" for="profile-name-modify"
+            >프로필 이름 입력</label
+          >
           <input id="profile-name-modify" class="text-input w-1/4" />
           <div class="h-group gap-2 shrink-0">
-            <button class="button button-neutral-lighter button-sm" type="button">
+            <button
+              class="button button-neutral-lighter button-sm"
+              type="button"
+            >
               취소
             </button>
-            <button class="button button-primary-lighter button-sm" type="button">
+            <button
+              class="button button-primary-lighter button-sm"
+              type="button"
+            >
               완료
             </button>
           </div>
@@ -39,7 +47,10 @@
           <div>
             <div class="editable-group">
               <span>사용자</span>
-              <button class="button button-neutral-ghost button-sm" type="button">
+              <button
+                class="button button-neutral-ghost button-sm"
+                type="button"
+              >
                 <span class="hidden-text">수정</span>
                 <svg-icon class="button-icon" name="pen"></svg-icon>
               </button>
@@ -63,12 +74,14 @@
           <span class="editable-group-desc">계정에 대한 설명영역입니다.</span>
           <button class="button button-neutral-ghost button-sm" type="button">
             <span class="hidden-text">수정</span>
-            <svg-icon class="button-icon " name="pen"></svg-icon>
+            <svg-icon class="button-icon" name="pen"></svg-icon>
           </button>
         </div>
         <!-- TODO : [개발] 수정시 textarea 활성화-->
         <div class="editable-group w-2/4">
-          <lable class="hidden-text" for="profile-description-modify">계정 설명 수정</lable>
+          <label class="hidden-text" for="profile-description-modify"
+            >계정 설명 수정</label
+          >
           <textarea id="profile-description-modify" class="textarea"></textarea>
           <div class="h-group gap-1">
             <button class="button button-neutral-stroke" type="button">
@@ -97,9 +110,16 @@
       <div class="tab-contents">
         <div class="search-input search-input-lg w-96">
           <label class="hidden-text" for="text-input-example-4">label</label>
-          <input id="text-input-example-4" class="text-input" placeholder="검색어를 입력하세요." />
+          <input
+            id="text-input-example-4"
+            class="text-input"
+            placeholder="검색어를 입력하세요."
+          />
           <svg-icon class="text-input-icon" name="search"></svg-icon>
-          <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+          <button
+            class="search-input-action-button button button-neutral-ghost button-sm"
+            type="button"
+          >
             <span class="hidden-text">지우기</span>
             <svg-icon class="button-icon" name="close"></svg-icon>
           </button>
@@ -126,8 +146,23 @@
                     </div>
                   </div>
                 </div>
-                <a href="#" class="editable-group-title" title="상세 보기">세종특별자치시 상하수도요금표</a>
-                <span class="editable-group-desc">한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다</span>
+                <a href="#" class="editable-group-title" title="상세 보기"
+                  >세종특별자치시 상하수도요금표</a
+                >
+                <span class="editable-group-desc"
+                  >한국교통안전공단에서 교통카드를 이용한 대중교통 사용시 1회
+                  이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서
+                  교통카드를 이용한 대중교통 사용시 1회 이용요금 평균을 조사한
+                  결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통
+                  사용시 1회 이용요금 평균을 조사한 결과
+                  입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시
+                  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서
+                  교통카드를 이용한 대중교통 사용시 1회 이용요금 평균을 조사한
+                  결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통
+                  사용시 1회 이용요금 평균을 조사한 결과
+                  입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시
+                  1회 이용요금 평균을 조사한 결과 입니다</span
+                >
                 <div class="resource-box-info">
                   <dl class="resource-box-list">
                     <dt>소유자</dt>
@@ -150,11 +185,10 @@
             </div>
             <div class="preview-contents">
               <div class="preview-item">
-                <div class="preview-title">
-                  세종특별자치시 상하수도요금표
-                </div>
+                <div class="preview-title">세종특별자치시 상하수도요금표</div>
                 <div class="preview-desc">
-                  한국교통안전공단에서 교통카드를 이용한 대중교통 사용시 1회 이용요금 평균을 조사한 결과 입니다.
+                  한국교통안전공단에서 교통카드를 이용한 대중교통 사용시 1회
+                  이용요금 평균을 조사한 결과 입니다.
                 </div>
                 <table>
                   <colgroup>
@@ -172,19 +206,19 @@
                 </table>
               </div>
               <div class="preview-item">
-                <div class="preview-title">
-                  태그
-                </div>
+                <div class="preview-title">태그</div>
                 <div class="preview-group">
-                  <div class="tag tag-primary tag-sm" v-for="tag in 8" :key="tag">
+                  <div
+                    class="tag tag-primary tag-sm"
+                    v-for="tag in 8"
+                    :key="tag"
+                  >
                     <span class="tag-text">tag</span>
                   </div>
                 </div>
               </div>
               <div class="preview-item">
-                <div class="preview-title">
-                  용어
-                </div>
+                <div class="preview-title">용어</div>
                 <div class="preview-group">
                   <div class="tag tag-primary tag-sm">
                     <span class="tag-text">관련 용어</span>
@@ -192,17 +226,11 @@
                 </div>
               </div>
               <div class="preview-item">
-                <div class="preview-title">
-                  상세 설명
-                </div>
-                <div class="preview-desc">
-                  상세 설명을 하는 구간입니다.
-                </div>
+                <div class="preview-title">상세 설명</div>
+                <div class="preview-desc">상세 설명을 하는 구간입니다.</div>
               </div>
               <div class="preview-item">
-                <div class="preview-title">
-                  URL
-                </div>
+                <div class="preview-title">URL</div>
                 <a href="#" class="preview-link">
                   https://sandbox.open-metadata.org/callback#state=49e9675588d3414f9585fb455e
                 </a>
@@ -215,18 +243,14 @@
                       <span class="schema-title">payment_id</span>
                       <span class="schema-subtitle">(INT)</span>
                     </div>
-                    <div class="schema-desc">
-                      schema description
-                    </div>
+                    <div class="schema-desc">schema description</div>
                   </div>
                   <div class="preview-schema">
                     <div class="h-group gap-1">
                       <span class="schema-title">payment_id</span>
                       <span class="schema-subtitle">(INT)</span>
                     </div>
-                    <div class="schema-desc">
-                      schema description
-                    </div>
+                    <div class="schema-desc">schema description</div>
                   </div>
                 </div>
               </div>
@@ -243,85 +267,18 @@
       </div>
     </div>
   </div>
-<!--TODO: Modal 비밀번호 변경 width:350px height332px -->
-  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalPwChange">
-    <div class="modal modal-padding-16" style="width:350px">
-      <div class="modal-head">
-        <div class="modal-head-text">
-          <span class="modal-head-title">비밀번호 변경</span>
-        </div>
-        <button class="button link-button button-sm" type="button" @click="showModalPwChange = false">
-          <span class="hidden-text">닫기</span>
-          <svg-icon class="button-icon" name="close"></svg-icon>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form form-lg">
-          <div class="form-body">
-            <div class="form-item">
-              <label for="new-password" class="form-label">
-                신규 비밀번호
-                <span class="required">*</span>
-              </label>
-              <div class="form-detail">
-                <div class="search-input">
-                <input id="new-password" class="text-input text-input-lg" type="password" placeholder="비밀번호 입력" />
-                  <!-- TODO : [개발] 비밀번호 보기와 보기해제 on/off 필요(hidden-text와 아이콘 체인지)-->
-                  <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
-                    <span class="hidden-text">비밀번호 보기 해제</span>
-                    <svg-icon class="button-icon" name="eye-hide"></svg-icon>
-                  </button>
-                </div>
-                <div class="notification notification-sm notification-error">
-                  <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">안내문구 출력</p>
-                </div>
-              </div>
-            </div>
-            <div class="form-item">
-              <label for="password-check" class="form-label">
-                비밀번호 확인
-                <span class="required">*</span>
-              </label>
-              <div class="form-detail">
-                <div class="search-input">
-                  <input id="password-check" class="text-input text-input-lg" type="password" placeholder="비밀번호 확인" />
-                  <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
-                    <span class="hidden-text">비밀번호 보기</span>
-                    <svg-icon class="button-icon" name="eye"></svg-icon>
-                  </button>
-                </div>
-                  <div class="notification notification-sm notification-error">
-                  <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">안내문구 출력</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-foot">
-        <div class="modal-foot-group">
-          <button class="button button-neutral-ghost button-lg">취소</button>
-          <button class="button button-primary button-lg">저장</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
+  <PwResetModal :modal-id="PW_RESET_MODAL_ID"></PwResetModal>
 </template>
 
-<script>
-export default {
-  name: "my-page",
-  data() {
-    return {
-      showModalPwChange: false
-    };
-  }
+<script setup lang="ts">
+import { useNuxtApp } from "nuxt/app";
+const { $vfm } = useNuxtApp();
+const PW_RESET_MODAL_ID: string = "pw-reset-modal";
+
+const showModalPwChange: () => void = () => {
+  console.log(PW_RESET_MODAL_ID);
+  $vfm.open(PW_RESET_MODAL_ID);
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

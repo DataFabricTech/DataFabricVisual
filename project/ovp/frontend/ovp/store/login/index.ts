@@ -67,6 +67,19 @@ export const loginStore = defineStore("login", () => {
       });
   }
 
+  async function getPwChangeInMypage(param: any) {
+    await getPublicKey();
+    const rsa = new RSA();
+    rsa.setKey(publicKey);
+    param.newPassword = rsa.encrypt(param.newPassword);
+    param.confirmPassword = rsa.encrypt(param.confirmPassword);
+
+    return $api(`/api/auth/login/password/change`, {
+      method: "POST",
+      body: param,
+    });
+  }
+
   async function getLinkValidState(id: any) {
     await $api(`/api/auth/login/password/change/check-id/${id}`)
       .then((res: any) => {
@@ -95,6 +108,12 @@ export const loginStore = defineStore("login", () => {
       body: param,
     });
   }
+  async function sendMailForPasswordReset(param: any) {
+    return $api(`/api/auth/login/password/send-mail`, {
+      method: "POST",
+      body: param,
+    });
+  }
 
   return {
     isloginSuccess,
@@ -104,8 +123,10 @@ export const loginStore = defineStore("login", () => {
     getPublicKey,
     getLoginSuccessState,
     getPwChangeSuccessState,
+    getPwChangeInMypage,
     getLinkValidState,
     signUpUser,
     checkDuplicateEmail,
+    sendMailForPasswordReset,
   };
 });

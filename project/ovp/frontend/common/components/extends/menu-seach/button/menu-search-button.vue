@@ -1,26 +1,26 @@
 <template>
-  <client-only>
-    <div class="select select-clean select-sm">
-      <button class="select-button" @click="onClickOpenMenuSearch">
+  <div class="select select-clean select-sm">
+    <button class="select-button" @click="onClickOpenMenuSearch">
+      <slot name="button-text-slot">
         <span class="select-button-title">{{ props.title }}</span>
         <div class="badge badge-primary-lighter" v-if="selectedListData.length > 0">
           <p class="badge-text">{{ selectedListData.length }}</p>
         </div>
-        <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
-      </button>
-      <menu-search
-        :is-show="isMenuSearchShow"
-        :data="props.data"
-        :selected-items="selectedListData"
-        :is-multi="props.isMulti"
-        :label-key="props.labelKey"
-        :value-key="props.valueKey"
-        @cancel="onCancel"
-        @multiple-change="changeMenuSearch"
-        @single-change="changeMenuSearch"
-      ></menu-search>
-    </div>
-  </client-only>
+      </slot>
+      <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
+    </button>
+    <menu-search
+      :is-show="isMenuSearchShow"
+      :data="props.data"
+      :selected-items="selectedListData"
+      :is-multi="props.isMulti"
+      :label-key="props.labelKey"
+      :value-key="props.valueKey"
+      @cancel="onCancel"
+      @multiple-change="changeMenuSearch"
+      @single-change="changeMenuSearch"
+    ></menu-search>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -54,6 +54,7 @@ const emit = defineEmits<{
   (e: "multiple-change", value: MenuSearchItemImpl[]): void;
   (e: "open"): void;
   (e: "cancel"): void;
+  (e: "close"): void;
 }>();
 
 const applyData: (value: MenuSearchItemImpl | MenuSearchItemImpl[]) => void = (value) => {
@@ -70,8 +71,13 @@ const openMenuSearch: () => void = () => {
   }
 };
 
+// panel 이 닫힐때 동작함.
+const panelClosed = () => {
+  emit("close");
+};
+
 const { isMenuSearchShow, selectedListData, onCancel, onClickOpenMenuSearch, changeMenuSearch } =
-  MenuSearchTypeComposition(props, applyData, openMenuSearch);
+  MenuSearchTypeComposition(props, applyData, openMenuSearch, panelClosed);
 </script>
 
 <style scoped></style>
