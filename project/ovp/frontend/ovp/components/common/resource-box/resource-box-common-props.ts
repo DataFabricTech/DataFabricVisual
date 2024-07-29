@@ -17,6 +17,7 @@ export interface ResourceBoxCommonProps {
   showCategory?: boolean;
   useFirModelNm?: boolean;
   useDataNmLink?: boolean;
+  useListCheckbox?: boolean;
 
   class?: any;
 }
