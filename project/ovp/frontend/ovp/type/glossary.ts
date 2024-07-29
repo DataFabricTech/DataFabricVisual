@@ -16,12 +16,15 @@ export interface Term {
   name: string;
 }
 export interface Activity {
+  cardStyle: string;
   createdBy: string;
   headerMessage: string;
   id: string;
   message: string;
   updatedAt: string;
   updatedBy: string;
+  fieldOperation: string;
+  entitySpecificInfo: object;
 }
 export interface Owner {
   id: string;
@@ -29,9 +32,4 @@ export interface Owner {
   name: string;
   fullyQualifiedName: string;
   displayName: string;
-}
-export interface JsonPatchOperation {
-  op: string;
-  path: string;
-  value?: string | object;
 }
