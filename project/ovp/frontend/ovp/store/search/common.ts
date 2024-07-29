@@ -1,5 +1,4 @@
-import { IntersectionObserverHandler } from "~/utils/intersection-observer";
-
+import { usePagingStore } from "~/store/common/paging";
 import _ from "lodash";
 
 export const FILTER_KEYS = {
@@ -61,8 +60,9 @@ export interface QueryFilter {
 
 export const useSearchCommonStore = defineStore("searchCommon", () => {
   const { $api } = useNuxtApp();
-
-  let intersectionHandler: IntersectionObserverHandler | null = null;
+  const pagingStore = usePagingStore();
+  const { setFrom, updateIntersectionHandler } = pagingStore;
+  const { from, size } = storeToRefs(pagingStore);
 
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
@@ -100,8 +100,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
 
   // List Query data
   let searchKeyword: string = "";
-  const from: Ref<number> = ref<number>(0);
-  const size: Ref<number> = ref<number>(20);
   const sortKey: Ref<string> = ref<string>("totalVotes");
   const sortKeyOpt: Ref<string> = ref<string>("desc");
 
@@ -250,7 +248,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
    * 목록을 '갱신'하는 경우, from 값을 항상 0으로 주어야 하기 때문에 fn 하나로 묶어서 처리.
    */
   const resetReloadList = () => {
-    setScrollFrom(0);
+    setFrom(0);
     updateIntersectionHandler(0);
     getSearchList();
   };
@@ -259,27 +257,11 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     sortKey.value = items.shift() ?? ""; // undefined 오류 예외처리
     sortKeyOpt.value = items.pop() ?? "";
   };
-  const setScrollFrom = (count: number) => {
-    from.value = count;
-  };
-  const updateIntersectionHandler = (count: number) => {
-    if (count < 1) {
-      if (intersectionHandler !== null) {
-        intersectionHandler.updateChangingInitialCount(from.value);
-        intersectionHandler.scrollToFirElement();
-      }
-    }
-  };
   const setSearchKeyword = (keyword: string) => {
     searchKeyword = keyword;
   };
-  const setIntersectionHandler = (ih: any) => {
-    intersectionHandler = ih;
-  };
 
   return {
-    from,
-    size,
     sortKey,
     sortKeyOpt,
     currentTab,
@@ -297,10 +279,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getFilters,
     getPreviewData,
     setSortInfo,
-    setScrollFrom,
     setSearchKeyword,
-    setIntersectionHandler,
     resetReloadList,
-    updateIntersectionHandler,
   };
 });
