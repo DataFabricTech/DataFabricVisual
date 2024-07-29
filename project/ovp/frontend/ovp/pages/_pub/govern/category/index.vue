@@ -124,7 +124,7 @@
                   </label>
                 </div>
                 <div class="h-group ml-auto gap-2">
-                  <button class="button button-secondary-stroke">카테고리 변경</button>
+                  <button class="button button-secondary-stroke" @click="showModalModelChange = true">카테고리 변경</button>
                   <button class="button button-secondary" @click="showModalModelAdd = true">데이터모델추가</button>
                 </div>
               </div>
@@ -643,6 +643,26 @@
       </div>
     </div>
   </div>
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalModelChange">
+    <div class="modal modal-padding-16" style="width:480px">
+      <div class="modal-head">
+        <div class="modal-head-text">
+          <span class="modal-head-title">카테고리 변경</span>
+        </div>
+        <button class="button link-button button-sm" type="button" @click="showModalModelChange = false">
+          <span class="hidden-text">닫기</span>
+          <svg-icon class="button-icon" name="close"></svg-icon>
+        </button>
+      </div>
+      <div class="modal-body"></div>
+      <div class="modal-foot">
+        <div class="modal-foot-group">
+          <button class="button button-neutral-ghost button-lg" @click="showModalModelChange = false">취소</button>
+          <button class="button button-primary button-lg">선택</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped></style>
@@ -656,7 +676,8 @@ export default defineComponent({
   data() {
     return {
       showModal: false,
-      showModalModelAdd: false
+      showModalModelAdd: false,
+      showModalModelChange: false
     };
   }
 });

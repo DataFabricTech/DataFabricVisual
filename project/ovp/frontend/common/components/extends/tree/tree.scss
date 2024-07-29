@@ -1,0 +1,114 @@
+.tree {
+  &-top-buttons {
+    @include flex($horizontal: flex-start);
+    gap: $spacing-8;
+    padding: $spacing-8;
+  }
+
+  &-item {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    color: $neutral-700;
+
+    &:hover {
+      .tree-item-buttons {
+        display: flex;
+      }
+    }
+  }
+
+  &-item-buttons {
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .selected-tree-item {
+    background: transparent;
+    color: $secondary-500;
+  }
+
+  .chevron-right {
+    width: 16px;
+    height: 16px;
+    color: $neutral-400;
+
+    &::after {
+      width: 0;
+      height: 0;
+      border-left: 3.53px solid transparent;
+      border-right: 3.53px solid transparent;
+      border-top: 4.1px solid;
+      border-bottom: none;
+      transform: rotate(-90deg);
+      right: 3px;
+      top: 4px;
+    }
+
+    &.rotate-90::after {
+      transform: rotateZ(0);
+    }
+  }
+
+  .root {
+    margin-left: 0 !important;
+  }
+
+  .nested {
+    margin-left: $spacing-12 !important;
+  }
+
+  .tree-item-node:has(> .tree-view-item + .node-child) {
+    .guide-line::before {
+      left: 0px; /* 위치 조정 */
+
+    }
+  }
+
+  .node-child {
+    padding: 0 0 0 $spacing-8;
+
+    .tree-item-node-parent {
+      .tree-item-node:not(:last-child) {
+        border-left: 1px solid $neutral-200;
+
+        &::before {
+          height: 8px;
+          border-left: 1px solid $neutral-200;
+        }
+      }
+      .tree-item-node:only-child > .tree-view-item > .guide-line:before {
+        top: -12px; /* 위치 조정 */
+        height: 18px;
+        border-left-style: solid;
+      }
+    }
+  }
+
+
+  .guide-line {
+    position: relative;
+    width: 12px;
+    height: 12px;
+    border: none;
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 16px;
+      border: 1px solid $neutral-200;
+      border-top: none;
+      border-right: none;
+      border-radius: 0 0 0 12px;
+      top: -9px; /* 위치 조정 */
+      left: -3px; /* 위치 조정 */
+    }
+  }
+}
+
+
+.tiny_horizontal_margin {
+  display: none;
+}
