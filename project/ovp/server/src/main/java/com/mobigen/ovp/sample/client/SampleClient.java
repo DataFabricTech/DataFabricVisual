@@ -1,15 +1,26 @@
 package com.mobigen.ovp.sample.client;
 
-import com.mobigen.framework.utility.restful.AutoRegisterApi;
-import org.springframework.web.service.annotation.GetExchange;
-import org.springframework.web.service.annotation.HttpExchange;
-import org.springframework.web.service.annotation.PostExchange;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
-@AutoRegisterApi
-@HttpExchange("https://jsonplaceholder.typicode.com/")
+import java.net.URI;
+import java.util.Map;
+
+@FeignClient(name = "SampleClient", url = "https://jsonplaceholder.typicode.com/")
 public interface SampleClient {
-    @GetExchange("/users")
-    Object getUsers();
-    @PostExchange("/asdf-asdfasdfasdfasdfa")
+    @GetMapping("/users")
+    Object getSampleApi();
+
+    @PostMapping("/test-error")
     Object getErrorApi();
+
+    @GetMapping("")
+    Object getDynamicAPI(URI baseUri);
+
+    // NOTE: consumes = "application/json-patch+json" 필수
+    @PatchMapping(value = "posts/1", consumes = "application/json-patch+json")
+    Object usePatchApi(@RequestBody Map<String, Object> params);
 }

@@ -46,11 +46,13 @@
                     <div class="element-group">
                       <div class="checkbox">
                         <input type="checkbox" id="checkbox" class="checkbox-input" />
-                        <label for="checkbox" class="checkbox-label"> label</label>
+                        <label for="checkbox" class="checkbox-label"> <span class="checkbox-text"> label </span></label>
                       </div>
                       <div class="checkbox">
                         <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
-                        <label for="checkbox2" class="checkbox-label"> label</label>
+                        <label for="checkbox2" class="checkbox-label">
+                          <span class="checkbox-text"> label </span></label
+                        >
                       </div>
                     </div>
                   </div>
@@ -108,11 +110,13 @@
                     <div class="element-group">
                       <div class="checkbox checkbox-sm">
                         <input type="checkbox" id="checkbox" class="checkbox-input" />
-                        <label for="checkbox" class="checkbox-label"> label</label>
+                        <label for="checkbox" class="checkbox-label"> <span class="checkbox-text"> label </span></label>
                       </div>
                       <div class="checkbox checkbox-sm">
                         <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
-                        <label for="checkbox2" class="checkbox-label"> label</label>
+                        <label for="checkbox2" class="checkbox-label">
+                          <span class="checkbox-text"> label </span></label
+                        >
                       </div>
                     </div>
                   </div>
@@ -184,11 +188,13 @@
                     <div class="element-group">
                       <div class="checkbox">
                         <input type="checkbox" id="checkbox" class="checkbox-input" />
-                        <label for="checkbox" class="checkbox-label"> label</label>
+                        <label for="checkbox" class="checkbox-label"> <span class="checkbox-text"> label </span></label>
                       </div>
                       <div class="checkbox">
                         <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
-                        <label for="checkbox2" class="checkbox-label"> label</label>
+                        <label for="checkbox2" class="checkbox-label">
+                          <span class="checkbox-text"> label </span></label
+                        >
                       </div>
                     </div>
                   </div>
@@ -246,11 +252,13 @@
                     <div class="element-group">
                       <div class="checkbox">
                         <input type="checkbox" id="checkbox" class="checkbox-input" />
-                        <label for="checkbox" class="checkbox-label"> label</label>
+                        <label for="checkbox" class="checkbox-label"> <span class="checkbox-text"> label </span></label>
                       </div>
                       <div class="checkbox">
                         <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
-                        <label for="checkbox2" class="checkbox-label"> label</label>
+                        <label for="checkbox2" class="checkbox-label">
+                          <span class="checkbox-text"> label </span></label
+                        >
                       </div>
                     </div>
                   </div>
@@ -308,11 +316,13 @@
                     <div class="element-group">
                       <div class="checkbox checkbox-sm">
                         <input type="checkbox" id="checkbox" class="checkbox-input" />
-                        <label for="checkbox" class="checkbox-label"> label</label>
+                        <label for="checkbox" class="checkbox-label"> <span class="checkbox-text"> label </span></label>
                       </div>
                       <div class="checkbox checkbox-sm">
                         <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
-                        <label for="checkbox2" class="checkbox-label"> label</label>
+                        <label for="checkbox2" class="checkbox-label">
+                          <span class="checkbox-text"> label </span></label
+                        >
                       </div>
                     </div>
                   </div>

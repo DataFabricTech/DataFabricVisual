@@ -1,0 +1,17 @@
+//동일 구조일때 타이틀 스타일 정의
+.l-top-bar {
+  .title {
+    @include font-size('16');
+    font-weight: 600;
+    color: $neutral-800;
+  }
+}
+
+.work-list,
+.work-page {
+  .title {
+    @include font-size('15');
+    font-weight: 600;
+    color: $neutral-600;
+  }
+}

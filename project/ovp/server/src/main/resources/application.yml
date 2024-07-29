@@ -25,8 +25,10 @@ spring:
     multipart:
       max-file-size: 1024MB
       max-request-size: 1024MB
+  jpa:
+    hibernate:
+      ddl-auto: validate
 
-  # H2 Console: /h2-console
   primary:
     datasource:
       hikari:
@@ -34,44 +36,38 @@ spring:
         maximum-pool-size: 10
         minimum-idle: 5
         pool-name: BaseHikariPool
-        jdbc-url: jdbc:h2:mem:testdb;MODE=MySQL;INIT=runscript from 'classpath:/config/h2_initialize.sql'
-        username: sa
-        password:
-        driver-class-name: org.h2.Driver
+        jdbc-url: jdbc:postgresql://192.168.105.26:5432/postgres?currentSchema=ovp
+        username: postgres
+        password: postgres
+        driver-class-name: org.postgresql.Driver
     hibernate:
       property:
-        "[hibernate.dialect]": org.hibernate.dialect.H2Dialect
+        "[hibernate.dialect]": org.hibernate.dialect.PostgreSQLDialect
         "[hibernate.show_sql]": true
         "[hibernate.format_sql]": true
         "[hibernate.hbm2ddl.auto]": none
         "[hibernate.cache.use_second_level_cache]": false
         "[hibernate.cache.use_query_cache]": false
         "[hibernate.globally_quoted_identifiers]": true
-  # 개발 서버 생성 시 수정
-#  primary:
-#    datasource:
-#      hikari:
-#        idle-timeout: 10000
-#        maximum-pool-size: 10
-#        minimum-idle: 5
-#        pool-name: BaseHikariPool
-#        jdbc-url: jdbc:postgresql://192.168.107.13:30002/postgres?currentSchema=idp
-#        username: root
-#        password: biris.manse
-#        driver-class-name: org.postgresql.Driver
-#    hibernate:
-#      property:
-#        "[hibernate.dialect]": org.hibernate.dialect.PostgreSQLDialect
-#        "[hibernate.show_sql]": true
-#        "[hibernate.format_sql]": true
-#        "[hibernate.hbm2ddl.auto]": none
-#        "[hibernate.cache.use_second_level_cache]": false
-#        "[hibernate.cache.use_query_cache]": false
-#        "[hibernate.globally_quoted_identifiers]": true
   h2:
     console:
       enabled: true
-
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: datafabric.test
+    password: ukpcbqzuqlpdmwpi # 개인 계정이므로 배포 시 변경 필요
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          debug: true
 logging:
   level:
     root: info
@@ -84,7 +80,7 @@ server:
     session:
       timeout: 7200
       cookie:
-        name: msf-session-id
+        name: ovp-session-id
     encoding:
       charset: UTF-8
     context-path: /
@@ -120,10 +116,10 @@ properties:
   framework:
     security:
       ignores: /css/**, /fonts/**, /img/**, /js/**, /favicon.ico
-      permit-alls: /**, /h2-console/**, /sample/public-key, /sample/authenticate, /error, /test, /api/**
+      permit-alls: /h2-console/**, /error, /test, /api/**, /api/auth/iag/**, /api/auth/login/**,  /api/auth/sign-up/** # /**, /h2-console/**,
       redirect-url: /
       iframe-option: disable #disable, same-origin, deny
-      csrf: true
+      csrf: false
       cors:
         pattern: /** #/auth/**
         allowed-origins: http://localhost:3300/ #"*" #http://server-name:port
@@ -132,13 +128,21 @@ properties:
         allow-credentials: true
       same-site: Lax #None, Lax, Strict
     token:
-      access-token: access_token
-      refresh-token: refresh_token
+      access-token: accessToken
+      refresh-token: refreshToken
       secret: jwt-secrect-b-iris # Keycloak "HS256" 알고리즘 secret 값
     route:
       locales: ko,en,zh,ja
     auth:
       rsa-enabled: true
     test:
-      username: root
-      password: "!Biris.test202"
+      username: admin
+      password: admin
+  ovp:
+    open-metadata-url: http://192.168.105.26:8585/api/v1
+    mail:
+      valid_time: 60
+      href: /api/email/pw-reset
+      redirect_url: /portal/login/pw-reset
+      redirect_error_url: /portal/error
+      title: "Open-Vdap-Platform  비밀번호 재 설정"

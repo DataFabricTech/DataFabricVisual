@@ -14,11 +14,16 @@ $input-group-classes: text-input-group, search-input;
     }
 
     .#{$group}-action-button {
-      @include z-index('float');
+      //@include z-index('float');
 
       position: absolute;
       right: 6px;
       top: 50%;
+      transform: translateY(calc(-50% + 10px));
+    }
+
+    label.hidden-text ~ .button,
+    &:not(:has(label)) .button {
       transform: translateY(-50%);
     }
 
@@ -67,4 +72,8 @@ $input-group-classes: text-input-group, search-input;
   }
 }
 
-
+.text-input-group {
+  display: flex;
+  width: 100%;
+  gap: $spacing-8;
+}

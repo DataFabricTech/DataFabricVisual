@@ -4,13 +4,13 @@ import { fileURLToPath } from "url";
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
+
   modules: [
     "@nuxtjs/tailwindcss",
     "@pinia/nuxt",
     "@nuxtjs/svg-sprite",
     "nuxt-lodash",
     "dayjs-nuxt",
-    '@pinia/nuxt',
   ],
 
   // runtime에서 설정된 정보를 조회 가능
@@ -19,11 +19,13 @@ export default defineNuxtConfig({
       baseUrl: `${process.env.VITE_BASE_URL}${process.env.VITE_CONTEXT_PATH}`,
     },
   },
+
   // dev 서버 설정
   devServer: {
     port: process.env.VITE_SERVER_PORT as unknown as number,
     url: `${process.env.VITE_BASE_URL}${process.env.VITE_CONTEXT_PATH}`,
   },
+
   app: {
     // context-path 설정
     //   baseURL: `${process.env.VITE_CONTEXT_PATH}`,
@@ -40,19 +42,21 @@ export default defineNuxtConfig({
       // noscript: []
     },
   },
+
   components: [
     {
       path: "~/components",
       pathPrefix: false,
     },
   ],
+
   alias: {
     // common 컴포넌트 별칭
     "@extends": fileURLToPath(
-      new URL("../common/components/extends", import.meta.url)
+      new URL("../common/components/extends", import.meta.url),
     ),
     "@base": fileURLToPath(
-      new URL("../common/components/base", import.meta.url)
+      new URL("../common/components/base", import.meta.url),
     ),
     // common 디자인 요소 별칭
     "@assets": fileURLToPath(new URL("../common/assets", import.meta.url)),
@@ -76,6 +80,8 @@ export default defineNuxtConfig({
   css: [
     "~/assets/css/main.scss",
     "vue-final-modal/style.css",
+    "ag-grid-community/dist/styles/ag-grid.css",
+    "ag-grid-community/dist/styles/ag-theme-alpine.css",
     // "~/assets/css/style.scss"
   ],
 
@@ -92,4 +98,6 @@ export default defineNuxtConfig({
       ["defineStore", "definePiniaStore"], // import { defineStore as definePiniaStore } from 'pinia'
     ],
   },
+
+  compatibilityDate: "2024-07-25",
 });

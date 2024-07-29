@@ -1,6 +1,7 @@
 .resource-box {
-  @include flex($direction:column, $vertical:flex-start);
+  @include flex($direction: column, $vertical: flex-start);
   @include box-shadow('sm');
+
   gap: $spacing-4;
   width: 100%;
   padding: $spacing-16;
@@ -10,13 +11,15 @@
   background: $neutral-0;
 
   &-function {
-    @include flex($horizontal:space-between);
+    @include flex($horizontal: space-between);
+
     width: 100%;
     margin-bottom: $spacing-12;
   }
 
   &-model {
     @include flex;
+
     gap: $spacing-8;
 
     & > img {
@@ -26,12 +29,15 @@
   }
 
   &-contents {
-    @include flex($direction:column, $vertical:flex-start);
+    @include flex($direction: column, $vertical: flex-start);
+
     gap: $spacing-4;
   }
 
-  &-title {
+  .editable-group-title {
+    @include ellipsis;
     @include font-size('18');
+
     font-weight: 600;
     color: $neutral-700;
 
@@ -39,25 +45,35 @@
       text-decoration: underline;
     }
   }
-
-  &-desc {
+  .editable-group-desc {
     @include ellipsis;
+
     width: 100%;
     color: $neutral-500;
   }
 
+
+  &-initial-name {
+    @include font-size('13');
+    color: $neutral-400;
+  }
+
   &-info {
     @include flex;
+
     gap: $spacing-24;
     margin-top: $spacing-12;
   }
 
   &-list {
     @include flex;
-    gap:$spacing-16;
-    color: $neutral-700;
 
-    dt{
+    gap: $spacing-16;
+    color: $neutral-700;
+    white-space: nowrap;
+
+    dt {
+      flex-shrink: 0;
       position: relative;
 
       &::after {
@@ -68,14 +84,58 @@
         transform: translateY(-50%);
         width: 1px;
         height: 10px;
-        background:$neutral-200;
+        background: $neutral-300;
       }
     }
   }
 
-  &:hover,
-  &.is-resource-box-selected{
+  &:hover {
+    border-color: $neutral-400;
+  }
+
+  &.is-resource-box-selected {
     border: 1px solid $secondary-500;
     box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
   }
+
+  &.is-resource-box-no-action {
+    cursor: default;
+    border-color: $neutral-200
+  }
+
+  &.is-resource-box-no-action.is-resource-box-selected {
+    border-color: $neutral-200;
+    @include box-shadow('sm');
+  }
 }
+
+.resource-box-full {
+  border-right: none;
+  border-left: none;
+  border-radius: 0;
+  border-top: 2px solid $secondary-500;
+  border-bottom: 1px solid $neutral-200;
+  box-shadow: none;
+  cursor: default;
+
+  &:hover {
+    border-right: none;
+    border-left: none;
+    border-top: 2px solid $secondary-500;
+    border-bottom: 1px solid $neutral-200;
+    box-shadow: none;
+  }
+
+  .editable-group-desc,
+  .editable-group-title {
+    white-space: normal;
+    display: inline;
+  }
+
+  .editable-group-title:hover {
+    text-decoration: none;
+  }
+}
+
+
+

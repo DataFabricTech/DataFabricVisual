@@ -122,7 +122,7 @@
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox-drop-3" class="checkbox-input" />
                       <label for="checkbox-drop-3" class="checkbox-label">
-                        Checkbox
+                        <span class="checkbox-text">Checkbox</span>
                         <span class="checkbox-subtext">(Optional)</span>
                       </label>
                     </div>
@@ -131,7 +131,7 @@
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox-drop-3" class="checkbox-input" />
                       <label for="checkbox-drop-3" class="checkbox-label">
-                        Checkbox
+                        <span class="checkbox-text"> Checkbox </span>
                         <span class="checkbox-subtext">(Optional)</span>
                       </label>
                     </div>
@@ -140,7 +140,7 @@
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox-drop-3" class="checkbox-input" />
                       <label for="checkbox-drop-3" class="checkbox-label">
-                        Checkbox
+                        <span class="checkbox-text"> Checkbox </span>
                         <span class="checkbox-subtext">(Optional)</span>
                       </label>
                     </div>
@@ -159,7 +159,7 @@
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox-drop-2" class="checkbox-input" />
                       <label for="checkbox-drop-2" class="checkbox-label">
-                        Checkbox
+                        <span class="checkbox-text"> Checkbox </span>
                         <span class="checkbox-subtext">(Optional)</span>
                       </label>
                     </div>
@@ -172,7 +172,7 @@
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox-drop-2" class="checkbox-input" />
                       <label for="checkbox-drop-2" class="checkbox-label">
-                        Checkbox
+                        <span class="checkbox-text"> Checkbox </span>
                         <span class="checkbox-subtext">(Optional)</span>
                       </label>
                     </div>
@@ -185,7 +185,7 @@
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox-drop-2" class="checkbox-input" />
                       <label for="checkbox-drop-2" class="checkbox-label">
-                        Checkbox
+                        <span class="checkbox-text"> Checkbox </span>
                         <span class="checkbox-subtext">(Optional)</span>
                       </label>
                     </div>
@@ -208,7 +208,7 @@
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox-drop-2" class="checkbox-input" />
                       <label for="checkbox-drop-2" class="checkbox-label">
-                        Checkbox
+                        <span class="checkbox-text"> Checkbox </span>
                       </label>
                     </div>
                   </li>
@@ -216,7 +216,7 @@
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox-drop-2" class="checkbox-input" />
                       <label for="checkbox-drop-2" class="checkbox-label">
-                        Checkbox
+                        <span class="checkbox-text"> Checkbox </span>
                       </label>
                     </div>
                   </li>
@@ -224,7 +224,7 @@
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox-drop-2" class="checkbox-input" />
                       <label for="checkbox-drop-2" class="checkbox-label">
-                        Checkbox
+                        <span class="checkbox-text"> Checkbox </span>
                       </label>
                     </div>
                   </li>
@@ -232,7 +232,7 @@
                     <div class="checkbox">
                       <input type="checkbox" id="checkbox-drop-2" class="checkbox-input" />
                       <label for="checkbox-drop-2" class="checkbox-label">
-                        Checkbox
+                        <span class="checkbox-text"> Checkbox </span>
                       </label>
                     </div>
                   </li>

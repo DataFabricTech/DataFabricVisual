@@ -9,13 +9,16 @@
     .menu-text {
       @include font-size($font-size);
     }
+
+    .menu-subtext {
+      @include font-size($font-size);
+    }
   }
 }
 
 .menu {
   @include menu-size;
 
-  z-index: auto;
   display: flex;
   flex-direction: column;
   height: fit-content;
@@ -34,13 +37,19 @@
   }
 
   &-head {
-    height: 100%;
+    flex-shrink: 0;
     padding: $spacing-8;
     border-bottom: 1px solid $neutral-200;
   }
 
   &-text {
     font-weight: 600;
+  }
+
+  &-subtext {
+    margin-left: $spacing-2;
+    font-weight: 400;
+    color: $neutral-500;
   }
 
   &-lg {

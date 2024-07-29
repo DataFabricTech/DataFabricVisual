@@ -15,7 +15,7 @@
         </button>
       </li>
     </ul>
-    <div class="tab-contents">
+    <div class="tab-contents" v-if="useTabContents">
       <slot :name="data[currentIndex][valueKey]"></slot>
     </div>
   </div>
@@ -34,6 +34,7 @@ const props = withDefaults(defineProps<TabProps>(), {
   iconKey: "icon",
   currentItem: 0,
   currentItemType: INDEX,
+  useTabContents: true,
   disabledList: () => [],
   tabSize: 16
 });
@@ -42,10 +43,8 @@ const emit = defineEmits<{ (e: "change", item: number | string): void }>();
 const onChange = (value: string | number): void => {
   emit("change", value);
 };
-const { data, labelKey, valueKey, currentIndex, move, isDisabled, changeCurrentTabClass } = TabComposition(
-  props,
-  onChange
-);
+const { data, labelKey, valueKey, currentIndex, useTabContents, move, isDisabled, changeCurrentTabClass } =
+  TabComposition(props, onChange);
 </script>
 
 <style lang="css"></style>

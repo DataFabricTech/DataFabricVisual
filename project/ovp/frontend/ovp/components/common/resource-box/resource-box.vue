@@ -1,0 +1,260 @@
+<template>
+  <div
+    :class="[
+      'resource-box',
+      props.class,
+      { 'is-resource-box-no-action': !props.usePrvBtn }, // preview 기능을 사용하지 않는 경우, 해당 class 를 추가해야함.
+    ]"
+    @click="previewClick"
+  >
+    <div class="resource-box-function">
+      <div class="resource-box-model">
+        <img :src="props.dataObj.serviceIcon" />
+        <div class="breadcrumb">
+          <ul class="breadcrumb-list">
+            <li
+              class="breadcrumb-item"
+              v-for="(item, index) in props.dataObj.depth"
+              :key="index"
+            >
+              <span class="breadcrumb-text">{{ item }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="resource-box-initial-name" v-if="useFirModelNm">
+      {{ props.dataObj.firModelNm }}
+    </div>
+
+    <editable-group
+      compKey="modelNm"
+      :editable="props.editable"
+      @editCancel="editCancel"
+      @editDone="editDone"
+    >
+      <template #edit-slot>
+        <label class="hidden-text" for="title-modify">모델 명</label>
+        <input
+          v-model="tempData.modelNm"
+          placeholder="모델명 대한 영역입니다."
+          required
+          id="title-modify"
+          class="text-input w-2/4"
+        />
+      </template>
+      <template #view-slot>
+        <template v-if="props.useDataNmLink">
+          <a
+            href="javascript:void(0);"
+            class="editable-group-title"
+            title="상세 보기"
+            @click.stop="modelNmClick"
+            >{{ newData.modelNm }}</a
+          >
+        </template>
+        <template v-else>
+          <h3 class="editable-group-title">{{ newData.modelNm }}</h3>
+        </template>
+      </template>
+    </editable-group>
+
+    <editable-group
+      compKey="modelDesc"
+      :editable="props.editable"
+      @editCancel="editCancel"
+      @editDone="editDone"
+    >
+      <template #edit-slot>
+        <label class="hidden-text" for="textarea-modify">모델 설명</label>
+        <textarea
+          class="textarea"
+          v-model="tempData.modelDesc"
+          placeholder="모델 설명에 대한 영역입니다."
+          required
+          id="textarea-modify"
+        ></textarea>
+      </template>
+      <template #view-slot>
+        <span class="editable-group-desc">{{ newData.modelDesc }}</span>
+      </template>
+    </editable-group>
+
+    <div class="resource-box-info">
+      <editable-group
+        :compKey="ownerKey"
+        :parent-edit-mode="isEditMode[ownerKey]"
+        :editable="props.editable"
+        :useEditButtons="false"
+        @editCancel="editCancel"
+        @editDone="editDone"
+        @editIcon="editIconClick(ownerKey, true)"
+      >
+        <template #edit-slot>
+          <dl v-if="props.showOwner" class="resource-box-list">
+            <dt>소유자</dt>
+            <dd>
+              <menu-search-button
+                v-on-click-outside="
+                  () => {
+                    updateIsEditMode(ownerKey, false);
+                  }
+                "
+                :data="filters[ownerKey].data"
+                :selected-items="{ key: newData[ownerKey] }"
+                label-key="key"
+                value-key="key"
+                :title="filters[ownerKey].text"
+                @single-change="handlerSingleChanged($event, ownerKey)"
+                @close="updateIsEditMode(ownerKey, false)"
+              >
+                <template #button-text-slot>
+                  <span class="select-button-title">{{
+                    newData[ownerKey]
+                  }}</span>
+                </template>
+              </menu-search-button>
+            </dd>
+          </dl>
+        </template>
+        <template #view-slot>
+          <dl v-if="props.showOwner" class="resource-box-list">
+            <dt>소유자</dt>
+            <dd>{{ newData[ownerKey] }}</dd>
+          </dl>
+        </template>
+      </editable-group>
+
+      <editable-group
+        :compKey="categoryKey"
+        :parent-edit-mode="isEditMode[categoryKey]"
+        :editable="props.editable"
+        :useEditButtons="false"
+        @editCancel="editCancel"
+        @editDone="editDone"
+        @editIcon="editIconClick(categoryKey, true)"
+      >
+        <template #edit-slot>
+          <dl v-if="props.showCategory" class="resource-box-list">
+            <dt>도메인</dt>
+            <dd>
+              <menu-search-button
+                v-on-click-outside="
+                  () => {
+                    updateIsEditMode(categoryKey, false);
+                  }
+                "
+                :data="filters[categoryKey].data"
+                :selected-items="{ key: newData[categoryKey] }"
+                label-key="key"
+                value-key="key"
+                :title="filters[categoryKey].text"
+                @single-change="handlerSingleChanged($event, categoryKey)"
+                @close="updateIsEditMode(categoryKey, false)"
+              >
+                <template #button-text-slot>
+                  <span class="select-button-title">{{
+                    newData[categoryKey]
+                  }}</span>
+                </template>
+              </menu-search-button>
+            </dd>
+          </dl>
+        </template>
+        <template #view-slot>
+          <dl v-if="props.showCategory" class="resource-box-list">
+            <dt>도메인</dt>
+            <dd>{{ newData[categoryKey] }}</dd>
+          </dl>
+        </template>
+      </editable-group>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { vOnClickOutside } from "@vueuse/components";
+import { defineEmits, ref } from "vue";
+
+import EditableGroup from "@extends/editable-group/EditableGroup.vue";
+import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
+
+import type { DataModel } from "./resource-box-common-props";
+import type { ResourceBoxProps } from "./resource-box-props";
+
+import _ from "lodash";
+
+const props = withDefaults(defineProps<ResourceBoxProps>(), {
+  useDataNmLink: false,
+  editable: false,
+  filters: () => {
+    return {};
+  },
+  ownerKey: "owner",
+  categoryKey: "category",
+});
+
+const isEditMode = ref<Record<string, boolean>>({
+  title: false,
+  desc: false,
+  [props.ownerKey]: false,
+  [props.categoryKey]: false,
+});
+
+// props.dataObj 값을 수정할 수 없기 때문에, 아래 두개의 값을 따로 두어 사용함.
+// 이 컴포넌트 내에서 쓰는 임시 저장용. (v-model 연결)
+const tempData = ref<DataModel>(_.cloneDeep(props.dataObj));
+// 부모 단으로 보낼 데이터 (데이터 수정 하고 '완료' 버튼 눌렀을때 v-model 데이터를 반영하는 용
+// 혹은 반영 해 두었다가 '취소' 버튼 눌렀을때 마지막 저장된 데이터로 원복 시키기 위해 사용.
+const newData = ref<DataModel>(_.cloneDeep(props.dataObj));
+
+const emit = defineEmits<{
+  (e: "previewClick", data: object): void;
+  (e: "modelNmClick", data: object): void;
+  (e: "editIconClick", id: string): void;
+  (e: "editDone", data: object): void;
+}>();
+
+const previewClick = () => {
+  if (props.usePrvBtn) {
+    emit("previewClick", props.dataObj);
+  }
+};
+const modelNmClick = () => {
+  emit("modelNmClick", props.dataObj);
+};
+
+const editCancel = (key: string) => {
+  tempData.value[key] = newData.value[key];
+};
+const editDone = (key: string) => {
+  newData.value[key] = tempData.value[key];
+  emit("editDone", newData.value);
+};
+
+const editIconClick = (key: string, value: boolean) => {
+  updateIsEditMode(key, value);
+  emit("editIconClick", key);
+};
+const updateIsEditMode = (key: string, value: boolean) => {
+  isEditMode.value[key] = value;
+};
+const handlerSingleChanged = (value: any, key: string) => {
+  changeMenuSearch(value, key);
+  updateIsEditMode(key, false);
+};
+const changeMenuSearch: (value: {}, keyName: any) => void = (
+  value: {},
+  keyName: string,
+) => {
+  newData.value[keyName] = (value as { key: any }).key;
+  emit("editDone", newData.value);
+};
+</script>
+
+<style lang="scss" scoped>
+.custom-fa {
+  width: 30px;
+  height: 30px;
+}
+</style>

@@ -89,6 +89,15 @@
           bottom: -2px;
           background: $primary-500;
         }
+
+        .svg-icon {
+          color: $primary-500;
+        }
+
+        .tab-button-count {
+          background: $primary-100;
+          color: $primary-500;
+        }
       }
     }
 
@@ -104,11 +113,27 @@
       &-text {
         font-weight: 400;
       }
+
+      .svg-icon {
+        width: 16px;
+        height: 16px;
+      }
+
+      &-count {
+        @include flex($direction: column);
+        height: $spacing-20;
+        padding: 0 $spacing-6;
+        border-radius: 50%;
+        font-size: 13px;
+        font-weight: 600;
+        color: $neutral-300;
+        background: $neutral-100;
+      }
     }
   }
 
-  // 추후 수정 예정
   &-contents {
     padding: $spacing-16;
   }
 }
+

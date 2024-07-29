@@ -7,17 +7,17 @@
           <span class="hidden-text">logo</span>
         </a>
       </h1>
-      <SearchInput></SearchInput>
+      <SearchInput @onClickSearch="onClickSearch"></SearchInput>
       <div class="profile ml-auto">
-          <span class="profile-avatar">
-            <img class="profile-img" src="" alt="프로필 이미지">
-          </span>
+        <span class="profile-avatar">
+          <img class="profile-img" src="" alt="프로필 이미지" />
+        </span>
         <div class="profile-text">root</div>
         <button class="button button-sm button-neutral-ghost">
           <svg-icon class="svg-icon" name="chevron-down-medium"></svg-icon>
           <span class="hidden-text">내 메뉴</span>
         </button>
-        <div class="dropdown" style="top: 40px;right: 16px;">
+        <div class="dropdown" style="top: 40px; right: 16px; display: none">
           <ul class="dropdown-list">
             <li class="dropdown-item">
               <button class="dropdown-button">
@@ -51,17 +51,20 @@
   </header>
 </template>
 
-<script>
-import SearchInput from "../../common/components/extends/search-input/search-input.vue";
+<script setup lang="ts">
+import SearchInput from "@extends/search-input/SearchInput.vue";
 
-export default {
-  name: "header",
-  components: {
-    SearchInput
-  }
+import { useSearchCommonStore } from "~/store/search/common";
+const searchCommonStore = useSearchCommonStore();
+const { setSearchKeyword, resetReloadList } = searchCommonStore;
+
+const onClickSearch = (value: string) => {
+  // 검색어 셋팅
+  setSearchKeyword(value);
+
+  // 항목 갱신
+  resetReloadList();
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -2,7 +2,7 @@ import { Ref, ref } from "vue";
 import { StepProps } from "@/components/extends/step/StepProps";
 import { NavigationFunctionality } from "@/components/extends/common/interfaces/functions/Navigation.interface";
 import { NavigationEvents } from "@/components/extends/common/interfaces/events/Navigation.interface";
-import { ComparisonOperator } from "@/components/extends/step/ComparisonOperator";
+import { ComparisonOperator } from "./ComparisonOperator";
 const INDEX = "index";
 interface StepComposition extends StepProps, NavigationFunctionality, NavigationEvents {
   currentIndex: Ref<number>;
@@ -14,21 +14,21 @@ export function StepComposition(props: StepProps, onchange: (value: string | num
   const currentIndex: Ref<number> = ref<number>(0);
 
   const clickStep: (index: number) => void = (index) => {
-    if(currentIndex.value < index) {
+    if (currentIndex.value < index) {
       return;
     }
     return move(index);
-  }
+  };
   const move: (index: number) => void = (index) => {
     currentIndex.value = index;
 
-    if(props.currentItemType === INDEX) {
+    if (props.currentItemType === INDEX) {
       onChange(index);
     } else {
       let clickedValue: string | number = (props.data?.[index] as any)?.[props.valueKey];
       onChange(clickedValue);
     }
-  }
+  };
   const changeCurrentStepClass: (clickedIdx: number) => boolean = (clickedIdx) => {
     switch (props.comparison) {
       case ComparisonOperator.GREATER_THAN_OR_EQUAL:
@@ -39,10 +39,17 @@ export function StepComposition(props: StepProps, onchange: (value: string | num
         console.error(`Unsupported comparison operator: ${props.comparison}`);
         return false;
     }
-  }
-  const onChange: (value: string | number) =>  void = (value) => {
-    onchange(value)
-  }
+  };
+  const onChange: (value: string | number) => void = (value) => {
+    onchange(value);
+  };
 
-  return { ...props, currentIndex, clickStep, move, changeCurrentStepClass, onChange}
+  const isDisabled: (value: string | number) => boolean = (value) => {
+    console.log("사용하지 않은 함수이지만 오버라이딩을 해야 함", value);
+    return false;
+  };
+
+  const toggleList: () => void = () => {};
+
+  return { ...props, currentIndex, clickStep, isDisabled, move, toggleList, changeCurrentStepClass, onChange };
 }

@@ -6,7 +6,6 @@ $list-classes: menu, dropdown;
 @each $list in $list-classes {
   .#{$list} {
     @include z-index('dropdown');
-    @include box-shadow('md');
 
     border-radius: $border-radius-4;
     border: 1px solid $neutral-100;
@@ -31,7 +30,13 @@ $list-classes: menu, dropdown;
         height: 100%;
 
         &-label {
+          overflow: hidden;
+          width: 100%;
           height: 100%;
+
+          &:before{
+            flex-shrink: 0;
+          }
         }
       }
 
@@ -41,7 +46,7 @@ $list-classes: menu, dropdown;
 
       .#{$list}-button {
         @include ellipsis;
-        @include flex;
+        @include flex($horizontal:flex-start);
 
         gap: $spacing-6;
         width: 100%;
@@ -62,14 +67,14 @@ $list-classes: menu, dropdown;
         .svg-icon {
           @include icon-size(18px);
         }
+      }
 
-        .#{$list}-text {
-          @include ellipsis;
+      .#{$list}-text {
+        @include ellipsis;
 
-          flex-grow: 1;
-          color: $neutral-700;
-          text-align: left;
-        }
+        //flex-grow: 1;
+        color: $neutral-700;
+        text-align: left;
       }
 
       .button {

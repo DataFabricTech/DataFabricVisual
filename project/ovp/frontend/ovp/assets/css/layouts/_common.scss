@@ -1,9 +1,111 @@
 //.l- class
-
 .l-split {
   display: flex;
-  gap: $spacing-24;
+  flex-grow: 1;
+
+  &:has(.work-contents) {
+    height: calc(100% - 48px);
+  }
+
+  .work-list {
+    width: 310px;
+    flex: 0 0 310px;
+    border-right: 1px solid $neutral-200;
+
+    .menu-data {
+      height: calc(100% - 49px);
+    }
+
+    .tab-line {
+      width: 100%;
+      height: 100%;
+    }
+
+    .tab-button-text {
+      @include font-size('14');
+    }
+
+    .tab-contents {
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 46px);
+      padding: $spacing-8 0 0 0;
+    }
+  }
+
+  .work-page {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    .code-box {
+      overflow: auto;
+      flex-grow: 1;
+    }
+  }
+
+  .work-list,
+  .work-page {
+    .l-top-bar {
+      border-bottom: 1px solid $neutral-200;
+
+      .menu-data-icon {
+        @include icon-size('lg');
+      }
+
+      .service-title {
+        @extend .editable-group-title;
+      }
+    }
+  }
+
+  .work-contents {
+    @include flex($direction: column, $vertical: null, $horizontal: null);
+    height: 100%;
+    overflow: auto;
+    gap: $spacing-32;
+    padding: $spacing-16;
+
+    .l-top-bar {
+      @include flex($vertical: flex-start, $direction: column);
+      gap: $spacing-8;
+      padding: 0;
+      border: 0;
+    }
+
+    .l-resource-box {
+      height: 894px;
+    }
+  }
 }
+
+.section-contents:has(.work-list + .work-page) {
+  .l-split:only-of-type {
+    height: calc(100% - 48px);
+  }
+
+  &:has(.l-split + .l-split){
+    .l-split:nth-child(1) {
+      height: 60%;
+      border-bottom: 1px solid $neutral-200;
+    }
+
+    .l-split:nth-child(2) {
+      height: 40%;
+    }
+  }
+}
+
+.section-contents:has(.main-content + .main-content) {
+  gap: $spacing-16;
+  height: auto;
+
+  .l-split {
+    gap: $spacing-16;
+  }
+}
+
 
 .l-between {
   @include flex($horizontal: space-between);
@@ -11,17 +113,23 @@
 
 .l-top-bar {
   @include flex($horizontal: space-between);
-  margin-bottom: $spacing-12;
+  width: 100%;
   flex-shrink: 0;
+  padding: $spacing-8;
 
   & + .l-split {
-    height: calc(100% - 48px);
+    flex-grow: 1;
+    height: calc(100% - 60px);
   }
 }
 
 .l-sidebar {
   @include flex($direction: column, $horizontal: space-between);
+
   padding: $spacing-24 0 $spacing-8;
   width: 100%;
   height: 100%;
 }
+
+
+

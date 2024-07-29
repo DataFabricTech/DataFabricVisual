@@ -20,11 +20,13 @@
 
 .select {
   @include select-size;
-  @include z-index('float');
+  //@include z-index('float');
+
   position: relative;
 
   &-button {
     @include flex($horizontal: flex-start);
+
     width: 100%;
     height: 100%;
     background: $neutral-0;
@@ -52,6 +54,7 @@
 
   .select-indicator {
     @include icon-size(18px);
+    margin-left: auto;
   }
 
   &.is-select-open {
@@ -104,13 +107,20 @@
     }
   }
 
+  .menu-search {
+    @include box-shadow('md');
+
+    width: 100%;
+    margin-top: $spacing-4;
+  }
+
   .dropdown {
+    min-width: 200px;
     width: 100%;
     margin-top: $spacing-4;
   }
 
   &-clean {
-
     .select-button {
       background: transparent;
 
@@ -119,6 +129,7 @@
 
       }
     }
+
     .select-button {
       border-color: transparent;
 

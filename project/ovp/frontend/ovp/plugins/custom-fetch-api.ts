@@ -20,10 +20,6 @@ export default defineNuxtPlugin(() => {
           errorResponse(blobData);
         }
       }
-
-      if (data) {
-        response._data = data.data;
-      }
     }
   });
 
@@ -33,7 +29,6 @@ export default defineNuxtPlugin(() => {
       errorMessage = "시스템 오류가 발생 하였습니다.";
     }
     console.error(errorMessage);
-    alert(errorMessage);
   }
 
   return {

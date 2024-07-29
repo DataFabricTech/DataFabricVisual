@@ -1,5 +1,7 @@
 package com.mobigen.framework.configuration;
 
+import com.mobigen.framework.security.JwtFilter;
+import com.mobigen.framework.security.LocalLoginFilter;
 import com.mobigen.framework.utility.FrameworkProperties;
 import com.mobigen.framework.utility.Token;
 import com.mobigen.framework.security.JwtAuthenticationEntryPoint;
@@ -14,6 +16,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -27,6 +30,8 @@ import java.util.Arrays;
 public class WebSecurityConfiguration {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final JwtFilter jwtFilter;
+    private final LocalLoginFilter localLoginFilter;
     private final Token token;
 
 
@@ -40,10 +45,10 @@ public class WebSecurityConfiguration {
     @Bean
     protected SecurityFilterChain configure(HttpSecurity http) throws Exception {
         // Enable CORS and disable CSRF
-        http.cors((cors) -> cors.configurationSource(corsConfigurationSource()));
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         // 토큰 방식 활용을 위해 Session Stateless 설정
-        http.sessionManagement((session) -> session
+        http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         // Set Logout
         http.logout(logout -> logout
@@ -53,11 +58,7 @@ public class WebSecurityConfiguration {
                     for (Cookie cookie : request.getCookies()) {
                         String cookieName = cookie.getName();
                         if (properties.getToken().getAccessToken().equals(cookieName)) {
-                            // OVP에서 Keycloak을 사용하지 않음
                             // TODO: Open Metadata 사용자 로그아웃 처리 필요
-                            // Keycloak Token Expire
-//                            Map<String, Object> param = token.getTokensByRequest(request);
-//                            keycloakAPI.logout(param);
 
                             // 쿠키에서 토큰값 삭제
                             Cookie cookieToDelete = new Cookie(cookieName, null);
@@ -69,34 +70,37 @@ public class WebSecurityConfiguration {
         );
 
         // Set CSRF
-        if (properties.getSecurity().getCsrf()) {
-            http.csrf((csrf) -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        if (Boolean.TRUE.equals(properties.getSecurity().getCsrf())) {
+            http.csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                     .ignoringRequestMatchers("/api/csrf-token"));
         } else {
             http.csrf(AbstractHttpConfigurer::disable);
         }
 
         // Set unauthorized requests exception handler
-        http.exceptionHandling((exception) -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
+        http.exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
 
-        // Set permissions on endpoints
-        http.authorizeHttpRequests((auth) -> auth.requestMatchers(properties.getSecurity().getPermitAlls())
-                .permitAll()
-                .anyRequest()
-                .authenticated());
+        http.authorizeHttpRequests(auth -> auth
+                .requestMatchers("http://localhost:8080/api**").permitAll() // localhost에 대한 모든 요청 허용
+                .requestMatchers(properties.getSecurity().getPermitAlls()).permitAll()
+                .anyRequest().authenticated()
+        );
 
         // set iframe option
         switch (properties.getSecurity().getIframeOption()) {
             case "same-origin" ->
-                http.headers((headers) -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+                http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
             case "deny" ->
-                http.headers((headers) -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::deny));
+                http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::deny));
             case "disable" ->
-                http.headers((headers) -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
+                http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
         }
 
         // add JWT token filter
-        return http.build();
+        return http
+                .addFilterBefore(localLoginFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean
