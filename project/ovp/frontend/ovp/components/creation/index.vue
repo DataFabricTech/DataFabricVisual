@@ -1,50 +1,26 @@
 <template>
   <div class="section-top-bar">
     <div class="l-top-bar">
-      <select-box
-        class="select-clean select-lg"
-        :data="options"
-        label-key="key"
-        value-key="key"
-        :selectedItem="defaultSelectedItem"
-      ></select-box>
-      <button class="button button-primary w-20" @click="saveDataModel(true)">
-        저장
-      </button>
+      <h4 class="title">데이터 모델 생성</h4>
+      <button class="button button-primary w-20" @click="saveDataModel(true)">저장</button>
     </div>
   </div>
+
   <div class="section-contents p-0 bg-white">
     <div class="l-split">
       <div class="work-list">
         <div class="l-top-bar">
-          <span class="font-semibold"
-            >선택된 데이터 모델 ({{ selectedDataModelCnt }})</span
-          >
-          <button
-            class="button button-secondary-stroke"
-            @click="addDataModel(true)"
-          >
-            추가
-          </button>
+          <span class="font-semibold">선택된 데이터 모델 (0)</span>
+          <button class="button button-secondary-stroke" @click="addDataModel(true)">추가</button>
         </div>
         <div class="menu menu-data menu-lg">
           <div class="menu-head">
             <div class="h-group">
               <div class="search-input">
-                <label class="hidden-text" for="data-menu-search"
-                  >데이터 모델 검색</label
-                >
-                <input
-                  id="data-menu-search"
-                  class="text-input"
-                  @input="onSearchText($event.target.value)"
-                  placeholder="검색어를 입력하세요"
-                />
+                <label class="hidden-text" for="data-menu-search">데이터 모델 검색</label>
+                <input id="data-menu-search" class="text-input" value="검색어 입력" />
                 <svg-icon class="text-input-icon" name="search"></svg-icon>
-                <button
-                  class="search-input-action-button button button-neutral-ghost button-sm"
-                  type="button"
-                >
+                <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
                   <span class="hidden-text">지우기</span>
                   <svg-icon class="button-icon" name="close"></svg-icon>
                 </button>
@@ -58,69 +34,85 @@
             <div class="filters">
               <!-- 카테고리, 소유자, 태그 select -->
               <div class="h-group">
-                <menuSearchButton
-                  class="select-clean select-sm"
-                  :data="categoryList"
-                  :selected-items="selectedCateList"
-                  label-key="key"
-                  value-key="key"
-                  title="카테고리"
-                  :is-multi="true"
-                  @multiple-change="cateApplyFilter"
-                ></menuSearchButton>
-                <menuSearchButton
-                  class="select-clean select-sm"
-                  :data="ownerList"
-                  :selected-items="selectedOwnerList"
-                  label-key="key"
-                  value-key="key"
-                  title="소유자"
-                  :is-multi="true"
-                  @multiple-change="ownerApplyFilter"
-                ></menuSearchButton>
-                <menuSearchButton
-                  class="select-clean select-sm"
-                  :data="tagList"
-                  :selected-items="selectedTagList"
-                  label-key="key"
-                  value-key="key"
-                  title="태그"
-                  :is-multi="true"
-                  @multiple-change="tagApplyFilter"
-                ></menuSearchButton>
+                <select-box class="select-clean select-sm"></select-box>
+                <select-box class="select-clean select-sm"></select-box>
+                <select-box class="select-clean select-sm"></select-box>
               </div>
             </div>
           </div>
           <ul class="menu-list">
-            <li
-              class="menu-item"
-              v-for="(item, index) in dataModelList"
-              :key="index"
-            >
-              <div class="checkbox">
-                <input
-                  type="checkbox"
-                  :id="'checkbox-menu-' + index"
-                  class="checkbox-input"
-                  :checked="item.checked"
-                />
-                <label :for="'checkbox-menu-' + index" class="checkbox-label">
-                  <svg-icon
-                    class="svg-icon menu-data-icon"
-                    name="resource"
-                  ></svg-icon>
-                  <span class="checkbox-text">{{ item.label }}</span>
-                  <span class="checkbox-subtext">({{ item.owner }})</span>
-                </label>
+            <li class="menu-item is-menu-item-selected">
+              <button class="menu-button">
+                <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                <span class="menu-text">데이터 모델</span>
+                <span class="menu-subtext">(소유자)</span>
+              </button>
+              <div class="menu-button-group">
+                <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환/icon에 .secondary 클래스 추가 -->
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon secondary" name="tag-fill"></svg-icon>
+                </button>
+                <div class="relative">
+                  <button class="button button-neutral-ghost button-sm">
+                    <span class="hidden-text">메뉴보기</span>
+                    <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                  </button>
+                  <!-- TODO: [개발] 메뉴 버튼 클릭 시 드롭다운 -->
+                  <div class="dropdown" style="right: 0;">
+                    <ul class="dropdown-list">
+                      <li class="dropdown-item">
+                        <button class="dropdown-button">
+                          <span class="dropdown-text">데이터 모델 상세 조회</span>
+                        </button>
+                      </li>
+                      <li class="dropdown-item">
+                        <button class="dropdown-button">
+                          <span class="dropdown-text">데이터 선택(해제)</span>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
               </div>
+            </li>
+            <li class="menu-item">
+              <button class="menu-button">
+                <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                <span class="menu-text">데이터 모델</span>
+                <span class="menu-subtext">(소유자)</span>
+              </button>
               <div class="menu-button-group">
                 <button class="button button-neutral-ghost button-sm">
                   <span class="hidden-text">북마크</span>
-                  <svg-icon
-                    class="svg-icon"
-                    :class="{ secondary: item.bookmarked }"
-                    :name="item.bookmarked ? 'tag-fill' : 'tag'"
-                  ></svg-icon>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
+                </button>
+                <div class="relative">
+                  <button class="button button-neutral-ghost button-sm">
+                    <span class="hidden-text">메뉴보기</span>
+                    <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                  </button>
+                </div>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </li>
+            <li class="menu-item">
+              <button class="menu-button">
+                <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                <span class="menu-text">데이터 모델데이터 모델데이터 모델데이터 모델</span>
+                <span class="menu-subtext">(소유자)</span>
+              </button>
+              <div class="menu-button-group">
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
                 </button>
                 <button class="button button-neutral-ghost button-sm">
                   <span class="hidden-text">메뉴보기</span>
@@ -130,6 +122,139 @@
                   <span class="hidden-text">삭제</span>
                   <svg-icon class="svg-icon" name="close"></svg-icon>
                 </button>
+              </div>
+            </li>
+            <li class="menu-item">
+              <button class="menu-button">
+                <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                <span class="menu-text">데이터 모델데이터 모델데이터 모델데이터 모델</span>
+                <span class="menu-subtext">(소유자)</span>
+              </button>
+              <div class="menu-button-group">
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
+                </button>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">메뉴보기</span>
+                  <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                </button>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <!-- TODO: [개발] 메뉴버튼 우클릭시 드롭다운 -->
+              <div class="dropdown" style="top: 20px;">
+                <ul class="dropdown-list">
+                  <li class="dropdown-item">
+                    <button class="dropdown-button">
+                      <span class="dropdown-text">복사 (데이터모델 이름)</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="menu-item">
+              <button class="menu-button">
+                <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                <span class="menu-text">데이터 모델데이터</span>
+                <span class="menu-subtext">(소유자)</span>
+              </button>
+              <div class="menu-button-group">
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
+                </button>
+                <div class="relative">
+                  <button class="button button-neutral-ghost button-sm">
+                    <span class="hidden-text">메뉴보기</span>
+                    <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                  </button>
+                </div>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </li>
+            <li class="menu-item">
+              <button class="menu-button">
+                <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                <span class="menu-text">데이터 모델</span>
+                <span class="menu-subtext">(소유자)</span>
+              </button>
+              <div class="menu-button-group">
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
+                </button>
+                <div class="relative">
+                  <button class="button button-neutral-ghost button-sm">
+                    <span class="hidden-text">메뉴보기</span>
+                    <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                  </button>
+                </div>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </li>
+            <li class="menu-item">
+              <button class="menu-button">
+                <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                <span class="menu-text">데이터 모델</span>
+                <span class="menu-subtext">(소유자)</span>
+              </button>
+              <div class="menu-button-group">
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
+                </button>
+                <div class="relative">
+                  <button class="button button-neutral-ghost button-sm">
+                    <span class="hidden-text">메뉴보기</span>
+                    <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                  </button>
+                </div>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </li>
+            <li class="menu-item">
+              <button class="menu-button">
+                <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                <span class="menu-text">데이터 모델</span>
+                <span class="menu-subtext">(소유자)</span>
+              </button>
+              <div class="menu-button-group">
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
+                </button>
+                <div class="relative">
+                  <button class="button button-neutral-ghost button-sm">
+                    <span class="hidden-text">메뉴보기</span>
+                    <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                  </button>
+                </div>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <!-- TODO: [개발] 레이아웃 깨짐으로 인해 맨 밑 아이템은 예외로 top:-20px를 적용해서 위로 배치시켜야 합니다. -->
+              <div class="dropdown" style="top: -20px;">
+                <ul class="dropdown-list">
+                  <li class="dropdown-item">
+                    <button class="dropdown-button">
+                      <span class="dropdown-text">복사 (데이터모델 이름)</span>
+                    </button>
+                  </li>
+                </ul>
               </div>
             </li>
           </ul>
@@ -151,7 +276,9 @@
           <button class="button button-error-lighter">초기화</button>
         </div>
         <!-- TODO: [퍼블리싱] code-box 적용 후 스타일 수정 확인 필요 -->
-        <div class="code-box">code-box</div>
+        <div class="code-box">
+          code-boxdddd
+        </div>
       </div>
     </div>
     <div class="l-split">
@@ -173,57 +300,55 @@
           <div class="tab-contents">
             <div class="data-summary">
               <span class="data-summary-title">데이터 모델 요약</span>
-              <span class="data-summary-name"
-                >데이터 모델 길어지면 말줄임 합니다</span
-              >
+              <span class="data-summary-name">데이터 모델 길어지면 말줄임 합니다</span>
               <span class="data-summary-text">(소유자)</span>
             </div>
             <!-- 샘플데이터 탭 시작 -->
             <div class="table-scroll" style="display: none">
               <table>
                 <thead>
-                  <tr>
-                    <th>NAME</th>
-                    <th>DATA TYPE</th>
-                    <th>NAME</th>
-                    <th>DATA TYPE</th>
-                    <th>NAME</th>
-                    <th>DATA TYPE</th>
-                  </tr>
+                <tr>
+                  <th>NAME</th>
+                  <th>DATA TYPE</th>
+                  <th>NAME</th>
+                  <th>DATA TYPE</th>
+                  <th>NAME</th>
+                  <th>DATA TYPE</th>
+                </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>항목</td>
-                    <td>항목</td>
-                    <td>항목</td>
-                    <td>항목</td>
-                    <td>항목</td>
-                    <td>항목</td>
-                  </tr>
-                  <tr>
-                    <td>항목</td>
-                    <td>항목</td>
-                    <td>항목</td>
-                    <td>항목</td>
-                    <td>항목</td>
-                    <td>항목</td>
-                  </tr>
-                  <tr>
-                    <td>항목</td>
-                    <td>항목</td>
-                    <td>항목</td>
-                    <td>항목항목항목항목항목항목항목항목</td>
-                    <td>항목</td>
-                    <td>항목</td>
-                  </tr>
-                  <tr>
-                    <td>항목</td>
-                    <td>항목</td>
-                    <td>항목</td>
-                    <td>항목</td>
-                    <td>항목</td>
-                    <td>항목</td>
-                  </tr>
+                <tr>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                </tr>
+                <tr>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                </tr>
+                <tr>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목항목항목항목항목항목항목항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                </tr>
+                <tr>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                  <td>항목</td>
+                </tr>
                 </tbody>
               </table>
             </div>
@@ -302,58 +427,57 @@
         <div class="result">
           <table>
             <thead>
-              <tr>
-                <th>NAME</th>
-                <th>DATA TYPE</th>
-                <th>NAME</th>
-                <th>DATA TYPE</th>
-                <th>NAME</th>
-                <th>DATA TYPE</th>
-              </tr>
+            <tr>
+              <th>NAME</th>
+              <th>DATA TYPE</th>
+              <th>NAME</th>
+              <th>DATA TYPE</th>
+              <th>NAME</th>
+              <th>DATA TYPE</th>
+            </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>항목</td>
-                <td>항목</td>
-                <td>항목</td>
-                <td>항목</td>
-                <td>항목</td>
-                <td>항목</td>
-              </tr>
-              <tr>
-                <td>항목</td>
-                <td>항목</td>
-                <td>항목</td>
-                <td>항목</td>
-                <td>항목</td>
-                <td>항목</td>
-              </tr>
-              <tr>
-                <td>항목</td>
-                <td>항목</td>
-                <td>항목</td>
-                <td>항목항목항목항목항목항목항목항목</td>
-                <td>항목</td>
-                <td>항목</td>
-              </tr>
-              <tr>
-                <td>항목</td>
-                <td>항목</td>
-                <td>항목</td>
-                <td>항목</td>
-                <td>항목</td>
-                <td>항목</td>
-              </tr>
+            <tr>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+            </tr>
+            <tr>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+            </tr>
+            <tr>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목항목항목항목항목항목항목항목</td>
+              <td>항목</td>
+              <td>항목</td>
+            </tr>
+            <tr>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+              <td>항목</td>
+            </tr>
             </tbody>
           </table>
         </div>
         <!-- TODO: [개발] 실행 error의 경우-->
         <div class="result result-error" style="display: none">
           <p>
-            Line 1 ~ 6 : Unknown error. ( TableNotExistsError() [/*+ LOCATION (
-            PARTITION >= '20240605131200' AND PARTITION <= '20240605131500' ) */
-            SELECT CATEGORY, BOUNDARY,SIDO_ENG, SIDO_KOR G_CO FROM ROOT.DTST
-            limit 5000;] )
+            Line 1 ~ 6 : Unknown error. ( TableNotExistsError() [/*+ LOCATION ( PARTITION >= '20240605131200' AND
+            PARTITION <= '20240605131500' ) */ SELECT CATEGORY, BOUNDARY,SIDO_ENG, SIDO_KOR G_CO FROM ROOT.DTST limit
+            5000;] )
           </p>
         </div>
       </div>
@@ -364,52 +488,12 @@
 </template>
 
 <script setup lang="ts">
-import _ from "lodash";
 import addModel from "@/components/creation/modal/add.vue";
 import saveModel from "@/components/creation/modal/save.vue";
 import SelectBox from "@extends/select-box/SelectBox.vue";
-import menuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
-import { creationStore } from "@/store/creation/index";
-
-const store = creationStore();
-const { modelList } = storeToRefs(store);
-
-const dataModelList = ref([]);
-
-const options = ref([{ label: "데이터 모델 생성 (SQL)", value: "sql" }]);
-const defaultSelectedItem = ref("sql");
-const isFirstCheckedEvent: boolean = true;
 
 const isShowAddModel = ref(false);
 const isShowSaveModel = ref(false);
-
-const selectedDataModelCnt = ref(0);
-selectedDataModelCnt.value = 6;
-
-// TODO: data 가져오기.. store?
-const categoryList = ref([]);
-const ownerList = ref([]);
-const tagList = ref([]);
-
-const selectedCateList = ref([]);
-const selectedOwnerList = ref([]);
-const selectedTagList = ref([]);
-
-const searchText = ref("");
-
-dataModelList.value = modelList.value;
-
-categoryList.value = [
-  ...new Set(modelList.value.map((item) => item.category)),
-].map((category) => ({ key: category, key: category }));
-
-ownerList.value = [...new Set(modelList.value.map((item) => item.owner))].map(
-  (owner) => ({ key: owner, key: owner }),
-);
-
-tagList.value = [...new Set(modelList.value.map((item) => item.tag))].map(
-  (tag) => ({ key: tag, key: tag }),
-);
 
 const saveDataModel = (param: boolean) => {
   isShowSaveModel.value = param;
@@ -418,51 +502,6 @@ const saveDataModel = (param: boolean) => {
 const addDataModel = (param: boolean) => {
   isShowAddModel.value = param;
 };
-
-// NOTE: 필터 처리
-const onSearchText = (value: string) => {
-  searchText.value = value;
-  console.log("검색어 확인: ", value);
-  selectedFilter();
-};
-
-const cateApplyFilter = async (value) => {
-  selectedCateList.value = value;
-  console.log("카테값: ", value);
-  selectedFilter();
-};
-
-const ownerApplyFilter = async (value) => {
-  selectedOwnerList.value = value;
-  selectedFilter();
-};
-
-const tagApplyFilter = async (value) => {
-  selectedTagList.value = value;
-  selectedFilter();
-};
-
-const selectedFilter = () => {
-
-  let cateMap = selectedCateList.value.map(item => item.key);
-  let ownerMap = selectedOwnerList.value.map(item => item.key);
-  let tagMap = selectedTagList.value.map(item => item.key);
-
-  let filteredList = modelList.value.filter((num) => {
-    let categoryMatch = cateMap.length === 0 || _.includes(cateMap, num.category);
-    let ownerMatch = ownerMap.length === 0 || _.includes(ownerMap, num.owner);
-    let tagMatch = tagMap.length === 0 || _.includes(tagMap, num.tag);
-
-    let textMatch = searchText.value === '' || num.label.includes(searchText.value) || num.owner.includes(searchText.value);
-
-    return categoryMatch && ownerMatch && tagMatch && textMatch;
-
-  });
-
-  dataModelList.value = filteredList;
-
-  console.log("filteredList확인: ", filteredList);
-}
 </script>
 
 <style scoped></style>
