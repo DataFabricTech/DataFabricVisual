@@ -155,10 +155,7 @@
                     @previewClick="previewClick"
                     @modelNmClick="modelNmClick"
                   />
-                  <div
-                    ref="scrollTriggerRef"
-                    class="w-full h-[1px] mt-px"
-                  ></div>
+                  <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
                   <!--                TODO: [퍼블리싱] loader UI 컴포넌트 추가 및 로딩 위치 검토 필요 -->
                   <div
                     id="loader"
@@ -430,7 +427,6 @@ await getCategories();
 
 const { scrollTrigger, setScrollOptions } =
   useIntersectionObserver(addModelList);
-let scrollTriggerRef = scrollTrigger;
 </script>
 
 <style scoped></style>

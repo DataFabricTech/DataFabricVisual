@@ -12,12 +12,20 @@ export function useIntersectionObserver(
   const loaderId = "loader";
   let intersectionHandler: IntersectionObserverHandler | null = null;
 
-  const pagingStore = usePagingStore(); // pagingStore 사용
+  const pagingStore = usePagingStore();
+  const {
+    setFrom,
+    setSize,
+    setIntersectionHandler,
+    updateIntersectionHandler,
+  } = pagingStore;
+  const { from: pageStoreFrom, size: pageStoreSize } = storeToRefs(pagingStore);
+
   if (from !== undefined) {
-    pagingStore.state.from = from;
+    setFrom(from);
   }
   if (size !== undefined) {
-    pagingStore.state.size = size;
+    setSize(size);
   }
 
   const getDataCallback = async (count: number, loader: HTMLElement | null) => {
@@ -40,11 +48,11 @@ export function useIntersectionObserver(
       targetId,
       scrollTrigger.value,
       loaderId,
-      pagingStore.state.from,
-      pagingStore.state.size,
+      pageStoreFrom.value,
+      pageStoreSize.value,
       getDataCallback,
     );
-    pagingStore.setIntersectionHandler(intersectionHandler);
+    setIntersectionHandler(intersectionHandler);
   });
 
   onBeforeUnmount(() => {
@@ -54,8 +62,8 @@ export function useIntersectionObserver(
   });
 
   const setScrollOptions = (count: number) => {
-    pagingStore.setScrollFrom(count);
-    pagingStore.updateIntersectionHandler(count);
+    setFrom(count);
+    updateIntersectionHandler(count);
   };
 
   return {

@@ -29,6 +29,7 @@
             @previewClick="previewClick"
             @modelNmClick="modelNmClick"
           />
+          <!-- NOTE "scrollTrigger" -> useIntersectionObserver 가 return 하는 변수병과 동일해야함. -->
           <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
           <div
             id="loader"
@@ -64,7 +65,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useSearchCommonStore } from "@/store/search/common";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
@@ -138,7 +139,6 @@ function changeTab(item: number | string) {}
 await getFilters();
 
 const { scrollTrigger } = useIntersectionObserver(addSearchList);
-let scrollTriggerRef = scrollTrigger;
 </script>
 
 <style lang="scss" scoped></style>

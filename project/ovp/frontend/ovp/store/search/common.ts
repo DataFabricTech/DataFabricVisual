@@ -61,6 +61,8 @@ export interface QueryFilter {
 export const useSearchCommonStore = defineStore("searchCommon", () => {
   const { $api } = useNuxtApp();
   const pagingStore = usePagingStore();
+  const { setFrom, updateIntersectionHandler } = pagingStore;
+  const { from, size } = storeToRefs(pagingStore);
 
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
@@ -109,8 +111,8 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       // eslint-disable-next-line id-length
       q: searchKeyword,
       index: currentTab.value, // table or storage or model -> tab
-      from: pagingStore.state.from,
-      size: pagingStore.state.size,
+      from: from.value,
+      size: size.value,
       deleted: false,
       query_filter: JSON.stringify(queryFilter),
       sort_field: sortKey.value,
@@ -246,17 +248,14 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
    * 목록을 '갱신'하는 경우, from 값을 항상 0으로 주어야 하기 때문에 fn 하나로 묶어서 처리.
    */
   const resetReloadList = () => {
-    setScrollFrom(0);
-    pagingStore.updateIntersectionHandler(0);
+    setFrom(0);
+    updateIntersectionHandler(0);
     getSearchList();
   };
   const setSortInfo = (item: string) => {
     const items = item.split("_");
     sortKey.value = items.shift() ?? ""; // undefined 오류 예외처리
     sortKeyOpt.value = items.pop() ?? "";
-  };
-  const setScrollFrom = (count: number) => {
-    pagingStore.state.from = count;
   };
   const setSearchKeyword = (keyword: string) => {
     searchKeyword = keyword;
@@ -280,7 +279,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getFilters,
     getPreviewData,
     setSortInfo,
-    setScrollFrom,
     setSearchKeyword,
     resetReloadList,
   };
