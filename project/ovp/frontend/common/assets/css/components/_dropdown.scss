@@ -27,6 +27,8 @@
   position: absolute;
 
   .dropdown-item {
+    font-weight: 400;
+
     .checkbox-label::after {
       top: 7px;
     }

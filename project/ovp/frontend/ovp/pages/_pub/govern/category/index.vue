@@ -344,8 +344,8 @@
       </div>
     </div>
   </div>
-  <!--  TODO: Modal 카테고리 추가-->
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModal">
+  <!--  TODO: Modal 카테고리 추가 width:480px height:394px-->
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModal">
     <div class="modal modal-padding-16" style="width: 480px">
       <div class="modal-head">
         <div class="modal-head-text">
@@ -413,7 +413,8 @@
       </div>
     </div>
   </div>
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModalModelAdd">
+  <!--  TODO: Modal 태그 추가 width:480px height:548px-->
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalModelAdd">
     <div class="modal modal-padding-16" style="width:480px">
       <div class="modal-head">
         <div class="modal-head-text">
