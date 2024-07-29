@@ -22,7 +22,7 @@
             <col />
           </colgroup>
           <tr>
-            <th>
+            <th class="align-left">
               {{ isStructuredModelType ? "테이블 유형" : "확장자" }}
             </th>
             <td>
@@ -34,7 +34,7 @@
             </td>
           </tr>
           <tr>
-            <th>
+            <th class="align-left">
               {{ isStructuredModelType ? "Columns" : "전체 행" }}
             </th>
             <td>
@@ -63,9 +63,7 @@
             v-for="(glossary, index) in previewData.glossaries"
             :key="index"
           >
-            <span class="tag-text">{{
-              glossary.name
-            }}</span>
+            <span class="tag-text">{{ glossary.name }}</span>
           </div>
         </div>
       </div>

@@ -8,7 +8,7 @@
       :data="tabOptions"
       :label-key="'label'"
       :value-key="'value'"
-      :current-item="currentTab"
+      :current-item="initTab"
       :current-item-type="'value'"
       :use-tab-contents="false"
       @change="changeTab"
@@ -19,7 +19,11 @@
     <top-bar></top-bar>
     <div class="l-split mt-3">
       <div class="data-page" style="position: relative">
-        <div id="dataList" class="data-list" v-if="viewType === 'listView'">
+        <div
+          id="dataList"
+          class="data-list"
+          v-show="viewType === 'listView' && !isSearchResultNoData"
+        >
           <resource-box-list
             :data-list="searchResult"
             :use-list-checkbox="false"
@@ -50,8 +54,17 @@
             <Loading class="loader-lg" :hide-text="false"></Loading>
           </div>
         </div>
-        <div class="data-list" v-if="viewType === 'graphView'">
+        <div
+          class="data-list"
+          v-if="viewType === 'graphView' && !isSearchResultNoData"
+        >
           <custom-knowledge-graph />
+        </div>
+        <div class="no-result" v-if="isSearchResultNoData">
+          <div class="notification">
+            <svg-icon class="notification-icon" name="info"></svg-icon>
+            <p class="notification-detail">선택된 데이터 모델이 없습니다.</p>
+          </div>
         </div>
       </div>
       <preview
@@ -65,7 +78,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useSearchCommonStore } from "@/store/search/common";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
@@ -78,7 +90,8 @@ import { useRouter } from "nuxt/app";
 const router = useRouter();
 
 const searchCommonStore = useSearchCommonStore();
-const { addSearchList, getFilters, getPreviewData } = searchCommonStore;
+const { addSearchList, getFilters, getPreviewData, changeTab } =
+  searchCommonStore;
 const {
   filters,
   searchResult,
@@ -86,6 +99,7 @@ const {
   viewType,
   isShowPreview,
   isBoxSelectedStyle,
+  isSearchResultNoData,
 } = storeToRefs(searchCommonStore);
 
 const getPreviewCloseStatus = (option: boolean) => {
@@ -120,16 +134,13 @@ const modelNmClick = (data: object) => {
   });
 };
 
+const initTab: string = "table";
+
 const tabOptions = [
   { label: "테이블", value: "table", type: "table" },
   { label: "스토리지", value: "storage", type: "storage" },
   { label: "융합모델", value: "model", type: "model" },
 ];
-
-const currentTab = ref();
-currentTab.value = "table";
-
-function changeTab(item: number | string) {}
 
 // top-bar 에서 select box (sort) 값이 변경되면 목록을 조회하라는 코드가 구현되어 있는데,
 // select box 가 화면 맨 처음에 뿌릴때 값을 초기에 1번 셋팅하는 부분에서 목록 조회가 이뤄짐.

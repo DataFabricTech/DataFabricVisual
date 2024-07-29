@@ -19,7 +19,6 @@ export const usePagingStore = defineStore("pagingStore", () => {
   // -> page 값은 from 값이 변경 되면 자동으로 계산되도록 처리.
   watch(from, () => {
     page.value = from.value / size.value;
-    console.log(page.value);
   });
 
   const updateIntersectionHandler = (count: number) => {

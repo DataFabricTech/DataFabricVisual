@@ -80,7 +80,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
   // filter 정보
   const filters = ref<Filters>(createDefaultFilters());
-  // TODO : [개발] 탐색 - 목록 페이지 tab 구현 완료 되면 currentTab 부분 변수 맞춰서 수정 필요.
   const currentTab: Ref<string> = ref("table");
   const searchResult: Ref<any[]> = ref([]);
   const previewData: Ref<any> = ref({
@@ -102,6 +101,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   let searchKeyword: string = "";
   const sortKey: Ref<string> = ref<string>("totalVotes");
   const sortKeyOpt: Ref<string> = ref<string>("desc");
+  const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
 
   const getSearchListQuery = () => {
     const queryFilter = getQueryFilter();
@@ -158,6 +158,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     const { data, totalCount } = await getSearchListAPI();
     searchResult.value = data[currentTab.value];
     searchResultLength.value = totalCount;
+    isSearchResultNoData.value = searchResult.value.length === 0;
   };
   const getFilters = async () => {
     const { data } = await $api(`/api/search/filters`);
@@ -247,10 +248,10 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
    * 목록 reset
    * 목록을 '갱신'하는 경우, from 값을 항상 0으로 주어야 하기 때문에 fn 하나로 묶어서 처리.
    */
-  const resetReloadList = () => {
+  const resetReloadList = async () => {
     setFrom(0);
+    await getSearchList();
     updateIntersectionHandler(0);
-    getSearchList();
   };
   const setSortInfo = (item: string) => {
     const items = item.split("_");
@@ -259,6 +260,11 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
   const setSearchKeyword = (keyword: string) => {
     searchKeyword = keyword;
+  };
+
+  const changeTab = (item: string) => {
+    currentTab.value = item;
+    resetReloadList();
   };
 
   return {
@@ -273,6 +279,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     isShowPreview,
     isBoxSelectedStyle,
     searchResultLength,
+    isSearchResultNoData,
     addSearchList,
     getSearchList,
     getFilter,
@@ -281,5 +288,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     setSortInfo,
     setSearchKeyword,
     resetReloadList,
+    changeTab,
   };
 });
