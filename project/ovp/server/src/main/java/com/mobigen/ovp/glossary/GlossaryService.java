@@ -1,6 +1,7 @@
 package com.mobigen.ovp.glossary;
 
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
+import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.glossary.client.GlossaryClient;
 import com.mobigen.ovp.glossary.client.dto.glossary.Glossary;
 import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivity;
@@ -11,9 +12,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -22,6 +28,7 @@ import java.util.UUID;
 public class GlossaryService {
 
     private final GlossaryClient glossaryClient;
+    private final SearchClient searchClient;
 
     /**
      * 용어 사전 리스트
@@ -101,6 +108,36 @@ public class GlossaryService {
 
         for(GlossaryActivity activity : response) {
             result.add(new GlossaryActivities(activity));
+        }
+        return result;
+    }
+
+    /**
+     * 태그 리스트 호출
+     * @return
+     * @throws Exception
+     */
+    public Object getAllTags() throws Exception {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
+        queryParams.add("q", "** AND disabled:false");
+        queryParams.add("index", "tag_search_index");
+        queryParams.add("query_filter", "{}");
+
+        List<Map<String, ?>> hits = (List<Map<String, ?>>) ((Map<?, ?>) searchClient.getSearchList(queryParams).get("hits")).get("hits");
+        List<Object> source = new ArrayList<>();
+        for(Map<String, ?> data : hits) {
+            source.add(data.get("_source"));
+        }
+        List<Map<String, String>> result = new ArrayList<>();
+
+        for(Object obj : source) {
+            if(obj instanceof Map<?,?>) {
+                Map<String, ?> data = (Map<String, ?>) obj;
+                Map<String, String> resultMap = new HashMap<>();
+                resultMap.put("data", String.valueOf(data.get("id")));
+                resultMap.put("label", String.valueOf(data.get("name")));
+                result.add(resultMap);
+            }
         }
         return result;
     }

@@ -100,4 +100,14 @@ public class GlossaryController {
         return glossaryService.getGlossaryActivities(entityLink);
     }
 
+    /**
+     * 태그 리스트 호출
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/all-tags")
+    public Object getAllTags() throws Exception {
+        return glossaryService.getAllTags();
+    }
 }
