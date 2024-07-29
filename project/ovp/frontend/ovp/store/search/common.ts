@@ -1,5 +1,4 @@
-import { IntersectionObserverHandler } from "~/utils/intersection-observer";
-
+import { usePagingStore } from "~/store/common/paging";
 import _ from "lodash";
 
 export const FILTER_KEYS = {
@@ -61,8 +60,7 @@ export interface QueryFilter {
 
 export const useSearchCommonStore = defineStore("searchCommon", () => {
   const { $api } = useNuxtApp();
-
-  let intersectionHandler: IntersectionObserverHandler | null = null;
+  const pagingStore = usePagingStore();
 
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
@@ -100,8 +98,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
 
   // List Query data
   let searchKeyword: string = "";
-  const from: Ref<number> = ref<number>(0);
-  const size: Ref<number> = ref<number>(20);
   const sortKey: Ref<string> = ref<string>("totalVotes");
   const sortKeyOpt: Ref<string> = ref<string>("desc");
 
@@ -113,8 +109,8 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       // eslint-disable-next-line id-length
       q: searchKeyword,
       index: currentTab.value, // table or storage or model -> tab
-      from: from.value,
-      size: size.value,
+      from: pagingStore.state.from,
+      size: pagingStore.state.size,
       deleted: false,
       query_filter: JSON.stringify(queryFilter),
       sort_field: sortKey.value,
@@ -251,7 +247,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
    */
   const resetReloadList = () => {
     setScrollFrom(0);
-    updateIntersectionHandler(0);
+    pagingStore.updateIntersectionHandler(0);
     getSearchList();
   };
   const setSortInfo = (item: string) => {
@@ -260,26 +256,13 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     sortKeyOpt.value = items.pop() ?? "";
   };
   const setScrollFrom = (count: number) => {
-    from.value = count;
-  };
-  const updateIntersectionHandler = (count: number) => {
-    if (count < 1) {
-      if (intersectionHandler !== null) {
-        intersectionHandler.updateChangingInitialCount(from.value);
-        intersectionHandler.scrollToFirElement();
-      }
-    }
+    pagingStore.state.from = count;
   };
   const setSearchKeyword = (keyword: string) => {
     searchKeyword = keyword;
   };
-  const setIntersectionHandler = (ih: any) => {
-    intersectionHandler = ih;
-  };
 
   return {
-    from,
-    size,
     sortKey,
     sortKeyOpt,
     currentTab,
@@ -299,8 +282,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     setSortInfo,
     setScrollFrom,
     setSearchKeyword,
-    setIntersectionHandler,
     resetReloadList,
-    updateIntersectionHandler,
   };
 });

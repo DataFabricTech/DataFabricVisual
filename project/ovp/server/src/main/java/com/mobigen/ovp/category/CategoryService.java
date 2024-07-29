@@ -10,6 +10,9 @@ import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -73,15 +76,15 @@ public class CategoryService {
         return null;
     }
 
-    public List<Object> getModelByCategoryId(String categoryId) {
+    public List<Object> getModelByCategoryId(String categoryId, int page, int size) {
         UUID uuid;
         try {
             uuid = UUID.fromString(categoryId);
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Invalid UUID string: " + categoryId, e);
         }
-
-        List<CategoryMatchEntity> categoryMatchList = categoryMatchRepository.findById(uuid);
+        Pageable pageable = PageRequest.of(page, size);
+        Page<CategoryMatchEntity> categoryMatchList = categoryMatchRepository.findByCategoryId(uuid, pageable);
 
         List<Object> resultList = new ArrayList<>();
         for (CategoryMatchEntity item : categoryMatchList) {

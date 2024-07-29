@@ -24,11 +24,11 @@ import java.util.UUID;
 public class CategoryMatchEntity {
 
     @Id
-    @Column(name = "id", nullable = false)
-    private UUID id;
-
     @Column(name = "model_id", nullable = false, unique = true)
     private UUID modelId;
+
+    @Column(name = "category_id", nullable = false)
+    private UUID category_id;
 
     @NotNull
     @Column(name = "model_index", nullable = false, length = 10)

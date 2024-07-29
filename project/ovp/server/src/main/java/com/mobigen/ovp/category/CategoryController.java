@@ -4,12 +4,13 @@ import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -31,7 +32,7 @@ public class CategoryController {
     @ResponseJsonResult
     @PutMapping("/")
     public Object addCategory(@RequestBody List<JsonPatchOperation> params) {
-         return categoryService.addCategory(params);
+        return categoryService.addCategory(params);
     }
 
     @ResponseJsonResult
@@ -41,8 +42,11 @@ public class CategoryController {
     }
 
     @ResponseJsonResult
-    @GetMapping("/models/{categoryId}")
-    public Object getModelByCategoryId(@PathVariable String categoryId) {
-        return categoryService.getModelByCategoryId(categoryId);
+    @GetMapping("/models")
+    public Object getModelByCategoryId(@RequestParam MultiValueMap<String, String> params) {
+        String categoryId = params.getFirst("categoryId");
+        int page = Integer.parseInt(params.getFirst("page"));
+        int size = Integer.parseInt(params.getFirst("size"));
+        return categoryService.getModelByCategoryId(categoryId, page, size);
     }
 }

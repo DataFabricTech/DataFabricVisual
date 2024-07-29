@@ -67,7 +67,7 @@
 import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useSearchCommonStore } from "@/store/search/common";
-import { IntersectionObserverHandler } from "@/utils/intersection-observer";
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import Loading from "@base/loading/Loading.vue";
 import Tab from "@extends/tab/Tab.vue";
 
@@ -77,17 +77,8 @@ import { useRouter } from "nuxt/app";
 const router = useRouter();
 
 const searchCommonStore = useSearchCommonStore();
+const { addSearchList, getFilters, getPreviewData } = searchCommonStore;
 const {
-  addSearchList,
-  getFilters,
-  getPreviewData,
-  setScrollFrom,
-  setIntersectionHandler,
-  updateIntersectionHandler,
-} = searchCommonStore;
-const {
-  from,
-  size,
   filters,
   searchResult,
   previewData,
@@ -124,37 +115,8 @@ const modelNmClick = (data: object) => {
       type: type,
       id: id,
       fqn: fqn,
-      type: type,
     },
   });
-};
-
-// TODO: intersection observer 옵션이 부족해 보임. 데이터가 1000가 넘으면 UI가 버벅거림.
-
-// intersection observer 타겟
-const targetId = "dataList";
-// 스크롤 트리거
-const scrollTrigger = ref<HTMLElement | null>(null);
-// 로딩 스피너 아이디
-const loaderId = "loader";
-// intersection observer instance
-let intersectionHandler: IntersectionObserverHandler | null = null;
-// 스크롤 이동시 데이터 로딩 시점에 실행되는 callback
-const getDataCallback = async (count: number, loader: HTMLElement | null) => {
-  // loader start
-  if (loader) {
-    loader.style.display = "flex";
-  }
-
-  setScrollFrom(count);
-  updateIntersectionHandler(count);
-
-  // 데이터 조회 : 쿼리는 store 에서 처리.
-  await addSearchList();
-
-  if (loader) {
-    loader.style.display = "none";
-  }
 };
 
 const tabOptions = [
@@ -168,33 +130,15 @@ currentTab.value = "table";
 
 function changeTab(item: number | string) {}
 
-onMounted(async () => {
-  // top-bar 에서 select box (sort) 값이 변경되면 목록을 조회하라는 코드가 구현되어 있는데,
-  // select box 가 화면 맨 처음에 뿌릴때 값을 초기에 1번 셋팅하는 부분에서 목록 조회가 이뤄짐.
-  // 중복 호출을 피하기 위해서 여기서는 목록 데이터를 조회하지 않음.
-  // await getSearchList();
+// top-bar 에서 select box (sort) 값이 변경되면 목록을 조회하라는 코드가 구현되어 있는데,
+// select box 가 화면 맨 처음에 뿌릴때 값을 초기에 1번 셋팅하는 부분에서 목록 조회가 이뤄짐.
+// 중복 호출을 피하기 위해서 여기서는 목록 데이터를 조회하지 않음.
+// await getSearchList();
 
-  await getFilters();
+await getFilters();
 
-  // intersection observer instance 생성
-  intersectionHandler = new IntersectionObserverHandler(
-    targetId,
-    scrollTrigger.value,
-    loaderId,
-    from.value,
-    size.value,
-    getDataCallback,
-  );
-
-  // from 값 변경에 따른 동작을 store 에서 하고 있기 때문에 intersectionHandler 변수를 store 에 저장해둔다.
-  setIntersectionHandler(intersectionHandler);
-});
-
-onBeforeUnmount(() => {
-  if (intersectionHandler) {
-    intersectionHandler.disconnect();
-  }
-});
+const { scrollTrigger } = useIntersectionObserver(addSearchList);
+let scrollTriggerRef = scrollTrigger;
 </script>
 
 <style lang="scss" scoped></style>

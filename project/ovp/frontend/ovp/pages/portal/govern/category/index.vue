@@ -101,7 +101,8 @@
               </button>
             </div>
           </div>
-          <div v-if="modelList.length > 0">
+          <!-- NOTE : v-if 로 할 경우, intersectionObserver 이 element 의 변화를 catch 하지 못해서 동작하지 않는 현상이 있어서 v-show 로 변환함. -->
+          <div v-show="modelList.length > 0">
             <div class="l-top-bar">
               <div class="search-input w-[541px]">
                 <label class="hidden-text" for="text-input-example-11"
@@ -143,10 +144,10 @@
               </div>
             </div>
             <div class="l-resource-box l-split mt-3">
-              <div class="data-page">
-                <div class="data-list">
+              <div class="data-page" style="position: relative">
+                <div id="dataList" class="data-list">
                   <resource-box-list
-                    :data-list="modelList"
+                    :data-list="modelList || []"
                     :use-list-checkbox="true"
                     :show-owner="true"
                     :show-category="true"
@@ -154,6 +155,29 @@
                     @previewClick="previewClick"
                     @modelNmClick="modelNmClick"
                   />
+                  <div
+                    ref="scrollTriggerRef"
+                    class="w-full h-[1px] mt-px"
+                  ></div>
+                  <!--                TODO: [퍼블리싱] loader UI 컴포넌트 추가 및 로딩 위치 검토 필요 -->
+                  <div
+                    id="loader"
+                    style="
+                      display: none;
+                      position: fixed;
+                      top: 0;
+                      left: 0;
+                      width: 100%;
+                      height: 100%;
+                      background-color: rgba(255, 255, 255, 0.5);
+                      align-items: center;
+                      justify-content: center;
+                      font-size: 20px;
+                      color: #333;
+                    "
+                  >
+                    loader
+                  </div>
                 </div>
               </div>
               <div class="preview">
@@ -321,9 +345,11 @@ import type { TreeViewItem } from "@extends/tree/TreeProps";
 
 import { storeToRefs } from "pinia";
 import { useGovernCategoryStore } from "~/store/governance/Category";
+import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 const categoryStore = useGovernCategoryStore();
 
-const { getCategories, getModelByCategoryId } = categoryStore;
+const { getCategories, addModelList, getModelList, setSelectedNode } =
+  categoryStore;
 const { categories, modelList } = storeToRefs(categoryStore);
 
 const showModal = ref(false);
@@ -341,9 +367,14 @@ const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
 });
 const onNodeClicked = (node: TreeViewItem) => {
   selectedNode.value = node;
-  // 선택한 노드 기준 모델 목록을 조회한다.
   // TODO : [개발] 카테고리 중 최 하위 카테고리가 아닌 경우 모델목록 조회하지 않음.
-  getModelByCategoryId(node.id);
+
+  // 선택한 노드정보 저장
+  setSelectedNode(node);
+
+  // 선택한 노드 기준 모델 목록을 조회한다.
+  setScrollOptions(0);
+  getModelList();
 };
 const addSibling = (newNode: TreeViewItem) => {
   // 형제 노드 추가
@@ -396,6 +427,10 @@ const modelNmClick = (data: object) => {
 };
 
 await getCategories();
+
+const { scrollTrigger, setScrollOptions } =
+  useIntersectionObserver(addModelList);
+let scrollTriggerRef = scrollTrigger;
 </script>
 
 <style scoped></style>

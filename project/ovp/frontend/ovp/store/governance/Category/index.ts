@@ -1,10 +1,14 @@
 import type { TreeViewItem } from "@extends/tree/TreeProps";
+import { usePagingStore } from "~/store/common/paging";
+import _ from "lodash";
 
 export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const { $api } = useNuxtApp();
+  const pagingStore = usePagingStore();
 
   const categories = ref<TreeViewItem>();
   const modelList: Ref<any[]> = ref([]);
+  let selectedNode: any = null;
 
   // METHODS
   const getCategories = async () => {
@@ -16,15 +20,45 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
      */
     categories.value = data.children;
   };
-  const getModelByCategoryId = async (categoryId: string) => {
-    const { data } = await $api(`/api/category/models/${categoryId}`);
+  const getModelListQuery = (id: string) => {
+    const params: any = {
+      categoryId: id,
+      page: pagingStore.state.from / pagingStore.state.size,
+      size: pagingStore.state.size,
+    };
+    return new URLSearchParams(params);
+  };
+
+  const getModelByCategoryIdAPI = async () => {
+    if (_.isNull(selectedNode) || _.isEmpty(selectedNode.id)) {
+      return;
+    }
+    const { data } = await $api(
+      `/api/category/models?${getModelListQuery(selectedNode.id)}`,
+    );
+    return data;
+  };
+  const addModelList = async () => {
+    const data = await getModelByCategoryIdAPI();
+    modelList.value = modelList.value.concat(data);
+  };
+  const getModelList = async () => {
+    if (_.isNull(selectedNode)) {
+      return;
+    }
+    const data = await getModelByCategoryIdAPI();
     modelList.value = data;
+  };
+  const setSelectedNode = (node: any) => {
+    selectedNode = node;
   };
 
   return {
     categories,
     modelList,
     getCategories,
-    getModelByCategoryId,
+    addModelList,
+    getModelList,
+    setSelectedNode,
   };
 });
