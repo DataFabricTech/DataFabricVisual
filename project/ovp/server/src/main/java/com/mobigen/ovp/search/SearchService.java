@@ -83,10 +83,13 @@ public class SearchService {
         List<Map<String, Object>> responseList = List.of(
                 getTableList(new LinkedMultiValueMap<>(params)),
                 getStorageList(new LinkedMultiValueMap<>(params)),
-                getModelList(new LinkedMultiValueMap<>(params))
+                getModelList(new LinkedMultiValueMap<>(params)),
+                getAllList(new LinkedMultiValueMap<>(params))
         );
 
-        List<String> keys = List.of("table", "storage", "model");
+
+        List<String> keys = List.of("table", "storage", "model", "all");
+
         for (int i = 0; i < keys.size(); i++) {
             String key = keys.get(i);
             Map<String, Object> res = responseList.get(i);
@@ -115,6 +118,15 @@ public class SearchService {
         return resultMap;
     }
 
+    private Map<String, Object> getAllList(MultiValueMap<String, String> params) throws Exception {
+        if (!params.getFirst("index").equals("all")) {
+            params.set("size", "0");
+        }
+        params.set("index", "all");
+
+        return getList(params);
+    }
+
     private Map<String, Object> getTableList(MultiValueMap<String, String> params) throws Exception {
         // 화면에 표시되는 tab 의 항목의 데이터만 조회되면 되기 때문에 해당 tab 이 아닌 경우, 0건 으로 조회한다.
         if (!params.getFirst("index").equals("table")) {
@@ -140,24 +152,30 @@ public class SearchService {
         params.set("query_filter", params.getFirst("trino_query").toString());
         params.remove("trino_query");
 
-
         return getList(params);
     }
 
     private Object convertSearchData(Object hits) {
         List<Map<String, Object>> list = (List<Map<String, Object>>) hits;
         List<Map<String, Object>> modifiedList = list.stream().map(hit -> {
-            String index = hit.get("_index").toString().equals("table_search_index") ? "table" : "storage";
+            String index = "unknown";
+            if (hit.get("_index") != null && hit.get("_index").toString().equals("table_search_index")) {
+                index = "table";
+            } else if (hit.get("_index") != null && hit.get("_index").toString().equals("storage_search_index")) {
+                index = "storage";
+            }
+
             if (hit.containsKey("_source")) {
                 Map<String, Object> source = (Map<String, Object>) hit.get("_source");
                 Map<String, Object> modifiedSource = new HashMap<>();
 
-                modifiedSource.put("type", source.get("serviceType").toString().toLowerCase().equals("trino") ? "model" : "table");
+                String serviceType = source.get("serviceType") != null ? source.get("serviceType").toString().toLowerCase() : "";
+                modifiedSource.put("type", "trino".equals(serviceType) ? "model" : "table");
 
                 modifiedSource.put("id", source.get("id"));
                 // TODO : ICON 처리 완료되면 아래 코드 수정 필요
                 modifiedSource.put("serviceIcon", "");
-                modifiedSource.put("depth", source.get("fullyQualifiedName").toString().split("\\."));
+                modifiedSource.put("depth", source.get("fullyQualifiedName") != null ? source.get("fullyQualifiedName").toString().split("\\.") : new String[]{});
                 modifiedSource.put("firModelNm", source.get("name"));
                 modifiedSource.put("modelNm", source.get("displayName"));
                 modifiedSource.put("modelDesc", source.get("description"));
@@ -165,15 +183,19 @@ public class SearchService {
 
                 String owner = "";
                 if (source.get("owner") != null) {
-                    Map<String, Object> onwerObj = (Map<String, Object>) source.get("owner");
-                    owner = onwerObj.get("displayName").toString();
+                    Map<String, Object> ownerObj = (Map<String, Object>) source.get("owner");
+                    if (ownerObj.get("displayName") != null) {
+                        owner = ownerObj.get("displayName").toString();
+                    }
                 }
                 modifiedSource.put("owner", owner);
 
                 String domain = "";
                 if (source.get("domain") != null) {
                     Map<String, Object> domainObj = (Map<String, Object>) source.get("domain");
-                    domain = domainObj.get("displayName").toString();
+                    if (domainObj.get("displayName") != null) {
+                        domain = domainObj.get("displayName").toString();
+                    }
                 }
                 modifiedSource.put("category", domain);
 
