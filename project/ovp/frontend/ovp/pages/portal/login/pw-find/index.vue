@@ -7,7 +7,7 @@
         <p class="submit-form-desc">
           비밀번호 재설정 링크를 받으려면 등록된 이메일을 입력하세요
         </p>
-        <div class="form form-lg gap-8">
+        <form class="form form-lg gap-8" @submit.prevent="onSubmit">
           <div class="form-body">
             <div class="form-item">
               <label for="inpEmail" class="form-label">
@@ -20,32 +20,83 @@
                     id="inpEmail"
                     class="text-input text-input-lg"
                     placeholder="이메일 입력"
+                    v-model="email"
                   />
                   <svg-icon class="text-input-icon" name="user"></svg-icon>
                 </div>
-                <div class="notification notification-sm notification-success">
+                <div
+                  class="notification notification-sm"
+                  :class="
+                    msgEmail ? 'notification-success' : 'notification-error'
+                  "
+                  v-if="msgEmail || errorMsgEmail"
+                >
                   <svg-icon class="notification-icon" name="success"></svg-icon>
                   <p class="notification-detail">
-                    재설정 링크가 이메일로 전송되었습니다.
+                    {{ notiMsg() }}
                   </p>
                 </div>
               </div>
             </div>
           </div>
           <div class="form-foot">
-            <button class="button button-primary button-lg" type="button">
+            <button class="button button-primary button-lg" type="submit">
               제출
             </button>
             <button class="button button-primary-ghost button-sm" type="button">
-              로그인 페이지로 돌아가기
+              <nuxt-link :to="'/portal/login'">
+                로그인 페이지로 돌아가기
+              </nuxt-link>
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import $constants from "~/utils/constant";
+import _ from "lodash";
+import { loginStore } from "~/store/login";
+
+const email = ref("");
+const msgEmail = ref("");
+const errorMsgEmail = ref("");
+
+const store = loginStore();
+const { sendMailForPasswordReset } = store;
+
+const notiMsg = () => {
+  return msgEmail.value ? msgEmail.value : errorMsgEmail.value;
+};
+
+const onSubmit = async () => {
+  if (!validateEmail()) {
+    return;
+  }
+  console.log("onSubmit");
+  let param = {
+    email: email.value,
+  };
+  const result = await sendMailForPasswordReset(param);
+
+  if (result.result === 1) {
+    msgEmail.value = "재설정 링크가 이메일로 전송되었습니다.";
+  } else {
+    errorMsgEmail.value = result.errorMessage;
+  }
+};
+
+const validateEmail = () => {
+  errorMsgEmail.value = email.value ? "" : "사용자 이메일을 입력하세요.";
+  if (_.isEmpty(email.value)) return false;
+
+  errorMsgEmail.value = $constants.LOGIN.EMAIL.REGEX.test(email.value)
+    ? ""
+    : "이메일이 유효하지 않습니다.";
+  return _.isEmpty(errorMsgEmail.value);
+};
+</script>
 
 <style lang="scss" scoped></style>
