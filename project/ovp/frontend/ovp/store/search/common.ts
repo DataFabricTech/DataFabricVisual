@@ -248,10 +248,10 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
    * 목록 reset
    * 목록을 '갱신'하는 경우, from 값을 항상 0으로 주어야 하기 때문에 fn 하나로 묶어서 처리.
    */
-  const resetReloadList = () => {
+  const resetReloadList = async () => {
     setFrom(0);
+    await getSearchList();
     updateIntersectionHandler(0);
-    getSearchList();
   };
   const setSortInfo = (item: string) => {
     const items = item.split("_");

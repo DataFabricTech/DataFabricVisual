@@ -22,7 +22,7 @@
         <div
           id="dataList"
           class="data-list"
-          v-if="viewType === 'listView' && !isSearchResultNoData"
+          v-show="viewType === 'listView' && !isSearchResultNoData"
         >
           <resource-box-list
             :data-list="searchResult"
@@ -78,7 +78,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useSearchCommonStore } from "@/store/search/common";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
@@ -91,7 +90,8 @@ import { useRouter } from "nuxt/app";
 const router = useRouter();
 
 const searchCommonStore = useSearchCommonStore();
-const { addSearchList, getFilters, getPreviewData, changeTab } = searchCommonStore;
+const { addSearchList, getFilters, getPreviewData, changeTab } =
+  searchCommonStore;
 const {
   filters,
   searchResult,
@@ -142,10 +142,10 @@ const tabOptions = [
   { label: "융합모델", value: "model", type: "model" },
 ];
 
-  // top-bar 에서 select box (sort) 값이 변경되면 목록을 조회하라는 코드가 구현되어 있는데,
-  // select box 가 화면 맨 처음에 뿌릴때 값을 초기에 1번 셋팅하는 부분에서 목록 조회가 이뤄짐.
-  // 중복 호출을 피하기 위해서 여기서는 목록 데이터를 조회하지 않음.
-  // await getSearchList();
+// top-bar 에서 select box (sort) 값이 변경되면 목록을 조회하라는 코드가 구현되어 있는데,
+// select box 가 화면 맨 처음에 뿌릴때 값을 초기에 1번 셋팅하는 부분에서 목록 조회가 이뤄짐.
+// 중복 호출을 피하기 위해서 여기서는 목록 데이터를 조회하지 않음.
+// await getSearchList();
 
 await getFilters();
 
