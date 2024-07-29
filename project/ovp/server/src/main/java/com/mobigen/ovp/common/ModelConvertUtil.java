@@ -20,15 +20,17 @@ public class ModelConvertUtil {
      * Open Meta Api 에서 response 를
      * 1. 복수건 으로 받았을 경우, hits 를 통째로 받아서 처리하거나
      * 2. 단건 으로 받았을 경우, _source 를 받아서 처리한다.
+     *
      * @param hits
      * @return
      */
     public Object convertSearchDataList(Object hits) {
         List<Map<String, Object>> list = (List<Map<String, Object>>) hits;
         List<Map<String, Object>> modifiedList = list.stream().map(hit -> {
+            String index = hit.get("_index").toString().equals("table_search_index") ? "table" : "storage";
             if (hit.containsKey("_source")) {
                 Map<String, Object> source = (Map<String, Object>) hit.get("_source");
-                return convertSourceDataOne(source);
+                return convertSourceDataOne(index, source);
             }
             return null;
         }).filter(Objects::nonNull).collect(Collectors.toList());
@@ -37,11 +39,14 @@ public class ModelConvertUtil {
 
     /**
      * 단건(_source) 받아서 처리
+     *
      * @param source
      * @return
      */
-    public Map<String, Object> convertSourceDataOne(Map<String, Object> source) {
+    public Map<String, Object> convertSourceDataOne(String index, Map<String, Object> source) {
         Map<String, Object> modifiedSource = new HashMap<>();
+
+        modifiedSource.put("type", source.get("serviceType").toString().toLowerCase().equals("trino") ? "model" : index);
 
         modifiedSource.put("id", source.get("id"));
         // TODO : ICON 처리 완료되면 아래 코드 수정 필요

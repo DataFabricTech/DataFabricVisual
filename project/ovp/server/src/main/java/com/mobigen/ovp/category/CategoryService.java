@@ -94,7 +94,7 @@ public class CategoryService {
                 Map<String, Object> modelData = searchClient.getSearchOne(modelIndex, modelId);
                 if (modelData != null && modelData.containsKey("_source")) {
                     Map<String, Object> source = (Map<String, Object>) modelData.get("_source");
-                    resultList.add(modelConvertUtil.convertSourceDataOne(source));
+                    resultList.add(modelConvertUtil.convertSourceDataOne(modelIndex, source));
                 }
             } catch (Exception e) {
                 // 각 요청의 예외를 로깅하고 continue (필요 시 다른 방법으로 처리 가능)
