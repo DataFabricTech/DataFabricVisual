@@ -8,7 +8,7 @@
       :data="tabOptions"
       :label-key="'label'"
       :value-key="'value'"
-      :current-item="currentTab"
+      :current-item="initTab"
       :current-item-type="'value'"
       :use-tab-contents="false"
       @change="changeTab"
@@ -99,7 +99,6 @@ const {
   viewType,
   isShowPreview,
   isBoxSelectedStyle,
-  currentTab,
   isSearchResultNoData,
 } = storeToRefs(searchCommonStore);
 
@@ -134,6 +133,8 @@ const modelNmClick = (data: object) => {
     },
   });
 };
+
+const initTab: string = "table";
 
 const tabOptions = [
   { label: "테이블", value: "table", type: "table" },

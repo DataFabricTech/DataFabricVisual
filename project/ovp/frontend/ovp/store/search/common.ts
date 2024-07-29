@@ -1,6 +1,5 @@
 import { usePagingStore } from "~/store/common/paging";
 import _ from "lodash";
-import { computed } from "vue";
 
 export const FILTER_KEYS = {
   CATEGORY: "domains",
@@ -104,11 +103,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const sortKeyOpt: Ref<string> = ref<string>("desc");
   const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
 
-  // Computed
-  const currentTabLive: Ref<string> = computed(() => {
-    return currentTab.value;
-  });
-
   const getSearchListQuery = () => {
     const queryFilter = getQueryFilter();
     const params: any = {
@@ -164,7 +158,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     const { data, totalCount } = await getSearchListAPI();
     searchResult.value = data[currentTab.value];
     searchResultLength.value = totalCount;
-    isSearchResultNoData.value = searchResult.value.length === 0 ? true : false;
+    isSearchResultNoData.value = searchResult.value.length === 0;
   };
   const getFilters = async () => {
     const { data } = await $api(`/api/search/filters`);
@@ -285,7 +279,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     isShowPreview,
     isBoxSelectedStyle,
     searchResultLength,
-    currentTabLive,
     isSearchResultNoData,
     addSearchList,
     getSearchList,
