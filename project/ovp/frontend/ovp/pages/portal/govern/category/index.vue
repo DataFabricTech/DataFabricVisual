@@ -154,6 +154,7 @@
                     :is-box-selected-style="false"
                     @previewClick="previewClick"
                     @modelNmClick="modelNmClick"
+                    @checkedValueChanged="checked"
                   />
                   <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
                   <!--                TODO: [퍼블리싱] loader UI 컴포넌트 추가 및 로딩 위치 검토 필요 -->
@@ -421,6 +422,9 @@ const previewClick = async (data: object) => {
 
 const modelNmClick = (data: object) => {
   console.log("modelClick");
+};
+const checked = (checkedList: any[]) => {
+  console.log(checkedList);
 };
 
 await getCategories();
