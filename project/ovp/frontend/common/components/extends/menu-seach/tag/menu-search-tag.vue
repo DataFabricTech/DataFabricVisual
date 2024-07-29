@@ -1,11 +1,16 @@
 <template>
   <client-only>
-    <div class="select select-clean select-sm">
-      <button class="select-button" @click="onClickOpenMenuSearch">
-        <span class="select-button-title">{{ props.title }}</span>
-        <div class="badge badge-primary-lighter" v-if="selectedListData.length > 0">
-          <p class="badge-text">{{ selectedListData.length }}</p>
+    <div class="select select-clean">
+      <button class="select-button" @click.stop="onClickOpenMenuSearch">
+        <span class="select-button-title" v-if="selectedListData.length < 1">{{ props.title }}</span>
+        <div class="tag tag-primary tag-sm" v-else v-for="item in selectedListData">
+          <span class="tag-text">{{ item[props.labelKey] }}</span>
+          <button class="tag-delete-button" @click.stop="onDeleteTag(item)">
+            <span class="hidden-text">삭제</span>
+            <svg-icon class="svg-icon" name="close"></svg-icon>
+          </button>
         </div>
+
         <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
       </button>
       <menu-search
@@ -25,8 +30,8 @@
 
 <script setup lang="ts">
 import { MenuSearchItemImpl } from "../MenuSearchComposition";
+import { MenuSearchTagComposition } from "./MenuSearchTagComposition";
 import { MenuSearchTypeProps } from "../type/MenuSearchTypeProps";
-import { MenuSearchTypeComposition } from "../type/MenuSearchTypeComposition";
 import MenuSearch from "../menu-search.vue";
 
 const props = withDefaults(defineProps<MenuSearchTypeProps>(), {
@@ -44,9 +49,7 @@ const props = withDefaults(defineProps<MenuSearchTypeProps>(), {
   nodataMsg: "데이터가 없습니다.",
   noSearchMsg: "검색결과가 없습니다.",
   isMulti: false,
-
-  // menu-search-button 고유 props
-  title: "컴포넌트"
+  title: "값을 선택하세요"
 });
 
 const emit = defineEmits<{
@@ -70,8 +73,8 @@ const openMenuSearch: () => void = () => {
   }
 };
 
-const { isMenuSearchShow, selectedListData, onCancel, onClickOpenMenuSearch, changeMenuSearch } =
-  MenuSearchTypeComposition(props, applyData, openMenuSearch);
+const { isMenuSearchShow, selectedListData, onCancel, onDeleteTag, onClickOpenMenuSearch, changeMenuSearch } =
+  MenuSearchTagComposition(props, applyData, openMenuSearch);
 </script>
 
 <style scoped></style>

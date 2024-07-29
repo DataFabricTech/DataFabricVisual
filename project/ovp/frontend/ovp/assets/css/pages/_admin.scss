@@ -154,6 +154,13 @@
   border-top: 1px solid $neutral-100;
 }
 
+//log modal
+.log-view {
+  overflow: auto;
+  width: 100%;
+  height: 400px;
+}
+
 
 //overview
 .overview {

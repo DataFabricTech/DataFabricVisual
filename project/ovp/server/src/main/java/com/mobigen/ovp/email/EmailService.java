@@ -41,7 +41,7 @@ public class EmailService {
         if (EmailUtil.isLinkExpiredWithValidTime(pwResetData.get().getValidTime(), pwResetData.get().getCreateDate())) {
             redirectUrl.append(ovpProperties.getMail().getRedirectErrorUrl());
         } else {
-            redirectUrl.append(ovpProperties.getMail().getRedirectUrl()).append("/").append(id);
+            redirectUrl.append(ovpProperties.getMail().getRedirectUrl()).append("?id=").append(id);
         }
         // 3. 리다이랙트
         return redirectUrl;

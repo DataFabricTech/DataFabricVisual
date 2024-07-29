@@ -7,5 +7,5 @@ export interface MenuSearchProps extends SelectProps {
   noSearchMsg?: string;
   searchText?: string;
   isMulti?: boolean;
-  isShow:boolean;
+  isShow?:boolean;
 }
