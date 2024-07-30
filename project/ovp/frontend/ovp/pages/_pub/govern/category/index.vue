@@ -654,7 +654,8 @@
           <svg-icon class="button-icon" name="close"></svg-icon>
         </button>
       </div>
-      <div class="modal-body"></div>
+      <div class="modal-body">
+      </div>
       <div class="modal-foot">
         <div class="modal-foot-group">
           <button class="button button-neutral-ghost button-lg" @click="showModalModelChange = false">취소</button>
@@ -666,7 +667,7 @@
 </template>
 
 <style scoped></style>
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
 import SelectBox from "../../../../common/components/extends/select-box/SelectBox.vue";
 import MenuSearch from "@extends/menu-seach/menu-search.vue";
@@ -681,4 +682,8 @@ export default defineComponent({
     };
   }
 });
+
+
+
+
 </script>
