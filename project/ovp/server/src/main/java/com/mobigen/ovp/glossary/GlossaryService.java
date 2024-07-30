@@ -3,9 +3,11 @@ package com.mobigen.ovp.glossary;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.glossary.client.GlossaryClient;
+import com.mobigen.ovp.glossary.client.dto.common.Tag;
 import com.mobigen.ovp.glossary.client.dto.glossary.Glossary;
 import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivity;
 import com.mobigen.ovp.glossary.client.dto.terms.GlossaryTerms;
+import com.mobigen.ovp.glossary.client.response.Glossaries;
 import com.mobigen.ovp.glossary.client.response.GlossaryActivities;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +18,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,9 +35,15 @@ public class GlossaryService {
      * 용어 사전 리스트
      * @return
      */
-    public List<Glossary> getGlossaries() {
+    public List<Glossaries> getGlossaries() {
         String fields = "owner,tags,reviewers,votes,domain";
-        return  glossaryClient.getGlossaries(fields).getData();
+        List<Glossaries> result = new ArrayList<>();
+        List<Glossary> response = glossaryClient.getGlossaries(fields).getData();
+
+        for(Glossary glossary : response) {
+            result.add(new Glossaries(glossary));
+        }
+        return result;
     }
 
     /**
@@ -45,8 +52,8 @@ public class GlossaryService {
      * @param param
      * @return
      */
-    public Object editGlossary(UUID id, List<JsonPatchOperation> param) {
-        return glossaryClient.editGlossary(id, param);
+    public Glossaries editGlossary(UUID id, List<JsonPatchOperation> param) {
+        return new Glossaries(glossaryClient.editGlossary(id, param));
     }
 
     /**
@@ -128,17 +135,24 @@ public class GlossaryService {
         for(Map<String, ?> data : hits) {
             source.add(data.get("_source"));
         }
-        List<Map<String, String>> result = new ArrayList<>();
+
+        List<Map<String, String>> menuSearchResult = new ArrayList<>();
+        List<Tag> allData = new ArrayList<>();
 
         for(Object obj : source) {
             if(obj instanceof Map<?,?>) {
                 Map<String, ?> data = (Map<String, ?>) obj;
-                Map<String, String> resultMap = new HashMap<>();
-                resultMap.put("data", String.valueOf(data.get("id")));
-                resultMap.put("label", String.valueOf(data.get("name")));
-                result.add(resultMap);
+                Map<String, String> menuSearchData = new HashMap<>();
+                menuSearchData.put("data", String.valueOf(data.get("name")));
+                menuSearchData.put("label", String.valueOf(data.get("displayName")));
+                menuSearchResult.add(menuSearchData);
+
+                allData.add(new Tag(data));
             }
         }
+        Map<String, List<?>> result = new HashMap<>();
+        result.put("menuSearchData", menuSearchResult);
+        result.put("allData", allData);
         return result;
     }
 }

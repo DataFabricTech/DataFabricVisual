@@ -2,6 +2,7 @@ package com.mobigen.ovp.glossary.client;
 
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivityResponse;
+import com.mobigen.ovp.glossary.client.dto.glossary.Glossary;
 import com.mobigen.ovp.glossary.client.dto.glossary.GlossaryResponse;
 import com.mobigen.ovp.glossary.client.dto.terms.GlossaryTermsResponse;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -34,7 +35,7 @@ public interface GlossaryClient {
      * @return
      */
     @PatchMapping(value = "/glossaries/{id}", consumes = "application/json-patch+json")
-    Object editGlossary(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param);
+    Glossary editGlossary(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param);
 
     /**
      * 용어 사전 삭제
