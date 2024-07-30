@@ -24,7 +24,7 @@
             <p class="notification-detail">등록된 정보가 없습니다.</p>
           </div>
         </div>
-        <div class="tree p-3">트리영역 입니다.</div>
+        <div class="p-3">트리영역 입니다.</div>
       </div>
       <div class="work-page">
         <div class="l-top-bar">
@@ -124,7 +124,7 @@
                   </label>
                 </div>
                 <div class="h-group ml-auto gap-2">
-                  <button class="button button-secondary-stroke">카테고리 변경</button>
+                  <button class="button button-secondary-stroke" @click="showModalModelChange = true">카테고리 변경</button>
                   <button class="button button-secondary" @click="showModalModelAdd = true">데이터모델추가</button>
                 </div>
               </div>
@@ -466,6 +466,26 @@
               <span class="button-title">초기화</span>
             </button>
           </div>
+          <div class="tab">
+            <ul class="tab-list">
+              <li class="tab-item is-tab-item-selected">
+                <button class="tab-button">
+                  <p class="tab-button-text">테이블 (100)</p>
+                </button>
+              </li>
+              <li class="tab-item">
+                <button class="tab-button">
+                  <p class="tab-button-text">스토리지 (0)</p>
+                </button>
+              </li>
+              <li class="tab-item">
+                <button class="tab-button">
+                  <p class="tab-button-text">융합모델 (3)</p>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <!-- 탭 시작  -->
           <strong>선택 <em class="primary">0개</em></strong>
           <div class="table-scroll">
             <table>
@@ -626,6 +646,7 @@
               </tbody>
             </table>
           </div>
+          <!-- 탭 끝  -->
           <!-- 결과 없을 시 no-result 표시 -->
           <div class="no-result" style="display: none">
             <div class="notification">
@@ -643,10 +664,31 @@
       </div>
     </div>
   </div>
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalModelChange">
+    <div class="modal modal-padding-16" style="width:480px">
+      <div class="modal-head">
+        <div class="modal-head-text">
+          <span class="modal-head-title">카테고리 변경</span>
+        </div>
+        <button class="button link-button button-sm" type="button" @click="showModalModelChange = false">
+          <span class="hidden-text">닫기</span>
+          <svg-icon class="button-icon" name="close"></svg-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-foot">
+        <div class="modal-foot-group">
+          <button class="button button-neutral-ghost button-lg" @click="showModalModelChange = false">취소</button>
+          <button class="button button-primary button-lg">선택</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped></style>
-<script>
+<script lang="ts">
 import { defineComponent } from "vue";
 import SelectBox from "../../../../common/components/extends/select-box/SelectBox.vue";
 import MenuSearch from "@extends/menu-seach/menu-search.vue";
@@ -656,8 +698,13 @@ export default defineComponent({
   data() {
     return {
       showModal: false,
-      showModalModelAdd: false
+      showModalModelAdd: false,
+      showModalModelChange: false
     };
   }
 });
+
+
+
+
 </script>
