@@ -14,15 +14,18 @@
               <div class="form-detail flex flex-col">
                 <div class="text-input-group w-full">
                   <input
-                      id="inpName"
-                      class="text-input text-input-lg"
-                      placeholder="이름 입력"
-                      v-model="form.name"
+                    id="inpName"
+                    class="text-input text-input-lg"
+                    placeholder="이름 입력"
+                    v-model="form.name"
                   />
                 </div>
-                <div class="notification notification-sm notification-error" v-if="errors.name">
+                <div
+                  class="notification notification-sm notification-error"
+                  v-if="errors.name"
+                >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">{{errors.name}}</p>
+                  <p class="notification-detail">{{ errors.name }}</p>
                 </div>
               </div>
             </div>
@@ -34,16 +37,18 @@
               <div class="form-detail flex flex-col">
                 <div class="text-input-group w-full">
                   <input
-                      id="inpEmail"
-                      class="text-input text-input-lg"
-                      placeholder="이메일 입력"
-                      v-model="form.email"
-
+                    id="inpEmail"
+                    class="text-input text-input-lg"
+                    placeholder="이메일 입력"
+                    v-model="form.email"
                   />
                 </div>
-                <div class="notification notification-sm notification-error" v-if="errors.email">
+                <div
+                  class="notification notification-sm notification-error"
+                  v-if="errors.email"
+                >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">{{errors.email}}</p>
+                  <p class="notification-detail">{{ errors.email }}</p>
                 </div>
               </div>
             </div>
@@ -55,25 +60,39 @@
               <div class="form-detail flex flex-col">
                 <div class="text-input-group w-full">
                   <input
-                      id="inpPw"
-                      :type="inputPasswordType"
-                      class="text-input text-input-lg"
-                      placeholder="비밀번호 입력"
-                      v-model="form.password"
+                    id="inpPw"
+                    :type="pwComposition.inputPasswordType.value"
+                    class="text-input text-input-lg"
+                    placeholder="비밀번호 입력"
+                    v-model="pwComposition.newPassword.value"
                   />
                   <button
-                      class="text-input-group-action-button button button-neutral-ghost button-sm"
-                      type="button"
-                      @click="isHidePw"
+                    class="text-input-group-action-button button button-neutral-ghost button-sm"
+                    type="button"
+                    @click="pwComposition.isHidePw"
                   >
-                    <span class="hidden-text">지우기</span>
-                    <svg-icon class="button-icon" name="eye"></svg-icon>
+                    <span class="hidden-text">비밀번호 보기 해제</span>
+                    <svg-icon
+                      v-if="
+                        pwComposition.inputPasswordType.value === 'password'
+                      "
+                      class="button-icon"
+                      name="eye"
+                    ></svg-icon>
+                    <svg-icon
+                      v-else
+                      class="button-icon"
+                      name="eye-hide"
+                    ></svg-icon>
                   </button>
                 </div>
-                <div class="notification notification-sm notification-error" v-if="errors.password">
+                <div
+                  class="notification notification-sm notification-error"
+                  v-if="pwComposition.errorMsgPassword.value"
+                >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
                   <p class="notification-detail">
-                    <p class="notification-detail">{{errors.password}}</p>
+                    {{ pwComposition.errorMsgPassword.value }}
                   </p>
                 </div>
               </div>
@@ -86,25 +105,40 @@
               <div class="form-detail flex flex-col">
                 <div class="text-input-group w-full">
                   <input
-                      id="inpConfirmPw"
-                      :type="inputConfirmPasswordType"
-                      class="text-input text-input-lg"
-                      placeholder="비밀번호 입력"
-                      v-model="form.confirmPassword"
+                    id="inpConfirmPw"
+                    :type="pwComposition.inputConfirmPasswordType.value"
+                    class="text-input text-input-lg"
+                    placeholder="비밀번호 입력"
+                    v-model="pwComposition.confirmPassword.value"
                   />
                   <button
-                      class="text-input-group-action-button button button-neutral-ghost button-sm"
-                      type="button"
-                      @click="isHideConfirmPw"
+                    class="text-input-group-action-button button button-neutral-ghost button-sm"
+                    type="button"
+                    @click="pwComposition.isHideConfirmPw"
                   >
                     <span class="hidden-text">지우기</span>
-                    <svg-icon class="button-icon" name="eye"></svg-icon>
+                    <svg-icon
+                      v-if="
+                        pwComposition.inputConfirmPasswordType.value ===
+                        'password'
+                      "
+                      class="button-icon"
+                      name="eye"
+                    ></svg-icon>
+                    <svg-icon
+                      v-else
+                      class="button-icon"
+                      name="eye-hide"
+                    ></svg-icon>
                   </button>
                 </div>
-                <div class="notification notification-sm notification-error" v-if="errors.confirmPassword">
+                <div
+                  class="notification notification-sm notification-error"
+                  v-if="pwComposition.errorMsgConfirmPassword.value"
+                >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
                   <p class="notification-detail">
-                    <p class="notification-detail">{{errors.confirmPassword}}</p>
+                    {{ pwComposition.errorMsgConfirmPassword.value }}
                   </p>
                 </div>
               </div>
@@ -114,10 +148,7 @@
             <button class="button button-primary button-lg" type="submit">
               회원가입
             </button>
-            <button
-                class="button button-primary-ghost button-sm"
-                type="button"
-            >
+            <button class="button button-primary-ghost button-sm" type="button">
               <nuxt-link :to="'/portal/login'">
                 로그인 페이지로 돌아가기
               </nuxt-link>
@@ -131,42 +162,26 @@
 
 <script setup lang="ts">
 import { loginStore } from "@/store/login/index";
-import { PWREGEX, PWREGEX_ERROR_MSG } from "~/utils/constant";
-import type { Ref } from "vue";
 import { useRouter } from "vue-router";
+import { PasswordComposition } from "~/components/login/PasswordComposition";
+import $constants from "~/utils/constant";
+const pwComposition = PasswordComposition();
 
 const form: {
   name: string;
   email: string;
-  password: string;
-  confirmPassword: string;
 } = reactive({
   name: "",
   email: "",
-  password: "",
-  confirmPassword: ""
 });
 
 const errors: {
   name: string;
   email: string;
-  password: string;
-  confirmPassword: string;
-}  = reactive({
-  name: '',
-  email: '',
-  password: '',
-  confirmPassword: ''
+} = reactive({
+  name: "",
+  email: "",
 });
-
-const inputPasswordType: Ref<string> = ref("password");
-const isHidePw = () => {
-  inputPasswordType.value = inputPasswordType.value === "password" ? "text" : "password";
-};
-const inputConfirmPasswordType: Ref<string> = ref("password");
-const isHideConfirmPw = () => {
-  inputConfirmPasswordType.value = inputConfirmPasswordType.value === "password" ? "text" : "password";
-};
 
 const store = loginStore();
 const router = useRouter();
@@ -184,10 +199,12 @@ const onSubmit = async () => {
 const validateForm = () => {
   const isErrorName = validateName();
   const isErrorEmail = validateEmail();
-  const isErrorPassword = validatePassword();
-  const isErrorConfirmPassword = validateConfirmPassword();
+  const isErrorPassword = pwComposition.validatePassword();
+  const isErrorConfirmPassword = pwComposition.validateConfirmPassword();
 
-  return isErrorName && isErrorEmail && isErrorPassword && isErrorConfirmPassword;
+  return (
+    isErrorName && isErrorEmail && isErrorPassword && isErrorConfirmPassword
+  );
 };
 
 const validateName = () => {
@@ -199,27 +216,11 @@ const validateEmail = () => {
   errors.email = form.email ? "" : "사용자 이메일을 입력하세요.";
   if (errors.email) return false;
 
-  // TODO: constants 연결 필요
-  const EMAIL_REG = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-  errors.email = EMAIL_REG.test(form.email) ? "" : "이메일이 유효하지 않습니다.";
+  errors.email = $constants.LOGIN.EMAIL.REGEX.test(form.email)
+    ? ""
+    : "이메일이 유효하지 않습니다.";
   return !errors.email;
 };
-
-const validatePassword = () => {
-  errors.password = form.password ? '' : '사용자 비밀번호를 입력하세요.';
-  if (errors.password) return false;
-
-  errors.password = PWREGEX.test(form.password) ? "" : PWREGEX_ERROR_MSG;
-  return !errors.password;
-};
-
-const validateConfirmPassword = () => {
-  errors.confirmPassword = form.confirmPassword ? "" : "사용자 비밀번호를 입력하세요.";
-  if (errors.confirmPassword) return false;
-  errors.confirmPassword = form.password === form.confirmPassword ? "" : "비밀번호가 일치하지 않습니다.";
-  return !errors.confirmPassword;
-};
-
 
 const isDuplicateEmail = async () => {
   const result = await store.checkDuplicateEmail({ email: form.email });
@@ -231,19 +232,17 @@ const isDuplicateEmail = async () => {
 const signUp = async () => {
   const result = await store.signUpUser({
     email: form.email,
-    password: form.password,
-    name: form.name
+    password: pwComposition.newPassword.value,
+    name: form.name,
   });
 
-
-  if (result.result === 0  && result.errorMessage) {
-    alert(result.errorMessage)
+  if (result.result === 0 && result.errorMessage) {
+    alert(result.errorMessage);
   } else {
-    alert('회원가입 성공');
-    router.push('/portal/login');
+    alert("회원가입 성공");
+    router.push("/portal/login");
   }
 };
-
 </script>
 
 <style lang="scss" scoped></style>

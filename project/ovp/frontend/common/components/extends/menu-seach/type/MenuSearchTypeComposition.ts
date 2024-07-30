@@ -7,14 +7,15 @@ export interface MenuSearchTypeCompositionImpl extends MenuSearchTypeProps {
   selectedListData: Ref<any[]>;
   onClickOpenMenuSearch(): void;
   onCancel(): void;
-  changeMenuSearch(value : any[] | {}): void;
-  applySelectedData(value : any[] | {}): void;
+  changeMenuSearch(value: any[] | {}): void;
+  applySelectedData(value: any[] | {}): void;
 }
 
 export function MenuSearchTypeComposition(
   props: MenuSearchTypeProps,
   applyData: (value: MenuSearchItemImpl | MenuSearchItemImpl[]) => void,
-  openMenuSearch: () => void
+  openMenuSearch: () => void,
+  panelClosed: () => void
 ): MenuSearchTypeCompositionImpl {
   const selectedListData: Ref<any[]> = ref([]);
   const setSelectedListData: () => void = () => {
@@ -35,15 +36,25 @@ export function MenuSearchTypeComposition(
     isMenuSearchShow.value = false;
   };
 
-  const changeMenuSearch : (value : any[] | {}) => void = (value) => {
+  const changeMenuSearch: (value: any[] | {}) => void = (value) => {
     applySelectedData(value);
     onClickOpenMenuSearch();
   };
 
-  const applySelectedData : (value : any[] | {}) => void = (value) => {
-    selectedListData.value = props.isMulti ? value as [] : [value];
+  const applySelectedData: (value: any[] | {}) => void = (value) => {
+    selectedListData.value = props.isMulti ? (value as []) : [value];
     applyData(value);
   };
+
+  // 선택 panel 이 닫힐때, 이벤트 처리
+  watch(
+    () => isMenuSearchShow.value,
+    (newVal) => {
+      if (!newVal) {
+        panelClosed();
+      }
+    }
+  );
 
   return {
     ...props,

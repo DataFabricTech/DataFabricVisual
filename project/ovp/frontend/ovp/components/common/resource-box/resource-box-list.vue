@@ -1,17 +1,5 @@
 <template>
-  <template v-for="(dataObj, index) in props.dataList" :key="dataObj.id">
-    <div v-if="props.useListCheckbox">
-      <input
-        type="checkbox"
-        :id="`resource_box_list_${index}`"
-        class="checkbox-input"
-        @change="checked($event, dataObj.id)"
-      />
-      <label :for="`resource_box_list_${index}`" class="checkbox-label">
-        <span class="checkbox-text"> </span>
-      </label>
-    </div>
-
+  <template v-for="dataObj in props.dataList" :key="dataObj.id">
     <resource-box
       :class="[
         {
@@ -21,11 +9,13 @@
         props.class,
       ]"
       :data-obj="dataObj"
+      :use-list-checkbox="props.useListCheckbox"
       :showOwner="props.showOwner"
       :showCategory="props.showCategory"
       :use-prv-btn="props.usePrvBtn"
       :useFirModelNm="props.useFirModelNm"
       :use-data-nm-link="props.useDataNmLink"
+      @checked="checked"
       @previewClick="previewClick"
       @modelNmClick="modelNmClick"
     />
@@ -63,10 +53,14 @@ const modelNmClick = (data: object) => {
   emit("modelNmClick", data);
 };
 
-const checked = ($evt: Event, id: string | number) => {
-  const target = $evt.target as HTMLInputElement;
-
-  if (target.checked) {
+const checked = ({
+  id,
+  checked,
+}: {
+  id: string | number;
+  checked: boolean;
+}) => {
+  if (checked) {
     if (!selectedList.value.includes(id)) {
       selectedList.value.push(id);
     }
