@@ -420,7 +420,7 @@ const onNodeClicked = (node: TreeViewItem) => {
 };
 const addSibling = (newNode: TreeViewItem) => {
   // 형제 노드 추가
-  // TODO : modal 창 띄워서 노드 추가 API  호출 (newNode 에 uuid 밒 parentId 포함되어있음)
+  // TODO : modal 창 띄워서 노드 추가 API  호출 (newNode 에 id(uuid), parentId 포함되어있음)
   console.log(`형제노드 추가 ${JSON.stringify(newNode)}`);
   addNewCategory(newNode);
 };
