@@ -3,6 +3,7 @@ import { useSearchCommonStore } from "../search/common";
 import sampleData from "./samples/sampleData.json";
 
 interface DataModel {
+  type: string;
   id: string | number;
   serviceIcon: string;
   depth: string[];
@@ -19,8 +20,8 @@ export const useMainStore = defineStore("mainStore", () => {
   // const { $api } = useNuxtApp();
 
   const searchCommonStore = useSearchCommonStore();
-  const { getSearchList, setSortInfo } = searchCommonStore;
-  const { searchResult } = storeToRefs(searchCommonStore);
+  const { setSortInfo, getQueryFilter, getTrinoQuery } = searchCommonStore;
+  const { sortKey, sortKeyOpt } = storeToRefs(searchCommonStore);
 
   const recentQuestData: Ref<DataModel[]> = ref([]);
   const bookmarkData: Ref<DataModel[]> = ref([]);
@@ -35,22 +36,40 @@ export const useMainStore = defineStore("mainStore", () => {
   // TODO: [개발] 임시 코드로 추후 삭제 예정
   const SAMPLE_DATA = sampleData.data.data as DataModel[];
   const SLICE_SIZE = 3;
+  const dataResult: Ref<any[]> = ref([]);
 
-  const getDataList = async (
-    apiCall: Ref<string | DataModel[]>,
+  const getMainDataListQuery = () => {
+    const queryFilter = getQueryFilter();
+    const params: any = {
+      q: "",
+      index: "all",
+      from: 0,
+      size: 3,
+      deleted: false,
+      query_filter: JSON.stringify(queryFilter),
+      sort_field: sortKey.value,
+      sort_order: sortKeyOpt.value,
+      trino_query: JSON.stringify(getTrinoQuery(queryFilter)),
+    };
+
+    return new URLSearchParams(params);
+  };
+
+  const getMainDataList = async () => {
+    const { data } = await getMainDataListAPI();
+    dataResult.value = data["all"];
+  };
+
+  const getMainDataListAPI = async () => {
+    const { data } = await $api(`/api/search/list?${getMainDataListQuery()}`);
+    return data;
+  };
+
+  const getDataList = (
+    data: any[],
     dataStatus: Ref<boolean>,
     dataList: Ref<DataModel[]>,
   ) => {
-    let data: any[] = [];
-
-    if (typeof apiCall === "object") {
-      data = await apiCall;
-    } else {
-      // TODO[개발] API 개발 후 적용 예정
-      // data = await $api(`${apiCall}`);
-      console.log("api 전달");
-    }
-
     if (data.length === 0) {
       dataStatus.value = true;
     } else {
@@ -64,30 +83,29 @@ export const useMainStore = defineStore("mainStore", () => {
     console.log("최근 탐색 데이터 API 불러오기", recentQuestData.value);
   };
 
-  const getBookmarkData = async () => {
-    await getDataList(
-      "/api/search/filters",
-      isBookmarkDataNoInfo,
-      bookmarkData,
-    );
+  // TODO: [개발] api/user/info 가져오는 store 가 있다면, 추후 그 곳에서 가져와서 id 만 받아오기
+  const getUserInfo = async () => {
+    const data: any = await $api(`/api/user/info`);
+    const userId = data.data.id;
 
-    console.log("북마크 한 데이터 API 불러오기", bookmarkData.value);
+    await getBookmarkData(userId);
+  };
+
+  const getBookmarkData = async (id: string) => {
+    const data = await $api(`/api/main/follows/${id}`);
+    await getDataList(data.data, isBookmarkDataNoInfo, bookmarkData);
   };
 
   const getUpVotesData = async () => {
     await setSortInfo("totalVotes_desc");
-    await getSearchList();
-    await getDataList(searchResult.value, isUpVotesDataNoInfo, upVotesData);
-
-    console.log("추천 많은 순 데이터 API 불러오기", upVotesData.value);
+    await getMainDataList();
+    await getDataList(dataResult.value, isUpVotesDataNoInfo, upVotesData);
   };
 
   const getLastUpdatedData = async () => {
     await setSortInfo("updatedAt_desc");
-    await getSearchList();
-    await getDataList(searchResult.value, isLastUpdatedData, lastUpdatedData);
-
-    console.log("최근 업데이트 데이터 API 불러오기", lastUpdatedData.value);
+    await getMainDataList();
+    await getDataList(dataResult.value, isLastUpdatedData, lastUpdatedData);
   };
 
   return {
@@ -99,6 +117,7 @@ export const useMainStore = defineStore("mainStore", () => {
     isBookmarkDataNoInfo,
     isUpVotesDataNoInfo,
     isLastUpdatedData,
+    getUserInfo,
     getRecentQuestData,
     getBookmarkData,
     getUpVotesData,

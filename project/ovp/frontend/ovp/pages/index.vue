@@ -120,14 +120,11 @@ const router = useRouter();
 
 const searchCommonStore = useSearchCommonStore();
 const { setSortFilter } = searchCommonStore;
+const { currentTab } = storeToRefs(searchCommonStore);
 
 const mainCommonStore = useMainStore();
-const {
-  getRecentQuestData,
-  getBookmarkData,
-  getUpVotesData,
-  getLastUpdatedData,
-} = mainCommonStore;
+const { getRecentQuestData, getUserInfo, getUpVotesData, getLastUpdatedData } =
+  mainCommonStore;
 const {
   recentQuestData,
   bookmarkData,
@@ -140,8 +137,12 @@ const {
 } = storeToRefs(mainCommonStore);
 
 const setSearchConditionUrl = (item: string) => {
+  currentTab.value = "table";
   setSortFilter(item);
-  router.push({ path: `/portal/search` });
+
+  nextTick(() => {
+    router.push({ path: `/portal/search` });
+  });
 };
 
 const modelNmClick = (data: object) => {

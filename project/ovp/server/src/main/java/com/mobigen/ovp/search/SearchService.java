@@ -124,8 +124,7 @@ public class SearchService {
         if (!params.getFirst("index").equals("all")) {
             params.set("size", "0");
         }
-        params.set("index", "all");
-
+        params.set("index", ModelIndex.all.name());
         return getList(params);
     }
 
@@ -157,7 +156,6 @@ public class SearchService {
 
         return getList(params);
     }
-
 
 
     /**
