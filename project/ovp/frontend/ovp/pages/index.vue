@@ -141,7 +141,10 @@ const {
 
 const setSearchConditionUrl = (item: string) => {
   setSortFilter(item);
-  router.push({ path: `/portal/search` });
+
+  nextTick(() => {
+    router.push({ path: `/portal/search` });
+  });
 };
 
 const modelNmClick = (data: object) => {

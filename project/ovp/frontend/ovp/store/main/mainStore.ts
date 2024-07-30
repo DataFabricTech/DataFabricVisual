@@ -19,8 +19,8 @@ export const useMainStore = defineStore("mainStore", () => {
   // const { $api } = useNuxtApp();
 
   const searchCommonStore = useSearchCommonStore();
-  const { getSearchList, setSortInfo } = searchCommonStore;
-  const { searchResult } = storeToRefs(searchCommonStore);
+  const { setSortInfo, getQueryFilter, getTrinoQuery } = searchCommonStore;
+  const { sortKey, sortKeyOpt } = storeToRefs(searchCommonStore);
 
   const recentQuestData: Ref<DataModel[]> = ref([]);
   const bookmarkData: Ref<DataModel[]> = ref([]);
@@ -76,16 +76,16 @@ export const useMainStore = defineStore("mainStore", () => {
 
   const getUpVotesData = async () => {
     await setSortInfo("totalVotes_desc");
-    await getSearchList();
-    await getDataList(searchResult.value, isUpVotesDataNoInfo, upVotesData);
+    await getMainDataList();
+    await getDataList(dataResult.value, isUpVotesDataNoInfo, upVotesData);
 
     console.log("추천 많은 순 데이터 API 불러오기", upVotesData.value);
   };
 
   const getLastUpdatedData = async () => {
     await setSortInfo("updatedAt_desc");
-    await getSearchList();
-    await getDataList(searchResult.value, isLastUpdatedData, lastUpdatedData);
+    await getMainDataList();
+    await getDataList(dataResult.value, isLastUpdatedData, lastUpdatedData);
 
     console.log("최근 업데이트 데이터 API 불러오기", lastUpdatedData.value);
   };
