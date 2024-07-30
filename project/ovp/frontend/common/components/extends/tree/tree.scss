@@ -59,6 +59,8 @@
     border: none;
 
     &::after {
+      right: 5px;
+      top: 6px;
       width: 0;
       height: 0;
       border-left: 3.53px solid transparent;
@@ -66,8 +68,7 @@
       border-top: 4.1px solid;
       border-bottom: none;
       transform: rotate(-90deg);
-      right: 5px;
-      top: 6px;
+      transition: transform 0.2s ease;
     }
 
     &.rotate-90::after {
