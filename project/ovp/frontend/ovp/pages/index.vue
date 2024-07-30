@@ -122,12 +122,8 @@ const searchCommonStore = useSearchCommonStore();
 const { setSortFilter } = searchCommonStore;
 
 const mainCommonStore = useMainStore();
-const {
-  getRecentQuestData,
-  getBookmarkData,
-  getUpVotesData,
-  getLastUpdatedData,
-} = mainCommonStore;
+const { getRecentQuestData, getUserInfo, getUpVotesData, getLastUpdatedData } =
+  mainCommonStore;
 const {
   recentQuestData,
   bookmarkData,
@@ -164,7 +160,7 @@ onMounted(async () => {
     loader.value.style.display = "block";
   }
   await getRecentQuestData();
-  await getBookmarkData();
+  await getUserInfo();
   await getLastUpdatedData();
   await getUpVotesData();
   if (loader.value) {

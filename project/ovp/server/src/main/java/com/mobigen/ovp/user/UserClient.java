@@ -1,6 +1,5 @@
 package com.mobigen.ovp.user;
 
-import com.mobigen.ovp.common.openmete_client.dto.Follows;
 import com.mobigen.ovp.user.dto.UserInfoDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
@@ -19,6 +18,6 @@ public interface UserClient {
     @GetMapping("/users/loggedInUser")
     UserInfoDTO getUserInfo() throws Exception;
 
-    @GetMapping("/users/${id}")
-    Follows getUserFollows(@PathVariable("id") String id);
+    @GetMapping("/users/{id}")
+    Map<String, Object> getUserFollows(@PathVariable("id") String id, @RequestParam("fields") String fields);
 }

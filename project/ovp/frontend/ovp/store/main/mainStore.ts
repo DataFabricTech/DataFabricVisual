@@ -16,7 +16,7 @@ interface DataModel {
 }
 
 export const useMainStore = defineStore("mainStore", () => {
-  // const { $api } = useNuxtApp();
+  const { $api } = useNuxtApp();
 
   const searchCommonStore = useSearchCommonStore();
   const { setSortInfo, getQueryFilter, getTrinoQuery } = searchCommonStore;
@@ -36,20 +36,40 @@ export const useMainStore = defineStore("mainStore", () => {
   const SAMPLE_DATA = sampleData.data.data as DataModel[];
   const SLICE_SIZE = 3;
 
+  const dataResult: Ref<any[]> = ref([]);
+  const getMainDataListQuery = () => {
+    const queryFilter = getQueryFilter();
+    const params: any = {
+      q: "",
+      index: "all",
+      from: 0,
+      size: 3,
+      deleted: false,
+      query_filter: JSON.stringify(queryFilter),
+      sort_field: sortKey.value,
+      sort_order: sortKeyOpt.value,
+      trino_query: JSON.stringify(getTrinoQuery(queryFilter)),
+    };
+
+    return new URLSearchParams(params);
+  };
+
+  const getMainDataList = async () => {
+    const { data } = await getMainDataListAPI();
+    dataResult.value = data["all"];
+  };
+
+  const getMainDataListAPI = async () => {
+    const { data } = await $api(`/api/search/list?${getMainDataListQuery()}`);
+    return data;
+  };
+
   const getDataList = async (
     apiCall: Ref<string | DataModel[]>,
     dataStatus: Ref<boolean>,
     dataList: Ref<DataModel[]>,
   ) => {
-    let data: any[] = [];
-
-    if (typeof apiCall === "object") {
-      data = await apiCall;
-    } else {
-      // TODO[개발] API 개발 후 적용 예정
-      // data = await $api(`${apiCall}`);
-      console.log("api 전달");
-    }
+    const data: any[] = await apiCall;
 
     if (data.length === 0) {
       dataStatus.value = true;
@@ -64,12 +84,16 @@ export const useMainStore = defineStore("mainStore", () => {
     console.log("최근 탐색 데이터 API 불러오기", recentQuestData.value);
   };
 
-  const getBookmarkData = async () => {
-    await getDataList(
-      "/api/search/filters",
-      isBookmarkDataNoInfo,
-      bookmarkData,
-    );
+  const getUserInfo = async () => {
+    const data: any = await $api(`/api/user/info`);
+    const userId = data.data.id;
+
+    await getBookmarkData(userId);
+  };
+
+  const getBookmarkData = async (id: string) => {
+    const data = await $api(`/api/main/follows/${id}`);
+    await getDataList(data.data, isBookmarkDataNoInfo, bookmarkData);
 
     console.log("북마크 한 데이터 API 불러오기", bookmarkData.value);
   };
@@ -99,6 +123,7 @@ export const useMainStore = defineStore("mainStore", () => {
     isBookmarkDataNoInfo,
     isUpVotesDataNoInfo,
     isLastUpdatedData,
+    getUserInfo,
     getRecentQuestData,
     getBookmarkData,
     getUpVotesData,
