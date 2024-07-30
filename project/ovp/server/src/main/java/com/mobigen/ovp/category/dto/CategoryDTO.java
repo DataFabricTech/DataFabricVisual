@@ -5,6 +5,8 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Data
 public class CategoryDTO {
@@ -18,6 +20,9 @@ public class CategoryDTO {
     private Boolean disabled;
     private List<CategoryDTO> children;
 
+    public CategoryDTO() {
+    }
+
     public CategoryDTO(CategoryEntity entity) {
         this.id = entity.getId().toString();
         this.parentId = entity.getParentId() != null ? entity.getParentId().toString() : null;
@@ -28,5 +33,15 @@ public class CategoryDTO {
         this.selected = false;
         this.disabled = false;
         this.children = new ArrayList<>();
+    }
+
+    public CategoryEntity toEntity() {
+        return new CategoryEntity(
+                Optional.ofNullable(this.id).map(UUID::fromString).orElse(null),
+                Optional.ofNullable(this.parentId).map(UUID::fromString).orElse(null),
+                this.name,
+                this.order,
+                this.desc
+        );
     }
 }

@@ -382,8 +382,14 @@ import { useGovernCategoryStore } from "~/store/governance/Category";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 const categoryStore = useGovernCategoryStore();
 
-const { getCategories, addModelList, getModelList, setSelectedNode } =
-  categoryStore;
+const {
+  getCategories,
+  addModelList,
+  getModelList,
+  setSelectedNode,
+  addCategory,
+  editCategory,
+} = categoryStore;
 const { categories, modelList } = storeToRefs(categoryStore);
 
 const showModal = ref(false);
@@ -414,13 +420,40 @@ const onNodeClicked = (node: TreeViewItem) => {
 };
 const addSibling = (newNode: TreeViewItem) => {
   // 형제 노드 추가
-  // TODO : modal 창 띄워서 노드 추가 API  호출
+  // TODO : modal 창 띄워서 노드 추가 API  호출 (newNode 에 uuid 밒 parentId 포함되어있음)
   console.log(`형제노드 추가 ${JSON.stringify(newNode)}`);
+  addNewCategory(newNode);
 };
 const addChild = (newNode: TreeViewItem) => {
   // 자식 노드 추가
   // TODO : modal 창 띄워서 노드 추가 API  호출
   console.log(`자식노드 추가 ${JSON.stringify(newNode)}`);
+  addNewCategory(newNode);
+};
+// TODO : [개발] 카테고리 등록 예
+const addNewCategory = (newNode: TreeViewItem) => {
+  const addNodeParam: TreeViewItem = {
+    id: "f6a91e15-18c1-4920-ab2b-dd20a68f75bc",
+    parentId: selectedNode.value.id,
+    name: "카테고리 01 - 01",
+    desc: "카테고리 설명이여요",
+    order: 0,
+    children: [],
+  };
+  addCategory(addNodeParam);
+};
+
+// TODO : [개발] 카테고리 수정 예
+const _editCategory = () => {
+  const editNodeParam: TreeViewItem = {
+    id: "f6a91e15-18c1-4920-ab2b-dd20a68f75bc",
+    parentId: "58615558-f39c-46d9-b5f3-d7884b1e25dd",
+    name: "카테고리 수정 테스트",
+    desc: "카테고리 설명을 수정",
+    order: 0,
+    children: [],
+  };
+  editCategory(editNodeParam);
 };
 
 const droppedNode: Ref<TreeViewItem> = ref<TreeViewItem>(<TreeViewItem>{});

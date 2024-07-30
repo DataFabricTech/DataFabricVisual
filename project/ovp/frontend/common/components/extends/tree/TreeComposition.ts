@@ -97,6 +97,15 @@ export function TreeComposition(props: TreeProps): TreeComposition {
   // vue3-tree-vue 에서는 dropValidator 이 undefined 일때만 drag/drop 이 동작하지 않음.
   const dropValidatorHandler: any = props.useDraggable ? dropValidator : undefined;
 
+  watch(
+    () => props.items,
+    (newItems) => {
+      treeItems.value = newItems;
+      openAll();
+    },
+    { immediate: true } // Optionally update immediately with the initial value
+  );
+
   return {
     ...props,
     treeItems,

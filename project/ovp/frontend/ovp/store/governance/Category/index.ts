@@ -53,6 +53,40 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const setSelectedNode = (node: any) => {
     selectedNode = node;
   };
+  const addCategory = (node: TreeViewItem) => {
+    insertOrEditAPI("PUT", node);
+  };
+  const editCategory = (node: TreeViewItem) => {
+    insertOrEditAPI("PATCH", node);
+  };
+  const insertOrEditAPI = (method: string, node: TreeViewItem) => {
+    // TODO : [개발] edit의 경우에도 id, parentId, name, desc, order 값을 모두 backend 로 보내야 함. 없는 항목을 'null'로 업데이트 됨.
+    $api("/api/category", {
+      method: method,
+      body: node,
+    }).then(() => {
+      getCategories();
+    });
+  };
+  const moveCategory = (oldParentId: string, newParentId: string) => {
+    console.log(`${oldParentId} | ${newParentId}`);
+    $api("/api/category/move", {
+      method: "PUT",
+      body: {
+        oldParentId: "",
+        newParentId: "",
+      },
+    });
+  };
+  const deleteCategory = (nodeId: string) => {
+    console.log(nodeId);
+    $api("/api/category", {
+      method: "delete",
+      body: {
+        newNodeId: "",
+      },
+    });
+  };
 
   return {
     categories,
@@ -61,5 +95,9 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     addModelList,
     getModelList,
     setSelectedNode,
+    addCategory,
+    editCategory,
+    moveCategory,
+    deleteCategory,
   };
 });

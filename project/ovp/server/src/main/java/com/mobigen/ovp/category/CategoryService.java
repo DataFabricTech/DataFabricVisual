@@ -68,11 +68,29 @@ public class CategoryService {
         return rootCategories.get(0);
     }
 
-    public Object addCategory(List<JsonPatchOperation> params) {
+    private int getSiblingCnt(UUID parentId) {
+        List<CategoryEntity> siblings = categoryRepository.findByParentIdOrderByOrderDesc(parentId);
+        return siblings.isEmpty() ? 1 : siblings.get(0).getOrder() + 1;
+    }
+
+    public Object addCategory(CategoryDTO paramsDTO) {
+        // parentId 기준 자식 노드가 몇인지 확인해서 order 값 부여 (가장 마지막 노드로 추가)
+        CategoryEntity categoryEntity = paramsDTO.toEntity();
+        int order = getSiblingCnt(categoryEntity.getParentId());
+        categoryEntity.setOrder(order);
+
+        return categoryRepository.saveOrUpdate(categoryEntity);
+    }
+
+    public Object updateCategory(CategoryDTO paramsDTO) {
+        return categoryRepository.saveOrUpdate(paramsDTO.toEntity());
+    }
+
+    public Object deleteCategory(Map<String, String> params) {
         return null;
     }
 
-    public Object updateCategory(List<JsonPatchOperation> params) {
+    public Object moveCategory(List<JsonPatchOperation> params) {
         return null;
     }
 

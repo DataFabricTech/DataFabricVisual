@@ -12,6 +12,8 @@ import java.util.UUID;
 
 @Repository
 public interface CategoryMatchRepository extends JpaRepository<CategoryMatchEntity, UUID> {
+
     @Query("SELECT c FROM CategoryMatchEntity c WHERE c.category_id = :categoryId")
     Page<CategoryMatchEntity> findByCategoryId(@Param("categoryId") UUID categoryId, Pageable pageable);
+
 }
