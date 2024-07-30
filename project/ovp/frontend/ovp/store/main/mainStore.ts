@@ -17,7 +17,7 @@ interface DataModel {
 }
 
 export const useMainStore = defineStore("mainStore", () => {
-  // const { $api } = useNuxtApp();
+  const { $api } = useNuxtApp();
 
   const searchCommonStore = useSearchCommonStore();
   const { setSortInfo, getQueryFilter, getTrinoQuery } = searchCommonStore;

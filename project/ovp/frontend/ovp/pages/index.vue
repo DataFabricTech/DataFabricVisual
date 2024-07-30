@@ -14,8 +14,10 @@
             <p class="notification-detail">출력할 정보가 없습니다.</p>
           </div>
         </div>
+        <!--        TODO: [개발] 최근 탐색 데이터 API 확인 후 추가 예정 -->
         <resource-box-list
           v-else
+          :use-prv-btn="false"
           :data-list="recentQuestData"
           :use-list-checkbox="false"
           :show-owner="true"
@@ -27,7 +29,7 @@
       <div class="main-content">
         <div class="l-top-bar">
           <span class="main-content-title">북마크 한 데이터</span>
-          <!--         TODO: [개발] 마이페이지 > 나의 북마크 리스트 이동-->
+          <!--         TODO: [개발] 마이페이지 > 나의 북마크 리스트 이동 추가 예정-->
           <button class="button link-button-support">
             <span class="button-title">모두 보기</span>
           </button>
@@ -40,6 +42,7 @@
         </div>
         <resource-box-list
           v-else
+          :use-prv-btn="false"
           :data-list="bookmarkData"
           :use-list-checkbox="false"
           :show-owner="true"
@@ -68,6 +71,7 @@
         </div>
         <resource-box-list
           v-else
+          :use-prv-btn="false"
           :data-list="upVotesData"
           :use-list-checkbox="false"
           :show-owner="true"
@@ -94,6 +98,7 @@
         </div>
         <resource-box-list
           v-else
+          :use-prv-btn="false"
           :data-list="lastUpdatedData"
           :use-list-checkbox="false"
           :show-owner="true"
@@ -162,7 +167,7 @@ onMounted(async () => {
     loader.value.style.display = "block";
   }
   await getRecentQuestData();
-  await getBookmarkData();
+  await getUserInfo();
   await getLastUpdatedData();
   await getUpVotesData();
   if (loader.value) {
