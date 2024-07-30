@@ -198,42 +198,11 @@
   </div>
 </template>
 
-<script lang="ts" setup>
-const { $api } = useNuxtApp();
-
-interface User {
-  id: string;
-  name: string;
-  fullyQualifiedName: string;
-  displayName: string;
-  email: string;
-  admin: boolean;
-}
-
-const user: Ref<User> = ref({
-  id: "",
-  name: "",
-  fullyQualifiedName: "",
-  displayName: "",
-  email: "",
-  admin: false,
-});
-
-const userId: Ref<string> = ref("");
-
-const getUserInfo = async () => {
-  const data: any = await $api(`/api/user/info`);
-
-  user.value = data.data;
-  userId.value = data.data.id;
-  
-  console.log("User 정보: ", user.value);
-  console.log("UserId: ", userId.value);
+<script lang="ts">
+export default {
+  name: "main",
+  components: {},
 };
-
-onMounted(async () => {
-  await getUserInfo();
-});
 </script>
 
 <style scoped></style>
