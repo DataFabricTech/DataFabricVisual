@@ -24,7 +24,7 @@
             <p class="notification-detail">등록된 정보가 없습니다.</p>
           </div>
         </div>
-        <div class="tree p-3">트리영역 입니다.</div>
+        <div class="p-3">트리영역 입니다.</div>
       </div>
       <div class="work-page">
         <div class="l-top-bar">
@@ -466,6 +466,26 @@
               <span class="button-title">초기화</span>
             </button>
           </div>
+          <div class="tab">
+            <ul class="tab-list">
+              <li class="tab-item is-tab-item-selected">
+                <button class="tab-button">
+                  <p class="tab-button-text">테이블 (100)</p>
+                </button>
+              </li>
+              <li class="tab-item">
+                <button class="tab-button">
+                  <p class="tab-button-text">스토리지 (0)</p>
+                </button>
+              </li>
+              <li class="tab-item">
+                <button class="tab-button">
+                  <p class="tab-button-text">융합모델 (3)</p>
+                </button>
+              </li>
+            </ul>
+          </div>
+          <!-- 탭 시작  -->
           <strong>선택 <em class="primary">0개</em></strong>
           <div class="table-scroll">
             <table>
@@ -626,6 +646,7 @@
               </tbody>
             </table>
           </div>
+          <!-- 탭 끝  -->
           <!-- 결과 없을 시 no-result 표시 -->
           <div class="no-result" style="display: none">
             <div class="notification">
