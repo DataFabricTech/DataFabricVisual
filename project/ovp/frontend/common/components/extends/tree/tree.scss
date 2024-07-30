@@ -66,8 +66,8 @@
       border-top: 4.1px solid;
       border-bottom: none;
       transform: rotate(-90deg);
-      right: 3px;
-      top: 4px;
+      right: 5px;
+      top: 6px;
     }
 
     &.rotate-90::after {
@@ -101,7 +101,7 @@
       }
 
       .tree-item-node:only-child > .tree-view-item > .guide-line:before {
-        left: 0;
+        left: -2px;
         top: -12px;
         height: 18px;
         border-left: 1px solid $neutral-200;
