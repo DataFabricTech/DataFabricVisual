@@ -9,6 +9,7 @@
       </button>
     </div>
     <vue-tree
+      class="tree-list"
       :items="treeItems"
       :isCheckable="props.isCheckable"
       :hideGuideLines="props.hideGuideLines"
@@ -17,11 +18,6 @@
       @dropValidator="dropValidatorHandler"
       @onSelect="onItemSelected"
     >
-      <!-- TODO : [퍼블] 자식 여부에 따라 ">" 로 생기는 들여쓰기? 같은거 해결하실때 필요하면 사용하시고, 불필요 하시면 삭제 바랍니다.-->
-<!--      <template v-slot:item-prepend="treeViewItem">-->
-<!--        <div style="margin-left: 20px" v-if="treeViewItem.children.length < 1"></div>-->
-<!--      </template>-->
-      <!-- // ---->
 
       <template v-if="mode === 'edit'" v-slot:item-append="treeViewItem">
         <div class="tree-item-buttons">
