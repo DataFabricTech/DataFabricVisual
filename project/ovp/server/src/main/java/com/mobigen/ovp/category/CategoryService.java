@@ -68,7 +68,7 @@ public class CategoryService {
         return rootCategories.get(0);
     }
 
-    private int getSiblingCnt(UUID parentId) {
+    private int getSiblingsMaxOrder(UUID parentId) {
         List<CategoryEntity> siblings = categoryRepository.findByParentIdOrderByOrderDesc(parentId);
         return siblings.isEmpty() ? 1 : siblings.get(0).getOrder() + 1;
     }
@@ -76,7 +76,7 @@ public class CategoryService {
     public Object addCategory(CategoryDTO paramsDTO) {
         // parentId 기준 자식 노드가 몇인지 확인해서 order 값 부여 (가장 마지막 노드로 추가)
         CategoryEntity categoryEntity = paramsDTO.toEntity();
-        int order = getSiblingCnt(categoryEntity.getParentId());
+        int order = getSiblingsMaxOrder(categoryEntity.getParentId());
         categoryEntity.setOrder(order);
 
         return categoryRepository.saveOrUpdate(categoryEntity);
