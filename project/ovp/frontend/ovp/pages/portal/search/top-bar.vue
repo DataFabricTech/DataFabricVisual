@@ -2,8 +2,8 @@
   <!--  상단 검색 결과 & 우측 필터-->
   <div class="l-top-bar">
     <strong
-      >총 <em class="primary">{{ searchResultLength }}개</em>의 검색 결과가
-      있습니다.</strong
+      >총 <em class="primary">{{ searchResultLength[currentTab] }}개</em>의 검색
+      결과가 있습니다.</strong
     >
     <div class="h-group gap-1">
       <select-box

@@ -49,6 +49,14 @@
   .work-page {
     .l-top-bar {
       border-bottom: 1px solid $neutral-200;
+
+      .menu-data-icon {
+        @include icon-size('lg');
+      }
+
+      .service-title {
+        @extend .editable-group-title;
+      }
     }
   }
 
