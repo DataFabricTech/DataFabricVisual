@@ -90,7 +90,15 @@
         ></textarea>
       </template>
       <template #view-slot>
-        <span class="editable-group-desc">{{ newData.modelDesc }}</span>
+        <span class="editable-group-desc">
+          {{
+            props.dataObj.modelDesc === "" ||
+            props.dataObj.modelDesc === null ||
+            props.dataObj.modelDesc === undefined
+              ? "-"
+              : props.dataObj.modelDesc
+          }}</span
+        >
       </template>
     </editable-group>
 

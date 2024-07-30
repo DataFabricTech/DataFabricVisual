@@ -258,6 +258,15 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     sortKey.value = items.shift() ?? ""; // undefined 오류 예외처리
     sortKeyOpt.value = items.pop() ?? "";
   };
+
+  const setSortFilter = (item: string | number = "totalVotes_desc") => {
+    if (!_.isUndefined(item) && typeof item === "string") {
+      setSortInfo(item);
+
+      // 항목 갱신
+      resetReloadList();
+    }
+  };
   const setSearchKeyword = (keyword: string) => {
     searchKeyword = keyword;
   };
@@ -286,6 +295,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getFilters,
     getPreviewData,
     setSortInfo,
+    setSortFilter,
     setSearchKeyword,
     resetReloadList,
     changeTab,
