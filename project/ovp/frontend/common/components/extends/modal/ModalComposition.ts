@@ -1,12 +1,12 @@
 import { ModalProps } from "./ModalProps";
-import { ComputedRef, onMounted, onUnmounted } from "vue";
+import { computed, ComputedRef, onMounted, onUnmounted } from "vue";
 import { useNuxtApp } from "nuxt/app";
 import _ from "lodash";
 
 interface ModalComposition extends ModalProps {
-  dynamicModalClass(): ComputedRef<String>;
+  dynamicModalClass(): string;
 
-  dynamicModalPosition(): ComputedRef<String>;
+  dynamicModalStyle(): string;
 
   closeModal(modalId: string | number | symbol): void;
 }
@@ -14,7 +14,7 @@ interface ModalComposition extends ModalProps {
 export function ModalComposition(props: ModalProps): ModalComposition {
   const { $vfm } = useNuxtApp();
 
-  const dynamicModalClass: ComputedRef<String> = computed(() => {
+  const dynamicModalClass: ComputedRef<string> = computed(() => {
     if (_.isNil(props.top) && _.isNil(props.left)) {
       return "modal-fixed";
     } else {
@@ -22,23 +22,31 @@ export function ModalComposition(props: ModalProps): ModalComposition {
     }
   });
 
-  const dynamicModalPosition: ComputedRef<String> = computed(() => {
+  const dynamicModalStyle: ComputedRef<string | string> = computed(() => {
+    let style: string = `modal; position: absolute; width: ${props.width}px; height: ${props.height}px;`;
+
     if (props.top !== undefined || props.left !== undefined) {
-      return `modal; position: absolute; top: ${modalPosition.top}px; left: ${modalPosition.left}px `;
-    } else {
-      return "";
+      style = `$${style} top: ${modalPosition.top}px; left: ${modalPosition.left}px;`;
     }
+
+    return style;
   });
+
   const closeModal = (modalId: string | number | symbol): void => {
     $vfm.close(modalId);
   };
 
-  const modalPosition = reactive<{ top: number | null; left: number | null }>({ top: null, left: null });
+  const modalPosition = reactive<{ top: number | null; left: number | null }>({
+    top: null,
+    left: null
+  });
+
+  console.log(modalPosition);
 
   function getDocumentSize() {
     let documentSize = {
-      width: window.innerWidth || document.body.clientWidth,
-      height: window.innerHeight || document.body.clientHeight
+      width: window.innerWidth ?? document.body.clientWidth,
+      height: window.innerHeight ?? document.body.clientHeight
     };
 
     let maxHeight = documentSize.height;
@@ -78,5 +86,6 @@ export function ModalComposition(props: ModalProps): ModalComposition {
     window.removeEventListener("resize", getDocumentSize);
   });
 
-  return { ...props, dynamicModalClass, dynamicModalPosition, closeModal };
+  // TODO: 타입스크릡트 return 수정해야 함.
+  return { ...props, dynamicModalClass, dynamicModalStyle, closeModal };
 }
