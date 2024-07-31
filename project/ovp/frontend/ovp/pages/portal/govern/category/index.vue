@@ -161,24 +161,12 @@
                   />
                   <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
                   <!--                TODO: [퍼블리싱] loader UI 컴포넌트 추가 및 로딩 위치 검토 필요 -->
-                  <div
+                  <Loading
                     id="loader"
-                    style="
-                      display: none;
-                      position: fixed;
-                      top: 0;
-                      left: 0;
-                      width: 100%;
-                      height: 100%;
-                      background-color: rgba(255, 255, 255, 0.5);
-                      align-items: center;
-                      justify-content: center;
-                      font-size: 20px;
-                      color: #333;
-                    "
-                  >
-                    loader
-                  </div>
+                    :use-loader-overlay="true"
+                    class="loader-lg is-loader-inner"
+                    style="display: none"
+                  ></Loading>
                 </div>
               </div>
               <div class="preview">
@@ -392,6 +380,8 @@ import type { TreeViewItem } from "@extends/tree/TreeProps";
 import { storeToRefs } from "pinia";
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import Loading from "@base/loading/Loading.vue";
+
 const categoryStore = useGovernCategoryStore();
 
 const {
