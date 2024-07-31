@@ -19,10 +19,20 @@
           class="activity-info-contents"
           v-if="activity.cardStyle === 'tags'"
         >
-          <!-- TODO 퍼블리싱 : 태그 종류에 따라 마이너스, 플러스 구분 되어야함 -->
           <div
             class="tag tag-primary tag-sm"
+            v-if="
+              activity.fieldOperation === 'updated' ||
+              activity.fieldOperation === 'added'
+            "
             v-for="tag in activity.entitySpecificInfo.updatedTags"
+          >
+            <a class="tag-link">{{ tag.name }}</a>
+          </div>
+          <div
+            class="tag tag-primary tag-sm"
+            v-if="activity.fieldOperation === 'deleted'"
+            v-for="tag in activity.entitySpecificInfo.previousTags"
           >
             <a class="tag-link">{{ tag.name }}</a>
           </div>
