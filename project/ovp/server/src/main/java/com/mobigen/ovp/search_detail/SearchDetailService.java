@@ -4,7 +4,7 @@ import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Columns;
 import com.mobigen.ovp.common.openmete_client.dto.ProfileColumn;
 import com.mobigen.ovp.search_detail.dto.response.DataModelSampleDataResponse;
-import com.mobigen.ovp.search_detail.dto.response.DataModelSchemaResponse;
+import com.mobigen.ovp.search_detail.dto.response.DataModelDetailResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -27,14 +27,14 @@ public class SearchDetailService {
      * @param id
      * @return
      */
-    public DataModelSchemaResponse getDataModelDetail(String id) {
+    public DataModelDetailResponse getDataModelDetail(String id) {
         MultiValueMap params = new LinkedMultiValueMap();
 
         // fields=tableConstraints,tablePartition,usageSummary,owner,customMetrics,columns,tags,followers,joins,schemaDefinition,dataModel,extension,testSuite,domain,dataProducts,lifeCycle,sourceHash
         params.add("fields", "owner,followers,tags,votes");
         params.add("include", "all");
 
-        return new DataModelSchemaResponse(tabelsClient.getTablesName(id, params));
+        return new DataModelDetailResponse(tabelsClient.getTablesName(id, params));
     }
 
     /**

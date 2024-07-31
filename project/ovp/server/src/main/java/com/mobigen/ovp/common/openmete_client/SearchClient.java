@@ -1,4 +1,4 @@
-package com.mobigen.ovp.search.client;
+package com.mobigen.ovp.common.openmete_client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.util.MultiValueMap;
@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 
-@FeignClient(name = "SearchClient", url = "${properties.ovp.open-metadata-url}")
+@FeignClient(name = "SearchClient", url = "${properties.ovp.open-metadata-url}/search")
 public interface SearchClient {
-    @GetMapping("/search/aggregate")
+    @GetMapping("/aggregate")
     Map<String, Object> getFilter(MultiValueMap<String, String> params);
 
-    @GetMapping("/search/query")
+    @GetMapping("/query")
     Map<String, Object> getSearchList(@RequestParam MultiValueMap<String, String> params) throws Exception;
+
+    @GetMapping("/get/{index}/doc/{id}")
+    Map<String, Object> getSearchOne(@PathVariable String index, @PathVariable String id) throws Exception;
 }

@@ -1,4 +1,5 @@
 export interface DataModel {
+  type: string;
   id: string | number;
   serviceIcon: string;
   depth: string[];
@@ -7,6 +8,8 @@ export interface DataModel {
   modelDesc: string;
   owner: string;
   category: string;
+  type: string;
+
   [key: string]: string | number | string[];
 }
 
@@ -16,6 +19,7 @@ export interface ResourceBoxCommonProps {
   showCategory?: boolean;
   useFirModelNm?: boolean;
   useDataNmLink?: boolean;
+  useListCheckbox?: boolean;
 
   class?: any;
 }

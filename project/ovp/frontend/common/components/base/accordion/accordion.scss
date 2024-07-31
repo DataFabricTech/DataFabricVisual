@@ -16,7 +16,13 @@
   }
 
   &-body {
+    overflow: hidden;
     padding: $spacing-8 $spacing-12;
+    transition: 150ms ease-out;
+  }
+
+  &-body > * {
+    height: unset !important;
   }
 
   .svg-icon {
@@ -24,6 +30,21 @@
   }
 }
 
-.is-accordion-open .svg-icon {
+.is-accordion-open .accordion-head-icon {
   transform: rotate(180deg);
+}
+
+.accordion-list {
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-8;
+  width: 100%;
+}
+
+.accordion-group {
+  display: flex;
+  flex-direction: column;
+  padding: $spacing-8;
+  gap: $spacing-8;
 }

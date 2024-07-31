@@ -6,8 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.net.URI;
+import java.util.Map;
 
 
 @Slf4j
@@ -69,6 +71,11 @@ public class SampleService {
      */
     public Object getMultiErrorMessage() throws Exception {
         throw new Exception("중복 - 기본 에러 메세지 출력");
+    }
+
+    public Object usePatchApi(@RequestBody Map<String, Object> param) {
+        Object res = sampleClient.usePatchApi(param);
+        return res;
     }
 
     /**

@@ -10,4 +10,9 @@ export interface ResourceBoxProps extends ResourceBoxCommonProps {
   useEditButtons?: boolean;
   isEditMode?: boolean;
   editable?: boolean;
+
+  filters?: { [key: string]: { text: string; data: any[] } };
+
+  ownerKey?: string;
+  categoryKey?: string;
 }

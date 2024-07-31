@@ -1,0 +1,138 @@
+.tree {
+  width: 100%;
+  height: 100%;
+
+  ul, li {
+    width: 100%;
+  }
+
+  &-top-buttons {
+    @include flex($horizontal: flex-start);
+    gap: $spacing-8;
+    padding-bottom: $spacing-8;
+  }
+
+  &-list {
+    overflow-y: auto;
+    height: calc(100% - 36px);
+  }
+
+  &-item {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    color: $neutral-700;
+
+    &:hover {
+      .tree-item-buttons {
+        display: flex;
+      }
+    }
+
+    & > div {
+      width: 100%;
+
+      .d-flex > span {
+        @include ellipsis;
+
+        flex-grow: 1;
+      }
+    }
+  }
+
+  &-item-buttons {
+    flex-shrink: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .selected-tree-item {
+    background: transparent;
+    color: $secondary-500;
+  }
+
+  .chevron-right {
+    width: 16px;
+    height: 16px;
+    color: $neutral-400;
+    border: none;
+
+    &::after {
+      right: 5px;
+      top: 6px;
+      width: 0;
+      height: 0;
+      border-left: 3.53px solid transparent;
+      border-right: 3.53px solid transparent;
+      border-top: 4.1px solid;
+      border-bottom: none;
+      transform: rotate(-90deg);
+      transition: transform 0.2s ease;
+    }
+
+    &.rotate-90::after {
+      transform: rotateZ(0);
+    }
+  }
+
+  .root {
+    margin-left: 0 !important;
+  }
+
+  .nested {
+    margin-left: $spacing-12 !important;
+  }
+
+  .node-child {
+    padding: 0 0 0 $spacing-8;
+
+    .tree-item-node-parent {
+      .tree-item-node:not(:last-child) {
+        border-left: 1px solid $neutral-200;
+
+        &::before {
+          height: 8px;
+          border-left: 1px solid $neutral-200;
+        }
+      }
+
+      .tree-item-node:last-child {
+        border-left: 1px solid transparent;
+      }
+
+      .tree-item-node:only-child > .tree-view-item > .guide-line:before {
+        left: -2px;
+        top: -12px;
+        height: 18px;
+        border-left: 1px solid $neutral-200;
+      }
+    }
+  }
+
+  .guide-line {
+    position: relative;
+    flex-shrink: 0;
+    width: 12px;
+    height: 12px;
+    border: none;
+
+    &::before {
+      content: "";
+      position: absolute;
+      width: 8px;
+      height: 16px;
+      border: 1px solid $neutral-200;
+      border-top: none;
+      border-right: none;
+      border-radius: 0 0 0 12px;
+      top: -9px;
+      left: -1px;
+    }
+  }
+}
+
+
+.tiny_horizontal_margin {
+  display: none;
+}

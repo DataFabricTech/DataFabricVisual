@@ -9,6 +9,11 @@
       :show-owner="true"
       :show-category="true"
       :editable="true"
+      :filters="filters"
+      :owner-key="FILTER_KEYS.OWNER"
+      :category-key="FILTER_KEYS.CATEGORY"
+      @editIconClick="editIconClick"
+      @editDone="editDone"
     />
     <Tab
       class="mt-8"
@@ -40,6 +45,13 @@ import Query from "@/components/search/detail-tab/query.vue";
 import Lineage from "@/components/search/detail-tab/lineage.vue";
 import KnowledgeGraph from "@/components/search/detail-tab/knowledge-graph.vue";
 import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
+import { useSearchCommonStore } from "~/store/search/common";
+import { storeToRefs } from "pinia";
+
+const searchCommonStore = useSearchCommonStore();
+const { getFilter } = searchCommonStore;
+const { filters } = storeToRefs(searchCommonStore);
+import { FILTER_KEYS } from "~/store/search/common";
 
 // tabfilter 객체 정의 (예시로 tables 값을 포함)
 const tabfilter = ref({ tables: true });
@@ -79,14 +91,23 @@ let resourceBoxObj: any = {
   modelNm: "세종특별자치시 상하수도요금표",
   modelDesc:
     "한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다",
-  owner: "Owner",
-  category: "Domain",
+  "owner.displayName.keyword": "N_mariadb",
+  domain: "Domain",
 };
 
 function changeTab(item: number | string) {
   currentTab.value = item;
   currentComponent.value = _.find(tabOptions, ["value", item])?.component;
 }
+
+const editIconClick = (key: string) => {
+  // TODO: [개발] 소유자 및 카테고리 목록 갱신 API 호출 필요.
+  getFilter(key);
+};
+const editDone = (newData: object) => {
+  // TODO: [개발] 변경 데이터 저장한는 API 호출 필요
+  console.log(newData);
+};
 </script>
 
 <style lang="scss" scoped></style>

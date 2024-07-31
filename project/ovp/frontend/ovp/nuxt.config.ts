@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
+
   modules: [
     "@nuxtjs/tailwindcss",
     "@pinia/nuxt",
@@ -18,11 +19,13 @@ export default defineNuxtConfig({
       baseUrl: `${process.env.VITE_BASE_URL}${process.env.VITE_CONTEXT_PATH}`,
     },
   },
+
   // dev 서버 설정
   devServer: {
     port: process.env.VITE_SERVER_PORT as unknown as number,
     url: `${process.env.VITE_BASE_URL}${process.env.VITE_CONTEXT_PATH}`,
   },
+
   app: {
     // context-path 설정
     //   baseURL: `${process.env.VITE_CONTEXT_PATH}`,
@@ -39,12 +42,14 @@ export default defineNuxtConfig({
       // noscript: []
     },
   },
+
   components: [
     {
       path: "~/components",
       pathPrefix: false,
     },
   ],
+
   alias: {
     // common 컴포넌트 별칭
     "@extends": fileURLToPath(
@@ -93,4 +98,6 @@ export default defineNuxtConfig({
       ["defineStore", "definePiniaStore"], // import { defineStore as definePiniaStore } from 'pinia'
     ],
   },
+
+  compatibilityDate: "2024-07-25",
 });
