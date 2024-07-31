@@ -2,16 +2,21 @@
   <div class="work-page">
     <div class="l-top-bar">
       <div class="v-group gap-[20px]">
-        <editable-group :editable="true" @editCancel="editCancel" @editDone="editDone" @editIcon="editIconClick">
+        <editable-group
+          :editable="true"
+          @editCancel="editCancel"
+          @editDone="editDone"
+          @editIcon="editIconClick"
+        >
           <template #edit-slot>
             <label class="hidden-text" for="title-modify">분류명 입력</label>
             <input
-                v-model="newData.title"
-                @input="editInput($event)"
-                placeholder="분류명에 대한 영역입니다."
-                required
-                id="title-modify"
-                class="text-input"
+              v-model="newData.title"
+              @input="editInput($event)"
+              placeholder="분류명에 대한 영역입니다."
+              required
+              id="title-modify"
+              class="text-input"
             />
           </template>
           <template #view-slot>
@@ -30,16 +35,21 @@
         </div>
       </div>
       <!-- 수정 버튼 클릭시 아래 내용으로 전환 -->
-      <editable-group :editable="true" @editCancel="editCancel" @editDone="editDone" @editIcon="editIconClick">
+      <editable-group
+        :editable="true"
+        @editCancel="editCancel"
+        @editDone="editDone"
+        @editIcon="editIconClick"
+      >
         <template #edit-slot>
           <label class="hidden-text" for="textarea-modify">textarea 입력</label>
           <textarea
-              class="textarea"
-              v-model="newData.description"
-              @input="editInput($event)"
-              placeholder="해당 분류 설명에 대한 영역입니다."
-              required
-              id="textarea-modify"
+            class="textarea"
+            v-model="newData.description"
+            @input="editInput($event)"
+            placeholder="해당 분류 설명에 대한 영역입니다."
+            required
+            id="textarea-modify"
           ></textarea>
         </template>
         <template #view-slot>
@@ -54,16 +64,29 @@
   </div>
 </template>
 <script setup lang="ts">
-import tagList from "@/components/classification/classification-list/tagList.vue"
+import tagList from "@/components/classification/classification-list/tagList.vue";
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 import _ from "lodash";
+
+import { classificationStore } from "~/store/classification";
+import { storeToRefs } from "pinia";
+import { onMounted, type Ref } from "vue";
+
+const useClassificationStore = classificationStore();
+const { classificationDetailData } = storeToRefs(useClassificationStore);
+const { getClassificationDetail } = useClassificationStore;
+
+onMounted(async () => {
+  //TODO: 분류 상세 조회 API 호출 - 화면에 조회된 classificationDetailData 세팅-!
+  await getClassificationDetail();
+});
 
 // 받아올 API 데이터. 완료를 누르자마자 새로 받아와야 함.
 const defaultData = ref<Record<string, any>>({
   title: "분류1",
   description:
-      "GDPR special category data is personal information of data subjects that is especially sensitive, the exposure of which could significantly impact the rights and freedoms of data subjects and potentially be used against them for unlawful discrimination.",
-  check: false
+    "GDPR special category data is personal information of data subjects that is especially sensitive, the exposure of which could significantly impact the rights and freedoms of data subjects and potentially be used against them for unlawful discrimination.",
+  check: false,
 });
 
 // 변경될 데이터

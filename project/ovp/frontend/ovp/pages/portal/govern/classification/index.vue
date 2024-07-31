@@ -15,17 +15,20 @@
 <script setup lang="ts">
 import ClassificationList from "@/components/classification/classification-list/classificationList.vue";
 import ClassificationListModify from "@/components/classification/classification-list/classificationList-modify.vue";
-import {classificationStore} from "@/store/classification";
-import {storeToRefs} from "pinia";
-import {onMounted, ref} from "vue";
-
+import { classificationStore } from "@/store/classification";
+import { storeToRefs } from "pinia";
+import { onMounted, ref } from "vue";
 const useClassificationStore = classificationStore();
 const { classificationList } = storeToRefs(useClassificationStore);
-const { getClassificationList } = useClassificationStore;
+const { getClassificationList, getClassificationDetail } =
+  useClassificationStore;
 const isLoaded = ref(false);
 
 onMounted(async () => {
-  await getClassificationList(); // API 호출
+  // 분류 목록 조회 API 호출
+  await getClassificationList();
+  // TODO: 분류 상세 조회 API 호출
+  await getClassificationDetail();
   isLoaded.value = true; // 데이터 로딩 완료
 });
 </script>
