@@ -2,11 +2,14 @@
   <header id="header" ref="header">
     <div class="h-group">
       <h1 class="logo">
-        <nuxt-link to="main" class="logo-link"
+        <nuxt-link to="/" class="logo-link"
           >Open VDAP Portal <span class="hidden-text">logo</span>
         </nuxt-link>
       </h1>
-      <SearchInput @onClickSearch="onClickSearch"></SearchInput>
+      <SearchInput
+        @onClickSearch="onClickSearch"
+        :placeholder="'검색어를 입력하세요.'"
+      ></SearchInput>
       <div class="profile ml-auto">
         <span class="profile-avatar"> {{ profileFirstWord }} </span>
         <div class="profile-text">{{ user.name }}</div>
@@ -67,10 +70,9 @@ const isDropdownOpen = ref(false);
 const profileFirstWord = ref("");
 
 const onClickSearch = (value: string) => {
-  // 검색어 셋팅
   setSearchKeyword(value);
-  // 항목 갱신
   resetReloadList();
+  router.push({ path: `/portal/search` });
 };
 
 const handleClickOutside = (event: any) => {
@@ -89,7 +91,7 @@ const setProfileFirstWord = (name: string) => {
 const logOut = () => {
   console.log("Logout");
   isDropdownOpen.value = false;
-  router.push("/login");
+  router.push("/portal/login");
 };
 
 onMounted(async () => {
