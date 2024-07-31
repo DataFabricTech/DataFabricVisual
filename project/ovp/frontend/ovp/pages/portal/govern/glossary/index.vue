@@ -9,6 +9,7 @@
     <div class="l-split">
       <glossary-list></glossary-list>
       <glossary-info></glossary-info>
+      <glossary-term-info></glossary-term-info>
     </div>
   </div>
 </template>

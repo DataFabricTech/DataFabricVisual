@@ -14,6 +14,9 @@ export interface Term {
   description: string;
   fullyQualifiedName: string;
   name: string;
+  tags: object[];
+  synonyms: string[];
+  relatedTerms: object[];
 }
 export interface Activity {
   cardStyle: string;

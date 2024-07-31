@@ -13,4 +13,6 @@ public class Term {
     private String fullyQualifiedName;
     private String name;
     private List<Tag> tags;
+    private List<String> synonyms;
+    private List<Object> relatedTerms;
 }

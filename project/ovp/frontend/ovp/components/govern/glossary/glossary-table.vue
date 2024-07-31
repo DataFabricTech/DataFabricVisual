@@ -23,7 +23,7 @@
         <div class="button-group">
           <button
             class="button button button-secondary-stroke"
-            @click="openEditTermComponent('term')"
+            @click="onClickTerm(term)"
           >
             편집
           </button>
@@ -38,7 +38,12 @@
 
 <script setup lang="ts">
 import { useGlossaryStore } from "@/store/glossary";
-const { terms, openEditTermComponent } = useGlossaryStore();
+import type { Term } from "~/type/glossary";
+const { terms, openEditTermComponent, changeCurrentTerm } = useGlossaryStore();
 
+function onClickTerm(source: Term) {
+  changeCurrentTerm(source);
+  openEditTermComponent("term");
+}
 const showModalPwChange: () => void = () => {};
 </script>

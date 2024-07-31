@@ -10,6 +10,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
   const glossary = reactive<Glossary>(<Glossary>{});
 
   const terms = reactive<Term[]>([]);
+  const term = reactive<Term>(<Term>{});
 
   const activities = reactive<Activity[]>([]);
 
@@ -18,9 +19,18 @@ export const useGlossaryStore = defineStore("glossary", () => {
   const tab = ref("term");
   const currentComponent = ref("glossary");
 
-  const editNameMode = ref(false);
-  const editDesMode = ref(false);
-  const editTagMode = ref(false);
+  const editGlossaryMode = reactive({
+    name: false,
+    des: false,
+    tag: false,
+  });
+  const editTermMode = reactive({
+    name: false,
+    des: false,
+    tag: false,
+    synonyms: false,
+    relatedTerms: false,
+  });
 
   /**
    * Glossary CRUD
@@ -58,12 +68,36 @@ export const useGlossaryStore = defineStore("glossary", () => {
   }
 
   /**
-   * 용어 리스트
-   * @param term
+   * 용어 Crud
    */
-  async function getGlossaryTerms(term: string): Promise<void> {
+  async function getTerms(term: string): Promise<void> {
     const res = await $api(`/api/glossary/terms?term=${term}`);
     terms.splice(0, terms.length, ...res.data);
+  }
+
+  async function editTerm(
+    id: string,
+    body: [JsonPatchOperation],
+  ): Promise<void> {
+    const res = await $api(`/api/glossary/terms/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json-patch+json",
+      },
+      body: body,
+    });
+    changeCurrentTerm(res.data);
+    disableEditTermModes();
+  }
+
+  async function deleteTerm(id: string) {
+    await $api(`/api/glossary/terms/${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  function changeCurrentTerm(param: Term) {
+    Object.assign(term, param);
   }
 
   /**
@@ -87,19 +121,25 @@ export const useGlossaryStore = defineStore("glossary", () => {
   /**
    * 수정 Input show-hide 처리
    */
-  function changeEditNameMode(): void {
-    editNameMode.value = !editNameMode.value;
-  }
-  function changeEditDesMode(): void {
-    editDesMode.value = !editDesMode.value;
-  }
-  function changeEditTagMode(): void {
-    editTagMode.value = !editTagMode.value;
+  function changeEditGlossaryMode(
+    property: keyof typeof editGlossaryMode,
+  ): void {
+    editGlossaryMode[property] = !editGlossaryMode[property];
   }
   function disableEditModes(): void {
-    editNameMode.value = false;
-    editDesMode.value = false;
-    editTagMode.value = false;
+    editGlossaryMode.name = false;
+    editGlossaryMode.des = false;
+    editGlossaryMode.tag = false;
+  }
+  function changeEditTermMode(property: keyof typeof editTermMode): void {
+    editTermMode[property] = !editTermMode[property];
+  }
+  function disableEditTermModes(): void {
+    editTermMode.name = false;
+    editTermMode.des = false;
+    editTermMode.tag = false;
+    editTermMode.synonyms = false;
+    editTermMode.relatedTerms = false;
   }
 
   /**
@@ -109,9 +149,10 @@ export const useGlossaryStore = defineStore("glossary", () => {
   async function changeCurrentGlossary(param: Glossary): Promise<void> {
     Object.assign(glossary, param);
     changeTab("term");
-    await getGlossaryTerms(param.name);
+    await getTerms(param.name);
     await getGlossaryActivities(`<%23E::glossary::${param.name}>`);
     disableEditModes();
+    disableEditTermModes();
     openEditTermComponent("glossary");
   }
 
@@ -131,26 +172,39 @@ export const useGlossaryStore = defineStore("glossary", () => {
   return {
     glossaries,
     glossary,
+
     terms,
+    term,
+
     activities,
+
     tab,
     tags,
     menuSearchTagsData,
     currentComponent,
-    editNameMode,
-    editDesMode,
-    editTagMode,
+
+    editGlossaryMode,
+    editTermMode,
+
     getGlossaries,
     editGlossary,
     deleteGlossary,
-    getGlossaryTerms,
+
+    getTerms,
+    editTerm,
+    deleteTerm,
+
     getGlossaryActivities,
+
     changeTab,
     openEditTermComponent,
-    changeEditNameMode,
-    changeEditDesMode,
-    changeEditTagMode,
+
+    changeEditGlossaryMode,
+    changeEditTermMode,
+
+    changeCurrentTerm,
     changeCurrentGlossary,
+
     getAllTags,
   };
 });

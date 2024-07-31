@@ -77,7 +77,7 @@ public class GlossaryService {
      * @return
      */
     public List<Terms> glossaryTerms(String directChildrenOf) {
-        final String FIELDS = "tags";
+        final String FIELDS = "tags,relatedTerms";
         List<Terms> result = new ArrayList<>();
         List<Term> response = glossaryClient.getGlossaryTerms(directChildrenOf, FIELDS).getData();
 

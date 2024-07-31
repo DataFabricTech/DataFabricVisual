@@ -4,5 +4,13 @@ export interface JsonPatchOperation {
   value?: string | object;
 }
 export interface Tag {
-  [key: string]: string;
+  // description: string;
+  // displayName: string;
+  // labelType: string;
+  // name: string;
+  // source: string;
+  // state: string;
+  // style: object;
+  // tagFQN: string;
+  [key: string]: string | object;
 }

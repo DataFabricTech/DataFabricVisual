@@ -17,6 +17,9 @@ public class Terms {
     private String description;
     private String fullyQualifiedName;
     private List<Map<String, String>> tags;
+    private List<String> synonyms;
+    private List<Object> relatedTerms;
+
 
     public Terms(Term term) {
         this.id = term.getId();
@@ -31,5 +34,7 @@ public class Terms {
             tagMap.put("data", tag.getName());
             this.tags.add(tagMap);
         }
+        this.synonyms = term.getSynonyms();
+        this.relatedTerms = term.getRelatedTerms();
     }
 }
