@@ -4,7 +4,7 @@ import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivityResponse;
 import com.mobigen.ovp.glossary.client.dto.glossary.Glossary;
 import com.mobigen.ovp.glossary.client.dto.glossary.GlossaryResponse;
-import com.mobigen.ovp.glossary.client.dto.terms.GlossaryTermsResponse;
+import com.mobigen.ovp.glossary.client.dto.terms.TermResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,7 +55,7 @@ public interface GlossaryClient {
      * @return
      */
     @GetMapping("/glossaryTerms")
-    GlossaryTermsResponse getGlossaryTerms(@RequestParam String directChildrenOf);
+    TermResponse getGlossaryTerms(@RequestParam String directChildrenOf, @RequestParam(required = false, defaultValue = "tags") String fields);
 
     /**
      * 용어 수정

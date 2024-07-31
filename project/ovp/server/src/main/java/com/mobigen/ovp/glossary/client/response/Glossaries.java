@@ -1,6 +1,7 @@
 package com.mobigen.ovp.glossary.client.response;
 
 import com.mobigen.ovp.common.openmete_client.dto.Owner;
+import com.mobigen.ovp.glossary.client.dto.common.Tag;
 import com.mobigen.ovp.glossary.client.dto.glossary.Glossary;
 import lombok.Data;
 
@@ -27,11 +28,10 @@ public class Glossaries {
         this.fullyQualifiedName = glossary.getFullyQualifiedName();
         this. owner = glossary.getOwner();
         this.tags = new ArrayList<>();
-        for(Object objTag : glossary.getTags()) {
-            Map<String, String> tag = (Map<String, String>) objTag;
+        for(Tag tag : glossary.getTags()) {
             Map<String, String> data = new HashMap<>();
-            data.put("label", tag.get("displayName"));
-            data.put("data", tag.get("name"));
+            data.put("label", tag.getDisplayName());
+            data.put("data", tag.getName());
             this.tags.add(data);
         }
     }

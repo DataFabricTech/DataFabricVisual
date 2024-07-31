@@ -15,6 +15,8 @@ public class Tag {
     private Object style;
     private String tagFQN;
 
+    public Tag() {}
+
     public Tag(Map<String,?> map) {
         this.description = (String) map.get("description");
         this.displayName = String.valueOf(map.get("displayName"));

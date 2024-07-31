@@ -1,6 +1,7 @@
 package com.mobigen.ovp.glossary.client.dto.glossary;
 
 import com.mobigen.ovp.common.openmete_client.dto.Owner;
+import com.mobigen.ovp.glossary.client.dto.common.Tag;
 import lombok.Data;
 
 import java.util.List;
@@ -13,5 +14,5 @@ public class Glossary {
     private String description;
     private String fullyQualifiedName;
     private Owner owner;
-    private List<Object> tags;
+    private List<Tag> tags;
 }

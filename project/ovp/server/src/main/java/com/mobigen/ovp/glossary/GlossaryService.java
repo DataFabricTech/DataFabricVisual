@@ -6,9 +6,10 @@ import com.mobigen.ovp.glossary.client.GlossaryClient;
 import com.mobigen.ovp.glossary.client.dto.common.Tag;
 import com.mobigen.ovp.glossary.client.dto.glossary.Glossary;
 import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivity;
-import com.mobigen.ovp.glossary.client.dto.terms.GlossaryTerms;
+import com.mobigen.ovp.glossary.client.dto.terms.Term;
 import com.mobigen.ovp.glossary.client.response.Glossaries;
 import com.mobigen.ovp.glossary.client.response.GlossaryActivities;
+import com.mobigen.ovp.glossary.client.response.Terms;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -75,8 +76,15 @@ public class GlossaryService {
      * @param directChildrenOf
      * @return
      */
-    public List<GlossaryTerms> glossaryTerms(String directChildrenOf) {
-        return glossaryClient.getGlossaryTerms(directChildrenOf).getData();
+    public List<Terms> glossaryTerms(String directChildrenOf) {
+        final String FIELDS = "tags";
+        List<Terms> result = new ArrayList<>();
+        List<Term> response = glossaryClient.getGlossaryTerms(directChildrenOf, FIELDS).getData();
+
+        for (Term term : response) {
+            result.add(new Terms(term));
+        }
+        return result;
     }
 
     /**
