@@ -8,12 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface CategoryMatchRepository extends JpaRepository<CategoryMatchEntity, UUID> {
 
-    @Query("SELECT c FROM CategoryMatchEntity c WHERE c.category_id = :categoryId")
+    @Query("SELECT c FROM CategoryMatchEntity c WHERE c.category = :categoryId")
     Page<CategoryMatchEntity> findByCategoryId(@Param("categoryId") UUID categoryId, Pageable pageable);
 
+    List<CategoryMatchEntity> findByCategoryIdIn(List<UUID> ids);
 }

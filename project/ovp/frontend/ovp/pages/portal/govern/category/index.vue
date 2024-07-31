@@ -387,8 +387,9 @@ const {
   addModelList,
   getModelList,
   setSelectedNode,
-  addCategory,
-  editCategory,
+  insertOrEditAPI,
+  moveCategory,
+  deleteCategory,
 } = categoryStore;
 const { categories, modelList } = storeToRefs(categoryStore);
 
@@ -430,7 +431,7 @@ const addChild = (newNode: TreeViewItem) => {
   console.log(`자식노드 추가 ${JSON.stringify(newNode)}`);
   addNewCategory(newNode);
 };
-// TODO : [개발] 카테고리 등록 예
+// TODO : [개발] 카테고리 등록 예 (등록, 수정 같은 코드 사용합니다.)
 const addNewCategory = (newNode: TreeViewItem) => {
   const addNodeParam: TreeViewItem = {
     id: "f6a91e15-18c1-4920-ab2b-dd20a68f75bc",
@@ -440,20 +441,24 @@ const addNewCategory = (newNode: TreeViewItem) => {
     order: 0,
     children: [],
   };
-  addCategory(addNodeParam);
+  insertOrEditAPI(addNodeParam);
 };
 
-// TODO : [개발] 카테고리 수정 예
-const _editCategory = () => {
+const editCategory = () => {
   const editNodeParam: TreeViewItem = {
     id: "f6a91e15-18c1-4920-ab2b-dd20a68f75bc",
-    parentId: "58615558-f39c-46d9-b5f3-d7884b1e25dd",
+    parentId: selectedNode.value.id,
     name: "카테고리 수정 테스트",
     desc: "카테고리 설명을 수정",
     order: 0,
     children: [],
   };
-  editCategory(editNodeParam);
+  insertOrEditAPI(editNodeParam);
+};
+
+// TODO : [개발] 카테고리 삭제 예 - function 명 겹쳐서 임의로 _deleteCategory 로 처리함. 추후에 store - deleteCategory 이용하여 처리.
+const _deleteCategory = () => {
+  deleteCategory(selectedNode.value.id);
 };
 
 const droppedNode: Ref<TreeViewItem> = ref<TreeViewItem>(<TreeViewItem>{});

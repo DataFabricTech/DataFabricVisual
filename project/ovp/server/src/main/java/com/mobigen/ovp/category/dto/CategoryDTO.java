@@ -2,12 +2,14 @@ package com.mobigen.ovp.category.dto;
 
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@NoArgsConstructor
 @Data
 public class CategoryDTO {
     private String id;
@@ -19,9 +21,6 @@ public class CategoryDTO {
     private Boolean selected;
     private Boolean disabled;
     private List<CategoryDTO> children;
-
-    public CategoryDTO() {
-    }
 
     public CategoryDTO(CategoryEntity entity) {
         this.id = entity.getId().toString();

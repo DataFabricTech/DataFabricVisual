@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 
 @Slf4j
@@ -35,20 +34,13 @@ public class CategoryController {
     @ResponseJsonResult
     @PutMapping("")
     public Object addCategory(@RequestBody CategoryDTO params) {
-        return categoryService.addCategory(params);
-    }
-
-
-    @ResponseJsonResult
-    @PatchMapping(value = "", consumes = "application/json-patch+json")
-    public Object updateCategory(@RequestBody CategoryDTO params) {
-        return categoryService.updateCategory(params);
+        return categoryService.insertOrUpdate(params);
     }
 
     @ResponseJsonResult
-    @DeleteMapping(value = "/")
-    public Object deleteCategory(@RequestBody Map<String, String> params) {
-        return categoryService.deleteCategory(params);
+    @DeleteMapping(value = "/{categoryId}")
+    public Object deleteCategory(@PathVariable String categoryId) {
+        return categoryService.deleteCategory(categoryId);
     }
 
     @ResponseJsonResult

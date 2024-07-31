@@ -1,11 +1,10 @@
 package com.mobigen.ovp.category.entity;
 
-import com.mobigen.ovp.common.entity.ModelIndex;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -27,11 +26,11 @@ public class CategoryMatchEntity {
     @Column(name = "model_id", nullable = false, unique = true)
     private UUID modelId;
 
-    @Column(name = "category_id", nullable = false)
-    private UUID category_id;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private CategoryEntity category;
 
     @NotNull
     @Column(name = "model_index", nullable = false, length = 10)
-    @Enumerated(EnumType.STRING)
-    private ModelIndex modelIndex;
+    private String modelIndex;
 }

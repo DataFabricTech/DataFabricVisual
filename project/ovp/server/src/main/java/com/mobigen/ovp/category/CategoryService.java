@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -73,21 +74,45 @@ public class CategoryService {
         return siblings.isEmpty() ? 1 : siblings.get(0).getOrder() + 1;
     }
 
-    public Object addCategory(CategoryDTO paramsDTO) {
+    @Transactional
+    public Object insertOrUpdate(CategoryDTO paramsDTO) {
         // parentId 기준 자식 노드가 몇인지 확인해서 order 값 부여 (가장 마지막 노드로 추가)
         CategoryEntity categoryEntity = paramsDTO.toEntity();
-        int order = getSiblingsMaxOrder(categoryEntity.getParentId());
-        categoryEntity.setOrder(order);
+
+        int maxOrder = categoryRepository.findMaxOrderByParentId(categoryEntity.getParentId());
+        categoryEntity.setOrder(maxOrder + 1);
 
         return categoryRepository.saveOrUpdate(categoryEntity);
     }
 
-    public Object updateCategory(CategoryDTO paramsDTO) {
-        return categoryRepository.saveOrUpdate(paramsDTO.toEntity());
+    private void collectCategoryIdsRecursively(UUID categoryId, List<UUID> idsToDelete) {
+        List<CategoryEntity> subCategories = categoryRepository.findByParentIdOrderByOrderDesc(categoryId);
+
+        if (!subCategories.isEmpty()) {
+            for (CategoryEntity subCategory : subCategories) {
+                collectCategoryIdsRecursively(subCategory.getId(), idsToDelete);
+            }
+        }
+
+        idsToDelete.add(categoryId);
     }
 
-    public Object deleteCategory(Map<String, String> params) {
-        return null;
+    public Object deleteCategory(String categoryId) {
+        // 재귀 함수 이용하여 하위 > 하위 > 하위.. 의 categoryId 목록 조회.
+        List<UUID> idsToDelete = new ArrayList<>();
+        collectCategoryIdsRecursively(UUID.fromString(categoryId), idsToDelete);
+
+        // 하위 categoryId 기반 설정된 modelList 있는지 조회
+        List<CategoryMatchEntity> modelList = categoryMatchRepository.findByCategoryIdIn(idsToDelete);
+
+        if (modelList.size() < 1) {
+            // 삭제 진행
+            categoryRepository.deleteAllByIds(idsToDelete);
+            // 같은 부모 노드 아래에서 순서 변경이 없기 때문에 노드 삭제 이후 order 를 변경할 필요가 없음.
+            return "";
+        } else {
+            return "HAS_MODEL_LIST";
+        }
     }
 
     public Object moveCategory(List<JsonPatchOperation> params) {
