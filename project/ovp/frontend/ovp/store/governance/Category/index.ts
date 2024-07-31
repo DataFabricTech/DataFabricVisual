@@ -83,7 +83,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     return data;
   };
   const deleteCategory = async (nodeId: string) => {
-    const { data } = await $api(`/api/category`, {
+    await $api(`/api/category`, {
       method: "delete",
       body: {
         id: nodeId,
