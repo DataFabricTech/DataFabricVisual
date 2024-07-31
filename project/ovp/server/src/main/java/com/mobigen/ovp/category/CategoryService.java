@@ -120,14 +120,14 @@ public class CategoryService {
     }
 
     public List<Object> getModelByCategoryId(String categoryId, int page, int size) {
-        UUID uuid;
+        CategoryEntity categoryEntity = new CategoryEntity();
         try {
-            uuid = UUID.fromString(categoryId);
+            categoryEntity.setId(UUID.fromString(categoryId));
         } catch (IllegalArgumentException e) {
             throw new RuntimeException("Invalid UUID string: " + categoryId, e);
         }
         Pageable pageable = PageRequest.of(page, size);
-        Page<CategoryMatchEntity> categoryMatchList = categoryMatchRepository.findByCategoryId(uuid, pageable);
+        Page<CategoryMatchEntity> categoryMatchList = categoryMatchRepository.findByCategoryId(categoryEntity, pageable);
 
         List<Object> resultList = new ArrayList<>();
         for (CategoryMatchEntity item : categoryMatchList) {

@@ -1,5 +1,6 @@
 package com.mobigen.ovp.category.repository;
 
+import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.entity.CategoryMatchEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,7 +16,7 @@ import java.util.UUID;
 public interface CategoryMatchRepository extends JpaRepository<CategoryMatchEntity, UUID> {
 
     @Query("SELECT c FROM CategoryMatchEntity c WHERE c.category = :categoryId")
-    Page<CategoryMatchEntity> findByCategoryId(@Param("categoryId") UUID categoryId, Pageable pageable);
+    Page<CategoryMatchEntity> findByCategoryId(@Param("categoryId") CategoryEntity categoryId, Pageable pageable);
 
     List<CategoryMatchEntity> findByCategoryIdIn(List<UUID> ids);
 }
