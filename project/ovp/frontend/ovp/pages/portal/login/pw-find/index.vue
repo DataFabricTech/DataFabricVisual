@@ -1,13 +1,13 @@
 <template>
   <div class="wrap">
     <div class="submit-form">
-      <h1 class="submit-form-logo">LOGO</h1>
       <div class="submit-form-form">
+        <h1 class="submit-form-logo">LOGO</h1>
         <h2 class="submit-form-title">비밀번호 재설정</h2>
         <p class="submit-form-desc">
           비밀번호 재설정 링크를 받으려면 등록된 이메일을 입력하세요
         </p>
-        <form class="form form-lg gap-8" @submit.prevent="onSubmit">
+        <form class="form form-lg gap-6" @submit.prevent="onSubmit">
           <div class="form-body">
             <div class="form-item">
               <label for="inpEmail" class="form-label">
@@ -43,7 +43,7 @@
             <button class="button button-primary button-lg" type="submit">
               제출
             </button>
-            <button class="button button-primary-ghost button-sm" type="button">
+            <button class="link-button link-button-support button-sm w-full" type="button">
               <nuxt-link :to="'/portal/login'">
                 로그인 페이지로 돌아가기
               </nuxt-link>
