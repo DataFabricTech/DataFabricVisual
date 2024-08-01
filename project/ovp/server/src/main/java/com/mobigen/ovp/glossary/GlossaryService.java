@@ -2,6 +2,7 @@ package com.mobigen.ovp.glossary;
 
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.glossary.client.GlossaryClient;
+import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
 import com.mobigen.ovp.glossary.client.dto.glossary.Glossary;
 import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivity;
 import com.mobigen.ovp.glossary.client.dto.terms.GlossaryTerms;
@@ -22,6 +23,10 @@ import java.util.UUID;
 public class GlossaryService {
 
     private final GlossaryClient glossaryClient;
+
+    public Object createGlossary(GlossaryDto dto) {
+        return glossaryClient.createGlossary(dto);
+    }
 
     /**
      * 용어 사전 리스트
