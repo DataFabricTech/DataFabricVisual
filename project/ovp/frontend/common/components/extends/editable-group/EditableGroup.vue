@@ -4,8 +4,8 @@
     <template v-if="isEditMode">
       <slot name="edit-slot"></slot>
       <div class="h-group gap-2 shrink-0" v-if="useEditButtons">
-        <button class="button button-neutral-lighter button-sm" type="button" @click="cancelClick">취소</button>
-        <button class="button button-primary-lighter button-sm" type="button" @click="doneClick">완료</button>
+        <button class="button button-neutral-lighter" type="button" @click="cancelClick">취소</button>
+        <button class="button button-primary-lighter" type="button" @click="doneClick">완료</button>
       </div>
     </template>
     <template v-else>

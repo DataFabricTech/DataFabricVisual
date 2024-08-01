@@ -43,28 +43,29 @@
       </div>
       <div class="work-page">
         <div class="l-top-bar">
-          <div class="editable-group">
-            <span class="editable-group-title">{{ selectedNode.name }}</span>
-            <button class="button button-neutral-ghost button-sm" type="button">
-              <span class="hidden-text">수정</span>
-              <svg-icon class="button-icon" name="pen"></svg-icon>
-            </button>
-          </div>
-          <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-          <div class="editable-group">
-            <label class="hidden-text" for="title-modify"
-              >카테고리 이름 수정
-            </label>
-            <input id="title-modify" class="text-input w-4/5" />
-            <div class="h-group gap-1">
-              <button class="button button-neutral-stroke" type="button">
-                취소
-              </button>
-              <button class="button button-primary-lighter" type="button">
-                완료
-              </button>
-            </div>
-          </div>
+          <editable-group
+            compKey="title"
+            :editable="true"
+            @editCancel="editCancel"
+            @editDone="editDone"
+            @editIcon="editIconClick"
+          >
+            <template #edit-slot>
+              <label class="hidden-text" for="title-modify"
+                >카테고리 이름 수정</label
+              >
+              <input
+                v-model="selectedNode.name"
+                placeholder="모델 설명에 대한 영역입니다."
+                required
+                id="title-modify"
+                class="text-input w-1/2"
+              />
+            </template>
+            <template #view-slot>
+              <h3 class="editable-group-title">{{ selectedNode.name }}</h3>
+            </template>
+          </editable-group>
           <button class="button button-error-lighter">삭제</button>
         </div>
         <div class="work-contents">
@@ -75,32 +76,29 @@
               <p class="notification-detail">등록된 정보가 없습니다.</p>
             </div>
           </div>
-          <div class="editable-group">
-            <span class="editable-group-desc">{{ selectedNode.desc }}</span>
-            <button class="button button-neutral-ghost button-sm" type="button">
-              <span class="hidden-text">수정</span>
-              <svg-icon class="button-icon" name="pen"></svg-icon>
-            </button>
-          </div>
-          <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-          <div class="editable-group">
-            <label class="hidden-text" for="description-modify"
-              >카테고리 설명 수정
-            </label>
-            <textarea
-              id="description-modify"
-              class="textarea"
-              width="300px"
-            ></textarea>
-            <div class="h-group gap-1">
-              <button class="button button-neutral-stroke" type="button">
-                취소
-              </button>
-              <button class="button button-primary-lighter" type="button">
-                완료
-              </button>
-            </div>
-          </div>
+          <editable-group
+            compKey="description"
+            :editable="true"
+            @editCancel="editCancel"
+            @editDone="editDone"
+            @editIcon="editIconClick"
+          >
+            <template #edit-slot>
+              <label class="hidden-text" for="textarea-modify"
+                >textarea 입력</label
+              >
+              <textarea
+                class="textarea"
+                v-model="selectedNode.desc"
+                placeholder="모델 설명에 대한 영역입니다."
+                required
+                id="textarea-modify"
+              ></textarea>
+            </template>
+            <template #view-slot>
+              <p class="editable-group-desc">{{ selectedNode.desc }}</p>
+            </template>
+          </editable-group>
           <!-- NOTE : v-if 로 할 경우, intersectionObserver 이 element 의 변화를 catch 하지 못해서 동작하지 않는 현상이 있어서 v-show 로 변환함. -->
           <div v-show="modelList.length > 0">
             <div class="l-top-bar">
@@ -374,13 +372,16 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
+import _ from "lodash";
 import TreeVue from "@extends/tree/Tree.vue";
+import EditableGroup from "@extends/editable-group/EditableGroup.vue";
+import Loading from "@base/loading/Loading.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
 import { storeToRefs } from "pinia";
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
-import Loading from "@base/loading/Loading.vue";
 
 const categoryStore = useGovernCategoryStore();
 
@@ -506,6 +507,40 @@ await getCategories();
 
 const { scrollTrigger, setScrollOptions } =
   useIntersectionObserver(addModelList);
+
+// 받아올 API 데이터. 완료를 누르자마자 새로 받아와야 함.
+const defaultData = ref<Record<string, any>>({
+  title: "Editable Group Title",
+  description:
+    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, aspernatur ducimus facere laboriosam nemo nobis nostrum sapiente sunt. Omnis, quidem.",
+  check: false,
+});
+
+// 변경될 데이터
+const newData = ref<Record<string, any>>(_.cloneDeep(defaultData.value));
+
+const editIconClick = () => {
+  // Button Click event
+  console.log(`icon event`);
+};
+
+const editCancel = (key: string) => {
+  // Cancel event
+  newData.value[key] = defaultData.value[key];
+  console.log(`cancel event`);
+};
+
+const editDone = (key: string) => {
+  // Done event
+  console.log(`done event`);
+
+  defaultData.value[key] = newData.value[key];
+
+  console.log("defaultData", defaultData.value);
+  console.log("newData: ", newData.value);
+};
+
+console.log("categories", categories.value);
 </script>
 
 <style scoped></style>
