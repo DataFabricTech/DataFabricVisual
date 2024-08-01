@@ -76,6 +76,7 @@
 }
 
 .result {
+  display: flex;
   overflow-y: auto;
   height: 100%;
   background: $success-100;
