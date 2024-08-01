@@ -22,6 +22,7 @@
     "@nuxtjs/tailwindcss": "^6.12.0",
     "@pinia/nuxt": "^0.5.1",
     "@types/cytoscape": "^3.21.4",
+    "@vueuse/components": "^10.11.0",
     "@types/cytoscape-dagre": "^2.3.3",
     "ag-grid-community": "^28.2.1",
     "cytoscape": "^3.29.2",

@@ -9,6 +9,20 @@
   >
     <div class="resource-box-function">
       <div class="resource-box-model">
+        <div class="checkbox" v-if="props.useListCheckbox" @click.stop>
+          <input
+            type="checkbox"
+            :id="`resource_box_list_${dataObj.id}`"
+            class="checkbox-input"
+            @change="checked($event, dataObj.id)"
+          />
+          <label
+            :for="`resource_box_list_${dataObj.id}`"
+            class="checkbox-label"
+          >
+          </label>
+        </div>
+
         <img :src="props.dataObj.serviceIcon" />
         <div class="breadcrumb">
           <ul class="breadcrumb-list">
@@ -76,7 +90,15 @@
         ></textarea>
       </template>
       <template #view-slot>
-        <span class="editable-group-desc">{{ newData.modelDesc }}</span>
+        <span class="editable-group-desc">
+          {{
+            props.dataObj.modelDesc === "" ||
+            props.dataObj.modelDesc === null ||
+            props.dataObj.modelDesc === undefined
+              ? "-"
+              : props.dataObj.modelDesc
+          }}</span
+        >
       </template>
     </editable-group>
 
@@ -192,6 +214,7 @@ const props = withDefaults(defineProps<ResourceBoxProps>(), {
   },
   ownerKey: "owner",
   categoryKey: "category",
+  useListCheckbox: false,
 });
 
 const isEditMode = ref<Record<string, boolean>>({
@@ -211,6 +234,7 @@ const newData = ref<DataModel>(_.cloneDeep(props.dataObj));
 const emit = defineEmits<{
   (e: "previewClick", data: object): void;
   (e: "modelNmClick", data: object): void;
+  (e: "checked", data: any): void;
   (e: "editIconClick", id: string): void;
   (e: "editDone", data: object): void;
 }>();
@@ -249,6 +273,11 @@ const changeMenuSearch: (value: {}, keyName: any) => void = (
 ) => {
   newData.value[keyName] = (value as { key: any }).key;
   emit("editDone", newData.value);
+};
+
+const checked = ($evt: Event, id: string | number) => {
+  const target = $evt.target as HTMLInputElement;
+  emit("checked", { id: id, checked: target.checked });
 };
 </script>
 

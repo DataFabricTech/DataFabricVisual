@@ -3,7 +3,7 @@
     :background="background"
     :class="dynamicModalClass"
     :click-to-close="clickToClose"
-    :content-style="dynamicModalPosition"
+    :content-style="dynamicModalStyle"
     :content-transition="contentTransition"
     :display-directive="displayDirective"
     :esc-to-close="escToClose"
@@ -52,16 +52,21 @@ import { ModalComposition } from "./ModalComposition";
 const { $vfm } = useNuxtApp();
 const props = withDefaults(defineProps<ModalProps>(), {
   modalId: undefined,
+  modalClass: "",
   displayDirective: "if",
+  hideOverlay: false,
   overlayTransition: "vfm-fade",
   contentTransition: "vfm-fade",
+  overlayClass: "",
   clickToClose: true,
   escToClose: true,
   background: "non-interactive",
   lockScroll: true,
   swipeToClose: "none",
   width: 620,
-  height: 180
+  height: 180,
+  title: "",
+  subTitle: ""
 });
 
 const emit = defineEmits<{
@@ -87,14 +92,10 @@ const {
   background,
   lockScroll,
   swipeToClose,
-  top,
-  left,
-  width,
-  height,
   title,
   subTitle,
   dynamicModalClass,
-  dynamicModalPosition,
+  dynamicModalStyle,
   closeModal
 } = ModalComposition(props);
 </script>

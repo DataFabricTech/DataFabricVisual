@@ -1,5 +1,4 @@
-import { IntersectionObserverHandler } from "~/utils/intersection-observer";
-
+import { usePagingStore } from "~/store/common/paging";
 import _ from "lodash";
 
 export const FILTER_KEYS = {
@@ -61,8 +60,9 @@ export interface QueryFilter {
 
 export const useSearchCommonStore = defineStore("searchCommon", () => {
   const { $api } = useNuxtApp();
-
-  let intersectionHandler: IntersectionObserverHandler | null = null;
+  const pagingStore = usePagingStore();
+  const { setFrom, updateIntersectionHandler } = pagingStore;
+  const { from, size } = storeToRefs(pagingStore);
 
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
@@ -80,7 +80,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
   // filter 정보
   const filters = ref<Filters>(createDefaultFilters());
-  // TODO : [개발] 탐색 - 목록 페이지 tab 구현 완료 되면 currentTab 부분 변수 맞춰서 수정 필요.
   const currentTab: Ref<string> = ref("table");
   const searchResult: Ref<any[]> = ref([]);
   const previewData: Ref<any> = ref({
@@ -100,10 +99,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
 
   // List Query data
   let searchKeyword: string = "";
-  const from: Ref<number> = ref<number>(0);
-  const size: Ref<number> = ref<number>(20);
   const sortKey: Ref<string> = ref<string>("totalVotes");
   const sortKeyOpt: Ref<string> = ref<string>("desc");
+  const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
 
   const getSearchListQuery = () => {
     const queryFilter = getQueryFilter();
@@ -160,6 +158,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     const { data, totalCount } = await getSearchListAPI();
     searchResult.value = data[currentTab.value];
     searchResultLength.value = totalCount;
+    isSearchResultNoData.value = searchResult.value.length === 0;
   };
   const getFilters = async () => {
     const { data } = await $api(`/api/search/filters`);
@@ -249,37 +248,35 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
    * 목록 reset
    * 목록을 '갱신'하는 경우, from 값을 항상 0으로 주어야 하기 때문에 fn 하나로 묶어서 처리.
    */
-  const resetReloadList = () => {
-    setScrollFrom(0);
+  const resetReloadList = async () => {
+    setFrom(0);
+    await getSearchList();
     updateIntersectionHandler(0);
-    getSearchList();
   };
   const setSortInfo = (item: string) => {
     const items = item.split("_");
     sortKey.value = items.shift() ?? ""; // undefined 오류 예외처리
     sortKeyOpt.value = items.pop() ?? "";
   };
-  const setScrollFrom = (count: number) => {
-    from.value = count;
-  };
-  const updateIntersectionHandler = (count: number) => {
-    if (count < 1) {
-      if (intersectionHandler !== null) {
-        intersectionHandler.updateChangingInitialCount(from.value);
-        intersectionHandler.scrollToFirElement();
-      }
+
+  const setSortFilter = (item: string | number = "totalVotes_desc") => {
+    if (!_.isUndefined(item) && typeof item === "string") {
+      setSortInfo(item);
+
+      // 항목 갱신
+      resetReloadList();
     }
   };
   const setSearchKeyword = (keyword: string) => {
     searchKeyword = keyword;
   };
-  const setIntersectionHandler = (ih: any) => {
-    intersectionHandler = ih;
+
+  const changeTab = (item: string) => {
+    currentTab.value = item;
+    resetReloadList();
   };
 
   return {
-    from,
-    size,
     sortKey,
     sortKeyOpt,
     currentTab,
@@ -291,16 +288,16 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     isShowPreview,
     isBoxSelectedStyle,
     searchResultLength,
+    isSearchResultNoData,
     addSearchList,
     getSearchList,
     getFilter,
     getFilters,
     getPreviewData,
     setSortInfo,
-    setScrollFrom,
+    setSortFilter,
     setSearchKeyword,
-    setIntersectionHandler,
     resetReloadList,
-    updateIntersectionHandler,
+    changeTab,
   };
 });

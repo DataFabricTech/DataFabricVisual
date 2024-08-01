@@ -14,54 +14,67 @@
         -->
     <div class="dropdown" v-show="isShowBox">
       <ul class="dropdown-list">
-        <li class="dropdown-item"
+        <template v-if="data.length > 0">
+          <li
+            class="dropdown-item"
             v-for="(option, index) in data"
             :key="index"
             @click="selectItem(option)"
-            :class="[{ 'disabled-option': isDisabled(option[valueKey]) }, { 'is-dropdown-item-selected': isActive(option[valueKey]) }]"
-        >
-          <button class="dropdown-button">
-            <svg-icon class="svg-icon" name="setting"></svg-icon>
-            <span class="dropdown-text">{{ option[labelKey] }}</span>
-          </button>
-          <button class="button button-neutral-ghost button-xs">
-            <span class="hidden-text">닫기</span>
-            <svg-icon class="button-icon" name="close"></svg-icon>
-          </button>
-        </li>
+            :class="[
+              { 'disabled-option': isDisabled(option[valueKey]) },
+              { 'is-dropdown-item-selected': isActive(option[valueKey]) }
+            ]"
+          >
+            <button class="dropdown-button">
+              <svg-icon class="svg-icon" name="setting"></svg-icon>
+              <span class="dropdown-text">{{ option[labelKey] }}</span>
+            </button>
+            <button class="button button-neutral-ghost button-xs" v-if="props.useDelete">
+              <span class="hidden-text">닫기</span>
+              <svg-icon class="button-icon" name="close"></svg-icon>
+            </button>
+          </li>
+        </template>
+        <template v-else>
+          <li class="dropdown-item">
+            <div class="notification notification-sm notification-error">
+              <svg-icon class="notification-icon" name="error"></svg-icon>
+              <p class="notification-detail">{{ props.nodataMsg }}</p>
+            </div>
+          </li>
+        </template>
         <!-- TODO: [개발] 체크박스 아이템  -->
-<!--        <li class="dropdown-item">-->
-<!--          <div class="checkbox">-->
-<!--            <input type="checkbox" id="checkbox-select" class="checkbox-input" />-->
-<!--            <label for="checkbox-select" class="checkbox-label">-->
-<!--              <span class="checkbox-text">Checkbox</span>-->
-<!--              <span class="checkbox-subtext">(Optional)</span>-->
-<!--            </label>-->
-<!--          </div>-->
-<!--        </li>-->
-<!--        <li class="dropdown-item">-->
-<!--          <div class="checkbox">-->
-<!--            <input type="checkbox" id="checkbox-select2" class="checkbox-input" />-->
-<!--            <label for="checkbox-select2" class="checkbox-label">-->
-<!--              <span class="checkbox-text">CheckboxCheckboxCheckboxCheckbox</span>-->
-<!--            </label>-->
-<!--          </div>-->
-<!--        </li>-->
+        <!--        <li class="dropdown-item">-->
+        <!--          <div class="checkbox">-->
+        <!--            <input type="checkbox" id="checkbox-select" class="checkbox-input" />-->
+        <!--            <label for="checkbox-select" class="checkbox-label">-->
+        <!--              <span class="checkbox-text">Checkbox</span>-->
+        <!--              <span class="checkbox-subtext">(Optional)</span>-->
+        <!--            </label>-->
+        <!--          </div>-->
+        <!--        </li>-->
+        <!--        <li class="dropdown-item">-->
+        <!--          <div class="checkbox">-->
+        <!--            <input type="checkbox" id="checkbox-select2" class="checkbox-input" />-->
+        <!--            <label for="checkbox-select2" class="checkbox-label">-->
+        <!--              <span class="checkbox-text">CheckboxCheckboxCheckboxCheckbox</span>-->
+        <!--            </label>-->
+        <!--          </div>-->
+        <!--        </li>-->
         <!-- TODO: [개발] 데이터가 없거나 에러가 날 경우 notificaiton으로 메세지 출력   -->
-<!--        <li class="dropdown-item">-->
-<!--          <div class="notification notification-sm notification-error">-->
-<!--            <svg-icon class="notification-icon" name="error"></svg-icon>-->
-<!--            <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>-->
-<!--          </div>-->
-<!--        </li>-->
-<!--        <li class="dropdown-item dropdown-item-negative">-->
-<!--          <button class="dropdown-button">-->
-<!--            <svg-icon class="svg-icon" name="trash"></svg-icon>-->
-<!--            <span class="dropdown-text">삭제</span>-->
-<!--          </button>-->
-<!--        </li>-->
+        <!--        <li class="dropdown-item">-->
+        <!--          <div class="notification notification-sm notification-error">-->
+        <!--            <svg-icon class="notification-icon" name="error"></svg-icon>-->
+        <!--            <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>-->
+        <!--          </div>-->
+        <!--        </li>-->
+        <!--        <li class="dropdown-item dropdown-item-negative">-->
+        <!--          <button class="dropdown-button">-->
+        <!--            <svg-icon class="svg-icon" name="trash"></svg-icon>-->
+        <!--            <span class="dropdown-text">삭제</span>-->
+        <!--          </button>-->
+        <!--        </li>-->
       </ul>
-
     </div>
   </div>
 </template>
@@ -80,6 +93,7 @@ const props = withDefaults(defineProps<SelectBoxProps>(), {
   selectedItem: undefined,
   disabledList: () => [],
   disabledAll: false,
+  useDelete: false,
   nodataMsg: "데이터가 없습니다.",
   isFirstSelectedEvent: true
 });
@@ -104,5 +118,4 @@ const {
 } = SelectBoxComposition(props, onSelect);
 </script>
 
-<style>
-</style>
+<style></style>
