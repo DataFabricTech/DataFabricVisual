@@ -16,12 +16,19 @@ export function SelectBoxComposition(
 ): SelectBoxComposition {
   const isShowBox: Ref<boolean> = ref<boolean>(false);
   const selectedLabel: Ref<string> = ref<string>("선택하세요");
-  let selectedValue: string | number | undefined = props.selectedItem;
+  const selectedValue: Ref<string | number | undefined> = ref("");
 
-  if (!props.data.length) {
-    // @ts-ignore
-    props.data.push({ [props.labelKey]: props.nodataMsg, [props.valueKey]: null });
-  }
+  // selectedItem 변경을 감지해 값 변경 (부모 컴포넌트에서 선택 값을 초기화하는 경우 존재)
+  watch(
+    () => props.selectedItem,
+    () => {
+      setSelectedData();
+    }
+  );
+
+  const findItem: (value: string | number | undefined) => any = (value) => {
+    return props.data?.find((option) => option[props.valueKey] === value);
+  };
 
   const onSelect: (value: string | number) => void = (value) => {
     onselect(value);
@@ -43,36 +50,42 @@ export function SelectBoxComposition(
   const selectItem: (option: { [key: string]: string | number }) => void = (option) => {
     const value = option[props.valueKey];
     selectedLabel.value = option[props.labelKey].toString();
-    selectedValue = value; // 선택된 값을 selectedValue로 저장
+    selectedValue.value = value; // 선택된 값을 selectedValue로 저장
 
     onSelect(value);
-
     closeDropdown();
   };
 
   const isActive: (value: string | number) => boolean = (value) => {
-    return value === selectedValue;
+    return value === selectedValue.value;
   };
 
-  if (props.selectedItem !== undefined) {
-    // props.selectedItem이 undefined 아닐 때, 해당 값이 props.data 배열에 포함되어 있는지 확인
-    const foundItem = props.data?.find((option) =>
-        option[props.valueKey] === props.selectedItem);
+  const setSelectedData: () => void = () => {
+    const foundItem = findItem(props.selectedItem);
     if (foundItem) {
       // foundItem의 값이 존재할 경우
       const value = foundItem[props.valueKey];
       selectedLabel.value = foundItem[props.labelKey].toString();
-      selectedValue = value; // 선택된 값을 selectedValue로 저장
+      selectedValue.value = value; // 선택된 값을 selectedValue로 저장
+    } else {
+      selectedValue.value = "";
+      selectedLabel.value = "선택하세요";
     }
+  };
+
+  // 초기값 설정
+  if (props.selectedItem !== undefined) {
+    // props.selectedItem이 undefined 아닐 때, 해당 값이 props.data 배열에 포함되어 있는지 확인
+    setSelectedData();
   }
 
-  if(props.isFirstSelectedEvent) {
-      const selectedOption = props.selectedItem && props.data?.find((option) =>
-          option[props.valueKey] === props.selectedItem);
-      if (selectedOption) {
-        // foundItem의 값이 존재할 경우
-        selectItem(selectedOption);
-      }
+  // 초기값 설정
+  if (props.isFirstSelectedEvent) {
+    const foundItem = findItem(props.selectedItem);
+    if (foundItem) {
+      // foundItem의 값이 존재할 경우
+      selectItem(foundItem);
+    }
   }
 
   return { ...props, isShowBox, selectedLabel, selectItem, toggleList, isDisabled, isActive, closeDropdown, onSelect };
