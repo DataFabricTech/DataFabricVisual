@@ -3,7 +3,10 @@ package com.mobigen.ovp.category.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -29,6 +32,13 @@ public class CategoryEntity {
     @Column(name = "parent_id")
     private UUID parentId;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id", referencedColumnName = "id", insertable = false, updatable = false)
+    private CategoryEntity parent;
+
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
+    private List<CategoryEntity> children = new ArrayList<>();
+
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -40,6 +50,10 @@ public class CategoryEntity {
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CategoryMatchEntity> categoryMatches = new ArrayList<>(); // 항상 초기화
+
+    public boolean isRoot() {
+        return this.id.equals(this.parentId);
+    }
 
     public CategoryEntity(UUID id, UUID parentId, String name, int order, String desc) {
         this.id = id;

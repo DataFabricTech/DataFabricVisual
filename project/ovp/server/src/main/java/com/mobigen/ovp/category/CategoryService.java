@@ -6,7 +6,6 @@ import com.mobigen.ovp.category.entity.CategoryMatchEntity;
 import com.mobigen.ovp.category.repository.CategoryMatchRepository;
 import com.mobigen.ovp.category.repository.CategoryRepository;
 import com.mobigen.ovp.common.ModelConvertUtil;
-import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -69,20 +69,15 @@ public class CategoryService {
         return rootCategories.get(0);
     }
 
-    private int getSiblingsMaxOrder(UUID parentId) {
-        List<CategoryEntity> siblings = categoryRepository.findByParentIdOrderByOrderDesc(parentId);
-        return siblings.isEmpty() ? 1 : siblings.get(0).getOrder() + 1;
+    @Transactional
+    public Object insertOrUpdate(CategoryDTO dto) {
+        CategoryEntity entity = dto.toEntity();
+        entity.setOrder(1 + getSiblingMaxOrder(UUID.fromString(dto.getParentId())));
+        return categoryRepository.saveOrUpdate(entity);
     }
 
-    @Transactional
-    public Object insertOrUpdate(CategoryDTO paramsDTO) {
-        // parentId 기준 자식 노드가 몇인지 확인해서 order 값 부여 (가장 마지막 노드로 추가)
-        CategoryEntity categoryEntity = paramsDTO.toEntity();
-
-        int maxOrder = categoryRepository.findMaxOrderByParentId(categoryEntity.getParentId());
-        categoryEntity.setOrder(maxOrder + 1);
-
-        return categoryRepository.saveOrUpdate(categoryEntity);
+    private int getSiblingMaxOrder(UUID parentId) {
+        return categoryRepository.findMaxOrderByParentId(parentId);
     }
 
     private void collectCategoryIdsRecursively(UUID categoryId, List<UUID> idsToDelete) {
@@ -97,10 +92,12 @@ public class CategoryService {
         idsToDelete.add(categoryId);
     }
 
-    public Object deleteCategory(String categoryId) {
+    @Transactional
+    public Object deleteCategory(CategoryDTO params) {
+        CategoryEntity entity = params.toEntity();
         // 재귀 함수 이용하여 하위 > 하위 > 하위.. 의 categoryId 목록 조회.
         List<UUID> idsToDelete = new ArrayList<>();
-        collectCategoryIdsRecursively(UUID.fromString(categoryId), idsToDelete);
+        collectCategoryIdsRecursively(entity.getId(), idsToDelete);
 
         // 하위 categoryId 기반 설정된 modelList 있는지 조회
         List<CategoryMatchEntity> modelList = categoryMatchRepository.findByCategoryIdIn(idsToDelete);
@@ -108,15 +105,73 @@ public class CategoryService {
         if (modelList.size() < 1) {
             // 삭제 진행
             categoryRepository.deleteAllByIds(idsToDelete);
-            // 같은 부모 노드 아래에서 순서 변경이 없기 때문에 노드 삭제 이후 order 를 변경할 필요가 없음.
+            // 선택한 노드의 형제노드들의 order 를 재정렬한다.
+            // 같은 형제 내에서 order 를 바꾸는 기능이 없어 하기 동작은 실행하지 않아도 무관함.
+            reorderSiblings(entity.getParentId());
             return "";
         } else {
             return "HAS_MODEL_LIST";
         }
     }
 
-    public Object moveCategory(List<JsonPatchOperation> params) {
-        return null;
+    private void reorderSiblings(UUID parentId) {
+        List<CategoryEntity> siblingCategories = categoryRepository.findByParentIdOrderByOrderAsc(parentId);
+        AtomicInteger orderCounter = new AtomicInteger(1);
+        siblingCategories.forEach(category -> category.setOrder(orderCounter.getAndIncrement()));
+        categoryRepository.saveAll(siblingCategories);
+    }
+
+    public int findAncestorsDepth(CategoryEntity category) {
+        List<CategoryEntity> ancestors = new ArrayList<>();
+        while (category.getParent() != null && !category.isRoot()) {
+            category = category.getParent();
+            ancestors.add(category);
+        }
+        return ancestors.size();
+    }
+
+    private int findChildrenDepth(CategoryEntity category) {
+        if (category.getChildren().isEmpty()) {
+            return 1;
+        }
+        int maxDepth = 0;
+        for (CategoryEntity child : category.getChildren()) {
+            int childDepth = findChildrenDepth(child);
+            maxDepth = Math.max(maxDepth, childDepth);
+        }
+        return maxDepth + 1;
+    }
+
+    @Transactional
+    public Object moveCategory(Map<String, Object> params) {
+        String thisNodeId = params.get("thisNodeId").toString();
+        String targetNodeId = params.get("targetNodeId").toString();
+
+        // step1. 노드 이동 하고 난 후에 category detph 가 3을 넘어선 안됨
+        CategoryEntity targetNodeEntity = categoryRepository.findByIdWithParent(UUID.fromString(targetNodeId));
+        int targetNodeDepth = findAncestorsDepth(targetNodeEntity);
+
+        CategoryEntity thisNodeEntity = categoryRepository.findByIdWithParent(UUID.fromString(thisNodeId));
+        int thisNodeDepth = findChildrenDepth(thisNodeEntity);
+        if (targetNodeDepth + thisNodeDepth > 3) {
+            return "DEPTH_OVER";
+        }
+
+        // step2. targetNode 에 데이터 모델이 설정되어 있으면 drop 불가능
+        if (targetNodeEntity.getCategoryMatches().size() > 1) {
+            return "HAS_MODEL_TARGET";
+        }
+
+        // step3. thisNode에 데이터 모델이 설정되어 있으면 targetNode 는 하위 노드일때만 가능.
+        if (thisNodeEntity.getCategoryMatches().size() > 0 && targetNodeEntity.getChildren().size() > 1) {
+            return "HAS_MODEL_THIS_TARGET_NOT_LEAF";
+        }
+
+        // step4. 예외 처리가 끝났으면, DB에 반영한다.
+        CategoryDTO categoryDto = new CategoryDTO(thisNodeEntity);
+        categoryDto.setParentId(targetNodeId);
+        insertOrUpdate(categoryDto);
+        return "";
     }
 
     public List<Object> getModelByCategoryId(String categoryId, int page, int size) {

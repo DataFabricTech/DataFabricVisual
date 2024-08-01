@@ -134,7 +134,10 @@
                   </label>
                 </div>
                 <div class="h-group ml-auto gap-2">
-                  <button class="button button-secondary-stroke" @click="showModalChange = true">
+                  <button
+                    class="button button-secondary-stroke"
+                    @click="showModalChange = true"
+                  >
                     카테고리 변경
                   </button>
                   <button class="button button-secondary">
@@ -337,12 +340,16 @@
   </div>
   <!--  TODO: Modal 카테고리 변경-->
   <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalChange">
-    <div class="modal modal-padding-16" style="width:350px;height: 450px">
+    <div class="modal modal-padding-16" style="width: 350px; height: 450px">
       <div class="modal-head">
         <div class="modal-head-text">
           <span class="modal-head-title">카테고리 변경</span>
         </div>
-        <button class="button link-button button-sm" type="button" @click="showModalChange = false">
+        <button
+          class="button link-button button-sm"
+          type="button"
+          @click="showModalChange = false"
+        >
           <span class="hidden-text">닫기</span>
           <svg-icon class="button-icon" name="close"></svg-icon>
         </button>
@@ -365,7 +372,12 @@
       </div>
       <div class="modal-foot">
         <div class="modal-foot-group">
-          <button class="button button-neutral-ghost button-lg" @click="showModalChange = false">취소</button>
+          <button
+            class="button button-neutral-ghost button-lg"
+            @click="showModalChange = false"
+          >
+            취소
+          </button>
           <button class="button button-primary button-lg">선택</button>
         </div>
       </div>
@@ -395,7 +407,6 @@ const { categories, modelList } = storeToRefs(categoryStore);
 
 const showModal = ref(false);
 const showModalChange = ref(false);
-
 
 const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
   id: "",
@@ -458,38 +469,38 @@ const editCategory = () => {
 
 // TODO : [개발] 카테고리 삭제 예 - function 명 겹쳐서 임의로 _deleteCategory 로 처리함. 추후에 store - deleteCategory 이용하여 처리.
 const _deleteCategory = () => {
-  deleteCategory(selectedNode.value.id);
+  deleteCategory(selectedNode.value);
 };
 
-const droppedNode: Ref<TreeViewItem> = ref<TreeViewItem>(<TreeViewItem>{});
-const dropValidator = (
+let nodeMoved: Ref<boolean> = ref(false);
+let dropMsg: Ref<any> = ref(null);
+watch(
+  () => nodeMoved.value,
+  (newVal) => {
+    if (newVal) {
+      if (dropMsg.value !== null) {
+        alert(dropMsg.value);
+      }
+      getCategories();
+    }
+    nodeMoved.value = false;
+    dropMsg.value = null;
+  },
+);
+
+const dropValidator = async (
   thisNode: TreeViewItem,
   targetNode: TreeViewItem,
-  newNode: TreeViewItem,
-): boolean => {
-  console.log(`drop validator`);
-  console.log(`선택한 노드 ${JSON.stringify(thisNode)}`);
-  console.log(`타겟 노드 ${JSON.stringify(targetNode)}`);
-  console.log(`갱신에 사용할 노드 데이터  ${JSON.stringify(newNode)}`);
-  // TODO : [개발] 갱신에 사용할 노드 데이터는 '타겟노드' 의 'parentId'를 수정 처리한 노드로 데이터 수정시 사용함.
+): Promise<boolean> => {
+  // 조건 처리 backend 에서 진행
+  const resultMsg = await moveCategory(thisNode.id, targetNode.id);
 
-  let isValid = false;
-  // 조건 1: targetNode 에 데이터 모델이 설정되어 있으면 drop 불가능
-  // TODO : [개발] targetNode 기준 데이터 모델 설정 여부 조회하는 API 호출
+  dropMsg.value = _.isEmpty(resultMsg) ? "이동이 불가능합니다." : "";
+  nodeMoved.value = true;
 
-  // 조건 2: thisNode에 데이터 모델이 설정되어 있으면 targetNode 는 하위 노드일때만 가능.
-  // TODO : [개발] thisNode 기준 데이터 모델 설정 여부 조회하는 API 호출 -> 2-1
-  // TODO : 2-1 에서 thisNode에 데이터 모델이 설정되어 있는 경우, targetNode.children 에 값이 없는 노드여야 함.
-
-  // TODO : [개발] 이전 형제노드들, 새 형제노드들 order 갱신 처리 해줘야함.
-
-  // 조건 만족시
-  isValid = true;
-
-  droppedNode.value = newNode;
-  // TODO : isValid 가 true 면 update API 호출
-
-  return isValid;
+  // tree lib가 async-await 처리를 지원하지 않기 때문에 여기서는 true 로 던지고,
+  // backend 동작이 끝나면 그때 결과에 따라 watch 항목에서 alert 처리, 목록을 갱신 or 유지 한다
+  return true;
 };
 
 const previewClick = async (data: object) => {

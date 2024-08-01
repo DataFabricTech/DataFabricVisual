@@ -30,24 +30,24 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     return new URLSearchParams(params);
   };
 
-  const getModelByCategoryIdAPI = async () => {
-    if (_.isNull(selectedNode) || _.isEmpty(selectedNode.id)) {
+  const getModelByCategoryIdAPI = async (node: TreeViewItem) => {
+    if (_.isNull(node) || _.isEmpty(node.id)) {
       return;
     }
     const { data } = await $api(
-      `/api/category/models?${getModelListQuery(selectedNode.id)}`,
+      `/api/category/models?${getModelListQuery(node.id)}`,
     );
     return data;
   };
   const addModelList = async () => {
-    const data = await getModelByCategoryIdAPI();
+    const data = await getModelByCategoryIdAPI(selectedNode);
     modelList.value = modelList.value.concat(data);
   };
   const getModelList = async () => {
     if (_.isNull(selectedNode)) {
       return;
     }
-    const data = await getModelByCategoryIdAPI();
+    const data = await getModelByCategoryIdAPI(selectedNode);
     modelList.value = data;
   };
   const setSelectedNode = (node: any) => {
@@ -62,19 +62,20 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       getCategories();
     });
   };
-  const moveCategory = (oldParentId: string, newParentId: string) => {
-    console.log(`${oldParentId} | ${newParentId}`);
-    $api("/api/category/move", {
+  const moveCategory = async (thisNodeId: string, targetNodeId: string) => {
+    const { data } = await $api("/api/category/move", {
       method: "PUT",
       body: {
-        oldParentId: "",
-        newParentId: "",
+        thisNodeId: thisNodeId,
+        targetNodeId: targetNodeId,
       },
     });
+    return data;
   };
-  const deleteCategory = async (nodeId: string) => {
-    const { data } = await $api(`/api/category/${nodeId}`, {
+  const deleteCategory = async (node: TreeViewItem) => {
+    const { data } = await $api(`/api/category`, {
       method: "delete",
+      body: node,
     });
     if (data === "HAS_MODEL_LIST") {
       alert("하위 노드에 매칭되어 있는 데이터 모델이 있습니다.");
