@@ -37,16 +37,15 @@
         <!-- 카테고리, 소유자, 태그 select -->
         <div class="h-group">
           <template v-for="(filterItem, keyName, FI) in props.filter" :key="FI">
-            <select-box
-              class="select-clean select-sm"
+            <menu-search-button
               :data="filterItem.data"
-              :selected-item="selectedFilter[keyName]"
-              :is-multi="false"
-              :title="filterItem.text"
+              :selected-items="selectedFilter[keyName]"
               label-key="key"
               value-key="key"
-              @select="onSelectFilter(keyName, $event)"
-            ></select-box>
+              :title="filterItem.text"
+              :is-multi="true"
+              @multiple-change="onSelectFilter(keyName, $event)"
+            ></menu-search-button>
           </template>
         </div>
       </div>
@@ -59,7 +58,7 @@
         value-key="value"
       ></select-box>
     </div>
-    <ul class="menu-list">
+    <ul class="menu-list" v-if="listData && listData.length > 1">
       <template v-for="(item, idx) in listData">
         <data-model-list-item
           v-if="item.isShow"
@@ -77,8 +76,9 @@
         ></data-model-list-item>
       </template>
     </ul>
+
     <!-- 결과 없을 시 no-result 표시 -->
-    <div class="no-result" style="display: none">
+    <div class="no-result" v-else>
       <div class="notification">
         <svg-icon class="notification-icon" name="info"></svg-icon>
         <p class="notification-detail">{{ props.noDataMsg }}</p>
@@ -92,6 +92,7 @@ import SelectBox from "@extends/select-box/SelectBox.vue";
 import DataModelListItem from "~/components/datamodel-creation/item/data-model-list-item.vue";
 import type { DataModelListProps } from "~/components/datamodel-creation/list/DataModelListProps";
 import { DataModelListComposition } from "~/components/datamodel-creation/list/DataModelListComposition";
+import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
 
 const props = withDefaults(defineProps<DataModelListProps>(), {
   data: () => [],

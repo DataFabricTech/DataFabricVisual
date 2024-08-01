@@ -17,7 +17,7 @@
       "firModelNm": "",
       "category": "",
       "bookmarked": false,
-      "tags":[]
+      "tags":["test_ go0101.test_go01_ term01.test_go01_ term02.test_go02_ term01", "tag2222"]
     },
     {
       "owner": "관리자123",
@@ -36,7 +36,7 @@
       "firModelNm": "Active_Employees",
       "category": "",
       "bookmarked": true,
-      "tags":[]
+      "tags":["tag22222"]
     },
     {
       "owner": "",
@@ -74,7 +74,7 @@
       "firModelNm": "sampledata_map_08",
       "category": "",
       "bookmarked": false,
-      "tags":[]
+      "tags":["분류01.태그01_01"]
     },
     {
       "owner": "",
@@ -93,7 +93,7 @@
       "firModelNm": "was_iwp_config_value",
       "category": "",
       "bookmarked": false,
-      "tags":[]
+      "tags":["분류01.태그01_01"]
     },
     {
       "owner": "",
