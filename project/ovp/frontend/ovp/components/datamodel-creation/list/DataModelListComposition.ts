@@ -147,7 +147,6 @@ export function DataModelListComposition(
         }
       }
     }
-    console.log("checkFilter 모두 통과");
     return true;
   };
 
