@@ -1,6 +1,8 @@
+<!-- API 통신을 위한 컴포넌트-->
 <template>
   <div class="menu menu-data">
     <div class="menu-head">
+      <slot name="tab"></slot>
       <!--검색 -->
       <div class="h-group">
         <div class="search-input">
@@ -11,7 +13,7 @@
             id="data-menu-search"
             class="text-input"
             :value="searchLabel"
-            @input="onSearchText($event.target.value)"
+            @keydown.enter="onSearchText($event.target.value)"
             placeholder="검색어를 입력하세요"
           />
           <svg-icon class="text-input-icon" name="search"></svg-icon>
@@ -37,28 +39,17 @@
         <!-- 카테고리, 소유자, 태그 select -->
         <div class="h-group">
           <template v-for="(filterItem, keyName, FI) in props.filter" :key="FI">
-            <menu-search-button
+            <select-box
+              class="select-clean select-sm"
               :data="filterItem.data"
-              :selected-items="selectedFilter[keyName]"
+              :selected-item="selectedFilter[keyName]"
+              :is-multi="false"
+              :title="filterItem.text"
               label-key="key"
               value-key="key"
-              :title="filterItem.text"
-              :is-multi="true"
-              @multiple-change="onSelectFilter(keyName, $event)"
-            ></menu-search-button>
+              @select="onSelectFilter(keyName, $event)"
+            ></select-box>
           </template>
-          <!--          <template v-for="(filterItem, keyName, FI) in props.filter" :key="FI">-->
-          <!--            <select-box-->
-          <!--              class="select-clean select-sm"-->
-          <!--              :data="filterItem.data"-->
-          <!--              :selected-item="selectedFilter[keyName]"-->
-          <!--              :is-multi="false"-->
-          <!--              :title="filterItem.text"-->
-          <!--              label-key="key"-->
-          <!--              value-key="key"-->
-          <!--              @select="onSelectFilter(keyName, $event)"-->
-          <!--            ></select-box>-->
-          <!--          </template>-->
         </div>
       </div>
       <!-- 정렬 -->
@@ -70,7 +61,7 @@
         value-key="value"
       ></select-box>
     </div>
-    <ul class="menu-list" v-if="listData && listData.length > 1">
+    <ul class="menu-list">
       <template v-for="(item, idx) in listData">
         <data-model-list-item
           v-if="item.isShow"
@@ -88,9 +79,8 @@
         ></data-model-list-item>
       </template>
     </ul>
-
     <!-- 결과 없을 시 no-result 표시 -->
-    <div class="no-result" v-else>
+    <div class="no-result" style="display: none">
       <div class="notification">
         <svg-icon class="notification-icon" name="info"></svg-icon>
         <p class="notification-detail">{{ props.noDataMsg }}</p>
@@ -103,8 +93,7 @@
 import SelectBox from "@extends/select-box/SelectBox.vue";
 import DataModelListItem from "~/components/datamodel-creation/item/data-model-list-item.vue";
 import type { DataModelListProps } from "~/components/datamodel-creation/list/DataModelListProps";
-import { DataModelListComposition } from "~/components/datamodel-creation/list/DataModelListComposition";
-import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
+import { DataModelApiListComposition } from "~/components/datamodel-creation/list/DataModelApiListComposition";
 
 const props = withDefaults(defineProps<DataModelListProps>(), {
   data: () => [],
@@ -126,6 +115,9 @@ const emit = defineEmits<{
   (e: "select", value: string): void;
   (e: "bookmark-change", value: string): void;
   (e: "item-click", value: string): void;
+  (e: "filter-change", value: string): void;
+  (e: "sort-change", value: string): void;
+  (e: "search-change", value: string): void;
 }>();
 
 const emitBookmark = (value: string) => {
@@ -147,6 +139,18 @@ const emitSelectItem = (value: string) => {
   console.log("onSelectItem");
   emit("select", value);
 };
+const emitFilterChange = (value: string) => {
+  console.log("emitFilterChange");
+  emit("filter-change", value);
+};
+const emitSearchChange = (value: string) => {
+  console.log("emitSearchChange");
+  emit("search-change", value);
+};
+const emitSortChange = (value: string) => {
+  console.log("emitSearchChange");
+  emit("sort-change", value);
+};
 
 const {
   listData,
@@ -162,7 +166,8 @@ const {
   onClickDataModelItem,
   onDeleteItem,
   onSelectItem,
-} = DataModelListComposition(
+  onCheckItem,
+} = DataModelApiListComposition(
   props,
   emitBookmark,
   emitItemClick,

@@ -46,7 +46,7 @@ export function DataModelListComposition(
   const selectedFilter = reactive<Record<string, string>>({}); // reactive로 변경
   const setSelectedFilter: () => void = () => {
     for (const key in props.filter) {
-      selectedFilter[key] = "";
+      selectedFilter[key] = [];
     }
   };
 

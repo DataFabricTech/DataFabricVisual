@@ -18,3 +18,8 @@ export interface DataModelListProps {
   noDataMsg?: string;
   listType?: "selected" | "non-selected";
 }
+
+export interface DataModelApiListProps extends DataModelListProps {
+  selectedSort: string;
+  selectFilter: any;
+}
