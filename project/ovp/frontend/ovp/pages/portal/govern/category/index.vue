@@ -2,7 +2,6 @@
   <div class="section-top-bar">
     <div class="l-top-bar">
       <h3 class="title">카테고리</h3>
-      <button class="button button-primary w-20">저장</button>
     </div>
   </div>
   <div class="section-contents p-0 bg-white">
@@ -17,14 +16,13 @@
             카테고리 추가
           </button>
         </div>
-        <!-- 결과 없을 시 no-result 표시 / 기본 .work-page로 컨텐츠 표시 -->
-        <div class="no-result" style="display: none">
+        <div class="no-result" v-if="isCategoriesNoData">
           <div class="notification">
             <svg-icon class="notification-icon" name="info"></svg-icon>
             <p class="notification-detail">등록된 정보가 없습니다.</p>
           </div>
         </div>
-        <div class="p-3">
+        <div class="p-3" v-else>
           <tree-vue
             :items="categories"
             :isCheckable="false"
@@ -41,7 +39,18 @@
           />
         </div>
       </div>
-      <div class="work-page">
+      <div class="work-page" v-if="isCategoriesNoData">
+        <div class="l-top-bar"></div>
+        <div class="work-contents">
+          <div class="no-result">
+            <div class="notification">
+              <svg-icon class="notification-icon" name="info"></svg-icon>
+              <p class="notification-detail">등록된 정보가 없습니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="work-page" v-else>
         <div class="l-top-bar">
           <editable-group
             compKey="title"
@@ -69,13 +78,6 @@
           <button class="button button-error-lighter">삭제</button>
         </div>
         <div class="work-contents">
-          <!-- 결과 없을 시 no-result 표시  -->
-          <div class="no-result" style="display: none">
-            <div class="notification">
-              <svg-icon class="notification-icon" name="info"></svg-icon>
-              <p class="notification-detail">등록된 정보가 없습니다.</p>
-            </div>
-          </div>
           <editable-group
             compKey="description"
             :editable="true"
@@ -100,7 +102,7 @@
             </template>
           </editable-group>
           <!-- NOTE : v-if 로 할 경우, intersectionObserver 이 element 의 변화를 catch 하지 못해서 동작하지 않는 현상이 있어서 v-show 로 변환함. -->
-          <div v-show="modelList.length > 0">
+          <div>
             <div class="l-top-bar">
               <div class="search-input w-[541px]">
                 <label class="hidden-text" for="text-input-example-11"
@@ -144,7 +146,16 @@
                 </div>
               </div>
             </div>
-            <div class="l-resource-box l-split mt-3">
+            <div v-show="modelList.length === 0" class="no-result mt-3">
+              <div class="notification">
+                <svg-icon class="notification-icon" name="info"></svg-icon>
+                <p class="notification-detail">등록된 정보가 없습니다.</p>
+              </div>
+            </div>
+            <div
+              v-show="modelList.length > 0"
+              class="l-resource-box l-split mt-3"
+            >
               <div class="data-page" style="position: relative">
                 <div id="dataList" class="data-list">
                   <resource-box-list
@@ -158,7 +169,6 @@
                     @checkedValueChanged="checked"
                   />
                   <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
-                  <!--                TODO: [퍼블리싱] loader UI 컴포넌트 추가 및 로딩 위치 검토 필요 -->
                   <Loading
                     id="loader"
                     :use-loader-overlay="true"
@@ -395,7 +405,8 @@ const {
   moveCategory,
   deleteCategory,
 } = categoryStore;
-const { categories, modelList } = storeToRefs(categoryStore);
+const { categories, modelList, isCategoriesNoData } =
+  storeToRefs(categoryStore);
 
 const showModal = ref(false);
 const showModalChange = ref(false);

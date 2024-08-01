@@ -85,7 +85,7 @@
     height: calc(100% - 48px);
   }
 
-  &:has(.l-split + .l-split){
+  &:has(.l-split + .l-split) {
     .l-split:nth-child(1) {
       height: 60%;
       border-bottom: 1px solid $neutral-200;
@@ -114,6 +114,7 @@
 .l-top-bar {
   @include flex($horizontal: space-between);
   width: 100%;
+  min-height: 48px;
   flex-shrink: 0;
   padding: $spacing-8;
 

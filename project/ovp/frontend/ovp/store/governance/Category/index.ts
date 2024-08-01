@@ -7,7 +7,8 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const pagingStore = usePagingStore();
   const { from, size } = storeToRefs(pagingStore);
 
-  const categories = ref<TreeViewItem>();
+  const categories: Ref<any[]> = ref<TreeViewItem>();
+  const isCategoriesNoData = ref(false);
   const modelList: Ref<any[]> = ref([]);
   let selectedNode: any = null;
 
@@ -52,6 +53,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     }
     const data = await getModelByCategoryIdAPI(selectedNode);
     modelList.value = data;
+    console.log("getModelList의 modelList", modelList.value);
   };
   const setSelectedNode = (node: any) => {
     selectedNode = node;
@@ -68,7 +70,8 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     $api("/api/category", {
       method: method,
       body: node,
-    }).then(() => {
+    }).then((res: any) => {
+      console.log("insertOrEditAPI의 res", res);
       getCategories();
     });
   };
@@ -97,6 +100,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   return {
     categories,
     modelList,
+    isCategoriesNoData,
     getCategories,
     addModelList,
     getModelList,
