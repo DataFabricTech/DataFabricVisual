@@ -10,8 +10,7 @@
       <div class="activity-info-wrap">
         <div class="activity-info-head">
           <p class="activity-info-title">
-            <!-- TODO: 디자인 퍼블리싱 -->
-            <strong>{{ activity.headerMessage }}</strong>
+            <span v-html="headerMessage(activity)"></span>
           </p>
           <span class="activity-info-ago">{{ activity.updatedAt }}</span>
         </div>
@@ -94,5 +93,25 @@
 </template>
 <script setup lang="ts">
 import { useGlossaryStore } from "@/store/glossary";
-const { activities } = useGlossaryStore();
+import type { Activity } from "~/type/glossary";
+const { activities, glossary } = useGlossaryStore();
+
+const headerMessage = (activity: Activity): string => {
+  const { updatedBy, fieldOperation } = activity;
+  const commonMsg = (prefix: string): string =>
+    `<strong>${updatedBy}</strong> ${prefix} <strong>${glossary.name}</strong>`;
+
+  switch (activity.cardStyle) {
+    case "tags":
+      return commonMsg(`${fieldOperation} <strong>Tags</strong> for`);
+    case "description":
+      return commonMsg(`${fieldOperation} <strong>Description</strong> for`);
+    case "entityCreated":
+      return commonMsg(`added`);
+    case "entityDeleted":
+      return commonMsg(`<p style="color: red;">deleted</p>`);
+    case "domain":
+      return commonMsg("posted on");
+  }
+};
 </script>
