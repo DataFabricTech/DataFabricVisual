@@ -1,11 +1,25 @@
 import { defineStore } from "pinia";
+import excuteResultJson from "./samples/excuteResult.json";
 
 export const creationStore = defineStore("creation", () => {
   const { $api } = useNuxtApp();
 
   const modelList = ref([]);
 
-  // TODO: 임시 데이터 .. store 연동시 제거
+  const query = ref("");
+
+  const querySuccess = ref(false);
+  const excuteResult = ref([]);
+
+  const isFirstExcute = ref(false);
+  const isExcuteQuery = ref(false);
+
+  const excuteResultErrMsg = ref("");
+
+  // TODO: 추가 모달 창에서 modelList에 값을 넣어줘야함
+  function getModelList() {}
+
+  // TODO: 임시 데이터 적용 -> 삭제 예정
   modelList.value = [
     {
       id: "1",
@@ -86,7 +100,34 @@ export const creationStore = defineStore("creation", () => {
     },
   ];
 
+  // TODO: 서버 연동 처리 필요
+  async function getExcuteResult(value: string) {
+    isFirstExcute.value = true;
+    isExcuteQuery.value = true;
+
+    // TODO: 임시 데이터 적용 -> 서버 연동 후 제거 예정
+    querySuccess.value = true;
+
+    // TODO: 임시 데이터 적용 -> 서버 연동 후 제거 예정
+    excuteResult.value = excuteResultJson.data;
+
+    // TODO: 임시 데이터 적용 -> 서버 연동 후 제거 예정
+    excuteResultErrMsg.value =
+      "Line 1 ~ 6 : Unknown error. ( TableNotExistsError() [/*+ LOCATION (\n" +
+      "        PARTITION >= '20240605131200' AND PARTITION <= '20240605131500' ) */\n" +
+      "        SELECT CATEGORY, BOUNDARY,SIDO_ENG, SIDO_KOR G_CO FROM ROOT.DTST limit\n" +
+      "        5000;] )";
+  }
+
   return {
     modelList,
+    query,
+    querySuccess,
+    isExcuteQuery,
+    isFirstExcute,
+    excuteResult,
+    excuteResultErrMsg,
+    getModelList,
+    getExcuteResult,
   };
 });
