@@ -1,10 +1,11 @@
 import { ref, Ref } from "vue";
 import type { DataModelListProps } from "~/components/datamodel-creation/list/DataModelListProps";
+import _ from "lodash";
 
 interface DataModelListCompositionImpl extends DataModelListProps {
   // Menu-search 컴포넌트에서만 사용하는 data, function
   listData: Ref<any[]>;
-  selectedFilter: Record<string, string>;
+  selectedFilter: Record<string, any>;
   searchLabel: Ref<string>;
   //
   onSearchText(value: string): void;
@@ -43,10 +44,10 @@ export function DataModelListComposition(
     });
   };
 
-  const selectedFilter = reactive<Record<string, string>>({}); // reactive로 변경
+  const selectedFilter = reactive<Record<string, any>>({}); // reactive로 변경
   const setSelectedFilter: () => void = () => {
     for (const key in props.filter) {
-      selectedFilter[key] = "";
+      selectedFilter[key] = [];
     }
   };
 
@@ -89,7 +90,6 @@ export function DataModelListComposition(
    * @param value
    */
   const onSearchText: (value: string) => void = (value) => {
-    console.log("onSearchText");
     searchLabel.value = value;
     searchList();
   };
@@ -132,23 +132,28 @@ export function DataModelListComposition(
 
       // 데이터 값 비교
       const selectedFilterValue = selectedFilter[key];
-      if (!selectedFilterValue) {
+      if (_.isEmpty(selectedFilterValue)) {
         continue;
       }
 
       if (Array.isArray(itemValue)) {
         itemValue = itemValue as [];
-        if (!itemValue.includes(selectedFilterValue)) {
+        const isValueNotPresent = selectedFilterValue.some((filterValue) =>
+          itemValue.includes(filterValue.key),
+        );
+        if (!isValueNotPresent) {
           return false;
         }
       } else {
         // 문자열 일때 비교
-        if (itemValue !== selectedFilterValue) {
+        const valueExists = selectedFilterValue.some(
+          (item) => item.key === itemValue,
+        );
+        if (!valueExists) {
           return false;
         }
       }
     }
-    console.log("checkFilter 모두 통과");
     return true;
   };
 
