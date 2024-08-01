@@ -47,9 +47,17 @@
         </div>
       </div>
     </div>
-    <div class="lineage">
+    <div class="visual">
       <!-- 1depth 카테고리 노드 샘플 -->
-      <div style="top: 200px; left: 200px; width:100px; height:100px; border-radius: 50%; background-color: #D99BFF; position: relative; cursor: pointer">
+      <div style="top: 200px;
+                  left: 200px;
+                  width:100px;
+                  height:100px;
+                  border-radius: 50%;
+                  background-color: #D99BFF;
+                  position: relative;
+                  cursor: pointer"
+      >
         <!-- TODO: [개발] 노드 클릭 시 드롭다운 -->
         <div class="dropdown" style="top: 50px; left: 50px">
           <ul class="dropdown-list">
@@ -63,8 +71,17 @@
         </div>
       </div>
       <!-- 데이터 모델 샘플 -->
-      <div style="top: 200px; left: 400px; width:100px; height:100px; border-radius: 50%; background-color:
-      #BDE3FF; border:3px solid #22B4FF; position: relative; cursor: pointer" title="마우스오버 시, 전체 내용을 툴 팁으로 제공 함.">
+      <div style="top: 200px;
+                  left: 400px;
+                  width:100px;
+                  height:100px;
+                  border-radius: 50%;
+                  background-color: #BDE3FF;
+                  border:3px solid #22B4FF;
+                  position: relative;
+                  cursor: pointer"
+                  title="마우스오버 시, 전체 내용을 툴 팁으로 제공 함."
+      >
         <!-- TODO: [개발] 노드 클릭 시 드롭다운 -->
         <div class="dropdown" style="top: 50px; left: 50px">
           <ul class="dropdown-list">
@@ -79,35 +96,35 @@
         </div>
       </div>
       <!-- 범례 -->
-      <div class="lineage-legend">
+      <div class="visual-legend">
         <button class="button button-lg button-neutral-stroke" type="button" @click="toggleLegend">
           <span class="hidden-text">범례</span>
           <svg-icon class="button-icon" name="legend"></svg-icon>
         </button>
-        <ul class="lineage-legend-content" v-show="isLegendVisible">
-          <li class="lineage-legend-item one-depth">
+        <ul class="visual-legend-content" v-show="isLegendVisible">
+          <li class="visual-legend-item one-depth">
             1depth 카테고리
           </li>
-          <li class="lineage-legend-item two-depth">
+          <li class="visual-legend-item two-depth">
             2depth 카테고리
           </li>
-          <li class="lineage-legend-item three-depth">
+          <li class="visual-legend-item three-depth">
             3depth 카테고리
           </li>
-          <li class="lineage-legend-item data-model">
+          <li class="visual-legend-item data-model">
             데이터 모델
           </li>
-          <li class="lineage-legend-item node-way">
-            <div class="arrow">
-              <div class="arrow-line"></div>
+          <li class="visual-legend-item node-way">
+            <div class="edge">
+              <div class="edge-line"></div>
             </div>
             노드 관계 방향
           </li>
         </ul>
       </div>
       <!-- 모델 리스트 -->
-      <div class="lineage-model-list" v-if="isModellistVisible" @click="closeModellist">
-        <div class="lineage-model-list-head">
+      <div class="visual-model-list" v-if="isModellistVisible" @click="closeModellist">
+        <div class="visual-model-list-head">
           <div class="breadcrumb">
             <ul class="breadcrumb-list">
               <li class="breadcrumb-item">
@@ -165,12 +182,12 @@
         </div>
       </div>
       <!-- 컨트롤러 -->
-      <div class="lineage-control">
-        <button class="button button-lg button-neutral-stroke lineage-control-zoom-in" type="button">
+      <div class="visual-control">
+        <button class="button button-lg button-neutral-stroke visual-control-zoom-in" type="button">
           <span class="hidden-text">확대</span>
           <svg-icon class="button-icon" name="plus"></svg-icon>
         </button>
-        <button class="button button-lg button-neutral-stroke lineage-control-zoom-out" type="button">
+        <button class="button button-lg button-neutral-stroke visual-control-zoom-out" type="button">
           <span class="hidden-text">축소</span>
           <svg-icon class="button-icon" name="minus"></svg-icon>
         </button>
@@ -180,7 +197,7 @@
         </button>
       </div>
       <!-- 미니맵 -->
-      <div class="lineage-map">
+      <div class="visual-mini-map">
         미니맵
       </div>
     </div>

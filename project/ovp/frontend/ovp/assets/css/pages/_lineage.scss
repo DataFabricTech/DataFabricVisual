@@ -1,4 +1,5 @@
-.lineage {
+//배경 스타일
+@mixin graph-grid {
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -8,6 +9,108 @@
   background-color: #fff;
   background-image: linear-gradient(to bottom, transparent, transparent 15%, #fff 10%), linear-gradient(to right, $neutral-300, $neutral-300 15%, #fff 10%);
   background-size: 10px 10px;
+}
+
+//범례
+@mixin graph-legend {
+  @include flex($vertical: flex-start);
+  position: absolute;
+  gap: $spacing-8;
+  top: $spacing-12;
+  left: $spacing-12;
+
+  &-content {
+    @include flex($direction: column, $vertical: flex-start);
+    gap: $spacing-4;
+    padding: $spacing-12;
+    background-color: $neutral-0;
+    border: 1px solid $neutral-300;
+    border-radius: $spacing-4;
+  }
+
+  &-item {
+    @include flex;
+    @include font-size('13');
+    gap: $spacing-8;
+    font-weight: 600;
+  }
+}
+
+@mixin graph-control {
+  @include flex($direction: column);
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+
+  .button-neutral-stroke:hover {
+    border: 1px solid $neutral-200;
+  }
+
+  &-zoom-in {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-width: 0;
+  }
+
+  &-zoom-out {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+  }
+}
+
+//미니맵
+@mixin graph-mini-map($bottom: 12px, $left: 55px) {
+  position: absolute;
+  bottom: $bottom;
+  left: $left;
+  width: 246px;
+  height: 136px;
+  border: 1px solid $neutral-300;
+  border-radius: 4px;
+  background-color: #ffffff;
+  cursor: grab;
+}
+
+//노드 관계 방향 스타일링
+@mixin edge {
+  position: relative;
+  width: 16px;
+  height: 10px;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &::before {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: $neutral-400;
+  }
+
+  &-line {
+    position: absolute;
+    width: 12px;
+    height: 2px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: $neutral-400;
+  }
+
+  &::after {
+    left: 11px;
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 6px solid $neutral-400;
+  }
+}
+
+
+.lineage {
+  @include graph-grid;
 
   .preview {
     @include box-shadow('lg');
@@ -23,62 +126,17 @@
   }
 
   &-control {
-    @include flex($direction: column);
-
-    position: absolute;
-    bottom: 12px;
-    left: 12px;
-
-    .button-neutral-stroke:hover {
-      border: 1px solid $neutral-200;
-    }
-
-    &-zoom-in {
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 0;
-      border-bottom-width: 0;
-    }
-
-    &-zoom-out {
-      border-top-right-radius: 0;
-      border-top-left-radius: 0;
-    }
+    @include graph-control;
   }
+}
 
-  &-map {
-    position: absolute;
-    bottom: 12px;
-    left: 55px;
-    width: 246px;
-    height: 136px;
-    border: 1px solid $neutral-300;
-    border-radius: 4px;
-    background-color: #ffffff;
-    cursor: grab;
-  }
+.visual {
+  @include graph-grid;
 
   &-legend {
-    @include flex($vertical: flex-start);
-    position: absolute;
-    gap: $spacing-8;
-    top: $spacing-12;
-    left: $spacing-12;
-
-    &-content {
-      @include flex($direction: column, $vertical: flex-start);
-      gap: $spacing-4;
-      padding: $spacing-12;
-      background-color: $neutral-0;
-      border: 1px solid $neutral-300;
-      border-radius: $spacing-4;
-    }
+    @include graph-legend;
 
     &-item {
-      @include flex;
-      @include font-size('13');
-      gap: $spacing-8;
-      font-weight: 600;
-
       &::before {
         content: '';
         display: block;
@@ -109,42 +167,17 @@
       content: unset;
     }
 
-    //노드 관계 방향 스타일링
-    .arrow {
-      position: relative;
-      width: 16px;
-      height: 10px;
-
-      &::before, &::after {
-        content: '';
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-
-      &::before {
-        width: 5px;
-        height: 5px;
-        border-radius: 50%;
-        background-color: $neutral-400;
-      }
-
-      &-line {
-        position: absolute;
-        width: 12px;
-        height: 2px;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: $neutral-400;
-      }
-
-      &::after {
-        left: 11px;
-        border-top: 6px solid transparent;
-        border-bottom: 6px solid transparent;
-        border-left: 6px solid $neutral-400;
-      }
+    .edge {
+      @include edge;
     }
+  }
+
+  &-control {
+    @include graph-control;
+  }
+
+  &-mini-map {
+    @include graph-mini-map;
   }
 
   &-model-list {

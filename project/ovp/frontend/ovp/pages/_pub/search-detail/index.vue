@@ -61,7 +61,7 @@
         </button>
       </div>
       <div class="editable-group">
-        <lable class="hidden-text" for="title-modify">데이터 모델 이름 입력</lable>
+        <label class="hidden-text" for="title-modify">데이터 모델 이름 입력</label>
         <input id="title-modify" class="text-input w-2/4" />
         <div class="h-group gap-2 shrink-0">
           <button class="button button-neutral-lighter button-sm" type="button">
@@ -80,7 +80,7 @@
         </button>
       </div>
       <div class="editable-group">
-        <lable class="hidden-text" for="description-modify">데이터 모델 설명 입력</lable>
+        <label class="hidden-text" for="description-modify">데이터 모델 설명 입력</label>
         <textarea id="description-modify" class="textarea"></textarea>
         <div class="h-group gap-2">
           <button class="button button-neutral-lighter button-sm" type="button">
@@ -212,7 +212,7 @@
         </li>
         <li class="tab-item">
           <button class="tab-button">
-            <p class="tab-button-text">knowledge graph</p>
+            <p class="tab-button-text">연관 데이터 모델 시각화</p>
           </button>
         </li>
         <li class="tab-item">
@@ -537,9 +537,85 @@
             </div>
           </div>
           <!--  데이터리니지 탭 끝-->
-          <!--  knowledge graph 탭 시작 -->
-          <div class="data-detail-group" style="display: none">
-            <div class="knowledge">knowledge</div>
+          <!--  연관 데이터 모델 시각화 탭 시작 -->
+          <div class="data-detail-group" style="">
+            <div class="visual visual-detail">
+              <!-- 기준 모델 샘플 -->
+              <div style="top: 200px;
+                          left: 200px;
+                          width:100px;
+                          height:100px;
+                          border-radius: 50%;
+                          background-color: #85E0A3;
+                          border: 3px solid #359F67;
+                          position: relative;
+                          cursor: pointer"
+              >
+              </div>
+              <!-- 연관 모델 샘플 -->
+              <div style="top: 200px;
+                          left: 400px;
+                          width:100px;
+                          height:100px;
+                          border-radius: 50%;
+                          background-color: #BDE3FF;
+                          border:3px solid #22B4FF;
+                          position: relative;
+                          cursor: pointer"
+                          title="마우스오버 시, 전체 내용을 툴 팁으로 제공 함."
+              >
+                <!-- TODO: [개발] 노드 클릭 시 드롭다운 -->
+                <div class="dropdown" style="top: 50px; left: 50px">
+                  <ul class="dropdown-list">
+                    <li class="dropdown-item">
+                      <button class="dropdown-button">
+                        <span class="dropdown-text"
+                        >상세정보</span
+                        >
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- 범례 -->
+              <div class="visual-legend">
+                <button class="button button-lg button-neutral-stroke" type="button" @click="toggleLegend">
+                  <span class="hidden-text">범례</span>
+                  <svg-icon class="button-icon" name="legend"></svg-icon>
+                </button>
+                <ul class="visual-legend-content" v-show="isLegendVisible">
+                  <li class="visual-legend-item reference-model">
+                    기준모델
+                  </li>
+                  <li class="visual-legend-item relation-model">
+                    연관모델
+                  </li>
+                  <li class="visual-legend-item relation-rank">
+                    연관순위
+                    <!-- TODO: [개발] 툴팁 컴포넌트 개발 후 추가 -->
+                    <button class="button button-neutral-ghost button-sm" type="button">
+                      <span class="hidden-text">툴팁</span>
+                      <svg-icon class="button-icon" name="help-outline"></svg-icon>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+              <!-- 컨트롤러 -->
+              <div class="visual-control">
+                <button class="button button-lg button-neutral-stroke visual-control-zoom-in" type="button">
+                  <span class="hidden-text">확대</span>
+                  <svg-icon class="button-icon" name="plus"></svg-icon>
+                </button>
+                <button class="button button-lg button-neutral-stroke visual-control-zoom-out" type="button">
+                  <span class="hidden-text">축소</span>
+                  <svg-icon class="button-icon" name="minus"></svg-icon>
+                </button>
+                <button class="button button-lg button-neutral-stroke mt-2" type="button">
+                  <span class="hidden-text">원좌표</span>
+                  <svg-icon class="button-icon" name="target-lock"></svg-icon>
+                </button>
+              </div>
+            </div>
             <div class="data-detail-list">
               <!-- TODO: [개발] resource-box 시작 컴포넌트화  -->
               <div class="resource-box" v-for="card in 10" :key="card">
@@ -567,7 +643,7 @@
               <!-- resource-box 끝  -->
             </div>
           </div>
-          <!--  knowledge graph 탭 끝 -->
+          <!--  연관 데이터 모델 시각화 탭 끝 -->
           <!--  추천 데이터모델 탭 시작-->
           <div class="data-detail-group" style="display: none">
             <div class="recommend" v-for="group in 4" :key="group">
@@ -604,16 +680,14 @@
   </div>
 </template>
 
-<script>
-import Header from "../layouts/header.vue";
-import Sidebar from "../layouts/sidebar.vue";
+<script setup lang="ts">
 
-// import Tab from "../../../../common/components/extends/tab/Tab.vue";
+const isLegendVisible = ref(true)
 
-export default {
-  name: "search-detail",
-  components: { Sidebar, Header }
-};
+function toggleLegend() {
+  isLegendVisible.value = !isLegendVisible.value
+}
+
 </script>
 
 <style scoped>

@@ -53,18 +53,49 @@
   display: flex;
   gap: $spacing-12;
 
-  &:has(.knowledge) {
-    overflow: hidden;
+  &:has(.visual-detail) {
     height: 100%;
 
-    .knowledge {
+    .visual-detail {
       width: 60%;
       height: 100%;
       min-height: 680px;
+    }
 
-      //임시 스타일
-      border: 1px solid $neutral-200;
-      background: $neutral-100;
+    .visual-legend {
+      &-item {
+        &::before {
+          content: '';
+          display: block;
+          width: 16px;
+          height: 16px;
+          border-radius: 50%;
+        }
+      }
+
+      .reference-model::before {
+        background-color: #85E0A3;
+        border: 2px solid #359F67;
+      }
+
+      .relation-model::before {
+        background-color: #BDE3FF;
+        border: 2px solid #22B4FF;
+      }
+
+      .relation-rank {
+        &::before {
+          content: '[순위]';
+          width: 28px;
+          font-size: 11px;
+          line-height: 1.5;
+          color: $neutral-500;
+        }
+
+        .button {
+          margin-left: -6px;
+        }
+      }
     }
 
     .data-detail-list {
