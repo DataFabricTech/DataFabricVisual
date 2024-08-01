@@ -21,6 +21,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
      * root node 는 화면에 표시하지 않기 때문에 rootNode.children 만 categories 에 저장.
      */
     categories.value = data.children;
+    isCategoriesNoData.value = categories.value.length === 0;
   };
   const getModelListQuery = (id: string) => {
     // TODO : [개발] 검색어 조건 여기 추가.

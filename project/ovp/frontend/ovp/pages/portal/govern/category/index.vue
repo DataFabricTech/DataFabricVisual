@@ -57,14 +57,13 @@
             :editable="true"
             @editCancel="editCancel"
             @editDone="editDone"
-            @editIcon="editIconClick"
           >
             <template #edit-slot>
               <label class="hidden-text" for="title-modify"
                 >카테고리 이름 수정</label
               >
               <input
-                v-model="selectedNode.name"
+                v-model="selectedNodeValue"
                 placeholder="모델 설명에 대한 영역입니다."
                 required
                 id="title-modify"
@@ -75,15 +74,16 @@
               <h3 class="editable-group-title">{{ selectedNode.name }}</h3>
             </template>
           </editable-group>
-          <button class="button button-error-lighter">삭제</button>
+          <button class="button button-error-lighter" @click="_deleteCategory">
+            삭제
+          </button>
         </div>
         <div class="work-contents">
           <editable-group
-            compKey="description"
+            compKey="desc"
             :editable="true"
             @editCancel="editCancel"
             @editDone="editDone"
-            @editIcon="editIconClick"
           >
             <template #edit-slot>
               <label class="hidden-text" for="textarea-modify"
@@ -91,7 +91,7 @@
               >
               <textarea
                 class="textarea"
-                v-model="selectedNode.desc"
+                v-model="selectedNodeValue"
                 placeholder="모델 설명에 대한 영역입니다."
                 required
                 id="textarea-modify"
@@ -104,24 +104,12 @@
           <!-- NOTE : v-if 로 할 경우, intersectionObserver 이 element 의 변화를 catch 하지 못해서 동작하지 않는 현상이 있어서 v-show 로 변환함. -->
           <div>
             <div class="l-top-bar">
-              <div class="search-input w-[541px]">
-                <label class="hidden-text" for="text-input-example-11"
-                  >label</label
-                >
-                <input
-                  id="text-input-example-11"
-                  class="text-input"
-                  placeholder="검색어 입력"
-                />
-                <svg-icon class="text-input-icon" name="search"></svg-icon>
-                <button
-                  class="search-input-action-button button button-neutral-ghost button-sm"
-                  type="button"
-                >
-                  <span class="hidden-text">지우기</span>
-                  <svg-icon class="button-icon" name="close"></svg-icon>
-                </button>
-              </div>
+              <search-input
+                class="w-[541px]"
+                :is-search-input-default-type="false"
+                :placeholder="'검색어를 입력하세요.'"
+                @on-input="onInput"
+              ></search-input>
               <div class="h-group w-full">
                 <div class="checkbox">
                   <input
@@ -386,6 +374,7 @@ import { ref } from "vue";
 import _ from "lodash";
 import TreeVue from "@extends/tree/Tree.vue";
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
+import SearchInput from "@extends/search-input/SearchInput.vue";
 import Loading from "@base/loading/Loading.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
@@ -411,6 +400,7 @@ const { categories, modelList, isCategoriesNoData } =
 const showModal = ref(false);
 const showModalChange = ref(false);
 
+const selectedNodeValue = ref("");
 const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
   id: "",
   name: "",
@@ -422,6 +412,7 @@ const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
   disabled: false,
   children: [],
 });
+
 const onNodeClicked = (node: TreeViewItem) => {
   selectedNode.value = node;
 
@@ -460,8 +451,8 @@ const _editCategory = () => {
   const editNodeParam: TreeViewItem = {
     id: selectedNode.value.id,
     parentId: selectedNode.value.parentId,
-    name: "카테고리 수정 테스트",
-    desc: "카테고리 설명을 수정",
+    name: selectedNode.value.name,
+    desc: selectedNode.value.desc,
     children: [],
   };
   editCategory(editNodeParam);
@@ -518,40 +509,28 @@ await getCategories();
 
 const { scrollTrigger, setScrollOptions } =
   useIntersectionObserver(addModelList);
-
-// 받아올 API 데이터. 완료를 누르자마자 새로 받아와야 함.
-const defaultData = ref<Record<string, any>>({
-  title: "Editable Group Title",
-  description:
-    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Amet, aspernatur ducimus facere laboriosam nemo nobis nostrum sapiente sunt. Omnis, quidem.",
-  check: false,
-});
-
-// 변경될 데이터
-const newData = ref<Record<string, any>>(_.cloneDeep(defaultData.value));
-
-const editIconClick = () => {
-  // Button Click event
-  console.log(`icon event`);
-};
-
 const editCancel = (key: string) => {
-  // Cancel event
-  newData.value[key] = defaultData.value[key];
-  console.log(`cancel event`);
+  selectedNodeValue.value = "";
 };
 
 const editDone = (key: string) => {
-  // Done event
-  console.log(`done event`);
+  switch (key) {
+    case "title":
+      selectedNode.value.name = selectedNodeValue.value;
+      break;
+    case "desc":
+      selectedNode.value.desc = selectedNodeValue.value;
+      break;
+    default:
+      selectedNode.value.name = selectedNodeValue.value;
+  }
 
-  defaultData.value[key] = newData.value[key];
-
-  console.log("defaultData", defaultData.value);
-  console.log("newData: ", newData.value);
+  _editCategory();
 };
 
-console.log("categories", categories.value);
+const onInput = (value: string) => {
+  console.log("value", value);
+};
 </script>
 
 <style scoped></style>
