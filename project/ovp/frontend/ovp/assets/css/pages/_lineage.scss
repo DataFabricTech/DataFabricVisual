@@ -26,8 +26,8 @@
     @include flex($direction: column);
 
     position: absolute;
-    bottom: 16px;
-    left: 16px;
+    bottom: 12px;
+    left: 12px;
 
     .button-neutral-stroke:hover {
       border: 1px solid $neutral-200;
@@ -45,17 +45,28 @@
     }
   }
 
-  .legend {
+  &-map {
+    position: absolute;
+    bottom: 12px;
+    left: 55px;
+    width: 246px;
+    height: 136px;
+    border: 1px solid $neutral-300;
+    border-radius: 4px;
+    background-color: #ffffff;
+    cursor: grab;
+  }
+
+  &-legend {
     @include flex($vertical: flex-start);
     position: absolute;
     gap: $spacing-8;
-    top: $spacing-16;
-    left: $spacing-16;
+    top: $spacing-12;
+    left: $spacing-12;
 
     &-content {
       @include flex($direction: column, $vertical: flex-start);
-      width: 160px;
-      gap: $spacing-8;
+      gap: $spacing-4;
       padding: $spacing-12;
       background-color: $neutral-0;
       border: 1px solid $neutral-300;
@@ -71,15 +82,27 @@
       &::before {
         content: '';
         display: block;
-        width: 20px;
-        height: 20px;
-        background-color: $neutral-200;
+        width: 16px;
+        height: 16px;
         border-radius: 50%;
       }
     }
 
-    .data-node::before {
-      border: 2px solid $neutral-400;
+    .one-depth::before {
+      background-color: #D99BFF;
+    }
+
+    .two-depth::before {
+      background-color: #FFCD29;
+    }
+
+    .three-depth::before {
+      background-color: #FF9A62;
+    }
+
+    .data-model::before {
+      background-color: #BDE3FF;
+      border: 2px solid #22B4FF;
     }
 
     .node-way::before {
@@ -89,7 +112,7 @@
     //노드 관계 방향 스타일링
     .arrow {
       position: relative;
-      width: 20px;
+      width: 16px;
       height: 10px;
 
       &::before, &::after {
@@ -100,15 +123,15 @@
       }
 
       &::before {
-        width: 6px;
-        height: 6px;
+        width: 5px;
+        height: 5px;
         border-radius: 50%;
         background-color: $neutral-400;
       }
 
       &-line {
         position: absolute;
-        width: 15px;
+        width: 12px;
         height: 2px;
         top: 50%;
         transform: translateY(-50%);
@@ -116,7 +139,7 @@
       }
 
       &::after {
-        left: 14px;
+        left: 11px;
         border-top: 6px solid transparent;
         border-bottom: 6px solid transparent;
         border-left: 6px solid $neutral-400;
@@ -124,7 +147,7 @@
     }
   }
 
-  .model-list {
+  &-model-list {
     position: absolute;
     width: 304px;
     height: calc(100% - 24px);
@@ -159,6 +182,5 @@
         padding: 0;
       }
     }
-
   }
 }
