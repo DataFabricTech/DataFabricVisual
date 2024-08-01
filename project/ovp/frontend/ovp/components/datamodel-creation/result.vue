@@ -67,9 +67,9 @@
 </template>
 <script setup lang="ts">
 import agGrid from "@extends/grid/Grid.vue";
-import { creationStore } from "@/store/datamodel-creation/index";
+import { useCreationStore } from "@/store/datamodel-creation/index";
 
-const store = creationStore();
+const store = useCreationStore();
 const {
   querySuccess,
   excuteResult,

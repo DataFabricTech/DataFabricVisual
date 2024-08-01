@@ -19,8 +19,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import { creationStore } from "@/store/datamodel-creation/index";
-const store = creationStore();
+import { useCreationStore } from "@/store/datamodel-creation/index";
+const store = useCreationStore();
 const { querySuccess, isExcuteQuery, query, isFirstExcute } =
   storeToRefs(store);
 const { getExcuteResult } = store;
