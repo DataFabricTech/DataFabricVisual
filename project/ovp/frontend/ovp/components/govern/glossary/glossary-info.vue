@@ -240,20 +240,20 @@ const getTabItemClassName = (param: string): string => {
 };
 
 async function changeTag(items: MenuSearchItemImpl[]) {
-  const selectedItems = items.map((v) => v.data);
-  const value = tags.filter((v) => selectedItems.includes(v.name));
-  const diff = glossary.tags.filter((v) => !selectedItems.includes(v.name));
-  console.log(diff);
-  if (items.length < glossary.tags.length) {
-  }
-
-  // {
-  //   op: 'replace',
-  //       path: '/displayName',
-  //     value: editData.displayName,
+  // const selectedItems = items.map((v) => v.data);
+  // const value = tags.filter((v) => selectedItems.includes(v.name));
+  // const diff = glossary.tags.filter((v) => !selectedItems.includes(v.name));
+  // console.log(diff);
+  // if (items.length < glossary.tags.length) {
   // }
-  //await editGlossary(glossary.id);
-  console.log(value);
+  //
+  // // {
+  // //   op: 'replace',
+  // //       path: '/displayName',
+  // //     value: editData.displayName,
+  // // }
+  // //await editGlossary(glossary.id);
+  // console.log(value);
   console.log(items);
 }
 </script>

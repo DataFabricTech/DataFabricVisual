@@ -1,15 +1,11 @@
 <template>
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModal">
+  <div class="modal-overlay vfm--fixed vfm--inset" v-if="false">
     <div class="modal modal-padding-16" style="width: 480px">
       <div class="modal-head">
         <div class="modal-head-text">
           <span class="modal-head-title">용어추가</span>
         </div>
-        <button
-          class="button link-button button-sm"
-          type="button"
-          @click="showModal = false"
-        >
+        <button class="button link-button button-sm" type="button">
           <span class="hidden-text">닫기</span>
           <svg-icon class="button-icon" name="close"></svg-icon>
         </button>
@@ -110,12 +106,7 @@
       </div>
       <div class="modal-foot">
         <div class="modal-foot-group">
-          <button
-            class="button button-neutral-ghost button-lg"
-            @click="showModal = false"
-          >
-            취소
-          </button>
+          <button class="button button-neutral-ghost button-lg">취소</button>
           <button class="button button-primary button-lg">저장</button>
         </div>
       </div>
