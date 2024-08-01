@@ -17,6 +17,7 @@ interface DataModelListCompositionImpl extends DataModelListProps {
   onClickDataModelItem(value: string): void;
   onDeleteItem(value: string): void;
   onSelectItem(value: string): void;
+  onCheckItem(value: string, checked: boolean): void;
 }
 
 export function DataModelListComposition(
@@ -29,13 +30,12 @@ export function DataModelListComposition(
   const listData: Ref<any[]> = ref([]);
   const setListData: () => void = () => {
     listData.value = props.data.map((item) => {
-      const isChecked = props.listType === "selected";
       return {
         ...item,
         label: item[props.labelKey],
         value: item[props.valueKey],
-        isChecked: isChecked, // 선택 여부
-        idShowDetail: false, // 단일선택 여부
+        isChecked: false, // checkbox 선택 여부
+        idShowDetail: false, // 단일선택(아이템) 여부
         isShowContextMenu: false, // "복사" 컨텍스트 메뉴 클릭 여부
         isShowContextMenuBtn: false, // 컨텍스트 메뉴 버튼 클릭 여부
         isShow: true, // 검색 처리
@@ -89,6 +89,7 @@ export function DataModelListComposition(
    * @param value
    */
   const onSearchText: (value: string) => void = (value) => {
+    console.log("onSearchText");
     searchLabel.value = value;
     searchList();
   };
@@ -147,6 +148,7 @@ export function DataModelListComposition(
         }
       }
     }
+    console.log("checkFilter 모두 통과");
     return true;
   };
 
@@ -209,6 +211,15 @@ export function DataModelListComposition(
     emitSelectItem(value);
   };
 
+  const onCheckItem = (value: string, checked: boolean) => {
+    listData.value = listData.value.map((el) => {
+      return {
+        ...el,
+        isChecked: el[value] === value ? checked : el.isChecked,
+      };
+    });
+  };
+
   return {
     ...props,
     listData,
@@ -224,5 +235,6 @@ export function DataModelListComposition(
     onClickDataModelItem,
     onDeleteItem,
     onSelectItem,
+    onCheckItem,
   };
 }

@@ -10,11 +10,12 @@
     >
       <input
         type="checkbox"
-        :id="'checkbox-menu' + props.data"
+        :id="'checkbox-menu' + props.data.value"
         class="checkbox-input"
-        checked
+        :checked="props.data.isChecked"
+        @input="onChangeChecked($event.target.checked)"
       />
-      <label :for="'checkbox-menu' + props.data" class="checkbox-label">
+      <label :for="'checkbox-menu' + props.data.value" class="checkbox-label">
         <!-- TODO: 서비스 타입에 따른 SVG 아이콘 변경 필요-->
         <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
         <span class="checkbox-text">{{ props.data.label }}</span>
@@ -121,6 +122,7 @@ const emit = defineEmits<{
   (e: "click", value: string): void;
   (e: "delete", value: string): void;
   (e: "select", value: string): void;
+  (e: "check", value: boolean): void;
   (e: "bookmark-change", value: string): void;
 
   (e: "context-menu-click", value: boolean | null): void;
@@ -140,6 +142,11 @@ const onDeleteItem: () => void = () => {
 const onSelectItem: () => void = () => {
   emit("select", props.data.value);
   hideContextMenuBtn();
+};
+
+const onChangeChecked: (checked: boolean) => void = (checked) => {
+  console.log("onChangeChecked", props.data, checked);
+  emit("check", checked);
 };
 
 const onShowContextMenu: () => void = () => {

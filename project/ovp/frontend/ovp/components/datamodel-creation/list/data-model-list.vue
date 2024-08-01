@@ -73,6 +73,7 @@
           @click="onClickDataModelItem"
           @delete="onDeleteItem"
           @select="onSelectItem"
+          @check="onCheckItem(item.value, $event)"
         ></data-model-list-item>
       </template>
     </ul>
