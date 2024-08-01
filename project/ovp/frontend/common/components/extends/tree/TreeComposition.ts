@@ -75,10 +75,16 @@ export function TreeComposition(props: TreeProps): TreeComposition {
   };
 
   const dropValidator = (thisNode: TreeViewItem, targetNode: TreeViewItem) => {
+    // 자기노드 밑으로 drop 할 수 없음.
+    if (thisNode.id === targetNode.id) {
+      console.log("dropNode와 targetNode 는 같을 수 없습니다.");
+      return false;
+    }
     // 부모노드는 자기 후손 노드로 drop 할수없음.
     // targetNode 기준 부모노드 List 를 조회해서 thisNode 의 id 가 있는지 확인 필요함.
     const parentIds = findAncestors(treeItems.value, targetNode.id);
     if (parentIds.includes(thisNode.id)) {
+      console.log("자식 노드 밑으로는 drop 불가능 합니다.");
       return false;
     }
 

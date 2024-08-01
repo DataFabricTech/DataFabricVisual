@@ -71,6 +71,18 @@ public class CategoryService {
 
     @Transactional
     public Object insertOrUpdate(CategoryDTO dto) {
+        CategoryEntity thisNodeEntity = dto.toEntity();
+        CategoryEntity targetNodeEntity = thisNodeEntity.getParent();
+        if (targetNodeEntity == null) {
+            targetNodeEntity = categoryRepository.findById(UUID.fromString(dto.getParentId())).get();
+        }
+
+        // 추가 여부 확인
+        Object checkCategoryValidation = isValid(targetNodeEntity, thisNodeEntity);
+        if (!checkCategoryValidation.equals("VALID")) {
+            return checkCategoryValidation;
+        }
+
         CategoryEntity entity = dto.toEntity();
         entity.setOrder(1 + getSiblingMaxOrder(UUID.fromString(dto.getParentId())));
         return categoryRepository.saveOrUpdate(entity);
@@ -143,35 +155,42 @@ public class CategoryService {
     }
 
     @Transactional
-    public Object moveCategory(Map<String, Object> params) {
+    public boolean moveCategory(Map<String, Object> params) {
         String thisNodeId = params.get("thisNodeId").toString();
         String targetNodeId = params.get("targetNodeId").toString();
-
-        // step1. 노드 이동 하고 난 후에 category detph 가 3을 넘어선 안됨
         CategoryEntity targetNodeEntity = categoryRepository.findByIdWithParent(UUID.fromString(targetNodeId));
-        int targetNodeDepth = findAncestorsDepth(targetNodeEntity);
-
         CategoryEntity thisNodeEntity = categoryRepository.findByIdWithParent(UUID.fromString(thisNodeId));
+
+        // 조건 처리
+        if (!isValid(targetNodeEntity, thisNodeEntity).equals("VALID")) {
+            return false;
+        }
+
+        CategoryDTO categoryDto = new CategoryDTO(thisNodeEntity);
+        categoryDto.setParentId(targetNodeId);
+        insertOrUpdate(categoryDto);
+        return true;
+    }
+
+    private Object isValid(CategoryEntity targetNodeEntity, CategoryEntity thisNodeEntity) {
+        // step1. 노드 이동 하고 난 후에 category detph 가 3을 넘어선 안됨
+        int targetNodeDepth = findAncestorsDepth(targetNodeEntity);
         int thisNodeDepth = findChildrenDepth(thisNodeEntity);
         if (targetNodeDepth + thisNodeDepth > 3) {
-            return "DEPTH_OVER";
+            return "OVER_DEPTH";
         }
 
         // step2. targetNode 에 데이터 모델이 설정되어 있으면 drop 불가능
         if (targetNodeEntity.getCategoryMatches().size() > 1) {
-            return "HAS_MODEL_TARGET";
+            return "INVALID";
         }
 
         // step3. thisNode에 데이터 모델이 설정되어 있으면 targetNode 는 하위 노드일때만 가능.
         if (thisNodeEntity.getCategoryMatches().size() > 0 && targetNodeEntity.getChildren().size() > 1) {
-            return "HAS_MODEL_THIS_TARGET_NOT_LEAF";
+            return "INVALID";
         }
 
-        // step4. 예외 처리가 끝났으면, DB에 반영한다.
-        CategoryDTO categoryDto = new CategoryDTO(thisNodeEntity);
-        categoryDto.setParentId(targetNodeId);
-        insertOrUpdate(categoryDto);
-        return "";
+        return "VALID";
     }
 
     public List<Object> getModelByCategoryId(String categoryId, int page, int size) {
