@@ -10,7 +10,18 @@ export const useCreationStore = defineStore("creation", () => {
   const { filters } = storeToRefs(searchCommonStore);
   const { getFilters } = searchCommonStore;
 
+  const query = ref("");
+
+  const querySuccess = ref(false);
+  const excuteResult = ref([]);
+
+  const isFirstExcute = ref(false);
+  const isExcuteQuery = ref(false);
+
+  const excuteResultErrMsg = ref("");
+
   const modelList = ref([]);
+  const modelListCnt = ref(0);
   const selectedModelList = ref([]);
   const dataModelFilter = ref({});
 
@@ -21,6 +32,8 @@ export const useCreationStore = defineStore("creation", () => {
    */
   const setDataModelList = async () => {
     modelList.value = DataModelSample.sampleList;
+    modelListCnt.value = modelList.value.length;
+    console.log('modelListCnt: ', modelListCnt.value);
   };
 
   /**
@@ -50,11 +63,43 @@ export const useCreationStore = defineStore("creation", () => {
     dataModelFilter.value = result;
   };
 
+  const deleteDataModel = (value: string) => {
+    modelList.value = modelList.value.filter(item => item.id !== value);
+    modelListCnt.value = modelList.value.length;
+  }
+
+  // TODO: 서버 연동 처리 필요
+  async function getExcuteResult(value: string) {
+    isFirstExcute.value = true;
+    isExcuteQuery.value = true;
+
+    // TODO: 임시 데이터 적용 -> 서버 연동 후 제거 예정
+    querySuccess.value = true;
+
+    // TODO: 임시 데이터 적용 -> 서버 연동 후 제거 예정
+    excuteResult.value = excuteResultJson.data;
+
+    // TODO: 임시 데이터 적용 -> 서버 연동 후 제거 예정
+    excuteResultErrMsg.value =
+      "Line 1 ~ 6 : Unknown error. ( TableNotExistsError() [/*+ LOCATION (\n" +
+      "        PARTITION >= '20240605131200' AND PARTITION <= '20240605131500' ) */\n" +
+      "        SELECT CATEGORY, BOUNDARY,SIDO_ENG, SIDO_KOR G_CO FROM ROOT.DTST limit\n" +
+      "        5000;] )";
+  }
+
   return {
     modelList,
-    selectedModelList,
+    modelListCnt,
+    query,
+    querySuccess,
+    isExcuteQuery,
+    isFirstExcute,
+    excuteResult,
+    excuteResultErrMsg,
+    getExcuteResult,
     dataModelFilter,
     setDataModelFilter,
     setDataModelList,
+    deleteDataModel
   };
 });
