@@ -69,6 +69,16 @@ public class CategoryService {
         return rootCategories.get(0);
     }
 
+    public Object addCategory(CategoryDTO dto) {
+        // TODO : [개발] open meta api 이용해서 tag id 처리 필요
+//        dto.setTagId("");
+        return insertOrUpdate(dto);
+    }
+
+    public Object updateCategory(CategoryDTO dto) {
+        return insertOrUpdate(dto);
+    }
+
     @Transactional
     public Object insertOrUpdate(CategoryDTO dto) {
         CategoryEntity thisNodeEntity = dto.toEntity();
@@ -82,7 +92,8 @@ public class CategoryService {
 
         CategoryEntity entity = dto.toEntity();
         entity.setOrder(1 + getSiblingMaxOrder(UUID.fromString(dto.getParentId())));
-        return categoryRepository.saveOrUpdate(entity);
+        categoryRepository.saveOrUpdate(entity);
+        return "";
     }
 
     private int getSiblingMaxOrder(UUID parentId) {
@@ -132,6 +143,7 @@ public class CategoryService {
 
     /**
      * 조상 (root) 까지의 depth count 를 구함
+     *
      * @param category
      * @return
      */
@@ -146,6 +158,7 @@ public class CategoryService {
 
     /**
      * 자식 노드들중 가장 최 하위의 자식까지의 depth count 를 구함
+     *
      * @param category
      * @return
      */

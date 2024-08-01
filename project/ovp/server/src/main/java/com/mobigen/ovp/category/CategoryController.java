@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +33,13 @@ public class CategoryController {
     @ResponseJsonResult
     @PutMapping("")
     public Object addCategory(@RequestBody CategoryDTO params) {
-        return categoryService.insertOrUpdate(params);
+        return categoryService.addCategory(params);
+    }
+
+    @ResponseJsonResult
+    @PatchMapping("")
+    public Object updateCategory(@RequestBody CategoryDTO params) {
+        return categoryService.updateCategory(params);
     }
 
     @ResponseJsonResult

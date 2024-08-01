@@ -2,7 +2,7 @@ export interface TreeViewItem {
   id: string;
   name: string;
   desc: string;
-  order: number;
+  order?: number;
   parentId: string;
   children: TreeViewItem[];
 

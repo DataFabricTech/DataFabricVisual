@@ -399,7 +399,8 @@ const {
   addModelList,
   getModelList,
   setSelectedNode,
-  insertOrEditAPI,
+  addCategory,
+  editCategory,
   moveCategory,
   deleteCategory,
 } = categoryStore;
@@ -449,27 +450,25 @@ const addNewCategory = (newNode: TreeViewItem) => {
     parentId: selectedNode.value.id,
     name: "카테고리 01 - 01",
     desc: "카테고리 설명이여요",
-    order: 0,
     children: [],
   };
-  insertOrEditAPI(addNodeParam);
+  addCategory(addNodeParam);
 };
 
-const editCategory = () => {
+const _editCategory = () => {
   const editNodeParam: TreeViewItem = {
-    id: "f6a91e15-18c1-4920-ab2b-dd20a68f75bc",
-    parentId: selectedNode.value.id,
+    id: selectedNode.value.id,
+    parentId: selectedNode.value.parentId,
     name: "카테고리 수정 테스트",
     desc: "카테고리 설명을 수정",
-    order: 0,
     children: [],
   };
-  insertOrEditAPI(editNodeParam);
+  editCategory(editNodeParam);
 };
 
 // TODO : [개발] 카테고리 삭제 예 - function 명 겹쳐서 임의로 _deleteCategory 로 처리함. 추후에 store - deleteCategory 이용하여 처리.
 const _deleteCategory = () => {
-  deleteCategory(selectedNode.value);
+  deleteCategory(selectedNode.value.id);
 };
 
 let nodeMoved: Ref<boolean> = ref(false);

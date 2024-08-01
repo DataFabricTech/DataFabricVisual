@@ -53,10 +53,17 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const setSelectedNode = (node: any) => {
     selectedNode = node;
   };
-  const insertOrEditAPI = (node: TreeViewItem) => {
+
+  const addCategory = (node: TreeViewItem) => {
+    insertOrEditAPI("PUT", node);
+  };
+  const editCategory = (node: TreeViewItem) => {
+    insertOrEditAPI("PATCH", node);
+  };
+  const insertOrEditAPI = (method: string, node: TreeViewItem) => {
     // TODO : [개발] edit의 경우에도 id, parentId, name, desc, order 값을 모두 backend 로 보내야 함. 없는 항목을 'null'로 업데이트 됨.
     $api("/api/category", {
-      method: "PUT",
+      method: method,
       body: node,
     }).then(() => {
       getCategories();
@@ -72,10 +79,12 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     });
     return data;
   };
-  const deleteCategory = async (node: TreeViewItem) => {
+  const deleteCategory = async (nodeId: string) => {
     const { data } = await $api(`/api/category`, {
       method: "delete",
-      body: node,
+      body: {
+        id: nodeId,
+      },
     });
     if (data === "HAS_MODEL_LIST") {
       alert("하위 노드에 매칭되어 있는 데이터 모델이 있습니다.");
@@ -92,7 +101,8 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     addModelList,
     getModelList,
     setSelectedNode,
-    insertOrEditAPI,
+    addCategory,
+    editCategory,
     moveCategory,
     deleteCategory,
   };
