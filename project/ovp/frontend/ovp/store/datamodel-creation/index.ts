@@ -1,92 +1,60 @@
 import { defineStore } from "pinia";
+import DataModelSample from "~/components/datamodel-creation/datamodel-sample.json";
+import { useSearchCommonStore } from "~/store/search/common";
 
-export const creationStore = defineStore("creation", () => {
+export const useCreationStore = defineStore("creation", () => {
   const { $api } = useNuxtApp();
 
-  const modelList = ref([]);
+  // NOTE: 탐색 페이지에서 사용되는 API 활용
+  const searchCommonStore = useSearchCommonStore();
+  const { filters } = storeToRefs(searchCommonStore);
+  const { getFilters } = searchCommonStore;
 
-  // TODO: 임시 데이터 .. store 연동시 제거
-  modelList.value = [
-    {
-      id: "1",
-      label: "데이터 모델1",
-      owner: "admin",
-      bookmarked: true,
-      category: "test",
-      serviceType: "",
-      tag: "1",
-      fqn: "df2.test_db.test_db.Employee",
-      type: "table",
-    },
-    {
-      id: "2",
-      label: "데이터 모델",
-      owner: "b",
-      bookmarked: false,
-      category: "tel",
-      serviceType: "",
-      tag: "2",
-      fqn: "df2.test_db.Employee2",
-      type: "table",
-    },
-    {
-      id: "3",
-      label: "데이터 모델",
-      owner: "b",
-      bookmarked: false,
-      category: "tel",
-      serviceType: "",
-      tag: "2",
-      fqn: "df2.test_db.Employee3",
-      type: "table",
-    },
-    {
-      id: "4",
-      label: "데이터 모델",
-      owner: "admin",
-      bookmarked: false,
-      category: "tel",
-      serviceType: "",
-      tag: "3",
-      fqn: "df2.test_db.Employee4",
-      type: "container",
-    },
-    {
-      id: "5",
-      label: "데이터 모델",
-      owner: "c",
-      bookmarked: false,
-      category: "test",
-      serviceType: "",
-      tag: "5",
-      fqn: "df2.test_db.Employee5",
-      type: "table",
-    },
-    {
-      id: "6",
-      label: "데이터 모델",
-      owner: "jack",
-      bookmarked: false,
-      category: "test",
-      serviceType: "",
-      tag: "6",
-      fqn: "df2.test_db.Employee6",
-      type: "table",
-    },
-    {
-      id: "7",
-      label: "테스트",
-      owner: "b",
-      bookmarked: false,
-      category: "test",
-      serviceType: "",
-      tag: "6",
-      fqn: "df5.test_db.Employee7",
-      type: "table",
-    },
-  ];
+  const modelList = ref([]);
+  const selectedModelList = ref([]);
+  const dataModelFilter = ref({});
+
+  /**
+   * 데이터 모델 생성 > 데이터 모델 리스트
+   *
+   * TODO: API 연동
+   */
+  const setDataModelList = async () => {
+    modelList.value = DataModelSample.sampleList;
+  };
+
+  /**
+   * 데이터 모델 생성 > 목록 필터 리스트 조회
+   */
+  const setDataModelFilter = async () => {
+    await getFilters();
+    const result = {} as { [key: string]: any };
+    for (const key in filters.value) {
+      if (
+        filters.value[key].text === "카테고리" ||
+        filters.value[key].text === "태그" ||
+        filters.value[key].text === "소유자"
+      ) {
+        // TODO: (확인 필요) item.category === filter.domains임.
+        // 검색 처리를 위해 filter의 Key값을 category로 변경
+        const filterKey =
+          filters.value[key].text === "카테고리" ? "category" : key;
+        result[filterKey] = filters.value[key];
+        result[filterKey].data =
+          result[filterKey].data !== null &&
+          result[filterKey].data !== undefined
+            ? result[filterKey].data
+            : [];
+      }
+    }
+    dataModelFilter.value = result;
+  };
 
   return {
     modelList,
+    selectedModelList,
+    dataModelFilter,
+    setDataModelFilter,
+    setDataModelList,
   };
 });

@@ -193,17 +193,14 @@
 </template>
 <script setup lang="ts">
 import _ from "lodash";
-import menuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
-import { creationStore } from "@/store/datamodel-creation/index";
+import { useCreationStore } from "@/store/datamodel-creation/index";
 import { useRouter } from "vue-router";
-import DataModelSample from "./datamodel-sample.json";
 import DataModelList from "~/components/datamodel-creation/list/data-model-list.vue";
-import { useSearchCommonStore } from "~/store/search/common";
 
 const emit = defineEmits<{ (e: "change", option: boolean): void }>();
 
-const store = creationStore();
-const { modelList } = storeToRefs(store);
+const store = useCreationStore();
+const { modelList, selectedDataList, dataModelFilter } = storeToRefs(store);
 
 const dataModelList = ref([]);
 
@@ -381,38 +378,5 @@ const removeDataModel = (item: any) => {
     (num) => !_.isEqual(item, num),
   );
 };
-
-const selectedDataList: any[] = DataModelSample.sampleList;
-const searchCommonStore = useSearchCommonStore();
-const dataModelFilter = ref({});
-
-const filterData = async () => {
-  const { getFilters } = searchCommonStore;
-  await getFilters();
-  const { filters } = storeToRefs(searchCommonStore);
-  const result = {} as { [key: string]: any };
-  for (const key in filters.value) {
-    if (
-      filters.value[key].text === "카테고리" ||
-      filters.value[key].text === "태그" ||
-      filters.value[key].text === "소유자"
-    ) {
-      // TODO: (확인 필요)item.category === filter.domains임.
-      // 검색 처리를 위해 filter의 Key값을 category로 변경
-      const filterKey =
-        filters.value[key].text === "카테고리" ? "category" : key;
-      result[filterKey] = filters.value[key];
-      result[filterKey].data =
-        result[filterKey].data !== null && result[filterKey].data !== undefined
-          ? result[filterKey].data
-          : [];
-    }
-  }
-  return result;
-};
-
-dataModelFilter.value = await filterData();
 </script>
-<style lang="scss" scoped>
-/* @import "./index.scss"; */
-</style>
+<style lang="scss" scoped></style>
