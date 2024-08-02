@@ -15,6 +15,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.thymeleaf.context.Context;
 
@@ -56,6 +59,33 @@ public class AuthService {
         Map<String, Object> result = authClient.login(param);
 
         return token.addTokenToResponse(response, result);
+    }
+
+    /**
+     * 로그아웃
+     *
+     * @param response
+     * @param param
+     * @return
+     */
+    public Object logout(HttpServletRequest request, HttpServletResponse response, Map<String, Object> param) throws Exception {
+        Map<String, Object> newParam = new HashMap<>();
+        newParam.put("token", param.get(frameworkProperties.getToken().getAccessToken()));
+
+        // 1. 로그아웃
+        String result = authClient.logout(newParam);
+
+        // 2. Session(Security 보안 세션) 로그아웃
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return null;
+        }
+        new SecurityContextLogoutHandler().logout(request, response, authentication);
+
+        // 3. Token 쿠키값 삭제
+        token.deleteTokens(request, response);
+
+        return result;
     }
 
     /**

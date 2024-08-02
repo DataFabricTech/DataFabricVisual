@@ -17,6 +17,9 @@ public interface AuthClient {
     @PostMapping("/users/login")
     Map<String, Object> login(@RequestBody Map<String, Object> params) throws Exception;
 
+    @PostMapping("/users/logout")
+    String logout(@RequestBody Map<String, Object> params) throws Exception;
+
     @PostMapping("/users/checkEmailInUse")
     boolean checkEmailInUse(@RequestBody Map<String, Object> params) throws Exception;
 
