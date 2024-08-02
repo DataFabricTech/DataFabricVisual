@@ -28,13 +28,15 @@
         >
           <ul class="dropdown-list">
             <li class="dropdown-item">
-              <!--              TODO: [개발] 마이페이지 개발 후 라우터 링크 연결 필요 -->
-              <button class="dropdown-button" @click="isDropdownOpen = false">
+              <nuxt-link
+                :to="'/portal/my-page'"
+                class="dropdown-button"
+                @click="isDropdownOpen = false"
+              >
                 <span class="dropdown-text">마이페이지</span>
-              </button>
+              </nuxt-link>
             </li>
             <li class="dropdown-item">
-              <!--              TODO: [개발] 로그아웃 요청 API 추가 필요 -->
               <button class="dropdown-button" @click="logOut">
                 <span class="dropdown-text">로그아웃</span>
               </button>
@@ -62,6 +64,7 @@ const userStore = useUserStore();
 const { getUserInfo } = userStore;
 const { user } = storeToRefs(userStore);
 
+const { $api } = useNuxtApp();
 const router = useRouter();
 
 const header = ref();
@@ -88,10 +91,17 @@ const setProfileFirstWord = (name: string) => {
   profileFirstWord.value = name.slice(0, 1).toUpperCase();
 };
 
-const logOut = () => {
-  console.log("Logout");
-  isDropdownOpen.value = false;
-  router.push("/portal/login");
+const logOut = async () => {
+  await $api(`/api/auth/logout`, {
+    method: "POST",
+  })
+    .then(() => {
+      isDropdownOpen.value = false;
+      router.push("/portal/login");
+    })
+    .catch((err: any) => {
+      console.log("err: ", err);
+    });
 };
 
 onMounted(async () => {
