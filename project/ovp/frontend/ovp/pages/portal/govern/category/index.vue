@@ -58,7 +58,7 @@
           <editable-group
             compKey="title"
             :editable="true"
-            :parent-edit-mode="isParentEditMode"
+            :parent-edit-mode="isTitleEditMode"
             @editCancel="editCancel"
             @editDone="editDone"
             @editIcon="editIcon"
@@ -87,7 +87,7 @@
           <editable-group
             compKey="desc"
             :editable="true"
-            :parent-edit-mode="isParentEditMode"
+            :parent-edit-mode="isDescEditMode"
             @editCancel="editCancel"
             @editDone="editDone"
             @editIcon="editIcon"
@@ -407,7 +407,8 @@ const { categories, modelList, isCategoriesNoData } =
 const loader = ref<HTMLElement | null>(null);
 const showModal = ref(false);
 const showModalChange = ref(false);
-const isParentEditMode = ref(false);
+const isDescEditMode = ref(false);
+const isTitleEditMode = ref(false);
 
 const selectedNodeValue = ref("");
 const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
@@ -423,7 +424,8 @@ const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
 });
 
 const onNodeClicked = (node: TreeViewItem) => {
-  isParentEditMode.value = false;
+  isDescEditMode.value = false;
+  isTitleEditMode.value = false;
   selectedNodeValue.value = "";
 
   selectedNode.value = node;
@@ -521,12 +523,18 @@ const { scrollTrigger, setScrollOptions } =
   useIntersectionObserver(addModelList);
 
 // editable-input
-const editCancel = () => {
-  isParentEditMode.value = false;
-  selectedNodeValue.value = "";
+const editCancel = (key: string) => {
+  switch (key) {
+    case "title":
+      isTitleEditMode.value = false;
+      break;
+    case "desc":
+      isDescEditMode.value = false;
+      break;
+  }
 };
+
 const editDone = (key: string) => {
-  isParentEditMode.value = false;
   if (selectedNodeValue.value === "") {
     return;
   }
@@ -534,20 +542,29 @@ const editDone = (key: string) => {
   switch (key) {
     case "title":
       selectedNode.value.name = selectedNodeValue.value;
+      isTitleEditMode.value = false;
       break;
     case "desc":
       selectedNode.value.desc = selectedNodeValue.value;
+      isDescEditMode.value = false;
       break;
     default:
       selectedNode.value.name = selectedNodeValue.value;
   }
 
-  selectedNodeValue.value = "";
-
   _editCategory();
 };
-const editIcon = () => {
-  isParentEditMode.value = true;
+const editIcon = (key: string) => {
+  selectedNodeValue.value = "";
+
+  switch (key) {
+    case "title":
+      isTitleEditMode.value = true;
+      break;
+    case "desc":
+      isDescEditMode.value = true;
+      break;
+  }
 };
 
 const onInput = (value: string) => {

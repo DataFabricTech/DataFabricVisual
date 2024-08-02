@@ -47,7 +47,7 @@ watch(
 const emit = defineEmits<{
   (e: "editCancel", key: string): void;
   (e: "editDone", key: string): void;
-  (e: "editIcon"): void;
+  (e: "editIcon", key: string): void;
 }>();
 
 const cancelClick = () => {
@@ -60,7 +60,7 @@ const doneClick = () => {
 };
 const editIconClick = () => {
   isEditMode.value = true;
-  emit("editIcon");
+  emit("editIcon", props.compKey);
 };
 </script>
 
