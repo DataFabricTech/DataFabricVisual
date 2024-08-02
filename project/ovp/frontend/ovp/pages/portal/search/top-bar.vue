@@ -50,14 +50,15 @@
 import { useSearchCommonStore } from "@/store/search/common";
 import { storeToRefs } from "pinia";
 import SelectBox from "@extends/select-box/SelectBox.vue";
-import CONSTANTS from "~/constants/constants";
+import $constants from "~/utils/constant";
 
 const searchCommonStore = useSearchCommonStore();
 const { setSortFilter } = searchCommonStore;
 const { viewType, searchResultLength, sortKey, sortKeyOpt, currentTab } =
   storeToRefs(searchCommonStore);
 
-const options: { [key: string]: string | number }[] = CONSTANTS.SORT_FILTER;
+const options: { [key: string]: string | number }[] =
+  $constants.COMMON.SORT_FILTER;
 const isFirstCheckedEvent: boolean = true;
 </script>
 

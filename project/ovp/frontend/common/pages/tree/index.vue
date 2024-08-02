@@ -6,6 +6,7 @@
       <p>선택한 노드 NM : {{ selectedNode.name }}</p>
     </div>
     <tree-vue
+      style="width:400px"
       :items="items"
       :isCheckable="false"
       :hideGuideLines="false"

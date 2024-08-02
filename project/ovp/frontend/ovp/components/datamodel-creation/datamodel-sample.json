@@ -1,0 +1,384 @@
+{
+  "sampleList": [
+    {
+      "owner": "황인용",
+      "fqn": "df2.test_db.test_db.Employee",
+      "depth": [
+        "df2",
+        "test_db",
+        "test_db",
+        "Employee"
+      ],
+      "serviceIcon": "",
+      "modelNm": "Employee",
+      "modelDesc": "adfasdfasdfasdfasd",
+      "id": "6ef96a3a-837b-40a5-9afe-a286e50e6ae4",
+      "type": "table",
+      "firModelNm": "",
+      "category": "",
+      "bookmarked": false,
+      "tags":["test_ go0101.test_go01_ term01.test_go01_ term02.test_go02_ term01", "tag2222"]
+    },
+    {
+      "owner": "관리자123",
+      "fqn": "df2.test_db.test_db.Active_Employees",
+      "depth": [
+        "df2",
+        "test_db",
+        "test_db",
+        "Active_Employees"
+      ],
+      "serviceIcon": "",
+      "modelNm": "Active_Employees",
+      "modelDesc": "수정수정",
+      "id": "801abfe5-eee7-434c-8570-84033dc8d447",
+      "type": "table",
+      "firModelNm": "Active_Employees",
+      "category": "",
+      "bookmarked": true,
+      "tags":["tag22222"]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap2.sample.sample.sampledata_chart_02",
+      "depth": [
+        "vdap2",
+        "sample",
+        "sample",
+        "sampledata_chart_02"
+      ],
+      "serviceIcon": "",
+      "modelNm": "sampledata_chart_02",
+      "modelDesc": null,
+      "id": "02ab816f-88e1-47df-bb87-926dcbcc20f0",
+      "type": "table",
+      "firModelNm": "sampledata_chart_02",
+      "category": "",
+      "bookmarked": true,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap2.sample.sample.sampledata_map_08",
+      "depth": [
+        "vdap2",
+        "sample",
+        "sample",
+        "sampledata_map_08"
+      ],
+      "serviceIcon": "",
+      "modelNm": "sampledata_map_08",
+      "modelDesc": null,
+      "id": "06b740b4-20e1-4f41-9912-49346db18a0d",
+      "type": "table",
+      "firModelNm": "sampledata_map_08",
+      "category": "",
+      "bookmarked": false,
+      "tags":["분류01.태그01_01"]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap.was_v2.was_v2.was_iwp_config_value",
+      "depth": [
+        "vdap",
+        "was_v2",
+        "was_v2",
+        "was_iwp_config_value"
+      ],
+      "serviceIcon": "",
+      "modelNm": "was_iwp_config_value",
+      "modelDesc": null,
+      "id": "0ec3e3a6-dc3a-45c8-afd7-a614294b57e0",
+      "type": "table",
+      "firModelNm": "was_iwp_config_value",
+      "category": "",
+      "bookmarked": false,
+      "tags":["분류01.태그01_01"]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap.was_v2.was_v2.was_web_menu",
+      "depth": [
+        "vdap",
+        "was_v2",
+        "was_v2",
+        "was_web_menu"
+      ],
+      "serviceIcon": "",
+      "modelNm": "was_web_menu",
+      "modelDesc": null,
+      "id": "13a641e1-f424-4c18-b0d0-a48172370e0c",
+      "type": "table",
+      "firModelNm": "was_web_menu",
+      "category": "",
+      "bookmarked": false,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap2.sample.sample.sampledata_map_03",
+      "depth": [
+        "vdap2",
+        "sample",
+        "sample",
+        "sampledata_map_03"
+      ],
+      "serviceIcon": "",
+      "modelNm": "sampledata_map_03",
+      "modelDesc": null,
+      "id": "16dfd121-187b-423a-b41f-36df1b3d062c",
+      "type": "table",
+      "firModelNm": "sampledata_map_03",
+      "category": "",
+      "bookmarked": false,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap.was_v2.was_v2.was_user_field",
+      "depth": [
+        "vdap",
+        "was_v2",
+        "was_v2",
+        "was_user_field"
+      ],
+      "serviceIcon": "",
+      "modelNm": "was_user_field",
+      "modelDesc": null,
+      "id": "1caceeb9-839d-4ccf-bc6c-6fc3e0d4db6b",
+      "type": "table",
+      "firModelNm": "was_user_field",
+      "category": "",
+      "bookmarked": false,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap.was_v2.was_v2.was_iwp_config_setting",
+      "depth": [
+        "vdap",
+        "was_v2",
+        "was_v2",
+        "was_iwp_config_setting"
+      ],
+      "serviceIcon": "",
+      "modelNm": "was_iwp_config_setting",
+      "modelDesc": null,
+      "id": "1cf0bf17-0be8-4e5b-86a2-335ea6f22364",
+      "type": "table",
+      "firModelNm": "was_iwp_config_setting",
+      "category": "",
+      "bookmarked": false,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap2.sample.sample.sampledata_chart_09",
+      "depth": [
+        "vdap2",
+        "sample",
+        "sample",
+        "sampledata_chart_09"
+      ],
+      "serviceIcon": "",
+      "modelNm": "sampledata_chart_09",
+      "modelDesc": null,
+      "id": "1e0f45c4-8f0c-4ceb-ada3-f1e118f1da08",
+      "type": "table",
+      "firModelNm": "sampledata_chart_09",
+      "category": "",
+      "bookmarked": false,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap2.sample.sample.sampledata_chart_14",
+      "depth": [
+        "vdap2",
+        "sample",
+        "sample",
+        "sampledata_chart_14"
+      ],
+      "serviceIcon": "",
+      "modelNm": "sampledata_chart_14",
+      "modelDesc": null,
+      "id": "2172406b-5134-4b2b-9bbc-fed9f1e5ecba",
+      "type": "table",
+      "firModelNm": "sampledata_chart_14",
+      "category": "",
+      "bookmarked": false,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "df2.test_db.test_db.Employee_Training",
+      "depth": [
+        "df2",
+        "test_db",
+        "test_db",
+        "Employee_Training"
+      ],
+      "serviceIcon": "",
+      "modelNm": "Employee_Training",
+      "modelDesc": null,
+      "id": "2a52d808-9b07-4a0d-8b8f-ca4f3a5a8148",
+      "type": "table",
+      "firModelNm": "Employee_Training",
+      "category": "",
+      "bookmarked": false,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap.was_v2.was_v2.was_web_menu_group",
+      "depth": [
+        "vdap",
+        "was_v2",
+        "was_v2",
+        "was_web_menu_group"
+      ],
+      "serviceIcon": "",
+      "modelNm": "was_web_menu_group",
+      "modelDesc": null,
+      "id": "2c9b656f-528e-4448-83ec-13fa75a767c7",
+      "type": "table",
+      "firModelNm": "was_web_menu_group",
+      "category": "",
+      "bookmarked": false,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap2.sample.sample.sampledata_map_05",
+      "depth": [
+        "vdap2",
+        "sample",
+        "sample",
+        "sampledata_map_05"
+      ],
+      "serviceIcon": "",
+      "modelNm": "sampledata_map_05",
+      "modelDesc": null,
+      "id": "2eafe5ee-b189-4ffd-90ec-bf49eb907df6",
+      "type": "table",
+      "firModelNm": "sampledata_map_05",
+      "category": "",
+      "bookmarked": false,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap2.sample.sample.sampledata_map_04",
+      "depth": [
+        "vdap2",
+        "sample",
+        "sample",
+        "sampledata_map_04"
+      ],
+      "serviceIcon": "",
+      "modelNm": "sampledata_map_04",
+      "modelDesc": null,
+      "id": "303abbb6-f79e-486d-a5d9-22cc748c0c6c",
+      "type": "table",
+      "firModelNm": "sampledata_map_04",
+      "category": "",
+      "bookmarked": false,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "df2.test_db.test_db.Job",
+      "depth": [
+        "df2",
+        "test_db",
+        "test_db",
+        "Job"
+      ],
+      "serviceIcon": "",
+      "modelNm": "Job",
+      "modelDesc": null,
+      "id": "31f4d6e9-f231-4bfa-95ab-e5e6d840eff4",
+      "type": "table",
+      "firModelNm": "Job",
+      "category": "IRIS ",
+      "bookmarked": false,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap.was_v2.was_v2.was_iwp_menu_style",
+      "depth": [
+        "vdap",
+        "was_v2",
+        "was_v2",
+        "was_iwp_menu_style"
+      ],
+      "serviceIcon": "",
+      "modelNm": "was_iwp_menu_style",
+      "modelDesc": null,
+      "id": "3e786228-9213-40ba-8c22-d43855712679",
+      "type": "table",
+      "firModelNm": "was_iwp_menu_style",
+      "category": "",
+      "bookmarked": false,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap.was_v2.was_v2.was_login_lock",
+      "depth": [
+        "vdap",
+        "was_v2",
+        "was_v2",
+        "was_login_lock"
+      ],
+      "serviceIcon": "",
+      "modelNm": "was_login_lock",
+      "modelDesc": null,
+      "id": "40be78e5-fdc4-43cf-9d43-14b7196ec4eb",
+      "type": "table",
+      "firModelNm": "was_login_lock",
+      "category": "",
+      "bookmarked": false,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "vdap.was_v2.was_v2.was_access_rights",
+      "depth": [
+        "vdap",
+        "was_v2",
+        "was_v2",
+        "was_access_rights"
+      ],
+      "serviceIcon": "",
+      "modelNm": "was_access_rights",
+      "modelDesc": null,
+      "id": "425a6505-df66-4abb-a6ae-ce1d45459aee",
+      "type": "table",
+      "firModelNm": "was_access_rights",
+      "category": "",
+      "bookmarked": false,
+      "tags":[]
+    },
+    {
+      "owner": "",
+      "fqn": "datamodels.internalhive.default.model_df2_test_db_employee_col_id_name_birth_gender",
+      "depth": [
+        "datamodels",
+        "internalhive",
+        "default",
+        "model_df2_test_db_employee_col_id_name_birth_gender"
+      ],
+      "serviceIcon": "",
+      "modelNm": "model_df2_test_db_employee_col_id_name_birth_gender",
+      "modelDesc": null,
+      "id": "42826a4e-3da2-412e-aaec-6959d02f626b",
+      "type": "model",
+      "firModelNm": "model_df2_test_db_employee_col_id_name_birth_gender",
+      "category": "",
+      "bookmarked": false,
+      "tags":[]
+    }
+  ]
+}

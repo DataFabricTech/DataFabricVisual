@@ -1,12 +1,15 @@
 <template>
-  <div :class="props.class">
-    <button v-if="showOpenAllBtn" class="button button-neutral-ghost button-sm" type="button" @click="openAll">
-      <span class="button-title">전체 열기</span>
-    </button>
-    <button v-if="showCloseAllBtn" class="button button-neutral-ghost button-sm" type="button" @click="closeAll">
-      <span class="button-title">전체 닫기</span>
-    </button>
+  <div :class="props.class" class="tree">
+    <div class="tree-top-buttons">
+      <button v-if="showOpenAllBtn" class="button button-neutral-stroke button-sm" type="button" @click="openAll">
+        <span class="button-title">전체 열기</span>
+      </button>
+      <button v-if="showCloseAllBtn" class="button button-neutral-stroke button-sm" type="button" @click="closeAll">
+        <span class="button-title">전체 닫기</span>
+      </button>
+    </div>
     <vue-tree
+      class="tree-list"
       :items="treeItems"
       :isCheckable="props.isCheckable"
       :hideGuideLines="props.hideGuideLines"
@@ -15,14 +18,9 @@
       @dropValidator="dropValidatorHandler"
       @onSelect="onItemSelected"
     >
-      <!-- TODO : [퍼블] 자식 여부에 따라 ">" 로 생기는 들여쓰기? 같은거 해결하실때 필요하면 사용하시고, 불필요 하시면 삭제 바랍니다.-->
-      <template v-slot:item-prepend="treeViewItem">
-        <div style="margin-left: 23px" v-if="treeViewItem.children.length < 1"></div>
-      </template>
-      <!-- // ---->
 
       <template v-if="mode === 'edit'" v-slot:item-append="treeViewItem">
-        <div class="on-item-hover">
+        <div class="tree-item-buttons">
           <button class="button button-neutral-ghost button-sm" type="button" @click="addSibling(treeViewItem)">
             <span class="button-title">추가</span>
           </button>
@@ -84,8 +82,4 @@ const { treeItems, createNewTreeItem, openAll, closeAll, dropValidatorHandler } 
 <style lang="scss">
 /* @import "./index.scss"; */
 
-/* TODO : [퍼블] 선택한 노드 style 변경시 사용. 사용 안할시 삭제 바랍니다. */
-.selected-tree-item {
-  background: lightblue !important;
-}
 </style>

@@ -24,7 +24,7 @@
             <p class="notification-detail">등록된 정보가 없습니다.</p>
           </div>
         </div>
-        <div class="tree p-3">
+        <div class="p-3">
           <tree-vue
             :items="categories"
             :isCheckable="false"
@@ -134,7 +134,7 @@
                   </label>
                 </div>
                 <div class="h-group ml-auto gap-2">
-                  <button class="button button-secondary-stroke">
+                  <button class="button button-secondary-stroke" @click="showModalChange = true">
                     카테고리 변경
                   </button>
                   <button class="button button-secondary">
@@ -267,7 +267,7 @@
     </div>
   </div>
   <!--  TODO: Modal 카테고리 추가-->
-  <div class="modal-overlay vfm--fixed vfm--inset" v-if="showModal">
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModal">
     <div class="modal modal-padding-16" style="width: 480px">
       <div class="modal-head">
         <div class="modal-head-text">
@@ -335,6 +335,42 @@
       </div>
     </div>
   </div>
+  <!--  TODO: Modal 카테고리 변경-->
+  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalChange">
+    <div class="modal modal-padding-16" style="width:350px;height: 450px">
+      <div class="modal-head">
+        <div class="modal-head-text">
+          <span class="modal-head-title">카테고리 변경</span>
+        </div>
+        <button class="button link-button button-sm" type="button" @click="showModalChange = false">
+          <span class="hidden-text">닫기</span>
+          <svg-icon class="button-icon" name="close"></svg-icon>
+        </button>
+      </div>
+      <div class="modal-body">
+        <tree-vue
+          :items="items"
+          :isCheckable="false"
+          :hideGuideLines="false"
+          :firExpandAll="true"
+          :show-open-all-btn="true"
+          :show-close-all-btn="true"
+          :use-draggable="true"
+          mode="view"
+          :dropValidator="dropValidator"
+          @onItemSelected="onNodeClicked"
+          @addSibling="addSibling"
+          @addChild="addChild"
+        />
+      </div>
+      <div class="modal-foot">
+        <div class="modal-foot-group">
+          <button class="button button-neutral-ghost button-lg" @click="showModalChange = false">취소</button>
+          <button class="button button-primary button-lg">선택</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -351,6 +387,8 @@ const { getCategories, addModelList, getModelList, setSelectedNode } =
 const { categories, modelList } = storeToRefs(categoryStore);
 
 const showModal = ref(false);
+const showModalChange = ref(false);
+
 
 const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
   id: "",

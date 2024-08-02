@@ -1,10 +1,10 @@
 <template>
   <div class="wrap is-wrap-height-full">
     <div class="submit-form">
-      <h1 class="submit-form-logo">LOGO</h1>
       <form class="submit-form-form" @submit.prevent="onSubmit">
+        <h1 class="submit-form-logo">LOGO</h1>
         <h2 class="submit-form-title">회원가입</h2>
-        <div class="form form-lg gap-8">
+        <div class="form form-lg gap-6">
           <div class="form-body">
             <div class="form-item">
               <label for="inpName" class="form-label">
@@ -148,7 +148,7 @@
             <button class="button button-primary button-lg" type="submit">
               회원가입
             </button>
-            <button class="button button-primary-ghost button-sm" type="button">
+            <button class="link-button link-button-support button-sm w-full" type="button">
               <nuxt-link :to="'/portal/login'">
                 로그인 페이지로 돌아가기
               </nuxt-link>
