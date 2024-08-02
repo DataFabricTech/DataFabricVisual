@@ -17,7 +17,7 @@
       <th>관리</th>
     </tr>
     <tr v-for="term in terms">
-      <td>{{ term.displayName }}</td>
+      <td>{{ term.name }}</td>
       <td>{{ term.description }}</td>
       <td>
         <div class="button-group">

@@ -25,7 +25,7 @@
         >
           <button class="menu-button">
             <svg-icon class="svg-icon" name="report-tag"></svg-icon>
-            <a class="menu-text">{{ glossary.displayName }}</a>
+            <a class="menu-text">{{ glossary.name }}</a>
           </button>
         </li>
       </div>

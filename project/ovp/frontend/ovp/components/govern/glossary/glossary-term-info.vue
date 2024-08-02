@@ -2,7 +2,7 @@
   <div class="work-page" v-if="store.currentComponent === 'term'">
     <div class="l-top-bar">
       <div class="editable-group" v-if="!store.editTermMode.name">
-        <span class="editable-group-title">{{ store.term.displayName }}</span>
+        <span class="editable-group-title">{{ store.term.name }}</span>
         <button
           class="button button-neutral-ghost button-sm"
           type="button"
@@ -18,7 +18,7 @@
         <input
           id="title-modify"
           class="text-input w-4/5"
-          v-model="editData.displayName"
+          v-model="editData.name"
         />
         <div class="h-group gap-1">
           <button
@@ -34,8 +34,8 @@
             @click="
               updateTerm(term.id, {
                 op: 'replace',
-                path: '/displayName',
-                value: editData.displayName,
+                path: '/name',
+                value: editData.name,
               })
             "
           >
@@ -252,7 +252,7 @@ const {
 const store = useGlossaryStore();
 
 const editData = reactive({
-  displayName: "",
+  name: "",
   description: "",
   synonyms: "",
 });
@@ -260,7 +260,7 @@ const editData = reactive({
 watch(
   () => store.term,
   (newTerm) => {
-    editData.displayName = newTerm.displayName;
+    editData.name = newTerm.name;
     editData.description = newTerm.description;
     if (newTerm.synonyms) {
       editData.synonyms = newTerm.synonyms.join(",");
@@ -275,7 +275,7 @@ onMounted(() => {
 });
 
 function syncEditDataWithTerm() {
-  editData.displayName = store.term.displayName;
+  editData.name = store.term.name;
   editData.description = store.term.description;
   if (store.term.synonyms) {
     editData.synonyms = store.term.synonyms.join(",");

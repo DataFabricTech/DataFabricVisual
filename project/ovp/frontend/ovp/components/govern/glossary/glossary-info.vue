@@ -2,9 +2,7 @@
   <div class="work-page" v-if="store.currentComponent === 'glossary'">
     <div class="l-top-bar">
       <div class="editable-group" v-if="!store.editGlossaryMode.name">
-        <span class="editable-group-title">{{
-          store.glossary.displayName
-        }}</span>
+        <span class="editable-group-title">{{ store.glossary.name }}</span>
         <button
           class="button button-neutral-ghost button-sm"
           type="button"
@@ -22,7 +20,7 @@
         <input
           id="title-modify"
           class="text-input w-4/5"
-          v-model="editData.displayName"
+          v-model="editData.name"
         />
         <div class="h-group gap-1">
           <button
@@ -38,8 +36,8 @@
             @click="
               updateGlossary(glossary.id, {
                 op: 'replace',
-                path: '/displayName',
-                value: editData.displayName,
+                path: '/name',
+                value: editData.name,
               })
             "
           >
@@ -199,14 +197,14 @@ const {
 const store = useGlossaryStore();
 
 const editData = reactive({
-  displayName: "",
+  name: "",
   description: "",
 });
 
 watch(
   () => store.glossary,
   (newGlossary) => {
-    editData.displayName = newGlossary.displayName;
+    editData.name = newGlossary.name;
     editData.description = newGlossary.description;
   },
   { deep: true },
@@ -218,7 +216,7 @@ onMounted(() => {
 });
 
 function syncEditDataWithGlossary() {
-  editData.displayName = store.glossary.displayName;
+  editData.name = store.glossary.name;
   editData.description = store.glossary.description;
 }
 
