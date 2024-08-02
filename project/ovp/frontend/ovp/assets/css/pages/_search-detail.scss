@@ -63,16 +63,6 @@
     }
 
     .visual-legend {
-      &-item {
-        &::before {
-          content: '';
-          display: block;
-          width: 16px;
-          height: 16px;
-          border-radius: 50%;
-        }
-      }
-
       .reference-model::before {
         background-color: #85E0A3;
         border: 2px solid #359F67;

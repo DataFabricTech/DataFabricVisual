@@ -55,6 +55,7 @@
                   height:100px;
                   border-radius: 50%;
                   background-color: #D99BFF;
+                  filter: drop-shadow(4px 6px 6px rgba(0, 0, 0, 0.25));
                   position: relative;
                   cursor: pointer"
       >
@@ -77,6 +78,7 @@
                   height:100px;
                   border-radius: 50%;
                   background-color: #BDE3FF;
+                  filter: drop-shadow(4px 6px 6px rgba(0, 0, 0, 0.25));
                   border:3px solid #22B4FF;
                   position: relative;
                   cursor: pointer"
