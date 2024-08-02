@@ -7,7 +7,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const pagingStore = usePagingStore();
   const { from, size } = storeToRefs(pagingStore);
 
-  const categories: Ref<any[]> = ref<TreeViewItem>();
+  const categories: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
   const isCategoriesNoData = ref(false);
   const modelList: Ref<any[]> = ref([]);
   let selectedNode: any = null;

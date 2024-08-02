@@ -5,6 +5,9 @@
     </div>
   </div>
   <div class="section-contents p-0 bg-white">
+    <div class="loader-wrap" ref="loader" style="display: none">
+      <Loading :use-loader-overlay="true" class="loader-lg"></Loading>
+    </div>
     <div class="l-split">
       <div class="work-list">
         <div class="l-top-bar">
@@ -55,8 +58,10 @@
           <editable-group
             compKey="title"
             :editable="true"
+            :parent-edit-mode="isParentEditMode"
             @editCancel="editCancel"
             @editDone="editDone"
+            @editIcon="editIcon"
           >
             <template #edit-slot>
               <label class="hidden-text" for="title-modify"
@@ -82,8 +87,10 @@
           <editable-group
             compKey="desc"
             :editable="true"
+            :parent-edit-mode="isParentEditMode"
             @editCancel="editCancel"
             @editDone="editDone"
+            @editIcon="editIcon"
           >
             <template #edit-slot>
               <label class="hidden-text" for="textarea-modify"
@@ -397,8 +404,10 @@ const {
 const { categories, modelList, isCategoriesNoData } =
   storeToRefs(categoryStore);
 
+const loader = ref<HTMLElement | null>(null);
 const showModal = ref(false);
 const showModalChange = ref(false);
+const isParentEditMode = ref(false);
 
 const selectedNodeValue = ref("");
 const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
@@ -414,6 +423,9 @@ const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
 });
 
 const onNodeClicked = (node: TreeViewItem) => {
+  isParentEditMode.value = false;
+  selectedNodeValue.value = "";
+
   selectedNode.value = node;
 
   // 선택한 노드정보 저장
@@ -505,15 +517,20 @@ const checked = (checkedList: any[]) => {
   console.log(checkedList);
 };
 
-await getCategories();
-
 const { scrollTrigger, setScrollOptions } =
   useIntersectionObserver(addModelList);
-const editCancel = (key: string) => {
+
+// editable-input
+const editCancel = () => {
+  isParentEditMode.value = false;
   selectedNodeValue.value = "";
 };
-
 const editDone = (key: string) => {
+  isParentEditMode.value = false;
+  if (selectedNodeValue.value === "") {
+    return;
+  }
+
   switch (key) {
     case "title":
       selectedNode.value.name = selectedNodeValue.value;
@@ -525,12 +542,35 @@ const editDone = (key: string) => {
       selectedNode.value.name = selectedNodeValue.value;
   }
 
+  selectedNodeValue.value = "";
+
   _editCategory();
+};
+const editIcon = () => {
+  isParentEditMode.value = true;
 };
 
 const onInput = (value: string) => {
   console.log("value", value);
 };
+
+onMounted(async () => {
+  if (loader.value) {
+    loader.value.style.display = "block";
+  }
+
+  await getCategories();
+
+  // TODO: [개발] 페이지 진입 시 첫 번째 트리, 모델 리스트 설정 - 우측 첫 번째 트리에 선택된 상태를 추가할 수 있는지 검토 필요
+  if (categories.value && categories.value.length > 0) {
+    onNodeClicked(categories.value[0]);
+  }
+
+  if (loader.value) {
+    loader.value.style.display = "none";
+  }
+  //   selectedNode
+});
 </script>
 
 <style scoped></style>
