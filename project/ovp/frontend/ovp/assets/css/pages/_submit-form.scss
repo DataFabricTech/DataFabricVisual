@@ -3,20 +3,21 @@
 
   height: 100%;
   gap: $spacing-48;
-  background-color: $primary-100;
+  background: linear-gradient(to bottom, rgba(189, 227, 255, 0.5), rgba(51, 152, 164, 0.5));
 
   &-logo {
-    @include font-size('40');
+    @include font-size('32');
 
+    margin-bottom: $spacing-24;
     font-weight: 700;
-    color: $neutral-700;
+    color: $primary-500;
   }
 
   &-title {
-    @include font-size('24');
+    @include font-size('20');
 
     font-weight: 700;
-    color: $primary-500;
+    color: $neutral-700;
   }
 
   &-desc {
@@ -29,27 +30,26 @@
     &::before {
       content: '';
       position: absolute;
-      width: 20px;
+      width: 10px;
       height: 1px;
       top: 8px;
       left: 0;
       background-color: $neutral-200;
-
     }
   }
 
   &-form {
     @include flex($vertical: flex-start, $direction: column);
-    @include box-shadow('lg');
 
-    width: 420px;
-    padding: $spacing-48 $spacing-36;
+    width: 400px;
+    padding: $spacing-40 $spacing-36;
     background-color: $neutral-0;
     border-radius: $border-radius-12;
+    box-shadow: 0 0 40px 0 rgba(9, 131, 143, 0.5);
 
     .form {
       width: 100%;
-      padding-top: $spacing-32;
+      padding-top: $spacing-24;
     }
   }
 }
