@@ -38,9 +38,11 @@
         </div>
         <div
           class="activity-info-contents"
-          v-if="activity.cardStyle === 'domain'"
+          v-if="
+            activity.cardStyle === 'domain' || activity.cardStyle === 'default'
+          "
         >
-          <span>{{ activity.message }}</span>
+          <span v-html="activity.message"></span>
           <span class="diff-added">{{ activity.updatedBy }}</span>
         </div>
         <div
@@ -111,6 +113,8 @@ const headerMessage = (activity: Activity): string => {
     case "entityDeleted":
       return commonMsg(`<p style="color: red;">deleted</p>`);
     case "domain":
+      return commonMsg("posted on");
+    case "default":
       return commonMsg("posted on");
   }
 };

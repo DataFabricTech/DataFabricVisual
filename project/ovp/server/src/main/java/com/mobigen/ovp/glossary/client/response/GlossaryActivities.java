@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.UUID;
 
 @Data
@@ -24,13 +25,18 @@ public class GlossaryActivities {
     public GlossaryActivities(GlossaryActivity glossaryActivity) {
         this.cardStyle = glossaryActivity.getCardStyle();
         this.createdBy = glossaryActivity.getCreatedBy();
-        this.headerMessage = glossaryActivity.getFeedInfo().getHeaderMessage();
+        if(glossaryActivity.getFeedInfo() != null) {
+            this.headerMessage = glossaryActivity.getFeedInfo().getHeaderMessage();
+            this.entitySpecificInfo = glossaryActivity.getFeedInfo().getEntitySpecificInfo();
+        } else {
+            this.headerMessage = null;
+            this.entitySpecificInfo = new HashMap<>();
+        }
         this.id = glossaryActivity.getId();
         this.message = glossaryActivity.getMessage();
         this.updatedAt = getTimeDifference(glossaryActivity.getUpdatedAt());
         this.updatedBy = glossaryActivity.getUpdatedBy();
         this.fieldOperation = glossaryActivity.getFieldOperation();
-        this.entitySpecificInfo = glossaryActivity.getFeedInfo().getEntitySpecificInfo();
     }
 
     public String getTimeDifference(Timestamp timestamp) {
