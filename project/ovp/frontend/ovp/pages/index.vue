@@ -29,10 +29,9 @@
       <div class="main-content">
         <div class="l-top-bar">
           <span class="main-content-title">북마크 한 데이터</span>
-          <!--         TODO: [개발] 마이페이지 > 나의 북마크 리스트 이동 추가 예정-->
-          <button class="button link-button-support">
+          <nuxt-link :to="'/portal/my-page'" class="button link-button-support">
             <span class="button-title">모두 보기</span>
-          </button>
+          </nuxt-link>
         </div>
         <div class="no-result" v-if="isBookmarkDataNoInfo">
           <div class="notification">
