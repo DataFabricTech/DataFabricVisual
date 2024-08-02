@@ -39,6 +39,20 @@ public class AuthController {
         return authService.login(response, newParam);
     }
 
+
+    /**
+     * 로그아웃
+     * @param request
+     * @param response
+     * @return
+     */
+    @ResponseJsonResult(errorMessage = "로그아웃 실패")
+    @PostMapping("/logout")
+    public Object logout(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map<String, Object> param = token.getTokensByRequest(request);
+        return authService.logout(request, response, param);
+    }
+
     /**
      * 로그인 > RSA 공개키 반환
      *
