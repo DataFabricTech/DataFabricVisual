@@ -163,9 +163,8 @@ const firCheckedIds: string[] = [
   "868928fc-4be3-46a3-8f07-95b516a59b92"
 ];
 
-const onNodeChecked = (froms: TreeViewItem[]) => {
-  const ids = froms.map((from: TreeViewItem) => from.id);
-  checkedIds.value = ids;
+const onNodeChecked = (checkedNodeIds: TreeViewItem[]) => {
+  checkedIds.value = checkedNodeIds.map((node: TreeViewItem) => node.id);
 };
 
 const onNodeClicked = (node: TreeViewItem) => {
