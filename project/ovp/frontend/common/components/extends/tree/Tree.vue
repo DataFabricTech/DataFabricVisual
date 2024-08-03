@@ -47,7 +47,8 @@ const props = withDefaults(defineProps<TreeProps>(), {
   hideGuideLines: false,
   showOpenAllBtn: false,
   showCloseAllBtn: false,
-  firExpandAll: false
+  firExpandAll: false,
+  checkedIds: () => []
 });
 
 const emit = defineEmits<{

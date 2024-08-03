@@ -11,8 +11,27 @@ export interface TreeComposition extends TreeProps {
 }
 
 export function TreeComposition(props: TreeProps): TreeComposition {
+  const updateCheckedStatus = (items: any[], checkedIds: string[]): void => {
+    _.forEach(items, (item) => {
+      // checkedIds 배열에 현재 항목의 id가 포함되어 있는지 확인
+      if (checkedIds.includes(item.id)) {
+        item.checked = true;
+      }
+
+      // 자식 노드가 있는 경우, 재귀적으로 호출
+      if (item.children && item.children.length > 0) {
+        updateCheckedStatus(item.children, checkedIds);
+      }
+    });
+  };
+
   const treeItems: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
   treeItems.value = props.items;
+
+  // 체크박스를 사용하는 경우, 체크여부를 object에 추가해준다.
+  if (props.isCheckable) {
+    updateCheckedStatus(treeItems.value, props.checkedIds || []);
+  }
 
   const createNewTreeItem: (
     parentId: string,
