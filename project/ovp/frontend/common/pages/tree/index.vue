@@ -7,7 +7,7 @@
     </div>
     <tree-vue
       :items="items"
-      :isCheckable="false"
+      :isCheckable="true"
       :hideGuideLines="false"
       :firExpandAll="true"
       :show-open-all-btn="true"
@@ -15,6 +15,7 @@
       :use-draggable="true"
       mode="edit"
       :dropValidator="dropValidator"
+      @onItemChecked="onNodeChecked"
       @onItemSelected="onNodeClicked"
       @addSibling="addSibling"
       @addChild="addChild"
@@ -152,6 +153,11 @@ const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
   disabled: false,
   children: []
 });
+
+const onNodeChecked = (froms: TreeViewItem[]) => {
+  const ids = froms.map((from: TreeViewItem) => from.id);
+  console.log(ids);
+};
 
 const onNodeClicked = (node: TreeViewItem) => {
   selectedNode.value = node;
