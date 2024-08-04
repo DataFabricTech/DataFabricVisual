@@ -104,19 +104,19 @@
           <svg-icon class="button-icon" name="legend"></svg-icon>
         </button>
         <ul class="visual-legend-content" v-show="isLegendVisible">
-          <li class="visual-legend-item one-depth">
+          <li class="visual-legend-item visual-legend-item-depth1">
             1depth 카테고리
           </li>
-          <li class="visual-legend-item two-depth">
+          <li class="visual-legend-item visual-legend-item-depth2">
             2depth 카테고리
           </li>
-          <li class="visual-legend-item three-depth">
+          <li class="visual-legend-item visual-legend-item-depth3">
             3depth 카테고리
           </li>
-          <li class="visual-legend-item data-model">
+          <li class="visual-legend-item visual-legend-item-model">
             데이터 모델
           </li>
-          <li class="visual-legend-item node-way">
+          <li class="visual-legend-item visual-legend-item-way">
             <div class="edge">
               <div class="edge-line"></div>
             </div>

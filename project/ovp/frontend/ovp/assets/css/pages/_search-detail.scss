@@ -56,38 +56,6 @@
   &:has(.visual-detail) {
     height: 100%;
 
-    .visual-detail {
-      width: 60%;
-      height: 100%;
-      min-height: 680px;
-    }
-
-    .visual-legend {
-      .reference-model::before {
-        background-color: #85E0A3;
-        border: 2px solid #359F67;
-      }
-
-      .relation-model::before {
-        background-color: #BDE3FF;
-        border: 2px solid #22B4FF;
-      }
-
-      .relation-rank {
-        &::before {
-          content: '[순위]';
-          width: 28px;
-          font-size: 11px;
-          line-height: 1.5;
-          color: $neutral-500;
-        }
-
-        .button {
-          margin-left: -6px;
-        }
-      }
-    }
-
     .data-detail-list {
       width: 40%;
       height: 100%;
@@ -116,6 +84,38 @@
 
       .resource-box {
         width: 50%;
+      }
+    }
+  }
+
+  .visual-detail {
+    width: 60%;
+    height: 100%;
+    min-height: 680px;
+  }
+
+  .visual-legend-item {
+    &-standard::before {
+      background-color: #85E0A3;
+      border: 2px solid #359F67;
+    }
+
+    &-relation::before {
+      background-color: #BDE3FF;
+      border: 2px solid #22B4FF;
+    }
+
+    &-rank {
+      &::before {
+        content: '[순위]';
+        width: 28px;
+        font-size: 11px;
+        line-height: 1.5;
+        color: $neutral-500;
+      }
+
+      .button {
+        margin-left: -6px;
       }
     }
   }

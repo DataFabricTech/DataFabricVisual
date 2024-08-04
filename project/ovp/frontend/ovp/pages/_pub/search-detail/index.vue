@@ -585,13 +585,13 @@
                   <svg-icon class="button-icon" name="legend"></svg-icon>
                 </button>
                 <ul class="visual-legend-content" v-show="isLegendVisible">
-                  <li class="visual-legend-item reference-model">
+                  <li class="visual-legend-item visual-legend-item-standard">
                     기준모델
                   </li>
-                  <li class="visual-legend-item relation-model">
+                  <li class="visual-legend-item visual-legend-item-relation">
                     연관모델
                   </li>
-                  <li class="visual-legend-item relation-rank">
+                  <li class="visual-legend-item visual-legend-item-rank">
                     연관순위
                     <!-- TODO: [개발] 툴팁 컴포넌트 개발 후 추가 -->
                     <button class="button button-neutral-ghost button-sm" type="button">
