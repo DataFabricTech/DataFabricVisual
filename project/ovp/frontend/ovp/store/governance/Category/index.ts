@@ -22,10 +22,13 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     categories.value = data.children;
   };
   const getModelListQuery = (id: string) => {
+    // TODO : [개발] 검색어 조건 여기 추가.
     const params: any = {
-      categoryId: id,
+      // eslint-disable-next-line id-length
+      q: "",
       from: from.value,
       size: size.value,
+      categoryId: id,
     };
     return new URLSearchParams(params);
   };
@@ -86,12 +89,9 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
         id: nodeId,
       },
     });
-    if (data === "HAS_MODEL_LIST") {
-      alert("하위 노드에 매칭되어 있는 데이터 모델이 있습니다.");
-    } else {
-      alert("삭제 되었습니다.");
-      getCategories();
-    }
+
+    alert("삭제 되었습니다.");
+    getCategories();
   };
 
   return {

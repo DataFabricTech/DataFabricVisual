@@ -108,15 +108,20 @@ public class CategoryService {
         List<UUID> idsToDelete = new ArrayList<>();
         collectCategoryIdsAndTags(categoryEntity.getId(), idsToDelete, tagIds);
 
+        // 삭제 진행
+        // step1. openMeta 에서 tag 삭제
+        MultiValueMap<String, String> tagParams = new LinkedMultiValueMap<>();
+        tagParams.add("recursive", "true");
+        tagParams.add("hardDelete", "true");
+
         for (UUID tagId : tagIds) {
-            if (getModelListByTagId(tagId).size() > 0) {
-                // modelList 가 0이 넘는 tag가 있으면, 삭제할수 없도록 경고 메시지를 return 한다.
-                return "HAS_MODEL_LIST";
-            }
+            classificationClient.deleteTag(tagId.toString(), tagParams);
         }
 
-        // 삭제 진행
+        // step2. db 에서 category 삭제
         categoryRepository.deleteAllByIds(idsToDelete);
+
+        // step3. 형제 category 들 reorder 진행
         reorderSiblings(categoryEntity.getParentId());
         return "";
     }

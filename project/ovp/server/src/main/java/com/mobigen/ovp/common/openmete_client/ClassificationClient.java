@@ -2,6 +2,7 @@ package com.mobigen.ovp.common.openmete_client;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -12,4 +13,7 @@ import java.util.Map;
 public interface ClassificationClient {
     @GetMapping("/{id}")
     Map<String, Object> getTag(@PathVariable String id);
+
+    @DeleteMapping("/{id}")
+    Map<String, Object> deleteTag(@PathVariable String id, @RequestParam MultiValueMap<String, String> params);
 }
