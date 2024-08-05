@@ -422,7 +422,6 @@ const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
 });
 const onNodeClicked = (node: TreeViewItem) => {
   selectedNode.value = node;
-  // TODO : [개발] 카테고리 중 최 하위 카테고리가 아닌 경우 모델목록 조회하지 않음.
 
   // 선택한 노드정보 저장
   setSelectedNode(node);

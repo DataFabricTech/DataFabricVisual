@@ -32,35 +32,33 @@ public class CategoryController {
 
     @ResponseJsonResult
     @PutMapping("")
-    public Object addCategory(@RequestBody CategoryDTO params) {
+    public Object addCategory(@RequestBody CategoryDTO params) throws Exception {
         return categoryService.addCategory(params);
     }
 
     @ResponseJsonResult
     @PatchMapping("")
-    public Object updateCategory(@RequestBody CategoryDTO params) {
+    public Object updateCategory(@RequestBody CategoryDTO params) throws Exception {
         return categoryService.updateCategory(params);
     }
 
     @ResponseJsonResult
     @DeleteMapping(value = "")
-    public Object deleteCategory(@RequestBody CategoryDTO params) {
+    public Object deleteCategory(@RequestBody CategoryDTO params) throws Exception {
         return categoryService.deleteCategory(params);
     }
 
     @ResponseJsonResult
     @PutMapping(value = "/move")
-    public Object moveCategory(@RequestBody Map<String, Object> params) {
+    public Object moveCategory(@RequestBody Map<String, Object> params) throws Exception {
         return categoryService.moveCategory(params);
     }
 
     @ResponseJsonResult
     @GetMapping("/models")
-    public Object getModelByCategoryId(@RequestParam MultiValueMap<String, String> params) {
+    public Object getModelByCategoryId(@RequestParam MultiValueMap<String, String> params) throws Exception {
         String categoryId = params.getFirst("categoryId");
-        int page = Integer.parseInt(params.getFirst("page"));
-        int size = Integer.parseInt(params.getFirst("size"));
-        return categoryService.getModelByCategoryId(categoryId, page, size);
+        return categoryService.getModelByCategoryId(categoryId, params);
     }
 
 }

@@ -5,7 +5,7 @@ import _ from "lodash";
 export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const { $api } = useNuxtApp();
   const pagingStore = usePagingStore();
-  const { page, size } = storeToRefs(pagingStore);
+  const { from, size } = storeToRefs(pagingStore);
 
   const categories = ref<TreeViewItem>();
   const modelList: Ref<any[]> = ref([]);
@@ -22,9 +22,10 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     categories.value = data.children;
   };
   const getModelListQuery = (id: string) => {
+    console.log(id);
     const params: any = {
       categoryId: id,
-      page: page.value,
+      from: from.value,
       size: size.value,
     };
     return new URLSearchParams(params);
