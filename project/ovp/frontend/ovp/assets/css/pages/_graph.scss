@@ -44,12 +44,13 @@
 
   .button-neutral-stroke:hover {
     border: 1px solid $neutral-200;
+    border-bottom: 1px solid transparent;
   }
 
   &-zoom-in {
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;
-    border-bottom-width: 0;
+    border-bottom: 1px solid transparent;
   }
 
   &-zoom-out {
