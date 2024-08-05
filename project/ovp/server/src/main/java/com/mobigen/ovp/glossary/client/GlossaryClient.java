@@ -26,7 +26,8 @@ public interface GlossaryClient {
      * @return
      */
     @GetMapping("/glossaries")
-    GlossaryResponse getGlossaries(@RequestParam(required = false, defaultValue = "owner,tags,reviewers,votes,domain") String fields);
+    GlossaryResponse getGlossaries(@RequestParam(required = false, defaultValue = "owner,tags,reviewers,votes,domain") String fields,
+                                    @RequestParam(required = false, defaultValue = "100") int limit);
 
     /**
      * 용어 사전 수정

@@ -110,4 +110,27 @@ public class GlossaryController {
     public Object getAllTags() throws Exception {
         return glossaryService.getAllTags();
     }
+
+    /**
+     * 데이터 모델 리스트
+     * @param name
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/data-models")
+    public Object getDataModels(@RequestParam String name) throws Exception {
+        return glossaryService.getDataModels(name);
+    }
+
+    /**
+     * 데이터 모델 상세
+     * @param fqn
+     * @return
+     */
+    @ResponseJsonResult
+    @GetMapping("/data-model")
+    public Object getDataModel(@RequestParam String fqn) {
+        return glossaryService.getDataModel(fqn);
+    }
 }
