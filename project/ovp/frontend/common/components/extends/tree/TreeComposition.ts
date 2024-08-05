@@ -86,17 +86,16 @@ export function TreeComposition(props: TreeProps): TreeComposition {
       return false;
     }
 
-    // TODO: confirm 창 구현 완료 되면 여기서 처리 필요함.
-    /**
-     * title : 카테고리 이동
-     * content : `${thisNode.name} 카테고리를 ${targetNode} 하위로 이동 하시겠습니까?`
-     * response가 true 일 때만, props.dropValidator 진행.
-     */
+    // TODO: NOTIFICATION - confirm 창 구현 완료 되면 아래 window.prompt 창 변경처리 필요.
+    const msg = `${thisNode.name} 카테고리를 ${targetNode.name} 하위로 이동 하시겠습니까?`;
 
-    const newNode = _.cloneDeep(thisNode);
-    newNode.parentId = targetNode.id;
+    const res = window.prompt(`${msg} (answer : 'yes'`);
+    if (res === "yes") {
+      const newNode = _.cloneDeep(thisNode);
+      newNode.parentId = targetNode.id;
 
-    return props.dropValidator(thisNode, targetNode, newNode);
+      return props.dropValidator(thisNode, targetNode, newNode);
+    }
   };
   // vue3-tree-vue 에서는 dropValidator 이 undefined 일때만 drag/drop 이 동작하지 않음.
   const dropValidatorHandler: any = props.useDraggable ? dropValidator : undefined;

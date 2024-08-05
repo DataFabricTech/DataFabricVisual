@@ -493,7 +493,7 @@ const dropValidator = async (
   // 조건 처리 backend 에서 진행
   const resultMsg = await moveCategory(dropNode.id, targetNode.id);
 
-  dropMsg.value = resultMsg ? "" : "이동이 불가능합니다.";
+  dropMsg.value = resultMsg ? null : "이동이 불가 합니다.";
   nodeMoved.value = true;
 
   // tree lib가 async-await 처리를 지원하지 않기 때문에 여기서는 true 로 던지고,
