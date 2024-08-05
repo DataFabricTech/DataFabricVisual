@@ -3,7 +3,7 @@
     <div class="h-group">
       <h1 class="logo">
         <a href="#" class="logo-link" title="메인 이동">
-          Open VDAP Portal
+          <svg-icon class="svg-icon logo-img" name="logo"></svg-icon>
           <span class="hidden-text">logo</span>
         </a>
       </h1>

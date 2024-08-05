@@ -15,10 +15,9 @@
   }
 }
 
-.logo {
-  @include font-size('18');
-
-  font-weight: 700;
+.logo-img {
+  width: 208px;
+  height: 26px;
 }
 
 .profile {
