@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,8 +76,20 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @PatchMapping(value = "/terms/{id}", consumes = "application/json-patch+json")
-    public Object editGlossaryTerms(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param) {
+    public Object editGlossaryTerm(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param) {
         return glossaryService.editGlossaryTerm(id, param);
+    }
+
+    /**
+     * 용어 변경 > 데이터 모델 삭제
+     * @param id
+     * @param body
+     * @return
+     */
+    @ResponseJsonResult
+    @PutMapping("/terms/{id}/assets/remove")
+    public Object updateGlossaryTerm(@PathVariable UUID id, @RequestBody List<Object> body) {
+        return glossaryService.updateGlossaryTerm(id, body);
     }
 
     /**

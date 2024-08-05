@@ -97,7 +97,22 @@ public class GlossaryService {
      * @return
      */
     public Object editGlossaryTerm(UUID id, List<JsonPatchOperation> param) {
-        return glossaryClient.editGlossaryTerms(id, param);
+        return glossaryClient.editGlossaryTerm(id, param);
+    }
+
+    /**
+     * 용어 변경 > 데이터 모델 삭제
+     * @param id
+     * @param param
+     * @return
+     */
+    public Object updateGlossaryTerm(UUID id, List<Object> param) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("assets", param);
+        body.put("dryRun", false);
+        body.put("glossaryTags", new ArrayList<>());
+
+        return glossaryClient.updateGlossaryTerm(id, body);
     }
 
     /**

@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @FeignClient(name = "GlossaryClient", url = "http://192.168.105.26:8585/api/v1")
@@ -65,7 +67,16 @@ public interface GlossaryClient {
      * @return
      */
     @PatchMapping(value = "/glossaryTerms/{id}", consumes = "application/json-patch+json")
-    Object editGlossaryTerms(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param);
+    Object editGlossaryTerm(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param);
+
+    /**
+     * 용어 변경 > 데이터 모델 삭제
+     * @param id
+     * @param body
+     * @return
+     */
+    @PutMapping(value="/glossaryTerms/{id}/assets/remove")
+    Object updateGlossaryTerm(@PathVariable UUID id, @RequestBody Map<String, Object> body);
 
     /**
      * 용어 삭제
