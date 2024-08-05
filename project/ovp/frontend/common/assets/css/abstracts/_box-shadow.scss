@@ -7,7 +7,9 @@ $box-shadows: (
 
 @mixin box-shadow($shadow) {
   @if map-has-key($box-shadows, $shadow) {
-    box-shadow: #{map-get($box-shadows, $shadow)};
+    & {
+      box-shadow: #{map-get($box-shadows, $shadow)};
+    }
   } @else {
     @warn "#{$shadow} 값이 올바르지 않습니다." + "#{$box-shadows} 중에 하나로 선택해 주세요";
   }
