@@ -11,6 +11,8 @@ import java.util.Map;
 
 @FeignClient(name = "ClassificationClient", url = "http://192.168.105.26:8585/api/v1/tags")
 public interface ClassificationClient {
+    // TODO : tag 쪽 코드 merge 되면 아래 코드 이동
+
     @GetMapping("/{id}")
     Map<String, Object> getTag(@PathVariable String id);
 
