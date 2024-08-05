@@ -22,7 +22,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     categories.value = data.children;
   };
   const getModelListQuery = (id: string) => {
-    console.log(id);
     const params: any = {
       categoryId: id,
       from: from.value,
