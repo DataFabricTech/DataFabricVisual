@@ -14,10 +14,10 @@
         -->
     <div class="dropdown" v-show="isShowBox">
       <ul class="dropdown-list">
-        <template v-if="data.length > 0">
+        <template v-if="localData.length > 0">
           <li
             class="dropdown-item"
-            v-for="(option, index) in data"
+            v-for="(option, index) in localData"
             :key="index"
             @click="selectItem(option)"
             :class="[
@@ -100,9 +100,18 @@ const props = withDefaults(defineProps<SelectBoxProps>(), {
 
 const emit = defineEmits<{ (e: "select", option: number | string): void }>();
 
+const localData = ref(props.data);
+
 function onSelect(value: string | number) {
   emit("select", value);
 }
+
+watch(
+    () => props.data,
+    (newData) => {
+      localData.value = newData;
+    }
+);
 
 const {
   data,
