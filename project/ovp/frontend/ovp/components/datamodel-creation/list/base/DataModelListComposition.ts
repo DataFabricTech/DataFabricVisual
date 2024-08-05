@@ -1,24 +1,15 @@
 import { ref, Ref } from "vue";
-import type { DataModelListProps } from "~/components/datamodel-creation/list/DataModelListProps";
+import type { DataModelListProps } from "~/components/datamodel-creation/list/base/DataModelListProps";
+import type { DataModelListEvent } from "~/components/datamodel-creation/list/base/DataModelListEvent.interface";
 import _ from "lodash";
 
-interface DataModelListCompositionImpl extends DataModelListProps {
-  // Menu-search 컴포넌트에서만 사용하는 data, function
+export interface DataModelListCompositionImpl
+  extends DataModelListProps,
+    DataModelListEvent {
   listData: Ref<any[]>;
   selectedFilter: Record<string, any>;
   searchLabel: Ref<string>;
-  //
-  onSearchText(value: string): void;
-  onSelectFilter(filterKey: string, value: string): void;
-  onResetSearchText(): void;
-  onResetSearchFilter(): void;
-  onShowContextMenu(itemValue: string, checked: boolean | null): void;
-  onShowContextMenuBtn(itemValue: string, checked: boolean | null): void;
-  onChangeBookmark(value: string): void;
-  onClickDataModelItem(value: string): void;
-  onDeleteItem(value: string): void;
-  onSelectItem(value: string): void;
-  onCheckItem(value: string, checked: boolean): void;
+  setSelectedFilter(): void;
 }
 
 export function DataModelListComposition(
@@ -52,7 +43,7 @@ export function DataModelListComposition(
   };
 
   /**
-   * 선택 리스트 값이 변경되면 일반 리스트의 속성값도 변경되야하므로 다중 watch
+   * 리스트 값이 변경되면 일반 리스트의 속성값도 변경되야하므로 다중 watch
    */
   watchEffect(() => {
     setListData();
@@ -230,6 +221,7 @@ export function DataModelListComposition(
     listData,
     searchLabel,
     selectedFilter,
+    setSelectedFilter,
     onSelectFilter,
     onSearchText,
     onResetSearchText,

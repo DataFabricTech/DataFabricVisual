@@ -49,7 +49,7 @@
           </template>
         </div>
       </div>
-      <!-- 정렬 -->
+      <!-- TODO: 정렬기능 추후 개발-->
       <select-box
         class="select-sm w-full"
         v-if="props.useSort"
@@ -90,8 +90,8 @@
 <script setup lang="ts">
 import SelectBox from "@extends/select-box/SelectBox.vue";
 import DataModelListItem from "~/components/datamodel-creation/item/data-model-list-item.vue";
-import type { DataModelListProps } from "~/components/datamodel-creation/list/DataModelListProps";
-import { DataModelListComposition } from "~/components/datamodel-creation/list/DataModelListComposition";
+import type { DataModelListProps } from "~/components/datamodel-creation/list/base/DataModelListProps";
+import { DataModelListComposition } from "~/components/datamodel-creation/list/base/DataModelListComposition";
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
 
 const props = withDefaults(defineProps<DataModelListProps>(), {
