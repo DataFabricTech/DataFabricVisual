@@ -32,7 +32,7 @@ public class CategoryEntity {
     private UUID parentId;
 
     @Column(name = "tag_id")
-    private String tagId;
+    private UUID tagId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id", referencedColumnName = "id", insertable = false, updatable = false)
@@ -54,7 +54,7 @@ public class CategoryEntity {
         return this.id.equals(this.parentId);
     }
 
-    public CategoryEntity(UUID id, UUID parentId, String tagId, String name, int order, String desc) {
+    public CategoryEntity(UUID id, UUID parentId, UUID tagId, String name, int order, String desc) {
         this.id = id;
         this.parentId = parentId;
         this.tagId = tagId;

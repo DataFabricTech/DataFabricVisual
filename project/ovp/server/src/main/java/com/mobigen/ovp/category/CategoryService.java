@@ -104,11 +104,11 @@ public class CategoryService {
         CategoryEntity categoryEntity = params.toEntity();
         // 재귀 함수 이용하여 하위 > 하위 > 하위.. 의 categoryId 목록 조회.
 
-        List<String> tagIds = new ArrayList<>();
+        List<UUID> tagIds = new ArrayList<>();
         List<UUID> idsToDelete = new ArrayList<>();
         collectCategoryIdsAndTags(categoryEntity.getId(), idsToDelete, tagIds);
 
-        for (String tagId : tagIds) {
+        for (UUID tagId : tagIds) {
             if (getModelListByTagId(tagId).size() > 0) {
                 // modelList 가 0이 넘는 tag가 있으면, 삭제할수 없도록 경고 메시지를 return 한다.
                 return "HAS_MODEL_LIST";
@@ -154,7 +154,7 @@ public class CategoryService {
      * @param idsToDelete
      * @param tagIds
      */
-    private void collectCategoryIdsAndTags(UUID categoryId, List<UUID> idsToDelete, List<String> tagIds) {
+    private void collectCategoryIdsAndTags(UUID categoryId, List<UUID> idsToDelete, List<UUID> tagIds) {
         List<CategoryEntity> subCategories = categoryRepository.findByParentIdOrderByOrderDesc(categoryId);
 
         for (CategoryEntity subCategory : subCategories) {
@@ -163,7 +163,7 @@ public class CategoryService {
 
         categoryRepository.findById(categoryId).ifPresent(category -> {
             idsToDelete.add(category.getId());
-            String tagId = category.getTagId();
+            UUID tagId = category.getTagId();
             if (tagId != null) {
                 tagIds.add(tagId);
             }
@@ -273,7 +273,7 @@ public class CategoryService {
     @Transactional
     public Object getModelByCategoryId(String categoryId, MultiValueMap<String, String> params) throws Exception {
         CategoryEntity categoryEntity = categoryRepository.findById(UUID.fromString(categoryId)).get();
-        params.add("query_filter", createQueryFilterByTagName(getTagInfo(categoryEntity.getTagId())));
+        params.add("query_filter", createQueryFilterByTagName(getTagInfo(categoryEntity.getTagId().toString())));
 
         return getModelListByTagId(categoryEntity.getTagId(), params);
     }
@@ -285,15 +285,15 @@ public class CategoryService {
      * @return
      * @throws Exception
      */
-    private List<Object> getModelListByTagId(String tagId) throws Exception {
+    private List<Object> getModelListByTagId(UUID tagId) throws Exception {
         return getModelListByTagId(tagId, null);
     }
 
-    private List<Object> getModelListByTagId(String tagId, MultiValueMap<String, String> params) throws Exception {
+    private List<Object> getModelListByTagId(UUID tagId, MultiValueMap<String, String> params) throws Exception {
         if (params == null) {
             params = new LinkedMultiValueMap<>();
         }
-        params.add("query_filter", createQueryFilterByTagName(getTagInfo(tagId)));
+        params.add("query_filter", createQueryFilterByTagName(getTagInfo(tagId.toString())));
         return (List<Object>) ((Map<String, Object>) (searchService.getAllSearchList(params)).get("data")).get("all");
     }
 

@@ -40,7 +40,7 @@ public class CategoryDTO {
         return new CategoryEntity(
                 Optional.ofNullable(this.id).map(UUID::fromString).orElse(null),
                 Optional.ofNullable(this.parentId).map(UUID::fromString).orElse(null),
-                this.tagId,
+                Optional.ofNullable(this.tagId).map(UUID::fromString).orElse(null),
                 this.name,
                 this.order,
                 this.desc
