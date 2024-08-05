@@ -70,11 +70,11 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       getCategories();
     });
   };
-  const moveCategory = async (thisNodeId: string, targetNodeId: string) => {
+  const moveCategory = async (dropNodeId: string, targetNodeId: string) => {
     const { data } = await $api("/api/category/move", {
       method: "PUT",
       body: {
-        thisNodeId: thisNodeId,
+        dropNodeId: dropNodeId,
         targetNodeId: targetNodeId,
       },
     });

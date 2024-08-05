@@ -487,11 +487,11 @@ watch(
 );
 
 const dropValidator = async (
-  thisNode: TreeViewItem,
+  dropNode: TreeViewItem,
   targetNode: TreeViewItem,
 ): Promise<boolean> => {
   // 조건 처리 backend 에서 진행
-  const resultMsg = await moveCategory(thisNode.id, targetNode.id);
+  const resultMsg = await moveCategory(dropNode.id, targetNode.id);
 
   dropMsg.value = resultMsg ? "" : "이동이 불가능합니다.";
   nodeMoved.value = true;

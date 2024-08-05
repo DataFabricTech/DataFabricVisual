@@ -217,17 +217,17 @@ public class CategoryService {
 
     @Transactional
     public boolean moveCategory(Map<String, Object> params) throws Exception {
-        String thisNodeId = params.get("thisNodeId").toString();
+        String dropNodeId = params.get("dropNodeId").toString();
         String targetNodeId = params.get("targetNodeId").toString();
+        CategoryEntity dropNodeEntity = categoryRepository.findByIdWithParent(UUID.fromString(dropNodeId));
         CategoryEntity targetNodeEntity = categoryRepository.findByIdWithParent(UUID.fromString(targetNodeId));
-        CategoryEntity thisNodeEntity = categoryRepository.findByIdWithParent(UUID.fromString(thisNodeId));
 
         // 조건 처리
-        if (!checkValidationNodePosition(targetNodeEntity, thisNodeEntity).equals("VALID")) {
+        if (!checkValidationNodePosition(targetNodeEntity, dropNodeEntity).equals("VALID")) {
             return false;
         }
 
-        CategoryDTO categoryDto = new CategoryDTO(thisNodeEntity);
+        CategoryDTO categoryDto = new CategoryDTO(dropNodeEntity);
         categoryDto.setParentId(targetNodeId);
         insertOrUpdate(categoryDto);
         return true;
