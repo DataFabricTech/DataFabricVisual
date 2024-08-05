@@ -125,7 +125,7 @@
         </ul>
       </div>
       <!-- 모델 리스트 -->
-      <div class="visual-model-list" v-if="isModellistVisible" @click="closeModellist">
+      <div class="visual-model-list" v-if="isModellistVisible">
         <div class="visual-model-list-head">
           <div class="breadcrumb">
             <ul class="breadcrumb-list">
@@ -137,7 +137,7 @@
               </li>
             </ul>
           </div>
-          <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+          <button class="search-input-action-button button button-neutral-ghost button-sm" type="button" @click="closeModellist">
             <span class="hidden-text">지우기</span>
             <svg-icon class="button-icon" name="close"></svg-icon>
           </button>
