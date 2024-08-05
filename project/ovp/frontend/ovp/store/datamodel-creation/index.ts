@@ -33,7 +33,40 @@ export const useCreationStore = defineStore("creation", () => {
   const setDataModelList = async () => {
     modelList.value = DataModelSample.sampleList;
     modelListCnt.value = modelList.value.length;
-    console.log('modelListCnt: ', modelListCnt.value);
+    console.log("modelListCnt: ", modelListCnt.value);
+  };
+
+  const setSelectedModelList = async () => {
+    selectedModelList.value = [
+      {
+        owner: "",
+        fqn: "vdap2.sample.sample.sampledata_chart_02",
+        depth: ["vdap2", "sample", "sample", "sampledata_chart_02"],
+        serviceIcon: "",
+        modelNm: "sampledata_chart_02",
+        modelDesc: null,
+        id: "02ab816f-88e1-47df-bb87-926dcbcc20f0",
+        type: "table",
+        firModelNm: "sampledata_chart_02",
+        category: "",
+        bookmarked: true,
+        tags: [],
+      },
+      {
+        owner: "",
+        fqn: "vdap2.sample.sample.sampledata_map_08",
+        depth: ["vdap2", "sample", "sample", "sampledata_map_08"],
+        serviceIcon: "",
+        modelNm: "sampledata_map_08",
+        modelDesc: null,
+        id: "06b740b4-20e1-4f41-9912-49346db18a0d",
+        type: "table",
+        firModelNm: "sampledata_map_08",
+        category: "",
+        bookmarked: false,
+        tags: ["분류01.태그01_01"],
+      },
+    ];
   };
 
   /**
@@ -64,9 +97,9 @@ export const useCreationStore = defineStore("creation", () => {
   };
 
   const deleteDataModel = (value: string) => {
-    modelList.value = modelList.value.filter(item => item.id !== value);
+    modelList.value = modelList.value.filter((item) => item.id !== value);
     modelListCnt.value = modelList.value.length;
-  }
+  };
 
   // TODO: 서버 연동 처리 필요
   async function getExcuteResult(value: string) {
@@ -89,6 +122,7 @@ export const useCreationStore = defineStore("creation", () => {
 
   return {
     modelList,
+    selectedModelList,
     modelListCnt,
     query,
     querySuccess,
@@ -99,7 +133,8 @@ export const useCreationStore = defineStore("creation", () => {
     getExcuteResult,
     dataModelFilter,
     setDataModelFilter,
+    setSelectedModelList,
     setDataModelList,
-    deleteDataModel
+    deleteDataModel,
   };
 });
