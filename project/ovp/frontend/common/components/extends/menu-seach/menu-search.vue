@@ -9,12 +9,14 @@
           class="text-input"
           :value="searchLabel"
           @input="onSearchText($event.target.value)"
-          placeholder="검색어를 입력하세요"/>
+          placeholder="검색어를 입력하세요"
+        />
         <svg-icon class="text-input-icon" name="user"></svg-icon>
         <button
           class="search-input-action-button button button-neutral-ghost button-sm"
           type="button"
-          @click="onResetSearchText">
+          @click="onResetSearchText"
+        >
           <span class="hidden-text">지우기</span>
           <svg-icon class="button-icon" name="close"></svg-icon>
         </button>
@@ -22,17 +24,22 @@
     </div>
     <div class="menu-list">
       <!-- 선택 리스트 -->
-      <div v-for="(item, index) in selectedListData" :key="item.value + index">
-        <div class="menu-item" :class="{'is-menu-item-selected': !props.isMulti}" v-if="item.isShow">
+      <template v-for="(item, index) in selectedListData" :key="item.id + index">
+        <div
+          class="menu-item"
+          :class="{ 'is-menu-item-selected': !props.isMulti }"
+          v-if="item.isShow"
+          style="z-index: 999"
+        >
           <div class="checkbox" v-if="isMulti">
             <input
               type="checkbox"
               class="checkbox-input"
-              :id="'menu-search-selected-' + item.value"
+              :id="'menu-search-selected-' + item.id"
               :checked="item.isChecked"
               @input="onCancelSelect(item, $event.target.checked)"
             />
-            <label :for="'menu-search-selected-' + item.value" class="checkbox-label">
+            <label :for="'menu-search-selected-' + item.id" class="checkbox-label">
               <span class="checkbox-text">{{ item.label }}</span>
             </label>
           </div>
@@ -40,7 +47,7 @@
             <span class="menu-text">{{ item.label }}</span>
           </button>
         </div>
-      </div>
+      </template>
       <!-- 일반 리스트 -->
       <div v-for="(item, index) in listData" :key="index">
         <div class="menu-item" v-if="!item.isChecked && item.isShow">
@@ -48,11 +55,11 @@
             <input
               type="checkbox"
               class="checkbox-input"
-              :id="'menu-search-data-' + item.value"
+              :id="'menu-search-data-' + item.id"
               :checked="item.isChecked"
               @input="onSelectListData(item, $event.target.checked)"
             />
-            <label :for="'menu-search-data-' + item.value" class="checkbox-label">
+            <label :for="'menu-search-data-' + item.id" class="checkbox-label">
               <span class="checkbox-text">{{ item.label }}</span>
             </label>
           </div>
@@ -78,9 +85,7 @@
 <script setup lang="ts">
 import { vOnClickOutside } from "@vueuse/components";
 import { MenuSearchProps } from "./MenuSearchProps";
-import {
-  MenuSearchItemImpl, MenuSearchComposition
-} from "./MenuSearchComposition";
+import { MenuSearchItemImpl, MenuSearchComposition } from "./MenuSearchComposition";
 
 const props = withDefaults(defineProps<MenuSearchProps>(), {
   data: () => [],
@@ -97,25 +102,25 @@ const props = withDefaults(defineProps<MenuSearchProps>(), {
   nodataMsg: "데이터가 없습니다.",
   noSearchMsg: "검색결과가 없습니다.",
   isMulti: false,
-  isShow: false,
+  isShow: false
 });
 
 const emit = defineEmits<{
-  (e: "single-change", value: MenuSearchItemImpl): void
-  (e: "multiple-change", value: MenuSearchItemImpl[]): void
-  (e: "cancel"): void
-}>()
+  (e: "single-change", value: MenuSearchItemImpl): void;
+  (e: "multiple-change", value: MenuSearchItemImpl[]): void;
+  (e: "cancel"): void;
+}>();
 
-const applyData : (value: MenuSearchItemImpl | MenuSearchItemImpl[]) => void  = (value) => {
+const applyData: (value: MenuSearchItemImpl | MenuSearchItemImpl[]) => void = (value) => {
   if (props.isMulti) {
     emit("multiple-change", value as MenuSearchItemImpl[]);
   } else {
     emit("single-change", value as MenuSearchItemImpl);
   }
-}
-const cancelData : () => void = () => {
-  emit("cancel")
-}
+};
+const cancelData: () => void = () => {
+  emit("cancel");
+};
 
 const {
   selectedListData,
