@@ -250,12 +250,7 @@ public class CategoryService {
         }
 
         // step2. targetNode 에 설정된 데이터 모델이 있는지 체크
-        if (getModelListByTagId(targetNodeEntity.getTagId()).size() > 1) {
-            return "INVALID";
-        }
-
-        // step3. thisNode 에 데이터 모델이 설정되어 있는 경우, tagetNode는 최하위 노드일때만 가능함. (중간 노드일때 불가능)
-        if (getModelListByTagId(dropNodeEntity.getTagId()).size() > 0 && targetNodeEntity.getChildren().size() > 1) {
+        if (getModelListByTagId(targetNodeEntity.getTagId()).size() > 0) {
             return "INVALID";
         }
 
