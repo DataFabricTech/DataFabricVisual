@@ -13,7 +13,9 @@
 .notification {
   @include flex;
 
-  gap: $spacing-8;
+  & {
+    gap: $spacing-8;
+  }
 
 
   &-icon {

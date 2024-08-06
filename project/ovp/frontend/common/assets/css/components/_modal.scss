@@ -13,12 +13,12 @@
   @include z-index('modal');
   @include box-shadow('lg');
 
-  display: flex;
-  flex-direction: column;
-
-  // width: 620px;
-  background: $neutral-0;
-  border-radius: $border-radius-12;
+  & {
+    display: flex;
+    flex-direction: column;
+    background: $neutral-0;
+    border-radius: $border-radius-12;
+  }
 
   &-head {
     @include flex($horizontal: space-between);
