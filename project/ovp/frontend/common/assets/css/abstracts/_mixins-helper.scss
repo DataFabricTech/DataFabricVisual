@@ -7,10 +7,13 @@
   $horizontal: center,
   $direction: null
 ) {
-  display: $display;
-  align-items: $vertical;
-  justify-content: $horizontal;
-  flex-direction: $direction;
+
+  & {
+    display: $display;
+    align-items: $vertical;
+    justify-content: $horizontal;
+    flex-direction: $direction;
+  }
 }
 
 // -------------------------------------------

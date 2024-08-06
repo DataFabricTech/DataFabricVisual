@@ -15,12 +15,14 @@
   .search-input-button {
     @include z-index('float');
 
-    position: absolute;
-    right: 1px;
-    top: 50%;
-    transform: translateY(-50%);
-    border-left: 1px solid $neutral-200;
-    border-radius: 0 $border-radius-4 $border-radius-4 0;
+    & {
+      position: absolute;
+      right: 1px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-left: 1px solid $neutral-200;
+      border-radius: 0 $border-radius-4 $border-radius-4 0;
+    }
   }
 
   &:has(.search-input-button) {

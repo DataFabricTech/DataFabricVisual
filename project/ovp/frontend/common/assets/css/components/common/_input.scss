@@ -34,10 +34,12 @@ $input-field-classes: text-input, textarea;
     &-label {
       @include flex($horizontal: flex-start);
 
-      font-weight: 600;
-      color: $neutral-800;
-      white-space: nowrap;
-      cursor: pointer;
+      & {
+        font-weight: 600;
+        color: $neutral-800;
+        white-space: nowrap;
+        cursor: pointer;
+      }
 
       &:hover::before {
         border-color: $neutral-400;

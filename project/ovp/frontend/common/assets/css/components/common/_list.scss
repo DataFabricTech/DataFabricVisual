@@ -7,9 +7,11 @@ $list-classes: menu, dropdown;
   .#{$list} {
     @include z-index('dropdown');
 
-    border-radius: $border-radius-4;
-    border: 1px solid $neutral-100;
-    background: $neutral-0;
+    & {
+      border-radius: $border-radius-4;
+      border: 1px solid $neutral-100;
+      background: $neutral-0;
+    }
 
     &-list {
       padding: $spacing-2 0;

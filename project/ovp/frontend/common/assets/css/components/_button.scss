@@ -1,10 +1,11 @@
 @mixin button {
   @include flex;
 
-  border-radius: $border-radius-4;
-  font-weight: 600;
-  flex-shrink: 0;
-
+  & {
+    border-radius: $border-radius-4;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
 
   &:disabled {
     color: $neutral-300;
@@ -281,7 +282,10 @@
 }
 
 @mixin link-button-size($gap: $spacing-4,$font-size: null, $icon-size: 'sm') {
-  gap: $gap;
+
+  & {
+    gap: $gap;
+  }
 
   @if $font-size != null {
     @include font-size($font-size);

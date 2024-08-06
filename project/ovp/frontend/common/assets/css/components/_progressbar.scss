@@ -28,23 +28,27 @@
   &::-webkit-progress-value {
     @include z-index('float');
 
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    background-color: $info-300;
+    & {
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background-color: $info-300;
+    }
   }
 
   &-gage {
     @include z-index('float');
 
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    background-color: $info-300;
+    & {
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      background-color: $info-300;
+    }
   }
 
   // % 표기
