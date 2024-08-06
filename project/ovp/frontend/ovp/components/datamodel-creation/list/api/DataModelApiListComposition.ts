@@ -20,17 +20,17 @@ export function DataModelApiListComposition(
   emitBookmark: (value: string) => void,
   emitItemClick: (value: string) => void,
   emitDeleteItem: (value: string) => void,
-  emitSelectItem: (value: string) => void,
   emitFilterChange: (value: {}) => void,
   emitSortChange: (value: string) => void,
   emitSearchChange: (value: string) => void,
+  emitCheckItem: (value: string) => void,
 ): DataModelApiListCompositionImpl {
   const compos = DataModelListComposition(
     props,
     emitBookmark,
     emitItemClick,
     emitDeleteItem,
-    emitSelectItem,
+    emitCheckItem,
   );
 
   const listData: Ref<any[]> = ref([]);
@@ -44,24 +44,15 @@ export function DataModelApiListComposition(
     listData.value = props.data.map((item) => {
       const isSelected = isSelectedData(item);
       return {
-        ...item,
         label: item[props.labelKey],
         value: item[props.valueKey],
         isChecked: false, // checkbox 선택 여부
         idShowDetail: false, // 단일선택(아이템) 여부
         isShowContextMenu: false, // "복사" 컨텍스트 메뉴 클릭 여부
         isShowContextMenuBtn: false, // 컨텍스트 메뉴 버튼 클릭 여부
-        isShow: true, // 검색 처리
-        isSelected: isSelected,
+        isSelected: isSelected, // 이미 선택여부 확인
       };
     });
-  };
-
-  const selectedFilter = reactive<Record<string, any>>({}); // reactive로 변경
-  const setSelectedFilter: () => void = () => {
-    for (const key in props.filter) {
-      selectedFilter[key] = [];
-    }
   };
 
   /**
@@ -69,15 +60,14 @@ export function DataModelApiListComposition(
    */
   watchEffect(() => {
     setListData();
-    setSelectedFilter();
+    compos.setSearchFilter();
   });
-
-  const selectedSort: Ref<string> = ref("");
 
   /**
    * (이벤트) 정렬 변경
    * @param value
    */
+  const selectedSort: Ref<string> = ref("");
   const onChangeSort: (value: string) => void = (value) => {
     selectedSort.value = value;
     console.log("onChangeSort", selectedSort.value);
@@ -118,62 +108,32 @@ export function DataModelApiListComposition(
    * @param value
    */
   const onResetSearchFilter: () => void = () => {
-    compos.setSelectedFilter();
-    compos.searchLabel = "";
+    compos.setSearchFilter();
     selectedSort.value = "";
-    console.log(compos.searchLabel);
-    console.log(compos.selectedFilter);
-    console.log(compos.searchLabel);
-    // 변경 값 EMIT
+
     emitSearchChange(compos.searchLabel);
     emitFilterChange(compos.selectedFilter);
     emitSortChange(selectedSort);
   };
 
-  // const onChangeBookmark = (value: string) => {
-  //   emitBookmark(value);
-  // };
-  //
-  // const onClickDataModelItem = (value: string) => {
-  //   emitItemClick(value);
-  // };
-  //
-  // const onDeleteItem = (value: string) => {
-  //   emitDeleteItem(value);
-  // };
-  //
-  // const onSelectItem = (value: string) => {
-  //   emitSelectItem(value);
-  // };
-  //
-  // const onCheckItem = (value: string, checked: boolean) => {};
-
+  /**
+   * 검색/필터 결과에 따른 listData 길이 확인
+   */
   const checkShowListData: ComputedRef<boolean> = computed(() => {
     if (!listData.value || listData.value.length < 1) {
       return false;
     }
-    if (
-      _.every(listData.value, { isSelected: true }) ||
-      _.every(listData.value, { isShow: false })
-    ) {
-      return false;
-    }
-    return true;
+    return !_.every(listData.value, { isSelected: true });
   });
   return {
     ...props,
     ...compos,
     selectedSort,
+    checkShowListData,
     onSelectFilter,
     onSearchText,
     onResetSearchText,
     onResetSearchFilter,
     onChangeSort,
-    checkShowListData,
-    // onChangeBookmark,
-    // onClickDataModelItem,
-    // onDeleteItem,
-    // onSelectItem,
-    // onCheckItem,
   };
 }

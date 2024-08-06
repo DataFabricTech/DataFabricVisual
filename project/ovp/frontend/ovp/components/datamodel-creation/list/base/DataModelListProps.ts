@@ -7,9 +7,6 @@ export interface DataModelListProps {
   data: any[];
   sortList?: DataModelSort[];
   filter: any;
-  useSort?: boolean;
-  useInfinite?: boolean;
-  useLiveSearch?: boolean;
   isMulti?: boolean;
   useItemDeleteBtn?: boolean;
   valueKey: string;

@@ -10,7 +10,7 @@ export interface DataModelListCompositionImpl
   selectedFilter: Record<string, any>;
   searchLabel: Ref<string>;
   checkShowListData: ComputedRef<boolean>;
-  setSelectedFilter(): void;
+  setSearchFilter(): void;
 }
 
 export function DataModelListComposition(
@@ -18,7 +18,7 @@ export function DataModelListComposition(
   emitBookmark: (value: string) => void,
   emitItemClick: (value: string) => void,
   emitDeleteItem: (value: string) => void,
-  emitSelectItem: (value: string) => void,
+  emitCheckItem: (value: string) => void,
 ): DataModelListCompositionImpl {
   const listData: Ref<any[]> = ref([]);
   const setListData: () => void = () => {
@@ -36,11 +36,13 @@ export function DataModelListComposition(
     });
   };
 
+  const searchLabel: Ref<string> = ref("");
   const selectedFilter = reactive<Record<string, any>>({}); // reactive로 변경
-  const setSelectedFilter: () => void = () => {
+  const setSearchFilter: () => void = () => {
     for (const key in props.filter) {
       selectedFilter[key] = [];
     }
+    searchLabel.value = "";
   };
 
   /**
@@ -48,7 +50,7 @@ export function DataModelListComposition(
    */
   watchEffect(() => {
     setListData();
-    setSelectedFilter();
+    setSearchFilter();
   });
 
   /**
@@ -68,15 +70,13 @@ export function DataModelListComposition(
    * @param value
    */
   const onResetSearchFilter: () => void = () => {
-    setSelectedFilter();
-    searchLabel.value = "";
+    setSearchFilter();
     listData.value = listData.value.map((item) => {
       item.isShow = true;
       return item;
     });
   };
 
-  const searchLabel: Ref<string> = ref("");
   /**
    * (이벤트) 리스트 검색
    * @param value
@@ -186,11 +186,22 @@ export function DataModelListComposition(
     }));
   };
 
+  /**
+   * (이벤트) 북마크 변경 이벤트
+   *  - API 연동 필요
+   * @param value
+   */
   const onChangeBookmark = (value: string) => {
     emitBookmark(value);
   };
 
+  /**
+   * (이벤트) item 클릭 이벤트
+   * @param value
+   */
   const onClickDataModelItem = (value: string) => {
+    // 다른 클릭된 항목은 모두 초기화 처리
+
     listData.value = listData.value.map((el) => {
       return {
         ...el,
@@ -200,35 +211,46 @@ export function DataModelListComposition(
     emitItemClick(value);
   };
 
+  /**
+   * (이벤트) 선택 해제
+   * @param value
+   */
   const onDeleteItem = (value: string) => {
     emitDeleteItem(value);
   };
 
-  const onSelectItem = (value: string) => {
-    emitSelectItem(value);
-  };
-
+  /**
+   * (이벤트) item 선택
+   * @param value
+   * @param checked
+   */
   const onCheckItem = (value: string, checked: boolean) => {
     listData.value = listData.value.map((el) => {
       return {
         ...el,
-        isChecked: el[value] === value ? checked : el.isChecked,
+        isChecked: el[props.valueKey] === value ? checked : el.isChecked,
       };
     });
+    emitCheckItem(value);
   };
 
+  /**
+   * 검색/필터 결과에 따른 listData 길이 확인
+   */
   const checkShowListData: ComputedRef<boolean> = computed(() => {
     if (!listData.value || listData.value.length < 1) {
       return false;
     }
     return !_.every(listData.value, { isShow: false });
   });
+
   return {
     ...props,
     listData,
     searchLabel,
     selectedFilter,
-    setSelectedFilter,
+    checkShowListData,
+    setSearchFilter,
     onSelectFilter,
     onSearchText,
     onResetSearchText,
@@ -238,8 +260,6 @@ export function DataModelListComposition(
     onChangeBookmark,
     onClickDataModelItem,
     onDeleteItem,
-    onSelectItem,
     onCheckItem,
-    checkShowListData,
   };
 }

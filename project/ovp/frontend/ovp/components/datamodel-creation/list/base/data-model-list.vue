@@ -1,6 +1,7 @@
 <template>
   <div class="menu menu-data">
     <div class="menu-head">
+      <slot name="tab"></slot>
       <!--검색 -->
       <div class="h-group">
         <div class="search-input">
@@ -50,28 +51,20 @@
         </div>
       </div>
       <!-- TODO: 정렬기능 추후 개발-->
-      <select-box
-        class="select-sm w-full"
-        v-if="props.useSort"
-        :data="props.sortList"
-        label-key="label"
-        value-key="value"
-      ></select-box>
     </div>
     <ul class="menu-list" v-if="checkShowListData">
-      <template v-for="(item, idx) in listData">
+      <template v-for="(item, idx) in listData" :key="item.value + idx">
         <data-model-list-item
           v-if="item.isShow"
-          :key="item.value + idx"
+          :data="item"
           :is-multi="props.isMulti"
           :use-delete-btn="props.useItemDeleteBtn"
-          :data="item"
+          :list-type="props.listType"
           @context-menu-click="onShowContextMenu(item.value, $event)"
           @context-menu-btn-click="onShowContextMenuBtn(item.value, $event)"
           @bookmark-change="onChangeBookmark"
           @click="onClickDataModelItem"
           @delete="onDeleteItem"
-          @select="onSelectItem"
           @check="onCheckItem(item.value, $event)"
         ></data-model-list-item>
       </template>
@@ -88,7 +81,6 @@
 </template>
 
 <script setup lang="ts">
-import SelectBox from "@extends/select-box/SelectBox.vue";
 import DataModelListItem from "~/components/datamodel-creation/item/data-model-list-item.vue";
 import type { DataModelListProps } from "~/components/datamodel-creation/list/base/DataModelListProps";
 import { DataModelListComposition } from "~/components/datamodel-creation/list/base/DataModelListComposition";
@@ -98,22 +90,19 @@ const props = withDefaults(defineProps<DataModelListProps>(), {
   data: () => [],
   sortList: () => [],
   filter: () => {},
-  useSort: false,
-  useLiveSearch: true,
-  useInfinite: false,
   isMulti: false,
+  useItemDeleteBtn: false,
   valueKey: "id",
   labelKey: "title",
   noDataMsg: "데이터 모델이 없습니다.",
-  listType: "non-selected",
-  useItemDeleteBtn: false,
+  listType: "selected",
 });
 
 const emit = defineEmits<{
   (e: "delete", value: string): void;
-  (e: "select", value: string): void;
   (e: "bookmark-change", value: string): void;
   (e: "item-click", value: string): void;
+  (e: "item-check", value: []): void;
 }>();
 
 const emitBookmark = (value: string) => {
@@ -130,16 +119,16 @@ const emitDeleteItem = (value: string) => {
   console.log("onDeleteItem");
   emit("delete", value);
 };
-
-const emitSelectItem = (value: string) => {
-  console.log("onSelectItem");
-  emit("select", value);
+const emitItemCheck = (value: string) => {
+  console.log("emitItemCheck", value);
+  emit("item-check", value);
 };
 
 const {
   listData,
   searchLabel,
   selectedFilter,
+  checkShowListData,
   onSearchText,
   onSelectFilter,
   onResetSearchText,
@@ -149,13 +138,12 @@ const {
   onChangeBookmark,
   onClickDataModelItem,
   onDeleteItem,
-  onSelectItem,
-  checkShowListData,
+  onCheckItem,
 } = DataModelListComposition(
   props,
   emitBookmark,
   emitItemClick,
   emitDeleteItem,
-  emitSelectItem,
+  emitItemCheck,
 );
 </script>
