@@ -126,14 +126,14 @@ public class GlossaryController {
 
     /**
      * 데이터 모델 리스트
-     * @param name
+     * @param q
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/data-models")
-    public Object getDataModels(@RequestParam String name) throws Exception {
-        return glossaryService.getDataModels(name);
+    public Object getDataModels(@RequestParam String q) throws Exception {
+        return glossaryService.getDataModels(q);
     }
 
     /**

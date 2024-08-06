@@ -1,7 +1,8 @@
 import { defineStore } from "pinia";
 import { reactive, ref } from "vue";
 import type { Activity, Glossary, Term } from "~/type/glossary";
-import type { JsonPatchOperation, Tag } from "~/type/common";
+import type { JsonPatchOperation, PreviewData, Tag } from "~/type/common";
+import type { DataModel } from "~/components/common/resource-box/resource-box-common-props";
 
 export const useGlossaryStore = defineStore("glossary", () => {
   const { $api } = useNuxtApp();
@@ -13,6 +14,9 @@ export const useGlossaryStore = defineStore("glossary", () => {
   const term = reactive<Term>(<Term>{});
 
   const activities = reactive<Activity[]>([]);
+
+  const dataModels = reactive<DataModel[]>([]);
+  const dataModel = reactive<PreviewData>(<PreviewData>{});
 
   const tags = reactive<Tag[]>([]);
   const menuSearchTagsData = reactive<Tag[]>([]);
@@ -90,6 +94,13 @@ export const useGlossaryStore = defineStore("glossary", () => {
     disableEditTermModes();
   }
 
+  async function updateTerm(id: string, body: object[]) {
+    await $api(`/api/glossary/terms/${id}/assets/remove`, {
+      method: "PUT",
+      body: body,
+    });
+  }
+
   async function deleteTerm(id: string) {
     await $api(`/api/glossary/terms/${id}`, {
       method: "DELETE",
@@ -108,6 +119,33 @@ export const useGlossaryStore = defineStore("glossary", () => {
     const res = await $api(`/api/glossary/activities?entityLink=${entityLink}`);
     if (res.data !== null) {
       activities.splice(0, activities.length, ...res.data);
+    }
+  }
+
+  /**
+   * 데이터 모델 리스트
+   * @param name
+   * @param search
+   */
+  async function getDataModels(name: string, search?: string): Promise<void> {
+    // eslint-disable-next-line id-length
+    const q: string = search
+      ? `*${search}* AND (tags.tagFQN:"${name}")`
+      : `** AND (tags.tagFQN:"${name}")`;
+    const res = await $api(`/api/glossary/data-models?q=${q}`);
+    if (res.data !== null) {
+      dataModels.splice(0, dataModels.length, ...res.data);
+    }
+  }
+
+  /**
+   * 데이터 모델 상세
+   * @param fqn
+   */
+  async function getDataModel(fqn: string): Promise<void> {
+    const res = await $api(`/api/glossary/data-model?fqn=${fqn}`);
+    if (res.data !== null) {
+      Object.assign(dataModel, res.data);
     }
   }
 
@@ -178,6 +216,9 @@ export const useGlossaryStore = defineStore("glossary", () => {
 
     activities,
 
+    dataModels,
+    dataModel,
+
     tab,
     tags,
     menuSearchTagsData,
@@ -193,8 +234,12 @@ export const useGlossaryStore = defineStore("glossary", () => {
     getTerms,
     editTerm,
     deleteTerm,
+    updateTerm,
 
     getGlossaryActivities,
+
+    getDataModels,
+    getDataModel,
 
     changeTab,
     openEditTermComponent,

@@ -184,13 +184,13 @@ public class GlossaryService {
 
     /**
      * 데이터 모델 리스트
-     * @param name
+     * @param q
      * @return
      * @throws Exception
      */
-    public Object getDataModels(String name) throws Exception {
+    public Object getDataModels(String q) throws Exception {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("q", name);
+        queryParams.add("q", q);
         queryParams.add("index", "all");
 
         List<Map<String, ?>> hits = (List<Map<String, ?>>) ((Map<?, ?>) searchClient.getSearchList(queryParams).get("hits")).get("hits");
@@ -209,8 +209,10 @@ public class GlossaryService {
                 tmp.put("modelDesc", data.get("description"));
                 tmp.put("modelNm", data.get("name"));
 
-                Map<String, Object> ownerData = (Map<String, Object>) data.get("owner");
-                tmp.put("owner", ownerData.get("name"));
+                if(data.containsKey("owner") && data.get("owner") != null) {
+                    Map<String, Object> ownerData = (Map<String, Object>) data.get("owner");
+                    tmp.put("owner", ownerData.get("name"));
+                }
 
                 tmp.put("type", String.valueOf(data.get("tableType")));
                 tmp.put("serviceIcon", "serviceIcon");
