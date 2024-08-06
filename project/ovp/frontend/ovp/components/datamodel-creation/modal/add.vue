@@ -18,7 +18,6 @@
         <div class="data-add">
           <div class="transfer">
             <div class="transfer-box">
-              <h3>type: string || Emit : {{ currTab }}</h3>
               <Tab
                 class="h-full"
                 :data="$constants.DATAMODEL_CREATION.ADD.TAB"
@@ -84,8 +83,6 @@
                   ></data-model-accordian-list>
                 </template>
               </Tab>
-              <!-- 전체 탭 끝  -->
-              <!-- MY 탭 시작  -->
             </div>
             <div class="transfer-handle">
               <button class="button button-neutral-stroke">
@@ -110,7 +107,6 @@
               <data-model-list
                 :filter="filter"
                 :data="selectedModelList"
-                :sort-list="$constants.COMMON.SORT_FILTER"
                 label-key="modelNm"
                 value-key="id"
                 :use-item-delete-btn="true"
