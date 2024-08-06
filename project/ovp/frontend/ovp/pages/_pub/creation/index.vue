@@ -59,7 +59,7 @@
                     <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
                   </button>
                   <!-- TODO: [개발] 메뉴 버튼 클릭 시 드롭다운 -->
-                  <div class="dropdown" style="right: 0;">
+                  <div class="dropdown" style="right: 0; display: none;">
                     <ul class="dropdown-list">
                       <li class="dropdown-item">
                         <button class="dropdown-button">
@@ -73,6 +73,38 @@
                       </li>
                     </ul>
                   </div>
+                </div>
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">삭제</span>
+                  <svg-icon class="svg-icon" name="close"></svg-icon>
+                </button>
+              </div>
+            </li>
+            <li class="menu-item">
+              <div class="checkbox">
+                <input
+                  type="checkbox"
+                  class="checkbox-input"
+                />
+                <label class="checkbox-label">
+                  <span class="hidden-text">label</span>
+                </label>
+              </div>
+              <button class="menu-button">
+                <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                <span class="menu-text">sampledata</span>
+                <span class="menu-subtext">(홍길동)</span>
+              </button>
+              <div class="menu-button-group">
+                <button class="button button-neutral-ghost button-sm">
+                  <span class="hidden-text">북마크</span>
+                  <svg-icon class="svg-icon" name="tag"></svg-icon>
+                </button>
+                <div class="relative">
+                  <button class="button button-neutral-ghost button-sm">
+                    <span class="hidden-text">메뉴보기</span>
+                    <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
+                  </button>
                 </div>
                 <button class="button button-neutral-ghost button-sm">
                   <span class="hidden-text">삭제</span>

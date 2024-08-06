@@ -20,6 +20,7 @@
             <div class="transfer-box">
               <h3>type: string || Emit : {{ currTab }}</h3>
               <Tab
+                class="h-full"
                 :data="$constants.DATAMODEL_CREATION.ADD.TAB"
                 label-key="label"
                 value-key="value"
@@ -30,6 +31,7 @@
                 <template #all>
                   <!-- 전체 탭 시작  -->
                   <data-model-api-list
+                    class="h-full"
                     :filter="filter"
                     :data="dataModelList"
                     :sort-list="$constants.COMMON.SORT_FILTER"

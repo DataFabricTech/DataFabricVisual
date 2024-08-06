@@ -3,6 +3,39 @@
     class="menu-item"
     :class="props.data.idShowDetail ? ' is-menu-item-selected' : ''"
   >
+
+    <!-- TODO: [개발] 체크박스 + menu-button 분리 퍼블리싱  -->
+<!--    <div class="checkbox">-->
+<!--      <input-->
+<!--        type="checkbox"-->
+<!--        class="checkbox-input"-->
+<!--      />-->
+<!--      <label class="checkbox-label">-->
+<!--        <span class="hidden-text">label</span>-->
+<!--      </label>-->
+<!--    </div>-->
+<!--    <button class="menu-button">-->
+<!--      <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>-->
+<!--      <span class="menu-text">sampledata</span>-->
+<!--      <span class="menu-subtext">(홍길동)</span>-->
+<!--    </button>-->
+<!--    <div class="menu-button-group">-->
+<!--      <button class="button button-neutral-ghost button-sm">-->
+<!--        <span class="hidden-text">북마크</span>-->
+<!--        <svg-icon class="svg-icon" name="tag"></svg-icon>-->
+<!--      </button>-->
+<!--      <div class="relative">-->
+<!--        <button class="button button-neutral-ghost button-sm">-->
+<!--          <span class="hidden-text">메뉴보기</span>-->
+<!--          <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>-->
+<!--        </button>-->
+<!--      </div>-->
+<!--      <button class="button button-neutral-ghost button-sm">-->
+<!--        <span class="hidden-text">삭제</span>-->
+<!--        <svg-icon class="svg-icon" name="close"></svg-icon>-->
+<!--      </button>-->
+<!--    </div>-->
+
     <div
       class="checkbox"
       v-if="props.isMulti"
@@ -115,7 +148,7 @@ const props = defineProps({
   data: { type: Object, default: {} },
   isMulti: { type: Boolean, default: false },
   listType: { type: String, default: "selected" },
-  useDeleteBtn: { type: Boolean, default: false },
+  useDeleteBtn: { type: Boolean, default: false }
 });
 
 const emit = defineEmits<{

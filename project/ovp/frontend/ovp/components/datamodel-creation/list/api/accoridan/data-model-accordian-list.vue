@@ -1,31 +1,33 @@
 <template>
   <div class="accordion-group">
-    <div class="search-input">
-      <label class="hidden-text" for="data-menu-search">데이터 모델 검색</label>
-      <input
-        id="data-menu-search"
-        class="text-input"
-        :value="searchLabel"
-        @keydown.enter="onSearchText($event.target.value)"
-        placeholder="검색어를 입력하세요"
-      />
-      <svg-icon class="text-input-icon" name="search"></svg-icon>
+    <div class="h-group">
+      <div class="search-input">
+        <label class="hidden-text" for="data-menu-search">데이터 모델 검색</label>
+        <input
+          id="data-menu-search"
+          class="text-input"
+          :value="searchLabel"
+          @keydown.enter="onSearchText($event.target.value)"
+          placeholder="검색어를 입력하세요"
+        />
+        <svg-icon class="text-input-icon" name="search"></svg-icon>
+        <button
+          class="search-input-action-button button button-neutral-ghost button-sm"
+          type="button"
+          @click="onResetSearchText"
+        >
+          <span class="hidden-text">지우기</span>
+          <svg-icon class="button-icon" name="close"></svg-icon>
+        </button>
+      </div>
       <button
-        class="search-input-action-button button button-neutral-ghost button-sm"
-        type="button"
-        @click="onResetSearchText"
+        class="button button-neutral-ghost button-lg"
+        @click="onResetSearchFilter"
       >
-        <span class="hidden-text">지우기</span>
-        <svg-icon class="button-icon" name="close"></svg-icon>
+        <span class="hidden-text">리셋</span>
+        <svg-icon class="svg-icon" name="reset"></svg-icon>
       </button>
     </div>
-    <button
-      class="button button-neutral-ghost button-lg"
-      @click="onResetSearchFilter"
-    >
-      <span class="hidden-text">리셋</span>
-      <svg-icon class="svg-icon" name="reset"></svg-icon>
-    </button>
     <div class="accordion-list">
       <Accordion
         v-for="(item, keyName) in listData"
