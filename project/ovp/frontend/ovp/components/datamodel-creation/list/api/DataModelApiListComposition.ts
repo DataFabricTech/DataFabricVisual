@@ -3,10 +3,11 @@ import {
   DataModelListCompositionImpl,
 } from "~/components/datamodel-creation/list/base/DataModelListComposition";
 import type { DataModelApiListProps } from "~/components/datamodel-creation/list/api/DataModelApiListProps";
-import { ref, Ref } from "vue";
+import { ComputedRef, ref, Ref } from "vue";
 import _ from "lodash";
 
-interface DataModelApiListCompositionImpl extends DataModelListCompositionImpl {
+export interface DataModelApiListCompositionImpl
+  extends DataModelListCompositionImpl {
   listData: Ref<any[]>;
   selectedFilter: Record<string, any>;
   searchLabel: Ref<string>;
@@ -35,15 +36,13 @@ export function DataModelApiListComposition(
   const listData: Ref<any[]> = ref([]);
   const isSelectedData: (item: any) => boolean = (item) => {
     const itemId = item[props.valueKey];
-    console.log(itemId, props.selectedItems);
     const findItem = _.find(props.selectedItems, { [props.valueKey]: itemId });
     return !!findItem;
   };
+
   const setListData: () => void = () => {
-    //
     listData.value = props.data.map((item) => {
       const isSelected = isSelectedData(item);
-      console.log(isSelected);
       return {
         ...item,
         label: item[props.labelKey],
@@ -149,6 +148,18 @@ export function DataModelApiListComposition(
   //
   // const onCheckItem = (value: string, checked: boolean) => {};
 
+  const checkShowListData: ComputedRef<boolean> = computed(() => {
+    if (!listData.value || listData.value.length < 1) {
+      return false;
+    }
+    if (
+      _.every(listData.value, { isSelected: true }) ||
+      _.every(listData.value, { isShow: false })
+    ) {
+      return false;
+    }
+    return true;
+  });
   return {
     ...props,
     ...compos,
@@ -158,6 +169,7 @@ export function DataModelApiListComposition(
     onResetSearchText,
     onResetSearchFilter,
     onChangeSort,
+    checkShowListData,
     // onChangeBookmark,
     // onClickDataModelItem,
     // onDeleteItem,

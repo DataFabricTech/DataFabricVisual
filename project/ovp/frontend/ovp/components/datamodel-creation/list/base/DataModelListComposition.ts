@@ -1,4 +1,4 @@
-import { ref, Ref } from "vue";
+import { ComputedRef, ref, Ref } from "vue";
 import type { DataModelListProps } from "~/components/datamodel-creation/list/base/DataModelListProps";
 import type { DataModelListEvent } from "~/components/datamodel-creation/list/base/DataModelListEvent.interface";
 import _ from "lodash";
@@ -9,6 +9,7 @@ export interface DataModelListCompositionImpl
   listData: Ref<any[]>;
   selectedFilter: Record<string, any>;
   searchLabel: Ref<string>;
+  checkShowListData: ComputedRef<boolean>;
   setSelectedFilter(): void;
 }
 
@@ -216,6 +217,12 @@ export function DataModelListComposition(
     });
   };
 
+  const checkShowListData: ComputedRef<boolean> = computed(() => {
+    if (!listData.value || listData.value.length < 1) {
+      return false;
+    }
+    return !_.every(listData.value, { isShow: false });
+  });
   return {
     ...props,
     listData,
@@ -233,5 +240,6 @@ export function DataModelListComposition(
     onDeleteItem,
     onSelectItem,
     onCheckItem,
+    checkShowListData,
   };
 }

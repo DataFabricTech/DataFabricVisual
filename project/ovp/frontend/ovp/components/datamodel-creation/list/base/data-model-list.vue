@@ -58,7 +58,7 @@
         value-key="value"
       ></select-box>
     </div>
-    <ul class="menu-list" v-if="listData && listData.length > 1">
+    <ul class="menu-list" v-if="checkShowListData">
       <template v-for="(item, idx) in listData">
         <data-model-list-item
           v-if="item.isShow"
@@ -150,6 +150,7 @@ const {
   onClickDataModelItem,
   onDeleteItem,
   onSelectItem,
+  checkShowListData,
 } = DataModelListComposition(
   props,
   emitBookmark,

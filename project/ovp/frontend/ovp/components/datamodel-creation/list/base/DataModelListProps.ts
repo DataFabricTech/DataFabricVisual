@@ -10,7 +10,6 @@ export interface DataModelListProps {
   useSort?: boolean;
   useInfinite?: boolean;
   useLiveSearch?: boolean;
-  initSelected?: boolean;
   isMulti?: boolean;
   useItemDeleteBtn?: boolean;
   valueKey: string;

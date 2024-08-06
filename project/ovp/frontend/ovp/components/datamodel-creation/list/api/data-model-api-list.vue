@@ -62,7 +62,7 @@
       ></select-box>
     </div>
     <!-- TODO: 인피니티 스크롤 -->
-    <ul class="menu-list" v-if="listData && listData.length > 1">
+    <ul class="menu-list" v-if="checkShowListData">
       <template v-for="(item, idx) in listData">
         <data-model-list-item
           v-if="!item.isSelected && item.isShow"
@@ -165,6 +165,7 @@ const {
   onDeleteItem,
   onSelectItem,
   onChangeSort,
+  checkShowListData,
 } = DataModelApiListComposition(
   props,
   emitBookmark,
