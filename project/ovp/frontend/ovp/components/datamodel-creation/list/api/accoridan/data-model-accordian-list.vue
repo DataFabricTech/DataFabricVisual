@@ -30,7 +30,7 @@
     </div>
     <div class="accordion-list">
       <Accordion
-        v-for="(item, keyName) in listData"
+        v-for="(item, keyName, idx) in listData"
         :key="item[props.valueKey]"
       >
         <template #title>
@@ -46,17 +46,15 @@
                   :is-multi="props.isMulti"
                   :use-delete-btn="props.useItemDeleteBtn"
                   :data="itemValue"
-                  @context-menu-click="
-                    onShowContextMenu(itemValue.value, $event)
-                  "
+                  @context-menu-click="onShowContextMenu(keyName, $event)"
                   @context-menu-btn-click="
-                    onShowContextMenuBtn(itemValue.value, $event)
+                    onShowContextMenuBtn(keyName, $event)
                   "
-                  @bookmark-change="onChangeBookmark"
+                  @bookmark-change="onChangeBookmark(keyName, $event)"
                   @click="onClickDataModelItem"
                   @delete="onDeleteItem"
                   @select="onSelectItem"
-                  @check="onCheckItem(itemValuevalue, $event)"
+                  @check="onCheckItem(keyName, $event)"
                 ></data-model-list-item>
               </template>
             </ul>
@@ -97,8 +95,6 @@ const emit = defineEmits<{
   (e: "select", value: string): void;
   (e: "item-click", value: string): void;
   (e: "bookmark-change", value: string): void;
-  (e: "filter-change", value: string): void;
-  (e: "sort-change", value: string): void;
   (e: "search-change", value: string): void;
 }>();
 
@@ -117,29 +113,28 @@ const emitDeleteItem = (value: string) => {
 const emitSelectItem = (value: string) => {
   emit("select", value);
 };
-const emitFilterChange = (value: {}) => {
-  emit("filter-change", value);
-};
-const emitSortChange = (value: string) => {
-  emit("sort-change", value);
-};
 const emitSearchChange = (value: string) => {
   emit("search-change", value);
 };
 const {
   listData,
   searchLabel,
+  checkShowListData,
   onSearchText,
   onResetSearchText,
-  checkShowListData,
+  onResetSearchFilter,
+  onShowContextMenu,
+  onShowContextMenuBtn,
+  onChangeBookmark,
+  onClickDataModelItem,
+  onDeleteItem,
+  onSelectItem,
 } = DataModelAccordianListComposition(
   props,
   emitBookmark,
   emitItemClick,
   emitDeleteItem,
   emitSelectItem,
-  emitFilterChange,
-  emitSortChange,
   emitSearchChange,
 );
 </script>

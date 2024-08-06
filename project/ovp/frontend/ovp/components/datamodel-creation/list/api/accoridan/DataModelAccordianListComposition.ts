@@ -1,8 +1,9 @@
-import { ComputedRef, ref, Ref } from "vue";
+import { ref, Ref } from "vue";
 import _ from "lodash";
 import type { DataModelAccordianListProps } from "~/components/datamodel-creation/list/api/accoridan/DataModelAccoridanListProps";
+import type { DataModelListEvent } from "~/components/datamodel-creation/list/base/DataModelListEvent.interface";
 
-interface DataModelAccordianListCompositionImpl {
+interface DataModelAccordianListCompositionImpl extends DataModelListEvent {
   listData: Record<string, any[]>;
   searchLabel: Ref<string>;
   checkShowListData(value: any[]): boolean;
@@ -16,8 +17,6 @@ export function DataModelAccordianListComposition(
   emitItemClick: (value: string) => void,
   emitDeleteItem: (value: string) => void,
   emitSelectItem: (value: string) => void,
-  emitFilterChange: (value: {}) => void,
-  emitSortChange: (value: string) => void,
   emitSearchChange: (value: string) => void,
 ): DataModelAccordianListCompositionImpl {
   const isSelectedData: (item: any) => boolean = (item) => {
@@ -74,6 +73,32 @@ export function DataModelAccordianListComposition(
     emitSearchChange(searchLabel.value);
   };
 
+  /**
+   (이벤트) Context-menu 제어
+   * @param itemValue
+   * @param checked
+   */
+  const onShowContextMenu = (itemValue: string, checked: boolean | null) => {
+    listData.value = listData.value.map((el) => ({
+      ...el,
+      isShowContextMenu:
+        checked === null ? false : el[props.valueKey] === itemValue,
+    }));
+  };
+
+  /**
+   * (이벤트) Context-menu 제어
+   * @param itemValue
+   * @param checked
+   */
+  const onShowContextMenuBtn = (itemValue: string, checked: boolean | null) => {
+    listData.value = listData.value.map((el) => ({
+      ...el,
+      isShowContextMenuBtn:
+        checked === null ? false : el[props.valueKey] === itemValue,
+    }));
+  };
+
   const checkShowListData: (item: any[]) => boolean = (item) => {
     if (!item || item.length < 1) {
       return false;
@@ -86,30 +111,41 @@ export function DataModelAccordianListComposition(
     }
     return true;
   };
-  // const onChangeBookmark = (value: string) => {
-  //   emitBookmark(value);
-  // };
-  //
-  // const onClickDataModelItem = (value: string) => {
-  //   emitItemClick(value);
-  // };
-  //
-  // const onDeleteItem = (value: string) => {
-  //   emitDeleteItem(value);
-  // };
-  //
-  // const onSelectItem = (value: string) => {
-  //   emitSelectItem(value);
-  // };
-  //
-  // const onCheckItem = (value: string, checked: boolean) => {};
+  const onChangeBookmark = (value: string) => {
+    emitBookmark(value);
+  };
+
+  const onClickDataModelItem = (value: string) => {
+    emitItemClick(value);
+  };
+
+  const onDeleteItem = (value: string) => {
+    emitDeleteItem(value);
+  };
+
+  const onSelectItem = (value: string) => {
+    emitSelectItem(value);
+  };
+
+  const onCheckItem = (value: string, checked: boolean) => {};
+  const onResetSearchFilter: () => void = () => {};
+  const onSelectFilter: (filterKey: string, value: string) => void = () => {};
 
   return {
     ...props,
     listData,
     searchLabel,
-    onSearchText,
-    onResetSearchText,
     checkShowListData,
+    onSearchText,
+    onSelectFilter,
+    onResetSearchFilter,
+    onResetSearchText,
+    onShowContextMenu,
+    onShowContextMenuBtn,
+    onChangeBookmark,
+    onClickDataModelItem,
+    onDeleteItem,
+    onSelectItem,
+    onCheckItem,
   };
 }
