@@ -40,18 +40,18 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-        log.debug("JwtFilter doFilterInternal");
         if (!shouldNotFilter(request)) {
             try {
                 // Token 확인
                 String accessToken = token.getAccessTokenByRequest(request);
 
                 if (StringUtils.hasText(accessToken) && !token.isExpiredToken(accessToken)) {
-                    token.deleteTokens(request, response);
                     // Spring Security 인증 처리
                     var authentication = token.getAuthentication(accessToken);
                     log.info("Spring Security token 처리 {}", authentication);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    token.deleteTokens(request, response);
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());
