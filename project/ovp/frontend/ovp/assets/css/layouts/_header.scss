@@ -31,9 +31,8 @@
     width: 32px;
     height: 32px;
     border-radius: $border-radius-round;
-
-    // 임시스타일
-    background: $primary-300;
+    background: $primary-500;
+    color: $neutral-0;
   }
 
   &-img {
