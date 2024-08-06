@@ -12,7 +12,7 @@
           <span class="title">카테고리 목록</span>
           <button
             class="button button-secondary-stroke"
-            @click="showModal = true"
+            @click="showCategoryAddModal"
           >
             카테고리 추가
           </button>
@@ -136,7 +136,7 @@
                 <div class="h-group ml-auto gap-2">
                   <button
                     class="button button-secondary-stroke"
-                    @click="showModalChange = true"
+                    @click="showCategoryChangeModal"
                   >
                     카테고리 변경
                   </button>
@@ -269,190 +269,39 @@
       </div>
     </div>
   </div>
-  <!--  TODO: Modal 카테고리 추가-->
-  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModal">
-    <div class="modal modal-padding-16" style="width: 480px">
-      <div class="modal-head">
-        <div class="modal-head-text">
-          <span class="modal-head-title">카테고리 추가</span>
-        </div>
-        <button
-          class="button link-button button-sm"
-          type="button"
-          @click="showModal = false"
-        >
-          <span class="hidden-text">닫기</span>
-          <svg-icon class="button-icon" name="close"></svg-icon>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="form form-lg">
-          <div class="form-body">
-            <div class="form-item">
-              <label for="data-model-save-name" class="form-label">
-                이름
-                <span class="required">*</span>
-              </label>
-              <div class="form-detail">
-                <input
-                  id="data-model-save-name"
-                  class="text-input text-input-lg"
-                  placeholder="이름을 입력하세요."
-                />
-                <div class="notification notification-sm notification-error">
-                  <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">이름을 입력하세요.</p>
-                </div>
-              </div>
-            </div>
-            <div class="form-item">
-              <label class="form-label" for="data-model-save-description">
-                설명
-                <span class="required">*</span>
-              </label>
-              <div class="form-detail">
-                <textarea
-                  id="data-model-save-description"
-                  class="textarea h-28"
-                  placeholder="설명을 입력하세요."
-                ></textarea>
-                <div class="notification notification-sm notification-error">
-                  <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">설명을 입력하세요.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-foot">
-        <div class="modal-foot-group">
-          <button
-            class="button button-neutral-ghost button-lg"
-            @click="showModal = false"
-          >
-            취소
-          </button>
-          <button class="button button-primary button-lg">저장</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--  TODO: Modal 카테고리 변경-->
-  <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalChange">
-    <div class="modal modal-padding-16" style="width: 350px; height: 450px">
-      <div class="modal-head">
-        <div class="modal-head-text">
-          <span class="modal-head-title">카테고리 변경</span>
-        </div>
-        <button
-          class="button link-button button-sm"
-          type="button"
-          @click="showModalChange = false"
-        >
-          <span class="hidden-text">닫기</span>
-          <svg-icon class="button-icon" name="close"></svg-icon>
-        </button>
-      </div>
-      <div class="modal-body">
-        <tree-vue
-          :items="items"
-          :isCheckable="false"
-          :hideGuideLines="false"
-          :firExpandAll="true"
-          :show-open-all-btn="true"
-          :show-close-all-btn="true"
-          :use-draggable="true"
-          mode="view"
-          :dropValidator="dropValidator"
-          @onItemSelected="onNodeClicked"
-          @addSibling="addSibling"
-          @addChild="addChild"
-        />
-      </div>
-      <div class="modal-foot">
-        <div class="modal-foot-group">
-          <button
-            class="button button-neutral-ghost button-lg"
-            @click="showModalChange = false"
-          >
-            취소
-          </button>
-          <button class="button button-primary button-lg">선택</button>
-        </div>
-      </div>
-    </div>
-  </div>
+  <CategoryAddModal :modal-id="CATEGORY_ADD_MODAL_ID"></CategoryAddModal>
+  <CategoryChangeModal
+    :modal-id="CATEGORY_CHANGE_MODAL_ID"
+  ></CategoryChangeModal>
 </template>
 
 <script setup lang="ts">
-import TreeVue from "@extends/tree/Tree.vue";
-import type { TreeViewItem } from "@extends/tree/TreeProps";
-
 import { storeToRefs } from "pinia";
+import { useNuxtApp } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import TreeVue from "@extends/tree/Tree.vue";
+import type { TreeViewItem } from "@extends/tree/TreeProps";
+import CategoryAddModal from "~/components/govern/category/category-add-modal.vue";
+import CategoryChangeModal from "~/components/govern/category/category-change-modal.vue"; // CategoryChangeModal 컴포넌트 import
+
+const { $vfm } = useNuxtApp();
 const categoryStore = useGovernCategoryStore();
 
 const {
   getCategories,
   addModelList,
-  getModelList,
-  setSelectedNode,
-  addCategory,
   editCategory,
-  moveCategory,
+  onNodeClicked,
   deleteCategory,
+  dropValidator,
+  addSibling,
+  addChild,
 } = categoryStore;
-const { categories, modelList } = storeToRefs(categoryStore);
+const { selectedNode, categories, modelList } = storeToRefs(categoryStore);
 
-const showModal = ref(false);
-const showModalChange = ref(false);
-
-const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
-  id: "",
-  name: "",
-  desc: "",
-  order: 0,
-  parentId: "",
-  expanded: false,
-  selected: false,
-  disabled: false,
-  children: [],
-});
-const onNodeClicked = (node: TreeViewItem) => {
-  selectedNode.value = node;
-
-  // 선택한 노드정보 저장
-  setSelectedNode(node);
-
-  // 선택한 노드 기준 모델 목록을 조회한다.
-  setScrollOptions(0);
-  getModelList();
-};
-const addSibling = (newNode: TreeViewItem) => {
-  // 형제 노드 추가
-  // TODO : modal 창 띄워서 노드 추가 API  호출 (newNode 에 id(uuid), parentId 포함되어있음)
-  console.log(`형제노드 추가 ${JSON.stringify(newNode)}`);
-  addNewCategory(newNode);
-};
-const addChild = (newNode: TreeViewItem) => {
-  // 자식 노드 추가
-  // TODO : modal 창 띄워서 노드 추가 API  호출
-  console.log(`자식노드 추가 ${JSON.stringify(newNode)}`);
-  addNewCategory(newNode);
-};
-// TODO : [개발] 카테고리 등록 예 (등록, 수정 같은 코드 사용합니다.)
-const addNewCategory = (newNode: TreeViewItem) => {
-  const addNodeParam: TreeViewItem = {
-    id: "f6a91e15-18c1-4920-ab2b-dd20a68f75bc",
-    parentId: selectedNode.value.id,
-    name: "카테고리 01 - 01",
-    desc: "카테고리 설명이여요",
-    children: [],
-  };
-  addCategory(addNodeParam);
-};
+const CATEGORY_ADD_MODAL_ID = "category-add-modal";
+const CATEGORY_CHANGE_MODAL_ID = "category-change-modal";
 
 const _editCategory = () => {
   const editNodeParam: TreeViewItem = {
@@ -470,37 +319,6 @@ const _deleteCategory = () => {
   deleteCategory(selectedNode.value.id);
 };
 
-let nodeMoved: Ref<boolean> = ref(false);
-let dropMsg: Ref<any> = ref(null);
-watch(
-  () => nodeMoved.value,
-  (newVal) => {
-    if (newVal) {
-      if (dropMsg.value !== null) {
-        alert(dropMsg.value);
-      }
-      getCategories();
-    }
-    nodeMoved.value = false;
-    dropMsg.value = null;
-  },
-);
-
-const dropValidator = async (
-  dropNode: TreeViewItem,
-  targetNode: TreeViewItem,
-): Promise<boolean> => {
-  // 조건 처리 backend 에서 진행
-  const resultMsg = await moveCategory(dropNode.id, targetNode.id);
-
-  dropMsg.value = resultMsg ? null : "이동이 불가 합니다.";
-  nodeMoved.value = true;
-
-  // tree lib가 async-await 처리를 지원하지 않기 때문에 여기서는 true 로 던지고,
-  // backend 동작이 끝나면 그때 결과에 따라 watch 항목에서 alert 처리, 목록을 갱신 or 유지 한다
-  return true;
-};
-
 const previewClick = async (data: object) => {
   console.log("previewClick");
 };
@@ -514,8 +332,15 @@ const checked = (checkedList: any[]) => {
 
 await getCategories();
 
-const { scrollTrigger, setScrollOptions } =
-  useIntersectionObserver(addModelList);
+const { scrollTrigger } = useIntersectionObserver(addModelList);
+
+const showCategoryAddModal = () => {
+  $vfm.open(CATEGORY_ADD_MODAL_ID);
+};
+
+const showCategoryChangeModal = () => {
+  $vfm.open(CATEGORY_CHANGE_MODAL_ID);
+};
 </script>
 
 <style scoped></style>
