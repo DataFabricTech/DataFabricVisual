@@ -21,6 +21,7 @@ export const useCreationStore = defineStore("creation", () => {
   const excuteResultErrMsg = ref("");
 
   const modelList = ref([]);
+  const myModelList = ref({});
   const modelListCnt = ref(0);
   const selectedModelList = ref([]);
   const dataModelFilter = ref({});
@@ -36,6 +37,9 @@ export const useCreationStore = defineStore("creation", () => {
     console.log("modelListCnt: ", modelListCnt.value);
   };
 
+  const setMyModelList = async () => {
+    myModelList.value = DataModelSample.my_sampleList;
+  };
   const setSelectedModelList = async () => {
     selectedModelList.value = [
       {
@@ -50,6 +54,34 @@ export const useCreationStore = defineStore("creation", () => {
         firModelNm: "sampledata_chart_02",
         category: "",
         bookmarked: true,
+        tags: [],
+      },
+      {
+        owner: "",
+        fqn: "vdap.was_v2.was_v2.was_login_lock",
+        depth: ["vdap", "was_v2", "was_v2", "was_login_lock"],
+        serviceIcon: "",
+        modelNm: "was_login_lock",
+        modelDesc: null,
+        id: "40be78e5-fdc4-43cf-9d43-14b7196ec4eb",
+        type: "table",
+        firModelNm: "was_login_lock",
+        category: "",
+        bookmarked: false,
+        tags: [],
+      },
+      {
+        owner: "",
+        fqn: "vdap.was_v2.was_v2.was_access_rights",
+        depth: ["vdap", "was_v2", "was_v2", "was_access_rights"],
+        serviceIcon: "",
+        modelNm: "was_access_rights",
+        modelDesc: null,
+        id: "425a6505-df66-4abb-a6ae-ce1d45459aee",
+        type: "table",
+        firModelNm: "was_access_rights",
+        category: "",
+        bookmarked: false,
         tags: [],
       },
       {
@@ -122,6 +154,7 @@ export const useCreationStore = defineStore("creation", () => {
 
   return {
     modelList,
+    myModelList,
     selectedModelList,
     modelListCnt,
     query,
@@ -134,6 +167,7 @@ export const useCreationStore = defineStore("creation", () => {
     dataModelFilter,
     setDataModelFilter,
     setSelectedModelList,
+    setMyModelList,
     setDataModelList,
     deleteDataModel,
   };
