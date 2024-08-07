@@ -1,15 +1,26 @@
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 import { usePagingStore } from "~/store/common/paging";
 import _ from "lodash";
+import { ref } from "vue";
 
 export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const { $api } = useNuxtApp();
   const pagingStore = usePagingStore();
   const { from, size } = storeToRefs(pagingStore);
 
-  const categories = ref<TreeViewItem>();
+  const categories: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
+  const isCategoriesNoData = ref(false);
   const modelList: Ref<any[]> = ref([]);
+  const modelIdList = ref([]);
+  const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
   let selectedNode: any = null;
+  const previewData: Ref<any> = ref({
+    modelInfo: {
+      model: {
+        name: "",
+      },
+    },
+  });
 
   // METHODS
   const getCategories = async () => {
@@ -20,6 +31,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
      * root node 는 화면에 표시하지 않기 때문에 rootNode.children 만 categories 에 저장.
      */
     categories.value = data.children;
+    isCategoriesNoData.value = categories.value.length === 0;
   };
   const getModelListQuery = (id: string) => {
     // TODO : [개발] 검색어 조건 여기 추가.
@@ -68,7 +80,8 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     $api("/api/category", {
       method: method,
       body: node,
-    }).then(() => {
+    }).then((res: any) => {
+      console.log("insertOrEditAPI의 res", res);
       getCategories();
     });
   };
@@ -83,7 +96,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     return data;
   };
   const deleteCategory = async (nodeId: string) => {
-    const { data } = await $api(`/api/category`, {
+    await $api(`/api/category`, {
       method: "delete",
       body: {
         id: nodeId,
@@ -93,10 +106,25 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     alert("삭제 되었습니다.");
     getCategories();
   };
+  const setModelIdList = () => {
+    for (const element of modelList.value) {
+      modelIdList.value.push(element.id);
+    }
+  };
+
+  // preview
+  const getPreviewData = async (fqn: string) => {
+    const data: any = await $api(`/api/search/preview/${fqn}`);
+    previewData.value = data.data;
+  };
 
   return {
     categories,
     modelList,
+    isCategoriesNoData,
+    modelIdList,
+    previewData,
+    isBoxSelectedStyle,
     getCategories,
     addModelList,
     getModelList,
@@ -105,5 +133,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     editCategory,
     moveCategory,
     deleteCategory,
+    setModelIdList,
+    getPreviewData,
   };
 });

@@ -19,8 +19,13 @@
     font-weight: 600;
   }
 
-  &-desc + .button {
-    display: inline-flex;
-    vertical-align: top;
+  &-desc {
+    display: inline;
+    vertical-align: middle;
+
+    & + .button {
+      display: inline;
+      vertical-align: middle;
+    }
   }
 }
