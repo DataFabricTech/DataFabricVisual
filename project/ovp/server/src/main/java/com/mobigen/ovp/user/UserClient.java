@@ -4,6 +4,7 @@ import com.mobigen.ovp.user.dto.UserInfoDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -16,4 +17,7 @@ public interface UserClient {
 
     @GetMapping("/users/loggedInUser")
     UserInfoDTO getUserInfo() throws Exception;
+
+    @GetMapping("/users/{id}")
+    Map<String, Object> getUserFollows(@PathVariable("id") String id, @RequestParam("fields") String fields);
 }

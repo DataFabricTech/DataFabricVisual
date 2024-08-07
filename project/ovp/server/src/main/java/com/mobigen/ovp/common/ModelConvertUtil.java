@@ -46,12 +46,14 @@ public class ModelConvertUtil {
     public Map<String, Object> convertSourceDataOne(String index, Map<String, Object> source) {
         Map<String, Object> modifiedSource = new HashMap<>();
 
-        modifiedSource.put("type", source.get("serviceType").toString().toLowerCase().equals("trino") ? "model" : index);
+        String serviceType = source.get("serviceType") != null ? source.get("serviceType").toString().toLowerCase() : "";
+        modifiedSource.put("type", "trino".equals(serviceType) ? "model" : index);
 
         modifiedSource.put("id", source.get("id"));
         // TODO : ICON 처리 완료되면 아래 코드 수정 필요
         modifiedSource.put("serviceIcon", "");
-        modifiedSource.put("depth", source.get("fullyQualifiedName").toString().split("\\."));
+
+        modifiedSource.put("depth", source.get("fullyQualifiedName") != null ? source.get("fullyQualifiedName").toString().split("\\.") : new String[]{});
         modifiedSource.put("firModelNm", source.get("displayName"));
         modifiedSource.put("modelNm", source.get("name"));
         modifiedSource.put("modelDesc", source.get("description"));
