@@ -5,6 +5,8 @@ import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.glossary.client.GlossaryClient;
 import com.mobigen.ovp.glossary.client.dto.common.Tag;
+import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
+import com.mobigen.ovp.glossary.client.dto.TermDto;
 import com.mobigen.ovp.glossary.client.dto.glossary.Glossary;
 import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivity;
 import com.mobigen.ovp.glossary.client.dto.terms.Term;
@@ -33,6 +35,10 @@ public class GlossaryService {
     private final GlossaryClient glossaryClient;
     private final SearchClient searchClient;
     private final TablesClient tablesClient;
+
+    public Object createGlossary(GlossaryDto dto) {
+        return glossaryClient.createGlossary(dto);
+    }
 
     /**
      * 용어 사전 리스트
@@ -72,6 +78,15 @@ public class GlossaryService {
         } else {
             throw new Exception();
         }
+    }
+
+    /**
+     * 용어 추가
+     * @param dto
+     * @return
+     */
+    public Object createTerm(TermDto dto) {
+        return glossaryClient.createTerms(dto);
     }
 
     /**
