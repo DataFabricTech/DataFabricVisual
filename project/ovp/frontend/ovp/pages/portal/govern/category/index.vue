@@ -26,6 +26,8 @@
         </div>
         <div class="p-3">
           <tree-vue
+            v-if="categories && categories.length"
+            mode="edit"
             :items="categories"
             :isCheckable="false"
             :hideGuideLines="false"
@@ -33,7 +35,6 @@
             :show-open-all-btn="true"
             :show-close-all-btn="true"
             :use-draggable="true"
-            mode="view"
             :dropValidator="dropValidator"
             @onItemSelected="onNodeClicked"
             @addSibling="addSibling"
@@ -102,7 +103,7 @@
             </div>
           </div>
           <!-- NOTE : v-if 로 할 경우, intersectionObserver 이 element 의 변화를 catch 하지 못해서 동작하지 않는 현상이 있어서 v-show 로 변환함. -->
-          <div v-show="modelList.length > 0">
+          <div v-show="modelList && modelList.length > 0">
             <div class="l-top-bar">
               <div class="search-input w-[541px]">
                 <label class="hidden-text" for="text-input-example-11"

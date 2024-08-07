@@ -9,6 +9,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const { from, size } = storeToRefs(pagingStore);
 
   const categories = ref<TreeViewItem>();
+  const categoriesParentId = ref("");
   const modelList: Ref<any[]> = ref([]);
   let selectedNodeItem: any = null;
 
@@ -21,6 +22,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
      * root node 는 화면에 표시하지 않기 때문에 rootNode.children 만 categories 에 저장.
      */
     categories.value = data.children;
+    categoriesParentId.value = data.parentId;
   };
   const getModelListQuery = (id: string) => {
     // TODO : [개발] 검색어 조건 여기 추가.
@@ -69,7 +71,11 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     $api("/api/category", {
       method: method,
       body: node,
-    }).then(() => {
+    }).then((res) => {
+      if (res.data === "OVER_DEPTH") {
+        alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
+        return;
+      }
       getCategories();
     });
   };
@@ -168,18 +174,12 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
 
   // TODO : [개발] 카테고리 등록 예 (등록, 수정 같은 코드 사용합니다.)
   const addNewCategory = (newNode: TreeViewItem) => {
-    const addNodeParam: TreeViewItem = {
-      id: "f6a91e15-18c1-4920-ab2b-dd20a68f75bc",
-      parentId: selectedNode.value.id,
-      name: "카테고리 01 - 01",
-      desc: "카테고리 설명이여요",
-      children: [],
-    };
-    addCategory(addNodeParam);
+    addCategory(newNode);
   };
 
   return {
     categories,
+    categoriesParentId,
     modelList,
     selectedNode,
     onNodeClicked,
@@ -194,5 +194,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     dropValidator,
     addSibling,
     addChild,
+    addNewCategory,
   };
 });
