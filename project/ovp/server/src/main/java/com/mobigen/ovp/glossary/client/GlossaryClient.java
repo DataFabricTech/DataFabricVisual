@@ -1,6 +1,7 @@
 package com.mobigen.ovp.glossary.client;
 
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
+import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
 import com.mobigen.ovp.glossary.client.dto.TermDto;
 import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivityResponse;
 import com.mobigen.ovp.glossary.client.dto.glossary.GlossaryResponse;
@@ -20,6 +21,14 @@ import java.util.UUID;
 
 @FeignClient(name = "GlossaryClient", url = "http://192.168.105.26:8585/api/v1")
 public interface GlossaryClient {
+
+    /**
+     * 용어 사전 등록
+     * @param dto
+     * @return
+     */
+    @PostMapping("/glossaries")
+    Object createGlossary(@RequestBody GlossaryDto dto);
 
     /**
      * 용어 사전 리스트

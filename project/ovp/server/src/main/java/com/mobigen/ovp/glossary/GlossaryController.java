@@ -2,6 +2,7 @@ package com.mobigen.ovp.glossary;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
+import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
 import com.mobigen.ovp.glossary.client.dto.TermDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,17 @@ import java.util.UUID;
 public class GlossaryController {
 
     private final GlossaryService glossaryService;
+
+    /**
+     * 용어 사전 등록
+     * @param dto
+     * @return
+     */
+    @ResponseJsonResult
+    @PostMapping()
+    public Object createGlossary(@RequestBody GlossaryDto dto) {
+        return glossaryService.createGlossary(dto);
+    }
 
     /**
      * 용어 사전 리스트
