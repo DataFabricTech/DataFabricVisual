@@ -35,7 +35,6 @@ export const useMainStore = defineStore("mainStore", () => {
 
   // TODO: [개발] 임시 코드로 추후 삭제 예정
   const SAMPLE_DATA = sampleData.data.data as DataModel[];
-  const SLICE_SIZE = 3;
   const dataResult: Ref<any[]> = ref([]);
 
   const getMainDataListQuery = () => {
@@ -73,7 +72,7 @@ export const useMainStore = defineStore("mainStore", () => {
     if (data.length === 0) {
       dataStatus.value = true;
     } else {
-      dataList.value = data.slice(0, SLICE_SIZE);
+      dataList.value = data;
     }
   };
 

@@ -28,6 +28,7 @@ public class MainService {
         Map<String, Object> userInfo = userClient.getUserFollows(id, "follows");
         List<Map<String, Object>> followsList = (List<Map<String, Object>>) userInfo.get("follows");
         List<String> followsIdList = new ArrayList<>();
+        List<DataModelDetailResponse> AllResult = new ArrayList<>();
         List<DataModelDetailResponse> result = new ArrayList<>();
 
         for (Map<String, Object> follow : followsList) {
@@ -37,10 +38,13 @@ public class MainService {
 
         for (String followId : followsIdList) {
             DataModelDetailResponse dataModelDetail = searchDetailService.getDataModelDetail(followId);
-            result.add(dataModelDetail);
+            AllResult.add(dataModelDetail);
         }
+
+        result.add(AllResult.get(0));
+        result.add(AllResult.get(1));
+        result.add(AllResult.get(2));
+
         return result;
     }
-
-
 }
