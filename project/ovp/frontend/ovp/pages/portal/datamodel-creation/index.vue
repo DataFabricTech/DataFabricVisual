@@ -48,6 +48,7 @@
     v-if="isShowAddModel"
     :data-model-list="modelList"
     :selected-model-list="selectedModelList"
+    :my-model-list="myModelList"
     :filter="dataModelFilter"
     @change="addDataModel"
   ></add-model>
@@ -91,6 +92,7 @@ const {
   sampleDataList,
   columnOptions,
   dataProfileList,
+  myModelList
 } = storeToRefs(creationStore);
 const {
   setDataModelFilter,
@@ -101,11 +103,15 @@ const {
   runQuery,
   resetQuery,
   editQueryText,
+  setSelectedModelList,
+  setMyModelList,
 } = creationStore;
 
 // 데이터 목록, 필터 목록, 선택 필터 초기화
 setDataModelFilter();
 setDataModelList();
+setMyModelList();
+setSelectedModelList();
 </script>
 
 <style scoped></style>

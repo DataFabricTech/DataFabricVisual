@@ -33,7 +33,7 @@
 </template>
 <script setup lang="ts">
 import { useCreationStore } from "@/store/datamodel-creation/index";
-import DataModelList from "~/components/datamodel-creation/list/data-model-list.vue";
+import DataModelList from "~/components/datamodel-creation/list/base/data-model-list.vue";
 
 const props = defineProps({
   modelList: {

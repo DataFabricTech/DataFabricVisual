@@ -2,8 +2,9 @@
   <header id="header" ref="header">
     <div class="h-group">
       <h1 class="logo">
-        <nuxt-link to="/" class="logo-link"
-          >Open VDAP Portal <span class="hidden-text">logo</span>
+        <nuxt-link to="/" class="logo-link">
+          <svg-icon class="svg-icon logo-img" name="logo"></svg-icon>
+          <span class="hidden-text">logo</span>
         </nuxt-link>
       </h1>
       <SearchInput
