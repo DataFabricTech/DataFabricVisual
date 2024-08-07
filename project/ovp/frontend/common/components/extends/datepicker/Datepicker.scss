@@ -43,9 +43,7 @@
   @include box-shadow('md');
   @include z-index('alert');
 
-  & {
-    margin-top: 6px;
-  }
+  margin-top: 6px;
 
   .mx-btn-current-year,
   .mx-btn-current-month,

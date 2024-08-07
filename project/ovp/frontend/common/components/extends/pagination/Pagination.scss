@@ -10,11 +10,9 @@
   &-button {
     @include button;
 
-    & {
-      width: 32px;
-      height: 32px;
-      font-size: 13px;
-    }
+    width: 32px;
+    height: 32px;
+    font-size: 13px;
   }
 
   &-icon-button.button {

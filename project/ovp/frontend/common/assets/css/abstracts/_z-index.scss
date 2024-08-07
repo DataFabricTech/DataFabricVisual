@@ -13,9 +13,7 @@ $z-indexes: (
 
 @mixin z-index($layer) {
   @if map-has-key($z-indexes, $layer) {
-    & {
-      z-index: #{map-get($z-indexes, $layer)};
-    }
+    z-index: #{map-get($z-indexes, $layer)};
   } @else {
     @warn "#{$layer} 값이 올바르지 않습니다.";
   }

@@ -20,10 +20,9 @@
 
 .select {
   @include select-size;
+  //@include z-index('float');
 
-  & {
-    position: relative;
-  }
+  position: relative;
 
   &-button {
     @include flex($horizontal: flex-start);
@@ -111,10 +110,8 @@
   .menu-search {
     @include box-shadow('md');
 
-    & {
-      width: 100%;
-      margin-top: $spacing-4;
-    }
+    width: 100%;
+    margin-top: $spacing-4;
   }
 
   .dropdown {
