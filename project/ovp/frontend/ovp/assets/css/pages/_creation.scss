@@ -95,7 +95,7 @@
   overflow-y: scroll;
   gap: $spacing-12;
   width: 100%;
-  height: 500px;
+  height: 565px;
   padding: $spacing-16;
 
   .tab-contents {
@@ -123,7 +123,7 @@
 // 컴포넌트로 분기될 경우 디폴트/모달 스타일 구별해야 함
 .transfer {
   display: flex;
-  height: 320px;
+  height: 350px;
   width: 100%;
 
   .menu-data {
@@ -156,7 +156,7 @@
   }
 
   .accordion-group {
-    height: calc(100% - 28px);
+    height: calc(100% - 12px);
   }
 }
 

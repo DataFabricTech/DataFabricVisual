@@ -15,22 +15,19 @@
         :checked="props.data.isChecked"
         @input="onChangeChecked($event.target.checked)"
       />
+
       <label :for="'checkbox-menu' + props.data.value" class="checkbox-label">
-        <!-- TODO: 서비스 타입에 따른 SVG 아이콘 변경 필요-->
-        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-        <span class="checkbox-text">{{ props.data.label }}</span>
-        <span class="checkbox-subtext">({{ props.data.owner }})</span>
+        <span class="hidden-text">label</span>
       </label>
     </div>
     <button
       class="menu-button"
-      v-else
       @click="onClickItem"
       @contextmenu.prevent="onShowContextMenu"
     >
       <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
       <span class="menu-text">{{ props.data.label }}</span>
-      <span class="menu-subtext">({{ props.data.owner }})</span>
+      <span class="menu-subtext">{{ owner }}</span>
     </button>
     <div class="menu-button-group">
       <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환/icon에 .secondary 클래스 추가 -->
@@ -75,8 +72,12 @@
               >
                 <span class="dropdown-text">데이터 선택 해제</span>
               </button>
-              <button class="dropdown-button" v-else @click="onSelectItem">
-                <span class="dropdown-text">데이터 선택</span>
+              <button
+                class="dropdown-button"
+                v-else
+                @click="onChangeCheckedInContextMenu(!props.data.isChecked)"
+              >
+                <span class="dropdown-text">데이터 선택 </span>
               </button>
             </li>
           </ul>
@@ -109,7 +110,7 @@
 </template>
 <script setup lang="ts">
 import { vOnClickOutside } from "@vueuse/components";
-import { defineProps, ref } from "vue";
+import { defineProps } from "vue";
 
 const props = defineProps({
   data: { type: Object, default: {} },
@@ -139,13 +140,12 @@ const onDeleteItem: () => void = () => {
   emit("delete", props.data.value);
   hideContextMenuBtn();
 };
-const onSelectItem: () => void = () => {
-  emit("select", props.data.value);
+const onChangeCheckedInContextMenu: (checked: boolean) => void = (checked) => {
+  emit("check", checked);
   hideContextMenuBtn();
 };
 
 const onChangeChecked: (checked: boolean) => void = (checked) => {
-  console.log("onChangeChecked", props.data, checked);
   emit("check", checked);
 };
 
@@ -176,6 +176,10 @@ const onOpenDataModelDetail: () => void = () => {
   window.open(`/portal/search/detail?id=${id}&fqn=${fqn}&type=${type}`);
   hideContextMenuBtn();
 };
+const owner = computed(() => {
+  const nOwner = props.data.owner ? props.data.owner : "-";
+  return `(${nOwner})`;
+});
 </script>
 
 <style scoped></style>

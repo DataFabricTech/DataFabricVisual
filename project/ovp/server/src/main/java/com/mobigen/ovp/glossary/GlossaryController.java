@@ -2,12 +2,15 @@ package com.mobigen.ovp.glossary;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
+import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
+import com.mobigen.ovp.glossary.client.dto.TermDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,6 +26,17 @@ import java.util.UUID;
 public class GlossaryController {
 
     private final GlossaryService glossaryService;
+
+    /**
+     * 용어 사전 등록
+     * @param dto
+     * @return
+     */
+    @ResponseJsonResult
+    @PostMapping()
+    public Object createGlossary(@RequestBody GlossaryDto dto) {
+        return glossaryService.createGlossary(dto);
+    }
 
     /**
      * 용어 사전 리스트
@@ -57,6 +71,17 @@ public class GlossaryController {
     }
 
     /**
+     * 용어 추가
+     * @param dto
+     * @return
+     */
+    @ResponseJsonResult
+    @PostMapping("/terms")
+    public Object createTerm(@RequestBody TermDto dto) {
+        return glossaryService.createTerm(dto);
+    }
+
+    /**
      * 용어 리스트
      * @param term
      * @return
@@ -75,7 +100,7 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @PatchMapping(value = "/terms/{id}", consumes = "application/json-patch+json")
-    public Object editGlossaryTerms(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param) {
+    public Object editGlossaryTerm(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param) {
         return glossaryService.editGlossaryTerm(id, param);
     }
 

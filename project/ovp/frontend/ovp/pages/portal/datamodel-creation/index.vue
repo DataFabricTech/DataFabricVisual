@@ -9,7 +9,10 @@
   </div>
   <div class="section-contents p-0 bg-white">
     <div class="l-split">
-      <selected-model @change="addDataModel" @delete="deleteDataModel"></selected-model>
+      <selected-model
+        @change="addDataModel"
+        @delete="deleteDataModel"
+      ></selected-model>
       <excute-quary></excute-quary>
     </div>
     <div class="l-split">
@@ -22,6 +25,7 @@
     v-if="isShowAddModel"
     :data-model-list="modelList"
     :selected-model-list="selectedModelList"
+    :my-model-list="myModelList"
     :filter="dataModelFilter"
     @change="addDataModel"
   ></add-model>
@@ -48,13 +52,21 @@ const addDataModel = (param: boolean) => {
 };
 
 const creationStore = useCreationStore();
-const { modelList, dataModelFilter, selectedModelList } =
+const { modelList, dataModelFilter, selectedModelList, myModelList } =
   storeToRefs(creationStore);
-const { setDataModelFilter, setDataModelList, deleteDataModel } = creationStore;
+const {
+  setDataModelFilter,
+  setDataModelList,
+  deleteDataModel,
+  setSelectedModelList,
+  setMyModelList,
+} = creationStore;
 
 // 데이터 목록, 필터 목록, 선택 필터 초기화
 setDataModelFilter();
 setDataModelList();
+setMyModelList();
+setSelectedModelList();
 </script>
 
 <style scoped></style>

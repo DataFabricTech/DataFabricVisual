@@ -11,8 +11,27 @@ export interface TreeComposition extends TreeProps {
 }
 
 export function TreeComposition(props: TreeProps): TreeComposition {
+  const updateCheckedStatus = (items: any[], checkedIds: string[]): void => {
+    _.forEach(items, (item) => {
+      // checkedIds 배열에 현재 항목의 id가 포함되어 있는지 확인
+      if (checkedIds.includes(item.id)) {
+        item.checked = true;
+      }
+
+      // 자식 노드가 있는 경우, 재귀적으로 호출
+      if (item.children && item.children.length > 0) {
+        updateCheckedStatus(item.children, checkedIds);
+      }
+    });
+  };
+
   const treeItems: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
   treeItems.value = props.items;
+
+  // 체크박스를 사용하는 경우, 체크여부를 object에 추가해준다.
+  if (props.isCheckable) {
+    updateCheckedStatus(treeItems.value, props.checkedIds || []);
+  }
 
   const createNewTreeItem: (
     parentId: string,
@@ -75,6 +94,10 @@ export function TreeComposition(props: TreeProps): TreeComposition {
   };
 
   const dropValidator = (thisNode: TreeViewItem, targetNode: TreeViewItem) => {
+    // 자기노드 밑으로 drop 할 수 없음.
+    if (thisNode.id === targetNode.id) {
+      return false;
+    }
     // 부모노드는 자기 후손 노드로 drop 할수없음.
     // targetNode 기준 부모노드 List 를 조회해서 thisNode 의 id 가 있는지 확인 필요함.
     const parentIds = findAncestors(treeItems.value, targetNode.id);
@@ -82,20 +105,28 @@ export function TreeComposition(props: TreeProps): TreeComposition {
       return false;
     }
 
-    // TODO: confirm 창 구현 완료 되면 여기서 처리 필요함.
-    /**
-     * title : 카테고리 이동
-     * content : `${thisNode.name} 카테고리를 ${targetNode} 하위로 이동 하시겠습니까?`
-     * response가 true 일 때만, props.dropValidator 진행.
-     */
+    // TODO: NOTIFICATION - confirm 창 구현 완료 되면 아래 window.prompt 창 변경처리 필요.
+    const msg = `${thisNode.name} 카테고리를 ${targetNode.name} 하위로 이동 하시겠습니까?`;
 
-    const newNode = _.cloneDeep(thisNode);
-    newNode.parentId = targetNode.id;
+    const res = window.prompt(`${msg} (answer : 'yes'`);
+    if (res === "yes") {
+      const newNode = _.cloneDeep(thisNode);
+      newNode.parentId = targetNode.id;
 
-    return props.dropValidator(thisNode, targetNode, newNode);
+      return props.dropValidator(thisNode, targetNode, newNode);
+    }
   };
   // vue3-tree-vue 에서는 dropValidator 이 undefined 일때만 drag/drop 이 동작하지 않음.
   const dropValidatorHandler: any = props.useDraggable ? dropValidator : undefined;
+
+  watch(
+    () => props.items,
+    (newItems) => {
+      treeItems.value = newItems;
+      openAll();
+    },
+    { immediate: true } // Optionally update immediately with the initial value
+  );
 
   return {
     ...props,
