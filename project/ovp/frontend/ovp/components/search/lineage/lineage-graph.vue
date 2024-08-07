@@ -36,11 +36,11 @@ const tpl = (data: NodeData) => {
   flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  background-color: #fff;
+  background-color: #f7f9fc;
   outline: none;
   border-radius: 4px">
-            <div style="font-size: 8px;font-weight: 300; color: #31353f; line-height: 1.2;">${data.path}</div>
-            <div style="color: #2b3440; font-size: 11px; line-height: 1.6; ">${data.label}</div>
+            <div style="font-size: 8px;font-weight: 300; color: #868C98; line-height: 1.2;">${data.path}</div>
+            <div style="color: #2b3440; font-size: 10px; line-height: 1.6; ">${data.label}</div>
           </div>`;
 };
 
