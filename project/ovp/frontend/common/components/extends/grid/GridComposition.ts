@@ -8,6 +8,7 @@ export interface GridComposition extends GridProps {
   getDefs(): any[];
   onGridReady(params: object): void;
   onGridSizeChanged(params: any): void;
+  setColumnToFit(): void;
 }
 
 export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): GridComposition {
@@ -15,16 +16,21 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
   const selectedNodes: any[] = props.selectedNodes || [];
   const buttons: any[] = props.buttons || [];
   const columnRender: object = props.columnRender || [];
+  let paramApi: any = null;
 
   const onGridReady: (params: { api: any }) => void = (params: { api: any }) => {
-    params.api.forEachNode((node: any) => {
+    paramApi = params.api;
+
+    paramApi.forEachNode((node: any) => {
       if (selectedNodes.includes(node.data[rowId])) {
         node.setSelected(true);
       }
     });
-
+    setColumnToFit();
+  };
+  const setColumnToFit = () => {
     if (props.setColumnFit) {
-      params.api.sizeColumnsToFit();
+      paramApi.sizeColumnsToFit();
     }
   };
 
@@ -39,6 +45,8 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
   });
 
   const getDefs: () => any[] = () => {
+    const columnDefs = ref<any[]>(_.cloneDeep(props.columnDefs) || []);
+
     // step1. button 설정을 columnDefsObject 형식으로 변환
     buttons.forEach((btnEl: any, bI: number) => {
       const btnObj = {
@@ -61,13 +69,13 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
         });
       }
 
-      props.columnDefs.splice(btnEl.order - 1, 0, btnObj);
+      columnDefs.value.splice(btnEl.order - 1, 0, btnObj);
     });
 
     // props.columnDefs에 renderer 설정한게 있으면 적용한다.
     if (Object.keys(columnRender).length > 0) {
       _.forOwn(columnRender, (obj: any, key: string) => {
-        const defs = _.find(props.columnDefs, { field: key });
+        const defs = _.find(columnDefs.value, { field: key });
 
         if (obj.type === "valFunc") {
           defs.cellRenderer = valFuncRenderer;
@@ -86,7 +94,7 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
 
     // width 지정한 게 있으면 반영한다.
     if (columnWidthList.value.length > 0) {
-      props.columnDefs.map((el: any, eI: number) => {
+      columnDefs.value.map((el: any, eI: number) => {
         el.width = columnWidthList.value[eI];
         return el;
       });
@@ -104,14 +112,14 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
         showDisabledCheckboxes: true
       });
     }
-
-    return checkboxDefs.concat(props.columnDefs);
+    return checkboxDefs.concat(columnDefs.value);
   };
 
   return {
     ...props,
     onGridReady,
     getDefs,
-    onGridSizeChanged
+    onGridSizeChanged,
+    setColumnToFit
   };
 }
