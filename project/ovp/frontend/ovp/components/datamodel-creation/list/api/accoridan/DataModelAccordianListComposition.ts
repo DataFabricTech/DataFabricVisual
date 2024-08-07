@@ -78,26 +78,17 @@ export function DataModelAccordianListComposition(
    * @param itemValue
    * @param checked
    */
-  const onShowContextMenu = (itemValue: string, checked: boolean | null) => {
-    listData.value = listData.value.map((el) => ({
-      ...el,
-      isShowContextMenu:
-        checked === null ? false : el[props.valueKey] === itemValue,
-    }));
-  };
+  const onShowContextMenu = (itemValue: string, checked: boolean | null) => {};
 
   /**
    * (이벤트) Context-menu 제어
    * @param itemValue
    * @param checked
    */
-  const onShowContextMenuBtn = (itemValue: string, checked: boolean | null) => {
-    listData.value = listData.value.map((el) => ({
-      ...el,
-      isShowContextMenuBtn:
-        checked === null ? false : el[props.valueKey] === itemValue,
-    }));
-  };
+  const onShowContextMenuBtn = (
+    itemValue: string,
+    checked: boolean | null,
+  ) => {};
 
   const checkShowListData: (item: any[]) => boolean = (item) => {
     if (!item || item.length < 1) {
