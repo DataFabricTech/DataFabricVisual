@@ -22,10 +22,13 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -165,7 +168,7 @@ public class GlossaryService {
      * @return
      * @throws Exception
      */
-    public Object getAllTags() throws Exception {
+    public List<Tag> getAllTags() throws Exception {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("q", "** AND disabled:false");
         queryParams.add("index", "tag_search_index");
@@ -176,24 +179,14 @@ public class GlossaryService {
         for(Map<String, ?> data : hits) {
             source.add(data.get("_source"));
         }
-
-        List<Map<String, String>> menuSearchResult = new ArrayList<>();
-        List<Tag> allData = new ArrayList<>();
+        List<Tag> result = new ArrayList<>();
 
         for(Object obj : source) {
             if(obj instanceof Map<?,?>) {
                 Map<String, ?> data = (Map<String, ?>) obj;
-                Map<String, String> menuSearchData = new HashMap<>();
-                menuSearchData.put("data", String.valueOf(data.get("name")));
-                menuSearchData.put("label", String.valueOf(data.get("displayName")));
-                menuSearchResult.add(menuSearchData);
-
-                allData.add(new Tag(data));
+                result.add(new Tag(data));
             }
         }
-        Map<String, List<?>> result = new HashMap<>();
-        result.put("menuSearchData", menuSearchResult);
-        result.put("allData", allData);
         return result;
     }
 
@@ -251,52 +244,59 @@ public class GlossaryService {
     public Object getDataModel(String fqn) {
         Map<String, Object> previewData = tablesClient.getSearchPreview(fqn);
 
+        Map<String, Object> modelInfo = createModelInfo(previewData);
+
         Map<String, Object> result = new HashMap<>();
-        Map<String, Object> modelInfo = new HashMap<>();
+        result.put("modelInfo", modelInfo);
+        result.put("modelType", "structured");
+        result.put("tags", extractTags(previewData, "Classification"));
+        result.put("glossaries", extractTags(previewData, "Glossary"));
+        return result;
+    }
+
+    private Map<String, Object> createModelInfo(Map<String, Object> previewData) {
         Map<String, Object> model = new HashMap<>();
 
         model.put("name", previewData.get("name"));
         model.put("desc", previewData.get("description"));
         model.put("tableType", previewData.get("tableType"));
 
-        List<Map<String, Object>> columnsData = (List<Map<String, Object>>) previewData.get("columns");
-        List<Map<String, Object>> columns = new ArrayList<>();
-        if (columnsData != null) {
-            for (Map<String, Object> columnData : columnsData) {
-                Map<String, Object> column = new HashMap<>();
-                column.put("name", columnData.get("name"));
-                column.put("dataType", columnData.get("dataType"));
-                column.put("desc", columnData.get("description"));
-                column.put("constraint", columnData.get("constraint"));
-                columns.add(column);
-            }
-        }
-
+        List<Map<String, Object>> columns = createColumns(previewData);
         model.put("cnt", columns.size());
 
+        Map<String, Object> modelInfo = new HashMap<>();
         modelInfo.put("columns", columns);
         modelInfo.put("details", "details");
         modelInfo.put("url", "url");
         modelInfo.put("model", model);
 
-        result.put("modelInfo", modelInfo);
-        result.put("modelType", "structured");
+        return modelInfo;
+    }
 
+    private Map<String, Object> mapToColumn(Map<String, Object> columnData) {
+        Map<String, Object> column = new HashMap<>();
+        column.put("name", columnData.get("name"));
+        column.put("dataType", columnData.get("dataType"));
+        column.put("desc", columnData.get("description"));
+        column.put("constraint", columnData.get("constraint"));
+        return column;
+    }
+
+    private List<Map<String, Object>> createColumns(Map<String, Object> previewData) {
+        List<Map<String, Object>> columnsData = (List<Map<String, Object>>) previewData.get("columns");
+        return Optional.ofNullable(columnsData)
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(this::mapToColumn)
+                .collect(Collectors.toList());
+    }
+
+    private List<Map<String, Object>> extractTags(Map<String, Object> previewData, String sourceType) {
         List<Map<String, Object>> tags = (List<Map<String, Object>>) previewData.get("tags");
-        List<Map<String, Object>> classifications = new ArrayList<>();
-        List<Map<String, Object>> glossaries = new ArrayList<>();
-        if (tags != null) {
-            for (Map<String, Object> tag : tags) {
-                String source = (String) tag.get("source");
-                if ("Glossary".equals(source)) {
-                    glossaries.add(tag);
-                } else if ("Classification".equals(source)) {
-                    classifications.add(tag);
-                }
-            }
-        }
-        result.put("tags", classifications);
-        result.put("glossaries", glossaries);
-        return result;
+        return Optional.ofNullable(tags)
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(tag -> sourceType.equals(tag.get("source")))
+                .collect(Collectors.toList());
     }
 }

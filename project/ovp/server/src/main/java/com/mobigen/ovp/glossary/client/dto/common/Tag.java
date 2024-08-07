@@ -20,11 +20,11 @@ public class Tag {
     public Tag(Map<String,?> map) {
         this.description = (String) map.get("description");
         this.displayName = String.valueOf(map.get("displayName"));
-        this.labelType = String.valueOf(map.get("labelType"));
+        this.labelType = "Manual";
         this.name = String.valueOf(map.get("name"));
-        this.source = String.valueOf(map.get("source"));
-        this.state = String.valueOf(map.get("state"));
+        this.source = "Classification";
+        this.state = "Confirmed";
         this.style = map.get("style");
-        this.tagFQN = String.valueOf(map.get("tagFQN"));
+        this.tagFQN = String.valueOf(map.get("fullyQualifiedName"));
     }
 }
