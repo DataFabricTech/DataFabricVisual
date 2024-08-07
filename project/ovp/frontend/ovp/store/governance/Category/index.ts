@@ -63,7 +63,8 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       return;
     }
     const data = await getModelByCategoryIdAPI(selectedNode);
-    modelList.value = data;
+    // data가 null 로 전달받는 경우 빈 값으로 전달 받도록 수정
+    modelList.value = data === null ? [] : data;
   };
   const setSelectedNode = (node: any) => {
     selectedNode = node;
@@ -77,6 +78,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   };
   const insertOrEditAPI = (method: string, node: TreeViewItem) => {
     // TODO : [개발] edit의 경우에도 id, parentId, name, desc, order 값을 모두 backend 로 보내야 함. 없는 항목을 'null'로 업데이트 됨.
+    // TODO: [개발] 정상적으로 PATCH 동작이 되지 않음. API 검토 요청
     $api("/api/category", {
       method: method,
       body: node,
