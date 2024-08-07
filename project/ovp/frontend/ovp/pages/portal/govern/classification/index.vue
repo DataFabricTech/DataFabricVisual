@@ -20,15 +20,20 @@ import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
 const useClassificationStore = classificationStore();
 const { classificationList } = storeToRefs(useClassificationStore);
-const { getClassificationList, getClassificationDetail } =
-  useClassificationStore;
+const {
+  getClassificationList,
+  getClassificationDetail,
+  getClassificationTags,
+} = useClassificationStore;
 const isLoaded = ref(false);
 
 onMounted(async () => {
   // 분류 목록 조회 API 호출
   await getClassificationList();
-  // TODO: 분류 상세 조회 API 호출
+  // 분류 상세 조회 API 호출
   await getClassificationDetail();
+  // 분류의 첫번째 Tag조회 API 호출
+  await getClassificationTags();
   isLoaded.value = true; // 데이터 로딩 완료
 });
 </script>

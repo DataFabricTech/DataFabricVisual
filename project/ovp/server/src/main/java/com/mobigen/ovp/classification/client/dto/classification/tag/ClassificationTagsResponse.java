@@ -4,7 +4,6 @@ import com.mobigen.ovp.common.openmete_client.dto.classification.tag.Classificat
 import com.mobigen.ovp.common.openmete_client.dto.tags.Tag;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Data

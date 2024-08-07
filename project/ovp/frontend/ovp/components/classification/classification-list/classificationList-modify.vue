@@ -11,7 +11,7 @@
           <template #edit-slot>
             <label class="hidden-text" for="title-modify">분류명 입력</label>
             <input
-              v-model="newData.title"
+              v-model="newData.displayName"
               @input="editInput($event)"
               placeholder="분류명에 대한 영역입니다."
               required
@@ -20,7 +20,7 @@
             />
           </template>
           <template #view-slot>
-            <h3 class="editable-group-title">{{ newData.title }}</h3>
+            <h3 class="editable-group-title">{{ newData.displayName }}</h3>
           </template>
         </editable-group>
       </div>
@@ -67,57 +67,60 @@
 import tagList from "@/components/classification/classification-list/tagList.vue";
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 import _ from "lodash";
-
-import { classificationStore } from "~/store/classification";
-import { storeToRefs } from "pinia";
-import { onMounted, type Ref } from "vue";
+import { classificationStore } from "@/store/classification/index";
 
 const useClassificationStore = classificationStore();
 const { classificationDetailData } = storeToRefs(useClassificationStore);
-const { getClassificationDetail } = useClassificationStore;
 
-onMounted(async () => {
-  //TODO: 분류 상세 조회 API 호출 - 화면에 조회된 classificationDetailData 세팅-!
-  await getClassificationDetail();
-});
-
-// 받아올 API 데이터. 완료를 누르자마자 새로 받아와야 함.
-const defaultData = ref<Record<string, any>>({
-  title: "분류1",
-  description:
-    "GDPR special category data is personal information of data subjects that is especially sensitive, the exposure of which could significantly impact the rights and freedoms of data subjects and potentially be used against them for unlawful discrimination.",
-  check: false,
-});
+// 이전 데이터를 저장할 객체
+let defaultData = {};
 
 // 변경될 데이터
-const newData = ref<Record<string, any>>(_.cloneDeep(defaultData.value));
+const newData = computed(() => {
+  // classificationDetailData의 값이 변경(입력란을 변경했을 경우)이 인지될 경우, 스토어의 디테일 데이터 정보를 newData에 할당됨.
+  return _.cloneDeep(classificationDetailData.value);
+});
 
+//실시간 값 입력 시 출력
 const editInput = (event: Event) => {
   // Input event
   const target = event.target as HTMLInputElement | HTMLTextAreaElement;
   console.log(`event: ${target.value}`);
 };
 
+// 수정'완료' 클릭 시
 const editIconClick = () => {
+  console.log("1 수정 버튼 클릭");
   // Button Click event
+  // 새로운 데이터를 기본 데이터로 깊은 복사해놓기
+  defaultData = _.cloneDeep(newData.value);
   console.log(`icon event`);
+  // TODO : 수정 API 호출
+  console.log("변경 안된 값이 나오는 newData 값 :  :: ", newData.value);
 };
 
+// 수정'취소' 클릭 시
 const editCancel = () => {
+  console.log("2 수정 취소 클릭");
   // Cancel event
-  newData.value = defaultData.value;
+  // 수정취소시, defaultData를 스토어 디테일데이터로 저장하여 이전 데이터를 보여주기
+  classificationDetailData.value = _.cloneDeep(defaultData);
   console.log(`cancel event`);
+  console.log("cancel", newData.value, defaultData);
+  console.log(
+    "변경 안된 값이 나오는 classificationDetailData 값 :  :: ",
+    defaultData,
+  );
 };
 
+// 수정 '저장' 클릭 시
 const editDone = () => {
-  // Done event
-  console.log(`done event`);
-
-  defaultData.value = _.cloneDeep(newData.value);
-
+  console.log("3 수정 완료 클릭");
+  console.log("defaultData", defaultData); // defaultData.value는 수정 전 값을 가짐
+  console.log("newData: ", newData.value); //  newData.value 가 변경된 값을 가짐
   // TODO: [개발] 적용/완료 버튼 클릭 시 API 전달 필요
-  console.log("defaultData", defaultData.value);
-  console.log("newData: ", newData.value);
+
+  classificationDetailData.value = _.cloneDeep(newData.value); // 변경된 데이터를 스토어의 값에 저장
 };
 </script>
 

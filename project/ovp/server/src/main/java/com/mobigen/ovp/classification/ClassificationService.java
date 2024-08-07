@@ -5,12 +5,9 @@ import com.mobigen.ovp.classification.client.dto.classification.ClassificationDe
 import com.mobigen.ovp.classification.client.dto.classification.ClassificationDetailResponse;
 import com.mobigen.ovp.classification.client.dto.classification.ClassificationResponse;
 import com.mobigen.ovp.classification.client.dto.classification.tag.ClassificationTagsResponse;
-import com.mobigen.ovp.common.openmete_client.dto.classification.Classification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 @Slf4j
 @Service
@@ -23,7 +20,7 @@ public class ClassificationService {
      * @return
      */
     public Object getClassifications() {
-//        log.info(""+ classificationClient.getClassifications());
+        log.info(""+ classificationClient.getClassifications());
 
         return new ClassificationResponse(classificationClient.getClassifications());
     }
@@ -39,7 +36,7 @@ public class ClassificationService {
     }
 
     /**
-     * 분류와 매칭되는 태그의 정보 조회 - 위에 2개와 같이 호출
+     * 분류와 매칭되는 태그의 정보 조회
      * @return
      */
     public Object getClassificationDetailByName(String name) {
@@ -53,8 +50,8 @@ public class ClassificationService {
      * @return
      * @throws Exception
      */
-    public Object getClassificationTags(String parentFqn) {
-        return new ClassificationTagsResponse(classificationClient.getClassificationTags(parentFqn));
+    public Object getClassificationTags(String parent) {
+        return new ClassificationTagsResponse(classificationClient.getClassificationTags(parent));
     }
 
 //    /**

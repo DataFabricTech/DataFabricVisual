@@ -2,7 +2,10 @@
   <div class="work-list">
     <div class="l-top-bar">
       <span class="title">분류 목록</span>
-      <button class="button button-secondary-stroke" @click="showModalClas = true">
+      <button
+        class="button button-secondary-stroke"
+        @click="showModalClas = true"
+      >
         분류 추가
       </button>
     </div>
@@ -20,17 +23,27 @@
       </div>
       <div v-else class="menu border-none">
         <div class="menu-list">
-          <li class="menu-item" v-for="item in classificationList" :key="item.id">
+          <li
+            class="menu-item"
+            v-for="item in classificationList"
+            :key="item.id"
+            @click="showClassificationDetail(item.id, item.name)"
+          >
             <button class="menu-button">
               <svg-icon class="svg-icon" name="tag"></svg-icon>
-              <a href="" class="menu-text">{{ item.displayName || item.name }}</a>
+              <a href="" class="menu-text">{{
+                item.displayName || item.name
+              }}</a>
             </button>
           </li>
         </div>
       </div>
     </div>
   </div>
-  <classification-create v-if="showModalClas" @close-modal="closeModalClas"></classification-create>
+  <classification-create
+    v-if="showModalClas"
+    @close-modal="closeModalClas"
+  ></classification-create>
 </template>
 
 <script setup lang="ts">
@@ -40,21 +53,32 @@ import classificationCreate from "@/components/classification/modal/classificati
 import { classificationStore } from "@/store/classification/index";
 
 const useClassificationStore = classificationStore();
-const { classificationList } = storeToRefs(useClassificationStore);
-
+const { classificationList, classificationDetailData } = storeToRefs(
+  useClassificationStore,
+);
+const { getClassificationDetail, getClassificationTags } =
+  useClassificationStore;
 const showModalClas = ref(false);
 
 const closeModalClas = () => {
   showModalClas.value = !showModalClas.value;
-}
+};
 
 const props = defineProps({
   isLoaded: {
     type: Boolean,
-    default: false
-  }
+    default: false,
+  },
 });
 
+// 분류 목록 중 단일 목록 클릭시 실행되는 함수
+const showClassificationDetail = async (id: string, name: string) => {
+  // 선택한 분류의 상세 조회 API 호출
+  await getClassificationDetail(id);
+  // 태그 리스트 API 호출
+  await getClassificationTags(name);
+  // console.log(classificationDetailData.value); //  : 선택된 분류의 상세 조회 결과 출력결과
+};
 </script>
 
 <style scoped></style>
