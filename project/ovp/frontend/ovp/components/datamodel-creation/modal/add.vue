@@ -18,507 +18,71 @@
         <div class="data-add">
           <div class="transfer">
             <div class="transfer-box">
-              <div class="tab">
-                <ul class="tab-list">
-                  <li class="tab-item is-tab-item-selected">
-                    <button class="tab-button">
-                      <p class="tab-button-text">전체 (367)</p>
-                    </button>
-                  </li>
-                  <li class="tab-item">
-                    <button class="tab-button">
-                      <p class="tab-button-text">MY (5)</p>
-                    </button>
-                  </li>
-                </ul>
-              </div>
-              <!-- 전체 탭 시작  -->
-              <div class="menu menu-data" style="">
-                <div class="menu-head">
-                  <div class="tab tab-line mb-3">
-                    <ul class="tab-list">
-                      <li class="tab-item is-tab-item-selected">
-                        <button class="tab-button">
-                          <p class="tab-button-text">테이블</p>
-                        </button>
-                      </li>
-                      <li class="tab-item">
-                        <button class="tab-button">
-                          <p class="tab-button-text">스토리지</p>
-                        </button>
-                      </li>
-                      <li class="tab-item">
-                        <button class="tab-button">
-                          <p class="tab-button-text">융합모델</p>
-                        </button>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="h-group">
-                    <div class="search-input search-input-sm">
-                      <label class="hidden-text" for="data-menu-search"
-                        >데이터 모델 검색</label
-                      >
-                      <input
-                        id="data-menu-search"
-                        class="text-input"
-                        placeholder="검색어 입력"
-                      />
-                      <svg-icon
-                        class="text-input-icon"
-                        name="search"
-                      ></svg-icon>
-                      <button
-                        class="search-input-action-button button button-neutral-ghost button-sm"
-                        type="button"
-                      >
-                        <span class="hidden-text">지우기</span>
-                        <svg-icon class="button-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                    <button class="button button-neutral-ghost">
-                      <span class="hidden-text">리셋</span>
-                      <svg-icon class="svg-icon" name="reset"></svg-icon>
-                    </button>
-                  </div>
-                  <div class="filters">
-                    <!-- 카테고리, 소유자, 태그 select -->
-                    <div class="h-group">
-                      <select-box class="select-clean select-sm"></select-box>
-                      <select-box class="select-clean select-sm"></select-box>
-                      <select-box class="select-clean select-sm"></select-box>
-                    </div>
-                    <!-- 정렬(인기많은순) select -->
-                    <select-box class="select-sm w-full"></select-box>
-                  </div>
-                </div>
-                <ul class="menu-list">
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input
-                        type="checkbox"
-                        id="checkbox-menu-01"
-                        class="checkbox-input"
-                        checked
-                      />
-                      <label for="checkbox-menu-01" class="checkbox-label">
-                        <svg-icon
-                          class="svg-icon menu-data-icon"
-                          name="resource"
-                        ></svg-icon>
-                        <span class="checkbox-text">데이터 델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환/icon에 .secondary 클래스 추가 -->
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon
-                          class="svg-icon secondary"
-                          name="tag-fill"
-                        ></svg-icon>
-                      </button>
-                      <div class="relative">
-                        <button class="button button-neutral-ghost button-sm">
-                          <span class="hidden-text">메뉴보기</span>
-                          <svg-icon
-                            class="svg-icon"
-                            name="kebab-menu"
-                          ></svg-icon>
-                        </button>
-                        <div class="dropdown" style="right: 0">
-                          <ul class="dropdown-list">
-                            <li class="dropdown-item">
-                              <button class="dropdown-button">
-                                <span class="dropdown-text"
-                                  >데이터 모델 상세 조회</span
-                                >
-                              </button>
-                            </li>
-                            <li class="dropdown-item">
-                              <button class="dropdown-button">
-                                <span class="dropdown-text"
-                                  >데이터 선택(해제)</span
-                                >
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="menu-item" v-for="menu in 6" :key="menu">
-                    <div class="checkbox">
-                      <input
-                        type="checkbox"
-                        id="checkbox-menu-02"
-                        class="checkbox-input"
-                      />
-                      <label for="checkbox-menu-02" class="checkbox-label">
-                        <svg-icon
-                          class="svg-icon menu-data-icon"
-                          name="resource"
-                        ></svg-icon>
-                        <span class="checkbox-text">데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon class="svg-icon" name="tag"></svg-icon>
-                      </button>
-                      <div class="relative">
-                        <button class="button button-neutral-ghost button-sm">
-                          <span class="hidden-text">메뉴보기</span>
-                          <svg-icon
-                            class="svg-icon"
-                            name="kebab-menu"
-                          ></svg-icon>
-                        </button>
-                        <!-- TODO: [개발] 레이아웃 깨짐으로 인해 맨 밑 아이템과 맨 밑 두번째 아이템은 예외로 top:-70px를 적용해서 위로 배치시켜야 합니다. -->
-                        <div class="dropdown" style="right: 0; display: none">
-                          <ul class="dropdown-list">
-                            <li class="dropdown-item">
-                              <button class="dropdown-button">
-                                <span class="dropdown-text"
-                                  >데이터 모델 상세 조회</span
-                                >
-                              </button>
-                            </li>
-                            <li class="dropdown-item">
-                              <button class="dropdown-button">
-                                <span class="dropdown-text"
-                                  >데이터 선택(해제)</span
-                                >
-                              </button>
-                            </li>
-                          </ul>
-                        </div>
-                      </div>
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </li>
-                </ul>
-                <!-- 결과 없을 시 no-result 표시 -->
-                <div class="no-result" style="display: none">
-                  <div class="notification">
-                    <svg-icon class="notification-icon" name="info"></svg-icon>
-                    <p class="notification-detail">
-                      선택된 데이터 모델이 없습니다.
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <!-- 전체 탭 끝  -->
-              <!-- MY 탭 시작  -->
-              <div class="accordion-group" style="display: none">
-                <div class="search-input search-input-sm">
-                  <label class="hidden-text" for="data-menu-search"
-                    >데이터 모델 검색</label
+              <Tab
+                class="h-full"
+                :data="$constants.DATAMODEL_CREATION.ADD.TAB"
+                label-key="label"
+                value-key="value"
+                current-item-type="value"
+                :current-item="currTab"
+                @change="onChangeTab"
+              >
+                <template #all>
+                  <!-- 전체 탭 시작  -->
+                  <data-model-api-list
+                    class="h-full"
+                    :filter="filter"
+                    :data="dataModelList"
+                    :sort-list="$constants.COMMON.SORT_FILTER"
+                    :selected-items="selectedModelList"
+                    label-key="modelNm"
+                    value-key="id"
+                    :use-item-delete-btn="false"
+                    :is-multi="true"
+                    :use-sort="true"
+                    :use-infinite="true"
+                    :use-live-search="false"
+                    list-type="non-selected"
+                    no-data-msg="데이터 모델이 없습니다."
+                    @delete="onDeleteDataModel"
                   >
-                  <input
-                    id="data-menu-search"
-                    class="text-input"
-                    placeholder="검색어 입력"
-                  />
-                  <svg-icon class="text-input-icon" name="search"></svg-icon>
-                  <button
-                    class="search-input-action-button button button-neutral-ghost button-sm"
-                    type="button"
-                  >
-                    <span class="hidden-text">지우기</span>
-                    <svg-icon class="button-icon" name="close"></svg-icon>
-                  </button>
-                </div>
-                <div class="accordion-list">
-                  <Accordion>
-                    <template #title> 내가 북마크한 데이터 모델 </template>
-                    <template #body>
-                      <div class="menu menu-data">
-                        <ul class="menu-list">
-                          <li class="menu-item">
-                            <div class="checkbox">
-                              <input
-                                type="checkbox"
-                                id="checkbox-menu-01"
-                                class="checkbox-input"
-                                checked
-                              />
-                              <label
-                                for="checkbox-menu-01"
-                                class="checkbox-label"
-                              >
-                                <svg-icon
-                                  class="svg-icon menu-data-icon"
-                                  name="resource"
-                                ></svg-icon>
-                                <span class="checkbox-text">데이터 모델</span>
-                                <span class="checkbox-subtext">(소유자)</span>
-                              </label>
-                            </div>
-                            <div class="menu-button-group">
-                              <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환/icon에 .secondary 클래스 추가 -->
-                              <button
-                                class="button button-neutral-ghost button-sm"
-                              >
-                                <span class="hidden-text">북마크</span>
-                                <svg-icon
-                                  class="svg-icon secondary"
-                                  name="tag-fill"
-                                ></svg-icon>
-                              </button>
-                              <button
-                                class="button button-neutral-ghost button-sm"
-                              >
-                                <span class="hidden-text">메뉴보기</span>
-                                <svg-icon
-                                  class="svg-icon"
-                                  name="kebab-menu"
-                                ></svg-icon>
-                              </button>
-                            </div>
+                    <template v-slot:tab>
+                      <div class="tab tab-line mb-3">
+                        <ul class="tab-list">
+                          <li class="tab-item is-tab-item-selected">
+                            <button class="tab-button">
+                              <p class="tab-button-text">테이블</p>
+                            </button>
                           </li>
-                          <li class="menu-item" v-for="menu in 2" :key="menu">
-                            <div class="checkbox">
-                              <input
-                                type="checkbox"
-                                id="checkbox-menu-03"
-                                class="checkbox-input"
-                              />
-                              <label
-                                for="checkbox-menu-03"
-                                class="checkbox-label"
-                              >
-                                <svg-icon
-                                  class="svg-icon menu-data-icon"
-                                  name="resource"
-                                ></svg-icon>
-                                <span class="checkbox-text">데이터 모델</span>
-                                <span class="checkbox-subtext">(소유자)</span>
-                              </label>
-                            </div>
-                            <div class="menu-button-group">
-                              <button
-                                class="button button-neutral-ghost button-sm"
-                              >
-                                <span class="hidden-text">북마크</span>
-                                <svg-icon
-                                  class="svg-icon"
-                                  name="tag"
-                                ></svg-icon>
-                              </button>
-                              <button
-                                class="button button-neutral-ghost button-sm"
-                              >
-                                <span class="hidden-text">메뉴보기</span>
-                                <svg-icon
-                                  class="svg-icon"
-                                  name="kebab-menu"
-                                ></svg-icon>
-                              </button>
-                            </div>
+                          <li class="tab-item">
+                            <button class="tab-button">
+                              <p class="tab-button-text">스토리지</p>
+                            </button>
+                          </li>
+                          <li class="tab-item">
+                            <button class="tab-button">
+                              <p class="tab-button-text">융합모델</p>
+                            </button>
                           </li>
                         </ul>
                       </div>
                     </template>
-                  </Accordion>
-                  <Accordion>
-                    <template #title> 내가 등록한 데이터 모델 </template>
-                    <template #body>
-                      <div class="menu menu-data">
-                        <ul class="menu-list">
-                          <li class="menu-item">
-                            <div class="checkbox">
-                              <input
-                                type="checkbox"
-                                id="checkbox-menu-01"
-                                class="checkbox-input"
-                                checked
-                              />
-                              <label
-                                for="checkbox-menu-01"
-                                class="checkbox-label"
-                              >
-                                <svg-icon
-                                  class="svg-icon menu-data-icon"
-                                  name="resource"
-                                ></svg-icon>
-                                <span class="checkbox-text">데이터 모델</span>
-                                <span class="checkbox-subtext">(소유자)</span>
-                              </label>
-                            </div>
-                            <div class="menu-button-group">
-                              <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환/icon에 .secondary 클래스 추가 -->
-                              <button
-                                class="button button-neutral-ghost button-sm"
-                              >
-                                <span class="hidden-text">북마크</span>
-                                <svg-icon
-                                  class="svg-icon secondary"
-                                  name="tag-fill"
-                                ></svg-icon>
-                              </button>
-                              <div class="relative">
-                                <button
-                                  class="button button-neutral-ghost button-sm"
-                                >
-                                  <span class="hidden-text">메뉴보기</span>
-                                  <svg-icon
-                                    class="svg-icon"
-                                    name="kebab-menu"
-                                  ></svg-icon>
-                                </button>
-                              </div>
-                            </div>
-                          </li>
-                          <li class="menu-item" v-for="menu in 2" :key="menu">
-                            <div class="checkbox">
-                              <input
-                                type="checkbox"
-                                id="checkbox-menu-03"
-                                class="checkbox-input"
-                              />
-                              <label
-                                for="checkbox-menu-03"
-                                class="checkbox-label"
-                              >
-                                <svg-icon
-                                  class="svg-icon menu-data-icon"
-                                  name="resource"
-                                ></svg-icon>
-                                <span class="checkbox-text">데이터 모델</span>
-                                <span class="checkbox-subtext">(소유자)</span>
-                              </label>
-                            </div>
-                            <div class="menu-button-group">
-                              <button
-                                class="button button-neutral-ghost button-sm"
-                              >
-                                <span class="hidden-text">북마크</span>
-                                <svg-icon
-                                  class="svg-icon"
-                                  name="tag"
-                                ></svg-icon>
-                              </button>
-                              <div class="relative">
-                                <button
-                                  class="button button-neutral-ghost button-sm"
-                                >
-                                  <span class="hidden-text">메뉴보기</span>
-                                  <svg-icon
-                                    class="svg-icon"
-                                    name="kebab-menu"
-                                  ></svg-icon>
-                                </button>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </template>
-                  </Accordion>
-                  <Accordion>
-                    <template #title> 최근에 조회한 데이터 모델 </template>
-                    <template #body>
-                      <div class="menu menu-data">
-                        <ul class="menu-list">
-                          <li class="menu-item">
-                            <div class="checkbox">
-                              <input
-                                type="checkbox"
-                                id="checkbox-menu-01"
-                                class="checkbox-input"
-                                checked
-                              />
-                              <label
-                                for="checkbox-menu-01"
-                                class="checkbox-label"
-                              >
-                                <svg-icon
-                                  class="svg-icon menu-data-icon"
-                                  name="resource"
-                                ></svg-icon>
-                                <span class="checkbox-text">데이터 모델</span>
-                                <span class="checkbox-subtext">(소유자)</span>
-                              </label>
-                            </div>
-                            <div class="menu-button-group">
-                              <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환/icon에 .secondary 클래스 추가 -->
-                              <button
-                                class="button button-neutral-ghost button-sm"
-                              >
-                                <span class="hidden-text">북마크</span>
-                                <svg-icon
-                                  class="svg-icon secondary"
-                                  name="tag-fill"
-                                ></svg-icon>
-                              </button>
-                              <div class="relative">
-                                <button
-                                  class="button button-neutral-ghost button-sm"
-                                >
-                                  <span class="hidden-text">메뉴보기</span>
-                                  <svg-icon
-                                    class="svg-icon"
-                                    name="kebab-menu"
-                                  ></svg-icon>
-                                </button>
-                              </div>
-                            </div>
-                          </li>
-                          <li class="menu-item" v-for="menu in 2" :key="menu">
-                            <div class="checkbox">
-                              <input
-                                type="checkbox"
-                                id="checkbox-menu-03"
-                                class="checkbox-input"
-                              />
-                              <label
-                                for="checkbox-menu-03"
-                                class="checkbox-label"
-                              >
-                                <svg-icon
-                                  class="svg-icon menu-data-icon"
-                                  name="resource"
-                                ></svg-icon>
-                                <span class="checkbox-text">데이터 모델</span>
-                                <span class="checkbox-subtext">(소유자)</span>
-                              </label>
-                            </div>
-                            <div class="menu-button-group">
-                              <button
-                                class="button button-neutral-ghost button-sm"
-                              >
-                                <span class="hidden-text">북마크</span>
-                                <svg-icon
-                                  class="svg-icon"
-                                  name="tag"
-                                ></svg-icon>
-                              </button>
-                              <div class="relative">
-                                <button
-                                  class="button button-neutral-ghost button-sm"
-                                >
-                                  <span class="hidden-text">메뉴보기</span>
-                                  <svg-icon
-                                    class="svg-icon"
-                                    name="kebab-menu"
-                                  ></svg-icon>
-                                </button>
-                              </div>
-                            </div>
-                          </li>
-                        </ul>
-                      </div>
-                    </template>
-                  </Accordion>
-                </div>
-              </div>
+                  </data-model-api-list>
+                </template>
+                <template #my>
+                  <data-model-accordian-list
+                    :data="myModelList"
+                    :selected-items="selectedModelList"
+                    label-key="modelNm"
+                    value-key="id"
+                    :use-item-delete-btn="false"
+                    :is-multi="true"
+                    :use-live-search="false"
+                    list-type="non-selected"
+                    no-data-msg="데이터 모델이 없습니다."
+                  ></data-model-accordian-list>
+                </template>
+              </Tab>
             </div>
             <div class="transfer-handle">
               <button class="button button-neutral-stroke">
@@ -538,128 +102,22 @@
             </div>
             <div class="transfer-box">
               <div class="transfer-head">
-                <span>선택된 데이터 모델(3)</span>
+                <span>선택된 데이터 모델({{ selectedListLength }})</span>
               </div>
-              <div class="menu menu-data">
-                <div class="menu-head">
-                  <div class="h-group">
-                    <div class="search-input search-input-sm">
-                      <label class="hidden-text" for="data-menu-search"
-                        >데이터 모델 검색</label
-                      >
-                      <input
-                        id="data-menu-search"
-                        class="text-input"
-                        value="검색어 입력"
-                      />
-                      <svg-icon
-                        class="text-input-icon"
-                        name="search"
-                      ></svg-icon>
-                      <button
-                        class="search-input-action-button button button-neutral-ghost button-sm"
-                        type="button"
-                      >
-                        <span class="hidden-text">지우기</span>
-                        <svg-icon class="button-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                    <button class="button button-neutral-ghost">
-                      <span class="hidden-text">리셋</span>
-                      <svg-icon class="svg-icon" name="reset"></svg-icon>
-                    </button>
-                  </div>
-                  <!-- 컨텐츠 넘침은 무시하고 작업해주세요.  -->
-                  <div class="filters">
-                    <!-- 카테고리, 소유자, 태그 select -->
-                    <div class="h-group">
-                      <select-box class="select-clean select-sm"></select-box>
-                      <select-box class="select-clean select-sm"></select-box>
-                      <select-box class="select-clean select-sm"></select-box>
-                    </div>
-                  </div>
-                </div>
-                <ul class="menu-list">
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input
-                        type="checkbox"
-                        id="checkbox-menu-01"
-                        class="checkbox-input"
-                        checked
-                      />
-                      <label for="checkbox-menu-01" class="checkbox-label">
-                        <svg-icon
-                          class="svg-icon menu-data-icon"
-                          name="resource"
-                        ></svg-icon>
-                        <span class="checkbox-text">데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환/icon에 .secondary 클래스 추가 -->
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon
-                          class="svg-icon secondary"
-                          name="tag-fill"
-                        ></svg-icon>
-                      </button>
-                      <div class="relative">
-                        <button class="button button-neutral-ghost button-sm">
-                          <span class="hidden-text">메뉴보기</span>
-                          <svg-icon
-                            class="svg-icon"
-                            name="kebab-menu"
-                          ></svg-icon>
-                        </button>
-                      </div>
-                    </div>
-                  </li>
-                  <li class="menu-item" v-for="menu in 6" :key="menu">
-                    <div class="checkbox">
-                      <input
-                        type="checkbox"
-                        id="checkbox-menu-03"
-                        class="checkbox-input"
-                      />
-                      <label for="checkbox-menu-03" class="checkbox-label">
-                        <svg-icon
-                          class="svg-icon menu-data-icon"
-                          name="resource"
-                        ></svg-icon>
-                        <span class="checkbox-text">데이터 모델</span>
-                        <span class="checkbox-subtext">(소유자)</span>
-                      </label>
-                    </div>
-                    <div class="menu-button-group">
-                      <button class="button button-neutral-ghost button-sm">
-                        <span class="hidden-text">북마크</span>
-                        <svg-icon class="svg-icon" name="tag"></svg-icon>
-                      </button>
-                      <div class="relative">
-                        <button class="button button-neutral-ghost button-sm">
-                          <span class="hidden-text">메뉴보기</span>
-                          <svg-icon
-                            class="svg-icon"
-                            name="kebab-menu"
-                          ></svg-icon>
-                        </button>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
-                <!-- 결과 없을 시 no-result 표시 -->
-                <div class="no-result" style="display: none">
-                  <div class="notification">
-                    <svg-icon class="notification-icon" name="info"></svg-icon>
-                    <p class="notification-detail">
-                      선택된 데이터 모델이 없습니다.
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <data-model-list
+                :filter="filter"
+                :data="selectedModelList"
+                label-key="modelNm"
+                value-key="id"
+                :use-item-delete-btn="true"
+                :is-multi="true"
+                :use-sort="false"
+                :use-infinite="false"
+                :use-live-search="true"
+                list-type="selected"
+                no-data-msg="선택된 데이터 모델이 없습니다."
+                @delete="onDeleteDataModel"
+              ></data-model-list>
             </div>
           </div>
           <div class="tab">
@@ -894,13 +352,47 @@
   </div>
 </template>
 <script setup lang="ts">
-import Accordion from "@base/accordion/accordion.vue";
+import Tab from "@extends/tab/Tab.vue";
+import $constants from "~/utils/constant";
+import DataModelApiList from "~/components/datamodel-creation/list/api/data-model-api-list.vue";
+import DataModelList from "~/components/datamodel-creation/list/base/data-model-list.vue";
+import DataModelAccordianList from "~/components/datamodel-creation/list/api/accoridan/data-model-accordian-list.vue";
+
+const props = defineProps({
+  dataModelList: {
+    type: Array,
+    required: true,
+  },
+  selectedModelList: {
+    type: Array,
+    required: true,
+  },
+  myModelList: {
+    type: Object,
+    required: true,
+  },
+  filter: {
+    type: Object,
+    required: true,
+  },
+});
+
+const currTab = ref("all");
 
 const emit = defineEmits<{ (e: "change", option: boolean): void }>();
+const selectedListLength = computed(() => {
+  return props.selectedModelList ? props.selectedModelList.length : 0;
+});
 
 const addDataModel = (option: boolean) => {
   emit("change", option);
 };
+const onDeleteDataModel = (option: boolean) => {
+  console.log("onDeleteDataModel");
+};
+function onChangeTab(item: number | string) {
+  currTab.value = item;
+}
 </script>
 <style lang="scss" scoped>
 /* @import "./index.scss"; */
