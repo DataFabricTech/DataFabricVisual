@@ -11,5 +11,5 @@ public class JsonPatchOperation {
     private String path;
 
     @JsonProperty("value")
-    private String value;
+    private Object value;
 }
