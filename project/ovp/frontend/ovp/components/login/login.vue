@@ -1,10 +1,10 @@
 <template>
   <div class="wrap">
     <div class="submit-form">
-      <h1 class="submit-form-logo">LOGO</h1>
       <div class="submit-form-form">
+        <h1 class="submit-form-logo">LOGO</h1>
         <h2 class="submit-form-title">로그인</h2>
-        <div class="form form-lg gap-8">
+        <div class="form form-lg gap-6">
           <div class="form-body">
             <div class="form-item">
               <label for="inpId" class="form-label"> 아이디 또는 이메일 </label>

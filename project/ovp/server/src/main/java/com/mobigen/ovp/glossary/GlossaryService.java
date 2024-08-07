@@ -3,6 +3,7 @@ package com.mobigen.ovp.glossary;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.glossary.client.GlossaryClient;
 import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
+import com.mobigen.ovp.glossary.client.dto.TermDto;
 import com.mobigen.ovp.glossary.client.dto.glossary.Glossary;
 import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivity;
 import com.mobigen.ovp.glossary.client.dto.terms.GlossaryTerms;
@@ -59,6 +60,15 @@ public class GlossaryService {
         } else {
             throw new Exception();
         }
+    }
+
+    /**
+     * 용어 추가
+     * @param dto
+     * @return
+     */
+    public Object createTerm(TermDto dto) {
+        return glossaryClient.createTerms(dto);
     }
 
     /**

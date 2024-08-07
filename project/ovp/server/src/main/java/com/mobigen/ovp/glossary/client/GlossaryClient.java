@@ -2,6 +2,7 @@ package com.mobigen.ovp.glossary.client;
 
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
+import com.mobigen.ovp.glossary.client.dto.TermDto;
 import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivityResponse;
 import com.mobigen.ovp.glossary.client.dto.glossary.GlossaryResponse;
 import com.mobigen.ovp.glossary.client.dto.terms.GlossaryTermsResponse;
@@ -57,6 +58,14 @@ public interface GlossaryClient {
     ResponseEntity<Void> deleteGlossary(@PathVariable UUID id,
                         @RequestParam(defaultValue = "true") Boolean recursive,
                         @RequestParam(defaultValue = "true") Boolean hardDelete);
+
+    /**
+     * 용어 추가
+     * @param dto
+     * @return
+     */
+    @PostMapping("/glossaryTerms")
+    Object createTerms(@RequestBody TermDto dto);
 
     /**
      * 용어 리스트

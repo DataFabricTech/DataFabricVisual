@@ -32,7 +32,6 @@ public class WebSecurityConfiguration {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtFilter jwtFilter;
     private final LocalLoginFilter localLoginFilter;
-    private final Token token;
 
 
     private final FrameworkProperties properties;
@@ -50,24 +49,25 @@ public class WebSecurityConfiguration {
         // 토큰 방식 활용을 위해 Session Stateless 설정
         http.sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        // TODO: Token 기반 인증 방식에서 사용되는 로그아웃 처리 확인 필요
         // Set Logout
-        http.logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl(properties.getSecurity().getRedirectUrl())
-                .addLogoutHandler((request, response, authentication) -> {
-                    for (Cookie cookie : request.getCookies()) {
-                        String cookieName = cookie.getName();
-                        if (properties.getToken().getAccessToken().equals(cookieName)) {
-                            // TODO: Open Metadata 사용자 로그아웃 처리 필요
-
-                            // 쿠키에서 토큰값 삭제
-                            Cookie cookieToDelete = new Cookie(cookieName, null);
-                            cookieToDelete.setMaxAge(-1);
-                            response.addCookie(cookieToDelete);
-                        }
-                    }
-                })
-        );
+//        http.logout(logout -> logout
+//                .logoutUrl("/logout")
+//                .logoutSuccessUrl(properties.getSecurity().getRedirectUrl())
+//                .addLogoutHandler((request, response, authentication) -> {
+//                    for (Cookie cookie : request.getCookies()) {
+//                        String cookieName = cookie.getName();
+//                        if (properties.getToken().getAccessToken().equals(cookieName)) {
+//                            // TODO: Open Metadata 사용자 로그아웃 처리 필요
+//
+//                            // 쿠키에서 토큰값 삭제
+//                            Cookie cookieToDelete = new Cookie(cookieName, null);
+//                            cookieToDelete.setMaxAge(-1);
+//                            response.addCookie(cookieToDelete);
+//                        }
+//                    }
+//                })
+//        );
 
         // Set CSRF
         if (Boolean.TRUE.equals(properties.getSecurity().getCsrf())) {

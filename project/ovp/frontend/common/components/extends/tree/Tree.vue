@@ -45,18 +45,19 @@ const props = withDefaults(defineProps<TreeProps>(), {
   hideGuideLines: false,
   showOpenAllBtn: false,
   showCloseAllBtn: false,
-  firExpandAll: false
+  firExpandAll: false,
+  checkedIds: () => []
 });
 
 const emit = defineEmits<{
-  (e: "onItemChecked", params: { from: TreeViewItem; to: TreeViewItem }): void;
+  (e: "onItemChecked", params: TreeViewItem[]): void;
   (e: "onItemSelected", params: TreeViewItem): void;
   (e: "addSibling", params: TreeViewItem): void;
   (e: "addChild", params: TreeViewItem): void;
 }>();
 
-const onItemChecked = (from: TreeViewItem, to: TreeViewItem) => {
-  emit("onItemChecked", { from, to } as { from: TreeViewItem; to: TreeViewItem });
+const onItemChecked = (from: TreeViewItem[]) => {
+  emit("onItemChecked", from);
 };
 
 const onItemSelected = (node: TreeViewItem) => {
