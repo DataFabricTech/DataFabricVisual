@@ -133,7 +133,7 @@
           :data="menuSearchTagsData"
           :selected-items="glossary.tags"
           label-key="label"
-          value-key="data"
+          value-key="tagFQN"
           :is-multi="true"
           title="값을 선택하세요"
           @multiple-change="changeTag"
@@ -178,8 +178,8 @@
 <script setup lang="ts">
 import { useGlossaryStore } from "~/store/glossary";
 import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
-import type { JsonPatchOperation } from "~/type/common";
-import { reactive, watch, onMounted } from "vue";
+import type { JsonPatchOperation, Tag } from "~/type/common";
+import { reactive, watch, onMounted, type Ref } from "vue";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 
 const {
@@ -193,6 +193,7 @@ const {
   changeTab,
   changeEditGlossaryMode,
   getAllTags,
+  createTagOperation,
 } = useGlossaryStore();
 const store = useGlossaryStore();
 
@@ -237,21 +238,19 @@ const getTabItemClassName = (param: string): string => {
   return store.tab === param ? "tab-item is-tab-item-selected" : "tab-item";
 };
 
+const selectedItems: Ref<string[]> = ref([]);
+
 async function changeTag(items: MenuSearchItemImpl[]) {
-  // const selectedItems = items.map((v) => v.data);
-  // const value = tags.filter((v) => selectedItems.includes(v.name));
-  // const diff = glossary.tags.filter((v) => !selectedItems.includes(v.name));
-  // console.log(diff);
-  // if (items.length < glossary.tags.length) {
-  // }
-  //
-  // // {
-  // //   op: 'replace',
-  // //       path: '/displayName',
-  // //     value: editData.displayName,
-  // // }
-  // //await editGlossary(glossary.id);
-  // console.log(value);
-  console.log(items);
+  selectedItems.value = items.map((item: MenuSearchItemImpl) => item.tagFQN);
+  const matchTags: Tag[] = tags.filter((tag) =>
+    selectedItems.value.includes(tag.tagFQN),
+  );
+  console.log(matchTags);
+  const operations: JsonPatchOperation[] = createTagOperation(
+    selectedItems.value,
+    matchTags,
+  );
+  await editGlossary(glossary.id, operations);
+  await getGlossaries();
 }
 </script>

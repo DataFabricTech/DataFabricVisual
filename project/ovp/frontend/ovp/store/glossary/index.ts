@@ -3,6 +3,7 @@ import { reactive, ref } from "vue";
 import type { Activity, Glossary, Term } from "~/type/glossary";
 import type { JsonPatchOperation, PreviewData, Tag } from "~/type/common";
 import type { DataModel } from "~/components/common/resource-box/resource-box-common-props";
+import $constants from "~/utils/constant";
 
 export const useGlossaryStore = defineStore("glossary", () => {
   const { $api } = useNuxtApp();
@@ -51,7 +52,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
 
   async function editGlossary(
     id: string,
-    body: [JsonPatchOperation],
+    body: JsonPatchOperation[],
   ): Promise<void> {
     const res = await $api(`/api/glossary/${id}`, {
       method: "PATCH",
@@ -199,13 +200,63 @@ export const useGlossaryStore = defineStore("glossary", () => {
    */
   async function getAllTags(): Promise<void> {
     const res = await $api(`/api/glossary/all-tags`);
-    tags.splice(0, tags.length, ...res.data.allData);
-    menuSearchTagsData.splice(
-      0,
-      menuSearchTagsData.length,
-      ...res.data.menuSearchData,
-    );
+    tags.splice(0, tags.length, ...res.data);
+    tags.forEach((tag) => {
+      menuSearchTagsData.push({ label: tag.name, tagFQN: tag.tagFQN });
+    });
   }
+
+  /**
+   * Tag 수정 operation 생성
+   * @param selectedItems
+   * @param matchTags
+   */
+  const createTagOperation = (
+    selectedItems: string[],
+    matchTags: Tag[],
+  ): JsonPatchOperation[] => {
+    const newTag = selectedItems;
+    const oldTag = glossary.tags.map((tag) => tag.tagFQN);
+    const maxLength = Math.max(newTag.length, oldTag.length);
+
+    const operations: JsonPatchOperation[] = [];
+
+    // eslint-disable-next-line id-length
+    for (let i: number = 0; i < maxLength; i++) {
+      const newVal = newTag[i] ?? null;
+      const oldVal = oldTag[i] ?? null;
+
+      if (newVal === null && oldVal !== null) {
+        operations.push({
+          op: "remove",
+          path: `/tags/${i}`,
+        });
+      } else if (newVal !== null && oldVal === null) {
+        const newTag = matchTags.find((tag) => tag.tagFQN === newVal);
+        if (newTag) {
+          operations.push({
+            op: "add",
+            path: `/tags/${i}`,
+            value: matchTags[i],
+          });
+        }
+      } else if (newVal !== oldVal) {
+        const tag: Tag | undefined = matchTags.find(
+          (tag: Tag) => tag.tagFQN === newVal,
+        );
+        if (tag) {
+          $constants.PATCH_OPERATION.PATH_LIST.forEach((path: string) => {
+            operations.push({
+              op: "replace",
+              path: `/tags/${i}/${path}`,
+              value: tag[path],
+            });
+          });
+        }
+      }
+    }
+    return operations;
+  };
 
   return {
     glossaries,
@@ -251,5 +302,6 @@ export const useGlossaryStore = defineStore("glossary", () => {
     changeCurrentGlossary,
 
     getAllTags,
+    createTagOperation,
   };
 });

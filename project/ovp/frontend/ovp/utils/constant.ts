@@ -40,5 +40,8 @@ const $constants = {
       },
     ],
   },
+  PATCH_OPERATION: {
+    PATH_LIST: ["description", "displayName", "name", "tagFQN"],
+  },
 };
 export default Object.freeze($constants);

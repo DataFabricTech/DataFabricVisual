@@ -6,7 +6,7 @@ export interface Glossary {
   fullyQualifiedName: string;
   owner: Owner;
   //TODO response type 정의
-  tags: object;
+  tags: object[];
 }
 export interface Term {
   id: string;
