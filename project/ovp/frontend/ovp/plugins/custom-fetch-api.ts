@@ -1,26 +1,45 @@
 import { ofetch } from "ofetch";
 import { defineNuxtPlugin, useRuntimeConfig } from "nuxt/app";
 
-export default defineNuxtPlugin(() => {
+export default defineNuxtPlugin((nuxtApp: any) => {
   const api = ofetch.create({
-    async onRequest({ options }) {
-      // TODO: 로더 추가
+    async onRequest(context) {
+      const { options } = context;
+
       options.baseURL = useRuntimeConfig().public.baseUrl;
       options.credentials = "include";
+
+      const showLoader = (options as object).showLoader ?? true;
+      if (showLoader) {
+        nuxtApp.$loading.start();
+      }
     },
-    async onResponse({ response }) {
-      // TODO: 로더 추가
+    async onResponse(context) {
+      const { response, options } = context;
       const data = response._data;
-      if (Object.prototype.hasOwnProperty.call(data, "result") && data.result === 0) {
+
+      const showLoader = (options as object).showLoader ?? true;
+      if (showLoader) {
+        nuxtApp.$loading.stop();
+      }
+      if (
+        Object.prototype.hasOwnProperty.call(data, "result") &&
+        data.result === 0
+      ) {
         errorResponse(data);
       } else if (data instanceof Blob && data.type) {
         const text = await data.text();
-        const blobData = data.type.toLowerCase().includes("json") ? JSON.parse(text) : text;
-        if (Object.prototype.hasOwnProperty.call(blobData, "code") && blobData.code !== 0) {
+        const blobData = data.type.toLowerCase().includes("json")
+          ? JSON.parse(text)
+          : text;
+        if (
+          Object.prototype.hasOwnProperty.call(blobData, "code") &&
+          blobData.code !== 0
+        ) {
           errorResponse(blobData);
         }
       }
-    }
+    },
   });
 
   function errorResponse(data: any) {
@@ -33,7 +52,7 @@ export default defineNuxtPlugin(() => {
 
   return {
     provide: {
-      api
-    }
+      api,
+    },
   };
 });
