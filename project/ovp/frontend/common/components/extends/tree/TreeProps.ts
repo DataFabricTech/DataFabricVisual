@@ -29,5 +29,7 @@ export interface TreeProps {
   hideGuideLines: boolean;
   firExpandAll?: boolean;
 
-  dropValidator: (thisNode: TreeViewItem, targetNode: TreeViewItem, newNode: TreeViewItem) => Promise<boolean>;
+  checkedIds?: string[];
+
+  dropValidator: (thisNode: TreeViewItem, targetNode: TreeViewItem, newNode: TreeViewItem) => boolean;
 }
