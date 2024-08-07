@@ -1,6 +1,7 @@
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 import { usePagingStore } from "~/store/common/paging";
 import _ from "lodash";
+import { ref } from "vue";
 
 export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const { $api } = useNuxtApp();
@@ -10,7 +11,16 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const categories: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
   const isCategoriesNoData = ref(false);
   const modelList: Ref<any[]> = ref([]);
+  const modelIdList = ref([]);
+  const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
   let selectedNode: any = null;
+  const previewData: Ref<any> = ref({
+    modelInfo: {
+      model: {
+        name: "",
+      },
+    },
+  });
 
   // METHODS
   const getCategories = async () => {
@@ -54,7 +64,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     }
     const data = await getModelByCategoryIdAPI(selectedNode);
     modelList.value = data;
-    console.log("getModelList의 modelList", modelList.value);
   };
   const setSelectedNode = (node: any) => {
     selectedNode = node;
@@ -97,11 +106,25 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     alert("삭제 되었습니다.");
     getCategories();
   };
+  const setModelIdList = () => {
+    for (const element of modelList.value) {
+      modelIdList.value.push(element.id);
+    }
+  };
+
+  // preview
+  const getPreviewData = async (fqn: string) => {
+    const data: any = await $api(`/api/search/preview/${fqn}`);
+    previewData.value = data.data;
+  };
 
   return {
     categories,
     modelList,
     isCategoriesNoData,
+    modelIdList,
+    previewData,
+    isBoxSelectedStyle,
     getCategories,
     addModelList,
     getModelList,
@@ -110,5 +133,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     editCategory,
     moveCategory,
     deleteCategory,
+    setModelIdList,
+    getPreviewData,
   };
 });

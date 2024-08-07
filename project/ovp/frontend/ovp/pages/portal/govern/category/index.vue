@@ -68,7 +68,7 @@
                 >카테고리 이름 수정</label
               >
               <input
-                v-model="selectedNodeValue"
+                v-model="selectedTitleNodeValue"
                 placeholder="모델 설명에 대한 영역입니다."
                 required
                 id="title-modify"
@@ -98,7 +98,7 @@
               >
               <textarea
                 class="textarea"
-                v-model="selectedNodeValue"
+                v-model="selectedDescNodeValue"
                 placeholder="모델 설명에 대한 영역입니다."
                 required
                 id="textarea-modify"
@@ -121,10 +121,12 @@
                 <div class="checkbox">
                   <input
                     type="checkbox"
-                    id="checkbox-menu-1"
+                    id="allCheck"
+                    value="all"
+                    v-model="allModelList"
                     class="checkbox-input"
                   />
-                  <label for="checkbox-menu-1" class="checkbox-label">
+                  <label for="allCheck" class="checkbox-label">
                     전체선택
                   </label>
                 </div>
@@ -158,9 +160,11 @@
                     :use-list-checkbox="true"
                     :show-owner="true"
                     :show-category="true"
-                    :is-box-selected-style="false"
+                    :is-box-selected-style="isBoxSelectedStyle"
+                    :useDataNmLink="false"
+                    :is-checked="isAllModelListChecked"
+                    :selected-model-list="selectedModelList"
                     @previewClick="previewClick"
-                    @modelNmClick="modelNmClick"
                     @checkedValueChanged="checked"
                   />
                   <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
@@ -172,88 +176,11 @@
                   ></Loading>
                 </div>
               </div>
-              <div class="preview">
-                <div class="ml-auto">
-                  <button class="button button-neutral-ghost button-sm">
-                    <svg-icon class="svg-icon" name="close"></svg-icon>
-                    <span class="hidden-text">닫기</span>
-                  </button>
-                </div>
-                <div class="preview-contents">
-                  <div class="preview-item">
-                    <div class="preview-title">
-                      세종특별자치시 상하수도요금표
-                    </div>
-                    <div class="preview-desc">
-                      한국교통안전공단에서 교통카드를 이용한 대중교통 사용시 1회
-                      이용요금 평균을 조사한 결과 입니다.
-                    </div>
-                    <table>
-                      <colgroup>
-                        <col style="width: 30%" />
-                        <col />
-                      </colgroup>
-                      <tr>
-                        <th>확장자</th>
-                        <td>PDF</td>
-                      </tr>
-                      <tr>
-                        <th>전체 행</th>
-                        <td>10000</td>
-                      </tr>
-                    </table>
-                  </div>
-                  <div class="preview-item">
-                    <div class="preview-title">태그</div>
-                    <div class="preview-group">
-                      <div
-                        class="tag tag-primary tag-sm"
-                        v-for="tag in 8"
-                        :key="tag"
-                      >
-                        <a class="tag-link" href="#">DATA-tag</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="preview-item">
-                    <div class="preview-title">용어</div>
-                    <div class="preview-group">
-                      <div class="tag tag-primary tag-sm">
-                        <a class="tag-link">관련 용어</a>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="preview-item">
-                    <div class="preview-title">상세 설명</div>
-                    <div class="preview-desc">상세 설명을 하는 구간입니다.</div>
-                  </div>
-                  <div class="preview-item">
-                    <div class="preview-title">URL</div>
-                    <a href="#" class="preview-link">
-                      https://sandbox.open-metadata.org/callback#state=49e9675588d3414f9585fb455e
-                    </a>
-                  </div>
-                  <div class="preview-item">
-                    <div class="preview-title">스키마</div>
-                    <div class="v-group gap-2 w-full">
-                      <div class="preview-schema">
-                        <div class="h-group gap-1">
-                          <span class="schema-title">payment_id</span>
-                          <span class="schema-subtitle">(INT)</span>
-                        </div>
-                        <div class="schema-desc">schema description</div>
-                      </div>
-                      <div class="preview-schema">
-                        <div class="h-group gap-1">
-                          <span class="schema-title">payment_id</span>
-                          <span class="schema-subtitle">(INT)</span>
-                        </div>
-                        <div class="schema-desc">schema description</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <Preview
+                :isShowPreview="isShowPreview"
+                :preview-data="previewData"
+                @change="getPreviewCloseStatus"
+              ></Preview>
             </div>
           </div>
         </div>
@@ -377,12 +304,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import _ from "lodash";
 import TreeVue from "@extends/tree/Tree.vue";
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import Loading from "@base/loading/Loading.vue";
+import Preview from "~/components/common/preview/preview.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
 import { storeToRefs } from "pinia";
@@ -400,17 +328,25 @@ const {
   editCategory,
   moveCategory,
   deleteCategory,
+  setModelIdList,
+  getPreviewData,
 } = categoryStore;
-const { categories, modelList, isCategoriesNoData } =
-  storeToRefs(categoryStore);
+const {
+  categories,
+  modelList,
+  modelIdList,
+  isCategoriesNoData,
+  previewData,
+  isBoxSelectedStyle,
+} = storeToRefs(categoryStore);
 
 const loader = ref<HTMLElement | null>(null);
 const showModal = ref(false);
 const showModalChange = ref(false);
 const isDescEditMode = ref(false);
 const isTitleEditMode = ref(false);
-
-const selectedNodeValue = ref("");
+const isShowPreview = ref<boolean>(false);
+let currentPreviewId: string | number = "";
 const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
   id: "",
   name: "",
@@ -422,11 +358,32 @@ const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
   disabled: false,
   children: [],
 });
+const isAllModelListChecked = ref<boolean>(false);
+const selectedModelList = ref([]);
+const selectedTitleNodeValue = ref(selectedNode.value.name || "");
+const selectedDescNodeValue = ref(selectedNode.value.desc || "");
 
-const onNodeClicked = (node: TreeViewItem) => {
+watch(
+  () => selectedNode.value.name,
+  (newVal) => {
+    selectedTitleNodeValue.value = newVal || "";
+  },
+  { immediate: true },
+);
+
+watch(
+  () => selectedNode.value.desc,
+  (newVal) => {
+    selectedDescNodeValue.value = newVal || "";
+  },
+  { immediate: true },
+);
+
+const onNodeClicked = async (node: TreeViewItem) => {
   isDescEditMode.value = false;
   isTitleEditMode.value = false;
-  selectedNodeValue.value = "";
+  selectedTitleNodeValue.value = "";
+  selectedDescNodeValue.value = "";
 
   selectedNode.value = node;
 
@@ -435,7 +392,9 @@ const onNodeClicked = (node: TreeViewItem) => {
 
   // 선택한 노드 기준 모델 목록을 조회한다.
   setScrollOptions(0);
-  getModelList();
+  await getModelList();
+  // 모든 모델 리스트 id 저장
+  setModelIdList();
 };
 const addSibling = (newNode: TreeViewItem) => {
   // 형제 노드 추가
@@ -507,56 +466,92 @@ const dropValidator = async (
   // backend 동작이 끝나면 그때 결과에 따라 watch 항목에서 alert 처리, 목록을 갱신 or 유지 한다
   return true;
 };
-
-const previewClick = async (data: object) => {
-  console.log("previewClick");
+// 데이터 모델 리스트
+// TODO: [개발] API 변경 후 value 를 q 에 담아 조회 해야함
+const onInput = (value: string) => {
+  getModelList();
+  console.log("value", value);
 };
 
-const modelNmClick = (data: object) => {
-  console.log("modelClick");
-};
+const allModelList = computed({
+  get() {
+    return modelIdList.value.length === 0
+      ? false
+      : modelIdList.value.length === selectedModelList.value.length;
+  },
+  set(event) {
+    if (event) {
+      isAllModelListChecked.value = true;
+      selectedModelList.value = modelIdList.value;
+      console.log("selectedModelList: ", selectedModelList.value);
+    } else {
+      isAllModelListChecked.value = false;
+      selectedModelList.value = [];
+      console.log("selectedModelList: ", selectedModelList.value);
+    }
+  },
+});
+
 const checked = (checkedList: any[]) => {
-  console.log(checkedList);
+  selectedModelList.value = checkedList;
+  console.log("selectedModelList: ", selectedModelList.value);
 };
 
 const { scrollTrigger, setScrollOptions } =
   useIntersectionObserver(addModelList);
 
+// preview
+const getPreviewCloseStatus = (option: boolean) => {
+  isShowPreview.value = option;
+  isBoxSelectedStyle.value = false;
+  currentPreviewId = "";
+};
+
+const previewClick = async (data: object) => {
+  const { id, fqn } = data as { id: string; fqn: string };
+  if (id === currentPreviewId) {
+    return;
+  }
+
+  await getPreviewData(fqn);
+  isShowPreview.value = true;
+  isBoxSelectedStyle.value = true;
+  currentPreviewId = id;
+};
 // editable-input
 const editCancel = (key: string) => {
   switch (key) {
     case "title":
+      selectedTitleNodeValue.value = selectedNode.value.name;
       isTitleEditMode.value = false;
       break;
     case "desc":
+      selectedDescNodeValue.value = selectedNode.value.desc;
       isDescEditMode.value = false;
       break;
   }
 };
-
 const editDone = (key: string) => {
-  if (selectedNodeValue.value === "") {
-    return;
-  }
-
   switch (key) {
     case "title":
-      selectedNode.value.name = selectedNodeValue.value;
+      if (selectedTitleNodeValue.value === "") {
+        return;
+      }
+      selectedNode.value.name = selectedTitleNodeValue.value;
       isTitleEditMode.value = false;
       break;
     case "desc":
-      selectedNode.value.desc = selectedNodeValue.value;
+      if (selectedDescNodeValue.value === "") {
+        return;
+      }
+      selectedNode.value.desc = selectedDescNodeValue.value;
       isDescEditMode.value = false;
       break;
-    default:
-      selectedNode.value.name = selectedNodeValue.value;
   }
 
   _editCategory();
 };
 const editIcon = (key: string) => {
-  selectedNodeValue.value = "";
-
   switch (key) {
     case "title":
       isTitleEditMode.value = true;
@@ -567,20 +562,17 @@ const editIcon = (key: string) => {
   }
 };
 
-const onInput = (value: string) => {
-  console.log("value", value);
-};
-
 onMounted(async () => {
   if (loader.value) {
     loader.value.style.display = "block";
   }
 
+  // TODO: [개발] 페이지 진입 시 첫 번째 트리, 모델 리스트 설정 - 첫 번째 트리에 선택된 상태를 추가할 수 있는지 검토 필요
   await getCategories();
 
-  // TODO: [개발] 페이지 진입 시 첫 번째 트리, 모델 리스트 설정 - 우측 첫 번째 트리에 선택된 상태를 추가할 수 있는지 검토 필요
   if (categories.value && categories.value.length > 0) {
-    onNodeClicked(categories.value[0]);
+    await onNodeClicked(categories.value[0]);
+    setModelIdList();
   }
 
   if (loader.value) {

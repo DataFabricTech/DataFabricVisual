@@ -15,6 +15,7 @@
       :use-prv-btn="props.usePrvBtn"
       :useFirModelNm="props.useFirModelNm"
       :use-data-nm-link="props.useDataNmLink"
+      :is-checked="props.isChecked"
       @checked="checked"
       @previewClick="previewClick"
       @modelNmClick="modelNmClick"
@@ -24,9 +25,8 @@
 
 <script setup lang="ts">
 import ResourceBox from "~/components/common/resource-box/resource-box.vue";
-
+import { defineEmits, ref, watch } from "vue";
 import type { ResourceBoxListProps } from "./resource-box-list-props";
-import { defineEmits } from "vue";
 
 const selectedList: Ref<Array<string | number>> = ref([]);
 const selectedResourceBoxId: Ref<string | number> = ref("");
@@ -37,6 +37,7 @@ const props = withDefaults(defineProps<ResourceBoxListProps>(), {
   useListCheckbox: false,
   useDataNmLink: true,
   isBoxSelectedStyle: false,
+  isChecked: false,
 });
 
 const emit = defineEmits<{
@@ -44,11 +45,13 @@ const emit = defineEmits<{
   (e: "modelNmClick", data: object): void;
   (e: "checkedValueChanged", ids: any[]): void;
 }>();
+
 const previewClick = (data: object) => {
   const { id } = data as { id: string };
   selectedResourceBoxId.value = id;
   emit("previewClick", data);
 };
+
 const modelNmClick = (data: object) => {
   emit("modelNmClick", data);
 };
@@ -72,6 +75,18 @@ const checked = ({
 
   emit("checkedValueChanged", selectedList.value);
 };
+
+// props.selectedModelList가 유효할 때만 watch를 설정
+// selectedModelList가 변경될 때 selectedList를 업데이트
+if (props.selectedModelList !== undefined) {
+  watch(
+    () => props.selectedModelList,
+    (newVal) => {
+      selectedList.value = [...newVal];
+    },
+    { immediate: true },
+  );
+}
 </script>
 
 <style lang="scss" scoped></style>

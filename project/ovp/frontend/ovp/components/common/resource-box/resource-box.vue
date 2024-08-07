@@ -13,6 +13,7 @@
           <input
             type="checkbox"
             :id="`resource_box_list_${dataObj.id}`"
+            :checked="isChecked"
             class="checkbox-input"
             @change="checked($event, dataObj.id)"
           />
