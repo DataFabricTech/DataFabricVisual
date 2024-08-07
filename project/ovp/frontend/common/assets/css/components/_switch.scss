@@ -16,18 +16,16 @@
     &::after {
       @include box-shadow('sm');
 
-      & {
-        content: "";
-        width: 18px;
-        height: 18px;
-        position: absolute;
-        top: 50%;
-        margin-top: -9px;
-        left: -6px;
-        background-color: $neutral-100;
-        border-radius: $border-radius-round;
-        transition: left 0.2s;
-      }
+      content: "";
+      width: 18px;
+      height: 18px;
+      position: absolute;
+      top: 50%;
+      margin-top: -9px;
+      left: -6px;
+      background-color: $neutral-100;
+      border-radius: $border-radius-round;
+      transition: left 0.2s;
     }
   }
 

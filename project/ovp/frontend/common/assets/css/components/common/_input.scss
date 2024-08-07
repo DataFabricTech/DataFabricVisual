@@ -58,16 +58,14 @@ $input-field-classes: text-input, textarea;
       &::before {
         @include box-shadow('sm');
 
-        & {
-          content: "";
-          flex-shrink: 0;
-          display: block;
-          width: 18px;
-          height: 18px;
-          margin-right: $spacing-8;
-          background-color: $neutral-0;
-          border: 1px solid $neutral-200;
-        }
+        content: "";
+        flex-shrink: 0;
+        display: block;
+        width: 18px;
+        height: 18px;
+        margin-right: $spacing-8;
+        background-color: $neutral-0;
+        border: 1px solid $neutral-200;
       }
 
       &::after {
@@ -198,12 +196,10 @@ $input-field-classes: text-input, textarea;
   .#{$field} {
     @include box-shadow('sm');
 
-    & {
-      width: 100%;
-      border-radius: $border-radius-4;
-      border: 1px solid $neutral-200;
-      color: $neutral-900;
-    }
+    width: 100%;
+    border-radius: $border-radius-4;
+    border: 1px solid $neutral-200;
+    color: $neutral-900;
 
     &::placeholder {
       color: $neutral-400;
