@@ -78,17 +78,26 @@ public class SearchService {
      * @throws Exception
      */
     public Object getSearchList(MultiValueMap<String, String> params) throws Exception {
-        Map<String, Object> resultMap = new HashMap<>();
-        Map<String, Object> totalCountMap = new HashMap<>();
-        Map<String, Object> dataMap = new HashMap<>();
-
         List<Map<String, Object>> responseList = List.of(
                 getTableList(new LinkedMultiValueMap<>(params)),
                 getStorageList(new LinkedMultiValueMap<>(params)),
                 getModelList(new LinkedMultiValueMap<>(params))
         );
-
         List<String> keys = List.of("table", "storage", "model");
+        return getSearchList(keys, responseList);
+    }
+    public Map<String, Object> getAllSearchList(MultiValueMap<String, String> params) throws Exception {
+        List<Map<String, Object>> responseList = List.of(
+                getAllList(new LinkedMultiValueMap<>(params))
+        );
+        List<String> keys = List.of("all");
+        return getSearchList(keys, responseList);
+    }
+
+    private Map<String, Object> getSearchList(List<String> keys, List<Map<String, Object>> responseList) {
+        Map<String, Object> resultMap = new HashMap<>();
+        Map<String, Object> totalCountMap = new HashMap<>();
+        Map<String, Object> dataMap = new HashMap<>();
         for (int i = 0; i < keys.size(); i++) {
             String key = keys.get(i);
             Map<String, Object> res = responseList.get(i);
@@ -115,6 +124,11 @@ public class SearchService {
         }
 
         return resultMap;
+    }
+
+    private Map<String, Object> getAllList(MultiValueMap<String, String> params) throws Exception {
+        params.set("index", ModelIndex.all.name());
+        return getList(params);
     }
 
     private Map<String, Object> getTableList(MultiValueMap<String, String> params) throws Exception {
@@ -145,7 +159,6 @@ public class SearchService {
 
         return getList(params);
     }
-
 
 
     /**
