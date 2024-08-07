@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 
-@FeignClient(name = "ClassificationClient", url = "http://192.168.105.26:8585/api/v1/tags")
+@FeignClient(name = "ClassificationClient", url = "${properties.ovp.open-metadata-url}/tags")
 public interface ClassificationClient {
     // TODO : tag 쪽 코드 merge 되면 아래 코드 이동
 
