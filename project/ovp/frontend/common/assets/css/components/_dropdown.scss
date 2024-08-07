@@ -24,9 +24,7 @@
   @include dropdown-size;
   @include box-shadow('md');
 
-  & {
-    position: absolute;
-  }
+  position: absolute;
 
   .dropdown-item {
     font-weight: 400;

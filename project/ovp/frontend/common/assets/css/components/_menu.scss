@@ -19,13 +19,11 @@
 .menu {
   @include menu-size;
 
-  & {
-    display: flex;
-    flex-direction: column;
-    height: fit-content;
-    box-shadow: none;
-    border-color: $neutral-200;
-  }
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  box-shadow: none;
+  border-color: $neutral-200;
 
   &-button-group {
     @include flex;

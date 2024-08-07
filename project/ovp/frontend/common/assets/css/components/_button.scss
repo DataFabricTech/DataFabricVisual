@@ -45,14 +45,11 @@
 }
 
 @mixin button-size($height: 32px, $gap: null, $padding: 6px, $font-size: '13', $icon-xs: false) {
-  & {
-    @include font-size($font-size);
+  height: $height;
+  gap: $gap;
+  padding: 0 $padding;
 
-    height: $height;
-    gap: $gap;
-    padding: 0 $padding;
-  }
-
+  @include font-size($font-size);
 
   @if $icon-xs {
     .button-icon {
@@ -73,21 +70,18 @@
 
 .button {
   @include button;
+  @include button-size($gap: 4px);
 
-  & {
-    font-weight: 600;
+  font-weight: 600;
+
+  .button-icon {
+    @include icon-size('sm');
   }
 
   &:disabled {
     .button-icon {
       @include icon-color($neutral-300);
     }
-  }
-
-  @include button-size($gap: 4px);
-
-  .button-icon {
-    @include icon-size('sm');
   }
 
   // Size
@@ -168,9 +162,7 @@
   &:has(.hidden-text) {
     @include icon-button-size;
 
-    & {
-      padding: 0;
-    }
+    padding: 0;
 
     &.button {
       &-xl {
@@ -264,9 +256,7 @@
 }
 
 @mixin link-button-color($color: null, $color-active: null) {
-  & {
-    color: $color;
-  }
+  color: $color;
 
   .button-icon {
     @include icon-color($color);
@@ -301,9 +291,7 @@
   @include link-button-size;
   @include link-button-color($color: $neutral-500, $color-active: $neutral-700);
 
-  & {
-    font-weight: 600;
-  }
+  font-weight: 600;
 
   .button-icon {
     @include icon-size('sm');
