@@ -27,6 +27,7 @@
 import ResourceBox from "~/components/common/resource-box/resource-box.vue";
 import { defineEmits, ref, watch } from "vue";
 import type { ResourceBoxListProps } from "./resource-box-list-props";
+import _ from "lodash";
 
 const selectedList: Ref<Array<string | number>> = ref([]);
 const selectedResourceBoxId: Ref<string | number> = ref("");
@@ -78,15 +79,15 @@ const checked = ({
 
 // props.selectedModelList가 유효할 때만 watch를 설정
 // selectedModelList가 변경될 때 selectedList를 업데이트
-if (props.selectedModelList !== undefined) {
-  watch(
-    () => props.selectedModelList,
-    (newVal) => {
+watch(
+  () => props.selectedModelList,
+  (newVal) => {
+    if (!_.isEmpty(newVal)) {
       selectedList.value = [...newVal];
-    },
-    { immediate: true },
-  );
-}
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <style lang="scss" scoped></style>
