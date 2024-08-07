@@ -2,11 +2,28 @@
   <div class="section-top-bar">
     <data-filter :data="filters"></data-filter>
   </div>
-  <div class="section-contents">
+  <div class="section-top-bar section-top-bar-tab">
+    <Tab
+      class="tab-line"
+      :data="tabOptions"
+      :label-key="'label'"
+      :value-key="'value'"
+      :current-item="initTab"
+      :current-item-type="'value'"
+      :use-tab-contents="false"
+      @change="changeTab"
+    >
+    </Tab>
+  </div>
+  <div class="section-contents overflow-auto">
     <top-bar></top-bar>
     <div class="l-split mt-3">
       <div class="data-page" style="position: relative">
-        <div id="dataList" class="data-list" v-if="viewType === 'listView'">
+        <div
+          id="dataList"
+          class="data-list"
+          v-show="viewType === 'listView' && !isSearchResultNoData"
+        >
           <resource-box-list
             :data-list="searchResult"
             :use-list-checkbox="false"
@@ -16,8 +33,8 @@
             @previewClick="previewClick"
             @modelNmClick="modelNmClick"
           />
+          <!-- NOTE "scrollTrigger" -> useIntersectionObserver 가 return 하는 변수병과 동일해야함. -->
           <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
-          <!--                TODO: [퍼블리싱] loader UI 컴포넌트 추가 및 로딩 위치 검토 필요 -->
           <div
             id="loader"
             style="
@@ -34,11 +51,20 @@
               color: #333;
             "
           >
-            loader
+            <Loading class="loader-lg" :hide-text="false"></Loading>
           </div>
         </div>
-        <div class="data-list" v-if="viewType === 'graphView'">
+        <div
+          class="data-list"
+          v-if="viewType === 'graphView' && !isSearchResultNoData"
+        >
           <custom-knowledge-graph />
+        </div>
+        <div class="no-result" v-if="isSearchResultNoData">
+          <div class="notification">
+            <svg-icon class="notification-icon" name="info"></svg-icon>
+            <p class="notification-detail">선택된 데이터 모델이 없습니다.</p>
+          </div>
         </div>
       </div>
       <preview
@@ -52,33 +78,28 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useSearchCommonStore } from "@/store/search/common";
-import { IntersectionObserverHandler } from "@/utils/intersection-observer";
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
+import Loading from "@base/loading/Loading.vue";
+import Tab from "@extends/tab/Tab.vue";
 
 import TopBar from "./top-bar.vue";
 import { useRouter } from "nuxt/app";
+
 const router = useRouter();
 
 const searchCommonStore = useSearchCommonStore();
+const { addSearchList, getFilters, getPreviewData, changeTab } =
+  searchCommonStore;
 const {
-  addSearchList,
-  getFilters,
-  getPreviewData,
-  setScrollFrom,
-  setIntersectionHandler,
-  updateIntersectionHandler,
-} = searchCommonStore;
-const {
-  from,
-  size,
   filters,
   searchResult,
   previewData,
   viewType,
   isShowPreview,
   isBoxSelectedStyle,
+  isSearchResultNoData,
 } = storeToRefs(searchCommonStore);
 
 const getPreviewCloseStatus = (option: boolean) => {
@@ -89,83 +110,46 @@ const getPreviewCloseStatus = (option: boolean) => {
 
 let currentPreviewId: string | number = "";
 
-const previewClick = async (id: string | number) => {
+const previewClick = async (data: object) => {
+  const { id, fqn } = data as { id: string; fqn: string };
   if (id === currentPreviewId) {
     return;
   }
 
-  await getPreviewData();
+  await getPreviewData(fqn);
   isShowPreview.value = true;
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;
 };
 
 const modelNmClick = (data: object) => {
-  const { id, fqn } = data as { id: string; fqn: string };
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
   router.push({
     path: "/portal/search/detail",
     query: {
+      type: type,
       id: id,
       fqn: fqn,
     },
   });
 };
 
-// TODO: intersection observer 옵션이 부족해 보임. 데이터가 1000가 넘으면 UI가 버벅거림.
+const initTab: string = "table";
 
-// intersection observer 타겟
-const targetId = "dataList";
-// 스크롤 트리거
-const scrollTrigger = ref<HTMLElement | null>(null);
-// 로딩 스피너 아이디
-const loaderId = "loader";
-// intersection observer instance
-let intersectionHandler: IntersectionObserverHandler | null = null;
-// 스크롤 이동시 데이터 로딩 시점에 실행되는 callback
-const getDataCallback = async (count: number, loader: HTMLElement | null) => {
-  // loader start
-  if (loader) {
-    loader.style.display = "flex";
-  }
+const tabOptions = [
+  { label: "테이블", value: "table", type: "table" },
+  { label: "스토리지", value: "storage", type: "storage" },
+  { label: "융합모델", value: "model", type: "model" },
+];
 
-  setScrollFrom(count);
-  updateIntersectionHandler(count);
+// top-bar 에서 select box (sort) 값이 변경되면 목록을 조회하라는 코드가 구현되어 있는데,
+// select box 가 화면 맨 처음에 뿌릴때 값을 초기에 1번 셋팅하는 부분에서 목록 조회가 이뤄짐.
+// 중복 호출을 피하기 위해서 여기서는 목록 데이터를 조회하지 않음.
+// await getSearchList();
 
-  // 데이터 조회 : 쿼리는 store 에서 처리.
-  await addSearchList();
+await getFilters();
 
-  if (loader) {
-    loader.style.display = "none";
-  }
-};
-
-onMounted(async () => {
-  // top-bar 에서 select box (sort) 값이 변경되면 목록을 조회하라는 코드가 구현되어 있는데,
-  // select box 가 화면 맨 처음에 뿌릴때 값을 초기에 1번 셋팅하는 부분에서 목록 조회가 이뤄짐.
-  // 중복 호출을 피하기 위해서 여기서는 목록 데이터를 조회하지 않음.
-  // await getSearchList();
-
-  await getFilters();
-
-  // intersection observer instance 생성
-  intersectionHandler = new IntersectionObserverHandler(
-    targetId,
-    scrollTrigger.value,
-    loaderId,
-    from.value,
-    size.value,
-    getDataCallback,
-  );
-
-  // from 값 변경에 따른 동작을 store 에서 하고 있기 때문에 intersectionHandler 변수를 store 에 저장해둔다.
-  setIntersectionHandler(intersectionHandler);
-});
-
-onBeforeUnmount(() => {
-  if (intersectionHandler) {
-    intersectionHandler.disconnect();
-  }
-});
+const { scrollTrigger } = useIntersectionObserver(addSearchList);
 </script>
 
 <style lang="scss" scoped></style>

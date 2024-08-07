@@ -1,5 +1,5 @@
 <template>
-  <div class="menu menu-search" style="width: 100%">
+  <div v-on-click-outside="onCancel" v-show="props.isShow" class="menu menu-search" style="width: 100%">
     <div class="menu-head">
       <!-- 검색 기능 -->
       <div class="search-input">
@@ -76,6 +76,7 @@
   </div>
 </template>
 <script setup lang="ts">
+import { vOnClickOutside } from "@vueuse/components";
 import { MenuSearchProps } from "./MenuSearchProps";
 import {
   MenuSearchItemImpl, MenuSearchComposition
@@ -96,6 +97,7 @@ const props = withDefaults(defineProps<MenuSearchProps>(), {
   nodataMsg: "데이터가 없습니다.",
   noSearchMsg: "검색결과가 없습니다.",
   isMulti: false,
+  isShow: false,
 });
 
 const emit = defineEmits<{

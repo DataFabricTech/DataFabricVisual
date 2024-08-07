@@ -7,7 +7,7 @@
         <p class="submit-form-desc">
           비밀번호 재설정 링크를 받으려면 등록된 이메일을 입력하세요
         </p>
-        <div class="form form-lg gap-8">
+        <div class="form form-lg gap-6">
           <div class="form-body">
             <div class="form-item">
               <label for="inpEmail" class="form-label">

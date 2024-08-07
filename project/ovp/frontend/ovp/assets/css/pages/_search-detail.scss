@@ -40,6 +40,10 @@
     padding: $spacing-4;
     overflow-y: auto;
   }
+
+  .lineage {
+    min-height: 680px;
+  }
 }
 
 //----------------------------
@@ -49,19 +53,8 @@
   display: flex;
   gap: $spacing-12;
 
-  &:has(.knowledge) {
-    overflow: hidden;
+  &:has(.visual-detail) {
     height: 100%;
-
-    .knowledge {
-      width: 60%;
-      height: 100%;
-      min-height: 680px;
-
-      //임시 스타일
-      border: 1px solid $neutral-200;
-      background: $neutral-100;
-    }
 
     .data-detail-list {
       width: 40%;
@@ -94,6 +87,38 @@
       }
     }
   }
+
+  .visual-detail {
+    width: 60%;
+    height: 100%;
+    min-height: 680px;
+  }
+
+  .visual-legend-item {
+    &-standard::before {
+      background-color: #85E0A3;
+      border: 2px solid #359F67;
+    }
+
+    &-relation::before {
+      background-color: #BDE3FF;
+      border: 2px solid #22B4FF;
+    }
+
+    &-rank {
+      &::before {
+        content: '[순위]';
+        width: 28px;
+        font-size: 11px;
+        line-height: 1.5;
+        color: $neutral-500;
+      }
+
+      .button {
+        margin-left: -6px;
+      }
+    }
+  }
 }
 
 .query {
@@ -120,61 +145,7 @@
   }
 }
 
-.lineage {
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  min-height: 680px;
 
-  //임시 스타일
-  border: 1px solid $neutral-200;
-  background: $neutral-100;
-
-  .preview {
-    @include box-shadow('lg');
-
-    position: absolute;
-    right: 0;
-    width: 375px;
-
-    &-title:hover {
-      text-decoration: underline;
-    }
-  }
-
-  &-control {
-    @include flex($direction: column);
-
-    position: absolute;
-    bottom: 16px;
-    left: 16px;
-
-    .button-neutral-stroke:hover {
-      border: 1px solid $neutral-200;
-    }
-
-    &-zoom-in {
-      border-bottom-right-radius: 0;
-      border-bottom-left-radius: 0;
-      border-bottom-width: 0;
-    }
-
-    &-zoom-out {
-      border-top-right-radius: 0;
-      border-top-left-radius: 0;
-    }
-  }
-}
-
-.filters {
-  @include flex($horizontal: flex-start);
-  z-index: 0;
-  position: absolute;
-  gap: $spacing-16;
-  width: 100%;
-  padding: $spacing-8 $spacing-20;
-}
 
 
 

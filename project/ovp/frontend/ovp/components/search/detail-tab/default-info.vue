@@ -19,7 +19,7 @@
       </tr>
       <tr>
         <th>태그</th>
-        <td>
+        <td class="py-0">
           <div class="editable-group" v-if="!editTagsMode">
             <div class="tag tag-primary tag-sm" v-for="tag in modelInfo.tags">
               <span class="tag-text">{{ tag.label }}</span>
@@ -67,7 +67,7 @@
       </tr>
       <tr>
         <th>용어</th>
-        <td>
+        <td class="py-0">
           <div class="editable-group" v-if="!editTermsMode">
             <div class="tag tag-primary tag-sm" v-for="term in modelInfo.terms">
               <span class="tag-text">{{ term.label }}</span>

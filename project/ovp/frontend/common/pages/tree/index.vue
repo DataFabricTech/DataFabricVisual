@@ -7,6 +7,7 @@
     </div>
     <div>체크한 noIds : {{ checkedIds }}</div>
     <tree-vue
+      style="width:400px"
       :items="items"
       :isCheckable="true"
       :hideGuideLines="false"

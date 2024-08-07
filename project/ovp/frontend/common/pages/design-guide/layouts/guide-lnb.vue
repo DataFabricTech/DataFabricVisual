@@ -12,7 +12,7 @@
           <p class="lnb-item-title">Foundation</p>
           <ul class="sub-list">
             <li class="sub-item">
-              <a class="sub-item-link" href="#guide-alert">color</a>
+              <a class="sub-item-link" href="#guide-color">color</a>
             </li>
             <li class="sub-item">
               <a class="sub-item-link" href="#">Typography</a>
@@ -28,7 +28,7 @@
           <p class="lnb-item-title">Component</p>
           <ul class="sub-list">
             <li class="sub-item">
-              <a class="sub-item-link" href="#">Accordion</a>
+              <a class="sub-item-link" href="#guide-accordion">Accordion</a>
             </li>
             <li class="sub-item">
               <a class="sub-item-link" href="#guide-alert">Alert</a>
@@ -101,6 +101,9 @@
             </li>
             <li class="sub-item">
               <a class="sub-item-link" href="#guide-toggle-switch">Toggle Switch</a>
+            </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-upload">Upload</a>
             </li>
           </ul>
         </li>

@@ -1,5 +1,10 @@
 
 .radio {
+  &-group {
+    @include flex;
+    gap: $spacing-12;
+  }
+
   &-input {
     &:checked + label {
       &::after {
@@ -35,6 +40,5 @@
         }
       }
     }
-
   }
 }

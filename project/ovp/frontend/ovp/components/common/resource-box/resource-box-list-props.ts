@@ -5,7 +5,5 @@ import type {
 
 export interface ResourceBoxListProps extends ResourceBoxCommonProps {
   dataList: DataModel[];
-
-  useListCheckbox?: boolean;
   isBoxSelectedStyle: boolean;
 }

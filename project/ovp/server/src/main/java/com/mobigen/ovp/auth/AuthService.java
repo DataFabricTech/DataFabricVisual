@@ -3,10 +3,11 @@ package com.mobigen.ovp.auth;
 import com.mobigen.framework.utility.FrameworkProperties;
 import com.mobigen.framework.utility.RSA;
 import com.mobigen.framework.utility.Token;
+import com.mobigen.ovp.email.EmailUtil;
+import com.mobigen.ovp.common.OvpProperties;
 import com.mobigen.ovp.user.UserRoleService;
 import com.mobigen.ovp.user.entity.UserEntity;
 import com.mobigen.ovp.user.entity.UserRole;
-import com.mobigen.ovp.user.entity.UserRoleEntity;
 import com.mobigen.ovp.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -14,13 +15,18 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.context.Context;
 
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -32,8 +38,11 @@ public class AuthService {
     private final Token token;
     private final AuthClient authClient;
     private final FrameworkProperties frameworkProperties;
+    private final OvpProperties ovpProperties;
     private final UserRoleService userRoleService;
     private final UserRepository userRepository;
+    private final PwResetRepository pwResetRepository;
+    private final EmailUtil emailUtil;
 
     /**
      * 로그인 - 토큰 발급 후 쿠키 설정
@@ -50,6 +59,33 @@ public class AuthService {
         Map<String, Object> result = authClient.login(param);
 
         return token.addTokenToResponse(response, result);
+    }
+
+    /**
+     * 로그아웃
+     *
+     * @param response
+     * @param param
+     * @return
+     */
+    public Object logout(HttpServletRequest request, HttpServletResponse response, Map<String, Object> param) throws Exception {
+        Map<String, Object> newParam = new HashMap<>();
+        newParam.put("token", param.get(frameworkProperties.getToken().getAccessToken()));
+
+        // 1. 로그아웃
+        String result = authClient.logout(newParam);
+
+        // 2. Session(Security 보안 세션) 로그아웃
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return null;
+        }
+        new SecurityContextLogoutHandler().logout(request, response, authentication);
+
+        // 3. Token 쿠키값 삭제
+        token.deleteTokens(request, response);
+
+        return result;
     }
 
     /**
@@ -146,6 +182,130 @@ public class AuthService {
     }
 
     /**
+     * 회원가입 > 이메일 중복 검사
+     *
+     * @param email : 이메일 정보
+     * @throws Exception
+     */
+    public boolean checkDuplicateEmail(String email) throws Exception {
+        Map<String, Object> checkEmailParam = new HashMap<>();
+        checkEmailParam.put(USER_ID_KEY, email);
+
+        return authClient.checkEmailInUse(checkEmailParam);
+    }
+
+    /**
+     * 비밀번호 재설정 > 메일 전송
+     *
+     * @param request
+     * @param email
+     * @return
+     * @throws Exception
+     */
+    public Object sendMail(HttpServletRequest request, String email) throws Exception {
+        // 1-1. 이메일 유효성 검증
+        boolean checkedEmailValidation = EmailUtil.isValidEmail(email);
+        if (!checkedEmailValidation) {
+            throw new Exception("이메일이 유효하지 않습니다.");
+        }
+
+        // 1-2. 이메일 사용 여부 검증
+        boolean checkedEmailInUse = this.checkDuplicateEmail(email);
+        if (!checkedEmailInUse) {
+            throw new Exception("등록된 이메일이 아닙니다.");
+        }
+
+        String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
+        String id = UUID.randomUUID().toString();
+        Context context = prepareEmailContext(host, id);
+
+        boolean sendEmail = emailUtil.sendHTMLMail(email, ovpProperties.getMail().getTitle(), context,"ovp_pwReset");
+
+        // Email 전송 성공 시 DB에 데이터 저장
+        if (sendEmail) {
+            savePwResetEntity(email, id);
+        }
+        return null;
+    }
+
+    /**
+     * 비밀번호 재설정 > 고유링크 생성 및 DB 저장
+     *
+     * @param id
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    public boolean changePasswordByUniqueLink(String id, Map<String, Object> param) throws Exception {
+        // 1. 링크 유효성 확인
+        PwResetEntity pwResetData = pwResetRepository.findById(id).orElseThrow(() -> new Exception("링크가 유효하지 않습니다."));
+
+        // 2. 시간 유효성 확인
+        if (EmailUtil.isLinkExpiredWithValidTime(pwResetData.getValidTime(), pwResetData.getCreateDate())) {
+            throw new Exception("링크가 유효하지 않습니다.");
+        }
+
+        // 1. 사용자 입력값 검증
+        String confirmPassword = (String) param.get("confirmPassword");
+        String newPassword = (String) param.get("newPassword");
+        if (!newPassword.equals(confirmPassword)) {
+            throw new Exception("비밀번호가 일치 하지 않습니다.");
+        }
+
+        param.put("username", pwResetData.getUserName());
+
+        boolean isChange = changePassword(param);
+        if (isChange) {
+            pwResetRepository.deleteById(id);
+        }
+        return isChange;
+    }
+    /**
+     * 비밀번호 재설정 > 고유링크 유효성 확인
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public boolean checkIdInChangePassword(String id) {
+        Optional<PwResetEntity> pwResetDataOpt = pwResetRepository.findById(id);
+        boolean checkedData = pwResetDataOpt.isPresent();
+        if (!checkedData) {
+            return false;
+        }
+
+        return !EmailUtil.isLinkExpiredWithValidTime(pwResetDataOpt.get().getValidTime(), pwResetDataOpt.get().getCreateDate());
+    }
+
+    /**
+     * 비밀번호 > 비밀번호 재설정 API
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    public boolean changePassword(Map<String, Object> param) throws Exception {
+        param.put("requestType", "USER");
+
+        // 1. 사용자 입력값 검증
+        String confirmPassword = (String) param.get("confirmPassword");
+        String newPassword = (String) param.get("newPassword");
+        if (!newPassword.equals(confirmPassword)) {
+            throw new Exception("비밀번호가 일치 하지 않습니다.");
+        }
+
+        // 2. 비밀번호 변경
+        try {
+            HttpHeaders adminAuthorizationHeader = adminLoginHeader();
+            authClient.changePassword(adminAuthorizationHeader, param);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
      * 회원가입 > OMD 서버 회원가입 API 통신
      *
      * @param adminAuthorizationHeader : 관리자 토큰 헤더
@@ -184,16 +344,35 @@ public class AuthService {
         }
     }
 
+
     /**
-     * 회원가입 > 이메일 중복 검사
-     *
-     * @param email : 이메일 정보
+     * 비밀번호 재설정 > HTML Context 설정
+     * @param host
+     * @param id
+     * @return
+     */
+    private Context prepareEmailContext(String host, String id) {
+        Context context = new Context();
+        context.setVariable("url", host + ovpProperties.getMail().getHref());
+        context.setVariable("token", id);
+        context.setVariable("validationTime", ovpProperties.getMail().getValidTime());
+        return context;
+    }
+
+    /**
+     * 비밀번호 재설정 > 링크 DB 저장
+     * @param email
+     * @param id
      * @throws Exception
      */
-    public boolean checkDuplicateEmail(String email) throws Exception {
-        Map<String, Object> checkEmailParam = new HashMap<>();
-        checkEmailParam.put(USER_ID_KEY, email);
+    private void savePwResetEntity(String email, String id) throws Exception {
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(() -> new Exception("등록된 이메일이 아닙니다."));
 
-        return authClient.checkEmailInUse(checkEmailParam);
+        PwResetEntity pwResetEntity = new PwResetEntity();
+        pwResetEntity.setId(id);
+        pwResetEntity.setEmail(email);
+        pwResetEntity.setUserName(user.getName());
+        pwResetEntity.setValidTime(ovpProperties.getMail().getValidTime());
+        pwResetRepository.save(pwResetEntity);
     }
 }

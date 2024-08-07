@@ -12,18 +12,20 @@
 // component
 @import "./component/resource-box";
 @import "./component/menu-data";
+@import "./component/filters";
 @import "./component/common";
 
 
 // pages
 @import "./pages/submit-form";
 @import "./pages/governance";
+@import "./pages/admin";
 @import "./pages/search";
 @import "./pages/search-detail";
 @import "./pages/creation";
-@import "./pages/editable-group";
 @import "./pages/main";
 @import "./pages/my-page";
+@import "pages/graph";
 
 
 

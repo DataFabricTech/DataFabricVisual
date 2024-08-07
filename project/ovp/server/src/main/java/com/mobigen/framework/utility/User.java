@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Data
 @ToString
@@ -16,10 +17,8 @@ public class User implements UserDetails {
     private static final long serialVersionUID = -7141725149692824852L;
 
     private String userId;
-    private String userPass;
-    private String roleCode;
-    private String roleName;
-    private String xAccessToken;
+    private List<String> roles;
+    private String email;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

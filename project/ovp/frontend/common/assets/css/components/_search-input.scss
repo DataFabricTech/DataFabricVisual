@@ -67,6 +67,12 @@
   &-sm {
     @include search-input-size($size: 28px, $search-icon-size: sm);
   }
+
+
+
+  .required {
+    color: $error-500;
+  }
 }
 
 .text-input {
