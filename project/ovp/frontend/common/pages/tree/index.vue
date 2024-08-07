@@ -5,17 +5,20 @@
       <p>선택한 노드 ID : {{ selectedNode.id }}</p>
       <p>선택한 노드 NM : {{ selectedNode.name }}</p>
     </div>
+    <div>체크한 noIds : {{ checkedIds }}</div>
     <tree-vue
       style="width:400px"
       :items="items"
-      :isCheckable="false"
+      :isCheckable="true"
       :hideGuideLines="false"
       :firExpandAll="true"
       :show-open-all-btn="true"
       :show-close-all-btn="true"
       :use-draggable="true"
+      :checked-ids="firCheckedIds"
       mode="edit"
       :dropValidator="dropValidator"
+      @onItemChecked="onNodeChecked"
       @onItemSelected="onNodeClicked"
       @addSibling="addSibling"
       @addChild="addChild"
@@ -153,6 +156,17 @@ const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
   disabled: false,
   children: []
 });
+
+const checkedIds: Ref<string[]> = ref<string[]>([]);
+const firCheckedIds: string[] = [
+  "58615558-f39c-46d9-b5f3-d7884b1e25dd",
+  "76b2bda2-31a3-4f7d-927a-c2ddd6354741",
+  "868928fc-4be3-46a3-8f07-95b516a59b92"
+];
+
+const onNodeChecked = (checkedNodeIds: TreeViewItem[]) => {
+  checkedIds.value = checkedNodeIds.map((node: TreeViewItem) => node.id);
+};
 
 const onNodeClicked = (node: TreeViewItem) => {
   selectedNode.value = node;
