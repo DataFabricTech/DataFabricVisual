@@ -61,6 +61,8 @@
 
 .lineage {
   @include graph-grid;
+  height: 100%;
+  min-height: 650px;
 
   .preview {
     @include box-shadow('lg');
