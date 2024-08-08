@@ -315,7 +315,7 @@ public class CategoryService {
     public String createTagInfo(String categoryId) {
         Map<String, Object> params = new HashMap<>();
         params.put("classification", "ovp_category");
-        params.put("description", "OVP Category Matched Tag__DELETE");
+        params.put("description", "OVP Category Matched Tag");
         params.put("displayName", categoryId);
         params.put("name", categoryId);
         Map<String, Object> response = (Map<String, Object>) classificationClient.createTag(params);
