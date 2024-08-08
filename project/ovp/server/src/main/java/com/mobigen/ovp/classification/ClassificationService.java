@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -70,6 +71,11 @@ public class ClassificationService {
      */
     public Object getClassificationTags(String parent) {
         return new ClassificationTagsResponse(tagClient.getClassificationTags(parent));
+    }
+
+    public String getTagInfo(String tagId) {
+        Map<String, Object> tagInfo = tagClient.getTag(tagId);
+        return tagInfo.get("fullyQualifiedName").toString();
     }
 
 //

@@ -3,7 +3,11 @@ package com.mobigen.ovp.category;
 import com.mobigen.ovp.category.dto.CategoryDTO;
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
+import com.mobigen.ovp.classification.ClassificationService;
+import com.mobigen.ovp.common.ModelConvertUtil;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
+import com.mobigen.ovp.common.openmete_client.SearchClient;
+import com.mobigen.ovp.common.openmete_client.TagClient;
 import com.mobigen.ovp.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,8 +33,12 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final SearchClient searchClient;
+    private final ModelConvertUtil modelConvertUtil;
     private final SearchService searchService;
     private final ClassificationClient classificationClient;
+    private final ClassificationService classificationService;
+    private final TagClient tagClient;
 
     public CategoryDTO getCategories() {
         List<CategoryEntity> categories = categoryRepository.findAll();
@@ -111,7 +119,7 @@ public class CategoryService {
         tagParams.add("hardDelete", "true");
 
         for (UUID tagId : tagIds) {
-            classificationClient.deleteTag(tagId.toString(), tagParams);
+            tagClient.deleteTag(tagId.toString(), tagParams);
         }
 
         // step2. db 에서 category 삭제
@@ -276,9 +284,11 @@ public class CategoryService {
      * @throws Exception
      */
     @Transactional
-    public Object getModelList(String tagId, MultiValueMap<String, String> params) throws Exception {
-        params.add("query_filter", createQueryFilterByTagName(getTagInfo(tagId.toString())));
-        return getModelListByTagId(UUID.fromString(tagId), params);
+    public Object getModelByCategoryId(String tagId, MultiValueMap<String, String> params) throws Exception {
+        CategoryEntity categoryEntity = categoryRepository.findById(UUID.fromString(tagId)).get();
+        params.add("query_filter", createQueryFilterByTagName(classificationService.getTagInfo(categoryEntity.getTagId().toString())));
+
+        return getModelListByTagId(categoryEntity.getTagId(), params);
     }
 
     /**
@@ -296,7 +306,7 @@ public class CategoryService {
         if (params == null) {
             params = new LinkedMultiValueMap<>();
         }
-        params.add("query_filter", createQueryFilterByTagName(getTagInfo(tagId.toString())));
+        params.add("query_filter", createQueryFilterByTagName(classificationService.getTagInfo(tagId.toString())));
         return (List<Object>) ((Map<String, Object>) (searchService.getAllSearchList(params)).get("data")).get("all");
     }
 
