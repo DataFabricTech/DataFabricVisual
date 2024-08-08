@@ -34,6 +34,7 @@ export function MenuSearchTreeComposition(
 
   const onCancel: () => void = () => {
     isMenuSearchShow.value = false;
+    console.log("onCancel", isMenuSearchShow.value);
   };
 
   const changeMenuSearch: (value: any[]) => void = (value) => {

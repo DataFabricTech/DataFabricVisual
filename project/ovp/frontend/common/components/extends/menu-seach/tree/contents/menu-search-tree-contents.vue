@@ -24,18 +24,20 @@
     </div>
     <div class="menu-list">
       <tree-vue
-        :items="props.data"
-        :isCheckable="props.isCheckable"
+        :items="listData"
+        :checked-ids="selectedListDataIds"
+        :isCheckable="props.isMulti"
         :hideGuideLines="props.hideGuideLines"
         :firExpandAll="props.firExpandAll"
         :show-open-all-btn="props.showOpenAllBtn"
         :show-close-all-btn="props.showCloseAllBtn"
         :use-draggable="props.useDraggable"
-        :checked-ids="firCheckedIds"
         :mode="props.mode"
         :dropValidator="props.dropValidator"
+        @onItemChecked="onNodeChecked"
+        @onItemSelected="onNodeClicked"
       ></tree-vue>
-      <div class="menu-item" v-if="checkSearchResult()">
+      <div class="menu-item" v-if="listData.length < 1">
         <span> {{ props.noSearchMsg }} </span>
       </div>
     </div>
@@ -65,10 +67,10 @@ const props = withDefaults(defineProps<MenuSearchTreeContentsProps>(), {
   nodataMsg: "데이터가 없습니다.",
   noSearchMsg: "검색결과가 없습니다.",
   isShow: false,
+  isMulti: false,
 
   // tree 고유 props
   mode: "view",
-  isCheckable: false,
   hideGuideLines: false,
   showOpenAllBtn: false,
   showCloseAllBtn: false,
@@ -79,30 +81,33 @@ const props = withDefaults(defineProps<MenuSearchTreeContentsProps>(), {
 });
 
 const emit = defineEmits<{
-  (e: "change", value: TreeViewItem[]): void;
+  (e: "single-change", value: TreeViewItem): void;
+  (e: "multiple-change", value: TreeViewItem[]): void;
   (e: "cancel"): void;
 }>();
 
-const applyData: (value: TreeViewItem[]) => void = (value) => {
-  emit("change", value);
+const applyData: (value: TreeViewItem | TreeViewItem[]) => void = (value) => {
+  if (props.isMulti) {
+    emit("multiple-change", value as TreeViewItem[]);
+  } else {
+    emit("single-change", value as TreeViewItem);
+  }
 };
 const cancelData: () => void = () => {
   emit("cancel");
 };
 
 const {
-  selectedListData,
   listData,
   searchLabel,
+  selectedListDataIds,
   onSearchText,
   onResetSearchText,
-  onCancelSelect,
-  onSelectListData,
-  firCheckedIds,
+  onNodeChecked,
+  onNodeClicked,
   onApply,
   onReset,
-  onCancel,
-  checkSearchResult
+  onCancel
 } = MenuSearchTreeContentsComposition(props, applyData, cancelData);
 
 // emit 생성

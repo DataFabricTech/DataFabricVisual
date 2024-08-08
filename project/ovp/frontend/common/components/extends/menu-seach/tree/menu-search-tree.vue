@@ -11,11 +11,11 @@
     </button>
     <menu-search-tree-contents
       :is-show="isMenuSearchShow"
+      :is-multi="props.isMulti"
       :data="props.data"
       :selected-items="selectedListData"
       :label-key="props.labelKey"
       :value-key="props.valueKey"
-      :isCheckable="props.isCheckable"
       :hideGuideLines="props.hideGuideLines"
       :firExpandAll="props.firExpandAll"
       :show-open-all-btn="props.showOpenAllBtn"
@@ -24,7 +24,8 @@
       :mode="props.mode"
       :dropValidator="props.dropValidator"
       @cancel="onCancel"
-      @change="changeMenuSearch"
+      @single-change="changeMenuSearch"
+      @multiple-change="changeMenuSearch"
     ></menu-search-tree-contents>
   </div>
 </template>
@@ -46,11 +47,11 @@ const props = withDefaults(defineProps<MenuSearchTreeProps>(), {
   selectedItems: () => [] || {},
   nodataMsg: "데이터가 없습니다.",
   noSearchMsg: "검색결과가 없습니다.",
+  isMulti: false,
   isShow: false,
 
   // tree 고유 props
   mode: "view",
-  isCheckable: false,
   hideGuideLines: false,
   showOpenAllBtn: false,
   showCloseAllBtn: false,
@@ -61,14 +62,19 @@ const props = withDefaults(defineProps<MenuSearchTreeProps>(), {
 });
 
 const emit = defineEmits<{
-  (e: "change", value: TreeViewItem[]): void;
+  (e: "single-change", value: TreeViewItem): void;
+  (e: "multiple-change", value: TreeViewItem[]): void;
   (e: "open"): void;
   (e: "cancel"): void;
   (e: "close"): void;
 }>();
 
-const applyData: (value: TreeViewItem[]) => void = (value) => {
-  emit("change", value);
+const applyData: (value: TreeViewItem | TreeViewItem[]) => void = (value) => {
+  if (props.isMulti) {
+    emit("multiple-change", value as TreeViewItem[]);
+  } else {
+    emit("single-change", value as TreeViewItem);
+  }
 };
 
 const openMenuSearch: () => void = () => {

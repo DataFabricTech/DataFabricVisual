@@ -53,7 +53,7 @@
           label-key="name"
           value-key="id"
           :data="items"
-          :isCheckable="true"
+          :is-multi="true"
           :hideGuideLines="false"
           :firExpandAll="true"
           :show-open-all-btn="false"
@@ -250,7 +250,7 @@ const items: any[] = [
         disabled: false,
         children: [
           {
-            id: "868928fc-4be3-46a3-8f07-95b516a59b92",
+            id: "868928fc-4be3-46a3-8f07-95b516a59b91",
             name: "카테고리 02 - 03 - 01",
             order: 1,
             desc: "설명",
