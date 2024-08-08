@@ -1,6 +1,6 @@
 import { SelectFunctionality } from "@/components/extends/common/interfaces/functions/Select.interface";
 import { SelectEvents } from "~/components/extends/common/interfaces/events/Select.interface";
-import { ComputedRef, ref, Ref } from "vue";
+import { ref, Ref } from "vue";
 import _ from "lodash";
 import { MenuSearchTreeContentsProps } from "~/components/extends/menu-seach/tree/contents/MenuSearchTreeContentsProps";
 import { TreeViewItem } from "~/components/extends/tree/TreeProps";
@@ -9,7 +9,7 @@ interface MenuSearchTreeContentsCompositionImpl extends MenuSearchTreeContentsPr
   // Menu-search 컴포넌트에서만 사용하는 data, function
   listData: Ref<any[]>;
   selectedListData: Ref<any[]>;
-  selectedListDataIds: ComputedRef<string[]>;
+  selectedListDataIds: Ref<string[]>;
   searchLabel: Ref<string>;
 
   onSearchText(value: string): void;
@@ -29,31 +29,36 @@ export function MenuSearchTreeContentsComposition(
 ): MenuSearchTreeContentsCompositionImpl {
   const originListData: Ref<any[]> = ref([]);
   const listData: Ref<any[]> = ref([]);
-  const initListData: (value: any[]) => void = (value) => {
-    listData.value = _.cloneDeep(value);
+  const initListData = () => {
+    originListData.value = _.cloneDeep(props.data);
+    listData.value = _.cloneDeep(props.data); // 내부에서 사용되는 리스트 데이터 - 검색 등에 사용되는 데이터
+    console.log("initListData", listData.value);
   };
 
   const originSelectedListData: Ref<any> = ref([]);
+  const selectedListDataIds: Ref<string[]> = ref([]);
   const selectedListData: Ref<any[]> = ref([]);
-  const initSelectedListData: (value: any) => void = (value) => {
-    console.log("initSelectedListData");
-    selectedListData.value = _.cloneDeep(value);
+
+  const initSelectedListData: () => void = () => {
+    const originData = Array.isArray(props.selectedItems) ? props.selectedItems : [props.selectedItems];
+    originSelectedListData.value = _.cloneDeep(originData);
+    selectedListData.value = _.cloneDeep(originData);
+    selectedListDataIds.value = selectedListData.value.map((el) => el[props.valueKey]); // tree에게 넘겨주는 선택 데이터
+    console.log("initSelectedListData", selectedListData.value);
+    console.log("initSelectedListData", selectedListDataIds.value);
   };
-  const selectedListDataIds: ComputedRef<string[]> = computed(() => {
-    return selectedListData.value.map((el) => el.id);
-  });
 
   /**
    * 선택 리스트 값이 변경되면 일반 리스트의 속성값도 변경되야하므로 다중 watch
    */
-  watchEffect(() => {
-    originListData.value = _.cloneDeep(props.data);
-    initListData(props.data);
-
-    const originData = Array.isArray(props.selectedItems) ? props.selectedItems : [props.selectedItems];
-    originSelectedListData.value = _.cloneDeep(originData);
-    initSelectedListData(originData);
-  });
+  watch(
+    () => [props.data, props.selectedItems],
+    () => {
+      initListData();
+      initSelectedListData();
+    },
+    { deep: true, immediate: true }
+  );
 
   /**
    * (이벤트) 리스트 검색
@@ -78,8 +83,10 @@ export function MenuSearchTreeContentsComposition(
    * @param value
    */
   const searchList: (value: string) => void = (value) => {
-    //원본 데이터에서 검색 필요
-    listData.value = searchTree(value, originListData.value);
+    const filteredTree = searchTree(value, originListData.value); //원본 데이터에서 검색 필요
+    // TODO: checked 변경 시 원본 데이터도 변경 필요
+    console.log("filteredTree", filteredTree);
+    listData.value = filteredTree;
   };
 
   /**
@@ -104,36 +111,32 @@ export function MenuSearchTreeContentsComposition(
   };
 
   const onNodeChecked = (checkedNodeList: TreeViewItem[]) => {
-    console.log("checkedNodeList", checkedNodeList);
     selectedListData.value = checkedNodeList;
+    selectedListDataIds.value = checkedNodeList.map((node: TreeViewItem) => node.id);
   };
 
   const onNodeClicked = (node: TreeViewItem) => {
     selectedListData.value = [node];
+    selectedListDataIds.value = [node].map((node: TreeViewItem) => node.id);
   };
 
-  const onApply: () => void = () => {
-    // 적용된 값을 origin에 저장
-    originSelectedListData.value = _.cloneDeep(selectedListData.value);
-    originListData.value = _.cloneDeep(listData.value);
-
-    const result = props.isMulti ? selectedListData.value : selectedListData.value[0];
-    console.log("onApply", result);
-    applyData(result);
-  };
-
+  const onApply: () => void = () => {};
   const onReset: () => void = () => {
+    console.log("onReset");
     // 선택 값 초기화
-    initSelectedListData([]);
+    selectedListData.value = [];
+    selectedListDataIds.value = [];
   };
   const onCancel: () => void = () => {
+    console.log("onCancel");
     // 원본 데이터를 통한 값 초기화
-    initSelectedListData(originSelectedListData.value);
-    initListData(listData.value);
+    selectedListData.value = originSelectedListData.value;
+    selectedListDataIds.value = originSelectedListData.value.map((node: TreeViewItem) => node.id);
+    listData.value = originListData.value;
     cancelData();
   };
 
-  // 기본 Select 기능 재정의
+  // 기본 Select 기능 재정의 - 사용 X
   const toggleList: () => void = () => {};
 
   const isDisabled: (value: string | number) => boolean = (value) => {
