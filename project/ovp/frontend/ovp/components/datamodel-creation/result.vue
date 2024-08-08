@@ -3,10 +3,15 @@
     <div class="l-top-bar py-3">
       <div class="h-group gap-2">
         <span class="font-semibold">실행 결과</span>
-        <!-- TODO: [개발] 실행 성공시 .badge-green으로 변경, icon name="success"로 변경-->
-        <div class="badge badge-red">
-          <svg-icon class="badge-icon" name="error"></svg-icon>
-          <p class="badge-text">error</p>
+        <div
+          :class="querySuccess ? 'badge badge-green' : 'badge badge-red'"
+          v-show="isFirstExcute"
+        >
+          <svg-icon
+            class="badge-icon"
+            :name="querySuccess ? 'success' : 'error'"
+          ></svg-icon>
+          <p class="badge-text">{{ querySuccess ? "success" : "error" }}</p>
         </div>
       </div>
       <div class="result-info">
@@ -16,7 +21,9 @@
               <p class="badge-text">실행시간</p>
             </div>
           </dt>
-          <dd>103ms</dd>
+          <dd v-if="querySuccess && isFirstExcute">
+            {{ excuteResult.runTime }}
+          </dd>
         </dl>
         <dl class="h-group gap-3">
           <dt>
@@ -24,7 +31,9 @@
               <p class="badge-text">실행시각</p>
             </div>
           </dt>
-          <dd>2024-06-05 13:23:53</dd>
+          <dd v-if="querySuccess && isFirstExcute">
+            {{ excuteResult.startTime }}
+          </dd>
         </dl>
         <dl class="h-group gap-3">
           <dt>
@@ -32,71 +41,42 @@
               <p class="badge-text">레코드 수</p>
             </div>
           </dt>
-          <dd></dd>
+          <dd v-if="querySuccess && isFirstExcute">
+            {{ excuteResult.totalRows }}
+          </dd>
         </dl>
       </div>
     </div>
-    <!-- TODO: [개발] 실행 성공시-->
-    <div class="result">
-      <table>
-        <thead>
-          <tr>
-            <th>NAME</th>
-            <th>DATA TYPE</th>
-            <th>NAME</th>
-            <th>DATA TYPE</th>
-            <th>NAME</th>
-            <th>DATA TYPE</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>항목</td>
-            <td>항목</td>
-            <td>항목</td>
-            <td>항목</td>
-            <td>항목</td>
-            <td>항목</td>
-          </tr>
-          <tr>
-            <td>항목</td>
-            <td>항목</td>
-            <td>항목</td>
-            <td>항목</td>
-            <td>항목</td>
-            <td>항목</td>
-          </tr>
-          <tr>
-            <td>항목</td>
-            <td>항목</td>
-            <td>항목</td>
-            <td>항목항목항목항목항목항목항목항목</td>
-            <td>항목</td>
-            <td>항목</td>
-          </tr>
-          <tr>
-            <td>항목</td>
-            <td>항목</td>
-            <td>항목</td>
-            <td>항목</td>
-            <td>항목</td>
-            <td>항목</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="result" v-if="querySuccess && isFirstExcute">
+      <agGrid
+        class="ag-theme-alpine ag-theme-quartz"
+        :columnDefs="excuteResult.columnDefs"
+        :rowData="excuteResult.rowData"
+        rowId="id"
+        :useRowCheckBox="false"
+        :setColumnFit="true"
+        :useColumnResize="true"
+      ></agGrid>
     </div>
-    <!-- TODO: [개발] 실행 error의 경우-->
-    <div class="result result-error" style="display: none">
+    <div class="result result-error" v-if="!querySuccess && isFirstExcute">
       <p>
-        Line 1 ~ 6 : Unknown error. ( TableNotExistsError() [/*+ LOCATION (
-        PARTITION >= '20240605131200' AND PARTITION <= '20240605131500' ) */
-        SELECT CATEGORY, BOUNDARY,SIDO_ENG, SIDO_KOR G_CO FROM ROOT.DTST limit
-        5000;] )
+        {{ excuteResultErrMsg }}
       </p>
     </div>
   </div>
 </template>
-<script setup lang="ts"></script>
-<style lang="scss" scoped>
-/* @import "./index.scss"; */
-</style>
+<script setup lang="ts">
+import agGrid from "@extends/grid/Grid.vue";
+import { useCreationStore } from "@/store/datamodel-creation/index";
+
+const store = useCreationStore();
+const {
+  querySuccess,
+  excuteResult,
+  isExcuteQuery,
+  isFirstExcute,
+  query,
+  excuteResultErrMsg,
+} = storeToRefs(store);
+</script>
+<style lang="scss" scoped></style>

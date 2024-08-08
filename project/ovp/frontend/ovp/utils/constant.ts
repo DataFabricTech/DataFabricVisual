@@ -12,5 +12,52 @@ const $constants = {
       REGEX: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     },
   },
+  COMMON: {
+    SORT_FILTER: [
+      {
+        label: "추천 많은 순 ↓",
+        value: "totalVotes_desc",
+      },
+      {
+        label: "추천 많은 순 ↑",
+        value: "totalVotes_asc",
+      },
+      {
+        label: "이름순 ↓",
+        value: "name.keyword_desc",
+      },
+      {
+        label: "이름순 ↑",
+        value: "name.keyword_asc",
+      },
+      {
+        label: "마지막 업데이트 순 ↓",
+        value: "updatedAt_desc",
+      },
+      {
+        label: "마지막 업데이트 순 ↑",
+        value: "updatedAt_asc",
+      },
+    ],
+  },
+  DATAMODEL_CREATION: {
+    ADD: {
+      TAB: [
+        {
+          label: "전체",
+          value: "all",
+        },
+        {
+          label: "MY",
+          value: "my",
+        },
+      ],
+      ACCORDION: {
+        bookmark: "내가 북마크한 데이터 모델",
+        owner: "내가 등록한 데이터 모델",
+        recent: "최근에 조회한 데이터 모델",
+      },
+    },
+  },
 };
 export default Object.freeze($constants);

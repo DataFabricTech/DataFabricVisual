@@ -95,7 +95,7 @@
 
 <script setup lang="ts">
 import LineageGraph from "~/components/search/lineage/lineage-graph.vue";
-import Preview from "~/components/search/preview.vue";
+import Preview from "~/components/common/preview/preview.vue";
 import type { NodeData } from "~/components/search/lineage/lineage";
 import menuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
 import { type Ref, ref } from "vue";

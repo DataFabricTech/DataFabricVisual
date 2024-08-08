@@ -2,17 +2,22 @@
   <div>
     <h1>Ag-Grid</h1>
 
+    <Button class="button button-neutral-ghost button-lg" @click="changeColumnDefs"
+      >column 변경 (test column 추가)</Button
+    >
+
     <!-- grid resize 할때 column width 변경해주는 코드에 필요함.-->
     <div style="display: flex; flex-direction: row">
       <div style="overflow: hidden; flex-grow: 1">
         <agGrid
           class="ag-theme-alpine ag-theme-quartz"
+          :style="'width: 900px; height: 1000px'"
           :columnDefs="columnDefs"
           :rowData="rowData"
           rowId="id"
           :useRowCheckBox="true"
           :selectedNodes="[10, 11, 12]"
-          :column-width-list="[100, 100, 200, 100, 100, 100, 100]"
+          :column-width-list="columnWidthList"
           :setColumnFit="true"
           :useColumnResize="true"
           :columnRender="{
@@ -84,12 +89,14 @@
 <script setup lang="ts">
 import agGrid from "@/components/extends/grid/Grid.vue";
 
-const columnDefs = [
+const columnWidthList = ref([100, 100, 200, 100, 100, 100, 100]);
+
+const columnDefs = ref([
   { headerName: "ID", field: "id" },
   { headerName: "Make", field: "make" },
   { headerName: "Model", field: "model" },
   { headerName: "Price", field: "price" }
-];
+]);
 
 const rowData = [
   { id: 1, make: "Toyota", model: "Celica", price: 35000 },
@@ -141,6 +148,12 @@ const editClick = (param: object) => {
 // checkbox 선택시 목록 리턴
 const selectionChanged = (params: any[]) => {
   console.log(params);
+};
+
+// column 추가 테스트
+const changeColumnDefs = () => {
+  columnWidthList.value.push(200);
+  columnDefs.value.push({ headerName: "테스트", field: "TEST" });
 };
 </script>
 
