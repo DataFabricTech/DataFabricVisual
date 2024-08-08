@@ -23,10 +23,12 @@
             class="ag-theme-alpine ag-theme-quartz"
             :columnDefs="localSampleDataList.columnDefs"
             :rowData="localSampleDataList.rowData"
+            :fqn="localSampleDataList.fqn"
             rowId="id"
             :useRowCheckBox="false"
             :setColumnFit="true"
             :useColumnResize="true"
+            :useColumnCopy="true"
           ></agGrid>
         </div>
         <div class="no-result" style="display: none">

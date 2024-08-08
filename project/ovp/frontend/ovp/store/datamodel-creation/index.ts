@@ -2,9 +2,14 @@ import { defineStore } from "pinia";
 import DataModelSample from "~/components/datamodel-creation/datamodel-sample.json";
 import { useSearchCommonStore } from "~/store/search/common";
 import executeResultJson from "~/store/datamodel-creation/samples/executeResult.json";
+import { useUserStore } from "~/store/user/userStore";
+import { storeToRefs } from "../../.nuxt/imports";
 
 export const useCreationStore = defineStore("creation", () => {
   const { $api } = useNuxtApp();
+
+  const userStore = useUserStore();
+  const { user } = storeToRefs(userStore);
 
   // NOTE: 탐색 페이지에서 사용되는 API 활용
   const searchCommonStore = useSearchCommonStore();
@@ -13,12 +18,14 @@ export const useCreationStore = defineStore("creation", () => {
 
   const query = ref("");
 
+  // NOTE: 쿼리 성공여부
   const querySuccess = ref(false);
-  const executeResult = ref([]);
-
+  // NOTE: 쿼리 최초실행여부
   const isFirstExecute = ref(false);
+  // NOTE: 쿼리 실행여부
   const isExecuteQuery = ref(false);
 
+  const executeResult = ref([]);
   const executeResultErrMsg = ref("");
 
   const modelList = ref([]);
@@ -141,8 +148,39 @@ export const useCreationStore = defineStore("creation", () => {
   /**
    * 데이터 모델 생성 > 북마크 변경
    * */
-  const changeBookmark = (value: string) => {
-    //TODO: 북마크 변경
+  const changeBookmark = async (value: string) => {
+    let param = {
+      id: value,
+      loginUserId: user.value.id,
+    };
+
+    let selectedModel = modelList.value.filter((item) => item.id === value);
+    let bookmarkState = selectedModel[0].bookmarked;
+
+    if (bookmarkState) {
+      await $api(`/api/creation/bookmark/remove`, {
+        method: "POST",
+        body: param,
+      })
+        .then((res: any) => {
+          console.log("성공여부 확인1: ", res);
+          setDataModelList();
+        })
+        .catch((err: any) => {
+          console.log("err: ", err);
+        });
+    } else {
+      await $api(`/api/creation/bookmark/add`, {
+        method: "POST",
+        body: param,
+      })
+        .then((res: any) => {
+          setDataModelList();
+        })
+        .catch((err: any) => {
+          console.log("err: ", err);
+        });
+    }
   };
 
   /**
@@ -155,7 +193,7 @@ export const useCreationStore = defineStore("creation", () => {
   };
 
   /**
-   * 데이터 모델 생성 > 샘플데이터 조회
+   * 데이터 모델 생성 > 샘플데이터 조회, 데이터 프로파일링 조회
    * */
   const onClickDataModelItem = async (value: string) => {
     isColumnSelected.value = false;
@@ -177,6 +215,7 @@ export const useCreationStore = defineStore("creation", () => {
           sampleDataList.value = {
             columnDefs: columnDefs,
             rowData: res.data.sampleList,
+            fqn: fqn,
           };
           isItemClicked.value = true;
         } else {
@@ -203,27 +242,45 @@ export const useCreationStore = defineStore("creation", () => {
       });
   };
 
-  // TODO: 서버 연동 처리 필요
-  function runQuery(value: any) {
+  /**
+   * 데이터 모델 생성 > 쿼리 실행
+   * */
+  async function runQuery(value: any) {
     query.value = value;
-    // quary.value 를 파람으로 axios 요청
-    isFirstExecute.value = true;
-    isExecuteQuery.value = true;
+    let referenceModels = modelList.value.map((item) => ({
+      id: item.id,
+      name: item.modelNm,
+      fullyQualifiedName: item.fqn,
+    }));
 
-    // TODO: 임시 데이터 적용 -> 서버 연동 후 제거 예정
-    querySuccess.value = true;
+    let param = {
+      query: query.value,
+      referenceModels: referenceModels,
+      limit: 100,
+      page: 0,
+    };
 
-    // TODO: 임시 데이터 적용 -> 서버 연동 후 제거 예정
-    executeResult.value = executeResultJson.data;
-
-    // TODO: 임시 데이터 적용 -> 서버 연동 후 제거 예정
-    executeResultErrMsg.value =
-      "Line 1 ~ 6 : Unknown error. ( TableNotExistsError() [/*+ LOCATION (\n" +
-      "        PARTITION >= '20240605131200' AND PARTITION <= '20240605131500' ) */\n" +
-      "        SELECT CATEGORY, BOUNDARY,SIDO_ENG, SIDO_KOR G_CO FROM ROOT.DTST limit\n" +
-      "        5000;] )";
+    await $api(`/api/creation/query/execute`, {
+      method: "POST",
+      body: param,
+    }).then((res: any) => {
+      if (res.result === 1) {
+        executeResult.value = res.data;
+        isFirstExecute.value = true;
+        isExecuteQuery.value = true;
+        querySuccess.value = true;
+      } else {
+        isFirstExecute.value = true;
+        isExecuteQuery.value = true;
+        querySuccess.value = false;
+        executeResultErrMsg.value = res.errorMessage;
+      }
+    });
   }
 
+  /**
+   * 데이터 모델 생성 > 쿼리 실행
+   * */
   const resetQuery = () => {
     query.value = "";
     isFirstExecute.value = false;
@@ -231,6 +288,9 @@ export const useCreationStore = defineStore("creation", () => {
     isExecuteQuery.value = false;
   };
 
+  /**
+   * 데이터 모델 생성 > 쿼리 편집
+   * */
   const editQueryText = (value: string) => {
     query.value = value;
     isExecuteQuery.value = false;
