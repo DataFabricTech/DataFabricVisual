@@ -26,7 +26,7 @@ public interface TagClient {
      * @param parent
      * @return
      */
-    @GetMapping("/tags")
+    @GetMapping("")
     ClassificationTag getClassificationTags(
             @RequestParam(defaultValue = "da") String parent);
 
