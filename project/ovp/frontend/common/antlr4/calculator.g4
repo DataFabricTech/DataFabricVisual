@@ -1,0 +1,16 @@
+grammar calculator;
+query: SELECT WS* columns WS* FROM WS* table (WS* WHERE WS* condition)?;
+columns: '*' | column (',' WS* column)*;
+column: ID;
+table: ID;
+condition: expression (WS* AND WS* expression)*;
+expression: column WS* '=' WS* value;
+value: STRING | NUMBER;
+SELECT: 'SELECT';
+FROM: 'FROM';
+WHERE: 'WHERE';
+AND: 'AND';
+ID: [a-zA-Z_][a-zA-Z_0-9]*;
+STRING: '\'' .*? '\'';
+NUMBER: [0-9]+;
+WS: [ \t\r\n]+ -> skip;

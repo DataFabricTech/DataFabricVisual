@@ -2,14 +2,20 @@
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
-  modules: ["@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt", "@nuxtjs/tailwindcss", "@pinia/nuxt"],
-
+  modules: [
+    "@nuxtjs/svg-sprite",
+    "nuxt-lodash",
+    "dayjs-nuxt",
+    "@nuxtjs/tailwindcss",
+    "@pinia/nuxt",
+    "nuxt-monaco-editor"
+  ],
   plugins: [
     { src: "~/plugins/highcharts-vue", mode: "client" },
     { src: "~/plugins/vue-final-modal", mode: "client" },
     { src: "~/plugins/ag-grid-vue", mode: "client" },
     { src: "~/plugins/vue-datepicker-next", mode: "client" },
-    { src: "~/plugins/code-mirror", mode: "client" }
+    { src: "~/plugins/antlr4", mode: "client" }
   ],
 
   components: [
