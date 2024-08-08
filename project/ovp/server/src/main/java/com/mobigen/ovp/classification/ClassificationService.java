@@ -8,6 +8,8 @@ import com.mobigen.ovp.classification.client.dto.classification.tag.Classificati
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.TagClient;
+import com.mobigen.ovp.common.openmete_client.dto.classification.Classification;
+import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -29,11 +32,22 @@ public class ClassificationService {
      * @return
      */
     public Object getClassifications() {
-        log.info(""+ classificationClient.getClassifications());
+        ClassificationData response = classificationClient.getClassifications();
 
-        return new ClassificationResponse(classificationClient.getClassifications());
+         // classificationList에서 "OVP_category"를 제외한 새로운 리스트 filteredList 생성
+        List<Classification> filteredList = response.getData().stream()
+                .filter(classification -> !"OVP_category".equals(classification.getDisplayName()))
+                .collect(Collectors.toList());
+
+        // 필터링된 리스트로 새로운 ClassificationData 객체 생성
+        ClassificationData filteredResponse = new ClassificationData();
+        filteredResponse.setData(filteredList);
+        filteredResponse.setPaging(response.getPaging());  // 기존 페이징 정보 유지
+
+        log.info("" + filteredResponse);
+
+        return new ClassificationResponse(filteredResponse);
     }
-
     /**
      * 분류 상세 조회
      * @param id
