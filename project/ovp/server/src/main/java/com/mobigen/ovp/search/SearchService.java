@@ -129,9 +129,6 @@ public class SearchService {
     }
 
     private Map<String, Object> getAllList(MultiValueMap<String, String> params) throws Exception {
-//        if (!params.getFirst("index").equals("all")) {
-//            params.set("size", "0");
-//        }
         params.set("index", ModelIndex.all.name());
         return getList(params);
     }

@@ -33,24 +33,24 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     categories.value = data.children;
     isCategoriesNoData.value = categories.value.length === 0;
   };
-  const getModelListQuery = (id: string) => {
+  const getModelListQuery = (tagId: string) => {
     // TODO : [개발] 검색어 조건 여기 추가.
     const params: any = {
       // eslint-disable-next-line id-length
       q: "",
       from: from.value,
       size: size.value,
-      categoryId: id,
+      tagId: tagId,
     };
     return new URLSearchParams(params);
   };
 
   const getModelByCategoryIdAPI = async (node: TreeViewItem) => {
-    if (_.isNull(node) || _.isEmpty(node.id)) {
+    if (_.isNull(node) || _.isEmpty(node.tagId)) {
       return;
     }
     const { data } = await $api(
-      `/api/category/models?${getModelListQuery(node.id)}`,
+      `/api/category/models?${getModelListQuery(node.tagId)}`,
     );
     return data;
   };
@@ -77,8 +77,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     insertOrEditAPI("PATCH", node);
   };
   const insertOrEditAPI = (method: string, node: TreeViewItem) => {
-    // TODO : [개발] edit의 경우에도 id, parentId, name, desc, order 값을 모두 backend 로 보내야 함. 없는 항목을 'null'로 업데이트 됨.
-    // TODO: [개발] 정상적으로 PATCH 동작이 되지 않음. API 검토 요청
     $api("/api/category", {
       method: method,
       body: node,
