@@ -27,6 +27,7 @@
         </div>
         <div class="p-3" v-else>
           <tree-vue
+            mode="edit"
             :items="categories"
             :isCheckable="false"
             :hideGuideLines="false"
@@ -34,7 +35,6 @@
             :show-open-all-btn="true"
             :show-close-all-btn="true"
             :use-draggable="true"
-            mode="view"
             :dropValidator="dropValidator"
             @onItemSelected="onNodeClicked"
             @addSibling="addSibling"
@@ -162,7 +162,6 @@
                     :show-category="true"
                     :is-box-selected-style="isBoxSelectedStyle"
                     :useDataNmLink="false"
-                    :is-checked="isAllModelListChecked"
                     :selected-model-list="selectedModelList"
                     @previewClick="previewClick"
                     @checkedValueChanged="checked"
@@ -383,16 +382,13 @@ watch(
 const onNodeClicked = async (node: TreeViewItem) => {
   isDescEditMode.value = false;
   isTitleEditMode.value = false;
-  selectedTitleNodeValue.value = "";
-  selectedDescNodeValue.value = "";
 
   selectedNode.value = node;
 
+  setScrollOptions(0);
   // 선택한 노드정보 저장
   setSelectedNode(node);
-
-  // 선택한 노드 기준 모델 목록을 조회한다.
-  setScrollOptions(0);
+  // 선택한 노드 기준 모델 목록을 조회
   await getModelList();
   // 모든 모델 리스트 id 저장
   setModelIdList();
@@ -433,9 +429,17 @@ const _editCategory = () => {
   editCategory(editNodeParam);
 };
 
-// TODO : [개발] 카테고리 삭제 예 - function 명 겹쳐서 임의로 _deleteCategory 로 처리함. 추후에 store - deleteCategory 이용하여 처리.
-const _deleteCategory = () => {
-  deleteCategory(selectedNode.value.id);
+const _deleteCategory = async () => {
+  if (confirm("카테고리를 삭제 하시겠습니까?")) {
+    const res = await deleteCategory(selectedNode.value.id);
+    if (res.result === 1) {
+      alert("삭제 되었습니다.");
+      await getCategories();
+      await onNodeClicked(categories.value[0]);
+    } else {
+      alert("삭제가 실행되지 않았습니다.");
+    }
+  }
 };
 
 let nodeMoved: Ref<boolean> = ref(false);
@@ -469,10 +473,9 @@ const dropValidator = async (
   return true;
 };
 // 데이터 모델 리스트
-// TODO: [개발] API 변경 후 value 를 q 에 담아 조회 해야함
 const onInput = (value: string) => {
-  getModelList();
-  console.log("value", value);
+  setScrollOptions(0);
+  getModelList(value);
 };
 
 const allModelList = computed({
@@ -485,18 +488,15 @@ const allModelList = computed({
     if (event) {
       isAllModelListChecked.value = true;
       selectedModelList.value = modelIdList.value;
-      console.log("selectedModelList: ", selectedModelList.value);
     } else {
       isAllModelListChecked.value = false;
       selectedModelList.value = [];
-      console.log("selectedModelList: ", selectedModelList.value);
     }
   },
 });
 
 const checked = (checkedList: any[]) => {
   selectedModelList.value = checkedList;
-  console.log("selectedModelList: ", selectedModelList.value);
 };
 
 const { scrollTrigger, setScrollOptions } =
@@ -544,6 +544,7 @@ const editDone = (key: string) => {
       break;
     case "desc":
       if (selectedDescNodeValue.value === "") {
+        selectedNode.value.desc = "설명 없음";
         return;
       }
       selectedNode.value.desc = selectedDescNodeValue.value;
@@ -574,7 +575,6 @@ onMounted(async () => {
 
   if (categories.value && categories.value.length > 0) {
     await onNodeClicked(categories.value[0]);
-    setModelIdList();
   }
 
   if (loader.value) {
