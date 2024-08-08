@@ -468,10 +468,9 @@ const dropValidator = async (
   return true;
 };
 // 데이터 모델 리스트
-// TODO: [개발] API 변경 후 value 를 q 에 담아 조회 해야함
 const onInput = (value: string) => {
-  getModelList();
-  console.log("value", value);
+  setScrollOptions(0);
+  getModelList(value);
 };
 
 const allModelList = computed({
