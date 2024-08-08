@@ -39,6 +39,7 @@ const props = withDefaults(defineProps<ResourceBoxListProps>(), {
   useDataNmLink: true,
   isBoxSelectedStyle: false,
   isChecked: false,
+  selectedModelList: () => [],
 });
 
 const emit = defineEmits<{
@@ -77,15 +78,13 @@ const checked = ({
   emit("checkedValueChanged", selectedList.value);
 };
 
-if (props.selectedModelList) {
-  watch(
-    () => props.selectedModelList,
-    (newVal) => {
-      selectedList.value = [...newVal];
-    },
-    { immediate: true },
-  );
-}
+watch(
+  () => props.selectedModelList,
+  (newVal) => {
+    selectedList.value = [...newVal];
+  },
+  { immediate: true },
+);
 </script>
 
 <style lang="scss" scoped></style>
