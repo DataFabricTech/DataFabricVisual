@@ -5,95 +5,7 @@
         비밀번호 변경
       </button>
     </div>
-    <div class="profile-box">
-      <span class="profile-avatar">
-        <img class="profile-img" alt="프로필 이미지" />
-      </span>
-      <div class="profile-group">
-        <div class="editable-group">
-          <span class="profile-name">root</span>
-          <button class="button button-neutral-ghost button-sm" type="button">
-            <span class="hidden-text">수정</span>
-            <svg-icon class="button-icon" name="pen"></svg-icon>
-          </button>
-        </div>
-        <!-- TODO : [개발] 수정시 인풋 활성화-->
-        <div class="editable-group">
-          <label class="hidden-text" for="profile-name-modify"
-            >프로필 이름 입력</label
-          >
-          <input id="profile-name-modify" class="text-input w-1/4" />
-          <div class="h-group gap-2 shrink-0">
-            <button
-              class="button button-neutral-lighter button-sm"
-              type="button"
-            >
-              취소
-            </button>
-            <button
-              class="button button-primary-lighter button-sm"
-              type="button"
-            >
-              완료
-            </button>
-          </div>
-        </div>
-        <div class="profile-list">
-          <div class="profile-title">이메일</div>
-          <div>admin@mobigen.com</div>
-        </div>
-        <div class="profile-list">
-          <div class="profile-title">역할</div>
-          <div>
-            <div class="editable-group">
-              <span>사용자</span>
-              <button
-                class="button button-neutral-ghost button-sm"
-                type="button"
-              >
-                <span class="hidden-text">수정</span>
-                <svg-icon class="button-icon" name="pen"></svg-icon>
-              </button>
-            </div>
-          </div>
-        </div>
-        <div class="profile-list">
-          <div class="profile-title">역할</div>
-          <div>
-            <!-- TODO : [개발] 수정시 스위치 활성화-->
-            <div class="switch">
-              <input type="checkbox" id="manager-sw" class="switch-input" />
-              <label for="manager-sw" class="switch-label">
-                관리자
-                <div class="switch-control"></div>
-              </label>
-            </div>
-          </div>
-        </div>
-        <div class="editable-group">
-          <span class="editable-group-desc">계정에 대한 설명영역입니다.</span>
-          <button class="button button-neutral-ghost button-sm" type="button">
-            <span class="hidden-text">수정</span>
-            <svg-icon class="button-icon" name="pen"></svg-icon>
-          </button>
-        </div>
-        <!-- TODO : [개발] 수정시 textarea 활성화-->
-        <div class="editable-group w-2/4">
-          <label class="hidden-text" for="profile-description-modify"
-            >계정 설명 수정</label
-          >
-          <textarea id="profile-description-modify" class="textarea"></textarea>
-          <div class="h-group gap-1">
-            <button class="button button-neutral-stroke" type="button">
-              취소
-            </button>
-            <button class="button button-primary-lighter" type="button">
-              완료
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
+    <profile-box></profile-box>
     <div class="tab tab-line">
       <ul class="tab-list">
         <li class="tab-item is-tab-item-selected">
@@ -273,6 +185,7 @@
 <script setup lang="ts">
 import { useNuxtApp } from "nuxt/app";
 const { $vfm } = useNuxtApp();
+import profileBox from "~/components/my-page/profile-box.vue"
 const PW_RESET_MODAL_ID: string = "pw-reset-modal";
 
 const showModalPwChange: () => void = () => {
