@@ -44,7 +44,7 @@ public interface ClassificationClient {
      * @param param
      * @return
      */
-    @PatchMapping(value = "/classifications/{id}", consumes = "application/json-patch+json")
+    @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
     ClassificationEdit editClassification(@PathVariable("id") String id, @RequestBody List<JsonPatchOperation> param);
 
 //    /**

@@ -2,9 +2,9 @@ package com.mobigen.ovp.classification;
 
 import com.mobigen.ovp.classification.client.dto.classification.ClassificationDetailByNameResponse;
 import com.mobigen.ovp.classification.client.dto.classification.ClassificationDetailResponse;
+import com.mobigen.ovp.classification.client.dto.classification.ClassificationEditResponse;
 import com.mobigen.ovp.classification.client.dto.classification.ClassificationResponse;
 import com.mobigen.ovp.classification.client.dto.classification.tag.ClassificationTagsResponse;
-import com.mobigen.ovp.classification.client.dto.classification.ClassificationEditResponse;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.TagClient;
@@ -33,6 +33,7 @@ public class ClassificationService {
 
     /**
      * 분류 상세 조회
+     * @param id
      * @return
      */
     public Object getClassificationDetail(String id) {
@@ -43,6 +44,7 @@ public class ClassificationService {
 
     /**
      * 분류와 매칭되는 태그의 정보 조회
+     * @param name
      * @return
      */
     public Object getClassificationDetailByName(String name) {
@@ -54,6 +56,7 @@ public class ClassificationService {
     /**
      * 분류 수정
      * @param id
+     * @param param
      * @return
      */
     public Object editClassification(String id, List<JsonPatchOperation> param) {

@@ -24,6 +24,11 @@ interface Tag {
   changeDescription: string | null;
 }
 
+interface JsonPatchOperation {
+  op: string;
+  path: string;
+  value: any;
+}
 //TODO : 추후, 태그 paging을 이용한 인피니트스크롤작업을 위해 보류
 
 // interface paging {
@@ -75,7 +80,7 @@ export const classificationStore = defineStore("classification", () => {
     firstClassificationName = data.data.classificationList[0].name;
   };
 
-  // TODO : 분류 상세 조회 ( name, displayName, description )
+  // 분류 상세 조회 ( name, displayName, description )
   const getClassificationDetail = async (id?: string) => {
     if (id) {
       // 어떠한 분류를 선택 했을 경우,
@@ -88,38 +93,41 @@ export const classificationStore = defineStore("classification", () => {
 
   // 태그 정보 조회 (기본값 : 분류 목록중 최상단 분류의 태그정보)
   const getClassificationTags = async (name?: any) => {
-    let url: string;
     if (name !== undefined) {
       // 선택된 분류의 name값이 들어올 경우
       firstClassificationName = name;
     }
-    url = `/api/classifications/tags?parent=` + firstClassificationName;
-    const data: any = await $api(url);
+    const data: any = await $api(
+      `/api/classifications/tags?parent=` + firstClassificationName,
+    );
     // TODO : 추후, 태그 목록 인피니트스크롤 작업을 위한 데이터 변수 지정 (ex_ tagContent.value = data;)
 
     classificationTagList.value = data.data.classificationTagList;
   };
 
-  // TODO : 분류 상세 수정 ( name/displayName 수정 & description 수정 )
-  const editClassificationDetail = async (editData: object) => {
+  // 분류 상세 수정 ( name/displayName 수정 & description 수정 )
+  const editClassificationDetail = async (editData: JsonPatchOperation[]) => {
     return insertOrEditAPI("PATCH", editData);
   };
 
   // TODO : 분류 추가 모달 API구현 예정
-  // const newClassificationDetail2 = (param: object) => {
-  //   insertOrEditAPI("PUT", param);
-  // };
 
-  // 분류 추가 / 수정 API 공용 API
-  const insertOrEditAPI = async (method: string, param: object) => {
+  // 분류 추가 & 수정 API
+  const insertOrEditAPI = async (
+    method: string,
+    param: JsonPatchOperation[],
+  ) => {
     const result = await $api(
       `/api/classifications/${currentClassificationID}`,
       {
         method: method,
-        body: param,
+        headers: {
+          "Content-Type": "application/json-patch+json",
+        },
+        body: JSON.stringify(param),
       },
     );
-    console.log("insertOrEditAPI의 res", result);
+    // console.log("insertOrEditAPI의 res", result);
     getClassificationList(); // 분류목록 API 재호출
 
     return result;
@@ -138,6 +146,5 @@ export const classificationStore = defineStore("classification", () => {
     getClassificationDetail,
     getClassificationTags,
     editClassificationDetail,
-    // editClassificationDetail2,
   };
 });
