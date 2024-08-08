@@ -49,8 +49,7 @@
 
   // % 표기
   &-group {
-    @include flex($direction: column, $vertical: flex-end);
-    gap: $spacing-2;
+    @include flex($direction: column, $vertical: flex-end, $gap: $spacing-2);
   }
 
   &-text {

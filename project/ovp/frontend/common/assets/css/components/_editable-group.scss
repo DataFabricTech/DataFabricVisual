@@ -9,8 +9,7 @@
   }
 
   &:has(.textarea) {
-    @include flex($direction: column, $vertical: flex-end);
-    gap: $spacing-8;
+    @include flex($direction: column, $vertical: flex-end, $gap: $spacing-8);
   }
 
   &-title {

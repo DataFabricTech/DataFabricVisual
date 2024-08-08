@@ -1,8 +1,7 @@
 .submit-form {
-  @include flex($direction: column);
+  @include flex($direction: column, $gap: $spacing-48);
 
   height: 100%;
-  gap: $spacing-48;
   background: linear-gradient(to bottom, rgba(189, 227, 255, 0.5), rgba(51, 152, 164, 0.5));
 
   &-logo {

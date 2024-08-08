@@ -88,9 +88,8 @@
   }
 
   &-foot {
-    @include flex($horizontal: space-between);
+    @include flex($horizontal: space-between, $gap: $spacing-8);
 
-    gap: $spacing-8;
     padding: $spacing-12 $spacing-16 $spacing-16;
 
     &-group {

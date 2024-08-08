@@ -18,9 +18,7 @@
   }
 
   &-model {
-    @include flex;
-
-    gap: $spacing-8;
+    @include flex($gap: $spacing-8);
 
     & > img {
       width: 32px;
@@ -29,9 +27,7 @@
   }
 
   &-contents {
-    @include flex($direction: column, $vertical: flex-start);
-
-    gap: $spacing-4;
+    @include flex($direction: column, $vertical: flex-start, $gap: $spacing-4);
   }
 
   .editable-group-title {
@@ -59,14 +55,13 @@
   }
 
   &-info {
-    @include flex;
+    @include flex($gap: $spacing-24);
 
-    gap: $spacing-24;
     margin-top: $spacing-12;
   }
 
   &-list {
-    @include flex;
+    @include flex($gap: $spacing-16);
 
     gap: $spacing-16;
     color: $neutral-700;

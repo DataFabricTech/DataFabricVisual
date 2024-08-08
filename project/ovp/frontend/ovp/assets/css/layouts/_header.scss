@@ -21,9 +21,7 @@
 }
 
 .profile {
-  @include flex;
-
-  gap: $spacing-8;
+  @include flex($gap: $spacing-8);
 
   &-avatar {
     @include flex;

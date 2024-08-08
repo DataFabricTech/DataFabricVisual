@@ -1,6 +1,5 @@
 .profile-box {
-  @include flex($vertical: flex-start, $horizontal: flex-start);
-  gap: $spacing-16;
+  @include flex($vertical: flex-start, $horizontal: flex-start, $gap: $spacing-16);
   width: 100%;
   padding: $spacing-16;
   border-bottom: 1px solid $neutral-200;
@@ -42,10 +41,9 @@
 }
 
 .profile-group {
-  @include flex($direction: column, $vertical: flex-start, $horizontal: flex-start);
+  @include flex($direction: column, $vertical: flex-start, $horizontal: flex-start, $gap: $spacing-16);
   @include font-size('14');
   flex-grow: 1;
-  gap: $spacing-16;
   color: $neutral-600;
 
   .profile-list {

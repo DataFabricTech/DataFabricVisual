@@ -16,9 +16,8 @@ $list-classes: menu, dropdown;
     }
 
     .#{$list}-item {
-      @include flex($horizontal: flex-start);
+      @include flex($horizontal: flex-start,$gap: $spacing-6);
 
-      gap: $spacing-6;
       padding: 0 $spacing-6 0 $spacing-8;
 
 
@@ -46,9 +45,8 @@ $list-classes: menu, dropdown;
 
       .#{$list}-button {
         @include ellipsis;
-        @include flex($horizontal:flex-start);
+        @include flex($horizontal:flex-start,$gap: $spacing-6);
 
-        gap: $spacing-6;
         width: 100%;
         height: 100%;
 

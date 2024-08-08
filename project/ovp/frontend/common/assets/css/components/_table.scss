@@ -50,8 +50,7 @@ table,
   }
 
   .button-group {
-    @include flex();
-    gap: $spacing-16;
+    @include flex($gap: $spacing-16);
 
     .button {
       position: relative;

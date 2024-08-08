@@ -17,9 +17,8 @@
 }
 
 .interaction-buttons {
-  @include flex;
+  @include flex($gap: $spacing-8);
 
-  gap: $spacing-8;
   position: absolute;
   right: 32px;
   top: 32px;
@@ -33,9 +32,8 @@
   padding: $spacing-16 0;
 
   &-list {
-    @include flex($direction: column, $horizontal: flex-start);
+    @include flex($direction: column, $horizontal: flex-start, $gap: $spacing-12);
 
-    gap: $spacing-12;
     height: 100%;
     padding: $spacing-4;
     overflow-y: auto;

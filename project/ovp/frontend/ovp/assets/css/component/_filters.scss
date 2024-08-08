@@ -1,6 +1,5 @@
 .filters {
-  @include flex($horizontal: flex-start);
-  gap: $spacing-4;
+  @include flex($horizontal: flex-start, $gap: $spacing-4);
   width: 100%;
 }
 

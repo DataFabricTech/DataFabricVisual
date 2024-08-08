@@ -13,15 +13,13 @@
 
 //범례
 @mixin graph-legend {
-  @include flex($vertical: flex-start);
+  @include flex($vertical: flex-start, $gap: $spacing-8);
   position: absolute;
-  gap: $spacing-8;
   top: $spacing-12;
   left: $spacing-12;
 
   &-content {
-    @include flex($direction: column, $vertical: flex-start);
-    gap: $spacing-4;
+    @include flex($direction: column, $vertical: flex-start, $gap: $spacing-4);
     padding: $spacing-12;
     background-color: $neutral-0;
     border: 1px solid $neutral-300;
@@ -29,9 +27,8 @@
   }
 
   &-item {
-    @include flex;
+    @include flex($gap: $spacing-8);
     @include font-size('13');
-    gap: $spacing-8;
     font-weight: 600;
   }
 }

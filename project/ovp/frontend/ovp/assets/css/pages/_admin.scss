@@ -1,11 +1,10 @@
 //서비스 선택
 .service-type {
   &-list {
-    @include flex($horizontal: flex-start);
+    @include flex($horizontal: flex-start, $gap: $spacing-36);
     flex-wrap: wrap;
     height: 430px;
     padding: $spacing-36 0 $spacing-36 $spacing-36;
-    gap: 36px;
     overflow: auto;
   }
 
@@ -29,11 +28,10 @@
   }
 
   &-button {
-    @include flex($direction: column);
+    @include flex($direction: column, $gap: $spacing-8);
     width: 100%;
     height: 100%;
     padding: $spacing-16;
-    gap: $spacing-8;
   }
 
   &-img {
@@ -81,9 +79,9 @@
   overflow: auto;
 
   &-summary {
-    @include flex($direction: column, $horizontal: flex-start, $vertical: flex-start);
+    @include flex($direction: column, $horizontal: flex-start, $vertical: flex-start, $gap: $spacing-4);
+
     width: 100%;
-    gap: $spacing-4;
     padding-bottom: $spacing-12;
     margin-bottom: $spacing-32;
     border-bottom: 1px solid $neutral-200;
@@ -131,8 +129,7 @@
   //폼 필드 속 파일 업로드
   &-upload {
     .form-detail {
-      @include flex($direction: column, $horizontal: flex-start, $vertical: flex-start);
-      gap: $spacing-4;
+      @include flex($direction: column, $horizontal: flex-start, $vertical: flex-start, $gap: $spacing-4);
     }
 
     .form-detail:not(:last-child) {
@@ -147,9 +144,8 @@
 
 //연결 테스트
 .connect-test {
-  @include flex($direction: row, $horizontal: flex-start, $vertical: center);
+  @include flex($direction: row, $horizontal: flex-start, $vertical: center, $gap: $spacing-12);
   width: 100%;
-  gap: $spacing-12;
   padding: $spacing-16 $spacing-16 0;
   border-top: 1px solid $neutral-100;
 }
