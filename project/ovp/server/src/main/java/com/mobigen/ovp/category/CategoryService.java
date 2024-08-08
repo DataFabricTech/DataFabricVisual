@@ -259,7 +259,16 @@ public class CategoryService {
             return "INVALID";
         }
 
+        // step3. 같은 형제 노드중에 중복된 카테고리 명이 있는지 체크 필요함.
+        if (hasSameNameInSiblings(dropNodeEntity.getId(), targetNodeEntity.getId(), dropNodeEntity.getName())) {
+            return "HAS_SAME_NAME";
+        }
+
         return "VALID";
+    }
+
+    private boolean hasSameNameInSiblings(UUID id, UUID parentId, String name) {
+        return categoryRepository.findByParentIdAndIdNotAndName(parentId, id, name).size() > 0;
     }
 
     /**
@@ -306,7 +315,7 @@ public class CategoryService {
     public String createTagInfo(String categoryId) {
         Map<String, Object> params = new HashMap<>();
         params.put("classification", "ovp_category");
-        params.put("description", "OVP Category Matched Tag");
+        params.put("description", "OVP Category Matched Tag__DELETE");
         params.put("displayName", categoryId);
         params.put("name", categoryId);
         Map<String, Object> response = (Map<String, Object>) classificationClient.createTag(params);
