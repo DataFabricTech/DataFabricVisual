@@ -353,6 +353,7 @@ const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
   desc: "",
   order: 0,
   parentId: "",
+  tagId: "",
   expanded: false,
   selected: false,
   disabled: false,
@@ -424,6 +425,7 @@ const _editCategory = () => {
   const editNodeParam: TreeViewItem = {
     id: selectedNode.value.id,
     parentId: selectedNode.value.parentId,
+    tagId: selectedNode.value.tagId,
     name: selectedNode.value.name,
     desc: selectedNode.value.desc,
     children: [],

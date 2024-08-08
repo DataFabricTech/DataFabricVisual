@@ -87,7 +87,7 @@ public class SearchService {
         List<String> keys = List.of("table", "storage", "model", "all");
         return getSearchList(keys, responseList);
     }
-  
+
     public Map<String, Object> getAllSearchList(MultiValueMap<String, String> params) throws Exception {
         List<Map<String, Object>> responseList = List.of(
                 getAllList(new LinkedMultiValueMap<>(params))
@@ -129,9 +129,6 @@ public class SearchService {
     }
 
     private Map<String, Object> getAllList(MultiValueMap<String, String> params) throws Exception {
-        if (!params.getFirst("index").equals("all")) {
-            params.set("size", "0");
-        }
         params.set("index", ModelIndex.all.name());
         return getList(params);
     }
