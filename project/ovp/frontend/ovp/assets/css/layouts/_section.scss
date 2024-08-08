@@ -2,7 +2,7 @@
   width: calc(100% - 48px);
   display: flex;
   flex-direction: column;
-  margin-left: 48px;
+  margin-left: $spacing-48;
 
   .section-top-bar + .section-contents {
     height: calc(100% - 48px);
