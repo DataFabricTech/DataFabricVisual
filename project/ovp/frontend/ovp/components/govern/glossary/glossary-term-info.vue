@@ -32,7 +32,7 @@
             class="button button-primary-lighter"
             type="button"
             @click="
-              updateTerm(term.id, {
+              updateTerm({
                 op: 'replace',
                 path: '/name',
                 value: editData.name,
@@ -94,7 +94,7 @@
             class="button button-primary-lighter"
             type="button"
             @click="
-              updateTerm(term.id, {
+              updateTerm({
                 op: 'replace',
                 path: '/description',
                 value: editData.description,
@@ -120,15 +120,12 @@
           <svg-icon class="button-icon" name="pen"></svg-icon>
         </button>
       </div>
-
-      <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-      <!-- TODO: 개발 - 태그 수정 -->
       <div class="editable-group" v-if="store.editTermMode.tag">
         <menu-search-tag
           :data="menuSearchTagsData"
           :selected-items="term.tags"
           label-key="label"
-          value-key="data"
+          value-key="tagFQN"
           :is-multi="true"
           title="값을 선택하세요"
           @multiple-change="changeTag"
@@ -137,8 +134,6 @@
         >
         </menu-search-tag>
       </div>
-      <!-- //수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-
       <div class="editable-group" v-if="!store.editTermMode.synonyms">
         <span
           class="editable-group-desc"
@@ -180,7 +175,11 @@
           >
             취소
           </button>
-          <button class="button button-primary-lighter" type="button">
+          <button
+            class="button button-primary-lighter"
+            type="button"
+            @click="changeSynonyms"
+          >
             완료
           </button>
         </div>
@@ -199,7 +198,7 @@
           v-if="term.relatedTerms && term.relatedTerms.length > 0"
           v-for="relatedTerm in term.relatedTerms"
         >
-          <span class="tag-text">{{ relatedTerm.name }}</span>
+          <span class="tag-text">{{ relatedTerm.label }}</span>
         </div>
         <button
           class="button button-neutral-ghost button-sm"
@@ -210,24 +209,20 @@
           <svg-icon class="button-icon" name="pen"></svg-icon>
         </button>
       </div>
-      <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-      <!-- TODO: 개발 - 태그 수정 -->
       <div class="editable-group" v-if="store.editTermMode.relatedTerms">
         <menu-search-tag
-          :data="menuSearchTagsData"
+          :data="menuSearchRelatedTermsData"
+          :selected-items="term.relatedTerms"
           label-key="label"
-          value-key="data"
+          value-key="id"
           :is-multi="true"
           title="값을 선택하세요"
-          @multiple-change="changeTag"
-          @cancel="changeEditTermMode('tag')"
-          @close="changeEditTermMode('tag')"
+          @multiple-change="changeRelatedTerms"
+          @cancel="changeEditTermMode('relatedTerms')"
+          @close="changeEditTermMode('relatedTerms')"
         >
         </menu-search-tag>
       </div>
-      <!-- //수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-
-      <!-- TODO: 개발 -->
       <data-model></data-model>
     </div>
   </div>
@@ -237,17 +232,28 @@
 import { useGlossaryStore } from "~/store/glossary";
 import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import { onMounted, reactive, watch } from "vue";
-import type { JsonPatchOperation } from "~/type/common";
+import type { JsonPatchOperation, Tag } from "~/type/common";
+import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
+import type { Term } from "~/type/glossary";
 const {
   term,
+  terms,
+  tags,
   editTermMode,
   menuSearchTagsData,
+  menuSearchRelatedTermsData,
   getAllTags,
+  getTerms,
   editTerm,
   deleteTerm,
+  changeCurrentTerm,
   getGlossaries,
   openEditTermComponent,
+  disableEditTermModes,
   changeEditTermMode,
+  createTagOperation,
+  createRelatedTermOperation,
+  createSynonymsOperation,
 } = useGlossaryStore();
 const store = useGlossaryStore();
 
@@ -274,7 +280,7 @@ onMounted(() => {
   getAllTags();
 });
 
-function syncEditDataWithTerm() {
+function syncEditDataWithTerm(): void {
   editData.name = store.term.name;
   editData.description = store.term.description;
   if (store.term.synonyms) {
@@ -282,11 +288,20 @@ function syncEditDataWithTerm() {
   }
 }
 
-async function updateTerm(id: string, op: JsonPatchOperation): Promise<void> {
-  await editTerm(id, [op]);
+async function refreshTerm(): Promise<void> {
+  const ID = term.id;
+  await getTerms(store.glossary.name);
+  const termData: Term = terms.find((term: Term) => term.id === ID);
+  changeCurrentTerm(termData);
+  disableEditTermModes();
 }
 
-async function onDeleteTerm() {
+async function updateTerm(op: JsonPatchOperation): Promise<void> {
+  await editTerm(term.id, [op]);
+  await refreshTerm();
+}
+
+async function onDeleteTerm(): Promise<void> {
   await deleteTerm(term.id);
   await getGlossaries();
   openEditTermComponent("glossary");
@@ -295,5 +310,54 @@ async function onDeleteTerm() {
 function cancel(property: keyof typeof editTermMode): void {
   changeEditTermMode(property);
   syncEditDataWithTerm();
+}
+
+async function changeSynonyms() {
+  const arr = editData.synonyms.split(",");
+  const operations: JsonPatchOperation[] = createSynonymsOperation(
+    arr,
+    term.synonyms,
+  );
+
+  await editTerm(term.id, operations);
+  await refreshTerm();
+}
+
+async function changeTag(items: MenuSearchItemImpl[]): Promise<void> {
+  const selectedItems: string[] = items.map(
+    (item: MenuSearchItemImpl) => item.tagFQN as string,
+  );
+  const matchTags: Tag[] = tags.filter((tag) =>
+    selectedItems.includes(tag.tagFQN),
+  );
+  const operations: JsonPatchOperation[] = createTagOperation(
+    selectedItems,
+    matchTags,
+    term,
+  );
+  await editTerm(term.id, operations);
+  await refreshTerm();
+}
+
+async function changeRelatedTerms(items: MenuSearchItemImpl[]): Promise<void> {
+  const selectedItems: string[] = items.map(
+    (item: MenuSearchItemImpl) => item.id as string,
+  );
+  const matchRelatedTerms: object[] = terms.filter((term: object) =>
+    selectedItems.includes(term.id),
+  );
+  matchRelatedTerms.forEach((term: object) => {
+    term.type = "glossaryTerm";
+    term.deleted = false;
+    delete term.tags;
+    delete term.synonyms;
+    delete term.relatedTerms;
+  });
+  const operations: JsonPatchOperation[] = createRelatedTermOperation(
+    selectedItems,
+    matchRelatedTerms,
+  );
+  await editTerm(term.id, operations);
+  await refreshTerm();
 }
 </script>

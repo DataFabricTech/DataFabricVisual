@@ -20,7 +20,9 @@ export const useGlossaryStore = defineStore("glossary", () => {
   const dataModel = reactive<PreviewData>(<PreviewData>{});
 
   const tags = reactive<Tag[]>([]);
-  const menuSearchTagsData = reactive<Tag[]>([]);
+  const menuSearchTagsData = reactive<object[]>([]);
+  const menuSearchRelatedTermsData = reactive<object[]>([]);
+
   const tab = ref("term");
   const currentComponent = ref("glossary");
 
@@ -76,23 +78,25 @@ export const useGlossaryStore = defineStore("glossary", () => {
    * 용어 Crud
    */
   async function getTerms(term: string): Promise<void> {
+    menuSearchRelatedTermsData.length = 0;
     const res = await $api(`/api/glossary/terms?term=${term}`);
     terms.splice(0, terms.length, ...res.data);
+    terms.forEach((term) => {
+      menuSearchRelatedTermsData.push({ label: term.name, id: term.id });
+    });
   }
 
   async function editTerm(
     id: string,
-    body: [JsonPatchOperation],
+    body: JsonPatchOperation[],
   ): Promise<void> {
-    const res = await $api(`/api/glossary/terms/${id}`, {
+    await $api(`/api/glossary/terms/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json-patch+json",
       },
       body: body,
     });
-    changeCurrentTerm(res.data);
-    disableEditTermModes();
   }
 
   async function updateTerm(id: string, body: object[]) {
@@ -210,51 +214,162 @@ export const useGlossaryStore = defineStore("glossary", () => {
    * Tag 수정 operation 생성
    * @param selectedItems
    * @param matchTags
+   * @param entity
    */
   const createTagOperation = (
     selectedItems: string[],
     matchTags: Tag[],
+    entity: Term | Glossary,
   ): JsonPatchOperation[] => {
-    const newTag = selectedItems;
-    const oldTag = glossary.tags.map((tag) => tag.tagFQN);
-    const maxLength = Math.max(newTag.length, oldTag.length);
-
+    const newData = selectedItems;
+    const oldData = entity.tags.map((tag) => tag.tagFQN);
     const operations: JsonPatchOperation[] = [];
+    const maxLength = Math.max(newData.length, oldData.length);
 
-    // eslint-disable-next-line id-length
-    for (let i: number = 0; i < maxLength; i++) {
-      const newVal = newTag[i] ?? null;
-      const oldVal = oldTag[i] ?? null;
+    const processTagChange = (index: number) => {
+      const newValue = newData[index] ?? null;
+      const oldValue = oldData[index] ?? null;
 
-      if (newVal === null && oldVal !== null) {
-        operations.push({
-          op: "remove",
-          path: `/tags/${i}`,
-        });
-      } else if (newVal !== null && oldVal === null) {
-        const newTag = matchTags.find((tag) => tag.tagFQN === newVal);
-        if (newTag) {
+      if (newValue === null && oldValue !== null) {
+        operations.push({ op: "remove", path: `/tags/${index}` });
+      } else if (newValue !== null && oldValue === null) {
+        const matchingTag = matchTags.find((tag) => tag.tagFQN === newValue);
+        if (matchingTag) {
           operations.push({
             op: "add",
-            path: `/tags/${i}`,
-            value: matchTags[i],
+            path: `/tags/${index}`,
+            value: matchingTag,
           });
         }
-      } else if (newVal !== oldVal) {
-        const tag: Tag | undefined = matchTags.find(
-          (tag: Tag) => tag.tagFQN === newVal,
-        );
-        if (tag) {
-          $constants.PATCH_OPERATION.PATH_LIST.forEach((path: string) => {
+      } else if (newValue !== oldValue) {
+        const matchingTag = matchTags.find((tag) => tag.tagFQN === newValue);
+        if (matchingTag) {
+          $constants.PATCH_OPERATION.PATH_LIST.TAGS.forEach((path) => {
             operations.push({
               op: "replace",
-              path: `/tags/${i}/${path}`,
-              value: tag[path],
+              path: `/tags/${index}/${path}`,
+              value: matchingTag[path],
             });
           });
         }
       }
+    };
+
+    if (newData.length >= oldData.length) {
+      for (let i = 0; i < maxLength; i++) {
+        processTagChange(i);
+      }
+    } else {
+      for (let i = maxLength - 1; i >= 0; i--) {
+        processTagChange(i);
+      }
     }
+
+    return operations;
+  };
+
+  /**
+   * 연관 용어 수정 operation 생성
+   * @param selectedItems
+   * @param matchTags
+   */
+  const createRelatedTermOperation = (
+    selectedItems: string[],
+    matchTags: object[],
+  ): JsonPatchOperation[] => {
+    const newData = selectedItems;
+    const oldData = term.relatedTerms.map((term) => term.id);
+    const operations: JsonPatchOperation[] = [];
+    const maxLength = Math.max(newData.length, oldData.length);
+
+    const processTagChange = (index: number) => {
+      const newValue = newData[index] ?? null;
+      const oldValue = oldData[index] ?? null;
+
+      if (newValue === null && oldValue !== null) {
+        operations.push({ op: "remove", path: `/relatedTerms/${index}` });
+      } else if (newValue !== null && oldValue === null) {
+        const matchingTag = matchTags.find((tag) => tag.id === newValue);
+        if (matchingTag) {
+          operations.push({
+            op: "add",
+            path: `/relatedTerms/${index}`,
+            value: matchingTag,
+          });
+        }
+      } else if (newValue !== oldValue) {
+        const matchingTag = matchTags.find((tag) => tag.id === newValue);
+        if (matchingTag) {
+          $constants.PATCH_OPERATION.PATH_LIST.RELATED_TERMS.forEach((path) => {
+            operations.push({
+              op: "replace",
+              path: `/relatedTerms/${index}/${path}`,
+              value: matchingTag[path],
+            });
+          });
+        }
+      }
+    };
+
+    if (newData.length >= oldData.length) {
+      for (let i = 0; i < maxLength; i++) {
+        processTagChange(i);
+      }
+    } else {
+      for (let i = maxLength - 1; i >= 0; i--) {
+        processTagChange(i);
+      }
+    }
+
+    return operations;
+  };
+
+  /**
+   * 동의어 수정 operation 생성
+   * @param editedItems
+   * @param matchSynonyms
+   */
+  const createSynonymsOperation = (
+    editedItems: string[],
+    matchSynonyms: string[],
+  ) => {
+    const operations: JsonPatchOperation[] = [];
+    const maxLength: number = Math.max(
+      editedItems.length,
+      matchSynonyms.length,
+    );
+
+    const processTagChange = (index: number) => {
+      const newData = editedItems[index] ?? null;
+      const oldData = matchSynonyms[index] ?? null;
+
+      if (newData === null && oldData !== null) {
+        operations.push({ op: "remove", path: `/synonyms/${index}` });
+      } else if (newData !== null && oldData === null) {
+        operations.push({
+          op: "add",
+          path: `/synonyms/${index}`,
+          value: editedItems[index],
+        });
+      } else if (newData !== oldData) {
+        operations.push({
+          op: "replace",
+          path: `/synonyms/${index}`,
+          value: editedItems[index],
+        });
+      }
+    };
+
+    if (editedItems.length >= matchSynonyms.length) {
+      for (let i = 0; i < maxLength; i++) {
+        processTagChange(i);
+      }
+    } else {
+      for (let i = maxLength - 1; i >= 0; i--) {
+        processTagChange(i);
+      }
+    }
+
     return operations;
   };
 
@@ -273,6 +388,8 @@ export const useGlossaryStore = defineStore("glossary", () => {
     tab,
     tags,
     menuSearchTagsData,
+    menuSearchRelatedTermsData,
+
     currentComponent,
 
     editGlossaryMode,
@@ -294,6 +411,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
 
     changeTab,
     openEditTermComponent,
+    disableEditTermModes,
 
     changeEditGlossaryMode,
     changeEditTermMode,
@@ -303,5 +421,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
 
     getAllTags,
     createTagOperation,
+    createRelatedTermOperation,
+    createSynonymsOperation,
   };
 });

@@ -126,8 +126,6 @@
           <svg-icon class="button-icon" name="pen"></svg-icon>
         </button>
       </div>
-      <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-      <!-- TODO: 개발 - 태그 수정 -->
       <div class="editable-group" v-if="store.editGlossaryMode.tag">
         <menu-search-tag
           :data="menuSearchTagsData"
@@ -141,7 +139,6 @@
           @close="changeEditGlossaryMode('tag')"
         ></menu-search-tag>
       </div>
-      <!-- // 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
 
       <div>
         <div class="tab tab-line">
@@ -245,10 +242,10 @@ async function changeTag(items: MenuSearchItemImpl[]) {
   const matchTags: Tag[] = tags.filter((tag) =>
     selectedItems.value.includes(tag.tagFQN),
   );
-  console.log(matchTags);
   const operations: JsonPatchOperation[] = createTagOperation(
     selectedItems.value,
     matchTags,
+    glossary,
   );
   await editGlossary(glossary.id, operations);
   await getGlossaries();

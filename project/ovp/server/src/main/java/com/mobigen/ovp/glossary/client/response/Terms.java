@@ -30,11 +30,20 @@ public class Terms {
         this.tags = new ArrayList<Map<String, String>>();
         for (Tag tag : term.getTags()) {
             Map<String, String> tagMap = new HashMap<String, String>();
-            tagMap.put("label", tag.getDisplayName());
-            tagMap.put("data", tag.getName());
+            tagMap.put("label", tag.getName());
+            tagMap.put("tagFQN", tag.getTagFQN());
             this.tags.add(tagMap);
         }
         this.synonyms = term.getSynonyms();
-        this.relatedTerms = term.getRelatedTerms();
+        this.relatedTerms = new ArrayList<>();
+        for(Object obj : term.getRelatedTerms()) {
+            if(obj instanceof Map<?,?>) {
+                Map<String, ?> data = (Map<String, ?>) obj;
+                Map<String, String> termMap = new HashMap<>();
+                termMap.put("label", (String) data.get("name"));
+                termMap.put("id", (String) data.get("id"));
+                this.relatedTerms.add(termMap);
+            }
+        }
     }
 }
