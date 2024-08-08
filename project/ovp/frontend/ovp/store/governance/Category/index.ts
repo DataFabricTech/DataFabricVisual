@@ -107,6 +107,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     getCategories();
   };
   const setModelIdList = () => {
+    modelIdList.value = [];
     for (const element of modelList.value) {
       modelIdList.value.push(element.id);
     }

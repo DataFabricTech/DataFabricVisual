@@ -15,7 +15,7 @@
       :use-prv-btn="props.usePrvBtn"
       :useFirModelNm="props.useFirModelNm"
       :use-data-nm-link="props.useDataNmLink"
-      :is-checked="props.isChecked"
+      :selected-model-list="props.selectedModelList"
       @checked="checked"
       @previewClick="previewClick"
       @modelNmClick="modelNmClick"
@@ -77,17 +77,15 @@ const checked = ({
   emit("checkedValueChanged", selectedList.value);
 };
 
-// props.selectedModelList가 유효할 때만 watch를 설정
-// selectedModelList가 변경될 때 selectedList를 업데이트
-watch(
-  () => props.selectedModelList,
-  (newVal) => {
-    if (!_.isEmpty(newVal)) {
+if (props.selectedModelList) {
+  watch(
+    () => props.selectedModelList,
+    (newVal) => {
       selectedList.value = [...newVal];
-    }
-  },
-  { immediate: true },
-);
+    },
+    { immediate: true },
+  );
+}
 </script>
 
 <style lang="scss" scoped></style>

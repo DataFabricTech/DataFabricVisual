@@ -162,7 +162,6 @@
                     :show-category="true"
                     :is-box-selected-style="isBoxSelectedStyle"
                     :useDataNmLink="false"
-                    :is-checked="isAllModelListChecked"
                     :selected-model-list="selectedModelList"
                     @previewClick="previewClick"
                     @checkedValueChanged="checked"
@@ -485,18 +484,15 @@ const allModelList = computed({
     if (event) {
       isAllModelListChecked.value = true;
       selectedModelList.value = modelIdList.value;
-      console.log("selectedModelList: ", selectedModelList.value);
     } else {
       isAllModelListChecked.value = false;
       selectedModelList.value = [];
-      console.log("selectedModelList: ", selectedModelList.value);
     }
   },
 });
 
 const checked = (checkedList: any[]) => {
   selectedModelList.value = checkedList;
-  console.log("selectedModelList: ", selectedModelList.value);
 };
 
 const { scrollTrigger, setScrollOptions } =
