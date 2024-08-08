@@ -25,7 +25,7 @@
           </template>
         </editable-group>
       </div>
-      <button class="button button-error-lighter" @click="deleteClick">
+      <button class="button button-error-lighter" @click="confirmDelete">
         삭제
       </button>
     </div>
@@ -160,8 +160,16 @@ const editDone = async () => {
 };
 
 // 분류 삭제 버튼 클릭
-const deleteClick = () => {
-  deleteClassification(); // 분류 삭세 API 호출
+const confirmDelete = () => {
+  if (confirm("삭제하시겠습니까?")) {
+    deleteClassification()
+      .then(() => {
+        alert("삭제되었습니다.");
+      })
+      .catch((error) => {
+        console.error("삭제 중 오류 발생: ", error);
+      });
+  }
 };
 </script>
 

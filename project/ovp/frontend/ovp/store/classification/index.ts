@@ -138,7 +138,6 @@ export const classificationStore = defineStore("classification", () => {
     await $api(`/api/classifications/${currentClassificationID}`, {
       method: "delete",
     });
-    alert("삭제되었습니다.");
     await getClassificationList(); // 분류목록 API 재호출
     await getClassificationDetail(); // 분류 상세 정보 API 호출
     await getClassificationTags(); // 태그 정보 API 호출
