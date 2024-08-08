@@ -430,8 +430,16 @@ const _editCategory = () => {
 };
 
 const _deleteCategory = async () => {
-  deleteCategory(selectedNode.value.id);
-  await onNodeClicked(categories.value[0]);
+  if (confirm("카테고리를 삭제 하시겠습니까?")) {
+    const res = await deleteCategory(selectedNode.value.id);
+    if (res.result === 1) {
+      alert("삭제 되었습니다.");
+      await getCategories();
+      await onNodeClicked(categories.value[0]);
+    } else {
+      alert("삭제가 실행되지 않았습니다.");
+    }
+  }
 };
 
 let nodeMoved: Ref<boolean> = ref(false);

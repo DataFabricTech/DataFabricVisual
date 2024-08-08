@@ -98,20 +98,15 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     });
     return data;
   };
-  const deleteCategory = async (nodeId: string) => {
-    if (confirm("카테고리를 삭제 하시겠습니까?")) {
-      await $api(`/api/category`, {
-        method: "delete",
-        body: {
-          id: nodeId,
-        },
-      });
-      getCategories();
-      alert("삭제되었습니다.");
-    } else {
-      return false;
-    }
+  const deleteCategory = (nodeId: string) => {
+    return $api(`/api/category`, {
+      method: "delete",
+      body: {
+        id: nodeId,
+      },
+    });
   };
+
   const setModelIdList = () => {
     modelIdList.value = [];
     for (const element of modelList.value) {
