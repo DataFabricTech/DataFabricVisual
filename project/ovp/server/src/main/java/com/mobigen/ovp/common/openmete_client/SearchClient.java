@@ -11,7 +11,7 @@ import java.util.Map;
 @FeignClient(name = "SearchClient", url = "${properties.ovp.open-metadata-url}/search")
 public interface SearchClient {
     @GetMapping("/aggregate")
-    Map<String, Object> getFilter(MultiValueMap<String, String> params);
+    Map<String, Object> getFilter(@RequestParam MultiValueMap<String, String> params);
 
     @GetMapping("/query")
     Map<String, Object> getSearchList(@RequestParam MultiValueMap<String, String> params) throws Exception;

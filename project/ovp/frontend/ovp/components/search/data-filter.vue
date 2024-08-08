@@ -1,6 +1,11 @@
 <template>
   <template v-for="(filter, keyName, FI) in props.data" :key="FI">
+    <template v-if="keyName === 'category'">
+      <!-- TODO : [개발] menu-search-tree 컴포넌트 추가 -->
+      {{ keyName }}
+    </template>
     <menu-search-button
+      v-else
       :data="filter.data"
       :selected-items="selectedFilterItems"
       label-key="key"
