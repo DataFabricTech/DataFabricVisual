@@ -103,10 +103,9 @@ public class SearchService {
         List<Map<String, Object>> responseList = List.of(
                 getTableList(new LinkedMultiValueMap<>(params)),
                 getStorageList(new LinkedMultiValueMap<>(params)),
-                getModelList(new LinkedMultiValueMap<>(params)),
-                getAllList(new LinkedMultiValueMap<>(params))
+                getModelList(new LinkedMultiValueMap<>(params))
         );
-        List<String> keys = List.of("table", "storage", "model", "all");
+        List<String> keys = List.of("table", "storage", "model");
         return getSearchList(keys, responseList);
     }
 
