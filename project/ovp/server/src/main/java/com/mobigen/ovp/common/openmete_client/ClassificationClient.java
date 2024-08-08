@@ -1,27 +1,64 @@
 package com.mobigen.ovp.common.openmete_client;
 
+import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationData;
+import com.mobigen.ovp.common.openmete_client.dto.classification.detail.ClassificationDetail;
+import com.mobigen.ovp.common.openmete_client.dto.classification.detail.ClassificationDetailByName;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Map;
-
-@FeignClient(name = "ClassificationClient", url = "${properties.ovp.open-metadata-url}/tags")
+@FeignClient(name = "ClassificationClient", url = "${properties.ovp.open-metadata-url}/classifications")
 public interface ClassificationClient {
-    // TODO : tag 쪽 코드 merge 되면 아래 코드 이동
+    /**
+     * 분류 리스트
+     * @return
+     */
+    @GetMapping("")
+    ClassificationData getClassifications();
 
+    /**
+     * 분류 리스트 단일 조회
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
-    Map<String, Object> getTag(@PathVariable String id);
+    ClassificationDetail getClassificationDetail(@PathVariable("id") String id);
+
+    /**
+     * 분류와 매칭되는 태그의 정보 조회 - 위에 2개와 같이 호출
+     * @param name
+     * @return
+     */
+    @GetMapping("/name/{name}")
+    ClassificationDetailByName getClassificationDetailByName(@PathVariable("name") String name);
 
     @DeleteMapping("/{id}")
     Map<String, Object> deleteTag(@PathVariable String id, @RequestParam MultiValueMap<String, String> params);
 
-    @PostMapping("")
-    Object createTag(@RequestBody Map<String, Object> params);
+    /**
+     * 분류 수정
+     *
+     * @Param id
+     * @param param
+     * @return
+     */
+    @PatchMapping(value = "/classifications/{id}", consumes = "application/json-patch+json")
+    ClassificationEdit editClassification(@PathVariable("id") String id, @RequestBody List<JsonPatchOperation> param);
+
+//    /**
+//     * 분류 삭제
+//     *
+//     * @param id
+//     * @param recursive
+//     * @param hardDelete
+//     * @rerurn
+//     */
+//    @DeleteMapping("/classifications/{id}")
+//    void deleteClassification(@PathVariable UUID id, @RequestParam(defaultValue = "true") Boolean recursive, @RequestParam(defaultValue = "true") Boolean hardDelete);
+
+//    @PostMapping("")
+//    Object createTag(@RequestBody Map<String, Object> params);
 
 }
