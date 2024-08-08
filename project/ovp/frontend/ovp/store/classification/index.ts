@@ -128,12 +128,21 @@ export const classificationStore = defineStore("classification", () => {
       },
     );
     // console.log("insertOrEditAPI의 res", result);
-    getClassificationList(); // 분류목록 API 재호출
+    await getClassificationList(); // 분류목록 API 재호출
 
     return result;
   };
 
-  // TODO : 분류 단일 삭제
+  // 분류 삭제
+  const deleteClassification = async () => {
+    await $api(`/api/classifications/${currentClassificationID}`, {
+      method: "delete",
+    });
+    alert("삭제되었습니다.");
+    await getClassificationList(); // 분류목록 API 재호출
+    await getClassificationDetail(); // 분류 상세 정보 API 호출
+    await getClassificationTags(); // 태그 정보 API 호출
+  };
 
   return {
     classificationList,
@@ -146,5 +155,6 @@ export const classificationStore = defineStore("classification", () => {
     getClassificationDetail,
     getClassificationTags,
     editClassificationDetail,
+    deleteClassification,
   };
 });

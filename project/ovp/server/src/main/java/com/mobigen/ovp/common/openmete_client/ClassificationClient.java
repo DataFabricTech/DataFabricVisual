@@ -5,9 +5,15 @@ import com.mobigen.ovp.common.openmete_client.dto.classification.detail.Classifi
 import com.mobigen.ovp.common.openmete_client.dto.classification.detail.ClassificationDetailByName;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @FeignClient(name = "ClassificationClient", url = "${properties.ovp.open-metadata-url}/classifications")
 public interface ClassificationClient {
@@ -47,18 +53,17 @@ public interface ClassificationClient {
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
     ClassificationEdit editClassification(@PathVariable("id") String id, @RequestBody List<JsonPatchOperation> param);
 
-//    /**
-//     * 분류 삭제
-//     *
-//     * @param id
-//     * @param recursive
-//     * @param hardDelete
-//     * @rerurn
-//     */
-//    @DeleteMapping("/classifications/{id}")
-//    void deleteClassification(@PathVariable UUID id, @RequestParam(defaultValue = "true") Boolean recursive, @RequestParam(defaultValue = "true") Boolean hardDelete);
+    /**
+     * 분류 삭제
+     *
+     * @param id
+     * @param recursive
+     * @param hardDelete
+     * @rerurn
+     */
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> deleteClassification(@PathVariable String id, @RequestParam(defaultValue = "true") boolean recursive, @RequestParam(defaultValue = "true") boolean hardDelete);
 
-//    @PostMapping("")
+    //    @PostMapping("")
 //    Object createTag(@RequestBody Map<String, Object> params);
-
 }

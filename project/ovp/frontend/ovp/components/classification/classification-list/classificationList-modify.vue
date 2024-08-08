@@ -25,7 +25,9 @@
           </template>
         </editable-group>
       </div>
-      <button class="button button-error-lighter">삭제</button>
+      <button class="button button-error-lighter" @click="deleteClick">
+        삭제
+      </button>
     </div>
     <div class="work-contents">
       <div class="no-result" style="display: none">
@@ -71,7 +73,8 @@ import tagList from "@/components/classification/classification-list/tagList.vue
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 
 const useClassificationStore = classificationStore();
-const { editClassificationDetail } = useClassificationStore;
+const { editClassificationDetail, deleteClassification } =
+  useClassificationStore;
 const { classificationDetailData } = storeToRefs(useClassificationStore);
 
 interface ClassificationDetail {
@@ -154,6 +157,11 @@ const editDone = async () => {
   } catch (error) {
     console.error("API 호출 중 오류 발생: ", error);
   }
+};
+
+// 분류 삭제 버튼 클릭
+const deleteClick = () => {
+  deleteClassification(); // 분류 삭세 API 호출
 };
 </script>
 

@@ -4,6 +4,7 @@ import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,13 +83,13 @@ public class ClassificationController {
         return classificationService.getClassificationTags(parent);
     }
 
-//    /**
-//     * 분류 삭제
-//     * @param id
-//     */
-//    @ResponseJsonResult
-//    @DeleteMapping("/{id}")
-//    public void deleteClassification(@PathVariable UUID id) {
-//        classificationService.deleteClassification(id);
-//    }
+    /**
+     * 분류 삭제
+     * @param id
+     */
+    @ResponseJsonResult(errorMessage = "Open-metadata 분류 삭제 오류")
+    @DeleteMapping("/{id}")
+    public Object deleteClassification(@PathVariable String id) throws Exception {
+        return classificationService.deleteClassification(id);
+    }
 }

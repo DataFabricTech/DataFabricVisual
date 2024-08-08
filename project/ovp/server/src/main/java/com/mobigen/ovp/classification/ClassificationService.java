@@ -10,7 +10,9 @@ import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.TagClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 import java.util.Map;
@@ -78,12 +80,17 @@ public class ClassificationService {
         return tagInfo.get("fullyQualifiedName").toString();
     }
 
-//
-//    /**
-//     * 분류 삭제
-//     * @param id
-//     */
-//    public void deleteClassification(UUID id) {
-//        classificationClient.deleteClassification(id, true, true);
-//    }
+
+    /**
+     * 분류 삭제
+     * @param id
+     */
+    public int deleteClassification(String id) throws Exception {
+        ResponseEntity<Void> response = classificationClient.deleteClassification(id, true, true);
+        if(response.getStatusCode() == HttpStatus.OK) {
+            return 1;
+        } else {
+            throw new Exception();
+        }
+    }
 }
