@@ -4,6 +4,7 @@ import com.mobigen.ovp.category.dto.CategoryDTO;
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
 import com.mobigen.ovp.classification.ClassificationService;
+import com.mobigen.ovp.classification.ClassificationTagService;
 import com.mobigen.ovp.common.ModelConvertUtil;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
@@ -39,6 +40,7 @@ public class CategoryService {
     private final ClassificationClient classificationClient;
     private final ClassificationService classificationService;
     private final TagClient tagClient;
+    private ClassificationTagService classficationTagService;
 
     public CategoryDTO getCategories() {
         List<CategoryEntity> categories = categoryRepository.findAll();
@@ -114,12 +116,8 @@ public class CategoryService {
 
         // 삭제 진행
         // step1. openMeta 에서 tag 삭제
-        MultiValueMap<String, String> tagParams = new LinkedMultiValueMap<>();
-        tagParams.add("recursive", "true");
-        tagParams.add("hardDelete", "true");
-
         for (UUID tagId : tagIds) {
-            tagClient.deleteTag(tagId.toString(), tagParams);
+            classficationTagService.deleteClassificationTag(tagId.toString());
         }
 
         // step2. db 에서 category 삭제

@@ -143,6 +143,14 @@ export const classificationStore = defineStore("classification", () => {
     await getClassificationTags(); // 태그 정보 API 호출
   };
 
+  // 분류 내 태그 삭제
+  const deleteClassificationTag = async (tagId: string) => {
+    await $api(`/api/tags/${tagId}`, {
+      method: "delete",
+    });
+    await getClassificationTags(); // 태그 정보 API 호출
+  };
+
   return {
     classificationList,
     classificationListTotal,
@@ -155,5 +163,6 @@ export const classificationStore = defineStore("classification", () => {
     getClassificationTags,
     editClassificationDetail,
     deleteClassification,
+    deleteClassificationTag,
   };
 });

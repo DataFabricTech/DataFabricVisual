@@ -29,7 +29,12 @@
           >
             편집
           </button>
-          <button class="button button button-error-stroke">삭제</button>
+          <button
+            class="button button button-error-stroke"
+            @click="confirmDelete(tag.id)"
+          >
+            삭제
+          </button>
         </div>
       </td>
     </tr>
@@ -49,6 +54,7 @@ import { classificationStore } from "@/store/classification/index";
 
 const useClassificationStore = classificationStore();
 const { classificationTagList } = storeToRefs(useClassificationStore);
+const { deleteClassificationTag } = useClassificationStore;
 
 const showModalTag = ref(false);
 const showModifyTag = ref(false);
@@ -63,6 +69,18 @@ const closeModifyTag = () => {
 watchEffect(() => {
   console.log(classificationTagList);
 });
+
+const confirmDelete = (tagId: string) => {
+  if (confirm("삭제하시겠습니까?")) {
+    deleteClassificationTag(tagId)
+      .then(() => {
+        alert("삭제되었습니다.");
+      })
+      .catch((error) => {
+        console.error("삭제 중 오류 발생: ", error);
+      });
+  }
+};
 </script>
 
 <style lang="scss" scoped></style>
