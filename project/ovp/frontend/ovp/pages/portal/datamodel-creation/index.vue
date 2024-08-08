@@ -10,7 +10,7 @@
   <div class="section-contents p-0 bg-white">
     <div class="l-split">
       <selected-model
-        @change="addDataModel"
+        @change="openAddModal"
         @delete="deleteDataModel"
       ></selected-model>
       <excute-quary></excute-quary>
@@ -21,14 +21,7 @@
     </div>
   </div>
   <save-model v-if="isShowSaveModel" @change="saveDataModel"></save-model>
-  <add-model
-    v-if="isShowAddModel"
-    :data-model-list="modelList"
-    :selected-model-list="selectedModelList"
-    :my-model-list="myModelList"
-    :filter="dataModelFilter"
-    @change="addDataModel"
-  ></add-model>
+  <add-model :modal-id="$constants.DATAMODEL_CREATION.ADD.MODAL_ID"></add-model>
 </template>
 
 <script setup lang="ts">
@@ -38,35 +31,19 @@ import sample from "@/components/datamodel-creation/sample.vue";
 import result from "@/components/datamodel-creation/result.vue";
 import addModel from "@/components/datamodel-creation/modal/add.vue";
 import saveModel from "@/components/datamodel-creation/modal/save.vue";
-import { useCreationStore } from "~/store/datamodel-creation/index";
+import { useNuxtApp } from "nuxt/app";
+import $constants from "~/utils/constant";
 
+const { $vfm } = useNuxtApp();
 const isShowSaveModel = ref(false);
-const isShowAddModel = ref(false);
 
 const saveDataModel = (param: boolean) => {
   isShowSaveModel.value = param;
 };
 
-const addDataModel = (param: boolean) => {
-  isShowAddModel.value = param;
+const openAddModal = () => {
+  $vfm.open($constants.DATAMODEL_CREATION.ADD.MODAL_ID);
 };
-
-const creationStore = useCreationStore();
-const { modelList, dataModelFilter, selectedModelList, myModelList } =
-  storeToRefs(creationStore);
-const {
-  setDataModelFilter,
-  setDataModelList,
-  deleteDataModel,
-  setSelectedModelList,
-  setMyModelList,
-} = creationStore;
-
-// 데이터 목록, 필터 목록, 선택 필터 초기화
-setDataModelFilter();
-setDataModelList();
-setMyModelList();
-setSelectedModelList();
 </script>
 
 <style scoped></style>

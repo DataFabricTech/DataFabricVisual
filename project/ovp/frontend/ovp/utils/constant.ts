@@ -13,6 +13,11 @@ const $constants = {
     },
   },
   COMMON: {
+    DATA_TYPE: [
+      { label: "테이블", value: "table", type: "table" },
+      { label: "스토리지", value: "storage", type: "storage" },
+      { label: "융합모델", value: "model", type: "model" },
+    ],
     SORT_FILTER: [
       {
         label: "추천 많은 순 ↓",
@@ -42,6 +47,7 @@ const $constants = {
   },
   DATAMODEL_CREATION: {
     ADD: {
+      MODAL_ID: "datamodel_creation-add-modal",
       TAB: [
         {
           label: "전체",

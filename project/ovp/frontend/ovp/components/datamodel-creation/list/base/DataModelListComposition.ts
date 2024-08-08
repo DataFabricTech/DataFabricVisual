@@ -231,6 +231,7 @@ export function DataModelListComposition(
         isChecked: el[props.valueKey] === value ? checked : el.isChecked,
       };
     });
+    console.log("listData", listData.value);
     emitCheckItem(value);
   };
 

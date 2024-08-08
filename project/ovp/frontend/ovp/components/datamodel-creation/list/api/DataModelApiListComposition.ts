@@ -33,26 +33,10 @@ export function DataModelApiListComposition(
     emitCheckItem,
   );
 
-  const listData: Ref<any[]> = ref([]);
-  const isSelectedData: (item: any) => boolean = (item) => {
-    const itemId = item[props.valueKey];
-    const findItem = _.find(props.selectedItems, { [props.valueKey]: itemId });
-    return !!findItem;
-  };
-
   const setListData: () => void = () => {
-    listData.value = props.data.map((item) => {
-      const isSelected = isSelectedData(item);
-      return {
-        label: item[props.labelKey],
-        value: item[props.valueKey],
-        isChecked: false, // checkbox 선택 여부
-        idShowDetail: false, // 단일선택(아이템) 여부
-        isShowContextMenu: false, // "복사" 컨텍스트 메뉴 클릭 여부
-        isShowContextMenuBtn: false, // 컨텍스트 메뉴 버튼 클릭 여부
-        isSelected: isSelected, // 이미 선택여부 확인
-      };
-    });
+    // TOOD: store로 빼기 -> listData 초기화를 store에서 진행하기.,
+    compos.listData.value = props.data;
+    console.log(compos.listData.value);
   };
 
   /**
@@ -120,14 +104,18 @@ export function DataModelApiListComposition(
    * 검색/필터 결과에 따른 listData 길이 확인
    */
   const checkShowListData: ComputedRef<boolean> = computed(() => {
-    if (!listData.value || listData.value.length < 1) {
+    if (!compos.listData.value || compos.listData.value.length < 1) {
       return false;
     }
-    return !_.every(listData.value, { isSelected: true });
+    return !_.every(compos.listData.value, { isSelected: true });
   });
+
   return {
     ...props,
     ...compos,
+    // listData,
+    // selectedFilter,
+    // searchLabel,
     selectedSort,
     checkShowListData,
     onSelectFilter,

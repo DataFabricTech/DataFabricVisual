@@ -1,11 +1,10 @@
 import type { Config } from "tailwindcss";
-import defaultTheme from "tailwindcss/defaultTheme";
 
 export default <Partial<Config>>{
   theme: {
     extend: {
       padding: {
-        '3': '12px',
+        "3": "12px",
       },
     },
   },

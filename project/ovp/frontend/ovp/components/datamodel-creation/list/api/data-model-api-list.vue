@@ -61,10 +61,8 @@
         @select="onChangeSort"
       ></select-box>
     </div>
-    <!-- TODO: 인피니티 스크롤 -->
     <ul class="menu-list" v-if="checkShowListData">
       <template v-for="(item, idx) in listData" :key="item.value + idx">
-        {{ item.isSelected }}
         <data-model-list-item
           v-if="!item.isSelected"
           :data="item"
@@ -79,6 +77,27 @@
           @check="onCheckItem(item.value, $event)"
         ></data-model-list-item>
       </template>
+      <!-- TODO: 인피니티 스크롤 -->
+      <!-- NOTE "scrollTrigger" -> useIntersectionObserver 가 return 하는 변수병과 동일해야함. -->
+      <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+      <div
+        id="loader"
+        style="
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(255, 255, 255, 0.5);
+          align-items: center;
+          justify-content: center;
+          font-size: 20px;
+          color: #333;
+        "
+      >
+        <Loading class="loader-lg" :hide-text="false"></Loading>
+      </div>
     </ul>
 
     <!-- 결과 없을 시 no-result 표시 -->
@@ -97,12 +116,17 @@ import DataModelListItem from "~/components/datamodel-creation/item/data-model-l
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
 import { DataModelApiListComposition } from "~/components/datamodel-creation/list/api/DataModelApiListComposition";
 import type { DataModelApiListProps } from "~/components/datamodel-creation/list/api/DataModelApiListProps";
+import Loading from "@base/loading/Loading.vue";
+import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 
 const props = withDefaults(defineProps<DataModelApiListProps>(), {
   data: () => [],
   selectedItems: () => [],
   sortList: () => [],
   filter: () => {},
+  addSearchList: () => {
+    return () => {};
+  },
   useSort: false,
   useLiveSearch: true,
   useInfinite: false,
@@ -116,7 +140,6 @@ const props = withDefaults(defineProps<DataModelApiListProps>(), {
 
 const emit = defineEmits<{
   (e: "delete", value: string): void;
-  (e: "select", value: string): void;
   (e: "item-check", value: string): void;
   (e: "item-click", value: string): void;
   (e: "bookmark-change", value: string): void;
@@ -157,6 +180,8 @@ const emitSearchChange = (value: string) => {
   console.log("emitSearchChange", value);
   emit("search-change", value);
 };
+
+const { scrollTrigger } = useIntersectionObserver(props.addSearchList);
 
 const {
   listData,
