@@ -1,6 +1,8 @@
 <template>
   <div class="search-input">
     <svg-icon class="text-input-icon svg-icon" name="search" v-if="!isSearchInputDefaultType"></svg-icon>
+    <!-- TODO: [개발] 접근성 개선 - label/input의 for/id값 사용되는 페이지마다 다르게 적용 필요,
+         label안 텍스트도 페이지마다 적절히 사용되어야 함 -->
     <label class="hidden-text" for="searchInp">label</label>
     <input
       id="searchInp"
