@@ -22,7 +22,12 @@
       </div>
       <div class="h-group w-full">
         <div class="checkbox">
-          <input type="checkbox" id="checkbox-menu-1" class="checkbox-input" />
+          <input
+            type="checkbox"
+            id="checkbox-menu-1"
+            class="checkbox-input"
+            @change="toggleAllCheck($event.target.checked)"
+          />
           <label for="checkbox-menu-1" class="checkbox-label"> 전체선택 </label>
         </div>
         <div class="h-group ml-auto gap-2">
@@ -43,6 +48,7 @@
           <resource-box-list
             :data-list="dataModels"
             :is-box-selected-style="true"
+            :selected-model-list="selectedDataModels"
             :show-owner="true"
             :show-category="true"
             :use-prv-btn="true"
@@ -76,6 +82,7 @@ const isShowPreview = ref(false);
 function showPreview(): void {
   isShowPreview.value = !isShowPreview.value;
 }
+
 function clickPreview(data): void {
   getDataModel(data.fullyQualifiedName);
   isShowPreview.value = true;
@@ -85,6 +92,15 @@ const selectedDataModels = ref([]);
 function checkDataModel(ids: string[]) {
   selectedDataModels.value = [...ids];
 }
+
+function toggleAllCheck(allCheck) {
+  if (allCheck) {
+    selectedDataModels.value = dataModels.map((dataModel) => dataModel.id);
+  } else {
+    selectedDataModels.value = [];
+  }
+}
+
 async function deleteDataModel() {
   const requestBody: object[] = [];
   selectedDataModels.value.forEach((id) => {
