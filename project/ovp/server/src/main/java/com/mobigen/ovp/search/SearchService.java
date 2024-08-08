@@ -81,11 +81,13 @@ public class SearchService {
         List<Map<String, Object>> responseList = List.of(
                 getTableList(new LinkedMultiValueMap<>(params)),
                 getStorageList(new LinkedMultiValueMap<>(params)),
-                getModelList(new LinkedMultiValueMap<>(params))
+                getModelList(new LinkedMultiValueMap<>(params)),
+                getAllList(new LinkedMultiValueMap<>(params))
         );
-        List<String> keys = List.of("table", "storage", "model");
+        List<String> keys = List.of("table", "storage", "model", "all");
         return getSearchList(keys, responseList);
     }
+
     public Map<String, Object> getAllSearchList(MultiValueMap<String, String> params) throws Exception {
         List<Map<String, Object>> responseList = List.of(
                 getAllList(new LinkedMultiValueMap<>(params))

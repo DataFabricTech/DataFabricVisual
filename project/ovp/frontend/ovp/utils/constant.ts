@@ -40,6 +40,25 @@ const $constants = {
       },
     ],
   },
+  DATAMODEL_CREATION: {
+    ADD: {
+      TAB: [
+        {
+          label: "전체",
+          value: "all",
+        },
+        {
+          label: "MY",
+          value: "my",
+        },
+      ],
+      ACCORDION: {
+        bookmark: "내가 북마크한 데이터 모델",
+        owner: "내가 등록한 데이터 모델",
+        recent: "최근에 조회한 데이터 모델",
+      },
+    },
+  },
   PATCH_OPERATION: {
     PATH_LIST: {
       TAGS: ["description", "displayName", "name", "tagFQN"],

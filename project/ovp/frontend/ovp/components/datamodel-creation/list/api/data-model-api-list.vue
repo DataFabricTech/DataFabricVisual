@@ -1,6 +1,7 @@
 <template>
   <div class="menu menu-data">
     <div class="menu-head">
+      <slot name="tab"></slot>
       <!--검색 -->
       <div class="h-group">
         <div class="search-input">
@@ -11,7 +12,7 @@
             id="data-menu-search"
             class="text-input"
             :value="searchLabel"
-            @input="onSearchText($event.target.value)"
+            @keydown.enter="onSearchText($event.target.value)"
             placeholder="검색어를 입력하세요"
           />
           <svg-icon class="text-input-icon" name="search"></svg-icon>
@@ -56,22 +57,25 @@
         :data="props.sortList"
         label-key="label"
         value-key="value"
+        :selected-item="selectedSort"
+        @select="onChangeSort"
       ></select-box>
     </div>
-    <ul class="menu-list" v-if="listData && listData.length > 1">
-      <template v-for="(item, idx) in listData">
+    <!-- TODO: 인피니티 스크롤 -->
+    <ul class="menu-list" v-if="checkShowListData">
+      <template v-for="(item, idx) in listData" :key="item.value + idx">
+        {{ item.isSelected }}
         <data-model-list-item
-          v-if="item.isShow"
-          :key="item.value + idx"
+          v-if="!item.isSelected"
+          :data="item"
           :is-multi="props.isMulti"
           :use-delete-btn="props.useItemDeleteBtn"
-          :data="item"
+          :list-type="props.listType"
           @context-menu-click="onShowContextMenu(item.value, $event)"
           @context-menu-btn-click="onShowContextMenuBtn(item.value, $event)"
           @bookmark-change="onChangeBookmark"
           @click="onClickDataModelItem"
           @delete="onDeleteItem"
-          @select="onSelectItem"
           @check="onCheckItem(item.value, $event)"
         ></data-model-list-item>
       </template>
@@ -90,12 +94,13 @@
 <script setup lang="ts">
 import SelectBox from "@extends/select-box/SelectBox.vue";
 import DataModelListItem from "~/components/datamodel-creation/item/data-model-list-item.vue";
-import type { DataModelListProps } from "~/components/datamodel-creation/list/DataModelListProps";
-import { DataModelListComposition } from "~/components/datamodel-creation/list/DataModelListComposition";
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
+import { DataModelApiListComposition } from "~/components/datamodel-creation/list/api/DataModelApiListComposition";
+import type { DataModelApiListProps } from "~/components/datamodel-creation/list/api/DataModelApiListProps";
 
-const props = withDefaults(defineProps<DataModelListProps>(), {
+const props = withDefaults(defineProps<DataModelApiListProps>(), {
   data: () => [],
+  selectedItems: () => [],
   sortList: () => [],
   filter: () => {},
   useSort: false,
@@ -112,34 +117,53 @@ const props = withDefaults(defineProps<DataModelListProps>(), {
 const emit = defineEmits<{
   (e: "delete", value: string): void;
   (e: "select", value: string): void;
-  (e: "bookmark-change", value: string): void;
+  (e: "item-check", value: string): void;
   (e: "item-click", value: string): void;
+  (e: "bookmark-change", value: string): void;
+  (e: "filter-change", value: string): void;
+  (e: "sort-change", value: string): void;
+  (e: "search-change", value: string): void;
 }>();
 
 const emitBookmark = (value: string) => {
-  console.log("changeBookmark");
+  console.log("emitBookmark", value);
   emit("bookmark-change", value);
 };
 
 const emitItemClick = (value: string) => {
-  console.log("onClickDataModelItem");
+  console.log("emitItemClick", value);
   emit("item-click", value);
 };
 
+const emitItemCheck = (value: string) => {
+  console.log("emitItemCheck", value);
+  emit("item-check", value);
+};
+
 const emitDeleteItem = (value: string) => {
-  console.log("onDeleteItem");
+  console.log("emitDeleteItem", value);
   emit("delete", value);
 };
 
-const emitSelectItem = (value: string) => {
-  console.log("onSelectItem");
-  emit("select", value);
+const emitFilterChange = (value: {}) => {
+  console.log("emitFilterChange", value);
+  emit("filter-change", value);
+};
+const emitSortChange = (value: string) => {
+  console.log("emitSortChange", value);
+  emit("sort-change", value);
+};
+const emitSearchChange = (value: string) => {
+  console.log("emitSearchChange", value);
+  emit("search-change", value);
 };
 
 const {
   listData,
   searchLabel,
   selectedFilter,
+  selectedSort,
+  checkShowListData,
   onSearchText,
   onSelectFilter,
   onResetSearchText,
@@ -149,12 +173,16 @@ const {
   onChangeBookmark,
   onClickDataModelItem,
   onDeleteItem,
-  onSelectItem,
-} = DataModelListComposition(
+  onChangeSort,
+  onCheckItem,
+} = DataModelApiListComposition(
   props,
   emitBookmark,
   emitItemClick,
   emitDeleteItem,
-  emitSelectItem,
+  emitFilterChange,
+  emitSortChange,
+  emitSearchChange,
+  emitItemCheck,
 );
 </script>

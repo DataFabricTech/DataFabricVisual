@@ -4,8 +4,8 @@
     <template v-if="isEditMode">
       <slot name="edit-slot"></slot>
       <div class="h-group gap-2 shrink-0" v-if="useEditButtons">
-        <button class="button button-neutral-lighter button-sm" type="button" @click="cancelClick">취소</button>
-        <button class="button button-primary-lighter button-sm" type="button" @click="doneClick">완료</button>
+        <button class="button button-neutral-lighter" type="button" @click="cancelClick">취소</button>
+        <button class="button button-primary-lighter" type="button" @click="doneClick">완료</button>
       </div>
     </template>
     <template v-else>
@@ -47,7 +47,7 @@ watch(
 const emit = defineEmits<{
   (e: "editCancel", key: string): void;
   (e: "editDone", key: string): void;
-  (e: "editIcon"): void;
+  (e: "editIcon", key: string): void;
 }>();
 
 const cancelClick = () => {
@@ -60,7 +60,7 @@ const doneClick = () => {
 };
 const editIconClick = () => {
   isEditMode.value = true;
-  emit("editIcon");
+  emit("editIcon", props.compKey);
 };
 </script>
 

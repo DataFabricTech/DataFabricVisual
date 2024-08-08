@@ -2,6 +2,7 @@ import { SelectFunctionality } from "@/components/extends/common/interfaces/func
 import { SelectEvents } from "~/components/extends/common/interfaces/events/Select.interface";
 import { MenuSearchProps } from "~/components/extends/menu-seach/MenuSearchProps";
 import { ref, Ref } from "vue";
+import { uuid } from "vue3-uuid";
 import _ from "lodash";
 
 export interface MenuSearchItemImpl {
@@ -43,6 +44,7 @@ export function MenuSearchComposition(
     const result = props.data.map((item) => {
       const isChecked = isCheckedData(item);
       return {
+        id: uuid.v4(),
         label: item[props.labelKey],
         value: item[props.valueKey],
         isChecked: isChecked, // 체크 여부
@@ -61,6 +63,7 @@ export function MenuSearchComposition(
     const result = originData.map((item) => {
       const isChecked = isCheckedData(item);
       return {
+        id: uuid.v4(),
         label: item[props.labelKey],
         value: item[props.valueKey],
         isChecked: isChecked, // 체크 여부
@@ -115,7 +118,15 @@ export function MenuSearchComposition(
    * @param checked
    */
   const onSelectData: (value: any, checked: boolean) => void = (value, checked) => {
-    value.isChecked = checked;
+    listData.value = listData.value.map((item) => {
+      if (item.value === value.value) {
+        return {
+          ...item,
+          isChecked: checked
+        };
+      }
+      return item;
+    });
 
     selectedListData.value.push({
       ...value,

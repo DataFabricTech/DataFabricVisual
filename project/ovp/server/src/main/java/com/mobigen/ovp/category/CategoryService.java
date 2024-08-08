@@ -265,17 +265,15 @@ public class CategoryService {
     /**
      * categoryId 기반 modelList 조회
      *
-     * @param categoryId
+     * @param tagId
      * @param params
      * @return
      * @throws Exception
      */
     @Transactional
-    public Object getModelByCategoryId(String categoryId, MultiValueMap<String, String> params) throws Exception {
-        CategoryEntity categoryEntity = categoryRepository.findById(UUID.fromString(categoryId)).get();
-        params.add("query_filter", createQueryFilterByTagName(getTagInfo(categoryEntity.getTagId().toString())));
-
-        return getModelListByTagId(categoryEntity.getTagId(), params);
+    public Object getModelList(String tagId, MultiValueMap<String, String> params) throws Exception {
+        params.add("query_filter", createQueryFilterByTagName(getTagInfo(tagId.toString())));
+        return getModelListByTagId(UUID.fromString(tagId), params);
     }
 
     /**

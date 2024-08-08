@@ -45,6 +45,13 @@
       text-decoration: underline;
     }
   }
+
+  h3.editable-group-title {
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
   .editable-group-desc {
     @include ellipsis;
 
