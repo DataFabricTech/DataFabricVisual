@@ -15,9 +15,11 @@ export interface TreeViewItem {
   meta?: any; // provides meta-data of any type per node.
 }
 
-export interface TreeProps {
+export interface TreeProps extends TreeDetailProps {
   items: TreeViewItem[];
+}
 
+export interface TreeDetailProps {
   class?: string;
 
   mode: "view" | "edit";

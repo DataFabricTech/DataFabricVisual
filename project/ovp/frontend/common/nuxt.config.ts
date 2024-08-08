@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-
+  ssr: false,
   modules: ["@nuxtjs/svg-sprite", "nuxt-lodash", "dayjs-nuxt", "@nuxtjs/tailwindcss", "@pinia/nuxt"],
 
   plugins: [
@@ -40,6 +40,7 @@ export default defineNuxtConfig({
     exclude: [],
     alias: []
   },
+
   dayjs: {
     locales: ["ko", "en"],
     plugins: [
@@ -75,5 +76,7 @@ export default defineNuxtConfig({
       "defineStore", // import { defineStore } from 'pinia'
       ["defineStore", "definePiniaStore"] // import { defineStore as definePiniaStore } from 'pinia'
     ]
-  }
+  },
+
+  compatibilityDate: "2024-08-08"
 });
