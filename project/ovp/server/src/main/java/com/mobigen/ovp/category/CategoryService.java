@@ -4,7 +4,6 @@ import com.mobigen.ovp.category.dto.CategoryDTO;
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
 import com.mobigen.ovp.common.ModelConvertUtil;
-import com.mobigen.ovp.common.RandomTextUtil;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.search.SearchService;
@@ -75,7 +74,7 @@ public class CategoryService {
 
     @Transactional
     public Object addCategory(CategoryDTO dto) throws Exception {
-        dto.setTagId(createTagInfo());
+        dto.setTagId(createTagInfo(dto.getId()));
         return insertOrUpdate(dto);
     }
 
@@ -304,15 +303,13 @@ public class CategoryService {
 
     // TODO : classification 쪽으로 이동 필요함.
     // TODO : classification 명 상수 처리 필요.
-    public String createTagInfo() {
-        String randomTagName = RandomTextUtil.generateRandomString();
+    public String createTagInfo(String categoryId) {
         Map<String, Object> params = new HashMap<>();
         params.put("classification", "ovp_category");
         params.put("description", "OVP Category Matched Tag");
-        params.put("displayName", randomTagName);
-        params.put("name", randomTagName);
+        params.put("displayName", categoryId);
+        params.put("name", categoryId);
         Map<String, Object> response = (Map<String, Object>) classificationClient.createTag(params);
         return response.get("id").toString();
     }
-
 }
