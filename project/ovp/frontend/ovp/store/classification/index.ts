@@ -101,6 +101,29 @@ export const classificationStore = defineStore("classification", () => {
   };
 
   // TODO : 분류 상세 수정 ( name/displayName 수정 & description 수정 )
+  const editClassificationDetail = async (editData: object) => {
+    return insertOrEditAPI("PATCH", editData);
+  };
+
+  // TODO : 분류 추가 모달 API구현 예정
+  // const newClassificationDetail2 = (param: object) => {
+  //   insertOrEditAPI("PUT", param);
+  // };
+
+  // 분류 추가 / 수정 API 공용 API
+  const insertOrEditAPI = async (method: string, param: object) => {
+    const result = await $api(
+      `/api/classifications/${currentClassificationID}`,
+      {
+        method: method,
+        body: param,
+      },
+    );
+    console.log("insertOrEditAPI의 res", result);
+    getClassificationList(); // 분류목록 API 재호출
+
+    return result;
+  };
 
   // TODO : 분류 단일 삭제
 
@@ -114,5 +137,7 @@ export const classificationStore = defineStore("classification", () => {
     getClassificationList,
     getClassificationDetail,
     getClassificationTags,
+    editClassificationDetail,
+    // editClassificationDetail2,
   };
 });

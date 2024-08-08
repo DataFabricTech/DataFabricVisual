@@ -3,6 +3,7 @@
     <div class="l-top-bar">
       <div class="v-group gap-[20px]">
         <editable-group
+          compKey="displayName"
           :editable="true"
           @editCancel="editCancel"
           @editDone="editDone"
@@ -36,6 +37,7 @@
       </div>
       <!-- 수정 버튼 클릭시 아래 내용으로 전환 -->
       <editable-group
+        compKey="description"
         :editable="true"
         @editCancel="editCancel"
         @editDone="editDone"
@@ -68,8 +70,8 @@ import tagList from "@/components/classification/classification-list/tagList.vue
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 import _ from "lodash";
 import { classificationStore } from "@/store/classification/index";
-
 const useClassificationStore = classificationStore();
+const { editClassificationDetail } = useClassificationStore;
 const { classificationDetailData } = storeToRefs(useClassificationStore);
 
 // 이전 데이터를 저장할 객체
@@ -96,6 +98,17 @@ const editIconClick = () => {
   defaultData = _.cloneDeep(newData.value);
   console.log(`icon event`);
   // TODO : 수정 API 호출
+  const result = editClassificationDetail(newData.value);
+  console.log(result);
+  // TODO : 수정 결과 분기 작업예정
+  // if (result === 1) {
+  //   // 성공
+  //   console.log("성공인가? ");
+  // } else {
+  //   // newData.value = defaultData;
+  //   console.log("실패인가 ");
+  // }
+
   console.log("변경 안된 값이 나오는 newData 값 :  :: ", newData.value);
 };
 
