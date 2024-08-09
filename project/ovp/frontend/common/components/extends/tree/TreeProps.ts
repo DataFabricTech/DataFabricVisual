@@ -15,9 +15,12 @@ export interface TreeViewItem {
   meta?: any; // provides meta-data of any type per node.
 }
 
-export interface TreeProps {
+export interface TreeProps extends TreeDetailProps {
   items: TreeViewItem[];
+  isCheckable: boolean;
+}
 
+export interface TreeDetailProps {
   class?: string;
 
   mode: "view" | "edit";
@@ -26,11 +29,10 @@ export interface TreeProps {
   showCloseAllBtn?: boolean;
   useDraggable?: boolean;
 
-  isCheckable: boolean;
   hideGuideLines: boolean;
   firExpandAll?: boolean;
 
   checkedIds?: string[];
 
-  dropValidator: (thisNode: TreeViewItem, targetNode: TreeViewItem, newNode: TreeViewItem) => boolean;
+  dropValidator?: (thisNode: TreeViewItem, targetNode: TreeViewItem, newNode: TreeViewItem) => boolean;
 }
