@@ -1,5 +1,5 @@
 <template>
-  <div class="select select-clean select-sm">
+  <div class="select select-clean select-sm" v-on-click-outside="onClickOutside">
     <button class="select-button" @click="onClickOpenMenuSearch">
       <slot name="button-text-slot">
         <span class="select-button-title">{{ props.title }}</span>
@@ -9,13 +9,15 @@
       </slot>
       <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
     </button>
+
     <menu-search-tree-contents
+      v-if="isMenuSearchShow"
       :is-show="isMenuSearchShow"
+      :is-multi="props.isMulti"
       :data="props.data"
       :selected-items="selectedListData"
       :label-key="props.labelKey"
       :value-key="props.valueKey"
-      :isCheckable="props.isCheckable"
       :hideGuideLines="props.hideGuideLines"
       :firExpandAll="props.firExpandAll"
       :show-open-all-btn="props.showOpenAllBtn"
@@ -24,12 +26,15 @@
       :mode="props.mode"
       :dropValidator="props.dropValidator"
       @cancel="onCancel"
-      @change="changeMenuSearch"
+      @single-change="changeMenuSearch"
+      @multiple-change="changeMenuSearch"
     ></menu-search-tree-contents>
   </div>
 </template>
 
 <script setup lang="ts">
+import { vOnClickOutside } from "@vueuse/components";
+
 import { TreeViewItem } from "~/components/extends/tree/TreeProps";
 import MenuSearchTreeContents from "../tree/contents/menu-search-tree-contents.vue";
 import { MenuSearchTreeProps } from "~/components/extends/menu-seach/tree/MenuSearchTreeProps";
@@ -46,11 +51,11 @@ const props = withDefaults(defineProps<MenuSearchTreeProps>(), {
   selectedItems: () => [] || {},
   nodataMsg: "데이터가 없습니다.",
   noSearchMsg: "검색결과가 없습니다.",
+  isMulti: false,
   isShow: false,
 
   // tree 고유 props
   mode: "view",
-  isCheckable: false,
   hideGuideLines: false,
   showOpenAllBtn: false,
   showCloseAllBtn: false,
@@ -61,14 +66,19 @@ const props = withDefaults(defineProps<MenuSearchTreeProps>(), {
 });
 
 const emit = defineEmits<{
-  (e: "change", value: TreeViewItem[]): void;
+  (e: "single-change", value: TreeViewItem): void;
+  (e: "multiple-change", value: TreeViewItem[]): void;
   (e: "open"): void;
   (e: "cancel"): void;
   (e: "close"): void;
 }>();
 
-const applyData: (value: TreeViewItem[]) => void = (value) => {
-  emit("change", value);
+const applyData: (value: TreeViewItem | TreeViewItem[]) => void = (value) => {
+  if (props.isMulti) {
+    emit("multiple-change", value as TreeViewItem[]);
+  } else {
+    emit("single-change", value as TreeViewItem);
+  }
 };
 
 const openMenuSearch: () => void = () => {
@@ -82,7 +92,7 @@ const panelClosed = () => {
   emit("close");
 };
 
-const { isMenuSearchShow, selectedListData, onCancel, onClickOpenMenuSearch, changeMenuSearch } =
+const { isMenuSearchShow, selectedListData, onCancel, onClickOutside, onClickOpenMenuSearch, changeMenuSearch } =
   MenuSearchTreeComposition(props, applyData, openMenuSearch, panelClosed);
 </script>
 

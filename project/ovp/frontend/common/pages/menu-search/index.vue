@@ -47,13 +47,14 @@
       </div>
     </div>
     <div class="sample">
-      <h1>메뉴 선택 - Tree 컴포넌트 예시</h1>
+      <h1>메뉴 선택 - 다중선택 Tree 컴포넌트 예시</h1>
+      <span> 선택 ItemList : {{ checkedData }}</span>
       <div class="button-container">
         <menu-search-tree
           label-key="name"
           value-key="id"
           :data="items"
-          :isCheckable="true"
+          :is-multi="true"
           :hideGuideLines="false"
           :firExpandAll="true"
           :show-open-all-btn="false"
@@ -61,14 +62,30 @@
           :use-draggable="true"
           :selected-items="tree_selectedItem"
           mode="view"
-          :dropValidator="dropValidator"
-          @onItemChecked="onNodeChecked"
-          @onItemSelected="onNodeClicked"
-          @addSibling="addSibling"
-          @addChild="addChild"
+          @multiple-change="onNodeChecked"
         ></menu-search-tree>
       </div>
     </div>
+    <!--    <div class="sample">-->
+    <!--      <h1>메뉴 선택 - 선택 Tree 컴포넌트 예시</h1>-->
+    <!--      <span> 선택 Item : {{ selectedNode.name }}</span>-->
+    <!--      <div class="button-container">-->
+    <!--        <menu-search-tree-->
+    <!--          label-key="name"-->
+    <!--          value-key="id"-->
+    <!--          :data="items"-->
+    <!--          :is-multi="false"-->
+    <!--          :hideGuideLines="false"-->
+    <!--          :firExpandAll="true"-->
+    <!--          :show-open-all-btn="false"-->
+    <!--          :show-close-all-btn="false"-->
+    <!--          :use-draggable="true"-->
+    <!--          :selected-items="selectedNode"-->
+    <!--          mode="view"-->
+    <!--          @single-change="onNodeClicked"-->
+    <!--        ></menu-search-tree>-->
+    <!--      </div>-->
+    <!--    </div>-->
   </div>
 </template>
 
@@ -250,7 +267,7 @@ const items: any[] = [
         disabled: false,
         children: [
           {
-            id: "868928fc-4be3-46a3-8f07-95b516a59b92",
+            id: "868928fc-4be3-46a3-8f07-95b516a59b91",
             name: "카테고리 02 - 03 - 01",
             order: 1,
             desc: "설명",
@@ -310,20 +327,11 @@ const items: any[] = [
   }
 ];
 
-const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
-  id: "",
-  name: "",
-  desc: "",
-  order: 0,
-  parentId: "",
-  expanded: false,
-  selected: false,
-  disabled: false,
-  children: []
+const checkedData = computed(() => {
+  return tree_selectedItem.value.map((node: TreeViewItem) => node.name);
 });
 
-const checkedIds: Ref<string[]> = ref<string[]>([]);
-const tree_selectedItem: any[] = [
+const tree_selectedItem: Ref<any[]> = ref<any[]>([
   {
     id: "4911b731-8573-4b74-a082-4cb7aa9a0c2f",
     name: "카테고리 05 - 01",
@@ -335,7 +343,6 @@ const tree_selectedItem: any[] = [
     disabled: false,
     children: []
   },
-
   {
     id: "3b738522-3f7b-4e0e-9457-fdbfaab11524",
     name: "카테고리 03",
@@ -347,48 +354,15 @@ const tree_selectedItem: any[] = [
     disabled: false,
     children: []
   }
-];
+]);
 
 const onNodeChecked = (checkedNodeIds: TreeViewItem[]) => {
-  checkedIds.value = checkedNodeIds.map((node: TreeViewItem) => node.id);
+  tree_selectedItem.value = checkedNodeIds;
 };
 
+const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({});
 const onNodeClicked = (node: TreeViewItem) => {
   selectedNode.value = node;
-};
-const addSibling = (newNode: TreeViewItem) => {
-  // 형제 노드 추가
-  // TODO : modal 창 띄워서 노드 추가 API  호출
-  console.log(`형제노드 추가 ${JSON.stringify(newNode)}`);
-};
-const addChild = (newNode: TreeViewItem) => {
-  // 자식 노드 추가
-  // TODO : modal 창 띄워서 노드 추가 API  호출
-  console.log(`자식노드 추가 ${JSON.stringify(newNode)}`);
-};
-
-const droppedNode: Ref<TreeViewItem> = ref<TreeViewItem>(<TreeViewItem>{});
-const dropValidator = (thisNode: TreeViewItem, targetNode: TreeViewItem, newNode: TreeViewItem): boolean => {
-  console.log(`drop validator`);
-  console.log(`선택한 노드 ${JSON.stringify(thisNode)}`);
-  console.log(`타겟 노드 ${JSON.stringify(targetNode)}`);
-  console.log(`타겟 노드 ${JSON.stringify(newNode)}`);
-
-  let isValid = false;
-  // 조건 1: targetNode 에 데이터 모델이 설정되어 있으면 drop 불가능
-  // TODO : targetNode 기준 데이터 모델 설정 여부 조회하는 API 호출
-
-  // 조건 2: thisNode에 데이터 모델이 설정되어 있으면 targetNode 는 하위 노드일때만 가능.
-  // TODO : thisNode 기준 데이터 모델 설정 여부 조회하는 API 호출 -> 2-1
-  // TODO : 2-1 에서 thisNode에 데이터 모델이 설정되어 있는 경우, targetNode.children 에 값이 없는 노드여야 함.
-
-  // 조건 만족시
-  isValid = true;
-
-  droppedNode.value = newNode;
-  // TODO : isValid 가 true 면 update API 호출
-
-  return isValid;
 };
 </script>
 

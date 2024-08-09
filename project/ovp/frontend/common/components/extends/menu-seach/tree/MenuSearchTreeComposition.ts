@@ -7,6 +7,7 @@ export interface MenuSearchTreeCompositionImpl extends MenuSearchTreeProps {
   selectedListData: Ref<any[]>;
   onClickOpenMenuSearch(): void;
   onCancel(): void;
+  onClickOutside(): void;
   changeMenuSearch(value: any[]): void;
   applySelectedData(value: any[]): void;
 }
@@ -35,6 +36,9 @@ export function MenuSearchTreeComposition(
   const onCancel: () => void = () => {
     isMenuSearchShow.value = false;
   };
+  const onClickOutside: () => void = () => {
+    isMenuSearchShow.value = false;
+  };
 
   const changeMenuSearch: (value: any[]) => void = (value) => {
     applySelectedData(value);
@@ -60,6 +64,7 @@ export function MenuSearchTreeComposition(
     isMenuSearchShow,
     selectedListData,
     changeMenuSearch,
+    onClickOutside,
     applySelectedData,
     onClickOpenMenuSearch,
     onCancel

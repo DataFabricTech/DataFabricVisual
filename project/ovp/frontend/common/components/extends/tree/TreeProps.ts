@@ -17,6 +17,7 @@ export interface TreeViewItem {
 
 export interface TreeProps extends TreeDetailProps {
   items: TreeViewItem[];
+  isCheckable: boolean;
 }
 
 export interface TreeDetailProps {
@@ -28,11 +29,10 @@ export interface TreeDetailProps {
   showCloseAllBtn?: boolean;
   useDraggable?: boolean;
 
-  isCheckable: boolean;
   hideGuideLines: boolean;
   firExpandAll?: boolean;
 
   checkedIds?: string[];
 
-  dropValidator: (thisNode: TreeViewItem, targetNode: TreeViewItem, newNode: TreeViewItem) => boolean;
+  dropValidator?: (thisNode: TreeViewItem, targetNode: TreeViewItem, newNode: TreeViewItem) => boolean;
 }
