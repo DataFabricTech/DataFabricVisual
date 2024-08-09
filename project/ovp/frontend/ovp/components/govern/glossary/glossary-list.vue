@@ -2,10 +2,7 @@
   <div class="work-list">
     <div class="l-top-bar">
       <span class="title">용어사전 목록</span>
-      <button
-        class="button button-secondary-stroke"
-        @click="showModalDic = true"
-      >
+      <button class="button button-secondary-stroke" @click="openModal">
         용어사전 추가
       </button>
     </div>
@@ -31,11 +28,23 @@
       </div>
     </div>
   </div>
-  <modal-glossary-dictionary></modal-glossary-dictionary>
+  <modal-glossary-dictionary
+    :modal-id="MODAL_ID"
+    @cancel-model="closeModal"
+  ></modal-glossary-dictionary>
 </template>
 
 <script setup lang="ts">
 import { useGlossaryStore } from "~/store/glossary";
+const { $vfm } = useNuxtApp();
 const { glossaries, getGlossaries, changeCurrentGlossary } = useGlossaryStore();
 getGlossaries();
+
+const MODAL_ID = "modal-glossary-dictionary";
+function openModal() {
+  $vfm.open(MODAL_ID);
+}
+function closeModal() {
+  $vfm.close(MODAL_ID);
+}
 </script>
