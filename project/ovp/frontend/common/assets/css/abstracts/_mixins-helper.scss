@@ -12,6 +12,7 @@
   align-items: $vertical;
   justify-content: $horizontal;
   flex-direction: $direction;
+
   @if $gap != null {
     gap: $gap;
   }

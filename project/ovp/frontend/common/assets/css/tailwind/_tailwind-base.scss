@@ -2,7 +2,6 @@
 
 /* reset */
 @layer base {
-
   @include font-face('Pretendard', 'https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular', 400);
   @include font-face('Pretendard', 'https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-SemiBold', 600);
   @include font-face('Pretendard', 'https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Bold', 700);

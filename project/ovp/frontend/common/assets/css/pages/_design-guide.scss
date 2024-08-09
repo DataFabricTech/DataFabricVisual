@@ -179,7 +179,6 @@ $primary-colors: (
         #{$primary-300},
         #{$primary-100}
 );
-
 $secondary-colors: (
         #{$secondary-900},
         #{$secondary-700},
@@ -187,7 +186,6 @@ $secondary-colors: (
         #{$secondary-300},
         #{$secondary-100}
 );
-
 $neutral-colors: (
         #{$neutral-900},
         #{$neutral-800},
@@ -200,7 +198,6 @@ $neutral-colors: (
         #{$neutral-100},
         #{$neutral-0}
 );
-
 $info-colors: (
         #{$info-900},
         #{$info-700},
@@ -208,7 +205,6 @@ $info-colors: (
         #{$info-300},
         #{$info-100}
 );
-
 $success-colors: (
         #{$success-900},
         #{$success-700},
@@ -216,7 +212,6 @@ $success-colors: (
         #{$success-300},
         #{$success-100}
 );
-
 $warning-colors: (
         #{$warning-900},
         #{$warning-700},
@@ -224,7 +219,6 @@ $warning-colors: (
         #{$warning-300},
         #{$warning-100}
 );
-
 $error-colors: (
         #{$error-900},
         #{$error-700},
@@ -247,7 +241,7 @@ $error-colors: (
     padding: 0 $spacing-12;
     width: 20%;
     height: 100px;
-    border-radius: 0px;
+    border-radius: 0;
     font-size: 13px;
     color: $neutral-100;
 
@@ -290,6 +284,7 @@ $error-colors: (
       }
     }
   }
+
   &.info {
     .color-item {
       @for $i from 1 through length($info-colors) {

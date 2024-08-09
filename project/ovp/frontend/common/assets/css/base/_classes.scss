@@ -3,7 +3,6 @@ $directions: (
         "vertical": v,
         "hozizontal": h
 );
-
 $gaps: (0, 4, 8, 12, 16, 20, 24, 32);
 
 @each $attr, $direction in $directions {
@@ -14,6 +13,7 @@ $gaps: (0, 4, 8, 12, 16, 20, 24, 32);
       } @else {
         @include flex($horizontal: flex-start);
       }
+
       @if $gap != 0 {
         gap: #{$gap}px;
       }

@@ -32,12 +32,14 @@
 
   &-title {
     @include font-size('18');
+
     font-weight: 600;
     margin-top: $spacing-16;
   }
 
   &-sub-title {
     @include font-size('16');
+
     font-weight: 600;
     margin: $spacing-20 0 $spacing-8;
   }
