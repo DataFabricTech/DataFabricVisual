@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.Map;
 
-@FeignClient(name = "DolphinClient", url = "${properties.ovp.platform-server}", configuration = FeignHttpClientConfiguration.class)
+@FeignClient(name = "DolphinClient", url = "${properties.ovp.dolphin-server-url}", configuration = FeignHttpClientConfiguration.class)
 public interface DolphinClient {
     @PostMapping("/query/execute")
     Map<String, Object> executeQuery(@RequestBody Map<String, Object> params) throws Exception;

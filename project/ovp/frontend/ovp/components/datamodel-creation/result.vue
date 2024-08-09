@@ -4,15 +4,15 @@
       <div class="h-group gap-2">
         <span class="font-semibold">실행 결과</span>
         <div
-          :class="localQuerySuccess ? 'badge badge-green' : 'badge badge-red'"
-          v-show="localIsFirstExecute"
+          :class="props.querySuccess ? 'badge badge-green' : 'badge badge-red'"
+          v-show="props.isFirstExecute"
         >
           <svg-icon
             class="badge-icon"
-            :name="localQuerySuccess ? 'success' : 'error'"
+            :name="props.querySuccess ? 'success' : 'error'"
           ></svg-icon>
           <p class="badge-text">
-            {{ localQuerySuccess ? "success" : "error" }}
+            {{ props.querySuccess ? "success" : "error" }}
           </p>
         </div>
       </div>
@@ -23,8 +23,8 @@
               <p class="badge-text">실행시간</p>
             </div>
           </dt>
-          <dd v-if="localQuerySuccess && localIsFirstExecute">
-            {{ localExecuteResult.runTime }}
+          <dd v-if="props.querySuccess && props.isFirstExecute">
+            {{ props.executeResult.runTime }}
           </dd>
         </dl>
         <dl class="h-group gap-3">
@@ -33,8 +33,8 @@
               <p class="badge-text">실행시각</p>
             </div>
           </dt>
-          <dd v-if="localQuerySuccess && localIsFirstExecute">
-            {{ localExecuteResult.startTime }}
+          <dd v-if="props.querySuccess && props.isFirstExecute">
+            {{ props.executeResult.startTime }}
           </dd>
         </dl>
         <dl class="h-group gap-3">
@@ -43,17 +43,17 @@
               <p class="badge-text">레코드 수</p>
             </div>
           </dt>
-          <dd v-if="localQuerySuccess && localIsFirstExecute">
-            {{ localExecuteResult.totalRows }}
+          <dd v-if="props.querySuccess && props.isFirstExecute">
+            {{ props.executeResult.totalRows }}
           </dd>
         </dl>
       </div>
     </div>
-    <div class="result" v-if="localQuerySuccess && localIsFirstExecute">
+    <div class="result" v-if="props.querySuccess && props.isFirstExecute">
       <agGrid
         class="ag-theme-alpine ag-theme-quartz"
-        :columnDefs="localExecuteResult.columnDefs"
-        :rowData="localExecuteResult.rowData"
+        :columnDefs="props.executeResult.columnDefs"
+        :rowData="props.executeResult.rowData"
         rowId="id"
         :useRowCheckBox="false"
         :setColumnFit="true"
@@ -62,10 +62,10 @@
     </div>
     <div
       class="result result-error"
-      v-if="!localQuerySuccess && localIsFirstExecute"
+      v-if="!props.querySuccess && props.isFirstExecute"
     >
       <p>
-        {{ localExecuteResultErrMsg }}
+        {{ props.executeResultErrMsg }}
       </p>
     </div>
   </div>
@@ -91,25 +91,5 @@ const props = defineProps({
     default: "",
   },
 });
-
-const localQuerySuccess = ref(props.querySuccess);
-const localExecuteResult = ref(props.executeResult);
-const localIsFirstExecute = ref(props.isFirstExecute);
-const localExecuteResultErrMsg = ref(props.executeResultErrMsg);
-
-watch(
-  () => ({
-    querySuccess: props.querySuccess,
-    executeResult: props.executeResult,
-    isFirstExecute: props.isFirstExecute,
-    executeResultErrMsg: props.executeResultErrMsg,
-  }),
-  (newProps) => {
-    localQuerySuccess.value = newProps.querySuccess;
-    localExecuteResult.value = newProps.executeResult;
-    localIsFirstExecute.value = newProps.isFirstExecute;
-    localExecuteResultErrMsg.value = newProps.executeResultErrMsg;
-  },
-);
 </script>
 <style lang="scss" scoped></style>

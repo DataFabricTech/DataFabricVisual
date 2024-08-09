@@ -2,7 +2,7 @@
   <div class="work-list">
     <div class="l-top-bar">
       <span class="font-semibold"
-        >선택된 데이터 모델 ({{ localModelListCnt }})</span
+        >선택된 데이터 모델 ({{ props.modelListCnt }})</span
       >
       <button
         class="button button-secondary-stroke"
@@ -14,8 +14,8 @@
 
     <data-model-list
       class="menu-lg"
-      :filter="localDataModelFilter"
-      :data="localModelList"
+      :filter="props.dataModelFilter"
+      :data="props.modelList"
       label-key="modelNm"
       value-key="id"
       :use-item-delete-btn="true"
@@ -32,7 +32,6 @@
   </div>
 </template>
 <script setup lang="ts">
-import { useCreationStore } from "@/store/datamodel-creation/index";
 import DataModelList from "~/components/datamodel-creation/list/base/data-model-list.vue";
 
 const props = defineProps({
@@ -50,10 +49,6 @@ const props = defineProps({
 
 const emit = defineEmits<{ (e: "change", option: boolean): void }>();
 
-const localModelList = ref(props.modelList);
-const localDataModelFilter = ref(props.dataModelFilter);
-const localModelListCnt = ref(props.modelListCnt);
-
 const addDataModel = (option: boolean) => {
   emit("change", option);
 };
@@ -69,18 +64,5 @@ const clickItem = (value: string) => {
 const changeBookmark = (value: any) => {
   emit("bookmark-change", value);
 };
-
-watch(
-  () => ({
-    modelList: props.modelList,
-    dataModelFilter: props.dataModelFilter,
-    modelListCnt: props.modelListCnt,
-  }),
-  (newProps) => {
-    localModelList.value = newProps.modelList;
-    localDataModelFilter.value = newProps.dataModelFilter;
-    localModelListCnt.value = newProps.modelListCnt;
-  },
-);
 </script>
 <style lang="scss" scoped></style>

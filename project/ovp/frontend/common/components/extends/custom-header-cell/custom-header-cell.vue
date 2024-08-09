@@ -22,14 +22,14 @@ const onRightClick = (event: MouseEvent) => {
       {
         label: "복사 (컬럼 이름)",
         onClick: () => {
-          navigator.clipboard.writeText(props.params.fqn + "." + props.params.displayName);
+          navigator.clipboard.writeText(`${props.params.fqn}.${props.params.displayName}`);
         }
       },
       {
         label: "복사 (모든 컬럼 이름)",
         onClick: () => {
           navigator.clipboard.writeText(
-            props.params.gridColumnDefs.map((fieldObj) => props.params.fqn + "." + fieldObj.field).join(",")
+            props.params.gridColumnDefs.map((fieldObj) => `${props.params.fqn}.${fieldObj.field}`).join(", ")
           );
         }
       }
@@ -38,5 +38,4 @@ const onRightClick = (event: MouseEvent) => {
 };
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

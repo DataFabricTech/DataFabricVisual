@@ -4,6 +4,7 @@ import { useSearchCommonStore } from "~/store/search/common";
 import executeResultJson from "~/store/datamodel-creation/samples/executeResult.json";
 import { useUserStore } from "~/store/user/userStore";
 import { storeToRefs } from "../../.nuxt/imports";
+import _ from "lodash";
 
 export const useCreationStore = defineStore("creation", () => {
   const { $api } = useNuxtApp();
@@ -197,13 +198,12 @@ export const useCreationStore = defineStore("creation", () => {
    * */
   const onClickDataModelItem = async (value: string) => {
     isColumnSelected.value = false;
-    let selectedModel = await modelList.value.filter(
-      (item) => item.id === value,
-    );
-    let fqn = selectedModel[0].fqn;
 
-    dataModelName.value = selectedModel[0].modelNm;
-    dataModelOwner.value = selectedModel[0].owner;
+    let selectedModel = _.find(modelList.value, ["id", value]);
+    let fqn = selectedModel.fqn;
+
+    dataModelName.value = selectedModel.modelNm;
+    dataModelOwner.value = selectedModel.owner;
 
     await $api(`/api/search/detail/sample-data/${value}`)
       .then((res: any) => {
@@ -240,6 +240,10 @@ export const useCreationStore = defineStore("creation", () => {
       .catch((err: any) => {
         console.log("err: ", err);
       });
+  };
+
+  const showProfile = (value: boolean) => {
+    isColumnSelected.value = true;
   };
 
   /**
@@ -325,5 +329,6 @@ export const useCreationStore = defineStore("creation", () => {
     changeBookmark,
     deleteDataModel,
     onClickDataModelItem,
+    showProfile,
   };
 });

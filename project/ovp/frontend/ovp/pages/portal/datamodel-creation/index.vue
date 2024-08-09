@@ -34,6 +34,7 @@
         :isColumnSelected="isColumnSelected"
         :dataProfileList="dataProfileList"
         :columnOptions="columnOptions"
+        @profile-show="showProfile"
       ></sample>
       <result
         :querySuccess="querySuccess"
@@ -105,6 +106,7 @@ const {
   editQueryText,
   setSelectedModelList,
   setMyModelList,
+  showProfile
 } = creationStore;
 
 // 데이터 목록, 필터 목록, 선택 필터 초기화
