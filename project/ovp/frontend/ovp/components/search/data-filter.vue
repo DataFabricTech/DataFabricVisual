@@ -11,7 +11,7 @@
         :show-open-all-btn="false"
         :show-close-all-btn="false"
         :use-draggable="false"
-        :selected-items="treeSelectedItem"
+        :selected-items="selectedFilters[FILTER_KEYS.CATEGORY]"
         mode="view"
         @multiple-change="onNodeChecked"
       />
@@ -42,9 +42,10 @@ import { ref } from "vue";
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
 import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 
-import { useSearchCommonStore } from "@/store/search/common";
+import { FILTER_KEYS, useSearchCommonStore } from "@/store/search/common";
 import { storeToRefs } from "pinia";
 import _ from "lodash";
+
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
@@ -76,8 +77,10 @@ const changeMultiple: (value: any[] | {}, keyName: any) => void = (
   value: any[] | {},
   keyName: string,
 ) => {
-  let selectedIds = _.map(value, "key");
+  setSelectedFilters(keyName, _.map(value, "key"));
+};
 
+const setSelectedFilters = (keyName: string, selectedIds: any[]) => {
   if (selectedIds.length === 0) {
     delete selectedFilters.value[keyName];
   } else {
@@ -87,9 +90,8 @@ const changeMultiple: (value: any[] | {}, keyName: any) => void = (
   resetReloadList();
 };
 
-const treeSelectedItem: Ref<any[]> = ref<any[]>([]);
-const onNodeChecked = (checkedNodeIds: TreeViewItem[]) => {
-  treeSelectedItem.value = checkedNodeIds;
+const onNodeChecked = (checkedNodes: TreeViewItem[]) => {
+  setSelectedFilters(FILTER_KEYS.CATEGORY, checkedNodes);
 };
 
 getCategories();

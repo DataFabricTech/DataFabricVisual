@@ -230,17 +230,27 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     return setBoolObj.value;
   };
 
-  const getQueryFilter = () => {
+  const getCtgIds = () => {
+    return !_.has(selectedFilters.value, FILTER_KEYS.CATEGORY)
+      ? []
+      : selectedFilters.value[FILTER_KEYS.CATEGORY].map(
+          (filter: any) => `ovp_category.${filter.id}`,
+        );
+  };
+
+  const getQueryFilter = (): QueryFilter => {
     const queryFilter: QueryFilter = {
       query: { bool: { must: [] } },
     };
-    let setBoolObj: object = {};
 
     for (const key in selectedFilters.value) {
-      const value = selectedFilters.value[key];
-      setBoolObj = setQueryFilterByDepth(key, value);
-      queryFilter.query.bool.must.push(setBoolObj);
+      const value =
+        key === "category" ? getCtgIds() : selectedFilters.value[key];
+      const keyValue = key === "category" ? "tags.tagFQN" : key;
+
+      queryFilter.query.bool.must.push(setQueryFilterByDepth(keyValue, value));
     }
+
     return queryFilter;
   };
 
