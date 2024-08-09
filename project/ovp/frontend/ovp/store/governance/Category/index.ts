@@ -1,6 +1,5 @@
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 import { usePagingStore } from "~/store/common/paging";
-import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import _ from "lodash";
 import { ref } from "vue";
 
@@ -9,13 +8,17 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const pagingStore = usePagingStore();
   const { from, size } = storeToRefs(pagingStore);
 
+  let selectedNode: any = null;
   const categories: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
   const categoriesParentId = ref("");
   const isCategoriesNoData = ref(false);
   const modelList: Ref<any[]> = ref([]);
-  const modelIdList = ref([]);
   const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
-  let selectedNodeItem: any = null;
+  const categoryAddName = ref<string>("");
+  const categoryAddDesc = ref<string>("");
+  const showAddNameNoti = ref<boolean>(false);
+  const showAddDescNoti = ref<boolean>(false);
+
   const previewData: Ref<any> = ref({
     modelInfo: {
       model: {
@@ -25,6 +28,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   });
 
   // METHODS
+  // tree
   const getCategories = async () => {
     const { data } = await $api(`/api/category/list`);
 
@@ -47,7 +51,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     };
     return new URLSearchParams(params);
   };
-
   const getModelByCategoryIdAPI = async (
     node: TreeViewItem,
     value?: string,
@@ -61,21 +64,19 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     return data;
   };
   const addModelList = async () => {
-    const data = await getModelByCategoryIdAPI(selectedNodeItem);
+    const data = await getModelByCategoryIdAPI(selectedNode);
     modelList.value = modelList.value.concat(data);
   };
-
   const getModelList = async (value?: string) => {
-    if (_.isNull(selectedNodeItem)) {
+    if (_.isNull(selectedNode)) {
       return;
     }
-    const data = await getModelByCategoryIdAPI(selectedNodeItem, value);
+    const data = await getModelByCategoryIdAPI(selectedNode, value);
     modelList.value = data === null ? [] : data;
   };
   const setSelectedNode = (node: any) => {
-    selectedNodeItem = node;
+    selectedNode = node;
   };
-
   const addCategory = (node: TreeViewItem) => {
     insertOrEditAPI("PUT", node);
   };
@@ -113,11 +114,8 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     });
   };
 
-  const setModelIdList = () => {
-    modelIdList.value = [];
-    for (const element of modelList.value) {
-      modelIdList.value.push(element.id);
-    }
+  const addNewCategory = (newNode: TreeViewItem) => {
+    addCategory(newNode);
   };
 
   // preview
@@ -126,92 +124,26 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     previewData.value = data.data;
   };
 
-  // Tree
-  const { setScrollOptions } = useIntersectionObserver(addModelList);
-  const nodeMoved: Ref<boolean> = ref(false);
-  const dropMsg: Ref<any> = ref(null);
-
-  watch(
-    () => nodeMoved.value,
-    (newVal) => {
-      if (newVal) {
-        if (dropMsg.value !== null) {
-          alert(dropMsg.value);
-        }
-        getCategories();
-      }
-      nodeMoved.value = false;
-      dropMsg.value = null;
-    },
-  );
-
-  const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
-    id: "",
-    name: "",
-    desc: "",
-    order: 0,
-    parentId: "",
-    expanded: false,
-    selected: false,
-    disabled: false,
-    children: [],
-  });
-
-  const onNodeClicked = (node: TreeViewItem) => {
-    selectedNode.value = node;
-
-    // 선택한 노드정보 저장
-    setSelectedNode(node);
-
-    // 선택한 노드 기준 모델 목록을 조회한다.
-    setScrollOptions(0);
-    getModelList();
-  };
-
-  const dropValidator = async (
-    dropNode: TreeViewItem,
-    targetNode: TreeViewItem,
-  ): Promise<boolean> => {
-    // 조건 처리 backend 에서 진행
-    const resultMsg = await moveCategory(dropNode.id, targetNode.id);
-
-    dropMsg.value = resultMsg ? null : "이동이 불가 합니다.";
-    nodeMoved.value = true;
-
-    // tree lib가 async-await 처리를 지원하지 않기 때문에 여기서는 true 로 던지고,
-    // backend 동작이 끝나면 그때 결과에 따라 watch 항목에서 alert 처리, 목록을 갱신 or 유지 한다
-    return true;
-  };
-
-  const addSibling = (newNode: TreeViewItem) => {
-    // 형제 노드 추가
-    // TODO : modal 창 띄워서 노드 추가 API  호출 (newNode 에 id(uuid), parentId 포함되어있음)
-    console.log(`형제노드 추가 ${JSON.stringify(newNode)}`);
-    addNewCategory(newNode);
-  };
-
-  const addChild = (newNode: TreeViewItem) => {
-    // 자식 노드 추가
-    // TODO : modal 창 띄워서 노드 추가 API  호출
-    console.log(`자식노드 추가 ${JSON.stringify(newNode)}`);
-    addNewCategory(newNode);
-  };
-
-  // TODO : [개발] 카테고리 등록 예 (등록, 수정 같은 코드 사용합니다.)
-  const addNewCategory = (newNode: TreeViewItem) => {
-    addCategory(newNode);
+  // modal
+  const resetAddModalStatus = () => {
+    showAddNameNoti.value = false;
+    showAddDescNoti.value = false;
+    categoryAddName.value = "";
+    categoryAddDesc.value = "";
   };
 
   return {
     categories,
     categoriesParentId,
     modelList,
-    selectedNode,
-    onNodeClicked,
     isCategoriesNoData,
-    modelIdList,
     previewData,
     isBoxSelectedStyle,
+    categoryAddName,
+    categoryAddDesc,
+    showAddNameNoti,
+    showAddDescNoti,
+    resetAddModalStatus,
     getCategories,
     addModelList,
     getModelList,
@@ -220,11 +152,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     editCategory,
     moveCategory,
     deleteCategory,
-    setModelIdList,
     getPreviewData,
-    dropValidator,
-    addSibling,
-    addChild,
-    addNewCategory
+    addNewCategory,
   };
 });

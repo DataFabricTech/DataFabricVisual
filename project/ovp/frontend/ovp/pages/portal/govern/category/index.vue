@@ -109,8 +109,7 @@
               <p class="editable-group-desc">{{ selectedNode.desc }}</p>
             </template>
           </editable-group>
-          <!-- NOTE : v-if 로 할 경우, intersectionObserver 이 element 의 변화를 catch 하지 못해서 동작하지 않는 현상이 있어서 v-show 로 변환함. -->
-          <div v-show="modelList && modelList.length > 0">
+          <div>
             <div class="l-top-bar">
               <search-input
                 class="w-[541px]"
@@ -151,7 +150,7 @@
               </div>
             </div>
             <div
-              v-show="modelList.length > 0"
+              v-show="modelList && modelList.length > 0"
               class="l-resource-box l-split mt-3"
             >
               <div class="data-page" style="position: relative">
@@ -195,12 +194,13 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import _ from "lodash";
 import TreeVue from "@extends/tree/Tree.vue";
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import Loading from "@base/loading/Loading.vue";
 import Preview from "~/components/common/preview/preview.vue";
+import CategoryAddModal from "~/components/govern/category/category-add-modal.vue";
+import CategoryChangeModal from "~/components/govern/category/category-change-modal.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
 import { storeToRefs } from "pinia";
@@ -208,34 +208,24 @@ import { useNuxtApp } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 
-import TreeVue from "@extends/tree/Tree.vue";
-import type { TreeViewItem } from "@extends/tree/TreeProps";
-import CategoryAddModal from "~/components/govern/category/category-add-modal.vue";
-import CategoryChangeModal from "~/components/govern/category/category-change-modal.vue"; // CategoryChangeModal 컴포넌트 import
-
 const { $vfm } = useNuxtApp();
 const categoryStore = useGovernCategoryStore();
 
 const {
   getCategories,
   addModelList,
+  addNewCategory,
   getModelList,
-  setSelectedNode,
-  addCategory,
   editCategory,
-  onNodeClicked,
   deleteCategory,
-  setModelIdList,
   getPreviewData,
-  dropValidator,
-  addSibling,
-  addChild,
+  moveCategory,
+  resetAddModalStatus,
+  setSelectedNode,
 } = categoryStore;
 const {
-  selectedNode,
   categories,
   modelList,
-  modelIdList,
   isCategoriesNoData,
   previewData,
   isBoxSelectedStyle,
@@ -245,6 +235,7 @@ const CATEGORY_ADD_MODAL_ID = "category-add-modal";
 const CATEGORY_CHANGE_MODAL_ID = "category-change-modal";
 
 const loader = ref<HTMLElement | null>(null);
+const modelIdList = ref([]);
 const isDescEditMode = ref(false);
 const isTitleEditMode = ref(false);
 const isShowPreview = ref<boolean>(false);
@@ -282,6 +273,7 @@ watch(
   { immediate: true },
 );
 
+// tree
 const onNodeClicked = async (node: TreeViewItem) => {
   isDescEditMode.value = false;
   isTitleEditMode.value = false;
@@ -296,28 +288,19 @@ const onNodeClicked = async (node: TreeViewItem) => {
   // 모든 모델 리스트 id 저장
   setModelIdList();
 };
+
 const addSibling = (newNode: TreeViewItem) => {
   // 형제 노드 추가
   // TODO : modal 창 띄워서 노드 추가 API  호출 (newNode 에 id(uuid), parentId 포함되어있음)
   console.log(`형제노드 추가 ${JSON.stringify(newNode)}`);
   addNewCategory(newNode);
 };
+
 const addChild = (newNode: TreeViewItem) => {
   // 자식 노드 추가
   // TODO : modal 창 띄워서 노드 추가 API  호출
   console.log(`자식노드 추가 ${JSON.stringify(newNode)}`);
   addNewCategory(newNode);
-};
-// TODO : [개발] 카테고리 등록 예 (등록, 수정 같은 코드 사용합니다.)
-const addNewCategory = (newNode: TreeViewItem) => {
-  const addNodeParam: TreeViewItem = {
-    id: "f6a91e15-18c1-4920-ab2b-dd20a68f75bc",
-    parentId: selectedNode.value.id,
-    name: "카테고리 01 - 01",
-    desc: "카테고리 설명이여요",
-    children: [],
-  };
-  addCategory(addNodeParam);
 };
 
 const _editCategory = () => {
@@ -345,12 +328,36 @@ const _deleteCategory = async () => {
   }
 };
 
-// 데이터 모델 리스트
-const onInput = (value: string) => {
-  setScrollOptions(0);
-  getModelList(value);
+let nodeMoved: Ref<boolean> = ref(false);
+let dropMsg: Ref<any> = ref(null);
+
+watch(
+  () => nodeMoved.value,
+  (newVal) => {
+    if (newVal) {
+      if (dropMsg.value !== null) {
+        alert(dropMsg.value);
+      }
+      getCategories();
+    }
+    nodeMoved.value = false;
+    dropMsg.value = null;
+  },
+);
+const dropValidator = async (
+  dropNode: TreeViewItem,
+  targetNode: TreeViewItem,
+): Promise<boolean> => {
+  // 조건 처리 backend 에서 진행
+  const resultMsg = await moveCategory(dropNode.id, targetNode.id);
+  dropMsg.value = resultMsg ? null : "이동이 불가 합니다.";
+  nodeMoved.value = true;
+  // tree lib가 async-await 처리를 지원하지 않기 때문에 여기서는 true 로 던지고,
+  // backend 동작이 끝나면 그때 결과에 따라 watch 항목에서 alert 처리, 목록을 갱신 or 유지 한다
+  return true;
 };
 
+// dataModel list
 const allModelList = computed({
   get() {
     return modelIdList.value.length === 0
@@ -368,6 +375,18 @@ const allModelList = computed({
   },
 });
 
+const setModelIdList = () => {
+  modelIdList.value = [];
+  for (const element of modelList.value) {
+    modelIdList.value.push(element.id);
+  }
+};
+
+const onInput = (value: string) => {
+  setScrollOptions(0);
+  getModelList(value);
+};
+
 const checked = (checkedList: any[]) => {
   selectedModelList.value = checkedList;
 };
@@ -375,13 +394,6 @@ const checked = (checkedList: any[]) => {
 const { scrollTrigger, setScrollOptions } =
   useIntersectionObserver(addModelList);
 
-const showCategoryAddModal = () => {
-  $vfm.open(CATEGORY_ADD_MODAL_ID);
-};
-
-const showCategoryChangeModal = () => {
-  $vfm.open(CATEGORY_CHANGE_MODAL_ID);
-};
 // preview
 const getPreviewCloseStatus = (option: boolean) => {
   isShowPreview.value = option;
@@ -400,6 +412,7 @@ const previewClick = async (data: object) => {
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;
 };
+
 // editable-input
 const editCancel = (key: string) => {
   switch (key) {
@@ -445,6 +458,16 @@ const editIcon = (key: string) => {
   }
 };
 
+// modal
+const showCategoryAddModal = () => {
+  $vfm.open(CATEGORY_ADD_MODAL_ID);
+  resetAddModalStatus();
+};
+
+const showCategoryChangeModal = () => {
+  $vfm.open(CATEGORY_CHANGE_MODAL_ID);
+};
+
 onMounted(async () => {
   if (loader.value) {
     loader.value.style.display = "block";
@@ -460,7 +483,6 @@ onMounted(async () => {
   if (loader.value) {
     loader.value.style.display = "none";
   }
-  //   selectedNode
 });
 </script>
 

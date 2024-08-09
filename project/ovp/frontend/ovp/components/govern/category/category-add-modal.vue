@@ -21,20 +21,20 @@
       <div class="form form-lg">
         <div class="form-body">
           <div class="form-item">
-            <label for="categoryName" class="form-label">
+            <label for="categoryAddName" class="form-label">
               이름
               <span class="required">*</span>
             </label>
             <div class="form-detail">
               <input
-                id="categoryName"
+                id="categoryAddName"
                 class="text-input text-input-lg"
                 placeholder="이름을 입력하세요."
-                v-model="categoryName"
+                v-model="categoryAddName"
               />
               <div
                 class="notification notification-sm notification-error"
-                v-if="isShowCategoryNameNoti"
+                v-if="showAddNameNoti"
               >
                 <svg-icon class="notification-icon" name="error"></svg-icon>
                 <p class="notification-detail">이름을 입력하세요.</p>
@@ -42,20 +42,20 @@
             </div>
           </div>
           <div class="form-item">
-            <label class="form-label" for="categoryDesc">
+            <label class="form-label" for="categoryAddDesc">
               설명
               <span class="required">*</span>
             </label>
             <div class="form-detail">
               <textarea
-                id="categoryDesc"
+                id="categoryAddDesc"
                 class="textarea h-28"
                 placeholder="설명을 입력하세요."
-                v-model="categoryDesc"
+                v-model="categoryAddDesc"
               ></textarea>
               <div
                 class="notification notification-sm notification-error"
-                v-if="isShowCategoryDescNoti"
+                v-if="showAddDescNoti"
               >
                 <svg-icon class="notification-icon" name="error"></svg-icon>
                 <p class="notification-detail">설명을 입력하세요.</p>
@@ -70,21 +70,22 @@
 
 <script setup lang="ts">
 import { uuid } from "vue3-uuid";
-import Modal from "@extends/modal/Modal.vue";
+import { storeToRefs } from "pinia";
 import { useNuxtApp } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category";
+import Modal from "@extends/modal/Modal.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
-import { storeToRefs } from "pinia";
 
 const categoryStore = useGovernCategoryStore();
 const { $vfm } = useNuxtApp();
 const { addNewCategory } = categoryStore;
-const { categoriesParentId } = storeToRefs(categoryStore);
-
-const categoryName = ref<string>("");
-const isShowCategoryNameNoti = ref<boolean>(false);
-const categoryDesc = ref<string>("");
-const isShowCategoryDescNoti = ref<boolean>(false);
+const {
+  categoriesParentId,
+  categoryAddName,
+  categoryAddDesc,
+  showAddNameNoti,
+  showAddDescNoti,
+} = storeToRefs(categoryStore);
 
 const props = defineProps({
   modalId: {
@@ -97,35 +98,26 @@ const setNewNodeCategory = () => {
   const newNodeParam: TreeViewItem = {
     id: uuid.v4(),
     parentId: categoriesParentId.value,
-    name: categoryName.value,
-    desc: categoryDesc.value,
+    name: categoryAddName.value,
+    desc: categoryAddDesc.value,
     children: [],
   };
-  addNewCategory(newNodeParam);
-};
 
-const resetModalStatus = () => {
-  categoryName.value = "";
-  isShowCategoryNameNoti.value = false;
-  categoryDesc.value = "";
-  isShowCategoryDescNoti.value = false;
+  addNewCategory(newNodeParam);
 };
 
 const onCancel = () => {
   $vfm.close(props.modalId);
-  resetModalStatus();
 };
 
 const onConfirm = async () => {
-  isShowCategoryNameNoti.value = categoryName.value === "" ? true : false;
-  isShowCategoryDescNoti.value = categoryDesc.value === "" ? true : false;
+  showAddNameNoti.value = categoryAddName.value === "" ? true : false;
+  showAddDescNoti.value = categoryAddDesc.value === "" ? true : false;
 
-  if (!isShowCategoryNameNoti.value && !isShowCategoryDescNoti.value) {
+  if (!showAddNameNoti.value && !showAddDescNoti.value) {
     setNewNodeCategory();
 
     $vfm.close(props.modalId);
-
-    resetModalStatus();
   }
 };
 </script>
