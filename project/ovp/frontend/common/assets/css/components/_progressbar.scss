@@ -6,6 +6,10 @@
   &::-webkit-progress-value {
     background-color: $color;
   }
+
+  &::-moz-progress-bar {
+    background-color: $color;
+  }
 }
 
 .progressbar {
@@ -35,6 +39,11 @@
     bottom: 0;
     background-color: $info-300;
   }
+
+  &::-moz-progress-bar {
+    background-color: $info-300;
+  }
+
 
   &-gage {
     @include z-index('float');
