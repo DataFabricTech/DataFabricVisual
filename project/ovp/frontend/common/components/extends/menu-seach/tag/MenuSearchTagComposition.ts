@@ -1,9 +1,6 @@
 import { MenuSearchItemImpl } from "~/components/extends/menu-seach/MenuSearchComposition";
 import { MenuSearchTypeProps } from "~/components/extends/menu-seach/type/MenuSearchTypeProps";
-import {
-  MenuSearchTypeCompositionImpl,
-  MenuSearchTypeComposition
-} from "~/components/extends/menu-seach/type/MenuSearchTypeComposition";
+import { MenuSearchTypeCompositionImpl, MenuSearchTypeComposition } from "../type/MenuSearchTypeComposition";
 
 interface MenuSearchTagComposition extends MenuSearchTypeCompositionImpl {
   onDeleteTag(value: any): void;
