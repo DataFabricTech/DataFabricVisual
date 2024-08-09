@@ -14,10 +14,10 @@
         -->
     <div class="dropdown" v-show="isShowBox">
       <ul class="dropdown-list">
-        <template v-if="localData.length > 0">
+        <template v-if="props.data.length > 0">
           <li
             class="dropdown-item"
-            v-for="(option, index) in localData"
+            v-for="(option, index) in props.data"
             :key="index"
             @click="selectItem(option)"
             :class="[
@@ -72,10 +72,6 @@ const emit = defineEmits<{ (e: "select", option: number | string): void }>();
 function onSelect(value: string | number) {
   emit("select", value);
 }
-
-const localData = computed(() => {
-  return props.data;
-});
 
 const {
   data,

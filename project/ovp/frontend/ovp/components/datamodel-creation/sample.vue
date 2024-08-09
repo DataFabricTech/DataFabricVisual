@@ -59,6 +59,7 @@
           <span class="profiling-detail-title">컬럼 상세</span>
           <select-box
             class="select-sm"
+            :selectedItem="[]"
             :data="props.columnOptions"
             labelKey="name"
             valueKey="id"

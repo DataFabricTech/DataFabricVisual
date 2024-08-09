@@ -19,9 +19,8 @@ export function SelectBoxComposition(
   const selectedValue: Ref<string | number | undefined> = ref("");
 
   // selectedItem 변경을 감지해 값 변경 (부모 컴포넌트에서 선택 값을 초기화하는 경우 존재)
-  // data 변경을 감지해 값 변경
   watch(
-    () => [props.selectedItem, props.data],
+    () => [props.selectedItem],
     () => {
       setSelectedData();
     }
