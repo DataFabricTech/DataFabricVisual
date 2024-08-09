@@ -405,7 +405,7 @@ const addChild = (newNode: TreeViewItem) => {
   console.log(`자식노드 추가 ${JSON.stringify(newNode)}`);
   addNewCategory(newNode);
 };
-// TODO : [개발] 카테고리 등록 예 (등록, 수정 같은 코드 사용합니다.)
+// TODO : [개발] 카테고리 등록 예
 const addNewCategory = (newNode: TreeViewItem) => {
   const addNodeParam: TreeViewItem = {
     id: "f6a91e15-18c1-4920-ab2b-dd20a68f75bc",

@@ -72,9 +72,9 @@ public class CategoryService {
         return rootCategories.get(0);
     }
 
+    @Transactional
     public Object addCategory(CategoryDTO dto) throws Exception {
-        // TODO : [개발] open meta api 이용해서 tag id 처리 필요
-//        dto.setTagId("");
+        dto.setTagId(createTagInfo(dto.getId()));
         return insertOrUpdate(dto);
     }
 
@@ -259,7 +259,16 @@ public class CategoryService {
             return "INVALID";
         }
 
+        // step3. 같은 형제 노드중에 중복된 카테고리 명이 있는지 체크 필요함.
+        if (hasSameNameInSiblings(dropNodeEntity.getId(), targetNodeEntity.getId(), dropNodeEntity.getName())) {
+            return "HAS_SAME_NAME";
+        }
+
         return "VALID";
+    }
+
+    private boolean hasSameNameInSiblings(UUID id, UUID parentId, String name) {
+        return categoryRepository.findByParentIdAndIdNotAndName(parentId, id, name).size() > 0;
     }
 
     /**
@@ -299,5 +308,17 @@ public class CategoryService {
     public String getTagInfo(String tagId) {
         Map<String, Object> tagInfo = classificationClient.getTag(tagId);
         return tagInfo.get("fullyQualifiedName").toString();
+    }
+
+    // TODO : classification 쪽으로 이동 필요함.
+    // TODO : classification 명 상수 처리 필요.
+    public String createTagInfo(String categoryId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("classification", "ovp_category");
+        params.put("description", "OVP Category Matched Tag");
+        params.put("displayName", categoryId);
+        params.put("name", categoryId);
+        Map<String, Object> response = (Map<String, Object>) classificationClient.createTag(params);
+        return response.get("id").toString();
     }
 }
