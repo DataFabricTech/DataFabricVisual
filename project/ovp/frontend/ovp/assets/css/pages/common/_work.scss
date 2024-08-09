@@ -1,0 +1,97 @@
+//----------------------------
+// .l-split 안
+// 작업 패널, 작업 페이지 유형 ui
+//----------------------------
+
+.work-list,
+.work-page {
+  .l-top-bar {
+    border-bottom: 1px solid $neutral-200;
+
+    .menu-data-icon {
+      @include icon-size('lg');
+    }
+
+    .service-title {
+      @extend .editable-group-title;
+    }
+  }
+}
+
+// 작업 패널
+.work-list {
+  width: 310px;
+  flex: 0 0 310px;
+  border-right: 1px solid $neutral-200;
+
+  .menu-data {
+    height: calc(100% - 49px);
+  }
+
+  .tab-line {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tab-button-text {
+    @include font-size('14');
+  }
+
+  .tab-contents {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 46px);
+    padding: $spacing-8 0 0 0;
+  }
+}
+
+//작업 페이지
+.work-page {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+
+  .code-box {
+    overflow: auto;
+    flex-grow: 1;
+  }
+}
+
+//작업 페이지 안 컨텐츠
+.work-contents {
+  @include flex($direction: column, $vertical: null, $horizontal: null, $gap: $spacing-32);
+  height: 100%;
+  overflow: auto;
+  padding: $spacing-16;
+
+  .l-top-bar {
+    @include flex($vertical: flex-start, $direction: column, $gap: $spacing-8);
+    padding: 0;
+    border: 0;
+  }
+
+  .l-resource-box {
+    height: 894px;
+  }
+}
+
+
+
+//동일 구조일때 타이틀 스타일 정의
+.l-top-bar {
+  .title {
+    @include font-size('16');
+    font-weight: 600;
+    color: $neutral-800;
+  }
+}
+
+.work-list,
+.work-page {
+  .title {
+    @include font-size('15');
+    font-weight: 600;
+    color: $neutral-600;
+  }
+}
