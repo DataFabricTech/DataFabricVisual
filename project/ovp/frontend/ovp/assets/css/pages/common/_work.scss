@@ -8,10 +8,6 @@
   .l-top-bar {
     border-bottom: 1px solid $neutral-200;
 
-    .menu-data-icon {
-      @include icon-size('lg');
-    }
-
     .service-title {
       @extend .editable-group-title;
     }
@@ -79,13 +75,7 @@
 
 
 //동일 구조일때 타이틀 스타일 정의
-.l-top-bar {
-  .title {
-    @include font-size('16');
-    font-weight: 600;
-    color: $neutral-800;
-  }
-}
+
 
 .work-list,
 .work-page {

@@ -13,7 +13,7 @@
     height: calc(100% - 48px);
   }
 
-  &:has(.l-split + .l-split){
+  &:has(.l-split + .l-split) {
     .l-split:nth-child(1) {
       height: 60%;
       border-bottom: 1px solid $neutral-200;
@@ -48,6 +48,12 @@
   & + .l-split {
     flex-grow: 1;
     height: calc(100% - 60px);
+  }
+
+  .title {
+    @include font-size('16');
+    font-weight: 600;
+    color: $neutral-800;
   }
 }
 

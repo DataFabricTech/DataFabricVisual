@@ -1,4 +1,5 @@
 .type-img {
+  flex-shrink: 0;
   width: 24px;
   height: 24px;
   background-position: center;
@@ -23,5 +24,12 @@
 
   &-minio {
     background-image: url("../images/storage-type_06.png");
+  }
+}
+
+.menu-lg {
+  .type-img {
+    width: 28px;
+    height: 28px;
   }
 }
