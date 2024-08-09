@@ -14,6 +14,7 @@
 
   &-list {
     overflow-y: auto;
+    overflow-x: hidden;
     height: calc(100% - 36px);
   }
 
@@ -46,6 +47,10 @@
         width: 16px;
         height: 16px;
         accent-color: $primary-500;
+      }
+
+      label {
+        @include ellipsis;
       }
     }
   }
