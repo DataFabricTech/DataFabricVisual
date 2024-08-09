@@ -1,4 +1,5 @@
 <template>
+  <!-- NOTY : 상태관리를 /common/component/extends 의 Loading.vue 에 할 수 없어 /ovp 에 wrap 한 component 별도 생성.-->
   <Loading
     v-if="isLoading"
     :class="props.class"
