@@ -1,8 +1,20 @@
 <template>
   <template v-for="(filter, keyName, FI) in props.data" :key="FI">
     <template v-if="keyName === 'category'">
-      <!-- TODO : [개발] menu-search-tree 컴포넌트 추가 -->
-      {{ keyName }}
+      <menu-search-tree
+        label-key="name"
+        value-key="id"
+        :data="categories"
+        :is-multi="true"
+        :hideGuideLines="false"
+        :firExpandAll="true"
+        :show-open-all-btn="false"
+        :show-close-all-btn="false"
+        :use-draggable="false"
+        :selected-items="treeSelectedItem"
+        mode="view"
+        @multiple-change="onNodeChecked"
+      />
     </template>
     <menu-search-button
       v-else
@@ -28,13 +40,21 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
+import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
+
 import { useSearchCommonStore } from "@/store/search/common";
 import { storeToRefs } from "pinia";
 import _ from "lodash";
+import { useGovernCategoryStore } from "~/store/governance/Category";
+import type { TreeViewItem } from "@extends/tree/TreeProps";
 
 const searchCommonStore = useSearchCommonStore();
 const { resetReloadList } = searchCommonStore;
 const { selectedFilters } = storeToRefs(searchCommonStore);
+
+const categoryStore = useGovernCategoryStore();
+const { getCategories } = categoryStore;
+const { categories } = storeToRefs(categoryStore);
 
 const props = defineProps({
   data: {
@@ -66,6 +86,13 @@ const changeMultiple: (value: any[] | {}, keyName: any) => void = (
 
   resetReloadList();
 };
+
+const treeSelectedItem: Ref<any[]> = ref<any[]>([]);
+const onNodeChecked = (checkedNodeIds: TreeViewItem[]) => {
+  treeSelectedItem.value = checkedNodeIds;
+};
+
+getCategories();
 </script>
 
 <style lang="scss" scoped></style>
