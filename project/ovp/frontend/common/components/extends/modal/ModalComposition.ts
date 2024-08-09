@@ -41,10 +41,8 @@ export function ModalComposition(props: ModalProps): ModalComposition {
     left: null
   });
 
-  console.log(modalPosition);
-
   function getDocumentSize() {
-    let documentSize = {
+    const documentSize = {
       width: window.innerWidth ?? document.body.clientWidth,
       height: window.innerHeight ?? document.body.clientHeight
     };

@@ -37,6 +37,7 @@ import $constants from "~/utils/constant";
 const { $vfm } = useNuxtApp();
 const isShowSaveModel = ref(false);
 
+const deleteDataModel = (param: boolean) => {};
 const saveDataModel = (param: boolean) => {
   isShowSaveModel.value = param;
 };

@@ -159,7 +159,6 @@ const emitItemClick = (value: string) => {
 };
 
 const emitItemCheck = (value: string) => {
-  console.log("emitItemCheck", value);
   emit("item-check", value);
 };
 

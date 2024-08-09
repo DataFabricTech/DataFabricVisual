@@ -20,11 +20,7 @@
   >
     <template v-slot:body>
       <div class="data-add">
-        <add-transfer
-          @detail-tab-change="onChangeDetailTypeTab"
-          @tab-change="onChangeTab"
-          @select="onSaveSelectData"
-        ></add-transfer>
+        <add-transfer @select="onSaveSelectData"></add-transfer>
         <div class="tab">
           <ul class="tab-list">
             <li class="tab-item is-tab-item-selected">
@@ -288,14 +284,11 @@ const onCancelModal = () => {
   selectedListData.value = selectedModelList.value;
   $vfm.close(props.modalId);
 };
+
 const onConfirmModal = () => {
   // 내부 데이터 저장
   selectedModelList.value = selectedListData.value;
   $vfm.close(props.modalId);
-};
-
-const onDeleteDataModel = (value: string) => {
-  console.log("onDeleteDataModel", value);
 };
 </script>
 <style lang="scss" scoped></style>

@@ -36,7 +36,7 @@ export function DataModelApiListComposition(
   const setListData: () => void = () => {
     // TOOD: store로 빼기 -> listData 초기화를 store에서 진행하기.,
     compos.listData.value = props.data;
-    console.log(compos.listData.value);
+    // console.log("setListData", compos.listData.value.length);
   };
 
   /**

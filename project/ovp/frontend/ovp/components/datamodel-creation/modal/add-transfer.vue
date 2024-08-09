@@ -17,7 +17,7 @@
             :filter="filters"
             :data="searchResult"
             :sort-list="$constants.COMMON.SORT_FILTER"
-            :selected-items="props.selectedModelList"
+            :selected-items="nSelectedListData"
             label-key="modelNm"
             value-key="id"
             :use-item-delete-btn="false"
@@ -28,12 +28,12 @@
             :addSearchList="addSearchList"
             list-type="non-selected"
             no-data-msg="데이터 모델이 없습니다."
-            @item-check="onSelectData"
-            @item-click="emitItemClick"
-            @bookmark-change="emitBookmark"
-            @filter-change="emitFilterChange"
-            @sort-change="emitSortChange"
-            @search-change="emitSearchChange"
+            @item-check="onSelectApiData"
+            @item-click="onClickApiData"
+            @bookmark-change="onClickApiBookmark"
+            @filter-change="onClickApiFilterChange"
+            @sort-change="onClickApiSortChange"
+            @search-change="onClickApiSearchChange"
           >
             <template v-slot:tab>
               <Tab
@@ -51,7 +51,7 @@
         <template #my>
           <data-model-accordian-list
             :data="mySearchResult"
-            :selected-items="props.selectedModelList"
+            :selected-items="nSelectedListData"
             label-key="modelNm"
             value-key="id"
             :use-item-delete-btn="false"
@@ -78,11 +78,11 @@
     </div>
     <div class="transfer-box">
       <div class="transfer-head">
-        <span>선택된 데이터 모델({{}})</span>
+        <span>선택된 데이터 모델({{ selectedListLength }})</span>
       </div>
       <data-model-list
         :filter="filters"
-        :data="props.selectedModelList"
+        :data="nSelectedListData"
         label-key="modelNm"
         value-key="id"
         :use-item-delete-btn="true"
@@ -92,7 +92,10 @@
         :use-live-search="true"
         list-type="selected"
         no-data-msg="선택된 데이터 모델이 없습니다."
-        @delete="onDeleteDataModel"
+        @delete="onDeleteListData"
+        @item-check="onSelectListData"
+        @item-click="onClickListData"
+        @bookmark-change="onClickApiBookmark"
       ></data-model-list>
     </div>
   </div>
@@ -104,54 +107,130 @@ import DataModelApiList from "~/components/datamodel-creation/list/api/data-mode
 import DataModelList from "~/components/datamodel-creation/list/base/data-model-list.vue";
 import DataModelAccordianList from "~/components/datamodel-creation/list/api/accoridan/data-model-accordian-list.vue";
 import { ref } from "vue";
-import _ from "lodash";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 import { storeToRefs } from "pinia";
+import { useCreationStore } from "~/store/datamodel-creation";
 
-const props = defineProps({
-  selectedModelList: {
-    type: Array,
-    required: true,
-  },
-});
+// 데이터 생성 > 선택
+const creationStore = useCreationStore();
+const { selectedModelList } = storeToRefs(creationStore);
+
+// 탐색 > 데이터 모델 조회 Store
+const dataModelSearchStore = useDataModelSearchStore();
+const { addSearchList, resetReloadList, changeDetailTab, changeTab } =
+  dataModelSearchStore;
+const { filters, searchResult, currTab, currDetailTab, mySearchResult } =
+  storeToRefs(dataModelSearchStore);
+
+// 전체/MY 데이터 초기화
+await resetReloadList();
+
 // 내부적으로 사용되는 데이터(모달 닫기 시 초기화됨)
-const selectedListData = ref([]);
+const nSelectedListData = ref([]);
+const tempSelectedListData = ref([]);
 const setSelectedListData = () => {
-  selectedListData.value = _.cloneDeep(props.selectedModelList);
+  nSelectedListData.value = $_cloneDeep(selectedModelList.value);
+  tempSelectedListData.value = $_cloneDeep(selectedModelList.value);
 };
+const selectedListLength = computed(() => {
+  return nSelectedListData.value ? nSelectedListData.value.length : 0;
+});
+
 watchEffect(() => {
   setSelectedListData();
 });
 
-const onSelectData = (item: string) => {
-  let findItem = _.find(props.modelList, { id: item });
+const isSelectedData: (item: any) => boolean = (item) => {
+  const itemId = item.id;
+  const findItem = $_find(nSelectedListData.value, { id: itemId });
+  return !!findItem;
+};
+
+/**
+ * 선택 데이터 추가 > 오른쪽으로 이동
+ */
+const onSaveSelectedData = () => {
+  // 임시로 저장되어 있던 값을 선택 리스트에 저장
+  nSelectedListData.value = tempSelectedListData.value;
+  tempSelectedListData.value = [];
+  searchResult.value.map((item: any) => {
+    // 선택되지 않은 항목 중에 SelectedList에 데이터가 존재하면 값 변경
+    if (!item.isSelected && isSelectedData(item)) {
+      item.isSelected = true;
+    }
+    return item;
+  });
+  console.log("nSelectedListData", nSelectedListData.value);
+};
+
+/**
+ * 선택 데이터 삭제 > 왼쪽으로 이동
+ */
+const onDeleteSelectedData = () => {
+  nSelectedListData.value = $_differenceBy(
+    nSelectedListData.value,
+    tempDeleteListData.value,
+    "id",
+  );
+  tempDeleteListData.value = [];
+  console.log("onDeleteSelectedData", nSelectedListData.value);
+  searchResult.value.map((item: any) => {
+    // 선택된 항목 중에 SelectedList에 데이터가 존재하면 값 변경
+    if (item.isSelected && !isSelectedData(item)) {
+      item.isSelected = false;
+    }
+    return item;
+  });
+};
+
+////////////// 선택 목록 //////////////
+/**
+ * 선택 목록 > 아이템 선택
+ * @param value
+ */
+const onDeleteListData = (value: string) => {
+  // temp 필요없이 바로 nselectedListData, searchResult에 바로 적용
+  nSelectedListData.value = $_reject(nSelectedListData.value, { id: value });
+
+  searchResult.value.map((item: any) => {
+    // 선택된 항목 중에 SelectedList에 데이터가 존재하면 값 변경
+    if (item.isSelected && item.id === value) {
+      item.isSelected = false;
+    }
+    return item;
+  });
+  console.log("onDeleteListData", value);
+};
+
+const tempDeleteListData = ref([]);
+const onSelectListData = (value: string) => {
+  let findItem = $_find(searchResult.value, { id: value });
   if (findItem) {
-    selectedListData.value.push(findItem);
+    tempDeleteListData.value.push(findItem);
   }
 };
 
-const selectedListLength = computed(() => {
-  return props.selectedModelList ? props.selectedModelList.length : 0;
-});
-const onDeleteSelectedData = () => {};
-const onDeleteDataModel = (value: string) => {
-  console.log("onDeleteDataModel", value);
+const onClickListData = (value: string) => {
+  console.log("onClickListData", value);
 };
 
-const dataModelSearchStore = useDataModelSearchStore();
-const { addSearchList, resetReloadList, changeDetailTab, changeTab } =
-  dataModelSearchStore;
-const {
-  filters,
-  searchResult,
-  currTab,
-  currDetailTab,
-  selectedFilters,
-  mySearchResult,
-} = storeToRefs(dataModelSearchStore);
+////////////// API 목록 //////////////
+/**
+ * API 통신 탐색 목록 > 아이템 선택
+ * @param value
+ */
+const onSelectApiData = (value: string) => {
+  let findItem = $_find(searchResult.value, { id: value });
+  if (findItem) {
+    tempSelectedListData.value.push(findItem);
+  }
+};
 
-// 전체/MY 데이터 초기화
-await resetReloadList();
+const onClickApiData = () => {};
+const onClickApiBookmark = () => {};
+const onClickApiFilterChange = () => {};
+const onClickApiSortChange = () => {};
+const onClickApiSearchChange = () => {};
 
 // EMIT
 // const emit = defineEmits<{
@@ -166,47 +245,5 @@ await resetReloadList();
 //   (e: "search-change", value: string): void;
 //   (e: "select", value: []): void;
 // }>();
-//
-// const onSaveSelectedData = () => {
-//   console.log("onSaveSelectedData", selectedListData.value);
-//   emit("select", selectedListData.value);
-// };
-// function emitTab(item: number | string) {
-//   console.log("emitTab", item);
-//   emit("tab-change", item);
-// }
-//
-// function emitDetailTypeTab(item: number | string) {
-//   console.log("emitDetailTypeTab", item);
-//   emit("detail-tab-change", item);
-// }
-//
-// const emitBookmark = (value: string) => {
-//   console.log("emitBookmark", value);
-//   emit("bookmark-change", value);
-// };
-//
-// const emitItemClick = (value: string) => {
-//   console.log("emitItemClick", value);
-//   emit("item-click", value);
-// };
-//
-// const emitDeleteItem = (value: string) => {
-//   console.log("emitDeleteItem", value);
-//   emit("delete", value);
-// };
-//
-// const emitFilterChange = (value: {}) => {
-//   console.log("emitFilterChange", value);
-//   emit("filter-change", value);
-// };
-// const emitSortChange = (value: string) => {
-//   console.log("emitSortChange", value);
-//   emit("sort-change", value);
-// };
-// const emitSearchChange = (value: string) => {
-//   console.log("emitSearchChange", value);
-//   emit("search-change", value);
-// };
 </script>
 <style lang="scss" scoped></style>
