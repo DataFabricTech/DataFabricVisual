@@ -223,6 +223,7 @@ const {
   setSelectedNode,
 } = categoryStore;
 const {
+  selectedModelList,
   categories,
   modelList,
   isCategoriesNoData,
@@ -252,7 +253,6 @@ const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
   children: [],
 });
 const isAllModelListChecked = ref<boolean>(false);
-const selectedModelList = ref([]);
 const selectedTitleNodeValue = ref(selectedNode.value.name || "");
 const selectedDescNodeValue = ref(selectedNode.value.desc || "");
 
