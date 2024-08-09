@@ -194,6 +194,10 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useNuxtApp } from "nuxt/app";
+import { useGovernCategoryStore } from "~/store/governance/Category";
+import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import TreeVue from "@extends/tree/Tree.vue";
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 import SearchInput from "@extends/search-input/SearchInput.vue";
@@ -202,11 +206,6 @@ import Preview from "~/components/common/preview/preview.vue";
 import CategoryAddModal from "~/components/govern/category/category-add-modal.vue";
 import CategoryChangeModal from "~/components/govern/category/category-change-modal.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
-
-import { storeToRefs } from "pinia";
-import { useNuxtApp } from "nuxt/app";
-import { useGovernCategoryStore } from "~/store/governance/Category";
-import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 
 const { $vfm } = useNuxtApp();
 const categoryStore = useGovernCategoryStore();

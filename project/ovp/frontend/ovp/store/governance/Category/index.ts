@@ -88,6 +88,11 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       method: method,
       body: node,
     }).then((res: any) => {
+      if (res.data === "HAS_SAME_NAME") {
+        alert(`${categoryAddName.value} 이 이미 존재합니다.`);
+        return;
+      }
+
       if (res.data === "OVER_DEPTH") {
         alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
         return;

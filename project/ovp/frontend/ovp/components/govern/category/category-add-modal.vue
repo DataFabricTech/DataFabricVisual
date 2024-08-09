@@ -115,7 +115,7 @@ const onConfirm = async () => {
   showAddDescNoti.value = categoryAddDesc.value === "" ? true : false;
 
   if (!showAddNameNoti.value && !showAddDescNoti.value) {
-    setNewNodeCategory();
+    await setNewNodeCategory();
 
     $vfm.close(props.modalId);
   }
