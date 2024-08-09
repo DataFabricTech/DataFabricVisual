@@ -1,96 +1,96 @@
 <template>
-  <div class="lineage">
-    <div class="filters">
-      <div class="select select-clean">
-        <menuSearchButton
-          :data="categoryList"
-          :selected-items="selectedCateList"
-          label-key="id"
-          value-key="value"
-          title="카테고리"
-          :is-multi="true"
-          @multiple-change="cateApplyFilter"
-        ></menuSearchButton>
+    <div class="lineage">
+      <div class="filters">
+        <div class="select select-clean">
+          <menuSearchButton
+            :data="categoryList"
+            :selected-items="selectedCateList"
+            label-key="id"
+            value-key="value"
+            title="카테고리"
+            :is-multi="true"
+            @multiple-change="cateApplyFilter"
+          ></menuSearchButton>
+        </div>
+        <div class="select select-clean">
+          <menuSearchButton
+            :data="ownerList"
+            :selected-items="selectedOwnerList"
+            label-key="id"
+            value-key="value"
+            title="소유자"
+            :is-multi="true"
+            @multiple-change="ownerApplyFilter"
+          ></menuSearchButton>
+        </div>
+        <div class="select select-clean">
+          <menuSearchButton
+            :data="tagList"
+            :selected-items="selectedTagList"
+            label-key="id"
+            value-key="value"
+            title="태그"
+            :is-multi="true"
+            @multiple-change="tagApplyFilter"
+          ></menuSearchButton>
+        </div>
+        <div class="select select-clean">
+          <menuSearchButton
+            :data="serviceList"
+            :selected-items="selectedSerivceList"
+            label-key="id"
+            value-key="value"
+            title="서비스"
+            :is-multi="true"
+            @multiple-change="serviceApplyFilter"
+          ></menuSearchButton>
+        </div>
+        <button
+          class="button button-error-lighter button-sm"
+          type="button"
+          @click="reset"
+        >
+          <svg-icon class="button-icon" name="reset"></svg-icon>
+          <span class="button-title">초기화</span>
+        </button>
       </div>
-      <div class="select select-clean">
-        <menuSearchButton
-          :data="ownerList"
-          :selected-items="selectedOwnerList"
-          label-key="id"
-          value-key="value"
-          title="소유자"
-          :is-multi="true"
-          @multiple-change="ownerApplyFilter"
-        ></menuSearchButton>
+      <Preview
+        :preview-data="previewData"
+        @change="getPreviewOn"
+        :is-show-preview="previewOn"
+      ></Preview>
+      <LineageGraph
+        ref="lineageRef"
+        :lineageData="lineageData"
+        @change="modelChoose"
+      ></LineageGraph>
+      <div class="lineage-control">
+        <button
+          class="button button-lg button-neutral-stroke lineage-control-zoom-in"
+          type="button"
+          @click="handleZoomIn"
+        >
+          <span class="hidden-text">확대</span>
+          <svg-icon class="button-icon" name="plus"></svg-icon>
+        </button>
+        <button
+          class="button button-lg button-neutral-stroke lineage-control-zoom-out"
+          type="button"
+          @click="handleZoomOut"
+        >
+          <span class="hidden-text">축소</span>
+          <svg-icon class="button-icon" name="minus"></svg-icon>
+        </button>
+        <button
+          class="button button-lg button-neutral-stroke mt-2"
+          type="button"
+          @click="resetView"
+        >
+          <span class="hidden-text">원좌표</span>
+          <svg-icon class="button-icon" name="target-lock"></svg-icon>
+        </button>
       </div>
-      <div class="select select-clean">
-        <menuSearchButton
-          :data="tagList"
-          :selected-items="selectedTagList"
-          label-key="id"
-          value-key="value"
-          title="태그"
-          :is-multi="true"
-          @multiple-change="tagApplyFilter"
-        ></menuSearchButton>
-      </div>
-      <div class="select select-clean">
-        <menuSearchButton
-          :data="serviceList"
-          :selected-items="selectedSerivceList"
-          label-key="id"
-          value-key="value"
-          title="서비스"
-          :is-multi="true"
-          @multiple-change="serviceApplyFilter"
-        ></menuSearchButton>
-      </div>
-      <button
-        class="button button-error-lighter button-sm"
-        type="button"
-        @click="reset"
-      >
-        <svg-icon class="button-icon" name="reset"></svg-icon>
-        <span class="button-title">초기화</span>
-      </button>
     </div>
-    <Preview
-      :preview-data="previewData"
-      @change="getPreviewOn"
-      :is-show-preview="previewOn"
-    ></Preview>
-    <LineageGraph
-      ref="lineageRef"
-      :lineageData="lineageData"
-      @change="modelChoose"
-    ></LineageGraph>
-    <div class="lineage-control">
-      <button
-        class="button button-lg button-neutral-stroke lineage-control-zoom-in"
-        type="button"
-        @click="handleZoomIn"
-      >
-        <span class="hidden-text">확대</span>
-        <svg-icon class="button-icon" name="plus"></svg-icon>
-      </button>
-      <button
-        class="button button-lg button-neutral-stroke lineage-control-zoom-out"
-        type="button"
-        @click="handleZoomOut"
-      >
-        <span class="hidden-text">축소</span>
-        <svg-icon class="button-icon" name="minus"></svg-icon>
-      </button>
-      <button
-        class="button button-lg button-neutral-stroke mt-2"
-        type="button"
-        @click="resetView"
-      >
-        <span class="hidden-text">원좌표</span>
-        <svg-icon class="button-icon" name="target-lock"></svg-icon>
-      </button>
-    </div>
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -109,7 +109,7 @@ const {
   categoryList,
   ownerList,
   tagList,
-  serviceList,
+  serviceList
 } = storeToRefs(lineageStore);
 const {
   getLineageData,
@@ -117,7 +117,7 @@ const {
   getCateList,
   getOwnerList,
   getTagList,
-  getServiceList,
+  getServiceList
 } = lineageStore;
 
 onBeforeMount(async () => {
