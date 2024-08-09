@@ -2,14 +2,21 @@ import { ofetch } from "ofetch";
 import { defineNuxtPlugin, useRuntimeConfig } from "nuxt/app";
 
 export default defineNuxtPlugin((nuxtApp: any) => {
-  const api = ofetch.create({
+  // NOTY : api 호출하는 코드에서 'showLoader' options 을 추가할 경우
+  // FetchContext type 이 아니라고 typescript 오류라고 판단하기 때문에
+  // 아래처럼 한번 더 wrap 한다.
+  const api = (request: string, options?: any) => {
+    return _api(request, options);
+  };
+
+  const _api = ofetch.create({
     async onRequest(context) {
       const { options } = context;
 
       options.baseURL = useRuntimeConfig().public.baseUrl;
       options.credentials = "include";
 
-      const showLoader = (options as object).showLoader ?? true;
+      const showLoader = (options as any).showLoader ?? true;
       if (showLoader) {
         nuxtApp.$loading.start();
       }
@@ -18,7 +25,7 @@ export default defineNuxtPlugin((nuxtApp: any) => {
       const { response, options } = context;
       const data = response._data;
 
-      const showLoader = (options as object).showLoader ?? true;
+      const showLoader = (options as any).showLoader ?? true;
       if (showLoader) {
         nuxtApp.$loading.stop();
       }

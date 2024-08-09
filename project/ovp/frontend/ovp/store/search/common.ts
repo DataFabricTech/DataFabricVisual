@@ -139,7 +139,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
   // METHODS
   const getSearchListAPI = async () => {
-    const { data } = await $api(`/api/search/list?${getSearchListQuery()}`);
+    const { data } = await $api(`/api/search/list?${getSearchListQuery()}`, {
+      showLoader: false,
+    });
     return data;
   };
   /**
