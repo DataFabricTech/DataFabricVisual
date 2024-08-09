@@ -18,6 +18,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const categoryAddDesc = ref<string>("");
   const showAddNameNoti = ref<boolean>(false);
   const showAddDescNoti = ref<boolean>(false);
+  const selectedModelList = ref([]);
 
   const previewData: Ref<any> = ref({
     modelInfo: {
@@ -148,6 +149,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     categoryAddDesc,
     showAddNameNoti,
     showAddDescNoti,
+    selectedModelList,
     resetAddModalStatus,
     getCategories,
     addModelList,

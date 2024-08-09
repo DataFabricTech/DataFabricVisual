@@ -27,7 +27,6 @@
         :show-close-all-btn="true"
         :use-draggable="true"
         mode="view"
-        :dropValidator="dropValidator"
         @onItemSelected="onNodeClicked"
       />
     </template>
@@ -46,7 +45,7 @@ import { ref } from "vue";
 const categoryStore = useGovernCategoryStore();
 
 const { $vfm } = useNuxtApp();
-const { categories } = storeToRefs(categoryStore);
+const { categories, selectedModelList } = storeToRefs(categoryStore);
 
 const props = defineProps({
   modalId: {
