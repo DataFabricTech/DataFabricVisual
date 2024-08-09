@@ -23,7 +23,7 @@
           </label>
         </div>
 
-        <img :src="props.dataObj.serviceIcon" />
+        <div class="type-img type-img-minio" :src="props.dataObj.serviceIcon" />
         <div class="breadcrumb">
           <ul class="breadcrumb-list">
             <li

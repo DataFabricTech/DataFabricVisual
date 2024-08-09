@@ -75,10 +75,10 @@
           </div>
         </div>
       </div>
-      <div class="work-page" >
+      <div class="work-page">
         <div class="l-top-bar">
           <div class="h-group gap-2">
-            <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+            <div class="type-img type-img-minio"></div>
             <h4 class="service-title">서비스A</h4>
           </div>
           <button class="button button-error-lighter">삭제</button>
