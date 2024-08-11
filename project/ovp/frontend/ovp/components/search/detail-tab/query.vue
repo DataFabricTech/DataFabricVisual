@@ -1,12 +1,18 @@
 <template>
   <div class="data-detail">
-    <div class="query" v-for="query in 2" :key="query">
-      <div class="query-date">2024-06-07 00:00:00</div>
-      <div class="code-box"></div>
+    <div class="query" v-for="(query, index) in queryList" :key="index">
+      <div class="query-date">{{ query.queryDate }}</div>
+      <div class="code-box">{{ query.query }}</div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useDataModelDetailStore } from "@/store/search/detail/index";
+
+const dataModelDetailStore = useDataModelDetailStore();
+
+const { queryList } = storeToRefs(dataModelDetailStore);
+</script>
 
 <style lang="scss" scoped></style>

@@ -58,7 +58,8 @@ const transformData = (
     data: {
       id: node.id,
       label: node.name,
-      path: node.fqn,
+      path: node.path,
+      fqn: node.fqn,
     },
   }));
 

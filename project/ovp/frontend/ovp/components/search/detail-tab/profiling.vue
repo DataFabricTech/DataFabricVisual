@@ -23,28 +23,28 @@
         <agGrid
           class="ag-theme-alpine ag-theme-quartz"
           :columnDefs="COLUMN_DEFS"
-          :rowData="rowData"
+          :rowData="profileList"
           rowId="id"
           :column-width-list="[100, 100, 100, 100, 100, 100]"
           :setColumnFit="true"
           :useColumnResize="true"
           :quickFilterText="keyword"
           :column-render="{
-            null: {
+            nullCount: {
               type: 'html',
               fn: (val: any) => {
                 return `
     <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
               },
             },
-            unique: {
+            uniqueCount: {
               type: 'html',
               fn: (val: any) => {
                 return `
     <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
               },
             },
-            distinct: {
+            distinctCount: {
               type: 'html',
               fn: (val: any) => {
                 return `
@@ -60,8 +60,14 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import agGrid from "@extends/grid/Grid.vue";
 import type { ColDef } from "ag-grid-community";
+import { useDataModelDetailStore } from "@/store/search/detail/index";
+
+const dataModelDetailStore = useDataModelDetailStore();
+
+const { profileList } = storeToRefs(dataModelDetailStore);
 
 const keyword = ref("");
 const clearInput = (): void => {
@@ -70,126 +76,126 @@ const clearInput = (): void => {
 
 const COLUMN_DEFS: ColDef[] = [
   { headerName: "NAME", field: "name", sortable: true },
-  { headerName: "DATA TYPE", field: "data_type", sortable: true },
-  { headerName: "NULL %", field: "null", sortable: true },
-  { headerName: "UNIQUE %", field: "unique", sortable: true },
-  { headerName: "DISTINCT %", field: "distinct", sortable: true },
-  { headerName: "VALUE COUNT", field: "value_count", sortable: true },
+  { headerName: "DATA TYPE", field: "dateTypeDisplay", sortable: true },
+  { headerName: "NULL %", field: "nullCount", sortable: true },
+  { headerName: "UNIQUE %", field: "uniqueCount", sortable: true },
+  { headerName: "DISTINCT %", field: "distinctCount", sortable: true },
+  { headerName: "VALUE COUNT", field: "valueCount", sortable: true },
 ];
 
-const rowData = ref([
-  {
-    name: "요일번호",
-    data_type: "integer",
-    null: 30,
-    unique: 35000,
-    distinct: 100,
-    value_count: 100,
-  },
-  {
-    name: "연월",
-    data_type: "integer",
-    null: 20,
-    unique: 35,
-    distinct: 66,
-    value_count: 100,
-  },
-  {
-    name: "역번호",
-    data_type: "integer",
-    null: 80,
-    unique: 87,
-    distinct: 45,
-    value_count: 100,
-  },
-  {
-    name: "역명",
-    data_type: "integer",
-    null: 100,
-    unique: 23,
-    distinct: 9,
-    value_count: 100,
-  },
-  {
-    name: "구분",
-    data_type: "integer",
-    null: 50,
-    unique: 76,
-    distinct: 45,
-    value_count: 100,
-  },
-  {
-    name: "선불카드_어른",
-    data_type: "real",
-    null: 60,
-    unique: 33,
-    distinct: 12,
-    value_count: 54,
-  },
-  {
-    name: "선불카드_청소년",
-    data_type: "real",
-    null: 37,
-    unique: 78,
-    distinct: 100,
-    value_count: 100,
-  },
-  {
-    name: "요일번호",
-    data_type: "integer",
-    null: 30,
-    unique: 35000,
-    distinct: 100,
-    value_count: 100,
-  },
-  {
-    name: "연월",
-    data_type: "integer",
-    null: 20,
-    unique: 35,
-    distinct: 66,
-    value_count: 100,
-  },
-  {
-    name: "역번호",
-    data_type: "integer",
-    null: 80,
-    unique: 87,
-    distinct: 45,
-    value_count: 100,
-  },
-  {
-    name: "역명",
-    data_type: "integer",
-    null: 100,
-    unique: 23,
-    distinct: 9,
-    value_count: 100,
-  },
-  {
-    name: "구분",
-    data_type: "integer",
-    null: 50,
-    unique: 76,
-    distinct: 45,
-    value_count: 100,
-  },
-  {
-    name: "선불카드_어른",
-    data_type: "real",
-    null: 60,
-    unique: 33,
-    distinct: 12,
-    value_count: 54,
-  },
-  {
-    name: "선불카드_청소년",
-    data_type: "real",
-    null: 37,
-    unique: 78,
-    distinct: 100,
-    value_count: 100,
-  },
-]);
+// const rowData = ref([
+//   {
+//     name: "요일번호",
+//     dateTypeDisplay: "integer",
+//     nullCount: 30,
+//     uniqueCount: 35000,
+//     distinctCount: 100,
+//     valueCount: 100,
+//   },
+//   {
+//     name: "연월",
+//     dateTypeDisplay: "integer",
+//     nullCount: 20,
+//     uniqueCount: 35,
+//     distinctCount: 66,
+//     valueCount: 100,
+//   },
+//   {
+//     name: "역번호",
+//     dateTypeDisplay: "integer",
+//     nullCount: 80,
+//     uniqueCount: 87,
+//     distinctCount: 45,
+//     valueCount: 100,
+//   },
+//   {
+//     name: "역명",
+//     dateTypeDisplay: "integer",
+//     nullCount: 100,
+//     uniqueCount: 23,
+//     distinctCount: 9,
+//     valueCount: 100,
+//   },
+//   {
+//     name: "구분",
+//     dateTypeDisplay: "integer",
+//     nullCount: 50,
+//     uniqueCount: 76,
+//     distinctCount: 45,
+//     valueCount: 100,
+//   },
+//   {
+//     name: "선불카드_어른",
+//     dateTypeDisplay: "real",
+//     nullCount: 60,
+//     uniqueCount: 33,
+//     distinctCount: 12,
+//     valueCount: 54,
+//   },
+//   {
+//     name: "선불카드_청소년",
+//     dateTypeDisplay: "real",
+//     nullCount: 37,
+//     uniqueCount: 78,
+//     distinctCount: 100,
+//     valueCount: 100,
+//   },
+//   {
+//     name: "요일번호",
+//     dateTypeDisplay: "integer",
+//     nullCount: 30,
+//     uniqueCount: 35000,
+//     distinctCount: 100,
+//     valueCount: 100,
+//   },
+//   {
+//     name: "연월",
+//     dateTypeDisplay: "integer",
+//     nullCount: 20,
+//     uniqueCount: 35,
+//     distinctCount: 66,
+//     valueCount: 100,
+//   },
+//   {
+//     name: "역번호",
+//     dateTypeDisplay: "integer",
+//     nullCount: 80,
+//     uniqueCount: 87,
+//     distinctCount: 45,
+//     valueCount: 100,
+//   },
+//   {
+//     name: "역명",
+//     dateTypeDisplay: "integer",
+//     nullCount: 100,
+//     uniqueCount: 23,
+//     distinctCount: 9,
+//     valueCount: 100,
+//   },
+//   {
+//     name: "구분",
+//     dateTypeDisplay: "integer",
+//     nullCount: 50,
+//     uniqueCount: 76,
+//     distinctCount: 45,
+//     valueCount: 100,
+//   },
+//   {
+//     name: "선불카드_어른",
+//     dateTypeDisplay: "real",
+//     nullCount: 60,
+//     uniqueCount: 33,
+//     distinctCount: 12,
+//     valueCount: 54,
+//   },
+//   {
+//     name: "선불카드_청소년",
+//     dateTypeDisplay: "real",
+//     nullCount: 37,
+//     uniqueCount: 78,
+//     distinctCount: 100,
+//     valueCount: 100,
+//   },
+// ]);
 </script>
 <style lang="scss" scoped></style>
