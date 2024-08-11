@@ -124,6 +124,11 @@ export function TreeComposition(props: TreeProps): TreeComposition {
     (newItems) => {
       treeItems.value = newItems;
       openAll();
+
+      // 리스트 변경 시 checked 항목 추가
+      if (props.isCheckable) {
+        updateCheckedStatus(treeItems.value, props.checkedIds || []);
+      }
     },
     { immediate: true } // Optionally update immediately with the initial value
   );

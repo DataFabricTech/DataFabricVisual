@@ -108,9 +108,10 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
+import type { PreviewData } from "~/type/common";
 
 interface Props {
-  previewData: any;
+  previewData: PreviewData;
   isShowPreview: boolean;
 }
 
