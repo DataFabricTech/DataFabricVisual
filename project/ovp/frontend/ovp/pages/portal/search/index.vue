@@ -35,12 +35,6 @@
           />
           <!-- NOTE "scrollTrigger" -> useIntersectionObserver 가 return 하는 변수병과 동일해야함. -->
           <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
-          <Loading
-            id="loader"
-            :use-loader-overlay="true"
-            class="loader-lg is-loader-inner"
-            style="display: none"
-          ></Loading>
         </div>
         <div
           class="data-list"
@@ -69,7 +63,6 @@
 import { storeToRefs } from "pinia";
 import { useSearchCommonStore } from "@/store/search/common";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
-import Loading from "@base/loading/Loading.vue";
 import Tab from "@extends/tab/Tab.vue";
 
 import TopBar from "./top-bar.vue";
