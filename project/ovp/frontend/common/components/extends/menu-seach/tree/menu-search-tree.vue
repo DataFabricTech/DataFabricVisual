@@ -35,10 +35,10 @@
 <script setup lang="ts">
 import { vOnClickOutside } from "@vueuse/components";
 
-import { TreeViewItem } from "~/components/extends/tree/TreeProps";
-import MenuSearchTreeContents from "../tree/contents/menu-search-tree-contents.vue";
-import { MenuSearchTreeProps } from "~/components/extends/menu-seach/tree/MenuSearchTreeProps";
-import { MenuSearchTreeComposition } from "~/components/extends/menu-seach/tree/MenuSearchTreeComposition";
+import { TreeViewItem } from "@/components/extends/tree/TreeProps";
+import MenuSearchTreeContents from "./contents/menu-search-tree-contents.vue";
+import { MenuSearchTreeProps } from "./MenuSearchTreeProps";
+import { MenuSearchTreeComposition } from "./MenuSearchTreeComposition";
 
 const props = withDefaults(defineProps<MenuSearchTreeProps>(), {
   title: "컴포넌트",

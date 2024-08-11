@@ -2,7 +2,7 @@ import { usePagingStore } from "~/store/common/paging";
 import _ from "lodash";
 
 export const FILTER_KEYS = {
-  CATEGORY: "domains",
+  CATEGORY: "category",
   OWNER: "owner.displayName.keyword",
   TAGS: "tags.tagFQN",
   SERVICE: "service.displayName.keyword",
@@ -15,7 +15,7 @@ export const FILTER_KEYS = {
 
 export interface Filter {
   text: string;
-  data: any[];
+  data: any[] | object;
 }
 
 export interface Filters {
@@ -29,7 +29,7 @@ export interface Filters {
   [FILTER_KEYS.COLUMNS]: Filter;
   [FILTER_KEYS.TABLE_TYPE]: Filter;
 
-  [key: string]: { text: string; data: any[] }; // 인덱스 시그니처 추가
+  [key: string]: Filter; // 인덱스 시그니처 추가
 }
 
 export interface SelectedFilters {
@@ -67,7 +67,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
     return {
-      [FILTER_KEYS.CATEGORY]: { text: "카테고리", data: [] },
+      [FILTER_KEYS.CATEGORY]: { text: "카테고리", data: {} },
       [FILTER_KEYS.OWNER]: { text: "소유자", data: [] },
       [FILTER_KEYS.TAGS]: { text: "태그", data: [] },
       [FILTER_KEYS.SERVICE]: { text: "서비스", data: [] },
@@ -232,17 +232,27 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     return setBoolObj.value;
   };
 
-  const getQueryFilter = () => {
+  const getCtgIds = () => {
+    return !_.has(selectedFilters.value, FILTER_KEYS.CATEGORY)
+      ? []
+      : selectedFilters.value[FILTER_KEYS.CATEGORY].map(
+          (filter: any) => `ovp_category.${filter.id}`,
+        );
+  };
+
+  const getQueryFilter = (): QueryFilter => {
     const queryFilter: QueryFilter = {
       query: { bool: { must: [] } },
     };
-    let setBoolObj: object = {};
 
     for (const key in selectedFilters.value) {
-      const value = selectedFilters.value[key];
-      setBoolObj = setQueryFilterByDepth(key, value);
-      queryFilter.query.bool.must.push(setBoolObj);
+      const value =
+        key === "category" ? getCtgIds() : selectedFilters.value[key];
+      const keyValue = key === "category" ? "tags.tagFQN" : key;
+
+      queryFilter.query.bool.must.push(setQueryFilterByDepth(keyValue, value));
     }
+
     return queryFilter;
   };
 

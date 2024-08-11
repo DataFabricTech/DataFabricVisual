@@ -3,9 +3,7 @@ package com.mobigen.ovp.category;
 import com.mobigen.ovp.category.dto.CategoryDTO;
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
-import com.mobigen.ovp.common.ModelConvertUtil;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
-import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +29,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-    private final SearchClient searchClient;
-    private final ModelConvertUtil modelConvertUtil;
     private final SearchService searchService;
     private final ClassificationClient classificationClient;
 

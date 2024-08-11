@@ -51,11 +51,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { vOnClickOutside } from "@vueuse/components";
-import TreeVue from "~/components/extends/tree/Tree.vue";
-import { MenuSearchTreeContentsProps } from "~/components/extends/menu-seach/tree/contents/MenuSearchTreeContentsProps";
-import { TreeViewItem } from "~/components/extends/tree/TreeProps";
-import { MenuSearchTreeContentsComposition } from "~/components/extends/menu-seach/tree/contents/MenuSearchTreeContentsComposition";
+import TreeVue from "../../../tree/Tree.vue";
+import { TreeViewItem } from "@/components/extends/tree/TreeProps";
+import { MenuSearchTreeContentsProps } from "./MenuSearchTreeContentsProps";
+import { MenuSearchTreeContentsComposition } from "./MenuSearchTreeContentsComposition";
 
 const props = withDefaults(defineProps<MenuSearchTreeContentsProps>(), {
   data: () => [],
