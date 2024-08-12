@@ -42,6 +42,12 @@
     }
   }
 
+  h3.editable-group-title {
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
   .editable-group-desc {
     @include ellipsis;
 
@@ -123,6 +129,7 @@
   &:hover {
     border-right: none;
     border-left: none;
+    border-top: 2px solid $secondary-500;
     border-bottom: 1px solid $neutral-200;
     box-shadow: none;
   }

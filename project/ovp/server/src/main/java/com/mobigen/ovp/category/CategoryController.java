@@ -56,9 +56,8 @@ public class CategoryController {
 
     @ResponseJsonResult
     @GetMapping("/models")
-    public Object getModelByCategoryId(@RequestParam MultiValueMap<String, String> params) throws Exception {
-        String categoryId = params.getFirst("categoryId");
-        return categoryService.getModelByCategoryId(categoryId, params);
+    public Object getModelList(@RequestParam MultiValueMap<String, String> params) throws Exception {
+        return categoryService.getModelList(params.getFirst("tagId"), params);
     }
 
 }

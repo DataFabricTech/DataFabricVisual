@@ -60,4 +60,13 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, UUID> 
     @Transactional
     @Query("DELETE FROM CategoryEntity c WHERE c.id IN :ids")
     void deleteAllByIds(@Param("ids") List<UUID> ids);
+
+    /**
+     * 형제노드 목록 조회
+     * @param parentId
+     * @param id
+     * @return
+     */
+    @Query("SELECT c FROM CategoryEntity c WHERE c.parentId = :parentId AND c.id <> :id AND c.name = :name")
+    List<CategoryEntity> findByParentIdAndIdNotAndName(@Param("parentId") UUID parentId, @Param("id") UUID id, @Param("name") String name);
 }

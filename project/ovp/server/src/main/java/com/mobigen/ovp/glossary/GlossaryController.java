@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -105,6 +106,18 @@ public class GlossaryController {
     }
 
     /**
+     * 용어 변경 > 데이터 모델 삭제
+     * @param id
+     * @param body
+     * @return
+     */
+    @ResponseJsonResult
+    @PutMapping("/terms/{id}/assets/remove")
+    public Object updateGlossaryTerm(@PathVariable UUID id, @RequestBody List<Object> body) {
+        return glossaryService.updateGlossaryTerm(id, body);
+    }
+
+    /**
      * 용어 삭제
      * @param id
      */
@@ -125,4 +138,37 @@ public class GlossaryController {
         return glossaryService.getGlossaryActivities(entityLink);
     }
 
+    /**
+     * 태그 리스트 호출
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/all-tags")
+    public Object getAllTags() throws Exception {
+        return glossaryService.getAllTags();
+    }
+
+    /**
+     * 데이터 모델 리스트
+     * @param q
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/data-models")
+    public Object getDataModels(@RequestParam String q) throws Exception {
+        return glossaryService.getDataModels(q);
+    }
+
+    /**
+     * 데이터 모델 상세
+     * @param fqn
+     * @return
+     */
+    @ResponseJsonResult
+    @GetMapping("/data-model")
+    public Object getDataModel(@RequestParam String fqn) {
+        return glossaryService.getDataModel(fqn);
+    }
 }

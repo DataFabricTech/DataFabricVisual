@@ -1,6 +1,7 @@
 package com.mobigen.ovp.user;
 
 import com.mobigen.ovp.auth.AuthService;
+import com.mobigen.ovp.user.dto.UserInfoDTO;
 import com.mobigen.ovp.user.entity.UserEntity;
 import com.mobigen.ovp.user.entity.UserRole;
 import com.mobigen.ovp.user.repository.UserRepository;
@@ -47,7 +48,17 @@ public class UserService {
      * @throws Exception
      */
     public Object getUserInfo() throws Exception {
-        return userClient.getUserInfo();
+        Map<String, Object> result =  userClient.getUserInfo();
+
+        // NOTE: isAdmin이라는 Boolean 값이 제대로 셋팅되지 않는 문제가 있음. -> 결과를 Map 형식으로 받아서 강제로 빌드
+        return UserInfoDTO.builder()
+                .id((String)result.get("id"))
+                .email((String)result.get("email"))
+                .name((String)result.get("name"))
+                .displayName((String)result.get("displayName"))
+                .fullyQualifiedName((String)result.get("fullyQualifiedName"))
+                .isAdmin((Boolean)result.get("isAdmin"))
+                .build();
     }
 
     /**

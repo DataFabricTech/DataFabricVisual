@@ -1,11 +1,13 @@
 <template>
   <!--  TODO: [개발] 권한 없는 메뉴 진입시 -->
-  <div class="section-contents" style="display:none;">
+  <div class="section-contents" style="display: none">
     <div class="no-result no-result-lg">
       <svg-icon class="svg-icon" name="denied"></svg-icon>
       <div class="no-result-group">
         <span class="no-result-title">접근할 수 없습니다.</span>
-        <span class="no-result-desc">권한을 얻으려면 관리자에게 문의하세요.</span>
+        <span class="no-result-desc"
+          >권한을 얻으려면 관리자에게 문의하세요.</span
+        >
       </div>
     </div>
   </div>
@@ -24,7 +26,7 @@
           <div class="resource-box">
             <div class="resource-box-function">
               <div class="resource-box-model">
-                <img/>
+                <img />
                 <div class="breadcrumb">
                   <ul class="breadcrumb-list">
                     <li class="breadcrumb-item">
@@ -42,8 +44,16 @@
             </div>
             <div class="resource-box-initial-name">최초 데이터 이름</div>
             <div class="editable-group">
-              <a title="상세 보기" href="" class="editable-group-title">세종특별자치시 상하수도요금표</a>
-              <span class="editable-group-desc">한국교통안전공단에서 교통카드를 한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를</span>
+              <a title="상세 보기" href="" class="editable-group-title"
+                >세종특별자치시 상하수도요금표</a
+              >
+              <span class="editable-group-desc"
+                >한국교통안전공단에서 교통카드를 한국교통안전공단에서
+                교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서
+                교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서
+                교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서
+                교통카드를</span
+              >
             </div>
             <div class="resource-box-info">
               <dl class="resource-box-list">
@@ -70,7 +80,7 @@
           <div class="resource-box">
             <div class="resource-box-function">
               <div class="resource-box-model">
-                <img/>
+                <img />
                 <div class="breadcrumb">
                   <ul class="breadcrumb-list">
                     <li class="breadcrumb-item">
@@ -88,8 +98,16 @@
             </div>
             <div class="resource-box-initial-name">최초 데이터 이름</div>
             <div class="editable-group">
-              <a title="상세 보기" href="" class="editable-group-title">세종특별자치시 상하수도요금표</a>
-              <span class="editable-group-desc">한국교통안전공단에서 교통카드를 한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를</span>
+              <a title="상세 보기" href="" class="editable-group-title"
+                >세종특별자치시 상하수도요금표</a
+              >
+              <span class="editable-group-desc"
+                >한국교통안전공단에서 교통카드를 한국교통안전공단에서
+                교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서
+                교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서
+                교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서
+                교통카드를</span
+              >
             </div>
             <div class="resource-box-info">
               <dl class="resource-box-list">
@@ -119,7 +137,7 @@
           <div class="resource-box">
             <div class="resource-box-function">
               <div class="resource-box-model">
-                <img/>
+                <img />
                 <div class="breadcrumb">
                   <ul class="breadcrumb-list">
                     <li class="breadcrumb-item">
@@ -137,8 +155,16 @@
             </div>
             <div class="resource-box-initial-name">최초 데이터 이름</div>
             <div class="editable-group">
-              <a title="상세 보기" href="" class="editable-group-title">세종특별자치시 상하수도요금표</a>
-              <span class="editable-group-desc">한국교통안전공단에서 교통카드를 한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서 교통카드를</span>
+              <a title="상세 보기" href="" class="editable-group-title"
+                >세종특별자치시 상하수도요금표</a
+              >
+              <span class="editable-group-desc"
+                >한국교통안전공단에서 교통카드를 한국교통안전공단에서
+                교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서
+                교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서
+                교통카드를한국교통안전공단에서 교통카드를한국교통안전공단에서
+                교통카드를</span
+              >
             </div>
             <div class="resource-box-info">
               <dl class="resource-box-list">
@@ -169,20 +195,14 @@
         </div>
       </div>
     </div>
-
-
   </div>
 </template>
 
 <script lang="ts">
-
 export default {
   name: "main",
-  components: { }
+  components: {},
 };
-
-
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

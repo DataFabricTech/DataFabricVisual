@@ -54,7 +54,7 @@ import $constants from "~/utils/constant";
 
 const searchCommonStore = useSearchCommonStore();
 const { setSortFilter } = searchCommonStore;
-const { viewType, searchResultLength, sortKey, sortKeyOpt } =
+const { viewType, searchResultLength, sortKey, sortKeyOpt, currentTab } =
   storeToRefs(searchCommonStore);
 
 const options: { [key: string]: string | number }[] =

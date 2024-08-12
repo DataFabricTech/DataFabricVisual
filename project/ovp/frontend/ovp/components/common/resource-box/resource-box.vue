@@ -13,6 +13,7 @@
           <input
             type="checkbox"
             :id="`resource_box_list_${dataObj.id}`"
+            :checked="isChecked"
             class="checkbox-input"
             @change="checked($event, dataObj.id)"
           />
@@ -196,7 +197,7 @@
 
 <script setup lang="ts">
 import { vOnClickOutside } from "@vueuse/components";
-import { defineEmits, ref } from "vue";
+import { defineEmits, ref, defineProps } from "vue";
 
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
@@ -215,6 +216,10 @@ const props = withDefaults(defineProps<ResourceBoxProps>(), {
   ownerKey: "owner",
   categoryKey: "category",
   useListCheckbox: false,
+});
+
+const isChecked = computed(() => {
+  return props.selectedModelList.includes(props.dataObj.id);
 });
 
 const isEditMode = ref<Record<string, boolean>>({

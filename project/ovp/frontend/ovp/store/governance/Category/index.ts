@@ -1,15 +1,26 @@
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 import { usePagingStore } from "~/store/common/paging";
 import _ from "lodash";
+import { ref } from "vue";
 
 export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const { $api } = useNuxtApp();
   const pagingStore = usePagingStore();
   const { from, size } = storeToRefs(pagingStore);
 
-  const categories = ref<TreeViewItem>();
+  const categories: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
+  const isCategoriesNoData = ref(false);
   const modelList: Ref<any[]> = ref([]);
+  const modelIdList = ref([]);
+  const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
   let selectedNode: any = null;
+  const previewData: Ref<any> = ref({
+    modelInfo: {
+      model: {
+        name: "",
+      },
+    },
+  });
 
   // METHODS
   const getCategories = async () => {
@@ -20,25 +31,29 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
      * root node 는 화면에 표시하지 않기 때문에 rootNode.children 만 categories 에 저장.
      */
     categories.value = data.children;
+    isCategoriesNoData.value = categories.value.length === 0;
   };
-  const getModelListQuery = (id: string) => {
+  const getModelListQuery = (tagId: string, value?: string) => {
     // TODO : [개발] 검색어 조건 여기 추가.
     const params: any = {
       // eslint-disable-next-line id-length
-      q: "",
+      q: value || "",
       from: from.value,
       size: size.value,
-      categoryId: id,
+      tagId: tagId,
     };
     return new URLSearchParams(params);
   };
 
-  const getModelByCategoryIdAPI = async (node: TreeViewItem) => {
-    if (_.isNull(node) || _.isEmpty(node.id)) {
+  const getModelByCategoryIdAPI = async (
+    node: TreeViewItem,
+    value?: string,
+  ) => {
+    if (_.isNull(node) || _.isEmpty(node.tagId)) {
       return;
     }
     const { data } = await $api(
-      `/api/category/models?${getModelListQuery(node.id)}`,
+      `/api/category/models?${getModelListQuery(node.tagId, value)}`,
     );
     return data;
   };
@@ -46,12 +61,13 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     const data = await getModelByCategoryIdAPI(selectedNode);
     modelList.value = modelList.value.concat(data);
   };
-  const getModelList = async () => {
+
+  const getModelList = async (value?: string) => {
     if (_.isNull(selectedNode)) {
       return;
     }
-    const data = await getModelByCategoryIdAPI(selectedNode);
-    modelList.value = data;
+    const data = await getModelByCategoryIdAPI(selectedNode, value);
+    modelList.value = data === null ? [] : data;
   };
   const setSelectedNode = (node: any) => {
     selectedNode = node;
@@ -64,11 +80,11 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     insertOrEditAPI("PATCH", node);
   };
   const insertOrEditAPI = (method: string, node: TreeViewItem) => {
-    // TODO : [개발] edit의 경우에도 id, parentId, name, desc, order 값을 모두 backend 로 보내야 함. 없는 항목을 'null'로 업데이트 됨.
     $api("/api/category", {
       method: method,
       body: node,
-    }).then(() => {
+    }).then((res: any) => {
+      console.log("insertOrEditAPI의 res", res);
       getCategories();
     });
   };
@@ -82,21 +98,35 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     });
     return data;
   };
-  const deleteCategory = async (nodeId: string) => {
-    const { data } = await $api(`/api/category`, {
+  const deleteCategory = (nodeId: string) => {
+    return $api(`/api/category`, {
       method: "delete",
       body: {
         id: nodeId,
       },
     });
+  };
 
-    alert("삭제 되었습니다.");
-    getCategories();
+  const setModelIdList = () => {
+    modelIdList.value = [];
+    for (const element of modelList.value) {
+      modelIdList.value.push(element.id);
+    }
+  };
+
+  // preview
+  const getPreviewData = async (fqn: string) => {
+    const data: any = await $api(`/api/search/preview/${fqn}`);
+    previewData.value = data.data;
   };
 
   return {
     categories,
     modelList,
+    isCategoriesNoData,
+    modelIdList,
+    previewData,
+    isBoxSelectedStyle,
     getCategories,
     addModelList,
     getModelList,
@@ -105,5 +135,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     editCategory,
     moveCategory,
     deleteCategory,
+    setModelIdList,
+    getPreviewData,
   };
 });

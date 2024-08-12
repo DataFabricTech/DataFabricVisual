@@ -47,6 +47,13 @@ public class SearchService {
                         if (!filteredBuckets.isEmpty()) {
                             resultMap.put(newKey, filteredBuckets);
                         }
+                    } else if (newKey.equals("tags.tagFQN") && buckets instanceof List) {
+                        List<Map<String, Object>> filteredBuckets = ((List<Map<String, Object>>) buckets).stream()
+                                .filter(bucket -> !((String) bucket.get("key")).contains("ovp_category."))
+                                .collect(Collectors.toList());
+                        if (!filteredBuckets.isEmpty()) {
+                            resultMap.put(newKey, filteredBuckets);
+                        }
                     } else {
                         resultMap.put(newKey, buckets);
                     }
@@ -56,18 +63,33 @@ public class SearchService {
         return resultMap;
     }
 
-    public Object getFilter(MultiValueMap<String, String> params) {
+    public Map<String, Object> getFilter(MultiValueMap<String, String> params) {
+        params.add("q", "{\"query\":{\"bool\":{\"must\":[{\"match\":{\"deleted\":false}}]}}}");
+        params.add("value", ".**");
+
         return convertAggregations(searchClient.getFilter(params));
     }
 
-    public Object getFilters() throws Exception {
-        // filter 조회는 params 가 필요 없기 때문에 공백으로 api 호출
+    public Map<String, Object> getFilters() throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        Map<String, Object> response = searchClient.getSearchList(params);
-        Map<String, Object> result = convertAggregations(response);
 
-        // TODO: category 구현 완료 되면 여기에 추가.
-        return result;
+        List<String> tagArrays = new ArrayList<>();
+        tagArrays.add("owner.displayName.keyword");
+        tagArrays.add("tags.tagFQN");
+        tagArrays.add("service.displayName.keyword");
+        tagArrays.add("serviceType");
+        tagArrays.add("database.displayName.keyword");
+        tagArrays.add("databaseSchema.displayName.keyword");
+        tagArrays.add("columns.name.keyword");
+        tagArrays.add("tableType");
+
+        Map<String, Object> responseMap = new HashMap<>();
+
+        for (String tag : tagArrays) {
+            params.set("field", tag);
+            responseMap.putAll(getFilter(params));
+        }
+        return responseMap;
     }
 
     /**
@@ -86,6 +108,7 @@ public class SearchService {
         List<String> keys = List.of("table", "storage", "model");
         return getSearchList(keys, responseList);
     }
+
     public Map<String, Object> getAllSearchList(MultiValueMap<String, String> params) throws Exception {
         List<Map<String, Object>> responseList = List.of(
                 getAllList(new LinkedMultiValueMap<>(params))
@@ -152,7 +175,7 @@ public class SearchService {
         if (!params.getFirst("index").equals("model")) {
             params.set("size", "0");
         }
-        params.set("index", ModelIndex.all.name());
+        params.set("index", ModelIndex.table.name());
         params.set("query_filter", params.getFirst("trino_query").toString());
         params.remove("trino_query");
 
