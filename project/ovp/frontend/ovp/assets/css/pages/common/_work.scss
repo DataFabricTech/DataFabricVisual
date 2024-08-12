@@ -31,6 +31,22 @@
     height: calc(100% - 49px);
   }
 
+  & > .menu {
+    overflow-y: auto;
+    height: calc(100% - 49px);
+  }
+
+  &-tree {
+    overflow-y: auto;
+    height: calc(100% - 49px);
+    padding-top: $spacing-12;
+    padding-left: $spacing-12;
+
+    .tree-item {
+      padding-right: $spacing-12;
+    }
+  }
+
   .tab-line {
     width: 100%;
     height: 100%;
