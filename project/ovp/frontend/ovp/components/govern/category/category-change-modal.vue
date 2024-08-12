@@ -27,7 +27,7 @@
         :show-close-all-btn="true"
         :use-draggable="true"
         mode="view"
-        @onItemSelected="onNodeClicked"
+        @onItemSelected="onCategoryNodeClick"
       />
     </template>
   </Modal>
@@ -39,8 +39,6 @@ import { useNuxtApp } from "nuxt/app";
 import TreeVue from "@extends/tree/Tree.vue";
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import { storeToRefs } from "pinia";
-import type { TreeViewItem } from "@extends/tree/TreeProps";
-import { ref } from "vue";
 
 const categoryStore = useGovernCategoryStore();
 
@@ -62,35 +60,10 @@ const onConfirm = async () => {
   $vfm.open(props.modalId);
 };
 
-const onNodeClicked = () => {
+// TODO: [API 개발] 모델 리스트 삭제/변경 API 수정
+// 변경하려고 하는 카테고리의 tag 정보를, 내가 선택한 모델 리스트 쿼리에 저장한다.
+const onCategoryNodeClick = () => {
   console.log("onNodeClick");
-};
-
-// TODO: [개발] 임시 추가 - dropValidator 기능 불필요(warning으로 추가해 둠)tree 컴포넌트에서 미사용할 수 있는지 검토요청
-let nodeMoved: Ref<boolean> = ref(false);
-let dropMsg: Ref<any> = ref(null);
-watch(
-  () => nodeMoved.value,
-  (newVal) => {
-    if (newVal) {
-      if (dropMsg.value !== null) {
-        alert(dropMsg.value);
-      }
-    }
-    nodeMoved.value = false;
-    dropMsg.value = null;
-  },
-);
-const dropValidator = async (
-  dropNode: TreeViewItem,
-  targetNode: TreeViewItem,
-): Promise<boolean> => {
-  // 조건 처리 backend 에서 진행
-  dropMsg.value = null;
-  nodeMoved.value = true;
-  // tree lib가 async-await 처리를 지원하지 않기 때문에 여기서는 true 로 던지고,
-  // backend 동작이 끝나면 그때 결과에 따라 watch 항목에서 alert 처리, 목록을 갱신 or 유지 한다
-  return true;
 };
 </script>
 
