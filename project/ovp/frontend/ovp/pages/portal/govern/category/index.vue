@@ -178,7 +178,7 @@
               <Preview
                 :isShowPreview="isShowPreview"
                 :preview-data="previewData"
-                :index="previewIndex"
+                :model-type="previewIndex"
                 @change="getPreviewCloseStatus"
               ></Preview>
             </div>

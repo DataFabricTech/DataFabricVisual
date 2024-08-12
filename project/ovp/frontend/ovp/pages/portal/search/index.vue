@@ -59,7 +59,7 @@
         v-if="viewType === 'listView'"
         :isShowPreview="isShowPreview"
         :preview-data="previewData"
-        :index="previewIndex"
+        :model-type="previewIndex"
         @change="getPreviewCloseStatus"
       ></preview>
     </div>

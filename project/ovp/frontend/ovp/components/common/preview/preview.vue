@@ -119,7 +119,7 @@ const router = useRouter();
 interface Props {
   previewData: PreviewData;
   isShowPreview: boolean;
-  index: string;
+  modelType: string;
 }
 
 const props = defineProps<Props>();
@@ -157,7 +157,7 @@ const gotoDetail = () => {
   router.push({
     path: "/portal/search/detail",
     query: {
-      type: props.index,
+      type: props.modelType,
       id: id,
       fqn: fqn,
     },
