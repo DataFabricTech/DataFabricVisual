@@ -47,7 +47,6 @@ export const useGlossaryStore = defineStore("glossary", () => {
       method: "POST",
       body: body,
     });
-    console.log("creat!");
   }
 
   async function getGlossaries(): Promise<void> {

@@ -5,7 +5,8 @@
     :height="900"
     :width="480"
     :esc-to-close="true"
-    @close="closeModal"
+    :btn-msg="'저장'"
+    @closed="closeModal"
     @cancel="closeModal"
     @confirm="validateForm"
   >
@@ -173,14 +174,13 @@ async function postGlossary(): Promise<void> {
   await getGlossaries();
 }
 
-function deleteTag(tag) {
-  glossaryForm.tags.filter(
-    (item) => JSON.stringify(item) !== JSON.stringify(tag),
+function deleteTag(tag): void {
+  glossaryForm.tags = glossaryForm.tags.filter(
+    (item) => item.tagFQN !== tag.tagFQN,
   );
-  console.log(glossaryForm);
 }
 
-function changeTag(items: MenuSearchItemImpl[]) {
+function changeTag(items: MenuSearchItemImpl[]): void {
   glossaryForm.tags.length = 0;
   const selectedItems = items.map((item: MenuSearchItemImpl) => item.tagFQN);
   const matchTags: Tag[] = tags.filter((tag) =>
