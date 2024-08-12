@@ -10,6 +10,6 @@ public class GlossaryDto {
     private String displayName;
     private String description;
     private Object owner;
-    private List<String> tags;
+    private List<Object> tags;
     private boolean mutuallyExclusive;
 }

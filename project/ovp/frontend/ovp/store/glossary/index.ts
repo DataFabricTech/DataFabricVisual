@@ -42,6 +42,13 @@ export const useGlossaryStore = defineStore("glossary", () => {
   /**
    * Glossary CRUD
    */
+  async function createGlossary(body: object) {
+    await $api(`/api/glossary`, {
+      method: "POST",
+      body: body,
+    });
+  }
+
   async function getGlossaries(): Promise<void> {
     const res = await $api(`/api/glossary/list`);
     const glossariesData: Glossary[] = res.data;
@@ -77,6 +84,13 @@ export const useGlossaryStore = defineStore("glossary", () => {
   /**
    * 용어 Crud
    */
+  async function createTerm(body: object): Promise<void> {
+    await $api(`/api/glossary/terms`, {
+      method: "POST",
+      body: body,
+    });
+  }
+
   async function getTerms(term: string): Promise<void> {
     menuSearchRelatedTermsData.length = 0;
     const res = await $api(`/api/glossary/terms?term=${term}`);
@@ -395,10 +409,12 @@ export const useGlossaryStore = defineStore("glossary", () => {
     editGlossaryMode,
     editTermMode,
 
+    createGlossary,
     getGlossaries,
     editGlossary,
     deleteGlossary,
 
+    createTerm,
     getTerms,
     editTerm,
     deleteTerm,
