@@ -37,7 +37,7 @@
             :show-close-all-btn="true"
             :use-draggable="true"
             :dropValidator="dropValidator"
-            @onItemSelected="onNodeClicked"
+            @onItemSelected="onCategoryNodeClick"
             @addSibling="addSibling"
             @addChild="addChild"
           />
@@ -273,7 +273,8 @@ watch(
 );
 
 // tree
-const onNodeClicked = async (node: TreeViewItem) => {
+const onCategoryNodeClick = async (node: TreeViewItem) => {
+  selectedModelList.value = [];
   isDescEditMode.value = false;
   isTitleEditMode.value = false;
 
@@ -320,7 +321,7 @@ const _deleteCategory = async () => {
     if (res.result === 1) {
       alert("삭제 되었습니다.");
       await getCategories();
-      await onNodeClicked(categories.value[0]);
+      await onCategoryNodeClick(categories.value[0]);
     } else {
       alert("삭제가 실행되지 않았습니다.");
     }
@@ -476,7 +477,7 @@ onMounted(async () => {
   await getCategories();
 
   if (categories.value && categories.value.length > 0) {
-    await onNodeClicked(categories.value[0]);
+    await onCategoryNodeClick(categories.value[0]);
   }
 
   if (loader.value) {
