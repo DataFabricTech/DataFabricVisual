@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
@@ -21,6 +22,7 @@ public class ClassificationTagService {
 
     /**
      * 분류내 태그 삭제
+     *
      * @param id
      */
     public Map<String, Object> deleteClassificationTag(String id) throws Exception {
@@ -30,6 +32,21 @@ public class ClassificationTagService {
         tagParams.add("hardDelete", "true");
 
         return tagClient.deleteTag(id, tagParams);
+    }
+
+    public String getTagInfo(String tagId) {
+        Map<String, Object> tagInfo = tagClient.getTag(tagId);
+        return tagInfo.get("fullyQualifiedName").toString();
+    }
+
+    public String createTagInfo(String categoryId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("classification", "OVP_category");
+        params.put("description", "OVP Category Matched Tag");
+        params.put("displayName", categoryId);
+        params.put("name", categoryId);
+        Map<String, Object> response = (Map<String, Object>) tagClient.createTag(params);
+        return response.get("id").toString();
     }
 
 }

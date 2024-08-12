@@ -49,7 +49,7 @@ public class SearchService {
                         }
                     } else if (newKey.equals("tags.tagFQN") && buckets instanceof List) {
                         List<Map<String, Object>> filteredBuckets = ((List<Map<String, Object>>) buckets).stream()
-                                .filter(bucket -> !((String) bucket.get("key")).contains("ovp_category."))
+                                .filter(bucket -> !((String) bucket.get("key")).contains("OVP_category."))
                                 .collect(Collectors.toList());
                         if (!filteredBuckets.isEmpty()) {
                             resultMap.put(newKey, filteredBuckets);

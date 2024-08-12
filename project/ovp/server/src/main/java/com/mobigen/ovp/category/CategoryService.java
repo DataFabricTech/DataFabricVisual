@@ -3,12 +3,7 @@ package com.mobigen.ovp.category;
 import com.mobigen.ovp.category.dto.CategoryDTO;
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
-import com.mobigen.ovp.classification.ClassificationService;
 import com.mobigen.ovp.classification.ClassificationTagService;
-import com.mobigen.ovp.common.ModelConvertUtil;
-import com.mobigen.ovp.common.openmete_client.ClassificationClient;
-import com.mobigen.ovp.common.openmete_client.SearchClient;
-import com.mobigen.ovp.common.openmete_client.TagClient;
 import com.mobigen.ovp.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,13 +29,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CategoryService {
     private final CategoryRepository categoryRepository;
-    private final SearchClient searchClient;
-    private final ModelConvertUtil modelConvertUtil;
     private final SearchService searchService;
-    private final ClassificationClient classificationClient;
-    private final ClassificationService classificationService;
-    private final TagClient tagClient;
-    private ClassificationTagService classficationTagService;
+    private final ClassificationTagService classificationTagService;
 
     public CategoryDTO getCategories() {
         List<CategoryEntity> categories = categoryRepository.findAll();
@@ -80,7 +70,7 @@ public class CategoryService {
 
     @Transactional
     public Object addCategory(CategoryDTO dto) throws Exception {
-        dto.setTagId(createTagInfo(dto.getId()));
+        dto.setTagId(classificationTagService.createTagInfo(dto.getId()));
         return insertOrUpdate(dto);
     }
 
@@ -117,7 +107,7 @@ public class CategoryService {
         // 삭제 진행
         // step1. openMeta 에서 tag 삭제
         for (UUID tagId : tagIds) {
-            classficationTagService.deleteClassificationTag(tagId.toString());
+            classificationTagService.deleteClassificationTag(tagId.toString());
         }
 
         // step2. db 에서 category 삭제
@@ -282,11 +272,9 @@ public class CategoryService {
      * @throws Exception
      */
     @Transactional
-    public Object getModelByCategoryId(String tagId, MultiValueMap<String, String> params) throws Exception {
-        CategoryEntity categoryEntity = categoryRepository.findById(UUID.fromString(tagId)).get();
-        params.add("query_filter", createQueryFilterByTagName(classificationService.getTagInfo(categoryEntity.getTagId().toString())));
-
-        return getModelListByTagId(categoryEntity.getTagId(), params);
+    public Object getModelList(String tagId, MultiValueMap<String, String> params) throws Exception {
+        params.add("query_filter", createQueryFilterByTagName(classificationTagService.getTagInfo(tagId.toString())));
+        return getModelListByTagId(UUID.fromString(tagId), params);
     }
 
     /**
@@ -304,25 +292,7 @@ public class CategoryService {
         if (params == null) {
             params = new LinkedMultiValueMap<>();
         }
-        params.add("query_filter", createQueryFilterByTagName(classificationService.getTagInfo(tagId.toString())));
+        params.add("query_filter", createQueryFilterByTagName(classificationTagService.getTagInfo(tagId.toString())));
         return (List<Object>) ((Map<String, Object>) (searchService.getAllSearchList(params)).get("data")).get("all");
-    }
-
-    // TODO : classfication 쪽으로 이동 필요함.
-    public String getTagInfo(String tagId) {
-        Map<String, Object> tagInfo = classificationClient.getTag(tagId);
-        return tagInfo.get("fullyQualifiedName").toString();
-    }
-
-    // TODO : classification 쪽으로 이동 필요함.
-    // TODO : classification 명 상수 처리 필요.
-    public String createTagInfo(String categoryId) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("classification", "ovp_category");
-        params.put("description", "OVP Category Matched Tag");
-        params.put("displayName", categoryId);
-        params.put("name", categoryId);
-        Map<String, Object> response = (Map<String, Object>) classificationClient.createTag(params);
-        return response.get("id").toString();
     }
 }

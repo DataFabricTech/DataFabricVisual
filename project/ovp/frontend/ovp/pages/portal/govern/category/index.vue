@@ -408,7 +408,7 @@ const addChild = (newNode: TreeViewItem) => {
 // TODO : [개발] 카테고리 등록 예
 const addNewCategory = (newNode: TreeViewItem) => {
   const addNodeParam: TreeViewItem = {
-    id: "f6a91e15-18c1-4920-ab2b-dd20a68f75bc",
+    id: "06a91e15-18c1-4920-ab2b-dd20a68f75bc",
     parentId: selectedNode.value.id,
     name: "카테고리 01 - 01",
     desc: "카테고리 설명이여요",

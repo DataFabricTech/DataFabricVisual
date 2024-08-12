@@ -13,11 +13,10 @@ import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationD
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -87,11 +86,6 @@ public class ClassificationService {
      */
     public Object getClassificationTags(String parent) {
         return new ClassificationTagsResponse(tagClient.getClassificationTags(parent));
-    }
-
-    public String getTagInfo(String tagId) {
-        Map<String, Object> tagInfo = tagClient.getTag(tagId);
-        return tagInfo.get("fullyQualifiedName").toString();
     }
 
 
