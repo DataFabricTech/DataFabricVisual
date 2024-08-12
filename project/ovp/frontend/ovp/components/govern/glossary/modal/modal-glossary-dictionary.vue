@@ -84,7 +84,7 @@
                 </button>
                 <menu-search
                   :data="menuSearchTagsData"
-                  :selected-items="[]"
+                  :selected-items="glossaryForm.tags"
                   :is-multi="true"
                   :is-show="isShowMenuSearch"
                   label-key="label"
@@ -106,7 +106,7 @@ import Modal from "@extends/modal/Modal.vue";
 import MenuSearch from "@extends/menu-seach/menu-search.vue";
 import { useGlossaryStore } from "@/store/glossary";
 import { useUserStore } from "@/store/user/userStore";
-import { defineProps, defineEmits, reactive, ref, type Reactive } from "vue";
+import { defineProps, reactive, ref, type Reactive } from "vue";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import type { Tag } from "~/type/common";
 
@@ -118,10 +118,6 @@ const { $vfm } = useNuxtApp();
 const props = defineProps({
   modalId: { type: String, required: true },
 });
-
-const emit = defineEmits<{
-  (e: "cancelModel"): void;
-}>();
 
 const initialFormState: object = {
   name: "",
