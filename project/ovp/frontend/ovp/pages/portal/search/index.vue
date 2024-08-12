@@ -35,6 +35,12 @@
           />
           <!-- NOTE "scrollTrigger" -> useIntersectionObserver 가 return 하는 변수병과 동일해야함. -->
           <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+          <Loading
+            id="loader"
+            :use-loader-overlay="true"
+            class="loader-lg is-loader-inner"
+            style="display: none"
+          ></Loading>
         </div>
         <div
           class="data-list"
@@ -53,6 +59,7 @@
         v-if="viewType === 'listView'"
         :isShowPreview="isShowPreview"
         :preview-data="previewData"
+        :index="previewIndex"
         @change="getPreviewCloseStatus"
       ></preview>
     </div>
@@ -63,6 +70,7 @@
 import { storeToRefs } from "pinia";
 import { useSearchCommonStore } from "@/store/search/common";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
+import Loading from "@base/loading/Loading.vue";
 import Tab from "@extends/tab/Tab.vue";
 
 import TopBar from "./top-bar.vue";
@@ -90,9 +98,10 @@ const getPreviewCloseStatus = (option: boolean) => {
 };
 
 let currentPreviewId: string | number = "";
+let previewIndex: string = "table";
 
 const previewClick = async (data: object) => {
-  const { id, fqn } = data as { id: string; fqn: string };
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
   if (id === currentPreviewId) {
     return;
   }
@@ -101,6 +110,7 @@ const previewClick = async (data: object) => {
   isShowPreview.value = true;
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;
+  previewIndex = type;
 };
 
 const modelNmClick = (data: object) => {

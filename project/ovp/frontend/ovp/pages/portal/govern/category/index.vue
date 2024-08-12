@@ -178,6 +178,7 @@
               <Preview
                 :isShowPreview="isShowPreview"
                 :preview-data="previewData"
+                :index="previewIndex"
                 @change="getPreviewCloseStatus"
               ></Preview>
             </div>
@@ -345,7 +346,10 @@ const showModalChange = ref(false);
 const isDescEditMode = ref(false);
 const isTitleEditMode = ref(false);
 const isShowPreview = ref<boolean>(false);
+
 let currentPreviewId: string | number = "";
+let previewIndex: string = "table";
+
 const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
   id: "",
   name: "",
@@ -519,6 +523,7 @@ const previewClick = async (data: object) => {
   isShowPreview.value = true;
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;
+  previewIndex = type;
 };
 // editable-input
 const editCancel = (key: string) => {
