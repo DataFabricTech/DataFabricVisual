@@ -37,7 +37,7 @@ public class MainService {
         }
 
         for (String followId : followsIdList) {
-            DataModelDetailResponse dataModelDetail = searchDetailService.getDataModelDetail(followId);
+            DataModelDetailResponse dataModelDetail = searchDetailService.getDataModelDetail(followId, "tables");
             AllResult.add(dataModelDetail);
         }
 
