@@ -287,6 +287,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
 
   const changeTab = (item: string) => {
+    isShowPreview.value = false;
     currentTab.value = item;
     resetReloadList();
   };
