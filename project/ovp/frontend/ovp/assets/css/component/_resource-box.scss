@@ -111,6 +111,12 @@
 
     border-color: $neutral-200;
   }
+
+  .breadcrumb-text {
+    @include ellipsis;
+
+    max-width: 200px;
+  }
 }
 
 .resource-box-full {
