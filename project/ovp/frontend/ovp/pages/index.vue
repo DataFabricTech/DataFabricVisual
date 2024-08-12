@@ -161,14 +161,14 @@ const modelNmClick = (data: object) => {
   });
 };
 
-onMounted(async () => {
+onMounted(() => {
   if (loader.value) {
     loader.value.style.display = "block";
   }
-  await getRecentQuestData();
-  await getUserInfo();
-  await getLastUpdatedData();
-  await getUpVotesData();
+  getRecentQuestData();
+  getUserInfo();
+  getLastUpdatedData();
+  getUpVotesData();
   if (loader.value) {
     loader.value.style.display = "none";
   }

@@ -38,6 +38,16 @@
         flex-grow: 1;
       }
     }
+
+    &__checkbox-area {
+      gap: $spacing-4;
+
+      & > input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: $primary-500;
+      }
+    }
   }
 
   &-item-buttons {
