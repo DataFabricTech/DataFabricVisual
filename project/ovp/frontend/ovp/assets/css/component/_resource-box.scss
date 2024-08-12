@@ -41,6 +41,7 @@
       text-decoration: underline;
     }
   }
+
   .editable-group-desc {
     @include ellipsis;
 
@@ -51,6 +52,7 @@
 
   &-initial-name {
     @include font-size('13');
+
     color: $neutral-400;
   }
 
@@ -99,8 +101,9 @@
   }
 
   &.is-resource-box-no-action.is-resource-box-selected {
-    border-color: $neutral-200;
     @include box-shadow('sm');
+
+    border-color: $neutral-200;
   }
 }
 

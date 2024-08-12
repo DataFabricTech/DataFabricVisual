@@ -14,12 +14,14 @@
 //범례
 @mixin graph-legend {
   @include flex($vertical: flex-start, $gap: $spacing-8);
+
   position: absolute;
   top: $spacing-12;
   left: $spacing-12;
 
   &-content {
     @include flex($direction: column, $vertical: flex-start, $gap: $spacing-4);
+
     padding: $spacing-12;
     background-color: $neutral-0;
     border: 1px solid $neutral-300;
@@ -29,12 +31,14 @@
   &-item {
     @include flex($gap: $spacing-8);
     @include font-size('13');
+
     font-weight: 600;
   }
 }
 
 @mixin graph-control {
   @include flex($direction: column);
+
   position: absolute;
   bottom: 12px;
   left: 12px;
@@ -58,6 +62,7 @@
 
 .lineage {
   @include graph-grid;
+
   height: 100%;
   min-height: 650px;
 
@@ -183,6 +188,7 @@
 
     &-head {
       @include flex($horizontal: space-between);
+
       position: relative;
       padding: $spacing-8;
 

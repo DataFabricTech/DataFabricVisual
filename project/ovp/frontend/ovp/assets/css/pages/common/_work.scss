@@ -57,12 +57,14 @@
 //작업 페이지 안 컨텐츠
 .work-contents {
   @include flex($direction: column, $vertical: null, $horizontal: null, $gap: $spacing-32);
+
   height: 100%;
   overflow: auto;
   padding: $spacing-16;
 
   .l-top-bar {
     @include flex($vertical: flex-start, $direction: column, $gap: $spacing-8);
+
     padding: 0;
     border: 0;
   }
@@ -81,6 +83,7 @@
 .work-page {
   .title {
     @include font-size('15');
+
     font-weight: 600;
     color: $neutral-600;
   }

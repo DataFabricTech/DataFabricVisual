@@ -1,11 +1,13 @@
 .profile-box {
   @include flex($vertical: flex-start, $horizontal: flex-start, $gap: $spacing-16);
+
   width: 100%;
   padding: $spacing-16;
   border-bottom: 1px solid $neutral-200;
 
   .profile-name {
     @include font-size('16');
+
     font-weight: 600;
     color: $neutral-800;
   }
@@ -23,7 +25,6 @@
     .tab-contents {
       width: 100%;
       height: calc(100% - 50px);
-      //min-height: 700px;
 
       .search-input {
         margin-bottom: $spacing-8;
@@ -43,6 +44,7 @@
 .profile-group {
   @include flex($direction: column, $vertical: flex-start, $horizontal: flex-start, $gap: $spacing-16);
   @include font-size('14');
+
   flex-grow: 1;
   color: $neutral-600;
 
@@ -55,7 +57,7 @@
       width: 75px;
       font-weight: 600;
 
-      &:after {
+      &::after {
         content: "";
         position: absolute;
         right: 16px;

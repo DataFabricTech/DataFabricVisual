@@ -1,5 +1,6 @@
 .main-content {
   @include flex($direction: column, $horizontal: flex-start, $gap: $spacing-8);
+
   width: 50%;
   background-color: $neutral-0;
   min-height: 582px;
@@ -7,10 +8,11 @@
 
   &-title {
     @include font-size('18');
+
     font-weight: 600;
     color: $neutral-800;
 
-    &:before {
+    &::before {
       content: url("../../assets/images/icon/double-circle.svg");
       display: inline-block;
       width: 18px;

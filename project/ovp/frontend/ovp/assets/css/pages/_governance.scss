@@ -48,6 +48,7 @@
 
   &-item {
     @include flex($direction: row, $horizontal: flex-start, $vertical: flex-start, $gap: $spacing-16);
+
     padding: $spacing-20 $spacing-16;
   }
 
@@ -57,11 +58,13 @@
 
   &-wrap {
     @include flex($direction: column, $vertical: flex-start, $gap: $spacing-12);
+
     width: 100%;
   }
 
   &-head {
     @include flex;
+
     width: 100%;
   }
 
@@ -81,12 +84,14 @@
 
   &-contents {
     @include flex($horizontal: flex-start);
+
     width: 100%;
     padding: $spacing-12;
     border: 1px solid $neutral-200;
 
     &.is-column {
       @include flex($direction: column, $horizontal: flex-start, $vertical: flex-start);
+
       gap: $spacing-4;
     }
 
@@ -157,6 +162,7 @@
 
 .table-data {
   @include flex($direction: column, $vertical: flex-start, $gap: $spacing-4);
+
   width: 100%;
   padding: $spacing-8 $spacing-12;
 
@@ -175,6 +181,7 @@
   &-title {
     @include ellipsis;
     @include font-size('15');
+
     width: 100%;
     font-weight: 600;
     color: $neutral-700;
