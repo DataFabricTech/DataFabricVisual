@@ -162,7 +162,7 @@ const hideContextMenuBtn: () => void = () => {
   emit("context-menu-btn-click", null);
 };
 const copyKeyword: () => void = () => {
-  window.navigator.clipboard.writeText(props.data.fqn).then(() => {
+  window.navigator.clipboard.writeText(`\`${props.data.fqn}\``).then(() => {
     alert("데이터 모델 이름 복사 완료");
     hideContextMenu();
   });
