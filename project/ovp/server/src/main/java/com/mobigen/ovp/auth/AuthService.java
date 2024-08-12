@@ -56,7 +56,12 @@ public class AuthService {
         String base64EncodingPasswd = Base64.getEncoder().encodeToString(param.get(PASSWORD_KEY).toString().getBytes());
         param.put(PASSWORD_KEY, base64EncodingPasswd);
 
-        Map<String, Object> result = authClient.login(param);
+        Map<String, Object> result = new HashMap<>();
+        try{
+            result = authClient.login(param);
+        } catch (Exception e) {
+            throw new Exception("아이디 및 비밀번호가 유효하지 않습니다.");
+        }
 
         return token.addTokenToResponse(response, result);
     }
@@ -257,6 +262,8 @@ public class AuthService {
         boolean isChange = changePassword(param);
         if (isChange) {
             pwResetRepository.deleteById(id);
+        } else {
+            throw new Exception("비밀번호 설정이 잘못되었습니다.");
         }
         return isChange;
     }
@@ -284,6 +291,14 @@ public class AuthService {
      * @return
      * @throws Exception
      */
+    public boolean changePasswordInMypage(Map<String, Object> param) throws Exception {
+        boolean isChange = changePassword(param);
+        if (!isChange) {
+            throw new Exception("비밀번호 설정이 잘못되었습니다.");
+        }
+        return isChange;
+    }
+
     public boolean changePassword(Map<String, Object> param) throws Exception {
         param.put("requestType", "USER");
 
@@ -318,7 +333,7 @@ public class AuthService {
             return authClient.signUpUser(adminAuthorizationHeader, paramMap);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new Exception("회원가입 실패. 관리자에게 문의하세요");
+            throw new Exception("회원가입에 실패 했습니다. 관리자에게 문의해주세요.");
         }
     }
 
@@ -340,7 +355,7 @@ public class AuthService {
         } catch (Exception e) {
             authClient.deleteUser(adminAuthorizationHeader, (String) signUpResult.get("id"), true, false);
             log.error(e.getMessage(), e);
-            throw new Exception("회원가입 실패. 관리자에게 문의하세요");
+            throw new Exception("회원가입에 실패 했습니다. 관리자에게 문의해주세요.");
         }
     }
 

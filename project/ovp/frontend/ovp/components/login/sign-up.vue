@@ -148,7 +148,10 @@
             <button class="button button-primary button-lg" type="submit">
               회원가입
             </button>
-            <button class="link-button link-button-support button-sm w-full" type="button">
+            <button
+              class="link-button link-button-support button-sm w-full"
+              type="button"
+            >
               <nuxt-link :to="'/portal/login'">
                 로그인 페이지로 돌아가기
               </nuxt-link>
@@ -208,7 +211,7 @@ const validateForm = () => {
 };
 
 const validateName = () => {
-  errors.name = form.name ? "" : "사용자 이름을 입력하세요.";
+  errors.name = form.name ? "" : "사용자 이름를 입력하세요.";
   return !errors.name;
 };
 
@@ -225,7 +228,7 @@ const validateEmail = () => {
 const isDuplicateEmail = async () => {
   const result = await store.checkDuplicateEmail({ email: form.email });
   const isDuplicate = result.data;
-  errors.email = isDuplicate ? "이미 사용 중인 이메일입니다." : "";
+  errors.email = isDuplicate ? "이미 사용중인 이메일 입니다." : "";
   return isDuplicate;
 };
 
