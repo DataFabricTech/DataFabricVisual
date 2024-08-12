@@ -16,7 +16,6 @@
 
 <script setup lang="ts">
 import { AgGridVue } from "ag-grid-vue3";
-import CustomHeader from "../custom-header-cell/custom-header-cell.vue";
 import { GridProps } from "@/components/extends/grid/GridProps";
 import { GridComposition } from "./GridComposition";
 
@@ -30,7 +29,6 @@ const props = withDefaults(defineProps<GridProps>(), {
   setColumnFit: false,
   useRowCheckBox: false,
   useColumnResize: false,
-  useColumnCopy: false,
   buttons: () => [],
   selectedNodes: () => [],
   columnWidthList: () => []
@@ -75,29 +73,6 @@ const { onGridReady, getDefs, onGridSizeChanged, setColumnToFit } = GridComposit
 
 const gridColumnDefs: Ref<any[]> = ref([]);
 
-if (props.useColumnCopy) {
-  const updateColumnDefs = () => {
-    const defs = getDefs();
-    gridColumnDefs.value = defs.map((colDef) => ({
-      ...colDef,
-      headerComponentFramework: CustomHeader,
-      headerComponentParams: { gridColumnDefs: defs, fqn: props.fqn }
-    }));
-  };
-
-  updateColumnDefs();
-
-  watch(
-    () => props.columnDefs,
-    () => {
-      updateColumnDefs();
-      nextTick(() => {
-        setColumnToFit();
-      });
-    },
-    { deep: true }
-  );
-} else {
   gridColumnDefs.value = getDefs();
 
   // Grid 를 가져다 쓰는 페이지에서 columnDefs 를 변경했을경우, 변경됨을 catch 해서 agGrid 에 반영해준다.
@@ -112,7 +87,6 @@ if (props.useColumnCopy) {
     },
     { deep: true }
   );
-}
 </script>
 
 <style lang="scss" scoped>

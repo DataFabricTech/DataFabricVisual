@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import CustomHeader from "@extends/custom-header-cell/custom-header-cell.vue";
 import DataModelSample from "~/components/datamodel-creation/datamodel-sample.json";
 import { useSearchCommonStore } from "~/store/search/common";
 import executeResultJson from "~/store/datamodel-creation/samples/executeResult.json";
@@ -164,7 +165,6 @@ export const useCreationStore = defineStore("creation", () => {
         body: param,
       })
         .then((res: any) => {
-          console.log("성공여부 확인1: ", res);
           setDataModelList();
         })
         .catch((err: any) => {
@@ -208,8 +208,14 @@ export const useCreationStore = defineStore("creation", () => {
     await $api(`/api/search/detail/sample-data/${value}`)
       .then((res: any) => {
         if (res.result === 1) {
+          const fields = res.data.columns.map((column) => ({
+            field: column.name,
+          }));
+
           const columnDefs = res.data.columns.map((column) => ({
             field: column.name,
+            headerComponentFramework: CustomHeader,
+            headerComponentParams: { gridColumnDefs: fields, fqn: fqn },
           }));
 
           sampleDataList.value = {

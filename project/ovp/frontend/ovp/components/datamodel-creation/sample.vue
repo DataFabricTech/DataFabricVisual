@@ -28,7 +28,6 @@
             :useRowCheckBox="false"
             :setColumnFit="true"
             :useColumnResize="true"
-            :useColumnCopy="true"
           ></agGrid>
         </div>
         <div class="no-result" style="display: none">
