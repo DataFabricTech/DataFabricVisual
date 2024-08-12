@@ -12,11 +12,9 @@ export const useLoading = () => {
   const stop = () => {
     count.value--;
 
-    setTimeout(() => {
-      if (count.value < 1) {
-        isLoading.value = false;
-      }
-    }, 10);
+    if (count.value < 1) {
+      isLoading.value = false;
+    }
   };
 
   return { isLoading, start, stop };
