@@ -2,12 +2,14 @@ package com.mobigen.ovp.classification;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
+import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationAdd;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -91,5 +93,14 @@ public class ClassificationController {
     @DeleteMapping("/{id}")
     public Object deleteClassification(@PathVariable String id) throws Exception {
         return classificationService.deleteClassification(id);
+    }
+    /**
+     * 분류 추가
+     * @return
+     */
+    @ResponseJsonResult
+    @PostMapping("/add")
+    public Object addClassification(@RequestBody ClassificationAdd classificationAdd) throws Exception {
+        return classificationService.addClassification(classificationAdd);
     }
 }

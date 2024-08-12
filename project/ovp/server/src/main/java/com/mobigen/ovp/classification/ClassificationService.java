@@ -3,6 +3,7 @@ package com.mobigen.ovp.classification;
 import com.mobigen.ovp.classification.client.dto.classification.ClassificationDetailByNameResponse;
 import com.mobigen.ovp.classification.client.dto.classification.ClassificationDetailResponse;
 import com.mobigen.ovp.classification.client.dto.classification.ClassificationEditResponse;
+import com.mobigen.ovp.classification.client.dto.classification.ClassificationAddResponse;
 import com.mobigen.ovp.classification.client.dto.classification.ClassificationResponse;
 import com.mobigen.ovp.classification.client.dto.classification.tag.ClassificationTagsResponse;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
@@ -10,6 +11,7 @@ import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.TagClient;
 import com.mobigen.ovp.common.openmete_client.dto.classification.Classification;
 import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationData;
+import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationAdd;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -53,8 +55,6 @@ public class ClassificationService {
      * @return
      */
     public Object getClassificationDetail(String id) {
-        System.out.println(classificationClient.getClassificationDetail(id));
-
         return new ClassificationDetailResponse(classificationClient.getClassificationDetail(id));
     }
 
@@ -64,8 +64,6 @@ public class ClassificationService {
      * @return
      */
     public Object getClassificationDetailByName(String name) {
-        System.out.println(classificationClient.getClassificationDetailByName(name));
-
         return new ClassificationDetailByNameResponse(classificationClient.getClassificationDetailByName(name));
     }
 
@@ -100,5 +98,13 @@ public class ClassificationService {
         } else {
             throw new Exception();
         }
+    }
+
+    /**
+     * 분류 추가
+     * @param classificationAdd
+     */
+    public Object addClassification(ClassificationAdd classificationAdd) throws Exception {
+        return new ClassificationAddResponse(classificationClient.addClassification(classificationAdd));
     }
 }

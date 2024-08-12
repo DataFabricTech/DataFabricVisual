@@ -1,6 +1,7 @@
 package com.mobigen.ovp.common.openmete_client;
 
 import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationData;
+import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationAdd;
 import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationEdit;
 import com.mobigen.ovp.common.openmete_client.dto.classification.detail.ClassificationDetail;
 import com.mobigen.ovp.common.openmete_client.dto.classification.detail.ClassificationDetailByName;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -65,4 +67,11 @@ public interface ClassificationClient {
      */
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteClassification(@PathVariable String id, @RequestParam(defaultValue = "true") boolean recursive, @RequestParam(defaultValue = "true") boolean hardDelete);
+
+    /**
+     * 분류 추가
+     * @return
+     */
+    @PostMapping("")
+    ClassificationAdd addClassification(@RequestBody ClassificationAdd classificationAdd);
 }
