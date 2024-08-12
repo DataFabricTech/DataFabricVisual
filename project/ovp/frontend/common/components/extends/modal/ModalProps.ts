@@ -17,4 +17,6 @@ export interface ModalProps {
   height: number;
   title?: string;
   subTitle?: string;
+  useCancelBtn?: boolean;
+  btnMsg?: string;
 }
