@@ -18,5 +18,5 @@ export interface ModalProps {
   title?: string;
   subTitle?: string;
   useCancelBtn?: boolean;
-  btnMsg?: string;
+  confirmBtnMsg?: string;
 }
