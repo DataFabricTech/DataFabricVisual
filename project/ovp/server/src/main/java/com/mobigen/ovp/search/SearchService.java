@@ -245,13 +245,10 @@ public class SearchService {
         modelInfo.put("columns", columList);
 
         Map<String, Object> resultMap = new HashMap<>();
-        // TODO: modelType 정보 불러오기 필요 "structured" || "unstructured" (현재 확인 불가)
         resultMap.put("modelType", "structured");
         resultMap.put("modelInfo", modelInfo);
         resultMap.put("glossaries", glossaryList);
         resultMap.put("tags", tagList);
-
-        // TODO: 비정형 API 불러오기 필요 details & url & model.ext (현재 확인 불가)
 
         return resultMap;
     }

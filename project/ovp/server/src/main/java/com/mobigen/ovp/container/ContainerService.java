@@ -21,7 +21,9 @@ public class ContainerService {
 
         String name = (String) result.get("name");
         String description = (String) result.get("description");
-        String tableType = (String) result.get("tableType");
+        Number size = (Number) result.get("size");
+        List<String> fileFormatsList = (List<String>) result.getOrDefault("fileFormats", new ArrayList<>());
+        String fileFormats = fileFormatsList.isEmpty() ? "" : fileFormatsList.get(0);
         List<Map<String, Object>> tags = (List<Map<String, Object>>) result.getOrDefault("tags", new ArrayList<>());
         Map<String, Object> dataModel = (Map<String, Object>) result.getOrDefault("dataModel", new HashMap<>());
         List<Map<String, Object>> columns = (List<Map<String, Object>>) dataModel.getOrDefault("columns", new ArrayList<>());
@@ -68,8 +70,8 @@ public class ContainerService {
         Map<String, Object> model = new HashMap<>();
         model.put("name", name);
         model.put("desc", description);
-        model.put("tableType", tableType);
-        model.put("cnt", columList.size());
+        model.put("size", size);
+        model.put("ext", fileFormats);
 
         Map<String, Object> modelInfo = new HashMap<>();
         modelInfo.put("model", model);

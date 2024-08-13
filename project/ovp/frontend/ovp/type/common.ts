@@ -3,6 +3,7 @@ export interface JsonPatchOperation {
   path: string;
   value?: string | object;
 }
+
 export interface Tag {
   description: string;
   displayName: string;
@@ -37,6 +38,7 @@ export interface PreviewData {
       tableType?: string;
       cnt: number;
       ext?: string;
+      size?: number;
     };
     columns?: Column[];
     details?: string;

@@ -15,7 +15,9 @@
         <a href="javascript:void(0)" class="preview-title">{{
           previewData.modelInfo.model.name
         }}</a>
-        <div class="preview-desc">{{ previewData.modelInfo.model.desc }}</div>
+        <div class="preview-desc">
+          {{ checkEmptyValues(previewData.modelInfo.model.desc) }}
+        </div>
         <table>
           <colgroup>
             <col style="width: 30%" />
@@ -38,7 +40,11 @@
               {{ isStructuredModelType ? "Columns" : "전체 행" }}
             </th>
             <td>
-              {{ checkEmptyValues(previewData.modelInfo.model.cnt) }}
+              {{
+                isStructuredModelType
+                  ? checkEmptyValues(previewData.modelInfo.model.cnt)
+                  : checkEmptyValues(previewData.modelInfo.model.size)
+              }}
             </td>
           </tr>
         </table>
@@ -66,24 +72,6 @@
             <span class="tag-text">{{ glossary.name }}</span>
           </div>
         </div>
-      </div>
-      <!--        TODO: [개발] 상세 설명 관련해서 받아오는 api 정보가 없음. 기획 검토 요청 예정  -->
-      <div class="preview-item" style="display: none">
-        <div class="preview-title">상세 설명</div>
-        <div class="preview-desc">
-          {{ previewData.modelInfo.details }}
-        </div>
-      </div>
-      <!--        TODO: [개발] url기능 사용하지 않을 수 있다. 기획 검토 요청 예정 -->
-      <div class="preview-item" style="display: none">
-        <div class="preview-title">URL</div>
-        <a
-          :href="previewData.modelInfo.url"
-          class="preview-link"
-          target="_blank"
-        >
-          {{ checkEmptyValues(previewData.modelInfo.url) }}
-        </a>
       </div>
       <div class="preview-item">
         <div class="preview-title">스키마</div>
