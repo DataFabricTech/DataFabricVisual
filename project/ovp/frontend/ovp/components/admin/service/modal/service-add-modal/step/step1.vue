@@ -26,8 +26,8 @@
 import type {
   IService,
   ServiceAddModalProps,
-} from "@/components/service/service-add-modal/ServiceAddModalProps";
-import { ServiceAddModalComposition } from "~/components/service/service-add-modal/ServiceAddModalComposition";
+} from "@/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
+import { ServiceAddModalComposition } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
 import _ from "lodash";
 
 const props = withDefaults(defineProps<ServiceAddModalProps>(), {});

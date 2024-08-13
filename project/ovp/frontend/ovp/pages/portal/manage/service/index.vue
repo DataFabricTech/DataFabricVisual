@@ -7,11 +7,13 @@
 
   <div class="section-contents p-0 bg-white overflow-auto">
     <div class="l-split">
-      <service-list></service-list>
+      <service-list
+        :add-modal-id="SERVICE_ADD_MODAL_ID"
+        @modalOpen="modalOpen"
+      ></service-list>
       <service-info></service-info>
     </div>
   </div>
-  <modal-service> </modal-service>
   <modal-collection></modal-collection>
   <modal-log></modal-log>
 

@@ -58,8 +58,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ServiceAddModalProps } from "@/components/service/service-add-modal/ServiceAddModalProps";
-import { ServiceAddModalComposition } from "@/components/service/service-add-modal/ServiceAddModalComposition";
+import type { ServiceAddModalProps } from "@/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
+import { ServiceAddModalComposition } from "@/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
 
 const props = withDefaults(defineProps<ServiceAddModalProps>(), {});
 const { serviceObj, selectedServiceObj, resetInput } =

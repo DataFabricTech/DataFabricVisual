@@ -1,7 +1,7 @@
 import type {
   IService,
   IServiceObj,
-} from "~/components/service/service-add-modal/ServiceAddModalProps";
+} from "~/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
 import _ from "lodash";
 
 export const useServiceStore = defineStore("serviceStore", () => {
@@ -33,6 +33,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
     // TODO : [개발] 서비스명 기준 중복 조회 API 구현
     // $api("");
     await $api("");
+    return [];
   };
 
   return {

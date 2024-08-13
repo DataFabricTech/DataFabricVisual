@@ -75,8 +75,8 @@ import { useNuxtApp } from "nuxt/app";
 
 const { $vfm } = useNuxtApp();
 import _ from "lodash";
-import { ServiceAddModalComposition } from "~/components/service/service-add-modal/ServiceAddModalComposition";
-import type { ServiceAddModalProps } from "~/components/service/service-add-modal/ServiceAddModalProps";
+import { ServiceAddModalComposition } from "./ServiceAddModalComposition";
+import type { ServiceAddModalProps } from "./ServiceAddModalProps";
 
 const props = withDefaults(defineProps<ServiceAddModalProps>(), {});
 
@@ -119,7 +119,7 @@ const gotoNext = () => {
   currentStep.value = currentStep.value + 1;
 };
 
-const checkValidation = (): boolean => {
+const checkValidation = async (): boolean => {
   if (currentStep.value === 1) {
     // modal 진입시에 무조건 첫번째 값을 선택하게 되어있기 때문에 값이 없을수가 없음.
   } else if (currentStep.value === 2) {
@@ -127,7 +127,7 @@ const checkValidation = (): boolean => {
       isValid.value = false;
       inValidMsg.value = "필수 값을 입력해주세요.";
       return false;
-    } else if (isServiceNameDuplicate()) {
+    } else if (await isServiceNameDuplicate()) {
       isValid.value = false;
       inValidMsg.value = "중복된 서비스 이름입니다.";
       return false;

@@ -13,7 +13,7 @@ export interface ServiceAddModalComposition extends ServiceAddModalProps {
   resetInput(serviceObjPath: string): void;
   resetData(): void;
   serviceImgClick(service: IService): void;
-  isServiceNameDuplicate(): Promise<void>;
+  isServiceNameDuplicate(): Promise<boolean>;
 }
 
 export function ServiceAddModalComposition(
@@ -39,7 +39,8 @@ export function ServiceAddModalComposition(
 
   // step2
   const isServiceNameDuplicate = async () => {
-    return await checkServiceNameDuplicate();
+    const result = await checkServiceNameDuplicate();
+    return result.length > 0;
   };
 
   return {
