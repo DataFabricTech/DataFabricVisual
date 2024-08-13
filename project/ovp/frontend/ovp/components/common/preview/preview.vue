@@ -67,14 +67,15 @@
           </div>
         </div>
       </div>
-      <!--        TODO: [개발] url기능 사용하지 않을 수 있다. 기획 검토 중 -->
-      <div class="preview-item" v-if="!isStructuredModelType">
+      <!--        TODO: [개발] 상세 설명 관련해서 받아오는 api 정보가 없음. 기획 검토 요청 예정  -->
+      <div class="preview-item" style="display: none">
         <div class="preview-title">상세 설명</div>
         <div class="preview-desc">
           {{ previewData.modelInfo.details }}
         </div>
       </div>
-      <div class="preview-item" v-if="!isStructuredModelType">
+      <!--        TODO: [개발] url기능 사용하지 않을 수 있다. 기획 검토 요청 예정 -->
+      <div class="preview-item" style="display: none">
         <div class="preview-title">URL</div>
         <a
           :href="previewData.modelInfo.url"
@@ -84,7 +85,7 @@
           {{ checkEmptyValues(previewData.modelInfo.url) }}
         </a>
       </div>
-      <div class="preview-item" v-if="isStructuredModelType">
+      <div class="preview-item">
         <div class="preview-title">스키마</div>
         <div class="v-group gap-2 w-full">
           <div

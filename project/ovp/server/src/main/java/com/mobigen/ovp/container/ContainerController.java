@@ -23,7 +23,7 @@ public class ContainerController {
      */
     @ResponseJsonResult(errorMessage = "스토리지 미리보기 조회 오류")
     @GetMapping("/{id}")
-    public Object getContainersName(@PathVariable("id") String id) {
-        return containerService.getContainersName(id);
+    public Object getContainersObject(@PathVariable("id") String id) {
+        return containerService.getContainersObject(id);
     }
 }

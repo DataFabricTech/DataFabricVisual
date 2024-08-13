@@ -210,10 +210,14 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     (filters.value as Filters)[filterKey].data = data[filterKey];
   };
 
-  const getPreviewData = async (fqn: string, id?: string) => {
+  const getPreviewData = async (fqn: string) => {
     const data: any = await $api(`/api/search/preview/${fqn}`);
     previewData.value = data.data;
-    const storageData = await $api(`/api/containers/${id}`);
+  };
+
+  const getContainerPreviewData = async (id: string) => {
+    const data: any = await $api(`/api/containers/${id}`);
+    previewData.value = data.data;
   };
 
   const setQueryFilterByDepth = (key: string, value: any) => {
@@ -290,6 +294,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const changeTab = (item: string) => {
     isShowPreview.value = false;
     currentTab.value = item;
+    console.log("tab", item);
     resetReloadList();
   };
 
@@ -311,6 +316,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getFilter,
     getFilters,
     getPreviewData,
+    getContainerPreviewData,
     setSortInfo,
     setSortFilter,
     setSearchKeyword,
