@@ -19,7 +19,7 @@
 
   &-item:hover,
   &-item:active,
-  &-item + .is-service-type-selected {
+  &-item.is-service-type-item-selected {
     background-color: $secondary-100;
     border: 1px solid $primary-300;
 

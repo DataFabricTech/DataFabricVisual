@@ -403,7 +403,7 @@
         <!-- Step 01 / 시작 -->
         <div class="service-type" style="display: block">
           <ul class="service-type-list">
-            <li class="service-type-item">
+            <li class="service-type-item is-service-type-item-selected">
               <button class="service-type-button">
                 <div class="service-type-img">
                   <img
@@ -414,8 +414,8 @@
                 <span class="service-type-title">MinIO</span>
               </button>
             </li>
-            <!-- item 요소 선택시 is-service-type-selected 클래스 추가 필요 -->
-            <li class="service-type-item is-service-type-selected">
+            <!-- item 요소 선택시 is-service-type-item-selected 클래스 추가 필요 -->
+            <li class="service-type-item is-service-type-item-selected">
               <button class="service-type-button">
                 <div class="service-type-img">
                   <img
