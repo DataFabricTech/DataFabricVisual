@@ -98,6 +98,7 @@ const previewClick = async (data: object) => {
   }
 
   await getPreviewData(fqn);
+  await getPreviewData(fqn, id);
   isShowPreview.value = true;
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;

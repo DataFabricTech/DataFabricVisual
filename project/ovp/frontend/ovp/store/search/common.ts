@@ -210,9 +210,10 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     (filters.value as Filters)[filterKey].data = data[filterKey];
   };
 
-  const getPreviewData = async (fqn: string) => {
+  const getPreviewData = async (fqn: string, id?: string) => {
     const data: any = await $api(`/api/search/preview/${fqn}`);
     previewData.value = data.data;
+    const storageData = await $api(`/api/containers/${id}`);
   };
 
   const setQueryFilterByDepth = (key: string, value: any) => {
