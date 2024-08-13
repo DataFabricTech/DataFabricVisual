@@ -1,9 +1,6 @@
 <template>
   <div class="l-top-bar">
-    <button
-      class="button button-secondary ml-auto"
-      @click="showModalTag = true"
-    >
+    <button class="button button-secondary ml-auto" @click="openModal">
       태그추가
     </button>
   </div>
@@ -23,12 +20,12 @@
       <td>{{ tag.description }}</td>
       <td>
         <div class="button-group">
-          <button
-            class="button button button-secondary-stroke"
-            @click="showModifyTag = true"
-          >
-            편집
-          </button>
+          <!--          <button-->
+          <!--            class="button button button-secondary-stroke"-->
+          <!--            @click="showModifyTag = true"-->
+          <!--          >-->
+          <!--            편집-->
+          <!--          </button>-->
           <button
             class="button button button-error-stroke"
             @click="confirmDelete(tag.id)"
@@ -39,32 +36,30 @@
       </td>
     </tr>
   </table>
-  <tag-create
-    v-if="showModalTag == true"
-    @close-modal="closeModalTag"
-  ></tag-create>
-  <tag-modify
-    v-if="showModifyTag == true"
-    @close-modal="closeModifyTag"
-  ></tag-modify>
+  <tag-create :modal-id="MODAL_ID" @close-modal="closeModal"></tag-create>
+  <!--  <tag-modify-->
+  <!--    v-if="showModifyTag == true"-->
+  <!--    @close-modal="closeModifyTag"-->
+  <!--  ></tag-modify>-->
 </template>
 
 <script setup lang="ts">
 import { classificationStore } from "@/store/classification/index";
+const { $vfm } = useNuxtApp();
 
 const useClassificationStore = classificationStore();
 const { classificationTagList } = storeToRefs(useClassificationStore);
 const { deleteClassificationTag } = useClassificationStore;
 
-const showModalTag = ref(false);
-const showModifyTag = ref(false);
+// 태그 추가 모달 ID
+const MODAL_ID = "modal-classificationTag";
 
-const closeModalTag = () => {
-  showModalTag.value = !showModalTag.value;
-};
-const closeModifyTag = () => {
-  showModifyTag.value = !showModifyTag.value;
-};
+function openModal() {
+  $vfm.open(MODAL_ID);
+}
+function closeModal() {
+  $vfm.close(MODAL_ID);
+}
 
 watchEffect(() => {
   console.log(classificationTagList);
