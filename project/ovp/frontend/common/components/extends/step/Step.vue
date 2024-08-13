@@ -1,15 +1,17 @@
 <template>
   <div class="step-container" style="width: 450px">
     <div class="step">
-      <!--  TODO: [개발] 작성완료후 다음으로 넘어갈시 해당 페이지는 is-step-item-complete 클래스 추가 -->
       <div
         class="step-item"
         v-for="(item, index) in data"
         @click="clickStep(index)"
-        :class="{ 'is-step-item-selected': changeCurrentStepClass(index) }"
+        :class="{
+          'is-step-item-selected': changeCurrentStepClass(index),
+          'is-step-item-complete': currentIndex > index
+        }"
       >
         <button class="step-button">
-          <p class="step-number">1</p>
+          <p class="step-number">{{ startPoint + index }}</p>
           <svg-icon class="step-icon" name="checkmark"></svg-icon>
         </button>
         <span class="step-title">{{ item[labelKey] }}</span>
@@ -38,7 +40,9 @@ const props = withDefaults(defineProps<StepProps>(), {
   currentItem: 0,
   currentItemType: INDEX,
   showBtn: true,
-  comparison: "equal"
+  comparison: "equal",
+  startPoint: 1,
+  useParentIndex: false
 });
 
 const emit = defineEmits<{ (e: "change", item: number | string): void }>();
