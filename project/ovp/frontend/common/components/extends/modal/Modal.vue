@@ -35,12 +35,14 @@
       <slot name="body" />
     </div>
     <div class="modal-foot">
-      <div class="modal-foot-group">
-        <button class="button button-ghost button-lg" @click="$emit('cancel', modalId)" v-if="useCancelBtn">
-          취소
-        </button>
-        <button class="button button-primary button-lg" @click="$emit('confirm', modalId)">{{ confirmBtnMsg }}</button>
-      </div>
+      <slot name="footer">
+        <div class="modal-foot-group">
+          <button class="button button-ghost button-lg" @click="$emit('cancel', modalId)" v-if="useCancelBtn">
+            취소
+          </button>
+          <button class="button button-primary button-lg" @click="$emit('confirm', modalId)">{{ confirmBtnMsg }}</button>
+        </div>
+      </slot>
     </div>
   </VueFinalModal>
 </template>
