@@ -2,10 +2,7 @@
   <div class="work-list">
     <div class="l-top-bar">
       <span class="title">분류 목록</span>
-      <button
-        class="button button-secondary-stroke"
-        @click="showModalClas = true"
-      >
+      <button class="button button-secondary-stroke" @click="openModal">
         분류 추가
       </button>
     </div>
@@ -41,28 +38,32 @@
     </div>
   </div>
   <classification-create
-    v-if="showModalClas"
-    @close-modal="closeModalClas"
+    :modal-id="MODAL_ID"
+    @close-modal="closeModal"
   ></classification-create>
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from "vue";
+import { defineProps } from "vue";
 import { storeToRefs } from "pinia";
 import classificationCreate from "@/components/classification/modal/classification-create.vue";
 import { classificationStore } from "@/store/classification/index";
+const { $vfm } = useNuxtApp();
 
 const useClassificationStore = classificationStore();
-const { classificationList, classificationDetailData } = storeToRefs(
-  useClassificationStore,
-);
+const { classificationList } = storeToRefs(useClassificationStore);
 const { getClassificationDetail, getClassificationTags } =
   useClassificationStore;
-const showModalClas = ref(false);
 
-const closeModalClas = () => {
-  showModalClas.value = !showModalClas.value;
-};
+// 분류 추가 모달 ID
+const MODAL_ID = "modal-classification";
+
+function openModal() {
+  $vfm.open(MODAL_ID);
+}
+function closeModal() {
+  $vfm.close(MODAL_ID);
+}
 
 const props = defineProps({
   isLoaded: {
@@ -77,7 +78,6 @@ const showClassificationDetail = async (id: string, name: string) => {
   await getClassificationDetail(id);
   // 태그 리스트 API 호출
   await getClassificationTags(name);
-  // console.log(classificationDetailData.value); //  : 선택된 분류의 상세 조회 결과 출력결과
 };
 </script>
 

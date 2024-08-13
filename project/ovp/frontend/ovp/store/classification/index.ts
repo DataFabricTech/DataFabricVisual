@@ -29,6 +29,11 @@ interface JsonPatchOperation {
   path: string;
   value: any;
 }
+
+interface addClassificationForm {
+  name: string;
+  description: string;
+}
 //TODO : 추후, 태그 paging을 이용한 인피니트스크롤작업을 위해 보류
 
 // interface paging {
@@ -105,31 +110,35 @@ export const classificationStore = defineStore("classification", () => {
     classificationTagList.value = data.data.classificationTagList;
   };
 
-  // 분류 상세 수정 ( name/displayName 수정 & description 수정 )
+  // 분류 상세 수정
   const editClassificationDetail = async (editData: JsonPatchOperation[]) => {
-    return insertOrEditAPI("PATCH", editData);
-  };
-
-  // TODO : 분류 추가 모달 API구현 예정
-
-  // 분류 추가 & 수정 API
-  const insertOrEditAPI = async (
-    method: string,
-    param: JsonPatchOperation[],
-  ) => {
     const result = await $api(
       `/api/classifications/${currentClassificationID}`,
       {
-        method: method,
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json-patch+json",
         },
-        body: JSON.stringify(param),
+        body: JSON.stringify(editData),
       },
     );
-    // console.log("insertOrEditAPI의 res", result);
-    await getClassificationList(); // 분류목록 API 재호출
+    // 분류목록 API 재호출
+    await getClassificationList();
+    return result;
+  };
 
+  // 분류 추가
+  const addClassification = async (addData: addClassificationForm) => {
+    const result = await $api(`/api/classifications/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(addData),
+    });
+
+    // 분류목록 API 재호출
+    await getClassificationList();
     return result;
   };
 
@@ -162,6 +171,7 @@ export const classificationStore = defineStore("classification", () => {
     getClassificationDetail,
     getClassificationTags,
     editClassificationDetail,
+    addClassification,
     deleteClassification,
     deleteClassificationTag,
   };
