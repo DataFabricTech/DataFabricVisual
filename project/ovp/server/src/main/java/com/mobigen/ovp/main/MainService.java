@@ -37,14 +37,17 @@ public class MainService {
         }
 
         for (String followId : followsIdList) {
-            DataModelDetailResponse dataModelDetail = searchDetailService.getDataModelDetail(followId);
+            DataModelDetailResponse dataModelDetail = searchDetailService.getDataModelDetail(followId, "tables");
             AllResult.add(dataModelDetail);
         }
 
-        result.add(AllResult.get(0));
-        result.add(AllResult.get(1));
-        result.add(AllResult.get(2));
+        if (!AllResult.isEmpty()) {
+            for (int i = 0; i < Math.min(3, AllResult.size()); i++) {
+                result.add(AllResult.get(i));
+            }
+        }
 
         return result;
     }
 }
+

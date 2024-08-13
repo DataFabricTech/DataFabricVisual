@@ -62,6 +62,7 @@
     <LineageGraph
       ref="lineageRef"
       :lineageData="lineageData"
+      :previewOn="previewOn"
       @change="modelChoose"
     ></LineageGraph>
     <div class="lineage-control">
@@ -94,12 +95,15 @@
 </template>
 
 <script setup lang="ts">
+import { type Ref, ref } from "vue";
+import type { NodeData } from "@/components/search/lineage/lineage";
+import { useLineageStore } from "@/store/lineage/lineageStore";
+import { useDataModelDetailStore } from "@/store/search/detail/index";
+
 import LineageGraph from "~/components/search/lineage/lineage-graph.vue";
 import Preview from "~/components/common/preview/preview.vue";
-import type { NodeData } from "~/components/search/lineage/lineage";
 import menuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
-import { type Ref, ref } from "vue";
-import { useLineageStore } from "@/store/lineage/lineageStore";
+
 // TODO: fqn을 호출 할 수 있는 store 필요
 
 const lineageStore = useLineageStore();
@@ -120,9 +124,12 @@ const {
   getServiceList,
 } = lineageStore;
 
+const dataModelDetailStore = useDataModelDetailStore();
+const { getDataModelFqn, getDataModelType } = dataModelDetailStore;
+
 onBeforeMount(async () => {
   // TODO: param => (fqn(외부스토어에서 호출), 필터) 추가 필요
-  await getLineageData();
+  // await getLineageData(dataModelType, dataModelFqn);
 
   await getCateList();
 
@@ -139,6 +146,7 @@ const previewOn: Ref<boolean> = ref<boolean>(false);
 
 const getPreviewOn = (isPreviewClosed: boolean) => {
   if (isPreviewClosed === false) {
+    lineageRef.value.handleNodeOff();
     previewOn.value = false;
   }
 };
@@ -146,8 +154,8 @@ const getPreviewOn = (isPreviewClosed: boolean) => {
 const modelChoose = async (nodeData: NodeData) => {
   if (nodeData) {
     previewOn.value = true;
-    // TODO: NodeData의 fqn 값 파라미터를 넣어 store에서 previewData 세팅
-    await getPreviewData();
+    console.log(nodeData.fqn);
+    await getPreviewData(nodeData.fqn);
     previewData.value.modelInfo.model.name = nodeData.label;
   }
 };
@@ -183,7 +191,7 @@ const reset = async () => {
      * 필터 ex
      * {}
      * */
-    await getLineageData();
+    await getLineageData(getDataModelType(), getDataModelFqn());
 
     lineageRef.value.reset();
   }
@@ -226,7 +234,7 @@ const ownerApplyFilter = async (value) => {
       service: selectedSerivceList.value,
        }
     * */
-  await getLineageData();
+  await getLineageData(getDataModelType(), getDataModelFqn());
 };
 const tagApplyFilter = async (value) => {
   selectedTagList.value = value;
@@ -242,7 +250,7 @@ const tagApplyFilter = async (value) => {
       service: selectedSerivceList.value,
        }
     * */
-  await getLineageData();
+  await getLineageData(getDataModelType(), getDataModelFqn());
 };
 const serviceApplyFilter = async (value) => {
   selectedSerivceList.value = value;
@@ -258,7 +266,7 @@ const serviceApplyFilter = async (value) => {
       service: selectedSerivceList.value,
        }
     * */
-  await getLineageData();
+  await getLineageData(getDataModelType(), getDataModelFqn());
 };
 </script>
 

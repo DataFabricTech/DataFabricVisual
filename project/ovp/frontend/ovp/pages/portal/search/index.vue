@@ -59,6 +59,7 @@
         v-if="viewType === 'listView'"
         :isShowPreview="isShowPreview"
         :preview-data="previewData"
+        :model-type="previewIndex"
         @change="getPreviewCloseStatus"
       ></preview>
     </div>
@@ -97,9 +98,10 @@ const getPreviewCloseStatus = (option: boolean) => {
 };
 
 let currentPreviewId: string | number = "";
+let previewIndex: string = "table";
 
 const previewClick = async (data: object) => {
-  const { id, fqn } = data as { id: string; fqn: string };
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
   if (id === currentPreviewId) {
     return;
   }
@@ -108,6 +110,7 @@ const previewClick = async (data: object) => {
   isShowPreview.value = true;
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;
+  previewIndex = type;
 };
 
 const modelNmClick = (data: object) => {

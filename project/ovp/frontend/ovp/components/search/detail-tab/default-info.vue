@@ -7,11 +7,11 @@
       </colgroup>
       <tr>
         <th>유형</th>
-        <td>{{ modelInfo.type }}</td>
+        <td>{{ defaultInfo.modelInfo.model.tableType }}</td>
       </tr>
       <tr>
         <th>Columns</th>
-        <td>{{ modelInfo.columnsLength }}</td>
+        <td>{{ defaultInfo.modelInfo.columns.length }}</td>
       </tr>
       <tr>
         <th>Rows</th>
@@ -21,8 +21,8 @@
         <th>태그</th>
         <td class="py-0">
           <div class="editable-group" v-if="!editTagsMode">
-            <div class="tag tag-primary tag-sm" v-for="tag in modelInfo.tags">
-              <span class="tag-text">{{ tag.label }}</span>
+            <div class="tag tag-primary tag-sm" v-for="tag in defaultInfo.tags">
+              <span class="tag-text">{{ tag.name }}</span>
             </div>
             <button
               class="button button-neutral-ghost button-sm"
@@ -69,8 +69,11 @@
         <th>용어</th>
         <td class="py-0">
           <div class="editable-group" v-if="!editTermsMode">
-            <div class="tag tag-primary tag-sm" v-for="term in modelInfo.terms">
-              <span class="tag-text">{{ term.label }}</span>
+            <div
+              class="tag tag-primary tag-sm"
+              v-for="term in defaultInfo.glossaries"
+            >
+              <span class="tag-text">{{ term.name }}</span>
             </div>
             <button
               class="button button-neutral-ghost button-sm"
@@ -118,8 +121,15 @@
 </template>
 
 <script setup lang="ts">
-import menuSearch from "@extends/menu-seach/menu-search.vue";
+import { useDataModelDetailStore } from "@/store/search/detail/index";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
+
+import menuSearch from "@extends/menu-seach/menu-search.vue";
+
+const dataModelDetailStore = useDataModelDetailStore();
+
+const { defaultInfo } = storeToRefs(dataModelDetailStore);
+
 const modelInfo = reactive({
   type: "Regular",
   columnsLength: 7,

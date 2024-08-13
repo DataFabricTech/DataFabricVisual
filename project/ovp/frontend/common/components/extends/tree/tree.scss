@@ -14,6 +14,7 @@
 
   &-list {
     overflow-y: auto;
+    overflow-x: hidden;
     height: calc(100% - 36px);
   }
 
@@ -36,6 +37,20 @@
         @include ellipsis;
 
         flex-grow: 1;
+      }
+    }
+
+    &__checkbox-area {
+      gap: $spacing-4;
+
+      & > input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        accent-color: $primary-500;
+      }
+
+      label {
+        @include ellipsis;
       }
     }
   }

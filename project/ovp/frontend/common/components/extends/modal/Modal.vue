@@ -36,8 +36,10 @@
     </div>
     <div class="modal-foot">
       <div class="modal-foot-group">
-        <button class="button button-ghost button-lg" @click="$emit('cancel', modalId)">취소</button>
-        <button class="button button-primary button-lg" @click="$emit('confirm', modalId)">확인</button>
+        <button class="button button-ghost button-lg" @click="$emit('cancel', modalId)" v-if="useCancelBtn">
+          취소
+        </button>
+        <button class="button button-primary button-lg" @click="$emit('confirm', modalId)">{{ confirmBtnMsg }}</button>
       </div>
     </div>
   </VueFinalModal>
@@ -45,11 +47,9 @@
 
 <script lang="ts" setup>
 import { VueFinalModal } from "vue-final-modal";
-import { useNuxtApp } from "nuxt/app";
 import { ModalProps } from "./ModalProps";
 import { ModalComposition } from "./ModalComposition";
 
-const { $vfm } = useNuxtApp();
 const props = withDefaults(defineProps<ModalProps>(), {
   modalId: undefined,
   modalClass: "",
@@ -66,7 +66,9 @@ const props = withDefaults(defineProps<ModalProps>(), {
   width: 620,
   height: 180,
   title: "",
-  subTitle: ""
+  subTitle: "",
+  useCancelBtn: true,
+  confirmBtnMsg: "확인"
 });
 
 const emit = defineEmits<{
@@ -78,6 +80,10 @@ const emit = defineEmits<{
   (e: "before-close"): void;
   (e: "closed"): void;
 }>();
+
+const onClose = (): void => {
+  emit("closed");
+};
 
 const {
   modalId,
@@ -97,5 +103,5 @@ const {
   dynamicModalClass,
   dynamicModalStyle,
   closeModal
-} = ModalComposition(props);
+} = ModalComposition(props, onClose);
 </script>

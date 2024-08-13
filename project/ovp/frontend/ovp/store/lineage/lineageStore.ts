@@ -5,12 +5,11 @@ export interface lineageData {
   edges: any[];
 }
 
-import lineageJson from "./samples/lineage.json";
-import previewJson from "./samples/preview.json";
 import ownerListJson from "./samples/ownerFilterList.json";
 import tagListJson from "./samples/tagFilterList.json";
 
 export const useLineageStore = defineStore("lineage", () => {
+  const { $api } = useNuxtApp();
   const lineageData: Ref<lineageData> = ref({} as lineageData);
 
   // TODO: 다른곳에서 preview에 대한 store를 만들기 떄문에 삭제 예정
@@ -37,17 +36,45 @@ export const useLineageStore = defineStore("lineage", () => {
   const serviceList = ref([]);
 
   // TODO: (fqn(외부스토어에서 호출, 필터) 파람 추가 필요
-  const getLineageData = async () => {
-    // TODO: 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
-    lineageData.value.nodes = lineageJson.rawNodes;
-    lineageData.value.edges = lineageJson.rawEdges;
+  const getLineageData = async (type: string, fqn: string) => {
+    console.log();
+    const queryFilter: any = {
+      query: {
+        bool: {
+          must: [
+            {
+              bool: {
+                should: [],
+              },
+            },
+          ],
+        },
+      },
+    };
+    const params: any = {
+      fqn: fqn,
+      query_filter: encodeURIComponent(JSON.stringify(queryFilter)),
+      upstreamDepth: "10",
+      downstreamDepth: "10",
+      includeDeleted: false,
+      type: "table",
+    };
+
+    const data = await $api(`/api/search/detail/lineage/${type}`, {
+      params: params,
+    });
+
+    lineageData.value.nodes = data.data.rawNodes;
+    lineageData.value.edges = data.data.rawEdges;
   };
 
   // TODO: 다른곳에서 preview에 대한 store를 만들기 떄문에 삭제 예정
   // TODO: fqn 파람 추가 필요
-  const getPreviewData = async () => {
+  const getPreviewData = async (fqn: string) => {
     // TODO: 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
-    previewData.value = previewJson;
+    const data: any = await $api(`/api/search/preview/${fqn}`);
+    console.log(data.data);
+    previewData.value = data.data;
     // TODO: fqn값을 쿼리파람에 넣어 api 요청 후 previewData 세팅 필요
   };
 

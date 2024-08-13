@@ -5,6 +5,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
@@ -18,4 +20,8 @@ public interface ClassificationClient {
 
     @DeleteMapping("/{id}")
     Map<String, Object> deleteTag(@PathVariable String id, @RequestParam MultiValueMap<String, String> params);
+
+    @PostMapping("")
+    Object createTag(@RequestBody Map<String, Object> params);
+
 }
