@@ -159,7 +159,7 @@
       >
         <template #edit-slot>
           <dl v-if="props.showCategory" class="resource-box-list">
-            <dt>도메인</dt>
+            <dt>카테고리</dt>
             <dd>
               <menu-search-button
                 v-on-click-outside="
@@ -186,7 +186,7 @@
         </template>
         <template #view-slot>
           <dl v-if="props.showCategory" class="resource-box-list">
-            <dt>도메인</dt>
+            <dt>카테고리</dt>
             <dd>{{ newData[categoryKey] }}</dd>
           </dl>
         </template>
@@ -257,8 +257,15 @@ const editCancel = (key: string) => {
   tempData.value[key] = newData.value[key];
 };
 const editDone = (key: string) => {
+  const data = {
+    key: key,
+    value: tempData.value[key],
+    beforeValue: newData.value[key],
+  };
+
   newData.value[key] = tempData.value[key];
-  emit("editDone", newData.value);
+
+  emit("editDone", data);
 };
 
 const editIconClick = (key: string, value: boolean) => {

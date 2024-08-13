@@ -58,7 +58,8 @@ const transformData = (
     data: {
       id: node.id,
       label: node.name,
-      path: node.fqn,
+      path: node.path,
+      fqn: node.fqn,
     },
   }));
 
@@ -93,6 +94,9 @@ const initializeCytoscape = (data: CytoscapeElement[]) => {
     cyRef = cytoscape(options);
 
     if (cyRef) {
+      // 리니지 default zoom 지정
+      cyRef.zoom(1.2);
+
       // cyRef를 any로 캐스팅하여 typescript가 nodeHtmlLabel 메서드 인식
       // 노드의 라벨 커스터마이징
       (cyRef as any).nodeHtmlLabel([
@@ -106,6 +110,44 @@ const initializeCytoscape = (data: CytoscapeElement[]) => {
           tpl,
         },
       ]);
+
+      // 마우스 오버 이벤트
+      cyRef.on("mouseover", "node", (event) => {
+        const node = event.target;
+        const nodeData = node.data(); // 노드 데이터 가져오기
+
+        // 툴팁을 HTML 요소로 만들어 추가 (예: div 요소)
+        const tooltip = document.createElement("div");
+        tooltip.className = "cy-tooltip";
+        tooltip.innerHTML = `${nodeData.path}<br>${nodeData.label}`;
+        tooltip.style.position = "absolute";
+        tooltip.style.backgroundColor = "#004D57";
+        tooltip.style.color = "#fff";
+        tooltip.style.padding = "5px";
+        tooltip.style.borderRadius = "4px";
+        tooltip.style.fontSize = "12px";
+        tooltip.style.pointerEvents = "none";
+        tooltip.style.zIndex = "1000";
+
+        document.body.appendChild(tooltip);
+
+        // 마우스 위치에 툴팁 배치
+        const updateTooltipPosition = (e) => {
+          tooltip.style.left = `${e.pageX + 10}px`;
+          tooltip.style.top = `${e.pageY + 10}px`;
+        };
+
+        updateTooltipPosition(event.originalEvent);
+
+        // 마우스 이동 시 툴팁 위치 업데이트
+        cyRef.on("mousemove", updateTooltipPosition);
+
+        // 마우스 아웃 시 툴팁 제거
+        cyRef.one("mouseout", "node", () => {
+          tooltip.remove();
+          cyRef.off("mousemove", updateTooltipPosition);
+        });
+      });
     }
 
     cyRef.edges().forEach((edge) => {
@@ -139,6 +181,13 @@ const initializeCytoscape = (data: CytoscapeElement[]) => {
 const handleNodeClick = (event) => {
   const node = event.target;
   emit("change", node.data());
+};
+
+const handleNodeOff = () => {
+  if (cyRef) {
+    // 노드 선택 상태 해제
+    cyRef.$("node:selected").unselect();
+  }
 };
 
 const zoomIn = () => {
@@ -190,6 +239,7 @@ onBeforeUnmount(() => {
 });
 
 defineExpose({
+  handleNodeOff,
   zoomIn,
   zoomOut,
   resetView,

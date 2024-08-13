@@ -4,7 +4,8 @@
       <menu-search-tree
         label-key="name"
         value-key="id"
-        :data="categories"
+        :title="filter.text"
+        :data="filter.data.children"
         :is-multi="true"
         :hideGuideLines="false"
         :firExpandAll="true"
@@ -53,10 +54,6 @@ const searchCommonStore = useSearchCommonStore();
 const { resetReloadList } = searchCommonStore;
 const { selectedFilters } = storeToRefs(searchCommonStore);
 
-const categoryStore = useGovernCategoryStore();
-const { getCategories } = categoryStore;
-const { categories } = storeToRefs(categoryStore);
-
 const props = defineProps({
   data: {
     type: Object,
@@ -93,8 +90,6 @@ const setSelectedFilters = (keyName: string, selectedIds: any[]) => {
 const onNodeChecked = (checkedNodes: TreeViewItem[]) => {
   setSelectedFilters(FILTER_KEYS.CATEGORY, checkedNodes);
 };
-
-getCategories();
 </script>
 
 <style lang="scss" scoped></style>

@@ -38,7 +38,8 @@
     "typescript": "^4.9.5",
     "vue": "^3.4.29",
     "vue-final-modal": "^4.5.4",
-    "vue-router": "^4.3.3"
+    "vue-router": "^4.3.3",
+    "vue3-uuid": "^1.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.5.0",
