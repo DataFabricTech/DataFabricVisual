@@ -14,6 +14,8 @@
   <modal-service> </modal-service>
   <modal-collection></modal-collection>
   <modal-log></modal-log>
+
+  <service-add-modal :modal-id="SERVICE_ADD_MODAL_ID"></service-add-modal>
 </template>
 
 <style scoped></style>
@@ -22,12 +24,12 @@
 import ModalService from "~/components/manage/service/modal/modal-service.vue";
 import ModalCollection from "~/components/manage/service/modal/modal-collection.vue";
 import ModalLog from "~/components/manage/service/modal/modal-log.vue";
+import ServiceAddModal from "@/components/manage/service/service-add-modal/service-add-modal.vue";
 
-const stepOptions = [
-  { label: "서비스 타입 선택", value: "Step1" },
-  { label: "서비스 컨피그 입력", value: "Step2" },
-  { label: "연결 세부 정보 입력", value: "Step3" },
-];
+import { useNuxtApp } from "nuxt/app";
+const { $vfm } = useNuxtApp();
+
+const SERVICE_ADD_MODAL_ID: string = "service-add-modal";
 
 const stepOptions2 = [
   { label: "컨피그 수집", value: "Step1" },
@@ -47,6 +49,11 @@ const changeDate = (v) => {
   console.log(v);
   console.log(typeof v);
 };
+
+const modalOpen = (modalId: string) => {
+  $vfm.open(modalId);
+};
+
 const nullData = ref(null);
 const date = ref("2024-01-26");
 const date2 = ref("24.01.26");
