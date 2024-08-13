@@ -62,6 +62,7 @@
     <LineageGraph
       ref="lineageRef"
       :lineageData="lineageData"
+      :previewOn="previewOn"
       @change="modelChoose"
     ></LineageGraph>
     <div class="lineage-control">
@@ -145,6 +146,7 @@ const previewOn: Ref<boolean> = ref<boolean>(false);
 
 const getPreviewOn = (isPreviewClosed: boolean) => {
   if (isPreviewClosed === false) {
+    lineageRef.value.handleNodeOff();
     previewOn.value = false;
   }
 };
@@ -153,7 +155,6 @@ const modelChoose = async (nodeData: NodeData) => {
   if (nodeData) {
     previewOn.value = true;
     console.log(nodeData.fqn);
-    // TODO: NodeData의 fqn 값 파라미터를 넣어 store에서 previewData 세팅
     await getPreviewData(nodeData.fqn);
     previewData.value.modelInfo.model.name = nodeData.label;
   }
