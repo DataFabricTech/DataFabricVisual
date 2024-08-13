@@ -16,7 +16,7 @@
     <div class="menu border-none" v-if="glossaries.length > 0">
       <div class="menu-list">
         <li
-          class="menu-item"
+          :class="menuListClass(glossary)"
           v-for="glossary in glossaries"
           @click="changeCurrentGlossary(glossary)"
         >
@@ -36,9 +36,18 @@
 
 <script setup lang="ts">
 import { useGlossaryStore } from "~/store/glossary";
+import type { Glossary } from "~/type/glossary";
+import { _ } from "lodash";
 const { $vfm } = useNuxtApp();
-const { glossaries, getGlossaries, changeCurrentGlossary } = useGlossaryStore();
+const { glossaries, glossary, getGlossaries, changeCurrentGlossary } =
+  useGlossaryStore();
 getGlossaries();
+
+const menuListClass = (data: Glossary): string => {
+  return _.isEqual(glossary, data)
+    ? "menu-item is-menu-item-selected"
+    : "menu-item";
+};
 
 const MODAL_ID = "modal-glossary-dictionary";
 function openModal() {
