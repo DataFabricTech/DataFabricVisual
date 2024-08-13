@@ -11,7 +11,7 @@ interface ModalComposition extends ModalProps {
   closeModal(modalId: string | number | symbol): void;
 }
 
-export function ModalComposition(props: ModalProps): ModalComposition {
+export function ModalComposition(props: ModalProps, onclose: () => void): ModalComposition {
   const { $vfm } = useNuxtApp();
 
   const dynamicModalClass: ComputedRef<string> = computed(() => {
@@ -22,7 +22,7 @@ export function ModalComposition(props: ModalProps): ModalComposition {
     }
   });
 
-  const dynamicModalStyle: ComputedRef<string | string> = computed(() => {
+  const dynamicModalStyle: ComputedRef<string> = computed(() => {
     let style: string = `modal; position: absolute; width: ${props.width}px; height: ${props.height}px;`;
 
     if (props.top !== undefined || props.left !== undefined) {
@@ -32,8 +32,13 @@ export function ModalComposition(props: ModalProps): ModalComposition {
     return style;
   });
 
+  const onClose = (): void => {
+    onclose();
+  };
+
   const closeModal = (modalId: string | number | symbol): void => {
     $vfm.close(modalId);
+    onClose();
   };
 
   const modalPosition = reactive<{ top: number | null; left: number | null }>({
@@ -44,7 +49,7 @@ export function ModalComposition(props: ModalProps): ModalComposition {
   console.log(modalPosition);
 
   function getDocumentSize() {
-    let documentSize = {
+    const documentSize = {
       width: window.innerWidth ?? document.body.clientWidth,
       height: window.innerHeight ?? document.body.clientHeight
     };
@@ -87,5 +92,5 @@ export function ModalComposition(props: ModalProps): ModalComposition {
   });
 
   // TODO: 타입스크릡트 return 수정해야 함.
-  return { ...props, dynamicModalClass, dynamicModalStyle, closeModal };
+  return { ...props, dynamicModalClass, dynamicModalStyle, closeModal, onClose };
 }

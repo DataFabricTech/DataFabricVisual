@@ -249,7 +249,8 @@ public class SearchService {
         resultMap.put("modelInfo", modelInfo);
         resultMap.put("glossaries", glossaryList);
         resultMap.put("tags", tagList);
-
+        resultMap.put("id", result.get("id"));
+        resultMap.put("fqn", fqn);
         return resultMap;
     }
 }

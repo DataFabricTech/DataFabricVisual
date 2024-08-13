@@ -41,7 +41,7 @@ import { MenuSearchTreeProps } from "./MenuSearchTreeProps";
 import { MenuSearchTreeComposition } from "./MenuSearchTreeComposition";
 
 const props = withDefaults(defineProps<MenuSearchTreeProps>(), {
-  title: "컴포넌트",
+  title: "",
 
   data: () => [],
   labelKey: "label",
