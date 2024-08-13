@@ -64,6 +64,18 @@
   .menu-list {
     max-height: 165px;
     overflow-y: auto;
+
+    .tree {
+      padding: 0 $spacing-8;
+
+      .guide-line::before {
+        left: -0.8px;
+      }
+
+      .node-child .tree-item-node-parent .tree-item-node:not(:last-child)::before {
+        left: -0.8px;
+      }
+    }
   }
 
   .menu-foot {

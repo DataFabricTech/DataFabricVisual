@@ -6,6 +6,5 @@ import type {
 export interface ResourceBoxListProps extends ResourceBoxCommonProps {
   dataList: DataModel[];
   isBoxSelectedStyle: boolean;
-  isChecked?: boolean;
   selectedModelList?: any[];
 }

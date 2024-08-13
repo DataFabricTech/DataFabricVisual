@@ -1,17 +1,152 @@
 {
   "rawNodes": [
-    { "id": "root", "name": "Root", "fqn": "/path/to/root" },
-    { "id": "child1", "name": "Child 1", "fqn": "/path/to/child1" },
-    { "id": "child2", "name": "Child 2", "fqn": "/path/to/child2" },
-    { "id": "child1-1", "name": "Child 1-1", "fqn": "/path/to/child1-1" },
-    { "id": "child1-2", "name": "Child 1-2", "fqn": "/path/to/child1-2" },
-    { "id": "child2-1", "name": "Child 2-1", "fqn": "/path/to/child2-1" }
+    {
+      "path": "df2.test_db.test_db",
+      "fqn": "df2.test_db.test_db.Active_Employees",
+      "name": "Active_Employees",
+      "id": "801abfe5-eee7-434c-8570-84033dc8d447"
+    },
+    {
+      "path": "df2.test_db.test_db",
+      "fqn": "df2.test_db.test_db.Employee_Job_Details",
+      "name": "Employee_Job_Details",
+      "id": "b6d43902-4e48-438b-ab08-e466e865c669"
+    },
+    {
+      "path": "df2.test_db.test_db",
+      "fqn": "df2.test_db.test_db.EmployeeSalaryView",
+      "name": "EmployeeSalaryView",
+      "id": "ec4165b3-0eb4-4ee1-b280-ae409e8760c0"
+    },
+    {
+      "path": "df2.test_db.test_db",
+      "fqn": "df2.test_db.test_db.Female_Active_Employees",
+      "name": "Female_Active_Employees",
+      "id": "a2ab770b-a871-43e7-bb8c-2ba0bc404769"
+    },
+    {
+      "path": "df2.test_db.test_db",
+      "fqn": "df2.test_db.test_db.Top_Female_Salaries",
+      "name": "Top_Female_Salaries",
+      "id": "7ed11849-0c4e-4cad-bc47-01dcc0400e1e"
+    },
+    {
+      "path": "df2.test_db.test_db",
+      "fqn": "df2.test_db.test_db.Female_Employees_Salary_Details",
+      "name": "Female_Employees_Salary_Details",
+      "id": "c49effc4-ca25-4af2-9a68-b69d0c6ec3a3"
+    },
+    {
+      "path": "datamodels.internalhive.default",
+      "fqn": "datamodels.internalhive.default.model_df2_test_db_employee_col_id_name_birth_gender",
+      "name": "model_df2_test_db_employee_col_id_name_birth_gender",
+      "id": "42826a4e-3da2-412e-aaec-6959d02f626b"
+    },
+    {
+      "path": "datamodels.internalhive.default",
+      "fqn": "datamodels.internalhive.default.model_df2_test_db_employee_col_id_name_gender",
+      "name": "model_df2_test_db_employee_col_id_name_gender",
+      "id": "d7801055-cbbf-4e2c-9cd8-4d73a8498b57"
+    },
+    {
+      "path": "df2.test_db.test_db",
+      "fqn": "df2.test_db.test_db.Employee",
+      "name": "EmployeeDisplay",
+      "id": "6ef96a3a-837b-40a5-9afe-a286e50e6ae4"
+    },
+    {
+      "path": "df2.test_db.test_db",
+      "fqn": "df2.test_db.test_db.Female_Active_Employees_High_Salary",
+      "name": "Female_Active_Employees_High_Salary",
+      "id": "b7e936ac-e3b0-4e15-a7b7-de2855630017"
+    },
+    {
+      "path": "df2.test_db.test_db",
+      "fqn": "df2.test_db.test_db.Job_Titles",
+      "name": "Job_Titles",
+      "id": "1ce17186-e1a4-4738-8cd4-f712123dd6da"
+    }
   ],
   "rawEdges": [
-    { "fromId": "root", "toId": "child1" },
-    { "fromId": "root", "toId": "child2" },
-    { "fromId": "child1", "toId": "child1-1" },
-    { "fromId": "child1", "toId": "child1-2" },
-    { "fromId": "child2", "toId": "child2-1" }
+    {
+      "toId": "a2ab770b-a871-43e7-bb8c-2ba0bc404769",
+      "fromId": "801abfe5-eee7-434c-8570-84033dc8d447"
+    },
+    {
+      "toId": "801abfe5-eee7-434c-8570-84033dc8d447",
+      "fromId": "b6d43902-4e48-438b-ab08-e466e865c669"
+    },
+    {
+      "toId": "1ce17186-e1a4-4738-8cd4-f712123dd6da",
+      "fromId": "b6d43902-4e48-438b-ab08-e466e865c669"
+    },
+    {
+      "toId": "801abfe5-eee7-434c-8570-84033dc8d447",
+      "fromId": "b6d43902-4e48-438b-ab08-e466e865c669"
+    },
+    {
+      "toId": "b6d43902-4e48-438b-ab08-e466e865c669",
+      "fromId": "6ef96a3a-837b-40a5-9afe-a286e50e6ae4"
+    },
+    {
+      "toId": "ec4165b3-0eb4-4ee1-b280-ae409e8760c0",
+      "fromId": "6ef96a3a-837b-40a5-9afe-a286e50e6ae4"
+    },
+    {
+      "toId": "b7e936ac-e3b0-4e15-a7b7-de2855630017",
+      "fromId": "a2ab770b-a871-43e7-bb8c-2ba0bc404769"
+    },
+    {
+      "toId": "c49effc4-ca25-4af2-9a68-b69d0c6ec3a3",
+      "fromId": "a2ab770b-a871-43e7-bb8c-2ba0bc404769"
+    },
+    {
+      "toId": "a2ab770b-a871-43e7-bb8c-2ba0bc404769",
+      "fromId": "801abfe5-eee7-434c-8570-84033dc8d447"
+    },
+    {
+      "toId": "7ed11849-0c4e-4cad-bc47-01dcc0400e1e",
+      "fromId": "b7e936ac-e3b0-4e15-a7b7-de2855630017"
+    },
+    {
+      "toId": "c49effc4-ca25-4af2-9a68-b69d0c6ec3a3",
+      "fromId": "a2ab770b-a871-43e7-bb8c-2ba0bc404769"
+    },
+    {
+      "toId": "42826a4e-3da2-412e-aaec-6959d02f626b",
+      "fromId": "6ef96a3a-837b-40a5-9afe-a286e50e6ae4"
+    },
+    {
+      "toId": "d7801055-cbbf-4e2c-9cd8-4d73a8498b57",
+      "fromId": "6ef96a3a-837b-40a5-9afe-a286e50e6ae4"
+    },
+    {
+      "toId": "42826a4e-3da2-412e-aaec-6959d02f626b",
+      "fromId": "6ef96a3a-837b-40a5-9afe-a286e50e6ae4"
+    },
+    {
+      "toId": "b6d43902-4e48-438b-ab08-e466e865c669",
+      "fromId": "6ef96a3a-837b-40a5-9afe-a286e50e6ae4"
+    },
+    {
+      "toId": "d7801055-cbbf-4e2c-9cd8-4d73a8498b57",
+      "fromId": "6ef96a3a-837b-40a5-9afe-a286e50e6ae4"
+    },
+    {
+      "toId": "ec4165b3-0eb4-4ee1-b280-ae409e8760c0",
+      "fromId": "6ef96a3a-837b-40a5-9afe-a286e50e6ae4"
+    },
+    {
+      "toId": "7ed11849-0c4e-4cad-bc47-01dcc0400e1e",
+      "fromId": "b7e936ac-e3b0-4e15-a7b7-de2855630017"
+    },
+    {
+      "toId": "b7e936ac-e3b0-4e15-a7b7-de2855630017",
+      "fromId": "a2ab770b-a871-43e7-bb8c-2ba0bc404769"
+    },
+    {
+      "toId": "1ce17186-e1a4-4738-8cd4-f712123dd6da",
+      "fromId": "b6d43902-4e48-438b-ab08-e466e865c669"
+    }
   ]
 }

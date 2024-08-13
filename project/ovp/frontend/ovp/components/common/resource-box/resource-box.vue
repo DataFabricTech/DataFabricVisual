@@ -159,7 +159,7 @@
       >
         <template #edit-slot>
           <dl v-if="props.showCategory" class="resource-box-list">
-            <dt>도메인</dt>
+            <dt>카테고리</dt>
             <dd>
               <menu-search-button
                 v-on-click-outside="
@@ -186,7 +186,7 @@
         </template>
         <template #view-slot>
           <dl v-if="props.showCategory" class="resource-box-list">
-            <dt>도메인</dt>
+            <dt>카테고리</dt>
             <dd>{{ newData[categoryKey] }}</dd>
           </dl>
         </template>
@@ -197,7 +197,7 @@
 
 <script setup lang="ts">
 import { vOnClickOutside } from "@vueuse/components";
-import { defineEmits, ref } from "vue";
+import { defineEmits, ref, defineProps } from "vue";
 
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
@@ -216,6 +216,10 @@ const props = withDefaults(defineProps<ResourceBoxProps>(), {
   ownerKey: "owner",
   categoryKey: "category",
   useListCheckbox: false,
+});
+
+const isChecked = computed(() => {
+  return props.selectedModelList.includes(props.dataObj.id);
 });
 
 const isEditMode = ref<Record<string, boolean>>({
@@ -253,8 +257,15 @@ const editCancel = (key: string) => {
   tempData.value[key] = newData.value[key];
 };
 const editDone = (key: string) => {
+  const data = {
+    key: key,
+    value: tempData.value[key],
+    beforeValue: newData.value[key],
+  };
+
   newData.value[key] = tempData.value[key];
-  emit("editDone", newData.value);
+
+  emit("editDone", data);
 };
 
 const editIconClick = (key: string, value: boolean) => {

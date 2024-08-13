@@ -77,7 +77,7 @@ export const useMainStore = defineStore("mainStore", () => {
   };
 
   const getRecentQuestData = async () => {
-    await getDataList(SAMPLE_DATA, isRecentQuestDataNoInfo, recentQuestData);
+    getDataList(SAMPLE_DATA, isRecentQuestDataNoInfo, recentQuestData);
 
     console.log("최근 탐색 데이터 API 불러오기", recentQuestData.value);
   };
@@ -92,19 +92,18 @@ export const useMainStore = defineStore("mainStore", () => {
 
   const getBookmarkData = async (id: string) => {
     const data = await $api(`/api/main/follows/${id}`);
-    await getDataList(data.data, isBookmarkDataNoInfo, bookmarkData);
+    getDataList(data.data, isBookmarkDataNoInfo, bookmarkData);
   };
-
   const getUpVotesData = async () => {
-    await setSortInfo("totalVotes_desc");
+    setSortInfo("totalVotes_desc");
     await getMainDataList();
-    await getDataList(dataResult.value, isUpVotesDataNoInfo, upVotesData);
+    getDataList(dataResult.value, isUpVotesDataNoInfo, upVotesData);
   };
 
   const getLastUpdatedData = async () => {
-    await setSortInfo("updatedAt_desc");
+    setSortInfo("updatedAt_desc");
     await getMainDataList();
-    await getDataList(dataResult.value, isLastUpdatedData, lastUpdatedData);
+    getDataList(dataResult.value, isLastUpdatedData, lastUpdatedData);
   };
 
   return {
@@ -116,9 +115,8 @@ export const useMainStore = defineStore("mainStore", () => {
     isBookmarkDataNoInfo,
     isUpVotesDataNoInfo,
     isLastUpdatedData,
-    getUserInfo,
     getRecentQuestData,
-    getBookmarkData,
+    getUserInfo,
     getUpVotesData,
     getLastUpdatedData,
   };

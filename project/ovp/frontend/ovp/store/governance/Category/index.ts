@@ -33,11 +33,11 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     categories.value = data.children;
     isCategoriesNoData.value = categories.value.length === 0;
   };
-  const getModelListQuery = (tagId: string) => {
+  const getModelListQuery = (tagId: string, value?: string) => {
     // TODO : [개발] 검색어 조건 여기 추가.
     const params: any = {
       // eslint-disable-next-line id-length
-      q: "",
+      q: value || "",
       from: from.value,
       size: size.value,
       tagId: tagId,
@@ -45,12 +45,15 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     return new URLSearchParams(params);
   };
 
-  const getModelByCategoryIdAPI = async (node: TreeViewItem) => {
+  const getModelByCategoryIdAPI = async (
+    node: TreeViewItem,
+    value?: string,
+  ) => {
     if (_.isNull(node) || _.isEmpty(node.tagId)) {
       return;
     }
     const { data } = await $api(
-      `/api/category/models?${getModelListQuery(node.tagId)}`,
+      `/api/category/models?${getModelListQuery(node.tagId, value)}`,
     );
     return data;
   };
@@ -58,12 +61,12 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     const data = await getModelByCategoryIdAPI(selectedNode);
     modelList.value = modelList.value.concat(data);
   };
-  const getModelList = async () => {
+
+  const getModelList = async (value?: string) => {
     if (_.isNull(selectedNode)) {
       return;
     }
-    const data = await getModelByCategoryIdAPI(selectedNode);
-    // data가 null 로 전달받는 경우 빈 값으로 전달 받도록 수정
+    const data = await getModelByCategoryIdAPI(selectedNode, value);
     modelList.value = data === null ? [] : data;
   };
   const setSelectedNode = (node: any) => {
@@ -95,18 +98,17 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     });
     return data;
   };
-  const deleteCategory = async (nodeId: string) => {
-    await $api(`/api/category`, {
+  const deleteCategory = (nodeId: string) => {
+    return $api(`/api/category`, {
       method: "delete",
       body: {
         id: nodeId,
       },
     });
-
-    alert("삭제 되었습니다.");
-    getCategories();
   };
+
   const setModelIdList = () => {
+    modelIdList.value = [];
     for (const element of modelList.value) {
       modelIdList.value.push(element.id);
     }
