@@ -47,10 +47,7 @@
       </div>
       <!-- // 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
       <!-- TODO alert 개발 후 얼럿 적용 -->
-      <button
-        class="button button-error-lighter"
-        @click="deleteGlossary(glossary.id)"
-      >
+      <button class="button button-error-lighter" @click="removeGlossary">
         삭제
       </button>
     </div>
@@ -216,6 +213,11 @@ onMounted(() => {
 function syncEditDataWithGlossary() {
   editData.name = store.glossary.name;
   editData.description = store.glossary.description;
+}
+
+async function removeGlossary() {
+  await deleteGlossary(glossary.id);
+  await getGlossaries();
 }
 
 async function updateGlossary(

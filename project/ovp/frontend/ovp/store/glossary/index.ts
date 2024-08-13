@@ -78,7 +78,9 @@ export const useGlossaryStore = defineStore("glossary", () => {
     await $api(`/api/glossary/${id}`, {
       method: "DELETE",
     });
-    await getGlossaries();
+    Object.keys(glossary).forEach((key) => {
+      delete glossary[key];
+    });
   }
 
   /**
@@ -205,6 +207,8 @@ export const useGlossaryStore = defineStore("glossary", () => {
    */
   async function changeCurrentGlossary(param: Glossary): Promise<void> {
     Object.assign(glossary, param);
+    console.log(param);
+    console.log(glossary);
     changeTab("term");
     await getTerms(param.name);
     await getGlossaryActivities(`<%23E::glossary::${param.name}>`);
