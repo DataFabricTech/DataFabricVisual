@@ -14,17 +14,12 @@
   </div>
 </template>
 
-<style scoped></style>
-<script>
-import MenuSearch from "@extends/menu-seach/menu-search.vue";
+<script setup lang="ts">
+import { onMounted } from "vue";
+import { useGlossaryStore } from "~/store/glossary";
+const { getAllTags } = useGlossaryStore();
 
-export default defineComponent({
-  components: { MenuSearch },
-  data() {
-    return {
-      showModalDic: false,
-      showModal: false,
-    };
-  },
+onMounted(() => {
+  getAllTags();
 });
 </script>

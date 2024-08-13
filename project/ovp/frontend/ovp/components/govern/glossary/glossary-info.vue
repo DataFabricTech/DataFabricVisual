@@ -186,7 +186,6 @@ const {
   deleteGlossary,
   changeTab,
   changeEditGlossaryMode,
-  getAllTags,
   createTagOperation,
 } = useGlossaryStore();
 const store = useGlossaryStore();
@@ -207,7 +206,6 @@ watch(
 
 onMounted(() => {
   syncEditDataWithGlossary();
-  getAllTags();
 });
 
 function syncEditDataWithGlossary() {

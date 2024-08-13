@@ -242,7 +242,6 @@ const {
   editTermMode,
   menuSearchTagsData,
   menuSearchRelatedTermsData,
-  getAllTags,
   getTerms,
   editTerm,
   deleteTerm,
@@ -277,7 +276,6 @@ watch(
 
 onMounted(() => {
   syncEditDataWithTerm();
-  getAllTags();
 });
 
 function syncEditDataWithTerm(): void {
