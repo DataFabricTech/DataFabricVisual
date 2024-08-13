@@ -111,8 +111,8 @@ const onCancel = () => {
 };
 
 const onConfirm = async () => {
-  showAddNameNoti.value = categoryAddName.value === "" ? true : false;
-  showAddDescNoti.value = categoryAddDesc.value === "" ? true : false;
+  showAddNameNoti.value = categoryAddName.value === "";
+  showAddDescNoti.value = categoryAddDesc.value === "";
 
   if (!showAddNameNoti.value && !showAddDescNoti.value) {
     await setNewNodeCategory();

@@ -60,10 +60,9 @@ const onConfirm = async () => {
   $vfm.open(props.modalId);
 };
 
-// TODO: [API 개발] 모델 리스트 삭제/변경 API 수정
-// 변경하려고 하는 카테고리의 tag 정보를, 내가 선택한 모델 리스트 쿼리에 저장한다.
 const onCategoryNodeClick = () => {
-  console.log("onNodeClick");
+  // TODO: [API 개발] 모델 리스트 삭제/변경 API 수정
+  // NOTE: 변경하려고 하는 카테고리의 tag 정보를, 내가 선택한 모델 리스트 쿼리에 저장한다.
 };
 </script>
 
