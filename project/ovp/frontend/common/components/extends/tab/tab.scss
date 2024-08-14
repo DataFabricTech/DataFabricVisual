@@ -10,6 +10,7 @@
   &-item {
     flex: 1 1 100%;
     border: 1px solid $neutral-200;
+    border-radius: 0;
     border-bottom-color: $primary-500;
 
     &:not(:last-child) {
