@@ -14,6 +14,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
       serviceNm: "",
       serviceDesc: "",
     },
+    detailInfo: {},
   };
   const serviceObj = ref<IServiceObj>(_.cloneDeep(initialServiceObj));
 
@@ -26,6 +27,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
   });
 
   const resetServiceObj = () => {
+    // serviceId 는 리셋하지 않음.
     serviceObj.value = _.cloneDeep(initialServiceObj);
   };
 
@@ -36,9 +38,14 @@ export const useServiceStore = defineStore("serviceStore", () => {
     return [];
   };
 
+  const setInitServiceId = (serviceId: string) => {
+    initialServiceObj.serviceId = serviceId;
+  };
+
   return {
     serviceObj,
     selectedServiceObj,
+    setInitServiceId,
     resetServiceObj,
     checkServiceNameDuplicate,
   };

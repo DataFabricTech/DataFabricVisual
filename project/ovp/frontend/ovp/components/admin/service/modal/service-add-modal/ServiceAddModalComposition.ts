@@ -1,4 +1,4 @@
-import { useServiceStore } from "~/store/service";
+import { useServiceStore } from "~/store/admin/service/modal";
 import _ from "lodash";
 
 import type {
@@ -12,7 +12,10 @@ export interface ServiceAddModalComposition extends ServiceAddModalProps {
   selectedServiceObj: Ref<IService>;
   resetInput(serviceObjPath: string): void;
   resetData(): void;
+
   serviceImgClick(service: IService): void;
+  setDefaultServiceId(serviceId: string): void;
+
   isServiceNameDuplicate(): Promise<boolean>;
 }
 
@@ -21,12 +24,23 @@ export function ServiceAddModalComposition(
 ): ServiceAddModalComposition {
   const serviceStore = useServiceStore();
   const { serviceObj, selectedServiceObj } = storeToRefs(serviceStore);
-  const { resetServiceObj, checkServiceNameDuplicate } = serviceStore;
+  const { setInitServiceId, resetServiceObj, checkServiceNameDuplicate } =
+    serviceStore;
+
+  enum PanelTypes {
+    INPUT = "INPUT",
+    INPUT_PWD = "INPUT_PWD",
+    SELECT = "SELECT",
+  }
 
   // coomon
   const resetInput = (serviceObjPath: string) => {
-    _.set(serviceObj.value, serviceObjPath, "");
+    setValue(serviceObjPath, "");
   };
+  const setValue = (serviceObjPath: string, value: any) => {
+    _.set(serviceObj.value, serviceObjPath, value);
+  };
+
   const resetData = () => {
     resetServiceObj();
   };
@@ -36,20 +50,29 @@ export function ServiceAddModalComposition(
     serviceObj.value.serviceId = service.id;
     selectedServiceObj.value = service;
   };
+  const setDefaultServiceId = (serviceId: string) => {
+    // 첫번째 serviceId 값을 저장해둔다.
+    setInitServiceId(serviceId);
+  };
 
   // step2
   const isServiceNameDuplicate = async () => {
     const result = await checkServiceNameDuplicate();
-    return result.length > 0;
+    console.log(result);
+    // return result.length > 0;
+    return false;
   };
 
   return {
     ...props,
+    PanelTypes,
     serviceObj,
     selectedServiceObj,
+    setValue,
     resetInput,
     resetData,
     serviceImgClick,
+    setDefaultServiceId,
     isServiceNameDuplicate,
   };
 }

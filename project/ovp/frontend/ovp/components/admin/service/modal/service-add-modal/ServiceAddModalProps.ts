@@ -11,9 +11,12 @@ export interface IServiceObj {
     serviceNm: string;
     serviceDesc: string;
   };
+  detailInfo: Record<string, any>;
 }
 
 export interface ServiceAddModalProps {
+  data?: object;
+
   modalId?: string;
   style?: any;
 }

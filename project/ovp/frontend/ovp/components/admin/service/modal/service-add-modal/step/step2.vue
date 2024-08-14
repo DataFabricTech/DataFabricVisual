@@ -23,7 +23,6 @@
               <input
                 id="text-input-example-4"
                 class="text-input text-input-lg"
-                value="prefix icon + button"
                 v-model="serviceObj.defaultInfo.serviceNm"
               />
               <button

@@ -14,7 +14,11 @@
           <div class="service-type-img">
             <img :src="service.imgUrl" :alt="service.label" />
           </div>
-          <span class="service-type-title">{{ service.label }}</span>
+          <!-- TODO: 개발 : 선택한 서비스 퍼블 처리 완료 되면 아래 코드 수정 필요함. -->
+          <span class="service-type-title"
+            >{{ serviceObj.serviceId === service.id ? "선택됨" : ""
+            }}{{ service.label }}</span
+          >
         </button>
       </li>
     </ul>
@@ -67,7 +71,8 @@ const services = ref<IService[]>([
     imgUrl: "",
   },
 ]);
-const { serviceObj, serviceImgClick } = ServiceAddModalComposition(props);
+const { serviceObj, serviceImgClick, setDefaultServiceId } =
+  ServiceAddModalComposition(props);
 
 // 이미지 URL 동적 셋팅
 services.value.forEach(async (service: any) => {
@@ -80,6 +85,9 @@ services.value.forEach(async (service: any) => {
 // auto select first img
 const firstService = _.head(services.value)!;
 serviceImgClick(firstService);
+
+// step1 생성될때 맨 처음 실행되는 코드로, 자동선택된 img 를 기본값으로 저장해둔다.
+setDefaultServiceId(firstService.id);
 </script>
 
 <style scoped></style>
