@@ -16,25 +16,28 @@
     margin: $spacing-20 $spacing-16 0;
     flex-grow: 1;
     width: 100%;
+    min-height: 700px;
 
     .tab-list {
       width: fit-content;
     }
-  }
-}
 
-.my-contents {
-  width: 100%;
-  height: calc(100% - 50px);
-  padding: $spacing-12;
+    .tab-contents {
+      width: 100%;
+      height: calc(100% - 50px);
 
-  .search-input {
-    margin-bottom: $spacing-8;
-  }
+      .search-input {
+        margin-bottom: $spacing-8;
+      }
 
-  .no-result,
-  .l-split {
-    height: calc(100% - 42px);
+      .no-result {
+        height: calc(100% - 36px);
+      }
+
+      .l-split {
+        height: inherit;
+      }
+    }
   }
 }
 
