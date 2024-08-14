@@ -1,9 +1,8 @@
 .submit-form {
-  @include flex($direction: column);
+  @include flex($direction: column, $gap: $spacing-48);
 
   height: 100%;
-  gap: $spacing-48;
-  background: linear-gradient(to bottom, rgba(189, 227, 255, 0.5), rgba(51, 152, 164, 0.5));
+  background: linear-gradient(to bottom, rgb(189 227 255 / 50%), rgb(51 152 164 / 50%));
 
   &-logo {
     @include font-size('32');
@@ -45,7 +44,7 @@
     padding: $spacing-40 $spacing-36;
     background-color: $neutral-0;
     border-radius: $border-radius-12;
-    box-shadow: 0 0 40px 0 rgba(9, 131, 143, 0.5);
+    box-shadow: 0 0 40px 0 rgb(9 131 143 / 50%);
 
     .form {
       width: 100%;

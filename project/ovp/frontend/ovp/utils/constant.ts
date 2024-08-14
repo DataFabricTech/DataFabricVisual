@@ -71,5 +71,21 @@ const $constants = {
       ],
     },
   },
+  SERVICE: {
+    TAB: [
+      {
+        label: "저장소",
+        value: "repository",
+      },
+      {
+        label: "수집",
+        value: "collection",
+      },
+      {
+        label: "연결정보",
+        value: "connection-info",
+      },
+    ],
+  },
 };
 export default Object.freeze($constants);

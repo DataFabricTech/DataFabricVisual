@@ -251,6 +251,9 @@ public class SearchService {
         resultMap.put("glossaries", glossaryList);
         resultMap.put("tags", tagList);
 
+        resultMap.put("id", result.get("id"));
+        resultMap.put("fqn", fqn);
+
         // TODO: 비정형 API 불러오기 필요 details & url & model.ext (현재 확인 불가)
 
         return resultMap;

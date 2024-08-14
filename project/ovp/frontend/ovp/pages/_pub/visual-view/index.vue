@@ -82,7 +82,7 @@
                   border:3px solid #22B4FF;
                   position: relative;
                   cursor: pointer"
-                  title="마우스오버 시, 전체 내용을 툴 팁으로 제공 함."
+           title="마우스오버 시, 전체 내용을 툴 팁으로 제공 함."
       >
         <!-- TODO: [개발] 노드 클릭 시 드롭다운 -->
         <div class="dropdown" style="top: 50px; left: 50px">
@@ -137,7 +137,8 @@
               </li>
             </ul>
           </div>
-          <button class="search-input-action-button button button-neutral-ghost button-sm" type="button" @click="closeModellist">
+          <button class="search-input-action-button button button-neutral-ghost button-sm" type="button"
+                  @click="closeModellist">
             <span class="hidden-text">지우기</span>
             <svg-icon class="button-icon" name="close"></svg-icon>
           </button>
@@ -150,11 +151,14 @@
                 <div class="checkbox">
                   <input type="checkbox" id="checkbox-menu-01" class="checkbox-input" checked />
                   <label for="checkbox-menu-01" class="checkbox-label">
-                    <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                    <span class="checkbox-text">데이터 모델</span>
-                    <span class="checkbox-subtext">(소유자)</span>
+                    <span class="hidden-text">label</span>
                   </label>
                 </div>
+                <button class="menu-button">
+                  <div class="type-img type-img-oracle"></div>
+                  <span class="menu-text">데이터 모델</span>
+                  <span class="menu-subtext">(소유자)</span>
+                </button>
                 <div class="menu-button-group">
                   <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환/icon에 .secondary 클래스 추가 -->
                   <button class="button button-neutral-ghost button-sm">
@@ -165,13 +169,16 @@
               </li>
               <li class="menu-item" v-for="menu in 26" :key="menu">
                 <div class="checkbox">
-                  <input type="checkbox" id="checkbox-menu-03" class="checkbox-input" />
-                  <label for="checkbox-menu-03" class="checkbox-label">
-                    <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                    <span class="checkbox-text">데이터 모델</span>
-                    <span class="checkbox-subtext">(소유자)</span>
+                  <input type="checkbox" id="checkbox-menu-02" class="checkbox-input" />
+                  <label for="checkbox-menu-02" class="checkbox-label">
+                    <span class="hidden-text">label</span>
                   </label>
                 </div>
+                <button class="menu-button">
+                  <div class="type-img type-img-oracle"></div>
+                  <span class="menu-text">데이터 모델</span>
+                  <span class="menu-subtext">(소유자)</span>
+                </button>
                 <div class="menu-button-group">
                   <button class="button button-neutral-ghost button-sm">
                     <span class="hidden-text">북마크</span>
@@ -208,10 +215,10 @@
 
 <script setup lang="ts">
 
-const isLegendVisible = ref(true)
+const isLegendVisible = ref(true);
 
 function toggleLegend() {
-  isLegendVisible.value = !isLegendVisible.value
+  isLegendVisible.value = !isLegendVisible.value;
 }
 
 const isModellistVisible = ref(true);
@@ -222,7 +229,7 @@ const openModellist = () => {
 
 const closeModellist = () => {
   isModellistVisible.value = false;
-}
+};
 
 
 </script>

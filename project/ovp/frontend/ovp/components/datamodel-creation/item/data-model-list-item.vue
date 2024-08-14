@@ -25,7 +25,7 @@
       @click="onClickItem"
       @contextmenu.prevent="onShowContextMenu"
     >
-      <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+      <div class="type-img type-img-oracle"></div>
       <span class="menu-text">{{ props.data.label }}</span>
       <span class="menu-subtext">{{ owner }}</span>
     </button>
