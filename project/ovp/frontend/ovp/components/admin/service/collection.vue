@@ -55,32 +55,10 @@
             <button class="button button button-error-stroke">종료</button>
             <button
               class="button button button-neutral-stroke"
-              @click="openModal"
+              @click="openModal(`5b905b8a-0bfc-4c19-b71e-c706be054884`)"
             >
               로그
             </button>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>pgv2_metadata_ingestion</td>
-        <td>metadata</td>
-        <td>00***</td>
-        <td>
-          <div class="badge badge-red-lighter">
-            <p class="badge-text">Fail</p>
-          </div>
-        </td>
-        <td>
-          <div class="button-group">
-            <button class="button button button-secondary-stroke">실행</button>
-            <button class="button button button-secondary-stroke">
-              동기화
-            </button>
-            <button class="button button button-secondary-stroke">편집</button>
-            <button class="button button button-error-stroke">삭제</button>
-            <button class="button button button-error-stroke">종료</button>
-            <button class="button button button-neutral-stroke">로그</button>
           </div>
         </td>
       </tr>
@@ -97,9 +75,17 @@
 </template>
 <script setup lang="ts">
 import ModalLog from "@/components/admin/service/modal/modal-log.vue";
+import { useServiceCollectionLogStore } from "@/store/admin/service/collection-log/index";
+
+const serviceCollectionLogStore = useServiceCollectionLogStore();
+const { getCollectionLogData, setServiceId } = serviceCollectionLogStore;
 
 const isModalVisible = ref(false);
-const openModal = () => {
+const openModal = async (id: string) => {
+  // 스토어에 id 저장
+  setServiceId(id);
+  // 로그 API 호출
+  await getCollectionLogData();
   isModalVisible.value = true;
 };
 const closeModal = () => {

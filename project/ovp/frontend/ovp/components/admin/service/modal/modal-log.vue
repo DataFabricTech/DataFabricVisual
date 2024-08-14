@@ -17,11 +17,15 @@
       </div>
       <div class="modal-body">
         <div class="flex justify-end w-full gap-2">
-          <button class="button button-neutral-stroke">새로고침</button>
-          <button class="button button-neutral-stroke">복사</button>
+          <button class="button button-neutral-stroke" @click="replay">
+            새로고침
+          </button>
+          <button class="button button-neutral-stroke" @click="copy">
+            복사
+          </button>
         </div>
         <!-- TODO: [개발] 로그 화면 구현 -->
-        <div class="log-view"></div>
+        <div class="log-view">{{ collectionLogData.log }}</div>
       </div>
       <div class="modal-foot">
         <div class="modal-foot-group">
@@ -33,6 +37,12 @@
 </template>
 <script setup lang="ts">
 import { defineProps, defineEmits } from "vue";
+import { useServiceCollectionLogStore } from "@/store/admin/service/collection-log/index";
+import { storeToRefs } from "pinia";
+
+const serviceCollectionLogStore = useServiceCollectionLogStore();
+const { collectionLogData } = storeToRefs(serviceCollectionLogStore);
+const { getCollectionLogData } = serviceCollectionLogStore;
 
 const props = defineProps({
   visible: { type: Boolean, required: false },
@@ -45,4 +55,11 @@ const emit = defineEmits<{
 const closeModal = () => {
   emit("close");
 };
+function replay() {
+  getCollectionLogData();
+}
+function copy() {
+  navigator.clipboard.writeText(collectionLogData.value.log);
+  alert("로그를 복사했습니다.");
+}
 </script>
