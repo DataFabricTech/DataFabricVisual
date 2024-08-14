@@ -137,7 +137,10 @@
                   >
                     카테고리 변경
                   </button>
-                  <button class="button button-secondary">
+                  <button
+                    class="button button-secondary"
+                    @click="showDataModelAddModal"
+                  >
                     데이터모델추가
                   </button>
                 </div>
@@ -191,6 +194,7 @@
   <CategoryChangeModal
     :modal-id="CATEGORY_CHANGE_MODAL_ID"
   ></CategoryChangeModal>
+  <DataModelAddModal :modal-id="DATA_MODEL_ADD_MODAL_ID"></DataModelAddModal>
 </template>
 
 <script setup lang="ts">
@@ -206,6 +210,7 @@ import Loading from "@base/loading/Loading.vue";
 import Preview from "~/components/common/preview/preview.vue";
 import CategoryAddModal from "~/components/govern/category/category-add-modal.vue";
 import CategoryChangeModal from "~/components/govern/category/category-change-modal.vue";
+import DataModelAddModal from "~/components/govern/category/data-model-add-modal.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
 const { $vfm } = useNuxtApp();
@@ -234,6 +239,7 @@ const {
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
 const CATEGORY_CHANGE_MODAL_ID = "category-change-modal";
+const DATA_MODEL_ADD_MODAL_ID = "data-modal-add-modal";
 
 const loader = ref<HTMLElement | null>(null);
 const modelIdList = ref([]);
@@ -469,6 +475,10 @@ const showCategoryAddModal = () => {
 
 const showCategoryChangeModal = () => {
   $vfm.open(CATEGORY_CHANGE_MODAL_ID);
+};
+
+const showDataModelAddModal = () => {
+  $vfm.open(DATA_MODEL_ADD_MODAL_ID);
 };
 
 onMounted(async () => {
