@@ -46,9 +46,8 @@
 }
 
 .tag {
-  @include flex;
+  @include flex($gap: $spacing-8);
 
-  gap: $spacing-8;
   height: 28px;
   padding: 0 $spacing-12;
   border-radius: $border-radius-15;

@@ -13,9 +13,12 @@
 @import "./component/resource-box";
 @import "./component/menu-data";
 @import "./component/filters";
-@import "./component/common";
+@import "./component/type-img";
+
 
 // pages
+@import "pages/common/graph";
+@import "pages/common/work";
 @import "./pages/submit-form";
 @import "./pages/governance";
 @import "./pages/admin";
@@ -24,6 +27,6 @@
 @import "./pages/creation";
 @import "./pages/main";
 @import "./pages/my-page";
-@import "pages/graph";
 
+// utility 스타일 우선순위 조정
 @import "../../../common/assets/css/utility";

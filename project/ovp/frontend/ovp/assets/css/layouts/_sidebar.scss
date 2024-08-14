@@ -49,11 +49,11 @@
 }
 
 .sidebar-button {
-  @include flex($horizontal: flex-start);
+  @include flex($horizontal: flex-start, $gap: $spacing-12);
 
-  gap: $spacing-12;
   width: 100%;
   height: 40px;
+  cursor: pointer;
   transition: text-indent 400ms ease-in-out;
 
   .svg-icon {

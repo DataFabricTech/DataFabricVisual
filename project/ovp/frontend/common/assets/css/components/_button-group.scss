@@ -25,10 +25,9 @@
   }
 
   &-label {
-    @include flex($horizontal: flex-start);
+    @include flex($horizontal: flex-start, $gap: $spacing-2);
     @include font-size('13');
 
-    gap: $spacing-2;
     font-weight: 600;
     height: 32px;
     padding: 0 $spacing-12;

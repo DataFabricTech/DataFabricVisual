@@ -9,12 +9,15 @@
 
 .ag-theme-alpine.ag-theme-quartz .ag-root-wrapper {
   border-color: transparent;
-}
 
-.ag-theme-alpine.ag-theme-quartz .ag-root-wrapper .ag-row-hover:not(.ag-full-width-row)::before {
-  background-color: #F7F9FC;
-}
+  .ag-row-hover:not(.ag-full-width-row)::before {
+    background-color: #F7F9FC;
+  }
 
+  .ag-row-selected::before {
+    background: $primary-100;
+  }
+}
 
 .ag-theme-alpine.ag-theme-quartz .ag-ltr .ag-cell-focus:not(.ag-cell-range-selected):focus-within {
   border: none;

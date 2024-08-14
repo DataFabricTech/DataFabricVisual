@@ -9,6 +9,7 @@
     border-bottom: none;
   }
 
+
   & > .menu-list {
     overflow-y: auto;
     flex-grow: 1;
@@ -24,23 +25,14 @@
         margin-top: $spacing-4;
       }
 
-      .menu-data-icon {
-        @include icon-size('sm');
-        //margin-right: $spacing-4;
-      }
-
       .checkbox {
         width: auto;
         flex: 0 0 auto;
       }
-    }
-  }
 
-  &.menu-lg {
-    .menu-item {
-      .menu-data-icon {
-        @include icon-size('md');
-        //margin-right: $spacing-8;
+      &.is-menu-item-selected {
+        border: 1px solid $primary-500;
+        background-color: $primary-100;
       }
     }
   }

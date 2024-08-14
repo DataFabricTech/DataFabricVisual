@@ -2,6 +2,8 @@
   <div v-on-click-outside="onCancel" v-show="props.isShow" class="menu menu-search" style="width: 100%">
     <div class="menu-head">
       <!-- 검색 기능 -->
+      <!-- TODO: [개발] 접근성 개선 - label/input의 for/id값 사용되는 용도마다 다르게 적용 필요,
+         label안 텍스트도 용도마다 적절히 사용되어야 함 -->
       <div class="search-input">
         <label class="hidden-text" for="text-input-example-11">검색</label>
         <input
