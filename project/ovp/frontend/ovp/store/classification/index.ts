@@ -30,7 +30,7 @@ interface JsonPatchOperation {
   value: any;
 }
 
-interface addClassificationForm {
+interface addForm {
   name: string;
   description: string;
 }
@@ -69,6 +69,9 @@ export const classificationStore = defineStore("classification", () => {
   // 첫 번째 분류 목록의 name값
   let firstClassificationName = "";
 
+  // 현재 태그의 분류 name값
+  let currentClassificationTagName = "";
+
   // TODO : 추후, 인피니트스크롤 작업이 필요할 수 있음
   // const tagContent: Ref<ClassificationTag | null> = ref(null); // 태그목록 조회 결과값
   const classificationTagList: Ref<Tag[]> = ref([]); // tagContent내에 실질 태그 목록
@@ -102,6 +105,8 @@ export const classificationStore = defineStore("classification", () => {
       // 선택된 분류의 name값이 들어올 경우
       firstClassificationName = name;
     }
+    // TODO : name을 저장해야함 .
+    // currentClassificationTagName = name;
     const data: any = await $api(
       `/api/classifications/tags?parent=` + firstClassificationName,
     );
@@ -128,7 +133,7 @@ export const classificationStore = defineStore("classification", () => {
   };
 
   // 분류 추가
-  const addClassification = async (addData: addClassificationForm) => {
+  const addClassification = async (addData: addForm) => {
     const result = await $api(`/api/classifications/add`, {
       method: "POST",
       headers: {
@@ -160,8 +165,20 @@ export const classificationStore = defineStore("classification", () => {
     await getClassificationTags(); // 태그 정보 API 호출
   };
 
+  // 분류 내 태그 추가
+  const addClassificationTag = async (addData: addForm) => {
+    await $api(`/api/tags/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(addData),
+    });
+  };
+
   return {
     classificationList,
+    currentClassificationTagName,
     classificationListTotal,
     currentClassificationID,
     firstClassificationName,
@@ -174,5 +191,6 @@ export const classificationStore = defineStore("classification", () => {
     addClassification,
     deleteClassification,
     deleteClassificationTag,
+    addClassificationTag,
   };
 });

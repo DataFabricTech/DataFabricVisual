@@ -57,16 +57,24 @@
 
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
+import { classificationStore } from "@/store/classification/index";
+import { storeToRefs } from "pinia";
 const { $vfm } = useNuxtApp();
+
+const useClassificationStore = classificationStore();
+const { addClassificationTag } = useClassificationStore;
+const { currentClassificationTagName } = storeToRefs(useClassificationStore);
 
 interface FormState {
   name: string;
   description: string;
+  classification: string;
 }
 
 interface NotificationState {
   name: boolean;
   description: boolean;
+  classification: boolean;
 }
 
 const props = defineProps({
@@ -78,29 +86,48 @@ const props = defineProps({
 const initialFormState: FormState = {
   name: "",
   description: "",
+  classification: "",
 };
 const classificationTagForm = reactive<FormState>({ ...initialFormState });
 const noneDataNoti = reactive<NotificationState>({
   name: false,
   description: false,
+  classification: false,
 });
 
 function validateForm(): void {
-  const { name, description } = classificationTagForm;
+  const { name, description, classification } = classificationTagForm;
   noneDataNoti.name = !name;
   noneDataNoti.description = !description;
-  if (!(noneDataNoti.name || noneDataNoti.description)) {
+  noneDataNoti.classification = !classification;
+  if (
+    !(
+      noneDataNoti.name ||
+      noneDataNoti.description ||
+      noneDataNoti.classification
+    )
+  ) {
     saveClassificationTag();
   }
 }
-
+console.log(
+  "currentClassificationTagName여어어어ㅓ ? ?? ??",
+  currentClassificationTagName,
+);
 async function saveClassificationTag(): Promise<void> {
   // 추가할 내용 저장(name, description)
   const addData = {
     name: classificationTagForm.name,
     description: classificationTagForm.description,
+    classification: classificationTagForm.classification,
   };
-  // TODO : 태그 추가 API호출
+  // 태그 추가 API호출
+  console.log("자아아----", addData);
+  console.log(
+    "currentClassificationTagName?????",
+    currentClassificationTagName,
+  );
+  await addClassificationTag(addData);
   closeModal();
 }
 

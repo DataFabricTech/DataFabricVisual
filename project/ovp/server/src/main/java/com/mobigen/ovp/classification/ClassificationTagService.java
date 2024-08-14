@@ -1,6 +1,8 @@
 package com.mobigen.ovp.classification;
 
+import com.mobigen.ovp.classification.client.dto.classification.tag.ClassificationTagAddResponse;
 import com.mobigen.ovp.common.openmete_client.TagClient;
+import com.mobigen.ovp.common.openmete_client.dto.classification.tag.ClassificationTagAdd;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +18,7 @@ import java.util.Map;
 public class ClassificationTagService {
     private final TagClient tagClient;
 
-    //TODO : 태그 추가 추가예정
+
 
     //TODO : 태그 수정 추가예정
 
@@ -49,4 +51,12 @@ public class ClassificationTagService {
         return response.get("id").toString();
     }
 
+    /**
+     * 분류내 태그 추가
+     * @param classificationTagAdd
+     * @return
+     */
+    public Object addClassificationTag(ClassificationTagAdd classificationTagAdd) {
+        return new ClassificationTagAddResponse(tagClient.addClassificationTag(classificationTagAdd));
+    }
 }
