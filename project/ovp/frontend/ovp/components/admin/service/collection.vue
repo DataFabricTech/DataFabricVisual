@@ -55,7 +55,7 @@
             <button class="button button button-error-stroke">종료</button>
             <button
               class="button button button-neutral-stroke"
-              @click="showModalLog = true"
+              @click="openModal"
             >
               로그
             </button>
@@ -93,7 +93,16 @@
       </div>
     </div>
   </div>
+  <modal-log :visible="isModalVisible" @close="closeModal"></modal-log>
 </template>
 <script setup lang="ts">
-import SelectBox from "@extends/select-box/SelectBox.vue";
+import ModalLog from "@/components/admin/service/modal/modal-log.vue";
+
+const isModalVisible = ref(false);
+const openModal = () => {
+  isModalVisible.value = true;
+};
+const closeModal = () => {
+  isModalVisible.value = false;
+};
 </script>
