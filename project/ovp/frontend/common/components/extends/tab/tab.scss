@@ -121,6 +121,7 @@
 
       &-count {
         @include flex($direction: column);
+
         height: $spacing-20;
         padding: 0 $spacing-6;
         border-radius: 50%;

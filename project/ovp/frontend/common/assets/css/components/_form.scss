@@ -16,9 +16,7 @@
 }
 
 .form {
-  @include flex($vertical: flex-start, $horizontal: flex-start, $direction: column);
-
-  gap: $spacing-20;
+  @include flex($vertical: flex-start, $horizontal: flex-start, $direction: column, $gap: $spacing-20);
 
   &-horizontal {
     @include form-horizontal;
@@ -34,12 +32,14 @@
 
   &-title {
     @include font-size('18');
+
     font-weight: 600;
     margin-top: $spacing-16;
   }
 
   &-sub-title {
     @include font-size('16');
+
     font-weight: 600;
     margin: $spacing-20 0 $spacing-8;
   }
@@ -61,10 +61,9 @@
   }
 
   &-item {
-    @include flex($vertical: flex-start, $direction: column);
+    @include flex($vertical: flex-start, $direction: column, $gap: $spacing-4);
 
     width: 100%;
-    gap: $spacing-4;
   }
 
   &-item:not(:last-child) {
@@ -80,6 +79,10 @@
 
     flex: 1;
     width: 100%;
+  }
+
+  &-input-group {
+    @include flex($gap: $spacing-8);
   }
 
   &-label {

@@ -1,7 +1,5 @@
 .pagination {
-  @include flex;
-
-  gap: $spacing-4;
+  @include flex($gap: $spacing-4);
 
   &-list {
     @include flex;

@@ -6,6 +6,10 @@
   &::-webkit-progress-value {
     background-color: $color;
   }
+
+  &::-moz-progress-bar {
+    background-color: $color;
+  }
 }
 
 .progressbar {
@@ -36,6 +40,11 @@
     background-color: $info-300;
   }
 
+  &::-moz-progress-bar {
+    background-color: $info-300;
+  }
+
+
   &-gage {
     @include z-index('float');
 
@@ -49,12 +58,12 @@
 
   // % 표기
   &-group {
-    @include flex($direction: column, $vertical: flex-end);
-    gap: $spacing-2;
+    @include flex($direction: column, $vertical: flex-end, $gap: $spacing-2);
   }
 
   &-text {
     @include font-size('13');
+
     font-size: 13px;
     color: $neutral-500;
   }

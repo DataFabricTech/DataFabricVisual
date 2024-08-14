@@ -27,46 +27,25 @@ let cyContainer = ref(null);
 let cyRef = null;
 
 const tpl = (data: NodeData) => {
+  // 라벨 템플릿 정의 메서드
   return `<div class="cytoscape-box" style="
-    font-family: 'pretendard', 'Segoe UI', 'Open Sans', 'Helvetica Neue';
-    width: 100px;
-    height: 25px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    background-color: #fff;
-    outline: none;
-    border-radius: 4px;
-    overflow: hidden;
-  ">
-            <div style="
-              font-size: 8px;
-              font-weight: 300;
-              color: #31353f;
-              line-height: 1.2;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              width: 100px; /* 노드 크기에 맞게 설정 */
-              display: inline-block;
-            ">${data.path}</div>
-            <div style="
-              color: #2b3440;
-              font-size: 11px;
-              line-height: 1.6;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              width: 100px; /* 노드 크기에 맞게 설정 */
-              display: inline-block;
-            ">${data.label}</div>
+  font-family: 'pretendard', 'Segoe UI', 'Open Sans', 'Helvetica Neue';
+  width: 100px;
+  height: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  background-color: #f7f9fc;
+  outline: none;
+  border-radius: 4px">
+            <div style="font-size: 8px;font-weight: 300; color: #868C98; line-height: 1.2;">${data.path}</div>
+            <div style="color: #2b3440; font-size: 10px; line-height: 1.6; ">${data.label}</div>
           </div>`;
 };
 
 const props = defineProps<{
   lineageData: { nodes: RawNodeData[]; edges: RawEdgeData[] };
-  previewOn: boolean;
 }>();
 
 const emit = defineEmits<{ (e: "change", nodeData: NodeData): void }>();

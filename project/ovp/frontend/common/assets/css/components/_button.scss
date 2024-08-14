@@ -43,7 +43,7 @@
   }
 }
 
-@mixin button-size($height: 32px, $gap: null, $padding: 6px, $font-size: '13', $icon-xs: false) {
+@mixin button-size($height: 32px, $gap: null, $padding: $spacing-6, $font-size: '13', $icon-xs: false) {
   height: $height;
   gap: $gap;
   padding: 0 $padding;

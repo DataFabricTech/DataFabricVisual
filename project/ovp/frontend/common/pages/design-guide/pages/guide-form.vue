@@ -43,7 +43,7 @@
                     <span class="sub-label">(sublabel)</span>
                   </label>
                   <div class="form-detail">
-                    <div class="element-group">
+                    <div class="form-input-group">
                       <div class="checkbox">
                         <input type="checkbox" id="checkbox" class="checkbox-input" />
                         <label for="checkbox" class="checkbox-label"> <span class="checkbox-text"> label </span></label>
@@ -107,7 +107,7 @@
                     <span class="sub-label">(sublabel)</span>
                   </label>
                   <div class="form-detail">
-                    <div class="element-group">
+                    <div class="form-input-group">
                       <div class="checkbox checkbox-sm">
                         <input type="checkbox" id="checkbox" class="checkbox-input" />
                         <label for="checkbox" class="checkbox-label"> <span class="checkbox-text"> label </span></label>
@@ -185,7 +185,7 @@
                     <span class="sub-label">(sublabel)</span>
                   </label>
                   <div class="form-detail">
-                    <div class="element-group">
+                    <div class="form-input-group">
                       <div class="checkbox">
                         <input type="checkbox" id="checkbox" class="checkbox-input" />
                         <label for="checkbox" class="checkbox-label"> <span class="checkbox-text"> label </span></label>
@@ -249,7 +249,7 @@
                     <span class="sub-label">(sublabel)</span>
                   </label>
                   <div class="form-detail">
-                    <div class="element-group">
+                    <div class="form-input-group">
                       <div class="checkbox">
                         <input type="checkbox" id="checkbox" class="checkbox-input" />
                         <label for="checkbox" class="checkbox-label"> <span class="checkbox-text"> label </span></label>
@@ -313,7 +313,7 @@
                     <span class="sub-label">(sublabel)</span>
                   </label>
                   <div class="form-detail">
-                    <div class="element-group">
+                    <div class="form-input-group">
                       <div class="checkbox checkbox-sm">
                         <input type="checkbox" id="checkbox" class="checkbox-input" />
                         <label for="checkbox" class="checkbox-label"> <span class="checkbox-text"> label </span></label>

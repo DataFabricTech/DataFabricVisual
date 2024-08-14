@@ -3,16 +3,25 @@ $directions: (
         "vertical": v,
         "hozizontal": h
 );
+$gaps: (0, 4, 8, 12, 16, 20, 24, 32);
 
 @each $attr, $direction in $directions {
-  .#{$direction}-group {
-    @if $attr == "vertical" {
-      @include flex($vertical: flex-start, $direction: column);
-    } @else {
-      @include flex($horizontal: flex-start);
+  @each $gap in $gaps {
+    .#{$direction}-group#{if($gap != 0, "-#{$gap}", "")} {
+      @if $attr == "vertical" {
+        @include flex($vertical: flex-start, $direction: column);
+      } @else {
+        @include flex($horizontal: flex-start);
+      }
+
+      @if $gap != 0 {
+        gap: #{$gap}px;
+      }
     }
   }
 }
+
+
 
 // color themes - 아이콘 / 텍스트 주요 컬러 테마
 $theme-colors: (
@@ -51,8 +60,3 @@ $theme-colors: (
   @include caption-out;
 }
 
- .element-group {
-  @include flex;
-
-  gap: $spacing-16;
-}
