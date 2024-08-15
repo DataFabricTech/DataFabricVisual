@@ -19,7 +19,7 @@
       :valueKey="'value'"
       :useTabContents="false"
       @change="changeTab"
-      :current-item="initTab"
+      :current-item="tabOptions[0].value"
       :current-item-type="'value'"
     >
     </tab>
@@ -56,6 +56,12 @@
               @modelNmClick="modelNmClick"
             />
             <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+            <Loading
+              id="loader"
+              :use-loader-overlay="true"
+              class="loader-lg is-loader-inner"
+              style="display: none"
+            ></Loading>
           </div>
           <div class="no-result" v-show="isSearchResultNoData">
             <div class="notification">
@@ -77,7 +83,9 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import Tab from "@extends/tab/Tab.vue";
+import Loading from "@base/loading/Loading.vue";
 import resourceBoxList from "~/components/common/resource-box/resource-box-list.vue";
 import Preview from "~/components/common/preview/preview.vue";
 import { useNuxtApp } from "nuxt/app";
@@ -122,7 +130,6 @@ const { user } = storeToRefs(userStore);
 const route = useRoute();
 
 const showModalPwChange: () => void = () => {
-  console.log(PW_RESET_MODAL_ID);
   $vfm.open(PW_RESET_MODAL_ID);
 };
 
@@ -146,7 +153,7 @@ let currentPreviewId: string | number = "";
 let previewIndex: string = "";
 
 const previewClick = async (data: object) => {
-  const { id, fqn, type } = data as { id: string; fqn: string };
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
   if (id === currentPreviewId) {
     return;
   }

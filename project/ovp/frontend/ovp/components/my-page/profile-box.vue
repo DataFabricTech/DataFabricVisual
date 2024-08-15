@@ -20,7 +20,11 @@
         <label class="hidden-text" for="profile-name-modify"
           >프로필 이름 입력</label
         >
-        <input id="profile-name-modify" class="text-input w-1/4" v-model="localDisplayName"/>
+        <input
+          id="profile-name-modify"
+          class="text-input w-1/4"
+          v-model="localDisplayName"
+        />
         <div class="h-group gap-2 shrink-0">
           <button
             class="button button-neutral-lighter button-sm"
@@ -98,12 +102,15 @@
           <svg-icon class="button-icon" name="pen"></svg-icon>
         </button>
       </div>
-      <!-- TODO : [개발] 수정시 textarea 활성화-->
       <div class="editable-group w-2/4" v-show="isOpenDescriptionEdit">
         <label class="hidden-text" for="profile-description-modify"
           >계정 설명 수정</label
         >
-        <textarea id="profile-description-modify" class="textarea" v-model="localDescription"></textarea>
+        <textarea
+          id="profile-description-modify"
+          class="textarea"
+          v-model="localDescription"
+        ></textarea>
         <div class="h-group gap-1">
           <button
             class="button button-neutral-stroke"
@@ -157,7 +164,7 @@ const editDescription = (value: boolean) => {
 };
 
 const editRole = () => {
-  isOpenRoleEdit.value = isOpenRoleEdit.value ? false : true;
+  isOpenRoleEdit.value = !isOpenRoleEdit.value;
 };
 
 const changeDisplayName = () => {
@@ -169,12 +176,11 @@ const changeDescription = () => {
 };
 
 const changeRoleSwitch = () => {
-  localAdmin.value = localAdmin.value ? false : true;
+  localAdmin.value = !localAdmin.value;
 };
 
 const changeRole = () => {
   emit("changeRole", localAdmin.value);
 };
 </script>
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
