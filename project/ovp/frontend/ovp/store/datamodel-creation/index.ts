@@ -156,10 +156,13 @@ export const useCreationStore = defineStore("creation", () => {
       loginUserId: user.value.id,
     };
 
-    let selectedModel = modelList.value.filter((item) => item.id === value);
-    let bookmarkState = selectedModel[0].bookmarked;
+    let selectedModel = _.find(modelList.value, ["id", value]);
 
-    if (bookmarkState) {
+    if (!selectedModel) {
+      // TODO: alert 컴포넌트로 변경 예정
+      alert("모델을 찾을 수 없습니다.");
+    }
+    if (selectedModel.bookmarked) {
       await $api(`/api/creation/bookmark/delete`, {
         method: "POST",
         body: param,
