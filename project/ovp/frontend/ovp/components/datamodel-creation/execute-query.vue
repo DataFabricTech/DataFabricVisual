@@ -10,13 +10,12 @@
       </button>
     </div>
     <div class="code-box">
-      <textarea v-model="localQuery" @input="emitEdit"></textarea>
+      <textarea v-model="localQuery.query" @input="emitEdit"></textarea>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from "vue";
 
 const props = defineProps({
   query: {
@@ -30,25 +29,22 @@ const emit = defineEmits<{
   (e: "edit", value: string): void;
 }>();
 
-const localQuery = ref(props.query);
-
-watch(
-  () => props.query,
-  (newQuery) => {
-    localQuery.value = newQuery;
-  },
-);
+const localQuery: ComputedRef<String> = computed(() => {
+  return {
+    query: props.query
+  };
+});
 
 const emitExecute = () => {
-  emit("execute", localQuery.value);
+  emit("execute", localQuery.value.query);
 };
 
 const emitReset = () => {
-  emit("reset", localQuery.value);
+  emit("reset", localQuery.value.query);
 };
 
 const emitEdit = () => {
-  emit("edit", localQuery.value);
+  emit("edit", localQuery.value.query);
 };
 </script>
 

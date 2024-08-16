@@ -51,7 +51,7 @@ public class ModelCreationController {
      * @throws Exception
      */
     @ResponseJsonResult(errorMessage = "북마크 삭제 오류")
-    @PostMapping("/bookmark/remove")
+    @PostMapping("/bookmark/delete")
     public Object removeBookMark(@RequestBody Map<String, Object> param) throws Exception {
         return modelCreationService.removeBookMark(param);
     }

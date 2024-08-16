@@ -160,7 +160,7 @@ export const useCreationStore = defineStore("creation", () => {
     let bookmarkState = selectedModel[0].bookmarked;
 
     if (bookmarkState) {
-      await $api(`/api/creation/bookmark/remove`, {
+      await $api(`/api/creation/bookmark/delete`, {
         method: "POST",
         body: param,
       })
