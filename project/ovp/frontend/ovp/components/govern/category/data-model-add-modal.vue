@@ -9,76 +9,48 @@
     contentTransition="vfm-fade"
     :clickToClose="true"
     :escToClose="true"
-    :width="480"
-    :height="548"
-    :top="410"
+    :width="1180"
+    :height="640"
+    :top="240"
     :lockScroll="false"
     swipeToClose="none"
     @cancel="onCancel"
     @confirm="onConfirm"
   >
     <template v-slot:body>
-      <div class="data-info">
+      <div class="data-info max-h-[460px]">
+        inpValue: {{ inputValue }}
         <search-input
           class="search-input-lg"
           :is-search-input-default-type="false"
           :placeholder="'검색어를 입력하세요.'"
+          v-model="inputValue"
           @on-input="onInput"
         ></search-input>
         <div class="filters">
-          <div class="select select-clean">
-            <button class="select-button">
-              <span class="select-button-title">소유자</span>
-              <svg-icon
-                class="svg-icon select-indicator"
-                name="chevron-down-medium"
-              ></svg-icon>
-            </button>
-          </div>
-          <div class="select select-clean">
-            <button class="select-button">
-              <span class="select-button-title">태그</span>
-              <svg-icon
-                class="svg-icon select-indicator"
-                name="chevron-down-medium"
-              ></svg-icon>
-            </button>
-          </div>
-          <div class="select select-clean">
-            <button class="select-button">
-              <span class="select-button-title">서비스</span>
-              <svg-icon
-                class="svg-icon select-indicator"
-                name="chevron-down-medium"
-              ></svg-icon>
-            </button>
-          </div>
-          <div class="select select-clean">
-            <button class="select-button">
-              <span class="select-button-title">서비스 타입</span>
-              <svg-icon
-                class="svg-icon select-indicator"
-                name="chevron-down-medium"
-              ></svg-icon>
-            </button>
-          </div>
-          <button class="button button-error-lighter button-sm" type="button">
-            <svg-icon class="button-icon" name="reset"></svg-icon>
-            <span class="button-title">초기화</span>
-          </button>
+          <data-filter :data="filters"></data-filter>
         </div>
         <Tab
-          style="width: 100%"
-          :data="tabOptions2"
+          :data="tabOptions"
           :label-key="'label'"
           :value-key="'value'"
-          :current-item="currentTab2"
-          :current-item-type="'index'"
-          @change="changeTab2"
-        ></Tab>
-        <!-- 탭 시작  -->
-        <strong>선택 <em class="primary">0개</em></strong>
-        <div class="table-scroll">
+          :current-item="initTab"
+          :current-item-type="'value'"
+          :use-tab-contents="false"
+          @change="changeTab"
+        >
+        </Tab>
+        <strong
+          >선택
+          <em class="primary">{{ selectedDataModelListLength }}개</em></strong
+        >
+        <div class="no-result" v-if="isSearchResultNoData">
+          <div class="notification">
+            <svg-icon class="notification-icon" name="info"></svg-icon>
+            <p class="notification-detail">정보가 없습니다.</p>
+          </div>
+        </div>
+        <div v-else class="table-scroll">
           <table>
             <colgroup>
               <col style="width: 10%" />
@@ -92,7 +64,7 @@
                       type="checkbox"
                       id="checkbox-all-select"
                       class="checkbox-input"
-                      checked
+                      v-model="allDataModalList"
                     />
                     <label for="checkbox-all-select" class="checkbox-label">
                       <span class="hidden-text"> 전체 선택 </span>
@@ -103,15 +75,17 @@
               </tr>
             </thead>
             <tbody>
-              <tr>
+              <tr v-for="(item, index) in searchResult" :key="index">
                 <td>
                   <div class="checkbox">
                     <input
                       type="checkbox"
-                      id="checkbox-01-data"
+                      :id="item.id"
+                      :value="item.id"
                       class="checkbox-input"
+                      v-model="selectedDataModelList"
                     />
-                    <label for="checkbox-01-data" class="checkbox-label">
+                    <label :for="item.id" class="checkbox-label">
                       <span class="hidden-text"> 첫번째 데이터 모델 </span>
                     </label>
                   </div>
@@ -121,167 +95,38 @@
                     <div class="l-between">
                       <div class="breadcrumb">
                         <ul class="breadcrumb-list">
-                          <li class="breadcrumb-item">
-                            <span class="breadcrumb-text">1depth</span>
-                          </li>
-                          <li class="breadcrumb-item">
-                            <span class="breadcrumb-text">2depth</span>
-                          </li>
-                          <li class="breadcrumb-item">
-                            <span class="breadcrumb-text">데이터 모델</span>
+                          <li
+                            class="breadcrumb-item"
+                            v-for="(breadItem, idx) in item.depth"
+                            :key="idx"
+                          >
+                            <span class="breadcrumb-text">{{ breadItem }}</span>
                           </li>
                         </ul>
                       </div>
-                      <button class="button link-button-support button-sm">
+                      <button
+                        class="button link-button-support button-sm"
+                        @click="goToModelDetail(item)"
+                      >
                         상세보기
                       </button>
                     </div>
                     <div class="h-group w-full">
                       <img src="" />
-                      <span class="table-data-title"
-                        >세종특별자치시 상하수도요금표</span
-                      >
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="checkbox">
-                    <input
-                      type="checkbox"
-                      id="checkbox-01-data"
-                      class="checkbox-input"
-                    />
-                    <label for="checkbox-01-data" class="checkbox-label">
-                      <span class="hidden-text"> 첫번째 데이터 모델 </span>
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <div class="table-data">
-                    <div class="l-between">
-                      <div class="breadcrumb">
-                        <ul class="breadcrumb-list">
-                          <li class="breadcrumb-item">
-                            <span class="breadcrumb-text">1depth</span>
-                          </li>
-                          <li class="breadcrumb-item">
-                            <span class="breadcrumb-text">2depth</span>
-                          </li>
-                          <li class="breadcrumb-item">
-                            <span class="breadcrumb-text">데이터 모델</span>
-                          </li>
-                        </ul>
-                      </div>
-                      <button class="button link-button-support button-sm">
-                        상세보기
-                      </button>
-                    </div>
-                    <div class="h-group w-full">
-                      <img src="" />
-                      <span class="table-data-title"
-                        >세종특별자치시
-                        상하수도요금표상하수도요금표상하수도요금표상하수도요금표상하수도요금표</span
-                      >
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="checkbox">
-                    <input
-                      type="checkbox"
-                      id="checkbox-01-data"
-                      class="checkbox-input"
-                    />
-                    <label for="checkbox-01-data" class="checkbox-label">
-                      <span class="hidden-text"> 첫번째 데이터 모델 </span>
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <div class="table-data">
-                    <div class="l-between">
-                      <div class="breadcrumb">
-                        <ul class="breadcrumb-list">
-                          <li class="breadcrumb-item">
-                            <span class="breadcrumb-text">1depth</span>
-                          </li>
-                          <li class="breadcrumb-item">
-                            <span class="breadcrumb-text">2depth</span>
-                          </li>
-                          <li class="breadcrumb-item">
-                            <span class="breadcrumb-text">데이터 모델</span>
-                          </li>
-                        </ul>
-                      </div>
-                      <button class="button link-button-support button-sm">
-                        상세보기
-                      </button>
-                    </div>
-                    <div class="h-group w-full">
-                      <img src="" />
-                      <span class="table-data-title"
-                        >세종특별자치시 상하수도요금표</span
-                      >
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>
-                  <div class="checkbox">
-                    <input
-                      type="checkbox"
-                      id="checkbox-01-data"
-                      class="checkbox-input"
-                    />
-                    <label for="checkbox-01-data" class="checkbox-label">
-                      <span class="hidden-text"> 첫번째 데이터 모델 </span>
-                    </label>
-                  </div>
-                </td>
-                <td>
-                  <div class="table-data">
-                    <div class="l-between">
-                      <div class="breadcrumb">
-                        <ul class="breadcrumb-list">
-                          <li class="breadcrumb-item">
-                            <span class="breadcrumb-text">1depth</span>
-                          </li>
-                          <li class="breadcrumb-item">
-                            <span class="breadcrumb-text">2depth</span>
-                          </li>
-                          <li class="breadcrumb-item">
-                            <span class="breadcrumb-text">데이터 모델</span>
-                          </li>
-                        </ul>
-                      </div>
-                      <button class="button link-button-support button-sm">
-                        상세보기
-                      </button>
-                    </div>
-                    <div class="h-group w-full">
-                      <img src="" />
-                      <span class="table-data-title"
-                        >세종특별자치시 상하수도요금표</span
-                      >
+                      <span class="table-data-title">{{ item.modelNm }}</span>
                     </div>
                   </div>
                 </td>
               </tr>
             </tbody>
           </table>
-        </div>
-        <!-- 탭 끝  -->
-        <!-- 결과 없을 시 no-result 표시 -->
-        <div class="no-result" style="display: none">
-          <div class="notification">
-            <svg-icon class="notification-icon" name="info"></svg-icon>
-            <p class="notification-detail">정보가 없습니다.</p>
-          </div>
+          <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+          <Loading
+            id="loader"
+            :use-loader-overlay="true"
+            class="loader-lg is-loader-inner"
+            style="display: none"
+          ></Loading>
         </div>
       </div>
     </template>
@@ -290,17 +135,35 @@
 
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
-import { useNuxtApp } from "nuxt/app";
-import { useGovernCategoryStore } from "~/store/governance/Category";
+import { useNuxtApp, useRouter } from "nuxt/app";
+import { useGovernCategoryStore } from "~/store/governance/Category/index";
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { storeToRefs } from "pinia";
+import DataFilter from "./data-filter.vue";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import Tab from "@extends/tab/Tab.vue";
-import { ref } from "vue";
+import { computed, ref } from "vue";
+import Loading from "@base/loading/Loading.vue";
 
+const router = useRouter();
 const { $vfm } = useNuxtApp();
 
 const categoryStore = useGovernCategoryStore();
-const { selectedModelList } = storeToRefs(categoryStore);
+const {
+  changeTab,
+  setSearchKeyword,
+  resetReloadList,
+  addSearchList,
+  getSearchList,
+} = categoryStore;
+const {
+  filters,
+  searchResult,
+  searchResultLength,
+  isSearchResultNoData,
+  dataModelIdList,
+  selectedDataModelList,
+} = storeToRefs(categoryStore);
 
 const props = defineProps({
   modalId: {
@@ -309,27 +172,77 @@ const props = defineProps({
   },
 });
 
-// search-input
+// SEARCH INPUT
+const inputValue = ref("");
 const onInput = (value: string) => {
   console.log("value", value);
+  setSearchKeyword(value);
+  resetReloadList();
 };
 
-// tab
-const tabOptions2 = [
-  { label: "테이블", value: 1 },
-  { label: "스토리지", value: 2 },
-  { label: "융합모델", value: 3 },
-];
+// DATA MODEL
+// checkbox
+const selectedDataModelListLength = computed(() => {
+  return selectedDataModelList.value.length;
+});
 
-const currentTab2 = ref();
-currentTab2.value = 1;
+const allDataModalList = computed({
+  get() {
+    return dataModelIdList.value.length === 0
+      ? false
+      : dataModelIdList.value.length === selectedDataModelListLength.value;
+  },
+  set(event) {
+    if (event) {
+      selectedDataModelList.value = dataModelIdList.value;
+    } else {
+      selectedDataModelList.value = [];
+    }
+  },
+});
 
-const changeTab2 = (item: number | string) => {
-  console.log("tab item", item);
-  currentTab2.value = item;
+const goToModelDetail = (data: object) => {
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
+
+  const url = router.resolve({
+    path: "/portal/search/detail",
+    query: {
+      type: type,
+      id: id,
+      fqn: fqn,
+    },
+  }).href;
+
+  window.open(url, "_blank");
 };
 
-// modal
+// TAB
+const initTab: Ref<string> = ref("table");
+const tabOptions = ref([
+  {
+    label: `테이블 (${searchResultLength.value.table})`,
+    value: "table",
+    type: "table",
+  },
+  {
+    label: `스토리지 (${searchResultLength.value.storage})`,
+    value: "storage",
+    type: "storage",
+  },
+  {
+    label: `융합모델 (${searchResultLength.value.model})`,
+    value: "model",
+    type: "model",
+  },
+]);
+
+watchEffect(() => {
+  tabOptions.value[0].label = `테이블 (${searchResultLength.value.table})`;
+  tabOptions.value[1].label = `스토리지 (${searchResultLength.value.storage})`;
+  tabOptions.value[2].label = `융합모델 (${searchResultLength.value.model})`;
+});
+
+// MODAL
 const onCancel = () => {
   $vfm.close(props.modalId);
 };
@@ -337,6 +250,8 @@ const onCancel = () => {
 const onConfirm = async () => {
   $vfm.close(props.modalId);
 };
+
+const { scrollTrigger } = useIntersectionObserver(addSearchList);
 </script>
 
 <style scoped></style>

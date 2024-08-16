@@ -194,7 +194,11 @@
   <CategoryChangeModal
     :modal-id="CATEGORY_CHANGE_MODAL_ID"
   ></CategoryChangeModal>
-  <DataModelAddModal :modal-id="DATA_MODEL_ADD_MODAL_ID"></DataModelAddModal>
+  <DataModelAddModal
+    :modal-id="DATA_MODEL_ADD_MODAL_ID"
+    @before-open="beforeOpen"
+    @open="open"
+  ></DataModelAddModal>
 </template>
 
 <script setup lang="ts">
@@ -227,6 +231,8 @@ const {
   moveCategory,
   resetAddModalStatus,
   setSelectedNode,
+  getSearchList,
+  getFilters,
 } = categoryStore;
 const {
   selectedModelList,
@@ -235,6 +241,7 @@ const {
   isCategoriesNoData,
   previewData,
   isBoxSelectedStyle,
+  selectedDataModelList,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -282,7 +289,7 @@ watch(
   { immediate: true },
 );
 
-// tree
+// TREE
 const onCategoryNodeClick = async (node: TreeViewItem) => {
   selectedModelList.value = [];
   isDescEditMode.value = false;
@@ -365,7 +372,7 @@ const dropValidator = async (
   return true;
 };
 
-// dataModel list
+// DATAMODEL LIST
 const allModelList = computed({
   get() {
     return modelIdList.value.length === 0
@@ -402,7 +409,7 @@ const checked = (checkedList: any[]) => {
 const { scrollTrigger, setScrollOptions } =
   useIntersectionObserver(addModelList);
 
-// preview
+// PREVIEW
 const getPreviewCloseStatus = (option: boolean) => {
   isShowPreview.value = option;
   isBoxSelectedStyle.value = false;
@@ -422,7 +429,7 @@ const previewClick = async (data: object) => {
   previewIndex = type;
 };
 
-// editable-input
+// EDITABLE-INPUT
 const editCancel = (key: string) => {
   switch (key) {
     case "title":
@@ -467,7 +474,7 @@ const editIcon = (key: string) => {
   }
 };
 
-// modal
+// MODAL
 const showCategoryAddModal = () => {
   $vfm.open(CATEGORY_ADD_MODAL_ID);
   resetAddModalStatus();
@@ -479,6 +486,15 @@ const showCategoryChangeModal = () => {
 
 const showDataModelAddModal = () => {
   $vfm.open(DATA_MODEL_ADD_MODAL_ID);
+};
+
+const beforeOpen = () => {
+  selectedDataModelList.value = [];
+  getSearchList();
+};
+
+const open = () => {
+  getFilters();
 };
 
 onMounted(async () => {
