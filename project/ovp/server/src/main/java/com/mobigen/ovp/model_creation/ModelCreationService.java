@@ -2,6 +2,8 @@ package com.mobigen.ovp.model_creation;
 
 import com.mobigen.ovp.model_creation.client.DolphinClient;
 import com.mobigen.ovp.model_creation.client.ModelCreationClient;
+import com.mobigen.ovp.user.UserClient;
+import com.mobigen.ovp.user.dto.UserInfoDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.Map;
 public class ModelCreationService {
     private final DolphinClient dolphinClient;
     private final ModelCreationClient modelCreationClient;
+    private final UserClient userClient;
 
     public Object executeQuery(Map<String, Object> param) throws Exception {
         Map<String, Object> stringObjectMap = dolphinClient.executeQuery(param);
@@ -63,14 +66,16 @@ public class ModelCreationService {
         return transformedMap;
     }
 
-    public Object addBookMark(Map<String, Object> param) {
-        String jsonLoginUserId = "\"" + param.get("loginUserId") + "\"";
-        modelCreationClient.addBookMark((String) param.get("id"), jsonLoginUserId);
+    public Object addBookMark(String id) throws Exception {
+        UserInfoDTO userInfo = userClient.getUserInfo();
+        String jsonLoginUserId = "\"" + userInfo.getId() + "\"";
+        modelCreationClient.addBookMark(id, jsonLoginUserId);
         return null;
     }
 
-    public Object removeBookMark(Map<String, Object> param) {
-        modelCreationClient.deleteBookMark((String) param.get("id"), (String) param.get("loginUserId"));
+    public Object removeBookMark(String id) throws Exception {
+        UserInfoDTO userInfo = userClient.getUserInfo();
+        modelCreationClient.deleteBookMark(id, userInfo.getId());
         return null;
     }
 }

@@ -151,11 +151,6 @@ export const useCreationStore = defineStore("creation", () => {
    * 데이터 모델 생성 > 북마크 변경
    * */
   const changeBookmark = async (value: string) => {
-    let param = {
-      id: value,
-      loginUserId: user.value.id,
-    };
-
     let selectedModel = _.find(modelList.value, ["id", value]);
 
     if (!selectedModel) {
@@ -164,9 +159,8 @@ export const useCreationStore = defineStore("creation", () => {
       return;
     }
     if (selectedModel.bookmarked) {
-      await $api(`/api/creation/bookmark/delete`, {
-        method: "POST",
-        body: param,
+      await $api(`/api/creation/bookmark/remove/${value}`, {
+        method: "DELETE",
       })
         .then((res: any) => {
           setDataModelList();
@@ -175,9 +169,8 @@ export const useCreationStore = defineStore("creation", () => {
           console.log("err: ", err);
         });
     } else {
-      await $api(`/api/creation/bookmark/add`, {
-        method: "POST",
-        body: param,
+      await $api(`/api/creation/bookmark/add/${value}`, {
+        method: "PUT",
       })
         .then((res: any) => {
           setDataModelList();
