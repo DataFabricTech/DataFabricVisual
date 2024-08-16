@@ -17,7 +17,7 @@
       </div>
       <div class="modal-body">
         <div class="flex justify-end w-full gap-2">
-          <button class="button button-neutral-stroke" @click="replay">
+          <button class="button button-neutral-stroke" @click="refresh">
             새로고침
           </button>
           <button class="button button-neutral-stroke" @click="copy">
@@ -55,7 +55,7 @@ const emit = defineEmits<{
 const closeModal = () => {
   emit("close");
 };
-function replay() {
+function refresh() {
   getCollectionLogData();
 }
 function copy() {
