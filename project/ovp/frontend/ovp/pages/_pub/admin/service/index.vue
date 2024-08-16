@@ -36,10 +36,19 @@
           <div class="menu-head">
             <div class="h-group">
               <div class="search-input">
-                <label class="hidden-text" for="data-menu-search">데이터 모델 검색</label>
-                <input id="data-menu-search" class="text-input" placeholder="검색어 입력" />
+                <label class="hidden-text" for="data-menu-search"
+                  >데이터 모델 검색</label
+                >
+                <input
+                  id="data-menu-search"
+                  class="text-input"
+                  placeholder="검색어 입력"
+                />
                 <svg-icon class="text-input-icon" name="search"></svg-icon>
-                <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                <button
+                  class="search-input-action-button button button-neutral-ghost button-sm"
+                  type="button"
+                >
                   <span class="hidden-text">지우기</span>
                   <svg-icon class="button-icon" name="close"></svg-icon>
                 </button>
@@ -53,14 +62,20 @@
           <ul class="menu-list">
             <li class="menu-item is-menu-item-selected">
               <button class="menu-button">
-                <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                <svg-icon
+                  class="svg-icon menu-data-icon"
+                  name="resource"
+                ></svg-icon>
                 <span class="menu-text">서비스A</span>
                 <span class="menu-subtext">(소유자)</span>
               </button>
             </li>
             <li class="menu-item" v-for="menu in 6" :key="menu">
               <button class="menu-button">
-                <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+                <svg-icon
+                  class="svg-icon menu-data-icon"
+                  name="resource"
+                ></svg-icon>
                 <span class="menu-text">서비스F</span>
                 <span class="menu-subtext">(소유자)</span>
               </button>
@@ -89,7 +104,10 @@
               <div class="text-neutral-700 font-semibold w-14">소유자</div>
               <div class="editable-group w-auto">
                 <div class="text-neutral-700">owner</div>
-                <button class="button button-neutral-ghost button-sm" type="button">
+                <button
+                  class="button button-neutral-ghost button-sm"
+                  type="button"
+                >
                   <span class="hidden-text">수정</span>
                   <svg-icon class="button-icon" name="pen"></svg-icon>
                 </button>
@@ -105,7 +123,10 @@
                   <div class="tag tag-primary tag-sm">
                     <span class="tag-text">DATA-tag</span>
                   </div>
-                  <button class="button button-neutral-ghost button-sm" type="button">
+                  <button
+                    class="button button-neutral-ghost button-sm"
+                    type="button"
+                  >
                     <span class="hidden-text">수정</span>
                     <svg-icon class="button-icon" name="pen"></svg-icon>
                   </button>
@@ -120,12 +141,14 @@
                   <div class="tag tag-primary tag-sm">
                     <span class="tag-text">term 04</span>
                   </div>
-                  <button class="button button-neutral-ghost button-sm" type="button">
+                  <button
+                    class="button button-neutral-ghost button-sm"
+                    type="button"
+                  >
                     <span class="hidden-text">수정</span>
                     <svg-icon class="button-icon" name="pen"></svg-icon>
                   </button>
                 </div>
-
               </div>
             </div>
           </div>
@@ -153,10 +176,13 @@
             <div class="v-group gap-2">
               <div class="font-semibold text-neutral-700">설명</div>
               <div class="editable-group">
-              <span class="editable-group-desc">
-              서비스 A에 대한 설명이 기재됩니다.
-              </span>
-                <button class="button button-neutral-ghost button-sm" type="button">
+                <span class="editable-group-desc">
+                  서비스 A에 대한 설명이 기재됩니다.
+                </span>
+                <button
+                  class="button button-neutral-ghost button-sm"
+                  type="button"
+                >
                   <span class="hidden-text">수정</span>
                   <svg-icon class="svg-icon" name="pen"></svg-icon>
                 </button>
@@ -164,8 +190,8 @@
             </div>
             <table class="mt-4">
               <colgroup>
-                <col/>
-                <col/>
+                <col />
+                <col />
                 <col style="width: 35%" />
               </colgroup>
               <tr>
@@ -178,7 +204,12 @@
               <tr v-for="tr in 3" :key="tr">
                 <td>DB기본정보</td>
                 <td>
-                  <a href="" class="link-button link-button link-button-underline" title="상세 페이지 이동">DB Table1</a>
+                  <a
+                    href=""
+                    class="link-button link-button link-button-underline"
+                    title="상세 페이지 이동"
+                    >DB Table1</a
+                  >
                 </td>
                 <td>DB Table에 대한 설명입니다.</td>
                 <td>-</td>
@@ -198,22 +229,34 @@
           <div class="px-4">
             <div class="l-between">
               <div class="search-input">
-                <label class="hidden-text" for="text-input-example-11">label</label>
-                <input id="text-input-example-11" class="text-input" placeholder="검색어 입력" />
+                <label class="hidden-text" for="text-input-example-11"
+                  >label</label
+                >
+                <input
+                  id="text-input-example-11"
+                  class="text-input"
+                  placeholder="검색어 입력"
+                />
                 <svg-icon class="text-input-icon" name="search"></svg-icon>
-                <button class="search-input-action-button button button-neutral-ghost button-sm"
-                        type="button">
+                <button
+                  class="search-input-action-button button button-neutral-ghost button-sm"
+                  type="button"
+                >
                   <span class="hidden-text">지우기</span>
                   <svg-icon class="button-icon" name="close"></svg-icon>
                 </button>
               </div>
-              <!--  TODO: [개발] 수집추가 모달을 메타데이터 수집추가, 프로파일러 수집추가 드롭다운 메뉴에 추가 필요, dropdown의 위치를 right:0으로 조정 필요  -->
-              <select-box class="" @click="showModalCollection = true">수집추가</select-box>
+              TODO: [개발] 수집추가 모달을 메타데이터 수집추가, 프로파일러
+              수집추가 드롭다운 메뉴에 추가 필요, dropdown의 위치를 right:0으로
+              조정 필요
+              <select-box class="" @click="showModalCollection = true"
+                >수집추가</select-box
+              >
             </div>
             <table class="mt-3">
               <colgroup>
-                <col/>
-                <col/>
+                <col />
+                <col />
                 <col style="width: 30%" />
               </colgroup>
               <tr>
@@ -249,7 +292,10 @@
                     <button class="button button button-error-stroke">
                       종료
                     </button>
-                    <button class="button button button-neutral-stroke" @click="showModalLog = true">
+                    <button
+                      class="button button button-neutral-stroke"
+                      @click="showModalLog = true"
+                    >
                       로그
                     </button>
                   </div>
@@ -303,14 +349,12 @@
               <button class="button button-neutral-stroke">
                 연결정보 수정
               </button>
-              <button class="button button-secondary">
-                연결 테스트
-              </button>
+              <button class="button button-secondary">연결 테스트</button>
             </div>
             <table class="mt-3">
               <colgroup>
-                <col style="width:20%;"/>
-                <col/>
+                <col style="width: 20%" />
+                <col />
               </colgroup>
               <tr>
                 <th>scheme</th>
@@ -398,7 +442,8 @@
           :current-item-type="'index'"
           :comparison="'equal'"
           @change="changeStep"
-          style="width: 100%">
+          style="width: 100%"
+        >
         </Step>
         <!-- Step 01 / 시작 -->
         <div class="service-type" style="display: block">
@@ -806,10 +851,15 @@
                               >
                                 Connection Options
                               </label>
-                              <input id="text-input-example-4" class="text-input text-input-lg"
-                                     value="prefix icon + button" />
-                              <button class="search-input-action-button button button-neutral-ghost button-sm"
-                                      type="button">
+                              <input
+                                id="text-input-example-4"
+                                class="text-input text-input-lg"
+                                value="prefix icon + button"
+                              />
+                              <button
+                                class="search-input-action-button button button-neutral-ghost button-sm"
+                                type="button"
+                              >
                                 <span class="hidden-text">지우기</span>
                                 <svg-icon
                                   class="button-icon"
@@ -824,10 +874,15 @@
                               >
                                 Connection Options
                               </label>
-                              <input id="text-input-example-4" class="text-input text-input-lg"
-                                     value="prefix icon + button" />
-                              <button class="search-input-action-button button button-neutral-ghost button-sm"
-                                      type="button">
+                              <input
+                                id="text-input-example-4"
+                                class="text-input text-input-lg"
+                                value="prefix icon + button"
+                              />
+                              <button
+                                class="search-input-action-button button button-neutral-ghost button-sm"
+                                type="button"
+                              >
                                 <span class="hidden-text">지우기</span>
                                 <svg-icon
                                   class="button-icon"
@@ -883,10 +938,15 @@
                               >
                                 Connection Options
                               </label>
-                              <input id="text-input-example-4" class="text-input text-input-lg"
-                                     value="prefix icon + button" />
-                              <button class="search-input-action-button button button-neutral-ghost button-sm"
-                                      type="button">
+                              <input
+                                id="text-input-example-4"
+                                class="text-input text-input-lg"
+                                value="prefix icon + button"
+                              />
+                              <button
+                                class="search-input-action-button button button-neutral-ghost button-sm"
+                                type="button"
+                              >
                                 <span class="hidden-text">지우기</span>
                                 <svg-icon
                                   class="button-icon"
@@ -901,10 +961,15 @@
                               >
                                 Connection Options
                               </label>
-                              <input id="text-input-example-4" class="text-input text-input-lg"
-                                     value="prefix icon + button" />
-                              <button class="search-input-action-button button button-neutral-ghost button-sm"
-                                      type="button">
+                              <input
+                                id="text-input-example-4"
+                                class="text-input text-input-lg"
+                                value="prefix icon + button"
+                              />
+                              <button
+                                class="search-input-action-button button button-neutral-ghost button-sm"
+                                type="button"
+                              >
                                 <span class="hidden-text">지우기</span>
                                 <svg-icon
                                   class="button-icon"
@@ -946,10 +1011,15 @@
                               >
                                 Connection Options
                               </label>
-                              <input id="text-input-example-4" class="text-input text-input-lg"
-                                     value="prefix icon + button" />
-                              <button class="search-input-action-button button button-neutral-ghost button-sm"
-                                      type="button">
+                              <input
+                                id="text-input-example-4"
+                                class="text-input text-input-lg"
+                                value="prefix icon + button"
+                              />
+                              <button
+                                class="search-input-action-button button button-neutral-ghost button-sm"
+                                type="button"
+                              >
                                 <span class="hidden-text">지우기</span>
                                 <svg-icon
                                   class="button-icon"
@@ -964,10 +1034,15 @@
                               >
                                 Connection Options
                               </label>
-                              <input id="text-input-example-4" class="text-input text-input-lg"
-                                     value="prefix icon + button" />
-                              <button class="search-input-action-button button button-neutral-ghost button-sm"
-                                      type="button">
+                              <input
+                                id="text-input-example-4"
+                                class="text-input text-input-lg"
+                                value="prefix icon + button"
+                              />
+                              <button
+                                class="search-input-action-button button button-neutral-ghost button-sm"
+                                type="button"
+                              >
                                 <span class="hidden-text">지우기</span>
                                 <svg-icon
                                   class="button-icon"
@@ -1079,7 +1154,7 @@
       </div>
     </div>
   </div>
-<!-- TODO: [개발]  width:620px,height:622px-->
+  <!-- TODO: [개발]  width:620px,height:622px-->
   <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalCollection">
     <div class="modal modal-padding-0" style="width: 620px">
       <div class="modal-head">
@@ -1106,7 +1181,8 @@
           :current-item-type="'index'"
           :comparison="'equal'"
           @change="changeStep"
-          style="width: 100%">
+          style="width: 100%"
+        >
         </Step>
         <!-- Step 01 / 시작  -->
         <div class="service-form" style="display: block">
@@ -1350,10 +1426,18 @@
                     <div class="form-item">
                       <label class="form-label"> Sample Data Rows Count </label>
                       <div class="search-input">
-                        <label class="hidden-text" for="text-input-example-4">label</label>
-                        <input id="text-input-example-4" class="text-input text-input-lg"
-                               value="prefix icon + button" />
-                        <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                        <label class="hidden-text" for="text-input-example-4"
+                          >label</label
+                        >
+                        <input
+                          id="text-input-example-4"
+                          class="text-input text-input-lg"
+                          value="prefix icon + button"
+                        />
+                        <button
+                          class="search-input-action-button button button-neutral-ghost button-sm"
+                          type="button"
+                        >
                           <span class="hidden-text">지우기</span>
                           <svg-icon class="button-icon" name="close"></svg-icon>
                         </button>
@@ -1362,10 +1446,18 @@
                     <div class="form-item">
                       <label class="form-label"> Thread Count </label>
                       <div class="search-input">
-                        <label class="hidden-text" for="text-input-example-4">label</label>
-                        <input id="text-input-example-4" class="text-input text-input-lg"
-                               value="prefix icon + button" />
-                        <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                        <label class="hidden-text" for="text-input-example-4"
+                          >label</label
+                        >
+                        <input
+                          id="text-input-example-4"
+                          class="text-input text-input-lg"
+                          value="prefix icon + button"
+                        />
+                        <button
+                          class="search-input-action-button button button-neutral-ghost button-sm"
+                          type="button"
+                        >
                           <span class="hidden-text">지우기</span>
                           <svg-icon class="button-icon" name="close"></svg-icon>
                         </button>
@@ -1374,10 +1466,18 @@
                     <div class="form-item">
                       <label class="form-label"> Timeout (In Sec.) </label>
                       <div class="search-input">
-                        <label class="hidden-text" for="text-input-example-4">label</label>
-                        <input id="text-input-example-4" class="text-input text-input-lg"
-                               value="prefix icon + button" />
-                        <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                        <label class="hidden-text" for="text-input-example-4"
+                          >label</label
+                        >
+                        <input
+                          id="text-input-example-4"
+                          class="text-input text-input-lg"
+                          value="prefix icon + button"
+                        />
+                        <button
+                          class="search-input-action-button button button-neutral-ghost button-sm"
+                          type="button"
+                        >
                           <span class="hidden-text">지우기</span>
                           <svg-icon class="button-icon" name="close"></svg-icon>
                         </button>
@@ -1446,25 +1546,77 @@
                           name="button-group4"
                           checked
                         />
-                        <label for="button-groupprimarysm1" class="button-group-label">SUN</label>
-                        <input type="radio" id="button-groupprimarysm2" class="button-group-input"
-                               name="button-group4" />
-                        <label for="button-groupprimarysm2" class="button-group-label">MON</label>
-                        <input type="radio" id="button-groupprimarysm3" class="button-group-input"
-                               name="button-group4" />
-                        <label for="button-groupprimarysm3" class="button-group-label">TUE</label>
-                        <input type="radio" id="button-groupprimarysm4" class="button-group-input"
-                               name="button-group4" />
-                        <label for="button-groupprimarysm4" class="button-group-label">WED</label>
-                        <input type="radio" id="button-groupprimarysm5" class="button-group-input"
-                               name="button-group4" />
-                        <label for="button-groupprimarysm5" class="button-group-label">THU</label>
-                        <input type="radio" id="button-groupprimarysm6" class="button-group-input"
-                               name="button-group4" />
-                        <label for="button-groupprimarysm6" class="button-group-label">FRI</label>
-                        <input type="radio" id="button-groupprimarysm7" class="button-group-input"
-                               name="button-group4" />
-                        <label for="button-groupprimarysm7" class="button-group-label">SAT</label>
+                        <label
+                          for="button-groupprimarysm1"
+                          class="button-group-label"
+                          >SUN</label
+                        >
+                        <input
+                          type="radio"
+                          id="button-groupprimarysm2"
+                          class="button-group-input"
+                          name="button-group4"
+                        />
+                        <label
+                          for="button-groupprimarysm2"
+                          class="button-group-label"
+                          >MON</label
+                        >
+                        <input
+                          type="radio"
+                          id="button-groupprimarysm3"
+                          class="button-group-input"
+                          name="button-group4"
+                        />
+                        <label
+                          for="button-groupprimarysm3"
+                          class="button-group-label"
+                          >TUE</label
+                        >
+                        <input
+                          type="radio"
+                          id="button-groupprimarysm4"
+                          class="button-group-input"
+                          name="button-group4"
+                        />
+                        <label
+                          for="button-groupprimarysm4"
+                          class="button-group-label"
+                          >WED</label
+                        >
+                        <input
+                          type="radio"
+                          id="button-groupprimarysm5"
+                          class="button-group-input"
+                          name="button-group4"
+                        />
+                        <label
+                          for="button-groupprimarysm5"
+                          class="button-group-label"
+                          >THU</label
+                        >
+                        <input
+                          type="radio"
+                          id="button-groupprimarysm6"
+                          class="button-group-input"
+                          name="button-group4"
+                        />
+                        <label
+                          for="button-groupprimarysm6"
+                          class="button-group-label"
+                          >FRI</label
+                        >
+                        <input
+                          type="radio"
+                          id="button-groupprimarysm7"
+                          class="button-group-input"
+                          name="button-group4"
+                        />
+                        <label
+                          for="button-groupprimarysm7"
+                          class="button-group-label"
+                          >SAT</label
+                        >
                       </div>
                     </div>
                   </div>
@@ -1484,10 +1636,18 @@
                     </label>
                     <div class="form-detail">
                       <div class="search-input">
-                        <label class="hidden-text" for="text-input-example-4">label</label>
-                        <input id="text-input-example-4" class="text-input text-input-lg"
-                               value="prefix icon + button" />
-                        <button class="search-input-action-button button button-neutral-ghost button-sm" type="button">
+                        <label class="hidden-text" for="text-input-example-4"
+                          >label</label
+                        >
+                        <input
+                          id="text-input-example-4"
+                          class="text-input text-input-lg"
+                          value="prefix icon + button"
+                        />
+                        <button
+                          class="search-input-action-button button button-neutral-ghost button-sm"
+                          type="button"
+                        >
                           <span class="hidden-text">지우기</span>
                           <svg-icon class="button-icon" name="close"></svg-icon>
                         </button>
@@ -1507,9 +1667,15 @@
                 <label for="" class="form-label"> Number of Retries </label>
                 <div class="form-detail flex flex-col">
                   <div class="search-input">
-                    <label class="hidden-text" for="text-input-example-4">label</label>
-                    <input id="text-input-example-4" type="number" class="text-input text-input-lg"
-                           value="prefix icon + button" />
+                    <label class="hidden-text" for="text-input-example-4"
+                      >label</label
+                    >
+                    <input
+                      id="text-input-example-4"
+                      type="number"
+                      class="text-input text-input-lg"
+                      value="prefix icon + button"
+                    />
                   </div>
                   <div class="notification notification-sm notification-error">
                     <svg-icon class="notification-icon" name="error"></svg-icon>
