@@ -161,6 +161,7 @@ export const useCreationStore = defineStore("creation", () => {
     if (!selectedModel) {
       // TODO: alert 컴포넌트로 변경 예정
       alert("모델을 찾을 수 없습니다.");
+      return;
     }
     if (selectedModel.bookmarked) {
       await $api(`/api/creation/bookmark/delete`, {
