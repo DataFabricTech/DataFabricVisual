@@ -19,7 +19,6 @@
   >
     <template v-slot:body>
       <div class="data-info max-h-[460px]">
-        inpValue: {{ inputValue }}
         <search-input
           class="search-input-lg"
           :is-search-input-default-type="false"
@@ -112,7 +111,8 @@
                       </button>
                     </div>
                     <div class="h-group w-full">
-                      <img src="" />
+                      <!--          TODO: [개발] type 이 table / storage / model 로 오는데 어떤 이미지를 넣는지 확인 필요 -->
+                      <div class="type-img type-img-mysql"></div>
                       <span class="table-data-title">{{ item.modelNm }}</span>
                     </div>
                   </div>
@@ -120,6 +120,7 @@
               </tr>
             </tbody>
           </table>
+          <!--          TODO: [개발] 인피니티 스크롤 적용 -->
           <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
           <Loading
             id="loader"
@@ -149,13 +150,8 @@ const router = useRouter();
 const { $vfm } = useNuxtApp();
 
 const categoryStore = useGovernCategoryStore();
-const {
-  changeTab,
-  setSearchKeyword,
-  resetReloadList,
-  addSearchList,
-  getSearchList,
-} = categoryStore;
+const { changeTab, setSearchKeyword, resetReloadList, addSearchList } =
+  categoryStore;
 const {
   filters,
   searchResult,
