@@ -4,10 +4,11 @@ import { usePagingStore } from "~/store/common/paging";
 
 export function useIntersectionObserver(
   realCallback: (params?: any) => Promise<void>,
+  diffTargetId?: string,
   from?: number,
   size?: number,
 ) {
-  const targetId = "dataList";
+  const targetId = diffTargetId || "dataList";
   const scrollTrigger = ref<HTMLElement | null>(null);
   const loaderId = "loader";
   let intersectionHandler: IntersectionObserverHandler | null = null;

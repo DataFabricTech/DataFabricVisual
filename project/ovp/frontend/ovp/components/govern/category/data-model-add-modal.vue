@@ -1,0 +1,259 @@
+<template>
+  <Modal
+    title="데이터 모델 추가"
+    class="modal modal-padding-16"
+    :modal-id="props.modalId"
+    background="non-interactive"
+    displayDirective="show"
+    overlayTransition="vfm-fade"
+    contentTransition="vfm-fade"
+    :clickToClose="true"
+    :escToClose="true"
+    :width="1180"
+    :height="640"
+    :top="240"
+    :lockScroll="false"
+    swipeToClose="none"
+    @cancel="onCancel"
+    @confirm="onConfirm"
+  >
+    <template v-slot:body>
+      <div class="data-info max-h-[460px]">
+        <search-input
+          class="search-input-lg"
+          :is-search-input-default-type="false"
+          :placeholder="'검색어를 입력하세요.'"
+          v-model="inputValue"
+          @on-input="onInput"
+        ></search-input>
+        <div class="filters">
+          <data-filter :data="filters"></data-filter>
+        </div>
+        <Tab
+          :data="tabOptions"
+          :label-key="'label'"
+          :value-key="'value'"
+          :current-item="initTab"
+          :current-item-type="'value'"
+          :use-tab-contents="false"
+          @change="changeTab"
+        >
+        </Tab>
+        <strong
+          >선택
+          <em class="primary">{{ selectedDataModelListLength }}개</em></strong
+        >
+        <div class="no-result" v-if="isSearchResultNoData">
+          <div class="notification">
+            <svg-icon class="notification-icon" name="info"></svg-icon>
+            <p class="notification-detail">정보가 없습니다.</p>
+          </div>
+        </div>
+        <div v-else class="table-scroll" id="dataListModal">
+          <table>
+            <colgroup>
+              <col style="width: 10%" />
+              <col />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>
+                  <div class="checkbox">
+                    <input
+                      type="checkbox"
+                      id="checkbox-all-select"
+                      class="checkbox-input"
+                      v-model="allDataModalList"
+                    />
+                    <label for="checkbox-all-select" class="checkbox-label">
+                      <span class="hidden-text"> 전체 선택 </span>
+                    </label>
+                  </div>
+                </th>
+                <th class="text-center">데이터 모델 정보</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in searchResult" :key="index">
+                <td>
+                  <div class="checkbox">
+                    <input
+                      type="checkbox"
+                      :id="item.id"
+                      :value="item.id"
+                      class="checkbox-input"
+                      v-model="selectedDataModelList"
+                    />
+                    <label :for="item.id" class="checkbox-label">
+                      <span class="hidden-text"> 첫번째 데이터 모델 </span>
+                    </label>
+                  </div>
+                </td>
+                <td>
+                  <div class="table-data">
+                    <div class="l-between">
+                      <div class="breadcrumb">
+                        <ul class="breadcrumb-list">
+                          <li
+                            class="breadcrumb-item"
+                            v-for="(breadItem, idx) in item.depth"
+                            :key="idx"
+                          >
+                            <span class="breadcrumb-text">{{ breadItem }}</span>
+                          </li>
+                        </ul>
+                      </div>
+                      <button
+                        class="button link-button-support button-sm"
+                        @click="goToModelDetail(item)"
+                      >
+                        상세보기
+                      </button>
+                    </div>
+                    <div class="h-group w-full gap-4">
+                      <!--          TODO: [개발] type 이 table / storage / model 로 오는데 어떤 이미지를 넣는지 확인 필요 -->
+                      <div
+                        class="type-img type-img-mysql"
+                        :class="`type-img-${item.serviceIcon}`"
+                      ></div>
+                      <span class="table-data-title">{{ item.modelNm }}</span>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--          TODO: [개발] 인피니티 스크롤 적용 -->
+          <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+          <Loading
+            id="loader"
+            :use-loader-overlay="true"
+            class="loader-lg is-loader-inner"
+            style="display: none"
+          ></Loading>
+        </div>
+      </div>
+    </template>
+  </Modal>
+</template>
+
+<script setup lang="ts">
+import Modal from "@extends/modal/Modal.vue";
+import { useNuxtApp, useRouter } from "nuxt/app";
+import { useGovernCategoryStore } from "~/store/governance/Category/index";
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
+import { storeToRefs } from "pinia";
+import DataFilter from "./data-filter.vue";
+import SearchInput from "@extends/search-input/SearchInput.vue";
+import Tab from "@extends/tab/Tab.vue";
+import { computed, ref } from "vue";
+import Loading from "@base/loading/Loading.vue";
+
+const router = useRouter();
+const { $vfm } = useNuxtApp();
+
+const categoryStore = useGovernCategoryStore();
+const { changeTab, setSearchKeyword, resetReloadList, addSearchList } =
+  categoryStore;
+const {
+  filters,
+  searchResult,
+  searchResultLength,
+  isSearchResultNoData,
+  dataModelIdList,
+  selectedDataModelList,
+} = storeToRefs(categoryStore);
+
+const props = defineProps({
+  modalId: {
+    type: String,
+    required: true,
+  },
+});
+
+// SEARCH INPUT
+const inputValue = ref("");
+const onInput = (value: string) => {
+  setScrollOptions(0);
+  setSearchKeyword(value);
+  resetReloadList();
+};
+
+// DATA MODEL
+// checkbox
+const selectedDataModelListLength = computed(() => {
+  return selectedDataModelList.value.length;
+});
+
+const allDataModalList = computed({
+  get() {
+    return dataModelIdList.value.length === 0
+      ? false
+      : dataModelIdList.value.length === selectedDataModelListLength.value;
+  },
+  set(event) {
+    if (event) {
+      selectedDataModelList.value = dataModelIdList.value;
+    } else {
+      selectedDataModelList.value = [];
+    }
+  },
+});
+
+const goToModelDetail = (data: object) => {
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
+
+  const url = router.resolve({
+    path: "/portal/search/detail",
+    query: {
+      type: type,
+      id: id,
+      fqn: fqn,
+    },
+  }).href;
+
+  window.open(url, "_blank");
+};
+
+// TAB
+const initTab: Ref<string> = ref("table");
+const tabOptions = ref([
+  {
+    label: `테이블 (${searchResultLength.value.table})`,
+    value: "table",
+    type: "table",
+  },
+  {
+    label: `스토리지 (${searchResultLength.value.storage})`,
+    value: "storage",
+    type: "storage",
+  },
+  {
+    label: `융합모델 (${searchResultLength.value.model})`,
+    value: "model",
+    type: "model",
+  },
+]);
+
+watchEffect(() => {
+  tabOptions.value[0].label = `테이블 (${searchResultLength.value.table})`;
+  tabOptions.value[1].label = `스토리지 (${searchResultLength.value.storage})`;
+  tabOptions.value[2].label = `융합모델 (${searchResultLength.value.model})`;
+});
+
+// MODAL
+const onCancel = () => {
+  $vfm.close(props.modalId);
+};
+
+const onConfirm = async () => {
+  $vfm.close(props.modalId);
+};
+
+const { scrollTrigger, setScrollOptions } = useIntersectionObserver(
+  addSearchList,
+  "dataListModal",
+);
+</script>
+
+<style scoped></style>
