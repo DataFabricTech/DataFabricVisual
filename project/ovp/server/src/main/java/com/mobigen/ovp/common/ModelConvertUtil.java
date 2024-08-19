@@ -89,6 +89,7 @@ public class ModelConvertUtil {
         String fileFormats = null;
         String tableType = null;
         String fullyQualifiedName = null;
+        String serviceType = null;
 
         if (type.equals("unstructured")) {
             size = (Number) data.get("size");
@@ -100,6 +101,7 @@ public class ModelConvertUtil {
         } else if (type.equals("structured")) {
             tableType = (String) data.get("tableType");
             columns = (List<Map<String, Object>>) data.get("columns");
+            serviceType = (String) data.get("serviceType");
         }
 
         List<Map<String, Object>> tagList = new ArrayList<>();
@@ -161,11 +163,17 @@ public class ModelConvertUtil {
         resultMap.put("glossaries", glossaryList);
         resultMap.put("tags", tagList);
         resultMap.put("id", data.get("id"));
-
+        
         if (type.equals("unstructured")) {
             resultMap.put("modelType", "unstructured");
+            resultMap.put("index", "storage");
             resultMap.put("fqn", fullyQualifiedName);
         } else if (type.equals("structured")) {
+            if (serviceType.equals("Trino")) {
+                resultMap.put("index", "model");
+            } else {
+                resultMap.put("index", "table");
+            }
             resultMap.put("modelType", "structured");
             resultMap.put("fqn", fqn);
         }

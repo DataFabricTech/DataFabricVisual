@@ -11,7 +11,6 @@
     </div>
     <div class="preview-contents">
       <div class="preview-item">
-        <!--        TODO: [개발] 추후 해당 모델 페이지로 이동하는 url 추가 필요-->
         <a
           href="javascript:void(0)"
           class="preview-title"
@@ -140,14 +139,16 @@ const setPreviewClose = (option: boolean) => {
   emit("change", option);
 };
 const gotoDetail = () => {
-  const { id, fqn } = props.previewData as unknown as {
+  const { id, fqn, index } = props.previewData as unknown as {
     id: string;
     fqn: string;
+    index: string;
   };
+
   router.push({
     path: "/portal/search/detail",
     query: {
-      type: props.modelType,
+      type: index,
       id: id,
       fqn: fqn,
     },
