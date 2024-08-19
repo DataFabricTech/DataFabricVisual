@@ -49,7 +49,7 @@
             <p class="notification-detail">정보가 없습니다.</p>
           </div>
         </div>
-        <div v-else class="table-scroll">
+        <div v-else class="table-scroll" id="dataListModal">
           <table>
             <colgroup>
               <col style="width: 10%" />
@@ -110,9 +110,12 @@
                         상세보기
                       </button>
                     </div>
-                    <div class="h-group w-full">
+                    <div class="h-group w-full gap-4">
                       <!--          TODO: [개발] type 이 table / storage / model 로 오는데 어떤 이미지를 넣는지 확인 필요 -->
-                      <div class="type-img type-img-mysql"></div>
+                      <div
+                        class="type-img type-img-mysql"
+                        :class="`type-img-${item.serviceIcon}`"
+                      ></div>
                       <span class="table-data-title">{{ item.modelNm }}</span>
                     </div>
                   </div>
@@ -171,7 +174,7 @@ const props = defineProps({
 // SEARCH INPUT
 const inputValue = ref("");
 const onInput = (value: string) => {
-  console.log("value", value);
+  setScrollOptions(0);
   setSearchKeyword(value);
   resetReloadList();
 };
@@ -247,7 +250,8 @@ const onConfirm = async () => {
   $vfm.close(props.modalId);
 };
 
-const { scrollTrigger } = useIntersectionObserver(addSearchList);
+const { scrollTrigger, setScrollOptions } =
+  useIntersectionObserver(addSearchList);
 </script>
 
 <style scoped></style>
