@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @Slf4j
-@RequestMapping("api/containers")
+@RequestMapping("/api/containers")
 @RestController
 @RequiredArgsConstructor
 public class ContainerController {
