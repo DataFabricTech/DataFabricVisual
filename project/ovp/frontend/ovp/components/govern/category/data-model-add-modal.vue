@@ -250,8 +250,10 @@ const onConfirm = async () => {
   $vfm.close(props.modalId);
 };
 
-const { scrollTrigger, setScrollOptions } =
-  useIntersectionObserver(addSearchList);
+const { scrollTrigger, setScrollOptions } = useIntersectionObserver(
+  addSearchList,
+  "dataListModal",
+);
 </script>
 
 <style scoped></style>
