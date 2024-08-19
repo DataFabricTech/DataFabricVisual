@@ -74,7 +74,7 @@ public class ServiceService {
     public ServiceEntity patchService(UUID id, List<JsonPatchOperation> param) throws Exception {
         ResponseEntity<ServiceResponse> result = serviceClient.patchServie(id, param);
         if(result.getStatusCode() == HttpStatus.OK) {
-            return new ServiceEntity(serviceClient.patchServie(id, param));
+            return new ServiceEntity(result);
         } else {
             throw new Exception();
         }

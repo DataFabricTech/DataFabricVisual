@@ -75,7 +75,9 @@ public class ServiceEntity {
                 }
             }
         }
-        this.owner = service.getBody().getOwner();
+        if(service.getBody().getOwner() != null) {
+            this.owner = service.getBody().getOwner();
+        }
     }
 
     public ServiceEntity(Map<String, Object> map) {
