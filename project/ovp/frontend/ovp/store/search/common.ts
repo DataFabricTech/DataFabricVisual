@@ -1,4 +1,5 @@
 import { usePagingStore } from "~/store/common/paging";
+import { useQueryHelpers } from "~/composables/queryHelpers";
 import _ from "lodash";
 
 export const FILTER_KEYS = {
@@ -36,20 +37,6 @@ export interface SelectedFilters {
   [key: string]: string[];
 }
 
-interface SingleKeyObj {
-  [key: string]: Ref<string>;
-}
-
-interface KeyObj {
-  term: SingleKeyObj;
-}
-
-interface BoolObj {
-  bool: {
-    should: any[];
-  };
-}
-
 export interface QueryFilter {
   query: {
     bool: {
@@ -63,6 +50,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const pagingStore = usePagingStore();
   const { setFrom, updateIntersectionHandler } = pagingStore;
   const { from, size } = storeToRefs(pagingStore);
+  const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
 
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
@@ -121,22 +109,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     };
     return new URLSearchParams(params);
   };
-  const getTrinoQuery = (queryFilter: QueryFilter) => {
-    // query 구현을 backend 에서 하려니까 코드가 너무 복잡해져서 front 에 해서 넘겨서 처리.
-    const trinoFilter: QueryFilter = {
-      query: {
-        bool: {
-          must: [{ bool: { should: [{ term: { serviceType: "trino" } }] } }],
-        },
-      },
-    };
-    const trinoMustArray = trinoFilter.query.bool.must;
-    queryFilter.query.bool.must = _.concat(
-      queryFilter.query.bool.must,
-      trinoMustArray,
-    );
-    return queryFilter;
-  };
+
   // METHODS
   const getSearchListAPI = async () => {
     const { data } = await $api(`/api/search/list?${getSearchListQuery()}`, {
@@ -213,23 +186,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const getPreviewData = async (fqn: string) => {
     const data: any = await $api(`/api/search/preview/${fqn}`);
     previewData.value = data.data;
-  };
-
-  const setQueryFilterByDepth = (key: string, value: any) => {
-    const setTermObj: Ref<any[]> = ref<any[]>([]);
-    const setBoolObj: Ref<BoolObj> = ref<BoolObj>({
-      bool: { should: [] },
-    });
-
-    for (const item of value) {
-      const setKeyObj: Ref<KeyObj> = ref<KeyObj>({
-        term: { [`${key}`]: ref(item) },
-      });
-
-      setTermObj.value.push(setKeyObj.value);
-    }
-    setBoolObj.value.bool.should = setTermObj.value;
-    return setBoolObj.value;
   };
 
   const getCtgIds = () => {

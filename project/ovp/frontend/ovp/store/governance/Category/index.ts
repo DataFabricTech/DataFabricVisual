@@ -1,14 +1,9 @@
+import { ref } from "vue";
+import _ from "lodash";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 import { usePagingStore } from "~/store/common/paging";
-import _ from "lodash";
-import { ref } from "vue";
-
-export const FILTER_KEYS = {
-  OWNER: "owner.displayName.keyword",
-  TAGS: "tags.tagFQN",
-  SERVICE: "service.displayName.keyword",
-  SERVICE_TYPE: "serviceType",
-} as const;
+import { useQueryHelpers } from "~/composables/queryHelpers";
+import { FILTER_KEYS } from "~/store/search/common";
 
 export interface Filter {
   text: string;
@@ -34,20 +29,6 @@ export interface SelectedFilters {
   [key: string]: string[];
 }
 
-interface SingleKeyObj {
-  [key: string]: Ref<string>;
-}
-
-interface KeyObj {
-  term: SingleKeyObj;
-}
-
-interface BoolObj {
-  bool: {
-    should: any[];
-  };
-}
-
 export interface QueryFilter {
   query: {
     bool: {
@@ -61,6 +42,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const pagingStore = usePagingStore();
   const { setFrom, updateIntersectionHandler } = pagingStore;
   const { from, size } = storeToRefs(pagingStore);
+  const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
 
   let selectedNode: any = null;
   const categories: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
@@ -82,7 +64,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     },
   });
 
-  // METHODS
   // TREE
   const getCategories = async () => {
     const { data } = await $api(`/api/category/list`);
@@ -192,6 +173,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     categoryAddDesc.value = "";
   };
 
+  // FILTERS
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
     return {
@@ -215,7 +197,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const selectedDataModelList = ref([]);
   const dataModelIdList = ref([]);
 
-  // List Query data
+  // MODEL LIST
   let searchKeyword: string = "";
   const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
   const getSearchListQuery = () => {
@@ -233,22 +215,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     return new URLSearchParams(params);
   };
 
-  const getTrinoQuery = (queryFilter: QueryFilter) => {
-    // query 구현을 backend 에서 하려니까 코드가 너무 복잡해져서 front 에 해서 넘겨서 처리.
-    const trinoFilter: QueryFilter = {
-      query: {
-        bool: {
-          must: [{ bool: { should: [{ term: { serviceType: "trino" } }] } }],
-        },
-      },
-    };
-    const trinoMustArray = trinoFilter.query.bool.must;
-    queryFilter.query.bool.must = _.concat(
-      queryFilter.query.bool.must,
-      trinoMustArray,
-    );
-    return queryFilter;
-  };
   // METHODS
   const getSearchListAPI = async () => {
     const { data } = await $api(`/api/search/list?${getSearchListQuery()}`, {
@@ -273,7 +239,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     searchResult.value = data[currentTab.value];
     searchResultLength.value = totalCount;
     isSearchResultNoData.value = searchResult.value.length === 0;
-    console.log("갱신 searchResultLength", searchResultLength.value);
     setDataModelIdList();
   };
   const getFilters = async () => {
@@ -285,23 +250,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     useFilters.forEach((key: string) => {
       (filters.value as Filters)[key].data = data[key];
     });
-  };
-
-  const setQueryFilterByDepth = (key: string, value: any) => {
-    const setTermObj: Ref<any[]> = ref<any[]>([]);
-    const setBoolObj: Ref<BoolObj> = ref<BoolObj>({
-      bool: { should: [] },
-    });
-
-    for (const item of value) {
-      const setKeyObj: Ref<KeyObj> = ref<KeyObj>({
-        term: { [`${key}`]: ref(item) },
-      });
-
-      setTermObj.value.push(setKeyObj.value);
-    }
-    setBoolObj.value.bool.should = setTermObj.value;
-    return setBoolObj.value;
   };
 
   const getQueryFilter = (): QueryFilter => {
