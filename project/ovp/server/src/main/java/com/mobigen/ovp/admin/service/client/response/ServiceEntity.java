@@ -3,11 +3,13 @@ package com.mobigen.ovp.admin.service.client.response;
 import com.mobigen.ovp.common.openmete_client.dto.Owner;
 import com.mobigen.ovp.glossary.client.dto.common.Tag;
 import lombok.Data;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Data
 public class ServiceEntity {
@@ -46,6 +48,34 @@ public class ServiceEntity {
             }
         }
         this.owner = service.getOwner();
+    }
+
+    public ServiceEntity(ResponseEntity<ServiceResponse> service) {
+        this.id = Objects.requireNonNull(service.getBody()).getId();
+        this.name = service.getBody().getName();
+        this.fullyQualifiedName = service.getBody().getFullyQualifiedName();
+        this.serviceType = service.getBody().getServiceType();
+        this.description = service.getBody().getDescription();
+        this.tags = new ArrayList<Map<String, Object>>();
+        this.relatedTerms = new ArrayList<Map<String, Object>>();
+
+        List<Tag> tags = service.getBody().getTags();
+        if(tags != null) {
+            for(Tag tag : tags) {
+                if ("Classification".equals(tag.getSource())) {
+                    Map<String, Object> tagData = new HashMap<>();
+                    tagData.put("label", tag.getName());
+                    tagData.put("tagFQN", tag.getTagFQN());
+                    this.tags.add(tagData);
+                } else if ("Glossary".equals(tag.getSource())) {
+                    Map<String, Object> termData = new HashMap<>();
+                    termData.put("label", tag.getName());
+                    termData.put("id", tag.getTagFQN());
+                    this.relatedTerms.add(termData);
+                }
+            }
+        }
+        this.owner = service.getBody().getOwner();
     }
 
     public ServiceEntity(Map<String, Object> map) {

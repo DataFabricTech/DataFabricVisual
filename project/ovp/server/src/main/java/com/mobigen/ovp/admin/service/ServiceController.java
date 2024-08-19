@@ -55,7 +55,7 @@ public class ServiceController {
      */
     @ResponseJsonResult
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
-    public Object patchService(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param) {
+    public Object patchService(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param) throws Exception {
         return service.patchService(id, param);
     }
 
@@ -68,7 +68,7 @@ public class ServiceController {
      */
     @ResponseJsonResult
     @DeleteMapping("/{id}")
-    public Object deleteService(@PathVariable UUID id, @RequestParam boolean hardDelete, @RequestParam boolean recursive) {
+    public Object deleteService(@PathVariable UUID id, @RequestParam boolean hardDelete, @RequestParam boolean recursive) throws Exception {
         return service.deleteService(id, hardDelete, recursive);
     }
 }

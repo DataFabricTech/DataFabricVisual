@@ -7,6 +7,8 @@ import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -69,8 +71,13 @@ public class ServiceService {
      * @param param
      * @return
      */
-    public ServiceEntity patchService(UUID id, List<JsonPatchOperation> param) {
-        return new ServiceEntity(serviceClient.patchServie(id, param));
+    public ServiceEntity patchService(UUID id, List<JsonPatchOperation> param) throws Exception {
+        ResponseEntity<ServiceResponse> result = serviceClient.patchServie(id, param);
+        if(result.getStatusCode() == HttpStatus.OK) {
+            return new ServiceEntity(serviceClient.patchServie(id, param));
+        } else {
+            throw new Exception();
+        }
     }
 
     /**
@@ -80,7 +87,12 @@ public class ServiceService {
      * @param recursive
      * @return
      */
-    public Object deleteService(UUID id, boolean hardDelete, boolean recursive) {
-        return serviceClient.deleteService(id, hardDelete, recursive);
+    public Object deleteService(UUID id, boolean hardDelete, boolean recursive) throws Exception {
+        ResponseEntity<Object> result = serviceClient.deleteService(id, hardDelete, recursive);
+        if(result.getStatusCode() == HttpStatus.OK) {
+            return serviceClient.deleteService(id, hardDelete, recursive);
+        } else {
+            throw new Exception();
+        }
     }
 }

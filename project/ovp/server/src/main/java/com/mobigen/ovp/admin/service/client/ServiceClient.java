@@ -4,6 +4,7 @@ import com.mobigen.ovp.admin.service.client.response.ServiceBaseResponse;
 import com.mobigen.ovp.admin.service.client.response.ServiceResponse;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -32,7 +33,7 @@ public interface ServiceClient {
      * @return
      */
     @PatchMapping(value = "/services/databaseServices/{id}", consumes = "application/json-patch+json")
-    ServiceResponse patchServie(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param);
+    ResponseEntity<ServiceResponse> patchServie(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param);
 
     /**
      * 서비스 삭제
@@ -43,6 +44,5 @@ public interface ServiceClient {
      * @return
      */
     @DeleteMapping("/services/databaseServices/{id}")
-    Object deleteService(@PathVariable UUID id, @RequestParam boolean hardDelete, @RequestParam boolean recursive);
-
+    ResponseEntity<Object> deleteService(@PathVariable UUID id, @RequestParam boolean hardDelete, @RequestParam boolean recursive);
 }
