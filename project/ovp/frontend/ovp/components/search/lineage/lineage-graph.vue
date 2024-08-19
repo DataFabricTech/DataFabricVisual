@@ -27,6 +27,7 @@ let cyContainer = ref(null);
 let cyRef = null;
 
 const tpl = (data: NodeData) => {
+  // 라벨 템플릿 정의 메서드
   return `<div class="cytoscape-box" style="
     font-family: 'pretendard', 'Segoe UI', 'Open Sans', 'Helvetica Neue';
     width: 100px;
@@ -35,7 +36,7 @@ const tpl = (data: NodeData) => {
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    background-color: #fff;
+    background-color: #f7f9fc;
     outline: none;
     border-radius: 4px;
     overflow: hidden;
@@ -43,7 +44,7 @@ const tpl = (data: NodeData) => {
             <div style="
               font-size: 8px;
               font-weight: 300;
-              color: #31353f;
+              color: #868C98;
               line-height: 1.2;
               overflow: hidden;
               text-overflow: ellipsis;

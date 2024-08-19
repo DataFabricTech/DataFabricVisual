@@ -24,7 +24,7 @@ const props = defineProps({
   },
   useLoaderOverlay: {
     type: Boolean,
-    default: false,
+    default: true,
   },
 });
 </script>

@@ -10,14 +10,38 @@
   <div class="section-contents p-0 bg-white">
     <div class="l-split">
       <selected-model
+        :modelList="modelList"
+        :dataModelFilter="dataModelFilter"
+        :modelListCnt="modelListCnt"
         @change="addDataModel"
         @delete="deleteDataModel"
+        @item-click="onClickDataModelItem"
+        @bookmark-change="changeBookmark"
       ></selected-model>
-      <excute-quary></excute-quary>
+      <execute-query
+        :query="query"
+        @execute="runQuery"
+        @reset="resetQuery"
+        @edit="editQueryText"
+      ></execute-query>
     </div>
     <div class="l-split">
-      <sample></sample>
-      <result></result>
+      <sample
+        :dataModelName="dataModelName"
+        :dataModelOwner="dataModelOwner"
+        :sampleDataList="sampleDataList"
+        :isItemClicked="isItemClicked"
+        :isColumnSelected="isColumnSelected"
+        :dataProfileList="dataProfileList"
+        :columnOptions="columnOptions"
+        @profile-show="showProfile"
+      ></sample>
+      <result
+        :querySuccess="querySuccess"
+        :executeResult="executeResult"
+        :isFirstExecute="isFirstExecute"
+        :executeResultErrMsg="executeResultErrMsg"
+      ></result>
     </div>
   </div>
   <save-model v-if="isShowSaveModel" @change="saveDataModel"></save-model>
@@ -33,7 +57,7 @@
 
 <script setup lang="ts">
 import selectedModel from "@/components/datamodel-creation/selected-model.vue";
-import excuteQuary from "@/components/datamodel-creation/excute-quary.vue";
+import executeQuery from "@/components/datamodel-creation/execute-query.vue";
 import sample from "@/components/datamodel-creation/sample.vue";
 import result from "@/components/datamodel-creation/result.vue";
 import addModel from "@/components/datamodel-creation/modal/add.vue";
@@ -52,14 +76,37 @@ const addDataModel = (param: boolean) => {
 };
 
 const creationStore = useCreationStore();
-const { modelList, dataModelFilter, selectedModelList, myModelList } =
-  storeToRefs(creationStore);
+const {
+  modelList,
+  modelListCnt,
+  dataModelFilter,
+  selectedModelList,
+  query,
+  isFirstExecute,
+  querySuccess,
+  executeResult,
+  executeResultErrMsg,
+  isItemClicked,
+  isColumnSelected,
+  dataModelName,
+  dataModelOwner,
+  sampleDataList,
+  columnOptions,
+  dataProfileList,
+  myModelList
+} = storeToRefs(creationStore);
 const {
   setDataModelFilter,
   setDataModelList,
   deleteDataModel,
+  changeBookmark,
+  onClickDataModelItem,
+  runQuery,
+  resetQuery,
+  editQueryText,
   setSelectedModelList,
   setMyModelList,
+  showProfile
 } = creationStore;
 
 // 데이터 목록, 필터 목록, 선택 필터 초기화

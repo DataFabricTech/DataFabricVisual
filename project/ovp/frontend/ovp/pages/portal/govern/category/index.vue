@@ -25,7 +25,7 @@
             <p class="notification-detail">등록된 정보가 없습니다.</p>
           </div>
         </div>
-        <div class="p-3" v-else>
+        <div class="work-list-tree" v-else>
           <tree-vue
             v-if="categories && categories.length"
             mode="edit"
@@ -137,7 +137,10 @@
                   >
                     카테고리 변경
                   </button>
-                  <button class="button button-secondary">
+                  <button
+                    class="button button-secondary"
+                    @click="showDataModelAddModal"
+                  >
                     데이터모델추가
                   </button>
                 </div>
@@ -191,6 +194,11 @@
   <CategoryChangeModal
     :modal-id="CATEGORY_CHANGE_MODAL_ID"
   ></CategoryChangeModal>
+  <DataModelAddModal
+    :modal-id="DATA_MODEL_ADD_MODAL_ID"
+    @before-open="beforeOpen"
+    @open="open"
+  ></DataModelAddModal>
 </template>
 
 <script setup lang="ts">
@@ -206,6 +214,7 @@ import Loading from "@base/loading/Loading.vue";
 import Preview from "~/components/common/preview/preview.vue";
 import CategoryAddModal from "~/components/govern/category/category-add-modal.vue";
 import CategoryChangeModal from "~/components/govern/category/category-change-modal.vue";
+import DataModelAddModal from "~/components/govern/category/data-model-add-modal.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
 const { $vfm } = useNuxtApp();
@@ -222,6 +231,8 @@ const {
   moveCategory,
   resetAddModalStatus,
   setSelectedNode,
+  getSearchList,
+  getFilters,
 } = categoryStore;
 const {
   selectedModelList,
@@ -230,10 +241,12 @@ const {
   isCategoriesNoData,
   previewData,
   isBoxSelectedStyle,
+  selectedDataModelList,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
 const CATEGORY_CHANGE_MODAL_ID = "category-change-modal";
+const DATA_MODEL_ADD_MODAL_ID = "data-modal-add-modal";
 
 const loader = ref<HTMLElement | null>(null);
 const modelIdList = ref([]);
@@ -276,7 +289,7 @@ watch(
   { immediate: true },
 );
 
-// tree
+// TREE
 const onCategoryNodeClick = async (node: TreeViewItem) => {
   selectedModelList.value = [];
   isDescEditMode.value = false;
@@ -359,7 +372,7 @@ const dropValidator = async (
   return true;
 };
 
-// dataModel list
+// DATAMODEL LIST
 const allModelList = computed({
   get() {
     return modelIdList.value.length === 0
@@ -396,7 +409,7 @@ const checked = (checkedList: any[]) => {
 const { scrollTrigger, setScrollOptions } =
   useIntersectionObserver(addModelList);
 
-// preview
+// PREVIEW
 const getPreviewCloseStatus = (option: boolean) => {
   isShowPreview.value = option;
   isBoxSelectedStyle.value = false;
@@ -404,7 +417,7 @@ const getPreviewCloseStatus = (option: boolean) => {
 };
 
 const previewClick = async (data: object) => {
-  const { id, fqn } = data as { id: string; fqn: string };
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
   if (id === currentPreviewId) {
     return;
   }
@@ -416,7 +429,7 @@ const previewClick = async (data: object) => {
   previewIndex = type;
 };
 
-// editable-input
+// EDITABLE-INPUT
 const editCancel = (key: string) => {
   switch (key) {
     case "title":
@@ -461,7 +474,7 @@ const editIcon = (key: string) => {
   }
 };
 
-// modal
+// MODAL
 const showCategoryAddModal = () => {
   $vfm.open(CATEGORY_ADD_MODAL_ID);
   resetAddModalStatus();
@@ -469,6 +482,19 @@ const showCategoryAddModal = () => {
 
 const showCategoryChangeModal = () => {
   $vfm.open(CATEGORY_CHANGE_MODAL_ID);
+};
+
+const showDataModelAddModal = () => {
+  $vfm.open(DATA_MODEL_ADD_MODAL_ID);
+};
+
+const beforeOpen = () => {
+  selectedDataModelList.value = [];
+  getSearchList();
+};
+
+const open = () => {
+  getFilters();
 };
 
 onMounted(async () => {

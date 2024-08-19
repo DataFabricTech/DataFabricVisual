@@ -72,6 +72,7 @@ import { useSearchCommonStore } from "@/store/search/common";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import Loading from "@base/loading/Loading.vue";
 import Tab from "@extends/tab/Tab.vue";
+import DataFilter from "@/components/search/data-filter.vue";
 
 import TopBar from "./top-bar.vue";
 import { useRouter } from "nuxt/app";

@@ -69,6 +69,7 @@ const $constants = {
         "name",
         "id",
       ],
+      OWNER: ["fullyQualifiedName", "description", "displayName", "name", "id"],
     },
   },
   SERVICE: {

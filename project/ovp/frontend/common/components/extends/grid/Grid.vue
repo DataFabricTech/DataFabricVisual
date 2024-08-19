@@ -72,6 +72,7 @@ const selectionChanged = (params: { api: any }) => {
 const { onGridReady, getDefs, onGridSizeChanged, setColumnToFit } = GridComposition(props, BTN_FIELD_CONST);
 
 const gridColumnDefs: Ref<any[]> = ref([]);
+
 gridColumnDefs.value = getDefs();
 
 // Grid 를 가져다 쓰는 페이지에서 columnDefs 를 변경했을경우, 변경됨을 catch 해서 agGrid 에 반영해준다.

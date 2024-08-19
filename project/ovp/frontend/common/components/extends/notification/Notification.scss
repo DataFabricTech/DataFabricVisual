@@ -18,9 +18,7 @@
   border: 1px solid $neutral-200;
 
   &-group {
-    @include flex($vertical: flex-start, $horizontal: space-between);
-
-    gap: $spacing-8;
+    @include flex($vertical: flex-start, $horizontal: space-between, $gap: $spacing-8);
 
     &:only-child {
       align-items: center;

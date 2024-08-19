@@ -5,12 +5,17 @@
   $display: flex,
   $vertical: center,
   $horizontal: center,
-  $direction: null
+  $direction: null,
+  $gap: null
 ) {
   display: $display;
   align-items: $vertical;
   justify-content: $horizontal;
   flex-direction: $direction;
+
+  @if $gap != null {
+    gap: $gap;
+  }
 }
 
 // -------------------------------------------

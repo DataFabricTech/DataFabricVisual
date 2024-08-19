@@ -147,7 +147,7 @@
                 <span class="data-summary-text">(소유자)</span>
               </div>
               <!--  샘플데이터 탭 시작-->
-              <div class="table-scroll">
+              <div class="table-scroll" style="display: none">
                 <table>
                   <thead>
                     <tr>
@@ -249,17 +249,14 @@
               <div class="ag-grid h-full" style="display: none"></div>
               <!--  데이터 프로파일링 끝-->
               <!--  연관데이터 시작-->
-              <div class="l-split" style="display: none">
+              <div class="l-split">
                 <div class="knowledge">knowledge</div>
                 <div class="data-list">
                   <div class="menu menu-data w-full">
                     <ul class="menu-list">
                       <li class="menu-item is-menu-item-selected">
                         <button class="menu-button">
-                          <svg-icon
-                            class="svg-icon menu-data-icon"
-                            name="resource"
-                          ></svg-icon>
+                          <div class="type-img type-img-oracle"></div>
                           <span class="menu-text">데이터 모델</span>
                           <span class="menu-subtext">(소유자)</span>
                         </button>
@@ -297,10 +294,7 @@
                       </li>
                       <li class="menu-item" v-for="item in 5" :key="item">
                         <button class="menu-button">
-                          <svg-icon
-                            class="svg-icon menu-data-icon"
-                            name="resource"
-                          ></svg-icon>
+                          <div class="type-img type-img-oracle"></div>
                           <span class="menu-text">데이터 모델</span>
                           <span class="menu-subtext">(소유자)</span>
                         </button>

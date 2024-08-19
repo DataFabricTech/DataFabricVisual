@@ -1,5 +1,6 @@
 import { storeToRefs } from "pinia";
 import { useSearchCommonStore } from "../search/common";
+import { useQueryHelpers } from "~/composables/queryHelpers";
 import sampleData from "./samples/sampleData.json";
 
 interface DataModel {
@@ -20,9 +21,10 @@ export const useMainStore = defineStore("mainStore", () => {
   const { $api } = useNuxtApp();
 
   const searchCommonStore = useSearchCommonStore();
-  const { setSortInfo, getQueryFilter, getTrinoQuery } = searchCommonStore;
+  const { setSortInfo, getQueryFilter } = searchCommonStore;
   const { sortKey, sortKeyOpt } = storeToRefs(searchCommonStore);
-
+  const { getTrinoQuery } = useQueryHelpers();
+  
   const recentQuestData: Ref<DataModel[]> = ref([]);
   const bookmarkData: Ref<DataModel[]> = ref([]);
   const upVotesData: Ref<DataModel[]> = ref([]);

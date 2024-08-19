@@ -1,9 +1,8 @@
 
 .toggle {
-  @include flex;
+  @include flex($gap: $spacing-2);
 
   position: relative;
-  padding: $spacing-2;
   background-color: $neutral-100;
   border-radius: $border-radius-4;
 
@@ -24,11 +23,10 @@
 
   &-label {
     @include font-size('12');
-    @include flex($horizontal: flex-start);
+    @include flex($horizontal: flex-start, $gap: $spacing-4);
 
     height: 24px;
     padding: 0 $spacing-8;
-    gap: $spacing-4;
     border-radius: $border-radius-4;
     color: $neutral-400;
     font-weight: 600;

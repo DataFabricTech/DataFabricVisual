@@ -53,10 +53,9 @@
   }
 
   &-label {
-    @include flex;
+    @include flex($gap: $spacing-8);
     @include font-size('12');
 
-    gap: $spacing-8;
     color: $neutral-500;
     cursor: pointer;
   }

@@ -20,7 +20,7 @@ export function SelectBoxComposition(
 
   // selectedItem 변경을 감지해 값 변경 (부모 컴포넌트에서 선택 값을 초기화하는 경우 존재)
   watch(
-    () => props.selectedItem,
+    () => [props.selectedItem],
     () => {
       setSelectedData();
     }
