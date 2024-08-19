@@ -15,10 +15,7 @@
             <img :src="service.imgUrl" :alt="service.label" />
           </div>
           <!-- TODO: 개발 : 선택한 서비스 퍼블 처리 완료 되면 아래 코드 수정 필요함. -->
-          <span class="service-type-title"
-            >{{ serviceObj.serviceId === service.id ? "선택됨" : ""
-            }}{{ service.label }}</span
-          >
+          <span class="service-type-title">{{ service.label }}</span>
         </button>
       </li>
     </ul>
