@@ -156,10 +156,16 @@ const localDescription = ref(props.targetUserInfo.description);
 const localDisplayName = ref(props.targetUserInfo.displayName);
 
 const editDisplayName = (value: boolean) => {
+  if (!value) {
+    localDisplayName.value = props.targetUserInfo.displayName;
+  }
   isOpenDisplayEdit.value = value;
 };
 
 const editDescription = (value: boolean) => {
+  if (!value) {
+    localDescription.value = props.targetUserInfo.description;
+  }
   isOpenDescriptionEdit.value = value;
 };
 
