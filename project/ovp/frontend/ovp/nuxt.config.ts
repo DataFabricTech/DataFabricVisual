@@ -4,6 +4,13 @@ import { fileURLToPath } from "url";
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
+  nitro: {
+    output: {
+      publicDir: fileURLToPath(
+        new URL("../../server/src/main/resources/static", import.meta.url),
+      ),
+    },
+  },
 
   modules: [
     "@nuxtjs/tailwindcss",
