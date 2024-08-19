@@ -18,7 +18,9 @@
           @click="gotoDetail"
           >{{ previewData.modelInfo.model.name }}</a
         >
-        <div class="preview-desc">{{ previewData.modelInfo.model.desc }}</div>
+        <div class="preview-desc">
+          {{ checkEmptyValues(previewData.modelInfo.model.desc) }}
+        </div>
         <table>
           <colgroup>
             <col style="width: 30%" />
@@ -101,6 +103,7 @@ import { computed } from "vue";
 import type { PreviewData } from "~/type/common";
 
 import { useRouter } from "nuxt/app";
+
 const router = useRouter();
 
 interface Props {
