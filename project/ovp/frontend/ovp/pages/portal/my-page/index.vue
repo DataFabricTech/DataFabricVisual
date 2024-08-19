@@ -8,9 +8,9 @@
     <profile-box
       :targetUserInfo="targetUserInfo"
       :userInfo="user"
-      @changeDisplayName="changeDisplayName"
-      @changeRole="changeRole"
-      @changeDescription="changeDescription"
+      @changeDisplayName="changeUserInfo"
+      @changeRole="changeUserInfo"
+      @changeDescription="changeUserInfo"
     ></profile-box>
     <tab
       class="tab-line"
@@ -95,6 +95,7 @@ import profileBox from "~/components/my-page/profile-box.vue";
 import { useMyPageStore } from "~/store/my-page/myPageStore";
 import { useUserStore } from "~/store/user/userStore";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import { useRouter } from "nuxt/app";
 
 const PW_RESET_MODAL_ID: string = "pw-reset-modal";
 
@@ -109,9 +110,7 @@ const {
   isBoxSelectedStyle,
 } = storeToRefs(myPageStore);
 const {
-  changeDisplayName,
-  changeRole,
-  changeDescription,
+  changeUserInfo,
   getTargetUserData,
   changeTab,
   updateTargetUserInfo,
@@ -120,7 +119,6 @@ const {
   addSearchList,
   search,
   clearSearchText,
-  modelNmClick,
 } = myPageStore;
 
 const userStore = useUserStore();
@@ -128,6 +126,7 @@ const userStore = useUserStore();
 const { user } = storeToRefs(userStore);
 
 const route = useRoute();
+const router = useRouter();
 
 const showModalPwChange: () => void = () => {
   $vfm.open(PW_RESET_MODAL_ID);
@@ -135,8 +134,6 @@ const showModalPwChange: () => void = () => {
 
 await getTargetUserData(route.query.fqn);
 await getSearchList();
-
-const initTab: string = "myBookMark";
 
 const tabOptions = [
   { label: "나의 북마크", value: "myBookMark" },
@@ -163,6 +160,18 @@ const previewClick = async (data: object) => {
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;
   previewIndex = type;
+};
+
+const modelNmClick = (data: object) => {
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
+  router.push({
+    path: "/portal/search/detail",
+    query: {
+      type: type,
+      id: id,
+      fqn: fqn,
+    },
+  });
 };
 
 const { scrollTrigger } = useIntersectionObserver(addSearchList);

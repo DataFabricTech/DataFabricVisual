@@ -1,25 +1,9 @@
 import { defineStore } from "pinia";
 import { useUserStore } from "~/store/user/userStore";
 import { usePagingStore } from "~/store/common/paging";
-import { useRouter } from "vue-router";
-
-interface DataModel {
-  type: string;
-  id: string | number;
-  serviceIcon: string;
-  depth: string[];
-  firModelNm: string;
-  modelNm: string;
-  modelDesc: string;
-  owner: string;
-  category: string;
-
-  [key: string]: string | number | string[];
-}
 
 export const useMyPageStore = defineStore("my-page", () => {
   const { $api } = useNuxtApp();
-  const router = useRouter();
 
   const pagingStore = usePagingStore();
   const { setFrom, updateIntersectionHandler } = pagingStore;
@@ -32,8 +16,8 @@ export const useMyPageStore = defineStore("my-page", () => {
   const targetUserInfo = ref([]);
   const targetFqn = ref("");
 
-  const currentTab: string = ref("myBookMark");
-  const searchKeyword: string = ref("");
+  const currentTab = ref("myBookMark");
+  const searchKeyword = ref("");
   const searchResult: Ref<any[]> = ref([]);
   const previewData: Ref<any> = ref({
     modelInfo: {
@@ -47,32 +31,12 @@ export const useMyPageStore = defineStore("my-page", () => {
   const isShowPreview: Ref<boolean> = ref<boolean>(false);
   const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
 
-  const changeDisplayName = async (value: any) => {
+  const changeUserInfo = async (data: any) => {
     let params = {
       loginId: user.value.id,
-      op: "add",
-      path: "/displayName",
-      value: value,
-    };
-    await updateTargetUserInfo(params);
-  };
-
-  const changeRole = async (value: any) => {
-    let params = {
-      loginId: user.value.id,
-      op: "replace",
-      path: "/isAdmin",
-      value: value,
-    };
-    await updateTargetUserInfo(params);
-  };
-
-  const changeDescription = async (value: any) => {
-    let params = {
-      loginId: user.value.id,
-      op: "add",
-      path: "/description",
-      value: value,
+      op: data.op,
+      path: data.path,
+      value: data.value,
     };
     await updateTargetUserInfo(params);
   };
@@ -115,7 +79,7 @@ export const useMyPageStore = defineStore("my-page", () => {
     resetReloadList();
   };
 
-  const search = async (keyword: string) => {
+  const search = async () => {
     setFrom(0);
     await getSearchList();
     updateIntersectionHandler(0);
@@ -160,28 +124,14 @@ export const useMyPageStore = defineStore("my-page", () => {
    * 데이터 조회 -> 누적
    */
   const addSearchList = async () => {
-    const { data, totalCount } = await getSearchListAPI();
+    const { data } = await getSearchListAPI();
     searchResult.value = searchResult.value.concat(data.all);
   };
 
   const getSearchList = async () => {
-    console.log("확인좀");
-    const { data, totalCount } = await getSearchListAPI();
-    console.log("data.all: ", data.all);
+    const { data } = await getSearchListAPI();
     searchResult.value = data.all;
     isSearchResultNoData.value = searchResult.value.length === 0;
-  };
-
-  const modelNmClick = (data: object) => {
-    const { id, fqn, type } = data as { id: string; fqn: string; type: string };
-    router.push({
-      path: "/portal/search/detail",
-      query: {
-        type: type,
-        id: id,
-        fqn: fqn,
-      },
-    });
   };
 
   return {
@@ -194,9 +144,7 @@ export const useMyPageStore = defineStore("my-page", () => {
     isBoxSelectedStyle,
     currentTab,
     changeTab,
-    changeDisplayName,
-    changeRole,
-    changeDescription,
+    changeUserInfo,
     addSearchList,
     getTargetUserData,
     updateTargetUserInfo,
@@ -204,6 +152,5 @@ export const useMyPageStore = defineStore("my-page", () => {
     getPreviewData,
     search,
     clearSearchText,
-    modelNmClick
   };
 });

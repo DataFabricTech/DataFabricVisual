@@ -168,11 +168,21 @@ const editRole = () => {
 };
 
 const changeDisplayName = () => {
-  emit("changeDisplayName", localDisplayName.value);
+  let data = {
+    value: localDisplayName.value,
+    op: "add",
+    path: "/displayName",
+  };
+  emit("changeDisplayName", data);
 };
 
 const changeDescription = () => {
-  emit("changeDescription", localDescription.value);
+  let data = {
+    value: localDescription.value,
+    op: "add",
+    path: "/description",
+  };
+  emit("changeDescription", data);
 };
 
 const changeRoleSwitch = () => {
@@ -180,7 +190,12 @@ const changeRoleSwitch = () => {
 };
 
 const changeRole = () => {
-  emit("changeRole", localAdmin.value);
+  let data = {
+    value: localAdmin.value,
+    op: "replace",
+    path: "/isAdmin",
+  };
+  emit("changeRole", data);
 };
 </script>
 <style lang="scss" scoped></style>
