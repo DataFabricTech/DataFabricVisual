@@ -88,9 +88,11 @@ public class ModelConvertUtil {
         Number size = null;
         String fileFormats = null;
         String tableType = null;
+        String fullyQualifiedName = null;
 
         if (type.equals("unstructured")) {
             size = (Number) data.get("size");
+            fullyQualifiedName = (String) data.get("fullyQualifiedName");
             List<String> fileFormatsList = (List<String>) data.getOrDefault("fileFormats", new ArrayList<>());
             fileFormats = fileFormatsList.isEmpty() ? "" : fileFormatsList.get(0);
             Map<String, Object> dataModel = (Map<String, Object>) data.getOrDefault("dataModel", new HashMap<>());
@@ -158,11 +160,13 @@ public class ModelConvertUtil {
         resultMap.put("modelInfo", modelInfo);
         resultMap.put("glossaries", glossaryList);
         resultMap.put("tags", tagList);
+        resultMap.put("id", data.get("id"));
+
         if (type.equals("unstructured")) {
             resultMap.put("modelType", "unstructured");
+            resultMap.put("fqn", fullyQualifiedName);
         } else if (type.equals("structured")) {
             resultMap.put("modelType", "structured");
-            resultMap.put("id", data.get("id"));
             resultMap.put("fqn", fqn);
         }
 
