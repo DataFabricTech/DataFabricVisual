@@ -417,7 +417,7 @@ const getPreviewCloseStatus = (option: boolean) => {
 };
 
 const previewClick = async (data: object) => {
-  const { id, fqn } = data as { id: string; fqn: string };
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
   if (id === currentPreviewId) {
     return;
   }
