@@ -25,9 +25,6 @@ public interface ServiceClient {
     @GetMapping("/services/databaseServices")
     ServiceBaseResponse<ServiceResponse> getServices(@RequestParam String fields, @RequestParam int limit);
 
-    @GetMapping()
-    ServiceBaseResponse<ServiceResponse> searchServices();
-
     /**
      * 서비스 수정
      * @param id

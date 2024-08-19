@@ -5,7 +5,6 @@ import com.mobigen.ovp.admin.service.client.response.ServiceResponse;
 import com.mobigen.ovp.admin.service.client.response.ServiceEntity;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
-import com.mobigen.ovp.user.UserClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.LinkedMultiValueMap;
@@ -23,7 +22,6 @@ public class ServiceService {
 
     private final ServiceClient serviceClient;
     private final SearchClient searchClient;
-    private final UserClient userClient;
 
     /**
      * 서비스 리스트
