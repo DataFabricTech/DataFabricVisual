@@ -15,6 +15,17 @@ public class UserController {
     private final UserService userService;
 
     /**
+     * 모든 사용자 호출
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult()
+    @GetMapping("/all")
+    public Object getAllUserList() throws Exception {
+        return userService.getAllUserList();
+    }
+
+    /**
      * 사용자 > 토큰을 통한 사용자 세부 정보 출력
      *
      * @return
