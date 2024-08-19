@@ -67,15 +67,15 @@ public class ModelCreationService {
     }
 
     public Object addBookMark(String id) throws Exception {
-        UserInfoDTO userInfo = userClient.getUserInfo();
-        String jsonLoginUserId = "\"" + userInfo.getId() + "\"";
+        Map<String, Object> userInfo = userClient.getUserInfo();
+        String jsonLoginUserId = "\"" + userInfo.get("id") + "\"";
         modelCreationClient.addBookMark(id, jsonLoginUserId);
         return null;
     }
 
     public Object removeBookMark(String id) throws Exception {
-        UserInfoDTO userInfo = userClient.getUserInfo();
-        modelCreationClient.deleteBookMark(id, userInfo.getId());
+        Map<String, Object> userInfo = userClient.getUserInfo();
+        modelCreationClient.deleteBookMark(id, (String) userInfo.get("id"));
         return null;
     }
 }
