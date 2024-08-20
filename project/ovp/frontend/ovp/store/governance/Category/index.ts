@@ -55,6 +55,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const showAddNameNoti = ref<boolean>(false);
   const showAddDescNoti = ref<boolean>(false);
   const selectedModelList = ref([]);
+  const addSearchInputValue = ref("");
 
   const previewData: Ref<any> = ref({
     modelInfo: {
@@ -220,7 +221,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     const { data } = await $api(`/api/search/list?${getSearchListQuery()}`, {
       showLoader: false,
     });
-    return data;
+    return data === null ? "" : data;
   };
   /**
    * 데이터 조회 -> 누적
@@ -315,6 +316,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     isSearchResultNoData,
     dataModelIdList,
     selectedDataModelList,
+    addSearchInputValue,
     resetAddModalStatus,
     getCategories,
     addModelList,
