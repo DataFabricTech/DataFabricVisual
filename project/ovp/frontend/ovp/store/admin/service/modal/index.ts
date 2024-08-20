@@ -32,11 +32,35 @@ export const useServiceStore = defineStore("serviceStore", () => {
     serviceObj.value = _.cloneDeep(initialServiceObj);
   };
 
+  const getQueryString = () => {
+    return new URLSearchParams({
+      index: selectedServiceObj.value.id,
+      // eslint-disable-next-line id-length
+      q: serviceObj.value.defaultInfo.serviceNm,
+      include_source_fields: "displayName",
+      from: "0",
+      size: "1",
+      query_filter: JSON.stringify({
+        query: {
+          bool: {
+            filter: [
+              {
+                term: {
+                  "displayName.keyword": serviceObj.value.defaultInfo.serviceNm,
+                },
+              },
+            ],
+          },
+        },
+      }),
+    });
+  };
+
   const checkServiceNameDuplicate = async () => {
-    // TODO : [개발] 서비스명 기준 중복 조회 API 구현
-    // $api("");
-    await $api("");
-    return [];
+    const { data } = await $api(
+      `/api/service/isDuplicatedNm?${getQueryString()}`,
+    );
+    return data;
   };
 
   const setInitServiceId = (serviceId: string) => {

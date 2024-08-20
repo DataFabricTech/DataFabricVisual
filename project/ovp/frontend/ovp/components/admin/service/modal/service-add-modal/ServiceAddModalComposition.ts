@@ -63,10 +63,7 @@ export function ServiceAddModalComposition(
 
   // step2
   const isServiceNameDuplicate = async () => {
-    const result = await checkServiceNameDuplicate();
-    console.log(result);
-    // return result.length > 0;
-    return false;
+    return await checkServiceNameDuplicate();
   };
 
   return {
