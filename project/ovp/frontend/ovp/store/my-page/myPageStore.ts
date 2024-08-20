@@ -32,7 +32,7 @@ export const useMyPageStore = defineStore("my-page", () => {
   const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
 
   const changeUserInfo = async (data: any) => {
-    let params = {
+    const params = {
       loginId: user.value.id,
       op: data.op,
       path: data.path,
@@ -91,11 +91,22 @@ export const useMyPageStore = defineStore("my-page", () => {
 
   const getPreviewData = async (fqn: string) => {
     const data: any = await $api(`/api/search/preview/${fqn}`);
+    if (data.result === 0) {
+      console.error("미리보기 지원하지 않는 데이터 타입입니다.");
+      previewData.value = {
+        modelInfo: {
+          model: {
+            name: "",
+          },
+        },
+      };
+      return;
+    }
     previewData.value = data.data;
   };
 
   const getSearchListQuery = () => {
-    let query =
+    const query =
       currentTab.value === "myBookMark"
         ? `*${searchKeyword.value}* AND followers:${targetUserInfo.value.id}`
         : `*${searchKeyword.value}* AND(owner.id:${targetUserInfo.value.id})`;
