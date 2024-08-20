@@ -29,29 +29,7 @@
           :setColumnFit="true"
           :useColumnResize="true"
           :quickFilterText="keyword"
-          :column-render="{
-            nullCount: {
-              type: 'html',
-              fn: (val: any) => {
-                return `
-    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
-              },
-            },
-            uniqueCount: {
-              type: 'html',
-              fn: (val: any) => {
-                return `
-    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
-              },
-            },
-            distinctCount: {
-              type: 'html',
-              fn: (val: any) => {
-                return `
-    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
-              },
-            },
-          }"
+          :column-render="$constants.COMMON.DATA_PROFILE_RENDER"
         >
         </agGrid>
       </div>
@@ -64,6 +42,7 @@ import { storeToRefs } from "pinia";
 import agGrid from "@extends/grid/Grid.vue";
 import type { ColDef } from "ag-grid-community";
 import { useDataModelDetailStore } from "@/store/search/detail/index";
+import $constants from "~/utils/constant";
 
 const dataModelDetailStore = useDataModelDetailStore();
 
@@ -74,14 +53,7 @@ const clearInput = (): void => {
   keyword.value = "";
 };
 
-const COLUMN_DEFS: ColDef[] = [
-  { headerName: "NAME", field: "name", sortable: true },
-  { headerName: "DATA TYPE", field: "dateTypeDisplay", sortable: true },
-  { headerName: "NULL %", field: "nullCount", sortable: true },
-  { headerName: "UNIQUE %", field: "uniqueCount", sortable: true },
-  { headerName: "DISTINCT %", field: "distinctCount", sortable: true },
-  { headerName: "VALUE COUNT", field: "valueCount", sortable: true },
-];
+const COLUMN_DEFS: ColDef[] = $constants.COMMON.DATA_PROFILE_COLUMN;
 
 // const rowData = ref([
 //   {

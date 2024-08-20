@@ -44,10 +44,55 @@ const $constants = {
         value: "updatedAt_asc",
       },
     ],
+    DATA_PROFILE_COLUMN: [
+      { headerName: "NAME", field: "name", sortable: true },
+      { headerName: "DATA TYPE", field: "dateTypeDisplay", sortable: true },
+      { headerName: "NULL %", field: "nullCount", sortable: true },
+      { headerName: "UNIQUE %", field: "uniqueCount", sortable: true },
+      { headerName: "DISTINCT %", field: "distinctCount", sortable: true },
+      { headerName: "VALUE COUNT", field: "valueCount", sortable: true },
+    ],
+    DATA_PROFILE_RENDER: {
+      nullCount: {
+        type: "html",
+        fn: (val: any) => {
+          return `
+    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
+        },
+      },
+      uniqueCount: {
+        type: "html",
+        fn: (val: any) => {
+          return `
+    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
+        },
+      },
+      distinctCount: {
+        type: "html",
+        fn: (val: any) => {
+          return `
+    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
+        },
+      },
+    },
   },
   DATAMODEL_CREATION: {
     ADD: {
       MODAL_ID: "datamodel_creation-add-modal",
+      DETAIL_TAB: [
+        {
+          label: "샘플데이터",
+          value: "sample",
+        },
+        {
+          label: "데이터 프로파일링",
+          value: "profile",
+        },
+        {
+          label: "연관 데이터",
+          value: "kg",
+        },
+      ],
       TAB: [
         {
           label: "전체",
