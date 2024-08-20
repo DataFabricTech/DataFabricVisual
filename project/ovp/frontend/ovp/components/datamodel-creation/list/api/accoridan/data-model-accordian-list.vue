@@ -2,7 +2,9 @@
   <div class="accordion-group">
     <div class="h-group">
       <div class="search-input">
-        <label class="hidden-text" for="data-menu-search">데이터 모델 검색</label>
+        <label class="hidden-text" for="data-menu-search"
+          >데이터 모델 검색</label
+        >
         <input
           id="data-menu-search"
           class="text-input"
@@ -43,6 +45,7 @@
                 <data-model-list-item
                   v-if="!itemValue.isSelected && itemValue.isShow"
                   :key="itemValue.value + idx"
+                  checked-key="checked-menu-accordion"
                   :is-multi="props.isMulti"
                   :use-delete-btn="props.useItemDeleteBtn"
                   :data="itemValue"

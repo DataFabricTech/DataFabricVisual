@@ -58,6 +58,9 @@ export class IntersectionObserverHandler {
    */
   public scrollToFirElement() {
     const rootEl: any = this.observer.root;
+    if (rootEl === null) {
+      return;
+    }
 
     if (rootEl.children.length > 0) {
       const firChildEl: any = rootEl.firstElementChild;

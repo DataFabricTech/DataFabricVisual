@@ -56,6 +56,7 @@
       <template v-for="(item, idx) in listData" :key="item.value + idx">
         <data-model-list-item
           v-if="item.isShow"
+          checked-key="checkbox-menu-selected"
           :data="item"
           :is-multi="props.isMulti"
           :use-delete-btn="props.useItemDeleteBtn"
@@ -106,21 +107,17 @@ const emit = defineEmits<{
 }>();
 
 const emitBookmark = (value: string) => {
-  console.log("changeBookmark");
   emit("bookmark-change", value);
 };
 
 const emitItemClick = (value: string) => {
-  console.log("onClickDataModelItem");
   emit("item-click", value);
 };
 
-const emitDeleteItem = (value: string) => {
-  console.log("onDeleteItem");
+const emitDeleteItem = (value: any[]) => {
   emit("delete", value);
 };
-const emitItemCheck = (value: string) => {
-  console.log("emitItemCheck", value);
+const emitItemCheck = (value: any[]) => {
   emit("item-check", value);
 };
 
@@ -129,6 +126,8 @@ const {
   searchLabel,
   selectedFilter,
   checkShowListData,
+  setListData,
+  setSearchFilter,
   onSearchText,
   onSelectFilter,
   onResetSearchText,
@@ -146,4 +145,16 @@ const {
   emitDeleteItem,
   emitItemCheck,
 );
+
+/**
+ * 리스트 값이 변경되면 일반 리스트의 속성값도 변경되야하므로 다중 watch
+ * NOTE: composition에서 동작 시 해당 컴포지션 사용하면 watcheffect가 계속 동작함.(상속 불가)
+ */
+watch(
+  () => props.data,
+  () => {
+    setListData();
+  },
+);
+setSearchFilter();
 </script>

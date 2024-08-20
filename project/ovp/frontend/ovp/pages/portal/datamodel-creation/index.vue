@@ -45,14 +45,7 @@
     </div>
   </div>
   <save-model v-if="isShowSaveModel" @change="saveDataModel"></save-model>
-  <add-model
-    v-if="isShowAddModel"
-    :data-model-list="modelList"
-    :selected-model-list="selectedModelList"
-    :my-model-list="myModelList"
-    :filter="dataModelFilter"
-    @change="addDataModel"
-  ></add-model>
+  <add-model :modal-id="$constants.DATAMODEL_CREATION.ADD.MODAL_ID"></add-model>
 </template>
 
 <script setup lang="ts">
@@ -62,17 +55,21 @@ import sample from "@/components/datamodel-creation/sample.vue";
 import result from "@/components/datamodel-creation/result.vue";
 import addModel from "@/components/datamodel-creation/modal/add.vue";
 import saveModel from "@/components/datamodel-creation/modal/save.vue";
+import { useNuxtApp } from "nuxt/app";
+import $constants from "~/utils/constant";
 import { useCreationStore } from "~/store/datamodel-creation/index";
 
-const isShowSaveModel = ref(false);
-const isShowAddModel = ref(false);
 
+const { $vfm } = useNuxtApp();
+const isShowSaveModel = ref(false);
+
+const deleteDataModel = (param: boolean) => {};
 const saveDataModel = (param: boolean) => {
   isShowSaveModel.value = param;
 };
 
-const addDataModel = (param: boolean) => {
-  isShowAddModel.value = param;
+const openAddModal = () => {
+  $vfm.open($constants.DATAMODEL_CREATION.ADD.MODAL_ID);
 };
 
 const creationStore = useCreationStore();
