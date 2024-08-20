@@ -82,7 +82,7 @@ export default defineNuxtConfig({
     "vue-final-modal/style.css",
     "ag-grid-community/dist/styles/ag-grid.css",
     "ag-grid-community/dist/styles/ag-theme-alpine.css",
-    // "~/assets/css/style.scss"
+    "vue3-tooltip/tooltip.css",
   ],
 
   lodash: {
