@@ -2,7 +2,7 @@
 :root {
   /* Directive Variables */
   --tooltip-d-transition-duration: 0.4s;
-  --tooltip-d-border-radius: 4px;
+  --tooltip-d-border-radius: 12px;
   --tooltip-d-padding: 2px 4px;
   --tooltip-d-position-x: calc(100% + 10px);
   --tooltip-d-position-y: calc(100% + 2px);
@@ -19,7 +19,7 @@
 
   /* Component Variables */
   --tooltip-c-transition-duration: 0.4s;
-  --tooltip-c-border-radius: 4px;
+  --tooltip-c-border-radius: 12px;
   --tooltip-c-padding: 2px 4px;
   --tooltip-c-position-x: calc(100% + 10px);
   --tooltip-c-position-y: 100%;
@@ -48,17 +48,17 @@
 
 // OR
 
-.vue-tooltip {
+.vue-tooltip.tooltip {
   &::after {
-    /*
-    * font-size, line-height, max-width, padding, border-radius, box-shadow, transition
-    */
+    @include font-size('12');
+    padding: $spacing-12;
+    border-radius: $border-radius-12;
   }
 
-  &__primary::after {
-    /*
-    * background, color
-    */
+  &.vue-tooltip__primary::after {
+   background-color: $primary-700;
+    color: $primary-100;
+
   }
 
   &__secondary::after { // ... //}
