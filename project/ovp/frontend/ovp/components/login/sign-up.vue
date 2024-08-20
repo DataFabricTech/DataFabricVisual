@@ -2,7 +2,10 @@
   <div class="wrap is-wrap-height-full">
     <div class="submit-form">
       <form class="submit-form-form" @submit.prevent="onSubmit">
-        <h1 class="submit-form-logo">LOGO</h1>
+        <h1 class="submit-form-logo">
+          <span class="hidden-text">open vdap portal</span>
+          <svg-icon class="logo" name="logo-simbol"></svg-icon>
+        </h1>
         <h2 class="submit-form-title">회원가입</h2>
         <div class="form form-lg gap-6">
           <div class="form-body">
