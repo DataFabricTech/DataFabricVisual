@@ -446,7 +446,7 @@
         >
         </Step>
         <!-- Step 01 / 시작 -->
-        <div class="service-type" style="display: block">
+        <div class="service-type" style="display: none">
           <ul class="service-type-list">
             <li class="service-type-item is-service-type-item-selected">
               <button class="service-type-button">
@@ -595,7 +595,7 @@
         <!-- Step 02 / 끝 -->
 
         <!-- Step 03 / 시작 div.service-form display:none을 해제해주세요. -->
-        <div class="service-form" style="display: none">
+        <div class="service-form" style="">
           <div class="service-form-summary">
             <label for="" class="form-label"> 선택된 서비스 타입 </label>
             <div class="form-detail">
