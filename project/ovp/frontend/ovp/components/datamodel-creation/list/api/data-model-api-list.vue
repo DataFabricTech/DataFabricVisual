@@ -188,7 +188,7 @@ const emitSearchChange = (value: string) => {
 };
 
 const { scrollTrigger, setScrollOptions } = useIntersectionObserver(
-  props.addSearchList
+  props.addSearchList,
 );
 setScrollOptions(0);
 

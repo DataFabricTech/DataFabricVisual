@@ -10,6 +10,8 @@ import type { Ref } from "vue";
 import $constants from "~/utils/constant";
 import DataModelSample from "~/components/datamodel-creation/datamodel-sample.json";
 import { useCreationStore } from "~/store/datamodel-creation/index";
+import { useQueryHelpers } from "~/composables/queryHelpers";
+import CustomHeader from "@extends/custom-header-cell/custom-header-cell.vue";
 
 interface Filters {
   [FILTER_KEYS.CATEGORY]: Filter;
@@ -45,6 +47,8 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const creationStore = useCreationStore();
   const { selectedModelList } = storeToRefs(creationStore);
 
+  const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
+
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
     return {
@@ -60,7 +64,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   // Tab 정보
   const TAB_DEFAULT = $constants.DATAMODEL_CREATION.ADD.TAB[0].value;
   const currTab: Ref<string> = ref(TAB_DEFAULT); // 대분류 : 전체/MY
-  const currDetailTab: Ref<string> = ref($constants.COMMON.DATA_TYPE[0].value);
+  const currTypeTab: Ref<string> = ref($constants.COMMON.DATA_TYPE[0].value);
 
   // 데이터 모델 리스트 - 전체
   const searchResult: Ref<any[]> = ref([]);
@@ -86,7 +90,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       // eslint 예외 제외 코드 추가.
       // eslint-disable-next-line id-length
       q: searchKeyword,
-      index: currDetailTab.value, // table or storage or model -> tab
+      index: currTypeTab.value, // table or storage or model -> tab
       from: from.value,
       size: size.value,
       deleted: false,
@@ -98,47 +102,12 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     return new URLSearchParams(params);
   };
 
-  /**
-   * 데이터 조회 > 쿼리 파라미터 처리
-   * @param queryFilter
-   */
-  const getTrinoQuery = (queryFilter: QueryFilter) => {
-    // query 구현을 backend 에서 하려니까 코드가 너무 복잡해져서 front 에 해서 넘겨서 처리.
-    const trinoFilter: QueryFilter = {
-      query: {
-        bool: {
-          must: [{ bool: { should: [{ term: { serviceType: "trino" } }] } }],
-        },
-      },
-    };
-    const trinoMustArray = trinoFilter.query.bool.must;
-    queryFilter.query.bool.must = _.concat(
-      queryFilter.query.bool.must,
-      trinoMustArray,
-    );
-    return queryFilter;
-  };
-
-  /**
-   * 데이터 조회 > 쿼리 파라미터 처리
-   * @param key
-   * @param value
-   */
-  const setQueryFilterByDepth = (key: string, value: any) => {
-    const setTermObj: Ref<any[]> = ref<any[]>([]);
-    const setBoolObj: Ref<BoolObj> = ref<BoolObj>({
-      bool: { should: [] },
-    });
-
-    for (const item of value) {
-      const setKeyObj: Ref<KeyObj> = ref<KeyObj>({
-        term: { [`${key}`]: ref(item) },
-      });
-
-      setTermObj.value.push(setKeyObj.value);
-    }
-    setBoolObj.value.bool.should = setTermObj.value;
-    return setBoolObj.value;
+  const getCtgIds = () => {
+    return !_.has(selectedFilters.value, FILTER_KEYS.CATEGORY)
+      ? []
+      : selectedFilters.value[FILTER_KEYS.CATEGORY].map(
+          (filter: any) => `ovp_category.${filter.id}`,
+        );
   };
 
   /**
@@ -148,17 +117,18 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     const queryFilter: QueryFilter = {
       query: { bool: { must: [] } },
     };
-    let setBoolObj: object = {};
 
     for (const key in selectedFilters.value) {
-      const value = selectedFilters.value[key];
+      const value =
+        key === "category"
+          ? getCtgIds()
+          : _.map(selectedFilters.value[key], "key");
       if ($_isEmpty(value)) {
         continue;
       }
-      const selectedIds = _.map(value, "key");
 
-      setBoolObj = setQueryFilterByDepth(key, selectedIds);
-      queryFilter.query.bool.must.push(setBoolObj);
+      const keyValue = key === "category" ? "tags.tagFQN" : key;
+      queryFilter.query.bool.must.push(setQueryFilterByDepth(keyValue, value));
     }
     return queryFilter;
   };
@@ -192,8 +162,8 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const getSearchListAPI = async (selectedList: any[] | null = null) => {
     if (currTab.value === TAB_DEFAULT) {
       const { data } = await $api(`/api/search/list?${getSearchListQuery()}`);
-      const nData = data.data[currDetailTab.value] as any[];
-      data.data[currDetailTab.value] = nData.map((item: any) => {
+      const nData = data.data[currTypeTab.value] as any[];
+      data.data[currTypeTab.value] = nData.map((item: any) => {
         return setSearchListItem(selectedList, item);
       });
       return data;
@@ -210,7 +180,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    */
   const addSearchList = async () => {
     const { data, totalCount } = await getSearchListAPI();
-    searchResult.value = searchResult.value.concat(data[currDetailTab.value]);
+    searchResult.value = searchResult.value.concat(data[currTypeTab.value]);
     searchResultLength.value = totalCount;
   };
 
@@ -219,7 +189,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    */
   const getSearchList = async (selectedList: any[] | null = null) => {
     const { data, totalCount } = await getSearchListAPI(selectedList);
-    searchResult.value = data[currDetailTab.value];
+    searchResult.value = data[currTypeTab.value];
     searchResultLength.value = totalCount;
   };
 
@@ -273,8 +243,8 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * 중분류 Tab 변경
    * @param item
    */
-  const changeDetailTab = (item: string) => {
-    currDetailTab.value = item;
+  const changeTypeTab = (item: string) => {
+    currTypeTab.value = item;
     resetReloadList();
   };
 
@@ -287,17 +257,140 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     resetReloadList();
   };
 
+  // 선택 데이터
+  const selectedItem: Ref<object> = ref<object>({});
+
+  // 추가 모달 > 선택 항목에 대한 상세 조회 데이터
+  const sampleData: Ref<object> = ref<object>({});
+  const profileData: Ref<object> = ref<object>({});
+  const kgData: Ref<object> = ref<object>({});
+  /**
+   * 샘플 데이터 조회
+   */
+  const getSampleData = async () => {
+    const value = selectedItem.value.id;
+    if (!value) {
+      return {};
+    }
+    return $api(`/api/search/detail/sample-data/${value}`)
+      .then((res: any) => {
+        if (res.result === 1) {
+          const fields = res.data.columns.map((column: any) => ({
+            field: column.name,
+          }));
+
+          const columnDefs = res.data.columns.map((column: any) => ({
+            field: column.name,
+            headerComponentFramework: CustomHeader,
+            headerComponentParams: {
+              gridColumnDefs: fields,
+              fqn: selectedItem.value.fqn,
+            },
+          }));
+
+          return {
+            columnDefs: columnDefs,
+            rowData: res.data.sampleList,
+            fqn: selectedItem.value.fqn,
+          };
+        }
+      })
+      .catch((err: any) => {
+        console.log("err: ", err);
+      });
+  };
+
+  const getProfileData = async () => {
+    const fqn = selectedItem.value.fqn;
+    if (!fqn) {
+      return {};
+    }
+    return $api(`/api/search/detail/profile/${fqn}`)
+      .then((res: any) => {
+        if (res.result === 1) {
+          return {
+            columnOptions: $constants.COMMON.DATA_PROFILE_RENDER,
+            columnDefs: $constants.COMMON.DATA_PROFILE_COLUMN,
+            rowData: res.data,
+            fqn: fqn,
+          };
+        }
+      })
+      .catch((err: any) => {
+        console.log("err: ", err);
+      });
+  };
+
+  const getKgData = async () => {
+    return null;
+  };
+
+  const onClickData = async (value: string) => {
+    const selectedModelItem = _.find(searchResult.value, { id: value });
+    selectedItem.value = selectedModelItem ? selectedModelItem : {};
+    await resetDetailBox();
+  };
+
+  const onClickAccordData = async (value: string) => {
+    let selectedModelItem = null;
+    for (const key in mySearchResult.value) {
+      const data = mySearchResult.value[key];
+      const findData = _.find(data, { id: value });
+      if (findData) {
+        selectedModelItem = findData;
+        break;
+      }
+    }
+
+    selectedItem.value = selectedModelItem ? selectedModelItem : {};
+    await resetDetailBox();
+  };
+
+  const DEFAULT_DETAIL_TAB =
+    $constants.DATAMODEL_CREATION.ADD.DETAIL_TAB[0].value;
+  const currDetailTab: Ref<string> = ref(DEFAULT_DETAIL_TAB);
+
+  const resetDetailBox = async () => {
+    currDetailTab.value = DEFAULT_DETAIL_TAB;
+    sampleData.value = await getSampleData();
+  };
+
+  const changeDetailTab = async (value: string) => {
+    currDetailTab.value = value;
+    if (value === DEFAULT_DETAIL_TAB) {
+      sampleData.value = await getSampleData();
+    } else if (
+      value === $constants.DATAMODEL_CREATION.ADD.DETAIL_TAB[1].value
+    ) {
+      profileData.value = await getProfileData();
+    } else {
+      kgData.value = await getKgData();
+    }
+  };
+
+  const selectedItemOwner = computed(() => {
+    return selectedItem.value.owner;
+  });
+
+  const onClickBookmark = () => {
+    // TODO: API 연동
+  };
   return {
     sortKey,
     sortKeyOpt,
     currTab,
-    currDetailTab,
+    currTypeTab,
     filters,
     searchResult,
     mySearchResult,
     selectedFilters,
     searchResultLength,
     mySearchResultLength,
+    selectedItem,
+    currDetailTab,
+    sampleData,
+    profileData,
+    kgData,
     addSearchList,
     getSearchList,
     getFilters,
@@ -306,7 +399,13 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     setSortFilter,
     setSearchKeyword,
     resetReloadList,
-    changeDetailTab,
+    resetDetailBox,
+    changeTypeTab,
     changeTab,
+    onClickData,
+    onClickAccordData,
+    changeDetailTab,
+    onClickBookmark,
+    selectedItemOwner,
   };
 });
