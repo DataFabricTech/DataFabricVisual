@@ -180,6 +180,7 @@ const changeDisplayName = () => {
     path: "/displayName",
   };
   emit("changeDisplayName", data);
+  isOpenDisplayEdit.value = false;
 };
 
 const changeDescription = () => {
@@ -189,6 +190,7 @@ const changeDescription = () => {
     path: "/description",
   };
   emit("changeDescription", data);
+  isOpenDescriptionEdit.value = false;
 };
 
 const changeRoleSwitch = () => {
