@@ -34,7 +34,7 @@
           <ul class="dropdown-list">
             <li class="dropdown-item">
               <nuxt-link
-                :to="'/portal/my-page'"
+                :to="`/portal/my-page?fqn=${user.fullyQualifiedName}`"
                 class="dropdown-button"
                 @click="isDropdownOpen = false"
               >
@@ -114,8 +114,9 @@ const logOut = async () => {
     });
 };
 
+await getUserInfo();
+
 onMounted(async () => {
-  await getUserInfo();
   setProfileFirstWord(user.value.name);
   document.addEventListener("click", handleClickOutside);
 });
