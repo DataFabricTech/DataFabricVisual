@@ -64,7 +64,7 @@ verRC="${verRelease}-RC${today}.${buildCnt}"
 
 # ex) repo.iris.tools/ovp/<service_id>
 echo "appId = ${appId}"
-harborRepo="repo.iris.tools/ovp/${appId}"
+harborRepo="repo.iris.tools/gdf/${appId}"
 # ex) v3.0.0-RC20210601.0-c452bc2
 harborTag="${verRC}-${headHash}"
 
@@ -244,7 +244,7 @@ function package() {
 }
 
 # ex) ./build-docker.sh clear
-if [[ $1 = "clear" ]]; then
+if [[ $1 = "clear" ]]; then앷
     clear
 else
     check
