@@ -10,13 +10,16 @@
     >
       <input
         type="checkbox"
-        :id="props.checkedKey + props.data.value"
+        :id="props.checkedKey + props.data[props.valueKey]"
         class="checkbox-input"
         :checked="props.data.isChecked"
         @input="onChangeChecked($event.target.checked)"
       />
 
-      <label :for="props.checkedKey + props.data.value" class="checkbox-label">
+      <label
+        :for="props.checkedKey + props.data[props.valueKey]"
+        class="checkbox-label"
+      >
         <span class="hidden-text">label</span>
       </label>
     </div>
@@ -115,6 +118,7 @@ import { defineProps } from "vue";
 const props = defineProps({
   data: { type: Object, default: {} },
   checkedKey: { type: String, default: "checked-menu" },
+  valueKey: { type: String, default: "value" },
   isMulti: { type: Boolean, default: false },
   listType: { type: String, default: "selected" },
   useDeleteBtn: { type: Boolean, default: false },

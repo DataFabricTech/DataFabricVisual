@@ -10,10 +10,10 @@
   <div class="section-contents p-0 bg-white">
     <div class="l-split">
       <selected-model
-        :modelList="modelList"
+        :modelList="selectedModelList"
         :dataModelFilter="dataModelFilter"
         :modelListCnt="modelListCnt"
-        @change="addDataModel"
+        @change="openAddModal"
         @delete="deleteDataModel"
         @item-click="onClickDataModelItem"
         @bookmark-change="changeBookmark"
@@ -59,11 +59,9 @@ import { useNuxtApp } from "nuxt/app";
 import $constants from "~/utils/constant";
 import { useCreationStore } from "~/store/datamodel-creation/index";
 
-
 const { $vfm } = useNuxtApp();
 const isShowSaveModel = ref(false);
 
-const deleteDataModel = (param: boolean) => {};
 const saveDataModel = (param: boolean) => {
   isShowSaveModel.value = param;
 };
@@ -90,7 +88,7 @@ const {
   sampleDataList,
   columnOptions,
   dataProfileList,
-  myModelList
+  myModelList,
 } = storeToRefs(creationStore);
 const {
   setDataModelFilter,
@@ -103,7 +101,7 @@ const {
   editQueryText,
   setSelectedModelList,
   setMyModelList,
-  showProfile
+  showProfile,
 } = creationStore;
 
 // 데이터 목록, 필터 목록, 선택 필터 초기화
