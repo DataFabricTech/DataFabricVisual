@@ -19,7 +19,7 @@
     </button>
     <!-- 연결중/ Loading 연결중일때 연결테스트 버튼 disabled 처리 필요 -->
     <Loading
-      v-if="connectionTestStatus === ConnectionStatus.SUCCESS"
+      v-if="connectionTestStatus === ConnectionStatus.LOADING"
       class="loader-xs"
       :use-hidden-text="true"
     ></Loading>
@@ -31,7 +31,8 @@
       <svg-icon class="notification-icon" name="error"></svg-icon>
       <p class="notification-detail">
         연결 테스트에 실패했습니다.<br />
-        connection exception (err: java.lang.NullPointerException)
+        <!--        connection exception (err: java.lang.NullPointerException)-->
+        {{ connectionErrorMsg }}
       </p>
     </div>
     <!-- 연결 성공/ notification -->
@@ -48,18 +49,16 @@
 
 <script setup lang="ts">
 import Loading from "@base/loading/Loading.vue";
-import ServiceDetailForm from "../service-detail-form.vue";
+import ServiceDetailForm from "../part/service-detail-form.vue";
 import SelectedServiceInfo from "@/components/admin/service/modal/service-add-modal/part/selected-service-info.vue";
 
 import type { ServiceAddModalProps } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
-import {
-  PanelTypes,
-  ServiceAddModalComposition,
-} from "~/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
+import { ServiceAddModalComposition } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
 import type { Ref } from "vue";
 
 const props = withDefaults(defineProps<ServiceAddModalProps>(), {});
-const { serviceObj } = ServiceAddModalComposition(props);
+const { serviceObj, serviceDetailFormObj, connectionTest } =
+  ServiceAddModalComposition(props);
 
 enum ConnectionStatus {
   LOADING = "LOADING",
@@ -68,288 +67,16 @@ enum ConnectionStatus {
   NONE = "NONE",
 }
 
-// step1 페이지의 services 의 id 들과 매칭되어야함.
-const serviceDetailFormObj = ref<any>({
-  minIo: {
-    defaultItems: [
-      {
-        title: "MinIO Credentials Configuration",
-        items: [
-          {
-            id: "accessKeyId",
-            label: "Access Key ID",
-            type: PanelTypes.INPUT,
-          },
-          {
-            id: "secretKey",
-            label: "Secret Key",
-            type: PanelTypes.INPUT_PWD,
-          },
-          {
-            id: "sessionToken",
-            label: "Session Token",
-            type: PanelTypes.INPUT,
-          },
-          {
-            id: "region",
-            label: "Region",
-            type: PanelTypes.INPUT,
-          },
-          {
-            id: "endpointUrl",
-            label: "Endpoint URL",
-            type: PanelTypes.INPUT,
-          },
-        ],
-      },
-    ],
-    addableItems: {
-      title: "Bucket Names",
-      id: "bucketNames",
-      items: [{ id: "key", type: PanelTypes.INPUT, showItemLabel: true }],
-    },
-    accordionItems: {
-      useConnectionSchema: false,
-      useSSL: false,
-      useSSlConfig: false,
-      useSSLUploads: false,
-      useConnectionOption: true,
-      useConnectionArguments: true,
-    },
-  },
-  mySql: {
-    defaultItems: [
-      {
-        title: "",
-        items: [
-          {
-            id: "username",
-            label: "Username",
-            type: PanelTypes.INPUT,
-          },
-          {
-            id: "authConfigurationType",
-            label: "Auth Configuration Type",
-            type: PanelTypes.SELECT,
-            options: [
-              {
-                label: "Basic Auth",
-                value: "basicAuth",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: "Basic Auth",
-        items: [
-          {
-            id: "password",
-            label: "Password",
-            type: PanelTypes.INPUT_PWD,
-          },
-          {
-            id: "hostAndPort",
-            label: "Host and Port",
-            type: PanelTypes.INPUT,
-          },
-          {
-            id: "databaseName",
-            label: "Database Name",
-            type: PanelTypes.INPUT,
-          },
-        ],
-      },
-    ],
-    accordionItems: {
-      useConnectionSchema: true,
-      useSSL: true,
-      useSSlConfig: false,
-      useSSLUploads: true,
-      useConnectionOption: false,
-      useConnectionArguments: true,
-    },
-  },
-  mariaDB: {
-    defaultItems: [
-      {
-        title: "",
-        items: [
-          {
-            id: "username",
-            label: "Username",
-            type: PanelTypes.INPUT,
-          },
-          {
-            id: "authConfigurationType",
-            label: "Auth Configuration Type",
-            type: PanelTypes.SELECT,
-            options: [
-              {
-                value: "basicAuth",
-                label: "Basic Auth",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: "Basic Auth",
-        items: [
-          {
-            id: "username",
-            label: "Username",
-            type: PanelTypes.INPUT,
-          },
-          {
-            id: "password",
-            label: "Password",
-            type: PanelTypes.INPUT_PWD,
-          },
-          {
-            id: "hostAndPort",
-            label: "Host and Port",
-            type: PanelTypes.INPUT,
-          },
-          {
-            id: "classificationName",
-            label: "Classification Name",
-            type: PanelTypes.INPUT,
-            defaultValue: "PostgresPolicyTags",
-          },
-        ],
-      },
-    ],
-    accordionItems: {
-      useConnectionSchema: true,
-      useSSL: false,
-      useSSlConfig: false,
-      useSSLUploads: false,
-      useConnectionOption: true,
-      useConnectionArguments: true,
-    },
-  },
-  postgreSql: {
-    defaultItems: [
-      {
-        title: "",
-        items: [
-          {
-            id: "username",
-            label: "Username",
-            type: PanelTypes.INPUT,
-          },
-          {
-            id: "password",
-            label: "Password",
-            type: PanelTypes.INPUT_PWD,
-          },
-          {
-            id: "hostAndPort",
-            label: "Host and Port",
-            type: PanelTypes.INPUT,
-          },
-          {
-            id: "databaseName",
-            label: "Database Name",
-            type: PanelTypes.INPUT,
-          },
-          {
-            id: "databaseSchema",
-            label: "Database Schema",
-            type: PanelTypes.INPUT,
-          },
-        ],
-      },
-    ],
-    accordionItems: {
-      useConnectionSchema: true,
-      useSSL: true,
-      useSSlConfig: true,
-      useSSLUploads: true,
-      useConnectionOption: false,
-      useConnectionArguments: true,
-    },
-  },
-  oracle: {
-    defaultItems: [
-      {
-        title: "",
-        items: [
-          {
-            id: "username",
-            label: "Username",
-            type: PanelTypes.INPUT,
-          },
-          {
-            id: "password",
-            label: "Password",
-            type: PanelTypes.INPUT_PWD,
-          },
-        ],
-      },
-      {
-        title: "Oracle Connection Type",
-        items: [
-          {
-            id: "oracleConnectionType",
-            label: "",
-            type: PanelTypes.SELECT,
-            options: [
-              {
-                label: "Database Schema",
-                value: "databaseSchema",
-              },
-              {
-                label: "Oracle Service Name",
-                value: "oracleServiceName",
-              },
-              {
-                label: "Oracle TNS Connection",
-                value: "oracleTNSConnection",
-              },
-            ],
-          },
-        ],
-      },
-      {
-        title: "Database Schema",
-        items: [
-          {
-            id: "databaseSchema",
-            label: "Database Schema",
-            type: PanelTypes.INPUT,
-          },
-          {
-            id: "oracleInstantClientDirectory",
-            label: "Oracle instant Client Directory",
-            type: PanelTypes.INPUT,
-            defaultValue: "/instantclient",
-          },
-          {
-            id: "databaseName",
-            label: "Database Name",
-            type: PanelTypes.INPUT,
-          },
-        ],
-      },
-    ],
-    accordionItems: {
-      useConnectionSchema: true,
-      useSSL: false,
-      useSSlConfig: false,
-      useSSLUploads: false,
-      useConnectionOption: true,
-      useConnectionArguments: true,
-    },
-  },
-});
-
 const connectionTestStatus: Ref<ConnectionStatus> = ref(ConnectionStatus.NONE);
 
-const doConnectionTest = () => {
+const doConnectionTest = async () => {
   connectionTestStatus.value = ConnectionStatus.LOADING;
-  console.log(serviceObj.value);
+
+  const response = await connectionTest();
+  // response 가 message 가 올꺼임.
+  connectionTestStatus.value = response
+    ? ConnectionStatus.SUCCESS
+    : ConnectionStatus.ERROR;
 };
 </script>
 

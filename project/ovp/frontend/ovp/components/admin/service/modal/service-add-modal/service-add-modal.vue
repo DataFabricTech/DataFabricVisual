@@ -57,7 +57,7 @@
           이전
         </button>
         <button class="button button-primary button-lg" @click="gotoNext">
-          다음
+          {{ currentStep === 3 ? "저장" : "다음" }}
         </button>
       </div>
     </template>
@@ -70,10 +70,11 @@ import Step from "@extends/step/Step.vue";
 import Step1 from "./step/step1.vue";
 import Step2 from "./step/step2.vue";
 import Step3 from "./step/step3.vue";
-import { useNuxtApp } from "nuxt/app";
-
-const { $vfm } = useNuxtApp();
 import _ from "lodash";
+
+import { useNuxtApp } from "nuxt/app";
+const { $vfm } = useNuxtApp();
+
 import { ServiceAddModalComposition } from "./ServiceAddModalComposition";
 import type { ServiceAddModalProps } from "./ServiceAddModalProps";
 
@@ -94,7 +95,7 @@ const changeStep = (value: number | string) => {
   currentStep.value = Number(value) - 1;
 };
 const onBeforeOpen = () => {
-  resetData();
+  resetData(); // store 에 저장하고 있던 데이터 리셋
   isValid.value = true;
   inValidMsg.value = "";
   currentStep.value = 1;
@@ -111,11 +112,24 @@ const gotoPrev = () => {
   currentStep.value = currentStep.value - 1;
 };
 const gotoNext = async () => {
+  currentStep.value = currentStep.value + 1;
   if (!(await checkValidation())) {
     return;
   }
-  // 다음 단계로 넘어가기 전에 validation 체크를 해야함.
-  currentStep.value = currentStep.value + 1;
+
+  if (currentStep.value === 3) {
+    gotoSave();
+  } else {
+    // 다음 단계로 넘어가기 전에 validation 체크를 해야함.
+  }
+};
+const gotoSave = async () => {
+  if (!(await checkValidation())) {
+    return;
+  }
+
+  // 저장한다.
+  submit();
 };
 
 const checkValidation = async (): Promise<boolean> => {
@@ -126,15 +140,27 @@ const checkValidation = async (): Promise<boolean> => {
       isValid.value = false;
       inValidMsg.value = "필수 값을 입력해주세요.";
       return false;
-    } else if (await isServiceNameDuplicate()) {
+    } else if (await checkServiceNameDuplicate()) {
       isValid.value = false;
       inValidMsg.value = "중복된 서비스 이름입니다.";
       return false;
     }
   } else if (currentStep.value === 3) {
-    isValid.value = false;
-    inValidMsg.value = "중복된 서비스 이름입니다.";
-    return false;
+    if (!checkRequiredValue()) {
+      isValid.value = false;
+      inValidMsg.value = "필수 값을 입력해주세요.";
+      return false;
+    }
+    if (_.isNull(connectionTestStatus)) {
+      isValid.value = false;
+      inValidMsg.value = "연결 테스트를 수행해 주세요.";
+      return false;
+    }
+    if (!connectionTestStatus) {
+      isValid.value = false;
+      inValidMsg.value = "연결 테스트를 다시 수행해 주세요.";
+      return false;
+    }
   }
 
   isValid.value = true;
@@ -142,8 +168,14 @@ const checkValidation = async (): Promise<boolean> => {
   return true;
 };
 
-const { serviceObj, resetData, isServiceNameDuplicate } =
-  ServiceAddModalComposition(props);
+const {
+  serviceObj,
+  connectionTestStatus,
+  resetData,
+  checkServiceNameDuplicate,
+  checkRequiredValue,
+  submit,
+} = ServiceAddModalComposition(props);
 </script>
 
 <style scoped></style>

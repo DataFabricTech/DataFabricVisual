@@ -6,15 +6,18 @@
     <div class="form-body">
       <div
         class="form-item"
-        v-for="bodyItem in item.items as any[]"
+        v-for="(bodyItem, bodyItemIndex) in item.items as any[]"
         :key="bodyItem.label"
       >
-        <label for="" class="form-label"> {{ bodyItem.label }} </label>
+        <label for="" class="form-label">
+          {{ bodyItem.label }}
+          <span v-if="bodyItem.required" class="required">*</span></label
+        >
         <div class="form-detail flex flex-col">
           <div class="search-input">
-            <label class="hidden-text" for="text-input-example-4">{{
-              bodyItem.id
-            }}</label>
+            <label class="hidden-text" :for="`${bodyItem.id}_${bodyItemIndex}`"
+              >{{ bodyItem.id }}
+            </label>
 
             <!-- 입력 필드가 INPUT 일때 -->
             <template
@@ -24,7 +27,7 @@
               "
             >
               <input
-                id="text-input-example-4"
+                :id="`${bodyItem.id}_${bodyItemIndex}`"
                 autocomplete="new-password"
                 :type="
                   bodyItem.type === PanelTypes.INPUT
@@ -97,7 +100,7 @@
         :id="addableItems.id"
         :items="addableItems.items"
         :service-obj="serviceObj"
-        service-obj-key="addedList"
+        :service-obj-key="`detailInfo.${addableItems.id}`"
         @setValue="setValue"
         @addNewList="addNewList"
         @deleteList="deleteList"
@@ -113,74 +116,8 @@
             {{ selectedServiceObj.label }} Connection Advanced Config</template
           >
           <template #body>
-            <!-- Connection Schema -->
-            <div class="form-item" v-if="accordionItems.useConnectionSchema">
-              <label class="form-label"> Connection Schema </label>
-              <select-box
-                class="select-lg w-full"
-                id="connectionSchema"
-                label-key="label"
-                value-key="value"
-                :selected-item="connectionSchemaOptions[0]['value']"
-                :data="connectionSchemaOptions"
-                @select="(option) => onSelectItem(option, 'connectionSchema')"
-              ></select-box>
-            </div>
-            <!-- // Connection Schema -->
-
-            <!-- SSL -->
-            <div class="form-item" v-if="accordionItems.useSSL">
-              <label class="form-label"> SSL </label>
-              <select-box
-                class="select-lg w-full"
-                id="ssl"
-                label-key="label"
-                value-key="value"
-                :selected-item="sslOptions[0]['value']"
-                :data="sslOptions"
-                @select="(option) => onSelectItem(option, 'ssl')"
-              ></select-box>
-            </div>
-            <!-- // SSL -->
-
-            <!-- SSL Config -->
-            <div class="form-item" v-if="accordionItems.useSSLConfig">
-              <label class="form-label"> SSL </label>
-              <select-box
-                class="select-lg w-full"
-                id="sslConfig"
-                label-key="label"
-                value-key="value"
-                :selected-item="sslConfigOptions[0]['value']"
-                :data="sslConfigOptions"
-                @select="(option) => onSelectItem(option, 'sslConfig')"
-              ></select-box>
-            </div>
-            <!-- // SSL Config -->
-
-            <!-- Validate SSL Client Config - Upload Buttons -->
-            <div
-              v-if="accordionItems.useSSLUploads"
-              class="form-item form-item-upload"
-            >
-              <label class="form-label"> Validate SSL Client Config </label>
-              <div class="form-detail" v-for="upload in uploadItems">
-                <p>{{ upload.title }}</p>
-                <Upload
-                  class="upload-loaded"
-                  :isLoadingVisible="false"
-                  :isLoadedVisible="true"
-                  :allowed-extensions="upload.allowedExtensions"
-                  :use-input-accept="upload.useInputAccept"
-                  @changed="fileUploaded(upload.id, $event)"
-                />
-              </div>
-            </div>
-            <!-- // Validate SSL Client Config - Upload Buttons -->
-
             <!-- Connection Option -->
             <addable-input
-              v-if="accordionItems.useConnectionOption"
               title="Connection Options"
               id="connectionOption"
               :items="[
@@ -191,7 +128,8 @@
                   type: PanelTypes.INPUT,
                 },
               ]"
-              service-obj-key="accordion.connectionOption"
+              service-obj-key="detailInfo.connectionOption"
+              :service-obj="serviceObj"
               @setValue="setValue"
               @addNewList="addNewList"
               @deleteList="deleteList"
@@ -199,7 +137,6 @@
             <!-- // Connection Option -->
             <!-- Connection Arguments -->
             <addable-input
-              v-if="accordionItems.useConnectionArguments"
               title="Connection Arguments"
               id="connectionArguments"
               :items="[
@@ -210,7 +147,8 @@
                   type: PanelTypes.INPUT,
                 },
               ]"
-              service-obj-key="accordion.connectionArguments"
+              service-obj-key="detailInfo.connectionArguments"
+              :service-obj="serviceObj"
               @setValue="setValue"
               @addNewList="addNewList"
               @deleteList="deleteList"
@@ -231,55 +169,13 @@ import {
 } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
 import SelectBox from "@extends/select-box/SelectBox.vue";
 import Accordion from "@base/accordion/accordion.vue";
-import Upload from "@base/upload/Upload.vue";
 
 import _ from "lodash";
 
 const props = withDefaults(defineProps<ServiceAddModalProps>(), {
   formData: () => {},
 });
-const accordionItems = computed(() => props.formData.accordionItems);
 const addableItems = computed(() => props.formData.addableItems);
-
-const connectionSchemaOptions: any[] = [
-  {
-    label: "",
-    value: "",
-  },
-];
-const sslOptions = [
-  {
-    label: "",
-    value: "",
-  },
-];
-const sslConfigOptions = [
-  {
-    label: "",
-    value: "",
-  },
-];
-
-const uploadItems = [
-  {
-    id: "caCertificate",
-    title: "CA Certificate",
-    useInputAccept: true,
-    allowedExtensions: [".crt", ".pem"],
-  },
-  {
-    id: "sslCertificate",
-    title: "SSL Certificate",
-    useInputAccept: true,
-    allowedExtensions: [".crt", ".pem"],
-  },
-  {
-    id: "sslKey",
-    title: "SSL Key",
-    useInputAccept: true,
-    allowedExtensions: [".key", ".pem"],
-  },
-];
 
 const openEyeValues = ref<string[]>([]);
 
@@ -296,11 +192,8 @@ const isShowPwdStatus = (itemId: string) => {
   return _.includes(openEyeValues.value, itemId);
 };
 
-const fileUploaded = (uploadId: string, file: File) => {
-  setValue(`sslUploaded.${uploadId}`, file);
-};
-
 const addNewList = (serviceObjPath: string) => {
+  console.log(serviceObjPath);
   if (_.isUndefined(_.get(serviceObj.value, serviceObjPath))) {
     _.set(serviceObj.value, serviceObjPath, []);
   }

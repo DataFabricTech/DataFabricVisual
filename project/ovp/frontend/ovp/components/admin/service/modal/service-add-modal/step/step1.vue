@@ -24,60 +24,14 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  IService,
-  ServiceAddModalProps,
-} from "@/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
+import type { ServiceAddModalProps } from "@/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
 import { ServiceAddModalComposition } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
 import _ from "lodash";
 
 const props = withDefaults(defineProps<ServiceAddModalProps>(), {});
-const services = ref<IService[]>([
-  {
-    id: "minIo",
-    label: "MinIO",
-    img: "storage-type_06",
-    imgUrl: "",
-    isDisabled: false,
-  },
-  {
-    id: "mySql",
-    label: "MySQL",
-    img: "storage-type_02",
-    imgUrl: "",
-    isDisabled: false,
-  },
-  {
-    id: "mariaDB",
-    label: "MariaDB",
-    img: "storage-type_01",
-    imgUrl: "",
-    isDisabled: false,
-  },
-  {
-    id: "postgreSql",
-    label: "PostgreSQL",
-    img: "storage-type_03",
-    imgUrl: "",
-    isDisabled: false,
-  },
-  {
-    id: "oracle",
-    label: "Oracle",
-    img: "storage-type_04",
-    imgUrl: "",
-  },
-]);
-const { serviceObj, serviceImgClick, setDefaultServiceId } =
-  ServiceAddModalComposition(props);
 
-// 이미지 URL 동적 셋팅
-services.value.forEach(async (service: any) => {
-  // @assetsPublic : nuxt.config.ts 에서 alias 처리한 문자임으로 ignore 하고 넘어감.
-  // @ts-ignore
-  const imgUrl: any = await import(`@assetsPublic/images/${service.img}.png`);
-  service.imgUrl = imgUrl.default;
-});
+const { services, serviceObj, serviceImgClick, setDefaultServiceId } =
+  ServiceAddModalComposition(props);
 
 // auto select first img
 const firstService = _.head(services.value)!;

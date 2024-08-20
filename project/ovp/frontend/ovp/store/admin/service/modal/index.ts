@@ -15,7 +15,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
       serviceDesc: "",
     },
     detailInfo: {},
-    addedList: [],
   };
   const serviceObj = ref<IServiceObj>(_.cloneDeep(initialServiceObj));
 
@@ -56,6 +55,8 @@ export const useServiceStore = defineStore("serviceStore", () => {
     });
   };
 
+  const connectionTestStatus = ref<boolean | null>(null);
+
   const checkServiceNameDuplicate = async () => {
     const { data } = await $api(
       `/api/service/isDuplicatedNm?${getQueryString()}`,
@@ -67,11 +68,30 @@ export const useServiceStore = defineStore("serviceStore", () => {
     initialServiceObj.serviceId = serviceId;
   };
 
+  const connectionTest = async () => {
+    console.log(serviceObj);
+    console.log("connectionTest");
+    // TODO : [개발] connectionTest 가 성공일때 태깅해둔다.
+    connectionTestStatus.value = true;
+
+    const connectionErrorMsg = "연결 실패 메시지";
+    return connectionErrorMsg;
+  };
+
+  const submit = async () => {
+    console.log(serviceObj);
+    console.log("submit");
+    return false;
+  };
+
   return {
     serviceObj,
     selectedServiceObj,
+    connectionTestStatus,
     setInitServiceId,
     resetServiceObj,
     checkServiceNameDuplicate,
+    connectionTest,
+    submit,
   };
 });
