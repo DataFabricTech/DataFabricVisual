@@ -105,6 +105,9 @@
             <li class="sub-item">
               <a class="sub-item-link" href="#guide-upload">Upload</a>
             </li>
+            <li class="sub-item">
+              <a class="sub-item-link" href="#guide-tooltip">Tooltip</a>
+            </li>
           </ul>
         </li>
       </ul>
@@ -112,11 +115,6 @@
   </nav>
 </template>
 
+<script setup></script>
 
-<script setup>
-
-</script>
-
-<style scoped>
-
-</style>
+<style scoped></style>
