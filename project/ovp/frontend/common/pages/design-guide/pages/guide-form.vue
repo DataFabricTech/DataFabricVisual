@@ -45,8 +45,8 @@
                   <div class="form-detail">
                     <div class="form-input-group">
                       <div class="checkbox">
-                        <input type="checkbox" id="checkbox" class="checkbox-input" />
-                        <label for="checkbox" class="checkbox-label"> <span class="checkbox-text"> label </span></label>
+                        <input type="checkbox" id="checkbox-form-ex" class="checkbox-input" />
+                        <label for="checkbox-form-ex" class="checkbox-label"> <span class="checkbox-text"> label </span></label>
                       </div>
                       <div class="checkbox">
                         <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
@@ -109,8 +109,8 @@
                   <div class="form-detail">
                     <div class="form-input-group">
                       <div class="checkbox checkbox-sm">
-                        <input type="checkbox" id="checkbox" class="checkbox-input" />
-                        <label for="checkbox" class="checkbox-label"> <span class="checkbox-text"> label </span></label>
+                        <input type="checkbox" id="checkbox-sm-form" class="checkbox-input" />
+                        <label for="checkbox-sm-form" class="checkbox-label"> <span class="checkbox-text"> label </span></label>
                       </div>
                       <div class="checkbox checkbox-sm">
                         <input type="checkbox" id="checkbox2" class="checkbox-input" disabled />
