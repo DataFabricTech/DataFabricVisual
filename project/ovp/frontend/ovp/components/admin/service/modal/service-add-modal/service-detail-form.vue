@@ -1,5 +1,5 @@
 <template>
-  <div class="form form-vertical" v-for="item in props.data.defaultList">
+  <div class="form form-vertical" v-for="item in props.formData.defaultItems">
     <div class="form-head" v-if="item.title">
       <h3 class="form-title">{{ item.title }}</h3>
     </div>
@@ -25,14 +25,14 @@
             >
               <input
                 id="text-input-example-4"
+                autocomplete="new-password"
                 :type="
-                  (inputType =
-                    bodyItem.type === PanelTypes.INPUT
+                  bodyItem.type === PanelTypes.INPUT
+                    ? 'input'
+                    : bodyItem.type === PanelTypes.INPUT_PWD &&
+                        isShowPwdStatus(bodyItem.id)
                       ? 'input'
-                      : bodyItem.type === PanelTypes.INPUT_PWD &&
-                          isShowPwdStatus(bodyItem.id)
-                        ? 'input'
-                        : 'password')
+                      : 'password'
                 "
                 class="text-input text-input-lg"
                 :value="
@@ -41,7 +41,10 @@
                   ''
                 "
                 @input="
-                  setValue(`detailInfo.${bodyItem.id}`, $event.target.value)
+                  setValue(
+                    `detailInfo.${bodyItem.id}`,
+                    ($event.target as HTMLInputElement).value,
+                  )
                 "
               />
               <button
@@ -87,260 +90,132 @@
     </div>
   </div>
 
-  <div class="form form-vertical" v-if="props.data.addedList">
+  <div class="form form-vertical" v-if="addableItems">
     <div class="form-body">
-      <div class="form-item form-item-expand">
-        <div class="form-label-group">
-          <label for="" class="form-label">
-            {{ props.data.addedList.title }}
-          </label>
-          <button
-            class="button button-primary button-sm"
-            type="button"
-            @click="addNewAddList"
-          >
-            <span class="hidden-text">추가</span>
-            <svg-icon class="button-icon" name="plus"></svg-icon>
-          </button>
-        </div>
-        <div
-          class="form-detail"
-          v-for="(addItem, addIndex) in serviceObj.addedList"
-        >
-          <div class="form-delete-group">
-            <div class="search-input">
-              <label for="text-input-example-4"
-                >{{ `${props.data.addedList.title} ${addIndex}` }}
-                <span class="required">*</span>
-              </label>
-              <input
-                v-if="props.data.addedList.type === PanelTypes.INPUT"
-                id="text-input-example-4"
-                class="text-input text-input-lg"
-                :value="serviceObj.addedList[addIndex] || ''"
-                @input="setValue(`addedList[${addIndex}]`, $event.target.value)"
-              />
-              <button
-                class="search-input-action-button button button-neutral-ghost button-sm"
-                type="button"
-                @click="resetInput(`addedList[${addIndex}]`)"
-              >
-                <span class="hidden-text">지우기</span>
-                <svg-icon class="button-icon" name="close"></svg-icon>
-              </button>
-            </div>
-            <button
-              class="button button-ghost button-sm"
-              type="button"
-              @click="onClickDeleteAddList(addIndex)"
-            >
-              <span class="hidden-text">삭제</span>
-              <svg-icon class="button-icon" name="close"></svg-icon>
-            </button>
-          </div>
-        </div>
-      </div>
+      <addable-input
+        :title="addableItems.title"
+        :id="addableItems.id"
+        :items="addableItems.items"
+        :service-obj="serviceObj"
+        service-obj-key="addedList"
+        @setValue="setValue"
+        @addNewList="addNewList"
+        @deleteList="deleteList"
+      />
     </div>
   </div>
 
-  <div class="form form-vertical" v-if="props.data.expandList">
+  <div class="form form-vertical">
     <div class="form-body">
       <div class="form-item">
         <Accordion>
-          <template #title> MinIO Connection Advanced Config</template>
+          <template #title>
+            {{ selectedServiceObj.label }} Connection Advanced Config</template
+          >
           <template #body>
-            <div class="form-item form-item-expand">
-              <div class="form-label-group">
-                <label for="" class="form-label"> Connection Options </label>
-                <button class="button button-primary button-sm" type="button">
-                  <span class="hidden-text">추가</span>
-                  <svg-icon class="button-icon" name="plus"></svg-icon>
-                </button>
-              </div>
-              <div class="form-detail">
-                <div class="form-delete-group">
-                  <div class="text-input-group">
-                    <div class="search-input">
-                      <label for="text-input-example-4" class="hidden-text">
-                        Connection Options
-                      </label>
-                      <input
-                        id="text-input-example-4"
-                        class="text-input text-input-lg"
-                        value="prefix icon + button"
-                      />
-                      <button
-                        class="search-input-action-button button button-neutral-ghost button-sm"
-                        type="button"
-                      >
-                        <span class="hidden-text">지우기</span>
-                        <svg-icon class="button-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                    <div class="search-input">
-                      <label for="text-input-example-4" class="hidden-text">
-                        Connection Options
-                      </label>
-                      <input
-                        id="text-input-example-4"
-                        class="text-input text-input-lg"
-                        value="prefix icon + button"
-                      />
-                      <button
-                        class="search-input-action-button button button-neutral-ghost button-sm"
-                        type="button"
-                      >
-                        <span class="hidden-text">지우기</span>
-                        <svg-icon class="button-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </div>
-                  <button class="button button-ghost button-sm" type="button">
-                    <span class="hidden-text">삭제</span>
-                    <svg-icon class="button-icon" name="close"></svg-icon>
-                  </button>
-                </div>
-                <div class="notification notification-sm notification-error">
-                  <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
-                </div>
-              </div>
-            </div>
-            <div class="form-item form-item-expand">
-              <div class="form-label-group">
-                <label for="" class="form-label"> Connection Options </label>
-                <button class="button button-primary button-sm" type="button">
-                  <span class="hidden-text">추가</span>
-                  <svg-icon class="button-icon" name="plus"></svg-icon>
-                </button>
-              </div>
-              <div class="form-detail">
-                <div class="form-delete-group">
-                  <div class="text-input-group">
-                    <div class="search-input">
-                      <label for="text-input-example-4" class="hidden-text">
-                        Connection Options
-                      </label>
-                      <input
-                        id="text-input-example-4"
-                        class="text-input text-input-lg"
-                        value="prefix icon + button"
-                      />
-                      <button
-                        class="search-input-action-button button button-neutral-ghost button-sm"
-                        type="button"
-                      >
-                        <span class="hidden-text">지우기</span>
-                        <svg-icon class="button-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                    <div class="search-input">
-                      <label for="text-input-example-4" class="hidden-text">
-                        Connection Options
-                      </label>
-                      <input
-                        id="text-input-example-4"
-                        class="text-input text-input-lg"
-                        value="prefix icon + button"
-                      />
-                      <button
-                        class="search-input-action-button button button-neutral-ghost button-sm"
-                        type="button"
-                      >
-                        <span class="hidden-text">지우기</span>
-                        <svg-icon class="button-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </div>
-                  <button class="button button-ghost button-sm" type="button">
-                    <span class="hidden-text">삭제</span>
-                    <svg-icon class="button-icon" name="close"></svg-icon>
-                  </button>
-                </div>
-                <div class="notification notification-sm notification-error">
-                  <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
-                </div>
-              </div>
-              <div class="form-detail">
-                <div class="form-delete-group">
-                  <div class="text-input-group">
-                    <div class="search-input">
-                      <label for="text-input-example-4" class="hidden-text">
-                        Connection Options
-                      </label>
-                      <input
-                        id="text-input-example-4"
-                        class="text-input text-input-lg"
-                        value="prefix icon + button"
-                      />
-                      <button
-                        class="search-input-action-button button button-neutral-ghost button-sm"
-                        type="button"
-                      >
-                        <span class="hidden-text">지우기</span>
-                        <svg-icon class="button-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                    <div class="search-input">
-                      <label for="text-input-example-4" class="hidden-text">
-                        Connection Options
-                      </label>
-                      <input
-                        id="text-input-example-4"
-                        class="text-input text-input-lg"
-                        value="prefix icon + button"
-                      />
-                      <button
-                        class="search-input-action-button button button-neutral-ghost button-sm"
-                        type="button"
-                      >
-                        <span class="hidden-text">지우기</span>
-                        <svg-icon class="button-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                  </div>
-                  <button class="button button-ghost button-sm" type="button">
-                    <span class="hidden-text">삭제</span>
-                    <svg-icon class="button-icon" name="close"></svg-icon>
-                  </button>
-                </div>
-                <div class="notification notification-sm notification-error">
-                  <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
-                </div>
-              </div>
-            </div>
-            <div class="form-item">
+            <!-- Connection Schema -->
+            <div class="form-item" v-if="accordionItems.useConnectionSchema">
               <label class="form-label"> Connection Schema </label>
-              <select-box class="select-lg w-full"></select-box>
+              <select-box
+                class="select-lg w-full"
+                id="connectionSchema"
+                label-key="label"
+                value-key="value"
+                :selected-item="connectionSchemaOptions[0]['value']"
+                :data="connectionSchemaOptions"
+                @select="(option) => onSelectItem(option, 'connectionSchema')"
+              ></select-box>
             </div>
-            <div class="form-item form-item-upload">
+            <!-- // Connection Schema -->
+
+            <!-- SSL -->
+            <div class="form-item" v-if="accordionItems.useSSL">
+              <label class="form-label"> SSL </label>
+              <select-box
+                class="select-lg w-full"
+                id="ssl"
+                label-key="label"
+                value-key="value"
+                :selected-item="sslOptions[0]['value']"
+                :data="sslOptions"
+                @select="(option) => onSelectItem(option, 'ssl')"
+              ></select-box>
+            </div>
+            <!-- // SSL -->
+
+            <!-- SSL Config -->
+            <div class="form-item" v-if="accordionItems.useSSLConfig">
+              <label class="form-label"> SSL </label>
+              <select-box
+                class="select-lg w-full"
+                id="sslConfig"
+                label-key="label"
+                value-key="value"
+                :selected-item="sslConfigOptions[0]['value']"
+                :data="sslConfigOptions"
+                @select="(option) => onSelectItem(option, 'sslConfig')"
+              ></select-box>
+            </div>
+            <!-- // SSL Config -->
+
+            <!-- Validate SSL Client Config - Upload Buttons -->
+            <div
+              v-if="accordionItems.useSSLUploads"
+              class="form-item form-item-upload"
+            >
               <label class="form-label"> Validate SSL Client Config </label>
-              <div class="form-detail">
-                <p>CA Certificate</p>
-                <Upload></Upload>
-              </div>
-              <div class="form-detail">
-                <p>SSL Certificate</p>
-                <Upload
-                  class="upload-loading"
-                  :isLoadingVisible="true"
-                  :isLoadedVisible="false"
-                  :isDisabled="true"
-                >
-                </Upload>
-              </div>
-              <div class="form-detail">
-                <p>SSL Key</p>
+              <div class="form-detail" v-for="upload in uploadItems">
+                <p>{{ upload.title }}</p>
                 <Upload
                   class="upload-loaded"
                   :isLoadingVisible="false"
                   :isLoadedVisible="true"
-                >
-                </Upload>
+                  :allowed-extensions="upload.allowedExtensions"
+                  :use-input-accept="upload.useInputAccept"
+                  @changed="fileUploaded(upload.id, $event)"
+                />
               </div>
             </div>
+            <!-- // Validate SSL Client Config - Upload Buttons -->
+
+            <!-- Connection Option -->
+            <addable-input
+              v-if="accordionItems.useConnectionOption"
+              title="Connection Options"
+              id="connectionOption"
+              :items="[
+                { id: 'key', defaultValue: 'New Key', type: PanelTypes.INPUT },
+                {
+                  id: 'value',
+                  defaultValue: 'New Value',
+                  type: PanelTypes.INPUT,
+                },
+              ]"
+              service-obj-key="accordion.connectionOption"
+              @setValue="setValue"
+              @addNewList="addNewList"
+              @deleteList="deleteList"
+            />
+            <!-- // Connection Option -->
+            <!-- Connection Arguments -->
+            <addable-input
+              v-if="accordionItems.useConnectionArguments"
+              title="Connection Arguments"
+              id="connectionArguments"
+              :items="[
+                { id: 'key', defaultValue: 'New Key', type: PanelTypes.INPUT },
+                {
+                  id: 'value',
+                  defaultValue: 'New Value',
+                  type: PanelTypes.INPUT,
+                },
+              ]"
+              service-obj-key="accordion.connectionArguments"
+              @setValue="setValue"
+              @addNewList="addNewList"
+              @deleteList="deleteList"
+            />
+            <!-- // Connection Arguments -->
           </template>
         </Accordion>
       </div>
@@ -350,14 +225,61 @@
 
 <script setup lang="ts">
 import type { ServiceAddModalProps } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
-import { ServiceAddModalComposition } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
+import {
+  PanelTypes,
+  ServiceAddModalComposition,
+} from "~/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
 import SelectBox from "@extends/select-box/SelectBox.vue";
+import Accordion from "@base/accordion/accordion.vue";
+import Upload from "@base/upload/Upload.vue";
 
 import _ from "lodash";
 
 const props = withDefaults(defineProps<ServiceAddModalProps>(), {
-  data: { type: Object, default: () => {} },
+  formData: () => {},
 });
+const accordionItems = computed(() => props.formData.accordionItems);
+const addableItems = computed(() => props.formData.addableItems);
+
+const connectionSchemaOptions: any[] = [
+  {
+    label: "",
+    value: "",
+  },
+];
+const sslOptions = [
+  {
+    label: "",
+    value: "",
+  },
+];
+const sslConfigOptions = [
+  {
+    label: "",
+    value: "",
+  },
+];
+
+const uploadItems = [
+  {
+    id: "caCertificate",
+    title: "CA Certificate",
+    useInputAccept: true,
+    allowedExtensions: [".crt", ".pem"],
+  },
+  {
+    id: "sslCertificate",
+    title: "SSL Certificate",
+    useInputAccept: true,
+    allowedExtensions: [".crt", ".pem"],
+  },
+  {
+    id: "sslKey",
+    title: "SSL Key",
+    useInputAccept: true,
+    allowedExtensions: [".key", ".pem"],
+  },
+];
 
 const openEyeValues = ref<string[]>([]);
 
@@ -370,20 +292,25 @@ const onClickViewPwdBtn = (itemKey: string) => {
 function onSelectItem(item: string | number, id: string) {
   setValue(`detailInfo.${id}`, item);
 }
-const addNewAddList = () => {
-  if (_.isUndefined(serviceObj.value.addedList)) {
-    serviceObj.value.addedList = [];
-  }
-  serviceObj.value.addedList.push("");
-};
 const isShowPwdStatus = (itemId: string) => {
   return _.includes(openEyeValues.value, itemId);
 };
-const onClickDeleteAddList = (index: string) => {
-  _.pullAt(serviceObj.value.addedList, index);
+
+const fileUploaded = (uploadId: string, file: File) => {
+  setValue(`sslUploaded.${uploadId}`, file);
 };
 
-const { PanelTypes, serviceObj, resetInput, setValue } =
+const addNewList = (serviceObjPath: string) => {
+  if (_.isUndefined(_.get(serviceObj.value, serviceObjPath))) {
+    _.set(serviceObj.value, serviceObjPath, []);
+  }
+  _.get(serviceObj.value, serviceObjPath).push("");
+};
+const deleteList = (serviceObjPath: string, index: number) => {
+  _.pullAt(_.get(serviceObj.value, serviceObjPath), index);
+};
+
+const { serviceObj, selectedServiceObj, resetInput, setValue } =
   ServiceAddModalComposition(props);
 </script>
 

@@ -15,6 +15,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
       serviceDesc: "",
     },
     detailInfo: {},
+    addedList: [],
   };
   const serviceObj = ref<IServiceObj>(_.cloneDeep(initialServiceObj));
 

@@ -1,15 +1,12 @@
 <template>
   <!-- Step 03 / 시작 div.service-form display:none을 해제해주세요. -->
   <div class="service-form" :style="props.style">
-    <div class="service-form-summary">
-      <label for="" class="form-label"> 선택된 서비스 타입 </label>
-      <div class="form-detail">
-        <img :src="selectedServiceObj.imgUrl" :alt="selectedServiceObj.label" />
-        <p class="form-detail-text">({{ selectedServiceObj.label }})</p>
-      </div>
-    </div>
+    <selected-service-info />
+
     <div class="form form-vertical">
-      <service-detail-form :data="serviceDetailList[serviceObj.serviceId]" />
+      <service-detail-form
+        :form-data="serviceDetailFormObj[serviceObj.serviceId]"
+      />
     </div>
   </div>
   <!-- 연결 정보 테스트/ step 03에서만 노출됩니다. 1,2 단계에서는 hidden -->
@@ -52,14 +49,17 @@
 <script setup lang="ts">
 import Loading from "@base/loading/Loading.vue";
 import ServiceDetailForm from "../service-detail-form.vue";
+import SelectedServiceInfo from "@/components/admin/service/modal/service-add-modal/part/selected-service-info.vue";
 
 import type { ServiceAddModalProps } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
-import { ServiceAddModalComposition } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
+import {
+  PanelTypes,
+  ServiceAddModalComposition,
+} from "~/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
 import type { Ref } from "vue";
 
 const props = withDefaults(defineProps<ServiceAddModalProps>(), {});
-const { PanelTypes, serviceObj, selectedServiceObj, resetInput } =
-  ServiceAddModalComposition(props);
+const { serviceObj } = ServiceAddModalComposition(props);
 
 enum ConnectionStatus {
   LOADING = "LOADING",
@@ -69,9 +69,9 @@ enum ConnectionStatus {
 }
 
 // step1 페이지의 services 의 id 들과 매칭되어야함.
-const serviceDetailList = ref<any>({
+const serviceDetailFormObj = ref<any>({
   minIo: {
-    defaultList: [
+    defaultItems: [
       {
         title: "MinIO Credentials Configuration",
         items: [
@@ -103,17 +103,22 @@ const serviceDetailList = ref<any>({
         ],
       },
     ],
-    addedList: {
+    addableItems: {
       title: "Bucket Names",
       id: "bucketNames",
-      type: PanelTypes.INPUT,
+      items: [{ id: "key", type: PanelTypes.INPUT, showItemLabel: true }],
     },
-    expandList: {
-      items: [[{ id: "bucketName", type: PanelTypes.INPUT }]],
+    accordionItems: {
+      useConnectionSchema: false,
+      useSSL: false,
+      useSSlConfig: false,
+      useSSLUploads: false,
+      useConnectionOption: true,
+      useConnectionArguments: true,
     },
   },
   mySql: {
-    defaultList: [
+    defaultItems: [
       {
         title: "",
         items: [
@@ -156,9 +161,17 @@ const serviceDetailList = ref<any>({
         ],
       },
     ],
+    accordionItems: {
+      useConnectionSchema: true,
+      useSSL: true,
+      useSSlConfig: false,
+      useSSLUploads: true,
+      useConnectionOption: false,
+      useConnectionArguments: true,
+    },
   },
   mariaDB: {
-    defaultList: [
+    defaultItems: [
       {
         title: "",
         items: [
@@ -198,15 +211,6 @@ const serviceDetailList = ref<any>({
             label: "Host and Port",
             type: PanelTypes.INPUT,
           },
-          // {
-          //   id: "databaseName",
-          //   label: "Database Name",
-          //   type: PanelTypes.INPUT_CHK,
-          //   checkInfo: {
-          //     id: "all",
-          //     label: "Ingest All Databases",
-          //   },
-          // },
           {
             id: "classificationName",
             label: "Classification Name",
@@ -216,9 +220,17 @@ const serviceDetailList = ref<any>({
         ],
       },
     ],
+    accordionItems: {
+      useConnectionSchema: true,
+      useSSL: false,
+      useSSlConfig: false,
+      useSSLUploads: false,
+      useConnectionOption: true,
+      useConnectionArguments: true,
+    },
   },
   postgreSql: {
-    defaultList: [
+    defaultItems: [
       {
         title: "",
         items: [
@@ -250,9 +262,17 @@ const serviceDetailList = ref<any>({
         ],
       },
     ],
+    accordionItems: {
+      useConnectionSchema: true,
+      useSSL: true,
+      useSSlConfig: true,
+      useSSLUploads: true,
+      useConnectionOption: false,
+      useConnectionArguments: true,
+    },
   },
   oracle: {
-    defaultList: [
+    defaultItems: [
       {
         title: "",
         items: [
@@ -314,6 +334,14 @@ const serviceDetailList = ref<any>({
         ],
       },
     ],
+    accordionItems: {
+      useConnectionSchema: true,
+      useSSL: false,
+      useSSlConfig: false,
+      useSSLUploads: false,
+      useConnectionOption: true,
+      useConnectionArguments: true,
+    },
   },
 });
 
@@ -321,7 +349,7 @@ const connectionTestStatus: Ref<ConnectionStatus> = ref(ConnectionStatus.NONE);
 
 const doConnectionTest = () => {
   connectionTestStatus.value = ConnectionStatus.LOADING;
-  console.log(serviceObj);
+  console.log(serviceObj.value);
 };
 </script>
 

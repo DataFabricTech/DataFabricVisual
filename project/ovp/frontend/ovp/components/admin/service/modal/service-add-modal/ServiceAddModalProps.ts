@@ -12,10 +12,13 @@ export interface IServiceObj {
     serviceDesc: string;
   };
   detailInfo: Record<string, any>;
+  addedList: any[];
+
+  [key: string]: any; // 문자열 인덱스 서명 추가
 }
 
 export interface ServiceAddModalProps {
-  data?: object;
+  formData?: any;
 
   modalId?: string;
   style?: any;

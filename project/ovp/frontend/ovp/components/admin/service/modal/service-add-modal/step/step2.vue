@@ -1,13 +1,8 @@
 <template>
   <!-- Step 02 / 시작 div.service-form display:none을 해제해주세요. -->
   <div class="service-form" :style="props.style">
-    <div class="service-form-summary">
-      <label for="" class="form-label"> 선택된 서비스 타입 </label>
-      <div class="form-detail">
-        <img :src="selectedServiceObj.imgUrl" :alt="selectedServiceObj.label" />
-        <p class="form-detail-text">({{ selectedServiceObj.label }})</p>
-      </div>
-    </div>
+    <selected-service-info />
+
     <div class="form form-vertical">
       <div class="form-body">
         <div class="form-item">
@@ -59,10 +54,10 @@
 <script setup lang="ts">
 import type { ServiceAddModalProps } from "@/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
 import { ServiceAddModalComposition } from "@/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
+import SelectedServiceInfo from "@/components/admin/service/modal/service-add-modal/part/selected-service-info.vue";
 
 const props = withDefaults(defineProps<ServiceAddModalProps>(), {});
-const { serviceObj, selectedServiceObj, resetInput } =
-  ServiceAddModalComposition(props);
+const { serviceObj, resetInput } = ServiceAddModalComposition(props);
 </script>
 
 <style scoped></style>

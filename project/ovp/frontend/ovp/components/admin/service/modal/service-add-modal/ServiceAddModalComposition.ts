@@ -1,3 +1,4 @@
+import { storeToRefs } from "pinia";
 import { useServiceStore } from "~/store/admin/service/modal";
 import _ from "lodash";
 
@@ -7,9 +8,17 @@ import type {
   ServiceAddModalProps,
 } from "./ServiceAddModalProps";
 
+export enum PanelTypes {
+  INPUT = "INPUT",
+  INPUT_PWD = "INPUT_PWD",
+  SELECT = "SELECT",
+}
+
 export interface ServiceAddModalComposition extends ServiceAddModalProps {
   serviceObj: Ref<IServiceObj>;
   selectedServiceObj: Ref<IService>;
+
+  setValue(serviceObjPath: string, value: any): void;
   resetInput(serviceObjPath: string): void;
   resetData(): void;
 
@@ -27,12 +36,6 @@ export function ServiceAddModalComposition(
   const { setInitServiceId, resetServiceObj, checkServiceNameDuplicate } =
     serviceStore;
 
-  enum PanelTypes {
-    INPUT = "INPUT",
-    INPUT_PWD = "INPUT_PWD",
-    SELECT = "SELECT",
-  }
-
   // coomon
   const resetInput = (serviceObjPath: string) => {
     setValue(serviceObjPath, "");
@@ -47,6 +50,9 @@ export function ServiceAddModalComposition(
 
   // step1
   const serviceImgClick = (service: IService) => {
+    // serviceObj에 저장된 값들 다 날려야함. (service 1 선택해서 값 입력하고, step1 로 돌아와서 다시 작업한 경우
+    resetServiceObj();
+
     serviceObj.value.serviceId = service.id;
     selectedServiceObj.value = service;
   };
@@ -65,7 +71,6 @@ export function ServiceAddModalComposition(
 
   return {
     ...props,
-    PanelTypes,
     serviceObj,
     selectedServiceObj,
     setValue,

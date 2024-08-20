@@ -30,8 +30,7 @@
         :show-btn="false"
         @change="changeStep"
         style="width: 100%"
-      >
-      </Step>
+      />
 
       <step1 :style="{ display: currentStep === 1 ? 'block' : 'none' }" />
 
