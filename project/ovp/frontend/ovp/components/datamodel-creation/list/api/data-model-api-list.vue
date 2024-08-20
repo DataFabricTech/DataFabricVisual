@@ -38,15 +38,34 @@
         <!-- 카테고리, 소유자, 태그 select -->
         <div class="h-group">
           <template v-for="(filterItem, keyName, FI) in props.filter" :key="FI">
-            <menu-search-button
-              :data="filterItem.data"
-              :selected-items="props.selectedFilters[keyName]"
-              label-key="key"
-              value-key="key"
-              :title="filterItem.text"
-              :is-multi="true"
-              @multiple-change="onSelectFilter(keyName, $event)"
-            ></menu-search-button>
+            <template v-if="keyName === 'category'">
+              <menu-search-tree
+                label-key="name"
+                value-key="id"
+                :title="filterItem.text"
+                :data="filterItem.data.children"
+                :is-multi="true"
+                :hideGuideLines="false"
+                :firExpandAll="true"
+                :show-open-all-btn="false"
+                :show-close-all-btn="false"
+                :use-draggable="false"
+                :selected-items="props.selectedFilters[keyName]"
+                mode="view"
+                @multiple-change="onSelectFilter(keyName, $event)"
+              />
+            </template>
+            <template v-else>
+              <menu-search-button
+                :data="filterItem.data"
+                :selected-items="props.selectedFilters[keyName]"
+                label-key="key"
+                value-key="key"
+                :title="filterItem.text"
+                :is-multi="true"
+                @multiple-change="onSelectFilter(keyName, $event)"
+              ></menu-search-button>
+            </template>
           </template>
         </div>
       </div>
@@ -79,26 +98,13 @@
         ></data-model-list-item>
       </template>
       <!-- TODO: 인피니티 스크롤 -->
-      <!-- NOTE "scrollTrigger" -> useIntersectionObserver 가 return 하는 변수병과 동일해야함. -->
       <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
-      <div
+      <Loading
         id="loader"
-        style="
-          display: none;
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 100%;
-          background-color: rgba(255, 255, 255, 0.5);
-          align-items: center;
-          justify-content: center;
-          font-size: 20px;
-          color: #333;
-        "
-      >
-        <Loading class="loader-lg" :hide-text="false"></Loading>
-      </div>
+        :use-loader-overlay="true"
+        class="loader-lg is-loader-inner"
+        style="display: none"
+      ></Loading>
     </ul>
 
     <!-- 결과 없을 시 no-result 표시 -->
@@ -119,6 +125,7 @@ import { DataModelApiListComposition } from "~/components/datamodel-creation/lis
 import type { DataModelApiListProps } from "~/components/datamodel-creation/list/api/DataModelApiListProps";
 import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 
 const props = withDefaults(defineProps<DataModelApiListProps>(), {
   data: () => [],
@@ -142,7 +149,7 @@ const props = withDefaults(defineProps<DataModelApiListProps>(), {
 
 const emit = defineEmits<{
   (e: "delete", value: any[]): void;
-  (e: "item-check", value: string, checked: boolean): void;
+  (e: "item-check", value: any[]): void;
   (e: "item-click", value: string): void;
   (e: "bookmark-change", value: string): void;
   (e: "filter-change", value: string): void;
@@ -168,16 +175,22 @@ const emitDeleteItem = (value: any[]) => {
 };
 
 const emitFilterChange = (value: {}) => {
+  setScrollOptions(0);
   emit("filter-change", value);
 };
 const emitSortChange = (value: string) => {
+  setScrollOptions(0);
   emit("sort-change", value);
 };
 const emitSearchChange = (value: string) => {
+  setScrollOptions(0);
   emit("search-change", value);
 };
 
-const { scrollTrigger } = useIntersectionObserver(props.addSearchList);
+const { scrollTrigger, setScrollOptions } = useIntersectionObserver(
+  props.addSearchList
+);
+setScrollOptions(0);
 
 const {
   listData,

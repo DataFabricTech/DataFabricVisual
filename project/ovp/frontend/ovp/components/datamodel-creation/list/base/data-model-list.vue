@@ -38,15 +38,34 @@
         <!-- 카테고리, 소유자, 태그 select -->
         <div class="h-group">
           <template v-for="(filterItem, keyName, FI) in props.filter" :key="FI">
-            <menu-search-button
-              :data="filterItem.data"
-              :selected-items="selectedFilter[keyName]"
-              label-key="key"
-              value-key="key"
-              :title="filterItem.text"
-              :is-multi="true"
-              @multiple-change="onSelectFilter(keyName, $event)"
-            ></menu-search-button>
+            <template v-if="keyName === 'category'">
+              <menu-search-tree
+                label-key="name"
+                value-key="id"
+                :title="filterItem.text"
+                :data="filterItem.data.children"
+                :is-multi="true"
+                :hideGuideLines="false"
+                :firExpandAll="true"
+                :show-open-all-btn="false"
+                :show-close-all-btn="false"
+                :use-draggable="false"
+                :selected-items="selectedFilter[keyName]"
+                mode="view"
+                @multiple-change="onSelectFilter(keyName, $event)"
+              />
+            </template>
+            <template v-else>
+              <menu-search-button
+                :data="filterItem.data"
+                :selected-items="selectedFilter[keyName]"
+                label-key="key"
+                value-key="key"
+                :title="filterItem.text"
+                :is-multi="true"
+                @multiple-change="onSelectFilter(keyName, $event)"
+              ></menu-search-button>
+            </template>
           </template>
         </div>
       </div>
@@ -86,6 +105,7 @@ import DataModelListItem from "~/components/datamodel-creation/item/data-model-l
 import type { DataModelListProps } from "~/components/datamodel-creation/list/base/DataModelListProps";
 import { DataModelListComposition } from "~/components/datamodel-creation/list/base/DataModelListComposition";
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
+import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 
 const props = withDefaults(defineProps<DataModelListProps>(), {
   data: () => [],
