@@ -55,7 +55,7 @@
         <div v-else class="table-scroll" id="dataListModal">
           <table>
             <colgroup>
-              <col style="width: 10%" />
+              <col style="width: 42px" />
               <col />
             </colgroup>
             <thead>

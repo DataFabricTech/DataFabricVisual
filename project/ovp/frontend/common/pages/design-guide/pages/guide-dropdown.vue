@@ -206,16 +206,16 @@
                 <ul class="dropdown-list">
                   <li class="dropdown-item">
                     <div class="checkbox">
-                      <input type="checkbox" id="checkbox-drop-2" class="checkbox-input" />
-                      <label for="checkbox-drop-2" class="checkbox-label">
+                      <input type="checkbox" id="checkbox-drop-1-sm" class="checkbox-input" checked/>
+                      <label for="checkbox-drop-1-sm" class="checkbox-label">
                         <span class="checkbox-text"> Checkbox </span>
                       </label>
                     </div>
                   </li>
                   <li class="dropdown-item">
                     <div class="checkbox">
-                      <input type="checkbox" id="checkbox-drop-2" class="checkbox-input" />
-                      <label for="checkbox-drop-2" class="checkbox-label">
+                      <input type="checkbox" id="checkbox-drop-2-sm" class="checkbox-input" />
+                      <label for="checkbox-drop-2-sm" class="checkbox-label">
                         <span class="checkbox-text"> Checkbox </span>
                       </label>
                     </div>
