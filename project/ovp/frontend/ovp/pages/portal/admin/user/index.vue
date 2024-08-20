@@ -145,6 +145,7 @@ const deleteClicked = ({
     deleteUser(data[rowId])
       .then(() => {
         alert("삭제 되었습니다.");
+        getUserList();
       })
       .catch((err: any) => {
         console.log("err: ", err);
