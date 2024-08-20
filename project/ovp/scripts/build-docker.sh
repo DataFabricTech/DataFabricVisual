@@ -244,7 +244,7 @@ function package() {
 }
 
 # ex) ./build-docker.sh clear
-if [[ $1 = "clear" ]]; then앷
+if [[ $1 = "clear" ]]; then
     clear
 else
     check
