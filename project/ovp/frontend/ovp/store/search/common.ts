@@ -188,6 +188,11 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     previewData.value = data.data;
   };
 
+  const getContainerPreviewData = async (id: string) => {
+    const data: any = await $api(`/api/containers/${id}`);
+    previewData.value = data.data;
+  };
+  
   const getCtgIds = () => {
     return !_.has(selectedFilters.value, FILTER_KEYS.CATEGORY)
       ? []
@@ -243,6 +248,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
 
   const changeTab = (item: string) => {
+    isShowPreview.value = false;
     currentTab.value = item;
     resetReloadList();
   };
@@ -265,6 +271,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getFilter,
     getFilters,
     getPreviewData,
+    getContainerPreviewData,
     setSortInfo,
     setSortFilter,
     setSearchKeyword,

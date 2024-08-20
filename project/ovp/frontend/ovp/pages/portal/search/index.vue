@@ -80,8 +80,13 @@ import { useRouter } from "nuxt/app";
 const router = useRouter();
 
 const searchCommonStore = useSearchCommonStore();
-const { addSearchList, getFilters, getPreviewData, changeTab } =
-  searchCommonStore;
+const {
+  addSearchList,
+  getFilters,
+  getPreviewData,
+  getContainerPreviewData,
+  changeTab,
+} = searchCommonStore;
 const {
   filters,
   searchResult,
@@ -107,7 +112,10 @@ const previewClick = async (data: object) => {
     return;
   }
 
-  await getPreviewData(fqn);
+  type === "storage"
+    ? await getContainerPreviewData(id)
+    : await getPreviewData(fqn);
+
   isShowPreview.value = true;
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;
