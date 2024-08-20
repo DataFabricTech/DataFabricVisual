@@ -8,7 +8,7 @@
         value-key="value"
         current-item-type="value"
         :current-item="currTab"
-        @change="changeTab"
+        @change="onChangeTab"
       >
         <template #all>
           <!-- 전체 탭 시작  -->
@@ -31,7 +31,7 @@
             no-data-msg="데이터 모델이 없습니다."
             @item-check="onSelectApiData"
             @item-click="onClickData"
-            @bookmark-change="onClickApiBookmark"
+            @bookmark-change="onClickBookmark"
             @filter-change="onClickApiFilterChange"
             @sort-change="onClickApiSortChange"
             @search-change="onClickApiSearchChange"
@@ -43,8 +43,8 @@
                 label-key="label"
                 value-key="value"
                 current-item-type="value"
-                :current-item="currDetailTab"
-                @change="changeDetailTab"
+                :current-item="currTypeTab"
+                @change="onChangeTypeTab"
               ></Tab>
             </template>
           </data-model-api-list>
@@ -60,6 +60,10 @@
             :use-live-search="false"
             list-type="non-selected"
             no-data-msg="데이터 모델이 없습니다."
+            @item-check="onSelectAccordData"
+            @item-click="onClickAccordData"
+            @bookmark-change="onClickBookmark"
+            @search-change="onClickAccordSearchChange"
           ></data-model-accordian-list>
         </template>
       </Tab>
@@ -96,7 +100,7 @@
         @delete="onDeleteListData"
         @item-check="onSelectListData"
         @item-click="onClickData"
-        @bookmark-change="onClickApiBookmark"
+        @bookmark-change="onClickBookmark"
       ></data-model-list>
     </div>
   </div>
@@ -121,18 +125,21 @@ const dataModelSearchStore = useDataModelSearchStore();
 const {
   addSearchList,
   resetReloadList,
-  changeDetailTab,
+  changeTypeTab,
   changeTab,
   setSortInfo,
   setSelectedFilter,
   setSearchKeyword,
+  onClickData,
+  onClickAccordData,
+  onClickBookmark,
 } = dataModelSearchStore;
 const {
   filters,
   selectedFilters,
   searchResult,
   currTab,
-  currDetailTab,
+  currTypeTab,
   mySearchResult,
 } = storeToRefs(dataModelSearchStore);
 
@@ -140,16 +147,30 @@ const selectedListLength = computed(() => {
   return nSelectedListData.value ? nSelectedListData.value.length : 0;
 });
 
+const onChangeTab = (value: string) => {
+  // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
+  tempSelectedListData.value = [];
+  tempAccordSelectedListData.value = [];
+  changeTab(value);
+};
+const onChangeTypeTab = (value: string) => {
+  // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
+  tempSelectedListData.value = [];
+  changeTypeTab(value);
+};
+
 ////////////// 목록 이동 //////////////
 /**
  * 선택 데이터 추가 > 오른쪽으로 이동
  */
 const onSaveSelectedData = () => {
   // 임시로 저장되어 있던 값을 선택 리스트에 저장
-  nSelectedListData.value = nSelectedListData.value.concat(
-    tempSelectedListData.value,
-  );
+  nSelectedListData.value = nSelectedListData.value
+    .concat(tempSelectedListData.value)
+    .concat(tempAccordSelectedListData.value);
+
   tempSelectedListData.value = [];
+  tempAccordSelectedListData.value = [];
 
   searchResult.value = searchResult.value.map((item: any) => {
     // 선택되지 않은 항목 중에 SelectedList에 데이터가 존재하면 값 변경
@@ -184,7 +205,6 @@ const isSelectedData: (item: any) => boolean = (itemId) => {
 };
 
 ////////////// 선택 목록 //////////////
-
 const onDeleteListData = (value: any[]) => {
   // temp 필요없이 바로 nselectedListData, searchResult에 바로 적용
   nSelectedListData.value = value;
@@ -203,8 +223,7 @@ const onSelectListData = (value: any[]) => {
   tempDeleteListData.value = value;
 };
 
-////////////// API 목록 //////////////
-
+////////////// API - 전체 목록 //////////////
 const tempSelectedListData = ref([]);
 const onSelectApiData = (value: any[]) => {
   tempSelectedListData.value = value;
@@ -221,25 +240,15 @@ const onClickApiSearchChange = async (value: string) => {
   setSearchKeyword(value);
   await resetReloadList(nSelectedListData.value);
 };
-const onClickData = () => {
-  // TODO: creationStore 연동
-};
-const onClickApiBookmark = () => {
-  // TODO: API 연동
-};
 
-// EMIT
-// const emit = defineEmits<{
-//   (e: "change", option: boolean): void;
-//   (e: "tab-change", value: string): void;
-//   (e: "detail-tab-change", value: string): void;
-//   (e: "delete", value: string): void;
-//   (e: "item-click", value: string): void;
-//   (e: "bookmark-change", value: string): void;
-//   (e: "filter-change", value: string): void;
-//   (e: "sort-change", value: string): void;
-//   (e: "search-change", value: string): void;
-//   (e: "select", value: []): void;
-// }>();
+////////////// API - MY 목록 //////////////
+const tempAccordSelectedListData = ref([]);
+const onSelectAccordData = (value: any[]) => {
+  tempAccordSelectedListData.value = value;
+};
+const onClickAccordSearchChange = async (value: string) => {
+  setSearchKeyword(value);
+  await resetReloadList(nSelectedListData.value);
+};
 </script>
 <style lang="scss" scoped></style>
