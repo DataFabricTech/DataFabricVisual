@@ -1,13 +1,11 @@
 <template>
   <div class="search-input">
     <svg-icon class="text-input-icon svg-icon" name="search" v-if="!isSearchInputDefaultType"></svg-icon>
-    <!-- TODO: [개발] 접근성 개선 - label/input의 for/id값 사용되는 페이지마다 다르게 적용 필요,
-         label안 텍스트도 페이지마다 적절히 사용되어야 함 -->
-    <label class="hidden-text" for="searchInp">label</label>
+    <label class="hidden-text" :for="inpId">{{ labelText }}</label>
     <input
-      id="searchInp"
+      :id="inpId"
       class="text-input"
-      v-model="inputValue"
+      :value="inpValue"
       @keyup.enter="onClickSearch"
       @change="onChange"
       @input="onInput"
@@ -33,33 +31,46 @@
     </button>
   </div>
 </template>
-<script setup lang="ts">
-import { SearchInputProps } from "./SearchInputProps";
-import { SearchInputComposition } from "./SearchInputComposition";
 
-const props = withDefaults(defineProps<SearchInputProps>(), {
+<script setup lang="ts">
+import { defineProps } from "vue";
+import { SearchInputProps } from "./SearchInputProps";
+
+const props = withDefaults(defineProps<SearchInputProps & { inpValue: string; labelText: string; inpId: string }>(), {
   isSearchInputDefaultType: true,
   placeholder: "Placeholder",
-  disabled: false
+  disabled: false,
+  inpValue: "",
+  labelText: "검색",
+  inpId: "input01"
 });
 
 const emit = defineEmits<{
+  (e: "update:value", value: string): void;
   (e: "onClickSearch", value: string): void;
   (e: "onChange", value: string): void;
   (e: "onInput", value: string): void;
 }>();
 
 const onClickSearch = () => {
-  emit("onClickSearch", inputValue.value);
-};
-const onChange = () => {
-  emit("onChange", inputValue.value);
-};
-const onInput = () => {
-  emit("onInput", inputValue.value);
+  emit("onClickSearch", props.inpValue);
 };
 
-const { inputValue, clearSearchValue } = SearchInputComposition(props);
+const onChange = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  emit("update:value", input.value);
+  emit("onChange", input.value);
+};
+
+const onInput = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  emit("update:value", input.value);
+  emit("onInput", input.value);
+};
+
+const clearSearchValue = () => {
+  emit("update:value", "");
+};
 </script>
 
-<style></style>
+<style scoped></style>

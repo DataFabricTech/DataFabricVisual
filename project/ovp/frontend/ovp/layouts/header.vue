@@ -10,6 +10,10 @@
       <SearchInput
         @onClickSearch="onClickSearch"
         :placeholder="'검색어를 입력하세요.'"
+        :inp-value="searchInputValue"
+        :inp-id="'headerInp1'"
+        :label-text="'데이터 모델 검색'"
+        @update:value="updateSearchInputValue"
       ></SearchInput>
       <div class="profile ml-auto">
         <span class="profile-avatar"> {{ profileFirstWord }} </span>
@@ -72,6 +76,11 @@ const header = ref();
 const dropdown = ref();
 const isDropdownOpen = ref(false);
 const profileFirstWord = ref("");
+
+const searchInputValue = ref("");
+const updateSearchInputValue = (newValue: string) => {
+  searchInputValue.value = newValue;
+};
 
 const onClickSearch = (value: string) => {
   setSearchKeyword(value);
