@@ -7,7 +7,6 @@ import com.mobigen.ovp.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.HashMap;
@@ -51,27 +50,16 @@ public class ServiceService {
         String definitionNm = "Mysql.testConnectionDefinition";
         Map<String, Object> definition = servicesClient.getTestConnectionDefinition(definitionNm);
         String definitionId = definition.get("id").toString();
+        System.out.println(definitionId);
 
         try {
             // 2. workflows 실행
             String serviceId = "mySql";
 
             Map<String, Object> workflowParams = new HashMap<>();
-            // NOTE : openMetaAPI 코드와 동일함.
             workflowParams.put("name", "test-connection-" + serviceId + "-" + getRandomUUID());
-            Map<String, Object> newParams = new HashMap<>();
-            Map<String, Object> connectionParam = new HashMap<>();
-            Map<String, Object> configParam = new HashMap<>();
-
-            newParams.put("serviceType", "database");
-            newParams.put("connectionType", "mysql");
-            configParam.put("type", "mysql");
-            connectionParam.put("config", configParam);
-            newParams.put("connection", connectionParam);
-            workflowParams.put("request", newParams);
             workflowParams.put("workflowType", "TEST_CONNECTION");
-
-
+            workflowParams.put("request", params.get("request"));
 
             Map<String, Object> res = automationsClient.workflows(workflowParams);
             System.out.println(res);
@@ -87,7 +75,7 @@ public class ServiceService {
             System.out.println(e);
         } finally {
             // 5. deleteWorkflows 실행
-//            automationsClient.deleteWorkflows(definitionId);
+            automationsClient.deleteWorkflows(definitionId);
         }
 
         return null;

@@ -2,6 +2,7 @@ import type {
   IService,
   IServiceObj,
 } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
+import { ServiceIds } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
 import _ from "lodash";
 
 export const useServiceStore = defineStore("serviceStore", () => {
@@ -124,13 +125,14 @@ export const useServiceStore = defineStore("serviceStore", () => {
     let specificConfig: Record<string, any> = {};
 
     switch (serviceId) {
-      case "minio": {
+      case ServiceIds.MINIO: {
+        console.log(ServiceIds.MINIO);
         const minioConfig: Record<string, any> = {};
         addIfExists(minioConfig, "accessKeyId", serviceObjData.accessKeyId);
         addIfExists(minioConfig, "secretKey", serviceObjData.secretKey);
         addIfExists(minioConfig, "sessionToken", serviceObjData.sessionToken);
         addIfExists(minioConfig, "region", serviceObjData.region);
-        addIfExists(minioConfig, "endpointUrl", serviceObjData.endpointUrl);
+        addIfExists(minioConfig, "endPointURL", serviceObjData.endPointURL);
 
         specificConfig = {
           bucketNames: (serviceObjData.bucketNames as Array<string[]>).reduce<
@@ -142,7 +144,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
             return acc;
           }, []),
           minioConfig,
-          supportMetadataExtraction: true,
+          supportsMetadataExtraction: true,
           supportsStorageProfiler: true,
         };
 
@@ -153,7 +155,8 @@ export const useServiceStore = defineStore("serviceStore", () => {
         };
       }
 
-      case "mariadb":
+      case ServiceIds.MARIA_DB:
+        console.log(ServiceIds.MARIA_DB);
         addIfExists(specificConfig, "username", serviceObjData.username);
         addIfExists(specificConfig, "password", serviceObjData.password);
         addIfExists(specificConfig, "hostPort", serviceObjData.hostAndPort);
@@ -170,20 +173,23 @@ export const useServiceStore = defineStore("serviceStore", () => {
         specificConfig.scheme = "mysql+pymysql";
         break;
 
-      case "mysql":
+      case ServiceIds.MYSQL: {
+        console.log(ServiceIds.MYSQL);
         specificConfig.scheme = "mysql+pymysql";
 
         addIfExists(specificConfig, "hostPort", serviceObjData.hostAndPort);
         addIfExists(specificConfig, "username", serviceObjData.username);
-        addIfExists(specificConfig, "password", serviceObjData.password);
-        break;
 
-      case "postgresql": {
-        const authType: Record<string, any> = {};
-        addIfExists(authType, "password", serviceObjData.password);
+        if (serviceObjData.password) {
+          specificConfig.authType = { password: serviceObjData.password };
+        }
+        break;
+      }
+
+      case ServiceIds.POSTGRESQL: {
+        console.log(ServiceIds.POSTGRESQL);
 
         specificConfig = {
-          authType,
           scheme: "postgresql+psycopg2",
           classificationName: "postgresPolicyTags",
           ingestAllDatabases: true,
@@ -192,13 +198,19 @@ export const useServiceStore = defineStore("serviceStore", () => {
           supportsLineageExtraction: true,
           supportsUsageExtraction: true,
         };
+
+        if (serviceObjData.password) {
+          specificConfig.authType = { password: serviceObjData.password };
+        }
+
         addIfExists(specificConfig, "database", serviceObjData.database);
         addIfExists(specificConfig, "hostPort", serviceObjData.hostAndPort);
         addIfExists(specificConfig, "username", serviceObjData.username);
         break;
       }
 
-      case "oracle": {
+      case ServiceIds.ORACLE: {
+        console.log(ServiceIds.ORACLE);
         const oracleConnectionType: Record<string, any> = {};
         if (serviceObjData.oracleConnectionType) {
           oracleConnectionType[serviceObjData.oracleConnectionType] =
@@ -231,10 +243,10 @@ export const useServiceStore = defineStore("serviceStore", () => {
   };
 
   const getParams = () => {
-    const serviceId = serviceObj.value.serviceId.toLowerCase();
+    const serviceId = serviceObj.value.serviceId;
     const params: any = {
       connectionType: serviceId,
-      serviceType: serviceId === "minio" ? "container" : "database",
+      serviceType: serviceId === ServiceIds.MINIO ? "Storage" : "Database",
       connection: {
         config: getConfig(serviceId),
       },
@@ -243,6 +255,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
   };
   const connectionTest = async () => {
     const response = await $api("/api/service/connectionTest", {
+      method: "POST",
       body: getParams(),
     });
     console.log(response);

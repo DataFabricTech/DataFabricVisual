@@ -13,6 +13,13 @@ export enum PanelTypes {
   INPUT_PWD = "INPUT_PWD",
   SELECT = "SELECT",
 }
+export enum ServiceIds {
+  MINIO = "MinIO",
+  MYSQL = "Mysql",
+  MARIA_DB = "MariaDB",
+  POSTGRESQL = "Postgres",
+  ORACLE = "Oracle",
+}
 
 export interface ServiceAddModalComposition extends ServiceAddModalProps {
   services: Ref<IService[]>;
@@ -52,42 +59,42 @@ export function ServiceAddModalComposition(
 
   const services = ref<IService[]>([
     {
-      id: "minIo",
+      id: ServiceIds.MINIO,
       label: "MinIO",
       img: "storage-type_06",
       imgUrl: "",
       isDisabled: false,
     },
     {
-      id: "mySql",
+      id: ServiceIds.MYSQL,
       label: "MySQL",
       img: "storage-type_02",
       imgUrl: "",
       isDisabled: false,
     },
     {
-      id: "mariaDB",
+      id: ServiceIds.MARIA_DB,
       label: "MariaDB",
       img: "storage-type_01",
       imgUrl: "",
       isDisabled: false,
     },
     {
-      id: "postgreSql",
+      id: ServiceIds.POSTGRESQL,
       label: "PostgreSQL",
       img: "storage-type_03",
       imgUrl: "",
       isDisabled: false,
     },
     {
-      id: "oracle",
+      id: ServiceIds.ORACLE,
       label: "Oracle",
       img: "storage-type_04",
       imgUrl: "",
     },
   ]);
   const serviceDetailFormObj: any = {
-    minIo: {
+    [ServiceIds.MINIO]: {
       defaultItems: [
         {
           title: "MinIO Credentials Configuration",
@@ -115,7 +122,7 @@ export function ServiceAddModalComposition(
               type: PanelTypes.INPUT,
             },
             {
-              id: "endpointUrl",
+              id: "endPointURL",
               label: "Endpoint URL",
               type: PanelTypes.INPUT,
               required: true,
@@ -130,7 +137,7 @@ export function ServiceAddModalComposition(
         items: [{ id: "key", type: PanelTypes.INPUT, showItemLabel: true }],
       },
     },
-    mySql: {
+    [ServiceIds.MYSQL]: {
       defaultItems: [
         {
           title: "",
@@ -178,7 +185,7 @@ export function ServiceAddModalComposition(
         },
       ],
     },
-    postgreSql: {
+    [ServiceIds.POSTGRESQL]: {
       defaultItems: [
         {
           title: "",
@@ -234,7 +241,7 @@ export function ServiceAddModalComposition(
         },
       ],
     },
-    mariaDB: {
+    [ServiceIds.MARIA_DB]: {
       defaultItems: [
         {
           title: "",
@@ -271,7 +278,7 @@ export function ServiceAddModalComposition(
         },
       ],
     },
-    oracle: {
+    [ServiceIds.ORACLE]: {
       defaultItems: [
         {
           title: "",
