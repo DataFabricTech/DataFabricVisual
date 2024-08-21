@@ -79,16 +79,20 @@ import { ServiceAddModalComposition } from "./ServiceAddModalComposition";
 import type { ServiceAddModalProps } from "./ServiceAddModalProps";
 
 const props = withDefaults(defineProps<ServiceAddModalProps>(), {});
+const {
+  currentStep,
+  inValidMsg,
+  isValid,
+  resetServiceObj,
+  submit,
+  checkValidation,
+} = ServiceAddModalComposition(props);
 
 const stepOptions: any[] = [
   { label: "서비스 타입 선택", value: 1 },
   { label: "서비스 컨피그 입력", value: 2 },
   { label: "연결 세부 정보 입력", value: 3 },
 ];
-
-const inValidMsg = ref<String>("");
-const isValid = ref<boolean>(true);
-const currentStep = ref<number>(1);
 
 const changeStep = (value: number | string) => {
   // value 를 숫자로만 했기 때문에 ts 오류 방지를 위해 Number 로 형변환 한다.
@@ -115,13 +119,13 @@ const gotoNext = async () => {
   if (!(await checkValidation())) {
     return;
   }
-  currentStep.value = currentStep.value + 1;
 
   if (currentStep.value === 3) {
     gotoSave();
   } else {
     // 다음 단계로 넘어가기 전에 validation 체크를 해야함.
   }
+  currentStep.value = currentStep.value + 1;
 };
 const gotoSave = async () => {
   if (!(await checkValidation())) {
@@ -131,52 +135,6 @@ const gotoSave = async () => {
   // 저장한다.
   submit();
 };
-
-const checkValidation = async (): Promise<boolean> => {
-  console.log(currentStep.value);
-  if (currentStep.value === 1) {
-    // modal 진입시에 무조건 첫번째 값을 선택하게 되어있기 때문에 값이 없을수가 없음.
-  } else if (currentStep.value === 2) {
-    if (_.isEmpty(serviceObj.value.defaultInfo.serviceNm)) {
-      isValid.value = false;
-      inValidMsg.value = "필수 값을 입력해주세요.";
-      return false;
-    } else if (await checkServiceNameDuplicate()) {
-      isValid.value = false;
-      inValidMsg.value = "중복된 서비스 이름입니다.";
-      return false;
-    }
-  } else if (currentStep.value === 3) {
-    if (!checkRequiredValue()) {
-      isValid.value = false;
-      inValidMsg.value = "필수 값을 입력해주세요.";
-      return false;
-    }
-    if (_.isNull(connectionTestStatus)) {
-      isValid.value = false;
-      inValidMsg.value = "연결 테스트를 수행해 주세요.";
-      return false;
-    }
-    if (!connectionTestStatus) {
-      isValid.value = false;
-      inValidMsg.value = "연결 테스트를 다시 수행해 주세요.";
-      return false;
-    }
-  }
-
-  isValid.value = true;
-  inValidMsg.value = "";
-  return true;
-};
-
-const {
-  serviceObj,
-  connectionTestStatus,
-  resetServiceObj,
-  checkServiceNameDuplicate,
-  checkRequiredValue,
-  submit,
-} = ServiceAddModalComposition(props);
 </script>
 
 <style scoped></style>

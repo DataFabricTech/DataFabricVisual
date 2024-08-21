@@ -22,6 +22,10 @@ export enum ServiceIds {
 }
 
 export interface ServiceAddModalComposition extends ServiceAddModalProps {
+  currentStep: Ref<number>;
+  isValid: Ref<boolean>;
+  inValidMsg: Ref<string>;
+
   services: Ref<IService[]>;
   serviceDetailFormObj: any; // 반응성 변수로 지정할 필요 없는 항목.
   serviceObj: Ref<IServiceObj>;
@@ -40,14 +44,21 @@ export interface ServiceAddModalComposition extends ServiceAddModalProps {
   connectionTest(): Promise<string>;
 
   submit(): void;
+  checkValidation(): Promise<boolean>;
 }
 
 export function ServiceAddModalComposition(
   props: ServiceAddModalProps,
 ): ServiceAddModalComposition {
   const serviceStore = useServiceStore();
-  const { serviceObj, selectedServiceObj, connectionTestStatus } =
-    storeToRefs(serviceStore);
+  const {
+    currentStep,
+    isValid,
+    inValidMsg,
+    serviceObj,
+    selectedServiceObj,
+    connectionTestStatus,
+  } = storeToRefs(serviceStore);
   const {
     setValue,
     setInitServiceId,
@@ -387,6 +398,42 @@ export function ServiceAddModalComposition(
     setValue(serviceObjPath, "");
   };
 
+  const checkValidation = async (): Promise<boolean> => {
+    if (currentStep.value === 1) {
+      // modal 진입시에 무조건 첫번째 값을 선택하게 되어있기 때문에 값이 없을수가 없음.
+    } else if (currentStep.value === 2) {
+      if (_.isEmpty(serviceObj.value.defaultInfo.serviceNm)) {
+        isValid.value = false;
+        inValidMsg.value = "필수 값을 입력해주세요.";
+        return false;
+      } else if (await checkServiceNameDuplicate()) {
+        isValid.value = false;
+        inValidMsg.value = "중복된 서비스 이름입니다.";
+        return false;
+      }
+    } else if (currentStep.value === 3) {
+      if (!checkRequiredValue()) {
+        isValid.value = false;
+        inValidMsg.value = "필수 값을 입력해주세요.";
+        return false;
+      }
+      if (_.isNull(connectionTestStatus)) {
+        isValid.value = false;
+        inValidMsg.value = "연결 테스트를 수행해 주세요.";
+        return false;
+      }
+      if (!connectionTestStatus) {
+        isValid.value = false;
+        inValidMsg.value = "연결 테스트를 다시 수행해 주세요.";
+        return false;
+      }
+    }
+
+    isValid.value = true;
+    inValidMsg.value = "";
+    return true;
+  };
+
   // step1
   const serviceImgClick = (service: IService) => {
     // serviceObj에 저장된 값들 다 날려야함. (service 1 선택해서 값 입력하고, step1 로 돌아와서 다시 작업한 경우
@@ -411,13 +458,12 @@ export function ServiceAddModalComposition(
     const defaultIds = service.defaultItems.flatMap((group: any) =>
       group.items
         .filter((item: any) => item.required)
-        .filter(
-          (item: any) =>
-            // condition 처리한 항목의 required 값을 별도로 처리한다.
-            _.has(item, "condition") &&
-            item.condition.id !==
-              serviceObj.value.detailInfo[item.condition.id],
-        )
+        .filter((item: any) => {
+          return (
+            !_.has(item, "condition") ||
+            item.id === serviceObj.value.detailInfo[item.condition.id]
+          );
+        })
         .map((item: any) => item.id),
     );
 
@@ -453,6 +499,9 @@ export function ServiceAddModalComposition(
 
   return {
     ...props,
+    currentStep,
+    isValid,
+    inValidMsg,
     services,
     serviceObj,
     selectedServiceObj,
@@ -467,5 +516,6 @@ export function ServiceAddModalComposition(
     checkRequiredValue,
     connectionTest,
     submit,
+    checkValidation,
   };
 }

@@ -57,7 +57,7 @@ import { ServiceAddModalComposition } from "~/components/admin/service/modal/ser
 import type { Ref } from "vue";
 
 const props = withDefaults(defineProps<ServiceAddModalProps>(), {});
-const { serviceObj, serviceDetailFormObj, connectionTest } =
+const { serviceObj, serviceDetailFormObj, connectionTest, checkValidation } =
   ServiceAddModalComposition(props);
 
 enum ConnectionStatus {
@@ -70,8 +70,11 @@ enum ConnectionStatus {
 const connectionTestStatus: Ref<ConnectionStatus> = ref(ConnectionStatus.NONE);
 
 const doConnectionTest = async () => {
-  connectionTestStatus.value = ConnectionStatus.LOADING;
+  if (!(await checkValidation())) {
+    return;
+  }
 
+  connectionTestStatus.value = ConnectionStatus.LOADING;
   const response = await connectionTest();
   // response 가 message 가 올꺼임.
   connectionTestStatus.value = response

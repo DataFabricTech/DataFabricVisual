@@ -27,6 +27,10 @@ export const useServiceStore = defineStore("serviceStore", () => {
     isDisabled: false,
   });
 
+  const currentStep = ref<number>(1);
+  const inValidMsg = ref<string>("");
+  const isValid = ref<boolean>(true);
+
   const resetServiceObj = () => {
     // serviceId 는 리셋하지 않음.
     serviceObj.value = _.cloneDeep(initialServiceObj);
@@ -126,7 +130,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
 
     switch (serviceId) {
       case ServiceIds.MINIO: {
-        console.log(ServiceIds.MINIO);
         const minioConfig: Record<string, any> = {};
         addIfExists(minioConfig, "accessKeyId", serviceObjData.accessKeyId);
         addIfExists(minioConfig, "secretKey", serviceObjData.secretKey);
@@ -156,7 +159,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
       }
 
       case ServiceIds.MARIA_DB:
-        console.log(ServiceIds.MARIA_DB);
         addIfExists(specificConfig, "username", serviceObjData.username);
         addIfExists(specificConfig, "password", serviceObjData.password);
         addIfExists(specificConfig, "hostPort", serviceObjData.hostAndPort);
@@ -174,7 +176,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
         break;
 
       case ServiceIds.MYSQL: {
-        console.log(ServiceIds.MYSQL);
         specificConfig.scheme = "mysql+pymysql";
 
         addIfExists(specificConfig, "hostPort", serviceObjData.hostAndPort);
@@ -187,8 +188,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
       }
 
       case ServiceIds.POSTGRESQL: {
-        console.log(ServiceIds.POSTGRESQL);
-
         specificConfig = {
           scheme: "postgresql+psycopg2",
           classificationName: "postgresPolicyTags",
@@ -210,7 +209,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
       }
 
       case ServiceIds.ORACLE: {
-        console.log(ServiceIds.ORACLE);
         const oracleConnectionType: Record<string, any> = {};
         if (serviceObjData.oracleConnectionType) {
           oracleConnectionType[serviceObjData.oracleConnectionType] =
@@ -273,6 +271,9 @@ export const useServiceStore = defineStore("serviceStore", () => {
   };
 
   return {
+    currentStep,
+    inValidMsg,
+    isValid,
     serviceObj,
     selectedServiceObj,
     connectionTestStatus,
