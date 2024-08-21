@@ -1,6 +1,6 @@
 <template>
   <div class="wrap">
-    <h2 class="hidden-text">admin</h2>
+    <h2 class="hidden-text">manage</h2>
     <div class="section-contents">
       <ul class="card">
         <li class="card-item">

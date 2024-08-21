@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 import { ref, reactive } from "vue";
-import type { Service, Owner } from "~/type/service";
+import type { Service, Owner, Ingestion } from "~/type/service";
 import type { JsonPatchOperation } from "~/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import $constants from "~/utils/constant";
@@ -15,6 +15,8 @@ export const useServiceStore = defineStore("service", () => {
 
   const userList = reactive<Owner[]>([]);
   const userSearchList = reactive<object[]>([]);
+
+  const ingestionList = reactive<Ingestion[]>([]);
 
   const editInfo = reactive({
     owner: false,
@@ -183,6 +185,17 @@ export const useServiceStore = defineStore("service", () => {
       }
     }
     return operations;
+  }
+
+  /**
+   * 수집 탭
+   */
+  async function getIngestionList() {
+    const res = await $api(`/api/service-manage/ingestion/list`);
+
+    if (res.data !== null) {
+      ingestionList.splice(0, ingestionList.length, ...res.data);
+    }
   }
 
   /**

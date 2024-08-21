@@ -37,7 +37,7 @@
 </template>
 <script setup lang="ts">
 import { defineProps, defineEmits } from "vue";
-import { useServiceCollectionLogStore } from "@/store/admin/service/collection-log/index";
+import { useServiceCollectionLogStore } from "~/store/manage/service/collection-log/index";
 import { storeToRefs } from "pinia";
 
 const serviceCollectionLogStore = useServiceCollectionLogStore();
