@@ -79,7 +79,7 @@ import { useServiceCollectionLogStore } from "@/store/admin/service/collection-l
 const serviceCollectionLogStore = useServiceCollectionLogStore();
 const { setServiceName, getRepositoryDescriptionAPI } =
   serviceCollectionLogStore;
-import { useServiceStore } from "~/store/manage/service";
+import { useServiceStore } from "@/store/admin/service";
 
 const {
   getServiceList,
@@ -124,11 +124,4 @@ const modalOpen = (modalId: string) => {
   emit("modalOpen", modalId);
 };
 function openModal() {}
-
-// 서비스 항목에 서비스를 클릭시 실행되는 함수 ( 저장소 탭 - 설명조회API / 표 조회API 호출함수 필요)
-function getTabContent(name: string): void {
-  setServiceName(name); // store에 클릭한 서비스 name값 set
-  getRepositoryDescriptionAPI(); // 클릭한 서비스의 설명조회하는 API호출
-  //TODO : 저장소 탭 > 표 데이터 조회 API 호출추가 예정
-}
 </script>

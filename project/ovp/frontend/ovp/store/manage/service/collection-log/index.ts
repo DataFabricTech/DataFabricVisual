@@ -12,6 +12,15 @@ interface ServiceData {
   description: string;
 }
 
+interface DBServiceListData {
+  serviceType: string;
+  name: string;
+  href: string;
+  description: string | undefined;
+  owner: object;
+  usage: string | undefined;
+}
+
 export const useServiceCollectionLogStore = defineStore(
   "service_collection_log",
   () => {
@@ -19,6 +28,20 @@ export const useServiceCollectionLogStore = defineStore(
 
     const collectionLogData: Ref<object> = ref({});
     const serviceData: Ref<ServiceData> = ref({ description: "" });
+
+    const DBServiceListData: Ref<DBServiceListData[]> = ref([
+      {
+        serviceType: "serviceType1",
+        name: "name1",
+        href: "http://192.168.105.26:8585/api/v1/services/databaseServices/e2e0484e-6985-4083-a244-698700c6b189",
+        description: "description1",
+        owner: {
+          name: "ownerName1",
+        },
+        usage: "usage1",
+      },
+    ]);
+
     let serviceId = "";
     const serviceFullID: string = "e2e0484e-6985-4083-a244-698700c6b189";
     let serviceFullNAME: string = "";
@@ -81,14 +104,44 @@ export const useServiceCollectionLogStore = defineStore(
       return result;
     };
 
+    const getDBServiceList = async () => {
+      // TODO : 가상 데이터 지정 > API생성 후 대체 예정
+      let result = await $api(`/api/v1/databases/`);
+      result = [
+        {
+          serviceType: "Mysql",
+          name: "test_db",
+          href: "http://192.168.105.26:8585/api/v1/services/databaseServices/e2e0484e-6985-4083-a244-698700c6b189",
+          description: "설명임",
+          owner: {
+            name: "ownerName",
+          },
+          usage: "비어있음",
+        },
+        {
+          serviceType: "Mysql2",
+          name: "test_db2",
+          href: "http://192.168.105.26:8585/api/v1/services/databaseServices/e2e0484e-6985-4083-a244-698700c6b189",
+          description: "설명임2",
+          owner: {
+            name: "ownerName2",
+          },
+          usage: "비어있음2",
+        },
+      ];
+      DBServiceListData.value = result;
+    };
+
     return {
       serviceData,
+      DBServiceListData,
       setServiceId,
       setServiceName,
       collectionLogData,
       getCollectionLogData,
       getRepositoryDescriptionAPI,
       updateRepositoryDescriptionAPI,
+      getDBServiceList,
     };
   },
 );
