@@ -35,7 +35,7 @@
               buttonTheme: 'button-error-stroke',
               buttonText: '삭제',
               order: 4,
-              fn: deleteClicked,
+              fn: deleteBtnClicked,
               cellStyle: {
                 display: 'flex',
                 justifyContent: 'center',
@@ -48,12 +48,6 @@
         >
         </agGrid>
         <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
-        <Loading
-          id="loader"
-          :use-loader-overlay="true"
-          class="loader-lg is-loader-inner"
-          style="display: none"
-        ></Loading>
       </div>
     </div>
   </div>
@@ -68,7 +62,6 @@ import { useUserStore } from "@/store/user/userStore";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import agGrid from "@extends/grid/Grid.vue";
-import Loading from "@base/loading/Loading.vue";
 import AddUserModal from "@/components/admin/user/modal/add.vue";
 
 const { $vfm } = useNuxtApp();
@@ -133,7 +126,7 @@ const cellClicked = ({
   }
 };
 
-const deleteClicked = ({
+const deleteBtnClicked = ({
   data,
   rowId,
 }: {
@@ -141,10 +134,10 @@ const deleteClicked = ({
   rowId: string;
 }) => {
   // TODO: confirm alert 개발되면 변경
-  if (confirm("사용자를 삭제하시겠습니까??")) {
+  if (confirm("사용자를 삭제하시겠습니까?")) {
     deleteUser(data[rowId])
       .then(() => {
-        alert("삭제 되었습니다.");
+        alert("삭제되었습니다.");
         getUserList();
       })
       .catch((err: any) => {
