@@ -1,6 +1,5 @@
 package com.mobigen.ovp.user;
 
-import com.mobigen.ovp.common.ModelConvertUtil;
 import com.mobigen.ovp.auth.AuthService;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.user.dto.UserInfoDTO;
@@ -18,8 +17,10 @@ import org.springframework.util.MultiValueMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -29,7 +30,6 @@ public class UserService {
     private final SearchClient searchClient;
     private final AuthService authService;
     private final UserRepository userRepository;
-    private final ModelConvertUtil modelConvertUtil;
 
     /**
      * 사용자 > 모든 사용자 리스트 조회
@@ -114,7 +114,7 @@ public class UserService {
             if (totalObj != null) {
                 resultMap.put("totalCount", totalObj.get("value"));
             }
-            resultMap.put("data", modelConvertUtil.convertUserDataList(data.get("hits")));
+            resultMap.put("data", convertUserDataList(data.get("hits")));
         }
 
         return resultMap;
@@ -133,5 +133,32 @@ public class UserService {
         } else {
             throw new Exception();
         }
+    }
+
+    /**
+     * Open Meta Api 에서 사용자 데이터 조회 한 후에, 해당 데이터를 화면에 사용 할 수 있게 데이터 정제
+     *
+     * @param hits
+     * @return
+     */
+    private Object convertUserDataList(Object hits) {
+        List<Map<String, Object>> list = (List<Map<String, Object>>) hits;
+        List<Map<String, Object>> modifiedList = list.stream().map(hit -> {
+            if (hit.containsKey("_source")) {
+                Map<String, Object> source = (Map<String, Object>) hit.get("_source");
+
+                Map<String, Object> userSource = new HashMap<>();
+                userSource.put("id", source.get("id"));
+                userSource.put("name", source.get("name"));
+                userSource.put("displayName", source.get("displayName"));
+                userSource.put("isAdmin", source.get("isAdmin"));
+                userSource.put("description", source.get("description"));
+                userSource.put("fqn", source.get("fullyQualifiedName"));
+
+                return userSource;
+            }
+            return null;
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+        return modifiedList;
     }
 }
