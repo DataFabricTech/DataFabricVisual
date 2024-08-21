@@ -34,6 +34,7 @@ export const useCreationStore = defineStore("creation", () => {
   const myModelList = ref({});
   const modelListCnt = ref(0);
   const selectedModelList = ref([]);
+  const nSelectedListData = ref([]);
   const dataModelFilter = ref({});
 
   const isItemClicked = ref(false);
@@ -58,66 +59,6 @@ export const useCreationStore = defineStore("creation", () => {
 
   const setMyModelList = async () => {
     myModelList.value = DataModelSample.my_sampleList;
-  };
-  const setSelectedModelList = async () => {
-    selectedModelList.value = [
-      {
-        owner: "",
-        fqn: "vdap2.sample.sample.sampledata_chart_02",
-        depth: ["vdap2", "sample", "sample", "sampledata_chart_02"],
-        serviceIcon: "",
-        modelNm: "sampledata_chart_02",
-        modelDesc: null,
-        id: "02ab816f-88e1-47df-bb87-926dcbcc20f0",
-        type: "table",
-        firModelNm: "sampledata_chart_02",
-        category: "",
-        bookmarked: true,
-        tags: [],
-      },
-      {
-        owner: "",
-        fqn: "vdap.was_v2.was_v2.was_login_lock",
-        depth: ["vdap", "was_v2", "was_v2", "was_login_lock"],
-        serviceIcon: "",
-        modelNm: "was_login_lock",
-        modelDesc: null,
-        id: "40be78e5-fdc4-43cf-9d43-14b7196ec4eb",
-        type: "table",
-        firModelNm: "was_login_lock",
-        category: "",
-        bookmarked: false,
-        tags: [],
-      },
-      {
-        owner: "",
-        fqn: "vdap.was_v2.was_v2.was_access_rights",
-        depth: ["vdap", "was_v2", "was_v2", "was_access_rights"],
-        serviceIcon: "",
-        modelNm: "was_access_rights",
-        modelDesc: null,
-        id: "425a6505-df66-4abb-a6ae-ce1d45459aee",
-        type: "table",
-        firModelNm: "was_access_rights",
-        category: "",
-        bookmarked: false,
-        tags: [],
-      },
-      {
-        owner: "",
-        fqn: "vdap2.sample.sample.sampledata_map_08",
-        depth: ["vdap2", "sample", "sample", "sampledata_map_08"],
-        serviceIcon: "",
-        modelNm: "sampledata_map_08",
-        modelDesc: null,
-        id: "06b740b4-20e1-4f41-9912-49346db18a0d",
-        type: "table",
-        firModelNm: "sampledata_map_08",
-        category: "",
-        bookmarked: false,
-        tags: ["분류01.태그01_01"],
-      },
-    ];
   };
 
   /**
@@ -151,7 +92,7 @@ export const useCreationStore = defineStore("creation", () => {
    * 데이터 모델 생성 > 북마크 변경
    * */
   const changeBookmark = async (value: string) => {
-    let selectedModel = _.find(modelList.value, ["id", value]);
+    const selectedModel = _.find(modelList.value, ["id", value]);
 
     if (!selectedModel) {
       // TODO: alert 컴포넌트로 변경 예정
@@ -196,8 +137,8 @@ export const useCreationStore = defineStore("creation", () => {
   const onClickDataModelItem = async (value: string) => {
     isColumnSelected.value = false;
 
-    let selectedModel = _.find(modelList.value, ["id", value]);
-    let fqn = selectedModel.fqn;
+    const selectedModel = _.find(modelList.value, ["id", value]);
+    const fqn = selectedModel.fqn;
 
     dataModelName.value = selectedModel.modelNm;
     dataModelOwner.value = selectedModel.owner;
@@ -254,13 +195,13 @@ export const useCreationStore = defineStore("creation", () => {
    * */
   async function runQuery(value: any) {
     query.value = value;
-    let referenceModels = modelList.value.map((item) => ({
+    const referenceModels = modelList.value.map((item) => ({
       id: item.id,
       name: item.modelNm,
       fullyQualifiedName: item.fqn,
     }));
 
-    let param = {
+    const param = {
       query: query.value,
       referenceModels: referenceModels,
       limit: 100,
@@ -325,8 +266,8 @@ export const useCreationStore = defineStore("creation", () => {
     resetQuery,
     editQueryText,
     dataModelFilter,
+    nSelectedListData,
     setDataModelFilter,
-    setSelectedModelList,
     setMyModelList,
     setDataModelList,
     changeBookmark,
