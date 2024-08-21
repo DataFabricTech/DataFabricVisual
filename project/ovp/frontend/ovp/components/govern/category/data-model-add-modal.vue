@@ -155,8 +155,13 @@ const router = useRouter();
 const { $vfm } = useNuxtApp();
 
 const categoryStore = useGovernCategoryStore();
-const { changeTab, setSearchKeyword, resetReloadList, addSearchList } =
-  categoryStore;
+const {
+  changeTab,
+  setSearchKeyword,
+  resetReloadList,
+  addSearchList,
+  getSearchList,
+} = categoryStore;
 const {
   filters,
   searchResult,
@@ -254,6 +259,9 @@ const onCancel = () => {
 const onConfirm = async () => {
   $vfm.close(props.modalId);
 };
+
+// category/index.vue의 open 함수에서 실행하니 useIntersectionObserver이 먼저 발생하여, 누적 개수에 이슈가 발생 -> getSearchList() 위치 이곳으로 이동
+await getSearchList();
 
 const { scrollTrigger, setScrollOptions } = useIntersectionObserver(
   addSearchList,

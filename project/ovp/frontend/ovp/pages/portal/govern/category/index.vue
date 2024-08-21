@@ -235,7 +235,6 @@ const {
   moveCategory,
   resetAddModalStatus,
   setSelectedNode,
-  getSearchList,
   setSearchKeyword,
   getFilters,
 } = categoryStore;
@@ -248,6 +247,7 @@ const {
   isBoxSelectedStyle,
   selectedDataModelList,
   addSearchInputValue,
+  checkReachedCount,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -501,8 +501,8 @@ const showDataModelAddModal = () => {
 const beforeOpen = () => {
   selectedDataModelList.value = [];
   addSearchInputValue.value = "";
+  checkReachedCount.value = false;
   setSearchKeyword("");
-  getSearchList();
 };
 
 const open = () => {

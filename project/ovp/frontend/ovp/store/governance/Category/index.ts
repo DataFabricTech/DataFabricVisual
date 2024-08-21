@@ -56,6 +56,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const showAddDescNoti = ref<boolean>(false);
   const selectedModelList = ref([]);
   const addSearchInputValue = ref("");
+  const checkReachedCount = ref<boolean>(false);
 
   const previewData: Ref<any> = ref({
     modelInfo: {
@@ -221,15 +222,30 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     const { data } = await $api(`/api/search/list?${getSearchListQuery()}`, {
       showLoader: false,
     });
-    return data === null ? "" : data;
+    return data === null ? [] : data;
   };
   /**
    * 데이터 조회 -> 누적
    */
+
   const addSearchList = async () => {
-    const { data, totalCount } = await getSearchListAPI();
+    const { data } = await getSearchListAPI();
     searchResult.value = searchResult.value.concat(data[currentTab.value]);
-    searchResultLength.value = totalCount;
+
+    const currentTabCumulativeCount =
+      searchResultLength.value[currentTab.value];
+
+    if (
+      searchResult.value.length < currentTabCumulativeCount ||
+      (searchResult.value.length === currentTabCumulativeCount &&
+        !checkReachedCount.value)
+    ) {
+      setDataModelIdList();
+    }
+
+    if (searchResult.value.length === currentTabCumulativeCount) {
+      checkReachedCount.value = true;
+    }
   };
 
   /**
@@ -283,8 +299,8 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   };
 
   const changeTab = async (item: string) => {
+    checkReachedCount.value = false;
     currentTab.value = item;
-
     await resetReloadList();
   };
 
@@ -317,6 +333,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     dataModelIdList,
     selectedDataModelList,
     addSearchInputValue,
+    checkReachedCount,
     resetAddModalStatus,
     getCategories,
     addModelList,
