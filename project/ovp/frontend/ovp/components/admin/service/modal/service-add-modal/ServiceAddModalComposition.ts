@@ -41,7 +41,7 @@ export interface ServiceAddModalComposition extends ServiceAddModalProps {
 
   checkServiceNameDuplicate(): Promise<boolean>;
   checkRequiredValue(): boolean;
-  connectionTest(): Promise<string>;
+  connectionTest(): Promise<any>;
 
   submit(): void;
   checkValidation(): Promise<boolean>;

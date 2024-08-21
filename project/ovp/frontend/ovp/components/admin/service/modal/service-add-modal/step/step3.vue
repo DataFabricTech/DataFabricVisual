@@ -19,25 +19,24 @@
     </button>
     <!-- 연결중/ Loading 연결중일때 연결테스트 버튼 disabled 처리 필요 -->
     <Loading
-      v-if="connectionTestStatus === ConnectionStatus.LOADING"
+      v-if="testConnectionStatus === ConnectionStatus.LOADING"
       class="loader-xs"
       :use-hidden-text="true"
     ></Loading>
     <!-- 연결 실패/ notification -->
     <div
-      v-if="connectionTestStatus === ConnectionStatus.ERROR"
+      v-if="testConnectionStatus === ConnectionStatus.ERROR"
       class="notification notification-sm notification-error"
     >
       <svg-icon class="notification-icon" name="error"></svg-icon>
       <p class="notification-detail">
         연결 테스트에 실패했습니다.<br />
-        <!--        connection exception (err: java.lang.NullPointerException)-->
-        <!--        {{ connectionErrorMsg }}-->
+        {{ connectionErrorMsg }}
       </p>
     </div>
     <!-- 연결 성공/ notification -->
     <div
-      v-if="connectionTestStatus === ConnectionStatus.SUCCESS"
+      v-if="testConnectionStatus === ConnectionStatus.SUCCESS"
       class="notification notification-sm notification-success"
     >
       <svg-icon class="notification-icon" name="success"></svg-icon>
@@ -67,19 +66,21 @@ enum ConnectionStatus {
   NONE = "NONE",
 }
 
-const connectionTestStatus: Ref<ConnectionStatus> = ref(ConnectionStatus.NONE);
+const testConnectionStatus: Ref<ConnectionStatus> = ref(ConnectionStatus.NONE);
+const connectionErrorMsg: Ref<String> = ref("");
 
 const doConnectionTest = async () => {
   if (!(await checkValidation())) {
     return;
   }
 
-  connectionTestStatus.value = ConnectionStatus.LOADING;
-  const response = await connectionTest();
-  // response 가 message 가 올꺼임.
-  connectionTestStatus.value = response
+  testConnectionStatus.value = ConnectionStatus.LOADING;
+  const { result, errorMessage } = await connectionTest();
+
+  testConnectionStatus.value = result
     ? ConnectionStatus.SUCCESS
     : ConnectionStatus.ERROR;
+  connectionErrorMsg.value = errorMessage;
 };
 </script>
 

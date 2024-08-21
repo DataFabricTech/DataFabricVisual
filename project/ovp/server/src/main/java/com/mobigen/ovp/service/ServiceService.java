@@ -35,8 +35,6 @@ public class ServiceService {
     }
 
     public Object connectionTest(Map<String, Object> params) {
-        System.out.println(params);
-
         /**
          * connection Test 순서
          * 1. getTestConnectionDefinition  을 통해서 definition ID 를 획득
@@ -50,35 +48,31 @@ public class ServiceService {
         String definitionNm = "Mysql.testConnectionDefinition";
         Map<String, Object> definition = servicesClient.getTestConnectionDefinition(definitionNm);
         String definitionId = definition.get("id").toString();
-        System.out.println(definitionId);
+
+        // 2. workflows 실행
+        Map<String, Object> workflowParams = new HashMap<>();
+        workflowParams.put("name", "test-connection-" + params.get("connectionType") + "-" + getRandomUUID());
+        workflowParams.put("workflowType", "TEST_CONNECTION");
+        workflowParams.put("request", params);
+
+        Map<String, Object> workflowInfo = automationsClient.workflows(workflowParams);
+        String workflowId = workflowInfo.get("id").toString();
 
         try {
-            // 2. workflows 실행
-            String serviceId = "mySql";
-
-            Map<String, Object> workflowParams = new HashMap<>();
-            workflowParams.put("name", "test-connection-" + serviceId + "-" + getRandomUUID());
-            workflowParams.put("workflowType", "TEST_CONNECTION");
-            workflowParams.put("request", params.get("request"));
-
-            Map<String, Object> res = automationsClient.workflows(workflowParams);
-            System.out.println(res);
-
             // 3. postWorkflows 실행
-            Map<String, Object> res1 = automationsClient.postWorkflows(definitionId);
-            System.out.println(res1);
+            automationsClient.postWorkflowsTrigger(workflowId);
 
-            // 4. getWorkflows 실행
-            Map<String, Object> res2 = automationsClient.postWorkflows(definitionId);
-            System.out.println(res2);
+            // 4. workflow 조회
+            automationsClient.getWorkflows(workflowId);
+
         } catch (Exception e) {
             System.out.println(e);
         } finally {
             // 5. deleteWorkflows 실행
-            automationsClient.deleteWorkflows(definitionId);
+            automationsClient.deleteWorkflowsTrigger(workflowId);
         }
 
-        return null;
+        return workflowId;
     }
 
     private String getRandomUUID() {

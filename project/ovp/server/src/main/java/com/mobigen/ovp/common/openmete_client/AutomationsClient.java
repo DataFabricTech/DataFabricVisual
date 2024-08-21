@@ -1,6 +1,7 @@
 package com.mobigen.ovp.common.openmete_client;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,12 +15,15 @@ public interface AutomationsClient {
     @PostMapping("/workflows")
     Map<String, Object> workflows(@RequestBody Map<String, Object> params);
 
-    @GetMapping("/workflows/trigger/{id}")
+    @GetMapping("/workflows/{id}")
     Map<String, Object> getWorkflows(@PathVariable String id);
 
+    @GetMapping("/workflows/trigger/{id}")
+    Map<String, Object> getWorkflowsTrigger(@PathVariable String id);
+
     @PostMapping("/workflows/trigger/{id}")
-    Map<String, Object> postWorkflows(@PathVariable String id);
+    Map<String, Object> postWorkflowsTrigger(@PathVariable String id);
 
     @DeleteMapping("/workflows/trigger/{id}")
-    Map<String, Object> deleteWorkflows(@PathVariable String id);
+    Map<String, Object> deleteWorkflowsTrigger(@PathVariable String id);
 }

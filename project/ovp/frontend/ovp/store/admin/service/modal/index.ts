@@ -256,12 +256,13 @@ export const useServiceStore = defineStore("serviceStore", () => {
       method: "POST",
       body: getParams(),
     });
-    console.log(response);
+    connectionTestStatus.value = response.result > 0;
 
-    connectionTestStatus.value = true;
-
-    const connectionErrorMsg = "연결 실패 메시지";
-    return connectionErrorMsg;
+    return {
+      result: response.result > 0,
+      errorMessage: response.errorMessage,
+      workflowId: response.data,
+    };
   };
 
   const submit = async () => {
