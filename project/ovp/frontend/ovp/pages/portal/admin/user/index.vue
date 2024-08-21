@@ -27,23 +27,9 @@
           :columnWidthList="[100, 100, 500, 100]"
           rowId="id"
           :rowData="userList"
-          :buttons="[
-            {
-              headerText: '관리',
-              rendererType: 'button',
-              type: 'button',
-              buttonTheme: 'button-error-stroke',
-              buttonText: '삭제',
-              order: 4,
-              fn: deleteBtnClicked,
-              cellStyle: {
-                display: 'flex',
-                justifyContent: 'center',
-              },
-            },
-          ]"
           :setColumnFit="true"
           :useColumnResize="true"
+          :context="gridContext"
           @cellClicked="cellClicked"
         >
         </agGrid>
@@ -63,6 +49,7 @@ import { useIntersectionObserver } from "~/composables/intersectionObserverHelpe
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import agGrid from "@extends/grid/Grid.vue";
 import AddUserModal from "@/components/admin/user/modal/add.vue";
+import DeleteButtonRenderer from "@/components/admin/user/cell-renderer/delete-button.vue";
 
 const { $vfm } = useNuxtApp();
 const router = useRouter();
@@ -101,7 +88,31 @@ const columnDefs = ref([
     headerName: "설명",
     field: "description",
   },
+  {
+    headerName: "관리",
+    field: "",
+    cellStyle: {
+      display: "flex",
+      justifyContent: "center",
+    },
+    cellRenderer: DeleteButtonRenderer,
+  },
 ]);
+
+const gridContext = {
+  deleteBtnClicked: ({ id }: { id: string }) => {
+    if (confirm("사용자를 삭제하시겠습니까?")) {
+      deleteUser(id)
+        .then(() => {
+          alert("삭제되었습니다.");
+          getUserList();
+        })
+        .catch((err: any) => {
+          console.log("err: ", err);
+        });
+    }
+  },
+};
 
 const onClickSearch = (value: string) => {
   setSearchKeyword(value);
@@ -123,26 +134,6 @@ const cellClicked = ({
   // 사용자 이름 컬럼을 클릭했을 때에만 사용자 마이페이지로 이동
   if (column.colId === "displayName") {
     router.push(`/portal/my-page?fqn=${data.fqn}`);
-  }
-};
-
-const deleteBtnClicked = ({
-  data,
-  rowId,
-}: {
-  data: { [key: string]: any };
-  rowId: string;
-}) => {
-  // TODO: confirm alert 개발되면 변경
-  if (confirm("사용자를 삭제하시겠습니까?")) {
-    deleteUser(data[rowId])
-      .then(() => {
-        alert("삭제되었습니다.");
-        getUserList();
-      })
-      .catch((err: any) => {
-        console.log("err: ", err);
-      });
   }
 };
 
