@@ -67,7 +67,7 @@
 
 <script setup lang="ts">
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
-import { useServiceCollectionLogStore } from "@/store/admin/service/collection-log/index";
+import { useServiceCollectionLogStore } from "@/store/manage/service/collection-log/index";
 import { onBeforeMount } from "vue";
 import { computed } from "vue";
 import _ from "lodash";
