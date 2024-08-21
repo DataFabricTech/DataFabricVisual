@@ -13,7 +13,10 @@ export const useServiceCollectionLogStore = defineStore(
       serviceId = id;
     };
     const getCollectionLogData = async () => {
-      const data: any = await $api(`/api/services/collection/log/${serviceId}`);
+      const data: any = await $api(
+        `/api/service-manage/collection/log/${serviceId}`,
+      );
+
       collectionLogData.value = data.data;
     };
 
