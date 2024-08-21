@@ -1,6 +1,7 @@
-package com.mobigen.ovp.admin.service.client.response;
+package com.mobigen.ovp.service_manager.client.response;
 
 import com.mobigen.ovp.common.openmete_client.dto.Owner;
+import com.mobigen.ovp.common.openmete_client.dto.Services;
 import com.mobigen.ovp.glossary.client.dto.common.Tag;
 import lombok.Data;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +13,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @Data
-public class ServiceEntity {
+public class ServiceResponse {
     private String id;
     private String name;
     private String fullyQualifiedName;
@@ -22,7 +23,7 @@ public class ServiceEntity {
     private List<Map<String, Object>> relatedTerms;
     private Owner owner;
 
-    public ServiceEntity(ServiceResponse service) {
+    public ServiceResponse(Services service) {
         this.id = service.getId();
         this.name = service.getName();
         this.fullyQualifiedName = service.getFullyQualifiedName();
@@ -50,7 +51,7 @@ public class ServiceEntity {
         this.owner = service.getOwner();
     }
 
-    public ServiceEntity(ResponseEntity<ServiceResponse> service) {
+    public ServiceResponse(ResponseEntity<Services> service) {
         this.id = Objects.requireNonNull(service.getBody()).getId();
         this.name = service.getBody().getName();
         this.fullyQualifiedName = service.getBody().getFullyQualifiedName();
@@ -80,7 +81,7 @@ public class ServiceEntity {
         }
     }
 
-    public ServiceEntity(Map<String, Object> map) {
+    public ServiceResponse(Map<String, Object> map) {
         this.id = (String) map.get("id");
         this.name = (String) map.get("name");
         this.fullyQualifiedName = (String) map.get("fullyQualifiedName");

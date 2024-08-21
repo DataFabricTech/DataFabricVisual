@@ -30,7 +30,7 @@ export const useServiceStore = defineStore("service", () => {
    * 서비스 리스트
    */
   async function getServiceList(): Promise<void> {
-    const res = await $api(`/api/service/list`);
+    const res = await $api(`/api/service-manage/list`);
     const serviceListData: Service[] = res.data;
     serviceList.splice(0, serviceList.length, ...serviceListData);
 
@@ -49,7 +49,7 @@ export const useServiceStore = defineStore("service", () => {
     from: string,
   ): Promise<void> {
     const res = await $api(
-      `/api/service/list/search?search=*${keyword}*&from=${from}`,
+      `/api/service-manage/list/search?search=*${keyword}*&from=${from}`,
     );
     if (res.data !== null) {
       serviceList.splice(0, serviceList.length, ...res.data);
@@ -82,7 +82,7 @@ export const useServiceStore = defineStore("service", () => {
    * @param id
    */
   async function deleteService(id: string): Promise<void> {
-    await $api(`/api/service/${id}?hardDelete=true&recursive=true`, {
+    await $api(`/api/service-manage/${id}?hardDelete=true&recursive=true`, {
       method: "DELETE",
     });
     emptyService();
@@ -106,7 +106,7 @@ export const useServiceStore = defineStore("service", () => {
     id: string,
     body: JsonPatchOperation[],
   ): Promise<void> {
-    const res = await $api(`/api/service/${id}`, {
+    const res = await $api(`/api/service-manage/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json-patch+json",

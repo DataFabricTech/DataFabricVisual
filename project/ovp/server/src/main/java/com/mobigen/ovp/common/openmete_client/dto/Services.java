@@ -1,13 +1,12 @@
-package com.mobigen.ovp.admin.service.client.response;
+package com.mobigen.ovp.common.openmete_client.dto;
 
-import com.mobigen.ovp.common.openmete_client.dto.Owner;
 import com.mobigen.ovp.glossary.client.dto.common.Tag;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class ServiceResponse {
+public class Services {
     private String id;
     private String fullyQualifiedName;
     private String name;
