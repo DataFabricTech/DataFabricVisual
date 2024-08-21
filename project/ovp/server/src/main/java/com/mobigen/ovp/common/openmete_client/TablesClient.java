@@ -43,5 +43,5 @@ public interface TablesClient {
     Object unfollow(@PathVariable("id") String id, @PathVariable("userId") String userId);
 
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
-    Tables changeDataModel(@PathVariable("id") String id, @RequestParam Map<String, String> params, @RequestBody List<DataModelDetailUpdate> body);
+    Tables changeDataModel(@PathVariable("id") String id, @RequestParam Map<String, String> params, @RequestBody List<Map<String, Object>> body);
 }

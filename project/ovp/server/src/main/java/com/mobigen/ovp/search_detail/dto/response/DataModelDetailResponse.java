@@ -2,6 +2,7 @@ package com.mobigen.ovp.search_detail.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mobigen.ovp.common.openmete_client.dto.Followers;
+import com.mobigen.ovp.common.openmete_client.dto.Owner;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
 import com.mobigen.ovp.common.openmete_client.dto.Voters;
 import lombok.Data;
@@ -23,7 +24,7 @@ public class DataModelDetailResponse {
     String displayName;
     String modelDesc;
     String ownerId;
-    String owner;
+    Owner owner;
     String ownerDisplayName;
     int followers;
     int upVotes;
@@ -53,11 +54,12 @@ public class DataModelDetailResponse {
         }
 
         this.modelDesc = (tables.getDescription() != null) ? tables.getDescription() : "";
+        this.owner = tables.getOwner();
 
-        if (tables.getOwner() != null) {
-            this.ownerId = (tables.getOwner().getId() != null) ? tables.getOwner().getId() : "";
-            this.owner = (tables.getOwner().getName() != null) ? tables.getOwner().getName() : "";
-            this.ownerDisplayName = (tables.getOwner().getDisplayName() != null) ? tables.getOwner().getDisplayName() : "";
+        if (this.owner != null) {
+            this.ownerId = (this.owner.getId() != null) ? this.owner.getId() : "";
+//            this.owner = (tables.getOwner().getName() != null) ? tables.getOwner().getName() : "";
+            this.ownerDisplayName = (this.owner.getDisplayName() != null) ?this.owner.getDisplayName() : "";
 
             if (!"".equals(this.ownerId)) {
 

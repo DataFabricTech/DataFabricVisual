@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,6 +28,16 @@ public class SearchDetailController {
 
     private final SearchDetailService searchDetailService;
 
+    @ResponseJsonResult
+    @GetMapping("/filter/user")
+    Object getUserFilter() throws Exception {
+        log.info("");
+
+        return searchDetailService.getUserFilter();
+    }
+
+
+
     /**
      * 데이터 모델 상세
      *
@@ -35,7 +46,7 @@ public class SearchDetailController {
      */
     @ResponseJsonResult
     @GetMapping("/{id}")
-    Object getDataModelDetail(HttpServletRequest request, @PathVariable String id, @RequestParam String type) {
+    Object getDataModelDetail(HttpServletRequest request, @PathVariable String id, @RequestParam String type) throws Exception {
         log.info("");
 
         return searchDetailService.getDataModelDetail(id, type);
@@ -108,7 +119,7 @@ public class SearchDetailController {
 
     @ResponseJsonResult
     @PutMapping("/{id}/follow")
-    Object followDataModel(@PathVariable String id) {
+    Object followDataModel(@PathVariable String id) throws Exception {
         log.info("");
 
         return searchDetailService.followDataModel(id);
@@ -116,7 +127,7 @@ public class SearchDetailController {
 
     @ResponseJsonResult
     @DeleteMapping("/{id}/follow")
-    Object unfollowDataModel(@PathVariable String id) {
+    Object unfollowDataModel(@PathVariable String id) throws Exception {
         log.info("");
 
         return searchDetailService.unfollowDataModel(id);
@@ -124,7 +135,7 @@ public class SearchDetailController {
 
     @ResponseJsonResult
     @PatchMapping("/{id}")
-    Object changeDataModel(@PathVariable String id, @RequestBody List<DataModelDetailUpdate> body) {
+    Object changeDataModel(@PathVariable String id, @RequestBody List<Map<String, Object>> body) {
         log.info("");
 
         return searchDetailService.changeDataModel(id, body);

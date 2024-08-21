@@ -1,6 +1,5 @@
 package com.mobigen.ovp.search_detail;
 
-import com.mobigen.ovp.auth.AuthClient;
 import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.openmete_client.LineageClient;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
@@ -10,8 +9,10 @@ import com.mobigen.ovp.common.openmete_client.dto.ProfileColumn;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailUpdate;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailVote;
 import com.mobigen.ovp.search_detail.dto.response.DataModelDetailLineageTableResponse;
-import com.mobigen.ovp.search_detail.dto.response.DataModelSampleDataResponse;
 import com.mobigen.ovp.search_detail.dto.response.DataModelDetailResponse;
+import com.mobigen.ovp.search_detail.dto.response.DataModelDetailSampleDataResponse;
+import com.mobigen.ovp.user.UserClient;
+import com.mobigen.ovp.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -25,15 +26,37 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class SearchDetailService {
 
-    private final AuthClient authClient;
+    private final UserClient userClient;
     private final SearchClient searchClient;
     private final TablesClient tablesClient;
     private final LineageClient lineageClient;
+
+    private final UserService userService;
+
+
+    public Object getUserFilter() throws Exception {
+        return userService.getAllUserList().stream().map(user -> {
+            Map<String, Object> data = new HashMap<>();
+            data.put("id", user.get("id"));
+            data.put("fqn", user.get("fullyQualifiedName"));
+            String name = (String) user.get("name");
+            data.put("name", name);
+
+            if (user.get("displayName") == null || "".equals(user.get("displayName"))) {
+                data.put("displayName", name);
+            } else {
+                data.put("displayName", user.get("displayName"));
+            }
+
+            return data;
+        }).collect(Collectors.toList());
+    }
 
     /**
      *  데이터 모델 상세
@@ -41,10 +64,10 @@ public class SearchDetailService {
      * @param type
      * @return
      */
-    public DataModelDetailResponse getDataModelDetail(String id, String type) {
+    public DataModelDetailResponse getDataModelDetail(String id, String type) throws Exception {
         MultiValueMap params = new LinkedMultiValueMap();
 
-        Map<String, Object> user = authClient.getLoggedInUser();
+        Map<String, Object> user = userClient.getUserInfo();
         String userId = user.get("id").toString();
 
         if (!ModelType.STORAGE.getValue().equals(type)) {
@@ -84,7 +107,7 @@ public class SearchDetailService {
      */
     public Object getDataModelSampleData(String id) {
 
-        return new DataModelSampleDataResponse(tablesClient.getSampleData(id));
+        return new DataModelDetailSampleDataResponse(tablesClient.getSampleData(id));
     }
 
     /**
@@ -149,21 +172,21 @@ public class SearchDetailService {
         return tablesClient.changeVote(id, dataModelDetailVote);
     }
 
-    public Object followDataModel(String id) {
-        Map<String, Object> user = authClient.getLoggedInUser();
+    public Object followDataModel(String id) throws Exception {
+        Map<String, Object> user = userClient.getUserInfo();
         String userId = user.get("id").toString();
 
         return tablesClient.follow(id, UUID.fromString(userId));
     }
 
-    public Object unfollowDataModel(String id) {
-        Map<String, Object> user = authClient.getLoggedInUser();
+    public Object unfollowDataModel(String id) throws Exception {
+        Map<String, Object> user = userClient.getUserInfo();
         String userId = user.get("id").toString();
 
         return tablesClient.unfollow(id, userId);
     }
 
-    public Object changeDataModel(String id, List<DataModelDetailUpdate> body) {
+    public Object changeDataModel(String id, List<Map<String, Object>> body) {
         MultiValueMap params = new LinkedMultiValueMap();
         params.add("fields", "owner,followers,tags,votes");
 

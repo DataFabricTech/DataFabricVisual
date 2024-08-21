@@ -16,9 +16,6 @@ import java.util.Map;
 @FeignClient(name = "AuthClient", url = "${properties.ovp.open-metadata-url}")
 public interface AuthClient {
 
-    @GetMapping("/users/loggedInUser")
-    Map<String, Object> getLoggedInUser();
-
     @PostMapping("/users/login")
     Map<String, Object> login(@RequestBody Map<String, Object> params) throws Exception;
 
