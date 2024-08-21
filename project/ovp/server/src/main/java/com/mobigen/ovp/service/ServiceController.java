@@ -39,7 +39,7 @@ public class ServiceController {
      * @return
      */
     @ResponseJsonResult
-    @PostMapping("/connectionTest")
+    @PostMapping(value = "/connectionTest")
     public Object connectionTest(@RequestBody Map<String, Object> params) throws Exception {
         return serviceService.connectionTest(params);
     }

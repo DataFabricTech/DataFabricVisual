@@ -232,7 +232,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
 
   const getParams = () => {
     const serviceId = serviceObj.value.serviceId.toLowerCase();
-    const params: object = {
+    const params: any = {
       connectionType: serviceId,
       serviceType: serviceId === "minio" ? "container" : "database",
       connection: {
@@ -243,10 +243,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
   };
   const connectionTest = async () => {
     const response = await $api("/api/service/connectionTest", {
-      method: "post",
-      body: {
-        params: getParams(),
-      },
+      body: getParams(),
     });
     console.log(response);
 
