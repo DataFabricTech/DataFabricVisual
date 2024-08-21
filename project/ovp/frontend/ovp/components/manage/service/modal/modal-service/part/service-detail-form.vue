@@ -129,7 +129,7 @@
                   type: PanelTypes.INPUT,
                 },
               ]"
-              service-obj-key="detailInfo.connectionOption"
+              service-obj-key="detailInfo.connectionOptions"
               :service-obj="serviceObj"
               @setValue="setValue"
               @addNewList="addNewList"
