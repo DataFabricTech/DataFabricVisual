@@ -10,6 +10,8 @@ import com.mobigen.ovp.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
@@ -17,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -115,5 +118,20 @@ public class UserService {
         }
 
         return resultMap;
+    }
+
+    /**
+     * 관리자 > 사용자 정보 삭제
+     *
+     * @return
+     * @throws Exception
+     */
+    public boolean deleteUser(UUID id) throws Exception {
+        ResponseEntity<Void> result = userClient.deleteUser(id, true, false);
+        if (result.getStatusCode() == HttpStatus.OK) {
+            return true;
+        } else {
+            throw new Exception();
+        }
     }
 }
