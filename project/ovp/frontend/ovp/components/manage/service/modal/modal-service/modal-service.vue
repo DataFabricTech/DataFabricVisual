@@ -109,17 +109,17 @@ const onConfirm = () => {
 };
 const onClosed = () => {
   resetServiceObj(); // store 에 저장하고 있던 데이터 리셋
-  isValid.value = true;
-  inValidMsg.value = "";
+  resetViewData();
   currentStep.value = 1;
-  isDoneTestConnection.value = null;
-  testConnectionStatus.value = ConnectionStatus.NONE;
 };
 
 const gotoPrev = () => {
+  resetViewData();
+  currentStep.value = currentStep.value - 1;
+};
+const resetViewData = () => {
   isValid.value = true;
   inValidMsg.value = "";
-  currentStep.value = currentStep.value - 1;
   isDoneTestConnection.value = null;
   testConnectionStatus.value = ConnectionStatus.NONE;
 };
