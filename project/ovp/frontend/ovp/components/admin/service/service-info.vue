@@ -139,6 +139,10 @@ import $constants from "~/utils/constant";
 import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import type { JsonPatchOperation, Tag } from "~/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
+import { useServiceCollectionLogStore } from "@/store/admin/service/collection-log/index";
+const serviceCollectionLogStore = useServiceCollectionLogStore();
+const { getRepositoryDescriptionAPI } = serviceCollectionLogStore;
+
 const {
   changeTab,
   getServiceList,
@@ -163,7 +167,9 @@ onMounted(() => {
   getUserList();
   getAllTags();
   //getTerms();
-  //TODO: 저장소, 연결  정보, 수집 API 호출
+  // TODO: 저장소, 연결  정보, 수집 API 호출
+  getRepositoryDescriptionAPI(); // 저장소 > 설명값 조회하는 API 호출
+
 });
 
 const tabSelectedClass = computed(() => (data: string): string => {
