@@ -2,7 +2,7 @@ spring:
   application:
     name: ovp
   profiles:
-    active: local
+    active: ovp
   web:
     locale: ko
     resources:
@@ -105,11 +105,6 @@ http-client-configuration:
   socket-timeout: -1
   idle-timeout: 60
 
-#sentry:
-#  dsn: https://c10f0211c0bb41af973f1f5ebf7fda60@o924939.ingest.sentry.io/6044951
-#  traces-sample-rate: 1
-#  logging:
-#    enabled: off
 
 # 사용자 정의 설정들
 properties:
@@ -139,11 +134,27 @@ properties:
       username: admin
       password: admin
   ovp:
+    # openMetadata 연동 URL
     open-metadata-url: http://192.168.105.26:8585/api/v1
     dolphin-server-url: http://192.168.105.26:28080/dolphin/v1
+
+    # 비밀번호 재설정 관련 설
     mail:
       valid_time: 60
       href: /api/email/pw-reset
       redirect_url: /portal/login/pw-reset
       redirect_error_url: /portal/error
       title: "Open-Vdap-Platform  비밀번호 재 설정"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: ovp
+
+  primary:
+    datasource:
+      hikari:
+        jdbc-url: jdbc:postgresql://192.168.105.26:5432/postgres?currentSchema=ovp
+        username: postgres
+        password: postgres
