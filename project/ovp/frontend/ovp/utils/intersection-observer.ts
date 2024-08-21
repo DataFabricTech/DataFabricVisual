@@ -38,6 +38,7 @@ export class IntersectionObserverHandler {
 
   private handleIntersect(entries: IntersectionObserverEntry[]) {
     entries.forEach((entry) => {
+      console.log(this.observer);
       if (entry.isIntersecting) {
         this.changingInitialCount += this.boxItemDefaultCount;
         this.getDataCallback(this.changingInitialCount, this.loader);
@@ -60,8 +61,7 @@ export class IntersectionObserverHandler {
     const rootEl: any = this.observer.root;
 
     if (rootEl.children.length > 0) {
-      const firChildEl: any = rootEl.firstElementChild;
-      rootEl.scrollTop = firChildEl.offsetTop;
+      rootEl.scrollTop = 0;
     }
   }
 
