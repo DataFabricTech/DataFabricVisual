@@ -304,6 +304,13 @@ export function ServiceAddModalComposition(
               id: "oracleConnectionType",
               label: "",
               type: PanelTypes.SELECT,
+              // 값변경시 다른 입력 panel 옵션 처리를 하기 위해 아래와 같이 설정함.
+              hasCondition: true,
+              conditionIds: [
+                "databaseSchema",
+                "oracleServiceName",
+                "oracleTNSConnection",
+              ],
               options: [
                 {
                   label: "Database Schema",
@@ -329,23 +336,37 @@ export function ServiceAddModalComposition(
               label: "Database Schema",
               type: PanelTypes.INPUT,
               required: true,
+              condition: {
+                class: "oracleConnectionType",
+                id: "oracleConnectionType",
+              },
             },
             {
               id: "oracleServiceName",
               label: "Oracle Service Name",
               type: PanelTypes.INPUT,
-              defaultValue: "/instantclient",
               required: true,
+              defaultHide: true,
+              condition: {
+                class: "oracleConnectionType",
+                id: "oracleConnectionType",
+              },
             },
             {
-              id: "oracleTNSConnectionString",
+              id: "oracleTNSConnection",
               label: "Oracle TNS Connection String",
               type: PanelTypes.INPUT,
               required: true,
+              defaultHide: true,
+              condition: {
+                class: "oracleConnectionType",
+                id: "oracleConnectionType",
+              },
             },
             {
               id: "instantClientDirectory",
               label: "Oracle Instant Client Directory",
+              defaultValue: "/instantclient",
               type: PanelTypes.INPUT,
               required: true,
             },
@@ -390,8 +411,16 @@ export function ServiceAddModalComposition(
     const defaultIds = service.defaultItems.flatMap((group: any) =>
       group.items
         .filter((item: any) => item.required)
+        .filter(
+          (item: any) =>
+            // condition 처리한 항목의 required 값을 별도로 처리한다.
+            _.has(item, "condition") &&
+            item.condition.id !==
+              serviceObj.value.detailInfo[item.condition.id],
+        )
         .map((item: any) => item.id),
     );
+
     const addableIds = service.addableItems?.required
       ? [
           service.addableItems.id,

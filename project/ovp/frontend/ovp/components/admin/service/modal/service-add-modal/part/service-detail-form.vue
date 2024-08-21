@@ -5,7 +5,12 @@
     </div>
     <div class="form-body">
       <div
+        v-show="!bodyItem.defaultHide"
         class="form-item"
+        :class="[
+          _.has(bodyItem, 'condition') ? bodyItem.condition.class : '',
+          _.has(bodyItem, 'condition') ? bodyItem.id : '',
+        ]"
         v-for="(bodyItem, bodyItemIndex) in item.items as any[]"
         :key="bodyItem.label"
       >
@@ -84,7 +89,7 @@
                 value-key="value"
                 :selected-item="bodyItem.options[0].value"
                 :data="bodyItem.options"
-                @select="(option) => onSelectItem(option, bodyItem.id)"
+                @select="(option) => onSelectItem(option, bodyItem)"
               ></select-box>
             </template>
           </div>
@@ -185,8 +190,34 @@ const onClickViewPwdBtn = (itemKey: string) => {
     : openEyeValues.value.push(itemKey);
 };
 
-function onSelectItem(item: string | number, id: string) {
-  setValue(`detailInfo.${id}`, item);
+function onSelectItem(item: string | number, bodyItem: any) {
+  if (bodyItem.hasCondition) {
+    // condition 설정이 되어있는 경우,
+    // 1. 이 selectbox 의 id 를 class 로 가진 항목들을 모두 숨김처리함.
+    const elements = document.getElementsByClassName(
+      bodyItem.id,
+    ) as HTMLCollectionOf<HTMLElement>;
+
+    // 2. 이 selectbox 의 선택값을 class 로 가진 항목을 표시.
+    Array.from(elements).forEach((el) => {
+      el.style.display = "none";
+    });
+    const elementsToShow = document.getElementsByClassName(
+      item + "", // item 은 string 이어야함.
+    ) as HTMLCollectionOf<HTMLElement>;
+    Array.from(elementsToShow).forEach((el) => {
+      el.style.display = "block";
+    });
+
+    // 값도 reset 함.
+    bodyItem.conditionIds.forEach((id: string) => {
+      if (id !== item) {
+        setValue(`detailInfo.${id}`, "");
+      }
+    });
+  }
+
+  setValue(`detailInfo.${bodyItem.id}`, item);
 }
 const isShowPwdStatus = (itemId: string) => {
   return _.includes(openEyeValues.value, itemId);
