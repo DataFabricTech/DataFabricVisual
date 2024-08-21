@@ -123,13 +123,13 @@ const cellClicked = ({
   data,
   column,
 }: {
-  data: { name: string };
+  data: { fqn: string };
   column: { colId: string };
 }) => {
   // TODO: 마이페이지 개발 완료되면 확인 필요
   // 사용자 이름 컬럼을 클릭했을 때에만 사용자 마이페이지로 이동
   if (column.colId === "displayName") {
-    router.push(`/portal/my-page?fqn=${data.name}`);
+    router.push(`/portal/my-page?fqn=${data.fqn}`);
   }
 };
 
