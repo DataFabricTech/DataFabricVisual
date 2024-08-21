@@ -153,6 +153,7 @@ const deleteClicked = ({
   }
 };
 
+await getUserList();
 const { scrollTrigger } = useIntersectionObserver(addUserList);
 </script>
 
