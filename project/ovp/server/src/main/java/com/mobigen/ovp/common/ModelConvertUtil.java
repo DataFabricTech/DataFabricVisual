@@ -163,7 +163,7 @@ public class ModelConvertUtil {
         resultMap.put("glossaries", glossaryList);
         resultMap.put("tags", tagList);
         resultMap.put("id", data.get("id"));
-        
+
         if (type.equals("unstructured")) {
             resultMap.put("modelType", "unstructured");
             resultMap.put("index", "storage");
@@ -179,6 +179,27 @@ public class ModelConvertUtil {
         }
 
         return resultMap;
+    }
+
+    public Object convertUserDataList(Object hits) {
+        List<Map<String, Object>> list = (List<Map<String, Object>>) hits;
+        List<Map<String, Object>> modifiedList = list.stream().map(hit -> {
+            if (hit.containsKey("_source")) {
+                Map<String, Object> source = (Map<String, Object>) hit.get("_source");
+
+                Map<String, Object> userSource = new HashMap<>();
+                userSource.put("id", source.get("id"));
+                userSource.put("name", source.get("name"));
+                userSource.put("displayName", source.get("displayName"));
+                userSource.put("isAdmin", source.get("isAdmin"));
+                userSource.put("description", source.get("description"));
+                userSource.put("fqn", source.get("fullyQualifiedName"));
+
+                return userSource;
+            }
+            return null;
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+        return modifiedList;
     }
 }
 
