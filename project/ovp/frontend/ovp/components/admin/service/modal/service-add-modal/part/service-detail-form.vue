@@ -43,11 +43,7 @@
                       : 'password'
                 "
                 class="text-input text-input-lg"
-                :value="
-                  bodyItem.defaultValue ||
-                  serviceObj.detailInfo[bodyItem.id] ||
-                  ''
-                "
+                :value="serviceObj.detailInfo[bodyItem.id] || ''"
                 @input="
                   setValue(
                     `detailInfo.${bodyItem.id}`,
@@ -180,6 +176,7 @@ import _ from "lodash";
 const props = withDefaults(defineProps<ServiceAddModalProps>(), {
   formData: () => {},
 });
+
 const addableItems = computed(() => props.formData.addableItems);
 
 const openEyeValues = ref<string[]>([]);

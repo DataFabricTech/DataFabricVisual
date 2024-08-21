@@ -36,7 +36,7 @@ export interface ServiceAddModalComposition extends ServiceAddModalProps {
   resetInput(serviceObjPath: string): void;
   resetServiceObj(): void;
 
-  serviceImgClick(service: IService): void;
+  newServiceIdSelect(service: IService): void;
   setDefaultServiceId(serviceId: string): void;
 
   checkServiceNameDuplicate(): Promise<boolean>;
@@ -435,12 +435,26 @@ export function ServiceAddModalComposition(
   };
 
   // step1
-  const serviceImgClick = (service: IService) => {
+  const newServiceIdSelect = (service: IService) => {
     // serviceObj에 저장된 값들 다 날려야함. (service 1 선택해서 값 입력하고, step1 로 돌아와서 다시 작업한 경우
     resetServiceObj();
 
     serviceObj.value.serviceId = service.id;
     selectedServiceObj.value = service;
+
+    // 선택한 서비스의 기본값 항목이 있는 경우, serviceObj 에 해당값을 미리 반영해둔다.
+    setDefaultValueItems();
+  };
+  const setDefaultValueItems = () => {
+    return serviceDetailFormObj[
+      serviceObj.value.serviceId
+    ].defaultItems.forEach((group: any) => {
+      group.items.forEach((item: any) => {
+        if (item.defaultValue !== undefined) {
+          setValue(`detailInfo.${item.id}`, item.defaultValue);
+        }
+      });
+    });
   };
   const setDefaultServiceId = (serviceId: string) => {
     // 첫번째 serviceId 값을 저장해둔다.
@@ -480,6 +494,7 @@ export function ServiceAddModalComposition(
 
   const checkRequiredValue = (): boolean => {
     const requiredItems = getRequiredIds(serviceObj.value.serviceId);
+
     for (const itemId of requiredItems) {
       const value = serviceObj.value.detailInfo[itemId];
       if (Array.isArray(value)) {
@@ -510,7 +525,7 @@ export function ServiceAddModalComposition(
     setValue,
     resetInput,
     resetServiceObj,
-    serviceImgClick,
+    newServiceIdSelect,
     setDefaultServiceId,
     checkServiceNameDuplicate,
     checkRequiredValue,

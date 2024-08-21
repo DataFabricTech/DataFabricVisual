@@ -13,8 +13,7 @@
     :height="674"
     :lockScroll="false"
     swipeToClose="none"
-    @open="onOpen"
-    @before-open="onBeforeOpen"
+    @closed="onClosed"
     @cancel="onCancel"
     @confirm="onConfirm"
   >
@@ -98,21 +97,22 @@ const changeStep = (value: number | string) => {
   // value 를 숫자로만 했기 때문에 ts 오류 방지를 위해 Number 로 형변환 한다.
   currentStep.value = Number(value) - 1;
 };
-const onBeforeOpen = () => {
-  resetServiceObj(); // store 에 저장하고 있던 데이터 리셋
-  isValid.value = true;
-  inValidMsg.value = "";
-  currentStep.value = 1;
-};
-const onOpen = () => {};
 const onCancel = () => {
   $vfm.close(props.modalId);
 };
 const onConfirm = () => {
   console.log("onConfirm");
 };
+const onClosed = () => {
+  resetServiceObj(); // store 에 저장하고 있던 데이터 리셋
+  isValid.value = true;
+  inValidMsg.value = "";
+  currentStep.value = 1;
+};
 
 const gotoPrev = () => {
+  isValid.value = true;
+  inValidMsg.value = "";
   currentStep.value = currentStep.value - 1;
 };
 const gotoNext = async () => {
