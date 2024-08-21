@@ -16,7 +16,7 @@ export interface IServiceObj {
   [key: string]: any; // 문자열 인덱스 서명 추가
 }
 
-export interface ServiceAddModalProps {
+export interface ModalServiceProps {
   formData?: any;
 
   modalId?: string;

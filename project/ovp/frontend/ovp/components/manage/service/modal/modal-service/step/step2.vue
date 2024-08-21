@@ -52,12 +52,12 @@
 </template>
 
 <script setup lang="ts">
-import type { ServiceAddModalProps } from "@/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
-import { ServiceAddModalComposition } from "@/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
-import SelectedServiceInfo from "@/components/admin/service/modal/service-add-modal/part/selected-service-info.vue";
+import type { ModalServiceProps } from "~/components/manage/service/modal/modal-service/ModalServiceProps";
+import { ModalServiceComposition } from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
+import SelectedServiceInfo from "~/components/manage/service/modal/modal-service/part/selected-service-info.vue";
 
-const props = withDefaults(defineProps<ServiceAddModalProps>(), {});
-const { serviceObj, resetInput } = ServiceAddModalComposition(props);
+const props = withDefaults(defineProps<ModalServiceProps>(), {});
+const { serviceObj, resetInput } = ModalServiceComposition(props);
 </script>
 
 <style scoped></style>

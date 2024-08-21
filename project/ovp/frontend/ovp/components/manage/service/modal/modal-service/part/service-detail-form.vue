@@ -163,17 +163,17 @@
 </template>
 
 <script setup lang="ts">
-import type { ServiceAddModalProps } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
+import type { ModalServiceProps } from "~/components/manage/service/modal/modal-service/ModalServiceProps";
 import {
   PanelTypes,
-  ServiceAddModalComposition,
-} from "~/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
+  ModalServiceComposition,
+} from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
 import SelectBox from "@extends/select-box/SelectBox.vue";
 import Accordion from "@base/accordion/accordion.vue";
 
 import _ from "lodash";
 
-const props = withDefaults(defineProps<ServiceAddModalProps>(), {
+const props = withDefaults(defineProps<ModalServiceProps>(), {
   formData: () => {},
 });
 
@@ -231,7 +231,7 @@ const deleteList = (serviceObjPath: string, index: number) => {
 };
 
 const { serviceObj, selectedServiceObj, resetInput, setValue } =
-  ServiceAddModalComposition(props);
+  ModalServiceComposition(props);
 </script>
 
 <style scoped></style>

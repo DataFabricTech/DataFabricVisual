@@ -1,12 +1,13 @@
 import { storeToRefs } from "pinia";
-import { useServiceStore } from "~/store/admin/service/modal";
+import { useServiceStore } from "~/store/manage/service/modal";
 import _ from "lodash";
 
 import type {
   IService,
   IServiceObj,
-  ServiceAddModalProps,
-} from "./ServiceAddModalProps";
+  ModalServiceProps,
+} from "./ModalServiceProps";
+import type { Ref } from "vue";
 
 export enum PanelTypes {
   INPUT = "INPUT",
@@ -20,8 +21,14 @@ export enum ServiceIds {
   POSTGRESQL = "Postgres",
   ORACLE = "Oracle",
 }
+export enum ConnectionStatus {
+  LOADING = "LOADING",
+  SUCCESS = "SUCCESS",
+  ERROR = "ERROR",
+  NONE = "NONE",
+}
 
-export interface ServiceAddModalComposition extends ServiceAddModalProps {
+export interface ModalServiceComposition extends ModalServiceProps {
   currentStep: Ref<number>;
   isValid: Ref<boolean>;
   inValidMsg: Ref<string>;
@@ -30,7 +37,8 @@ export interface ServiceAddModalComposition extends ServiceAddModalProps {
   serviceDetailFormObj: any; // 반응성 변수로 지정할 필요 없는 항목.
   serviceObj: Ref<IServiceObj>;
   selectedServiceObj: Ref<IService>;
-  connectionTestStatus: Ref<boolean | null>;
+  isDoneTestConnection: Ref<boolean | null>;
+  testConnectionStatus: Ref<ConnectionStatus>;
 
   setValue(serviceObjPath: string, value: any): void;
   resetInput(serviceObjPath: string): void;
@@ -47,9 +55,9 @@ export interface ServiceAddModalComposition extends ServiceAddModalProps {
   checkValidation(): Promise<boolean>;
 }
 
-export function ServiceAddModalComposition(
-  props: ServiceAddModalProps,
-): ServiceAddModalComposition {
+export function ModalServiceComposition(
+  props: ModalServiceProps,
+): ModalServiceComposition {
   const serviceStore = useServiceStore();
   const {
     currentStep,
@@ -57,7 +65,8 @@ export function ServiceAddModalComposition(
     inValidMsg,
     serviceObj,
     selectedServiceObj,
-    connectionTestStatus,
+    isDoneTestConnection,
+    testConnectionStatus,
   } = storeToRefs(serviceStore);
   const {
     setValue,
@@ -417,12 +426,12 @@ export function ServiceAddModalComposition(
         inValidMsg.value = "필수 값을 입력해주세요.";
         return false;
       }
-      if (_.isNull(connectionTestStatus)) {
+      if (_.isNull(isDoneTestConnection)) {
         isValid.value = false;
         inValidMsg.value = "연결 테스트를 수행해 주세요.";
         return false;
       }
-      if (!connectionTestStatus) {
+      if (!isDoneTestConnection) {
         isValid.value = false;
         inValidMsg.value = "연결 테스트를 다시 수행해 주세요.";
         return false;
@@ -521,7 +530,8 @@ export function ServiceAddModalComposition(
     serviceObj,
     selectedServiceObj,
     serviceDetailFormObj,
-    connectionTestStatus,
+    isDoneTestConnection,
+    testConnectionStatus,
     setValue,
     resetInput,
     resetServiceObj,

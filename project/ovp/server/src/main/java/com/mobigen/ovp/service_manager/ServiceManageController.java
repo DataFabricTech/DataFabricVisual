@@ -4,16 +4,19 @@ import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RequestMapping("/api/service-manage")
@@ -81,5 +84,29 @@ public class ServiceManageController {
     @GetMapping("/collection/log/{id}")
     public Object getServiceCollectionLog(@PathVariable String id) {
         return service.getServiceCollectionLog(id);
+    }
+
+
+
+    /**
+     * 서비스 명 중복인지 체크
+     *
+     * @return
+     */
+    @ResponseJsonResult
+    @GetMapping("/isDuplicatedNm")
+    public Object isDuplicatedNm(@RequestParam MultiValueMap<String, String> params) throws Exception {
+        return service.checkDuplicatedNm(params);
+    }
+
+    /**
+     * 서비스 명 중복인지 체크
+     *
+     * @return
+     */
+    @ResponseJsonResult
+    @PostMapping(value = "/connectionTest")
+    public Object connectionTest(@RequestBody Map<String, Object> params) throws Exception {
+        return service.connectionTest(params);
     }
 }

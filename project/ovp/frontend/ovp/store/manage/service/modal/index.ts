@@ -1,9 +1,13 @@
 import type {
   IService,
   IServiceObj,
-} from "~/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
-import { ServiceIds } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
+} from "~/components/manage/service/modal/modal-service/ModalServiceProps";
+import {
+  ConnectionStatus,
+  ServiceIds,
+} from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
 import _ from "lodash";
+import type { Ref } from "vue";
 
 export const useServiceStore = defineStore("serviceStore", () => {
   const { $api } = useNuxtApp();
@@ -64,11 +68,14 @@ export const useServiceStore = defineStore("serviceStore", () => {
     _.set(serviceObj.value, serviceObjPath, value);
   };
 
-  const connectionTestStatus = ref<boolean | null>(null);
+  const isDoneTestConnection = ref<boolean | null>(null);
+  const testConnectionStatus: Ref<ConnectionStatus> = ref(
+    ConnectionStatus.NONE,
+  );
 
   const checkServiceNameDuplicate = async () => {
     const { data } = await $api(
-      `/api/service/isDuplicatedNm?${getQueryString()}`,
+      `/api/service-manage/isDuplicatedNm?${getQueryString()}`,
     );
     return data;
   };
@@ -252,11 +259,11 @@ export const useServiceStore = defineStore("serviceStore", () => {
     return params;
   };
   const connectionTest = async () => {
-    const response = await $api("/api/service/connectionTest", {
+    const response = await $api("/api/service-manage/connectionTest", {
       method: "POST",
       body: getParams(),
     });
-    connectionTestStatus.value = response.result > 0;
+    isDoneTestConnection.value = response.result > 0;
 
     return {
       result: response.result > 0,
@@ -277,7 +284,8 @@ export const useServiceStore = defineStore("serviceStore", () => {
     isValid,
     serviceObj,
     selectedServiceObj,
-    connectionTestStatus,
+    isDoneTestConnection,
+    testConnectionStatus,
     setValue,
     setInitServiceId,
     resetServiceObj,

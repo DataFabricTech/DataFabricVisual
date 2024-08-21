@@ -1,12 +1,11 @@
 package com.mobigen.ovp.common.openmete_client;
 
-import com.mobigen.ovp.common.openmete_client.dto.Log;
 import com.mobigen.ovp.common.openmete_client.dto.Base;
+import com.mobigen.ovp.common.openmete_client.dto.Log;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.Map;
+import java.util.UUID;
 
-@FeignClient(name = "ServiceClient", url="http://192.168.105.26:8585/api/v1/services")
+@FeignClient(name = "ServiceClient", url="${properties.ovp.open-metadata-url}/services")
 public interface ServicesClient {
 
     /**

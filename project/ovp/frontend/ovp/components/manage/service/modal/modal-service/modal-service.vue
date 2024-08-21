@@ -69,23 +69,27 @@ import Step from "@extends/step/Step.vue";
 import Step1 from "./step/step1.vue";
 import Step2 from "./step/step2.vue";
 import Step3 from "./step/step3.vue";
-import _ from "lodash";
 
 import { useNuxtApp } from "nuxt/app";
 const { $vfm } = useNuxtApp();
 
-import { ServiceAddModalComposition } from "./ServiceAddModalComposition";
-import type { ServiceAddModalProps } from "./ServiceAddModalProps";
+import {
+  ModalServiceComposition,
+  ConnectionStatus,
+} from "./ModalServiceComposition";
+import type { ModalServiceProps } from "./ModalServiceProps";
 
-const props = withDefaults(defineProps<ServiceAddModalProps>(), {});
+const props = withDefaults(defineProps<ModalServiceProps>(), {});
 const {
   currentStep,
   inValidMsg,
   isValid,
+  isDoneTestConnection,
+  testConnectionStatus,
   resetServiceObj,
   submit,
   checkValidation,
-} = ServiceAddModalComposition(props);
+} = ModalServiceComposition(props);
 
 const stepOptions: any[] = [
   { label: "서비스 타입 선택", value: 1 },
@@ -108,12 +112,17 @@ const onClosed = () => {
   isValid.value = true;
   inValidMsg.value = "";
   currentStep.value = 1;
+  isDoneTestConnection.value = null;
+  testConnectionStatus.value = ConnectionStatus.NONE;
 };
 
 const gotoPrev = () => {
+  console.log("here");
   isValid.value = true;
   inValidMsg.value = "";
   currentStep.value = currentStep.value - 1;
+  isDoneTestConnection.value = null;
+  testConnectionStatus.value = ConnectionStatus.NONE;
 };
 const gotoNext = async () => {
   if (!(await checkValidation())) {

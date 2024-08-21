@@ -49,24 +49,24 @@
 <script setup lang="ts">
 import Loading from "@base/loading/Loading.vue";
 import ServiceDetailForm from "../part/service-detail-form.vue";
-import SelectedServiceInfo from "@/components/admin/service/modal/service-add-modal/part/selected-service-info.vue";
+import SelectedServiceInfo from "~/components/manage/service/modal/modal-service/part/selected-service-info.vue";
 
-import type { ServiceAddModalProps } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
-import { ServiceAddModalComposition } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
+import type { ModalServiceProps } from "~/components/manage/service/modal/modal-service/ModalServiceProps";
+import {
+  ModalServiceComposition,
+  ConnectionStatus,
+} from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
 import type { Ref } from "vue";
 
-const props = withDefaults(defineProps<ServiceAddModalProps>(), {});
-const { serviceObj, serviceDetailFormObj, connectionTest, checkValidation } =
-  ServiceAddModalComposition(props);
+const props = withDefaults(defineProps<ModalServiceProps>(), {});
+const {
+  serviceObj,
+  serviceDetailFormObj,
+  testConnectionStatus,
+  connectionTest,
+  checkValidation,
+} = ModalServiceComposition(props);
 
-enum ConnectionStatus {
-  LOADING = "LOADING",
-  SUCCESS = "SUCCESS",
-  ERROR = "ERROR",
-  NONE = "NONE",
-}
-
-const testConnectionStatus: Ref<ConnectionStatus> = ref(ConnectionStatus.NONE);
 const connectionErrorMsg: Ref<String> = ref("");
 
 const doConnectionTest = async () => {

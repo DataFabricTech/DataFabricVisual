@@ -9,11 +9,11 @@
 </template>
 
 <script setup lang="ts">
-import type { ServiceAddModalProps } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalProps";
-import { ServiceAddModalComposition } from "~/components/admin/service/modal/service-add-modal/ServiceAddModalComposition";
+import type { ModalServiceProps } from "~/components/manage/service/modal/modal-service/ModalServiceProps";
+import { ModalServiceComposition } from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
 
-const props = withDefaults(defineProps<ServiceAddModalProps>(), {});
-const { selectedServiceObj } = ServiceAddModalComposition(props);
+const props = withDefaults(defineProps<ModalServiceProps>(), {});
+const { selectedServiceObj } = ModalServiceComposition(props);
 </script>
 
 <style scoped></style>
