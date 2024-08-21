@@ -1,6 +1,7 @@
 .main-content {
   @include flex($direction: column, $horizontal: flex-start, $gap: $spacing-8);
 
+  flex: 1 0 50%;
   width: 50%;
   background-color: $neutral-0;
   min-height: 582px;
