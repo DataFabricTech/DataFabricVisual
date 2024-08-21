@@ -32,7 +32,7 @@
       <p class="notification-detail">
         연결 테스트에 실패했습니다.<br />
         <!--        connection exception (err: java.lang.NullPointerException)-->
-        {{ connectionErrorMsg }}
+        <!--        {{ connectionErrorMsg }}-->
       </p>
     </div>
     <!-- 연결 성공/ notification -->

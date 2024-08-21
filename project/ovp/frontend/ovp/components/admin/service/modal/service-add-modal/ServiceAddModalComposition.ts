@@ -23,7 +23,7 @@ export interface ServiceAddModalComposition extends ServiceAddModalProps {
 
   setValue(serviceObjPath: string, value: any): void;
   resetInput(serviceObjPath: string): void;
-  resetData(): void;
+  resetServiceObj(): void;
 
   serviceImgClick(service: IService): void;
   setDefaultServiceId(serviceId: string): void;
@@ -42,6 +42,7 @@ export function ServiceAddModalComposition(
   const { serviceObj, selectedServiceObj, connectionTestStatus } =
     storeToRefs(serviceStore);
   const {
+    setValue,
     setInitServiceId,
     resetServiceObj,
     checkServiceNameDuplicate,
@@ -217,8 +218,8 @@ export function ServiceAddModalComposition(
               required: true,
             },
             {
-              id: "Database",
-              label: "database",
+              id: "database",
+              label: "Database",
               type: PanelTypes.INPUT,
               required: true,
             },
@@ -336,7 +337,7 @@ export function ServiceAddModalComposition(
               required: true,
             },
             {
-              id: "oracleInstantClientDirectory",
+              id: "instantClientDirectory",
               label: "Oracle Instant Client Directory",
               type: PanelTypes.INPUT,
               required: true,
@@ -356,13 +357,6 @@ export function ServiceAddModalComposition(
   // coomon
   const resetInput = (serviceObjPath: string) => {
     setValue(serviceObjPath, "");
-  };
-  const setValue = (serviceObjPath: string, value: any) => {
-    _.set(serviceObj.value, serviceObjPath, value);
-  };
-
-  const resetData = () => {
-    resetServiceObj();
   };
 
   // step1
@@ -404,7 +398,6 @@ export function ServiceAddModalComposition(
 
   const checkRequiredValue = (): boolean => {
     const requiredItems = getRequiredIds(serviceObj.value.serviceId);
-    console.log(requiredItems);
     for (const itemId of requiredItems) {
       const value = serviceObj.value.detailInfo[itemId];
       if (Array.isArray(value)) {
@@ -431,7 +424,7 @@ export function ServiceAddModalComposition(
     connectionTestStatus,
     setValue,
     resetInput,
-    resetData,
+    resetServiceObj,
     serviceImgClick,
     setDefaultServiceId,
     checkServiceNameDuplicate,

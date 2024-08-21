@@ -55,6 +55,10 @@ export const useServiceStore = defineStore("serviceStore", () => {
     });
   };
 
+  const setValue = (serviceObjPath: string, value: any) => {
+    _.set(serviceObj.value, serviceObjPath, value);
+  };
+
   const connectionTestStatus = ref<boolean | null>(null);
 
   const checkServiceNameDuplicate = async () => {
@@ -68,10 +72,184 @@ export const useServiceStore = defineStore("serviceStore", () => {
     initialServiceObj.serviceId = serviceId;
   };
 
+  const addIfExists = (obj: Record<string, any>, key: string, value: any) => {
+    if (value) {
+      obj[key] = value;
+    }
+  };
+  const getConfig = (serviceId: string) => {
+    const serviceObjData = serviceObj.value.detailInfo;
+
+    const defaultConfig = {
+      supportsDBTExtraction: true,
+      supportsMetadataExtraction: true,
+      supportsProfiler: true,
+      supportsQueryComment: true,
+      type: serviceId,
+    };
+
+    const connectionArgumentsParam = _.has(
+      serviceObj.value,
+      "connectionArguments",
+    )
+      ? {
+          connectionArguments: serviceObjData.connectionArguments.reduce(
+            (
+              acc: { [key: string]: string },
+              [key, value]: [string, string],
+            ) => {
+              acc[key] = value;
+              return acc;
+            },
+            {} as { [key: string]: string },
+          ),
+        }
+      : {};
+
+    const connectionOptionsParam = _.has(serviceObj.value, "connectionOptions")
+      ? {
+          connectionOptions: serviceObjData.connectionOptions.reduce(
+            (
+              acc: { [key: string]: string },
+              [key, value]: [string, string],
+            ) => {
+              acc[key] = value;
+              return acc;
+            },
+            {} as { [key: string]: string },
+          ),
+        }
+      : {};
+
+    let specificConfig: Record<string, any> = {};
+
+    switch (serviceId) {
+      case "minio": {
+        const minioConfig: Record<string, any> = {};
+        addIfExists(minioConfig, "accessKeyId", serviceObjData.accessKeyId);
+        addIfExists(minioConfig, "secretKey", serviceObjData.secretKey);
+        addIfExists(minioConfig, "sessionToken", serviceObjData.sessionToken);
+        addIfExists(minioConfig, "region", serviceObjData.region);
+        addIfExists(minioConfig, "endpointUrl", serviceObjData.endpointUrl);
+
+        specificConfig = {
+          bucketNames: (serviceObjData.bucketNames as Array<string[]>).reduce<
+            string[]
+          >((acc, item) => {
+            if (Array.isArray(item) && item.length > 0 && item[0] !== "") {
+              acc.push(item[0]);
+            }
+            return acc;
+          }, []),
+          minioConfig,
+          supportMetadataExtraction: true,
+          supportsStorageProfiler: true,
+        };
+
+        return {
+          ...specificConfig,
+          ...connectionArgumentsParam,
+          ...connectionOptionsParam,
+        };
+      }
+
+      case "mariadb":
+        addIfExists(specificConfig, "username", serviceObjData.username);
+        addIfExists(specificConfig, "password", serviceObjData.password);
+        addIfExists(specificConfig, "hostPort", serviceObjData.hostAndPort);
+        addIfExists(
+          specificConfig,
+          "databaseName",
+          serviceObjData.databaseName,
+        );
+        addIfExists(
+          specificConfig,
+          "databaseSchema",
+          serviceObjData.databaseSchema,
+        );
+        specificConfig.scheme = "mysql+pymysql";
+        break;
+
+      case "mysql":
+        specificConfig.scheme = "mysql+pymysql";
+
+        addIfExists(specificConfig, "hostPort", serviceObjData.hostAndPort);
+        addIfExists(specificConfig, "username", serviceObjData.username);
+        addIfExists(specificConfig, "password", serviceObjData.password);
+        break;
+
+      case "postgresql": {
+        const authType: Record<string, any> = {};
+        addIfExists(authType, "password", serviceObjData.password);
+
+        specificConfig = {
+          authType,
+          scheme: "postgresql+psycopg2",
+          classificationName: "postgresPolicyTags",
+          ingestAllDatabases: true,
+          sslMode: "disable",
+          supportsDatabase: true,
+          supportsLineageExtraction: true,
+          supportsUsageExtraction: true,
+        };
+        addIfExists(specificConfig, "database", serviceObjData.database);
+        addIfExists(specificConfig, "hostPort", serviceObjData.hostAndPort);
+        addIfExists(specificConfig, "username", serviceObjData.username);
+        break;
+      }
+
+      case "oracle": {
+        const oracleConnectionType: Record<string, any> = {};
+        if (serviceObjData.oracleConnectionType) {
+          oracleConnectionType[serviceObjData.oracleConnectionType] =
+            serviceObjData[serviceObjData.oracleConnectionType];
+        }
+
+        specificConfig = {
+          oracleConnectionType,
+          scheme: "oracle+cx_oracle",
+          supportsLineageExtraction: true,
+          supportsUsageExtraction: true,
+        };
+        addIfExists(specificConfig, "username", serviceObjData.username);
+        addIfExists(specificConfig, "password", serviceObjData.password);
+        break;
+      }
+
+      default:
+        // 예상치 못한 serviceId에 대한 처리
+        console.warn(`Unknown serviceId: ${serviceId}`);
+        break;
+    }
+
+    return {
+      ...defaultConfig,
+      ...specificConfig,
+      ...connectionArgumentsParam,
+      ...connectionOptionsParam,
+    };
+  };
+
+  const getParams = () => {
+    const serviceId = serviceObj.value.serviceId.toLowerCase();
+    const params: object = {
+      connectionType: serviceId,
+      serviceType: serviceId === "minio" ? "container" : "database",
+      connection: {
+        config: getConfig(serviceId),
+      },
+    };
+    return params;
+  };
   const connectionTest = async () => {
-    console.log(serviceObj);
-    console.log("connectionTest");
-    // TODO : [개발] connectionTest 가 성공일때 태깅해둔다.
+    const response = await $api("/api/service/connectionTest", {
+      method: "post",
+      body: {
+        params: getParams(),
+      },
+    });
+    console.log(response);
+
     connectionTestStatus.value = true;
 
     const connectionErrorMsg = "연결 실패 메시지";
@@ -88,6 +266,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
     serviceObj,
     selectedServiceObj,
     connectionTestStatus,
+    setValue,
     setInitServiceId,
     resetServiceObj,
     checkServiceNameDuplicate,

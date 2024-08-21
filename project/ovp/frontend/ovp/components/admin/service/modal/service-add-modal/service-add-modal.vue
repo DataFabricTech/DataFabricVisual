@@ -95,7 +95,7 @@ const changeStep = (value: number | string) => {
   currentStep.value = Number(value) - 1;
 };
 const onBeforeOpen = () => {
-  resetData(); // store 에 저장하고 있던 데이터 리셋
+  resetServiceObj(); // store 에 저장하고 있던 데이터 리셋
   isValid.value = true;
   inValidMsg.value = "";
   currentStep.value = 1;
@@ -136,15 +136,15 @@ const checkValidation = async (): Promise<boolean> => {
   if (currentStep.value === 1) {
     // modal 진입시에 무조건 첫번째 값을 선택하게 되어있기 때문에 값이 없을수가 없음.
   } else if (currentStep.value === 2) {
-    if (_.isEmpty(serviceObj.value.defaultInfo.serviceNm)) {
-      isValid.value = false;
-      inValidMsg.value = "필수 값을 입력해주세요.";
-      return false;
-    } else if (await checkServiceNameDuplicate()) {
-      isValid.value = false;
-      inValidMsg.value = "중복된 서비스 이름입니다.";
-      return false;
-    }
+    // if (_.isEmpty(serviceObj.value.defaultInfo.serviceNm)) {
+    //   isValid.value = false;
+    //   inValidMsg.value = "필수 값을 입력해주세요.";
+    //   return false;
+    // } else if (await checkServiceNameDuplicate()) {
+    //   isValid.value = false;
+    //   inValidMsg.value = "중복된 서비스 이름입니다.";
+    //   return false;
+    // }
   } else if (currentStep.value === 3) {
     if (!checkRequiredValue()) {
       isValid.value = false;
@@ -171,7 +171,7 @@ const checkValidation = async (): Promise<boolean> => {
 const {
   serviceObj,
   connectionTestStatus,
-  resetData,
+  resetServiceObj,
   checkServiceNameDuplicate,
   checkRequiredValue,
   submit,

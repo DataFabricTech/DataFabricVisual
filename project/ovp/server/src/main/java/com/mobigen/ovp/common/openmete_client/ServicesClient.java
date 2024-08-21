@@ -6,6 +6,7 @@ import com.mobigen.ovp.common.openmete_client.dto.Services;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.Map;
 
 @FeignClient(name = "ServiceClient", url="http://192.168.105.26:8585/api/v1/services")
 public interface ServicesClient {
@@ -53,4 +55,7 @@ public interface ServicesClient {
      * **/
     @GetMapping("/ingestionPipelines/logs/{id}/last")
     Log getServiceCollectionLog(@PathVariable("id") String id);
+
+    @GetMapping("/testConnectionDefinitions/name/{definitionNm}")
+    Map<String, Object> getTestConnectionDefinition(@PathVariable String definitionNm);
 }

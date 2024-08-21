@@ -193,7 +193,6 @@ const isShowPwdStatus = (itemId: string) => {
 };
 
 const addNewList = (serviceObjPath: string) => {
-  console.log(serviceObjPath);
   if (_.isUndefined(_.get(serviceObj.value, serviceObjPath))) {
     _.set(serviceObj.value, serviceObjPath, []);
   }
