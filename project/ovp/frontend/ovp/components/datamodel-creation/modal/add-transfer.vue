@@ -114,11 +114,6 @@ import DataModelAccordianList from "~/components/datamodel-creation/list/api/acc
 import { ref } from "vue";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 import { storeToRefs } from "pinia";
-import { useCreationStore } from "~/store/datamodel-creation";
-
-// 데이터 생성 > 선택
-const creationStore = useCreationStore();
-const { nSelectedListData } = storeToRefs(creationStore);
 
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
@@ -141,6 +136,7 @@ const {
   currTab,
   currTypeTab,
   mySearchResult,
+  nSelectedListData,
 } = storeToRefs(dataModelSearchStore);
 
 const selectedListLength = computed(() => {

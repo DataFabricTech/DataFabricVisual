@@ -1,22 +1,15 @@
 import { defineStore } from "pinia";
-import CustomHeader from "@extends/custom-header-cell/custom-header-cell.vue";
-import DataModelSample from "~/components/datamodel-creation/datamodel-sample.json";
-import { useSearchCommonStore } from "~/store/search/common";
-import executeResultJson from "~/store/datamodel-creation/samples/executeResult.json";
-import { useUserStore } from "~/store/user/userStore";
 import { storeToRefs } from "../../.nuxt/imports";
 import _ from "lodash";
+import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 
 export const useCreationStore = defineStore("creation", () => {
   const { $api } = useNuxtApp();
 
-  const userStore = useUserStore();
-  const { user } = storeToRefs(userStore);
-
   // NOTE: 탐색 페이지에서 사용되는 API 활용
-  const searchCommonStore = useSearchCommonStore();
-  const { filters } = storeToRefs(searchCommonStore);
-  const { getFilters } = searchCommonStore;
+  const dataModelSearchStore = useDataModelSearchStore();
+  const { selectedModelList } = storeToRefs(dataModelSearchStore);
+  const { getSampleData, getProfileData } = dataModelSearchStore;
 
   const query = ref("");
 
@@ -30,13 +23,6 @@ export const useCreationStore = defineStore("creation", () => {
   const executeResult = ref([]);
   const executeResultErrMsg = ref("");
 
-  const modelList = ref([]);
-  const myModelList = ref({});
-  const modelListCnt = ref(0);
-  const selectedModelList = ref([]);
-  const nSelectedListData = ref([]);
-  const dataModelFilter = ref({});
-
   const isItemClicked = ref(false);
   const isColumnSelected = ref(false);
 
@@ -48,86 +34,12 @@ export const useCreationStore = defineStore("creation", () => {
   const dataProfileList = ref([]);
 
   /**
-   * 데이터 모델 생성 > 데이터 모델 리스트
-   *
-   * TODO: API 연동
-   */
-  const setDataModelList = async () => {
-    modelList.value = DataModelSample.sampleList;
-    modelListCnt.value = modelList.value.length;
-  };
-
-  const setMyModelList = async () => {
-    myModelList.value = DataModelSample.my_sampleList;
-  };
-
-  /**
-   * 데이터 모델 생성 > 목록 필터 리스트 조회
-   */
-  const setDataModelFilter = async () => {
-    await getFilters();
-    const result = {} as { [key: string]: any };
-    for (const key in filters.value) {
-      if (
-        filters.value[key].text === "카테고리" ||
-        filters.value[key].text === "태그" ||
-        filters.value[key].text === "소유자"
-      ) {
-        // TODO: (확인 필요) item.category === filter.domains임.
-        // 검색 처리를 위해 filter의 Key값을 category로 변경
-        const filterKey =
-          filters.value[key].text === "카테고리" ? "category" : key;
-        result[filterKey] = filters.value[key];
-        result[filterKey].data =
-          result[filterKey].data !== null &&
-          result[filterKey].data !== undefined
-            ? result[filterKey].data
-            : [];
-      }
-    }
-    dataModelFilter.value = result;
-  };
-
-  /**
-   * 데이터 모델 생성 > 북마크 변경
-   * */
-  const changeBookmark = async (value: string) => {
-    const selectedModel = _.find(modelList.value, ["id", value]);
-
-    if (!selectedModel) {
-      // TODO: alert 컴포넌트로 변경 예정
-      alert("모델을 찾을 수 없습니다.");
-      return;
-    }
-    if (selectedModel.bookmarked) {
-      await $api(`/api/creation/bookmark/remove/${value}`, {
-        method: "DELETE",
-      })
-        .then((res: any) => {
-          setDataModelList();
-        })
-        .catch((err: any) => {
-          console.log("err: ", err);
-        });
-    } else {
-      await $api(`/api/creation/bookmark/add/${value}`, {
-        method: "PUT",
-      })
-        .then((res: any) => {
-          setDataModelList();
-        })
-        .catch((err: any) => {
-          console.log("err: ", err);
-        });
-    }
-  };
-
-  /**
    * 데이터 모델 생성 > 목록 리스트의 항목 삭제
    */
   const deleteDataModel = (value: string) => {
-    modelList.value = modelList.value.filter((item) => item.id !== value);
-    modelListCnt.value = modelList.value.length;
+    selectedModelList.value = selectedModelList.value.filter(
+      (item: any) => item.id !== value,
+    );
     isItemClicked.value = false;
   };
 
@@ -137,56 +49,27 @@ export const useCreationStore = defineStore("creation", () => {
   const onClickDataModelItem = async (value: string) => {
     isColumnSelected.value = false;
 
-    const selectedModel = _.find(modelList.value, ["id", value]);
-    const fqn = selectedModel.fqn;
+    const selectedModel = _.find(selectedModelList.value, ["id", value]);
 
     dataModelName.value = selectedModel.modelNm;
     dataModelOwner.value = selectedModel.owner;
 
-    await $api(`/api/search/detail/sample-data/${value}`)
-      .then((res: any) => {
-        if (res.result === 1) {
-          const fields = res.data.columns.map((column) => ({
-            field: column.name,
-          }));
+    sampleDataList.value = await getSampleData(
+      selectedModel.id,
+      selectedModel.fqn,
+    );
+    if (sampleDataList.value) {
+      isItemClicked.value = true;
+    }
 
-          const columnDefs = res.data.columns.map((column) => ({
-            field: column.name,
-            headerComponentFramework: CustomHeader,
-            headerComponentParams: { gridColumnDefs: fields, fqn: fqn },
-          }));
-
-          sampleDataList.value = {
-            columnDefs: columnDefs,
-            rowData: res.data.sampleList,
-            fqn: fqn,
-          };
-          isItemClicked.value = true;
-        } else {
-          isItemClicked.value = false;
-        }
-      })
-      .catch((err: any) => {
-        console.log("err: ", err);
-      });
-
-    await $api(`/api/search/detail/profile/${fqn}`)
-      .then((res: any) => {
-        if (res.result === 1) {
-          columnOptions.value = res.data
-            .filter((item) => item.name)
-            .map((item) => ({ id: item.name, name: item.name }));
-          dataProfileList.value = res.data;
-        } else {
-          isItemClicked.value = false;
-        }
-      })
-      .catch((err: any) => {
-        console.log("err: ", err);
-      });
+    const result = await getProfileData(selectedModel.fqn);
+    dataProfileList.value = result.rowData;
+    columnOptions.value = result.rowData
+      .filter((item: any) => item.name)
+      .map((item: any) => ({ id: item.name, name: item.name }));
   };
 
-  const showProfile = (value: boolean) => {
+  const showProfile = () => {
     isColumnSelected.value = true;
   };
 
@@ -195,7 +78,7 @@ export const useCreationStore = defineStore("creation", () => {
    * */
   async function runQuery(value: any) {
     query.value = value;
-    const referenceModels = modelList.value.map((item) => ({
+    const referenceModels = selectedModelList.value.map((item) => ({
       id: item.id,
       name: item.modelNm,
       fullyQualifiedName: item.fqn,
@@ -207,8 +90,10 @@ export const useCreationStore = defineStore("creation", () => {
       limit: 100,
       page: 0,
     };
-
-    await $api(`/api/creation/query/execute`, {
+    insertDataModel(param);
+  }
+  const insertDataModel = (param: any) => {
+    return $api(`/api/creation/query/execute`, {
       method: "POST",
       body: param,
     }).then((res: any) => {
@@ -224,7 +109,7 @@ export const useCreationStore = defineStore("creation", () => {
         executeResultErrMsg.value = res.errorMessage;
       }
     });
-  }
+  };
 
   /**
    * 데이터 모델 생성 > 쿼리 실행
@@ -245,10 +130,7 @@ export const useCreationStore = defineStore("creation", () => {
   };
 
   return {
-    modelList,
-    myModelList,
     selectedModelList,
-    modelListCnt,
     query,
     querySuccess,
     isExecuteQuery,
@@ -265,12 +147,6 @@ export const useCreationStore = defineStore("creation", () => {
     runQuery,
     resetQuery,
     editQueryText,
-    dataModelFilter,
-    nSelectedListData,
-    setDataModelFilter,
-    setMyModelList,
-    setDataModelList,
-    changeBookmark,
     deleteDataModel,
     onClickDataModelItem,
     showProfile,
