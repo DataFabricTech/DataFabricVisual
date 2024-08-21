@@ -40,23 +40,23 @@
         <th>소유자</th>
         <th>USAGE</th>
       </tr>
-      <tr v-for="tr in 3" :key="tr">
-        <td>DB기본정보</td>
+      <tr v-for="(item, index) in DBServiceListData" :key="index">
+        <td>{{ item.serviceType }}</td>
         <td>
           <a
-            href=""
+            :href="item.href"
             class="link-button link-button link-button-underline"
             title="상세 페이지 이동"
-            >DB Table1</a
+            >{{ item.name }}</a
           >
         </td>
-        <td>DB Table에 대한 설명입니다.</td>
-        <td>-</td>
-        <td>0th pctile</td>
+        <td>{{ item.description }}</td>
+        <td>{{ item.owner }}</td>
+        <td>{{ item.usage }}</td>
       </tr>
     </table>
     <!-- 결과 없을 시 no-result 표시 -->
-    <div class="no-result" style="display: none">
+    <div class="no-result" v-if="DBServiceListData.length === 0">
       <div class="notification">
         <svg-icon class="notification-icon" name="info"></svg-icon>
         <p class="notification-detail">데이터 리스트가 없습니다.</p>
@@ -68,13 +68,16 @@
 <script setup lang="ts">
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 import { useServiceCollectionLogStore } from "@/store/admin/service/collection-log/index";
-import { storeToRefs } from "pinia";
+import { onBeforeMount } from "vue";
 import { computed } from "vue";
 import _ from "lodash";
 
 const serviceCollectionLogStore = useServiceCollectionLogStore();
-const { updateRepositoryDescriptionAPI } = serviceCollectionLogStore;
-const { serviceData } = storeToRefs(serviceCollectionLogStore);
+const { updateRepositoryDescriptionAPI, getDBServiceList } =
+  serviceCollectionLogStore;
+const { serviceData, DBServiceListData } = storeToRefs(
+  serviceCollectionLogStore,
+);
 
 interface RepositoryDescription {
   description: string;
@@ -87,7 +90,7 @@ let defaultData: RepositoryDescription = {
 
 // 수정될 새로운 데이터
 const newData = computed(() => {
-  return _.cloneDeep(serviceData.value); // 값이 조회되거나 수정이 되면 newData로 값이 주입.
+  return _.cloneDeep(serviceData.value);
 });
 
 // JSON Patch 형식으로 데이터 변환 함수
@@ -143,6 +146,11 @@ const editDone = async () => {
     serviceData.value.description = defaultData.description;
   }
 };
+
+// TODO : 다른 페이지에서 로드할 예정
+onBeforeMount(async () => {
+  await getDBServiceList(); // DB서비스리스트 조회API 호출
+});
 </script>
 
 <style scoped></style>
