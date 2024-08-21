@@ -53,34 +53,11 @@ export const useUserStore = defineStore("userStore", () => {
   };
 
   const getUserListAPI = async () => {
-    // TODO: API 구현 완료 되면 주석 처리 제거 및 테스트 데이터 조회 코드 삭제
-    /*const { data } = await $api(`/api/user/list?${getUserListQuery()}`, {
+    const { data } = await $api(`/api/user/list?${getUserListQuery()}`, {
       showLoader: false,
     });
 
-    return data;*/
-
-    interface RowData {
-      id: number;
-      name: string;
-      displayName: null | string;
-      isAdmin: boolean;
-      description: string;
-      fqn: string;
-    }
-    const rowData: RowData[] = [];
-    for (let i = 0; i < 20; i++) {
-      rowData.push({
-        id: i,
-        name: `user${i}`,
-        displayName: i % 10 === 0 ? null : "홍길동",
-        isAdmin: i % 3 === 0 ? true : false,
-        description: "사용자에 대한 설명입니다. ".repeat(7),
-        fqn: `user${i}`,
-      });
-    }
-
-    return { data: rowData };
+    return data;
   };
 
   /**
@@ -105,11 +82,9 @@ export const useUserStore = defineStore("userStore", () => {
    * 사용자 정보 삭제
    */
   const deleteUser = async (id: string) => {
-    // TODO: API 구현 완료 되면 주석 처리 제거
-    /*await $api(`/api/user/${id}`, {
+    await $api(`/api/user/${id}`, {
       method: "DELETE",
-    });*/
-    console.log("delete id", id);
+    });
   };
 
   return {
