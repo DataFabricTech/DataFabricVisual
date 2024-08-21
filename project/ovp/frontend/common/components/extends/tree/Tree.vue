@@ -56,11 +56,21 @@ const emit = defineEmits<{
   (e: "addChild", params: TreeViewItem): void;
 }>();
 
+const checkOnlyOneAction = ref(true);
 const onItemChecked = (from: TreeViewItem[]) => {
   emit("onItemChecked", from);
 };
 
 const onItemSelected = (node: TreeViewItem) => {
+  if (checkOnlyOneAction.value) {
+    const treeItem = document.querySelector(
+      ".tree-list > .tree-item-node-parent > .tree-item-node:first-child > .d-flex .tree-item"
+    );
+
+    treeItem.style.color = "#2b3440";
+    checkOnlyOneAction.value = false;
+  }
+
   emit("onItemSelected", node);
 };
 

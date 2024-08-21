@@ -2,6 +2,10 @@
   width: 100%;
   height: 100%;
 
+  .tree-list > .tree-item-node-parent > .tree-item-node:first-child > .d-flex .tree-item {
+    color: $secondary-500;
+  }
+
   ul, li {
     width: 100%;
   }
@@ -64,7 +68,7 @@
 
   .selected-tree-item {
     background: transparent;
-    color: $secondary-500;
+    color: $secondary-500 !important;
   }
 
   .chevron-right {

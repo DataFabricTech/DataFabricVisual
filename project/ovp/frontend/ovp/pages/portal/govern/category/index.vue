@@ -514,7 +514,6 @@ onMounted(async () => {
     loader.value.style.display = "block";
   }
 
-  // TODO: [개발] 페이지 진입 시 첫 번째 트리, 모델 리스트 설정 - 첫 번째 트리에 선택된 상태를 추가할 수 있는지 검토 필요
   await getCategories();
 
   if (categories.value && categories.value.length > 0) {
