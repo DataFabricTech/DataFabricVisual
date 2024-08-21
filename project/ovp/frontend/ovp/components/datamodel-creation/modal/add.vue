@@ -71,10 +71,6 @@ const props = defineProps({
 
 const creationStore = useCreationStore();
 const { selectedModelList, nSelectedListData } = storeToRefs(creationStore);
-const { setSelectedModelList } = creationStore;
-
-// 데이터 목록, 필터 목록, 선택 필터 초기화
-setSelectedModelList();
 
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();

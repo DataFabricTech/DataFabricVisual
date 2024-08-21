@@ -99,7 +99,6 @@ const {
   runQuery,
   resetQuery,
   editQueryText,
-  setSelectedModelList,
   setMyModelList,
   showProfile,
 } = creationStore;
@@ -108,7 +107,6 @@ const {
 setDataModelFilter();
 setDataModelList();
 setMyModelList();
-setSelectedModelList();
 </script>
 
 <style scoped></style>
