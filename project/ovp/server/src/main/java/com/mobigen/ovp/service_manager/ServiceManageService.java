@@ -1,14 +1,16 @@
-package com.mobigen.ovp.admin.service;
+package com.mobigen.ovp.service_manager;
 
-import com.mobigen.ovp.admin.service.client.ServiceClient;
-import com.mobigen.ovp.admin.service.client.response.ServiceResponse;
-import com.mobigen.ovp.admin.service.client.response.ServiceEntity;
+import com.mobigen.ovp.common.openmete_client.ServicesClient;
+import com.mobigen.ovp.service_manager.client.response.ServiceCollectionLogResponse;
+import com.mobigen.ovp.common.openmete_client.dto.Services;
+import com.mobigen.ovp.service_manager.client.response.ServiceResponse;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -18,24 +20,24 @@ import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
-@org.springframework.stereotype.Service
+@Service
 @RequiredArgsConstructor
-public class ServiceService {
+public class ServiceManageService {
 
-    private final ServiceClient serviceClient;
+    private final ServicesClient servicesClient;
     private final SearchClient searchClient;
 
     /**
      * 서비스 리스트
      * @return
      */
-    public List<ServiceEntity> getServices() {
+    public List<ServiceResponse> getServices() {
         String fields = "owner,tags";
         int limit = 100;
-        List<ServiceResponse> result = serviceClient.getServices(fields, limit).getData();
-        List<ServiceEntity> serviceResponses = new ArrayList<>();
-        for(ServiceResponse service : result) {
-            serviceResponses.add(new ServiceEntity(service));
+        List<Services> result = servicesClient.getServices(fields, limit).getData();
+        List<ServiceResponse> serviceResponses = new ArrayList<>();
+        for(Services service : result) {
+            serviceResponses.add(new ServiceResponse(service));
         }
         return serviceResponses;
     }
@@ -57,10 +59,10 @@ public class ServiceService {
         for(Map<String, ?> data : hits) {
             source.add((Map<String, Object>) data.get("_source"));
         }
-        List<ServiceEntity> result = new ArrayList<>();
+        List<ServiceResponse> result = new ArrayList<>();
 
         for(Map<String, Object> map : source) {
-            result.add(new ServiceEntity(map));
+            result.add(new ServiceResponse(map));
         }
         return result;
     }
@@ -71,10 +73,10 @@ public class ServiceService {
      * @param param
      * @return
      */
-    public ServiceEntity patchService(UUID id, List<JsonPatchOperation> param) throws Exception {
-        ResponseEntity<ServiceResponse> result = serviceClient.patchServie(id, param);
+    public ServiceResponse patchService(UUID id, List<JsonPatchOperation> param) throws Exception {
+        ResponseEntity<Services> result = servicesClient.patchServie(id, param);
         if(result.getStatusCode() == HttpStatus.OK) {
-            return new ServiceEntity(result);
+            return new ServiceResponse(result);
         } else {
             throw new Exception();
         }
@@ -88,11 +90,20 @@ public class ServiceService {
      * @return
      */
     public Object deleteService(UUID id, boolean hardDelete, boolean recursive) throws Exception {
-        ResponseEntity<Object> result = serviceClient.deleteService(id, hardDelete, recursive);
+        ResponseEntity<Object> result = servicesClient.deleteService(id, hardDelete, recursive);
         if(result.getStatusCode() == HttpStatus.OK) {
-            return serviceClient.deleteService(id, hardDelete, recursive);
+            return servicesClient.deleteService(id, hardDelete, recursive);
         } else {
             throw new Exception();
         }
+    }
+
+    /**
+     * service : Service - 수집 - 동작 [log] 조회
+     * @param id
+     * @return
+     * **/
+    public Object getServiceCollectionLog(String id) {
+        return new ServiceCollectionLogResponse(servicesClient.getServiceCollectionLog(id));
     }
 }

@@ -1,4 +1,4 @@
-package com.mobigen.ovp.admin.service;
+package com.mobigen.ovp.service_manager;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.UUID;
 
-@RequestMapping("/api/service")
+@RequestMapping("/api/service-manage")
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-public class ServiceController {
+public class ServiceManageController {
 
-    private final ServiceService service;
+    private final ServiceManageService service;
 
     /**
      * 서비스 리스트
@@ -70,5 +70,16 @@ public class ServiceController {
     @DeleteMapping("/{id}")
     public Object deleteService(@PathVariable UUID id, @RequestParam boolean hardDelete, @RequestParam boolean recursive) throws Exception {
         return service.deleteService(id, hardDelete, recursive);
+    }
+
+    /**
+     * service : Service - 수집 - 동작 [log] 조회
+     * @param id
+     * @return
+     * **/
+    @ResponseJsonResult
+    @GetMapping("/collection/log/{id}")
+    public Object getServiceCollectionLog(@PathVariable String id) {
+        return service.getServiceCollectionLog(id);
     }
 }
