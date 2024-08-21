@@ -43,11 +43,10 @@ export const useUserStore = defineStore("userStore", () => {
   const getUserListQuery = () => {
     const params: any = {
       // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
-      q: searchKeyword,
+      q: `*${searchKeyword}* AND isBot:false`,
       index: "user_search_index",
       from: from.value,
       size: size.value,
-      isBot: false,
     };
 
     return new URLSearchParams(params);
@@ -67,6 +66,7 @@ export const useUserStore = defineStore("userStore", () => {
       displayName: null | string;
       isAdmin: boolean;
       description: string;
+      fqn: string;
     }
     const rowData: RowData[] = [];
     for (let i = 0; i < 20; i++) {
@@ -76,10 +76,11 @@ export const useUserStore = defineStore("userStore", () => {
         displayName: i % 10 === 0 ? null : "홍길동",
         isAdmin: i % 3 === 0 ? true : false,
         description: "사용자에 대한 설명입니다. ".repeat(7),
+        fqn: `user${i}`,
       });
     }
 
-    return rowData;
+    return { data: rowData };
   };
 
   /**
@@ -87,7 +88,7 @@ export const useUserStore = defineStore("userStore", () => {
    */
   const getUserList = async () => {
     setFrom(0);
-    const data = await getUserListAPI();
+    const { data } = await getUserListAPI();
     userList.value = data;
     updateIntersectionHandler(0);
   };
@@ -96,7 +97,7 @@ export const useUserStore = defineStore("userStore", () => {
    * 사용자 정보 조회 -> 누적
    */
   const addUserList = async () => {
-    const data = await getUserListAPI();
+    const { data } = await getUserListAPI();
     userList.value = userList.value.concat(data);
   };
 
@@ -104,9 +105,11 @@ export const useUserStore = defineStore("userStore", () => {
    * 사용자 정보 삭제
    */
   const deleteUser = async (id: string) => {
-    await $api(`/api/user/${id}`, {
+    // TODO: API 구현 완료 되면 주석 처리 제거
+    /*await $api(`/api/user/${id}`, {
       method: "DELETE",
-    });
+    });*/
+    console.log("delete id", id);
   };
 
   return {
