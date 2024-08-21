@@ -18,3 +18,12 @@ export interface Owner {
 
   isAdmin?: boolean;
 }
+
+export interface Ingestion {
+  name: string;
+  displayName: string;
+  fullyQualifiedName: string;
+  id: string;
+  pipelineType: string;
+  scheduleInterval: string;
+}

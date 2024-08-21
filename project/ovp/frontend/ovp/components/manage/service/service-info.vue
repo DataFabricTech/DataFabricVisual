@@ -129,7 +129,7 @@
         </ul>
       </div>
       <repository v-if="store.tab === 'repository'"></repository>
-      <collection v-if="store.tab === 'collection'"></collection>
+      <ingestions v-if="store.tab === 'collection'"></ingestions>
       <connection-info v-if="store.tab === 'connection-info'"></connection-info>
     </div>
   </div>
@@ -144,7 +144,7 @@
 <script lang="ts" setup>
 import { onMounted, computed } from "vue";
 import { useGlossaryStore } from "@/store/glossary";
-import { useServiceStore } from "@/store/admin/service";
+import { useServiceStore } from "~/store/manage/service";
 import $constants from "~/utils/constant";
 import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import type { JsonPatchOperation, Tag } from "~/type/common";

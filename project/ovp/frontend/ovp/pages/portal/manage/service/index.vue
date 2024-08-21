@@ -19,9 +19,9 @@
 <style scoped></style>
 
 <script setup lang="ts">
-import ModalService from "~/components/admin/service/modal/modal-service.vue";
-import ModalCollection from "~/components/admin/service/modal/modal-collection.vue";
-import ModalLog from "~/components/admin/service/modal/modal-log.vue";
+import ModalService from "~/components/manage/service/modal/modal-service.vue";
+import ModalCollection from "~/components/manage/service/modal/modal-collection.vue";
+import ModalLog from "~/components/manage/service/modal/modal-log.vue";
 
 const stepOptions = [
   { label: "서비스 타입 선택", value: "Step1" },
