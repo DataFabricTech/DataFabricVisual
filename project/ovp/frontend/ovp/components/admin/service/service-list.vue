@@ -30,7 +30,7 @@
               <svg-icon class="button-icon" name="close"></svg-icon>
             </button>
           </div>
-          <button class="button button-neutral-ghost" @click="getServiceList">
+          <button class="button button-neutral-ghost" @click="reset">
             <span class="hidden-text">리셋</span>
             <svg-icon class="svg-icon" name="reset"></svg-icon>
           </button>
@@ -40,6 +40,7 @@
         <li
           :class="menuSelectedClass(service)"
           v-for="service in store.serviceList"
+          @click="changeCurrentService(service)"
         >
           <button class="menu-button">
             <svg-icon
@@ -47,7 +48,13 @@
               name="resource"
             ></svg-icon>
             <span class="menu-text">{{ service.name }}</span>
-            <span class="menu-subtext">({{ service.owner.name }})</span>
+            <span class="menu-subtext"
+              >({{
+                service.owner && service.owner.name
+                  ? service.owner.name
+                  : "없음"
+              }})</span
+            >
           </button>
         </li>
       </ul>
@@ -63,18 +70,22 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import { _ } from "lodash";
+import { onMounted, ref } from "vue";
 import type { Service } from "~/type/service";
 import { useServiceStore } from "@/store/admin/service";
 
-const { getServiceList, searchServiceList } = useServiceStore();
+const {
+  getServiceList,
+  searchServiceList,
+  changeCurrentService,
+  emptyService,
+} = useServiceStore();
 const store = useServiceStore();
 
 const keyword = ref<string>("");
 
 const menuSelectedClass = (value: Service) => {
-  return _.isEqual(store.service, value)
+  return store.service.id == value.id
     ? "menu-item is-menu-item-selected"
     : "menu-item";
 };
@@ -83,8 +94,15 @@ onMounted(() => {
   getServiceList();
 });
 
-function search() {
-  searchServiceList(keyword.value);
+async function search() {
+  emptyService();
+  await searchServiceList(keyword.value, "0");
+}
+
+async function reset() {
+  keyword.value = "";
+  emptyService();
+  await getServiceList();
 }
 
 function openModal() {}

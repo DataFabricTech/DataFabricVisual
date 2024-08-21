@@ -1,6 +1,5 @@
 <template>
-  <!--  <div class="work-page" v-if="!isEmptyService">-->
-  <div class="work-page">
+  <div class="work-page" v-if="!isEmptyService()">
     <div class="l-top-bar">
       <div class="h-group gap-2">
         <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
@@ -16,7 +15,11 @@
           <div class="text-neutral-700 font-semibold w-14">소유자</div>
           <div class="editable-group w-auto" v-if="!store.editInfo.owner">
             <div class="text-neutral-700">
-              {{ service.owner ? service.owner.name : "없음" }}
+              {{
+                service.owner && service.owner.name
+                  ? service.owner.name
+                  : "소유자 없음"
+              }}
             </div>
             <button
               class="button button-neutral-ghost button-sm"
@@ -29,8 +32,8 @@
           </div>
           <div class="editable-group w-auto" v-if="store.editInfo.owner">
             <menu-search-tag
-              :data="store.userList"
-              :selected-item="service.owner"
+              :data="store.userSearchList"
+              :selected-items="service.owner"
               label-key="name"
               value-key="id"
               title="값을 선택하세요"
@@ -44,8 +47,15 @@
           <div class="h-group gap-2">
             <div class="font-semibold text-neutral-700 w-14">태그</div>
             <div class="editable-group w-auto" v-if="!store.editInfo.tag">
-              <div class="tag tag-primary tag-sm" v-for="tag in service.tags">
-                <span class="tag-text">{{ tag ? tag.label : "없음" }}</span>
+              <div class="text-neutral-700" v-if="service.tags.length === 0">
+                <span>태그 없음</span>
+              </div>
+              <div
+                class="tag tag-primary tag-sm"
+                v-else
+                v-for="tag in service.tags"
+              >
+                <span class="tag-text">{{ tag.label }}</span>
               </div>
               <button
                 class="button button-neutral-ghost button-sm"
@@ -61,7 +71,7 @@
                 :data="menuSearchTagsData"
                 :selected-items="service.tags"
                 label-key="label"
-                value-key="id"
+                value-key="tagFQN"
                 :is-multi="true"
                 title="값을 선택하세요"
                 @multiple-change="changeTag"
@@ -123,12 +133,12 @@
       <connection-info v-if="store.tab === 'connection-info'"></connection-info>
     </div>
   </div>
-  <!--  <div class="no-result" v-if="isEmptyService()">-->
-  <!--    <div class="notification">-->
-  <!--      <svg-icon class="notification-icon" name="info"></svg-icon>-->
-  <!--      <p class="notification-detail">등록된 서비스가 없습니다.</p>-->
-  <!--    </div>-->
-  <!--  </div>-->
+  <div class="no-result" v-if="isEmptyService()">
+    <div class="notification">
+      <svg-icon class="notification-icon" name="info"></svg-icon>
+      <p class="notification-detail">등록된 서비스가 없습니다.</p>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
