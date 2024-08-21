@@ -72,7 +72,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import type { Service } from "~/type/service";
-import { useServiceStore } from "@/store/admin/service";
+import { useServiceStore } from "~/store/manage/service";
 
 const {
   getServiceList,

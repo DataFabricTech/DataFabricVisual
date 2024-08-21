@@ -8,7 +8,8 @@
   <div v-else>
     <button
       v-if="params.type === 'button'"
-      class="button button-primary-lighter button-lg"
+      class="button button-lg"
+      :class="params.buttonTheme"
       type="button"
       @click="handleClick"
     >

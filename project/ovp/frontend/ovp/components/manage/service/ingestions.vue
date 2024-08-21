@@ -74,8 +74,8 @@
   <modal-log :visible="isModalVisible" @close="closeModal"></modal-log>
 </template>
 <script setup lang="ts">
-import ModalLog from "@/components/admin/service/modal/modal-log.vue";
-import { useServiceCollectionLogStore } from "@/store/admin/service/collection-log/index";
+import ModalLog from "~/components/manage/service/modal/modal-log.vue";
+import { useServiceCollectionLogStore } from "~/store/manage/service/collection-log/index";
 
 const serviceCollectionLogStore = useServiceCollectionLogStore();
 const { getCollectionLogData, setServiceId } = serviceCollectionLogStore;
