@@ -38,7 +38,6 @@ export class IntersectionObserverHandler {
 
   private handleIntersect(entries: IntersectionObserverEntry[]) {
     entries.forEach((entry) => {
-      console.log(this.observer);
       if (entry.isIntersecting) {
         this.changingInitialCount += this.boxItemDefaultCount;
         this.getDataCallback(this.changingInitialCount, this.loader);
