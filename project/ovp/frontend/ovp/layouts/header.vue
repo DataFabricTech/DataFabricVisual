@@ -10,6 +10,10 @@
       <SearchInput
         @onClickSearch="onClickSearch"
         :placeholder="'검색어를 입력하세요.'"
+        :inp-value="searchInputValue"
+        :inp-id="'headerInp1'"
+        :label-text="'데이터 모델 검색'"
+        @update:value="updateSearchInputValue"
       ></SearchInput>
       <div class="profile ml-auto">
         <span class="profile-avatar"> {{ profileFirstWord }} </span>
@@ -30,7 +34,7 @@
           <ul class="dropdown-list">
             <li class="dropdown-item">
               <nuxt-link
-                :to="'/portal/my-page'"
+                :to="`/portal/my-page?fqn=${user.fullyQualifiedName}`"
                 class="dropdown-button"
                 @click="isDropdownOpen = false"
               >
@@ -73,6 +77,11 @@ const dropdown = ref();
 const isDropdownOpen = ref(false);
 const profileFirstWord = ref("");
 
+const searchInputValue = ref("");
+const updateSearchInputValue = (newValue: string) => {
+  searchInputValue.value = newValue;
+};
+
 const onClickSearch = (value: string) => {
   setSearchKeyword(value);
   resetReloadList();
@@ -105,8 +114,9 @@ const logOut = async () => {
     });
 };
 
+await getUserInfo();
+
 onMounted(async () => {
-  await getUserInfo();
   setProfileFirstWord(user.value.name);
   document.addEventListener("click", handleClickOutside);
 });

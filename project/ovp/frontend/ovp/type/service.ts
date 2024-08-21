@@ -6,6 +6,7 @@ export interface Service {
   tags: object[];
   relatedTerms: object[];
   serviceType: string;
+  description: string;
 }
 
 export interface Owner {
@@ -14,4 +15,6 @@ export interface Owner {
   name: string;
   fullyQualifiedName: string;
   displayName: string;
+
+  isAdmin?: boolean;
 }

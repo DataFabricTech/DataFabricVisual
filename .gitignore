@@ -139,3 +139,4 @@ nbdist/
 **/docker/target/
 
 # nuxt build
+/project/ovp/server/src/main/resources/static

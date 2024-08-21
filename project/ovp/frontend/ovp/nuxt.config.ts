@@ -4,6 +4,13 @@ import { fileURLToPath } from "url";
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
+  nitro: {
+    output: {
+      publicDir: fileURLToPath(
+        new URL("../../server/src/main/resources/static", import.meta.url),
+      ),
+    },
+  },
 
   modules: [
     "@nuxtjs/tailwindcss",
@@ -82,7 +89,7 @@ export default defineNuxtConfig({
     "vue-final-modal/style.css",
     "ag-grid-community/dist/styles/ag-grid.css",
     "ag-grid-community/dist/styles/ag-theme-alpine.css",
-    // "~/assets/css/style.scss"
+    "vue3-tooltip/tooltip.css",
   ],
 
   lodash: {

@@ -38,15 +38,34 @@
         <!-- 카테고리, 소유자, 태그 select -->
         <div class="h-group">
           <template v-for="(filterItem, keyName, FI) in props.filter" :key="FI">
-            <menu-search-button
-              :data="filterItem.data"
-              :selected-items="selectedFilter[keyName]"
-              label-key="key"
-              value-key="key"
-              :title="filterItem.text"
-              :is-multi="true"
-              @multiple-change="onSelectFilter(keyName, $event)"
-            ></menu-search-button>
+            <template v-if="keyName === 'category'">
+              <menu-search-tree
+                label-key="name"
+                value-key="id"
+                :title="filterItem.text"
+                :data="filterItem.data.children"
+                :is-multi="true"
+                :hideGuideLines="false"
+                :firExpandAll="true"
+                :show-open-all-btn="false"
+                :show-close-all-btn="false"
+                :use-draggable="false"
+                :selected-items="props.selectedFilters[keyName]"
+                mode="view"
+                @multiple-change="onSelectFilter(keyName, $event)"
+              />
+            </template>
+            <template v-else>
+              <menu-search-button
+                :data="filterItem.data"
+                :selected-items="props.selectedFilters[keyName]"
+                label-key="key"
+                value-key="key"
+                :title="filterItem.text"
+                :is-multi="true"
+                @multiple-change="onSelectFilter(keyName, $event)"
+              ></menu-search-button>
+            </template>
           </template>
         </div>
       </div>
@@ -61,12 +80,11 @@
         @select="onChangeSort"
       ></select-box>
     </div>
-    <!-- TODO: 인피니티 스크롤 -->
     <ul class="menu-list" v-if="checkShowListData">
       <template v-for="(item, idx) in listData" :key="item.value + idx">
-        {{ item.isSelected }}
         <data-model-list-item
           v-if="!item.isSelected"
+          checked-key="checked-menu-api-list-"
           :data="item"
           :is-multi="props.isMulti"
           :use-delete-btn="props.useItemDeleteBtn"
@@ -79,6 +97,14 @@
           @check="onCheckItem(item.value, $event)"
         ></data-model-list-item>
       </template>
+      <!-- TODO: 인피니티 스크롤 -->
+      <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+      <Loading
+        id="loader"
+        :use-loader-overlay="true"
+        class="loader-lg is-loader-inner"
+        style="display: none"
+      ></Loading>
     </ul>
 
     <!-- 결과 없을 시 no-result 표시 -->
@@ -97,12 +123,19 @@ import DataModelListItem from "~/components/datamodel-creation/item/data-model-l
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
 import { DataModelApiListComposition } from "~/components/datamodel-creation/list/api/DataModelApiListComposition";
 import type { DataModelApiListProps } from "~/components/datamodel-creation/list/api/DataModelApiListProps";
+import Loading from "@base/loading/Loading.vue";
+import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 
 const props = withDefaults(defineProps<DataModelApiListProps>(), {
   data: () => [],
   selectedItems: () => [],
+  selectedFilters: () => [],
   sortList: () => [],
   filter: () => {},
+  addSearchList: () => {
+    return () => {};
+  },
   useSort: false,
   useLiveSearch: true,
   useInfinite: false,
@@ -115,53 +148,53 @@ const props = withDefaults(defineProps<DataModelApiListProps>(), {
 });
 
 const emit = defineEmits<{
-  (e: "delete", value: string): void;
-  (e: "select", value: string): void;
-  (e: "item-check", value: string): void;
+  (e: "delete", value: any[]): void;
+  (e: "item-check", value: any[]): void;
   (e: "item-click", value: string): void;
   (e: "bookmark-change", value: string): void;
   (e: "filter-change", value: string): void;
   (e: "sort-change", value: string): void;
   (e: "search-change", value: string): void;
+  (e: "filter-reset", value: string): void;
 }>();
 
 const emitBookmark = (value: string) => {
-  console.log("emitBookmark", value);
   emit("bookmark-change", value);
 };
 
 const emitItemClick = (value: string) => {
-  console.log("emitItemClick", value);
   emit("item-click", value);
 };
 
-const emitItemCheck = (value: string) => {
-  console.log("emitItemCheck", value);
+const emitItemCheck = (value: any[]) => {
   emit("item-check", value);
 };
 
-const emitDeleteItem = (value: string) => {
-  console.log("emitDeleteItem", value);
+const emitDeleteItem = (value: any[]) => {
   emit("delete", value);
 };
 
 const emitFilterChange = (value: {}) => {
-  console.log("emitFilterChange", value);
+  setScrollOptions(0);
   emit("filter-change", value);
 };
 const emitSortChange = (value: string) => {
-  console.log("emitSortChange", value);
+  setScrollOptions(0);
   emit("sort-change", value);
 };
 const emitSearchChange = (value: string) => {
-  console.log("emitSearchChange", value);
+  setScrollOptions(0);
   emit("search-change", value);
 };
+
+const { scrollTrigger, setScrollOptions } = useIntersectionObserver(
+  props.addSearchList,
+);
+setScrollOptions(0);
 
 const {
   listData,
   searchLabel,
-  selectedFilter,
   selectedSort,
   checkShowListData,
   onSearchText,

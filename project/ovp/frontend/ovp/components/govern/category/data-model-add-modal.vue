@@ -23,7 +23,10 @@
           class="search-input-lg"
           :is-search-input-default-type="false"
           :placeholder="'검색어를 입력하세요.'"
-          v-model="inputValue"
+          :inp-value="addSearchInputValue"
+          :inp-id="'modelAddInp1'"
+          :label-text="'데이터 모델 검색'"
+          @update:value="updateSearchInputValue"
           @on-input="onInput"
         ></search-input>
         <div class="filters">
@@ -52,7 +55,7 @@
         <div v-else class="table-scroll" id="dataListModal">
           <table>
             <colgroup>
-              <col style="width: 10%" />
+              <col style="width: 42px" />
               <col />
             </colgroup>
             <thead>
@@ -123,7 +126,6 @@
               </tr>
             </tbody>
           </table>
-          <!--          TODO: [개발] 인피니티 스크롤 적용 -->
           <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
           <Loading
             id="loader"
@@ -162,6 +164,7 @@ const {
   isSearchResultNoData,
   dataModelIdList,
   selectedDataModelList,
+  addSearchInputValue,
 } = storeToRefs(categoryStore);
 
 const props = defineProps({
@@ -172,7 +175,9 @@ const props = defineProps({
 });
 
 // SEARCH INPUT
-const inputValue = ref("");
+const updateSearchInputValue = (newValue: string) => {
+  addSearchInputValue.value = newValue;
+};
 const onInput = (value: string) => {
   setScrollOptions(0);
   setSearchKeyword(value);

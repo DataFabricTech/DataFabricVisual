@@ -2,14 +2,15 @@
   @include flex($direction: column, $gap: $spacing-48);
 
   height: 100%;
-  background: linear-gradient(to bottom, rgb(189 227 255 / 50%), rgb(51 152 164 / 50%));
+  background: linear-gradient(to bottom, rgb(189 227 255 / 40%), rgb(51 152 164 / 40%));
 
   &-logo {
-    @include font-size('32');
-
     margin-bottom: $spacing-24;
-    font-weight: 700;
-    color: $primary-500;
+
+    .logo {
+      width: 55px;
+      height: 55px;
+    }
   }
 
   &-title {

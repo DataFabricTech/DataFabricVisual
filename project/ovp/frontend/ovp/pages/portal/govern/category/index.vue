@@ -115,6 +115,10 @@
                 class="w-[541px]"
                 :is-search-input-default-type="false"
                 :placeholder="'검색어를 입력하세요.'"
+                :inp-value="searchInputValue"
+                :inp-id="'categoryInp1'"
+                :label-text="'데이터 모델 검색'"
+                @update:value="updateSearchInputValue"
                 @on-input="onInput"
               ></search-input>
               <div class="h-group w-full">
@@ -232,6 +236,7 @@ const {
   resetAddModalStatus,
   setSelectedNode,
   getSearchList,
+  setSearchKeyword,
   getFilters,
 } = categoryStore;
 const {
@@ -242,6 +247,7 @@ const {
   previewData,
   isBoxSelectedStyle,
   selectedDataModelList,
+  addSearchInputValue,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -397,6 +403,10 @@ const setModelIdList = () => {
   }
 };
 
+const searchInputValue = ref("");
+const updateSearchInputValue = (newValue: string) => {
+  searchInputValue.value = newValue;
+};
 const onInput = (value: string) => {
   setScrollOptions(0);
   getModelList(value);
@@ -490,6 +500,8 @@ const showDataModelAddModal = () => {
 
 const beforeOpen = () => {
   selectedDataModelList.value = [];
+  addSearchInputValue.value = "";
+  setSearchKeyword("");
   getSearchList();
 };
 

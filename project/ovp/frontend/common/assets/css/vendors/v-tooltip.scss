@@ -1,0 +1,30 @@
+.vue-tooltip.tooltip {
+  &::after {
+    @include font-size('12');
+    padding: $spacing-12;
+    border-radius: $border-radius-12;
+  }
+
+  &.vue-tooltip__primary::after {
+    background-color: $primary-700;
+    color: $primary-100;
+  }
+
+  &.tooltip-light::after {
+    @include box-shadow('lg');
+
+    background-color: $primary-100;
+    color: $primary-900;
+  }
+
+  .svg-icon {
+    @include icon-color($neutral-400);
+
+    width: 20px;
+    height: 20px;
+
+    &:hover {
+      @include icon-color($primary-500);
+    }
+  }
+}
