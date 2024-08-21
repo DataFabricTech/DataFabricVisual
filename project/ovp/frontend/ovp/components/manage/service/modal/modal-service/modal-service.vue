@@ -117,7 +117,6 @@ const onClosed = () => {
 };
 
 const gotoPrev = () => {
-  console.log("here");
   isValid.value = true;
   inValidMsg.value = "";
   currentStep.value = currentStep.value - 1;
