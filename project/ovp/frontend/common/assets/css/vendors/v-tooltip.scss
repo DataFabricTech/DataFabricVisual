@@ -1,53 +1,3 @@
-
-:root {
-  /* Directive Variables */
-  --tooltip-d-transition-duration: 0.4s;
-  --tooltip-d-border-radius: 12px;
-  --tooltip-d-padding: 2px 4px;
-  --tooltip-d-position-x: calc(100% + 10px);
-  --tooltip-d-position-y: calc(100% + 2px);
-  --tooltip-d-box-shadow: 0px 3.2px 7.2px 0px rgba(0, 0, 0, 0.14),
-  0px 0.6px 1.8px 0px rgba(0, 0, 0, 0.1),
-  0px -1.5px 6px 0px rgba(0, 0, 0, 0.06);
-  --tooltip-d-z-index: 10;
-  --tooltip-d-max-width: 200px;
-  --tooltip-d-font-size: 14px;
-  --tooltip-d-width: max-content;
-  --tooltip-d-height: max-content;
-  --tooltip-d-outline: none;
-  --tooltip-d-border: none;
-
-  /* Component Variables */
-  --tooltip-c-transition-duration: 0.4s;
-  --tooltip-c-border-radius: 12px;
-  --tooltip-c-padding: 2px 4px;
-  --tooltip-c-position-x: calc(100% + 10px);
-  --tooltip-c-position-y: 100%;
-  --tooltip-c-box-shadow: 0px 3.2px 7.2px 0px rgba(0, 0, 0, 0.14),
-  0px 0.6px 1.8px 0px rgba(0, 0, 0, 0.1),
-  0px -1.5px 6px 0px rgba(0, 0, 0, 0.06);
-  --tooltip-c-z-index: 10;
-  --tooltip-c-max-width: max-content;
-  --tooltip-c-width: max-content;
-  --tooltip-c-height: max-content;
-  --tooltip-c-outline: none;
-  --tooltip-c-border: none;
-
-  /* Colors */
-  --tooltip-primary-color: #212121;
-  --tooltip-primary-background: #fff;
-  --tooltip-seconary-color: #fff;
-  --tooltip-seconary-background: #475DEB;
-  --tooltip-accent-color: #fff;
-  --tooltip-accent-background: #212121;
-
-  --tooltip-component-color: #212121;
-  --tooltip-component-background: #fff;
-}
-
-
-// OR
-
 .vue-tooltip.tooltip {
   &::after {
     @include font-size('12');
@@ -56,13 +6,25 @@
   }
 
   &.vue-tooltip__primary::after {
-   background-color: $primary-700;
+    background-color: $primary-700;
     color: $primary-100;
-
   }
 
-  &__secondary::after { // ... //}
-    &__accent::after { // ... //}
+  &.tooltip-light::after {
+    @include box-shadow('lg');
+
+    background-color: $primary-100;
+    color: $primary-900;
+  }
+
+  .svg-icon {
+    @include icon-color($neutral-400);
+
+    width: 20px;
+    height: 20px;
+
+    &:hover {
+      @include icon-color($primary-500);
     }
   }
 }
