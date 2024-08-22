@@ -245,17 +245,15 @@ export const useServiceStore = defineStore("serviceStore", () => {
     return params;
   };
   const connectionTest = async () => {
-    const { result, errorMessage, data } = await $api(
+    const { errorMessage, data } = await $api(
       "/api/service-manage/connectionTest",
       {
         method: "POST",
         body: getParams(),
       },
     );
-    isDoneTestConnection.value = result > 0;
 
     const { workflowId, responseStatus } = data;
-    console.log(responseStatus);
 
     let errMsg = null;
     if (errorMessage) {
@@ -268,6 +266,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
       errMsg = "";
     }
 
+    isDoneTestConnection.value = _.isEmpty(errMsg);
     return {
       result: _.isEmpty(errMsg),
       errorMessage: errMsg,
