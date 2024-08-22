@@ -473,6 +473,10 @@ export function ModalServiceComposition(
   // step2
 
   // step3
+  /**
+   * 필수 key 조회
+   * @param key
+   */
   const getRequiredIds = (key: string): string[] => {
     const service = serviceDetailFormObj[key];
     if (!service) {
@@ -482,6 +486,7 @@ export function ModalServiceComposition(
       group.items
         .filter((item: any) => item.required)
         .filter((item: any) => {
+          // condifiton 항목이 있는 데이터 처리
           return (
             !_.has(item, "condition") ||
             item.id === serviceObj.value.detailInfo[item.condition.id]
@@ -501,6 +506,21 @@ export function ModalServiceComposition(
     return [...defaultIds, ...addableIds];
   };
 
+  const checkDoubleArrayRequiredValue = (jsonObj: any): boolean => {
+    // 값이 아예 없으면 true 를 return 한다
+    if (_.isUndefined(jsonObj)) {
+      return true;
+    }
+
+    return (
+      Array.isArray(jsonObj) &&
+      jsonObj.every(
+        (item) =>
+          Array.isArray(item) &&
+          item.every((subItem) => subItem !== null && subItem !== ""),
+      )
+    );
+  };
   const checkRequiredValue = (): boolean => {
     const requiredItems = getRequiredIds(serviceObj.value.serviceId);
 
@@ -517,6 +537,21 @@ export function ModalServiceComposition(
           return false;
         }
       }
+    }
+
+    if (
+      !checkDoubleArrayRequiredValue(
+        serviceObj.value.detailInfo.connectionOptions,
+      )
+    ) {
+      return false;
+    }
+    if (
+      !checkDoubleArrayRequiredValue(
+        serviceObj.value.detailInfo.connectionArguments,
+      )
+    ) {
+      return false;
     }
     return true;
   };

@@ -50,6 +50,7 @@
           <p class="notification-detail">{{ inValidMsg }}</p>
         </div>
         <button
+          v-show="currentStep > 1"
           class="button button-primary-stroke button-lg"
           @click="gotoPrev"
         >

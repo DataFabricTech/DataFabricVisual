@@ -100,7 +100,7 @@ public class ServiceManageController {
     }
 
     /**
-     * 서비스 명 중복인지 체크
+     * connection test
      *
      * @return
      */

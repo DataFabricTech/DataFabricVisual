@@ -127,8 +127,8 @@ public class ServiceManageService {
         /**
          * connection Test 순서
          * 1. getTestConnectionDefinition  을 통해서 definition ID 를 획득
-         * 2. workflows 실행
-         * 3. postWorkflows 실행
+         * 2. workflows 실행 (workflow 생성 후 workflow id 조회)
+         * 3. postWorkflowsTrigger 실행
          * 4. getWorkflows 실행
          * 5. deleteWorkflows 실행
          */
@@ -136,7 +136,6 @@ public class ServiceManageService {
         // 1. getTestConnectionDefinition
         String definitionNm = "Mysql.testConnectionDefinition";
         Map<String, Object> definition = servicesClient.getTestConnectionDefinition(definitionNm);
-        String definitionId = definition.get("id").toString();
 
         // 2. workflows 실행
         Map<String, Object> workflowParams = new HashMap<>();

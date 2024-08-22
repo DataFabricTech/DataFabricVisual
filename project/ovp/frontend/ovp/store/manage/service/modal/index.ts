@@ -262,17 +262,29 @@ export const useServiceStore = defineStore("serviceStore", () => {
     return params;
   };
   const connectionTest = async () => {
-    const response = await $api("/api/service-manage/connectionTest", {
-      method: "POST",
-      body: getParams(),
-    });
-    isDoneTestConnection.value = response.result > 0;
+    const { result, errorMessage, data } = await $api(
+      "/api/service-manage/connectionTest",
+      {
+        method: "POST",
+        body: getParams(),
+      },
+    );
+    isDoneTestConnection.value = result > 0;
 
     return {
-      result: response.result > 0,
-      errorMessage: response.errorMessage,
-      workflowId: response.data,
+      result: result > 0,
+      errorMessage: errorMessage ? getErrorMessage(errorMessage) : "",
+      workflowId: data,
     };
+  };
+  const getErrorMessage = (str: string): string => {
+    try {
+      const messageJsonStr = str.split("]: ").pop();
+      const errorJson = JSON.parse(messageJsonStr ?? "")[0];
+      return `${errorJson.responseMessage} [${errorJson.errorType}]`;
+    } catch {
+      return "";
+    }
   };
 
   const submit = async () => {
