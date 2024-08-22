@@ -5,4 +5,5 @@ export interface StepProps extends NavigationProps {
   comparison?: "equal" | "greater";
   startPoint?: number;
   parentIndex?: number;
+  useButtonClick?: boolean;
 }

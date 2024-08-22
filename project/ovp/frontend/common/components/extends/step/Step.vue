@@ -4,7 +4,7 @@
       <div
         class="step-item"
         v-for="(item, index) in data"
-        @click="clickStep(index)"
+        v-on:click="useButtonClick ? () => clickStep(index) : null"
         :class="{
           'is-step-item-selected': changeCurrentStepClass(index),
           'is-step-item-complete': currentIndex > index
@@ -42,7 +42,8 @@ const props = withDefaults(defineProps<StepProps>(), {
   showBtn: true,
   comparison: "equal",
   startPoint: 1,
-  useParentIndex: false
+  useParentIndex: false,
+  useButtonClick: true
 });
 
 const emit = defineEmits<{ (e: "change", item: number | string): void }>();
