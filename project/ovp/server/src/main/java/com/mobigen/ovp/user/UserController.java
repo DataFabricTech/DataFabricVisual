@@ -22,6 +22,7 @@ public class UserController {
 
     /**
      * 모든 사용자 호출
+     *
      * @return
      * @throws Exception
      */
@@ -61,7 +62,7 @@ public class UserController {
      * @return
      * @throws Exception
      */
-    @ResponseJsonResult
+    @ResponseJsonResult(errorMessage = "사용자 정보 정보 삭제 오류")
     @DeleteMapping("/{id}")
     public Object deleteUser(@PathVariable UUID id) throws Exception {
         return userService.deleteUser(id);
