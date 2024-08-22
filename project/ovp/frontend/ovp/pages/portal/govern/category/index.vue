@@ -237,8 +237,12 @@ const {
   setSelectedNode,
   setSearchKeyword,
   getFilters,
+  getSearchList,
+  changeTab,
+  setEmptyFilter,
 } = categoryStore;
 const {
+  initTab,
   selectedModelList,
   categories,
   modelList,
@@ -503,10 +507,12 @@ const beforeOpen = () => {
   addSearchInputValue.value = "";
   checkReachedCount.value = false;
   setSearchKeyword("");
+  getFilters();
 };
 
 const open = () => {
-  getFilters();
+  setEmptyFilter();
+  changeTab("table");
 };
 
 onMounted(async () => {

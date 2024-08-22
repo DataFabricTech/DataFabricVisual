@@ -21,7 +21,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
 import { useGovernCategoryStore } from "~/store/governance/Category/index";
 import { storeToRefs } from "pinia";
@@ -29,7 +28,7 @@ import _ from "lodash";
 
 const categoryStore = useGovernCategoryStore();
 const { resetReloadList } = categoryStore;
-const { selectedFilters } = storeToRefs(categoryStore);
+const { selectedFilters, selectedFilterItems } = storeToRefs(categoryStore);
 
 const props = defineProps({
   data: {
@@ -38,15 +37,12 @@ const props = defineProps({
   },
 });
 
-const selectedFilterItems: Ref<any> = ref([]);
-
 const resetFilters = () => {
   selectedFilterItems.value = [];
   selectedFilters.value = {};
 
   resetReloadList();
 };
-
 const changeMultiple: (value: any[] | {}, keyName: any) => void = (
   value: any[] | {},
   keyName: string,
