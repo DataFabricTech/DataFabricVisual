@@ -15,10 +15,11 @@ interface ServiceData {
 interface DBServiceListData {
   serviceType: string;
   name: string;
-  href: string;
   description: string | undefined;
   owner: object;
-  usage: string | undefined;
+  id: string;
+  fqn: string;
+  type: string;
 }
 
 export const useServiceCollectionLogStore = defineStore(
@@ -39,6 +40,9 @@ export const useServiceCollectionLogStore = defineStore(
           name: "ownerName1",
         },
         usage: "usage1",
+        type: "type1",
+        id: "id1",
+        fqn: "fqn1",
       },
     ]);
 
@@ -111,22 +115,24 @@ export const useServiceCollectionLogStore = defineStore(
         {
           serviceType: "Mysql",
           name: "test_db",
-          href: "http://192.168.105.26:8585/api/v1/services/databaseServices/e2e0484e-6985-4083-a244-698700c6b189",
           description: "설명임",
           owner: {
             name: "ownerName",
           },
-          usage: "비어있음",
+          type: "Table",
+          id: "id1",
+          fqn: "fqn1",
         },
         {
           serviceType: "Mysql2",
           name: "test_db2",
-          href: "http://192.168.105.26:8585/api/v1/services/databaseServices/e2e0484e-6985-4083-a244-698700c6b189",
           description: "설명임2",
           owner: {
             name: "ownerName2",
           },
-          usage: "비어있음2",
+          type: "model",
+          id: "id2",
+          fqn: "fqn2",
         },
       ];
       DBServiceListData.value = result;

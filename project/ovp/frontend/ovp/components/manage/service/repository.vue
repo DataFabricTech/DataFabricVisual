@@ -38,21 +38,18 @@
         <th class="align-center">이름</th>
         <th>설명</th>
         <th>소유자</th>
-        <th>USAGE</th>
       </tr>
       <tr v-for="(item, index) in DBServiceListData" :key="index">
         <td>{{ item.serviceType }}</td>
-        <td>
-          <a
-            :href="item.href"
-            class="link-button link-button link-button-underline"
-            title="상세 페이지 이동"
-            >{{ item.name }}</a
-          >
+        <td
+          @click="routeDetail(item)"
+          class="link-button link-button link-button-underline"
+          title="상세 페이지 이동"
+        >
+          {{ item.name }}
         </td>
         <td>{{ item.description }}</td>
-        <td>{{ item.owner }}</td>
-        <td>{{ item.usage }}</td>
+        <td>{{ item.owner.name }}</td>
       </tr>
     </table>
     <!-- 결과 없을 시 no-result 표시 -->
@@ -71,6 +68,9 @@ import { useServiceCollectionLogStore } from "@/store/manage/service/collection-
 import { onBeforeMount } from "vue";
 import { computed } from "vue";
 import _ from "lodash";
+import { useRouter } from "nuxt/app";
+
+const router = useRouter();
 
 const serviceCollectionLogStore = useServiceCollectionLogStore();
 const { updateRepositoryDescriptionAPI, getDBServiceList } =
@@ -81,6 +81,16 @@ const { serviceData, DBServiceListData } = storeToRefs(
 
 interface RepositoryDescription {
   description: string;
+}
+
+interface DBServiceListData {
+  serviceType: string;
+  name: string;
+  description: string | undefined;
+  owner: object;
+  id: string;
+  fqn: string;
+  type: string;
 }
 
 // 초기 데이터(description) 백업
@@ -151,6 +161,17 @@ const editDone = async () => {
 onBeforeMount(async () => {
   await getDBServiceList(); // DB서비스리스트 조회API 호출
 });
+
+const routeDetail = (item: DBServiceListData) => {
+  router.push({
+    path: "/portal/search/detail",
+    query: {
+      type: item.type,
+      id: item.id,
+      fqn: item.fqn,
+    },
+  });
+};
 </script>
 
 <style scoped></style>
