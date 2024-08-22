@@ -45,7 +45,7 @@ public class UserService {
         Map<String, Object> param = new HashMap<>();
         param.put("limit", 1000000); // 모든 유저 목록을 조회해 데이터 삽입
         param.put("isBot", false);
-        Map<String, Object> result = userClient.getUsers(headers, param);
+        Map<String, Object> result = userClient.getUserAll(headers, param);
 
         return (List<Map<String, Object>>) result.get("data");
     }

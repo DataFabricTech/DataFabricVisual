@@ -17,7 +17,7 @@ import java.util.UUID;
 @FeignClient(name = "UserClient", url = "${properties.ovp.open-metadata-url}/users")
 public interface UserClient {
     @GetMapping("")
-    Map<String, Object> getUsers(@RequestHeader HttpHeaders headers, @RequestParam Map<String, Object> param) throws Exception;
+    Map<String, Object> getUserAll(@RequestHeader HttpHeaders headers, @RequestParam Map<String, Object> param) throws Exception;
 
     @GetMapping("/loggedInUser")
     Map<String, Object> getUserInfo() throws Exception;

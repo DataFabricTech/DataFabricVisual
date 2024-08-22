@@ -5,6 +5,7 @@ import com.mobigen.ovp.common.openmete_client.dto.Followers;
 import com.mobigen.ovp.common.openmete_client.dto.Owner;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
 import com.mobigen.ovp.common.openmete_client.dto.Voters;
+import com.mobigen.ovp.glossary.client.dto.common.Tag;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -13,11 +14,12 @@ import java.util.List;
 
 @Data
 public class DataModelDetailResponse {
+
     String serviceType;
     String type;
     String id;
     String fqn;
-    String category;
+    DataModelDetailCategory category;
     String categoryId;
     String firModelNm;
     String modelNm;
@@ -36,12 +38,14 @@ public class DataModelDetailResponse {
     @JsonProperty("isDownVote")
     boolean isDownVote;
     List<String> depth;
+    List<Tag> tags;
 
     public DataModelDetailResponse(Tables tables, String type, String userId) {
         this.serviceType = tables.getService().getType();
         this.type = type;
         this.id = tables.getId();
         this.fqn = tables.getFullyQualifiedName();
+        this.category = new DataModelDetailCategory();
         this.modelNm = tables.getName();
         String displayName = tables.getDisplayName();
 
@@ -82,12 +86,12 @@ public class DataModelDetailResponse {
                     }
                 }
             }
-
         }
 
         this.followers = tables.getFollowers().size();
         this.upVotes = tables.getVotes().getUpVotes();
         this.downVotes = tables.getVotes().getDownVotes();
+        this.tags = new ArrayList<>();
 
 
         String[] splitArray = this.fqn.split("\\.");

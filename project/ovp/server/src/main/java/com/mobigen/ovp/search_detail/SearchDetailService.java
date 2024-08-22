@@ -1,12 +1,15 @@
 package com.mobigen.ovp.search_detail;
 
+import com.mobigen.ovp.category.entity.CategoryEntity;
+import com.mobigen.ovp.category.repository.CategoryRepository;
 import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.openmete_client.LineageClient;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Columns;
 import com.mobigen.ovp.common.openmete_client.dto.ProfileColumn;
-import com.mobigen.ovp.search_detail.dto.request.DataModelDetailUpdate;
+import com.mobigen.ovp.common.openmete_client.dto.Tables;
+import com.mobigen.ovp.glossary.client.dto.common.Tag;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailVote;
 import com.mobigen.ovp.search_detail.dto.response.DataModelDetailLineageTableResponse;
 import com.mobigen.ovp.search_detail.dto.response.DataModelDetailResponse;
@@ -38,6 +41,7 @@ public class SearchDetailService {
     private final LineageClient lineageClient;
 
     private final UserService userService;
+    private final CategoryRepository categoryRepository;
 
 
     public Object getUserFilter() throws Exception {
@@ -74,8 +78,21 @@ public class SearchDetailService {
             // fields=tableConstraints,tablePartition,usageSummary,owner,customMetrics,columns,tags,followers,joins,schemaDefinition,dataModel,extension,testSuite,domain,dataProducts,lifeCycle,sourceHash
             params.add("fields", "owner,followers,tags,votes");
             params.add("include", "all");
+            Tables tables = tablesClient.getTablesName(id, params);
+            DataModelDetailResponse dataModelDetailResponse = new DataModelDetailResponse(tables, type, userId);
 
-            DataModelDetailResponse dataModelDetailResponse = new DataModelDetailResponse(tablesClient.getTablesName(id, params), type, userId);
+            for(Tag tag : tables.getTags()) {
+                dataModelDetailResponse.getTags().add(tag);
+
+                if (tag.getTagFQN().contains("ovp_category")) {
+                    CategoryEntity categoryEntity = categoryRepository.findByIdWithParent(UUID.fromString(tag.getName()));
+                    dataModelDetailResponse.getCategory().setName(categoryEntity.getName());
+                    dataModelDetailResponse.getCategory().setTagName(tag.getName());
+                    dataModelDetailResponse.getCategory().setTagDisplayName(tag.getDisplayName());
+                    dataModelDetailResponse.getCategory().setTagDescription(tag.getDescription());
+                    dataModelDetailResponse.getCategory().setTagFQN(tag.getTagFQN());
+                }
+            }
 
             return dataModelDetailResponse;
         } else {

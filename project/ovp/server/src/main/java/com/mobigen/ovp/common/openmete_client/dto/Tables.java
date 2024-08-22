@@ -1,5 +1,6 @@
 package com.mobigen.ovp.common.openmete_client.dto;
 
+import com.mobigen.ovp.glossary.client.dto.common.Tag;
 import lombok.Data;
 
 import java.util.List;
@@ -17,4 +18,5 @@ public class Tables {
     List<Columns> columns;
     Service service;
     Entity entity;
+    List<Tag> tags;
 }
