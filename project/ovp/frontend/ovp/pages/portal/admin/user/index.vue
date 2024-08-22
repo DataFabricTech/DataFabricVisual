@@ -41,7 +41,7 @@
     </div>
   </div>
 
-  <AddUserModal></AddUserModal>
+  <AddUserModal :modal-id="addUserModalId"></AddUserModal>
 </template>
 
 <script setup lang="ts">
@@ -60,6 +60,7 @@ const userStore = useUserStore();
 const { setSearchKeyword, getUserList, addUserList, deleteUser } = userStore;
 const { userList } = storeToRefs(userStore);
 
+const addUserModalId = "addUserModal";
 const columnDefs = ref([
   {
     headerName: "사용자 이름",
@@ -129,7 +130,7 @@ const onClickSearch = (value: string) => {
 };
 
 const openModal = () => {
-  $vfm.open("addUserModal");
+  $vfm.open(addUserModalId);
 };
 
 const cellClicked = ({
