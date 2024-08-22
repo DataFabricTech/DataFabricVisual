@@ -126,24 +126,16 @@ const resetViewData = () => {
   testConnectionStatus.value = ConnectionStatus.NONE;
 };
 const gotoNext = async () => {
+  // 다음 단계로 넘어가기 전에 validation 체크를 해야함.
   if (!(await checkValidation())) {
     return;
   }
 
   if (currentStep.value === 3) {
-    gotoSave();
-  } else {
-    // 다음 단계로 넘어가기 전에 validation 체크를 해야함.
-  }
-  currentStep.value = currentStep.value + 1;
-};
-const gotoSave = async () => {
-  if (!(await checkValidation())) {
+    submit();
     return;
   }
-
-  // 저장한다.
-  submit();
+  currentStep.value = currentStep.value + 1;
 };
 </script>
 

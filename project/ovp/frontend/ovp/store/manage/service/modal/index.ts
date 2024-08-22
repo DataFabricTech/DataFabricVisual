@@ -9,8 +9,14 @@ import {
 import _ from "lodash";
 import type { Ref } from "vue";
 
+import { storeToRefs } from "pinia";
+import { useUserStore } from "~/store/user/userStore";
+
 export const useServiceStore = defineStore("serviceStore", () => {
   const { $api } = useNuxtApp();
+
+  const userStore = useUserStore();
+  const { user } = storeToRefs(userStore);
 
   // 리셋하기 위해 초기상태 저장
   const initialServiceObj: IServiceObj = {
@@ -233,16 +239,30 @@ export const useServiceStore = defineStore("serviceStore", () => {
     };
   };
 
-  const getParams = () => {
+  const getDefqaultParam = () => {
     const serviceId = serviceObj.value.serviceId;
-    const params: any = {
-      connectionType: serviceId,
+    return {
       serviceType: serviceId === ServiceIds.MINIO ? "Storage" : "Database",
       connection: {
         config: getConfig(serviceId),
       },
     };
-    return params;
+  };
+  const getParams = () => {
+    const serviceId = serviceObj.value.serviceId;
+    return { ...getDefqaultParam(), ...{ connectionType: serviceId } };
+  };
+  const getSubmitParams = () => {
+    return {
+      ...getDefqaultParam(),
+      ...serviceObj.value.defaultInfo,
+      ...{
+        owner: {
+          id: user.id,
+          type: "user",
+        },
+      },
+    };
   };
   const connectionTest = async () => {
     const { errorMessage, data } = await $api(
@@ -278,8 +298,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
   };
 
   const submit = async () => {
-    console.log(serviceObj);
-    console.log("submit");
+    console.log(getSubmitParams());
     return false;
   };
 
