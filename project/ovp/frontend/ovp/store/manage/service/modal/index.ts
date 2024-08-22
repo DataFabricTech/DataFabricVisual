@@ -92,14 +92,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
   const getConfig = (serviceId: string) => {
     const serviceObjData = serviceObj.value.detailInfo;
 
-    const defaultConfig = {
-      supportsDBTExtraction: true,
-      supportsMetadataExtraction: true,
-      supportsProfiler: true,
-      supportsQueryComment: true,
-      type: serviceId,
-    };
-
     const connectionArgumentsParam = _.has(
       serviceObj.value.detailInfo,
       "connectionArguments",
@@ -157,7 +149,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
             return acc;
           }, []),
           minioConfig,
-          supportsMetadataExtraction: true,
           supportsStorageProfiler: true,
         };
 
@@ -182,11 +173,10 @@ export const useServiceStore = defineStore("serviceStore", () => {
           "databaseSchema",
           serviceObjData.databaseSchema,
         );
-        specificConfig.scheme = "mysql+pymysql";
         break;
 
       case ServiceIds.MYSQL: {
-        specificConfig.scheme = "mysql+pymysql";
+        specificConfig.databaseName = serviceObjData.databaseName;
 
         addIfExists(specificConfig, "hostPort", serviceObjData.hostAndPort);
         addIfExists(specificConfig, "username", serviceObjData.username);
@@ -199,13 +189,9 @@ export const useServiceStore = defineStore("serviceStore", () => {
 
       case ServiceIds.POSTGRESQL: {
         specificConfig = {
-          scheme: "postgresql+psycopg2",
           classificationName: "postgresPolicyTags",
           ingestAllDatabases: true,
           sslMode: "disable",
-          supportsDatabase: true,
-          supportsLineageExtraction: true,
-          supportsUsageExtraction: true,
         };
 
         if (serviceObjData.password) {
@@ -227,12 +213,10 @@ export const useServiceStore = defineStore("serviceStore", () => {
 
         specificConfig = {
           oracleConnectionType,
-          scheme: "oracle+cx_oracle",
-          supportsLineageExtraction: true,
-          supportsUsageExtraction: true,
         };
         addIfExists(specificConfig, "username", serviceObjData.username);
         addIfExists(specificConfig, "password", serviceObjData.password);
+        addIfExists(specificConfig, "hostPort", serviceObjData.hostAndPort);
         break;
       }
 
@@ -243,7 +227,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
     }
 
     return {
-      ...defaultConfig,
       ...specificConfig,
       ...connectionArgumentsParam,
       ...connectionOptionsParam,
@@ -271,20 +254,28 @@ export const useServiceStore = defineStore("serviceStore", () => {
     );
     isDoneTestConnection.value = result > 0;
 
+    const { workflowId, responseStatus } = data;
+    console.log(responseStatus);
+
+    let errMsg = null;
+    if (errorMessage) {
+      errMsg = getErrorMessage(errorMessage);
+    } else if (responseStatus.status === "Failed") {
+      errMsg = responseStatus.steps.map(
+        (step: any) => `[${step.name}] ${step.message}`,
+      )[0];
+    } else {
+      errMsg = "";
+    }
+
     return {
-      result: result > 0,
-      errorMessage: errorMessage ? getErrorMessage(errorMessage) : "",
-      workflowId: data,
+      result: _.isEmpty(errMsg),
+      errorMessage: errMsg,
+      workflowId: workflowId,
     };
   };
-  const getErrorMessage = (str: string): string => {
-    try {
-      const messageJsonStr = str.split("]: ").pop();
-      const errorJson = JSON.parse(messageJsonStr ?? "")[0];
-      return `${errorJson.responseMessage} [${errorJson.errorType}]`;
-    } catch {
-      return "";
-    }
+  const getErrorMessage = (str: string): string | undefined => {
+    return str.split("]: ").pop();
   };
 
   const submit = async () => {

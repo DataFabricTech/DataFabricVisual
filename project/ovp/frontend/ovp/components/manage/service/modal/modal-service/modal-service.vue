@@ -27,6 +27,7 @@
         :current-item-type="'index'"
         :comparison="'equal'"
         :show-btn="false"
+        :use-button-click="false"
         @change="changeStep"
         style="width: 100%"
       />

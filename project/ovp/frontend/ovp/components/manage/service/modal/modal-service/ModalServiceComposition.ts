@@ -315,6 +315,12 @@ export function ModalServiceComposition(
               type: PanelTypes.INPUT_PWD,
               required: true,
             },
+            {
+              id: "hostAndPort",
+              label: "Host and Port",
+              type: PanelTypes.INPUT,
+              required: true,
+            },
           ],
         },
         {

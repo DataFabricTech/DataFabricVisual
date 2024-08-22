@@ -8,6 +8,7 @@ import com.mobigen.ovp.common.openmete_client.dto.Services;
 import com.mobigen.ovp.search.SearchService;
 import com.mobigen.ovp.service_manager.client.response.ServiceCollectionLogResponse;
 import com.mobigen.ovp.service_manager.client.response.ServiceResponse;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,7 @@ public class ServiceManageService {
 
     /**
      * 서비스 리스트
+     *
      * @return
      */
     public List<ServiceResponse> getServices() {
@@ -41,7 +43,7 @@ public class ServiceManageService {
         int limit = 100;
         List<Services> result = servicesClient.getServices(fields, limit).getData();
         List<ServiceResponse> serviceResponses = new ArrayList<>();
-        for(Services service : result) {
+        for (Services service : result) {
             serviceResponses.add(new ServiceResponse(service));
         }
         return serviceResponses;
@@ -49,6 +51,7 @@ public class ServiceManageService {
 
     /**
      * 서비스 검색
+     *
      * @param keyword
      * @param from
      * @return
@@ -61,12 +64,12 @@ public class ServiceManageService {
         params.add("index", "database_service_search_index");
         List<Map<String, ?>> hits = (List<Map<String, ?>>) ((Map<?, ?>) searchClient.getSearchList(params).get("hits")).get("hits");
         List<Map<String, Object>> source = new ArrayList<>();
-        for(Map<String, ?> data : hits) {
+        for (Map<String, ?> data : hits) {
             source.add((Map<String, Object>) data.get("_source"));
         }
         List<ServiceResponse> result = new ArrayList<>();
 
-        for(Map<String, Object> map : source) {
+        for (Map<String, Object> map : source) {
             result.add(new ServiceResponse(map));
         }
         return result;
@@ -74,13 +77,14 @@ public class ServiceManageService {
 
     /**
      * 서비스 수정
+     *
      * @param id
      * @param param
      * @return
      */
     public ServiceResponse patchService(UUID id, List<JsonPatchOperation> param) throws Exception {
         ResponseEntity<Services> result = servicesClient.patchServie(id, param);
-        if(result.getStatusCode() == HttpStatus.OK) {
+        if (result.getStatusCode() == HttpStatus.OK) {
             return new ServiceResponse(result);
         } else {
             throw new Exception();
@@ -89,6 +93,7 @@ public class ServiceManageService {
 
     /**
      * 서비스 삭제
+     *
      * @param id
      * @param hardDelete
      * @param recursive
@@ -96,7 +101,7 @@ public class ServiceManageService {
      */
     public Object deleteService(UUID id, boolean hardDelete, boolean recursive) throws Exception {
         ResponseEntity<Object> result = servicesClient.deleteService(id, hardDelete, recursive);
-        if(result.getStatusCode() == HttpStatus.OK) {
+        if (result.getStatusCode() == HttpStatus.OK) {
             return servicesClient.deleteService(id, hardDelete, recursive);
         } else {
             throw new Exception();
@@ -105,9 +110,10 @@ public class ServiceManageService {
 
     /**
      * service : Service - 수집 - 동작 [log] 조회
+     *
      * @param id
      * @return
-     * **/
+     **/
     public Object getServiceCollectionLog(String id) {
         return new ServiceCollectionLogResponse(servicesClient.getServiceCollectionLog(id));
     }
@@ -124,6 +130,7 @@ public class ServiceManageService {
     }
 
     public Object connectionTest(Map<String, Object> params) {
+        Map<String, Object> responseMap = new HashMap<>();
         /**
          * connection Test 순서
          * 1. getTestConnectionDefinition  을 통해서 definition ID 를 획득
@@ -145,22 +152,25 @@ public class ServiceManageService {
 
         Map<String, Object> workflowInfo = automationsClient.workflows(workflowParams);
         String workflowId = workflowInfo.get("id").toString();
+        responseMap.put("workflowId", workflowId);
 
         try {
             // 3. postWorkflows 실행
             automationsClient.postWorkflowsTrigger(workflowId);
 
             // 4. workflow 조회
-            automationsClient.getWorkflows(workflowId);
-
-        } catch (Exception e) {
-            System.out.println(e);
+            Map<String, Object> res = automationsClient.getWorkflows(workflowId);
+            Map<String, Object> connectionRes = (Map<String, Object>) res.get("response");
+            ;
+            responseMap.put("responseStatus", connectionRes);
+        } catch (FeignException e) {
+            throw e;
         } finally {
-            // 5. deleteWorkflows 실행
-            automationsClient.deleteWorkflowsTrigger(workflowId);
+            // 5. workflow 삭제
+            automationsClient.deleteWorkflows(workflowId, true);
         }
 
-        return workflowId;
+        return responseMap;
     }
 
     private String getRandomUUID() {
