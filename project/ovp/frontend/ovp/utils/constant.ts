@@ -10,6 +10,8 @@ const $constants = {
     },
     EMAIL: {
       REGEX: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      INPUT_ERROR_MSG: "사용자 이메일을 입력하세요.",
+      INVALID_ERROR_MSG: "이메일 형식이 올바르지 않습니다.",
     },
   },
   COMMON: {
