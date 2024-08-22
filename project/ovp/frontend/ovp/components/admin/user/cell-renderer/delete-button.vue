@@ -1,5 +1,6 @@
 <template>
   <button
+    v-if="data.name !== 'admin'"
     class="button button-lg button-error-stroke"
     type="button"
     @click="handleClick"
@@ -14,9 +15,9 @@ const props = defineProps({
     type: Object,
   },
 });
-const params = props.params;
+const data = props.params.data;
 
 const handleClick = () => {
-  params.context.deleteBtnClicked(props.params.data);
+  props.params.context.deleteBtnClicked(data);
 };
 </script>

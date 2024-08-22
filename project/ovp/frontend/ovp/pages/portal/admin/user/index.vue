@@ -6,10 +6,13 @@
   </div>
   <div class="section-contents bg-white">
     <div class="l-between mb-3">
-      <!-- TODO: SearchInput 컴포넌트 접근성 개선 개발 완료되면 label/input의 for/id 값 "data-menu-search" 로 설정-->
       <SearchInput
-        @onClickSearch="onClickSearch"
+        inp-id="userSearchInp"
+        label-text="사용자 정보 검색"
         :placeholder="'검색어를 입력하세요.'"
+        :inp-value="searchInputValue"
+        @update:value="updateSearchInputValue"
+        @onClickSearch="onClickSearch"
       ></SearchInput>
       <button class="button button-secondary ml-auto" @click="openModal">
         사용자 추가
@@ -112,6 +115,12 @@ const gridContext = {
         });
     }
   },
+};
+
+const searchInputValue = ref("");
+
+const updateSearchInputValue = (newValue: string) => {
+  searchInputValue.value = newValue;
 };
 
 const onClickSearch = (value: string) => {
