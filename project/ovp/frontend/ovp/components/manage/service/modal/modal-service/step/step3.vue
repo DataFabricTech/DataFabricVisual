@@ -69,7 +69,14 @@ const {
 
 const connectionErrorMsg: Ref<String> = ref("");
 
+const resetTestConnectionStatus = () => {
+  testConnectionStatus.value = ConnectionStatus.NONE;
+  connectionErrorMsg.value = "";
+};
+
 const doConnectionTest = async () => {
+  resetTestConnectionStatus();
+
   if (!(await checkValidation())) {
     return;
   }
