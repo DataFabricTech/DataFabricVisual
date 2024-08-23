@@ -2,16 +2,12 @@
   width: 100%;
   height: 100%;
 
-  .tree-list > .tree-item-node-parent > .tree-item-node:first-child > .d-flex .tree-item {
-    color: $secondary-500;
-  }
-
   ul, li {
     width: 100%;
   }
 
   &-top-buttons {
-    @include flex($horizontal: flex-start,$gap: $spacing-8);
+    @include flex($horizontal: flex-start, $gap: $spacing-8);
 
     padding-bottom: $spacing-8;
   }

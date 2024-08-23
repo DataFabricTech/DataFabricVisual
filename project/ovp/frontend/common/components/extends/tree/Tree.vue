@@ -18,7 +18,6 @@
       @dropValidator="dropValidatorHandler"
       @onSelect="onItemSelected"
     >
-
       <template v-if="mode === 'edit'" v-slot:item-append="treeViewItem">
         <div class="tree-item-buttons">
           <button class="button button-neutral-ghost button-sm" type="button" @click="addSibling(treeViewItem)">
@@ -39,6 +38,7 @@ import "vue3-tree-vue/dist/style.css";
 
 import { TreeProps, TreeViewItem } from "./TreeProps";
 import { TreeComposition } from "./TreeComposition";
+
 const props = withDefaults(defineProps<TreeProps>(), {
   mode: "view",
   isCheckable: false,
@@ -61,14 +61,20 @@ const onItemChecked = (from: TreeViewItem[]) => {
   emit("onItemChecked", from);
 };
 
+const changeFirstItemChange = (bool: boolean) => {
+  if (props.items.length < 1) {
+    return;
+  }
+  const element: any = document.querySelector(`li#${props.items[0].id} .tree-item`);
+
+  if (element) {
+    element.style.color = bool ? "#188ab0" : "#2b3440";
+  }
+};
+
 const onItemSelected = (node: TreeViewItem) => {
   if (checkOnlyOneAction.value) {
-    const treeItem = document.querySelector(
-      ".tree-list > .tree-item-node-parent > .tree-item-node:first-child > .d-flex .tree-item"
-    );
-
-    treeItem.style.color = "#2b3440";
-    checkOnlyOneAction.value = false;
+    changeFirstItemChange(false);
   }
 
   emit("onItemSelected", node);
@@ -85,6 +91,10 @@ onMounted(() => {
   if (props.firExpandAll) {
     openAll();
   }
+
+  nextTick(() => {
+    changeFirstItemChange(true);
+  });
 });
 
 const { treeItems, createNewTreeItem, openAll, closeAll, dropValidatorHandler } = TreeComposition(props);
@@ -92,5 +102,4 @@ const { treeItems, createNewTreeItem, openAll, closeAll, dropValidatorHandler } 
 
 <style lang="scss">
 /* @import "./index.scss"; */
-
 </style>
