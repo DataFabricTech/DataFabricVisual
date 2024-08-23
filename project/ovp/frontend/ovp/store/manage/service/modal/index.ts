@@ -328,6 +328,11 @@ export const useServiceStore = defineStore("serviceStore", () => {
         body: getSubmitParams(),
       },
     );
+    if (result < 1) {
+      // TODO : [개발] notification 개발 완료 되면 아래 코드 변경
+      alert("저장 실패했습니다. 잠시 후 다시 시도해주세요.");
+    }
+
     return result > 0;
   };
 
