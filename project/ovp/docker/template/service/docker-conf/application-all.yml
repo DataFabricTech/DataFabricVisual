@@ -55,9 +55,6 @@ spring:
     baseline-version: 0
     enabled: false
     locations: classpath:db/migration
-  thymeleaf:
-    prefix: classpath:/templates/
-    suffix: .html
   mail:
     host: smtp.gmail.com
     port: 587
@@ -154,6 +151,7 @@ properties:
       href: /api/email/pw-reset
       redirect_url: /portal/login/pw-reset
       redirect_error_url: /portal/error
+      contents_file_path: "templates/ovp_pwReset.html"
       title: "Open-Vdap-Platform  비밀번호 재 설정"
 
 ---

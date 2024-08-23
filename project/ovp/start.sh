@@ -3,14 +3,13 @@ CONTAINER_HOME="/home/docker"
 SERVICE_HOME="${CONTAINER_HOME}/app/${SERVICE_ID}"
 
 IMAGE_NAME=repo.iris.tools/datafabric/ovp
-VERSION=2024-ready-RC20240823.0-e60b6d8
+VERSION=2024-ready-RC20240823.0-d8eeb50-2
 
 DOCKER_PORT=8889
-basePath=$(pwd)
-LOCAL_MOUNT_PATH=$basePath
-#START_OPTION="--spring.config.additional-location=${LOCAL_MOUNT_PATH}/docker/template/service/docker-conf/application.yml"
+LOCAL_MOUNT_PATH=$(pwd)
+
 docker run -itd --name ovp --restart unless-stopped \
-    -p $DOCKER_PORT:80 \
+    -p $DOCKER_PORT:8080 \
     -v "${LOCAL_MOUNT_PATH}"/${SERVICE_ID}/logs/:${SERVICE_HOME}/logs \
     -v "${LOCAL_MOUNT_PATH}"/${SERVICE_ID}/conf/:${SERVICE_HOME}/conf \
     -v /etc/localtime:/etc/localtime:ro \
