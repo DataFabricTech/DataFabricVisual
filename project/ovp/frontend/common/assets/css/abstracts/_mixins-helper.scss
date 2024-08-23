@@ -80,6 +80,18 @@
 }
 
 // -------------------------------------------
+// scroll 숨김
+// -------------------------------------------
+@mixin scroll-hidden {
+  -ms-overflow-style: none;  /* Internet Explorer and Edge */
+  scrollbar-width: none;  /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none; /* (Chrome, Safari) */
+  }
+}
+
+// -------------------------------------------
 // IE10+ 크로스브라우징
 // -------------------------------------------
 @mixin ie-resolution {
