@@ -131,4 +131,17 @@ public class ServiceManageController {
 //    public Object updateIngestionPipelines(@PathVariable String id, List<JsonPatchOperation> params) {
 //        return service.updateIngestionPipelines(id, params);
 //    }
+
+    /**
+     * 서비스 관리 > 상세 > 서비스 리스트
+     *
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping(value = "/detail/table-list")
+    public Object saveService(@RequestParam MultiValueMap<String, String> params) throws Exception {
+        return service.getServiceTableList(params);
+    }
 }

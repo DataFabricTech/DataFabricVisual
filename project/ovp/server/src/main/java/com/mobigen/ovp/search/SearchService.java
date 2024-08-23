@@ -135,7 +135,7 @@ public class SearchService {
         return resultMap;
     }
 
-    private Map<String, Object> getList(MultiValueMap<String, String> params) throws Exception {
+    public Map<String, Object> getList(MultiValueMap<String, String> params) throws Exception {
         Map<String, Object> result = searchClient.getSearchList(params);
         return convertToMap(result);
     }
@@ -185,7 +185,6 @@ public class SearchService {
         params.set("index", ModelIndex.table.name());
         params.set("query_filter", params.getFirst("trino_query").toString());
         params.remove("trino_query");
-
 
         return getList(params);
     }

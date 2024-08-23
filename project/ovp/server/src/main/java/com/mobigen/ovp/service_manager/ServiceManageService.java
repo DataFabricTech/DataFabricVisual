@@ -3,10 +3,11 @@ package com.mobigen.ovp.service_manager;
 import com.mobigen.ovp.common.openmete_client.AutomationsClient;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
+import com.mobigen.ovp.common.entity.ModelIndex;
 import com.mobigen.ovp.common.openmete_client.ServicesClient;
-import com.mobigen.ovp.common.openmete_client.dto.Services;
 import com.mobigen.ovp.search.SearchService;
 import com.mobigen.ovp.service_manager.client.response.ServiceCollectionLogResponse;
+import com.mobigen.ovp.common.openmete_client.dto.Services;
 import com.mobigen.ovp.service_manager.client.response.ServiceResponse;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -227,4 +228,40 @@ public class ServiceManageService {
 //        return true;
 //    }
 
+
+    /**
+     * 서비스 관리 > 상세 > 서비스 리스트
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    public Object getServiceTableList(MultiValueMap<String, String> param) throws Exception {
+        param.add("q", "");
+        param.add("from", "0");
+        param.add("size", "10000");
+        param.add("deleted", "false");
+        param.add("sort_field", "totalVotes");
+        param.add("sort_order", "desc");
+
+        String type = param.getFirst("index");
+
+        // Type에 따른 분기 처리
+        switch (type) {
+            case "model":
+                param.set("index", ModelIndex.table.name());
+                param.set("query_filter", param.getFirst("trino_query").toString());
+                param.remove("trino_query");
+                break;
+            case "storage":
+                param.set("index", ModelIndex.container.name());
+                break;
+            case "table":
+                param.set("index", ModelIndex.table.name());
+                break;
+            default:
+                break;
+        }
+        return searchService.getList(param);
+    }
 }
