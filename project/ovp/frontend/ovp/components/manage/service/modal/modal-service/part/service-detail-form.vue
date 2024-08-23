@@ -121,14 +121,7 @@
             <addable-input
               title="Connection Options"
               id="connectionOption"
-              :items="[
-                { id: 'key', defaultValue: 'New Key', type: PanelTypes.INPUT },
-                {
-                  id: 'value',
-                  defaultValue: 'New Value',
-                  type: PanelTypes.INPUT,
-                },
-              ]"
+              :items="addableDefaultItems"
               service-obj-key="detailInfo.connectionOptions"
               :service-obj="serviceObj"
               @setValue="setValue"
@@ -140,14 +133,7 @@
             <addable-input
               title="Connection Arguments"
               id="connectionArguments"
-              :items="[
-                { id: 'key', defaultValue: 'New Key', type: PanelTypes.INPUT },
-                {
-                  id: 'value',
-                  defaultValue: 'New Value',
-                  type: PanelTypes.INPUT,
-                },
-              ]"
+              :items="addableDefaultItems"
               service-obj-key="detailInfo.connectionArguments"
               :service-obj="serviceObj"
               @setValue="setValue"
@@ -178,6 +164,14 @@ const props = withDefaults(defineProps<ModalServiceProps>(), {
 });
 
 const addableItems = computed(() => props.formData.addableItems);
+const addableDefaultItems: any[] = [
+  { id: "key", defaultValue: "New Key", type: PanelTypes.INPUT },
+  {
+    id: "value",
+    defaultValue: "New Value",
+    type: PanelTypes.INPUT,
+  },
+];
 
 const onClickViewPwdBtn = (itemKey: string) => {
   _.includes(openEyeValues.value, itemKey)
