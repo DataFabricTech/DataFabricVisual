@@ -39,7 +39,13 @@
         <button class="button button-ghost button-lg" @click="$emit('cancel', modalId)" v-if="useCancelBtn">
           취소
         </button>
-        <button class="button button-primary button-lg" @click="$emit('confirm', modalId)">{{ confirmBtnMsg }}</button>
+        <button
+          class="button button-primary button-lg"
+          :disabled="isDisabledConfirmBtn"
+          @click="$emit('confirm', modalId)"
+        >
+          {{ confirmBtnMsg }}
+        </button>
       </div>
     </div>
   </VueFinalModal>
@@ -68,7 +74,8 @@ const props = withDefaults(defineProps<ModalProps>(), {
   title: "",
   subTitle: "",
   useCancelBtn: true,
-  confirmBtnMsg: "확인"
+  confirmBtnMsg: "확인",
+  isDisabledConfirmBtn: false
 });
 
 const emit = defineEmits<{
