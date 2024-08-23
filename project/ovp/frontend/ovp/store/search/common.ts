@@ -11,7 +11,6 @@ export const FILTER_KEYS = {
   DATABASE: "database.displayName.keyword",
   DATABASE_SCHEMA: "databaseSchema.displayName.keyword",
   COLUMNS: "columns.name.keyword",
-  TABLE_TYPE: "tableType",
 } as const;
 
 export interface Filter {
@@ -28,7 +27,6 @@ export interface Filters {
   [FILTER_KEYS.DATABASE]: Filter;
   [FILTER_KEYS.DATABASE_SCHEMA]: Filter;
   [FILTER_KEYS.COLUMNS]: Filter;
-  [FILTER_KEYS.TABLE_TYPE]: Filter;
 
   [key: string]: Filter; // 인덱스 시그니처 추가
 }
@@ -63,7 +61,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       [FILTER_KEYS.DATABASE]: { text: "데이터베이스", data: [] },
       [FILTER_KEYS.DATABASE_SCHEMA]: { text: "스키마", data: [] },
       [FILTER_KEYS.COLUMNS]: { text: "컬럼", data: [] },
-      [FILTER_KEYS.TABLE_TYPE]: { text: "테이블타입", data: [] },
     };
   };
   // filter 정보
@@ -192,7 +189,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     const data: any = await $api(`/api/containers/${id}`);
     previewData.value = data.data;
   };
-  
+
   const getCtgIds = () => {
     return !_.has(selectedFilters.value, FILTER_KEYS.CATEGORY)
       ? []

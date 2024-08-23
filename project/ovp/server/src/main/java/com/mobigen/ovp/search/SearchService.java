@@ -81,7 +81,6 @@ public class SearchService {
         tagArrays.add("database.displayName.keyword");
         tagArrays.add("databaseSchema.displayName.keyword");
         tagArrays.add("columns.name.keyword");
-        tagArrays.add("tableType");
 
         Map<String, Object> responseMap = new HashMap<>();
 
