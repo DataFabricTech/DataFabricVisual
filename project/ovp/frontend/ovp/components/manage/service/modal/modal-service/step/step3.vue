@@ -1,5 +1,5 @@
 <template>
-  <!-- Step 03 / 시작 div.service-form display:none을 해제해주세요. -->
+  <!-- Step 03 / 시작 -->
   <div class="service-form" :style="props.style">
     <selected-service-info />
 
