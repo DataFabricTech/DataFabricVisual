@@ -27,37 +27,36 @@
         </template>
       </editable-group>
     </div>
-    <table class="mt-4">
-      <colgroup>
-        <col />
-        <col />
-        <col style="width: 35%" />
-      </colgroup>
-      <tr>
-        <th>구분</th>
-        <th class="align-center">이름</th>
-        <th>설명</th>
-        <th>소유자</th>
-      </tr>
-      <tr v-for="(item, index) in DBServiceListData" :key="index">
-        <td>{{ item.serviceType }}</td>
-        <td
-          @click="routeDetail(item)"
-          class="link-button link-button link-button-underline"
-          title="상세 페이지 이동"
-        >
-          {{ item.name }}
-        </td>
-        <td>{{ item.description }}</td>
-        <td>{{ item.owner.name }}</td>
-      </tr>
-    </table>
-    <!-- 결과 없을 시 no-result 표시 -->
-    <div class="no-result" v-if="DBServiceListData.length === 0">
-      <div class="notification">
-        <svg-icon class="notification-icon" name="info"></svg-icon>
-        <p class="notification-detail">데이터 리스트가 없습니다.</p>
-      </div>
+    <agGrid
+      style="height: 800px"
+      class="ag-theme-alpine ag-theme-quartz"
+      :columnDefs="columnDefs"
+      :rowData="DBServiceListData"
+      :useRowCheckBox="false"
+      :setColumnFit="true"
+      :useColumnResize="false"
+      :columnRender="{
+        owner: {
+          type: 'valFunc',
+          fn: (val: any) => {
+            return `${val.name}`;
+          },
+        },
+      }"
+    ></agGrid>
+    <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+    <Loading
+      id="loader"
+      :use-loader-overlay="true"
+      class="loader-lg is-loader-inner"
+      style="display: none"
+    ></Loading>
+  </div>
+  <!-- 결과 없을 시 no-result 표시 -->
+  <div class="no-result" v-if="DBServiceListData.length === 0">
+    <div class="notification">
+      <svg-icon class="notification-icon" name="info"></svg-icon>
+      <p class="notification-detail">데이터 리스트가 없습니다.</p>
     </div>
   </div>
 </template>
@@ -68,10 +67,9 @@ import { useServiceCollectionLogStore } from "@/store/manage/service/collection-
 import { onBeforeMount } from "vue";
 import { computed } from "vue";
 import _ from "lodash";
-import { useRouter } from "nuxt/app";
-
-const router = useRouter();
-
+import Loading from "@base/loading/Loading.vue";
+import agGrid from "@extends/grid/Grid.vue";
+import LinkDetailComponent from "./linkDetailComponent.vue";
 const serviceCollectionLogStore = useServiceCollectionLogStore();
 const { updateRepositoryDescriptionAPI, getDBServiceList } =
   serviceCollectionLogStore;
@@ -87,7 +85,9 @@ interface DBServiceListData {
   serviceType: string;
   name: string;
   description: string | undefined;
-  owner: object;
+  owner: {
+    name: string | undefined;
+  };
   id: string;
   fqn: string;
   type: string;
@@ -162,16 +162,16 @@ onBeforeMount(async () => {
   await getDBServiceList(); // DB서비스리스트 조회API 호출
 });
 
-const routeDetail = (item: DBServiceListData) => {
-  router.push({
-    path: "/portal/search/detail",
-    query: {
-      type: item.type,
-      id: item.id,
-      fqn: item.fqn,
-    },
-  });
-};
+const columnDefs = ref([
+  { field: "serviceType", headerName: "구분" },
+  {
+    field: "name",
+    headerName: "이름",
+    cellRenderer: LinkDetailComponent,
+  },
+  { field: "description", headerName: "설명" },
+  { field: "owner", headerName: "소유자" },
+]);
 </script>
 
 <style scoped></style>
