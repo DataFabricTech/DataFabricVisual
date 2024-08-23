@@ -432,8 +432,7 @@ const checkNameValidation = async () => {
 };
 
 const checkEmailValidation = async () => {
-  const email = params.value.email;
-  const name = params.value.name;
+  const { email } = params.value;
   let isValidation = true;
 
   if (_.isEmpty(email)) {
@@ -444,10 +443,7 @@ const checkEmailValidation = async () => {
     // 이메일 형식 체크
     emailInpErrorMsg.value = $constants.LOGIN.EMAIL.REGEX_ERROR_MSG;
     isValidation = false;
-  } else if (
-    (await checkDuplicateEmail(email)) ||
-    (await checkDuplicateName(name))
-  ) {
+  } else if (await checkDuplicateEmail(email)) {
     // 이메일 중복 체크
     emailInpErrorMsg.value = $constants.LOGIN.EMAIL.DUPLICATE_ERROR_MSG;
     isValidation = false;
@@ -458,8 +454,7 @@ const checkEmailValidation = async () => {
 };
 
 const checkPwdValidation = () => {
-  const password = params.value.password;
-  const confirmPassword = params.value.confirmPassword;
+  const { password, confirmPassword } = params.value;
   let isValidation = true;
 
   if (_.isEmpty(password)) {
