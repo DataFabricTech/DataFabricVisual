@@ -1,8 +1,8 @@
+<!--TODO:[개발] 모달클래스 .modal-padding-16 추가-->
+
 <template>
-  <!--TODO: Modal 비밀번호 변경 width:350px height332px -->
   <Modal
     title="비밀번호 변경"
-    class="modal modal-padding-16"
     :modal-id="props.modalId"
     background="non-interactive"
     displayDirective="show"
@@ -10,8 +10,8 @@
     contentTransition="vfm-fade"
     :clickToClose="true"
     :escToClose="true"
-    :width="700"
-    :height="600"
+    :width="350"
+    :height="332"
     :top="700"
     :lockScroll="false"
     swipeToClose="none"
