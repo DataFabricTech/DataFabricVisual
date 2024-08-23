@@ -25,7 +25,7 @@ export function StepComposition(props: StepProps, onchange: (value: string | num
     if (props.currentItemType === INDEX) {
       onChange(index);
     } else {
-      let clickedValue: string | number = (props.data?.[index] as any)?.[props.valueKey];
+      const clickedValue: string | number = (props.data?.[index] as any)?.[props.valueKey];
       onChange(clickedValue);
     }
   };
@@ -50,6 +50,16 @@ export function StepComposition(props: StepProps, onchange: (value: string | num
   };
 
   const toggleList: () => void = () => {};
+
+  // 버튼을 사용하지 않는 경우, parent 에서 보내주는 index 값으로 currentIndex 값을 제어한다.
+  if (!props.showBtn) {
+    watch(
+      () => props.parentIndex,
+      (newValue) => {
+        currentIndex.value = (newValue || 0) - 1;
+      }
+    );
+  }
 
   return { ...props, currentIndex, clickStep, isDisabled, move, toggleList, changeCurrentStepClass, onChange };
 }
