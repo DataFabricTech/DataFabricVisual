@@ -1,6 +1,6 @@
 <template>
   <Modal
-    modal-id="addUserModal"
+    :modal-id="props.modalId"
     title="사용자 추가"
     :click-to-close="true"
     :esc-to-close="true"
@@ -8,10 +8,47 @@
     :width="480"
     :height="516"
     confirmBtnMsg="생성"
+    @before-open="beforeOpen"
+    @cancel="onCancel"
+    @confirm="onConfirm"
   >
     <template v-slot:body>
       <div class="form form-vertical">
         <div class="form-body">
+          <div class="form-item">
+            <label for="" class="form-label">
+              아이디
+              <span class="required">*</span>
+            </label>
+            <div class="form-detail">
+              <div class="search-input">
+                <label class="hidden-text" for="service-add-input-name">
+                  label
+                </label>
+                <input
+                  id="service-add-input-name"
+                  class="text-input text-input-lg"
+                  placeholder="아이디"
+                  v-model="params.name"
+                />
+                <button
+                  class="search-input-action-button button button-neutral-ghost button-sm"
+                  type="button"
+                  @click="resetInputValue('name')"
+                >
+                  <span class="hidden-text">아이디 지우기</span>
+                  <svg-icon class="button-icon" name="close"></svg-icon>
+                </button>
+              </div>
+              <div
+                v-if="nameInpErrorMsg"
+                class="notification notification-sm notification-error"
+              >
+                <svg-icon class="notification-icon" name="error"></svg-icon>
+                <p class="notification-detail">{{ nameInpErrorMsg }}</p>
+              </div>
+            </div>
+          </div>
           <div class="form-item">
             <label for="" class="form-label">
               이메일
@@ -19,25 +56,30 @@
             </label>
             <div class="form-detail">
               <div class="search-input">
-                <label class="hidden-text" for="service-add-input-email"
-                  >label</label
-                >
+                <label class="hidden-text" for="service-add-input-email">
+                  label
+                </label>
                 <input
                   id="service-add-input-email"
                   class="text-input text-input-lg"
                   placeholder="이메일"
+                  v-model="params.email"
                 />
                 <button
                   class="search-input-action-button button button-neutral-ghost button-sm"
                   type="button"
+                  @click="resetInputValue('email')"
                 >
-                  <span class="hidden-text">지우기</span>
+                  <span class="hidden-text">이메일 지우기</span>
                   <svg-icon class="button-icon" name="close"></svg-icon>
                 </button>
               </div>
-              <div class="notification notification-sm notification-error">
+              <div
+                v-if="emailInpErrorMsg"
+                class="notification notification-sm notification-error"
+              >
                 <svg-icon class="notification-icon" name="error"></svg-icon>
-                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                <p class="notification-detail">{{ emailInpErrorMsg }}</p>
               </div>
             </div>
           </div>
@@ -45,25 +87,23 @@
             <label for="" class="form-label"> 이름표시 </label>
             <div class="form-detail flex flex-col">
               <div class="search-input">
-                <label class="hidden-text" for="service-add-input-name"
-                  >label</label
-                >
+                <label class="hidden-text" for="service-add-input-name">
+                  label
+                </label>
                 <input
                   id="service-add-input-name"
                   class="text-input text-input-lg"
                   placeholder="이름"
+                  v-model="params.displayName"
                 />
                 <button
                   class="search-input-action-button button button-neutral-ghost button-sm"
                   type="button"
+                  @click="resetInputValue('displayName')"
                 >
-                  <span class="hidden-text">지우기</span>
+                  <span class="hidden-text">이름표시 지우기</span>
                   <svg-icon class="button-icon" name="close"></svg-icon>
                 </button>
-              </div>
-              <div class="notification notification-sm notification-error">
-                <svg-icon class="notification-icon" name="error"></svg-icon>
-                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
               </div>
             </div>
           </div>
@@ -76,11 +116,8 @@
                 id="service-add-description"
                 class="textarea h-28"
                 placeholder="설명을 입력하세요."
+                v-model="params.description"
               ></textarea>
-              <div class="notification notification-sm notification-error">
-                <svg-icon class="notification-icon" name="error"></svg-icon>
-                <p class="notification-detail">설명을 입력하세요.</p>
-              </div>
             </div>
           </div>
           <div class="form-item">
@@ -93,7 +130,8 @@
                     id="radiosm"
                     class="radio-input"
                     name="radio2"
-                    checked
+                    :value="true"
+                    v-model="isAutoGeneratedPwd"
                   />
                   <label for="radiosm" class="radio-label">
                     비밀번호 자동생성
@@ -105,6 +143,8 @@
                     id="radiosm3"
                     class="radio-input"
                     name="radio2"
+                    :value="false"
+                    v-model="isAutoGeneratedPwd"
                   />
                   <label for="radiosm3" class="radio-label"
                     >비밀번호 직접생성
@@ -112,92 +152,128 @@
                 </div>
               </div>
               <!-- 비밀번호 자동생성 -->
-              <div class="text-input-group">
+              <div v-if="isAutoGeneratedPwd" class="text-input-group">
                 <div class="v-group w-full">
                   <div class="search-input">
-                    <label class="hidden-text" for="service-add-input-password"
-                      >label</label
-                    >
+                    <label class="hidden-text" for="service-add-input-password">
+                      label
+                    </label>
                     <input
                       id="service-add-input-password"
-                      type="password"
+                      :type="isShowPwdStatus.password ? 'input' : 'password'"
                       class="text-input text-input-lg"
-                      value="prefix icon + button"
+                      v-model="params.password"
                     />
                     <button
                       class="search-input-action-button button button-neutral-ghost button-sm"
                       type="button"
+                      @click="setShowPwdStatus('password')"
                     >
-                      <span class="hidden-text">지우기</span>
-                      <svg-icon class="button-icon" name="eye-hide"></svg-icon>
+                      <span class="hidden-text"
+                        >비밀번호
+                        {{ isShowPwdStatus.password ? "표시" : "숨김" }}</span
+                      >
+                      <svg-icon
+                        class="button-icon"
+                        :name="isShowPwdStatus.password ? 'eye' : 'eye-hide'"
+                      ></svg-icon>
                     </button>
                   </div>
-                  <div class="notification notification-sm notification-error">
-                    <svg-icon class="notification-icon" name="error"></svg-icon>
-                    <p class="notification-detail">
-                      얼럿 메세지를 입력해주세요.
-                    </p>
-                  </div>
                 </div>
-                <button class="button button-neutral-stroke button-xl">
+                <button
+                  class="button button-neutral-stroke button-xl"
+                  @click="resetRandomPwd"
+                >
                   <span class="hidden-text"></span>
                   <svg-icon class="icons button-icon" name="reset"></svg-icon>
                 </button>
-                <button class="button button-neutral-stroke button-xl">
+                <button
+                  class="button button-neutral-stroke button-xl"
+                  @click="pwdCopyBtnClicked"
+                >
                   <span class="hidden-text"></span>
                   <svg-icon class="icons button-icon" name="copy"></svg-icon>
                 </button>
               </div>
               <!-- 비밀번호 직접생성 -->
-              <div class="search-input">
+              <div v-if="!isAutoGeneratedPwd" class="search-input">
                 <label
                   class="hidden-text"
                   for="service-add-input-password-direct"
-                  >label</label
                 >
+                  label
+                </label>
                 <input
                   id="service-add-input-password-direct"
-                  type="password"
+                  :type="isShowPwdStatus.password ? 'input' : 'password'"
                   class="text-input text-input-lg"
-                  value="prefix icon + button"
+                  v-model="params.password"
                 />
                 <button
                   class="search-input-action-button button button-neutral-ghost button-sm"
                   type="button"
+                  @click="setShowPwdStatus('password')"
                 >
-                  <span class="hidden-text">지우기</span>
-                  <svg-icon class="button-icon" name="eye-hide"></svg-icon>
+                  <span class="hidden-text"
+                    >비밀번호
+                    {{ isShowPwdStatus.password ? "표시" : "숨김" }}</span
+                  >
+                  <svg-icon
+                    class="button-icon"
+                    :name="isShowPwdStatus.password ? 'eye' : 'eye-hide'"
+                  ></svg-icon>
                 </button>
+              </div>
+              <div
+                v-if="pwdInpErrorMsg"
+                class="notification notification-sm notification-error"
+              >
+                <svg-icon class="notification-icon" name="error"></svg-icon>
+                <p class="notification-detail">
+                  {{ pwdInpErrorMsg }}
+                </p>
               </div>
             </div>
           </div>
           <!-- 비밀번호 직접생성 선택시 노출 -->
-          <div class="form-item">
+          <div v-if="!isAutoGeneratedPwd" class="form-item">
             <label for="" class="form-label">비밀번호 확인</label>
             <div class="form-detail">
               <div class="search-input">
                 <label
                   class="hidden-text"
                   for="service-add-input-password-check"
-                  >label</label
-                >
+                  >label
+                </label>
                 <input
                   id="service-add-input-password-check"
-                  type="password"
+                  :type="isShowPwdStatus.confirmPassword ? 'input' : 'password'"
                   class="text-input text-input-lg"
-                  value="prefix icon + button"
+                  v-model="params.confirmPassword"
                 />
                 <button
                   class="search-input-action-button button button-neutral-ghost button-sm"
                   type="button"
+                  @click="setShowPwdStatus('confirmPassword')"
                 >
-                  <span class="hidden-text">지우기</span>
-                  <svg-icon class="button-icon" name="eye-hide"></svg-icon>
+                  <span class="hidden-text"
+                    >비밀번호
+                    {{
+                      isShowPwdStatus.confirmPassword ? "표시" : "숨김"
+                    }}</span
+                  >
+                  <svg-icon
+                    class="button-icon"
+                    :name="isShowPwdStatus.confirmPassword ? 'eye' : 'eye-hide'"
+                  ></svg-icon>
                 </button>
               </div>
-              <div class="notification notification-sm notification-error">
+              <div
+                v-if="confirmPwdInpErrorMsg"
+                class="notification notification-sm notification-error"
+              >
                 <svg-icon class="notification-icon" name="error"></svg-icon>
-                <p class="notification-detail">얼럿 메세지를 입력해주세요.</p>
+                <p class="notification-detail">{{ confirmPwdInpErrorMsg }}</p>
               </div>
             </div>
           </div>
@@ -205,7 +281,12 @@
             <label for="" class="form-label">관리자</label>
             <div class="form-detail">
               <div class="switch">
-                <input type="checkbox" id="manager-sw" class="switch-input" />
+                <input
+                  type="checkbox"
+                  id="manager-sw"
+                  class="switch-input"
+                  v-model="params.isAdmin"
+                />
                 <label for="manager-sw" class="switch-label">
                   <div class="switch-control"></div>
                 </label>
@@ -219,7 +300,197 @@
 </template>
 
 <script setup lang="ts">
+import { useNuxtApp } from "nuxt/app";
+import { useUserStore } from "~/store/user/userStore";
+import type { AddUser } from "~/type/user";
 import Modal from "@extends/modal/Modal.vue";
+
+const { $vfm } = useNuxtApp();
+import _ from "lodash";
+import $constants from "~/utils/constant";
+
+const userStore = useUserStore();
+const { getRandomPwd, checkDuplicateEmail, checkDuplicateName, addUser } =
+  userStore;
+const defaultAddUser = userStore.defaultAddUser;
+
+const props = defineProps({
+  modalId: {
+    type: String,
+    required: true,
+  },
+});
+
+const emit = defineEmits<{
+  (e: "userAddedSuccess"): void;
+}>();
+
+const params: Ref<AddUser> = ref(defaultAddUser);
+const isAutoGeneratedPwd: Ref<boolean> = ref(true);
+const isShowPwdStatus: Ref<{ [key: string]: boolean }> = ref({
+  password: false,
+  confirmPassword: false,
+});
+const nameInpErrorMsg: Ref<string> = ref("");
+const emailInpErrorMsg: Ref<string> = ref("");
+const pwdInpErrorMsg: Ref<string> = ref("");
+const confirmPwdInpErrorMsg: Ref<string> = ref("");
+
+watch(isAutoGeneratedPwd, (value: boolean) => {
+  resetInputValue("password");
+  resetInputValue("confirmPassword");
+  isShowPwdStatus.value.password = false;
+  isShowPwdStatus.value.confirmPassword = false;
+  pwdInpErrorMsg.value = "";
+  confirmPwdInpErrorMsg.value = "";
+  if (value) {
+    resetRandomPwd();
+  }
+});
+
+const beforeOpen = () => {
+  params.value = _.cloneDeep(defaultAddUser);
+  if (isAutoGeneratedPwd.value) {
+    resetRandomPwd();
+  } else {
+    isAutoGeneratedPwd.value = true;
+  }
+};
+
+const resetInputValue = (key: keyof AddUser) => {
+  if (typeof params.value[key] === "string") {
+    params.value[key] = "";
+  }
+};
+
+const setShowPwdStatus = (id: string) => {
+  isShowPwdStatus.value[id] = !isShowPwdStatus.value[id];
+};
+
+const resetRandomPwd = async () => {
+  params.value.password = await getRandomPwd();
+  params.value.confirmPassword = params.value.password;
+};
+
+const pwdCopyBtnClicked = async () => {
+  try {
+    await navigator.clipboard.writeText(params.value.password);
+    alert("비밀번호가 복사되었습니다.");
+  } catch (err) {
+    alert("비밀번호 복사에 실패했습니다. 다시 시도해 주세요.");
+  }
+};
+
+const onCancel = () => {
+  $vfm.close(props.modalId);
+};
+
+const onConfirm = async () => {
+  // 비밀번호 자동생성일 경우에는 confirmPassword 값은 password 와 같음.
+  if (isAutoGeneratedPwd.value) {
+    params.value.confirmPassword = params.value.password;
+  }
+
+  // name and email and password validation check
+  const isNameValid = await checkNameValidation();
+  const isEmailValid = await checkEmailValidation();
+  const isPwdValid = checkPwdValidation();
+  if (!isNameValid || !isEmailValid || !isPwdValid) return;
+
+  // 사용자 추가
+  await addUser(params.value).then((data) => {
+    if (_.isEmpty(data)) {
+      alert("사용자 생성 실패했습니다. 잠시 후 다시 시도해주세요.");
+    } else {
+      alert("사용자 생성이 완료되었습니다.");
+      $vfm.close(props.modalId);
+      emit("userAddedSuccess");
+    }
+  });
+};
+
+const checkNameValidation = async () => {
+  const name = params.value.name;
+  let isValidation = true;
+
+  if (_.isEmpty(name)) {
+    // 아이디 값 입력 여부 체크
+    nameInpErrorMsg.value = $constants.LOGIN.ID.INPUT_ERROR_MSG;
+    isValidation = false;
+  } else if (!$constants.LOGIN.ID.REGEX.test(name)) {
+    // 아이디 값 형식 체크
+    nameInpErrorMsg.value = $constants.LOGIN.ID.REGEX_ERROR_MSG;
+    isValidation = false;
+  } else if (await checkDuplicateName(name)) {
+    // 아이디 중복 체크
+    nameInpErrorMsg.value = $constants.LOGIN.ID.DUPLICATE_ERROR_MSG;
+    isValidation = false;
+  }
+
+  if (isValidation) nameInpErrorMsg.value = "";
+  return isValidation;
+};
+
+const checkEmailValidation = async () => {
+  const email = params.value.email;
+  const name = params.value.name;
+  let isValidation = true;
+
+  if (_.isEmpty(email)) {
+    // 이메일 값 입력 여부 체크
+    emailInpErrorMsg.value = $constants.LOGIN.EMAIL.INPUT_ERROR_MSG;
+    isValidation = false;
+  } else if (!$constants.LOGIN.EMAIL.REGEX.test(email)) {
+    // 이메일 형식 체크
+    emailInpErrorMsg.value = $constants.LOGIN.EMAIL.REGEX_ERROR_MSG;
+    isValidation = false;
+  } else if (
+    (await checkDuplicateEmail(email)) ||
+    (await checkDuplicateName(name))
+  ) {
+    // 이메일 중복 체크
+    emailInpErrorMsg.value = $constants.LOGIN.EMAIL.DUPLICATE_ERROR_MSG;
+    isValidation = false;
+  }
+
+  if (isValidation) emailInpErrorMsg.value = "";
+  return isValidation;
+};
+
+const checkPwdValidation = () => {
+  const password = params.value.password;
+  const confirmPassword = params.value.confirmPassword;
+  let isValidation = true;
+
+  if (_.isEmpty(password)) {
+    // password 값 입력여부 체크
+    pwdInpErrorMsg.value = $constants.LOGIN.PASSWORD.INPUT_ERROR_MSG;
+    isValidation = false;
+  } else if (
+    !isAutoGeneratedPwd &&
+    !$constants.LOGIN.PASSWORD.REGEX.test(password)
+  ) {
+    // password 형식 체크
+    pwdInpErrorMsg.value = $constants.LOGIN.PASSWORD.REGEX_ERROR_MSG;
+    isValidation = false;
+  } else {
+    pwdInpErrorMsg.value = "";
+  }
+
+  if (_.isEmpty(confirmPassword)) {
+    // confirmPassword 값 입력여부 체크
+    confirmPwdInpErrorMsg.value = $constants.LOGIN.PASSWORD.INPUT_ERROR_MSG;
+    isValidation = false;
+  } else if (password !== confirmPassword) {
+    // password 와 confirmPassword 가 일치하는지 체크
+    confirmPwdInpErrorMsg.value = $constants.LOGIN.PASSWORD.MATCH_ERROR_MSG;
+    isValidation = false;
+  } else {
+    confirmPwdInpErrorMsg.value = "";
+  }
+
+  return isValidation;
+};
 </script>
 
 <style>

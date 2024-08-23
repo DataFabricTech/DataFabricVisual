@@ -41,7 +41,10 @@
     </div>
   </div>
 
-  <AddUserModal :modal-id="addUserModalId"></AddUserModal>
+  <AddUserModal
+    :modal-id="addUserModalId"
+    @user-added-success="getUserList"
+  ></AddUserModal>
 </template>
 
 <script setup lang="ts">
