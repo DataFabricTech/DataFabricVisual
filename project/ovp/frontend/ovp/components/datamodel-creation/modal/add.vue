@@ -1,7 +1,7 @@
+<!--TODO:[개발] 모달클래스 .modal-padding-16 추가-->
 <template>
   <Modal
     title="데이터 모델 추가"
-    class="modal"
     :modal-id="props.modalId"
     background="non-interactive"
     displayDirective="show"

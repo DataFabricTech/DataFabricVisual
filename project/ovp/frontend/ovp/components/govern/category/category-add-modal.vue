@@ -1,7 +1,7 @@
+<!--TODO:[개발] 모달클래스 .modal-padding-32 추가-->
 <template>
   <Modal
     title="카테고리 추가"
-    class="modal modal-padding-16"
     :modal-id="props.modalId"
     background="non-interactive"
     displayDirective="show"
