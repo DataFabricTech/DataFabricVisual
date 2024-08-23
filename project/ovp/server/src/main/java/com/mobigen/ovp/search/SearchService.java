@@ -135,6 +135,10 @@ public class SearchService {
 
     private Map<String, Object> getList(MultiValueMap<String, String> params) throws Exception {
         Map<String, Object> result = searchClient.getSearchList(params);
+        return convertToMap(result);
+    }
+
+    public Map<String, Object> convertToMap(Map<String, Object> result) {
         Map<String, Object> resultMap = new HashMap<>();
 
         Map<String, Object> data = (Map<String, Object>) result.get("hits");
@@ -147,6 +151,7 @@ public class SearchService {
         }
 
         return resultMap;
+
     }
 
     private Map<String, Object> getAllList(MultiValueMap<String, String> params) throws Exception {
