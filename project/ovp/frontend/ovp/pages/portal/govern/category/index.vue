@@ -194,7 +194,10 @@
       </div>
     </div>
   </div>
-  <CategoryAddModal :modal-id="CATEGORY_ADD_MODAL_ID"></CategoryAddModal>
+  <CategoryAddModal
+    :modal-id="CATEGORY_ADD_MODAL_ID"
+    :confirm-btn-msg="'저장'"
+  ></CategoryAddModal>
   <CategoryChangeModal
     :modal-id="CATEGORY_CHANGE_MODAL_ID"
   ></CategoryChangeModal>
@@ -202,6 +205,7 @@
     :modal-id="DATA_MODEL_ADD_MODAL_ID"
     @before-open="beforeOpen"
     @open="open"
+    :confirm-btn-msg="'저장'"
   ></DataModelAddModal>
 </template>
 
@@ -238,6 +242,7 @@ const {
   getSearchList,
   setSearchKeyword,
   getFilters,
+  setModelIdList,
 } = categoryStore;
 const {
   selectedModelList,
@@ -248,6 +253,7 @@ const {
   isBoxSelectedStyle,
   selectedDataModelList,
   addSearchInputValue,
+  modelIdList,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -255,7 +261,7 @@ const CATEGORY_CHANGE_MODAL_ID = "category-change-modal";
 const DATA_MODEL_ADD_MODAL_ID = "data-modal-add-modal";
 
 const loader = ref<HTMLElement | null>(null);
-const modelIdList = ref([]);
+
 const isDescEditMode = ref(false);
 const isTitleEditMode = ref(false);
 const isShowPreview = ref<boolean>(false);
@@ -395,13 +401,6 @@ const allModelList = computed({
     }
   },
 });
-
-const setModelIdList = () => {
-  modelIdList.value = [];
-  for (const element of modelList.value) {
-    modelIdList.value.push(element.id);
-  }
-};
 
 const searchInputValue = ref("");
 const updateSearchInputValue = (newValue: string) => {

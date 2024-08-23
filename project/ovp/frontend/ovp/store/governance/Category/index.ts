@@ -65,7 +65,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     },
   });
 
-  // TREE
+  // MAIN - TREE
   const getCategories = async () => {
     const { data } = await $api(`/api/category/list`);
 
@@ -77,43 +77,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     isCategoriesNoData.value = categories.value.length === 0;
     categoriesParentId.value = data.parentId;
   };
-  const getModelListQuery = (tagId: string, value?: string) => {
-    // TODO : [개발] 검색어 조건 여기 추가.
-    const params: any = {
-      // eslint-disable-next-line id-length
-      q: value || "",
-      from: from.value,
-      size: size.value,
-      tagId: tagId,
-    };
-    return new URLSearchParams(params);
-  };
-  const getModelByCategoryIdAPI = async (
-    node: TreeViewItem,
-    value?: string,
-  ) => {
-    if (_.isNull(node) || _.isEmpty(node.tagId)) {
-      return;
-    }
-    const { data } = await $api(
-      `/api/category/models?${getModelListQuery(node.tagId, value)}`,
-    );
-    return data;
-  };
-  const addModelList = async () => {
-    const data = await getModelByCategoryIdAPI(selectedNode);
-    modelList.value = modelList.value.concat(data);
-  };
-  const getModelList = async (value?: string) => {
-    if (_.isNull(selectedNode)) {
-      return;
-    }
-    const data = await getModelByCategoryIdAPI(selectedNode, value);
-    modelList.value = data === null ? [] : data;
-  };
-  const setSelectedNode = (node: any) => {
-    selectedNode = node;
-  };
+
   const addCategory = (node: TreeViewItem) => {
     insertOrEditAPI("PUT", node);
   };
@@ -160,6 +124,46 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     addCategory(newNode);
   };
 
+  // MAIN - MODEL LIST
+  const modelIdList = ref([]);
+  const getModelListQuery = (tagId: string, value?: string) => {
+    // TODO : [개발] 검색어 조건 여기 추가.
+    const params: any = {
+      // eslint-disable-next-line id-length
+      q: value || "",
+      from: from.value,
+      size: size.value,
+      tagId: tagId,
+    };
+    return new URLSearchParams(params);
+  };
+  const getModelByCategoryIdAPI = async (
+    node: TreeViewItem,
+    value?: string,
+  ) => {
+    if (_.isNull(node) || _.isEmpty(node.tagId)) {
+      return;
+    }
+    const { data } = await $api(
+      `/api/category/models?${getModelListQuery(node.tagId, value)}`,
+    );
+    return data;
+  };
+  const addModelList = async () => {
+    const data = await getModelByCategoryIdAPI(selectedNode);
+    modelList.value = modelList.value.concat(data);
+  };
+  const getModelList = async (value?: string) => {
+    if (_.isNull(selectedNode)) {
+      return;
+    }
+    const data = await getModelByCategoryIdAPI(selectedNode, value);
+    modelList.value = data === null ? [] : data;
+  };
+  const setSelectedNode = (node: any) => {
+    selectedNode = node;
+  };
+
   // PREVIEW
   const getPreviewData = async (fqn: string) => {
     const data: any = await $api(`/api/search/preview/${fqn}`);
@@ -174,7 +178,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     categoryAddDesc.value = "";
   };
 
-  // FILTERS
+  // MODAL - FILTERS
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
     return {
@@ -198,9 +202,10 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const selectedDataModelList = ref([]);
   const dataModelIdList = ref([]);
 
-  // MODEL LIST
+  // MODAL - MODEL LIST
   let searchKeyword: string = "";
   const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
+
   const getSearchListQuery = () => {
     const queryFilter = getQueryFilter();
     const params: any = {
@@ -216,7 +221,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     return new URLSearchParams(params);
   };
 
-  // METHODS
   const getSearchListAPI = async () => {
     const { data } = await $api(`/api/search/list?${getSearchListQuery()}`, {
       showLoader: false,
@@ -230,6 +234,8 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     const { data, totalCount } = await getSearchListAPI();
     searchResult.value = searchResult.value.concat(data[currentTab.value]);
     searchResultLength.value = totalCount;
+    setDataModelIdList();
+    checkExistingDataModelList();
   };
 
   /**
@@ -241,6 +247,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     searchResultLength.value = totalCount;
     isSearchResultNoData.value = searchResult.value.length === 0;
     setDataModelIdList();
+    checkExistingDataModelList();
   };
   const getFilters = async () => {
     const { data } = await $api(`/api/search/filters`);
@@ -287,7 +294,12 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
 
     await resetReloadList();
   };
-
+  const setModelIdList = () => {
+    modelIdList.value = [];
+    for (const element of modelList.value) {
+      modelIdList.value.push(element.id);
+    }
+  };
   const setDataModelIdList = () => {
     selectedDataModelList.value = [];
     dataModelIdList.value = [];
@@ -296,6 +308,18 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       dataModelIdList.value.push(element.id);
     }
   };
+
+  const checkExistingDataModelList = () => {
+    for (const item of dataModelIdList.value) {
+      for (const selectedModelListItem of modelIdList.value) {
+        if (item === selectedModelListItem) {
+          selectedDataModelList.value.push(selectedModelListItem);
+          console.log(selectedDataModelList.value);
+        }
+      }
+    }
+  };
+
   return {
     categories,
     categoriesParentId,
@@ -317,6 +341,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     dataModelIdList,
     selectedDataModelList,
     addSearchInputValue,
+    modelIdList,
     resetAddModalStatus,
     getCategories,
     addModelList,
@@ -335,5 +360,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     resetReloadList,
     changeTab,
     updateIntersectionHandler,
+    setModelIdList,
+    checkExistingDataModelList,
   };
 });
