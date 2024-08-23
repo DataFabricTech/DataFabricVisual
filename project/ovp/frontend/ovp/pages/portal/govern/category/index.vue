@@ -194,10 +194,7 @@
       </div>
     </div>
   </div>
-  <CategoryAddModal
-    :modal-id="CATEGORY_ADD_MODAL_ID"
-    :confirm-btn-msg="'저장'"
-  ></CategoryAddModal>
+  <CategoryAddModal :modal-id="CATEGORY_ADD_MODAL_ID"></CategoryAddModal>
   <CategoryChangeModal
     :modal-id="CATEGORY_CHANGE_MODAL_ID"
   ></CategoryChangeModal>
@@ -205,7 +202,6 @@
     :modal-id="DATA_MODEL_ADD_MODAL_ID"
     @before-open="beforeOpen"
     @open="open"
-    :confirm-btn-msg="'저장'"
   ></DataModelAddModal>
 </template>
 
@@ -246,7 +242,6 @@ const {
   setModelIdList,
 } = categoryStore;
 const {
-  initTab,
   selectedModelList,
   categories,
   modelList,
@@ -308,9 +303,7 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   selectedModelList.value = [];
   isDescEditMode.value = false;
   isTitleEditMode.value = false;
-
   selectedNode.value = node;
-
   setScrollOptions(0);
   // 선택한 노드정보 저장
   setSelectedNode(node);

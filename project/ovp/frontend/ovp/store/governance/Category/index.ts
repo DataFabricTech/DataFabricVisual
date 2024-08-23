@@ -180,7 +180,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   };
 
   // MODAL - FILTERS
-
   const createDefaultFilters = (): Filters => {
     return {
       [FILTER_KEYS.OWNER]: { text: "소유자", data: [] },
@@ -257,7 +256,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
         !checkReachedCount.value)
     ) {
       setDataModelIdList();
-      checkExistingDataModelList();
     }
 
     if (searchResult.value.length === currentTabCumulativeCount) {
@@ -272,7 +270,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     searchResultLength.value = totalCount;
     isSearchResultNoData.value = searchResult.value.length === 0;
     setDataModelIdList();
-    checkExistingDataModelList();
   };
 
   const getQueryFilter = (): QueryFilter => {
@@ -317,18 +314,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     }
   };
 
-  const checkExistingDataModelList = () => {
-    for (const item of dataModelIdList.value) {
-      for (const selectedModelListItem of modelIdList.value) {
-        if (item === selectedModelListItem) {
-          selectedDataModelList.value.push(selectedModelListItem);
-          console.log(selectedDataModelList.value);
-        }
-      }
-    }
-  };
-
-  // TAB
+  // MODAL - TAB
   const initTab: Ref<string> = ref("table");
   const currentTab: Ref<string> = ref("table");
   const changeTab = async (item: string) => {
@@ -383,6 +369,5 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     updateIntersectionHandler,
     setEmptyFilter,
     setModelIdList,
-    checkExistingDataModelList
   };
 });
