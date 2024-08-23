@@ -1,5 +1,12 @@
 const $constants = {
   LOGIN: {
+    ID: {
+      REGEX: /^[a-z0-9_-]{5,20}$/,
+      REGEX_ERROR_MSG:
+        "아이디는 5~20자의 영문 소문자, 숫자와 특수기호(_),(-)만 사용 가능합니다.",
+      INPUT_ERROR_MSG: "사용자 아이디를 입력하세요.",
+      DUPLICATE_ERROR_MSG: "이미 사용 중인 아이디 입니다.",
+    },
     PASSWORD: {
       REGEX:
         /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^()_\-=\[\]{}|;:<>,.\/?]).{8,56}$/,
@@ -10,6 +17,9 @@ const $constants = {
     },
     EMAIL: {
       REGEX: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      REGEX_ERROR_MSG: "이메일이 유효하지 않습니다.",
+      INPUT_ERROR_MSG: "사용자 이메일을 입력하세요.",
+      DUPLICATE_ERROR_MSG: "이미 사용 중인 이메일 입니다.",
     },
   },
   COMMON: {
