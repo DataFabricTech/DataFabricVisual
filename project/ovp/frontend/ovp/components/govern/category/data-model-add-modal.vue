@@ -30,7 +30,7 @@
           @on-input="onInput"
         ></search-input>
         <div class="filters">
-          <data-filter :data="filters"></data-filter>
+          <data-filter :data="filters" :filter-type="currentTab"></data-filter>
         </div>
         <Tab
           :data="tabOptions"
@@ -171,6 +171,7 @@ const {
   dataModelIdList,
   selectedDataModelList,
   addSearchInputValue,
+  currentTab,
 } = storeToRefs(categoryStore);
 
 const props = defineProps({
