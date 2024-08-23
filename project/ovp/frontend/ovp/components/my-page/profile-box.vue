@@ -1,7 +1,7 @@
 <template>
   <div class="profile-box">
     <span class="profile-avatar">
-      <img class="profile-img" alt="프로필 이미지" />
+      {{ profileFirstWord }}
     </span>
     <div class="profile-group">
       <div class="editable-group">
@@ -10,6 +10,7 @@
           class="button button-neutral-ghost button-sm"
           type="button"
           @click="editDisplayName(true)"
+          v-show="IsEditAgree"
         >
           <span class="hidden-text">수정</span>
           <svg-icon class="button-icon" name="pen"></svg-icon>
@@ -56,7 +57,9 @@
               class="button button-neutral-ghost button-sm"
               type="button"
               @click="editRole"
-              v-show="props.userInfo.admin"
+              v-show="
+                props.userInfo.admin && props.targetUserInfo.name !== 'admin'
+              "
             >
               <span class="hidden-text">수정</span>
               <svg-icon class="button-icon" name="pen"></svg-icon>
@@ -97,6 +100,7 @@
           class="button button-neutral-ghost button-sm"
           type="button"
           @click="editDescription(true)"
+          v-show="IsEditAgree"
         >
           <span class="hidden-text">수정</span>
           <svg-icon class="button-icon" name="pen"></svg-icon>
@@ -154,6 +158,13 @@ const emit = defineEmits<{
 const localAdmin = ref(props.targetUserInfo.admin);
 const localDescription = ref(props.targetUserInfo.description);
 const localDisplayName = ref(props.targetUserInfo.displayName);
+const localName = ref(props.targetUserInfo.name);
+
+const profileFirstWord = computed(() => {
+  let word =
+    props.targetUserInfo.displayName || props.targetUserInfo.name || "";
+  return word.slice(0, 1).toUpperCase();
+});
 
 const editDisplayName = (value: boolean) => {
   if (!value) {
@@ -205,5 +216,84 @@ const changeRole = () => {
   };
   emit("changeRole", data);
 };
+
+const IsEditAgree = computed(() => {
+  const isCurrentUserAdmin = props.userInfo.admin;
+  const isCurrentUserSuperAdmin =
+    isCurrentUserAdmin && props.userInfo.name === "admin";
+  const isTargetUserAdmin = props.targetUserInfo.admin;
+  const isTargetUserSuperAdmin =
+    isTargetUserAdmin && props.targetUserInfo.name === "admin";
+
+  // NOTE: 최고관리자(U)가 유저(T) -> true
+  if (isCurrentUserSuperAdmin && !isTargetUserAdmin) {
+    return true;
+  }
+
+  // NOTE: 최고관리자(U)가 관리자(T) -> true
+  if (isCurrentUserSuperAdmin && isTargetUserAdmin && !isTargetUserSuperAdmin) {
+    return true;
+  }
+
+  // NOTE: 최고관리자(U)가 최고관리자(T) -> true
+  if (isCurrentUserSuperAdmin && isTargetUserSuperAdmin) {
+    return true;
+  }
+
+  // NOTE: 관리자(U)가 유저(T) -> true
+  if (isCurrentUserAdmin && !isCurrentUserSuperAdmin && !isTargetUserAdmin) {
+    return true;
+  }
+
+  // NOTE: 관리자(U)가 관리자(T) -> true
+  if (
+    isCurrentUserAdmin &&
+    !isCurrentUserSuperAdmin &&
+    isTargetUserAdmin &&
+    !isTargetUserSuperAdmin
+  ) {
+    return true;
+  }
+
+  // NOTE: 관리자(U)가 최고관리자(T) -> false
+  if (
+    isCurrentUserAdmin &&
+    !isCurrentUserSuperAdmin &&
+    isTargetUserSuperAdmin
+  ) {
+    return false;
+  }
+
+  // NOTE: 유저(U)가 최고관리자(T) -> false
+  if (!isCurrentUserAdmin && isTargetUserSuperAdmin) {
+    return false;
+  }
+
+  // NOTE: 유저(U)가 관리자(T) -> false
+  if (!isCurrentUserAdmin && isTargetUserAdmin && !isTargetUserSuperAdmin) {
+    return false;
+  }
+
+  // NOTE: 유저(U)가 유저(본인) -> true
+  if (
+    !isCurrentUserAdmin &&
+    !isTargetUserAdmin &&
+    props.userInfo.name === props.targetUserInfo.name
+  ) {
+    return true;
+  }
+
+  // NOTE: 유저(U)가 유저(타인) -> false
+  if (
+    !isCurrentUserAdmin &&
+    !isTargetUserAdmin &&
+    props.userInfo.name !== props.targetUserInfo.name
+  ) {
+    return false;
+  }
+
+  // NOTE: 기본값으로 false 반환
+  return false;
+});
 </script>
 <style lang="scss" scoped></style>
