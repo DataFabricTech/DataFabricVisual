@@ -104,8 +104,8 @@ const stepOptions: any[] = [
   { label: "서비스 컨피그 입력", value: 2 },
   { label: "연결 세부 정보 입력", value: 3 },
 ];
-const step2Ref = ref<HTMLElement | null>(null);
-const step3Ref = ref<HTMLElement | null>(null);
+const step2Ref = ref<any | null>(null);
+const step3Ref = ref<any | null>(null);
 
 const changeStep = (value: number | string) => {
   // value 를 숫자로만 했기 때문에 ts 오류 방지를 위해 Number 로 형변환 한다.
@@ -153,9 +153,9 @@ watch(
       // 페이지 이동시 스크롤 탑으로 이동
       // 1페이지는 스크롤이 생기지 않아 생략.
       if (currentStep.value === 2 && step2Ref.value) {
-        step2Ref.value.nextElementSibling?.scrollTo({ top: 0 });
+        step2Ref.value.$el.nextElementSibling?.scrollTo({ top: 0 });
       } else if (currentStep.value === 3 && step3Ref.value) {
-        step3Ref.value.nextElementSibling?.scrollTo({ top: 0 });
+        step3Ref.value.$el.nextElementSibling?.scrollTo({ top: 0 });
       }
     });
   },
