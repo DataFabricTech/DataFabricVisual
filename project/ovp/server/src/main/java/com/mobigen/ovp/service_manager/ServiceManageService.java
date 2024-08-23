@@ -142,11 +142,12 @@ public class ServiceManageService {
 
         // 1. getTestConnectionDefinition
         String definitionNm = "Mysql.testConnectionDefinition";
-        Map<String, Object> definition = servicesClient.getTestConnectionDefinition(definitionNm);
+        servicesClient.getTestConnectionDefinition(definitionNm);
 
         // 2. workflows 실행
+        String workflowName = "test-connection-" + params.get("connectionType") + "-" + getRandomUUID();
         Map<String, Object> workflowParams = new HashMap<>();
-        workflowParams.put("name", "test-connection-" + params.get("connectionType") + "-" + getRandomUUID());
+        workflowParams.put("name", workflowName);
         workflowParams.put("workflowType", "TEST_CONNECTION");
         workflowParams.put("request", params);
 
@@ -159,10 +160,9 @@ public class ServiceManageService {
             automationsClient.postWorkflowsTrigger(workflowId);
 
             // 4. workflow 조회
-            Map<String, Object> res = automationsClient.getWorkflows(workflowId);
-            Map<String, Object> connectionRes = (Map<String, Object>) res.get("response");
-            ;
-            responseMap.put("responseStatus", connectionRes);
+            Map<String, Object> workflowResult = automationsClient.getWorkflows(workflowId);
+            Map<String, Object> connectionResponse = (Map<String, Object>) workflowResult.get("response");
+            responseMap.put("responseStatus", connectionResponse);
         } catch (FeignException e) {
             throw e;
         } finally {
