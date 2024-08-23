@@ -77,7 +77,7 @@ const resetTestConnectionStatus = () => {
 const doConnectionTest = async () => {
   resetTestConnectionStatus();
 
-  if (!(await checkValidation())) {
+  if (!(await checkValidation("test"))) {
     return;
   }
 

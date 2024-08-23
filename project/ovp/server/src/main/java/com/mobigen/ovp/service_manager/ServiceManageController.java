@@ -29,6 +29,7 @@ public class ServiceManageController {
 
     /**
      * 서비스 리스트
+     *
      * @return
      */
     @ResponseJsonResult
@@ -39,6 +40,7 @@ public class ServiceManageController {
 
     /**
      * 서비스 검색 리스트
+     *
      * @param search
      * @param from
      * @return
@@ -52,6 +54,7 @@ public class ServiceManageController {
 
     /**
      * 서비스 수정
+     *
      * @param id
      * @param param
      * @return
@@ -64,6 +67,7 @@ public class ServiceManageController {
 
     /**
      * 서비스 삭제
+     *
      * @param id
      * @param hardDelete
      * @param recursive
@@ -77,15 +81,15 @@ public class ServiceManageController {
 
     /**
      * service : Service - 수집 - 동작 [log] 조회
+     *
      * @param id
      * @return
-     * **/
+     **/
     @ResponseJsonResult
     @GetMapping("/collection/log/{id}")
     public Object getServiceCollectionLog(@PathVariable String id) {
         return service.getServiceCollectionLog(id);
     }
-
 
 
     /**
@@ -108,5 +112,11 @@ public class ServiceManageController {
     @PostMapping(value = "/connectionTest")
     public Object connectionTest(@RequestBody Map<String, Object> params) throws Exception {
         return service.connectionTest(params);
+    }
+
+    @ResponseJsonResult
+    @PostMapping(value = "/save/{type}")
+    public Object saveService(@PathVariable String type, @RequestBody Map<String, Object> params) {
+        return type.toLowerCase().equals("database") ? service.saveDatabase(params) : service.saveStorage(params);
     }
 }

@@ -51,8 +51,8 @@ export interface ModalServiceComposition extends ModalServiceProps {
   checkRequiredValue(): boolean;
   connectionTest(): Promise<any>;
 
-  submit(): void;
-  checkValidation(): Promise<boolean>;
+  submit(): Promise<boolean>;
+  checkValidation(type: string): Promise<boolean>;
 }
 
 export function ModalServiceComposition(
@@ -413,7 +413,7 @@ export function ModalServiceComposition(
     setValue(serviceObjPath, "");
   };
 
-  const checkValidation = async (): Promise<boolean> => {
+  const checkValidation = async (type: string): Promise<boolean> => {
     if (currentStep.value === 1) {
       // modal 진입시에 무조건 첫번째 값을 선택하게 되어있기 때문에 값이 없을수가 없음.
     } else if (currentStep.value === 2) {
@@ -432,12 +432,12 @@ export function ModalServiceComposition(
         inValidMsg.value = "필수 값을 입력해주세요.";
         return false;
       }
-      if (_.isNull(isDoneTestConnection)) {
+      if (type === "submit" && _.isNull(isDoneTestConnection.value)) {
         isValid.value = false;
         inValidMsg.value = "연결 테스트를 수행해 주세요.";
         return false;
       }
-      if (!isDoneTestConnection) {
+      if (type === "submit" && !isDoneTestConnection.value) {
         isValid.value = false;
         inValidMsg.value = "연결 테스트를 다시 수행해 주세요.";
         return false;

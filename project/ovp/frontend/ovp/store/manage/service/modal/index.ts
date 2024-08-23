@@ -239,51 +239,70 @@ export const useServiceStore = defineStore("serviceStore", () => {
     };
   };
 
-  const getDefqaultParam = () => {
+  const getDefaultParam = () => {
     const serviceId = serviceObj.value.serviceId;
     return {
-      serviceType: serviceId === ServiceIds.MINIO ? "Storage" : "Database",
       connection: {
         config: getConfig(serviceId),
       },
     };
   };
+  const getContentType = () => {
+    return serviceObj.value.serviceId === ServiceIds.MINIO
+      ? "Storage"
+      : "Database";
+  };
   const getParams = () => {
     const serviceId = serviceObj.value.serviceId;
-    return { ...getDefqaultParam(), ...{ connectionType: serviceId } };
+    return {
+      ...getDefaultParam(),
+      ...{
+        serviceType: getContentType(),
+      },
+      ...{ connectionType: serviceId },
+    };
   };
   const getSubmitParams = () => {
     return {
-      ...getDefqaultParam(),
-      ...serviceObj.value.defaultInfo,
+      ...getDefaultParam(),
+      ...{
+        serviceType: serviceObj.value.serviceId,
+        name: serviceObj.value.defaultInfo.serviceNm,
+        description: serviceObj.value.defaultInfo.serviceDesc,
+      },
       ...{
         owner: {
-          id: user.id,
+          id: user.value.id,
           type: "user",
         },
       },
     };
   };
   const connectionTest = async () => {
-    const { errorMessage, data } = await $api(
+    const { result, errorMessage, data } = await $api(
       "/api/service-manage/connectionTest",
       {
+        showLoader: false,
         method: "POST",
         body: getParams(),
       },
     );
-
-    const { workflowId, responseStatus } = data;
+    let workflowId = "";
 
     let errMsg = null;
-    if (errorMessage) {
+    if (result === 0 && errorMessage) {
       errMsg = getErrorMessage(errorMessage);
-    } else if (responseStatus.status === "Failed") {
-      errMsg = responseStatus.steps.map(
-        (step: any) => `[${step.name}] ${step.message}`,
-      )[0];
     } else {
-      errMsg = "";
+      workflowId = data.workflowId;
+      if (data.responseStatus.status === "Failed") {
+        errMsg = data.responseStatus.steps
+          .filter(
+            (step: any) => step.mandatory === true && step.passed === false,
+          )
+          .map((step: any) => `[${step.name}] ${step.message}`)[0];
+      } else {
+        errMsg = "";
+      }
     }
 
     isDoneTestConnection.value = _.isEmpty(errMsg);
@@ -297,9 +316,15 @@ export const useServiceStore = defineStore("serviceStore", () => {
     return str.split("]: ").pop();
   };
 
-  const submit = async () => {
-    console.log(getSubmitParams());
-    return false;
+  const submit = async (): Promise<boolean> => {
+    const { result } = await $api(
+      `/api/service-manage/save/${getContentType()}`,
+      {
+        method: "POST",
+        body: getSubmitParams(),
+      },
+    );
+    return result > 0;
   };
 
   return {

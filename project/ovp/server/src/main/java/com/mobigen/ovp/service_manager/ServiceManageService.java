@@ -176,4 +176,13 @@ public class ServiceManageService {
     private String getRandomUUID() {
         return UUID.randomUUID().toString().substring(0, 8);
     }
+
+    public Object saveDatabase(Map<String, Object> params) {
+        return servicesClient.saveDatabase(params);
+    }
+
+
+    public Object saveStorage(Map<String, Object> params) {
+        return servicesClient.saveStorage(params);
+    }
 }

@@ -15,7 +15,6 @@
     swipeToClose="none"
     @closed="onClosed"
     @cancel="onCancel"
-    @confirm="onConfirm"
   >
     <template #body>
       <Step
@@ -106,9 +105,6 @@ const changeStep = (value: number | string) => {
 const onCancel = () => {
   $vfm.close(props.modalId);
 };
-const onConfirm = () => {
-  console.log("onConfirm");
-};
 const onClosed = () => {
   resetServiceObj(); // store 에 저장하고 있던 데이터 리셋
   resetViewData();
@@ -127,15 +123,18 @@ const resetViewData = () => {
 };
 const gotoNext = async () => {
   // 다음 단계로 넘어가기 전에 validation 체크를 해야함.
-  if (!(await checkValidation())) {
+  if (!(await checkValidation("submit"))) {
     return;
   }
 
   if (currentStep.value === 3) {
-    submit();
+    if (await submit()) {
+      $vfm.close(props.modalId);
+    }
     return;
+  } else {
+    currentStep.value = currentStep.value + 1;
   }
-  currentStep.value = currentStep.value + 1;
 };
 </script>
 
