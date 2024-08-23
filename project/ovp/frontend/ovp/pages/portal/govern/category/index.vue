@@ -239,12 +239,14 @@ const {
   moveCategory,
   resetAddModalStatus,
   setSelectedNode,
-  getSearchList,
   setSearchKeyword,
   getFilters,
+  changeTab,
+  setEmptyFilter,
   setModelIdList,
 } = categoryStore;
 const {
+  initTab,
   selectedModelList,
   categories,
   modelList,
@@ -253,6 +255,7 @@ const {
   isBoxSelectedStyle,
   selectedDataModelList,
   addSearchInputValue,
+  checkReachedCount,
   modelIdList,
 } = storeToRefs(categoryStore);
 
@@ -261,7 +264,6 @@ const CATEGORY_CHANGE_MODAL_ID = "category-change-modal";
 const DATA_MODEL_ADD_MODAL_ID = "data-modal-add-modal";
 
 const loader = ref<HTMLElement | null>(null);
-
 const isDescEditMode = ref(false);
 const isTitleEditMode = ref(false);
 const isShowPreview = ref<boolean>(false);
@@ -500,12 +502,14 @@ const showDataModelAddModal = () => {
 const beforeOpen = () => {
   selectedDataModelList.value = [];
   addSearchInputValue.value = "";
+  checkReachedCount.value = false;
   setSearchKeyword("");
-  getSearchList();
+  getFilters();
 };
 
 const open = () => {
-  getFilters();
+  setEmptyFilter();
+  changeTab("table");
 };
 
 onMounted(async () => {
@@ -513,7 +517,6 @@ onMounted(async () => {
     loader.value.style.display = "block";
   }
 
-  // TODO: [개발] 페이지 진입 시 첫 번째 트리, 모델 리스트 설정 - 첫 번째 트리에 선택된 상태를 추가할 수 있는지 검토 필요
   await getCategories();
 
   if (categories.value && categories.value.length > 0) {

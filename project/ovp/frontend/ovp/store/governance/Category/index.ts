@@ -56,6 +56,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const showAddDescNoti = ref<boolean>(false);
   const selectedModelList = ref([]);
   const addSearchInputValue = ref("");
+  const checkReachedCount = ref<boolean>(false);
 
   const previewData: Ref<any> = ref({
     modelInfo: {
@@ -179,7 +180,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   };
 
   // MODAL - FILTERS
-  // filters 초기값 부여 (text 처리)
+
   const createDefaultFilters = (): Filters => {
     return {
       [FILTER_KEYS.OWNER]: { text: "소유자", data: [] },
@@ -188,21 +189,35 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       [FILTER_KEYS.SERVICE_TYPE]: { text: "서비스타입", data: [] },
     };
   };
-  // filter 정보
+
   const filters = ref<Filters>(createDefaultFilters());
-  const currentTab: Ref<string> = ref("table");
-  const searchResult: Ref<any[]> = ref([]);
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
+  const selectedFilterItems: Ref<any> = ref([]);
+  const setEmptyFilter = () => {
+    selectedFilterItems.value = [];
+    selectedFilters.value = {};
+  };
+
+  const getFilters = async () => {
+    const { data } = await $api(`/api/search/filters`);
+
+    const defaultFilters = createDefaultFilters();
+    const useFilters = Object.keys(defaultFilters);
+
+    useFilters.forEach((key: string) => {
+      (filters.value as Filters)[key].data = data[key];
+    });
+  };
+
+  // MODAL - MODEL LIST
+  const searchResult: Ref<any[]> = ref([]);
   const searchResultLength: Ref<SearchResultLength> = ref<SearchResultLength>({
     model: 0,
     table: 0,
     storage: 0,
   });
-
   const selectedDataModelList = ref([]);
   const dataModelIdList = ref([]);
-
-  // MODAL - MODEL LIST
   let searchKeyword: string = "";
   const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
 
@@ -225,22 +240,32 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     const { data } = await $api(`/api/search/list?${getSearchListQuery()}`, {
       showLoader: false,
     });
-    return data === null ? "" : data;
-  };
-  /**
-   * 데이터 조회 -> 누적
-   */
-  const addSearchList = async () => {
-    const { data, totalCount } = await getSearchListAPI();
-    searchResult.value = searchResult.value.concat(data[currentTab.value]);
-    searchResultLength.value = totalCount;
-    setDataModelIdList();
-    checkExistingDataModelList();
+    return data === null ? [] : data;
   };
 
-  /**
-   * 데이터 조회 -> 갱신
-   */
+  // 데이터 모델 데이터 누적
+  const addSearchList = async () => {
+    const { data } = await getSearchListAPI();
+    searchResult.value = searchResult.value.concat(data[currentTab.value]);
+
+    const currentTabCumulativeCount =
+      searchResultLength.value[currentTab.value];
+
+    if (
+      searchResult.value.length < currentTabCumulativeCount ||
+      (searchResult.value.length === currentTabCumulativeCount &&
+        !checkReachedCount.value)
+    ) {
+      setDataModelIdList();
+      checkExistingDataModelList();
+    }
+
+    if (searchResult.value.length === currentTabCumulativeCount) {
+      checkReachedCount.value = true;
+    }
+  };
+
+  // 데이터 모델 목록 최초 갱신
   const getSearchList = async () => {
     const { data, totalCount } = await getSearchListAPI();
     searchResult.value = data[currentTab.value];
@@ -248,16 +273,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     isSearchResultNoData.value = searchResult.value.length === 0;
     setDataModelIdList();
     checkExistingDataModelList();
-  };
-  const getFilters = async () => {
-    const { data } = await $api(`/api/search/filters`);
-
-    const defaultFilters = createDefaultFilters();
-    const useFilters = Object.keys(defaultFilters);
-
-    useFilters.forEach((key: string) => {
-      (filters.value as Filters)[key].data = data[key];
-    });
   };
 
   const getQueryFilter = (): QueryFilter => {
@@ -275,10 +290,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     return queryFilter;
   };
 
-  /**
-   * 목록 reset
-   * 목록을 '갱신'하는 경우, from 값을 항상 0으로 주어야 하기 때문에 fn 하나로 묶어서 처리.
-   */
+  // 데이터 모델 목록 Reset
   const resetReloadList = async () => {
     setFrom(0);
     await getSearchList();
@@ -289,17 +301,13 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     searchKeyword = keyword;
   };
 
-  const changeTab = async (item: string) => {
-    currentTab.value = item;
-
-    await resetReloadList();
-  };
   const setModelIdList = () => {
     modelIdList.value = [];
     for (const element of modelList.value) {
       modelIdList.value.push(element.id);
     }
   };
+
   const setDataModelIdList = () => {
     selectedDataModelList.value = [];
     dataModelIdList.value = [];
@@ -320,6 +328,16 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     }
   };
 
+  // TAB
+  const initTab: Ref<string> = ref("table");
+  const currentTab: Ref<string> = ref("table");
+  const changeTab = async (item: string) => {
+    checkReachedCount.value = false;
+    initTab.value = item;
+    currentTab.value = item;
+    await resetReloadList();
+  };
+
   return {
     categories,
     categoriesParentId,
@@ -333,14 +351,17 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     showAddDescNoti,
     selectedModelList,
     currentTab,
+    initTab,
     filters,
     searchResult,
     selectedFilters,
+    selectedFilterItems,
     searchResultLength,
     isSearchResultNoData,
     dataModelIdList,
     selectedDataModelList,
     addSearchInputValue,
+    checkReachedCount,
     modelIdList,
     resetAddModalStatus,
     getCategories,
@@ -360,7 +381,8 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     resetReloadList,
     changeTab,
     updateIntersectionHandler,
+    setEmptyFilter,
     setModelIdList,
-    checkExistingDataModelList,
+    checkExistingDataModelList
   };
 });

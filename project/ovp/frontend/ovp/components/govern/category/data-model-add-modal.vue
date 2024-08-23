@@ -155,9 +155,15 @@ const router = useRouter();
 const { $vfm } = useNuxtApp();
 
 const categoryStore = useGovernCategoryStore();
-const { changeTab, setSearchKeyword, resetReloadList, addSearchList } =
-  categoryStore;
 const {
+  changeTab,
+  setSearchKeyword,
+  resetReloadList,
+  addSearchList,
+  getSearchList,
+} = categoryStore;
+const {
+  initTab,
   filters,
   searchResult,
   searchResultLength,
@@ -221,7 +227,6 @@ const goToModelDetail = (data: object) => {
 };
 
 // TAB
-const initTab: Ref<string> = ref("table");
 const tabOptions = ref([
   {
     label: `테이블 (${searchResultLength.value.table})`,
@@ -254,6 +259,8 @@ const onCancel = () => {
 const onConfirm = async () => {
   $vfm.close(props.modalId);
 };
+
+await getSearchList();
 
 const { scrollTrigger, setScrollOptions } = useIntersectionObserver(
   addSearchList,

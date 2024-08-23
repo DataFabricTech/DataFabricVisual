@@ -7,7 +7,7 @@
   }
 
   &-top-buttons {
-    @include flex($horizontal: flex-start,$gap: $spacing-8);
+    @include flex($horizontal: flex-start, $gap: $spacing-8);
 
     padding-bottom: $spacing-8;
   }
@@ -64,7 +64,7 @@
 
   .selected-tree-item {
     background: transparent;
-    color: $secondary-500;
+    color: $secondary-500 !important;
   }
 
   .chevron-right {
