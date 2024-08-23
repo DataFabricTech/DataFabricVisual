@@ -16,7 +16,9 @@ interface DBServiceListData {
   serviceType: string;
   name: string;
   description: string | undefined;
-  owner: object;
+  owner: {
+    name: string | undefined;
+  };
   id: string;
   fqn: string;
   type: string;
@@ -34,12 +36,10 @@ export const useServiceCollectionLogStore = defineStore(
       {
         serviceType: "serviceType1",
         name: "name1",
-        href: "http://192.168.105.26:8585/api/v1/services/databaseServices/e2e0484e-6985-4083-a244-698700c6b189",
         description: "description1",
         owner: {
           name: "ownerName1",
         },
-        usage: "usage1",
         type: "type1",
         id: "id1",
         fqn: "fqn1",
@@ -108,34 +108,35 @@ export const useServiceCollectionLogStore = defineStore(
       return result;
     };
 
-    const getDBServiceList = async () => {
+    const getDBServiceList = () => {
       // TODO : 가상 데이터 지정 > API생성 후 대체 예정
-      let result = await $api(`/api/v1/databases/`);
-      result = [
-        {
-          serviceType: "Mysql",
-          name: "test_db",
-          description: "설명임",
-          owner: {
-            name: "ownerName",
+      // let result: any = await $api("api/v1/databases/");
+      const result = {
+        result: 1,
+        data: [
+          {
+            serviceType: "serviceType1",
+            name: "11이름",
+            description: "설명1",
+            owner: { name: "소유자1" },
+            type: "table",
+            id: "6ef96a3a-837b-40a5-9afe-a286e50e6ae4",
+            fqn: "df2.test_db.test_db.Employee",
           },
-          type: "Table",
-          id: "id1",
-          fqn: "fqn1",
-        },
-        {
-          serviceType: "Mysql2",
-          name: "test_db2",
-          description: "설명임2",
-          owner: {
-            name: "ownerName2",
+          {
+            serviceType: "serviceType2",
+            name: "22이름",
+            description: "설명2",
+            owner: { name: "소유자2" },
+            type: "table",
+            id: "02ab816f-88e1-47df-bb87-926dcbcc20f0",
+            fqn: "vdap2.sample.sample.sampledata_chart_02",
           },
-          type: "model",
-          id: "id2",
-          fqn: "fqn2",
-        },
-      ];
-      DBServiceListData.value = result;
+        ],
+      };
+      DBServiceListData.value = result.data;
+
+      return result;
     };
 
     return {
