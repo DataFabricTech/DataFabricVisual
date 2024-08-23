@@ -63,8 +63,7 @@ export class IntersectionObserverHandler {
     }
 
     if (rootEl.children.length > 0) {
-      const firChildEl: any = rootEl.firstElementChild;
-      rootEl.scrollTop = firChildEl.offsetTop;
+      rootEl.scrollTop = 0;
     }
   }
 
