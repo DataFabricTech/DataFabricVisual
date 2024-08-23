@@ -163,7 +163,7 @@ public class ModelConvertUtil {
         resultMap.put("glossaries", glossaryList);
         resultMap.put("tags", tagList);
         resultMap.put("id", data.get("id"));
-        
+
         if (type.equals("unstructured")) {
             resultMap.put("modelType", "unstructured");
             resultMap.put("index", "storage");

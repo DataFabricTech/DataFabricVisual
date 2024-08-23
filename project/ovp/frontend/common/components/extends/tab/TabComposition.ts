@@ -9,6 +9,7 @@ const INDEX = "index";
 
 interface TabComposition extends TabProps, NavigationFunctionality, NavigationEvents {
   currentIndex: Ref<number>;
+
   changeCurrentTabClass(index: number): boolean;
 }
 
@@ -34,6 +35,17 @@ export function TabComposition(props: TabProps, onchange: (value: string | numbe
   };
 
   setCurrentIndex();
+
+  watch(
+    () => props.currentItem,
+    (newVal) => {
+      if (props.currentItemType === INDEX) {
+        currentIndex.value = typeof newVal === "number" ? newVal : 0;
+      } else {
+        currentIndex.value = _.findIndex(props.data, ["value", newVal]);
+      }
+    }
+  );
 
   const move: (index: number) => void = (index) => {
     currentIndex.value = index;

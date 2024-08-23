@@ -6,10 +6,13 @@
   </div>
   <div class="section-contents bg-white">
     <div class="l-between mb-3">
-      <!-- TODO: SearchInput 컴포넌트 접근성 개선 개발 완료되면 label/input의 for/id 값 "data-menu-search" 로 설정-->
       <SearchInput
-        @onClickSearch="onClickSearch"
+        inp-id="userSearchInp"
+        label-text="사용자 정보 검색"
         :placeholder="'검색어를 입력하세요.'"
+        :inp-value="searchInputValue"
+        @update:value="updateSearchInputValue"
+        @onClickSearch="onClickSearch"
       ></SearchInput>
       <button class="button button-secondary ml-auto" @click="openModal">
         사용자 추가
@@ -38,7 +41,10 @@
     </div>
   </div>
 
-  <AddUserModal></AddUserModal>
+  <AddUserModal
+    :modal-id="addUserModalId"
+    @user-added-success="getUserList"
+  ></AddUserModal>
 </template>
 
 <script setup lang="ts">
@@ -57,6 +63,7 @@ const userStore = useUserStore();
 const { setSearchKeyword, getUserList, addUserList, deleteUser } = userStore;
 const { userList } = storeToRefs(userStore);
 
+const addUserModalId = "addUserModal";
 const columnDefs = ref([
   {
     headerName: "사용자 이름",
@@ -114,13 +121,19 @@ const gridContext = {
   },
 };
 
+const searchInputValue = ref("");
+
+const updateSearchInputValue = (newValue: string) => {
+  searchInputValue.value = newValue;
+};
+
 const onClickSearch = (value: string) => {
   setSearchKeyword(value);
   getUserList();
 };
 
 const openModal = () => {
-  $vfm.open("addUserModal");
+  $vfm.open(addUserModalId);
 };
 
 const cellClicked = ({

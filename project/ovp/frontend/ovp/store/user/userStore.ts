@@ -1,4 +1,5 @@
 import { usePagingStore } from "~/store/common/paging";
+import type { AddUser } from "~/type/user";
 
 interface User {
   role: string;
@@ -25,6 +26,17 @@ export const useUserStore = defineStore("userStore", () => {
   // Data
   const user: Ref<User> = ref(defaultUser);
   const userList: Ref<any[]> = ref([]);
+  const defaultAddUser: AddUser = {
+    email: "",
+    name: "",
+    displayName: "",
+    description: "",
+    password: "",
+    confirmPassword: "",
+    isAdmin: false,
+    isBot: false,
+    createPasswordType: "ADMIN_CREATE",
+  };
 
   // List Query Data
   let searchKeyword: string = "";
@@ -53,34 +65,11 @@ export const useUserStore = defineStore("userStore", () => {
   };
 
   const getUserListAPI = async () => {
-    // TODO: API 구현 완료 되면 주석 처리 제거 및 테스트 데이터 조회 코드 삭제
-    /*const { data } = await $api(`/api/user/list?${getUserListQuery()}`, {
+    const { data } = await $api(`/api/user/list?${getUserListQuery()}`, {
       showLoader: false,
     });
 
-    return data;*/
-
-    interface RowData {
-      id: number;
-      name: string;
-      displayName: null | string;
-      isAdmin: boolean;
-      description: string;
-      fqn: string;
-    }
-    const rowData: RowData[] = [];
-    for (let i = 0; i < 20; i++) {
-      rowData.push({
-        id: i,
-        name: `user${i}`,
-        displayName: i % 10 === 0 ? null : "홍길동",
-        isAdmin: i % 3 === 0 ? true : false,
-        description: "사용자에 대한 설명입니다. ".repeat(7),
-        fqn: `user${i}`,
-      });
-    }
-
-    return { data: rowData };
+    return data;
   };
 
   /**
@@ -105,20 +94,80 @@ export const useUserStore = defineStore("userStore", () => {
    * 사용자 정보 삭제
    */
   const deleteUser = async (id: string) => {
-    // TODO: API 구현 완료 되면 주석 처리 제거
-    /*await $api(`/api/user/${id}`, {
+    await $api(`/api/user/${id}`, {
       method: "DELETE",
-    });*/
-    console.log("delete id", id);
+    });
+  };
+
+  /**
+   * 랜덤 비밀번호 발급
+   */
+  const getRandomPwd = async () => {
+    // TODO: API 구현 완료되면 수정
+    /*return await $api(`/api/user/random-pwd`, {
+        method: "GET",
+        showLoader: false,
+      }).then(({ data }) => {
+        return data;
+      });*/
+    return "test" + Math.floor(Math.random() * 100);
+  };
+
+  /**
+   * 사용자 이메일 중복 체크
+   */
+  const checkDuplicateEmail = async (email: string) => {
+    // TODO: API 구현 완료되면 수정
+    /*return await $api(`/api/auth/sign-up/check-email`, {
+        method: "POST",
+        body: { email },
+        showLoader: false,
+      }).then(({ data }) => {
+        return data;
+      });*/
+    return !!(email.length % 2);
+  };
+
+  /**
+   * 사용자 이름 중복 체크
+   */
+  const checkDuplicateName = async (name: string) => {
+    // TODO: API 구현 완료되면 수정
+    /*return await $api(`/api/user/check-name/${name}`, {
+        showLoader: false,
+      }).then(({ data }) => {
+        return data;
+      });*/
+    return !!(name.length % 2);
+  };
+
+  /**
+   * 사용자 정보 추가
+   */
+  const addUser = async (params: { [key: string]: any }) => {
+    // TODO: API 구현 완료되면 수정
+    /*return await $api(`/api/user/add`, {
+          method: "POST",
+          body: params,
+          showLoader: false,
+        }).then(({ data }) => {
+          return data;
+        });*/
+    console.log(params);
   };
 
   return {
     user,
     userList,
+    defaultAddUser,
     setSearchKeyword,
     getUserInfo,
     getUserList,
     addUserList,
     deleteUser,
+    getRandomPwd,
+    checkDuplicateEmail,
+    checkDuplicateName,
+    addUser,
   };
 });

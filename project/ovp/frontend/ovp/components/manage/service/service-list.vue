@@ -2,7 +2,10 @@
   <div class="work-list">
     <div class="l-top-bar">
       <span class="title">서비스 목록</span>
-      <button class="button button-secondary-stroke" @click="openModal">
+      <button
+        class="button button-secondary-stroke"
+        @click="modalOpen(props.addModalId)"
+      >
         서비스 추가
       </button>
     </div>
@@ -105,5 +108,15 @@ async function reset() {
   await getServiceList();
 }
 
-function openModal() {}
+const props = defineProps({
+  addModalId: { type: String, default: "" },
+});
+
+const emit = defineEmits<{
+  (e: "modalOpen", modalId: string): void;
+}>();
+
+const modalOpen = (modalId: string) => {
+  emit("modalOpen", modalId);
+};
 </script>

@@ -43,6 +43,7 @@ public class MyPageService {
         newUserInfo.put("id", id);
         newUserInfo.put("description", openMetaUserInfo.get("description"));
         newUserInfo.put("displayName", openMetaUserInfo.get("displayName"));
+        newUserInfo.put("name", openMetaUserInfo.get("name"));
         newUserInfo.put("email", openMetaUserInfo.get("email"));
         newUserInfo.put("isAdmin", openMetaUserInfo.get("isAdmin"));
 
