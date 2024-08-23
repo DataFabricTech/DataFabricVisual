@@ -126,7 +126,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   };
 
   // MAIN - MODEL LIST
-  const modelIdList = ref([]);
   const getModelListQuery = (tagId: string, value?: string) => {
     // TODO : [개발] 검색어 조건 여기 추가.
     const params: any = {
@@ -298,13 +297,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     searchKeyword = keyword;
   };
 
-  const setModelIdList = () => {
-    modelIdList.value = [];
-    for (const element of modelList.value) {
-      modelIdList.value.push(element.id);
-    }
-  };
-
   const setDataModelIdList = () => {
     selectedDataModelList.value = [];
     dataModelIdList.value = [];
@@ -348,7 +340,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     selectedDataModelList,
     addSearchInputValue,
     checkReachedCount,
-    modelIdList,
     resetAddModalStatus,
     getCategories,
     addModelList,
@@ -368,6 +359,5 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     changeTab,
     updateIntersectionHandler,
     setEmptyFilter,
-    setModelIdList,
   };
 });

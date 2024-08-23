@@ -239,7 +239,6 @@ const {
   getFilters,
   changeTab,
   setEmptyFilter,
-  setModelIdList,
 } = categoryStore;
 const {
   selectedModelList,
@@ -251,7 +250,6 @@ const {
   selectedDataModelList,
   addSearchInputValue,
   checkReachedCount,
-  modelIdList,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -259,6 +257,7 @@ const CATEGORY_CHANGE_MODAL_ID = "category-change-modal";
 const DATA_MODEL_ADD_MODAL_ID = "data-modal-add-modal";
 
 const loader = ref<HTMLElement | null>(null);
+const modelIdList = ref([]);
 const isDescEditMode = ref(false);
 const isTitleEditMode = ref(false);
 const isShowPreview = ref<boolean>(false);
@@ -396,6 +395,13 @@ const allModelList = computed({
     }
   },
 });
+
+const setModelIdList = () => {
+  modelIdList.value = [];
+  for (const element of modelList.value) {
+    modelIdList.value.push(element.id);
+  }
+};
 
 const searchInputValue = ref("");
 const updateSearchInputValue = (newValue: string) => {

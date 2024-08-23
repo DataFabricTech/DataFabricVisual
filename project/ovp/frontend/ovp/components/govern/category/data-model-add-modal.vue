@@ -14,7 +14,7 @@
     :top="240"
     :lockScroll="false"
     :confirm-btn-msg="'저장'"
-    :isDisabledConfirmBtn="isDisabledConfirmBtn"
+    :is-disabled-confirm-btn="isDisabledConfirmBtn"
     swipeToClose="none"
     @cancel="onCancel"
     @confirm="onConfirm"
