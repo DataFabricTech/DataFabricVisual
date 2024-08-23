@@ -39,6 +39,7 @@ export interface ModalServiceComposition extends ModalServiceProps {
   selectedServiceObj: Ref<IService>;
   isDoneTestConnection: Ref<boolean | null>;
   testConnectionStatus: Ref<ConnectionStatus>;
+  openEyeValues: Ref<string[]>;
 
   setValue(serviceObjPath: string, value: any): void;
   resetInput(serviceObjPath: string): void;
@@ -67,6 +68,7 @@ export function ModalServiceComposition(
     selectedServiceObj,
     isDoneTestConnection,
     testConnectionStatus,
+    openEyeValues,
   } = storeToRefs(serviceStore);
   const {
     setValue,
@@ -459,6 +461,9 @@ export function ModalServiceComposition(
 
     // 선택한 서비스의 기본값 항목이 있는 경우, serviceObj 에 해당값을 미리 반영해둔다.
     setDefaultValueItems();
+
+    // 비밀번호 표시/미표시 정보를 리셋해준다.
+    openEyeValues.value = [];
   };
   const setDefaultValueItems = () => {
     return serviceDetailFormObj[
@@ -573,6 +578,7 @@ export function ModalServiceComposition(
     serviceDetailFormObj,
     isDoneTestConnection,
     testConnectionStatus,
+    openEyeValues,
     setValue,
     resetInput,
     resetServiceObj,

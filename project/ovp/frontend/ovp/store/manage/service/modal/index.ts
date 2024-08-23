@@ -27,6 +27,10 @@ export const useServiceStore = defineStore("serviceStore", () => {
     },
     detailInfo: {},
   };
+
+  // 비밀번호 표시/미표시 처리 변수. 페이지 전환시에 리셋해주기 위해 store 에서 처리한다.
+  const openEyeValues = ref<string[]>([]);
+
   const serviceObj = ref<IServiceObj>(_.cloneDeep(initialServiceObj));
 
   const selectedServiceObj = ref<IService>({
@@ -335,6 +339,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
     selectedServiceObj,
     isDoneTestConnection,
     testConnectionStatus,
+    openEyeValues,
     setValue,
     setInitServiceId,
     resetServiceObj,

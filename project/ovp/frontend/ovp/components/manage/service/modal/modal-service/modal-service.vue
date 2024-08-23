@@ -13,7 +13,6 @@
     :height="674"
     :lockScroll="false"
     swipeToClose="none"
-    @open="onBeforeOpen"
     @closed="onClosed"
     @cancel="onCancel"
   >
@@ -94,6 +93,7 @@ const {
   isValid,
   isDoneTestConnection,
   testConnectionStatus,
+  openEyeValues,
   resetServiceObj,
   submit,
   checkValidation,
@@ -111,7 +111,6 @@ const changeStep = (value: number | string) => {
   // value 를 숫자로만 했기 때문에 ts 오류 방지를 위해 Number 로 형변환 한다.
   currentStep.value = Number(value) - 1;
 };
-const onBeforeOpen = () => {};
 const onCancel = () => {
   $vfm.close(props.modalId);
 };
@@ -119,6 +118,7 @@ const onClosed = () => {
   resetServiceObj(); // store 에 저장하고 있던 데이터 리셋
   resetViewData();
   currentStep.value = 1;
+  openEyeValues.value = [];
 };
 
 const gotoPrev = () => {

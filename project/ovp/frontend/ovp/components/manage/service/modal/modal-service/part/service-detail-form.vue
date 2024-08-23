@@ -179,8 +179,6 @@ const props = withDefaults(defineProps<ModalServiceProps>(), {
 
 const addableItems = computed(() => props.formData.addableItems);
 
-const openEyeValues = ref<string[]>([]);
-
 const onClickViewPwdBtn = (itemKey: string) => {
   _.includes(openEyeValues.value, itemKey)
     ? _.pull(openEyeValues.value, itemKey)
@@ -230,7 +228,7 @@ const deleteList = (serviceObjPath: string, index: number) => {
   _.pullAt(_.get(serviceObj.value, serviceObjPath), index);
 };
 
-const { serviceObj, selectedServiceObj, resetInput, setValue } =
+const { serviceObj, selectedServiceObj, openEyeValues, resetInput, setValue } =
   ModalServiceComposition(props);
 </script>
 
