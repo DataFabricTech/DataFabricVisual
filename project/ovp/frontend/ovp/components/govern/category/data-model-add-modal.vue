@@ -13,6 +13,8 @@
     :height="640"
     :top="240"
     :lockScroll="false"
+    :confirm-btn-msg="'저장'"
+    :is-disabled-confirm-btn="isDisabledConfirmBtn"
     swipeToClose="none"
     @cancel="onCancel"
     @confirm="onConfirm"
@@ -252,6 +254,9 @@ watchEffect(() => {
 });
 
 // MODAL
+const isDisabledConfirmBtn = computed(() => {
+  return selectedDataModelList.value.length === 0;
+});
 const onCancel = () => {
   $vfm.close(props.modalId);
 };
