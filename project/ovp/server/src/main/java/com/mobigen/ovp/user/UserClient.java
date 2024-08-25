@@ -14,16 +14,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Map;
 import java.util.UUID;
 
-@FeignClient(name = "UserClient", url = "${properties.ovp.open-metadata-url}")
+@FeignClient(name = "UserClient", url = "${properties.ovp.open-metadata-url}/users")
 public interface UserClient {
-    @GetMapping("/users")
-    Map<String, Object> getUsers(@RequestHeader HttpHeaders headers,
-                                 @RequestParam Map<String, Object> param) throws Exception;
+    @GetMapping("")
+    Map<String, Object> getUserAll(@RequestHeader HttpHeaders headers, @RequestParam Map<String, Object> param) throws Exception;
 
-    @GetMapping("/users/loggedInUser")
+    @GetMapping("/loggedInUser")
     Map<String, Object> getUserInfo() throws Exception;
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/{id}")
     Map<String, Object> getUserFollows(@PathVariable("id") String id, @RequestParam("fields") String fields);
 
     @DeleteMapping("/users/{id}")

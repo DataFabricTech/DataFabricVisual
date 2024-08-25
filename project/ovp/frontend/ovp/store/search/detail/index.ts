@@ -11,7 +11,7 @@ export interface DataModel {
   modelNm: string;
   displayName: string;
   modelDesc: string | null;
-  owner: string;
+  owner: any;
   ownerDisplayName: string;
   category: string;
   categoryId: string;
@@ -55,6 +55,8 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     isUpVote: false,
     isDownVote: false,
   });
+  // TODO: tpye 변경 id, fqn, name, displayName
+  const userList: Ref<any> = ref([]);
   const defaultInfo: Ref<any> = ref({
     modelInfo: { model: { type: "" }, columns: [] },
     glossaries: [],
@@ -90,16 +92,16 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     return dataModelType;
   };
 
+  const getUserFilter = async () => {
+    const data = await $api(`/api/search/detail/filter/user`);
+
+    userList.value = data.data;
+  };
+
   const getDataModel = async () => {
     const data = await $api(
       `/api/search/detail/${dataModelId}?type=${dataModelType}`,
     );
-
-    const owner = data.data.owner;
-
-    if (owner) {
-      data.data.owner = owner.displayName;
-    }
 
     dataModel.value = data.data;
   };
@@ -186,28 +188,29 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     await getDataModel();
   };
 
-  const changeDataModel = async (model: any) => {
+  const changeDataModel = (data: any) => {
     let body: any[] = [];
-    console.log(model);
-    switch (model.key) {
+    switch (data.key) {
       case "modelNm":
-        body = makeModelNameBody(model);
+        body = makeModelNameBody(data);
         break;
       case "modelDesc":
-        body = makeModeDescBody(model);
+        body = makeModeDescBody(data);
+        break;
+      case "owner":
+        body = makeUserBody(data);
         break;
       default:
     }
 
-    await $api(`/api/search/detail/${dataModelId}`, {
+    return $api(`/api/search/detail/${dataModelId}`, {
       method: "patch",
       body: body,
     });
-    await getDataModel();
   };
 
   function makeModelNameBody(model: any) {
-    let body: any[] = [];
+    const body: any[] = [];
     if (dataModel.value.displayName) {
       body.push({ op: "replace", path: "/displayName", value: model.value });
     } else {
@@ -218,17 +221,74 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   }
 
   function makeModeDescBody(model: any) {
-    let body: any[] = [];
-    if (dataModel.value.displayName !== null) {
+    const body: any[] = [];
+    if (dataModel.value.modelDesc !== null) {
       body.push({ op: "replace", path: "/description", value: model.value });
     } else {
       body.push({ op: "add", path: "/description", value: model.value });
     }
-    console.log(body);
+    return body;
+  }
+
+  function makeUserBody(data: any) {
+    const user = _.find(userList.value, { id: data.id });
+    let body: any[] = [];
+
+    if (data.op === "remove") {
+      body.push({
+        op: "remove",
+        path: "/owner",
+      });
+    } else if (data.op === "add") {
+      body.push({
+        op: "add",
+        path: "/owner",
+        value: {
+          id: user.id,
+          type: "user",
+          name: user.name,
+          fullyQualifiedName: user.fqn,
+          displayName: user.displayName,
+        },
+      });
+    } else if (data.op === "replace") {
+      body = [
+        {
+          op: "remove",
+          path: "/owner/href",
+        },
+        {
+          op: "remove",
+          path: "/owner/deleted",
+        },
+        {
+          op: "replace",
+          path: "/owner/displayName",
+          value: user.displayName,
+        },
+        {
+          op: "replace",
+          path: "/owner/fullyQualifiedName",
+          value: user.fqn,
+        },
+        {
+          op: "replace",
+          path: "/owner/name",
+          value: user.name,
+        },
+        {
+          op: "replace",
+          path: "/owner/id",
+          value: user.id,
+        },
+      ];
+    }
+
     return body;
   }
 
   return {
+    userList,
     dataModel,
     defaultInfo,
     schemaList,
@@ -242,6 +302,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     setDataModelType,
     getDataModelFqn,
     getDataModelType,
+    getUserFilter,
     getDataModel,
     getDefaultInfo,
     getSchema,

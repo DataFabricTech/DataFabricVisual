@@ -10,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 
 @Data
-public class DataModelSampleDataResponse {
+public class DataModelDetailSampleDataResponse {
     private List<Columns> columns;
     private List<Map<String, Object>> sampleList;
 
-    public DataModelSampleDataResponse(SampleData sampleData) {
+    public DataModelDetailSampleDataResponse(SampleData sampleData) {
         this.columns = sampleData.getColumns();
         List<Map<String, Object>> sampleList = new ArrayList<>();
         List<String> columns = sampleData.getSampleData().getColumns();
