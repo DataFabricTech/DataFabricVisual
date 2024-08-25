@@ -103,57 +103,49 @@ export const useUserStore = defineStore("userStore", () => {
    * 랜덤 비밀번호 발급
    */
   const getRandomPwd = async () => {
-    // TODO: API 구현 완료되면 수정
-    /*return await $api(`/api/user/random-pwd`, {
-        method: "GET",
-        showLoader: false,
-      }).then(({ data }) => {
-        return data;
-      });*/
-    return "test" + Math.floor(Math.random() * 100);
+    return await $api(`/api/user/random-pwd`, {
+      method: "GET",
+      showLoader: false,
+    }).then(({ data }) => {
+      return data;
+    });
   };
 
   /**
    * 사용자 이메일 중복 체크
    */
   const checkDuplicateEmail = async (email: string) => {
-    // TODO: API 구현 완료되면 수정
-    /*return await $api(`/api/auth/sign-up/check-email`, {
-        method: "POST",
-        body: { email },
-        showLoader: false,
-      }).then(({ data }) => {
-        return data;
-      });*/
-    return !!(email.length % 2);
+    return await $api(`/api/auth/sign-up/check-email`, {
+      method: "POST",
+      body: { email },
+      showLoader: false,
+    }).then(({ data }) => {
+      return data;
+    });
   };
 
   /**
    * 사용자 이름 중복 체크
    */
   const checkDuplicateName = async (name: string) => {
-    // TODO: API 구현 완료되면 수정
-    /*return await $api(`/api/user/check-name/${name}`, {
-        showLoader: false,
-      }).then(({ data }) => {
-        return data;
-      });*/
-    return !!(name.length % 2);
+    return await $api(`/api/user/check-name/${name}`, {
+      showLoader: false,
+    }).then(({ data }) => {
+      return data;
+    });
   };
 
   /**
    * 사용자 정보 추가
    */
   const addUser = async (params: { [key: string]: any }) => {
-    // TODO: API 구현 완료되면 수정
-    /*return await $api(`/api/user/add`, {
-          method: "POST",
-          body: params,
-          showLoader: false,
-        }).then(({ data }) => {
-          return data;
-        });*/
-    console.log(params);
+    return await $api(`/api/user/add`, {
+      method: "POST",
+      body: params,
+      showLoader: false,
+    }).then(({ data }) => {
+      return data;
+    });
   };
 
   return {
