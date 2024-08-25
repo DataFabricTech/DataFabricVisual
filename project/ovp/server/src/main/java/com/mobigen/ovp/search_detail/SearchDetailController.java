@@ -1,7 +1,6 @@
 package com.mobigen.ovp.search_detail;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
-import com.mobigen.ovp.search_detail.dto.request.DataModelDetailUpdate;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailVote;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +27,11 @@ public class SearchDetailController {
 
     private final SearchDetailService searchDetailService;
 
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
     @ResponseJsonResult
     @GetMapping("/filter/user")
     Object getUserFilter() throws Exception {
@@ -36,7 +40,26 @@ public class SearchDetailController {
         return searchDetailService.getUserFilter();
     }
 
+    /**
+     *
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/tag/all")
+    Object getTagAll() throws Exception {
+        log.info("");
 
+        return searchDetailService.getTagAll();
+    }
+
+    @ResponseJsonResult
+    @GetMapping("/glossary/all")
+    Object getGlossaryAll() throws Exception {
+        log.info("");
+
+        return searchDetailService.getGlossaryAll();
+    }
 
     /**
      * 데이터 모델 상세
@@ -135,7 +158,7 @@ public class SearchDetailController {
 
     @ResponseJsonResult
     @PatchMapping("/{id}")
-    Object changeDataModel(@PathVariable String id, @RequestBody List<Map<String, Object>> body) {
+    Object changeDataModel(@PathVariable String id, @RequestBody List<Map<String, String>> body) {
         log.info("");
 
         return searchDetailService.changeDataModel(id, body);

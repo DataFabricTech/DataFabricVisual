@@ -3,13 +3,17 @@ package com.mobigen.ovp.search_detail;
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
 import com.mobigen.ovp.common.constants.ModelType;
+import com.mobigen.ovp.common.openmete_client.ClassificationClient;
 import com.mobigen.ovp.common.openmete_client.LineageClient;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Columns;
 import com.mobigen.ovp.common.openmete_client.dto.ProfileColumn;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
-import com.mobigen.ovp.glossary.client.dto.common.Tag;
+import com.mobigen.ovp.common.openmete_client.dto.Tag;
+import com.mobigen.ovp.common.openmete_client.dto.Tags;
+import com.mobigen.ovp.glossary.client.GlossaryClient;
+import com.mobigen.ovp.glossary.client.dto.terms.TermResponse;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailVote;
 import com.mobigen.ovp.search_detail.dto.response.DataModelDetailLineageTableResponse;
 import com.mobigen.ovp.search_detail.dto.response.DataModelDetailResponse;
@@ -30,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RequiredArgsConstructor
 @Service
@@ -39,6 +44,8 @@ public class SearchDetailService {
     private final SearchClient searchClient;
     private final TablesClient tablesClient;
     private final LineageClient lineageClient;
+    private final ClassificationClient classificationClient;
+    private final GlossaryClient glossaryClient;
 
     private final UserService userService;
     private final CategoryRepository categoryRepository;
@@ -62,6 +69,60 @@ public class SearchDetailService {
         }).collect(Collectors.toList());
     }
 
+    private List<Tag> getTags(List<Tag> tags, String after, boolean isStart) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("limit", "100");
+
+        if (!isStart && (after == null || "".equals(after))) {
+           return tags;
+        } else if (after != null && !"".equals(after)) {
+            params.add("after", after);
+        }
+
+        Tags res = classificationClient.gatTags(params);
+        List<Tag> resTags = res.getData().stream().filter(tag -> !tag.getFullyQualifiedName().contains("ovp_category")).collect(Collectors.toList());
+
+
+        List<Tag> mergeTagList = Stream.concat(tags.stream(), resTags.stream()).collect(Collectors.toList());
+
+        return getTags(mergeTagList, res.getPaging().getAfter(), false);
+    }
+
+    public Object getTagAll() throws Exception {
+        List<Tag> tags = getTags(new ArrayList<>(), "", true);
+
+        return tags.stream().map(tag -> {
+            Map<String, Object> data = new HashMap<>();
+            String displayName = tag.getDisplayName();
+            if(displayName == null || "".equals(displayName)) {
+                displayName = tag.getName();
+            }
+
+            data.put("name", tag.getName());
+            data.put("displayName", displayName);
+            data.put("description", tag.getDescription());
+            data.put("tagFQN", tag.getFullyQualifiedName());
+
+            return data;
+        }).collect(Collectors.toList());
+    }
+
+    private Object getGlossaries(List<?> glossaries, String after, boolean isStart) throws Exception {
+        if (!isStart && (after == null || "".equals(after))) {
+            return glossaries;
+        }
+
+        TermResponse res = glossaryClient.getGlossaryTerms("", "", 1000, after);
+
+        List mergeTagList = Stream.concat(glossaries.stream(), res.getData().stream()).collect(Collectors.toList());
+
+        return getGlossaries(mergeTagList, res.getPaging().getAfter(), false);
+    }
+
+    public Object getGlossaryAll() throws Exception {
+        return getGlossaries(new ArrayList<>(), "", true);
+    }
+
     /**
      *  데이터 모델 상세
      * @param id
@@ -82,7 +143,12 @@ public class SearchDetailService {
             DataModelDetailResponse dataModelDetailResponse = new DataModelDetailResponse(tables, type, userId);
 
             for(Tag tag : tables.getTags()) {
-                dataModelDetailResponse.getTags().add(tag);
+                String displayName = tag.getDisplayName();
+
+                if (displayName == null || "".equals(displayName)) {
+                    displayName = tag.getName();
+                    tag.setDisplayName(displayName);
+                }
 
                 if (tag.getTagFQN().contains("ovp_category")) {
                     CategoryEntity categoryEntity = categoryRepository.findByIdWithParent(UUID.fromString(tag.getName()));
@@ -91,6 +157,10 @@ public class SearchDetailService {
                     dataModelDetailResponse.getCategory().setTagDisplayName(tag.getDisplayName());
                     dataModelDetailResponse.getCategory().setTagDescription(tag.getDescription());
                     dataModelDetailResponse.getCategory().setTagFQN(tag.getTagFQN());
+                } else if ("Glossary".equals(tag.getSource())) {
+                    dataModelDetailResponse.getTerms().add(tag);
+                } else if ("Classification".equals(tag.getSource())) {
+                    dataModelDetailResponse.getTags().add(tag);
                 }
             }
 
@@ -203,7 +273,7 @@ public class SearchDetailService {
         return tablesClient.unfollow(id, userId);
     }
 
-    public Object changeDataModel(String id, List<Map<String, Object>> body) {
+    public Object changeDataModel(String id, List<Map<String, String>> body) {
         MultiValueMap params = new LinkedMultiValueMap();
         params.add("fields", "owner,followers,tags,votes");
 

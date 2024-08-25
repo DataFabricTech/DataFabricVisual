@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mobigen.ovp.common.openmete_client.dto.Followers;
 import com.mobigen.ovp.common.openmete_client.dto.Owner;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
+import com.mobigen.ovp.common.openmete_client.dto.Tag;
 import com.mobigen.ovp.common.openmete_client.dto.Voters;
-import com.mobigen.ovp.glossary.client.dto.common.Tag;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -39,6 +39,7 @@ public class DataModelDetailResponse {
     boolean isDownVote;
     List<String> depth;
     List<Tag> tags;
+    List<Tag> terms;
 
     public DataModelDetailResponse(Tables tables, String type, String userId) {
         this.serviceType = tables.getService().getType();
@@ -92,6 +93,7 @@ public class DataModelDetailResponse {
         this.upVotes = tables.getVotes().getUpVotes();
         this.downVotes = tables.getVotes().getDownVotes();
         this.tags = new ArrayList<>();
+        this.terms = new ArrayList<>();
 
 
         String[] splitArray = this.fqn.split("\\.");

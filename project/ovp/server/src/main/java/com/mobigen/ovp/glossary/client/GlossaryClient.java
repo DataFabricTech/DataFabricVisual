@@ -77,7 +77,7 @@ public interface GlossaryClient {
      * @return
      */
     @GetMapping("/glossaryTerms")
-    TermResponse getGlossaryTerms(@RequestParam String directChildrenOf, @RequestParam(required = false, defaultValue = "tags") String fields);
+    TermResponse getGlossaryTerms(@RequestParam String directChildrenOf, @RequestParam(required = false, defaultValue = "tags") String fields, @RequestParam(required = false, defaultValue = "100") int limit, @RequestParam(required = false, defaultValue = "") String after);
 
     /**
      * 용어 수정
