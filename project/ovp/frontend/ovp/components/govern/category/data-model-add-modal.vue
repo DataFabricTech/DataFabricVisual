@@ -254,16 +254,9 @@ watchEffect(() => {
 });
 
 // MODAL
-const isDisabledConfirmBtn: Ref<boolean> = ref(false);
-
-watch(
-  () => selectedDataModelList.value,
-  (newVal) => {
-    isDisabledConfirmBtn.value = newVal.length === 0 ? true : false;
-  },
-  { immediate: true },
-);
-
+const isDisabledConfirmBtn = computed(() => {
+  return selectedDataModelList.value.length === 0;
+});
 const onCancel = () => {
   $vfm.close(props.modalId);
 };
