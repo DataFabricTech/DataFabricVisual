@@ -2,10 +2,15 @@
   @include flex($direction: column, $horizontal: flex-start, $gap: $spacing-8);
 
   flex: 1 0 50%;
-  width: 50%;
+  //width: 50%;
   background-color: $neutral-0;
   min-height: 582px;
   padding: 0 $spacing-12 $spacing-12;
+
+  &.main-content-full {
+    flex: 1 0 100%;
+    width: 100%;
+  }
 
   &-title {
     @include font-size('18');
