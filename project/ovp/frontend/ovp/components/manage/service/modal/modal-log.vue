@@ -1,5 +1,3 @@
-<!--TODO:[개발] 모달클래스 .modal-padding-16 추가-->
-
 <template>
   <!-- TODO: [개발]  width:620px,height:580px-->
   <div class="modal-fixed vfm--fixed vfm--inset" v-if="visible">
