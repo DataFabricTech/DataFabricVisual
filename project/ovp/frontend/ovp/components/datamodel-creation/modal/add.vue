@@ -13,9 +13,8 @@
     :height="681"
     :lockScroll="true"
     swipeToClose="none"
-    @closed="onCancelModal"
-    @click-outside="onCancelModal"
     @before-open="onOpenModal"
+    @click-outside="onCancelModal"
     @cancel="onCancelModal"
     @confirm="onConfirmModal"
   >
@@ -55,7 +54,6 @@
 import Modal from "@extends/modal/Modal.vue";
 import { useCreationStore } from "~/store/datamodel-creation";
 import AddTransfer from "~/components/datamodel-creation/modal/add-transfer.vue";
-import { useNuxtApp } from "nuxt/app";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 import { storeToRefs } from "pinia";
 import Tab from "@extends/tab/Tab.vue";
@@ -79,8 +77,6 @@ const { currDetailTab, sampleData, profileData, selectedItemOwner } =
 const { resetReloadList, getFilters, changeDetailTab, resetDetailBox } =
   dataModelSearchStore;
 
-const { $vfm } = useNuxtApp();
-
 const onOpenModal = async () => {
   // 전체+MY / 필터 / 내부 선택 목록 데이터 초기화
   nSelectedListData.value = $_cloneDeep(selectedModelList.value);
@@ -89,15 +85,18 @@ const onOpenModal = async () => {
   await resetDetailBox();
 };
 
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
+
 const onCancelModal = () => {
-  // 내부 데이터 초기화 -> store 데이터
-  $vfm.close(props.modalId);
+  emit("close");
 };
 
 const onConfirmModal = () => {
   // 내부 데이터 저장
   selectedModelList.value = nSelectedListData.value;
-  $vfm.close(props.modalId);
+  emit("close");
 };
 </script>
 <style lang="scss" scoped></style>
