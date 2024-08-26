@@ -16,7 +16,20 @@ export const useServiceStore = defineStore("service", () => {
   const userList = reactive<Owner[]>([]);
   const userSearchList = reactive<object[]>([]);
 
-  const ingestionList = reactive<Ingestion[]>([]);
+  const ingestionList = reactive<Ingestion[]>([
+    {
+      displayName: "test",
+      pipelineType: "test",
+      scheduleInterval: "test",
+      pipelineState: "Success",
+    },
+    {
+      displayName: "test2",
+      pipelineType: "test2",
+      scheduleInterval: "test2",
+      pipelineState: "Failed",
+    },
+  ]);
 
   const editInfo = reactive({
     owner: false,
@@ -198,6 +211,34 @@ export const useServiceStore = defineStore("service", () => {
     }
   }
 
+  async function getIngestionStatus(id: string): Promise<void> {
+    await $api(`/api/service-manage/ingestion/status?id=${id}`);
+  }
+
+  async function runIngestion(id: string): Promise<void> {
+    await $api(`/api/service-manage/ingestion/trigger?id=${id}`, {
+      method: "POST",
+    });
+  }
+
+  async function editIngestion(id: string): Promise<void> {
+    await $api(`/api/service-manage/ingestion?id=${id}`, {
+      method: "PUT",
+    });
+  }
+
+  async function deleteIngestion(id: string): Promise<void> {
+    await $api(`/api/service-manage/ingestion?id=${id}`, {
+      method: "DELETE",
+    });
+  }
+
+  async function killIngestion(id: string): Promise<void> {
+    await $api(`/api/service-manage/ingestion/kill?id=${id}`, {
+      method: "POST",
+    });
+  }
+
   /**
    * input show-hide
    * @param property
@@ -218,6 +259,7 @@ export const useServiceStore = defineStore("service", () => {
     userList,
     userSearchList,
 
+    ingestionList,
     editInfo,
     changeTab,
 
@@ -228,6 +270,13 @@ export const useServiceStore = defineStore("service", () => {
     deleteService,
     updateService,
     emptyService,
+
+    getIngestionList,
+    getIngestionStatus,
+    runIngestion,
+    editIngestion,
+    deleteIngestion,
+    killIngestion,
 
     changeEditInfo,
     disableEditInfo,

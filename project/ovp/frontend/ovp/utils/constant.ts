@@ -131,13 +131,25 @@ const $constants = {
       },
       {
         label: "수집",
-        value: "collection",
+        value: "ingestion",
       },
       {
         label: "연결정보",
         value: "connection-info",
       },
     ],
+    INGESTION: {
+      SELECT_BOX_DATA: [
+        {
+          label: "메타 데이터 수집 추가",
+          value: "meta-data",
+        },
+        {
+          label: "프로파일러 수집 추가",
+          value: "profiler",
+        },
+      ],
+    },
   },
 };
 export default Object.freeze($constants);

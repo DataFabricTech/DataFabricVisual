@@ -26,4 +26,5 @@ export interface Ingestion {
   id: string;
   pipelineType: string;
   scheduleInterval: string;
+  pipelineState: string;
 }
