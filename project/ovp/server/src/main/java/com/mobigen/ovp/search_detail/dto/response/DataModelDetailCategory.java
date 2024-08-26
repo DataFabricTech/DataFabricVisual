@@ -6,6 +6,7 @@ import java.util.UUID;
 
 @Data
 public class DataModelDetailCategory {
+    UUID id;
     String name;
     String tagName;
     String tagDisplayName;
