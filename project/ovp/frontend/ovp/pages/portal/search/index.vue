@@ -1,6 +1,6 @@
 <template>
   <div class="section-top-bar">
-    <data-filter :data="filters" :filter-type="currentTab"></data-filter>
+    <data-filter :data="filters"></data-filter>
   </div>
   <div class="section-top-bar section-top-bar-tab">
     <Tab
@@ -88,7 +88,6 @@ const {
   changeTab,
 } = searchCommonStore;
 const {
-  currentTab,
   filters,
   searchResult,
   previewData,

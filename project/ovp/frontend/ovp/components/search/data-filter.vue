@@ -21,7 +21,7 @@
       v-else
       v-if="
         !(
-          filterType === 'storage' &&
+          currentTab === 'storage' &&
           (keyName === FILTER_KEYS.DATABASE ||
             keyName === FILTER_KEYS.DATABASE_SCHEMA)
         )
@@ -64,10 +64,6 @@ const props = defineProps({
   data: {
     type: Object,
     default: () => {},
-  },
-  filterType: {
-    type: String,
-    default: "table",
   },
 });
 
