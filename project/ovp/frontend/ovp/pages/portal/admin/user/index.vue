@@ -40,30 +40,34 @@
       </div>
     </div>
   </div>
-
-  <AddUserModal
-    :modal-id="addUserModalId"
-    @user-added-success="getUserList"
-  ></AddUserModal>
 </template>
 
 <script setup lang="ts">
-import { useNuxtApp } from "nuxt/app";
 import { useRouter } from "#vue-router";
 import { useUserStore } from "@/store/user/userStore";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import { useModal } from "vue-final-modal";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import agGrid from "@extends/grid/Grid.vue";
 import AddUserModal from "@/components/admin/user/modal/add.vue";
 import DeleteButtonRenderer from "@/components/admin/user/cell-renderer/delete-button.vue";
 
-const { $vfm } = useNuxtApp();
 const router = useRouter();
 const userStore = useUserStore();
 const { setSearchKeyword, getUserList, addUserList, deleteUser } = userStore;
 const { userList } = storeToRefs(userStore);
 
-const addUserModalId = "addUserModal";
+const { open, close } = useModal({
+  component: AddUserModal,
+  attrs: {
+    onClose() {
+      close();
+    },
+    onUserAddedSuccess() {
+      getUserList();
+    },
+  },
+});
 const columnDefs = ref([
   {
     headerName: "사용자 이름",
@@ -133,7 +137,7 @@ const onClickSearch = (value: string) => {
 };
 
 const openModal = () => {
-  $vfm.open(addUserModalId);
+  open();
 };
 
 const cellClicked = ({
