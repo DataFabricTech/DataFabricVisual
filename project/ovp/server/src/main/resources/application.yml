@@ -113,7 +113,7 @@ properties:
       csrf: false
       cors:
         pattern: /** #/auth/**
-        allowed-origins: "*" #"*" #http://server-name:port
+        allowed-origins: http://localhost:3300/ #"*" #http://server-name:port
         allowed-methods: "*" #PUT,DELETE,GET,POST ...
         allowed-headers: "*" #Context-Type, ...
         allow-credentials: true
