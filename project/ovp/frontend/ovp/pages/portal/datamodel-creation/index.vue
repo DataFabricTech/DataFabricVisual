@@ -11,12 +11,12 @@
     <div class="l-split">
       <selected-model
         :modelList="selectedModelList"
-        :dataModelFilter="dataModelFilter"
-        :modelListCnt="modelListCnt"
+        :dataModelFilter="filters"
+        :modelListCnt="selectedModelListCnt"
         @change="open"
         @delete="deleteDataModel"
         @item-click="onClickDataModelItem"
-        @bookmark-change="changeBookmark"
+        @bookmark-change="onClickBookmark"
       ></selected-model>
       <execute-query
         :query="query"
@@ -55,6 +55,8 @@ import result from "@/components/datamodel-creation/result.vue";
 import addModel from "@/components/datamodel-creation/modal/add.vue";
 import saveModel from "@/components/datamodel-creation/modal/save.vue";
 import { useCreationStore } from "~/store/datamodel-creation/index";
+import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
+import { storeToRefs } from "pinia";
 import { useModal } from "vue-final-modal";
 
 const isShowSaveModel = ref(false);
@@ -74,10 +76,6 @@ const { open, close } = useModal({
 
 const creationStore = useCreationStore();
 const {
-  modelList,
-  modelListCnt,
-  dataModelFilter,
-  selectedModelList,
   query,
   isFirstExecute,
   querySuccess,
@@ -90,25 +88,21 @@ const {
   sampleDataList,
   columnOptions,
   dataProfileList,
-  myModelList,
 } = storeToRefs(creationStore);
 const {
-  setDataModelFilter,
-  setDataModelList,
   deleteDataModel,
-  changeBookmark,
   onClickDataModelItem,
   runQuery,
   resetQuery,
   editQueryText,
-  setMyModelList,
   showProfile,
 } = creationStore;
 
-// 데이터 목록, 필터 목록, 선택 필터 초기화
-setDataModelFilter();
-setDataModelList();
-setMyModelList();
+// 탐색 > 데이터 모델 조회 Store
+const dataModelSearchStore = useDataModelSearchStore();
+const { filters, selectedModelList, selectedModelListCnt } =
+  storeToRefs(dataModelSearchStore);
+const { onClickBookmark } = dataModelSearchStore;
 </script>
 
 <style scoped></style>

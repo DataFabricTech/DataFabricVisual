@@ -1,7 +1,7 @@
+<!--TODO:[개발] 모달클래스 .modal-padding-16 추가-->
 <template>
   <Modal
     title="데이터 모델 추가"
-    class="modal"
     :modal-id="props.modalId"
     background="non-interactive"
     displayDirective="show"
@@ -67,13 +67,16 @@ const props = defineProps({
   },
 });
 
-const creationStore = useCreationStore();
-const { selectedModelList, nSelectedListData } = storeToRefs(creationStore);
-
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
-const { currDetailTab, sampleData, profileData, selectedItemOwner } =
-  storeToRefs(dataModelSearchStore);
+const {
+  currDetailTab,
+  sampleData,
+  profileData,
+  selectedItemOwner,
+  selectedModelList,
+  nSelectedListData,
+} = storeToRefs(dataModelSearchStore);
 const { resetReloadList, getFilters, changeDetailTab, resetDetailBox } =
   dataModelSearchStore;
 

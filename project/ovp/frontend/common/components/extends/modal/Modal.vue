@@ -14,7 +14,7 @@
     :overlay-class="overlayClass"
     :overlay-transition="overlayTransition"
     :swipe-to-close="swipeToClose"
-    content-class="modal modal-padding-32"
+    content-class="modal"
     @clickOutside="$emit('click-outside')"
     @closed="$emit('closed')"
     @opened="$emit('open')"

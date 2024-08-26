@@ -12,15 +12,10 @@
 
 .data-list {
   @include flex($direction:column, $horizontal: flex-start, $vertical: flex-start, $gap: $spacing-16);
+  @include scroll-hidden;
 
   overflow-y: auto;
   flex-grow: 1;
-  -ms-overflow-style: none;  /* Internet Explorer and Edge */
-  scrollbar-width: none;  /* Firefox */
-
-  &::-webkit-scrollbar {
-    display: none; /* (Chrome, Safari) */
-  }
 }
 
 .preview {

@@ -13,6 +13,7 @@ $list-classes: menu, dropdown;
 
     &-list {
       padding: $spacing-2 0;
+      width: 100%;
     }
 
     .#{$list}-item {
