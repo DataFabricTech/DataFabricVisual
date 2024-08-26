@@ -143,7 +143,7 @@
 
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
-import { useNuxtApp, useRouter } from "nuxt/app";
+import { useRouter } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category/index";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { storeToRefs } from "pinia";
@@ -154,7 +154,6 @@ import { computed, ref } from "vue";
 import Loading from "@base/loading/Loading.vue";
 
 const router = useRouter();
-const { $vfm } = useNuxtApp();
 
 const categoryStore = useGovernCategoryStore();
 const {
@@ -181,6 +180,9 @@ const props = defineProps({
     required: true,
   },
 });
+const emit = defineEmits<{
+  (e: "close-data-model-add-modal"): void;
+}>();
 
 // SEARCH INPUT
 const updateSearchInputValue = (newValue: string) => {
@@ -258,11 +260,11 @@ const isDisabledConfirmBtn = computed(() => {
   return selectedDataModelList.value.length === 0;
 });
 const onCancel = () => {
-  $vfm.close(props.modalId);
+  emit("close-data-model-add-modal");
 };
 
 const onConfirm = async () => {
-  $vfm.close(props.modalId);
+  emit("close-data-model-add-modal");
 };
 
 await getSearchList();
