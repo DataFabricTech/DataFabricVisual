@@ -72,13 +72,11 @@
 <script setup lang="ts">
 import { uuid } from "vue3-uuid";
 import { storeToRefs } from "pinia";
-import { useNuxtApp } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import Modal from "@extends/modal/Modal.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
 const categoryStore = useGovernCategoryStore();
-const { $vfm } = useNuxtApp();
 const { addNewCategory } = categoryStore;
 const {
   categoriesParentId,
@@ -95,6 +93,10 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits<{
+  (e: "close-category-add-modal"): void;
+}>();
+
 const setNewNodeCategory = () => {
   const newNodeParam: TreeViewItem = {
     id: uuid.v4(),
@@ -108,7 +110,7 @@ const setNewNodeCategory = () => {
 };
 
 const onCancel = () => {
-  $vfm.close(props.modalId);
+  emit("close-category-add-modal");
 };
 
 const onConfirm = async () => {
@@ -117,8 +119,7 @@ const onConfirm = async () => {
 
   if (!showAddNameNoti.value && !showAddDescNoti.value) {
     await setNewNodeCategory();
-
-    $vfm.close(props.modalId);
+    emit("close-category-add-modal");
   }
 };
 </script>
