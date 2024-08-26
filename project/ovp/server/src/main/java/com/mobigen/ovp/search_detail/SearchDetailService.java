@@ -156,11 +156,13 @@ public class SearchDetailService {
 
                 if (tag.getTagFQN().contains("ovp_category")) {
                     CategoryEntity categoryEntity = categoryRepository.findByIdWithParent(UUID.fromString(tag.getName()));
-                    dataModelDetailResponse.getCategory().setName(categoryEntity.getName());
-                    dataModelDetailResponse.getCategory().setTagName(tag.getName());
-                    dataModelDetailResponse.getCategory().setTagDisplayName(tag.getDisplayName());
-                    dataModelDetailResponse.getCategory().setTagDescription(tag.getDescription());
-                    dataModelDetailResponse.getCategory().setTagFQN(tag.getTagFQN());
+                    if (categoryEntity != null) {
+                        dataModelDetailResponse.getCategory().setName(categoryEntity.getName());
+                        dataModelDetailResponse.getCategory().setTagName(tag.getName());
+                        dataModelDetailResponse.getCategory().setTagDisplayName(tag.getDisplayName());
+                        dataModelDetailResponse.getCategory().setTagDescription(tag.getDescription());
+                        dataModelDetailResponse.getCategory().setTagFQN(tag.getTagFQN());
+                    }
                 } else if ("Glossary".equals(tag.getSource())) {
                     dataModelDetailResponse.getTerms().add(tag);
                 } else if ("Classification".equals(tag.getSource())) {
