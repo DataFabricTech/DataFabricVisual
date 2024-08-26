@@ -21,13 +21,20 @@ import java.util.UUID;
 public interface ServicesClient {
 
     /**
-     * 서비스 리스트
+     * 서비스 리스트 - 데이터 베이스
      *
      * @param fields
      * @return
      */
     @GetMapping("/databaseServices")
     Base<Services> getServices(@RequestParam String fields, @RequestParam int limit);
+
+    /**
+     * 서비스 리스트 - 스토리지
+     * @return
+     */
+    @GetMapping("/storageServices")
+    Base<Services> getServiceStorage(@RequestParam String fields, @RequestParam String include, @RequestParam int limit);
 
     /**
      * 서비스 수정

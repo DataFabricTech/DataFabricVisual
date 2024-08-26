@@ -11,6 +11,7 @@
       :editable="true"
       :user-list="userList"
       owner-key="id"
+      :category-list="categoryList"
       :category-key="FILTER_KEYS.CATEGORY"
       @editIconClick="editIconClick"
       @editDone="editDone"
@@ -38,6 +39,8 @@ import { ref, shallowRef } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useDataModelDetailStore } from "@/store/search/detail/index";
+import { useLineageStore } from "@/store/search/detail/lineage/index";
+import { useSearchCommonStore } from "@/store/search/common";
 
 import Tab from "@extends/tab/Tab.vue";
 import ResourceBox from "@/components/common/resource-box/resource-box.vue";
@@ -50,7 +53,6 @@ import Query from "@/components/search/detail-tab/query.vue";
 import Lineage from "@/components/search/detail-tab/lineage.vue";
 import KnowledgeGraph from "@/components/search/detail-tab/knowledge-graph.vue";
 import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
-import { useLineageStore } from "@/store/lineage/lineageStore";
 
 import { FILTER_KEYS } from "@/store/search/common";
 
@@ -58,16 +60,18 @@ const route = useRoute();
 
 const dataModelDetailStore = useDataModelDetailStore();
 const lineageStore = useLineageStore();
+const searchCommonStore = useSearchCommonStore();
 
-const { userList, dataModel } = storeToRefs(dataModelDetailStore);
+const { userList, categoryList, dataModel } = storeToRefs(dataModelDetailStore);
 
 const {
+  getUserList,
+  getCategoryList,
   getDataModelFqn,
   getDataModelType,
   setDataModelId,
   setDataModelFqn,
   setDataModelType,
-  getUserFilter,
   getDataModel,
   getDefaultInfo,
   getSchema,
@@ -79,17 +83,19 @@ const {
 
 const { getLineageData } = lineageStore;
 
-// tabfilter 객체 정의 (예시로 tables 값을 포함)
-const tabfilter = ref({ tables: true });
+const { getFilters } = searchCommonStore;
 
 // computed 속성으로 filteredTabs 정의
 const filteredTabs = computed(() => {
-  if (tabfilter.value.tables) {
+  if (route.query.type !== "storage") {
     // tables가 true이면 모든 탭 옵션을 반환
     return tabOptions;
   } else {
     // tables가 false이면 기본정보, 데이터 리니지, Knowledge graph, 추천 데이터 모델 탭만 반환
-    const includedValues = ["default", 6, 7, 8];
+    const includedValues = ["default", "schema", "lineage", 7, 8];
+    console.log(
+      tabOptions.filter((option) => includedValues.includes(option.value)),
+    );
     return tabOptions.filter((option) => includedValues.includes(option.value));
   }
 });
@@ -117,6 +123,7 @@ async function changeTab(tab: number | string) {
       break;
     case "schema":
       await getSchema();
+      break;
     case "sample":
       await getSampleData();
       break;
@@ -128,6 +135,7 @@ async function changeTab(tab: number | string) {
       break;
     case "lineage":
       await getLineageData(getDataModelType(), getDataModelFqn());
+      await getFilters();
       break;
   }
   currentComponent.value = _.find(tabOptions, ["value", tab])?.component;
@@ -135,9 +143,9 @@ async function changeTab(tab: number | string) {
 
 const editIconClick = (key: string) => {
   if (key === "category") {
-    console.log("key = ", key);
+    getCategoryList();
   } else {
-    getUserFilter();
+    getUserList();
   }
 };
 

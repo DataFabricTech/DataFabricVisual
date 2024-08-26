@@ -39,12 +39,18 @@ public class ServiceManageService {
      * @return
      */
     public List<ServiceResponse> getServices() {
-        String fields = "owner,tags";
-        int limit = 100;
-        List<Services> result = servicesClient.getServices(fields, limit).getData();
+        final String DATA_BASE = "database";
+        final String STORAGE = "storage";
+        final int limit = 100;
+        List<Services> dataBases = servicesClient.getServices("owner,tags", limit).getData();
+        List<Services> storages = servicesClient.getServiceStorage("owner", "non-deleted", limit).getData();
         List<ServiceResponse> serviceResponses = new ArrayList<>();
-        for (Services service : result) {
-            serviceResponses.add(new ServiceResponse(service));
+
+        for (Services service : dataBases) {
+            serviceResponses.add(new ServiceResponse(service, DATA_BASE));
+        }
+        for (Services service : storages) {
+            serviceResponses.add(new ServiceResponse(service, STORAGE));
         }
         return serviceResponses;
     }

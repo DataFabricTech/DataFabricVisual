@@ -1,7 +1,7 @@
+<!--TODO:[개발] 모달클래스 .modal-padding-16 추가-->
 <template>
   <Modal
     title="데이터 모델 추가"
-    class="modal modal-padding-16"
     :modal-id="props.modalId"
     background="non-interactive"
     displayDirective="show"
@@ -10,7 +10,7 @@
     :clickToClose="true"
     :escToClose="true"
     :width="1180"
-    :height="640"
+    :height="620"
     :top="240"
     :lockScroll="false"
     :confirm-btn-msg="'저장'"
@@ -143,6 +143,7 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from "nuxt/app";
 import { computed, ref } from "vue";
 import { useNuxtApp, useRouter } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category/index";
@@ -155,7 +156,7 @@ import Tab from "@extends/tab/Tab.vue";
 import Loading from "@base/loading/Loading.vue";
 
 const router = useRouter();
-const { $vfm, $api } = useNuxtApp();
+const { $api } = useNuxtApp();
 
 const categoryStore = useGovernCategoryStore();
 const {
@@ -184,6 +185,9 @@ const props = defineProps({
     required: true,
   },
 });
+const emit = defineEmits<{
+  (e: "close-data-model-add-modal"): void;
+}>();
 
 // SEARCH INPUT
 const updateSearchInputValue = (newValue: string) => {
@@ -261,13 +265,12 @@ const isDisabledConfirmBtn = computed(() => {
   return selectedDataModelList.value.length === 0;
 });
 const onCancel = () => {
-  $vfm.close(props.modalId);
+  emit("close-data-model-add-modal");
 };
 
 const onConfirm = async () => {
   getModelItemAPI(selectedCategoryTagId.value);
-
-  // $vfm.close(props.modalId);
+  emit("close-data-model-add-modal");
 };
 
 await getSearchList();

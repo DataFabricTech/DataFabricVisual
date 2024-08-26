@@ -64,6 +64,12 @@ export const useLineageStore = defineStore("lineage", () => {
       params: params,
     });
 
+    if (data.data === null) {
+      lineageData.value.nodes = [];
+      lineageData.value.edges = [];
+      return;
+    }
+
     lineageData.value.nodes = data.data.rawNodes;
     lineageData.value.edges = data.data.rawEdges;
   };

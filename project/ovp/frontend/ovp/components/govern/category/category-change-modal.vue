@@ -1,7 +1,7 @@
+<!--TODO:[개발] 모달클래스 .modal-padding-16 추가-->
 <template>
   <Modal
     title="카테고리 변경"
-    class="modal modal-padding-16"
     :modal-id="props.modalId"
     background="non-interactive"
     displayDirective="show"
@@ -35,14 +35,12 @@
 
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
-import { useNuxtApp } from "nuxt/app";
 import TreeVue from "@extends/tree/Tree.vue";
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import { storeToRefs } from "pinia";
 
 const categoryStore = useGovernCategoryStore();
 
-const { $vfm } = useNuxtApp();
 const { categories, selectedModelList } = storeToRefs(categoryStore);
 
 const props = defineProps({
@@ -51,13 +49,15 @@ const props = defineProps({
     required: true,
   },
 });
-
+const emit = defineEmits<{
+  (e: "close-category-change-modal"): void;
+}>();
 const onCancel = () => {
-  $vfm.close(props.modalId);
+  emit("close-category-change-modal");
 };
 
 const onConfirm = async () => {
-  $vfm.open(props.modalId);
+  emit("close-category-change-modal");
 };
 
 const onCategoryNodeClick = () => {
