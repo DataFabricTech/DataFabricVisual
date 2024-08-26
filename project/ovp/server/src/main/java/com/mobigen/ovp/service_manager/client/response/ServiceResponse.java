@@ -22,8 +22,9 @@ public class ServiceResponse {
     private List<Map<String, Object>> tags;
     private List<Map<String, Object>> relatedTerms;
     private Owner owner;
+    private String type;
 
-    public ServiceResponse(Services service) {
+    public ServiceResponse(Services service, String type) {
         this.id = service.getId();
         this.name = service.getName();
         this.fullyQualifiedName = service.getFullyQualifiedName();
@@ -49,6 +50,7 @@ public class ServiceResponse {
             }
         }
         this.owner = service.getOwner();
+        this.type = type;
     }
 
     public ServiceResponse(ResponseEntity<Services> service) {
