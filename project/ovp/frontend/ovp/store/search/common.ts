@@ -148,39 +148,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
   const getFilter = async (filterKey: string) => {
     // TODO : 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
-    // const data = await $api(`/api/search/filter?filterKey=${filterKey}`);
-
-    const data: any = {
-      "owner.displayName.keyword": [
-        {
-          key: "N_mariadb",
-        },
-        {
-          key: "N_bigquery",
-        },
-        {
-          key: "N_mysql",
-        },
-        {
-          key: "N_glue",
-        },
-      ],
-      domains: [
-        {
-          key: "N_category1",
-        },
-        {
-          key: "N_category2",
-        },
-        {
-          key: "N_category3",
-        },
-        {
-          key: "N_category",
-        },
-      ],
-    };
-    (filters.value as Filters)[filterKey].data = data[filterKey];
+    const data = await $api(`/api/search/filter?field=${filterKey}`);
+    console.log(data);
+    (filters.value as Filters)[filterKey].data = data.data[filterKey];
   };
 
   const getPreviewData = async (fqn: string) => {

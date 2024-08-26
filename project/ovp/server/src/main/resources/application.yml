@@ -1,8 +1,7 @@
+---
 spring:
-  application:
-    name: ovp
   profiles:
-    active: local
+    active: ovp
   web:
     locale: ko
     resources:
@@ -52,9 +51,6 @@ spring:
   h2:
     console:
       enabled: true
-  thymeleaf:
-    prefix: classpath:/templates/
-    suffix: .html
   mail:
     host: smtp.gmail.com
     port: 587
@@ -105,18 +101,13 @@ http-client-configuration:
   socket-timeout: -1
   idle-timeout: 60
 
-#sentry:
-#  dsn: https://c10f0211c0bb41af973f1f5ebf7fda60@o924939.ingest.sentry.io/6044951
-#  traces-sample-rate: 1
-#  logging:
-#    enabled: off
 
 # 사용자 정의 설정들
 properties:
   framework:
     security:
-      ignores: /css/**, /fonts/**, /img/**, /js/**, /favicon.ico
-      permit-alls: /h2-console/**, /error, /test, /api/**, /api/auth/iag/**, /api/auth/login/**,  /api/auth/sign-up/** # /**, /h2-console/**,
+      ignores: /css/**, /fonts/**, /img/**, /js/**, /_nuxt/**, /favicon.ico
+      permit-alls: /portal/login, /, /error, /api/auth/login/**, /api/auth/sign-up/** #/login, /h2-console/**, /error, /test, /api/**, /api/auth/iag/**,
       redirect-url: /
       iframe-option: disable #disable, same-origin, deny
       csrf: false
@@ -139,11 +130,28 @@ properties:
       username: admin
       password: admin
   ovp:
+    # openMetadata 연동 URL
     open-metadata-url: http://192.168.105.26:8585/api/v1
     dolphin-server-url: http://192.168.105.26:28080/dolphin/v1
+
+    # 비밀번호 재설정 관련 설
     mail:
       valid_time: 60
       href: /api/email/pw-reset
       redirect_url: /portal/login/pw-reset
       redirect_error_url: /portal/error
+      contents_file_path: "templates/ovp_pwReset.html"
       title: "Open-Vdap-Platform  비밀번호 재 설정"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: ovp
+
+  primary:
+    datasource:
+      hikari:
+        jdbc-url: jdbc:postgresql://192.168.105.26:5432/postgres?currentSchema=ovp
+        username: postgres
+        password: postgres

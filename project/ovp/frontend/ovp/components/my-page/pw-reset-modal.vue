@@ -3,16 +3,15 @@
 <template>
   <Modal
     title="비밀번호 변경"
-    :modal-id="props.modalId"
+    class="modal modal-padding-16"
     background="non-interactive"
     displayDirective="show"
     overlayTransition="vfm-fade"
     contentTransition="vfm-fade"
     :clickToClose="true"
     :escToClose="true"
-    :width="350"
+    :width="360"
     :height="332"
-    :top="700"
     :lockScroll="false"
     swipeToClose="none"
     @cancel="onCancel"
@@ -39,16 +38,12 @@ const store = loginStore();
 const { $vfm } = useNuxtApp();
 const { getPwChangeInMypage } = store;
 
-const props = defineProps({
-  modalId: {
-    type: String,
-    required: true,
-  },
-});
-
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
 const onCancel = () => {
   composition.resetValues();
-  $vfm.close(props.modalId);
+  emit("close");
 };
 
 const onConfirm = async () => {

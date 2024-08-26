@@ -9,8 +9,8 @@
       :show-owner="true"
       :show-category="true"
       :editable="true"
-      :filters="filters"
-      :owner-key="FILTER_KEYS.OWNER"
+      :user-list="userList"
+      owner-key="id"
       :category-key="FILTER_KEYS.CATEGORY"
       @editIconClick="editIconClick"
       @editDone="editDone"
@@ -38,6 +38,8 @@ import { ref, shallowRef } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useDataModelDetailStore } from "@/store/search/detail/index";
+import { useLineageStore } from "@/store/search/detail/lineage/index";
+import { useSearchCommonStore } from "@/store/search/common";
 
 import Tab from "@extends/tab/Tab.vue";
 import ResourceBox from "@/components/common/resource-box/resource-box.vue";
@@ -50,22 +52,19 @@ import Query from "@/components/search/detail-tab/query.vue";
 import Lineage from "@/components/search/detail-tab/lineage.vue";
 import KnowledgeGraph from "@/components/search/detail-tab/knowledge-graph.vue";
 import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
-import { useSearchCommonStore } from "@/store/search/common";
-import { useLineageStore } from "@/store/lineage/lineageStore";
 
-const searchCommonStore = useSearchCommonStore();
-const { getFilter } = searchCommonStore;
-const { filters } = storeToRefs(searchCommonStore);
 import { FILTER_KEYS } from "@/store/search/common";
 
 const route = useRoute();
 
 const dataModelDetailStore = useDataModelDetailStore();
 const lineageStore = useLineageStore();
+const searchCommonStore = useSearchCommonStore();
 
-const { dataModel } = storeToRefs(dataModelDetailStore);
+const { userList, dataModel } = storeToRefs(dataModelDetailStore);
 
 const {
+  getUserFilter,
   getDataModelFqn,
   getDataModelType,
   setDataModelId,
@@ -81,6 +80,8 @@ const {
 } = dataModelDetailStore;
 
 const { getLineageData } = lineageStore;
+
+const { getFilters } = searchCommonStore;
 
 // tabfilter 객체 정의 (예시로 tables 값을 포함)
 const tabfilter = ref({ tables: true });
@@ -131,18 +132,29 @@ async function changeTab(tab: number | string) {
       break;
     case "lineage":
       await getLineageData(getDataModelType(), getDataModelFqn());
+      await getFilters();
       break;
   }
   currentComponent.value = _.find(tabOptions, ["value", tab])?.component;
 }
 
 const editIconClick = (key: string) => {
-  // TODO: [개발] 소유자 및 카테고리 목록 갱신 API 호출 필요.
-  getFilter(key);
+  if (key === "category") {
+    console.log("key = ", key);
+  } else {
+    getUserFilter();
+  }
 };
-const editDone = async (newData: object) => {
+
+const editDone = (data: object) => {
   // TODO: [개발] 변경 데이터 저장한는 API 호출 필요
-  await changeDataModel(newData);
+  changeDataModel(data)
+    .then(() => {
+      getDataModel();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 setDataModelId(route.query.id);

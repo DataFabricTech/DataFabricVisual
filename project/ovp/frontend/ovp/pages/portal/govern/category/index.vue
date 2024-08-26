@@ -237,12 +237,10 @@ const {
   setSelectedNode,
   setSearchKeyword,
   getFilters,
-  getSearchList,
   changeTab,
   setEmptyFilter,
 } = categoryStore;
 const {
-  initTab,
   selectedModelList,
   categories,
   modelList,
@@ -304,9 +302,7 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   selectedModelList.value = [];
   isDescEditMode.value = false;
   isTitleEditMode.value = false;
-
   selectedNode.value = node;
-
   setScrollOptions(0);
   // 선택한 노드정보 저장
   setSelectedNode(node);

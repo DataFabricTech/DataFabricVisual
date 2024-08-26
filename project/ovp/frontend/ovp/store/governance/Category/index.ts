@@ -66,7 +66,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     },
   });
 
-  // TREE
+  // MAIN - TREE
   const getCategories = async () => {
     const { data } = await $api(`/api/category/list`);
 
@@ -78,43 +78,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     isCategoriesNoData.value = categories.value.length === 0;
     categoriesParentId.value = data.parentId;
   };
-  const getModelListQuery = (tagId: string, value?: string) => {
-    // TODO : [개발] 검색어 조건 여기 추가.
-    const params: any = {
-      // eslint-disable-next-line id-length
-      q: value || "",
-      from: from.value,
-      size: size.value,
-      tagId: tagId,
-    };
-    return new URLSearchParams(params);
-  };
-  const getModelByCategoryIdAPI = async (
-    node: TreeViewItem,
-    value?: string,
-  ) => {
-    if (_.isNull(node) || _.isEmpty(node.tagId)) {
-      return;
-    }
-    const { data } = await $api(
-      `/api/category/models?${getModelListQuery(node.tagId, value)}`,
-    );
-    return data;
-  };
-  const addModelList = async () => {
-    const data = await getModelByCategoryIdAPI(selectedNode);
-    modelList.value = modelList.value.concat(data);
-  };
-  const getModelList = async (value?: string) => {
-    if (_.isNull(selectedNode)) {
-      return;
-    }
-    const data = await getModelByCategoryIdAPI(selectedNode, value);
-    modelList.value = data === null ? [] : data;
-  };
-  const setSelectedNode = (node: any) => {
-    selectedNode = node;
-  };
+
   const addCategory = (node: TreeViewItem) => {
     insertOrEditAPI("PUT", node);
   };
@@ -161,6 +125,45 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     addCategory(newNode);
   };
 
+  // MAIN - MODEL LIST
+  const getModelListQuery = (tagId: string, value?: string) => {
+    // TODO : [개발] 검색어 조건 여기 추가.
+    const params: any = {
+      // eslint-disable-next-line id-length
+      q: value || "",
+      from: from.value,
+      size: size.value,
+      tagId: tagId,
+    };
+    return new URLSearchParams(params);
+  };
+  const getModelByCategoryIdAPI = async (
+    node: TreeViewItem,
+    value?: string,
+  ) => {
+    if (_.isNull(node) || _.isEmpty(node.tagId)) {
+      return;
+    }
+    const { data } = await $api(
+      `/api/category/models?${getModelListQuery(node.tagId, value)}`,
+    );
+    return data;
+  };
+  const addModelList = async () => {
+    const data = await getModelByCategoryIdAPI(selectedNode);
+    modelList.value = modelList.value.concat(data);
+  };
+  const getModelList = async (value?: string) => {
+    if (_.isNull(selectedNode)) {
+      return;
+    }
+    const data = await getModelByCategoryIdAPI(selectedNode, value);
+    modelList.value = data === null ? [] : data;
+  };
+  const setSelectedNode = (node: any) => {
+    selectedNode = node;
+  };
+
   // PREVIEW
   const getPreviewData = async (fqn: string) => {
     const data: any = await $api(`/api/search/preview/${fqn}`);
@@ -175,8 +178,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     categoryAddDesc.value = "";
   };
 
-  // FILTERS
-
+  // MODAL - FILTERS
   const createDefaultFilters = (): Filters => {
     return {
       [FILTER_KEYS.OWNER]: { text: "소유자", data: [] },
@@ -205,7 +207,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     });
   };
 
-  // MODEL LIST
+  // MODAL - MODEL LIST
   const searchResult: Ref<any[]> = ref([]);
   const searchResultLength: Ref<SearchResultLength> = ref<SearchResultLength>({
     model: 0,
@@ -216,6 +218,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const dataModelIdList = ref([]);
   let searchKeyword: string = "";
   const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
+
   const getSearchListQuery = () => {
     const queryFilter = getQueryFilter();
     const params: any = {
@@ -303,7 +306,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     }
   };
 
-  // TAB
+  // MODAL - TAB
   const initTab: Ref<string> = ref("table");
   const currentTab: Ref<string> = ref("table");
   const changeTab = async (item: string) => {

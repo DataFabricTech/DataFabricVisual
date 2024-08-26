@@ -11,6 +11,6 @@ spring:
   primary:
     datasource:
       hikari:
-        jdbc-url: jdbc:postgresql://postgres-svc:5432/postgres?currentSchema=gdf
-        username: root
-        password: biris.manse
+        jdbc-url: jdbc:postgresql://postgres-svc:5432/postgres?currentSchema=ovp
+        username: postgres
+        password: postgres

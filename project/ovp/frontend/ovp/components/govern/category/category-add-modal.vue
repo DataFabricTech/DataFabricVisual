@@ -13,6 +13,7 @@
     :height="400"
     :top="380"
     :lockScroll="false"
+    :confirm-btn-msg="'저장'"
     swipeToClose="none"
     @cancel="onCancel"
     @confirm="onConfirm"

@@ -81,7 +81,6 @@ public class WebSecurityConfiguration {
         http.exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint));
 
         http.authorizeHttpRequests(auth -> auth
-                .requestMatchers("http://localhost:8080/api**").permitAll() // localhost에 대한 모든 요청 허용
                 .requestMatchers(properties.getSecurity().getPermitAlls()).permitAll()
                 .anyRequest().authenticated()
         );

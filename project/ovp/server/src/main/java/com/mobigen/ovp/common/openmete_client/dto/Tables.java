@@ -17,4 +17,5 @@ public class Tables {
     List<Columns> columns;
     Service service;
     Entity entity;
+    List<Tag> tags;
 }

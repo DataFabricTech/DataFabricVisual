@@ -3,7 +3,6 @@ package com.mobigen.ovp.common.openmete_client;
 import com.mobigen.ovp.common.openmete_client.dto.SampleData;
 import com.mobigen.ovp.common.openmete_client.dto.TableProfile;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
-import com.mobigen.ovp.search_detail.dto.request.DataModelDetailUpdate;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailVote;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -43,5 +42,5 @@ public interface TablesClient {
     Object unfollow(@PathVariable("id") String id, @PathVariable("userId") String userId);
 
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
-    Tables changeDataModel(@PathVariable("id") String id, @RequestParam Map<String, String> params, @RequestBody List<DataModelDetailUpdate> body);
+    Map<String, Object> changeDataModel(@PathVariable("id") String id, @RequestParam Map<String, String> params, @RequestBody List<Map<String, Object>> body);
 }

@@ -6,6 +6,7 @@ import com.mobigen.ovp.user.dto.UserInfoDTO;
 import com.mobigen.ovp.user.entity.UserEntity;
 import com.mobigen.ovp.user.entity.UserRole;
 import com.mobigen.ovp.user.repository.UserRepository;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -44,7 +45,7 @@ public class UserService {
         Map<String, Object> param = new HashMap<>();
         param.put("limit", 1000000); // 모든 유저 목록을 조회해 데이터 삽입
         param.put("isBot", false);
-        Map<String, Object> result = userClient.getUsers(headers, param);
+        Map<String, Object> result = userClient.getUserAll(headers, param);
 
         return (List<Map<String, Object>>) result.get("data");
     }
@@ -160,5 +161,42 @@ public class UserService {
             return null;
         }).filter(Objects::nonNull).collect(Collectors.toList());
         return modifiedList;
+    }
+
+    /**
+     * 관리자 > 랜덤 비밀번호 발급
+     *
+     * @return
+     * @throws Exception
+     */
+    public String getRandomPwd() throws Exception {
+        return userClient.getRandomPwd();
+    }
+
+    /**
+     * 관리자 > 사용자 이름 중복 체크
+     *
+     * @return
+     * @throws Exception
+     */
+    public boolean checkDuplicateName(String name) throws Exception {
+        try {
+            Map<String, Object> userInfo = userClient.checkDuplicateName(name);
+            return !userInfo.isEmpty();
+        } catch (FeignException.NotFound e) {
+            // name 으로 조회시, 중복된 값이 없을 경우 404 에러 받음
+            log.error("checkDuplicateName {}", e.getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * 관리자 > 사용자 정보 추가
+     *
+     * @return
+     * @throws Exception
+     */
+    public Map<String, Object> addUser(Map<String, Object> params) throws Exception {
+        return userClient.addUser(params);
     }
 }

@@ -74,7 +74,7 @@
                   <td width="36"></td>
                   <td height="48" align="center">
                     <a target="_blank"
-                       th:href="@{|${url}/${token}|}"
+                       href="{message.url}"
                        style="
                         display: inline-block;
                         padding: 14.5px 60px;
@@ -100,7 +100,7 @@
                 <tr>
                   <td width="36"></td>
                   <td style="font-size: 15px; font-weight: 400; color: #606974; line-height: 24px;"  align="center">
-                    보안을 위해 위의 링크는 <span th:text="${validationTime}">10</span>분 동안만 유효합니다. <br />
+                    보안을 위해 위의 링크는 {message.validationTime}분 동안만 유효합니다. <br />
                     비밀번호 변경을 본인이 요청하지 않는 경우, 본 이메일은 무시하십시오.
                   </td>
                   <td width="36"></td>
