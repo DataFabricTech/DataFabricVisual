@@ -45,7 +45,6 @@
     </div>
   </div>
   <save-model v-if="isShowSaveModel" @change="saveDataModel"></save-model>
-  <ModalsContainer />
 </template>
 
 <script setup lang="ts">
@@ -56,13 +55,14 @@ import result from "@/components/datamodel-creation/result.vue";
 import addModel from "@/components/datamodel-creation/modal/add.vue";
 import saveModel from "@/components/datamodel-creation/modal/save.vue";
 import { useCreationStore } from "~/store/datamodel-creation/index";
-import { ModalsContainer, useModal } from "vue-final-modal";
+import { useModal } from "vue-final-modal";
 
 const isShowSaveModel = ref(false);
 
 const saveDataModel = (param: boolean) => {
   isShowSaveModel.value = param;
 };
+
 const { open, close } = useModal({
   component: addModel,
   attrs: {
