@@ -3,8 +3,14 @@ package com.mobigen.ovp.category;
 import com.mobigen.ovp.category.dto.CategoryDTO;
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
+import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
+import com.mobigen.ovp.common.openmete_client.TablesClient;
+import com.mobigen.ovp.common.openmete_client.dto.Tables;
+import com.mobigen.ovp.common.openmete_client.dto.Tag;
 import com.mobigen.ovp.search.SearchService;
+import com.mobigen.ovp.search_detail.dto.response.DataModelDetailResponse;
+import com.mobigen.ovp.user.UserClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -28,6 +34,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+    private final UserClient userClient;
+    private final TablesClient tablesClient;
     private final CategoryRepository categoryRepository;
     private final SearchService searchService;
     private final ClassificationClient classificationClient;
@@ -316,5 +324,64 @@ public class CategoryService {
         params.put("name", categoryId);
         Map<String, Object> response = (Map<String, Object>) classificationClient.createTag(params);
         return response.get("id").toString();
+    }
+
+    /**
+     * 카테고리 데이터 모델 추가 / 변경
+     *
+     * @param id
+     * @param type
+     * @return
+     */
+    public DataModelDetailResponse addCategoryTagId(String id, String type, List selectparams) throws Exception {
+        MultiValueMap params = new LinkedMultiValueMap();
+
+        log.info("****selectparams: {}", selectparams);
+        log.info("***id: {}", id);
+
+        Map<String, Object> user = userClient.getUserInfo();
+        String userId = user.get("id").toString();
+
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+
+            for (Object itemId : selectparams) {
+                log.info("!!!!!!itemId: {}", itemId);
+//                Tables tablesSam = tablesClient.getTablesName(id, params);
+//                log.info("!!!!!! tablesSam: {}", tablesSam);
+            }
+
+            params.add("fields", "tags");
+            params.add("include", "all");
+            Tables tables = tablesClient.getTablesName(id, params);
+
+            log.info("****tables: {}", tables);
+            DataModelDetailResponse dataModelDetailResponse = new DataModelDetailResponse(tables, type, userId);
+
+            for (Tag tag : tables.getTags()) {
+                String displayName = tag.getDisplayName();
+
+                if (displayName == null || "".equals(displayName)) {
+                    displayName = tag.getName();
+                    tag.setDisplayName(displayName);
+                }
+
+                if (tag.getTagFQN().contains("ovp_category")) {
+                    CategoryEntity categoryEntity = categoryRepository.findByIdWithParent(UUID.fromString(tag.getName()));
+                    dataModelDetailResponse.getCategory().setName(categoryEntity.getName());
+                    dataModelDetailResponse.getCategory().setTagName(tag.getName());
+                    dataModelDetailResponse.getCategory().setTagDisplayName(tag.getDisplayName());
+                    dataModelDetailResponse.getCategory().setTagDescription(tag.getDescription());
+                    dataModelDetailResponse.getCategory().setTagFQN(tag.getTagFQN());
+                } else if ("Glossary".equals(tag.getSource())) {
+                    dataModelDetailResponse.getTerms().add(tag);
+                } else if ("Classification".equals(tag.getSource())) {
+                    dataModelDetailResponse.getTags().add(tag);
+                }
+            }
+
+            return dataModelDetailResponse;
+        } else {
+            return null;
+        }
     }
 }

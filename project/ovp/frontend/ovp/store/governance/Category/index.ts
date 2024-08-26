@@ -57,7 +57,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const selectedModelList = ref([]);
   const addSearchInputValue = ref("");
   const checkReachedCount = ref<boolean>(false);
-
   const previewData: Ref<any> = ref({
     modelInfo: {
       model: {
@@ -65,6 +64,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       },
     },
   });
+  const selectedCategoryTagId = ref("");
 
   // MAIN - TREE
   const getCategories = async () => {
@@ -340,6 +340,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     selectedDataModelList,
     addSearchInputValue,
     checkReachedCount,
+    selectedCategoryTagId,
     resetAddModalStatus,
     getCategories,
     addModelList,

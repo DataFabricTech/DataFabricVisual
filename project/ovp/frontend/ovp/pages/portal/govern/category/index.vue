@@ -250,6 +250,7 @@ const {
   selectedDataModelList,
   addSearchInputValue,
   checkReachedCount,
+  selectedCategoryTagId,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -303,6 +304,9 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   isDescEditMode.value = false;
   isTitleEditMode.value = false;
   selectedNode.value = node;
+  selectedCategoryTagId.value = <string>node.tagId;
+  console.log("selectedCategoryTagId는 ", selectedCategoryTagId.value);
+
   setScrollOptions(0);
   // 선택한 노드정보 저장
   setSelectedNode(node);

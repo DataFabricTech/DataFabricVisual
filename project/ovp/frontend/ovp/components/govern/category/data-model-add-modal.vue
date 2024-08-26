@@ -21,6 +21,7 @@
   >
     <template v-slot:body>
       <div class="data-info max-h-[460px]">
+        selectedDataModelList: {{ selectedDataModelList }}
         <search-input
           class="search-input-lg"
           :is-search-input-default-type="false"
@@ -142,19 +143,19 @@
 </template>
 
 <script setup lang="ts">
-import Modal from "@extends/modal/Modal.vue";
+import { computed, ref } from "vue";
 import { useNuxtApp, useRouter } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category/index";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { storeToRefs } from "pinia";
+import Modal from "@extends/modal/Modal.vue";
 import DataFilter from "./data-filter.vue";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import Tab from "@extends/tab/Tab.vue";
-import { computed, ref } from "vue";
 import Loading from "@base/loading/Loading.vue";
 
 const router = useRouter();
-const { $vfm } = useNuxtApp();
+const { $vfm, $api } = useNuxtApp();
 
 const categoryStore = useGovernCategoryStore();
 const {
@@ -165,6 +166,7 @@ const {
   getSearchList,
 } = categoryStore;
 const {
+  currentTab,
   initTab,
   filters,
   searchResult,
@@ -173,6 +175,7 @@ const {
   dataModelIdList,
   selectedDataModelList,
   addSearchInputValue,
+  selectedCategoryTagId,
 } = storeToRefs(categoryStore);
 
 const props = defineProps({
@@ -262,10 +265,40 @@ const onCancel = () => {
 };
 
 const onConfirm = async () => {
-  $vfm.close(props.modalId);
+  getModelItemAPI(selectedCategoryTagId.value);
+
+  // $vfm.close(props.modalId);
 };
 
 await getSearchList();
+
+// PATCH
+// {
+// "op": "add",
+//   "path": "/tags/0",
+//   "value": {
+//   "tagFQN": "ovp_category.a96f792a-5f55-46a0-ab29-586a221afa2f",
+//     "source": "Classification",
+//     "labelType": "Manual",
+//     "name": "a96f792a-5f55-46a0-ab29-586a221afa2f",
+//     "displayName": "d",
+//     "description": "d",
+//     "style": {},
+//   "state": "Confirmed"
+// }
+
+const getModelItemAPI = async (id: string) => {
+  console.log("id", id);
+  console.log("selectedDataModelList", selectedDataModelList.value);
+
+  await $api(`api/category/${id}?type=${currentTab.value}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json-patch+json",
+    },
+    body: JSON.stringify(selectedDataModelList.value),
+  });
+};
 
 const { scrollTrigger, setScrollOptions } = useIntersectionObserver(
   addSearchList,
