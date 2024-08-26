@@ -17,7 +17,7 @@
   <modal-collection></modal-collection>
   <modal-log></modal-log>
 
-  <modal-service :modal-id="SERVICE_ADD_MODAL_ID"></modal-service>
+  <modal-service />
 </template>
 
 <style scoped></style>
@@ -36,16 +36,18 @@ const { getServiceList } = useServiceStore();
 const { open, close } = useModal({
   component: ModalService,
   attrs: {
-    modalId: SERVICE_ADD_MODAL_ID,
-    // @ts-ignore
-    onClosed() {
-      getServiceList();
+    onClose() {
       close();
+    },
+    onLoadData() {
+      getServiceList();
     },
   },
 });
 
-const modalOpen = () => {
-  open();
+const modalOpen = (modalId: string) => {
+  if (modalId === SERVICE_ADD_MODAL_ID) {
+    open();
+  }
 };
 </script>
