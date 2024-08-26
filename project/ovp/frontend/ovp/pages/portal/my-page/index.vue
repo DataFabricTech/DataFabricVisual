@@ -79,7 +79,6 @@
       </div>
     </div>
   </div>
-  <PwResetModal :modal-id="PW_RESET_MODAL_ID"></PwResetModal>
 </template>
 
 <script setup lang="ts">
@@ -88,16 +87,23 @@ import Tab from "@extends/tab/Tab.vue";
 import Loading from "@base/loading/Loading.vue";
 import resourceBoxList from "~/components/common/resource-box/resource-box-list.vue";
 import Preview from "~/components/common/preview/preview.vue";
-import { useNuxtApp } from "nuxt/app";
 import { useRoute } from "vue-router";
-const { $vfm } = useNuxtApp();
+import { useModal } from "vue-final-modal";
 import profileBox from "~/components/my-page/profile-box.vue";
 import { useMyPageStore } from "~/store/my-page/myPageStore";
 import { useUserStore } from "~/store/user/userStore";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import { useRouter } from "nuxt/app";
+import pwResetModal from "@/components/my-page/pw-reset-modal.vue";
 
-const PW_RESET_MODAL_ID: string = "pw-reset-modal";
+const { open, close } = useModal({
+  component: pwResetModal,
+  attrs: {
+    onClose() {
+      close();
+    },
+  },
+});
 
 const myPageStore = useMyPageStore();
 const {
@@ -129,7 +135,7 @@ const route = useRoute();
 const router = useRouter();
 
 const showModalPwChange: () => void = () => {
-  $vfm.open(PW_RESET_MODAL_ID);
+  open();
 };
 
 await getTargetUserData(route.query.fqn);
