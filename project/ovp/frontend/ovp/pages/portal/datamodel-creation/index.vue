@@ -13,7 +13,7 @@
         :modelList="selectedModelList"
         :dataModelFilter="dataModelFilter"
         :modelListCnt="modelListCnt"
-        @change="openAddModal"
+        @change="open"
         @delete="deleteDataModel"
         @item-click="onClickDataModelItem"
         @bookmark-change="changeBookmark"
@@ -45,7 +45,6 @@
     </div>
   </div>
   <save-model v-if="isShowSaveModel" @change="saveDataModel"></save-model>
-  <add-model :modal-id="$constants.DATAMODEL_CREATION.ADD.MODAL_ID"></add-model>
 </template>
 
 <script setup lang="ts">
@@ -55,20 +54,23 @@ import sample from "@/components/datamodel-creation/sample.vue";
 import result from "@/components/datamodel-creation/result.vue";
 import addModel from "@/components/datamodel-creation/modal/add.vue";
 import saveModel from "@/components/datamodel-creation/modal/save.vue";
-import { useNuxtApp } from "nuxt/app";
-import $constants from "~/utils/constant";
 import { useCreationStore } from "~/store/datamodel-creation/index";
+import { useModal } from "vue-final-modal";
 
-const { $vfm } = useNuxtApp();
 const isShowSaveModel = ref(false);
 
 const saveDataModel = (param: boolean) => {
   isShowSaveModel.value = param;
 };
 
-const openAddModal = () => {
-  $vfm.open($constants.DATAMODEL_CREATION.ADD.MODAL_ID);
-};
+const { open, close } = useModal({
+  component: addModel,
+  attrs: {
+    onClose() {
+      close();
+    },
+  },
+});
 
 const creationStore = useCreationStore();
 const {

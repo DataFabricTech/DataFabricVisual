@@ -48,13 +48,19 @@ public class JwtFilter extends OncePerRequestFilter {
                 if (StringUtils.hasText(accessToken) && !token.isExpiredToken(accessToken)) {
                     // Spring Security 인증 처리
                     var authentication = token.getAuthentication(accessToken);
-                    log.info("Spring Security token 처리 {}", authentication);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 } else {
                     token.deleteTokens(request, response);
+                    String url = request.getServletPath();
+                    if (!url.startsWith("/_nuxt/") && !url.contains(".")&& !url.startsWith("/api") && !url.startsWith("/portal/login")) {
+                        response.sendRedirect("/portal/login");  // 로그인 페이지로 리다이렉트
+                        return;  // 필터 체인을 계속 진행하지 않도록 리턴
+                    }
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());
+                response.sendRedirect("/portal/login");  // 로그인 페이지로 리다이렉트
+                return;  // 필터 체인을 계속 진행하지 않도록 리턴
             }
         }
 
