@@ -2,7 +2,6 @@
   <Modal
     title="서비스 추가"
     class="modal modal-padding-16"
-    :modal-id="props.modalId"
     background="non-interactive"
     displayDirective="show"
     overlayTransition="vfm-fade"
@@ -13,7 +12,7 @@
     :height="674"
     :lockScroll="false"
     swipeToClose="none"
-    @closed="onClosed"
+    @closed="onCancel"
     @cancel="onCancel"
   >
     <template #body>
@@ -77,9 +76,6 @@ import Step1 from "./step/step1.vue";
 import Step2 from "./step/step2.vue";
 import Step3 from "./step/step3.vue";
 
-import { useNuxtApp } from "nuxt/app";
-const { $vfm } = useNuxtApp();
-
 import {
   ModalServiceComposition,
   ConnectionStatus,
@@ -99,6 +95,11 @@ const {
   checkValidation,
 } = ModalServiceComposition(props);
 
+const emit = defineEmits<{
+  (e: "close"): void;
+  (e: "loadData"): void;
+}>();
+
 const stepOptions: any[] = [
   { label: "서비스 타입 선택", value: 1 },
   { label: "서비스 컨피그 입력", value: 2 },
@@ -112,13 +113,12 @@ const changeStep = (value: number | string) => {
   currentStep.value = Number(value) - 1;
 };
 const onCancel = () => {
-  $vfm.close(props.modalId);
-};
-const onClosed = () => {
   resetServiceObj(); // store 에 저장하고 있던 데이터 리셋
   resetViewData();
   currentStep.value = 1;
   openEyeValues.value = [];
+
+  emit("close");
 };
 
 const gotoPrev = () => {
@@ -139,7 +139,8 @@ const gotoNext = async () => {
 
   if (currentStep.value === 3) {
     if (await submit()) {
-      $vfm.close(props.modalId);
+      emit("close");
+      emit("loadData");
     }
     return;
   } else {
