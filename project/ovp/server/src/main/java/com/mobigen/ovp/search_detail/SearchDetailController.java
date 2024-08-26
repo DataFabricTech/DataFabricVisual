@@ -83,10 +83,10 @@ public class SearchDetailController {
      */
     @ResponseJsonResult
     @GetMapping("/schema/{id}")
-    Object getDataModelSchema(@PathVariable String id) {
+    Object getDataModelSchema(@PathVariable String id, @RequestParam String type) throws Exception {
         log.info("");
 
-        return searchDetailService.getDataModelSchema(id);
+        return searchDetailService.getDataModelSchema(id, type);
     }
 
     /**
@@ -158,9 +158,9 @@ public class SearchDetailController {
 
     @ResponseJsonResult
     @PatchMapping("/{id}")
-    Object changeDataModel(@PathVariable String id, @RequestBody List<Map<String, Object>> body) {
+    Object changeDataModel(@PathVariable String id, @RequestParam String type, @RequestBody List<Map<String, Object>> body) {
         log.info("");
 
-        return searchDetailService.changeDataModel(id, body);
+        return searchDetailService.changeDataModel(id, type, body);
     }
 }

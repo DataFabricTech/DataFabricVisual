@@ -18,4 +18,7 @@ public class Tables {
     Service service;
     Entity entity;
     List<Tag> tags;
+    // NOTE: Containers 전용(Storage)
+    String prefix;
+    StorageColumn dataModel;
 }

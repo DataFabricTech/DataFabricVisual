@@ -162,48 +162,39 @@
           <dl v-if="props.showCategory" class="resource-box-list">
             <dt>카테고리</dt>
             <dd>
-              <!--              <menu-search-button-->
-              <!--                v-on-click-outside="-->
-              <!--                  () => {-->
-              <!--                    updateIsEditMode(categoryKey, false);-->
-              <!--                  }-->
-              <!--                "-->
-              <!--                :data="filters[categoryKey].data"-->
-              <!--                :selected-items="{ key: newData[categoryKey] }"-->
-              <!--                label-key="key"-->
-              <!--                value-key="key"-->
-              <!--                :title="filters[categoryKey].text"-->
-              <!--                @single-change="handlerSingleChanged($event, categoryKey)"-->
-              <!--                @close="updateIsEditMode(categoryKey, false)"-->
-              <!--              >-->
-              <!--                <template #button-text-slot>-->
-              <!--                  <span class="select-button-title">{{-->
-              <!--                    newData[categoryKey]-->
-              <!--                  }}</span>-->
-              <!--                </template>-->
-              <!--              </menu-search-button>-->
-              <!--              <menu-search-tree-->
-              <!--                label-key="name"-->
-              <!--                value-key="id"-->
-              <!--                :title="filter.text"-->
-              <!--                :data="filter.data.children"-->
-              <!--                :is-multi="true"-->
-              <!--                :hideGuideLines="false"-->
-              <!--                :firExpandAll="true"-->
-              <!--                :show-open-all-btn="false"-->
-              <!--                :show-close-all-btn="false"-->
-              <!--                :use-draggable="false"-->
-              <!--                :selected-items="selectedFilters[FILTER_KEYS.CATEGORY]"-->
-              <!--                mode="view"-->
-              <!--                @multiple-change="onNodeChecked"-->
-              <!--              />-->
+              <menu-search-tree
+                label-key="name"
+                value-key="id"
+                :data="categoryList"
+                :title="
+                  newData[categoryKey].name
+                    ? newData[categoryKey].name
+                    : '카테고리 없음'
+                "
+                :is-multi="false"
+                :is-show-length="false"
+                :hideGuideLines="false"
+                :firExpandAll="true"
+                :show-open-all-btn="false"
+                :show-close-all-btn="false"
+                :use-draggable="false"
+                :selected-items="newData.category"
+                mode="view"
+                @single-change="editDoneForCategory"
+              />
             </dd>
           </dl>
         </template>
         <template #view-slot>
           <dl v-if="props.showCategory" class="resource-box-list">
             <dt>카테고리</dt>
-            <dd>{{ newData[categoryKey] }}</dd>
+            <dd>
+              {{
+                newData[categoryKey].name
+                  ? newData[categoryKey].name
+                  : "카테고리 없음"
+              }}
+            </dd>
           </dl>
         </template>
       </editable-group>
@@ -232,6 +223,9 @@ const props = withDefaults(defineProps<ResourceBoxProps>(), {
     return {};
   },
   userList: () => {
+    return [];
+  },
+  categoryList: () => {
     return [];
   },
   ownerKey: "id",
@@ -319,6 +313,12 @@ const editDoneForOwner = (value: any, key: string) => {
   emit("editDone", data);
 
   updateIsEditMode(key, false);
+};
+
+const editDoneForCategory = (value: any, key: string) => {
+  // TODO: 카테고리 변경 처리
+  console.log(value);
+  console.log(key);
 };
 
 const editDone = (key: string) => {

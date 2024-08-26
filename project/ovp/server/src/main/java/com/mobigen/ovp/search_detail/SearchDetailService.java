@@ -4,6 +4,7 @@ import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
 import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
+import com.mobigen.ovp.common.openmete_client.ContainersClient;
 import com.mobigen.ovp.common.openmete_client.LineageClient;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
@@ -43,6 +44,7 @@ public class SearchDetailService {
     private final UserClient userClient;
     private final SearchClient searchClient;
     private final TablesClient tablesClient;
+    private final ContainersClient containersClient;
     private final LineageClient lineageClient;
     private final ClassificationClient classificationClient;
     private final GlossaryClient glossaryClient;
@@ -135,45 +137,50 @@ public class SearchDetailService {
      */
     public DataModelDetailResponse getDataModelDetail(String id, String type) throws Exception {
         MultiValueMap params = new LinkedMultiValueMap();
+        // fields=tableConstraints,tablePartition,usageSummary,owner,customMetrics,columns,tags,followers,joins,schemaDefinition,dataModel,extension,testSuite,domain,dataProducts,lifeCycle,sourceHash
+        params.add("fields", "owner,followers,tags,votes");
+        params.add("include", "all");
 
         Map<String, Object> user = userClient.getUserInfo();
         String userId = user.get("id").toString();
 
+        DataModelDetailResponse dataModelDetailResponse = null;
+        Tables tables = null;
+
         if (!ModelType.STORAGE.getValue().equals(type)) {
-            // fields=tableConstraints,tablePartition,usageSummary,owner,customMetrics,columns,tags,followers,joins,schemaDefinition,dataModel,extension,testSuite,domain,dataProducts,lifeCycle,sourceHash
-            params.add("fields", "owner,followers,tags,votes");
-            params.add("include", "all");
-            Tables tables = tablesClient.getTablesName(id, params);
-            DataModelDetailResponse dataModelDetailResponse = new DataModelDetailResponse(tables, type, userId);
+            tables = tablesClient.getTablesName(id, params);
+            dataModelDetailResponse = new DataModelDetailResponse(tables, type, userId);
+        } else {
+            tables = containersClient.getStorageById(id, params);
+            dataModelDetailResponse = new DataModelDetailResponse(tables, type, userId);
+        }
 
-            for(Tag tag : tables.getTags()) {
-                String displayName = tag.getDisplayName();
+        for(Tag tag : tables.getTags()) {
+            String displayName = tag.getDisplayName();
 
-                if (displayName == null || "".equals(displayName)) {
-                    displayName = tag.getName();
-                    tag.setDisplayName(displayName);
-                }
-
-                if (tag.getTagFQN().contains("ovp_category")) {
-                    CategoryEntity categoryEntity = categoryRepository.findByIdWithParent(UUID.fromString(tag.getName()));
-                    if (categoryEntity != null) {
-                        dataModelDetailResponse.getCategory().setName(categoryEntity.getName());
-                        dataModelDetailResponse.getCategory().setTagName(tag.getName());
-                        dataModelDetailResponse.getCategory().setTagDisplayName(tag.getDisplayName());
-                        dataModelDetailResponse.getCategory().setTagDescription(tag.getDescription());
-                        dataModelDetailResponse.getCategory().setTagFQN(tag.getTagFQN());
-                    }
-                } else if ("Glossary".equals(tag.getSource())) {
-                    dataModelDetailResponse.getTerms().add(tag);
-                } else if ("Classification".equals(tag.getSource())) {
-                    dataModelDetailResponse.getTags().add(tag);
-                }
+            if (displayName == null || "".equals(displayName)) {
+                displayName = tag.getName();
+                tag.setDisplayName(displayName);
             }
 
-            return dataModelDetailResponse;
-        } else {
-            return null;
+            if (tag.getTagFQN().contains("ovp_category")) {
+                CategoryEntity categoryEntity = categoryRepository.findByIdWithParent(UUID.fromString(tag.getName()));
+                if (categoryEntity != null) {
+                    dataModelDetailResponse.getCategory().setId(categoryEntity.getId());
+                    dataModelDetailResponse.getCategory().setName(categoryEntity.getName());
+                    dataModelDetailResponse.getCategory().setTagName(tag.getName());
+                    dataModelDetailResponse.getCategory().setTagDisplayName(tag.getDisplayName());
+                    dataModelDetailResponse.getCategory().setTagDescription(tag.getDescription());
+                    dataModelDetailResponse.getCategory().setTagFQN(tag.getTagFQN());
+                }
+            } else if ("Glossary".equals(tag.getSource())) {
+                dataModelDetailResponse.getTerms().add(tag);
+            } else if ("Classification".equals(tag.getSource())) {
+                dataModelDetailResponse.getTags().add(tag);
+            }
         }
+
+        return dataModelDetailResponse;
     }
 
     /**
@@ -182,14 +189,19 @@ public class SearchDetailService {
      * @param id
      * @return
      */
-    public List<Columns> getDataModelSchema(String id) {
+    public List<Columns> getDataModelSchema(String id, String type) {
         MultiValueMap params = new LinkedMultiValueMap();
 
         // fields=tableConstraints,tablePartition,usageSummary,owner,customMetrics,columns,tags,followers,joins,schemaDefinition,dataModel,extension,testSuite,domain,dataProducts,lifeCycle,sourceHash
-        params.add("fields", "columns");
         params.add("include", "all");
 
-        return tablesClient.getTablesName(id, params).getColumns();
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            params.add("fields", "columns");
+            return tablesClient.getTablesName(id, params).getColumns();
+        } else {
+            params.add("fields", "dataModel");
+            return containersClient.getStorageById(id, params).getDataModel().getColumns();
+        }
     }
 
     /**
@@ -279,10 +291,14 @@ public class SearchDetailService {
         return tablesClient.unfollow(id, userId);
     }
 
-    public Object changeDataModel(String id, List<Map<String, Object>> body) {
+    public Object changeDataModel(String id, String type, List<Map<String, Object>> body) {
         MultiValueMap params = new LinkedMultiValueMap();
         params.add("fields", "owner,followers,tags,votes");
 
-        return tablesClient.changeDataModel(id, params, body);
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            return tablesClient.changeDataModel(id, params, body);
+        } else {
+            return containersClient.changeStorage(id, params, body);
+        }
     }
 }

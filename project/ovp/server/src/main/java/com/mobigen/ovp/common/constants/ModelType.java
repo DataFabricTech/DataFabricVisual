@@ -1,7 +1,7 @@
 package com.mobigen.ovp.common.constants;
 
 public enum ModelType {
-    TABLES("tables"),
+    TABLES("table"),
     STORAGE("storage"),
     MODELS("model");
 

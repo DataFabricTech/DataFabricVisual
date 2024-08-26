@@ -56,14 +56,15 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     isDownVote: false,
   });
   // TODO: tpye 변경 id, fqn, name, displayName
-  const userList: Ref<any> = ref([]);
   const defaultInfo: Ref<any> = ref({
     modelInfo: { model: { type: "" }, columns: [] },
     glossaries: [],
     tags: [],
   });
-  const tagList = ref([]);
-  const glossaryList = ref([]);
+  const userList: Ref<any[]> = ref([]);
+  const categoryList: Ref<any[]> = ref([]);
+  const tagList: Ref<any[]> = ref([]);
+  const glossaryList: Ref<any[]> = ref([]);
   const schemaList: Ref<Schema[]> = ref([]);
   const sampleColumns: Ref<any> = ref([]);
   const sampleList: Ref<any> = ref([]);
@@ -94,10 +95,15 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     return dataModelType;
   };
 
-  const getUserFilter = async () => {
+  const getUserList = async () => {
     const data = await $api(`/api/search/detail/filter/user`);
 
     userList.value = data.data;
+  };
+
+  const getCategoryList = async () => {
+    const data = await $api("/api/category/list");
+    categoryList.value = data.data.children;
   };
 
   const getTagList = async () => {
@@ -115,16 +121,31 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
       `/api/search/detail/${dataModelId}?type=${dataModelType}`,
     );
 
+    if (data.result === 0) {
+      // TODO: 에러페이지 이동
+      console.error(data.errorMessage);
+      return;
+    }
+
     dataModel.value = data.data;
   };
 
   const getDefaultInfo = async () => {
     const data = await $api(`/api/search/preview/${dataModelFqn}`);
+
+    if (data.result === 0) {
+      // TODO: 에러페이지 이동
+      console.error(data.errorMessage);
+      return;
+    }
+
     defaultInfo.value = data.data;
   };
 
   const getSchema = async () => {
-    const data = await $api(`/api/search/detail/schema/${dataModelId}`);
+    const data = await $api(
+      `/api/search/detail/schema/${dataModelId}?type=${dataModelType}`,
+    );
     schemaList.value = data.data;
   };
 
@@ -215,7 +236,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
       default:
     }
 
-    return $api(`/api/search/detail/${dataModelId}`, {
+    return $api(`/api/search/detail/${dataModelId}?type=${dataModelType}`, {
       method: "patch",
       body: body,
     });
@@ -301,6 +322,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
 
   return {
     userList,
+    categoryList,
     tagList,
     glossaryList,
     dataModel,
@@ -316,7 +338,8 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     setDataModelType,
     getDataModelFqn,
     getDataModelType,
-    getUserFilter,
+    getUserList,
+    getCategoryList,
     getTagList,
     getGlossaryList,
     getDataModel,

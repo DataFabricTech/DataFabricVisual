@@ -56,6 +56,7 @@
     </div>
     <Preview
       :preview-data="previewData"
+      :model-type="getDataModelType()"
       @change="getPreviewOn"
       :is-show-preview="previewOn"
     ></Preview>
