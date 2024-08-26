@@ -1,6 +1,5 @@
 <template>
   <Modal
-    :modal-id="props.modalId"
     title="사용자 추가"
     :click-to-close="true"
     :esc-to-close="true"
@@ -266,12 +265,10 @@
 </template>
 
 <script setup lang="ts">
-import { useNuxtApp } from "nuxt/app";
 import { useUserStore } from "~/store/user/userStore";
 import type { AddUser } from "~/type/user";
 import Modal from "@extends/modal/Modal.vue";
 
-const { $vfm } = useNuxtApp();
 import _ from "lodash";
 import $constants from "~/utils/constant";
 
@@ -280,14 +277,8 @@ const { getRandomPwd, checkDuplicateEmail, checkDuplicateName, addUser } =
   userStore;
 const defaultAddUser = userStore.defaultAddUser;
 
-const props = defineProps({
-  modalId: {
-    type: String,
-    required: true,
-  },
-});
-
 const emit = defineEmits<{
+  (e: "close"): void;
   (e: "userAddedSuccess"): void;
 }>();
 
@@ -347,7 +338,7 @@ const pwdCopyBtnClicked = async () => {
 };
 
 const onCancel = () => {
-  $vfm.close(props.modalId);
+  emit("close");
 };
 
 const onConfirm = async () => {
@@ -370,7 +361,7 @@ const onConfirm = async () => {
       alert("사용자 생성 실패했습니다. 잠시 후 다시 시도해주세요.");
     } else {
       alert("사용자 생성이 완료되었습니다.");
-      $vfm.close(props.modalId);
+      emit("close");
       emit("userAddedSuccess");
     }
   });
@@ -435,10 +426,4 @@ const checkPwdValidation = () => {
 };
 </script>
 
-<style>
-/* TODO: Modal 컴포넌트 사용하려면 해당 style 필요, 퍼블리싱 요청 */
-.modal-body {
-  height: 400px;
-  overflow: auto;
-}
-</style>
+<style></style>
