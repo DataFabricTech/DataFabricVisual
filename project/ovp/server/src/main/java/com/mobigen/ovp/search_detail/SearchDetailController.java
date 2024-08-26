@@ -158,7 +158,7 @@ public class SearchDetailController {
 
     @ResponseJsonResult
     @PatchMapping("/{id}")
-    Object changeDataModel(@PathVariable String id, @RequestBody List<Map<String, String>> body) {
+    Object changeDataModel(@PathVariable String id, @RequestBody List<Map<String, Object>> body) {
         log.info("");
 
         return searchDetailService.changeDataModel(id, body);

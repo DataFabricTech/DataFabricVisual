@@ -10,19 +10,11 @@
         <td>{{ defaultInfo.modelInfo.model.tableType }}</td>
       </tr>
       <tr>
-        <th>Columns</th>
-        <td>{{ defaultInfo.modelInfo.columns.length }}</td>
-      </tr>
-      <tr>
-        <th>Rows</th>
-        <td>{{ modelInfo.totalCount }}</td>
-      </tr>
-      <tr>
         <th>태그</th>
         <td class="py-0">
           <div class="editable-group" v-if="!editTagsMode">
-            <div class="tag tag-primary tag-sm" v-for="tag in defaultInfo.tags">
-              <span class="tag-text">{{ tag.name }}</span>
+            <div class="tag tag-primary tag-sm" v-for="tag in mdoelTagList">
+              <span class="tag-text">{{ tag.displayName }}</span>
             </div>
             <button
               class="button button-neutral-ghost button-sm"
@@ -34,34 +26,17 @@
             </button>
           </div>
           <div class="editable-group" v-if="editTagsMode">
-            <div class="select select-clean">
-              <button class="select-button" @click.stop="editTags">
-                <div
-                  class="tag tag-primary tag-sm"
-                  v-for="tag in modelInfo.tags"
-                >
-                  <span class="tag-text">{{ tag.label }}</span>
-                  <button
-                    class="tag-delete-button"
-                    @click.stop="deleteTag(tag)"
-                  >
-                    <span class="hidden-text">삭제</span>
-                    <svg-icon class="svg-icon" name="close"></svg-icon>
-                  </button>
-                </div>
-                <svg-icon
-                  class="svg-icon select-indicator"
-                  name="chevron-down-medium"
-                ></svg-icon>
-              </button>
-              <menu-search
-                :data="tags"
-                :selected-items="modelInfo.tags"
-                :is-multi="true"
-                @multiple-change="changeTags"
-                @cancel="editTags"
-              ></menu-search>
-            </div>
+            <menu-search-tag
+              :data="tagList"
+              :selected-items="mdoelTagList"
+              label-key="displayName"
+              value-key="tagFQN"
+              :is-multi="true"
+              title="값을 선택하세요"
+              @multiple-change="changeTags"
+              @cancel="editTags"
+              @close="editTagsMode = false"
+            ></menu-search-tag>
           </div>
         </td>
       </tr>
@@ -69,11 +44,8 @@
         <th>용어</th>
         <td class="py-0">
           <div class="editable-group" v-if="!editTermsMode">
-            <div
-              class="tag tag-primary tag-sm"
-              v-for="term in defaultInfo.glossaries"
-            >
-              <span class="tag-text">{{ term.name }}</span>
+            <div class="tag tag-primary tag-sm" v-for="term in dataModel.terms">
+              <span class="tag-text">{{ term.displayName }}</span>
             </div>
             <button
               class="button button-neutral-ghost button-sm"
@@ -85,34 +57,17 @@
             </button>
           </div>
           <div class="editable-group" v-if="editTermsMode">
-            <div class="select select-clean">
-              <button class="select-button" @click.stop="editTerms">
-                <div
-                  class="tag tag-primary tag-sm"
-                  v-for="term in modelInfo.terms"
-                >
-                  <span class="tag-text">{{ term.label }}</span>
-                  <button
-                    class="tag-delete-button"
-                    @click.stop="deleteTerm(term)"
-                  >
-                    <span class="hidden-text">삭제</span>
-                    <svg-icon class="svg-icon" name="close"></svg-icon>
-                  </button>
-                </div>
-                <svg-icon
-                  class="svg-icon select-indicator"
-                  name="chevron-down-medium"
-                ></svg-icon>
-              </button>
-              <menu-search
-                :data="terms"
-                :selected-items="modelInfo.terms"
-                :is-multi="true"
-                @multiple-change="changeTerms"
-                @cancel="editTerms"
-              ></menu-search>
-            </div>
+            <menu-search-tag
+              :data="glossaryList"
+              :selected-items="dataModel.terms"
+              label-key="displayName"
+              value-key="fullyQualifiedName"
+              :is-multi="true"
+              title="값을 선택하세요"
+              @multiple-change="changeTags"
+              @cancel="editTags"
+              @close="editTags"
+            ></menu-search-tag>
           </div>
         </td>
       </tr>
@@ -121,72 +76,58 @@
 </template>
 
 <script setup lang="ts">
-import { useDataModelDetailStore } from "@/store/search/detail/index";
-import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
+import _ from "lodash";
 
-import menuSearch from "@extends/menu-seach/menu-search.vue";
+import { useDataModelDetailStore } from "@/store/search/detail/index";
+import { useSearchCommonStore } from "@/store/search/common";
+
+import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
+import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
+
+import type { ComputedRef } from "vue";
 
 const dataModelDetailStore = useDataModelDetailStore();
+const searchCommonStore = useSearchCommonStore();
 
-const { defaultInfo } = storeToRefs(dataModelDetailStore);
+const { getTagList, getGlossaryList } = dataModelDetailStore;
+const { tagList, glossaryList, dataModel, defaultInfo } =
+  storeToRefs(dataModelDetailStore);
+const { filters } = storeToRefs(searchCommonStore);
 
-const modelInfo = reactive({
-  type: "Regular",
-  columnsLength: 7,
-  totalCount: 10,
-  tags: [
-    { label: "tag 03", value: "tag 03" },
-    { label: "tag 04", value: "tag 04" },
-  ],
-  terms: [
-    { label: "term 01", value: "term 01" },
-    { label: "term 04", value: "term 04" },
-    { label: "term 05", value: "term 05" },
-  ],
-});
 const editTagsMode = ref(false);
 const editTermsMode = ref(false);
-const editTags = () => {
+
+const mdoelTagList: ComputedRef<any[]> = computed(() => {
+  return _.filter(dataModel.value.tags, (tag) => {
+    return !_.includes(tag.tagFQN, "ovp_category");
+  });
+});
+
+const editTags = async () => {
+  await getTagList();
   editTagsMode.value = !editTagsMode.value;
+
+  if (editTagsMode.value) {
+    await getTagList();
+  }
 };
 
-const editTerms = () => {
+const editTerms = async () => {
   editTermsMode.value = !editTermsMode.value;
-};
-const deleteTag = (tag: object) => {
-  const index = modelInfo.tags.indexOf(tag);
-  if (index !== -1) {
-    modelInfo.tags.splice(index, 1);
+
+  if (editTermsMode.value) {
+    await getGlossaryList();
   }
 };
-const deleteTerm = (term: object) => {
-  const index = modelInfo.terms.indexOf(term);
-  if (index !== -1) {
-    modelInfo.terms.splice(index, 1);
-  }
-};
+
 const changeTags = (val: MenuSearchItemImpl[]) => {
-  modelInfo.tags = [...val];
-  editTags();
+  // TODO: 태그 변경 처리
+  editTagsMode.value = false;
 };
 const changeTerms = (val: MenuSearchItemImpl[]) => {
-  modelInfo.terms = [...val];
-  editTerms();
+  // TODO: 용어 변경 처리
+  editTermsMode.value;
 };
-const tags = [
-  { label: "tag 01", value: "tag 01" },
-  { label: "tag 02", value: "tag 02" },
-  { label: "tag 03", value: "tag 03" },
-  { label: "tag 04", value: "tag 04" },
-  { label: "tag 05", value: "tag 05" },
-];
-const terms = [
-  { label: "term 01", value: "term 01" },
-  { label: "term 02", value: "term 02" },
-  { label: "term 03", value: "term 03" },
-  { label: "term 04", value: "term 04" },
-  { label: "term 05", value: "term 05" },
-];
 </script>
 
 <style lang="scss" scoped></style>
