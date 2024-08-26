@@ -26,13 +26,26 @@
 import ModalCollection from "~/components/manage/service/modal/modal-collection.vue";
 import ModalLog from "~/components/manage/service/modal/modal-log.vue";
 import ModalService from "~/components/manage/service/modal/modal-service/modal-service.vue";
-
-import { useNuxtApp } from "nuxt/app";
-const { $vfm } = useNuxtApp();
+import { useModal } from "vue-final-modal";
+import { useServiceStore } from "~/store/manage/service";
 
 const SERVICE_ADD_MODAL_ID: string = "service-add-modal";
 
-const modalOpen = (modalId: string) => {
-  $vfm.open(modalId);
+const { getServiceList } = useServiceStore();
+
+const { open, close } = useModal({
+  component: ModalService,
+  attrs: {
+    modalId: SERVICE_ADD_MODAL_ID,
+    // @ts-ignore
+    onClosed() {
+      getServiceList();
+      close();
+    },
+  },
+});
+
+const modalOpen = () => {
+  open();
 };
 </script>
