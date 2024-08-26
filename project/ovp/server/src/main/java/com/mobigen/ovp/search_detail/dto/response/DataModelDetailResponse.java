@@ -40,6 +40,7 @@ public class DataModelDetailResponse {
     List<String> depth;
     List<Tag> tags;
     List<Tag> terms;
+    List<Tag> originTags;
 
     public DataModelDetailResponse(Tables tables, String type, String userId) {
         this.serviceType = tables.getService().getType();
@@ -58,7 +59,7 @@ public class DataModelDetailResponse {
             this.modelNm = displayName;
         }
 
-        this.modelDesc = (tables.getDescription() != null) ? tables.getDescription() : "";
+        this.modelDesc = tables.getDescription();
         this.owner = tables.getOwner();
 
         if (this.owner != null) {
@@ -94,6 +95,7 @@ public class DataModelDetailResponse {
         this.downVotes = tables.getVotes().getDownVotes();
         this.tags = new ArrayList<>();
         this.terms = new ArrayList<>();
+        this.originTags = tables.getTags();
 
 
         String[] splitArray = this.fqn.split("\\.");

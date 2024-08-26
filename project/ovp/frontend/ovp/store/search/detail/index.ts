@@ -1,5 +1,5 @@
 import _ from "lodash";
-import type { Ref } from "vue";
+import { reactive, type Ref } from "vue";
 
 export interface DataModel {
   serviceType: string;
@@ -62,6 +62,8 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     glossaries: [],
     tags: [],
   });
+  const tagList = ref([]);
+  const glossaryList = ref([]);
   const schemaList: Ref<Schema[]> = ref([]);
   const sampleColumns: Ref<any> = ref([]);
   const sampleList: Ref<any> = ref([]);
@@ -96,6 +98,16 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     const data = await $api(`/api/search/detail/filter/user`);
 
     userList.value = data.data;
+  };
+
+  const getTagList = async () => {
+    const data = await $api("/api/search/detail/tag/all");
+    tagList.value = data.data;
+  };
+
+  const getGlossaryList = async () => {
+    const data = await $api("/api/search/detail/glossary/all");
+    glossaryList.value = data.data;
   };
 
   const getDataModel = async () => {
@@ -289,6 +301,8 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
 
   return {
     userList,
+    tagList,
+    glossaryList,
     dataModel,
     defaultInfo,
     schemaList,
@@ -303,6 +317,8 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     getDataModelFqn,
     getDataModelType,
     getUserFilter,
+    getTagList,
+    getGlossaryList,
     getDataModel,
     getDefaultInfo,
     getSchema,

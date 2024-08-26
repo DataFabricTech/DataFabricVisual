@@ -112,7 +112,7 @@ public class SearchDetailService {
             return glossaries;
         }
 
-        TermResponse res = glossaryClient.getGlossaryTerms("", "", 1000, after);
+        TermResponse res = glossaryClient.getGlossaryTerms("", "", 100, after);
 
         List mergeTagList = Stream.concat(glossaries.stream(), res.getData().stream()).collect(Collectors.toList());
 
@@ -120,7 +120,11 @@ public class SearchDetailService {
     }
 
     public Object getGlossaryAll() throws Exception {
-        return getGlossaries(new ArrayList<>(), "", true);
+//        return getGlossaries(new ArrayList<>(), "", true);
+
+        TermResponse res = glossaryClient.getGlossaryTerms("", "", 100, "");
+
+        return res.getData();
     }
 
     /**
@@ -273,7 +277,7 @@ public class SearchDetailService {
         return tablesClient.unfollow(id, userId);
     }
 
-    public Object changeDataModel(String id, List<Map<String, String>> body) {
+    public Object changeDataModel(String id, List<Map<String, Object>> body) {
         MultiValueMap params = new LinkedMultiValueMap();
         params.add("fields", "owner,followers,tags,votes");
 
