@@ -38,6 +38,8 @@ import { ref, shallowRef } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useDataModelDetailStore } from "@/store/search/detail/index";
+import { useLineageStore } from "@/store/search/detail/lineage/index";
+import { useSearchCommonStore } from "@/store/search/common";
 
 import Tab from "@extends/tab/Tab.vue";
 import ResourceBox from "@/components/common/resource-box/resource-box.vue";
@@ -50,7 +52,6 @@ import Query from "@/components/search/detail-tab/query.vue";
 import Lineage from "@/components/search/detail-tab/lineage.vue";
 import KnowledgeGraph from "@/components/search/detail-tab/knowledge-graph.vue";
 import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
-import { useLineageStore } from "@/store/lineage/lineageStore";
 
 import { FILTER_KEYS } from "@/store/search/common";
 
@@ -58,16 +59,17 @@ const route = useRoute();
 
 const dataModelDetailStore = useDataModelDetailStore();
 const lineageStore = useLineageStore();
+const searchCommonStore = useSearchCommonStore();
 
 const { userList, dataModel } = storeToRefs(dataModelDetailStore);
 
 const {
+  getUserFilter,
   getDataModelFqn,
   getDataModelType,
   setDataModelId,
   setDataModelFqn,
   setDataModelType,
-  getUserFilter,
   getDataModel,
   getDefaultInfo,
   getSchema,
@@ -78,6 +80,8 @@ const {
 } = dataModelDetailStore;
 
 const { getLineageData } = lineageStore;
+
+const { getFilters } = searchCommonStore;
 
 // tabfilter 객체 정의 (예시로 tables 값을 포함)
 const tabfilter = ref({ tables: true });
@@ -128,6 +132,7 @@ async function changeTab(tab: number | string) {
       break;
     case "lineage":
       await getLineageData(getDataModelType(), getDataModelFqn());
+      await getFilters();
       break;
   }
   currentComponent.value = _.find(tabOptions, ["value", tab])?.component;
