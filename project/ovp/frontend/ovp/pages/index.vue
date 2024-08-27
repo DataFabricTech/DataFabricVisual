@@ -4,7 +4,6 @@
       <Loading :use-loader-overlay="true" class="loader-lg"></Loading>
     </div>
     <div class="flex">
-      <!--      TODO: [퍼블리싱] 6개로 보이도록 수정 필요 -->
       <div class="main-content main-content-full">
         <div class="l-top-bar">
           <span class="main-content-title">추천 많은 데이터</span>
@@ -15,7 +14,7 @@
             <span class="button-title">모두 보기</span>
           </button>
         </div>
-        <div class="flex flex-col w-full">
+        <div class="recommend-data">
           <div class="no-result" v-if="isUpVotesDataNoInfo">
             <div class="notification">
               <svg-icon class="notification-icon" name="info"></svg-icon>
