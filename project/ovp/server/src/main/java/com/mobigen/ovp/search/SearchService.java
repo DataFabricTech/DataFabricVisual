@@ -1,5 +1,7 @@
 package com.mobigen.ovp.search;
 
+import com.mobigen.ovp.category.entity.CategoryEntity;
+import com.mobigen.ovp.category.repository.CategoryRepository;
 import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.ModelConvertUtil;
 import com.mobigen.ovp.common.entity.ModelIndex;
@@ -16,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,6 +28,7 @@ public class SearchService {
     private final SearchClient searchClient;
     private final TablesClient tablesClient;
     private final ModelConvertUtil modelConvertUtil;
+    private final CategoryRepository categoryRepository;
 
     private Map<String, Object> convertAggregations(Map<String, Object> response) {
         Map<String, Object> aggregations = (Map<String, Object>) response.get("aggregations");
@@ -261,5 +265,39 @@ public class SearchService {
         result.put("totalData", trimmedData.size());
 
         return result;
+    }
+
+    public Object getGraphCategories(MultiValueMap<String, String> params) throws Exception {
+        List<CategoryEntity> categories = categoryRepository.findAll();
+
+        Map<String, Object> result = new HashMap<>();
+
+        List<Map<String, Object>> edgeList = categories.stream()
+                .map(category -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", UUID.randomUUID().toString());
+                    map.put("sources", List.of(category.getParentId()));
+                    map.put("targets", List.of(category.getId()));
+                    return map;
+                })
+                .collect(Collectors.toList());
+
+        result.put("edges", edgeList);
+
+
+        String index = params.getFirst("index").toString();
+
+        Map<String, Object> searchData = new HashMap<>();
+        if (index.equals("table")) {
+            searchData = getTableList(params);
+        } else if (index.equals("storage")) {
+            searchData = getStorageList(params);
+        } else if (index.equals("model")) {
+            searchData = getModelList(params);
+        }
+        List<Object> searchList = (List<Object>) searchData.get("data");
+//        searchList.stream();
+
+        return edgeList;
     }
 }

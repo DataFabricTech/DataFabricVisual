@@ -78,5 +78,13 @@ public class SearchController {
     public Object getSearchPreview(@PathVariable("fqn") String fqn) {
         return searchService.getSearchPreview(fqn);
     }
+
+
+    @ResponseJsonResult(errorMessage = "그래프 데이터 조회 오류")
+    @GetMapping("/graph/list")
+    public Object getGraphCategories(@RequestParam MultiValueMap<String, String> params) throws Exception {
+        return searchService.getGraphCategories(params);
+    }
+
 }
 
