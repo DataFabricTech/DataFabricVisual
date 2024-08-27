@@ -1,14 +1,17 @@
 package com.mobigen.ovp.common.openmete_client;
 
+import com.mobigen.ovp.common.openmete_client.dto.Ingestion;
 import com.mobigen.ovp.common.openmete_client.dto.Log;
 import com.mobigen.ovp.common.openmete_client.dto.Base;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -53,4 +56,54 @@ public interface ServicesClient {
      * **/
     @GetMapping("/ingestionPipelines/logs/{id}/last")
     Log getServiceCollectionLog(@PathVariable("id") String id);
+
+    /**
+     * 수집 리스트
+     * @return
+     */
+    @GetMapping("/ingestionPipelines")
+    Base<Ingestion> getIngestionList(@RequestParam MultiValueMap<String, String> params);
+
+    /**
+     * 수집 상태
+     * @param name
+     * @param startTs
+     * @param endTs
+     * @return
+     */
+    @GetMapping("/ingestionPipelines/{name}/pipelineStatus")
+    Base<Object> getIngestionStatus(@PathVariable String name, @RequestParam Long startTs, @RequestParam Long endTs);
+
+    /**
+     * 수집 RUN
+     * @param id
+     * @return
+     */
+    @PostMapping("/ingestionPipelines/trigger/{id}")
+    ResponseEntity<Object> triggerIngestion(@PathVariable UUID id);
+
+    /**
+     * 수집 동기화
+     * @param id
+     * @return
+     */
+    @PostMapping("/ingestionPipelines/deploy/{id}")
+    ResponseEntity<Object> deployIngestion(@PathVariable UUID id);
+
+    /**
+     * 수집 삭제
+     * @param id
+     * @param hardDelete
+     * @return
+     */
+    @DeleteMapping("/ingestionPipelines/{id}")
+    ResponseEntity<Object> deleteIngestion(@PathVariable UUID id, @RequestParam boolean hardDelete);
+
+    /**
+     * 수집 KILL
+     * @param id
+     * @return
+     */
+    @PostMapping("/ingestionPipelines/kill/{id}")
+    ResponseEntity<Object> killIngestion(@PathVariable UUID id);
 }

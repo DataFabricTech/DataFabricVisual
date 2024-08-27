@@ -1,6 +1,8 @@
 package com.mobigen.ovp.service_manager;
 
 import com.mobigen.ovp.common.openmete_client.ServicesClient;
+import com.mobigen.ovp.common.openmete_client.dto.Ingestion;
+import com.mobigen.ovp.service_manager.client.response.IngestionResponse;
 import com.mobigen.ovp.service_manager.client.response.ServiceCollectionLogResponse;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
 import com.mobigen.ovp.service_manager.client.response.ServiceResponse;
@@ -105,5 +107,89 @@ public class ServiceManageService {
      * **/
     public Object getServiceCollectionLog(String id) {
         return new ServiceCollectionLogResponse(servicesClient.getServiceCollectionLog(id));
+    }
+
+    /**
+     * 수집 리스트
+     * @param service
+     * @return
+     */
+    public List<IngestionResponse> getIngestionList(String service) {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("fields", "owner,pipelineStatuses");
+        params.add("service", service);
+        params.add("pipelineType", "metadata,usage,lineage,profiler,dbt");
+        params.add("serviceType", "databaseService");
+
+        List<Ingestion> ingestion = servicesClient.getIngestionList(params).getData();
+        return ingestion.stream().map(IngestionResponse::new).toList();
+    }
+
+    /**
+     * 수집 상태
+     * @param name
+     * @param startTs
+     * @param endTs
+     * @return
+     */
+    public Object getIngestionStatus(String name, Long startTs, Long endTs) {
+        return servicesClient.getIngestionStatus(name, startTs, endTs).getData();
+    }
+
+    /**
+     * 수집 RUN
+     * @param id
+     * @return
+     */
+    public Object triggerIngestion(UUID id) throws Exception {
+        ResponseEntity<Object> result = servicesClient.triggerIngestion(id);
+        if(result.getStatusCode() == HttpStatus.OK) {
+            return result.getBody();
+        } else {
+            throw new Exception();
+        }
+    }
+
+    /**
+     * 수집 동기화
+     * @param id
+     * @return
+     */
+    public Object deployIngestion(UUID id) throws Exception {
+        ResponseEntity<Object> result = servicesClient.deployIngestion(id);
+        if(result.getStatusCode() == HttpStatus.OK) {
+            return result.getBody();
+        } else {
+            throw new Exception();
+        }
+    }
+
+    /**
+     * 수집 삭제
+     * @param id
+     * @return
+     */
+    public Object deleteIngestion(UUID id) throws Exception {
+        final boolean hardDelete = true;
+        ResponseEntity<Object> result = servicesClient.deleteIngestion(id, hardDelete);
+        if(result.getStatusCode() == HttpStatus.OK) {
+            return result;
+        } else {
+            throw new Exception();
+        }
+    }
+
+    /**
+     * 수집 KILL
+     * @param id
+     * @return
+     */
+    public Object killIngestion(UUID id) throws Exception {
+        ResponseEntity<Object> result = servicesClient.killIngestion(id);
+        if(result.getStatusCode() == HttpStatus.OK) {
+            return result;
+        } else {
+            throw new Exception();
+        }
     }
 }
