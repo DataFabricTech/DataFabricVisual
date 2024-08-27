@@ -8,6 +8,7 @@
     </h4>
     <div class="h-group gap-1">
       <select-box
+        v-if="viewType === 'listView'"
         class="select-clean"
         :data="options"
         label-key="label"

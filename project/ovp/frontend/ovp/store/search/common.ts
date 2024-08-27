@@ -253,6 +253,16 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     resetReloadList();
   };
 
+  const getGraphData = async () => {
+    const { data } = await $api(
+      `/api/search/graph/list?${getSearchListQuery()}`,
+      {
+        showLoader: false,
+      },
+    );
+    return data;
+  };
+
   return {
     sortKey,
     sortKeyOpt,
@@ -282,5 +292,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getQueryFilter,
     getTrinoQuery,
     setEmptyFilter,
+    getGraphData,
   };
 });
