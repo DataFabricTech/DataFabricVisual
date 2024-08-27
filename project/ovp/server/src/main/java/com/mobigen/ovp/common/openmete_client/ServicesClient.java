@@ -81,7 +81,7 @@ public interface ServicesClient {
      * 저장소관리 > 저장소탭 > '설명'조회
      *
      * @param name
-     * @param params 
+     * @param params
      * @return
      **/
     @GetMapping("/databaseServices/name/{name}")
@@ -96,4 +96,13 @@ public interface ServicesClient {
      **/
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
     RepositoryDescription editRepositoryDescription(@PathVariable("id") String id, @RequestBody List<JsonPatchOperation> param);
+//
+//    @PostMapping("/ingestionPipelines")
+//    Object saveIngestionPipelines(@RequestBody Map<String, Object> params);
+//
+//    @PatchMapping(value="/ingestionPipelines/{id}", consumes = "application/json-patch+json")
+//    Object updateIngestionPipelines(String id, @RequestBody List<JsonPatchOperation> params);
+//
+//    @PostMapping("/ingestionPipelines/deploy/{id}")
+//    Object ingestionPipelinesDeploy(@PathVariable String id);
 }
