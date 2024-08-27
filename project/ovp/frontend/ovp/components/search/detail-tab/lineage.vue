@@ -56,7 +56,7 @@
     </div>
     <Preview
       :preview-data="previewData"
-      :model-type="getDataModelType()"
+      :model-type="dataModelType"
       @change="getPreviewOn"
       :is-show-preview="previewOn"
     ></Preview>
@@ -124,7 +124,8 @@ const {
 } = lineageStore;
 
 const dataModelDetailStore = useDataModelDetailStore();
-const { getDataModelFqn, getDataModelType } = dataModelDetailStore;
+const { getDataModelFqn } = dataModelDetailStore;
+const { dataModelType } = storeToRefs(dataModelDetailStore);
 
 onBeforeMount(async () => {
   // TODO: param => (fqn(외부스토어에서 호출), 필터) 추가 필요
@@ -184,7 +185,7 @@ const reset = async () => {
     selectedTagList.value = [];
     selectedSerivceList.value = [];
 
-    await getLineageData(getDataModelType(), getDataModelFqn());
+    await getLineageData(dataModelType.value, getDataModelFqn());
 
     lineageRef.value.reset();
   }

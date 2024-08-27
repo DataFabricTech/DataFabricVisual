@@ -52,8 +52,12 @@ public class SearchDetailService {
     private final UserService userService;
     private final CategoryRepository categoryRepository;
 
-
-    public Object getUserFilter() throws Exception {
+    /**
+     * 사용자 목록 (전체)
+     * @return
+     * @throws Exception
+     */
+    public Object getUserAll() throws Exception {
         return userService.getAllUserList().stream().map(user -> {
             Map<String, Object> data = new HashMap<>();
             data.put("id", user.get("id"));
@@ -71,6 +75,13 @@ public class SearchDetailService {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * 태그 전체 순회
+     * @param tags
+     * @param after
+     * @param isStart
+     * @return
+     */
     private List<Tag> getTags(List<Tag> tags, String after, boolean isStart) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("limit", "100");
@@ -90,9 +101,15 @@ public class SearchDetailService {
         return getTags(mergeTagList, res.getPaging().getAfter(), false);
     }
 
+    /**
+     * 태그 목록 (전체)
+     * @return
+     * @throws Exception
+     */
     public Object getTagAll() throws Exception {
         List<Tag> tags = getTags(new ArrayList<>(), "", true);
 
+        // TODO: 페이징 처리 필요
         return tags.stream().map(tag -> {
             Map<String, Object> data = new HashMap<>();
             String displayName = tag.getDisplayName();
@@ -109,6 +126,14 @@ public class SearchDetailService {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * 용어 전체 순회
+     * @param glossaries
+     * @param after
+     * @param isStart
+     * @return
+     * @throws Exception
+     */
     private Object getGlossaries(List<?> glossaries, String after, boolean isStart) throws Exception {
         if (!isStart && (after == null || "".equals(after))) {
             return glossaries;
@@ -121,16 +146,22 @@ public class SearchDetailService {
         return getGlossaries(mergeTagList, res.getPaging().getAfter(), false);
     }
 
+    /**
+     * 용어 목록 (전체)
+     * @return
+     * @throws Exception
+     */
     public Object getGlossaryAll() throws Exception {
 //        return getGlossaries(new ArrayList<>(), "", true);
 
+        // TODO: 페이징 처리 필요
         TermResponse res = glossaryClient.getGlossaryTerms("", "", 100, "");
 
         return res.getData();
     }
 
     /**
-     *  데이터 모델 상세
+     *  데이터 모델 상세 (테이블, 스토리지)
      * @param id
      * @param type
      * @return
@@ -184,8 +215,7 @@ public class SearchDetailService {
     }
 
     /**
-     * 데이터 모델 스키마
-     *
+     * 데이터 모델 스키마 (테이블, 스토리지)
      * @param id
      * @return
      */
@@ -206,7 +236,6 @@ public class SearchDetailService {
 
     /**
      * 데이터 모델 샘플 데이터
-     *
      * @param id
      * @return
      */
@@ -217,7 +246,6 @@ public class SearchDetailService {
 
     /**
      * 프로파일
-     *
      * @param id
      * @return
      */
@@ -240,6 +268,12 @@ public class SearchDetailService {
         return columns;
     }
 
+    /**
+     * 쿼리
+     * @param params
+     * @return
+     * @throws Exception
+     */
     public Object getDataModelQuery(MultiValueMap<String, String> params) throws Exception {
         List<Map<String, Object>> queryList = new ArrayList<>();
         List<Map<String, Object>> hits = new ArrayList<>();
@@ -264,19 +298,33 @@ public class SearchDetailService {
         return queryList;
     }
 
-    public Object getDataModelLineage(String type, MultiValueMap<String, String> params) {
-        if (!ModelType.STORAGE.getValue().equals(type)) {
-            return new DataModelDetailLineageTableResponse(lineageClient.getLineage(params));
-        } else {
-            return null;
-        }
+    /**
+     * 리니지 그래프 (테이블, 스토리지)
+     * @param params
+     * @return
+     */
+    public Object getDataModelLineage(MultiValueMap<String, String> params) {
+
+        return new DataModelDetailLineageTableResponse(lineageClient.getLineage(params));
     }
 
+    /**
+     * 추천 (테이블, 스토리지)
+     * @param id
+     * @param dataModelDetailVote
+     * @return
+     */
     public Object changeVote(String id, DataModelDetailVote dataModelDetailVote) {
 
         return tablesClient.changeVote(id, dataModelDetailVote);
     }
 
+    /***
+     * 비추천 (테이블, 스토리지)
+     * @param id
+     * @return
+     * @throws Exception
+     */
     public Object followDataModel(String id) throws Exception {
         Map<String, Object> user = userClient.getUserInfo();
         String userId = user.get("id").toString();
@@ -284,6 +332,12 @@ public class SearchDetailService {
         return tablesClient.follow(id, UUID.fromString(userId));
     }
 
+    /**
+     * 북먀크 (테이블, 스토리지)
+     * @param id
+     * @return
+     * @throws Exception
+     */
     public Object unfollowDataModel(String id) throws Exception {
         Map<String, Object> user = userClient.getUserInfo();
         String userId = user.get("id").toString();
@@ -291,6 +345,13 @@ public class SearchDetailService {
         return tablesClient.unfollow(id, userId);
     }
 
+    /**
+     * 데이터 모델 변경 (테이블, 스토리지)
+     * @param id
+     * @param type
+     * @param body
+     * @return
+     */
     public Object changeDataModel(String id, String type, List<Map<String, Object>> body) {
         MultiValueMap params = new LinkedMultiValueMap();
         params.add("fields", "owner,followers,tags,votes");
