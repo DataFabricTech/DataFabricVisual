@@ -70,7 +70,6 @@ export const useMainStore = defineStore("mainStore", () => {
     dataStatus: Ref<boolean>,
     dataList: Ref<DataModel[]>,
   ) => {
-    console.log("data", data);
     if (data.length === 0 || data === null) {
       dataStatus.value = true;
     } else {
