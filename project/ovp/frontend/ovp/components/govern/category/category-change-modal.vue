@@ -25,7 +25,7 @@
         :firExpandAll="true"
         :show-open-all-btn="true"
         :show-close-all-btn="true"
-        :use-draggable="true"
+        :use-draggable="false"
         mode="view"
         @onItemSelected="onCategoryNodeClick"
       />

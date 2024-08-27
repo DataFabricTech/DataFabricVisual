@@ -171,6 +171,11 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     previewData.value = data.data;
   };
 
+  const getContainerPreviewData = async (id: string) => {
+    const data: any = await $api(`/api/containers/${id}`);
+    previewData.value = data.data;
+  };
+
   // MODAL
   const resetAddModalStatus = () => {
     showAddNameNoti.value = false;
@@ -353,6 +358,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     moveCategory,
     deleteCategory,
     getPreviewData,
+    getContainerPreviewData,
     addNewCategory,
     addSearchList,
     getSearchList,

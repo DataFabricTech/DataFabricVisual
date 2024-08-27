@@ -230,6 +230,7 @@ const {
   getModelList,
   editCategory,
   deleteCategory,
+  getContainerPreviewData,
   getPreviewData,
   moveCategory,
   resetAddModalStatus,
@@ -301,6 +302,8 @@ watch(
 // TREE
 const onCategoryNodeClick = async (node: TreeViewItem) => {
   selectedModelList.value = [];
+  isShowPreview.value = false;
+  isBoxSelectedStyle.value = false;
   isDescEditMode.value = false;
   isTitleEditMode.value = false;
   selectedNode.value = node;
@@ -436,7 +439,10 @@ const previewClick = async (data: object) => {
     return;
   }
 
-  await getPreviewData(fqn);
+  type === "storage"
+    ? await getContainerPreviewData(id)
+    : await getPreviewData(fqn);
+
   isShowPreview.value = true;
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;
