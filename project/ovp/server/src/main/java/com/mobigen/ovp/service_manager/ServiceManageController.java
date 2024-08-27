@@ -131,4 +131,18 @@ public class ServiceManageController {
     public Object getRepositoryDescription(@PathVariable String name, @RequestParam MultiValueMap<String, String> params) {
         return service.getRepositoryDescription(name, params);
     }
+
+    /**
+     * 저장소관리 > 저장소탭 > '설명'수정
+     *
+     * @param id
+     * @param param
+     * @return
+     **/
+    @ResponseJsonResult
+    @PatchMapping("/repository/description/{id}")
+    public Object editRepositoryDescriptiopn(@PathVariable String id, @RequestBody List<JsonPatchOperation> param) {
+        return service.editRepositoryDescription(id, param);
+    }
+
 }
