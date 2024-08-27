@@ -16,20 +16,7 @@ export const useServiceStore = defineStore("service", () => {
   const userList = reactive<Owner[]>([]);
   const userSearchList = reactive<object[]>([]);
 
-  const ingestionList = reactive<Ingestion[]>([
-    {
-      displayName: "test",
-      pipelineType: "test",
-      scheduleInterval: "test",
-      pipelineState: "Success",
-    },
-    {
-      displayName: "test2",
-      pipelineType: "test2",
-      scheduleInterval: "test2",
-      pipelineState: "Failed",
-    },
-  ]);
+  const ingestionList = reactive<Ingestion[]>([]);
 
   const editInfo = reactive({
     owner: false,
@@ -203,40 +190,64 @@ export const useServiceStore = defineStore("service", () => {
   /**
    * 수집 탭
    */
-  async function getIngestionList() {
-    const res = await $api(`/api/service-manage/ingestion/list`);
+  async function getIngestionList(service: string) {
+    const res = await $api(
+      `/api/service-manage/ingestion/list?service=${service}`,
+    );
 
     if (res.data !== null) {
       ingestionList.splice(0, ingestionList.length, ...res.data);
     }
   }
 
-  async function getIngestionStatus(id: string): Promise<void> {
-    await $api(`/api/service-manage/ingestion/status?id=${id}`);
+  async function getIngestionStatus(
+    name: string,
+    startTs: number,
+    endTs: number,
+  ): Promise<void> {
+    const res = await $api(
+      `/api/service-manage/ingestion/status/${name}?startTs=${startTs}&endTs=${endTs}`,
+    );
   }
 
   async function runIngestion(id: string): Promise<void> {
-    await $api(`/api/service-manage/ingestion/trigger?id=${id}`, {
+    const res = await $api(`/api/service-manage/ingestion/trigger/${id}`, {
       method: "POST",
+      showLoader: false,
     });
+    if (res.data === null) {
+      throw new Error(res.errorMessage);
+    }
   }
 
-  async function editIngestion(id: string): Promise<void> {
-    await $api(`/api/service-manage/ingestion?id=${id}`, {
-      method: "PUT",
+  async function deployIngestion(id: string): Promise<void> {
+    const res = await $api(`/api/service-manage/ingestion/deploy/${id}`, {
+      method: "POST",
+      showLoader: false,
     });
+    if (res.data === null) {
+      throw new Error(res.errorMessage);
+    }
   }
 
   async function deleteIngestion(id: string): Promise<void> {
-    await $api(`/api/service-manage/ingestion?id=${id}`, {
+    const res = await $api(`/api/service-manage/ingestion/${id}`, {
       method: "DELETE",
+      showLoader: false,
     });
+    if (res.data === null) {
+      throw new Error(res.errorMessage);
+    }
   }
 
   async function killIngestion(id: string): Promise<void> {
-    await $api(`/api/service-manage/ingestion/kill?id=${id}`, {
+    const res = await $api(`/api/service-manage/ingestion/kill/${id}`, {
       method: "POST",
+      showLoader: false,
     });
+    if (res.data === null) {
+      throw new Error(res.errorMessage);
+    }
   }
 
   /**
@@ -274,7 +285,7 @@ export const useServiceStore = defineStore("service", () => {
     getIngestionList,
     getIngestionStatus,
     runIngestion,
-    editIngestion,
+    deployIngestion,
     deleteIngestion,
     killIngestion,
 

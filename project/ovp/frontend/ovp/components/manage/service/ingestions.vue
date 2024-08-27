@@ -59,13 +59,41 @@
         <th class="align-center">현황</th>
         <th class="align-center">동작</th>
       </tr>
-      <tr v-for="ingestion in filteredIngestionList">
+      <tr v-for="ingestion in filteredIngestionList" :key="ingestion.id">
         <td>{{ ingestion.displayName }}</td>
-        <td>{{ ingestion.pipelineType }}</td>
-        <td>{{ ingestion.scheduleInterval }}</td>
+        <td>
+          {{ ingestion.pipelineType }}
+        </td>
+        <td>
+          <p v-tooltip="ingestion.scheduleInterval">
+            {{ ingestion.scheduleInterval }}
+          </p>
+        </td>
         <td>
           <div :class="badgeClass(ingestion)">
-            <p class="badge-text">{{ ingestion.pipelineState }}</p>
+            <tooltip position="bottom">
+              <template v-slot:text>
+                <p class="badge-text">
+                  {{
+                    ingestion && ingestion.pipelineState
+                      ? statusStr(ingestion.pipelineState)
+                      : "-"
+                  }}
+                </p>
+              </template>
+              <template
+                v-slot:tooltip
+                v-if="ingestion && ingestion.pipelineState"
+              >
+                <p>
+                  Execution Date:
+                  {{ formatDate(ingestion.timestamp) }} <br />
+                  Start Date: {{ formatDate(ingestion.startDate) }}
+                  <br />
+                  End Date: {{ formatDate(ingestion.endDate) }}
+                </p>
+              </template>
+            </tooltip>
           </div>
         </td>
         <td>
@@ -73,33 +101,54 @@
             <button
               class="button button button-secondary-stroke"
               @click="run(ingestion.id)"
+              v-show="!currentLoading[ingestion.id]?.run"
             >
               실행
             </button>
+            <loading
+              class="loader-simple loader-xs"
+              v-show="currentLoading[ingestion.id]?.run"
+            ></loading>
             <button
               class="button button button-secondary-stroke"
-              @click="run(ingestion.id)"
+              @click="deploy(ingestion.id)"
+              v-show="!currentLoading[ingestion.id]?.deploy"
             >
               동기화
             </button>
+            <loading
+              class="loader-simple loader-xs"
+              v-show="currentLoading[ingestion.id]?.deploy"
+            ></loading>
             <button
               class="button button button-secondary-stroke"
               @click="editIngestionModal(ingestion.id)"
             >
               편집
             </button>
+
             <button
               class="button button button-error-stroke"
               @click="onDelete(ingestion.id)"
+              v-show="!currentLoading[ingestion.id]?.delete"
             >
               삭제
             </button>
+            <loading
+              class="loader-simple loader-xs"
+              v-show="currentLoading[ingestion.id]?.delete"
+            ></loading>
             <button
               class="button button button-error-stroke"
               @click="kill(ingestion.id)"
+              v-show="!currentLoading[ingestion.id]?.kill"
             >
               종료
             </button>
+            <loading
+              class="loader-simple loader-xs"
+              v-show="currentLoading[ingestion.id]?.kill"
+            ></loading>
             <button
               class="button button button-neutral-stroke"
               @click="openLogModal()"
@@ -122,33 +171,61 @@
 
 <script setup lang="ts">
 import { useServiceStore } from "~/store/manage/service";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 import type { Ingestion } from "~/type/service";
 import $constants from "~/utils/constant";
+import Loading from "@base/loading/Loading.vue";
+const dayjs = useDayjs();
+const FORMAT = "MMM D, YYYY, h:mm A";
 const {
   ingestionList,
+  service,
   getIngestionList,
+  getIngestionStatus,
   runIngestion,
-  editIngestion,
+  deployIngestion,
   deleteIngestion,
   killIngestion,
 } = useServiceStore();
 
-onMounted(() => {
+const store = useServiceStore();
+
+onMounted(async () => {
+  await getIngestionList(service.name);
   filterList();
-  //getIngestionList();
+  getStatus();
 });
+
+watch(
+  () => store.service.name,
+  async () => {
+    await refreshIngestionList();
+  },
+);
 
 const isEmpty = (): boolean => {
   return ingestionList.length === 0;
 };
 
-const badgeClass = (ingestion: Ingestion) => {
+const formatDate = (date: number) => {
+  return dayjs(date).format(FORMAT);
+};
+
+const badgeClass = (ingestion: Ingestion): string => {
   switch (ingestion.pipelineState) {
-    case "Success":
+    case "success":
       return "badge badge-green-lighter";
-    case "Failed":
+    case "failed":
       return "badge badge-red-lighter";
+  }
+};
+
+const statusStr = (pipelineState: string): string => {
+  switch (pipelineState) {
+    case "success":
+      return "Success";
+    case "failed":
+      return "Fail";
   }
 };
 
@@ -166,9 +243,57 @@ function reset(): void {
   filterList();
 }
 
+function getStatus(): void {
+  if (ingestionList.length > 0) {
+    ingestionList.forEach((value: Ingestion) => {
+      let name = service.name + "." + value.name;
+      getIngestionStatus(name, value.startDate, value.endDate);
+    });
+  }
+}
+
+async function refreshIngestionList(): Promise<void> {
+  await getIngestionList(service.name);
+  filterList();
+  getStatus();
+}
+
+const currentLoading = ref({});
+
+async function updateLoading(
+  id: string,
+  action: "run" | "deploy" | "kill" | "delete",
+  status: boolean,
+): Promise<void> {
+  currentLoading.value = {
+    ...currentLoading.value,
+    [id]: { [action]: status },
+  };
+}
+//TODO: alert 얼럿
+
 async function run(id: string): Promise<void> {
-  await runIngestion(id);
-  alert("실행이 완료되었습니다.");
+  try {
+    await updateLoading(id, "run", true);
+    await runIngestion(id);
+    alert("실행이 완료되었습니다.");
+  } catch (error) {
+    alert(error);
+  } finally {
+    await updateLoading(id, "run", false);
+  }
+}
+
+async function deploy(id: string): Promise<void> {
+  try {
+    await updateLoading(id, "deploy", true);
+    await deployIngestion(id);
+    alert("동기화가 완료되었습니다.");
+  } catch (error) {
+    alert(error);
+  } finally {
+    await updateLoading(id, "deploy", false);
+  }
 }
 
 async function editIngestionModal(id: string): Promise<void> {
@@ -176,22 +301,35 @@ async function editIngestionModal(id: string): Promise<void> {
 }
 
 async function onDelete(id: string): Promise<void> {
-  //TODO: alert 얼럿
   if (confirm("해당 수집 워크플로우가 영구 삭제되며 복구할 수 없습니다.")) {
-    await deleteIngestion(id);
-    alert("삭제가 완료되었습니다.");
+    try {
+      await updateLoading(id, "delete", true);
+      await deleteIngestion(id);
+      alert("삭제가 완료되었습니다.");
+      await refreshIngestionList();
+    } catch (error) {
+      alert(error);
+    } finally {
+      await updateLoading(id, "delete", false);
+    }
   }
 }
 
 async function kill(id: string): Promise<void> {
-  //TODO: alert 얼럿
   if (
     confirm(
       "실행 중인 워크플로우와 대기열에 있는 워크플로우가 모두 중지되고 실패로 표시됩니다.",
     )
   ) {
-    await killIngestion(id);
-    alert("종료가 완료되었습니다.");
+    try {
+      await updateLoading(id, "kill", true);
+      await killIngestion(id);
+      alert("종료가 완료되었습니다.");
+    } catch (error) {
+      alert(error);
+    } finally {
+      await updateLoading(id, "kill", false);
+    }
   }
 }
 
