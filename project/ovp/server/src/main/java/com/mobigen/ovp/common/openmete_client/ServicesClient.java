@@ -96,7 +96,7 @@ public interface ServicesClient {
      * @param param
      * @return
      **/
-    @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
+    @PatchMapping(value = "/databaseServices/{id}", consumes = "application/json-patch+json")
     RepositoryDescription editRepositoryDescription(@PathVariable("id") String id, @RequestBody List<JsonPatchOperation> param);
     @PostMapping("/ingestionPipelines")
     Object saveIngestionPipelines(@RequestBody Map<String, Object> params);

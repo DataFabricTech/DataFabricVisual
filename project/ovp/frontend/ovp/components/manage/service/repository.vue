@@ -1,57 +1,55 @@
 <template>
-  <div class="px-4">
-    <div class="v-group gap-2">
-      <div class="font-semibold text-neutral-700">설명</div>
-      <editable-group
-        compKey="repositoryDescription"
-        :editable="true"
-        @editCancel="editCancel"
-        @editDone="editDone"
-        @editIcon="editIconClick"
-      >
-        <template #edit-slot>
-          <label class="hidden-text" for="textarea-modify">설명 입력</label>
-          <textarea
-            class="textarea"
-            v-model="newData.description"
-            @input="editInput($event)"
-            placeholder="설명에 대한 영역입니다."
-            required
-            id="textarea-modify"
-          ></textarea>
-        </template>
-        <template #view-slot>
-          <span class="editable-group-desc">
-            {{ newData.description }}
-          </span>
-        </template>
-      </editable-group>
-    </div>
-    <agGrid
-      style="height: 800px"
-      class="ag-theme-alpine ag-theme-quartz"
-      :columnDefs="columnDefs"
-      :rowData="DBServiceListData"
-      :useRowCheckBox="false"
-      :setColumnFit="true"
-      :useColumnResize="false"
-      :columnRender="{
-        owner: {
-          type: 'valFunc',
-          fn: (val: any) => {
-            return `${val.name}`;
-          },
-        },
-      }"
-    ></agGrid>
-    <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
-    <Loading
-      id="loader"
-      :use-loader-overlay="true"
-      class="loader-lg is-loader-inner"
-      style="display: none"
-    ></Loading>
+  <div class="v-group gap-2">
+    <div class="font-semibold text-neutral-700">설명</div>
+    <editable-group
+      compKey="repositoryDescription"
+      :editable="true"
+      @editCancel="editCancel"
+      @editDone="editDone"
+      @editIcon="editIconClick"
+    >
+      <template #edit-slot>
+        <label class="hidden-text" for="textarea-modify">설명 입력</label>
+        <textarea
+          class="textarea"
+          v-model="newData.description"
+          @input="editInput($event)"
+          placeholder="설명에 대한 영역입니다."
+          required
+          id="textarea-modify"
+        ></textarea>
+      </template>
+      <template #view-slot>
+        <span class="editable-group-desc">
+          {{ newData.description }}
+        </span>
+      </template>
+    </editable-group>
   </div>
+  <agGrid
+    style="height: 800px"
+    class="ag-theme-alpine ag-theme-quartz"
+    :columnDefs="columnDefs"
+    :rowData="DBServiceListData"
+    :useRowCheckBox="false"
+    :setColumnFit="true"
+    :useColumnResize="false"
+    :columnRender="{
+      owner: {
+        type: 'valFunc',
+        fn: (val: any) => {
+          return `${val.name}`;
+        },
+      },
+    }"
+  ></agGrid>
+  <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+  <Loading
+    id="loader"
+    :use-loader-overlay="true"
+    class="loader-lg is-loader-inner"
+    style="display: none"
+  ></Loading>
   <!-- 결과 없을 시 no-result 표시 -->
   <div class="no-result" v-if="DBServiceListData.length === 0">
     <div class="notification">
@@ -63,17 +61,16 @@
 
 <script setup lang="ts">
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
-import { useServiceCollectionLogStore } from "@/store/manage/service/collection-log/index";
+import { useServiceStore } from "@/store/manage/service";
 import { computed } from "vue";
 import _ from "lodash";
 import Loading from "@base/loading/Loading.vue";
 import agGrid from "@extends/grid/Grid.vue";
 import LinkDetailComponent from "./linkDetailComponent.vue";
-const serviceCollectionLogStore = useServiceCollectionLogStore();
-const { updateRepositoryDescriptionAPI } = serviceCollectionLogStore;
-const { serviceData, DBServiceListData } = storeToRefs(
-  serviceCollectionLogStore,
-);
+const serviceStore = useServiceStore();
+
+const { serviceData, DBServiceListData } = storeToRefs(serviceStore);
+const { updateRepositoryDescriptionAPI } = serviceStore;
 
 interface RepositoryDescription {
   description: string;
@@ -98,7 +95,7 @@ let defaultData: RepositoryDescription = {
 
 // 수정될 새로운 데이터
 const newData = computed(() => {
-  return _.cloneDeep(serviceData.value);
+  return _.cloneDeep(serviceData.value.description);
 });
 
 // JSON Patch 형식으로 데이터 변환 함수
@@ -128,7 +125,7 @@ const editInput = (event: Event) => {
 
 // 수정 버튼 클릭 시 호출
 const editIconClick = () => {
-  defaultData = _.cloneDeep(newData.value);
+  defaultData.description = _.cloneDeep(newData.value);
 };
 
 // 취소 버튼 클릭 시 호출

@@ -48,7 +48,6 @@ export const useServiceStore = defineStore("service", () => {
   });
 
   const serviceData: Ref<ServiceData> = ref({ description: "" });
-  const currentServiceManageID: string = "";
 
   const DBServiceListData: Ref<DBServiceListData[]> = ref([
     {
@@ -64,6 +63,9 @@ export const useServiceStore = defineStore("service", () => {
     },
   ]);
 
+  let selectedFqn: string = "";
+  let selectedID: string = "";
+
   // getRepositoryDescriptionAPI의 params 생성함수
   const getQueryData = () => {
     const params = {
@@ -74,11 +76,9 @@ export const useServiceStore = defineStore("service", () => {
   };
 
   // 저장소 탭 > 설명 조회 API호출 함수
-  const getRepositoryDescriptionAPI = async (fqn: string, id: string) => {
-    // 선택하면 store의 serviceFullID값도 주입(수정 API에 쓰이기 위해서_)
-    currentServiceManageID = id;
+  const getRepositoryDescriptionAPI = async () => {
     const { data }: any = await $api(
-      `/api/service-manage/repository/description/${fqn}?${getQueryData()}`,
+      `/api/service-manage/repository/description/${selectedFqn}?${getQueryData()}`,
     );
     serviceData.value = { description: data.description };
   };
@@ -87,12 +87,8 @@ export const useServiceStore = defineStore("service", () => {
   const updateRepositoryDescriptionAPI = async (
     patchData: JsonPatchOperation[],
   ) => {
-    console.log(
-      "serviceFullID 수정할 때 필요한 아이디 값 ====> : ",
-      currentServiceManageID,
-    );
     const result = await $api(
-      `/api/service-manage/repository/description/${currentServiceManageID}`,
+      `/api/service-manage/repository/description/${selectedID}`,
       {
         method: "PATCH",
         headers: {
@@ -101,9 +97,8 @@ export const useServiceStore = defineStore("service", () => {
         body: JSON.stringify(patchData),
       },
     );
-    console.log("수정시 보내느 API ", result);
-    // TODO : 수정 후 설명 데이터 재조회 >>> param 추가예정
-    // await getRepositoryDescriptionAPI();
+
+    await getRepositoryDescriptionAPI();
 
     return result;
   };
@@ -192,7 +187,9 @@ export const useServiceStore = defineStore("service", () => {
       !_.isEmpty(service.fullyQualifiedName) &&
       !_.isUndefined(service.fullyQualifiedName)
     ) {
-      getRepositoryDescriptionAPI(service.fullyQualifiedName, service.id);
+      selectedFqn = service.fullyQualifiedName;
+      selectedID = service.id;
+      getRepositoryDescriptionAPI();
     }
     // TODO : 아래 DB 테이블 조회도 호출필요 !!!---------------
     getDBServiceList();
@@ -355,6 +352,7 @@ export const useServiceStore = defineStore("service", () => {
     createOwnerOperation,
 
     serviceData,
+    DBServiceListData,
     getRepositoryDescriptionAPI,
     updateRepositoryDescriptionAPI,
     getDBServiceList,
