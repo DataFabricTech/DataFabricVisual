@@ -198,7 +198,7 @@ public class ServiceManageController {
      * @return
      **/
     @ResponseJsonResult
-    @PatchMapping("/repository/description/{id}")
+    @PatchMapping("/repository/description/update/{id}")
     public Object editRepositoryDescriptiopn(@PathVariable String id, @RequestBody List<JsonPatchOperation> param) {
         return service.editRepositoryDescription(id, param);
     }
