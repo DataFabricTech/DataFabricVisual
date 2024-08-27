@@ -89,6 +89,15 @@ public interface ServicesClient {
     @GetMapping("/databaseServices/name/{name}")
     RepositoryDescription getRepositoryDescription(@PathVariable("name") String name, @RequestParam MultiValueMap<String, String> params);
 
+    /**
+     * 저장소관리 > 저장소탭 > '설명'수정
+     *
+     * @param id
+     * @param param
+     * @return
+     **/
+    @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
+    RepositoryDescription editRepositoryDescription(@PathVariable("id") String id, @RequestBody List<JsonPatchOperation> param);
     @PostMapping("/ingestionPipelines")
     Object saveIngestionPipelines(@RequestBody Map<String, Object> params);
 

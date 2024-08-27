@@ -213,6 +213,17 @@ public class ServiceManageService {
         return new RepositoryDescriptionResponse(servicesClient.getRepositoryDescription(name, params));
     }
 
+    /**
+     * 저장소관리 > 저장소탭 > '설명'수정
+     *
+     * @param id
+     * @param param
+     * @return
+     **/
+    public Object editRepositoryDescription(String id, List<JsonPatchOperation> param) {
+        return new RepositoryDescriptionResponse(servicesClient.editRepositoryDescription(id, param));
+    }
+
     public Object saveIngestionPipelines(Map<String, Object> params) {
         /**
          * step0. param 추가 (airflowConfig/startDate, name)
