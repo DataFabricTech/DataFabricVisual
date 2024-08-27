@@ -58,7 +58,7 @@ import type { TreeViewItem } from "@extends/tree/TreeProps";
 
 const searchCommonStore = useSearchCommonStore();
 const { resetReloadList } = searchCommonStore;
-const { selectedFilters } = storeToRefs(searchCommonStore);
+const { selectedFilters, currentTab } = storeToRefs(searchCommonStore);
 
 const props = defineProps({
   data: {
