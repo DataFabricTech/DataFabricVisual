@@ -177,4 +177,16 @@ public class ServiceManageController {
                                        @RequestBody List<JsonPatchOperation> params) {
         return service.getUpdateConnectionInfo(type, id, params);
     }
+
+    /**
+     * 저장소관리 > 저장소탭 > '설명'조회
+     *
+     * @param name
+     * @return
+     **/
+    @ResponseJsonResult
+    @GetMapping("/repository/description/{name}")
+    public Object getRepositoryDescription(@PathVariable String name, @RequestParam MultiValueMap<String, String> params) {
+        return service.getRepositoryDescription(name, params);
+    }
 }
