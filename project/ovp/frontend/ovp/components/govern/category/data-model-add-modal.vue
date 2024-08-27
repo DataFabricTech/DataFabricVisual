@@ -20,7 +20,6 @@
   >
     <template v-slot:body>
       <div class="data-info max-h-[460px]">
-        selectedDataModelList: {{ selectedDataModelList }}
         <search-input
           class="search-input-lg"
           :is-search-input-default-type="false"
