@@ -74,6 +74,8 @@ public class SearchService {
     public Map<String, Object> getFilters() throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
+        params.set("index", "all");
+
         List<String> tagArrays = new ArrayList<>();
         tagArrays.add("owner.displayName.keyword");
         tagArrays.add("tags.tagFQN");
@@ -82,7 +84,6 @@ public class SearchService {
         tagArrays.add("database.displayName.keyword");
         tagArrays.add("databaseSchema.displayName.keyword");
         tagArrays.add("columns.name.keyword");
-        tagArrays.add("tableType");
 
         Map<String, Object> responseMap = new HashMap<>();
 
