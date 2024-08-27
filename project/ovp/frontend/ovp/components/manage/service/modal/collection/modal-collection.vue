@@ -87,17 +87,14 @@ const emit = defineEmits<{
 }>();
 
 const onCancel = () => {
-  // setModalOpenStatus(false);
-  // setSaveConfigStatus(false);
-  // resetData();
+  resetData();
+  console.log("cancel안됨?");
   emit("close");
 };
 
 const onClosed = () => {
   currentStep.value = 1;
-  // setModalOpenStatus(false);
-  // setSaveConfigStatus(false);
-  // resetData();
+  resetData();
   emit("close");
 };
 
