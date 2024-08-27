@@ -57,10 +57,10 @@ export const useLineageStore = defineStore("lineage", () => {
       upstreamDepth: "10",
       downstreamDepth: "10",
       includeDeleted: false,
-      type: "table",
+      type: type === "storage" ? "container" : "table",
     };
 
-    const data = await $api(`/api/search/detail/lineage/${type}`, {
+    const data = await $api(`/api/search/detail/lineage`, {
       params: params,
     });
 

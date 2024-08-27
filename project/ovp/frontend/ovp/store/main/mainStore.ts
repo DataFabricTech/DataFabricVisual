@@ -24,7 +24,7 @@ export const useMainStore = defineStore("mainStore", () => {
   const { setSortInfo, getQueryFilter } = searchCommonStore;
   const { sortKey, sortKeyOpt } = storeToRefs(searchCommonStore);
   const { getTrinoQuery } = useQueryHelpers();
-  
+
   const recentQuestData: Ref<DataModel[]> = ref([]);
   const bookmarkData: Ref<DataModel[]> = ref([]);
   const upVotesData: Ref<DataModel[]> = ref([]);
@@ -35,8 +35,7 @@ export const useMainStore = defineStore("mainStore", () => {
   const isUpVotesDataNoInfo: Ref<boolean> = ref(false);
   const isLastUpdatedData: Ref<boolean> = ref(false);
 
-  // TODO: [개발] 임시 코드로 추후 삭제 예정
-  const SAMPLE_DATA = sampleData.data.data as DataModel[];
+  const size: Ref<number> = ref(3);
   const dataResult: Ref<any[]> = ref([]);
 
   const getMainDataListQuery = () => {
@@ -45,7 +44,7 @@ export const useMainStore = defineStore("mainStore", () => {
       q: "",
       index: "all",
       from: 0,
-      size: 3,
+      size: size.value,
       deleted: false,
       query_filter: JSON.stringify(queryFilter),
       sort_field: sortKey.value,
@@ -71,17 +70,11 @@ export const useMainStore = defineStore("mainStore", () => {
     dataStatus: Ref<boolean>,
     dataList: Ref<DataModel[]>,
   ) => {
-    if (data.length === 0) {
+    if (data.length === 0 || data === null) {
       dataStatus.value = true;
     } else {
       dataList.value = data;
     }
-  };
-
-  const getRecentQuestData = async () => {
-    getDataList(SAMPLE_DATA, isRecentQuestDataNoInfo, recentQuestData);
-
-    console.log("최근 탐색 데이터 API 불러오기", recentQuestData.value);
   };
 
   // TODO: [개발] api/user/info 가져오는 store 가 있다면, 추후 그 곳에서 가져와서 id 만 받아오기
@@ -98,12 +91,14 @@ export const useMainStore = defineStore("mainStore", () => {
   };
   const getUpVotesData = async () => {
     setSortInfo("totalVotes_desc");
+    size.value = 6;
     await getMainDataList();
     getDataList(dataResult.value, isUpVotesDataNoInfo, upVotesData);
   };
 
   const getLastUpdatedData = async () => {
     setSortInfo("updatedAt_desc");
+    size.value = 3;
     await getMainDataList();
     getDataList(dataResult.value, isLastUpdatedData, lastUpdatedData);
   };
@@ -117,7 +112,6 @@ export const useMainStore = defineStore("mainStore", () => {
     isBookmarkDataNoInfo,
     isUpVotesDataNoInfo,
     isLastUpdatedData,
-    getRecentQuestData,
     getUserInfo,
     getUpVotesData,
     getLastUpdatedData,

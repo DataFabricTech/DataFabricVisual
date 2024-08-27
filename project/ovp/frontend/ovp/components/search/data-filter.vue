@@ -19,6 +19,13 @@
     </template>
     <menu-search-button
       v-else
+      v-if="
+        !(
+          currentTab === 'storage' &&
+          (keyName === FILTER_KEYS.DATABASE ||
+            keyName === FILTER_KEYS.DATABASE_SCHEMA)
+        )
+      "
       :data="filter.data"
       :selected-items="selectedFilterItems"
       label-key="key"
@@ -47,12 +54,11 @@ import { FILTER_KEYS, useSearchCommonStore } from "@/store/search/common";
 import { storeToRefs } from "pinia";
 import _ from "lodash";
 
-import { useGovernCategoryStore } from "~/store/governance/Category";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
 const searchCommonStore = useSearchCommonStore();
 const { resetReloadList } = searchCommonStore;
-const { selectedFilters } = storeToRefs(searchCommonStore);
+const { selectedFilters, currentTab } = storeToRefs(searchCommonStore);
 
 const props = defineProps({
   data: {

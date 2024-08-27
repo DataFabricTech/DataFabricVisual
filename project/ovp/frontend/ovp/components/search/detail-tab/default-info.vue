@@ -5,10 +5,24 @@
         <col style="width: 20%" />
         <col />
       </colgroup>
-      <tr>
+      <tr v-if="dataModelType === 'table'">
         <th>유형</th>
-        <td>{{ defaultInfo.modelInfo.model.tableType }}</td>
+        <td>테이블</td>
       </tr>
+      <tr v-else-if="dataModelType === 'model'">
+        <th>유형</th>
+        <td>융합모델</td>
+      </tr>
+      <template v-else-if="dataModelType === 'storage'">
+        <tr>
+          <th>유형</th>
+          <td>스토리지</td>
+        </tr>
+        <tr>
+          <th>확장자</th>
+          <td>{{ defaultInfo.modelInfo.model.ext.toUpperCase() }}</td>
+        </tr>
+      </template>
       <tr>
         <th>태그</th>
         <td class="py-0">
@@ -90,7 +104,7 @@ const dataModelDetailStore = useDataModelDetailStore();
 const searchCommonStore = useSearchCommonStore();
 
 const { getTagList, getGlossaryList } = dataModelDetailStore;
-const { tagList, glossaryList, dataModel, defaultInfo } =
+const { dataModelType, tagList, glossaryList, dataModel, defaultInfo } =
   storeToRefs(dataModelDetailStore);
 const { filters } = storeToRefs(searchCommonStore);
 

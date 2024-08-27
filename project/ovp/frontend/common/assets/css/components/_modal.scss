@@ -45,6 +45,7 @@
       overflow-y: hidden;
       width: 100%;
       height: 100%;
+      padding:$spacing-16;
 
       .form {
         width: 100%;
@@ -97,20 +98,6 @@
       &:has(> .button + .button) {
         .button {
           flex: 1;
-        }
-      }
-    }
-
-    $modal-padding-map: (
-            "16": $spacing-16,
-            "32": $spacing-32,
-            "48": $spacing-48
-    );
-
-    @each $value, $padding in $modal-padding-map {
-      &-padding-#{$value} {
-        .modal-body {
-          padding: $padding;
         }
       }
     }
