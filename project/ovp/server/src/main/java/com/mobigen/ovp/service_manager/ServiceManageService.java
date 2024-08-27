@@ -200,10 +200,10 @@ public class ServiceManageService {
         try {
             // step1.
             Map<String, Object> ipResult = (Map<String, Object>) servicesClient.saveIngestionPipelines(params);
-            String ipId = ipResult.get("id").toString();
+            String id = ipResult.get("id").toString();
 
             // step2
-            servicesClient.ingestionPipelinesDeploy(ipId);
+            servicesClient.ingestionPipelinesDeploy(id);
         } catch (Exception e) {
             return false;
         }
