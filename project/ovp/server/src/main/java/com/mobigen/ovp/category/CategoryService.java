@@ -5,12 +5,11 @@ import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
 import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
+import com.mobigen.ovp.common.openmete_client.ContainersClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
 import com.mobigen.ovp.common.openmete_client.dto.Tag;
 import com.mobigen.ovp.search.SearchService;
-import com.mobigen.ovp.search_detail.dto.response.DataModelDetailResponse;
-import com.mobigen.ovp.user.UserClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -34,7 +33,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
-    private final UserClient userClient;
+    private final ContainersClient containersClient;
     private final TablesClient tablesClient;
     private final CategoryRepository categoryRepository;
     private final SearchService searchService;
@@ -329,59 +328,104 @@ public class CategoryService {
     /**
      * 카테고리 데이터 모델 추가 / 변경
      *
-     * @param id
-     * @param type
      * @return
      */
-    public DataModelDetailResponse addCategoryTagId(String id, String type, List selectparams) throws Exception {
+    public Object addCategoryTagId(String id, Map<String, Object> body) throws Exception {
         MultiValueMap params = new LinkedMultiValueMap();
 
-        log.info("****selectparams: {}", selectparams);
-        log.info("***id: {}", id);
+        String type = (String) body.get("type");
+        String tagId = (String) body.get("tagId");
+        Map<String, Object> tagInfo = classificationClient.getTag(tagId);
+        List<String> selectedModelIdList = (List<String>) body.get("list");
+        List<Map<String, Object>> reqBody = new ArrayList<>();
+        Tables tables = null;
 
-        Map<String, Object> user = userClient.getUserInfo();
-        String userId = user.get("id").toString();
 
         if (!ModelType.STORAGE.getValue().equals(type)) {
-
-            for (Object itemId : selectparams) {
-                log.info("!!!!!!itemId: {}", itemId);
-//                Tables tablesSam = tablesClient.getTablesName(id, params);
-//                log.info("!!!!!! tablesSam: {}", tablesSam);
-            }
-
+            int excuteCount = 0;
+            int successCount = 0;
             params.add("fields", "tags");
             params.add("include", "all");
-            Tables tables = tablesClient.getTablesName(id, params);
 
-            log.info("****tables: {}", tables);
-            DataModelDetailResponse dataModelDetailResponse = new DataModelDetailResponse(tables, type, userId);
+            for (String itemId : selectedModelIdList) {
+                reqBody.clear();
+                tables = tablesClient.getTablesName(itemId, params);
+                List<Tag> tags = tables.getTags();
+                Number tagsLength = tags.size();
 
-            for (Tag tag : tables.getTags()) {
-                String displayName = tag.getDisplayName();
+                Map<String, Object> operation = new HashMap<>();
+                Map<String, Object> value = new HashMap<>();
 
-                if (displayName == null || "".equals(displayName)) {
-                    displayName = tag.getName();
-                    tag.setDisplayName(displayName);
+                // tags 목록이 존재하지 않으면 0번째에 add
+                if (tags.isEmpty()) {
+                    operation.put("op", "add");
+                    operation.put("path", "/tags/0");
+                    value.put("name", tagInfo.get("name"));
+                    value.put("displayName", tagInfo.get("displayName"));
+                    value.put("tagFQN", tagInfo.get("fullyQualifiedName"));
+                    value.put("description", tagInfo.get("description"));
+                    value.put("style", tagInfo.get("style"));
+                    operation.put("value", value);
+                    reqBody.add(operation);
+                } else {
+                    int index = 0;
+                    boolean ovpCategoryFound = false;
+
+                    for (Tag itemTag : tags) {
+                        // 2-1. tags 목록이 존재하고 + ovp_category가 있다면 replace -> 하고 끝.
+                        if (itemTag.getTagFQN().contains("ovp_category")) {
+                            List<Map<String, Object>> replaceOperations = new ArrayList<>();
+                            String[] replaceInfoList = {"description", "displayName", "name", "tagFQN"};
+                            for (String item : replaceInfoList) {
+                                Map<String, Object> replaceOperation = new HashMap<>();
+                                replaceOperation.put("op", "replace");
+                                replaceOperation.put("path", "/tags/" + index + "/" + item);
+                                if (item.equals("tagFQN")) {  // String 비교 시 `==` 대신 `equals` 사용
+                                    replaceOperation.put("value", tagInfo.get("fullyQualifiedName"));
+                                } else {
+                                    replaceOperation.put("value", tagInfo.get(item));
+                                }
+
+                                replaceOperations.add(replaceOperation);
+                            }
+
+                            reqBody.addAll(replaceOperations);
+                            ovpCategoryFound = true;
+                            break; // ovp_category가 발견되었으므로 루프 종료
+
+                        }
+                        index++;
+                    }
+
+                    // 2-2. tags 목록이 존재하고 + ovp_category가 없다면 index 맨 뒤에 add
+                    if (!ovpCategoryFound) {
+                        value.put("name", tagInfo.get("name"));
+                        value.put("displayName", tagInfo.get("displayName"));
+                        value.put("tagFQN", tagInfo.get("fullyQualifiedName"));
+                        value.put("description", tagInfo.get("description"));
+                        value.put("style", tagInfo.get("style"));
+                        operation.put("value", value);
+                        operation.put("op", "add");
+                        operation.put("path", "/tags/" + (tagsLength.intValue()));
+                        reqBody.add(operation);
+                    }
                 }
 
-                if (tag.getTagFQN().contains("ovp_category")) {
-                    CategoryEntity categoryEntity = categoryRepository.findByIdWithParent(UUID.fromString(tag.getName()));
-                    dataModelDetailResponse.getCategory().setName(categoryEntity.getName());
-                    dataModelDetailResponse.getCategory().setTagName(tag.getName());
-                    dataModelDetailResponse.getCategory().setTagDisplayName(tag.getDisplayName());
-                    dataModelDetailResponse.getCategory().setTagDescription(tag.getDescription());
-                    dataModelDetailResponse.getCategory().setTagFQN(tag.getTagFQN());
-                } else if ("Glossary".equals(tag.getSource())) {
-                    dataModelDetailResponse.getTerms().add(tag);
-                } else if ("Classification".equals(tag.getSource())) {
-                    dataModelDetailResponse.getTags().add(tag);
+
+                log.info("*** reqBody: {}", reqBody);
+                Map<String, Object> result = tablesClient.changeDataModel(itemId, null, reqBody);
+                excuteCount++;
+                if (!result.isEmpty()) {
+                    successCount++;
+                }
+                if (excuteCount != successCount) {
+                    throw new Exception("업데이트 실패");
                 }
             }
-
-            return dataModelDetailResponse;
         } else {
-            return null;
+            log.info("!!!!! storage?: {}", type);
         }
+
+        return true;
     }
 }

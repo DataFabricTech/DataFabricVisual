@@ -70,7 +70,7 @@
               >
               <input
                 v-model="selectedTitleNodeValue"
-                placeholder="모델 설명에 대한 영역입니다."
+                placeholder="모델명에 대한 영역입니다."
                 required
                 id="title-modify"
                 class="text-input w-1/2"
@@ -209,7 +209,6 @@
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useModal } from "vue-final-modal";
-import { useNuxtApp } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import TreeVue from "@extends/tree/Tree.vue";
@@ -222,7 +221,6 @@ import CategoryChangeModal from "~/components/govern/category/category-change-mo
 import DataModelAddModal from "~/components/govern/category/data-model-add-modal.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
-const { $vfm } = useNuxtApp();
 const categoryStore = useGovernCategoryStore();
 
 const {
@@ -251,6 +249,7 @@ const {
   selectedDataModelList,
   addSearchInputValue,
   checkReachedCount,
+  selectedCategoryId,
   selectedCategoryTagId,
 } = storeToRefs(categoryStore);
 
@@ -305,8 +304,8 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   isDescEditMode.value = false;
   isTitleEditMode.value = false;
   selectedNode.value = node;
+  selectedCategoryId.value = <string>node.id;
   selectedCategoryTagId.value = <string>node.tagId;
-  console.log("selectedCategoryTagId는 ", selectedCategoryTagId.value);
 
   setScrollOptions(0);
   // 선택한 노드정보 저장

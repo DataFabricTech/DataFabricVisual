@@ -65,10 +65,8 @@ public class CategoryController {
 
     @ResponseJsonResult
     @PatchMapping("/{id}")
-    Object addCategoryTagId(@PathVariable String id, @RequestParam String type, @RequestBody List<String> params) throws Exception {
-        log.info("성공...?? : {}", params);
-
-        return categoryService.addCategoryTagId(id, type, params);
+    Object addCategoryTagId(@PathVariable String id, @RequestBody Map<String, Object> body) throws Exception {
+        return categoryService.addCategoryTagId(id, body);
     }
 
 }

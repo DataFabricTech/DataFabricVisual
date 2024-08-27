@@ -143,7 +143,6 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "nuxt/app";
 import { computed, ref } from "vue";
 import { useNuxtApp, useRouter } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category/index";
@@ -165,6 +164,7 @@ const {
   resetReloadList,
   addSearchList,
   getSearchList,
+  getModelList,
 } = categoryStore;
 const {
   currentTab,
@@ -176,6 +176,7 @@ const {
   dataModelIdList,
   selectedDataModelList,
   addSearchInputValue,
+  selectedCategoryId,
   selectedCategoryTagId,
 } = storeToRefs(categoryStore);
 
@@ -269,37 +270,23 @@ const onCancel = () => {
 };
 
 const onConfirm = async () => {
-  getModelItemAPI(selectedCategoryTagId.value);
+  await getModelItemAPI(selectedCategoryId.value);
+  await getModelList();
   emit("close-data-model-add-modal");
 };
 
 await getSearchList();
-
-// PATCH
-// {
-// "op": "add",
-//   "path": "/tags/0",
-//   "value": {
-//   "tagFQN": "ovp_category.a96f792a-5f55-46a0-ab29-586a221afa2f",
-//     "source": "Classification",
-//     "labelType": "Manual",
-//     "name": "a96f792a-5f55-46a0-ab29-586a221afa2f",
-//     "displayName": "d",
-//     "description": "d",
-//     "style": {},
-//   "state": "Confirmed"
-// }
-
 const getModelItemAPI = async (id: string) => {
-  console.log("id", id);
-  console.log("selectedDataModelList", selectedDataModelList.value);
-
-  await $api(`api/category/${id}?type=${currentTab.value}`, {
+  await $api(`api/category/${id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json-patch+json",
     },
-    body: JSON.stringify(selectedDataModelList.value),
+    body: {
+      tagId: selectedCategoryTagId.value,
+      type: currentTab.value,
+      list: selectedDataModelList.value,
+    },
   });
 };
 

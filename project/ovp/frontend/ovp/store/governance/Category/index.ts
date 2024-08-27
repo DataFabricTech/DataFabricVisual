@@ -64,6 +64,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       },
     },
   });
+  const selectedCategoryId = ref("");
   const selectedCategoryTagId = ref("");
 
   // MAIN - TREE
@@ -91,7 +92,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       body: node,
     }).then((res: any) => {
       if (res.data === "HAS_SAME_NAME") {
-        alert(`${categoryAddName.value} 이 이미 존재합니다.`);
+        alert(`${categoryAddName.value} 이미 존재합니다.`);
         return;
       }
 
@@ -340,6 +341,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     selectedDataModelList,
     addSearchInputValue,
     checkReachedCount,
+    selectedCategoryId,
     selectedCategoryTagId,
     resetAddModalStatus,
     getCategories,
