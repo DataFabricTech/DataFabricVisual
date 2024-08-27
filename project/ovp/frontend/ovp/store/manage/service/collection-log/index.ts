@@ -66,6 +66,15 @@ export const useServiceCollectionLogStore = defineStore(
       serviceFullNAME = name;
     };
 
+    const getSearchListQuery = () => {
+      const query = {
+        fields: "owner%2Ctags%2CdataProducts%2Cdomain",
+        include: "all",
+      };
+
+      return query;
+    };
+
     const getRepositoryDescriptionAPI = async () => {
       if (serviceFullNAME.length === 0) {
         // 처음 로드시 , 첫번째 서비스목록 항목의 name값이 들어가도록 설정.
@@ -73,7 +82,7 @@ export const useServiceCollectionLogStore = defineStore(
       }
       // TODO : 서버 만들고 주입할 예정
       let data: any = await $api(
-        `/api/v1/services/databaseServices/name/${serviceFullNAME}`,
+        `/api/service-manage/repository/description/${serviceFullNAME}?${getSearchListQuery()}`,
       );
       // TODO : 예시 데이터 설정 (실제 API 호출 결과로 제거 예정)
       data = {
