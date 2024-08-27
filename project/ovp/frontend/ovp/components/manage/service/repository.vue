@@ -64,15 +64,13 @@
 <script setup lang="ts">
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 import { useServiceCollectionLogStore } from "@/store/manage/service/collection-log/index";
-import { onBeforeMount } from "vue";
 import { computed } from "vue";
 import _ from "lodash";
 import Loading from "@base/loading/Loading.vue";
 import agGrid from "@extends/grid/Grid.vue";
 import LinkDetailComponent from "./linkDetailComponent.vue";
 const serviceCollectionLogStore = useServiceCollectionLogStore();
-const { updateRepositoryDescriptionAPI, getDBServiceList } =
-  serviceCollectionLogStore;
+const { updateRepositoryDescriptionAPI } = serviceCollectionLogStore;
 const { serviceData, DBServiceListData } = storeToRefs(
   serviceCollectionLogStore,
 );
@@ -156,11 +154,6 @@ const editDone = async () => {
     serviceData.value.description = defaultData.description;
   }
 };
-
-// TODO : 다른 페이지에서 로드할 예정
-onBeforeMount(async () => {
-  await getDBServiceList(); // DB서비스리스트 조회API 호출
-});
 
 const columnDefs = ref([
   { field: "serviceType", headerName: "구분" },

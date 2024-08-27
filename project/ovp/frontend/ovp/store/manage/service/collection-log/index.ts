@@ -48,7 +48,6 @@ export const useServiceCollectionLogStore = defineStore(
 
     let serviceId = "";
     const serviceFullID: string = "e2e0484e-6985-4083-a244-698700c6b189";
-    let serviceFullNAME: string = "";
 
     const setServiceId = (id: string) => {
       serviceId = id;
@@ -62,36 +61,24 @@ export const useServiceCollectionLogStore = defineStore(
       collectionLogData.value = data.data;
     };
 
-    const setServiceName = (name: string) => {
-      serviceFullNAME = name;
-    };
-
-    const getSearchListQuery = () => {
-      const query = {
-        fields: "owner%2Ctags%2CdataProducts%2Cdomain",
+    // getRepositoryDescriptionAPI의 params 생성함수
+    const getQueryData = () => {
+      const params = {
+        fields: "owner,tags,dataProducts,domain",
         include: "all",
       };
-
-      return query;
+      return new URLSearchParams(params);
     };
 
-    const getRepositoryDescriptionAPI = async () => {
-      if (serviceFullNAME.length === 0) {
-        // 처음 로드시 , 첫번째 서비스목록 항목의 name값이 들어가도록 설정.
-        serviceFullNAME = "test_df3"; // 기본값 주입
-      }
-      // TODO : 서버 만들고 주입할 예정
-      let data: any = await $api(
-        `/api/service-manage/repository/description/${serviceFullNAME}?${getSearchListQuery()}`,
+    // 저장소 탭 > 설명 조회 API호출 함수
+    const getRepositoryDescriptionAPI = async (fqn: string) => {
+      const { data }: any = await $api(
+        `/api/service-manage/repository/description/${fqn}?${getQueryData()}`,
       );
-      // TODO : 예시 데이터 설정 (실제 API 호출 결과로 제거 예정)
-      data = {
-        description: "기존 서버 description값",
-      };
-
       serviceData.value = { description: data.description };
     };
 
+    // 저장소 탭 > 설명 수정 API호출 함수
     const updateRepositoryDescriptionAPI = async (
       patchData: JsonPatchOperation[],
     ) => {
@@ -111,8 +98,8 @@ export const useServiceCollectionLogStore = defineStore(
         description: "수정된 description 값",
       };
 
-      // 수정 후 설명 데이터 재조회
-      await getRepositoryDescriptionAPI();
+      // TODO : 수정 후 설명 데이터 재조회 >>> param 추가예정
+      // await getRepositoryDescriptionAPI();
 
       return result;
     };
@@ -152,7 +139,6 @@ export const useServiceCollectionLogStore = defineStore(
       serviceData,
       DBServiceListData,
       setServiceId,
-      setServiceName,
       collectionLogData,
       getCollectionLogData,
       getRepositoryDescriptionAPI,

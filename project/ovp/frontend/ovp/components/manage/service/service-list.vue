@@ -73,7 +73,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import type { Service } from "~/type/service";
 import { useServiceCollectionLogStore } from "@/store/admin/service/collection-log/index";
 const serviceCollectionLogStore = useServiceCollectionLogStore();
@@ -96,10 +96,6 @@ const menuSelectedClass = (value: Service) => {
     ? "menu-item is-menu-item-selected"
     : "menu-item";
 };
-
-onMounted(() => {
-  getServiceList();
-});
 
 async function search() {
   emptyService();

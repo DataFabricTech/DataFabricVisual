@@ -4,9 +4,16 @@ import type { Service, Owner, Ingestion } from "~/type/service";
 import type { JsonPatchOperation } from "~/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import $constants from "~/utils/constant";
+import _ from "lodash";
+
+import { useServiceCollectionLogStore } from "@/store/manage/service/collection-log/index";
 
 export const useServiceStore = defineStore("service", () => {
   const { $api } = useNuxtApp();
+  const serviceCollectionLogStore = useServiceCollectionLogStore();
+
+  const { getRepositoryDescriptionAPI, getDBServiceList } =
+    serviceCollectionLogStore;
 
   const tab = ref<string>("repository");
 
@@ -72,6 +79,15 @@ export const useServiceStore = defineStore("service", () => {
     }
     Object.assign(service, source);
     disableEditInfo();
+    // 서비스관리 목록 클릭시, 설명 API호출
+    if (
+      !_.isEmpty(service.fullyQualifiedName) &&
+      !_.isUndefined(service.fullyQualifiedName)
+    ) {
+      getRepositoryDescriptionAPI(service.fullyQualifiedName);
+    }
+    // TODO : 아래 DB 테이블 조회도 호출필요 !!!---------------
+    getDBServiceList();
   }
 
   /**
