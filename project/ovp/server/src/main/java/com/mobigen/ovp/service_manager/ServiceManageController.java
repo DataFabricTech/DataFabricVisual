@@ -119,4 +119,16 @@ public class ServiceManageController {
     public Object saveService(@PathVariable String type, @RequestBody Map<String, Object> params) {
         return type.toLowerCase().equals("database") ? service.saveDatabase(params) : service.saveStorage(params);
     }
+
+    /**
+     * 저장소관리 > 저장소탭 > '설명'조회
+     *
+     * @param name
+     * @return
+     **/
+    @ResponseJsonResult
+    @GetMapping("/repository/description/{name}")
+    public Object getRepositoryDescription(@PathVariable String name, @RequestParam MultiValueMap<String, String> params) {
+        return service.getRepositoryDescription(name, params);
+    }
 }

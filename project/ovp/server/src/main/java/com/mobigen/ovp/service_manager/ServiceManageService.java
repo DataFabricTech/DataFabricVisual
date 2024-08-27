@@ -6,6 +6,7 @@ import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.ServicesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
 import com.mobigen.ovp.search.SearchService;
+import com.mobigen.ovp.service_manager.client.response.RepositoryDescriptionResponse;
 import com.mobigen.ovp.service_manager.client.response.ServiceCollectionLogResponse;
 import com.mobigen.ovp.service_manager.client.response.ServiceResponse;
 import feign.FeignException;
@@ -190,5 +191,16 @@ public class ServiceManageService {
 
     public Object saveStorage(Map<String, Object> params) {
         return servicesClient.saveStorage(params);
+    }
+
+    /**
+     * 저장소관리 > 저장소탭 > '설명'조회
+     *
+     * @param name
+     * @param params
+     * @return
+     **/
+    public Object getRepositoryDescription(String name, MultiValueMap<String, String> params) {
+        return new RepositoryDescriptionResponse(servicesClient.getRepositoryDescription(name, params));
     }
 }

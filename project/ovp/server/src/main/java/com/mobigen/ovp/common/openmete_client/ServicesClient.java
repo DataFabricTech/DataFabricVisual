@@ -2,9 +2,11 @@ package com.mobigen.ovp.common.openmete_client;
 
 import com.mobigen.ovp.common.openmete_client.dto.Base;
 import com.mobigen.ovp.common.openmete_client.dto.Log;
+import com.mobigen.ovp.common.openmete_client.dto.RepositoryDescription;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -74,5 +76,15 @@ public interface ServicesClient {
 
     @PostMapping("/storageServices")
     Map<String, Object> saveStorage(@RequestBody Map<String, Object> params);
+
+    /**
+     * 저장소관리 > 저장소탭 > '설명'조회
+     *
+     * @param name
+     * @param params 
+     * @return
+     **/
+    @GetMapping("/databaseServices/name/{name}")
+    RepositoryDescription getRepositoryDescription(@PathVariable("name") String name, @RequestParam MultiValueMap<String, String> params);
 
 }
