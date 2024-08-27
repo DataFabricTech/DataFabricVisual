@@ -1,19 +1,35 @@
 import { defineStore } from "pinia";
-import { ref, reactive } from "vue";
+import { ref, reactive, Ref } from "vue";
 import type { Service, Owner, Ingestion } from "~/type/service";
 import type { JsonPatchOperation } from "~/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import $constants from "~/utils/constant";
 import _ from "lodash";
 
-import { useServiceCollectionLogStore } from "@/store/manage/service/collection-log/index";
+interface JsonPatchOperation {
+  op: string;
+  path: string;
+  value: any;
+}
+
+interface ServiceData {
+  description: string;
+}
+
+interface DBServiceListData {
+  serviceType: string;
+  name: string;
+  description: string | undefined;
+  owner: {
+    name: string | undefined;
+  };
+  id: string;
+  fqn: string;
+  type: string;
+}
 
 export const useServiceStore = defineStore("service", () => {
   const { $api } = useNuxtApp();
-  const serviceCollectionLogStore = useServiceCollectionLogStore();
-
-  const { getRepositoryDescriptionAPI, getDBServiceList } =
-    serviceCollectionLogStore;
 
   const tab = ref<string>("repository");
 
@@ -30,6 +46,98 @@ export const useServiceStore = defineStore("service", () => {
     tag: false,
     term: false,
   });
+
+  const serviceData: Ref<ServiceData> = ref({ description: "" });
+  const currentServiceManageID: string = "";
+
+  const DBServiceListData: Ref<DBServiceListData[]> = ref([
+    {
+      serviceType: "serviceType1",
+      name: "name1",
+      description: "description1",
+      owner: {
+        name: "ownerName1",
+      },
+      type: "type1",
+      id: "id1",
+      fqn: "fqn1",
+    },
+  ]);
+
+  // getRepositoryDescriptionAPI의 params 생성함수
+  const getQueryData = () => {
+    const params = {
+      fields: "owner,tags,dataProducts,domain",
+      include: "all",
+    };
+    return new URLSearchParams(params);
+  };
+
+  // 저장소 탭 > 설명 조회 API호출 함수
+  const getRepositoryDescriptionAPI = async (fqn: string, id: string) => {
+    // 선택하면 store의 serviceFullID값도 주입(수정 API에 쓰이기 위해서_)
+    currentServiceManageID = id;
+    const { data }: any = await $api(
+      `/api/service-manage/repository/description/${fqn}?${getQueryData()}`,
+    );
+    serviceData.value = { description: data.description };
+  };
+
+  // 저장소 탭 > 설명 수정 API호출 함수
+  const updateRepositoryDescriptionAPI = async (
+    patchData: JsonPatchOperation[],
+  ) => {
+    console.log(
+      "serviceFullID 수정할 때 필요한 아이디 값 ====> : ",
+      currentServiceManageID,
+    );
+    const result = await $api(
+      `/api/service-manage/repository/description/${currentServiceManageID}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json-patch+json",
+        },
+        body: JSON.stringify(patchData),
+      },
+    );
+    console.log("수정시 보내느 API ", result);
+    // TODO : 수정 후 설명 데이터 재조회 >>> param 추가예정
+    // await getRepositoryDescriptionAPI();
+
+    return result;
+  };
+
+  const getDBServiceList = () => {
+    // TODO : 가상 데이터 지정 > API생성 후 대체 예정
+    // let result: any = await $api("api/v1/databases/");
+    const result = {
+      result: 1,
+      data: [
+        {
+          serviceType: "serviceType1",
+          name: "11이름",
+          description: "설명1",
+          owner: { name: "소유자1" },
+          type: "table",
+          id: "6ef96a3a-837b-40a5-9afe-a286e50e6ae4",
+          fqn: "df2.test_db.test_db.Employee",
+        },
+        {
+          serviceType: "serviceType2",
+          name: "22이름",
+          description: "설명2",
+          owner: { name: "소유자2" },
+          type: "table",
+          id: "02ab816f-88e1-47df-bb87-926dcbcc20f0",
+          fqn: "vdap2.sample.sample.sampledata_chart_02",
+        },
+      ],
+    };
+    DBServiceListData.value = result.data;
+
+    return result;
+  };
 
   async function changeTab(value: string) {
     tab.value = value;
@@ -84,7 +192,7 @@ export const useServiceStore = defineStore("service", () => {
       !_.isEmpty(service.fullyQualifiedName) &&
       !_.isUndefined(service.fullyQualifiedName)
     ) {
-      getRepositoryDescriptionAPI(service.fullyQualifiedName);
+      getRepositoryDescriptionAPI(service.fullyQualifiedName, service.id);
     }
     // TODO : 아래 DB 테이블 조회도 호출필요 !!!---------------
     getDBServiceList();
@@ -245,5 +353,10 @@ export const useServiceStore = defineStore("service", () => {
 
     getUserList,
     createOwnerOperation,
+
+    serviceData,
+    getRepositoryDescriptionAPI,
+    updateRepositoryDescriptionAPI,
+    getDBServiceList,
   };
 });

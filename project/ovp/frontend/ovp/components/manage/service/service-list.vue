@@ -97,6 +97,10 @@ const menuSelectedClass = (value: Service) => {
     : "menu-item";
 };
 
+onMounted(() => {
+  getServiceList();
+});
+
 async function search() {
   emptyService();
   await searchServiceList(keyword.value, "0");
