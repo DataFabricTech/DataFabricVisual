@@ -325,187 +325,83 @@ public class CategoryService {
         return response.get("id").toString();
     }
 
-    
-    /**
-     * 카테고리 데이터 모델 추가 / 변경
-     *
-     * @return
-     */
-    public Object addCategoryTagId(String id, Map<String, Object> body) throws Exception {
-        MultiValueMap params = new LinkedMultiValueMap();
 
+    private List<Map<String, Object>> replaceOrAddTag(List<Tag> tags, Map<String, Object> tagInfo) {
+        List<Map<String, Object>> operations = new ArrayList<>();
+        boolean ovpCategoryFound = false;
+        int index = 0;
+
+        for (Tag itemTag : tags) {
+            if (itemTag.getTagFQN().contains("ovp_category")) {
+                String[] replaceInfoList = {"description", "displayName", "name", "tagFQN"};
+                for (String item : replaceInfoList) {
+                    Map<String, Object> replaceOperation = new HashMap<>();
+                    replaceOperation.put("op", "replace");
+                    replaceOperation.put("path", "/tags/" + index + "/" + item);
+                    replaceOperation.put("value", item.equals("tagFQN") ? tagInfo.get("fullyQualifiedName") : tagInfo.get(item));
+                    operations.add(replaceOperation);
+                }
+                ovpCategoryFound = true;
+                break;
+            }
+            index++;
+        }
+
+        if (!ovpCategoryFound) {
+            Map<String, Object> operation = new HashMap<>();
+            Map<String, Object> value = new HashMap<>();
+            value.put("name", tagInfo.get("name"));
+            value.put("displayName", tagInfo.get("displayName"));
+            value.put("tagFQN", tagInfo.get("fullyQualifiedName"));
+            value.put("description", tagInfo.get("description"));
+            value.put("style", tagInfo.get("style"));
+            operation.put("value", value);
+            operation.put("op", "add");
+            operation.put("path", "/tags/" + tags.size());
+            operations.add(operation);
+        }
+
+        return operations;
+    }
+
+    private void updateTags(List<String> selectedModelIdList, Map<String, Object> tagInfo, boolean isStorage, TablesClient tablesClient, ContainersClient containersClient) throws Exception {
+        MultiValueMap params = new LinkedMultiValueMap();
+        params.add("fields", "tags");
+        params.add("include", "all");
+
+        int excuteCount = 0;
+        int successCount = 0;
+
+        for (String itemId : selectedModelIdList) {
+            List<Map<String, Object>> reqBody = new ArrayList<>();
+            Tables tables = isStorage ? containersClient.getStorageById(itemId, params) : tablesClient.getTablesName(itemId, params);
+            List<Tag> tags = tables.getTags();
+
+            reqBody.addAll(replaceOrAddTag(tags, tagInfo));
+
+            log.info("*** reqBody: {}", reqBody);
+            Map<String, Object> result = isStorage ? containersClient.changeStorage(itemId, null, reqBody) : tablesClient.changeDataModel(itemId, null, reqBody);
+
+            excuteCount++;
+            if (!result.isEmpty()) {
+                successCount++;
+            }
+            if (excuteCount != successCount) {
+                throw new Exception("업데이트 실패");
+            }
+        }
+    }
+
+
+    public Object addCategoryTagId(String id, Map<String, Object> body) throws Exception {
         String type = (String) body.get("type");
         String tagId = (String) body.get("tagId");
         Map<String, Object> tagInfo = classificationClient.getTag(tagId);
         List<String> selectedModelIdList = (List<String>) body.get("list");
-        List<Map<String, Object>> reqBody = new ArrayList<>();
-        Tables tables = null;
 
+        boolean isStorage = ModelType.STORAGE.getValue().equals(type);
 
-        if (!ModelType.STORAGE.getValue().equals(type)) {
-            int excuteCount = 0;
-            int successCount = 0;
-            params.add("fields", "tags");
-            params.add("include", "all");
-
-            for (String itemId : selectedModelIdList) {
-                reqBody.clear();
-                tables = tablesClient.getTablesName(itemId, params);
-                List<Tag> tags = tables.getTags();
-                Number tagsLength = tags.size();
-
-                Map<String, Object> operation = new HashMap<>();
-                Map<String, Object> value = new HashMap<>();
-
-                // tags 목록이 존재하지 않으면 0번째에 add
-                if (tags.isEmpty()) {
-                    operation.put("op", "add");
-                    operation.put("path", "/tags/0");
-                    value.put("name", tagInfo.get("name"));
-                    value.put("displayName", tagInfo.get("displayName"));
-                    value.put("tagFQN", tagInfo.get("fullyQualifiedName"));
-                    value.put("description", tagInfo.get("description"));
-                    value.put("style", tagInfo.get("style"));
-                    operation.put("value", value);
-                    reqBody.add(operation);
-                } else {
-                    int index = 0;
-                    boolean ovpCategoryFound = false;
-
-                    for (Tag itemTag : tags) {
-                        // 2-1. tags 목록이 존재하고 + ovp_category가 있다면 replace -> 하고 끝.
-                        if (itemTag.getTagFQN().contains("ovp_category")) {
-                            List<Map<String, Object>> replaceOperations = new ArrayList<>();
-                            String[] replaceInfoList = {"description", "displayName", "name", "tagFQN"};
-                            for (String item : replaceInfoList) {
-                                Map<String, Object> replaceOperation = new HashMap<>();
-                                replaceOperation.put("op", "replace");
-                                replaceOperation.put("path", "/tags/" + index + "/" + item);
-                                if (item.equals("tagFQN")) {  // String 비교 시 `==` 대신 `equals` 사용
-                                    replaceOperation.put("value", tagInfo.get("fullyQualifiedName"));
-                                } else {
-                                    replaceOperation.put("value", tagInfo.get(item));
-                                }
-
-                                replaceOperations.add(replaceOperation);
-                            }
-
-                            reqBody.addAll(replaceOperations);
-                            ovpCategoryFound = true;
-                            break; // ovp_category가 발견되었으므로 루프 종료
-
-                        }
-                        index++;
-                    }
-
-                    // 2-2. tags 목록이 존재하고 + ovp_category가 없다면 index 맨 뒤에 add
-                    if (!ovpCategoryFound) {
-                        value.put("name", tagInfo.get("name"));
-                        value.put("displayName", tagInfo.get("displayName"));
-                        value.put("tagFQN", tagInfo.get("fullyQualifiedName"));
-                        value.put("description", tagInfo.get("description"));
-                        value.put("style", tagInfo.get("style"));
-                        operation.put("value", value);
-                        operation.put("op", "add");
-                        operation.put("path", "/tags/" + (tagsLength.intValue()));
-                        reqBody.add(operation);
-                    }
-                }
-
-
-                log.info("*** reqBody: {}", reqBody);
-                Map<String, Object> result = tablesClient.changeDataModel(itemId, null, reqBody);
-                excuteCount++;
-                if (!result.isEmpty()) {
-                    successCount++;
-                }
-                if (excuteCount != successCount) {
-                    throw new Exception("업데이트 실패");
-                }
-            }
-        } else {
-            log.info("!!!!! storage?: {}", type);
-            int excuteCount = 0;
-            int successCount = 0;
-            params.add("fields", "tags");
-            params.add("include", "all");
-
-            for (String itemId : selectedModelIdList) {
-                reqBody.clear();
-                tables = containersClient.getStorageById(itemId, params);
-                List<Tag> tags = tables.getTags();
-                Number tagsLength = tags.size();
-
-                Map<String, Object> operation = new HashMap<>();
-                Map<String, Object> value = new HashMap<>();
-
-                // tags 목록이 존재하지 않으면 0번째에 add
-                if (tags.isEmpty()) {
-                    operation.put("op", "add");
-                    operation.put("path", "/tags/0");
-                    value.put("name", tagInfo.get("name"));
-                    value.put("displayName", tagInfo.get("displayName"));
-                    value.put("tagFQN", tagInfo.get("fullyQualifiedName"));
-                    value.put("description", tagInfo.get("description"));
-                    value.put("style", tagInfo.get("style"));
-                    operation.put("value", value);
-                    reqBody.add(operation);
-                } else {
-                    int index = 0;
-                    boolean ovpCategoryFound = false;
-
-                    for (Tag itemTag : tags) {
-                        // 2-1. tags 목록이 존재하고 + ovp_category가 있다면 replace -> 하고 끝.
-                        if (itemTag.getTagFQN().contains("ovp_category")) {
-                            List<Map<String, Object>> replaceOperations = new ArrayList<>();
-                            String[] replaceInfoList = {"description", "displayName", "name", "tagFQN"};
-                            for (String item : replaceInfoList) {
-                                Map<String, Object> replaceOperation = new HashMap<>();
-                                replaceOperation.put("op", "replace");
-                                replaceOperation.put("path", "/tags/" + index + "/" + item);
-                                if (item.equals("tagFQN")) {  // String 비교 시 `==` 대신 `equals` 사용
-                                    replaceOperation.put("value", tagInfo.get("fullyQualifiedName"));
-                                } else {
-                                    replaceOperation.put("value", tagInfo.get(item));
-                                }
-
-                                replaceOperations.add(replaceOperation);
-                            }
-
-                            reqBody.addAll(replaceOperations);
-                            ovpCategoryFound = true;
-                            break; // ovp_category가 발견되었으므로 루프 종료
-
-                        }
-                        index++;
-                    }
-
-                    // 2-2. tags 목록이 존재하고 + ovp_category가 없다면 index 맨 뒤에 add
-                    if (!ovpCategoryFound) {
-                        value.put("name", tagInfo.get("name"));
-                        value.put("displayName", tagInfo.get("displayName"));
-                        value.put("tagFQN", tagInfo.get("fullyQualifiedName"));
-                        value.put("description", tagInfo.get("description"));
-                        value.put("style", tagInfo.get("style"));
-                        operation.put("value", value);
-                        operation.put("op", "add");
-                        operation.put("path", "/tags/" + (tagsLength.intValue()));
-                        reqBody.add(operation);
-                    }
-                }
-
-
-                log.info("*** reqBody: {}", reqBody);
-                Map<String, Object> result = containersClient.changeStorage(itemId, null, reqBody);
-                excuteCount++;
-                if (!result.isEmpty()) {
-                    successCount++;
-                }
-                if (excuteCount != successCount) {
-                    throw new Exception("업데이트 실패");
-                }
-            }
-        }
+        updateTags(selectedModelIdList, tagInfo, isStorage, tablesClient, containersClient);
 
         return true;
     }
