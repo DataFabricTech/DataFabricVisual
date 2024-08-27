@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import _ from "lodash";
 import type { IngestionPipeline } from "./IngestionPipeline";
+import { computed } from "../../../../.nuxt/imports";
 
 export const useServiceCollectionAddStore = defineStore(
   "service_collection_add",
@@ -48,11 +49,11 @@ export const useServiceCollectionAddStore = defineStore(
     const sampleTypeOptions = ref([
       {
         label: "Percentage",
-        value: "persentage",
+        value: "PERCENTAGE",
       },
       {
         label: "Rows",
-        value: "rows",
+        value: "ROWS",
       },
     ]);
     const selectedSampleTypeItem = ref(sampleTypeOptions.value[0].value);
@@ -69,6 +70,148 @@ export const useServiceCollectionAddStore = defineStore(
       isEnableDebug.value ? "DEBUG" : "INFO",
     );
 
+    const bindPipelineType = computed(() => {
+      if (
+        pipelineType.value === "metadata" &&
+        serviceType.value === "databaseService"
+      ) {
+        return "metadata";
+      }
+
+      if (
+        pipelineType.value === "metadata" &&
+        serviceType.value === "storageService"
+      ) {
+        return "metadata";
+      }
+
+      if (
+        pipelineType.value === "profiler" &&
+        serviceType.value === "databaseService"
+      ) {
+        return "profiler";
+      }
+
+      if (
+        pipelineType.value === "profiler" &&
+        serviceType.value === "storageService"
+      ) {
+        return "storageProfiler";
+      }
+    });
+
+    const config = computed(() => {
+      const configObject = {};
+
+      if (
+        pipelineType.value === "metadata" &&
+        serviceType.value === "databaseService"
+      ) {
+        configObject.type = "DatabaseMetadata";
+        configObject.markDeletedTables = isMarkDeletedTables.value;
+        configObject.markDeletedStoredProcedures = false;
+        configObject.includeTables = isIncludeTables.value;
+        configObject.includeViews = isIncludeViews.value;
+        configObject.includeTags = false;
+        configObject.includeOwners = isIncludeOwners.value;
+        configObject.includeStoredProcedures = false;
+        configObject.includeDDL = false;
+        configObject.queryLogDuration = 1;
+        configObject.queryParsingTimeoutLimit = 300;
+        configObject.useFqnForFiltering = false;
+        configObject.threads = 1;
+        configObject.incremental = {
+          enabled: false,
+          lookbackDays: 7, // TODO: 파람값으로 필요 판단 여부
+          safetyMarginDays: 1, // TODO: 파람값으로 필요 판단 여부
+        };
+      }
+
+      if (
+        pipelineType.value === "metadata" &&
+        serviceType.value === "storageService"
+      ) {
+        configObject.type = "StorageMetadata";
+        // TODO: 기획서랑 openmeta 화면이랑 filterpattern 포함 내용이 다름..bucket 패턴?
+        // 확인 후 처리
+      }
+
+      if (
+        pipelineType.value === "profiler" &&
+        serviceType.value === "databaseService"
+      ) {
+        configObject.type = "Profiler";
+        configObject.includeViews = isIncludeViews.value;
+        configObject.useFqnForFiltering = false;
+        configObject.generateSampleData = isGenerateSampleData.value;
+        configObject.computeMetrics = isComputeMetric.value;
+        configObject.processPiiSensitive = false;
+        configObject.profileSampleType = selectedSampleTypeItem.value;
+        configObject.profileSample = Number(profileSample.value);
+        configObject.sampleDataCount = Number(sampleDataRowsCount.value);
+        configObject.threadCount = 5;
+        configObject.timeoutSeconds = 43200;
+      }
+
+      if (
+        pipelineType.value === "profiler" &&
+        serviceType.value === "storageService"
+      ) {
+        configObject.type = "StorageProfiler";
+        configObject.useFqnForFiltering = false;
+        configObject.generateSampleData = isGenerateSampleData.value;
+        configObject.computeMetrics = isComputeMetric.value;
+        configObject.processPiiSensitive = false;
+        configObject.profileSampleType = selectedSampleTypeItem.value;
+        configObject.profileSample = Number(profileSample.value);
+        configObject.sampleDataCount = Number(sampleDataRowsCount.value);
+        configObject.threadCount = 5;
+        configObject.timeoutSeconds = 43200;
+      }
+
+      // CFP_includes나 CFP_excludes가 비어 있지 않으면 containerFilterPattern 추가
+      if (CFP_includes.length > 0 || CFP_excludes.length > 0) {
+        configObject.containerFilterPattern = {
+          includes: CFP_includes.map((item) => item.name),
+          excludes: CFP_excludes.map((item) => item.name),
+        };
+      }
+
+      // BFP_includes나 BFP_excludes가 비어 있지 않으면 bucketFilterPattern 추가
+      if (BFP_includes.length > 0 || BFP_excludes.length > 0) {
+        configObject.bucketFilterPattern = {
+          includes: BFP_includes.map((item) => item.name),
+          excludes: BFP_excludes.map((item) => item.name),
+        };
+      }
+
+      // DFP_includes나 DFP_excludes가 비어 있지 않으면 databaseFilterPattern 추가
+      if (DFP_includes.length > 0 || DFP_excludes.length > 0) {
+        configObject.databaseFilterPattern = {
+          includes: DFP_includes.map((item) => item.name),
+          excludes: DFP_excludes.map((item) => item.name),
+        };
+      }
+
+      // SFP_includes나 SFP_excludes가 비어 있지 않으면 schemaFilterPattern 추가
+      if (SFP_includes.length > 0 || SFP_excludes.length > 0) {
+        configObject.schemaFilterPattern = {
+          includes: SFP_includes.map((item) => item.name),
+          excludes: SFP_excludes.map((item) => item.name),
+        };
+      }
+
+      // TFP_includes나 TFP_excludes가 비어 있지 않으면 tableFilterPattern 추가
+      if (TFP_includes.length > 0 || TFP_excludes.length > 0) {
+        configObject.tableFilterPattern = {
+          includes: TFP_includes.map((item) => item.name),
+          excludes: TFP_excludes.map((item) => item.name),
+        };
+      }
+
+      return configObject;
+    });
+
     const ingestionPipeLine = ref<IngestionPipeline>({
       airflowConfig: {
         scheduleInterval: "", // 두 JSON 모두 크론 스케줄을 가짐 (단, 시간이 다를 수 있음)
@@ -78,18 +221,16 @@ export const useServiceCollectionAddStore = defineStore(
       name: "", // 서버에서 넣어줘야함 ex) UUID 값
       displayName: "",
       owner: {
-        id: "b7b3f5cb-4e71-4197-8ff0-34e0ced231cc", // 소유자 ID
-        type: "user", // 고정?
+        id: "b7b3f5cb-4e71-4197-8ff0-34e0ced231cc", // TODO: 소유자 ID 바인딩
+        type: "user", // TODO: 이정책임님과 논의
       },
-      pipelineType: "", // ex) StorageProfiler, Profiler, metadata
+      pipelineType: bindPipelineType.value, // ex) storageProfiler, profiler, metadata
       service: {
-        id: serviceId.value, // 공통된 서비스 ID
-        type: serviceType.value, // 서비스 타입이 공통됨
+        id: serviceId.value,
+        type: serviceType.value,
       },
       sourceConfig: {
-        config: {
-          type: "", // ex) DatabaseMetadata, StorageMetadata, StorageProfiler, Profiler
-        },
+        config: config.value,
       },
     });
 
@@ -113,39 +254,6 @@ export const useServiceCollectionAddStore = defineStore(
     };
 
     // setters
-    // const set_CFP_includes = (value: any) => {
-    //   CFP_includes.value = value.map((item) => item.name);
-    // };
-    // const set_CFP_excludes = (value: any) => {
-    //   CFP_excludes.value = value.map((item) => item.name);
-    // };
-    // const set_BFP_includes = (value: any) => {
-    //   BFP_includes.value = value.map((item) => item.name);
-    // };
-    // const set_BFP_excludes = (value: any) => {
-    //   BFP_excludes.value = value.map((item) => item.name);
-    // };
-    //
-    // const set_DFP_includes = (value: any) => {
-    //   DFP_includes.value = value.map((item) => item.name);
-    // };
-    // const set_DFP_excludes = (value: any) => {
-    //   DFP_excludes.value = value.map((item) => item.name);
-    // };
-    // const set_SFP_includes = (value: any) => {
-    //   SFP_includes.value = value.map((item) => item.name);
-    // };
-    // const set_SFP_excludes = (value: any) => {
-    //   SFP_excludes.value = value.map((item) => item.name);
-    // };
-    //
-    // const set_TFP_includes = (value: any) => {
-    //   TFP_includes.value = value.map((item) => item.name);
-    // };
-    // const set_TFP_excludes = (value: any) => {
-    //   TFP_excludes.value = value.map((item) => item.name);
-    // };
-
     const setCronParedMessage = (value: any) => {
       isValidCronMessage.value = value;
     };
@@ -396,7 +504,9 @@ export const useServiceCollectionAddStore = defineStore(
       isValidCronMessage.value = true;
     };
 
-    const createIngestion = () => {};
+    const createIngestion = () => {
+      console.log("config값확인: ", config.value);
+    };
 
     return {
       pipelineType,

@@ -79,8 +79,7 @@ import { useServiceCollectionAddStore } from "@/store/manage/service/collection-
 const collectionAddStore = useServiceCollectionAddStore();
 const { pipelineType, serviceType, modalTitle, isValid, inValidMsg } =
   storeToRefs(collectionAddStore);
-const {resetData, checkValidation } =
-  collectionAddStore;
+const { resetData, checkValidation, createIngestion } = collectionAddStore;
 
 const emit = defineEmits<{
   (e: "close"): void;
@@ -88,7 +87,6 @@ const emit = defineEmits<{
 
 const onCancel = () => {
   resetData();
-  console.log("cancel안됨?");
   emit("close");
 };
 
@@ -122,7 +120,6 @@ const changeStep = (value: number) => {
 
 const gotoPrev = () => {
   if (currentStep.value === 2) {
-
   }
   currentStep.value = currentStep.value - 1;
 };
@@ -135,10 +132,8 @@ const gotoNext = async () => {
     return;
   }
 
-  if (currentStep.value === 1) {
-  }
-
   if (currentStep.value === 2) {
+    createIngestion();
     close();
     return;
   } else {
