@@ -1,7 +1,9 @@
 package com.mobigen.ovp.search;
 
+import com.mobigen.ovp.category.dto.CategoryDTO;
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
+import com.mobigen.ovp.common.CategoryConvertUtil;
 import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.ModelConvertUtil;
 import com.mobigen.ovp.common.entity.ModelIndex;
@@ -29,6 +31,7 @@ public class SearchService {
     private final TablesClient tablesClient;
     private final ModelConvertUtil modelConvertUtil;
     private final CategoryRepository categoryRepository;
+    private final CategoryConvertUtil categoryConvertUtil;
 
     private Map<String, Object> convertAggregations(Map<String, Object> response) {
         Map<String, Object> aggregations = (Map<String, Object>) response.get("aggregations");
@@ -287,6 +290,7 @@ public class SearchService {
 
         String index = params.getFirst("index").toString();
 
+        // 데이터 조회
         Map<String, Object> searchData = new HashMap<>();
         if (index.equals("table")) {
             searchData = getTableList(params);
@@ -295,9 +299,28 @@ public class SearchService {
         } else if (index.equals("model")) {
             searchData = getModelList(params);
         }
-        List<Object> searchList = (List<Object>) searchData.get("data");
-//        searchList.stream();
+        List<Map<String, Object>> searchList = (List<Map<String, Object>>) searchData.get("data");
 
-        return edgeList;
+
+        List<CategoryDTO> dataModelDTOList = searchList.stream()
+                .map(dataMap -> {
+                    // 여기서 CategoryDTO 객체에 데이터를 매핑합니다
+                    CategoryDTO categoryDTO = new CategoryDTO();
+
+                    // 예시로 매핑하는 부분:
+                    categoryDTO.setId(dataMap.get("id").toString());
+                    categoryDTO.setParentId(dataMap.get("category").toString());
+                    categoryDTO.setName(dataMap.get("modelNm").toString());
+
+                    return categoryDTO;
+                })
+                .collect(Collectors.toList());
+
+
+        CategoryDTO nodeObj = categoryConvertUtil.convertCategoryEntityAndDTO(categories, dataModelDTOList);
+
+        result.put("nodes", nodeObj);
+
+        return result;
     }
 }

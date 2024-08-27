@@ -106,6 +106,8 @@ public class ModelConvertUtil {
         modifiedSource.put("category", new HashMap<>());
 
         if (source.get("tags") != null) {
+            String categoryId = "";
+
             List<Map<String, Object>> tags = (List<Map<String, Object>>) source.get("tags");
             for (Map<String, Object> tag : tags) {
                 String displayName = tag.get("displayName").toString();
@@ -117,6 +119,7 @@ public class ModelConvertUtil {
 
                 if (tag.get("tagFQN").toString().contains(Constants.OVP_CATEGORY)) {
                     CategoryEntity categoryEntity = getCategoryEntity(tag.get("name").toString());
+                    categoryId = categoryEntity.getId().toString();
                     if (categoryEntity != null) {
                         Map<String, Object> category = (Map<String, Object>) modifiedSource.get("category");
                         category.put("id", categoryEntity.getId());
@@ -125,9 +128,17 @@ public class ModelConvertUtil {
                         category.put("tagDisplayName", tag.get("displayName"));
                         category.put("tagDescription", tag.get("description"));
                         category.put("tagFQN", tag.get("tagFQN"));
+
+                        modifiedSource.put("category", category);
                         break;
                     }
                 }
+            }
+
+            // 루프가 끝난 후 categoryId가 있으면 추가
+            if (!categoryId.isEmpty()) {
+                modifiedSource.put("category", categoryId);
+                System.out.println("HERE");
             }
         }
 
