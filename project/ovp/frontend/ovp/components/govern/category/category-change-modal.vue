@@ -1,4 +1,3 @@
-<!--TODO:[개발] 모달클래스 .modal-padding-16 추가-->
 <template>
   <Modal
     title="카테고리 변경"

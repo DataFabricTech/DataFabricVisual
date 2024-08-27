@@ -1,5 +1,5 @@
 #header {
-  @include z-index('header');
+  //@include z-index('header');
   @include box-shadow('md');
 
   position: fixed;

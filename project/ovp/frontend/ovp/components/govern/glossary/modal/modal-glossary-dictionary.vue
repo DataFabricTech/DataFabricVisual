@@ -1,5 +1,3 @@
-<!--TODO:[개발] 모달클래스 .modal-padding-16 추가-->
-
 <template>
   <!--  TODO: Modal 용어사전 추가-->
   <div class="modal-overlay vfm--fixed vfm--inset" v-if="false">
