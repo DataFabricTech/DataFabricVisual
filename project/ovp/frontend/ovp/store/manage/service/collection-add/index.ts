@@ -13,7 +13,6 @@ export const useServiceCollectionAddStore = defineStore(
 
     const modalTitle = ref("");
 
-    const name = ref("");
     const profileSample = ref(50);
     const sampleDataRowsCount = ref(50);
 
@@ -367,7 +366,7 @@ export const useServiceCollectionAddStore = defineStore(
 
     const checkValidation = () => {
       // 이름이 체크
-      if (_.isEmpty(name.value)) {
+      if (_.isEmpty(ingestionPipeLine.value.displayName)) {
         isValid.value = false;
         inValidMsg.value = "필수 값을 입력해주세요.";
         return;
