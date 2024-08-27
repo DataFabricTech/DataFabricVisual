@@ -1,7 +1,7 @@
+<!--TODO:[개발] 모달클래스 .modal-padding-16 추가-->
 <template>
   <Modal
     title="데이터 모델 추가"
-    class="modal modal-padding-16"
     :modal-id="props.modalId"
     background="non-interactive"
     displayDirective="show"
@@ -10,9 +10,11 @@
     :clickToClose="true"
     :escToClose="true"
     :width="1180"
-    :height="640"
+    :height="620"
     :top="240"
     :lockScroll="false"
+    :confirm-btn-msg="'저장'"
+    :is-disabled-confirm-btn="isDisabledConfirmBtn"
     swipeToClose="none"
     @cancel="onCancel"
     @confirm="onConfirm"
@@ -141,7 +143,7 @@
 
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
-import { useNuxtApp, useRouter } from "nuxt/app";
+import { useRouter } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category/index";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { storeToRefs } from "pinia";
@@ -152,7 +154,6 @@ import { computed, ref } from "vue";
 import Loading from "@base/loading/Loading.vue";
 
 const router = useRouter();
-const { $vfm } = useNuxtApp();
 
 const categoryStore = useGovernCategoryStore();
 const {
@@ -179,6 +180,9 @@ const props = defineProps({
     required: true,
   },
 });
+const emit = defineEmits<{
+  (e: "close-data-model-add-modal"): void;
+}>();
 
 // SEARCH INPUT
 const updateSearchInputValue = (newValue: string) => {
@@ -252,12 +256,15 @@ watchEffect(() => {
 });
 
 // MODAL
+const isDisabledConfirmBtn = computed(() => {
+  return selectedDataModelList.value.length === 0;
+});
 const onCancel = () => {
-  $vfm.close(props.modalId);
+  emit("close-data-model-add-modal");
 };
 
 const onConfirm = async () => {
-  $vfm.close(props.modalId);
+  emit("close-data-model-add-modal");
 };
 
 await getSearchList();

@@ -1,18 +1,17 @@
+<!--TODO:[개발] 모달클래스 .modal-padding-16 추가-->
+
 <template>
-  <!--TODO: Modal 비밀번호 변경 width:350px height332px -->
   <Modal
     title="비밀번호 변경"
     class="modal modal-padding-16"
-    :modal-id="props.modalId"
     background="non-interactive"
     displayDirective="show"
     overlayTransition="vfm-fade"
     contentTransition="vfm-fade"
     :clickToClose="true"
     :escToClose="true"
-    :width="700"
-    :height="600"
-    :top="700"
+    :width="360"
+    :height="332"
     :lockScroll="false"
     swipeToClose="none"
     @cancel="onCancel"
@@ -39,16 +38,12 @@ const store = loginStore();
 const { $vfm } = useNuxtApp();
 const { getPwChangeInMypage } = store;
 
-const props = defineProps({
-  modalId: {
-    type: String,
-    required: true,
-  },
-});
-
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
 const onCancel = () => {
   composition.resetValues();
-  $vfm.close(props.modalId);
+  emit("close");
 };
 
 const onConfirm = async () => {

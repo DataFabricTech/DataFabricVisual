@@ -97,7 +97,6 @@
           @check="onCheckItem(item.value, $event)"
         ></data-model-list-item>
       </template>
-      <!-- TODO: 인피니티 스크롤 -->
       <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
       <Loading
         id="loader"
@@ -175,22 +174,16 @@ const emitDeleteItem = (value: any[]) => {
 };
 
 const emitFilterChange = (value: {}) => {
-  setScrollOptions(0);
   emit("filter-change", value);
 };
 const emitSortChange = (value: string) => {
-  setScrollOptions(0);
   emit("sort-change", value);
 };
 const emitSearchChange = (value: string) => {
-  setScrollOptions(0);
   emit("search-change", value);
 };
 
-const { scrollTrigger, setScrollOptions } = useIntersectionObserver(
-  props.addSearchList,
-);
-setScrollOptions(0);
+const { scrollTrigger } = useIntersectionObserver(props.addSearchList);
 
 const {
   listData,

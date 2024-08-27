@@ -1,6 +1,7 @@
 package com.mobigen.ovp.search;
 
 import com.mobigen.ovp.common.ModelConvertUtil;
+import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.entity.ModelIndex;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;

@@ -21,5 +21,6 @@ public class OvpProperties {
         private String redirectErrorUrl;
         private String href;
         private String title;
+        private String contentsFilePath;
     }
 }

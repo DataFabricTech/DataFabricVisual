@@ -200,14 +200,15 @@
   ></CategoryChangeModal>
   <DataModelAddModal
     :modal-id="DATA_MODEL_ADD_MODAL_ID"
-    @before-open="beforeOpen"
-    @open="open"
+    @before-open="beforeOpenModal"
+    @open="openModal"
   ></DataModelAddModal>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
+import { useModal } from "vue-final-modal";
 import { useNuxtApp } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
@@ -237,12 +238,10 @@ const {
   setSelectedNode,
   setSearchKeyword,
   getFilters,
-  getSearchList,
   changeTab,
   setEmptyFilter,
 } = categoryStore;
 const {
-  initTab,
   selectedModelList,
   categories,
   modelList,
@@ -304,9 +303,7 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   selectedModelList.value = [];
   isDescEditMode.value = false;
   isTitleEditMode.value = false;
-
   selectedNode.value = node;
-
   setScrollOptions(0);
   // 선택한 노드정보 저장
   setSelectedNode(node);
@@ -489,20 +486,48 @@ const editIcon = (key: string) => {
 };
 
 // MODAL
+const { open: openCategoryAddModal, close: closeCategoryAddModal } = useModal({
+  component: CategoryAddModal,
+  attrs: {
+    onCloseCategoryAddModal() {
+      closeCategoryAddModal();
+    },
+  },
+});
+const { open: openCategoryChangeModal, close: closeCategoryChangeModal } =
+  useModal({
+    component: CategoryChangeModal,
+    attrs: {
+      onCloseCategoryChangeModal() {
+        closeCategoryChangeModal();
+      },
+    },
+  });
+const { open: openDataModelAddModal, close: closeDataModelAddModal } = useModal(
+  {
+    component: DataModelAddModal,
+    attrs: {
+      onCloseDataModelAddModal() {
+        closeDataModelAddModal();
+      },
+    },
+  },
+);
+
 const showCategoryAddModal = () => {
-  $vfm.open(CATEGORY_ADD_MODAL_ID);
+  openCategoryAddModal();
   resetAddModalStatus();
 };
 
 const showCategoryChangeModal = () => {
-  $vfm.open(CATEGORY_CHANGE_MODAL_ID);
+  openCategoryChangeModal();
 };
 
 const showDataModelAddModal = () => {
-  $vfm.open(DATA_MODEL_ADD_MODAL_ID);
+  openDataModelAddModal();
 };
 
-const beforeOpen = () => {
+const beforeOpenModal = () => {
   selectedDataModelList.value = [];
   addSearchInputValue.value = "";
   checkReachedCount.value = false;
@@ -510,7 +535,7 @@ const beforeOpen = () => {
   getFilters();
 };
 
-const open = () => {
+const openModal = () => {
   setEmptyFilter();
   changeTab("table");
 };

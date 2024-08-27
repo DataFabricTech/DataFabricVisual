@@ -2,4 +2,5 @@ import { MenuSearchTreeContentsProps } from "~/components/extends/menu-seach/tre
 
 export interface MenuSearchTreeProps extends MenuSearchTreeContentsProps {
   title?: string;
+  isShowLength?: boolean;
 }

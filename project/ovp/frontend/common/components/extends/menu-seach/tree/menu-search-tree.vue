@@ -3,7 +3,7 @@
     <button class="select-button" @click="onClickOpenMenuSearch">
       <slot name="button-text-slot">
         <span class="select-button-title">{{ props.title }}</span>
-        <div class="badge badge-primary-lighter" v-if="selectedListData.length > 0">
+        <div class="badge badge-primary-lighter" v-if="selectedListData.length > 0 && isShowLength">
           <p class="badge-text">{{ selectedListData.length }}</p>
         </div>
       </slot>
@@ -53,6 +53,7 @@ const props = withDefaults(defineProps<MenuSearchTreeProps>(), {
   noSearchMsg: "검색결과가 없습니다.",
   isMulti: false,
   isShow: false,
+  isShowLength: true,
 
   // tree 고유 props
   mode: "view",
