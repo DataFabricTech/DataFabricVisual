@@ -192,39 +192,39 @@ public class ServiceManageService {
         return servicesClient.saveStorage(params);
     }
 
-//    public Object saveIngestionPipelines(Map<String, Object> params) {
-//        /**
-//         * step1. ingestionPipelines
-//         * step1. deploy
-//         */
-//        try {
-//            // step1.
-//            Map<String, Object> ipResult = (Map<String, Object>) servicesClient.saveIngestionPipelines(params);
-//            String id = ipResult.get("id").toString();
-//
-//            // step2
-//            servicesClient.ingestionPipelinesDeploy(id);
-//        } catch (Exception e) {
-//            return false;
-//        }
-//        return true;
-//    }
-//
-//
-//    public Object updateIngestionPipelines(String id, List<JsonPatchOperation> params) {
-//        /**
-//         * step1. ingestionPipelines
-//         * step1. deploy
-//         */
-//        try {
-//            // step1.
-//            servicesClient.updateIngestionPipelines(id, params);
-//            // step2
-//            servicesClient.ingestionPipelinesDeploy(id);
-//        } catch (Exception e) {
-//            return false;
-//        }
-//        return true;
-//    }
+    public Object saveIngestionPipelines(Map<String, Object> params) {
+        /**
+         * step1. ingestionPipelines
+         * step1. deploy
+         */
+        try {
+            // step1.
+            Map<String, Object> ipResult = (Map<String, Object>) servicesClient.saveIngestionPipelines(params);
+            String id = ipResult.get("id").toString();
+
+            // step2
+            servicesClient.ingestionPipelinesDeploy(id);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+
+    public Object updateIngestionPipelines(String id, List<JsonPatchOperation> params) {
+        /**
+         * step1. ingestionPipelines
+         * step1. deploy
+         */
+        try {
+            // step1.
+            servicesClient.updateIngestionPipelines(id, params);
+            // step2
+            servicesClient.ingestionPipelinesDeploy(id);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 
 }

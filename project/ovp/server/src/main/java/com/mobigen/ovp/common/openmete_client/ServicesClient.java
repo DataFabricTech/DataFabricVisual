@@ -74,13 +74,13 @@ public interface ServicesClient {
 
     @PostMapping("/storageServices")
     Map<String, Object> saveStorage(@RequestBody Map<String, Object> params);
-//
-//    @PostMapping("/ingestionPipelines")
-//    Object saveIngestionPipelines(@RequestBody Map<String, Object> params);
-//
-//    @PatchMapping(value="/ingestionPipelines/{id}", consumes = "application/json-patch+json")
-//    Object updateIngestionPipelines(String id, @RequestBody List<JsonPatchOperation> params);
-//
-//    @PostMapping("/ingestionPipelines/deploy/{id}")
-//    Object ingestionPipelinesDeploy(@PathVariable String id);
+
+    @PostMapping("/ingestionPipelines")
+    Object saveIngestionPipelines(@RequestBody Map<String, Object> params);
+
+    @PatchMapping(value="/ingestionPipelines/{id}", consumes = "application/json-patch+json")
+    Object updateIngestionPipelines(@PathVariable String id, @RequestBody List<JsonPatchOperation> params);
+
+    @PostMapping("/ingestionPipelines/deploy/{id}")
+    Object ingestionPipelinesDeploy(@PathVariable String id);
 }

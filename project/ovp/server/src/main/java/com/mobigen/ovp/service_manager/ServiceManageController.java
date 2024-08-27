@@ -120,15 +120,15 @@ public class ServiceManageController {
         return type.toLowerCase().equals("database") ? service.saveDatabase(params) : service.saveStorage(params);
     }
 
-//    @ResponseJsonResult
-//    @PostMapping(value = "/pipelines")
-//    public Object saveIngestionPipelines(@RequestBody Map<String, Object> params) {
-//        return service.saveIngestionPipelines(params);
-//    }
-//
-//    @ResponseJsonResult
-//    @PatchMapping(value = "/pipelines/{id}")
-//    public Object updateIngestionPipelines(@PathVariable String id, List<JsonPatchOperation> params) {
-//        return service.updateIngestionPipelines(id, params);
-//    }
+    @ResponseJsonResult
+    @PostMapping(value = "/pipelines")
+    public Object saveIngestionPipelines(@RequestBody Map<String, Object> params) {
+        return service.saveIngestionPipelines(params);
+    }
+
+    @ResponseJsonResult
+    @PatchMapping(value = "/pipelines/{id}")
+    public Object updateIngestionPipelines(@PathVariable String id, @RequestBody List<JsonPatchOperation> params) {
+        return service.updateIngestionPipelines(id, params);
+    }
 }
