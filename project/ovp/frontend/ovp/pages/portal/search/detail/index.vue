@@ -62,13 +62,13 @@ const dataModelDetailStore = useDataModelDetailStore();
 const lineageStore = useLineageStore();
 const searchCommonStore = useSearchCommonStore();
 
-const { userList, categoryList, dataModel } = storeToRefs(dataModelDetailStore);
+const { dataModelType, userList, categoryList, dataModel } =
+  storeToRefs(dataModelDetailStore);
 
 const {
   getUserList,
   getCategoryList,
   getDataModelFqn,
-  getDataModelType,
   setDataModelId,
   setDataModelFqn,
   setDataModelType,
@@ -134,7 +134,7 @@ async function changeTab(tab: number | string) {
       await getQuery();
       break;
     case "lineage":
-      await getLineageData(getDataModelType(), getDataModelFqn());
+      await getLineageData(dataModelType.value, getDataModelFqn());
       await getFilters();
       break;
   }

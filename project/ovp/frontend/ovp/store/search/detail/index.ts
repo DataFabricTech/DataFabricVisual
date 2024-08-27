@@ -73,7 +73,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   const dataLineage: Ref<any> = ref({});
   let dataModelId: string = "";
   let dataModelFqn: string = "";
-  let dataModelType: string = "";
+  const dataModelType: Ref<string> = ref("");
 
   const setDataModelId = (id: any) => {
     dataModelId = id;
@@ -84,19 +84,15 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   };
 
   const setDataModelType = (type: any) => {
-    dataModelType = type;
+    dataModelType.value = type;
   };
 
   const getDataModelFqn = () => {
     return dataModelFqn;
   };
 
-  const getDataModelType = () => {
-    return dataModelType;
-  };
-
   const getUserList = async () => {
-    const data = await $api(`/api/search/detail/filter/user`);
+    const data = await $api(`/api/search/detail/user/all`);
 
     userList.value = data.data;
   };
@@ -118,7 +114,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
 
   const getDataModel = async () => {
     const data = await $api(
-      `/api/search/detail/${dataModelId}?type=${dataModelType}`,
+      `/api/search/detail/${dataModelId}?type=${dataModelType.value}`,
     );
 
     if (data.result === 0) {
@@ -131,7 +127,12 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   };
 
   const getDefaultInfo = async () => {
-    const data = await $api(`/api/search/preview/${dataModelFqn}`);
+    let data: any = {};
+    if (dataModelType.value !== "storage") {
+      data = await $api(`/api/search/preview/${dataModelFqn}`);
+    } else {
+      data = await $api(`/api/containers/${dataModelId}`);
+    }
 
     if (data.result === 0) {
       // TODO: 에러페이지 이동
@@ -144,7 +145,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
 
   const getSchema = async () => {
     const data = await $api(
-      `/api/search/detail/schema/${dataModelId}?type=${dataModelType}`,
+      `/api/search/detail/schema/${dataModelId}?type=${dataModelType.value}`,
     );
     schemaList.value = data.data;
   };
@@ -236,10 +237,13 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
       default:
     }
 
-    return $api(`/api/search/detail/${dataModelId}?type=${dataModelType}`, {
-      method: "patch",
-      body: body,
-    });
+    return $api(
+      `/api/search/detail/${dataModelId}?type=${dataModelType.value}`,
+      {
+        method: "patch",
+        body: body,
+      },
+    );
   };
 
   function makeModelNameBody(model: any) {
@@ -321,6 +325,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   }
 
   return {
+    dataModelType,
     userList,
     categoryList,
     tagList,
@@ -337,7 +342,6 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     setDataModelFqn,
     setDataModelType,
     getDataModelFqn,
-    getDataModelType,
     getUserList,
     getCategoryList,
     getTagList,
