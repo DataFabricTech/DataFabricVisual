@@ -4,7 +4,9 @@ export interface SelectProps {
   labelKey: string;
   valueKey: string;
   iconKey?: string;
+  defaultLabel?: string;
   selectedItem?: string | number;
   disabledList?: (string | number)[];
   isFirstSelectedEvent?: boolean;
 }
+

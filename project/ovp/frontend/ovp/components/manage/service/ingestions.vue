@@ -18,7 +18,13 @@
         </button>
       </div>
       <!--  TODO: [개발] 수집추가 모달을 메타데이터 수집추가, 프로파일러 수집추가 드롭다운 메뉴에 추가 필요, dropdown의 위치를 right:0으로 조정 필요  -->
-      <select-box class="" @click="showModalCollection = true"
+      <select-box
+        :data="collectionAddOptions"
+        :selectedItem="[]"
+        :defaultLabel="defaultLabel"
+        label-key="label"
+        value-key="value"
+        @select="selectCollectionAdd"
         >수집추가</select-box
       >
     </div>
@@ -77,8 +83,31 @@
 import ModalLog from "~/components/manage/service/modal/modal-log.vue";
 import { useServiceCollectionLogStore } from "~/store/manage/service/collection-log/index";
 
+import { useModal } from "vue-final-modal";
+import SelectBox from "@extends/select-box/SelectBox.vue";
+
+import ModalCollection from "@/components/manage/service/modal/collection/modal-collection.vue";
+import { useServiceCollectionAddStore } from "@/store/manage/service/collection-add/index";
+
+const COLLECTION_ID: string = "collection-id";
+
 const serviceCollectionLogStore = useServiceCollectionLogStore();
 const { getCollectionLogData, setServiceId } = serviceCollectionLogStore;
+
+const props = defineProps({
+  service: {
+    type: Object,
+  },
+});
+
+const { open, close } = useModal({
+  component: ModalCollection,
+  attrs: {
+    onClose() {
+      close();
+    },
+  },
+});
 
 const isModalVisible = ref(false);
 const openModal = async (id: string) => {
@@ -90,5 +119,38 @@ const openModal = async (id: string) => {
 };
 const closeModal = () => {
   isModalVisible.value = false;
+};
+
+const collectionAddStore = useServiceCollectionAddStore();
+const { pipelineType } = storeToRefs(collectionAddStore);
+const { setModalTitle, setPipelineType, setServiceType, setId } =
+  collectionAddStore;
+
+const defaultLabel = "수집추가";
+
+const collectionAddOptions = [
+  {
+    label: "메타데이터 수집 추가",
+    value: "metadata",
+  },
+  {
+    label: "프로파일러 수집 추가",
+    value: "profiler",
+  },
+];
+
+const selectCollectionAdd = (value: any) => {
+  setPipelineType(value);
+  // TODO: 저장소 이름, id, serviceType 세팅 필요 .. service-info.vue에서 props로 받아오기..
+  //setId("아이디이");
+  setServiceType("storageService");
+
+  if (value === "metadata") {
+    setModalTitle("메타데이터 수집 추가");
+  } else {
+    setModalTitle("프로파일러 수집 추가");
+  }
+
+  open();
 };
 </script>
