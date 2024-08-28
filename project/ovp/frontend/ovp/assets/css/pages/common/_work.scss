@@ -27,11 +27,8 @@
   flex: 0 0 310px;
   border-right: 1px solid $neutral-200;
 
-  .menu-data {
-    height: calc(100% - 49px);
-  }
-
-  & > .menu {
+  & > .menu,
+  & > .menu-data {
     overflow-y: auto;
     height: calc(100% - 49px);
   }
@@ -52,15 +49,17 @@
     height: 100%;
   }
 
-  .tab-button-text {
-    @include font-size('14');
-  }
-
   .tab-contents {
     display: flex;
     flex-direction: column;
     height: calc(100% - 46px);
     padding: $spacing-8 0 0 0;
+  }
+}
+
+.section-contents:has(.l-split + .l-split) {
+  .work-list > .menu {
+    overflow-y: visible;
   }
 }
 
