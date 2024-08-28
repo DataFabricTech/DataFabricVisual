@@ -35,7 +35,6 @@ export const useServiceStore = defineStore("service", () => {
     const res = await $api(`/api/service-manage/list`);
     const serviceListData: Service[] = res.data;
     serviceList.splice(0, serviceList.length, ...serviceListData);
-    console.log(res.data);
 
     const serviceData: Service =
       Object.keys(service).length === 0 ? serviceListData[0] : service;
