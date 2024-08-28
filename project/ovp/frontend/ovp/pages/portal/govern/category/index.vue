@@ -194,15 +194,6 @@
       </div>
     </div>
   </div>
-  <CategoryAddModal :modal-id="CATEGORY_ADD_MODAL_ID"></CategoryAddModal>
-  <CategoryChangeModal
-    :modal-id="CATEGORY_CHANGE_MODAL_ID"
-  ></CategoryChangeModal>
-  <DataModelAddModal
-    :modal-id="DATA_MODEL_ADD_MODAL_ID"
-    @before-open="beforeOpenModal"
-    @open="openModal"
-  ></DataModelAddModal>
 </template>
 
 <script setup lang="ts">
@@ -489,6 +480,7 @@ const editIcon = (key: string) => {
 const { open: openCategoryAddModal, close: closeCategoryAddModal } = useModal({
   component: CategoryAddModal,
   attrs: {
+    modalId: CATEGORY_ADD_MODAL_ID,
     onCloseCategoryAddModal() {
       closeCategoryAddModal();
     },
@@ -498,6 +490,7 @@ const { open: openCategoryChangeModal, close: closeCategoryChangeModal } =
   useModal({
     component: CategoryChangeModal,
     attrs: {
+      modalId: CATEGORY_CHANGE_MODAL_ID,
       onCloseCategoryChangeModal() {
         closeCategoryChangeModal();
       },
@@ -507,8 +500,12 @@ const { open: openDataModelAddModal, close: closeDataModelAddModal } = useModal(
   {
     component: DataModelAddModal,
     attrs: {
+      modalId: DATA_MODEL_ADD_MODAL_ID,
       onCloseDataModelAddModal() {
         closeDataModelAddModal();
+      },
+      onBeforeOpen() {
+        beforeOpenModal();
       },
     },
   },
