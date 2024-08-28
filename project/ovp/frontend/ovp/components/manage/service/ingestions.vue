@@ -89,8 +89,6 @@ import SelectBox from "@extends/select-box/SelectBox.vue";
 import ModalCollection from "@/components/manage/service/modal/collection/modal-collection.vue";
 import { useServiceCollectionAddStore } from "@/store/manage/service/collection-add/index";
 
-const COLLECTION_ID: string = "collection-id";
-
 const serviceCollectionLogStore = useServiceCollectionLogStore();
 const { getCollectionLogData, setServiceId } = serviceCollectionLogStore;
 
@@ -125,7 +123,6 @@ const closeModal = () => {
 };
 
 const collectionAddStore = useServiceCollectionAddStore();
-const { pipelineType } = storeToRefs(collectionAddStore);
 const { setModalTitle, setPipelineType, setServiceType, setId } =
   collectionAddStore;
 
