@@ -129,7 +129,7 @@
         </ul>
       </div>
       <repository v-if="store.tab === 'repository'"></repository>
-      <ingestions v-if="store.tab === 'collection'"></ingestions>
+      <ingestions v-if="store.tab === 'collection'" :service="service"></ingestions>
       <connection-info v-if="store.tab === 'connection-info'"></connection-info>
     </div>
   </div>

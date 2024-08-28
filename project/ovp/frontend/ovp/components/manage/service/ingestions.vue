@@ -18,7 +18,13 @@
         </button>
       </div>
       <!--  TODO: [개발] 수집추가 모달을 메타데이터 수집추가, 프로파일러 수집추가 드롭다운 메뉴에 추가 필요, dropdown의 위치를 right:0으로 조정 필요  -->
-      <select-box class="" @click="showModalCollection = true"
+      <select-box
+        :data="collectionAddOptions"
+        :selectedItem="ingestionSelected"
+        :defaultLabel="defaultLabel"
+        label-key="label"
+        value-key="value"
+        @select="selectCollectionAdd"
         >수집추가</select-box
       >
     </div>
@@ -77,8 +83,32 @@
 import ModalLog from "~/components/manage/service/modal/modal-log.vue";
 import { useServiceCollectionLogStore } from "~/store/manage/service/collection-log/index";
 
+import { useModal } from "vue-final-modal";
+import SelectBox from "@extends/select-box/SelectBox.vue";
+
+import ModalCollection from "@/components/manage/service/modal/collection/modal-collection.vue";
+import { useServiceCollectionAddStore } from "@/store/manage/service/collection-add/index";
+
 const serviceCollectionLogStore = useServiceCollectionLogStore();
 const { getCollectionLogData, setServiceId } = serviceCollectionLogStore;
+
+const props = defineProps({
+  service: {
+    type: Object,
+  },
+});
+
+const { open, close } = useModal({
+  component: ModalCollection,
+  attrs: {
+    onClose() {
+      close();
+    },
+    onLoadData() {
+      // TODO: 메타데이터 생성/수정 모달이 닫혔을때 파이프라인 목록 갱신 필요
+    },
+  },
+});
 
 const isModalVisible = ref(false);
 const openModal = async (id: string) => {
@@ -90,5 +120,45 @@ const openModal = async (id: string) => {
 };
 const closeModal = () => {
   isModalVisible.value = false;
+};
+
+const collectionAddStore = useServiceCollectionAddStore();
+const { setModalTitle, setPipelineType, setServiceType, setId } =
+  collectionAddStore;
+
+const defaultLabel = "수집추가";
+
+const collectionAddOptions = [
+  {
+    label: "메타데이터 수집 추가",
+    value: "metadata",
+  },
+  {
+    label: "프로파일러 수집 추가",
+    value: "profiler",
+  },
+];
+
+const ingestionSelected = ref([]);
+
+const selectCollectionAdd = (value: any) => {
+  setPipelineType(value);
+  // 서비스 id 세팅
+  setId(props.service.id);
+
+  if (props.service.type === "database") {
+    setServiceType("databaseService");
+  } else {
+    setServiceType("storageService");
+  }
+
+  if (value === "metadata") {
+    setModalTitle("메타데이터 수집 추가");
+  } else {
+    setModalTitle("프로파일러 수집 추가");
+  }
+
+  open();
+  ingestionSelected.value = [];
 };
 </script>
