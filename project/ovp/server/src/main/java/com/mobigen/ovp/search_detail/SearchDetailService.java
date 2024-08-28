@@ -9,6 +9,7 @@ import com.mobigen.ovp.common.openmete_client.LineageClient;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Columns;
+import com.mobigen.ovp.common.openmete_client.dto.Followers;
 import com.mobigen.ovp.common.openmete_client.dto.ProfileColumn;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
 import com.mobigen.ovp.common.openmete_client.dto.Tag;
@@ -213,6 +214,43 @@ public class SearchDetailService {
 
         return dataModelDetailResponse;
     }
+
+    /**
+     * 데이터 모델 상세 > 팔로우(북마크) 데이터 추출
+     * @param userId
+     * @param id
+     * @param type
+     * @return
+     */
+    public boolean getFollowDataModel(String userId, String id, String type) {
+        boolean isFollow = false;
+        if (ModelType.STORAGE.getValue().equals(type)) {
+            Map<String, Object> container = containersClient.getContainersObject(id, "followers");
+            List<Map<String, Object>> followers = (List<Map<String, Object>>) container.get("followers");
+            for(Map<String, Object> follower: followers) {
+                if (follower.get("id").equals(userId)) {
+                    isFollow = true;
+                    break;
+                }
+            }
+            return isFollow;
+        } else {
+            MultiValueMap params = new LinkedMultiValueMap();
+            params.add("fields", "followers");
+            params.add("include", "all");
+
+            Tables tables = tablesClient.getTablesName(id, params);
+
+            for(Followers followers: tables.getFollowers()) {
+                if (followers.getId().equals(userId)) {
+                    isFollow = true;
+                    break;
+                }
+            }
+            return isFollow;
+        }
+    }
+
 
     /**
      * 데이터 모델 스키마 (테이블, 스토리지)
