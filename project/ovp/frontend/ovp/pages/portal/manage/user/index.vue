@@ -49,8 +49,8 @@ import { useIntersectionObserver } from "~/composables/intersectionObserverHelpe
 import { useModal } from "vue-final-modal";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import agGrid from "@extends/grid/Grid.vue";
-import AddUserModal from "@/components/admin/user/modal/add.vue";
-import DeleteButtonRenderer from "@/components/admin/user/cell-renderer/delete-button.vue";
+import AddUserModal from "@/components/manage/user/modal/add.vue";
+import DeleteButtonRenderer from "@/components/manage/user/cell-renderer/delete-button.vue";
 
 const router = useRouter();
 const userStore = useUserStore();
