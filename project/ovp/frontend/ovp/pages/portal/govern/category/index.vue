@@ -136,7 +136,7 @@
                     전체선택
                   </label>
                 </div>
-                <div class="h-group ml-auto gap-2">
+                <div class="h-group ml-auto gap-2" v-if="isModalButtonShow">
                   <button
                     class="button button-secondary-stroke"
                     @click="showCategoryChangeModal"
@@ -248,6 +248,7 @@ const {
   selectedTitleNodeValue,
   selectedNodeCategory,
   dupliSelectedTitleNodeValue,
+  lastChildIdList,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -259,6 +260,7 @@ const modelIdList = ref([]);
 const isDescEditMode = ref(false);
 const isTitleEditMode = ref(false);
 const isShowPreview = ref<boolean>(false);
+const isModalButtonShow = ref<boolean>(false);
 
 let currentPreviewId: string | number = "";
 let previewIndex: string = "table";
@@ -290,8 +292,10 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   isTitleEditMode.value = false;
   selectedNodeCategory.value = node;
   dupliSelectedTitleNodeValue.value = node.name;
-  selectedCategoryId.value = <string>node.id;
+  selectedCategoryId.value = node.id;
   selectedCategoryTagId.value = <string>node.tagId;
+
+  checkModalButton(node.id);
 
   setScrollOptions(0);
   // 선택한 노드정보 저장
@@ -300,6 +304,12 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   await getModelList();
   // 모든 모델 리스트 id 저장
   setModelIdList();
+};
+
+const checkModalButton = (id: string) => {
+  isModalButtonShow.value = lastChildIdList.value.some(
+    (lastChildId: string) => lastChildId === id,
+  );
 };
 
 const addSibling = (newNode: TreeViewItem) => {

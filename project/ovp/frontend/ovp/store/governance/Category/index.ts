@@ -80,6 +80,8 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   });
   const selectedTitleNodeValue = ref(selectedNodeCategory.value.name || "");
   const dupliSelectedTitleNodeValue = ref("");
+  const lastChildIdList: Ref<string[]> = ref<string[]>([]);
+
   // MAIN - TREE
   const getCategories = async () => {
     const { data } = await $api(`/api/category/list`);
@@ -91,7 +93,11 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     categories.value = data.children;
     isCategoriesNoData.value = categories.value.length === 0;
     categoriesParentId.value = data.parentId;
-    console.log(categories.value);
+
+    lastChildIdList.value = categories.value
+      .flatMap((item1) => item1.children)
+      .flatMap((item2) => item2.children)
+      .map((item3) => item3.id);
   };
 
   const addCategory = (node: TreeViewItem) => {
@@ -382,6 +388,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     selectedNodeCategory,
     selectedTitleNodeValue,
     dupliSelectedTitleNodeValue,
+    lastChildIdList,
     resetAddModalStatus,
     getModelItemAPI,
     getCategories,
