@@ -210,20 +210,23 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
       updatedVoteType: state,
     };
 
-    await $api(`/api/search/detail/${dataModelId}/vote`, {
-      method: "put",
-      body: body,
-    });
+    await $api(
+      `/api/search/detail/${dataModelId}/vote?type=${dataModelType.value}`,
+      {
+        method: "PUT",
+        body: body,
+      },
+    );
     await getDataModel();
   };
 
   const changeFollow = async () => {
-    const url: string = `/api/search/detail/${dataModelId}/follow`;
+    const url: string = `/api/search/detail/${dataModelId}/follow?type=${dataModelType.value}`;
 
     if (dataModel.value.isFollow) {
-      await $api(url, { method: "delete" });
+      await $api(url, { method: "DELETE" });
     } else {
-      await $api(url, { method: "put" });
+      await $api(url, { method: "PUT" });
     }
 
     await getDataModel();
@@ -253,7 +256,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     return $api(
       `/api/search/detail/${dataModelId}?type=${dataModelType.value}`,
       {
-        method: "patch",
+        method: "PATCH",
         body: body,
       },
     );
@@ -359,7 +362,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     return $api(
       `/api/search/detail/${dataModelId}/tag?type=${dataModelType.value}&target=${target}&isCategory=${isCategory}`,
       {
-        method: "patch",
+        method: "PATCH",
         body: body,
       },
     );

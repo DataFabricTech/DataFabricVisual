@@ -162,10 +162,10 @@ public class SearchDetailController {
      */
     @ResponseJsonResult
     @PutMapping("/{id}/vote")
-    Object changeVote(@PathVariable String id, @RequestBody DataModelDetailVote dataModelDetailVote) {
+    Object changeVote(@PathVariable String id, @RequestParam String type, @RequestBody DataModelDetailVote dataModelDetailVote) {
         log.info("");
 
-        return searchDetailService.changeVote(id, dataModelDetailVote);
+        return searchDetailService.changeVote(id, type, dataModelDetailVote);
     }
 
     /**
@@ -177,10 +177,10 @@ public class SearchDetailController {
      */
     @ResponseJsonResult
     @PutMapping("/{id}/follow")
-    Object followDataModel(@PathVariable String id) throws Exception {
+    Object followDataModel(@PathVariable String id, @RequestParam String type) throws Exception {
         log.info("");
 
-        return searchDetailService.followDataModel(id);
+        return searchDetailService.followDataModel(id, type);
     }
 
     /**
@@ -192,10 +192,10 @@ public class SearchDetailController {
      */
     @ResponseJsonResult
     @DeleteMapping("/{id}/follow")
-    Object unfollowDataModel(@PathVariable String id) throws Exception {
+    Object unfollowDataModel(@PathVariable String id, @RequestParam String type) throws Exception {
         log.info("");
 
-        return searchDetailService.unfollowDataModel(id);
+        return searchDetailService.unfollowDataModel(id, type);
     }
 
     /**

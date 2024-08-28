@@ -329,9 +329,14 @@ public class SearchDetailService {
      * @param dataModelDetailVote
      * @return
      */
-    public Object changeVote(String id, DataModelDetailVote dataModelDetailVote) {
+    public Object changeVote(String id, String type, DataModelDetailVote dataModelDetailVote) {
 
-        return tablesClient.changeVote(id, dataModelDetailVote);
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            return tablesClient.changeVote(id, dataModelDetailVote);
+
+        }
+
+        return containersClient.changeVote(id, dataModelDetailVote);
     }
 
     /***
@@ -340,11 +345,15 @@ public class SearchDetailService {
      * @return
      * @throws Exception
      */
-    public Object followDataModel(String id) throws Exception {
+    public Object followDataModel(String id, String type) throws Exception {
         Map<String, Object> user = userClient.getUserInfo();
         String userId = user.get("id").toString();
 
-        return tablesClient.follow(id, UUID.fromString(userId));
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            return tablesClient.follow(id, UUID.fromString(userId));
+        }
+
+        return containersClient.follow(id, UUID.fromString(userId));
     }
 
     /**
@@ -354,11 +363,15 @@ public class SearchDetailService {
      * @return
      * @throws Exception
      */
-    public Object unfollowDataModel(String id) throws Exception {
+    public Object unfollowDataModel(String id, String type) throws Exception {
         Map<String, Object> user = userClient.getUserInfo();
         String userId = user.get("id").toString();
 
-        return tablesClient.unfollow(id, userId);
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            return tablesClient.unfollow(id, userId);
+        }
+
+        return containersClient.unfollow(id, userId);
     }
 
     /**
