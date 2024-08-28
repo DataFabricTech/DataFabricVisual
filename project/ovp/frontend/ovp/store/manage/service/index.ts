@@ -67,12 +67,7 @@ export const useServiceStore = defineStore("service", () => {
    * @param source
    */
   function changeCurrentService(source: Service): void {
-    if (source.owner) {
-      source.owner = {
-        id: source.owner.id,
-        name: source.owner.name,
-      };
-    } else {
+    if (!source.owner) {
       source.owner = [];
     }
     Object.assign(service, source);
