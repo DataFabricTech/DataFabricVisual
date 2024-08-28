@@ -524,9 +524,13 @@ export function ModalServiceComposition(
     for (const itemId of requiredItems) {
       const value = serviceObj.value.detailInfo[itemId];
       if (Array.isArray(value)) {
-        for (const innerItem of value) {
-          if (_.isEmpty(innerItem)) {
-            return false;
+        if (_.isEmpty(value)) {
+          return false;
+        } else {
+          for (const innerItem of value) {
+            if (_.isEmpty(innerItem)) {
+              return false;
+            }
           }
         }
       } else {
