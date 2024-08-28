@@ -14,6 +14,7 @@
     swipeToClose="none"
     @before-open="onBeforeOpen"
     @closed="onClosed"
+    @cancel="onClosed"
   >
     <template v-slot:body>
       <Step
