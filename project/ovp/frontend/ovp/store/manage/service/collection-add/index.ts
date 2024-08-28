@@ -313,15 +313,6 @@ export const useServiceCollectionAddStore = defineStore(
         };
       }
 
-      // TODO: 플랫폼팀에서 storage metadata 부분의 bucket기능 구현시 아래 코드 제거 예정
-      if (
-        pipelineType.value === "metadata" &&
-        serviceType.value === "storageService"
-      ) {
-        // configObject 에 포함되어있는 bucketFilterPattern 객체 제거.
-        delete configObject.bucketFilterPattern;
-      }
-
       return configObject;
     });
 
