@@ -1,6 +1,9 @@
 <template>
   <!-- Step 01 / 시작 -->
-  <div class="service-type" :style="props.style">
+  <div
+    class="service-type"
+    :style="{ display: props.isShow ? 'block' : 'none' }"
+  >
     <ul class="service-type-list">
       <li
         v-for="service in services"

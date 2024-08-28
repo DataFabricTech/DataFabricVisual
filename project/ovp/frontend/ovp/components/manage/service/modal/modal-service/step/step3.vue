@@ -1,6 +1,9 @@
 <template>
   <!-- Step 03 / 시작 -->
-  <div class="service-form" :style="props.style">
+  <div
+    class="service-form"
+    :style="{ display: props.isShow ? 'block' : 'none' }"
+  >
     <selected-service-info />
 
     <div class="form form-vertical">
@@ -9,8 +12,9 @@
       />
     </div>
   </div>
+
   <!-- 연결 정보 테스트/ step 03에서만 노출됩니다. 1,2 단계에서는 hidden -->
-  <div class="connect-test" :style="props.style">
+  <div class="connect-test" :style="props.isShow ? '' : { display: 'none' }">
     <button
       class="button button-secondary-stroke button-lg"
       @click="doConnectionTest"
