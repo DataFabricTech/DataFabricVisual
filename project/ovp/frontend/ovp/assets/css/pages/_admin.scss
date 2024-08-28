@@ -1,5 +1,7 @@
 //서비스 선택
 .service-type {
+
+
   &-list {
     @include flex($horizontal: flex-start, $gap: $spacing-36);
 
