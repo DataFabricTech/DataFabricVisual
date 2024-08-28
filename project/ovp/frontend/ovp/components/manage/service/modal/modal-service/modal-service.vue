@@ -1,6 +1,6 @@
 <template>
   <Modal
-    title="서비스 추가"
+    :title="`서비스 ${isAddMode ? '추가' : '수정'}`"
     class="modal modal-padding-16"
     background="non-interactive"
     displayDirective="show"
@@ -12,6 +12,7 @@
     :height="674"
     :lockScroll="false"
     swipeToClose="none"
+    @before-open="beforeOpen"
     @closed="onCancel"
     @cancel="onCancel"
   >
@@ -30,10 +31,10 @@
         style="width: 100%"
       />
 
-      <step1 :is-show="currentStep === 1" />
-
-      <step2 ref="step2Ref" :is-show="currentStep === 2" />
-
+      <template v-if="isAddMode">
+        <step1 :is-show="currentStep === 1" />
+        <step2 ref="step2Ref" :is-show="currentStep === 2" />
+      </template>
       <step3 ref="step3Ref" :is-show="currentStep === 3" />
     </template>
     <template #footer>
@@ -49,7 +50,7 @@
           <p class="notification-detail">{{ inValidMsg }}</p>
         </div>
         <button
-          v-show="currentStep > 1"
+          v-show="currentStep > 1 && isAddMode"
           class="button button-primary-stroke button-lg"
           @click="gotoPrev"
         >
@@ -76,8 +77,9 @@ import {
 } from "./ModalServiceComposition";
 import type { ModalServiceProps } from "./ModalServiceProps";
 
-const props = withDefaults(defineProps<ModalServiceProps>(), {});
+const props = withDefaults(defineProps<ModalServiceProps>(), { mode: "add" });
 const {
+  isAddMode,
   currentStep,
   inValidMsg,
   isValid,
@@ -94,6 +96,7 @@ const emit = defineEmits<{
   (e: "loadData"): void;
 }>();
 
+isAddMode.value = props.mode === "add";
 const stepOptions: any[] = [
   { label: "서비스 타입 선택", value: 1 },
   { label: "서비스 컨피그 입력", value: 2 },
@@ -101,6 +104,13 @@ const stepOptions: any[] = [
 ];
 const step2Ref = ref<any | null>(null);
 const step3Ref = ref<any | null>(null);
+
+const beforeOpen = () => {
+  if (!isAddMode.value) {
+    // 서비스 수정일 경우, 3번 탭을 보여주도록 설정
+    changeStep(4);
+  }
+};
 
 const changeStep = (value: number | string) => {
   // value 를 숫자로만 했기 때문에 ts 오류 방지를 위해 Number 로 형변환 한다.

@@ -1,9 +1,17 @@
 import { defineStore } from "pinia";
-import { ref, reactive } from "vue";
+import { ref, reactive, type Ref } from "vue";
 import type { Service, Owner, Ingestion } from "~/type/service";
 import type { JsonPatchOperation } from "~/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
+import { ServiceIds } from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
 import $constants from "~/utils/constant";
+
+export enum ConnectionStatus {
+  LOADING = "LOADING",
+  SUCCESS = "SUCCESS",
+  ERROR = "ERROR",
+  NONE = "NONE",
+}
 
 export const useServiceStore = defineStore("service", () => {
   const { $api } = useNuxtApp();
@@ -23,6 +31,12 @@ export const useServiceStore = defineStore("service", () => {
     tag: false,
     term: false,
   });
+
+  const testConnectionStatus: Ref<ConnectionStatus> = ref(
+    ConnectionStatus.NONE,
+  );
+  const connectionInfo: Ref<{ [key: string]: any }> = ref({});
+  const viewConnectionInfo: Ref<{ [key: string]: any }> = ref({});
 
   async function changeTab(value: string) {
     tab.value = value;
@@ -200,11 +214,114 @@ export const useServiceStore = defineStore("service", () => {
   function changeEditInfo(property: keyof typeof editInfo): void {
     editInfo[property] = !editInfo[property];
   }
+
   function disableEditInfo(): void {
     editInfo.owner = false;
     editInfo.tag = false;
     editInfo.term = false;
   }
+
+  /**
+   * 연결정보 조회
+   */
+  const getConnectionInfo = async () => {
+    // TODO: API 구현 완료 후 수정
+    const queryParams = {
+      fields: "owner,tags,dataProducts,domain",
+      include: "all",
+    };
+    const connectionQuery = new URLSearchParams(queryParams);
+    const { type, name } = service;
+    const { data } = await $api(
+      `/api/service-manage/${type}/${name}?${connectionQuery}`,
+    );
+
+    connectionInfo.value = data;
+    setViewConnectionInfo();
+  };
+
+  const addIfExists = (obj: any, key: string, value: any) => {
+    if (value) {
+      obj[key] = value;
+    }
+  };
+
+  const setViewConnectionInfo = () => {
+    // TODO: 상수처리
+    const connectionInfoData = connectionInfo.value;
+    const { type, scheme, connectionArguments, connectionOptions } =
+      connectionInfoData;
+
+    const data: { [key: string]: any } = {};
+    addIfExists(data, "scheme", scheme);
+    addIfExists(data, "connectionArguments", connectionArguments);
+    addIfExists(data, "connectionOptions", connectionOptions);
+    switch (type) {
+      case ServiceIds.MINIO: {
+        const minioConfig = connectionInfoData.minioConfig;
+        addIfExists(data, "accessKeyId", minioConfig.accessKeyId);
+        addIfExists(data, "secretKey", minioConfig.secretKey);
+        addIfExists(data, "sessionToken", minioConfig.sessionToken);
+        addIfExists(data, "region", minioConfig.region);
+        addIfExists(data, "endPointURL", minioConfig.endPointURL);
+        addIfExists(data, "bucketNames", connectionInfoData.bucketNames);
+        break;
+      }
+      case ServiceIds.MARIA_DB:
+        addIfExists(data, "username", connectionInfoData.username);
+        addIfExists(data, "password", connectionInfoData.password);
+        addIfExists(data, "hostPort", connectionInfoData.hostPort);
+        addIfExists(data, "databaseName", connectionInfoData.databaseName);
+        addIfExists(data, "databaseSchema", connectionInfoData.databaseSchema);
+        break;
+      case ServiceIds.MYSQL:
+        addIfExists(
+          data,
+          "authConfigurationType",
+          connectionInfoData.authConfigurationType,
+        );
+        addIfExists(data, "username", connectionInfoData.username);
+        addIfExists(data, "password", connectionInfoData.password);
+        addIfExists(data, "hostPort", connectionInfoData.hostPort);
+        addIfExists(data, "databaseName", connectionInfoData.databaseName);
+        break;
+      case ServiceIds.POSTGRESQL:
+        addIfExists(
+          data,
+          "authConfigurationType",
+          connectionInfoData.authConfigurationType,
+        );
+        addIfExists(data, "username", connectionInfoData.username);
+        addIfExists(data, "password", connectionInfoData.password);
+        addIfExists(data, "hostPort", connectionInfoData.hostPort);
+        addIfExists(data, "database", connectionInfoData.database);
+        break;
+      case ServiceIds.ORACLE:
+        addIfExists(
+          data,
+          "oracleConnectionType",
+          connectionInfoData.oracleConnectionType,
+        );
+        addIfExists(
+          data,
+          "instantClientDirectory",
+          connectionInfoData.instantClientDirectory,
+        );
+        addIfExists(data, "username", connectionInfoData.username);
+        addIfExists(data, "password", connectionInfoData.password);
+        addIfExists(data, "hostPort", connectionInfoData.hostPort);
+        break;
+      default:
+        // 예상치 못한 serviceId에 대한 처리
+        console.warn(`Unknown serviceId: ${type}`);
+        break;
+    }
+
+    viewConnectionInfo.value = {
+      scheme,
+      ...data,
+    };
+  };
 
   return {
     tab,
@@ -229,5 +346,10 @@ export const useServiceStore = defineStore("service", () => {
 
     getUserList,
     createOwnerOperation,
+
+    testConnectionStatus,
+    connectionInfo,
+    viewConnectionInfo,
+    getConnectionInfo,
   };
 });

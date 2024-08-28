@@ -14,6 +14,7 @@ export enum PanelTypes {
   INPUT_PWD = "INPUT_PWD",
   SELECT = "SELECT",
 }
+
 export enum ServiceIds {
   MINIO = "MinIO",
   MYSQL = "Mysql",
@@ -21,6 +22,7 @@ export enum ServiceIds {
   POSTGRESQL = "Postgres",
   ORACLE = "Oracle",
 }
+
 export enum ConnectionStatus {
   LOADING = "LOADING",
   SUCCESS = "SUCCESS",
@@ -29,6 +31,7 @@ export enum ConnectionStatus {
 }
 
 export interface ModalServiceComposition extends ModalServiceProps {
+  isAddMode: Ref<boolean>;
   currentStep: Ref<number>;
   isValid: Ref<boolean>;
   inValidMsg: Ref<string>;
@@ -42,25 +45,69 @@ export interface ModalServiceComposition extends ModalServiceProps {
   openEyeValues: Ref<string[]>;
 
   setValue(serviceObjPath: string, value: any): void;
+
   resetInput(serviceObjPath: string): void;
+
   resetServiceObj(): void;
 
   newServiceIdSelect(service: IService): void;
+
   setDefaultServiceId(serviceId: string): void;
 
   checkServiceNameDuplicate(): Promise<boolean>;
+
   checkRequiredValue(): boolean;
+
   connectionTest(): Promise<any>;
 
   submit(): Promise<boolean>;
+
   checkValidation(type: string): Promise<boolean>;
 }
+
+export const services = ref<IService[]>([
+  {
+    id: ServiceIds.MINIO,
+    label: "MinIO",
+    img: "storage-type_06",
+    imgUrl: "",
+    isDisabled: false,
+  },
+  {
+    id: ServiceIds.MYSQL,
+    label: "MySQL",
+    img: "storage-type_02",
+    imgUrl: "",
+    isDisabled: false,
+  },
+  {
+    id: ServiceIds.MARIA_DB,
+    label: "MariaDB",
+    img: "storage-type_01",
+    imgUrl: "",
+    isDisabled: false,
+  },
+  {
+    id: ServiceIds.POSTGRESQL,
+    label: "PostgreSQL",
+    img: "storage-type_03",
+    imgUrl: "",
+    isDisabled: false,
+  },
+  {
+    id: ServiceIds.ORACLE,
+    label: "Oracle",
+    img: "storage-type_04",
+    imgUrl: "",
+  },
+]);
 
 export function ModalServiceComposition(
   props: ModalServiceProps,
 ): ModalServiceComposition {
   const serviceStore = useServiceStore();
   const {
+    isAddMode,
     currentStep,
     isValid,
     inValidMsg,
@@ -79,42 +126,6 @@ export function ModalServiceComposition(
     submit,
   } = serviceStore;
 
-  const services = ref<IService[]>([
-    {
-      id: ServiceIds.MINIO,
-      label: "MinIO",
-      img: "storage-type_06",
-      imgUrl: "",
-      isDisabled: false,
-    },
-    {
-      id: ServiceIds.MYSQL,
-      label: "MySQL",
-      img: "storage-type_02",
-      imgUrl: "",
-      isDisabled: false,
-    },
-    {
-      id: ServiceIds.MARIA_DB,
-      label: "MariaDB",
-      img: "storage-type_01",
-      imgUrl: "",
-      isDisabled: false,
-    },
-    {
-      id: ServiceIds.POSTGRESQL,
-      label: "PostgreSQL",
-      img: "storage-type_03",
-      imgUrl: "",
-      isDisabled: false,
-    },
-    {
-      id: ServiceIds.ORACLE,
-      label: "Oracle",
-      img: "storage-type_04",
-      imgUrl: "",
-    },
-  ]);
   const serviceDetailFormObj: any = {
     [ServiceIds.MINIO]: {
       defaultItems: [
@@ -544,6 +555,7 @@ export function ModalServiceComposition(
 
   return {
     ...props,
+    isAddMode,
     currentStep,
     isValid,
     inValidMsg,
