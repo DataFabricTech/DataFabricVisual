@@ -3,15 +3,11 @@ import { ref, reactive, type Ref } from "vue";
 import type { Service, Owner, Ingestion } from "~/type/service";
 import type { JsonPatchOperation } from "~/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
-import { ServiceIds } from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
+import {
+  ConnectionStatus,
+  ServiceIds,
+} from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
 import $constants from "~/utils/constant";
-
-export enum ConnectionStatus {
-  LOADING = "LOADING",
-  SUCCESS = "SUCCESS",
-  ERROR = "ERROR",
-  NONE = "NONE",
-}
 
 export const useServiceStore = defineStore("service", () => {
   const { $api } = useNuxtApp();
