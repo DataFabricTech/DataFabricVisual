@@ -56,7 +56,8 @@ const cellClicked = ({
   }
   emit("cellClicked", {
     rowIndex: rowIndex,
-    data: data
+    data: data,
+    column
   });
 };
 const rowClicked = ({ rowIndex, data }: { rowIndex: number; data: object }) => {

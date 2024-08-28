@@ -21,15 +21,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
 import { useGovernCategoryStore } from "~/store/governance/Category/index";
 import { storeToRefs } from "pinia";
 import _ from "lodash";
 
 const categoryStore = useGovernCategoryStore();
-const { resetReloadList } = categoryStore;
-const { selectedFilters } = storeToRefs(categoryStore);
+const { resetReloadList, setSearchKeyword, setEmptyFilter } = categoryStore;
+const { selectedFilters, selectedFilterItems, addSearchInputValue } =
+  storeToRefs(categoryStore);
 
 const props = defineProps({
   data: {
@@ -38,12 +38,10 @@ const props = defineProps({
   },
 });
 
-const selectedFilterItems: Ref<any> = ref([]);
-
 const resetFilters = () => {
-  selectedFilterItems.value = [];
-  selectedFilters.value = {};
-
+  setEmptyFilter();
+  addSearchInputValue.value = "";
+  setSearchKeyword("");
   resetReloadList();
 };
 

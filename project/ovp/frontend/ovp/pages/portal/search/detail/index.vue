@@ -9,8 +9,10 @@
       :show-owner="true"
       :show-category="true"
       :editable="true"
-      :filters="filters"
-      :owner-key="FILTER_KEYS.OWNER"
+      :user-list="userList"
+      owner-key="id"
+      :user="user"
+      :category-list="categoryList"
       :category-key="FILTER_KEYS.CATEGORY"
       @editIconClick="editIconClick"
       @editDone="editDone"
@@ -38,6 +40,9 @@ import { ref, shallowRef } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useDataModelDetailStore } from "@/store/search/detail/index";
+import { useLineageStore } from "@/store/search/detail/lineage/index";
+import { useSearchCommonStore } from "@/store/search/common";
+import { useUserStore } from "@/store/user/userStore";
 
 import Tab from "@extends/tab/Tab.vue";
 import ResourceBox from "@/components/common/resource-box/resource-box.vue";
@@ -50,24 +55,24 @@ import Query from "@/components/search/detail-tab/query.vue";
 import Lineage from "@/components/search/detail-tab/lineage.vue";
 import KnowledgeGraph from "@/components/search/detail-tab/knowledge-graph.vue";
 import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
-import { useSearchCommonStore } from "@/store/search/common";
-import { useLineageStore } from "@/store/lineage/lineageStore";
 
-const searchCommonStore = useSearchCommonStore();
-const { getFilter } = searchCommonStore;
-const { filters } = storeToRefs(searchCommonStore);
 import { FILTER_KEYS } from "@/store/search/common";
 
 const route = useRoute();
 
 const dataModelDetailStore = useDataModelDetailStore();
 const lineageStore = useLineageStore();
+const searchCommonStore = useSearchCommonStore();
+const userStore = useUserStore();
 
-const { dataModel } = storeToRefs(dataModelDetailStore);
+const { dataModelType, userList, categoryList, dataModel } =
+  storeToRefs(dataModelDetailStore);
 
 const {
+  getUserList,
+  getCategoryList,
+  getCategoryAllList,
   getDataModelFqn,
-  getDataModelType,
   setDataModelId,
   setDataModelFqn,
   setDataModelType,
@@ -82,17 +87,21 @@ const {
 
 const { getLineageData } = lineageStore;
 
-// tabfilter 객체 정의 (예시로 tables 값을 포함)
-const tabfilter = ref({ tables: true });
+const { getFilters } = searchCommonStore;
+
+const { user } = storeToRefs(userStore);
 
 // computed 속성으로 filteredTabs 정의
 const filteredTabs = computed(() => {
-  if (tabfilter.value.tables) {
+  if (route.query.type !== "storage") {
     // tables가 true이면 모든 탭 옵션을 반환
     return tabOptions;
   } else {
     // tables가 false이면 기본정보, 데이터 리니지, Knowledge graph, 추천 데이터 모델 탭만 반환
-    const includedValues = ["default", 6, 7, 8];
+    const includedValues = ["default", "schema", "lineage", 7, 8];
+    console.log(
+      tabOptions.filter((option) => includedValues.includes(option.value)),
+    );
     return tabOptions.filter((option) => includedValues.includes(option.value));
   }
 });
@@ -120,6 +129,7 @@ async function changeTab(tab: number | string) {
       break;
     case "schema":
       await getSchema();
+      break;
     case "sample":
       await getSampleData();
       break;
@@ -130,19 +140,30 @@ async function changeTab(tab: number | string) {
       await getQuery();
       break;
     case "lineage":
-      await getLineageData(getDataModelType(), getDataModelFqn());
+      await getLineageData(dataModelType.value, getDataModelFqn());
+      await getFilters();
       break;
   }
   currentComponent.value = _.find(tabOptions, ["value", tab])?.component;
 }
 
 const editIconClick = (key: string) => {
-  // TODO: [개발] 소유자 및 카테고리 목록 갱신 API 호출 필요.
-  getFilter(key);
+  if (key === "category") {
+    getCategoryList();
+    getCategoryAllList();
+  } else {
+    getUserList();
+  }
 };
-const editDone = async (newData: object) => {
-  // TODO: [개발] 변경 데이터 저장한는 API 호출 필요
-  await changeDataModel(newData);
+
+const editDone = (data: any) => {
+  changeDataModel(data)
+    .then(() => {
+      getDataModel();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 
 setDataModelId(route.query.id);

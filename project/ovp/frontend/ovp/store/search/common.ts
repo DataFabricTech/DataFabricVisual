@@ -1,6 +1,7 @@
 import { usePagingStore } from "~/store/common/paging";
 import { useQueryHelpers } from "~/composables/queryHelpers";
 import _ from "lodash";
+import { ref } from "vue";
 
 export const FILTER_KEYS = {
   CATEGORY: "category",
@@ -11,7 +12,6 @@ export const FILTER_KEYS = {
   DATABASE: "database.displayName.keyword",
   DATABASE_SCHEMA: "databaseSchema.displayName.keyword",
   COLUMNS: "columns.name.keyword",
-  TABLE_TYPE: "tableType",
 } as const;
 
 export interface Filter {
@@ -28,7 +28,6 @@ export interface Filters {
   [FILTER_KEYS.DATABASE]: Filter;
   [FILTER_KEYS.DATABASE_SCHEMA]: Filter;
   [FILTER_KEYS.COLUMNS]: Filter;
-  [FILTER_KEYS.TABLE_TYPE]: Filter;
 
   [key: string]: Filter; // 인덱스 시그니처 추가
 }
@@ -63,7 +62,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       [FILTER_KEYS.DATABASE]: { text: "데이터베이스", data: [] },
       [FILTER_KEYS.DATABASE_SCHEMA]: { text: "스키마", data: [] },
       [FILTER_KEYS.COLUMNS]: { text: "컬럼", data: [] },
-      [FILTER_KEYS.TABLE_TYPE]: { text: "테이블타입", data: [] },
     };
   };
   // filter 정보
@@ -77,6 +75,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       },
     },
   });
+  const selectedFilterItems: Ref<any> = ref([]);
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
 
   // DATA
@@ -135,6 +134,12 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     searchResultLength.value = totalCount;
     isSearchResultNoData.value = searchResult.value.length === 0;
   };
+
+  const setEmptyFilter = () => {
+    selectedFilterItems.value = [];
+    selectedFilters.value = {};
+  };
+
   const getFilters = async () => {
     const { data } = await $api(`/api/search/filters`);
 
@@ -148,39 +153,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
   const getFilter = async (filterKey: string) => {
     // TODO : 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
-    // const data = await $api(`/api/search/filter?filterKey=${filterKey}`);
-
-    const data: any = {
-      "owner.displayName.keyword": [
-        {
-          key: "N_mariadb",
-        },
-        {
-          key: "N_bigquery",
-        },
-        {
-          key: "N_mysql",
-        },
-        {
-          key: "N_glue",
-        },
-      ],
-      domains: [
-        {
-          key: "N_category1",
-        },
-        {
-          key: "N_category2",
-        },
-        {
-          key: "N_category3",
-        },
-        {
-          key: "N_category",
-        },
-      ],
-    };
-    (filters.value as Filters)[filterKey].data = data[filterKey];
+    const data = await $api(`/api/search/filter?field=${filterKey}`);
+    console.log(data);
+    (filters.value as Filters)[filterKey].data = data.data[filterKey];
   };
 
   const getPreviewData = async (fqn: string) => {
@@ -192,7 +167,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     const data: any = await $api(`/api/containers/${id}`);
     previewData.value = data.data;
   };
-  
+
   const getCtgIds = () => {
     return !_.has(selectedFilters.value, FILTER_KEYS.CATEGORY)
       ? []
@@ -260,6 +235,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     filters,
     searchResult,
     previewData,
+    selectedFilterItems,
     selectedFilters,
     viewType,
     isShowPreview,
@@ -280,5 +256,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     updateIntersectionHandler,
     getQueryFilter,
     getTrinoQuery,
+    setEmptyFilter,
   };
 });

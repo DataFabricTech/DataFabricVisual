@@ -1,4 +1,5 @@
 export interface SelectProps {
+  id?: string;
   data: { [key: string]: string | number }[];
   labelKey: string;
   valueKey: string;

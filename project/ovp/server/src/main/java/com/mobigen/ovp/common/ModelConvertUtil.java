@@ -59,13 +59,14 @@ public class ModelConvertUtil {
         modifiedSource.put("modelNm", source.get("name"));
         modifiedSource.put("modelDesc", source.get("description"));
         modifiedSource.put("fqn", source.get("fullyQualifiedName"));
+        modifiedSource.put("owner", source.get("owner"));
 
         String owner = "";
         if (source.get("owner") != null) {
             Map<String, Object> ownerObj = (Map<String, Object>) source.get("owner");
             owner = ownerObj.get("displayName").toString();
+            modifiedSource.put("ownerDisplayName", owner);
         }
-        modifiedSource.put("owner", owner);
 
         String domain = "";
         if (source.get("domain") != null) {
@@ -82,6 +83,7 @@ public class ModelConvertUtil {
         fqn = (fqn == null) ? "" : fqn;
 
         String name = (String) data.get("name");
+        String displayName = (String) data.get("displayName");
         String description = (String) data.get("description");
         List<Map<String, Object>> tags = (List<Map<String, Object>>) data.getOrDefault("tags", new ArrayList<>());
         List<Map<String, Object>> columns = new ArrayList<>();
@@ -145,6 +147,7 @@ public class ModelConvertUtil {
 
         Map<String, Object> model = new HashMap<>();
         model.put("name", name);
+        model.put("displayName", displayName);
         model.put("desc", description);
         if (type.equals("unstructured")) {
             model.put("size", size);
@@ -163,7 +166,7 @@ public class ModelConvertUtil {
         resultMap.put("glossaries", glossaryList);
         resultMap.put("tags", tagList);
         resultMap.put("id", data.get("id"));
-        
+
         if (type.equals("unstructured")) {
             resultMap.put("modelType", "unstructured");
             resultMap.put("index", "storage");

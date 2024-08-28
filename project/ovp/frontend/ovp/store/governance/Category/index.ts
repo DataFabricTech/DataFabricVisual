@@ -46,7 +46,9 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
 
   let selectedNode: any = null;
   const categories: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
+  const defaultCategoriesParentId = ref("");
   const categoriesParentId = ref("");
+  const categoriesId = ref("");
   const isCategoriesNoData = ref(false);
   const modelList: Ref<any[]> = ref([]);
   const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
@@ -56,7 +58,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const showAddDescNoti = ref<boolean>(false);
   const selectedModelList = ref([]);
   const addSearchInputValue = ref("");
-
+  const checkReachedCount = ref<boolean>(false);
   const previewData: Ref<any> = ref({
     modelInfo: {
       model: {
@@ -64,8 +66,25 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       },
     },
   });
+  const selectedCategoryId = ref("");
+  const selectedCategoryTagId = ref("");
+  const selectedNodeCategory: Ref<TreeViewItem> = ref<TreeViewItem>({
+    id: "",
+    name: "",
+    desc: "",
+    order: 0,
+    parentId: "",
+    tagId: "",
+    expanded: false,
+    selected: false,
+    disabled: false,
+    children: [],
+  });
+  const selectedTitleNodeValue = ref(selectedNodeCategory.value.name || "");
+  const dupliSelectedTitleNodeValue = ref("");
+  const lastChildIdList: Ref<string[]> = ref<string[]>([]);
 
-  // TREE
+  // MAIN - TREE
   const getCategories = async () => {
     const { data } = await $api(`/api/category/list`);
 
@@ -75,8 +94,71 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
      */
     categories.value = data.children;
     isCategoriesNoData.value = categories.value.length === 0;
+    defaultCategoriesParentId.value = data.parentId;
     categoriesParentId.value = data.parentId;
+
+    lastChildIdList.value = categories.value
+      .flatMap((item1) => item1.children)
+      .flatMap((item2) => item2.children)
+      .map((item3) => item3.id);
   };
+
+  const addCategory = (node: TreeViewItem) => {
+    insertOrEditAPI("PUT", node);
+  };
+  const editCategory = (node: TreeViewItem) => {
+    insertOrEditAPI("PATCH", node);
+  };
+  const insertOrEditAPI = async (method: string, node: TreeViewItem) => {
+    const res: any = await $api("/api/category", {
+      method: method,
+      body: node,
+    });
+
+    if (res.data === "HAS_SAME_NAME") {
+      if (categoryAddName.value !== "") {
+        alert(`${categoryAddName.value} 이미 존재합니다.`);
+        categoryAddName.value = "";
+        return;
+      } else if (selectedTitleNodeValue.value !== "") {
+        alert(`${selectedTitleNodeValue.value} 이미 존재합니다.`);
+        selectedTitleNodeValue.value = dupliSelectedTitleNodeValue.value;
+        selectedNodeCategory.value.name = dupliSelectedTitleNodeValue.value;
+      }
+    }
+    // 모달 창이 뜨기 전에 확인을 해야돼서, 이 시점에는 확인하지 않는다. (추후 사용할 수 있어서 남김)
+    // if (res.data === "OVER_DEPTH") {
+    //   alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
+    //   return;
+    // }
+
+    await getCategories();
+  };
+
+  const moveCategory = async (dropNodeId: string, targetNodeId: string) => {
+    const { data } = await $api("/api/category/move", {
+      method: "PUT",
+      body: {
+        dropNodeId: dropNodeId,
+        targetNodeId: targetNodeId,
+      },
+    });
+    return data;
+  };
+  const deleteCategory = (nodeId: string) => {
+    return $api(`/api/category`, {
+      method: "delete",
+      body: {
+        id: nodeId,
+      },
+    });
+  };
+
+  const addNewCategory = (newNode: TreeViewItem) => {
+    addCategory(newNode);
+  };
+
+  // MAIN - MODEL LIST
   const getModelListQuery = (tagId: string, value?: string) => {
     // TODO : [개발] 검색어 조건 여기 추가.
     const params: any = {
@@ -114,55 +196,15 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const setSelectedNode = (node: any) => {
     selectedNode = node;
   };
-  const addCategory = (node: TreeViewItem) => {
-    insertOrEditAPI("PUT", node);
-  };
-  const editCategory = (node: TreeViewItem) => {
-    insertOrEditAPI("PATCH", node);
-  };
-  const insertOrEditAPI = (method: string, node: TreeViewItem) => {
-    $api("/api/category", {
-      method: method,
-      body: node,
-    }).then((res: any) => {
-      if (res.data === "HAS_SAME_NAME") {
-        alert(`${categoryAddName.value} 이 이미 존재합니다.`);
-        return;
-      }
-
-      if (res.data === "OVER_DEPTH") {
-        alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
-        return;
-      }
-      getCategories();
-    });
-  };
-  const moveCategory = async (dropNodeId: string, targetNodeId: string) => {
-    const { data } = await $api("/api/category/move", {
-      method: "PUT",
-      body: {
-        dropNodeId: dropNodeId,
-        targetNodeId: targetNodeId,
-      },
-    });
-    return data;
-  };
-  const deleteCategory = (nodeId: string) => {
-    return $api(`/api/category`, {
-      method: "delete",
-      body: {
-        id: nodeId,
-      },
-    });
-  };
-
-  const addNewCategory = (newNode: TreeViewItem) => {
-    addCategory(newNode);
-  };
 
   // PREVIEW
   const getPreviewData = async (fqn: string) => {
     const data: any = await $api(`/api/search/preview/${fqn}`);
+    previewData.value = data.data;
+  };
+
+  const getContainerPreviewData = async (id: string) => {
+    const data: any = await $api(`/api/containers/${id}`);
     previewData.value = data.data;
   };
 
@@ -174,8 +216,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     categoryAddDesc.value = "";
   };
 
-  // FILTERS
-  // filters 초기값 부여 (text 처리)
+  // MODAL - FILTERS
   const createDefaultFilters = (): Filters => {
     return {
       [FILTER_KEYS.OWNER]: { text: "소유자", data: [] },
@@ -184,23 +225,38 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       [FILTER_KEYS.SERVICE_TYPE]: { text: "서비스타입", data: [] },
     };
   };
-  // filter 정보
+
   const filters = ref<Filters>(createDefaultFilters());
-  const currentTab: Ref<string> = ref("table");
-  const searchResult: Ref<any[]> = ref([]);
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
+  const selectedFilterItems: Ref<any> = ref([]);
+  const setEmptyFilter = () => {
+    selectedFilterItems.value = [];
+    selectedFilters.value = {};
+  };
+
+  const getFilters = async () => {
+    const { data } = await $api(`/api/search/filters`);
+
+    const defaultFilters = createDefaultFilters();
+    const useFilters = Object.keys(defaultFilters);
+
+    useFilters.forEach((key: string) => {
+      (filters.value as Filters)[key].data = data[key];
+    });
+  };
+
+  // MODAL - MODEL LIST
+  const searchResult: Ref<any[]> = ref([]);
   const searchResultLength: Ref<SearchResultLength> = ref<SearchResultLength>({
     model: 0,
     table: 0,
     storage: 0,
   });
-
   const selectedDataModelList = ref([]);
   const dataModelIdList = ref([]);
-
-  // MODEL LIST
   let searchKeyword: string = "";
   const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
+
   const getSearchListQuery = () => {
     const queryFilter = getQueryFilter();
     const params: any = {
@@ -216,41 +272,41 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     return new URLSearchParams(params);
   };
 
-  // METHODS
   const getSearchListAPI = async () => {
     const { data } = await $api(`/api/search/list?${getSearchListQuery()}`, {
       showLoader: false,
     });
-    return data === null ? "" : data;
-  };
-  /**
-   * 데이터 조회 -> 누적
-   */
-  const addSearchList = async () => {
-    const { data, totalCount } = await getSearchListAPI();
-    searchResult.value = searchResult.value.concat(data[currentTab.value]);
-    searchResultLength.value = totalCount;
+    return data === null ? [] : data;
   };
 
-  /**
-   * 데이터 조회 -> 갱신
-   */
+  // 데이터 모델 데이터 누적
+  const addSearchList = async () => {
+    const { data } = await getSearchListAPI();
+    searchResult.value = searchResult.value.concat(data[currentTab.value]);
+
+    const currentTabCumulativeCount =
+      searchResultLength.value[currentTab.value];
+
+    if (
+      searchResult.value.length < currentTabCumulativeCount ||
+      (searchResult.value.length === currentTabCumulativeCount &&
+        !checkReachedCount.value)
+    ) {
+      setDataModelIdList();
+    }
+
+    if (searchResult.value.length === currentTabCumulativeCount) {
+      checkReachedCount.value = true;
+    }
+  };
+
+  // 데이터 모델 목록 최초 갱신
   const getSearchList = async () => {
     const { data, totalCount } = await getSearchListAPI();
     searchResult.value = data[currentTab.value];
     searchResultLength.value = totalCount;
     isSearchResultNoData.value = searchResult.value.length === 0;
     setDataModelIdList();
-  };
-  const getFilters = async () => {
-    const { data } = await $api(`/api/search/filters`);
-
-    const defaultFilters = createDefaultFilters();
-    const useFilters = Object.keys(defaultFilters);
-
-    useFilters.forEach((key: string) => {
-      (filters.value as Filters)[key].data = data[key];
-    });
   };
 
   const getQueryFilter = (): QueryFilter => {
@@ -268,10 +324,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     return queryFilter;
   };
 
-  /**
-   * 목록 reset
-   * 목록을 '갱신'하는 경우, from 값을 항상 0으로 주어야 하기 때문에 fn 하나로 묶어서 처리.
-   */
+  // 데이터 모델 목록 Reset
   const resetReloadList = async () => {
     setFrom(0);
     await getSearchList();
@@ -282,12 +335,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     searchKeyword = keyword;
   };
 
-  const changeTab = async (item: string) => {
-    currentTab.value = item;
-
-    await resetReloadList();
-  };
-
   const setDataModelIdList = () => {
     selectedDataModelList.value = [];
     dataModelIdList.value = [];
@@ -296,9 +343,36 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       dataModelIdList.value.push(element.id);
     }
   };
+
+  // MODAL - TAB
+  const initTab: Ref<string> = ref("table");
+  const currentTab: Ref<string> = ref("table");
+  const changeTab = async (item: string) => {
+    checkReachedCount.value = false;
+    initTab.value = item;
+    currentTab.value = item;
+    await resetReloadList();
+  };
+
+  const getModelItemAPI = async (id: string) => {
+    await $api(`api/category/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json-patch+json",
+      },
+      body: {
+        tagId: selectedCategoryTagId.value,
+        type: currentTab.value,
+        list: selectedDataModelList.value,
+      },
+    });
+  };
+
   return {
     categories,
+    defaultCategoriesParentId,
     categoriesParentId,
+    categoriesId,
     modelList,
     isCategoriesNoData,
     previewData,
@@ -309,15 +383,25 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     showAddDescNoti,
     selectedModelList,
     currentTab,
+    initTab,
     filters,
     searchResult,
     selectedFilters,
+    selectedFilterItems,
     searchResultLength,
     isSearchResultNoData,
     dataModelIdList,
     selectedDataModelList,
     addSearchInputValue,
+    checkReachedCount,
+    selectedCategoryId,
+    selectedCategoryTagId,
+    selectedNodeCategory,
+    selectedTitleNodeValue,
+    dupliSelectedTitleNodeValue,
+    lastChildIdList,
     resetAddModalStatus,
+    getModelItemAPI,
     getCategories,
     addModelList,
     getModelList,
@@ -327,6 +411,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     moveCategory,
     deleteCategory,
     getPreviewData,
+    getContainerPreviewData,
     addNewCategory,
     addSearchList,
     getSearchList,
@@ -335,5 +420,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     resetReloadList,
     changeTab,
     updateIntersectionHandler,
+    setEmptyFilter,
   };
 });

@@ -14,7 +14,7 @@
     :overlay-class="overlayClass"
     :overlay-transition="overlayTransition"
     :swipe-to-close="swipeToClose"
-    content-class="modal modal-padding-32"
+    content-class="modal"
     @clickOutside="$emit('click-outside')"
     @closed="$emit('closed')"
     @opened="$emit('open')"
@@ -26,7 +26,7 @@
         <span class="modal-head-title">{{ title }}</span>
         <span class="modal-head-subtitle">{{ subTitle }}</span>
       </div>
-      <button class="button link-button button-sm" type="button" @click="closeModal(modalId)">
+      <button class="button link-button button-sm" type="button" @click="$emit('cancel', modalId)">
         <span class="hidden-text">닫기</span>
         <svg-icon class="button-icon" name="close"></svg-icon>
       </button>
@@ -35,12 +35,20 @@
       <slot name="body" />
     </div>
     <div class="modal-foot">
-      <div class="modal-foot-group">
-        <button class="button button-ghost button-lg" @click="$emit('cancel', modalId)" v-if="useCancelBtn">
-          취소
-        </button>
-        <button class="button button-primary button-lg" @click="$emit('confirm', modalId)">{{ confirmBtnMsg }}</button>
-      </div>
+      <slot name="footer">
+        <div class="modal-foot-group">
+          <button class="button button-ghost button-lg" @click="$emit('cancel', modalId)" v-if="useCancelBtn">
+            취소
+          </button>
+          <button
+            class="button button-primary button-lg"
+            @click="$emit('confirm', modalId)"
+            :disabled="isDisabledConfirmBtn"
+          >
+            {{ confirmBtnMsg }}
+          </button>
+        </div>
+      </slot>
     </div>
   </VueFinalModal>
 </template>
@@ -68,7 +76,8 @@ const props = withDefaults(defineProps<ModalProps>(), {
   title: "",
   subTitle: "",
   useCancelBtn: true,
-  confirmBtnMsg: "확인"
+  confirmBtnMsg: "확인",
+  isDisabledConfirmBtn: false
 });
 
 const emit = defineEmits<{

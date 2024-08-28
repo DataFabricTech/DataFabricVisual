@@ -47,7 +47,12 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits<{ (e: "change", option: boolean): void }>();
+const emit = defineEmits<{
+  (e: "change", option: boolean): void;
+  (e: "delete", value: string): void;
+  (e: "item-click", value: string): void;
+  (e: "bookmark-change", value: any): void;
+}>();
 
 const addDataModel = (option: boolean) => {
   emit("change", option);

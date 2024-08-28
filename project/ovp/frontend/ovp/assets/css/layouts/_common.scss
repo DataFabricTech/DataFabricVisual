@@ -13,6 +13,7 @@
     height: calc(100% - 48px);
   }
 
+  // 4개 레이아웃 (데이터 생성)
   &:has(.l-split + .l-split) {
     .l-split:nth-child(1) {
       height: 60%;
@@ -31,6 +32,7 @@
 
   .l-split {
     gap: $spacing-16;
+    width: calc(100% - 16px);
   }
 }
 

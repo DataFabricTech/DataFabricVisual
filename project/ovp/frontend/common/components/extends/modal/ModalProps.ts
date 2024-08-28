@@ -1,5 +1,5 @@
 export interface ModalProps {
-  modalId: string | number | symbol;
+  modalId?: string | number | symbol;
   modalClass?: string;
   displayDirective?: "if" | "show" | "visible";
   hideOverlay?: boolean;
@@ -18,5 +18,6 @@ export interface ModalProps {
   title?: string;
   subTitle?: string;
   useCancelBtn?: boolean;
+  isDisabledConfirmBtn?: boolean;
   confirmBtnMsg?: string;
 }

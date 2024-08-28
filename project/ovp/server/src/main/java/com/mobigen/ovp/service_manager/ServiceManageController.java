@@ -4,6 +4,7 @@ import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RequestMapping("/api/service-manage")
@@ -75,9 +77,10 @@ public class ServiceManageController {
 
     /**
      * service : Service - 수집 - 동작 [log] 조회
+     *
      * @param id
      * @return
-     * **/
+     **/
     @ResponseJsonResult
     @GetMapping("/collection/log/{id}")
     public Object getServiceCollectionLog(@PathVariable String id) {
@@ -146,5 +149,90 @@ public class ServiceManageController {
     @PostMapping("/ingestion/kill/{id}")
     public Object killIngestion(@PathVariable UUID id) throws Exception {
         return serviceManageService.killIngestion(id);
+    }
+
+
+    /**
+     * 서비스 명 중복인지 체크
+     *
+     * @return
+     */
+    @ResponseJsonResult
+    @GetMapping("/isDuplicatedNm")
+    public Object isDuplicatedNm(@RequestParam MultiValueMap<String, String> params) throws Exception {
+        return serviceManageService.checkDuplicatedNm(params);
+    }
+
+    /**
+     * connection test
+     *
+     * @return
+     */
+    @ResponseJsonResult
+    @PostMapping(value = "/connectionTest")
+    public Object connectionTest(@RequestBody Map<String, Object> params) throws Exception {
+        return serviceManageService.connectionTest(params);
+    }
+
+    @ResponseJsonResult
+    @PostMapping(value = "/save/{type}")
+    public Object saveService(@PathVariable String type, @RequestBody Map<String, Object> params) {
+        return type.toLowerCase().equals("database") ? serviceManageService.saveDatabase(params) : service.saveStorage(params);
+    }
+
+    @ResponseJsonResult
+    @PostMapping(value = "/pipelines")
+    public Object saveIngestionPipelines(@RequestBody Map<String, Object> params) {
+        return serviceManageService.saveIngestionPipelines(params);
+    }
+
+    @ResponseJsonResult
+    @PatchMapping(value = "/pipelines/{id}")
+    public Object updateIngestionPipelines(@PathVariable String id, @RequestBody List<JsonPatchOperation> params) {
+        return serviceManageService.updateIngestionPipelines(id, params);
+    }
+
+    @ResponseJsonResult
+    @GetMapping("/pipelines/{id}")
+    public Object getPipelinesData(@PathVariable String id, @RequestParam Map<String, Object> params) {
+        return serviceManageService.getPipelinesData(id, params);
+    }
+
+    @ResponseJsonResult
+    @GetMapping("/database-services/{id}")
+    public Object getDatabaseServiceList(@PathVariable String id) {
+        return serviceManageService.getDatabaseServiceList(id);
+    }
+
+    @ResponseJsonResult
+    @GetMapping("/storage-services/{id}")
+    public Object getStorageServiceList(@PathVariable String id) {
+        return serviceManageService.getStorageServiceList(id);
+    }
+
+    /**
+     * 연결정보 조회
+     *
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping(value = "/{type}/{name}")
+    public Object getConnectionInfo(@PathVariable String type, @PathVariable String name,
+                                    @RequestParam MultiValueMap<String, String> params) throws Exception {
+        return serviceManageService.getConnectionInfo(type, name, params);
+    }
+
+    /**
+     * 연결정보 수정
+     *
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PatchMapping(value = "/update/{type}/{id}", consumes = "application/json-patch+json")
+    public Object updateConnectionInfo(@PathVariable String type, @PathVariable String id,
+                                       @RequestBody List<JsonPatchOperation> params) {
+        return serviceManageService.getUpdateConnectionInfo(type, id, params);
     }
 }

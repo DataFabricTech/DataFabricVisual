@@ -1,6 +1,7 @@
 package com.mobigen.ovp.search;
 
 import com.mobigen.ovp.common.ModelConvertUtil;
+import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.entity.ModelIndex;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
@@ -73,6 +74,8 @@ public class SearchService {
     public Map<String, Object> getFilters() throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
+        params.set("index", "all");
+
         List<String> tagArrays = new ArrayList<>();
         tagArrays.add("owner.displayName.keyword");
         tagArrays.add("tags.tagFQN");
@@ -81,7 +84,6 @@ public class SearchService {
         tagArrays.add("database.displayName.keyword");
         tagArrays.add("databaseSchema.displayName.keyword");
         tagArrays.add("columns.name.keyword");
-        tagArrays.add("tableType");
 
         Map<String, Object> responseMap = new HashMap<>();
 
@@ -135,6 +137,10 @@ public class SearchService {
 
     private Map<String, Object> getList(MultiValueMap<String, String> params) throws Exception {
         Map<String, Object> result = searchClient.getSearchList(params);
+        return convertToMap(result);
+    }
+
+    public Map<String, Object> convertToMap(Map<String, Object> result) {
         Map<String, Object> resultMap = new HashMap<>();
 
         Map<String, Object> data = (Map<String, Object>) result.get("hits");
@@ -147,6 +153,7 @@ public class SearchService {
         }
 
         return resultMap;
+
     }
 
     private Map<String, Object> getAllList(MultiValueMap<String, String> params) throws Exception {

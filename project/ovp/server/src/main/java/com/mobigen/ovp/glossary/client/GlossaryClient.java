@@ -43,6 +43,15 @@ public interface GlossaryClient {
                                     @RequestParam(required = false, defaultValue = "100") int limit);
 
     /**
+     * 용어 조회
+     * @param id
+     * @param include
+     * @return
+     */
+    @GetMapping("/glossaryTerms/{id}")
+    TermDto getGlossaryTermsById(@PathVariable String id, @RequestParam(required = false, defaultValue = "all") String include);
+
+    /**
      * 용어 사전 수정
      * @param id
      * @param param
@@ -77,7 +86,7 @@ public interface GlossaryClient {
      * @return
      */
     @GetMapping("/glossaryTerms")
-    TermResponse getGlossaryTerms(@RequestParam String directChildrenOf, @RequestParam(required = false, defaultValue = "tags") String fields);
+    TermResponse getGlossaryTerms(@RequestParam String directChildrenOf, @RequestParam(required = false, defaultValue = "tags") String fields, @RequestParam(required = false, defaultValue = "100") int limit, @RequestParam(required = false, defaultValue = "") String after);
 
     /**
      * 용어 수정
