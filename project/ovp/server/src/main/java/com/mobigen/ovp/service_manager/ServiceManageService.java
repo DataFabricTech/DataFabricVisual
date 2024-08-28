@@ -1,6 +1,9 @@
 package com.mobigen.ovp.service_manager;
 
 import com.mobigen.ovp.common.openmete_client.AutomationsClient;
+import com.mobigen.ovp.common.openmete_client.ContainersClient;
+import com.mobigen.ovp.common.openmete_client.DatabaseClient;
+import com.mobigen.ovp.common.openmete_client.DatabaseSchemasClient;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.ServicesClient;
@@ -24,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,6 +38,9 @@ public class ServiceManageService {
     private final SearchClient searchClient;
     private final AutomationsClient automationsClient;
     private final SearchService searchService;
+    private final ContainersClient containersClient;
+    private final DatabaseClient databaseClient;
+    private final DatabaseSchemasClient databaseSchemasClient;
 
     /**
      * 서비스 리스트
@@ -247,4 +254,84 @@ public class ServiceManageService {
         return true;
     }
 
+    public Object getDatabaseServiceList(String serviceId) {
+        Map<String, Object> params = createParams(serviceId, "owner,tags,usageSummary", "non-deleted");
+        Map<String, Object> serviceParam = createServiceParam("owner,usageSummary", "non-deleted", "10000");
+
+        Map<String, Object> clients = databaseClient.getDatabase(params);
+        List<Map<String, Object>> serviceList = (List<Map<String, Object>>) clients.get("data");
+
+        return processServiceList(serviceList, serviceParam, true);
+    }
+
+    public Object getStorageServiceList(String serviceId) {
+        Map<String, Object> params = createParams(serviceId, "owner,tags", "non-deleted");
+        params.put("root", true);
+
+        Map<String, Object> serviceParam = createServiceParam("children", "all", null);
+
+        Map<String, Object> clients = containersClient.getContainers(params);
+        List<Map<String, Object>> serviceList = (List<Map<String, Object>>) clients.get("data");
+
+        return processServiceList(serviceList, serviceParam, false);
+    }
+
+    private Map<String, Object> createParams(String serviceId, String fields, String include) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("service", serviceId);
+        params.put("fields", fields);
+        params.put("include", include);
+        return params;
+    }
+
+    private Map<String, Object> createServiceParam(String fields, String include, String limit) {
+        Map<String, Object> serviceParam = new HashMap<>();
+        serviceParam.put("fields", fields);
+        serviceParam.put("include", include);
+        if (limit != null) {
+            serviceParam.put("limit", limit);
+        }
+        return serviceParam;
+    }
+
+    private List<Map<String, Object>> processServiceList(List<Map<String, Object>> serviceList, Map<String, Object> serviceParam, boolean isDatabase) {
+        return serviceList.stream()
+                .map(client -> (String) client.get("fullyQualifiedName"))
+                .filter(this::isNotNullOrEmpty)
+                .flatMap(fullyQualifiedName -> {
+                    Map<String, Object> result = isDatabase
+                            ? databaseSchemasClient.getDatabaseSchemas(serviceParam)
+                            : containersClient.getContainersName(fullyQualifiedName, serviceParam);
+                    return ((List<Map<String, Object>>) result.get(isDatabase ? "data" : "children")).stream();
+                })
+                .map(this::processEntry)
+                .collect(Collectors.toList());
+    }
+
+    private boolean isNotNullOrEmpty(String value) {
+        return value != null && !value.isEmpty();
+    }
+
+    private Map<String, Object> processEntry(Map<String, Object> entry) {
+        Map<String, Object> newEntry = new HashMap<>();
+        newEntry.put("fqn", entry.get("fullyQualifiedName"));
+        newEntry.put("name", entry.get("name"));
+        newEntry.put("id", entry.get("id"));
+        newEntry.put("type", determineType(entry.get("serviceType")));
+        newEntry.put("desc", entry.get("description"));
+        newEntry.put("owner", extractOwner(entry));
+        return newEntry;
+    }
+
+    private String determineType(Object serviceType) {
+        return serviceType != null && serviceType.toString().equalsIgnoreCase("trino") ? "model" : "table";
+    }
+
+    private String extractOwner(Map<String, Object> entry) {
+        if (entry.containsKey("owner")) {
+            Map<String, String> ownerObj = (Map<String, String>) entry.get("owner");
+            return ownerObj.get("displayName");
+        }
+        return null;
+    }
 }

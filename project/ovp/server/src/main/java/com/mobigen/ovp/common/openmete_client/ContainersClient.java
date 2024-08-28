@@ -18,4 +18,10 @@ public interface ContainersClient {
 
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
     Map<String, Object> changeStorage(@PathVariable("id") String id, @RequestParam Map<String, String> params, @RequestBody List<Map<String, Object>> body);
+
+    @GetMapping("")
+    Map<String, Object> getContainers(@RequestParam Map<String, Object> params);
+
+    @GetMapping("/name/{fqn}")
+    Map<String, Object> getContainersName(@PathVariable String fqn, @RequestParam Map<String, Object> params);
 }
