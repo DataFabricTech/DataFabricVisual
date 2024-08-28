@@ -41,12 +41,18 @@
     <div class="resource-box-initial-name" v-if="useFirModelNm">
       {{ props.dataObj.firModelNm }}
     </div>
-
+    <div
+      class="editable-group"
+      v-show="!user.admin && newData.owner?.id !== user.id"
+    >
+      <h3 class="editable-group-title">{{ newData.modelNm }}</h3>
+    </div>
     <editable-group
       compKey="modelNm"
       :editable="props.editable"
       @editCancel="editCancel"
       @editDone="editDoneForModel"
+      v-show="newData.owner?.id === user.id || user.admin"
     >
       <template #edit-slot>
         <label class="hidden-text" for="title-modify">모델 명</label>
@@ -73,12 +79,26 @@
         </template>
       </template>
     </editable-group>
-
+    <div
+      class="editable-group"
+      v-show="!user.admin && newData.owner?.id !== user.id"
+    >
+      <span class="editable-group-desc">
+        {{
+          props.dataObj.modelDesc === "" ||
+          props.dataObj.modelDesc === null ||
+          props.dataObj.modelDesc === undefined
+            ? "-"
+            : props.dataObj.modelDesc
+        }}</span
+      >
+    </div>
     <editable-group
       compKey="modelDesc"
       :editable="props.editable"
       @editCancel="editCancel"
       @editDone="editDoneForModel"
+      v-show="newData.owner?.id === user.id || user.admin"
     >
       <template #edit-slot>
         <label class="hidden-text" for="textarea-modify">모델 설명</label>
@@ -102,7 +122,17 @@
         >
       </template>
     </editable-group>
-
+    <div
+      class="editable-group"
+      v-show="!user.admin && newData.owner?.id !== user.id"
+    >
+      <dl class="resource-box-list">
+        <dt>소유자</dt>
+        <dd>
+          {{ newData.owner ? newData.ownerDisplayName : "소유자 없음" }}
+        </dd>
+      </dl>
+    </div>
     <div class="resource-box-info">
       <editable-group
         :compKey="ownerKey"
@@ -111,6 +141,7 @@
         :useEditButtons="false"
         @editCancel="editCancel"
         @editIcon="editIconClick(ownerKey, true)"
+        v-show="newData.owner?.id === user.id || user.admin"
       >
         <template #edit-slot>
           <dl v-if="props.showOwner" class="resource-box-list">
@@ -148,7 +179,21 @@
           </dl>
         </template>
       </editable-group>
-
+      <div
+        class="editable-group"
+        v-show="!user.admin && newData.owner?.id !== user.id"
+      >
+        <dl class="resource-box-list">
+          <dt>카테고리</dt>
+          <dd>
+            {{
+              newData[categoryKey].name
+                ? newData[categoryKey].name
+                : "카테고리 없음"
+            }}
+          </dd>
+        </dl>
+      </div>
       <editable-group
         :compKey="categoryKey"
         :parent-edit-mode="isEditMode[categoryKey]"
@@ -157,6 +202,7 @@
         @editCancel="editCancel"
         @editDone="editDone"
         @editIcon="editIconClick(categoryKey, true)"
+        v-show="newData.owner?.id === user.id || user.admin"
       >
         <template #edit-slot>
           <dl v-if="props.showCategory" class="resource-box-list">
