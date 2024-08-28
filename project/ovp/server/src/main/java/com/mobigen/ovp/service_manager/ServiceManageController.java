@@ -134,6 +134,12 @@ public class ServiceManageController {
     }
 
     @ResponseJsonResult
+    @GetMapping("/pipelines/{id}")
+    public Object getPipelinesData(@PathVariable String id, @RequestParam Map<String, Object> params) {
+        return service.getPipelinesData(id, params);
+    }
+
+    @ResponseJsonResult
     @GetMapping("/database-services/{id}")
     public Object getDatabaseServiceList(@PathVariable String id) {
         return service.getDatabaseServiceList(id);
