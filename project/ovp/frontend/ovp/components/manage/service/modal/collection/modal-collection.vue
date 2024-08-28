@@ -92,6 +92,7 @@ const {
 
 const emit = defineEmits<{
   (e: "close"): void;
+  (e: "onLoadData"): void;
 }>();
 
 const onCancel = () => {
@@ -147,10 +148,11 @@ const gotoNext = async () => {
 
   if (currentStep.value === 2) {
     await createIngestion();
-    if(!isValid.value) {
+    if (!isValid.value) {
       return;
     }
     onCancel();
+    emit("onLoadData");
     return;
   } else {
     currentStep.value = currentStep.value + 1;

@@ -106,6 +106,9 @@ const { open, close } = useModal({
     onClose() {
       close();
     },
+    onLoadData() {
+      // TODO: 메타데이터 생성/수정 모달이 닫혔을때 파이프라인 목록 갱신 필요
+    },
   },
 });
 
