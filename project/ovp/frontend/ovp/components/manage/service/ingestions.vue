@@ -141,9 +141,14 @@ const collectionAddOptions = [
 
 const selectCollectionAdd = (value: any) => {
   setPipelineType(value);
-  // TODO: 저장소 이름, id, serviceType 세팅 필요 .. service-info.vue에서 props로 받아오기..
-  //setId("아이디이");
-  setServiceType("storageService");
+  // 서비스 id 세팅
+  setId(props.service.id);
+
+  if (props.service.type === "database") {
+    setServiceType("databaseService");
+  } else {
+    setServiceType("storageService");
+  }
 
   if (value === "metadata") {
     setModalTitle("메타데이터 수집 추가");

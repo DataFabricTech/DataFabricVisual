@@ -30,7 +30,6 @@
                   style="width: 100%"
                   type="time"
                   value-type="format"
-                  @change="changeDate"
                 ></DatePicker>
               </div>
             </div>
@@ -45,7 +44,6 @@
                   style="width: 100%"
                   type="time"
                   value-type="format"
-                  @change="changeDate"
                 ></DatePicker>
               </div>
             </div>

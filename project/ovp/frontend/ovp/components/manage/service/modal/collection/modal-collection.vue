@@ -146,8 +146,11 @@ const gotoNext = async () => {
   }
 
   if (currentStep.value === 2) {
-    createIngestion();
-    close();
+    await createIngestion();
+    if(!isValid.value) {
+      return;
+    }
+    onCancel();
     return;
   } else {
     currentStep.value = currentStep.value + 1;

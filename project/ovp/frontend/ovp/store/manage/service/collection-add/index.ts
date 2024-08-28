@@ -1,13 +1,17 @@
 import { defineStore } from "pinia";
 import _ from "lodash";
 import type { IngestionPipeline } from "./IngestionPipeline";
-import { computed } from "../../../../.nuxt/imports";
 import cronstrue from "cronstrue";
+import { useUserStore } from "~/store/user/userStore";
 
 export const useServiceCollectionAddStore = defineStore(
   "service_collection_add",
   () => {
     const { $api } = useNuxtApp();
+
+    const userStore = useUserStore();
+    // NOTE: 로그인 사용자 정보
+    const { user } = storeToRefs(userStore);
 
     const serviceId = ref("");
     const pipelineType = ref("");
@@ -141,6 +145,9 @@ export const useServiceCollectionAddStore = defineStore(
         airflowObj.scheduleInterval = cron;
       } else if (isShowDay.value) {
         // 매일 특정 시간에 작업을 실행
+        if (time.value === null) {
+          time.value = "00:00";
+        }
         const [hour, min] = time.value.split(":");
         cron = `${parseInt(min)} ${parseInt(hour)} * * *`;
         airflowObj.scheduleInterval = cron;
@@ -158,7 +165,7 @@ export const useServiceCollectionAddStore = defineStore(
         airflowObj.scheduleInterval = cron;
       }
 
-      airflowObj.startDate = "";
+      airflowObj.startDate = ""; // 서버에서 바인딩 처리
       airflowObj.retries = reties.value;
 
       return airflowObj;
@@ -230,8 +237,7 @@ export const useServiceCollectionAddStore = defineStore(
         serviceType.value === "storageService"
       ) {
         configObject.type = "StorageMetadata";
-        // TODO: 기획서랑 openmeta 화면이랑 filterpattern 포함 내용이 다름..bucket 패턴?
-        // 확인 후 처리
+        configObject.useFqnForFiltering = false;
       }
 
       if (
@@ -307,22 +313,31 @@ export const useServiceCollectionAddStore = defineStore(
         };
       }
 
+      // TODO: 플랫폼팀에서 storage metadata 부분의 bucket기능 구현시 아래 코드 제거 예정
+      if (
+        pipelineType.value === "metadata" &&
+        serviceType.value === "storageService"
+      ) {
+        // configObject 에 포함되어있는 bucketFilterPattern 객체 제거.
+        delete configObject.bucketFilterPattern;
+      }
+
       return configObject;
     });
 
     const ingestionPipeLine = ref<IngestionPipeline>({
       airflowConfig: {},
-      loggerLevel: "", // ex) INFO or DEBUG
-      name: "", // 서버에서 넣어줘야함 ex) UUID 값
+      loggerLevel: "",
+      name: "",
       displayName: "",
       owner: {
-        id: "b7b3f5cb-4e71-4197-8ff0-34e0ced231cc", // TODO: 소유자 ID 바인딩
-        type: "user", // TODO: 이정책임님과 논의
+        id: "",
+        type: "user",
       },
-      pipelineType: bindPipelineType.value, // ex) storageProfiler, profiler, metadata
+      pipelineType: "", // ex) storageProfiler, profiler, metadata
       service: {
-        id: serviceId.value,
-        type: serviceType.value,
+        id: "",
+        type: "",
       },
       sourceConfig: {
         config: {},
@@ -335,17 +350,14 @@ export const useServiceCollectionAddStore = defineStore(
     };
 
     const setId = (value: any) => {
-      console.log("아이디확인: ", value);
       serviceId.value = value;
     };
 
     const setPipelineType = (value: any) => {
-      console.log("pipelineType값 확인: ", value);
       pipelineType.value = value;
     };
 
     const setServiceType = (value: any) => {
-      console.log("serviceType확인: ", value);
       serviceType.value = value;
     };
 
@@ -579,27 +591,21 @@ export const useServiceCollectionAddStore = defineStore(
 
       //TODO: ingestionPipeLine이 기본값으로 초기화 (수정용 처리도 해줘야함)
       ingestionPipeLine.value = {
-        airflowConfig: {
-          scheduleInterval: "", // 두 JSON 모두 크론 스케줄을 가짐 (단, 시간이 다를 수 있음)
-          startDate: "", // 스케줄러 (생성할때는 특정시간때 우선 반영 - 서버에서 넣어줘야함)
-        },
-        loggerLevel: loggerLevel.value, // ex) INFO or DEBUG
+        airflowConfig: {},
+        loggerLevel: "",
         name: "", // 서버에서 넣어줘야함 ex) UUID 값
         displayName: "",
         owner: {
-          id: "b7b3f5cb-4e71-4197-8ff0-34e0ced231cc", // 소유자 ID
-          type: "user", // 고정?
+          id: "",
+          type: "user",
         },
         pipelineType: "", // ex) StorageProfiler, Profiler, metadata
         service: {
-          id: serviceId.value, // 공통된 서비스 ID
-          type: serviceType.value, // 서비스 타입이 공통됨
+          id: "", // 공통된 서비스 ID
+          type: "", // 서비스 타입이 공통됨
         },
         sourceConfig: {
-          config: {
-            // config를 compute로 만들어야함
-            type: "", // ex) DatabaseMetadata, StorageMetadata, StorageProfiler, Profiler
-          },
+          config: {},
         },
       };
 
@@ -682,12 +688,28 @@ export const useServiceCollectionAddStore = defineStore(
       isValidCronMessage.value = true;
     };
 
-    const createIngestion = () => {
+    const createIngestion = async () => {
       ingestionPipeLine.value.pipelineType = bindPipelineType.value;
       ingestionPipeLine.value.airflowConfig = airflowConfig.value;
       ingestionPipeLine.value.sourceConfig.config = config.value;
       ingestionPipeLine.value.loggerLevel = loggerLevel.value;
-      console.log("ingestionPipeLine: ", ingestionPipeLine.value);
+      ingestionPipeLine.value.service.id = serviceId.value;
+      ingestionPipeLine.value.service.type = serviceType.value;
+      ingestionPipeLine.value.owner.id = user.value.id;
+
+      await $api(`/api/service-manage/pipelines`, {
+        method: "POST",
+        body: ingestionPipeLine.value,
+      })
+        .then((res: any) => {
+          if (!res.data) {
+            isValid.value = false;
+            inValidMsg.value = "생성 실패했습니다. 잠시 후 다시 시도해주세요";
+          }
+        })
+        .catch((err: any) => {
+          console.log("err: ", err);
+        });
     };
 
     return {
