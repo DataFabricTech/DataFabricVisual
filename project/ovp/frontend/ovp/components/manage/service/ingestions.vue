@@ -20,7 +20,7 @@
       <!--  TODO: [개발] 수집추가 모달을 메타데이터 수집추가, 프로파일러 수집추가 드롭다운 메뉴에 추가 필요, dropdown의 위치를 right:0으로 조정 필요  -->
       <select-box
         :data="collectionAddOptions"
-        :selectedItem="[]"
+        :selectedItem="ingestionSelected"
         :defaultLabel="defaultLabel"
         label-key="label"
         value-key="value"
@@ -139,6 +139,8 @@ const collectionAddOptions = [
   },
 ];
 
+const ingestionSelected = ref([]);
+
 const selectCollectionAdd = (value: any) => {
   setPipelineType(value);
   // 서비스 id 세팅
@@ -157,5 +159,6 @@ const selectCollectionAdd = (value: any) => {
   }
 
   open();
+  ingestionSelected.value = [];
 };
 </script>
