@@ -177,7 +177,7 @@ public class ServiceManageController {
     @ResponseJsonResult
     @PostMapping(value = "/save/{type}")
     public Object saveService(@PathVariable String type, @RequestBody Map<String, Object> params) {
-        return type.toLowerCase().equals("database") ? serviceManageService.saveDatabase(params) : service.saveStorage(params);
+        return type.toLowerCase().equals("database") ? serviceManageService.saveDatabase(params) : serviceManageService.saveStorage(params);
     }
 
     @ResponseJsonResult
