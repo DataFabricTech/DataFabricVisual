@@ -33,6 +33,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class ServiceManageService {
+    private static final String DATA_BASE = "database";
+    private static final String STORAGE = "storage";
 
     private final ServicesClient servicesClient;
     private final SearchClient searchClient;
@@ -48,8 +50,6 @@ public class ServiceManageService {
      * @return
      */
     public List<ServiceResponse> getServices() {
-        final String DATA_BASE = "database";
-        final String STORAGE = "storage";
         final int limit = 100;
         List<Services> dataBases = servicesClient.getServices("owner,tags", limit).getData();
         List<Services> storages = servicesClient.getServiceStorage("owner", "non-deleted", limit).getData();
@@ -252,6 +252,17 @@ public class ServiceManageService {
             return false;
         }
         return true;
+    }
+
+
+    public Object getConnectionInfo(String type, String name, MultiValueMap<String, String> params) {
+        Map<String, Object> serviceInfo = DATA_BASE.equals(type) ? servicesClient.getDBConnectionInfo(name, params) : servicesClient.getStorageConnectionInfo(name, params);
+        Map<String, Object> connection = (Map<String, Object>) serviceInfo.get("connection");
+        return connection.get("config");
+    }
+
+    public Object getUpdateConnectionInfo(String type, String id, List<JsonPatchOperation> params) {
+        return DATA_BASE.equals(type) ? servicesClient.updateDBConnectionInfo(id, params) : servicesClient.updateStorageConnectionInfo(id, params);
     }
 
     public Object getDatabaseServiceList(String serviceId) {

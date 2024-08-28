@@ -75,7 +75,8 @@ public class ServiceManageController {
      */
     @ResponseJsonResult
     @DeleteMapping("/{id}")
-    public Object deleteService(@PathVariable UUID id, @RequestParam boolean hardDelete, @RequestParam boolean recursive) throws Exception {
+    public Object deleteService(@PathVariable UUID id, @RequestParam boolean hardDelete,
+                                @RequestParam boolean recursive) throws Exception {
         return service.deleteService(id, hardDelete, recursive);
     }
 
@@ -144,4 +145,30 @@ public class ServiceManageController {
         return service.getStorageServiceList(id);
     }
 
+
+    /**
+     * 연결정보 조회
+     *
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping(value = "/{type}/{name}")
+    public Object getConnectionInfo(@PathVariable String type, @PathVariable String name,
+                                    @RequestParam MultiValueMap<String, String> params) throws Exception {
+        return service.getConnectionInfo(type, name, params);
+    }
+
+    /**
+     * 연결정보 수정
+     *
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PatchMapping(value = "/update/{type}/{id}", consumes = "application/json-patch+json")
+    public Object updateConnectionInfo(@PathVariable String type, @PathVariable String id,
+                                       @RequestBody List<JsonPatchOperation> params) {
+        return service.getUpdateConnectionInfo(type, id, params);
+    }
 }

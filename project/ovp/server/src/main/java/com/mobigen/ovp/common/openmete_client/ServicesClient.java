@@ -5,6 +5,7 @@ import com.mobigen.ovp.common.openmete_client.dto.Log;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,10 +32,12 @@ public interface ServicesClient {
 
     /**
      * 서비스 리스트 - 스토리지
+     *
      * @return
      */
     @GetMapping("/storageServices")
-    Base<Services> getServiceStorage(@RequestParam String fields, @RequestParam String include, @RequestParam int limit);
+    Base<Services> getServiceStorage(@RequestParam String fields, @RequestParam String include,
+                                     @RequestParam int limit);
 
     /**
      * 서비스 수정
@@ -83,4 +86,20 @@ public interface ServicesClient {
 
     @PostMapping("/ingestionPipelines/deploy/{id}")
     Object ingestionPipelinesDeploy(@PathVariable String id);
+
+    @GetMapping("/databaseServices/name/{name}")
+    Map<String, Object> getDBConnectionInfo(@PathVariable String name,
+                                            @RequestParam MultiValueMap<String, String> params);
+
+    @GetMapping("/storageServices/name/{name}")
+    Map<String, Object> getStorageConnectionInfo(@PathVariable String name,
+                                                 @RequestParam MultiValueMap<String, String> params);
+
+    @PatchMapping(value = "/databaseServices/{id}", consumes = "application/json-patch+json")
+    Map<String, Object> updateDBConnectionInfo(@PathVariable String id, @RequestBody List<JsonPatchOperation> params);
+
+    @PatchMapping(value = "/storageServices/{id}", consumes = "application/json-patch+json")
+    Map<String, Object> updateStorageConnectionInfo(@PathVariable String id,
+                                                    @RequestBody List<JsonPatchOperation> params);
+
 }
