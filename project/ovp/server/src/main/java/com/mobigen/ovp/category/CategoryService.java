@@ -3,7 +3,12 @@ package com.mobigen.ovp.category;
 import com.mobigen.ovp.category.dto.CategoryDTO;
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
+import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
+import com.mobigen.ovp.common.openmete_client.ContainersClient;
+import com.mobigen.ovp.common.openmete_client.TablesClient;
+import com.mobigen.ovp.common.openmete_client.dto.Tables;
+import com.mobigen.ovp.common.openmete_client.dto.Tag;
 import com.mobigen.ovp.search.SearchService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +33,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+    private final ContainersClient containersClient;
+    private final TablesClient tablesClient;
     private final CategoryRepository categoryRepository;
     private final SearchService searchService;
     private final ClassificationClient classificationClient;
@@ -316,5 +323,86 @@ public class CategoryService {
         params.put("name", categoryId);
         Map<String, Object> response = (Map<String, Object>) classificationClient.createTag(params);
         return response.get("id").toString();
+    }
+
+
+    private List<Map<String, Object>> replaceOrAddTag(List<Tag> tags, Map<String, Object> tagInfo) {
+        List<Map<String, Object>> operations = new ArrayList<>();
+        boolean ovpCategoryFound = false;
+        int index = 0;
+
+        for (Tag itemTag : tags) {
+            if (itemTag.getTagFQN().contains("ovp_category")) {
+                String[] replaceInfoList = {"description", "displayName", "name", "tagFQN"};
+                for (String item : replaceInfoList) {
+                    Map<String, Object> replaceOperation = new HashMap<>();
+                    replaceOperation.put("op", "replace");
+                    replaceOperation.put("path", "/tags/" + index + "/" + item);
+                    replaceOperation.put("value", item.equals("tagFQN") ? tagInfo.get("fullyQualifiedName") : tagInfo.get(item));
+                    operations.add(replaceOperation);
+                }
+                ovpCategoryFound = true;
+                break;
+            }
+            index++;
+        }
+
+        if (!ovpCategoryFound) {
+            Map<String, Object> operation = new HashMap<>();
+            Map<String, Object> value = new HashMap<>();
+            value.put("name", tagInfo.get("name"));
+            value.put("displayName", tagInfo.get("displayName"));
+            value.put("tagFQN", tagInfo.get("fullyQualifiedName"));
+            value.put("description", tagInfo.get("description"));
+            value.put("style", tagInfo.get("style"));
+            operation.put("value", value);
+            operation.put("op", "add");
+            operation.put("path", "/tags/" + tags.size());
+            operations.add(operation);
+        }
+
+        return operations;
+    }
+
+    private void updateTags(List<String> selectedModelIdList, Map<String, Object> tagInfo, boolean isStorage, TablesClient tablesClient, ContainersClient containersClient) throws Exception {
+        MultiValueMap params = new LinkedMultiValueMap();
+        params.add("fields", "tags");
+        params.add("include", "all");
+
+        int excuteCount = 0;
+        int successCount = 0;
+
+        for (String itemId : selectedModelIdList) {
+            List<Map<String, Object>> reqBody = new ArrayList<>();
+            Tables tables = isStorage ? containersClient.getStorageById(itemId, params) : tablesClient.getTablesName(itemId, params);
+            List<Tag> tags = tables.getTags();
+
+            reqBody.addAll(replaceOrAddTag(tags, tagInfo));
+
+            log.info("*** reqBody: {}", reqBody);
+            Map<String, Object> result = isStorage ? containersClient.changeStorage(itemId, null, reqBody) : tablesClient.changeDataModel(itemId, null, reqBody);
+
+            excuteCount++;
+            if (!result.isEmpty()) {
+                successCount++;
+            }
+            if (excuteCount != successCount) {
+                throw new Exception("업데이트 실패");
+            }
+        }
+    }
+
+
+    public Object addCategoryTagId(String id, Map<String, Object> body) throws Exception {
+        String type = (String) body.get("type");
+        String tagId = (String) body.get("tagId");
+        Map<String, Object> tagInfo = classificationClient.getTag(tagId);
+        List<String> selectedModelIdList = (List<String>) body.get("list");
+
+        boolean isStorage = ModelType.STORAGE.getValue().equals(type);
+
+        updateTags(selectedModelIdList, tagInfo, isStorage, tablesClient, containersClient);
+
+        return true;
     }
 }

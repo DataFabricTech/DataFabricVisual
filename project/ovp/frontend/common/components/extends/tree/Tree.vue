@@ -65,10 +65,13 @@ const changeFirstItemChange = (bool: boolean) => {
   if (props.items.length < 1) {
     return;
   }
-  const element: any = document.querySelector(`li#${props.items[0].id} .tree-item`);
 
-  if (element) {
-    element.style.color = bool ? "#188ab0" : "#2b3440";
+  if (props.items && props.items.length > 0 && props.items[0].id) {
+    const id = CSS.escape(props.items[0].id);
+    const element: any = document.querySelector(`li#${id} .tree-item`);
+    if (element) {
+      element.style.color = bool ? "#188ab0" : "#2b3440";
+    }
   }
 };
 

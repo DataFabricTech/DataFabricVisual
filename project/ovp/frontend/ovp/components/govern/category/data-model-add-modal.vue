@@ -142,15 +142,15 @@
 </template>
 
 <script setup lang="ts">
-import Modal from "@extends/modal/Modal.vue";
+import { computed, ref } from "vue";
 import { useRouter } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category/index";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { storeToRefs } from "pinia";
+import Modal from "@extends/modal/Modal.vue";
 import DataFilter from "./data-filter.vue";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import Tab from "@extends/tab/Tab.vue";
-import { computed, ref } from "vue";
 import Loading from "@base/loading/Loading.vue";
 
 const router = useRouter();
@@ -162,6 +162,8 @@ const {
   resetReloadList,
   addSearchList,
   getSearchList,
+  getModelList,
+  getModelItemAPI,
 } = categoryStore;
 const {
   initTab,
@@ -172,6 +174,7 @@ const {
   dataModelIdList,
   selectedDataModelList,
   addSearchInputValue,
+  selectedCategoryId,
 } = storeToRefs(categoryStore);
 
 const props = defineProps({
@@ -264,6 +267,8 @@ const onCancel = () => {
 };
 
 const onConfirm = async () => {
+  await getModelItemAPI(selectedCategoryId.value);
+  await getModelList();
   emit("close-data-model-add-modal");
 };
 
