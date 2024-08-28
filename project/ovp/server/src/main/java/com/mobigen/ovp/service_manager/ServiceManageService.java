@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -194,9 +196,27 @@ public class ServiceManageService {
 
     public Object saveIngestionPipelines(Map<String, Object> params) {
         /**
+         * step0. param 추가 (airflowConfig/startDate, name)
+         * - startDate : 금일 자정
+         * - name : randomUUID
          * step1. ingestionPipelines
          * step1. deploy
          */
+
+        // step0. startDate
+        ZonedDateTime now = ZonedDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+        String formattedDate = now.format(DateTimeFormatter.ISO_INSTANT);
+
+        Map<String, Object> airflowConfig = (Map<String, Object>) params.get("airflowConfig");
+        if (airflowConfig == null) {
+            airflowConfig = new HashMap<>();
+            params.put("airflowConfig", airflowConfig);
+        }
+        airflowConfig.put("startDate", formattedDate);
+
+        // step0. name
+        params.put("name", UUID.randomUUID());
+
         try {
             // step1.
             Map<String, Object> ipResult = (Map<String, Object>) servicesClient.saveIngestionPipelines(params);
