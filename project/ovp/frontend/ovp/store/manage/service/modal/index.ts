@@ -266,7 +266,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
     const serviceObjData = detailInfo || serviceObj.value.detailInfo;
 
     const connectionArgumentsParam = _.has(
-      serviceObj.value.detailInfo,
+      serviceObjData,
       "connectionArguments",
     )
       ? {
@@ -283,10 +283,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
         }
       : {};
 
-    const connectionOptionsParam = _.has(
-      serviceObj.value.detailInfo,
-      "connectionOptions",
-    )
+    const connectionOptionsParam = _.has(serviceObjData, "connectionOptions")
       ? {
           connectionOptions: serviceObjData.connectionOptions.reduce(
             (
