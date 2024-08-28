@@ -4,7 +4,7 @@
     <div class="section-contents">
       <ul class="card">
         <li class="card-item">
-          <a href="/portal/admin/service" title="서비스 관리">
+          <a href="/portal/manage/service" title="서비스 관리">
             <svg-icon name="service" class="svg-icon"></svg-icon>
             <div class="flex flex-col gap-[16px]">
               <strong class="card-title">서비스 관리</strong>
@@ -15,7 +15,7 @@
           </a>
         </li>
         <li class="card-item">
-          <a href="/portal/admin/user" title="사용자 관리">
+          <a href="/portal/manage/user" title="사용자 관리">
             <svg-icon name="user-setting" class="svg-icon"></svg-icon>
             <div class="flex flex-col gap-[16px]">
               <strong class="card-title">사용자 관리</strong>
