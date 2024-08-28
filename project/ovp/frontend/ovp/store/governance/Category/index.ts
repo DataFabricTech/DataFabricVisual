@@ -113,9 +113,15 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     });
 
     if (res.data === "HAS_SAME_NAME") {
-      alert(`${categoryAddName.value} 이미 존재합니다.`);
-      selectedTitleNodeValue.value = dupliSelectedTitleNodeValue.value;
-      selectedNodeCategory.value.name = dupliSelectedTitleNodeValue.value;
+      if (categoryAddName.value !== "") {
+        alert(`${categoryAddName.value} 이미 존재합니다.`);
+        categoryAddName.value = "";
+        return;
+      } else if (selectedTitleNodeValue.value !== "") {
+        alert(`${selectedTitleNodeValue.value} 이미 존재합니다.`);
+        selectedTitleNodeValue.value = dupliSelectedTitleNodeValue.value;
+        selectedNodeCategory.value.name = dupliSelectedTitleNodeValue.value;
+      }
     }
 
     if (res.data === "OVER_DEPTH") {
