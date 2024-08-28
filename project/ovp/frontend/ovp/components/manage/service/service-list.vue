@@ -75,11 +75,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import type { Service } from "~/type/service";
-import { useServiceCollectionLogStore } from "@/store/admin/service/collection-log/index";
-const serviceCollectionLogStore = useServiceCollectionLogStore();
-const { setServiceName, getRepositoryDescriptionAPI } =
-  serviceCollectionLogStore;
-import { useServiceStore } from "@/store/admin/service";
+import { useServiceStore } from "@/store/manage/service";
 
 const {
   getServiceList,
@@ -123,5 +119,4 @@ const emit = defineEmits<{
 const modalOpen = (modalId: string) => {
   emit("modalOpen", modalId);
 };
-function openModal() {}
 </script>

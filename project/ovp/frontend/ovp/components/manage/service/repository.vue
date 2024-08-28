@@ -34,14 +34,6 @@
     :useRowCheckBox="false"
     :setColumnFit="true"
     :useColumnResize="false"
-    :columnRender="{
-      owner: {
-        type: 'valFunc',
-        fn: (val: any) => {
-          return `${val.name}`;
-        },
-      },
-    }"
   ></agGrid>
   <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
   <Loading
@@ -51,7 +43,10 @@
     style="display: none"
   ></Loading>
   <!-- 결과 없을 시 no-result 표시 -->
-  <div class="no-result" v-if="DBServiceListData.length === 0">
+  <div
+    class="no-result"
+    v-if="DBServiceListData.length === 0 || null || undefined"
+  >
     <div class="notification">
       <svg-icon class="notification-icon" name="info"></svg-icon>
       <p class="notification-detail">데이터 리스트가 없습니다.</p>
@@ -77,15 +72,12 @@ interface RepositoryDescription {
 }
 
 interface DBServiceListData {
-  serviceType: string;
-  name: string;
-  description: string | undefined;
-  owner: {
-    name: string | undefined;
-  };
-  id: string;
+  owner: string | undefined;
   fqn: string;
+  name: string;
+  id: string;
   type: string;
+  desc: string | undefined;
 }
 
 // 초기 데이터(description) 백업
@@ -153,13 +145,13 @@ const editDone = async () => {
 };
 
 const columnDefs = ref([
-  { field: "serviceType", headerName: "구분" },
+  { field: "type", headerName: "구분" },
   {
     field: "name",
     headerName: "이름",
     cellRenderer: LinkDetailComponent,
   },
-  { field: "description", headerName: "설명" },
+  { field: "desc", headerName: "설명" },
   { field: "owner", headerName: "소유자" },
 ]);
 </script>

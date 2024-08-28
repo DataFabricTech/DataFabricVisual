@@ -17,15 +17,12 @@ interface ServiceData {
 }
 
 interface DBServiceListData {
-  serviceType: string;
-  name: string;
-  description: string | undefined;
-  owner: {
-    name: string | undefined;
-  };
-  id: string;
+  owner: string | undefined;
   fqn: string;
+  name: string;
+  id: string;
   type: string;
+  desc: string | undefined;
 }
 
 export const useServiceStore = defineStore("service", () => {
@@ -49,22 +46,13 @@ export const useServiceStore = defineStore("service", () => {
 
   const serviceData: Ref<ServiceData> = ref({ description: "" });
 
-  const DBServiceListData: Ref<DBServiceListData[]> = ref([
-    {
-      serviceType: "serviceType1",
-      name: "name1",
-      description: "description1",
-      owner: {
-        name: "ownerName1",
-      },
-      type: "type1",
-      id: "id1",
-      fqn: "fqn1",
-    },
+  const DBServiceListData: Ref<DBServiceListData[] | null | undefined> = ref([
+    {},
   ]);
 
   let selectedFqn: string = "";
   let selectedID: string = "";
+  let selectedName: string = "";
   let selectedServiceType: string = "";
 
   // getRepositoryDescriptionAPI의 params 생성함수
@@ -121,32 +109,15 @@ export const useServiceStore = defineStore("service", () => {
     return result;
   };
 
-  const getDBServiceList = () => {
-    // TODO : 가상 데이터 지정 > API생성 후 대체 예정
-    // let result: any = await $api("api/v1/databases/");
-    const result = {
-      result: 1,
-      data: [
-        {
-          serviceType: "serviceType1",
-          name: "11이름",
-          description: "설명1",
-          owner: { name: "소유자1" },
-          type: "table",
-          id: "6ef96a3a-837b-40a5-9afe-a286e50e6ae4",
-          fqn: "df2.test_db.test_db.Employee",
-        },
-        {
-          serviceType: "serviceType2",
-          name: "22이름",
-          description: "설명2",
-          owner: { name: "소유자2" },
-          type: "table",
-          id: "02ab816f-88e1-47df-bb87-926dcbcc20f0",
-          fqn: "vdap2.sample.sample.sampledata_chart_02",
-        },
-      ],
-    };
+  const getDBServiceList = async () => {
+    let url: string = "";
+    if (["MinIO"].includes(selectedServiceType)) {
+      url = "/api/service-manage/storage-services/";
+    } else {
+      url = "/api/service-manage/database-services/";
+    }
+
+    const result: any = await $api(url + `${selectedName}`);
     DBServiceListData.value = result.data;
 
     return result;
@@ -207,6 +178,7 @@ export const useServiceStore = defineStore("service", () => {
     ) {
       selectedFqn = service.fullyQualifiedName;
       selectedID = service.id;
+      selectedName = service.name;
       selectedServiceType = service.serviceType;
       if (
         ["Mysql", "MariaDB", "Oracle", "Postgres"].includes(service.serviceType)
