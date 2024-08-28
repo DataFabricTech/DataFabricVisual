@@ -186,10 +186,11 @@ export const useServiceCollectionAddStore = defineStore(
           ? "profiler"
           : "storageProfiler";
       }
+      return "";
     });
 
     const config = computed(() => {
-      const configObject = {};
+      const configObject: any = {};
 
       if (
         pipelineType.value === "metadata" &&
