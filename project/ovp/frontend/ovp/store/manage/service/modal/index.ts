@@ -186,10 +186,18 @@ export const useServiceStore = defineStore("serviceStore", () => {
         break;
 
       case ServiceIds.MYSQL: {
-        specificConfig.databaseName = serviceObjData.databaseName;
-
         addIfExists(specificConfig, "hostPort", serviceObjData.hostAndPort);
         addIfExists(specificConfig, "username", serviceObjData.username);
+        addIfExists(
+          specificConfig,
+          "databaseName",
+          serviceObjData.databaseName,
+        );
+        addIfExists(
+          specificConfig,
+          "databaseSchema",
+          serviceObjData.databaseSchema,
+        );
 
         if (serviceObjData.password) {
           specificConfig.authType = { password: serviceObjData.password };
@@ -223,6 +231,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
 
         specificConfig = {
           oracleConnectionType,
+          instantClientDirectory: "/instantclient",
         };
         addIfExists(specificConfig, "username", serviceObjData.username);
         addIfExists(specificConfig, "password", serviceObjData.password);

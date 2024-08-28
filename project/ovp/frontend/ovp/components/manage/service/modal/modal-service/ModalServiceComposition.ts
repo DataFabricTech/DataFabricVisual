@@ -170,17 +170,6 @@ export function ModalServiceComposition(
               type: PanelTypes.INPUT,
               required: true,
             },
-            {
-              id: "authConfigurationType",
-              label: "Auth Configuration Type",
-              type: PanelTypes.SELECT,
-              options: [
-                {
-                  label: "Basic Auth",
-                  value: "basicAuth",
-                },
-              ],
-            },
           ],
         },
         {
@@ -203,6 +192,11 @@ export function ModalServiceComposition(
               label: "Database Name",
               type: PanelTypes.INPUT,
             },
+            {
+              id: "databaseSchema",
+              label: "Database Schema",
+              type: PanelTypes.INPUT,
+            },
           ],
         },
       ],
@@ -217,17 +211,6 @@ export function ModalServiceComposition(
               label: "Username",
               type: PanelTypes.INPUT,
               required: true,
-            },
-            {
-              id: "authConfigurationType",
-              label: "Auth Configuration Type",
-              type: PanelTypes.SELECT,
-              options: [
-                {
-                  value: "basicAuth",
-                  label: "Basic Auth",
-                },
-              ],
             },
           ],
         },
@@ -250,7 +233,6 @@ export function ModalServiceComposition(
               id: "database",
               label: "Database",
               type: PanelTypes.INPUT,
-              required: true,
             },
             {
               id: "classificationName",
@@ -390,13 +372,6 @@ export function ModalServiceComposition(
                 class: "oracleConnectionType",
                 id: "oracleConnectionType",
               },
-            },
-            {
-              id: "instantClientDirectory",
-              label: "Oracle Instant Client Directory",
-              defaultValue: "/instantclient",
-              type: PanelTypes.INPUT,
-              required: true,
             },
           ],
         },
