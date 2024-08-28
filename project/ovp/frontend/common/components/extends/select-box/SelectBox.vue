@@ -16,11 +16,11 @@
       <ul class="dropdown-list">
         <template v-if="props.data.length > 0">
           <li
-              class="dropdown-item"
-              v-for="(option, index) in props.data"
-              :key="index"
-              @click="selectItem(option)"
-              :class="[
+            class="dropdown-item"
+            v-for="(option, index) in props.data"
+            :key="index"
+            @click="selectItem(option)"
+            :class="[
               { 'disabled-option': isDisabled(option[valueKey]) },
               { 'is-dropdown-item-selected': isActive(option[valueKey]) }
             ]"
@@ -64,11 +64,10 @@ const props = withDefaults(defineProps<SelectBoxProps>(), {
   useDelete: false,
   nodataMsg: "데이터가 없습니다.",
   isFirstSelectedEvent: true,
-  defaultLabel: "",
+  defaultLabel: ""
 });
 
 const emit = defineEmits<{ (e: "select", option: number | string): void }>();
-
 
 function onSelect(value: string | number) {
   emit("select", value);
@@ -89,4 +88,3 @@ const {
 </script>
 
 <style></style>
-
