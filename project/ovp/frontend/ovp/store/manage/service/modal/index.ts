@@ -180,7 +180,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
           addIfExists(
             specificConfig,
             "password",
-            connectionData.authType.password,
+            connectionData.authType?.password,
           );
         }
         addIfExists(specificConfig, "username", connectionData.username);
@@ -201,7 +201,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
           addIfExists(
             specificConfig,
             "password",
-            connectionData.authType.password,
+            connectionData.authType?.password,
           );
         }
         addIfExists(specificConfig, "database", connectionData.database);
@@ -230,7 +230,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
           addIfExists(
             specificConfig,
             "password",
-            connectionData.authType.password,
+            connectionData.authType?.password,
           );
         }
         addIfExists(specificConfig, "username", connectionData.username);

@@ -278,7 +278,7 @@ export const useServiceStore = defineStore("service", () => {
           connectionInfoData.authConfigurationType,
         );
         addIfExists(data, "username", connectionInfoData.username);
-        addIfExists(data, "password", connectionInfoData.authType.password);
+        addIfExists(data, "password", connectionInfoData.authType?.password);
         addIfExists(data, "hostPort", connectionInfoData.hostPort);
         addIfExists(data, "databaseName", connectionInfoData.databaseName);
         break;
@@ -289,7 +289,7 @@ export const useServiceStore = defineStore("service", () => {
           connectionInfoData.authConfigurationType,
         );
         addIfExists(data, "username", connectionInfoData.username);
-        addIfExists(data, "password", connectionInfoData.authType.password);
+        addIfExists(data, "password", connectionInfoData.authType?.password);
         addIfExists(data, "hostPort", connectionInfoData.hostPort);
         addIfExists(data, "database", connectionInfoData.database);
         addIfExists(
@@ -316,7 +316,7 @@ export const useServiceStore = defineStore("service", () => {
           connectionInfoData.instantClientDirectory,
         );
         addIfExists(data, "username", connectionInfoData.username);
-        addIfExists(data, "password", connectionInfoData.authType.password);
+        addIfExists(data, "password", connectionInfoData.authType?.password);
         addIfExists(data, "hostPort", connectionInfoData.hostPort);
         break;
       default:
