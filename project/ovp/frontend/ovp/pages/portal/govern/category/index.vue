@@ -518,6 +518,9 @@ const { open: openDataModelAddModal, close: closeDataModelAddModal } = useModal(
       onBeforeOpen() {
         beforeOpenModal();
       },
+      onOpen() {
+        openModal();
+      },
     },
   },
 );
