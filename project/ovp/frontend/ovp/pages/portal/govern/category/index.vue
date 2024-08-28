@@ -77,7 +77,9 @@
               />
             </template>
             <template #view-slot>
-              <h3 class="editable-group-title">{{ selectedNode.name }}</h3>
+              <h3 class="editable-group-title">
+                {{ selectedNodeCategory.name }}
+              </h3>
             </template>
           </editable-group>
           <button class="button button-error-lighter" @click="_deleteCategory">
@@ -106,7 +108,7 @@
               ></textarea>
             </template>
             <template #view-slot>
-              <p class="editable-group-desc">{{ selectedNode.desc }}</p>
+              <p class="editable-group-desc">{{ selectedNodeCategory.desc }}</p>
             </template>
           </editable-group>
           <div>
@@ -252,6 +254,9 @@ const {
   checkReachedCount,
   selectedCategoryId,
   selectedCategoryTagId,
+  selectedTitleNodeValue,
+  selectedNodeCategory,
+  dupliSelectedTitleNodeValue,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -267,24 +272,10 @@ const isShowPreview = ref<boolean>(false);
 let currentPreviewId: string | number = "";
 let previewIndex: string = "table";
 
-const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
-  id: "",
-  name: "",
-  desc: "",
-  order: 0,
-  parentId: "",
-  tagId: "",
-  expanded: false,
-  selected: false,
-  disabled: false,
-  children: [],
-});
+const selectedDescNodeValue = ref(selectedNodeCategory.value.desc || "");
 const isAllModelListChecked = ref<boolean>(false);
-const selectedTitleNodeValue = ref(selectedNode.value.name || "");
-const selectedDescNodeValue = ref(selectedNode.value.desc || "");
-
 watch(
-  () => selectedNode.value.name,
+  () => selectedNodeCategory.value.name,
   (newVal) => {
     selectedTitleNodeValue.value = newVal || "";
   },
@@ -292,7 +283,7 @@ watch(
 );
 
 watch(
-  () => selectedNode.value.desc,
+  () => selectedNodeCategory.value.desc,
   (newVal) => {
     selectedDescNodeValue.value = newVal || "";
   },
@@ -306,7 +297,8 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   isBoxSelectedStyle.value = false;
   isDescEditMode.value = false;
   isTitleEditMode.value = false;
-  selectedNode.value = node;
+  selectedNodeCategory.value = node;
+  dupliSelectedTitleNodeValue.value = node.name;
   selectedCategoryId.value = <string>node.id;
   selectedCategoryTagId.value = <string>node.tagId;
 
@@ -333,11 +325,11 @@ const addChild = (newNode: TreeViewItem) => {
 
 const _editCategory = () => {
   const editNodeParam: TreeViewItem = {
-    id: selectedNode.value.id,
-    parentId: selectedNode.value.parentId,
-    tagId: selectedNode.value.tagId,
-    name: selectedNode.value.name,
-    desc: selectedNode.value.desc,
+    id: selectedNodeCategory.value.id,
+    parentId: selectedNodeCategory.value.parentId,
+    tagId: selectedNodeCategory.value.tagId,
+    name: selectedNodeCategory.value.name,
+    desc: selectedNodeCategory.value.desc,
     children: [],
   };
   editCategory(editNodeParam);
@@ -345,7 +337,7 @@ const _editCategory = () => {
 
 const _deleteCategory = async () => {
   if (confirm("카테고리를 삭제 하시겠습니까?")) {
-    const res = await deleteCategory(selectedNode.value.id);
+    const res = await deleteCategory(selectedNodeCategory.value.id);
     if (res.result === 1) {
       alert("삭제 되었습니다.");
       await getCategories();
@@ -453,11 +445,11 @@ const previewClick = async (data: object) => {
 const editCancel = (key: string) => {
   switch (key) {
     case "title":
-      selectedTitleNodeValue.value = selectedNode.value.name;
+      selectedTitleNodeValue.value = selectedNodeCategory.value.name;
       isTitleEditMode.value = false;
       break;
     case "desc":
-      selectedDescNodeValue.value = selectedNode.value.desc;
+      selectedDescNodeValue.value = selectedNodeCategory.value.desc;
       isDescEditMode.value = false;
       break;
   }
@@ -468,15 +460,15 @@ const editDone = (key: string) => {
       if (selectedTitleNodeValue.value === "") {
         return;
       }
-      selectedNode.value.name = selectedTitleNodeValue.value;
+      selectedNodeCategory.value.name = selectedTitleNodeValue.value;
       isTitleEditMode.value = false;
       break;
     case "desc":
       if (selectedDescNodeValue.value === "") {
-        selectedNode.value.desc = "설명 없음";
+        selectedNodeCategory.value.desc = "설명 없음";
         return;
       }
-      selectedNode.value.desc = selectedDescNodeValue.value;
+      selectedNodeCategory.value.desc = selectedDescNodeValue.value;
       isDescEditMode.value = false;
       break;
   }
