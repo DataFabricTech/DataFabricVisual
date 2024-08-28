@@ -19,4 +19,6 @@ export interface ResourceBoxProps extends ResourceBoxCommonProps {
 
   ownerKey?: string;
   categoryKey?: string;
+
+  user?: any;
 }

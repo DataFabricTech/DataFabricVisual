@@ -26,10 +26,36 @@
       <tr>
         <th>태그</th>
         <td class="py-0">
-          <div class="editable-group" v-if="!editTagsMode">
-            <div class="tag tag-primary tag-sm" v-for="tag in mdoelTagList">
-              <span class="tag-text">{{ tag.displayName }}</span>
-            </div>
+          <div
+            class="editable-group"
+            v-show="!user.admin && dataModel.owner?.id !== user.id"
+          >
+            <template v-if="mdoelTagList.length > 0">
+              <div class="tag tag-primary tag-sm" v-for="tag in mdoelTagList">
+                <span class="tag-text">{{ tag.displayName }}</span>
+              </div>
+            </template>
+            <template v-else>
+              <div class="tag tag-primary tag-sm">
+                <span class="tag-text">-</span>
+              </div>
+            </template>
+          </div>
+          <div
+            class="editable-group"
+            v-if="!editTagsMode"
+            v-show="dataModel.owner?.id === user.id || user.admin"
+          >
+            <template v-if="mdoelTagList.length > 0">
+              <div class="tag tag-primary tag-sm" v-for="tag in mdoelTagList">
+                <span class="tag-text">{{ tag.displayName }}</span>
+              </div>
+            </template>
+            <template v-else>
+              <div class="tag tag-primary tag-sm">
+                <span class="tag-text">-</span>
+              </div>
+            </template>
             <button
               class="button button-neutral-ghost button-sm"
               type="button"
@@ -57,10 +83,42 @@
       <tr>
         <th>용어</th>
         <td class="py-0">
-          <div class="editable-group" v-if="!editTermsMode">
-            <div class="tag tag-primary tag-sm" v-for="term in dataModel.terms">
-              <span class="tag-text">{{ term.displayName }}</span>
-            </div>
+          <div
+            class="editable-group"
+            v-show="!user.admin && dataModel.owner?.id !== user.id"
+          >
+            <template v-if="dataModel.terms.length > 0">
+              <div
+                class="tag tag-primary tag-sm"
+                v-for="term in dataModel.terms"
+              >
+                <span class="tag-text">{{ term.displayName }}</span>
+              </div>
+            </template>
+            <template v-else>
+              <div class="tag tag-primary tag-sm">
+                <span class="tag-text">-</span>
+              </div>
+            </template>
+          </div>
+          <div
+            class="editable-group"
+            v-if="!editTermsMode"
+            v-show="dataModel.owner?.id === user.id || user.admin"
+          >
+            <template v-if="dataModel.terms.length > 0">
+              <div
+                class="tag tag-primary tag-sm"
+                v-for="term in dataModel.terms"
+              >
+                <span class="tag-text">{{ term.displayName }}</span>
+              </div>
+            </template>
+            <template v-else>
+              <div class="tag tag-primary tag-sm">
+                <span class="tag-text">-</span>
+              </div>
+            </template>
             <button
               class="button button-neutral-ghost button-sm"
               type="button"
@@ -72,13 +130,13 @@
           </div>
           <div class="editable-group" v-if="editTermsMode">
             <menu-search-tag
-              :data="glossaryList"
+              :data="termList"
               :selected-items="dataModel.terms"
               label-key="displayName"
               value-key="fullyQualifiedName"
               :is-multi="true"
               title="값을 선택하세요"
-              @multiple-change="changeTags"
+              @multiple-change="changeTerms"
               @cancel="editTags"
               @close="editTags"
             ></menu-search-tag>
@@ -93,7 +151,7 @@
 import _ from "lodash";
 
 import { useDataModelDetailStore } from "@/store/search/detail/index";
-import { useSearchCommonStore } from "@/store/search/common";
+import { useUserStore } from "@/store/user/userStore";
 
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
@@ -101,12 +159,14 @@ import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import type { ComputedRef } from "vue";
 
 const dataModelDetailStore = useDataModelDetailStore();
-const searchCommonStore = useSearchCommonStore();
+const userStore = useUserStore();
 
-const { getTagList, getGlossaryList } = dataModelDetailStore;
-const { dataModelType, tagList, glossaryList, dataModel, defaultInfo } =
+const { getTagList, getGlossaryList, getDataModel, changeTag } =
+  dataModelDetailStore;
+const { dataModelType, tagList, termList, dataModel, defaultInfo } =
   storeToRefs(dataModelDetailStore);
-const { filters } = storeToRefs(searchCommonStore);
+
+const { user } = storeToRefs(userStore);
 
 const editTagsMode = ref(false);
 const editTermsMode = ref(false);
@@ -134,13 +194,29 @@ const editTerms = async () => {
   }
 };
 
-const changeTags = (val: MenuSearchItemImpl[]) => {
-  // TODO: 태그 변경 처리
-  editTagsMode.value = false;
+const changeTags = (value: MenuSearchItemImpl[]) => {
+  const data: any = _.map(value, "tagFQN");
+  changeTag("Classification", false, data)
+    .then(() => {
+      editTagsMode.value = false;
+      getDataModel();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
-const changeTerms = (val: MenuSearchItemImpl[]) => {
-  // TODO: 용어 변경 처리
-  editTermsMode.value;
+
+const changeTerms = (value: MenuSearchItemImpl[]) => {
+  const data: any = _.map(value, "fullyQualifiedName");
+
+  changeTag("Glossary", false, data)
+    .then(() => {
+      editTermsMode.value = false;
+      getDataModel();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
 </script>
 

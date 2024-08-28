@@ -213,7 +213,6 @@ import type { DataModel } from "./resource-box-common-props";
 import type { ResourceBoxProps } from "./resource-box-props";
 
 import _ from "lodash";
-import { FILTER_KEYS } from "~/store/search/common";
 import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 
 const props = withDefaults(defineProps<ResourceBoxProps>(), {
@@ -231,6 +230,9 @@ const props = withDefaults(defineProps<ResourceBoxProps>(), {
   ownerKey: "id",
   categoryKey: "category",
   useListCheckbox: false,
+  user: () => {
+    return {};
+  },
 });
 
 const isChecked = computed(() => {
@@ -290,7 +292,6 @@ const editDoneForModel = (key: string) => {
 };
 
 const editDoneForOwner = (value: any, key: string) => {
-  console.log(value);
   const data = {
     key: "owner",
     op: "",
@@ -315,10 +316,13 @@ const editDoneForOwner = (value: any, key: string) => {
   updateIsEditMode(key, false);
 };
 
-const editDoneForCategory = (value: any, key: string) => {
-  // TODO: 카테고리 변경 처리
-  console.log(value);
-  console.log(key);
+const editDoneForCategory = (value: any) => {
+  const data: any = {
+    key: "category",
+    value: value,
+  };
+
+  emit("editDone", data);
 };
 
 const editDone = (key: string) => {
