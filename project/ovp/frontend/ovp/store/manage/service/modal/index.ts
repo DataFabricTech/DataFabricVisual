@@ -413,9 +413,9 @@ export const useServiceStore = defineStore("serviceStore", () => {
       ...getDefaultParam(),
       ...{
         serviceType: getContentType(),
+        connectionType: serviceId,
+        serviceName: service.value.name,
       },
-      ...{ connectionType: serviceId },
-      ...{ serviceName: service.value.name },
     };
   };
   const getSubmitParams = () => {
