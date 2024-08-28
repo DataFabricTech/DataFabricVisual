@@ -142,7 +142,7 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import { useNuxtApp, useRouter } from "nuxt/app";
+import { useRouter } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category/index";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { storeToRefs } from "pinia";
@@ -153,7 +153,6 @@ import Tab from "@extends/tab/Tab.vue";
 import Loading from "@base/loading/Loading.vue";
 
 const router = useRouter();
-const { $api } = useNuxtApp();
 
 const categoryStore = useGovernCategoryStore();
 const {
@@ -163,9 +162,9 @@ const {
   addSearchList,
   getSearchList,
   getModelList,
+  getModelItemAPI,
 } = categoryStore;
 const {
-  currentTab,
   initTab,
   filters,
   searchResult,
@@ -175,7 +174,6 @@ const {
   selectedDataModelList,
   addSearchInputValue,
   selectedCategoryId,
-  selectedCategoryTagId,
 } = storeToRefs(categoryStore);
 
 const props = defineProps({
@@ -274,19 +272,6 @@ const onConfirm = async () => {
 };
 
 await getSearchList();
-const getModelItemAPI = async (id: string) => {
-  await $api(`api/category/${id}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json-patch+json",
-    },
-    body: {
-      tagId: selectedCategoryTagId.value,
-      type: currentTab.value,
-      list: selectedDataModelList.value,
-    },
-  });
-};
 
 const { scrollTrigger, setScrollOptions } = useIntersectionObserver(
   addSearchList,

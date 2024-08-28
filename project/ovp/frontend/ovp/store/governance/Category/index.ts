@@ -339,6 +339,20 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     await resetReloadList();
   };
 
+  const getModelItemAPI = async (id: string) => {
+    await $api(`api/category/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json-patch+json",
+      },
+      body: {
+        tagId: selectedCategoryTagId.value,
+        type: currentTab.value,
+        list: selectedDataModelList.value,
+      },
+    });
+  };
+
   return {
     categories,
     categoriesParentId,
@@ -369,6 +383,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     selectedTitleNodeValue,
     dupliSelectedTitleNodeValue,
     resetAddModalStatus,
+    getModelItemAPI,
     getCategories,
     addModelList,
     getModelList,
