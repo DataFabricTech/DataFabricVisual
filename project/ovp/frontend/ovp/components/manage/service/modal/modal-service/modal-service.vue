@@ -30,17 +30,11 @@
         style="width: 100%"
       />
 
-      <step1 :style="{ display: currentStep === 1 ? 'block' : 'none' }" />
+      <step1 :is-show="currentStep === 1" />
 
-      <step2
-        ref="step2Ref"
-        :style="{ display: currentStep === 2 ? 'block' : 'none' }"
-      />
+      <step2 ref="step2Ref" :is-show="currentStep === 2" />
 
-      <step3
-        ref="step3Ref"
-        :style="{ display: currentStep === 3 ? 'block' : 'none' }"
-      />
+      <step3 ref="step3Ref" :is-show="currentStep === 3" />
     </template>
     <template #footer>
       <button class="button button-neutral-ghost button-lg" @click="onCancel">

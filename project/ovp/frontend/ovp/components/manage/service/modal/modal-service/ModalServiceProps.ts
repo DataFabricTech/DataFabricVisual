@@ -20,5 +20,5 @@ export interface ModalServiceProps {
   formData?: any;
 
   modalId?: string;
-  style?: any;
+  isShow?: boolean;
 }
