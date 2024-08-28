@@ -2,14 +2,12 @@
   @include flex($direction: column, $gap: $spacing-48);
 
   height: 100%;
-  background: linear-gradient(to bottom, rgb(189 227 255 / 40%), rgb(51 152 164 / 40%));
+  background: linear-gradient(to bottom, rgb(189 227 255 / 20%), rgb(51 152 164 / 30%));
 
   &-logo {
-    margin-bottom: $spacing-24;
-
     .logo {
-      width: 55px;
-      height: 55px;
+      width: 300px;
+      height: 50px;
     }
   }
 
@@ -45,7 +43,6 @@
     padding: $spacing-40 $spacing-36;
     background-color: $neutral-0;
     border-radius: $border-radius-12;
-    box-shadow: 0 0 40px 0 rgb(9 131 143 / 50%);
 
     .form {
       width: 100%;
