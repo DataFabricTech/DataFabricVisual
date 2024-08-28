@@ -59,13 +59,14 @@ public class ModelConvertUtil {
         modifiedSource.put("modelNm", source.get("name"));
         modifiedSource.put("modelDesc", source.get("description"));
         modifiedSource.put("fqn", source.get("fullyQualifiedName"));
+        modifiedSource.put("owner", source.get("owner"));
 
         String owner = "";
         if (source.get("owner") != null) {
             Map<String, Object> ownerObj = (Map<String, Object>) source.get("owner");
             owner = ownerObj.get("displayName").toString();
+            modifiedSource.put("ownerDisplayName", owner);
         }
-        modifiedSource.put("owner", owner);
 
         String domain = "";
         if (source.get("domain") != null) {
