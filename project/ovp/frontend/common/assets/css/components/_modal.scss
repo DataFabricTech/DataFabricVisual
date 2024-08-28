@@ -16,7 +16,7 @@
       @include flex($horizontal: space-between);
 
       flex-shrink: 0;
-      padding: $spacing-16 $spacing-16 $spacing-12;
+      padding: $spacing-16 $spacing-16 0;
 
       &-text {
         display: flex;
@@ -84,7 +84,7 @@
     &-foot {
       @include flex($horizontal: space-between, $gap: $spacing-8);
 
-      padding: $spacing-12 $spacing-16 $spacing-16;
+      padding: 0 $spacing-16 $spacing-16;
 
       &-group {
         display: flex;
