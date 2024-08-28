@@ -17,6 +17,7 @@
     swipeToClose="none"
     @cancel="onCancel"
     @confirm="onConfirm"
+    @open="onOpened"
   >
     <template v-slot:body>
       <div class="data-info max-h-[460px]">
@@ -268,10 +269,17 @@ const onConfirm = async () => {
 
 await getSearchList();
 
-const { scrollTrigger, setScrollOptions } = useIntersectionObserver(
+const { scrollTrigger, setScrollOptions, mount } = useIntersectionObserver(
   addSearchList,
   "dataListModal",
 );
+
+const onOpened = () => {
+  // NOTE : modal 사용 방식 변경 후 부터, modal 은 intersectionHelper 의 onMounted 보다 dom 생성이 늦어
+  // mount = intersectionObserver 의 생성 순서가 맞지 않아 동작하지 않는 오류가 발생하기 때문에,
+  // onOpened 로 이벤트를 받고 dom 이 생성 완료 되면 mount 를 실행해서 intersection observer 를 동작시킨다.
+  mount();
+};
 </script>
 
 <style scoped></style>

@@ -44,7 +44,10 @@ export function useIntersectionObserver(
     }
   };
 
-  onMounted(() => {
+  // modal 사용 방식 변경 후,
+  // onMounted 보다 dom 생성이 늦어 IntersectionObserverHandler 가 제대로 동작하지 않는 오류가 있음.
+  // modal 에서 infinite scroll 을 사용하는 경우 mount 를 이용해서 호출해줘야함.
+  const mountIntersectionObserver = () => {
     intersectionHandler = new IntersectionObserverHandler(
       targetId,
       scrollTrigger.value,
@@ -54,6 +57,9 @@ export function useIntersectionObserver(
       getDataCallback,
     );
     setIntersectionHandler(intersectionHandler);
+  };
+  onMounted(() => {
+    mountIntersectionObserver();
   });
 
   onBeforeUnmount(() => {
@@ -70,5 +76,6 @@ export function useIntersectionObserver(
   return {
     scrollTrigger,
     setScrollOptions: setScrollOptions,
+    mount: mountIntersectionObserver,
   };
 }
