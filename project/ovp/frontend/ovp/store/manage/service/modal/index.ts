@@ -177,7 +177,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
         break;
 
       case ServiceIds.MYSQL: {
-        specificConfig.authConfigurationType = "basicAuth";
         if (isForModal) {
           specificConfig.password = "";
         } else {
@@ -198,7 +197,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
       }
 
       case ServiceIds.POSTGRESQL: {
-        specificConfig.authConfigurationType = "basicAuth";
         if (isForModal) {
           specificConfig.password = "";
         } else {
