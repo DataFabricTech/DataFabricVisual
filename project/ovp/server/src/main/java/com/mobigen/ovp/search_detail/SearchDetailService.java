@@ -160,12 +160,24 @@ public class SearchDetailService {
      * @throws Exception
      */
     public Object getGlossaryAll() throws Exception {
-//        return getGlossaries(new ArrayList<>(), "", true);
+        TermResponse glossaryTerms = glossaryClient.getGlossaryTerms("", "", 300, "");
 
         // TODO: 페이징 처리 필요
-        TermResponse res = glossaryClient.getGlossaryTerms("", "", 500, "");
+        return glossaryTerms.getData().stream().map(term -> {
+            Map<String, Object> data = new HashMap<>();
+            String displayName = term.getDisplayName();
+            if (displayName == null || "".equals(displayName)) {
+                displayName = term.getName();
+            }
 
-        return res.getData();
+            data.put("id", term.getId());
+            data.put("name", term.getName());
+            data.put("displayName", displayName);
+            data.put("description", term.getDescription());
+            data.put("tagFQN", term.getFullyQualifiedName());
+
+            return data;
+        }).collect(Collectors.toList());
     }
 
     /**
@@ -329,9 +341,14 @@ public class SearchDetailService {
      * @param dataModelDetailVote
      * @return
      */
-    public Object changeVote(String id, DataModelDetailVote dataModelDetailVote) {
+    public Object changeVote(String id, String type, DataModelDetailVote dataModelDetailVote) {
 
-        return tablesClient.changeVote(id, dataModelDetailVote);
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            return tablesClient.changeVote(id, dataModelDetailVote);
+
+        }
+
+        return containersClient.changeVote(id, dataModelDetailVote);
     }
 
     /***
@@ -340,11 +357,15 @@ public class SearchDetailService {
      * @return
      * @throws Exception
      */
-    public Object followDataModel(String id) throws Exception {
+    public Object followDataModel(String id, String type) throws Exception {
         Map<String, Object> user = userClient.getUserInfo();
         String userId = user.get("id").toString();
 
-        return tablesClient.follow(id, UUID.fromString(userId));
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            return tablesClient.follow(id, UUID.fromString(userId));
+        }
+
+        return containersClient.follow(id, UUID.fromString(userId));
     }
 
     /**
@@ -354,11 +375,15 @@ public class SearchDetailService {
      * @return
      * @throws Exception
      */
-    public Object unfollowDataModel(String id) throws Exception {
+    public Object unfollowDataModel(String id, String type) throws Exception {
         Map<String, Object> user = userClient.getUserInfo();
         String userId = user.get("id").toString();
 
-        return tablesClient.unfollow(id, userId);
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            return tablesClient.unfollow(id, userId);
+        }
+
+        return containersClient.unfollow(id, userId);
     }
 
     /**

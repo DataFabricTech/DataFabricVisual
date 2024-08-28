@@ -41,11 +41,11 @@ public interface TablesClient {
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
     Map<String, Object> changeDataModel(@PathVariable("id") String id, @RequestParam Map<String, String> params, @RequestBody List<Map<String, Object>> body);
 
+    @DeleteMapping("/{id}/followers/{userId}")
+    Object unfollow(@PathVariable("id") String id, @PathVariable("userId") String userId);
+
     @DeleteMapping("{id}")
     Object delete(@PathVariable("id") String id,
                   @RequestParam(defaultValue = "true") Boolean recursive,
                   @RequestParam(defaultValue = "true") Boolean hardDelete);
-
-    @DeleteMapping("/{id}/followers/{userId}")
-    Object unfollow(@PathVariable("id") String id, @PathVariable("userId") String userId);
 }
