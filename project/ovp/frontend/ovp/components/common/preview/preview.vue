@@ -15,7 +15,10 @@
           href="javascript:void(0)"
           class="preview-title"
           @click="gotoDetail"
-          >{{ previewData.modelInfo.model.name }}</a
+          >{{
+            previewData.modelInfo.model.displayName ??
+            previewData.modelInfo.model.name
+          }}</a
         >
         <div class="preview-desc">
           {{ checkEmptyValues(previewData.modelInfo.model.desc) }}

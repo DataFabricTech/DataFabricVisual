@@ -82,6 +82,7 @@ public class ModelConvertUtil {
         fqn = (fqn == null) ? "" : fqn;
 
         String name = (String) data.get("name");
+        String displayName = (String) data.get("displayName");
         String description = (String) data.get("description");
         List<Map<String, Object>> tags = (List<Map<String, Object>>) data.getOrDefault("tags", new ArrayList<>());
         List<Map<String, Object>> columns = new ArrayList<>();
@@ -145,6 +146,7 @@ public class ModelConvertUtil {
 
         Map<String, Object> model = new HashMap<>();
         model.put("name", name);
+        model.put("displayName", displayName);
         model.put("desc", description);
         if (type.equals("unstructured")) {
             model.put("size", size);
