@@ -79,7 +79,16 @@ import { useServiceCollectionAddStore } from "@/store/manage/service/collection-
 const collectionAddStore = useServiceCollectionAddStore();
 const { pipelineType, serviceType, modalTitle, isValid, inValidMsg } =
   storeToRefs(collectionAddStore);
-const { resetData, checkValidation, createIngestion } = collectionAddStore;
+const {
+  setIsValidCronParsedMessage,
+  setIsValidCronParedMessage,
+  setInvalidMessage,
+  setIsValid,
+  setCronExpression,
+  resetData,
+  checkValidation,
+  createIngestion,
+} = collectionAddStore;
 
 const emit = defineEmits<{
   (e: "close"): void;
@@ -120,6 +129,10 @@ const changeStep = (value: number) => {
 
 const gotoPrev = () => {
   if (currentStep.value === 2) {
+    setIsValidCronParsedMessage(true);
+    setInvalidMessage("");
+    setIsValid(true);
+    setCronExpression("0 0 * * *");
   }
   currentStep.value = currentStep.value - 1;
 };

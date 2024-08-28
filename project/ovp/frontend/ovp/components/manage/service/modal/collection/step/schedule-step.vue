@@ -8,11 +8,10 @@
               <label for="" class="form-label">Every </label>
               <div class="form-detail">
                 <select-box
-                  v-if="shouldRenderSelectBox"
                   id="select-box-id-same"
                   class="select-lg w-full"
                   :data="scheduleTypeOptions"
-                  :selectedItem="selectedItem"
+                  :selectedItem="selectedScheduleTypeItem"
                   label-key="label"
                   value-key="value"
                   @select="selectScheduleType"
@@ -136,7 +135,7 @@
                 id="text-input-example-schedule-step-nor"
                 type="number"
                 class="text-input text-input-lg"
-                v-model="retries"
+                v-model="reties"
                 @input="changeRetries"
               />
             </div>
@@ -149,152 +148,26 @@
 <script setup lang="ts">
 import SelectBox from "@extends/select-box/SelectBox.vue";
 import DatePicker from "@extends/datepicker/DatePicker.vue";
-import cronstrue from "cronstrue";
 import { useServiceCollectionAddStore } from "@/store/manage/service/collection-add";
 const collectionAddStore = useServiceCollectionAddStore();
-const { setCronParedMessage, setRetries } = collectionAddStore;
-
-let shouldRenderSelectBox = ref(true);
-
-let isNone = ref(false);
-let isShowHour = ref(false);
-let isShowDay = ref(false);
-let isShowWeek = ref(false);
-let isShowCustom = ref(false);
-
-const scheduleTypeOptions = [
-  {
-    label: "None",
-    value: "none",
-  },
-  {
-    label: "Hour",
-    value: "hour",
-  },
-  {
-    label: "Day",
-    value: "day",
-  },
-  {
-    label: "Week",
-    value: "week",
-  },
-  {
-    label: "Custom",
-    value: "custom",
-  },
-];
-
-const selectedItem = ref(scheduleTypeOptions[0].value);
-
-const selectScheduleType = (value: any) => {
-  if (value === selectedItem.value) {
-    return;
-  }
-
-  hideTypeView();
-  resetScheduleData();
-
-  if (value === "none") {
-    selectedItem.value = scheduleTypeOptions[0].value;
-    isNone.value = true;
-  }
-  if (value === "hour") {
-    selectedItem.value = scheduleTypeOptions[1].value;
-    isShowHour.value = true;
-  }
-  if (value === "day") {
-    selectedItem.value = scheduleTypeOptions[2].value;
-    isShowDay.value = true;
-  }
-  if (value === "week") {
-    selectedItem.value = scheduleTypeOptions[3].value;
-    isShowWeek.value = true;
-  }
-  if (value === "custom") {
-    selectedItem.value = scheduleTypeOptions[4].value;
-    isShowCustom.value = true;
-  }
-};
-
-const hideTypeView = () => {
-  isNone.value = false;
-  isShowHour.value = false;
-  isShowDay.value = false;
-  isShowWeek.value = false;
-  isShowCustom.value = false;
-};
-
-const resetScheduleData = () => {
-  minute.value = "00";
-  time.value = "00:00";
-  selectedDay.value = daysOfWeek[0].value;
-};
-
-const minute = ref("00");
-const time = ref("00:00");
-
-const daysOfWeek = [
-  { label: "SUN", value: "Sunday" },
-  { label: "MON", value: "Monday" },
-  { label: "TUE", value: "Tuesday" },
-  { label: "WED", value: "Wednesday" },
-  { label: "THU", value: "Thursday" },
-  { label: "FRI", value: "Friday" },
-  { label: "SAT", value: "Saturday" },
-];
-const selectedDay = ref(daysOfWeek[0].value);
-
-const selectDay = (value: string) => {
-  selectedDay.value = value;
-};
-
-const cronExpression = ref("0 0 * * *");
-
-const retries = ref(0);
-
-const changeRetries = (e) => {
-  retries.value = e.target.value;
-  setRetries(Number(retries.value));
-};
-
-const cronParedMessage = ref("");
-
-watchEffect(() => {
-
-  if (isShowCustom.value) {
-    try {
-      cronParedMessage.value = cronstrue.toString(cronExpression.value);
-      setCronParedMessage(true); // 유효한 크론 표현식임을 설정
-    } catch (err: any) {
-      cronParedMessage.value = "유효하지 않은 크론 표현식 입니다.";
-      setCronParedMessage(false); // 유효하지 않은 크론 표현식임을 설정
-    }
-  } else {
-    cronParedMessage.value = ""; // isShowCustom이 false일 때 빈 메시지 설정
-  }
-
-  // if (!modalOpenStatus.value) {
-  //   // 모달이 닫힐 때 select-box 컴포넌트를 재렌더링하기 위해 v-if를 false로 설정
-  //   shouldRenderSelectBox.value = false;
-  //
-  //   // 다음 렌더링 사이클에서 shouldRenderSelectBox를 true로 설정
-  //   nextTick(() => {
-  //     shouldRenderSelectBox.value = true;
-  //   });
-  //
-  //   hideTypeView();
-  //   isNone.value = true;
-  //
-  //   selectedItem.value = scheduleTypeOptions[0].value;
-  //
-  //   resetScheduleData();
-  //
-  //   cronExpression.value = "0 0 * * *";
-  //
-  //   retries.value = 0;
-  // }
-});
+const {
+  cronExpression,
+  cronParedMessage,
+  isNone,
+  isShowHour,
+  isShowDay,
+  isShowWeek,
+  isShowCustom,
+  scheduleTypeOptions,
+  selectedScheduleTypeItem,
+  minute,
+  time,
+  daysOfWeek,
+  selectedDay,
+  reties,
+} = storeToRefs(collectionAddStore);
+const { setCronParedMessage, selectScheduleType, selectDay, changeRetries } =
+  collectionAddStore;
 </script>
 <style lang="scss" scoped>
 /* @import "./index.scss"; */

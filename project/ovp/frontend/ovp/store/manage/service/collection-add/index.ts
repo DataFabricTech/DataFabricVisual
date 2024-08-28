@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import _ from "lodash";
 import type { IngestionPipeline } from "./IngestionPipeline";
 import { computed } from "../../../../.nuxt/imports";
+import cronstrue from "cronstrue";
 
 export const useServiceCollectionAddStore = defineStore(
   "service_collection_add",
@@ -63,8 +64,105 @@ export const useServiceCollectionAddStore = defineStore(
 
     const inValidMsg = ref("");
     const isValid = ref(true);
+
+    const cronExpression = ref("0 0 * * *");
+    const isNone = ref(true);
+    const isShowHour = ref(false);
+    const isShowDay = ref(false);
+    const isShowWeek = ref(false);
+    const isShowCustom = ref(false);
+
+    const cronParedMessage = ref("");
+
+    const scheduleTypeOptions = ref([
+      {
+        label: "None",
+        value: "none",
+      },
+      {
+        label: "Hour",
+        value: "hour",
+      },
+      {
+        label: "Day",
+        value: "day",
+      },
+      {
+        label: "Week",
+        value: "week",
+      },
+      {
+        label: "Custom",
+        value: "custom",
+      },
+    ]);
+
+    const selectedScheduleTypeItem = ref(scheduleTypeOptions.value[0].value);
+    const minute = ref("00");
+    const time = ref("00:00");
+
+    const daysOfWeek = ref([
+      { label: "SUN", value: "Sunday" },
+      { label: "MON", value: "Monday" },
+      { label: "TUE", value: "Tuesday" },
+      { label: "WED", value: "Wednesday" },
+      { label: "THU", value: "Thursday" },
+      { label: "FRI", value: "Friday" },
+      { label: "SAT", value: "Saturday" },
+    ]);
+
+    const selectedDay = ref(daysOfWeek.value[0].value);
+
     const isValidCronMessage = ref(true);
     const reties = ref(0);
+
+    watchEffect(() => {
+      if (isShowCustom.value) {
+        try {
+          cronParedMessage.value = cronstrue.toString(cronExpression.value);
+          isValidCronMessage.value = true; // 유효한 크론 표현식임을 설정
+        } catch (err: any) {
+          cronParedMessage.value = "유효하지 않은 크론 표현식 입니다."; // 유효하지 않은 크론 표현식임을 설정
+          isValidCronMessage.value = false;
+        }
+      } else {
+        cronParedMessage.value = ""; // isShowCustom이 false일 때 빈 메시지 설정
+      }
+    });
+
+    // computed
+    const airflowConfig = computed(() => {
+      const airflowObj = {};
+
+      let cron = "";
+      if (isShowHour.value) {
+        // ex) "매시간 4분에" 작업을 실행
+        cron = `${parseInt(minute.value)} * * * *`;
+        airflowObj.scheduleInterval = cron;
+      } else if (isShowDay.value) {
+        // 매일 특정 시간에 작업을 실행
+        const [hour, min] = time.value.split(":");
+        cron = `${parseInt(min)} ${parseInt(hour)} * * *`;
+        airflowObj.scheduleInterval = cron;
+      } else if (isShowWeek.value) {
+        // 매주 특정 요일, 특정 시간에 작업을 실행
+        const [hour, min] = time.value.split(":");
+        const dayIndex = daysOfWeek.value.findIndex(
+          (day) => day.value === selectedDay.value,
+        );
+        cron = `${parseInt(min)} ${parseInt(hour)} * * ${dayIndex}`;
+        airflowObj.scheduleInterval = cron;
+      } else if (isShowCustom.value) {
+        // 사용자가 직접 입력한 크론 표현식을 사용
+        cron = cronExpression.value;
+        airflowObj.scheduleInterval = cron;
+      }
+
+      airflowObj.startDate = "";
+      airflowObj.retries = reties.value;
+
+      return airflowObj;
+    });
 
     const loggerLevel = computed(() =>
       isEnableDebug.value ? "DEBUG" : "INFO",
@@ -213,11 +311,8 @@ export const useServiceCollectionAddStore = defineStore(
     });
 
     const ingestionPipeLine = ref<IngestionPipeline>({
-      airflowConfig: {
-        scheduleInterval: "", // 두 JSON 모두 크론 스케줄을 가짐 (단, 시간이 다를 수 있음)
-        startDate: "", // 스케줄러 (생성할때는 특정시간때 우선 반영 - 서버에서 넣어줘야함)
-      },
-      loggerLevel: loggerLevel.value, // ex) INFO or DEBUG
+      airflowConfig: {},
+      loggerLevel: "", // ex) INFO or DEBUG
       name: "", // 서버에서 넣어줘야함 ex) UUID 값
       displayName: "",
       owner: {
@@ -230,10 +325,11 @@ export const useServiceCollectionAddStore = defineStore(
         type: serviceType.value,
       },
       sourceConfig: {
-        config: config.value,
+        config: {},
       },
     });
 
+    // setters
     const setModalTitle = (value: any) => {
       modalTitle.value = value;
     };
@@ -253,8 +349,19 @@ export const useServiceCollectionAddStore = defineStore(
       serviceType.value = value;
     };
 
-    // setters
-    const setCronParedMessage = (value: any) => {
+    const setInvalidMessage = (value: any) => {
+      inValidMsg.value = value;
+    };
+
+    const setIsValid = (value: any) => {
+      isValid.value = value;
+    };
+
+    const setCronExpression = (value: any) => {
+      cronExpression.value = value;
+    };
+
+    const setIsValidCronParsedMessage = (value: any) => {
       isValidCronMessage.value = value;
     };
 
@@ -415,6 +522,58 @@ export const useServiceCollectionAddStore = defineStore(
       }
     };
 
+    const selectScheduleType = (value: any) => {
+      if (value === selectedScheduleTypeItem.value) {
+        return;
+      }
+
+      hideTypeView();
+      resetScheduleData();
+
+      if (value === "none") {
+        selectedScheduleTypeItem.value = scheduleTypeOptions.value[0].value;
+        isNone.value = true;
+      }
+      if (value === "hour") {
+        selectedScheduleTypeItem.value = scheduleTypeOptions.value[1].value;
+        isShowHour.value = true;
+      }
+      if (value === "day") {
+        selectedScheduleTypeItem.value = scheduleTypeOptions.value[2].value;
+        isShowDay.value = true;
+      }
+      if (value === "week") {
+        selectedScheduleTypeItem.value = scheduleTypeOptions.value[3].value;
+        isShowWeek.value = true;
+      }
+      if (value === "custom") {
+        selectedScheduleTypeItem.value = scheduleTypeOptions.value[4].value;
+        isShowCustom.value = true;
+      }
+    };
+
+    const hideTypeView = () => {
+      isNone.value = false;
+      isShowHour.value = false;
+      isShowDay.value = false;
+      isShowWeek.value = false;
+      isShowCustom.value = false;
+    };
+
+    const resetScheduleData = () => {
+      minute.value = "00";
+      time.value = "00:00";
+      selectedDay.value = daysOfWeek.value[0].value;
+    };
+
+    const selectDay = (value: string) => {
+      selectedDay.value = value;
+    };
+
+    const changeRetries = (e) => {
+      reties.value = Number(e.target.value);
+    };
+
     const resetData = () => {
       isValid.value = true;
 
@@ -470,9 +629,28 @@ export const useServiceCollectionAddStore = defineStore(
       isComputeMetric.value = true;
 
       isValidCronMessage.value = true;
+      resetScheduleData();
+      hideTypeView();
+      isNone.value = true;
+      selectedScheduleTypeItem.value = scheduleTypeOptions.value[0].value;
+      cronExpression.value = "0 0 * * *";
+
+      reties.value = 0;
     };
 
     const checkValidation = () => {
+      if (isShowCustom.value) {
+        try {
+          cronParedMessage.value = cronstrue.toString(cronExpression.value);
+          isValidCronMessage.value = true; // 유효한 크론 표현식임을 설정
+        } catch (err: any) {
+          cronParedMessage.value = "유효하지 않은 크론 표현식 입니다."; // 유효하지 않은 크론 표현식임을 설정
+          isValidCronMessage.value = false;
+        }
+      } else {
+        cronParedMessage.value = ""; // isShowCustom이 false일 때 빈 메시지 설정
+      }
+
       // 이름이 체크
       if (_.isEmpty(ingestionPipeLine.value.displayName)) {
         isValid.value = false;
@@ -505,7 +683,11 @@ export const useServiceCollectionAddStore = defineStore(
     };
 
     const createIngestion = () => {
-      console.log("config값확인: ", config.value);
+      ingestionPipeLine.value.pipelineType = bindPipelineType.value;
+      ingestionPipeLine.value.airflowConfig = airflowConfig.value;
+      ingestionPipeLine.value.sourceConfig.config = config.value;
+      ingestionPipeLine.value.loggerLevel = loggerLevel.value;
+      console.log("ingestionPipeLine: ", ingestionPipeLine.value);
     };
 
     return {
@@ -540,11 +722,30 @@ export const useServiceCollectionAddStore = defineStore(
       SFP_excludes,
       TFP_includes,
       TFP_excludes,
+
+      cronExpression,
+      cronParedMessage,
+      isNone,
+      isShowHour,
+      isShowDay,
+      isShowWeek,
+      isShowCustom,
+      scheduleTypeOptions,
+      selectedScheduleTypeItem,
+      minute,
+      time,
+      daysOfWeek,
+      selectedDay,
+
+      reties,
       setModalTitle,
       setId,
       setPipelineType,
       setServiceType,
-      setCronParedMessage,
+      setInvalidMessage,
+      setIsValidCronParsedMessage,
+      setIsValid,
+      setCronExpression,
       setRetries,
       handleNameInput,
       clearNameInput,
@@ -563,6 +764,11 @@ export const useServiceCollectionAddStore = defineStore(
       selectSampleType,
       handleProfileSampleInput,
       handleRowCount,
+
+      selectScheduleType,
+      selectDay,
+      changeRetries,
+
       resetData,
       checkValidation,
       createIngestion,
