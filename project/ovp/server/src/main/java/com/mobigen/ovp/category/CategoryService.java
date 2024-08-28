@@ -75,6 +75,12 @@ public class CategoryService {
         return rootCategories.get(0);
     }
 
+    public List<CategoryDTO> getCategoryAllList() {
+        List<CategoryEntity> categories = categoryRepository.findAll();
+
+        return categories.stream().map(category -> new CategoryDTO(category)).collect(Collectors.toList());
+    }
+
     @Transactional
     public Object addCategory(CategoryDTO dto) throws Exception {
         dto.setTagId(createTagInfo(dto.getId()));

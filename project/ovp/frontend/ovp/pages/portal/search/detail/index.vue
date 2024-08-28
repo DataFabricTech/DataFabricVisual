@@ -11,6 +11,7 @@
       :editable="true"
       :user-list="userList"
       owner-key="id"
+      :user="user"
       :category-list="categoryList"
       :category-key="FILTER_KEYS.CATEGORY"
       @editIconClick="editIconClick"
@@ -41,6 +42,7 @@ import { storeToRefs } from "pinia";
 import { useDataModelDetailStore } from "@/store/search/detail/index";
 import { useLineageStore } from "@/store/search/detail/lineage/index";
 import { useSearchCommonStore } from "@/store/search/common";
+import { useUserStore } from "@/store/user/userStore";
 
 import Tab from "@extends/tab/Tab.vue";
 import ResourceBox from "@/components/common/resource-box/resource-box.vue";
@@ -61,6 +63,7 @@ const route = useRoute();
 const dataModelDetailStore = useDataModelDetailStore();
 const lineageStore = useLineageStore();
 const searchCommonStore = useSearchCommonStore();
+const userStore = useUserStore();
 
 const { dataModelType, userList, categoryList, dataModel } =
   storeToRefs(dataModelDetailStore);
@@ -68,6 +71,7 @@ const { dataModelType, userList, categoryList, dataModel } =
 const {
   getUserList,
   getCategoryList,
+  getCategoryAllList,
   getDataModelFqn,
   setDataModelId,
   setDataModelFqn,
@@ -84,6 +88,8 @@ const {
 const { getLineageData } = lineageStore;
 
 const { getFilters } = searchCommonStore;
+
+const { user } = storeToRefs(userStore);
 
 // computed 속성으로 filteredTabs 정의
 const filteredTabs = computed(() => {
@@ -144,13 +150,13 @@ async function changeTab(tab: number | string) {
 const editIconClick = (key: string) => {
   if (key === "category") {
     getCategoryList();
+    getCategoryAllList();
   } else {
     getUserList();
   }
 };
 
-const editDone = (data: object) => {
-  // TODO: [개발] 변경 데이터 저장한는 API 호출 필요
+const editDone = (data: any) => {
   changeDataModel(data)
     .then(() => {
       getDataModel();
