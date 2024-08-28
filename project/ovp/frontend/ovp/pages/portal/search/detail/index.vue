@@ -113,8 +113,12 @@ const tabOptions = [
   { label: "프로파일링", value: "profile", component: Profiling },
   { label: "쿼리", value: "query", component: Query },
   { label: "데이터 리니지", value: "lineage", component: Lineage },
-  { label: "Knowledge graph", value: 7, component: KnowledgeGraph },
-  { label: "추천 데이터 모델", value: 8, component: RecommendModel },
+  { label: "Knowledge graph", value: "knowledge", component: KnowledgeGraph },
+  {
+    label: "추천 데이터 모델",
+    value: "recommended",
+    component: RecommendModel,
+  },
 ];
 
 const initTabValue: Ref<any> = ref("default");
@@ -140,8 +144,15 @@ async function changeTab(tab: number | string) {
       await getQuery();
       break;
     case "lineage":
+      alert("개발중 입니다.");
       await getLineageData(dataModelType.value, getDataModelFqn());
-      await getFilters();
+      // await getFilters();
+      break;
+    case "knowledge":
+      alert("개발중 입니다.");
+      break;
+    case "recommended":
+      alert("개발중 입니다.");
       break;
   }
   currentComponent.value = _.find(tabOptions, ["value", tab])?.component;
