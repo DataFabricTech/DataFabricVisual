@@ -110,7 +110,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
     }
   };
   const formatConfig = (purpose: string) => {
-    const serviceObjData = {};
+    const serviceObjData: Record<string, any> = {};
     const connectionData = _.cloneDeep(connectionInfo.value);
     const isForModal = purpose === "modal";
 
@@ -135,14 +135,18 @@ export const useServiceStore = defineStore("serviceStore", () => {
       case ServiceIds.MINIO: {
         const minioConfig: Record<string, any> = connectionData.minioConfig;
         addIfExists(serviceObjData, "accessKeyId", minioConfig.accessKeyId);
-        addIfExists(serviceObjData, "secretKey", minioConfig.secretKey);
+        if (isForModal) {
+          serviceObjData.secretKey = "";
+        } else {
+          addIfExists(serviceObjData, "secretKey", minioConfig.secretKey);
+        }
         addIfExists(serviceObjData, "sessionToken", minioConfig.sessionToken);
         addIfExists(serviceObjData, "region", minioConfig.region);
         addIfExists(serviceObjData, "endPointURL", minioConfig.endPointURL);
 
         specificConfig = {
           bucketNames: connectionData.bucketNames.map((item: any) => [item]),
-          serviceObjData,
+          ...serviceObjData,
         };
 
         return {
