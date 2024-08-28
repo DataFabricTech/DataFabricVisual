@@ -65,7 +65,7 @@ export const useServiceStore = defineStore("service", () => {
 
   let selectedFqn: string = "";
   let selectedID: string = "";
-  // let selectedServiceType: string = ""; // 수정API호출시 필요할 수 있어서 남겨둠
+  let selectedServiceType: string = "";
 
   // getRepositoryDescriptionAPI의 params 생성함수
   const getQueryData = () => {
@@ -96,18 +96,27 @@ export const useServiceStore = defineStore("service", () => {
   const updateRepositoryDescriptionAPI = async (
     patchData: JsonPatchOperation[],
   ) => {
-    const result = await $api(
-      `/api/service-manage/repository/description/${selectedID}`,
-      {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json-patch+json",
-        },
-        body: JSON.stringify(patchData),
+    let url: string = "";
+    // Storage의 항목을 수정할 경로
+    if (["MinIO"].includes(selectedServiceType)) {
+      url = "api/service-manage/repository/storage/description/";
+    } else {
+      // DataBase의 항목을 수정할 경로
+      url = "api/service-manage/repository/description/";
+    }
+    const result = await $api(url + `${selectedID}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json-patch+json",
       },
-    );
-
-    await getRepositoryDescriptionAPI();
+      body: JSON.stringify(patchData),
+    });
+    // 설명 조회 재호출
+    if (["MinIO"].includes(selectedServiceType)) {
+      await getRepositoryStorageDescriptionAPI();
+    } else {
+      await getRepositoryDescriptionAPI();
+    }
 
     return result;
   };
@@ -198,7 +207,7 @@ export const useServiceStore = defineStore("service", () => {
     ) {
       selectedFqn = service.fullyQualifiedName;
       selectedID = service.id;
-      // selectedServiceType = service.serviceType;
+      selectedServiceType = service.serviceType;
       if (
         ["Mysql", "MariaDB", "Oracle", "Postgres"].includes(service.serviceType)
       ) {

@@ -204,7 +204,7 @@ public class ServiceManageController {
 
 
     /**
-     * 저장소관리 > 저장소탭 > '설명'수정
+     * 저장소관리 > 저장소탭 > Database > '설명'수정
      *
      * @param id
      * @param param
@@ -214,6 +214,19 @@ public class ServiceManageController {
     @PatchMapping("/repository/description/{id}")
     public Object editRepositoryDescription(@PathVariable String id, @RequestBody List<JsonPatchOperation> param) {
         return service.editRepositoryDescription(id, param);
+    }
+
+    /**
+     * 저장소관리 > 저장소탭 > Storage > '설명'수정
+     *
+     * @param id
+     * @param param
+     * @return
+     **/
+    @ResponseJsonResult
+    @PatchMapping("/repository/storage/description/{id}")
+    public Object editRepositoryStorageDescription(@PathVariable String id, @RequestBody List<JsonPatchOperation> param) {
+        return service.editRepositoryStorageDescription(id, param);
     }
 
 

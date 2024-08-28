@@ -225,7 +225,7 @@ public class ServiceManageService {
     }
 
     /**
-     * 저장소관리 > 저장소탭 > '설명'수정
+     * 저장소관리 > 저장소탭 > Database > '설명'수정
      *
      * @param id
      * @param param
@@ -233,6 +233,17 @@ public class ServiceManageService {
      **/
     public Object editRepositoryDescription(String id, List<JsonPatchOperation> param) {
         return new RepositoryDescriptionResponse(servicesClient.editRepositoryDescription(id, param));
+    }
+
+    /**
+     * 저장소관리 > 저장소탭 > Storage > '설명'수정
+     *
+     * @param id
+     * @param param
+     * @return
+     **/
+    public Object editRepositoryStorageDescription(String id, List<JsonPatchOperation> param) {
+        return new RepositoryDescriptionResponse(servicesClient.editRepositoryStorageDescription(id, param));
     }
 
     public Object saveIngestionPipelines(Map<String, Object> params) {

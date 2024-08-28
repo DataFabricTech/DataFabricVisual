@@ -99,7 +99,7 @@ public interface ServicesClient {
     RepositoryDescription getRepositoryStorageDescription(@PathVariable("name") String name, @RequestParam MultiValueMap<String, String> params);
 
     /**
-     * 저장소관리 > 저장소탭 > '설명'수정
+     * 저장소관리 > 저장소탭 > Database > '설명'수정
      *
      * @param id
      * @param param
@@ -118,6 +118,16 @@ public interface ServicesClient {
 
     @GetMapping("/ingestionPipelines/name/{id}")
     Map<String, Object> getPipelinesData(@PathVariable String id, @RequestParam Map<String, Object> params);
+
+    /**
+     * 저장소관리 > 저장소탭 > Storage > '설명'수정
+     *
+     * @param id
+     * @param param
+     * @return
+     **/
+    @PatchMapping(value = "/storageServices/{id}", consumes = "application/json-patch+json")
+    RepositoryDescription editRepositoryStorageDescription(@PathVariable("id") String id, @RequestBody List<JsonPatchOperation> param);
 
     @GetMapping("/databaseServices/name/{name}")
     Map<String, Object> getDBConnectionInfo(@PathVariable String name,
