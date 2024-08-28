@@ -65,7 +65,7 @@
             class="editable-group-title"
             title="상세 보기"
             @click.stop="modelNmClick"
-            >{{ newData.modelNm }}</a
+            >{{ newData.firModelNm ?? newData.modelNm }}</a
           >
         </template>
         <template v-else>

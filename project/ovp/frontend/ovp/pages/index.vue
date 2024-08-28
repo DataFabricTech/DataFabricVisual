@@ -38,7 +38,10 @@
       <div class="main-content">
         <div class="l-top-bar">
           <span class="main-content-title">북마크 한 데이터</span>
-          <nuxt-link :to="'/portal/my-page'" class="button link-button-support">
+          <nuxt-link
+            :to="`/portal/my-page?fqn=${user.fullyQualifiedName}`"
+            class="button link-button-support"
+          >
             <span class="button-title">모두 보기</span>
           </nuxt-link>
         </div>
@@ -94,6 +97,7 @@
 import { ref, onMounted } from "vue";
 import { storeToRefs } from "pinia";
 import { useMainStore } from "@/store/main/mainStore";
+import { useUserStore } from "@/store/user/userStore";
 import { useSearchCommonStore } from "@/store/search/common";
 import { useRouter } from "nuxt/app";
 import Loading from "@base/loading/Loading.vue";
@@ -101,6 +105,9 @@ import Loading from "@base/loading/Loading.vue";
 const loader = ref<HTMLElement | null>(null);
 
 const router = useRouter();
+
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
 const searchCommonStore = useSearchCommonStore();
 const { setSortFilter } = searchCommonStore;

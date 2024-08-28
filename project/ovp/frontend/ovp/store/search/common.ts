@@ -1,6 +1,7 @@
 import { usePagingStore } from "~/store/common/paging";
 import { useQueryHelpers } from "~/composables/queryHelpers";
 import _ from "lodash";
+import { ref } from "vue";
 
 export const FILTER_KEYS = {
   CATEGORY: "category",
@@ -74,6 +75,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       },
     },
   });
+  const selectedFilterItems: Ref<any> = ref([]);
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
 
   // DATA
@@ -132,6 +134,12 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     searchResultLength.value = totalCount;
     isSearchResultNoData.value = searchResult.value.length === 0;
   };
+
+  const setEmptyFilter = () => {
+    selectedFilterItems.value = [];
+    selectedFilters.value = {};
+  };
+
   const getFilters = async () => {
     const { data } = await $api(`/api/search/filters`);
 
@@ -227,6 +235,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     filters,
     searchResult,
     previewData,
+    selectedFilterItems,
     selectedFilters,
     viewType,
     isShowPreview,
@@ -247,5 +256,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     updateIntersectionHandler,
     getQueryFilter,
     getTrinoQuery,
+    setEmptyFilter,
   };
 });

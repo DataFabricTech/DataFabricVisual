@@ -46,7 +46,9 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
 
   let selectedNode: any = null;
   const categories: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
+  const defaultCategoriesParentId = ref("");
   const categoriesParentId = ref("");
+  const categoriesId = ref("");
   const isCategoriesNoData = ref(false);
   const modelList: Ref<any[]> = ref([]);
   const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
@@ -80,6 +82,8 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   });
   const selectedTitleNodeValue = ref(selectedNodeCategory.value.name || "");
   const dupliSelectedTitleNodeValue = ref("");
+  const lastChildIdList: Ref<string[]> = ref<string[]>([]);
+
   // MAIN - TREE
   const getCategories = async () => {
     const { data } = await $api(`/api/category/list`);
@@ -90,8 +94,13 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
      */
     categories.value = data.children;
     isCategoriesNoData.value = categories.value.length === 0;
+    defaultCategoriesParentId.value = data.parentId;
     categoriesParentId.value = data.parentId;
-    console.log(categories.value);
+
+    lastChildIdList.value = categories.value
+      .flatMap((item1) => item1.children)
+      .flatMap((item2) => item2.children)
+      .map((item3) => item3.id);
   };
 
   const addCategory = (node: TreeViewItem) => {
@@ -107,15 +116,21 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     });
 
     if (res.data === "HAS_SAME_NAME") {
-      alert(`${categoryAddName.value} 이미 존재합니다.`);
-      selectedTitleNodeValue.value = dupliSelectedTitleNodeValue.value;
-      selectedNodeCategory.value.name = dupliSelectedTitleNodeValue.value;
+      if (categoryAddName.value !== "") {
+        alert(`${categoryAddName.value} 이미 존재합니다.`);
+        categoryAddName.value = "";
+        return;
+      } else if (selectedTitleNodeValue.value !== "") {
+        alert(`${selectedTitleNodeValue.value} 이미 존재합니다.`);
+        selectedTitleNodeValue.value = dupliSelectedTitleNodeValue.value;
+        selectedNodeCategory.value.name = dupliSelectedTitleNodeValue.value;
+      }
     }
-
-    if (res.data === "OVER_DEPTH") {
-      alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
-      return;
-    }
+    // 모달 창이 뜨기 전에 확인을 해야돼서, 이 시점에는 확인하지 않는다. (추후 사용할 수 있어서 남김)
+    // if (res.data === "OVER_DEPTH") {
+    //   alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
+    //   return;
+    // }
 
     await getCategories();
   };
@@ -355,7 +370,9 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
 
   return {
     categories,
+    defaultCategoriesParentId,
     categoriesParentId,
+    categoriesId,
     modelList,
     isCategoriesNoData,
     previewData,
@@ -382,6 +399,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     selectedNodeCategory,
     selectedTitleNodeValue,
     dupliSelectedTitleNodeValue,
+    lastChildIdList,
     resetAddModalStatus,
     getModelItemAPI,
     getCategories,

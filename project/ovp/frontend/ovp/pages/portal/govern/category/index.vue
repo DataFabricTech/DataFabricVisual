@@ -136,7 +136,7 @@
                     전체선택
                   </label>
                 </div>
-                <div class="h-group ml-auto gap-2">
+                <div class="h-group ml-auto gap-2" v-if="isModalButtonShow">
                   <button
                     class="button button-secondary-stroke"
                     @click="showCategoryChangeModal"
@@ -219,7 +219,6 @@ const categoryStore = useGovernCategoryStore();
 const {
   getCategories,
   addModelList,
-  addNewCategory,
   getModelList,
   editCategory,
   deleteCategory,
@@ -248,6 +247,10 @@ const {
   selectedTitleNodeValue,
   selectedNodeCategory,
   dupliSelectedTitleNodeValue,
+  lastChildIdList,
+  defaultCategoriesParentId,
+  categoriesParentId,
+  categoriesId,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -259,6 +262,7 @@ const modelIdList = ref([]);
 const isDescEditMode = ref(false);
 const isTitleEditMode = ref(false);
 const isShowPreview = ref<boolean>(false);
+const isModalButtonShow = ref<boolean>(false);
 
 let currentPreviewId: string | number = "";
 let previewIndex: string = "table";
@@ -290,8 +294,10 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   isTitleEditMode.value = false;
   selectedNodeCategory.value = node;
   dupliSelectedTitleNodeValue.value = node.name;
-  selectedCategoryId.value = <string>node.id;
+  selectedCategoryId.value = node.id;
   selectedCategoryTagId.value = <string>node.tagId;
+
+  checkModalButton(node.id);
 
   setScrollOptions(0);
   // 선택한 노드정보 저장
@@ -302,16 +308,34 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   setModelIdList();
 };
 
+const checkModalButton = (id: string) => {
+  isModalButtonShow.value = lastChildIdList.value.some(
+    (lastChildId: string) => lastChildId === id,
+  );
+};
+
 const addSibling = (newNode: TreeViewItem) => {
-  // TODO : modal 창 띄워서 노드 추가 API  호출 (newNode 에 id(uuid), parentId 포함되어있음)
-  console.debug(`형제노드 추가 ${JSON.stringify(newNode)}`);
-  addNewCategory(newNode);
+  categoriesParentId.value = newNode.parentId;
+  categoriesId.value = newNode.id;
+  openCategoryAddModal();
+  resetAddModalStatus();
 };
 
 const addChild = (newNode: TreeViewItem) => {
-  // TODO : modal 창 띄워서 노드 추가 API  호출
-  console.debug(`자식노드 추가 ${JSON.stringify(newNode)}`);
-  addNewCategory(newNode);
+  const checkAddLasChild = lastChildIdList.value.some(
+    (lastChildId: string) => lastChildId === newNode.parentId,
+  );
+
+  // 이곳에서 3depth 체크
+  if (checkAddLasChild) {
+    alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
+    return;
+  }
+
+  categoriesParentId.value = newNode.parentId;
+  categoriesId.value = newNode.id;
+  openCategoryAddModal();
+  resetAddModalStatus();
 };
 
 const _editCategory = () => {
@@ -508,11 +532,16 @@ const { open: openDataModelAddModal, close: closeDataModelAddModal } = useModal(
       onBeforeOpen() {
         beforeOpenModal();
       },
+      onOpen() {
+        openModal();
+      },
     },
   },
 );
 
 const showCategoryAddModal = () => {
+  categoriesParentId.value = defaultCategoriesParentId.value;
+  categoriesId.value = "";
   openCategoryAddModal();
   resetAddModalStatus();
 };
