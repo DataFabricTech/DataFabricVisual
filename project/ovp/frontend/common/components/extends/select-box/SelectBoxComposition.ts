@@ -11,8 +11,8 @@ interface SelectBoxComposition extends SelectBoxProps, SelectFunctionality, Sele
 }
 
 export function SelectBoxComposition(
-    props: SelectBoxProps,
-    onselect: (value: string | number) => void
+  props: SelectBoxProps,
+  onselect: (value: string | number) => void
 ): SelectBoxComposition {
   const isShowBox: Ref<boolean> = ref<boolean>(false);
   const selectedLabel: Ref<string> = ref<string>(props.defaultLabel || "선택하세요");
@@ -20,10 +20,10 @@ export function SelectBoxComposition(
 
   // selectedItem 변경을 감지해 값 변경 (부모 컴포넌트에서 선택 값을 초기화하는 경우 존재)
   watch(
-      () => [props.selectedItem],
-      () => {
-        setSelectedData();
-      }
+    () => [props.selectedItem],
+    () => {
+      setSelectedData();
+    }
   );
 
   const findItem: (value: string | number | undefined) => any = (value) => {
@@ -96,4 +96,3 @@ export function SelectBoxComposition(
 
   return { ...props, isShowBox, selectedLabel, selectItem, toggleList, isDisabled, isActive, closeDropdown, onSelect };
 }
-
