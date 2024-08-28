@@ -79,6 +79,7 @@ const categoryStore = useGovernCategoryStore();
 const { addNewCategory } = categoryStore;
 const {
   categoriesParentId,
+  categoriesId,
   categoryAddName,
   categoryAddDesc,
   showAddNameNoti,
@@ -98,7 +99,7 @@ const emit = defineEmits<{
 
 const setNewNodeCategory = () => {
   const newNodeParam: TreeViewItem = {
-    id: uuid.v4(),
+    id: categoriesId.value !== "" ? categoriesId.value : uuid.v4(),
     parentId: categoriesParentId.value,
     name: categoryAddName.value,
     desc: categoryAddDesc.value,

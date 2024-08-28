@@ -219,7 +219,6 @@ const categoryStore = useGovernCategoryStore();
 const {
   getCategories,
   addModelList,
-  addNewCategory,
   getModelList,
   editCategory,
   deleteCategory,
@@ -249,6 +248,9 @@ const {
   selectedNodeCategory,
   dupliSelectedTitleNodeValue,
   lastChildIdList,
+  defaultCategoriesParentId,
+  categoriesParentId,
+  categoriesId,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -313,15 +315,27 @@ const checkModalButton = (id: string) => {
 };
 
 const addSibling = (newNode: TreeViewItem) => {
-  // TODO : modal 창 띄워서 노드 추가 API  호출 (newNode 에 id(uuid), parentId 포함되어있음)
-  console.debug(`형제노드 추가 ${JSON.stringify(newNode)}`);
-  addNewCategory(newNode);
+  categoriesParentId.value = newNode.parentId;
+  categoriesId.value = newNode.id;
+  openCategoryAddModal();
+  resetAddModalStatus();
 };
 
 const addChild = (newNode: TreeViewItem) => {
-  // TODO : modal 창 띄워서 노드 추가 API  호출
-  console.debug(`자식노드 추가 ${JSON.stringify(newNode)}`);
-  addNewCategory(newNode);
+  const checkAddLasChild = lastChildIdList.value.some(
+    (lastChildId: string) => lastChildId === newNode.parentId,
+  );
+
+  // 이곳에서 3depth 체크
+  if (checkAddLasChild) {
+    alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
+    return;
+  }
+
+  categoriesParentId.value = newNode.parentId;
+  categoriesId.value = newNode.id;
+  openCategoryAddModal();
+  resetAddModalStatus();
 };
 
 const _editCategory = () => {
@@ -526,6 +540,8 @@ const { open: openDataModelAddModal, close: closeDataModelAddModal } = useModal(
 );
 
 const showCategoryAddModal = () => {
+  categoriesParentId.value = defaultCategoriesParentId.value;
+  categoriesId.value = "";
   openCategoryAddModal();
   resetAddModalStatus();
 };

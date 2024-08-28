@@ -46,7 +46,9 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
 
   let selectedNode: any = null;
   const categories: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
+  const defaultCategoriesParentId = ref("");
   const categoriesParentId = ref("");
+  const categoriesId = ref("");
   const isCategoriesNoData = ref(false);
   const modelList: Ref<any[]> = ref([]);
   const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
@@ -92,6 +94,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
      */
     categories.value = data.children;
     isCategoriesNoData.value = categories.value.length === 0;
+    defaultCategoriesParentId.value = data.parentId;
     categoriesParentId.value = data.parentId;
 
     lastChildIdList.value = categories.value
@@ -123,11 +126,11 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
         selectedNodeCategory.value.name = dupliSelectedTitleNodeValue.value;
       }
     }
-
-    if (res.data === "OVER_DEPTH") {
-      alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
-      return;
-    }
+    // 모달 창이 뜨기 전에 확인을 해야돼서, 이 시점에는 확인하지 않는다. (추후 사용할 수 있어서 남김)
+    // if (res.data === "OVER_DEPTH") {
+    //   alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
+    //   return;
+    // }
 
     await getCategories();
   };
@@ -367,7 +370,9 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
 
   return {
     categories,
+    defaultCategoriesParentId,
     categoriesParentId,
+    categoriesId,
     modelList,
     isCategoriesNoData,
     previewData,
