@@ -30,7 +30,6 @@
         @change="changeStep"
         style="width: 100%"
       />
-
       <template v-if="isAddMode">
         <step1 :is-show="currentStep === 1" />
         <step2 ref="step2Ref" :is-show="currentStep === 2" />
@@ -76,6 +75,7 @@ import {
   ConnectionStatus,
 } from "./ModalServiceComposition";
 import type { ModalServiceProps } from "./ModalServiceProps";
+import { watch } from "vue";
 
 const props = withDefaults(defineProps<ModalServiceProps>(), { mode: "add" });
 const {
@@ -89,12 +89,21 @@ const {
   resetServiceObj,
   submit,
   checkValidation,
+  serviceObj,
 } = ModalServiceComposition(props);
 
 const emit = defineEmits<{
   (e: "close"): void;
   (e: "loadData"): void;
 }>();
+
+watch(
+  () => serviceObj.value.detailInfo,
+  () => {
+    isDoneTestConnection.value = null;
+  },
+  { immediate: true, deep: true },
+);
 
 isAddMode.value = props.mode === "add";
 const stepOptions: any[] = [
