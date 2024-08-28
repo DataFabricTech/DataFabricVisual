@@ -192,7 +192,6 @@ export const useServiceStore = defineStore("service", () => {
         // 서비스 타입이 기타일 경우
       }
     }
-    // TODO : 아래 DB 테이블 조회도 호출필요 !!!---------------
     getDBServiceList();
   }
 
