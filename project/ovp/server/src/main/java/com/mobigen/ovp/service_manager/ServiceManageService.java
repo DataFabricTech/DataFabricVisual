@@ -203,7 +203,7 @@ public class ServiceManageService {
     }
 
     /**
-     * 저장소관리 > 저장소탭 > '설명'조회
+     * 저장소관리 > 저장소탭 > Database > '설명'조회
      *
      * @param name
      * @param params
@@ -211,6 +211,17 @@ public class ServiceManageService {
      **/
     public Object getRepositoryDescription(String name, MultiValueMap<String, String> params) {
         return new RepositoryDescriptionResponse(servicesClient.getRepositoryDescription(name, params));
+    }
+
+    /**
+     * 저장소관리 > 저장소탭 > Storage > '설명'조회
+     *
+     * @param name
+     * @param params
+     * @return
+     **/
+    public Object getRepositoryStorageDescription(String name, MultiValueMap<String, String> params) {
+        return new RepositoryDescriptionResponse(servicesClient.getRepositoryStorageDescription(name, params));
     }
 
     /**

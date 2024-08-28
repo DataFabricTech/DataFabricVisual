@@ -65,6 +65,7 @@ export const useServiceStore = defineStore("service", () => {
 
   let selectedFqn: string = "";
   let selectedID: string = "";
+  // let selectedServiceType: string = ""; // 수정API호출시 필요할 수 있어서 남겨둠
 
   // getRepositoryDescriptionAPI의 params 생성함수
   const getQueryData = () => {
@@ -75,10 +76,18 @@ export const useServiceStore = defineStore("service", () => {
     return new URLSearchParams(params);
   };
 
-  // 저장소 탭 > 설명 조회 API호출 함수
+  // 저장소 탭 > 설명 [데이터베이스] 조회 API호출 함수
   const getRepositoryDescriptionAPI = async () => {
     const { data }: any = await $api(
       `/api/service-manage/repository/description/${selectedFqn}?${getQueryData()}`,
+    );
+    serviceData.value = { description: data.description };
+  };
+
+  // 저장소 탭 > [스토리지] 설명 조회 API호출 함수
+  const getRepositoryStorageDescriptionAPI = async () => {
+    const { data }: any = await $api(
+      `/api/service-manage/repository/storage/description/${selectedFqn}?${getQueryData()}`,
     );
     serviceData.value = { description: data.description };
   };
@@ -189,7 +198,18 @@ export const useServiceStore = defineStore("service", () => {
     ) {
       selectedFqn = service.fullyQualifiedName;
       selectedID = service.id;
-      getRepositoryDescriptionAPI();
+      // selectedServiceType = service.serviceType;
+      if (
+        ["Mysql", "MariaDB", "Oracle", "Postgres"].includes(service.serviceType)
+      ) {
+        // 서비스타입이 데이터베이스 일 경우
+        getRepositoryDescriptionAPI();
+      } else if (["MinIO"].includes(service.serviceType)) {
+        // 서비스 타입이 스토리지일 경우
+        getRepositoryStorageDescriptionAPI();
+      } else {
+        // 서비스 타입이 기타일 경우
+      }
     }
     // TODO : 아래 DB 테이블 조회도 호출필요 !!!---------------
     getDBServiceList();

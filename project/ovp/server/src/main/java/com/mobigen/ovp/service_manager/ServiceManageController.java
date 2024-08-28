@@ -179,7 +179,7 @@ public class ServiceManageController {
     }
 
     /**
-     * 저장소관리 > 저장소탭 > '설명'조회
+     * 저장소관리 > 저장소탭 > Database > '설명'조회
      *
      * @param name
      * @return
@@ -189,6 +189,19 @@ public class ServiceManageController {
     public Object getRepositoryDescription(@PathVariable String name, @RequestParam MultiValueMap<String, String> params) {
         return service.getRepositoryDescription(name, params);
     }
+
+    /**
+     * 저장소관리 > 저장소탭 > Storage > '설명'조회
+     *
+     * @param name
+     * @return
+     **/
+    @ResponseJsonResult
+    @GetMapping("/repository/storage/description/{name}")
+    public Object getRepositoryStorageDescription(@PathVariable String name, @RequestParam MultiValueMap<String, String> params) {
+        return service.getRepositoryStorageDescription(name, params);
+    }
+
 
     /**
      * 저장소관리 > 저장소탭 > '설명'수정

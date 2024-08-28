@@ -80,7 +80,7 @@ public interface ServicesClient {
     Map<String, Object> saveStorage(@RequestBody Map<String, Object> params);
 
     /**
-     * 저장소관리 > 저장소탭 > '설명'조회
+     * 저장소관리 > 저장소탭 > Database > '설명'조회
      *
      * @param name
      * @param params
@@ -88,6 +88,15 @@ public interface ServicesClient {
      **/
     @GetMapping("/databaseServices/name/{name}")
     RepositoryDescription getRepositoryDescription(@PathVariable("name") String name, @RequestParam MultiValueMap<String, String> params);
+
+    /**
+     * 저장소관리 > 저장소탭 > Storage > '설명'조회
+     *
+     * @param name
+     * @return
+     **/
+    @GetMapping("/storageServices/name/{name}")
+    RepositoryDescription getRepositoryStorageDescription(@PathVariable("name") String name, @RequestParam MultiValueMap<String, String> params);
 
     /**
      * 저장소관리 > 저장소탭 > '설명'수정
