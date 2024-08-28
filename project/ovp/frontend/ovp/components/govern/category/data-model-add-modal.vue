@@ -9,7 +9,7 @@
     :clickToClose="true"
     :escToClose="true"
     :width="1180"
-    :height="620"
+    :height="615"
     :top="240"
     :lockScroll="false"
     :confirm-btn-msg="'저장'"
@@ -55,7 +55,7 @@
           </div>
         </div>
         <div v-else class="table-scroll" id="dataListModal">
-          <table>
+          <table class="table-fixed">
             <colgroup>
               <col style="width: 42px" />
               <col />
