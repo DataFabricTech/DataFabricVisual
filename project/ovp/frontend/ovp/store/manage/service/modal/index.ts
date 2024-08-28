@@ -177,7 +177,11 @@ export const useServiceStore = defineStore("serviceStore", () => {
         if (isForModal) {
           specificConfig.password = "";
         } else {
-          addIfExists(specificConfig, "password", connectionData.password);
+          addIfExists(
+            specificConfig,
+            "password",
+            connectionData.authType.password,
+          );
         }
         addIfExists(specificConfig, "username", connectionData.username);
         addIfExists(specificConfig, "hostAndPort", connectionData.hostPort);
@@ -194,11 +198,20 @@ export const useServiceStore = defineStore("serviceStore", () => {
         if (isForModal) {
           specificConfig.password = "";
         } else {
-          addIfExists(specificConfig, "password", connectionData.password);
+          addIfExists(
+            specificConfig,
+            "password",
+            connectionData.authType.password,
+          );
         }
         addIfExists(specificConfig, "database", connectionData.database);
         addIfExists(specificConfig, "username", connectionData.username);
         addIfExists(specificConfig, "hostAndPort", connectionData.hostPort);
+        addIfExists(
+          specificConfig,
+          "classificationName",
+          connectionData.classificationName,
+        );
         break;
       }
 
@@ -214,7 +227,11 @@ export const useServiceStore = defineStore("serviceStore", () => {
         if (isForModal) {
           specificConfig.password = "";
         } else {
-          addIfExists(specificConfig, "password", connectionData.password);
+          addIfExists(
+            specificConfig,
+            "password",
+            connectionData.authType.password,
+          );
         }
         addIfExists(specificConfig, "username", connectionData.username);
         addIfExists(specificConfig, "hostAndPort", connectionData.hostPort);
@@ -409,13 +426,15 @@ export const useServiceStore = defineStore("serviceStore", () => {
   };
   const getParams = () => {
     const serviceId = serviceObj.value.serviceId;
+    // 연결테스트 시, 이미 저장된 데이터인 경우 serviceName 값도 보내줘야 정상적으로 작동
+    const hasSavedData = _.isEmpty(serviceObj.value.defaultInfo.serviceNm);
     return {
       ...getDefaultParam(),
-      ...{
-        serviceType: getContentType(),
-        connectionType: serviceId,
+      serviceType: getContentType(),
+      connectionType: serviceId,
+      ...(hasSavedData && {
         serviceName: service.value.name,
-      },
+      }),
     };
   };
   const getSubmitParams = () => {

@@ -241,13 +241,14 @@ export const useServiceStore = defineStore("service", () => {
   };
 
   const addIfExists = (obj: any, key: string, value: any) => {
+    // TODO: 공통모듈화, service modal 에 같은 코드 있음
     if (value) {
       obj[key] = value;
     }
   };
 
   const setViewConnectionInfo = () => {
-    // TODO: 상수처리
+    // TODO: 상수처리, service modal 에 비슷한 코드 확인 후 공통으로 사용가능하면 수정 필요
     const connectionInfoData = connectionInfo.value;
     const { type, scheme, connectionArguments, connectionOptions } =
       connectionInfoData;
@@ -281,7 +282,7 @@ export const useServiceStore = defineStore("service", () => {
           connectionInfoData.authConfigurationType,
         );
         addIfExists(data, "username", connectionInfoData.username);
-        addIfExists(data, "password", connectionInfoData.password);
+        addIfExists(data, "password", connectionInfoData.authType.password);
         addIfExists(data, "hostPort", connectionInfoData.hostPort);
         addIfExists(data, "databaseName", connectionInfoData.databaseName);
         break;
@@ -292,9 +293,20 @@ export const useServiceStore = defineStore("service", () => {
           connectionInfoData.authConfigurationType,
         );
         addIfExists(data, "username", connectionInfoData.username);
-        addIfExists(data, "password", connectionInfoData.password);
+        addIfExists(data, "password", connectionInfoData.authType.password);
         addIfExists(data, "hostPort", connectionInfoData.hostPort);
         addIfExists(data, "database", connectionInfoData.database);
+        addIfExists(
+          data,
+          "ingestAllDatabases",
+          connectionInfoData.ingestAllDatabases,
+        );
+        addIfExists(data, "sslMode", connectionInfoData.sslMode);
+        addIfExists(
+          data,
+          "classificationName",
+          connectionInfoData.classificationName,
+        );
         break;
       case ServiceIds.ORACLE:
         addIfExists(
@@ -308,7 +320,7 @@ export const useServiceStore = defineStore("service", () => {
           connectionInfoData.instantClientDirectory,
         );
         addIfExists(data, "username", connectionInfoData.username);
-        addIfExists(data, "password", connectionInfoData.password);
+        addIfExists(data, "password", connectionInfoData.authType.password);
         addIfExists(data, "hostPort", connectionInfoData.hostPort);
         break;
       default:
@@ -317,10 +329,7 @@ export const useServiceStore = defineStore("service", () => {
         break;
     }
 
-    viewConnectionInfo.value = {
-      scheme,
-      ...data,
-    };
+    viewConnectionInfo.value = data;
   };
 
   return {
