@@ -131,4 +131,17 @@ public class ServiceManageController {
     public Object updateIngestionPipelines(@PathVariable String id, @RequestBody List<JsonPatchOperation> params) {
         return service.updateIngestionPipelines(id, params);
     }
+
+    @ResponseJsonResult
+    @GetMapping("/database-services/{id}")
+    public Object getDatabaseServiceList(@PathVariable String id) {
+        return service.getDatabaseServiceList(id);
+    }
+
+    @ResponseJsonResult
+    @GetMapping("/storage-services/{id}")
+    public Object getStorageServiceList(@PathVariable String id) {
+        return service.getStorageServiceList(id);
+    }
+
 }
