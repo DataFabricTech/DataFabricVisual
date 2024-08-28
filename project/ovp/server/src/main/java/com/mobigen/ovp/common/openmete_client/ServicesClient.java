@@ -87,6 +87,9 @@ public interface ServicesClient {
     @PostMapping("/ingestionPipelines/deploy/{id}")
     Object ingestionPipelinesDeploy(@PathVariable String id);
 
+    @GetMapping("/ingestionPipelines/name/{id}")
+    Map<String, Object> getPipelinesData(@PathVariable String id, @RequestParam Map<String, Object> params);
+
     @GetMapping("/databaseServices/name/{name}")
     Map<String, Object> getDBConnectionInfo(@PathVariable String name,
                                             @RequestParam MultiValueMap<String, String> params);

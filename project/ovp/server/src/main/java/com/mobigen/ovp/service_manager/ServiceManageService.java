@@ -345,4 +345,8 @@ public class ServiceManageService {
         }
         return null;
     }
+
+    public Map<String, Object> getPipelinesData(String id, Map<String, Object> params) {
+        return servicesClient.getPipelinesData(id, params);
+    }
 }
