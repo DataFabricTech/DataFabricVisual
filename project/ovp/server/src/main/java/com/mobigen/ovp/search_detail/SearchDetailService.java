@@ -224,31 +224,22 @@ public class SearchDetailService {
      */
     public boolean getFollowDataModel(String userId, String id, String type) {
         boolean isFollow = false;
-        if (ModelType.STORAGE.getValue().equals(type)) {
-            Map<String, Object> container = containersClient.getContainersObject(id, "followers");
-            List<Map<String, Object>> followers = (List<Map<String, Object>>) container.get("followers");
-            for(Map<String, Object> follower: followers) {
-                if (follower.get("id").equals(userId)) {
-                    isFollow = true;
-                    break;
-                }
-            }
-            return isFollow;
-        } else {
-            MultiValueMap params = new LinkedMultiValueMap();
-            params.add("fields", "followers");
-            params.add("include", "all");
 
-            Tables tables = tablesClient.getTablesName(id, params);
+        MultiValueMap params = new LinkedMultiValueMap();
+        params.add("fields", "followers");
+        params.add("include", "all");
 
-            for(Followers followers: tables.getFollowers()) {
-                if (followers.getId().equals(userId)) {
-                    isFollow = true;
-                    break;
-                }
+        Tables resultData = ModelType.STORAGE.getValue().equals(type)
+                ? containersClient.getStorageById(id, params)
+                : tablesClient.getTablesName(id, params);
+
+        for(Followers followers: resultData.getFollowers()) {
+            if (followers.getId().equals(userId)) {
+                isFollow = true;
+                break;
             }
-            return isFollow;
         }
+        return isFollow;
     }
 
 
