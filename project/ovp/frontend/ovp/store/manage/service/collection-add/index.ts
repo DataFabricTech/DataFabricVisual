@@ -120,48 +120,50 @@ export const useServiceCollectionAddStore = defineStore(
     const isValidCronMessage = ref(true);
     const reties = ref(0);
 
-    watchEffect(() => {
-      if (isShowCustom.value) {
-        try {
-          cronParedMessage.value = cronstrue.toString(cronExpression.value);
-          isValidCronMessage.value = true; // 유효한 크론 표현식임을 설정
-        } catch (err: any) {
-          cronParedMessage.value = "유효하지 않은 크론 표현식 입니다."; // 유효하지 않은 크론 표현식임을 설정
-          isValidCronMessage.value = false;
+    watch(
+      [isShowCustom, cronExpression],
+      ([newIsShowCustom, newCronExpression]) => {
+        if (newIsShowCustom) {
+          try {
+            cronParedMessage.value = cronstrue.toString(newCronExpression);
+            isValidCronMessage.value = true; // 유효한 크론 표현식임을 설정
+          } catch (err: any) {
+            cronParedMessage.value = "유효하지 않은 크론 표현식 입니다."; // 유효하지 않은 크론 표현식임을 설정
+            isValidCronMessage.value = false;
+          }
+        } else {
+          cronParedMessage.value = ""; // isShowCustom이 false일 때 빈 메시지 설정
         }
-      } else {
-        cronParedMessage.value = ""; // isShowCustom이 false일 때 빈 메시지 설정
-      }
-    });
+      },
+    );
 
     // computed
     const airflowConfig = computed(() => {
       const airflowObj = {};
-
-      let cron = "";
-      if (isShowHour.value) {
-        // ex) "매시간 4분에" 작업을 실행
-        cron = `${parseInt(minute.value)} * * * *`;
-        airflowObj.scheduleInterval = cron;
-      } else if (isShowDay.value) {
-        // 매일 특정 시간에 작업을 실행
-        if (time.value === null) {
-          time.value = "00:00";
+      const generateCronExpression = () => {
+        if (isShowHour.value) {
+          // ex) "매시간 4분에" 작업을 실행
+          return `${parseInt(minute.value)} * * * *`;
+        } else if (isShowDay.value) {
+          // 매일 특정 시간에 작업을 실행
+          const [hour, min] = time.value ? time.value.split(":") : ["00", "00"];
+          return `${parseInt(min)} ${parseInt(hour)} * * *`;
+        } else if (isShowWeek.value) {
+          // 매주 특정 요일, 특정 시간에 작업을 실행
+          const [hour, min] = time.value ? time.value.split(":") : ["00", "00"];
+          const dayIndex = daysOfWeek.value.findIndex(
+            (day) => day.value === selectedDay.value,
+          );
+          return `${parseInt(min)} ${parseInt(hour)} * * ${dayIndex}`;
+        } else if (isShowCustom.value) {
+          // 사용자가 직접 입력한 크론 표현식을 사용
+          return cronExpression.value;
         }
-        const [hour, min] = time.value.split(":");
-        cron = `${parseInt(min)} ${parseInt(hour)} * * *`;
-        airflowObj.scheduleInterval = cron;
-      } else if (isShowWeek.value) {
-        // 매주 특정 요일, 특정 시간에 작업을 실행
-        const [hour, min] = time.value.split(":");
-        const dayIndex = daysOfWeek.value.findIndex(
-          (day) => day.value === selectedDay.value,
-        );
-        cron = `${parseInt(min)} ${parseInt(hour)} * * ${dayIndex}`;
-        airflowObj.scheduleInterval = cron;
-      } else if (isShowCustom.value) {
-        // 사용자가 직접 입력한 크론 표현식을 사용
-        cron = cronExpression.value;
+        return ""; // 기본 값으로 빈 문자열 반환
+      };
+
+      const cron = generateCronExpression();
+      if (cron) {
         airflowObj.scheduleInterval = cron;
       }
 
@@ -176,32 +178,13 @@ export const useServiceCollectionAddStore = defineStore(
     );
 
     const bindPipelineType = computed(() => {
-      if (
-        pipelineType.value === "metadata" &&
-        serviceType.value === "databaseService"
-      ) {
+      if (pipelineType.value === "metadata") {
         return "metadata";
       }
-
-      if (
-        pipelineType.value === "metadata" &&
-        serviceType.value === "storageService"
-      ) {
-        return "metadata";
-      }
-
-      if (
-        pipelineType.value === "profiler" &&
-        serviceType.value === "databaseService"
-      ) {
-        return "profiler";
-      }
-
-      if (
-        pipelineType.value === "profiler" &&
-        serviceType.value === "storageService"
-      ) {
-        return "storageProfiler";
+      if (pipelineType.value === "profiler") {
+        return serviceType.value === "databaseService"
+          ? "profiler"
+          : "storageProfiler";
       }
     });
 
@@ -273,45 +256,45 @@ export const useServiceCollectionAddStore = defineStore(
         configObject.timeoutSeconds = 43200;
       }
 
-      // CFP_includes나 CFP_excludes가 비어 있지 않으면 containerFilterPattern 추가
-      if (CFP_includes.length > 0 || CFP_excludes.length > 0) {
-        configObject.containerFilterPattern = {
-          includes: CFP_includes.map((item) => item.name),
-          excludes: CFP_excludes.map((item) => item.name),
-        };
+      function addFilterPattern(configObject, patternKey, includes, excludes) {
+        if (includes.length > 0 || excludes.length > 0) {
+          configObject[patternKey] = {
+            includes: includes.map((item) => item.name),
+            excludes: excludes.map((item) => item.name),
+          };
+        }
       }
 
-      // BFP_includes나 BFP_excludes가 비어 있지 않으면 bucketFilterPattern 추가
-      if (BFP_includes.length > 0 || BFP_excludes.length > 0) {
-        configObject.bucketFilterPattern = {
-          includes: BFP_includes.map((item) => item.name),
-          excludes: BFP_excludes.map((item) => item.name),
-        };
-      }
-
-      // DFP_includes나 DFP_excludes가 비어 있지 않으면 databaseFilterPattern 추가
-      if (DFP_includes.length > 0 || DFP_excludes.length > 0) {
-        configObject.databaseFilterPattern = {
-          includes: DFP_includes.map((item) => item.name),
-          excludes: DFP_excludes.map((item) => item.name),
-        };
-      }
-
-      // SFP_includes나 SFP_excludes가 비어 있지 않으면 schemaFilterPattern 추가
-      if (SFP_includes.length > 0 || SFP_excludes.length > 0) {
-        configObject.schemaFilterPattern = {
-          includes: SFP_includes.map((item) => item.name),
-          excludes: SFP_excludes.map((item) => item.name),
-        };
-      }
-
-      // TFP_includes나 TFP_excludes가 비어 있지 않으면 tableFilterPattern 추가
-      if (TFP_includes.length > 0 || TFP_excludes.length > 0) {
-        configObject.tableFilterPattern = {
-          includes: TFP_includes.map((item) => item.name),
-          excludes: TFP_excludes.map((item) => item.name),
-        };
-      }
+      addFilterPattern(
+        configObject,
+        "containerFilterPattern",
+        CFP_includes,
+        CFP_excludes,
+      );
+      addFilterPattern(
+        configObject,
+        "bucketFilterPattern",
+        BFP_includes,
+        BFP_excludes,
+      );
+      addFilterPattern(
+        configObject,
+        "databaseFilterPattern",
+        DFP_includes,
+        DFP_excludes,
+      );
+      addFilterPattern(
+        configObject,
+        "schemaFilterPattern",
+        SFP_includes,
+        SFP_excludes,
+      );
+      addFilterPattern(
+        configObject,
+        "tableFilterPattern",
+        TFP_includes,
+        TFP_excludes,
+      );
 
       return configObject;
     });
@@ -420,108 +403,37 @@ export const useServiceCollectionAddStore = defineStore(
       sampleDataRowsCount.value = e.target.value;
     };
 
-    const addInput = (patternAlias: any) => {
-      if (patternAlias === "CFP_includes") {
-        CFP_includes.push({ name: "" });
-      }
-      if (patternAlias === "CFP_excludes") {
-        CFP_excludes.push({ name: "" });
-      }
-      if (patternAlias === "BFP_includes") {
-        BFP_includes.push({ name: "" });
-      }
-      if (patternAlias === "BFP_excludes") {
-        BFP_excludes.push({ name: "" });
-      }
-      if (patternAlias === "DFP_includes") {
-        DFP_includes.push({ name: "" });
-      }
-      if (patternAlias === "DFP_excludes") {
-        DFP_excludes.push({ name: "" });
-      }
+    const patternMap: { [key: string]: { name: string }[] } = {
+      CFP_includes,
+      CFP_excludes,
+      BFP_includes,
+      BFP_excludes,
+      DFP_includes,
+      DFP_excludes,
+      SFP_includes,
+      SFP_excludes,
+      TFP_includes,
+      TFP_excludes,
+    };
 
-      if (patternAlias === "SFP_includes") {
-        SFP_includes.push({ name: "" });
-      }
-      if (patternAlias === "SFP_excludes") {
-        SFP_excludes.push({ name: "" });
-      }
-
-      if (patternAlias === "TFP_includes") {
-        TFP_includes.push({ name: "" });
-      }
-      if (patternAlias === "TFP_excludes") {
-        TFP_excludes.push({ name: "" });
+    const addInput = (patternAlias: string) => {
+      const targetArray = patternMap[patternAlias];
+      if (targetArray) {
+        targetArray.push({ name: "" });
       }
     };
 
-    const clearInput = (patternAlias: any, index: any) => {
-      if (patternAlias === "CFP_includes") {
-        CFP_includes[index].name = "";
-      }
-      if (patternAlias === "CFP_excludes") {
-        CFP_excludes[index].name = "";
-      }
-      if (patternAlias === "BFP_includes") {
-        BFP_includes[index].name = "";
-      }
-      if (patternAlias === "BFP_excludes") {
-        BFP_excludes[index].name = "";
-      }
-      if (patternAlias === "DFP_includes") {
-        DFP_includes[index].name = "";
-      }
-      if (patternAlias === "DFP_excludes") {
-        DFP_excludes[index].name = "";
-      }
-
-      if (patternAlias === "SFP_includes") {
-        SFP_includes[index].name = "";
-      }
-      if (patternAlias === "SFP_excludes") {
-        SFP_excludes[index].name = "";
-      }
-
-      if (patternAlias === "TFP_includes") {
-        TFP_includes[index].name = "";
-      }
-      if (patternAlias === "TFP_excludes") {
-        TFP_excludes[index].name = "";
+    const clearInput = (patternAlias: string, index: number) => {
+      const targetArray = patternMap[patternAlias];
+      if (targetArray && targetArray[index]) {
+        targetArray[index].name = "";
       }
     };
 
-    const removeInput = (patternAlias: any, index: number) => {
-      if (patternAlias === "CFP_includes") {
-        CFP_includes.splice(index, 1);
-      }
-      if (patternAlias === "CFP_excludes") {
-        CFP_excludes.splice(index, 1);
-      }
-      if (patternAlias === "BFP_includes") {
-        BFP_includes.splice(index, 1);
-      }
-      if (patternAlias === "BFP_excludes") {
-        BFP_excludes.splice(index, 1);
-      }
-      if (patternAlias === "DFP_includes") {
-        DFP_includes.splice(index, 1);
-      }
-      if (patternAlias === "DFP_excludes") {
-        DFP_excludes.splice(index, 1);
-      }
-
-      if (patternAlias === "SFP_includes") {
-        SFP_includes.splice(index, 1);
-      }
-      if (patternAlias === "SFP_excludes") {
-        SFP_excludes.splice(index, 1);
-      }
-
-      if (patternAlias === "TFP_includes") {
-        TFP_includes.splice(index, 1);
-      }
-      if (patternAlias === "TFP_excludes") {
-        TFP_excludes.splice(index, 1);
+    const removeInput = (patternAlias: string, index: number) => {
+      const targetArray = patternMap[patternAlias];
+      if (targetArray && targetArray[index]) {
+        targetArray.splice(index, 1);
       }
     };
 
@@ -603,16 +515,7 @@ export const useServiceCollectionAddStore = defineStore(
       profileSample.value = 50;
       sampleDataRowsCount.value = 50;
 
-      CFP_includes.splice(0);
-      CFP_excludes.splice(0);
-      BFP_includes.splice(0);
-      BFP_excludes.splice(0);
-      DFP_includes.splice(0);
-      DFP_excludes.splice(0);
-      SFP_includes.splice(0);
-      SFP_excludes.splice(0);
-      TFP_includes.splice(0);
-      TFP_excludes.splice(0);
+      Object.values(patternMap).forEach((array) => array.splice(0));
 
       isEnableDebug.value = false;
       isMarkDeletedTables.value = true;

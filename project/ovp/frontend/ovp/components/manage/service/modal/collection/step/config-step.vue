@@ -1,41 +1,6 @@
 <template>
   <div class="service-form" :style="props.style">
-    <div
-      class="form form-vertical"
-      v-show="
-        props.serviceType === 'databaseService' &&
-        props.pipelineType === 'metadata'
-      "
-    >
-      <DatabaseMeta />
-    </div>
-    <div
-      class="form form-vertical"
-      v-show="
-        props.serviceType === 'databaseService' &&
-        props.pipelineType === 'profiler'
-      "
-    >
-      <DatabaseProfiler />
-    </div>
-    <div
-      class="form form-vertical"
-      v-show="
-        props.serviceType === 'storageService' &&
-        props.pipelineType === 'metadata'
-      "
-    >
-      <StorageMeta />
-    </div>
-    <div
-      class="form form-vertical"
-      v-show="
-        props.serviceType === 'storageService' &&
-        props.pipelineType === 'profiler'
-      "
-    >
-      <StorageProfiler />
-    </div>
+    <component :is="selectedComponent" />
   </div>
 </template>
 <script setup lang="ts">
@@ -54,6 +19,20 @@ const props = defineProps({
   pipelineType: {
     type: String,
   },
+});
+
+const selectedComponent = computed(() => {
+  const componentMap = {
+    databaseService: {
+      metadata: DatabaseMeta,
+      profiler: DatabaseProfiler,
+    },
+    storageService: {
+      metadata: StorageMeta,
+      profiler: StorageProfiler,
+    },
+  };
+  return componentMap[props.serviceType]?.[props.pipelineType] || null;
 });
 </script>
 <style lang="scss" scoped>

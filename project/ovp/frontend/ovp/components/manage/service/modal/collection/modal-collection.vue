@@ -13,9 +13,7 @@
     :height="580"
     swipeToClose="none"
     @before-open="onBeforeOpen"
-    @cancel="onCancel"
     @closed="onClosed"
-    @confirm="onConfirm"
   >
     <template v-slot:body>
       <Step
@@ -41,7 +39,7 @@
       />
     </template>
     <template v-slot:footer>
-      <button class="button button-neutral-ghost button-lg" @click="onCancel">
+      <button class="button button-neutral-ghost button-lg" @click="onClosed">
         취소
       </button>
       <div class="modal-foot-group">
@@ -73,7 +71,6 @@ import Modal from "@extends/modal/Modal.vue";
 import Step from "@extends/step/Step.vue";
 import ConfigStep from "./step/config-step.vue";
 import ScheduleStep from "./step/schedule-step.vue";
-const { $vfm } = useNuxtApp();
 
 import { useServiceCollectionAddStore } from "@/store/manage/service/collection-add";
 const collectionAddStore = useServiceCollectionAddStore();
@@ -95,19 +92,10 @@ const emit = defineEmits<{
   (e: "onLoadData"): void;
 }>();
 
-const onCancel = () => {
-  resetData();
-  emit("close");
-};
-
 const onClosed = () => {
   currentStep.value = 1;
   resetData();
   emit("close");
-};
-
-const onConfirm = () => {
-  console.log("onConfirm");
 };
 
 const onBeforeOpen = () => {
@@ -151,7 +139,7 @@ const gotoNext = async () => {
     if (!isValid.value) {
       return;
     }
-    onCancel();
+    onClosed();
     emit("onLoadData");
     return;
   } else {
