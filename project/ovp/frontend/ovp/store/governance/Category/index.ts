@@ -57,7 +57,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const selectedModelList = ref([]);
   const addSearchInputValue = ref("");
   const checkReachedCount = ref<boolean>(false);
-
   const previewData: Ref<any> = ref({
     modelInfo: {
       model: {
@@ -65,7 +64,22 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       },
     },
   });
-
+  const selectedCategoryId = ref("");
+  const selectedCategoryTagId = ref("");
+  const selectedNodeCategory: Ref<TreeViewItem> = ref<TreeViewItem>({
+    id: "",
+    name: "",
+    desc: "",
+    order: 0,
+    parentId: "",
+    tagId: "",
+    expanded: false,
+    selected: false,
+    disabled: false,
+    children: [],
+  });
+  const selectedTitleNodeValue = ref(selectedNodeCategory.value.name || "");
+  const dupliSelectedTitleNodeValue = ref("");
   // MAIN - TREE
   const getCategories = async () => {
     const { data } = await $api(`/api/category/list`);
@@ -77,6 +91,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     categories.value = data.children;
     isCategoriesNoData.value = categories.value.length === 0;
     categoriesParentId.value = data.parentId;
+    console.log(categories.value);
   };
 
   const addCategory = (node: TreeViewItem) => {
@@ -85,23 +100,26 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const editCategory = (node: TreeViewItem) => {
     insertOrEditAPI("PATCH", node);
   };
-  const insertOrEditAPI = (method: string, node: TreeViewItem) => {
-    $api("/api/category", {
+  const insertOrEditAPI = async (method: string, node: TreeViewItem) => {
+    const res: any = await $api("/api/category", {
       method: method,
       body: node,
-    }).then((res: any) => {
-      if (res.data === "HAS_SAME_NAME") {
-        alert(`${categoryAddName.value} 이 이미 존재합니다.`);
-        return;
-      }
-
-      if (res.data === "OVER_DEPTH") {
-        alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
-        return;
-      }
-      getCategories();
     });
+
+    if (res.data === "HAS_SAME_NAME") {
+      alert(`${categoryAddName.value} 이미 존재합니다.`);
+      selectedTitleNodeValue.value = dupliSelectedTitleNodeValue.value;
+      selectedNodeCategory.value.name = dupliSelectedTitleNodeValue.value;
+    }
+
+    if (res.data === "OVER_DEPTH") {
+      alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
+      return;
+    }
+
+    await getCategories();
   };
+
   const moveCategory = async (dropNodeId: string, targetNodeId: string) => {
     const { data } = await $api("/api/category/move", {
       method: "PUT",
@@ -167,6 +185,11 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   // PREVIEW
   const getPreviewData = async (fqn: string) => {
     const data: any = await $api(`/api/search/preview/${fqn}`);
+    previewData.value = data.data;
+  };
+
+  const getContainerPreviewData = async (id: string) => {
+    const data: any = await $api(`/api/containers/${id}`);
     previewData.value = data.data;
   };
 
@@ -316,6 +339,20 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     await resetReloadList();
   };
 
+  const getModelItemAPI = async (id: string) => {
+    await $api(`api/category/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json-patch+json",
+      },
+      body: {
+        tagId: selectedCategoryTagId.value,
+        type: currentTab.value,
+        list: selectedDataModelList.value,
+      },
+    });
+  };
+
   return {
     categories,
     categoriesParentId,
@@ -340,7 +377,13 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     selectedDataModelList,
     addSearchInputValue,
     checkReachedCount,
+    selectedCategoryId,
+    selectedCategoryTagId,
+    selectedNodeCategory,
+    selectedTitleNodeValue,
+    dupliSelectedTitleNodeValue,
     resetAddModalStatus,
+    getModelItemAPI,
     getCategories,
     addModelList,
     getModelList,
@@ -350,6 +393,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     moveCategory,
     deleteCategory,
     getPreviewData,
+    getContainerPreviewData,
     addNewCategory,
     addSearchList,
     getSearchList,

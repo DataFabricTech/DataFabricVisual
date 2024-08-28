@@ -17,6 +17,7 @@
     swipeToClose="none"
     @cancel="onCancel"
     @confirm="onConfirm"
+    @open="onOpened"
   >
     <template v-slot:body>
       <div class="data-info max-h-[460px]">
@@ -141,15 +142,15 @@
 </template>
 
 <script setup lang="ts">
-import Modal from "@extends/modal/Modal.vue";
+import { computed, ref } from "vue";
 import { useRouter } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category/index";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { storeToRefs } from "pinia";
+import Modal from "@extends/modal/Modal.vue";
 import DataFilter from "./data-filter.vue";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import Tab from "@extends/tab/Tab.vue";
-import { computed, ref } from "vue";
 import Loading from "@base/loading/Loading.vue";
 
 const router = useRouter();
@@ -161,6 +162,8 @@ const {
   resetReloadList,
   addSearchList,
   getSearchList,
+  getModelList,
+  getModelItemAPI,
 } = categoryStore;
 const {
   initTab,
@@ -171,6 +174,7 @@ const {
   dataModelIdList,
   selectedDataModelList,
   addSearchInputValue,
+  selectedCategoryId,
 } = storeToRefs(categoryStore);
 
 const props = defineProps({
@@ -263,15 +267,24 @@ const onCancel = () => {
 };
 
 const onConfirm = async () => {
+  await getModelItemAPI(selectedCategoryId.value);
+  await getModelList();
   emit("close-data-model-add-modal");
 };
 
 await getSearchList();
 
-const { scrollTrigger, setScrollOptions } = useIntersectionObserver(
+const { scrollTrigger, setScrollOptions, mount } = useIntersectionObserver(
   addSearchList,
   "dataListModal",
 );
+
+const onOpened = () => {
+  // NOTE : modal 사용 방식 변경 후 부터, modal 은 intersectionHelper 의 onMounted 보다 dom 생성이 늦어
+  // mount = intersectionObserver 의 생성 순서가 맞지 않아 동작하지 않는 오류가 발생하기 때문에,
+  // onOpened 로 이벤트를 받고 dom 이 생성 완료 되면 mount 를 실행해서 intersection observer 를 동작시킨다.
+  mount();
+};
 </script>
 
 <style scoped></style>

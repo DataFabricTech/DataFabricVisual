@@ -70,14 +70,16 @@
               >
               <input
                 v-model="selectedTitleNodeValue"
-                placeholder="모델 설명에 대한 영역입니다."
+                placeholder="모델명에 대한 영역입니다."
                 required
                 id="title-modify"
                 class="text-input w-1/2"
               />
             </template>
             <template #view-slot>
-              <h3 class="editable-group-title">{{ selectedNode.name }}</h3>
+              <h3 class="editable-group-title">
+                {{ selectedNodeCategory.name }}
+              </h3>
             </template>
           </editable-group>
           <button class="button button-error-lighter" @click="_deleteCategory">
@@ -106,7 +108,7 @@
               ></textarea>
             </template>
             <template #view-slot>
-              <p class="editable-group-desc">{{ selectedNode.desc }}</p>
+              <p class="editable-group-desc">{{ selectedNodeCategory.desc }}</p>
             </template>
           </editable-group>
           <div>
@@ -194,22 +196,12 @@
       </div>
     </div>
   </div>
-  <CategoryAddModal :modal-id="CATEGORY_ADD_MODAL_ID"></CategoryAddModal>
-  <CategoryChangeModal
-    :modal-id="CATEGORY_CHANGE_MODAL_ID"
-  ></CategoryChangeModal>
-  <DataModelAddModal
-    :modal-id="DATA_MODEL_ADD_MODAL_ID"
-    @before-open="beforeOpenModal"
-    @open="openModal"
-  ></DataModelAddModal>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useModal } from "vue-final-modal";
-import { useNuxtApp } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import TreeVue from "@extends/tree/Tree.vue";
@@ -222,7 +214,6 @@ import CategoryChangeModal from "~/components/govern/category/category-change-mo
 import DataModelAddModal from "~/components/govern/category/data-model-add-modal.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
-const { $vfm } = useNuxtApp();
 const categoryStore = useGovernCategoryStore();
 
 const {
@@ -232,6 +223,7 @@ const {
   getModelList,
   editCategory,
   deleteCategory,
+  getContainerPreviewData,
   getPreviewData,
   moveCategory,
   resetAddModalStatus,
@@ -251,6 +243,11 @@ const {
   selectedDataModelList,
   addSearchInputValue,
   checkReachedCount,
+  selectedCategoryId,
+  selectedCategoryTagId,
+  selectedTitleNodeValue,
+  selectedNodeCategory,
+  dupliSelectedTitleNodeValue,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -266,24 +263,10 @@ const isShowPreview = ref<boolean>(false);
 let currentPreviewId: string | number = "";
 let previewIndex: string = "table";
 
-const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
-  id: "",
-  name: "",
-  desc: "",
-  order: 0,
-  parentId: "",
-  tagId: "",
-  expanded: false,
-  selected: false,
-  disabled: false,
-  children: [],
-});
+const selectedDescNodeValue = ref(selectedNodeCategory.value.desc || "");
 const isAllModelListChecked = ref<boolean>(false);
-const selectedTitleNodeValue = ref(selectedNode.value.name || "");
-const selectedDescNodeValue = ref(selectedNode.value.desc || "");
-
 watch(
-  () => selectedNode.value.name,
+  () => selectedNodeCategory.value.name,
   (newVal) => {
     selectedTitleNodeValue.value = newVal || "";
   },
@@ -291,7 +274,7 @@ watch(
 );
 
 watch(
-  () => selectedNode.value.desc,
+  () => selectedNodeCategory.value.desc,
   (newVal) => {
     selectedDescNodeValue.value = newVal || "";
   },
@@ -301,9 +284,15 @@ watch(
 // TREE
 const onCategoryNodeClick = async (node: TreeViewItem) => {
   selectedModelList.value = [];
+  isShowPreview.value = false;
+  isBoxSelectedStyle.value = false;
   isDescEditMode.value = false;
   isTitleEditMode.value = false;
-  selectedNode.value = node;
+  selectedNodeCategory.value = node;
+  dupliSelectedTitleNodeValue.value = node.name;
+  selectedCategoryId.value = <string>node.id;
+  selectedCategoryTagId.value = <string>node.tagId;
+
   setScrollOptions(0);
   // 선택한 노드정보 저장
   setSelectedNode(node);
@@ -327,11 +316,11 @@ const addChild = (newNode: TreeViewItem) => {
 
 const _editCategory = () => {
   const editNodeParam: TreeViewItem = {
-    id: selectedNode.value.id,
-    parentId: selectedNode.value.parentId,
-    tagId: selectedNode.value.tagId,
-    name: selectedNode.value.name,
-    desc: selectedNode.value.desc,
+    id: selectedNodeCategory.value.id,
+    parentId: selectedNodeCategory.value.parentId,
+    tagId: selectedNodeCategory.value.tagId,
+    name: selectedNodeCategory.value.name,
+    desc: selectedNodeCategory.value.desc,
     children: [],
   };
   editCategory(editNodeParam);
@@ -339,7 +328,7 @@ const _editCategory = () => {
 
 const _deleteCategory = async () => {
   if (confirm("카테고리를 삭제 하시겠습니까?")) {
-    const res = await deleteCategory(selectedNode.value.id);
+    const res = await deleteCategory(selectedNodeCategory.value.id);
     if (res.result === 1) {
       alert("삭제 되었습니다.");
       await getCategories();
@@ -433,7 +422,10 @@ const previewClick = async (data: object) => {
     return;
   }
 
-  await getPreviewData(fqn);
+  type === "storage"
+    ? await getContainerPreviewData(id)
+    : await getPreviewData(fqn);
+
   isShowPreview.value = true;
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;
@@ -444,11 +436,11 @@ const previewClick = async (data: object) => {
 const editCancel = (key: string) => {
   switch (key) {
     case "title":
-      selectedTitleNodeValue.value = selectedNode.value.name;
+      selectedTitleNodeValue.value = selectedNodeCategory.value.name;
       isTitleEditMode.value = false;
       break;
     case "desc":
-      selectedDescNodeValue.value = selectedNode.value.desc;
+      selectedDescNodeValue.value = selectedNodeCategory.value.desc;
       isDescEditMode.value = false;
       break;
   }
@@ -459,15 +451,15 @@ const editDone = (key: string) => {
       if (selectedTitleNodeValue.value === "") {
         return;
       }
-      selectedNode.value.name = selectedTitleNodeValue.value;
+      selectedNodeCategory.value.name = selectedTitleNodeValue.value;
       isTitleEditMode.value = false;
       break;
     case "desc":
       if (selectedDescNodeValue.value === "") {
-        selectedNode.value.desc = "설명 없음";
+        selectedNodeCategory.value.desc = "설명 없음";
         return;
       }
-      selectedNode.value.desc = selectedDescNodeValue.value;
+      selectedNodeCategory.value.desc = selectedDescNodeValue.value;
       isDescEditMode.value = false;
       break;
   }
@@ -489,6 +481,7 @@ const editIcon = (key: string) => {
 const { open: openCategoryAddModal, close: closeCategoryAddModal } = useModal({
   component: CategoryAddModal,
   attrs: {
+    modalId: CATEGORY_ADD_MODAL_ID,
     onCloseCategoryAddModal() {
       closeCategoryAddModal();
     },
@@ -498,6 +491,7 @@ const { open: openCategoryChangeModal, close: closeCategoryChangeModal } =
   useModal({
     component: CategoryChangeModal,
     attrs: {
+      modalId: CATEGORY_CHANGE_MODAL_ID,
       onCloseCategoryChangeModal() {
         closeCategoryChangeModal();
       },
@@ -507,8 +501,12 @@ const { open: openDataModelAddModal, close: closeDataModelAddModal } = useModal(
   {
     component: DataModelAddModal,
     attrs: {
+      modalId: DATA_MODEL_ADD_MODAL_ID,
       onCloseDataModelAddModal() {
         closeDataModelAddModal();
+      },
+      onBeforeOpen() {
+        beforeOpenModal();
       },
     },
   },

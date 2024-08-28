@@ -15,8 +15,6 @@
     </div>
   </div>
   <modal-log></modal-log>
-
-  <modal-service />
 </template>
 
 <style scoped></style>
