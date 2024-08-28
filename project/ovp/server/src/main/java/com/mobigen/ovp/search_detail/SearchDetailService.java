@@ -160,12 +160,24 @@ public class SearchDetailService {
      * @throws Exception
      */
     public Object getGlossaryAll() throws Exception {
-//        return getGlossaries(new ArrayList<>(), "", true);
+        TermResponse glossaryTerms = glossaryClient.getGlossaryTerms("", "", 300, "");
 
         // TODO: 페이징 처리 필요
-        TermResponse res = glossaryClient.getGlossaryTerms("", "", 500, "");
+        return glossaryTerms.getData().stream().map(term -> {
+            Map<String, Object> data = new HashMap<>();
+            String displayName = term.getDisplayName();
+            if (displayName == null || "".equals(displayName)) {
+                displayName = term.getName();
+            }
 
-        return res.getData();
+            data.put("id", term.getId());
+            data.put("name", term.getName());
+            data.put("displayName", displayName);
+            data.put("description", term.getDescription());
+            data.put("tagFQN", term.getFullyQualifiedName());
+
+            return data;
+        }).collect(Collectors.toList());
     }
 
     /**
