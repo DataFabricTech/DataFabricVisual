@@ -169,8 +169,9 @@ public class ModelCreationService {
                 tempResult.add(dataModelDetail);
             }
 
+            // 갯수에 따른 목록 파싱
             if (limit != null && limit > 0 && !tempResult.isEmpty()) {
-                for (int i = 0; i < Math.min(3, tempResult.size()); i++) {
+                for (int i = 0; i < Math.min(limit, tempResult.size()); i++) {
                     allList.add(tempResult.get(i));
                 }
             } else {
