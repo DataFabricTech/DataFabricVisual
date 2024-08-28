@@ -120,6 +120,7 @@ public class ServiceManageService {
         params.add("service", service);
         params.add("pipelineType", "metadata,usage,lineage,profiler,dbt");
         params.add("serviceType", "databaseService");
+        params.add("limit", "1000");
 
         List<Ingestion> ingestion = servicesClient.getIngestionList(params).getData();
         return ingestion.stream().map(IngestionResponse::new).toList();

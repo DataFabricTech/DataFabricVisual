@@ -65,8 +65,12 @@
           {{ ingestion.pipelineType }}
         </td>
         <td>
-          <p v-tooltip="ingestion.scheduleInterval">
-            {{ ingestion.scheduleInterval }}
+          <p v-tooltip="scheduleIntervalTooltip(ingestion.scheduleInterval)">
+            {{
+              ingestion && ingestion.scheduleInterval
+                ? ingestion.scheduleInterval
+                : "-"
+            }}
           </p>
         </td>
         <td>
@@ -85,13 +89,7 @@
                 v-slot:tooltip
                 v-if="ingestion && ingestion.pipelineState"
               >
-                <p>
-                  Execution Date:
-                  {{ formatDate(ingestion.timestamp) }} <br />
-                  Start Date: {{ formatDate(ingestion.startDate) }}
-                  <br />
-                  End Date: {{ formatDate(ingestion.endDate) }}
-                </p>
+                <p v-html="pipelineStateTooltip(ingestion)"></p>
               </template>
             </tooltip>
           </div>
@@ -100,7 +98,7 @@
           <div class="button-group">
             <button
               class="button button button-secondary-stroke"
-              @click="run(ingestion.id)"
+              @click="run(ingestion)"
               v-show="!currentLoading[ingestion.id]?.run"
             >
               실행
@@ -111,7 +109,7 @@
             ></loading>
             <button
               class="button button button-secondary-stroke"
-              @click="deploy(ingestion.id)"
+              @click="deploy(ingestion)"
               v-show="!currentLoading[ingestion.id]?.deploy"
             >
               동기화
@@ -126,7 +124,6 @@
             >
               편집
             </button>
-
             <button
               class="button button button-error-stroke"
               @click="onDelete(ingestion.id)"
@@ -140,7 +137,7 @@
             ></loading>
             <button
               class="button button button-error-stroke"
-              @click="kill(ingestion.id)"
+              @click="kill(ingestion)"
               v-show="!currentLoading[ingestion.id]?.kill"
             >
               종료
@@ -175,6 +172,7 @@ import { ref, onMounted, watch } from "vue";
 import type { Ingestion } from "~/type/service";
 import $constants from "~/utils/constant";
 import Loading from "@base/loading/Loading.vue";
+import cronstrue from "cronstrue";
 const dayjs = useDayjs();
 const FORMAT = "MMM D, YYYY, h:mm A";
 const {
@@ -193,7 +191,6 @@ const store = useServiceStore();
 onMounted(async () => {
   await getIngestionList(service.name);
   filterList();
-  getStatus();
 });
 
 watch(
@@ -217,7 +214,32 @@ const badgeClass = (ingestion: Ingestion): string => {
       return "badge badge-green-lighter";
     case "failed":
       return "badge badge-red-lighter";
+    case "running":
+      return "badge badge-blue-lighter";
   }
+};
+
+const scheduleIntervalTooltip = (scheduleInterval: string): string => {
+  if (scheduleInterval === null) {
+    return "";
+  } else {
+    return cronstrue.toString(scheduleInterval);
+  }
+};
+
+const pipelineStateTooltip = (ingestion: Ingestion) => {
+  let tooltipMsg = "";
+  const { timestamp, startDate, endDate } = ingestion;
+  if (timestamp) {
+    tooltipMsg += `Execution Date: ${formatDate(ingestion.timestamp)} <br>`;
+  }
+  if (startDate) {
+    tooltipMsg += `Start Date: ${formatDate(ingestion.startDate)} <br>`;
+  }
+  if (endDate) {
+    tooltipMsg += `End Date: ${formatDate(ingestion.endDate)}`;
+  }
+  return tooltipMsg;
 };
 
 const statusStr = (pipelineState: string): string => {
@@ -226,6 +248,10 @@ const statusStr = (pipelineState: string): string => {
       return "Success";
     case "failed":
       return "Fail";
+    case "running":
+      return "Running";
+    default:
+      return pipelineState;
   }
 };
 
@@ -243,19 +269,14 @@ function reset(): void {
   filterList();
 }
 
-function getStatus(): void {
-  if (ingestionList.length > 0) {
-    ingestionList.forEach((value: Ingestion) => {
-      let name = service.name + "." + value.name;
-      getIngestionStatus(name, value.startDate, value.endDate);
-    });
-  }
+async function getStatus(ingestion: Ingestion): Promise<void> {
+  let name = service.name + "." + ingestion.name;
+  await getIngestionStatus(name, ingestion.startDate, ingestion.endDate);
 }
 
 async function refreshIngestionList(): Promise<void> {
   await getIngestionList(service.name);
   filterList();
-  getStatus();
 }
 
 const currentLoading = ref({});
@@ -272,10 +293,12 @@ async function updateLoading(
 }
 //TODO: alert 얼럿
 
-async function run(id: string): Promise<void> {
+async function run(ingestion: Ingestion): Promise<void> {
+  const id = ingestion.id;
   try {
     await updateLoading(id, "run", true);
     await runIngestion(id);
+    await getStatus(ingestion);
     alert("실행이 완료되었습니다.");
   } catch (error) {
     alert(error);
@@ -284,10 +307,12 @@ async function run(id: string): Promise<void> {
   }
 }
 
-async function deploy(id: string): Promise<void> {
+async function deploy(ingestion: Ingestion): Promise<void> {
+  const id = ingestion.id;
   try {
     await updateLoading(id, "deploy", true);
     await deployIngestion(id);
+    await getStatus(ingestion);
     alert("동기화가 완료되었습니다.");
   } catch (error) {
     alert(error);
@@ -315,7 +340,8 @@ async function onDelete(id: string): Promise<void> {
   }
 }
 
-async function kill(id: string): Promise<void> {
+async function kill(ingestion: Ingestion): Promise<void> {
+  const id = ingestion.id;
   if (
     confirm(
       "실행 중인 워크플로우와 대기열에 있는 워크플로우가 모두 중지되고 실패로 표시됩니다.",
@@ -324,6 +350,7 @@ async function kill(id: string): Promise<void> {
     try {
       await updateLoading(id, "kill", true);
       await killIngestion(id);
+      await getStatus(ingestion);
       alert("종료가 완료되었습니다.");
     } catch (error) {
       alert(error);

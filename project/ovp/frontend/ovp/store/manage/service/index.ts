@@ -207,7 +207,18 @@ export const useServiceStore = defineStore("service", () => {
   ): Promise<void> {
     const res = await $api(
       `/api/service-manage/ingestion/status/${name}?startTs=${startTs}&endTs=${endTs}`,
+      {
+        showLoader: false,
+      },
     );
+    setIngestionStatus(name, res.data.pipelineState);
+  }
+
+  function setIngestionStatus(name: string, pipelineState: string) {
+    const index = ingestionList.findIndex((v: Ingestion) => v.name === name);
+    if (index !== -1) {
+      ingestionList[index].pipelineState = pipelineState;
+    }
   }
 
   async function runIngestion(id: string): Promise<void> {
