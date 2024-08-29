@@ -76,16 +76,12 @@
                   >
                     <span class="hidden-text">비밀번호 보기 해제</span>
                     <svg-icon
-                      v-if="
-                        pwComposition.inputPasswordType.value === 'password'
+                      class="button-icon"
+                      :name="
+                        pwComposition.inputPasswordType.value === 'text'
+                          ? 'eye'
+                          : 'eye-hide'
                       "
-                      class="button-icon"
-                      name="eye"
-                    ></svg-icon>
-                    <svg-icon
-                      v-else
-                      class="button-icon"
-                      name="eye-hide"
                     ></svg-icon>
                   </button>
                 </div>
@@ -121,17 +117,12 @@
                   >
                     <span class="hidden-text">지우기</span>
                     <svg-icon
-                      v-if="
-                        pwComposition.inputConfirmPasswordType.value ===
-                        'password'
+                      class="button-icon"
+                      :name="
+                        pwComposition.inputConfirmPasswordType.value === 'text'
+                          ? 'eye'
+                          : 'eye-hide'
                       "
-                      class="button-icon"
-                      name="eye"
-                    ></svg-icon>
-                    <svg-icon
-                      v-else
-                      class="button-icon"
-                      name="eye-hide"
                     ></svg-icon>
                   </button>
                 </div>
@@ -171,6 +162,7 @@ import { loginStore } from "@/store/login/index";
 import { useRouter } from "vue-router";
 import { PasswordComposition } from "~/components/login/PasswordComposition";
 import $constants from "~/utils/constant";
+
 const pwComposition = PasswordComposition();
 
 const form: {
