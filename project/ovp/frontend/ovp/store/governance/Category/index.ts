@@ -84,6 +84,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const selectedTitleNodeValue = ref(selectedNodeCategory.value.name || "");
   const dupliSelectedTitleNodeValue = ref("");
   const lastChildIdList: Ref<string[]> = ref<string[]>([]);
+  const childlessList: Ref<string[]> = ref<string[]>([]);
 
   // MAIN - TREE
   const getCategories = async () => {
@@ -97,6 +98,22 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     isCategoriesNoData.value = categories.value.length === 0;
     defaultCategoriesParentId.value = data.parentId;
     categoriesParentId.value = data.parentId;
+
+    for (const item1 of categories.value) {
+      if (item1.children.length === 0) {
+        childlessList.value.push(item1.id);
+      }
+      for (const item2 of item1.children) {
+        if (item2.children.length === 0) {
+          childlessList.value.push(item2.id);
+        }
+        for (const item3 of item2.children) {
+          if (item3.children.length === 0) {
+            childlessList.value.push(item3.id);
+          }
+        }
+      }
+    }
 
     lastChildIdList.value = categories.value
       .flatMap((item1) => item1.children)
@@ -417,6 +434,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     selectedTitleNodeValue,
     dupliSelectedTitleNodeValue,
     lastChildIdList,
+    childlessList,
     resetAddModalStatus,
     patchModelAddItemAPI,
     patchCategoryTagAPI,

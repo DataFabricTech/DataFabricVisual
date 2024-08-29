@@ -250,6 +250,7 @@ const {
   selectedNodeCategory,
   dupliSelectedTitleNodeValue,
   lastChildIdList,
+  childlessList,
   defaultCategoriesParentId,
   categoriesParentId,
   categoriesId,
@@ -311,7 +312,7 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
 };
 
 const checkModalButton = (id: string) => {
-  isModalButtonShow.value = lastChildIdList.value.some(
+  isModalButtonShow.value = childlessList.value.some(
     (lastChildId: string) => lastChildId === id,
   );
 };

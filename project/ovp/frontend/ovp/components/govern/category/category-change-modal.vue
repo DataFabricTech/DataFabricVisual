@@ -53,7 +53,7 @@ const {
   categories,
   selectedModelList,
   modelList,
-  lastChildIdList,
+  childlessList,
   selectedCategoryId,
 } = storeToRefs(categoryStore);
 
@@ -115,7 +115,7 @@ const onOpened = () => {
 };
 
 const onCategoryNodeClick = (node: TreeViewItem) => {
-  const checkAddLasChild = !lastChildIdList.value.includes(node.id);
+  const checkAddLasChild = !childlessList.value.includes(node.id);
   isDisabledSaveButton.value = checkAddLasChild;
   tagIdForCategoryChange.value = node.tagId;
 };
