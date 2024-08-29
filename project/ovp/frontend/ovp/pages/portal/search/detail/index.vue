@@ -11,6 +11,7 @@
       :editable="true"
       :user-list="userList"
       owner-key="id"
+      :user="user"
       :category-list="categoryList"
       :category-key="FILTER_KEYS.CATEGORY"
       @editIconClick="editIconClick"
@@ -41,6 +42,7 @@ import { storeToRefs } from "pinia";
 import { useDataModelDetailStore } from "@/store/search/detail/index";
 import { useLineageStore } from "@/store/search/detail/lineage/index";
 import { useSearchCommonStore } from "@/store/search/common";
+import { useUserStore } from "@/store/user/userStore";
 
 import Tab from "@extends/tab/Tab.vue";
 import ResourceBox from "@/components/common/resource-box/resource-box.vue";
@@ -61,6 +63,7 @@ const route = useRoute();
 const dataModelDetailStore = useDataModelDetailStore();
 const lineageStore = useLineageStore();
 const searchCommonStore = useSearchCommonStore();
+const userStore = useUserStore();
 
 const { dataModelType, userList, categoryList, dataModel } =
   storeToRefs(dataModelDetailStore);
@@ -68,6 +71,7 @@ const { dataModelType, userList, categoryList, dataModel } =
 const {
   getUserList,
   getCategoryList,
+  getCategoryAllList,
   getDataModelFqn,
   setDataModelId,
   setDataModelFqn,
@@ -84,6 +88,8 @@ const {
 const { getLineageData } = lineageStore;
 
 const { getFilters } = searchCommonStore;
+
+const { user } = storeToRefs(userStore);
 
 // computed 속성으로 filteredTabs 정의
 const filteredTabs = computed(() => {
@@ -107,8 +113,12 @@ const tabOptions = [
   { label: "프로파일링", value: "profile", component: Profiling },
   { label: "쿼리", value: "query", component: Query },
   { label: "데이터 리니지", value: "lineage", component: Lineage },
-  { label: "Knowledge graph", value: 7, component: KnowledgeGraph },
-  { label: "추천 데이터 모델", value: 8, component: RecommendModel },
+  { label: "Knowledge graph", value: "knowledge", component: KnowledgeGraph },
+  {
+    label: "추천 데이터 모델",
+    value: "recommended",
+    component: RecommendModel,
+  },
 ];
 
 const initTabValue: Ref<any> = ref("default");
@@ -134,8 +144,15 @@ async function changeTab(tab: number | string) {
       await getQuery();
       break;
     case "lineage":
+      alert("개발중 입니다.");
       await getLineageData(dataModelType.value, getDataModelFqn());
-      await getFilters();
+      // await getFilters();
+      break;
+    case "knowledge":
+      alert("개발중 입니다.");
+      break;
+    case "recommended":
+      alert("개발중 입니다.");
       break;
   }
   currentComponent.value = _.find(tabOptions, ["value", tab])?.component;
@@ -144,13 +161,13 @@ async function changeTab(tab: number | string) {
 const editIconClick = (key: string) => {
   if (key === "category") {
     getCategoryList();
+    getCategoryAllList();
   } else {
     getUserList();
   }
 };
 
-const editDone = (data: object) => {
-  // TODO: [개발] 변경 데이터 저장한는 API 호출 필요
+const editDone = (data: any) => {
   changeDataModel(data)
     .then(() => {
       getDataModel();

@@ -27,8 +27,9 @@ import { storeToRefs } from "pinia";
 import _ from "lodash";
 
 const categoryStore = useGovernCategoryStore();
-const { resetReloadList } = categoryStore;
-const { selectedFilters, selectedFilterItems } = storeToRefs(categoryStore);
+const { resetReloadList, setSearchKeyword, setEmptyFilter } = categoryStore;
+const { selectedFilters, selectedFilterItems, addSearchInputValue } =
+  storeToRefs(categoryStore);
 
 const props = defineProps({
   data: {
@@ -38,11 +39,12 @@ const props = defineProps({
 });
 
 const resetFilters = () => {
-  selectedFilterItems.value = [];
-  selectedFilters.value = {};
-
+  setEmptyFilter();
+  addSearchInputValue.value = "";
+  setSearchKeyword("");
   resetReloadList();
 };
+
 const changeMultiple: (value: any[] | {}, keyName: any) => void = (
   value: any[] | {},
   keyName: string,

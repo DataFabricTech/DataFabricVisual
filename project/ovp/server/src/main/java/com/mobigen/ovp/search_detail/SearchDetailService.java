@@ -14,7 +14,9 @@ import com.mobigen.ovp.common.openmete_client.dto.Tables;
 import com.mobigen.ovp.common.openmete_client.dto.Tag;
 import com.mobigen.ovp.common.openmete_client.dto.Tags;
 import com.mobigen.ovp.glossary.client.GlossaryClient;
+import com.mobigen.ovp.glossary.client.dto.TermDto;
 import com.mobigen.ovp.glossary.client.dto.terms.TermResponse;
+import com.mobigen.ovp.search_detail.dto.request.DataModelDetailTagDto;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailVote;
 import com.mobigen.ovp.search_detail.dto.response.DataModelDetailLineageTableResponse;
 import com.mobigen.ovp.search_detail.dto.response.DataModelDetailResponse;
@@ -54,6 +56,7 @@ public class SearchDetailService {
 
     /**
      * 사용자 목록 (전체)
+     *
      * @return
      * @throws Exception
      */
@@ -77,6 +80,7 @@ public class SearchDetailService {
 
     /**
      * 태그 전체 순회
+     *
      * @param tags
      * @param after
      * @param isStart
@@ -87,7 +91,7 @@ public class SearchDetailService {
         params.add("limit", "100");
 
         if (!isStart && (after == null || "".equals(after))) {
-           return tags;
+            return tags;
         } else if (after != null && !"".equals(after)) {
             params.add("after", after);
         }
@@ -103,6 +107,7 @@ public class SearchDetailService {
 
     /**
      * 태그 목록 (전체)
+     *
      * @return
      * @throws Exception
      */
@@ -113,10 +118,11 @@ public class SearchDetailService {
         return tags.stream().map(tag -> {
             Map<String, Object> data = new HashMap<>();
             String displayName = tag.getDisplayName();
-            if(displayName == null || "".equals(displayName)) {
+            if (displayName == null || "".equals(displayName)) {
                 displayName = tag.getName();
             }
 
+            data.put("id", tag.getId());
             data.put("name", tag.getName());
             data.put("displayName", displayName);
             data.put("description", tag.getDescription());
@@ -128,6 +134,7 @@ public class SearchDetailService {
 
     /**
      * 용어 전체 순회
+     *
      * @param glossaries
      * @param after
      * @param isStart
@@ -148,20 +155,34 @@ public class SearchDetailService {
 
     /**
      * 용어 목록 (전체)
+     *
      * @return
      * @throws Exception
      */
     public Object getGlossaryAll() throws Exception {
-//        return getGlossaries(new ArrayList<>(), "", true);
+        TermResponse glossaryTerms = glossaryClient.getGlossaryTerms("", "", 300, "");
 
         // TODO: 페이징 처리 필요
-        TermResponse res = glossaryClient.getGlossaryTerms("", "", 100, "");
+        return glossaryTerms.getData().stream().map(term -> {
+            Map<String, Object> data = new HashMap<>();
+            String displayName = term.getDisplayName();
+            if (displayName == null || "".equals(displayName)) {
+                displayName = term.getName();
+            }
 
-        return res.getData();
+            data.put("id", term.getId());
+            data.put("name", term.getName());
+            data.put("displayName", displayName);
+            data.put("description", term.getDescription());
+            data.put("tagFQN", term.getFullyQualifiedName());
+
+            return data;
+        }).collect(Collectors.toList());
     }
 
     /**
-     *  데이터 모델 상세 (테이블, 스토리지)
+     * 데이터 모델 상세 (테이블, 스토리지)
+     *
      * @param id
      * @param type
      * @return
@@ -186,7 +207,7 @@ public class SearchDetailService {
             dataModelDetailResponse = new DataModelDetailResponse(tables, type, userId);
         }
 
-        for(Tag tag : tables.getTags()) {
+        for (Tag tag : tables.getTags()) {
             String displayName = tag.getDisplayName();
 
             if (displayName == null || "".equals(displayName)) {
@@ -216,6 +237,7 @@ public class SearchDetailService {
 
     /**
      * 데이터 모델 스키마 (테이블, 스토리지)
+     *
      * @param id
      * @return
      */
@@ -236,6 +258,7 @@ public class SearchDetailService {
 
     /**
      * 데이터 모델 샘플 데이터
+     *
      * @param id
      * @return
      */
@@ -246,6 +269,7 @@ public class SearchDetailService {
 
     /**
      * 프로파일
+     *
      * @param id
      * @return
      */
@@ -270,6 +294,7 @@ public class SearchDetailService {
 
     /**
      * 쿼리
+     *
      * @param params
      * @return
      * @throws Exception
@@ -284,7 +309,7 @@ public class SearchDetailService {
             hits = (ArrayList<Map<String, Object>>) queryHits.get("hits");
             queryList = hits.stream().map(v -> {
                 Map<String, Object> queryRow = new HashMap<>();
-                Map<String, Object>  source = (Map<String, Object>) v.get("_source");
+                Map<String, Object> source = (Map<String, Object>) v.get("_source");
                 queryRow.put("query", source.get("query"));
 
                 Timestamp timestamp = new Timestamp((Long) source.get("queryDate"));
@@ -300,6 +325,7 @@ public class SearchDetailService {
 
     /**
      * 리니지 그래프 (테이블, 스토리지)
+     *
      * @param params
      * @return
      */
@@ -310,13 +336,19 @@ public class SearchDetailService {
 
     /**
      * 추천 (테이블, 스토리지)
+     *
      * @param id
      * @param dataModelDetailVote
      * @return
      */
-    public Object changeVote(String id, DataModelDetailVote dataModelDetailVote) {
+    public Object changeVote(String id, String type, DataModelDetailVote dataModelDetailVote) {
 
-        return tablesClient.changeVote(id, dataModelDetailVote);
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            return tablesClient.changeVote(id, dataModelDetailVote);
+
+        }
+
+        return containersClient.changeVote(id, dataModelDetailVote);
     }
 
     /***
@@ -325,28 +357,38 @@ public class SearchDetailService {
      * @return
      * @throws Exception
      */
-    public Object followDataModel(String id) throws Exception {
+    public Object followDataModel(String id, String type) throws Exception {
         Map<String, Object> user = userClient.getUserInfo();
         String userId = user.get("id").toString();
 
-        return tablesClient.follow(id, UUID.fromString(userId));
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            return tablesClient.follow(id, UUID.fromString(userId));
+        }
+
+        return containersClient.follow(id, UUID.fromString(userId));
     }
 
     /**
      * 북먀크 (테이블, 스토리지)
+     *
      * @param id
      * @return
      * @throws Exception
      */
-    public Object unfollowDataModel(String id) throws Exception {
+    public Object unfollowDataModel(String id, String type) throws Exception {
         Map<String, Object> user = userClient.getUserInfo();
         String userId = user.get("id").toString();
 
-        return tablesClient.unfollow(id, userId);
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            return tablesClient.unfollow(id, userId);
+        }
+
+        return containersClient.unfollow(id, userId);
     }
 
     /**
      * 데이터 모델 변경 (테이블, 스토리지)
+     *
      * @param id
      * @param type
      * @param body
@@ -361,5 +403,126 @@ public class SearchDetailService {
         } else {
             return containersClient.changeStorage(id, params, body);
         }
+    }
+
+    private List<Map<String, Object>> makeRemoveBody(int tagLength) {
+        List<Map<String, Object>> removedBody = new ArrayList<>();
+
+        for (int i = (tagLength - 1); i >= 0; i--) {
+            Map<String, Object> row = new HashMap<>();
+            row.put("op", "remove");
+            row.put("path", new StringBuffer("/tags/").append(i).toString());
+            removedBody.add(row);
+        }
+
+        return removedBody;
+    }
+
+    private List<Map<String, Object>> makeAddBody(List<Tag> tags, List<Map<String, Object>> body, String target, boolean isCategory) {
+        List<Map<String, Object>> addedBody = new ArrayList<>();
+        List<DataModelDetailTagDto> bodyList = new ArrayList<>();
+        List<DataModelDetailTagDto> tagList = new ArrayList<>();
+
+        // 데이터 모델의 태크 목록에서 카테고리, 태그, 용어를 분리해서 저장.
+        List<DataModelDetailTagDto> glossaryList = tags.stream()
+                .filter(tag -> !tag.getTagFQN().contains("ovp_category") && "Glossary".equals(tag.getSource()))
+                .map(tag -> new DataModelDetailTagDto(tag))
+                .collect(Collectors.toList());
+        ;
+        List<DataModelDetailTagDto> classificationList = tags.stream()
+                .filter(tag -> !tag.getTagFQN().contains("ovp_category") && "Classification".equals(tag.getSource()))
+                .map(tag -> new DataModelDetailTagDto(tag))
+                .collect(Collectors.toList());
+        List<DataModelDetailTagDto> categoryList = tags.stream()
+                .filter(tag -> tag.getTagFQN().contains("ovp_category") && "Classification".equals(tag.getSource()))
+                .map(tag -> new DataModelDetailTagDto(tag))
+                .collect(Collectors.toList());
+
+        // { op, path, value }
+        // 클라이언트로 받은 변경해야 할 데이터(태그, 카테고라, 용어)를 각각 단일 조회 후에 value 를 셋팅한다.
+        if ("Classification".equals(target)) {
+            for (Map<String, Object> item : body) {
+                String key = "id";
+                if (isCategory) {
+                    key = "tagId";
+                }
+
+                Map<String, Object> tempTag = classificationClient.getTag(item.get(key).toString());
+
+                DataModelDetailTagDto tag = new DataModelDetailTagDto();
+                tag.setName(tempTag.get("name").toString());
+                tag.setDisplayName(tempTag.get("displayName").toString());
+                tag.setDescription(tempTag.get("description").toString());
+                tag.setTagFQN(tempTag.get("fullyQualifiedName").toString());
+                tag.setSource(target);
+                tag.setLabelType("Manual");
+                tag.setStyle((Map<String, Object>) tempTag.get("style"));
+
+                tagList.add(tag);
+            }
+        } else if ("Glossary".equals(target)) {
+            for (Map<String, Object> item : body) {
+                TermDto tempTerm = glossaryClient.getGlossaryTermsById(item.get("id").toString(), "all");
+
+                DataModelDetailTagDto tag = new DataModelDetailTagDto();
+                tag.setName(tempTerm.getName());
+                tag.setDisplayName(tempTerm.getDisplayName());
+                tag.setDescription(tempTerm.getDescription());
+                tag.setTagFQN(tempTerm.getFullyQualifiedName());
+                tag.setSource(target);
+                tag.setLabelType("Manual");
+                tag.setStyle(tempTerm.getStyle());
+
+                tagList.add(tag);
+            }
+        }
+
+        // value가 셋팅이 완료 되면 모든 데이터(카테고리, 태그, 용어)를 하나로 합친다.
+        if (isCategory) {
+            bodyList = Stream.concat(glossaryList.stream(), classificationList.stream()).collect(Collectors.toList());
+            bodyList = Stream.concat(bodyList.stream(), tagList.stream()).collect(Collectors.toList());
+        } else if ("Classification".equals(target)) {
+            bodyList = Stream.concat(glossaryList.stream(), tagList.stream()).collect(Collectors.toList());
+            bodyList = Stream.concat(bodyList.stream(), categoryList.stream()).collect(Collectors.toList());
+        } else if ("Glossary".equals(target)) {
+            bodyList = Stream.concat(tagList.stream(), classificationList.stream()).collect(Collectors.toList());
+            bodyList = Stream.concat(bodyList.stream(), categoryList.stream()).collect(Collectors.toList());
+        }
+
+        // 모두 합쳐진 value를 가지고 patch할 body 데이터를 만든다.
+        int bodySize = bodyList.size();
+        for (int i = 0; i < bodySize; i++) {
+            Map<String, Object> operationMap = new HashMap<>();
+            operationMap.put("op", "add");
+            operationMap.put("path", new StringBuffer("/tags/").append(i).toString());
+            operationMap.put("value", bodyList.get(i));
+            addedBody.add(operationMap);
+        }
+
+        return addedBody;
+    }
+
+    public Object ChangeDataModelTag(String id, String type, String target, boolean isCategory, List<Map<String, Object>> body) {
+        Tables tables = null;
+        MultiValueMap params = new LinkedMultiValueMap();
+        params.add("fields", "tags");
+        params.add("include", "all");
+
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            tables = tablesClient.getTablesName(id, params);
+        } else {
+            tables = containersClient.getStorageById(id, params);
+        }
+
+        Map<String, Object> result = new HashMap<>();
+
+        List tags = tables.getTags();
+        List removeBody = makeRemoveBody(tags.size());
+        List addBody = makeAddBody(tags, body, target, isCategory);
+
+        changeDataModel(id, type, removeBody);
+        changeDataModel(id, type, addBody);
+
+        return true;
     }
 }

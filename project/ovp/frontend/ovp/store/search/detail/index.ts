@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { reactive, type Ref } from "vue";
+import { type Ref } from "vue";
 
 export interface DataModel {
   serviceType: string;
@@ -64,7 +64,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   const userList: Ref<any[]> = ref([]);
   const categoryList: Ref<any[]> = ref([]);
   const tagList: Ref<any[]> = ref([]);
-  const glossaryList: Ref<any[]> = ref([]);
+  const termList: Ref<any[]> = ref([]);
   const schemaList: Ref<Schema[]> = ref([]);
   const sampleColumns: Ref<any> = ref([]);
   const sampleList: Ref<any> = ref([]);
@@ -74,6 +74,8 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   let dataModelId: string = "";
   let dataModelFqn: string = "";
   const dataModelType: Ref<string> = ref("");
+
+  let categoryAllList: any[] = [];
 
   const setDataModelId = (id: any) => {
     dataModelId = id;
@@ -102,6 +104,11 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     categoryList.value = data.data.children;
   };
 
+  const getCategoryAllList = async () => {
+    const data = await $api("/api/category/list/all");
+    categoryAllList = data.data;
+  };
+
   const getTagList = async () => {
     const data = await $api("/api/search/detail/tag/all");
     tagList.value = data.data;
@@ -109,7 +116,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
 
   const getGlossaryList = async () => {
     const data = await $api("/api/search/detail/glossary/all");
-    glossaryList.value = data.data;
+    termList.value = data.data;
   };
 
   const getDataModel = async () => {
@@ -203,28 +210,37 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
       updatedVoteType: state,
     };
 
-    await $api(`/api/search/detail/${dataModelId}/vote`, {
-      method: "put",
-      body: body,
-    });
+    await $api(
+      `/api/search/detail/${dataModelId}/vote?type=${dataModelType.value}`,
+      {
+        method: "PUT",
+        body: body,
+      },
+    );
     await getDataModel();
   };
 
   const changeFollow = async () => {
-    const url: string = `/api/search/detail/${dataModelId}/follow`;
+    const url: string = `/api/search/detail/${dataModelId}/follow?type=${dataModelType.value}`;
 
     if (dataModel.value.isFollow) {
-      await $api(url, { method: "delete" });
+      await $api(url, { method: "DELETE" });
     } else {
-      await $api(url, { method: "put" });
+      await $api(url, { method: "PUT" });
     }
 
     await getDataModel();
   };
 
   const changeDataModel = (data: any) => {
+    const operationKey: string = data.key;
+
+    if (operationKey === "category") {
+      return changeTag("Classification", true, data.value);
+    }
+
     let body: any[] = [];
-    switch (data.key) {
+    switch (operationKey) {
       case "modelNm":
         body = makeModelNameBody(data);
         break;
@@ -240,13 +256,13 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     return $api(
       `/api/search/detail/${dataModelId}?type=${dataModelType.value}`,
       {
-        method: "patch",
+        method: "PATCH",
         body: body,
       },
     );
   };
 
-  function makeModelNameBody(model: any) {
+  const makeModelNameBody = (model: any) => {
     const body: any[] = [];
     if (dataModel.value.displayName) {
       body.push({ op: "replace", path: "/displayName", value: model.value });
@@ -255,9 +271,9 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     }
 
     return body;
-  }
+  };
 
-  function makeModeDescBody(model: any) {
+  const makeModeDescBody = (model: any) => {
     const body: any[] = [];
     if (dataModel.value.modelDesc !== null) {
       body.push({ op: "replace", path: "/description", value: model.value });
@@ -265,9 +281,9 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
       body.push({ op: "add", path: "/description", value: model.value });
     }
     return body;
-  }
+  };
 
-  function makeUserBody(data: any) {
+  const makeUserBody = (data: any) => {
     const user = _.find(userList.value, { id: data.id });
     let body: any[] = [];
 
@@ -322,14 +338,42 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     }
 
     return body;
-  }
+  };
+
+  const changeTag = (target: string, isCategory: boolean, data: any) => {
+    let body: any[] = [];
+
+    if (_.isEmpty(data)) {
+      body = [];
+    } else if (isCategory) {
+      body = _.filter(categoryAllList, (category) => {
+        return data.id.includes(category.id);
+      });
+    } else if (target === "Classification") {
+      body = _.filter(tagList.value, (tag) => {
+        return data.includes(tag.tagFQN);
+      });
+    } else if (target === "Glossary") {
+      body = _.filter(termList.value, (tag) => {
+        return data.includes(tag.tagFQN);
+      });
+    }
+
+    return $api(
+      `/api/search/detail/${dataModelId}/tag?type=${dataModelType.value}&target=${target}&isCategory=${isCategory}`,
+      {
+        method: "PATCH",
+        body: body,
+      },
+    );
+  };
 
   return {
     dataModelType,
     userList,
     categoryList,
     tagList,
-    glossaryList,
+    termList,
     dataModel,
     defaultInfo,
     schemaList,
@@ -344,6 +388,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     getDataModelFqn,
     getUserList,
     getCategoryList,
+    getCategoryAllList,
     getTagList,
     getGlossaryList,
     getDataModel,
@@ -355,5 +400,6 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     changeVote,
     changeFollow,
     changeDataModel,
+    changeTag,
   };
 });

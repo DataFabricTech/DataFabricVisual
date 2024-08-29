@@ -59,6 +59,7 @@ import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 import { useSearchCommonStore } from "~/store/search/common";
 import { useUserStore } from "@/store/user/userStore";
+import { useLayoutHeaderStore } from "~/store/layout/header";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 
 // Store
@@ -69,6 +70,9 @@ const userStore = useUserStore();
 const { getUserInfo } = userStore;
 const { user } = storeToRefs(userStore);
 
+const layoutHeaderStore = useLayoutHeaderStore();
+const { searchInputValue } = storeToRefs(layoutHeaderStore);
+
 const { $api } = useNuxtApp();
 const router = useRouter();
 
@@ -77,7 +81,6 @@ const dropdown = ref();
 const isDropdownOpen = ref(false);
 const profileFirstWord = ref("");
 
-const searchInputValue = ref("");
 const updateSearchInputValue = (newValue: string) => {
   searchInputValue.value = newValue;
 };

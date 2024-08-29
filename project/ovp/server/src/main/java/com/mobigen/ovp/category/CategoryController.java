@@ -34,6 +34,12 @@ public class CategoryController {
     }
 
     @ResponseJsonResult
+    @GetMapping("/list/all")
+    public Object getCategoryAllList(@RequestParam MultiValueMap<String, String> params) {
+        return categoryService.getCategoryAllList();
+    }
+
+    @ResponseJsonResult
     @PutMapping("")
     public Object addCategory(@RequestBody CategoryDTO params) throws Exception {
         return categoryService.addCategory(params);

@@ -41,12 +41,18 @@
     <div class="resource-box-initial-name" v-if="useFirModelNm">
       {{ props.dataObj.firModelNm }}
     </div>
-
+    <div
+      class="editable-group"
+      v-show="!user.admin && newData.owner?.id !== user.id"
+    >
+      <h3 class="editable-group-title">{{ newData.modelNm }}</h3>
+    </div>
     <editable-group
       compKey="modelNm"
       :editable="props.editable"
       @editCancel="editCancel"
       @editDone="editDoneForModel"
+      v-show="newData.owner?.id === user.id || user.admin"
     >
       <template #edit-slot>
         <label class="hidden-text" for="title-modify">모델 명</label>
@@ -65,7 +71,7 @@
             class="editable-group-title"
             title="상세 보기"
             @click.stop="modelNmClick"
-            >{{ newData.modelNm }}</a
+            >{{ newData.firModelNm ?? newData.modelNm }}</a
           >
         </template>
         <template v-else>
@@ -73,12 +79,26 @@
         </template>
       </template>
     </editable-group>
-
+    <div
+      class="editable-group"
+      v-show="!user.admin && newData.owner?.id !== user.id"
+    >
+      <span class="editable-group-desc">
+        {{
+          props.dataObj.modelDesc === "" ||
+          props.dataObj.modelDesc === null ||
+          props.dataObj.modelDesc === undefined
+            ? "-"
+            : props.dataObj.modelDesc
+        }}</span
+      >
+    </div>
     <editable-group
       compKey="modelDesc"
       :editable="props.editable"
       @editCancel="editCancel"
       @editDone="editDoneForModel"
+      v-show="newData.owner?.id === user.id || user.admin"
     >
       <template #edit-slot>
         <label class="hidden-text" for="textarea-modify">모델 설명</label>
@@ -102,7 +122,17 @@
         >
       </template>
     </editable-group>
-
+    <div
+      class="editable-group"
+      v-show="!user.admin && newData.owner?.id !== user.id"
+    >
+      <dl class="resource-box-list">
+        <dt>소유자</dt>
+        <dd>
+          {{ newData.owner ? newData.ownerDisplayName : "소유자 없음" }}
+        </dd>
+      </dl>
+    </div>
     <div class="resource-box-info">
       <editable-group
         :compKey="ownerKey"
@@ -111,6 +141,7 @@
         :useEditButtons="false"
         @editCancel="editCancel"
         @editIcon="editIconClick(ownerKey, true)"
+        v-show="newData.owner?.id === user.id || user.admin"
       >
         <template #edit-slot>
           <dl v-if="props.showOwner" class="resource-box-list">
@@ -148,7 +179,21 @@
           </dl>
         </template>
       </editable-group>
-
+      <div
+        class="editable-group"
+        v-show="!user.admin && newData.owner?.id !== user.id"
+      >
+        <dl class="resource-box-list">
+          <dt>카테고리</dt>
+          <dd>
+            {{
+              newData[categoryKey].name
+                ? newData[categoryKey].name
+                : "카테고리 없음"
+            }}
+          </dd>
+        </dl>
+      </div>
       <editable-group
         :compKey="categoryKey"
         :parent-edit-mode="isEditMode[categoryKey]"
@@ -157,6 +202,7 @@
         @editCancel="editCancel"
         @editDone="editDone"
         @editIcon="editIconClick(categoryKey, true)"
+        v-show="newData.owner?.id === user.id || user.admin"
       >
         <template #edit-slot>
           <dl v-if="props.showCategory" class="resource-box-list">
@@ -213,7 +259,6 @@ import type { DataModel } from "./resource-box-common-props";
 import type { ResourceBoxProps } from "./resource-box-props";
 
 import _ from "lodash";
-import { FILTER_KEYS } from "~/store/search/common";
 import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 
 const props = withDefaults(defineProps<ResourceBoxProps>(), {
@@ -231,6 +276,9 @@ const props = withDefaults(defineProps<ResourceBoxProps>(), {
   ownerKey: "id",
   categoryKey: "category",
   useListCheckbox: false,
+  user: () => {
+    return {};
+  },
 });
 
 const isChecked = computed(() => {
@@ -290,7 +338,6 @@ const editDoneForModel = (key: string) => {
 };
 
 const editDoneForOwner = (value: any, key: string) => {
-  console.log(value);
   const data = {
     key: "owner",
     op: "",
@@ -315,10 +362,13 @@ const editDoneForOwner = (value: any, key: string) => {
   updateIsEditMode(key, false);
 };
 
-const editDoneForCategory = (value: any, key: string) => {
-  // TODO: 카테고리 변경 처리
-  console.log(value);
-  console.log(key);
+const editDoneForCategory = (value: any) => {
+  const data: any = {
+    key: "category",
+    value: value,
+  };
+
+  emit("editDone", data);
 };
 
 const editDone = (key: string) => {

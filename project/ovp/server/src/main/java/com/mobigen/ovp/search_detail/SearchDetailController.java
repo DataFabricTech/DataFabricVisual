@@ -29,6 +29,7 @@ public class SearchDetailController {
 
     /**
      * 사용자 목록 (전체)
+     *
      * @return
      * @throws Exception
      */
@@ -42,6 +43,7 @@ public class SearchDetailController {
 
     /**
      * 태그 목록 (전체)
+     *
      * @return
      * @throws Exception
      */
@@ -55,6 +57,7 @@ public class SearchDetailController {
 
     /**
      * 용어 목록 (전체)
+     *
      * @return
      * @throws Exception
      */
@@ -68,6 +71,7 @@ public class SearchDetailController {
 
     /**
      * 데이터 모델 상세 (테이블, 스토리지)
+     *
      * @param id
      * @return
      */
@@ -81,6 +85,7 @@ public class SearchDetailController {
 
     /**
      * 스키마 (테이블, 스토리지)
+     *
      * @param id
      * @return
      */
@@ -94,6 +99,7 @@ public class SearchDetailController {
 
     /**
      * 샘플데이터
+     *
      * @param id
      * @return
      */
@@ -106,6 +112,7 @@ public class SearchDetailController {
 
     /**
      * 프로파일링
+     *
      * @param fqn
      * @return
      */
@@ -119,6 +126,7 @@ public class SearchDetailController {
 
     /**
      * 쿼리
+     *
      * @param params
      * @return
      * @throws Exception
@@ -133,6 +141,7 @@ public class SearchDetailController {
 
     /**
      * 리니지 그래프 (테이블, 스토리지)
+     *
      * @param params
      * @return
      */
@@ -146,48 +155,52 @@ public class SearchDetailController {
 
     /**
      * 추천 (테이블, 스토리지)
+     *
      * @param id
      * @param dataModelDetailVote
      * @return
      */
     @ResponseJsonResult
     @PutMapping("/{id}/vote")
-    Object changeVote(@PathVariable String id, @RequestBody DataModelDetailVote dataModelDetailVote) {
+    Object changeVote(@PathVariable String id, @RequestParam String type, @RequestBody DataModelDetailVote dataModelDetailVote) {
         log.info("");
 
-        return searchDetailService.changeVote(id, dataModelDetailVote);
+        return searchDetailService.changeVote(id, type, dataModelDetailVote);
     }
 
     /**
      * 비추천 (테이블, 스토리지)
+     *
      * @param id
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @PutMapping("/{id}/follow")
-    Object followDataModel(@PathVariable String id) throws Exception {
+    Object followDataModel(@PathVariable String id, @RequestParam String type) throws Exception {
         log.info("");
 
-        return searchDetailService.followDataModel(id);
+        return searchDetailService.followDataModel(id, type);
     }
 
     /**
      * 북마크 (테이블, 스토리지)
+     *
      * @param id
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @DeleteMapping("/{id}/follow")
-    Object unfollowDataModel(@PathVariable String id) throws Exception {
+    Object unfollowDataModel(@PathVariable String id, @RequestParam String type) throws Exception {
         log.info("");
 
-        return searchDetailService.unfollowDataModel(id);
+        return searchDetailService.unfollowDataModel(id, type);
     }
 
     /**
      * 데이터 모델 변경 (테이블, 스토리지)
+     *
      * @param id
      * @param type
      * @param body
@@ -199,5 +212,21 @@ public class SearchDetailController {
         log.info("");
 
         return searchDetailService.changeDataModel(id, type, body);
+    }
+
+    /**
+     * 태그 변경 (테이블, 스토리지)
+     *
+     * @param id
+     * @param type
+     * @param body
+     * @return
+     */
+    @ResponseJsonResult
+    @PatchMapping("/{id}/tag")
+    Object changeDataModelTag(@PathVariable String id, @RequestParam String type, @RequestParam String target, @RequestParam boolean isCategory, @RequestBody List<Map<String, Object>> body) {
+        log.info("");
+
+        return searchDetailService.ChangeDataModelTag(id, type, target, isCategory, body);
     }
 }

@@ -151,7 +151,6 @@ public class ServiceManageController {
         return service.getStorageServiceList(id);
     }
 
-
     /**
      * 연결정보 조회
      *

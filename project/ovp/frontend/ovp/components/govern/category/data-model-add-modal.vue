@@ -192,7 +192,6 @@ const updateSearchInputValue = (newValue: string) => {
   addSearchInputValue.value = newValue;
 };
 const onInput = (value: string) => {
-  setScrollOptions(0);
   setSearchKeyword(value);
   resetReloadList();
 };

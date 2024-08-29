@@ -7,6 +7,7 @@ import com.mobigen.ovp.common.openmete_client.DatabaseSchemasClient;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.ServicesClient;
+import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
 import com.mobigen.ovp.search.SearchService;
 import com.mobigen.ovp.service_manager.client.response.RepositoryDescriptionResponse;
@@ -44,6 +45,7 @@ public class ServiceManageService {
     private final ContainersClient containersClient;
     private final DatabaseClient databaseClient;
     private final DatabaseSchemasClient databaseSchemasClient;
+    private final TablesClient tablesClient;
 
     /**
      * 서비스 리스트
@@ -355,14 +357,32 @@ public class ServiceManageService {
                 .map(client -> (String) client.get("fullyQualifiedName"))
                 .filter(this::isNotNullOrEmpty)
                 .flatMap(fullyQualifiedName -> {
-                    Map<String, Object> result = isDatabase
-                            ? databaseSchemasClient.getDatabaseSchemas(serviceParam)
-                            : containersClient.getContainersName(fullyQualifiedName, serviceParam);
-                    return ((List<Map<String, Object>>) result.get(isDatabase ? "data" : "children")).stream();
+                    if (isDatabase) {
+                        // Database Service Logic
+                        serviceParam.put("database", fullyQualifiedName);
+                        Map<String, Object> result = databaseSchemasClient.getDatabaseSchemas(serviceParam);
+                        List<Map<String, Object>> dataList = (List<Map<String, Object>>) result.get("data");
+
+                        return dataList.stream().flatMap(dataItem -> {
+                            String nestedFullyQualifiedName = (String) dataItem.get("fullyQualifiedName");
+                            Map<String, String> tableParam = new HashMap<>();
+                            tableParam.put("databaseSchema", nestedFullyQualifiedName);
+                            tableParam.put("include", "non-deleted");
+                            Map<String, Object> tableInfo = tablesClient.getTablesInfo(tableParam);
+
+                            List<Map<String, Object>> tableDataList = (List<Map<String, Object>>) tableInfo.get("data");
+                            return tableDataList.stream();
+                        });
+                    } else {
+                        // Storage Service Logic
+                        Map<String, Object> result = containersClient.getContainersName(fullyQualifiedName, serviceParam);
+                        return ((List<Map<String, Object>>) result.get("children")).stream();
+                    }
                 })
                 .map(this::processEntry)
                 .collect(Collectors.toList());
     }
+
 
     private boolean isNotNullOrEmpty(String value) {
         return value != null && !value.isEmpty();
