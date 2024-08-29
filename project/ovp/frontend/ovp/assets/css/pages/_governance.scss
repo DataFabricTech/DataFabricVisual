@@ -6,7 +6,7 @@
   &-item {
     @include flex;
 
-    width: calc(25% - 24px);
+    width: calc(33.33333% - 24px);
     background-color: $neutral-0;
     border: 1px solid $neutral-200;
     border-radius: $spacing-8;
