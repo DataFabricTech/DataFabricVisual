@@ -119,18 +119,16 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     termList.value = data.data;
   };
 
-  const getDataModel = async () => {
-    const data = await $api(
+  const getDataModel = () => {
+    return $api(
       `/api/search/detail/${dataModelId}?type=${dataModelType.value}`,
-    );
+    ).then((data) => {
+      if (data.result === 1) {
+        dataModel.value = data.data;
+      }
 
-    if (data.result === 0) {
-      // TODO: 에러페이지 이동
-      console.error(data.errorMessage);
-      return;
-    }
-
-    dataModel.value = data.data;
+      return data;
+    });
   };
 
   const getDefaultInfo = async () => {

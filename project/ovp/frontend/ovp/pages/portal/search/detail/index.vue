@@ -38,6 +38,7 @@ import _ from "lodash";
 
 import { ref, shallowRef } from "vue";
 import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
 
 import { useDataModelDetailStore } from "@/store/search/detail/index";
 import { useLineageStore } from "@/store/search/detail/lineage/index";
@@ -59,6 +60,7 @@ import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
 import { FILTER_KEYS } from "@/store/search/common";
 
 const route = useRoute();
+const router = useRouter();
 
 const dataModelDetailStore = useDataModelDetailStore();
 const lineageStore = useLineageStore();
@@ -99,9 +101,6 @@ const filteredTabs = computed(() => {
   } else {
     // tables가 false이면 기본정보, 데이터 리니지, Knowledge graph, 추천 데이터 모델 탭만 반환
     const includedValues = ["default", "schema", "lineage", 7, 8];
-    console.log(
-      tabOptions.filter((option) => includedValues.includes(option.value)),
-    );
     return tabOptions.filter((option) => includedValues.includes(option.value));
   }
 });
@@ -180,8 +179,14 @@ const editDone = (data: any) => {
 setDataModelId(route.query.id);
 setDataModelFqn(route.query.fqn);
 setDataModelType(route.query.type);
-await getDataModel();
-await getDefaultInfo();
+getDataModel().then(async (data) => {
+  if (data.result === 0) {
+    // TODO: 에러페이지 추가
+    // router.push("/portal/error");
+  }
+
+  await getDefaultInfo();
+});
 </script>
 
 <style lang="scss" scoped></style>

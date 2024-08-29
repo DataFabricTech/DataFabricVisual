@@ -51,8 +51,7 @@ public class ModelConvertUtil {
         modifiedSource.put("type", "trino".equals(serviceType) ? "model" : index);
 
         modifiedSource.put("id", source.get("id"));
-        // TODO : ICON 처리 완료되면 아래 코드 수정 필요
-        modifiedSource.put("serviceIcon", "");
+        modifiedSource.put("serviceIcon", new StringBuffer("type-img type-img-").append(serviceType).toString());
 
         modifiedSource.put("depth", source.get("fullyQualifiedName") != null ? source.get("fullyQualifiedName").toString().split("\\.") : new String[]{});
         modifiedSource.put("firModelNm", source.get("displayName"));

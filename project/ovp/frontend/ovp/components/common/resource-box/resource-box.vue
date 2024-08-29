@@ -24,7 +24,7 @@
           </label>
         </div>
 
-        <div class="type-img type-img-minio" :src="props.dataObj.serviceIcon" />
+        <div class="type-img" :class="props.dataObj.serviceIcon" />
         <div class="breadcrumb">
           <ul class="breadcrumb-list">
             <li
@@ -45,7 +45,13 @@
       class="editable-group"
       v-show="!user.admin && newData.owner?.id !== user.id"
     >
-      <h3 class="editable-group-title">{{ newData.modelNm }}</h3>
+      <a
+        href="javascript:void(0);"
+        class="editable-group-title"
+        title="상세 보기"
+        @click.stop="modelNmClick"
+        >{{ newData.firModelNm ?? newData.modelNm }}</a
+      >
     </div>
     <editable-group
       compKey="modelNm"
@@ -122,18 +128,18 @@
         >
       </template>
     </editable-group>
-    <div
-      class="editable-group"
-      v-show="!user.admin && newData.owner?.id !== user.id"
-    >
-      <dl class="resource-box-list">
-        <dt>소유자</dt>
-        <dd>
-          {{ newData.owner ? newData.ownerDisplayName : "소유자 없음" }}
-        </dd>
-      </dl>
-    </div>
     <div class="resource-box-info">
+      <div
+        class="editable-group"
+        v-show="!user.admin && newData.owner?.id !== user.id"
+      >
+        <dl class="resource-box-list">
+          <dt>소유자</dt>
+          <dd>
+            {{ newData.owner ? newData.ownerDisplayName : "소유자 없음" }}
+          </dd>
+        </dl>
+      </div>
       <editable-group
         :compKey="ownerKey"
         :parent-edit-mode="isEditMode[ownerKey]"

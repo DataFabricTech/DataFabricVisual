@@ -15,8 +15,7 @@ import java.util.List;
 
 @Data
 public class DataModelDetailResponse {
-
-    String serviceType;
+    String serviceIcon;
     String type;
     String id;
     String fqn;
@@ -45,7 +44,7 @@ public class DataModelDetailResponse {
     String prefix;
 
     public DataModelDetailResponse(Tables tables, String type, String userId) {
-        this.serviceType = tables.getService().getType();
+        this.serviceIcon = new StringBuffer("type-img type-img-").append(tables.getServiceType().toLowerCase()).toString();
         this.type = type;
         this.id = tables.getId();
         this.fqn = tables.getFullyQualifiedName();
