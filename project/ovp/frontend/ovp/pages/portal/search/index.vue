@@ -51,7 +51,7 @@
         <div class="no-result" v-if="isSearchResultNoData">
           <div class="notification">
             <svg-icon class="notification-icon" name="info"></svg-icon>
-            <p class="notification-detail">선택된 데이터 모델이 없습니다.</p>
+            <p class="notification-detail">검색 결과가 없습니다.</p>
           </div>
         </div>
       </div>
@@ -76,6 +76,7 @@ import DataFilter from "@/components/search/data-filter.vue";
 
 import TopBar from "./top-bar.vue";
 import { useRouter } from "nuxt/app";
+import { useLayoutHeaderStore } from "~/store/layout/header";
 
 const router = useRouter();
 
@@ -86,6 +87,9 @@ const {
   getPreviewData,
   getContainerPreviewData,
   changeTab,
+  resetReloadList,
+  setEmptyFilter,
+  setSearchKeyword,
 } = searchCommonStore;
 const {
   filters,
@@ -95,7 +99,11 @@ const {
   isShowPreview,
   isBoxSelectedStyle,
   isSearchResultNoData,
+  searchResultLength,
 } = storeToRefs(searchCommonStore);
+
+const layoutHeaderStore = useLayoutHeaderStore();
+const { searchInputValue } = storeToRefs(layoutHeaderStore);
 
 const getPreviewCloseStatus = (option: boolean) => {
   isShowPreview.value = option;
@@ -136,11 +144,28 @@ const modelNmClick = (data: object) => {
 
 const initTab: string = "table";
 
-const tabOptions = [
-  { label: "테이블", value: "table", type: "table" },
-  { label: "스토리지", value: "storage", type: "storage" },
-  { label: "융합모델", value: "model", type: "model" },
-];
+const tabOptions = ref([
+  {
+    label: `테이블 (${searchResultLength.value.table})`,
+    value: "table",
+    type: "table",
+  },
+  {
+    label: `스토리지 (${searchResultLength.value.storage})`,
+    value: "storage",
+    type: "storage",
+  },
+  {
+    label: `융합모델 (${searchResultLength.value.model})`,
+    value: "model",
+    type: "model",
+  },
+]);
+watchEffect(() => {
+  tabOptions.value[0].label = `테이블 (${searchResultLength.value.table})`;
+  tabOptions.value[1].label = `스토리지 (${searchResultLength.value.storage})`;
+  tabOptions.value[2].label = `융합모델 (${searchResultLength.value.model})`;
+});
 
 // top-bar 에서 select box (sort) 값이 변경되면 목록을 조회하라는 코드가 구현되어 있는데,
 // select box 가 화면 맨 처음에 뿌릴때 값을 초기에 1번 셋팅하는 부분에서 목록 조회가 이뤄짐.
@@ -148,6 +173,15 @@ const tabOptions = [
 // await getSearchList();
 
 await getFilters();
+
+onBeforeRouteLeave((to, from, next) => {
+  isShowPreview.value = false;
+  setEmptyFilter();
+  setSearchKeyword("");
+  searchInputValue.value = "";
+  resetReloadList();
+  next();
+});
 
 const { scrollTrigger } = useIntersectionObserver(addSearchList);
 </script>

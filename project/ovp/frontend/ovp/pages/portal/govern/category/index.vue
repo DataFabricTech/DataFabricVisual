@@ -70,7 +70,7 @@
               >
               <input
                 v-model="selectedTitleNodeValue"
-                placeholder="모델명에 대한 영역입니다."
+                placeholder="카테고리명 에 대한 영역입니다."
                 required
                 id="title-modify"
                 class="text-input w-1/2"
