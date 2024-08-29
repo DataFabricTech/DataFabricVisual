@@ -111,7 +111,7 @@
               <p class="editable-group-desc">{{ selectedNodeCategory.desc }}</p>
             </template>
           </editable-group>
-          <div>
+          <div class="category-search">
             <div class="l-top-bar">
               <search-input
                 class="w-[541px]"

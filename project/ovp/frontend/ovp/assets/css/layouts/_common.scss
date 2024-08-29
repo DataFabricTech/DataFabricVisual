@@ -62,6 +62,10 @@
   }
 }
 
+.tab-line + .l-top-bar + .l-split {
+  height: calc(100% - 105px);
+}
+
 .l-sidebar {
   @include flex($direction: column, $horizontal: space-between);
 
