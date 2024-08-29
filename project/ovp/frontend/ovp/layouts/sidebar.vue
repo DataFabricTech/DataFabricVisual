@@ -15,7 +15,7 @@
           </nuxt-link>
         </li>
       </ul>
-      <ul class="sidebar-list">
+      <ul v-if="!_.isEmpty(mgmtMenuJson)" class="sidebar-list">
         <li
           class="sidebar-item"
           :class="
@@ -44,6 +44,7 @@ import _ from "lodash";
 
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store/common/menu";
+
 const menuStore = useMenuStore();
 
 const { getMenuData } = menuStore;
