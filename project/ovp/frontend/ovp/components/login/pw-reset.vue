@@ -22,11 +22,13 @@
           >
             <span class="hidden-text">비밀번호 보기 해제</span>
             <svg-icon
-              v-if="composition.inputPasswordType.value === 'password'"
               class="button-icon"
-              name="eye"
+              :name="
+                composition.inputPasswordType.value === 'text'
+                  ? 'eye'
+                  : 'eye-hide'
+              "
             ></svg-icon>
-            <svg-icon v-else class="button-icon" name="eye-hide"></svg-icon>
           </button>
         </div>
         <div
@@ -62,11 +64,13 @@
           >
             <span class="hidden-text">비밀번호 보기</span>
             <svg-icon
-              v-if="composition.inputConfirmPasswordType.value === 'password'"
               class="button-icon"
-              name="eye"
+              :name="
+                composition.inputConfirmPasswordType.value === 'text'
+                  ? 'eye'
+                  : 'eye-hide'
+              "
             ></svg-icon>
-            <svg-icon v-else class="button-icon" name="eye-hide"></svg-icon>
           </button>
         </div>
         <div
