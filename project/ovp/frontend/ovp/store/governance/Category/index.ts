@@ -44,7 +44,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const { from, size } = storeToRefs(pagingStore);
   const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
 
-  let selectedNode: any = null;
+  const selectedNode = ref({});
   const categories: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
   const defaultCategoriesParentId = ref("");
   const categoriesParentId = ref("");
@@ -197,18 +197,25 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     }
     const { data } = await $api(
       `/api/category/models?${getModelListQuery(node.tagId, value)}`,
+      { showLoader: false },
     );
+
     return data;
   };
+
+  const setFromReset = () => {
+    from.value = 0;
+  };
+
   const addModelList = async () => {
-    const data = await getModelByCategoryIdAPI(selectedNode);
+    const data = await getModelByCategoryIdAPI(selectedNode.value);
     modelList.value = modelList.value.concat(data);
   };
   const getModelList = async (value?: string) => {
-    if (_.isNull(selectedNode)) {
+    if (_.isNull(selectedNode.value)) {
       return;
     }
-    const data = await getModelByCategoryIdAPI(selectedNode, value);
+    const data = await getModelByCategoryIdAPI(selectedNode.value, value);
     modelList.value = data === null ? [] : data;
   };
   const setModelIdList = () => {
@@ -218,7 +225,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     }
   };
   const setSelectedNode = (node: any) => {
-    selectedNode = node;
+    selectedNode.value = node;
   };
 
   // PREVIEW
@@ -402,6 +409,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   };
 
   return {
+    selectedNode,
     categories,
     defaultCategoriesParentId,
     categoriesParentId,
@@ -458,5 +466,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     updateIntersectionHandler,
     setEmptyFilter,
     setModelIdList,
+    setFromReset,
   };
 });

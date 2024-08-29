@@ -48,7 +48,8 @@ import { ref } from "vue";
 import _ from "lodash";
 
 const categoryStore = useGovernCategoryStore();
-const { patchCategoryTagAPI, setModelIdList, getModelList } = categoryStore;
+const { patchCategoryTagAPI, setModelIdList, getModelList, setFromReset } =
+  categoryStore;
 const {
   categories,
   selectedModelList,
@@ -105,6 +106,7 @@ const onConfirm = async () => {
     );
   }
 
+  setFromReset();
   await getModelList();
   setModelIdList();
 

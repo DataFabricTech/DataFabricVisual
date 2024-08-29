@@ -226,7 +226,6 @@ const {
   getPreviewData,
   moveCategory,
   resetAddModalStatus,
-  setSelectedNode,
   setSearchKeyword,
   getFilters,
   changeTab,
@@ -234,6 +233,7 @@ const {
   setModelIdList,
 } = categoryStore;
 const {
+  selectedNode,
   selectedModelList,
   categories,
   modelList,
@@ -304,7 +304,7 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
 
   setScrollOptions(0);
   // 선택한 노드정보 저장
-  setSelectedNode(node);
+  selectedNode.value = node;
   // 선택한 노드 기준 모델 목록을 조회
   await getModelList();
   // 모든 모델 리스트 id 저장
