@@ -1,10 +1,9 @@
 <template>
   <!--  상단 검색 결과 & 우측 필터-->
   <div class="l-top-bar">
-    <strong
-      >총 <em class="primary">{{ searchResultLength[currentTab] }}개</em>의 검색
-      결과가 있습니다.</strong
-    >
+    <h4 class="search-result">
+      총 <em class="search-result-num">{{ searchResultLength[currentTab] }}개</em>의 검색 결과가 있습니다.
+    </h4>
     <div class="h-group gap-1">
       <select-box
         class="select-clean"

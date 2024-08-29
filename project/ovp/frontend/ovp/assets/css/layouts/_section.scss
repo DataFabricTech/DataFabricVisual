@@ -53,4 +53,15 @@
   height: 100%;
   padding: $spacing-16 $spacing-20;
   background: $neutral-100;
+
+  &:has(.title) {
+    gap: $spacing-20;
+  }
+
+  .title {
+    @include font-size('16');
+    font-weight: 600;
+    color: $neutral-800;
+    margin-top: $spacing-12;
+  }
 }
