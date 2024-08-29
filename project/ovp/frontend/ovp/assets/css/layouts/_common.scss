@@ -70,5 +70,15 @@
   height: 100%;
 }
 
+// 검색결과 공통
+.search-result {
+  @include font-size('15');
+  color: $neutral-700;
+
+  &-num {
+    font-weight: 600;
+    color: $primary-500;
+  }
+}
 
 
