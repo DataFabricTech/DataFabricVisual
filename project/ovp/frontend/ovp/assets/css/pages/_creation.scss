@@ -99,12 +99,9 @@
 //데이터모델추가 모달 스타일
 .data-add {
   @include flex($direction: column, $horizontal: flex-start, $gap: $spacing-12);
-  @include scroll-hidden;
 
   overflow-y: scroll;
   width: 100%;
-  //height: 520px;
-  //padding: $spacing-16;
 
   .tab-contents {
     height: calc(100% - 36px);
