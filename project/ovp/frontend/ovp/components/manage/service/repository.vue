@@ -13,7 +13,6 @@
         <textarea
           class="textarea"
           v-model="newData.description"
-          @input="editInput($event)"
           placeholder="설명에 대한 영역입니다."
           required
           id="textarea-modify"
@@ -26,27 +25,20 @@
       </template>
     </editable-group>
   </div>
-  <agGrid
-    style="height: 800px"
-    class="ag-theme-alpine ag-theme-quartz"
-    :columnDefs="columnDefs"
-    :rowData="DBServiceListData"
-    :useRowCheckBox="false"
-    :setColumnFit="true"
-    :useColumnResize="false"
-  ></agGrid>
-  <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
-  <Loading
-    id="loader"
-    :use-loader-overlay="true"
-    class="loader-lg is-loader-inner"
-    style="display: none"
-  ></Loading>
+  <template v-if="DBServiceListData.length > 0">
+    <agGrid
+      class="ag-theme-alpine ag-theme-quartz"
+      :columnDefs="columnDefs"
+      :rowData="DBServiceListData"
+      :useRowCheckBox="false"
+      :setColumnFit="true"
+      :useColumnResize="false"
+    ></agGrid>
+    <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+  </template>
+
   <!-- 결과 없을 시 no-result 표시 -->
-  <div
-    class="no-result"
-    v-if="DBServiceListData.length === 0 || null || undefined"
-  >
+  <div class="no-result" v-else>
     <div class="notification">
       <svg-icon class="notification-icon" name="info"></svg-icon>
       <p class="notification-detail">데이터 리스트가 없습니다.</p>
@@ -59,7 +51,6 @@ import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 import { useServiceStore } from "@/store/manage/service";
 import { computed } from "vue";
 import _ from "lodash";
-import Loading from "@base/loading/Loading.vue";
 import agGrid from "@extends/grid/Grid.vue";
 import LinkDetailComponent from "./linkDetailComponent.vue";
 const serviceStore = useServiceStore();
@@ -87,7 +78,7 @@ let defaultData: RepositoryDescription = {
 
 // 수정될 새로운 데이터
 const newData = computed(() => {
-  return _.cloneDeep(serviceData.value.description);
+  return _.cloneDeep(serviceData.value);
 });
 
 // JSON Patch 형식으로 데이터 변환 함수
@@ -109,15 +100,9 @@ const createJsonPatch = (oldData: any, newData: any): JsonPatchOperation[] => {
   return patch;
 };
 
-// 사용자 입력 처리
-const editInput = (event: Event) => {
-  const target = event.target as HTMLTextAreaElement;
-  console.log(`event: ${target.value}`);
-};
-
 // 수정 버튼 클릭 시 호출
 const editIconClick = () => {
-  defaultData.description = _.cloneDeep(newData.value);
+  defaultData = _.cloneDeep(newData.value);
 };
 
 // 취소 버튼 클릭 시 호출
@@ -126,22 +111,23 @@ const editCancel = () => {
 };
 
 // 수정 완료 버튼 클릭 시 호출
-const editDone = async () => {
+const editDone = () => {
   const patchData = createJsonPatch(defaultData, newData.value);
 
-  try {
-    const response = await updateRepositoryDescriptionAPI(patchData);
-    if (response.result === 1) {
-      serviceData.value.description = response.description;
-      alert("수정이 완료되었습니다.");
-    } else {
-      serviceData.value.description = defaultData.description;
-      alert("수정에 실패하였습니다.");
-    }
-  } catch (error) {
-    console.error("API 호출 중 오류 발생: ", error);
-    serviceData.value.description = defaultData.description;
-  }
+  updateRepositoryDescriptionAPI(patchData)
+    .then((response) => {
+      if (response.result === 1) {
+        serviceData.value = response.data;
+        alert("수정이 완료되었습니다.");
+      } else {
+        serviceData.value = defaultData;
+        alert("수정에 실패하였습니다.");
+      }
+    })
+    .catch((error) => {
+      console.error("API 호출 중 오류 발생: ", error);
+      serviceData.value = defaultData;
+    });
 };
 
 const columnDefs = ref([

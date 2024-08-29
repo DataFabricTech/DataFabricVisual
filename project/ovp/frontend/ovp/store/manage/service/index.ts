@@ -69,7 +69,7 @@ export const useServiceStore = defineStore("service", () => {
     const { data }: any = await $api(
       `/api/service-manage/repository/description/${selectedFqn}?${getQueryData()}`,
     );
-    serviceData.value = { description: data.description };
+    serviceData.value = data;
   };
 
   // 저장소 탭 > [스토리지] 설명 조회 API호출 함수
@@ -77,47 +77,34 @@ export const useServiceStore = defineStore("service", () => {
     const { data }: any = await $api(
       `/api/service-manage/repository/storage/description/${selectedFqn}?${getQueryData()}`,
     );
-    serviceData.value = { description: data.description };
+
+    serviceData.value = data;
   };
 
   // 저장소 탭 > 설명 수정 API호출 함수
-  const updateRepositoryDescriptionAPI = async (
-    patchData: JsonPatchOperation[],
-  ) => {
-    let url: string = "";
-    // Storage의 항목을 수정할 경로
-    if (["MinIO"].includes(selectedServiceType)) {
-      url = "api/service-manage/repository/storage/description/";
-    } else {
-      // DataBase의 항목을 수정할 경로
-      url = "api/service-manage/repository/description/";
-    }
-    const result = await $api(url + `${selectedID}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json-patch+json",
+  const updateRepositoryDescriptionAPI = (patchData: JsonPatchOperation[]) => {
+    const serviceType: string = ["MINIO"].includes(
+      selectedServiceType.toUpperCase(),
+    )
+      ? "repository/storage"
+      : "repository";
+    return $api(
+      `/api/service-manage/${serviceType}/description/${selectedID}`,
+      {
+        method: "PATCH",
+        body: patchData,
       },
-      body: JSON.stringify(patchData),
-    });
-    // 설명 조회 재호출
-    if (["MinIO"].includes(selectedServiceType)) {
-      await getRepositoryStorageDescriptionAPI();
-    } else {
-      await getRepositoryDescriptionAPI();
-    }
-
-    return result;
+    );
   };
 
   const getDBServiceList = async () => {
-    let url: string = "";
-    if (["MinIO"].includes(selectedServiceType)) {
-      url = "/api/service-manage/storage-services/";
-    } else {
-      url = "/api/service-manage/database-services/";
-    }
+    const uri: string = ["MINIO"].includes(selectedServiceType.toUpperCase())
+      ? "storage-services"
+      : "database-services";
 
-    const result: any = await $api(url + `${selectedName}`);
+    const result: any = await $api(
+      `/api/service-manage/${uri}/${selectedName}`,
+    );
     DBServiceListData.value = result.data;
 
     return result;
@@ -181,11 +168,13 @@ export const useServiceStore = defineStore("service", () => {
       selectedName = service.name;
       selectedServiceType = service.serviceType;
       if (
-        ["Mysql", "MariaDB", "Oracle", "Postgres"].includes(service.serviceType)
+        ["MYSQL", "MARIADB", "ORACLE", "POSTGRES"].includes(
+          selectedServiceType.toUpperCase(),
+        )
       ) {
         // 서비스타입이 데이터베이스 일 경우
         getRepositoryDescriptionAPI();
-      } else if (["MinIO"].includes(service.serviceType)) {
+      } else if (["MINIO"].includes(selectedServiceType.toUpperCase())) {
         // 서비스 타입이 스토리지일 경우
         getRepositoryStorageDescriptionAPI();
       } else {

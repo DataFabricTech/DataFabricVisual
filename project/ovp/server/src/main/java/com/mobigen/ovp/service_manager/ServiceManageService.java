@@ -210,7 +210,7 @@ public class ServiceManageService {
      * @return
      **/
     public Object getRepositoryDescription(String name, MultiValueMap<String, String> params) {
-        return new RepositoryDescriptionResponse(servicesClient.getRepositoryDescription(name, params));
+        return servicesClient.getRepositoryDescription(name, params);
     }
 
     /**
@@ -221,7 +221,7 @@ public class ServiceManageService {
      * @return
      **/
     public Object getRepositoryStorageDescription(String name, MultiValueMap<String, String> params) {
-        return new RepositoryDescriptionResponse(servicesClient.getRepositoryStorageDescription(name, params));
+        return servicesClient.getRepositoryStorageDescription(name, params);
     }
 
     /**
@@ -232,7 +232,7 @@ public class ServiceManageService {
      * @return
      **/
     public Object editRepositoryDescription(String id, List<JsonPatchOperation> param) {
-        return new RepositoryDescriptionResponse(servicesClient.editRepositoryDescription(id, param));
+        return servicesClient.editRepositoryDescription(id, param);
     }
 
     /**
@@ -243,7 +243,7 @@ public class ServiceManageService {
      * @return
      **/
     public Object editRepositoryStorageDescription(String id, List<JsonPatchOperation> param) {
-        return new RepositoryDescriptionResponse(servicesClient.editRepositoryStorageDescription(id, param));
+        return servicesClient.editRepositoryStorageDescription(id, param);
     }
 
     public Object saveIngestionPipelines(Map<String, Object> params) {
