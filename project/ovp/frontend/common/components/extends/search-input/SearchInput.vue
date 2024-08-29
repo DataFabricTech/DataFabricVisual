@@ -17,6 +17,7 @@
       class="search-input-action-button button button-neutral-ghost button-xs"
       type="button"
       @click="clearSearchValue"
+      v-if="isShowResetButton"
     >
       <span class="hidden-text">지우기</span>
       <svg-icon class="button-icon" name="close"></svg-icon>
@@ -50,7 +51,20 @@ const emit = defineEmits<{
   (e: "onClickSearch", value: string): void;
   (e: "onChange", value: string): void;
   (e: "onInput", value: string): void;
+  (e: "reset"): void;
 }>();
+
+const isShowResetButton = ref(true);
+
+watch(
+  () => props.isSearchInputDefaultType,
+  (newVal) => {
+    if (newVal) {
+      isShowResetButton.value = false;
+    }
+  },
+  { immediate: true }
+);
 
 const onClickSearch = () => {
   emit("onClickSearch", props.inpValue);
@@ -64,12 +78,19 @@ const onChange = (event: Event) => {
 
 const onInput = (event: Event) => {
   const input = event.target as HTMLInputElement;
+  if (props.isSearchInputDefaultType) {
+    isShowResetButton.value = true;
+  }
   emit("update:value", input.value);
   emit("onInput", input.value);
 };
 
 const clearSearchValue = () => {
+  if (props.isSearchInputDefaultType) {
+    isShowResetButton.value = false;
+  }
   emit("update:value", "");
+  emit("reset");
 };
 </script>
 
