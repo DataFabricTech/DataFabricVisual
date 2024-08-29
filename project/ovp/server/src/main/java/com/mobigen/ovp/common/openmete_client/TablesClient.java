@@ -20,6 +20,9 @@ import java.util.UUID;
 @FeignClient(name = "TablesClient", url = "${properties.ovp.open-metadata-url}/tables")
 public interface TablesClient {
 
+    @GetMapping("")
+    Map<String, Object> getTablesInfo(@RequestParam Map<String, String> params);
+
     @GetMapping("/{id}")
     Tables getTablesName(@PathVariable("id") String id, @RequestParam Map<String, String> params);
 
