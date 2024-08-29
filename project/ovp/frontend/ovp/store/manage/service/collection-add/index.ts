@@ -13,6 +13,10 @@ export const useServiceCollectionAddStore = defineStore(
     // NOTE: 로그인 사용자 정보
     const { user } = storeToRefs(userStore);
 
+    const isEditModalStatus = ref(false);
+    const pipelineId = ref("");
+    const cloneIngestionPipline = ref({});
+
     const serviceId = ref("");
     const pipelineType = ref("");
     const serviceType = ref("");
@@ -356,6 +360,149 @@ export const useServiceCollectionAddStore = defineStore(
       reties.value = value;
     };
 
+    const setFilterPattern = (pattern, includes, excludes) => {
+      if (pattern) {
+        includes.splice(
+          0,
+          includes.length,
+          ...(pattern.includes.map((name) => ({ name })) || []),
+        );
+        excludes.splice(
+          0,
+          excludes.length,
+          ...(pattern.excludes.map((name) => ({ name })) || []),
+        );
+      }
+    };
+
+    const setScheduleBasedOnInterval = (scheduleInterval) => {
+      // 초기화
+      isShowHour.value = false;
+      isShowDay.value = false;
+      isShowWeek.value = false;
+      hideTypeView();
+      resetScheduleData();
+
+      // 매 시간 실행하는 경우
+      if (/^\d{1,2} \* \* \* \*$/.test(scheduleInterval)) {
+        isShowHour.value = true;
+        const [min] = scheduleInterval.split(" ");
+        minute.value = min.padStart(2, "0");
+        selectedScheduleTypeItem.value = scheduleTypeOptions.value[1].value;
+      }
+      // 매일 특정 시간에 실행하는 경우
+      else if (/^\d{1,2} \d{1,2} \* \* \*$/.test(scheduleInterval)) {
+        isShowDay.value = true;
+        const [min, hour] = scheduleInterval.split(" ");
+        time.value = `${hour.padStart(2, "0")}:${min.padStart(2, "0")}`;
+        selectedScheduleTypeItem.value = scheduleTypeOptions.value[2].value;
+      }
+      // 매주 특정 요일, 특정 시간에 실행하는 경우
+      else if (/^\d{1,2} \d{1,2} \* \* \d$/.test(scheduleInterval)) {
+        isShowWeek.value = true;
+        const [min, hour, , , dayOfWeek] = scheduleInterval.split(" ");
+        time.value = `${hour.padStart(2, "0")}:${min.padStart(2, "0")}`;
+        selectedDay.value = daysOfWeek.value[dayOfWeek].value;
+        selectedScheduleTypeItem.value = scheduleTypeOptions.value[3].value;
+      }
+      // 사용자 정의 크론 표현식인 경우
+      else {
+        isShowCustom.value = true;
+        cronExpression.value = scheduleInterval;
+        selectedScheduleTypeItem.value = scheduleTypeOptions.value[4].value;
+      }
+    };
+
+    // 수정시 화면에 값 로드
+    const setEditModalData = (data: any) => {
+      let loadConfig = data.sourceConfig.config;
+      isEnableDebug.value = data.loggerLevel === "INFO" ? false : true;
+      if (
+        pipelineType.value == "metadata" &&
+        serviceType.value === "databaseService"
+      ) {
+        isMarkDeletedTables.value = loadConfig.markDeletedTables;
+        isIncludeTables.value = loadConfig.includeTables;
+        isIncludeViews.value = loadConfig.includeViews;
+        isIncludeOwners.value = loadConfig.includeOwners;
+      }
+
+      // TODO: 추후 필요한 값이 있으면 추가
+      // if (
+      //   pipelineType.value == "metadata" &&
+      //   serviceType.value === "storageService"
+      // ) {
+      // }
+
+      if (
+        pipelineType.value == "profiler" &&
+        serviceType.value === "databaseService"
+      ) {
+        isIncludeViews.value = loadConfig.includeViews;
+        isGenerateSampleData.value = loadConfig.isGenerateSampleData;
+        isComputeMetric.value = loadConfig.computeMetrics;
+        selectedSampleTypeItem.value = loadConfig.profileSampleType;
+        profileSample.value = loadConfig.profileSample;
+        sampleDataRowsCount.value = loadConfig.sampleDataCount;
+      }
+
+      if (
+        pipelineType.value == "profiler" &&
+        serviceType.value === "storageService"
+      ) {
+        isGenerateSampleData.value = loadConfig.generateSampleData;
+        isComputeMetric.value = loadConfig.computeMetrics;
+        selectedSampleTypeItem.value = loadConfig.profileSampleType;
+        profileSample.value = loadConfig.profileSample;
+        sampleDataRowsCount.value = loadConfig.sampleDataCount;
+      }
+
+      setFilterPattern(
+        loadConfig.containerFilterPattern,
+        CFP_includes,
+        CFP_excludes,
+      );
+      setFilterPattern(
+        loadConfig.bucketFilterPattern,
+        BFP_includes,
+        BFP_excludes,
+      );
+      setFilterPattern(
+        loadConfig.databaseFilterPattern,
+        DFP_includes,
+        DFP_excludes,
+      );
+      setFilterPattern(
+        loadConfig.schemaFilterPattern,
+        SFP_includes,
+        SFP_excludes,
+      );
+      setFilterPattern(
+        loadConfig.tableFilterPattern,
+        TFP_includes,
+        TFP_excludes,
+      );
+      if (data.airflowConfig.scheduleInterval) {
+        setScheduleBasedOnInterval(data.airflowConfig.scheduleInterval);
+        ingestionPipeLine.value.airflowConfig.scheduleInterval =
+          data.airflowConfig.scheduleInterval;
+      }
+
+      reties.value = data.airflowConfig.retries;
+
+      ingestionPipeLine.value.name = data.name;
+      ingestionPipeLine.value.displayName = data.displayName;
+      ingestionPipeLine.value.loggerLevel = data.loggerLevel;
+      ingestionPipeLine.value.pipelineType = data.pipelineType;
+      ingestionPipeLine.value.sourceConfig.config = config.value;
+      ingestionPipeLine.value.airflowConfig.startDate =
+        data.airflowConfig.startDate;
+      ingestionPipeLine.value.airflowConfig.retries =
+        data.airflowConfig.retries;
+
+      cloneIngestionPipline.value = _.cloneDeep(ingestionPipeLine.value);
+    };
+
     const handleNameInput = (e) => {
       ingestionPipeLine.value.displayName = e.target.value;
     };
@@ -537,6 +684,10 @@ export const useServiceCollectionAddStore = defineStore(
       cronExpression.value = "0 0 * * *";
 
       reties.value = 0;
+
+      isEditModalStatus.value = false;
+      pipelineId.value = "";
+      cloneIngestionPipline.value = {};
     };
 
     const checkValidation = () => {
@@ -607,7 +758,117 @@ export const useServiceCollectionAddStore = defineStore(
         });
     };
 
+    const getPipeLineData = async (value: any) => {
+      isEditModalStatus.value = true;
+      await $api(`/api/service-manage/pipelines/${value}`)
+        .then((res: any) => {
+          if (res.result === 1) {
+            pipelineId.value = res.data.id;
+            if (res.data.pipelineType === "storageProfiler") {
+              pipelineType.value = "profiler";
+            } else {
+              pipelineType.value = res.data.pipelineType;
+            }
+
+            if (pipelineType.value === "metadata") {
+              modalTitle.value = "메타데이터 수집 수정";
+            } else {
+              modalTitle.value = "프로파일러 수집 수정";
+            }
+            serviceType.value = res.data.service.type;
+            setEditModalData(res.data);
+          } else {
+            console.log("에러 발생");
+          }
+        })
+        .catch((err: any) => {
+          console.log("err: ", err);
+        });
+    };
+
+    function generatePatchOperations(original, updated, basePath = "") {
+      let operations = [];
+      const ignorePaths = ["/airflowConfig/startDate"];
+
+      // 원본에서 존재하지 않는 항목을 제거하는 경우
+      for (const key in original) {
+        const originalValue = original[key];
+        const updatedValue = updated[key];
+        const currentPath = `${basePath}/${key}`;
+
+        if (ignorePaths.includes(currentPath)) {
+          continue;
+        }
+
+        if (!(key in updated)) {
+          operations.push({
+            op: "remove",
+            path: currentPath,
+          });
+        } else if (
+          typeof originalValue === "object" &&
+          typeof updatedValue === "object"
+        ) {
+          operations.push(
+            ...generatePatchOperations(
+              originalValue,
+              updatedValue,
+              currentPath,
+            ),
+          );
+        } else if (originalValue !== updatedValue) {
+          operations.push({
+            op: "replace",
+            path: currentPath,
+            value: updatedValue,
+          });
+        }
+      }
+
+      // 업데이트된 항목 중 원본에 없는 항목을 추가하는 경우
+      for (const key in updated) {
+        if (!(key in original)) {
+          const currentPath = `${basePath}/${key}`;
+          if (!ignorePaths.includes(currentPath)) {
+            operations.push({
+              op: "add",
+              path: currentPath,
+              value: updated[key],
+            });
+          }
+        }
+      }
+
+      // 'remove' 작업을 내림차순으로 정렬필요
+      operations = operations.sort((a, b) => {
+        if (a.op === "remove" && b.op === "remove") {
+          return b.path.localeCompare(a.path);
+        }
+        return 0;
+      });
+
+      return operations;
+    }
+
+    const editIngestion = async (value: any) => {
+      ingestionPipeLine.value.pipelineType = bindPipelineType.value;
+      ingestionPipeLine.value.airflowConfig = airflowConfig.value;
+      ingestionPipeLine.value.sourceConfig.config = config.value;
+      ingestionPipeLine.value.loggerLevel = loggerLevel.value;
+
+      let editPatchObj = generatePatchOperations(
+        cloneIngestionPipline.value,
+        ingestionPipeLine.value,
+      );
+
+      await $api(`/api/service-manage/pipelines/${pipelineId.value}`, {
+        method: "PATCH",
+        body: editPatchObj,
+      });
+    };
+
     return {
+      isEditModalStatus,
       pipelineType,
       serviceType,
       modalTitle,
@@ -689,6 +950,9 @@ export const useServiceCollectionAddStore = defineStore(
       resetData,
       checkValidation,
       createIngestion,
+
+      getPipeLineData,
+      editIngestion,
     };
   },
 );

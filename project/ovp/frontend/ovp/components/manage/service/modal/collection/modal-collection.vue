@@ -75,8 +75,14 @@ import ScheduleStep from "./step/schedule-step.vue";
 
 import { useServiceCollectionAddStore } from "@/store/manage/service/collection-add";
 const collectionAddStore = useServiceCollectionAddStore();
-const { pipelineType, serviceType, modalTitle, isValid, inValidMsg } =
-  storeToRefs(collectionAddStore);
+const {
+  isEditModalStatus,
+  pipelineType,
+  serviceType,
+  modalTitle,
+  isValid,
+  inValidMsg,
+} = storeToRefs(collectionAddStore);
 const {
   setIsValidCronParsedMessage,
   setIsValidCronParedMessage,
@@ -86,6 +92,7 @@ const {
   resetData,
   checkValidation,
   createIngestion,
+  editIngestion,
 } = collectionAddStore;
 
 const emit = defineEmits<{
@@ -136,7 +143,12 @@ const gotoNext = async () => {
   }
 
   if (currentStep.value === 2) {
-    await createIngestion();
+    if (isEditModalStatus.value) {
+      await editIngestion();
+    } else {
+      await createIngestion();
+    }
+
     if (!isValid.value) {
       return;
     }

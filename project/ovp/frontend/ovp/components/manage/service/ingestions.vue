@@ -118,9 +118,10 @@
               class="loader-simple loader-xs"
               v-show="currentLoading[ingestion.id]?.deploy"
             ></loading>
+            <!-- TODO : ingestion.id 가 fqn 값인지 확인 필요-->
             <button
               class="button button button-secondary-stroke"
-              @click="editIngestionModal(ingestion.id)"
+              @click="openEditModal(ingestion.id)"
             >
               편집
             </button>
@@ -246,6 +247,15 @@ const formatDate = (date: number) => {
   return dayjs(date).format(FORMAT);
 };
 
+const collectionAddStore = useServiceCollectionAddStore();
+const { pipelineType } = storeToRefs(collectionAddStore);
+const {
+  setModalTitle,
+  setPipelineType,
+  setServiceType,
+  setId,
+  getPipeLineData,
+} = collectionAddStore;
 const badgeClass = (ingestion: Ingestion): string => {
   return (
     {
@@ -420,5 +430,10 @@ function openAddModel(value: string) {
 
   open();
   ingestionSelected.value = [];
-}
+};
+
+const openEditModal = async (value: any) => {
+  await getPipeLineData(value);
+  open();
+};
 </script>
