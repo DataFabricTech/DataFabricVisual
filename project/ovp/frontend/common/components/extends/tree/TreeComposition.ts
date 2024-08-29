@@ -36,7 +36,7 @@ export function TreeComposition(props: TreeProps): TreeComposition {
   }
 
   // 체크박스를 사용하는 경우, 체크여부를 object에 추가해준다.
-  if (props.isCheckable && props.checkedIds && props.checkedIds.length > 9) {
+  if (props.isCheckable && props.checkedIds && props.checkedIds.length > 0) {
     updateStatus(treeItems.value, props.checkedIds, "checked");
   }
   // NOTE : 처음 선택값도 disabled 랑 같이 처리하려 했으나, tree lib 가 제대로 동작하지 않아 주석처리함.
