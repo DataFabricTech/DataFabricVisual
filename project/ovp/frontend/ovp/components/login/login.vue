@@ -51,7 +51,10 @@
                     @click="isHidePw"
                   >
                     <span class="hidden-text">지우기</span>
-                    <svg-icon class="button-icon" name="eye"></svg-icon>
+                    <svg-icon
+                      class="button-icon"
+                      :name="inpType === 'text' ? 'eye' : 'eye-hide'"
+                    ></svg-icon>
                   </button>
                 </div>
                 <div
@@ -87,7 +90,7 @@
                 class="button button-primary-ghost button-sm"
                 type="button"
               >
-                <nuxt-link :to="'/portal/login/sign-up'"> 회원가입 </nuxt-link>
+                <nuxt-link :to="'/portal/login/sign-up'"> 회원가입</nuxt-link>
               </button>
             </div>
           </div>
@@ -101,6 +104,7 @@
 import _ from "lodash";
 import { loginStore } from "@/store/login/index";
 import { useRouter } from "vue-router";
+
 const store = loginStore();
 const { isloginSuccess, errorMessage } = storeToRefs(store);
 const { getLoginSuccessState } = store;
