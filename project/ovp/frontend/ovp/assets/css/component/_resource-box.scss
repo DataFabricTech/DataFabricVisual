@@ -32,7 +32,7 @@
 
   .editable-group-title {
     @include ellipsis;
-    @include font-size('18');
+    @include font-size('16');
 
     font-weight: 600;
     color: $neutral-700;
