@@ -73,9 +73,9 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { ref } from "vue";
 import type { Service } from "~/type/service";
-import { useServiceStore } from "~/store/manage/service";
+import { useServiceStore } from "@/store/manage/service";
 
 const {
   getServiceList,

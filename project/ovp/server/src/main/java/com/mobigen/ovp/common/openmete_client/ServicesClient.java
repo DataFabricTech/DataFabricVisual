@@ -2,6 +2,7 @@ package com.mobigen.ovp.common.openmete_client;
 
 import com.mobigen.ovp.common.openmete_client.dto.Base;
 import com.mobigen.ovp.common.openmete_client.dto.Log;
+import com.mobigen.ovp.common.openmete_client.dto.RepositoryDescription;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -78,6 +79,35 @@ public interface ServicesClient {
     @PostMapping("/storageServices")
     Map<String, Object> saveStorage(@RequestBody Map<String, Object> params);
 
+    /**
+     * 저장소관리 > 저장소탭 > Database > '설명'조회
+     *
+     * @param name
+     * @param params
+     * @return
+     **/
+    @GetMapping("/databaseServices/name/{name}")
+    RepositoryDescription getRepositoryDescription(@PathVariable("name") String name, @RequestParam MultiValueMap<String, String> params);
+
+    /**
+     * 저장소관리 > 저장소탭 > Storage > '설명'조회
+     *
+     * @param name
+     * @return
+     **/
+    @GetMapping("/storageServices/name/{name}")
+    RepositoryDescription getRepositoryStorageDescription(@PathVariable("name") String name, @RequestParam MultiValueMap<String, String> params);
+
+    /**
+     * 저장소관리 > 저장소탭 > Database > '설명'수정
+     *
+     * @param id
+     * @param param
+     * @return
+     **/
+    @PatchMapping(value = "/databaseServices/{id}", consumes = "application/json-patch+json")
+    RepositoryDescription editRepositoryDescription(@PathVariable("id") String id, @RequestBody List<JsonPatchOperation> param);
+
     @PostMapping("/ingestionPipelines")
     Object saveIngestionPipelines(@RequestBody Map<String, Object> params);
 
@@ -90,6 +120,15 @@ public interface ServicesClient {
     @GetMapping("/ingestionPipelines/name/{id}")
     Map<String, Object> getPipelinesData(@PathVariable String id, @RequestParam Map<String, Object> params);
 
+    /**
+     * 저장소관리 > 저장소탭 > Storage > '설명'수정
+     *
+     * @param id
+     * @param param
+     * @return
+     **/
+    @PatchMapping(value = "/storageServices/{id}", consumes = "application/json-patch+json")
+    RepositoryDescription editRepositoryStorageDescription(@PathVariable("id") String id, @RequestBody List<JsonPatchOperation> param);
 
     @GetMapping("/databaseServices/name/{name}")
     Map<String, Object> getDBConnectionInfo(@PathVariable String name,

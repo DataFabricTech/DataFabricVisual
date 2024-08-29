@@ -176,4 +176,68 @@ public class ServiceManageController {
                                        @RequestBody List<JsonPatchOperation> params) {
         return service.getUpdateConnectionInfo(type, id, params);
     }
+
+    /**
+     * 저장소관리 > 저장소탭 > Database > '설명'조회
+     *
+     * @param name
+     * @return
+     **/
+    @ResponseJsonResult
+    @GetMapping("/repository/description/{name}")
+    public Object getRepositoryDescription(@PathVariable String name, @RequestParam MultiValueMap<String, String> params) {
+        return service.getRepositoryDescription(name, params);
+    }
+
+    /**
+     * 저장소관리 > 저장소탭 > Storage > '설명'조회
+     *
+     * @param name
+     * @return
+     **/
+    @ResponseJsonResult
+    @GetMapping("/repository/storage/description/{name}")
+    public Object getRepositoryStorageDescription(@PathVariable String name, @RequestParam MultiValueMap<String, String> params) {
+        return service.getRepositoryStorageDescription(name, params);
+    }
+
+
+    /**
+     * 저장소관리 > 저장소탭 > Database > '설명'수정
+     *
+     * @param id
+     * @param param
+     * @return
+     **/
+    @ResponseJsonResult
+    @PatchMapping("/repository/description/{id}")
+    public Object editRepositoryDescription(@PathVariable String id, @RequestBody List<JsonPatchOperation> param) {
+        return service.editRepositoryDescription(id, param);
+    }
+
+    /**
+     * 저장소관리 > 저장소탭 > Storage > '설명'수정
+     *
+     * @param id
+     * @param param
+     * @return
+     **/
+    @ResponseJsonResult
+    @PatchMapping( "/repository/storage/description/{id}")
+    public Object editRepositoryStorageDescription(@PathVariable String id, @RequestBody List<JsonPatchOperation> param) {
+        return service.editRepositoryStorageDescription(id, param);
+    }
+
+
+//    @ResponseJsonResult
+//    @PostMapping(value = "/pipelines")
+//    public Object saveIngestionPipelines(@RequestBody Map<String, Object> params) {
+//        return service.saveIngestionPipelines(params);
+//    }
+//
+//    @ResponseJsonResult
+//    @PatchMapping(value = "/pipelines/{id}")
+//    public Object updateIngestionPipelines(@PathVariable String id, List<JsonPatchOperation> params) {
+//        return service.updateIngestionPipelines(id, params);
+//    }
 }
