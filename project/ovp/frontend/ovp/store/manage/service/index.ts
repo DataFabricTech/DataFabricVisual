@@ -48,6 +48,9 @@ export const useServiceStore = defineStore("service", () => {
     term: false,
   });
 
+  // 수정가능상태
+  const isDescEditable = ref<boolean>(false);
+
   const serviceData: Ref<ServiceData> = ref({ description: "" });
 
   const DBServiceListData: Ref<DBServiceListData[] | null | undefined> = ref([
@@ -163,6 +166,7 @@ export const useServiceStore = defineStore("service", () => {
    * @param source
    */
   function changeCurrentService(source: Service): void {
+    isDescEditable.value = false;
     if (!source.owner) {
       source.owner = [];
     }
@@ -472,5 +476,7 @@ export const useServiceStore = defineStore("service", () => {
     connectionInfo,
     viewConnectionInfo,
     getConnectionInfo,
+
+    isDescEditable,
   };
 });
