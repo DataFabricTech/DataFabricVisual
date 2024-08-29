@@ -37,33 +37,6 @@
     <div class="l-split">
       <div class="main-content">
         <div class="l-top-bar">
-          <span class="main-content-title">북마크 한 데이터</span>
-          <nuxt-link
-            :to="`/portal/my-page?fqn=${user.fullyQualifiedName}`"
-            class="button link-button-support"
-          >
-            <span class="button-title">모두 보기</span>
-          </nuxt-link>
-        </div>
-        <div class="no-result" v-if="isBookmarkDataNoInfo">
-          <div class="notification">
-            <svg-icon class="notification-icon" name="info"></svg-icon>
-            <p class="notification-detail">출력할 정보가 없습니다.</p>
-          </div>
-        </div>
-        <resource-box-list
-          v-else
-          :use-prv-btn="false"
-          :data-list="bookmarkData"
-          :use-list-checkbox="false"
-          :show-owner="true"
-          :show-category="true"
-          :is-box-selected-style="false"
-          @modelNmClick="modelNmClick"
-        />
-      </div>
-      <div class="main-content">
-        <div class="l-top-bar">
           <span class="main-content-title">최근 업데이트 데이터</span>
           <button
             class="button link-button-support"
@@ -82,6 +55,33 @@
           v-else
           :use-prv-btn="false"
           :data-list="lastUpdatedData"
+          :use-list-checkbox="false"
+          :show-owner="true"
+          :show-category="true"
+          :is-box-selected-style="false"
+          @modelNmClick="modelNmClick"
+        />
+      </div>
+      <div class="main-content">
+        <div class="l-top-bar">
+          <span class="main-content-title">북마크 한 데이터</span>
+          <nuxt-link
+            :to="`/portal/my-page?fqn=${user.fullyQualifiedName}`"
+            class="button link-button-support"
+          >
+            <span class="button-title">모두 보기</span>
+          </nuxt-link>
+        </div>
+        <div class="no-result" v-if="isBookmarkDataNoInfo">
+          <div class="notification">
+            <svg-icon class="notification-icon" name="info"></svg-icon>
+            <p class="notification-detail">출력할 정보가 없습니다.</p>
+          </div>
+        </div>
+        <resource-box-list
+          v-else
+          :use-prv-btn="false"
+          :data-list="bookmarkData"
           :use-list-checkbox="false"
           :show-owner="true"
           :show-category="true"
