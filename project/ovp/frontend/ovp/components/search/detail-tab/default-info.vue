@@ -20,7 +20,7 @@
         </tr>
         <tr>
           <th>확장자</th>
-          <td>{{ defaultInfo.modelInfo.model.ext.toUpperCase() }}</td>
+          <td>{{ defaultInfo.modelInfo.model.ext?.toUpperCase() }}</td>
         </tr>
       </template>
       <tr>
@@ -87,7 +87,7 @@
             class="editable-group"
             v-show="!user.admin && dataModel.owner?.id !== user.id"
           >
-            <template v-if="dataModel.terms.length > 0">
+            <template v-if="dataModel.terms?.length > 0">
               <div
                 class="tag tag-primary tag-sm"
                 v-for="term in dataModel.terms"
@@ -106,7 +106,7 @@
             v-if="!editTermsMode"
             v-show="dataModel.owner?.id === user.id || user.admin"
           >
-            <template v-if="dataModel.terms.length > 0">
+            <template v-if="dataModel.terms?.length > 0">
               <div
                 class="tag tag-primary tag-sm"
                 v-for="term in dataModel.terms"

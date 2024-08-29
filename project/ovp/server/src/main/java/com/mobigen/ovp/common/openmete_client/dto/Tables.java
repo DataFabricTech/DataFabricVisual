@@ -12,6 +12,7 @@ public class Tables {
     String displayName;
     String description;
     Owner owner;
+    String serviceType;
     List<Followers> followers;
     Votes votes;
     List<Columns> columns;
