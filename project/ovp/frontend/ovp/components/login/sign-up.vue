@@ -206,24 +206,24 @@ const validateForm = () => {
 };
 
 const validateName = () => {
-  errors.name = form.name ? "" : "사용자 이름를 입력하세요.";
+  errors.name = form.name ? "" : $constants.LOGIN.NAME.INPUT_ERROR_MSG;
   return !errors.name;
 };
 
 const validateEmail = () => {
-  errors.email = form.email ? "" : "사용자 이메일을 입력하세요.";
+  errors.email = form.email ? "" : $constants.LOGIN.EMAIL.INPUT_ERROR_MSG;
   if (errors.email) return false;
 
   errors.email = $constants.LOGIN.EMAIL.REGEX.test(form.email)
     ? ""
-    : "이메일이 유효하지 않습니다.";
+    : $constants.LOGIN.EMAIL.REGEX_ERROR_MSG;
   return !errors.email;
 };
 
 const isDuplicateEmail = async () => {
   const result = await store.checkDuplicateEmail({ email: form.email });
   const isDuplicate = result.data;
-  errors.email = isDuplicate ? "이미 사용중인 이메일 입니다." : "";
+  errors.email = isDuplicate ? $constants.LOGIN.EMAIL.DUPLICATE_ERROR_MSG : "";
   return isDuplicate;
 };
 

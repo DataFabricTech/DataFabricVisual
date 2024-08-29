@@ -104,6 +104,7 @@
 import _ from "lodash";
 import { loginStore } from "@/store/login/index";
 import { useRouter } from "vue-router";
+import $constants from "~/utils/constant";
 
 const store = loginStore();
 const { isloginSuccess, errorMessage } = storeToRefs(store);
@@ -132,13 +133,13 @@ const login = async () => {
 
   if (_.isEmpty(id)) {
     isErrorEmailOrId.value = true;
-    emailOrIdErrorMsg.value = "사용자 아이디를 입력하세요.";
+    emailOrIdErrorMsg.value = $constants.LOGIN.ID.INPUT_ERROR_MSG;
     return;
   }
 
   if (_.isEmpty(password)) {
     isErrorPassword.value = true;
-    passwordErrorMsg.value = "사용자 비밀번호를 입력하세요.";
+    passwordErrorMsg.value = $constants.LOGIN.PASSWORD.INPUT_ERROR_MSG;
     return;
   }
 
