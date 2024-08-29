@@ -13,13 +13,12 @@
     :top="410"
     :lockScroll="false"
     swipeToClose="none"
+    @open="onOpened"
     @cancel="onCancel"
     @confirm="onConfirm"
     :is-disabled-confirm-btn="isDisabledSaveButton"
   >
     <template v-slot:body>
-      <!--      TODO: [개발] 현재 내 카테고리(selectedCategoryId)가 비활성화 상태로 보여져야 함-->
-      <!--      TODO: [개발] 변경 시 카테고리 화면의 트리도 함께 이동함-->
       <tree-vue
         :items="categories"
         :isCheckable="false"
@@ -28,6 +27,10 @@
         :show-open-all-btn="true"
         :show-close-all-btn="true"
         :use-draggable="false"
+        :selected-ids="[selectedNodeId]"
+        :disabled-ids="[selectedNodeId]"
+        :use-fir-select="false"
+        comp-id="modalTreeComponent"
         mode="view"
         @onItemSelected="onCategoryNodeClick"
       />
@@ -42,6 +45,7 @@ import { useGovernCategoryStore } from "~/store/governance/Category";
 import { storeToRefs } from "pinia";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 import { ref } from "vue";
+import _ from "lodash";
 
 const categoryStore = useGovernCategoryStore();
 const { patchCategoryTagAPI, setModelIdList, getModelList } = categoryStore;
@@ -61,6 +65,8 @@ const props = defineProps({
   },
 });
 const tagIdForCategoryChange = ref("");
+const selectedNodeId = ref("");
+
 const emit = defineEmits<{
   (e: "close-category-change-modal"): void;
 }>();
@@ -103,6 +109,9 @@ const onConfirm = async () => {
   setModelIdList();
 
   emit("close-category-change-modal");
+};
+const onOpened = () => {
+  selectedNodeId.value = _.cloneDeep(selectedCategoryId.value);
 };
 
 const onCategoryNodeClick = (node: TreeViewItem) => {
