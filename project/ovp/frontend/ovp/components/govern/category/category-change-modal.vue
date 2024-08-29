@@ -15,8 +15,11 @@
     swipeToClose="none"
     @cancel="onCancel"
     @confirm="onConfirm"
+    :is-disabled-confirm-btn="isDisabledSaveButton"
   >
     <template v-slot:body>
+      <!--      TODO: [개발] 현재 내 카테고리(selectedCategoryId)가 비활성화 상태로 보여져야 함-->
+      <!--      TODO: [개발] 변경 시 카테고리 화면의 트리도 함께 이동함-->
       <tree-vue
         :items="categories"
         :isCheckable="false"
@@ -37,31 +40,75 @@ import Modal from "@extends/modal/Modal.vue";
 import TreeVue from "@extends/tree/Tree.vue";
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import { storeToRefs } from "pinia";
+import type { TreeViewItem } from "@extends/tree/TreeProps";
+import { ref } from "vue";
 
 const categoryStore = useGovernCategoryStore();
+const { patchCategoryTagAPI, setModelIdList, getModelList } = categoryStore;
+const {
+  categories,
+  selectedModelList,
+  modelList,
+  lastChildIdList,
+  selectedCategoryId,
+} = storeToRefs(categoryStore);
 
-const { categories, selectedModelList } = storeToRefs(categoryStore);
-
+const isDisabledSaveButton = ref(false);
 const props = defineProps({
   modalId: {
     type: String,
     required: true,
   },
 });
+const tagIdForCategoryChange = ref("");
 const emit = defineEmits<{
   (e: "close-category-change-modal"): void;
 }>();
+
 const onCancel = () => {
   emit("close-category-change-modal");
 };
 
 const onConfirm = async () => {
+  const storageList = ref([]);
+  const tableList = ref([]);
+
+  for (const modelItem of modelList.value) {
+    for (const selectedItem of selectedModelList.value) {
+      if (modelItem.id === selectedItem) {
+        modelItem.type === "table"
+          ? tableList.value.push(selectedItem)
+          : storageList.value.push(selectedItem);
+      }
+    }
+  }
+
+  if (storageList.value.length > 0) {
+    await patchCategoryTagAPI(
+      tagIdForCategoryChange.value,
+      "storage",
+      storageList.value,
+    );
+  }
+
+  if (tableList.value.length > 0) {
+    await patchCategoryTagAPI(
+      tagIdForCategoryChange.value,
+      "table",
+      tableList.value,
+    );
+  }
+
+  await getModelList();
+  setModelIdList();
+
   emit("close-category-change-modal");
 };
 
-const onCategoryNodeClick = () => {
-  // TODO: [API 개발] 모델 리스트 삭제/변경 API 수정
-  // NOTE: 변경하려고 하는 카테고리의 tag 정보를, 내가 선택한 모델 리스트 쿼리에 저장한다.
+const onCategoryNodeClick = (node: TreeViewItem) => {
+  const checkAddLasChild = !lastChildIdList.value.includes(node.id);
+  isDisabledSaveButton.value = checkAddLasChild;
+  tagIdForCategoryChange.value = node.tagId;
 };
 </script>
 

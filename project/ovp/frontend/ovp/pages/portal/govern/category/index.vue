@@ -231,11 +231,13 @@ const {
   getFilters,
   changeTab,
   setEmptyFilter,
+  setModelIdList,
 } = categoryStore;
 const {
   selectedModelList,
   categories,
   modelList,
+  modelIdList,
   isCategoriesNoData,
   previewData,
   isBoxSelectedStyle,
@@ -258,7 +260,7 @@ const CATEGORY_CHANGE_MODAL_ID = "category-change-modal";
 const DATA_MODEL_ADD_MODAL_ID = "data-modal-add-modal";
 
 const loader = ref<HTMLElement | null>(null);
-const modelIdList = ref([]);
+
 const isDescEditMode = ref(false);
 const isTitleEditMode = ref(false);
 const isShowPreview = ref<boolean>(false);
@@ -410,13 +412,6 @@ const allModelList = computed({
   },
 });
 
-const setModelIdList = () => {
-  modelIdList.value = [];
-  for (const element of modelList.value) {
-    modelIdList.value.push(element.id);
-  }
-};
-
 const searchInputValue = ref("");
 const updateSearchInputValue = (newValue: string) => {
   searchInputValue.value = newValue;
@@ -547,6 +542,10 @@ const showCategoryAddModal = () => {
 };
 
 const showCategoryChangeModal = () => {
+  if (selectedModelList.value.length === 0) {
+    alert(`데이터모델을 선택해주세요`);
+    return;
+  }
   openCategoryChangeModal();
 };
 

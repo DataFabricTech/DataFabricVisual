@@ -51,6 +51,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const categoriesId = ref("");
   const isCategoriesNoData = ref(false);
   const modelList: Ref<any[]> = ref([]);
+  const modelIdList = ref([]);
   const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
   const categoryAddName = ref<string>("");
   const categoryAddDesc = ref<string>("");
@@ -192,6 +193,12 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     }
     const data = await getModelByCategoryIdAPI(selectedNode, value);
     modelList.value = data === null ? [] : data;
+  };
+  const setModelIdList = () => {
+    modelIdList.value = [];
+    for (const element of modelList.value) {
+      modelIdList.value.push(element.id);
+    }
   };
   const setSelectedNode = (node: any) => {
     selectedNode = node;
@@ -354,18 +361,27 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     await resetReloadList();
   };
 
-  const getModelItemAPI = async (id: string) => {
-    await $api(`api/category/${id}`, {
+  const patchCategoryTagAPI = async (
+    tagId: string,
+    type: string,
+    list: object[],
+  ) => {
+    const body: any = list;
+
+    return $api(`/api/category/${tagId}/tag?type=${type}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json-patch+json",
       },
-      body: {
-        tagId: selectedCategoryTagId.value,
-        type: currentTab.value,
-        list: selectedDataModelList.value,
-      },
+      body: body,
     });
+  };
+  const patchModelAddItemAPI = async () => {
+    return patchCategoryTagAPI(
+      selectedCategoryTagId.value,
+      currentTab.value,
+      selectedDataModelList.value,
+    );
   };
 
   return {
@@ -374,6 +390,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     categoriesParentId,
     categoriesId,
     modelList,
+    modelIdList,
     isCategoriesNoData,
     previewData,
     isBoxSelectedStyle,
@@ -401,7 +418,8 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     dupliSelectedTitleNodeValue,
     lastChildIdList,
     resetAddModalStatus,
-    getModelItemAPI,
+    patchModelAddItemAPI,
+    patchCategoryTagAPI,
     getCategories,
     addModelList,
     getModelList,
@@ -421,5 +439,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     changeTab,
     updateIntersectionHandler,
     setEmptyFilter,
+    setModelIdList,
   };
 });
