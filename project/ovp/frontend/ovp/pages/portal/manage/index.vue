@@ -2,6 +2,7 @@
   <div class="wrap">
     <h2 class="hidden-text">manage</h2>
     <div class="section-contents">
+      <h3 class="title">관리</h3>
       <ul class="card">
         <li class="card-item">
           <nuxt-link to="/portal/manage/service" title="서비스 관리">

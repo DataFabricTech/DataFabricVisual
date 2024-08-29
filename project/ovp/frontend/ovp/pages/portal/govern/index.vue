@@ -2,6 +2,7 @@
   <div class="wrap">
     <h2 class="hidden-text">거버넌스</h2>
     <div class="section-contents">
+      <h3 class="title">거버넌스</h3>
       <ul class="card">
         <li class="card-item">
           <a href="/portal/govern/category" title="카테고리">
@@ -41,5 +42,6 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+</script>
 <style scoped></style>
