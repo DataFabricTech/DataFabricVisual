@@ -4,6 +4,7 @@
     <editable-group
       compKey="repositoryDescription"
       :editable="true"
+      :parent-edit-mode="isDescEditable"
       @editCancel="editCancel"
       @editDone="editDone"
       @editIcon="editIconClick"
@@ -55,7 +56,8 @@ import agGrid from "@extends/grid/Grid.vue";
 import LinkDetailComponent from "./linkDetailComponent.vue";
 const serviceStore = useServiceStore();
 
-const { serviceData, DBServiceListData } = storeToRefs(serviceStore);
+const { serviceData, DBServiceListData, isDescEditable } =
+  storeToRefs(serviceStore);
 const { updateRepositoryDescriptionAPI } = serviceStore;
 
 interface RepositoryDescription {
@@ -103,6 +105,7 @@ const createJsonPatch = (oldData: any, newData: any): JsonPatchOperation[] => {
 // 수정 버튼 클릭 시 호출
 const editIconClick = () => {
   defaultData = _.cloneDeep(newData.value);
+  isDescEditable.value = true;
 };
 
 // 취소 버튼 클릭 시 호출
