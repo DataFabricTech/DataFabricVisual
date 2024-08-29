@@ -73,11 +73,11 @@
             }}
           </p>
         </td>
-        <td>
+        <td class="align-center">
           <div :class="badgeClass(ingestion)">
-            <tooltip position="bottom">
+            <tooltip position="bottom" style="text-align: center; width: 100%">
               <template v-slot:text>
-                <p class="badge-text">
+                <p class="badge-text text-center">
                   {{
                     ingestion && ingestion.pipelineState
                       ? statusStr(ingestion.pipelineState)
@@ -227,17 +227,17 @@ const scheduleIntervalTooltip = (scheduleInterval: string): string => {
   }
 };
 
-const pipelineStateTooltip = (ingestion: Ingestion) => {
+const pipelineStateTooltip = (ingestion: Ingestion): string => {
   let tooltipMsg = "";
   const { timestamp, startDate, endDate } = ingestion;
   if (timestamp) {
-    tooltipMsg += `Execution Date: ${formatDate(ingestion.timestamp)} <br>`;
+    tooltipMsg += `Execution Date: ${formatDate(timestamp)} <br>`;
   }
   if (startDate) {
-    tooltipMsg += `Start Date: ${formatDate(ingestion.startDate)} <br>`;
+    tooltipMsg += `Start Date: ${formatDate(startDate)} <br>`;
   }
   if (endDate) {
-    tooltipMsg += `End Date: ${formatDate(ingestion.endDate)}`;
+    tooltipMsg += `End Date: ${formatDate(endDate)}`;
   }
   return tooltipMsg;
 };

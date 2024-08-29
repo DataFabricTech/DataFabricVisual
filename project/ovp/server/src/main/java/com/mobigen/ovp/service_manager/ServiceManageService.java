@@ -1,6 +1,7 @@
 package com.mobigen.ovp.service_manager;
 
 import com.mobigen.ovp.common.openmete_client.AutomationsClient;
+import com.mobigen.ovp.common.openmete_client.ClassificationClient;
 import com.mobigen.ovp.common.openmete_client.ContainersClient;
 import com.mobigen.ovp.common.openmete_client.DatabaseClient;
 import com.mobigen.ovp.common.openmete_client.DatabaseSchemasClient;
@@ -8,11 +9,14 @@ import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.ServicesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Ingestion;
+import com.mobigen.ovp.common.openmete_client.dto.Tag;
+import com.mobigen.ovp.glossary.client.GlossaryClient;
+import com.mobigen.ovp.glossary.client.dto.TermDto;
+import com.mobigen.ovp.search_detail.dto.request.DataModelDetailTagDto;
 import com.mobigen.ovp.service_manager.client.response.IngestionResponse;
 import com.mobigen.ovp.service_manager.client.response.ServiceCollectionLogResponse;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
 import com.mobigen.ovp.search.SearchService;
-import com.mobigen.ovp.service_manager.client.response.ServiceCollectionLogResponse;
 import com.mobigen.ovp.service_manager.client.response.ServiceResponse;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -38,6 +43,8 @@ import java.util.stream.Collectors;
 public class ServiceManageService {
     private static final String DATA_BASE = "database";
     private static final String STORAGE = "storage";
+    private static final String FIELDS = "owner,tags,dataProducts,domain";
+    private static final String INCLUDE = "all";
 
     private final ServicesClient servicesClient;
     private final SearchClient searchClient;
@@ -46,6 +53,8 @@ public class ServiceManageService {
     private final ContainersClient containersClient;
     private final DatabaseClient databaseClient;
     private final DatabaseSchemasClient databaseSchemasClient;
+    private final ClassificationClient classificationClient;
+    private final GlossaryClient glossaryClient;
 
     /**
      * 서비스 리스트
@@ -64,6 +73,23 @@ public class ServiceManageService {
             serviceResponses.add(new ServiceResponse(service, STORAGE));
         }
         return serviceResponses;
+    }
+
+    /**
+     * 서비스 조회
+     * @param type
+     * @param name
+     * @return
+     */
+    public Services getService(String type, String name) throws Exception {
+        switch (type) {
+            case DATA_BASE:
+                return servicesClient.getServiceDataBase(name, FIELDS, INCLUDE);
+            case STORAGE:
+                return servicesClient.getServiceStorage(name, FIELDS, INCLUDE);
+            default:
+                throw new Exception();
+        }
     }
 
     /**
@@ -92,18 +118,141 @@ public class ServiceManageService {
     }
 
     /**
-     * 서비스 수정
+     * 서비스 수정 - DataBase
      * @param id
      * @param param
      * @return
      */
-    public ServiceResponse patchService(UUID id, List<JsonPatchOperation> param) throws Exception {
-        ResponseEntity<Services> result = servicesClient.patchServie(id, param);
+    public ServiceResponse patchServiceDataBase(UUID id, List<JsonPatchOperation> param) throws Exception {
+        ResponseEntity<Services> result = servicesClient.patchServieDataBase(id, param);
         if (result.getStatusCode() == HttpStatus.OK) {
             return new ServiceResponse(result);
         } else {
             throw new Exception();
         }
+    }
+
+    /**
+     * 서비스 수정 - Storage
+     * @param id
+     * @param param
+     * @return
+     */
+    public ServiceResponse patchServiceStorage(UUID id, List<JsonPatchOperation> param) throws Exception {
+        ResponseEntity<Services> result = servicesClient.patchServieStorage(id, param);
+        if (result.getStatusCode() == HttpStatus.OK) {
+            return new ServiceResponse(result);
+        } else {
+            throw new Exception();
+        }
+    }
+
+    public Object patchTagService(UUID id, String name, String type, String target, List<Map<String, Object>> body) throws Exception {
+        Services service = getService(type, name);
+
+        List<Tag> tags = service.getTags();
+        List<JsonPatchOperation> removeBody = makeRemoveBody(tags.size());
+        List<JsonPatchOperation> addBody = makeAddBody(tags, body, target);
+
+        ServiceResponse result;
+        switch (type) {
+            case DATA_BASE:
+                patchServiceDataBase(id, removeBody);
+                result = patchServiceDataBase(id, addBody);
+                break;
+            case STORAGE:
+                patchServiceStorage(id, removeBody);
+                result = patchServiceStorage(id, addBody);
+                break;
+            default:
+                throw new Exception();
+        }
+        return result;
+    }
+
+    private List<JsonPatchOperation> makeRemoveBody(int tagLength) {
+        List<JsonPatchOperation> removedBody = new ArrayList<>();
+        for (int i = (tagLength - 1); i >= 0; i--) {
+            JsonPatchOperation jsonPatchOperation = new JsonPatchOperation();
+            jsonPatchOperation.setOp("remove");
+            jsonPatchOperation.setPath(new StringBuffer("/tags/").append(i).toString());
+            removedBody.add(jsonPatchOperation);
+        }
+
+        return removedBody;
+    }
+
+    private List<JsonPatchOperation> makeAddBody(List<Tag> tags, List<Map<String, Object>> body, String target) {
+        List<JsonPatchOperation> addedBody = new ArrayList<>();
+        List<DataModelDetailTagDto> bodyList = new ArrayList<>();
+        List<DataModelDetailTagDto> tagList = new ArrayList<>();
+
+        // 데이터 모델의 태크 목록에서 카테고리, 태그, 용어를 분리해서 저장.
+        List<DataModelDetailTagDto> glossaryList = tags.stream()
+                .filter(tag -> !tag.getTagFQN().contains("ovp_category") && "Glossary".equals(tag.getSource()))
+                .map(tag -> new DataModelDetailTagDto(tag))
+                .collect(Collectors.toList());
+
+        List<DataModelDetailTagDto> classificationList = tags.stream()
+                .filter(tag -> !tag.getTagFQN().contains("ovp_category") && "Classification".equals(tag.getSource()))
+                .map(tag -> new DataModelDetailTagDto(tag))
+                .collect(Collectors.toList());
+
+
+        // { op, path, value }
+        // 클라이언트로 받은 변경해야 할 데이터(태그, 카테고라, 용어)를 각각 단일 조회 후에 value 를 셋팅한다.
+        if ("Classification".equals(target)) {
+            for (Map<String, Object> item : body) {
+                String key = "id";
+
+                Map<String, Object> tempTag = classificationClient.getTag(item.get(key).toString());
+
+                DataModelDetailTagDto tag = new DataModelDetailTagDto();
+                tag.setName(tempTag.get("name").toString());
+                tag.setDisplayName(tempTag.get("displayName").toString());
+                tag.setDescription(tempTag.get("description").toString());
+                tag.setTagFQN(tempTag.get("fullyQualifiedName").toString());
+                tag.setSource(target);
+                tag.setLabelType("Manual");
+                tag.setStyle((Map<String, Object>) tempTag.get("style"));
+
+                tagList.add(tag);
+            }
+        } else if ("Glossary".equals(target)) {
+            for (Map<String, Object> item : body) {
+                TermDto tempTerm = glossaryClient.getGlossaryTermsById(item.get("id").toString(), "all");
+
+                DataModelDetailTagDto tag = new DataModelDetailTagDto();
+                tag.setName(tempTerm.getName());
+                tag.setDisplayName(tempTerm.getDisplayName());
+                tag.setDescription(tempTerm.getDescription());
+                tag.setTagFQN(tempTerm.getFullyQualifiedName());
+                tag.setSource(target);
+                tag.setLabelType("Manual");
+                tag.setStyle(tempTerm.getStyle());
+
+                tagList.add(tag);
+            }
+        }
+
+        // value가 셋팅이 완료 되면 모든 데이터(카테고리, 태그, 용어)를 하나로 합친다.
+         if ("Classification".equals(target)) {
+            bodyList = Stream.concat(glossaryList.stream(), tagList.stream()).collect(Collectors.toList());
+        } else if ("Glossary".equals(target)) {
+            bodyList = Stream.concat(tagList.stream(), classificationList.stream()).collect(Collectors.toList());
+        }
+
+        // 모두 합쳐진 value를 가지고 patch할 body 데이터를 만든다.
+        int bodySize = bodyList.size();
+        for (int i = 0; i < bodySize; i++) {
+            JsonPatchOperation jsonPatchOperation = new JsonPatchOperation();
+            jsonPatchOperation.setOp("add");
+            jsonPatchOperation.setPath(new StringBuffer("/tags/").append(i).toString());
+            jsonPatchOperation.setValue(bodyList.get(i));
+            addedBody.add(jsonPatchOperation);
+        }
+
+        return addedBody;
     }
 
     /**

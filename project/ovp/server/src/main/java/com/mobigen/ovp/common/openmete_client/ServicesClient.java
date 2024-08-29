@@ -3,7 +3,6 @@ package com.mobigen.ovp.common.openmete_client;
 import com.mobigen.ovp.common.openmete_client.dto.Ingestion;
 import com.mobigen.ovp.common.openmete_client.dto.Log;
 import com.mobigen.ovp.common.openmete_client.dto.Base;
-import com.mobigen.ovp.common.openmete_client.dto.Log;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +31,26 @@ public interface ServicesClient {
     Base<Services> getServices(@RequestParam String fields, @RequestParam int limit);
 
     /**
+     * 서비스 조회 - 데이터 베이스
+     * @param name
+     * @param fields
+     * @param include
+     * @return
+     */
+    @GetMapping("/databaseServices/name/{name}")
+    Services getServiceDataBase(@PathVariable String name, @RequestParam String fields, @RequestParam String include);
+
+    /**
+     * 서비스 조회 - 스토리지
+     * @param name
+     * @param fields
+     * @param include
+     * @return
+     */
+    @GetMapping("/storageServices/name/{name}")
+    Services getServiceStorage(@PathVariable String name, @RequestParam String fields, @RequestParam String include);
+
+    /**
      * 서비스 리스트 - 스토리지
      *
      * @return
@@ -41,13 +60,21 @@ public interface ServicesClient {
                                      @RequestParam int limit);
 
     /**
-     * 서비스 수정
+     * 서비스 수정 - 데이터 베이스
      * @param id
      * @param param
-     * @return
-     */
+     **/
     @PatchMapping(value = "/databaseServices/{id}", consumes = "application/json-patch+json")
-    ResponseEntity<Services> patchServie(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param);
+    ResponseEntity<Services> patchServieDataBase(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param);
+
+    /**
+     * 서비스 수정 - 스토리지
+     * @param id
+     * @param param
+     */
+    @PatchMapping(value = "/storageServices/{id}", consumes = "application/json-patch+json")
+    ResponseEntity<Services> patchServieStorage(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param);
+
 
     /**
      * 서비스 삭제

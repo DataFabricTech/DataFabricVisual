@@ -58,8 +58,26 @@ public class ServiceManageController {
      */
     @ResponseJsonResult
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
-    public Object patchService(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param) throws Exception {
-        return serviceManageService.patchService(id, param);
+    public Object patchService(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param, @RequestParam String type) throws Exception {
+        if(type.equals("database")) {
+            return serviceManageService.patchServiceDataBase(id, param);
+        } else {
+            return serviceManageService.patchServiceStorage(id, param);
+        }
+    }
+
+    /**
+     * 서비스 태그 수정
+     * @param id
+     * @param type
+     * @param target
+     * @param body
+     * @return
+     */
+    @ResponseJsonResult
+    @PatchMapping("/{id}/tag")
+    public Object patchTagService(@PathVariable UUID id, @RequestParam String name, @RequestParam String type, @RequestParam String target, @RequestBody List<Map<String, Object>> body) throws Exception {
+        return serviceManageService.patchTagService(id, name, type, target, body);
     }
 
     /**

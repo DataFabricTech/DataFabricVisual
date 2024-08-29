@@ -7,11 +7,14 @@ import {
   ConnectionStatus,
   ServiceIds,
 } from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
+import { useDataModelDetailStore } from "@/store/search/detail";
 import $constants from "~/utils/constant";
+import _ from "lodash";
 
 export const useServiceStore = defineStore("service", () => {
   const { $api } = useNuxtApp();
-
+  const dataModelDetailStore = useDataModelDetailStore();
+  const { tagList, termList } = storeToRefs(dataModelDetailStore);
   const tab = ref<string>("repository");
 
   const service = reactive<Service>(<Service>{});
@@ -104,6 +107,35 @@ export const useServiceStore = defineStore("service", () => {
     });
   }
 
+  async function changeTag(target: string, data: any) {
+    let body: any[] = [];
+
+    if (_.isEmpty(data)) {
+      body = [];
+    } else if (target === "Classification") {
+      body = _.filter(tagList.value, (tag) => {
+        return data.includes(tag.tagFQN);
+      });
+    } else if (target === "Glossary") {
+      body = _.filter(termList.value, (tag) => {
+        return data.includes(tag.fullyQualifiedName);
+      });
+    }
+
+    const res = await $api(
+      `/api/service-manage/${service.id}/tag?name=${service.name}&type=${service.type}&target=${target}`,
+      {
+        method: "patch",
+        body: body,
+      },
+    );
+    if (res.data !== null) {
+      changeCurrentService(res.data);
+    } else {
+      alert(res.errorMessage);
+    }
+  }
+
   /**
    * 서비스 수정
    * @param id
@@ -113,7 +145,7 @@ export const useServiceStore = defineStore("service", () => {
     id: string,
     body: JsonPatchOperation[],
   ): Promise<void> {
-    const res = await $api(`/api/service-manage/${id}`, {
+    const res = await $api(`/api/service-manage/${id}?type=${service.type}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json-patch+json",
@@ -401,6 +433,7 @@ export const useServiceStore = defineStore("service", () => {
     ingestionList,
     editInfo,
     changeTab,
+    changeTag,
 
     getServiceList,
     searchServiceList,

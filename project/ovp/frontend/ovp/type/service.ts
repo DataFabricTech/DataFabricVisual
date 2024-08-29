@@ -4,7 +4,7 @@ export interface Service {
   name: string;
   owner: Owner;
   tags: object[];
-  relatedTerms: object[];
+  terms: object[];
   serviceType: string;
   description: string;
   // database | storage
