@@ -2,7 +2,7 @@
   <div class="section-top-bar">
     <data-filter :data="filters"></data-filter>
   </div>
-  <div class="section-top-bar section-top-bar-tab">
+  <div class="section-contents pt-2">
     <Tab
       class="tab-line"
       :data="tabOptions"
@@ -14,8 +14,6 @@
       @change="changeTab"
     >
     </Tab>
-  </div>
-  <div class="section-contents overflow-auto">
     <top-bar></top-bar>
     <div class="l-split mt-3">
       <div class="data-page" style="position: relative">
