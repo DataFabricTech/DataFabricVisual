@@ -122,6 +122,7 @@
                 :label-text="'데이터 모델 검색'"
                 @update:value="updateSearchInputValue"
                 @on-input="onInput"
+                @reset="getAllModelList"
               ></search-input>
               <div class="h-group w-full">
                 <div class="checkbox">
@@ -296,15 +297,20 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   dupliSelectedTitleNodeValue.value = node.name;
   selectedCategoryId.value = node.id;
   selectedCategoryTagId.value = <string>node.tagId;
-
   checkModalButton(node.id);
-
   setScrollOptions(0);
   // 선택한 노드정보 저장
   setSelectedNode(node);
   // 선택한 노드 기준 모델 목록을 조회
   await getModelList();
   // 모든 모델 리스트 id 저장
+  setModelIdList();
+};
+
+const getAllModelList = async () => {
+  setScrollOptions(0);
+  setSelectedNode(selectedNodeCategory.value);
+  await getModelList();
   setModelIdList();
 };
 

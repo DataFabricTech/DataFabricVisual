@@ -30,6 +30,7 @@
           :label-text="'데이터 모델 검색'"
           @update:value="updateSearchInputValue"
           @on-input="onInput"
+          @reset="getAllDataModelList"
         ></search-input>
         <div class="filters">
           <data-filter :data="filters"></data-filter>
@@ -193,6 +194,11 @@ const updateSearchInputValue = (newValue: string) => {
 };
 const onInput = (value: string) => {
   setSearchKeyword(value);
+  resetReloadList();
+};
+
+const getAllDataModelList = () => {
+  setSearchKeyword("");
   resetReloadList();
 };
 
