@@ -118,10 +118,9 @@
               class="loader-simple loader-xs"
               v-show="currentLoading[ingestion.id]?.deploy"
             ></loading>
-            <!-- TODO : ingestion.id 가 fqn 값인지 확인 필요-->
             <button
               class="button button button-secondary-stroke"
-              @click="openEditModal(ingestion.id)"
+              @click="openEditModal(ingestion.fullyQualifiedName)"
             >
               편집
             </button>
