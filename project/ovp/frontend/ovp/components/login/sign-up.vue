@@ -76,16 +76,12 @@
                   >
                     <span class="hidden-text">비밀번호 보기 해제</span>
                     <svg-icon
-                      v-if="
-                        pwComposition.inputPasswordType.value === 'password'
+                      class="button-icon"
+                      :name="
+                        getPwdIconName({
+                          inputType: pwComposition.inputPasswordType.value,
+                        })
                       "
-                      class="button-icon"
-                      name="eye"
-                    ></svg-icon>
-                    <svg-icon
-                      v-else
-                      class="button-icon"
-                      name="eye-hide"
                     ></svg-icon>
                   </button>
                 </div>
@@ -121,17 +117,13 @@
                   >
                     <span class="hidden-text">지우기</span>
                     <svg-icon
-                      v-if="
-                        pwComposition.inputConfirmPasswordType.value ===
-                        'password'
+                      class="button-icon"
+                      :name="
+                        getPwdIconName({
+                          inputType:
+                            pwComposition.inputConfirmPasswordType.value,
+                        })
                       "
-                      class="button-icon"
-                      name="eye"
-                    ></svg-icon>
-                    <svg-icon
-                      v-else
-                      class="button-icon"
-                      name="eye-hide"
                     ></svg-icon>
                   </button>
                 </div>
@@ -169,9 +161,12 @@
 <script setup lang="ts">
 import { loginStore } from "@/store/login/index";
 import { useRouter } from "vue-router";
-import { PasswordComposition } from "~/components/login/PasswordComposition";
-import $constants from "~/utils/constant";
+import { PasswordComposition } from "@/components/login/PasswordComposition";
+import { useCommonUtils } from "@/composables/commonUtils";
+import $constants from "@/utils/constant";
+
 const pwComposition = PasswordComposition();
+const { getPwdIconName } = useCommonUtils();
 
 const form: {
   name: string;
@@ -214,24 +209,24 @@ const validateForm = () => {
 };
 
 const validateName = () => {
-  errors.name = form.name ? "" : "사용자 이름를 입력하세요.";
+  errors.name = form.name ? "" : $constants.LOGIN.NAME.INPUT_ERROR_MSG;
   return !errors.name;
 };
 
 const validateEmail = () => {
-  errors.email = form.email ? "" : "사용자 이메일을 입력하세요.";
+  errors.email = form.email ? "" : $constants.LOGIN.EMAIL.INPUT_ERROR_MSG;
   if (errors.email) return false;
 
   errors.email = $constants.LOGIN.EMAIL.REGEX.test(form.email)
     ? ""
-    : "이메일이 유효하지 않습니다.";
+    : $constants.LOGIN.EMAIL.REGEX_ERROR_MSG;
   return !errors.email;
 };
 
 const isDuplicateEmail = async () => {
   const result = await store.checkDuplicateEmail({ email: form.email });
   const isDuplicate = result.data;
-  errors.email = isDuplicate ? "이미 사용중인 이메일 입니다." : "";
+  errors.email = isDuplicate ? $constants.LOGIN.EMAIL.DUPLICATE_ERROR_MSG : "";
   return isDuplicate;
 };
 

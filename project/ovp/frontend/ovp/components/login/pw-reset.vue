@@ -22,11 +22,13 @@
           >
             <span class="hidden-text">비밀번호 보기 해제</span>
             <svg-icon
-              v-if="composition.inputPasswordType.value === 'password'"
               class="button-icon"
-              name="eye"
+              :name="
+                getPwdIconName({
+                  inputType: composition.inputPasswordType.value,
+                })
+              "
             ></svg-icon>
-            <svg-icon v-else class="button-icon" name="eye-hide"></svg-icon>
           </button>
         </div>
         <div
@@ -62,11 +64,13 @@
           >
             <span class="hidden-text">비밀번호 보기</span>
             <svg-icon
-              v-if="composition.inputConfirmPasswordType.value === 'password'"
               class="button-icon"
-              name="eye"
+              :name="
+                getPwdIconName({
+                  inputType: composition.inputConfirmPasswordType.value,
+                })
+              "
             ></svg-icon>
-            <svg-icon v-else class="button-icon" name="eye-hide"></svg-icon>
           </button>
         </div>
         <div
@@ -83,6 +87,10 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useCommonUtils } from "@/composables/commonUtils";
+
+const { getPwdIconName } = useCommonUtils();
+
 const props = defineProps({
   composition: {
     type: Object,

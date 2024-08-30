@@ -140,7 +140,11 @@
                       >
                       <svg-icon
                         class="button-icon"
-                        :name="isShowPwdStatus.password ? 'eye' : 'eye-hide'"
+                        :name="
+                          getPwdIconName({
+                            isVisible: isShowPwdStatus.password,
+                          })
+                        "
                       ></svg-icon>
                     </button>
                   </div>
@@ -185,7 +189,9 @@
                   >
                   <svg-icon
                     class="button-icon"
-                    :name="isShowPwdStatus.password ? 'eye' : 'eye-hide'"
+                    :name="
+                      getPwdIconName({ isVisible: isShowPwdStatus.password })
+                    "
                   ></svg-icon>
                 </button>
               </div>
@@ -229,7 +235,11 @@
                   >
                   <svg-icon
                     class="button-icon"
-                    :name="isShowPwdStatus.confirmPassword ? 'eye' : 'eye-hide'"
+                    :name="
+                      getPwdIconName({
+                        isVisible: isShowPwdStatus.confirmPassword,
+                      })
+                    "
                   ></svg-icon>
                 </button>
               </div>
@@ -266,12 +276,14 @@
 
 <script setup lang="ts">
 import { useUserStore } from "~/store/user/userStore";
+import { useCommonUtils } from "@/composables/commonUtils";
 import type { AddUser } from "~/type/user";
 import Modal from "@extends/modal/Modal.vue";
 
 import _ from "lodash";
-import $constants from "~/utils/constant";
+import $constants from "@/utils/constant";
 
+const { getPwdIconName } = useCommonUtils();
 const userStore = useUserStore();
 const { getRandomPwd, checkDuplicateEmail, checkDuplicateName, addUser } =
   userStore;

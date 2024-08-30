@@ -383,7 +383,7 @@ public class ServiceManageService {
     public Boolean checkDuplicatedNm(MultiValueMap<String, String> params) throws Exception {
         String index = params.getFirst("index");
 
-        String newIndex = index.toLowerCase().equals("minio") ? "container" : "table";
+        String newIndex = index.toLowerCase().equals("minio") ? "storage_service_search_index" : "database_service_search_index";
         params.set("index", newIndex);
 
         Object result = searchClient.getSearchList(params);
@@ -596,7 +596,8 @@ public class ServiceManageService {
         return serviceParam;
     }
 
-    private List<Map<String, Object>> processServiceList(List<Map<String, Object>> serviceList, Map<String, Object> serviceParam, boolean isDatabase) {
+    private List<Map<String, Object>> processServiceList(List<Map<String, Object>> serviceList,
+                                                         Map<String, Object> serviceParam, boolean isDatabase) {
         return serviceList.stream()
                 .map(client -> (String) client.get("fullyQualifiedName"))
                 .filter(this::isNotNullOrEmpty)
