@@ -89,7 +89,7 @@
       class="editable-group"
       v-show="!user.admin && newData.owner?.id !== user.id"
     >
-      <span class="editable-group-desc">
+      <span class="editable-group-desc" :title="props.dataObj.modelDesc">
         {{
           props.dataObj.modelDesc === "" ||
           props.dataObj.modelDesc === null ||
