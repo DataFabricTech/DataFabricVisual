@@ -159,7 +159,7 @@
     <div class="no-result max-h-40" v-if="isEmpty()">
       <div class="notification">
         <svg-icon class="notification-icon" name="info"></svg-icon>
-        <p class="notification-detail">데이터 리스트가 없습니다.</p>
+        <p class="notification-detail">수집 리스트가 없습니다.</p>
       </div>
     </div>
   </div>
