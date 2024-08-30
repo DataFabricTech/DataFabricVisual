@@ -2,7 +2,7 @@ package com.mobigen.ovp.service_manager.client.response;
 
 import com.mobigen.ovp.common.openmete_client.dto.Owner;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
-import com.mobigen.ovp.glossary.client.dto.common.Tag;
+import com.mobigen.ovp.common.openmete_client.dto.Tag;
 import lombok.Data;
 import org.springframework.http.ResponseEntity;
 
@@ -20,7 +20,7 @@ public class ServiceResponse {
     private String serviceType;
     private String description;
     private List<Map<String, Object>> tags;
-    private List<Map<String, Object>> relatedTerms;
+    private List<Map<String, Object>> terms;
     private Owner owner;
     private String type;
 
@@ -31,21 +31,21 @@ public class ServiceResponse {
         this.serviceType = service.getServiceType();
         this.description = service.getDescription();
         this.tags = new ArrayList<Map<String, Object>>();
-        this.relatedTerms = new ArrayList<Map<String, Object>>();
+        this.terms = new ArrayList<Map<String, Object>>();
 
         List<Tag> tags = service.getTags();
         if(tags != null) {
             for(Tag tag : tags) {
                 if ("Classification".equals(tag.getSource())) {
                     Map<String, Object> tagData = new HashMap<>();
-                    tagData.put("label", tag.getName());
+                    tagData.put("displayName", tag.getDisplayName());
                     tagData.put("tagFQN", tag.getTagFQN());
                     this.tags.add(tagData);
                 } else if ("Glossary".equals(tag.getSource())) {
                     Map<String, Object> termData = new HashMap<>();
-                    termData.put("label", tag.getName());
-                    termData.put("id", tag.getTagFQN());
-                    this.relatedTerms.add(termData);
+                    termData.put("displayName", tag.getDisplayName());
+                    termData.put("fullyQualifiedName", tag.getTagFQN());
+                    this.terms.add(termData);
                 }
             }
         }
@@ -60,21 +60,21 @@ public class ServiceResponse {
         this.serviceType = service.getBody().getServiceType();
         this.description = service.getBody().getDescription();
         this.tags = new ArrayList<Map<String, Object>>();
-        this.relatedTerms = new ArrayList<Map<String, Object>>();
+        this.terms = new ArrayList<Map<String, Object>>();
 
         List<Tag> tags = service.getBody().getTags();
         if(tags != null) {
             for(Tag tag : tags) {
                 if ("Classification".equals(tag.getSource())) {
                     Map<String, Object> tagData = new HashMap<>();
-                    tagData.put("label", tag.getName());
+                    tagData.put("displayName", tag.getDisplayName());
                     tagData.put("tagFQN", tag.getTagFQN());
                     this.tags.add(tagData);
                 } else if ("Glossary".equals(tag.getSource())) {
                     Map<String, Object> termData = new HashMap<>();
-                    termData.put("label", tag.getName());
-                    termData.put("id", tag.getTagFQN());
-                    this.relatedTerms.add(termData);
+                    termData.put("displayName", tag.getDisplayName());
+                    termData.put("fullyQualifiedName", tag.getTagFQN());
+                    this.terms.add(termData);
                 }
             }
         }
@@ -90,21 +90,21 @@ public class ServiceResponse {
         this.serviceType = (String) map.get("serviceType");
         this.description = (String) map.get("description");
         this.tags = new ArrayList<Map<String, Object>>();
-        this.relatedTerms = new ArrayList<Map<String, Object>>();
+        this.terms = new ArrayList<Map<String, Object>>();
 
         List<Map<String, Object>> tags = (List<Map<String, Object>>) map.get("tags");
         if(tags != null) {
             for(Map<String, Object> tag : tags) {
                 if ("Classification".equals(tag.get("source"))) {
                     Map<String, Object> tagData = new HashMap<>();
-                    tagData.put("label", tag.get("name"));
+                    tagData.put("displayName", tag.get("displayName"));
                     tagData.put("tagFQN", tag.get("tagFQN"));
                     this.tags.add(tagData);
                 } else if ("Glossary".equals(tag.get("source"))) {
                     Map<String, Object> termData = new HashMap<>();
-                    termData.put("label", tag.get("name"));
-                    termData.put("id", tag.get("tagFQN"));
-                    this.relatedTerms.add(termData);
+                    termData.put("displayName", tag.get("displayName"));
+                    termData.put("fullyQualifiedName", tag.get("fullyQualifiedName"));
+                    this.terms.add(termData);
                 }
             }
         }

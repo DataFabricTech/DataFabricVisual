@@ -7,14 +7,9 @@ import {
   ConnectionStatus,
   ServiceIds,
 } from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
+import { useDataModelDetailStore } from "@/store/search/detail";
 import $constants from "~/utils/constant";
 import _ from "lodash";
-
-interface JsonPatchOperation {
-  op: string;
-  path: string;
-  value: any;
-}
 
 interface ServiceData {
   description: string;
@@ -31,7 +26,8 @@ interface DBServiceListData {
 
 export const useServiceStore = defineStore("service", () => {
   const { $api } = useNuxtApp();
-
+  const dataModelDetailStore = useDataModelDetailStore();
+  const { tagList, termList } = storeToRefs(dataModelDetailStore);
   const tab = ref<string>("repository");
 
   const service = reactive<Service>(<Service>{});
@@ -218,6 +214,35 @@ export const useServiceStore = defineStore("service", () => {
     });
   }
 
+  async function changeTag(target: string, data: any) {
+    let body: any[] = [];
+
+    if (_.isEmpty(data)) {
+      body = [];
+    } else if (target === "Classification") {
+      body = _.filter(tagList.value, (tag) => {
+        return data.includes(tag.tagFQN);
+      });
+    } else if (target === "Glossary") {
+      body = _.filter(termList.value, (tag) => {
+        return data.includes(tag.fullyQualifiedName);
+      });
+    }
+
+    const res = await $api(
+      `/api/service-manage/${service.id}/tag?name=${service.name}&type=${service.type}&target=${target}`,
+      {
+        method: "patch",
+        body: body,
+      },
+    );
+    if (res.data !== null) {
+      changeCurrentService(res.data);
+    } else {
+      alert(res.errorMessage);
+    }
+  }
+
   /**
    * 서비스 수정
    * @param id
@@ -227,7 +252,7 @@ export const useServiceStore = defineStore("service", () => {
     id: string,
     body: JsonPatchOperation[],
   ): Promise<void> {
-    const res = await $api(`/api/service-manage/${id}`, {
+    const res = await $api(`/api/service-manage/${id}?type=${service.type}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json-patch+json",
@@ -269,7 +294,7 @@ export const useServiceStore = defineStore("service", () => {
     item: MenuSearchItemImpl,
   ): JsonPatchOperation[] {
     const operations: JsonPatchOperation[] = [];
-    const foundUser = userList.find((user: Owner) => user.id === item.id);
+    const foundUser: any = userList.find((user: Owner) => user.id === item.id);
 
     const isEmpty = item.id === undefined;
     if (service.owner.id === undefined) {
@@ -309,11 +334,74 @@ export const useServiceStore = defineStore("service", () => {
   /**
    * 수집 탭
    */
-  async function getIngestionList() {
-    const res = await $api(`/api/service-manage/ingestion/list`);
+  async function getIngestionList(service: string) {
+    const res = await $api(
+      `/api/service-manage/ingestion/list?service=${service}`,
+    );
 
     if (res.data !== null) {
       ingestionList.splice(0, ingestionList.length, ...res.data);
+    }
+  }
+
+  async function getIngestionStatus(
+    name: string,
+    startTs: number,
+    endTs: number,
+  ): Promise<void> {
+    const res = await $api(
+      `/api/service-manage/ingestion/status/${name}?startTs=${startTs}&endTs=${endTs}`,
+      {
+        showLoader: false,
+      },
+    );
+    setIngestionStatus(name, res.data.pipelineState);
+  }
+
+  function setIngestionStatus(name: string, pipelineState: string) {
+    const index = ingestionList.findIndex((v: Ingestion) => v.name === name);
+    if (index !== -1) {
+      ingestionList[index].pipelineState = pipelineState;
+    }
+  }
+
+  async function runIngestion(id: string): Promise<void> {
+    const res = await $api(`/api/service-manage/ingestion/trigger/${id}`, {
+      method: "POST",
+      showLoader: false,
+    });
+    if (res.data === null) {
+      throw new Error(res.errorMessage);
+    }
+  }
+
+  async function deployIngestion(id: string): Promise<void> {
+    const res = await $api(`/api/service-manage/ingestion/deploy/${id}`, {
+      method: "POST",
+      showLoader: false,
+    });
+    if (res.data === null) {
+      throw new Error(res.errorMessage);
+    }
+  }
+
+  async function deleteIngestion(id: string): Promise<void> {
+    const res = await $api(`/api/service-manage/ingestion/${id}`, {
+      method: "DELETE",
+      showLoader: false,
+    });
+    if (res.data === null) {
+      throw new Error(res.errorMessage);
+    }
+  }
+
+  async function killIngestion(id: string): Promise<void> {
+    const res = await $api(`/api/service-manage/ingestion/kill/${id}`, {
+      method: "POST",
+      showLoader: false,
+    });
+    if (res.data === null) {
+      throw new Error(res.errorMessage);
     }
   }
 
@@ -449,8 +537,10 @@ export const useServiceStore = defineStore("service", () => {
     userList,
     userSearchList,
 
+    ingestionList,
     editInfo,
     changeTab,
+    changeTag,
 
     getServiceList,
     searchServiceList,
@@ -459,6 +549,13 @@ export const useServiceStore = defineStore("service", () => {
     deleteService,
     updateService,
     emptyService,
+
+    getIngestionList,
+    getIngestionStatus,
+    runIngestion,
+    deployIngestion,
+    deleteIngestion,
+    killIngestion,
 
     changeEditInfo,
     disableEditInfo,

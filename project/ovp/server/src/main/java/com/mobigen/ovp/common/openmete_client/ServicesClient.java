@@ -1,7 +1,8 @@
 package com.mobigen.ovp.common.openmete_client;
 
-import com.mobigen.ovp.common.openmete_client.dto.Base;
+import com.mobigen.ovp.common.openmete_client.dto.Ingestion;
 import com.mobigen.ovp.common.openmete_client.dto.Log;
+import com.mobigen.ovp.common.openmete_client.dto.Base;
 import com.mobigen.ovp.common.openmete_client.dto.RepositoryDescription;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -23,13 +24,35 @@ import java.util.UUID;
 public interface ServicesClient {
 
     /**
-     * 서비스 리스트 - 데이터 베이스
+     * 서비스 리스트
      *
      * @param fields
      * @return
      */
     @GetMapping("/databaseServices")
     Base<Services> getServices(@RequestParam String fields, @RequestParam int limit);
+
+    /**
+     * 서비스 조회 - 데이터 베이스
+     *
+     * @param name
+     * @param fields
+     * @param include
+     * @return
+     */
+    @GetMapping("/databaseServices/name/{name}")
+    Services getServiceDataBase(@PathVariable String name, @RequestParam String fields, @RequestParam String include);
+
+    /**
+     * 서비스 조회 - 스토리지
+     *
+     * @param name
+     * @param fields
+     * @param include
+     * @return
+     */
+    @GetMapping("/storageServices/name/{name}")
+    Services getServiceStorage(@PathVariable String name, @RequestParam String fields, @RequestParam String include);
 
     /**
      * 서비스 리스트 - 스토리지
@@ -41,14 +64,23 @@ public interface ServicesClient {
                                      @RequestParam int limit);
 
     /**
-     * 서비스 수정
+     * 서비스 수정 - 데이터 베이스
      *
      * @param id
      * @param param
-     * @return
-     */
+     **/
     @PatchMapping(value = "/databaseServices/{id}", consumes = "application/json-patch+json")
-    ResponseEntity<Services> patchServie(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param);
+    ResponseEntity<Services> patchServieDataBase(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param);
+
+    /**
+     * 서비스 수정 - 스토리지
+     *
+     * @param id
+     * @param param
+     */
+    @PatchMapping(value = "/storageServices/{id}", consumes = "application/json-patch+json")
+    ResponseEntity<Services> patchServieStorage(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param);
+
 
     /**
      * 서비스 삭제
@@ -69,6 +101,62 @@ public interface ServicesClient {
      **/
     @GetMapping("/ingestionPipelines/logs/{id}/last")
     Log getServiceCollectionLog(@PathVariable("id") String id);
+
+    /**
+     * 수집 리스트
+     *
+     * @return
+     */
+    @GetMapping("/ingestionPipelines")
+    Base<Ingestion> getIngestionList(@RequestParam MultiValueMap<String, String> params);
+
+    /**
+     * 수집 상태
+     *
+     * @param name
+     * @param startTs
+     * @param endTs
+     * @return
+     */
+    @GetMapping("/ingestionPipelines/{name}/pipelineStatus")
+    Base<Object> getIngestionStatus(@PathVariable String name, @RequestParam Long startTs, @RequestParam Long endTs);
+
+    /**
+     * 수집 RUN
+     *
+     * @param id
+     * @return
+     */
+    @PostMapping("/ingestionPipelines/trigger/{id}")
+    ResponseEntity<Object> triggerIngestion(@PathVariable UUID id);
+
+    /**
+     * 수집 동기화
+     *
+     * @param id
+     * @return
+     */
+    @PostMapping("/ingestionPipelines/deploy/{id}")
+    ResponseEntity<Object> deployIngestion(@PathVariable UUID id);
+
+    /**
+     * 수집 삭제
+     *
+     * @param id
+     * @param hardDelete
+     * @return
+     */
+    @DeleteMapping("/ingestionPipelines/{id}")
+    ResponseEntity<Object> deleteIngestion(@PathVariable UUID id, @RequestParam boolean hardDelete);
+
+    /**
+     * 수집 KILL
+     *
+     * @param id
+     * @return
+     */
+    @PostMapping("/ingestionPipelines/kill/{id}")
+    ResponseEntity<Object> killIngestion(@PathVariable UUID id);
 
     @GetMapping("/testConnectionDefinitions/name/{definitionNm}")
     Map<String, Object> getTestConnectionDefinition(@PathVariable String definitionNm);
@@ -111,7 +199,7 @@ public interface ServicesClient {
     @PostMapping("/ingestionPipelines")
     Object saveIngestionPipelines(@RequestBody Map<String, Object> params);
 
-    @PatchMapping(value="/ingestionPipelines/{id}", consumes = "application/json-patch+json")
+    @PatchMapping(value = "/ingestionPipelines/{id}", consumes = "application/json-patch+json")
     Object updateIngestionPipelines(@PathVariable String id, @RequestBody List<JsonPatchOperation> params);
 
     @PostMapping("/ingestionPipelines/deploy/{id}")
