@@ -4,7 +4,7 @@ export interface Service {
   name: string;
   owner: Owner;
   tags: object[];
-  relatedTerms: object[];
+  terms: object[];
   serviceType: string;
   description: string;
   // database | storage
@@ -28,4 +28,9 @@ export interface Ingestion {
   id: string;
   pipelineType: string;
   scheduleInterval: string;
+  pipelineState: string;
+  owner: Owner;
+  startDate: number;
+  endDate: number;
+  timestamp: number;
 }

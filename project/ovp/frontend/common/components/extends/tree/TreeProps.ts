@@ -18,6 +18,10 @@ export interface TreeViewItem {
 export interface TreeProps extends TreeDetailProps {
   items: TreeViewItem[];
   isCheckable: boolean;
+  disabledIds?: any[];
+  selectedIds?: any[];
+  useFirSelect?: boolean;
+  compId?: string;
 }
 
 export interface TreeDetailProps {

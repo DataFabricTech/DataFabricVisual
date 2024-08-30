@@ -1,5 +1,5 @@
 <template>
-  <div :class="props.class" class="tree">
+  <div :class="[props.class, props.compId, 'tree']" v-if="showTree">
     <div class="tree-top-buttons">
       <button v-if="showOpenAllBtn" class="button button-neutral-stroke button-sm" type="button" @click="openAll">
         <span class="button-title">전체 열기</span>
@@ -18,8 +18,15 @@
       @dropValidator="dropValidatorHandler"
       @onSelect="onItemSelected"
     >
-      <template v-if="mode === 'edit'" v-slot:item-append="treeViewItem">
-        <div class="tree-item-buttons">
+      <template v-slot:item-append="treeViewItem">
+        <!-- TODO : [퍼블] 선택된 노드 비활성화 처리 'node-disabled' 로 처리 필요함. -->
+        <div
+          :class="{
+            'node-disabled': props.disabledIds.length > 0 && props.disabledIds.includes(treeViewItem.id),
+            'node-fir-selected': props.selectedIds.length > 0 && props.selectedIds.includes(treeViewItem.id)
+          }"
+        ></div>
+        <div v-if="mode === 'edit'" class="tree-item-buttons">
           <button class="button button-neutral-ghost button-sm" type="button" @click="addSibling(treeViewItem)">
             <span class="button-title">추가</span>
           </button>
@@ -46,7 +53,11 @@ const props = withDefaults(defineProps<TreeProps>(), {
   showOpenAllBtn: false,
   showCloseAllBtn: false,
   firExpandAll: false,
-  checkedIds: () => []
+  checkedIds: () => [],
+  disabledIds: () => [],
+  selectedIds: () => [],
+  useFirSelect: true,
+  compId: "treeComponent"
 });
 
 const emit = defineEmits<{
@@ -56,30 +67,11 @@ const emit = defineEmits<{
   (e: "addChild", params: TreeViewItem): void;
 }>();
 
-const checkOnlyOneAction = ref(true);
 const onItemChecked = (from: TreeViewItem[]) => {
   emit("onItemChecked", from);
 };
 
-const changeFirstItemChange = (bool: boolean) => {
-  if (props.items.length < 1) {
-    return;
-  }
-
-  if (props.items && props.items.length > 0 && props.items[0].id) {
-    const id = CSS.escape(props.items[0].id);
-    const element: any = document.querySelector(`li#${id} .tree-item`);
-    if (element) {
-      element.style.color = bool ? "#188ab0" : "#2b3440";
-    }
-  }
-};
-
 const onItemSelected = (node: TreeViewItem) => {
-  if (checkOnlyOneAction.value) {
-    changeFirstItemChange(false);
-  }
-
   emit("onItemSelected", node);
 };
 
@@ -94,13 +86,9 @@ onMounted(() => {
   if (props.firExpandAll) {
     openAll();
   }
-
-  nextTick(() => {
-    changeFirstItemChange(true);
-  });
 });
 
-const { treeItems, createNewTreeItem, openAll, closeAll, dropValidatorHandler } = TreeComposition(props);
+const { showTree, treeItems, createNewTreeItem, openAll, closeAll, dropValidatorHandler } = TreeComposition(props);
 </script>
 
 <style lang="scss">

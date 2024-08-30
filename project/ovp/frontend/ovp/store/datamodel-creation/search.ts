@@ -384,7 +384,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    */
   const getSearchListAPI = async (selectedList: any[] | null = null) => {
     if (currTab.value === TAB_DEFAULT) {
-      const { data } = await $api(`/api/search/list?${getSearchListQuery()}`);
+      const { data } = await $api(`/api/creation/list?${getSearchListQuery()}`);
       const nData = data.data[currTypeTab.value] as any[];
       data.data[currTypeTab.value] = nData.map((item: any) => {
         return setSearchListItem(selectedList, item);

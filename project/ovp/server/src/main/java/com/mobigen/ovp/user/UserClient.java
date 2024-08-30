@@ -24,7 +24,7 @@ public interface UserClient {
     Map<String, Object> getUserInfo() throws Exception;
 
     @GetMapping("/{id}")
-    Map<String, Object> getUserFollows(@PathVariable("id") String id, @RequestParam("fields") String fields);
+    Map<String, Object> getUserWithFields(@PathVariable("id") String id, @RequestParam("fields") String fields);
 
     @DeleteMapping("/{id}")
     ResponseEntity<Void> deleteUser(@PathVariable UUID id,
