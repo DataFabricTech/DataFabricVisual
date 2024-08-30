@@ -254,6 +254,7 @@ const {
   defaultCategoriesParentId,
   categoriesParentId,
   categoriesId,
+  isShowPreview,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -264,7 +265,6 @@ const loader = ref<HTMLElement | null>(null);
 
 const isDescEditMode = ref(false);
 const isTitleEditMode = ref(false);
-const isShowPreview = ref<boolean>(false);
 const isModalButtonShow = ref<boolean>(false);
 
 let currentPreviewId: string | number = "";

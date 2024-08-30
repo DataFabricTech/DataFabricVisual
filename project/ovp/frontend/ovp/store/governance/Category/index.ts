@@ -85,6 +85,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const dupliSelectedTitleNodeValue = ref("");
   const lastChildIdList: Ref<string[]> = ref<string[]>([]);
   const childlessList: Ref<string[]> = ref<string[]>([]);
+  const isShowPreview = ref<boolean>(false);
 
   // MAIN - TREE
   const getCategories = async () => {
@@ -392,13 +393,19 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   ) => {
     const body: any = list;
 
-    return $api(`/api/category/${tagId}/tag?type=${type}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json-patch+json",
-      },
-      body: body,
-    });
+    try {
+      const res = $api(`/api/category/${tagId}/tag?type=${type}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json-patch+json",
+        },
+        body: body,
+      });
+
+      return await res;
+    } catch (error) {
+      alert(`업데이트 실패했습니다.`);
+    }
   };
   const patchModelAddItemAPI = async () => {
     return patchCategoryTagAPI(
@@ -443,6 +450,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     dupliSelectedTitleNodeValue,
     lastChildIdList,
     childlessList,
+    isShowPreview,
     resetAddModalStatus,
     patchModelAddItemAPI,
     patchCategoryTagAPI,

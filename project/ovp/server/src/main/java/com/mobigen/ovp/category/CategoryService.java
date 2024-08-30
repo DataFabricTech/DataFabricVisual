@@ -419,7 +419,8 @@ public class CategoryService {
         MultiValueMap params = new LinkedMultiValueMap();
         params.add("fields", "tags");
         params.add("include", "all");
-
+        int excuteCount = 0;
+        int successCount = 0;
         for (String dataModelId : body) {
             if (!ModelType.STORAGE.getValue().equals(type)) {
                 tables = tablesClient.getTablesName(dataModelId, params);
@@ -427,14 +428,22 @@ public class CategoryService {
                 tables = containersClient.getStorageById(dataModelId, params);
             }
 
-            Map<String, Object> result = new HashMap<>();
-
             List tags = tables.getTags();
             List removeBody = makeRemoveBody(tags.size());
             List addBody = makeAddBody(tags, tagId);
 
-            changeDataModel(dataModelId, type, removeBody);
-            changeDataModel(dataModelId, type, addBody);
+            Object removeResult = changeDataModel(dataModelId, type, removeBody);
+            Object addResult = changeDataModel(dataModelId, type, addBody);
+
+            excuteCount++;
+
+            if (removeResult != null && addResult != null) {
+                successCount++;
+            }
+        }
+
+        if (excuteCount != successCount) {
+            throw new RuntimeException("업데이트 실패: " + (excuteCount - successCount) + "개의 데이터 모델이 업데이트되지 않았습니다.");
         }
 
         return true;

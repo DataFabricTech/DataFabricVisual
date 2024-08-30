@@ -165,6 +165,7 @@ const {
   getModelList,
   patchModelAddItemAPI,
   setModelIdList,
+  setFromReset,
 } = categoryStore;
 const {
   initTab,
@@ -175,6 +176,7 @@ const {
   dataModelIdList,
   selectedDataModelList,
   addSearchInputValue,
+  isShowPreview,
 } = storeToRefs(categoryStore);
 
 const props = defineProps({
@@ -267,9 +269,11 @@ const onCancel = () => {
 
 const onConfirm = async () => {
   await patchModelAddItemAPI();
+  setFromReset();
   await getModelList();
   setModelIdList();
 
+  isShowPreview.value = false;
   emit("close-data-model-add-modal");
 };
 

@@ -56,6 +56,7 @@ const {
   modelList,
   childlessList,
   selectedCategoryId,
+  isShowPreview,
 } = storeToRefs(categoryStore);
 
 const isDisabledSaveButton = ref(false);
@@ -110,6 +111,7 @@ const onConfirm = async () => {
   await getModelList();
   setModelIdList();
 
+  isShowPreview.value = false;
   emit("close-category-change-modal");
 };
 const onOpened = () => {
