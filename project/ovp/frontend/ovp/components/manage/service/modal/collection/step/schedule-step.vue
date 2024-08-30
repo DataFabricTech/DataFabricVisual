@@ -1,5 +1,8 @@
 <template>
-  <div class="service-form" style="display: none">
+  <div
+    class="service-form"
+    :style="{ display: props.isShow ? 'block' : 'none' }"
+  >
     <div class="form form-vertical">
       <div class="form-body">
         <div class="form-item">
@@ -166,6 +169,12 @@ const {
 } = storeToRefs(collectionAddStore);
 const { setCronParedMessage, selectScheduleType, selectDay, changeRetries } =
   collectionAddStore;
+
+const props = defineProps({
+  isShow: {
+    type: Boolean,
+  },
+});
 </script>
 <style lang="scss" scoped>
 /* @import "./index.scss"; */

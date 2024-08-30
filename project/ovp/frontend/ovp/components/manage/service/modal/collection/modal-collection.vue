@@ -31,13 +31,11 @@
       >
       </Step>
       <config-step
-        :style="{ display: currentStep === 1 ? 'block' : 'none' }"
+        :is-show="currentStep === 1"
         :serviceType="serviceType"
         :pipelineType="pipelineType"
       />
-      <schedule-step
-        :style="{ display: currentStep === 2 ? 'block' : 'none' }"
-      />
+      <schedule-step :is-show="currentStep === 2" />
     </template>
     <template v-slot:footer>
       <button class="button button-neutral-ghost button-lg" @click="onClosed">
@@ -85,7 +83,6 @@ const {
 } = storeToRefs(collectionAddStore);
 const {
   setIsValidCronParsedMessage,
-  setIsValidCronParedMessage,
   setInvalidMessage,
   setIsValid,
   setCronExpression,

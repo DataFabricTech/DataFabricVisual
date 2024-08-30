@@ -3,6 +3,7 @@ import _ from "lodash";
 import type { IngestionPipeline } from "./IngestionPipeline";
 import cronstrue from "cronstrue";
 import { useUserStore } from "~/store/user/userStore";
+import { compare } from "fast-json-patch";
 
 export const useServiceCollectionAddStore = defineStore(
   "service_collection_add",
@@ -170,8 +171,6 @@ export const useServiceCollectionAddStore = defineStore(
       if (cron) {
         airflowObj.scheduleInterval = cron;
       }
-
-      airflowObj.startDate = ""; // 서버에서 바인딩 처리
       airflowObj.retries = reties.value;
 
       return airflowObj;
@@ -360,7 +359,11 @@ export const useServiceCollectionAddStore = defineStore(
       reties.value = value;
     };
 
-    const setFilterPattern = (pattern, includes, excludes) => {
+    const setFilterPattern = (
+      pattern: { includes: string[]; excludes: string[] } | undefined,
+      includes: Pattern[],
+      excludes: Pattern[],
+    ): void => {
       if (pattern) {
         includes.splice(
           0,
@@ -383,22 +386,26 @@ export const useServiceCollectionAddStore = defineStore(
       hideTypeView();
       resetScheduleData();
 
+      const hourlyPattern = /^\d{1,2} \* \* \* \*$/;
+      const dailyPattern = /^\d{1,2} \d{1,2} \* \* \*$/;
+      const weeklyPattern = /^\d{1,2} \d{1,2} \* \* \d$/;
+
       // 매 시간 실행하는 경우
-      if (/^\d{1,2} \* \* \* \*$/.test(scheduleInterval)) {
+      if (hourlyPattern.test(scheduleInterval)) {
         isShowHour.value = true;
         const [min] = scheduleInterval.split(" ");
         minute.value = min.padStart(2, "0");
         selectedScheduleTypeItem.value = scheduleTypeOptions.value[1].value;
       }
       // 매일 특정 시간에 실행하는 경우
-      else if (/^\d{1,2} \d{1,2} \* \* \*$/.test(scheduleInterval)) {
+      else if (dailyPattern.test(scheduleInterval)) {
         isShowDay.value = true;
         const [min, hour] = scheduleInterval.split(" ");
         time.value = `${hour.padStart(2, "0")}:${min.padStart(2, "0")}`;
         selectedScheduleTypeItem.value = scheduleTypeOptions.value[2].value;
       }
       // 매주 특정 요일, 특정 시간에 실행하는 경우
-      else if (/^\d{1,2} \d{1,2} \* \* \d$/.test(scheduleInterval)) {
+      else if (weeklyPattern.test(scheduleInterval)) {
         isShowWeek.value = true;
         const [min, hour, , , dayOfWeek] = scheduleInterval.split(" ");
         time.value = `${hour.padStart(2, "0")}:${min.padStart(2, "0")}`;
@@ -416,9 +423,9 @@ export const useServiceCollectionAddStore = defineStore(
     // 수정시 화면에 값 로드
     const setEditModalData = (data: any) => {
       let loadConfig = data.sourceConfig.config;
-      isEnableDebug.value = data.loggerLevel === "INFO" ? false : true;
+      isEnableDebug.value = data.loggerLevel !== "INFO";
       if (
-        pipelineType.value == "metadata" &&
+        pipelineType.value === "metadata" &&
         serviceType.value === "databaseService"
       ) {
         isMarkDeletedTables.value = loadConfig.markDeletedTables;
@@ -435,7 +442,7 @@ export const useServiceCollectionAddStore = defineStore(
       // }
 
       if (
-        pipelineType.value == "profiler" &&
+        pipelineType.value === "profiler" &&
         serviceType.value === "databaseService"
       ) {
         isIncludeViews.value = loadConfig.includeViews;
@@ -495,8 +502,6 @@ export const useServiceCollectionAddStore = defineStore(
       ingestionPipeLine.value.loggerLevel = data.loggerLevel;
       ingestionPipeLine.value.pipelineType = data.pipelineType;
       ingestionPipeLine.value.sourceConfig.config = config.value;
-      ingestionPipeLine.value.airflowConfig.startDate =
-        data.airflowConfig.startDate;
       ingestionPipeLine.value.airflowConfig.retries =
         data.airflowConfig.retries;
 
@@ -770,11 +775,7 @@ export const useServiceCollectionAddStore = defineStore(
               pipelineType.value = res.data.pipelineType;
             }
 
-            if (pipelineType.value === "metadata") {
-              modalTitle.value = "메타데이터 수집 수정";
-            } else {
-              modalTitle.value = "프로파일러 수집 수정";
-            }
+            modalTitle.value = `${pipelineType.value === "metadata" ? "메타데이터" : "프로파일러"} 수집 수정`;
             serviceType.value = res.data.service.type;
             setEditModalData(res.data);
           } else {
@@ -785,78 +786,13 @@ export const useServiceCollectionAddStore = defineStore(
           console.log("err: ", err);
         });
     };
-
-    function generatePatchOperations(original, updated, basePath = "") {
-      let operations = [];
-      const ignorePaths = ["/airflowConfig/startDate"];
-
-      // 원본에서 존재하지 않는 항목을 제거하는 경우
-      for (const key in original) {
-        const originalValue = original[key];
-        const updatedValue = updated[key];
-        const currentPath = `${basePath}/${key}`;
-
-        if (ignorePaths.includes(currentPath)) {
-          continue;
-        }
-
-        if (!(key in updated)) {
-          operations.push({
-            op: "remove",
-            path: currentPath,
-          });
-        } else if (
-          typeof originalValue === "object" &&
-          typeof updatedValue === "object"
-        ) {
-          operations.push(
-            ...generatePatchOperations(
-              originalValue,
-              updatedValue,
-              currentPath,
-            ),
-          );
-        } else if (originalValue !== updatedValue) {
-          operations.push({
-            op: "replace",
-            path: currentPath,
-            value: updatedValue,
-          });
-        }
-      }
-
-      // 업데이트된 항목 중 원본에 없는 항목을 추가하는 경우
-      for (const key in updated) {
-        if (!(key in original)) {
-          const currentPath = `${basePath}/${key}`;
-          if (!ignorePaths.includes(currentPath)) {
-            operations.push({
-              op: "add",
-              path: currentPath,
-              value: updated[key],
-            });
-          }
-        }
-      }
-
-      // 'remove' 작업을 내림차순으로 정렬필요
-      operations = operations.sort((a, b) => {
-        if (a.op === "remove" && b.op === "remove") {
-          return b.path.localeCompare(a.path);
-        }
-        return 0;
-      });
-
-      return operations;
-    }
-
     const editIngestion = async (value: any) => {
       ingestionPipeLine.value.pipelineType = bindPipelineType.value;
       ingestionPipeLine.value.airflowConfig = airflowConfig.value;
       ingestionPipeLine.value.sourceConfig.config = config.value;
       ingestionPipeLine.value.loggerLevel = loggerLevel.value;
 
-      let editPatchObj = generatePatchOperations(
+      let editPatchObj = compare(
         cloneIngestionPipline.value,
         ingestionPipeLine.value,
       );

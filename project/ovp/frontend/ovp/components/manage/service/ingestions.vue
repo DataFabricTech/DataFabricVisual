@@ -248,7 +248,6 @@ const formatDate = (date: number) => {
 };
 
 const collectionAddStore = useServiceCollectionAddStore();
-const { pipelineType } = storeToRefs(collectionAddStore);
 const {
   setModalTitle,
   setPipelineType,
