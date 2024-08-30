@@ -24,9 +24,9 @@
             <svg-icon
               class="button-icon"
               :name="
-                composition.inputPasswordType.value === 'text'
-                  ? 'eye'
-                  : 'eye-hide'
+                getPwdIconName({
+                  inputType: composition.inputPasswordType.value,
+                })
               "
             ></svg-icon>
           </button>
@@ -66,9 +66,9 @@
             <svg-icon
               class="button-icon"
               :name="
-                composition.inputConfirmPasswordType.value === 'text'
-                  ? 'eye'
-                  : 'eye-hide'
+                getPwdIconName({
+                  inputType: composition.inputConfirmPasswordType.value,
+                })
               "
             ></svg-icon>
           </button>
@@ -87,6 +87,10 @@
   </div>
 </template>
 <script setup lang="ts">
+import { useCommonUtils } from "@/composables/commonUtils";
+
+const { getPwdIconName } = useCommonUtils();
+
 const props = defineProps({
   composition: {
     type: Object,
