@@ -1,7 +1,7 @@
 <template>
   <div
     class="service-form"
-    :style="{ display: props.isShow ? 'block' : 'none' }"
+    v-show="props.isShow"
   >
     <div class="form form-vertical">
       <div class="form-body">

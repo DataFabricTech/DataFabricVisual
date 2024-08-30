@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="service-form"
-    :style="{ display: props.isShow ? 'block' : 'none' }"
-  >
+  <div class="service-form" v-show="props.isShow">
     <component :is="selectedComponent" />
   </div>
 </template>
