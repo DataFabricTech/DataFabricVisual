@@ -15,7 +15,7 @@
         />
         <svg-icon class="text-input-icon" name="search"></svg-icon>
         <button
-          class="search-input-action-button button button-neutral-ghost button-sm"
+          class="search-input-action-button button button-neutral-ghost button-xs"
           type="button"
           @click="onResetSearchText"
         >
