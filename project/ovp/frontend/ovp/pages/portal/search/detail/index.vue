@@ -140,6 +140,7 @@ async function changeTab(tab: number | string) {
       await getProfile();
       break;
     case "query":
+      alert("개발중 입니다.");
       await getQuery();
       break;
     case "lineage":
