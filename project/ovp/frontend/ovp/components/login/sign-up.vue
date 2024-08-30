@@ -78,9 +78,9 @@
                     <svg-icon
                       class="button-icon"
                       :name="
-                        pwComposition.inputPasswordType.value === 'text'
-                          ? 'eye'
-                          : 'eye-hide'
+                        getPwdIconName({
+                          inputType: pwComposition.inputPasswordType.value,
+                        })
                       "
                     ></svg-icon>
                   </button>
@@ -119,9 +119,10 @@
                     <svg-icon
                       class="button-icon"
                       :name="
-                        pwComposition.inputConfirmPasswordType.value === 'text'
-                          ? 'eye'
-                          : 'eye-hide'
+                        getPwdIconName({
+                          inputType:
+                            pwComposition.inputConfirmPasswordType.value,
+                        })
                       "
                     ></svg-icon>
                   </button>
@@ -161,9 +162,11 @@
 import { loginStore } from "@/store/login/index";
 import { useRouter } from "vue-router";
 import { PasswordComposition } from "@/components/login/PasswordComposition";
+import { useCommonUtils } from "@/composables/commonUtils";
 import $constants from "@/utils/constant";
 
 const pwComposition = PasswordComposition();
+const { getPwdIconName } = useCommonUtils();
 
 const form: {
   name: string;

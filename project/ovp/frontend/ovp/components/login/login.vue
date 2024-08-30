@@ -53,7 +53,7 @@
                     <span class="hidden-text">지우기</span>
                     <svg-icon
                       class="button-icon"
-                      :name="inpType === 'text' ? 'eye' : 'eye-hide'"
+                      :name="getPwdIconName({ inputType: inpType })"
                     ></svg-icon>
                   </button>
                 </div>
@@ -105,6 +105,9 @@ import _ from "lodash";
 import { loginStore } from "@/store/login/index";
 import { useRouter } from "vue-router";
 import $constants from "@/utils/constant";
+import { useCommonUtils } from "@/composables/commonUtils";
+
+const { getPwdIconName } = useCommonUtils();
 
 const store = loginStore();
 const { isloginSuccess, errorMessage } = storeToRefs(store);
