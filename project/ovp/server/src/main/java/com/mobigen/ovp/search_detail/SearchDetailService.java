@@ -9,6 +9,7 @@ import com.mobigen.ovp.common.openmete_client.LineageClient;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Columns;
+import com.mobigen.ovp.common.openmete_client.dto.Followers;
 import com.mobigen.ovp.common.openmete_client.dto.ProfileColumn;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
 import com.mobigen.ovp.common.openmete_client.dto.Tag;
@@ -234,6 +235,34 @@ public class SearchDetailService {
 
         return dataModelDetailResponse;
     }
+
+    /**
+     * 데이터 모델 상세 > 팔로우(북마크) 데이터 추출
+     * @param userId
+     * @param id
+     * @param type
+     * @return
+     */
+    public boolean getFollowDataModel(String userId, String id, String type) {
+        boolean isFollow = false;
+
+        MultiValueMap params = new LinkedMultiValueMap();
+        params.add("fields", "followers");
+        params.add("include", "all");
+
+        Tables resultData = ModelType.STORAGE.getValue().equals(type)
+                ? containersClient.getStorageById(id, params)
+                : tablesClient.getTablesName(id, params);
+
+        for(Followers followers: resultData.getFollowers()) {
+            if (followers.getId().equals(userId)) {
+                isFollow = true;
+                break;
+            }
+        }
+        return isFollow;
+    }
+
 
     /**
      * 데이터 모델 스키마 (테이블, 스토리지)
