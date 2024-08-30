@@ -160,8 +160,8 @@
 <script setup lang="ts">
 import { loginStore } from "@/store/login/index";
 import { useRouter } from "vue-router";
-import { PasswordComposition } from "~/components/login/PasswordComposition";
-import $constants from "~/utils/constant";
+import { PasswordComposition } from "@/components/login/PasswordComposition";
+import $constants from "@/utils/constant";
 
 const pwComposition = PasswordComposition();
 

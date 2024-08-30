@@ -104,7 +104,7 @@
 import _ from "lodash";
 import { loginStore } from "@/store/login/index";
 import { useRouter } from "vue-router";
-import $constants from "~/utils/constant";
+import $constants from "@/utils/constant";
 
 const store = loginStore();
 const { isloginSuccess, errorMessage } = storeToRefs(store);

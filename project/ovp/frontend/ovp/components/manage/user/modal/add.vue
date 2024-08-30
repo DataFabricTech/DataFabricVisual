@@ -270,7 +270,7 @@ import type { AddUser } from "~/type/user";
 import Modal from "@extends/modal/Modal.vue";
 
 import _ from "lodash";
-import $constants from "~/utils/constant";
+import $constants from "@/utils/constant";
 
 const userStore = useUserStore();
 const { getRandomPwd, checkDuplicateEmail, checkDuplicateName, addUser } =
