@@ -70,9 +70,9 @@ public class CategoryController {
     }
 
     @ResponseJsonResult
-    @PatchMapping("/{id}")
-    Object addCategoryTagId(@PathVariable String id, @RequestBody Map<String, Object> body) throws Exception {
-        return categoryService.addCategoryTagId(id, body);
+    @PatchMapping("/{tagId}/tag")
+    Object changeDataModelTag(@PathVariable String tagId, @RequestParam String type, @RequestBody List<String> body) {
+        return categoryService.ChangeDataModelTag(tagId, type, body);
     }
 
 }

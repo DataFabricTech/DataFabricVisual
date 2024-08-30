@@ -164,7 +164,8 @@ const {
   addSearchList,
   getSearchList,
   getModelList,
-  getModelItemAPI,
+  patchModelAddItemAPI,
+  setModelIdList,
 } = categoryStore;
 const {
   initTab,
@@ -175,7 +176,7 @@ const {
   dataModelIdList,
   selectedDataModelList,
   addSearchInputValue,
-  selectedCategoryId,
+  isShowPreview,
 } = storeToRefs(categoryStore);
 
 const props = defineProps({
@@ -272,14 +273,18 @@ const onCancel = () => {
 };
 
 const onConfirm = async () => {
-  await getModelItemAPI(selectedCategoryId.value);
+  await patchModelAddItemAPI();
+  setScrollOptions(0);
   await getModelList();
+  setModelIdList();
+
+  isShowPreview.value = false;
   emit("close-data-model-add-modal");
 };
 
 await getSearchList();
 
-const { scrollTrigger, setScrollOptions, mount } = useIntersectionObserver(
+const { scrollTrigger, mount, setScrollOptions } = useIntersectionObserver(
   addSearchList,
   "dataListModal",
 );

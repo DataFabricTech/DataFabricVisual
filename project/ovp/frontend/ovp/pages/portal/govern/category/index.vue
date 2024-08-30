@@ -227,16 +227,18 @@ const {
   getPreviewData,
   moveCategory,
   resetAddModalStatus,
-  setSelectedNode,
   setSearchKeyword,
   getFilters,
   changeTab,
   setEmptyFilter,
+  setModelIdList,
 } = categoryStore;
 const {
+  selectedNode,
   selectedModelList,
   categories,
   modelList,
+  modelIdList,
   isCategoriesNoData,
   previewData,
   isBoxSelectedStyle,
@@ -249,9 +251,11 @@ const {
   selectedNodeCategory,
   dupliSelectedTitleNodeValue,
   lastChildIdList,
+  childlessList,
   defaultCategoriesParentId,
   categoriesParentId,
   categoriesId,
+  isShowPreview,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -259,10 +263,9 @@ const CATEGORY_CHANGE_MODAL_ID = "category-change-modal";
 const DATA_MODEL_ADD_MODAL_ID = "data-modal-add-modal";
 
 const loader = ref<HTMLElement | null>(null);
-const modelIdList = ref([]);
+
 const isDescEditMode = ref(false);
 const isTitleEditMode = ref(false);
-const isShowPreview = ref<boolean>(false);
 const isModalButtonShow = ref<boolean>(false);
 
 let currentPreviewId: string | number = "";
@@ -300,7 +303,7 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   checkModalButton(node.id);
   setScrollOptions(0);
   // 선택한 노드정보 저장
-  setSelectedNode(node);
+  selectedNode.value = node;
   // 선택한 노드 기준 모델 목록을 조회
   await getModelList();
   // 모든 모델 리스트 id 저장
@@ -315,7 +318,7 @@ const getAllModelList = async () => {
 };
 
 const checkModalButton = (id: string) => {
-  isModalButtonShow.value = lastChildIdList.value.some(
+  isModalButtonShow.value = childlessList.value.some(
     (lastChildId: string) => lastChildId === id,
   );
 };
@@ -415,13 +418,6 @@ const allModelList = computed({
     }
   },
 });
-
-const setModelIdList = () => {
-  modelIdList.value = [];
-  for (const element of modelList.value) {
-    modelIdList.value.push(element.id);
-  }
-};
 
 const searchInputValue = ref("");
 const updateSearchInputValue = (newValue: string) => {
@@ -553,6 +549,10 @@ const showCategoryAddModal = () => {
 };
 
 const showCategoryChangeModal = () => {
+  if (selectedModelList.value.length === 0) {
+    alert(`데이터모델을 선택해주세요`);
+    return;
+  }
   openCategoryChangeModal();
 };
 

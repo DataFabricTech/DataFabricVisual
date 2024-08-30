@@ -44,13 +44,14 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const { from, size } = storeToRefs(pagingStore);
   const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
 
-  let selectedNode: any = null;
+  const selectedNode = ref({});
   const categories: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
   const defaultCategoriesParentId = ref("");
   const categoriesParentId = ref("");
   const categoriesId = ref("");
   const isCategoriesNoData = ref(false);
   const modelList: Ref<any[]> = ref([]);
+  const modelIdList = ref([]);
   const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
   const categoryAddName = ref<string>("");
   const categoryAddDesc = ref<string>("");
@@ -83,8 +84,21 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const selectedTitleNodeValue = ref(selectedNodeCategory.value.name || "");
   const dupliSelectedTitleNodeValue = ref("");
   const lastChildIdList: Ref<string[]> = ref<string[]>([]);
+  const childlessList: Ref<string[]> = ref<string[]>([]);
+  const isShowPreview = ref<boolean>(false);
 
   // MAIN - TREE
+
+  const setChildlessCategory = (categoryList: any[], list: string[]) => {
+    for (const item of categoryList) {
+      if (item.children.length === 0) {
+        list.push(item.id);
+      } else {
+        setChildlessCategory(item.children, list);
+      }
+    }
+  };
+
   const getCategories = async () => {
     const { data } = await $api(`/api/category/list`);
 
@@ -96,6 +110,8 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     isCategoriesNoData.value = categories.value.length === 0;
     defaultCategoriesParentId.value = data.parentId;
     categoriesParentId.value = data.parentId;
+
+    setChildlessCategory(categories.value, childlessList.value);
 
     lastChildIdList.value = categories.value
       .flatMap((item1) => item1.children)
@@ -179,22 +195,31 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     }
     const { data } = await $api(
       `/api/category/models?${getModelListQuery(node.tagId, value)}`,
+      { showLoader: false },
     );
+
     return data;
   };
+
   const addModelList = async () => {
-    const data = await getModelByCategoryIdAPI(selectedNode);
+    const data = await getModelByCategoryIdAPI(selectedNode.value);
     modelList.value = modelList.value.concat(data);
   };
   const getModelList = async (value?: string) => {
-    if (_.isNull(selectedNode)) {
+    if (_.isNull(selectedNode.value)) {
       return;
     }
-    const data = await getModelByCategoryIdAPI(selectedNode, value);
+    const data = await getModelByCategoryIdAPI(selectedNode.value, value);
     modelList.value = data === null ? [] : data;
   };
+  const setModelIdList = () => {
+    modelIdList.value = [];
+    for (const element of modelList.value) {
+      modelIdList.value.push(element.id);
+    }
+  };
   const setSelectedNode = (node: any) => {
-    selectedNode = node;
+    selectedNode.value = node;
   };
 
   // PREVIEW
@@ -336,7 +361,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   };
 
   const setDataModelIdList = () => {
-    selectedDataModelList.value = [];
     dataModelIdList.value = [];
 
     for (const element of searchResult.value) {
@@ -354,26 +378,43 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     await resetReloadList();
   };
 
-  const getModelItemAPI = async (id: string) => {
-    await $api(`api/category/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json-patch+json",
-      },
-      body: {
-        tagId: selectedCategoryTagId.value,
-        type: currentTab.value,
-        list: selectedDataModelList.value,
-      },
-    });
+  const patchCategoryTagAPI = async (
+    tagId: string,
+    type: string,
+    list: object[],
+  ) => {
+    const body: any = list;
+
+    try {
+      const res = await $api(`/api/category/${tagId}/tag?type=${type}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json-patch+json",
+        },
+        body: body,
+      });
+
+      return await res;
+    } catch (error) {
+      alert(`업데이트 실패했습니다.`);
+    }
+  };
+  const patchModelAddItemAPI = async () => {
+    return patchCategoryTagAPI(
+      selectedCategoryTagId.value,
+      currentTab.value,
+      selectedDataModelList.value,
+    );
   };
 
   return {
+    selectedNode,
     categories,
     defaultCategoriesParentId,
     categoriesParentId,
     categoriesId,
     modelList,
+    modelIdList,
     isCategoriesNoData,
     previewData,
     isBoxSelectedStyle,
@@ -400,8 +441,11 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     selectedTitleNodeValue,
     dupliSelectedTitleNodeValue,
     lastChildIdList,
+    childlessList,
+    isShowPreview,
     resetAddModalStatus,
-    getModelItemAPI,
+    patchModelAddItemAPI,
+    patchCategoryTagAPI,
     getCategories,
     addModelList,
     getModelList,
@@ -421,5 +465,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     changeTab,
     updateIntersectionHandler,
     setEmptyFilter,
+    setModelIdList,
   };
 });

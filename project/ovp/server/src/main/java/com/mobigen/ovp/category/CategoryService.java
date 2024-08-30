@@ -10,6 +10,7 @@ import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
 import com.mobigen.ovp.common.openmete_client.dto.Tag;
 import com.mobigen.ovp.search.SearchService;
+import com.mobigen.ovp.search_detail.dto.request.DataModelDetailTagDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
@@ -28,6 +29,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -331,83 +333,118 @@ public class CategoryService {
         return response.get("id").toString();
     }
 
+    /**
+     * 데이터 모델 변경 (테이블, 스토리지)
+     *
+     * @param id
+     * @param type
+     * @param body
+     * @return
+     */
+    public Object changeDataModel(String id, String type, List<Map<String, Object>> body) {
+        MultiValueMap params = new LinkedMultiValueMap();
+        params.add("fields", "owner,followers,tags,votes");
 
-    private List<Map<String, Object>> replaceOrAddTag(List<Tag> tags, Map<String, Object> tagInfo) {
-        List<Map<String, Object>> operations = new ArrayList<>();
-        boolean ovpCategoryFound = false;
-        int index = 0;
-
-        for (Tag itemTag : tags) {
-            if (itemTag.getTagFQN().contains("ovp_category")) {
-                String[] replaceInfoList = {"description", "displayName", "name", "tagFQN"};
-                for (String item : replaceInfoList) {
-                    Map<String, Object> replaceOperation = new HashMap<>();
-                    replaceOperation.put("op", "replace");
-                    replaceOperation.put("path", "/tags/" + index + "/" + item);
-                    replaceOperation.put("value", item.equals("tagFQN") ? tagInfo.get("fullyQualifiedName") : tagInfo.get(item));
-                    operations.add(replaceOperation);
-                }
-                ovpCategoryFound = true;
-                break;
-            }
-            index++;
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            return tablesClient.changeDataModel(id, params, body);
+        } else {
+            return containersClient.changeStorage(id, params, body);
         }
-
-        if (!ovpCategoryFound) {
-            Map<String, Object> operation = new HashMap<>();
-            Map<String, Object> value = new HashMap<>();
-            value.put("name", tagInfo.get("name"));
-            value.put("displayName", tagInfo.get("displayName"));
-            value.put("tagFQN", tagInfo.get("fullyQualifiedName"));
-            value.put("description", tagInfo.get("description"));
-            value.put("style", tagInfo.get("style"));
-            operation.put("value", value);
-            operation.put("op", "add");
-            operation.put("path", "/tags/" + tags.size());
-            operations.add(operation);
-        }
-
-        return operations;
     }
 
-    private void updateTags(List<String> selectedModelIdList, Map<String, Object> tagInfo, boolean isStorage, TablesClient tablesClient, ContainersClient containersClient) throws Exception {
+    private List<Map<String, Object>> makeRemoveBody(int tagLength) {
+        List<Map<String, Object>> removedBody = new ArrayList<>();
+
+        for (int i = (tagLength - 1); i >= 0; i--) {
+            Map<String, Object> row = new HashMap<>();
+            row.put("op", "remove");
+            row.put("path", new StringBuffer("/tags/").append(i).toString());
+            removedBody.add(row);
+        }
+
+        return removedBody;
+    }
+
+    private List<Map<String, Object>> makeAddBody(List<Tag> tags, String tagId) {
+        List<Map<String, Object>> addedBody = new ArrayList<>();
+        List<DataModelDetailTagDto> bodyList = new ArrayList<>();
+        List<DataModelDetailTagDto> tagList = new ArrayList<>();
+
+        // 데이터 모델의 태크 목록에서 카테고리, 태그, 용어를 분리해서 저장.
+        List<DataModelDetailTagDto> glossaryList = tags.stream()
+                .filter(tag -> !tag.getTagFQN().contains("ovp_category") && "Glossary".equals(tag.getSource()))
+                .map(tag -> new DataModelDetailTagDto(tag))
+                .collect(Collectors.toList());
+        ;
+        List<DataModelDetailTagDto> classificationList = tags.stream()
+                .filter(tag -> !tag.getTagFQN().contains("ovp_category") && "Classification".equals(tag.getSource()))
+                .map(tag -> new DataModelDetailTagDto(tag))
+                .collect(Collectors.toList());
+
+        // { op, path, value }
+        // 클라이언트로 받은 변경해야 할 데이터(태그, 카테고라, 용어)를 각각 단일 조회 후에 value 를 셋팅한다.
+        Map<String, Object> tempTag = classificationClient.getTag(tagId);
+
+        DataModelDetailTagDto tag = new DataModelDetailTagDto();
+        tag.setName(tempTag.get("name").toString());
+        tag.setDisplayName(tempTag.get("displayName").toString());
+        tag.setDescription(tempTag.get("description").toString());
+        tag.setTagFQN(tempTag.get("fullyQualifiedName").toString());
+        tag.setSource("Classification");
+        tag.setLabelType("Manual");
+        tag.setStyle((Map<String, Object>) tempTag.get("style"));
+
+        tagList.add(tag);
+
+        // value가 셋팅이 완료 되면 모든 데이터(카테고리, 태그, 용어)를 하나로 합친다.
+        bodyList = Stream.concat(glossaryList.stream(), classificationList.stream()).collect(Collectors.toList());
+        bodyList = Stream.concat(bodyList.stream(), tagList.stream()).collect(Collectors.toList());
+
+        // 모두 합쳐진 value를 가지고 patch할 body 데이터를 만든다.
+        int bodySize = bodyList.size();
+        for (int i = 0; i < bodySize; i++) {
+            Map<String, Object> operationMap = new HashMap<>();
+            operationMap.put("op", "add");
+            operationMap.put("path", new StringBuffer("/tags/").append(i).toString());
+            operationMap.put("value", bodyList.get(i));
+            addedBody.add(operationMap);
+        }
+
+        return addedBody;
+    }
+
+    public Object ChangeDataModelTag(String tagId, String type, List<String> body) {
+
+        Tables tables = null;
         MultiValueMap params = new LinkedMultiValueMap();
         params.add("fields", "tags");
         params.add("include", "all");
-
         int excuteCount = 0;
         int successCount = 0;
+        for (String dataModelId : body) {
+            if (!ModelType.STORAGE.getValue().equals(type)) {
+                tables = tablesClient.getTablesName(dataModelId, params);
+            } else {
+                tables = containersClient.getStorageById(dataModelId, params);
+            }
 
-        for (String itemId : selectedModelIdList) {
-            List<Map<String, Object>> reqBody = new ArrayList<>();
-            Tables tables = isStorage ? containersClient.getStorageById(itemId, params) : tablesClient.getTablesName(itemId, params);
-            List<Tag> tags = tables.getTags();
+            List tags = tables.getTags();
+            List removeBody = makeRemoveBody(tags.size());
+            List addBody = makeAddBody(tags, tagId);
 
-            reqBody.addAll(replaceOrAddTag(tags, tagInfo));
-
-            log.info("*** reqBody: {}", reqBody);
-            Map<String, Object> result = isStorage ? containersClient.changeStorage(itemId, null, reqBody) : tablesClient.changeDataModel(itemId, null, reqBody);
+            Object removeResult = changeDataModel(dataModelId, type, removeBody);
+            Object addResult = changeDataModel(dataModelId, type, addBody);
 
             excuteCount++;
-            if (!result.isEmpty()) {
+
+            if (removeResult != null && addResult != null) {
                 successCount++;
             }
-            if (excuteCount != successCount) {
-                throw new Exception("업데이트 실패");
-            }
         }
-    }
 
-
-    public Object addCategoryTagId(String id, Map<String, Object> body) throws Exception {
-        String type = (String) body.get("type");
-        String tagId = (String) body.get("tagId");
-        Map<String, Object> tagInfo = classificationClient.getTag(tagId);
-        List<String> selectedModelIdList = (List<String>) body.get("list");
-
-        boolean isStorage = ModelType.STORAGE.getValue().equals(type);
-
-        updateTags(selectedModelIdList, tagInfo, isStorage, tablesClient, containersClient);
+        if (excuteCount != successCount) {
+            throw new RuntimeException("업데이트 실패: " + (excuteCount - successCount) + "개의 데이터 모델이 업데이트되지 않았습니다.");
+        }
 
         return true;
     }
