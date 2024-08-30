@@ -368,7 +368,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   };
 
   const setDataModelIdList = () => {
-    selectedDataModelList.value = [];
     dataModelIdList.value = [];
 
     for (const element of searchResult.value) {
