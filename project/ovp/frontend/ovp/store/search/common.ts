@@ -44,6 +44,12 @@ export interface QueryFilter {
   };
 }
 
+export interface SearchResultLength {
+  table: number;
+  storage: number;
+  model: number;
+}
+
 export const useSearchCommonStore = defineStore("searchCommon", () => {
   const { $api } = useNuxtApp();
   const pagingStore = usePagingStore();
@@ -82,8 +88,11 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const viewType: Ref<string> = ref<string>("listView");
   const isShowPreview: Ref<boolean> = ref<boolean>(false);
   const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
-  const searchResultLength: Ref<number> = ref<number>(0);
-
+  const searchResultLength: Ref<SearchResultLength> = ref<SearchResultLength>({
+    model: 0,
+    table: 0,
+    storage: 0,
+  });
   // List Query data
   let searchKeyword: string = "";
   const sortKey: Ref<string> = ref<string>("totalVotes");
