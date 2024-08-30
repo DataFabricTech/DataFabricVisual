@@ -7,8 +7,7 @@ export interface Service {
   terms: object[];
   serviceType: string;
   description: string;
-  // database | storage
-  type: string;
+  type: "database" | "storage";
 }
 
 export interface Owner {
