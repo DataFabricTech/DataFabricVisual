@@ -19,7 +19,7 @@
             </button>
             <div class="form-foot-group">
               <button
-                class="link-button link-button-support button-sm w-full"
+                class="button button-primary-ghost button-sm"
                 type="button"
               >
                 <nuxt-link :to="'/portal/login'">

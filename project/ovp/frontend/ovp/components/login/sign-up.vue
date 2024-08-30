@@ -151,10 +151,7 @@
             <button class="button button-primary button-lg" type="submit">
               회원가입
             </button>
-            <button
-              class="link-button link-button-support button-sm w-full"
-              type="button"
-            >
+            <button class="button button-primary-ghost button-sm" type="button">
               <nuxt-link :to="'/portal/login'">
                 로그인 페이지로 돌아가기
               </nuxt-link>
@@ -171,6 +168,7 @@ import { loginStore } from "@/store/login/index";
 import { useRouter } from "vue-router";
 import { PasswordComposition } from "~/components/login/PasswordComposition";
 import $constants from "~/utils/constant";
+
 const pwComposition = PasswordComposition();
 
 const form: {
