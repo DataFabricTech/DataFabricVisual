@@ -132,7 +132,7 @@ public class ServiceManageService {
     public ServiceResponse patchServiceDataBase(UUID id, List<JsonPatchOperation> param) throws Exception {
         ResponseEntity<Services> result = servicesClient.patchServieDataBase(id, param);
         if (result.getStatusCode() == HttpStatus.OK) {
-            return new ServiceResponse(result);
+            return new ServiceResponse(result, DATA_BASE);
         } else {
             throw new Exception();
         }
@@ -148,7 +148,7 @@ public class ServiceManageService {
     public ServiceResponse patchServiceStorage(UUID id, List<JsonPatchOperation> param) throws Exception {
         ResponseEntity<Services> result = servicesClient.patchServieStorage(id, param);
         if (result.getStatusCode() == HttpStatus.OK) {
-            return new ServiceResponse(result);
+            return new ServiceResponse(result, STORAGE);
         } else {
             throw new Exception();
         }

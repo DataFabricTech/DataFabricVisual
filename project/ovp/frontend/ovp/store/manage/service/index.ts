@@ -225,7 +225,7 @@ export const useServiceStore = defineStore("service", () => {
       });
     } else if (target === "Glossary") {
       body = _.filter(termList.value, (tag) => {
-        return data.includes(tag.fullyQualifiedName);
+        return data.includes(tag.tagFQN);
       });
     }
 
