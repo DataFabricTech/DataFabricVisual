@@ -34,3 +34,16 @@ export interface Ingestion {
   endDate: number;
   timestamp: number;
 }
+
+export interface ServiceData {
+  description: string;
+}
+
+export interface DBServiceListData {
+  owner: string | undefined;
+  fqn: string;
+  name: string;
+  id: string;
+  type: string;
+  desc: string | undefined;
+}
