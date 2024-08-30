@@ -124,7 +124,7 @@
                 @on-input="onInput"
                 @reset="getAllModelList"
               ></search-input>
-              <div class="h-group w-full">
+              <div class="h-group w-full h-8">
                 <div class="checkbox">
                   <input
                     type="checkbox"
