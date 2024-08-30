@@ -308,9 +308,9 @@ export const useServiceStore = defineStore("serviceStore", () => {
         addIfExists(minioConfig, "endPointURL", serviceObjData.endPointURL);
 
         specificConfig = {
-          bucketNames: (serviceObjData.bucketNames as Array<string[]>).reduce<
-            string[]
-          >((acc, item) => {
+          bucketNames: (
+            (serviceObjData.bucketNames as Array<string[]>) || []
+          ).reduce<string[]>((acc, item) => {
             if (Array.isArray(item) && item.length > 0 && item[0] !== "") {
               acc.push(item[0]);
             }
