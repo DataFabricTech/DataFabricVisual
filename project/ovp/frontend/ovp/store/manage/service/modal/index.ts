@@ -65,22 +65,8 @@ export const useServiceStore = defineStore("serviceStore", () => {
       index: selectedServiceObj.value.id,
       // eslint-disable-next-line id-length
       q: serviceObj.value.defaultInfo.serviceNm,
-      include_source_fields: "displayName",
       from: "0",
       size: "1",
-      query_filter: JSON.stringify({
-        query: {
-          bool: {
-            filter: [
-              {
-                term: {
-                  "displayName.keyword": serviceObj.value.defaultInfo.serviceNm,
-                },
-              },
-            ],
-          },
-        },
-      }),
     });
   };
 
