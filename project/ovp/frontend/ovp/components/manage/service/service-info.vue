@@ -46,9 +46,9 @@
             ></menu-search-tag>
           </div>
         </div>
-        <div class="h-group gap-8">
+        <div class="v-group gap-4">
           <div class="h-group gap-2">
-            <div class="font-semibold text-neutral-700 w-14">태그</div>
+            <div class="font-semibold text-neutral-700 w-14 shrink-0">태그</div>
             <div
               class="editable-group w-auto"
               v-if="!serviceStore.editInfo.tag"
@@ -87,7 +87,7 @@
             </div>
           </div>
           <div class="h-group gap-2">
-            <div class="font-semibold text-neutral-700 w-14">용어</div>
+            <div class="font-semibold text-neutral-700 w-14 shrink-0">용어</div>
             <div
               class="editable-group w-auto"
               v-if="!serviceStore.editInfo.term"
