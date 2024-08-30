@@ -199,9 +199,13 @@ const store = useServiceStore();
 const collectionAddStore = useServiceCollectionAddStore();
 const serviceCollectionLogStore = useServiceCollectionLogStore();
 
-const { setModalTitle, setPipelineType, setServiceType, setId } =
-  collectionAddStore;
-
+const {
+  setModalTitle,
+  setPipelineType,
+  setServiceType,
+  setId,
+  getPipeLineData,
+} = collectionAddStore;
 const { getCollectionLogData, setServiceId } = serviceCollectionLogStore;
 
 const ingestionSelected = ref([]);
@@ -246,15 +250,6 @@ const isEmpty = (): boolean => {
 const formatDate = (date: number) => {
   return dayjs(date).format(FORMAT);
 };
-
-const collectionAddStore = useServiceCollectionAddStore();
-const {
-  setModalTitle,
-  setPipelineType,
-  setServiceType,
-  setId,
-  getPipeLineData,
-} = collectionAddStore;
 const badgeClass = (ingestion: Ingestion): string => {
   return (
     {
@@ -429,7 +424,7 @@ function openAddModel(value: string) {
 
   open();
   ingestionSelected.value = [];
-};
+}
 
 const openEditModal = async (value: any) => {
   await getPipeLineData(value);
