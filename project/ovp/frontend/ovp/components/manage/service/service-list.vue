@@ -27,7 +27,7 @@
             <button
               class="search-input-action-button button button-neutral-ghost button-sm"
               type="button"
-              @click="keyword = ''"
+              @click="reset"
             >
               <span class="hidden-text">지우기</span>
               <svg-icon class="button-icon" name="close"></svg-icon>

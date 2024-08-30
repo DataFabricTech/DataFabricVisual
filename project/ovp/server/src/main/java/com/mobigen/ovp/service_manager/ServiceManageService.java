@@ -105,21 +105,28 @@ public class ServiceManageService {
      * @throws Exception
      */
     public Object searchServices(String keyword, String from) throws Exception {
+        List<ServiceResponse> result = new ArrayList<>();
+        List<ServiceResponse> databaseServices = fetchSearchServices(keyword, from, "database_service_search_index");
+        result.addAll(databaseServices);
+
+        List<ServiceResponse> storageServices = fetchSearchServices(keyword, from, "storage_service_search_index");
+        result.addAll(storageServices);
+
+        return result;
+    }
+
+    private List<ServiceResponse> fetchSearchServices(String keyword, String from, String index) throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("q", keyword);
         params.add("from", from);
-        params.add("index", "database_service_search_index");
-        List<Map<String, ?>> hits = (List<Map<String, ?>>) ((Map<?, ?>) searchClient.getSearchList(params).get("hits")).get("hits");
-        List<Map<String, Object>> source = new ArrayList<>();
-        for (Map<String, ?> data : hits) {
-            source.add((Map<String, Object>) data.get("_source"));
-        }
-        List<ServiceResponse> result = new ArrayList<>();
+        params.add("index", index);
 
-        for (Map<String, Object> map : source) {
-            result.add(new ServiceResponse(map));
-        }
-        return result;
+        List<Map<String, ?>> hits = (List<Map<String, ?>>) ((Map<?, ?>) searchClient.getSearchList(params).get("hits")).get("hits");
+
+        return hits.stream()
+                .map(hit -> (Map<String, Object>) hit.get("_source"))
+                .map(ServiceResponse::new)
+                .collect(Collectors.toList());
     }
 
     /**
