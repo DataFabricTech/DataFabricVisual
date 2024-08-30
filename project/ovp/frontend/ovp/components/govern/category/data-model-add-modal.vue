@@ -165,7 +165,6 @@ const {
   getModelList,
   patchModelAddItemAPI,
   setModelIdList,
-  setFromReset,
 } = categoryStore;
 const {
   initTab,
@@ -269,7 +268,7 @@ const onCancel = () => {
 
 const onConfirm = async () => {
   await patchModelAddItemAPI();
-  setFromReset();
+  setScrollOptions(0);
   await getModelList();
   setModelIdList();
 
@@ -279,7 +278,7 @@ const onConfirm = async () => {
 
 await getSearchList();
 
-const { scrollTrigger, mount } = useIntersectionObserver(
+const { scrollTrigger, mount, setScrollOptions } = useIntersectionObserver(
   addSearchList,
   "dataListModal",
 );

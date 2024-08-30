@@ -88,6 +88,17 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const isShowPreview = ref<boolean>(false);
 
   // MAIN - TREE
+
+  const setChildlessCategory = (categoryList: any[], list: string[]) => {
+    for (const item of categoryList) {
+      if (item.children.length === 0) {
+        list.push(item.id);
+      } else {
+        setChildlessCategory(item.children, list);
+      }
+    }
+  };
+
   const getCategories = async () => {
     const { data } = await $api(`/api/category/list`);
 
@@ -100,21 +111,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     defaultCategoriesParentId.value = data.parentId;
     categoriesParentId.value = data.parentId;
 
-    for (const item1 of categories.value) {
-      if (item1.children.length === 0) {
-        childlessList.value.push(item1.id);
-      }
-      for (const item2 of item1.children) {
-        if (item2.children.length === 0) {
-          childlessList.value.push(item2.id);
-        }
-        for (const item3 of item2.children) {
-          if (item3.children.length === 0) {
-            childlessList.value.push(item3.id);
-          }
-        }
-      }
-    }
+    setChildlessCategory(categories.value, childlessList.value);
 
     lastChildIdList.value = categories.value
       .flatMap((item1) => item1.children)
@@ -202,10 +199,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     );
 
     return data;
-  };
-
-  const setFromReset = () => {
-    from.value = 0;
   };
 
   const addModelList = async () => {
@@ -393,7 +386,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     const body: any = list;
 
     try {
-      const res = $api(`/api/category/${tagId}/tag?type=${type}`, {
+      const res = await $api(`/api/category/${tagId}/tag?type=${type}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json-patch+json",
@@ -473,6 +466,5 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     updateIntersectionHandler,
     setEmptyFilter,
     setModelIdList,
-    setFromReset,
   };
 });

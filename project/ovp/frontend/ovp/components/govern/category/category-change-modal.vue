@@ -46,9 +46,10 @@ import { storeToRefs } from "pinia";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 import { ref } from "vue";
 import _ from "lodash";
+import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 
 const categoryStore = useGovernCategoryStore();
-const { patchCategoryTagAPI, setModelIdList, getModelList, setFromReset } =
+const { patchCategoryTagAPI, setModelIdList, getModelList, addSearchList } =
   categoryStore;
 const {
   categories,
@@ -78,36 +79,34 @@ const onCancel = () => {
 };
 
 const onConfirm = async () => {
-  const storageList = ref([]);
-  const tableList = ref([]);
+  let storageList: string[] = [];
+  let tableList: string[] = [];
 
   for (const modelItem of modelList.value) {
     for (const selectedItem of selectedModelList.value) {
       if (modelItem.id === selectedItem) {
-        modelItem.type === "table"
-          ? tableList.value.push(selectedItem)
-          : storageList.value.push(selectedItem);
+        if (modelItem.type === "table") {
+          tableList.push(selectedItem);
+        } else {
+          storageList.push(selectedItem);
+        }
       }
     }
   }
 
-  if (storageList.value.length > 0) {
+  if (storageList.length > 0) {
     await patchCategoryTagAPI(
       tagIdForCategoryChange.value,
       "storage",
-      storageList.value,
+      storageList,
     );
   }
 
-  if (tableList.value.length > 0) {
-    await patchCategoryTagAPI(
-      tagIdForCategoryChange.value,
-      "table",
-      tableList.value,
-    );
+  if (tableList.length > 0) {
+    await patchCategoryTagAPI(tagIdForCategoryChange.value, "table", tableList);
   }
 
-  setFromReset();
+  setScrollOptions(0);
   await getModelList();
   setModelIdList();
 
@@ -123,6 +122,8 @@ const onCategoryNodeClick = (node: TreeViewItem) => {
   isDisabledSaveButton.value = checkAddLasChild;
   tagIdForCategoryChange.value = node.tagId;
 };
+
+const { setScrollOptions } = useIntersectionObserver(addSearchList);
 </script>
 
 <style scoped></style>
