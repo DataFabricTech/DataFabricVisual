@@ -1,5 +1,5 @@
 <template>
-  <div class="service-form" :style="props.style">
+  <div class="service-form" v-show="props.isShow">
     <component :is="selectedComponent" />
   </div>
 </template>
@@ -10,8 +10,8 @@ import StorageMeta from "./config/storage-meta.vue";
 import StorageProfiler from "./config/storage-profiler.vue";
 
 const props = defineProps({
-  style: {
-    type: String,
+  isShow: {
+    type: Boolean,
   },
   serviceType: {
     type: String,

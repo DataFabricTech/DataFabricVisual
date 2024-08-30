@@ -31,13 +31,11 @@
       >
       </Step>
       <config-step
-        :style="{ display: currentStep === 1 ? 'block' : 'none' }"
+        :is-show="currentStep === 1"
         :serviceType="serviceType"
         :pipelineType="pipelineType"
       />
-      <schedule-step
-        :style="{ display: currentStep === 2 ? 'block' : 'none' }"
-      />
+      <schedule-step :is-show="currentStep === 2" />
     </template>
     <template v-slot:footer>
       <button class="button button-neutral-ghost button-lg" @click="onClosed">
@@ -75,17 +73,23 @@ import ScheduleStep from "./step/schedule-step.vue";
 
 import { useServiceCollectionAddStore } from "@/store/manage/service/collection-add";
 const collectionAddStore = useServiceCollectionAddStore();
-const { pipelineType, serviceType, modalTitle, isValid, inValidMsg } =
-  storeToRefs(collectionAddStore);
+const {
+  isEditModalStatus,
+  pipelineType,
+  serviceType,
+  modalTitle,
+  isValid,
+  inValidMsg,
+} = storeToRefs(collectionAddStore);
 const {
   setIsValidCronParsedMessage,
-  setIsValidCronParedMessage,
   setInvalidMessage,
   setIsValid,
   setCronExpression,
   resetData,
   checkValidation,
   createIngestion,
+  editIngestion,
 } = collectionAddStore;
 
 const emit = defineEmits<{
@@ -136,7 +140,12 @@ const gotoNext = async () => {
   }
 
   if (currentStep.value === 2) {
-    await createIngestion();
+    if (isEditModalStatus.value) {
+      await editIngestion();
+    } else {
+      await createIngestion();
+    }
+
     if (!isValid.value) {
       return;
     }
