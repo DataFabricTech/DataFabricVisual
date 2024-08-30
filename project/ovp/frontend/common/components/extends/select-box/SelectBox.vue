@@ -63,11 +63,11 @@ const props = withDefaults(defineProps<SelectBoxProps>(), {
   disabledAll: false,
   useDelete: false,
   nodataMsg: "데이터가 없습니다.",
-  isFirstSelectedEvent: true
+  isFirstSelectedEvent: true,
+  defaultLabel: ""
 });
 
 const emit = defineEmits<{ (e: "select", option: number | string): void }>();
-
 
 function onSelect(value: string | number) {
   emit("select", value);

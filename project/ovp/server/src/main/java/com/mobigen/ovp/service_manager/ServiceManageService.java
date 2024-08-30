@@ -17,6 +17,7 @@ import com.mobigen.ovp.service_manager.client.response.IngestionResponse;
 import com.mobigen.ovp.service_manager.client.response.ServiceCollectionLogResponse;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
 import com.mobigen.ovp.search.SearchService;
+import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.service_manager.client.response.ServiceResponse;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -55,9 +56,11 @@ public class ServiceManageService {
     private final DatabaseSchemasClient databaseSchemasClient;
     private final ClassificationClient classificationClient;
     private final GlossaryClient glossaryClient;
+    private final TablesClient tablesClient;
 
     /**
      * 서비스 리스트
+     *
      * @return
      */
     public List<ServiceResponse> getServices() {
@@ -77,6 +80,7 @@ public class ServiceManageService {
 
     /**
      * 서비스 조회
+     *
      * @param type
      * @param name
      * @return
@@ -94,6 +98,7 @@ public class ServiceManageService {
 
     /**
      * 서비스 검색
+     *
      * @param keyword
      * @param from
      * @return
@@ -119,6 +124,7 @@ public class ServiceManageService {
 
     /**
      * 서비스 수정 - DataBase
+     *
      * @param id
      * @param param
      * @return
@@ -134,6 +140,7 @@ public class ServiceManageService {
 
     /**
      * 서비스 수정 - Storage
+     *
      * @param id
      * @param param
      * @return
@@ -236,7 +243,7 @@ public class ServiceManageService {
         }
 
         // value가 셋팅이 완료 되면 모든 데이터(카테고리, 태그, 용어)를 하나로 합친다.
-         if ("Classification".equals(target)) {
+        if ("Classification".equals(target)) {
             bodyList = Stream.concat(glossaryList.stream(), tagList.stream()).collect(Collectors.toList());
         } else if ("Glossary".equals(target)) {
             bodyList = Stream.concat(tagList.stream(), classificationList.stream()).collect(Collectors.toList());
@@ -257,6 +264,7 @@ public class ServiceManageService {
 
     /**
      * 서비스 삭제
+     *
      * @param id
      * @param hardDelete
      * @param recursive
@@ -273,15 +281,17 @@ public class ServiceManageService {
 
     /**
      * service : Service - 수집 - 동작 [log] 조회
+     *
      * @param id
      * @return
-     * **/
+     **/
     public Object getServiceCollectionLog(String id) {
         return new ServiceCollectionLogResponse(servicesClient.getServiceCollectionLog(id));
     }
 
     /**
      * 수집 리스트
+     *
      * @param service
      * @return
      */
@@ -299,6 +309,7 @@ public class ServiceManageService {
 
     /**
      * 수집 상태
+     *
      * @param name
      * @param startTs
      * @param endTs
@@ -310,12 +321,13 @@ public class ServiceManageService {
 
     /**
      * 수집 RUN
+     *
      * @param id
      * @return
      */
     public Object triggerIngestion(UUID id) throws Exception {
         ResponseEntity<Object> result = servicesClient.triggerIngestion(id);
-        if(result.getStatusCode() == HttpStatus.OK) {
+        if (result.getStatusCode() == HttpStatus.OK) {
             return result.getBody();
         } else {
             throw new Exception();
@@ -324,12 +336,13 @@ public class ServiceManageService {
 
     /**
      * 수집 동기화
+     *
      * @param id
      * @return
      */
     public Object deployIngestion(UUID id) throws Exception {
         ResponseEntity<Object> result = servicesClient.deployIngestion(id);
-        if(result.getStatusCode() == HttpStatus.OK) {
+        if (result.getStatusCode() == HttpStatus.OK) {
             return result.getBody();
         } else {
             throw new Exception();
@@ -338,13 +351,14 @@ public class ServiceManageService {
 
     /**
      * 수집 삭제
+     *
      * @param id
      * @return
      */
     public Object deleteIngestion(UUID id) throws Exception {
         final boolean hardDelete = true;
         ResponseEntity<Object> result = servicesClient.deleteIngestion(id, hardDelete);
-        if(result.getStatusCode() == HttpStatus.OK) {
+        if (result.getStatusCode() == HttpStatus.OK) {
             return result;
         } else {
             throw new Exception();
@@ -353,12 +367,13 @@ public class ServiceManageService {
 
     /**
      * 수집 KILL
+     *
      * @param id
      * @return
      */
     public Object killIngestion(UUID id) throws Exception {
         ResponseEntity<Object> result = servicesClient.killIngestion(id);
-        if(result.getStatusCode() == HttpStatus.OK) {
+        if (result.getStatusCode() == HttpStatus.OK) {
             return result;
         } else {
             throw new Exception();
@@ -431,6 +446,50 @@ public class ServiceManageService {
 
     public Object saveStorage(Map<String, Object> params) {
         return servicesClient.saveStorage(params);
+    }
+
+    /**
+     * 저장소관리 > 저장소탭 > Database > '설명'조회
+     *
+     * @param name
+     * @param params
+     * @return
+     **/
+    public Object getRepositoryDescription(String name, MultiValueMap<String, String> params) {
+        return servicesClient.getRepositoryDescription(name, params);
+    }
+
+    /**
+     * 저장소관리 > 저장소탭 > Storage > '설명'조회
+     *
+     * @param name
+     * @param params
+     * @return
+     **/
+    public Object getRepositoryStorageDescription(String name, MultiValueMap<String, String> params) {
+        return servicesClient.getRepositoryStorageDescription(name, params);
+    }
+
+    /**
+     * 저장소관리 > 저장소탭 > Database > '설명'수정
+     *
+     * @param id
+     * @param param
+     * @return
+     **/
+    public Object editRepositoryDescription(String id, List<JsonPatchOperation> param) {
+        return servicesClient.editRepositoryDescription(id, param);
+    }
+
+    /**
+     * 저장소관리 > 저장소탭 > Storage > '설명'수정
+     *
+     * @param id
+     * @param param
+     * @return
+     **/
+    public Object editRepositoryStorageDescription(String id, List<JsonPatchOperation> param) {
+        return servicesClient.editRepositoryStorageDescription(id, param);
     }
 
     public Object saveIngestionPipelines(Map<String, Object> params) {
@@ -542,14 +601,32 @@ public class ServiceManageService {
                 .map(client -> (String) client.get("fullyQualifiedName"))
                 .filter(this::isNotNullOrEmpty)
                 .flatMap(fullyQualifiedName -> {
-                    Map<String, Object> result = isDatabase
-                            ? databaseSchemasClient.getDatabaseSchemas(serviceParam)
-                            : containersClient.getContainersName(fullyQualifiedName, serviceParam);
-                    return ((List<Map<String, Object>>) result.get(isDatabase ? "data" : "children")).stream();
+                    if (isDatabase) {
+                        // Database Service Logic
+                        serviceParam.put("database", fullyQualifiedName);
+                        Map<String, Object> result = databaseSchemasClient.getDatabaseSchemas(serviceParam);
+                        List<Map<String, Object>> dataList = (List<Map<String, Object>>) result.get("data");
+
+                        return dataList.stream().flatMap(dataItem -> {
+                            String nestedFullyQualifiedName = (String) dataItem.get("fullyQualifiedName");
+                            Map<String, String> tableParam = new HashMap<>();
+                            tableParam.put("databaseSchema", nestedFullyQualifiedName);
+                            tableParam.put("include", "non-deleted");
+                            Map<String, Object> tableInfo = tablesClient.getTablesInfo(tableParam);
+
+                            List<Map<String, Object>> tableDataList = (List<Map<String, Object>>) tableInfo.get("data");
+                            return tableDataList.stream();
+                        });
+                    } else {
+                        // Storage Service Logic
+                        Map<String, Object> result = containersClient.getContainersName(fullyQualifiedName, serviceParam);
+                        return ((List<Map<String, Object>>) result.get("children")).stream();
+                    }
                 })
                 .map(this::processEntry)
                 .collect(Collectors.toList());
     }
+
 
     private boolean isNotNullOrEmpty(String value) {
         return value != null && !value.isEmpty();

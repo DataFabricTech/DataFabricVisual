@@ -9,10 +9,14 @@ interface ModalComposition extends ModalProps {
   dynamicModalStyle(): string;
 
   closeModal(modalId: string | number | symbol): void;
+
+  title: ComputedRef<string>;
 }
 
 export function ModalComposition(props: ModalProps, onclose: () => void): ModalComposition {
   const { $vfm } = useNuxtApp();
+
+  const title = computed(() => props.title);
 
   const dynamicModalClass: ComputedRef<string> = computed(() => {
     if (_.isNil(props.top) && _.isNil(props.left)) {
@@ -90,5 +94,5 @@ export function ModalComposition(props: ModalProps, onclose: () => void): ModalC
   });
 
   // TODO: 타입스크릡트 return 수정해야 함.
-  return { ...props, dynamicModalClass, dynamicModalStyle, closeModal, onClose };
+  return { ...props, title, dynamicModalClass, dynamicModalStyle, closeModal, onClose };
 }

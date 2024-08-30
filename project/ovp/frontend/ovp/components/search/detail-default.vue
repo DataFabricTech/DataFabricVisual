@@ -48,7 +48,7 @@
     </button>
     <button
       class="button button-error-stroke button-sm"
-      v-show="user.role === 'admin'"
+      v-show="dataModel.owner?.id === user.id || user.admin"
     >
       <svg-icon class="button-icon" name="trash"></svg-icon>
       삭제

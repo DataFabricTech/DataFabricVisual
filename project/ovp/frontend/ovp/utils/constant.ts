@@ -146,7 +146,7 @@ const $constants = {
       SELECT_BOX_DATA: [
         {
           label: "메타 데이터 수집 추가",
-          value: "meta-data",
+          value: "metadata",
         },
         {
           label: "프로파일러 수집 추가",

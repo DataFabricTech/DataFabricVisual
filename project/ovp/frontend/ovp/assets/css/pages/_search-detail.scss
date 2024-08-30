@@ -33,10 +33,10 @@
   flex-direction: column;
   gap: $spacing-12;
   height: 100%;
+  padding: $spacing-4 0;
 
   &-list {
     @include flex($direction: column, $horizontal: flex-start, $gap: $spacing-12);
-    @include scroll-hidden;
 
     overflow-y: auto;
     height: 100%;

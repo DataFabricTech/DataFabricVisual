@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface MenuRepository extends JpaRepository<MenuEntity, String> {
-    List<MenuEntity> findAllByUseYnTrueOrderByOrderAsc();
+    List<MenuEntity> findAllByUseYnTrueAndMenuAuthContainingOrderByOrderAsc(String menuAuth);
 }

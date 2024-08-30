@@ -59,7 +59,7 @@ import type { TreeViewItem } from "@extends/tree/TreeProps";
 
 const searchCommonStore = useSearchCommonStore();
 const { resetReloadList, setEmptyFilter, setSearchKeyword } = searchCommonStore;
-const { selectedFilters, currentTab, selectedFilterItems } =
+const { selectedFilters, currentTab, selectedFilterItems, isShowPreview } =
   storeToRefs(searchCommonStore);
 
 const layoutHeaderStore = useLayoutHeaderStore();
@@ -73,6 +73,7 @@ const props = defineProps({
 });
 
 const resetFilters = () => {
+  isShowPreview.value = false;
   setEmptyFilter();
   searchInputValue.value = "";
   setSearchKeyword("");
@@ -83,6 +84,7 @@ const changeMultiple: (value: any[] | {}, keyName: any) => void = (
   value: any[] | {},
   keyName: string,
 ) => {
+  isShowPreview.value = false;
   setSelectedFilters(keyName, _.map(value, "key"));
 };
 
@@ -97,6 +99,7 @@ const setSelectedFilters = (keyName: string, selectedIds: any[]) => {
 };
 
 const onNodeChecked = (checkedNodes: TreeViewItem[]) => {
+  isShowPreview.value = false;
   setSelectedFilters(FILTER_KEYS.CATEGORY, checkedNodes);
 };
 </script>

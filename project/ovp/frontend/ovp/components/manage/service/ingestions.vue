@@ -167,12 +167,20 @@
 </template>
 
 <script setup lang="ts">
-import { useServiceStore } from "~/store/manage/service";
 import { ref, onMounted, watch } from "vue";
-import type { Ingestion } from "~/type/service";
-import $constants from "~/utils/constant";
-import Loading from "@base/loading/Loading.vue";
+import { useModal } from "vue-final-modal";
 import cronstrue from "cronstrue";
+
+import $constants from "~/utils/constant";
+
+import type { Ingestion } from "@/type/service";
+import { useServiceStore } from "@/store/manage/service";
+import { useServiceCollectionAddStore } from "@/store/manage/service/collection-add/index";
+import { useServiceCollectionLogStore } from "@/store/manage/service/collection-log/index";
+
+import Loading from "@base/loading/Loading.vue";
+import ModalCollection from "@/components/manage/service/modal/collection/modal-collection.vue";
+
 const dayjs = useDayjs();
 const FORMAT = "MMM D, YYYY, h:mm A";
 const {
@@ -187,6 +195,36 @@ const {
 } = useServiceStore();
 
 const store = useServiceStore();
+const collectionAddStore = useServiceCollectionAddStore();
+const serviceCollectionLogStore = useServiceCollectionLogStore();
+
+const { setModalTitle, setPipelineType, setServiceType, setId } =
+  collectionAddStore;
+
+const { getCollectionLogData, setServiceId } = serviceCollectionLogStore;
+
+const ingestionSelected = ref([]);
+
+const { open, close } = useModal({
+  component: ModalCollection,
+  attrs: {
+    onClose() {
+      close();
+    },
+    // onLoadData() {
+    //   //TODO: 메타데이터 생성/수정 모달이 닫혔을때 파이프라인 목록 갱신 필요
+    // },
+  },
+});
+
+const isModalVisible = ref(false);
+// const openModal = async (id: string) => {
+//   // 스토어에 id 저장
+//   setServiceId(id);
+//   // 로그 API 호출
+//   await getCollectionLogData();
+//   isModalVisible.value = true;
+// }
 
 onMounted(async () => {
   await getIngestionList(service.name);
@@ -209,14 +247,13 @@ const formatDate = (date: number) => {
 };
 
 const badgeClass = (ingestion: Ingestion): string => {
-  switch (ingestion.pipelineState) {
-    case "success":
-      return "badge badge-green-lighter";
-    case "failed":
-      return "badge badge-red-lighter";
-    case "running":
-      return "badge badge-blue-lighter";
-  }
+  return (
+    {
+      success: "badge badge-green-lighter",
+      failed: "badge badge-red-lighter",
+      running: "badge badge-blue-lighter",
+    }[ingestion.pipelineState] ?? ""
+  );
 };
 
 const scheduleIntervalTooltip = (scheduleInterval: string): string => {
@@ -365,6 +402,23 @@ async function openLogModal() {}
 const toggle = ref<boolean>(false);
 
 function openAddModel(value: string) {
-  //TODO: 모달 연동
+  setPipelineType(value);
+  // 서비스 id 세팅
+  setId(service.id);
+
+  if (service.type === "database") {
+    setServiceType("databaseService");
+  } else {
+    setServiceType("storageService");
+  }
+
+  if (value === "metadata") {
+    setModalTitle("메타데이터 수집 추가");
+  } else {
+    setModalTitle("프로파일러 수집 추가");
+  }
+
+  open();
+  ingestionSelected.value = [];
 }
 </script>

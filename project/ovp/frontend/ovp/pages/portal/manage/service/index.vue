@@ -14,14 +14,12 @@
       <service-info></service-info>
     </div>
   </div>
-  <modal-collection></modal-collection>
   <modal-log></modal-log>
 </template>
 
 <style scoped></style>
 
 <script setup lang="ts">
-import ModalCollection from "~/components/manage/service/modal/modal-collection.vue";
 import ModalLog from "~/components/manage/service/modal/modal-log.vue";
 import ModalService from "~/components/manage/service/modal/modal-service/modal-service.vue";
 import { useModal } from "vue-final-modal";

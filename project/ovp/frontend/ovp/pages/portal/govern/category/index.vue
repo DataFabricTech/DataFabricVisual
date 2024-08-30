@@ -70,7 +70,7 @@
               >
               <input
                 v-model="selectedTitleNodeValue"
-                placeholder="모델명에 대한 영역입니다."
+                placeholder="카테고리명 에 대한 영역입니다."
                 required
                 id="title-modify"
                 class="text-input w-1/2"
@@ -111,7 +111,7 @@
               <p class="editable-group-desc">{{ selectedNodeCategory.desc }}</p>
             </template>
           </editable-group>
-          <div>
+          <div class="category-search">
             <div class="l-top-bar">
               <search-input
                 class="w-[541px]"
@@ -122,6 +122,7 @@
                 :label-text="'데이터 모델 검색'"
                 @update:value="updateSearchInputValue"
                 @on-input="onInput"
+                @reset="getAllModelList"
               ></search-input>
               <div class="h-group w-full">
                 <div class="checkbox">
@@ -296,15 +297,20 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   dupliSelectedTitleNodeValue.value = node.name;
   selectedCategoryId.value = node.id;
   selectedCategoryTagId.value = <string>node.tagId;
-
   checkModalButton(node.id);
-
   setScrollOptions(0);
   // 선택한 노드정보 저장
   setSelectedNode(node);
   // 선택한 노드 기준 모델 목록을 조회
   await getModelList();
   // 모든 모델 리스트 id 저장
+  setModelIdList();
+};
+
+const getAllModelList = async () => {
+  setScrollOptions(0);
+  setSelectedNode(selectedNodeCategory.value);
+  await getModelList();
   setModelIdList();
 };
 

@@ -20,7 +20,7 @@
         </tr>
         <tr>
           <th>확장자</th>
-          <td>{{ defaultInfo.modelInfo.model.ext.toUpperCase() }}</td>
+          <td>{{ defaultInfo.modelInfo.model.ext?.toUpperCase() }}</td>
         </tr>
       </template>
       <tr>
@@ -87,7 +87,7 @@
             class="editable-group"
             v-show="!user.admin && dataModel.owner?.id !== user.id"
           >
-            <template v-if="dataModel.terms.length > 0">
+            <template v-if="dataModel.terms?.length > 0">
               <div
                 class="tag tag-primary tag-sm"
                 v-for="term in dataModel.terms"
@@ -106,7 +106,7 @@
             v-if="!editTermsMode"
             v-show="dataModel.owner?.id === user.id || user.admin"
           >
-            <template v-if="dataModel.terms.length > 0">
+            <template v-if="dataModel.terms?.length > 0">
               <div
                 class="tag tag-primary tag-sm"
                 v-for="term in dataModel.terms"
@@ -133,7 +133,7 @@
               :data="termList"
               :selected-items="dataModel.terms"
               label-key="displayName"
-              value-key="fullyQualifiedName"
+              value-key="tagFQN"
               :is-multi="true"
               title="값을 선택하세요"
               @multiple-change="changeTerms"
@@ -178,7 +178,6 @@ const mdoelTagList: ComputedRef<any[]> = computed(() => {
 });
 
 const editTags = async () => {
-  await getTagList();
   editTagsMode.value = !editTagsMode.value;
 
   if (editTagsMode.value) {
@@ -207,7 +206,7 @@ const changeTags = (value: MenuSearchItemImpl[]) => {
 };
 
 const changeTerms = (value: MenuSearchItemImpl[]) => {
-  const data: any = _.map(value, "fullyQualifiedName");
+  const data: any = _.map(value, "tagFQN");
 
   changeTag("Glossary", false, data)
     .then(() => {

@@ -8,6 +8,7 @@
         </nuxt-link>
       </h1>
       <SearchInput
+        @reset="getAllSearchList"
         @onClickSearch="onClickSearch"
         :placeholder="'검색어를 입력하세요.'"
         :inp-value="searchInputValue"
@@ -17,7 +18,7 @@
       ></SearchInput>
       <div class="profile ml-auto">
         <span class="profile-avatar"> {{ profileFirstWord }} </span>
-        <div class="profile-text">{{ user.name }}</div>
+        <div class="profile-text">{{ user.displayName || user.name }}</div>
         <button
           class="button button-sm button-neutral-ghost"
           @click="isDropdownOpen = !isDropdownOpen"
@@ -85,6 +86,12 @@ const updateSearchInputValue = (newValue: string) => {
   searchInputValue.value = newValue;
 };
 
+const getAllSearchList = () => {
+  setSearchKeyword("");
+  resetReloadList();
+  router.push({ path: `/portal/search` });
+};
+
 const onClickSearch = (value: string) => {
   setSearchKeyword(value);
   resetReloadList();
@@ -120,7 +127,7 @@ const logOut = async () => {
 await getUserInfo();
 
 onMounted(async () => {
-  setProfileFirstWord(user.value.name);
+  setProfileFirstWord(user.value.displayName || user.value.name);
   document.addEventListener("click", handleClickOutside);
 });
 

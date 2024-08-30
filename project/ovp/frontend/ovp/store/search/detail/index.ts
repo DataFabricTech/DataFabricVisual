@@ -119,18 +119,16 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     termList.value = data.data;
   };
 
-  const getDataModel = async () => {
-    const data = await $api(
+  const getDataModel = () => {
+    return $api(
       `/api/search/detail/${dataModelId}?type=${dataModelType.value}`,
-    );
+    ).then((data) => {
+      if (data.result === 1) {
+        dataModel.value = data.data;
+      }
 
-    if (data.result === 0) {
-      // TODO: 에러페이지 이동
-      console.error(data.errorMessage);
-      return;
-    }
-
-    dataModel.value = data.data;
+      return data;
+    });
   };
 
   const getDefaultInfo = async () => {
@@ -210,20 +208,23 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
       updatedVoteType: state,
     };
 
-    await $api(`/api/search/detail/${dataModelId}/vote`, {
-      method: "put",
-      body: body,
-    });
+    await $api(
+      `/api/search/detail/${dataModelId}/vote?type=${dataModelType.value}`,
+      {
+        method: "PUT",
+        body: body,
+      },
+    );
     await getDataModel();
   };
 
   const changeFollow = async () => {
-    const url: string = `/api/search/detail/${dataModelId}/follow`;
+    const url: string = `/api/search/detail/${dataModelId}/follow?type=${dataModelType.value}`;
 
     if (dataModel.value.isFollow) {
-      await $api(url, { method: "delete" });
+      await $api(url, { method: "DELETE" });
     } else {
-      await $api(url, { method: "put" });
+      await $api(url, { method: "PUT" });
     }
 
     await getDataModel();
@@ -253,7 +254,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     return $api(
       `/api/search/detail/${dataModelId}?type=${dataModelType.value}`,
       {
-        method: "patch",
+        method: "PATCH",
         body: body,
       },
     );
@@ -352,14 +353,14 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
       });
     } else if (target === "Glossary") {
       body = _.filter(termList.value, (tag) => {
-        return data.includes(tag.fullyQualifiedName);
+        return data.includes(tag.tagFQN);
       });
     }
 
     return $api(
       `/api/search/detail/${dataModelId}/tag?type=${dataModelType.value}&target=${target}&isCategory=${isCategory}`,
       {
-        method: "patch",
+        method: "PATCH",
         body: body,
       },
     );
