@@ -70,6 +70,7 @@ export const useMainStore = defineStore("mainStore", () => {
     dataStatus: Ref<boolean>,
     dataList: Ref<DataModel[]>,
   ) => {
+    console.log(data);
     if (data === null || data.length === 0) {
       dataStatus.value = true;
     } else {
@@ -87,7 +88,8 @@ export const useMainStore = defineStore("mainStore", () => {
 
   const getBookmarkData = async (id: string) => {
     const data = await $api(`/api/main/follows/${id}`);
-    getDataList(data.data, isBookmarkDataNoInfo, bookmarkData);
+    const list: Ref<any[]> = ref(data.data);
+    getDataList(list.value, isBookmarkDataNoInfo, bookmarkData);
   };
   const getUpVotesData = async () => {
     setSortInfo("totalVotes_desc");

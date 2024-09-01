@@ -48,9 +48,9 @@
       <a
         href="javascript:void(0);"
         class="editable-group-title"
-        :title="newData.firModelNm ?? newData.modelNm"
+        :title="newData.displayName ?? newData.modelNm"
         @click.stop="modelNmClick"
-        >{{ newData.firModelNm ?? newData.modelNm }}</a
+        >{{ newData.displayName ?? newData.modelNm }}</a
       >
     </div>
     <editable-group
@@ -75,14 +75,17 @@
           <a
             href="javascript:void(0);"
             class="editable-group-title"
-            :title="newData.firModelNm ?? newData.modelNm"
+            :title="newData.displayName ?? newData.modelNm"
             @click.stop="modelNmClick"
-            >{{ newData.firModelNm ?? newData.modelNm }}</a
+            >{{ newData.displayName ?? newData.modelNm }}</a
           >
         </template>
         <template v-else>
-          <h3 class="editable-group-title" :title="newData.modelNm">
-            {{ newData.modelNm }}
+          <h3
+            class="editable-group-title"
+            :title="newData.displayName ?? newData.modelNm"
+          >
+            {{ newData.displayName ?? newData.modelNm }}
           </h3>
         </template>
       </template>

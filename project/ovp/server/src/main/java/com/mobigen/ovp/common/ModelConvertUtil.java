@@ -1,20 +1,27 @@
 package com.mobigen.ovp.common;
 
+import com.mobigen.ovp.category.entity.CategoryEntity;
+import com.mobigen.ovp.category.repository.CategoryRepository;
+import com.mobigen.ovp.common.constants.ModelType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class ModelConvertUtil {
+
+    private final CategoryRepository categoryRepository;
 
     /**
      * Open Meta Api 에서 모델 데이터 조회 한 후에, 해당 데이터를 화면에 사용 할 수 있게 데이터 정제하는 부분을 공통 코드로 구현.
@@ -53,7 +60,17 @@ public class ModelConvertUtil {
         modifiedSource.put("id", source.get("id"));
         modifiedSource.put("serviceIcon", new StringBuffer("type-img type-img-").append(serviceType).toString());
 
-        modifiedSource.put("depth", source.get("fullyQualifiedName") != null ? source.get("fullyQualifiedName").toString().split("\\.") : new String[]{});
+        String[] splitArray = source.get("fullyQualifiedName").toString().split("\\.");
+        List<String> resultList = new ArrayList<>(Arrays.asList(splitArray));
+        // TODO: index 와 실제 데이터가 매칭이 되지 않고 있음.
+        if (!ModelType.STORAGE.getValue().equals(index)) {
+            resultList.remove(resultList.size() - 1);
+            modifiedSource.put("depth", resultList);
+        } else {
+            modifiedSource.put("depth", resultList);
+//            modifiedSource.put("depth", List.of(new String[]{resultList.get(0), resultList.get(1)}));
+        }
+
         modifiedSource.put("firModelNm", source.get("displayName"));
         modifiedSource.put("modelNm", source.get("name"));
         modifiedSource.put("modelDesc", source.get("description"));
@@ -67,12 +84,33 @@ public class ModelConvertUtil {
             modifiedSource.put("ownerDisplayName", owner);
         }
 
-        String domain = "";
-        if (source.get("domain") != null) {
-            Map<String, Object> domainObj = (Map<String, Object>) source.get("domain");
-            domain = domainObj.get("displayName").toString();
+        modifiedSource.put("category", new HashMap<>());
+
+        if (source.get("tags") != null) {
+            List<Map<String, Object>> tags = (List<Map<String, Object>>) source.get("tags");
+            for (Map<String, Object> tag: tags) {
+                String displayName = tag.get("displayName").toString();
+
+                if (displayName == null || "".equals(displayName)) {
+                    displayName = tag.get("name").toString();
+                    tag.put("displayName", displayName);
+                }
+
+                if (tag.get("tagFQN").toString().contains("ovp_category")) {
+                    CategoryEntity categoryEntity = categoryRepository.findByIdWithParent(UUID.fromString(tag.get("name").toString()));
+                    if (categoryEntity != null) {
+                        Map<String, Object> category = (Map<String, Object>) modifiedSource.get("category");
+                        category.put("id", categoryEntity.getId());
+                        category.put("name", categoryEntity.getName());
+                        category.put("tagName", tag.get("name"));
+                        category.put("tagDisplayName", tag.get("displayName"));
+                        category.put("tagDescription", tag.get("description"));
+                        category.put("tagFQN", tag.get("tagFQN"));
+                        break;
+                    }
+                }
+            }
         }
-        modifiedSource.put("category", domain);
 
         return modifiedSource;
     }
