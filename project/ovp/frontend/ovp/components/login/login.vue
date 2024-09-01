@@ -40,6 +40,7 @@
                     class="text-input text-input-lg"
                     placeholder="비밀번호 입력"
                     v-model="loginPassword"
+                    @keyup.enter="login"
                   />
                   <svg-icon
                     class="text-input-icon"
@@ -74,6 +75,7 @@
               class="button button-primary button-lg"
               type="button"
               @click="login"
+              :disabled="isDoingLogin"
             >
               로그인
             </button>
@@ -110,7 +112,7 @@ import { useCommonUtils } from "@/composables/commonUtils";
 const { getPwdIconName } = useCommonUtils();
 
 const store = loginStore();
-const { isloginSuccess, errorMessage } = storeToRefs(store);
+const { isDoingLogin, isloginSuccess, errorMessage } = storeToRefs(store);
 const { getLoginSuccessState } = store;
 
 const router = useRouter();
@@ -127,6 +129,10 @@ const isErrorPassword = ref(false);
 const inpType = ref("password");
 
 const login = async () => {
+  if (isDoingLogin.value) {
+    return;
+  }
+
   let id = loginEmailOrId.value;
   let password = loginPassword.value;
 
