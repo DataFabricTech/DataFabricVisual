@@ -31,13 +31,13 @@
             v-show="!user.admin && dataModel.owner?.id !== user.id"
           >
             <template v-if="mdoelTagList.length > 0">
-              <div class="tag tag-primary tag-sm" v-for="tag in mdoelTagList">
-                <span class="tag-text">{{ tag.displayName }}</span>
+              <div v-for="tag in mdoelTagList">
+                <span>{{ tag.displayName }}</span>
               </div>
             </template>
             <template v-else>
-              <div class="tag tag-primary tag-sm">
-                <span class="tag-text">-</span>
+              <div>
+                <span>-</span>
               </div>
             </template>
           </div>
@@ -52,8 +52,8 @@
               </div>
             </template>
             <template v-else>
-              <div class="tag tag-primary tag-sm">
-                <span class="tag-text">-</span>
+              <div>
+                <span>-</span>
               </div>
             </template>
             <button
@@ -96,8 +96,8 @@
               </div>
             </template>
             <template v-else>
-              <div class="tag tag-primary tag-sm">
-                <span class="tag-text">-</span>
+              <div>
+                <span>-</span>
               </div>
             </template>
           </div>
@@ -115,8 +115,8 @@
               </div>
             </template>
             <template v-else>
-              <div class="tag tag-primary tag-sm">
-                <span class="tag-text">-</span>
+              <div>
+                <span>-</span>
               </div>
             </template>
             <button
