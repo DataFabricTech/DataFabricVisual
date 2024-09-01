@@ -302,12 +302,12 @@ public class ServiceManageService {
      * @param service
      * @return
      */
-    public List<IngestionResponse> getIngestionList(String service) {
+    public List<IngestionResponse> getIngestionList(String service, String serviceType) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("fields", "owner,pipelineStatuses");
         params.add("service", service);
         params.add("pipelineType", "metadata,usage,lineage,profiler,dbt");
-        params.add("serviceType", "databaseService");
+        params.add("serviceType", serviceType);
         params.add("limit", "1000");
 
         List<Ingestion> ingestion = servicesClient.getIngestionList(params).getData();

@@ -20,7 +20,7 @@
 <style scoped></style>
 
 <script setup lang="ts">
-import ModalLog from "~/components/manage/service/modal/modal-log.vue";
+import ModalLog from "~/components/manage/service/modal/log.vue";
 import ModalService from "~/components/manage/service/modal/modal-service/modal-service.vue";
 import { useModal } from "vue-final-modal";
 import { useServiceStore } from "~/store/manage/service";

@@ -80,7 +80,7 @@ const changeDownVote = async () => {
 };
 function copyLink() {
   navigator.clipboard.writeText(window.location.href);
-  alert("주소를 복사했습니다.");
+  alert("링크가 복사되었습니다.");
 }
 </script>
 

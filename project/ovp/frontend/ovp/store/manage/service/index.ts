@@ -327,9 +327,13 @@ export const useServiceStore = defineStore("service", () => {
   /**
    * 수집 탭
    */
-  async function getIngestionList(service: string) {
+  async function getIngestionList(service: Service) {
+    const serviceType =
+      service.serviceType.toUpperCase() === "MINIO"
+        ? "storageService"
+        : "databaseService";
     const res = await $api(
-      `/api/service-manage/ingestion/list?service=${service}`,
+      `/api/service-manage/ingestion/list?service=${service.name}&serviceType=${serviceType}`,
     );
 
     if (res.data !== null) {
