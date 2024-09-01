@@ -3,6 +3,7 @@ import _ from "lodash";
 import type { IngestionPipeline } from "./IngestionPipeline";
 import cronstrue from "cronstrue";
 import { useUserStore } from "~/store/user/userStore";
+import { compare } from "fast-json-patch";
 
 export const useServiceCollectionAddStore = defineStore(
   "service_collection_add",
@@ -12,6 +13,10 @@ export const useServiceCollectionAddStore = defineStore(
     const userStore = useUserStore();
     // NOTE: 로그인 사용자 정보
     const { user } = storeToRefs(userStore);
+
+    const isEditModalStatus = ref(false);
+    const pipelineId = ref("");
+    const cloneIngestionPipline = ref({});
 
     const serviceId = ref("");
     const pipelineType = ref("");
@@ -166,8 +171,6 @@ export const useServiceCollectionAddStore = defineStore(
       if (cron) {
         airflowObj.scheduleInterval = cron;
       }
-
-      airflowObj.startDate = ""; // 서버에서 바인딩 처리
       airflowObj.retries = reties.value;
 
       return airflowObj;
@@ -356,6 +359,155 @@ export const useServiceCollectionAddStore = defineStore(
       reties.value = value;
     };
 
+    const setFilterPattern = (
+      pattern: { includes: string[]; excludes: string[] } | undefined,
+      includes: Pattern[],
+      excludes: Pattern[],
+    ): void => {
+      if (pattern) {
+        includes.splice(
+          0,
+          includes.length,
+          ...(pattern.includes.map((name) => ({ name })) || []),
+        );
+        excludes.splice(
+          0,
+          excludes.length,
+          ...(pattern.excludes.map((name) => ({ name })) || []),
+        );
+      }
+    };
+
+    const setScheduleBasedOnInterval = (scheduleInterval) => {
+      // 초기화
+      isShowHour.value = false;
+      isShowDay.value = false;
+      isShowWeek.value = false;
+      hideTypeView();
+      resetScheduleData();
+
+      const hourlyPattern = /^\d{1,2} \* \* \* \*$/;
+      const dailyPattern = /^\d{1,2} \d{1,2} \* \* \*$/;
+      const weeklyPattern = /^\d{1,2} \d{1,2} \* \* \d$/;
+
+      // 매 시간 실행하는 경우
+      if (hourlyPattern.test(scheduleInterval)) {
+        isShowHour.value = true;
+        const [min] = scheduleInterval.split(" ");
+        minute.value = min.padStart(2, "0");
+        selectedScheduleTypeItem.value = scheduleTypeOptions.value[1].value;
+      }
+      // 매일 특정 시간에 실행하는 경우
+      else if (dailyPattern.test(scheduleInterval)) {
+        isShowDay.value = true;
+        const [min, hour] = scheduleInterval.split(" ");
+        time.value = `${hour.padStart(2, "0")}:${min.padStart(2, "0")}`;
+        selectedScheduleTypeItem.value = scheduleTypeOptions.value[2].value;
+      }
+      // 매주 특정 요일, 특정 시간에 실행하는 경우
+      else if (weeklyPattern.test(scheduleInterval)) {
+        isShowWeek.value = true;
+        const [min, hour, , , dayOfWeek] = scheduleInterval.split(" ");
+        time.value = `${hour.padStart(2, "0")}:${min.padStart(2, "0")}`;
+        selectedDay.value = daysOfWeek.value[dayOfWeek].value;
+        selectedScheduleTypeItem.value = scheduleTypeOptions.value[3].value;
+      }
+      // 사용자 정의 크론 표현식인 경우
+      else {
+        isShowCustom.value = true;
+        cronExpression.value = scheduleInterval;
+        selectedScheduleTypeItem.value = scheduleTypeOptions.value[4].value;
+      }
+    };
+
+    // 수정시 화면에 값 로드
+    const setEditModalData = (data: any) => {
+      let loadConfig = data.sourceConfig.config;
+      isEnableDebug.value = data.loggerLevel !== "INFO";
+      if (
+        pipelineType.value === "metadata" &&
+        serviceType.value === "databaseService"
+      ) {
+        isMarkDeletedTables.value = loadConfig.markDeletedTables;
+        isIncludeTables.value = loadConfig.includeTables;
+        isIncludeViews.value = loadConfig.includeViews;
+        isIncludeOwners.value = loadConfig.includeOwners;
+      }
+
+      // TODO: 추후 필요한 값이 있으면 추가
+      // if (
+      //   pipelineType.value == "metadata" &&
+      //   serviceType.value === "storageService"
+      // ) {
+      // }
+
+      if (
+        pipelineType.value === "profiler" &&
+        serviceType.value === "databaseService"
+      ) {
+        isIncludeViews.value = loadConfig.includeViews;
+        isGenerateSampleData.value = loadConfig.isGenerateSampleData;
+        isComputeMetric.value = loadConfig.computeMetrics;
+        selectedSampleTypeItem.value = loadConfig.profileSampleType;
+        profileSample.value = loadConfig.profileSample;
+        sampleDataRowsCount.value = loadConfig.sampleDataCount;
+      }
+
+      if (
+        pipelineType.value == "profiler" &&
+        serviceType.value === "storageService"
+      ) {
+        isGenerateSampleData.value = loadConfig.generateSampleData;
+        isComputeMetric.value = loadConfig.computeMetrics;
+        selectedSampleTypeItem.value = loadConfig.profileSampleType;
+        profileSample.value = loadConfig.profileSample;
+        sampleDataRowsCount.value = loadConfig.sampleDataCount;
+      }
+
+      setFilterPattern(
+        loadConfig.containerFilterPattern,
+        CFP_includes,
+        CFP_excludes,
+      );
+      setFilterPattern(
+        loadConfig.bucketFilterPattern,
+        BFP_includes,
+        BFP_excludes,
+      );
+      setFilterPattern(
+        loadConfig.databaseFilterPattern,
+        DFP_includes,
+        DFP_excludes,
+      );
+      setFilterPattern(
+        loadConfig.schemaFilterPattern,
+        SFP_includes,
+        SFP_excludes,
+      );
+      setFilterPattern(
+        loadConfig.tableFilterPattern,
+        TFP_includes,
+        TFP_excludes,
+      );
+      if (data.airflowConfig.scheduleInterval) {
+        setScheduleBasedOnInterval(data.airflowConfig.scheduleInterval);
+        ingestionPipeLine.value.airflowConfig.scheduleInterval =
+          data.airflowConfig.scheduleInterval;
+      }
+
+      reties.value = data.airflowConfig.retries;
+
+      ingestionPipeLine.value.name = data.name;
+      ingestionPipeLine.value.displayName = data.displayName;
+      ingestionPipeLine.value.loggerLevel = data.loggerLevel;
+      ingestionPipeLine.value.pipelineType = data.pipelineType;
+      ingestionPipeLine.value.sourceConfig.config = config.value;
+      ingestionPipeLine.value.airflowConfig.retries =
+        data.airflowConfig.retries;
+
+      cloneIngestionPipline.value = _.cloneDeep(ingestionPipeLine.value);
+    };
+
     const handleNameInput = (e) => {
       ingestionPipeLine.value.displayName = e.target.value;
     };
@@ -537,6 +689,10 @@ export const useServiceCollectionAddStore = defineStore(
       cronExpression.value = "0 0 * * *";
 
       reties.value = 0;
+
+      isEditModalStatus.value = false;
+      pipelineId.value = "";
+      cloneIngestionPipline.value = {};
     };
 
     const checkValidation = () => {
@@ -607,7 +763,48 @@ export const useServiceCollectionAddStore = defineStore(
         });
     };
 
+    const getPipeLineData = async (value: any) => {
+      isEditModalStatus.value = true;
+      await $api(`/api/service-manage/pipelines/${value}`)
+        .then((res: any) => {
+          if (res.result === 1) {
+            pipelineId.value = res.data.id;
+            if (res.data.pipelineType === "storageProfiler") {
+              pipelineType.value = "profiler";
+            } else {
+              pipelineType.value = res.data.pipelineType;
+            }
+
+            modalTitle.value = `${pipelineType.value === "metadata" ? "메타데이터" : "프로파일러"} 수집 수정`;
+            serviceType.value = res.data.service.type;
+            setEditModalData(res.data);
+          } else {
+            console.log("에러 발생");
+          }
+        })
+        .catch((err: any) => {
+          console.log("err: ", err);
+        });
+    };
+    const editIngestion = async (value: any) => {
+      ingestionPipeLine.value.pipelineType = bindPipelineType.value;
+      ingestionPipeLine.value.airflowConfig = airflowConfig.value;
+      ingestionPipeLine.value.sourceConfig.config = config.value;
+      ingestionPipeLine.value.loggerLevel = loggerLevel.value;
+
+      let editPatchObj = compare(
+        cloneIngestionPipline.value,
+        ingestionPipeLine.value,
+      );
+
+      await $api(`/api/service-manage/pipelines/${pipelineId.value}`, {
+        method: "PATCH",
+        body: editPatchObj,
+      });
+    };
+
     return {
+      isEditModalStatus,
       pipelineType,
       serviceType,
       modalTitle,
@@ -689,6 +886,9 @@ export const useServiceCollectionAddStore = defineStore(
       resetData,
       checkValidation,
       createIngestion,
+
+      getPipeLineData,
+      editIngestion,
     };
   },
 );

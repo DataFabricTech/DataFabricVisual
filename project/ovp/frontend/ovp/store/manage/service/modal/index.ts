@@ -64,23 +64,9 @@ export const useServiceStore = defineStore("serviceStore", () => {
     return new URLSearchParams({
       index: selectedServiceObj.value.id,
       // eslint-disable-next-line id-length
-      q: serviceObj.value.defaultInfo.serviceNm,
-      include_source_fields: "displayName",
+      q: `*${serviceObj.value.defaultInfo.serviceNm}*`,
       from: "0",
       size: "1",
-      query_filter: JSON.stringify({
-        query: {
-          bool: {
-            filter: [
-              {
-                term: {
-                  "displayName.keyword": serviceObj.value.defaultInfo.serviceNm,
-                },
-              },
-            ],
-          },
-        },
-      }),
     });
   };
 
@@ -308,9 +294,9 @@ export const useServiceStore = defineStore("serviceStore", () => {
         addIfExists(minioConfig, "endPointURL", serviceObjData.endPointURL);
 
         specificConfig = {
-          bucketNames: (serviceObjData.bucketNames as Array<string[]>).reduce<
-            string[]
-          >((acc, item) => {
+          bucketNames: (
+            (serviceObjData.bucketNames as Array<string[]>) || []
+          ).reduce<string[]>((acc, item) => {
             if (Array.isArray(item) && item.length > 0 && item[0] !== "") {
               acc.push(item[0]);
             }

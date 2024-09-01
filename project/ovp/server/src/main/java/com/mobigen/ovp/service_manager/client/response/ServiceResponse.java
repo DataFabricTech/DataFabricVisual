@@ -44,7 +44,7 @@ public class ServiceResponse {
                 } else if ("Glossary".equals(tag.getSource())) {
                     Map<String, Object> termData = new HashMap<>();
                     termData.put("displayName", tag.getDisplayName());
-                    termData.put("fullyQualifiedName", tag.getTagFQN());
+                    termData.put("tagFQN", tag.getTagFQN());
                     this.terms.add(termData);
                 }
             }
@@ -53,7 +53,7 @@ public class ServiceResponse {
         this.type = type;
     }
 
-    public ServiceResponse(ResponseEntity<Services> service) {
+    public ServiceResponse(ResponseEntity<Services> service, String type) {
         this.id = Objects.requireNonNull(service.getBody()).getId();
         this.name = service.getBody().getName();
         this.fullyQualifiedName = service.getBody().getFullyQualifiedName();
@@ -73,7 +73,7 @@ public class ServiceResponse {
                 } else if ("Glossary".equals(tag.getSource())) {
                     Map<String, Object> termData = new HashMap<>();
                     termData.put("displayName", tag.getDisplayName());
-                    termData.put("fullyQualifiedName", tag.getTagFQN());
+                    termData.put("tagFQN", tag.getTagFQN());
                     this.terms.add(termData);
                 }
             }
@@ -81,6 +81,7 @@ public class ServiceResponse {
         if(service.getBody().getOwner() != null) {
             this.owner = service.getBody().getOwner();
         }
+        this.type = type;
     }
 
     public ServiceResponse(Map<String, Object> map) {
@@ -103,7 +104,7 @@ public class ServiceResponse {
                 } else if ("Glossary".equals(tag.get("source"))) {
                     Map<String, Object> termData = new HashMap<>();
                     termData.put("displayName", tag.get("displayName"));
-                    termData.put("fullyQualifiedName", tag.get("fullyQualifiedName"));
+                    termData.put("tagFQN", tag.get("fullyQualifiedName"));
                     this.terms.add(termData);
                 }
             }

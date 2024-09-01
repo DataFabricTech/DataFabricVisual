@@ -62,7 +62,9 @@
                 }}</span>
                 <svg-icon
                   class="button-icon"
-                  :name="isShowPwdStatus(bodyItem.id) ? 'eye' : 'eye-hide'"
+                  :name="
+                    getPwdIconName({ isVisible: isShowPwdStatus(bodyItem.id) })
+                  "
                 ></svg-icon>
               </button>
 
@@ -114,8 +116,8 @@
       <div class="form-item">
         <Accordion>
           <template #title>
-            {{ selectedServiceObj.label }} Connection Advanced Config</template
-          >
+            {{ selectedServiceObj.label }} Connection Advanced Config
+          </template>
           <template #body>
             <!-- Connection Option -->
             <addable-input
@@ -154,10 +156,13 @@ import {
   PanelTypes,
   ModalServiceComposition,
 } from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
+import { useCommonUtils } from "@/composables/commonUtils";
 import SelectBox from "@extends/select-box/SelectBox.vue";
 import Accordion from "@base/accordion/accordion.vue";
 
 import _ from "lodash";
+
+const { getPwdIconName } = useCommonUtils();
 
 const props = withDefaults(defineProps<ModalServiceProps>(), {
   formData: () => {},
@@ -208,6 +213,7 @@ function onSelectItem(item: string | number, bodyItem: any) {
 
   setValue(`detailInfo.${bodyItem.id}`, item);
 }
+
 const isShowPwdStatus = (itemId: string) => {
   return _.includes(openEyeValues.value, itemId);
 };

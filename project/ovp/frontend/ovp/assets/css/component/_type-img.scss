@@ -6,7 +6,7 @@
   background-size: contain;
   background-repeat: no-repeat;
 
-  &-maria {
+  &-mariadb {
     background-image: url("../images/storage-type_01.png");
   }
 
@@ -14,7 +14,7 @@
     background-image: url("../images/storage-type_02.png");
   }
 
-  &-postgre {
+  &-postgres {
     background-image: url("../images/storage-type_03.png");
   }
 
@@ -24,6 +24,10 @@
 
   &-minio {
     background-image: url("../images/storage-type_06.png");
+  }
+
+  &-trino {
+    background-image: url("../images/storage-type_07.png");
   }
 }
 

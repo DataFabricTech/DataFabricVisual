@@ -33,7 +33,7 @@
             :checked="isEnableDebug"
             @click="changeEnableDebug"
           />
-          <label for="manager-sw-database-meta-eld" class="switch-label">
+          <label for="manager-sw-database-profiler-eld" class="switch-label">
             <div class="switch-control"></div>
           </label>
         </div>

@@ -32,8 +32,12 @@
       vertical-align: middle;
     }
   }
-  .select-button {
-    &:has(.tag) {
+
+  //안에 태그가 많을걸 대비 높이값 자동으로 조정
+  .select:has(.tag) {
+    height: auto;
+
+    .select-button {
       flex-wrap: wrap;
     }
   }

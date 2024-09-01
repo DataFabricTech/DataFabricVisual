@@ -523,6 +523,12 @@ export function ModalServiceComposition(
 
     for (const itemId of requiredItems) {
       const value = serviceObj.value.detailInfo[itemId];
+
+      // bucketNames 는 inputItem 을 추가한 경우에만 필수
+      if (itemId === "bucketNames") {
+        return checkDoubleArrayRequiredValue(value);
+      }
+
       if (Array.isArray(value)) {
         if (_.isEmpty(value)) {
           return false;

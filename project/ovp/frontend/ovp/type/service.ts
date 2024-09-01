@@ -7,8 +7,7 @@ export interface Service {
   terms: object[];
   serviceType: string;
   description: string;
-  // database | storage
-  type: string;
+  type: "database" | "storage";
 }
 
 export interface Owner {
@@ -33,4 +32,17 @@ export interface Ingestion {
   startDate: number;
   endDate: number;
   timestamp: number;
+}
+
+export interface ServiceData {
+  description: string;
+}
+
+export interface DBServiceListData {
+  owner: string | undefined;
+  fqn: string;
+  name: string;
+  id: string;
+  type: string;
+  desc: string | undefined;
 }
