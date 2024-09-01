@@ -48,7 +48,7 @@
       <a
         href="javascript:void(0);"
         class="editable-group-title"
-        title="상세 보기"
+        :title="newData.firModelNm ?? newData.modelNm"
         @click.stop="modelNmClick"
         >{{ newData.firModelNm ?? newData.modelNm }}</a
       >
@@ -75,13 +75,15 @@
           <a
             href="javascript:void(0);"
             class="editable-group-title"
-            title="상세 보기"
+            :title="newData.firModelNm ?? newData.modelNm"
             @click.stop="modelNmClick"
             >{{ newData.firModelNm ?? newData.modelNm }}</a
           >
         </template>
         <template v-else>
-          <h3 class="editable-group-title">{{ newData.modelNm }}</h3>
+          <h3 class="editable-group-title" :title="newData.modelNm">
+            {{ newData.modelNm }}
+          </h3>
         </template>
       </template>
     </editable-group>
@@ -89,7 +91,7 @@
       class="editable-group"
       v-show="!user.admin && newData.owner?.id !== user.id"
     >
-      <span class="editable-group-desc">
+      <span class="editable-group-desc" :title="props.dataObj.modelDesc">
         {{
           props.dataObj.modelDesc === "" ||
           props.dataObj.modelDesc === null ||
@@ -117,7 +119,7 @@
         ></textarea>
       </template>
       <template #view-slot>
-        <span class="editable-group-desc">
+        <span class="editable-group-desc" :title="props.dataObj.modelDesc">
           {{
             props.dataObj.modelDesc === "" ||
             props.dataObj.modelDesc === null ||

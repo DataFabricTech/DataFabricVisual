@@ -12,14 +12,10 @@
     >
       <template v-slot:sampleData>
         <!-- 샘플데이터 탭 내용 -->
-        <div class="data-summary">
+        <div class="data-summary" v-show="props.isItemClicked">
           <span class="data-summary-title">데이터 모델 요약</span>
-          <span class="data-summary-name" v-show="props.isItemClicked">{{
-            props.dataModelName
-          }}</span>
-          <span class="data-summary-text" v-show="props.isItemClicked"
-            >({{ props.dataModelOwner }})</span
-          >
+          <span class="data-summary-name">{{ props.dataModelName }}</span>
+          <span class="data-summary-text">({{ props.dataModelOwner }})</span>
         </div>
         <div class="data-detail" v-if="props.isItemClicked">
           <agGrid
@@ -48,14 +44,10 @@
       </template>
       <template v-slot:dataProfiling>
         <!-- 데이터 프로파일링 탭 내용 -->
-        <div class="data-summary">
+        <div class="data-summary" v-show="props.isItemClicked">
           <span class="data-summary-title">데이터 모델 요약</span>
-          <span class="data-summary-name" v-show="props.isItemClicked">{{
-            props.dataModelName
-          }}</span>
-          <span class="data-summary-text" v-show="props.isItemClicked"
-            >({{ props.dataModelOwner }})</span
-          >
+          <span class="data-summary-name">{{ props.dataModelName }}</span>
+          <span class="data-summary-text">({{ props.dataModelOwner }})</span>
         </div>
         <div class="profiling-detail" v-show="props.isItemClicked">
           <span class="profiling-detail-title">컬럼 상세</span>
