@@ -112,8 +112,8 @@ public class ServiceManageController {
      */
     @ResponseJsonResult
     @GetMapping("/ingestion/list")
-    public Object getIngestionList(@RequestParam String service) {
-        return serviceManageService.getIngestionList(service);
+    public Object getIngestionList(@RequestParam String service, @RequestParam String serviceType) {
+        return serviceManageService.getIngestionList(service, serviceType);
     }
 
     @ResponseJsonResult

@@ -7,7 +7,7 @@ export const useServiceCollectionLogStore = defineStore(
   () => {
     const { $api } = useNuxtApp();
 
-    const collectionLogData: Ref<object> = ref({});
+    const collectionLog: Ref<string> = ref("");
 
     let serviceId = "";
 
@@ -20,12 +20,12 @@ export const useServiceCollectionLogStore = defineStore(
         `/api/service-manage/collection/log/${serviceId}`,
       );
 
-      collectionLogData.value = data.data;
+      collectionLog.value = data.data?.log ?? "";
     };
 
     return {
       setServiceId,
-      collectionLogData,
+      collectionLog,
       getCollectionLogData,
     };
   },

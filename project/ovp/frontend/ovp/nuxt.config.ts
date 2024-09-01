@@ -18,6 +18,7 @@ export default defineNuxtConfig({
     "@nuxtjs/svg-sprite",
     "nuxt-lodash",
     "dayjs-nuxt",
+    "nuxt-monaco-editor",
   ],
 
   // runtime에서 설정된 정보를 조회 가능

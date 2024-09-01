@@ -51,7 +51,6 @@
 </template>
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
-import { useCreationStore } from "~/store/datamodel-creation";
 import AddTransfer from "~/components/datamodel-creation/modal/add-transfer.vue";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 import { storeToRefs } from "pinia";

@@ -150,7 +150,7 @@
             ></loading>
             <button
               class="button button button-neutral-stroke"
-              @click="openLogModal()"
+              @click="openLogModal(ingestion.id)"
             >
               로그
             </button>
@@ -165,11 +165,11 @@
       </div>
     </div>
   </div>
-  <modal-log></modal-log>
+  <log></log>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onBeforeMount, watch } from "vue";
 import { useModal } from "vue-final-modal";
 import cronstrue from "cronstrue";
 
@@ -182,6 +182,7 @@ import { useServiceCollectionLogStore } from "@/store/manage/service/collection-
 
 import Loading from "@base/loading/Loading.vue";
 import ModalCollection from "@/components/manage/service/modal/collection/modal-collection.vue";
+import Log from "@/components/manage/service/modal/log.vue";
 
 const dayjs = useDayjs();
 const FORMAT = "MMM D, YYYY, h:mm A";
@@ -207,15 +208,15 @@ const {
   setId,
   getPipeLineData,
 } = collectionAddStore;
-const { getCollectionLogData, setServiceId } = serviceCollectionLogStore;
+const { setServiceId } = serviceCollectionLogStore;
 
 const ingestionSelected = ref([]);
 
-const { open, close } = useModal({
+const collectionModalInstance = useModal({
   component: ModalCollection,
   attrs: {
     onClose() {
-      close();
+      collectionModalInstance.close();
     },
     // onLoadData() {
     //   //TODO: 메타데이터 생성/수정 모달이 닫혔을때 파이프라인 목록 갱신 필요
@@ -223,26 +224,19 @@ const { open, close } = useModal({
   },
 });
 
-const isModalVisible = ref(false);
-// const openModal = async (id: string) => {
-//   // 스토어에 id 저장
-//   setServiceId(id);
-//   // 로그 API 호출
-//   await getCollectionLogData();
-//   isModalVisible.value = true;
-// }
-
-onMounted(async () => {
-  await getIngestionList(service.name);
-  filterList();
+const logModalInstance = useModal({
+  component: Log,
+  attrs: {
+    onClose() {
+      logModalInstance.close();
+    },
+  },
 });
 
-watch(
-  () => store.service.name,
-  async () => {
-    await refreshIngestionList();
-  },
-);
+const openLogModal = async (id: string) => {
+  setServiceId(id);
+  logModalInstance.open();
+};
 
 const isEmpty = (): boolean => {
   return ingestionList.length === 0;
@@ -302,7 +296,9 @@ const filteredIngestionList = ref<Ingestion[]>([]);
 
 function filterList(): void {
   filteredIngestionList.value = ingestionList.filter((item) =>
-    item.displayName.toLowerCase().includes(keyword.value.toLowerCase()),
+    (item.displayName ?? item.name)
+      .toLowerCase()
+      .includes(keyword.value.toLowerCase()),
   );
 }
 
@@ -317,7 +313,7 @@ async function getStatus(ingestion: Ingestion): Promise<void> {
 }
 
 async function refreshIngestionList(): Promise<void> {
-  await getIngestionList(service.name);
+  await getIngestionList(service);
   filterList();
 }
 
@@ -363,10 +359,6 @@ async function deploy(ingestion: Ingestion): Promise<void> {
   }
 }
 
-async function editIngestionModal(id: string): Promise<void> {
-  //TODO: 모달 연동
-}
-
 async function onDelete(id: string): Promise<void> {
   if (confirm("해당 수집 워크플로우가 영구 삭제되며 복구할 수 없습니다.")) {
     try {
@@ -402,8 +394,6 @@ async function kill(ingestion: Ingestion): Promise<void> {
   }
 }
 
-async function openLogModal() {}
-
 const toggle = ref<boolean>(false);
 
 function openAddModel(value: string) {
@@ -423,12 +413,14 @@ function openAddModel(value: string) {
     setModalTitle("프로파일러 수집 추가");
   }
 
-  open();
+  collectionModalInstance.open();
   ingestionSelected.value = [];
 }
 
 const openEditModal = async (value: any) => {
   await getPipeLineData(value);
-  open();
+  collectionModalInstance.open();
 };
+
+await refreshIngestionList();
 </script>
