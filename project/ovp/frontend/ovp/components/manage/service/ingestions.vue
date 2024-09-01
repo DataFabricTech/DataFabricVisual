@@ -20,30 +20,32 @@
           <svg-icon class="button-icon" name="close"></svg-icon>
         </button>
       </div>
-      <button class="button button-neutral-ghost" @click="toggle = !toggle">
-        <span class="button-title">수집추가</span>
-        <svg-icon
-          class="button-icon"
-          name="chevron-down-medium"
-          v-if="!toggle"
-        ></svg-icon>
-        <svg-icon
-          class="button-icon rotate-180"
-          name="chevron-down-medium"
-          v-else
-        ></svg-icon>
-      </button>
-      <div class="dropdown" style="top: 270px; right: 16px" v-if="toggle">
-        <ul class="dropdown-list">
-          <li
-            class="dropdown-item"
-            v-for="item in $constants.SERVICE.INGESTION.SELECT_BOX_DATA"
-          >
-            <button class="dropdown-button" @click="openAddModel(item.value)">
-              <span class="dropdown-text">{{ item.label }}</span>
-            </button>
-          </li>
-        </ul>
+      <div class="relative">
+        <button class="button button-neutral-ghost" @click="toggle = !toggle">
+          <span class="button-title">수집추가</span>
+          <svg-icon
+            class="button-icon"
+            name="chevron-down-medium"
+            v-if="!toggle"
+          ></svg-icon>
+          <svg-icon
+            class="button-icon rotate-180"
+            name="chevron-down-medium"
+            v-else
+          ></svg-icon>
+        </button>
+        <div class="dropdown" style="right: 0" v-if="toggle">
+          <ul class="dropdown-list">
+            <li
+              class="dropdown-item"
+              v-for="item in $constants.SERVICE.INGESTION.SELECT_BOX_DATA"
+            >
+              <button class="dropdown-button" @click="openAddModel(item.value)">
+                <span class="dropdown-text">{{ item.label }}</span>
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <table class="mt-3" v-if="!isEmpty()">
@@ -159,7 +161,7 @@
     <div class="no-result max-h-40" v-if="isEmpty()">
       <div class="notification">
         <svg-icon class="notification-icon" name="info"></svg-icon>
-        <p class="notification-detail">데이터 리스트가 없습니다.</p>
+        <p class="notification-detail">수집 리스트가 없습니다.</p>
       </div>
     </div>
   </div>

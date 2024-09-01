@@ -1,6 +1,12 @@
 import { defineStore } from "pinia";
 import { ref, reactive, type Ref } from "vue";
-import type { Service, Owner, Ingestion } from "~/type/service";
+import type {
+  Service,
+  Owner,
+  Ingestion,
+  ServiceData,
+  DBServiceListData,
+} from "~/type/service";
 import type { JsonPatchOperation } from "~/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import {
@@ -10,19 +16,6 @@ import {
 import { useDataModelDetailStore } from "@/store/search/detail";
 import $constants from "~/utils/constant";
 import _ from "lodash";
-
-interface ServiceData {
-  description: string;
-}
-
-interface DBServiceListData {
-  owner: string | undefined;
-  fqn: string;
-  name: string;
-  id: string;
-  type: string;
-  desc: string | undefined;
-}
 
 export const useServiceStore = defineStore("service", () => {
   const { $api } = useNuxtApp();
@@ -225,7 +218,7 @@ export const useServiceStore = defineStore("service", () => {
       });
     } else if (target === "Glossary") {
       body = _.filter(termList.value, (tag) => {
-        return data.includes(tag.fullyQualifiedName);
+        return data.includes(tag.tagFQN);
       });
     }
 
@@ -359,6 +352,7 @@ export const useServiceStore = defineStore("service", () => {
   }
 
   function setIngestionStatus(name: string, pipelineState: string) {
+    // eslint-disable-next-line id-length
     const index = ingestionList.findIndex((v: Ingestion) => v.name === name);
     if (index !== -1) {
       ingestionList[index].pipelineState = pipelineState;

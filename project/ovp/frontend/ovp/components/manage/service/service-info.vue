@@ -92,10 +92,11 @@
               class="editable-group w-auto"
               v-if="!serviceStore.editInfo.term"
             >
+              <div class="text-neutral-700" v-if="service.terms.length === 0">
+                <span>용어 없음</span>
+              </div>
               <div class="tag tag-primary tag-sm" v-for="term in service.terms">
-                <span class="tag-text">{{
-                  term ? term.displayName : "없음"
-                }}</span>
+                <span class="tag-text">{{ term.displayName }}</span>
               </div>
               <button
                 class="button button-neutral-ghost button-sm"
@@ -114,7 +115,7 @@
                 :data="termList"
                 :selected-items="service.terms"
                 label-key="displayName"
-                value-key="fullyQualifiedName"
+                value-key="tagFQN"
                 :is-multi="true"
                 title="값을 선택하세요"
                 @multiple-change="changeTerms"
@@ -219,7 +220,7 @@ async function changeTags(value: MenuSearchItemImpl[]): Promise<void> {
 }
 
 async function changeTerms(value: MenuSearchItemImpl[]): Promise<void> {
-  const data: any = _.map(value, "fullyQualifiedName");
+  const data: any = _.map(value, "tagFQN");
   await changeTag("Glossary", data);
   await refreshService();
 }
