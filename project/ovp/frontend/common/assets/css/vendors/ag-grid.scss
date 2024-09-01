@@ -22,3 +22,8 @@
 .ag-theme-alpine.ag-theme-quartz .ag-ltr .ag-cell-focus:not(.ag-cell-range-selected):focus-within {
   border: none;
 }
+
+
+.ag-theme-alpine.ag-theme-quartz .ag-ltr .ag-cell .link-button {
+  justify-content: flex-start;
+}
