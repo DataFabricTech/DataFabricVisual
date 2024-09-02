@@ -169,7 +169,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onBeforeMount, watch } from "vue";
+import { ref } from "vue";
 import { useModal } from "vue-final-modal";
 import cronstrue from "cronstrue";
 
@@ -215,12 +215,12 @@ const ingestionSelected = ref([]);
 const collectionModalInstance = useModal({
   component: ModalCollection,
   attrs: {
-    onClose() {
+    async onClose(data: any) {
+      if (data) {
+        await refreshIngestionList();
+      }
       collectionModalInstance.close();
     },
-    // onLoadData() {
-    //   //TODO: 메타데이터 생성/수정 모달이 닫혔을때 파이프라인 목록 갱신 필요
-    // },
   },
 });
 
