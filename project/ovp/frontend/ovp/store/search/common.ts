@@ -124,7 +124,22 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     const { data } = await $api(`/api/search/list?${getSearchListQuery()}`, {
       showLoader: false,
     });
-    return data;
+    // 특수문자 이슈 때문에  backend 에서 1차로 처리(일부 특수문자에 한해서) 했으나,
+    // 그외의 특수문자의 경우, backend 에서 에러를 뱉음 -> 공백으로 처리한다.
+    return (
+      data ?? {
+        data: {
+          model: [],
+          table: [],
+          storage: [],
+        },
+        totalCount: {
+          model: 0,
+          table: 0,
+          storage: 0,
+        },
+      }
+    );
   };
   /**
    * 데이터 조회 -> 누적

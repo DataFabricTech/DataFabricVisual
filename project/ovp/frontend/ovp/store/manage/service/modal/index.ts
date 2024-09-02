@@ -64,7 +64,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
     return new URLSearchParams({
       index: selectedServiceObj.value.id,
       // eslint-disable-next-line id-length
-      q: `*${serviceObj.value.defaultInfo.serviceNm}*`,
+      q: `fullyQualifiedName:${serviceObj.value.defaultInfo.serviceNm}`,
       from: "0",
       size: "1",
     });
@@ -195,11 +195,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
         addIfExists(specificConfig, "database", connectionData.database);
         addIfExists(specificConfig, "username", connectionData.username);
         addIfExists(specificConfig, "hostAndPort", connectionData.hostPort);
-        addIfExists(
-          specificConfig,
-          "classificationName",
-          connectionData.classificationName,
-        );
         break;
       }
 
@@ -351,7 +346,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
 
       case ServiceIds.POSTGRESQL: {
         specificConfig = {
-          classificationName: "postgresPolicyTags",
           ingestAllDatabases: true,
           sslMode: "disable",
         };

@@ -8,16 +8,16 @@ import com.mobigen.ovp.common.openmete_client.DatabaseSchemasClient;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.ServicesClient;
+import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Ingestion;
+import com.mobigen.ovp.common.openmete_client.dto.Services;
 import com.mobigen.ovp.common.openmete_client.dto.Tag;
 import com.mobigen.ovp.glossary.client.GlossaryClient;
 import com.mobigen.ovp.glossary.client.dto.TermDto;
+import com.mobigen.ovp.search.SearchService;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailTagDto;
 import com.mobigen.ovp.service_manager.client.response.IngestionResponse;
 import com.mobigen.ovp.service_manager.client.response.ServiceCollectionLogResponse;
-import com.mobigen.ovp.common.openmete_client.dto.Services;
-import com.mobigen.ovp.search.SearchService;
-import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.service_manager.client.response.ServiceResponse;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -306,9 +306,14 @@ public class ServiceManageService {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("fields", "owner,pipelineStatuses");
         params.add("service", service);
-        params.add("pipelineType", "metadata,usage,lineage,profiler,dbt");
         params.add("serviceType", serviceType);
         params.add("limit", "1000");
+
+        if(serviceType.equals("databaseService")) {
+            params.add("pipelineType", "metadata,usage,lineage,profiler,dbt");
+        } else {
+            params.add("pipelineType", "metadata,usage,lineage,profiler,storageProfiler,dbt");
+        }
 
         List<Ingestion> ingestion = servicesClient.getIngestionList(params).getData();
         return ingestion.stream().map(IngestionResponse::new).toList();
@@ -388,14 +393,17 @@ public class ServiceManageService {
     }
 
     public Boolean checkDuplicatedNm(MultiValueMap<String, String> params) throws Exception {
-        String index = params.getFirst("index");
-
-        String newIndex = index.toLowerCase().equals("minio") ? "storage_service_search_index" : "database_service_search_index";
+        String index = params.getFirst("index").toLowerCase();
+        String newIndex = index.equals("minio") ? "storage_service_search_index" : "database_service_search_index";
         params.set("index", newIndex);
 
-        Object result = searchClient.getSearchList(params);
-        Map<String, Object> response = searchService.convertToMap((Map<String, Object>) result);
-        return Integer.parseInt(response.get("totalCount").toString()) > 0;
+        Map<String, Object> result = searchClient.getSearchList(params);
+        Map<String, Object> hits = (Map<String, Object>) result.get("hits");
+        int totalCount = ((Map<String, Object>) hits.get("total")).get("value") instanceof Integer ?
+                (Integer) ((Map<String, Object>) hits.get("total")).get("value") :
+                Integer.parseInt(((Map<String, Object>) hits.get("total")).get("value").toString());
+
+        return totalCount > 0;
     }
 
     public Object connectionTest(Map<String, Object> params) {

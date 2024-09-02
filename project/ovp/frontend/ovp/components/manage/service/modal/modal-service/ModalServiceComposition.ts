@@ -245,13 +245,6 @@ export function ModalServiceComposition(
               label: "Database",
               type: PanelTypes.INPUT,
             },
-            {
-              id: "classificationName",
-              label: "Classification Name",
-              type: PanelTypes.INPUT,
-              defaultValue: "PostgresPolicyTags",
-              required: true,
-            },
           ],
         },
       ],
