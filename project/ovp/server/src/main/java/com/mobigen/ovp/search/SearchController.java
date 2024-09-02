@@ -55,7 +55,7 @@ public class SearchController {
     @GetMapping("/list")
     public Object getSearchList(@RequestParam MultiValueMap<String, String> params) throws Exception {
 
-        if(params.get("index").get(0).equals("all")) {
+        if (params.get("index").get(0).equals("all")) {
             return searchService.getAllSearchList(params);
         }
 
