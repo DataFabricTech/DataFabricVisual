@@ -244,6 +244,7 @@ export function ModalServiceComposition(
               id: "database",
               label: "Database",
               type: PanelTypes.INPUT,
+              required: true,
             },
           ],
         },
