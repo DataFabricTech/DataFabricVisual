@@ -80,8 +80,7 @@ public class ModelConvertUtil {
             resultList.remove(resultList.size() - 1);
             modifiedSource.put("depth", resultList);
         } else {
-            modifiedSource.put("depth", resultList);
-//            modifiedSource.put("depth", List.of(new String[]{resultList.get(0), resultList.get(1)}));
+            modifiedSource.put("depth", List.of(new String[]{resultList.get(0), resultList.get(1)}));
         }
 
         modifiedSource.put("firModelNm", source.get("displayName"));
