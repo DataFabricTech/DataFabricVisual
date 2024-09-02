@@ -80,7 +80,12 @@ public class ModelConvertUtil {
             resultList.remove(resultList.size() - 1);
             modifiedSource.put("depth", resultList);
         } else {
-            modifiedSource.put("depth", List.of(new String[]{resultList.get(0), resultList.get(1)}));
+            // TODO : [개발] 마이 페이지 -> 나의 데이터 에 'admin' 계정인 경우, all 로 모든 데이터가 표시되기 때문에 아래 코드에서 에러남. try/catch 로 에러 대응함. 추후 코드 수정 필요함.
+            try {
+                modifiedSource.put("depth", List.of(new String[]{resultList.get(0), resultList.get(1)}));
+            } catch (Exception e) {
+                modifiedSource.put("depth", resultList);
+            }
         }
 
         modifiedSource.put("firModelNm", source.get("displayName"));
