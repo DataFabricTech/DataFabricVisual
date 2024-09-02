@@ -306,9 +306,14 @@ public class ServiceManageService {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("fields", "owner,pipelineStatuses");
         params.add("service", service);
-        params.add("pipelineType", "metadata,usage,lineage,profiler,dbt");
         params.add("serviceType", serviceType);
         params.add("limit", "1000");
+
+        if(serviceType.equals("databaseService")) {
+            params.add("pipelineType", "metadata,usage,lineage,profiler,dbt");
+        } else {
+            params.add("pipelineType", "metadata,usage,lineage,profiler,storageProfiler,dbt");
+        }
 
         List<Ingestion> ingestion = servicesClient.getIngestionList(params).getData();
         return ingestion.stream().map(IngestionResponse::new).toList();
