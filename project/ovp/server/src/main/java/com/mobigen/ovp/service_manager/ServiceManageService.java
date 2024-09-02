@@ -106,16 +106,16 @@ public class ServiceManageService {
      */
     public Object searchServices(String keyword, String from) throws Exception {
         List<ServiceResponse> result = new ArrayList<>();
-        List<ServiceResponse> databaseServices = fetchSearchServices(keyword, from, "database_service_search_index");
+        List<ServiceResponse> databaseServices = fetchSearchServices(keyword, from, "database_service_search_index", DATA_BASE);
         result.addAll(databaseServices);
 
-        List<ServiceResponse> storageServices = fetchSearchServices(keyword, from, "storage_service_search_index");
+        List<ServiceResponse> storageServices = fetchSearchServices(keyword, from, "storage_service_search_index", STORAGE);
         result.addAll(storageServices);
 
         return result;
     }
 
-    private List<ServiceResponse> fetchSearchServices(String keyword, String from, String index) throws Exception {
+    private List<ServiceResponse> fetchSearchServices(String keyword, String from, String index, String type) throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("q", keyword);
         params.add("from", from);
@@ -125,7 +125,7 @@ public class ServiceManageService {
 
         return hits.stream()
                 .map(hit -> (Map<String, Object>) hit.get("_source"))
-                .map(ServiceResponse::new)
+                .map(data -> new ServiceResponse(data, type))
                 .collect(Collectors.toList());
     }
 
