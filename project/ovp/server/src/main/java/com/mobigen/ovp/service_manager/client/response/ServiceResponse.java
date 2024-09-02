@@ -84,7 +84,7 @@ public class ServiceResponse {
         this.type = type;
     }
 
-    public ServiceResponse(Map<String, Object> map) {
+    public ServiceResponse(Map<String, Object> map, String type) {
         this.id = (String) map.get("id");
         this.name = (String) map.get("name");
         this.fullyQualifiedName = (String) map.get("fullyQualifiedName");
@@ -92,6 +92,7 @@ public class ServiceResponse {
         this.description = (String) map.get("description");
         this.tags = new ArrayList<Map<String, Object>>();
         this.terms = new ArrayList<Map<String, Object>>();
+        this.type = type;
 
         List<Map<String, Object>> tags = (List<Map<String, Object>>) map.get("tags");
         if(tags != null) {
