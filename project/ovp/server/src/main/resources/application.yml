@@ -35,7 +35,7 @@ spring:
         maximum-pool-size: 10
         minimum-idle: 5
         pool-name: BaseHikariPool
-        jdbc-url: jdbc:postgresql://192.168.105.26:5432/postgres?currentSchema=ovp
+        jdbc-url: jdbc:postgresql://192.168.105.26:5432/postgres2?currentSchema=ovp
         username: postgres
         password: postgres
         driver-class-name: org.postgresql.Driver
@@ -153,6 +153,6 @@ spring:
   primary:
     datasource:
       hikari:
-        jdbc-url: jdbc:postgresql://192.168.105.26:5432/postgres?currentSchema=ovp
+        jdbc-url: jdbc:postgresql://192.168.105.26:5432/postgres2?currentSchema=ovp
         username: postgres
         password: postgres
