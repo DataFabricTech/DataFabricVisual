@@ -195,11 +195,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
         addIfExists(specificConfig, "database", connectionData.database);
         addIfExists(specificConfig, "username", connectionData.username);
         addIfExists(specificConfig, "hostAndPort", connectionData.hostPort);
-        addIfExists(
-          specificConfig,
-          "classificationName",
-          connectionData.classificationName,
-        );
         break;
       }
 
@@ -351,7 +346,6 @@ export const useServiceStore = defineStore("serviceStore", () => {
 
       case ServiceIds.POSTGRESQL: {
         specificConfig = {
-          classificationName: "postgresPolicyTags",
           ingestAllDatabases: true,
           sslMode: "disable",
         };
