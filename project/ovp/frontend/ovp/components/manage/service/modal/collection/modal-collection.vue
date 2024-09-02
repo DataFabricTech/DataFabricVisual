@@ -13,8 +13,8 @@
     :height="580"
     swipeToClose="none"
     @before-open="onBeforeOpen"
-    @closed="onClosed"
-    @cancel="onClosed"
+    @closed="onClosed(false)"
+    @cancel="onClosed(false)"
   >
     <template v-slot:body>
       <Step
@@ -38,7 +38,10 @@
       <schedule-step :is-show="currentStep === 2" />
     </template>
     <template v-slot:footer>
-      <button class="button button-neutral-ghost button-lg" @click="onClosed">
+      <button
+        class="button button-neutral-ghost button-lg"
+        @click="onClosed(false)"
+      >
         취소
       </button>
       <div class="modal-foot-group">
@@ -97,10 +100,14 @@ const emit = defineEmits<{
   (e: "onLoadData"): void;
 }>();
 
-const onClosed = () => {
+const onClosed = (data: any) => {
   currentStep.value = 1;
   resetData();
-  emit("close");
+  if (data) {
+    emit("close", true);
+  } else {
+    emit("close");
+  }
 };
 
 const onBeforeOpen = () => {
@@ -149,9 +156,7 @@ const gotoNext = async () => {
     if (!isValid.value) {
       return;
     }
-    onClosed();
-    emit("onLoadData");
-    return;
+    onClosed(true);
   } else {
     currentStep.value = currentStep.value + 1;
   }
