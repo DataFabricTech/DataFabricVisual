@@ -27,8 +27,12 @@
           >
             편집
           </button>
-          <!-- TODO: 삭제 모달 -->
-          <button class="button button button-error-stroke">삭제</button>
+          <button
+            class="button button button-error-stroke"
+            @click="removeTerm(term.id)"
+          >
+            삭제
+          </button>
         </div>
       </td>
     </tr>
@@ -39,11 +43,26 @@
 <script setup lang="ts">
 import { useGlossaryStore } from "@/store/glossary";
 import type { Term } from "~/type/glossary";
-const { terms, openEditTermComponent, changeCurrentTerm } = useGlossaryStore();
+const {
+  glossary,
+  terms,
+  openEditTermComponent,
+  changeCurrentTerm,
+  deleteTerm,
+  getTerms,
+} = useGlossaryStore();
 
 function onClickTerm(source: Term) {
   changeCurrentTerm(source);
   openEditTermComponent("term");
 }
+
+async function removeTerm(id: string) {
+  if (confirm("데이터모델을 삭제 하시겠습니까?")) {
+    await deleteTerm(id);
+    await getTerms(glossary.name);
+  }
+}
+
 const showModalPwChange: () => void = () => {};
 </script>
