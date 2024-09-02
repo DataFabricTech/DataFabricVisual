@@ -2,7 +2,6 @@
   <div class="section-top-bar">
     <div class="l-top-bar">
       <h3 class="title">용어사전</h3>
-      <button class="button button-primary w-20">저장</button>
     </div>
   </div>
   <div class="section-contents p-0 bg-white">
