@@ -8,8 +8,9 @@ import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivityResponse;
 import com.mobigen.ovp.glossary.client.dto.common.Tag;
 import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
 import com.mobigen.ovp.glossary.client.dto.TermDto;
-import com.mobigen.ovp.glossary.client.dto.glossary.Glossary;
 import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivity;
+import com.mobigen.ovp.glossary.client.dto.common.Tag;
+import com.mobigen.ovp.glossary.client.dto.glossary.Glossary;
 import com.mobigen.ovp.glossary.client.dto.terms.Term;
 import com.mobigen.ovp.glossary.client.response.Glossaries;
 import com.mobigen.ovp.glossary.client.response.GlossaryActivities;
@@ -111,7 +112,8 @@ public class GlossaryService {
     public List<Terms> glossaryTerms(String directChildrenOf) {
         final String FIELDS = "tags,relatedTerms";
         List<Terms> result = new ArrayList<>();
-        List<Term> response = glossaryClient.getGlossaryTerms(directChildrenOf, FIELDS).getData();
+        // TODO: 용어 전체를 가져오는건지 아니면 인피니티 스크롤 이용해서 가져오는지에 따라 after 처리를 해야 함.
+        List<Term> response = glossaryClient.getGlossaryTerms(directChildrenOf, FIELDS, 100, "").getData();
 
         for (Term term : response) {
             result.add(new Terms(term));

@@ -2,7 +2,10 @@
   <div class="wrap is-wrap-height-full">
     <div class="submit-form">
       <form class="submit-form-form" @submit.prevent="onSubmit">
-        <h1 class="submit-form-logo">LOGO</h1>
+        <h1 class="submit-form-logo">
+          <span class="hidden-text">open vdap portal</span>
+          <svg-icon class="logo" name="logo-simbol"></svg-icon>
+        </h1>
         <h2 class="submit-form-title">회원가입</h2>
         <div class="form form-lg gap-6">
           <div class="form-body">
@@ -73,16 +76,12 @@
                   >
                     <span class="hidden-text">비밀번호 보기 해제</span>
                     <svg-icon
-                      v-if="
-                        pwComposition.inputPasswordType.value === 'password'
+                      class="button-icon"
+                      :name="
+                        getPwdIconName({
+                          inputType: pwComposition.inputPasswordType.value,
+                        })
                       "
-                      class="button-icon"
-                      name="eye"
-                    ></svg-icon>
-                    <svg-icon
-                      v-else
-                      class="button-icon"
-                      name="eye-hide"
                     ></svg-icon>
                   </button>
                 </div>
@@ -118,17 +117,13 @@
                   >
                     <span class="hidden-text">지우기</span>
                     <svg-icon
-                      v-if="
-                        pwComposition.inputConfirmPasswordType.value ===
-                        'password'
+                      class="button-icon"
+                      :name="
+                        getPwdIconName({
+                          inputType:
+                            pwComposition.inputConfirmPasswordType.value,
+                        })
                       "
-                      class="button-icon"
-                      name="eye"
-                    ></svg-icon>
-                    <svg-icon
-                      v-else
-                      class="button-icon"
-                      name="eye-hide"
                     ></svg-icon>
                   </button>
                 </div>
@@ -148,7 +143,7 @@
             <button class="button button-primary button-lg" type="submit">
               회원가입
             </button>
-            <button class="link-button link-button-support button-sm w-full" type="button">
+            <button class="button button-primary-ghost button-sm" type="button">
               <nuxt-link :to="'/portal/login'">
                 로그인 페이지로 돌아가기
               </nuxt-link>
@@ -163,9 +158,12 @@
 <script setup lang="ts">
 import { loginStore } from "@/store/login/index";
 import { useRouter } from "vue-router";
-import { PasswordComposition } from "~/components/login/PasswordComposition";
-import $constants from "~/utils/constant";
+import { PasswordComposition } from "@/components/login/PasswordComposition";
+import { useCommonUtils } from "@/composables/commonUtils";
+import $constants from "@/utils/constant";
+
 const pwComposition = PasswordComposition();
+const { getPwdIconName } = useCommonUtils();
 
 const form: {
   name: string;
@@ -208,24 +206,24 @@ const validateForm = () => {
 };
 
 const validateName = () => {
-  errors.name = form.name ? "" : "사용자 이름을 입력하세요.";
+  errors.name = form.name ? "" : $constants.LOGIN.NAME.INPUT_ERROR_MSG;
   return !errors.name;
 };
 
 const validateEmail = () => {
-  errors.email = form.email ? "" : "사용자 이메일을 입력하세요.";
+  errors.email = form.email ? "" : $constants.LOGIN.EMAIL.INPUT_ERROR_MSG;
   if (errors.email) return false;
 
   errors.email = $constants.LOGIN.EMAIL.REGEX.test(form.email)
     ? ""
-    : "이메일이 유효하지 않습니다.";
+    : $constants.LOGIN.EMAIL.REGEX_ERROR_MSG;
   return !errors.email;
 };
 
 const isDuplicateEmail = async () => {
   const result = await store.checkDuplicateEmail({ email: form.email });
   const isDuplicate = result.data;
-  errors.email = isDuplicate ? "이미 사용 중인 이메일입니다." : "";
+  errors.email = isDuplicate ? $constants.LOGIN.EMAIL.DUPLICATE_ERROR_MSG : "";
   return isDuplicate;
 };
 

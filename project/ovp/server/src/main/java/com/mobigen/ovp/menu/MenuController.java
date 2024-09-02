@@ -17,7 +17,7 @@ public class MenuController {
 
     @ResponseJsonResult
     @GetMapping("/list")
-    public Object getMenus() {
+    public Object getMenus() throws Exception {
         return menuService.getMenus();
     }
 }

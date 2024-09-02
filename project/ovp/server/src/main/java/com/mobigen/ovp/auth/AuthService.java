@@ -14,13 +14,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.context.Context;
+import org.springframework.util.FileCopyUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +60,12 @@ public class AuthService {
         String base64EncodingPasswd = Base64.getEncoder().encodeToString(param.get(PASSWORD_KEY).toString().getBytes());
         param.put(PASSWORD_KEY, base64EncodingPasswd);
 
-        Map<String, Object> result = authClient.login(param);
+        Map<String, Object> result = new HashMap<>();
+        try{
+            result = authClient.login(param);
+        } catch (Exception e) {
+            throw new Exception("아이디 및 비밀번호가 유효하지 않습니다.");
+        }
 
         return token.addTokenToResponse(response, result);
     }
@@ -217,9 +226,9 @@ public class AuthService {
 
         String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
         String id = UUID.randomUUID().toString();
-        Context context = prepareEmailContext(host, id);
+        String context = prepareEmailContext(host, id);
 
-        boolean sendEmail = emailUtil.sendHTMLMail(email, ovpProperties.getMail().getTitle(), context,"ovp_pwReset");
+        boolean sendEmail = emailUtil.sendHTMLMail(email, ovpProperties.getMail().getTitle(), context);
 
         // Email 전송 성공 시 DB에 데이터 저장
         if (sendEmail) {
@@ -257,6 +266,8 @@ public class AuthService {
         boolean isChange = changePassword(param);
         if (isChange) {
             pwResetRepository.deleteById(id);
+        } else {
+            throw new Exception("비밀번호 설정이 잘못되었습니다.");
         }
         return isChange;
     }
@@ -284,6 +295,14 @@ public class AuthService {
      * @return
      * @throws Exception
      */
+    public boolean changePasswordInMypage(Map<String, Object> param) throws Exception {
+        boolean isChange = changePassword(param);
+        if (!isChange) {
+            throw new Exception("비밀번호 설정이 잘못되었습니다.");
+        }
+        return isChange;
+    }
+
     public boolean changePassword(Map<String, Object> param) throws Exception {
         param.put("requestType", "USER");
 
@@ -318,7 +337,7 @@ public class AuthService {
             return authClient.signUpUser(adminAuthorizationHeader, paramMap);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            throw new Exception("회원가입 실패. 관리자에게 문의하세요");
+            throw new Exception("회원가입에 실패 했습니다. 관리자에게 문의해주세요.");
         }
     }
 
@@ -340,7 +359,7 @@ public class AuthService {
         } catch (Exception e) {
             authClient.deleteUser(adminAuthorizationHeader, (String) signUpResult.get("id"), true, false);
             log.error(e.getMessage(), e);
-            throw new Exception("회원가입 실패. 관리자에게 문의하세요");
+            throw new Exception("회원가입에 실패 했습니다. 관리자에게 문의해주세요.");
         }
     }
 
@@ -351,12 +370,29 @@ public class AuthService {
      * @param id
      * @return
      */
-    private Context prepareEmailContext(String host, String id) {
-        Context context = new Context();
-        context.setVariable("url", host + ovpProperties.getMail().getHref());
-        context.setVariable("token", id);
-        context.setVariable("validationTime", ovpProperties.getMail().getValidTime());
-        return context;
+    private String prepareEmailContext(String host, String id) {
+        OvpProperties.MailProperties emailProps = ovpProperties.getMail();
+        String contents = "";
+
+        // read file
+        ClassPathResource resource = new ClassPathResource(emailProps.getContentsFilePath());
+        try {
+            InputStream inputStream = resource.getInputStream();
+            byte[] fileContent = FileCopyUtils.copyToByteArray(inputStream);
+            contents = new String(fileContent, StandardCharsets.UTF_8);
+
+            inputStream.close();
+        } catch (IOException e) {
+            log.error("(getPasswordEmailTemplate) Failed read file: " + emailProps.getContentsFilePath());
+            throw new RuntimeException(e);
+        }
+
+        String tokenUrl = String.format("%s%s/%s", host, ovpProperties.getMail().getHref(), id);
+        // replace text in contents html
+        contents = contents
+                .replace("{message.url}", tokenUrl)
+                .replace("{message.validationTime}", ovpProperties.getMail().getValidTime());
+        return contents;
     }
 
     /**

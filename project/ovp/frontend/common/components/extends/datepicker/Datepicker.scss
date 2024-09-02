@@ -43,12 +43,22 @@
   @include box-shadow('md');
   @include z-index('alert');
 
-  margin-top: 6px;
+  margin-top: $spacing-6;
 
   .mx-btn-current-year,
   .mx-btn-current-month,
   .mx-calendar-header-label {
     font-weight: 600;
+  }
+
+  .mx-table-year,
+  .mx-table-month {
+    border: none;
+
+    th, td {
+      text-align: center;
+      border: none;
+    }
   }
 
   .mx-calendar-header-label {
@@ -125,9 +135,19 @@
   }
 
   .mx-table-date {
+    border: none;
+
     th {
-      font-weight: 600;
+      border: none;
+      text-align: center;
+      font-weight: 700;
+      background: $neutral-0;
       color: $neutral-500;
+    }
+
+    td {
+      border: none;
+      text-align: center;
     }
 
     .cell.not-current-month {

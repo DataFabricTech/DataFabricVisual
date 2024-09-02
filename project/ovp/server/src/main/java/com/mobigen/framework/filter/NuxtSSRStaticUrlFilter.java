@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.io.IOException;
 @Component
 @Slf4j
 @AllArgsConstructor
+@Order(1)  // 이 필터가 가장 먼저 실행됨
 public class NuxtSSRStaticUrlFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -32,9 +34,9 @@ public class NuxtSSRStaticUrlFilter implements Filter {
                 HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
                 String uri = httpRequest.getRequestURI();
                 String url = httpRequest.getServletPath();
-
                 // 리소스 파일. api 요청 제외한 화면 접근 시 index.html을 강제로 매핑
                 if (!url.startsWith("/_nuxt/") && !url.contains(".")&& !url.startsWith("/api")) {
+                    log.info("SSR URI {}", uri);
                     return uri + "/index.html";
                 }
                 return uri;

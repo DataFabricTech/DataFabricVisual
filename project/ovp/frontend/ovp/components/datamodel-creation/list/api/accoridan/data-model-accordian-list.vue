@@ -2,7 +2,9 @@
   <div class="accordion-group">
     <div class="h-group">
       <div class="search-input">
-        <label class="hidden-text" for="data-menu-search">데이터 모델 검색</label>
+        <label class="hidden-text" for="data-menu-search"
+          >데이터 모델 검색</label
+        >
         <input
           id="data-menu-search"
           class="text-input"
@@ -30,7 +32,7 @@
     </div>
     <div class="accordion-list">
       <Accordion
-        v-for="(item, keyName, idx) in listData"
+        v-for="(item, keyName) in listData"
         :key="item[props.valueKey]"
       >
         <template #title>
@@ -42,19 +44,21 @@
               <template v-for="(itemValue, idx) in item" :key="idx">
                 <data-model-list-item
                   v-if="!itemValue.isSelected && itemValue.isShow"
-                  :key="itemValue.value + idx"
+                  checked-key="checked-menu-accordion-"
                   :is-multi="props.isMulti"
                   :use-delete-btn="props.useItemDeleteBtn"
                   :data="itemValue"
-                  @context-menu-click="onShowContextMenu(keyName, $event)"
-                  @context-menu-btn-click="
-                    onShowContextMenuBtn(keyName, $event)
+                  value-key="defaultId"
+                  @context-menu-click="
+                    onShowContextMenu(keyName, itemValue.value, $event)
                   "
-                  @bookmark-change="onChangeBookmark(keyName, $event)"
+                  @context-menu-btn-click="
+                    onShowContextMenuBtn(keyName, itemValue.value, $event)
+                  "
+                  @bookmark-change="onChangeBookmark"
                   @click="onClickDataModelItem"
                   @delete="onDeleteItem"
-                  @select="onSelectItem"
-                  @check="onCheckItem(keyName, $event)"
+                  @check="onCheckItem(itemValue.value, $event)"
                 ></data-model-list-item>
               </template>
             </ul>
@@ -92,7 +96,7 @@ const props = withDefaults(defineProps<DataModelAccordianListProps>(), {
 
 const emit = defineEmits<{
   (e: "delete", value: string): void;
-  (e: "select", value: string): void;
+  (e: "item-check", value: string): void;
   (e: "item-click", value: string): void;
   (e: "bookmark-change", value: string): void;
   (e: "search-change", value: string): void;
@@ -110,9 +114,10 @@ const emitDeleteItem = (value: string) => {
   emit("delete", value);
 };
 
-const emitSelectItem = (value: string) => {
-  emit("select", value);
+const emitItemCheck = (value: any[]) => {
+  emit("item-check", value);
 };
+
 const emitSearchChange = (value: string) => {
   emit("search-change", value);
 };
@@ -128,13 +133,13 @@ const {
   onChangeBookmark,
   onClickDataModelItem,
   onDeleteItem,
-  onSelectItem,
+  onCheckItem,
 } = DataModelAccordianListComposition(
   props,
   emitBookmark,
   emitItemClick,
   emitDeleteItem,
-  emitSelectItem,
+  emitItemCheck,
   emitSearchChange,
 );
 </script>

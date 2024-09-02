@@ -67,6 +67,10 @@
             <nuxt-link :to="'/editable-group'" class="button button-primary button-lg">
               <span class="button-text">editable-group 예시 이동</span>
             </nuxt-link>
+            <h4 class="group-title">Search Input</h4>
+            <nuxt-link :to="'/search-input'" class="button button-primary button-lg">
+              <span class="button-text">search-input 예시 이동</span>
+            </nuxt-link>
           </div>
         </div>
       </article>

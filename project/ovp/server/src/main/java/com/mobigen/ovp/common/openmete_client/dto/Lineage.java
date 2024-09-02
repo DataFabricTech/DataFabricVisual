@@ -7,4 +7,5 @@ import java.util.List;
 @Data
 public class Lineage {
     List<Node> nodes;
+    Node entity;
 }

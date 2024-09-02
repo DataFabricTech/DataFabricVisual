@@ -1,11 +1,11 @@
 <template>
   <div class="search-input">
     <svg-icon class="text-input-icon svg-icon" name="search" v-if="!isSearchInputDefaultType"></svg-icon>
-    <label class="hidden-text" for="searchInp">label</label>
+    <label class="hidden-text" :for="inpId">{{ labelText }}</label>
     <input
-      id="searchInp"
+      :id="inpId"
       class="text-input"
-      v-model="inputValue"
+      :value="inpValue"
       @keyup.enter="onClickSearch"
       @change="onChange"
       @input="onInput"
@@ -17,6 +17,7 @@
       class="search-input-action-button button button-neutral-ghost button-xs"
       type="button"
       @click="clearSearchValue"
+      v-if="isShowResetButton"
     >
       <span class="hidden-text">지우기</span>
       <svg-icon class="button-icon" name="close"></svg-icon>
@@ -31,33 +32,66 @@
     </button>
   </div>
 </template>
-<script setup lang="ts">
-import { SearchInputProps } from "./SearchInputProps";
-import { SearchInputComposition } from "./SearchInputComposition";
 
-const props = withDefaults(defineProps<SearchInputProps>(), {
+<script setup lang="ts">
+import { defineProps } from "vue";
+import { SearchInputProps } from "./SearchInputProps";
+
+const props = withDefaults(defineProps<SearchInputProps & { inpValue: string; labelText: string; inpId: string }>(), {
   isSearchInputDefaultType: true,
   placeholder: "Placeholder",
-  disabled: false
+  disabled: false,
+  inpValue: "",
+  labelText: "검색",
+  inpId: "input01"
 });
 
 const emit = defineEmits<{
+  (e: "update:value", value: string): void;
   (e: "onClickSearch", value: string): void;
   (e: "onChange", value: string): void;
   (e: "onInput", value: string): void;
+  (e: "reset"): void;
 }>();
 
+const isShowResetButton = ref(true);
+
+watch(
+  () => props.isSearchInputDefaultType,
+  (newVal) => {
+    if (newVal) {
+      isShowResetButton.value = false;
+    }
+  },
+  { immediate: true }
+);
+
 const onClickSearch = () => {
-  emit("onClickSearch", inputValue.value);
-};
-const onChange = () => {
-  emit("onChange", inputValue.value);
-};
-const onInput = () => {
-  emit("onInput", inputValue.value);
+  emit("onClickSearch", props.inpValue);
 };
 
-const { inputValue, clearSearchValue } = SearchInputComposition(props);
+const onChange = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  emit("update:value", input.value);
+  emit("onChange", input.value);
+};
+
+const onInput = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  if (props.isSearchInputDefaultType) {
+    isShowResetButton.value = true;
+  }
+  emit("update:value", input.value);
+  emit("onInput", input.value);
+};
+
+const clearSearchValue = () => {
+  if (props.isSearchInputDefaultType) {
+    isShowResetButton.value = false;
+  }
+  emit("update:value", "");
+  emit("reset");
+};
 </script>
 
-<style></style>
+<style scoped></style>

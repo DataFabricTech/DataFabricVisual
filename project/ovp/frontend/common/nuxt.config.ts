@@ -9,7 +9,8 @@ export default defineNuxtConfig({
     { src: "~/plugins/vue-final-modal", mode: "client" },
     { src: "~/plugins/ag-grid-vue", mode: "client" },
     { src: "~/plugins/vue-datepicker-next", mode: "client" },
-    { src: "~/plugins/code-mirror", mode: "client" }
+    { src: "~/plugins/code-mirror", mode: "client" },
+    { src: "~/plugins/vue3-tooltip", mode: "client" }
   ],
 
   components: [
@@ -24,7 +25,8 @@ export default defineNuxtConfig({
     "vue-final-modal/style.css",
     "ag-grid-community/dist/styles/ag-grid.css",
     "ag-grid-community/dist/styles/ag-theme-alpine.css",
-    "@fortawesome/fontawesome-svg-core/styles.css"
+    "@fortawesome/fontawesome-svg-core/styles.css",
+    "vue3-tooltip/tooltip.css"
   ],
 
   tailwindcss: {

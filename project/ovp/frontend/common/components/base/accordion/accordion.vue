@@ -40,6 +40,9 @@ const beforeEnter = (el) => {
 
 const enter = (el) => {
   el.style.height = el.scrollHeight + 'px';
+  el.addEventListener('transitionend', () => {
+    el.style.height = 'auto';
+  }, { once: true });
 };
 
 const beforeLeave = (el) => {
@@ -47,6 +50,9 @@ const beforeLeave = (el) => {
 };
 
 const leave = (el) => {
+  el.style.height = el.scrollHeight + 'px';
+  // 강제로 리플로우를 일으켜야 transition이 제대로 작동함
+  el.offsetHeight;
   el.style.height = '0';
 };
 

@@ -10,13 +10,16 @@
     >
       <input
         type="checkbox"
-        :id="'checkbox-menu' + props.data.value"
+        :id="props.checkedKey + props.data[props.valueKey]"
         class="checkbox-input"
         :checked="props.data.isChecked"
         @input="onChangeChecked($event.target.checked)"
       />
 
-      <label :for="'checkbox-menu' + props.data.value" class="checkbox-label">
+      <label
+        :for="props.checkedKey + props.data[props.valueKey]"
+        class="checkbox-label"
+      >
         <span class="hidden-text">label</span>
       </label>
     </div>
@@ -25,7 +28,7 @@
       @click="onClickItem"
       @contextmenu.prevent="onShowContextMenu"
     >
-      <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+      <div class="type-img type-img-oracle"></div>
       <span class="menu-text">{{ props.data.label }}</span>
       <span class="menu-subtext">{{ owner }}</span>
     </button>
@@ -114,6 +117,8 @@ import { defineProps } from "vue";
 
 const props = defineProps({
   data: { type: Object, default: {} },
+  checkedKey: { type: String, default: "checked-menu" },
+  valueKey: { type: String, default: "value" },
   isMulti: { type: Boolean, default: false },
   listType: { type: String, default: "selected" },
   useDeleteBtn: { type: Boolean, default: false },
@@ -162,7 +167,7 @@ const hideContextMenuBtn: () => void = () => {
   emit("context-menu-btn-click", null);
 };
 const copyKeyword: () => void = () => {
-  window.navigator.clipboard.writeText(props.data.fqn).then(() => {
+  window.navigator.clipboard.writeText(`\`${props.data.fqn}\``).then(() => {
     alert("데이터 모델 이름 복사 완료");
     hideContextMenu();
   });

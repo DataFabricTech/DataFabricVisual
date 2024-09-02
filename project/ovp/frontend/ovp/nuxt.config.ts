@@ -4,6 +4,13 @@ import { fileURLToPath } from "url";
 export default defineNuxtConfig({
   devtools: { enabled: true },
   ssr: false,
+  nitro: {
+    output: {
+      publicDir: fileURLToPath(
+        new URL("../../server/src/main/resources/static", import.meta.url),
+      ),
+    },
+  },
 
   modules: [
     "@nuxtjs/tailwindcss",
@@ -11,6 +18,7 @@ export default defineNuxtConfig({
     "@nuxtjs/svg-sprite",
     "nuxt-lodash",
     "dayjs-nuxt",
+    "nuxt-monaco-editor",
   ],
 
   // runtime에서 설정된 정보를 조회 가능
@@ -82,7 +90,7 @@ export default defineNuxtConfig({
     "vue-final-modal/style.css",
     "ag-grid-community/dist/styles/ag-grid.css",
     "ag-grid-community/dist/styles/ag-theme-alpine.css",
-    // "~/assets/css/style.scss"
+    "vue3-tooltip/tooltip.css",
   ],
 
   lodash: {

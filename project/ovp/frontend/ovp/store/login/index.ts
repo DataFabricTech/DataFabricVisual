@@ -10,13 +10,15 @@ export const loginStore = defineStore("login", () => {
   const isLinkValid = ref(false);
   const errorMessage = ref("");
 
+  const isDoingLogin: Ref<boolean> = ref(false);
+
   const getPublicKey = async () => {
     publicKey = await $api(`/api/auth/login/public-key`)
       .then((res: any) => {
         return res.data;
       })
       .catch((err: any) => {
-        console.log("err: ", err);
+        console.error("err: ", err);
       });
   };
 
@@ -25,6 +27,7 @@ export const loginStore = defineStore("login", () => {
     const rsa = new RSA();
     rsa.setKey(publicKey);
     param.password = rsa.encrypt(param.password);
+    isDoingLogin.value = true;
 
     await $api(`/api/auth/login`, {
       method: "POST",
@@ -39,7 +42,10 @@ export const loginStore = defineStore("login", () => {
         }
       })
       .catch((err: any) => {
-        console.log("err: ", err);
+        console.error("err: ", err);
+      })
+      .finally(() => {
+        isDoingLogin.value = false;
       });
   }
 
@@ -63,7 +69,7 @@ export const loginStore = defineStore("login", () => {
         }
       })
       .catch((err: any) => {
-        console.log("err: ", err);
+        console.error("err: ", err);
       });
   }
 
@@ -86,7 +92,7 @@ export const loginStore = defineStore("login", () => {
         isLinkValid.value = res.data;
       })
       .catch((err: any) => {
-        console.log("err: ", err);
+        console.error("err: ", err);
       });
   }
 
@@ -116,6 +122,7 @@ export const loginStore = defineStore("login", () => {
   }
 
   return {
+    isDoingLogin,
     isloginSuccess,
     isPwChangeSuccess,
     isLinkValid,

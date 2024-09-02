@@ -15,17 +15,16 @@
           </nuxt-link>
         </li>
       </ul>
-      <ul class="sidebar-list">
-        <li>
-          <nuxt-link
-            :to="mgmtMenuJson.linkTo"
-            :class="
-              isSelectedMenu(mgmtMenuJson.linkTo)
-                ? 'is-sidebar-item-selected'
-                : ''
-            "
-            class="sidebar-button"
-          >
+      <ul v-if="!_.isEmpty(mgmtMenuJson)" class="sidebar-list">
+        <li
+          class="sidebar-item"
+          :class="
+            isSelectedMenu(mgmtMenuJson.linkTo)
+              ? 'is-sidebar-item-selected'
+              : ''
+          "
+        >
+          <nuxt-link :to="mgmtMenuJson.linkTo" class="sidebar-button">
             <div class="sidebar-icon">
               <svg-icon
                 :name="mgmtMenuJson.iconName"
@@ -45,6 +44,7 @@ import _ from "lodash";
 
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store/common/menu";
+
 const menuStore = useMenuStore();
 
 const { getMenuData } = menuStore;

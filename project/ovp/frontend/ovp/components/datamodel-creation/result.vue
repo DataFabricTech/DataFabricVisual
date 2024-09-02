@@ -4,14 +4,16 @@
       <div class="h-group gap-2">
         <span class="font-semibold">실행 결과</span>
         <div
-          :class="querySuccess ? 'badge badge-green' : 'badge badge-red'"
-          v-show="isFirstExcute"
+          :class="props.querySuccess ? 'badge badge-green' : 'badge badge-red'"
+          v-show="props.isFirstExecute"
         >
           <svg-icon
             class="badge-icon"
-            :name="querySuccess ? 'success' : 'error'"
+            :name="props.querySuccess ? 'success' : 'error'"
           ></svg-icon>
-          <p class="badge-text">{{ querySuccess ? "success" : "error" }}</p>
+          <p class="badge-text">
+            {{ props.querySuccess ? "success" : "error" }}
+          </p>
         </div>
       </div>
       <div class="result-info">
@@ -21,8 +23,8 @@
               <p class="badge-text">실행시간</p>
             </div>
           </dt>
-          <dd v-if="querySuccess && isFirstExcute">
-            {{ excuteResult.runTime }}
+          <dd v-if="props.querySuccess && props.isFirstExecute">
+            {{ props.executeResult.runTime }}
           </dd>
         </dl>
         <dl class="h-group gap-3">
@@ -31,8 +33,8 @@
               <p class="badge-text">실행시각</p>
             </div>
           </dt>
-          <dd v-if="querySuccess && isFirstExcute">
-            {{ excuteResult.startTime }}
+          <dd v-if="props.querySuccess && props.isFirstExecute">
+            {{ props.executeResult.startTime }}
           </dd>
         </dl>
         <dl class="h-group gap-3">
@@ -41,42 +43,53 @@
               <p class="badge-text">레코드 수</p>
             </div>
           </dt>
-          <dd v-if="querySuccess && isFirstExcute">
-            {{ excuteResult.totalRows }}
+          <dd v-if="props.querySuccess && props.isFirstExecute">
+            {{ props.executeResult.totalRows }}
           </dd>
         </dl>
       </div>
     </div>
-    <div class="result" v-if="querySuccess && isFirstExcute">
+    <div class="result" v-if="props.querySuccess && props.isFirstExecute">
       <agGrid
         class="ag-theme-alpine ag-theme-quartz"
-        :columnDefs="excuteResult.columnDefs"
-        :rowData="excuteResult.rowData"
+        :columnDefs="props.executeResult.columnDefs"
+        :rowData="props.executeResult.rowData"
         rowId="id"
         :useRowCheckBox="false"
         :setColumnFit="true"
         :useColumnResize="true"
       ></agGrid>
     </div>
-    <div class="result result-error" v-if="!querySuccess && isFirstExcute">
+    <div
+      class="result result-error"
+      v-if="!props.querySuccess && props.isFirstExecute"
+    >
       <p>
-        {{ excuteResultErrMsg }}
+        {{ props.executeResultErrMsg }}
       </p>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import agGrid from "@extends/grid/Grid.vue";
-import { useCreationStore } from "@/store/datamodel-creation/index";
 
-const store = useCreationStore();
-const {
-  querySuccess,
-  excuteResult,
-  isExcuteQuery,
-  isFirstExcute,
-  query,
-  excuteResultErrMsg,
-} = storeToRefs(store);
+const props = defineProps({
+  querySuccess: {
+    type: Boolean,
+    default: false,
+  },
+  executeResult: {
+    type: Object,
+    default: [],
+  },
+  isFirstExecute: {
+    type: Boolean,
+    default: false,
+  },
+  executeResultErrMsg: {
+    type: String,
+    default: "",
+  },
+});
 </script>
 <style lang="scss" scoped></style>

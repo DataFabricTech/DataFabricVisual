@@ -25,7 +25,7 @@
             <p class="notification-detail">등록된 정보가 없습니다.</p>
           </div>
         </div>
-        <div class="p-3" v-else>
+        <div class="work-list-tree" v-else>
           <tree-vue
             v-if="categories && categories.length"
             mode="edit"
@@ -70,14 +70,16 @@
               >
               <input
                 v-model="selectedTitleNodeValue"
-                placeholder="모델 설명에 대한 영역입니다."
+                placeholder="카테고리명 에 대한 영역입니다."
                 required
                 id="title-modify"
                 class="text-input w-1/2"
               />
             </template>
             <template #view-slot>
-              <h3 class="editable-group-title">{{ selectedNode.name }}</h3>
+              <h3 class="editable-group-title">
+                {{ selectedNodeCategory.name }}
+              </h3>
             </template>
           </editable-group>
           <button class="button button-error-lighter" @click="_deleteCategory">
@@ -106,18 +108,23 @@
               ></textarea>
             </template>
             <template #view-slot>
-              <p class="editable-group-desc">{{ selectedNode.desc }}</p>
+              <p class="editable-group-desc">{{ selectedNodeCategory.desc }}</p>
             </template>
           </editable-group>
-          <div>
+          <div class="category-search">
             <div class="l-top-bar">
               <search-input
                 class="w-[541px]"
                 :is-search-input-default-type="false"
                 :placeholder="'검색어를 입력하세요.'"
+                :inp-value="searchInputValue"
+                :inp-id="'categoryInp1'"
+                :label-text="'데이터 모델 검색'"
+                @update:value="updateSearchInputValue"
                 @on-input="onInput"
+                @reset="getAllModelList"
               ></search-input>
-              <div class="h-group w-full">
+              <div class="h-group w-full h-8">
                 <div class="checkbox">
                   <input
                     type="checkbox"
@@ -130,14 +137,17 @@
                     전체선택
                   </label>
                 </div>
-                <div class="h-group ml-auto gap-2">
+                <div class="h-group ml-auto gap-2" v-if="isModalButtonShow">
                   <button
                     class="button button-secondary-stroke"
                     @click="showCategoryChangeModal"
                   >
                     카테고리 변경
                   </button>
-                  <button class="button button-secondary">
+                  <button
+                    class="button button-secondary"
+                    @click="showDataModelAddModal"
+                  >
                     데이터모델추가
                   </button>
                 </div>
@@ -187,16 +197,12 @@
       </div>
     </div>
   </div>
-  <CategoryAddModal :modal-id="CATEGORY_ADD_MODAL_ID"></CategoryAddModal>
-  <CategoryChangeModal
-    :modal-id="CATEGORY_CHANGE_MODAL_ID"
-  ></CategoryChangeModal>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
 import { storeToRefs } from "pinia";
-import { useNuxtApp } from "nuxt/app";
+import { useModal } from "vue-final-modal";
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import TreeVue from "@extends/tree/Tree.vue";
@@ -206,62 +212,69 @@ import Loading from "@base/loading/Loading.vue";
 import Preview from "~/components/common/preview/preview.vue";
 import CategoryAddModal from "~/components/govern/category/category-add-modal.vue";
 import CategoryChangeModal from "~/components/govern/category/category-change-modal.vue";
+import DataModelAddModal from "~/components/govern/category/data-model-add-modal.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
-const { $vfm } = useNuxtApp();
 const categoryStore = useGovernCategoryStore();
 
 const {
   getCategories,
   addModelList,
-  addNewCategory,
   getModelList,
   editCategory,
   deleteCategory,
+  getContainerPreviewData,
   getPreviewData,
   moveCategory,
   resetAddModalStatus,
-  setSelectedNode,
+  setSearchKeyword,
+  getFilters,
+  changeTab,
+  setEmptyFilter,
+  setModelIdList,
 } = categoryStore;
 const {
+  selectedNode,
   selectedModelList,
   categories,
   modelList,
+  modelIdList,
   isCategoriesNoData,
   previewData,
   isBoxSelectedStyle,
+  selectedDataModelList,
+  addSearchInputValue,
+  checkReachedCount,
+  selectedCategoryId,
+  selectedCategoryTagId,
+  selectedTitleNodeValue,
+  selectedNodeCategory,
+  dupliSelectedTitleNodeValue,
+  lastChildIdList,
+  childlessList,
+  defaultCategoriesParentId,
+  categoriesParentId,
+  categoriesId,
+  isShowPreview,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
 const CATEGORY_CHANGE_MODAL_ID = "category-change-modal";
+const DATA_MODEL_ADD_MODAL_ID = "data-modal-add-modal";
 
 const loader = ref<HTMLElement | null>(null);
-const modelIdList = ref([]);
+
 const isDescEditMode = ref(false);
 const isTitleEditMode = ref(false);
-const isShowPreview = ref<boolean>(false);
+const isModalButtonShow = ref<boolean>(false);
 
 let currentPreviewId: string | number = "";
 let previewIndex: string = "table";
 
-const selectedNode: Ref<TreeViewItem> = ref<TreeViewItem>({
-  id: "",
-  name: "",
-  desc: "",
-  order: 0,
-  parentId: "",
-  tagId: "",
-  expanded: false,
-  selected: false,
-  disabled: false,
-  children: [],
-});
+const selectedDescNodeValue = ref(selectedNodeCategory.value.desc || "");
 const isAllModelListChecked = ref<boolean>(false);
-const selectedTitleNodeValue = ref(selectedNode.value.name || "");
-const selectedDescNodeValue = ref(selectedNode.value.desc || "");
-
 watch(
-  () => selectedNode.value.name,
+  () => selectedNodeCategory.value.name,
   (newVal) => {
     selectedTitleNodeValue.value = newVal || "";
   },
@@ -269,49 +282,78 @@ watch(
 );
 
 watch(
-  () => selectedNode.value.desc,
+  () => selectedNodeCategory.value.desc,
   (newVal) => {
     selectedDescNodeValue.value = newVal || "";
   },
   { immediate: true },
 );
 
-// tree
+// TREE
 const onCategoryNodeClick = async (node: TreeViewItem) => {
   selectedModelList.value = [];
+  isShowPreview.value = false;
+  isBoxSelectedStyle.value = false;
   isDescEditMode.value = false;
   isTitleEditMode.value = false;
-
-  selectedNode.value = node;
-
+  selectedNodeCategory.value = node;
+  dupliSelectedTitleNodeValue.value = node.name;
+  selectedCategoryId.value = node.id;
+  selectedCategoryTagId.value = <string>node.tagId;
+  checkModalButton(node.id);
   setScrollOptions(0);
   // 선택한 노드정보 저장
-  setSelectedNode(node);
+  selectedNode.value = node;
   // 선택한 노드 기준 모델 목록을 조회
   await getModelList();
   // 모든 모델 리스트 id 저장
   setModelIdList();
 };
 
+const getAllModelList = async () => {
+  setScrollOptions(0);
+  setSelectedNode(selectedNodeCategory.value);
+  await getModelList();
+  setModelIdList();
+};
+
+const checkModalButton = (id: string) => {
+  isModalButtonShow.value = childlessList.value.some(
+    (lastChildId: string) => lastChildId === id,
+  );
+};
+
 const addSibling = (newNode: TreeViewItem) => {
-  // TODO : modal 창 띄워서 노드 추가 API  호출 (newNode 에 id(uuid), parentId 포함되어있음)
-  console.debug(`형제노드 추가 ${JSON.stringify(newNode)}`);
-  addNewCategory(newNode);
+  categoriesParentId.value = newNode.parentId;
+  categoriesId.value = newNode.id;
+  openCategoryAddModal();
+  resetAddModalStatus();
 };
 
 const addChild = (newNode: TreeViewItem) => {
-  // TODO : modal 창 띄워서 노드 추가 API  호출
-  console.debug(`자식노드 추가 ${JSON.stringify(newNode)}`);
-  addNewCategory(newNode);
+  const checkAddLasChild = lastChildIdList.value.some(
+    (lastChildId: string) => lastChildId === newNode.parentId,
+  );
+
+  // 이곳에서 3depth 체크
+  if (checkAddLasChild) {
+    alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
+    return;
+  }
+
+  categoriesParentId.value = newNode.parentId;
+  categoriesId.value = newNode.id;
+  openCategoryAddModal();
+  resetAddModalStatus();
 };
 
 const _editCategory = () => {
   const editNodeParam: TreeViewItem = {
-    id: selectedNode.value.id,
-    parentId: selectedNode.value.parentId,
-    tagId: selectedNode.value.tagId,
-    name: selectedNode.value.name,
-    desc: selectedNode.value.desc,
+    id: selectedNodeCategory.value.id,
+    parentId: selectedNodeCategory.value.parentId,
+    tagId: selectedNodeCategory.value.tagId,
+    name: selectedNodeCategory.value.name,
+    desc: selectedNodeCategory.value.desc,
     children: [],
   };
   editCategory(editNodeParam);
@@ -319,7 +361,7 @@ const _editCategory = () => {
 
 const _deleteCategory = async () => {
   if (confirm("카테고리를 삭제 하시겠습니까?")) {
-    const res = await deleteCategory(selectedNode.value.id);
+    const res = await deleteCategory(selectedNodeCategory.value.id);
     if (res.result === 1) {
       alert("삭제 되었습니다.");
       await getCategories();
@@ -359,7 +401,7 @@ const dropValidator = async (
   return true;
 };
 
-// dataModel list
+// DATAMODEL LIST
 const allModelList = computed({
   get() {
     return modelIdList.value.length === 0
@@ -377,13 +419,10 @@ const allModelList = computed({
   },
 });
 
-const setModelIdList = () => {
-  modelIdList.value = [];
-  for (const element of modelList.value) {
-    modelIdList.value.push(element.id);
-  }
+const searchInputValue = ref("");
+const updateSearchInputValue = (newValue: string) => {
+  searchInputValue.value = newValue;
 };
-
 const onInput = (value: string) => {
   setScrollOptions(0);
   getModelList(value);
@@ -396,7 +435,7 @@ const checked = (checkedList: any[]) => {
 const { scrollTrigger, setScrollOptions } =
   useIntersectionObserver(addModelList);
 
-// preview
+// PREVIEW
 const getPreviewCloseStatus = (option: boolean) => {
   isShowPreview.value = option;
   isBoxSelectedStyle.value = false;
@@ -404,27 +443,30 @@ const getPreviewCloseStatus = (option: boolean) => {
 };
 
 const previewClick = async (data: object) => {
-  const { id, fqn } = data as { id: string; fqn: string };
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
   if (id === currentPreviewId) {
     return;
   }
 
-  await getPreviewData(fqn);
+  type === "storage"
+    ? await getContainerPreviewData(id)
+    : await getPreviewData(fqn);
+
   isShowPreview.value = true;
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;
   previewIndex = type;
 };
 
-// editable-input
+// EDITABLE-INPUT
 const editCancel = (key: string) => {
   switch (key) {
     case "title":
-      selectedTitleNodeValue.value = selectedNode.value.name;
+      selectedTitleNodeValue.value = selectedNodeCategory.value.name;
       isTitleEditMode.value = false;
       break;
     case "desc":
-      selectedDescNodeValue.value = selectedNode.value.desc;
+      selectedDescNodeValue.value = selectedNodeCategory.value.desc;
       isDescEditMode.value = false;
       break;
   }
@@ -435,15 +477,15 @@ const editDone = (key: string) => {
       if (selectedTitleNodeValue.value === "") {
         return;
       }
-      selectedNode.value.name = selectedTitleNodeValue.value;
+      selectedNodeCategory.value.name = selectedTitleNodeValue.value;
       isTitleEditMode.value = false;
       break;
     case "desc":
       if (selectedDescNodeValue.value === "") {
-        selectedNode.value.desc = "설명 없음";
+        selectedNodeCategory.value.desc = "설명 없음";
         return;
       }
-      selectedNode.value.desc = selectedDescNodeValue.value;
+      selectedNodeCategory.value.desc = selectedDescNodeValue.value;
       isDescEditMode.value = false;
       break;
   }
@@ -461,14 +503,74 @@ const editIcon = (key: string) => {
   }
 };
 
-// modal
+// MODAL
+const { open: openCategoryAddModal, close: closeCategoryAddModal } = useModal({
+  component: CategoryAddModal,
+  attrs: {
+    modalId: CATEGORY_ADD_MODAL_ID,
+    onCloseCategoryAddModal() {
+      closeCategoryAddModal();
+    },
+  },
+});
+const { open: openCategoryChangeModal, close: closeCategoryChangeModal } =
+  useModal({
+    component: CategoryChangeModal,
+    attrs: {
+      modalId: CATEGORY_CHANGE_MODAL_ID,
+      onCloseCategoryChangeModal() {
+        closeCategoryChangeModal();
+      },
+    },
+  });
+const { open: openDataModelAddModal, close: closeDataModelAddModal } = useModal(
+  {
+    component: DataModelAddModal,
+    attrs: {
+      modalId: DATA_MODEL_ADD_MODAL_ID,
+      onCloseDataModelAddModal() {
+        closeDataModelAddModal();
+      },
+      onBeforeOpen() {
+        beforeOpenModal();
+      },
+      onOpen() {
+        openModal();
+      },
+    },
+  },
+);
+
 const showCategoryAddModal = () => {
-  $vfm.open(CATEGORY_ADD_MODAL_ID);
+  categoriesParentId.value = defaultCategoriesParentId.value;
+  categoriesId.value = "";
+  openCategoryAddModal();
   resetAddModalStatus();
 };
 
 const showCategoryChangeModal = () => {
-  $vfm.open(CATEGORY_CHANGE_MODAL_ID);
+  if (selectedModelList.value.length === 0) {
+    alert(`데이터모델을 선택해주세요`);
+    return;
+  }
+  openCategoryChangeModal();
+};
+
+const showDataModelAddModal = () => {
+  openDataModelAddModal();
+};
+
+const beforeOpenModal = () => {
+  selectedDataModelList.value = [];
+  addSearchInputValue.value = "";
+  checkReachedCount.value = false;
+  setSearchKeyword("");
+  getFilters();
+};
+
+const openModal = () => {
+  setEmptyFilter();
+  changeTab("table");
 };
 
 onMounted(async () => {
@@ -476,7 +578,6 @@ onMounted(async () => {
     loader.value.style.display = "block";
   }
 
-  // TODO: [개발] 페이지 진입 시 첫 번째 트리, 모델 리스트 설정 - 첫 번째 트리에 선택된 상태를 추가할 수 있는지 검토 필요
   await getCategories();
 
   if (categories.value && categories.value.length > 0) {

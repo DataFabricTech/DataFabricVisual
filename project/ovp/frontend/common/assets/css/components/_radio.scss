@@ -2,6 +2,7 @@
 .radio {
   &-group {
     @include flex;
+
     gap: $spacing-12;
   }
 
@@ -19,7 +20,7 @@
     }
 
     &::after {
-      top: 3.5px;
+      top: 3px;
       left: 2px;
       width: 14px;
       height: 14px;

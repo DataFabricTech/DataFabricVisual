@@ -9,19 +9,43 @@ const INDEX = "index";
 
 interface TabComposition extends TabProps, NavigationFunctionality, NavigationEvents {
   currentIndex: Ref<number>;
+
   changeCurrentTabClass(index: number): boolean;
 }
 
 export function TabComposition(props: TabProps, onchange: (value: string | number) => void): TabComposition {
   const currentIndex: Ref<number> = ref<number>(0);
 
-  if (props.currentItemType === INDEX) {
-    if (typeof props.currentItem === "number") {
-      currentIndex.value = props.currentItem;
+  // currentItem 변경을 감지해 값 변경 (부모 컴포넌트에서 선택 값을 초기화하는 경우 존재)
+  watch(
+    () => [props.currentItem],
+    () => {
+      setCurrentIndex();
     }
-  } else {
-    currentIndex.value = _.findIndex(props.data, ["value", props.currentItem]);
-  }
+  );
+
+  const setCurrentIndex: () => void = () => {
+    if (props.currentItemType === INDEX) {
+      if (typeof props.currentItem === "number") {
+        currentIndex.value = props.currentItem;
+      }
+    } else {
+      currentIndex.value = _.findIndex(props.data, ["value", props.currentItem]);
+    }
+  };
+
+  setCurrentIndex();
+
+  watch(
+    () => props.currentItem,
+    (newVal) => {
+      if (props.currentItemType === INDEX) {
+        currentIndex.value = typeof newVal === "number" ? newVal : 0;
+      } else {
+        currentIndex.value = _.findIndex(props.data, ["value", newVal]);
+      }
+    }
+  );
 
   const move: (index: number) => void = (index) => {
     currentIndex.value = index;

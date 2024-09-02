@@ -38,15 +38,34 @@
         <!-- 카테고리, 소유자, 태그 select -->
         <div class="h-group">
           <template v-for="(filterItem, keyName, FI) in props.filter" :key="FI">
-            <menu-search-button
-              :data="filterItem.data"
-              :selected-items="selectedFilter[keyName]"
-              label-key="key"
-              value-key="key"
-              :title="filterItem.text"
-              :is-multi="true"
-              @multiple-change="onSelectFilter(keyName, $event)"
-            ></menu-search-button>
+            <template v-if="keyName === 'category'">
+              <menu-search-tree
+                label-key="name"
+                value-key="id"
+                :title="filterItem.text"
+                :data="filterItem.data.children"
+                :is-multi="true"
+                :hideGuideLines="false"
+                :firExpandAll="true"
+                :show-open-all-btn="false"
+                :show-close-all-btn="false"
+                :use-draggable="false"
+                :selected-items="selectedFilter[keyName]"
+                mode="view"
+                @multiple-change="onSelectFilter(keyName, $event)"
+              />
+            </template>
+            <template v-else>
+              <menu-search-button
+                :data="filterItem.data"
+                :selected-items="selectedFilter[keyName]"
+                label-key="key"
+                value-key="key"
+                :title="filterItem.text"
+                :is-multi="true"
+                @multiple-change="onSelectFilter(keyName, $event)"
+              ></menu-search-button>
+            </template>
           </template>
         </div>
       </div>
@@ -56,6 +75,7 @@
       <template v-for="(item, idx) in listData" :key="item.value + idx">
         <data-model-list-item
           v-if="item.isShow"
+          checked-key="checkbox-menu-selected"
           :data="item"
           :is-multi="props.isMulti"
           :use-delete-btn="props.useItemDeleteBtn"
@@ -85,6 +105,7 @@ import DataModelListItem from "~/components/datamodel-creation/item/data-model-l
 import type { DataModelListProps } from "~/components/datamodel-creation/list/base/DataModelListProps";
 import { DataModelListComposition } from "~/components/datamodel-creation/list/base/DataModelListComposition";
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
+import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 
 const props = withDefaults(defineProps<DataModelListProps>(), {
   data: () => [],
@@ -106,21 +127,17 @@ const emit = defineEmits<{
 }>();
 
 const emitBookmark = (value: string) => {
-  console.log("changeBookmark");
   emit("bookmark-change", value);
 };
 
 const emitItemClick = (value: string) => {
-  console.log("onClickDataModelItem");
   emit("item-click", value);
 };
 
-const emitDeleteItem = (value: string) => {
-  console.log("onDeleteItem");
+const emitDeleteItem = (value: any[]) => {
   emit("delete", value);
 };
-const emitItemCheck = (value: string) => {
-  console.log("emitItemCheck", value);
+const emitItemCheck = (value: any[]) => {
   emit("item-check", value);
 };
 
@@ -129,6 +146,8 @@ const {
   searchLabel,
   selectedFilter,
   checkShowListData,
+  setListData,
+  setSearchFilter,
   onSearchText,
   onSelectFilter,
   onResetSearchText,
@@ -146,4 +165,16 @@ const {
   emitDeleteItem,
   emitItemCheck,
 );
+
+/**
+ * 리스트 값이 변경되면 일반 리스트의 속성값도 변경되야하므로 다중 watch
+ * NOTE: composition에서 동작 시 해당 컴포지션 사용하면 watcheffect가 계속 동작함.(상속 불가)
+ */
+watch(
+  () => props.data,
+  () => {
+    setListData();
+  },
+);
+setSearchFilter();
 </script>

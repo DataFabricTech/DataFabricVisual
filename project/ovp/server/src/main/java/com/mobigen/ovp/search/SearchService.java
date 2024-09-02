@@ -73,6 +73,8 @@ public class SearchService {
     public Map<String, Object> getFilters() throws Exception {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
 
+        params.set("index", "all");
+
         List<String> tagArrays = new ArrayList<>();
         tagArrays.add("owner.displayName.keyword");
         tagArrays.add("tags.tagFQN");
@@ -81,7 +83,6 @@ public class SearchService {
         tagArrays.add("database.displayName.keyword");
         tagArrays.add("databaseSchema.displayName.keyword");
         tagArrays.add("columns.name.keyword");
-        tagArrays.add("tableType");
 
         Map<String, Object> responseMap = new HashMap<>();
 
@@ -133,8 +134,22 @@ public class SearchService {
         return resultMap;
     }
 
+    // function wrapper
     private Map<String, Object> getList(MultiValueMap<String, String> params) throws Exception {
+        return getList(params, false);
+    }
+    
+    private Map<String, Object> getList(MultiValueMap<String, String> params, Boolean useFilter) throws Exception {
         Map<String, Object> result = searchClient.getSearchList(params);
+        return convertToMap(result, useFilter);
+    }
+
+    // function wrapper
+    public Map<String, Object> convertToMap(Map<String, Object> result) {
+        return convertToMap(result, false);
+    }
+
+    public Map<String, Object> convertToMap(Map<String, Object> result, boolean useFilter) {
         Map<String, Object> resultMap = new HashMap<>();
 
         Map<String, Object> data = (Map<String, Object>) result.get("hits");
@@ -143,10 +158,11 @@ public class SearchService {
             if (totalObj != null) {
                 resultMap.put("totalCount", totalObj.get("value"));
             }
-            resultMap.put("data", modelConvertUtil.convertSearchDataList(data.get("hits")));
+            resultMap.put("data", modelConvertUtil.convertSearchDataList(data.get("hits"), useFilter));
         }
 
         return resultMap;
+
     }
 
     private Map<String, Object> getAllList(MultiValueMap<String, String> params) throws Exception {
@@ -191,71 +207,40 @@ public class SearchService {
      * @throws Exception
      */
     public Object getSearchPreview(String fqn) {
-        Map<String, Object> result = tablesClient.getSearchPreview(fqn);
+        Map<String, Object> resultMap = modelConvertUtil.convertPreviewData(tablesClient.getSearchPreview(fqn), "structured", fqn);
 
-        String name = (String) result.get("name");
-        String description = (String) result.get("description");
-        String tableType = (String) result.get("tableType");
-        List<Map<String, Object>> tags = (List<Map<String, Object>>) result.get("tags");
-        List<Map<String, Object>> columns = (List<Map<String, Object>>) result.get("columns");
+        return resultMap;
+    }
 
-        List<Map<String, Object>> tagList = new ArrayList<>();
-        List<Map<String, Object>> glossaryList = new ArrayList<>();
-        List<Map<String, Object>> columList = new ArrayList<>();
+    public Object getBothSearchList(MultiValueMap<String, String> params) throws Exception {
+        int initSize = Integer.parseInt(params.getFirst("size").toString());
+        int curSize = initSize;
 
-        for (Map<String, Object> tag : tags) {
-            String tagName = (String) tag.get("name");
-            String tagFQN = (String) tag.get("tagFQN");
-            String tagSource = (String) tag.get("source");
+        // 데이터가 너무 적을경우 initSize 를 채우기 위해서 무한으로 while 이 실행될꺼기 때문에 5번의 한도를 둔다.
+        int maxAttempts = 5;
+        int limitCnt = 0;
+        Map<String, Object> result = getList(params, true);
+        List<Map<String, Object>> data = (List<Map<String, Object>>) result.get("data");
 
-            Map<String, Object> tagMap = new HashMap<>();
-            tagMap.put("name", tagName);
-            tagMap.put("category", tagFQN);
+        while (data.size() < initSize && limitCnt < maxAttempts) {
+            limitCnt++;
+            curSize += initSize;
+            params.set("size", String.valueOf(curSize));
+            result = getList(params, true);
+            data = (List<Map<String, Object>>) result.get("data");
 
-            if ("Glossary".equals(tagSource)) {
-                glossaryList.add(tagMap);
-            } else {
-                tagList.add(tagMap);
+            if (data.size() >= initSize) {
+                break;
             }
         }
 
-        for (Map<String, Object> column : columns) {
-            String columnName = (String) column.get("name");
-            String columnDataType = (String) column.get("dataType");
-            String columnDesc = (String) column.get("description");
-            String columnConstraint = (String) column.get("constraint");
+        List<Map<String, Object>> trimmedData = data.stream()
+                .limit(initSize)
+                .collect(Collectors.toList());
 
-            Map<String, Object> columnMap = new HashMap<>();
-            columnMap.put("name", columnName);
-            columnMap.put("dataType", columnDataType);
-            columnMap.put("desc", columnDesc);
-            columnMap.put("constraint", columnConstraint);
+        result.put("data", trimmedData);
+        result.put("totalData", trimmedData.size());
 
-            columList.add(columnMap);
-        }
-
-        Map<String, Object> model = new HashMap<>();
-        model.put("name", name);
-        model.put("desc", description);
-        model.put("tableType", tableType);
-        model.put("cnt", columList.size());
-
-        Map<String, Object> modelInfo = new HashMap<>();
-        modelInfo.put("model", model);
-        modelInfo.put("columns", columList);
-
-        Map<String, Object> resultMap = new HashMap<>();
-        // TODO: modelType 정보 불러오기 필요 "structured" || "unstructured" (현재 확인 불가)
-        resultMap.put("modelType", "structured");
-        resultMap.put("modelInfo", modelInfo);
-        resultMap.put("glossaries", glossaryList);
-        resultMap.put("tags", tagList);
-
-        resultMap.put("id", result.get("id"));
-        resultMap.put("fqn", fqn);
-
-        // TODO: 비정형 API 불러오기 필요 details & url & model.ext (현재 확인 불가)
-
-        return resultMap;
+        return result;
     }
 }

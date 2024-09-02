@@ -32,7 +32,13 @@
 
   &-item {
     .checkbox-label::after {
-      top: 10px;
+      top: 9px;
+    }
+
+    .checkbox-sm {
+      .checkbox-label::after {
+        top: 11px;
+      }
     }
   }
 
@@ -54,6 +60,12 @@
 
   &-lg {
     @include menu-size($font-size: '14', $size: 40px, $icon-size: sm);
+
+    .menu-item {
+      .checkbox-label::after {
+        top: 12px;
+      }
+    }
   }
 }
 

@@ -2,6 +2,8 @@
   <div v-on-click-outside="onCancel" v-show="props.isShow" class="menu menu-search" style="width: 100%">
     <div class="menu-head">
       <!-- 검색 기능 -->
+      <!-- TODO: [개발] 접근성 개선 - label/input의 for/id값 사용되는 용도마다 다르게 적용 필요,
+         label안 텍스트도 용도마다 적절히 사용되어야 함 -->
       <div class="search-input">
         <label class="hidden-text" for="text-input-example-11">검색</label>
         <input
@@ -11,9 +13,9 @@
           @input="onSearchText($event.target.value)"
           placeholder="검색어를 입력하세요"
         />
-        <svg-icon class="text-input-icon" name="user"></svg-icon>
+        <svg-icon class="text-input-icon" name="search"></svg-icon>
         <button
-          class="search-input-action-button button button-neutral-ghost button-sm"
+          class="search-input-action-button button button-neutral-ghost button-xs"
           type="button"
           @click="onResetSearchText"
         >
@@ -70,7 +72,10 @@
       </div>
 
       <div class="menu-item" v-if="checkSearchResult()">
-        <span> {{ props.noSearchMsg }} </span>
+        <div class="notification">
+          <svg-icon class="notification-icon" name="info"></svg-icon>
+          <p class="notification-detail">{{ props.noSearchMsg }}</p>
+        </div>
       </div>
     </div>
     <div class="menu-foot">

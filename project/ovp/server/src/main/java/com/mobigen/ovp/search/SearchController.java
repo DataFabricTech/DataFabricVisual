@@ -54,6 +54,11 @@ public class SearchController {
     @ResponseJsonResult(errorMessage = "데이터 모델 목록 조회 오류")
     @GetMapping("/list")
     public Object getSearchList(@RequestParam MultiValueMap<String, String> params) throws Exception {
+
+        if (params.get("index").get(0).equals("all")) {
+            return searchService.getAllSearchList(params);
+        }
+
         return searchService.getSearchList(params);
     }
 
@@ -68,3 +73,4 @@ public class SearchController {
         return searchService.getSearchPreview(fqn);
     }
 }
+

@@ -1,7 +1,6 @@
 package com.mobigen.ovp.search_detail;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
-import com.mobigen.ovp.search_detail.dto.request.DataModelDetailUpdate;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailVote;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -28,31 +28,73 @@ public class SearchDetailController {
     private final SearchDetailService searchDetailService;
 
     /**
-     * 데이터 모델 상세
+     * 사용자 목록 (전체)
+     *
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/user/all")
+    Object getUserAll() throws Exception {
+        log.info("");
+
+        return searchDetailService.getUserAll();
+    }
+
+    /**
+     * 태그 목록 (전체)
+     *
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/tag/all")
+    Object getTagAll() throws Exception {
+        log.info("");
+
+        return searchDetailService.getTagAll();
+    }
+
+    /**
+     * 용어 목록 (전체)
+     *
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/glossary/all")
+    Object getGlossaryAll() throws Exception {
+        log.info("");
+
+        return searchDetailService.getGlossaryAll();
+    }
+
+    /**
+     * 데이터 모델 상세 (테이블, 스토리지)
      *
      * @param id
      * @return
      */
     @ResponseJsonResult
     @GetMapping("/{id}")
-    Object getDataModelDetail(HttpServletRequest request, @PathVariable String id, @RequestParam String type) {
+    Object getDataModelDetail(HttpServletRequest request, @PathVariable String id, @RequestParam String type) throws Exception {
         log.info("");
 
         return searchDetailService.getDataModelDetail(id, type);
     }
 
     /**
-     * 스키마
+     * 스키마 (테이블, 스토리지)
      *
      * @param id
      * @return
      */
     @ResponseJsonResult
     @GetMapping("/schema/{id}")
-    Object getDataModelSchema(@PathVariable String id) {
+    Object getDataModelSchema(@PathVariable String id, @RequestParam String type) throws Exception {
         log.info("");
 
-        return searchDetailService.getDataModelSchema(id);
+        return searchDetailService.getDataModelSchema(id, type);
     }
 
     /**
@@ -82,6 +124,13 @@ public class SearchDetailController {
         return searchDetailService.getTableProfile(fqn);
     }
 
+    /**
+     * 쿼리
+     *
+     * @param params
+     * @return
+     * @throws Exception
+     */
     @ResponseJsonResult
     @GetMapping("/query")
     Object getDataModelQuery(@RequestParam MultiValueMap<String, String> params) throws Exception {
@@ -90,43 +139,94 @@ public class SearchDetailController {
         return searchDetailService.getDataModelQuery(params);
     }
 
+    /**
+     * 리니지 그래프 (테이블, 스토리지)
+     *
+     * @param params
+     * @return
+     */
     @ResponseJsonResult
-    @GetMapping("/lineage/{type}")
-    Object getDataModelLineage(@PathVariable String type, @RequestParam MultiValueMap<String, String> params) {
+    @GetMapping("/lineage")
+    Object getDataModelLineage(@RequestParam MultiValueMap<String, String> params) {
         log.info("");
 
-        return searchDetailService.getDataModelLineage(type, params);
+        return searchDetailService.getDataModelLineage(params);
     }
 
+    /**
+     * 추천 (테이블, 스토리지)
+     *
+     * @param id
+     * @param dataModelDetailVote
+     * @return
+     */
     @ResponseJsonResult
     @PutMapping("/{id}/vote")
-    Object changeVote(@PathVariable String id, @RequestBody DataModelDetailVote dataModelDetailVote) {
+    Object changeVote(@PathVariable String id, @RequestParam String type, @RequestBody DataModelDetailVote dataModelDetailVote) {
         log.info("");
 
-        return searchDetailService.changeVote(id, dataModelDetailVote);
+        return searchDetailService.changeVote(id, type, dataModelDetailVote);
     }
 
+    /**
+     * 비추천 (테이블, 스토리지)
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
     @ResponseJsonResult
     @PutMapping("/{id}/follow")
-    Object followDataModel(@PathVariable String id) {
+    Object followDataModel(@PathVariable String id, @RequestParam String type) throws Exception {
         log.info("");
 
-        return searchDetailService.followDataModel(id);
+        return searchDetailService.followDataModel(id, type);
     }
 
+    /**
+     * 북마크 (테이블, 스토리지)
+     *
+     * @param id
+     * @return
+     * @throws Exception
+     */
     @ResponseJsonResult
     @DeleteMapping("/{id}/follow")
-    Object unfollowDataModel(@PathVariable String id) {
+    Object unfollowDataModel(@PathVariable String id, @RequestParam String type) throws Exception {
         log.info("");
 
-        return searchDetailService.unfollowDataModel(id);
+        return searchDetailService.unfollowDataModel(id, type);
     }
 
+    /**
+     * 데이터 모델 변경 (테이블, 스토리지)
+     *
+     * @param id
+     * @param type
+     * @param body
+     * @return
+     */
     @ResponseJsonResult
     @PatchMapping("/{id}")
-    Object changeDataModel(@PathVariable String id, @RequestBody List<DataModelDetailUpdate> body) {
+    Object changeDataModel(@PathVariable String id, @RequestParam String type, @RequestBody List<Map<String, Object>> body) {
         log.info("");
 
-        return searchDetailService.changeDataModel(id, body);
+        return searchDetailService.changeDataModel(id, type, body);
+    }
+
+    /**
+     * 태그 변경 (테이블, 스토리지)
+     *
+     * @param id
+     * @param type
+     * @param body
+     * @return
+     */
+    @ResponseJsonResult
+    @PatchMapping("/{id}/tag")
+    Object changeDataModelTag(@PathVariable String id, @RequestParam String type, @RequestParam String target, @RequestParam boolean isCategory, @RequestBody List<Map<String, Object>> body) {
+        log.info("");
+
+        return searchDetailService.ChangeDataModelTag(id, type, target, isCategory, body);
     }
 }

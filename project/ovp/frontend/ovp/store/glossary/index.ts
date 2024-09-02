@@ -4,6 +4,7 @@ import type { Activity, Glossary, Term } from "~/type/glossary";
 import type { JsonPatchOperation, PreviewData, Tag } from "~/type/common";
 import type { DataModel } from "~/components/common/resource-box/resource-box-common-props";
 import $constants from "~/utils/constant";
+import type { Service } from "~/type/service";
 
 export const useGlossaryStore = defineStore("glossary", () => {
   const { $api } = useNuxtApp();
@@ -237,7 +238,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
   const createTagOperation = (
     selectedItems: string[],
     matchTags: Tag[],
-    entity: Term | Glossary,
+    entity: Term | Glossary | Service,
   ): JsonPatchOperation[] => {
     const newData = selectedItems;
     const oldData = entity.tags.map((tag) => tag.tagFQN);
