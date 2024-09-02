@@ -131,7 +131,7 @@ properties:
       password: admin
   ovp:
     # openMetadata 연동 URL
-    open-metadata-url: http://192.168.105.26:8585/api/v1
+    open-metadata-url: http://192.168.105.2:8585/api/v1
     dolphin-server-url: http://192.168.105.26:28080/dolphin/v1
 
     # 비밀번호 재설정 관련 설
