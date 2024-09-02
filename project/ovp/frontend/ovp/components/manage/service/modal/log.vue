@@ -7,8 +7,8 @@
     contentTransition="vfm-fade"
     :clickToClose="true"
     :escToClose="true"
-    :width="620"
-    :height="580"
+    :width="1080"
+    :height="800"
     :lockScroll="true"
     :useCancelBtn="false"
     @before-open="onBeforeOpenModal"
@@ -17,24 +17,20 @@
     @confirm="onCancelModal"
   >
     <template v-slot:body>
-      <div class="modal-body">
-        <div class="flex justify-end w-full gap-2">
-          <button class="button button-neutral-stroke" @click="refresh">
-            새로고침
-          </button>
-          <button class="button button-neutral-stroke" @click="copy">
-            복사
-          </button>
-        </div>
-        <!-- TODO: [개발] 로그 화면 구현 -->
-        <div class="log-view">
-          <MonacoEditor
-            v-model="collectionLog"
-            lang="shell"
-            :options="options"
-            style="height: 100%"
-          />
-        </div>
+      <div class="flex justify-end w-full gap-2">
+        <button class="button button-neutral-stroke" @click="refresh">
+          새로고침
+        </button>
+        <button class="button button-neutral-stroke" @click="copy">복사</button>
+      </div>
+      <!-- TODO: [개발] 로그 화면 구현 -->
+      <div class="log-view" style="height: 100%">
+        <MonacoEditor
+          v-model="collectionLog"
+          lang="shell"
+          :options="options"
+          style="height: 100%"
+        />
       </div>
     </template>
   </Modal>
@@ -60,6 +56,8 @@ const options = {
     addExtraSpaceOnTop: true,
     autoFindInSelection: "multiline",
   },
+  readOnly: true,
+  domReadOnly: true,
 };
 
 const emit = defineEmits<{
