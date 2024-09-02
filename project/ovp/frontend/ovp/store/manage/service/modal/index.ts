@@ -64,7 +64,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
     return new URLSearchParams({
       index: selectedServiceObj.value.id,
       // eslint-disable-next-line id-length
-      q: `*${serviceObj.value.defaultInfo.serviceNm}*`,
+      q: `fullyQualifiedName:${serviceObj.value.defaultInfo.serviceNm}`,
       from: "0",
       size: "1",
     });
