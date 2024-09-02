@@ -108,13 +108,14 @@ export const useMyPageStore = defineStore("my-page", () => {
   const getSearchListQuery = () => {
     const query =
       currentTab.value === "myBookMark"
-        ? `*${searchKeyword.value}* AND followers:${targetUserInfo.value.id}`
-        : `*${searchKeyword.value}* AND(owner.id:${targetUserInfo.value.id})`;
+        ? ` AND followers:${targetUserInfo.value.id}`
+        : ` AND(owner.id:${targetUserInfo.value.id})`;
     const params: any = {
       // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
       // eslint 예외 제외 코드 추가.
       // eslint-disable-next-line id-length
-      q: query,
+      q: `*${searchKeyword.value}*`,
+      tempQuery: query,
       index: "all", // table or storage or model -> tab
       from: from.value,
       size: size.value,
