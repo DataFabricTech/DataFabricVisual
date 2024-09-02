@@ -3,15 +3,14 @@ package com.mobigen.ovp.glossary;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
-import com.mobigen.ovp.glossary.client.GlossaryClient;
-import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivityResponse;
-import com.mobigen.ovp.glossary.client.dto.common.Tag;
+import com.mobigen.ovp.common.openmete_client.GlossaryClient;
+import com.mobigen.ovp.common.openmete_client.dto.Base;
+import com.mobigen.ovp.glossary.client.dto.Tag;
 import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
 import com.mobigen.ovp.glossary.client.dto.TermDto;
-import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivity;
-import com.mobigen.ovp.glossary.client.dto.common.Tag;
-import com.mobigen.ovp.glossary.client.dto.glossary.Glossary;
-import com.mobigen.ovp.glossary.client.dto.terms.Term;
+import com.mobigen.ovp.common.openmete_client.dto.GlossaryActivity;
+import com.mobigen.ovp.common.openmete_client.dto.Glossary;
+import com.mobigen.ovp.common.openmete_client.dto.Term;
 import com.mobigen.ovp.glossary.client.response.Glossaries;
 import com.mobigen.ovp.glossary.client.response.GlossaryActivities;
 import com.mobigen.ovp.glossary.client.response.Terms;
@@ -81,10 +80,10 @@ public class GlossaryService {
      * @param id
      * @return
      */
-    public int deleteGlossary(UUID id) throws Exception {
-        ResponseEntity<Void> response = glossaryClient.deleteGlossary(id, true, true);
+    public Object deleteGlossary(UUID id) throws Exception {
+        ResponseEntity<Object> response = glossaryClient.deleteGlossary(id, true, true);
         if(response.getStatusCode() == HttpStatus.OK ) {
-            return 1;
+            return response.getBody();
         } else {
             throw new Exception();
         }
@@ -151,10 +150,10 @@ public class GlossaryService {
      * @param id
      * @return
      */
-    public int deleteGlossaryTerm(UUID id) throws Exception {
-        ResponseEntity<Void> response = glossaryClient.deleteGlossaryTerms(id, true, true);
+    public Object deleteGlossaryTerm(UUID id) throws Exception {
+        ResponseEntity<Object> response = glossaryClient.deleteGlossaryTerms(id, true, true);
         if (response.getStatusCode() == HttpStatus.OK) {
-            return 1;
+            return response.getBody();
         } else {
             throw new Exception();
         }
@@ -171,7 +170,7 @@ public class GlossaryService {
         Map<String, Object> result = new HashMap<>();
 
         List<GlossaryActivities> activities = new ArrayList<>();
-        GlossaryActivityResponse response = glossaryClient.getGlossaryActivities(entityLink, after, type);
+        Base<GlossaryActivity> response = glossaryClient.getGlossaryActivities(entityLink, after, type);
         List<GlossaryActivity> data = response.getData();
         Object paging = response.getPaging();
 

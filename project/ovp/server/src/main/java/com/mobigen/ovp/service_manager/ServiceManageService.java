@@ -12,7 +12,7 @@ import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Ingestion;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
 import com.mobigen.ovp.common.openmete_client.dto.Tag;
-import com.mobigen.ovp.glossary.client.GlossaryClient;
+import com.mobigen.ovp.common.openmete_client.GlossaryClient;
 import com.mobigen.ovp.glossary.client.dto.TermDto;
 import com.mobigen.ovp.search.SearchService;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailTagDto;

@@ -1,8 +1,8 @@
 package com.mobigen.ovp.glossary.client.response;
 
 import com.mobigen.ovp.common.openmete_client.dto.Owner;
-import com.mobigen.ovp.glossary.client.dto.common.Tag;
-import com.mobigen.ovp.glossary.client.dto.glossary.Glossary;
+import com.mobigen.ovp.glossary.client.dto.Tag;
+import com.mobigen.ovp.common.openmete_client.dto.Glossary;
 import lombok.Data;
 
 import java.util.ArrayList;

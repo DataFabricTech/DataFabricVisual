@@ -1,4 +1,4 @@
-package com.mobigen.ovp.glossary.client.dto.common;
+package com.mobigen.ovp.glossary.client.dto;
 
 import lombok.Data;
 
