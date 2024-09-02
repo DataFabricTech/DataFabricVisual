@@ -1,7 +1,6 @@
 package com.mobigen.ovp.search;
 
 import com.mobigen.ovp.common.ModelConvertUtil;
-import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.entity.ModelIndex;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
@@ -135,12 +134,22 @@ public class SearchService {
         return resultMap;
     }
 
+    // function wrapper
     private Map<String, Object> getList(MultiValueMap<String, String> params) throws Exception {
+        return getList(params, false);
+    }
+    
+    private Map<String, Object> getList(MultiValueMap<String, String> params, Boolean useFilter) throws Exception {
         Map<String, Object> result = searchClient.getSearchList(params);
-        return convertToMap(result);
+        return convertToMap(result, useFilter);
     }
 
+    // function wrapper
     public Map<String, Object> convertToMap(Map<String, Object> result) {
+        return convertToMap(result, false);
+    }
+
+    public Map<String, Object> convertToMap(Map<String, Object> result, boolean useFilter) {
         Map<String, Object> resultMap = new HashMap<>();
 
         Map<String, Object> data = (Map<String, Object>) result.get("hits");
@@ -149,7 +158,7 @@ public class SearchService {
             if (totalObj != null) {
                 resultMap.put("totalCount", totalObj.get("value"));
             }
-            resultMap.put("data", modelConvertUtil.convertSearchDataList(data.get("hits")));
+            resultMap.put("data", modelConvertUtil.convertSearchDataList(data.get("hits"), useFilter));
         }
 
         return resultMap;
@@ -201,5 +210,37 @@ public class SearchService {
         Map<String, Object> resultMap = modelConvertUtil.convertPreviewData(tablesClient.getSearchPreview(fqn), "structured", fqn);
 
         return resultMap;
+    }
+
+    public Object getBothSearchList(MultiValueMap<String, String> params) throws Exception {
+        int initSize = Integer.parseInt(params.getFirst("size").toString());
+        int curSize = initSize;
+
+        // 데이터가 너무 적을경우 initSize 를 채우기 위해서 무한으로 while 이 실행될꺼기 때문에 5번의 한도를 둔다.
+        int maxAttempts = 5;
+        int limitCnt = 0;
+        Map<String, Object> result = getList(params, true);
+        List<Map<String, Object>> data = (List<Map<String, Object>>) result.get("data");
+
+        while (data.size() < initSize && limitCnt < maxAttempts) {
+            limitCnt++;
+            curSize += initSize;
+            params.set("size", String.valueOf(curSize));
+            result = getList(params, true);
+            data = (List<Map<String, Object>>) result.get("data");
+
+            if (data.size() >= initSize) {
+                break;
+            }
+        }
+
+        List<Map<String, Object>> trimmedData = data.stream()
+                .limit(initSize)
+                .collect(Collectors.toList());
+
+        result.put("data", trimmedData);
+        result.put("totalData", trimmedData.size());
+
+        return result;
     }
 }
