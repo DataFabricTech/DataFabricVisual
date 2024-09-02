@@ -57,11 +57,11 @@ export const useMainStore = defineStore("mainStore", () => {
 
   const getMainDataList = async () => {
     const { data } = await getMainDataListAPI();
-    dataResult.value = data["all"];
+    dataResult.value = data;
   };
 
   const getMainDataListAPI = async () => {
-    const { data } = await $api(`/api/search/list?${getMainDataListQuery()}`);
+    const { data } = await $api(`/api/main/list?${getMainDataListQuery()}`);
     return data;
   };
 

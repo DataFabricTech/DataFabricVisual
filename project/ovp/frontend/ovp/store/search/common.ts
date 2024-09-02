@@ -101,6 +101,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
 
   const getSearchListQuery = () => {
     const queryFilter = getQueryFilter();
+    console.log(currentTab.value);
     const params: any = {
       // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
       // eslint 예외 제외 코드 추가.

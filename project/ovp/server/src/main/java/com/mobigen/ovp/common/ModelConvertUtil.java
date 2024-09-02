@@ -32,16 +32,29 @@ public class ModelConvertUtil {
      * @param hits
      * @return
      */
-    public Object convertSearchDataList(Object hits) {
+    public Object convertSearchDataList(Object hits, boolean useFilter) {
         List<Map<String, Object>> list = (List<Map<String, Object>>) hits;
-        List<Map<String, Object>> modifiedList = list.stream().map(hit -> {
-            String index = hit.get("_index").toString().equals("table_search_index") ? "table" : "storage";
-            if (hit.containsKey("_source")) {
-                Map<String, Object> source = (Map<String, Object>) hit.get("_source");
-                return convertSourceDataOne(index, source);
-            }
-            return null;
-        }).filter(Objects::nonNull).collect(Collectors.toList());
+        List<Map<String, Object>> modifiedList = list.stream()
+                .map(hit -> {
+                    String index = hit.get("_index").toString().equals("table_search_index") ? "table" : "storage";
+                    if (hit.containsKey("_source")) {
+                        Map<String, Object> source = (Map<String, Object>) hit.get("_source");
+                        Map<String, Object> convertedData = convertSourceDataOne(index, source);
+                        convertedData.put("_index", hit.get("_index"));  // 나중에 필터링을 위해 index 값을 저장
+                        return convertedData;
+                    }
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .filter(data -> {
+                    if (useFilter) {
+                        String index = data.get("_index").toString();
+                        return index.equals("table_search_index") || index.equals("container_search_index");
+                    }
+                    return true;
+                })
+                .collect(Collectors.toList());
+
         return modifiedList;
     }
 
@@ -88,7 +101,7 @@ public class ModelConvertUtil {
 
         if (source.get("tags") != null) {
             List<Map<String, Object>> tags = (List<Map<String, Object>>) source.get("tags");
-            for (Map<String, Object> tag: tags) {
+            for (Map<String, Object> tag : tags) {
                 String displayName = tag.get("displayName").toString();
 
                 if (displayName == null || "".equals(displayName)) {
