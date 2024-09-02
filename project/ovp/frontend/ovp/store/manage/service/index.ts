@@ -498,11 +498,6 @@ export const useServiceStore = defineStore("service", () => {
           connectionInfoData.ingestAllDatabases,
         );
         addIfExists(data, "sslMode", connectionInfoData.sslMode);
-        addIfExists(
-          data,
-          "classificationName",
-          connectionInfoData.classificationName,
-        );
         break;
       case ServiceIds.ORACLE:
         addIfExists(
