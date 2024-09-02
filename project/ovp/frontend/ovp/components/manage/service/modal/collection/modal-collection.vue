@@ -103,11 +103,7 @@ const emit = defineEmits<{
 const onClosed = (data: any) => {
   currentStep.value = 1;
   resetData();
-  if (data) {
-    emit("close", true);
-  } else {
-    emit("close");
-  }
+  emit("close", data);
 };
 
 const onBeforeOpen = () => {
