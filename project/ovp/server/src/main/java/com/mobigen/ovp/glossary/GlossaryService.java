@@ -4,6 +4,7 @@ import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.glossary.client.GlossaryClient;
+import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivityResponse;
 import com.mobigen.ovp.glossary.client.dto.common.Tag;
 import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
 import com.mobigen.ovp.glossary.client.dto.TermDto;
@@ -39,8 +40,13 @@ public class GlossaryService {
     private final SearchClient searchClient;
     private final TablesClient tablesClient;
 
-    public Object createGlossary(GlossaryDto dto) {
-        return glossaryClient.createGlossary(dto);
+    public Object createGlossary(GlossaryDto dto) throws Exception {
+        ResponseEntity<Object> response = glossaryClient.createGlossary(dto);
+        if(response.getStatusCode() == HttpStatus.OK) {
+            return response;
+        } else {
+            throw new Exception();
+        }
     }
 
     /**
@@ -88,8 +94,13 @@ public class GlossaryService {
      * @param dto
      * @return
      */
-    public Object createTerm(TermDto dto) {
-        return glossaryClient.createTerms(dto);
+    public Object createTerm(TermDto dto) throws Exception {
+        ResponseEntity<Object> response = glossaryClient.createTerms(dto);
+        if(response.getStatusCode() == HttpStatus.OK) {
+            return response;
+        } else {
+            throw new Exception();
+        }
     }
 
     /**
@@ -150,16 +161,23 @@ public class GlossaryService {
     /**
      * 용어 사전 활동 사항
      * @param entityLink
+     * @param after
      * @return
      */
-    public List<GlossaryActivities> getGlossaryActivities(String entityLink) {
+    public Map<String, Object> getGlossaryActivities(String entityLink, String after) {
         String type = "Conversation";
-        List<GlossaryActivities> result = new ArrayList<>();
-        List<GlossaryActivity> response = glossaryClient.getGlossaryActivities(entityLink, type).getData();
+        Map<String, Object> result = new HashMap<>();
 
-        for(GlossaryActivity activity : response) {
-            result.add(new GlossaryActivities(activity));
+        List<GlossaryActivities> activities = new ArrayList<>();
+        GlossaryActivityResponse response = glossaryClient.getGlossaryActivities(entityLink, after, type);
+        List<GlossaryActivity> data = response.getData();
+        Object paging = response.getPaging();
+
+        for(GlossaryActivity activity : data) {
+            activities.add(new GlossaryActivities(activity));
         }
+        result.put("activities", activities);
+        result.put("paging", paging);
         return result;
     }
 

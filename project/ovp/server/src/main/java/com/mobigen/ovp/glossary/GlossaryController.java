@@ -35,7 +35,7 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @PostMapping()
-    public Object createGlossary(@RequestBody GlossaryDto dto) {
+    public Object createGlossary(@RequestBody GlossaryDto dto) throws Exception {
         return glossaryService.createGlossary(dto);
     }
 
@@ -78,7 +78,7 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @PostMapping("/terms")
-    public Object createTerm(@RequestBody TermDto dto) {
+    public Object createTerm(@RequestBody TermDto dto) throws Exception{
         return glossaryService.createTerm(dto);
     }
 
@@ -130,12 +130,13 @@ public class GlossaryController {
     /**
      * 용어 사전 활동 기록
      * @param entityLink
+     * @param after
      * @return
      */
     @ResponseJsonResult
     @GetMapping("/activities")
-    public Object getGlossaryActivities(@RequestParam String entityLink) {
-        return glossaryService.getGlossaryActivities(entityLink);
+    public Object getGlossaryActivities(@RequestParam String entityLink, @RequestParam(required = false) String after) {
+        return glossaryService.getGlossaryActivities(entityLink, after);
     }
 
     /**

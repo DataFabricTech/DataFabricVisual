@@ -31,7 +31,7 @@ public interface GlossaryClient {
      * @return
      */
     @PostMapping("/glossaries")
-    Object createGlossary(@RequestBody GlossaryDto dto);
+    ResponseEntity<Object> createGlossary(@RequestBody GlossaryDto dto);
 
     /**
      * 용어 사전 리스트
@@ -69,7 +69,7 @@ public interface GlossaryClient {
      * @return
      */
     @PostMapping("/glossaryTerms")
-    Object createTerms(@RequestBody TermDto dto);
+    ResponseEntity<Object> createTerms(@RequestBody TermDto dto);
 
     /**
      * 용어 리스트
@@ -116,5 +116,5 @@ public interface GlossaryClient {
      * @return
      */
     @GetMapping("/feed")
-    GlossaryActivityResponse getGlossaryActivities(@RequestParam String entityLink, @RequestParam String type);
+    GlossaryActivityResponse getGlossaryActivities(@RequestParam String entityLink, @RequestParam(required = false) String after, @RequestParam String type);
 }

@@ -169,9 +169,14 @@ function validateForm(): void {
 async function postGlossary(): Promise<void> {
   glossaryForm.owner.id = userStore.user.id;
   glossaryForm.owner.type = userStore.user.admin ? "admin" : "user";
-  await createGlossary(glossaryForm);
-  closeModal();
-  await getGlossaries();
+  try {
+    await createGlossary(glossaryForm);
+  } catch (error) {
+    alert(error);
+  } finally {
+    closeModal();
+    await getGlossaries();
+  }
 }
 
 function deleteTag(tag): void {
