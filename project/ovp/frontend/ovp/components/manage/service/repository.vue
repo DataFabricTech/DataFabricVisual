@@ -33,7 +33,7 @@
       :rowData="DBServiceListData"
       :useRowCheckBox="false"
       :setColumnFit="true"
-      :useColumnResize="false"
+      :useColumnResize="true"
     ></agGrid>
     <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
   </template>
