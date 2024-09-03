@@ -20,15 +20,15 @@
                     id="inpName"
                     class="text-input text-input-lg"
                     placeholder="이름 입력"
-                    v-model="form.name"
+                    v-model="form.displayName"
                   />
                 </div>
                 <div
                   class="notification notification-sm notification-error"
-                  v-if="errors.name"
+                  v-if="errors.displayName"
                 >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">{{ errors.name }}</p>
+                  <p class="notification-detail">{{ errors.displayName }}</p>
                 </div>
               </div>
             </div>
@@ -170,16 +170,18 @@ const { getPwdIconName } = useCommonUtils();
 const form: {
   name: string;
   email: string;
+  displayName: string;
 } = reactive({
   name: "",
   email: "",
+  displayName: "",
 });
 
 const errors: {
-  name: string;
+  displayName: string;
   email: string;
 } = reactive({
-  name: "",
+  displayName: "",
   email: "",
 });
 
@@ -191,6 +193,9 @@ const { checkDuplicateEmail, signUpUser } = store;
 const { checkDuplicateName } = userStore;
 
 const onSubmit = async () => {
+  // name 값은 email 의 id 값과 같음
+  form.name = _.first(_.split(form.email, "@")) || "";
+
   const isFormValid = validateForm();
   const isEmailValid = _.isEmpty(errors.email)
     ? !((await isDuplicateEmail()) || (await isDuplicateName()))
@@ -200,19 +205,24 @@ const onSubmit = async () => {
   await signUp();
 };
 const validateForm = () => {
-  const isErrorName = validateName();
+  const isErrorDisplayName = validateDisplayName();
   const isErrorEmail = validateEmail();
   const isErrorPassword = pwComposition.validatePassword();
   const isErrorConfirmPassword = pwComposition.validateConfirmPassword();
 
   return (
-    isErrorName && isErrorEmail && isErrorPassword && isErrorConfirmPassword
+    isErrorDisplayName &&
+    isErrorEmail &&
+    isErrorPassword &&
+    isErrorConfirmPassword
   );
 };
 
-const validateName = () => {
-  errors.name = form.name ? "" : $constants.LOGIN.NAME.INPUT_ERROR_MSG;
-  return !errors.name;
+const validateDisplayName = () => {
+  errors.displayName = form.displayName
+    ? ""
+    : $constants.LOGIN.DISPLAY_NAME.INPUT_ERROR_MSG;
+  return !errors.displayName;
 };
 
 const validateEmail = () => {
@@ -233,8 +243,7 @@ const isDuplicateEmail = async () => {
 };
 
 const isDuplicateName = async () => {
-  const name = _.first(_.split(form.email, "@")) || "";
-  const isDuplicate = await checkDuplicateName(name);
+  const isDuplicate = await checkDuplicateName(form.name);
   errors.email = isDuplicate
     ? $constants.LOGIN.EMAIL.DUPLICATE_ID_ERROR_MSG
     : "";
@@ -243,9 +252,8 @@ const isDuplicateName = async () => {
 
 const signUp = async () => {
   const result = await signUpUser({
-    email: form.email,
+    ...form,
     password: pwComposition.newPassword.value,
-    name: form.name,
   });
 
   if (result.result === 0 && result.errorMessage) {
