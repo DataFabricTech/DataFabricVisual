@@ -118,7 +118,7 @@ properties:
   framework:
     security:
       ignores: /css/**, /fonts/**, /img/**, /js/**, /favicon.ico, /_nuxt/**
-      permit-alls: /portal/login, /, /error, /api/auth/login/**, /api/auth/sign-up/** #/login, /h2-console/**, /error, /test, /api/**, /api/auth/iag/**,
+      permit-alls: /, /portal/login/**, /api/email/**, /api/auth/login/**, /api/auth/sign-up/** #/login, /h2-console/**, /error, /test, /api/**, /api/auth/iag/**,
       redirect-url: /
       iframe-option: disable #disable, same-origin, deny
       csrf: false
@@ -150,7 +150,7 @@ properties:
       valid_time: 60
       href: /api/email/pw-reset
       redirect_url: /portal/login/pw-reset
-      redirect_error_url: /portal/error
+      redirect_error_url: /portal/login/error
       contents_file_path: "templates/ovp_pwReset.html"
       title: "Open-Vdap-Platform  비밀번호 재 설정"
 
