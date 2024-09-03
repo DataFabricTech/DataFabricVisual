@@ -41,6 +41,10 @@ public class CategoryService {
     private final SearchService searchService;
     private final ClassificationClient classificationClient;
 
+    private static final String OVP_CATEGORY = "ovp_category";
+    private static final String UNDEFINED_TAG_NAME = "미분류";
+
+
     public CategoryDTO getCategories() {
         List<CategoryEntity> categories = categoryRepository.findAll();
 
@@ -95,6 +99,15 @@ public class CategoryService {
 
     @Transactional
     public Object insertOrUpdate(CategoryDTO dto) throws Exception {
+        CategoryEntity undefinedTagEntity = getUndefinedTag();
+
+        if (undefinedTagEntity != null && dto.getName().equals(UNDEFINED_TAG_NAME)) {
+            return "NOT_ALLOWED_NAME";
+        }
+        if (undefinedTagEntity != null && dto.getParentId().equals(undefinedTagEntity.getId().toString())) {
+            return "NOT_ALLOWED_PARENT_ID";
+        }
+
         CategoryEntity thisNodeEntity = dto.toEntity();
         CategoryEntity targetNodeEntity = categoryRepository.findById(UUID.fromString(dto.getParentId())).get();
 
@@ -112,6 +125,11 @@ public class CategoryService {
 
     @Transactional
     public Object deleteCategory(CategoryDTO params) throws Exception {
+        CategoryEntity undefinedTagEntity = getUndefinedTag();
+        if (params.getId().equals(undefinedTagEntity.getId().toString())) {
+            return "NOT_ALLOWED_ID";
+        }
+
         CategoryEntity categoryEntity = params.toEntity();
         // 재귀 함수 이용하여 하위 > 하위 > 하위.. 의 categoryId 목록 조회.
 
@@ -235,6 +253,12 @@ public class CategoryService {
     public boolean moveCategory(Map<String, Object> params) throws Exception {
         String dropNodeId = params.get("dropNodeId").toString();
         String targetNodeId = params.get("targetNodeId").toString();
+
+        CategoryEntity undefinedTagEntity = getUndefinedTag();
+        if (undefinedTagEntity.getId().equals(dropNodeId)) {
+            return false;
+        }
+
         CategoryEntity dropNodeEntity = categoryRepository.findByIdWithParent(UUID.fromString(dropNodeId));
         CategoryEntity targetNodeEntity = categoryRepository.findByIdWithParent(UUID.fromString(targetNodeId));
 
@@ -325,7 +349,7 @@ public class CategoryService {
     // TODO : classification 명 상수 처리 필요.
     public String createTagInfo(String categoryId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("classification", "ovp_category");
+        params.put("classification", OVP_CATEGORY);
         params.put("description", "OVP Category Matched Tag");
         params.put("displayName", categoryId);
         params.put("name", categoryId);
@@ -372,12 +396,12 @@ public class CategoryService {
 
         // 데이터 모델의 태크 목록에서 카테고리, 태그, 용어를 분리해서 저장.
         List<DataModelDetailTagDto> glossaryList = tags.stream()
-                .filter(tag -> !tag.getTagFQN().contains("ovp_category") && "Glossary".equals(tag.getSource()))
+                .filter(tag -> !tag.getTagFQN().contains(OVP_CATEGORY) && "Glossary".equals(tag.getSource()))
                 .map(tag -> new DataModelDetailTagDto(tag))
                 .collect(Collectors.toList());
         ;
         List<DataModelDetailTagDto> classificationList = tags.stream()
-                .filter(tag -> !tag.getTagFQN().contains("ovp_category") && "Classification".equals(tag.getSource()))
+                .filter(tag -> !tag.getTagFQN().contains(OVP_CATEGORY) && "Classification".equals(tag.getSource()))
                 .map(tag -> new DataModelDetailTagDto(tag))
                 .collect(Collectors.toList());
 
@@ -447,5 +471,9 @@ public class CategoryService {
         }
 
         return true;
+    }
+
+    private CategoryEntity getUndefinedTag() {
+        return categoryRepository.findByName(UNDEFINED_TAG_NAME);
     }
 }

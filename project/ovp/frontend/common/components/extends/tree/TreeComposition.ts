@@ -108,7 +108,7 @@ export function TreeComposition(props: TreeProps): TreeComposition {
     return parentIds;
   };
 
-  const dropValidator = (thisNode: TreeViewItem, targetNode: TreeViewItem) => {
+  const dropValidator = (thisNode: TreeViewItem, targetNode: TreeViewItem): any => {
     // 자기노드 밑으로 drop 할 수 없음.
     if (thisNode.id === targetNode.id) {
       return false;
@@ -117,6 +117,12 @@ export function TreeComposition(props: TreeProps): TreeComposition {
     // targetNode 기준 부모노드 List 를 조회해서 thisNode 의 id 가 있는지 확인 필요함.
     const parentIds = findAncestors(treeItems.value, targetNode.id);
     if (parentIds.includes(thisNode.id)) {
+      return false;
+    }
+
+    // immutableItems 의 항목은 drag/drop 할수없음.
+    if (Array.isArray(props.immutableItems) && props.immutableItems.some((item) => thisNode.id.includes(item))) {
+      alert("미분류 항목은 이동 불가능 합니다.");
       return false;
     }
 

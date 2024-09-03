@@ -1,7 +1,7 @@
 <template>
   <div class="section-top-bar">
     <div class="l-top-bar">
-      <h3 class="title">카테고리</h3>
+      <h3 class="title">카테고리{{ isEditableNode }}</h3>
     </div>
   </div>
   <div class="section-contents p-0 bg-white">
@@ -37,6 +37,7 @@
             :show-close-all-btn="true"
             :use-draggable="true"
             :dropValidator="dropValidator"
+            :immutable-items="[undefinedTagIdManager.get() ?? '']"
             @onItemSelected="onCategoryNodeClick"
             @addSibling="addSibling"
             @addChild="addChild"
@@ -58,7 +59,7 @@
         <div class="l-top-bar">
           <editable-group
             compKey="title"
-            :editable="true"
+            :editable="isEditableNode"
             :parent-edit-mode="isTitleEditMode"
             @editCancel="editCancel"
             @editDone="editDone"
@@ -82,14 +83,18 @@
               </h3>
             </template>
           </editable-group>
-          <button class="button button-error-lighter" @click="_deleteCategory">
+          <button
+            class="button button-error-lighter"
+            @click="_deleteCategory"
+            v-if="isEditableNode"
+          >
             삭제
           </button>
         </div>
         <div class="work-contents">
           <editable-group
             compKey="desc"
-            :editable="true"
+            :editable="isEditableNode"
             :parent-edit-mode="isDescEditMode"
             @editCancel="editCancel"
             @editDone="editDone"
@@ -233,6 +238,7 @@ const {
   changeTab,
   setEmptyFilter,
   setModelIdList,
+  undefinedTagIdManager,
 } = categoryStore;
 const {
   selectedNode,
@@ -362,6 +368,10 @@ const _deleteCategory = async () => {
   if (confirm("카테고리를 삭제 하시겠습니까?")) {
     const res = await deleteCategory(selectedNodeCategory.value.id);
     if (res.result === 1) {
+      if (res.data === "NOT_ALLOWED_ID") {
+        alert("미분류 카테고리는 삭제가 불가능합니다.");
+        return;
+      }
       alert("삭제 되었습니다.");
       await getCategories();
       await onCategoryNodeClick(categories.value[0]);
@@ -571,6 +581,10 @@ const openModal = () => {
   setEmptyFilter();
   changeTab("table");
 };
+
+const isEditableNode = computed(() => {
+  return undefinedTagIdManager.get() !== selectedNodeCategory.value.id;
+});
 
 onMounted(async () => {
   if (loader.value) {

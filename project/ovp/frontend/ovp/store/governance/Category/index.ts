@@ -4,6 +4,7 @@ import type { TreeViewItem } from "@extends/tree/TreeProps";
 import { usePagingStore } from "~/store/common/paging";
 import { useQueryHelpers } from "~/composables/queryHelpers";
 import { FILTER_KEYS } from "~/store/search/common";
+import $constants from "@/utils/constant";
 
 export interface Filter {
   text: string;
@@ -35,6 +36,12 @@ export interface QueryFilter {
       must: any[];
     };
   };
+}
+
+// 미분류 카테고리 처리
+interface UndefinedTagIdManager {
+  set: (value: string | null) => void;
+  get: () => string | null;
 }
 
 export const useGovernCategoryStore = defineStore("GovernCategory", () => {
@@ -84,8 +91,22 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const selectedTitleNodeValue = ref(selectedNodeCategory.value.name || "");
   const dupliSelectedTitleNodeValue = ref("");
   const lastChildIdList: Ref<string[]> = ref<string[]>([]);
-  const childlessList: Ref<string[]> = ref<string[]>([]);
   const isShowPreview = ref<boolean>(false);
+
+  // 미분류 set/get 분리해서 page 단에는 get() 만 해서 사용하도록 처리함.
+  const createUndefinedTagId = (): UndefinedTagIdManager => {
+    let UNDEFINED_TAG_ID: string | null = null; // Adjust type based on your requirements
+
+    return {
+      set: (value: string | null) => {
+        if (UNDEFINED_TAG_ID === null) {
+          UNDEFINED_TAG_ID = value;
+        }
+      },
+      get: () => UNDEFINED_TAG_ID,
+    };
+  };
+  const undefinedTagIdManager = createUndefinedTagId();
 
   // MAIN - TREE
   const getCategories = async () => {
@@ -95,6 +116,14 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
      * data 는 root node 기준 으로 조회 됨.
      * root node 는 화면에 표시하지 않기 때문에 rootNode.children 만 categories 에 저장.
      */
+
+    // 미분류항목은 categories 에 첫번째 항목으로 등록할꺼기 때문에 (자동이든, 수동이든)
+    // categories 의 항목이 1개이상인 경우, 첫번째 항목이 '미분류' 항목이 됨.
+    // 저장해둔다.
+    if (data.children.length > 0) {
+      undefinedTagIdManager.set(data.children[0].id);
+    }
+
     categories.value = data.children;
     isCategoriesNoData.value = categories.value.length === 0;
     defaultCategoriesParentId.value = data.parentId;
@@ -106,10 +135,30 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       .map((item3) => item3.id);
   };
 
+  // 노드명 유효한지 체크.
+  const isValidNodeName = (name: string) => {
+    // node name 약어 처리 ('미분류' 항목은 사용할 수 없음)
+    if (
+      !_.isNull(undefinedTagIdManager.get()) &&
+      name.trim() === $constants.SERVICE.CATEGORY_UNDEFINED_NAME
+    ) {
+      // TODO : [개발] '미분류' 카테고리 명으로 입력 못하게 Notification 표시 추가.
+      alert(`${name} 은 예약어로 등록되어 사용 불가능합니다.`);
+      return false;
+    }
+    return true;
+  };
+
   const addCategory = (node: TreeViewItem) => {
+    if (!isValidNodeName(node.name)) {
+      return;
+    }
     insertOrEditAPI("PUT", node);
   };
   const editCategory = (node: TreeViewItem) => {
+    if (!isValidNodeName(node.name)) {
+      return;
+    }
     insertOrEditAPI("PATCH", node);
   };
   const insertOrEditAPI = async (method: string, node: TreeViewItem) => {
@@ -149,6 +198,10 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     return data;
   };
   const deleteCategory = (nodeId: string) => {
+    if (nodeId === undefinedTagIdManager.get()) {
+      alert(`'미분류 카테고리는 삭제가 불가능합니다.`);
+      return;
+    }
     return $api(`/api/category`, {
       method: "delete",
       body: {
@@ -429,6 +482,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     dupliSelectedTitleNodeValue,
     lastChildIdList,
     isShowPreview,
+    undefinedTagIdManager,
     resetAddModalStatus,
     patchModelAddItemAPI,
     patchCategoryTagAPI,
