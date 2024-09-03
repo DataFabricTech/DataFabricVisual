@@ -5,7 +5,7 @@
         <img
           v-if="servicesById[service.serviceType]"
           :src="servicesById[service.serviceType].imgUrl"
-          :alt="servicesById[service.serviceType].imgUrl"
+          :alt="servicesById[service.serviceType].label"
           :width="25"
         />
         <h4 class="service-title">{{ service.name }}</h4>
