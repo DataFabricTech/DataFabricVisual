@@ -20,15 +20,15 @@
                     id="inpName"
                     class="text-input text-input-lg"
                     placeholder="이름 입력"
-                    v-model="form.name"
+                    v-model="form.displayName"
                   />
                 </div>
                 <div
                   class="notification notification-sm notification-error"
-                  v-if="errors.name"
+                  v-if="errors.displayName"
                 >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">{{ errors.name }}</p>
+                  <p class="notification-detail">{{ errors.displayName }}</p>
                 </div>
               </div>
             </div>
@@ -161,6 +161,8 @@ import { useRouter } from "vue-router";
 import { PasswordComposition } from "@/components/login/PasswordComposition";
 import { useCommonUtils } from "@/composables/commonUtils";
 import $constants from "@/utils/constant";
+import { useUserStore } from "@/store/user/userStore";
+import _ from "lodash";
 
 const pwComposition = PasswordComposition();
 const { getPwdIconName } = useCommonUtils();
@@ -168,46 +170,59 @@ const { getPwdIconName } = useCommonUtils();
 const form: {
   name: string;
   email: string;
+  displayName: string;
 } = reactive({
   name: "",
   email: "",
+  displayName: "",
 });
 
 const errors: {
-  name: string;
+  displayName: string;
   email: string;
 } = reactive({
-  name: "",
+  displayName: "",
   email: "",
 });
 
 const store = loginStore();
+const userStore = useUserStore();
 const router = useRouter();
 
-const onSubmit = async () => {
-  if (!validateForm()) {
-    return;
-  }
+const { checkDuplicateEmail, signUpUser } = store;
+const { checkDuplicateName } = userStore;
 
-  if (await isDuplicateEmail()) {
-    return;
-  }
+const onSubmit = async () => {
+  // name 값은 email 의 id 값과 같음
+  form.name = _.first(_.split(form.email, "@")) || "";
+
+  const isFormValid = validateForm();
+  const isEmailValid = _.isEmpty(errors.email)
+    ? !((await isDuplicateEmail()) || (await isDuplicateName()))
+    : false;
+  if (!isFormValid || !isEmailValid) return;
+
   await signUp();
 };
 const validateForm = () => {
-  const isErrorName = validateName();
+  const isErrorDisplayName = validateDisplayName();
   const isErrorEmail = validateEmail();
   const isErrorPassword = pwComposition.validatePassword();
   const isErrorConfirmPassword = pwComposition.validateConfirmPassword();
 
   return (
-    isErrorName && isErrorEmail && isErrorPassword && isErrorConfirmPassword
+    isErrorDisplayName &&
+    isErrorEmail &&
+    isErrorPassword &&
+    isErrorConfirmPassword
   );
 };
 
-const validateName = () => {
-  errors.name = form.name ? "" : $constants.LOGIN.NAME.INPUT_ERROR_MSG;
-  return !errors.name;
+const validateDisplayName = () => {
+  errors.displayName = form.displayName
+    ? ""
+    : $constants.LOGIN.DISPLAY_NAME.INPUT_ERROR_MSG;
+  return !errors.displayName;
 };
 
 const validateEmail = () => {
@@ -221,17 +236,24 @@ const validateEmail = () => {
 };
 
 const isDuplicateEmail = async () => {
-  const result = await store.checkDuplicateEmail({ email: form.email });
+  const result = await checkDuplicateEmail({ email: form.email });
   const isDuplicate = result.data;
   errors.email = isDuplicate ? $constants.LOGIN.EMAIL.DUPLICATE_ERROR_MSG : "";
   return isDuplicate;
 };
 
+const isDuplicateName = async () => {
+  const isDuplicate = await checkDuplicateName(form.name);
+  errors.email = isDuplicate
+    ? $constants.LOGIN.EMAIL.DUPLICATE_ID_ERROR_MSG
+    : "";
+  return isDuplicate;
+};
+
 const signUp = async () => {
-  const result = await store.signUpUser({
-    email: form.email,
+  const result = await signUpUser({
+    ...form,
     password: pwComposition.newPassword.value,
-    name: form.name,
   });
 
   if (result.result === 0 && result.errorMessage) {
