@@ -161,6 +161,8 @@ import { useRouter } from "vue-router";
 import { PasswordComposition } from "@/components/login/PasswordComposition";
 import { useCommonUtils } from "@/composables/commonUtils";
 import $constants from "@/utils/constant";
+import { useUserStore } from "@/store/user/userStore";
+import _ from "lodash";
 
 const pwComposition = PasswordComposition();
 const { getPwdIconName } = useCommonUtils();
@@ -182,16 +184,19 @@ const errors: {
 });
 
 const store = loginStore();
+const userStore = useUserStore();
 const router = useRouter();
 
-const onSubmit = async () => {
-  if (!validateForm()) {
-    return;
-  }
+const { checkDuplicateEmail, signUpUser } = store;
+const { checkDuplicateName } = userStore;
 
-  if (await isDuplicateEmail()) {
-    return;
-  }
+const onSubmit = async () => {
+  const isFormValid = validateForm();
+  const isEmailValid = _.isEmpty(errors.email)
+    ? !((await isDuplicateEmail()) || (await isDuplicateName()))
+    : false;
+  if (!isFormValid || !isEmailValid) return;
+
   await signUp();
 };
 const validateForm = () => {
@@ -221,14 +226,23 @@ const validateEmail = () => {
 };
 
 const isDuplicateEmail = async () => {
-  const result = await store.checkDuplicateEmail({ email: form.email });
+  const result = await checkDuplicateEmail({ email: form.email });
   const isDuplicate = result.data;
   errors.email = isDuplicate ? $constants.LOGIN.EMAIL.DUPLICATE_ERROR_MSG : "";
   return isDuplicate;
 };
 
+const isDuplicateName = async () => {
+  const name = _.first(_.split(form.email, "@")) || "";
+  const isDuplicate = await checkDuplicateName(name);
+  errors.email = isDuplicate
+    ? $constants.LOGIN.EMAIL.DUPLICATE_ID_ERROR_MSG
+    : "";
+  return isDuplicate;
+};
+
 const signUp = async () => {
-  const result = await store.signUpUser({
+  const result = await signUpUser({
     email: form.email,
     password: pwComposition.newPassword.value,
     name: form.name,
