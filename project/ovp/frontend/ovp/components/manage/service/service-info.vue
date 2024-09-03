@@ -2,7 +2,12 @@
   <div class="work-page" v-if="!isEmptyService()">
     <div class="l-top-bar">
       <div class="h-group gap-2">
-        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+        <img
+          v-if="servicesById[service.serviceType]"
+          :src="servicesById[service.serviceType].imgUrl"
+          :alt="servicesById[service.serviceType].imgUrl"
+          :width="25"
+        />
         <h4 class="service-title">{{ service.name }}</h4>
       </div>
       <button class="button button-error-lighter" @click="removeService">
@@ -163,6 +168,7 @@ import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import type { JsonPatchOperation } from "~/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import _ from "lodash";
+
 const {
   changeTab,
   getServiceList,
@@ -174,6 +180,7 @@ const {
   createOwnerOperation,
   changeTag,
   service,
+  servicesById,
 } = useServiceStore();
 const serviceStore = useServiceStore();
 const dataModelDetailStore = useDataModelDetailStore();

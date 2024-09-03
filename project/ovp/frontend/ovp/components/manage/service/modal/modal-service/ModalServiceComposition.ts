@@ -384,12 +384,6 @@ export function ModalServiceComposition(
     },
   };
 
-  // 이미지 URL 동적 셋팅
-  services.value.forEach(async (service: any) => {
-    const imgUrl: any = await import(`@assetsPublic/images/${service.img}.png`);
-    service.imgUrl = imgUrl.default;
-  });
-
   // coomon
   const resetInput = (serviceObjPath: string) => {
     setValue(serviceObjPath, "");

@@ -46,10 +46,12 @@
           @click="changeService(service)"
         >
           <button class="menu-button">
-            <svg-icon
-              class="svg-icon menu-data-icon"
-              name="resource"
-            ></svg-icon>
+            <img
+              v-if="servicesById[service.serviceType]"
+              :src="servicesById[service.serviceType].imgUrl"
+              :alt="servicesById[service.serviceType].imgUrl"
+              :width="25"
+            />
             <span class="menu-text">{{ service.name }}</span>
             <span class="menu-subtext"
               >({{
@@ -84,6 +86,7 @@ const {
   changeCurrentService,
   emptyService,
   changeTab,
+  servicesById,
 } = useServiceStore();
 const store = useServiceStore();
 const TAB_REPOSITORY = $constants.SERVICE.TAB[0].value;
