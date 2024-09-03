@@ -1,11 +1,10 @@
 <template>
   <div class="wrap">
     <div class="submit-form">
+      <h1 class="submit-form-logo">
+        <svg-icon class="svg-icon logo-img" name="logo"></svg-icon>
+      </h1>
       <div class="submit-form-form">
-        <h1 class="submit-form-logo">
-          <span class="hidden-text">open vdap portal</span>
-          <svg-icon class="svg-icon logo" name="logo"></svg-icon>
-        </h1>
         <h2 class="submit-form-title">비밀번호 재설정</h2>
         <p class="submit-form-desc">
           비밀번호 재설정 링크를 받으려면 등록된 이메일을 입력하세요
