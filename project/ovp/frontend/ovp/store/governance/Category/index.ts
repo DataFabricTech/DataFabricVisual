@@ -88,17 +88,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const isShowPreview = ref<boolean>(false);
 
   // MAIN - TREE
-
-  const setChildlessCategory = (categoryList: any[], list: string[]) => {
-    for (const item of categoryList) {
-      if (item.children.length === 0) {
-        list.push(item.id);
-      } else {
-        setChildlessCategory(item.children, list);
-      }
-    }
-  };
-
   const getCategories = async () => {
     const { data } = await $api(`/api/category/list`);
 
@@ -110,8 +99,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     isCategoriesNoData.value = categories.value.length === 0;
     defaultCategoriesParentId.value = data.parentId;
     categoriesParentId.value = data.parentId;
-
-    setChildlessCategory(categories.value, childlessList.value);
 
     lastChildIdList.value = categories.value
       .flatMap((item1) => item1.children)
@@ -441,7 +428,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     selectedTitleNodeValue,
     dupliSelectedTitleNodeValue,
     lastChildIdList,
-    childlessList,
     isShowPreview,
     resetAddModalStatus,
     patchModelAddItemAPI,

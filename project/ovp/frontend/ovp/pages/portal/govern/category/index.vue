@@ -214,6 +214,7 @@ import CategoryAddModal from "~/components/govern/category/category-add-modal.vu
 import CategoryChangeModal from "~/components/govern/category/category-change-modal.vue";
 import DataModelAddModal from "~/components/govern/category/data-model-add-modal.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
+import _ from "lodash";
 
 const categoryStore = useGovernCategoryStore();
 
@@ -251,7 +252,6 @@ const {
   selectedNodeCategory,
   dupliSelectedTitleNodeValue,
   lastChildIdList,
-  childlessList,
   defaultCategoriesParentId,
   categoriesParentId,
   categoriesId,
@@ -300,7 +300,7 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   dupliSelectedTitleNodeValue.value = node.name;
   selectedCategoryId.value = node.id;
   selectedCategoryTagId.value = <string>node.tagId;
-  checkModalButton(node.id);
+  checkModalButton(node);
   setScrollOptions(0);
   // 선택한 노드정보 저장
   selectedNode.value = node;
@@ -317,10 +317,9 @@ const getAllModelList = async () => {
   setModelIdList();
 };
 
-const checkModalButton = (id: string) => {
-  isModalButtonShow.value = childlessList.value.some(
-    (lastChildId: string) => lastChildId === id,
-  );
+const checkModalButton = (node: TreeViewItem) => {
+  isModalButtonShow.value =
+    !_.has(node, "children") || _.size(node.children) < 1;
 };
 
 const addSibling = (newNode: TreeViewItem) => {
