@@ -200,9 +200,12 @@ export const useServiceStore = defineStore("service", () => {
    * @param id
    */
   async function deleteService(id: string): Promise<void> {
-    await $api(`/api/service-manage/${id}?hardDelete=true&recursive=true`, {
-      method: "DELETE",
-    });
+    await $api(
+      `/api/service-manage/${id}?type=${service.type}&hardDelete=true&recursive=true`,
+      {
+        method: "DELETE",
+      },
+    );
     emptyService();
   }
 

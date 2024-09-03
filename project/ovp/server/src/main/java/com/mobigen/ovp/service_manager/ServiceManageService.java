@@ -277,12 +277,11 @@ public class ServiceManageService {
      * @param recursive
      * @return
      */
-    public Object deleteService(UUID id, boolean hardDelete, boolean recursive) throws Exception {
-        ResponseEntity<Object> result = servicesClient.deleteService(id, hardDelete, recursive);
-        if (result.getStatusCode() == HttpStatus.OK) {
-            return servicesClient.deleteService(id, hardDelete, recursive);
+    public Object deleteService(UUID id, String type, boolean hardDelete, boolean recursive) throws Exception {
+        if (!STORAGE.equals(type)) {
+            return servicesClient.deleteServiceDataBase(id, hardDelete, recursive);
         } else {
-            throw new Exception();
+            return servicesClient.deleteServiceStorage(id, hardDelete, recursive);
         }
     }
 
