@@ -98,7 +98,10 @@ public class SearchDetailService {
         }
 
         Tags res = classificationClient.gatTags(params);
-        List<Tag> resTags = res.getData().stream().filter(tag -> !tag.getFullyQualifiedName().contains("ovp_category")).collect(Collectors.toList());
+        List<Tag> resTags = res.getData().stream().filter(tag -> {
+            String classificationName = tag.getClassification().getName();
+            return !(classificationName.contains("ovp_category") || classificationName.contains("PersonalData") || classificationName.contains("Pll") || classificationName.contains("Tier"));
+        }).collect(Collectors.toList());
 
 
         List<Tag> mergeTagList = Stream.concat(tags.stream(), resTags.stream()).collect(Collectors.toList());
@@ -238,6 +241,7 @@ public class SearchDetailService {
 
     /**
      * 데이터 모델 상세 > 팔로우(북마크) 데이터 추출
+     *
      * @param userId
      * @param id
      * @param type
@@ -254,7 +258,7 @@ public class SearchDetailService {
                 ? containersClient.getStorageById(id, params)
                 : tablesClient.getTablesName(id, params);
 
-        for(Followers followers: resultData.getFollowers()) {
+        for (Followers followers : resultData.getFollowers()) {
             if (followers.getId().equals(userId)) {
                 isFollow = true;
                 break;
