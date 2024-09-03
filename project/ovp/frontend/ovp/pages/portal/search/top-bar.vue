@@ -2,7 +2,9 @@
   <!--  상단 검색 결과 & 우측 필터-->
   <div class="l-top-bar">
     <h4 class="search-result">
-      총 <em class="search-result-num">{{ searchResultLength[currentTab] }}개</em>의 검색 결과가 있습니다.
+      총
+      <em class="search-result-num">{{ searchResultLength[currentTab] }}개</em
+      >의 검색 결과가 있습니다.
     </h4>
     <div class="h-group gap-1">
       <select-box
@@ -35,6 +37,7 @@
           name="button-group3"
           value="graphView"
           v-model="viewType"
+          @change="onGraphView"
         />
         <label for="graphView" class="button-group-label">
           <svg-icon class="svg-icon" name="knowleage-graph"></svg-icon>
@@ -59,6 +62,11 @@ const { viewType, searchResultLength, sortKey, sortKeyOpt, currentTab } =
 const options: { [key: string]: string | number }[] =
   $constants.COMMON.SORT_FILTER;
 const isFirstCheckedEvent: boolean = true;
+
+const onGraphView = () => {
+  viewType.value = "listView";
+  alert("개발중 입니다.");
+};
 </script>
 
 <style lang="scss" scoped></style>

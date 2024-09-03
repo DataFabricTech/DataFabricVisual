@@ -100,7 +100,7 @@ public class SearchDetailService {
         Tags res = classificationClient.gatTags(params);
         List<Tag> resTags = res.getData().stream().filter(tag -> {
             String classificationName = tag.getClassification().getName();
-            return !(classificationName.contains("ovp_category") || classificationName.contains("PersonalData") || classificationName.contains("Pll") || classificationName.contains("Tier"));
+            return !(classificationName.contains("ovp_category") || classificationName.contains("PersonalData") || classificationName.contains("PII") || classificationName.contains("Tier"));
         }).collect(Collectors.toList());
 
 

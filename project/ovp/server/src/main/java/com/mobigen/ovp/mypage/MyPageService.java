@@ -44,7 +44,7 @@ public class MyPageService {
         newUserInfo.put("description", openMetaUserInfo.get("description"));
         newUserInfo.put("displayName", openMetaUserInfo.get("displayName"));
         newUserInfo.put("name", openMetaUserInfo.get("name"));
-        newUserInfo.put("email", openMetaUserInfo.get("email"));
+        newUserInfo.put("email", openMetaUserInfo.get("email").toString().replace("openmetadata.org", "mobigen.com"));
         newUserInfo.put("isAdmin", openMetaUserInfo.get("isAdmin"));
 
         Optional<UserEntity> dbUserinfo = (Optional<UserEntity>) userService.getUserInfo(id);

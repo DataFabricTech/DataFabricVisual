@@ -89,8 +89,8 @@ public class ServiceManageController {
      */
     @ResponseJsonResult
     @DeleteMapping("/{id}")
-    public Object deleteService(@PathVariable UUID id, @RequestParam boolean hardDelete, @RequestParam boolean recursive) throws Exception {
-        return serviceManageService.deleteService(id, hardDelete, recursive);
+    public Object deleteService(@PathVariable UUID id, @RequestParam String type, @RequestParam boolean hardDelete, @RequestParam boolean recursive) throws Exception {
+        return serviceManageService.deleteService(id, type, hardDelete, recursive);
     }
 
     /**
