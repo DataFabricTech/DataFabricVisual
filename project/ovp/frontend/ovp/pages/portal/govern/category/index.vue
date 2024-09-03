@@ -116,7 +116,7 @@
               <p class="editable-group-desc">{{ selectedNodeCategory.desc }}</p>
             </template>
           </editable-group>
-          <div class="category-search">
+          <div class="category-search" v-if="isModalButtonShow">
             <div class="l-top-bar">
               <search-input
                 class="w-[541px]"
@@ -142,7 +142,7 @@
                     전체선택
                   </label>
                 </div>
-                <div class="h-group ml-auto gap-2" v-if="isModalButtonShow">
+                <div class="h-group ml-auto gap-2">
                   <button
                     class="button button-secondary-stroke"
                     @click="showCategoryChangeModal"
