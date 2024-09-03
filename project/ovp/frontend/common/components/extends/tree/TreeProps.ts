@@ -38,5 +38,7 @@ export interface TreeDetailProps {
 
   checkedIds?: string[];
 
-  dropValidator?: (thisNode: TreeViewItem, targetNode: TreeViewItem, newNode: TreeViewItem) => boolean;
+  immutableItems?: string[];
+
+  dropValidator?: (thisNode: TreeViewItem, targetNode: TreeViewItem, newNode: TreeViewItem) => any;
 }

@@ -134,6 +134,7 @@ const $constants = {
     },
   },
   SERVICE: {
+    CATEGORY_UNDEFINED_NAME: "미분류",
     TAB: [
       {
         label: "저장소",

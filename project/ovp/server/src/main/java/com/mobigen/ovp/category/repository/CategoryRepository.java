@@ -69,4 +69,6 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, UUID> 
      */
     @Query("SELECT c FROM CategoryEntity c WHERE c.parentId = :parentId AND c.id <> :id AND c.name = :name")
     List<CategoryEntity> findByParentIdAndIdNotAndName(@Param("parentId") UUID parentId, @Param("id") UUID id, @Param("name") String name);
+
+    CategoryEntity findByName(@Param("name") String categoryName);
 }

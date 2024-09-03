@@ -55,12 +55,11 @@ const {
   categories,
   selectedModelList,
   modelList,
-  childlessList,
   selectedCategoryId,
   isShowPreview,
 } = storeToRefs(categoryStore);
 
-const isDisabledSaveButton = ref(false);
+const isDisabledSaveButton = ref(true);
 const props = defineProps({
   modalId: {
     type: String,
@@ -118,8 +117,8 @@ const onOpened = () => {
 };
 
 const onCategoryNodeClick = (node: TreeViewItem) => {
-  const checkAddLasChild = !childlessList.value.includes(node.id);
-  isDisabledSaveButton.value = checkAddLasChild;
+  isDisabledSaveButton.value =
+    _.has(node, "children") && _.size(node.children) > 0;
   tagIdForCategoryChange.value = node.tagId;
 };
 
