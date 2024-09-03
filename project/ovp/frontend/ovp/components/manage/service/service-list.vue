@@ -46,10 +46,12 @@
           @click="changeService(service)"
         >
           <button class="menu-button">
-            <svg-icon
-              class="svg-icon menu-data-icon"
-              name="resource"
-            ></svg-icon>
+            <img
+              v-if="servicesById[service.serviceType]"
+              :src="servicesById[service.serviceType].imgUrl"
+              :alt="servicesById[service.serviceType].label"
+              :width="25"
+            />
             <span class="menu-text">{{ service.name }}</span>
             <span class="menu-subtext"
               >({{
@@ -74,9 +76,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, defineProps, defineEmits } from "vue";
-import type { Service } from "~/type/service";
+import type { Service } from "@/type/service";
 import { useServiceStore } from "@/store/manage/service";
-import $constants from "~/utils/constant";
+import $constants from "@/utils/constant";
 
 const {
   getServiceList,
@@ -84,6 +86,7 @@ const {
   changeCurrentService,
   emptyService,
   changeTab,
+  servicesById,
 } = useServiceStore();
 const store = useServiceStore();
 const TAB_REPOSITORY = $constants.SERVICE.TAB[0].value;

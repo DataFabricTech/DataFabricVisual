@@ -1,18 +1,18 @@
 import type {
   IService,
   IServiceObj,
-} from "~/components/manage/service/modal/modal-service/ModalServiceProps";
+} from "@/components/manage/service/modal/modal-service/ModalServiceProps";
 import {
   ConnectionStatus,
   ServiceIds,
   services,
-} from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
+} from "@/components/manage/service/modal/modal-service/ModalServiceComposition";
 import _ from "lodash";
 import type { Ref } from "vue";
 import { compare } from "fast-json-patch";
 
 import { storeToRefs } from "pinia";
-import { useUserStore } from "~/store/user/userStore";
+import { useUserStore } from "@/store/user/userStore";
 import { useServiceStore as useDefaultServiceStore } from "../index";
 
 const defaultSelectedServiceObj: IService = {
