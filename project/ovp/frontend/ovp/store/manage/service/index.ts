@@ -6,16 +6,16 @@ import type {
   Ingestion,
   ServiceData,
   DBServiceListData,
-} from "~/type/service";
-import type { JsonPatchOperation } from "~/type/common";
+} from "@/type/service";
+import type { JsonPatchOperation } from "@/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import {
   ConnectionStatus,
   services,
   ServiceIds,
-} from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
+} from "@/components/manage/service/modal/modal-service/ModalServiceComposition";
 import { useDataModelDetailStore } from "@/store/search/detail";
-import $constants from "~/utils/constant";
+import $constants from "@/utils/constant";
 import _ from "lodash";
 
 export const useServiceStore = defineStore("service", () => {

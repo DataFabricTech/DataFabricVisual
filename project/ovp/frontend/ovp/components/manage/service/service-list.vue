@@ -76,9 +76,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted, defineProps, defineEmits } from "vue";
-import type { Service } from "~/type/service";
+import type { Service } from "@/type/service";
 import { useServiceStore } from "@/store/manage/service";
-import $constants from "~/utils/constant";
+import $constants from "@/utils/constant";
 
 const {
   getServiceList,

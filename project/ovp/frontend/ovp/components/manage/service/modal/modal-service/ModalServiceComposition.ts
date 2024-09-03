@@ -1,5 +1,5 @@
 import { storeToRefs } from "pinia";
-import { useServiceStore } from "~/store/manage/service/modal";
+import { useServiceStore } from "@/store/manage/service/modal";
 import _ from "lodash";
 
 import type {

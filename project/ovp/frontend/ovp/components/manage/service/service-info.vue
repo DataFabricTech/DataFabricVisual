@@ -163,9 +163,9 @@
 import { onMounted, computed } from "vue";
 import { useServiceStore } from "@/store/manage/service";
 import { useDataModelDetailStore } from "@/store/search/detail";
-import $constants from "~/utils/constant";
+import $constants from "@/utils/constant";
 import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
-import type { JsonPatchOperation } from "~/type/common";
+import type { JsonPatchOperation } from "@/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import _ from "lodash";
 
