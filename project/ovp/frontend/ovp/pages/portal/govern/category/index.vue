@@ -1,7 +1,7 @@
 <template>
   <div class="section-top-bar">
     <div class="l-top-bar">
-      <h3 class="title">카테고리{{ isEditableNode }}</h3>
+      <h3 class="title">카테고리</h3>
     </div>
   </div>
   <div class="section-contents p-0 bg-white">
