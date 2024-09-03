@@ -90,6 +90,7 @@ public class ModelConvertUtil {
 
         modifiedSource.put("firModelNm", source.get("displayName"));
         modifiedSource.put("modelNm", source.get("name"));
+        modifiedSource.put("displayName", source.get("displayName"));
         modifiedSource.put("modelDesc", source.get("description"));
         modifiedSource.put("fqn", source.get("fullyQualifiedName"));
         modifiedSource.put("owner", source.get("owner"));
