@@ -199,7 +199,9 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   };
   const deleteCategory = (nodeId: string) => {
     if (nodeId === undefinedTagIdManager.get()) {
-      alert(`'미분류 카테고리는 삭제가 불가능합니다.`);
+      alert(
+        `${$constants.SERVICE.CATEGORY_UNDEFINED_NAME} 카테고리는 삭제가 불가능합니다.`,
+      );
       return;
     }
     return $api(`/api/category`, {

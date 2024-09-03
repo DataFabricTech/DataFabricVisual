@@ -220,6 +220,7 @@ import CategoryChangeModal from "~/components/govern/category/category-change-mo
 import DataModelAddModal from "~/components/govern/category/data-model-add-modal.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 import _ from "lodash";
+import $constants from "~/utils/constant";
 
 const categoryStore = useGovernCategoryStore();
 
@@ -369,7 +370,9 @@ const _deleteCategory = async () => {
     const res = await deleteCategory(selectedNodeCategory.value.id);
     if (res.result === 1) {
       if (res.data === "NOT_ALLOWED_ID") {
-        alert("미분류 카테고리는 삭제가 불가능합니다.");
+        alert(
+          `${$constants.SERVICE.CATEGORY_UNDEFINED_NAME} 카테고리는 삭제가 불가능합니다.`,
+        );
         return;
       }
       alert("삭제 되었습니다.");
