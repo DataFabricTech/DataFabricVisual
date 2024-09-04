@@ -37,7 +37,7 @@
               <nuxt-link
                 :to="`/portal/my-page?fqn=${user.fullyQualifiedName}`"
                 class="dropdown-button"
-                @click="isDropdownOpen = false"
+                @click="moveMyPage"
               >
                 <span class="dropdown-text">마이페이지</span>
               </nuxt-link>
@@ -125,6 +125,11 @@ const logOut = async () => {
 };
 
 await getUserInfo();
+
+const moveMyPage = () => {
+  alert("개발중 입니다.");
+  isDropdownOpen.value = false;
+};
 
 onMounted(async () => {
   setProfileFirstWord(user.value.displayName || user.value.name);
