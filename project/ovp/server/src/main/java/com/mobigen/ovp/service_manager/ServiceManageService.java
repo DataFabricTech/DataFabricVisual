@@ -613,9 +613,9 @@ public class ServiceManageService {
     private List<Map<String, Object>> processServiceList(List<Map<String, Object>> serviceList,
                                                          Map<String, Object> serviceParam, boolean isDatabase) {
         return serviceList.stream()
-                .map(client -> (String) client.get("fullyQualifiedName"))
-                .filter(this::isNotNullOrEmpty)
-                .flatMap(fullyQualifiedName -> {
+                .flatMap(client -> {
+                    String fullyQualifiedName = client.get("fullyQualifiedName").toString();
+                    String depth1Name = client.get("name").toString();
                     if (isDatabase) {
                         // Database Service Logic
                         serviceParam.put("database", fullyQualifiedName);
@@ -623,6 +623,7 @@ public class ServiceManageService {
                         List<Map<String, Object>> dataList = (List<Map<String, Object>>) result.get("data");
 
                         return dataList.stream().flatMap(dataItem -> {
+                            String schemaName = dataItem.get("name").toString();
                             String nestedFullyQualifiedName = (String) dataItem.get("fullyQualifiedName");
                             Map<String, String> tableParam = new HashMap<>();
                             tableParam.put("databaseSchema", nestedFullyQualifiedName);
@@ -630,7 +631,10 @@ public class ServiceManageService {
                             Map<String, Object> tableInfo = tablesClient.getTablesInfo(tableParam);
 
                             List<Map<String, Object>> tableDataList = (List<Map<String, Object>>) tableInfo.get("data");
-                            return tableDataList.stream();
+                            return tableDataList.stream().map(tableData -> {
+                                tableData.put("customType", schemaName);
+                                return tableData;
+                            });
                         });
                     } else {
                         // Storage Service Logic
@@ -641,7 +645,10 @@ public class ServiceManageService {
                             if (innerFullyQualifiedName != null) {
                                 Map<String, Object> resultFromClient = containersClient.getContainersName(innerFullyQualifiedName, serviceParam);
                                 List<Map<String, Object>> innerChildren = (List<Map<String, Object>>) resultFromClient.get("children");
-                                return innerChildren.stream();
+                                return innerChildren.stream().map(tableData -> {
+                                    tableData.put("customType", depth1Name);
+                                    return tableData;
+                                });
                             } else {
                                 return Stream.empty();
                             }
@@ -651,18 +658,13 @@ public class ServiceManageService {
                 .map(this::processEntry)
                 .collect(Collectors.toList());
     }
-
-
-    private boolean isNotNullOrEmpty(String value) {
-        return value != null && !value.isEmpty();
-    }
-
+    
     private Map<String, Object> processEntry(Map<String, Object> entry) {
         Map<String, Object> newEntry = new HashMap<>();
         newEntry.put("fqn", entry.get("fullyQualifiedName"));
         newEntry.put("name", entry.get("name"));
         newEntry.put("id", entry.get("id"));
-        newEntry.put("type", determineType(entry.get("serviceType")));
+        newEntry.put("type", entry.get("customType"));
         newEntry.put("desc", entry.get("description"));
         newEntry.put("owner", extractOwner(entry));
         return newEntry;
