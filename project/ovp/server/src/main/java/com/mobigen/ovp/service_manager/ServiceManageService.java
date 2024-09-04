@@ -665,6 +665,7 @@ public class ServiceManageService {
         newEntry.put("name", entry.get("name"));
         newEntry.put("id", entry.get("id"));
         newEntry.put("type", entry.get("customType"));
+        newEntry.put("serviceType", determineType(entry.get("serviceType")));
         newEntry.put("desc", entry.get("description"));
         newEntry.put("owner", extractOwner(entry));
         return newEntry;
