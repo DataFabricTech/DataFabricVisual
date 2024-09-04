@@ -308,7 +308,7 @@ public class ServiceManageService {
         params.add("serviceType", serviceType);
         params.add("limit", "1000");
 
-        if(serviceType.equals("databaseService")) {
+        if (serviceType.equals("databaseService")) {
             params.add("pipelineType", "metadata,usage,lineage,profiler,dbt");
         } else {
             params.add("pipelineType", "metadata,usage,lineage,profiler,storageProfiler,dbt");
@@ -635,7 +635,17 @@ public class ServiceManageService {
                     } else {
                         // Storage Service Logic
                         Map<String, Object> result = containersClient.getContainersName(fullyQualifiedName, serviceParam);
-                        return ((List<Map<String, Object>>) result.get("children")).stream();
+                        List<Map<String, Object>> children = (List<Map<String, Object>>) result.get("children");
+                        return children.stream().flatMap(child -> {
+                            String innerFullyQualifiedName = (String) child.get("fullyQualifiedName");
+                            if (innerFullyQualifiedName != null) {
+                                Map<String, Object> resultFromClient = containersClient.getContainersName(innerFullyQualifiedName, serviceParam);
+                                List<Map<String, Object>> innerChildren = (List<Map<String, Object>>) resultFromClient.get("children");
+                                return innerChildren.stream();
+                            } else {
+                                return Stream.empty();
+                            }
+                        });
                     }
                 })
                 .map(this::processEntry)
