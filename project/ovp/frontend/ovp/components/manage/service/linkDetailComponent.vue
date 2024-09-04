@@ -1,8 +1,9 @@
 <template>
   <a
-    :href="link"
+    href="javascript:void(0);"
     class="link-button link-button-underline"
     title="상세 페이지 이동"
+    @click="rowClick()"
   >
     {{ params.data.name }}
   </a>
@@ -17,11 +18,11 @@ const props = defineProps<{
 }>();
 
 const router = useRouter();
-
-// 링크 생성
-const link = computed(() => {
-  return `/portal/search/detail?type=${props.params.data.type}&id=${props.params.data.id}&fqn=${props.params.data.fqn}`;
-});
+const rowClick = () => {
+  router.push(
+    `/portal/search/detail?type=${props.params.data.serviceType}&id=${props.params.data.id}&fqn=${props.params.data.fqn}`,
+  );
+};
 </script>
 
 <style scoped>
