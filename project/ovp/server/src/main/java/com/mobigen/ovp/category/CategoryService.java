@@ -86,7 +86,9 @@ public class CategoryService {
 
     @Transactional
     public Object addCategory(CategoryDTO dto) throws Exception {
-        dto.setTagId(createTagInfo(dto.getId()));
+        // 이름이 "미분류"일 경우, name 값과 displayName 값을 "미분류" 로 저장
+        String categoryId = dto.getName().equals(UNDEFINED_TAG_NAME) ? UNDEFINED_TAG_NAME : dto.getId();
+        dto.setTagId(createTagInfo(categoryId));
         return insertOrUpdate(dto);
     }
 
@@ -278,7 +280,8 @@ public class CategoryService {
      * @return
      * @throws Exception
      */
-    private Object checkValidationNodePosition(CategoryEntity targetNodeEntity, CategoryEntity dropNodeEntity) throws Exception {
+    private Object checkValidationNodePosition(CategoryEntity targetNodeEntity,
+                                               CategoryEntity dropNodeEntity) throws Exception {
         // step1. 노드의 위치가 3 depth 를 넘는지 체크
         int targetNodeDepth = findAncestorsDepth(targetNodeEntity);
         int thisNodeDepth = findChildrenDepth(dropNodeEntity);
