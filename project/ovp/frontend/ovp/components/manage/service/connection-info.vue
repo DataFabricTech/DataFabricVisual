@@ -1,7 +1,7 @@
 <template>
   <div class="px-4">
     <div class="flex justify-end gap-2">
-      <button class="button button-neutral-stroke" @click="modalOpen">
+      <button class="button button-lg button-neutral-stroke" @click="modalOpen">
         연결정보 수정
       </button>
       <button

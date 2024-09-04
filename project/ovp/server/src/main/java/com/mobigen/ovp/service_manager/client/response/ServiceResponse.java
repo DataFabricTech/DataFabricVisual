@@ -36,14 +36,18 @@ public class ServiceResponse {
         List<Tag> tags = service.getTags();
         if(tags != null) {
             for(Tag tag : tags) {
+                String displayName = tag.getDisplayName();
+                if (displayName == null || displayName.isEmpty()) {
+                    displayName = tag.getName();
+                }
                 if ("Classification".equals(tag.getSource())) {
                     Map<String, Object> tagData = new HashMap<>();
-                    tagData.put("displayName", tag.getDisplayName());
+                    tagData.put("displayName", displayName);
                     tagData.put("tagFQN", tag.getTagFQN());
                     this.tags.add(tagData);
                 } else if ("Glossary".equals(tag.getSource())) {
                     Map<String, Object> termData = new HashMap<>();
-                    termData.put("displayName", tag.getDisplayName());
+                    termData.put("displayName", displayName);
                     termData.put("tagFQN", tag.getTagFQN());
                     this.terms.add(termData);
                 }
@@ -65,14 +69,18 @@ public class ServiceResponse {
         List<Tag> tags = service.getBody().getTags();
         if(tags != null) {
             for(Tag tag : tags) {
+                String displayName = tag.getDisplayName();
+                if (displayName == null || displayName.isEmpty()) {
+                    displayName = tag.getName();
+                }
                 if ("Classification".equals(tag.getSource())) {
                     Map<String, Object> tagData = new HashMap<>();
-                    tagData.put("displayName", tag.getDisplayName());
+                    tagData.put("displayName", displayName);
                     tagData.put("tagFQN", tag.getTagFQN());
                     this.tags.add(tagData);
                 } else if ("Glossary".equals(tag.getSource())) {
                     Map<String, Object> termData = new HashMap<>();
-                    termData.put("displayName", tag.getDisplayName());
+                    termData.put("displayName", displayName);
                     termData.put("tagFQN", tag.getTagFQN());
                     this.terms.add(termData);
                 }
@@ -97,14 +105,21 @@ public class ServiceResponse {
         List<Map<String, Object>> tags = (List<Map<String, Object>>) map.get("tags");
         if(tags != null) {
             for(Map<String, Object> tag : tags) {
+                String displayName = "";
+                if (tag.get("displayName") == null || "".equals(tag.get("displayName"))) {
+                    displayName = tag.get("name").toString();
+                } else {
+                    displayName = tag.get("displayName").toString();
+                }
+
                 if ("Classification".equals(tag.get("source"))) {
                     Map<String, Object> tagData = new HashMap<>();
-                    tagData.put("displayName", tag.get("displayName"));
+                    tagData.put("displayName", displayName);
                     tagData.put("tagFQN", tag.get("tagFQN"));
                     this.tags.add(tagData);
                 } else if ("Glossary".equals(tag.get("source"))) {
                     Map<String, Object> termData = new HashMap<>();
-                    termData.put("displayName", tag.get("displayName"));
+                    termData.put("displayName", displayName);
                     termData.put("tagFQN", tag.get("fullyQualifiedName"));
                     this.terms.add(termData);
                 }

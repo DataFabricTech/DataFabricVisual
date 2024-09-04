@@ -58,7 +58,6 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useClipboard } from "@vueuse/core";
 import { storeToRefs } from "pinia";
@@ -76,7 +75,10 @@ const { dataModel } = storeToRefs(dataModelDetailStore);
 
 const { user } = storeToRefs(userStore);
 const currentUrl = ref("");
-const { copy } = useClipboard({ currentUrl });
+const { copy } = useClipboard({
+  source: currentUrl,
+  legacy: true,
+});
 
 const changeUpVote = async () => {
   const state: string = dataModel.value.isUpVote ? "unVoted" : "votedUp";
@@ -87,6 +89,7 @@ const changeDownVote = async () => {
   await changeVote(state);
 };
 function copyLink() {
+  getURL();
   copy(currentUrl.value);
   alert("링크가 복사되었습니다.");
 }
@@ -114,11 +117,6 @@ const getURL = () => {
     console.error("window 객체를 찾을 수 없습니다.");
   }
 };
-
-// mounted 훅에서 URL을 가져올 수 있습니다.
-onMounted(() => {
-  getURL();
-});
 </script>
 
 <style lang="scss" scoped></style>

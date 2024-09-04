@@ -66,7 +66,7 @@ public class ServiceManageService {
     public List<ServiceResponse> getServices() {
         final int limit = 100;
         List<Services> dataBases = servicesClient.getServices("owner,tags", limit).getData();
-        List<Services> storages = servicesClient.getServiceStorage("owner", "non-deleted", limit).getData();
+        List<Services> storages = servicesClient.getServiceStorage("owner,tags", "non-deleted", limit).getData();
         List<ServiceResponse> serviceResponses = new ArrayList<>();
 
         for (Services service : dataBases) {
