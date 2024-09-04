@@ -21,13 +21,13 @@
         <button class="button button-neutral-stroke" @click="refresh">
           새로고침
         </button>
-        <button
-          class="button button-neutral-stroke"
-          ref="copyButton"
-          @click="copyLog"
-        >
-          복사
-        </button>
+        <!--        <button-->
+        <!--          class="button button-neutral-stroke"-->
+        <!--          ref="copyButton"-->
+        <!--          @click="copyLog"-->
+        <!--        >-->
+        <!--          복사-->
+        <!--        </button>-->
       </div>
       <!-- TODO: [개발] 로그 화면 구현 -->
       <div class="log-view" style="height: 100%">
