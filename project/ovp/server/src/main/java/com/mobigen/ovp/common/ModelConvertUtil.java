@@ -139,7 +139,7 @@ public class ModelConvertUtil {
         if (tagName.equals(Constants.UNDEFINED_TAG_NAME)) {
             return categoryRepository.findByName(tagName);
         } else {
-            return categoryRepository.findByTagId(UUID.fromString(tagName));
+            return categoryRepository.findById(UUID.fromString(tagName)).orElse(null);
         }
     }
 
