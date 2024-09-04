@@ -1,5 +1,6 @@
 package com.mobigen.ovp.search;
 
+import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.ModelConvertUtil;
 import com.mobigen.ovp.common.entity.ModelIndex;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
@@ -11,6 +12,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +51,7 @@ public class SearchService {
                         }
                     } else if (newKey.equals("tags.tagFQN") && buckets instanceof List) {
                         List<Map<String, Object>> filteredBuckets = ((List<Map<String, Object>>) buckets).stream()
-                                .filter(bucket -> !((String) bucket.get("key")).contains("ovp_category."))
+                                .filter(bucket -> !((String) bucket.get("key")).contains(Constants.OVP_CATEGORY + "."))
                                 .collect(Collectors.toList());
                         if (!filteredBuckets.isEmpty()) {
                             resultMap.put(newKey, filteredBuckets);
@@ -64,32 +66,49 @@ public class SearchService {
     }
 
     public Map<String, Object> getFilter(MultiValueMap<String, String> params) {
-        params.add("q", "{\"query\":{\"bool\":{\"must\":[{\"match\":{\"deleted\":false}}]}}}");
-        params.add("value", ".**");
+        params.set("q", "{\"query\":{\"bool\":{\"must\":[{\"match\":{\"deleted\":false}}]}}}");
+        params.set("value", ".*.*");
 
-        return convertAggregations(searchClient.getFilter(params));
+        Map<String, Object> combinedAggregations = new HashMap<>();
+
+        List<String> indices = Arrays.asList("table_search_index", "container_search_index");
+
+        for (String index : indices) {
+            params.set("index", index);
+            Map<String, Object> resultSet = convertAggregations(searchClient.getFilter(params));
+
+            resultSet.forEach((key, value) -> {
+                combinedAggregations.merge(key, value, (oldValue, newValue) -> {
+                    List<Object> mergedList = new ArrayList<>((List<Object>) oldValue);
+                    mergedList.addAll((List<Object>) newValue);
+                    return mergedList;
+                });
+            });
+        }
+
+        return combinedAggregations;
     }
 
     public Map<String, Object> getFilters() throws Exception {
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-
-        params.set("index", "all");
-
-        List<String> tagArrays = new ArrayList<>();
-        tagArrays.add("owner.displayName.keyword");
-        tagArrays.add("tags.tagFQN");
-        tagArrays.add("service.displayName.keyword");
-        tagArrays.add("serviceType");
-        tagArrays.add("database.displayName.keyword");
-        tagArrays.add("databaseSchema.displayName.keyword");
-        tagArrays.add("columns.name.keyword");
+        List<String> tagArrays = Arrays.asList(
+                "owner.displayName.keyword",
+                "tags.tagFQN",
+                "service.displayName.keyword",
+                "serviceType",
+                "database.displayName.keyword",
+                "databaseSchema.displayName.keyword",
+                "columns.name.keyword"
+        );
 
         Map<String, Object> responseMap = new HashMap<>();
 
         for (String tag : tagArrays) {
+            MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
             params.set("field", tag);
-            responseMap.putAll(getFilter(params));
+            Map<String, Object> filterResult = getFilter(params);
+            responseMap.putAll(filterResult);
         }
+
         return responseMap;
     }
 
@@ -138,7 +157,7 @@ public class SearchService {
     private Map<String, Object> getList(MultiValueMap<String, String> params) throws Exception {
         return getList(params, false);
     }
-    
+
     private Map<String, Object> getList(MultiValueMap<String, String> params, Boolean useFilter) throws Exception {
         Map<String, Object> result = searchClient.getSearchList(params);
         return convertToMap(result, useFilter);

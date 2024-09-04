@@ -37,6 +37,7 @@
             :show-close-all-btn="true"
             :use-draggable="true"
             :dropValidator="dropValidator"
+            :immutable-items="[undefinedTagIdManager.get() ?? '']"
             @onItemSelected="onCategoryNodeClick"
             @addSibling="addSibling"
             @addChild="addChild"
@@ -58,7 +59,7 @@
         <div class="l-top-bar">
           <editable-group
             compKey="title"
-            :editable="true"
+            :editable="isEditableNode"
             :parent-edit-mode="isTitleEditMode"
             @editCancel="editCancel"
             @editDone="editDone"
@@ -70,7 +71,7 @@
               >
               <input
                 v-model="selectedTitleNodeValue"
-                placeholder="카테고리명 에 대한 영역입니다."
+                placeholder="카테고리명에 대한 영역입니다."
                 required
                 id="title-modify"
                 class="text-input w-1/2"
@@ -82,14 +83,18 @@
               </h3>
             </template>
           </editable-group>
-          <button class="button button-error-lighter" @click="_deleteCategory">
+          <button
+            class="button button-error-lighter"
+            @click="_deleteCategory"
+            v-if="isEditableNode"
+          >
             삭제
           </button>
         </div>
         <div class="work-contents">
           <editable-group
             compKey="desc"
-            :editable="true"
+            :editable="isEditableNode"
             :parent-edit-mode="isDescEditMode"
             @editCancel="editCancel"
             @editDone="editDone"
@@ -102,7 +107,7 @@
               <textarea
                 class="textarea"
                 v-model="selectedDescNodeValue"
-                placeholder="모델 설명에 대한 영역입니다."
+                placeholder="카테고리 설명에 대한 영역입니다."
                 required
                 id="textarea-modify"
               ></textarea>
@@ -111,7 +116,7 @@
               <p class="editable-group-desc">{{ selectedNodeCategory.desc }}</p>
             </template>
           </editable-group>
-          <div class="category-search">
+          <div class="category-search" v-if="isModalButtonShow">
             <div class="l-top-bar">
               <search-input
                 class="w-[541px]"
@@ -137,7 +142,7 @@
                     전체선택
                   </label>
                 </div>
-                <div class="h-group ml-auto gap-2" v-if="isModalButtonShow">
+                <div class="h-group ml-auto gap-2">
                   <button
                     class="button button-secondary-stroke"
                     @click="showCategoryChangeModal"
@@ -214,6 +219,8 @@ import CategoryAddModal from "~/components/govern/category/category-add-modal.vu
 import CategoryChangeModal from "~/components/govern/category/category-change-modal.vue";
 import DataModelAddModal from "~/components/govern/category/data-model-add-modal.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
+import _ from "lodash";
+import $constants from "~/utils/constant";
 
 const categoryStore = useGovernCategoryStore();
 
@@ -232,6 +239,7 @@ const {
   changeTab,
   setEmptyFilter,
   setModelIdList,
+  undefinedTagIdManager,
 } = categoryStore;
 const {
   selectedNode,
@@ -251,7 +259,6 @@ const {
   selectedNodeCategory,
   dupliSelectedTitleNodeValue,
   lastChildIdList,
-  childlessList,
   defaultCategoriesParentId,
   categoriesParentId,
   categoriesId,
@@ -300,7 +307,7 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   dupliSelectedTitleNodeValue.value = node.name;
   selectedCategoryId.value = node.id;
   selectedCategoryTagId.value = <string>node.tagId;
-  checkModalButton(node.id);
+  checkModalButton(node);
   setScrollOptions(0);
   // 선택한 노드정보 저장
   selectedNode.value = node;
@@ -317,10 +324,9 @@ const getAllModelList = async () => {
   setModelIdList();
 };
 
-const checkModalButton = (id: string) => {
-  isModalButtonShow.value = childlessList.value.some(
-    (lastChildId: string) => lastChildId === id,
-  );
+const checkModalButton = (node: TreeViewItem) => {
+  isModalButtonShow.value =
+    !_.has(node, "children") || _.size(node.children) < 1;
 };
 
 const addSibling = (newNode: TreeViewItem) => {
@@ -363,6 +369,12 @@ const _deleteCategory = async () => {
   if (confirm("카테고리를 삭제 하시겠습니까?")) {
     const res = await deleteCategory(selectedNodeCategory.value.id);
     if (res.result === 1) {
+      if (res.data === "NOT_ALLOWED_ID") {
+        alert(
+          `${$constants.SERVICE.CATEGORY_UNDEFINED_NAME} 카테고리는 삭제가 불가능합니다.`,
+        );
+        return;
+      }
       alert("삭제 되었습니다.");
       await getCategories();
       await onCategoryNodeClick(categories.value[0]);
@@ -572,6 +584,10 @@ const openModal = () => {
   setEmptyFilter();
   changeTab("table");
 };
+
+const isEditableNode = computed(() => {
+  return undefinedTagIdManager.get() !== selectedNodeCategory.value.id;
+});
 
 onMounted(async () => {
   if (loader.value) {

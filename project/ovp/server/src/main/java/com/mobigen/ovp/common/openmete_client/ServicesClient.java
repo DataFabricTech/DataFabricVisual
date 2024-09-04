@@ -83,7 +83,7 @@ public interface ServicesClient {
 
 
     /**
-     * 서비스 삭제
+     * 서비스 삭제 - 데이터베이스
      *
      * @param id
      * @param hardDelete
@@ -91,7 +91,18 @@ public interface ServicesClient {
      * @return
      */
     @DeleteMapping("/databaseServices/{id}")
-    ResponseEntity<Object> deleteService(@PathVariable UUID id, @RequestParam boolean hardDelete, @RequestParam boolean recursive);
+    ResponseEntity<Object> deleteServiceDataBase(@PathVariable UUID id, @RequestParam boolean hardDelete, @RequestParam boolean recursive);
+
+    /**
+     * 서비스 삭제 - 스토리지
+     *
+     * @param id
+     * @param hardDelete
+     * @param recursive
+     * @return
+     */
+    @DeleteMapping("/storageServices/{id}")
+    ResponseEntity<Object> deleteServiceStorage(@PathVariable UUID id, @RequestParam boolean hardDelete, @RequestParam boolean recursive);
 
     /**
      * service : Service - 수집 - 동작 [log] 조회

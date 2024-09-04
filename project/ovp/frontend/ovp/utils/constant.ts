@@ -3,7 +3,7 @@ const $constants = {
     ID: {
       INPUT_ERROR_MSG: "사용자 아이디/이메일을 입력하세요.",
     },
-    NAME: {
+    DISPLAY_NAME: {
       INPUT_ERROR_MSG: "사용자 이름를 입력하세요.",
     },
     PASSWORD: {
@@ -134,6 +134,7 @@ const $constants = {
     },
   },
   SERVICE: {
+    CATEGORY_UNDEFINED_NAME: "미분류",
     TAB: [
       {
         label: "저장소",

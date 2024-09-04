@@ -19,14 +19,13 @@
       @onSelect="onItemSelected"
     >
       <template v-slot:item-append="treeViewItem">
-        <!-- TODO : [퍼블] 선택된 노드 비활성화 처리 'node-disabled' 로 처리 필요함. -->
         <div
           :class="{
             'node-disabled': props.disabledIds.length > 0 && props.disabledIds.includes(treeViewItem.id),
             'node-fir-selected': props.selectedIds.length > 0 && props.selectedIds.includes(treeViewItem.id)
           }"
         ></div>
-        <div v-if="mode === 'edit'" class="tree-item-buttons">
+        <div v-if="mode === 'edit' && !props.immutableItems.includes(treeViewItem.id)" class="tree-item-buttons">
           <button class="button button-neutral-ghost button-sm" type="button" @click="addSibling(treeViewItem)">
             <span class="button-title">추가</span>
           </button>
@@ -57,7 +56,8 @@ const props = withDefaults(defineProps<TreeProps>(), {
   disabledIds: () => [],
   selectedIds: () => [],
   useFirSelect: true,
-  compId: "treeComponent"
+  compId: "treeComponent",
+  immutableItems: () => []
 });
 
 const emit = defineEmits<{

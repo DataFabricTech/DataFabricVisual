@@ -2,6 +2,8 @@ package com.mobigen.ovp.search_detail;
 
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
+import com.mobigen.ovp.common.constants.Constants;
+import com.mobigen.ovp.common.ModelConvertUtil;
 import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
 import com.mobigen.ovp.common.openmete_client.ContainersClient;
@@ -55,6 +57,7 @@ public class SearchDetailService {
 
     private final UserService userService;
     private final CategoryRepository categoryRepository;
+    private final ModelConvertUtil modelConvertUtil;
 
     /**
      * 사용자 목록 (전체)
@@ -99,7 +102,10 @@ public class SearchDetailService {
         }
 
         Tags res = classificationClient.gatTags(params);
-        List<Tag> resTags = res.getData().stream().filter(tag -> !tag.getFullyQualifiedName().contains("ovp_category")).collect(Collectors.toList());
+        List<Tag> resTags = res.getData().stream().filter(tag -> {
+            String classificationName = tag.getClassification().getName();
+            return !(classificationName.contains("ovp_category") || classificationName.contains("PersonalData") || classificationName.contains("PII") || classificationName.contains("Tier"));
+        }).collect(Collectors.toList());
 
 
         List<Tag> mergeTagList = Stream.concat(tags.stream(), resTags.stream()).collect(Collectors.toList());
@@ -217,8 +223,8 @@ public class SearchDetailService {
                 tag.setDisplayName(displayName);
             }
 
-            if (tag.getTagFQN().contains("ovp_category")) {
-                CategoryEntity categoryEntity = categoryRepository.findByIdWithParent(UUID.fromString(tag.getName()));
+            if (tag.getTagFQN().contains(Constants.OVP_CATEGORY)) {
+                CategoryEntity categoryEntity = modelConvertUtil.getCategoryEntity(tag.getName());
                 if (categoryEntity != null) {
                     dataModelDetailResponse.getCategory().setId(categoryEntity.getId());
                     dataModelDetailResponse.getCategory().setName(categoryEntity.getName());
@@ -239,6 +245,7 @@ public class SearchDetailService {
 
     /**
      * 데이터 모델 상세 > 팔로우(북마크) 데이터 추출
+     *
      * @param userId
      * @param id
      * @param type
@@ -255,7 +262,7 @@ public class SearchDetailService {
                 ? containersClient.getStorageById(id, params)
                 : tablesClient.getTablesName(id, params);
 
-        for(Followers followers: resultData.getFollowers()) {
+        for (Followers followers : resultData.getFollowers()) {
             if (followers.getId().equals(userId)) {
                 isFollow = true;
                 break;
@@ -455,16 +462,16 @@ public class SearchDetailService {
 
         // 데이터 모델의 태크 목록에서 카테고리, 태그, 용어를 분리해서 저장.
         List<DataModelDetailTagDto> glossaryList = tags.stream()
-                .filter(tag -> !tag.getTagFQN().contains("ovp_category") && "Glossary".equals(tag.getSource()))
+                .filter(tag -> !tag.getTagFQN().contains(Constants.OVP_CATEGORY) && "Glossary".equals(tag.getSource()))
                 .map(tag -> new DataModelDetailTagDto(tag))
                 .collect(Collectors.toList());
         ;
         List<DataModelDetailTagDto> classificationList = tags.stream()
-                .filter(tag -> !tag.getTagFQN().contains("ovp_category") && "Classification".equals(tag.getSource()))
+                .filter(tag -> !tag.getTagFQN().contains(Constants.OVP_CATEGORY) && "Classification".equals(tag.getSource()))
                 .map(tag -> new DataModelDetailTagDto(tag))
                 .collect(Collectors.toList());
         List<DataModelDetailTagDto> categoryList = tags.stream()
-                .filter(tag -> tag.getTagFQN().contains("ovp_category") && "Classification".equals(tag.getSource()))
+                .filter(tag -> tag.getTagFQN().contains(Constants.OVP_CATEGORY) && "Classification".equals(tag.getSource()))
                 .map(tag -> new DataModelDetailTagDto(tag))
                 .collect(Collectors.toList());
 

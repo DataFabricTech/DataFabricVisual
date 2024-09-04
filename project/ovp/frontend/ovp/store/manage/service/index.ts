@@ -6,15 +6,16 @@ import type {
   Ingestion,
   ServiceData,
   DBServiceListData,
-} from "~/type/service";
-import type { JsonPatchOperation } from "~/type/common";
+} from "@/type/service";
+import type { JsonPatchOperation } from "@/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import {
   ConnectionStatus,
+  services,
   ServiceIds,
-} from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
+} from "@/components/manage/service/modal/modal-service/ModalServiceComposition";
 import { useDataModelDetailStore } from "@/store/search/detail";
-import $constants from "~/utils/constant";
+import $constants from "@/utils/constant";
 import _ from "lodash";
 
 export const useServiceStore = defineStore("service", () => {
@@ -25,6 +26,13 @@ export const useServiceStore = defineStore("service", () => {
 
   const service = reactive<Service>(<Service>{});
   const serviceList = reactive<Service[]>([]);
+
+  // 이미지 URL 동적 셋팅
+  services.value.forEach(async (service: any) => {
+    const imgUrl: any = await import(`@assetsPublic/images/${service.img}.png`);
+    service.imgUrl = imgUrl.default;
+  });
+  const servicesById = _.keyBy(services.value, "id");
 
   const userList = reactive<Owner[]>([]);
   const userSearchList = reactive<object[]>([]);
@@ -192,9 +200,12 @@ export const useServiceStore = defineStore("service", () => {
    * @param id
    */
   async function deleteService(id: string): Promise<void> {
-    await $api(`/api/service-manage/${id}?hardDelete=true&recursive=true`, {
-      method: "DELETE",
-    });
+    await $api(
+      `/api/service-manage/${id}?type=${service.type}&hardDelete=true&recursive=true`,
+      {
+        method: "DELETE",
+      },
+    );
     emptyService();
   }
 
@@ -525,6 +536,7 @@ export const useServiceStore = defineStore("service", () => {
 
   return {
     tab,
+    servicesById,
     service,
     serviceList,
     userList,

@@ -61,7 +61,7 @@ public class AuthService {
         param.put(PASSWORD_KEY, base64EncodingPasswd);
 
         Map<String, Object> result = new HashMap<>();
-        try{
+        try {
             result = authClient.login(param);
         } catch (Exception e) {
             throw new Exception("아이디 및 비밀번호가 유효하지 않습니다.");
@@ -77,7 +77,8 @@ public class AuthService {
      * @param param
      * @return
      */
-    public Object logout(HttpServletRequest request, HttpServletResponse response, Map<String, Object> param) throws Exception {
+    public Object logout(HttpServletRequest request, HttpServletResponse response,
+                         Map<String, Object> param) throws Exception {
         Map<String, Object> newParam = new HashMap<>();
         newParam.put("token", param.get(frameworkProperties.getToken().getAccessToken()));
 
@@ -99,6 +100,7 @@ public class AuthService {
 
     /**
      * 로그인 - 토큰 발급
+     *
      * @param param
      * @return
      */
@@ -112,6 +114,7 @@ public class AuthService {
 
     /**
      * 로그인 > 공개키 반환
+     *
      * @param request
      * @return
      */
@@ -178,6 +181,7 @@ public class AuthService {
         paramMap.put("confirmPassword", param.get(PASSWORD_KEY));
         paramMap.put("createPasswordType", "ADMIN_CREATE");
         paramMap.put("name", param.get("name"));
+        paramMap.put("displayName", param.get("displayName"));
         paramMap.put("roles", userRoles);
         paramMap.put("isAdmin", false);
         paramMap.put("isBot", false);
@@ -271,6 +275,7 @@ public class AuthService {
         }
         return isChange;
     }
+
     /**
      * 비밀번호 재설정 > 고유링크 유효성 확인
      *
@@ -328,11 +333,12 @@ public class AuthService {
      * 회원가입 > OMD 서버 회원가입 API 통신
      *
      * @param adminAuthorizationHeader : 관리자 토큰 헤더
-     * @param paramMap : 회원가입 바디 정보
+     * @param paramMap                 : 회원가입 바디 정보
      * @return
      * @throws Exception
      */
-    private Map<String, Object> singUpAPI(HttpHeaders adminAuthorizationHeader, Map<String, Object> paramMap) throws Exception {
+    private Map<String, Object> singUpAPI(HttpHeaders adminAuthorizationHeader,
+                                          Map<String, Object> paramMap) throws Exception {
         try {
             return authClient.signUpUser(adminAuthorizationHeader, paramMap);
         } catch (Exception e) {
@@ -344,11 +350,12 @@ public class AuthService {
     /**
      * 회원가입 > User DB 저장
      *
-     * @param signUpResult : OMD 서버에 저장된 사용자 정보
+     * @param signUpResult             : OMD 서버에 저장된 사용자 정보
      * @param adminAuthorizationHeader : 관리자 토큰 헤더
      * @throws Exception : 저장 시 Exception이 발생되면 OMD 서버에 저장된 User 정보도 삭제
      */
-    private void saveUserToDatabase(Map<String, Object> signUpResult, HttpHeaders adminAuthorizationHeader) throws Exception {
+    private void saveUserToDatabase(Map<String, Object> signUpResult,
+                                    HttpHeaders adminAuthorizationHeader) throws Exception {
         try {
             userRepository.save(new UserEntity(
                     (String) signUpResult.get("id"),
@@ -366,6 +373,7 @@ public class AuthService {
 
     /**
      * 비밀번호 재설정 > HTML Context 설정
+     *
      * @param host
      * @param id
      * @return
@@ -397,6 +405,7 @@ public class AuthService {
 
     /**
      * 비밀번호 재설정 > 링크 DB 저장
+     *
      * @param email
      * @param id
      * @throws Exception

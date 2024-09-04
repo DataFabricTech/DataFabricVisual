@@ -53,10 +53,10 @@
 <script setup lang="ts">
 import _ from "lodash";
 import { useModal } from "vue-final-modal";
-import { useServiceStore } from "~/store/manage/service";
+import { useServiceStore } from "@/store/manage/service";
 import { useServiceStore as useServiceModalStore } from "~/store/manage/service/modal";
-import { ConnectionStatus } from "~/components/manage/service/modal/modal-service/ModalServiceComposition";
-import ModalService from "~/components/manage/service/modal/modal-service/modal-service.vue";
+import { ConnectionStatus } from "@/components/manage/service/modal/modal-service/ModalServiceComposition";
+import ModalService from "@/components/manage/service/modal/modal-service/modal-service.vue";
 import Loading from "@base/loading/Loading.vue";
 
 const serviceStore = useServiceStore();

@@ -1,7 +1,6 @@
 <template>
   <div class="l-top-bar">
-    <!-- TODO 모달 용어 추가 -->
-    <button class="button button-secondary ml-auto" @click="showModalPwChange">
+    <button class="button button-secondary ml-auto" @click="openModal">
       용어추가
     </button>
   </div>
@@ -37,7 +36,7 @@
       </td>
     </tr>
   </table>
-  <modal-glossary :modal-id="''"></modal-glossary>
+  <modal-glossary :modal-id="MODAL_ID"></modal-glossary>
 </template>
 
 <script setup lang="ts">
@@ -51,6 +50,8 @@ const {
   deleteTerm,
   getTerms,
 } = useGlossaryStore();
+const { terms, openEditTermComponent, changeCurrentTerm } = useGlossaryStore();
+const { $vfm } = useNuxtApp();
 
 function onClickTerm(source: Term) {
   changeCurrentTerm(source);
@@ -65,4 +66,8 @@ async function removeTerm(id: string) {
 }
 
 const showModalPwChange: () => void = () => {};
+const MODAL_ID = "modal-glossary";
+function openModal() {
+  $vfm.open(MODAL_ID);
+}
 </script>

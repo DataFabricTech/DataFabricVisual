@@ -57,6 +57,7 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { storeToRefs } from "pinia";
 
 import { useDataModelDetailStore } from "@/store/search/detail/index";
@@ -69,6 +70,7 @@ const { changeVote, changeFollow } = dataModelDetailStore;
 const { dataModel } = storeToRefs(dataModelDetailStore);
 
 const { user } = storeToRefs(userStore);
+const currentUrl = ref("");
 
 const changeUpVote = async () => {
   const state: string = dataModel.value.isUpVote ? "unVoted" : "votedUp";
@@ -79,9 +81,23 @@ const changeDownVote = async () => {
   await changeVote(state);
 };
 function copyLink() {
-  navigator.clipboard.writeText(window.location.href);
+  navigator.clipboard.writeText(currentUrl.value);
   alert("링크가 복사되었습니다.");
 }
+
+// 메서드 정의
+const getURL = () => {
+  if (typeof window !== "undefined") {
+    currentUrl.value = window.location.href; // 클라이언트 측에서 URL을 가져옴
+  } else {
+    console.error("window 객체를 찾을 수 없습니다.");
+  }
+};
+
+// mounted 훅에서 URL을 가져올 수 있습니다.
+onMounted(() => {
+  getURL();
+});
 </script>
 
 <style lang="scss" scoped></style>

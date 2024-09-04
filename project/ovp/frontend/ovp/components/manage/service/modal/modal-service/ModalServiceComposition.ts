@@ -1,5 +1,5 @@
 import { storeToRefs } from "pinia";
-import { useServiceStore } from "~/store/manage/service/modal";
+import { useServiceStore } from "@/store/manage/service/modal";
 import _ from "lodash";
 
 import type {
@@ -383,12 +383,6 @@ export function ModalServiceComposition(
       ],
     },
   };
-
-  // 이미지 URL 동적 셋팅
-  services.value.forEach(async (service: any) => {
-    const imgUrl: any = await import(`@assetsPublic/images/${service.img}.png`);
-    service.imgUrl = imgUrl.default;
-  });
 
   // coomon
   const resetInput = (serviceObjPath: string) => {

@@ -16,4 +16,5 @@ public class Tag {
     Map<String, Object> style;
     String labelType;
     String state;
+    Tag classification;
 }
