@@ -366,6 +366,15 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     );
   };
 
+  const removeDataModel = () => {
+    return $api(
+      `/api/search/detail/${dataModelId}?type=${dataModelType.value}`,
+      {
+        method: "DELETE",
+      },
+    );
+  };
+
   return {
     dataModelType,
     userList,
@@ -399,5 +408,6 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     changeFollow,
     changeDataModel,
     changeTag,
+    removeDataModel,
   };
 });

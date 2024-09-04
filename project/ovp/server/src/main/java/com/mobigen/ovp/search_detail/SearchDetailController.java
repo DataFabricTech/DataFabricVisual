@@ -229,4 +229,12 @@ public class SearchDetailController {
 
         return searchDetailService.ChangeDataModelTag(id, type, target, isCategory, body);
     }
+
+    @ResponseJsonResult
+    @DeleteMapping("/{id}")
+    Object deleteDataModel(@PathVariable String id, @RequestParam String type) {
+        log.info("");
+
+        return searchDetailService.deleteDataModel(id, type);
+    }
 }

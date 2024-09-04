@@ -37,4 +37,9 @@ public interface ContainersClient {
 
     @DeleteMapping("/{id}/followers/{userId}")
     Object unfollow(@PathVariable("id") String id, @PathVariable("userId") String userId);
+
+    @DeleteMapping("{id}")
+    Object delete(@PathVariable("id") String id,
+                  @RequestParam(defaultValue = "true") Boolean recursive,
+                  @RequestParam(defaultValue = "true") Boolean hardDelete);
 }
