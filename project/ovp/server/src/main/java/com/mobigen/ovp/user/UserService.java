@@ -128,7 +128,7 @@ public class UserService {
      * @throws Exception
      */
     public boolean deleteUser(UUID id) throws Exception {
-        ResponseEntity<Void> result = userClient.deleteUser(id, true, false);
+        ResponseEntity<Void> result = userClient.deleteUser(id, true, true);
         if (result.getStatusCode() == HttpStatus.OK) {
             return true;
         } else {
