@@ -21,7 +21,11 @@
         <button class="button button-neutral-stroke" @click="refresh">
           새로고침
         </button>
-        <button class="button button-neutral-stroke" @click="copyLog">
+        <button
+          class="button button-neutral-stroke"
+          ref="copyButton"
+          @click="copyLog"
+        >
           복사
         </button>
       </div>
@@ -50,7 +54,10 @@ const serviceCollectionLogStore = useServiceCollectionLogStore();
 const { collectionLog } = storeToRefs(serviceCollectionLogStore);
 const { getCollectionLogData } = serviceCollectionLogStore;
 
-const { copy } = useClipboard({ collectionLog });
+const { copy } = useClipboard({
+  source: collectionLog,
+  legacy: true,
+});
 
 const options = {
   theme: "vs-dark",
@@ -79,10 +86,12 @@ const onCancelModal = () => {
 };
 
 function refresh() {
+  collectionLog.value = "";
   getCollectionLogData();
 }
-function copyLog() {
+
+const copyLog = async () => {
   copy(collectionLog.value);
-  alert("로그를 복사했습니다.");
-}
+  alert("링크가 복사되었습니다.");
+};
 </script>
