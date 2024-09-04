@@ -1,5 +1,6 @@
 package com.mobigen.ovp.search;
 
+import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.ModelConvertUtil;
 import com.mobigen.ovp.common.entity.ModelIndex;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
@@ -50,7 +51,7 @@ public class SearchService {
                         }
                     } else if (newKey.equals("tags.tagFQN") && buckets instanceof List) {
                         List<Map<String, Object>> filteredBuckets = ((List<Map<String, Object>>) buckets).stream()
-                                .filter(bucket -> !((String) bucket.get("key")).contains("ovp_category."))
+                                .filter(bucket -> !((String) bucket.get("key")).contains(Constants.OVP_CATEGORY + "."))
                                 .collect(Collectors.toList());
                         if (!filteredBuckets.isEmpty()) {
                             resultMap.put(newKey, filteredBuckets);
@@ -156,7 +157,7 @@ public class SearchService {
     private Map<String, Object> getList(MultiValueMap<String, String> params) throws Exception {
         return getList(params, false);
     }
-    
+
     private Map<String, Object> getList(MultiValueMap<String, String> params, Boolean useFilter) throws Exception {
         Map<String, Object> result = searchClient.getSearchList(params);
         return convertToMap(result, useFilter);

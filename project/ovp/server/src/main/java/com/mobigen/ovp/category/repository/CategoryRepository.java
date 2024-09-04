@@ -71,4 +71,6 @@ public interface CategoryRepository extends JpaRepository<CategoryEntity, UUID> 
     List<CategoryEntity> findByParentIdAndIdNotAndName(@Param("parentId") UUID parentId, @Param("id") UUID id, @Param("name") String name);
 
     CategoryEntity findByName(@Param("name") String categoryName);
+
+    CategoryEntity findByTagId(@Param("id") UUID tagId);
 }

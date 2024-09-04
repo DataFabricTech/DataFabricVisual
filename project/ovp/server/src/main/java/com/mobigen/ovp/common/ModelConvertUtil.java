@@ -2,6 +2,7 @@ package com.mobigen.ovp.common;
 
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
+import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.constants.ModelType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -114,8 +115,8 @@ public class ModelConvertUtil {
                     tag.put("displayName", displayName);
                 }
 
-                if (tag.get("tagFQN").toString().contains("ovp_category")) {
-                    CategoryEntity categoryEntity = categoryRepository.findByIdWithParent(UUID.fromString(tag.get("name").toString()));
+                if (tag.get("tagFQN").toString().contains(Constants.OVP_CATEGORY)) {
+                    CategoryEntity categoryEntity = getCategoryEntity(tag.get("name").toString());
                     if (categoryEntity != null) {
                         Map<String, Object> category = (Map<String, Object>) modifiedSource.get("category");
                         category.put("id", categoryEntity.getId());
@@ -131,6 +132,15 @@ public class ModelConvertUtil {
         }
 
         return modifiedSource;
+    }
+
+    // TODO : [개발] 추후에 카테고리 DB 정리하면서 아래 코드 수정 필요함.
+    public CategoryEntity getCategoryEntity(String tagName) {
+        if (tagName.equals(Constants.UNDEFINED_TAG_NAME)) {
+            return categoryRepository.findByName(tagName);
+        } else {
+            return categoryRepository.findByTagId(UUID.fromString(tagName));
+        }
     }
 
 
