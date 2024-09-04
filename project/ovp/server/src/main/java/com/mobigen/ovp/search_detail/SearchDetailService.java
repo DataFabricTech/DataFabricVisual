@@ -561,4 +561,12 @@ public class SearchDetailService {
 
         return true;
     }
+
+    public Object deleteDataModel(String id, String type) {
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            return tablesClient.delete(id, true, true);
+        } else {
+            return containersClient.delete(id, false, true);
+        }
+    }
 }
