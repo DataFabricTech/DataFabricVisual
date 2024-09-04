@@ -107,7 +107,7 @@ properties:
   framework:
     security:
       ignores: /css/**, /fonts/**, /img/**, /js/**, /_nuxt/**, /favicon.ico
-      permit-alls: /, /portal/login/**, /api/email/**, /api/auth/login/**, /api/auth/sign-up/** #/login, /h2-console/**, /error, /test, /api/**, /api/auth/iag/**,
+      permit-alls: /, /portal/login/**, /api/email/**, /api/auth/login/**, /api/auth/sign-up/**, /api/user/check-name/** #/login, /h2-console/**, /error, /test, /api/**, /api/auth/iag/**,
       redirect-url: /
       iframe-option: disable #disable, same-origin, deny
       csrf: false
