@@ -2,8 +2,8 @@ package com.mobigen.ovp.glossary;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
+import com.mobigen.ovp.common.openmete_client.dto.TermDto;
 import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
-import com.mobigen.ovp.glossary.client.dto.TermDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -137,6 +137,17 @@ public class GlossaryController {
     @GetMapping("/activities")
     public Object getGlossaryActivities(@RequestParam String entityLink, @RequestParam(required = false) String after) {
         return glossaryService.getGlossaryActivities(entityLink, after);
+    }
+
+    /**
+     * 용어 사전 활동 기록 개수
+     * @param entityLink
+     * @return
+     */
+    @ResponseJsonResult
+    @GetMapping("/activities/count")
+    public Object getGlossaryActivitiesCount(@RequestParam String entityLink) {
+        return glossaryService.getGlossaryActivitiesCount(entityLink);
     }
 
     /**

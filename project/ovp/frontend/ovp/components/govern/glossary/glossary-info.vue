@@ -151,11 +151,9 @@
             >
               <button class="tab-button">
                 <p class="tab-button-text">활동사항</p>
-                <span
-                  class="tab-button-count"
-                  v-if="store.activities.length > 0"
-                  >{{ store.activities.length }}</span
-                >
+                <span class="tab-button-count">{{
+                  store.activitiesCount
+                }}</span>
               </button>
             </li>
           </ul>
@@ -187,6 +185,7 @@ const {
   changeTab,
   changeEditGlossaryMode,
   createTagOperation,
+  getGlossaryActivitiesCount,
 } = useGlossaryStore();
 const store = useGlossaryStore();
 
@@ -200,12 +199,14 @@ watch(
   (newGlossary) => {
     editData.name = newGlossary.name;
     editData.description = newGlossary.description;
+    getGlossaryActivitiesCount(`<%23E::glossary::${glossary.name}>`);
   },
   { deep: true },
 );
 
 onMounted(() => {
   syncEditDataWithGlossary();
+  getGlossaryActivitiesCount(`<%23E::glossary::${glossary.name}>`);
 });
 
 function syncEditDataWithGlossary() {

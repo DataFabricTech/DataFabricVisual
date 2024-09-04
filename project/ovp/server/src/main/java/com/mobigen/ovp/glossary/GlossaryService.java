@@ -5,9 +5,9 @@ import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.GlossaryClient;
 import com.mobigen.ovp.common.openmete_client.dto.Base;
+import com.mobigen.ovp.common.openmete_client.dto.TermDto;
 import com.mobigen.ovp.glossary.client.dto.Tag;
 import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
-import com.mobigen.ovp.glossary.client.dto.TermDto;
 import com.mobigen.ovp.common.openmete_client.dto.GlossaryActivity;
 import com.mobigen.ovp.common.openmete_client.dto.Glossary;
 import com.mobigen.ovp.common.openmete_client.dto.Term;
@@ -110,14 +110,10 @@ public class GlossaryService {
      */
     public List<Terms> glossaryTerms(String directChildrenOf) {
         final String FIELDS = "tags,relatedTerms";
-        List<Terms> result = new ArrayList<>();
         // TODO: 용어 전체를 가져오는건지 아니면 인피니티 스크롤 이용해서 가져오는지에 따라 after 처리를 해야 함.
-        List<Term> response = glossaryClient.getGlossaryTerms(directChildrenOf, FIELDS, 100, "").getData();
+        List<Term> response = glossaryClient.getGlossaryTerms(directChildrenOf, FIELDS, 100, null).getData();
 
-        for (Term term : response) {
-            result.add(new Terms(term));
-        }
-        return result;
+        return response.stream().map(Terms::new).toList();
     }
 
     /**
@@ -179,6 +175,28 @@ public class GlossaryService {
         }
         result.put("activities", activities);
         result.put("paging", paging);
+        return result;
+    }
+
+    /**
+     * 용어 사전 활동 사항 개수
+     * @param entityLink
+     * @return
+     */
+    public int getGlossaryActivitiesCount(String entityLink) {
+        Map<String, Object> response = glossaryClient.getGlossaryActivitiesCount(entityLink);
+
+        List<Map<String, Object>> data  = (List<Map<String, Object>>) response.get("data");
+        int result = 0;
+
+        if (data != null) {
+            for (Map<String, Object> map : data) {
+                Object countObj = map.get("conversationCount");
+                if (countObj instanceof Number) {
+                    result += ((Number) countObj).intValue();
+                }
+            }
+        }
         return result;
     }
 

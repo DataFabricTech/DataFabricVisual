@@ -77,7 +77,7 @@ public interface GlossaryClient {
      * @return
      */
     @PostMapping("/glossaryTerms")
-    ResponseEntity<Object> createTerms(@RequestBody TermDto dto);
+    ResponseEntity<Object> createTerms(@RequestBody com.mobigen.ovp.common.openmete_client.dto.TermDto dto);
 
     /**
      * 용어 리스트
@@ -85,7 +85,10 @@ public interface GlossaryClient {
      * @return
      */
     @GetMapping("/glossaryTerms")
-    Base<Term> getGlossaryTerms(@RequestParam String directChildrenOf, @RequestParam(required = false, defaultValue = "tags") String fields, @RequestParam(required = false, defaultValue = "100") int limit, @RequestParam(required = false, defaultValue = "") String after);
+    Base<Term> getGlossaryTerms(@RequestParam String directChildrenOf,
+                                @RequestParam(required = false, defaultValue = "tags") String fields,
+                                @RequestParam(required = false, defaultValue = "100") int limit,
+                                @RequestParam(required = false) String after);
 
     /**
      * 용어 수정
@@ -125,4 +128,12 @@ public interface GlossaryClient {
      */
     @GetMapping("/feed")
     Base<GlossaryActivity> getGlossaryActivities(@RequestParam String entityLink, @RequestParam(required = false) String after, @RequestParam String type);
+
+    /**
+     * 용어 사전 활동 사항 갯수
+     * @param entityLink
+     * @return
+     */
+    @GetMapping("/feed/count")
+    Map<String, Object> getGlossaryActivitiesCount(@RequestParam String entityLink);
 }
