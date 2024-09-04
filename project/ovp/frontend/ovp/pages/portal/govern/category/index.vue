@@ -71,7 +71,7 @@
               >
               <input
                 v-model="selectedTitleNodeValue"
-                placeholder="카테고리명 에 대한 영역입니다."
+                placeholder="카테고리명에 대한 영역입니다."
                 required
                 id="title-modify"
                 class="text-input w-1/2"
@@ -107,7 +107,7 @@
               <textarea
                 class="textarea"
                 v-model="selectedDescNodeValue"
-                placeholder="모델 설명에 대한 영역입니다."
+                placeholder="카테고리 설명에 대한 영역입니다."
                 required
                 id="textarea-modify"
               ></textarea>
