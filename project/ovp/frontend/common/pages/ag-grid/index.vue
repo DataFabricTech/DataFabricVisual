@@ -57,7 +57,11 @@
               },
               selectedData: bookmarkSelected,
               order: 2,
-              fn: bookmarkClick
+              fn: bookmarkClick,
+              cellStyle: {
+                display: 'flex',
+                justifyContent: 'center'
+              }
             },
             {
               headerText: '수정',
@@ -72,6 +76,7 @@
               rendererType: 'button',
               type: 'button',
               buttonText: '삭제',
+              buttonTheme: 'button-error-stroke',
               order: 5,
               fn: editClick
             }

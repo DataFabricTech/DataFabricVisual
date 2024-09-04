@@ -104,7 +104,7 @@ $input-field-classes: text-input, textarea;
           @include font-size('12');
 
           &::before {
-            margin-right: 6px;
+            margin-right: $spacing-6;
             width: 16px;
             height: 16px;
           }

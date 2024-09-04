@@ -14,7 +14,11 @@ export interface ResourceBoxProps extends ResourceBoxCommonProps {
   selectedModelList?: any[];
 
   filters?: { [key: string]: { text: string; data: any[] } };
+  userList?: any[];
+  categoryList?: any[];
 
   ownerKey?: string;
   categoryKey?: string;
+
+  user?: any;
 }

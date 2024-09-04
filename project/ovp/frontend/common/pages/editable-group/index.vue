@@ -11,6 +11,8 @@
         @editIcon="editIconClick"
       >
         <template #edit-slot>
+        <!-- TODO: [개발] 접근성 개선 - label/input의 for/id값 사용되는 페이지마다 다르게 적용 필요,
+         label안 텍스트도 페이지마다 적절히 사용되어야 함 -->
           <label class="hidden-text" for="title-modify">text input 입력</label>
           <input
             v-model="newData.title"
@@ -34,6 +36,8 @@
         @editIcon="editIconClick"
       >
         <template #edit-slot>
+          <!-- TODO: [개발] 접근성 개선 - label/textarea의 for/id값 사용되는 페이지마다 다르게 적용 필요,
+         label안 텍스트도 페이지마다 적절히 사용되어야 함 -->
           <label class="hidden-text" for="textarea-modify">textarea 입력</label>
           <textarea
             class="textarea"

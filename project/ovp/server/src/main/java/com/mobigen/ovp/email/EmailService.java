@@ -1,11 +1,13 @@
 package com.mobigen.ovp.email;
 
+import java.io.IOException;
 import java.util.Optional;
 import com.mobigen.framework.utility.Token;
 import com.mobigen.ovp.auth.PwResetEntity;
 import com.mobigen.ovp.auth.PwResetRepository;
 import com.mobigen.ovp.common.OvpProperties;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -26,16 +28,17 @@ public class EmailService {
      * @return
      * @throws Exception
      */
-    public Object redirectPwRest(HttpServletRequest request, String id) {
+    public void redirectPwRest(HttpServletRequest request, HttpServletResponse response, String id) throws IOException {
         String host = determineHost(request);
         StringBuilder redirectUrl = new StringBuilder();
-        redirectUrl.append("redirect:").append(host);
+        redirectUrl.append(host);
 
         // 1. 링크 유효성 확인
         Optional<PwResetEntity> pwResetData = pwResetRepository.findById(id);
         if (!pwResetData.isPresent()) {
             redirectUrl.append(ovpProperties.getMail().getRedirectErrorUrl());
-            return redirectUrl;
+            response.sendRedirect(String.valueOf(redirectUrl));
+            return;
         }
         // 2. 메일 시간 유효성 검증
         if (EmailUtil.isLinkExpiredWithValidTime(pwResetData.get().getValidTime(), pwResetData.get().getCreateDate())) {
@@ -44,7 +47,7 @@ public class EmailService {
             redirectUrl.append(ovpProperties.getMail().getRedirectUrl()).append("?id=").append(id);
         }
         // 3. 리다이랙트
-        return redirectUrl;
+        response.sendRedirect(String.valueOf(redirectUrl));
     }
 
     /**

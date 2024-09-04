@@ -4,6 +4,7 @@ import type { Activity, Glossary, Term } from "~/type/glossary";
 import type { JsonPatchOperation, PreviewData, Tag } from "~/type/common";
 import type { DataModel } from "~/components/common/resource-box/resource-box-common-props";
 import $constants from "~/utils/constant";
+import type { Service } from "~/type/service";
 
 export const useGlossaryStore = defineStore("glossary", () => {
   const { $api } = useNuxtApp();
@@ -147,6 +148,8 @@ export const useGlossaryStore = defineStore("glossary", () => {
    * @param search
    */
   async function getDataModels(name: string, search?: string): Promise<void> {
+    // TODO : [개발] queryParam (q) 에 검색어 제외 AND ( ) 이런 내용이 들어가면 안됩니다. backend 에서 처리할수 있게 수정해주세요.
+    // myPageStore.ts getSearchListQuery() function 보고 참조해서 수정해주세요.
     // eslint-disable-next-line id-length
     const q: string = search
       ? `*${search}* AND (tags.tagFQN:"${name}")`
@@ -233,7 +236,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
   const createTagOperation = (
     selectedItems: string[],
     matchTags: Tag[],
-    entity: Term | Glossary,
+    entity: Term | Glossary | Service,
   ): JsonPatchOperation[] => {
     const newData = selectedItems;
     const oldData = entity.tags.map((tag) => tag.tagFQN);

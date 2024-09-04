@@ -56,12 +56,14 @@
     </div>
     <Preview
       :preview-data="previewData"
+      :model-type="dataModelType"
       @change="getPreviewOn"
       :is-show-preview="previewOn"
     ></Preview>
     <LineageGraph
       ref="lineageRef"
       :lineageData="lineageData"
+      :previewOn="previewOn"
       @change="modelChoose"
     ></LineageGraph>
     <div class="lineage-control">
@@ -96,14 +98,12 @@
 <script setup lang="ts">
 import { type Ref, ref } from "vue";
 import type { NodeData } from "@/components/search/lineage/lineage";
-import { useLineageStore } from "@/store/lineage/lineageStore";
+import { useLineageStore } from "~/store/search/detail/lineage";
 import { useDataModelDetailStore } from "@/store/search/detail/index";
 
 import LineageGraph from "~/components/search/lineage/lineage-graph.vue";
 import Preview from "~/components/common/preview/preview.vue";
 import menuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
-
-// TODO: fqn을 호출 할 수 있는 store 필요
 
 const lineageStore = useLineageStore();
 const {
@@ -124,7 +124,8 @@ const {
 } = lineageStore;
 
 const dataModelDetailStore = useDataModelDetailStore();
-const { getDataModelFqn, getDataModelType } = dataModelDetailStore;
+const { getDataModelFqn } = dataModelDetailStore;
+const { dataModelType } = storeToRefs(dataModelDetailStore);
 
 onBeforeMount(async () => {
   // TODO: param => (fqn(외부스토어에서 호출), 필터) 추가 필요
@@ -145,6 +146,7 @@ const previewOn: Ref<boolean> = ref<boolean>(false);
 
 const getPreviewOn = (isPreviewClosed: boolean) => {
   if (isPreviewClosed === false) {
+    lineageRef.value.handleNodeOff();
     previewOn.value = false;
   }
 };
@@ -153,7 +155,6 @@ const modelChoose = async (nodeData: NodeData) => {
   if (nodeData) {
     previewOn.value = true;
     console.log(nodeData.fqn);
-    // TODO: NodeData의 fqn 값 파라미터를 넣어 store에서 previewData 세팅
     await getPreviewData(nodeData.fqn);
     previewData.value.modelInfo.model.name = nodeData.label;
   }
@@ -184,13 +185,7 @@ const reset = async () => {
     selectedTagList.value = [];
     selectedSerivceList.value = [];
 
-    /*
-     * TODO: param => (fqn, 필터) 추가 필요
-     * fqn -> 외부스토어에서 호출
-     * 필터 ex
-     * {}
-     * */
-    await getLineageData(getDataModelType(), getDataModelFqn());
+    await getLineageData(dataModelType.value, getDataModelFqn());
 
     lineageRef.value.reset();
   }
@@ -206,65 +201,21 @@ const selectedSerivceList: Ref<any> = ref([]);
 const cateApplyFilter = async (value) => {
   selectedCateList.value = value;
 
-  /*
-    * TODO: param => (fqn, 필터) 추가 필요
-    * fqn -> 외부스토어에서 호출
-    * 필터 ex
-    * {
-      category: selectedCateList.value,
-      owner: selectedOwnerList.value,
-      tag: selectedTagList.value,
-      service: selectedSerivceList.value,
-       }
-    * */
   await getLineageData();
 };
 const ownerApplyFilter = async (value) => {
   selectedOwnerList.value = value;
 
-  /*
-    * TODO: param => (fqn, 필터) 추가 필요
-    * fqn -> 외부스토어에서 호출
-    * 필터 ex
-    * {
-      category: selectedCateList.value,
-      owner: selectedOwnerList.value,
-      tag: selectedTagList.value,
-      service: selectedSerivceList.value,
-       }
-    * */
   await getLineageData(getDataModelType(), getDataModelFqn());
 };
 const tagApplyFilter = async (value) => {
   selectedTagList.value = value;
 
-  /*
-    * TODO: param => (fqn, 필터) 추가 필요
-    * fqn -> 외부스토어에서 호출
-    * 필터 ex
-    * {
-      category: selectedCateList.value,
-      owner: selectedOwnerList.value,
-      tag: selectedTagList.value,
-      service: selectedSerivceList.value,
-       }
-    * */
   await getLineageData(getDataModelType(), getDataModelFqn());
 };
 const serviceApplyFilter = async (value) => {
   selectedSerivceList.value = value;
 
-  /*
-    * TODO: param => (fqn, 필터) 추가 필요
-    * fqn -> 외부스토어에서 호출
-    * 필터 ex
-    * {
-      category: selectedCateList.value,
-      owner: selectedOwnerList.value,
-      tag: selectedTagList.value,
-      service: selectedSerivceList.value,
-       }
-    * */
   await getLineageData(getDataModelType(), getDataModelFqn());
 };
 </script>

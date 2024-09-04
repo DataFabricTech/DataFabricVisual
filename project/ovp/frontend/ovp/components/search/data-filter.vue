@@ -4,7 +4,8 @@
       <menu-search-tree
         label-key="name"
         value-key="id"
-        :data="categories"
+        :title="filter.text"
+        :data="filter.data.children"
         :is-multi="true"
         :hideGuideLines="false"
         :firExpandAll="true"
@@ -18,6 +19,13 @@
     </template>
     <menu-search-button
       v-else
+      v-if="
+        !(
+          currentTab === 'storage' &&
+          (keyName === FILTER_KEYS.DATABASE ||
+            keyName === FILTER_KEYS.DATABASE_SCHEMA)
+        )
+      "
       :data="filter.data"
       :selected-items="selectedFilterItems"
       label-key="key"
@@ -43,19 +51,19 @@ import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue"
 import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 
 import { FILTER_KEYS, useSearchCommonStore } from "@/store/search/common";
+import { useLayoutHeaderStore } from "~/store/layout/header";
 import { storeToRefs } from "pinia";
 import _ from "lodash";
 
-import { useGovernCategoryStore } from "~/store/governance/Category";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
 const searchCommonStore = useSearchCommonStore();
-const { resetReloadList } = searchCommonStore;
-const { selectedFilters } = storeToRefs(searchCommonStore);
+const { resetReloadList, setEmptyFilter, setSearchKeyword } = searchCommonStore;
+const { selectedFilters, currentTab, selectedFilterItems, isShowPreview } =
+  storeToRefs(searchCommonStore);
 
-const categoryStore = useGovernCategoryStore();
-const { getCategories } = categoryStore;
-const { categories } = storeToRefs(categoryStore);
+const layoutHeaderStore = useLayoutHeaderStore();
+const { searchInputValue } = storeToRefs(layoutHeaderStore);
 
 const props = defineProps({
   data: {
@@ -64,12 +72,11 @@ const props = defineProps({
   },
 });
 
-const selectedFilterItems: Ref<any> = ref([]);
-
 const resetFilters = () => {
-  selectedFilterItems.value = [];
-  selectedFilters.value = {};
-
+  isShowPreview.value = false;
+  setEmptyFilter();
+  searchInputValue.value = "";
+  setSearchKeyword("");
   resetReloadList();
 };
 
@@ -77,6 +84,7 @@ const changeMultiple: (value: any[] | {}, keyName: any) => void = (
   value: any[] | {},
   keyName: string,
 ) => {
+  isShowPreview.value = false;
   setSelectedFilters(keyName, _.map(value, "key"));
 };
 
@@ -91,10 +99,9 @@ const setSelectedFilters = (keyName: string, selectedIds: any[]) => {
 };
 
 const onNodeChecked = (checkedNodes: TreeViewItem[]) => {
+  isShowPreview.value = false;
   setSelectedFilters(FILTER_KEYS.CATEGORY, checkedNodes);
 };
-
-getCategories();
 </script>
 
 <style lang="scss" scoped></style>

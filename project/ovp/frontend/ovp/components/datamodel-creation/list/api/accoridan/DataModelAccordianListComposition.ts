@@ -2,6 +2,7 @@ import { ref, Ref } from "vue";
 import _ from "lodash";
 import type { DataModelAccordianListProps } from "~/components/datamodel-creation/list/api/accoridan/DataModelAccoridanListProps";
 import type { DataModelListEvent } from "~/components/datamodel-creation/list/base/DataModelListEvent.interface";
+import { uuid } from "vue3-uuid";
 
 interface DataModelAccordianListCompositionImpl extends DataModelListEvent {
   listData: Record<string, any[]>;
@@ -9,6 +10,7 @@ interface DataModelAccordianListCompositionImpl extends DataModelListEvent {
   checkShowListData(value: any[]): boolean;
   onSearchText(value: string): void;
   onResetSearchText(): void;
+  onCheckItem(value: string, checked: boolean): void;
 }
 
 export function DataModelAccordianListComposition(
@@ -16,7 +18,7 @@ export function DataModelAccordianListComposition(
   emitBookmark: (value: string) => void,
   emitItemClick: (value: string) => void,
   emitDeleteItem: (value: string) => void,
-  emitSelectItem: (value: string) => void,
+  emitCheckItem: (value: any[]) => void,
   emitSearchChange: (value: string) => void,
 ): DataModelAccordianListCompositionImpl {
   const isSelectedData: (item: any) => boolean = (item) => {
@@ -34,6 +36,7 @@ export function DataModelAccordianListComposition(
         const isSelected = isSelectedData(item);
         return {
           ...item,
+          defaultId: uuid.v4(),
           label: item[props.labelKey],
           value: item[props.valueKey],
           isChecked: false, // checkbox 선택 여부
@@ -75,20 +78,39 @@ export function DataModelAccordianListComposition(
 
   /**
    (이벤트) Context-menu 제어
+   * @param key
    * @param itemValue
    * @param checked
    */
-  const onShowContextMenu = (itemValue: string, checked: boolean | null) => {};
+  const onShowContextMenu = (
+    key: string,
+    itemValue: string,
+    checked: boolean | null,
+  ) => {
+    listData[key].value = listData.value.map((el) => ({
+      ...el,
+      isShowContextMenu:
+        checked === null ? false : el[props.valueKey] === itemValue,
+    }));
+  };
 
   /**
    * (이벤트) Context-menu 제어
+   * @param key
    * @param itemValue
    * @param checked
    */
   const onShowContextMenuBtn = (
+    key: string,
     itemValue: string,
     checked: boolean | null,
-  ) => {};
+  ) => {
+    listData[key].value = listData.value.map((el) => ({
+      ...el,
+      isShowContextMenuBtn:
+        checked === null ? false : el[props.valueKey] === itemValue,
+    }));
+  };
 
   const checkShowListData: (item: any[]) => boolean = (item) => {
     if (!item || item.length < 1) {
@@ -114,11 +136,22 @@ export function DataModelAccordianListComposition(
     emitDeleteItem(value);
   };
 
-  const onSelectItem = (value: string) => {
-    emitSelectItem(value);
+  const onCheckItem = (value: string, checked: boolean) => {
+    const checkedList = [];
+    // 다른 key에서 value에 해당하는 item을 checked 해줌
+    for (const key in listData) {
+      listData[key] = listData[key].map((el: any) => {
+        return {
+          ...el,
+          isChecked: el[props.valueKey] === value ? checked : el.isChecked,
+        };
+      });
+      const selectedData = $_filter(listData[key], { isChecked: true })[0];
+      checkedList.push(selectedData);
+    }
+    const nCheckedList = $_uniqBy(checkedList, props.valueKey);
+    emitCheckItem(nCheckedList);
   };
-
-  const onCheckItem = (value: string, checked: boolean) => {};
   const onResetSearchFilter: () => void = () => {};
   const onSelectFilter: (filterKey: string, value: string) => void = () => {};
 
@@ -136,7 +169,6 @@ export function DataModelAccordianListComposition(
     onChangeBookmark,
     onClickDataModelItem,
     onDeleteItem,
-    onSelectItem,
     onCheckItem,
   };
 }

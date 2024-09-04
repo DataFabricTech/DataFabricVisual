@@ -12,9 +12,14 @@ public class Tables {
     String displayName;
     String description;
     Owner owner;
+    String serviceType;
     List<Followers> followers;
     Votes votes;
     List<Columns> columns;
     Service service;
     Entity entity;
+    List<Tag> tags;
+    // NOTE: Containers 전용(Storage)
+    String prefix;
+    StorageColumn dataModel;
 }

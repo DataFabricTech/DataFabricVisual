@@ -58,10 +58,16 @@ export class IntersectionObserverHandler {
    */
   public scrollToFirElement() {
     const rootEl: any = this.observer.root;
+    if (rootEl === null) {
+      return;
+    }
 
     if (rootEl.children.length > 0) {
-      const firChildEl: any = rootEl.firstElementChild;
-      rootEl.scrollTop = firChildEl.offsetTop;
+      // NOTE : modal 사용 방식이 변경되면서 가짜 modal 이 dom 에 생성됨. -> rootEl 이 제대로 된 element 를 못잡아서 아래 코드처럼 구현함.
+      const targetId = rootEl.id;
+      document.querySelectorAll(`#${targetId}`).forEach((el) => {
+        el.scrollTop = 0;
+      });
     }
   }
 

@@ -4,7 +4,7 @@ export interface TreeViewItem {
   desc: string;
   order?: number;
   parentId: string;
-  tagId: string;
+  tagId?: string;
   children: TreeViewItem[];
 
   // NOTE: isCheckable 이 false 일때, checked key 를 node 에 포함할 경우, vue3-tree-vue 에서 오류를 발생시킴.
@@ -18,6 +18,10 @@ export interface TreeViewItem {
 export interface TreeProps extends TreeDetailProps {
   items: TreeViewItem[];
   isCheckable: boolean;
+  disabledIds?: any[];
+  selectedIds?: any[];
+  useFirSelect?: boolean;
+  compId?: string;
 }
 
 export interface TreeDetailProps {
@@ -34,5 +38,7 @@ export interface TreeDetailProps {
 
   checkedIds?: string[];
 
-  dropValidator?: (thisNode: TreeViewItem, targetNode: TreeViewItem, newNode: TreeViewItem) => boolean;
+  immutableItems?: string[];
+
+  dropValidator?: (thisNode: TreeViewItem, targetNode: TreeViewItem, newNode: TreeViewItem) => any;
 }

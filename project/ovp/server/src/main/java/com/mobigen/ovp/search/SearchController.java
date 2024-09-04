@@ -54,6 +54,17 @@ public class SearchController {
     @ResponseJsonResult(errorMessage = "데이터 모델 목록 조회 오류")
     @GetMapping("/list")
     public Object getSearchList(@RequestParam MultiValueMap<String, String> params) throws Exception {
+
+        // q 파라메터에 filter 가 걸려있어서 특수문자가 치환됨. tempQuery 를 이용해서 AND (UUID) 등으로 처리하는 코드를 backend 에서 처리해야 검색어 쿼리가 제대로 동작함.
+        if (params.getFirst("tempQuery") != null) {
+            params.set("q", params.getFirst("q").toString() + params.getFirst("tempQuery").toString());
+            params.remove("tempQuery");
+        }
+
+        if (params.get("index").get(0).equals("all")) {
+            return searchService.getAllSearchList(params);
+        }
+
         return searchService.getSearchList(params);
     }
 
@@ -68,3 +79,4 @@ public class SearchController {
         return searchService.getSearchPreview(fqn);
     }
 }
+

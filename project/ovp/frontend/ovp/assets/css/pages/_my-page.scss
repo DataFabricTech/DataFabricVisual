@@ -1,12 +1,15 @@
 .profile-box {
-  @include flex($vertical: flex-start, $horizontal: flex-start);
-  gap: $spacing-16;
+  @include flex($vertical: flex-start, $horizontal: flex-start, $gap: $spacing-16);
+
   width: 100%;
   padding: $spacing-16;
+  border-top: 2px solid $primary-500;
   border-bottom: 1px solid $neutral-200;
+  background-color: #F7F9FC;
 
   .profile-name {
     @include font-size('16');
+
     font-weight: 600;
     color: $neutral-800;
   }
@@ -15,37 +18,34 @@
     margin: $spacing-20 $spacing-16 0;
     flex-grow: 1;
     width: 100%;
-    min-height: 700px;
+    //min-height: 700px;
 
     .tab-list {
       width: fit-content;
     }
+  }
+}
 
-    .tab-contents {
-      width: 100%;
-      height: calc(100% - 50px);
-      //min-height: 700px;
+.my-contents {
+  width: 100%;
+  height: calc(100% - 50px);
+  padding: $spacing-12;
 
-      .search-input {
-        margin-bottom: $spacing-8;
-      }
+  .search-input {
+    margin-bottom: $spacing-8;
+  }
 
-      .no-result {
-        height: calc(100% - 36px);
-      }
-
-      .l-split {
-        height: inherit;
-      }
-    }
+  .no-result,
+  .l-split {
+    height: calc(100% - 42px);
   }
 }
 
 .profile-group {
-  @include flex($direction: column, $vertical: flex-start, $horizontal: flex-start);
+  @include flex($direction: column, $vertical: flex-start, $horizontal: flex-start, $gap: $spacing-16);
   @include font-size('14');
+
   flex-grow: 1;
-  gap: $spacing-16;
   color: $neutral-600;
 
   .profile-list {
@@ -57,7 +57,7 @@
       width: 75px;
       font-weight: 600;
 
-      &:after {
+      &::after {
         content: "";
         position: absolute;
         right: 16px;

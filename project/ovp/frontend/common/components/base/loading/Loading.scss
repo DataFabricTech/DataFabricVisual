@@ -2,6 +2,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -12,18 +13,22 @@
     border-color: $primary-500;
     border-bottom-color: $primary-100;
   }
+
   25% {
     border-color: $primary-500;
     border-bottom-color: $primary-100;
   }
+
   50% {
     border-color: $primary-500;
     border-bottom-color: $primary-100;
   }
+
   75% {
     border-color: $primary-500;
     border-bottom-color: $primary-100;
   }
+
   100% {
     border-color: $primary-500;
     border-bottom-color: $primary-100;
@@ -35,41 +40,49 @@
     border-color: $primary-500;
     border-bottom-color: transparent;
   }
+
   25% {
     border-color: $primary-500;
     border-bottom-color: transparent;
   }
+
   50% {
     border-color: $primary-500;
     border-bottom-color: transparent;
   }
+
   75% {
     border-color: $primary-500;
     border-bottom-color: transparent;
   }
+
   100% {
     border-color: $primary-500;
     border-bottom-color: transparent;
   }
 }
 
-@-webkit-keyframes inverse-loading-spinner-colors {
+@keyframes inverse-loading-spinner-colors {
   0% {
     border-color: rgba($neutral-0, 0.3);
     border-bottom-color: transparent;
   }
+
   25% {
     border-color: rgba($neutral-0, 0.8);
     border-bottom-color: transparent;
   }
+
   50% {
     border-color: rgba($neutral-0, 0.3);
     border-bottom-color: transparent;
   }
+
   75% {
     border-color: rgba($neutral-0, 0.8);
     border-bottom-color: transparent;
   }
+
   100% {
     border-color: rgba($neutral-0, 0.3);
     border-bottom-color: transparent;
@@ -77,10 +90,9 @@
 }
 
 .loader {
-
   &-group {
-    @include flex($direction: column, $horizontal: center);
-    gap: 12px;
+    @include flex($direction: column, $horizontal: center, $gap: $spacing-12);
+
     text-align: center;
   }
 
@@ -105,6 +117,7 @@
 
   &-message {
     @include font-size('15');
+
     color: $neutral-700;
   }
 
@@ -168,7 +181,8 @@
 
 .overlay {
   @include z-index('loaderBg');
-  @include flex();
+  @include flex;
+
   position: fixed;
   top: 0;
   left: 0;
@@ -187,6 +201,7 @@
 .overlay + .loader-group,
 .overlay-dark + .loader-group {
   @include z-index('loader');
+
   position: fixed;
   top: 50%;
   left: 50%;

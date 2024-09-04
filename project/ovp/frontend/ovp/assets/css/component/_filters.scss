@@ -1,20 +1,21 @@
 .filters {
-  @include flex($horizontal: flex-start);
-  gap: $spacing-4;
+  @include flex($horizontal: flex-start, $gap: $spacing-4);
+
   width: 100%;
 }
 
-//데이터 상세 > 리니지
+//데이터 상세 > 리니지 필터
 .lineage {
   .filters {
     @include z-index('float');
+
     position: absolute;
     gap: $spacing-16;
     padding: $spacing-8 $spacing-20;
   }
 }
 
-//menu-data ui
+//menu-data ui > 필터
 .menu-data {
   .filters {
     flex-direction: column;

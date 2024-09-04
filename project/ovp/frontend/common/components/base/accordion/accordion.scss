@@ -6,6 +6,7 @@
 
   &-head {
     @include flex($direction: row, $horizontal: space-between, $vertical: center);
+
     width: 100%;
     padding: $spacing-8 $spacing-12;
   }

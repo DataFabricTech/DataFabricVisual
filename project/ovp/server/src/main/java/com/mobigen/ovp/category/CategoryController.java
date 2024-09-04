@@ -2,12 +2,14 @@ package com.mobigen.ovp.category;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.ovp.category.dto.CategoryDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.List;
 
 
 @Slf4j
@@ -28,6 +31,12 @@ public class CategoryController {
     @GetMapping("/list")
     public Object getModelByCategoryId() {
         return categoryService.getCategories();
+    }
+
+    @ResponseJsonResult
+    @GetMapping("/list/all")
+    public Object getCategoryAllList(@RequestParam MultiValueMap<String, String> params) {
+        return categoryService.getCategoryAllList();
     }
 
     @ResponseJsonResult
@@ -58,6 +67,12 @@ public class CategoryController {
     @GetMapping("/models")
     public Object getModelList(@RequestParam MultiValueMap<String, String> params) throws Exception {
         return categoryService.getModelList(params.getFirst("tagId"), params);
+    }
+
+    @ResponseJsonResult
+    @PatchMapping("/{tagId}/tag")
+    Object changeDataModelTag(@PathVariable String tagId, @RequestParam String type, @RequestBody List<String> body) {
+        return categoryService.ChangeDataModelTag(tagId, type, body);
     }
 
 }

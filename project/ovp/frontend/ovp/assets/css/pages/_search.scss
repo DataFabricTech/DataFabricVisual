@@ -11,17 +11,10 @@
 }
 
 .data-list {
-  @include flex($direction:column, $horizontal: flex-start, $vertical: flex-start);
+  @include flex($direction:column, $horizontal: flex-start, $vertical: flex-start, $gap: $spacing-16);
 
   overflow-y: auto;
-  gap: $spacing-16;
   flex-grow: 1;
-  -ms-overflow-style: none;  /* Internet Explorer and Edge */
-  scrollbar-width: none;  /* Firefox */
-
-  &::-webkit-scrollbar {
-    display: none; /* (Chrome, Safari) */
-  }
 }
 
 .preview {
@@ -44,10 +37,7 @@
   }
 
   &-item {
-    @include flex($direction: column, $vertical: flex-start);
-
-    gap: $spacing-16;
-
+    @include flex($direction: column, $vertical: flex-start, $gap: $spacing-16);
   }
 
   &-title {

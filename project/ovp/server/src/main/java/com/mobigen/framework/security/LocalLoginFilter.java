@@ -38,13 +38,10 @@ public class LocalLoginFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("localLoginFilter");
-
         // 로컬 확인 + 로그인/인증 API 확인 + 토큰 여부 확인
         boolean isApiAuthRequest = request.getRequestURI().contains("/api/auth");
         boolean isNotLocalRequest = !Boolean.TRUE.equals(token.isLocal(request));
         if (isNotLocalRequest || isApiAuthRequest) {
-            log.info("로컬 로그인 진행 X");
             filterChain.doFilter(request, response);
             return;
         }
@@ -52,11 +49,9 @@ public class LocalLoginFilter extends OncePerRequestFilter {
         // 토큰 유효성 검사 확인 -> 토큰 실패 유효성 실패 시 삭제 후 로컬 로그인 진행
         String accessToken = token.getAccessTokenByRequest(request);
         if (StringUtils.hasText(accessToken) && !token.isExpiredToken(accessToken)) {
-            log.info("로컬 로그인 진행 X");
             filterChain.doFilter(request, response);
             return;
         }
-
 
         // 로컬 로그인 진행
         log.info("로컬 로그인 진행");

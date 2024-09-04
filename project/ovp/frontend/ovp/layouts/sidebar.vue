@@ -2,38 +2,36 @@
   <nav id="sidebar">
     <div class="l-sidebar">
       <ul class="sidebar-list">
-        <li class="sidebar-item is-sidebar-item-selected">
-          <nuxt-link :to="'/'" class="sidebar-button">
+        <li
+          v-for="menu in menuJson"
+          class="sidebar-item"
+          :class="isSelectedMenu(menu.linkTo) ? 'is-sidebar-item-selected' : ''"
+        >
+          <nuxt-link :to="menu.linkTo" class="sidebar-button">
             <div class="sidebar-icon">
-              <svg-icon name="explore" class="svg-icon"></svg-icon>
+              <svg-icon :name="menu.iconName" class="svg-icon"></svg-icon>
             </div>
-            <span class="sidebar-text">탐색</span>
-          </nuxt-link>
-        </li>
-        <li class="sidebar-item">
-          <nuxt-link :to="''" class="sidebar-button">
-            <div class="sidebar-icon">
-              <svg-icon name="chart-multitype" class="svg-icon"></svg-icon>
-            </div>
-            <span class="sidebar-text">데이터모델 생성</span>
-          </nuxt-link>
-        </li>
-        <li class="sidebar-item">
-          <nuxt-link :to="''" class="sidebar-button">
-            <div class="sidebar-icon">
-              <svg-icon name="governance" class="svg-icon"></svg-icon>
-            </div>
-            <span class="sidebar-text">거버넌스</span>
+            <span class="sidebar-text">{{ menu.label }}</span>
           </nuxt-link>
         </li>
       </ul>
-      <ul class="sidebar-list">
-        <li>
-          <nuxt-link :to="''" class="sidebar-button">
+      <ul v-if="!_.isEmpty(mgmtMenuJson)" class="sidebar-list">
+        <li
+          class="sidebar-item"
+          :class="
+            isSelectedMenu(mgmtMenuJson.linkTo)
+              ? 'is-sidebar-item-selected'
+              : ''
+          "
+        >
+          <nuxt-link :to="mgmtMenuJson.linkTo" class="sidebar-button">
             <div class="sidebar-icon">
-              <svg-icon name="custom-tune" class="svg-icon"></svg-icon>
+              <svg-icon
+                :name="mgmtMenuJson.iconName"
+                class="svg-icon"
+              ></svg-icon>
             </div>
-            <span class="sidebar-text">관리</span>
+            <span class="sidebar-text">{{ mgmtMenuJson.label }}</span>
           </nuxt-link>
         </li>
       </ul>
@@ -41,9 +39,27 @@
   </nav>
 </template>
 
-<script>
-export default {
-  name: "sidebar",
+<script setup lang="ts">
+import _ from "lodash";
+
+import { storeToRefs } from "pinia";
+import { useMenuStore } from "@/store/common/menu";
+
+const menuStore = useMenuStore();
+
+const { getMenuData } = menuStore;
+const { headerUrl, menuJson, mgmtMenuJson } = storeToRefs(menuStore);
+
+// 메뉴 데이터 조회
+await getMenuData();
+
+// URL 기준 메뉴 하이라이팅 처리
+const isSelectedMenu = (pageUrl: string) => {
+  // URL depth 특성상 ROOT 페이지의 경우 모든 페이지에서 true를 return 하기 예외처리 한다.
+  if (headerUrl.value === "/portal" || headerUrl.value === "/portal/") {
+    return false;
+  }
+  return _.includes(pageUrl, headerUrl.value);
 };
 </script>
 

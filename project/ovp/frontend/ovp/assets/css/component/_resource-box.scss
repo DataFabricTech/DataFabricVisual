@@ -18,9 +18,7 @@
   }
 
   &-model {
-    @include flex;
-
-    gap: $spacing-8;
+    @include flex($gap: $spacing-8);
 
     & > img {
       width: 32px;
@@ -29,14 +27,12 @@
   }
 
   &-contents {
-    @include flex($direction: column, $vertical: flex-start);
-
-    gap: $spacing-4;
+    @include flex($direction: column, $vertical: flex-start, $gap: $spacing-4);
   }
 
   .editable-group-title {
     @include ellipsis;
-    @include font-size('18');
+    @include font-size('16');
 
     font-weight: 600;
     color: $neutral-700;
@@ -62,18 +58,18 @@
 
   &-initial-name {
     @include font-size('13');
+
     color: $neutral-400;
   }
 
   &-info {
-    @include flex;
+    @include flex($gap: $spacing-24);
 
-    gap: $spacing-24;
     margin-top: $spacing-12;
   }
 
   &-list {
-    @include flex;
+    @include flex($gap: $spacing-16);
 
     gap: $spacing-16;
     color: $neutral-700;
@@ -111,8 +107,15 @@
   }
 
   &.is-resource-box-no-action.is-resource-box-selected {
-    border-color: $neutral-200;
     @include box-shadow('sm');
+
+    border-color: $neutral-200;
+  }
+
+  .breadcrumb-text {
+    @include ellipsis;
+
+    max-width: 200px;
   }
 }
 
@@ -124,6 +127,10 @@
   border-bottom: 1px solid $neutral-200;
   box-shadow: none;
   cursor: default;
+
+  &.is-resource-box-no-action {
+    border-top: 2px solid $secondary-500;
+  }
 
   &:hover {
     border-right: none;

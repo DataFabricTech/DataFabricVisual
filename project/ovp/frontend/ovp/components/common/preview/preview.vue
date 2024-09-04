@@ -11,11 +11,18 @@
     </div>
     <div class="preview-contents">
       <div class="preview-item">
-        <!--        TODO: [개발] 추후 해당 모델 페이지로 이동하는 url 추가 필요-->
-        <a href="javascript:void(0)" class="preview-title">{{
-          previewData.modelInfo.model.name
-        }}</a>
-        <div class="preview-desc">{{ previewData.modelInfo.model.desc }}</div>
+        <a
+          href="javascript:void(0)"
+          class="preview-title"
+          @click="gotoDetail"
+          >{{
+            previewData.modelInfo.model.displayName ??
+            previewData.modelInfo.model.name
+          }}</a
+        >
+        <div class="preview-desc">
+          {{ checkEmptyValues(previewData.modelInfo.model.desc) }}
+        </div>
         <table>
           <colgroup>
             <col style="width: 30%" />
@@ -38,7 +45,11 @@
               {{ isStructuredModelType ? "Columns" : "전체 행" }}
             </th>
             <td>
-              {{ checkEmptyValues(previewData.modelInfo.model.cnt) }}
+              {{
+                isStructuredModelType
+                  ? checkEmptyValues(previewData.modelInfo.model.cnt)
+                  : checkEmptyValues(previewData.modelInfo.model.size)
+              }}
             </td>
           </tr>
         </table>
@@ -46,13 +57,14 @@
       <div class="preview-item">
         <div class="preview-title">태그</div>
         <div class="preview-group">
-          <div
-            class="tag tag-primary tag-sm"
-            v-for="(tag, index) in previewData.tags"
-            :key="index"
-          >
-            <span class="tag-text">{{ tag.name }}</span>
-          </div>
+          <template v-for="(tag, index) in previewData.tags" :key="index">
+            <div
+              class="tag tag-primary tag-sm"
+              v-show="!tag.category.includes('ovp_category')"
+            >
+              <span class="tag-text">{{ tag.name }}</span>
+            </div>
+          </template>
         </div>
       </div>
       <div class="preview-item">
@@ -67,24 +79,7 @@
           </div>
         </div>
       </div>
-      <!--        TODO: [개발] url기능 사용하지 않을 수 있다. 기획 검토 중 -->
-      <div class="preview-item" v-if="!isStructuredModelType">
-        <div class="preview-title">상세 설명</div>
-        <div class="preview-desc">
-          {{ previewData.modelInfo.details }}
-        </div>
-      </div>
-      <div class="preview-item" v-if="!isStructuredModelType">
-        <div class="preview-title">URL</div>
-        <a
-          :href="previewData.modelInfo.url"
-          class="preview-link"
-          target="_blank"
-        >
-          {{ checkEmptyValues(previewData.modelInfo.url) }}
-        </a>
-      </div>
-      <div class="preview-item" v-if="isStructuredModelType">
+      <div class="preview-item">
         <div class="preview-title">스키마</div>
         <div class="v-group gap-2 w-full">
           <div
@@ -110,9 +105,14 @@
 import { computed } from "vue";
 import type { PreviewData } from "~/type/common";
 
+import { useRouter } from "nuxt/app";
+
+const router = useRouter();
+
 interface Props {
   previewData: PreviewData;
   isShowPreview: boolean;
+  modelType: string;
 }
 
 const props = defineProps<Props>();
@@ -141,6 +141,22 @@ const checkEmptyValues = (value: string | number) => {
 
 const setPreviewClose = (option: boolean) => {
   emit("change", option);
+};
+const gotoDetail = () => {
+  const { id, fqn, index } = props.previewData as unknown as {
+    id: string;
+    fqn: string;
+    index: string;
+  };
+
+  router.push({
+    path: "/portal/search/detail",
+    query: {
+      type: index,
+      id: id,
+      fqn: fqn,
+    },
+  });
 };
 </script>
 

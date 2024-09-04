@@ -1,12 +1,9 @@
 .capsule-pagination {
-  @include flex;
+  @include flex($gap: $spacing-4);
 
-  gap: $spacing-4;
 
   .description {
-    @include flex;
-
-    gap: $spacing-4;
+    @include flex($gap: $spacing-4);
 
     dd {
       @include flex;

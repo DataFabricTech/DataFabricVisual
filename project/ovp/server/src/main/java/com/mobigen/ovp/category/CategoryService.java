@@ -3,13 +3,20 @@ package com.mobigen.ovp.category;
 import com.mobigen.ovp.category.dto.CategoryDTO;
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
+import com.mobigen.ovp.common.constants.Constants;
+import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
+import com.mobigen.ovp.common.openmete_client.ContainersClient;
+import com.mobigen.ovp.common.openmete_client.TablesClient;
+import com.mobigen.ovp.common.openmete_client.dto.Tables;
+import com.mobigen.ovp.common.openmete_client.dto.Tag;
 import com.mobigen.ovp.search.SearchService;
+import com.mobigen.ovp.search_detail.dto.request.DataModelDetailTagDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.configurationprocessor.json.JSONArray;
-import org.springframework.boot.configurationprocessor.json.JSONException;
-import org.springframework.boot.configurationprocessor.json.JSONObject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -23,11 +30,14 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
+    private final ContainersClient containersClient;
+    private final TablesClient tablesClient;
     private final CategoryRepository categoryRepository;
     private final SearchService searchService;
     private final ClassificationClient classificationClient;
@@ -68,6 +78,12 @@ public class CategoryService {
         return rootCategories.get(0);
     }
 
+    public List<CategoryDTO> getCategoryAllList() {
+        List<CategoryEntity> categories = categoryRepository.findAll();
+
+        return categories.stream().map(category -> new CategoryDTO(category)).collect(Collectors.toList());
+    }
+
     @Transactional
     public Object addCategory(CategoryDTO dto) throws Exception {
         dto.setTagId(createTagInfo(dto.getId()));
@@ -80,6 +96,15 @@ public class CategoryService {
 
     @Transactional
     public Object insertOrUpdate(CategoryDTO dto) throws Exception {
+        CategoryEntity undefinedTagEntity = getUndefinedTag();
+
+        if (undefinedTagEntity != null && dto.getName().equals(Constants.UNDEFINED_TAG_NAME)) {
+            return "NOT_ALLOWED_NAME";
+        }
+        if (undefinedTagEntity != null && dto.getParentId().equals(undefinedTagEntity.getId().toString())) {
+            return "NOT_ALLOWED_PARENT_ID";
+        }
+
         CategoryEntity thisNodeEntity = dto.toEntity();
         CategoryEntity targetNodeEntity = categoryRepository.findById(UUID.fromString(dto.getParentId())).get();
 
@@ -97,6 +122,11 @@ public class CategoryService {
 
     @Transactional
     public Object deleteCategory(CategoryDTO params) throws Exception {
+        CategoryEntity undefinedTagEntity = getUndefinedTag();
+        if (params.getId().equals(undefinedTagEntity.getId().toString())) {
+            return "NOT_ALLOWED_ID";
+        }
+
         CategoryEntity categoryEntity = params.toEntity();
         // 재귀 함수 이용하여 하위 > 하위 > 하위.. 의 categoryId 목록 조회.
 
@@ -220,6 +250,12 @@ public class CategoryService {
     public boolean moveCategory(Map<String, Object> params) throws Exception {
         String dropNodeId = params.get("dropNodeId").toString();
         String targetNodeId = params.get("targetNodeId").toString();
+
+        CategoryEntity undefinedTagEntity = getUndefinedTag();
+        if (undefinedTagEntity.getId().equals(dropNodeId)) {
+            return false;
+        }
+
         CategoryEntity dropNodeEntity = categoryRepository.findByIdWithParent(UUID.fromString(dropNodeId));
         CategoryEntity targetNodeEntity = categoryRepository.findByIdWithParent(UUID.fromString(targetNodeId));
 
@@ -310,11 +346,131 @@ public class CategoryService {
     // TODO : classification 명 상수 처리 필요.
     public String createTagInfo(String categoryId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("classification", "ovp_category");
+        params.put("classification", Constants.OVP_CATEGORY);
         params.put("description", "OVP Category Matched Tag");
         params.put("displayName", categoryId);
         params.put("name", categoryId);
         Map<String, Object> response = (Map<String, Object>) classificationClient.createTag(params);
         return response.get("id").toString();
+    }
+
+    /**
+     * 데이터 모델 변경 (테이블, 스토리지)
+     *
+     * @param id
+     * @param type
+     * @param body
+     * @return
+     */
+    public Object changeDataModel(String id, String type, List<Map<String, Object>> body) {
+        MultiValueMap params = new LinkedMultiValueMap();
+        params.add("fields", "owner,followers,tags,votes");
+
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            return tablesClient.changeDataModel(id, params, body);
+        } else {
+            return containersClient.changeStorage(id, params, body);
+        }
+    }
+
+    private List<Map<String, Object>> makeRemoveBody(int tagLength) {
+        List<Map<String, Object>> removedBody = new ArrayList<>();
+
+        for (int i = (tagLength - 1); i >= 0; i--) {
+            Map<String, Object> row = new HashMap<>();
+            row.put("op", "remove");
+            row.put("path", new StringBuffer("/tags/").append(i).toString());
+            removedBody.add(row);
+        }
+
+        return removedBody;
+    }
+
+    private List<Map<String, Object>> makeAddBody(List<Tag> tags, String tagId) {
+        List<Map<String, Object>> addedBody = new ArrayList<>();
+        List<DataModelDetailTagDto> bodyList = new ArrayList<>();
+        List<DataModelDetailTagDto> tagList = new ArrayList<>();
+
+        // 데이터 모델의 태크 목록에서 카테고리, 태그, 용어를 분리해서 저장.
+        List<DataModelDetailTagDto> glossaryList = tags.stream()
+                .filter(tag -> !tag.getTagFQN().contains(Constants.OVP_CATEGORY) && "Glossary".equals(tag.getSource()))
+                .map(tag -> new DataModelDetailTagDto(tag))
+                .collect(Collectors.toList());
+        ;
+        List<DataModelDetailTagDto> classificationList = tags.stream()
+                .filter(tag -> !tag.getTagFQN().contains(Constants.OVP_CATEGORY) && "Classification".equals(tag.getSource()))
+                .map(tag -> new DataModelDetailTagDto(tag))
+                .collect(Collectors.toList());
+
+        // { op, path, value }
+        // 클라이언트로 받은 변경해야 할 데이터(태그, 카테고라, 용어)를 각각 단일 조회 후에 value 를 셋팅한다.
+        Map<String, Object> tempTag = classificationClient.getTag(tagId);
+
+        DataModelDetailTagDto tag = new DataModelDetailTagDto();
+        tag.setName(tempTag.get("name").toString());
+        tag.setDisplayName(tempTag.get("displayName").toString());
+        tag.setDescription(tempTag.get("description").toString());
+        tag.setTagFQN(tempTag.get("fullyQualifiedName").toString());
+        tag.setSource("Classification");
+        tag.setLabelType("Manual");
+        tag.setStyle((Map<String, Object>) tempTag.get("style"));
+
+        tagList.add(tag);
+
+        // value가 셋팅이 완료 되면 모든 데이터(카테고리, 태그, 용어)를 하나로 합친다.
+        bodyList = Stream.concat(glossaryList.stream(), classificationList.stream()).collect(Collectors.toList());
+        bodyList = Stream.concat(bodyList.stream(), tagList.stream()).collect(Collectors.toList());
+
+        // 모두 합쳐진 value를 가지고 patch할 body 데이터를 만든다.
+        int bodySize = bodyList.size();
+        for (int i = 0; i < bodySize; i++) {
+            Map<String, Object> operationMap = new HashMap<>();
+            operationMap.put("op", "add");
+            operationMap.put("path", new StringBuffer("/tags/").append(i).toString());
+            operationMap.put("value", bodyList.get(i));
+            addedBody.add(operationMap);
+        }
+
+        return addedBody;
+    }
+
+    public Object ChangeDataModelTag(String tagId, String type, List<String> body) {
+
+        Tables tables = null;
+        MultiValueMap params = new LinkedMultiValueMap();
+        params.add("fields", "tags");
+        params.add("include", "all");
+        int excuteCount = 0;
+        int successCount = 0;
+        for (String dataModelId : body) {
+            if (!ModelType.STORAGE.getValue().equals(type)) {
+                tables = tablesClient.getTablesName(dataModelId, params);
+            } else {
+                tables = containersClient.getStorageById(dataModelId, params);
+            }
+
+            List tags = tables.getTags();
+            List removeBody = makeRemoveBody(tags.size());
+            List addBody = makeAddBody(tags, tagId);
+
+            Object removeResult = changeDataModel(dataModelId, type, removeBody);
+            Object addResult = changeDataModel(dataModelId, type, addBody);
+
+            excuteCount++;
+
+            if (removeResult != null && addResult != null) {
+                successCount++;
+            }
+        }
+
+        if (excuteCount != successCount) {
+            throw new RuntimeException("업데이트 실패: " + (excuteCount - successCount) + "개의 데이터 모델이 업데이트되지 않았습니다.");
+        }
+
+        return true;
+    }
+
+    private CategoryEntity getUndefinedTag() {
+        return categoryRepository.findByName(Constants.UNDEFINED_TAG_NAME);
     }
 }

@@ -1,6 +1,5 @@
 .upload {
-  @include flex($direction: row, $horizontal: flex-start, $vertical: center);
-  gap: $spacing-12;
+  @include flex($direction: row, $horizontal: flex-start, $vertical: center, $gap: $spacing-12);
 
   &-file {
     position: relative;
@@ -30,7 +29,7 @@
 
 .upload-loaded {
   .upload-status {
-    @include flex($direction: row, $horizontal: flex-start, $vertical: flex-start);
-    gap: $spacing-4;
+    @include flex($direction: row, $horizontal: flex-start, $vertical: flex-start, $gap: $spacing-4);
+
   }
 }

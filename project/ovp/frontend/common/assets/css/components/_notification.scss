@@ -11,10 +11,7 @@
 }
 
 .notification {
-  @include flex;
-
-  gap: $spacing-8;
-
+  @include flex($gap: $spacing-8);
 
   &-icon {
     @include icon-color($neutral-400);

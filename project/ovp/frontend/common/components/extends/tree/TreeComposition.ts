@@ -1,9 +1,11 @@
 import { TreeProps, TreeViewItem } from "./TreeProps";
 import { uuid } from "vue3-uuid";
 import _ from "lodash";
+import $constants from "@/utils/constant";
 
 export interface TreeComposition extends TreeProps {
   treeItems: Ref<TreeViewItem[]>;
+  showTree: Ref<boolean>;
   createNewTreeItem(parentId: string, id?: string, name?: string, desc?: string, order?: number): TreeViewItem;
   openAll(): void;
   closeAll(): void;
@@ -11,26 +13,40 @@ export interface TreeComposition extends TreeProps {
 }
 
 export function TreeComposition(props: TreeProps): TreeComposition {
-  const updateCheckedStatus = (items: any[], checkedIds: string[]): void => {
+  const showTree = ref(true);
+
+  const updateStatus = (items: any[], ids: string[], statusKey: string): void => {
     _.forEach(items, (item) => {
-      // checkedIds 배열에 현재 항목의 id가 포함되어 있는지 확인
-      if (checkedIds.includes(item.id)) {
-        item.checked = true;
+      // ids 배열에 현재 항목의 id가 포함되어 있는지 확인
+      if (ids.includes(item.id)) {
+        item[statusKey] = true;
       }
 
       // 자식 노드가 있는 경우, 재귀적으로 호출
       if (item.children && item.children.length > 0) {
-        updateCheckedStatus(item.children, checkedIds);
+        updateStatus(item.children, ids, statusKey);
       }
     });
   };
 
   const treeItems: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
-  treeItems.value = props.items;
+  treeItems.value = _.cloneDeep(props.items ?? []);
+
+  if (props.useFirSelect) {
+    treeItems.value[0].selected = true;
+  }
 
   // 체크박스를 사용하는 경우, 체크여부를 object에 추가해준다.
-  if (props.isCheckable) {
-    updateCheckedStatus(treeItems.value, props.checkedIds || []);
+  if (props.isCheckable && props.checkedIds && props.checkedIds.length > 0) {
+    updateStatus(treeItems.value, props.checkedIds, "checked");
+  }
+  // NOTE : 처음 선택값도 disabled 랑 같이 처리하려 했으나, tree lib 가 제대로 동작하지 않아 주석처리함.
+  // if (props.selectedIds && props.selectedIds.length > 0) {
+  //   updateStatus(treeItems.value, props.selectedIds, "selected");
+  // }
+  // 비활성화 하는 node id 항목이 있을 경우, 비활성화 여부를 object 에 추가해준다.
+  if (props.disabledIds && props.disabledIds.length > 0) {
+    updateStatus(treeItems.value, props.disabledIds, "disabled");
   }
 
   const createNewTreeItem: (
@@ -93,7 +109,7 @@ export function TreeComposition(props: TreeProps): TreeComposition {
     return parentIds;
   };
 
-  const dropValidator = (thisNode: TreeViewItem, targetNode: TreeViewItem) => {
+  const dropValidator = (thisNode: TreeViewItem, targetNode: TreeViewItem): any => {
     // 자기노드 밑으로 drop 할 수 없음.
     if (thisNode.id === targetNode.id) {
       return false;
@@ -102,6 +118,12 @@ export function TreeComposition(props: TreeProps): TreeComposition {
     // targetNode 기준 부모노드 List 를 조회해서 thisNode 의 id 가 있는지 확인 필요함.
     const parentIds = findAncestors(treeItems.value, targetNode.id);
     if (parentIds.includes(thisNode.id)) {
+      return false;
+    }
+
+    // immutableItems 의 항목은 drag/drop 할수없음.
+    if (Array.isArray(props.immutableItems) && props.immutableItems.some((item) => thisNode.id.includes(item))) {
+      alert(`${$constants.SERVICE.CATEGORY_UNDEFINED_NAME} 항목은 이동 불가능 합니다.`);
       return false;
     }
 
@@ -122,19 +144,40 @@ export function TreeComposition(props: TreeProps): TreeComposition {
   watch(
     () => props.items,
     (newItems) => {
-      treeItems.value = newItems;
+      // tree 문제로 인해서 showTree 를 false/true 해서 tree 를 refresh 시켜줘야함.
+      showTree.value = false;
+      setTimeout(() => {
+        showTree.value = true;
+      }, 0);
+
+      treeItems.value = _.cloneDeep(newItems ?? []);
       openAll();
 
       // 리스트 변경 시 checked 항목 추가
-      if (props.isCheckable) {
-        updateCheckedStatus(treeItems.value, props.checkedIds || []);
+      if (props.isCheckable && props.checkedIds) {
+        updateStatus(treeItems.value, props.checkedIds, "checked");
       }
-    },
-    { immediate: true } // Optionally update immediately with the initial value
+    }
+  );
+
+  watch(
+    () => [props.disabledIds, props.selectedIds],
+    ([disabledIds]) => {
+      // disabled 상태 업데이트
+      if (disabledIds && disabledIds.length > 0) {
+        updateStatus(treeItems.value, disabledIds, "disabled");
+      }
+
+      // selected 상태 업데이트
+      // if (selectedIds && selectedIds.length > 0) {
+      //   updateStatus(treeItems.value, selectedIds, "selected");
+      // }
+    }
   );
 
   return {
     ...props,
+    showTree,
     treeItems,
     createNewTreeItem,
     openAll,

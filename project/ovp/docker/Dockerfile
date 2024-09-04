@@ -1,4 +1,4 @@
-FROM openjdk:8u292-jre-slim
+FROM eclipse-temurin:17
 
 ARG SERVICE_ID
 ARG CONTAINER_HOME
