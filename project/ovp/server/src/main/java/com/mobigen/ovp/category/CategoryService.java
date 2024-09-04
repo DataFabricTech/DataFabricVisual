@@ -3,6 +3,7 @@ package com.mobigen.ovp.category;
 import com.mobigen.ovp.category.dto.CategoryDTO;
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
+import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
 import com.mobigen.ovp.common.openmete_client.ContainersClient;
@@ -40,10 +41,6 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final SearchService searchService;
     private final ClassificationClient classificationClient;
-
-    private static final String OVP_CATEGORY = "ovp_category";
-    private static final String UNDEFINED_TAG_NAME = "미분류";
-
 
     public CategoryDTO getCategories() {
         List<CategoryEntity> categories = categoryRepository.findAll();
@@ -101,7 +98,7 @@ public class CategoryService {
     public Object insertOrUpdate(CategoryDTO dto) throws Exception {
         CategoryEntity undefinedTagEntity = getUndefinedTag();
 
-        if (undefinedTagEntity != null && dto.getName().equals(UNDEFINED_TAG_NAME)) {
+        if (undefinedTagEntity != null && dto.getName().equals(Constants.UNDEFINED_TAG_NAME)) {
             return "NOT_ALLOWED_NAME";
         }
         if (undefinedTagEntity != null && dto.getParentId().equals(undefinedTagEntity.getId().toString())) {
@@ -349,7 +346,7 @@ public class CategoryService {
     // TODO : classification 명 상수 처리 필요.
     public String createTagInfo(String categoryId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("classification", OVP_CATEGORY);
+        params.put("classification", Constants.OVP_CATEGORY);
         params.put("description", "OVP Category Matched Tag");
         params.put("displayName", categoryId);
         params.put("name", categoryId);
@@ -396,12 +393,12 @@ public class CategoryService {
 
         // 데이터 모델의 태크 목록에서 카테고리, 태그, 용어를 분리해서 저장.
         List<DataModelDetailTagDto> glossaryList = tags.stream()
-                .filter(tag -> !tag.getTagFQN().contains(OVP_CATEGORY) && "Glossary".equals(tag.getSource()))
+                .filter(tag -> !tag.getTagFQN().contains(Constants.OVP_CATEGORY) && "Glossary".equals(tag.getSource()))
                 .map(tag -> new DataModelDetailTagDto(tag))
                 .collect(Collectors.toList());
         ;
         List<DataModelDetailTagDto> classificationList = tags.stream()
-                .filter(tag -> !tag.getTagFQN().contains(OVP_CATEGORY) && "Classification".equals(tag.getSource()))
+                .filter(tag -> !tag.getTagFQN().contains(Constants.OVP_CATEGORY) && "Classification".equals(tag.getSource()))
                 .map(tag -> new DataModelDetailTagDto(tag))
                 .collect(Collectors.toList());
 
@@ -474,6 +471,6 @@ public class CategoryService {
     }
 
     private CategoryEntity getUndefinedTag() {
-        return categoryRepository.findByName(UNDEFINED_TAG_NAME);
+        return categoryRepository.findByName(Constants.UNDEFINED_TAG_NAME);
     }
 }
