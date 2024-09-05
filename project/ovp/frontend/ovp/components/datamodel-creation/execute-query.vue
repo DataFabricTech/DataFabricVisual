@@ -10,13 +10,19 @@
       </button>
     </div>
     <div class="code-box">
-      <textarea v-model="localQuery.query" @input="emitEdit"></textarea>
+      <!--      <textarea v-model="localQuery.query" @input="emitEdit"></textarea>-->
+      <MonacoEditor
+        v-model="localQuery.query"
+        @input="emitEdit"
+        lang="sql"
+        :options="editorOptions"
+        style="height: 100%"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-
 const props = defineProps({
   query: {
     type: String,
@@ -31,7 +37,7 @@ const emit = defineEmits<{
 
 const localQuery: ComputedRef<String> = computed(() => {
   return {
-    query: props.query
+    query: props.query,
   };
 });
 
@@ -45,6 +51,18 @@ const emitReset = () => {
 
 const emitEdit = () => {
   emit("edit", localQuery.value.query);
+};
+
+// Monaco Editor options 설정
+const editorOptions = {
+  language: "sql", // SQL 구문 강조
+  automaticLayout: true, // 창 크기 변경 시 자동 레이아웃
+  minimap: {
+    enabled: false, // 미니맵 비활성화
+  },
+  scrollBeyondLastLine: false,
+  readOnly: false, // 읽기 전용 여부
+  wordWrap: "on", // 자동 줄바꿈
 };
 </script>
 

@@ -27,6 +27,7 @@
             :use-infinite="true"
             :use-live-search="false"
             :addSearchList="addSearchList"
+            :onAddTransfer="props.onAddTransfer"
             list-type="non-selected"
             no-data-msg="데이터 모델이 없습니다."
             @item-check="onSelectApiData"
@@ -138,6 +139,12 @@ const {
   mySearchResult,
   nSelectedListData,
 } = storeToRefs(dataModelSearchStore);
+
+const props = defineProps({
+  onAddTransfer: {
+    type: Boolean
+  },
+});
 
 const selectedListLength = computed(() => {
   return nSelectedListData.value ? nSelectedListData.value.length : 0;

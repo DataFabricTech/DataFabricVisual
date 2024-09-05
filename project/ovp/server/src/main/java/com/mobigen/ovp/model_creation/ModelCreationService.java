@@ -152,6 +152,12 @@ public class ModelCreationService {
             String followId = (String) follow.get("id");
             String dataType = (String) follow.get("type");
             String newDataType = getDataType(dataType);
+
+            // NOTE: 삭제된 데이터 모델 필터링
+            if(follow.containsKey("deleted") && (boolean) follow.get("deleted")) {
+                continue;
+            }
+
             if (newDataType == null) {
                 continue;
             }

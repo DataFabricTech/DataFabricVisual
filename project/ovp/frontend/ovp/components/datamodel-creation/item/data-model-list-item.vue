@@ -42,7 +42,7 @@
         <svg-icon
           class="svg-icon secondary"
           name="tag-fill"
-          v-if="props.data.bookmarked"
+          v-if="props.data.isFollow"
         ></svg-icon>
         <svg-icon class="svg-icon" name="tag" v-else></svg-icon>
       </button>

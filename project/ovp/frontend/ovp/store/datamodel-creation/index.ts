@@ -37,9 +37,7 @@ export const useCreationStore = defineStore("creation", () => {
    * 데이터 모델 생성 > 목록 리스트의 항목 삭제
    */
   const deleteDataModel = (value: string) => {
-    selectedModelList.value = selectedModelList.value.filter(
-      (item: any) => item.id !== value,
-    );
+    selectedModelList.value = value;
     isItemClicked.value = false;
   };
 
@@ -50,9 +48,8 @@ export const useCreationStore = defineStore("creation", () => {
     isColumnSelected.value = false;
 
     const selectedModel = _.find(selectedModelList.value, ["id", value]);
-
     dataModelName.value = selectedModel.modelNm;
-    dataModelOwner.value = selectedModel.owner;
+    dataModelOwner.value = selectedModel.ownerDisplayName;
 
     sampleDataList.value = await getSampleData(
       selectedModel.id,

@@ -1,4 +1,5 @@
 import { usePagingStore } from "~/store/common/paging";
+import { useUserStore } from "~/store/user/userStore";
 import _ from "lodash";
 import {
   type Filter,
@@ -22,6 +23,9 @@ interface Filters {
 
 export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const { $api } = useNuxtApp();
+
+  const userStore = useUserStore();
+  const { user } = storeToRefs(userStore);
 
   // 인피니티 스크롤 - Pageing 처리 관련
   const pagingStore = usePagingStore();
@@ -193,7 +197,24 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    */
   const resetReloadList = async (selectedList: any[] | null = null) => {
     setFrom(0);
-    await getSearchList(selectedList);
+    if (currTab.value === "my") {
+      const { data } = await $api(
+        `/api/creation/my-list/${user.value.id}?query=${searchKeyword}`,
+      );
+
+      console.log("data2312: ", data);
+
+      mySearchResult.value = data;
+      const ndata = [...data.bookmark, ...data.owner];
+      const newData = ndata.map((item: any) => {
+        return setSearchListItem(selectedList, item);
+      });
+
+      searchResult.value = newData;
+      searchResultLength.value = newData.length;
+    } else {
+      await getSearchList(selectedList);
+    }
     updateIntersectionHandler(0);
   };
 
@@ -229,6 +250,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    */
   const changeTab = (item: string) => {
     currTab.value = item;
+    setSearchKeyword("");
     resetReloadList(nSelectedListData.value);
   };
 
@@ -414,8 +436,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       alert("모델을 찾을 수 없습니다.");
       return;
     }
-    const urlType = selectedModel.bookmarked ? "remove" : "add";
-    const methodType = selectedModel.bookmarked ? "DELETE" : "PUT";
+
+    const urlType = selectedModel.isFollow ? "remove" : "add";
+    const methodType = selectedModel.isFollow ? "DELETE" : "PUT";
     $api(`/api/creation/bookmark/${urlType}/${value}`, {
       method: methodType,
     })

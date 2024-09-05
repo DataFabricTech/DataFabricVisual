@@ -127,7 +127,7 @@ import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 
-const props = withDefaults(defineProps<DataModelApiListProps>(), {
+const props = withDefaults(defineProps<DataModelApiListProps & { onAddTransfer?: () => void }>(), {
   data: () => [],
   selectedItems: () => [],
   selectedFilters: () => [],
@@ -145,6 +145,7 @@ const props = withDefaults(defineProps<DataModelApiListProps>(), {
   noDataMsg: "데이터 모델이 없습니다.",
   listType: "non-selected",
   useItemDeleteBtn: false,
+  onAddTransfer: false,
 });
 
 const emit = defineEmits<{
