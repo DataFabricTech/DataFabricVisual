@@ -36,6 +36,7 @@
             :show-open-all-btn="true"
             :show-close-all-btn="true"
             :use-draggable="true"
+            :use-fir-select="true"
             :dropValidator="dropValidator"
             :immutable-items="[undefinedTagIdManager.get() ?? '']"
             @onItemSelected="onCategoryNodeClick"
