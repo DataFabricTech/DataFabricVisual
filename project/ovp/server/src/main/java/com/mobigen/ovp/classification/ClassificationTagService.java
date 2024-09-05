@@ -1,9 +1,8 @@
 package com.mobigen.ovp.classification;
 
 import com.mobigen.ovp.classification.client.dto.classification.tag.ClassificationTagAddResponse;
-import com.mobigen.ovp.common.openmete_client.ClassificationClient;
-import com.mobigen.ovp.common.openmete_client.ClassificationClient2;
-//import com.mobigen.ovp.common.openmete_client.TagClient;
+import com.mobigen.ovp.common.constants.Constants;
+import com.mobigen.ovp.common.openmete_client.ClassificationTagsClient;
 import com.mobigen.ovp.common.openmete_client.dto.classification.tag.ClassificationTagAdd;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,9 +17,7 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class ClassificationTagService {
-//    private final TagClient tagClient;
-    private final ClassificationClient classificationClient;
-    private final ClassificationClient2 classificationClient2;
+    private final ClassificationTagsClient classificationTagsClient;
 
 
 
@@ -37,21 +34,21 @@ public class ClassificationTagService {
         tagParams.add("recursive", "true");
         tagParams.add("hardDelete", "true");
 
-        return classificationClient.deleteTag(id, tagParams);
+        return classificationTagsClient.deleteTag(id, tagParams);
     }
 
     public String getTagInfo(String tagId) {
-        Map<String, Object> tagInfo = classificationClient.getTag(tagId);
+        Map<String, Object> tagInfo = classificationTagsClient.getTag(tagId);
         return tagInfo.get("fullyQualifiedName").toString();
     }
 
     public String createTagInfo(String categoryId) {
         Map<String, Object> params = new HashMap<>();
-        params.put("classification", "OVP_category");
+        params.put("classification", Constants.OVP_CATEGORY);
         params.put("description", "OVP Category Matched Tag");
         params.put("displayName", categoryId);
         params.put("name", categoryId);
-        Map<String, Object> response = (Map<String, Object>) classificationClient.createTag(params);
+        Map<String, Object> response = (Map<String, Object>) classificationTagsClient.createTag(params);
         return response.get("id").toString();
     }
 
@@ -61,6 +58,6 @@ public class ClassificationTagService {
      * @return
      */
     public Object addClassificationTag(ClassificationTagAdd classificationTagAdd) {
-        return new ClassificationTagAddResponse(classificationClient.addClassificationTag(classificationTagAdd));
+        return new ClassificationTagAddResponse(classificationTagsClient.addClassificationTag(classificationTagAdd));
     }
 }
