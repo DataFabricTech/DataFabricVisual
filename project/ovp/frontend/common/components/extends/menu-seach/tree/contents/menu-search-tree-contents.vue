@@ -1,27 +1,28 @@
 <template>
   <div v-show="props.isShow" class="menu menu-search" style="width: 100%">
-    <div class="menu-head">
-      <!-- 검색 기능 -->
-      <div class="search-input">
-        <label class="hidden-text" for="text-input-example-11">검색</label>
-        <input
-          id="text-input-example-11"
-          class="text-input"
-          :value="searchLabel"
-          @input="onSearchText($event.target.value)"
-          placeholder="검색어를 입력하세요"
-        />
-        <svg-icon class="text-input-icon" name="user"></svg-icon>
-        <button
-          class="search-input-action-button button button-neutral-ghost button-sm"
-          type="button"
-          @click="onResetSearchText"
-        >
-          <span class="hidden-text">지우기</span>
-          <svg-icon class="button-icon" name="close"></svg-icon>
-        </button>
-      </div>
-    </div>
+    <!-- TODO: Vue-tree 라이브러리에서 변경 목록 데이터 랜더링 문제로 검색 기능은 추후 개발 -->
+    <!--    <div class="menu-head">-->
+    <!--      &lt;!&ndash; 검색 기능 &ndash;&gt;-->
+    <!--      <div class="search-input">-->
+    <!--        <label class="hidden-text" for="text-input-example-11">검색</label>-->
+    <!--        <input-->
+    <!--          id="text-input-example-11"-->
+    <!--          class="text-input"-->
+    <!--          :value="searchLabel"-->
+    <!--          @input="onSearchText($event.target.value)"-->
+    <!--          placeholder="검색어를 입력하세요"-->
+    <!--        />-->
+    <!--        <svg-icon class="text-input-icon" name="user"></svg-icon>-->
+    <!--        <button-->
+    <!--          class="search-input-action-button button button-neutral-ghost button-sm"-->
+    <!--          type="button"-->
+    <!--          @click="onResetSearchText"-->
+    <!--        >-->
+    <!--          <span class="hidden-text">지우기</span>-->
+    <!--          <svg-icon class="button-icon" name="close"></svg-icon>-->
+    <!--        </button>-->
+    <!--      </div>-->
+    <!--    </div>-->
     <div class="menu-list">
       <tree-vue
         :items="listData"
@@ -34,6 +35,7 @@
         :use-draggable="props.useDraggable"
         :mode="props.mode"
         :dropValidator="props.dropValidator"
+        :selected-ids="selectedListDataIds"
         @onItemChecked="onNodeChecked"
         @onItemSelected="onNodeClicked"
       ></tree-vue>

@@ -1,5 +1,7 @@
 import { usePagingStore } from "~/store/common/paging";
+import { useQueryHelpers } from "~/composables/queryHelpers";
 import _ from "lodash";
+import { ref } from "vue";
 
 export const FILTER_KEYS = {
   CATEGORY: "category",
@@ -10,7 +12,6 @@ export const FILTER_KEYS = {
   DATABASE: "database.displayName.keyword",
   DATABASE_SCHEMA: "databaseSchema.displayName.keyword",
   COLUMNS: "columns.name.keyword",
-  TABLE_TYPE: "tableType",
 } as const;
 
 export interface Filter {
@@ -27,27 +28,12 @@ export interface Filters {
   [FILTER_KEYS.DATABASE]: Filter;
   [FILTER_KEYS.DATABASE_SCHEMA]: Filter;
   [FILTER_KEYS.COLUMNS]: Filter;
-  [FILTER_KEYS.TABLE_TYPE]: Filter;
 
   [key: string]: Filter; // 인덱스 시그니처 추가
 }
 
 export interface SelectedFilters {
   [key: string]: string[];
-}
-
-interface SingleKeyObj {
-  [key: string]: Ref<string>;
-}
-
-interface KeyObj {
-  term: SingleKeyObj;
-}
-
-interface BoolObj {
-  bool: {
-    should: any[];
-  };
 }
 
 export interface QueryFilter {
@@ -58,11 +44,18 @@ export interface QueryFilter {
   };
 }
 
+export interface SearchResultLength {
+  table: number;
+  storage: number;
+  model: number;
+}
+
 export const useSearchCommonStore = defineStore("searchCommon", () => {
   const { $api } = useNuxtApp();
   const pagingStore = usePagingStore();
   const { setFrom, updateIntersectionHandler } = pagingStore;
   const { from, size } = storeToRefs(pagingStore);
+  const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
 
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
@@ -75,7 +68,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       [FILTER_KEYS.DATABASE]: { text: "데이터베이스", data: [] },
       [FILTER_KEYS.DATABASE_SCHEMA]: { text: "스키마", data: [] },
       [FILTER_KEYS.COLUMNS]: { text: "컬럼", data: [] },
-      [FILTER_KEYS.TABLE_TYPE]: { text: "테이블타입", data: [] },
     };
   };
   // filter 정보
@@ -89,14 +81,18 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       },
     },
   });
+  const selectedFilterItems: Ref<any> = ref([]);
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
 
   // DATA
   const viewType: Ref<string> = ref<string>("listView");
   const isShowPreview: Ref<boolean> = ref<boolean>(false);
   const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
-  const searchResultLength: Ref<number> = ref<number>(0);
-
+  const searchResultLength: Ref<SearchResultLength> = ref<SearchResultLength>({
+    model: 0,
+    table: 0,
+    storage: 0,
+  });
   // List Query data
   let searchKeyword: string = "";
   const sortKey: Ref<string> = ref<string>("totalVotes");
@@ -121,28 +117,28 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     };
     return new URLSearchParams(params);
   };
-  const getTrinoQuery = (queryFilter: QueryFilter) => {
-    // query 구현을 backend 에서 하려니까 코드가 너무 복잡해져서 front 에 해서 넘겨서 처리.
-    const trinoFilter: QueryFilter = {
-      query: {
-        bool: {
-          must: [{ bool: { should: [{ term: { serviceType: "trino" } }] } }],
-        },
-      },
-    };
-    const trinoMustArray = trinoFilter.query.bool.must;
-    queryFilter.query.bool.must = _.concat(
-      queryFilter.query.bool.must,
-      trinoMustArray,
-    );
-    return queryFilter;
-  };
+
   // METHODS
   const getSearchListAPI = async () => {
     const { data } = await $api(`/api/search/list?${getSearchListQuery()}`, {
       showLoader: false,
     });
-    return data;
+    // 특수문자 이슈 때문에  backend 에서 1차로 처리(일부 특수문자에 한해서) 했으나,
+    // 그외의 특수문자의 경우, backend 에서 에러를 뱉음 -> 공백으로 처리한다.
+    return (
+      data ?? {
+        data: {
+          model: [],
+          table: [],
+          storage: [],
+        },
+        totalCount: {
+          model: 0,
+          table: 0,
+          storage: 0,
+        },
+      }
+    );
   };
   /**
    * 데이터 조회 -> 누적
@@ -162,6 +158,12 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     searchResultLength.value = totalCount;
     isSearchResultNoData.value = searchResult.value.length === 0;
   };
+
+  const setEmptyFilter = () => {
+    selectedFilterItems.value = [];
+    selectedFilters.value = {};
+  };
+
   const getFilters = async () => {
     const { data } = await $api(`/api/search/filters`);
 
@@ -175,39 +177,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
   const getFilter = async (filterKey: string) => {
     // TODO : 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
-    // const data = await $api(`/api/search/filter?filterKey=${filterKey}`);
-
-    const data: any = {
-      "owner.displayName.keyword": [
-        {
-          key: "N_mariadb",
-        },
-        {
-          key: "N_bigquery",
-        },
-        {
-          key: "N_mysql",
-        },
-        {
-          key: "N_glue",
-        },
-      ],
-      domains: [
-        {
-          key: "N_category1",
-        },
-        {
-          key: "N_category2",
-        },
-        {
-          key: "N_category3",
-        },
-        {
-          key: "N_category",
-        },
-      ],
-    };
-    (filters.value as Filters)[filterKey].data = data[filterKey];
+    const data = await $api(`/api/search/filter?field=${filterKey}`);
+    console.log(data);
+    (filters.value as Filters)[filterKey].data = data.data[filterKey];
   };
 
   const getPreviewData = async (fqn: string) => {
@@ -215,21 +187,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     previewData.value = data.data;
   };
 
-  const setQueryFilterByDepth = (key: string, value: any) => {
-    const setTermObj: Ref<any[]> = ref<any[]>([]);
-    const setBoolObj: Ref<BoolObj> = ref<BoolObj>({
-      bool: { should: [] },
-    });
-
-    for (const item of value) {
-      const setKeyObj: Ref<KeyObj> = ref<KeyObj>({
-        term: { [`${key}`]: ref(item) },
-      });
-
-      setTermObj.value.push(setKeyObj.value);
-    }
-    setBoolObj.value.bool.should = setTermObj.value;
-    return setBoolObj.value;
+  const getContainerPreviewData = async (id: string) => {
+    const data: any = await $api(`/api/containers/${id}`);
+    previewData.value = data.data;
   };
 
   const getCtgIds = () => {
@@ -287,6 +247,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
 
   const changeTab = (item: string) => {
+    isShowPreview.value = false;
     currentTab.value = item;
     resetReloadList();
   };
@@ -298,6 +259,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     filters,
     searchResult,
     previewData,
+    selectedFilterItems,
     selectedFilters,
     viewType,
     isShowPreview,
@@ -309,6 +271,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getFilter,
     getFilters,
     getPreviewData,
+    getContainerPreviewData,
     setSortInfo,
     setSortFilter,
     setSearchKeyword,
@@ -317,5 +280,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     updateIntersectionHandler,
     getQueryFilter,
     getTrinoQuery,
+    setEmptyFilter,
   };
 });

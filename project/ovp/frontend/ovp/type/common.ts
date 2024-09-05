@@ -3,6 +3,7 @@ export interface JsonPatchOperation {
   path: string;
   value?: string | object;
 }
+
 export interface Tag {
   description: string;
   displayName: string;
@@ -33,10 +34,12 @@ export interface PreviewData {
   modelInfo: {
     model: {
       name: string;
+      displayName?: string;
       desc: string;
       tableType?: string;
       cnt: number;
       ext?: string;
+      size?: number;
     };
     columns?: Column[];
     details?: string;

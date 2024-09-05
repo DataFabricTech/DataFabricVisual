@@ -306,7 +306,7 @@
               <ul class="menu-list">
                 <li class="menu-item">
                   <div class="checkbox checkbox-sm">
-                    <input type="checkbox" id="checkbox-menu" class="checkbox-input" />
+                    <input type="checkbox" id="checkbox-menu" class="checkbox-input" checked/>
                     <label for="checkbox-menu" class="checkbox-label">
                       <span class="checkbox-text"> Checkbox </span>
                     </label>

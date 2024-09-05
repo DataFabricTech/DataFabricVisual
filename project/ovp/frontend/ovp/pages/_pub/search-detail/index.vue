@@ -398,13 +398,11 @@
                 <svg-icon class="button-icon" name="close"></svg-icon>
               </button>
             </div>
-            <!--  TODO: [퍼블리싱] ag-grid 개발 후 스타일 적용 예정 -->
             <div class="profiling">
               프로파일링
             </div>
           </div>
           <!--  프로파일링 탭 끝-->
-          <!--  TODO: [퍼블리싱] 리니지, code-box,knowledge graph 개발 후 스타일 적용 예정 -->
           <!--  쿼리 탭 시작-->
           <div class="query" v-for="query in 2" :key="query">
             <div class="query-date">2024-06-07 00:00:00</div>

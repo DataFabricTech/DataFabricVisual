@@ -26,7 +26,7 @@ public class Glossaries {
         this.displayName = glossary.getDisplayName();
         this.description = glossary.getDescription();
         this.fullyQualifiedName = glossary.getFullyQualifiedName();
-        this. owner = glossary.getOwner();
+        this.owner = glossary.getOwner();
         this.tags = new ArrayList<>();
         for(Tag tag : glossary.getTags()) {
             Map<String, String> data = new HashMap<>();

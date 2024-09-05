@@ -1,0 +1,39 @@
+.type-img {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+
+  &-mariadb {
+    background-image: url("../images/storage-type_01.png");
+  }
+
+  &-mysql {
+    background-image: url("../images/storage-type_02.png");
+  }
+
+  &-postgres {
+    background-image: url("../images/storage-type_03.png");
+  }
+
+  &-oracle {
+    background-image: url("../images/storage-type_04.png");
+  }
+
+  &-minio {
+    background-image: url("../images/storage-type_06.png");
+  }
+
+  &-trino {
+    background-image: url("../images/storage-type_07.png");
+  }
+}
+
+.menu-lg {
+  .type-img {
+    width: 28px;
+    height: 28px;
+  }
+}

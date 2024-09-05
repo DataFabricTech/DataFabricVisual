@@ -52,7 +52,8 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
       const btnObj = {
         headerName: btnEl.headerText,
         field: `${BTN_FIELD_CONST}${bI}`,
-        cellRenderer: buttonRenderer
+        cellRenderer: buttonRenderer,
+        cellStyle: btnEl.cellStyle
       };
 
       if (btnEl.rendererType === "button") {
@@ -63,6 +64,7 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
             type: btnEl.type,
             icon: btnEl.icon || "",
             buttonText: btnEl.buttonText || "",
+            buttonTheme: btnEl.buttonTheme || "button-primary-lighter",
             onClickRenderer: btnEl.fn,
             onOffKeys: btnEl.type === "onOff" ? btnEl.selectedData : []
           }

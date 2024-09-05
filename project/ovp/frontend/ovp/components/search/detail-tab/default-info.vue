@@ -5,25 +5,57 @@
         <col style="width: 20%" />
         <col />
       </colgroup>
-      <tr>
+      <tr v-if="dataModelType === 'table'">
         <th>유형</th>
-        <td>{{ modelInfo.type }}</td>
+        <td>테이블</td>
       </tr>
-      <tr>
-        <th>Columns</th>
-        <td>{{ modelInfo.columnsLength }}</td>
+      <tr v-else-if="dataModelType === 'model'">
+        <th>유형</th>
+        <td>융합모델</td>
       </tr>
-      <tr>
-        <th>Rows</th>
-        <td>{{ modelInfo.totalCount }}</td>
-      </tr>
+      <template v-else-if="dataModelType === 'storage'">
+        <tr>
+          <th>유형</th>
+          <td>스토리지</td>
+        </tr>
+        <tr>
+          <th>확장자</th>
+          <td>{{ defaultInfo.modelInfo.model.ext?.toUpperCase() }}</td>
+        </tr>
+      </template>
       <tr>
         <th>태그</th>
         <td class="py-0">
-          <div class="editable-group" v-if="!editTagsMode">
-            <div class="tag tag-primary tag-sm" v-for="tag in modelInfo.tags">
-              <span class="tag-text">{{ tag.label }}</span>
-            </div>
+          <div
+            class="editable-group"
+            v-show="!user.admin && dataModel.owner?.id !== user.id"
+          >
+            <template v-if="mdoelTagList.length > 0">
+              <div v-for="tag in mdoelTagList">
+                <span>{{ tag.displayName }}</span>
+              </div>
+            </template>
+            <template v-else>
+              <div>
+                <span>-</span>
+              </div>
+            </template>
+          </div>
+          <div
+            class="editable-group"
+            v-if="!editTagsMode"
+            v-show="dataModel.owner?.id === user.id || user.admin"
+          >
+            <template v-if="mdoelTagList.length > 0">
+              <div class="tag tag-primary tag-sm" v-for="tag in mdoelTagList">
+                <span class="tag-text">{{ tag.displayName }}</span>
+              </div>
+            </template>
+            <template v-else>
+              <div>
+                <span>-</span>
+              </div>
+            </template>
             <button
               class="button button-neutral-ghost button-sm"
               type="button"
@@ -34,44 +66,59 @@
             </button>
           </div>
           <div class="editable-group" v-if="editTagsMode">
-            <div class="select select-clean">
-              <button class="select-button" @click.stop="editTags">
-                <div
-                  class="tag tag-primary tag-sm"
-                  v-for="tag in modelInfo.tags"
-                >
-                  <span class="tag-text">{{ tag.label }}</span>
-                  <button
-                    class="tag-delete-button"
-                    @click.stop="deleteTag(tag)"
-                  >
-                    <span class="hidden-text">삭제</span>
-                    <svg-icon class="svg-icon" name="close"></svg-icon>
-                  </button>
-                </div>
-                <svg-icon
-                  class="svg-icon select-indicator"
-                  name="chevron-down-medium"
-                ></svg-icon>
-              </button>
-              <menu-search
-                :data="tags"
-                :selected-items="modelInfo.tags"
-                :is-multi="true"
-                @multiple-change="changeTags"
-                @cancel="editTags"
-              ></menu-search>
-            </div>
+            <menu-search-tag
+              :data="tagList"
+              :selected-items="mdoelTagList"
+              label-key="displayName"
+              value-key="tagFQN"
+              :is-multi="true"
+              title="값을 선택하세요"
+              @multiple-change="changeTags"
+              @cancel="editTags"
+              @close="editTagsMode = false"
+            ></menu-search-tag>
           </div>
         </td>
       </tr>
       <tr>
         <th>용어</th>
         <td class="py-0">
-          <div class="editable-group" v-if="!editTermsMode">
-            <div class="tag tag-primary tag-sm" v-for="term in modelInfo.terms">
-              <span class="tag-text">{{ term.label }}</span>
-            </div>
+          <div
+            class="editable-group"
+            v-show="!user.admin && dataModel.owner?.id !== user.id"
+          >
+            <template v-if="dataModel.terms?.length > 0">
+              <div
+                class="tag tag-primary tag-sm"
+                v-for="term in dataModel.terms"
+              >
+                <span class="tag-text">{{ term.displayName }}</span>
+              </div>
+            </template>
+            <template v-else>
+              <div>
+                <span>-</span>
+              </div>
+            </template>
+          </div>
+          <div
+            class="editable-group"
+            v-if="!editTermsMode"
+            v-show="dataModel.owner?.id === user.id || user.admin"
+          >
+            <template v-if="dataModel.terms?.length > 0">
+              <div
+                class="tag tag-primary tag-sm"
+                v-for="term in dataModel.terms"
+              >
+                <span class="tag-text">{{ term.displayName }}</span>
+              </div>
+            </template>
+            <template v-else>
+              <div>
+                <span>-</span>
+              </div>
+            </template>
             <button
               class="button button-neutral-ghost button-sm"
               type="button"
@@ -82,34 +129,17 @@
             </button>
           </div>
           <div class="editable-group" v-if="editTermsMode">
-            <div class="select select-clean">
-              <button class="select-button" @click.stop="editTerms">
-                <div
-                  class="tag tag-primary tag-sm"
-                  v-for="term in modelInfo.terms"
-                >
-                  <span class="tag-text">{{ term.label }}</span>
-                  <button
-                    class="tag-delete-button"
-                    @click.stop="deleteTerm(term)"
-                  >
-                    <span class="hidden-text">삭제</span>
-                    <svg-icon class="svg-icon" name="close"></svg-icon>
-                  </button>
-                </div>
-                <svg-icon
-                  class="svg-icon select-indicator"
-                  name="chevron-down-medium"
-                ></svg-icon>
-              </button>
-              <menu-search
-                :data="terms"
-                :selected-items="modelInfo.terms"
-                :is-multi="true"
-                @multiple-change="changeTerms"
-                @cancel="editTerms"
-              ></menu-search>
-            </div>
+            <menu-search-tag
+              :data="termList"
+              :selected-items="dataModel.terms"
+              label-key="displayName"
+              value-key="tagFQN"
+              :is-multi="true"
+              title="값을 선택하세요"
+              @multiple-change="changeTerms"
+              @cancel="editTags"
+              @close="editTags"
+            ></menu-search-tag>
           </div>
         </td>
       </tr>
@@ -118,65 +148,75 @@
 </template>
 
 <script setup lang="ts">
-import menuSearch from "@extends/menu-seach/menu-search.vue";
+import _ from "lodash";
+
+import { useDataModelDetailStore } from "@/store/search/detail/index";
+import { useUserStore } from "@/store/user/userStore";
+
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
-const modelInfo = reactive({
-  type: "Regular",
-  columnsLength: 7,
-  totalCount: 10,
-  tags: [
-    { label: "tag 03", value: "tag 03" },
-    { label: "tag 04", value: "tag 04" },
-  ],
-  terms: [
-    { label: "term 01", value: "term 01" },
-    { label: "term 04", value: "term 04" },
-    { label: "term 05", value: "term 05" },
-  ],
-});
+import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
+
+import type { ComputedRef } from "vue";
+
+const dataModelDetailStore = useDataModelDetailStore();
+const userStore = useUserStore();
+
+const { getTagList, getGlossaryList, getDataModel, changeTag } =
+  dataModelDetailStore;
+const { dataModelType, tagList, termList, dataModel, defaultInfo } =
+  storeToRefs(dataModelDetailStore);
+
+const { user } = storeToRefs(userStore);
+
 const editTagsMode = ref(false);
 const editTermsMode = ref(false);
-const editTags = () => {
+
+const mdoelTagList: ComputedRef<any[]> = computed(() => {
+  return _.filter(dataModel.value.tags, (tag) => {
+    return !_.includes(tag.tagFQN, "ovp_category");
+  });
+});
+
+const editTags = async () => {
   editTagsMode.value = !editTagsMode.value;
+
+  if (editTagsMode.value) {
+    await getTagList();
+  }
 };
 
-const editTerms = () => {
+const editTerms = async () => {
   editTermsMode.value = !editTermsMode.value;
-};
-const deleteTag = (tag: object) => {
-  const index = modelInfo.tags.indexOf(tag);
-  if (index !== -1) {
-    modelInfo.tags.splice(index, 1);
+
+  if (editTermsMode.value) {
+    await getGlossaryList();
   }
 };
-const deleteTerm = (term: object) => {
-  const index = modelInfo.terms.indexOf(term);
-  if (index !== -1) {
-    modelInfo.terms.splice(index, 1);
-  }
+
+const changeTags = (value: MenuSearchItemImpl[]) => {
+  const data: any = _.map(value, "tagFQN");
+  changeTag("Classification", false, data)
+    .then(() => {
+      editTagsMode.value = false;
+      getDataModel();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
-const changeTags = (val: MenuSearchItemImpl[]) => {
-  modelInfo.tags = [...val];
-  editTags();
+
+const changeTerms = (value: MenuSearchItemImpl[]) => {
+  const data: any = _.map(value, "tagFQN");
+
+  changeTag("Glossary", false, data)
+    .then(() => {
+      editTermsMode.value = false;
+      getDataModel();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
-const changeTerms = (val: MenuSearchItemImpl[]) => {
-  modelInfo.terms = [...val];
-  editTerms();
-};
-const tags = [
-  { label: "tag 01", value: "tag 01" },
-  { label: "tag 02", value: "tag 02" },
-  { label: "tag 03", value: "tag 03" },
-  { label: "tag 04", value: "tag 04" },
-  { label: "tag 05", value: "tag 05" },
-];
-const terms = [
-  { label: "term 01", value: "term 01" },
-  { label: "term 02", value: "term 02" },
-  { label: "term 03", value: "term 03" },
-  { label: "term 04", value: "term 04" },
-  { label: "term 05", value: "term 05" },
-];
 </script>
 
 <style lang="scss" scoped></style>

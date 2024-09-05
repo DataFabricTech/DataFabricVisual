@@ -3,14 +3,16 @@
     <detail-default />
     <resource-box
       class="resource-box-full"
-      :data-obj="resourceBoxObj"
+      :data-obj="dataModel"
       :use-fir-model-nm="true"
-      :use-data-nm-link="true"
+      :use-data-nm-link="false"
       :show-owner="true"
       :show-category="true"
       :editable="true"
-      :filters="filters"
-      :owner-key="FILTER_KEYS.OWNER"
+      :user-list="userList"
+      owner-key="id"
+      :user="user"
+      :category-list="categoryList"
       :category-key="FILTER_KEYS.CATEGORY"
       @editIconClick="editIconClick"
       @editDone="editDone"
@@ -33,7 +35,16 @@
 
 <script setup lang="ts">
 import _ from "lodash";
+
 import { ref, shallowRef } from "vue";
+import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+
+import { useDataModelDetailStore } from "@/store/search/detail/index";
+import { useLineageStore } from "@/store/search/detail/lineage/index";
+import { useSearchCommonStore } from "@/store/search/common";
+import { useUserStore } from "@/store/user/userStore";
+
 import Tab from "@extends/tab/Tab.vue";
 import ResourceBox from "@/components/common/resource-box/resource-box.vue";
 import DetailDefault from "@/components/search/detail-default.vue";
@@ -45,69 +56,148 @@ import Query from "@/components/search/detail-tab/query.vue";
 import Lineage from "@/components/search/detail-tab/lineage.vue";
 import KnowledgeGraph from "@/components/search/detail-tab/knowledge-graph.vue";
 import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
-import { useSearchCommonStore } from "~/store/search/common";
-import { storeToRefs } from "pinia";
 
+import { FILTER_KEYS } from "@/store/search/common";
+
+const route = useRoute();
+const router = useRouter();
+
+const dataModelDetailStore = useDataModelDetailStore();
+const lineageStore = useLineageStore();
 const searchCommonStore = useSearchCommonStore();
-const { getFilter } = searchCommonStore;
-const { filters } = storeToRefs(searchCommonStore);
-import { FILTER_KEYS } from "~/store/search/common";
+const userStore = useUserStore();
 
-// tabfilter 객체 정의 (예시로 tables 값을 포함)
-const tabfilter = ref({ tables: true });
+const { dataModelType, userList, categoryList, dataModel } =
+  storeToRefs(dataModelDetailStore);
+
+const {
+  getUserList,
+  getCategoryList,
+  getCategoryAllList,
+  getDataModelFqn,
+  setDataModelId,
+  setDataModelFqn,
+  setDataModelType,
+  getDataModel,
+  getDefaultInfo,
+  getSchema,
+  getSampleData,
+  getProfile,
+  getQuery,
+  changeDataModel,
+} = dataModelDetailStore;
+
+const { getLineageData } = lineageStore;
+
+const { getFilters } = searchCommonStore;
+
+const { user } = storeToRefs(userStore);
 
 // computed 속성으로 filteredTabs 정의
 const filteredTabs = computed(() => {
-  if (tabfilter.value.tables) {
+  if (route.query.type !== "storage") {
     // tables가 true이면 모든 탭 옵션을 반환
     return tabOptions;
   } else {
     // tables가 false이면 기본정보, 데이터 리니지, Knowledge graph, 추천 데이터 모델 탭만 반환
-    const includedValues = [1, 6, 7, 8];
+    const includedValues = [
+      "default",
+      "schema",
+      "lineage",
+      "knowledge",
+      "recommended",
+    ];
     return tabOptions.filter((option) => includedValues.includes(option.value));
   }
 });
 
 const tabOptions = [
-  { label: "기본정보", value: 1, component: DefaultInfo },
-  { label: "스키마", value: 2, component: Schema },
-  { label: "샘플데이터", value: 3, component: Sample },
-  { label: "프로파일링", value: 4, component: Profiling },
-  { label: "쿼리", value: 5, component: Query },
-  { label: "데이터 리니지", value: 6, component: Lineage },
-  { label: "Knowledge graph", value: 7, component: KnowledgeGraph },
-  { label: "추천 데이터 모델", value: 8, component: RecommendModel },
+  { label: "기본정보", value: "default", component: DefaultInfo },
+  { label: "스키마", value: "schema", component: Schema },
+  { label: "샘플데이터", value: "sample", component: Sample },
+  { label: "프로파일링", value: "profile", component: Profiling },
+  { label: "쿼리", value: "query", component: Query },
+  { label: "데이터 리니지", value: "lineage", component: Lineage },
+  {
+    label: "연관데이터모델 시각화",
+    value: "knowledge",
+    component: KnowledgeGraph,
+  },
+  {
+    label: "추천 데이터 모델",
+    value: "recommended",
+    component: RecommendModel,
+  },
 ];
 
-const initTabValue: Ref<any> = ref(1);
-const currentTab: Ref<any> = ref(1);
+const initTabValue: Ref<any> = ref("default");
+const currentTab: Ref<any> = ref("default");
 const currentComponent: Component = shallowRef(DefaultInfo);
 
-let resourceBoxObj: any = {
-  id: "1",
-  serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
-  depth: ["1depth", "2depth", "3depth", "데이터모델"],
-  firModelNm: "최초 데이터모델 명",
-  modelNm: "세종특별자치시 상하수도요금표",
-  modelDesc:
-    "한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다",
-  "owner.displayName.keyword": "N_mariadb",
-  domain: "Domain",
-};
-
-function changeTab(item: number | string) {
-  currentTab.value = item;
-  currentComponent.value = _.find(tabOptions, ["value", item])?.component;
+async function changeTab(tab: number | string) {
+  currentTab.value = tab;
+  switch (tab) {
+    case "default":
+      await getDefaultInfo();
+      break;
+    case "schema":
+      await getSchema();
+      break;
+    case "sample":
+      await getSampleData();
+      break;
+    case "profile":
+      await getProfile();
+      break;
+    case "query":
+      alert("개발중 입니다.");
+      await getQuery();
+      break;
+    case "lineage":
+      alert("개발중 입니다.");
+      await getLineageData(dataModelType.value, getDataModelFqn());
+      // await getFilters();
+      break;
+    case "knowledge":
+      alert("개발중 입니다.");
+      break;
+    case "recommended":
+      alert("개발중 입니다.");
+      break;
+  }
+  currentComponent.value = _.find(tabOptions, ["value", tab])?.component;
 }
 
 const editIconClick = (key: string) => {
-  // TODO: [개발] 소유자 및 카테고리 목록 갱신 API 호출 필요.
-  getFilter(key);
+  if (key === "category") {
+    getCategoryList();
+    getCategoryAllList();
+  } else {
+    getUserList();
+  }
 };
-const editDone = (newData: object) => {
-  // TODO: [개발] 변경 데이터 저장한는 API 호출 필요
-  console.log(newData);
+
+const editDone = (data: any) => {
+  changeDataModel(data)
+    .then(() => {
+      getDataModel();
+    })
+    .catch((error) => {
+      console.error(error);
+    });
 };
+
+setDataModelId(route.query.id);
+setDataModelFqn(route.query.fqn);
+setDataModelType(route.query.type);
+getDataModel().then(async (data) => {
+  if (data.result === 0) {
+    // TODO: 에러페이지 추가
+    // router.push("/portal/error");
+  }
+
+  await getDefaultInfo();
+});
 </script>
 
 <style lang="scss" scoped></style>

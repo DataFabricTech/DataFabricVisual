@@ -10,63 +10,99 @@
   <div class="section-contents p-0 bg-white">
     <div class="l-split">
       <selected-model
-        @change="addDataModel"
+        :modelList="selectedModelList"
+        :dataModelFilter="filters"
+        :modelListCnt="selectedModelListCnt"
+        @change="open"
         @delete="deleteDataModel"
+        @item-click="onClickDataModelItem"
+        @bookmark-change="onClickBookmark"
       ></selected-model>
-      <excute-quary></excute-quary>
+      <execute-query
+        :query="query"
+        @execute="runQuery"
+        @reset="resetQuery"
+        @edit="editQueryText"
+      ></execute-query>
     </div>
     <div class="l-split">
-      <sample></sample>
-      <result></result>
+      <sample
+        :dataModelName="dataModelName"
+        :dataModelOwner="dataModelOwner"
+        :sampleDataList="sampleDataList"
+        :isItemClicked="isItemClicked"
+        :isColumnSelected="isColumnSelected"
+        :dataProfileList="dataProfileList"
+        :columnOptions="columnOptions"
+        @profile-show="showProfile"
+      ></sample>
+      <result
+        :querySuccess="querySuccess"
+        :executeResult="executeResult"
+        :isFirstExecute="isFirstExecute"
+        :executeResultErrMsg="executeResultErrMsg"
+      ></result>
     </div>
   </div>
   <save-model v-if="isShowSaveModel" @change="saveDataModel"></save-model>
-  <add-model
-    v-if="isShowAddModel"
-    :data-model-list="modelList"
-    :selected-model-list="selectedModelList"
-    :my-model-list="myModelList"
-    :filter="dataModelFilter"
-    @change="addDataModel"
-  ></add-model>
 </template>
 
 <script setup lang="ts">
 import selectedModel from "@/components/datamodel-creation/selected-model.vue";
-import excuteQuary from "@/components/datamodel-creation/excute-quary.vue";
+import executeQuery from "@/components/datamodel-creation/execute-query.vue";
 import sample from "@/components/datamodel-creation/sample.vue";
 import result from "@/components/datamodel-creation/result.vue";
 import addModel from "@/components/datamodel-creation/modal/add.vue";
 import saveModel from "@/components/datamodel-creation/modal/save.vue";
 import { useCreationStore } from "~/store/datamodel-creation/index";
+import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
+import { storeToRefs } from "pinia";
+import { useModal } from "vue-final-modal";
 
 const isShowSaveModel = ref(false);
-const isShowAddModel = ref(false);
 
 const saveDataModel = (param: boolean) => {
   isShowSaveModel.value = param;
 };
 
-const addDataModel = (param: boolean) => {
-  isShowAddModel.value = param;
-};
+const { open, close } = useModal({
+  component: addModel,
+  attrs: {
+    onClose() {
+      close();
+    },
+  },
+});
 
 const creationStore = useCreationStore();
-const { modelList, dataModelFilter, selectedModelList, myModelList } =
-  storeToRefs(creationStore);
 const {
-  setDataModelFilter,
-  setDataModelList,
+  query,
+  isFirstExecute,
+  querySuccess,
+  executeResult,
+  executeResultErrMsg,
+  isItemClicked,
+  isColumnSelected,
+  dataModelName,
+  dataModelOwner,
+  sampleDataList,
+  columnOptions,
+  dataProfileList,
+} = storeToRefs(creationStore);
+const {
   deleteDataModel,
-  setSelectedModelList,
-  setMyModelList,
+  onClickDataModelItem,
+  runQuery,
+  resetQuery,
+  editQueryText,
+  showProfile,
 } = creationStore;
 
-// 데이터 목록, 필터 목록, 선택 필터 초기화
-setDataModelFilter();
-setDataModelList();
-setMyModelList();
-setSelectedModelList();
+// 탐색 > 데이터 모델 조회 Store
+const dataModelSearchStore = useDataModelSearchStore();
+const { filters, selectedModelList, selectedModelListCnt } =
+  storeToRefs(dataModelSearchStore);
+const { onClickBookmark } = dataModelSearchStore;
 </script>
 
 <style scoped></style>

@@ -6,78 +6,6 @@
   &:has(.work-contents) {
     height: calc(100% - 48px);
   }
-
-  .work-list {
-    width: 310px;
-    flex: 0 0 310px;
-    border-right: 1px solid $neutral-200;
-
-    .menu-data {
-      height: calc(100% - 49px);
-    }
-
-    .tab-line {
-      width: 100%;
-      height: 100%;
-    }
-
-    .tab-button-text {
-      @include font-size('14');
-    }
-
-    .tab-contents {
-      display: flex;
-      flex-direction: column;
-      height: calc(100% - 46px);
-      padding: $spacing-8 0 0 0;
-    }
-  }
-
-  .work-page {
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-
-    .code-box {
-      overflow: auto;
-      flex-grow: 1;
-    }
-  }
-
-  .work-list,
-  .work-page {
-    .l-top-bar {
-      border-bottom: 1px solid $neutral-200;
-
-      .menu-data-icon {
-        @include icon-size('lg');
-      }
-
-      .service-title {
-        @extend .editable-group-title;
-      }
-    }
-  }
-
-  .work-contents {
-    @include flex($direction: column, $vertical: null, $horizontal: null);
-    height: 100%;
-    overflow: auto;
-    gap: $spacing-32;
-    padding: $spacing-16;
-
-    .l-top-bar {
-      @include flex($vertical: flex-start, $direction: column);
-      gap: $spacing-8;
-      padding: 0;
-      border: 0;
-    }
-
-    .l-resource-box {
-      height: 894px;
-    }
-  }
 }
 
 .section-contents:has(.work-list + .work-page) {
@@ -85,6 +13,7 @@
     height: calc(100% - 48px);
   }
 
+  // 4개 레이아웃 (데이터 생성)
   &:has(.l-split + .l-split) {
     .l-split:nth-child(1) {
       height: 60%;
@@ -103,6 +32,7 @@
 
   .l-split {
     gap: $spacing-16;
+    width: calc(100% - 16px);
   }
 }
 
@@ -113,6 +43,7 @@
 
 .l-top-bar {
   @include flex($horizontal: space-between);
+
   width: 100%;
   min-height: 48px;
   flex-shrink: 0;
@@ -122,6 +53,17 @@
     flex-grow: 1;
     height: calc(100% - 60px);
   }
+
+  .title {
+    @include font-size('16');
+
+    font-weight: 600;
+    color: $neutral-800;
+  }
+}
+
+.tab-line + .l-top-bar + .l-split {
+  height: calc(100% - 105px);
 }
 
 .l-sidebar {
@@ -132,5 +74,15 @@
   height: 100%;
 }
 
+// 검색결과 공통
+.search-result {
+  @include font-size('15');
+  color: $neutral-700;
+
+  &-num {
+    font-weight: 600;
+    color: $primary-500;
+  }
+}
 
 

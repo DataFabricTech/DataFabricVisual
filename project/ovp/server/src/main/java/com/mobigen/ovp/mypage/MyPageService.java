@@ -24,6 +24,7 @@ import java.util.Optional;
 public class MyPageService {
     private final MyPageClient myPageClient;
     private final UserService userService;
+    private final UserRepository userRepository;
 
     /**
      * 사용자 정보 조회
@@ -43,7 +44,20 @@ public class MyPageService {
         newUserInfo.put("id", id);
         newUserInfo.put("description", openMetaUserInfo.get("description"));
         newUserInfo.put("displayName", openMetaUserInfo.get("displayName"));
-        newUserInfo.put("email", openMetaUserInfo.get("email"));
+        newUserInfo.put("name", openMetaUserInfo.get("name"));
+
+        // NOTE: backend에서 email이 마스킹 처리가 되서 DB에서 email 조회 후 데이터를 추가한다.
+        Optional<UserEntity> userInfo = userRepository.findById(id);
+        String email = "";
+
+        if (userInfo.isPresent()) {
+            UserEntity user = userInfo.get();
+            email = user.getEmail();
+        } else {
+            throw new RuntimeException("User not found with id " + fqn);
+        }
+
+        newUserInfo.put("email", email.replace("openmetadata.org", "mobigen.com"));
         newUserInfo.put("isAdmin", openMetaUserInfo.get("isAdmin"));
 
         Optional<UserEntity> dbUserinfo = (Optional<UserEntity>) userService.getUserInfo(id);

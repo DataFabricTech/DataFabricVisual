@@ -24,10 +24,10 @@ public class OpenFeignConfig {
     @Bean
     public RequestInterceptor globalRequestInterceptor() {
         return requestTemplate -> {
-            log.info("OpenFeign Interceptor {}", requestTemplate.url());
+            log.debug("OpenFeign Interceptor {}", requestTemplate.url());
             // 헤더에 Authorization 값이 없다면 강제 주입
             if (!requestTemplate.headers().containsKey("Authorization")) {
-                log.info("Request header Authorization not found.");
+                log.debug("Request header Authorization not found.");
 
                 ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
                 if (attrs != null) {

@@ -50,8 +50,7 @@ table,
   }
 
   .button-group {
-    @include flex();
-    gap: $spacing-16;
+    @include flex($gap: $spacing-16);
 
     .button {
       position: relative;
@@ -84,5 +83,39 @@ table,
 
   td {
     word-break: break-all;
+  }
+}
+
+.table-fixed {
+  border-top-width: 0px;
+
+  thead {
+    @include z-index('float');
+
+    position: sticky;
+    top: 0;
+
+    th {
+      position: relative;
+      border-bottom-width: 0px;
+
+      &::before,
+      &::after {
+        position: absolute;
+        content: '';
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: $neutral-200;
+      }
+
+      &::before {
+        top: 0;
+      }
+
+      &::after {
+        bottom: 0;
+      }
+    }
   }
 }

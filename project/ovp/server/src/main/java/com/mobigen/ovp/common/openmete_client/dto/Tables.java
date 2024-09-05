@@ -6,12 +6,20 @@ import java.util.List;
 
 @Data
 public class Tables {
-    private String id;
-    private String fullyQualifiedName;
-    private String name;
-    private String description;
-    private Owner owner;
-    private List<?> followers;
-    private Votes votes;
-    private List<Columns> columns;
+    String id;
+    String fullyQualifiedName;
+    String name;
+    String displayName;
+    String description;
+    Owner owner;
+    String serviceType;
+    List<Followers> followers;
+    Votes votes;
+    List<Columns> columns;
+    Service service;
+    Entity entity;
+    List<Tag> tags;
+    // NOTE: Containers 전용(Storage)
+    String prefix;
+    StorageColumn dataModel;
 }

@@ -3,6 +3,7 @@ package com.mobigen.ovp.auth;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +15,7 @@ import java.util.Map;
 
 @FeignClient(name = "AuthClient", url = "${properties.ovp.open-metadata-url}")
 public interface AuthClient {
+
     @PostMapping("/users/login")
     Map<String, Object> login(@RequestBody Map<String, Object> params) throws Exception;
 

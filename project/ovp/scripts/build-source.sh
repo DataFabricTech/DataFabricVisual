@@ -8,7 +8,7 @@ baseDir=$(pwd)
 source scripts/env.sh
 
 srcDir=$baseDir/server
-frontDir=$baseDir/frontend
+frontDir=$baseDir/frontend/ovp
 distDir=$baseDir/dist-source
 
 # Node 버전 확인
@@ -60,8 +60,6 @@ function checkJava() {
 }
 
 
-
-
 function clear() {
     echo "========================================================="
     echo "## Source Clear"
@@ -81,7 +79,7 @@ function buildJS() {
     echo '-source build - JavaScript'
     cd ${frontDir}
     npm i --legacy-peer-deps
-    npm run build
+    npm run generate # nuxt3에서 generate 옵션이 사라져서 해당 명령어로 실행
     cd ${baseDir}
 }
 

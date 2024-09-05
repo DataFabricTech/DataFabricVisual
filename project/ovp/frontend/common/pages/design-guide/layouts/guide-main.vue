@@ -27,6 +27,7 @@
     <guide-toggle-switch id="guide-toggle-switch" />
     <guide-toggle-switch id="guide-toggle-switch" />
     <guide-upload id="guide-upload" />
+    <guide-tooltip id="guide-tooltip" />
   </main>
 </template>
 
@@ -57,7 +58,7 @@ import GuideToggleButton from "../pages/guide-toggle-button.vue";
 import GuideToggleSwitch from "../pages/guide-toggle-switch.vue";
 import GuideProgressbar from "../pages/guide-progressbar.vue";
 import GuideUpload from "../pages/guide-upload.vue";
-
+import GuideTooltip from "../pages/guide-tooltip.vue";
 </script>
 
 <style scoped></style>

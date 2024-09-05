@@ -1,3 +1,24 @@
+// -------------------------------------------
+//  font-face
+// ------------------------------------------
+@mixin font-face($family, $file, $weight: normal, $style: normal) {
+  @font-face {
+    font-family: $family;
+    font-weight: $weight;
+    font-style: $style;
+    src: url('#{$file}.eot');
+    src: url('#{$file}.eot?#iefix') format('embedded-opentype'),
+    url('#{$file}.woff2') format('woff2'),
+    url('#{$file}.woff') format('woff'),
+    url('#{$file}.ttf') format('truetype');
+    font-display: swap;
+  }
+}
+
+
+// -------------------------------------------
+//  font-family
+// ------------------------------------------
 $font-families: (
         pretendard:
         unquote(
@@ -22,18 +43,6 @@ $font-families: (
 //   @include font-family('sans');
 // }
 
-// TODO: [퍼블리싱] 믹스인/변수 재정의 및 리팩토링
-// -------------------------------------------
-//  Heading
-// ------------------------------------------
-// heading size : 40px,32px,24px
-
-// @mixin heading($size) {
-//  font-size: $size;
-//  line-height: 1.2;
-//  font-weight: 700;
-// }
-
 // -------------------------------------------
 //  font-size + line-height
 // ------------------------------------------
@@ -55,8 +64,11 @@ $font-families: (
   @if map-has-key($font-size, $size) {
     $properties: map-get($font-size, $size);
 
-    font-size: map-get($properties, font-size);
-    line-height: map-get($properties, line-height);
+    & {
+      font-size: map-get($properties, font-size);
+      line-height: map-get($properties, line-height);
+    }
+
   } @else {
     @warn '지정된 폰트 크기가 아닙니다. 다시 한번 확인해주세요.';
   }

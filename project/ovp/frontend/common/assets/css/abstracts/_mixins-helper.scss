@@ -5,12 +5,17 @@
   $display: flex,
   $vertical: center,
   $horizontal: center,
-  $direction: null
+  $direction: null,
+  $gap: null
 ) {
   display: $display;
   align-items: $vertical;
   justify-content: $horizontal;
   flex-direction: $direction;
+
+  @if $gap != null {
+    gap: $gap;
+  }
 }
 
 // -------------------------------------------
@@ -72,6 +77,18 @@
   height: 0;
   font-size: 0;
   line-height: 0;
+}
+
+// -------------------------------------------
+// scroll 숨김
+// -------------------------------------------
+@mixin scroll-hidden {
+  -ms-overflow-style: none;  /* Internet Explorer and Edge */
+  scrollbar-width: none;  /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none; /* (Chrome, Safari) */
+  }
 }
 
 // -------------------------------------------

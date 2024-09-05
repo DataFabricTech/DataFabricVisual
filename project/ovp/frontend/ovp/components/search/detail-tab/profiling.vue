@@ -23,35 +23,13 @@
         <agGrid
           class="ag-theme-alpine ag-theme-quartz"
           :columnDefs="COLUMN_DEFS"
-          :rowData="rowData"
+          :rowData="profileList"
           rowId="id"
           :column-width-list="[100, 100, 100, 100, 100, 100]"
           :setColumnFit="true"
           :useColumnResize="true"
           :quickFilterText="keyword"
-          :column-render="{
-            null: {
-              type: 'html',
-              fn: (val: any) => {
-                return `
-    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
-              },
-            },
-            unique: {
-              type: 'html',
-              fn: (val: any) => {
-                return `
-    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
-              },
-            },
-            distinct: {
-              type: 'html',
-              fn: (val: any) => {
-                return `
-    <div class='progressbar-group'><span class='progressbar-text'>${val}%</span><progress id='bar-gage-02' class='progressbar progressbar-sm progressbar-major' value=${val} max='100'></progress></div>`;
-              },
-            },
-          }"
+          :column-render="$constants.COMMON.DATA_PROFILE_RENDER"
         >
         </agGrid>
       </div>
@@ -60,136 +38,21 @@
 </template>
 
 <script setup lang="ts">
+import { storeToRefs } from "pinia";
 import agGrid from "@extends/grid/Grid.vue";
 import type { ColDef } from "ag-grid-community";
+import { useDataModelDetailStore } from "@/store/search/detail/index";
+import $constants from "~/utils/constant";
+
+const dataModelDetailStore = useDataModelDetailStore();
+
+const { profileList } = storeToRefs(dataModelDetailStore);
 
 const keyword = ref("");
 const clearInput = (): void => {
   keyword.value = "";
 };
 
-const COLUMN_DEFS: ColDef[] = [
-  { headerName: "NAME", field: "name", sortable: true },
-  { headerName: "DATA TYPE", field: "data_type", sortable: true },
-  { headerName: "NULL %", field: "null", sortable: true },
-  { headerName: "UNIQUE %", field: "unique", sortable: true },
-  { headerName: "DISTINCT %", field: "distinct", sortable: true },
-  { headerName: "VALUE COUNT", field: "value_count", sortable: true },
-];
-
-const rowData = ref([
-  {
-    name: "요일번호",
-    data_type: "integer",
-    null: 30,
-    unique: 35000,
-    distinct: 100,
-    value_count: 100,
-  },
-  {
-    name: "연월",
-    data_type: "integer",
-    null: 20,
-    unique: 35,
-    distinct: 66,
-    value_count: 100,
-  },
-  {
-    name: "역번호",
-    data_type: "integer",
-    null: 80,
-    unique: 87,
-    distinct: 45,
-    value_count: 100,
-  },
-  {
-    name: "역명",
-    data_type: "integer",
-    null: 100,
-    unique: 23,
-    distinct: 9,
-    value_count: 100,
-  },
-  {
-    name: "구분",
-    data_type: "integer",
-    null: 50,
-    unique: 76,
-    distinct: 45,
-    value_count: 100,
-  },
-  {
-    name: "선불카드_어른",
-    data_type: "real",
-    null: 60,
-    unique: 33,
-    distinct: 12,
-    value_count: 54,
-  },
-  {
-    name: "선불카드_청소년",
-    data_type: "real",
-    null: 37,
-    unique: 78,
-    distinct: 100,
-    value_count: 100,
-  },
-  {
-    name: "요일번호",
-    data_type: "integer",
-    null: 30,
-    unique: 35000,
-    distinct: 100,
-    value_count: 100,
-  },
-  {
-    name: "연월",
-    data_type: "integer",
-    null: 20,
-    unique: 35,
-    distinct: 66,
-    value_count: 100,
-  },
-  {
-    name: "역번호",
-    data_type: "integer",
-    null: 80,
-    unique: 87,
-    distinct: 45,
-    value_count: 100,
-  },
-  {
-    name: "역명",
-    data_type: "integer",
-    null: 100,
-    unique: 23,
-    distinct: 9,
-    value_count: 100,
-  },
-  {
-    name: "구분",
-    data_type: "integer",
-    null: 50,
-    unique: 76,
-    distinct: 45,
-    value_count: 100,
-  },
-  {
-    name: "선불카드_어른",
-    data_type: "real",
-    null: 60,
-    unique: 33,
-    distinct: 12,
-    value_count: 54,
-  },
-  {
-    name: "선불카드_청소년",
-    data_type: "real",
-    null: 37,
-    unique: 78,
-    distinct: 100,
-    value_count: 100,
-  },
-]);
+const COLUMN_DEFS: ColDef[] = $constants.COMMON.DATA_PROFILE_COLUMN;
 </script>
 <style lang="scss" scoped></style>

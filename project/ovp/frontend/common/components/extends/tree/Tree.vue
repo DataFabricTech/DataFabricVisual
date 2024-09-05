@@ -1,5 +1,5 @@
 <template>
-  <div :class="props.class" class="tree">
+  <div :class="[props.class, props.compId, 'tree']" v-if="showTree">
     <div class="tree-top-buttons">
       <button v-if="showOpenAllBtn" class="button button-neutral-stroke button-sm" type="button" @click="openAll">
         <span class="button-title">전체 열기</span>
@@ -18,9 +18,14 @@
       @dropValidator="dropValidatorHandler"
       @onSelect="onItemSelected"
     >
-
-      <template v-if="mode === 'edit'" v-slot:item-append="treeViewItem">
-        <div class="tree-item-buttons">
+      <template v-slot:item-append="treeViewItem">
+        <div
+          :class="{
+            'node-disabled': props.disabledIds.length > 0 && props.disabledIds.includes(treeViewItem.id),
+            'node-fir-selected': props.selectedIds.length > 0 && props.selectedIds.includes(treeViewItem.id)
+          }"
+        ></div>
+        <div v-if="mode === 'edit' && !props.immutableItems.includes(treeViewItem.id)" class="tree-item-buttons">
           <button class="button button-neutral-ghost button-sm" type="button" @click="addSibling(treeViewItem)">
             <span class="button-title">추가</span>
           </button>
@@ -39,6 +44,7 @@ import "vue3-tree-vue/dist/style.css";
 
 import { TreeProps, TreeViewItem } from "./TreeProps";
 import { TreeComposition } from "./TreeComposition";
+
 const props = withDefaults(defineProps<TreeProps>(), {
   mode: "view",
   isCheckable: false,
@@ -46,7 +52,12 @@ const props = withDefaults(defineProps<TreeProps>(), {
   showOpenAllBtn: false,
   showCloseAllBtn: false,
   firExpandAll: false,
-  checkedIds: () => []
+  checkedIds: () => [],
+  disabledIds: () => [],
+  selectedIds: () => [],
+  useFirSelect: true,
+  compId: "treeComponent",
+  immutableItems: () => []
 });
 
 const emit = defineEmits<{
@@ -77,10 +88,9 @@ onMounted(() => {
   }
 });
 
-const { treeItems, createNewTreeItem, openAll, closeAll, dropValidatorHandler } = TreeComposition(props);
+const { showTree, treeItems, createNewTreeItem, openAll, closeAll, dropValidatorHandler } = TreeComposition(props);
 </script>
 
 <style lang="scss">
 /* @import "./index.scss"; */
-
 </style>

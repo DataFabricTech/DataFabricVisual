@@ -9,6 +9,7 @@
 
   &-item {
     flex: 1 1 100%;
+    border-radius: 0;
     border: 1px solid $neutral-200;
     border-bottom-color: $primary-500;
 
@@ -111,6 +112,7 @@
       }
 
       &-text {
+        @include font-size('14');
         font-weight: 400;
       }
 
@@ -121,6 +123,7 @@
 
       &-count {
         @include flex($direction: column);
+
         height: $spacing-20;
         padding: 0 $spacing-6;
         border-radius: 50%;

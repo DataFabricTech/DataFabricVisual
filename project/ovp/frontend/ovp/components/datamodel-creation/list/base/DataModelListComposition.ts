@@ -11,14 +11,15 @@ export interface DataModelListCompositionImpl
   searchLabel: Ref<string>;
   checkShowListData: ComputedRef<boolean>;
   setSearchFilter(): void;
+  setListData(): void;
 }
 
 export function DataModelListComposition(
   props: DataModelListProps,
   emitBookmark: (value: string) => void,
   emitItemClick: (value: string) => void,
-  emitDeleteItem: (value: string) => void,
-  emitCheckItem: (value: string) => void,
+  emitDeleteItem: (value: any[]) => void,
+  emitCheckItem: (value: any[]) => void,
 ): DataModelListCompositionImpl {
   const listData: Ref<any[]> = ref([]);
   const setListData: () => void = () => {
@@ -44,14 +45,6 @@ export function DataModelListComposition(
     }
     searchLabel.value = "";
   };
-
-  /**
-   * 리스트 값이 변경되면 일반 리스트의 속성값도 변경되야하므로 다중 watch
-   */
-  watchEffect(() => {
-    setListData();
-    setSearchFilter();
-  });
 
   /**
    * (이벤트) 필터 값 변경 검색
@@ -112,22 +105,15 @@ export function DataModelListComposition(
    */
   const checkFilter = (item: any): boolean => {
     for (const key in selectedFilter) {
-      // NOTE: filter의 key는 tags.tagFqn, owner.displayName.keyword 이런식으로 되어 있어서 데이터 목록 아이템 속성 값과 맞지 않음.
-      // "." 기준으로 스플릿 처리
-      const itemKey = key.split(".")[0];
+      let itemValue = item[key];
 
-      // 데이터가 없으면 무조건 false
-      let itemValue = item[itemKey];
-      if (itemValue === undefined) {
-        return false;
-      }
-
-      // 데이터 값 비교
-      const selectedFilterValue = selectedFilter[key];
+      // 필터 선택값이 존재하지 않으면 통과
+      const selectedFilterValue: any = selectedFilter[key];
       if (_.isEmpty(selectedFilterValue)) {
         continue;
       }
 
+      // 데이터 값 비교
       if (Array.isArray(itemValue)) {
         itemValue = itemValue as [];
         const isValueNotPresent = selectedFilterValue.some((filterValue) =>
@@ -216,7 +202,14 @@ export function DataModelListComposition(
    * @param value
    */
   const onDeleteItem = (value: string) => {
-    emitDeleteItem(value);
+    listData.value = listData.value.map((el) => {
+      return {
+        ...el,
+        isChecked: el[props.valueKey] === value ? false : el.isChecked,
+      };
+    });
+    const selectedList = $_reject(listData.value, { id: value });
+    emitDeleteItem(selectedList);
   };
 
   /**
@@ -231,7 +224,9 @@ export function DataModelListComposition(
         isChecked: el[props.valueKey] === value ? checked : el.isChecked,
       };
     });
-    emitCheckItem(value);
+
+    const selectedData = $_filter(listData.value, { isChecked: true });
+    emitCheckItem(selectedData);
   };
 
   /**
@@ -251,6 +246,7 @@ export function DataModelListComposition(
     selectedFilter,
     checkShowListData,
     setSearchFilter,
+    setListData,
     onSelectFilter,
     onSearchText,
     onResetSearchText,

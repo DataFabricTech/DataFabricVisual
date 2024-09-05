@@ -15,12 +15,12 @@ export function SelectBoxComposition(
   onselect: (value: string | number) => void
 ): SelectBoxComposition {
   const isShowBox: Ref<boolean> = ref<boolean>(false);
-  const selectedLabel: Ref<string> = ref<string>("선택하세요");
+  const selectedLabel: Ref<string> = ref<string>(props.defaultLabel || "선택하세요");
   const selectedValue: Ref<string | number | undefined> = ref("");
 
   // selectedItem 변경을 감지해 값 변경 (부모 컴포넌트에서 선택 값을 초기화하는 경우 존재)
   watch(
-    () => props.selectedItem,
+    () => [props.selectedItem],
     () => {
       setSelectedData();
     }
@@ -49,7 +49,13 @@ export function SelectBoxComposition(
 
   const selectItem: (option: { [key: string]: string | number }) => void = (option) => {
     const value = option[props.valueKey];
-    selectedLabel.value = option[props.labelKey].toString();
+
+    if (props.defaultLabel) {
+      selectedLabel.value = props.defaultLabel;
+    } else {
+      selectedLabel.value = option[props.labelKey].toString();
+    }
+
     selectedValue.value = value; // 선택된 값을 selectedValue로 저장
 
     onSelect(value);
@@ -69,7 +75,7 @@ export function SelectBoxComposition(
       selectedValue.value = value; // 선택된 값을 selectedValue로 저장
     } else {
       selectedValue.value = "";
-      selectedLabel.value = "선택하세요";
+      selectedLabel.value = props.defaultLabel || "선택하세요";
     }
   };
 

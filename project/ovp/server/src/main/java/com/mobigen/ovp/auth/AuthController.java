@@ -32,7 +32,7 @@ public class AuthController {
      * @param param
      * @return
      */
-    @ResponseJsonResult(errorMessage = "로그인 실패")
+    @ResponseJsonResult
     @PostMapping("/login")
     public Object login(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> newParam = decryptRsaPasswordWithParam(request, param);
@@ -158,7 +158,7 @@ public class AuthController {
     @PostMapping("/login/password/change")
     public Object changePassword(HttpServletRequest request, @RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> newParam = decryptRsaPasswordWithParam(request, param);
-        return authService.changePassword(newParam);
+        return authService.changePasswordInMypage(newParam);
     }
 
     /**
