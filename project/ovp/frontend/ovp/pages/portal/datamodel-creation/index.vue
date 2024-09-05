@@ -48,6 +48,7 @@
 </template>
 
 <script setup lang="ts">
+import { onBeforeMount } from "vue";
 import selectedModel from "@/components/datamodel-creation/selected-model.vue";
 import executeQuery from "@/components/datamodel-creation/execute-query.vue";
 import sample from "@/components/datamodel-creation/sample.vue";
@@ -103,6 +104,10 @@ const dataModelSearchStore = useDataModelSearchStore();
 const { filters, selectedModelList, selectedModelListCnt } =
   storeToRefs(dataModelSearchStore);
 const { onClickBookmark } = dataModelSearchStore;
+
+onMounted(() => {
+  alert("개발중 입니다.");
+});
 </script>
 
 <style scoped></style>
