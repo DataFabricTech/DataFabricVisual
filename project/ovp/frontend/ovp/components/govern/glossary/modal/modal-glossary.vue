@@ -31,6 +31,13 @@
                 <svg-icon class="notification-icon" name="error"></svg-icon>
                 <p class="notification-detail">이름을 입력하세요.</p>
               </div>
+              <div
+                class="notification notification-sm notification-error"
+                v-if="duplicateName"
+              >
+                <svg-icon class="notification-icon" name="error"></svg-icon>
+                <p class="notification-detail">이름이 중복됩니다.</p>
+              </div>
             </div>
           </div>
           <div class="form-item">
@@ -157,7 +164,7 @@
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
 import MenuSearch from "@extends/menu-seach/menu-search.vue";
-import { defineProps, reactive, type Reactive } from "vue";
+import { defineProps, reactive, type Reactive, ref, watch } from "vue";
 import { useGlossaryStore } from "~/store/glossary";
 import { useUserStore } from "@/store/user/userStore";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
@@ -178,6 +185,22 @@ const props = defineProps({
   modalId: { type: String, required: true },
 });
 
+type Owner = {
+  id: string;
+  type: string;
+};
+
+type TermForm = {
+  name: string;
+  displayName: string;
+  description: string;
+  glossary: string;
+  owner: Owner;
+  tags: string[];
+  relatedTerms: string[];
+  synonyms: string[];
+  mutuallyExclusive: boolean;
+};
 const initialFormState: object = {
   name: "",
   displayName: "",
@@ -192,8 +215,18 @@ const initialFormState: object = {
   synonyms: [],
   mutuallyExclusive: false,
 };
+const termForm: Reactive<TermForm> = reactive({
+  ...initialFormState,
+});
 
-const termForm: Reactive<object> = reactive({ ...initialFormState });
+watch(
+  () => termForm.name,
+  () => {
+    duplicateName.value = false;
+  },
+);
+
+const duplicateName = ref(false);
 
 function closeModal(): void {
   resetForm();
@@ -243,11 +276,22 @@ async function postTerm(): Promise<void> {
   termForm.relatedTerms.length = 0;
   termForm.relatedTerms = [...relatedTermsFQNs.value];
   termForm.owner.id = userStore.user.id;
-  termForm.owner.type = userStore.user.admin ? "admin" : "user";
+  termForm.owner.type = userStore.user.isBot ? "system" : "user";
   termForm.synonyms = [...changeSynonyms()];
-  await createTerm(termForm);
-  closeModal();
-  await getTerms(glossary.name);
+
+  let errorOccurred = false;
+  try {
+    await createTerm(termForm);
+  } catch (error) {
+    duplicateName.value = true;
+    errorOccurred = true;
+  } finally {
+    if (!errorOccurred) {
+      closeModal();
+      await getTerms(glossary.name);
+      duplicateName.value = false;
+    }
+  }
 }
 
 function changeSynonyms() {
@@ -260,7 +304,7 @@ function deleteTag(tag): void {
   termForm.tags = termForm.tags.filter((item) => item.tagFQN !== tag.tagFQN);
 }
 
-function deleteTerm(term: object) {
+function deleteTerm(term: object): void {
   termForm.relatedTerms = termForm.relatedTerms.filter(
     (item) => item.id !== term.id,
   );

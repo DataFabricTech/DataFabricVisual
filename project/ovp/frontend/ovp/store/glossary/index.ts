@@ -16,6 +16,8 @@ export const useGlossaryStore = defineStore("glossary", () => {
   const term = reactive<Term>(<Term>{});
 
   const activities = reactive<Activity[]>([]);
+  const activityAfter = ref(null);
+  const activitiesCount = ref(0);
 
   const dataModels = reactive<DataModel[]>([]);
   const dataModel = reactive<PreviewData>(<PreviewData>{});
@@ -43,11 +45,14 @@ export const useGlossaryStore = defineStore("glossary", () => {
   /**
    * Glossary CRUD
    */
-  async function createGlossary(body: object) {
-    await $api(`/api/glossary`, {
+  async function createGlossary(body: object): Promise<void> {
+    const res = await $api(`/api/glossary`, {
       method: "POST",
       body: body,
     });
+    if (res.data === null) {
+      throw new Error(res.errorMessage);
+    }
   }
 
   async function getGlossaries(): Promise<void> {
@@ -88,10 +93,13 @@ export const useGlossaryStore = defineStore("glossary", () => {
    * 용어 Crud
    */
   async function createTerm(body: object): Promise<void> {
-    await $api(`/api/glossary/terms`, {
+    const res = await $api(`/api/glossary/terms`, {
       method: "POST",
       body: body,
     });
+    if (res.data === null) {
+      throw new Error(res.errorMessage);
+    }
   }
 
   async function getTerms(term: string): Promise<void> {
@@ -136,11 +144,33 @@ export const useGlossaryStore = defineStore("glossary", () => {
   /**
    * 용어 활동 사항
    * @param entityLink
+   * @param after
    */
-  async function getGlossaryActivities(entityLink: string): Promise<void> {
-    const res = await $api(`/api/glossary/activities?entityLink=${entityLink}`);
+  async function getGlossaryActivities(
+    entityLink: string,
+    after?: number | undefined,
+  ): Promise<void> {
+    const param: string =
+      after !== undefined
+        ? `entityLink=${entityLink}&after=${after}`
+        : `entityLink=${entityLink}`;
+    const res = await $api(`/api/glossary/activities?${param}`);
     if (res.data !== null) {
-      activities.splice(0, activities.length, ...res.data);
+      activities.push(...res.data.activities);
+      activityAfter.value = res.data.paging.after;
+    }
+  }
+
+  /**
+   * 용어 활동 사항 개수
+   * @param entityLink
+   */
+  async function getGlossaryActivitiesCount(entityLink: string) {
+    const res = await $api(
+      `/api/glossary/activities/count?entityLink=${entityLink}`,
+    );
+    if (res.data !== null) {
+      activitiesCount.value = res.data;
     }
   }
 
@@ -157,6 +187,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
       ? `*${search}* AND (tags.tagFQN:"${name}")`
       : `** AND (tags.tagFQN:"${name}")`;
     const res = await $api(`/api/glossary/data-models?q=${q}`);
+    console.log(res);
     if (res.data !== null) {
       dataModels.splice(0, dataModels.length, ...res.data);
     }
@@ -210,8 +241,6 @@ export const useGlossaryStore = defineStore("glossary", () => {
    */
   async function changeCurrentGlossary(param: Glossary): Promise<void> {
     Object.assign(glossary, param);
-    console.log(param);
-    console.log(glossary);
     changeTab("term");
     await getTerms(param.name);
     await getGlossaryActivities(`<%23E::glossary::${param.name}>`);
@@ -227,7 +256,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
     const res = await $api(`/api/glossary/all-tags`);
     tags.splice(0, tags.length, ...res.data);
     tags.forEach((tag) => {
-      menuSearchTagsData.push({ label: tag.name, tagFQN: tag.tagFQN });
+      menuSearchTagsData.push({ displayName: tag.name, tagFQN: tag.tagFQN });
     });
   }
 
@@ -402,6 +431,8 @@ export const useGlossaryStore = defineStore("glossary", () => {
     term,
 
     activities,
+    activityAfter,
+    activitiesCount,
 
     dataModels,
     dataModel,
@@ -428,6 +459,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
     updateTerm,
 
     getGlossaryActivities,
+    getGlossaryActivitiesCount,
 
     getDataModels,
     getDataModel,

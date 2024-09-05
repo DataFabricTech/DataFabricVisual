@@ -14,6 +14,7 @@ import com.mobigen.ovp.common.openmete_client.dto.Term;
 import com.mobigen.ovp.glossary.client.response.Glossaries;
 import com.mobigen.ovp.glossary.client.response.GlossaryActivities;
 import com.mobigen.ovp.glossary.client.response.Terms;
+import com.mobigen.ovp.search_detail.SearchDetailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -39,10 +40,11 @@ public class GlossaryService {
     private final GlossaryClient glossaryClient;
     private final SearchClient searchClient;
     private final TablesClient tablesClient;
+    private final SearchDetailService searchDetailService;
 
     public Object createGlossary(GlossaryDto dto) throws Exception {
         ResponseEntity<Object> response = glossaryClient.createGlossary(dto);
-        if(response.getStatusCode() == HttpStatus.OK) {
+        if(response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.CREATED) {
             return response;
         } else {
             throw new Exception();
@@ -96,7 +98,7 @@ public class GlossaryService {
      */
     public Object createTerm(TermDto dto) throws Exception {
         ResponseEntity<Object> response = glossaryClient.createTerms(dto);
-        if(response.getStatusCode() == HttpStatus.OK) {
+        if(response.getStatusCode() == HttpStatus.OK || response.getStatusCode() == HttpStatus.CREATED) {
             return response;
         } else {
             throw new Exception();
@@ -205,11 +207,14 @@ public class GlossaryService {
      * @return
      * @throws Exception
      */
-    public List<Tag> getAllTags() throws Exception {
+    public Object getAllTags() throws Exception {
+        //List<com.mobigen.ovp.common.openmete_client.dto.Tag> tags = searchDetailService.getTags(new ArrayList<>(), "", true);
+
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
         queryParams.add("q", "** AND disabled:false");
         queryParams.add("index", "tag_search_index");
         queryParams.add("query_filter", "{}");
+        queryParams.add("limit", "100");
 
         List<Map<String, ?>> hits = (List<Map<String, ?>>) ((Map<?, ?>) searchClient.getSearchList(queryParams).get("hits")).get("hits");
         List<Object> source = new ArrayList<>();
@@ -224,7 +229,26 @@ public class GlossaryService {
                 result.add(new Tag(data));
             }
         }
+
         return result;
+
+//        return tags.stream().map(tag -> {
+//            Map<String, Object> data = new HashMap<>();
+//            String displayName = tag.getDisplayName();
+//            if (displayName == null || "".equals(displayName)) {
+//                displayName = tag.getName();
+//            }
+//            data.put("name", tag.getName());
+//            data.put("displayName", displayName);
+//            data.put("description", tag.getDescription());
+//            data.put("tagFQN", tag.getFullyQualifiedName());
+//            data.put("source", tag.getSource());
+//            data.put("labelType", tag.getLabelType());
+//            data.put("style", tag.getStyle());
+//            data.put("state", tag.getState());
+//
+//            return data;
+//        }).toList();
     }
 
     /**

@@ -50,7 +50,6 @@ const {
   deleteTerm,
   getTerms,
 } = useGlossaryStore();
-const { terms, openEditTermComponent, changeCurrentTerm } = useGlossaryStore();
 const { $vfm } = useNuxtApp();
 
 function onClickTerm(source: Term) {
@@ -65,7 +64,6 @@ async function removeTerm(id: string) {
   }
 }
 
-const showModalPwChange: () => void = () => {};
 const MODAL_ID = "modal-glossary";
 function openModal() {
   $vfm.open(MODAL_ID);

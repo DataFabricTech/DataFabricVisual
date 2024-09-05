@@ -32,6 +32,13 @@
                 <svg-icon class="notification-icon" name="error"></svg-icon>
                 <p class="notification-detail">이름을 입력하세요.</p>
               </div>
+              <div
+                class="notification notification-sm notification-error"
+                v-if="duplicateName"
+              >
+                <svg-icon class="notification-icon" name="error"></svg-icon>
+                <p class="notification-detail">이름이 중복됩니다.</p>
+              </div>
             </div>
           </div>
           <div class="form-item">
@@ -106,7 +113,7 @@ import Modal from "@extends/modal/Modal.vue";
 import MenuSearch from "@extends/menu-seach/menu-search.vue";
 import { useGlossaryStore } from "@/store/glossary";
 import { useUserStore } from "@/store/user/userStore";
-import { defineProps, reactive, ref, type Reactive } from "vue";
+import { defineProps, reactive, ref, type Reactive, watch } from "vue";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import type { Tag } from "~/type/common";
 
@@ -119,7 +126,21 @@ const props = defineProps({
   modalId: { type: String, required: true },
 });
 
-const initialFormState: object = {
+type Owner = {
+  id: string;
+  type: string;
+};
+
+type FormState = {
+  name: string;
+  displayName: string;
+  description: string;
+  owner: Owner;
+  tags: string[];
+  mutuallyExclusive: boolean;
+};
+
+const initialFormState: FormState = {
   name: "",
   displayName: "",
   description: "",
@@ -130,7 +151,16 @@ const initialFormState: object = {
   tags: [],
   mutuallyExclusive: false,
 };
-const glossaryForm: Reactive<object> = reactive({ ...initialFormState });
+const glossaryForm: Reactive<FormState> = reactive({ ...initialFormState });
+
+watch(
+  () => glossaryForm.name,
+  () => {
+    duplicateName.value = false;
+  },
+);
+
+const duplicateName = ref(false);
 
 function closeModal(): void {
   resetForm();
@@ -164,14 +194,20 @@ function validateForm(): void {
 
 async function postGlossary(): Promise<void> {
   glossaryForm.owner.id = userStore.user.id;
-  glossaryForm.owner.type = userStore.user.admin ? "admin" : "user";
+  glossaryForm.owner.type = userStore.user.isBot ? "system" : "user";
+  glossaryForm.displayName = glossaryForm.name;
+  let errorOccurred = false;
   try {
     await createGlossary(glossaryForm);
   } catch (error) {
-    alert(error);
+    duplicateName.value = true;
+    errorOccurred = true;
   } finally {
-    closeModal();
-    await getGlossaries();
+    if (!errorOccurred) {
+      closeModal();
+      await getGlossaries();
+      duplicateName.value = false;
+    }
   }
 }
 
