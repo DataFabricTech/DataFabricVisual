@@ -87,7 +87,7 @@ public class CategoryService {
     @Transactional
     public Object addCategory(CategoryDTO dto) throws Exception {
         // 이름이 "미분류"일 경우, name 값과 displayName 값을 "미분류" 로 저장
-        String categoryId = dto.getName().equals(UNDEFINED_TAG_NAME) ? UNDEFINED_TAG_NAME : dto.getId();
+        String categoryId = dto.getName().equals(Constants.UNDEFINED_TAG_NAME) ? Constants.UNDEFINED_TAG_NAME : dto.getId();
         dto.setTagId(createTagInfo(categoryId));
         return insertOrUpdate(dto);
     }
