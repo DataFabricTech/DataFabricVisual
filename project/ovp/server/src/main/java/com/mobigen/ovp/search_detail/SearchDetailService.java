@@ -2,8 +2,8 @@ package com.mobigen.ovp.search_detail;
 
 import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
-import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.ModelConvertUtil;
+import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
 import com.mobigen.ovp.common.openmete_client.ContainersClient;
@@ -298,9 +298,12 @@ public class SearchDetailService {
      * @param id
      * @return
      */
-    public Object getDataModelSampleData(String id) {
-
-        return new DataModelDetailSampleDataResponse(tablesClient.getSampleData(id));
+    public Object getDataModelSampleData(String id, String type) throws Exception {
+        if (!ModelType.STORAGE.getValue().equals(type)) {
+            return new DataModelDetailSampleDataResponse(tablesClient.getSampleData(id), type);
+        } else {
+            return new DataModelDetailSampleDataResponse(containersClient.getSampleData(id), type);
+        }
     }
 
     /**

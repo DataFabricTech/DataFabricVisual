@@ -156,7 +156,9 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   };
 
   const getSampleData = async () => {
-    const data = await $api(`/api/search/detail/sample-data/${dataModelId}`);
+    const data = await $api(
+      `/api/search/detail/sample-data/${dataModelId}?type=${dataModelType.value}`,
+    );
     sampleColumns.value = _.map(data.data.columns, (value) => {
       return {
         headerName: `${value.name}(${value.dataType})`,

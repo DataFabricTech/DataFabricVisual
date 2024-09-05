@@ -5,8 +5,6 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class SampleData {
-    private DataModel dataModel;
+public class DataModel {
     private List<Columns> columns;
-    private Sample sampleData;
 }
