@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(name = "ClassificationClient", url = "${properties.ovp.open-metadata-url}/classifications")
+@FeignClient(name = "ClassificationClient2", url = "${properties.ovp.open-metadata-url}/classifications")
 public interface ClassificationClient2 {
     /**
      * 분류 리스트

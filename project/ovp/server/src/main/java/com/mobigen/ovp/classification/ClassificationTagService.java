@@ -1,7 +1,9 @@
 package com.mobigen.ovp.classification;
 
 import com.mobigen.ovp.classification.client.dto.classification.tag.ClassificationTagAddResponse;
-import com.mobigen.ovp.common.openmete_client.TagClient;
+import com.mobigen.ovp.common.openmete_client.ClassificationClient;
+import com.mobigen.ovp.common.openmete_client.ClassificationClient2;
+//import com.mobigen.ovp.common.openmete_client.TagClient;
 import com.mobigen.ovp.common.openmete_client.dto.classification.tag.ClassificationTagAdd;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +18,9 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class ClassificationTagService {
-    private final TagClient tagClient;
+//    private final TagClient tagClient;
+    private final ClassificationClient classificationClient;
+    private final ClassificationClient2 classificationClient2;
 
 
 
@@ -33,11 +37,11 @@ public class ClassificationTagService {
         tagParams.add("recursive", "true");
         tagParams.add("hardDelete", "true");
 
-        return tagClient.deleteTag(id, tagParams);
+        return classificationClient.deleteTag(id, tagParams);
     }
 
     public String getTagInfo(String tagId) {
-        Map<String, Object> tagInfo = tagClient.getTag(tagId);
+        Map<String, Object> tagInfo = classificationClient.getTag(tagId);
         return tagInfo.get("fullyQualifiedName").toString();
     }
 
@@ -47,7 +51,7 @@ public class ClassificationTagService {
         params.put("description", "OVP Category Matched Tag");
         params.put("displayName", categoryId);
         params.put("name", categoryId);
-        Map<String, Object> response = (Map<String, Object>) tagClient.createTag(params);
+        Map<String, Object> response = (Map<String, Object>) classificationClient.createTag(params);
         return response.get("id").toString();
     }
 
@@ -57,6 +61,6 @@ public class ClassificationTagService {
      * @return
      */
     public Object addClassificationTag(ClassificationTagAdd classificationTagAdd) {
-        return new ClassificationTagAddResponse(tagClient.addClassificationTag(classificationTagAdd));
+        return new ClassificationTagAddResponse(classificationClient.addClassificationTag(classificationTagAdd));
     }
 }

@@ -42,6 +42,7 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final SearchService searchService;
     private final ClassificationTagService classificationTagService;
+    private final ClassificationClient classificationClient;
 
     public CategoryDTO getCategories() {
         List<CategoryEntity> categories = categoryRepository.findAll();

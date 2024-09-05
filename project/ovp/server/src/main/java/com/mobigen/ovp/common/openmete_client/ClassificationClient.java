@@ -1,6 +1,8 @@
 package com.mobigen.ovp.common.openmete_client;
 
 import com.mobigen.ovp.common.openmete_client.dto.Tags;
+import com.mobigen.ovp.common.openmete_client.dto.classification.tag.ClassificationTag;
+import com.mobigen.ovp.common.openmete_client.dto.classification.tag.ClassificationTagAdd;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,7 +27,24 @@ public interface ClassificationClient {
     @DeleteMapping("/{id}")
     Map<String, Object> deleteTag(@PathVariable String id, @RequestParam MultiValueMap<String, String> params);
 
+    /**
+     * 태그정보 조회
+     *
+     * @param parent
+     * @return
+     */
+    @GetMapping("")
+    ClassificationTag getClassificationTags(@RequestParam(defaultValue = "da") String parent);
+
     @PostMapping("")
     Object createTag(@RequestBody Map<String, Object> params);
 
+    /**
+     * 태그 추가
+     *
+     * @param classificationTagAdd
+     * @return
+     */
+    @PostMapping("")
+    ClassificationTagAdd addClassificationTag(@RequestBody ClassificationTagAdd classificationTagAdd);
 }
