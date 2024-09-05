@@ -628,6 +628,7 @@ public class ServiceManageService {
                             Map<String, String> tableParam = new HashMap<>();
                             tableParam.put("databaseSchema", nestedFullyQualifiedName);
                             tableParam.put("include", "non-deleted");
+                            tableParam.put("limit", "10000");
                             Map<String, Object> tableInfo = tablesClient.getTablesInfo(tableParam);
 
                             List<Map<String, Object>> tableDataList = (List<Map<String, Object>>) tableInfo.get("data");
@@ -639,6 +640,7 @@ public class ServiceManageService {
                     } else {
                         // Storage Service Logic
                         Map<String, Object> result = containersClient.getContainersName(fullyQualifiedName, serviceParam);
+                        String serviceType = result.get("serviceType").toString();
                         List<Map<String, Object>> children = (List<Map<String, Object>>) result.get("children");
                         return children.stream().flatMap(child -> {
                             String innerFullyQualifiedName = (String) child.get("fullyQualifiedName");
@@ -647,6 +649,7 @@ public class ServiceManageService {
                                 List<Map<String, Object>> innerChildren = (List<Map<String, Object>>) resultFromClient.get("children");
                                 return innerChildren.stream().map(tableData -> {
                                     tableData.put("customType", depth1Name);
+                                    tableData.put("serviceType", serviceType);
                                     return tableData;
                                 });
                             } else {
@@ -658,21 +661,22 @@ public class ServiceManageService {
                 .map(this::processEntry)
                 .collect(Collectors.toList());
     }
-    
+
     private Map<String, Object> processEntry(Map<String, Object> entry) {
         Map<String, Object> newEntry = new HashMap<>();
         newEntry.put("fqn", entry.get("fullyQualifiedName"));
         newEntry.put("name", entry.get("name"));
         newEntry.put("id", entry.get("id"));
         newEntry.put("type", entry.get("customType"));
-        newEntry.put("serviceType", determineType(entry.get("serviceType")));
+        newEntry.put("serviceType", determineType(entry.get("serviceType").toString()));
         newEntry.put("desc", entry.get("description"));
         newEntry.put("owner", extractOwner(entry));
         return newEntry;
     }
 
-    private String determineType(Object serviceType) {
-        return serviceType != null && serviceType.toString().equalsIgnoreCase("trino") ? "model" : "table";
+    private String determineType(String serviceType) {
+        return serviceType.equalsIgnoreCase("minio") ? "storage" :
+                serviceType.equalsIgnoreCase("trino") ? "model" : "table";
     }
 
     private String extractOwner(Map<String, Object> entry) {
