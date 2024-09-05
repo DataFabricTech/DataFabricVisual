@@ -27,7 +27,7 @@
             :use-infinite="true"
             :use-live-search="false"
             :addSearchList="addSearchList"
-            :onAddTransfer="props.onAddTransfer"
+            :isDoneFirModelListLoad="isDoneFirModelListLoad"
             list-type="non-selected"
             no-data-msg="데이터 모델이 없습니다."
             @item-check="onSelectApiData"
@@ -138,13 +138,8 @@ const {
   currTypeTab,
   mySearchResult,
   nSelectedListData,
+  isDoneFirModelListLoad,
 } = storeToRefs(dataModelSearchStore);
-
-const props = defineProps({
-  onAddTransfer: {
-    type: Boolean
-  },
-});
 
 const selectedListLength = computed(() => {
   return nSelectedListData.value ? nSelectedListData.value.length : 0;
@@ -252,6 +247,10 @@ const onSelectAccordData = (value: any[]) => {
 const onClickAccordSearchChange = async (value: string) => {
   setSearchKeyword(value);
   await resetReloadList(nSelectedListData.value);
+};
+const loadSearchData = () => {
+  console.log("here");
+  addSearchList();
 };
 </script>
 <style lang="scss" scoped></style>

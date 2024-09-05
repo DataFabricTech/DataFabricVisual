@@ -19,7 +19,7 @@
   >
     <template v-slot:body>
       <div class="data-add">
-        <add-transfer v-if="onAddTransfer" :onAddTransfer="onAddTransfer"></add-transfer>
+        <add-transfer></add-transfer>
         <Tab
           class="h-full"
           :data="$constants.DATAMODEL_CREATION.ADD.DETAIL_TAB"
@@ -58,8 +58,6 @@ import Tab from "@extends/tab/Tab.vue";
 import $constants from "~/utils/constant";
 import AddDetailGrid from "~/components/datamodel-creation/modal/add-detail-grid.vue";
 
-const onAddTransfer = ref(false);
-
 const props = defineProps({
   modalId: {
     type: String,
@@ -80,14 +78,11 @@ const {
 const { resetReloadList, getFilters, changeDetailTab, resetDetailBox } =
   dataModelSearchStore;
 
+Promise.all([resetReloadList(), getFilters(), resetDetailBox()]);
+
 const onOpenModal = async () => {
-  console.log("onOpenModal");
-  onAddTransfer.value = true;
   // 전체+MY / 필터 / 내부 선택 목록 데이터 초기화
   nSelectedListData.value = $_cloneDeep(selectedModelList.value);
-  await resetReloadList();
-  await getFilters();
-  await resetDetailBox();
 };
 
 const emit = defineEmits<{
@@ -95,7 +90,6 @@ const emit = defineEmits<{
 }>();
 
 const onCancelModal = () => {
-  onAddTransfer.value = false;
   emit("close");
 };
 

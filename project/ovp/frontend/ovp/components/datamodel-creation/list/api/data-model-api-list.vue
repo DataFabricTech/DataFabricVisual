@@ -82,7 +82,7 @@
     </div>
 
     <!-- 결과 없을 시 no-result 표시 -->
-    <div class="no-result" v-if="!checkShowListData">
+    <div class="no-result" v-if="!isDoneFirModelListLoad">
       <div class="notification">
         <svg-icon class="notification-icon" name="info"></svg-icon>
         <p class="notification-detail">{{ props.noDataMsg }}</p>
@@ -126,27 +126,36 @@ import type { DataModelApiListProps } from "~/components/datamodel-creation/list
 import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
+import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 
-const props = withDefaults(defineProps<DataModelApiListProps & { onAddTransfer?: () => void }>(), {
-  data: () => [],
-  selectedItems: () => [],
-  selectedFilters: () => [],
-  sortList: () => [],
-  filter: () => {},
-  addSearchList: () => {
-    return () => {};
+const props = withDefaults(
+  defineProps<
+    DataModelApiListProps & {
+      onAddTransfer?: () => void;
+      isDoneFirModelListLoad?: boolean;
+    }
+  >(),
+  {
+    data: () => [],
+    selectedItems: () => [],
+    selectedFilters: () => [],
+    sortList: () => [],
+    filter: () => {},
+    addSearchList: () => {
+      return () => {};
+    },
+    useSort: false,
+    useLiveSearch: true,
+    useInfinite: false,
+    isMulti: false,
+    valueKey: "id",
+    labelKey: "title",
+    noDataMsg: "데이터 모델이 없습니다.",
+    listType: "non-selected",
+    useItemDeleteBtn: false,
+    isDoneFirModelListLoad: false,
   },
-  useSort: false,
-  useLiveSearch: true,
-  useInfinite: false,
-  isMulti: false,
-  valueKey: "id",
-  labelKey: "title",
-  noDataMsg: "데이터 모델이 없습니다.",
-  listType: "non-selected",
-  useItemDeleteBtn: false,
-  onAddTransfer: false,
-});
+);
 
 const emit = defineEmits<{
   (e: "delete", value: any[]): void;

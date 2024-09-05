@@ -38,6 +38,8 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const selectedModelListCnt = computed(() => {
     return selectedModelList.value.length;
   });
+  const isDoneFirModelListLoad = ref(false);
+
   const { setQueryFilterByDepth } = useQueryHelpers();
 
   // filters 초기값 부여 (text 처리)
@@ -183,9 +185,12 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * 데이터 조회 > 갱신
    */
   const getSearchList = async (selectedList: any[] | null = null) => {
+    isDoneFirModelListLoad.value = false;
+
     const { data, totalCount } = await getSearchListAPI(selectedList);
     searchResult.value = data[currTypeTab.value];
     searchResultLength.value = totalCount;
+    isDoneFirModelListLoad.value = true;
 
     // [데이터 갱신] 이 완료되면 호출한다. infiniteScroll 처리하기 위해 필요한 함수. (modal 한정)
     setDataLoadDone();
@@ -470,6 +475,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     nSelectedListData,
     selectedModelList,
     selectedModelListCnt,
+    isDoneFirModelListLoad,
     addSearchList,
     getSearchList,
     getFilters,
