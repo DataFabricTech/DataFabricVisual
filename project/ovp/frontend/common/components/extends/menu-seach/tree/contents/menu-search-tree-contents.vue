@@ -35,6 +35,7 @@
         :use-draggable="props.useDraggable"
         :mode="props.mode"
         :dropValidator="props.dropValidator"
+        :selected-ids="selectedListDataIds"
         @onItemChecked="onNodeChecked"
         @onItemSelected="onNodeClicked"
       ></tree-vue>
