@@ -7,8 +7,9 @@ import com.mobigen.ovp.classification.client.dto.classification.ClassificationAd
 import com.mobigen.ovp.classification.client.dto.classification.ClassificationResponse;
 import com.mobigen.ovp.classification.client.dto.classification.tag.ClassificationTagsResponse;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
+import com.mobigen.ovp.common.openmete_client.ClassificationClient2;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
-import com.mobigen.ovp.common.openmete_client.TagClient;
+//import com.mobigen.ovp.common.openmete_client.TagClient;
 import com.mobigen.ovp.common.openmete_client.dto.classification.Classification;
 import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationData;
 import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationAdd;
@@ -26,14 +27,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ClassificationService {
     private final ClassificationClient classificationClient;
-    private final TagClient tagClient;
+    private final ClassificationClient2 classificationClient2;
+//    private final TagClient tagClient;
 
     /**
      * 분류 리스트 조회
      * @return
      */
     public Object getClassifications() {
-        ClassificationData response = classificationClient.getClassifications();
+        ClassificationData response = classificationClient2.getClassifications();
 
          // classificationList에서 "OVP_category"를 제외한 새로운 리스트 filteredList 생성
         List<Classification> filteredList = response.getData().stream()
@@ -55,7 +57,7 @@ public class ClassificationService {
      * @return
      */
     public Object getClassificationDetail(String id) {
-        return new ClassificationDetailResponse(classificationClient.getClassificationDetail(id));
+        return new ClassificationDetailResponse(classificationClient2.getClassificationDetail(id));
     }
 
     /**
@@ -64,7 +66,7 @@ public class ClassificationService {
      * @return
      */
     public Object getClassificationDetailByName(String name) {
-        return new ClassificationDetailByNameResponse(classificationClient.getClassificationDetailByName(name));
+        return new ClassificationDetailByNameResponse(classificationClient2.getClassificationDetailByName(name));
     }
 
     /**
@@ -74,7 +76,7 @@ public class ClassificationService {
      * @return
      */
     public Object editClassification(String id, List<JsonPatchOperation> param) {
-        return new ClassificationEditResponse(classificationClient.editClassification(id, param));
+        return new ClassificationEditResponse(classificationClient2.editClassification(id, param));
     }
 
     /**
@@ -83,7 +85,7 @@ public class ClassificationService {
      * @throws Exception
      */
     public Object getClassificationTags(String parent) {
-        return new ClassificationTagsResponse(tagClient.getClassificationTags(parent));
+        return new ClassificationTagsResponse(classificationClient.getClassificationTags(parent));
     }
 
 
@@ -92,7 +94,7 @@ public class ClassificationService {
      * @param id
      */
     public int deleteClassification(String id) throws Exception {
-        ResponseEntity<Void> response = classificationClient.deleteClassification(id, true, true);
+        ResponseEntity<Void> response = classificationClient2.deleteClassification(id, true, true);
         if(response.getStatusCode() == HttpStatus.OK) {
             return 1;
         } else {
@@ -105,6 +107,6 @@ public class ClassificationService {
      * @param classificationAdd
      */
     public Object addClassification(ClassificationAdd classificationAdd) throws Exception {
-        return new ClassificationAddResponse(classificationClient.addClassification(classificationAdd));
+        return new ClassificationAddResponse(classificationClient2.addClassification(classificationAdd));
     }
 }
