@@ -105,9 +105,9 @@ public class SearchDetailController {
      */
     @ResponseJsonResult
     @GetMapping("/sample-data/{id}")
-    Object getDataModelSampleData(@PathVariable String id) {
+    Object getDataModelSampleData(@PathVariable String id, @RequestParam String type) throws Exception {
         log.info("");
-        return searchDetailService.getDataModelSampleData(id);
+        return searchDetailService.getDataModelSampleData(id, type);
     }
 
     /**

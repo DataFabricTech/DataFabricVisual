@@ -103,6 +103,7 @@ const filteredTabs = computed(() => {
     const includedValues = [
       "default",
       "schema",
+      "sample",
       "lineage",
       "knowledge",
       "recommended",
