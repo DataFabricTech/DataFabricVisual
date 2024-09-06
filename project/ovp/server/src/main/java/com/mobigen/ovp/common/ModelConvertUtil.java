@@ -119,8 +119,8 @@ public class ModelConvertUtil {
 
                 if (tag.get("tagFQN").toString().contains(Constants.OVP_CATEGORY)) {
                     CategoryEntity categoryEntity = getCategoryEntity(tag.get("name").toString());
-                    categoryId = categoryEntity.getId().toString();
                     if (categoryEntity != null) {
+                        categoryId = categoryEntity.getId().toString();
                         Map<String, Object> category = (Map<String, Object>) modifiedSource.get("category");
                         category.put("id", categoryEntity.getId());
                         category.put("name", categoryEntity.getName());

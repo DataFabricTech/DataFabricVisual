@@ -84,6 +84,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const selectedFilterItems: Ref<any> = ref([]);
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
 
+  // GraphData
+  const graphData: Ref<any[]> = ref([]);
+
   // DATA
   const viewType: Ref<string> = ref<string>("listView");
   const isShowPreview: Ref<boolean> = ref<boolean>(false);
@@ -99,10 +102,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const sortKeyOpt: Ref<string> = ref<string>("desc");
   const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
 
-  const getSearchListQuery = () => {
+  const getQueryParam = (): any => {
     const queryFilter = getQueryFilter();
-    console.log(currentTab.value);
-    const params: any = {
+    return {
       // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
       // eslint 예외 제외 코드 추가.
       // eslint-disable-next-line id-length
@@ -116,7 +118,15 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       sort_order: sortKeyOpt.value,
       trino_query: JSON.stringify(getTrinoQuery(queryFilter)),
     };
-    return new URLSearchParams(params);
+  };
+  const getSearchListQuery = (): any => {
+    return new URLSearchParams(getQueryParam());
+  };
+  const getGraphQuery = (): any => {
+    const query = getQueryParam();
+    query.size = query.from + query.size;
+    query.from = 0;
+    return new URLSearchParams(query);
   };
 
   // METHODS
@@ -145,6 +155,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
    * 데이터 조회 -> 누적
    */
   const addSearchList = async () => {
+    console.log("addSearchList");
     const { data, totalCount } = await getSearchListAPI();
     searchResult.value = searchResult.value.concat(data[currentTab.value]);
     searchResultLength.value = totalCount;
@@ -154,6 +165,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
    * 데이터 조회 -> 갱신
    */
   const getSearchList = async () => {
+    console.log("getSearchList");
     const { data, totalCount } = await getSearchListAPI();
     searchResult.value = data[currentTab.value];
     searchResultLength.value = totalCount;
@@ -254,13 +266,13 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
 
   const getGraphData = async () => {
-    const { data } = await $api(
-      `/api/search/graph/list?${getSearchListQuery()}`,
-      {
-        showLoader: false,
-      },
-    );
-    return data;
+    const graphParam: any = getGraphQuery();
+    graphParam.from = 0;
+    console.log(graphParam);
+    const { data } = await $api(`/api/search/graph/list?${graphParam}`, {
+      showLoader: false,
+    });
+    graphData.value = data;
   };
 
   return {
@@ -277,6 +289,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     isBoxSelectedStyle,
     searchResultLength,
     isSearchResultNoData,
+    graphData,
     addSearchList,
     getSearchList,
     getFilter,

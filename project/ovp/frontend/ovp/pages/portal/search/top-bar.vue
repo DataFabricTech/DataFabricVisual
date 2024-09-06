@@ -65,8 +65,8 @@ const options: { [key: string]: string | number }[] =
 const isFirstCheckedEvent: boolean = true;
 
 const onGraphView = () => {
-  viewType.value = "listView";
-  alert("개발중 입니다.");
+  viewType.value = "graphView";
+  // alert("개발중 입니다.");
 };
 </script>
 
