@@ -35,7 +35,6 @@
       :setColumnFit="true"
       :useColumnResize="false"
     ></agGrid>
-    <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
   </template>
 
   <!-- 결과 없을 시 no-result 표시 -->
