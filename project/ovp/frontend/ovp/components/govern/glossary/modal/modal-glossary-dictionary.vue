@@ -94,7 +94,7 @@
                   :selected-items="glossaryForm.tags"
                   :is-multi="true"
                   :is-show="isShowMenuSearch"
-                  label-key="label"
+                  label-key="displayName"
                   value-key="tagFQN"
                   @cancel="showMenuSearch(false)"
                   @multiple-change="changeTag"

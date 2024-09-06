@@ -65,7 +65,9 @@
         class="editable-group"
         v-if="Object.keys(glossary).length > 0 && !store.editGlossaryMode.des"
       >
-        <span class="editable-group-desc">{{ glossary.description }}</span>
+        <span class="editable-group-desc">{{
+          glossary && glossary.description ? glossary.description : "설명 없음"
+        }}</span>
         <button
           class="button button-neutral-ghost button-sm"
           type="button"
@@ -111,8 +113,15 @@
       </div>
       <!-- // 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
       <div class="editable-group" v-if="!store.editGlossaryMode.tag">
-        <div class="tag tag-primary tag-sm" v-for="tag in glossary.tags">
-          <span class="tag-text">{{ tag.label }}</span>
+        <div
+          class="tag tag-primary tag-sm"
+          v-if="glossary && glossary.tags && glossary.tags.length > 0"
+          v-for="tag in glossary.tags"
+        >
+          <span class="tag-text">{{ tag.displayName }}</span>
+        </div>
+        <div class="text-neutral-700" v-else>
+          <span>태그 없음</span>
         </div>
         <button
           class="button button-neutral-ghost button-sm"
@@ -127,7 +136,7 @@
         <menu-search-tag
           :data="menuSearchTagsData"
           :selected-items="glossary.tags"
-          label-key="label"
+          label-key="displayName"
           value-key="tagFQN"
           :is-multi="true"
           title="값을 선택하세요"
@@ -173,7 +182,10 @@ import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import type { JsonPatchOperation, Tag } from "~/type/common";
 import { reactive, watch, onMounted, type Ref } from "vue";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
-
+import { useDataModelDetailStore } from "@/store/search/detail";
+const dataModelDetailStore = useDataModelDetailStore();
+const { getTagList } = dataModelDetailStore;
+const { tagList } = storeToRefs(dataModelDetailStore);
 const {
   glossary,
   tags,
@@ -207,6 +219,7 @@ watch(
 onMounted(() => {
   syncEditDataWithGlossary();
   getGlossaryActivitiesCount(`<%23E::glossary::${glossary.name}>`);
+  getTagList();
 });
 
 function syncEditDataWithGlossary() {

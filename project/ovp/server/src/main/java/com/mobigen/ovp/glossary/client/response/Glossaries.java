@@ -30,7 +30,7 @@ public class Glossaries {
         this.tags = new ArrayList<>();
         for(Tag tag : glossary.getTags()) {
             Map<String, String> data = new HashMap<>();
-            data.put("label", tag.getName());
+            data.put("displayName", tag.getName());
             data.put("tagFQN", tag.getTagFQN());
             this.tags.add(data);
         }

@@ -31,7 +31,7 @@ public class Terms {
         if(term.getTags() != null) {
             for (Tag tag : term.getTags()) {
                 Map<String, String> tagMap = new HashMap<String, String>();
-                tagMap.put("label", tag.getName());
+                tagMap.put("displayName", tag.getName());
                 tagMap.put("tagFQN", tag.getTagFQN());
                 this.tags.add(tagMap);
             }

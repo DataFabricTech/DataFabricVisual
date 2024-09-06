@@ -91,7 +91,7 @@ public class SearchDetailService {
      * @param isStart
      * @return
      */
-    private List<Tag> getTags(List<Tag> tags, String after, boolean isStart) {
+    public List<Tag> getTags(List<Tag> tags, String after, boolean isStart) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("limit", "100");
 

@@ -157,7 +157,7 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @GetMapping("/all-tags")
-    public Object getAllTags() throws Exception {
+    public Object getAllTags() {
         return glossaryService.getAllTags();
     }
 

@@ -207,48 +207,26 @@ public class GlossaryService {
      * @return
      * @throws Exception
      */
-    public Object getAllTags() throws Exception {
-        //List<com.mobigen.ovp.common.openmete_client.dto.Tag> tags = searchDetailService.getTags(new ArrayList<>(), "", true);
+    public Object getAllTags() {
+        List<com.mobigen.ovp.common.openmete_client.dto.Tag> tags = searchDetailService.getTags(new ArrayList<>(), "", true);
 
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("q", "** AND disabled:false");
-        queryParams.add("index", "tag_search_index");
-        queryParams.add("query_filter", "{}");
-        queryParams.add("limit", "100");
-
-        List<Map<String, ?>> hits = (List<Map<String, ?>>) ((Map<?, ?>) searchClient.getSearchList(queryParams).get("hits")).get("hits");
-        List<Object> source = new ArrayList<>();
-        for(Map<String, ?> data : hits) {
-            source.add(data.get("_source"));
-        }
-        List<Tag> result = new ArrayList<>();
-
-        for(Object obj : source) {
-            if(obj instanceof Map<?,?>) {
-                Map<String, ?> data = (Map<String, ?>) obj;
-                result.add(new Tag(data));
+        return tags.stream().map(tag -> {
+            Map<String, Object> data = new HashMap<>();
+            String displayName = tag.getDisplayName();
+            if (displayName == null || "".equals(displayName)) {
+                displayName = tag.getName();
             }
-        }
+            data.put("name", tag.getName());
+            data.put("displayName", displayName);
+            data.put("description", tag.getDescription());
+            data.put("tagFQN", tag.getFullyQualifiedName());
+            data.put("source", "Classification");
+            data.put("labelType", "Manual");
+            data.put("style", new HashMap<String, Object>());
+            data.put("state", "Confirmed");
 
-        return result;
-
-//        return tags.stream().map(tag -> {
-//            Map<String, Object> data = new HashMap<>();
-//            String displayName = tag.getDisplayName();
-//            if (displayName == null || "".equals(displayName)) {
-//                displayName = tag.getName();
-//            }
-//            data.put("name", tag.getName());
-//            data.put("displayName", displayName);
-//            data.put("description", tag.getDescription());
-//            data.put("tagFQN", tag.getFullyQualifiedName());
-//            data.put("source", tag.getSource());
-//            data.put("labelType", tag.getLabelType());
-//            data.put("style", tag.getStyle());
-//            data.put("state", tag.getState());
-//
-//            return data;
-//        }).toList();
+            return data;
+        }).toList();
     }
 
     /**

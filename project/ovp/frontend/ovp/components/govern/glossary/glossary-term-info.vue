@@ -109,7 +109,7 @@
 
       <div class="editable-group" v-if="!store.editTermMode.tag">
         <div class="tag tag-primary tag-sm" v-for="tag in term.tags">
-          <span class="tag-text">{{ tag.label }}</span>
+          <span class="tag-text">{{ tag.displayName }}</span>
         </div>
         <button
           class="button button-neutral-ghost button-sm"
@@ -124,7 +124,7 @@
         <menu-search-tag
           :data="menuSearchTagsData"
           :selected-items="term.tags"
-          label-key="label"
+          label-key="displayName"
           value-key="tagFQN"
           :is-multi="true"
           title="값을 선택하세요"
