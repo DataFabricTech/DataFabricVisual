@@ -28,7 +28,11 @@
               : ''
           "
         >
-          <nuxt-link :to="mgmtMenuJson.linkTo" class="sidebar-button">
+          <nuxt-link
+            :to="mgmtMenuJson.linkTo"
+            class="sidebar-button"
+            @click="handleLinkClick(mgmtMenuJson.linkTo)"
+          >
             <div class="sidebar-icon">
               <svg-icon
                 :name="mgmtMenuJson.iconName"
