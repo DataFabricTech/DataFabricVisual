@@ -35,10 +35,20 @@ public class ClassificationService {
      */
     public Object getClassifications() {
         ClassificationData response = classificationClient.getClassifications();
+        log.info("추석추석" ,response);
+        // 제외할 이름들을 리스트로 작성
+        List<String> excludedNames = List.of("PersonalData", "PII", "ovp_category", "Tier");
 
-        // classificationList에서 "OVP_category"를 제외한 새로운 리스트 filteredList 생성
+        // classificationList에서 제외할 이름들을 제외한 새로운 리스트 filteredList 생성
+
         List<Classification> filteredList = response.getData().stream()
-                .filter(classification -> !"OVP_category".equals(classification.getDisplayName()))
+                .filter(classification -> {
+                    String displayName = classification.getDisplayName();
+                    if(displayName == null) {
+                        displayName = classification.getName();
+                    }
+                    return !excludedNames.contains(displayName);
+                })
                 .collect(Collectors.toList());
 
         // 필터링된 리스트로 새로운 ClassificationData 객체 생성
@@ -113,6 +123,20 @@ public class ClassificationService {
      * @param classificationAdd
      */
     public Object addClassification(ClassificationAdd classificationAdd) throws Exception {
+        // classificationResponse 가져오기
+        ClassificationResponse classificationResponse = (ClassificationResponse) getClassifications();
+
+        // classificationList에서 중복 체크할 리스트 가져오기
+        List<Classification> classifications = classificationResponse.getClassificationList();
+
+        // 분류 이름 중복 체크
+        boolean isDuplicate = classifications.stream().anyMatch(classification -> classification.getName().equalsIgnoreCase(classificationAdd.getName()));
+
+        if(isDuplicate) {
+            throw new Exception("Duplicate classification name");
+        }
+
+
         return new ClassificationAddResponse(classificationClient.addClassification(classificationAdd));
     }
 }

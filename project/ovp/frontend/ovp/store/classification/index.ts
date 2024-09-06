@@ -70,7 +70,7 @@ export const classificationStore = defineStore("classification", () => {
   let firstClassificationName = "";
 
   // 현재 태그의 분류 name값
-  let currentClassificationTagName = "";
+  const currentClassificationTagName = "";
 
   // TODO : 추후, 인피니트스크롤 작업이 필요할 수 있음
   // const tagContent: Ref<ClassificationTag | null> = ref(null); // 태그목록 조회 결과값
@@ -133,18 +133,14 @@ export const classificationStore = defineStore("classification", () => {
   };
 
   // 분류 추가
-  const addClassification = async (addData: addForm) => {
-    const result = await $api(`/api/classifications/add`, {
+  const addClassification = (addData: addForm) => {
+    return $api(`/api/classifications/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(addData),
     });
-
-    // 분류목록 API 재호출
-    await getClassificationList();
-    return result;
   };
 
   // 분류 삭제
