@@ -76,6 +76,10 @@ export const classificationStore = defineStore("classification", () => {
   // const tagContent: Ref<ClassificationTag | null> = ref(null); // 태그목록 조회 결과값
   const classificationTagList: Ref<Tag[]> = ref([]); // tagContent내에 실질 태그 목록
 
+  // [ 이름 / 설명 ] 수정 상태
+  const isNameEditable = ref<boolean>(false);
+  const isDescEditable = ref<boolean>(false);
+
   // 분류 목록 조회 ( id / name / displayName )
   const getClassificationList = async () => {
     const data: any = await $api(`/api/classifications/list`);
@@ -90,6 +94,10 @@ export const classificationStore = defineStore("classification", () => {
 
   // 분류 상세 조회 ( name, displayName, description )
   const getClassificationDetail = async (id?: string) => {
+    // [이름 / 설명 ] 수정상태 off
+    isNameEditable.value = false;
+    isDescEditable.value = false;
+
     if (id) {
       // 어떠한 분류를 선택 했을 경우,
       currentClassificationID = id;
@@ -188,5 +196,7 @@ export const classificationStore = defineStore("classification", () => {
     deleteClassification,
     deleteClassificationTag,
     addClassificationTag,
+    isNameEditable,
+    isDescEditable,
   };
 });

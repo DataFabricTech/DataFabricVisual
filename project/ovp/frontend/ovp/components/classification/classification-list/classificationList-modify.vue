@@ -3,17 +3,17 @@
     <div class="l-top-bar">
       <div class="v-group gap-[20px]">
         <editable-group
+          :parent-edit-mode="isNameEditable"
           compKey="displayName"
           :editable="true"
           @editCancel="editCancel"
           @editDone="editDone"
-          @editIcon="editIconClick"
+          @editIcon="() => editIconClick('displayName')"
         >
           <template #edit-slot>
             <label class="hidden-text" for="title-modify">분류명 입력</label>
             <input
               v-model="newData.displayName"
-              @input="editInput($event)"
               placeholder="분류명에 대한 영역입니다."
               required
               id="title-modify"
@@ -37,18 +37,18 @@
         </div>
       </div>
       <editable-group
+        :parent-edit-mode="isDescEditable"
         compKey="description"
         :editable="true"
         @editCancel="editCancel"
         @editDone="editDone"
-        @editIcon="editIconClick"
+        @editIcon="() => editIconClick('description')"
       >
         <template #edit-slot>
           <label class="hidden-text" for="textarea-modify">textarea 입력</label>
           <textarea
             class="textarea"
             v-model="newData.description"
-            @input="editInput($event)"
             placeholder="해당 분류 설명에 대한 영역입니다."
             required
             id="textarea-modify"
@@ -75,7 +75,8 @@ import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 const useClassificationStore = classificationStore();
 const { editClassificationDetail, deleteClassification } =
   useClassificationStore;
-const { classificationDetailData } = storeToRefs(useClassificationStore);
+const { classificationDetailData, isNameEditable, isDescEditable } =
+  storeToRefs(useClassificationStore);
 
 interface ClassificationDetail {
   id: string;
@@ -121,27 +122,22 @@ const createJsonPatch = (oldData: any, newData: any): JsonPatchOperation[] => {
   return patch;
 };
 
-const editInput = (event: Event) => {
-  const target = event.target as HTMLInputElement | HTMLTextAreaElement;
-  console.log(`event: ${target.value}`);
-};
-
-const editIconClick = () => {
-  console.log("1 수정 버튼 클릭");
+const editIconClick = (key: string) => {
+  if (key === "displayName") {
+    isNameEditable.value = true;
+  } else if (key === "description") {
+    isDescEditable.value = true;
+  }
   defaultData = _.cloneDeep(newData.value);
 };
 
 const editCancel = () => {
-  console.log("2 수정 취소 클릭");
   classificationDetailData.value = _.cloneDeep(defaultData);
-  console.log(`cancel event`);
-  console.log("cancel", newData.value, defaultData);
 };
 
 const editDone = async () => {
   // API호출시 보낼 수정 내용
   const patchData = createJsonPatch(defaultData, newData.value);
-  // console.log("JSON Patch Data: ", patchData);
 
   // 분류 displayName or description 수정 API 호출
   try {
