@@ -6,16 +6,16 @@
   flex-shrink: 0;
   width: 48px;
   height: calc(100% - 50px);
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
+  transition:width 0.3s ease-in-out;
   background-color: $primary-500;
 
   &:hover {
     width: 186px;
 
     .sidebar-text {
+      transform: scaleZ(1);
       opacity: 1;
-      transition-delay: 100ms;
+      transition: opacity 400ms ease-in-out;
     }
   }
 }
@@ -33,6 +33,7 @@
 
   &.is-sidebar-item-selected {
     &::before {
+      @include z-index('float');
       content: "";
       position: absolute;
       width: 2px;
@@ -78,8 +79,9 @@
   white-space: nowrap;
   color: $neutral-0;
   font-weight: 500;
+  transform: scaleZ(0);
   opacity: 0;
-  transition: opacity 200ms ease-in-out;
+  transition: opacity 200ms ease-in-out, transform 500ms linear;
 }
 
 .sidebar-bottom {
