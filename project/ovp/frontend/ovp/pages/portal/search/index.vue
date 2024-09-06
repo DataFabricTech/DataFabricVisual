@@ -172,6 +172,10 @@ watchEffect(() => {
 
 await getFilters();
 
+onBeforeMount(() => {
+  changeTab("table");
+});
+
 onBeforeRouteLeave((to, from, next) => {
   isShowPreview.value = false;
   setEmptyFilter();
