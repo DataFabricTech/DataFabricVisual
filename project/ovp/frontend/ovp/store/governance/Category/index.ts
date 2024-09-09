@@ -57,6 +57,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const categoriesParentId = ref("");
   const categoriesId = ref("");
   const isCategoriesNoData = ref(false);
+  const isUpdatedModelList = ref(false);
   const modelList: Ref<any[]> = ref([]);
   const modelIdList = ref([]);
   const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
@@ -253,6 +254,8 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     }
     const data = await getModelByCategoryIdAPI(selectedNode.value, value);
     modelList.value = data === null ? [] : data;
+
+    isUpdatedModelList.value = true;
   };
   const setModelIdList = () => {
     modelIdList.value = [];
@@ -485,6 +488,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     lastChildIdList,
     isShowPreview,
     undefinedTagIdManager,
+    isUpdatedModelList,
     resetAddModalStatus,
     patchModelAddItemAPI,
     patchCategoryTagAPI,

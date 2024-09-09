@@ -265,6 +265,7 @@ const {
   categoriesParentId,
   categoriesId,
   isShowPreview,
+  isUpdatedModelList,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -452,9 +453,6 @@ const checked = (checkedList: any[]) => {
   selectedModelList.value = checkedList;
 };
 
-const { scrollTrigger, setScrollOptions } =
-  useIntersectionObserver(addModelList);
-
 // PREVIEW
 const getPreviewCloseStatus = (option: boolean) => {
   isShowPreview.value = option;
@@ -612,6 +610,18 @@ onMounted(async () => {
     loader.value.style.display = "none";
   }
 });
+
+const { scrollTrigger, setScrollOptions, mount } =
+  useIntersectionObserver(addModelList);
+
+watch(
+  () => isUpdatedModelList.value,
+  (value) => {
+    if (value) {
+      mount();
+    }
+  },
+);
 </script>
 
 <style scoped></style>
