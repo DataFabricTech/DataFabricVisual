@@ -19,9 +19,9 @@
 
 
 .select {
-  @include select-size;
-
   position: relative;
+
+  @include select-size;
 
   &-button {
     @include flex($horizontal: flex-start);

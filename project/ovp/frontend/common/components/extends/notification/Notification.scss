@@ -26,27 +26,27 @@
   }
 
   &-normal {
-    @include notification-box-color($bg: $neutral-100, $border: $neutral-300, $icon-color: $neutral-400);
     @include box-shadow('sm');
+    @include notification-box-color($bg: $neutral-100, $border: $neutral-300, $icon-color: $neutral-400);
   }
 
   &-info {
-    @include notification-box-color($bg: $info-100, $border: $info-300, $icon-color: $info-500);
     @include box-shadow('sm');
+    @include notification-box-color($bg: $info-100, $border: $info-300, $icon-color: $info-500);
   }
 
   &-warning {
-    @include notification-box-color($bg: $warning-100, $border: $warning-300, $icon-color: $warning-500);
     @include box-shadow('sm');
+    @include notification-box-color($bg: $warning-100, $border: $warning-300, $icon-color: $warning-500);
   }
 
   &-success {
-    @include notification-box-color($bg: $success-100, $border: $success-300, $icon-color: $success-500);
     @include box-shadow('sm');
+    @include notification-box-color($bg: $success-100, $border: $success-300, $icon-color: $success-500);
   }
 
   &-error {
-    @include notification-box-color($bg: $error-100, $border: $error-300, $icon-color: $error-500);
     @include box-shadow('sm');
+    @include notification-box-color($bg: $error-100, $border: $error-300, $icon-color: $error-500);
   }
 }
