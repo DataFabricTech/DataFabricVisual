@@ -80,7 +80,16 @@
         @select="onChangeSort"
       ></select-box>
     </div>
-    <ul class="menu-list" v-if="checkShowListData">
+
+    <!-- 결과 없을 시 no-result 표시 -->
+    <div class="no-result" v-if="!checkShowListData">
+      <div class="notification">
+        <svg-icon class="notification-icon" name="info"></svg-icon>
+        <p class="notification-detail">{{ props.noDataMsg }}</p>
+      </div>
+    </div>
+
+    <ul id="dataListModal" class="menu-list">
       <template v-for="(item, idx) in listData" :key="item.value + idx">
         <data-model-list-item
           v-if="!item.isSelected"
@@ -105,14 +114,6 @@
         style="display: none"
       ></Loading>
     </ul>
-
-    <!-- 결과 없을 시 no-result 표시 -->
-    <div class="no-result" v-else>
-      <div class="notification">
-        <svg-icon class="notification-icon" name="info"></svg-icon>
-        <p class="notification-detail">{{ props.noDataMsg }}</p>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -185,6 +186,7 @@ const emitSearchChange = (value: string) => {
 
 const { scrollTrigger } = useIntersectionObserver({
   callback: props.addSearchList,
+  targetId: "dataListModal",
   loaderId: "dataModelApiListLoader",
 });
 
