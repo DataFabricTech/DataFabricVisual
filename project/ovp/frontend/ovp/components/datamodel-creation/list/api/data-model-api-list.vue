@@ -99,7 +99,7 @@
       </template>
       <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
       <Loading
-        id="loader"
+        id="dataModelApiListLoader"
         :use-loader-overlay="true"
         class="loader-lg is-loader-inner"
         style="display: none"
@@ -183,7 +183,10 @@ const emitSearchChange = (value: string) => {
   emit("search-change", value);
 };
 
-const { scrollTrigger } = useIntersectionObserver(props.addSearchList);
+const { scrollTrigger } = useIntersectionObserver({
+  callback: props.addSearchList,
+  loaderId: "dataModelApiListLoader",
+});
 
 const {
   listData,

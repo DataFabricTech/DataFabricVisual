@@ -612,8 +612,9 @@ onMounted(async () => {
   }
 });
 
-const { scrollTrigger, setScrollOptions } =
-  useIntersectionObserver(addModelList);
+const { scrollTrigger, setScrollOptions } = useIntersectionObserver({
+  callback: addModelList,
+});
 </script>
 
 <style scoped></style>

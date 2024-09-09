@@ -119,7 +119,6 @@ const {
   changeUserInfo,
   getTargetUserData,
   changeTab,
-  updateTargetUserInfo,
   getPreviewData,
   getSearchList,
   addSearchList,
@@ -180,7 +179,7 @@ const modelNmClick = (data: object) => {
   });
 };
 
-const { scrollTrigger } = useIntersectionObserver(addSearchList);
+const { scrollTrigger } = useIntersectionObserver({ callback: addSearchList });
 </script>
 
 <style scoped></style>

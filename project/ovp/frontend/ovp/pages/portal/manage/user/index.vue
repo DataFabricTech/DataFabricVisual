@@ -157,7 +157,7 @@ const cellClicked = ({
 };
 
 await getUserList();
-const { scrollTrigger } = useIntersectionObserver(addUserList);
+const { scrollTrigger } = useIntersectionObserver({ callback: addUserList });
 </script>
 
 <style>

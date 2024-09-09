@@ -2,15 +2,22 @@ import { ref, onMounted, onBeforeUnmount } from "vue";
 import { IntersectionObserverHandler } from "@/utils/intersection-observer";
 import { usePagingStore } from "~/store/common/paging";
 
-export function useIntersectionObserver(
-  realCallback: (params?: any) => Promise<void>,
-  diffTargetId?: string,
-  from?: number,
-  size?: number,
-) {
-  const targetId = diffTargetId || "dataList";
+export function useIntersectionObserver({
+  callback,
+  targetId,
+  loaderId,
+  from,
+  size,
+}: {
+  callback: (params?: any) => Promise<void>;
+  targetId?: string;
+  loaderId?: string;
+  from?: number;
+  size?: number;
+}) {
+  targetId = targetId || "dataList";
+  loaderId = loaderId || "loader";
   const scrollTrigger = ref<HTMLElement | null>(null);
-  const loaderId = "loader";
   let intersectionHandler: IntersectionObserverHandler | null = null;
 
   const pagingStore = usePagingStore();
@@ -38,7 +45,7 @@ export function useIntersectionObserver(
 
     setScrollOptions(count);
 
-    await realCallback();
+    await callback();
 
     if (loader) {
       loader.style.display = "none";

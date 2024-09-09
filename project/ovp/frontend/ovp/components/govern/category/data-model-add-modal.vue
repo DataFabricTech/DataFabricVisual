@@ -131,7 +131,7 @@
           </table>
           <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
           <Loading
-            id="loader"
+            id="dataModelAddModalLoader"
             :use-loader-overlay="true"
             class="loader-lg is-loader-inner"
             style="display: none"
@@ -284,10 +284,11 @@ const onConfirm = async () => {
 
 await getSearchList();
 
-const { scrollTrigger, mount, setScrollOptions } = useIntersectionObserver(
-  addSearchList,
-  "dataListModal",
-);
+const { scrollTrigger, mount, setScrollOptions } = useIntersectionObserver({
+  callback: addSearchList,
+  targetId: "dataListModal",
+  loaderId: "dataModelAddModalLoader",
+});
 
 const onOpened = () => {
   // NOTE : modal 사용 방식 변경 후 부터, modal 은 intersectionHelper 의 onMounted 보다 dom 생성이 늦어
