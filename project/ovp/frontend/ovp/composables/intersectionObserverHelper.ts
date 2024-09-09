@@ -20,14 +20,15 @@ export function useIntersectionObserver(
     setIntersectionHandler,
     updateIntersectionHandler,
   } = pagingStore;
-  const { from: pageStoreFrom, size: pageStoreSize } = storeToRefs(pagingStore);
+  const {
+    from: pageStoreFrom,
+    size: pageStoreSize,
+    isDataLoadDone,
+  } = storeToRefs(pagingStore);
 
-  if (from !== undefined) {
-    setFrom(from);
-  }
-  if (size !== undefined) {
-    setSize(size);
-  }
+  // 초기값 설정
+  setFrom(from ?? 0);
+  setSize(size ?? 20);
 
   const getDataCallback = async (count: number, loader: HTMLElement | null) => {
     // loader start
@@ -48,6 +49,13 @@ export function useIntersectionObserver(
   // onMounted 보다 dom 생성이 늦어 IntersectionObserverHandler 가 제대로 동작하지 않는 오류가 있음.
   // modal 에서 infinite scroll 을 사용하는 경우 mount 를 이용해서 호출해줘야함.
   const mountIntersectionObserver = () => {
+    if (intersectionHandler) {
+      intersectionHandler.disconnect();
+    }
+
+    setFrom(0);
+    setSize(20);
+
     intersectionHandler = new IntersectionObserverHandler(
       targetId,
       scrollTrigger.value,
@@ -72,6 +80,15 @@ export function useIntersectionObserver(
     setFrom(count);
     updateIntersectionHandler(count);
   };
+
+  // 데이터 loading 이 끝나면 observer를 mount 해준다.
+  // infinite scroll 적용되는 페이지 마다 mount 되는 시점이 다르기 때문에 watch 로 처리.
+  watch(
+    () => isDataLoadDone.value,
+    () => {
+      mountIntersectionObserver();
+    },
+  );
 
   return {
     scrollTrigger,

@@ -47,7 +47,7 @@ interface UndefinedTagIdManager {
 export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const { $api } = useNuxtApp();
   const pagingStore = usePagingStore();
-  const { setFrom, updateIntersectionHandler } = pagingStore;
+  const { setFrom, setDataLoadDone, updateIntersectionHandler } = pagingStore;
   const { from, size } = storeToRefs(pagingStore);
   const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
 
@@ -57,7 +57,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const categoriesParentId = ref("");
   const categoriesId = ref("");
   const isCategoriesNoData = ref(false);
-  const isUpdatedModelList = ref(false);
   const modelList: Ref<any[]> = ref([]);
   const modelIdList = ref([]);
   const isBoxSelectedStyle: Ref<boolean> = ref<boolean>(false);
@@ -246,14 +245,15 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     const data = await getModelByCategoryIdAPI(selectedNode.value);
     modelList.value = modelList.value.concat(data);
   };
-  const getModelList = async (value?: string) => {
+  const getModelList = async () => {
     if (_.isNull(selectedNode.value)) {
       return;
     }
     const data = await getModelByCategoryIdAPI(selectedNode.value);
     modelList.value = data === null ? [] : data;
 
-    isUpdatedModelList.value = true;
+    // [데이터 갱신] 이 완료되면 호출한다. infiniteScroll 처리하기 위해 필요한 함수.
+    setDataLoadDone();
   };
   const setModelIdList = () => {
     modelIdList.value = [];
@@ -486,7 +486,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     lastChildIdList,
     isShowPreview,
     undefinedTagIdManager,
-    isUpdatedModelList,
     searchInputValue,
     resetAddModalStatus,
     patchModelAddItemAPI,

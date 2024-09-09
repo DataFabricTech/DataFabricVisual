@@ -117,7 +117,7 @@
               <p class="editable-group-desc">{{ selectedNodeCategory.desc }}</p>
             </template>
           </editable-group>
-          <div class="category-search" v-if="isModalButtonShow">
+          <div class="category-search" v-show="isModalButtonShow">
             <div class="l-top-bar">
               <search-input
                 class="w-[541px]"
@@ -265,7 +265,6 @@ const {
   categoriesParentId,
   categoriesId,
   isShowPreview,
-  isUpdatedModelList,
   searchInputValue,
 } = storeToRefs(categoryStore);
 
@@ -302,6 +301,7 @@ watch(
 
 // TREE
 const onCategoryNodeClick = async (node: TreeViewItem) => {
+  searchInputValue.value = "";
   selectedModelList.value = [];
   isShowPreview.value = false;
   isBoxSelectedStyle.value = false;
@@ -612,17 +612,8 @@ onMounted(async () => {
   }
 });
 
-const { scrollTrigger, setScrollOptions, mount } =
+const { scrollTrigger, setScrollOptions } =
   useIntersectionObserver(addModelList);
-
-watch(
-  () => isUpdatedModelList.value,
-  (value) => {
-    if (value) {
-      mount();
-    }
-  },
-);
 </script>
 
 <style scoped></style>
