@@ -68,6 +68,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const selectedModelList = ref([]);
   const addSearchInputValue = ref("");
   const checkReachedCount = ref<boolean>(false);
+  const searchInputValue = ref("");
   const previewData: Ref<any> = ref({
     modelInfo: {
       model: {
@@ -218,26 +219,23 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   };
 
   // MAIN - MODEL LIST
-  const getModelListQuery = (tagId: string, value?: string) => {
+  const getModelListQuery = (tagId: string) => {
     // TODO : [개발] 검색어 조건 여기 추가.
     const params: any = {
       // eslint-disable-next-line id-length
-      q: value || "",
+      q: searchInputValue.value || "",
       from: from.value,
       size: size.value,
       tagId: tagId,
     };
     return new URLSearchParams(params);
   };
-  const getModelByCategoryIdAPI = async (
-    node: TreeViewItem,
-    value?: string,
-  ) => {
+  const getModelByCategoryIdAPI = async (node: TreeViewItem) => {
     if (_.isNull(node) || _.isEmpty(node.tagId)) {
       return;
     }
     const { data } = await $api(
-      `/api/category/models?${getModelListQuery(node.tagId, value)}`,
+      `/api/category/models?${getModelListQuery(node.tagId)}`,
       { showLoader: false },
     );
 
@@ -252,7 +250,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     if (_.isNull(selectedNode.value)) {
       return;
     }
-    const data = await getModelByCategoryIdAPI(selectedNode.value, value);
+    const data = await getModelByCategoryIdAPI(selectedNode.value);
     modelList.value = data === null ? [] : data;
 
     isUpdatedModelList.value = true;
@@ -489,6 +487,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     isShowPreview,
     undefinedTagIdManager,
     isUpdatedModelList,
+    searchInputValue,
     resetAddModalStatus,
     patchModelAddItemAPI,
     patchCategoryTagAPI,

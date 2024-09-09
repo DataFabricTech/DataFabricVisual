@@ -266,6 +266,7 @@ const {
   categoriesId,
   isShowPreview,
   isUpdatedModelList,
+  searchInputValue,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -437,15 +438,15 @@ const allModelList = computed({
   },
 });
 
-const searchInputValue = ref("");
 const updateSearchInputValue = (newValue: string) => {
   searchInputValue.value = newValue;
 };
-const onInput = async (value: string) => {
+const onInput = async (value:string) => {
+  searchInputValue.value = value;
   isAllModelListChecked.value = false;
   selectedModelList.value = [];
   setScrollOptions(0);
-  await getModelList(value);
+  await getModelList();
   setModelIdList();
 };
 
