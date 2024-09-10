@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RequestMapping("/api/glossary")
@@ -30,6 +31,7 @@ public class GlossaryController {
 
     /**
      * 용어 사전 등록
+     *
      * @param dto
      * @return
      */
@@ -41,6 +43,7 @@ public class GlossaryController {
 
     /**
      * 용어 사전 리스트
+     *
      * @return
      */
     @ResponseJsonResult
@@ -51,6 +54,7 @@ public class GlossaryController {
 
     /**
      * 용어 사전 수정
+     *
      * @param id
      * @param param
      * @return
@@ -63,6 +67,7 @@ public class GlossaryController {
 
     /**
      * 용어 사전 삭제
+     *
      * @param id
      */
     @ResponseJsonResult(errorMessage = "Open-metadata 용어 사전 삭제 오류")
@@ -73,6 +78,7 @@ public class GlossaryController {
 
     /**
      * 용어 추가
+     *
      * @param dto
      * @return
      */
@@ -84,6 +90,7 @@ public class GlossaryController {
 
     /**
      * 용어 리스트
+     *
      * @param term
      * @return
      */
@@ -95,6 +102,7 @@ public class GlossaryController {
 
     /**
      * 용어 수정
+     *
      * @param id
      * @param param
      * @return
@@ -107,6 +115,7 @@ public class GlossaryController {
 
     /**
      * 용어 변경 > 데이터 모델 삭제
+     *
      * @param id
      * @param body
      * @return
@@ -119,6 +128,7 @@ public class GlossaryController {
 
     /**
      * 용어 삭제
+     *
      * @param id
      */
     @ResponseJsonResult(errorMessage = "Open-metadata 용어 삭제 오류")
@@ -129,6 +139,7 @@ public class GlossaryController {
 
     /**
      * 용어 사전 활동 기록
+     *
      * @param entityLink
      * @return
      */
@@ -140,6 +151,7 @@ public class GlossaryController {
 
     /**
      * 태그 리스트 호출
+     *
      * @return
      * @throws Exception
      */
@@ -151,6 +163,7 @@ public class GlossaryController {
 
     /**
      * 데이터 모델 리스트
+     *
      * @param q
      * @return
      * @throws Exception
@@ -163,6 +176,7 @@ public class GlossaryController {
 
     /**
      * 데이터 모델 상세
+     *
      * @param fqn
      * @return
      */
@@ -170,5 +184,17 @@ public class GlossaryController {
     @GetMapping("/data-model")
     public Object getDataModel(@RequestParam String fqn) {
         return glossaryService.getDataModel(fqn);
+    }
+
+    /**
+     * 용어 변경 > 데이터 모델 추가
+     *
+     * @param ids
+     * @return
+     */
+    @ResponseJsonResult
+    @PutMapping("/terms/{id}/data-models")
+    public Object addDataModelsTerm(@PathVariable UUID id, @RequestBody Map<String, List<String>> ids) {
+        return glossaryService.addDataModelsTerm(id, ids);
     }
 }
