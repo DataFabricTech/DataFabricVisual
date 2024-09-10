@@ -173,10 +173,16 @@ export const useAddDataModel = defineStore("AddDataModel", () => {
    * 데이터모델 조회 -> 누적
    */
   const addDataModelList = async () => {
-    const { data } = await getDataModelListAPI();
-    dataModelList.value = dataModelList.value.concat(data[currentTab.value]);
+    // 현재 탭에서 불러오지 않은 데이터가 있을 경우에 추가 조회
+    if (
+      dataModelTotalCountByTab.value[currentTab.value] >
+      dataModelList.value.length
+    ) {
+      const { data } = await getDataModelListAPI();
+      dataModelList.value = dataModelList.value.concat(data[currentTab.value]);
 
-    setDataModelIdList();
+      setDataModelIdList();
+    }
   };
 
   /**
