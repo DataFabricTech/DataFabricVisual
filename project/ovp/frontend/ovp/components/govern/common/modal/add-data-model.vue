@@ -159,10 +159,9 @@ const router = useRouter();
 
 const addDataModelStore = useAddDataModel();
 const {
+  clearDataModelModalSettings,
   setSearchKeyword,
   getFilters,
-  setEmptyFilter,
-  initCurrentTab,
   getDataModelList,
   addDataModelList,
   resetSelectedDataModelListByTab,
@@ -190,12 +189,7 @@ const emit = defineEmits<{
 }>();
 
 const beforeOpen = async () => {
-  setSearchKeyword("");
-  setEmptyFilter();
-  initCurrentTab();
-  resetSelectedDataModelListByTab();
   await getFilters();
-  await getDataModelList();
 };
 
 const inputSearchKeyword = (keyword: string) => {
@@ -270,15 +264,17 @@ const onCancel = () => {
 };
 
 // TODO: 인피니티 스크롤 정상적으로 작동이 안되는 이슈
-// 1. 검색어 입력 및 태그 선택으로 조회 후, 인피니티 스크롤 작동 안됨
-// 2. 체크박스 클릭 후 다른 탭으로 이동하면 인피니티 스크롤이 간헐적으로 작동하지 않음
-// -> 리로드 후 처음 모달열었을때 동작을 제대로 수행하지 못하는걸로 보임
+// 1. 데이터가 없는 탭으로 이동했다가 다시 돌아왔을때 인피니티 스크롤 작동 안됨
 const { scrollTrigger, mount, setScrollOptions } = useIntersectionObserver(
   addDataModelList,
   "dataListModal",
 );
 
-const onOpened = () => {
+// 모달의 설정 값 초기화 후 데이터 조회
+clearDataModelModalSettings();
+await getDataModelList();
+
+const onOpened = async () => {
   // NOTE : modal 사용 방식 변경 후 부터, modal 은 intersectionHelper 의 onMounted 보다 dom 생성이 늦어
   // mount = intersectionObserver 의 생성 순서가 맞지 않아 동작하지 않는 오류가 발생하기 때문에,
   // onOpened 로 이벤트를 받고 dom 이 생성 완료 되면 mount 를 실행해서 intersection observer 를 동작시킨다.

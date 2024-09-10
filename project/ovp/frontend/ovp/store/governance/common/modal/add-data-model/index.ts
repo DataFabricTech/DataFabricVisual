@@ -67,6 +67,13 @@ export const useAddDataModel = defineStore("AddDataModel", () => {
     createDefaultDataModelListByTab(),
   );
 
+  const clearDataModelModalSettings = () => {
+    setSearchKeyword("");
+    setEmptyFilter();
+    initCurrentTab();
+    resetSelectedDataModelListByTab();
+  };
+
   const setSearchKeyword = (keyword: string) => {
     searchKeyword.value = keyword;
   };
@@ -192,6 +199,7 @@ export const useAddDataModel = defineStore("AddDataModel", () => {
     dataModelList,
     dataModelIdList,
     selectedDataModelListByTab,
+    clearDataModelModalSettings,
     setSearchKeyword,
     getFilters,
     setEmptyFilter,
