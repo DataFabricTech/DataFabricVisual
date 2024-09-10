@@ -11,6 +11,7 @@ import com.mobigen.ovp.user.UserClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.time.ZonedDateTime;
@@ -226,5 +227,32 @@ public class ModelCreationService {
             newResult.add(row);
         }
         return newResult;
+    }
+
+    public boolean checkDuplicateModelName(Map<String, Object> param) {
+        boolean isDuplicate;
+        String modelName = (String) param.get("modelName");
+        String queryFilter = String.format("{\"query\":{\"bool\":{\"must\":[{\"bool\":{\"should\":[{\"term\":{\"fullyQualifiedName\":\"datamodels.internalhive.default.%s\"}}]}}]}}}", modelName);
+        String includeSourceFields = "name";
+
+        Map<String, Object> modelInfo = modelCreationClient.selectDataModelName(queryFilter, includeSourceFields);
+
+        Map<String, Object> hits = (Map<String, Object>) modelInfo.get("hits");
+        Map<String, Object> total = (Map<String, Object>) hits.get("total");
+        int totalValue = (int) total.get("value");
+
+        if(totalValue == 1) {
+            isDuplicate = true;
+        } else {
+            isDuplicate = false;
+        }
+
+        return isDuplicate;
+    }
+
+    public Object saveModel(Map<String, Object> param) throws Exception {
+        // TODO: 돌핀 create api 테스트 후 필요시 수정
+        Map<String, Object> result = dolphinClient.createModel(param);
+        return result;
     }
 }

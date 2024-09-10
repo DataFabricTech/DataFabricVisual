@@ -75,4 +75,10 @@ public class CategoryController {
         return categoryService.ChangeDataModelTag(tagId, type, body);
     }
 
+    @ResponseJsonResult
+    @GetMapping("/{tagId}")
+    public Object getCategoryInfo(@PathVariable String tagId) {
+        return categoryService.getTagInfo(tagId);
+    }
+
 }

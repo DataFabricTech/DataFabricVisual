@@ -2,7 +2,10 @@
   <div class="section-top-bar">
     <div class="l-top-bar">
       <h4 class="title">데이터 모델 생성</h4>
-      <button class="button button-primary w-20" @click="saveDataModel(true)">
+      <button
+        class="button button-primary w-20"
+        @click="saveModelInstance.open"
+      >
         저장
       </button>
     </div>
@@ -13,7 +16,7 @@
         :modelList="selectedModelList"
         :dataModelFilter="filters"
         :modelListCnt="selectedModelListCnt"
-        @change="open"
+        @change="addModelInstance.open"
         @delete="deleteDataModel"
         @item-click="onClickDataModelItem"
         @bookmark-change="onClickBookmark"
@@ -44,11 +47,9 @@
       ></result>
     </div>
   </div>
-  <save-model v-if="isShowSaveModel" @change="saveDataModel"></save-model>
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount } from "vue";
 import selectedModel from "@/components/datamodel-creation/selected-model.vue";
 import executeQuery from "@/components/datamodel-creation/execute-query.vue";
 import sample from "@/components/datamodel-creation/sample.vue";
@@ -62,15 +63,20 @@ import { useModal } from "vue-final-modal";
 
 const isShowSaveModel = ref(false);
 
-const saveDataModel = (param: boolean) => {
-  isShowSaveModel.value = param;
-};
-
-const { open, close } = useModal({
+const addModelInstance = useModal({
   component: addModel,
   attrs: {
     onClose() {
-      close();
+      addModelInstance.close();
+    },
+  },
+});
+
+const saveModelInstance = useModal({
+  component: saveModel,
+  attrs: {
+    onClose() {
+      saveModelInstance.close();
     },
   },
 });

@@ -206,9 +206,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       const { data } = await $api(
         `/api/creation/my-list/${user.value.id}?query=${searchKeyword}`,
       );
-
-      console.log("data2312: ", data);
-
       mySearchResult.value = data;
       const ndata = [...data.bookmark, ...data.owner];
       const newData = ndata.map((item: any) => {

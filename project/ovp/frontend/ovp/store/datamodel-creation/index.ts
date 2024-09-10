@@ -12,6 +12,7 @@ export const useCreationStore = defineStore("creation", () => {
   const { getSampleData, getProfileData } = dataModelSearchStore;
 
   const query = ref("");
+  const referenceModels = ref([]);
 
   // NOTE: 쿼리 성공여부
   const querySuccess = ref(false);
@@ -75,7 +76,7 @@ export const useCreationStore = defineStore("creation", () => {
    * */
   async function runQuery(value: any) {
     query.value = value;
-    const referenceModels = selectedModelList.value.map((item) => ({
+    referenceModels.value = selectedModelList.value.map((item) => ({
       id: item.id,
       name: item.modelNm,
       fullyQualifiedName: item.fqn,
@@ -83,7 +84,7 @@ export const useCreationStore = defineStore("creation", () => {
 
     const param = {
       query: query.value,
-      referenceModels: referenceModels,
+      referenceModels: referenceModels.value,
       limit: 100,
       page: 0,
     };
@@ -113,6 +114,7 @@ export const useCreationStore = defineStore("creation", () => {
    * */
   const resetQuery = () => {
     query.value = "";
+    referenceModels.value = [];
     isFirstExecute.value = false;
     querySuccess.value = false;
     isExecuteQuery.value = false;
@@ -129,6 +131,7 @@ export const useCreationStore = defineStore("creation", () => {
   return {
     selectedModelList,
     query,
+    referenceModels,
     querySuccess,
     isExecuteQuery,
     isFirstExecute,
