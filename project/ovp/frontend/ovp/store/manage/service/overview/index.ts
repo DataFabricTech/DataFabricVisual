@@ -5,9 +5,8 @@ export const useOverviewStore = defineStore("overview", () => {
 
   const typeData: Ref<any[]> = ref([]);
   const statusData: Ref<any[]> = ref([]);
-  const recommendData: Ref<any[]> = ref([]);
   const responseData: Ref<any[]> = ref([]);
-  const registerData: Ref<any[]> = ref([]);
+  const currentSituationData: Ref<any[]> = ref([]);
   const serviceData: Ref<any[]> = ref([]);
   const historyData: Ref<any[]> = ref([]);
   const getTypeApi = async () => {
@@ -32,21 +31,6 @@ export const useOverviewStore = defineStore("overview", () => {
 
     statusData.value = tempData;
   };
-  const getRecommendApi = async () => {
-    // const {data} = await $api (``);
-    const tempData = [
-      120, 200,
-      // {
-      //   value: 200,
-      //   itemStyle: {
-      //     color: "#a90000",
-      //   },
-      // },
-      150, 80, 70, 110, 130,
-    ];
-
-    recommendData.value = tempData;
-  };
 
   const getResponseApi = async () => {
     // const {data} = await $api (``);
@@ -60,7 +44,7 @@ export const useOverviewStore = defineStore("overview", () => {
 
     responseData.value = tempData;
   };
-  const getRegisterApi = async () => {
+  const getCurrentSituationApi = async () => {
     // const {data} = await $api (``);
     const tempData = [
       { value: 1048, name: "Search Engine" },
@@ -70,7 +54,7 @@ export const useOverviewStore = defineStore("overview", () => {
       { value: 300, name: "Video Ads" },
     ];
 
-    registerData.value = tempData;
+    currentSituationData.value = tempData;
   };
   const getServiceApi = async () => {
     // const {data} = await $api (``);
@@ -315,16 +299,14 @@ export const useOverviewStore = defineStore("overview", () => {
   return {
     typeData,
     statusData,
-    recommendData,
     responseData,
-    registerData,
+    currentSituationData,
     serviceData,
     historyData,
     getTypeApi,
     getStatusApi,
-    getRecommendApi,
     getResponseApi,
-    getRegisterApi,
+    getCurrentSituationApi,
     getServiceApi,
     getHistoryApi,
   };

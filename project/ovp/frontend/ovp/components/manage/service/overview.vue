@@ -23,12 +23,34 @@
       </div>
       <div class="flex w-full gap-5">
         <div class="overview-summary">
-          <span>데이터 모델 추천 순위</span>
-          <div id="recommendChart" style="width: 100%; height: 320px"></div>
-        </div>
-        <div class="overview-summary">
-          <span>데이터 모델 등록 현황</span>
-          <div id="registerChart" style="width: 100%; height: 320px"></div>
+          <span>등록된 데이터 모델 현황</span>
+          <div class="overview-chart h-group gap-4 px-2">
+            <button
+              class="button button-neutral-stroke button-lg"
+              type="button"
+              disabled
+            >
+              <span class="hidden-text">이전 내용으로 넘기기</span>
+              <svg-icon
+                class="button-icon"
+                name="chevron-left-medium"
+              ></svg-icon>
+            </button>
+            <div
+              id="currentSituationChart"
+              style="width: 100%; height: 320px"
+            ></div>
+            <button
+              class="button button-neutral-stroke button-lg"
+              type="button"
+            >
+              <span class="hidden-text">다음 내용으로 넘기기</span>
+              <svg-icon
+                class="button-icon"
+                name="chevron-right-medium"
+              ></svg-icon>
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -71,18 +93,16 @@ const overviewStore = useOverviewStore();
 const {
   getTypeApi,
   getStatusApi,
-  getRecommendApi,
   getResponseApi,
-  getRegisterApi,
+  getCurrentSituationApi,
   getServiceApi,
   getHistoryApi,
 } = overviewStore;
 const {
   typeData,
   statusData,
-  recommendData,
   responseData,
-  registerData,
+  currentSituationData,
   serviceData,
   historyData,
 } = storeToRefs(overviewStore);
@@ -92,9 +112,8 @@ const setOverviewData = () => {
   console.log("1. setOverviewData 실행");
   getTypeApi();
   getStatusApi();
-  getRecommendApi();
   getResponseApi();
-  getRegisterApi();
+  getCurrentSituationApi();
   getServiceApi();
   getHistoryApi();
 };
@@ -122,11 +141,8 @@ const setECharts = () => {
   console.log("2. setECharts 실행");
   const typeChartDOM = document.getElementById("typeChart") as HTMLElement;
   const statusChartDOM = document.getElementById("statusChart") as HTMLElement;
-  const recommendChartDOM = document.getElementById(
-    "recommendChart",
-  ) as HTMLElement;
-  const registerChartDOM = document.getElementById(
-    "registerChart",
+  const currentSituationChartDOM = document.getElementById(
+    "currentSituationChart",
   ) as HTMLElement;
 
   // 차트가 이미 초기화되어 있는지 확인하고, 존재하면 dispose()로 기존 인스턴스 파괴 후, 재 생성
@@ -136,17 +152,13 @@ const setECharts = () => {
   if (echarts.getInstanceByDom(statusChartDOM)) {
     echarts.dispose(statusChartDOM);
   }
-  if (echarts.getInstanceByDom(recommendChartDOM)) {
-    echarts.dispose(recommendChartDOM);
-  }
-  if (echarts.getInstanceByDom(registerChartDOM)) {
-    echarts.dispose(registerChartDOM);
+  if (echarts.getInstanceByDom(currentSituationChartDOM)) {
+    echarts.dispose(currentSituationChartDOM);
   }
 
   const typeChart = echarts.init(typeChartDOM);
   const statusChart = echarts.init(statusChartDOM);
-  const recommendChart = echarts.init(recommendChartDOM);
-  const registerChart = echarts.init(registerChartDOM);
+  const currentSituationChart = echarts.init(currentSituationChartDOM);
 
   typeChart.setOption({
     tooltip: {
@@ -212,72 +224,24 @@ const setECharts = () => {
       },
     ],
   });
-  recommendChart.setOption({
-    tooltip: {
-      trigger: "axis",
-      axisPointer: {
-        type: "shadow",
-      },
-    },
-    xAxis: {
-      type: "category",
-      data: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-    },
-    yAxis: {
-      type: "value",
-    },
-    series: [
-      {
-        data: recommendData.value,
-        type: "bar",
-      },
-    ],
-  });
-  registerChart.setOption({
-    tooltip: {
-      trigger: "axis",
-      axisPointer: {
-        type: "shadow",
-      },
-    },
+  currentSituationChart.setOption({
     legend: {},
-    grid: {
-      left: "3%",
-      right: "4%",
-      bottom: "3%",
-      containLabel: true,
+    tooltip: {},
+    dataset: {
+      source: [
+        ["product", "전체 데이터", "등록된 데이터 모델"],
+        ["서비스 A", 43.3, 85.8],
+        ["서비스 B", 83.1, 73.4],
+        ["서비스 C", 86.4, 65.2],
+        ["서비스 D", 72.4, 53.9],
+        ["서비스 E", 100, 89],
+      ],
     },
-    xAxis: [
-      {
-        type: "category",
-        data: ["A", "B", "C", "D", "E", "F", "G"],
-      },
-    ],
-    yAxis: [
-      {
-        type: "value",
-      },
-    ],
-    series: [
-      {
-        name: "전체 데이터",
-        type: "bar",
-        stack: "Ad",
-        emphasis: {
-          focus: "series",
-        },
-        data: [120, 132, 101, 134, 90, 230, 210],
-      },
-      {
-        name: "데이터 모델로 등록된 데이터",
-        type: "bar",
-        stack: "Ad",
-        emphasis: {
-          focus: "series",
-        },
-        data: [220, 182, 191, 234, 290, 330, 310],
-      },
-    ],
+    xAxis: { type: "category" },
+    yAxis: {},
+    // Declare several bar series, each will be mapped
+    // to a column of dataset.source by default.
+    series: [{ type: "bar" }, { type: "bar" }],
   });
 };
 
