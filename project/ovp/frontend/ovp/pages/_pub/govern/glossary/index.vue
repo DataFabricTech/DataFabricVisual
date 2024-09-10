@@ -90,8 +90,9 @@
             </div>
           </div>
           <!-- // 결과 없을 시 no-result 표시  -->
-
-          <div class="editable-group">
+          <div class="v-group gap-2">
+            <div class="font-semibold text-neutral-700">설명</div>
+            <div class="editable-group">
             <span class="editable-group-desc"
               >GDPR special category data is personal information of data
               subjects that is especially sensitive, the exposure of which could
@@ -104,28 +105,10 @@
               <svg-icon class="button-icon" name="pen"></svg-icon>
             </button>
           </div>
-          <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-          <div class="editable-group">
-            <lable class="hidden-text" for="description-modify"
-              >카테고리 설명 수정
-            </lable>
-            <textarea
-              id="description-modify"
-              class="textarea"
-              width="300px"
-            ></textarea>
-            <div class="h-group gap-1">
-              <button class="button button-neutral-stroke" type="button">
-                취소
-              </button>
-              <button class="button button-primary-lighter" type="button">
-                완료
-              </button>
-            </div>
           </div>
-          <!-- // 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-
-          <div class="editable-group">
+          <div class="h-group gap-2">
+            <div class="font-semibold text-neutral-700 w-16">태그</div>
+            <div class="editable-group">
             <div class="tag tag-primary tag-sm">
               <span class="tag-text">tag</span>
             </div>
@@ -137,127 +120,39 @@
               <svg-icon class="button-icon" name="pen"></svg-icon>
             </button>
           </div>
-          <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-          <div class="editable-group">
-            <!-- TODO: [개발] 수정버튼 클릭시 select 활성화  -->
-            <div class="select select-clean">
-              <button class="select-button">
-                <div class="tag tag-primary tag-sm">
-                  <span class="tag-text">tag</span>
-                  <button class="tag-delete-button">
-                    <span class="hidden-text">삭제</span>
-                    <svg-icon class="svg-icon" name="close"></svg-icon>
-                  </button>
-                </div>
-                <div class="tag tag-primary tag-sm">
-                  <span class="tag-text">DATA-tag</span>
-                  <button class="tag-delete-button">
-                    <span class="hidden-text">삭제</span>
-                    <svg-icon class="svg-icon" name="close"></svg-icon>
-                  </button>
-                </div>
-                <svg-icon
-                  class="svg-icon select-indicator"
-                  name="chevron-down-medium"
-                ></svg-icon>
-              </button>
-              <!-- TODO: [개발] menu-search 시작 컴포넌트화  -->
-              <div class="menu menu-search" style="display: none">
-                <div class="menu-head">
-                  <div class="search-input">
-                    <label class="hidden-text" for="text-input-example-11"
-                      >label</label
-                    >
-                    <input
-                      id="text-input-example-11"
-                      class="text-input"
-                      placeholder="검색어 입력"
-                    />
-                    <svg-icon class="text-input-icon" name="search"></svg-icon>
-                    <button
-                      class="search-input-action-button button button-neutral-ghost button-sm"
-                      type="button"
-                    >
-                      <span class="hidden-text">지우기</span>
-                      <svg-icon class="button-icon" name="close"></svg-icon>
-                    </button>
-                  </div>
-                </div>
-                <ul class="menu-list">
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input
-                        type="checkbox"
-                        id="checkbox-menu-1"
-                        class="checkbox-input"
-                      />
-                      <label for="checkbox-menu-1" class="checkbox-label">
-                        <span class="checkbox-text"> Checkbox1 </span>
-                      </label>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input
-                        type="checkbox"
-                        id="checkbox-menu-2"
-                        class="checkbox-input"
-                      />
-                      <label for="checkbox-menu-2" class="checkbox-label">
-                        <span class="checkbox-text"> Checkbox2 </span>
-                      </label>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input
-                        type="checkbox"
-                        id="checkbox-menu-3"
-                        class="checkbox-input"
-                      />
-                      <label for="checkbox-menu-3" class="checkbox-label">
-                        <span class="checkbox-text"> Checkbox3 </span>
-                      </label>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input
-                        type="checkbox"
-                        id="checkbox-menu-4"
-                        class="checkbox-input"
-                      />
-                      <label for="checkbox-menu-4" class="checkbox-label">
-                        <span class="checkbox-text"> Checkbox4 </span>
-                      </label>
-                    </div>
-                  </li>
-                  <li class="menu-item">
-                    <div class="checkbox">
-                      <input
-                        type="checkbox"
-                        id="checkbox-menu-5"
-                        class="checkbox-input"
-                      />
-                      <label for="checkbox-menu-5" class="checkbox-label">
-                        <span class="checkbox-text"> Checkbox5 </span>
-                      </label>
-                    </div>
-                  </li>
-                </ul>
-                <div class="menu-foot">
-                  <button class="button button-error-ghost">초기화</button>
-                  <div class="menu-foot-group">
-                    <button class="button button-neutral-ghost">취소</button>
-                    <button class="button button-primary">적용</button>
-                  </div>
-                </div>
+          </div>
+          <div class="h-group gap-2">
+            <div class="font-semibold text-neutral-700 w-16">동의어</div>
+            <div class="editable-group">
+              <div class="tag tag-primary tag-sm">
+                <span class="tag-text">tag</span>
               </div>
-              <!-- menu-search 끝 -->
+              <span>,</span>
+              <div class="tag tag-primary tag-sm">
+                <span class="tag-text">tag</span>
+              </div>
+              <button class="button button-neutral-ghost button-sm" type="button">
+                <span class="hidden-text">수정</span>
+                <svg-icon class="button-icon" name="pen"></svg-icon>
+              </button>
             </div>
           </div>
-          <!-- // 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-
+          <div class="h-group gap-2">
+            <div class="font-semibold text-neutral-700 w-16">관련용어</div>
+            <div class="editable-group">
+              <div class="tag tag-primary tag-sm">
+                <span class="tag-text">tag</span>
+              </div>
+              <span>,</span>
+              <div class="tag tag-primary tag-sm">
+                <span class="tag-text">tag</span>
+              </div>
+              <button class="button button-neutral-ghost button-sm" type="button">
+                <span class="hidden-text">수정</span>
+                <svg-icon class="button-icon" name="pen"></svg-icon>
+              </button>
+            </div>
+          </div>
           <div>
             <div class="tab tab-line">
               <ul class="tab-list">
