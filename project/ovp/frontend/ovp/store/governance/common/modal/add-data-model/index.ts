@@ -9,6 +9,7 @@ import { ref } from "vue";
 import { FILTER_KEYS } from "@/store/search/common";
 import $constants from "@/utils/constant";
 import _ from "lodash";
+import { useGlossaryStore } from "~/store/glossary";
 
 interface Tab {
   label: string;
@@ -29,6 +30,9 @@ export const useAddDataModel = defineStore("AddDataModel", () => {
   const { setFrom, updateIntersectionHandler } = pagingStore;
   const { from, size } = storeToRefs(pagingStore);
   const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
+
+  const glossaryStore = useGlossaryStore();
+  const { term } = storeToRefs(glossaryStore);
 
   const createDefaultFilters = (): Filters => {
     return {
@@ -179,13 +183,35 @@ export const useAddDataModel = defineStore("AddDataModel", () => {
    * 데이터모델 추가
    */
   const addDataModel = async ({
-    currentPageType, // glossary or category
+    currentPageType,
   }: {
     currentPageType: string;
   }) => {
-    // TODO: pageTyp e에 따라 각각 다른 API 를 구현하여 개발
-    console.log("currentPageType", currentPageType);
-    console.log(selectedDataModelListByTab.value);
+    // category or glossary
+    return currentPageType === "category"
+      ? await addDataModelsCategory()
+      : await addDataModelsTerm();
+  };
+
+  /**
+   * 데이터모델 추가 - 카테고리
+   */
+  const addDataModelsCategory = async () => {
+    // TODO: 카테고리 데이터모델추가
+    return true;
+  };
+
+  /**
+   * 데이터모델 추가 - 용어
+   */
+  const addDataModelsTerm = async () => {
+    const id = term.value.id;
+    const { data } = await $api(`/api/glossary/terms/${id}/data-models`, {
+      method: "PUT",
+      body: selectedDataModelListByTab.value,
+    });
+
+    return data;
   };
 
   return {

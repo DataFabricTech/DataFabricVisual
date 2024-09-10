@@ -86,7 +86,6 @@ const { open, close } = useModal({
     currentPageType: "glossary",
     onConfirm() {
       // TODO: 데이터모델 목록 조회 및 초기화
-      alert("저장완료");
       close();
     },
     onClose() {

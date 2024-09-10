@@ -257,10 +257,16 @@ const isDisabledConfirmBtn = computed(() => {
 });
 
 const onConfirm = async () => {
-  await addDataModel({ currentPageType: props.currentPageType });
-  setScrollOptions(0);
-
-  emit("confirm");
+  await addDataModel({ currentPageType: props.currentPageType }).then(
+    (isSuccess) => {
+      if (isSuccess) {
+        setScrollOptions(0);
+        emit("confirm");
+      } else {
+        alert("저장 실패했습니다. 잠시 후 다시 시도해주세요.");
+      }
+    },
+  );
 };
 
 const onCancel = () => {
