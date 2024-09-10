@@ -19,9 +19,9 @@
 
 
 .select {
-  @include select-size;
-
   position: relative;
+
+  @include select-size;
 
   &-button {
     @include flex($horizontal: flex-start);
@@ -146,6 +146,17 @@
         box-shadow: none;
         background: $primary-100;
       }
+    }
+  }
+
+
+  //안에 태그가 많을걸 대비 높이값 자동으로 조정, 너비 초과시 줄바꿈
+  &:has(.tag) {
+    height: auto;
+
+    .select-button {
+      padding-block: $spacing-6;
+      flex-wrap: wrap;
     }
   }
 

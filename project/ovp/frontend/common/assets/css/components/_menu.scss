@@ -17,13 +17,13 @@
 }
 
 .menu {
-  @include menu-size;
-
   display: flex;
   flex-direction: column;
   height: fit-content;
   box-shadow: none;
   border-color: $neutral-200;
+
+  @include menu-size;
 
   &-button-group {
     @include flex;

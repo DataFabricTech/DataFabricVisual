@@ -1,7 +1,7 @@
 <template>
   <button
     v-if="data.name !== 'admin'"
-    class="button button-lg button-error-stroke"
+    class="button button-sm button-error-stroke"
     type="button"
     @click="handleClick"
   >

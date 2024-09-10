@@ -6,11 +6,11 @@
   }
 
   &-button {
-    @include button;
-
     width: 32px;
     height: 32px;
     font-size: 13px;
+
+    @include button;
   }
 
   &-icon-button.button {
