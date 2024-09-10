@@ -54,7 +54,11 @@
             <p class="notification-detail">정보가 없습니다.</p>
           </div>
         </div>
-        <div v-else class="table-scroll" id="dataListModal">
+        <div
+          v-show="!_.isEmpty(dataModelList)"
+          class="table-scroll"
+          id="dataListModal"
+        >
           <table class="table-fixed">
             <colgroup>
               <col style="width: 42px" />
@@ -263,8 +267,6 @@ const onCancel = () => {
   emit("close");
 };
 
-// TODO: 인피니티 스크롤 정상적으로 작동이 안되는 이슈
-// 1. 데이터가 없는 탭으로 이동했다가 다시 돌아왔을때 인피니티 스크롤 작동 안됨
 const { scrollTrigger, mount, setScrollOptions } = useIntersectionObserver(
   addDataModelList,
   "dataListModal",
