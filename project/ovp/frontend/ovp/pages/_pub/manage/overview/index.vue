@@ -57,15 +57,20 @@
         </div>
         <div class="flex w-full gap-5">
           <div class="overview-summary">
-            <span>데이터 모델 추천 순위</span>
-            <div class="overview-chart">
+            <span>등록된 데이터 모델 현황</span>
+            <div class="overview-chart h-group gap-4 px-2">
+              <button class="button button-neutral-stroke button-lg" type="button" disabled>
+                <span class="hidden-text">이전 내용으로 넘기기</span>
+                <svg-icon class="button-icon" name="chevron-left-medium"></svg-icon>
+              </button>
+              <!-- TODO:[개발] 컬럼차트 넣는 곳 -->
+              <div class="column-chart">
 
-            </div>
-          </div>
-          <div class="overview-summary">
-            <span>데이터 모델 등록 현황</span>
-            <div class="overview-chart">
-
+              </div>
+              <button class="button button-neutral-stroke button-lg" type="button">
+                <span class="hidden-text">다음 내용으로 넘기기</span>
+                <svg-icon class="button-icon" name="chevron-right-medium"></svg-icon>
+              </button>
             </div>
           </div>
         </div>
