@@ -19,7 +19,9 @@
                     id="inpName"
                     class="text-input text-input-lg"
                     placeholder="이름 입력"
+                    autocomplete="off"
                     v-model="form.displayName"
+                    @input="validateDisplayName"
                   />
                 </div>
                 <div
@@ -42,7 +44,9 @@
                     id="inpEmail"
                     class="text-input text-input-lg"
                     placeholder="이메일 입력"
+                    autocomplete="off"
                     v-model="form.email"
+                    @input="validateEmail"
                   />
                 </div>
                 <div
@@ -66,7 +70,9 @@
                     :type="inputPasswordType"
                     class="text-input text-input-lg"
                     placeholder="비밀번호 입력"
+                    autocomplete="new-password"
                     v-model="newPassword"
+                    @input="validatePassword"
                   />
                   <button
                     class="text-input-group-action-button button button-neutral-ghost button-sm"
@@ -107,7 +113,9 @@
                     :type="inputConfirmPasswordType"
                     class="text-input text-input-lg"
                     placeholder="비밀번호 입력"
+                    autocomplete="new-password"
                     v-model="confirmPassword"
+                    @input="validateConfirmPassword"
                   />
                   <button
                     class="text-input-group-action-button button button-neutral-ghost button-sm"
