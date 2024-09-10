@@ -22,7 +22,7 @@
         <div
           :class="{
             'node-disabled': props.disabledIds.length > 0 && props.disabledIds.includes(treeViewItem.id),
-            'node-fir-selected': props.selectedIds.length > 0 && props.selectedIds.includes(treeViewItem.id)
+            'node-selected': treeSelectedIds.length > 0 && treeSelectedIds.includes(treeViewItem.id)
           }"
         ></div>
         <div v-if="mode === 'edit' && !props.immutableItems.includes(treeViewItem.id)" class="tree-item-buttons">
@@ -88,7 +88,8 @@ onMounted(() => {
   }
 });
 
-const { showTree, treeItems, createNewTreeItem, openAll, closeAll, dropValidatorHandler } = TreeComposition(props);
+const { showTree, treeItems, createNewTreeItem, openAll, closeAll, dropValidatorHandler, treeSelectedIds } =
+  TreeComposition(props);
 </script>
 
 <style lang="scss">
