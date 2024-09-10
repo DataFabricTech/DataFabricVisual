@@ -240,6 +240,7 @@ const {
   changeTab,
   setEmptyFilter,
   setModelIdList,
+  setSelectedNode,
   undefinedTagIdManager,
 } = categoryStore;
 const {
