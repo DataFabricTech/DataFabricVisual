@@ -99,7 +99,7 @@
           props.dataObj.modelDesc === "" ||
           props.dataObj.modelDesc === null ||
           props.dataObj.modelDesc === undefined
-            ? "설명 없음"
+            ? "-"
             : props.dataObj.modelDesc
         }}</span
       >
@@ -127,7 +127,7 @@
             props.dataObj.modelDesc === "" ||
             props.dataObj.modelDesc === null ||
             props.dataObj.modelDesc === undefined
-              ? "설명 없음"
+              ? "-"
               : props.dataObj.modelDesc
           }}</span
         >
