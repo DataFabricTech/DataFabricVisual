@@ -149,6 +149,17 @@
     }
   }
 
+
+  //안에 태그가 많을걸 대비 높이값 자동으로 조정, 너비 초과시 줄바꿈
+  &:has(.tag) {
+    height: auto;
+
+    .select-button {
+      padding-block: $spacing-6;
+      flex-wrap: wrap;
+    }
+  }
+
   // Size
   &-lg {
     @include select-size($size: 36px, $right-padding: $spacing-8, $left-padding: 10px, $icon-size: sm);
