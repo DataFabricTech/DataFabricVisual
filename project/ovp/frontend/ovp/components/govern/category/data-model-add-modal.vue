@@ -177,6 +177,7 @@ const {
   selectedDataModelList,
   addSearchInputValue,
   isShowPreview,
+  searchInputValue,
 } = storeToRefs(categoryStore);
 
 const props = defineProps({
@@ -275,6 +276,8 @@ const onCancel = () => {
 const onConfirm = async () => {
   await patchModelAddItemAPI();
   setScrollOptions(0);
+  searchInputValue.value = "";
+
   await getModelList();
   setModelIdList();
 
