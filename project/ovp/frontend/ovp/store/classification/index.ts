@@ -104,7 +104,12 @@ export const classificationStore = defineStore("classification", () => {
     }
     const urlID: any = `/api/classifications/list/` + currentClassificationID;
     const data: any = await $api(urlID); // 분류 상세 조회 API 호출
+
     classificationDetailData.value = data.data; // 화면에 보여줄 store 변수로 세팅
+    if (data.data.description.length === 0) {
+      // 설명이 없을 때,
+      classificationDetailData.value.description = "-";
+    }
   };
 
   // 태그 정보 조회 (기본값 : 분류 목록중 최상단 분류의 태그정보)

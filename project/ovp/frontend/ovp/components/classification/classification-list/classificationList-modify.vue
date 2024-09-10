@@ -4,16 +4,16 @@
       <div class="v-group gap-[20px]">
         <editable-group
           :parent-edit-mode="isNameEditable"
-          compKey="displayName"
+          compKey="name"
           :editable="true"
           @editCancel="editCancel"
           @editDone="editDone"
-          @editIcon="() => editIconClick('displayName')"
+          @editIcon="() => editIconClick('name')"
         >
           <template #edit-slot>
             <label class="hidden-text" for="title-modify">분류명 입력</label>
             <input
-              v-model="newData.displayName"
+              v-model="newData.name"
               placeholder="분류명에 대한 영역입니다."
               required
               id="title-modify"
@@ -21,7 +21,7 @@
             />
           </template>
           <template #view-slot>
-            <h3 class="editable-group-title">{{ newData.displayName }}</h3>
+            <h3 class="editable-group-title">{{ newData.name }}</h3>
           </template>
         </editable-group>
       </div>
@@ -93,6 +93,9 @@ let defaultData: ClassificationDetail = {
 };
 
 const newData = computed(() => {
+  if (classificationDetailData.value.description?.length === 0) {
+    classificationDetailData.value.description.concat("-");
+  }
   return _.cloneDeep(classificationDetailData.value);
 });
 
@@ -105,11 +108,11 @@ interface JsonPatchOperation {
 // 수정될 내용 형식 만드는 함수
 const createJsonPatch = (oldData: any, newData: any): JsonPatchOperation[] => {
   const patch: JsonPatchOperation[] = [];
-  if (oldData.displayName !== newData.displayName) {
+  if (oldData.name !== newData.name) {
     patch.push({
       op: "replace",
-      path: "/displayName",
-      value: newData.displayName,
+      path: "/name",
+      value: newData.name,
     });
   }
   if (oldData.description !== newData.description) {
@@ -123,12 +126,20 @@ const createJsonPatch = (oldData: any, newData: any): JsonPatchOperation[] => {
 };
 
 const editIconClick = (key: string) => {
-  if (key === "displayName") {
+  if (key === "name") {
     isNameEditable.value = true;
   } else if (key === "description") {
     isDescEditable.value = true;
+    // 수정버튼 클릭시, description의 수정상태에 '-'를 제거
+    if (newData.value.description === "-") {
+      newData.value.description = "";
+    }
   }
   defaultData = _.cloneDeep(newData.value);
+  // 설명값이 빈값일 경우에는, default값은 '-'로 설정
+  if (defaultData.description?.length === 0) {
+    defaultData.description = "-";
+  }
 };
 
 const editCancel = () => {
@@ -136,7 +147,13 @@ const editCancel = () => {
 };
 
 const editDone = async () => {
-  // API호출시 보낼 수정 내용
+  // 분류이름이 빈값으로 수정할 경우, 기존값으로 세팅
+  if (!newData.value.name) {
+    classificationDetailData.value = _.cloneDeep(defaultData);
+    return;
+  }
+
+  // 이름이 있을 경우에만 API 호출 로직 수행
   const patchData = createJsonPatch(defaultData, newData.value);
 
   // 분류 displayName or description 수정 API 호출
@@ -144,6 +161,10 @@ const editDone = async () => {
     const res = await editClassificationDetail(patchData);
     if (res.result === 1) {
       // 서버 수정 성공시,
+      // 설명에 값이 없을 경우, '-' 되도록 세팅
+      if (res.data.description.length === 0) {
+        newData.value.description = "-";
+      }
       classificationDetailData.value = _.cloneDeep(newData.value);
       return;
     } else {
