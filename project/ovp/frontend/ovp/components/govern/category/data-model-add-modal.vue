@@ -55,7 +55,11 @@
             <p class="notification-detail">정보가 없습니다.</p>
           </div>
         </div>
-        <div v-else class="table-scroll" id="dataListModal">
+        <div
+          class="table-scroll"
+          id="dataListModal"
+          v-show="!isSearchResultNoData"
+        >
           <table class="table-fixed">
             <colgroup>
               <col style="width: 42px" />
