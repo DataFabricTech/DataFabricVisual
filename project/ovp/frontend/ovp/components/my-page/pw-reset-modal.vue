@@ -27,13 +27,11 @@
 import Modal from "@extends/modal/Modal.vue";
 import { loginStore } from "~/store/login";
 import { PasswordComposition } from "~/components/login/PasswordComposition";
-import { useNuxtApp } from "nuxt/app";
 import { useRouter } from "#vue-router";
 
 const composition = PasswordComposition();
 const router = useRouter();
 const store = loginStore();
-const { $vfm } = useNuxtApp();
 const { getPwChangeInMypage } = store;
 
 const emit = defineEmits<{

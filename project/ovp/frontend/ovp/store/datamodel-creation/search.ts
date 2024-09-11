@@ -25,7 +25,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
 
   // 인피니티 스크롤 - Pageing 처리 관련
   const pagingStore = usePagingStore();
-  const { setFrom, updateIntersectionHandler } = pagingStore;
+  const { setFrom, updateIntersectionHandler, setDataLoadDone } = pagingStore;
   const { from, size } = storeToRefs(pagingStore);
 
   // 데이터 생성 > 추가 모달 관련
@@ -183,6 +183,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     const { data, totalCount } = await getSearchListAPI(selectedList);
     searchResult.value = data[currTypeTab.value];
     searchResultLength.value = totalCount;
+
+    // [데이터 갱신] 이 완료되면 호출한다. infiniteScroll 처리하기 위해 필요한 함수. (modal 한정)
+    setDataLoadDone();
   };
 
   /**
@@ -361,7 +364,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * API- 필터 조회
    */
   const getFilters = async () => {
-    const { data } = await $api(`/api/search/filters`);
+    const { data } = await $api(`/api/search/filters`, { showLoader: false });
 
     // 기본값 기준 사용할 필터 key 를 정리
     const defaultFilters = createDefaultFilters();
@@ -384,7 +387,10 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    */
   const getSearchListAPI = async (selectedList: any[] | null = null) => {
     if (currTab.value === TAB_DEFAULT) {
-      const { data } = await $api(`/api/creation/list?${getSearchListQuery()}`);
+      const { data } = await $api(
+        `/api/creation/list?${getSearchListQuery()}`,
+        { showLoader: false },
+      );
       const nData = data.data[currTypeTab.value] as any[];
       data.data[currTypeTab.value] = nData.map((item: any) => {
         return setSearchListItem(selectedList, item);

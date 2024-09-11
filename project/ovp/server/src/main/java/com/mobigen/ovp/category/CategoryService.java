@@ -139,8 +139,8 @@ public class CategoryService {
         // 삭제 진행
         // step1. openMeta 에서 tag 삭제
         MultiValueMap<String, String> tagParams = new LinkedMultiValueMap<>();
-        tagParams.add("recursive", "true");
-        tagParams.add("hardDelete", "true");
+        tagParams.set("recursive", "true");
+        tagParams.set("hardDelete", "true");
 
         for (UUID tagId : tagIds) {
             classificationClient.deleteTag(tagId.toString(), tagParams);
@@ -316,7 +316,7 @@ public class CategoryService {
      */
     @Transactional
     public Object getModelList(String tagId, MultiValueMap<String, String> params) throws Exception {
-        params.add("query_filter", createQueryFilterByTagName(getTagInfo(tagId.toString())));
+        params.set("query_filter", createQueryFilterByTagName(getTagInfo(tagId.toString())));
         return getModelListByTagId(UUID.fromString(tagId), params);
     }
 
@@ -335,7 +335,7 @@ public class CategoryService {
         if (params == null) {
             params = new LinkedMultiValueMap<>();
         }
-        params.add("query_filter", createQueryFilterByTagName(getTagInfo(tagId.toString())));
+        params.set("query_filter", createQueryFilterByTagName(getTagInfo(tagId.toString())));
         return (List<Object>) ((Map<String, Object>) (searchService.getAllSearchList(params)).get("data")).get("all");
     }
 
@@ -367,7 +367,7 @@ public class CategoryService {
      */
     public Object changeDataModel(String id, String type, List<Map<String, Object>> body) {
         MultiValueMap params = new LinkedMultiValueMap();
-        params.add("fields", "owner,followers,tags,votes");
+        params.set("fields", "owner,followers,tags,votes");
 
         if (!ModelType.STORAGE.getValue().equals(type)) {
             return tablesClient.changeDataModel(id, params, body);
@@ -441,8 +441,8 @@ public class CategoryService {
 
         Tables tables = null;
         MultiValueMap params = new LinkedMultiValueMap();
-        params.add("fields", "tags");
-        params.add("include", "all");
+        params.set("fields", "tags");
+        params.set("include", "all");
         int excuteCount = 0;
         int successCount = 0;
         for (String dataModelId : body) {

@@ -185,7 +185,7 @@ onBeforeRouteLeave((to, from, next) => {
   next();
 });
 
-const { scrollTrigger } = useIntersectionObserver(addSearchList);
+const { scrollTrigger } = useIntersectionObserver({ callback: addSearchList });
 </script>
 
 <style lang="scss" scoped></style>

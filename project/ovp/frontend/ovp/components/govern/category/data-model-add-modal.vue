@@ -55,7 +55,11 @@
             <p class="notification-detail">정보가 없습니다.</p>
           </div>
         </div>
-        <div v-else class="table-scroll" id="dataListModal">
+        <div
+          class="table-scroll"
+          id="dataListModal"
+          v-show="!isSearchResultNoData"
+        >
           <table class="table-fixed">
             <colgroup>
               <col style="width: 42px" />
@@ -131,7 +135,7 @@
           </table>
           <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
           <Loading
-            id="loader"
+            id="dataModelAddModalLoader"
             :use-loader-overlay="true"
             class="loader-lg is-loader-inner"
             style="display: none"
@@ -177,6 +181,7 @@ const {
   selectedDataModelList,
   addSearchInputValue,
   isShowPreview,
+  searchInputValue,
 } = storeToRefs(categoryStore);
 
 const props = defineProps({
@@ -275,6 +280,8 @@ const onCancel = () => {
 const onConfirm = async () => {
   await patchModelAddItemAPI();
   setScrollOptions(0);
+  searchInputValue.value = "";
+
   await getModelList();
   setModelIdList();
 
@@ -284,10 +291,11 @@ const onConfirm = async () => {
 
 await getSearchList();
 
-const { scrollTrigger, mount, setScrollOptions } = useIntersectionObserver(
-  addSearchList,
-  "dataListModal",
-);
+const { scrollTrigger, mount, setScrollOptions } = useIntersectionObserver({
+  callback: addSearchList,
+  targetId: "dataListModal",
+  loaderId: "dataModelAddModalLoader",
+});
 
 const onOpened = () => {
   // NOTE : modal 사용 방식 변경 후 부터, modal 은 intersectionHelper 의 onMounted 보다 dom 생성이 늦어
