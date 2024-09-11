@@ -248,9 +248,5 @@ const onClickAccordSearchChange = async (value: string) => {
   setSearchKeyword(value);
   await resetReloadList(nSelectedListData.value);
 };
-const loadSearchData = () => {
-  console.log("here");
-  addSearchList();
-};
 </script>
 <style lang="scss" scoped></style>
