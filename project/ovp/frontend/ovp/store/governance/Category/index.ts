@@ -49,7 +49,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const pagingStore = usePagingStore();
   const { setFrom, setDataLoadDone, updateIntersectionHandler } = pagingStore;
   const { from, size } = storeToRefs(pagingStore);
-  const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
+  const { setQueryFilterByDepth } = useQueryHelpers();
 
   const selectedNode = ref({});
   const categories: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
@@ -335,7 +335,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       deleted: false,
       query_filter: JSON.stringify(queryFilter),
       sort_field: "totalVotes",
-      trino_query: JSON.stringify(getTrinoQuery(queryFilter, currentTab.value)),
     };
     return new URLSearchParams(params);
   };

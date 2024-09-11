@@ -43,22 +43,5 @@ export const useQueryHelpers = () => {
     return setBoolObj.value;
   };
 
-  const getTrinoQuery = (queryFilter: QueryFilter) => {
-    // query 구현을 backend 에서 하려니까 코드가 너무 복잡해져서 front 에 해서 넘겨서 처리.
-    const trinoFilter: QueryFilter = {
-      query: {
-        bool: {
-          must: [{ bool: { should: [{ term: { serviceType: "trino" } }] } }],
-        },
-      },
-    };
-    const trinoMustArray = trinoFilter.query.bool.must;
-    queryFilter.query.bool.must = _.concat(
-      queryFilter.query.bool.must,
-      trinoMustArray,
-    );
-    return queryFilter;
-  };
-
-  return { setQueryFilterByDepth, getTrinoQuery };
+  return { setQueryFilterByDepth };
 };
