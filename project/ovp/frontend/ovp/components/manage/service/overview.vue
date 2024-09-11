@@ -11,13 +11,21 @@
           <span>서비스 상태 요약</span>
           <div id="statusChart" style="width: 100%; height: 320px"></div>
         </div>
-        <div class="overview-summary">
+        <div class="overview-summary" style="position: relative">
           <span>서비스 응답시간</span>
-          <div class="overview-chart p-3">
-            <dl v-for="(item, index) in responseData" :key="index">
+          <div class="overview-chart p-3 overflow-y-auto" id="responseList">
+            <dl v-for="(item, index) in serviceResponseData" :key="index">
               <dt>{{ item.name }}</dt>
               <dd>{{ item.value }}</dd>
             </dl>
+            <!-- NOTE "scrollTrigger" -> useIntersectionObserver 가 return 하는 변수병과 동일해야함. -->
+            <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+            <Loading
+              id="loader"
+              :use-loader-overlay="true"
+              class="loader-lg is-loader-inner"
+              style="display: none"
+            ></Loading>
           </div>
         </div>
       </div>
@@ -85,9 +93,11 @@
 <script setup lang="ts">
 import * as echarts from "echarts";
 import { onMounted } from "vue";
-import { useOverviewStore } from "~/store/manage/service/overview";
 import { storeToRefs } from "pinia";
+import { useOverviewStore } from "~/store/manage/service/overview";
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import agGrid from "@extends/grid/Grid.vue";
+import Loading from "@base/loading/Loading.vue";
 
 const overviewStore = useOverviewStore();
 const {
@@ -249,4 +259,6 @@ onMounted(() => {
   setOverviewData();
   setECharts();
 });
+
+const { scrollTrigger } = useIntersectionObserver(addServiceResponseData);
 </script>

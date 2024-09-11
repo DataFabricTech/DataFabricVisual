@@ -44,7 +44,13 @@ export const useOverviewStore = defineStore("overview", () => {
 
     responseData.value = tempData;
   };
-  const getCurrentSituationApi = async () => {
+  const addServiceResponseData = async () => {
+    console.log("응답시간 누적");
+    // const { data, totalCount } = await getSearchListAPI();
+    // searchResult.value = searchResult.value.concat(data[currentTab.value]);
+    // searchResultLength.value = totalCount;
+  };
+  const getDataCurrentSituationData = async () => {
     // const {data} = await $api (``);
     const tempData = [
       { value: 1048, name: "Search Engine" },
@@ -309,5 +315,6 @@ export const useOverviewStore = defineStore("overview", () => {
     getCurrentSituationApi,
     getServiceApi,
     getHistoryApi,
+    addServiceResponseData,
   };
 });
