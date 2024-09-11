@@ -73,8 +73,13 @@ import tagList from "@/components/classification/classification-list/tagList.vue
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 
 const useClassificationStore = classificationStore();
-const { editClassificationDetail, deleteClassification } =
-  useClassificationStore;
+const {
+  editClassificationDetail,
+  deleteClassification,
+  getClassificationList,
+  getClassificationDetail,
+  getClassificationTags,
+} = useClassificationStore;
 const { classificationDetailData, isNameEditable, isDescEditable } =
   storeToRefs(useClassificationStore);
 
@@ -182,6 +187,9 @@ const confirmDelete = () => {
     deleteClassification()
       .then(() => {
         alert("삭제되었습니다.");
+        getClassificationList(); // 분류목록 API 재호출
+        getClassificationDetail(); // 분류 상세 정보 API 호출
+        getClassificationTags(); // 태그 정보 API 호출
       })
       .catch((error) => {
         console.error("삭제 중 오류 발생: ", error);

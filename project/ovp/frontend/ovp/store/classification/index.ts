@@ -157,13 +157,10 @@ export const classificationStore = defineStore("classification", () => {
   };
 
   // 분류 삭제
-  const deleteClassification = async () => {
-    await $api(`/api/classifications/${currentClassificationID}`, {
+  const deleteClassification = () => {
+    return $api(`/api/classifications/${currentClassificationID}`, {
       method: "delete",
     });
-    await getClassificationList(); // 분류목록 API 재호출
-    await getClassificationDetail(); // 분류 상세 정보 API 호출
-    await getClassificationTags(); // 태그 정보 API 호출
   };
 
   // 분류 내 태그 삭제
