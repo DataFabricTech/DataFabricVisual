@@ -175,8 +175,8 @@ export const classificationStore = defineStore("classification", () => {
   };
 
   // 분류 내 태그 추가
-  const addClassificationTag = async (addData: addForm) => {
-    await $api(`/api/tags/add`, {
+  const addClassificationTag = (addData: addForm) => {
+    return $api(`/api/tags/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
