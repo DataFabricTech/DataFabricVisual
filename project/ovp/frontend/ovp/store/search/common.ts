@@ -113,7 +113,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       query_filter: JSON.stringify(queryFilter),
       sort_field: sortKey.value,
       sort_order: sortKeyOpt.value,
-      trino_query: JSON.stringify(getTrinoQuery(queryFilter)),
+      trino_query: JSON.stringify(getTrinoQuery(queryFilter, currentTab.value)),
     };
     return new URLSearchParams(params);
   };

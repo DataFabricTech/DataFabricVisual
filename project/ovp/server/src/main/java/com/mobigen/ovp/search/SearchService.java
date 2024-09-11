@@ -195,6 +195,11 @@ public class SearchService {
             params.set("size", "0");
         }
         params.set("index", ModelIndex.table.name());
+        String trinoQuery = params.getFirst("trino_query").toString();
+        String mustNotQuery = trinoQuery.replace("\"must\"", "\"must_not\"");
+        params.set("query_filter", mustNotQuery);
+
+        params.remove("trino_query");
         return getList(params);
     }
 

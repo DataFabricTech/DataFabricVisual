@@ -99,7 +99,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       query_filter: JSON.stringify(queryFilter),
       sort_field: sortKey.value,
       sort_order: sortKeyOpt.value,
-      trino_query: JSON.stringify(getTrinoQuery(queryFilter)),
+      trino_query: JSON.stringify(
+        getTrinoQuery(queryFilter, ccurrTypeTab.value),
+      ),
     };
     return new URLSearchParams(params);
   };

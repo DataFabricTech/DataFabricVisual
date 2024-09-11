@@ -335,7 +335,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       deleted: false,
       query_filter: JSON.stringify(queryFilter),
       sort_field: "totalVotes",
-      trino_query: JSON.stringify(getTrinoQuery(queryFilter)),
+      trino_query: JSON.stringify(getTrinoQuery(queryFilter, currentTab.value)),
     };
     return new URLSearchParams(params);
   };
