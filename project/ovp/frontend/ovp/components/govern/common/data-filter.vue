@@ -30,6 +30,7 @@ const {
   getDataModelList,
   setSearchKeyword,
   setEmptyFilter,
+  resetDataModelIdListByTab,
   resetSelectedDataModelListByTab,
 } = addDataModelStore;
 const { selectedFilters, selectedFilterItems } = storeToRefs(addDataModelStore);
@@ -44,6 +45,7 @@ const props = defineProps({
 const resetFilters = () => {
   setSearchKeyword("");
   setEmptyFilter();
+  resetDataModelIdListByTab();
   resetSelectedDataModelListByTab();
   getDataModelList();
 };
@@ -59,6 +61,7 @@ const setSelectedFilters = (keyName: string, selectedIds: string[]) => {
     selectedFilters.value[keyName] = selectedIds;
   }
 
+  resetDataModelIdListByTab();
   resetSelectedDataModelListByTab();
   getDataModelList();
 };

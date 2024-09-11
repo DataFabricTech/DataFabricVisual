@@ -30,7 +30,7 @@
           :inp-id="'modelAddInp1'"
           :label-text="'데이터 모델 검색'"
           @on-input="inputSearchKeyword"
-          @reset="resetSearchKeyword"
+          @reset="inputSearchKeyword"
         ></search-input>
         <div class="filters">
           <data-filter :data="filters"></data-filter>
@@ -168,6 +168,7 @@ const {
   getFilters,
   getDataModelList,
   addDataModelList,
+  resetDataModelIdListByTab,
   resetSelectedDataModelListByTab,
   addDataModel,
 } = addDataModelStore;
@@ -177,7 +178,7 @@ const {
   tabList,
   currentTab,
   dataModelList,
-  dataModelIdList,
+  loadedDataModelIdListByTab,
   selectedDataModelListByTab,
 } = storeToRefs(addDataModelStore);
 
@@ -196,14 +197,12 @@ const beforeOpen = async () => {
   await getFilters();
 };
 
-const inputSearchKeyword = (keyword: string) => {
-  setSearchKeyword(keyword);
-  resetSelectedDataModelListByTab();
-  getDataModelList();
-};
+const inputSearchKeyword = (searchKeyword?: string) => {
+  const keyword = searchKeyword?.trim() || "";
 
-const resetSearchKeyword = () => {
-  setSearchKeyword("");
+  setSearchKeyword(keyword);
+  resetDataModelIdListByTab();
+  resetSelectedDataModelListByTab();
   getDataModelList();
 };
 
@@ -227,13 +226,22 @@ const handleSelectAll = computed({
       ];
     return (
       !_.isEmpty(dataModelList.value) &&
-      _.size(selectedDataModelList) === _.size(dataModelIdList.value)
+      _.size(selectedDataModelList) ===
+        _.size(
+          loadedDataModelIdListByTab.value[
+            currentTab.value as keyof typeof loadedDataModelIdListByTab.value
+          ],
+        )
     );
   },
   set(checked) {
     selectedDataModelListByTab.value[
       currentTab.value as keyof typeof selectedDataModelListByTab.value
-    ] = checked ? dataModelIdList.value : [];
+    ] = checked
+      ? loadedDataModelIdListByTab.value[
+          currentTab.value as keyof typeof loadedDataModelIdListByTab.value
+        ]
+      : [];
   },
 });
 

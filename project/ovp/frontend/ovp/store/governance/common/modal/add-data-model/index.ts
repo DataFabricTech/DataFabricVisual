@@ -66,7 +66,9 @@ export const useAddDataModel = defineStore("AddDataModel", () => {
 
   const dataModelTotalCountByTab = ref<{ [key: string]: number }>({});
   const dataModelList = ref<{ [key: string]: any }[]>([]);
-  const dataModelIdList = ref<string[]>([]);
+  const loadedDataModelIdListByTab = ref<DataGroupByTab>(
+    createDefaultDataModelListByTab(),
+  );
   const selectedDataModelListByTab = ref<DataGroupByTab>(
     createDefaultDataModelListByTab(),
   );
@@ -75,6 +77,7 @@ export const useAddDataModel = defineStore("AddDataModel", () => {
     setSearchKeyword("");
     setEmptyFilter();
     initCurrentTab();
+    resetDataModelIdListByTab();
     resetSelectedDataModelListByTab();
   };
 
@@ -145,8 +148,26 @@ export const useAddDataModel = defineStore("AddDataModel", () => {
     return data || [];
   };
 
-  const setDataModelIdList = () => {
-    dataModelIdList.value = dataModelList.value.map(({ id }) => id);
+  const setDataModelIdListByTab = (data: {
+    [key: string]: { [key: string]: any }[];
+  }) => {
+    const currentTabKey =
+      currentTab.value as keyof typeof loadedDataModelIdListByTab.value;
+    const dataModelIdList = data[currentTabKey].map(({ id }) => id);
+
+    const existingDataModelIds =
+      loadedDataModelIdListByTab.value[currentTabKey] || [];
+
+    if (_.size(existingDataModelIds) < _.size(dataModelList.value)) {
+      loadedDataModelIdListByTab.value[currentTabKey] = [
+        ...existingDataModelIds,
+        ...dataModelIdList,
+      ];
+    }
+  };
+
+  const resetDataModelIdListByTab = () => {
+    loadedDataModelIdListByTab.value = createDefaultDataModelListByTab();
   };
 
   const resetSelectedDataModelListByTab = () => {
@@ -164,7 +185,7 @@ export const useAddDataModel = defineStore("AddDataModel", () => {
     dataModelTotalCountByTab.value = totalCount;
 
     setTabList();
-    setDataModelIdList();
+    setDataModelIdListByTab(data);
 
     updateIntersectionHandler(0);
   };
@@ -181,7 +202,7 @@ export const useAddDataModel = defineStore("AddDataModel", () => {
       const { data } = await getDataModelListAPI();
       dataModelList.value = dataModelList.value.concat(data[currentTab.value]);
 
-      setDataModelIdList();
+      setDataModelIdListByTab(data);
     }
   };
 
@@ -229,7 +250,7 @@ export const useAddDataModel = defineStore("AddDataModel", () => {
     currentTab,
     dataModelTotalCountByTab,
     dataModelList,
-    dataModelIdList,
+    loadedDataModelIdListByTab,
     selectedDataModelListByTab,
     clearDataModelModalSettings,
     setSearchKeyword,
@@ -238,6 +259,7 @@ export const useAddDataModel = defineStore("AddDataModel", () => {
     initCurrentTab,
     getDataModelList,
     addDataModelList,
+    resetDataModelIdListByTab,
     resetSelectedDataModelListByTab,
     addDataModel,
   };
