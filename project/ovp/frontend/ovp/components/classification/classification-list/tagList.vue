@@ -49,7 +49,8 @@ const { $vfm } = useNuxtApp();
 
 const useClassificationStore = classificationStore();
 const { classificationTagList } = storeToRefs(useClassificationStore);
-const { deleteClassificationTag } = useClassificationStore;
+const { deleteClassificationTag, getClassificationTags } =
+  useClassificationStore;
 
 // 태그 추가 모달 ID
 const MODAL_ID = "modal-classificationTag";
@@ -66,6 +67,7 @@ const confirmDelete = (tagId: string) => {
     deleteClassificationTag(tagId)
       .then(() => {
         alert("삭제되었습니다.");
+        getClassificationTags(); // 태그 정보 API 호출
       })
       .catch((error) => {
         console.error("삭제 중 오류 발생: ", error);
