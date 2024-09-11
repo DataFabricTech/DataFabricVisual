@@ -66,7 +66,7 @@ public class ServiceManageService {
     public List<ServiceResponse> getServices() {
         final int limit = 100;
         List<Services> dataBases = servicesClient.getServices("owner,tags", limit).getData();
-        List<Services> storages = servicesClient.getServiceStorage("owner", "non-deleted", limit).getData();
+        List<Services> storages = servicesClient.getServiceStorage("owner,tags", "non-deleted", limit).getData();
         List<ServiceResponse> serviceResponses = new ArrayList<>();
 
         for (Services service : dataBases) {
@@ -613,9 +613,9 @@ public class ServiceManageService {
     private List<Map<String, Object>> processServiceList(List<Map<String, Object>> serviceList,
                                                          Map<String, Object> serviceParam, boolean isDatabase) {
         return serviceList.stream()
-                .map(client -> (String) client.get("fullyQualifiedName"))
-                .filter(this::isNotNullOrEmpty)
-                .flatMap(fullyQualifiedName -> {
+                .flatMap(client -> {
+                    String fullyQualifiedName = client.get("fullyQualifiedName").toString();
+                    String depth1Name = client.get("name").toString();
                     if (isDatabase) {
                         // Database Service Logic
                         serviceParam.put("database", fullyQualifiedName);
@@ -623,25 +623,35 @@ public class ServiceManageService {
                         List<Map<String, Object>> dataList = (List<Map<String, Object>>) result.get("data");
 
                         return dataList.stream().flatMap(dataItem -> {
+                            String schemaName = dataItem.get("name").toString();
                             String nestedFullyQualifiedName = (String) dataItem.get("fullyQualifiedName");
                             Map<String, String> tableParam = new HashMap<>();
                             tableParam.put("databaseSchema", nestedFullyQualifiedName);
                             tableParam.put("include", "non-deleted");
+                            tableParam.put("limit", "10000");
                             Map<String, Object> tableInfo = tablesClient.getTablesInfo(tableParam);
 
                             List<Map<String, Object>> tableDataList = (List<Map<String, Object>>) tableInfo.get("data");
-                            return tableDataList.stream();
+                            return tableDataList.stream().map(tableData -> {
+                                tableData.put("customType", schemaName);
+                                return tableData;
+                            });
                         });
                     } else {
                         // Storage Service Logic
                         Map<String, Object> result = containersClient.getContainersName(fullyQualifiedName, serviceParam);
+                        String serviceType = result.get("serviceType").toString();
                         List<Map<String, Object>> children = (List<Map<String, Object>>) result.get("children");
                         return children.stream().flatMap(child -> {
                             String innerFullyQualifiedName = (String) child.get("fullyQualifiedName");
                             if (innerFullyQualifiedName != null) {
                                 Map<String, Object> resultFromClient = containersClient.getContainersName(innerFullyQualifiedName, serviceParam);
                                 List<Map<String, Object>> innerChildren = (List<Map<String, Object>>) resultFromClient.get("children");
-                                return innerChildren.stream();
+                                return innerChildren.stream().map(tableData -> {
+                                    tableData.put("customType", depth1Name);
+                                    tableData.put("serviceType", serviceType);
+                                    return tableData;
+                                });
                             } else {
                                 return Stream.empty();
                             }
@@ -652,24 +662,21 @@ public class ServiceManageService {
                 .collect(Collectors.toList());
     }
 
-
-    private boolean isNotNullOrEmpty(String value) {
-        return value != null && !value.isEmpty();
-    }
-
     private Map<String, Object> processEntry(Map<String, Object> entry) {
         Map<String, Object> newEntry = new HashMap<>();
         newEntry.put("fqn", entry.get("fullyQualifiedName"));
         newEntry.put("name", entry.get("name"));
         newEntry.put("id", entry.get("id"));
-        newEntry.put("type", determineType(entry.get("serviceType")));
+        newEntry.put("type", entry.get("customType"));
+        newEntry.put("serviceType", determineType(entry.get("serviceType").toString()));
         newEntry.put("desc", entry.get("description"));
         newEntry.put("owner", extractOwner(entry));
         return newEntry;
     }
 
-    private String determineType(Object serviceType) {
-        return serviceType != null && serviceType.toString().equalsIgnoreCase("trino") ? "model" : "table";
+    private String determineType(String serviceType) {
+        return serviceType.equalsIgnoreCase("minio") ? "storage" :
+                serviceType.equalsIgnoreCase("trino") ? "model" : "table";
     }
 
     private String extractOwner(Map<String, Object> entry) {

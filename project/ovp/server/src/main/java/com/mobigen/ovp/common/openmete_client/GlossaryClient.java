@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@FeignClient(name = "GlossaryClient", url = "http://192.168.105.26:8585/api/v1")
+@FeignClient(name = "GlossaryClient", url = "${properties.ovp.open-metadata-url}")
 public interface GlossaryClient {
 
     /**

@@ -105,9 +105,9 @@ public class SearchDetailController {
      */
     @ResponseJsonResult
     @GetMapping("/sample-data/{id}")
-    Object getDataModelSampleData(@PathVariable String id) {
+    Object getDataModelSampleData(@PathVariable String id, @RequestParam String type) throws Exception {
         log.info("");
-        return searchDetailService.getDataModelSampleData(id);
+        return searchDetailService.getDataModelSampleData(id, type);
     }
 
     /**
@@ -228,5 +228,13 @@ public class SearchDetailController {
         log.info("");
 
         return searchDetailService.ChangeDataModelTag(id, type, target, isCategory, body);
+    }
+
+    @ResponseJsonResult
+    @DeleteMapping("/{id}")
+    Object deleteDataModel(@PathVariable String id, @RequestParam String type) {
+        log.info("");
+
+        return searchDetailService.deleteDataModel(id, type);
     }
 }

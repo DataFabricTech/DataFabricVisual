@@ -32,7 +32,8 @@ export function TreeComposition(props: TreeProps): TreeComposition {
   const treeItems: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
   treeItems.value = _.cloneDeep(props.items ?? []);
 
-  if (props.useFirSelect) {
+  // useFirSelect 를 사용하고, 선택된 값이 없으면 첫번째 항목을 선택한다.
+  if (props.useFirSelect && props.selectedIds !== undefined && props.selectedIds.length < 1) {
     treeItems.value[0].selected = true;
   }
 
@@ -41,9 +42,9 @@ export function TreeComposition(props: TreeProps): TreeComposition {
     updateStatus(treeItems.value, props.checkedIds, "checked");
   }
   // NOTE : 처음 선택값도 disabled 랑 같이 처리하려 했으나, tree lib 가 제대로 동작하지 않아 주석처리함.
-  // if (props.selectedIds && props.selectedIds.length > 0) {
-  //   updateStatus(treeItems.value, props.selectedIds, "selected");
-  // }
+  if (props.selectedIds && props.selectedIds.length > 0) {
+    updateStatus(treeItems.value, props.selectedIds, "selected");
+  }
   // 비활성화 하는 node id 항목이 있을 경우, 비활성화 여부를 object 에 추가해준다.
   if (props.disabledIds && props.disabledIds.length > 0) {
     updateStatus(treeItems.value, props.disabledIds, "disabled");

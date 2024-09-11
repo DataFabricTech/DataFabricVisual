@@ -36,6 +36,7 @@
             :show-open-all-btn="true"
             :show-close-all-btn="true"
             :use-draggable="true"
+            :use-fir-select="true"
             :dropValidator="dropValidator"
             :immutable-items="[undefinedTagIdManager.get() ?? '']"
             @onItemSelected="onCategoryNodeClick"
@@ -239,6 +240,7 @@ const {
   changeTab,
   setEmptyFilter,
   setModelIdList,
+  setSelectedNode,
   undefinedTagIdManager,
 } = categoryStore;
 const {
@@ -307,6 +309,7 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
   dupliSelectedTitleNodeValue.value = node.name;
   selectedCategoryId.value = node.id;
   selectedCategoryTagId.value = <string>node.tagId;
+  searchInputValue.value = "";
   checkModalButton(node);
   setScrollOptions(0);
   // 선택한 노드정보 저장
@@ -318,6 +321,8 @@ const onCategoryNodeClick = async (node: TreeViewItem) => {
 };
 
 const getAllModelList = async () => {
+  isAllModelListChecked.value = false;
+  selectedModelList.value = [];
   setScrollOptions(0);
   setSelectedNode(selectedNodeCategory.value);
   await getModelList();
@@ -435,9 +440,12 @@ const searchInputValue = ref("");
 const updateSearchInputValue = (newValue: string) => {
   searchInputValue.value = newValue;
 };
-const onInput = (value: string) => {
+const onInput = async (value: string) => {
+  isAllModelListChecked.value = false;
+  selectedModelList.value = [];
   setScrollOptions(0);
-  getModelList(value);
+  await getModelList(value);
+  setModelIdList();
 };
 
 const checked = (checkedList: any[]) => {

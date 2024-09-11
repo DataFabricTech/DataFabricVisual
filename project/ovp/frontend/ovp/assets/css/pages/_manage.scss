@@ -214,15 +214,18 @@
         height: 1px;
         margin: 0 $spacing-20;
         background: $neutral-200;
-
       }
     }
   }
 
   &-chart {
     width: 100%;
-    min-height: 320px;
+    height: 320px;
 
+    .column-chart {
+      height: 100%;
+      flex-grow: 1;
+    }
   }
 }
 

@@ -21,10 +21,10 @@
 }
 
 .dropdown {
-  @include dropdown-size;
-  @include box-shadow('md');
-
   position: absolute;
+
+  @include box-shadow('md');
+  @include dropdown-size;
 
   .dropdown-item {
     font-weight: 400;

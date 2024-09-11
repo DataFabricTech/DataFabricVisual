@@ -156,7 +156,8 @@
   position: relative;
 }
 
-.node-disabled {
+.node-disabled,
+.node-fir-selected {
   position: absolute;
   height: 100%;
   width: 100%;

@@ -7,6 +7,7 @@
   <div class="section-contents bg-white">
     <div class="l-between mb-3">
       <SearchInput
+        class="w-[256px]"
         inp-id="userSearchInp"
         label-text="사용자 정보 검색"
         :placeholder="'검색어를 입력하세요.'"
@@ -105,6 +106,7 @@ const columnDefs = ref([
     cellStyle: {
       display: "flex",
       justifyContent: "center",
+      alignItems: "center"
     },
     cellRenderer: DeleteButtonRenderer,
   },

@@ -84,7 +84,9 @@
               <p class="notification-detail">등록된 정보가 없습니다.</p>
             </div>
           </div>
-          <div class="editable-group">
+          <div class="v-group gap-2">
+            <div class="font-semibold text-neutral-700">설명</div>
+            <div class="editable-group">
             <span class="editable-group-desc"
               >GDPR special category data is personal information of data
               subjects that is especially sensitive, the exposure of which could
@@ -97,8 +99,11 @@
               <svg-icon class="button-icon" name="pen"></svg-icon>
             </button>
           </div>
+          </div>
           <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-          <div class="editable-group">
+          <div class="v-group gap-2">
+            <div class="font-semibold text-neutral-700">설명</div>
+            <div class="editable-group">
             <lable class="hidden-text" for="description-modify"
               >분류 설명 수정
             </lable>
@@ -115,6 +120,7 @@
                 완료
               </button>
             </div>
+          </div>
           </div>
           <div>
             <div class="l-top-bar">

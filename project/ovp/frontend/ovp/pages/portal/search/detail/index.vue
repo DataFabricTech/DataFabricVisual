@@ -100,7 +100,14 @@ const filteredTabs = computed(() => {
     return tabOptions;
   } else {
     // tables가 false이면 기본정보, 데이터 리니지, Knowledge graph, 추천 데이터 모델 탭만 반환
-    const includedValues = ["default", "schema", "lineage", 7, 8];
+    const includedValues = [
+      "default",
+      "schema",
+      "sample",
+      "lineage",
+      "knowledge",
+      "recommended",
+    ];
     return tabOptions.filter((option) => includedValues.includes(option.value));
   }
 });

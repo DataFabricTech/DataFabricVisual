@@ -29,13 +29,13 @@
   <template v-if="DBServiceListData.length > 0">
     <agGrid
       class="ag-theme-alpine ag-theme-quartz"
+      :column-width-list="[20, 100, 150]"
       :columnDefs="columnDefs"
       :rowData="DBServiceListData"
       :useRowCheckBox="false"
       :setColumnFit="true"
       :useColumnResize="true"
     ></agGrid>
-    <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
   </template>
 
   <!-- 결과 없을 시 no-result 표시 -->
@@ -141,7 +141,7 @@ const columnDefs = ref([
     cellRenderer: LinkDetailComponent,
   },
   { field: "desc", headerName: "설명" },
-  { field: "owner", headerName: "소유자" },
+  // { field: "owner", headerName: "소유자" },
 ]);
 </script>
 

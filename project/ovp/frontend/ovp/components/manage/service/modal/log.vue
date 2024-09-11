@@ -21,7 +21,13 @@
         <button class="button button-neutral-stroke" @click="refresh">
           새로고침
         </button>
-        <button class="button button-neutral-stroke" @click="copy">복사</button>
+        <!--        <button-->
+        <!--          class="button button-neutral-stroke"-->
+        <!--          ref="copyButton"-->
+        <!--          @click="copyLog"-->
+        <!--        >-->
+        <!--          복사-->
+        <!--        </button>-->
       </div>
       <!-- TODO: [개발] 로그 화면 구현 -->
       <div class="log-view" style="height: 100%">
@@ -37,6 +43,7 @@
 </template>
 <script setup lang="ts">
 import { defineEmits } from "vue";
+import { useClipboard } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
 import { useServiceCollectionLogStore } from "@/store/manage/service/collection-log/index";
@@ -46,6 +53,11 @@ import Modal from "@extends/modal/Modal.vue";
 const serviceCollectionLogStore = useServiceCollectionLogStore();
 const { collectionLog } = storeToRefs(serviceCollectionLogStore);
 const { getCollectionLogData } = serviceCollectionLogStore;
+
+const { copy } = useClipboard({
+  source: collectionLog,
+  legacy: true,
+});
 
 const options = {
   theme: "vs-dark",
@@ -74,10 +86,12 @@ const onCancelModal = () => {
 };
 
 function refresh() {
+  collectionLog.value = "";
   getCollectionLogData();
 }
-function copy() {
-  navigator.clipboard.writeText(collectionLog.value);
-  alert("로그를 복사했습니다.");
-}
+
+const copyLog = async () => {
+  copy(collectionLog.value);
+  alert("링크가 복사되었습니다.");
+};
 </script>

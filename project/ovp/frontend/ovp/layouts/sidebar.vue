@@ -7,7 +7,11 @@
           class="sidebar-item"
           :class="isSelectedMenu(menu.linkTo) ? 'is-sidebar-item-selected' : ''"
         >
-          <nuxt-link :to="menu.linkTo" class="sidebar-button">
+          <nuxt-link
+            :to="menu.linkTo"
+            class="sidebar-button"
+            @click="handleLinkClick(menu.linkTo)"
+          >
             <div class="sidebar-icon">
               <svg-icon :name="menu.iconName" class="svg-icon"></svg-icon>
             </div>
@@ -24,7 +28,11 @@
               : ''
           "
         >
-          <nuxt-link :to="mgmtMenuJson.linkTo" class="sidebar-button">
+          <nuxt-link
+            :to="mgmtMenuJson.linkTo"
+            class="sidebar-button"
+            @click="handleLinkClick(mgmtMenuJson.linkTo)"
+          >
             <div class="sidebar-icon">
               <svg-icon
                 :name="mgmtMenuJson.iconName"
@@ -42,8 +50,13 @@
 <script setup lang="ts">
 import _ from "lodash";
 
+import { useRouter } from "vue-router";
+const router = useRouter();
+const route = useRoute();
+
 import { storeToRefs } from "pinia";
 import { useMenuStore } from "@/store/common/menu";
+import { useRoute } from "nuxt/app";
 
 const menuStore = useMenuStore();
 
@@ -60,6 +73,12 @@ const isSelectedMenu = (pageUrl: string) => {
     return false;
   }
   return _.includes(pageUrl, headerUrl.value);
+};
+
+const handleLinkClick = (linkTo: string) => {
+  if (route.path === linkTo) {
+    router.go(0);
+  }
 };
 </script>
 

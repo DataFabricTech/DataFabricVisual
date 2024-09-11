@@ -1,5 +1,6 @@
 package com.mobigen.ovp.common.openmete_client;
 
+import com.mobigen.ovp.common.openmete_client.dto.SampleData;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailVote;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -26,6 +27,9 @@ public interface ContainersClient {
     @GetMapping("")
     Map<String, Object> getContainers(@RequestParam Map<String, Object> params);
 
+    @GetMapping("/{id}/sampleData")
+    SampleData getSampleData(@PathVariable("id") String id);
+
     @GetMapping("/name/{fqn}")
     Map<String, Object> getContainersName(@PathVariable String fqn, @RequestParam Map<String, Object> params);
 
@@ -37,4 +41,9 @@ public interface ContainersClient {
 
     @DeleteMapping("/{id}/followers/{userId}")
     Object unfollow(@PathVariable("id") String id, @PathVariable("userId") String userId);
+
+    @DeleteMapping("{id}")
+    Object delete(@PathVariable("id") String id,
+                  @RequestParam(defaultValue = "true") Boolean recursive,
+                  @RequestParam(defaultValue = "true") Boolean hardDelete);
 }

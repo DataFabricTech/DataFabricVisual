@@ -49,6 +49,7 @@
     <button
       class="button button-error-stroke button-sm"
       v-show="dataModel.owner?.id === user.id || user.admin"
+      @click="deleteDataModel()"
     >
       <svg-icon class="button-icon" name="trash"></svg-icon>
       삭제
@@ -57,20 +58,27 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useClipboard } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
 import { useDataModelDetailStore } from "@/store/search/detail/index";
 import { useUserStore } from "@/store/user/userStore";
 
+const router = useRouter();
+
 const dataModelDetailStore = useDataModelDetailStore();
 const userStore = useUserStore();
 
-const { changeVote, changeFollow } = dataModelDetailStore;
+const { changeVote, changeFollow, removeDataModel } = dataModelDetailStore;
 const { dataModel } = storeToRefs(dataModelDetailStore);
 
 const { user } = storeToRefs(userStore);
 const currentUrl = ref("");
+const { copy } = useClipboard({
+  source: currentUrl,
+  legacy: true,
+});
 
 const changeUpVote = async () => {
   const state: string = dataModel.value.isUpVote ? "unVoted" : "votedUp";
@@ -81,8 +89,24 @@ const changeDownVote = async () => {
   await changeVote(state);
 };
 function copyLink() {
-  navigator.clipboard.writeText(currentUrl.value);
+  getURL();
+  copy(currentUrl.value);
   alert("링크가 복사되었습니다.");
+}
+
+function deleteDataModel() {
+  if (confirm("데이터모델을 삭제 하시겠습니까?")) {
+    removeDataModel()
+      .then((data) => {
+        if (data.result === 1) {
+          alert("삭제되었습니다.");
+          router.push("/portal/search");
+        } else {
+          alert("삭제 실패했습니다. 잠시 후 다시 시도해주세요.");
+        }
+      })
+      .catch((error) => {});
+  }
 }
 
 // 메서드 정의
@@ -93,11 +117,6 @@ const getURL = () => {
     console.error("window 객체를 찾을 수 없습니다.");
   }
 };
-
-// mounted 훅에서 URL을 가져올 수 있습니다.
-onMounted(() => {
-  getURL();
-});
 </script>
 
 <style lang="scss" scoped></style>
