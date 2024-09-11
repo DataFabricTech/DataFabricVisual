@@ -265,6 +265,10 @@ const isDisabledConfirmBtn = computed(() => {
 });
 
 const onConfirm = async () => {
+  if (selectedDataModelCount.value > 20) {
+    alert("선택된 데이터 모델이 많아 시간이 소요될 수 있습니다.");
+  }
+
   await addDataModel({ currentPageType: props.currentPageType }).then(
     (isSuccess) => {
       if (isSuccess) {
