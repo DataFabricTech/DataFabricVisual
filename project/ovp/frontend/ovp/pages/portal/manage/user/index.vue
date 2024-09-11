@@ -25,7 +25,7 @@
         <!-- NOTE: domLayout 값을 autoHeight 으로 설정하여 scroll 제거 해줘야 인피니티 스크롤 기능이 정상적으로 작동 -->
         <agGrid
           class="ag-theme-alpine ag-theme-quartz"
-          style="width: 100%"
+          :style="'width: 100%'"
           domLayout="autoHeight"
           :columnDefs="columnDefs"
           :columnWidthList="[100, 100, 500, 100]"
@@ -106,7 +106,7 @@ const columnDefs = ref([
     cellStyle: {
       display: "flex",
       justifyContent: "center",
-      alignItems: "center"
+      alignItems: "center",
     },
     cellRenderer: DeleteButtonRenderer,
   },
