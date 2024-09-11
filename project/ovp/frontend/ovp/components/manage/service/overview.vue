@@ -68,7 +68,7 @@
         :style="'width: 100%; height: 300px'"
         class="ag-theme-alpine ag-theme-quartz"
         :columnDefs="serviceColumnDefs"
-        :rowData="serviceData"
+        :rowData="recentServiceData"
         rowId="id"
         :useRowCheckBox="false"
         :setColumnFit="true"
@@ -101,31 +101,32 @@ import Loading from "@base/loading/Loading.vue";
 
 const overviewStore = useOverviewStore();
 const {
-  getTypeApi,
-  getStatusApi,
-  getResponseApi,
-  getCurrentSituationApi,
-  getServiceApi,
-  getHistoryApi,
+  getServiceTypeData,
+  getServiceStatusData,
+  getServiceResponseData,
+  getDataCurrentSituationData,
+  getRecentServiceData,
+  getHistoryData,
+  addServiceResponseData,
 } = overviewStore;
 const {
-  typeData,
-  statusData,
-  responseData,
+  serviceTypeData,
+  serviceStatusData,
+  serviceResponseData,
   currentSituationData,
-  serviceData,
+  recentServiceData,
   historyData,
 } = storeToRefs(overviewStore);
 
 // Common
 const setOverviewData = () => {
   console.log("1. setOverviewData 실행");
-  getTypeApi();
-  getStatusApi();
-  getResponseApi();
-  getCurrentSituationApi();
-  getServiceApi();
-  getHistoryApi();
+  getServiceTypeData();
+  getServiceStatusData();
+  getServiceResponseData();
+  getDataCurrentSituationData();
+  getRecentServiceData();
+  getHistoryData();
 };
 
 // Ag-grid
@@ -198,7 +199,7 @@ const setECharts = () => {
         labelLine: {
           show: false,
         },
-        data: typeData.value,
+        data: serviceTypeData.value,
       },
     ],
   });
@@ -230,7 +231,7 @@ const setECharts = () => {
         labelLine: {
           show: false,
         },
-        data: statusData.value,
+        data: serviceStatusData.value,
       },
     ],
   });

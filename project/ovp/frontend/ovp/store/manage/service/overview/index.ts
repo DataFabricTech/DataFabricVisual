@@ -3,13 +3,13 @@ import { ref } from "vue";
 export const useOverviewStore = defineStore("overview", () => {
   // const { $api } = useNuxtApp();
 
-  const typeData: Ref<any[]> = ref([]);
-  const statusData: Ref<any[]> = ref([]);
-  const responseData: Ref<any[]> = ref([]);
+  const serviceTypeData: Ref<any[]> = ref([]);
+  const serviceStatusData: Ref<any[]> = ref([]);
+  const serviceResponseData: Ref<any[]> = ref([]);
   const currentSituationData: Ref<any[]> = ref([]);
-  const serviceData: Ref<any[]> = ref([]);
+  const recentServiceData: Ref<any[]> = ref([]);
   const historyData: Ref<any[]> = ref([]);
-  const getTypeApi = async () => {
+  const getServiceTypeData = async () => {
     // const {data} = await $api (``);
     const tempData = [
       { value: 1048, name: "Search Engine" },
@@ -19,9 +19,9 @@ export const useOverviewStore = defineStore("overview", () => {
       { value: 300, name: "Video Ads" },
     ];
 
-    typeData.value = tempData;
+    serviceTypeData.value = tempData;
   };
-  const getStatusApi = async () => {
+  const getServiceStatusData = async () => {
     // const {data} = await $api (``);
     const tempData = [
       { value: 1048, name: "Search Engine" },
@@ -29,20 +29,39 @@ export const useOverviewStore = defineStore("overview", () => {
       { value: 580, name: "Email" },
     ];
 
-    statusData.value = tempData;
+    serviceStatusData.value = tempData;
   };
-
-  const getResponseApi = async () => {
+  const getServiceResponseData = async () => {
     // const {data} = await $api (``);
     const tempData = [
-      { value: 24.1, name: "서비스 C" },
-      { value: 22.54, name: "서비스 A" },
-      { value: 22.01, name: "서비스 F" },
-      { value: 19.85, name: "서비스 E" },
-      { value: 15.98, name: "서비스 B" },
+      { name: "서비스 C", value: 24.1 },
+      { name: "서비스 A", value: 22.54 },
+      { name: "서비스 F", value: 22.01 },
+      { name: "서비스 E", value: 19.85 },
+      { name: "서비스 B", value: 15.98 },
+      { name: "서비스 C", value: 24.1 },
+      { name: "서비스 A", value: 22.54 },
+      { name: "서비스 F", value: 22.01 },
+      { name: "서비스 E", value: 19.85 },
+      { name: "서비스 B", value: 15.98 },
+      { name: "서비스 C", value: 24.1 },
+      { name: "서비스 A", value: 22.54 },
+      { name: "서비스 F", value: 22.01 },
+      { name: "서비스 E", value: 19.85 },
+      { name: "서비스 B", value: 15.98 },
+      { name: "서비스 C", value: 24.1 },
+      { name: "서비스 A", value: 22.54 },
+      { name: "서비스 F", value: 22.01 },
+      { name: "서비스 E", value: 19.85 },
+      { name: "서비스 B", value: 15.98 },
+      { name: "서비스 C", value: 24.1 },
+      { name: "서비스 A", value: 22.54 },
+      { name: "서비스 F", value: 22.01 },
+      { name: "서비스 E", value: 19.85 },
+      { name: "서비스 B", value: 15.98 },
     ];
 
-    responseData.value = tempData;
+    serviceResponseData.value = tempData;
   };
   const addServiceResponseData = async () => {
     console.log("응답시간 누적");
@@ -62,7 +81,7 @@ export const useOverviewStore = defineStore("overview", () => {
 
     currentSituationData.value = tempData;
   };
-  const getServiceApi = async () => {
+  const getRecentServiceData = async () => {
     // const {data} = await $api (``);
     const tempData = [
       {
@@ -187,9 +206,9 @@ export const useOverviewStore = defineStore("overview", () => {
       },
     ];
 
-    serviceData.value = tempData;
+    recentServiceData.value = tempData;
   };
-  const getHistoryApi = async () => {
+  const getHistoryData = async () => {
     // const {data} = await $api (``);
     const tempData = [
       {
@@ -303,18 +322,18 @@ export const useOverviewStore = defineStore("overview", () => {
   };
 
   return {
-    typeData,
-    statusData,
-    responseData,
+    serviceTypeData,
+    serviceStatusData,
+    serviceResponseData,
     currentSituationData,
-    serviceData,
+    recentServiceData,
     historyData,
-    getTypeApi,
-    getStatusApi,
-    getResponseApi,
-    getCurrentSituationApi,
-    getServiceApi,
-    getHistoryApi,
+    getServiceTypeData,
+    getServiceStatusData,
+    getServiceResponseData,
+    getDataCurrentSituationData,
+    getRecentServiceData,
+    getHistoryData,
     addServiceResponseData,
   };
 });
