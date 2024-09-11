@@ -62,6 +62,7 @@ import { useSearchCommonStore } from "~/store/search/common";
 import { useUserStore } from "@/store/user/userStore";
 import { useLayoutHeaderStore } from "~/store/layout/header";
 import SearchInput from "@extends/search-input/SearchInput.vue";
+import { useDropdownHelper } from "~/composables/dropDownHelper";
 
 // Store
 const searchCommonStore = useSearchCommonStore();
@@ -79,8 +80,12 @@ const router = useRouter();
 
 const header = ref();
 const dropdown = ref();
-const isDropdownOpen = ref(false);
 const profileFirstWord = ref("");
+
+const { isDropdownOpen, setHandler } = useDropdownHelper();
+onMounted(() => {
+  setHandler(dropdown.value, header.value);
+});
 
 const updateSearchInputValue = (newValue: string) => {
   searchInputValue.value = newValue;
@@ -96,16 +101,6 @@ const onClickSearch = (value: string) => {
   setSearchKeyword(value);
   resetReloadList();
   router.push({ path: `/portal/search` });
-};
-
-const handleClickOutside = (event: any) => {
-  if (
-    dropdown.value &&
-    !dropdown.value.contains(event.target) &&
-    !header.value.contains(event.target)
-  ) {
-    isDropdownOpen.value = false;
-  }
 };
 const setProfileFirstWord = (name: string) => {
   profileFirstWord.value = name.slice(0, 1).toUpperCase();
@@ -133,11 +128,6 @@ const moveMyPage = () => {
 
 onMounted(async () => {
   setProfileFirstWord(user.value.displayName || user.value.name);
-  document.addEventListener("click", handleClickOutside);
-});
-
-onUnmounted(() => {
-  document.removeEventListener("click", handleClickOutside);
 });
 </script>
 

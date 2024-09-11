@@ -20,7 +20,7 @@
           <svg-icon class="button-icon" name="close"></svg-icon>
         </button>
       </div>
-      <div class="relative">
+      <div class="relative" ref="dropdownToggle">
         <button class="button button-neutral-ghost" @click="toggle = !toggle">
           <span class="button-title">수집추가</span>
           <svg-icon
@@ -179,6 +179,9 @@ import type { Ingestion } from "@/type/service";
 import { useServiceStore } from "@/store/manage/service";
 import { useServiceCollectionAddStore } from "@/store/manage/service/collection-add/index";
 import { useServiceCollectionLogStore } from "@/store/manage/service/collection-log/index";
+
+import { useDropdownHelper } from "@/composables/dropdownHelper";
+// const isDropdownOpen = ref(false);
 
 import Loading from "@base/loading/Loading.vue";
 import ModalCollection from "@/components/manage/service/modal/collection/modal-collection.vue";
@@ -394,7 +397,7 @@ async function kill(ingestion: Ingestion): Promise<void> {
   }
 }
 
-const toggle = ref<boolean>(false);
+// const toggle = ref<boolean>(false);
 
 function openAddModel(value: string) {
   setPipelineType(value);
@@ -423,4 +426,11 @@ const openEditModal = async (value: any) => {
 };
 
 await refreshIngestionList();
+
+const dropdownToggle = ref();
+
+const { isDropdownOpen: toggle, setHandler } = useDropdownHelper();
+onMounted(() => {
+  setHandler(dropdownToggle.value);
+});
 </script>
