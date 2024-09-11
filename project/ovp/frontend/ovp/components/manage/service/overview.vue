@@ -98,6 +98,8 @@ import { useOverviewStore } from "~/store/manage/service/overview";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import agGrid from "@extends/grid/Grid.vue";
 import Loading from "@base/loading/Loading.vue";
+import { ServiceNameRenderer } from "~/store/manage/service/overview/cell-renderer/serviceNameRenderer";
+import { HistoryServiceNameRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceNameRenderer";
 
 const overviewStore = useOverviewStore();
 const {
@@ -131,7 +133,11 @@ const setOverviewData = () => {
 
 // Ag-grid
 const serviceColumnDefs = ref([
-  { headerName: "서비스 이름", field: "name" },
+  {
+    headerName: "서비스 이름",
+    field: "name",
+    cellRenderer: ServiceNameRenderer,
+  },
   { headerName: "데이터 저장소 유형", field: "type" },
   { headerName: "상태", field: "status" },
   { headerName: "등록일시", field: "register" },
@@ -142,7 +148,11 @@ const serviceColumnDefs = ref([
 const historyColumnDefs = ref([
   { headerName: "이벤트 발생 일시", field: "date" },
   { headerName: "이벤트", field: "event" },
-  { headerName: "서비스 이름", field: "name" },
+  {
+    headerName: "서비스 이름",
+    field: "name",
+    cellRenderer: HistoryServiceNameRenderer,
+  },
   { headerName: "저장소 유형", field: "type" },
   { headerName: "내용", field: "detail" },
 ]);
