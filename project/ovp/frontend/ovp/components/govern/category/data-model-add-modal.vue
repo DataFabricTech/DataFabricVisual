@@ -194,11 +194,13 @@ const updateSearchInputValue = (newValue: string) => {
   addSearchInputValue.value = newValue;
 };
 const onInput = (value: string) => {
+  selectedDataModelList.value = [];
   setSearchKeyword(value);
   resetReloadList();
 };
 
 const getAllDataModelList = () => {
+  selectedDataModelList.value = [];
   setSearchKeyword("");
   resetReloadList();
 };
