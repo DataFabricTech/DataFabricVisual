@@ -33,7 +33,8 @@ export const useDataModelTag = defineStore("DataModelTag", () => {
   const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
 
   const categoryStore = useGovernCategoryStore();
-  const { selectedCategoryTagId } = storeToRefs(categoryStore);
+  const { selectedCategoryTagId, modelList, selectedModelList } =
+    storeToRefs(categoryStore);
 
   const glossaryStore = useGlossaryStore();
   const { term } = storeToRefs(glossaryStore);
@@ -58,6 +59,8 @@ export const useDataModelTag = defineStore("DataModelTag", () => {
       model: [],
     };
   };
+
+  const tagId = ref<string>();
 
   const searchKeyword = ref<string>("");
 
@@ -213,7 +216,7 @@ export const useDataModelTag = defineStore("DataModelTag", () => {
   /**
    * 데이터모델 추가
    */
-  const addDataModel = async ({
+  const addDataModels = async ({
     currentPageType,
   }: {
     currentPageType: string;
@@ -225,11 +228,10 @@ export const useDataModelTag = defineStore("DataModelTag", () => {
   };
 
   /**
-   * 데이터모델 추가 - 카테고리
+   * 데이터모델 추가 및 변경시 공통으로 사용하는 API - 카테고리
    */
-  const addDataModelsCategory = async () => {
-    const tagId = selectedCategoryTagId.value;
-    const { data } = await $api(`/api/category/${tagId}/data-models`, {
+  const updateDataModelsCategory = async () => {
+    const { data } = await $api(`/api/category/${tagId.value}/data-models`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json-patch+json",
@@ -237,6 +239,35 @@ export const useDataModelTag = defineStore("DataModelTag", () => {
       body: selectedDataModelListByTab.value,
     });
     return data;
+  };
+
+  /**
+   * 데이터모델 추가 - 카테고리
+   */
+  const addDataModelsCategory = async () => {
+    // 선택한 데이터모델 목록은 데이터모델추가 모달에서 자동으로 값 셋팅되므로 tagId 만 설정해줌
+    tagId.value = selectedCategoryTagId.value;
+    return await updateDataModelsCategory();
+  };
+
+  /**
+   * 데이터모델 변경 - 카테고리
+   */
+  const changeDataModelsCategory = async () => {
+    // tagId 는 카테고리변경 모달에서 자동으로 값 셋팅되므로 선택한 데이터모델 목록만 설정해줌
+    selectedDataModelListByTab.value = modelList.value.reduce(
+      (acc, { id, type }) => {
+        if (_.includes(selectedModelList.value, id)) {
+          if (!acc[type]) {
+            acc[type] = [];
+          }
+          acc[type].push(id);
+        }
+        return acc;
+      },
+      {},
+    );
+    return await updateDataModelsCategory();
   };
 
   /**
@@ -253,6 +284,7 @@ export const useDataModelTag = defineStore("DataModelTag", () => {
   };
 
   return {
+    tagId,
     searchKeyword,
     filters,
     selectedFilters,
@@ -272,6 +304,7 @@ export const useDataModelTag = defineStore("DataModelTag", () => {
     addDataModelList,
     resetDataModelIdListByTab,
     resetSelectedDataModelListByTab,
-    addDataModel,
+    addDataModels,
+    changeDataModelsCategory,
   };
 });

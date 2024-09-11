@@ -263,6 +263,7 @@ const {
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
 const CATEGORY_CHANGE_MODAL_ID = "category-change-modal";
+const DATA_MODEL_ADD_MODAL = "data-model-add-modal";
 
 const loader = ref<HTMLElement | null>(null);
 
@@ -524,12 +525,21 @@ const { open: openCategoryAddModal, close: closeCategoryAddModal } = useModal({
     },
   },
 });
+
 const { open: openCategoryChangeModal, close: closeCategoryChangeModal } =
   useModal({
     component: CategoryChangeModal,
     attrs: {
       modalId: CATEGORY_CHANGE_MODAL_ID,
-      onCloseCategoryChangeModal() {
+      async onConfirm() {
+        searchInputValue.value = "";
+        selectedModelList.value = [];
+        isShowPreview.value = false;
+        await getModelList();
+        setModelIdList();
+        closeCategoryChangeModal();
+      },
+      onClose() {
         closeCategoryChangeModal();
       },
     },
@@ -539,6 +549,7 @@ const { open: openDataModelAddModal, close: closeDataModelAddModal } = useModal(
   {
     component: DataModelAddModal,
     attrs: {
+      modalId: DATA_MODEL_ADD_MODAL,
       currentPageType: "category",
       onConfirm() {
         searchInputValue.value = "";

@@ -80,9 +80,12 @@ const { getDataModels, getDataModel, updateTerm, dataModels, dataModel, term } =
   useGlossaryStore();
 getDataModels(term.fullyQualifiedName);
 
+const DATA_MODEL_ADD_MODAL = "data-model-add-modal";
+
 const { open, close } = useModal({
   component: DataModelAddModal,
   attrs: {
+    modalId: DATA_MODEL_ADD_MODAL,
     currentPageType: "glossary",
     onConfirm() {
       // TODO: 데이터모델 목록 조회 및 초기화

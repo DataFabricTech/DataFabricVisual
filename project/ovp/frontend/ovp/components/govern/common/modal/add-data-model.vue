@@ -170,7 +170,7 @@ const {
   addDataModelList,
   resetDataModelIdListByTab,
   resetSelectedDataModelListByTab,
-  addDataModel,
+  addDataModels,
 } = dataModelTagStore;
 const {
   searchKeyword,
@@ -183,6 +183,9 @@ const {
 } = storeToRefs(dataModelTagStore);
 
 const props = defineProps({
+  modalId: {
+    type: String,
+  },
   currentPageType: {
     type: String,
     required: true,
@@ -269,7 +272,7 @@ const onConfirm = async () => {
     alert("선택된 데이터 모델이 많아 시간이 소요될 수 있습니다.");
   }
 
-  await addDataModel({ currentPageType: props.currentPageType }).then(
+  await addDataModels({ currentPageType: props.currentPageType }).then(
     (isSuccess) => {
       if (isSuccess) {
         setScrollOptions(0);
