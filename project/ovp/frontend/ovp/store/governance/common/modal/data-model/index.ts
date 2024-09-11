@@ -25,7 +25,7 @@ interface DataGroupByTab {
   model: string[];
 }
 
-export const useAddDataModel = defineStore("AddDataModel", () => {
+export const useDataModelTag = defineStore("DataModelTag", () => {
   const { $api } = useNuxtApp();
   const pagingStore = usePagingStore();
   const { setFrom, updateIntersectionHandler } = pagingStore;

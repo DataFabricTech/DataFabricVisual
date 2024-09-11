@@ -150,7 +150,7 @@
 
 <script setup lang="ts">
 import { useRouter } from "nuxt/app";
-import { useAddDataModel } from "~/store/governance/common/modal/add-data-model";
+import { useDataModelTag } from "@/store/governance/common/modal/data-model";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import Modal from "@extends/modal/Modal.vue";
 import SearchInput from "@extends/search-input/SearchInput.vue";
@@ -161,7 +161,7 @@ import _ from "lodash";
 
 const router = useRouter();
 
-const addDataModelStore = useAddDataModel();
+const dataModelTagStore = useDataModelTag();
 const {
   clearDataModelModalSettings,
   setSearchKeyword,
@@ -171,7 +171,7 @@ const {
   resetDataModelIdListByTab,
   resetSelectedDataModelListByTab,
   addDataModel,
-} = addDataModelStore;
+} = dataModelTagStore;
 const {
   searchKeyword,
   filters,
@@ -180,7 +180,7 @@ const {
   dataModelList,
   loadedDataModelIdListByTab,
   selectedDataModelListByTab,
-} = storeToRefs(addDataModelStore);
+} = storeToRefs(dataModelTagStore);
 
 const props = defineProps({
   currentPageType: {

@@ -22,18 +22,18 @@
 
 <script setup lang="ts">
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
-import { useAddDataModel } from "@/store/governance/common/modal/add-data-model";
+import { useDataModelTag } from "@/store/governance/common/modal/data-model";
 import _ from "lodash";
 
-const addDataModelStore = useAddDataModel();
+const dataModelTagStore = useDataModelTag();
 const {
   getDataModelList,
   setSearchKeyword,
   setEmptyFilter,
   resetDataModelIdListByTab,
   resetSelectedDataModelListByTab,
-} = addDataModelStore;
-const { selectedFilters, selectedFilterItems } = storeToRefs(addDataModelStore);
+} = dataModelTagStore;
+const { selectedFilters, selectedFilterItems } = storeToRefs(dataModelTagStore);
 
 const props = defineProps({
   data: {
