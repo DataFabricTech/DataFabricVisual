@@ -10,6 +10,7 @@ import { FILTER_KEYS } from "@/store/search/common";
 import $constants from "@/utils/constant";
 import _ from "lodash";
 import { useGlossaryStore } from "~/store/glossary";
+import { useGovernCategoryStore } from "@/store/governance/Category";
 
 interface Tab {
   label: string;
@@ -30,6 +31,9 @@ export const useAddDataModel = defineStore("AddDataModel", () => {
   const { setFrom, updateIntersectionHandler } = pagingStore;
   const { from, size } = storeToRefs(pagingStore);
   const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
+
+  const categoryStore = useGovernCategoryStore();
+  const { selectedCategoryTagId } = storeToRefs(categoryStore);
 
   const glossaryStore = useGlossaryStore();
   const { term } = storeToRefs(glossaryStore);
@@ -224,8 +228,22 @@ export const useAddDataModel = defineStore("AddDataModel", () => {
    * 데이터모델 추가 - 카테고리
    */
   const addDataModelsCategory = async () => {
-    // TODO: 카테고리 데이터모델추가
-    return true;
+    // TODO: 정상적으로 저장되지 않는 에러 있음. backend 수정 후 frontend 도 수정 필요.
+    const tagId = selectedCategoryTagId.value;
+    const currentTabKey =
+      currentTab.value as keyof typeof selectedDataModelListByTab.value;
+    const { data } = await $api(
+      `/api/category/${tagId}/tag?type=${currentTabKey}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json-patch+json",
+        },
+        body: selectedDataModelListByTab.value[currentTabKey],
+      },
+    );
+
+    return data;
   };
 
   /**
