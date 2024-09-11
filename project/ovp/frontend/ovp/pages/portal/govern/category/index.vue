@@ -531,12 +531,8 @@ const { open: openCategoryChangeModal, close: closeCategoryChangeModal } =
     component: CategoryChangeModal,
     attrs: {
       modalId: CATEGORY_CHANGE_MODAL_ID,
-      async onConfirm() {
-        searchInputValue.value = "";
-        selectedModelList.value = [];
-        isShowPreview.value = false;
-        await getModelList();
-        setModelIdList();
+      onConfirm() {
+        resetDataModelList();
         closeCategoryChangeModal();
       },
       onClose() {
@@ -552,10 +548,7 @@ const { open: openDataModelAddModal, close: closeDataModelAddModal } = useModal(
       modalId: DATA_MODEL_ADD_MODAL,
       currentPageType: "category",
       onConfirm() {
-        searchInputValue.value = "";
-        selectedModelList.value = [];
-        isShowPreview.value = false;
-        getModelList();
+        resetDataModelList();
         closeDataModelAddModal();
       },
       onClose() {
@@ -564,6 +557,14 @@ const { open: openDataModelAddModal, close: closeDataModelAddModal } = useModal(
     },
   },
 );
+
+const resetDataModelList = async () => {
+  searchInputValue.value = "";
+  selectedModelList.value = [];
+  isShowPreview.value = false;
+  await getModelList();
+  setModelIdList();
+};
 
 const showCategoryAddModal = () => {
   categoriesParentId.value = defaultCategoriesParentId.value;
