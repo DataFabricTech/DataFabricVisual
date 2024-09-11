@@ -79,9 +79,37 @@ public class SearchService {
 
             resultSet.forEach((key, value) -> {
                 combinedAggregations.merge(key, value, (oldValue, newValue) -> {
-                    List<Object> mergedList = new ArrayList<>((List<Object>) oldValue);
-                    mergedList.addAll((List<Object>) newValue);
-                    return mergedList;
+                    // 기존 값과 새 값을 모두 리스트로 변환
+                    List<Map<String, Object>> mergedList = new ArrayList<>((List<Map<String, Object>>) oldValue);
+                    List<Map<String, Object>> newList = (List<Map<String, Object>>) newValue;
+
+                    // 중복을 제거하며 합산할 맵 생성
+                    Map<String, Integer> mergedMap = new HashMap<>();
+
+                    // 기존 리스트 항목 처리
+                    for (Map<String, Object> item : mergedList) {
+                        String itemKey = (String) item.get("key");
+                        int docCount = (int) item.get("doc_count");
+                        mergedMap.merge(itemKey, docCount, Integer::sum);
+                    }
+
+                    // 새로운 리스트 항목 처리
+                    for (Map<String, Object> item : newList) {
+                        String itemKey = (String) item.get("key");
+                        int docCount = (int) item.get("doc_count");
+                        mergedMap.merge(itemKey, docCount, Integer::sum);
+                    }
+
+                    // 합산된 결과를 다시 리스트로 변환
+                    List<Map<String, Object>> resultList = new ArrayList<>();
+                    mergedMap.forEach((mergedKey, docCount) -> {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("key", mergedKey);
+                        map.put("doc_count", docCount);
+                        resultList.add(map);
+                    });
+
+                    return resultList;
                 });
             });
         }
