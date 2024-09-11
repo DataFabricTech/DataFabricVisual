@@ -1,7 +1,7 @@
 import { TreeProps, TreeViewItem } from "./TreeProps";
 import { uuid } from "vue3-uuid";
 import _ from "lodash";
-import $constants from "@/utils/constant";
+import $constants from "../../../../ovp/utils/constant";
 
 export interface TreeComposition extends TreeProps {
   treeItems: Ref<TreeViewItem[]>;
