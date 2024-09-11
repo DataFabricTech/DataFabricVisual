@@ -61,10 +61,6 @@ function closeModal() {
   $vfm.close(MODAL_ID);
 }
 
-watchEffect(() => {
-  console.log(classificationTagList);
-});
-
 const confirmDelete = (tagId: string) => {
   if (confirm("삭제하시겠습니까?")) {
     deleteClassificationTag(tagId)
