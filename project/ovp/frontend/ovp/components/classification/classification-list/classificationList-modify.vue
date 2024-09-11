@@ -185,9 +185,9 @@ const editDone = async () => {
 const confirmDelete = () => {
   if (confirm("삭제하시겠습니까?")) {
     deleteClassification()
-      .then(() => {
+      .then(async () => {
         alert("삭제되었습니다.");
-        getClassificationList(); // 분류목록 API 재호출
+        await getClassificationList(); // 분류목록 API 재호출
         getClassificationDetail(); // 분류 상세 정보 API 호출
         getClassificationTags(); // 태그 정보 API 호출
       })
