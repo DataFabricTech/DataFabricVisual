@@ -45,8 +45,8 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @GetMapping("/list")
-    public Object getGlossaries() {
-        return glossaryService.getGlossaries();
+    public Object getGlossaries(@RequestParam(required = false) String after) {
+        return glossaryService.getGlossaries(after);
     }
 
     /**
@@ -89,8 +89,8 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @GetMapping("/terms")
-    public Object getGlossaryTerms(@RequestParam String term) {
-        return glossaryService.glossaryTerms(term);
+    public Object getGlossaryTerms(@RequestParam String term, @RequestParam(required = false) String after) {
+        return glossaryService.glossaryTerms(term, after);
     }
 
     /**
@@ -169,8 +169,8 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @GetMapping("/data-models")
-    public Object getDataModels(@RequestParam String q) throws Exception {
-        return glossaryService.getDataModels(q);
+    public Object getDataModels(@RequestParam String search, @RequestParam String name, @RequestParam String from) throws Exception {
+        return glossaryService.getDataModels(search, name, from);
     }
 
     /**

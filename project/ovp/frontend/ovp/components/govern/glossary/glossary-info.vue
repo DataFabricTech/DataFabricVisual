@@ -182,10 +182,6 @@ import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import type { JsonPatchOperation, Tag } from "~/type/common";
 import { reactive, watch, onMounted, type Ref } from "vue";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
-import { useDataModelDetailStore } from "@/store/search/detail";
-const dataModelDetailStore = useDataModelDetailStore();
-const { getTagList } = dataModelDetailStore;
-const { tagList } = storeToRefs(dataModelDetailStore);
 const {
   glossary,
   tags,
@@ -219,7 +215,6 @@ watch(
 onMounted(() => {
   syncEditDataWithGlossary();
   getGlossaryActivitiesCount(`<%23E::glossary::${glossary.name}>`);
-  getTagList();
 });
 
 function syncEditDataWithGlossary() {

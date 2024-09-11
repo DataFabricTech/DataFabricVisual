@@ -36,28 +36,50 @@
       </td>
     </tr>
   </table>
+  <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+  <Loading
+    id="loader"
+    :use-loader-overlay="true"
+    class="loader-lg is-loader-inner"
+    style="display: none"
+  ></Loading>
   <modal-glossary :modal-id="MODAL_ID"></modal-glossary>
 </template>
 
 <script setup lang="ts">
+import { watch } from "vue";
 import { useGlossaryStore } from "@/store/glossary";
 import type { Term } from "~/type/glossary";
+import Loading from "@base/loading/Loading.vue";
+import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 const {
   glossary,
   terms,
   openEditTermComponent,
+  resetTerms,
   changeCurrentTerm,
   deleteTerm,
   getTerms,
 } = useGlossaryStore();
+const store = useGlossaryStore();
 const { $vfm } = useNuxtApp();
 
-function onClickTerm(source: Term) {
+watch(
+  () => store.glossary,
+  () => {
+    resetTerms();
+  },
+  { deep: true },
+);
+
+function onClickTerm(source: Term): void {
   changeCurrentTerm(source);
   openEditTermComponent("term");
 }
 
-async function removeTerm(id: string) {
+const { scrollTrigger } = useIntersectionObserver(getTerms);
+
+async function removeTerm(id: string): Promise<void> {
   if (confirm("데이터모델을 삭제 하시겠습니까?")) {
     await deleteTerm(id);
     await getTerms(glossary.name);
@@ -65,7 +87,7 @@ async function removeTerm(id: string) {
 }
 
 const MODAL_ID = "modal-glossary";
-function openModal() {
+function openModal(): void {
   $vfm.open(MODAL_ID);
 }
 </script>

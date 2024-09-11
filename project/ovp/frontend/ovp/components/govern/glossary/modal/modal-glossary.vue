@@ -201,7 +201,7 @@ type TermForm = {
   synonyms: string[];
   mutuallyExclusive: boolean;
 };
-const initialFormState: object = {
+const initialFormState: TermForm = {
   name: "",
   displayName: "",
   description: "",

@@ -25,6 +25,13 @@
             <a class="menu-text">{{ glossary.name }}</a>
           </button>
         </li>
+        <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+        <Loading
+          id="loader"
+          :use-loader-overlay="true"
+          class="loader-lg is-loader-inner"
+          style="display: none"
+        ></Loading>
       </div>
     </div>
   </div>
@@ -38,6 +45,8 @@
 import { useGlossaryStore } from "~/store/glossary";
 import type { Glossary } from "~/type/glossary";
 import { _ } from "lodash";
+import Loading from "@base/loading/Loading.vue";
+import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 const { $vfm } = useNuxtApp();
 const { glossaries, glossary, getGlossaries, changeCurrentGlossary } =
   useGlossaryStore();
@@ -48,6 +57,8 @@ const menuListClass = (data: Glossary): string => {
     ? "menu-item is-menu-item-selected"
     : "menu-item";
 };
+
+const { scrollTrigger } = useIntersectionObserver(getGlossaries);
 
 const MODAL_ID = "modal-glossary-dictionary";
 function openModal() {

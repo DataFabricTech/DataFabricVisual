@@ -56,26 +56,46 @@
             @preview-click="clickPreview"
             @checked-value-changed="checkDataModel"
           ></resource-box-list>
+          <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+          <Loading
+            id="loader"
+            :use-loader-overlay="true"
+            class="loader-lg is-loader-inner"
+            style="display: none"
+          ></Loading>
         </div>
       </div>
-      <preview
-        :preview-data="dataModel"
+      <Preview
+        :preview-data="previewData"
         :is-show-preview="isShowPreview"
         @change="showPreview"
-      ></preview>
+      ></Preview>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import { useGlossaryStore } from "@/store/glossary";
-const { getDataModels, getDataModel, updateTerm, dataModels, dataModel, term } =
+import { useSearchCommonStore } from "@/store/search/common";
+import { onMounted, ref } from "vue";
+import Preview from "~/components/common/preview/preview.vue";
+import Loading from "@base/loading/Loading.vue";
+import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+const { getDataModels, resetDataModels, updateTerm, dataModels, term } =
   useGlossaryStore();
-getDataModels(term.fullyQualifiedName);
+const { getPreviewData } = useSearchCommonStore();
+const searchCommonStore = useSearchCommonStore();
+const { previewData } = storeToRefs(searchCommonStore);
+
+onMounted(() => {
+  resetDataModels();
+  getDataModels(term.fullyQualifiedName, keyword.value);
+});
 
 const keyword = ref("");
-function searchDataModel() {
+function searchDataModel(): void {
   getDataModels(term.fullyQualifiedName, keyword.value);
+  isShowPreview.value = false;
 }
 
 const isShowPreview = ref(false);
@@ -83,17 +103,17 @@ function showPreview(): void {
   isShowPreview.value = !isShowPreview.value;
 }
 
-function clickPreview(data): void {
-  getDataModel(data.fullyQualifiedName);
+function clickPreview(data: object): void {
+  getPreviewData(data.fullyQualifiedName);
   isShowPreview.value = true;
 }
 
 const selectedDataModels = ref([]);
-function checkDataModel(ids: string[]) {
+function checkDataModel(ids: string[]): void {
   selectedDataModels.value = [...ids];
 }
 
-function toggleAllCheck(allCheck) {
+function toggleAllCheck(allCheck: boolean): void {
   if (allCheck) {
     selectedDataModels.value = dataModels.map((dataModel) => dataModel.id);
   } else {
@@ -101,7 +121,7 @@ function toggleAllCheck(allCheck) {
   }
 }
 
-async function deleteDataModel() {
+async function deleteDataModel(): Promise<void> {
   const requestBody: object[] = [];
   selectedDataModels.value.forEach((id) => {
     requestBody.push({ id: id, type: "table" });
@@ -109,4 +129,6 @@ async function deleteDataModel() {
   await updateTerm(term.id, requestBody);
   await getDataModels(term.fullyQualifiedName);
 }
+
+const { scrollTrigger } = useIntersectionObserver(searchDataModel);
 </script>

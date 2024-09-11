@@ -153,8 +153,12 @@ public class SearchDetailService {
         if (!isStart && (after == null || "".equals(after))) {
             return glossaries;
         }
-
-        Base<Term> res = glossaryClient.getGlossaryTerms("", "", 100, after);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("limit", "100");
+        if (after != null && !after.equals("undefined") && !after.isEmpty()) {
+            params.add("after", after);
+        }
+        Base<Term> res = glossaryClient.getGlossaryTerms(params);
 
         List mergeTagList = Stream.concat(glossaries.stream(), res.getData().stream()).collect(Collectors.toList());
 
@@ -168,7 +172,9 @@ public class SearchDetailService {
      * @throws Exception
      */
     public Object getGlossaryAll() throws Exception {
-        Base<Term> glossaryTerms = glossaryClient.getGlossaryTerms("", "", 300, "");
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("limit", "300");
+        Base<Term> glossaryTerms = glossaryClient.getGlossaryTerms(params);
 
         // TODO: 페이징 처리 필요
         return glossaryTerms.getData().stream().map(term -> {

@@ -5,14 +5,23 @@ import type { JsonPatchOperation, PreviewData, Tag } from "~/type/common";
 import type { DataModel } from "~/components/common/resource-box/resource-box-common-props";
 import $constants from "~/utils/constant";
 import type { Service } from "~/type/service";
+import { usePagingStore } from "~/store/common/paging";
 
 export const useGlossaryStore = defineStore("glossary", () => {
+  const pagingStore = usePagingStore();
+  const { setFrom, updateIntersectionHandler } = pagingStore;
+  const { from } = storeToRefs(pagingStore);
+
   const { $api } = useNuxtApp();
 
   const glossaries = reactive<Glossary[]>([]);
+  const glossariesAfter = ref();
+
   const glossary = reactive<Glossary>(<Glossary>{});
 
   const terms = reactive<Term[]>([]);
+  const termsAfter = ref(null);
+
   const term = reactive<Term>(<Term>{});
 
   const activities = reactive<Activity[]>([]);
@@ -56,10 +65,18 @@ export const useGlossaryStore = defineStore("glossary", () => {
   }
 
   async function getGlossaries(): Promise<void> {
-    const res = await $api(`/api/glossary/list`);
-    const glossariesData: Glossary[] = res.data;
+    const param =
+      // eslint-disable-next-line eqeqeq
+      glossariesAfter.value != null ? `?after=${glossariesAfter.value}` : "";
+    const res = await $api(`/api/glossary/list${param}`, {
+      showLoader: false,
+    });
+    const glossariesData: Glossary[] = res.data.data;
     glossaries.splice(0, glossaries.length, ...glossariesData);
 
+    if (res.data.paging.after) {
+      glossariesAfter.value = res.data.paging.after;
+    }
     const glossaryData: Glossary =
       Object.keys(glossary).length === 0 ? glossariesData[0] : glossary;
     await changeCurrentGlossary(glossaryData);
@@ -102,10 +119,34 @@ export const useGlossaryStore = defineStore("glossary", () => {
     }
   }
 
-  async function getTerms(term: string): Promise<void> {
+  function resetTerms() {
+    termsAfter.value = null;
+    terms.splice(0);
+  }
+
+  async function getTerms(): Promise<void> {
     menuSearchRelatedTermsData.length = 0;
-    const res = await $api(`/api/glossary/terms?term=${term}`);
-    terms.splice(0, terms.length, ...res.data);
+    const param: string =
+      // eslint-disable-next-line eqeqeq
+      termsAfter.value != null
+        ? `term=${glossary.name}&after=${termsAfter.value}`
+        : `term=${glossary.name}`;
+    const res = await $api(`/api/glossary/terms?${param}`, {
+      showLoader: false,
+    });
+    if (res.data.paging) {
+      if (res.data.paging.total <= terms.length) {
+        return;
+      }
+    }
+
+    if (res.data !== null) {
+      terms.push(...res.data.terms);
+    }
+
+    if (res.data.paging) {
+      termsAfter.value = res.data.paging.after;
+    }
     terms.forEach((term) => {
       menuSearchRelatedTermsData.push({ label: term.name, id: term.id });
     });
@@ -142,21 +183,34 @@ export const useGlossaryStore = defineStore("glossary", () => {
   }
 
   /**
-   * 용어 활동 사항
-   * @param entityLink
-   * @param after
+   * 데이터 모델 초기화
    */
-  async function getGlossaryActivities(
-    entityLink: string,
-    after?: number | undefined,
-  ): Promise<void> {
+  function resetGlossaryActivities() {
+    activityAfter.value = null;
+    activities.splice(0);
+  }
+
+  /**
+   * 용어 활동 사항
+   */
+  async function getGlossaryActivities(): Promise<void> {
     const param: string =
-      after !== undefined
-        ? `entityLink=${entityLink}&after=${after}`
-        : `entityLink=${entityLink}`;
-    const res = await $api(`/api/glossary/activities?${param}`);
+      // eslint-disable-next-line eqeqeq
+      activityAfter.value != null
+        ? `entityLink=<%23E::glossary::${glossary.name}>&after=${activityAfter.value}`
+        : `entityLink=<%23E::glossary::${glossary.name}>`;
+    const res = await $api(`/api/glossary/activities?${param}`, {
+      showLoader: false,
+    });
+
+    if (activitiesCount.value === activities.length) {
+      return;
+    }
+
     if (res.data !== null) {
       activities.push(...res.data.activities);
+    }
+    if (res.data.paging) {
       activityAfter.value = res.data.paging.after;
     }
   }
@@ -175,21 +229,25 @@ export const useGlossaryStore = defineStore("glossary", () => {
   }
 
   /**
+   * 데이터 모델 초기화
+   */
+  function resetDataModels() {
+    setFrom(0);
+    updateIntersectionHandler(0);
+    dataModels.splice(0);
+  }
+
+  /**
    * 데이터 모델 리스트
    * @param name
    * @param search
    */
   async function getDataModels(name: string, search?: string): Promise<void> {
-    // TODO : [개발] queryParam (q) 에 검색어 제외 AND ( ) 이런 내용이 들어가면 안됩니다. backend 에서 처리할수 있게 수정해주세요.
-    // myPageStore.ts getSearchListQuery() function 보고 참조해서 수정해주세요.
-    // eslint-disable-next-line id-length
-    const q: string = search
-      ? `*${search}* AND (tags.tagFQN:"${name}")`
-      : `** AND (tags.tagFQN:"${name}")`;
-    const res = await $api(`/api/glossary/data-models?q=${q}`);
-    console.log(res);
+    const res = await $api(
+      `/api/glossary/data-models?search=${search}&name=${name}&from=${from.value}`,
+    );
     if (res.data !== null) {
-      dataModels.splice(0, dataModels.length, ...res.data);
+      dataModels.push(...res.data);
     }
   }
 
@@ -243,7 +301,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
     Object.assign(glossary, param);
     changeTab("term");
     await getTerms(param.name);
-    await getGlossaryActivities(`<%23E::glossary::${param.name}>`);
+    await getGlossaryActivities();
     disableEditModes();
     disableEditTermModes();
     openEditTermComponent("glossary");
@@ -425,9 +483,11 @@ export const useGlossaryStore = defineStore("glossary", () => {
 
   return {
     glossaries,
+    glossariesAfter,
     glossary,
 
     terms,
+    termsAfter,
     term,
 
     activities,
@@ -454,15 +514,18 @@ export const useGlossaryStore = defineStore("glossary", () => {
 
     createTerm,
     getTerms,
+    resetTerms,
     editTerm,
     deleteTerm,
     updateTerm,
 
+    resetGlossaryActivities,
     getGlossaryActivities,
     getGlossaryActivitiesCount,
 
     getDataModels,
     getDataModel,
+    resetDataModels,
 
     changeTab,
     openEditTermComponent,

@@ -8,6 +8,7 @@ import com.mobigen.ovp.glossary.client.dto.TermDto;
 import com.mobigen.ovp.common.openmete_client.dto.Glossary;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -34,12 +35,11 @@ public interface GlossaryClient {
 
     /**
      * 용어 사전 리스트
-     * @param fields
+     * @param params
      * @return
      */
     @GetMapping("/glossaries")
-    Base<Glossary> getGlossaries(@RequestParam(required = false, defaultValue = "owner,tags,reviewers,votes,domain") String fields,
-                                    @RequestParam(required = false, defaultValue = "100") int limit);
+    Base<Glossary> getGlossaries(@RequestParam MultiValueMap<String, String> params);
 
     /**
      * 용어 조회
@@ -81,14 +81,11 @@ public interface GlossaryClient {
 
     /**
      * 용어 리스트
-     * @param directChildrenOf
+     * @param params
      * @return
      */
     @GetMapping("/glossaryTerms")
-    Base<Term> getGlossaryTerms(@RequestParam String directChildrenOf,
-                                @RequestParam(required = false, defaultValue = "tags") String fields,
-                                @RequestParam(required = false, defaultValue = "100") int limit,
-                                @RequestParam(required = false) String after);
+    Base<Term> getGlossaryTerms(@RequestParam MultiValueMap<String, String> params);
 
     /**
      * 용어 수정
