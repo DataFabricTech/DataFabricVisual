@@ -41,16 +41,88 @@
     }
 
     &__checkbox-area {
-      gap: $spacing-4;
+      position: relative;
+      height: 28px;
+
+      @include flex($horizontal: flex-start);
 
       & > input[type="checkbox"] {
-        width: 16px;
-        height: 16px;
-        accent-color: $primary-500;
+        @include hidden-input;
+
+        &:checked {
+          & ~ label {
+            &::before {
+              box-shadow: none;
+              background-color: $primary-500;
+              border-color: $primary-500;
+            }
+
+            &:hover::before {
+              background-color: $primary-700;
+              border-color: $primary-700;
+            }
+
+            &:active::before {
+              background-color: $primary-900;
+              border-color: $primary-900;
+            }
+
+            &::after {
+              transform: scale(1) rotate(-45deg);
+            }
+          }
+        }
       }
 
       label {
-        @include ellipsis;
+        @include flex($horizontal: flex-start);
+
+        font-weight: 600;
+        color: $neutral-800;
+        white-space: nowrap;
+        cursor: pointer;
+
+        &:hover::before {
+          border-color: $neutral-400;
+        }
+
+        &:active::before {
+          border-color: $primary-500;
+          background-color: $primary-100;
+        }
+
+        &::before,
+        &::after {
+          box-sizing: border-box;
+        }
+
+        &::before {
+          @include box-shadow('sm');
+
+          content: "";
+          flex-shrink: 0;
+          display: block;
+          width: 16px;
+          height: 16px;
+          margin-right: $spacing-8;
+          background-color: $neutral-0;
+          border: 1px solid $neutral-200;
+          border-radius: $border-radius-2;
+        }
+
+        &::after {
+          content: "";
+          position: absolute;
+          left: 4px;
+          top: 6px;
+          width: 9px;
+          height: 5px;
+          background: none;
+          transform-origin: bottom right;
+          border-left: 2px solid $neutral-0;
+          border-bottom: 2px solid $neutral-0;
+          transform: scale(0) rotate(-45deg);
+        }
       }
     }
   }
@@ -153,17 +225,16 @@
 }
 
 .d-flex {
-  position: relative;
-}
+  &:has(.node-fir-selected) {
+    color: $secondary-500;
+  }
 
-.node-disabled,
-.node-fir-selected {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  opacity: 0.7;
-  background: $neutral-0;
-  cursor: not-allowed;
+  &:has(.node-disabled) {
+    opacity: 0.7;
+    background: $neutral-0;
+    cursor: not-allowed;
+    color: $neutral-700 !important;
+  }
 }
 
 
