@@ -66,7 +66,7 @@ public interface ClassificationClient {
      * @rerurn
      */
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> deleteClassification(@PathVariable String id, @RequestParam(defaultValue = "true") boolean recursive, @RequestParam(defaultValue = "true") boolean hardDelete);
+    Map<String, Object> deleteClassification(@PathVariable String id, @RequestParam(defaultValue = "true") boolean recursive, @RequestParam(defaultValue = "true") boolean hardDelete);
 
     /**
      * 분류 추가

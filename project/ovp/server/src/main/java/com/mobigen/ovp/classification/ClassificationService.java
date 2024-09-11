@@ -107,13 +107,8 @@ public class ClassificationService {
      *
      * @param id
      */
-    public int deleteClassification(String id) throws Exception {
-        ResponseEntity<Void> response = classificationClient.deleteClassification(id, true, true);
-        if (response.getStatusCode() == HttpStatus.OK) {
-            return 1;
-        } else {
-            throw new Exception();
-        }
+    public Object deleteClassification(String id) throws Exception {
+        return classificationClient.deleteClassification(id, true, true);
     }
 
     /**
