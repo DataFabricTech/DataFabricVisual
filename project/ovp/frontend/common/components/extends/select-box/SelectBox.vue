@@ -3,7 +3,6 @@
   (open시에는 select-list가 보이게 스타일 처리 했습니다.인라인스타일은 생략해주세요.)-->
   <div class="select" v-on-click-outside="closeDropdown">
     <button class="select-button" @click="toggleList" :disabled="disabledAll">
-      <svg-icon class="svg-icon select-button-icon" name="setting"></svg-icon>
       <span class="select-button-title">{{ selectedLabel }}</span>
       <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
     </button>
@@ -26,7 +25,6 @@
             ]"
           >
             <button class="dropdown-button">
-              <svg-icon class="svg-icon" name="setting"></svg-icon>
               <span class="dropdown-text">{{ option[labelKey] }}</span>
             </button>
             <button class="button button-neutral-ghost button-xs" v-if="props.useDelete">
