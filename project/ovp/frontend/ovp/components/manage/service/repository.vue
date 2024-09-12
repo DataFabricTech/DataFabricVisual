@@ -36,6 +36,13 @@
       :setColumnFit="true"
       :useColumnResize="true"
     ></agGrid>
+    <!-- TODO: [퍼블] 저장소 탭 부분에만 loading 처리 가능 여부 확인 -->
+    <Loading
+      v-show="isDoneRepoAPI"
+      id="repoLoader"
+      :use-loader-overlay="true"
+      class="loader-lg is-loader-inner"
+    ></Loading>
   </template>
 
   <!-- 결과 없을 시 no-result 표시 -->
@@ -54,9 +61,10 @@ import { computed } from "vue";
 import _ from "lodash";
 import agGrid from "@extends/grid/Grid.vue";
 import LinkDetailComponent from "./linkDetailComponent.vue";
+import Loading from "@base/loading/Loading.vue";
 const serviceStore = useServiceStore();
 
-const { serviceData, DBServiceListData, isDescEditable } =
+const { serviceData, DBServiceListData, isDescEditable, isDoneRepoAPI } =
   storeToRefs(serviceStore);
 const { updateRepositoryDescriptionAPI } = serviceStore;
 

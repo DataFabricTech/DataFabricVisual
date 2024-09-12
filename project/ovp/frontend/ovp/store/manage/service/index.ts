@@ -24,6 +24,8 @@ export const useServiceStore = defineStore("service", () => {
   const { tagList, termList } = storeToRefs(dataModelDetailStore);
   const tab = ref<string>("repository");
 
+  const isDoneRepoAPI = ref<boolean>(false);
+
   const service = reactive<Service>(<Service>{});
   const serviceList = reactive<Service[]>([]);
 
@@ -72,6 +74,7 @@ export const useServiceStore = defineStore("service", () => {
   const getRepositoryDescriptionAPI = async () => {
     const { data }: any = await $api(
       `/api/service-manage/repository/description/${selectedFqn}?${getQueryData()}`,
+      { showLoader: false },
     );
     serviceData.value = data;
   };
@@ -80,6 +83,9 @@ export const useServiceStore = defineStore("service", () => {
   const getRepositoryStorageDescriptionAPI = async () => {
     const { data }: any = await $api(
       `/api/service-manage/repository/storage/description/${selectedFqn}?${getQueryData()}`,
+      {
+        showLoader: false,
+      },
     );
 
     serviceData.value = data;
@@ -102,14 +108,18 @@ export const useServiceStore = defineStore("service", () => {
   };
 
   const getDBServiceList = async () => {
+    isDoneRepoAPI.value = true;
     const uri: string = ["MINIO"].includes(selectedServiceType.toUpperCase())
       ? "storage-services"
       : "database-services";
 
     const result: any = await $api(
       `/api/service-manage/${uri}/${selectedName}`,
+      { showLoader: false },
     );
     DBServiceListData.value = result.data;
+
+    isDoneRepoAPI.value = false;
 
     return result;
   };
@@ -178,22 +188,14 @@ export const useServiceStore = defineStore("service", () => {
       selectedID = service.id;
       selectedName = service.name;
       selectedServiceType = service.serviceType;
-      if (
-        ["MYSQL", "MARIADB", "ORACLE", "POSTGRES"].includes(
-          selectedServiceType.toUpperCase(),
-        )
-      ) {
-        // 서비스타입이 데이터베이스 일 경우
-        getRepositoryDescriptionAPI();
-      } else if (["MINIO"].includes(selectedServiceType.toUpperCase())) {
-        // 서비스 타입이 스토리지일 경우
-        getRepositoryStorageDescriptionAPI();
-      } else {
-        // 서비스 타입이 기타일 경우
-      }
     }
-    getDBServiceList();
   }
+
+  const getServiceRepoList = () => {
+    selectedServiceType.toLowerCase() === "minio"
+      ? getRepositoryStorageDescriptionAPI()
+      : getRepositoryDescriptionAPI();
+  };
 
   /**
    * 서비스 삭제
@@ -540,6 +542,17 @@ export const useServiceStore = defineStore("service", () => {
     viewConnectionInfo.value = data;
   };
 
+  watch(
+    () => tab.value,
+    (value) => {
+      if (value === "repository") {
+        // repository 저장소 탭을 누를때만 조회한다 (전체조회에 포함하지 않음)
+        getServiceRepoList();
+        getDBServiceList();
+      }
+    },
+  );
+
   return {
     tab,
     servicesById,
@@ -586,5 +599,6 @@ export const useServiceStore = defineStore("service", () => {
     getConnectionInfo,
 
     isDescEditable,
+    isDoneRepoAPI,
   };
 });
