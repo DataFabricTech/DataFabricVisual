@@ -30,7 +30,7 @@ export const useDataModelTag = defineStore("DataModelTag", () => {
   const pagingStore = usePagingStore();
   const { setFrom, updateIntersectionHandler } = pagingStore;
   const { from, size } = storeToRefs(pagingStore);
-  const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
+  const { setQueryFilterByDepth } = useQueryHelpers();
 
   const categoryStore = useGovernCategoryStore();
   const { selectedCategoryTagId, modelList, selectedModelList } =
@@ -143,7 +143,6 @@ export const useDataModelTag = defineStore("DataModelTag", () => {
       deleted: false,
       query_filter: JSON.stringify(queryFilter),
       sort_field: "totalVotes",
-      trino_query: JSON.stringify(getTrinoQuery(queryFilter)),
     };
     return new URLSearchParams(params);
   };

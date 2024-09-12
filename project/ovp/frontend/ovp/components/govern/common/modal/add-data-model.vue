@@ -137,7 +137,7 @@
           </table>
           <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
           <Loading
-            id="loader"
+            id="dataModelAddModalLoader"
             :use-loader-overlay="true"
             class="loader-lg is-loader-inner"
             style="display: none"
@@ -288,11 +288,6 @@ const onCancel = () => {
   emit("close");
 };
 
-const { scrollTrigger, mount, setScrollOptions } = useIntersectionObserver(
-  addDataModelList,
-  "dataListModal",
-);
-
 // 모달의 설정 값 초기화 후 데이터 조회
 clearDataModelModalSettings();
 await getDataModelList();
@@ -303,6 +298,12 @@ const onOpened = async () => {
   // onOpened 로 이벤트를 받고 dom 이 생성 완료 되면 mount 를 실행해서 intersection observer 를 동작시킨다.
   mount();
 };
+
+const { scrollTrigger, mount, setScrollOptions } = useIntersectionObserver({
+  callback: addDataModelList,
+  targetId: "dataListModal",
+  loaderId: "dataModelAddModalLoader",
+});
 </script>
 
 <style scoped></style>
