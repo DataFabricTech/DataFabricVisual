@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -437,8 +438,7 @@ public class CategoryService {
         return addedBody;
     }
 
-    public Object ChangeDataModelTag(String tagId, String type, List<String> body) {
-
+    public void ChangeDataModelsTagByType(String tagId, String type, List<String> body) {
         Tables tables = null;
         MultiValueMap params = new LinkedMultiValueMap();
         params.set("fields", "tags");
@@ -470,7 +470,20 @@ public class CategoryService {
             throw new RuntimeException("업데이트 실패: " + (excuteCount - successCount) + "개의 데이터 모델이 업데이트되지 않았습니다.");
         }
 
-        return true;
+    }
+
+    public Boolean changeDataModelsTag(String tagId, @RequestBody Map<String, List<String>> ids) {
+        try {
+            for (Map.Entry<String, List<String>> entry : ids.entrySet()) {
+                String type = entry.getKey();
+                List<String> dataModelIds = entry.getValue();
+
+                ChangeDataModelsTagByType(tagId, type, dataModelIds);
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private CategoryEntity getUndefinedTag() {

@@ -27,6 +27,7 @@ public interface GlossaryClient {
 
     /**
      * 용어 사전 등록
+     *
      * @param dto
      * @return
      */
@@ -35,24 +36,29 @@ public interface GlossaryClient {
 
     /**
      * 용어 사전 리스트
+     *
      * @param fields
      * @return
      */
     @GetMapping("/glossaries")
-    GlossaryResponse getGlossaries(@RequestParam(required = false, defaultValue = "owner,tags,reviewers,votes,domain") String fields,
-                                    @RequestParam(required = false, defaultValue = "100") int limit);
+    GlossaryResponse getGlossaries(
+            @RequestParam(required = false, defaultValue = "owner,tags,reviewers,votes,domain") String fields,
+            @RequestParam(required = false, defaultValue = "100") int limit);
 
     /**
      * 용어 조회
+     *
      * @param id
      * @param include
      * @return
      */
     @GetMapping("/glossaryTerms/{id}")
-    TermDto getGlossaryTermsById(@PathVariable String id, @RequestParam(required = false, defaultValue = "all") String include);
+    TermDto getGlossaryTermsById(@PathVariable String id,
+                                 @RequestParam(required = false, defaultValue = "all") String include);
 
     /**
      * 용어 사전 수정
+     *
      * @param id
      * @param param
      * @return
@@ -62,6 +68,7 @@ public interface GlossaryClient {
 
     /**
      * 용어 사전 삭제
+     *
      * @param id
      * @param recursive
      * @param hardDelete
@@ -69,11 +76,12 @@ public interface GlossaryClient {
      */
     @DeleteMapping("/glossaries/{id}")
     ResponseEntity<Void> deleteGlossary(@PathVariable UUID id,
-                        @RequestParam(defaultValue = "true") Boolean recursive,
-                        @RequestParam(defaultValue = "true") Boolean hardDelete);
+                                        @RequestParam(defaultValue = "true") Boolean recursive,
+                                        @RequestParam(defaultValue = "true") Boolean hardDelete);
 
     /**
      * 용어 추가
+     *
      * @param dto
      * @return
      */
@@ -82,14 +90,19 @@ public interface GlossaryClient {
 
     /**
      * 용어 리스트
+     *
      * @param directChildrenOf
      * @return
      */
     @GetMapping("/glossaryTerms")
-    TermResponse getGlossaryTerms(@RequestParam String directChildrenOf, @RequestParam(required = false, defaultValue = "tags") String fields, @RequestParam(required = false, defaultValue = "100") int limit, @RequestParam(required = false, defaultValue = "") String after);
+    TermResponse getGlossaryTerms(@RequestParam String directChildrenOf,
+                                  @RequestParam(required = false, defaultValue = "tags") String fields,
+                                  @RequestParam(required = false, defaultValue = "100") int limit,
+                                  @RequestParam(required = false, defaultValue = "") String after);
 
     /**
      * 용어 수정
+     *
      * @param id
      * @param param
      * @return
@@ -98,16 +111,28 @@ public interface GlossaryClient {
     Object editGlossaryTerm(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param);
 
     /**
-     * 용어 변경 > 데이터 모델 삭제
+     * 용어 변경 > 데이터 모델 추가
+     *
      * @param id
      * @param body
      * @return
      */
-    @PutMapping(value="/glossaryTerms/{id}/assets/remove")
+    @PutMapping(value = "/glossaryTerms/{id}/assets/add", consumes = "application/json")
+    Object addGlossaryTerm(@PathVariable UUID id, @RequestBody Map<String, Object> body);
+
+    /**
+     * 용어 변경 > 데이터 모델 삭제
+     *
+     * @param id
+     * @param body
+     * @return
+     */
+    @PutMapping(value = "/glossaryTerms/{id}/assets/remove")
     Object updateGlossaryTerm(@PathVariable UUID id, @RequestBody Map<String, Object> body);
 
     /**
      * 용어 삭제
+     *
      * @param id
      * @param recursive
      * @param hardDelete
@@ -115,11 +140,12 @@ public interface GlossaryClient {
      */
     @DeleteMapping("/glossaryTerms/{id}")
     ResponseEntity<Void> deleteGlossaryTerms(@PathVariable UUID id,
-                            @RequestParam(defaultValue = "true") boolean recursive,
-                            @RequestParam(defaultValue = "true") boolean hardDelete);
+                                             @RequestParam(defaultValue = "true") boolean recursive,
+                                             @RequestParam(defaultValue = "true") boolean hardDelete);
 
     /**
      * 용어 사전 활동 사항
+     *
      * @param entityLink
      * @param type
      * @return

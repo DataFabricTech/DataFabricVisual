@@ -44,6 +44,7 @@ interface UndefinedTagIdManager {
   get: () => string | null;
 }
 
+// TODO: 데이터모델추가 모달 공통모달로 변경되면서 사용하지 않는 코드가 있으므로 관련 코드 삭제 필요. Category 관련 이슈처리가 완료된 후 정리하는것이 좋을 것 같음.
 export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const { $api } = useNuxtApp();
   const pagingStore = usePagingStore();

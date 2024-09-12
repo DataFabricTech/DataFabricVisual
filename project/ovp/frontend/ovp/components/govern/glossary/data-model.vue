@@ -37,8 +37,12 @@
           >
             데이터모델 제외
           </button>
-          <!-- TODO: 카테고리 개발 완료 후 예정 -->
-          <button class="button button-secondary">데이터모델추가</button>
+          <button
+            class="button button-secondary"
+            @click="showDataModelAddModal"
+          >
+            데이터모델추가
+          </button>
         </div>
       </div>
     </div>
@@ -68,34 +72,63 @@
 </template>
 
 <script lang="ts" setup>
+import { useModal } from "vue-final-modal";
+import DataModelAddModal from "~/components/govern/common/modal/add-data-model.vue";
 import { useGlossaryStore } from "@/store/glossary";
+
 const { getDataModels, getDataModel, updateTerm, dataModels, dataModel, term } =
   useGlossaryStore();
 getDataModels(term.fullyQualifiedName);
 
+const DATA_MODEL_ADD_MODAL = "data-model-add-modal";
+
+const { open, close } = useModal({
+  component: DataModelAddModal,
+  attrs: {
+    modalId: DATA_MODEL_ADD_MODAL,
+    currentPageType: "glossary",
+    onConfirm() {
+      // TODO: 데이터모델 목록 조회 및 초기화
+      close();
+    },
+    onClose() {
+      close();
+    },
+  },
+});
+
 const keyword = ref("");
+
+const showDataModelAddModal = () => {
+  open();
+};
+
 function searchDataModel() {
   getDataModels(term.fullyQualifiedName, keyword.value);
 }
 
 const isShowPreview = ref(false);
+
 function showPreview(): void {
   isShowPreview.value = !isShowPreview.value;
 }
 
-function clickPreview(data): void {
+function clickPreview(data: any): void {
   getDataModel(data.fullyQualifiedName);
   isShowPreview.value = true;
 }
 
-const selectedDataModels = ref([]);
+const selectedDataModels = ref<string[]>([]);
+
 function checkDataModel(ids: string[]) {
   selectedDataModels.value = [...ids];
 }
 
-function toggleAllCheck(allCheck) {
+function toggleAllCheck(allCheck: boolean) {
   if (allCheck) {
-    selectedDataModels.value = dataModels.map((dataModel) => dataModel.id);
+    selectedDataModels.value = dataModels.map(
+      (dataModel) => dataModel.id,
+    ) as string[];
   } else {
     selectedDataModels.value = [];
   }
