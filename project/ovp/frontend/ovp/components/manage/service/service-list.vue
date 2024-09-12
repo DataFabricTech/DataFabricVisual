@@ -75,10 +75,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, defineProps, defineEmits } from "vue";
+import { ref, onMounted, defineProps, defineEmits, watch } from "vue";
 import type { Service } from "@/type/service";
 import { useServiceStore } from "@/store/manage/service";
 import $constants from "@/utils/constant";
+import { debounce } from "lodash";
 
 const {
   getServiceList,
@@ -102,6 +103,21 @@ const menuSelectedClass = (value: Service): string => {
 onMounted(() => {
   getServiceList();
 });
+
+function createDebouncedSearch() {
+  return debounce(async () => {
+    await search();
+  }, 300);
+}
+
+const debouncedSearch = createDebouncedSearch();
+
+watch(
+  () => keyword.value,
+  () => {
+    debouncedSearch();
+  },
+);
 
 async function search(): Promise<void> {
   emptyService();
