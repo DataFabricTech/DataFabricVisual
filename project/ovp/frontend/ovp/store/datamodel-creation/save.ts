@@ -58,16 +58,11 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
   };
 
   const getCategoryInfo = async (value: any) => {
-    const data = await $api(`api/category/${value}`);
-    return data;
+    return await $api(`api/category/${value}`);
   };
 
   const editDoneForCategory = (value: any) => {
-    if (!_.isEmpty(value)) {
-      cateTitle.value = value.name;
-    } else {
-      cateTitle.value = "";
-    }
+    cateTitle.value = _.isEmpty(value) ? "" : value.name;
     tree_selectedItem.value = value;
   };
 
@@ -135,7 +130,7 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
   };
 
   const createModel = async (tags: any) => {
-    let param = {
+    const param = {
       modelName: dataModelName.value,
       baseModel: {
         type: "QUERY",

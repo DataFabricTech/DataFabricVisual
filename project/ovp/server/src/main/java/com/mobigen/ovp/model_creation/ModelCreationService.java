@@ -230,7 +230,6 @@ public class ModelCreationService {
     }
 
     public boolean checkDuplicateModelName(Map<String, Object> param) {
-        boolean isDuplicate;
         String modelName = (String) param.get("modelName");
         String queryFilter = String.format("{\"query\":{\"bool\":{\"must\":[{\"bool\":{\"should\":[{\"term\":{\"fullyQualifiedName\":\"datamodels.internalhive.default.%s\"}}]}}]}}}", modelName);
         String includeSourceFields = "name";
@@ -241,13 +240,7 @@ public class ModelCreationService {
         Map<String, Object> total = (Map<String, Object>) hits.get("total");
         int totalValue = (int) total.get("value");
 
-        if(totalValue == 1) {
-            isDuplicate = true;
-        } else {
-            isDuplicate = false;
-        }
-
-        return isDuplicate;
+        return totalValue == 1;
     }
 
     public Object saveModel(Map<String, Object> param) throws Exception {
