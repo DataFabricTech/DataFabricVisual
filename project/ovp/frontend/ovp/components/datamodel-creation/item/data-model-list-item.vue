@@ -182,7 +182,9 @@ const onOpenDataModelDetail: () => void = () => {
   hideContextMenuBtn();
 };
 const owner = computed(() => {
-  const nOwner = props.data.owner ? props.data.owner : "-";
+  const nOwner = props.data.ownerDisplayName
+    ? props.data.ownerDisplayName
+    : "-";
   return `(${nOwner})`;
 });
 </script>

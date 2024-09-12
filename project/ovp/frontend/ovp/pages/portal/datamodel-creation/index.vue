@@ -19,7 +19,7 @@
         @change="addModelInstance.open"
         @delete="deleteDataModel"
         @item-click="onClickDataModelItem"
-        @bookmark-change="onClickBookmark"
+        @bookmark-change="updateMainSelectedModelBookmark"
       ></selected-model>
       <execute-query
         :query="query"
@@ -107,9 +107,10 @@ const {
 
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
-const { filters, selectedModelList, selectedModelListCnt } =
+const { filters, nSelectedListData, selectedModelList, selectedModelListCnt } =
   storeToRefs(dataModelSearchStore);
-const { onClickBookmark } = dataModelSearchStore;
+const { onClickBookmark, updateMainSelectedModelBookmark } =
+  dataModelSearchStore;
 
 onMounted(() => {
   alert("개발중 입니다.");

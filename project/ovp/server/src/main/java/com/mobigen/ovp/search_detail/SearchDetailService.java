@@ -12,6 +12,7 @@ import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Columns;
 import com.mobigen.ovp.common.openmete_client.dto.Followers;
+import com.mobigen.ovp.common.openmete_client.dto.Profile;
 import com.mobigen.ovp.common.openmete_client.dto.ProfileColumn;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
 import com.mobigen.ovp.common.openmete_client.dto.Tag;
@@ -27,6 +28,8 @@ import com.mobigen.ovp.search_detail.dto.response.DataModelDetailSampleDataRespo
 import com.mobigen.ovp.user.UserClient;
 import com.mobigen.ovp.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -46,6 +49,7 @@ import java.util.stream.Stream;
 @Service
 public class SearchDetailService {
 
+    private static final Logger log = LoggerFactory.getLogger(SearchDetailService.class);
     private final UserClient userClient;
     private final SearchClient searchClient;
     private final TablesClient tablesClient;
@@ -320,11 +324,18 @@ public class SearchDetailService {
             Map<String, Object> row = new HashMap<>();
             row.put("name", column.getName());
             row.put("dateTypeDisplay", column.getDataTypeDisplay());
-            row.put("nullCount", column.getProfile().getNullCount());
-            row.put("uniqueCount", column.getProfile().getUniqueCount());
-            row.put("distinctCount", column.getProfile().getDistinctCount());
-            row.put("valueCount", column.getProfile().getValueCount());
 
+            if(column.getProfile() != null) {
+                row.put("nullCount", column.getProfile().getNullCount());
+                row.put("uniqueCount", column.getProfile().getUniqueCount());
+                row.put("distinctCount", column.getProfile().getDistinctCount());
+                row.put("valueCount", column.getProfile().getValueCount());
+            } else {
+                row.put("nullCount", "");
+                row.put("uniqueCount", "");
+                row.put("distinctCount", "");
+                row.put("valueCount", "");
+            }
             columns.add(row);
         }
 

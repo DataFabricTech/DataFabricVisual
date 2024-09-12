@@ -55,6 +55,7 @@ export const useCreationStore = defineStore("creation", () => {
     sampleDataList.value = await getSampleData(
       selectedModel.id,
       selectedModel.fqn,
+      selectedModel.type,
     );
     if (sampleDataList.value) {
       isItemClicked.value = true;
@@ -65,6 +66,8 @@ export const useCreationStore = defineStore("creation", () => {
     columnOptions.value = result.rowData
       .filter((item: any) => item.name)
       .map((item: any) => ({ id: item.name, name: item.name }));
+
+    columnOptions.value.unshift({ id: "choose", name: "선택하세요" });
   };
 
   const showProfile = () => {

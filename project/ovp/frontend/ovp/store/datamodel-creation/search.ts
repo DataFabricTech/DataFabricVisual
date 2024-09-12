@@ -333,8 +333,8 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   /**
    * API - 샘플 데이터 조회
    */
-  const getSampleData = async (value: string, fqn: string) => {
-    return $api(`/api/search/detail/sample-data/${value}`)
+  const getSampleData = async (value: string, fqn: string, type: string) => {
+    return $api(`/api/search/detail/sample-data/${value}?type=${type}`)
       .then((res: any) => {
         if (res.result === 0) {
           return {};
@@ -432,7 +432,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    */
   const updateBookmark = async (value: string) => {
     const selectedModel = _.find(searchResult.value, { id: value });
-
     if (!selectedModel) {
       // TODO: alert 컴포넌트로 변경 예정
       alert("모델을 찾을 수 없습니다.");
@@ -444,8 +443,68 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     $api(`/api/creation/bookmark/${urlType}/${value}`, {
       method: methodType,
     })
-      .then(() => {
-        resetReloadList();
+      .then((res: any) => {
+        if (res.result === 1) {
+          searchResult.value = searchResult.value.filter((item) => {
+            // selectedModel과 일치하는 항목의 isFollow만 false로 변경
+            if (item.fqn === selectedModel.fqn) {
+              item.isFollow = !item.isFollow;
+            }
+            return true; // 모든 항목을 유지
+          });
+        }
+      })
+      .catch((err: any) => {
+        console.log("err: ", err);
+      });
+  };
+
+  // 데이터 모델 추가 팝업 > 선택된 데이터 모델 > 북마크 변경
+  const updateSelectedModelBookmark = async (value: any) => {
+    const selectedModel = _.find(nSelectedListData.value, { id: value });
+
+    const urlType = selectedModel.isFollow ? "remove" : "add";
+    const methodType = selectedModel.isFollow ? "DELETE" : "PUT";
+
+    $api(`/api/creation/bookmark/${urlType}/${value}`, {
+      method: methodType,
+    })
+      .then((res: any) => {
+        if (res.result === 1) {
+          nSelectedListData.value = nSelectedListData.value.filter((item) => {
+            // selectedModel과 일치하는 항목의 isFollow만 false로 변경
+            if (item.fqn === selectedModel.fqn) {
+              item.isFollow = !item.isFollow;
+            }
+            return true; // 모든 항목을 유지
+          });
+        }
+      })
+      .catch((err: any) => {
+        console.log("err: ", err);
+      });
+  };
+
+  // 데이터 생성 메인 > 선택된 데이터 모델 > 북마크 변경
+  const updateMainSelectedModelBookmark = async (value: any) => {
+    const selectedModel = _.find(selectedModelList.value, { id: value });
+
+    const urlType = selectedModel.isFollow ? "remove" : "add";
+    const methodType = selectedModel.isFollow ? "DELETE" : "PUT";
+
+    $api(`/api/creation/bookmark/${urlType}/${value}`, {
+      method: methodType,
+    })
+      .then((res: any) => {
+        if (res.result === 1) {
+          selectedModelList.value = selectedModelList.value.filter((item) => {
+            // selectedModel과 일치하는 항목의 isFollow만 false로 변경
+            if (item.fqn === selectedModel.fqn) {
+              item.isFollow = !item.isFollow;
+            }
+            return true; // 모든 항목을 유지
+          });
+        }
       })
       .catch((err: any) => {
         console.log("err: ", err);
@@ -489,5 +548,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     onClickAccordData,
     changeDetailTab,
     onClickBookmark,
+    updateSelectedModelBookmark,
+    updateMainSelectedModelBookmark,
   };
 });
