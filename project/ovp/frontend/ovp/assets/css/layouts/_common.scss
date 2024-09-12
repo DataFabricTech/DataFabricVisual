@@ -13,6 +13,7 @@
     height: calc(100% - 48px);
   }
 
+  // 4개 레이아웃 (데이터 생성)
   &:has(.l-split + .l-split) {
     .l-split:nth-child(1) {
       height: 60%;
@@ -44,7 +45,7 @@
   @include flex($horizontal: space-between);
 
   width: 100%;
-  min-height: 48px;
+  min-height: 45px;
   flex-shrink: 0;
   padding: $spacing-8;
 
@@ -61,6 +62,10 @@
   }
 }
 
+.tab-line + .l-top-bar + .l-split {
+  height: calc(100% - 105px);
+}
+
 .l-sidebar {
   @include flex($direction: column, $horizontal: space-between);
 
@@ -69,5 +74,15 @@
   height: 100%;
 }
 
+// 검색결과 공통
+.search-result {
+  @include font-size('15');
+  color: $neutral-700;
+
+  &-num {
+    font-weight: 600;
+    color: $primary-500;
+  }
+}
 
 

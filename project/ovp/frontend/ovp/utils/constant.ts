@@ -1,17 +1,16 @@
 const $constants = {
   LOGIN: {
     ID: {
-      REGEX: /^[a-z0-9_-]{5,20}$/,
-      REGEX_ERROR_MSG:
-        "아이디는 5~20자의 영문 소문자, 숫자와 특수기호(_),(-)만 사용 가능합니다.",
-      INPUT_ERROR_MSG: "사용자 아이디를 입력하세요.",
-      DUPLICATE_ERROR_MSG: "이미 사용 중인 아이디 입니다.",
+      INPUT_ERROR_MSG: "사용자 아이디/이메일을 입력하세요.",
+    },
+    DISPLAY_NAME: {
+      INPUT_ERROR_MSG: "사용자 이름를 입력하세요.",
     },
     PASSWORD: {
       REGEX:
-        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^()_\-=\[\]{}|;:<>,.\/?]).{8,56}$/,
+        /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[~`!@#$%^&*()_\-+=\[\]{}|;:<>,.\/?]).{8,56}$/,
       REGEX_ERROR_MSG:
-        "비밀번호는 최소 8자, 최대 56자여야 하며 대문자(AZ), 소문자(az), 숫자, 특수 문자(예: !, %, @ 또는 # 등)를 하나 이상 포함해야 합니다.",
+        "비밀번호는 최소 8자, 최대 56자여야 하며 대문자(AZ), 소문자(az), 숫자, 특수 문자(예: !, %, @ 또는 # 등)를 각 하나 이상 포함해야 합니다.",
       MATCH_ERROR_MSG: "비밀번호가 일치 하지 않습니다.",
       INPUT_ERROR_MSG: "사용자 비밀번호를 입력하세요.",
     },
@@ -20,6 +19,7 @@ const $constants = {
       REGEX_ERROR_MSG: "이메일이 유효하지 않습니다.",
       INPUT_ERROR_MSG: "사용자 이메일을 입력하세요.",
       DUPLICATE_ERROR_MSG: "이미 사용 중인 이메일 입니다.",
+      DUPLICATE_ID_ERROR_MSG: "이미 사용 중인 이메일 아이디 입니다.",
     },
   },
   COMMON: {
@@ -134,6 +134,7 @@ const $constants = {
     },
   },
   SERVICE: {
+    CATEGORY_UNDEFINED_NAME: "미분류",
     TAB: [
       {
         label: "저장소",
@@ -141,13 +142,25 @@ const $constants = {
       },
       {
         label: "수집",
-        value: "collection",
+        value: "ingestion",
       },
       {
         label: "연결정보",
         value: "connection-info",
       },
     ],
+    INGESTION: {
+      SELECT_BOX_DATA: [
+        {
+          label: "메타 데이터 수집 추가",
+          value: "metadata",
+        },
+        {
+          label: "프로파일러 수집 추가",
+          value: "profiler",
+        },
+      ],
+    },
   },
 };
 export default Object.freeze($constants);

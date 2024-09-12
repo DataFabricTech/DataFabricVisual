@@ -15,12 +15,6 @@
 
   overflow-y: auto;
   flex-grow: 1;
-  -ms-overflow-style: none;  /* Internet Explorer and Edge */
-  scrollbar-width: none;  /* Firefox */
-
-  &::-webkit-scrollbar {
-    display: none; /* (Chrome, Safari) */
-  }
 }
 
 .preview {

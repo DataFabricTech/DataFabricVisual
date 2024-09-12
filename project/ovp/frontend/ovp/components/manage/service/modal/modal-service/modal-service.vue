@@ -1,8 +1,7 @@
 <template>
   <Modal
-    title="서비스 추가"
+    :title="`서비스 ${isAddMode ? '추가' : '수정'}`"
     class="modal modal-padding-16"
-    :modal-id="props.modalId"
     background="non-interactive"
     displayDirective="show"
     overlayTransition="vfm-fade"
@@ -13,7 +12,8 @@
     :height="674"
     :lockScroll="false"
     swipeToClose="none"
-    @closed="onClosed"
+    @before-open="beforeOpen"
+    @closed="onCancel"
     @cancel="onCancel"
   >
     <template #body>
@@ -30,18 +30,11 @@
         @change="changeStep"
         style="width: 100%"
       />
-
-      <step1 :style="{ display: currentStep === 1 ? 'block' : 'none' }" />
-
-      <step2
-        ref="step2Ref"
-        :style="{ display: currentStep === 2 ? 'block' : 'none' }"
-      />
-
-      <step3
-        ref="step3Ref"
-        :style="{ display: currentStep === 3 ? 'block' : 'none' }"
-      />
+      <template v-if="isAddMode">
+        <step1 :is-show="currentStep === 1" />
+        <step2 ref="step2Ref" :is-show="currentStep === 2" />
+      </template>
+      <step3 ref="step3Ref" :is-show="currentStep === 3" />
     </template>
     <template #footer>
       <button class="button button-neutral-ghost button-lg" @click="onCancel">
@@ -56,7 +49,7 @@
           <p class="notification-detail">{{ inValidMsg }}</p>
         </div>
         <button
-          v-show="currentStep > 1"
+          v-show="currentStep > 1 && isAddMode"
           class="button button-primary-stroke button-lg"
           @click="gotoPrev"
         >
@@ -77,17 +70,16 @@ import Step1 from "./step/step1.vue";
 import Step2 from "./step/step2.vue";
 import Step3 from "./step/step3.vue";
 
-import { useNuxtApp } from "nuxt/app";
-const { $vfm } = useNuxtApp();
-
 import {
   ModalServiceComposition,
   ConnectionStatus,
 } from "./ModalServiceComposition";
 import type { ModalServiceProps } from "./ModalServiceProps";
+import { watch } from "vue";
 
-const props = withDefaults(defineProps<ModalServiceProps>(), {});
+const props = withDefaults(defineProps<ModalServiceProps>(), { mode: "add" });
 const {
+  isAddMode,
   currentStep,
   inValidMsg,
   isValid,
@@ -97,8 +89,23 @@ const {
   resetServiceObj,
   submit,
   checkValidation,
+  serviceObj,
 } = ModalServiceComposition(props);
 
+const emit = defineEmits<{
+  (e: "close"): void;
+  (e: "loadData"): void;
+}>();
+
+watch(
+  () => serviceObj.value.detailInfo,
+  () => {
+    isDoneTestConnection.value = null;
+  },
+  { immediate: true, deep: true },
+);
+
+isAddMode.value = props.mode === "add";
 const stepOptions: any[] = [
   { label: "서비스 타입 선택", value: 1 },
   { label: "서비스 컨피그 입력", value: 2 },
@@ -107,18 +114,24 @@ const stepOptions: any[] = [
 const step2Ref = ref<any | null>(null);
 const step3Ref = ref<any | null>(null);
 
+const beforeOpen = () => {
+  if (!isAddMode.value) {
+    // 서비스 수정일 경우, 3번 탭을 보여주도록 설정
+    changeStep(4);
+  }
+};
+
 const changeStep = (value: number | string) => {
   // value 를 숫자로만 했기 때문에 ts 오류 방지를 위해 Number 로 형변환 한다.
   currentStep.value = Number(value) - 1;
 };
 const onCancel = () => {
-  $vfm.close(props.modalId);
-};
-const onClosed = () => {
   resetServiceObj(); // store 에 저장하고 있던 데이터 리셋
   resetViewData();
   currentStep.value = 1;
   openEyeValues.value = [];
+
+  emit("close");
 };
 
 const gotoPrev = () => {
@@ -139,7 +152,8 @@ const gotoNext = async () => {
 
   if (currentStep.value === 3) {
     if (await submit()) {
-      $vfm.close(props.modalId);
+      emit("close");
+      emit("loadData");
     }
     return;
   } else {

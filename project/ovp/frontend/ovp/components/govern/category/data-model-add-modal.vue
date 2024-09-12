@@ -1,7 +1,6 @@
 <template>
   <Modal
     title="데이터 모델 추가"
-    class="modal modal-padding-16"
     :modal-id="props.modalId"
     background="non-interactive"
     displayDirective="show"
@@ -10,12 +9,15 @@
     :clickToClose="true"
     :escToClose="true"
     :width="1180"
-    :height="640"
+    :height="615"
     :top="240"
     :lockScroll="false"
+    :confirm-btn-msg="'저장'"
+    :is-disabled-confirm-btn="isDisabledConfirmBtn"
     swipeToClose="none"
     @cancel="onCancel"
     @confirm="onConfirm"
+    @open="onOpened"
   >
     <template v-slot:body>
       <div class="data-info max-h-[460px]">
@@ -28,6 +30,7 @@
           :label-text="'데이터 모델 검색'"
           @update:value="updateSearchInputValue"
           @on-input="onInput"
+          @reset="getAllDataModelList"
         ></search-input>
         <div class="filters">
           <data-filter :data="filters"></data-filter>
@@ -52,8 +55,12 @@
             <p class="notification-detail">정보가 없습니다.</p>
           </div>
         </div>
-        <div v-else class="table-scroll" id="dataListModal">
-          <table>
+        <div
+          class="table-scroll"
+          id="dataListModal"
+          v-show="!isSearchResultNoData"
+        >
+          <table class="table-fixed">
             <colgroup>
               <col style="width: 42px" />
               <col />
@@ -128,7 +135,7 @@
           </table>
           <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
           <Loading
-            id="loader"
+            id="dataModelAddModalLoader"
             :use-loader-overlay="true"
             class="loader-lg is-loader-inner"
             style="display: none"
@@ -140,19 +147,18 @@
 </template>
 
 <script setup lang="ts">
-import Modal from "@extends/modal/Modal.vue";
-import { useNuxtApp, useRouter } from "nuxt/app";
+import { computed, ref } from "vue";
+import { useRouter } from "nuxt/app";
 import { useGovernCategoryStore } from "~/store/governance/Category/index";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { storeToRefs } from "pinia";
+import Modal from "@extends/modal/Modal.vue";
 import DataFilter from "./data-filter.vue";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import Tab from "@extends/tab/Tab.vue";
-import { computed, ref } from "vue";
 import Loading from "@base/loading/Loading.vue";
 
 const router = useRouter();
-const { $vfm } = useNuxtApp();
 
 const categoryStore = useGovernCategoryStore();
 const {
@@ -161,6 +167,9 @@ const {
   resetReloadList,
   addSearchList,
   getSearchList,
+  getModelList,
+  patchModelAddItemAPI,
+  setModelIdList,
 } = categoryStore;
 const {
   initTab,
@@ -171,6 +180,8 @@ const {
   dataModelIdList,
   selectedDataModelList,
   addSearchInputValue,
+  isShowPreview,
+  searchInputValue,
 } = storeToRefs(categoryStore);
 
 const props = defineProps({
@@ -179,14 +190,21 @@ const props = defineProps({
     required: true,
   },
 });
+const emit = defineEmits<{
+  (e: "close-data-model-add-modal"): void;
+}>();
 
 // SEARCH INPUT
 const updateSearchInputValue = (newValue: string) => {
   addSearchInputValue.value = newValue;
 };
 const onInput = (value: string) => {
-  setScrollOptions(0);
   setSearchKeyword(value);
+  resetReloadList();
+};
+
+const getAllDataModelList = () => {
+  setSearchKeyword("");
   resetReloadList();
 };
 
@@ -252,20 +270,39 @@ watchEffect(() => {
 });
 
 // MODAL
+const isDisabledConfirmBtn = computed(() => {
+  return selectedDataModelList.value.length === 0;
+});
 const onCancel = () => {
-  $vfm.close(props.modalId);
+  emit("close-data-model-add-modal");
 };
 
 const onConfirm = async () => {
-  $vfm.close(props.modalId);
+  await patchModelAddItemAPI();
+  setScrollOptions(0);
+  searchInputValue.value = "";
+
+  await getModelList();
+  setModelIdList();
+
+  isShowPreview.value = false;
+  emit("close-data-model-add-modal");
 };
 
 await getSearchList();
 
-const { scrollTrigger, setScrollOptions } = useIntersectionObserver(
-  addSearchList,
-  "dataListModal",
-);
+const { scrollTrigger, mount, setScrollOptions } = useIntersectionObserver({
+  callback: addSearchList,
+  targetId: "dataListModal",
+  loaderId: "dataModelAddModalLoader",
+});
+
+const onOpened = () => {
+  // NOTE : modal 사용 방식 변경 후 부터, modal 은 intersectionHelper 의 onMounted 보다 dom 생성이 늦어
+  // mount = intersectionObserver 의 생성 순서가 맞지 않아 동작하지 않는 오류가 발생하기 때문에,
+  // onOpened 로 이벤트를 받고 dom 이 생성 완료 되면 mount 를 실행해서 intersection observer 를 동작시킨다.
+  mount();
+};
 </script>
 
 <style scoped></style>

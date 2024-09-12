@@ -1,5 +1,5 @@
 <template>
-  <div :class="props.class" class="tree">
+  <div :class="[props.class, props.compId, 'tree']" v-if="showTree">
     <div class="tree-top-buttons">
       <button v-if="showOpenAllBtn" class="button button-neutral-stroke button-sm" type="button" @click="openAll">
         <span class="button-title">전체 열기</span>
@@ -18,8 +18,14 @@
       @dropValidator="dropValidatorHandler"
       @onSelect="onItemSelected"
     >
-      <template v-if="mode === 'edit'" v-slot:item-append="treeViewItem">
-        <div class="tree-item-buttons">
+      <template v-slot:item-append="treeViewItem">
+        <div
+          :class="{
+            'node-disabled': props.disabledIds.length > 0 && props.disabledIds.includes(treeViewItem.id),
+            'node-fir-selected': treeSelectedIds.length > 0 && treeSelectedIds.includes(treeViewItem.id)
+          }"
+        ></div>
+        <div v-if="mode === 'edit' && !props.immutableItems.includes(treeViewItem.id)" class="tree-item-buttons">
           <button class="button button-neutral-ghost button-sm" type="button" @click="addSibling(treeViewItem)">
             <span class="button-title">추가</span>
           </button>
@@ -46,7 +52,12 @@ const props = withDefaults(defineProps<TreeProps>(), {
   showOpenAllBtn: false,
   showCloseAllBtn: false,
   firExpandAll: false,
-  checkedIds: () => []
+  checkedIds: () => [],
+  disabledIds: () => [],
+  selectedIds: () => [],
+  useFirSelect: true,
+  compId: "treeComponent",
+  immutableItems: () => []
 });
 
 const emit = defineEmits<{
@@ -56,27 +67,15 @@ const emit = defineEmits<{
   (e: "addChild", params: TreeViewItem): void;
 }>();
 
-const checkOnlyOneAction = ref(true);
 const onItemChecked = (from: TreeViewItem[]) => {
   emit("onItemChecked", from);
 };
 
-const changeFirstItemChange = (bool: boolean) => {
-  if (props.items.length < 1) {
-    return;
-  }
-  const element: any = document.querySelector(`li#${props.items[0].id} .tree-item`);
-
-  if (element) {
-    element.style.color = bool ? "#188ab0" : "#2b3440";
-  }
-};
-
 const onItemSelected = (node: TreeViewItem) => {
-  if (checkOnlyOneAction.value) {
-    changeFirstItemChange(false);
-  }
-
+  // node-fir-select class 를 삭제해준다.
+  try {
+    treeSelectedIds.value = treeSelectedIds.value.filter((id) => id !== treeItems.value[0].id);
+  } catch {}
   emit("onItemSelected", node);
 };
 
@@ -91,13 +90,10 @@ onMounted(() => {
   if (props.firExpandAll) {
     openAll();
   }
-
-  nextTick(() => {
-    changeFirstItemChange(true);
-  });
 });
 
-const { treeItems, createNewTreeItem, openAll, closeAll, dropValidatorHandler } = TreeComposition(props);
+const { showTree, treeItems, createNewTreeItem, openAll, closeAll, dropValidatorHandler, treeSelectedIds } =
+  TreeComposition(props);
 </script>
 
 <style lang="scss">

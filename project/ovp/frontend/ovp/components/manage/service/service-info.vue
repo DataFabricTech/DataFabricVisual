@@ -2,7 +2,12 @@
   <div class="work-page" v-if="!isEmptyService()">
     <div class="l-top-bar">
       <div class="h-group gap-2">
-        <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
+        <img
+          v-if="servicesById[service.serviceType]"
+          :src="servicesById[service.serviceType].imgUrl"
+          :alt="servicesById[service.serviceType].label"
+          :width="25"
+        />
         <h4 class="service-title">{{ service.name }}</h4>
       </div>
       <button class="button button-error-lighter" @click="removeService">
@@ -13,7 +18,10 @@
       <div class="v-group gap-4">
         <div class="h-group gap-2">
           <div class="text-neutral-700 font-semibold w-14">소유자</div>
-          <div class="editable-group w-auto" v-if="!store.editInfo.owner">
+          <div
+            class="editable-group w-auto"
+            v-if="!serviceStore.editInfo.owner"
+          >
             <div class="text-neutral-700">
               {{
                 service.owner && service.owner.name
@@ -30,9 +38,9 @@
               <svg-icon class="button-icon" name="pen"></svg-icon>
             </button>
           </div>
-          <div class="editable-group w-auto" v-if="store.editInfo.owner">
+          <div class="editable-group w-auto" v-if="serviceStore.editInfo.owner">
             <menu-search-tag
-              :data="store.userSearchList"
+              :data="serviceStore.userSearchList"
               :selected-items="service.owner"
               label-key="name"
               value-key="id"
@@ -43,10 +51,13 @@
             ></menu-search-tag>
           </div>
         </div>
-        <div class="h-group gap-8">
+        <div class="v-group gap-4">
           <div class="h-group gap-2">
-            <div class="font-semibold text-neutral-700 w-14">태그</div>
-            <div class="editable-group w-auto" v-if="!store.editInfo.tag">
+            <div class="font-semibold text-neutral-700 w-14 shrink-0">태그</div>
+            <div
+              class="editable-group w-auto"
+              v-if="!serviceStore.editInfo.tag"
+            >
               <div class="text-neutral-700" v-if="service.tags.length === 0">
                 <span>태그 없음</span>
               </div>
@@ -55,7 +66,7 @@
                 v-else
                 v-for="tag in service.tags"
               >
-                <span class="tag-text">{{ tag.label }}</span>
+                <span class="tag-text">{{ tag.displayName }}</span>
               </div>
               <button
                 class="button button-neutral-ghost button-sm"
@@ -66,28 +77,31 @@
                 <svg-icon class="button-icon" name="pen"></svg-icon>
               </button>
             </div>
-            <div class="editable-group w-auto" v-if="store.editInfo.tag">
+            <div class="editable-group w-auto" v-if="serviceStore.editInfo.tag">
               <menu-search-tag
-                :data="menuSearchTagsData"
+                :data="tagList"
                 :selected-items="service.tags"
-                label-key="label"
+                label-key="displayName"
                 value-key="tagFQN"
                 :is-multi="true"
                 title="값을 선택하세요"
-                @multiple-change="changeTag"
+                @multiple-change="changeTags"
                 @cancel="changeEditInfo('tag')"
                 @close="changeEditInfo('tag')"
               ></menu-search-tag>
             </div>
           </div>
           <div class="h-group gap-2">
-            <div class="font-semibold text-neutral-700 w-14">용어</div>
-            <div class="editable-group w-auto" v-if="!store.editInfo.term">
-              <div
-                class="tag tag-primary tag-sm"
-                v-for="term in service.relatedTerms"
-              >
-                <span class="tag-text">{{ term ? term.label : "없음" }}</span>
+            <div class="font-semibold text-neutral-700 w-14 shrink-0">용어</div>
+            <div
+              class="editable-group w-auto"
+              v-if="!serviceStore.editInfo.term"
+            >
+              <div class="text-neutral-700" v-if="service.terms.length === 0">
+                <span>용어 없음</span>
+              </div>
+              <div class="tag tag-primary tag-sm" v-for="term in service.terms">
+                <span class="tag-text">{{ term.displayName }}</span>
               </div>
               <button
                 class="button button-neutral-ghost button-sm"
@@ -98,19 +112,21 @@
                 <svg-icon class="button-icon" name="pen"></svg-icon>
               </button>
             </div>
-            <div class="editable-group w-auto" v-if="store.editInfo.term">
-              <!-- TODO:  추후 개발 -->
-              <!--              <menu-search-tag-->
-              <!--                :data="menuSearchRelatedTermsData"-->
-              <!--                :selected-items="[]"-->
-              <!--                label-key="label"-->
-              <!--                value-key="id"-->
-              <!--                :is-multi="true"-->
-              <!--                title="값을 선택하세요"-->
-              <!--                @multiple-change="changeRelatedTerms"-->
-              <!--                @cancel="changeEditInfo('term')"-->
-              <!--                @close="changeEditInfo('term')"-->
-              <!--              ></menu-search-tag>-->
+            <div
+              class="editable-group w-auto"
+              v-if="serviceStore.editInfo.term"
+            >
+              <menu-search-tag
+                :data="termList"
+                :selected-items="service.terms"
+                label-key="displayName"
+                value-key="tagFQN"
+                :is-multi="true"
+                title="값을 선택하세요"
+                @multiple-change="changeTerms"
+                @cancel="changeEditInfo('term')"
+                @close="changeEditInfo('term')"
+              ></menu-search-tag>
             </div>
           </div>
         </div>
@@ -128,9 +144,11 @@
           </li>
         </ul>
       </div>
-      <repository v-if="store.tab === 'repository'"></repository>
-      <ingestions v-if="store.tab === 'collection'"></ingestions>
-      <connection-info v-if="store.tab === 'connection-info'"></connection-info>
+      <repository v-if="serviceStore.tab === 'repository'"></repository>
+      <ingestions v-if="serviceStore.tab === 'ingestion'"></ingestions>
+      <connection-info
+        v-if="serviceStore.tab === 'connection-info'"
+      ></connection-info>
     </div>
   </div>
   <div class="no-result" v-if="isEmptyService()">
@@ -143,12 +161,14 @@
 
 <script lang="ts" setup>
 import { onMounted, computed } from "vue";
-import { useGlossaryStore } from "@/store/glossary";
-import { useServiceStore } from "~/store/manage/service";
-import $constants from "~/utils/constant";
+import { useServiceStore } from "@/store/manage/service";
+import { useDataModelDetailStore } from "@/store/search/detail";
+import $constants from "@/utils/constant";
 import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
-import type { JsonPatchOperation, Tag } from "~/type/common";
+import type { JsonPatchOperation } from "@/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
+import _ from "lodash";
+
 const {
   changeTab,
   getServiceList,
@@ -158,26 +178,24 @@ const {
   changeEditInfo,
   disableEditInfo,
   createOwnerOperation,
+  changeTag,
   service,
+  servicesById,
 } = useServiceStore();
-const {
-  getAllTags,
-  createTagOperation,
-  tags,
-  menuSearchTagsData,
-  //menuSearchRelatedTermsData,
-} = useGlossaryStore();
-const store = useServiceStore();
-
+const serviceStore = useServiceStore();
+const dataModelDetailStore = useDataModelDetailStore();
+const { getTagList, getGlossaryList } = dataModelDetailStore;
+const { tagList, termList } = storeToRefs(dataModelDetailStore);
 onMounted(() => {
   getUserList();
-  getAllTags();
-  //getTerms();
-  //TODO: 저장소, 연결  정보, 수집 API 호출
+  getTagList();
+  getGlossaryList();
 });
 
 const tabSelectedClass = computed(() => (data: string): string => {
-  return store.tab === data ? "tab-item is-tab-item-selected" : "tab-item";
+  return serviceStore.tab === data
+    ? "tab-item is-tab-item-selected"
+    : "tab-item";
 });
 
 const isEmptyService = (): boolean => {
@@ -202,19 +220,15 @@ async function changeOwner(item: MenuSearchItemImpl): Promise<void> {
   await refreshService();
 }
 
-async function changeTag(items: MenuSearchItemImpl[]): Promise<void> {
-  const selectedItems: string[] = items.map(
-    (item: MenuSearchItemImpl) => item.tagFQN as string,
-  );
-  const matchTags: Tag[] = tags.filter((tag) =>
-    selectedItems.includes(tag.tagFQN),
-  );
-  const operations: JsonPatchOperation[] = createTagOperation(
-    selectedItems,
-    matchTags,
-    service,
-  );
-  await updateService(service.id, operations);
+async function changeTags(value: MenuSearchItemImpl[]): Promise<void> {
+  const data: any = _.map(value, "tagFQN");
+  await changeTag("Classification", data);
+  await refreshService();
+}
+
+async function changeTerms(value: MenuSearchItemImpl[]): Promise<void> {
+  const data: any = _.map(value, "tagFQN");
+  await changeTag("Glossary", data);
   await refreshService();
 }
 </script>

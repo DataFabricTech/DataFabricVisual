@@ -68,10 +68,10 @@
 }
 
 .button {
-  @include button;
-  @include button-size($gap: 4px);
-
   font-weight: 600;
+
+  @include button-size($gap: 4px);
+  @include button;
 
   .button-icon {
     @include icon-size('sm');
@@ -159,9 +159,9 @@
 
   // Icon Button Custom
   &:has(.hidden-text) {
-    @include icon-button-size;
-
     padding: 0;
+
+    @include icon-button-size;
 
     &.button {
       &-xl {
@@ -255,7 +255,9 @@
 }
 
 @mixin link-button-color($color: null, $color-active: null) {
-  color: $color;
+  & {
+    color: $color;
+  }
 
   .button-icon {
     @include icon-color($color);
@@ -283,11 +285,11 @@
 }
 
 .link-button {
+  font-weight: 600;
+
   @include flex;
   @include link-button-size;
   @include link-button-color($color: $neutral-500, $color-active: $neutral-700);
-
-  font-weight: 600;
 
   .button-icon {
     @include icon-size('sm');

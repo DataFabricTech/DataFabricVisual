@@ -14,13 +14,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
-import org.thymeleaf.context.Context;
+import org.springframework.util.FileCopyUtils;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +61,7 @@ public class AuthService {
         param.put(PASSWORD_KEY, base64EncodingPasswd);
 
         Map<String, Object> result = new HashMap<>();
-        try{
+        try {
             result = authClient.login(param);
         } catch (Exception e) {
             throw new Exception("아이디 및 비밀번호가 유효하지 않습니다.");
@@ -73,7 +77,8 @@ public class AuthService {
      * @param param
      * @return
      */
-    public Object logout(HttpServletRequest request, HttpServletResponse response, Map<String, Object> param) throws Exception {
+    public Object logout(HttpServletRequest request, HttpServletResponse response,
+                         Map<String, Object> param) throws Exception {
         Map<String, Object> newParam = new HashMap<>();
         newParam.put("token", param.get(frameworkProperties.getToken().getAccessToken()));
 
@@ -95,6 +100,7 @@ public class AuthService {
 
     /**
      * 로그인 - 토큰 발급
+     *
      * @param param
      * @return
      */
@@ -108,6 +114,7 @@ public class AuthService {
 
     /**
      * 로그인 > 공개키 반환
+     *
      * @param request
      * @return
      */
@@ -174,6 +181,7 @@ public class AuthService {
         paramMap.put("confirmPassword", param.get(PASSWORD_KEY));
         paramMap.put("createPasswordType", "ADMIN_CREATE");
         paramMap.put("name", param.get("name"));
+        paramMap.put("displayName", param.get("displayName"));
         paramMap.put("roles", userRoles);
         paramMap.put("isAdmin", false);
         paramMap.put("isBot", false);
@@ -222,9 +230,9 @@ public class AuthService {
 
         String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
         String id = UUID.randomUUID().toString();
-        Context context = prepareEmailContext(host, id);
+        String context = prepareEmailContext(host, id);
 
-        boolean sendEmail = emailUtil.sendHTMLMail(email, ovpProperties.getMail().getTitle(), context,"ovp_pwReset");
+        boolean sendEmail = emailUtil.sendHTMLMail(email, ovpProperties.getMail().getTitle(), context);
 
         // Email 전송 성공 시 DB에 데이터 저장
         if (sendEmail) {
@@ -267,6 +275,7 @@ public class AuthService {
         }
         return isChange;
     }
+
     /**
      * 비밀번호 재설정 > 고유링크 유효성 확인
      *
@@ -324,11 +333,12 @@ public class AuthService {
      * 회원가입 > OMD 서버 회원가입 API 통신
      *
      * @param adminAuthorizationHeader : 관리자 토큰 헤더
-     * @param paramMap : 회원가입 바디 정보
+     * @param paramMap                 : 회원가입 바디 정보
      * @return
      * @throws Exception
      */
-    private Map<String, Object> singUpAPI(HttpHeaders adminAuthorizationHeader, Map<String, Object> paramMap) throws Exception {
+    private Map<String, Object> singUpAPI(HttpHeaders adminAuthorizationHeader,
+                                          Map<String, Object> paramMap) throws Exception {
         try {
             return authClient.signUpUser(adminAuthorizationHeader, paramMap);
         } catch (Exception e) {
@@ -340,11 +350,12 @@ public class AuthService {
     /**
      * 회원가입 > User DB 저장
      *
-     * @param signUpResult : OMD 서버에 저장된 사용자 정보
+     * @param signUpResult             : OMD 서버에 저장된 사용자 정보
      * @param adminAuthorizationHeader : 관리자 토큰 헤더
      * @throws Exception : 저장 시 Exception이 발생되면 OMD 서버에 저장된 User 정보도 삭제
      */
-    private void saveUserToDatabase(Map<String, Object> signUpResult, HttpHeaders adminAuthorizationHeader) throws Exception {
+    private void saveUserToDatabase(Map<String, Object> signUpResult,
+                                    HttpHeaders adminAuthorizationHeader) throws Exception {
         try {
             userRepository.save(new UserEntity(
                     (String) signUpResult.get("id"),
@@ -362,20 +373,39 @@ public class AuthService {
 
     /**
      * 비밀번호 재설정 > HTML Context 설정
+     *
      * @param host
      * @param id
      * @return
      */
-    private Context prepareEmailContext(String host, String id) {
-        Context context = new Context();
-        context.setVariable("url", host + ovpProperties.getMail().getHref());
-        context.setVariable("token", id);
-        context.setVariable("validationTime", ovpProperties.getMail().getValidTime());
-        return context;
+    private String prepareEmailContext(String host, String id) {
+        OvpProperties.MailProperties emailProps = ovpProperties.getMail();
+        String contents = "";
+
+        // read file
+        ClassPathResource resource = new ClassPathResource(emailProps.getContentsFilePath());
+        try {
+            InputStream inputStream = resource.getInputStream();
+            byte[] fileContent = FileCopyUtils.copyToByteArray(inputStream);
+            contents = new String(fileContent, StandardCharsets.UTF_8);
+
+            inputStream.close();
+        } catch (IOException e) {
+            log.error("(getPasswordEmailTemplate) Failed read file: " + emailProps.getContentsFilePath());
+            throw new RuntimeException(e);
+        }
+
+        String tokenUrl = String.format("%s%s/%s", host, ovpProperties.getMail().getHref(), id);
+        // replace text in contents html
+        contents = contents
+                .replace("{message.url}", tokenUrl)
+                .replace("{message.validationTime}", ovpProperties.getMail().getValidTime());
+        return contents;
     }
 
     /**
      * 비밀번호 재설정 > 링크 DB 저장
+     *
      * @param email
      * @param id
      * @throws Exception

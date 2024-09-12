@@ -3,6 +3,7 @@ export class IntersectionObserverHandler {
   private readonly scrollTriggerTarget: HTMLElement | null;
   private readonly boxItemDefaultCount: number;
   private changingInitialCount: number;
+  private readonly targetId: string;
   private readonly loader: HTMLElement | null;
   private readonly getDataCallback: (
     count: number,
@@ -19,6 +20,7 @@ export class IntersectionObserverHandler {
     rootMargin?: string,
     threshold?: number,
   ) {
+    this.targetId = targetId;
     this.scrollTriggerTarget = scrollTriggerTarget;
     this.changingInitialCount = changingInitialCount;
     this.boxItemDefaultCount = boxItemDefaultCount;
@@ -39,8 +41,15 @@ export class IntersectionObserverHandler {
   private handleIntersect(entries: IntersectionObserverEntry[]) {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        this.changingInitialCount += this.boxItemDefaultCount;
-        this.getDataCallback(this.changingInitialCount, this.loader);
+        const rootEl: any = document.getElementById(this.targetId);
+        const result =
+          rootEl !== null &&
+          (rootEl.scrollTop > 0 || rootEl.scrollHeight > rootEl.clientHeight);
+
+        if (result) {
+          this.changingInitialCount += this.boxItemDefaultCount;
+          this.getDataCallback(this.changingInitialCount, this.loader);
+        }
       }
     });
   }
@@ -63,7 +72,11 @@ export class IntersectionObserverHandler {
     }
 
     if (rootEl.children.length > 0) {
-      rootEl.scrollTop = 0;
+      // NOTE : modal 사용 방식이 변경되면서 가짜 modal 이 dom 에 생성됨. -> rootEl 이 제대로 된 element 를 못잡아서 아래 코드처럼 구현함.
+      const targetId = rootEl.id;
+      document.querySelectorAll(`#${targetId}`).forEach((el) => {
+        el.scrollTop = 0;
+      });
     }
   }
 

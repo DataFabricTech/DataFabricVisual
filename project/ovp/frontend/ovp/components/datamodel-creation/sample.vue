@@ -3,20 +3,19 @@
     <tab
       class="tab-line"
       :data="tabOptions"
-      :labelKey="'label'"
-      :valueKey="'value'"
       :useTabContents="true"
+      label-key="label"
+      value-key="value"
+      current-item-type="value"
+      :current-item="currTab"
+      @change="onChangeTab"
     >
       <template v-slot:sampleData>
         <!-- 샘플데이터 탭 내용 -->
-        <div class="data-summary">
+        <div class="data-summary" v-show="props.isItemClicked">
           <span class="data-summary-title">데이터 모델 요약</span>
-          <span class="data-summary-name" v-show="props.isItemClicked">{{
-            props.dataModelName
-          }}</span>
-          <span class="data-summary-text" v-show="props.isItemClicked"
-            >({{ props.dataModelOwner }})</span
-          >
+          <span class="data-summary-name">{{ props.dataModelName }}</span>
+          <span class="data-summary-text">({{ props.dataModelOwner }})</span>
         </div>
         <div class="data-detail" v-if="props.isItemClicked">
           <agGrid
@@ -45,25 +44,18 @@
       </template>
       <template v-slot:dataProfiling>
         <!-- 데이터 프로파일링 탭 내용 -->
-        <div class="data-summary">
+        <div class="data-summary" v-show="props.isItemClicked">
           <span class="data-summary-title">데이터 모델 요약</span>
-          <span class="data-summary-name" v-show="props.isItemClicked">{{
-            props.dataModelName
-          }}</span>
-          <span class="data-summary-text" v-show="props.isItemClicked"
-            >({{ props.dataModelOwner }})</span
-          >
+          <span class="data-summary-name">{{ props.dataModelName }}</span>
+          <span class="data-summary-text">({{ props.dataModelOwner }})</span>
         </div>
         <div class="profiling-detail" v-show="props.isItemClicked">
           <span class="profiling-detail-title">컬럼 상세</span>
           <select-box
             class="select-sm"
-            :selectedItem="[]"
             :data="props.columnOptions"
             labelKey="name"
             valueKey="id"
-            :disabledList="disabledOptions"
-            :disabledAll="isDisabled"
             nodataMsg="선택 가능한 옵션이 없습니다."
             @select="handleSelect"
           ></select-box>
@@ -114,6 +106,7 @@
 import agGrid from "@extends/grid/Grid.vue";
 import Tab from "@extends/tab/Tab.vue";
 import selectBox from "@extends/select-box/SelectBox.vue";
+import type { Ref } from "vue";
 
 const props = defineProps({
   isItemClicked: {
@@ -152,17 +145,21 @@ const emit = defineEmits<{
 
 const columnDetailData = ref({});
 
-const tabOptions = [
-  { label: "샘플데이터", value: "sampleData" },
-  { label: "데이터프로파일링", value: "dataProfiling" },
-];
-
 const handleSelect = (option: any) => {
   emit("profile-show", true);
 
   columnDetailData.value = props.dataProfileList.filter(
     (item) => item.name === option,
   );
+};
+
+const tabOptions = [
+  { label: "샘플데이터", value: "sampleData" },
+  { label: "데이터프로파일링", value: "dataProfiling" },
+];
+const currTab: Ref<string> = ref(tabOptions[0].value); // 대분류 : 전체/MY
+const onChangeTab = (value: string) => {
+  currTab.value = value;
 };
 </script>
 <style lang="scss" scoped>

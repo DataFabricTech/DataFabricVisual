@@ -33,22 +33,16 @@
   flex-direction: column;
   gap: $spacing-12;
   height: 100%;
+  padding: $spacing-4 0;
 
   &-list {
     @include flex($direction: column, $horizontal: flex-start, $gap: $spacing-12);
 
+    overflow-y: auto;
     height: 100%;
     max-height: 650px;
     padding: $spacing-4;
-    overflow-y: auto;
-    -ms-overflow-style: none;  /* Internet Explorer and Edge */
-    scrollbar-width: none;  /* Firefox */
-
-    &::-webkit-scrollbar {
-      display: none; /* (Chrome, Safari) */
-    }
   }
-
 }
 
 

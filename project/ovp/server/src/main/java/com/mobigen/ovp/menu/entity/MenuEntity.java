@@ -42,4 +42,7 @@ public class MenuEntity {
 
     @Column(name = "use_yn", nullable = false)
     private boolean useYn;
+
+    @Column(name = "menu_auth", nullable = false)
+    private String menuAuth;
 }

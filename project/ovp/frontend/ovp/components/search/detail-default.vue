@@ -46,17 +46,39 @@
       <svg-icon class="button-icon" name="copy"></svg-icon>
       링크
     </button>
+    <button
+      class="button button-error-stroke button-sm"
+      v-show="dataModel.owner?.id === user.id || user.admin"
+      @click="deleteDataModel()"
+    >
+      <svg-icon class="button-icon" name="trash"></svg-icon>
+      삭제
+    </button>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from "vue-router";
+import { useClipboard } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
 import { useDataModelDetailStore } from "@/store/search/detail/index";
+import { useUserStore } from "@/store/user/userStore";
+
+const router = useRouter();
 
 const dataModelDetailStore = useDataModelDetailStore();
-const { changeVote, changeFollow } = dataModelDetailStore;
+const userStore = useUserStore();
+
+const { changeVote, changeFollow, removeDataModel } = dataModelDetailStore;
 const { dataModel } = storeToRefs(dataModelDetailStore);
+
+const { user } = storeToRefs(userStore);
+const currentUrl = ref("");
+const { copy } = useClipboard({
+  source: currentUrl,
+  legacy: true,
+});
 
 const changeUpVote = async () => {
   const state: string = dataModel.value.isUpVote ? "unVoted" : "votedUp";
@@ -67,9 +89,34 @@ const changeDownVote = async () => {
   await changeVote(state);
 };
 function copyLink() {
-  navigator.clipboard.writeText(window.location.href);
-  alert("주소를 복사했습니다.");
+  getURL();
+  copy(currentUrl.value);
+  alert("링크가 복사되었습니다.");
 }
+
+function deleteDataModel() {
+  if (confirm("데이터모델을 삭제 하시겠습니까?")) {
+    removeDataModel()
+      .then((data) => {
+        if (data.result === 1) {
+          alert("삭제되었습니다.");
+          router.push("/portal/search");
+        } else {
+          alert("삭제 실패했습니다. 잠시 후 다시 시도해주세요.");
+        }
+      })
+      .catch((error) => {});
+  }
+}
+
+// 메서드 정의
+const getURL = () => {
+  if (typeof window !== "undefined") {
+    currentUrl.value = window.location.href; // 클라이언트 측에서 URL을 가져옴
+  } else {
+    console.error("window 객체를 찾을 수 없습니다.");
+  }
+};
 </script>
 
 <style lang="scss" scoped></style>

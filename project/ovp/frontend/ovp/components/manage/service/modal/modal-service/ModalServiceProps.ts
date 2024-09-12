@@ -5,6 +5,7 @@ export interface IService {
   imgUrl: string;
   isDisabled?: boolean; // isDisabled는 일부 객체에서만 정의되었으므로 선택적 속성으로 처리
 }
+
 export interface IServiceObj {
   serviceId: string;
   defaultInfo: {
@@ -20,5 +21,6 @@ export interface ModalServiceProps {
   formData?: any;
 
   modalId?: string;
-  style?: any;
+  mode?: string;
+  isShow?: boolean;
 }

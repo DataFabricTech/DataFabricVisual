@@ -80,7 +80,16 @@
         @select="onChangeSort"
       ></select-box>
     </div>
-    <ul class="menu-list" v-if="checkShowListData">
+
+    <!-- 결과 없을 시 no-result 표시 -->
+    <div class="no-result" v-if="!checkShowListData">
+      <div class="notification">
+        <svg-icon class="notification-icon" name="info"></svg-icon>
+        <p class="notification-detail">{{ props.noDataMsg }}</p>
+      </div>
+    </div>
+
+    <ul id="dataListModal" class="menu-list">
       <template v-for="(item, idx) in listData" :key="item.value + idx">
         <data-model-list-item
           v-if="!item.isSelected"
@@ -97,23 +106,14 @@
           @check="onCheckItem(item.value, $event)"
         ></data-model-list-item>
       </template>
-      <!-- TODO: 인피니티 스크롤 -->
       <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
       <Loading
-        id="loader"
+        id="dataModelApiListLoader"
         :use-loader-overlay="true"
         class="loader-lg is-loader-inner"
         style="display: none"
       ></Loading>
     </ul>
-
-    <!-- 결과 없을 시 no-result 표시 -->
-    <div class="no-result" v-else>
-      <div class="notification">
-        <svg-icon class="notification-icon" name="info"></svg-icon>
-        <p class="notification-detail">{{ props.noDataMsg }}</p>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -175,22 +175,20 @@ const emitDeleteItem = (value: any[]) => {
 };
 
 const emitFilterChange = (value: {}) => {
-  setScrollOptions(0);
   emit("filter-change", value);
 };
 const emitSortChange = (value: string) => {
-  setScrollOptions(0);
   emit("sort-change", value);
 };
 const emitSearchChange = (value: string) => {
-  setScrollOptions(0);
   emit("search-change", value);
 };
 
-const { scrollTrigger, setScrollOptions } = useIntersectionObserver(
-  props.addSearchList,
-);
-setScrollOptions(0);
+const { scrollTrigger } = useIntersectionObserver({
+  callback: props.addSearchList,
+  targetId: "dataListModal",
+  loaderId: "dataModelApiListLoader",
+});
 
 const {
   listData,

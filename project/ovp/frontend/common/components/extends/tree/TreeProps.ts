@@ -18,6 +18,10 @@ export interface TreeViewItem {
 export interface TreeProps extends TreeDetailProps {
   items: TreeViewItem[];
   isCheckable: boolean;
+  disabledIds?: any[];
+  selectedIds?: any[];
+  useFirSelect?: boolean;
+  compId?: string;
 }
 
 export interface TreeDetailProps {
@@ -34,5 +38,7 @@ export interface TreeDetailProps {
 
   checkedIds?: string[];
 
-  dropValidator?: (thisNode: TreeViewItem, targetNode: TreeViewItem, newNode: TreeViewItem) => boolean;
+  immutableItems?: string[];
+
+  dropValidator?: (thisNode: TreeViewItem, targetNode: TreeViewItem, newNode: TreeViewItem) => any;
 }

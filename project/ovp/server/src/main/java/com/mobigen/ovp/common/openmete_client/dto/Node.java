@@ -10,4 +10,6 @@ public class Node {
     String displayName;
     String fullyQualifiedName;
     List<LineageData> lineage;
+    String type;
+    String entityType;
 }

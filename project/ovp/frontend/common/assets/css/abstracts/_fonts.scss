@@ -63,12 +63,8 @@ $font-families: (
 
   @if map-has-key($font-size, $size) {
     $properties: map-get($font-size, $size);
-
-    & {
-      font-size: map-get($properties, font-size);
-      line-height: map-get($properties, line-height);
-    }
-
+    font-size: map-get($properties, font-size);
+    line-height: map-get($properties, line-height);
   } @else {
     @warn '지정된 폰트 크기가 아닙니다. 다시 한번 확인해주세요.';
   }

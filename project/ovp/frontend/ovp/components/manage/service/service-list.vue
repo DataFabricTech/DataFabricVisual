@@ -27,7 +27,7 @@
             <button
               class="search-input-action-button button button-neutral-ghost button-sm"
               type="button"
-              @click="keyword = ''"
+              @click="reset"
             >
               <span class="hidden-text">지우기</span>
               <svg-icon class="button-icon" name="close"></svg-icon>
@@ -43,13 +43,15 @@
         <li
           :class="menuSelectedClass(service)"
           v-for="service in store.serviceList"
-          @click="changeCurrentService(service)"
+          @click="changeService(service)"
         >
           <button class="menu-button">
-            <svg-icon
-              class="svg-icon menu-data-icon"
-              name="resource"
-            ></svg-icon>
+            <img
+              v-if="servicesById[service.serviceType]"
+              :src="servicesById[service.serviceType].imgUrl"
+              :alt="servicesById[service.serviceType].label"
+              :width="25"
+            />
             <span class="menu-text">{{ service.name }}</span>
             <span class="menu-subtext"
               >({{
@@ -73,21 +75,25 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import type { Service } from "~/type/service";
-import { useServiceStore } from "~/store/manage/service";
+import { ref, onMounted, defineProps, defineEmits } from "vue";
+import type { Service } from "@/type/service";
+import { useServiceStore } from "@/store/manage/service";
+import $constants from "@/utils/constant";
 
 const {
   getServiceList,
   searchServiceList,
   changeCurrentService,
   emptyService,
+  changeTab,
+  servicesById,
 } = useServiceStore();
 const store = useServiceStore();
+const TAB_REPOSITORY = $constants.SERVICE.TAB[0].value;
 
 const keyword = ref<string>("");
 
-const menuSelectedClass = (value: Service) => {
+const menuSelectedClass = (value: Service): string => {
   return store.service.id == value.id
     ? "menu-item is-menu-item-selected"
     : "menu-item";
@@ -97,15 +103,20 @@ onMounted(() => {
   getServiceList();
 });
 
-async function search() {
+async function search(): Promise<void> {
   emptyService();
   await searchServiceList(keyword.value, "0");
 }
 
-async function reset() {
+async function reset(): Promise<void> {
   keyword.value = "";
   emptyService();
   await getServiceList();
+}
+
+function changeService(service: Service): void {
+  changeCurrentService(service);
+  changeTab(TAB_REPOSITORY);
 }
 
 const props = defineProps({
@@ -116,7 +127,7 @@ const emit = defineEmits<{
   (e: "modalOpen", modalId: string): void;
 }>();
 
-const modalOpen = (modalId: string) => {
+const modalOpen = (modalId: string): void => {
   emit("modalOpen", modalId);
 };
 </script>

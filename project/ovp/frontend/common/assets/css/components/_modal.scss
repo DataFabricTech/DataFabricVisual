@@ -2,6 +2,108 @@
   background-color: rgb(36 46 61 / 35%);
 }
 
+.vfm--fixed {
+  .modal {
+    @include z-index('modal');
+    @include box-shadow('lg');
+
+    display: flex;
+    flex-direction: column;
+    background: $neutral-0;
+    border-radius: $border-radius-12;
+
+    &-head {
+      @include flex($horizontal: space-between);
+
+      flex-shrink: 0;
+      padding: $spacing-16 $spacing-16 0;
+
+      &-text {
+        display: flex;
+        align-items: center;
+        gap: $spacing-4;
+      }
+
+      &-title {
+        @include font-size('16');
+
+        font-weight: 600;
+      }
+
+      &-subtitle {
+        @include font-size('15');
+
+        font-weight: 400;
+        color: $neutral-500;
+      }
+    }
+
+    &-body {
+      @include flex($direction: column, $horizontal: flex-start);
+
+      flex-grow: 1;
+      overflow-y: auto;
+      width: 100%;
+      height: 100%;
+      padding:$spacing-16;
+
+      .form {
+        width: 100%;
+
+        .select {
+          width: 100%;
+        }
+      }
+
+      .search-input {
+        width: 100%;
+      }
+
+      .tab {
+        width: 100%;
+        flex-grow: 1;
+
+        &-list {
+          height: 36px;
+        }
+
+        &-button {
+          @include font-size('13');
+
+          height: 36px;
+          padding: 0;
+
+        }
+
+        &-contents {
+          padding: $spacing-8;
+        }
+      }
+    }
+
+    &-foot {
+      @include flex($horizontal: space-between, $gap: $spacing-8);
+
+      padding: 0 $spacing-16 $spacing-16;
+
+      &-group {
+        display: flex;
+        gap: $spacing-8;
+
+        &:only-child {
+          margin-left: auto;
+        }
+      }
+
+      &:has(> .button + .button) {
+        .button {
+          flex: 1;
+        }
+      }
+    }
+  }
+}
+
 // 퍼블리싱 전용 스타일
 .modal-fixed {
   @include flex;
@@ -10,117 +112,4 @@
   background-color: rgb(36 46 61 / 35%);
 }
 
-.modal {
-  @include z-index('modal');
-  @include box-shadow('lg');
 
-  display: flex;
-  flex-direction: column;
-
-  // width: 620px;
-  background: $neutral-0;
-  border-radius: $border-radius-12;
-
-  &-head {
-    @include flex($horizontal: space-between);
-
-    flex-shrink: 0;
-    padding: $spacing-16 $spacing-16 $spacing-12;
-
-    &-text {
-      display: flex;
-      align-items: center;
-      gap: $spacing-4;
-    }
-
-    &-title {
-      @include font-size('16');
-
-      font-weight: 600;
-    }
-
-    &-subtitle {
-      @include font-size('15');
-
-      font-weight: 400;
-      color: $neutral-500;
-    }
-  }
-
-  &-body {
-    @include flex($direction: column, $horizontal: flex-start);
-
-    flex-grow: 1;
-    overflow-y: hidden;
-    width: 100%;
-    height: 100%;
-
-    .form {
-      width: 100%;
-
-      .select {
-        width: 100%;
-      }
-    }
-
-    .search-input {
-      width: 100%;
-    }
-
-    .tab {
-      width: 100%;
-      flex-grow: 1;
-
-      &-list {
-        height: 36px;
-      }
-
-      &-button {
-        @include font-size('13');
-
-        height: 36px;
-        padding: 0;
-
-      }
-
-      &-contents {
-        padding: $spacing-8;
-      }
-    }
-  }
-
-  &-foot {
-    @include flex($horizontal: space-between, $gap: $spacing-8);
-
-    padding: $spacing-12 $spacing-16 $spacing-16;
-
-    &-group {
-      display: flex;
-      gap: $spacing-8;
-
-      &:only-child {
-        margin-left: auto;
-      }
-    }
-
-    &:has(> .button + .button) {
-      .button {
-        flex: 1;
-      }
-    }
-  }
-
-  $modal-padding-map: (
-          "16": $spacing-16,
-          "32": $spacing-32,
-          "48": $spacing-48
-  );
-
-  @each $value, $padding in $modal-padding-map {
-    &-padding-#{$value} {
-      .modal-body {
-        padding: $padding;
-      }
-    }
-  }
-}

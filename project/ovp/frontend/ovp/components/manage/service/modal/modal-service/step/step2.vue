@@ -1,6 +1,9 @@
 <template>
   <!-- Step 02 / 시작 -->
-  <div class="service-form" :style="props.style">
+  <div
+    class="service-form"
+    :style="{ display: props.isShow ? 'block' : 'none' }"
+  >
     <selected-service-info />
 
     <div class="form form-vertical">

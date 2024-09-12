@@ -56,6 +56,7 @@
     </div>
     <Preview
       :preview-data="previewData"
+      :model-type="dataModelType"
       @change="getPreviewOn"
       :is-show-preview="previewOn"
     ></Preview>
@@ -97,13 +98,12 @@
 <script setup lang="ts">
 import { type Ref, ref } from "vue";
 import type { NodeData } from "@/components/search/lineage/lineage";
-import { useLineageStore } from "@/store/lineage/lineageStore";
+import { useLineageStore } from "~/store/search/detail/lineage";
 import { useDataModelDetailStore } from "@/store/search/detail/index";
 
 import LineageGraph from "~/components/search/lineage/lineage-graph.vue";
 import Preview from "~/components/common/preview/preview.vue";
 import menuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
-
 
 const lineageStore = useLineageStore();
 const {
@@ -124,7 +124,8 @@ const {
 } = lineageStore;
 
 const dataModelDetailStore = useDataModelDetailStore();
-const { getDataModelFqn, getDataModelType } = dataModelDetailStore;
+const { getDataModelFqn } = dataModelDetailStore;
+const { dataModelType } = storeToRefs(dataModelDetailStore);
 
 onBeforeMount(async () => {
   // TODO: param => (fqn(외부스토어에서 호출), 필터) 추가 필요
@@ -184,7 +185,7 @@ const reset = async () => {
     selectedTagList.value = [];
     selectedSerivceList.value = [];
 
-    await getLineageData(getDataModelType(), getDataModelFqn());
+    await getLineageData(dataModelType.value, getDataModelFqn());
 
     lineageRef.value.reset();
   }

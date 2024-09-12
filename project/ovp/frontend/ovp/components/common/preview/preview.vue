@@ -15,7 +15,10 @@
           href="javascript:void(0)"
           class="preview-title"
           @click="gotoDetail"
-          >{{ previewData.modelInfo.model.name }}</a
+          >{{
+            previewData.modelInfo.model.displayName ??
+            previewData.modelInfo.model.name
+          }}</a
         >
         <div class="preview-desc">
           {{ checkEmptyValues(previewData.modelInfo.model.desc) }}
@@ -54,13 +57,14 @@
       <div class="preview-item">
         <div class="preview-title">태그</div>
         <div class="preview-group">
-          <div
-            class="tag tag-primary tag-sm"
-            v-for="(tag, index) in previewData.tags"
-            :key="index"
-          >
-            <span class="tag-text">{{ tag.name }}</span>
-          </div>
+          <template v-for="(tag, index) in previewData.tags" :key="index">
+            <div
+              class="tag tag-primary tag-sm"
+              v-show="!tag.category.includes('ovp_category')"
+            >
+              <span class="tag-text">{{ tag.name }}</span>
+            </div>
+          </template>
         </div>
       </div>
       <div class="preview-item">

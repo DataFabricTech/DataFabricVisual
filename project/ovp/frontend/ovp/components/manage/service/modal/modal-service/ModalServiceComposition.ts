@@ -1,5 +1,5 @@
 import { storeToRefs } from "pinia";
-import { useServiceStore } from "~/store/manage/service/modal";
+import { useServiceStore } from "@/store/manage/service/modal";
 import _ from "lodash";
 
 import type {
@@ -14,6 +14,7 @@ export enum PanelTypes {
   INPUT_PWD = "INPUT_PWD",
   SELECT = "SELECT",
 }
+
 export enum ServiceIds {
   MINIO = "MinIO",
   MYSQL = "Mysql",
@@ -21,6 +22,7 @@ export enum ServiceIds {
   POSTGRESQL = "Postgres",
   ORACLE = "Oracle",
 }
+
 export enum ConnectionStatus {
   LOADING = "LOADING",
   SUCCESS = "SUCCESS",
@@ -29,6 +31,7 @@ export enum ConnectionStatus {
 }
 
 export interface ModalServiceComposition extends ModalServiceProps {
+  isAddMode: Ref<boolean>;
   currentStep: Ref<number>;
   isValid: Ref<boolean>;
   inValidMsg: Ref<string>;
@@ -42,25 +45,69 @@ export interface ModalServiceComposition extends ModalServiceProps {
   openEyeValues: Ref<string[]>;
 
   setValue(serviceObjPath: string, value: any): void;
+
   resetInput(serviceObjPath: string): void;
+
   resetServiceObj(): void;
 
   newServiceIdSelect(service: IService): void;
+
   setDefaultServiceId(serviceId: string): void;
 
   checkServiceNameDuplicate(): Promise<boolean>;
+
   checkRequiredValue(): boolean;
+
   connectionTest(): Promise<any>;
 
   submit(): Promise<boolean>;
+
   checkValidation(type: string): Promise<boolean>;
 }
+
+export const services = ref<IService[]>([
+  {
+    id: ServiceIds.MINIO,
+    label: "MinIO",
+    img: "storage-type_06",
+    imgUrl: "",
+    isDisabled: false,
+  },
+  {
+    id: ServiceIds.MYSQL,
+    label: "MySQL",
+    img: "storage-type_02",
+    imgUrl: "",
+    isDisabled: false,
+  },
+  {
+    id: ServiceIds.MARIA_DB,
+    label: "MariaDB",
+    img: "storage-type_01",
+    imgUrl: "",
+    isDisabled: false,
+  },
+  {
+    id: ServiceIds.POSTGRESQL,
+    label: "PostgreSQL",
+    img: "storage-type_03",
+    imgUrl: "",
+    isDisabled: false,
+  },
+  {
+    id: ServiceIds.ORACLE,
+    label: "Oracle",
+    img: "storage-type_04",
+    imgUrl: "",
+  },
+]);
 
 export function ModalServiceComposition(
   props: ModalServiceProps,
 ): ModalServiceComposition {
   const serviceStore = useServiceStore();
   const {
+    isAddMode,
     currentStep,
     isValid,
     inValidMsg,
@@ -79,42 +126,6 @@ export function ModalServiceComposition(
     submit,
   } = serviceStore;
 
-  const services = ref<IService[]>([
-    {
-      id: ServiceIds.MINIO,
-      label: "MinIO",
-      img: "storage-type_06",
-      imgUrl: "",
-      isDisabled: false,
-    },
-    {
-      id: ServiceIds.MYSQL,
-      label: "MySQL",
-      img: "storage-type_02",
-      imgUrl: "",
-      isDisabled: false,
-    },
-    {
-      id: ServiceIds.MARIA_DB,
-      label: "MariaDB",
-      img: "storage-type_01",
-      imgUrl: "",
-      isDisabled: false,
-    },
-    {
-      id: ServiceIds.POSTGRESQL,
-      label: "PostgreSQL",
-      img: "storage-type_03",
-      imgUrl: "",
-      isDisabled: false,
-    },
-    {
-      id: ServiceIds.ORACLE,
-      label: "Oracle",
-      img: "storage-type_04",
-      imgUrl: "",
-    },
-  ]);
   const serviceDetailFormObj: any = {
     [ServiceIds.MINIO]: {
       defaultItems: [
@@ -170,17 +181,6 @@ export function ModalServiceComposition(
               type: PanelTypes.INPUT,
               required: true,
             },
-            {
-              id: "authConfigurationType",
-              label: "Auth Configuration Type",
-              type: PanelTypes.SELECT,
-              options: [
-                {
-                  label: "Basic Auth",
-                  value: "basicAuth",
-                },
-              ],
-            },
           ],
         },
         {
@@ -203,6 +203,11 @@ export function ModalServiceComposition(
               label: "Database Name",
               type: PanelTypes.INPUT,
             },
+            {
+              id: "databaseSchema",
+              label: "Database Schema",
+              type: PanelTypes.INPUT,
+            },
           ],
         },
       ],
@@ -217,17 +222,6 @@ export function ModalServiceComposition(
               label: "Username",
               type: PanelTypes.INPUT,
               required: true,
-            },
-            {
-              id: "authConfigurationType",
-              label: "Auth Configuration Type",
-              type: PanelTypes.SELECT,
-              options: [
-                {
-                  value: "basicAuth",
-                  label: "Basic Auth",
-                },
-              ],
             },
           ],
         },
@@ -250,13 +244,6 @@ export function ModalServiceComposition(
               id: "database",
               label: "Database",
               type: PanelTypes.INPUT,
-              required: true,
-            },
-            {
-              id: "classificationName",
-              label: "Classification Name",
-              type: PanelTypes.INPUT,
-              defaultValue: "PostgresPolicyTags",
               required: true,
             },
           ],
@@ -391,24 +378,11 @@ export function ModalServiceComposition(
                 id: "oracleConnectionType",
               },
             },
-            {
-              id: "instantClientDirectory",
-              label: "Oracle Instant Client Directory",
-              defaultValue: "/instantclient",
-              type: PanelTypes.INPUT,
-              required: true,
-            },
           ],
         },
       ],
     },
   };
-
-  // 이미지 URL 동적 셋팅
-  services.value.forEach(async (service: any) => {
-    const imgUrl: any = await import(`@assetsPublic/images/${service.img}.png`);
-    service.imgUrl = imgUrl.default;
-  });
 
   // coomon
   const resetInput = (serviceObjPath: string) => {
@@ -537,10 +511,20 @@ export function ModalServiceComposition(
 
     for (const itemId of requiredItems) {
       const value = serviceObj.value.detailInfo[itemId];
+
+      // bucketNames 는 inputItem 을 추가한 경우에만 필수
+      if (itemId === "bucketNames") {
+        return checkDoubleArrayRequiredValue(value);
+      }
+
       if (Array.isArray(value)) {
-        for (const innerItem of value) {
-          if (_.isEmpty(innerItem)) {
-            return false;
+        if (_.isEmpty(value)) {
+          return false;
+        } else {
+          for (const innerItem of value) {
+            if (_.isEmpty(innerItem)) {
+              return false;
+            }
           }
         }
       } else {
@@ -569,6 +553,7 @@ export function ModalServiceComposition(
 
   return {
     ...props,
+    isAddMode,
     currentStep,
     isValid,
     inValidMsg,

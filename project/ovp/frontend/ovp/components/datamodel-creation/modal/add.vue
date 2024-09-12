@@ -1,7 +1,6 @@
 <template>
   <Modal
     title="데이터 모델 추가"
-    class="modal"
     :modal-id="props.modalId"
     background="non-interactive"
     displayDirective="show"
@@ -13,9 +12,8 @@
     :height="681"
     :lockScroll="true"
     swipeToClose="none"
-    @closed="onCancelModal"
-    @click-outside="onCancelModal"
     @before-open="onOpenModal"
+    @click-outside="onCancelModal"
     @cancel="onCancelModal"
     @confirm="onConfirmModal"
   >
@@ -53,9 +51,7 @@
 </template>
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
-import { useCreationStore } from "~/store/datamodel-creation";
 import AddTransfer from "~/components/datamodel-creation/modal/add-transfer.vue";
-import { useNuxtApp } from "nuxt/app";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 import { storeToRefs } from "pinia";
 import Tab from "@extends/tab/Tab.vue";
@@ -69,17 +65,18 @@ const props = defineProps({
   },
 });
 
-const creationStore = useCreationStore();
-const { selectedModelList, nSelectedListData } = storeToRefs(creationStore);
-
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
-const { currDetailTab, sampleData, profileData, selectedItemOwner } =
-  storeToRefs(dataModelSearchStore);
+const {
+  currDetailTab,
+  sampleData,
+  profileData,
+  selectedItemOwner,
+  selectedModelList,
+  nSelectedListData,
+} = storeToRefs(dataModelSearchStore);
 const { resetReloadList, getFilters, changeDetailTab, resetDetailBox } =
   dataModelSearchStore;
-
-const { $vfm } = useNuxtApp();
 
 const onOpenModal = async () => {
   // 전체+MY / 필터 / 내부 선택 목록 데이터 초기화
@@ -89,15 +86,18 @@ const onOpenModal = async () => {
   await resetDetailBox();
 };
 
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
+
 const onCancelModal = () => {
-  // 내부 데이터 초기화 -> store 데이터
-  $vfm.close(props.modalId);
+  emit("close");
 };
 
 const onConfirmModal = () => {
   // 내부 데이터 저장
   selectedModelList.value = nSelectedListData.value;
-  $vfm.close(props.modalId);
+  emit("close");
 };
 </script>
 <style lang="scss" scoped></style>

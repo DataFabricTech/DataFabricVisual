@@ -7,12 +7,18 @@ export const usePagingStore = defineStore("pagingStore", () => {
   const from = ref(0);
   const size = ref(20);
 
+  const isDataLoadDone = ref(false);
+
   const setFrom = (newFrom: number) => {
     from.value = newFrom;
   };
 
   const setSize = (newSize: number) => {
     size.value = newSize;
+  };
+
+  const setDataLoadDone = () => {
+    isDataLoadDone.value = true;
   };
 
   // pagination 을 사용하는것이 아니기 때문에 특정 page 를 조회하는 등의 기능이 없음
@@ -38,9 +44,11 @@ export const usePagingStore = defineStore("pagingStore", () => {
     page,
     from,
     size,
+    isDataLoadDone,
     setFrom,
     setSize,
     updateIntersectionHandler,
     setIntersectionHandler,
+    setDataLoadDone,
   };
 });

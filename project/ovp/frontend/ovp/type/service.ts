@@ -4,9 +4,10 @@ export interface Service {
   name: string;
   owner: Owner;
   tags: object[];
-  relatedTerms: object[];
+  terms: object[];
   serviceType: string;
   description: string;
+  type: "database" | "storage";
 }
 
 export interface Owner {
@@ -26,4 +27,22 @@ export interface Ingestion {
   id: string;
   pipelineType: string;
   scheduleInterval: string;
+  pipelineState: string;
+  owner: Owner;
+  startDate: number;
+  endDate: number;
+  timestamp: number;
+}
+
+export interface ServiceData {
+  description: string;
+}
+
+export interface DBServiceListData {
+  owner: string | undefined;
+  fqn: string;
+  name: string;
+  id: string;
+  type: string;
+  desc: string | undefined;
 }

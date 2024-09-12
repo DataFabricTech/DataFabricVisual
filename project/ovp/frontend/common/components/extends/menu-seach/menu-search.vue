@@ -13,9 +13,9 @@
           @input="onSearchText($event.target.value)"
           placeholder="검색어를 입력하세요"
         />
-        <svg-icon class="text-input-icon" name="user"></svg-icon>
+        <svg-icon class="text-input-icon" name="search"></svg-icon>
         <button
-          class="search-input-action-button button button-neutral-ghost button-sm"
+          class="search-input-action-button button button-neutral-ghost button-xs"
           type="button"
           @click="onResetSearchText"
         >
@@ -72,7 +72,10 @@
       </div>
 
       <div class="menu-item" v-if="checkSearchResult()">
-        <span> {{ props.noSearchMsg }} </span>
+        <div class="notification">
+          <svg-icon class="notification-icon" name="info"></svg-icon>
+          <p class="notification-detail">{{ props.noSearchMsg }}</p>
+        </div>
       </div>
     </div>
     <div class="menu-foot">

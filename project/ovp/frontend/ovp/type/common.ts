@@ -34,6 +34,7 @@ export interface PreviewData {
   modelInfo: {
     model: {
       name: string;
+      displayName?: string;
       desc: string;
       tableType?: string;
       cnt: number;

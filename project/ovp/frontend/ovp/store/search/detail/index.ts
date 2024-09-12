@@ -1,5 +1,5 @@
 import _ from "lodash";
-import type { Ref } from "vue";
+import { type Ref } from "vue";
 
 export interface DataModel {
   serviceType: string;
@@ -11,7 +11,7 @@ export interface DataModel {
   modelNm: string;
   displayName: string;
   modelDesc: string | null;
-  owner: string;
+  owner: any;
   ownerDisplayName: string;
   category: string;
   categoryId: string;
@@ -55,11 +55,16 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     isUpVote: false,
     isDownVote: false,
   });
+  // TODO: tpye 변경 id, fqn, name, displayName
   const defaultInfo: Ref<any> = ref({
     modelInfo: { model: { type: "" }, columns: [] },
     glossaries: [],
     tags: [],
   });
+  const userList: Ref<any[]> = ref([]);
+  const categoryList: Ref<any[]> = ref([]);
+  const tagList: Ref<any[]> = ref([]);
+  const termList: Ref<any[]> = ref([]);
   const schemaList: Ref<Schema[]> = ref([]);
   const sampleColumns: Ref<any> = ref([]);
   const sampleList: Ref<any> = ref([]);
@@ -68,7 +73,9 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   const dataLineage: Ref<any> = ref({});
   let dataModelId: string = "";
   let dataModelFqn: string = "";
-  let dataModelType: string = "";
+  const dataModelType: Ref<string> = ref("");
+
+  let categoryAllList: any[] = [];
 
   const setDataModelId = (id: any) => {
     dataModelId = id;
@@ -79,43 +86,79 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   };
 
   const setDataModelType = (type: any) => {
-    dataModelType = type;
+    dataModelType.value = type;
   };
 
   const getDataModelFqn = () => {
     return dataModelFqn;
   };
 
-  const getDataModelType = () => {
-    return dataModelType;
+  const getUserList = async () => {
+    const data = await $api(`/api/search/detail/user/all`);
+
+    userList.value = data.data;
   };
 
-  const getDataModel = async () => {
-    const data = await $api(
-      `/api/search/detail/${dataModelId}?type=${dataModelType}`,
-    );
+  const getCategoryList = async () => {
+    const data = await $api("/api/category/list");
+    categoryList.value = data.data.children;
+  };
 
-    const owner = data.data.owner;
+  const getCategoryAllList = async () => {
+    const data = await $api("/api/category/list/all");
+    categoryAllList = data.data;
+  };
 
-    if (owner) {
-      data.data.owner = owner.displayName;
-    }
+  const getTagList = async () => {
+    const data = await $api("/api/search/detail/tag/all");
+    tagList.value = data.data;
+  };
 
-    dataModel.value = data.data;
+  const getGlossaryList = async () => {
+    const data = await $api("/api/search/detail/glossary/all");
+    termList.value = data.data;
+  };
+
+  const getDataModel = () => {
+    return $api(
+      `/api/search/detail/${dataModelId}?type=${dataModelType.value}`,
+    ).then((data) => {
+      if (data.result === 1) {
+        dataModel.value = data.data;
+      }
+
+      return data;
+    });
   };
 
   const getDefaultInfo = async () => {
-    const data = await $api(`/api/search/preview/${dataModelFqn}`);
+    let data: any = {};
+    if (dataModelType.value !== "storage") {
+      data = await $api(`/api/search/preview/${dataModelFqn}`);
+    } else {
+      data = await $api(`/api/containers/${dataModelId}`);
+    }
+
+    if (data.result === 0) {
+      // TODO: 에러페이지 이동
+      console.error(data.errorMessage);
+      return;
+    }
+
     defaultInfo.value = data.data;
   };
 
   const getSchema = async () => {
-    const data = await $api(`/api/search/detail/schema/${dataModelId}`);
+    const data = await $api(
+      `/api/search/detail/schema/${dataModelId}?type=${dataModelType.value}`,
+    );
     schemaList.value = data.data;
   };
 
   const getSampleData = async () => {
-    const data = await $api(`/api/search/detail/sample-data/${dataModelId}`);
+    const data = await $api(
+      `/api/search/detail/sample-data/${dataModelId}?type=${dataModelType.value}`,
+    );
     sampleColumns.value = _.map(data.data.columns, (value) => {
       return {
         headerName: `${value.name}(${value.dataType})`,
@@ -167,47 +210,60 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
       updatedVoteType: state,
     };
 
-    await $api(`/api/search/detail/${dataModelId}/vote`, {
-      method: "put",
-      body: body,
-    });
+    await $api(
+      `/api/search/detail/${dataModelId}/vote?type=${dataModelType.value}`,
+      {
+        method: "PUT",
+        body: body,
+      },
+    );
     await getDataModel();
   };
 
   const changeFollow = async () => {
-    const url: string = `/api/search/detail/${dataModelId}/follow`;
+    const url: string = `/api/search/detail/${dataModelId}/follow?type=${dataModelType.value}`;
 
     if (dataModel.value.isFollow) {
-      await $api(url, { method: "delete" });
+      await $api(url, { method: "DELETE" });
     } else {
-      await $api(url, { method: "put" });
+      await $api(url, { method: "PUT" });
     }
 
     await getDataModel();
   };
 
-  const changeDataModel = async (model: any) => {
+  const changeDataModel = (data: any) => {
+    const operationKey: string = data.key;
+
+    if (operationKey === "category") {
+      return changeTag("Classification", true, data.value);
+    }
+
     let body: any[] = [];
-    console.log(model);
-    switch (model.key) {
+    switch (operationKey) {
       case "modelNm":
-        body = makeModelNameBody(model);
+        body = makeModelNameBody(data);
         break;
       case "modelDesc":
-        body = makeModeDescBody(model);
+        body = makeModeDescBody(data);
+        break;
+      case "owner":
+        body = makeUserBody(data);
         break;
       default:
     }
 
-    await $api(`/api/search/detail/${dataModelId}`, {
-      method: "patch",
-      body: body,
-    });
-    await getDataModel();
+    return $api(
+      `/api/search/detail/${dataModelId}?type=${dataModelType.value}`,
+      {
+        method: "PATCH",
+        body: body,
+      },
+    );
   };
 
-  function makeModelNameBody(model: any) {
-    let body: any[] = [];
+  const makeModelNameBody = (model: any) => {
+    const body: any[] = [];
     if (dataModel.value.displayName) {
       body.push({ op: "replace", path: "/displayName", value: model.value });
     } else {
@@ -215,20 +271,118 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     }
 
     return body;
-  }
+  };
 
-  function makeModeDescBody(model: any) {
-    let body: any[] = [];
-    if (dataModel.value.displayName !== null) {
+  const makeModeDescBody = (model: any) => {
+    const body: any[] = [];
+    if (dataModel.value.modelDesc !== null) {
       body.push({ op: "replace", path: "/description", value: model.value });
     } else {
       body.push({ op: "add", path: "/description", value: model.value });
     }
-    console.log(body);
     return body;
-  }
+  };
+
+  const makeUserBody = (data: any) => {
+    const user = _.find(userList.value, { id: data.id });
+    let body: any[] = [];
+
+    if (data.op === "remove") {
+      body.push({
+        op: "remove",
+        path: "/owner",
+      });
+    } else if (data.op === "add") {
+      body.push({
+        op: "add",
+        path: "/owner",
+        value: {
+          id: user.id,
+          type: "user",
+          name: user.name,
+          fullyQualifiedName: user.fqn,
+          displayName: user.displayName,
+        },
+      });
+    } else if (data.op === "replace") {
+      body = [
+        {
+          op: "remove",
+          path: "/owner/href",
+        },
+        {
+          op: "remove",
+          path: "/owner/deleted",
+        },
+        {
+          op: "replace",
+          path: "/owner/displayName",
+          value: user.displayName,
+        },
+        {
+          op: "replace",
+          path: "/owner/fullyQualifiedName",
+          value: user.fqn,
+        },
+        {
+          op: "replace",
+          path: "/owner/name",
+          value: user.name,
+        },
+        {
+          op: "replace",
+          path: "/owner/id",
+          value: user.id,
+        },
+      ];
+    }
+
+    return body;
+  };
+
+  const changeTag = (target: string, isCategory: boolean, data: any) => {
+    let body: any[] = [];
+
+    if (_.isEmpty(data)) {
+      body = [];
+    } else if (isCategory) {
+      body = _.filter(categoryAllList, (category) => {
+        return data.id.includes(category.id);
+      });
+    } else if (target === "Classification") {
+      body = _.filter(tagList.value, (tag) => {
+        return data.includes(tag.tagFQN);
+      });
+    } else if (target === "Glossary") {
+      body = _.filter(termList.value, (tag) => {
+        return data.includes(tag.tagFQN);
+      });
+    }
+
+    return $api(
+      `/api/search/detail/${dataModelId}/tag?type=${dataModelType.value}&target=${target}&isCategory=${isCategory}`,
+      {
+        method: "PATCH",
+        body: body,
+      },
+    );
+  };
+
+  const removeDataModel = () => {
+    return $api(
+      `/api/search/detail/${dataModelId}?type=${dataModelType.value}`,
+      {
+        method: "DELETE",
+      },
+    );
+  };
 
   return {
+    dataModelType,
+    userList,
+    categoryList,
+    tagList,
+    termList,
     dataModel,
     defaultInfo,
     schemaList,
@@ -241,7 +395,11 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     setDataModelFqn,
     setDataModelType,
     getDataModelFqn,
-    getDataModelType,
+    getUserList,
+    getCategoryList,
+    getCategoryAllList,
+    getTagList,
+    getGlossaryList,
     getDataModel,
     getDefaultInfo,
     getSchema,
@@ -251,5 +409,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     changeVote,
     changeFollow,
     changeDataModel,
+    changeTag,
+    removeDataModel,
   };
 });

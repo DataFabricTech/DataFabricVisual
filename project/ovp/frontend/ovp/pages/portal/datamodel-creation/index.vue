@@ -11,12 +11,12 @@
     <div class="l-split">
       <selected-model
         :modelList="selectedModelList"
-        :dataModelFilter="dataModelFilter"
-        :modelListCnt="modelListCnt"
-        @change="openAddModal"
+        :dataModelFilter="filters"
+        :modelListCnt="selectedModelListCnt"
+        @change="open"
         @delete="deleteDataModel"
         @item-click="onClickDataModelItem"
-        @bookmark-change="changeBookmark"
+        @bookmark-change="onClickBookmark"
       ></selected-model>
       <execute-query
         :query="query"
@@ -45,37 +45,38 @@
     </div>
   </div>
   <save-model v-if="isShowSaveModel" @change="saveDataModel"></save-model>
-  <add-model :modal-id="$constants.DATAMODEL_CREATION.ADD.MODAL_ID"></add-model>
 </template>
 
 <script setup lang="ts">
+import { onBeforeMount } from "vue";
 import selectedModel from "@/components/datamodel-creation/selected-model.vue";
 import executeQuery from "@/components/datamodel-creation/execute-query.vue";
 import sample from "@/components/datamodel-creation/sample.vue";
 import result from "@/components/datamodel-creation/result.vue";
 import addModel from "@/components/datamodel-creation/modal/add.vue";
 import saveModel from "@/components/datamodel-creation/modal/save.vue";
-import { useNuxtApp } from "nuxt/app";
-import $constants from "~/utils/constant";
 import { useCreationStore } from "~/store/datamodel-creation/index";
+import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
+import { storeToRefs } from "pinia";
+import { useModal } from "vue-final-modal";
 
-const { $vfm } = useNuxtApp();
 const isShowSaveModel = ref(false);
 
 const saveDataModel = (param: boolean) => {
   isShowSaveModel.value = param;
 };
 
-const openAddModal = () => {
-  $vfm.open($constants.DATAMODEL_CREATION.ADD.MODAL_ID);
-};
+const { open, close } = useModal({
+  component: addModel,
+  attrs: {
+    onClose() {
+      close();
+    },
+  },
+});
 
 const creationStore = useCreationStore();
 const {
-  modelList,
-  modelListCnt,
-  dataModelFilter,
-  selectedModelList,
   query,
   isFirstExecute,
   querySuccess,
@@ -88,25 +89,25 @@ const {
   sampleDataList,
   columnOptions,
   dataProfileList,
-  myModelList,
 } = storeToRefs(creationStore);
 const {
-  setDataModelFilter,
-  setDataModelList,
   deleteDataModel,
-  changeBookmark,
   onClickDataModelItem,
   runQuery,
   resetQuery,
   editQueryText,
-  setMyModelList,
   showProfile,
 } = creationStore;
 
-// 데이터 목록, 필터 목록, 선택 필터 초기화
-setDataModelFilter();
-setDataModelList();
-setMyModelList();
+// 탐색 > 데이터 모델 조회 Store
+const dataModelSearchStore = useDataModelSearchStore();
+const { filters, selectedModelList, selectedModelListCnt } =
+  storeToRefs(dataModelSearchStore);
+const { onClickBookmark } = dataModelSearchStore;
+
+onMounted(() => {
+  alert("개발중 입니다.");
+});
 </script>
 
 <style scoped></style>

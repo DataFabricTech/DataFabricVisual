@@ -1,11 +1,10 @@
 <template>
   <div class="wrap">
     <div class="submit-form">
+      <h1 class="submit-form-logo">
+        <svg-icon class="svg-icon logo-img" name="logo"></svg-icon>
+      </h1>
       <div class="submit-form-form">
-        <h1 class="submit-form-logo">
-          <span class="hidden-text">open vdap portal</span>
-          <svg-icon class="logo" name="logo-simbol"></svg-icon>
-        </h1>
         <h2 class="submit-form-title">로그인</h2>
         <div class="form form-lg gap-6">
           <div class="form-body">
@@ -40,6 +39,7 @@
                     class="text-input text-input-lg"
                     placeholder="비밀번호 입력"
                     v-model="loginPassword"
+                    @keyup.enter="login"
                   />
                   <svg-icon
                     class="text-input-icon"
@@ -51,7 +51,10 @@
                     @click="isHidePw"
                   >
                     <span class="hidden-text">지우기</span>
-                    <svg-icon class="button-icon" name="eye"></svg-icon>
+                    <svg-icon
+                      class="button-icon"
+                      :name="getPwdIconName({ inputType: inpType })"
+                    ></svg-icon>
                   </button>
                 </div>
                 <div
@@ -71,6 +74,7 @@
               class="button button-primary button-lg"
               type="button"
               @click="login"
+              :disabled="isDoingLogin"
             >
               로그인
             </button>
@@ -87,7 +91,7 @@
                 class="button button-primary-ghost button-sm"
                 type="button"
               >
-                <nuxt-link :to="'/portal/login/sign-up'"> 회원가입 </nuxt-link>
+                <nuxt-link :to="'/portal/login/sign-up'"> 회원가입</nuxt-link>
               </button>
             </div>
           </div>
@@ -101,8 +105,13 @@
 import _ from "lodash";
 import { loginStore } from "@/store/login/index";
 import { useRouter } from "vue-router";
+import $constants from "@/utils/constant";
+import { useCommonUtils } from "@/composables/commonUtils";
+
+const { getPwdIconName } = useCommonUtils();
+
 const store = loginStore();
-const { isloginSuccess, errorMessage } = storeToRefs(store);
+const { isDoingLogin, isloginSuccess, errorMessage } = storeToRefs(store);
 const { getLoginSuccessState } = store;
 
 const router = useRouter();
@@ -119,6 +128,10 @@ const isErrorPassword = ref(false);
 const inpType = ref("password");
 
 const login = async () => {
+  if (isDoingLogin.value) {
+    return;
+  }
+
   let id = loginEmailOrId.value;
   let password = loginPassword.value;
 
@@ -128,13 +141,13 @@ const login = async () => {
 
   if (_.isEmpty(id)) {
     isErrorEmailOrId.value = true;
-    emailOrIdErrorMsg.value = "사용자 아이디를 입력하세요.";
+    emailOrIdErrorMsg.value = $constants.LOGIN.ID.INPUT_ERROR_MSG;
     return;
   }
 
   if (_.isEmpty(password)) {
     isErrorPassword.value = true;
-    passwordErrorMsg.value = "사용자 비밀번호를 입력하세요.";
+    passwordErrorMsg.value = $constants.LOGIN.PASSWORD.INPUT_ERROR_MSG;
     return;
   }
 

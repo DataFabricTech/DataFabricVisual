@@ -11,7 +11,16 @@ interface StepComposition extends StepProps, NavigationFunctionality, Navigation
 }
 
 export function StepComposition(props: StepProps, onchange: (value: string | number) => void): StepComposition {
-  const currentIndex: Ref<number> = ref<number>(0);
+  let currentIndex: Ref<number> | null = null;
+
+  // 버튼을 사용하지 않는 경우, parent 에서 보내주는 index 값으로 currentIndex 값을 제어한다.
+  if (!props.showBtn) {
+    currentIndex = computed(() => {
+      return (props.parentIndex || 0) - 1;
+    });
+  } else {
+    currentIndex = ref(0); // 또는 다른 기본값
+  }
 
   const clickStep: (index: number) => void = (index) => {
     if (currentIndex.value < index) {
@@ -50,16 +59,6 @@ export function StepComposition(props: StepProps, onchange: (value: string | num
   };
 
   const toggleList: () => void = () => {};
-
-  // 버튼을 사용하지 않는 경우, parent 에서 보내주는 index 값으로 currentIndex 값을 제어한다.
-  if (!props.showBtn) {
-    watch(
-      () => props.parentIndex,
-      (newValue) => {
-        currentIndex.value = (newValue || 0) - 1;
-      }
-    );
-  }
 
   return { ...props, currentIndex, clickStep, isDisabled, move, toggleList, changeCurrentStepClass, onChange };
 }

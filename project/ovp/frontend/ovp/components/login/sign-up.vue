@@ -1,11 +1,10 @@
 <template>
   <div class="wrap is-wrap-height-full">
     <div class="submit-form">
+      <h1 class="submit-form-logo">
+        <svg-icon class="svg-icon logo-img" name="logo"></svg-icon>
+      </h1>
       <form class="submit-form-form" @submit.prevent="onSubmit">
-        <h1 class="submit-form-logo">
-          <span class="hidden-text">open vdap portal</span>
-          <svg-icon class="logo" name="logo-simbol"></svg-icon>
-        </h1>
         <h2 class="submit-form-title">회원가입</h2>
         <div class="form form-lg gap-6">
           <div class="form-body">
@@ -20,15 +19,17 @@
                     id="inpName"
                     class="text-input text-input-lg"
                     placeholder="이름 입력"
-                    v-model="form.name"
+                    autocomplete="off"
+                    v-model="form.displayName"
+                    @input="validateDisplayName"
                   />
                 </div>
                 <div
                   class="notification notification-sm notification-error"
-                  v-if="errors.name"
+                  v-if="errors.displayName"
                 >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">{{ errors.name }}</p>
+                  <p class="notification-detail">{{ errors.displayName }}</p>
                 </div>
               </div>
             </div>
@@ -43,7 +44,9 @@
                     id="inpEmail"
                     class="text-input text-input-lg"
                     placeholder="이메일 입력"
+                    autocomplete="off"
                     v-model="form.email"
+                    @input="validateEmail"
                   />
                 </div>
                 <div
@@ -64,38 +67,36 @@
                 <div class="text-input-group w-full">
                   <input
                     id="inpPw"
-                    :type="pwComposition.inputPasswordType.value"
+                    :type="inputPasswordType"
                     class="text-input text-input-lg"
                     placeholder="비밀번호 입력"
-                    v-model="pwComposition.newPassword.value"
+                    autocomplete="new-password"
+                    v-model="newPassword"
+                    @input="validatePassword"
                   />
                   <button
                     class="text-input-group-action-button button button-neutral-ghost button-sm"
                     type="button"
-                    @click="pwComposition.isHidePw"
+                    @click="isHidePw"
                   >
                     <span class="hidden-text">비밀번호 보기 해제</span>
                     <svg-icon
-                      v-if="
-                        pwComposition.inputPasswordType.value === 'password'
+                      class="button-icon"
+                      :name="
+                        getPwdIconName({
+                          inputType: inputPasswordType,
+                        })
                       "
-                      class="button-icon"
-                      name="eye"
-                    ></svg-icon>
-                    <svg-icon
-                      v-else
-                      class="button-icon"
-                      name="eye-hide"
                     ></svg-icon>
                   </button>
                 </div>
                 <div
                   class="notification notification-sm notification-error"
-                  v-if="pwComposition.errorMsgPassword.value"
+                  v-if="errorMsgPassword"
                 >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
                   <p class="notification-detail">
-                    {{ pwComposition.errorMsgPassword.value }}
+                    {{ errorMsgPassword }}
                   </p>
                 </div>
               </div>
@@ -109,39 +110,36 @@
                 <div class="text-input-group w-full">
                   <input
                     id="inpConfirmPw"
-                    :type="pwComposition.inputConfirmPasswordType.value"
+                    :type="inputConfirmPasswordType"
                     class="text-input text-input-lg"
                     placeholder="비밀번호 입력"
-                    v-model="pwComposition.confirmPassword.value"
+                    autocomplete="new-password"
+                    v-model="confirmPassword"
+                    @input="validateConfirmPassword"
                   />
                   <button
                     class="text-input-group-action-button button button-neutral-ghost button-sm"
                     type="button"
-                    @click="pwComposition.isHideConfirmPw"
+                    @click="isHideConfirmPw"
                   >
                     <span class="hidden-text">지우기</span>
                     <svg-icon
-                      v-if="
-                        pwComposition.inputConfirmPasswordType.value ===
-                        'password'
+                      class="button-icon"
+                      :name="
+                        getPwdIconName({
+                          inputType: inputConfirmPasswordType,
+                        })
                       "
-                      class="button-icon"
-                      name="eye"
-                    ></svg-icon>
-                    <svg-icon
-                      v-else
-                      class="button-icon"
-                      name="eye-hide"
                     ></svg-icon>
                   </button>
                 </div>
                 <div
                   class="notification notification-sm notification-error"
-                  v-if="pwComposition.errorMsgConfirmPassword.value"
+                  v-if="errorMsgConfirmPassword"
                 >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
                   <p class="notification-detail">
-                    {{ pwComposition.errorMsgConfirmPassword.value }}
+                    {{ errorMsgConfirmPassword }}
                   </p>
                 </div>
               </div>
@@ -151,10 +149,7 @@
             <button class="button button-primary button-lg" type="submit">
               회원가입
             </button>
-            <button
-              class="link-button link-button-support button-sm w-full"
-              type="button"
-            >
+            <button class="button button-primary-ghost button-sm" type="button">
               <nuxt-link :to="'/portal/login'">
                 로그인 페이지로 돌아가기
               </nuxt-link>
@@ -169,77 +164,113 @@
 <script setup lang="ts">
 import { loginStore } from "@/store/login/index";
 import { useRouter } from "vue-router";
-import { PasswordComposition } from "~/components/login/PasswordComposition";
-import $constants from "~/utils/constant";
-const pwComposition = PasswordComposition();
+import { PasswordComposition } from "@/components/login/PasswordComposition";
+import { useCommonUtils } from "@/composables/commonUtils";
+import $constants from "@/utils/constant";
+import { useUserStore } from "@/store/user/userStore";
+import _ from "lodash";
+
+const {
+  newPassword,
+  confirmPassword,
+  inputPasswordType,
+  inputConfirmPasswordType,
+  errorMsgPassword,
+  errorMsgConfirmPassword,
+  isHidePw,
+  isHideConfirmPw,
+  validatePassword,
+  validateConfirmPassword,
+} = PasswordComposition();
+const { getPwdIconName } = useCommonUtils();
 
 const form: {
   name: string;
   email: string;
+  displayName: string;
 } = reactive({
   name: "",
   email: "",
+  displayName: "",
 });
 
 const errors: {
-  name: string;
+  displayName: string;
   email: string;
 } = reactive({
-  name: "",
+  displayName: "",
   email: "",
 });
 
 const store = loginStore();
+const userStore = useUserStore();
 const router = useRouter();
 
-const onSubmit = async () => {
-  if (!validateForm()) {
-    return;
-  }
+const { checkDuplicateEmail, signUpUser } = store;
+const { checkDuplicateName } = userStore;
 
-  if (await isDuplicateEmail()) {
-    return;
-  }
+const onSubmit = async () => {
+  // name 값은 email 의 id 값과 같음
+  form.name = _.first(_.split(form.email, "@")) || "";
+
+  const isFormValid = validateForm();
+  const isEmailValid = _.isEmpty(errors.email)
+    ? !((await isDuplicateEmail()) || (await isDuplicateName()))
+    : false;
+  if (!isFormValid || !isEmailValid) return;
+
   await signUp();
 };
 const validateForm = () => {
-  const isErrorName = validateName();
+  const isErrorDisplayName = validateDisplayName();
   const isErrorEmail = validateEmail();
-  const isErrorPassword = pwComposition.validatePassword();
-  const isErrorConfirmPassword = pwComposition.validateConfirmPassword();
+  const isErrorPassword = validatePassword();
+  const isErrorConfirmPassword = validateConfirmPassword();
 
   return (
-    isErrorName && isErrorEmail && isErrorPassword && isErrorConfirmPassword
+    isErrorDisplayName &&
+    isErrorEmail &&
+    isErrorPassword &&
+    isErrorConfirmPassword
   );
 };
 
-const validateName = () => {
-  errors.name = form.name ? "" : "사용자 이름를 입력하세요.";
-  return !errors.name;
+const validateDisplayName = () => {
+  errors.displayName = form.displayName
+    ? ""
+    : $constants.LOGIN.DISPLAY_NAME.INPUT_ERROR_MSG;
+  return !errors.displayName;
 };
 
 const validateEmail = () => {
-  errors.email = form.email ? "" : "사용자 이메일을 입력하세요.";
+  errors.email = form.email ? "" : $constants.LOGIN.EMAIL.INPUT_ERROR_MSG;
   if (errors.email) return false;
 
   errors.email = $constants.LOGIN.EMAIL.REGEX.test(form.email)
     ? ""
-    : "이메일이 유효하지 않습니다.";
+    : $constants.LOGIN.EMAIL.REGEX_ERROR_MSG;
   return !errors.email;
 };
 
 const isDuplicateEmail = async () => {
-  const result = await store.checkDuplicateEmail({ email: form.email });
+  const result = await checkDuplicateEmail({ email: form.email });
   const isDuplicate = result.data;
-  errors.email = isDuplicate ? "이미 사용중인 이메일 입니다." : "";
+  errors.email = isDuplicate ? $constants.LOGIN.EMAIL.DUPLICATE_ERROR_MSG : "";
+  return isDuplicate;
+};
+
+const isDuplicateName = async () => {
+  const isDuplicate = await checkDuplicateName(form.name);
+  errors.email = isDuplicate
+    ? $constants.LOGIN.EMAIL.DUPLICATE_ID_ERROR_MSG
+    : "";
   return isDuplicate;
 };
 
 const signUp = async () => {
-  const result = await store.signUpUser({
-    email: form.email,
-    password: pwComposition.newPassword.value,
-    name: form.name,
+  const result = await signUpUser({
+    ...form,
+    password: newPassword,
   });
 
   if (result.result === 0 && result.errorMessage) {
