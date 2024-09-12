@@ -46,7 +46,7 @@
         </div>
       </div>
       <div class="work-page" v-if="isCategoriesNoData">
-        <div class="l-top-bar"></div>
+        <div class="l-top-bar h-[48.8px]"></div>
         <div class="work-contents">
           <div class="no-result">
             <div class="notification">
@@ -57,7 +57,7 @@
         </div>
       </div>
       <div class="work-page" v-else>
-        <div class="l-top-bar">
+        <div class="l-top-bar h-[48.8px]">
           <editable-group
             compKey="title"
             :editable="isEditableNode"
