@@ -300,6 +300,12 @@ export const useServiceStore = defineStore("service", () => {
     const operations: JsonPatchOperation[] = [];
     const foundUser: any = userList.find((user: Owner) => user.id === item.id);
 
+    if (foundUser !== null && foundUser !== undefined) {
+      // 바꾸려는 값이 'admin' 인 경우, admin 은 type 이 'admin'으로 되어있음.
+      // open meta 에 type 을 'admin' 으로 날리면 서버 오류가 남.
+      foundUser.type = "user";
+    }
+
     const isEmpty = item.id === undefined;
     if (service.owner.id === undefined) {
       if (item && foundUser) {
