@@ -34,7 +34,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const selectedModelListCnt = computed(() => {
     return selectedModelList.value.length;
   });
-  const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
+  const { setQueryFilterByDepth } = useQueryHelpers();
 
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
@@ -99,7 +99,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       query_filter: JSON.stringify(queryFilter),
       sort_field: sortKey.value,
       sort_order: sortKeyOpt.value,
-      trino_query: JSON.stringify(getTrinoQuery(queryFilter)),
     };
     return new URLSearchParams(params);
   };

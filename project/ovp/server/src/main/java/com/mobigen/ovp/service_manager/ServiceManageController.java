@@ -39,15 +39,15 @@ public class ServiceManageController {
 
     /**
      * 서비스 검색 리스트
-     * @param search
+     * @param q : searchText
      * @param from
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/list/search")
-    public Object searchServices(@RequestParam String search, @RequestParam String from) throws Exception {
-        return serviceManageService.searchServices(search, from);
+    public Object searchServices(@RequestParam String q, @RequestParam String from) throws Exception {
+        return serviceManageService.searchServices(q, from);
     }
 
     /**

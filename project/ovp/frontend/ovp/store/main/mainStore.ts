@@ -1,7 +1,5 @@
 import { storeToRefs } from "pinia";
 import { useSearchCommonStore } from "../search/common";
-import { useQueryHelpers } from "~/composables/queryHelpers";
-import sampleData from "./samples/sampleData.json";
 
 interface DataModel {
   type: string;
@@ -23,7 +21,6 @@ export const useMainStore = defineStore("mainStore", () => {
   const searchCommonStore = useSearchCommonStore();
   const { setSortInfo, getQueryFilter } = searchCommonStore;
   const { sortKey, sortKeyOpt } = storeToRefs(searchCommonStore);
-  const { getTrinoQuery } = useQueryHelpers();
 
   const recentQuestData: Ref<DataModel[]> = ref([]);
   const bookmarkData: Ref<DataModel[]> = ref([]);
@@ -49,7 +46,6 @@ export const useMainStore = defineStore("mainStore", () => {
       query_filter: JSON.stringify(queryFilter),
       sort_field: sortKey.value,
       sort_order: sortKeyOpt.value,
-      trino_query: JSON.stringify(getTrinoQuery(queryFilter)),
     };
 
     return new URLSearchParams(params);
