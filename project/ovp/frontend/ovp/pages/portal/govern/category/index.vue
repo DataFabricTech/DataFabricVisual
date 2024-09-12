@@ -270,6 +270,7 @@ const {
   categoriesParentId,
   categoriesId,
   isShowPreview,
+  searchInputValue,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
@@ -305,6 +306,7 @@ watch(
 
 // TREE
 const onCategoryNodeClick = async (node: TreeViewItem) => {
+  searchInputValue.value = "";
   selectedModelList.value = [];
   isShowPreview.value = false;
   isBoxSelectedStyle.value = false;
@@ -441,24 +443,21 @@ const allModelList = computed({
   },
 });
 
-const searchInputValue = ref("");
 const updateSearchInputValue = (newValue: string) => {
   searchInputValue.value = newValue;
 };
-const onInput = async (value: string) => {
+const onInput = async (value:string) => {
+  searchInputValue.value = value;
   isAllModelListChecked.value = false;
   selectedModelList.value = [];
   setScrollOptions(0);
-  await getModelList(value);
+  await getModelList();
   setModelIdList();
 };
 
 const checked = (checkedList: any[]) => {
   selectedModelList.value = checkedList;
 };
-
-const { scrollTrigger, setScrollOptions } =
-  useIntersectionObserver(addModelList);
 
 // PREVIEW
 const getPreviewCloseStatus = (option: boolean) => {
@@ -616,6 +615,10 @@ onMounted(async () => {
   if (loader.value) {
     loader.value.style.display = "none";
   }
+});
+
+const { scrollTrigger, setScrollOptions } = useIntersectionObserver({
+  callback: addModelList,
 });
 </script>
 

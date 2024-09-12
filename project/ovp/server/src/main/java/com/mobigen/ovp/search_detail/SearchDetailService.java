@@ -5,7 +5,7 @@ import com.mobigen.ovp.category.repository.CategoryRepository;
 import com.mobigen.ovp.common.ModelConvertUtil;
 import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.constants.ModelType;
-import com.mobigen.ovp.common.openmete_client.ClassificationClient;
+import com.mobigen.ovp.common.openmete_client.ClassificationTagsClient;
 import com.mobigen.ovp.common.openmete_client.ContainersClient;
 import com.mobigen.ovp.common.openmete_client.LineageClient;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
@@ -51,7 +51,7 @@ public class SearchDetailService {
     private final TablesClient tablesClient;
     private final ContainersClient containersClient;
     private final LineageClient lineageClient;
-    private final ClassificationClient classificationClient;
+    private final ClassificationTagsClient classificationTagsClient;
     private final GlossaryClient glossaryClient;
 
     private final UserService userService;
@@ -100,7 +100,7 @@ public class SearchDetailService {
             params.add("after", after);
         }
 
-        Tags res = classificationClient.gatTags(params);
+        Tags res = classificationTagsClient.gatTags(params);
         List<Tag> resTags = res.getData().stream().filter(tag -> {
             String classificationName = tag.getClassification().getName();
             return !(classificationName.contains("ovp_category") || classificationName.contains("PersonalData") || classificationName.contains("PII") || classificationName.contains("Tier"));
@@ -486,7 +486,7 @@ public class SearchDetailService {
                     key = "tagId";
                 }
 
-                Map<String, Object> tempTag = classificationClient.getTag(item.get(key).toString());
+                Map<String, Object> tempTag = classificationTagsClient.getTag(item.get(key).toString());
 
                 DataModelDetailTagDto tag = new DataModelDetailTagDto();
                 tag.setName(tempTag.get("name").toString());

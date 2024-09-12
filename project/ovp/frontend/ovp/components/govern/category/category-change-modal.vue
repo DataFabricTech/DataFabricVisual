@@ -122,7 +122,9 @@ const onCategoryNodeClick = (node: TreeViewItem) => {
   tagIdForCategoryChange.value = node.tagId;
 };
 
-const { setScrollOptions } = useIntersectionObserver(addSearchList);
+const { setScrollOptions } = useIntersectionObserver({
+  callback: addSearchList,
+});
 </script>
 
 <style scoped></style>

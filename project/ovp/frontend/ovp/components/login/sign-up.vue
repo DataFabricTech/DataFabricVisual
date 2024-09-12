@@ -19,7 +19,9 @@
                     id="inpName"
                     class="text-input text-input-lg"
                     placeholder="이름 입력"
+                    autocomplete="off"
                     v-model="form.displayName"
+                    @input="validateDisplayName"
                   />
                 </div>
                 <div
@@ -42,7 +44,9 @@
                     id="inpEmail"
                     class="text-input text-input-lg"
                     placeholder="이메일 입력"
+                    autocomplete="off"
                     v-model="form.email"
+                    @input="validateEmail"
                   />
                 </div>
                 <div
@@ -63,22 +67,24 @@
                 <div class="text-input-group w-full">
                   <input
                     id="inpPw"
-                    :type="pwComposition.inputPasswordType.value"
+                    :type="inputPasswordType"
                     class="text-input text-input-lg"
                     placeholder="비밀번호 입력"
-                    v-model="pwComposition.newPassword.value"
+                    autocomplete="new-password"
+                    v-model="newPassword"
+                    @input="validatePassword"
                   />
                   <button
                     class="text-input-group-action-button button button-neutral-ghost button-sm"
                     type="button"
-                    @click="pwComposition.isHidePw"
+                    @click="isHidePw"
                   >
                     <span class="hidden-text">비밀번호 보기 해제</span>
                     <svg-icon
                       class="button-icon"
                       :name="
                         getPwdIconName({
-                          inputType: pwComposition.inputPasswordType.value,
+                          inputType: inputPasswordType,
                         })
                       "
                     ></svg-icon>
@@ -86,11 +92,11 @@
                 </div>
                 <div
                   class="notification notification-sm notification-error"
-                  v-if="pwComposition.errorMsgPassword.value"
+                  v-if="errorMsgPassword"
                 >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
                   <p class="notification-detail">
-                    {{ pwComposition.errorMsgPassword.value }}
+                    {{ errorMsgPassword }}
                   </p>
                 </div>
               </div>
@@ -104,23 +110,24 @@
                 <div class="text-input-group w-full">
                   <input
                     id="inpConfirmPw"
-                    :type="pwComposition.inputConfirmPasswordType.value"
+                    :type="inputConfirmPasswordType"
                     class="text-input text-input-lg"
                     placeholder="비밀번호 입력"
-                    v-model="pwComposition.confirmPassword.value"
+                    autocomplete="new-password"
+                    v-model="confirmPassword"
+                    @input="validateConfirmPassword"
                   />
                   <button
                     class="text-input-group-action-button button button-neutral-ghost button-sm"
                     type="button"
-                    @click="pwComposition.isHideConfirmPw"
+                    @click="isHideConfirmPw"
                   >
                     <span class="hidden-text">지우기</span>
                     <svg-icon
                       class="button-icon"
                       :name="
                         getPwdIconName({
-                          inputType:
-                            pwComposition.inputConfirmPasswordType.value,
+                          inputType: inputConfirmPasswordType,
                         })
                       "
                     ></svg-icon>
@@ -128,11 +135,11 @@
                 </div>
                 <div
                   class="notification notification-sm notification-error"
-                  v-if="pwComposition.errorMsgConfirmPassword.value"
+                  v-if="errorMsgConfirmPassword"
                 >
                   <svg-icon class="notification-icon" name="error"></svg-icon>
                   <p class="notification-detail">
-                    {{ pwComposition.errorMsgConfirmPassword.value }}
+                    {{ errorMsgConfirmPassword }}
                   </p>
                 </div>
               </div>
@@ -163,7 +170,18 @@ import $constants from "@/utils/constant";
 import { useUserStore } from "@/store/user/userStore";
 import _ from "lodash";
 
-const pwComposition = PasswordComposition();
+const {
+  newPassword,
+  confirmPassword,
+  inputPasswordType,
+  inputConfirmPasswordType,
+  errorMsgPassword,
+  errorMsgConfirmPassword,
+  isHidePw,
+  isHideConfirmPw,
+  validatePassword,
+  validateConfirmPassword,
+} = PasswordComposition();
 const { getPwdIconName } = useCommonUtils();
 
 const form: {
@@ -206,8 +224,8 @@ const onSubmit = async () => {
 const validateForm = () => {
   const isErrorDisplayName = validateDisplayName();
   const isErrorEmail = validateEmail();
-  const isErrorPassword = pwComposition.validatePassword();
-  const isErrorConfirmPassword = pwComposition.validateConfirmPassword();
+  const isErrorPassword = validatePassword();
+  const isErrorConfirmPassword = validateConfirmPassword();
 
   return (
     isErrorDisplayName &&
@@ -252,7 +270,7 @@ const isDuplicateName = async () => {
 const signUp = async () => {
   const result = await signUpUser({
     ...form,
-    password: pwComposition.newPassword.value,
+    password: newPassword,
   });
 
   if (result.result === 0 && result.errorMessage) {

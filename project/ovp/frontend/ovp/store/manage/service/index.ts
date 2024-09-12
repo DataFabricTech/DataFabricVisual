@@ -147,7 +147,7 @@ export const useServiceStore = defineStore("service", () => {
     from: string,
   ): Promise<void> {
     const res = await $api(
-      `/api/service-manage/list/search?search=*${keyword}*&from=${from}`,
+      `/api/service-manage/list/search?q=*${keyword}*&from=${from}`,
     );
     if (res.data !== null) {
       serviceList.splice(0, serviceList.length, ...res.data);
