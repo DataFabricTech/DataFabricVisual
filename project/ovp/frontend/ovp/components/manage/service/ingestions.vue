@@ -323,6 +323,7 @@ async function getStatus(ingestion: Ingestion): Promise<void> {
 async function refreshIngestionList(): Promise<void> {
   await getIngestionList(service);
   filterList();
+  toggle.value = false;
 }
 
 const currentLoading = ref({});
