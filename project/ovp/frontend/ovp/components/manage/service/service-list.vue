@@ -89,7 +89,7 @@ const {
   servicesById,
 } = useServiceStore();
 const store = useServiceStore();
-const TAB_REPOSITORY = $constants.SERVICE.TAB[0].value;
+const TAB_INGESTION = $constants.SERVICE.TAB[0].value;
 
 const keyword = ref<string>("");
 
@@ -116,7 +116,7 @@ async function reset(): Promise<void> {
 
 function changeService(service: Service): void {
   changeCurrentService(service);
-  changeTab(TAB_REPOSITORY);
+  changeTab(TAB_INGESTION);
 }
 
 const props = defineProps({

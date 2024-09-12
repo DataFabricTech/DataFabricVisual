@@ -22,7 +22,7 @@ export const useServiceStore = defineStore("service", () => {
   const { $api } = useNuxtApp();
   const dataModelDetailStore = useDataModelDetailStore();
   const { tagList, termList } = storeToRefs(dataModelDetailStore);
-  const tab = ref<string>("repository");
+  const tab = ref<string>("ingestion");
 
   const service = reactive<Service>(<Service>{});
   const serviceList = reactive<Service[]>([]);
