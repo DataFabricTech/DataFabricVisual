@@ -1,7 +1,7 @@
 <template>
   <div class="work-page" v-if="!isEmptyService()">
     <div class="l-top-bar h-[48.8px]">
-      <div class="h-group">
+      <div class="h-group gap-2">
         <img
           v-if="servicesById[service.serviceType]"
           :src="servicesById[service.serviceType].imgUrl"
