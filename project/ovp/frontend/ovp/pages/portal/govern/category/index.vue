@@ -434,7 +434,7 @@ const allModelList = computed({
 const updateSearchInputValue = (newValue: string) => {
   searchInputValue.value = newValue;
 };
-const onInput = async (value:string) => {
+const onInput = async (value: string) => {
   searchInputValue.value = value;
   isAllModelListChecked.value = false;
   selectedModelList.value = [];
@@ -552,6 +552,7 @@ const { open: openDataModelAddModal, close: closeDataModelAddModal } = useModal(
         closeDataModelAddModal();
       },
       onClose() {
+        getModelList();
         closeDataModelAddModal();
       },
     },

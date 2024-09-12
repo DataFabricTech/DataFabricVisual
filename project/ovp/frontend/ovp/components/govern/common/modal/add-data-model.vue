@@ -285,6 +285,7 @@ const onConfirm = async () => {
 };
 
 const onCancel = () => {
+  setScrollOptions(0);
   emit("close");
 };
 
