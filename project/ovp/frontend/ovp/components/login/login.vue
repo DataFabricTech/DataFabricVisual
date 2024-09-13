@@ -130,8 +130,8 @@ const login = async () => {
     return;
   }
 
-  let id = loginEmailOrId.value;
-  let password = loginPassword.value;
+  let id = loginEmailOrId.value.trim();
+  let password = loginPassword.value.trim();
 
   loginValidationReset();
 
