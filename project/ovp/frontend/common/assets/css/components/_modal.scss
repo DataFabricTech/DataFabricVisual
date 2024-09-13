@@ -3,6 +3,8 @@
 }
 
 .vfm--fixed {
+  z-index: 8000 !important;
+
   .modal {
     @include z-index('modal');
     @include box-shadow('lg');
