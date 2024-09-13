@@ -34,7 +34,7 @@ public class ClassificationService {
      * @return
      */
     public Object getClassifications() {
-        ClassificationData response = classificationClient.getClassifications();
+        ClassificationData response = classificationClient.getClassifications(100000);
         // 제외할 이름들을 리스트로 작성
         List<String> excludedNames = List.of("PersonalData", "PII", "ovp_category", "Tier");
 
