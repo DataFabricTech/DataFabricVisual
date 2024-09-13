@@ -244,7 +244,6 @@ public class ModelCreationService {
     }
 
     public Object saveModel(Map<String, Object> param) throws Exception {
-        Map<String, Object> result = dolphinClient.createModel(param);
-        return result;
+        return dolphinClient.createModel(param);
     }
 }
