@@ -25,9 +25,12 @@
                 placeholder="이름을 입력하세요."
                 v-model="classificationTagForm.name"
               />
-              <div class="notification notification-sm notification-error">
+              <div
+                class="notification notification-sm notification-error"
+                v-show="isShowNameNoti"
+              >
                 <svg-icon class="notification-icon" name="error"></svg-icon>
-                <p class="notification-detail">이름을 입력하세요.</p>
+                <p class="notification-detail">{{ nameErrorMsg }}</p>
               </div>
             </div>
           </div>
@@ -43,9 +46,12 @@
                 placeholder="설명을 입력하세요."
                 v-model="classificationTagForm.description"
               ></textarea>
-              <div class="notification notification-sm notification-error">
+              <div
+                class="notification notification-sm notification-error"
+                v-show="isShowDescNoti"
+              >
                 <svg-icon class="notification-icon" name="error"></svg-icon>
-                <p class="notification-detail">설명을 입력하세요.</p>
+                <p class="notification-detail">{{ descriptionErrorMsg }}</p>
               </div>
             </div>
           </div>
@@ -58,23 +64,15 @@
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
 import { classificationStore } from "@/store/classification/index";
-import { storeToRefs } from "pinia";
 const { $vfm } = useNuxtApp();
 
 const useClassificationStore = classificationStore();
-const { addClassificationTag } = useClassificationStore;
-const { currentClassificationTagName } = storeToRefs(useClassificationStore);
+const { addClassificationTag, getClassificationTags } = useClassificationStore;
 
 interface FormState {
   name: string;
   description: string;
   classification: string;
-}
-
-interface NotificationState {
-  name: boolean;
-  description: boolean;
-  classification: boolean;
 }
 
 const props = defineProps({
@@ -83,52 +81,64 @@ const props = defineProps({
     required: true,
   },
 });
+
 const initialFormState: FormState = {
   name: "",
   description: "",
   classification: "",
 };
+
 const classificationTagForm = reactive<FormState>({ ...initialFormState });
-const noneDataNoti = reactive<NotificationState>({
-  name: false,
-  description: false,
-  classification: false,
-});
+
+let nameErrorMsg: Ref<string> = ref("");
+const descriptionErrorMsg = "설명을 입력하세요.";
+
+const isShowNameNoti: Ref<boolean> = ref(false);
+const isShowDescNoti: Ref<boolean> = ref(false);
 
 function validateForm(): void {
-  const { name, description, classification } = classificationTagForm;
-  noneDataNoti.name = !name;
-  noneDataNoti.description = !description;
-  noneDataNoti.classification = !classification;
-  if (
-    !(
-      noneDataNoti.name ||
-      noneDataNoti.description ||
-      noneDataNoti.classification
-    )
-  ) {
-    saveClassificationTag();
+  isShowDescNoti.value = false;
+  if (!classificationTagForm.description) {
+    isShowDescNoti.value = true;
   }
+  nameErrorMsg.value = "";
+  // 저장 전에 name, description의 값이 빈값일 경우
+  // 이름값이 빈값일 경우,
+  if (!classificationTagForm.name) {
+    nameErrorMsg.value = "이름을 입력하세요.";
+    isShowNameNoti.value = true;
+    return;
+  }
+  nameErrorMsg.value = "";
+  isShowNameNoti.value = false;
+  // 설명값이 빈값일 경우,
+  if (!classificationTagForm.description) {
+    isShowDescNoti.value = true;
+    return;
+  }
+  isShowDescNoti.value = false;
+
+  saveClassificationTag().then((response: object) => {
+    if (response.errorMessage === "Duplicate classification name") {
+      nameErrorMsg.value = "이름이 중복되었습니다.";
+      isShowNameNoti.value = true;
+      return;
+    } else if (response.result === 1) {
+      getClassificationTags(); // 태그리스트조회 재호출
+      // 성공시 모달 닫기
+      closeModal();
+    }
+  });
 }
-console.log(
-  "currentClassificationTagName여어어어ㅓ ? ?? ??",
-  currentClassificationTagName,
-);
-async function saveClassificationTag(): Promise<void> {
+
+function saveClassificationTag(): Promise<void> {
   // 추가할 내용 저장(name, description)
   const addData = {
     name: classificationTagForm.name,
     description: classificationTagForm.description,
-    classification: classificationTagForm.classification,
   };
   // 태그 추가 API호출
-  console.log("자아아----", addData);
-  console.log(
-    "currentClassificationTagName?????",
-    currentClassificationTagName,
-  );
-  await addClassificationTag(addData);
-  closeModal();
+  return addClassificationTag(addData);
 }
 
 function closeModal(): void {
