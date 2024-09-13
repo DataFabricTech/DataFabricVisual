@@ -5,7 +5,9 @@
     </span>
     <div class="profile-group">
       <div class="editable-group">
-        <span class="profile-name">{{ props.targetUserInfo.displayName }}</span>
+        <span class="profile-name">{{
+          props.targetUserInfo?.displayName || "이름없음"
+        }}</span>
         <button
           class="button button-neutral-ghost button-sm"
           type="button"
@@ -24,6 +26,7 @@
         <input
           id="profile-name-modify"
           class="text-input w-1/4"
+          :placeholder="localDisplayName ? '' : '이름을 입력해주세요.'"
           v-model="localDisplayName"
         />
         <div class="h-group gap-2 shrink-0">
@@ -92,19 +95,22 @@
           </div>
         </div>
       </div>
-      <div class="editable-group">
-        <span class="editable-group-desc">{{
-          props.targetUserInfo.description
-        }}</span>
-        <button
-          class="button button-neutral-ghost button-sm"
-          type="button"
-          @click="editDescription(true)"
-          v-show="IsEditAgree"
-        >
-          <span class="hidden-text">수정</span>
-          <svg-icon class="button-icon" name="pen"></svg-icon>
-        </button>
+      <div class="profile-list">
+        <div class="profile-title">설명</div>
+        <div class="editable-group">
+          <span class="editable-group-desc">{{
+            props.targetUserInfo?.description || "-"
+          }}</span>
+          <button
+            class="button button-neutral-ghost button-sm"
+            type="button"
+            @click="editDescription(true)"
+            v-show="IsEditAgree"
+          >
+            <span class="hidden-text">수정</span>
+            <svg-icon class="button-icon" name="pen"></svg-icon>
+          </button>
+        </div>
       </div>
       <div class="editable-group w-2/4" v-show="isOpenDescriptionEdit">
         <label class="hidden-text" for="profile-description-modify"
@@ -113,6 +119,7 @@
         <textarea
           id="profile-description-modify"
           class="textarea"
+          :placeholder="localDescription ? '' : '설명을 입력해주세요.'"
           v-model="localDescription"
         ></textarea>
         <div class="h-group gap-1">
