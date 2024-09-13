@@ -111,10 +111,6 @@ const { filters, nSelectedListData, selectedModelList, selectedModelListCnt } =
   storeToRefs(dataModelSearchStore);
 const { onClickBookmark, updateMainSelectedModelBookmark } =
   dataModelSearchStore;
-
-onMounted(() => {
-  alert("개발중 입니다.");
-});
 </script>
 
 <style scoped></style>

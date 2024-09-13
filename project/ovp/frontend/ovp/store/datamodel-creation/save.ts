@@ -137,6 +137,7 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
         query: query.value,
         referenceModels: referenceModels.value,
       },
+      description: modelDescription.value,
       tags: tags,
     };
 
