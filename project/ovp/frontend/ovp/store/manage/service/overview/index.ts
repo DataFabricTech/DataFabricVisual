@@ -64,8 +64,10 @@ export const useOverviewStore = defineStore("overview", () => {
 
     serviceResponseData.value = tempData;
   };
+
+  // TODO: [개발] API 완료 후 데이터 누적 기능 구현 필요
   const addServiceResponseData = async () => {
-    console.log("응답시간 누적");
+    console.log("인피니티 스크롤 누적");
     // const { data, totalCount } = await getSearchListAPI();
     // searchResult.value = searchResult.value.concat(data[currentTab.value]);
     // searchResultLength.value = totalCount;
@@ -120,240 +122,210 @@ export const useOverviewStore = defineStore("overview", () => {
     );
     currentSituationData.value = currentSituationTempData.value;
   };
-  const getRecentServiceData = async () => {
+  const getStatusDetailData = async () => {
     // const {data} = await $api (``);
     const tempData = [
       {
         name: "서비스 B",
         type: "MySQL",
         status: "Disconnected",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "수정",
       },
       {
         name: "서비스 G",
         type: "MariaDB",
         status: "Connected",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "등록",
       },
       {
         name: "서비스 F",
         type: "MinIO",
         status: "Error",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "등록",
       },
       {
         name: "서비스 D",
         type: "MariaDB",
         status: "Connected",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "등록",
       },
       {
         name: "서비스 G",
         type: "MySQL",
         status: "Disconnected",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "수정",
       },
       {
         name: "서비스 B",
         type: "MySQL",
         status: "Disconnected",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "수정",
       },
       {
         name: "서비스 G",
         type: "MariaDB",
         status: "Connected",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "등록",
       },
       {
         name: "서비스 F",
         type: "MinIO",
         status: "Error",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "등록",
       },
       {
         name: "서비스 D",
         type: "MariaDB",
         status: "Connected",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "등록",
       },
       {
         name: "서비스 G",
         type: "MySQL",
         status: "Disconnected",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "수정",
       },
       {
         name: "서비스 B",
         type: "MySQL",
         status: "Disconnected",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "수정",
       },
       {
         name: "서비스 G",
         type: "MariaDB",
         status: "Connected",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "등록",
       },
       {
         name: "서비스 F",
         type: "MinIO",
         status: "Error",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "등록",
       },
       {
         name: "서비스 D",
         type: "MariaDB",
         status: "Connected",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "등록",
       },
       {
         name: "서비스 G",
         type: "MySQL",
         status: "Disconnected",
-        register: "2023-01-02 12:13:14",
-        modification: "2023-01-05 12:12:55",
-        detail: "수정",
       },
     ];
 
-    recentServiceData.value = tempData;
+    statusDetailData.value = tempData;
   };
   const getHistoryData = async () => {
     // const {data} = await $api (``);
     const tempData = [
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "동기화 완료",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "연결",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "연결",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "동기화 완료",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "동기화 완료",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "연",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "연",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "연",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "연결",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "동기화 완료",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "동기화 완료",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "연결",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "동기화 완료",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "동기화 완료",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
       {
         date: "2023-01-05 12:16:46",
+        collectionName: "pgv2_metadata_ingestion",
         event: "동기화 완료",
+        status: "Success",
         name: "서비스 B",
         type: "MySQL",
-        detail: "데이터 모델 신규 등록",
       },
     ];
 
@@ -365,13 +337,13 @@ export const useOverviewStore = defineStore("overview", () => {
     serviceStatusData,
     serviceResponseData,
     currentSituationData,
-    recentServiceData,
+    statusDetailData,
     historyData,
     getServiceTypeData,
     getServiceStatusData,
     getServiceResponseData,
     getDataCurrentSituationData,
-    getRecentServiceData,
+    getStatusDetailData,
     getHistoryData,
     addServiceResponseData,
   };

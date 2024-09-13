@@ -2,7 +2,7 @@
   flex-grow: 1;
 }
 
-.ag-theme-alpine.ag-theme-quartz .ag-root .ag-header{
+.ag-theme-alpine.ag-theme-quartz .ag-root .ag-header {
   background-color: $neutral-100;
   border-color: $neutral-200;
 }
@@ -26,4 +26,10 @@
 
 .ag-theme-alpine.ag-theme-quartz .ag-ltr .ag-cell .link-button {
   justify-content: flex-start;
+}
+
+.ag-header-center {
+  .ag-header-cell-label {
+    justify-content: center;
+  }
 }

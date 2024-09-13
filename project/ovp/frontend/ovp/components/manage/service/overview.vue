@@ -21,7 +21,7 @@
             <!-- NOTE "scrollTrigger" -> useIntersectionObserver 가 return 하는 변수병과 동일해야함. -->
             <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
             <Loading
-              id="loader"
+              id="responseListLoader"
               :use-loader-overlay="true"
               class="loader-lg is-loader-inner"
               style="display: none"
@@ -66,12 +66,12 @@
       </div>
     </div>
     <div class="v-group gap-5">
-      <h4 class="overview-title">최근 등록/수정된 서비스</h4>
+      <h4 class="overview-title">서비스 상태</h4>
       <agGrid
         :style="'width: 100%; height: 300px'"
         class="ag-theme-alpine ag-theme-quartz"
         :columnDefs="serviceColumnDefs"
-        :rowData="recentServiceData"
+        :rowData="statusDetailData"
         rowId="id"
         :useRowCheckBox="false"
         :setColumnFit="true"
@@ -79,7 +79,7 @@
       ></agGrid>
     </div>
     <div class="v-group gap-5">
-      <h4 class="overview-title">히스토리</h4>
+      <h4 class="overview-title">수집히스토리</h4>
       <agGrid
         :style="'width: 100%; height: 300px'"
         class="ag-theme-alpine ag-theme-quartz"
@@ -95,12 +95,12 @@
 </template>
 <script setup lang="ts">
 import * as echarts from "echarts";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
-import { useOverviewStore } from "~/store/manage/service/overview";
-import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import agGrid from "@extends/grid/Grid.vue";
 import Loading from "@base/loading/Loading.vue";
+import { useOverviewStore } from "~/store/manage/service/overview";
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { ServiceNameRenderer } from "~/store/manage/service/overview/cell-renderer/serviceNameRenderer";
 import { HistoryServiceNameRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceNameRenderer";
 
@@ -110,7 +110,7 @@ const {
   getServiceStatusData,
   getServiceResponseData,
   getDataCurrentSituationData,
-  getRecentServiceData,
+  getStatusDetailData,
   getHistoryData,
   addServiceResponseData,
 } = overviewStore;
@@ -119,7 +119,7 @@ const {
   serviceStatusData,
   serviceResponseData,
   currentSituationData,
-  recentServiceData,
+  statusDetailData,
   historyData,
 } = storeToRefs(overviewStore);
 
@@ -130,7 +130,7 @@ const setOverviewData = () => {
   getServiceStatusData();
   getServiceResponseData();
   getDataCurrentSituationData();
-  getRecentServiceData();
+  getStatusDetailData();
   getHistoryData();
 };
 
@@ -138,26 +138,63 @@ const setOverviewData = () => {
 const serviceColumnDefs = ref([
   {
     headerName: "서비스 이름",
+    headerClass: "ag-header-center",
     field: "name",
     cellRenderer: ServiceNameRenderer,
+    cellStyle: { textAlign: "center" },
   },
-  { headerName: "데이터 저장소 유형", field: "type" },
-  { headerName: "상태", field: "status" },
-  { headerName: "등록일시", field: "register" },
-  { headerName: "수정일시", field: "modification" },
-  { headerName: "내용", field: "detail" },
+  {
+    headerName: "데이터 저장소 유형",
+    headerClass: "ag-header-center",
+    field: "type",
+    cellStyle: { textAlign: "center" },
+  },
+  {
+    headerName: "상태",
+    headerClass: "ag-header-center",
+    field: "status",
+    cellStyle: { textAlign: "center" },
+  },
 ]);
 
 const historyColumnDefs = ref([
-  { headerName: "이벤트 발생 일시", field: "date" },
-  { headerName: "이벤트", field: "event" },
+  {
+    headerName: "이벤트 발생 일시",
+    headerClass: "ag-header-center",
+    field: "date",
+    cellStyle: { textAlign: "center" },
+  },
+  {
+    headerName: "수집 이름",
+    headerClass: "ag-header-center",
+    field: "collectionName",
+    cellStyle: { textAlign: "center" },
+  },
+  {
+    headerName: "이벤트",
+    headerClass: "ag-header-center",
+    field: "event",
+    cellStyle: { textAlign: "center" },
+  },
+  {
+    headerName: "상태",
+    headerClass: "ag-header-center",
+    field: "status",
+    cellStyle: { textAlign: "center" },
+  },
   {
     headerName: "서비스 이름",
+    headerClass: "ag-header-center",
     field: "name",
     cellRenderer: HistoryServiceNameRenderer,
+    cellStyle: { textAlign: "center" },
   },
-  { headerName: "저장소 유형", field: "type" },
-  { headerName: "내용", field: "detail" },
+  {
+    headerName: "저장소 유형",
+    headerClass: "ag-header-center",
+    field: "type",
+    cellStyle: { textAlign: "center" },
+  },
 ]);
 
 // ECharts
@@ -324,5 +361,9 @@ onMounted(async () => {
   }
 });
 
-const { scrollTrigger } = useIntersectionObserver(addServiceResponseData);
+const { scrollTrigger } = useIntersectionObserver({
+  callback: addServiceResponseData,
+  targetId: "responseList",
+  loaderId: "responseListLoader",
+});
 </script>
