@@ -98,7 +98,7 @@ public class ClassificationService {
      * @throws Exception
      */
     public Object getClassificationTags(String parent) {
-        return new ClassificationTagsResponse(classificationTagsClient.getClassificationTags(parent));
+        return new ClassificationTagsResponse(classificationTagsClient.getClassificationTags(parent, 100000));
     }
 
 
