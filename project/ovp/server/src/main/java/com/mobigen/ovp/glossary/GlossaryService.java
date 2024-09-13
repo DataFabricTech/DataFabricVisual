@@ -408,4 +408,29 @@ public class GlossaryService {
                 .filter(tag -> sourceType.equals(tag.get("source")))
                 .toList();
     }
+
+    public Boolean addDataModelsTerm(UUID id, Map<String, List<String>> ids) {
+        List<Map<String, String>> assets = ids.entrySet().stream()
+                .flatMap(entry -> entry.getValue().stream()
+                        .map(dataModelId -> {
+                            Map<String, String> item = new HashMap<>();
+                            item.put("id", dataModelId);
+                            item.put("type", entry.getKey().equals("storage") ? "container" : "table");
+                            return item;
+                        }))
+                .collect(Collectors.toList());
+
+        Map<String, Object> params = Map.of(
+                "assets", assets,
+                "dryRun", false,
+                "glossaryTags", new ArrayList<>()
+        );
+
+        try {
+            glossaryClient.addGlossaryTerm(id, params);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

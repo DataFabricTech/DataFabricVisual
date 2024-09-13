@@ -37,8 +37,12 @@
           >
             데이터모델 제외
           </button>
-          <!-- TODO: 카테고리 개발 완료 후 예정 -->
-          <button class="button button-secondary">데이터모델추가</button>
+          <button
+            class="button button-secondary"
+            @click="showDataModelAddModal"
+          >
+            데이터모델추가
+          </button>
         </div>
       </div>
     </div>
@@ -75,13 +79,15 @@
 </template>
 
 <script lang="ts" setup>
+import { useModal } from "vue-final-modal";
+import DataModelAddModal from "~/components/govern/common/modal/add-data-model.vue";
 import { useGlossaryStore } from "@/store/glossary";
 import { useSearchCommonStore } from "@/store/search/common";
 import { onMounted, ref } from "vue";
 import Preview from "~/components/common/preview/preview.vue";
 import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
-const { getDataModels, resetDataModels, updateTerm, dataModels, term } =
+const { getDataModels, getDataModel, resetDataModels, updateTerm, dataModels, term } =
   useGlossaryStore();
 const { getPreviewData } = useSearchCommonStore();
 const searchCommonStore = useSearchCommonStore();
@@ -92,30 +98,62 @@ onMounted(() => {
   getDataModels(term.fullyQualifiedName, keyword.value);
 });
 
+const DATA_MODEL_ADD_MODAL = "data-model-add-modal";
+
+const { open, close } = useModal({
+  component: DataModelAddModal,
+  attrs: {
+    modalId: DATA_MODEL_ADD_MODAL,
+    currentPageType: "glossary",
+    onConfirm() {
+      // TODO: 데이터모델 목록 조회 및 초기화
+      close();
+    },
+    onClose() {
+      close();
+    },
+  },
+});
+
 const keyword = ref("");
+
+const showDataModelAddModal = () => {
+  open();
+};
+
+function searchDataModel() {
 function searchDataModel(): void {
   getDataModels(term.fullyQualifiedName, keyword.value);
   isShowPreview.value = false;
 }
 
 const isShowPreview = ref(false);
+
 function showPreview(): void {
   isShowPreview.value = !isShowPreview.value;
 }
 
 function clickPreview(data: object): void {
   getPreviewData(data.fullyQualifiedName);
+function clickPreview(data: any): void {
+  getDataModel(data.fullyQualifiedName);
   isShowPreview.value = true;
 }
 
 const selectedDataModels = ref([]);
 function checkDataModel(ids: string[]): void {
+const selectedDataModels = ref<string[]>([]);
+
+function checkDataModel(ids: string[]) {
   selectedDataModels.value = [...ids];
 }
 
 function toggleAllCheck(allCheck: boolean): void {
+function toggleAllCheck(allCheck: boolean) {
   if (allCheck) {
-    selectedDataModels.value = dataModels.map((dataModel) => dataModel.id);
+    selectedDataModels.value = dataModels.map(
+      (dataModel) => dataModel.id,
+    ) as string[];
   } else {
     selectedDataModels.value = [];
   }

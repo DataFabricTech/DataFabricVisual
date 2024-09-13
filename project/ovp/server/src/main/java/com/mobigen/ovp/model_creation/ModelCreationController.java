@@ -88,4 +88,31 @@ public class ModelCreationController {
     public Object getSearchList(@RequestParam MultiValueMap<String, String> params) throws Exception {
         return modelCreationService.getSearchList(params);
     }
+
+    /**
+     * 데이터 모델 생성 > 저장모달 > 이름 중복 체크
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult(errorMessage = "데이터 모델 이름 중복 체크 오류")
+    @PostMapping("/validation-name")
+    public Object checkDuplicateModelName(@RequestBody Map<String, Object> param) throws Exception {
+        return modelCreationService.checkDuplicateModelName(param);
+    }
+
+    /**
+     * 데이터 모델 생성 > 저장모달 > 모델 저장
+     *
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult(errorMessage = "데이터 모델 저장 오류")
+    @PostMapping("/save")
+    public Object saveModel(@RequestBody Map<String, Object> param) throws Exception {
+        return modelCreationService.saveModel(param);
+    }
+
 }

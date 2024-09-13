@@ -1,7 +1,7 @@
 package com.mobigen.ovp.service_manager;
 
 import com.mobigen.ovp.common.openmete_client.AutomationsClient;
-import com.mobigen.ovp.common.openmete_client.ClassificationClient;
+import com.mobigen.ovp.common.openmete_client.ClassificationTagsClient;
 import com.mobigen.ovp.common.openmete_client.ContainersClient;
 import com.mobigen.ovp.common.openmete_client.DatabaseClient;
 import com.mobigen.ovp.common.openmete_client.DatabaseSchemasClient;
@@ -54,7 +54,7 @@ public class ServiceManageService {
     private final ContainersClient containersClient;
     private final DatabaseClient databaseClient;
     private final DatabaseSchemasClient databaseSchemasClient;
-    private final ClassificationClient classificationClient;
+    private final ClassificationTagsClient classificationTagsClient;
     private final GlossaryClient glossaryClient;
     private final TablesClient tablesClient;
 
@@ -219,7 +219,7 @@ public class ServiceManageService {
             for (Map<String, Object> item : body) {
                 String key = "id";
 
-                Map<String, Object> tempTag = classificationClient.getTag(item.get(key).toString());
+                Map<String, Object> tempTag = classificationTagsClient.getTag(item.get(key).toString());
 
                 DataModelDetailTagDto tag = new DataModelDetailTagDto();
                 tag.setName(tempTag.get("name").toString());

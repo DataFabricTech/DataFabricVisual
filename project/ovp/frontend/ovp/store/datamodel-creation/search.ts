@@ -1,4 +1,5 @@
 import { usePagingStore } from "~/store/common/paging";
+import { useUserStore } from "~/store/user/userStore";
 import _ from "lodash";
 import {
   type Filter,
@@ -23,9 +24,12 @@ interface Filters {
 export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const { $api } = useNuxtApp();
 
+  const userStore = useUserStore();
+  const { user } = storeToRefs(userStore);
+
   // 인피니티 스크롤 - Pageing 처리 관련
   const pagingStore = usePagingStore();
-  const { setFrom, updateIntersectionHandler } = pagingStore;
+  const { setFrom, updateIntersectionHandler, setDataLoadDone } = pagingStore;
   const { from, size } = storeToRefs(pagingStore);
 
   // 데이터 생성 > 추가 모달 관련
@@ -34,7 +38,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const selectedModelListCnt = computed(() => {
     return selectedModelList.value.length;
   });
-  const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
+  const isDoneFirModelListLoad = ref(false);
+
+  const { setQueryFilterByDepth } = useQueryHelpers();
 
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
@@ -99,7 +105,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       query_filter: JSON.stringify(queryFilter),
       sort_field: sortKey.value,
       sort_order: sortKeyOpt.value,
-      trino_query: JSON.stringify(getTrinoQuery(queryFilter)),
     };
     return new URLSearchParams(params);
   };
@@ -180,9 +185,15 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * 데이터 조회 > 갱신
    */
   const getSearchList = async (selectedList: any[] | null = null) => {
+    isDoneFirModelListLoad.value = false;
+
     const { data, totalCount } = await getSearchListAPI(selectedList);
     searchResult.value = data[currTypeTab.value];
     searchResultLength.value = totalCount;
+    isDoneFirModelListLoad.value = true;
+
+    // [데이터 갱신] 이 완료되면 호출한다. infiniteScroll 처리하기 위해 필요한 함수. (modal 한정)
+    setDataLoadDone();
   };
 
   /**
@@ -191,7 +202,21 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    */
   const resetReloadList = async (selectedList: any[] | null = null) => {
     setFrom(0);
-    await getSearchList(selectedList);
+    if (currTab.value === "my") {
+      const { data } = await $api(
+        `/api/creation/my-list/${user.value.id}?query=${searchKeyword}`,
+      );
+      mySearchResult.value = data;
+      const ndata = [...data.bookmark, ...data.owner];
+      const newData = ndata.map((item: any) => {
+        return setSearchListItem(selectedList, item);
+      });
+
+      searchResult.value = newData;
+      searchResultLength.value = newData.length;
+    } else {
+      await getSearchList(selectedList);
+    }
     updateIntersectionHandler(0);
   };
 
@@ -227,6 +252,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    */
   const changeTab = (item: string) => {
     currTab.value = item;
+    setSearchKeyword("");
     resetReloadList(nSelectedListData.value);
   };
 
@@ -307,8 +333,8 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   /**
    * API - 샘플 데이터 조회
    */
-  const getSampleData = async (value: string, fqn: string) => {
-    return $api(`/api/search/detail/sample-data/${value}`)
+  const getSampleData = async (value: string, fqn: string, type: string) => {
+    return $api(`/api/search/detail/sample-data/${value}?type=${type}`)
       .then((res: any) => {
         if (res.result === 0) {
           return {};
@@ -361,7 +387,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * API- 필터 조회
    */
   const getFilters = async () => {
-    const { data } = await $api(`/api/search/filters`);
+    const { data } = await $api(`/api/search/filters`, { showLoader: false });
 
     // 기본값 기준 사용할 필터 key 를 정리
     const defaultFilters = createDefaultFilters();
@@ -384,7 +410,10 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    */
   const getSearchListAPI = async (selectedList: any[] | null = null) => {
     if (currTab.value === TAB_DEFAULT) {
-      const { data } = await $api(`/api/creation/list?${getSearchListQuery()}`);
+      const { data } = await $api(
+        `/api/creation/list?${getSearchListQuery()}`,
+        { showLoader: false },
+      );
       const nData = data.data[currTypeTab.value] as any[];
       data.data[currTypeTab.value] = nData.map((item: any) => {
         return setSearchListItem(selectedList, item);
@@ -403,19 +432,79 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    */
   const updateBookmark = async (value: string) => {
     const selectedModel = _.find(searchResult.value, { id: value });
-
     if (!selectedModel) {
       // TODO: alert 컴포넌트로 변경 예정
       alert("모델을 찾을 수 없습니다.");
       return;
     }
-    const urlType = selectedModel.bookmarked ? "remove" : "add";
-    const methodType = selectedModel.bookmarked ? "DELETE" : "PUT";
+
+    const urlType = selectedModel.isFollow ? "remove" : "add";
+    const methodType = selectedModel.isFollow ? "DELETE" : "PUT";
     $api(`/api/creation/bookmark/${urlType}/${value}`, {
       method: methodType,
     })
-      .then(() => {
-        resetReloadList();
+      .then((res: any) => {
+        if (res.result === 1) {
+          searchResult.value = searchResult.value.filter((item) => {
+            // selectedModel과 일치하는 항목의 isFollow만 false로 변경
+            if (item.fqn === selectedModel.fqn) {
+              item.isFollow = !item.isFollow;
+            }
+            return true; // 모든 항목을 유지
+          });
+        }
+      })
+      .catch((err: any) => {
+        console.log("err: ", err);
+      });
+  };
+
+  // 데이터 모델 추가 팝업 > 선택된 데이터 모델 > 북마크 변경
+  const updateSelectedModelBookmark = async (value: any) => {
+    const selectedModel = _.find(nSelectedListData.value, { id: value });
+
+    const urlType = selectedModel.isFollow ? "remove" : "add";
+    const methodType = selectedModel.isFollow ? "DELETE" : "PUT";
+
+    $api(`/api/creation/bookmark/${urlType}/${value}`, {
+      method: methodType,
+    })
+      .then((res: any) => {
+        if (res.result === 1) {
+          nSelectedListData.value = nSelectedListData.value.filter((item) => {
+            // selectedModel과 일치하는 항목의 isFollow만 false로 변경
+            if (item.fqn === selectedModel.fqn) {
+              item.isFollow = !item.isFollow;
+            }
+            return true; // 모든 항목을 유지
+          });
+        }
+      })
+      .catch((err: any) => {
+        console.log("err: ", err);
+      });
+  };
+
+  // 데이터 생성 메인 > 선택된 데이터 모델 > 북마크 변경
+  const updateMainSelectedModelBookmark = async (value: any) => {
+    const selectedModel = _.find(selectedModelList.value, { id: value });
+
+    const urlType = selectedModel.isFollow ? "remove" : "add";
+    const methodType = selectedModel.isFollow ? "DELETE" : "PUT";
+
+    $api(`/api/creation/bookmark/${urlType}/${value}`, {
+      method: methodType,
+    })
+      .then((res: any) => {
+        if (res.result === 1) {
+          selectedModelList.value = selectedModelList.value.filter((item) => {
+            // selectedModel과 일치하는 항목의 isFollow만 false로 변경
+            if (item.fqn === selectedModel.fqn) {
+              item.isFollow = !item.isFollow;
+            }
+            return true; // 모든 항목을 유지
+          });
+        }
       })
       .catch((err: any) => {
         console.log("err: ", err);
@@ -442,6 +531,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     nSelectedListData,
     selectedModelList,
     selectedModelListCnt,
+    isDoneFirModelListLoad,
     addSearchList,
     getSearchList,
     getFilters,
@@ -458,5 +548,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     onClickAccordData,
     changeDetailTab,
     onClickBookmark,
+    updateSelectedModelBookmark,
+    updateMainSelectedModelBookmark,
   };
 });

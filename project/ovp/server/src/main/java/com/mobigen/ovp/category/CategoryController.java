@@ -70,9 +70,15 @@ public class CategoryController {
     }
 
     @ResponseJsonResult
-    @PatchMapping("/{tagId}/tag")
-    Object changeDataModelTag(@PathVariable String tagId, @RequestParam String type, @RequestBody List<String> body) {
-        return categoryService.ChangeDataModelTag(tagId, type, body);
+    @PatchMapping("/{tagId}/data-models")
+    Object changeDataModelsTag(@PathVariable String tagId, @RequestBody Map<String, List<String>> ids) {
+        return categoryService.changeDataModelsTag(tagId, ids);
+    }
+
+    @ResponseJsonResult
+    @GetMapping("/{tagId}")
+    public Object getCategoryInfo(@PathVariable String tagId) {
+        return categoryService.getTagInfo(tagId);
     }
 
 }
