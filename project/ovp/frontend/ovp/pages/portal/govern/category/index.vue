@@ -93,31 +93,36 @@
           </button>
         </div>
         <div class="work-contents">
-          <editable-group
-            compKey="desc"
-            :editable="isEditableNode"
-            :parent-edit-mode="isDescEditMode"
-            @editCancel="editCancel"
-            @editDone="editDone"
-            @editIcon="editIcon"
-          >
-            <template #edit-slot>
-              <label class="hidden-text" for="textarea-modify"
-                >textarea 입력</label
-              >
-              <textarea
-                class="textarea"
-                v-model="selectedDescNodeValue"
-                placeholder="카테고리 설명에 대한 영역입니다."
-                required
-                id="textarea-modify"
-              ></textarea>
-            </template>
-            <template #view-slot>
-              <p class="editable-group-desc">{{ selectedNodeCategory.desc }}</p>
-            </template>
-          </editable-group>
-          <div class="category-search" v-show="isModalButtonShow">
+          <div class="v-group gap-2">
+            <div class="font-semibold text-neutral-700">설명</div>
+            <editable-group
+              compKey="desc"
+              :editable="isEditableNode"
+              :parent-edit-mode="isDescEditMode"
+              @editCancel="editCancel"
+              @editDone="editDone"
+              @editIcon="editIcon"
+            >
+              <template #edit-slot>
+                <label class="hidden-text" for="textarea-modify"
+                  >textarea 입력</label
+                >
+                <textarea
+                  class="textarea"
+                  v-model="selectedDescNodeValue"
+                  placeholder="카테고리 설명에 대한 영역입니다."
+                  required
+                  id="textarea-modify"
+                ></textarea>
+              </template>
+              <template #view-slot>
+                <p class="editable-group-desc">
+                  {{ selectedNodeCategory.desc }}
+                </p>
+              </template>
+            </editable-group>
+          </div>
+          <div class="category-search" v-if="isModalButtonShow">
             <div class="l-top-bar">
               <search-input
                 class="w-[541px]"
@@ -494,7 +499,7 @@ const editDone = (key: string) => {
       break;
     case "desc":
       if (selectedDescNodeValue.value === "") {
-        selectedNodeCategory.value.desc = "설명 없음";
+        selectedNodeCategory.value.desc = "-";
         return;
       }
       selectedNodeCategory.value.desc = selectedDescNodeValue.value;
