@@ -117,7 +117,7 @@
               <p class="editable-group-desc">{{ selectedNodeCategory.desc }}</p>
             </template>
           </editable-group>
-          <div class="category-search" v-if="isModalButtonShow">
+          <div class="category-search" v-show="isModalButtonShow">
             <div class="l-top-bar">
               <search-input
                 class="w-[541px]"
@@ -218,7 +218,7 @@ import Loading from "@base/loading/Loading.vue";
 import Preview from "~/components/common/preview/preview.vue";
 import CategoryAddModal from "~/components/govern/category/category-add-modal.vue";
 import CategoryChangeModal from "~/components/govern/category/category-change-modal.vue";
-import DataModelAddModal from "~/components/govern/category/data-model-add-modal.vue";
+import DataModelAddModal from "@/components/govern/common/modal/add-data-model.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 import _ from "lodash";
 import $constants from "~/utils/constant";
@@ -235,10 +235,6 @@ const {
   getPreviewData,
   moveCategory,
   resetAddModalStatus,
-  setSearchKeyword,
-  getFilters,
-  changeTab,
-  setEmptyFilter,
   setModelIdList,
   setSelectedNode,
   undefinedTagIdManager,
@@ -252,9 +248,6 @@ const {
   isCategoriesNoData,
   previewData,
   isBoxSelectedStyle,
-  selectedDataModelList,
-  addSearchInputValue,
-  checkReachedCount,
   selectedCategoryId,
   selectedCategoryTagId,
   selectedTitleNodeValue,
@@ -265,11 +258,12 @@ const {
   categoriesParentId,
   categoriesId,
   isShowPreview,
+  searchInputValue,
 } = storeToRefs(categoryStore);
 
 const CATEGORY_ADD_MODAL_ID = "category-add-modal";
 const CATEGORY_CHANGE_MODAL_ID = "category-change-modal";
-const DATA_MODEL_ADD_MODAL_ID = "data-modal-add-modal";
+const DATA_MODEL_ADD_MODAL = "data-model-add-modal";
 
 const loader = ref<HTMLElement | null>(null);
 
@@ -300,6 +294,7 @@ watch(
 
 // TREE
 const onCategoryNodeClick = async (node: TreeViewItem) => {
+  searchInputValue.value = "";
   selectedModelList.value = [];
   isShowPreview.value = false;
   isBoxSelectedStyle.value = false;
@@ -436,24 +431,21 @@ const allModelList = computed({
   },
 });
 
-const searchInputValue = ref("");
 const updateSearchInputValue = (newValue: string) => {
   searchInputValue.value = newValue;
 };
 const onInput = async (value: string) => {
+  searchInputValue.value = value;
   isAllModelListChecked.value = false;
   selectedModelList.value = [];
   setScrollOptions(0);
-  await getModelList(value);
+  await getModelList();
   setModelIdList();
 };
 
 const checked = (checkedList: any[]) => {
   selectedModelList.value = checkedList;
 };
-
-const { scrollTrigger, setScrollOptions } =
-  useIntersectionObserver(addModelList);
 
 // PREVIEW
 const getPreviewCloseStatus = (option: boolean) => {
@@ -533,33 +525,47 @@ const { open: openCategoryAddModal, close: closeCategoryAddModal } = useModal({
     },
   },
 });
+
 const { open: openCategoryChangeModal, close: closeCategoryChangeModal } =
   useModal({
     component: CategoryChangeModal,
     attrs: {
       modalId: CATEGORY_CHANGE_MODAL_ID,
-      onCloseCategoryChangeModal() {
+      onConfirm() {
+        resetDataModelList();
+        closeCategoryChangeModal();
+      },
+      onClose() {
         closeCategoryChangeModal();
       },
     },
   });
+
 const { open: openDataModelAddModal, close: closeDataModelAddModal } = useModal(
   {
     component: DataModelAddModal,
     attrs: {
-      modalId: DATA_MODEL_ADD_MODAL_ID,
-      onCloseDataModelAddModal() {
+      modalId: DATA_MODEL_ADD_MODAL,
+      currentPageType: "category",
+      onConfirm() {
+        resetDataModelList();
         closeDataModelAddModal();
       },
-      onBeforeOpen() {
-        beforeOpenModal();
-      },
-      onOpen() {
-        openModal();
+      onClose() {
+        getModelList();
+        closeDataModelAddModal();
       },
     },
   },
 );
+
+const resetDataModelList = async () => {
+  searchInputValue.value = "";
+  selectedModelList.value = [];
+  isShowPreview.value = false;
+  await getModelList();
+  setModelIdList();
+};
 
 const showCategoryAddModal = () => {
   categoriesParentId.value = defaultCategoriesParentId.value;
@@ -580,19 +586,6 @@ const showDataModelAddModal = () => {
   openDataModelAddModal();
 };
 
-const beforeOpenModal = () => {
-  selectedDataModelList.value = [];
-  addSearchInputValue.value = "";
-  checkReachedCount.value = false;
-  setSearchKeyword("");
-  getFilters();
-};
-
-const openModal = () => {
-  setEmptyFilter();
-  changeTab("table");
-};
-
 const isEditableNode = computed(() => {
   return undefinedTagIdManager.get() !== selectedNodeCategory.value.id;
 });
@@ -611,6 +604,10 @@ onMounted(async () => {
   if (loader.value) {
     loader.value.style.display = "none";
   }
+});
+
+const { scrollTrigger, setScrollOptions } = useIntersectionObserver({
+  callback: addModelList,
 });
 </script>
 

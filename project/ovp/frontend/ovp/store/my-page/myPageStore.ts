@@ -120,7 +120,6 @@ export const useMyPageStore = defineStore("my-page", () => {
       from: from.value,
       size: size.value,
       deleted: false,
-      trino_query: null,
     };
     return new URLSearchParams(params);
   };

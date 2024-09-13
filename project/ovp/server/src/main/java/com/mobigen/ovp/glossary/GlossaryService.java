@@ -45,6 +45,7 @@ public class GlossaryService {
 
     /**
      * 용어 사전 리스트
+     *
      * @return
      */
     public List<Glossaries> getGlossaries() {
@@ -53,7 +54,7 @@ public class GlossaryService {
         List<Glossaries> result = new ArrayList<>();
         List<Glossary> response = glossaryClient.getGlossaries(fields, limit).getData();
 
-        for(Glossary glossary : response) {
+        for (Glossary glossary : response) {
             result.add(new Glossaries(glossary));
         }
         return result;
@@ -61,6 +62,7 @@ public class GlossaryService {
 
     /**
      * 용어 사전 수정
+     *
      * @param id
      * @param param
      * @return
@@ -71,12 +73,13 @@ public class GlossaryService {
 
     /**
      * 용어 사전 삭제
+     *
      * @param id
      * @return
      */
     public int deleteGlossary(UUID id) throws Exception {
         ResponseEntity<Void> response = glossaryClient.deleteGlossary(id, true, true);
-        if(response.getStatusCode() == HttpStatus.OK ) {
+        if (response.getStatusCode() == HttpStatus.OK) {
             return 1;
         } else {
             throw new Exception();
@@ -85,6 +88,7 @@ public class GlossaryService {
 
     /**
      * 용어 추가
+     *
      * @param dto
      * @return
      */
@@ -94,6 +98,7 @@ public class GlossaryService {
 
     /**
      * 용어 리스트
+     *
      * @param directChildrenOf
      * @return
      */
@@ -111,6 +116,7 @@ public class GlossaryService {
 
     /**
      * 용어 수정
+     *
      * @param id
      * @param param
      * @return
@@ -121,6 +127,7 @@ public class GlossaryService {
 
     /**
      * 용어 변경 > 데이터 모델 삭제
+     *
      * @param id
      * @param param
      * @return
@@ -136,6 +143,7 @@ public class GlossaryService {
 
     /**
      * 용어 삭제
+     *
      * @param id
      * @return
      */
@@ -150,6 +158,7 @@ public class GlossaryService {
 
     /**
      * 용어 사전 활동 사항
+     *
      * @param entityLink
      * @return
      */
@@ -158,7 +167,7 @@ public class GlossaryService {
         List<GlossaryActivities> result = new ArrayList<>();
         List<GlossaryActivity> response = glossaryClient.getGlossaryActivities(entityLink, type).getData();
 
-        for(GlossaryActivity activity : response) {
+        for (GlossaryActivity activity : response) {
             result.add(new GlossaryActivities(activity));
         }
         return result;
@@ -166,6 +175,7 @@ public class GlossaryService {
 
     /**
      * 태그 리스트 호출
+     *
      * @return
      * @throws Exception
      */
@@ -177,13 +187,13 @@ public class GlossaryService {
 
         List<Map<String, ?>> hits = (List<Map<String, ?>>) ((Map<?, ?>) searchClient.getSearchList(queryParams).get("hits")).get("hits");
         List<Object> source = new ArrayList<>();
-        for(Map<String, ?> data : hits) {
+        for (Map<String, ?> data : hits) {
             source.add(data.get("_source"));
         }
         List<Tag> result = new ArrayList<>();
 
-        for(Object obj : source) {
-            if(obj instanceof Map<?,?>) {
+        for (Object obj : source) {
+            if (obj instanceof Map<?, ?>) {
                 Map<String, ?> data = (Map<String, ?>) obj;
                 result.add(new Tag(data));
             }
@@ -193,6 +203,7 @@ public class GlossaryService {
 
     /**
      * 데이터 모델 리스트
+     *
      * @param q
      * @return
      * @throws Exception
@@ -205,20 +216,20 @@ public class GlossaryService {
         List<Map<String, ?>> hits = (List<Map<String, ?>>) ((Map<?, ?>) searchClient.getSearchList(queryParams).get("hits")).get("hits");
 
         List<Object> source = new ArrayList<>();
-        for(Map<String, ?> data : hits) {
+        for (Map<String, ?> data : hits) {
             source.add(data.get("_source"));
         }
 
         List<Map<String, Object>> dataList = new ArrayList<>();
-        for(Object obj : source) {
-            if(obj instanceof Map<?,?>) {
+        for (Object obj : source) {
+            if (obj instanceof Map<?, ?>) {
                 Map<String, Object> data = (Map<String, Object>) obj;
                 Map<String, Object> tmp = new HashMap<>();
                 tmp.put("id", data.get("id"));
                 tmp.put("modelDesc", data.get("description"));
                 tmp.put("modelNm", data.get("name"));
 
-                if(data.containsKey("owner") && data.get("owner") != null) {
+                if (data.containsKey("owner") && data.get("owner") != null) {
                     Map<String, Object> ownerData = (Map<String, Object>) data.get("owner");
                     tmp.put("owner", ownerData.get("name"));
                 }
@@ -239,6 +250,7 @@ public class GlossaryService {
 
     /**
      * 데이터 모델 상세
+     *
      * @param fqn
      * @return
      */
@@ -299,5 +311,30 @@ public class GlossaryService {
                 .stream()
                 .filter(tag -> sourceType.equals(tag.get("source")))
                 .collect(Collectors.toList());
+    }
+
+    public Boolean addDataModelsTerm(UUID id, Map<String, List<String>> ids) {
+        List<Map<String, String>> assets = ids.entrySet().stream()
+                .flatMap(entry -> entry.getValue().stream()
+                        .map(dataModelId -> {
+                            Map<String, String> item = new HashMap<>();
+                            item.put("id", dataModelId);
+                            item.put("type", entry.getKey().equals("storage") ? "container" : "table");
+                            return item;
+                        }))
+                .collect(Collectors.toList());
+
+        Map<String, Object> params = Map.of(
+                "assets", assets,
+                "dryRun", false,
+                "glossaryTags", new ArrayList<>()
+        );
+
+        try {
+            glossaryClient.addGlossaryTerm(id, params);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

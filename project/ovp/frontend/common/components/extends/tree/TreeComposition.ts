@@ -10,10 +10,12 @@ export interface TreeComposition extends TreeProps {
   openAll(): void;
   closeAll(): void;
   dropValidatorHandler: any;
+  treeSelectedIds: Ref<any[]>;
 }
 
 export function TreeComposition(props: TreeProps): TreeComposition {
   const showTree = ref(true);
+  const treeSelectedIds = ref([""]);
 
   const updateStatus = (items: any[], ids: string[], statusKey: string): void => {
     _.forEach(items, (item) => {
@@ -32,9 +34,13 @@ export function TreeComposition(props: TreeProps): TreeComposition {
   const treeItems: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
   treeItems.value = _.cloneDeep(props.items ?? []);
 
+  if (props.selectedIds !== undefined) {
+    treeSelectedIds.value = props.selectedIds;
+  }
   // useFirSelect 를 사용하고, 선택된 값이 없으면 첫번째 항목을 선택한다.
   if (props.useFirSelect && props.selectedIds !== undefined && props.selectedIds.length < 1) {
     treeItems.value[0].selected = true;
+    treeSelectedIds.value.push(treeItems.value[0].id);
   }
 
   // 체크박스를 사용하는 경우, 체크여부를 object에 추가해준다.
@@ -183,6 +189,7 @@ export function TreeComposition(props: TreeProps): TreeComposition {
     createNewTreeItem,
     openAll,
     closeAll,
-    dropValidatorHandler
+    dropValidatorHandler,
+    treeSelectedIds
   };
 }

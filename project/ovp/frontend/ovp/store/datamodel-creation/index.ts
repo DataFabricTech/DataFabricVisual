@@ -12,6 +12,7 @@ export const useCreationStore = defineStore("creation", () => {
   const { getSampleData, getProfileData } = dataModelSearchStore;
 
   const query = ref("");
+  const referenceModels = ref([]);
 
   // NOTE: 쿼리 성공여부
   const querySuccess = ref(false);
@@ -37,9 +38,7 @@ export const useCreationStore = defineStore("creation", () => {
    * 데이터 모델 생성 > 목록 리스트의 항목 삭제
    */
   const deleteDataModel = (value: string) => {
-    selectedModelList.value = selectedModelList.value.filter(
-      (item: any) => item.id !== value,
-    );
+    selectedModelList.value = value;
     isItemClicked.value = false;
   };
 
@@ -50,13 +49,13 @@ export const useCreationStore = defineStore("creation", () => {
     isColumnSelected.value = false;
 
     const selectedModel = _.find(selectedModelList.value, ["id", value]);
-
     dataModelName.value = selectedModel.modelNm;
-    dataModelOwner.value = selectedModel.owner;
+    dataModelOwner.value = selectedModel.ownerDisplayName;
 
     sampleDataList.value = await getSampleData(
       selectedModel.id,
       selectedModel.fqn,
+      selectedModel.type,
     );
     if (sampleDataList.value) {
       isItemClicked.value = true;
@@ -67,6 +66,8 @@ export const useCreationStore = defineStore("creation", () => {
     columnOptions.value = result.rowData
       .filter((item: any) => item.name)
       .map((item: any) => ({ id: item.name, name: item.name }));
+
+    columnOptions.value.unshift({ id: "choose", name: "선택하세요" });
   };
 
   const showProfile = () => {
@@ -78,7 +79,7 @@ export const useCreationStore = defineStore("creation", () => {
    * */
   async function runQuery(value: any) {
     query.value = value;
-    const referenceModels = selectedModelList.value.map((item) => ({
+    referenceModels.value = selectedModelList.value.map((item) => ({
       id: item.id,
       name: item.modelNm,
       fullyQualifiedName: item.fqn,
@@ -86,7 +87,7 @@ export const useCreationStore = defineStore("creation", () => {
 
     const param = {
       query: query.value,
-      referenceModels: referenceModels,
+      referenceModels: referenceModels.value,
       limit: 100,
       page: 0,
     };
@@ -116,6 +117,7 @@ export const useCreationStore = defineStore("creation", () => {
    * */
   const resetQuery = () => {
     query.value = "";
+    referenceModels.value = [];
     isFirstExecute.value = false;
     querySuccess.value = false;
     isExecuteQuery.value = false;
@@ -132,6 +134,7 @@ export const useCreationStore = defineStore("creation", () => {
   return {
     selectedModelList,
     query,
+    referenceModels,
     querySuccess,
     isExecuteQuery,
     isFirstExecute,

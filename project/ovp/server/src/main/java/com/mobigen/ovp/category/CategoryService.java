@@ -5,7 +5,7 @@ import com.mobigen.ovp.category.entity.CategoryEntity;
 import com.mobigen.ovp.category.repository.CategoryRepository;
 import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.constants.ModelType;
-import com.mobigen.ovp.common.openmete_client.ClassificationClient;
+import com.mobigen.ovp.common.openmete_client.ClassificationTagsClient;
 import com.mobigen.ovp.common.openmete_client.ContainersClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -40,7 +41,7 @@ public class CategoryService {
     private final TablesClient tablesClient;
     private final CategoryRepository categoryRepository;
     private final SearchService searchService;
-    private final ClassificationClient classificationClient;
+    private final ClassificationTagsClient classificationTagsClient;
 
     public CategoryDTO getCategories() {
         List<CategoryEntity> categories = categoryRepository.findAll();
@@ -139,11 +140,11 @@ public class CategoryService {
         // 삭제 진행
         // step1. openMeta 에서 tag 삭제
         MultiValueMap<String, String> tagParams = new LinkedMultiValueMap<>();
-        tagParams.add("recursive", "true");
-        tagParams.add("hardDelete", "true");
+        tagParams.set("recursive", "true");
+        tagParams.set("hardDelete", "true");
 
         for (UUID tagId : tagIds) {
-            classificationClient.deleteTag(tagId.toString(), tagParams);
+            classificationTagsClient.deleteTag(tagId.toString(), tagParams);
         }
 
         // step2. db 에서 category 삭제
@@ -316,7 +317,7 @@ public class CategoryService {
      */
     @Transactional
     public Object getModelList(String tagId, MultiValueMap<String, String> params) throws Exception {
-        params.add("query_filter", createQueryFilterByTagName(getTagInfo(tagId.toString())));
+        params.set("query_filter", createQueryFilterByTagName(getTagInfo(tagId.toString())));
         return getModelListByTagId(UUID.fromString(tagId), params);
     }
 
@@ -335,13 +336,13 @@ public class CategoryService {
         if (params == null) {
             params = new LinkedMultiValueMap<>();
         }
-        params.add("query_filter", createQueryFilterByTagName(getTagInfo(tagId.toString())));
+        params.set("query_filter", createQueryFilterByTagName(getTagInfo(tagId.toString())));
         return (List<Object>) ((Map<String, Object>) (searchService.getAllSearchList(params)).get("data")).get("all");
     }
 
     // TODO : classfication 쪽으로 이동 필요함.
     public String getTagInfo(String tagId) {
-        Map<String, Object> tagInfo = classificationClient.getTag(tagId);
+        Map<String, Object> tagInfo = classificationTagsClient.getTag(tagId);
         return tagInfo.get("fullyQualifiedName").toString();
     }
 
@@ -353,7 +354,7 @@ public class CategoryService {
         params.put("description", "OVP Category Matched Tag");
         params.put("displayName", categoryId);
         params.put("name", categoryId);
-        Map<String, Object> response = (Map<String, Object>) classificationClient.createTag(params);
+        Map<String, Object> response = (Map<String, Object>) classificationTagsClient.createTag(params);
         return response.get("id").toString();
     }
 
@@ -367,7 +368,7 @@ public class CategoryService {
      */
     public Object changeDataModel(String id, String type, List<Map<String, Object>> body) {
         MultiValueMap params = new LinkedMultiValueMap();
-        params.add("fields", "owner,followers,tags,votes");
+        params.set("fields", "owner,followers,tags,votes");
 
         if (!ModelType.STORAGE.getValue().equals(type)) {
             return tablesClient.changeDataModel(id, params, body);
@@ -407,7 +408,7 @@ public class CategoryService {
 
         // { op, path, value }
         // 클라이언트로 받은 변경해야 할 데이터(태그, 카테고라, 용어)를 각각 단일 조회 후에 value 를 셋팅한다.
-        Map<String, Object> tempTag = classificationClient.getTag(tagId);
+        Map<String, Object> tempTag = classificationTagsClient.getTag(tagId);
 
         DataModelDetailTagDto tag = new DataModelDetailTagDto();
         tag.setName(tempTag.get("name").toString());
@@ -437,12 +438,11 @@ public class CategoryService {
         return addedBody;
     }
 
-    public Object ChangeDataModelTag(String tagId, String type, List<String> body) {
-
+    public void ChangeDataModelsTagByType(String tagId, String type, List<String> body) {
         Tables tables = null;
         MultiValueMap params = new LinkedMultiValueMap();
-        params.add("fields", "tags");
-        params.add("include", "all");
+        params.set("fields", "tags");
+        params.set("include", "all");
         int excuteCount = 0;
         int successCount = 0;
         for (String dataModelId : body) {
@@ -470,7 +470,20 @@ public class CategoryService {
             throw new RuntimeException("업데이트 실패: " + (excuteCount - successCount) + "개의 데이터 모델이 업데이트되지 않았습니다.");
         }
 
-        return true;
+    }
+
+    public Boolean changeDataModelsTag(String tagId, @RequestBody Map<String, List<String>> ids) {
+        try {
+            for (Map.Entry<String, List<String>> entry : ids.entrySet()) {
+                String type = entry.getKey();
+                List<String> dataModelIds = entry.getValue();
+
+                ChangeDataModelsTagByType(tagId, type, dataModelIds);
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     private CategoryEntity getUndefinedTag() {

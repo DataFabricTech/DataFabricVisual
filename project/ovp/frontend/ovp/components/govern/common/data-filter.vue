@@ -1,5 +1,5 @@
 <template>
-  <template v-for="(filter, keyName, FI) in props.data" :key="FI">
+  <template v-for="(filter, keyName, fi) in props.data" :key="fi">
     <menu-search-button
       :data="filter.data"
       :selected-items="selectedFilterItems"
@@ -22,14 +22,18 @@
 
 <script setup lang="ts">
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
-import { useGovernCategoryStore } from "~/store/governance/Category/index";
-import { storeToRefs } from "pinia";
+import { useDataModelTag } from "@/store/governance/common/modal/data-model";
 import _ from "lodash";
 
-const categoryStore = useGovernCategoryStore();
-const { resetReloadList, setSearchKeyword, setEmptyFilter } = categoryStore;
-const { selectedFilters, selectedFilterItems, addSearchInputValue } =
-  storeToRefs(categoryStore);
+const dataModelTagStore = useDataModelTag();
+const {
+  getDataModelList,
+  setSearchKeyword,
+  setEmptyFilter,
+  resetDataModelIdListByTab,
+  resetSelectedDataModelListByTab,
+} = dataModelTagStore;
+const { selectedFilters, selectedFilterItems } = storeToRefs(dataModelTagStore);
 
 const props = defineProps({
   data: {
@@ -39,27 +43,27 @@ const props = defineProps({
 });
 
 const resetFilters = () => {
-  setEmptyFilter();
-  addSearchInputValue.value = "";
   setSearchKeyword("");
-  resetReloadList();
+  setEmptyFilter();
+  resetDataModelIdListByTab();
+  resetSelectedDataModelListByTab();
+  getDataModelList();
 };
 
-const changeMultiple: (value: any[] | {}, keyName: any) => void = (
-  value: any[] | {},
-  keyName: string,
-) => {
+const changeMultiple = (value: { [key: string]: any }[], keyName: string) => {
   setSelectedFilters(keyName, _.map(value, "key"));
 };
 
-const setSelectedFilters = (keyName: string, selectedIds: any[]) => {
+const setSelectedFilters = (keyName: string, selectedIds: string[]) => {
   if (selectedIds.length === 0) {
     delete selectedFilters.value[keyName];
   } else {
     selectedFilters.value[keyName] = selectedIds;
   }
 
-  resetReloadList();
+  resetDataModelIdListByTab();
+  resetSelectedDataModelListByTab();
+  getDataModelList();
 };
 </script>
 

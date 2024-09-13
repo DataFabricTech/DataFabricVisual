@@ -2,15 +2,15 @@ import type { Ref } from "vue";
 import $constants from "~/utils/constant";
 
 export interface PasswordCompositionImpl {
-  newPassword: string;
-  confirmPassword: string;
+  newPassword: Ref<string>;
+  confirmPassword: Ref<string>;
   // 비밀번호 보기 관련 변수
-  inputPasswordType: string;
-  inputConfirmPasswordType: string;
+  inputPasswordType: Ref<string>;
+  inputConfirmPasswordType: Ref<string>;
 
   // 에러 변수
-  errorMsgPassword: string;
-  errorMsgConfirmPassword: string;
+  errorMsgPassword: Ref<string>;
+  errorMsgConfirmPassword: Ref<string>;
 
   // 비밀번호 관련 함수
   isHidePw(): void;

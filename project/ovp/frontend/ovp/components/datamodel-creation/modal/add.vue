@@ -78,12 +78,11 @@ const {
 const { resetReloadList, getFilters, changeDetailTab, resetDetailBox } =
   dataModelSearchStore;
 
+Promise.all([resetReloadList(), getFilters(), resetDetailBox()]);
+
 const onOpenModal = async () => {
   // 전체+MY / 필터 / 내부 선택 목록 데이터 초기화
   nSelectedListData.value = $_cloneDeep(selectedModelList.value);
-  await resetReloadList();
-  await getFilters();
-  await resetDetailBox();
 };
 
 const emit = defineEmits<{

@@ -23,9 +23,10 @@ public class DataModelDetailSampleDataResponse {
         }
 
         List<Map<String, Object>> sampleList = new ArrayList<>();
-        List<String> columns = sampleData.getSampleData().getColumns();
+        List<String> columns = new ArrayList<>();
 
         if (sampleData.getSampleData() != null) {
+            columns = sampleData.getSampleData().getColumns();
             for (List<?> items : sampleData.getSampleData().getRows()) {
                 Map<String, Object> row = new LinkedHashMap<>();
                 for (int i = 0; i < items.size(); i++) {
