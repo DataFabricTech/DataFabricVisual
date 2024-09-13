@@ -36,7 +36,8 @@
             <button
               class="button button-neutral-stroke button-lg"
               type="button"
-              disabled
+              @click="showPrevData"
+              :disabled="isPrevDisabled"
             >
               <span class="hidden-text">이전 내용으로 넘기기</span>
               <svg-icon
@@ -51,6 +52,8 @@
             <button
               class="button button-neutral-stroke button-lg"
               type="button"
+              @click="showNextData"
+              :disabled="isNextDisabled"
             >
               <span class="hidden-text">다음 내용으로 넘기기</span>
               <svg-icon
@@ -158,6 +161,8 @@ const historyColumnDefs = ref([
 ]);
 
 // ECharts
+let currentSituationChart: echarts.ECharts | null = null;
+
 const setECharts = () => {
   console.log("2. setECharts 실행");
   const typeChartDOM = document.getElementById("typeChart") as HTMLElement;
@@ -179,7 +184,7 @@ const setECharts = () => {
 
   const typeChart = echarts.init(typeChartDOM);
   const statusChart = echarts.init(statusChartDOM);
-  const currentSituationChart = echarts.init(currentSituationChartDOM);
+  currentSituationChart = echarts.init(currentSituationChartDOM);
 
   typeChart.setOption({
     tooltip: {
@@ -249,14 +254,8 @@ const setECharts = () => {
     legend: {},
     tooltip: {},
     dataset: {
-      source: [
-        ["product", "전체 데이터", "등록된 데이터 모델"],
-        ["서비스 A", 43.3, 85.8],
-        ["서비스 B", 83.1, 73.4],
-        ["서비스 C", 86.4, 65.2],
-        ["서비스 D", 72.4, 53.9],
-        ["서비스 E", 100, 89],
-      ],
+      dimensions: ["data", "전체 데이터", "등록된 데이터 모델"],
+      source: currentSituationData.value,
     },
     xAxis: { type: "category" },
     yAxis: {},
@@ -266,9 +265,63 @@ const setECharts = () => {
   });
 };
 
-onMounted(() => {
-  setOverviewData();
+const updateCurrentSituationChart = () => {
+  console.log("update! ", currentSituationData.value);
+  if (currentSituationChart) {
+    currentSituationChart.setOption({
+      dataset: {
+        source: currentSituationData.value, // 업데이트된 데이터
+      },
+    });
+  }
+};
+
+// Data output by number
+const DEFAULT_COUNT = 5;
+const startStandard: Ref<number> = ref(0);
+const isPrevDisabled: Ref<boolean> = ref(true);
+const isNextDisabled: Ref<boolean> = ref(false);
+
+const showPrevData = () => {
+  startStandard.value -= DEFAULT_COUNT;
+
+  getDataCurrentSituationData(startStandard.value, DEFAULT_COUNT);
+  updateCurrentSituationChart();
+
+  if (startStandard.value === 0) {
+    isPrevDisabled.value = true;
+    return;
+  }
+
+  if (currentSituationData.value.length === DEFAULT_COUNT) {
+    isNextDisabled.value = false;
+  }
+};
+
+const showNextData = () => {
+  startStandard.value += DEFAULT_COUNT;
+
+  if (startStandard.value === DEFAULT_COUNT) {
+    isPrevDisabled.value = false;
+  }
+
+  getDataCurrentSituationData(startStandard.value, DEFAULT_COUNT);
+  updateCurrentSituationChart();
+
+  if (currentSituationData.value.length < DEFAULT_COUNT) {
+    isNextDisabled.value = true;
+    return;
+  }
+};
+
+onMounted(async () => {
+  await setOverviewData();
   setECharts();
+
+  // 등록된 데이터 모델 현황의 총 개수가 DEFAULT_COUNT 보다 적을 경우 '다음버튼' 비활성화
+  if (currentSituationData.value.length + 1 < DEFAULT_COUNT) {
+    isNextDisabled.value = true;
+  }
 });
 
 const { scrollTrigger } = useIntersectionObserver(addServiceResponseData);

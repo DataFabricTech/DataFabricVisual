@@ -7,8 +7,9 @@ export const useOverviewStore = defineStore("overview", () => {
   const serviceStatusData: Ref<any[]> = ref([]);
   const serviceResponseData: Ref<any[]> = ref([]);
   const currentSituationData: Ref<any[]> = ref([]);
-  const recentServiceData: Ref<any[]> = ref([]);
+  const statusDetailData: Ref<any[]> = ref([]);
   const historyData: Ref<any[]> = ref([]);
+
   const getServiceTypeData = async () => {
     // const {data} = await $api (``);
     const tempData = [
@@ -69,17 +70,55 @@ export const useOverviewStore = defineStore("overview", () => {
     // searchResult.value = searchResult.value.concat(data[currentTab.value]);
     // searchResultLength.value = totalCount;
   };
-  const getDataCurrentSituationData = async () => {
-    // const {data} = await $api (``);
-    const tempData = [
-      { value: 1048, name: "Search Engine" },
-      { value: 735, name: "Direct" },
-      { value: 580, name: "Email" },
-      { value: 484, name: "Union Ads" },
-      { value: 300, name: "Video Ads" },
-    ];
 
-    currentSituationData.value = tempData;
+  // Move To Page
+  const allTempData = [
+    ["서비스 A", 43.3, 85.8],
+    ["서비스 B", 83.1, 73.4],
+    ["서비스 C", 86.4, 65.2],
+    ["서비스 D", 72.4, 53.9],
+    ["서비스 E", 92.4, 15.3],
+
+    ["서비스 F", 15.3, 73.5],
+    ["서비스 G", 94.1, 12.4],
+    ["서비스 H", 86.4, 23.2],
+    ["서비스 I", 45.4, 53.9],
+    ["서비스 K", 92.4, 36.3],
+
+    ["서비스 Q", 43.3, 85.8],
+    ["서비스 W", 47.5, 73.4],
+    ["서비스 E", 34.4, 6.3],
+    ["서비스 R", 100, 53.9],
+    ["서비스 T", 83.4, 35.5],
+
+    ["서비스 Y", 43.3, 85.8],
+    ["서비스 R", 83.1, 58.4],
+    ["서비스 V", 66.4, 65.2],
+    ["서비스 I", 45.4, 53.9],
+    ["서비스 K", 92.4, 36.3],
+
+    ["서비스 T", 43.3, 85.8],
+    ["서비스 W", 47.5, 73.4],
+    ["서비스 E", 34.4, 6.3],
+    ["서비스 R", 100, 53.9],
+    ["서비스 S", 83.4, 35.5],
+
+    ["서비스 B", 43.3, 85.8],
+    ["서비스 R", 83.1, 58.4],
+    ["서비스 V", 66.4, 65.2],
+  ];
+  const currentSituationTempData: Ref<any[]> = ref([]);
+
+  const getDataCurrentSituationData = async (
+    startStandard: number = 0,
+    count: number = 5,
+  ) => {
+    // const {data} = await $api (``);
+    currentSituationTempData.value = allTempData.slice(
+      startStandard,
+      startStandard + count,
+    );
+    currentSituationData.value = currentSituationTempData.value;
   };
   const getRecentServiceData = async () => {
     // const {data} = await $api (``);
