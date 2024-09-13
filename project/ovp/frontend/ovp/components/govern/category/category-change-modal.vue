@@ -39,79 +39,37 @@
 </template>
 
 <script setup lang="ts">
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
+import { useGovernCategoryStore } from "@/store/governance/Category";
+import { useDataModelTag } from "@/store/governance/common/modal/data-model";
 import Modal from "@extends/modal/Modal.vue";
 import TreeVue from "@extends/tree/Tree.vue";
-import { useGovernCategoryStore } from "~/store/governance/Category";
-import { storeToRefs } from "pinia";
-import type { TreeViewItem } from "@extends/tree/TreeProps";
-import { ref } from "vue";
 import _ from "lodash";
-import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import type { TreeViewItem } from "@extends/tree/TreeProps";
 
 const categoryStore = useGovernCategoryStore();
-const { patchCategoryTagAPI, setModelIdList, getModelList, addSearchList } =
-  categoryStore;
-const {
-  categories,
-  selectedModelList,
-  modelList,
-  selectedCategoryId,
-  isShowPreview,
-} = storeToRefs(categoryStore);
+const { addSearchList } = categoryStore;
+const { categories, selectedModelList, selectedCategoryId } =
+  storeToRefs(categoryStore);
+const dataModelTagStore = useDataModelTag();
+const { changeDataModelsCategory } = dataModelTagStore;
+const { tagId } = storeToRefs(dataModelTagStore);
 
-const isDisabledSaveButton = ref(true);
 const props = defineProps({
   modalId: {
     type: String,
     required: true,
   },
 });
-const tagIdForCategoryChange = ref("");
-const selectedNodeId = ref("");
 
 const emit = defineEmits<{
-  (e: "close-category-change-modal"): void;
+  (e: "close"): void;
+  (e: "confirm"): void;
 }>();
 
-const onCancel = () => {
-  emit("close-category-change-modal");
-};
+const isDisabledSaveButton = ref(true);
+const selectedNodeId = ref("");
 
-const onConfirm = async () => {
-  let storageList: string[] = [];
-  let tableList: string[] = [];
-
-  for (const modelItem of modelList.value) {
-    for (const selectedItem of selectedModelList.value) {
-      if (modelItem.id === selectedItem) {
-        if (modelItem.type === "table") {
-          tableList.push(selectedItem);
-        } else {
-          storageList.push(selectedItem);
-        }
-      }
-    }
-  }
-
-  if (storageList.length > 0) {
-    await patchCategoryTagAPI(
-      tagIdForCategoryChange.value,
-      "storage",
-      storageList,
-    );
-  }
-
-  if (tableList.length > 0) {
-    await patchCategoryTagAPI(tagIdForCategoryChange.value, "table", tableList);
-  }
-
-  setScrollOptions(0);
-  await getModelList();
-  setModelIdList();
-
-  isShowPreview.value = false;
-  emit("close-category-change-modal");
-};
 const onOpened = () => {
   selectedNodeId.value = _.cloneDeep(selectedCategoryId.value);
 };
@@ -119,7 +77,26 @@ const onOpened = () => {
 const onCategoryNodeClick = (node: TreeViewItem) => {
   isDisabledSaveButton.value =
     _.has(node, "children") && _.size(node.children) > 0;
-  tagIdForCategoryChange.value = node.tagId;
+  tagId.value = node.tagId;
+};
+
+const onConfirm = async () => {
+  if (selectedModelList.value.length > 20) {
+    alert("선택된 데이터 모델이 많아 시간이 소요될 수 있습니다.");
+  }
+
+  await changeDataModelsCategory().then(async (isSuccess) => {
+    if (isSuccess) {
+      setScrollOptions(0);
+      emit("confirm");
+    } else {
+      alert("저장 실패했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  });
+};
+
+const onCancel = () => {
+  emit("close");
 };
 
 const { setScrollOptions } = useIntersectionObserver({

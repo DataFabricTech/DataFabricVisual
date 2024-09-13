@@ -1,7 +1,6 @@
 import { TreeProps, TreeViewItem } from "./TreeProps";
 import { uuid } from "vue3-uuid";
 import _ from "lodash";
-import $constants from "@/utils/constant";
 
 export interface TreeComposition extends TreeProps {
   treeItems: Ref<TreeViewItem[]>;
@@ -14,6 +13,8 @@ export interface TreeComposition extends TreeProps {
 }
 
 export function TreeComposition(props: TreeProps): TreeComposition {
+  const CATEGORY_UNDEFINED_NAME = "미분류";
+
   const showTree = ref(true);
   const treeSelectedIds = ref([""]);
 
@@ -130,7 +131,7 @@ export function TreeComposition(props: TreeProps): TreeComposition {
 
     // immutableItems 의 항목은 drag/drop 할수없음.
     if (Array.isArray(props.immutableItems) && props.immutableItems.some((item) => thisNode.id.includes(item))) {
-      alert(`${$constants.SERVICE.CATEGORY_UNDEFINED_NAME} 항목은 이동 불가능 합니다.`);
+      alert(`${CATEGORY_UNDEFINED_NAME} 항목은 이동 불가능 합니다.`);
       return false;
     }
 
