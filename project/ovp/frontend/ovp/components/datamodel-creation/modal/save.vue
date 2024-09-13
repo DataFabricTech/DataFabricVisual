@@ -63,7 +63,7 @@
                 label-key="name"
                 value-key="id"
                 :data="categoryList"
-                :title="cateTitle ? cateTitle : '카테고리 없음'"
+                :title="cateTitle ? cateTitle : categoryList[0].name"
                 :is-multi="false"
                 :hideGuideLines="false"
                 :firExpandAll="true"
