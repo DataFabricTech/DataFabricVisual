@@ -77,28 +77,33 @@
       </div>
       <div class="v-group gap-5">
         <h4 class="overview-title">최근 등록/수정된 서비스</h4>
-        <table>
-          <thead>
-          <tr>
-            <th>서비스 이름</th>
-            <th>데이터 저장소 유형</th>
-            <th>상태</th>
-            <th>등록일시</th>
-            <th>수정일시</th>
-            <th>내용</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr v-for="tr in 6" :key="tr">
-            <td>서비스 B</td>
-            <td>MySQL</td>
-            <td>Disconnected</td>
-            <td>2023-01-02 12:10:00</td>
-            <td>2023-01-02 12:10:0</td>
-            <td>수정</td>
-          </tr>
-          </tbody>
-        </table>
+        <div class="table-group">
+          <div class="table-info">
+            수집 일시 : 2024-09-12 00:00:00
+          </div>
+          <table>
+            <thead>
+            <tr>
+              <th>서비스 이름</th>
+              <th>데이터 저장소 유형</th>
+              <th>상태</th>
+              <th>등록일시</th>
+              <th>수정일시</th>
+              <th>내용</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="tr in 6" :key="tr">
+              <td>서비스 B</td>
+              <td>MySQL</td>
+              <td>Disconnected</td>
+              <td>2023-01-02 12:10:00</td>
+              <td>2023-01-02 12:10:0</td>
+              <td>수정</td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class="v-group gap-5">
         <h4 class="overview-title">히스토리</h4>
