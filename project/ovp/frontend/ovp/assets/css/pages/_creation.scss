@@ -49,20 +49,20 @@
     @include font-size('13');
 
     display: flex;
-    flex-direction: column;
     gap: $spacing-8;
     padding: 0 $spacing-8;
   }
 
   dt {
-    color: $neutral-800;
+    width: 122px;
+    color: $neutral-500;
   }
 
   dd {
-    @include font-size('12');
+    @include font-size('13');
 
     margin-left: $spacing-4;
-    color: $neutral-500;
+    color: $neutral-800;
   }
 
   .profiling-list {
