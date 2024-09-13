@@ -129,6 +129,35 @@
               ></menu-search-tag>
             </div>
           </div>
+          <div class="v-group gap-2">
+            <div class="font-semibold text-neutral-700 w-14 shrink-0">설명</div>
+            <editable-group
+              compKey="repositoryDescription"
+              :editable="true"
+              :parent-edit-mode="serviceStore.editInfo.description"
+              @editCancel="editCancel"
+              @editDone="editDone"
+              @editIcon="editIconClick"
+            >
+              <template #edit-slot>
+                <label class="hidden-text" for="textarea-modify"
+                  >설명 입력</label
+                >
+                <textarea
+                  class="textarea"
+                  v-model="newDescription"
+                  placeholder="설명에 대한 영역입니다."
+                  required
+                  id="textarea-modify"
+                ></textarea>
+              </template>
+              <template #view-slot>
+                <span class="editable-group-desc">
+                  {{ service.description }}
+                </span>
+              </template>
+            </editable-group>
+          </div>
         </div>
       </div>
       <div class="tab tab-line">
@@ -168,6 +197,7 @@ import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import type { JsonPatchOperation } from "@/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import _ from "lodash";
+import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 
 const {
   changeTab,
@@ -183,9 +213,14 @@ const {
   servicesById,
 } = useServiceStore();
 const serviceStore = useServiceStore();
+const { serviceData, defaultDescription, newDescription } =
+  storeToRefs(serviceStore);
+const { updateRepositoryDescriptionAPI } = serviceStore;
+
 const dataModelDetailStore = useDataModelDetailStore();
 const { getTagList, getGlossaryList } = dataModelDetailStore;
 const { tagList, termList } = storeToRefs(dataModelDetailStore);
+
 onMounted(() => {
   getUserList();
   getTagList();
@@ -230,5 +265,47 @@ async function changeTerms(value: MenuSearchItemImpl[]): Promise<void> {
   const data: any = _.map(value, "tagFQN");
   await changeTag("Glossary", data);
   await refreshService();
+}
+
+// 수정 버튼 클릭 시 호출
+const editIconClick = () => {
+  defaultDescription.value = _.cloneDeep(newDescription.value);
+  changeEditInfo("description");
+};
+// 취소 버튼 클릭 시 호출
+const editCancel = () => {
+  serviceData.value.description = _.cloneDeep(defaultDescription.value);
+  changeEditInfo("description");
+};
+// 수정 완료 버튼 클릭 시 호출
+const editDone = async () => {
+  changeEditInfo("description");
+
+  const patchData = createJsonPatch(
+    defaultDescription.value,
+    newDescription.value,
+  );
+
+  await updateRepositoryDescriptionAPI(patchData);
+  await refreshService();
+};
+
+const createJsonPatch = (oldData: any, newData: any): JsonPatchOperation[] => {
+  const patch: JsonPatchOperation[] = [];
+  if (oldData !== newData) {
+    patch.push({
+      op: "replace",
+      path: "/description",
+      value: newDescription.value,
+    });
+  }
+  return patch;
+};
+
+// JSON Patch 형식으로 데이터 변환 함수
+interface JsonPatchOperation {
+  op: string;
+  path: string;
+  value: any;
 }
 </script>

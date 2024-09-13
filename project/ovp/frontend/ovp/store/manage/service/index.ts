@@ -45,6 +45,7 @@ export const useServiceStore = defineStore("service", () => {
     owner: false,
     tag: false,
     term: false,
+    description: false,
   });
 
   // 수정가능상태
@@ -60,6 +61,10 @@ export const useServiceStore = defineStore("service", () => {
   let selectedID: string = "";
   let selectedName: string = "";
   let selectedServiceType: string = "";
+
+  // 설명 관련 코드
+  const defaultDescription = ref("");
+  const newDescription = ref("");
 
   // getRepositoryDescriptionAPI의 params 생성함수
   const getQueryData = () => {
@@ -92,19 +97,32 @@ export const useServiceStore = defineStore("service", () => {
   };
 
   // 저장소 탭 > 설명 수정 API호출 함수
-  const updateRepositoryDescriptionAPI = (patchData: JsonPatchOperation[]) => {
+  const updateRepositoryDescriptionAPI = async (
+    patchData: JsonPatchOperation[],
+  ) => {
     const serviceType: string = ["MINIO"].includes(
       selectedServiceType.toUpperCase(),
     )
       ? "repository/storage"
       : "repository";
-    return $api(
+    const { result, data } = await $api(
       `/api/service-manage/${serviceType}/description/${selectedID}`,
       {
         method: "PATCH",
         body: patchData,
       },
-    );
+    ).catch((error) => {
+      console.error("API 호출 중 오류 발생: ", error);
+      serviceData.value = defaultDescription;
+    });
+
+    if (result === 1) {
+      alert("수정이 완료되었습니다.");
+      service.description = data.description;
+    } else {
+      alert("수정에 실패하였습니다.");
+      service.description = defaultDescription.value;
+    }
   };
 
   const getDBServiceList = async () => {
@@ -188,6 +206,8 @@ export const useServiceStore = defineStore("service", () => {
       selectedID = service.id;
       selectedName = service.name;
       selectedServiceType = service.serviceType;
+      defaultDescription.value = "";
+      newDescription.value = service.description;
     }
   }
 
@@ -434,6 +454,7 @@ export const useServiceStore = defineStore("service", () => {
     editInfo.owner = false;
     editInfo.tag = false;
     editInfo.term = false;
+    editInfo.description = false;
   }
 
   /**
@@ -600,5 +621,8 @@ export const useServiceStore = defineStore("service", () => {
 
     isDescEditable,
     isDoneRepoAPI,
+
+    defaultDescription,
+    newDescription,
   };
 });
