@@ -103,6 +103,8 @@ import { useOverviewStore } from "~/store/manage/service/overview";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { ServiceNameRenderer } from "~/store/manage/service/overview/cell-renderer/serviceNameRenderer";
 import { HistoryServiceNameRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceNameRenderer";
+import { HistoryServiceStatusRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceStatusRenderer";
+import HeaderTooltip from "~/components/manage/service/ag-grid/header-tooltip.vue";
 
 const overviewStore = useOverviewStore();
 const {
@@ -177,10 +179,13 @@ const historyColumnDefs = ref([
     cellStyle: { textAlign: "center" },
   },
   {
-    headerName: "상태",
+    headerName: HeaderTooltip,
     headerClass: "ag-header-center",
     field: "status",
-    cellStyle: { textAlign: "center" },
+    cellRenderer: HistoryServiceStatusRenderer,
+    cellStyle: {
+      textAlign: "center",
+    },
   },
   {
     headerName: "서비스 이름",
