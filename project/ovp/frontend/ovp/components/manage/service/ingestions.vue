@@ -179,7 +179,6 @@ import { useServiceCollectionAddStore } from "@/store/manage/service/collection-
 import { useServiceCollectionLogStore } from "@/store/manage/service/collection-log/index";
 
 import { useDropdownHelper } from "@/composables/dropdownHelper";
-// const isDropdownOpen = ref(false);
 
 import Loading from "@base/loading/Loading.vue";
 import ModalCollection from "@/components/manage/service/modal/collection/modal-collection.vue";
@@ -394,8 +393,6 @@ async function kill(ingestion: Ingestion): Promise<void> {
     }
   }
 }
-
-// const toggle = ref<boolean>(false);
 
 function openAddModel(value: string) {
   setPipelineType(value);
