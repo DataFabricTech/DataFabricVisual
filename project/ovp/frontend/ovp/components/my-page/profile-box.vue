@@ -193,7 +193,7 @@ const editRole = () => {
 
 const changeDisplayName = () => {
   let data = {
-    value: localDisplayName.value,
+    value: localDisplayName.value.trim(),
     op: "add",
     path: "/displayName",
   };
