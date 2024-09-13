@@ -105,6 +105,11 @@ export const useMyPageStore = defineStore("my-page", () => {
     previewData.value = data.data;
   };
 
+  const getContainerPreviewData = async (id: string) => {
+    const data: any = await $api(`/api/containers/${id}`);
+    previewData.value = data.data;
+  };
+
   const getSearchListQuery = () => {
     const query =
       currentTab.value === "myBookMark"
@@ -161,6 +166,7 @@ export const useMyPageStore = defineStore("my-page", () => {
     updateTargetUserInfo,
     getSearchList,
     getPreviewData,
+    getContainerPreviewData,
     search,
     clearSearchText,
   };

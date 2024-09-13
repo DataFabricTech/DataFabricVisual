@@ -115,6 +115,7 @@ const {
   getTargetUserData,
   changeTab,
   getPreviewData,
+  getContainerPreviewData,
   getSearchList,
   addSearchList,
   search,
@@ -165,7 +166,9 @@ const previewClick = async (data: object) => {
     return;
   }
 
-  await getPreviewData(fqn);
+  type === "storage"
+    ? await getContainerPreviewData(id)
+    : await getPreviewData(fqn);
   isShowPreview.value = true;
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;
