@@ -17,7 +17,9 @@ export const useDropdownHelper = () => {
       return condition?.contains(event.target);
     });
 
-    isDropdownOpen.value = isClickInside ? isDropdownOpen.value : false;
+    if (!isClickInside) {
+      isDropdownOpen.value = false;
+    }
   };
 
   onMounted(() => {

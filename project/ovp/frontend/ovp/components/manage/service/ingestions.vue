@@ -21,18 +21,16 @@
         </button>
       </div>
       <div class="relative" ref="dropdownToggle">
-        <button class="button button-neutral-ghost" @click="toggle = !toggle">
+        <button
+          class="button button-neutral-ghost"
+          @click="onClickDropdownToggle"
+        >
           <span class="button-title">수집추가</span>
           <svg-icon
             class="button-icon"
+            :class="{ 'rotate-180': toggle }"
             name="chevron-down-medium"
-            v-if="!toggle"
-          ></svg-icon>
-          <svg-icon
-            class="button-icon rotate-180"
-            name="chevron-down-medium"
-            v-else
-          ></svg-icon>
+          />
         </button>
         <div class="dropdown" style="right: 0" v-if="toggle">
           <ul class="dropdown-list">
@@ -423,6 +421,10 @@ function openAddModel(value: string) {
 const openEditModal = async (value: any) => {
   await getPipeLineData(value);
   collectionModalInstance.open();
+};
+
+const onClickDropdownToggle = () => {
+  toggle.value = !toggle.value;
 };
 
 await refreshIngestionList();

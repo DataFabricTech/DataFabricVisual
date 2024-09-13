@@ -16,21 +16,24 @@
         :label-text="'데이터 모델 검색'"
         @update:value="updateSearchInputValue"
       ></SearchInput>
-      <div class="profile ml-auto">
+      <div class="profile ml-auto" ref="dropdown">
         <span class="profile-avatar"> {{ profileFirstWord }} </span>
         <div class="profile-text">{{ user.displayName || user.name }}</div>
         <button
           class="button button-sm button-neutral-ghost"
           @click="isDropdownOpen = !isDropdownOpen"
         >
-          <svg-icon class="svg-icon" name="chevron-down-medium"></svg-icon>
+          <svg-icon
+            class="svg-icon"
+            :class="{ 'rotate-180': isDropdownOpen }"
+            name="chevron-down-medium"
+          />
           <span class="hidden-text">내 메뉴</span>
         </button>
         <div
           class="dropdown"
           style="top: 40px; right: 16px"
           v-if="isDropdownOpen"
-          ref="dropdown"
         >
           <ul class="dropdown-list">
             <li class="dropdown-item">
@@ -83,9 +86,6 @@ const dropdown = ref();
 const profileFirstWord = ref("");
 
 const { isDropdownOpen, setHandler } = useDropdownHelper();
-onMounted(() => {
-  setHandler(dropdown.value, header.value);
-});
 
 const updateSearchInputValue = (newValue: string) => {
   searchInputValue.value = newValue;
@@ -126,8 +126,9 @@ const moveMyPage = () => {
   isDropdownOpen.value = false;
 };
 
-onMounted(async () => {
+onMounted(() => {
   setProfileFirstWord(user.value.displayName || user.value.name);
+  setHandler(dropdown.value, header.value);
 });
 </script>
 
