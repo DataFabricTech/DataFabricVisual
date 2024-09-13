@@ -1,4 +1,5 @@
 <template>
+  <div class="service-page">
   <div class="v-group gap-2">
     <div class="font-semibold text-neutral-700">설명</div>
     <editable-group
@@ -36,14 +37,21 @@
       :setColumnFit="true"
       :useColumnResize="true"
     ></agGrid>
+    <!-- TODO: [퍼블] 저장소 탭 부분에만 loading 처리 가능 여부 확인 -->
+    <Loading
+      v-show="isDoneRepoAPI"
+      id="repoLoader"
+      :use-loader-overlay="true"
+      class="is-loader-inner loader-content"
+    ></Loading>
   </template>
-
   <!-- 결과 없을 시 no-result 표시 -->
-  <div class="no-result" v-else>
+  <div class="no-result h-auto" v-else>
     <div class="notification">
       <svg-icon class="notification-icon" name="info"></svg-icon>
       <p class="notification-detail">데이터 리스트가 없습니다.</p>
     </div>
+  </div>
   </div>
 </template>
 
@@ -54,9 +62,10 @@ import { computed } from "vue";
 import _ from "lodash";
 import agGrid from "@extends/grid/Grid.vue";
 import LinkDetailComponent from "./linkDetailComponent.vue";
+import Loading from "@base/loading/Loading.vue";
 const serviceStore = useServiceStore();
 
-const { serviceData, DBServiceListData, isDescEditable } =
+const { serviceData, DBServiceListData, isDescEditable, isDoneRepoAPI } =
   storeToRefs(serviceStore);
 const { updateRepositoryDescriptionAPI } = serviceStore;
 
