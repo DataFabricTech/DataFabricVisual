@@ -418,7 +418,7 @@ public class GlossaryService {
                             item.put("type", entry.getKey().equals("storage") ? "container" : "table");
                             return item;
                         }))
-                .collect(Collectors.toList());
+                .toList();
 
         Map<String, Object> params = Map.of(
                 "assets", assets,
