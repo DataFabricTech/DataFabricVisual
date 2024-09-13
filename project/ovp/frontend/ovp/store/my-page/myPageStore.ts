@@ -92,14 +92,7 @@ export const useMyPageStore = defineStore("my-page", () => {
   const getPreviewData = async (fqn: string) => {
     const data: any = await $api(`/api/search/preview/${fqn}`);
     if (data.result === 0) {
-      console.error("미리보기 지원하지 않는 데이터 타입입니다.");
-      previewData.value = {
-        modelInfo: {
-          model: {
-            name: "",
-          },
-        },
-      };
+      handlePreviewError();
       return;
     }
     previewData.value = data.data;
@@ -107,7 +100,22 @@ export const useMyPageStore = defineStore("my-page", () => {
 
   const getContainerPreviewData = async (id: string) => {
     const data: any = await $api(`/api/containers/${id}`);
+    if (data.result === 0) {
+      handlePreviewError();
+      return;
+    }
     previewData.value = data.data;
+  };
+
+  const handlePreviewError = () => {
+    console.error("미리보기 지원하지 않는 데이터 타입입니다.");
+    previewData.value = {
+      modelInfo: {
+        model: {
+          name: "",
+        },
+      },
+    };
   };
 
   const getSearchListQuery = () => {
