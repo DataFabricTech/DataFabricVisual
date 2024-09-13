@@ -1,4 +1,5 @@
 <template>
+  <div class="service-page">
   <div class="v-group gap-2">
     <div class="font-semibold text-neutral-700">설명</div>
     <editable-group
@@ -41,16 +42,16 @@
       v-show="isDoneRepoAPI"
       id="repoLoader"
       :use-loader-overlay="true"
-      class="loader-lg is-loader-inner"
+      class="is-loader-inner loader-content"
     ></Loading>
   </template>
-
   <!-- 결과 없을 시 no-result 표시 -->
-  <div class="no-result" v-else>
+  <div class="no-result h-auto" v-else>
     <div class="notification">
       <svg-icon class="notification-icon" name="info"></svg-icon>
       <p class="notification-detail">데이터 리스트가 없습니다.</p>
     </div>
+  </div>
   </div>
 </template>
 
