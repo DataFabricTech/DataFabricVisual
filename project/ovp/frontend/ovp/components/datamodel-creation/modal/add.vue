@@ -9,7 +9,7 @@
     :clickToClose="true"
     :escToClose="true"
     :width="900"
-    :height="681"
+    :height="560"
     :lockScroll="true"
     swipeToClose="none"
     @before-open="onOpenModal"

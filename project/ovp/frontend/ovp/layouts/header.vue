@@ -23,7 +23,7 @@
           class="button button-sm button-neutral-ghost"
           @click="isDropdownOpen = !isDropdownOpen"
         >
-          <svg-icon class="svg-icon" name="chevron-down-medium"></svg-icon>
+          <svg-icon class="svg-icon button-icon" name="chevron-down-medium"></svg-icon>
           <span class="hidden-text">내 메뉴</span>
         </button>
         <div

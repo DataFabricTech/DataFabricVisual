@@ -100,7 +100,6 @@
 .data-add {
   @include flex($direction: column, $horizontal: flex-start, $gap: $spacing-12);
 
-  overflow-y: scroll;
   width: 100%;
 
   .tab-contents {
