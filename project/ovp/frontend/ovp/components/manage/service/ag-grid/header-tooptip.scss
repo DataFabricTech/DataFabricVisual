@@ -1,0 +1,23 @@
+.ag-tooltip-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: 4px;
+}
+
+.svg-icon {
+  > svg {
+    fill: #868c98;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+  }
+
+  &:hover {
+    > svg {
+      fill: #09838f;
+    }
+  }
+}

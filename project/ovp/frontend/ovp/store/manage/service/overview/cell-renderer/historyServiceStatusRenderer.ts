@@ -1,8 +1,6 @@
 import { ICellRendererParams } from "@ag-grid-community/core";
 
 export function HistoryServiceStatusRenderer(params: ICellRendererParams) {
-  console.log("HistoryServiceStatusRenderer의  params: ", params.data.status);
-
   const badgeStatus = (status: string) => {
     let badgeTheme = "";
     switch (status) {

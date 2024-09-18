@@ -67,6 +67,7 @@
     </div>
     <div class="v-group gap-5">
       <h4 class="overview-title">서비스 상태</h4>
+      <div class="table-info">수집 일시 : 2024-09-12 00:00:00</div>
       <agGrid
         :style="'width: 100%; height: 300px'"
         class="ag-theme-alpine ag-theme-quartz"
@@ -179,7 +180,7 @@ const historyColumnDefs = ref([
     cellStyle: { textAlign: "center" },
   },
   {
-    headerName: HeaderTooltip,
+    headerComponentFramework: HeaderTooltip,
     headerClass: "ag-header-center",
     field: "status",
     cellRenderer: HistoryServiceStatusRenderer,
