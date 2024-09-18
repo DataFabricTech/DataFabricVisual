@@ -24,7 +24,7 @@
           @click="isDropdownOpen = !isDropdownOpen"
         >
           <svg-icon
-            class="svg-icon"
+            class="svg-icon button-icon"
             :class="{ 'rotate-180': isDropdownOpen }"
             name="chevron-down-medium"
           />

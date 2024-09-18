@@ -9,7 +9,7 @@
     :clickToClose="true"
     :escToClose="true"
     :width="1180"
-    :height="615"
+    :height="560"
     :top="240"
     :lockScroll="false"
     :confirm-btn-msg="'저장'"
