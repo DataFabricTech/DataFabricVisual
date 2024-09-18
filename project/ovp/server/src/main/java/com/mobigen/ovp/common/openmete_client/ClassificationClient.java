@@ -26,7 +26,7 @@ public interface ClassificationClient {
      * @return
      */
     @GetMapping("")
-    ClassificationData getClassifications();
+    ClassificationData getClassifications(@RequestParam Integer limit);
 
     /**
      * 분류 리스트 단일 조회

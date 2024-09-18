@@ -34,6 +34,12 @@ interface addForm {
   name: string;
   description: string;
 }
+
+interface addTagForm {
+  classification: string;
+  name: string;
+  description: string;
+}
 //TODO : 추후, 태그 paging을 이용한 인피니트스크롤작업을 위해 보류
 
 // interface paging {
@@ -66,11 +72,9 @@ export const classificationStore = defineStore("classification", () => {
 
   // 현재 선택된 아이디 분류 ID값(기본값 : classificationList[0]의 ID값)
   let currentClassificationID = "";
-  // 첫 번째 분류 목록의 name값
-  let firstClassificationName = "";
 
   // 현재 태그의 분류 name값
-  const currentClassificationTagName = "";
+  const currentClassificationTagName: Ref<string> = ref("");
 
   // TODO : 추후, 인피니트스크롤 작업이 필요할 수 있음
   // const tagContent: Ref<ClassificationTag | null> = ref(null); // 태그목록 조회 결과값
@@ -89,7 +93,7 @@ export const classificationStore = defineStore("classification", () => {
     // 분류목록의 0번째 인덱스 ID값을 currentClassificationID에 저장
     currentClassificationID = data.data.classificationList[0].id;
     // 태그의 기본값 및 선택된 값(매개변수)을 저장
-    firstClassificationName = data.data.classificationList[0].name;
+    currentClassificationTagName.value = data.data.classificationList[0].name;
   };
 
   // 분류 상세 조회 ( name, displayName, description )
@@ -116,12 +120,10 @@ export const classificationStore = defineStore("classification", () => {
   const getClassificationTags = async (name?: any) => {
     if (name !== undefined) {
       // 선택된 분류의 name값이 들어올 경우
-      firstClassificationName = name;
+      currentClassificationTagName.value = name;
     }
-    // TODO : name을 저장해야함 .
-    // currentClassificationTagName = name;
     const data: any = await $api(
-      `/api/classifications/tags?parent=` + firstClassificationName,
+      `/api/classifications/tags?parent=${currentClassificationTagName.value}`,
     );
     // TODO : 추후, 태그 목록 인피니트스크롤 작업을 위한 데이터 변수 지정 (ex_ tagContent.value = data;)
 
@@ -172,12 +174,14 @@ export const classificationStore = defineStore("classification", () => {
 
   // 분류 내 태그 추가
   const addClassificationTag = (addData: addForm) => {
+    // 태그 추가 body 분류명 포함
+    const classificationObj = {
+      classification: currentClassificationTagName.value,
+    };
+    const body: addTagForm = { ...addData, ...classificationObj };
     return $api(`/api/tags/add`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(addData),
+      body: body,
     });
   };
 
@@ -186,7 +190,6 @@ export const classificationStore = defineStore("classification", () => {
     currentClassificationTagName,
     classificationListTotal,
     currentClassificationID,
-    firstClassificationName,
     classificationTagList,
     classificationDetailData,
     getClassificationList,

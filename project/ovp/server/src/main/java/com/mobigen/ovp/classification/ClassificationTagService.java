@@ -1,9 +1,10 @@
 package com.mobigen.ovp.classification;
 
-import com.mobigen.ovp.classification.client.dto.classification.tag.ClassificationTagAddResponse;
+import com.mobigen.ovp.classification.client.dto.classification.tag.ClassificationTagsResponse;
 import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.openmete_client.ClassificationTagsClient;
 import com.mobigen.ovp.common.openmete_client.dto.classification.tag.ClassificationTagAdd;
+import com.mobigen.ovp.common.openmete_client.dto.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -18,8 +20,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ClassificationTagService {
     private final ClassificationTagsClient classificationTagsClient;
-
-
+    private final ClassificationService classificationService;
 
     //TODO : 태그 수정 추가예정
 
@@ -57,7 +58,20 @@ public class ClassificationTagService {
      * @param classificationTagAdd
      * @return
      */
-    public Object addClassificationTag(ClassificationTagAdd classificationTagAdd) {
-        return new ClassificationTagAddResponse(classificationTagsClient.addClassificationTag(classificationTagAdd));
+    public Object addClassificationTag(ClassificationTagAdd classificationTagAdd) throws Exception {
+        // 해당 태그의 분류name값 가져오기
+        String classificationName = classificationTagAdd.getClassification();
+        ClassificationTagsResponse classificationTagsResponse = (ClassificationTagsResponse) classificationService.getClassificationTags(classificationName);
+
+        // 중복 체크할 리스트 가져오기
+        List<Tag> classificationTags = classificationTagsResponse.getClassificationTagList();
+
+        // 태그 이름 중복 체크
+        boolean isDuplicate = classificationTags.stream().anyMatch(classificationTag -> classificationTag.getName().equalsIgnoreCase(classificationTagAdd.getName()));
+
+        if(isDuplicate) {
+            throw new Exception("Duplicate classification name");
+        }
+        return classificationTagsClient.addClassificationTag(classificationTagAdd);
     }
 }

@@ -331,14 +331,15 @@ public class AuthService {
 
     /**
      * 회원가입 > OMD 서버 회원가입 API 통신
+     * 사용자관리 > 사용자추가
      *
      * @param adminAuthorizationHeader : 관리자 토큰 헤더
      * @param paramMap                 : 회원가입 바디 정보
      * @return
      * @throws Exception
      */
-    private Map<String, Object> singUpAPI(HttpHeaders adminAuthorizationHeader,
-                                          Map<String, Object> paramMap) throws Exception {
+    public Map<String, Object> singUpAPI(HttpHeaders adminAuthorizationHeader,
+                                         Map<String, Object> paramMap) throws Exception {
         try {
             return authClient.signUpUser(adminAuthorizationHeader, paramMap);
         } catch (Exception e) {
@@ -349,19 +350,20 @@ public class AuthService {
 
     /**
      * 회원가입 > User DB 저장
+     * 사용자관리 > 사용자추가
      *
      * @param signUpResult             : OMD 서버에 저장된 사용자 정보
      * @param adminAuthorizationHeader : 관리자 토큰 헤더
      * @throws Exception : 저장 시 Exception이 발생되면 OMD 서버에 저장된 User 정보도 삭제
      */
-    private void saveUserToDatabase(Map<String, Object> signUpResult,
-                                    HttpHeaders adminAuthorizationHeader) throws Exception {
+    public void saveUserToDatabase(Map<String, Object> signUpResult,
+                                   HttpHeaders adminAuthorizationHeader) throws Exception {
         try {
             userRepository.save(new UserEntity(
                     (String) signUpResult.get("id"),
                     (String) signUpResult.get("name"),
                     (String) signUpResult.get(USER_ID_KEY),
-                    UserRole.USER
+                    (boolean) signUpResult.get("isAdmin") ? UserRole.ADMIN : UserRole.USER
             ));
         } catch (Exception e) {
             authClient.deleteUser(adminAuthorizationHeader, (String) signUpResult.get("id"), true, false);

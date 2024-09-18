@@ -244,8 +244,6 @@ public class ModelCreationService {
     }
 
     public Object saveModel(Map<String, Object> param) throws Exception {
-        // TODO: 돌핀 create api 테스트 후 필요시 수정
-        Map<String, Object> result = dolphinClient.createModel(param);
-        return result;
+        return dolphinClient.createModel(param);
     }
 }
