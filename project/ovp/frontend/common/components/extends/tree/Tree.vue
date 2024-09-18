@@ -22,7 +22,8 @@
         <div
           :class="{
             'node-disabled': props.disabledIds.length > 0 && props.disabledIds.includes(treeViewItem.id),
-            'node-fir-selected': treeSelectedIds.length > 0 && treeSelectedIds.includes(treeViewItem.id)
+            'node-fir-selected':
+              treeSelectedIds.length > 0 && treeSelectedIds.includes(treeViewItem.id) && !isCheckable
           }"
         ></div>
         <div v-if="mode === 'edit' && !props.immutableItems.includes(treeViewItem.id)" class="tree-item-buttons">

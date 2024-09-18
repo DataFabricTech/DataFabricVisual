@@ -1,4 +1,6 @@
 .ag-theme-alpine.ag-theme-quartz {
+  @include font-family('pretendard');
+
   flex-grow: 1;
 }
 

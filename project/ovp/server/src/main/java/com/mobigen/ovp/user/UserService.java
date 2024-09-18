@@ -130,6 +130,8 @@ public class UserService {
     public boolean deleteUser(UUID id) throws Exception {
         ResponseEntity<Void> result = userClient.deleteUser(id, true, true);
         if (result.getStatusCode() == HttpStatus.OK) {
+            // User DB 에 사용자 정보 삭제
+            userRepository.deleteById(String.valueOf(id));
             return true;
         } else {
             throw new Exception();
@@ -196,7 +198,11 @@ public class UserService {
      * @return
      * @throws Exception
      */
-    public Map<String, Object> addUser(Map<String, Object> params) throws Exception {
-        return userClient.addUser(params);
+    public Map<String, Object> addUser(HttpHeaders authHeader, Map<String, Object> params) throws Exception {
+        // OMD 서버에 사용자 정보 추가
+        Map<String, Object> userInfo = authService.singUpAPI(authHeader, params);
+        // User DB 에 사용자 정보 추가
+        authService.saveUserToDatabase(userInfo, authHeader);
+        return userInfo;
     }
 }

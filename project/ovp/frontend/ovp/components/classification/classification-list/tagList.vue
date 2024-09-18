@@ -16,7 +16,7 @@
       <th>관리</th>
     </tr>
     <tr v-for="tag in classificationTagList" :key="tag.id">
-      <td>{{ tag.displayName }}</td>
+      <td>{{ tag.name }}</td>
       <td>{{ tag.description }}</td>
       <td>
         <div class="button-group">

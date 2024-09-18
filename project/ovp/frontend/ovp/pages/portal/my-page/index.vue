@@ -24,25 +24,18 @@
     >
     </tab>
     <div class="my-contents">
-      <div class="search-input search-input-lg w-96">
-        <label class="hidden-text" for="text-input-example-4">label</label>
-        <input
-          id="text-input-example-4"
-          class="text-input"
-          placeholder="검색어를 입력하세요."
-          v-model="searchKeyword"
-          @keyup.enter="search"
-        />
-        <svg-icon class="text-input-icon" name="search"></svg-icon>
-        <button
-          class="search-input-action-button button button-neutral-ghost button-sm"
-          type="button"
-          @click="clearSearchText"
-        >
-          <span class="hidden-text">지우기</span>
-          <svg-icon class="button-icon" name="close"></svg-icon>
-        </button>
-      </div>
+      <search-input
+        class="search-input-lg w-96"
+        :is-search-input-default-type="false"
+        :placeholder="'검색어를 입력하세요.'"
+        :inp-value="searchKeyword"
+        :inp-id="currentTab"
+        :label-text="
+          currentTab === 'myBookMark' ? '나의 북마크 검색' : '나의 데이터 검색'
+        "
+        @on-input="inputSearchKeyword"
+        @reset="resetSearchKeyword"
+      ></search-input>
       <div class="l-split">
         <div class="data-page">
           <div id="dataList" class="data-list" v-show="!isSearchResultNoData">
@@ -87,6 +80,7 @@ import Tab from "@extends/tab/Tab.vue";
 import Loading from "@base/loading/Loading.vue";
 import resourceBoxList from "~/components/common/resource-box/resource-box-list.vue";
 import Preview from "~/components/common/preview/preview.vue";
+import SearchInput from "@extends/search-input/SearchInput.vue";
 import { useRoute } from "vue-router";
 import { useModal } from "vue-final-modal";
 import profileBox from "~/components/my-page/profile-box.vue";
@@ -108,6 +102,7 @@ const { open, close } = useModal({
 const myPageStore = useMyPageStore();
 const {
   targetUserInfo,
+  currentTab,
   searchResult,
   isSearchResultNoData,
   searchKeyword,
@@ -120,6 +115,7 @@ const {
   getTargetUserData,
   changeTab,
   getPreviewData,
+  getContainerPreviewData,
   getSearchList,
   addSearchList,
   search,
@@ -145,6 +141,16 @@ const tabOptions = [
   { label: "나의 데이터", value: "myData" },
 ];
 
+const inputSearchKeyword = (keyword: string) => {
+  searchKeyword.value = keyword;
+  search();
+};
+
+const resetSearchKeyword = () => {
+  clearSearchText();
+  search();
+};
+
 const getPreviewCloseStatus = (option: boolean) => {
   isShowPreview.value = option;
   isBoxSelectedStyle.value = false;
@@ -160,7 +166,9 @@ const previewClick = async (data: object) => {
     return;
   }
 
-  await getPreviewData(fqn);
+  type === "storage"
+    ? await getContainerPreviewData(id)
+    : await getPreviewData(fqn);
   isShowPreview.value = true;
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;

@@ -69,7 +69,7 @@ import type { Ref } from "vue";
 const { $vfm } = useNuxtApp();
 
 const useClassificationStore = classificationStore();
-const { addClassification } = useClassificationStore;
+const { addClassification, getClassificationList } = useClassificationStore;
 
 interface FormState {
   name: string;
@@ -123,6 +123,8 @@ function validateForm(): void {
       isShowNameNoti.value = true;
       return;
     } else if (response.result === 1) {
+      // 분류항목 리스트 재호출
+      getClassificationList();
       // 성공시 모달 닫기
       closeModal();
     }
