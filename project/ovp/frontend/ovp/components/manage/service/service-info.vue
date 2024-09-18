@@ -154,10 +154,7 @@
               <template #view-slot>
         <div class="h-group gap-2">
           <div class="font-semibold text-neutral-700 w-14 shrink-0">태그</div>
-          <div
-            class="editable-group w-auto"
-            v-if="!serviceStore.editInfo.tag"
-          >
+          <div class="editable-group w-auto" v-if="!serviceStore.editInfo.tag">
             <div class="text-neutral-700" v-if="service.tags.length === 0">
               <span>태그 없음</span>
             </div>
@@ -193,10 +190,7 @@
         </div>
         <div class="h-group gap-2">
           <div class="font-semibold text-neutral-700 w-14 shrink-0">용어</div>
-          <div
-            class="editable-group w-auto"
-            v-if="!serviceStore.editInfo.term"
-          >
+          <div class="editable-group w-auto" v-if="!serviceStore.editInfo.term">
             <div class="text-neutral-700" v-if="service.terms.length === 0">
               <span>용어 없음</span>
             </div>
@@ -212,10 +206,7 @@
               <svg-icon class="button-icon" name="pen"></svg-icon>
             </button>
           </div>
-          <div
-            class="editable-group w-auto"
-            v-if="serviceStore.editInfo.term"
-          >
+          <div class="editable-group w-auto" v-if="serviceStore.editInfo.term">
             <menu-search-tag
               :data="termList"
               :selected-items="service.terms"
@@ -240,9 +231,7 @@
             @editIcon="editIconClick"
           >
             <template #edit-slot>
-              <label class="hidden-text" for="textarea-modify"
-              >설명 입력</label
-              >
+              <label class="hidden-text" for="textarea-modify">설명 입력</label>
               <textarea
                 class="textarea"
                 v-model="newDescription"
@@ -252,9 +241,9 @@
               ></textarea>
             </template>
             <template #view-slot>
-                <span class="editable-group-desc">
-                  {{ service.description }}
-                </span>
+              <span class="editable-group-desc">
+                {{ service.description }}
+              </span>
             </template>
           </editable-group>
         </div>
@@ -373,11 +362,12 @@ const editIconClick = () => {
 };
 // 취소 버튼 클릭 시 호출
 const editCancel = () => {
-  serviceData.value.description = _.cloneDeep(defaultDescription.value);
+  newDescription.value = _.cloneDeep(defaultDescription.value);
   changeEditInfo("description");
 };
 // 수정 완료 버튼 클릭 시 호출
 const editDone = async () => {
+  service.description = newDescription.value;
   changeEditInfo("description");
 
   const patchData = createJsonPatch(
