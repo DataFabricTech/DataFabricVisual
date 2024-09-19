@@ -81,7 +81,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       },
     },
   });
-  const selectedFilterItems: Ref<any> = ref([]);
+  const selectedFilterItems: Ref<any> = ref({});
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
 
   // DATA
@@ -159,7 +159,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
 
   const setEmptyFilter = () => {
-    selectedFilterItems.value = [];
+    selectedFilterItems.value = {};
     selectedFilters.value = {};
   };
 
