@@ -1,19 +1,53 @@
 <template>
   <div class="overview">
+    <!--    ag-grid 내에 tooltip을 넣으면 overflow:hidden 때문에 툴팁이 숨겨져 일부만 보이는 이슈가 있어서 밖으로 뺌-->
+    <div
+      id="dynamicTooltip"
+      class="dynamic-tooltip"
+      v-show="isOpenAgHeaderTooltip"
+    >
+      <p>Queued: 수집 작업이 시작 대기 상태에 있음</p>
+      <p>Running: 현재 수집 작업이 진행 중</p>
+      <p>Success: 수집 작업이 성공적으로 완료됨</p>
+      <p>Failed: 오류가 발생하여 작업이 완료되지 않음</p>
+      <p>PartialSuccess: 일부는 성공적으로 수집되었으나, 일부는 실패함</p>
+    </div>
     <div class="v-group gap-5">
       <h4 class="overview-title">요약 정보</h4>
       <div class="flex w-full gap-5">
         <div class="overview-summary">
           <span>서비스 타입 요약</span>
-          <div id="typeChart" style="width: 100%; height: 320px"></div>
+          <div class="no-result" v-if="serviceTypeData.length === 0">
+            <div class="notification">
+              <svg-icon class="notification-icon" name="info"></svg-icon>
+              <p class="notification-detail">등록된 서비스가 없습니다.</p>
+            </div>
+          </div>
+          <div v-else id="typeChart" style="width: 100%; height: 320px"></div>
         </div>
         <div class="overview-summary">
           <span>서비스 상태 요약</span>
-          <div id="statusChart" style="width: 100%; height: 320px"></div>
+          <div class="no-result" v-if="serviceStatusData.length === 0">
+            <div class="notification">
+              <svg-icon class="notification-icon" name="info"></svg-icon>
+              <p class="notification-detail">등록된 서비스가 없습니다.</p>
+            </div>
+          </div>
+          <div v-else id="statusChart" style="width: 100%; height: 320px"></div>
         </div>
         <div class="overview-summary" style="position: relative">
           <span>서비스 응답시간</span>
-          <div class="overview-chart p-3 overflow-y-auto" id="responseList">
+          <div class="no-result" v-if="serviceResponseData.length === 0">
+            <div class="notification">
+              <svg-icon class="notification-icon" name="info"></svg-icon>
+              <p class="notification-detail">등록된 서비스가 없습니다.</p>
+            </div>
+          </div>
+          <div
+            v-else
+            class="overview-chart p-3 overflow-y-auto"
+            id="responseList"
+          >
             <dl v-for="(item, index) in serviceResponseData" :key="index">
               <dt>{{ item.name }}</dt>
               <dd>{{ item.value }}</dd>
@@ -21,7 +55,7 @@
             <!-- NOTE "scrollTrigger" -> useIntersectionObserver 가 return 하는 변수병과 동일해야함. -->
             <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
             <Loading
-              id="loader"
+              id="responseListLoader"
               :use-loader-overlay="true"
               class="loader-lg is-loader-inner"
               style="display: none"
@@ -32,11 +66,18 @@
       <div class="flex w-full gap-5">
         <div class="overview-summary">
           <span>등록된 데이터 모델 현황</span>
-          <div class="overview-chart h-group gap-4 px-2">
+          <div class="no-result" v-if="currentSituationData.length === 0">
+            <div class="notification">
+              <svg-icon class="notification-icon" name="info"></svg-icon>
+              <p class="notification-detail">등록된 서비스가 없습니다.</p>
+            </div>
+          </div>
+          <div v-else class="overview-chart h-group gap-4 px-2">
             <button
               class="button button-neutral-stroke button-lg"
               type="button"
-              disabled
+              @click="showPrevData"
+              :disabled="isPrevDisabled"
             >
               <span class="hidden-text">이전 내용으로 넘기기</span>
               <svg-icon
@@ -51,6 +92,8 @@
             <button
               class="button button-neutral-stroke button-lg"
               type="button"
+              @click="showNextData"
+              :disabled="isNextDisabled"
             >
               <span class="hidden-text">다음 내용으로 넘기기</span>
               <svg-icon
@@ -63,12 +106,22 @@
       </div>
     </div>
     <div class="v-group gap-5">
-      <h4 class="overview-title">최근 등록/수정된 서비스</h4>
+      <h4 class="overview-title">서비스 상태</h4>
+      <!--     TODO: [개발] 수집일시 api -->
+      <div class="table-info">수집 일시 : 2024-09-12 00:00:00</div>
+      <div class="no-result" v-if="statusDetailData.length === 0">
+        <div class="notification">
+          <svg-icon class="notification-icon" name="info"></svg-icon>
+          <p class="notification-detail">등록된 서비스가 없습니다.</p>
+        </div>
+      </div>
+      <!--      TODO: [개발] 30개까지 출력되고 인피니티 스크롤 적용 -->
       <agGrid
+        v-else
         :style="'width: 100%; height: 300px'"
         class="ag-theme-alpine ag-theme-quartz"
         :columnDefs="serviceColumnDefs"
-        :rowData="recentServiceData"
+        :rowData="statusDetailData"
         rowId="id"
         :useRowCheckBox="false"
         :setColumnFit="true"
@@ -76,8 +129,16 @@
       ></agGrid>
     </div>
     <div class="v-group gap-5">
-      <h4 class="overview-title">히스토리</h4>
+      <h4 class="overview-title">수집 히스토리</h4>
+      <div class="no-result" v-if="historyData.length === 0">
+        <div class="notification">
+          <svg-icon class="notification-icon" name="info"></svg-icon>
+          <p class="notification-detail">등록된 서비스가 없습니다.</p>
+        </div>
+      </div>
+      <!--      TODO: [개발] 30개까지 출력되고 인피니티 스크롤 적용 -->
       <agGrid
+        v-else
         :style="'width: 100%; height: 300px'"
         class="ag-theme-alpine ag-theme-quartz"
         :columnDefs="historyColumnDefs"
@@ -92,14 +153,16 @@
 </template>
 <script setup lang="ts">
 import * as echarts from "echarts";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
-import { useOverviewStore } from "~/store/manage/service/overview";
-import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import agGrid from "@extends/grid/Grid.vue";
 import Loading from "@base/loading/Loading.vue";
+import { useOverviewStore } from "~/store/manage/service/overview";
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { ServiceNameRenderer } from "~/store/manage/service/overview/cell-renderer/serviceNameRenderer";
 import { HistoryServiceNameRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceNameRenderer";
+import { HistoryServiceStatusRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceStatusRenderer";
+import HeaderTooltip from "~/components/manage/service/ag-grid/header-tooltip.vue";
 
 const overviewStore = useOverviewStore();
 const {
@@ -107,7 +170,7 @@ const {
   getServiceStatusData,
   getServiceResponseData,
   getDataCurrentSituationData,
-  getRecentServiceData,
+  getStatusDetailData,
   getHistoryData,
   addServiceResponseData,
 } = overviewStore;
@@ -116,9 +179,29 @@ const {
   serviceStatusData,
   serviceResponseData,
   currentSituationData,
-  recentServiceData,
+  statusDetailData,
   historyData,
+  isOpenAgHeaderTooltip,
+  agHeaderCoordinates,
 } = storeToRefs(overviewStore);
+
+// Dynamic Tooltip
+watch(
+  () => agHeaderCoordinates.value,
+  async (newVal) => {
+    await nextTick();
+
+    const dynamicTooltipDOM = document.getElementById(
+      "dynamicTooltip",
+    ) as HTMLElement;
+
+    if (dynamicTooltipDOM) {
+      dynamicTooltipDOM.style.left = `${agHeaderCoordinates.value.x}px`;
+      dynamicTooltipDOM.style.top = `${agHeaderCoordinates.value.y}px`;
+    }
+  },
+  { immediate: true },
+);
 
 // Common
 const setOverviewData = () => {
@@ -127,7 +210,7 @@ const setOverviewData = () => {
   getServiceStatusData();
   getServiceResponseData();
   getDataCurrentSituationData();
-  getRecentServiceData();
+  getStatusDetailData();
   getHistoryData();
 };
 
@@ -135,29 +218,71 @@ const setOverviewData = () => {
 const serviceColumnDefs = ref([
   {
     headerName: "서비스 이름",
+    headerClass: "ag-header-center",
     field: "name",
     cellRenderer: ServiceNameRenderer,
+    cellStyle: { textAlign: "center" },
   },
-  { headerName: "데이터 저장소 유형", field: "type" },
-  { headerName: "상태", field: "status" },
-  { headerName: "등록일시", field: "register" },
-  { headerName: "수정일시", field: "modification" },
-  { headerName: "내용", field: "detail" },
+  {
+    headerName: "데이터 저장소 유형",
+    headerClass: "ag-header-center",
+    field: "type",
+    cellStyle: { textAlign: "center" },
+  },
+  {
+    headerName: "상태",
+    headerClass: "ag-header-center",
+    field: "status",
+    cellStyle: { textAlign: "center" },
+  },
 ]);
 
 const historyColumnDefs = ref([
-  { headerName: "이벤트 발생 일시", field: "date" },
-  { headerName: "이벤트", field: "event" },
+  {
+    headerName: "이벤트 발생 일시",
+    headerClass: "ag-header-center",
+    field: "date",
+    cellStyle: { textAlign: "center" },
+  },
+  {
+    headerName: "수집 이름",
+    headerClass: "ag-header-center",
+    field: "collectionName",
+    cellStyle: { textAlign: "center" },
+  },
+  {
+    headerName: "이벤트",
+    headerClass: "ag-header-center",
+    field: "event",
+    cellStyle: { textAlign: "center" },
+  },
+  {
+    headerComponent: HeaderTooltip,
+    headerClass: "ag-header-center",
+    field: "status",
+    cellRenderer: HistoryServiceStatusRenderer,
+    cellStyle: {
+      textAlign: "center",
+    },
+  },
   {
     headerName: "서비스 이름",
+    headerClass: "ag-header-center",
     field: "name",
     cellRenderer: HistoryServiceNameRenderer,
+    cellStyle: { textAlign: "center" },
   },
-  { headerName: "저장소 유형", field: "type" },
-  { headerName: "내용", field: "detail" },
+  {
+    headerName: "저장소 유형",
+    headerClass: "ag-header-center",
+    field: "type",
+    cellStyle: { textAlign: "center" },
+  },
 ]);
 
 // ECharts
+let currentSituationChart: echarts.ECharts | null = null;
+
 const setECharts = () => {
   console.log("2. setECharts 실행");
   const typeChartDOM = document.getElementById("typeChart") as HTMLElement;
@@ -179,7 +304,7 @@ const setECharts = () => {
 
   const typeChart = echarts.init(typeChartDOM);
   const statusChart = echarts.init(statusChartDOM);
-  const currentSituationChart = echarts.init(currentSituationChartDOM);
+  currentSituationChart = echarts.init(currentSituationChartDOM);
 
   typeChart.setOption({
     tooltip: {
@@ -249,14 +374,8 @@ const setECharts = () => {
     legend: {},
     tooltip: {},
     dataset: {
-      source: [
-        ["product", "전체 데이터", "등록된 데이터 모델"],
-        ["서비스 A", 43.3, 85.8],
-        ["서비스 B", 83.1, 73.4],
-        ["서비스 C", 86.4, 65.2],
-        ["서비스 D", 72.4, 53.9],
-        ["서비스 E", 100, 89],
-      ],
+      dimensions: ["data", "전체 데이터", "등록된 데이터 모델"],
+      source: currentSituationData.value,
     },
     xAxis: { type: "category" },
     yAxis: {},
@@ -266,10 +385,68 @@ const setECharts = () => {
   });
 };
 
-onMounted(() => {
-  setOverviewData();
+const updateCurrentSituationChart = () => {
+  console.log("update! ", currentSituationData.value);
+  if (currentSituationChart) {
+    currentSituationChart.setOption({
+      dataset: {
+        source: currentSituationData.value, // 업데이트된 데이터
+      },
+    });
+  }
+};
+
+// Data output by number
+const DEFAULT_COUNT = 5;
+const startStandard: Ref<number> = ref(0);
+const isPrevDisabled: Ref<boolean> = ref(true);
+const isNextDisabled: Ref<boolean> = ref(false);
+
+const showPrevData = () => {
+  startStandard.value -= DEFAULT_COUNT;
+
+  getDataCurrentSituationData(startStandard.value, DEFAULT_COUNT);
+  updateCurrentSituationChart();
+
+  if (startStandard.value === 0) {
+    isPrevDisabled.value = true;
+    return;
+  }
+
+  if (currentSituationData.value.length === DEFAULT_COUNT) {
+    isNextDisabled.value = false;
+  }
+};
+
+const showNextData = () => {
+  startStandard.value += DEFAULT_COUNT;
+
+  if (startStandard.value === DEFAULT_COUNT) {
+    isPrevDisabled.value = false;
+  }
+
+  getDataCurrentSituationData(startStandard.value, DEFAULT_COUNT);
+  updateCurrentSituationChart();
+
+  if (currentSituationData.value.length < DEFAULT_COUNT) {
+    isNextDisabled.value = true;
+    return;
+  }
+};
+
+onMounted(async () => {
+  await setOverviewData();
   setECharts();
+
+  // 등록된 데이터 모델 현황의 총 개수가 DEFAULT_COUNT 보다 적을 경우 '다음버튼' 비활성화
+  if (currentSituationData.value.length + 1 < DEFAULT_COUNT) {
+    isNextDisabled.value = true;
+  }
 });
 
-const { scrollTrigger } = useIntersectionObserver(addServiceResponseData);
+const { scrollTrigger } = useIntersectionObserver({
+  callback: addServiceResponseData,
+  targetId: "responseList",
+  loaderId: "responseListLoader",
+});
 </script>
