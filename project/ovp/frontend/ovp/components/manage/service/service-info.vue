@@ -236,7 +236,6 @@
                 class="textarea"
                 v-model="newDescription"
                 placeholder="설명에 대한 영역입니다."
-                required
                 id="textarea-modify"
               ></textarea>
             </template>
