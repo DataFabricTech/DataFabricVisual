@@ -65,15 +65,13 @@ public class ModelCreationController {
     /**
      * 데이터 모델 생성 > 추가모달 > MY 리스트
      *
-     * @param id
-     * @param query
+     * @param params
      * @return
-     * @throws Exception
      */
     @ResponseJsonResult(errorMessage = "My 리스트 조회 오류")
-    @GetMapping("/my-list/{id}")
-    public Object getMyList(@PathVariable String id, @RequestParam String query) throws Exception {
-        return modelCreationService.getMyList(id, query);
+    @GetMapping("/my-list")
+    public Object getMyList(@RequestParam MultiValueMap<String, String> params) {
+        return modelCreationService.getMyList(params);
     }
 
     /**

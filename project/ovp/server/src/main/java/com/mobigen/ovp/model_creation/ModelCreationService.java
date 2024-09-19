@@ -11,7 +11,6 @@ import com.mobigen.ovp.user.UserClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.time.ZonedDateTime;
@@ -20,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -92,17 +92,41 @@ public class ModelCreationService {
     /**
      * 데이터 모델 생성 > MY 리스트
      *
-     * @param id : 사용자 아이디
-     * @param query : 검색어
+     * @param params
      * @return
-     * @throws Exception
      */
-    public Object getMyList(String id, String query) {
-        Map<String, Object> param = new HashMap<>();
-        param.put("bookmark", getMyModelList(id, query, "follows", null));
-        param.put("owner", getMyModelList(id, query, "owns",null));
+    public Object getMyList(MultiValueMap<String, String> params) {
+        Map<String, Object> userInfo = userClient.getUserWithFields(params.getFirst("id"), "owns,follows");
 
-        return param;
+        List<Map<String, Object>> followsList = (List<Map<String, Object>>) userInfo.get("follows");
+        List<Map<String, Object>> ownerList = (List<Map<String, Object>>) userInfo.get("owns");
+
+        boolean isBookmark = Objects.equals(params.getFirst("type"), "bookmark");
+        String bookmarkQuery = isBookmark ? params.getFirst("query") : "";
+        String ownsQuery = !isBookmark ? params.getFirst("query") : "";
+
+        List<DataModelDetailResponse> listData = isBookmark
+                ? getMyModelList(bookmarkQuery, followsList, null)
+                : getMyModelList(ownsQuery, ownerList, null);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("bookmark", isBookmark ? listData : new ArrayList<>());
+        data.put("owner", !isBookmark ? listData : new ArrayList<>());
+
+        // 쿼리 + 전체 검색결과
+        // NOTE: User에서 가져오는 정보는 삭제된 데이터도 모두 포함되기 때문에 삭제 처리
+        List<String> followListCount = getMyModelListCount(bookmarkQuery, followsList, null);
+        List<String> ownsListCount = getMyModelListCount(ownsQuery, ownerList, null);
+
+        Map<String, Object> totalCount = new HashMap<>();
+        totalCount.put("bookmark", followListCount.size());
+        totalCount.put("owner", ownsListCount.size());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", data);
+        result.put("totalCount", totalCount);
+
+        return result;
     }
 
     /**
@@ -138,26 +162,57 @@ public class ModelCreationService {
     /**
      * 나의 데이터 조회
      *
-     * @param id : 사용자 아이디
      * @param query : 검색 값
-     * @param key : open-metadata key
      * @return
      */
-    public Object getMyModelList(String id, String query, String key, Integer limit) {
-        Map<String, Object> userInfo = userClient.getUserWithFields(id, key);
-        List<Map<String, Object>> followsList = (List<Map<String, Object>>) userInfo.get(key);
-        List<DataModelDetailResponse> tempResult = new ArrayList<>();
-        List<DataModelDetailResponse> allList = new ArrayList<>();
+    public List<String> getMyModelListCount(String query, List<Map<String, Object>> listData, Integer limit) {
+        List<String> tempResult = new ArrayList<>();
+        List<String> allList = new ArrayList<>();
 
-        for (Map<String, Object> follow : followsList) {
-            String followId = (String) follow.get("id");
-            String dataType = (String) follow.get("type");
-            String newDataType = getDataType(dataType);
-
+        for (Map<String, Object> follow : listData) {
             // NOTE: 삭제된 데이터 모델 필터링
             if(follow.containsKey("deleted") && (boolean) follow.get("deleted")) {
                 continue;
             }
+
+            String dataType = (String) follow.get("type");
+            String newDataType = getDataType(dataType);
+            if (newDataType == null) {
+                continue;
+            }
+
+
+            String modelNm = (String) follow.get("name");
+
+            // 검색 처리
+            if (modelNm.contains(query)) {
+                tempResult.add((String) follow.get("id"));
+            }
+
+            // 갯수에 따른 목록 파싱
+            if (limit != null && limit > 0 && !tempResult.isEmpty()) {
+                for (int i = 0; i < Math.min(limit, tempResult.size()); i++) {
+                    allList.add(tempResult.get(i));
+                }
+            } else {
+                allList = tempResult;
+            }
+        }
+        return allList;
+    }
+    public List<DataModelDetailResponse> getMyModelList(String query, List<Map<String, Object>> listData, Integer limit) {
+        List<DataModelDetailResponse> tempResult = new ArrayList<>();
+        List<DataModelDetailResponse> allList = new ArrayList<>();
+
+        for (Map<String, Object> follow : listData) {
+            // NOTE: 삭제된 데이터 모델 필터링
+            if(follow.containsKey("deleted") && (boolean) follow.get("deleted")) {
+                continue;
+            }
+
+            String followId = (String) follow.get("id");
+            String dataType = (String) follow.get("type");
+            String newDataType = getDataType(dataType);
 
             if (newDataType == null) {
                 continue;
@@ -185,7 +240,6 @@ public class ModelCreationService {
                 allList = tempResult;
             }
         }
-
         return allList;
     }
     private String getDataType(String dataType) {

@@ -113,6 +113,10 @@ const $constants = {
           value: "my",
         },
       ],
+      MY_DATA_TAB: [
+        { label: "나의 데이터", value: "owner", type: "owner" },
+        { label: "나의 북마크", value: "bookmark", type: "bookmark" },
+      ],
       ACCORDION: {
         bookmark: "내가 북마크한 데이터 모델",
         owner: "내가 등록한 데이터 모델",

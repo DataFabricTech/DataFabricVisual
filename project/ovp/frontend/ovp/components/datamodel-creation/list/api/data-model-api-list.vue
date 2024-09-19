@@ -36,7 +36,7 @@
       <!-- 필터 -->
       <div class="filters">
         <!-- 카테고리, 소유자, 태그 select -->
-        <div class="h-group">
+        <div class="h-group" v-if="props.useFilter">
           <template v-for="(filterItem, keyName, FI) in props.filter" :key="FI">
             <template v-if="keyName === 'category'">
               <menu-search-tree
@@ -145,6 +145,7 @@ const props = withDefaults(
       return () => {};
     },
     useSort: false,
+    useFilter: true,
     useLiveSearch: true,
     useInfinite: false,
     isMulti: false,

@@ -16,7 +16,7 @@
         :modelList="selectedModelList"
         :dataModelFilter="filters"
         :modelListCnt="selectedModelListCnt"
-        @change="addModelInstance.open"
+        @change="addModelInstance.open()"
         @delete="deleteDataModel"
         @item-click="onClickDataModelItem"
         @bookmark-change="updateMainSelectedModelBookmark"

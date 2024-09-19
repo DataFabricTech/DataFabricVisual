@@ -21,4 +21,6 @@ const props = defineProps({
     default: false
   }
 });
+
+console.log("loader");
 </script>
