@@ -127,6 +127,9 @@ import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
+import { storeToRefs } from "pinia";
+const dataModelSearchStore = useDataModelSearchStore();
+const { infiniteScrollSettingDone } = storeToRefs(dataModelSearchStore);
 
 const props = withDefaults(
   defineProps<
@@ -238,7 +241,6 @@ const {
  * 그래서 아래와 같이 설정함.
  */
 // scroll tag dom v-if false 처리
-const infiniteScrollSettingDone = ref(false);
 // infinte scroll 생성 (helper 에 설정한 mount 단계에서 동작하지 않음 -> dom 이 v-if false 이기 때문.
 const { scrollTrigger, mount } = useIntersectionObserver({
   callback: props.addSearchList,
@@ -253,4 +255,13 @@ onMounted(() => {
   // infinite scroll mount 설정
   mount();
 });
+
+watch(
+  () => infiniteScrollSettingDone.value,
+  (value) => {
+    if (value) {
+      mount();
+    }
+  },
+);
 </script>

@@ -12,6 +12,7 @@
     :height="560"
     :lockScroll="true"
     swipeToClose="none"
+    @close="onCloseModal"
     @before-open="onOpenModal"
     @click-outside="onCancelModal"
     @cancel="onCancelModal"
@@ -74,6 +75,7 @@ const {
   selectedItemOwner,
   selectedModelList,
   nSelectedListData,
+  infiniteScrollSettingDone,
 } = storeToRefs(dataModelSearchStore);
 const { resetReloadList, getFilters, changeDetailTab, resetDetailBox } =
   dataModelSearchStore;
@@ -97,6 +99,10 @@ const onConfirmModal = () => {
   // 내부 데이터 저장
   selectedModelList.value = nSelectedListData.value;
   emit("close");
+};
+
+const onCloseModal = () => {
+  infiniteScrollSettingDone.value = false;
 };
 </script>
 <style lang="scss" scoped></style>

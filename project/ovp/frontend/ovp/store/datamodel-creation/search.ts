@@ -39,6 +39,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     return selectedModelList.value.length;
   });
   const isDoneFirModelListLoad = ref(false);
+  const infiniteScrollSettingDone = ref(false);
 
   const { setQueryFilterByDepth } = useQueryHelpers();
 
@@ -574,6 +575,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     selectedModelList,
     selectedModelListCnt,
     isDoneFirModelListLoad,
+    infiniteScrollSettingDone,
     addSearchList,
     getSearchList,
     getFilters,
