@@ -89,7 +89,7 @@
       </div>
     </div>
 
-    <ul id="dataListModal" class="menu-list">
+    <ul id="dataListModal" class="menu-list" v-if="infiniteScrollSettingDone">
       <template v-for="(item, idx) in listData" :key="item.value + idx">
         <data-model-list-item
           v-if="!item.isSelected"
@@ -195,12 +195,6 @@ const emitSearchChange = (value: string) => {
   emit("search-change", value);
 };
 
-const { scrollTrigger } = useIntersectionObserver({
-  callback: props.addSearchList,
-  targetId: "dataListModal",
-  loaderId: "dataModelApiListLoader",
-});
-
 const {
   listData,
   searchLabel,
@@ -227,4 +221,36 @@ const {
   emitSearchChange,
   emitItemCheck,
 );
+
+/**
+ * modal 의 경우 infinite scroll 을 셋팅하는 순서가 맞지 않는 경우
+ * 초반에 갱신 - 누적 연달아 api 호출 하거나, 아예 호출하지 않거나, infinite scroll 이 동작되지 않거나 하는 오류가 있음.
+ *
+ * 보통의 infinite scroll 의 경우
+ * 1. infinite scroll tag dom 생성
+ * 2. 갱신 api 호출
+ * 3. infinite scroll 생성
+ * 4. scroll 동작에 따라 infinite scroll 설정 (mount)
+ *
+ * 이 모달의 경우 갱신 api 호출과 infinite scroll 이 동시에 생성 되어,
+ * 갱신 api 호출되어 데이터를 dom 에 셋팅하자 마자 infinite scroll 이 scroll event 가 발생되었다고 판단, 누적 api 를 호출하는 오류가 있음.
+ *
+ * 그래서 아래와 같이 설정함.
+ */
+// scroll tag dom v-if false 처리
+const infiniteScrollSettingDone = ref(false);
+// infinte scroll 생성 (helper 에 설정한 mount 단계에서 동작하지 않음 -> dom 이 v-if false 이기 때문.
+const { scrollTrigger, mount } = useIntersectionObserver({
+  callback: props.addSearchList,
+  targetId: "dataListModal",
+  loaderId: "dataModelApiListLoader",
+});
+
+onMounted(() => {
+  // 2. 갱신 api 호출 완료됨.
+  // dom v-if=true 설정
+  infiniteScrollSettingDone.value = true;
+  // infinite scroll mount 설정
+  mount();
+});
 </script>
