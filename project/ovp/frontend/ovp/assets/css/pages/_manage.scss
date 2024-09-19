@@ -80,6 +80,7 @@
 .service-form {
   @include flex($direction: column, $horizontal: flex-start);
 
+  flex-grow: 1;
   width: 100%;
   max-height: 430px;
   padding: $spacing-16;
@@ -168,6 +169,12 @@
   height: 400px;
 }
 
+//서비스 저장소,수집,연결정보 탭
+.service-page {
+  position: relative;
+  padding-inline: $spacing-16;
+  flex-grow: 1;
+}
 
 //overview
 .overview {

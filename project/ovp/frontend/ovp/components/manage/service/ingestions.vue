@@ -20,19 +20,17 @@
           <svg-icon class="button-icon" name="close"></svg-icon>
         </button>
       </div>
-      <div class="relative">
-        <button class="button button-neutral-ghost" @click="toggle = !toggle">
+      <div class="relative" ref="dropdownToggle">
+        <button
+          class="button button-neutral-ghost"
+          @click="onClickDropdownToggle"
+        >
           <span class="button-title">수집추가</span>
           <svg-icon
             class="button-icon"
+            :class="{ 'rotate-180': toggle }"
             name="chevron-down-medium"
-            v-if="!toggle"
-          ></svg-icon>
-          <svg-icon
-            class="button-icon rotate-180"
-            name="chevron-down-medium"
-            v-else
-          ></svg-icon>
+          />
         </button>
         <div class="dropdown" style="right: 0" v-if="toggle">
           <ul class="dropdown-list">
@@ -179,6 +177,8 @@ import type { Ingestion } from "@/type/service";
 import { useServiceStore } from "@/store/manage/service";
 import { useServiceCollectionAddStore } from "@/store/manage/service/collection-add/index";
 import { useServiceCollectionLogStore } from "@/store/manage/service/collection-log/index";
+
+import { useDropdownHelper } from "@/composables/dropdownHelper";
 
 import Loading from "@base/loading/Loading.vue";
 import ModalCollection from "@/components/manage/service/modal/collection/modal-collection.vue";
@@ -394,8 +394,6 @@ async function kill(ingestion: Ingestion): Promise<void> {
   }
 }
 
-const toggle = ref<boolean>(false);
-
 function openAddModel(value: string) {
   setPipelineType(value);
   // 서비스 id 세팅
@@ -422,5 +420,16 @@ const openEditModal = async (value: any) => {
   collectionModalInstance.open();
 };
 
+const onClickDropdownToggle = () => {
+  toggle.value = !toggle.value;
+};
+
 await refreshIngestionList();
+
+const dropdownToggle = ref();
+
+const { isDropdownOpen: toggle, setHandler } = useDropdownHelper();
+onMounted(() => {
+  setHandler(dropdownToggle.value);
+});
 </script>

@@ -55,7 +55,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const pagingStore = usePagingStore();
   const { setFrom, updateIntersectionHandler } = pagingStore;
   const { from, size } = storeToRefs(pagingStore);
-  const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
+  const { setQueryFilterByDepth } = useQueryHelpers();
 
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Filters => {
@@ -113,7 +113,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       query_filter: JSON.stringify(queryFilter),
       sort_field: sortKey.value,
       sort_order: sortKeyOpt.value,
-      trino_query: JSON.stringify(getTrinoQuery(queryFilter)),
     };
     return new URLSearchParams(params);
   };
@@ -196,7 +195,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     return !_.has(selectedFilters.value, FILTER_KEYS.CATEGORY)
       ? []
       : selectedFilters.value[FILTER_KEYS.CATEGORY].map(
-          (filter: any) => `ovp_category.${filter.id}`,
+          (filter: any) => `OVP_category.${filter.id}`,
         );
   };
 
@@ -279,7 +278,6 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     changeTab,
     updateIntersectionHandler,
     getQueryFilter,
-    getTrinoQuery,
     setEmptyFilter,
   };
 });

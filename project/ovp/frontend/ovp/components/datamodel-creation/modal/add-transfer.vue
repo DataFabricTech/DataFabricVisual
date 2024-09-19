@@ -27,6 +27,7 @@
             :use-infinite="true"
             :use-live-search="false"
             :addSearchList="addSearchList"
+            :isDoneFirModelListLoad="isDoneFirModelListLoad"
             list-type="non-selected"
             no-data-msg="데이터 모델이 없습니다."
             @item-check="onSelectApiData"
@@ -100,7 +101,7 @@
         @delete="onDeleteListData"
         @item-check="onSelectListData"
         @item-click="onClickData"
-        @bookmark-change="onClickBookmark"
+        @bookmark-change="updateSelectedModelBookmark"
       ></data-model-list>
     </div>
   </div>
@@ -128,6 +129,7 @@ const {
   onClickData,
   onClickAccordData,
   onClickBookmark,
+  updateSelectedModelBookmark,
 } = dataModelSearchStore;
 const {
   filters,
@@ -137,6 +139,7 @@ const {
   currTypeTab,
   mySearchResult,
   nSelectedListData,
+  isDoneFirModelListLoad,
 } = storeToRefs(dataModelSearchStore);
 
 const selectedListLength = computed(() => {
@@ -167,14 +170,6 @@ const onSaveSelectedData = () => {
 
   tempSelectedListData.value = [];
   tempAccordSelectedListData.value = [];
-
-  searchResult.value = searchResult.value.map((item: any) => {
-    // 선택되지 않은 항목 중에 SelectedList에 데이터가 존재하면 값 변경
-    if (!item.isSelected && isSelectedData(item.id)) {
-      item.isSelected = true;
-    }
-    return item;
-  });
 };
 
 /**
@@ -246,5 +241,16 @@ const onClickAccordSearchChange = async (value: string) => {
   setSearchKeyword(value);
   await resetReloadList(nSelectedListData.value);
 };
+
+watchEffect(() => {
+  // nSelectedListData.value 의 값이 변경되면 적용되도록
+  searchResult.value = searchResult.value.map((item: any) => {
+    // 선택되지 않은 항목 중에 SelectedList에 데이터가 존재하면 값 변경
+    if (!item.isSelected && isSelectedData(item.id)) {
+      item.isSelected = true;
+    }
+    return item;
+  });
+});
 </script>
 <style lang="scss" scoped></style>

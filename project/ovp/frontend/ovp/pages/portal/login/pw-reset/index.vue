@@ -17,14 +17,12 @@
               확인
             </button>
             <div class="form-foot-group">
-              <button
+              <nuxt-link
+                :to="'/portal/login'"
                 class="button button-primary-ghost button-sm"
-                type="button"
               >
-                <nuxt-link :to="'/portal/login'">
-                  로그인 페이지로 돌아가기
-                </nuxt-link>
-              </button>
+                로그인 페이지로 돌아가기
+              </nuxt-link>
             </div>
           </div>
         </div>

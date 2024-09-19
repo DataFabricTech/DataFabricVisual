@@ -22,7 +22,8 @@
         <div
           :class="{
             'node-disabled': props.disabledIds.length > 0 && props.disabledIds.includes(treeViewItem.id),
-            'node-fir-selected': props.selectedIds.length > 0 && props.selectedIds.includes(treeViewItem.id)
+            'node-fir-selected':
+              treeSelectedIds.length > 0 && treeSelectedIds.includes(treeViewItem.id) && !isCheckable
           }"
         ></div>
         <div v-if="mode === 'edit' && !props.immutableItems.includes(treeViewItem.id)" class="tree-item-buttons">
@@ -72,6 +73,10 @@ const onItemChecked = (from: TreeViewItem[]) => {
 };
 
 const onItemSelected = (node: TreeViewItem) => {
+  // node-fir-select class 를 삭제해준다.
+  try {
+    treeSelectedIds.value = treeSelectedIds.value.filter((id) => id !== treeItems.value[0].id);
+  } catch {}
   emit("onItemSelected", node);
 };
 
@@ -88,7 +93,8 @@ onMounted(() => {
   }
 });
 
-const { showTree, treeItems, createNewTreeItem, openAll, closeAll, dropValidatorHandler } = TreeComposition(props);
+const { showTree, treeItems, createNewTreeItem, openAll, closeAll, dropValidatorHandler, treeSelectedIds } =
+  TreeComposition(props);
 </script>
 
 <style lang="scss">

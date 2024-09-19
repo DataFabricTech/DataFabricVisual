@@ -177,6 +177,17 @@
       top: 45%;
     }
   }
+
+  &.loader-content {
+    .overlay {
+      position: absolute;
+    }
+
+    .overlay + .loader-group,
+    .overlay-dark + .loader-group {
+      position: absolute;
+    }
+  }
 }
 
 .overlay {

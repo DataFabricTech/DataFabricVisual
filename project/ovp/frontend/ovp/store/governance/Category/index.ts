@@ -44,12 +44,13 @@ interface UndefinedTagIdManager {
   get: () => string | null;
 }
 
+// TODO: 데이터모델추가 모달 공통모달로 변경되면서 사용하지 않는 코드가 있으므로 관련 코드 삭제 필요. Category 관련 이슈처리가 완료된 후 정리하는것이 좋을 것 같음.
 export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const { $api } = useNuxtApp();
   const pagingStore = usePagingStore();
-  const { setFrom, updateIntersectionHandler } = pagingStore;
+  const { setFrom, setDataLoadDone, updateIntersectionHandler } = pagingStore;
   const { from, size } = storeToRefs(pagingStore);
-  const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
+  const { setQueryFilterByDepth } = useQueryHelpers();
 
   const selectedNode = ref({});
   const categories: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
@@ -67,6 +68,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const selectedModelList = ref([]);
   const addSearchInputValue = ref("");
   const checkReachedCount = ref<boolean>(false);
+  const searchInputValue = ref("");
   const previewData: Ref<any> = ref({
     modelInfo: {
       model: {
@@ -217,26 +219,23 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   };
 
   // MAIN - MODEL LIST
-  const getModelListQuery = (tagId: string, value?: string) => {
+  const getModelListQuery = (tagId: string) => {
     // TODO : [개발] 검색어 조건 여기 추가.
     const params: any = {
       // eslint-disable-next-line id-length
-      q: value || "",
+      q: searchInputValue.value || "",
       from: from.value,
       size: size.value,
       tagId: tagId,
     };
     return new URLSearchParams(params);
   };
-  const getModelByCategoryIdAPI = async (
-    node: TreeViewItem,
-    value?: string,
-  ) => {
+  const getModelByCategoryIdAPI = async (node: TreeViewItem) => {
     if (_.isNull(node) || _.isEmpty(node.tagId)) {
       return;
     }
     const { data } = await $api(
-      `/api/category/models?${getModelListQuery(node.tagId, value)}`,
+      `/api/category/models?${getModelListQuery(node.tagId)}`,
       { showLoader: false },
     );
 
@@ -247,12 +246,15 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     const data = await getModelByCategoryIdAPI(selectedNode.value);
     modelList.value = modelList.value.concat(data);
   };
-  const getModelList = async (value?: string) => {
+  const getModelList = async () => {
     if (_.isNull(selectedNode.value)) {
       return;
     }
-    const data = await getModelByCategoryIdAPI(selectedNode.value, value);
+    const data = await getModelByCategoryIdAPI(selectedNode.value);
     modelList.value = data === null ? [] : data;
+
+    // [데이터 갱신] 이 완료되면 호출한다. infiniteScroll 처리하기 위해 필요한 함수.
+    setDataLoadDone();
   };
   const setModelIdList = () => {
     modelIdList.value = [];
@@ -334,7 +336,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       deleted: false,
       query_filter: JSON.stringify(queryFilter),
       sort_field: "totalVotes",
-      trino_query: JSON.stringify(getTrinoQuery(queryFilter)),
     };
     return new URLSearchParams(params);
   };
@@ -415,6 +416,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const currentTab: Ref<string> = ref("table");
   const changeTab = async (item: string) => {
     checkReachedCount.value = false;
+    selectedDataModelList.value = [];
     initTab.value = item;
     currentTab.value = item;
     await resetReloadList();
@@ -485,6 +487,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
     lastChildIdList,
     isShowPreview,
     undefinedTagIdManager,
+    searchInputValue,
     resetAddModalStatus,
     patchModelAddItemAPI,
     patchCategoryTagAPI,

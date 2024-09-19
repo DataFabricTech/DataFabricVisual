@@ -92,17 +92,30 @@ export const useMyPageStore = defineStore("my-page", () => {
   const getPreviewData = async (fqn: string) => {
     const data: any = await $api(`/api/search/preview/${fqn}`);
     if (data.result === 0) {
-      console.error("미리보기 지원하지 않는 데이터 타입입니다.");
-      previewData.value = {
-        modelInfo: {
-          model: {
-            name: "",
-          },
-        },
-      };
+      handlePreviewError();
       return;
     }
     previewData.value = data.data;
+  };
+
+  const getContainerPreviewData = async (id: string) => {
+    const data: any = await $api(`/api/containers/${id}`);
+    if (data.result === 0) {
+      handlePreviewError();
+      return;
+    }
+    previewData.value = data.data;
+  };
+
+  const handlePreviewError = () => {
+    console.error("미리보기 지원하지 않는 데이터 타입입니다.");
+    previewData.value = {
+      modelInfo: {
+        model: {
+          name: "",
+        },
+      },
+    };
   };
 
   const getSearchListQuery = () => {
@@ -120,7 +133,6 @@ export const useMyPageStore = defineStore("my-page", () => {
       from: from.value,
       size: size.value,
       deleted: false,
-      trino_query: null,
     };
     return new URLSearchParams(params);
   };
@@ -162,6 +174,7 @@ export const useMyPageStore = defineStore("my-page", () => {
     updateTargetUserInfo,
     getSearchList,
     getPreviewData,
+    getContainerPreviewData,
     search,
     clearSearchText,
   };

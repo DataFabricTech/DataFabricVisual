@@ -15,8 +15,8 @@
             </div>
           </nuxt-link>
         </li>
-        <li class="card-item" @click="clickMenu">
-          <a href="javascript:void(0);" title="용어사전">
+        <li class="card-item">
+          <nuxt-link to="/portal/govern/glossary" title="용어사전">
             <svg-icon name="glossary" class="svg-icon"></svg-icon>
             <div class="flex flex-col gap-[16px]">
               <strong class="card-title">용어사전</strong>
@@ -24,10 +24,10 @@
                 사용자와 팀의 관리를 효율적으로 할 수 있습니다.
               </p>
             </div>
-          </a>
+          </nuxt-link>
         </li>
-        <li class="card-item" @click="clickMenu">
-          <a href="javascript:void(0);" title="분류">
+        <li class="card-item">
+          <nuxt-link to="/portal/govern/classification" title="분류">
             <svg-icon name="classify" class="svg-icon"></svg-icon>
             <div class="flex flex-col gap-[16px]">
               <strong class="card-title">분류</strong>
@@ -35,16 +35,11 @@
                 다양한 소스에서 메타데이터를 추출하고 연결 설정할 수 있습니다.
               </p>
             </div>
-          </a>
+          </nuxt-link>
         </li>
       </ul>
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
-const clickMenu = () => {
-  alert("개발중 입니다.");
-};
 </script>
-<style scoped></style>

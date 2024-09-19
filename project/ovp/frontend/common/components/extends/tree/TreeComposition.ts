@@ -1,7 +1,6 @@
 import { TreeProps, TreeViewItem } from "./TreeProps";
 import { uuid } from "vue3-uuid";
 import _ from "lodash";
-import $constants from "@/utils/constant";
 
 export interface TreeComposition extends TreeProps {
   treeItems: Ref<TreeViewItem[]>;
@@ -10,10 +9,14 @@ export interface TreeComposition extends TreeProps {
   openAll(): void;
   closeAll(): void;
   dropValidatorHandler: any;
+  treeSelectedIds: Ref<any[]>;
 }
 
 export function TreeComposition(props: TreeProps): TreeComposition {
+  const CATEGORY_UNDEFINED_NAME = "미분류";
+
   const showTree = ref(true);
+  const treeSelectedIds = ref([""]);
 
   const updateStatus = (items: any[], ids: string[], statusKey: string): void => {
     _.forEach(items, (item) => {
@@ -32,9 +35,13 @@ export function TreeComposition(props: TreeProps): TreeComposition {
   const treeItems: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
   treeItems.value = _.cloneDeep(props.items ?? []);
 
+  if (props.selectedIds !== undefined) {
+    treeSelectedIds.value = props.selectedIds;
+  }
   // useFirSelect 를 사용하고, 선택된 값이 없으면 첫번째 항목을 선택한다.
   if (props.useFirSelect && props.selectedIds !== undefined && props.selectedIds.length < 1) {
     treeItems.value[0].selected = true;
+    treeSelectedIds.value.push(treeItems.value[0].id);
   }
 
   // 체크박스를 사용하는 경우, 체크여부를 object에 추가해준다.
@@ -124,7 +131,7 @@ export function TreeComposition(props: TreeProps): TreeComposition {
 
     // immutableItems 의 항목은 drag/drop 할수없음.
     if (Array.isArray(props.immutableItems) && props.immutableItems.some((item) => thisNode.id.includes(item))) {
-      alert(`${$constants.SERVICE.CATEGORY_UNDEFINED_NAME} 항목은 이동 불가능 합니다.`);
+      alert(`${CATEGORY_UNDEFINED_NAME} 항목은 이동 불가능 합니다.`);
       return false;
     }
 
@@ -183,6 +190,7 @@ export function TreeComposition(props: TreeProps): TreeComposition {
     createNewTreeItem,
     openAll,
     closeAll,
-    dropValidatorHandler
+    dropValidatorHandler,
+    treeSelectedIds
   };
 }

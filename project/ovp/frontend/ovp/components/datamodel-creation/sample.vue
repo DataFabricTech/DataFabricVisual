@@ -17,7 +17,12 @@
           <span class="data-summary-name">{{ props.dataModelName }}</span>
           <span class="data-summary-text">({{ props.dataModelOwner }})</span>
         </div>
-        <div class="data-detail" v-if="props.isItemClicked">
+        <div
+          class="data-detail"
+          v-if="
+            props.sampleDataList?.rowData?.length > 0 && props.isItemClicked
+          "
+        >
           <agGrid
             class="ag-theme-alpine ag-theme-quartz"
             :columnDefs="props.sampleDataList.columnDefs"
@@ -29,7 +34,12 @@
             :useColumnResize="true"
           ></agGrid>
         </div>
-        <div class="no-result" style="display: none">
+        <div
+          class="no-result"
+          v-show="
+            props.sampleDataList?.rowData?.length === 0 && props.isItemClicked
+          "
+        >
           <div class="notification">
             <svg-icon class="notification-icon" name="info"></svg-icon>
             <p class="notification-detail">샘플 데이터가 없습니다.</p>
@@ -54,6 +64,7 @@
           <select-box
             class="select-sm"
             :data="props.columnOptions"
+            :selectedItem="props.columnOptions[0]"
             labelKey="name"
             valueKey="id"
             nodataMsg="선택 가능한 옵션이 없습니다."
@@ -125,10 +136,10 @@ const props = defineProps({
   },
   sampleDataList: {
     type: Object,
-    default: {
+    default: () => ({
       columnDefs: [],
       rowData: [],
-    },
+    }),
   },
   columnOptions: {
     type: Array,

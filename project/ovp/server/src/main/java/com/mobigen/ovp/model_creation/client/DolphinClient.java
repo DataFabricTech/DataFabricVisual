@@ -11,4 +11,7 @@ import java.util.Map;
 public interface DolphinClient {
     @PostMapping("/query/execute")
     Map<String, Object> executeQuery(@RequestBody Map<String, Object> params) throws Exception;
+
+    @PostMapping("/model")
+    Map<String, Object> createModel(@RequestBody Map<String, Object> params) throws Exception;
 }
