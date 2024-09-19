@@ -24,12 +24,12 @@
       <td>{{ tag.description }}</td>
       <td>
         <div class="button-group">
-          <!--          <button-->
-          <!--            class="button button button-secondary-stroke"-->
-          <!--            @click="showModifyTag = true"-->
-          <!--          >-->
-          <!--            편집-->
-          <!--          </button>-->
+          <button
+            class="button button button-secondary-stroke"
+            @click="openModifyModal(tag.id)"
+          >
+            편집
+          </button>
           <button
             class="button button button-error-stroke"
             @click="confirmDelete(tag.id)"
@@ -50,10 +50,12 @@
       </td>
     </tr>
   </table>
-  <!--  <tag-modify-->
-  <!--    v-if="showModifyTag == true"-->
-  <!--    @close-modal="closeModifyTag"-->
-  <!--  ></tag-modify>-->
+  <tag-create :modal-id="MODAL_ID" @close-modal="closeModal"></tag-create>
+  <tag-modify
+    :modal-id="MODAL_MODIFY_ID"
+    @close-modal="closeModifyModal"
+    :formInfo="formInfo"
+  ></tag-modify>
 </template>
 
 <script setup lang="ts">
@@ -63,11 +65,17 @@ import tagCreate from "@/components/classification/modal/tag-create.vue";
 
 const useClassificationStore = classificationStore();
 const { classificationTagList } = storeToRefs(useClassificationStore);
-const { deleteClassificationTag, getClassificationTags } =
-  useClassificationStore;
+const {
+  deleteClassificationTag,
+  getClassificationTags,
+  editFormInfo,
+  setTagId,
+} = useClassificationStore;
 
 // 태그 추가 모달 ID
 const MODAL_ID = "modal-classificationTag";
+// 태그 수정 모달 ID
+const MODAL_MODIFY_ID = "modal-classificationTag-modify";
 
 const { open, close } = useModal({
   component: tagCreate,
@@ -81,6 +89,20 @@ const { open, close } = useModal({
 
 function openModal() {
   open();
+}
+
+// 수정할 태그의 정보
+let formInfo = ref({ name: "", description: "" });
+
+async function openModifyModal(val: string) {
+  // 선택한 태그의 id값을 스토어에 저장
+  setTagId(val);
+  // 태그정보 가져오기
+  formInfo.value = editFormInfo();
+  $vfm.open(MODAL_MODIFY_ID);
+}
+function closeModifyModal() {
+  $vfm.close(MODAL_MODIFY_ID);
 }
 
 const confirmDelete = (tagId: string) => {

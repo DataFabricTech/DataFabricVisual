@@ -76,6 +76,9 @@ export const classificationStore = defineStore("classification", () => {
 
   // 현재 선택된 아이디 분류 ID값(기본값 : classificationList[0]의 ID값)
   const currentClassificationID: Ref = ref("");
+
+  const tagID: Ref<string> = ref("");
+
   // 현재 태그의 분류 name값
   const currentClassificationTagName: Ref<string> = ref("");
 
@@ -193,6 +196,41 @@ export const classificationStore = defineStore("classification", () => {
     });
   };
 
+  const setTagId = (tagId: string) => {
+    tagID.value = tagId;
+  };
+
+  // 태그 수정 버튼을 클릭시 해당 태그의 name, description값을 가져오는 함수
+  const editFormInfo = () => {
+    // classificationTagList에서 tagId에 해당하는 태그를 찾기
+    const tag = classificationTagList.value.find(
+      (tag) => tag.id === tagID.value,
+    );
+    // tagID와 동일한 아이디를 가진 태그가 존재하면 태그의 정보, name과 description을 객체로 반환
+    if (tag) {
+      return {
+        name: tag.name,
+        description: tag.description,
+      };
+    }
+    // 태그가 존재하지 않을 경우, 기본값을 반환
+    return {
+      name: "",
+      description: "",
+    };
+  };
+
+  // 태그 수정 API 호출
+  const editClassificationTag = (editData: JsonPatchOperation[]) => {
+    return $api(`/api/tags/edit/${currentClassificationID}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json-patch+json",
+      },
+      body: JSON.stringify(editData),
+    });
+  };
+
   return {
     classificationList,
     currentClassificationTagName,
@@ -211,5 +249,10 @@ export const classificationStore = defineStore("classification", () => {
     addClassificationTag,
     isNameEditable,
     isDescEditable,
+    editFormInfo,
+    editClassificationTag,
+    setTagId,
+    tagID,
+    // formInfo,
   };
 });
