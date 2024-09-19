@@ -76,11 +76,12 @@
         </div>
       </div>
       <div class="v-group gap-5">
-        <h4 class="overview-title">최근 등록/수정된 서비스</h4>
-        <div class="table-group">
-          <div class="table-info">
+        <div class="h-group w-full">
+          <h4 class="overview-title">최근 등록/수정된 서비스</h4>
+          <div class="overview-info">
             수집 일시 : 2024-09-12 00:00:00
           </div>
+        </div>
           <table>
             <thead>
             <tr>
@@ -103,7 +104,6 @@
             </tr>
             </tbody>
           </table>
-        </div>
       </div>
       <div class="v-group gap-5">
         <h4 class="overview-title">히스토리</h4>

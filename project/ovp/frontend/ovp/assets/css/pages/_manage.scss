@@ -182,8 +182,13 @@
   flex-direction: column;
   gap: $spacing-40;
 
+  &-info {
+    margin-left: auto;
+    color: $neutral-400;
+  }
+
   &-title {
-    @include font-size('15');
+    @include font-size('16');
 
     font-weight: 600;
   }
@@ -233,6 +238,20 @@
       height: 100%;
       flex-grow: 1;
     }
+  }
+
+  .ag-theme-alpine.ag-theme-quartz .ag-root .ag-header {
+    height: 42px !important;
+    min-height: 42px !important;
+    background-color: $neutral-0;
+  }
+
+  .ag-header-row.ag-header-row-column {
+    height: 42px !important;
+  }
+
+  .ag-theme-alpine .ag-row {
+    border-width: 0;
   }
 }
 
