@@ -9,6 +9,8 @@ export const useOverviewStore = defineStore("overview", () => {
   const currentSituationData: Ref<any[]> = ref([]);
   const statusDetailData: Ref<any[]> = ref([]);
   const historyData: Ref<any[]> = ref([]);
+  const isOpenAgHeaderTooltip: Ref<boolean> = ref(false);
+  const agHeaderCoordinates = ref({ x: 0, y: 0 });
 
   const getServiceTypeData = async () => {
     // const {data} = await $api (``);
@@ -332,6 +334,20 @@ export const useOverviewStore = defineStore("overview", () => {
     historyData.value = tempData;
   };
 
+  const openDynamicTooltip = (event: any): void => {
+    isOpenAgHeaderTooltip.value = true;
+    const rect = event.target.getBoundingClientRect();
+
+    agHeaderCoordinates.value = {
+      x: rect.left - 130,
+      y: rect.top - 125,
+    };
+  };
+
+  const closeDynamicTooltip = () => {
+    isOpenAgHeaderTooltip.value = false;
+  };
+
   return {
     serviceTypeData,
     serviceStatusData,
@@ -339,7 +355,11 @@ export const useOverviewStore = defineStore("overview", () => {
     currentSituationData,
     statusDetailData,
     historyData,
+    isOpenAgHeaderTooltip,
+    agHeaderCoordinates,
     getServiceTypeData,
+    openDynamicTooltip,
+    closeDynamicTooltip,
     getServiceStatusData,
     getServiceResponseData,
     getDataCurrentSituationData,

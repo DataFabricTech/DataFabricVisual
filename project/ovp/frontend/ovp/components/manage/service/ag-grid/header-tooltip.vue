@@ -1,7 +1,11 @@
 <template>
   <div class="ag-tooltip-header">
-    현황
-    <div class="tooltip" v-tooltip:top="tooltipContent">
+    <div
+      class="ag-tooltip-header-inner"
+      @mouseenter="openDynamicTooltip"
+      @mouseleave="closeDynamicTooltip"
+    >
+      <span class="ag-tooltip-header-title"> 현황 </span>
       <span class="svg-icon">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -24,8 +28,11 @@
   </div>
 </template>
 
-<script setup>
-const tooltipContent = `Queued: 수집 작업이 시작 대기 상태에 있음 <br/> Running: 현재 수집 작업이 진행 중 <br/> Success: 수집 작업이 성공적으로 완료됨 <br/> Failed: 오류가 발생하여 작업이 완료되지 않음 <br/> PartialSuccess: 일부는 성공적으로 수집되었으나, 일부는 실패함`;
+<script setup lang="ts">
+import { useOverviewStore } from "~/store/manage/service/overview";
+
+const overviewStore = useOverviewStore();
+const { openDynamicTooltip, closeDynamicTooltip } = overviewStore;
 </script>
 
 <style lang="scss">

@@ -1,19 +1,53 @@
 <template>
   <div class="overview">
+    <!--    ag-grid 내에 tooltip을 넣으면 overflow:hidden 때문에 툴팁이 숨겨져 일부만 보이는 이슈가 있어서 밖으로 뺌-->
+    <div
+      id="dynamicTooltip"
+      class="dynamic-tooltip"
+      v-show="isOpenAgHeaderTooltip"
+    >
+      <p>Queued: 수집 작업이 시작 대기 상태에 있음</p>
+      <p>Running: 현재 수집 작업이 진행 중</p>
+      <p>Success: 수집 작업이 성공적으로 완료됨</p>
+      <p>Failed: 오류가 발생하여 작업이 완료되지 않음</p>
+      <p>PartialSuccess: 일부는 성공적으로 수집되었으나, 일부는 실패함</p>
+    </div>
     <div class="v-group gap-5">
       <h4 class="overview-title">요약 정보</h4>
       <div class="flex w-full gap-5">
         <div class="overview-summary">
           <span>서비스 타입 요약</span>
-          <div id="typeChart" style="width: 100%; height: 320px"></div>
+          <div class="no-result" v-if="serviceTypeData.length === 0">
+            <div class="notification">
+              <svg-icon class="notification-icon" name="info"></svg-icon>
+              <p class="notification-detail">등록된 서비스가 없습니다.</p>
+            </div>
+          </div>
+          <div v-else id="typeChart" style="width: 100%; height: 320px"></div>
         </div>
         <div class="overview-summary">
           <span>서비스 상태 요약</span>
-          <div id="statusChart" style="width: 100%; height: 320px"></div>
+          <div class="no-result" v-if="serviceStatusData.length === 0">
+            <div class="notification">
+              <svg-icon class="notification-icon" name="info"></svg-icon>
+              <p class="notification-detail">등록된 서비스가 없습니다.</p>
+            </div>
+          </div>
+          <div v-else id="statusChart" style="width: 100%; height: 320px"></div>
         </div>
         <div class="overview-summary" style="position: relative">
           <span>서비스 응답시간</span>
-          <div class="overview-chart p-3 overflow-y-auto" id="responseList">
+          <div class="no-result" v-if="serviceResponseData.length === 0">
+            <div class="notification">
+              <svg-icon class="notification-icon" name="info"></svg-icon>
+              <p class="notification-detail">등록된 서비스가 없습니다.</p>
+            </div>
+          </div>
+          <div
+            v-else
+            class="overview-chart p-3 overflow-y-auto"
+            id="responseList"
+          >
             <dl v-for="(item, index) in serviceResponseData" :key="index">
               <dt>{{ item.name }}</dt>
               <dd>{{ item.value }}</dd>
@@ -32,7 +66,13 @@
       <div class="flex w-full gap-5">
         <div class="overview-summary">
           <span>등록된 데이터 모델 현황</span>
-          <div class="overview-chart h-group gap-4 px-2">
+          <div class="no-result" v-if="currentSituationData.length === 0">
+            <div class="notification">
+              <svg-icon class="notification-icon" name="info"></svg-icon>
+              <p class="notification-detail">등록된 서비스가 없습니다.</p>
+            </div>
+          </div>
+          <div v-else class="overview-chart h-group gap-4 px-2">
             <button
               class="button button-neutral-stroke button-lg"
               type="button"
@@ -67,8 +107,17 @@
     </div>
     <div class="v-group gap-5">
       <h4 class="overview-title">서비스 상태</h4>
+      <!--     TODO: [개발] 수집일시 api -->
       <div class="table-info">수집 일시 : 2024-09-12 00:00:00</div>
+      <div class="no-result" v-if="statusDetailData.length === 0">
+        <div class="notification">
+          <svg-icon class="notification-icon" name="info"></svg-icon>
+          <p class="notification-detail">등록된 서비스가 없습니다.</p>
+        </div>
+      </div>
+      <!--      TODO: [개발] 30개까지 출력되고 인피니티 스크롤 적용 -->
       <agGrid
+        v-else
         :style="'width: 100%; height: 300px'"
         class="ag-theme-alpine ag-theme-quartz"
         :columnDefs="serviceColumnDefs"
@@ -80,8 +129,16 @@
       ></agGrid>
     </div>
     <div class="v-group gap-5">
-      <h4 class="overview-title">수집히스토리</h4>
+      <h4 class="overview-title">수집 히스토리</h4>
+      <div class="no-result" v-if="historyData.length === 0">
+        <div class="notification">
+          <svg-icon class="notification-icon" name="info"></svg-icon>
+          <p class="notification-detail">등록된 서비스가 없습니다.</p>
+        </div>
+      </div>
+      <!--      TODO: [개발] 30개까지 출력되고 인피니티 스크롤 적용 -->
       <agGrid
+        v-else
         :style="'width: 100%; height: 300px'"
         class="ag-theme-alpine ag-theme-quartz"
         :columnDefs="historyColumnDefs"
@@ -124,7 +181,27 @@ const {
   currentSituationData,
   statusDetailData,
   historyData,
+  isOpenAgHeaderTooltip,
+  agHeaderCoordinates,
 } = storeToRefs(overviewStore);
+
+// Dynamic Tooltip
+watch(
+  () => agHeaderCoordinates.value,
+  async (newVal) => {
+    await nextTick();
+
+    const dynamicTooltipDOM = document.getElementById(
+      "dynamicTooltip",
+    ) as HTMLElement;
+
+    if (dynamicTooltipDOM) {
+      dynamicTooltipDOM.style.left = `${agHeaderCoordinates.value.x}px`;
+      dynamicTooltipDOM.style.top = `${agHeaderCoordinates.value.y}px`;
+    }
+  },
+  { immediate: true },
+);
 
 // Common
 const setOverviewData = () => {
@@ -180,7 +257,7 @@ const historyColumnDefs = ref([
     cellStyle: { textAlign: "center" },
   },
   {
-    headerComponentFramework: HeaderTooltip,
+    headerComponent: HeaderTooltip,
     headerClass: "ag-header-center",
     field: "status",
     cellRenderer: HistoryServiceStatusRenderer,
