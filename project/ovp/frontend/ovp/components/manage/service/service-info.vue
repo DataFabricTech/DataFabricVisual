@@ -299,6 +299,7 @@ const {
   changeTag,
   service,
   servicesById,
+  changeCurrentService,
 } = useServiceStore();
 const serviceStore = useServiceStore();
 const { serviceData, defaultDescription, newDescription } =
@@ -326,13 +327,15 @@ const isEmptyService = (): boolean => {
 };
 
 async function refreshService(): Promise<void> {
-  await getServiceList();
+  // await getServiceList();
+  changeCurrentService(service);
   disableEditInfo();
 }
 
 async function removeService(): Promise<void> {
   if (confirm("삭제된 서비스는 복구할 수 없습니다. 정말 삭제하시겠습니까?")) {
     await deleteService(service.id);
+    await getServiceList();
     await refreshService();
   }
 }

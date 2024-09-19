@@ -97,6 +97,20 @@ public class ServiceManageService {
     }
 
     /**
+     * 서비스 단일 항목 조회
+     * getService() 사용하려 했으나, serviceResponse 로 변환처리가 필요해서 분리함.
+     *
+     * @param type
+     * @param name
+     * @return
+     * @throws Exception
+     */
+    public Object getServiceOne(String type, String name) throws Exception {
+        return new ServiceResponse(getService(type, name), type);
+    }
+
+
+    /**
      * 서비스 검색
      *
      * @param keyword
