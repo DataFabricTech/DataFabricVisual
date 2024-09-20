@@ -3,20 +3,20 @@
     <ul class="tab-list">
       <li
         class="tab-item"
-        v-for="(item, index) in data"
+        v-for="(item, index) in props.data"
         @click="move(index)"
         :class="{
-          'is-tab-item-disabled': isDisabled(item[valueKey]),
+          'is-tab-item-disabled': isDisabled(item[props.valueKey]),
           'is-tab-item-selected': changeCurrentTabClass(index)
         }"
       >
         <button class="tab-button">
-          <p class="tab-button-text">{{ item[labelKey] }}</p>
+          <p class="tab-button-text">{{ item[props.labelKey] }}</p>
         </button>
       </li>
     </ul>
-    <div class="tab-contents" v-if="useTabContents">
-      <slot :name="data[currentIndex][valueKey]"></slot>
+    <div class="tab-contents" v-if="props.useTabContents">
+      <slot :name="props.data[currentIndex][props.valueKey]"></slot>
     </div>
   </div>
 </template>
