@@ -69,12 +69,14 @@ public class ServiceManageService {
         List<Services> storages = servicesClient.getServiceStorage("owner,tags", "non-deleted", limit).getData();
         List<ServiceResponse> serviceResponses = new ArrayList<>();
 
-        for (Services service : dataBases) {
-            serviceResponses.add(new ServiceResponse(service, DATA_BASE));
-        }
-        for (Services service : storages) {
-            serviceResponses.add(new ServiceResponse(service, STORAGE));
-        }
+        // 목록 표시에 필요한 항목만 포함되도록 처리함.
+        serviceResponses.addAll(dataBases.stream()
+                .map(service -> new ServiceResponse(service.getId(), service.getName(), DATA_BASE, service.getOwner(), service.getServiceType()))
+                .toList());
+
+        serviceResponses.addAll(storages.stream()
+                .map(service -> new ServiceResponse(service.getId(), service.getName(), STORAGE, service.getOwner(), service.getServiceType()))
+                .toList());
         return serviceResponses;
     }
 
@@ -95,6 +97,20 @@ public class ServiceManageService {
                 throw new Exception();
         }
     }
+
+    /**
+     * 서비스 단일 항목 조회
+     * getService() 사용하려 했으나, serviceResponse 로 변환처리가 필요해서 분리함.
+     *
+     * @param type
+     * @param name
+     * @return
+     * @throws Exception
+     */
+    public Object getServiceOne(String type, String name) throws Exception {
+        return new ServiceResponse(getService(type, name), type);
+    }
+
 
     /**
      * 서비스 검색
