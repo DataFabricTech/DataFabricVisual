@@ -120,6 +120,7 @@ public class ServiceManageService {
         params.add("q", keyword);
         params.add("from", from);
         params.add("index", index);
+        params.add("size", "1000");
 
         List<Map<String, ?>> hits = (List<Map<String, ?>>) ((Map<?, ?>) searchClient.getSearchList(params).get("hits")).get("hits");
 

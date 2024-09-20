@@ -59,7 +59,7 @@
               v-if="!serviceStore.editInfo.tag"
             >
               <div class="text-neutral-700" v-if="service.tags.length === 0">
-                <span>태그 없음</span>
+                <span>-</span>
               </div>
               <div
                 class="tag tag-primary tag-sm"
@@ -98,7 +98,7 @@
               v-if="!serviceStore.editInfo.term"
             >
               <div class="text-neutral-700" v-if="service.terms.length === 0">
-                <span>용어 없음</span>
+                <span>-</span>
               </div>
               <div class="tag tag-primary tag-sm" v-for="term in service.terms">
                 <span class="tag-text">{{ term.displayName }}</span>

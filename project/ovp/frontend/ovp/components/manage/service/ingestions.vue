@@ -167,7 +167,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { useModal } from "vue-final-modal";
 import cronstrue from "cronstrue";
 
@@ -238,11 +238,19 @@ const openLogModal = async (id: string) => {
   logModalInstance.open();
 };
 
+watch(
+  () => store.service,
+  () => {
+    refreshIngestionList();
+  },
+  { deep: true },
+);
+
 const isEmpty = (): boolean => {
   return ingestionList.length === 0;
 };
 
-const formatDate = (date: number) => {
+const formatDate = (date: number): string => {
   return dayjs(date).format(FORMAT);
 };
 const badgeClass = (ingestion: Ingestion): string => {
@@ -315,6 +323,7 @@ async function getStatus(ingestion: Ingestion): Promise<void> {
 async function refreshIngestionList(): Promise<void> {
   await getIngestionList(service);
   filterList();
+  toggle.value = false;
 }
 
 const currentLoading = ref({});

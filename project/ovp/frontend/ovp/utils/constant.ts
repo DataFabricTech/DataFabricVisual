@@ -137,12 +137,12 @@ const $constants = {
     CATEGORY_UNDEFINED_NAME: "미분류",
     TAB: [
       {
-        label: "저장소",
-        value: "repository",
-      },
-      {
         label: "수집",
         value: "ingestion",
+      },
+      {
+        label: "저장소",
+        value: "repository",
       },
       {
         label: "연결정보",
