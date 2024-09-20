@@ -202,7 +202,6 @@ const {
   listData,
   searchLabel,
   selectedSort,
-  checkShowListData,
   onSearchText,
   onSelectFilter,
   onResetSearchText,

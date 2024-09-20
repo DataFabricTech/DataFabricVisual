@@ -12,13 +12,10 @@ export default defineNuxtPlugin((nuxtApp: any) => {
   const _api = ofetch.create({
     async onRequest(context) {
       const { options } = context;
-      console.log("-------------------API--------------------");
-      console.log("onRequest >>> ", context.request);
       options.baseURL = useRuntimeConfig().public.baseUrl;
       options.credentials = "include";
 
       const showLoader = (options as any).showLoader ?? true;
-      console.log("onRequest showLoader >>> ", (options as any).showLoader);
 
       if (showLoader) {
         nuxtApp.$loading.start();
