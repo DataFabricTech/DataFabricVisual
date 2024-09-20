@@ -195,7 +195,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     return !_.has(selectedFilters.value, FILTER_KEYS.CATEGORY)
       ? []
       : selectedFilters.value[FILTER_KEYS.CATEGORY].map(
-          (filter: any) => `OVP_category.${filter.id}`,
+          (filter: any) => `ovp_category.${filter.id}`,
         );
   };
 
