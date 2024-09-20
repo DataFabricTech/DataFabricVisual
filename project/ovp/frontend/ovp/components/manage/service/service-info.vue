@@ -225,7 +225,6 @@ const isEmptyService = (): boolean => {
 };
 
 async function refreshService(): Promise<void> {
-  // await getServiceList();
   changeCurrentService(service);
   disableEditInfo();
 }
