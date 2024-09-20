@@ -10,7 +10,6 @@
         :setColumnFit="true"
         :useColumnResize="true"
       ></agGrid>
-      <!-- TODO: [퍼블] 저장소 탭 부분에만 loading 처리 가능 여부 확인 -->
       <Loading
         v-show="isDoneRepoAPI"
         id="repoLoader"
