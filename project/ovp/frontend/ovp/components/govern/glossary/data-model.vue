@@ -87,8 +87,14 @@ import { onMounted, ref } from "vue";
 import Preview from "~/components/common/preview/preview.vue";
 import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
-const { getDataModels, getDataModel, resetDataModels, updateTerm, dataModels, term } =
-  useGlossaryStore();
+const {
+  getDataModels,
+  getDataModel,
+  resetDataModels,
+  updateTerm,
+  dataModels,
+  term,
+} = useGlossaryStore();
 const { getPreviewData } = useSearchCommonStore();
 const searchCommonStore = useSearchCommonStore();
 const { previewData } = storeToRefs(searchCommonStore);
@@ -121,7 +127,6 @@ const showDataModelAddModal = () => {
   open();
 };
 
-function searchDataModel() {
 function searchDataModel(): void {
   getDataModels(term.fullyQualifiedName, keyword.value);
   isShowPreview.value = false;
@@ -135,21 +140,16 @@ function showPreview(): void {
 
 function clickPreview(data: object): void {
   getPreviewData(data.fullyQualifiedName);
-function clickPreview(data: any): void {
-  getDataModel(data.fullyQualifiedName);
   isShowPreview.value = true;
 }
 
-const selectedDataModels = ref([]);
-function checkDataModel(ids: string[]): void {
 const selectedDataModels = ref<string[]>([]);
 
-function checkDataModel(ids: string[]) {
+function checkDataModel(ids: string[]): void {
   selectedDataModels.value = [...ids];
 }
 
 function toggleAllCheck(allCheck: boolean): void {
-function toggleAllCheck(allCheck: boolean) {
   if (allCheck) {
     selectedDataModels.value = dataModels.map(
       (dataModel) => dataModel.id,
