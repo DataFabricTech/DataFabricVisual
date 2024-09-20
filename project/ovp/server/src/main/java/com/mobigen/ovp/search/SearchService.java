@@ -220,28 +220,50 @@ public class SearchService {
     }
 
     private String getQueryFilter(String index, String queryFilter) {
+        // Step 1: queryFilter를 JSON으로 변환
         JSONObject combinedFilter = new JSONObject(queryFilter);
 
-        JSONObject boolObject = new JSONObject();
-        JSONArray mustArray = new JSONArray();
-
-        boolObject.put("must", mustArray);
-        combinedFilter.put("query", new JSONObject().put("bool", boolObject));
-
-        JSONArray trinoMustArray = new JSONArray();
-        JSONObject trinoMustObject = new JSONObject();
+        // Step 2: trino 필터를 별도로 생성
         JSONArray trinoShouldArray = new JSONArray();
-
         trinoShouldArray.put(new JSONObject().put("term", new JSONObject().put("serviceType", "trino")));
 
-        trinoMustObject.put("bool", new JSONObject().put("should", trinoShouldArray));
-        trinoMustArray.put(trinoMustObject);
+        JSONObject trinoFilter = new JSONObject();
+        trinoFilter.put("bool", new JSONObject().put("should", trinoShouldArray));
 
-        if (index.equals("table")) {
-            boolObject.put("must_not", trinoMustArray);  // must_not으로 넣음
-        } else if (index.equals("model")) {
-            boolObject.put("must", trinoMustArray);  // 기본적으로 must로 넣음
+        // Step 3: 기존 queryFilter에 bool 필드가 있는지 확인
+        JSONObject queryBoolObject = combinedFilter.optJSONObject("query");
+        if (queryBoolObject == null) {
+            queryBoolObject = new JSONObject();
+            combinedFilter.put("query", queryBoolObject);
         }
+
+        JSONObject boolObject = queryBoolObject.optJSONObject("bool");
+        if (boolObject == null) {
+            boolObject = new JSONObject();
+            queryBoolObject.put("bool", boolObject);
+        }
+
+        // Step 4: must 또는 must_not에 trino 필터 추가
+        if (index.equals("table") || index.equals("storage")) {
+            // 기존 must_not이 있으면 가져오고, 없으면 새로 생성
+            JSONArray mustNotArray = boolObject.optJSONArray("must_not");
+            if (mustNotArray == null) {
+                mustNotArray = new JSONArray();
+                boolObject.put("must_not", mustNotArray);
+            }
+            // must_not에 trino 필터 추가
+            mustNotArray.put(trinoFilter);
+        } else if (index.equals("model")) {
+            // 기존 must가 있으면 가져오고, 없으면 새로 생성
+            JSONArray mustArray = boolObject.optJSONArray("must");
+            if (mustArray == null) {
+                mustArray = new JSONArray();
+                boolObject.put("must", mustArray);
+            }
+            // must에 trino 필터 추가
+            mustArray.put(trinoFilter);
+        }
+
         return combinedFilter.toString();
     }
 
