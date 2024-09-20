@@ -282,7 +282,15 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const changeTab = (item: string) => {
     currTab.value = item;
     setSearchKeyword("");
-    resetReloadList(nSelectedListData.value);
+
+    nextTick(() => {
+      // 두 tab 다 infinite scroll 이 설정 되어 있기 때문에 tab 전환시 설정 flag 를 초기화해준다.
+      // dom 에 infinite scroll 이 적용될 tag가 생성 된 후에 infinite scroll 을 설정해줘야 동작하기 때문에 nextTick 에서 설정함.
+      infiniteScrollSettingDone.value = false;
+      infiniteScrollSettingDone.value = true;
+    }).then(() => {
+      resetReloadList(nSelectedListData.value);
+    });
   };
 
   /**

@@ -252,10 +252,10 @@ onMounted(() => {
   // 2. 갱신 api 호출 완료됨.
   // dom v-if=true 설정
   infiniteScrollSettingDone.value = true;
-  // infinite scroll mount 설정
-  mount();
 });
 
+// infinite scroll flag 가 true 로 설정되면
+// intesection observer 를 mount 시켜준다.
 watch(
   () => infiniteScrollSettingDone.value,
   (value) => {
