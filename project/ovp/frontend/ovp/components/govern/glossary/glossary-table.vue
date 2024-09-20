@@ -1,7 +1,6 @@
 <template>
   <div class="l-top-bar">
-    <!-- TODO 모달 용어 추가 -->
-    <button class="button button-secondary ml-auto" @click="showModalPwChange">
+    <button class="button button-secondary ml-auto" @click="openModal">
       용어추가
     </button>
   </div>
@@ -27,23 +26,68 @@
           >
             편집
           </button>
-          <!-- TODO: 삭제 모달 -->
-          <button class="button button button-error-stroke">삭제</button>
+          <button
+            class="button button button-error-stroke"
+            @click="removeTerm(term.id)"
+          >
+            삭제
+          </button>
         </div>
       </td>
     </tr>
   </table>
-  <modal-glossary :modal-id="''"></modal-glossary>
+  <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+  <Loading
+    id="loader"
+    :use-loader-overlay="true"
+    class="loader-lg is-loader-inner"
+    style="display: none"
+  ></Loading>
+  <modal-glossary :modal-id="MODAL_ID"></modal-glossary>
 </template>
 
 <script setup lang="ts">
+import { watch } from "vue";
 import { useGlossaryStore } from "@/store/glossary";
 import type { Term } from "~/type/glossary";
-const { terms, openEditTermComponent, changeCurrentTerm } = useGlossaryStore();
+import Loading from "@base/loading/Loading.vue";
+import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+const {
+  glossary,
+  terms,
+  openEditTermComponent,
+  resetTerms,
+  changeCurrentTerm,
+  deleteTerm,
+  getTerms,
+} = useGlossaryStore();
+const store = useGlossaryStore();
+const { $vfm } = useNuxtApp();
 
-function onClickTerm(source: Term) {
+watch(
+  () => store.glossary,
+  () => {
+    resetTerms();
+  },
+  { deep: true },
+);
+
+function onClickTerm(source: Term): void {
   changeCurrentTerm(source);
   openEditTermComponent("term");
 }
-const showModalPwChange: () => void = () => {};
+
+const { scrollTrigger } = useIntersectionObserver(getTerms);
+
+async function removeTerm(id: string): Promise<void> {
+  if (confirm("데이터모델을 삭제 하시겠습니까?")) {
+    await deleteTerm(id);
+    await getTerms(glossary.name);
+  }
+}
+
+const MODAL_ID = "modal-glossary";
+function openModal(): void {
+  $vfm.open(MODAL_ID);
+}
 </script>

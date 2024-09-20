@@ -2,8 +2,8 @@ package com.mobigen.ovp.glossary;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
+import com.mobigen.ovp.common.openmete_client.dto.TermDto;
 import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
-import com.mobigen.ovp.glossary.client.dto.TermDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,7 +37,7 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @PostMapping()
-    public Object createGlossary(@RequestBody GlossaryDto dto) {
+    public Object createGlossary(@RequestBody GlossaryDto dto) throws Exception {
         return glossaryService.createGlossary(dto);
     }
 
@@ -48,8 +48,8 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @GetMapping("/list")
-    public Object getGlossaries() {
-        return glossaryService.getGlossaries();
+    public Object getGlossaries(@RequestParam(required = false) String after) {
+        return glossaryService.getGlossaries(after);
     }
 
     /**
@@ -84,7 +84,7 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @PostMapping("/terms")
-    public Object createTerm(@RequestBody TermDto dto) {
+    public Object createTerm(@RequestBody TermDto dto) throws Exception{
         return glossaryService.createTerm(dto);
     }
 
@@ -96,8 +96,8 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @GetMapping("/terms")
-    public Object getGlossaryTerms(@RequestParam String term) {
-        return glossaryService.glossaryTerms(term);
+    public Object getGlossaryTerms(@RequestParam String term, @RequestParam(required = false) String after) {
+        return glossaryService.glossaryTerms(term, after);
     }
 
     /**
@@ -141,12 +141,24 @@ public class GlossaryController {
      * 용어 사전 활동 기록
      *
      * @param entityLink
+     * @param after
      * @return
      */
     @ResponseJsonResult
     @GetMapping("/activities")
-    public Object getGlossaryActivities(@RequestParam String entityLink) {
-        return glossaryService.getGlossaryActivities(entityLink);
+    public Object getGlossaryActivities(@RequestParam String entityLink, @RequestParam(required = false) String after) {
+        return glossaryService.getGlossaryActivities(entityLink, after);
+    }
+
+    /**
+     * 용어 사전 활동 기록 개수
+     * @param entityLink
+     * @return
+     */
+    @ResponseJsonResult
+    @GetMapping("/activities/count")
+    public Object getGlossaryActivitiesCount(@RequestParam String entityLink) {
+        return glossaryService.getGlossaryActivitiesCount(entityLink);
     }
 
     /**
@@ -157,7 +169,7 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @GetMapping("/all-tags")
-    public Object getAllTags() throws Exception {
+    public Object getAllTags() {
         return glossaryService.getAllTags();
     }
 
@@ -170,8 +182,8 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @GetMapping("/data-models")
-    public Object getDataModels(@RequestParam String q) throws Exception {
-        return glossaryService.getDataModels(q);
+    public Object getDataModels(@RequestParam String search, @RequestParam String name, @RequestParam String from) throws Exception {
+        return glossaryService.getDataModels(search, name, from);
     }
 
     /**

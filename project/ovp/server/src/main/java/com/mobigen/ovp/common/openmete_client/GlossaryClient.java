@@ -1,14 +1,14 @@
-package com.mobigen.ovp.glossary.client;
+package com.mobigen.ovp.common.openmete_client;
 
-import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
+import com.mobigen.ovp.common.openmete_client.dto.Base;
+import com.mobigen.ovp.common.openmete_client.dto.GlossaryActivity;
+import com.mobigen.ovp.common.openmete_client.dto.Term;
 import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
 import com.mobigen.ovp.glossary.client.dto.TermDto;
-import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivityResponse;
-import com.mobigen.ovp.glossary.client.dto.glossary.Glossary;
-import com.mobigen.ovp.glossary.client.dto.glossary.GlossaryResponse;
-import com.mobigen.ovp.glossary.client.dto.terms.TermResponse;
+import com.mobigen.ovp.common.openmete_client.dto.Glossary;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,38 +27,31 @@ public interface GlossaryClient {
 
     /**
      * 용어 사전 등록
-     *
      * @param dto
      * @return
      */
     @PostMapping("/glossaries")
-    Object createGlossary(@RequestBody GlossaryDto dto);
+    ResponseEntity<Object> createGlossary(@RequestBody GlossaryDto dto);
 
     /**
      * 용어 사전 리스트
-     *
-     * @param fields
+     * @param params
      * @return
      */
     @GetMapping("/glossaries")
-    GlossaryResponse getGlossaries(
-            @RequestParam(required = false, defaultValue = "owner,tags,reviewers,votes,domain") String fields,
-            @RequestParam(required = false, defaultValue = "100") int limit);
+    Base<Glossary> getGlossaries(@RequestParam MultiValueMap<String, String> params);
 
     /**
      * 용어 조회
-     *
      * @param id
      * @param include
      * @return
      */
     @GetMapping("/glossaryTerms/{id}")
-    TermDto getGlossaryTermsById(@PathVariable String id,
-                                 @RequestParam(required = false, defaultValue = "all") String include);
+    TermDto getGlossaryTermsById(@PathVariable String id, @RequestParam(required = false, defaultValue = "all") String include);
 
     /**
      * 용어 사전 수정
-     *
      * @param id
      * @param param
      * @return
@@ -68,41 +61,34 @@ public interface GlossaryClient {
 
     /**
      * 용어 사전 삭제
-     *
      * @param id
      * @param recursive
      * @param hardDelete
      * @return
      */
     @DeleteMapping("/glossaries/{id}")
-    ResponseEntity<Void> deleteGlossary(@PathVariable UUID id,
-                                        @RequestParam(defaultValue = "true") Boolean recursive,
-                                        @RequestParam(defaultValue = "true") Boolean hardDelete);
+    ResponseEntity<Object> deleteGlossary(@PathVariable UUID id,
+                        @RequestParam(defaultValue = "true") Boolean recursive,
+                        @RequestParam(defaultValue = "true") Boolean hardDelete);
 
     /**
      * 용어 추가
-     *
      * @param dto
      * @return
      */
     @PostMapping("/glossaryTerms")
-    Object createTerms(@RequestBody TermDto dto);
+    ResponseEntity<Object> createTerms(@RequestBody com.mobigen.ovp.common.openmete_client.dto.TermDto dto);
 
     /**
      * 용어 리스트
-     *
-     * @param directChildrenOf
+     * @param params
      * @return
      */
     @GetMapping("/glossaryTerms")
-    TermResponse getGlossaryTerms(@RequestParam String directChildrenOf,
-                                  @RequestParam(required = false, defaultValue = "tags") String fields,
-                                  @RequestParam(required = false, defaultValue = "100") int limit,
-                                  @RequestParam(required = false, defaultValue = "") String after);
+    Base<Term> getGlossaryTerms(@RequestParam MultiValueMap<String, String> params);
 
     /**
      * 용어 수정
-     *
      * @param id
      * @param param
      * @return
@@ -122,7 +108,6 @@ public interface GlossaryClient {
 
     /**
      * 용어 변경 > 데이터 모델 삭제
-     *
      * @param id
      * @param body
      * @return
@@ -132,24 +117,30 @@ public interface GlossaryClient {
 
     /**
      * 용어 삭제
-     *
      * @param id
      * @param recursive
      * @param hardDelete
      * @return
      */
     @DeleteMapping("/glossaryTerms/{id}")
-    ResponseEntity<Void> deleteGlossaryTerms(@PathVariable UUID id,
-                                             @RequestParam(defaultValue = "true") boolean recursive,
-                                             @RequestParam(defaultValue = "true") boolean hardDelete);
+    ResponseEntity<Object> deleteGlossaryTerms(@PathVariable UUID id,
+                            @RequestParam(defaultValue = "true") boolean recursive,
+                            @RequestParam(defaultValue = "true") boolean hardDelete);
 
     /**
      * 용어 사전 활동 사항
-     *
      * @param entityLink
      * @param type
      * @return
      */
     @GetMapping("/feed")
-    GlossaryActivityResponse getGlossaryActivities(@RequestParam String entityLink, @RequestParam String type);
+    Base<GlossaryActivity> getGlossaryActivities(@RequestParam String entityLink, @RequestParam(required = false) String after, @RequestParam String type);
+
+    /**
+     * 용어 사전 활동 사항 갯수
+     * @param entityLink
+     * @return
+     */
+    @GetMapping("/feed/count")
+    Map<String, Object> getGlossaryActivitiesCount(@RequestParam String entityLink);
 }

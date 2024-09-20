@@ -1,6 +1,8 @@
 import { usePagingStore } from "~/store/common/paging";
 import type { AddUser } from "~/type/user";
 
+import type { Ref } from "vue";
+
 interface User {
   role: string;
   id: string;

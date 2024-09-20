@@ -2,10 +2,7 @@
   <div class="work-list">
     <div class="l-top-bar">
       <span class="title">용어사전 목록</span>
-      <button
-        class="button button-secondary-stroke"
-        @click="showModalDic = true"
-      >
+      <button class="button button-secondary-stroke" @click="openModal">
         용어사전 추가
       </button>
     </div>
@@ -19,7 +16,7 @@
     <div class="menu border-none" v-if="glossaries.length > 0">
       <div class="menu-list">
         <li
-          class="menu-item"
+          :class="menuListClass(glossary)"
           v-for="glossary in glossaries"
           @click="changeCurrentGlossary(glossary)"
         >
@@ -28,14 +25,46 @@
             <a class="menu-text">{{ glossary.name }}</a>
           </button>
         </li>
+        <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+        <Loading
+          id="loader"
+          :use-loader-overlay="true"
+          class="loader-lg is-loader-inner"
+          style="display: none"
+        ></Loading>
       </div>
     </div>
   </div>
-  <modal-glossary-dictionary></modal-glossary-dictionary>
+  <modal-glossary-dictionary
+    :modal-id="MODAL_ID"
+    @cancel-model="closeModal"
+  ></modal-glossary-dictionary>
 </template>
 
 <script setup lang="ts">
 import { useGlossaryStore } from "~/store/glossary";
-const { glossaries, getGlossaries, changeCurrentGlossary } = useGlossaryStore();
+import type { Glossary } from "~/type/glossary";
+import { _ } from "lodash";
+import Loading from "@base/loading/Loading.vue";
+import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+const { $vfm } = useNuxtApp();
+const { glossaries, glossary, getGlossaries, changeCurrentGlossary } =
+  useGlossaryStore();
 getGlossaries();
+
+const menuListClass = (data: Glossary): string => {
+  return _.isEqual(glossary, data)
+    ? "menu-item is-menu-item-selected"
+    : "menu-item";
+};
+
+const { scrollTrigger } = useIntersectionObserver(getGlossaries);
+
+const MODAL_ID = "modal-glossary-dictionary";
+function openModal() {
+  $vfm.open(MODAL_ID);
+}
+function closeModal() {
+  $vfm.close(MODAL_ID);
+}
 </script>

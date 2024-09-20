@@ -10,6 +10,7 @@ import com.mobigen.ovp.common.openmete_client.ContainersClient;
 import com.mobigen.ovp.common.openmete_client.LineageClient;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
+import com.mobigen.ovp.common.openmete_client.dto.Base;
 import com.mobigen.ovp.common.openmete_client.dto.Columns;
 import com.mobigen.ovp.common.openmete_client.dto.Followers;
 import com.mobigen.ovp.common.openmete_client.dto.Profile;
@@ -17,9 +18,9 @@ import com.mobigen.ovp.common.openmete_client.dto.ProfileColumn;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
 import com.mobigen.ovp.common.openmete_client.dto.Tag;
 import com.mobigen.ovp.common.openmete_client.dto.Tags;
-import com.mobigen.ovp.glossary.client.GlossaryClient;
+import com.mobigen.ovp.common.openmete_client.GlossaryClient;
+import com.mobigen.ovp.common.openmete_client.dto.Term;
 import com.mobigen.ovp.glossary.client.dto.TermDto;
-import com.mobigen.ovp.glossary.client.dto.terms.TermResponse;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailTagDto;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailVote;
 import com.mobigen.ovp.search_detail.dto.response.DataModelDetailLineageTableResponse;
@@ -94,7 +95,7 @@ public class SearchDetailService {
      * @param isStart
      * @return
      */
-    private List<Tag> getTags(List<Tag> tags, String after, boolean isStart) {
+    public List<Tag> getTags(List<Tag> tags, String after, boolean isStart) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("limit", "100");
 
@@ -156,8 +157,12 @@ public class SearchDetailService {
         if (!isStart && (after == null || "".equals(after))) {
             return glossaries;
         }
-
-        TermResponse res = glossaryClient.getGlossaryTerms("", "", 100, after);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("limit", "100");
+        if (after != null && !after.equals("undefined") && !after.isEmpty()) {
+            params.add("after", after);
+        }
+        Base<Term> res = glossaryClient.getGlossaryTerms(params);
 
         List mergeTagList = Stream.concat(glossaries.stream(), res.getData().stream()).collect(Collectors.toList());
 
@@ -171,7 +176,9 @@ public class SearchDetailService {
      * @throws Exception
      */
     public Object getGlossaryAll() throws Exception {
-        TermResponse glossaryTerms = glossaryClient.getGlossaryTerms("", "", 300, "");
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("limit", "300");
+        Base<Term> glossaryTerms = glossaryClient.getGlossaryTerms(params);
 
         // TODO: 페이징 처리 필요
         return glossaryTerms.getData().stream().map(term -> {

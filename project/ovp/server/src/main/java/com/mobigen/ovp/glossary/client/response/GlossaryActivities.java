@@ -1,6 +1,6 @@
 package com.mobigen.ovp.glossary.client.response;
 
-import com.mobigen.ovp.glossary.client.dto.activity.GlossaryActivity;
+import com.mobigen.ovp.common.openmete_client.dto.GlossaryActivity;
 import lombok.Data;
 
 import java.sql.Timestamp;

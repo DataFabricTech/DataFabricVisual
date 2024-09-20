@@ -47,10 +47,7 @@
       </div>
       <!-- // 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
       <!-- TODO alert 개발 후 얼럿 적용 -->
-      <button
-        class="button button-error-lighter"
-        @click="deleteGlossary(glossary.id)"
-      >
+      <button class="button button-error-lighter" @click="removeGlossary">
         삭제
       </button>
     </div>
@@ -63,81 +60,96 @@
         </div>
       </div>
       <!-- // 결과 없을 시 no-result 표시  -->
-
-      <div
-        class="editable-group"
-        v-if="Object.keys(glossary).length > 0 && !store.editGlossaryMode.des"
-      >
-        <span class="editable-group-desc">{{ glossary.description }}</span>
-        <button
-          class="button button-neutral-ghost button-sm"
-          type="button"
-          @click="changeEditGlossaryMode('des')"
+      <div class="v-group gap-2">
+        <div class="font-semibold text-neutral-700">설명</div>
+        <div
+          class="editable-group"
+          v-if="Object.keys(glossary).length > 0 && !store.editGlossaryMode.des"
         >
-          <span class="hidden-text">수정</span>
-          <svg-icon class="button-icon" name="pen"></svg-icon>
-        </button>
-      </div>
-      <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-      <div class="editable-group" v-if="store.editGlossaryMode.des">
-        <label class="hidden-text" for="description-modify"
-          >카테고리 설명 수정
-        </label>
-        <textarea
-          id="description-modify"
-          class="textarea"
-          width="300px"
-          v-model="editData.description"
-        ></textarea>
-        <div class="h-group gap-1">
+          <span class="editable-group-desc">{{
+            glossary && glossary.description ? glossary.description : "-"
+          }}</span>
           <button
-            class="button button-neutral-stroke"
+            class="button button-neutral-ghost button-sm"
             type="button"
-            @click="cancel('des')"
+            @click="changeEditGlossaryMode('des')"
           >
-            취소
+            <span class="hidden-text">수정</span>
+            <svg-icon class="button-icon" name="pen"></svg-icon>
           </button>
-          <button
-            class="button button-primary-lighter"
-            type="button"
-            @click="
-              updateGlossary(glossary.id, {
-                op: 'replace',
-                path: '/description',
-                value: editData.description,
-              })
-            "
-          >
-            완료
-          </button>
+        </div>
+
+        <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
+        <div class="editable-group" v-if="store.editGlossaryMode.des">
+          <label class="hidden-text" for="description-modify"
+            >카테고리 설명 수정
+          </label>
+          <textarea
+            id="description-modify"
+            class="textarea"
+            width="300px"
+            v-model="editData.description"
+          ></textarea>
+          <div class="h-group gap-1">
+            <button
+              class="button button-neutral-stroke"
+              type="button"
+              @click="cancel('des')"
+            >
+              취소
+            </button>
+            <button
+              class="button button-primary-lighter"
+              type="button"
+              @click="
+                updateGlossary(glossary.id, {
+                  op: 'replace',
+                  path: '/description',
+                  value: editData.description,
+                })
+              "
+            >
+              완료
+            </button>
+          </div>
         </div>
       </div>
       <!-- // 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-      <div class="editable-group" v-if="!store.editGlossaryMode.tag">
-        <div class="tag tag-primary tag-sm" v-for="tag in glossary.tags">
-          <span class="tag-text">{{ tag.label }}</span>
+      <div class="h-group gap-2">
+        <div class="font-semibold text-neutral-700 w-16">태그</div>
+        <div class="editable-group" v-if="!store.editGlossaryMode.tag">
+          <div
+            class="tag tag-primary tag-sm"
+            v-if="glossary && glossary.tags && glossary.tags.length > 0"
+            v-for="tag in glossary.tags"
+          >
+            <span class="tag-text">{{ tag.displayName }}</span>
+          </div>
+          <div class="text-neutral-700" v-else>
+            <span>-</span>
+          </div>
+          <button
+            class="button button-neutral-ghost button-sm"
+            type="button"
+            @click="changeEditGlossaryMode('tag')"
+          >
+            <span class="hidden-text">수정</span>
+            <svg-icon class="button-icon" name="pen"></svg-icon>
+          </button>
         </div>
-        <button
-          class="button button-neutral-ghost button-sm"
-          type="button"
-          @click="changeEditGlossaryMode('tag')"
-        >
-          <span class="hidden-text">수정</span>
-          <svg-icon class="button-icon" name="pen"></svg-icon>
-        </button>
-      </div>
-      <div class="editable-group" v-if="store.editGlossaryMode.tag">
-        <menu-search-tag
-          :data="menuSearchTagsData"
-          :selected-items="glossary.tags"
-          label-key="label"
-          value-key="tagFQN"
-          :is-multi="true"
-          title="값을 선택하세요"
-          @multiple-change="changeTag"
-          @cancel="changeEditGlossaryMode('tag')"
-          @close="changeEditGlossaryMode('tag')"
-        ></menu-search-tag>
+        <div class="editable-group" v-if="store.editGlossaryMode.tag">
+          <menu-search-tag
+            :data="menuSearchTagsData"
+            :selected-items="glossary.tags"
+            label-key="displayName"
+            value-key="tagFQN"
+            :is-multi="true"
+            title="값을 선택하세요"
+            @multiple-change="changeTag"
+            @cancel="changeEditGlossaryMode('tag')"
+            @close="changeEditGlossaryMode('tag')"
+          ></menu-search-tag>
+        </div>
       </div>
 
       <div>
@@ -154,11 +166,9 @@
             >
               <button class="tab-button">
                 <p class="tab-button-text">활동사항</p>
-                <span
-                  class="tab-button-count"
-                  v-if="store.activities.length > 0"
-                  >{{ store.activities.length }}</span
-                >
+                <span class="tab-button-count">{{
+                  store.activitiesCount
+                }}</span>
               </button>
             </li>
           </ul>
@@ -178,7 +188,6 @@ import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import type { JsonPatchOperation, Tag } from "~/type/common";
 import { reactive, watch, onMounted, type Ref } from "vue";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
-
 const {
   glossary,
   tags,
@@ -189,8 +198,8 @@ const {
   deleteGlossary,
   changeTab,
   changeEditGlossaryMode,
-  getAllTags,
   createTagOperation,
+  getGlossaryActivitiesCount,
 } = useGlossaryStore();
 const store = useGlossaryStore();
 
@@ -204,18 +213,24 @@ watch(
   (newGlossary) => {
     editData.name = newGlossary.name;
     editData.description = newGlossary.description;
+    getGlossaryActivitiesCount(`<%23E::glossary::${glossary.name}>`);
   },
   { deep: true },
 );
 
 onMounted(() => {
   syncEditDataWithGlossary();
-  getAllTags();
+  getGlossaryActivitiesCount(`<%23E::glossary::${glossary.name}>`);
 });
 
 function syncEditDataWithGlossary() {
   editData.name = store.glossary.name;
   editData.description = store.glossary.description;
+}
+
+async function removeGlossary() {
+  await deleteGlossary(glossary.id);
+  await getGlossaries();
 }
 
 async function updateGlossary(

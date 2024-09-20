@@ -1,4 +1,4 @@
-package com.mobigen.ovp.glossary.client.dto.common;
+package com.mobigen.ovp.glossary.client.dto;
 
 import lombok.Data;
 
@@ -26,5 +26,16 @@ public class Tag {
         this.state = "Confirmed";
         this.style = map.get("style");
         this.tagFQN = String.valueOf(map.get("fullyQualifiedName"));
+    }
+
+    public Tag(com.mobigen.ovp.common.openmete_client.dto.Tag map) {
+        this.description = map.getDescription();
+        this.displayName = map.getDisplayName();
+        this.labelType = "Manual";
+        this.name = map.getName();
+        this.source = "Classification";
+        this.state = "Confirmed";
+        this.style = new Object();
+        this.tagFQN = map.getTagFQN();
     }
 }

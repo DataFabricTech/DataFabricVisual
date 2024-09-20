@@ -2,7 +2,6 @@
   <div class="section-top-bar">
     <div class="l-top-bar">
       <h3 class="title">용어사전</h3>
-      <button class="button button-primary w-20">저장</button>
     </div>
   </div>
   <div class="section-contents p-0 bg-white">
@@ -14,17 +13,12 @@
   </div>
 </template>
 
-<style scoped></style>
-<script>
-import MenuSearch from "@extends/menu-seach/menu-search.vue";
+<script setup lang="ts">
+import { onMounted } from "vue";
+import { useGlossaryStore } from "~/store/glossary";
+const { getAllTags } = useGlossaryStore();
 
-export default defineComponent({
-  components: { MenuSearch },
-  data() {
-    return {
-      showModalDic: false,
-      showModal: false,
-    };
-  },
+onMounted(() => {
+  getAllTags();
 });
 </script>

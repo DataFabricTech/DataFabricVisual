@@ -56,172 +56,192 @@
           <p class="notification-detail">등록된 정보가 없습니다.</p>
         </div>
       </div>
-      <div
-        class="editable-group"
-        v-if="Object.keys(term).length > 0 && !store.editTermMode.des"
-      >
-        <span class="editable-group-desc">{{ term.description }}</span>
-        <button
-          class="button button-neutral-ghost button-sm"
-          type="button"
-          @click="changeEditTermMode('des')"
+      <div class="v-group gap-2">
+        <div class="font-semibold text-neutral-700">설명</div>
+        <div
+          class="editable-group"
+          v-if="Object.keys(term).length > 0 && !store.editTermMode.des"
         >
-          <span class="hidden-text">수정</span>
-          <svg-icon class="button-icon" name="pen"></svg-icon>
-        </button>
-      </div>
+          <span class="editable-group-desc">{{
+            term && term.description ? term.description : "-"
+          }}</span>
+          <button
+            class="button button-neutral-ghost button-sm"
+            type="button"
+            @click="changeEditTermMode('des')"
+          >
+            <span class="hidden-text">수정</span>
+            <svg-icon class="button-icon" name="pen"></svg-icon>
+          </button>
+        </div>
 
-      <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-      <div class="editable-group" v-if="store.editTermMode.des">
-        <label class="hidden-text" for="description-modify"
-          >용어 설명 수정
-        </label>
-        <textarea
-          id="description-modify"
-          class="textarea"
-          width="300px"
-          v-model="editData.description"
-        ></textarea>
-        <div class="h-group gap-1">
-          <button
-            class="button button-neutral-stroke"
-            type="button"
-            @click="cancel('des')"
-          >
-            취소
-          </button>
-          <button
-            class="button button-primary-lighter"
-            type="button"
-            @click="
-              updateTerm({
-                op: 'replace',
-                path: '/description',
-                value: editData.description,
-              })
-            "
-          >
-            완료
-          </button>
+        <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
+        <div class="editable-group" v-if="store.editTermMode.des">
+          <label class="hidden-text" for="description-modify"
+            >용어 설명 수정
+          </label>
+          <textarea
+            id="description-modify"
+            class="textarea"
+            width="300px"
+            v-model="editData.description"
+          ></textarea>
+          <div class="h-group gap-1">
+            <button
+              class="button button-neutral-stroke"
+              type="button"
+              @click="cancel('des')"
+            >
+              취소
+            </button>
+            <button
+              class="button button-primary-lighter"
+              type="button"
+              @click="
+                updateTerm({
+                  op: 'replace',
+                  path: '/description',
+                  value: editData.description,
+                })
+              "
+            >
+              완료
+            </button>
+          </div>
         </div>
       </div>
       <!-- //수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-
-      <div class="editable-group" v-if="!store.editTermMode.tag">
-        <div class="tag tag-primary tag-sm" v-for="tag in term.tags">
-          <span class="tag-text">{{ tag.label }}</span>
-        </div>
-        <button
-          class="button button-neutral-ghost button-sm"
-          type="button"
-          @click="changeEditTermMode('tag')"
-        >
-          <span class="hidden-text">수정</span>
-          <svg-icon class="button-icon" name="pen"></svg-icon>
-        </button>
-      </div>
-      <div class="editable-group" v-if="store.editTermMode.tag">
-        <menu-search-tag
-          :data="menuSearchTagsData"
-          :selected-items="term.tags"
-          label-key="label"
-          value-key="tagFQN"
-          :is-multi="true"
-          title="값을 선택하세요"
-          @multiple-change="changeTag"
-          @cancel="changeEditTermMode('tag')"
-          @close="changeEditTermMode('tag')"
-        >
-        </menu-search-tag>
-      </div>
-      <div class="editable-group" v-if="!store.editTermMode.synonyms">
-        <span
-          class="editable-group-desc"
-          v-if="!term.synonyms || term.synonyms.length === 0"
-          >동의어 없음</span
-        >
-        <!-- 동의어 있을 경우-->
-        <div
-          class="tag tag-primary tag-sm"
-          v-if="term.synonyms.length > 0"
-          v-for="synonym in term.synonyms"
-        >
-          <span class="tag-text">{{ synonym }}</span>
-        </div>
-        <button
-          class="button button-neutral-ghost button-sm"
-          type="button"
-          @click="changeEditTermMode('synonyms')"
-        >
-          <span class="hidden-text">수정</span>
-          <svg-icon class="button-icon" name="pen"></svg-icon>
-        </button>
-      </div>
-      <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-      <div class="editable-group" v-if="store.editTermMode.synonyms">
-        <label class="hidden-text" for="synonym-modify"
-          >동의어 설명 수정
-        </label>
-        <input
-          id="synonym-modify"
-          class="text-input w-4/5"
-          v-model="editData.synonyms"
-        />
-        <div class="h-group gap-1">
+      <div class="h-group gap-2">
+        <div class="font-semibold text-neutral-700 w-16">태그</div>
+        <div class="editable-group" v-if="!store.editTermMode.tag">
+          <div
+            class="tag tag-primary tag-sm"
+            v-if="term && term.tags && term.tags.length > 0"
+            v-for="tag in term.tags"
+          >
+            <span class="tag-text">{{ tag.displayName }}</span>
+          </div>
+          <div class="text-neutral-700" v-else>
+            <span>-</span>
+          </div>
           <button
-            class="button button-neutral-stroke"
+            class="button button-neutral-ghost button-sm"
+            type="button"
+            @click="changeEditTermMode('tag')"
+          >
+            <span class="hidden-text">수정</span>
+            <svg-icon class="button-icon" name="pen"></svg-icon>
+          </button>
+        </div>
+        <div class="editable-group" v-if="store.editTermMode.tag">
+          <menu-search-tag
+            :data="menuSearchTagsData"
+            :selected-items="term.tags"
+            label-key="displayName"
+            value-key="tagFQN"
+            :is-multi="true"
+            title="값을 선택하세요"
+            @multiple-change="changeTag"
+            @cancel="changeEditTermMode('tag')"
+            @close="changeEditTermMode('tag')"
+          >
+          </menu-search-tag>
+        </div>
+      </div>
+      <div class="h-group gap-2">
+        <div class="font-semibold text-neutral-700 w-16">동의어</div>
+        <div class="editable-group" v-if="!store.editTermMode.synonyms">
+          <span
+            class="editable-group-desc"
+            v-if="!term.synonyms || term.synonyms.length === 0"
+            >-</span
+          >
+          <!-- 동의어 있을 경우-->
+          <div
+            class="tag tag-primary tag-sm"
+            v-if="term.synonyms.length > 0"
+            v-for="synonym in term.synonyms"
+          >
+            <span class="tag-text">{{ synonym }}</span>
+          </div>
+          <button
+            class="button button-neutral-ghost button-sm"
             type="button"
             @click="changeEditTermMode('synonyms')"
           >
-            취소
+            <span class="hidden-text">수정</span>
+            <svg-icon class="button-icon" name="pen"></svg-icon>
           </button>
-          <button
-            class="button button-primary-lighter"
-            type="button"
-            @click="changeSynonyms"
-          >
-            완료
-          </button>
+        </div>
+        <!-- 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
+        <div class="editable-group" v-if="store.editTermMode.synonyms">
+          <label class="hidden-text" for="synonym-modify"
+            >동의어 설명 수정
+          </label>
+          <input
+            id="synonym-modify"
+            class="text-input w-4/5"
+            v-model="editData.synonyms"
+          />
+          <div class="h-group gap-1">
+            <button
+              class="button button-neutral-stroke"
+              type="button"
+              @click="changeEditTermMode('synonyms')"
+            >
+              취소
+            </button>
+            <button
+              class="button button-primary-lighter"
+              type="button"
+              @click="changeSynonyms"
+            >
+              완료
+            </button>
+          </div>
         </div>
       </div>
       <!-- //수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
 
-      <div class="editable-group" v-if="!store.editTermMode.relatedTerms">
-        <span
-          class="editable-group-desc"
-          v-if="!term.relatedTerms || term.relatedTerms.length === 0"
-          >관련용어 없음</span
-        >
-        <!-- 관련용어 있을 경우-->
-        <div
-          class="tag tag-primary tag-sm"
-          v-if="term.relatedTerms && term.relatedTerms.length > 0"
-          v-for="relatedTerm in term.relatedTerms"
-        >
-          <span class="tag-text">{{ relatedTerm.label }}</span>
+      <div class="h-group gap-2">
+        <div class="font-semibold text-neutral-700 w-16">관련용어</div>
+        <div class="editable-group" v-if="!store.editTermMode.relatedTerms">
+          <span
+            class="editable-group-desc"
+            v-if="!term.relatedTerms || term.relatedTerms.length === 0"
+            >-</span
+          >
+          <!-- 관련용어 있을 경우-->
+          <div
+            class="tag tag-primary tag-sm"
+            v-if="term.relatedTerms && term.relatedTerms.length > 0"
+            v-for="relatedTerm in term.relatedTerms"
+          >
+            <span class="tag-text">{{ relatedTerm.label }}</span>
+          </div>
+          <button
+            class="button button-neutral-ghost button-sm"
+            type="button"
+            @click="changeEditTermMode('relatedTerms')"
+          >
+            <span class="hidden-text">수정</span>
+            <svg-icon class="button-icon" name="pen"></svg-icon>
+          </button>
         </div>
-        <button
-          class="button button-neutral-ghost button-sm"
-          type="button"
-          @click="changeEditTermMode('relatedTerms')"
-        >
-          <span class="hidden-text">수정</span>
-          <svg-icon class="button-icon" name="pen"></svg-icon>
-        </button>
-      </div>
-      <div class="editable-group" v-if="store.editTermMode.relatedTerms">
-        <menu-search-tag
-          :data="menuSearchRelatedTermsData"
-          :selected-items="term.relatedTerms"
-          label-key="label"
-          value-key="id"
-          :is-multi="true"
-          title="값을 선택하세요"
-          @multiple-change="changeRelatedTerms"
-          @cancel="changeEditTermMode('relatedTerms')"
-          @close="changeEditTermMode('relatedTerms')"
-        >
-        </menu-search-tag>
+        <div class="editable-group" v-if="store.editTermMode.relatedTerms">
+          <menu-search-tag
+            :data="menuSearchRelatedTermsData"
+            :selected-items="term.relatedTerms"
+            label-key="label"
+            value-key="id"
+            :is-multi="true"
+            title="값을 선택하세요"
+            @multiple-change="changeRelatedTerms"
+            @cancel="changeEditTermMode('relatedTerms')"
+            @close="changeEditTermMode('relatedTerms')"
+          >
+          </menu-search-tag>
+        </div>
       </div>
       <data-model></data-model>
     </div>
@@ -242,7 +262,6 @@ const {
   editTermMode,
   menuSearchTagsData,
   menuSearchRelatedTermsData,
-  getAllTags,
   getTerms,
   editTerm,
   deleteTerm,
@@ -277,7 +296,6 @@ watch(
 
 onMounted(() => {
   syncEditDataWithTerm();
-  getAllTags();
 });
 
 function syncEditDataWithTerm(): void {

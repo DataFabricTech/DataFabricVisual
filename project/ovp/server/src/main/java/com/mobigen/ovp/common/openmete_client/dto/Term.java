@@ -1,6 +1,6 @@
-package com.mobigen.ovp.glossary.client.dto.terms;
+package com.mobigen.ovp.common.openmete_client.dto;
 
-import com.mobigen.ovp.glossary.client.dto.common.Tag;
+import com.mobigen.ovp.glossary.client.dto.Tag;
 import lombok.Data;
 
 import java.util.List;
