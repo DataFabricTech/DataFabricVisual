@@ -105,9 +105,11 @@ public class ModelCreationService {
         String bookmarkQuery = isBookmark ? params.getFirst("query") : "";
         String ownsQuery = !isBookmark ? params.getFirst("query") : "";
 
+        int from = Integer.parseInt(params.getFirst("from"));
+        int size = Integer.parseInt(params.getFirst("size"));
         List<DataModelDetailResponse> listData = isBookmark
-                ? getMyModelList(bookmarkQuery, followsList, null)
-                : getMyModelList(ownsQuery, ownerList, null);
+                ? getMyModelList(bookmarkQuery, followsList, from, size)
+                : getMyModelList(ownsQuery, ownerList, from, size);
 
         Map<String, Object> data = new HashMap<>();
         data.put("bookmark", isBookmark ? listData : new ArrayList<>());
@@ -115,8 +117,8 @@ public class ModelCreationService {
 
         // 쿼리 + 전체 검색결과
         // NOTE: User에서 가져오는 정보는 삭제된 데이터도 모두 포함되기 때문에 삭제 처리
-        List<String> followListCount = getMyModelListCount(bookmarkQuery, followsList, null);
-        List<String> ownsListCount = getMyModelListCount(ownsQuery, ownerList, null);
+        List<String> followListCount = getMyModelListCount(bookmarkQuery, followsList);
+        List<String> ownsListCount = getMyModelListCount(ownsQuery, ownerList);
 
         Map<String, Object> totalCount = new HashMap<>();
         totalCount.put("bookmark", followListCount.size());
@@ -151,7 +153,7 @@ public class ModelCreationService {
             default -> null;
         };
         // follow 데이터 확인 필요
-        List<Map<String, Object>> newResult= addFollowData(resultMap);
+        List<Map<String, Object>> newResult = addFollowData(resultMap);
 
         // 데이터 재정의
         dataMap.put(type, newResult);
@@ -160,13 +162,12 @@ public class ModelCreationService {
     }
 
     /**
-     * 나의 데이터 조회
+     * 나의 데이터 > 목록 수
      *
      * @param query : 검색 값
      * @return
      */
-    public List<String> getMyModelListCount(String query, List<Map<String, Object>> listData, Integer limit) {
-        List<String> tempResult = new ArrayList<>();
+    public List<String> getMyModelListCount(String query, List<Map<String, Object>> listData) {
         List<String> allList = new ArrayList<>();
 
         for (Map<String, Object> follow : listData) {
@@ -181,27 +182,25 @@ public class ModelCreationService {
                 continue;
             }
 
-
-            String modelNm = (String) follow.get("name");
-
             // 검색 처리
-            if (modelNm.contains(query)) {
-                tempResult.add((String) follow.get("id"));
+            String modelNm = (String) follow.get("name");
+            if (modelNm.toLowerCase().contains(query.toLowerCase())) {
+                allList.add((String) follow.get("id"));
             }
 
-            // 갯수에 따른 목록 파싱
-            if (limit != null && limit > 0 && !tempResult.isEmpty()) {
-                for (int i = 0; i < Math.min(limit, tempResult.size()); i++) {
-                    allList.add(tempResult.get(i));
-                }
-            } else {
-                allList = tempResult;
-            }
         }
         return allList;
     }
-    public List<DataModelDetailResponse> getMyModelList(String query, List<Map<String, Object>> listData, Integer limit) {
-        List<DataModelDetailResponse> tempResult = new ArrayList<>();
+
+    /**
+     * 나의 데이터 > 목록 정의
+     * @param query
+     * @param listData
+     * @param from
+     * @param size
+     * @return
+     */
+    public List<DataModelDetailResponse> getMyModelList(String query, List<Map<String, Object>> listData, int from, int size) {
         List<DataModelDetailResponse> allList = new ArrayList<>();
 
         for (Map<String, Object> follow : listData) {
@@ -227,21 +226,22 @@ public class ModelCreationService {
 
             // 검색 처리
             // TODO: Storage의 경우 상세 데이터(dataModelDetail)를 확인해 Bucket 데이터 제외 필요
-            if (dataModelDetail != null && dataModelDetail.getModelNm().contains(query)) {
-                tempResult.add(dataModelDetail);
-            }
-
-            // 갯수에 따른 목록 파싱
-            if (limit != null && limit > 0 && !tempResult.isEmpty()) {
-                for (int i = 0; i < Math.min(limit, tempResult.size()); i++) {
-                    allList.add(tempResult.get(i));
-                }
-            } else {
-                allList = tempResult;
+            if (dataModelDetail != null && dataModelDetail.getModelNm().toLowerCase().contains(query.toLowerCase())) {
+                allList.add(dataModelDetail);
             }
         }
-        return allList;
+        int last = Math.min(allList.size(), from + size);
+        if (from > last) {
+            return new ArrayList<>();
+        }
+        return allList.subList(from, last);
     }
+
+    /**
+     * 데이터 상세 > 데이터 상세 조회 시 필요한 데이터 타입으로 변경
+     * @param dataType
+     * @return
+     */
     private String getDataType(String dataType) {
         String newDataType = null;
         for (ModelIndex index : ModelIndex.values()) {
@@ -300,4 +300,5 @@ public class ModelCreationService {
     public Object saveModel(Map<String, Object> param) throws Exception {
         return dolphinClient.createModel(param);
     }
+
 }
