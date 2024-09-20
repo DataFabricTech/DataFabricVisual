@@ -137,4 +137,12 @@ public class ServiceResponse {
             this.owner = new Owner();
         }
     }
+
+    public ServiceResponse(String id, String name, String type, Owner owner, String serviceType) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.owner = owner;
+        this.serviceType = serviceType;
+    }
 }

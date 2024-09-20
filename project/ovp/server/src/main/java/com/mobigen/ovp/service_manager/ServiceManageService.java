@@ -69,12 +69,14 @@ public class ServiceManageService {
         List<Services> storages = servicesClient.getServiceStorage("owner,tags", "non-deleted", limit).getData();
         List<ServiceResponse> serviceResponses = new ArrayList<>();
 
-        for (Services service : dataBases) {
-            serviceResponses.add(new ServiceResponse(service, DATA_BASE));
-        }
-        for (Services service : storages) {
-            serviceResponses.add(new ServiceResponse(service, STORAGE));
-        }
+        // 목록 표시에 필요한 항목만 포함되도록 처리함.
+        serviceResponses.addAll(dataBases.stream()
+                .map(service -> new ServiceResponse(service.getId(), service.getName(), DATA_BASE, service.getOwner(), service.getServiceType()))
+                .toList());
+
+        serviceResponses.addAll(storages.stream()
+                .map(service -> new ServiceResponse(service.getId(), service.getName(), STORAGE, service.getOwner(), service.getServiceType()))
+                .toList());
         return serviceResponses;
     }
 

@@ -197,7 +197,7 @@ export const useServiceStore = defineStore("service", () => {
     if (!source.owner) {
       source.owner = [];
     }
-    Object.assign(service, newService, source);
+    Object.assign(service, source, newService);
     disableEditInfo();
     // 서비스관리 목록 클릭시, 설명 API호출
     if (
