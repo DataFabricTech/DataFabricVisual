@@ -120,14 +120,3 @@ table,
     }
   }
 }
-
-//table 위로 서브 내용 출력할때
-.table-group {
-  @include flex($direction: column, $gap:$spacing-8);
-
-  width: 100%;
-}
-.table-info {
-  margin-left: auto;
-  color: $neutral-500;
-}
