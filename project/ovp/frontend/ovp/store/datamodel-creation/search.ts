@@ -180,7 +180,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * 데이터 조회 > 누적
    */
   const addSearchList = async () => {
-    console.log("addSearchList");
     const { data, totalCount } = await getSearchListAPI(null, false);
     searchResult.value = searchResult.value.concat(data[currTypeTab.value]);
     searchResultLength.value = totalCount;
@@ -190,7 +189,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * 데이터 조회 > 갱신
    */
   const getSearchList = async (selectedList: any[] | null = null) => {
-    console.log("getSearchList");
     isDoneFirModelListLoad.value = false;
 
     const { data, totalCount } = await getSearchListAPI(selectedList);
