@@ -21,8 +21,6 @@ export default defineNuxtConfig({
     "nuxt-monaco-editor",
   ],
 
-  plugins: [{ src: "~/plugins/vue3-tooltip", mode: "client" }],
-
   // runtime에서 설정된 정보를 조회 가능
   runtimeConfig: {
     public: {
