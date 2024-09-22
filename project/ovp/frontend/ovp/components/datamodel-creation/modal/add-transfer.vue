@@ -11,7 +11,6 @@
         @change="onChangeTab"
       >
         <template #all>
-          <!-- 전체 탭 시작  -->
           <data-model-api-list
             class="h-full"
             :filter="filters"
@@ -23,6 +22,7 @@
             value-key="id"
             :use-item-delete-btn="false"
             :is-multi="true"
+            :use-filter="true"
             :use-sort="true"
             :use-infinite="true"
             :use-live-search="false"
@@ -51,21 +51,41 @@
           </data-model-api-list>
         </template>
         <template #my>
-          <data-model-accordian-list
+          <data-model-api-list
+            class="h-full"
             :data="mySearchResult"
+            :filter="[]"
+            :selected-filters="[]"
             :selected-items="nSelectedListData"
             label-key="modelNm"
             value-key="id"
             :use-item-delete-btn="false"
             :is-multi="true"
+            :use-filter="false"
             :use-live-search="false"
+            :use-sort="false"
+            :use-infinite="true"
+            :addSearchList="addSearchList"
+            :isDoneFirModelListLoad="isDoneFirModelListLoad"
             list-type="non-selected"
             no-data-msg="데이터 모델이 없습니다."
             @item-check="onSelectAccordData"
             @item-click="onClickAccordData"
             @bookmark-change="onClickBookmark"
             @search-change="onClickAccordSearchChange"
-          ></data-model-accordian-list>
+          >
+            <template v-slot:tab>
+              <Tab
+                class="tab-line"
+                :data="$constants.DATAMODEL_CREATION.ADD.MY_DATA_TAB"
+                label-key="label"
+                value-key="value"
+                current-item-type="value"
+                :current-item="currTypeMyTab"
+                @change="onChangeTypeMyTab"
+              ></Tab>
+            </template>
+          </data-model-api-list>
         </template>
       </Tab>
     </div>
@@ -111,7 +131,6 @@ import Tab from "@extends/tab/Tab.vue";
 import $constants from "~/utils/constant";
 import DataModelApiList from "~/components/datamodel-creation/list/api/data-model-api-list.vue";
 import DataModelList from "~/components/datamodel-creation/list/base/data-model-list.vue";
-import DataModelAccordianList from "~/components/datamodel-creation/list/api/accoridan/data-model-accordian-list.vue";
 import { ref } from "vue";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 import { storeToRefs } from "pinia";
@@ -122,6 +141,7 @@ const {
   addSearchList,
   resetReloadList,
   changeTypeTab,
+  changeTypeMyTab,
   changeTab,
   setSortInfo,
   setSelectedFilter,
@@ -136,6 +156,7 @@ const {
   selectedFilters,
   searchResult,
   currTab,
+  currTypeMyTab,
   currTypeTab,
   mySearchResult,
   nSelectedListData,
@@ -156,6 +177,11 @@ const onChangeTypeTab = (value: string) => {
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempSelectedListData.value = [];
   changeTypeTab(value);
+};
+const onChangeTypeMyTab = (value: string) => {
+  // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
+  tempAccordSelectedListData.value = [];
+  changeTypeMyTab(value);
 };
 
 ////////////// 목록 이동 //////////////
@@ -222,6 +248,7 @@ const onSelectApiData = (value: any[]) => {
 const onClickApiFilterChange = async (value: []) => {
   setSelectedFilter(value);
   await resetReloadList(nSelectedListData.value);
+  ("");
 };
 const onClickApiSortChange = async (value: string) => {
   setSortInfo(value);

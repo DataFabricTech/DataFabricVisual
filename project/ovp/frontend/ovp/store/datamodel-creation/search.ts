@@ -39,6 +39,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     return selectedModelList.value.length;
   });
   const isDoneFirModelListLoad = ref(false);
+  const infiniteScrollSettingDone = ref(false);
 
   const { setQueryFilterByDepth } = useQueryHelpers();
 
@@ -58,6 +59,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const TAB_DEFAULT = $constants.DATAMODEL_CREATION.ADD.TAB[0].value;
   const currTab: Ref<string> = ref(TAB_DEFAULT); // 대분류 : 전체/MY
   const currTypeTab: Ref<string> = ref($constants.COMMON.DATA_TYPE[0].value);
+  const currTypeMyTab: Ref<string> = ref(
+    $constants.DATAMODEL_CREATION.ADD.MY_DATA_TAB[0].value,
+  );
 
   // 데이터 모델 리스트 - 전체
   const searchResult: Ref<any[]> = ref([]);
@@ -176,7 +180,8 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * 데이터 조회 > 누적
    */
   const addSearchList = async () => {
-    const { data, totalCount } = await getSearchListAPI();
+    console.log("addSearchList");
+    const { data, totalCount } = await getSearchListAPI(null, false);
     searchResult.value = searchResult.value.concat(data[currTypeTab.value]);
     searchResultLength.value = totalCount;
   };
@@ -185,6 +190,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * 데이터 조회 > 갱신
    */
   const getSearchList = async (selectedList: any[] | null = null) => {
+    console.log("getSearchList");
     isDoneFirModelListLoad.value = false;
 
     const { data, totalCount } = await getSearchListAPI(selectedList);
@@ -196,24 +202,38 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     setDataLoadDone();
   };
 
+  const getMyList = async (selectedList: any[] | null = null) => {
+    isDoneFirModelListLoad.value = false;
+
+    const { data, totalCount } = await getMyListAPI(selectedList);
+    mySearchResult.value = data[currTypeMyTab.value];
+    mySearchResultLength.value = totalCount;
+    isDoneFirModelListLoad.value = true;
+
+    // [데이터 갱신] 이 완료되면 호출한다. infiniteScroll 처리하기 위해 필요한 함수. (modal 한정)
+    setDataLoadDone();
+  };
+
   /**
    * 목록 reset
    * 목록을 '갱신'하는 경우, from 값을 항상 0으로 주어야 하기 때문에 fn 하나로 묶어서 처리.
    */
+
+  const getMyListQuery = () => {
+    const params: any = {
+      query: searchKeyword,
+      type: currTypeMyTab.value, // table or storage or model -> tab
+      from: from.value,
+      size: size.value,
+      id: user.value.id,
+    };
+    return new URLSearchParams(params);
+  };
+
   const resetReloadList = async (selectedList: any[] | null = null) => {
     setFrom(0);
     if (currTab.value === "my") {
-      const { data } = await $api(
-        `/api/creation/my-list/${user.value.id}?query=${searchKeyword}`,
-      );
-      mySearchResult.value = data;
-      const ndata = [...data.bookmark, ...data.owner];
-      const newData = ndata.map((item: any) => {
-        return setSearchListItem(selectedList, item);
-      });
-
-      searchResult.value = newData;
-      searchResultLength.value = newData.length;
+      await getMyList(selectedList);
     } else {
       await getSearchList(selectedList);
     }
@@ -247,13 +267,30 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   };
 
   /**
+   * My List > 중분류 Tab 변경
+   * @param item
+   */
+  const changeTypeMyTab = (item: string) => {
+    currTypeMyTab.value = item;
+    resetReloadList(nSelectedListData.value);
+  };
+
+  /**
    * 대분류 Tab 변경
    * @param item
    */
   const changeTab = (item: string) => {
     currTab.value = item;
     setSearchKeyword("");
-    resetReloadList(nSelectedListData.value);
+
+    nextTick(() => {
+      // 두 tab 다 infinite scroll 이 설정 되어 있기 때문에 tab 전환시 설정 flag 를 초기화해준다.
+      // dom 에 infinite scroll 이 적용될 tag가 생성 된 후에 infinite scroll 을 설정해줘야 동작하기 때문에 nextTick 에서 설정함.
+      infiniteScrollSettingDone.value = false;
+      infiniteScrollSettingDone.value = true;
+    }).then(() => {
+      resetReloadList(nSelectedListData.value);
+    });
   };
 
   /**
@@ -408,23 +445,36 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   /**
    * API - 데이터 조회
    */
-  const getSearchListAPI = async (selectedList: any[] | null = null) => {
-    if (currTab.value === TAB_DEFAULT) {
-      const { data } = await $api(
-        `/api/creation/list?${getSearchListQuery()}`,
-        { showLoader: false },
-      );
-      const nData = data.data[currTypeTab.value] as any[];
-      data.data[currTypeTab.value] = nData.map((item: any) => {
-        return setSearchListItem(selectedList, item);
-      });
-      return data;
-    } else {
-      // TODO: MY 데이터 연동
-      const { data, totalCount } = DataModelSample.my_sampleList;
-      mySearchResult.value = data;
-      mySearchResultLength.value = totalCount;
-    }
+  const getSearchListAPI = async (
+    selectedList: any[] | null = null,
+    isFirst = true,
+  ) => {
+    console.log("getSearchListAPI");
+    console.log("isFirst", isFirst);
+    const { data } = await $api(`/api/creation/list?${getSearchListQuery()}`, {
+      // showLoader: false,
+      showLoader: isFirst,
+    });
+    const nData = data.data[currTypeTab.value] as any[];
+    data.data[currTypeTab.value] = nData.map((item: any) => {
+      return setSearchListItem(selectedList, item);
+    });
+    return data;
+  };
+
+  /**
+   * API - My 데이터 조회
+   */
+  const getMyListAPI = async (selectedList: any[] | null = null) => {
+    const { data } = await $api(`/api/creation/my-list?${getMyListQuery()}`, {
+      showLoader: false,
+    });
+    const nData = data.data[currTypeMyTab.value] as any[];
+    data.data[currTypeMyTab.value] = nData.map((item: any) => {
+      return setSearchListItem(selectedList, item);
+    });
+    console.log(data);
+    return data;
   };
 
   /**
@@ -515,6 +565,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     sortKey,
     sortKeyOpt,
     currTab,
+    currTypeMyTab,
     currTypeTab,
     filters,
     searchResult,
@@ -532,6 +583,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     selectedModelList,
     selectedModelListCnt,
     isDoneFirModelListLoad,
+    infiniteScrollSettingDone,
     addSearchList,
     getSearchList,
     getFilters,
@@ -543,6 +595,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     resetReloadList,
     resetDetailBox,
     changeTypeTab,
+    changeTypeMyTab,
     changeTab,
     onClickData,
     onClickAccordData,

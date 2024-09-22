@@ -5,6 +5,7 @@ export interface DataModelApiListProps extends DataModelListProps {
   selectedFilters: {};
   addSearchList: any;
   useSort?: boolean;
+  useFilter?: boolean;
   useInfinite?: boolean;
   useLiveSearch?: boolean;
 }
