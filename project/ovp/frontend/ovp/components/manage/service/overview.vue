@@ -106,9 +106,11 @@
       </div>
     </div>
     <div class="v-group gap-5">
-      <h4 class="overview-title">서비스 상태</h4>
-      <!--     TODO: [개발] 수집일시 api -->
-      <div class="table-info">수집 일시 : 2024-09-12 00:00:00</div>
+      <div class="h-group w-full">
+        <h4 class="overview-title">서비스 상태</h4>
+        <!--     TODO: [개발] 수집일시 api -->
+        <div class="overview-info">수집 일시 : 2024-09-12 00:00:00</div>
+      </div>
       <div class="no-result" v-if="statusDetailData.length === 0">
         <div class="notification">
           <svg-icon class="notification-icon" name="info"></svg-icon>
