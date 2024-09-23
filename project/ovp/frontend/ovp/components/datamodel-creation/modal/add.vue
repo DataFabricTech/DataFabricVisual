@@ -1,7 +1,6 @@
 <template>
   <Modal
     title="데이터 모델 추가"
-    :modal-id="props.modalId"
     background="non-interactive"
     displayDirective="show"
     overlayTransition="vfm-fade"
@@ -59,13 +58,6 @@ import Tab from "@extends/tab/Tab.vue";
 import $constants from "~/utils/constant";
 import AddDetailGrid from "~/components/datamodel-creation/modal/add-detail-grid.vue";
 
-const props = defineProps({
-  modalId: {
-    type: String,
-    required: true,
-  },
-});
-
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
 const {
@@ -77,14 +69,21 @@ const {
   nSelectedListData,
   infiniteScrollSettingDone,
 } = storeToRefs(dataModelSearchStore);
-const { resetReloadList, getFilters, changeDetailTab, resetDetailBox } =
-  dataModelSearchStore;
+const {
+  resetReloadList,
+  getFilters,
+  changeDetailTab,
+  resetDetailBox,
+  setNSelectedListData,
+  setSearchKeyword,
+  setSearchMyKeyword,
+} = dataModelSearchStore;
 
 Promise.all([resetReloadList(), getFilters(), resetDetailBox()]);
 
 const onOpenModal = async () => {
   // 전체+MY / 필터 / 내부 선택 목록 데이터 초기화
-  nSelectedListData.value = $_cloneDeep(selectedModelList.value);
+  setNSelectedListData($_cloneDeep(selectedModelList.value));
 };
 
 const emit = defineEmits<{
@@ -96,8 +95,11 @@ const onCancelModal = () => {
 };
 
 const onConfirmModal = () => {
-  // 내부 데이터 저장
+  // 내부 데이터 저장modalId
   selectedModelList.value = nSelectedListData.value;
+  setSearchKeyword("");
+  setSearchMyKeyword("");
+  setNSelectedListData([]);
   emit("close");
 };
 

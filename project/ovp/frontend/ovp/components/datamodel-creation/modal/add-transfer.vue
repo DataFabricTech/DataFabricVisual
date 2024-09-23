@@ -40,7 +40,7 @@
             <template v-slot:tab>
               <Tab
                 class="tab-line"
-                :data="$constants.COMMON.DATA_TYPE"
+                :data="searchListDetailTab"
                 label-key="label"
                 value-key="value"
                 current-item-type="value"
@@ -65,19 +65,19 @@
             :use-live-search="false"
             :use-sort="false"
             :use-infinite="true"
-            :addSearchList="addSearchList"
+            :addSearchList="addMySearchList"
             :isDoneFirModelListLoad="isDoneFirModelListLoad"
             list-type="non-selected"
             no-data-msg="데이터 모델이 없습니다."
-            @item-check="onSelectAccordData"
-            @item-click="onClickAccordData"
+            @item-check="onSelectMyListData"
+            @item-click="onClickMyListData"
             @bookmark-change="onClickBookmark"
-            @search-change="onClickAccordSearchChange"
+            @search-change="onClickMyListSearchChange"
           >
             <template v-slot:tab>
               <Tab
                 class="tab-line"
-                :data="$constants.DATAMODEL_CREATION.ADD.MY_DATA_TAB"
+                :data="myListDetailTab"
                 label-key="label"
                 value-key="value"
                 current-item-type="value"
@@ -139,6 +139,7 @@ import { storeToRefs } from "pinia";
 const dataModelSearchStore = useDataModelSearchStore();
 const {
   addSearchList,
+  addMySearchList,
   resetReloadList,
   changeTypeTab,
   changeTypeMyTab,
@@ -147,7 +148,8 @@ const {
   setSelectedFilter,
   setSearchKeyword,
   onClickData,
-  onClickAccordData,
+  onClickMyListData,
+  setSearchMyKeyword,
   onClickBookmark,
   updateSelectedModelBookmark,
 } = dataModelSearchStore;
@@ -155,10 +157,12 @@ const {
   filters,
   selectedFilters,
   searchResult,
+  searchResultLength,
   currTab,
   currTypeMyTab,
   currTypeTab,
   mySearchResult,
+  mySearchResultLength,
   nSelectedListData,
   isDoneFirModelListLoad,
 } = storeToRefs(dataModelSearchStore);
@@ -166,11 +170,27 @@ const {
 const selectedListLength = computed(() => {
   return nSelectedListData.value ? nSelectedListData.value.length : 0;
 });
+const myListDetailTab = computed(() => {
+  const defaultTab = $_cloneDeep($constants.DATAMODEL_CREATION.ADD.MY_DATA_TAB);
+  defaultTab.map((item) => {
+    const lengthValue = mySearchResultLength.value[item.value];
+    item.label = !!lengthValue ? `${item.label}(${lengthValue})` : item.label;
+  });
+  return defaultTab;
+});
+const searchListDetailTab = computed(() => {
+  const defaultTab = $_cloneDeep($constants.COMMON.DATA_TYPE);
+  defaultTab.map((item) => {
+    const lengthValue = searchResultLength.value[item.value];
+    item.label = !!lengthValue ? `${item.label}(${lengthValue})` : item.label;
+  });
+  return defaultTab;
+});
 
 const onChangeTab = (value: string) => {
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempSelectedListData.value = [];
-  tempAccordSelectedListData.value = [];
+  tempMyListSelectedListData.value = [];
   changeTab(value);
 };
 const onChangeTypeTab = (value: string) => {
@@ -180,7 +200,7 @@ const onChangeTypeTab = (value: string) => {
 };
 const onChangeTypeMyTab = (value: string) => {
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
-  tempAccordSelectedListData.value = [];
+  tempMyListSelectedListData.value = [];
   changeTypeMyTab(value);
 };
 
@@ -192,10 +212,10 @@ const onSaveSelectedData = () => {
   // 임시로 저장되어 있던 값을 선택 리스트에 저장
   nSelectedListData.value = nSelectedListData.value
     .concat(tempSelectedListData.value)
-    .concat(tempAccordSelectedListData.value);
+    .concat(tempMyListSelectedListData.value);
 
   tempSelectedListData.value = [];
-  tempAccordSelectedListData.value = [];
+  tempMyListSelectedListData.value = [];
 };
 
 /**
@@ -248,7 +268,6 @@ const onSelectApiData = (value: any[]) => {
 const onClickApiFilterChange = async (value: []) => {
   setSelectedFilter(value);
   await resetReloadList(nSelectedListData.value);
-  ("");
 };
 const onClickApiSortChange = async (value: string) => {
   setSortInfo(value);
@@ -260,12 +279,12 @@ const onClickApiSearchChange = async (value: string) => {
 };
 
 ////////////// API - MY 목록 //////////////
-const tempAccordSelectedListData = ref([]);
-const onSelectAccordData = (value: any[]) => {
-  tempAccordSelectedListData.value = value;
+const tempMyListSelectedListData = ref([]);
+const onSelectMyListData = (value: any[]) => {
+  tempMyListSelectedListData.value = value;
 };
-const onClickAccordSearchChange = async (value: string) => {
-  setSearchKeyword(value);
+const onClickMyListSearchChange = async (value: string) => {
+  setSearchMyKeyword(value);
   await resetReloadList(nSelectedListData.value);
 };
 
