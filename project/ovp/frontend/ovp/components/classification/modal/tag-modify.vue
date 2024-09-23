@@ -65,11 +65,11 @@
 
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
-import { ref } from "vue";
-import { classificationStore } from "@/store/classification/index";
-const useClassificationStore = classificationStore();
+import { type Ref, ref } from "vue";
+// import { classificationStore } from "@/store/classification/index";
+// const useClassificationStore = classificationStore();
 // const { formInfo } = storeToRefs(useClassificationStore);
-const { getClassificationTags, editClassificationTag } = useClassificationStore; // TODO : 태그 수정하는 API 가진 함수 호출 할 곳!
+// const { getClassificationTags, editClassificationTag } = useClassificationStore; // TODO : 태그 수정하는 API 가진 함수 호출 할 곳!
 
 const { $vfm } = useNuxtApp();
 
@@ -79,10 +79,10 @@ const closeModalTag = () => {
   emit("close-modal");
 };
 
-// interface TagFormState {
-//   name: string;
-//   description: string;
-// }
+interface TagFormState {
+  name: string;
+  description: string;
+}
 
 const props = defineProps({
   modalId: {
@@ -95,20 +95,26 @@ const props = defineProps({
   },
 });
 
-// computed로 formInfo를 기반으로 tagFormState를 계산
-const tagFormState = computed(() => ({
-  name: props.formInfo.name || "",
-  description: props.formInfo.description || "",
-}));
+const tagFormState: Ref<TagFormState> = ref({
+  name: "",
+  description: "",
+});
+
+watchEffect(() => {
+  tagFormState.value.name = props.formInfo.name || "";
+  tagFormState.value.description = props.formInfo.description || "";
+});
 
 let nameErrorMsg: Ref<string> = ref("");
 const descriptionErrorMsg = "설명을 입력하세요.";
 
 const isShowNameNoti: Ref<boolean> = ref(false);
 const isShowDescNoti: Ref<boolean> = ref(false);
-function validateForm(): void {
-  console.log("validate 실행");
-}
+
+// function validateForm(): void {
+//   console.log("validate 실행");
+// }
+//
 // function validateForm(): void {
 //   isShowDescNoti.value = false;
 //   if (!tagFormState.description) {
@@ -140,7 +146,7 @@ function validateForm(): void {
 //   // });
 //   saveTag();
 // }
-
+//
 // function saveTag() {
 //   const editData = {
 //     name: tagFormState.name,
@@ -150,7 +156,7 @@ function validateForm(): void {
 //     "수정된 에디트 데이터 : 추후 patch형식으로 바꿔야함 ===> ",
 //     editData,
 //   );
-//   // return editClassificationTag(editData);
+//   return editClassificationTag(editData);
 // }
 
 function closeModal(): void {
