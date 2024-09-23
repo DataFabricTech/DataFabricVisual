@@ -265,6 +265,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
   function changeTab(param: string): void {
     tab.value = param;
   }
+
   function openEditTermComponent(component: string): void {
     currentComponent.value = component;
   }
@@ -277,14 +278,17 @@ export const useGlossaryStore = defineStore("glossary", () => {
   ): void {
     editGlossaryMode[property] = !editGlossaryMode[property];
   }
+
   function disableEditModes(): void {
     editGlossaryMode.name = false;
     editGlossaryMode.des = false;
     editGlossaryMode.tag = false;
   }
+
   function changeEditTermMode(property: keyof typeof editTermMode): void {
     editTermMode[property] = !editTermMode[property];
   }
+
   function disableEditTermModes(): void {
     editTermMode.name = false;
     editTermMode.des = false;
@@ -301,7 +305,6 @@ export const useGlossaryStore = defineStore("glossary", () => {
     Object.assign(glossary, param);
     changeTab("term");
     await getTerms(param.name);
-    await getGlossaryActivities();
     disableEditModes();
     disableEditTermModes();
     openEditTermComponent("glossary");
