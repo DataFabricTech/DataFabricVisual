@@ -66,36 +66,6 @@ export const useServiceStore = defineStore("service", () => {
   const defaultDescription = ref("");
   const newDescription = ref("");
 
-  // getRepositoryDescriptionAPI의 params 생성함수
-  const getQueryData = () => {
-    const params = {
-      fields: "owner,tags,dataProducts,domain",
-      include: "all",
-    };
-    return new URLSearchParams(params);
-  };
-
-  // 저장소 탭 > 설명 [데이터베이스] 조회 API호출 함수
-  const getRepositoryDescriptionAPI = async () => {
-    const { data }: any = await $api(
-      `/api/service-manage/repository/description/${selectedFqn}?${getQueryData()}`,
-      { showLoader: false },
-    );
-    serviceData.value = data;
-  };
-
-  // 저장소 탭 > [스토리지] 설명 조회 API호출 함수
-  const getRepositoryStorageDescriptionAPI = async () => {
-    const { data }: any = await $api(
-      `/api/service-manage/repository/storage/description/${selectedFqn}?${getQueryData()}`,
-      {
-        showLoader: false,
-      },
-    );
-
-    serviceData.value = data;
-  };
-
   // 저장소 탭 > 설명 수정 API호출 함수
   const updateRepositoryDescriptionAPI = async (
     patchData: JsonPatchOperation[],
@@ -135,6 +105,7 @@ export const useServiceStore = defineStore("service", () => {
       `/api/service-manage/${uri}/${selectedName}`,
       { showLoader: false },
     );
+    console.log(result);
     DBServiceListData.value = result.data;
 
     isDoneRepoAPI.value = false;
@@ -212,12 +183,6 @@ export const useServiceStore = defineStore("service", () => {
       newDescription.value = newService.description;
     }
   }
-
-  const getServiceRepoList = () => {
-    selectedServiceType.toLowerCase() === "minio"
-      ? getRepositoryStorageDescriptionAPI()
-      : getRepositoryDescriptionAPI();
-  };
 
   const getServiceInfo = async ({ type, name }) => {
     const { data } = await $api(
@@ -578,7 +543,6 @@ export const useServiceStore = defineStore("service", () => {
     (value) => {
       if (value === "repository") {
         // repository 저장소 탭을 누를때만 조회한다 (전체조회에 포함하지 않음)
-        getServiceRepoList();
         getDBServiceList();
       }
     },
@@ -620,7 +584,6 @@ export const useServiceStore = defineStore("service", () => {
 
     serviceData,
     DBServiceListData,
-    getRepositoryDescriptionAPI,
     updateRepositoryDescriptionAPI,
     getDBServiceList,
 
