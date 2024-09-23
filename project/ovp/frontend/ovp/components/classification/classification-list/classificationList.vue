@@ -37,10 +37,6 @@
       </div>
     </div>
   </div>
-  <classification-create
-    :modal-id="MODAL_ID"
-    @close-modal="closeModal"
-  ></classification-create>
 </template>
 
 <script setup lang="ts">
@@ -48,7 +44,7 @@ import { defineProps } from "vue";
 import { storeToRefs } from "pinia";
 import classificationCreate from "@/components/classification/modal/classification-create.vue";
 import { classificationStore } from "@/store/classification/index";
-const { $vfm } = useNuxtApp();
+import { useModal } from "vue-final-modal";
 
 const useClassificationStore = classificationStore();
 const { classificationList } = storeToRefs(useClassificationStore);
@@ -58,11 +54,18 @@ const { getClassificationDetail, getClassificationTags } =
 // 분류 추가 모달 ID
 const MODAL_ID = "modal-classification";
 
+const { open, close } = useModal({
+  component: classificationCreate,
+  attrs: {
+    modalId: MODAL_ID,
+    onClose() {
+      close();
+    },
+  },
+});
+
 function openModal() {
-  $vfm.open(MODAL_ID);
-}
-function closeModal() {
-  $vfm.close(MODAL_ID);
+  open();
 }
 
 const props = defineProps({
