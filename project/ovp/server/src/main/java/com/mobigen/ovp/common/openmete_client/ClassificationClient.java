@@ -1,12 +1,12 @@
 package com.mobigen.ovp.common.openmete_client;
 
+import com.mobigen.ovp.classification.client.dto.request.ClassificationAddRequest;
 import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationAdd;
 import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationData;
 import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationEdit;
 import com.mobigen.ovp.common.openmete_client.dto.classification.detail.ClassificationDetail;
 import com.mobigen.ovp.common.openmete_client.dto.classification.detail.ClassificationDetailByName;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +23,7 @@ import java.util.Map;
 public interface ClassificationClient {
     /**
      * 분류 리스트
+     *
      * @return
      */
     @GetMapping("")
@@ -30,6 +31,7 @@ public interface ClassificationClient {
 
     /**
      * 분류 리스트 단일 조회
+     *
      * @param id
      * @return
      */
@@ -38,6 +40,7 @@ public interface ClassificationClient {
 
     /**
      * 분류와 매칭되는 태그의 정보 조회 - 위에 2개와 같이 호출
+     *
      * @param name
      * @return
      */
@@ -50,9 +53,9 @@ public interface ClassificationClient {
     /**
      * 분류 수정
      *
-     * @Param id
      * @param param
      * @return
+     * @Param id
      */
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
     ClassificationEdit editClassification(@PathVariable("id") String id, @RequestBody List<JsonPatchOperation> param);
@@ -70,8 +73,9 @@ public interface ClassificationClient {
 
     /**
      * 분류 추가
+     *
      * @return
      */
     @PostMapping("")
-    ClassificationAdd addClassification(@RequestBody ClassificationAdd classificationAdd);
+    ClassificationAdd addClassification(@RequestBody ClassificationAddRequest classificationAdd);
 }

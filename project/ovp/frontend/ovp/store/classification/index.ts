@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import type { Ref } from "vue";
+import _ from "lodash";
 
 interface Classification {
   id: string;
@@ -90,14 +91,17 @@ export const classificationStore = defineStore("classification", () => {
 
     classificationList.value = data.data.classificationList;
     classificationListTotal.value = data.data.total;
-    // 분류목록의 0번째 인덱스 ID값을 currentClassificationID에 저장
-    currentClassificationID = data.data.classificationList[0].id;
-    // 태그의 기본값 및 선택된 값(매개변수)을 저장
-    currentClassificationTagName.value = data.data.classificationList[0].name;
+
+    if (!_.isEmpty(data.data.classificationList)) {
+      // 분류목록의 0번째 인덱스 ID값을 currentClassificationID에 저장
+      currentClassificationID = data.data.classificationList[0].id;
+      // 태그의 기본값 및 선택된 값(매개변수)을 저장
+      currentClassificationTagName.value = data.data.classificationList[0].name;
+    }
   };
 
   // 분류 상세 조회 ( name, displayName, description )
-  const getClassificationDetail = async (id?: string) => {
+  const getClassificationDetail = async (id: string) => {
     // [이름 / 설명 ] 수정상태 off
     isNameEditable.value = false;
     isDescEditable.value = false;
@@ -110,7 +114,7 @@ export const classificationStore = defineStore("classification", () => {
     const data: any = await $api(urlID); // 분류 상세 조회 API 호출
 
     classificationDetailData.value = data.data; // 화면에 보여줄 store 변수로 세팅
-    if (data.data.description.length === 0) {
+    if (data.data && data.data.description.length === 0) {
       // 설명이 없을 때,
       classificationDetailData.value.description = "-";
     }

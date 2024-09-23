@@ -69,7 +69,8 @@ import type { Ref } from "vue";
 const { $vfm } = useNuxtApp();
 
 const useClassificationStore = classificationStore();
-const { addClassification, getClassificationList } = useClassificationStore;
+const { addClassification, getClassificationList, getClassificationDetail } =
+  useClassificationStore;
 
 interface FormState {
   name: string;
@@ -117,7 +118,7 @@ function validateForm(): void {
   isShowDescNoti.value = false;
 
   // 저장 API 호출
-  saveClassification().then((response: object) => {
+  saveClassification().then(async (response: object) => {
     if (response.errorMessage === "Duplicate classification name") {
       nameErrorMsg.value = "이름이 중복되었습니다.";
       isShowNameNoti.value = true;
@@ -125,6 +126,7 @@ function validateForm(): void {
     } else if (response.result === 1) {
       // 분류항목 리스트 재호출
       getClassificationList();
+      await getClassificationDetail(response.data.id);
       // 성공시 모달 닫기
       closeModal();
     }

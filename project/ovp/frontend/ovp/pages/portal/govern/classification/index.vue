@@ -7,7 +7,17 @@
   <div class="section-contents p-0 bg-white">
     <div class="l-split">
       <classification-list :isLoaded="isLoaded"></classification-list>
-      <classification-list-modify></classification-list-modify>
+      <template v-if="classificationList.length === 0">
+        <div class="no-result">
+          <div class="notification">
+            <svg-icon class="notification-icon" name="info"></svg-icon>
+            <p class="notification-detail">등록된 정보가 없습니다.</p>
+          </div>
+        </div>
+      </template>
+      <template v-else>
+        <classification-list-modify></classification-list-modify>
+      </template>
     </div>
   </div>
 </template>
@@ -30,6 +40,12 @@ const isLoaded = ref(false);
 onMounted(async () => {
   // 분류 목록 조회 API 호출
   await getClassificationList();
+
+  if (classificationList.value.length === 0) {
+    isLoaded.value = true; // 데이터 로딩 완료
+    return;
+  }
+
   // 분류 상세 조회 API 호출
   await getClassificationDetail();
   // 분류의 첫번째 Tag조회 API 호출
