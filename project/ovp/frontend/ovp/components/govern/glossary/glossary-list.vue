@@ -35,19 +35,17 @@
       </div>
     </div>
   </div>
-  <modal-glossary-dictionary
-    :modal-id="MODAL_ID"
-    @cancel-model="closeModal"
-  ></modal-glossary-dictionary>
 </template>
 
 <script setup lang="ts">
-import { useGlossaryStore } from "~/store/glossary";
-import type { Glossary } from "~/type/glossary";
-import { _ } from "lodash";
+import ModalGlossaryDictionary from "@/components/govern/glossary/modal/modal-glossary-dictionary.vue";
+import { useGlossaryStore } from "@/store/glossary";
+import type { Glossary } from "@/type/glossary";
+import _ from "lodash";
 import Loading from "@base/loading/Loading.vue";
-import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
-const { $vfm } = useNuxtApp();
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
+import { useModal } from "vue-final-modal";
+
 const { glossaries, glossary, getGlossaries, changeCurrentGlossary } =
   useGlossaryStore();
 getGlossaries();
@@ -61,10 +59,18 @@ const menuListClass = (data: Glossary): string => {
 const { scrollTrigger } = useIntersectionObserver(getGlossaries);
 
 const MODAL_ID = "modal-glossary-dictionary";
+
+const { open, close } = useModal({
+  component: ModalGlossaryDictionary,
+  attrs: {
+    modalId: MODAL_ID,
+    onClose() {
+      close();
+    },
+  },
+});
+
 function openModal() {
-  $vfm.open(MODAL_ID);
-}
-function closeModal() {
-  $vfm.close(MODAL_ID);
+  open();
 }
 </script>
