@@ -64,7 +64,6 @@
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
 import { classificationStore } from "@/store/classification/index";
-const { $vfm } = useNuxtApp();
 
 const useClassificationStore = classificationStore();
 const { addClassificationTag, getClassificationTags } = useClassificationStore;
@@ -81,6 +80,10 @@ const props = defineProps({
     required: true,
   },
 });
+
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
 
 const initialFormState: FormState = {
   name: "",
@@ -118,20 +121,25 @@ function validateForm(): void {
   }
   isShowDescNoti.value = false;
 
-  saveClassificationTag().then((response: object) => {
-    if (response.errorMessage === "Duplicate classification name") {
-      nameErrorMsg.value = "이름이 중복되었습니다.";
-      isShowNameNoti.value = true;
-      return;
-    } else if (response.result === 1) {
-      getClassificationTags(); // 태그리스트조회 재호출
-      // 성공시 모달 닫기
-      closeModal();
-    }
-  });
+  saveClassificationTag().then(
+    (response: { errorMessage: string; result: number }) => {
+      if (response.errorMessage === "Duplicate classification name") {
+        nameErrorMsg.value = "이름이 중복되었습니다.";
+        isShowNameNoti.value = true;
+        return;
+      } else if (response.result === 1) {
+        getClassificationTags(); // 태그리스트조회 재호출
+        // 성공시 모달 닫기
+        closeModal();
+      }
+    },
+  );
 }
 
-function saveClassificationTag(): Promise<void> {
+function saveClassificationTag(): Promise<{
+  errorMessage: string;
+  result: number;
+}> {
   // 추가할 내용 저장(name, description)
   const addData = {
     name: classificationTagForm.name,
@@ -143,7 +151,7 @@ function saveClassificationTag(): Promise<void> {
 
 function closeModal(): void {
   resetForm();
-  $vfm.close(props.modalId);
+  emit("close");
 }
 
 function resetForm(): void {
