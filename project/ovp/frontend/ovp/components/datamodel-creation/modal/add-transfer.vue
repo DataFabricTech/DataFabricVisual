@@ -70,7 +70,7 @@
             list-type="non-selected"
             no-data-msg="데이터 모델이 없습니다."
             @item-check="onSelectMyListData"
-            @item-click="onClickMyListData"
+            @item-click="onClickData"
             @bookmark-change="onClickBookmark"
             @search-change="onClickMyListSearchChange"
           >
@@ -120,7 +120,7 @@
         no-data-msg="선택된 데이터 모델이 없습니다."
         @delete="onDeleteListData"
         @item-check="onSelectListData"
-        @item-click="onClickData"
+        @item-click="onClickSelectedData"
         @bookmark-change="updateSelectedModelBookmark"
       ></data-model-list>
     </div>
@@ -148,7 +148,7 @@ const {
   setSelectedFilter,
   setSearchKeyword,
   onClickData,
-  onClickMyListData,
+  onClickSelectedData,
   setSearchMyKeyword,
   onClickBookmark,
   updateSelectedModelBookmark,
@@ -227,10 +227,21 @@ const onDeleteSelectedData = () => {
     tempDeleteListData.value,
     "id",
   );
+
+  tempDeleteListData.value = [];
   searchResult.value = searchResult.value.map((item: any) => {
     // 선택된 항목 중에 SelectedList에 데이터가 존재하면 값 변경
     if (item.isSelected && !isSelectedData(item.id)) {
       item.isSelected = false;
+      item.isChecked = false;
+    }
+    return item;
+  });
+  mySearchResult.value = mySearchResult.value.map((item: any) => {
+    // 선택된 항목 중에 SelectedList에 데이터가 존재하면 값 변경
+    if (item.isSelected && !isSelectedData(item.id)) {
+      item.isSelected = false;
+      item.isChecked = false;
     }
     return item;
   });
@@ -257,14 +268,27 @@ const onDeleteListData = (value: any[]) => {
 
 const tempDeleteListData = ref([]);
 const onSelectListData = (value: any[]) => {
-  tempDeleteListData.value = value;
+  tempDeleteListData.value = value.map((item) => {
+    return {
+      ...item,
+      isChecked: false,
+    };
+  });
 };
 
 ////////////// API - 전체 목록 //////////////
 const tempSelectedListData = ref([]);
 const onSelectApiData = (value: any[]) => {
   tempSelectedListData.value = value;
+  searchResult.value = searchResult.value.map((item: any) => {
+    let findItem = $_find(value, { id: item.id });
+    return {
+      ...item,
+      isChecked: !!findItem,
+    };
+  });
 };
+
 const onClickApiFilterChange = async (value: []) => {
   setSelectedFilter(value);
   await resetReloadList(nSelectedListData.value);
@@ -282,6 +306,13 @@ const onClickApiSearchChange = async (value: string) => {
 const tempMyListSelectedListData = ref([]);
 const onSelectMyListData = (value: any[]) => {
   tempMyListSelectedListData.value = value;
+  mySearchResult.value = mySearchResult.value.map((item: any) => {
+    let findItem = $_find(value, { id: item.id });
+    return {
+      ...item,
+      isChecked: !!findItem,
+    };
+  });
 };
 const onClickMyListSearchChange = async (value: string) => {
   setSearchMyKeyword(value);
@@ -289,14 +320,20 @@ const onClickMyListSearchChange = async (value: string) => {
 };
 
 watchEffect(() => {
-  // nSelectedListData.value 의 값이 변경되면 적용되도록
-  searchResult.value = searchResult.value.map((item: any) => {
-    // 선택되지 않은 항목 중에 SelectedList에 데이터가 존재하면 값 변경
-    if (!item.isSelected && isSelectedData(item.id)) {
-      item.isSelected = true;
-    }
-    return item;
-  });
+  const updateSelection = (resultList: any[]) => {
+    return resultList.map((item: any) => {
+      if (!item.isSelected && isSelectedData(item.id)) {
+        item.isSelected = true;
+      }
+      return item;
+    });
+  };
+
+  if (currTab.value === "all") {
+    searchResult.value = updateSelection(searchResult.value);
+  } else {
+    mySearchResult.value = updateSelection(mySearchResult.value);
+  }
 });
 </script>
 <style lang="scss" scoped></style>

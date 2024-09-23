@@ -11,7 +11,7 @@
     :height="560"
     :lockScroll="true"
     swipeToClose="none"
-    @close="onCloseModal"
+    @closed="onCloseModal"
     @before-open="onOpenModal"
     @click-outside="onCancelModal"
     @cancel="onCancelModal"
@@ -76,6 +76,7 @@ const {
   resetDetailBox,
   setNSelectedListData,
   setSearchKeyword,
+  setSelectedItem,
   setSearchMyKeyword,
 } = dataModelSearchStore;
 
@@ -97,13 +98,14 @@ const onCancelModal = () => {
 const onConfirmModal = () => {
   // 내부 데이터 저장modalId
   selectedModelList.value = nSelectedListData.value;
-  setSearchKeyword("");
-  setSearchMyKeyword("");
-  setNSelectedListData([]);
   emit("close");
 };
 
 const onCloseModal = () => {
+  setSearchKeyword("");
+  setSearchMyKeyword("");
+  setNSelectedListData([]);
+  setSelectedItem({});
   infiniteScrollSettingDone.value = false;
 };
 </script>

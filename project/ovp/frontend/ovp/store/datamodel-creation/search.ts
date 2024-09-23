@@ -9,7 +9,6 @@ import {
 } from "~/store/search/common";
 import type { Ref } from "vue";
 import $constants from "~/utils/constant";
-import DataModelSample from "~/components/datamodel-creation/datamodel-sample.json";
 import { useQueryHelpers } from "~/composables/queryHelpers";
 import CustomHeader from "@extends/custom-header-cell/custom-header-cell.vue";
 
@@ -86,7 +85,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   // 선택 데이터
   const selectedItem: Ref<object> = ref<object>({});
   const selectedItemOwner = computed(() => {
-    return selectedItem.value.owner;
+    return selectedItem.value.owner?.name;
   });
 
   // 추가 모달 > 선택 항목에 대한 상세 조회 데이터
@@ -158,6 +157,11 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     return !!findItem;
   };
 
+  const isShowDetailData = (item: any) => {
+    const itemId = item.id;
+    return itemId === selectedItem.id;
+  };
+
   /**
    * 리스트 변경 - 호출된 데이터를 화면에서 사용하는 속성으로 변경해서 반환
    * @param selectedList
@@ -165,14 +169,15 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    */
   const setSearchListItem = (selectedList: any[] | null = null, item: any) => {
     const isSelected = isSelectedData(selectedList, item);
+    const idShowDetail = isShowDetailData(item);
     return {
       ...item,
       label: item.modelNm,
       value: item.id,
       isChecked: false, // checkbox 선택 여부
-      idShowDetail: false, // 단일선택(아이템) 여부
       isShowContextMenu: false, // "복사" 컨텍스트 메뉴 클릭 여부
       isShowContextMenuBtn: false, // 컨텍스트 메뉴 버튼 클릭 여부
+      idShowDetail: idShowDetail, // 단일선택(아이템) 여부
       isSelected: isSelected, // 이미 선택여부 확인
     };
   };
@@ -181,7 +186,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * 데이터 조회 > 갱신
    */
   const getSearchList = async (selectedList: any[] | null = null) => {
-    console.log("getSearchList");
     isDoneFirModelListLoad.value = false;
 
     const { data, totalCount } = await getSearchListAPI(selectedList);
@@ -266,6 +270,12 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   const setSelectedFilter = (value: any[]) => {
     selectedFilters.value = value;
   };
+  const setSelectedItem = (value: any) => {
+    selectedItem.value = value;
+    sampleData.value = value;
+    profileData.value = value;
+    kgData.value = value;
+  };
 
   /**
    * 중분류 Tab 변경
@@ -303,33 +313,53 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       resetReloadList(nSelectedListData.value);
     });
   };
-
-  /**
-   * 추가 모달 > 데이터 선택(상세보기)
-   * @param value
-   */
-  const onClickData = async (value: string) => {
+  const setSelectedData = (value: string) => {
     const selectedModelItem = _.find(searchResult.value, { id: value });
-    selectedItem.value = selectedModelItem ? selectedModelItem : {};
-    await resetDetailBox();
+    const selectedMyModelItem = _.find(mySearchResult.value, { id: value });
+    if (
+      $_isUndefined(selectedModelItem) &&
+      $_isUndefined(selectedMyModelItem)
+    ) {
+      selectedItem.value = {};
+    } else {
+      selectedItem.value = selectedModelItem || selectedMyModelItem;
+    }
+  };
+
+  const updateSelection = (resultList: any[], value: string) => {
+    return resultList.map((item: any) => {
+      return { ...item, idShowDetail: item.id === value };
+    });
   };
 
   /**
    * 추가 모달 > 데이터 선택(상세보기)
    * @param value
    */
-  const onClickMyListData = async (value: string) => {
-    let selectedModelItem = null;
-    for (const key in mySearchResult.value) {
-      const data = mySearchResult.value[key];
-      const findData = _.find(data, { id: value });
-      if (findData) {
-        selectedModelItem = findData;
-        break;
-      }
+  const onClickData = async (value: string) => {
+    setSelectedData(value);
+
+    if (currTab.value === "all") {
+      searchResult.value = updateSelection(searchResult.value, value);
+    } else {
+      mySearchResult.value = updateSelection(mySearchResult.value, value);
     }
 
-    selectedItem.value = selectedModelItem ? selectedModelItem : {};
+    await resetDetailBox();
+  };
+
+  const onClickSelectedData = async (value: string) => {
+    setSelectedData(value);
+    nSelectedListData.value = nSelectedListData.value.map((item: any) => {
+      return {
+        ...item,
+        idShowDetail: item.id === selectedItem.value.id,
+      };
+    });
+
+    searchResult.value = updateSelection(searchResult.value, "");
+    mySearchResult.value = updateSelection(mySearchResult.value, "");
+
     await resetDetailBox();
   };
 
@@ -337,13 +367,16 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * 추가 모달 > 상세 보기 - tab 값 초기화
    */
   const resetDetailBox = async () => {
-    selectedItem.value = {};
     currDetailTab.value = DEFAULT_DETAIL_TAB;
     const value = selectedItem.value.id;
     if (!value) {
       return;
     }
-    sampleData.value = await getSampleData(value, selectedItem.value.fqn);
+    sampleData.value = await getSampleData(
+      value,
+      selectedItem.value.fqn,
+      selectedItem.value.type,
+    );
   };
 
   /**
@@ -357,7 +390,11 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       if (!value) {
         return;
       }
-      sampleData.value = await getSampleData(value, selectedItem.value.fqn);
+      sampleData.value = await getSampleData(
+        value,
+        selectedItem.value.fqn,
+        selectedItem.value.type,
+      );
     } else if (
       value === $constants.DATAMODEL_CREATION.ADD.DETAIL_TAB[1].value
     ) {
@@ -493,14 +530,17 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    */
   const updateBookmark = async (value: string) => {
     const selectedModel = _.find(searchResult.value, { id: value });
-    if (!selectedModel) {
+    const mySelectedModel = _.find(mySearchResult.value, { id: value });
+    if ($_isUndefined(selectedModel) && $_isUndefined(mySelectedModel)) {
       // TODO: alert 컴포넌트로 변경 예정
       alert("모델을 찾을 수 없습니다.");
       return;
     }
 
-    const urlType = selectedModel.isFollow ? "remove" : "add";
-    const methodType = selectedModel.isFollow ? "DELETE" : "PUT";
+    const model = selectedModel || mySelectedModel;
+
+    const urlType = model.isFollow ? "remove" : "add";
+    const methodType = model.isFollow ? "DELETE" : "PUT";
     $api(`/api/creation/bookmark/${urlType}/${value}`, {
       method: methodType,
     })
@@ -508,7 +548,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
         if (res.result === 1) {
           searchResult.value = searchResult.value.filter((item) => {
             // selectedModel과 일치하는 항목의 isFollow만 false로 변경
-            if (item.fqn === selectedModel.fqn) {
+            if (item.fqn === model.fqn) {
               item.isFollow = !item.isFollow;
             }
             return true; // 모든 항목을 유지
@@ -609,13 +649,14 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     setSortInfo,
     setSearchKeyword,
     setSearchMyKeyword,
+    setSelectedItem,
     resetReloadList,
     resetDetailBox,
     changeTypeTab,
     changeTypeMyTab,
     changeTab,
     onClickData,
-    onClickMyListData,
+    onClickSelectedData,
     changeDetailTab,
     onClickBookmark,
     updateSelectedModelBookmark,
