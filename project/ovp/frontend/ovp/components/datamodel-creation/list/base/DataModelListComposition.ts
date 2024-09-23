@@ -29,7 +29,9 @@ export function DataModelListComposition(
         label: item[props.labelKey],
         value: item[props.valueKey],
         isChecked: false, // checkbox 선택 여부
-        idShowDetail: false, // 단일선택(아이템) 여부
+        idShowDetail: $_isUndefined(item.idShowDetail)
+          ? false
+          : item.idShowDetail, // 단일선택(아이템) 여부
         isShowContextMenu: false, // "복사" 컨텍스트 메뉴 클릭 여부
         isShowContextMenuBtn: false, // 컨텍스트 메뉴 버튼 클릭 여부
         isShow: true, // 검색 처리
@@ -123,7 +125,7 @@ export function DataModelListComposition(
       } else {
         // 데이터 값 비교
         const valueExists = selectedFilterValue.some(
-          (item) => item.id === itemValue,
+          (item) => item.key === itemValue,
         );
         if (!valueExists) {
           return false;
