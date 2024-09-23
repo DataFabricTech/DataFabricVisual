@@ -65,7 +65,6 @@ const isFirstCheckedEvent: boolean = true;
 
 const onGraphView = () => {
   viewType.value = "listView";
-  alert("개발중 입니다.");
 };
 </script>
 

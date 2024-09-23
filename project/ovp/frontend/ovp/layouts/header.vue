@@ -122,7 +122,6 @@ const logOut = async () => {
 await getUserInfo();
 
 const moveMyPage = () => {
-  alert("개발중 입니다.");
   isDropdownOpen.value = false;
 };
 
