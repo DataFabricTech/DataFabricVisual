@@ -7,11 +7,13 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Map;
 
 @FeignClient(name = "ClassificationTagsClient", url = "${properties.ovp.open-metadata-url}/tags")
@@ -47,4 +49,10 @@ public interface ClassificationTagsClient {
      */
     @PostMapping("")
     Object addClassificationTag(@RequestBody ClassificationTagAdd classificationTagAdd);
+
+    /**
+     * 분류내 태그 수정
+     */
+    @PatchMapping(value="/{id}", consumes = "application/json-patch+json")
+    Object editClassificationTag(@PathVariable("id") String tagId, @RequestBody List<JsonPatchOperation> param);
 }
