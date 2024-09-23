@@ -331,7 +331,6 @@ function changeTag(items: MenuSearchItemImpl[]): void {
 const relatedTermsFQNs = ref([]);
 
 function changeRelatedTerms(items: MenuSearchItemImpl[]): void {
-  console.log(items);
   termForm.relatedTerms.length = 0;
   const selectedItems = items.map((item: MenuSearchItemImpl) => item.id);
   const matchTerms: object[] = terms.filter((term: object) =>
