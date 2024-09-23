@@ -43,15 +43,17 @@
     class="loader-lg is-loader-inner"
     style="display: none"
   ></Loading>
-  <modal-glossary :modal-id="MODAL_ID"></modal-glossary>
 </template>
 
 <script setup lang="ts">
+import ModalGlossary from "@/components/govern/glossary/modal/modal-glossary.vue";
 import { watch } from "vue";
 import { useGlossaryStore } from "@/store/glossary";
-import type { Term } from "~/type/glossary";
+import type { Term } from "@/type/glossary";
 import Loading from "@base/loading/Loading.vue";
-import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
+import { useModal } from "vue-final-modal";
+
 const {
   glossary,
   terms,
@@ -62,7 +64,6 @@ const {
   getTerms,
 } = useGlossaryStore();
 const store = useGlossaryStore();
-const { $vfm } = useNuxtApp();
 
 watch(
   () => store.glossary,
@@ -87,7 +88,18 @@ async function removeTerm(id: string): Promise<void> {
 }
 
 const MODAL_ID = "modal-glossary";
+
+const { open, close } = useModal({
+  component: ModalGlossary,
+  attrs: {
+    modalId: MODAL_ID,
+    onClose() {
+      close();
+    },
+  },
+});
+
 function openModal(): void {
-  $vfm.open(MODAL_ID);
+  open();
 }
 </script>

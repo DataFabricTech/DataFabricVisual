@@ -6,7 +6,7 @@
     :width="480"
     :esc-to-close="true"
     :btn-msg="'저장'"
-    @closed="closeModal"
+    @close="closeModal"
     @cancel="closeModal"
     @confirm="validateForm"
   >
@@ -120,11 +120,14 @@ import type { Tag } from "~/type/common";
 const { createGlossary, getGlossaries, menuSearchTagsData, tags } =
   useGlossaryStore();
 const userStore = useUserStore();
-const { $vfm } = useNuxtApp();
 
 const props = defineProps({
   modalId: { type: String, required: true },
 });
+
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
 
 type Owner = {
   id: string;
@@ -164,7 +167,7 @@ const duplicateName = ref(false);
 
 function closeModal(): void {
   resetForm();
-  $vfm.close(props.modalId);
+  emit("close");
 }
 
 function resetForm(): void {

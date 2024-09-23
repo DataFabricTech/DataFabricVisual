@@ -66,7 +66,6 @@
 import Modal from "@extends/modal/Modal.vue";
 import { classificationStore } from "@/store/classification/index";
 import type { Ref } from "vue";
-const { $vfm } = useNuxtApp();
 
 const useClassificationStore = classificationStore();
 const { addClassification, getClassificationList, getClassificationDetail } =
@@ -83,6 +82,11 @@ const props = defineProps({
     required: true,
   },
 });
+
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
+
 const initialFormState: FormState = {
   name: "",
   description: "",
@@ -118,7 +122,7 @@ function validateForm(): void {
   isShowDescNoti.value = false;
 
   // 저장 API 호출
-  saveClassification().then(async (response: object) => {
+  saveClassification().then(async (response: { errorMessage: string; result: number }) => {
     if (response.errorMessage === "Duplicate classification name") {
       nameErrorMsg.value = "이름이 중복되었습니다.";
       isShowNameNoti.value = true;
@@ -140,7 +144,10 @@ function initForm(): void {
   isShowDescNoti.value = false;
 }
 
-function saveClassification(): Promise<void> {
+function saveClassification(): Promise<{
+  errorMessage: string;
+  result: number;
+}> {
   // 추가할 내용 저장(name, description)
   const addData = {
     name: classificationForm.name,
@@ -152,7 +159,7 @@ function saveClassification(): Promise<void> {
 
 function closeModal(): void {
   resetForm();
-  $vfm.close(props.modalId);
+  emit("close");
 }
 
 function resetForm(): void {

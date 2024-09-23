@@ -103,18 +103,13 @@
   <!--  활동사항 탭 끝-->
 </template>
 <script setup lang="ts">
-import { useGlossaryStore } from "@/store/glossary";
-import type { Activity } from "~/type/glossary";
 import Loading from "@base/loading/Loading.vue";
+import { useGlossaryStore } from "@/store/glossary";
+import type { Activity } from "@/type/glossary";
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
+
 const { getGlossaryActivities, resetGlossaryActivities, activities, glossary } =
   useGlossaryStore();
-
-import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
-import { onMounted } from "vue";
-
-onMounted(() => {
-  resetGlossaryActivities();
-});
 
 const headerMessage = (activity: Activity): string => {
   const { updatedBy, fieldOperation } = activity;
@@ -138,6 +133,9 @@ const headerMessage = (activity: Activity): string => {
       return "";
   }
 };
+
+resetGlossaryActivities();
+await getGlossaryActivities();
 
 const { scrollTrigger } = useIntersectionObserver(getGlossaryActivities);
 </script>

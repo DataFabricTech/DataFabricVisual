@@ -169,6 +169,7 @@ import { useGlossaryStore } from "~/store/glossary";
 import { useUserStore } from "@/store/user/userStore";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import type { Tag } from "~/type/common";
+
 const userStore = useUserStore();
 const {
   createTerm,
@@ -179,11 +180,14 @@ const {
   terms,
   tags,
 } = useGlossaryStore();
-const { $vfm } = useNuxtApp();
 
 const props = defineProps({
   modalId: { type: String, required: true },
 });
+
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
 
 type Owner = {
   id: string;
@@ -230,7 +234,7 @@ const duplicateName = ref(false);
 
 function closeModal(): void {
   resetForm();
-  $vfm.close(props.modalId);
+  emit("close");
 }
 
 function resetForm(): void {
@@ -325,8 +329,8 @@ function changeTag(items: MenuSearchItemImpl[]): void {
 }
 
 const relatedTermsFQNs = ref([]);
+
 function changeRelatedTerms(items: MenuSearchItemImpl[]): void {
-  console.log(items);
   termForm.relatedTerms.length = 0;
   const selectedItems = items.map((item: MenuSearchItemImpl) => item.id);
   const matchTerms: object[] = terms.filter((term: object) =>
