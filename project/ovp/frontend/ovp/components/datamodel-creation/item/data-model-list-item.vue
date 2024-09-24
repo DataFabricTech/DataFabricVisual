@@ -28,7 +28,7 @@
       @click="onClickItem"
       @contextmenu.prevent="onShowContextMenu"
     >
-      <div class="type-img type-img-oracle"></div>
+      <div class="type-img" :class="props.data.serviceIcon"></div>
       <span class="menu-text">{{ props.data.label }}</span>
       <span class="menu-subtext">{{ owner }}</span>
     </button>
