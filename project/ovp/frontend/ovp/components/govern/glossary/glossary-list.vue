@@ -47,10 +47,17 @@ import type { Glossary } from "~/type/glossary";
 import { _ } from "lodash";
 import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import { onMounted } from "vue";
 const { $vfm } = useNuxtApp();
 const { glossaries, glossary, getGlossaries, changeCurrentGlossary } =
   useGlossaryStore();
-getGlossaries();
+
+onMounted(async () => {
+  Object.keys(glossary).forEach((key) => {
+    delete glossary[key];
+  });
+  await getGlossaries();
+});
 
 const menuListClass = (data: Glossary): string => {
   return _.isEqual(glossary, data)
