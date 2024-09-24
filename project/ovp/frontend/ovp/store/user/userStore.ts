@@ -2,6 +2,7 @@ import { usePagingStore } from "~/store/common/paging";
 import type { AddUser } from "~/type/user";
 
 import type { Ref } from "vue";
+import { ref } from "vue";
 
 interface User {
   role: string;
@@ -38,6 +39,12 @@ export const useUserStore = defineStore("userStore", () => {
     isAdmin: false,
     isBot: false,
     createPasswordType: "ADMIN_CREATE",
+  };
+
+  const profileFirstWord = ref("");
+
+  const setProfileFirstWord = (name: string) => {
+    profileFirstWord.value = name.slice(0, 1).toUpperCase();
   };
 
   // List Query Data
@@ -154,6 +161,7 @@ export const useUserStore = defineStore("userStore", () => {
     user,
     userList,
     defaultAddUser,
+    profileFirstWord,
     setSearchKeyword,
     getUserInfo,
     getUserList,
@@ -163,5 +171,6 @@ export const useUserStore = defineStore("userStore", () => {
     checkDuplicateEmail,
     checkDuplicateName,
     addUser,
+    setProfileFirstWord,
   };
 });

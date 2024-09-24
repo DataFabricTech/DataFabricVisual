@@ -4,7 +4,7 @@
     <li class="activity-info-item" v-for="activity in activities">
       <div class="profile">
         <span class="profile-avatar">
-          <image class="profile-img" alt="프로필 이미지"></image>
+          {{ profileFirstWord }}
         </span>
       </div>
       <div class="activity-info-wrap">
@@ -104,12 +104,17 @@
 </template>
 <script setup lang="ts">
 import Loading from "@base/loading/Loading.vue";
+import { useUserStore } from "@/store/user/userStore";
 import { useGlossaryStore } from "@/store/glossary";
 import type { Activity } from "@/type/glossary";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
+import { storeToRefs } from "pinia";
 
 const { getGlossaryActivities, resetGlossaryActivities, activities, glossary } =
   useGlossaryStore();
+
+const userStore = useUserStore();
+const { profileFirstWord } = storeToRefs(userStore);
 
 const headerMessage = (activity: Activity): string => {
   const { updatedBy, fieldOperation } = activity;

@@ -72,8 +72,8 @@ const searchCommonStore = useSearchCommonStore();
 const { setSearchKeyword, resetReloadList } = searchCommonStore;
 
 const userStore = useUserStore();
-const { getUserInfo } = userStore;
-const { user } = storeToRefs(userStore);
+const { getUserInfo, setProfileFirstWord } = userStore;
+const { user, profileFirstWord } = storeToRefs(userStore);
 
 const layoutHeaderStore = useLayoutHeaderStore();
 const { searchInputValue } = storeToRefs(layoutHeaderStore);
@@ -83,7 +83,6 @@ const router = useRouter();
 
 const header = ref();
 const dropdown = ref();
-const profileFirstWord = ref("");
 
 const { isDropdownOpen, setHandler } = useDropdownHelper();
 
@@ -101,9 +100,6 @@ const onClickSearch = (value: string) => {
   setSearchKeyword(value);
   resetReloadList();
   router.push({ path: `/portal/search` });
-};
-const setProfileFirstWord = (name: string) => {
-  profileFirstWord.value = name.slice(0, 1).toUpperCase();
 };
 
 const logOut = async () => {
