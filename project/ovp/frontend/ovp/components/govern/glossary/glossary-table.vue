@@ -15,7 +15,7 @@
       <th>설명</th>
       <th>관리</th>
     </tr>
-    <tr v-for="term in terms">
+    <tr v-if="terms.length !== 0" v-for="term in terms">
       <td>{{ term.name }}</td>
       <td>{{ term.description }}</td>
       <td>
@@ -32,6 +32,16 @@
           >
             삭제
           </button>
+        </div>
+      </td>
+    </tr>
+    <tr v-else>
+      <td colspan="3">
+        <div class="no-result">
+          <div class="notification">
+            <svg-icon class="notification-icon" name="info"></svg-icon>
+            <p class="notification-detail">등록된 정보가 없습니다.</p>
+          </div>
         </div>
       </td>
     </tr>

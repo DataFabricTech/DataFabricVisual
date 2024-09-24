@@ -84,6 +84,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   });
   const selectedFilterItems: Ref<any> = ref([]);
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
+  const currentPreviewId: Ref<string | number> = ref("");
   let UNDEFINED_TAG_ID: string = null;
 
   // DATA
@@ -241,12 +242,10 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
 
   const setSortFilter = (item: string | number = "totalVotes_desc") => {
     if (!_.isUndefined(item) && typeof item === "string") {
+      isShowPreview.value = false;
+      isBoxSelectedStyle.value = false;
+      currentPreviewId.value = "";
       setSortInfo(item);
-
-      // searchResult 초기화
-      searchResult.value = [];
-
-      // 항목 갱신
       resetReloadList();
     }
   };
@@ -277,6 +276,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     isBoxSelectedStyle,
     searchResultLength,
     isSearchResultNoData,
+    currentPreviewId,
     addSearchList,
     getSearchList,
     getFilter,

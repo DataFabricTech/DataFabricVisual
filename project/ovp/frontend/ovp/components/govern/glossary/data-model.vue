@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="category-search">
     <div class="l-top-bar">
       <div class="search-input">
         <label class="hidden-text" for="text-input-example-11">label</label>
@@ -46,7 +46,7 @@
         </div>
       </div>
     </div>
-    <div class="l-resource-box l-split mt-3">
+    <div v-if="dataModels.length !== 0" class="l-resource-box l-split mt-3">
       <div class="data-page">
         <div class="data-list">
           <resource-box-list
@@ -75,6 +75,12 @@
         @change="showPreview"
       ></Preview>
     </div>
+    <div v-else class="no-result mt-3">
+      <div class="notification">
+        <svg-icon class="notification-icon" name="info"></svg-icon>
+        <p class="notification-detail">등록된 정보가 없습니다.</p>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -87,6 +93,7 @@ import { onMounted, ref } from "vue";
 import Preview from "~/components/common/preview/preview.vue";
 import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+
 const {
   getDataModels,
   getDataModel,
