@@ -158,14 +158,17 @@
       <div>
         <div class="tab tab-line">
           <ul class="tab-list">
-            <li :class="getTabItemClassName('term')" @click="changeTab('term')">
+            <li
+              :class="getTabItemClassName('term')"
+              @click="clickedTab('term')"
+            >
               <button class="tab-button">
                 <p class="tab-button-text">용어</p>
               </button>
             </li>
             <li
               :class="getTabItemClassName('activity')"
-              @click="changeTab('activity')"
+              @click="clickedTab('activity')"
             >
               <button class="tab-button">
                 <p class="tab-button-text">활동사항</p>
@@ -204,6 +207,10 @@ const {
   changeEditGlossaryMode,
   createTagOperation,
   getGlossaryActivitiesCount,
+  getTerms,
+  resetTerms,
+  getGlossaryActivities,
+  resetGlossaryActivities,
 } = useGlossaryStore();
 const store = useGlossaryStore();
 
@@ -224,7 +231,6 @@ watch(
 
 onMounted(() => {
   syncEditDataWithGlossary();
-  getGlossaryActivitiesCount(`<%23E::glossary::${glossary.name}>`);
 });
 
 function syncEditDataWithGlossary() {
@@ -269,4 +275,15 @@ async function changeTag(items: MenuSearchItemImpl[]) {
   await editGlossary(glossary.id, operations);
   await getGlossaries();
 }
+
+const clickedTab = (tabKey: string) => {
+  changeTab(tabKey);
+  if (tabKey === "term") {
+    resetTerms();
+    getTerms();
+  } else {
+    resetGlossaryActivities();
+    getGlossaryActivities();
+  }
+};
 </script>

@@ -57,7 +57,6 @@ const {
   glossary,
   terms,
   openEditTermComponent,
-  resetTerms,
   changeCurrentTerm,
   deleteTerm,
   getTerms,
@@ -90,9 +89,6 @@ const { open, close } = useModal({
 function openModal(): void {
   open();
 }
-
-resetTerms();
-await getTerms();
 
 const { scrollTrigger } = useIntersectionObserver({
   callback: getTerms,

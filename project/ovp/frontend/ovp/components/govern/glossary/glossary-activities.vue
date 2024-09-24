@@ -108,8 +108,7 @@ import { useGlossaryStore } from "@/store/glossary";
 import type { Activity } from "@/type/glossary";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 
-const { getGlossaryActivities, resetGlossaryActivities, activities, glossary } =
-  useGlossaryStore();
+const { getGlossaryActivities, activities, glossary } = useGlossaryStore();
 
 const headerMessage = (activity: Activity): string => {
   const { updatedBy, fieldOperation } = activity;
@@ -133,9 +132,6 @@ const headerMessage = (activity: Activity): string => {
       return "";
   }
 };
-
-resetGlossaryActivities();
-await getGlossaryActivities();
 
 const { scrollTrigger } = useIntersectionObserver({
   callback: getGlossaryActivities,
