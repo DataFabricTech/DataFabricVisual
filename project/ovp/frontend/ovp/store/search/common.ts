@@ -254,10 +254,13 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     searchKeyword = keyword;
   };
 
-  const changeTab = (item: string) => {
+  const changeTab = (item: string, loadList: boolean = true) => {
     isShowPreview.value = false;
     currentTab.value = item;
-    resetReloadList();
+
+    if (loadList) {
+      resetReloadList();
+    }
   };
 
   return {
