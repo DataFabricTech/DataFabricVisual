@@ -232,12 +232,8 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
 
   const setSortFilter = (item: string | number = "totalVotes_desc") => {
     if (!_.isUndefined(item) && typeof item === "string") {
+      isShowPreview.value = false;
       setSortInfo(item);
-
-      // searchResult 초기화
-      searchResult.value = [];
-
-      // 항목 갱신
       resetReloadList();
     }
   };
