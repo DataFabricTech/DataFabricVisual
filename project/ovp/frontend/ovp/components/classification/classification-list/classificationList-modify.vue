@@ -1,7 +1,7 @@
 <template>
   <div class="work-page">
     <div class="l-top-bar">
-      <div class="v-group gap-[20px]">
+      <div class="w-[calc(100%-50px)]">
         <editable-group
           :parent-edit-mode="isNameEditable"
           compKey="name"
