@@ -165,7 +165,7 @@
 import Modal from "@extends/modal/Modal.vue";
 import MenuSearch from "@extends/menu-seach/menu-search.vue";
 import { defineProps, reactive, type Reactive, ref, watch } from "vue";
-import { useGlossaryStore } from "~/store/glossary";
+import { useGlossaryStore } from "@/store/glossary";
 import { useUserStore } from "@/store/user/userStore";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import type { Tag } from "~/type/common";
@@ -277,7 +277,11 @@ async function postTerm(): Promise<void> {
   termForm.relatedTerms = [...relatedTermsFQNs.value];
   termForm.owner.id = userStore.user.id;
   termForm.owner.type = userStore.user.isBot ? "system" : "user";
-  termForm.synonyms = [...changeSynonyms()];
+  if (synonyms.value) {
+    termForm.synonyms = [...changeSynonyms()];
+  } else {
+    termForm.synonyms = [];
+  }
 
   let errorOccurred = false;
   try {
