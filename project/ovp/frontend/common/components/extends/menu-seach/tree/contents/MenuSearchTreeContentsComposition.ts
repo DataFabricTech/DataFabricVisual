@@ -166,8 +166,8 @@ export function MenuSearchTreeContentsComposition(
     checkboxes.forEach((checkbox) => {
       checkbox.checked = false;
     });
-    // 선택 값 초기화
-    selectedListData.value = [];
+
+    selectedListData.value = props.isResetToFirst ? [originListData.value[0]] : [];
     listData.value = originListData.value;
   };
 
