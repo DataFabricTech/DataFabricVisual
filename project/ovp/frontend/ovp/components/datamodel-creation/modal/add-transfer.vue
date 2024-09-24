@@ -307,6 +307,7 @@ const onClickApiReset = async (value: string) => {
   setSelectedFilter(value.selectedFilter);
   setSortInfo(value.selectedSort);
   setSearchKeyword(value.searchLabel);
+  setSortInfo("totalVotes_desc");
   await resetReloadList(nSelectedListData.value);
 };
 
