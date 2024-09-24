@@ -47,32 +47,21 @@
 </template>
 
 <script setup lang="ts">
-import { watch, onMounted } from "vue";
+import { onMounted } from "vue";
 import { useGlossaryStore } from "@/store/glossary";
 import type { Term } from "~/type/glossary";
 import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 const {
-  glossary,
   terms,
   openEditTermComponent,
-  resetTerms,
   changeCurrentTerm,
   deleteTerm,
   getTerms,
 } = useGlossaryStore();
-const store = useGlossaryStore();
 const { $vfm } = useNuxtApp();
 
 onMounted(() => getTerms());
-watch(
-  () => store.glossary,
-  () => {
-    resetTerms();
-    getTerms();
-  },
-  { deep: true },
-);
 
 function onClickTerm(source: Term): void {
   changeCurrentTerm(source);

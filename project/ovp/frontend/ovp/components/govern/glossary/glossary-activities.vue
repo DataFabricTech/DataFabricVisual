@@ -1,5 +1,4 @@
 <template>
-  <!--  활동사항 탭 시작-->
   <ul class="activity-info">
     <li class="activity-info-item" v-for="activity in activities">
       <div class="profile">
@@ -100,21 +99,13 @@
       style="display: none"
     ></Loading>
   </ul>
-  <!--  활동사항 탭 끝-->
 </template>
 <script setup lang="ts">
 import { useGlossaryStore } from "@/store/glossary";
 import type { Activity } from "~/type/glossary";
 import Loading from "@base/loading/Loading.vue";
-const { getGlossaryActivities, resetGlossaryActivities, activities, glossary } =
-  useGlossaryStore();
-
+const { getGlossaryActivities, activities, glossary } = useGlossaryStore();
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
-import { onMounted } from "vue";
-
-onMounted(() => {
-  resetGlossaryActivities();
-});
 
 const headerMessage = (activity: Activity): string => {
   const { updatedBy, fieldOperation } = activity;

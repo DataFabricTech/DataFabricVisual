@@ -205,6 +205,10 @@ const {
   changeEditGlossaryMode,
   createTagOperation,
   getGlossaryActivitiesCount,
+  resetTerms,
+  getTerms,
+  resetGlossaryActivities,
+  getGlossaryActivities,
 } = useGlossaryStore();
 const store = useGlossaryStore();
 
@@ -215,10 +219,14 @@ const editData = reactive({
 
 watch(
   () => store.glossary,
-  (newGlossary) => {
+  async (newGlossary) => {
     editData.name = newGlossary.name;
     editData.description = newGlossary.description;
-    getGlossaryActivitiesCount(`<%23E::glossary::${glossary.name}>`);
+    await getGlossaryActivitiesCount(`<%23E::glossary::${glossary.name}>`);
+    await resetTerms();
+    await getTerms();
+    await resetGlossaryActivities();
+    await getGlossaryActivities();
   },
   { deep: true },
 );
