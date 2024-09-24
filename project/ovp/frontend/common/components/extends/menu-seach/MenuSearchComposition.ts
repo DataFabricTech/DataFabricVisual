@@ -41,6 +41,9 @@ export function MenuSearchComposition(
   const listData: Ref<any[]> = ref([]);
 
   const setListData: () => void = () => {
+    if (_.isEmpty(props.data)) {
+      return;
+    }
     const result = props.data.map((item) => {
       const isChecked = isCheckedData(item);
       return {
