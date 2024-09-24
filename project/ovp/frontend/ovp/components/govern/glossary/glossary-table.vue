@@ -48,7 +48,7 @@
   </table>
   <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
   <Loading
-    id="loader"
+    id="termLoader"
     :use-loader-overlay="true"
     class="loader-lg is-loader-inner"
     style="display: none"
@@ -57,7 +57,6 @@
 
 <script setup lang="ts">
 import ModalGlossary from "@/components/govern/glossary/modal/modal-glossary.vue";
-import { watch } from "vue";
 import { useGlossaryStore } from "@/store/glossary";
 import type { Term } from "@/type/glossary";
 import Loading from "@base/loading/Loading.vue";
@@ -68,27 +67,15 @@ const {
   glossary,
   terms,
   openEditTermComponent,
-  resetTerms,
   changeCurrentTerm,
   deleteTerm,
   getTerms,
 } = useGlossaryStore();
-const store = useGlossaryStore();
-
-watch(
-  () => store.glossary,
-  () => {
-    resetTerms();
-  },
-  { deep: true },
-);
 
 function onClickTerm(source: Term): void {
   changeCurrentTerm(source);
   openEditTermComponent("term");
 }
-
-const { scrollTrigger } = useIntersectionObserver(getTerms);
 
 async function removeTerm(id: string): Promise<void> {
   if (confirm("데이터모델을 삭제 하시겠습니까?")) {
@@ -112,4 +99,10 @@ const { open, close } = useModal({
 function openModal(): void {
   open();
 }
+
+const { scrollTrigger } = useIntersectionObserver({
+  callback: getTerms,
+  targetId: "termList",
+  loaderId: "termLoader",
+});
 </script>

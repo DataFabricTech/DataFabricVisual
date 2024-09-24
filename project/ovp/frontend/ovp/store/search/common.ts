@@ -1,7 +1,8 @@
-import { usePagingStore } from "~/store/common/paging";
-import { useQueryHelpers } from "~/composables/queryHelpers";
+import { usePagingStore } from "@/store/common/paging";
+import { useQueryHelpers } from "@/composables/queryHelpers";
 import _ from "lodash";
 import { ref } from "vue";
+import $constants from "@/utils/constant";
 
 export const FILTER_KEYS = {
   CATEGORY: "category",
@@ -84,6 +85,8 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const selectedFilterItems: Ref<any> = ref([]);
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
   const currentPreviewId: Ref<string | number> = ref("");
+  let UNDEFINED_TAG_ID: string = null;
+
   // DATA
   const viewType: Ref<string> = ref<string>("listView");
   const isShowPreview: Ref<boolean> = ref<boolean>(false);
@@ -173,11 +176,13 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     useFilters.forEach((key: string) => {
       (filters.value as Filters)[key].data = data[key];
     });
+
+    // 미분류 카테고리 ID 저장
+    UNDEFINED_TAG_ID = filters.value[FILTER_KEYS.CATEGORY].data.children[0].id;
   };
   const getFilter = async (filterKey: string) => {
     // TODO : 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
     const data = await $api(`/api/search/filter?field=${filterKey}`);
-    console.log(data);
     (filters.value as Filters)[filterKey].data = data.data[filterKey];
   };
 
@@ -195,7 +200,12 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     return !_.has(selectedFilters.value, FILTER_KEYS.CATEGORY)
       ? []
       : selectedFilters.value[FILTER_KEYS.CATEGORY].map(
-          (filter: any) => `ovp_category.${filter.id}`,
+          (filter: any) =>
+            `ovp_category.${
+              filter.id === UNDEFINED_TAG_ID
+                ? $constants.SERVICE.CATEGORY_UNDEFINED_NAME
+                : filter.id
+            }`,
         );
   };
 
@@ -242,10 +252,13 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     searchKeyword = keyword;
   };
 
-  const changeTab = (item: string) => {
+  const changeTab = (item: string, loadList: boolean = true) => {
     isShowPreview.value = false;
     currentTab.value = item;
-    resetReloadList();
+
+    if (loadList) {
+      resetReloadList();
+    }
   };
 
   return {

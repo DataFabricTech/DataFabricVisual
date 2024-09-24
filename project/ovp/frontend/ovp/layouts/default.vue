@@ -7,7 +7,7 @@
       <h2 class="hidden-text"></h2>
       <Sidebar></Sidebar>
       <section id="section">
-        <slot :key="route.fullPath" />
+        <slot />
       </section>
     </main>
   </div>

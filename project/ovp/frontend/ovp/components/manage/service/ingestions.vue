@@ -433,12 +433,12 @@ const onClickDropdownToggle = () => {
   toggle.value = !toggle.value;
 };
 
-await refreshIngestionList();
-
 const dropdownToggle = ref();
 
 const { isDropdownOpen: toggle, setHandler } = useDropdownHelper();
 onMounted(() => {
   setHandler(dropdownToggle.value);
 });
+
+await refreshIngestionList();
 </script>

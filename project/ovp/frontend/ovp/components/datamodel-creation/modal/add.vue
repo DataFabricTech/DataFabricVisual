@@ -8,7 +8,7 @@
     :clickToClose="true"
     :escToClose="true"
     :width="900"
-    :height="560"
+    :height="837"
     :lockScroll="true"
     swipeToClose="none"
     @closed="onCloseModal"
