@@ -11,4 +11,5 @@ export interface MenuSearchTreeContentsProps extends TreeDetailProps {
   searchText?: string;
   isShow?: boolean;
   isMulti?: boolean;
+  isResetToFirst?: boolean;
 }
