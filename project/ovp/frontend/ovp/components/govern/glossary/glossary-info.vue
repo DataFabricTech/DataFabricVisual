@@ -7,6 +7,7 @@
           class="button button-neutral-ghost button-sm"
           type="button"
           @click="changeEditGlossaryMode('name')"
+          v-if="!isGlossaryNull()"
         >
           <span class="hidden-text">수정</span>
           <svg-icon class="button-icon" name="pen"></svg-icon>
@@ -47,7 +48,11 @@
       </div>
       <!-- // 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
       <!-- TODO alert 개발 후 얼럿 적용 -->
-      <button class="button button-error-lighter" @click="removeGlossary">
+      <button
+        class="button button-error-lighter"
+        v-if="!isGlossaryNull"
+        @click="removeGlossary"
+      >
         삭제
       </button>
     </div>
@@ -60,7 +65,7 @@
         </div>
       </div>
       <!-- // 결과 없을 시 no-result 표시  -->
-      <div class="v-group gap-2">
+      <div class="v-group gap-2" v-if="!isGlossaryNull()">
         <div class="font-semibold text-neutral-700">설명</div>
         <div
           class="editable-group"
@@ -115,7 +120,7 @@
         </div>
       </div>
       <!-- // 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-      <div class="h-group gap-2">
+      <div class="h-group gap-2" v-if="!isGlossaryNull()">
         <div class="font-semibold text-neutral-700 w-16">태그</div>
         <div class="editable-group" v-if="!store.editGlossaryMode.tag">
           <div
@@ -152,7 +157,7 @@
         </div>
       </div>
 
-      <div>
+      <div v-if="!isGlossaryNull()">
         <div class="tab tab-line">
           <ul class="tab-list">
             <li :class="getTabItemClassName('term')" @click="changeTab('term')">
@@ -223,12 +228,16 @@ onMounted(() => {
   getGlossaryActivitiesCount(`<%23E::glossary::${glossary.name}>`);
 });
 
-function syncEditDataWithGlossary() {
+const isGlossaryNull = (): boolean => {
+  return Object.keys(store.glossary).length === 0;
+};
+
+function syncEditDataWithGlossary(): void {
   editData.name = store.glossary.name;
   editData.description = store.glossary.description;
 }
 
-async function removeGlossary() {
+async function removeGlossary(): Promise<void> {
   await deleteGlossary(glossary.id);
   await getGlossaries();
 }
@@ -252,7 +261,7 @@ const getTabItemClassName = (param: string): string => {
 
 const selectedItems: Ref<string[]> = ref([]);
 
-async function changeTag(items: MenuSearchItemImpl[]) {
+async function changeTag(items: MenuSearchItemImpl[]): Promise<void> {
   selectedItems.value = items.map((item: MenuSearchItemImpl) => item.tagFQN);
   const matchTags: Tag[] = tags.filter((tag) =>
     selectedItems.value.includes(tag.tagFQN),
