@@ -695,7 +695,7 @@
 
           <div>
             <div class="l-top-bar">
-              <div class="search-input w-[541px]">
+              <div class="search-input">
                 <label class="hidden-text" for="text-input-example-11"
                   >label</label
                 >
