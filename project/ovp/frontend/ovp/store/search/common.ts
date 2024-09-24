@@ -83,7 +83,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   });
   const selectedFilterItems: Ref<any> = ref([]);
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
-
+  const currentPreviewId: Ref<string | number> = ref("");
   // DATA
   const viewType: Ref<string> = ref<string>("listView");
   const isShowPreview: Ref<boolean> = ref<boolean>(false);
@@ -233,6 +233,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const setSortFilter = (item: string | number = "totalVotes_desc") => {
     if (!_.isUndefined(item) && typeof item === "string") {
       isShowPreview.value = false;
+      currentPreviewId.value = "";
       setSortInfo(item);
       resetReloadList();
     }
@@ -261,6 +262,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     isBoxSelectedStyle,
     searchResultLength,
     isSearchResultNoData,
+    currentPreviewId,
     addSearchList,
     getSearchList,
     getFilter,
