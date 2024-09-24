@@ -316,6 +316,9 @@ export const useGlossaryStore = defineStore("glossary", () => {
   async function getAllTags(): Promise<void> {
     const res = await $api(`/api/glossary/all-tags`);
     tags.splice(0, tags.length, ...res.data);
+
+    // 배열 초기화
+    menuSearchTagsData.length = 0;
     tags.forEach((tag) => {
       menuSearchTagsData.push({ displayName: tag.name, tagFQN: tag.tagFQN });
     });
