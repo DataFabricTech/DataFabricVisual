@@ -51,7 +51,10 @@
         삭제
       </button>
     </div>
-    <div class="work-contents">
+    <div
+      :id="store.tab === 'term' ? 'termList' : 'activitiesList'"
+      class="work-contents"
+    >
       <!-- 결과 없을 시 no-result 표시  -->
       <div class="no-result" v-if="Object.keys(glossary).length === 0">
         <div class="notification">
@@ -188,6 +191,7 @@ import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import type { JsonPatchOperation, Tag } from "~/type/common";
 import { reactive, watch, onMounted, type Ref } from "vue";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
+
 const {
   glossary,
   tags,

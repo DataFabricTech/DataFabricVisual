@@ -21,11 +21,13 @@ export const useGlossaryStore = defineStore("glossary", () => {
 
   const terms = reactive<Term[]>([]);
   const termsAfter = ref(null);
+  const termsBefore = ref(null);
 
   const term = reactive<Term>(<Term>{});
 
   const activities = reactive<Activity[]>([]);
   const activityAfter = ref(null);
+  const activityBefore = ref(null);
   const activitiesCount = ref(0);
 
   const dataModels = reactive<DataModel[]>([]);
@@ -121,10 +123,16 @@ export const useGlossaryStore = defineStore("glossary", () => {
 
   function resetTerms() {
     termsAfter.value = null;
+    termsBefore.value = null;
     terms.splice(0);
   }
 
   async function getTerms(): Promise<void> {
+    // 마지막 데이터까지 조회 완료한 경우, 추가적인 호출 중단
+    if (termsAfter.value === null && termsBefore.value !== null) {
+      return;
+    }
+
     menuSearchRelatedTermsData.length = 0;
     const param: string =
       // eslint-disable-next-line eqeqeq
@@ -134,11 +142,6 @@ export const useGlossaryStore = defineStore("glossary", () => {
     const res = await $api(`/api/glossary/terms?${param}`, {
       showLoader: false,
     });
-    if (res.data.paging) {
-      if (res.data.paging.total <= terms.length) {
-        return;
-      }
-    }
 
     if (res.data !== null) {
       terms.push(...res.data.terms);
@@ -146,6 +149,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
 
     if (res.data.paging) {
       termsAfter.value = res.data.paging.after;
+      termsBefore.value = res.data.paging.before;
     }
     terms.forEach((term) => {
       menuSearchRelatedTermsData.push({ label: term.name, id: term.id });
@@ -187,6 +191,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
    */
   function resetGlossaryActivities() {
     activityAfter.value = null;
+    activityBefore.value = null;
     activities.splice(0);
   }
 
@@ -194,6 +199,11 @@ export const useGlossaryStore = defineStore("glossary", () => {
    * 용어 활동 사항
    */
   async function getGlossaryActivities(): Promise<void> {
+    // 마지막 데이터까지 조회 완료한 경우, 추가적인 호출 중단
+    if (activityAfter.value === null && activityBefore.value !== null) {
+      return;
+    }
+
     const param: string =
       // eslint-disable-next-line eqeqeq
       activityAfter.value != null
@@ -203,15 +213,12 @@ export const useGlossaryStore = defineStore("glossary", () => {
       showLoader: false,
     });
 
-    if (activitiesCount.value === activities.length) {
-      return;
-    }
-
     if (res.data !== null) {
       activities.push(...res.data.activities);
     }
     if (res.data.paging) {
       activityAfter.value = res.data.paging.after;
+      activityBefore.value = res.data.paging.before;
     }
   }
 
@@ -304,6 +311,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
   async function changeCurrentGlossary(param: Glossary): Promise<void> {
     Object.assign(glossary, param);
     changeTab("term");
+    resetTerms();
     await getTerms(param.name);
     disableEditModes();
     disableEditTermModes();

@@ -94,7 +94,7 @@
     </li>
     <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
     <Loading
-      id="loader"
+      id="activitiesLoader"
       :use-loader-overlay="true"
       class="loader-lg is-loader-inner"
       style="display: none"
@@ -137,5 +137,9 @@ const headerMessage = (activity: Activity): string => {
 resetGlossaryActivities();
 await getGlossaryActivities();
 
-const { scrollTrigger } = useIntersectionObserver(getGlossaryActivities);
+const { scrollTrigger } = useIntersectionObserver({
+  callback: getGlossaryActivities,
+  targetId: "activitiesList",
+  loaderId: "activitiesLoader",
+});
 </script>
