@@ -292,7 +292,7 @@ async function postTerm(): Promise<void> {
   } finally {
     if (!errorOccurred) {
       closeModal();
-      await getTerms(glossary.name);
+      await getTerms();
       duplicateName.value = false;
     }
   }

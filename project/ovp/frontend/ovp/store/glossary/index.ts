@@ -119,7 +119,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
     }
   }
 
-  function resetTerms() {
+  function resetTerms(): void {
     termsAfter.value = null;
     terms.splice(0);
   }
@@ -134,14 +134,9 @@ export const useGlossaryStore = defineStore("glossary", () => {
     const res = await $api(`/api/glossary/terms?${param}`, {
       showLoader: false,
     });
-    if (res.data.paging) {
-      if (res.data.paging.total <= terms.length) {
-        return;
-      }
-    }
 
-    if (res.data !== null) {
-      terms.push(...res.data.terms);
+    if (res.data.terms !== null) {
+      terms.splice(0, terms.length, ...res.data.terms);
     }
 
     if (res.data.paging) {
@@ -165,27 +160,30 @@ export const useGlossaryStore = defineStore("glossary", () => {
     });
   }
 
-  async function updateTerm(id: string, body: object[]) {
+  async function updateTerm(id: string, body: object[]): Promise<void> {
     await $api(`/api/glossary/terms/${id}/assets/remove`, {
       method: "PUT",
       body: body,
     });
   }
 
-  async function deleteTerm(id: string) {
-    await $api(`/api/glossary/terms/${id}`, {
+  async function deleteTerm(id: string): Promise<void> {
+    const res = await $api(`/api/glossary/terms/${id}`, {
       method: "DELETE",
     });
+    if (res.data === null) {
+      throw new Error(res.errorMessage);
+    }
   }
 
-  function changeCurrentTerm(param: Term) {
+  function changeCurrentTerm(param: Term): void {
     Object.assign(term, param);
   }
 
   /**
    * 데이터 모델 초기화
    */
-  function resetGlossaryActivities() {
+  function resetGlossaryActivities(): void {
     activityAfter.value = null;
     activities.splice(0);
   }
@@ -219,7 +217,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
    * 용어 활동 사항 개수
    * @param entityLink
    */
-  async function getGlossaryActivitiesCount(entityLink: string) {
+  async function getGlossaryActivitiesCount(entityLink: string): Promise<void> {
     const res = await $api(
       `/api/glossary/activities/count?entityLink=${entityLink}`,
     );
@@ -231,7 +229,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
   /**
    * 데이터 모델 초기화
    */
-  function resetDataModels() {
+  function resetDataModels(): void {
     setFrom(0);
     updateIntersectionHandler(0);
     dataModels.splice(0);
@@ -300,8 +298,6 @@ export const useGlossaryStore = defineStore("glossary", () => {
   async function changeCurrentGlossary(param: Glossary): Promise<void> {
     Object.assign(glossary, param);
     changeTab("term");
-    await getTerms(param.name);
-    await getGlossaryActivities();
     disableEditModes();
     disableEditTermModes();
     openEditTermComponent("glossary");

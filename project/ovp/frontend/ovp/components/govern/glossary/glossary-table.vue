@@ -47,7 +47,7 @@
 </template>
 
 <script setup lang="ts">
-import { watch } from "vue";
+import { watch, onMounted } from "vue";
 import { useGlossaryStore } from "@/store/glossary";
 import type { Term } from "~/type/glossary";
 import Loading from "@base/loading/Loading.vue";
@@ -64,10 +64,12 @@ const {
 const store = useGlossaryStore();
 const { $vfm } = useNuxtApp();
 
+onMounted(() => getTerms());
 watch(
   () => store.glossary,
   () => {
     resetTerms();
+    getTerms();
   },
   { deep: true },
 );
@@ -80,9 +82,14 @@ function onClickTerm(source: Term): void {
 const { scrollTrigger } = useIntersectionObserver(getTerms);
 
 async function removeTerm(id: string): Promise<void> {
-  if (confirm("데이터모델을 삭제 하시겠습니까?")) {
-    await deleteTerm(id);
-    await getTerms(glossary.name);
+  if (confirm("용어를 삭제 하시겠습니까?")) {
+    try {
+      await deleteTerm(id);
+    } catch (error) {
+      alert(error);
+    } finally {
+      await getTerms();
+    }
   }
 }
 
