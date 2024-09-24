@@ -114,6 +114,13 @@
 <script setup lang="ts">
 import { vOnClickOutside } from "@vueuse/components";
 import { defineProps } from "vue";
+import { useClipboard } from "@vueuse/core";
+
+const currentText = ref("");
+const { copy } = useClipboard({
+  source: currentText,
+  legacy: true,
+});
 
 const props = defineProps({
   data: { type: Object, default: {} },
@@ -167,10 +174,9 @@ const hideContextMenuBtn: () => void = () => {
   emit("context-menu-btn-click", null);
 };
 const copyKeyword: () => void = () => {
-  window.navigator.clipboard.writeText(`\`${props.data.fqn}\``).then(() => {
-    alert("데이터 모델 이름 복사 완료");
-    hideContextMenu();
-  });
+  copy(`\`${props.data.fqn}\``);
+  alert("데이터 모델 이름 복사 완료");
+  hideContextMenu();
 };
 const onOpenDataModelDetail: () => void = () => {
   const { id, fqn, type } = props.data as {
