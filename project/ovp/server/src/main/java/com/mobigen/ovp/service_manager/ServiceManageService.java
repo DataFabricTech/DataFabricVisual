@@ -683,6 +683,11 @@ public class ServiceManageService {
         Map<String, Object> newEntry = new HashMap<>();
         newEntry.put("fqn", entry.get("fullyQualifiedName"));
         newEntry.put("name", entry.get("name"));
+
+        if (entry.get("displayName") != null) {
+            newEntry.put("displayName", entry.get("displayName"));
+        }
+
         newEntry.put("id", entry.get("id"));
         newEntry.put("type", entry.get("customType"));
         newEntry.put("serviceType", determineType(entry.get("serviceType").toString()));
