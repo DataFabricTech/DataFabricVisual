@@ -187,7 +187,7 @@
             <button
               class="button button-neutral-stroke"
               type="button"
-              @click="changeEditTermMode('synonyms')"
+              @click="cancelSynonyms"
             >
               취소
             </button>
@@ -328,6 +328,11 @@ async function onDeleteTerm(): Promise<void> {
 function cancel(property: keyof typeof editTermMode): void {
   changeEditTermMode(property);
   syncEditDataWithTerm();
+}
+
+function cancelSynonyms(): void {
+  editData.synonyms = term.synonyms;
+  changeEditTermMode("synonyms");
 }
 
 async function changeSynonyms() {
