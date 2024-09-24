@@ -55,7 +55,7 @@ export default defineNuxtPlugin(() => {
         console.error(
           "[권한 테스트 로그] 사용자 계정. 관리자만 접근 가능한 메뉴. 접근 불가능.",
         );
-        // return next("/no-auth"); // 접근 권한 없는 페이지로 이동
+        // return next("/portal/login/error"); // 접근 권한 없는 페이지로 이동
         return next();
       }
 
