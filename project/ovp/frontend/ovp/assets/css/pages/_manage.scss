@@ -160,6 +160,14 @@
   width: 100%;
   padding: $spacing-16 $spacing-16 0;
   border-top: 1px solid $neutral-100;
+
+  .notification-error {
+    align-items: flex-start;
+
+    .notification-icon {
+      margin-top: $spacing-2;
+    }
+  }
 }
 
 //log modal
@@ -174,6 +182,10 @@
   position: relative;
   padding-inline: $spacing-16;
   flex-grow: 1;
+
+  .ag-theme-alpine.ag-theme-quartz {
+    height: 100%;
+  }
 }
 
 //overview

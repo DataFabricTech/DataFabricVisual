@@ -2,7 +2,7 @@
   <Modal
     :title="'용어사전 추가'"
     :modal-id="props.modalId"
-    :height="474"
+    :height="500"
     :width="480"
     :esc-to-close="true"
     :btn-msg="'저장'"

@@ -153,17 +153,16 @@
 }
 
 .d-flex {
-  position: relative;
-}
+  &:has(.node-fir-selected) {
+    color: $secondary-500;
+  }
 
-.node-disabled,
-.node-fir-selected {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  opacity: 0.7;
-  background: $neutral-0;
-  cursor: not-allowed;
+  &:has(.node-disabled) {
+    opacity: 0.7;
+    background: $neutral-0;
+    cursor: not-allowed;
+    color: $neutral-700 !important;
+  }
 }
 
 

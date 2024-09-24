@@ -25,7 +25,7 @@
     <Loading
       v-if="testConnectionStatus === ConnectionStatus.LOADING"
       class="loader-xs"
-      :use-hidden-text="true"
+      :use-hidden-text="false"
     ></Loading>
     <!-- 연결 실패/ notification -->
     <div

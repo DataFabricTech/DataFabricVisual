@@ -4,7 +4,7 @@
     :modal-id="props.modalId"
     :esc-to-close="true"
     :width="480"
-    :height="634"
+    :height="600"
     :btn-msg="'저장'"
     @close="closeModal"
     @cancel="closeModal"
