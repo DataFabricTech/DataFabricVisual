@@ -17,9 +17,18 @@
 import Header from "./header.vue";
 import Sidebar from "./sidebar.vue";
 
-import { useRoute } from "nuxt/app";
+import { useRoute, useHead } from "nuxt/app";
 import Loading from "~/components/common/Loading.vue";
 import { ModalsContainer } from "vue-final-modal";
 
 const route = useRoute();
+
+useHead({
+  meta: [
+    {
+      "http-equiv": "Content-Security-Policy",
+      content: "script-src 'self'; clipboard-write 'self';",
+    },
+  ],
+});
 </script>
