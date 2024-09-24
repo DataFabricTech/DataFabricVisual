@@ -9,6 +9,7 @@ export default defineNuxtPlugin(() => {
   const { getMenuData } = menuStore;
   const { menuJson, mgmtMenuJson } = storeToRefs(menuStore);
   const userStore = useUserStore();
+  const { getUserInfo } = userStore;
   const { user } = storeToRefs(userStore);
 
   const router = useRouter();
@@ -29,6 +30,9 @@ export default defineNuxtPlugin(() => {
       if (_.isEmpty(menuJson.value)) {
         await getMenuData();
       }
+      if (_.isEmpty(user.value.id)) {
+        await getUserInfo();
+      }
 
       // concat을 사용하여 메뉴 데이터 병합
       const newMenuArr = [].concat(
@@ -38,7 +42,7 @@ export default defineNuxtPlugin(() => {
 
       // URL에 해당하는 메뉴 객체를 찾음
       const menuObj = _.find(newMenuArr, (item) => {
-        return _.isEmpty(item) ? null : item.linkTo.includes(path);
+        return _.isEmpty(item) ? null : item.linkTo.includes(url);
       });
       if (_.isEmpty(menuObj)) {
         return next("/portal/login/error");
