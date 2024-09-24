@@ -1,6 +1,5 @@
 <template>
-  <!--  활동사항 탭 시작-->
-  <ul class="activity-info">
+  <ul v-if="activities.length !== 0" class="activity-info">
     <li class="activity-info-item" v-for="activity in activities">
       <div class="profile">
         <span class="profile-avatar">
@@ -100,7 +99,12 @@
       style="display: none"
     ></Loading>
   </ul>
-  <!--  활동사항 탭 끝-->
+  <div v-else class="no-result">
+    <div class="notification">
+      <svg-icon class="notification-icon" name="info"></svg-icon>
+      <p class="notification-detail">등록된 정보가 없습니다.</p>
+    </div>
+  </div>
 </template>
 <script setup lang="ts">
 import Loading from "@base/loading/Loading.vue";
