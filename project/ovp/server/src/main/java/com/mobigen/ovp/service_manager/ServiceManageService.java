@@ -1,7 +1,7 @@
 package com.mobigen.ovp.service_manager;
 
 import com.mobigen.ovp.common.openmete_client.AutomationsClient;
-import com.mobigen.ovp.common.openmete_client.ClassificationClient;
+import com.mobigen.ovp.common.openmete_client.ClassificationTagsClient;
 import com.mobigen.ovp.common.openmete_client.ContainersClient;
 import com.mobigen.ovp.common.openmete_client.DatabaseClient;
 import com.mobigen.ovp.common.openmete_client.DatabaseSchemasClient;
@@ -12,7 +12,7 @@ import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Ingestion;
 import com.mobigen.ovp.common.openmete_client.dto.Services;
 import com.mobigen.ovp.common.openmete_client.dto.Tag;
-import com.mobigen.ovp.glossary.client.GlossaryClient;
+import com.mobigen.ovp.common.openmete_client.GlossaryClient;
 import com.mobigen.ovp.glossary.client.dto.TermDto;
 import com.mobigen.ovp.search.SearchService;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailTagDto;
@@ -54,7 +54,7 @@ public class ServiceManageService {
     private final ContainersClient containersClient;
     private final DatabaseClient databaseClient;
     private final DatabaseSchemasClient databaseSchemasClient;
-    private final ClassificationClient classificationClient;
+    private final ClassificationTagsClient classificationTagsClient;
     private final GlossaryClient glossaryClient;
     private final TablesClient tablesClient;
 
@@ -69,12 +69,14 @@ public class ServiceManageService {
         List<Services> storages = servicesClient.getServiceStorage("owner,tags", "non-deleted", limit).getData();
         List<ServiceResponse> serviceResponses = new ArrayList<>();
 
-        for (Services service : dataBases) {
-            serviceResponses.add(new ServiceResponse(service, DATA_BASE));
-        }
-        for (Services service : storages) {
-            serviceResponses.add(new ServiceResponse(service, STORAGE));
-        }
+        // 목록 표시에 필요한 항목만 포함되도록 처리함.
+        serviceResponses.addAll(dataBases.stream()
+                .map(service -> new ServiceResponse(service.getId(), service.getName(), DATA_BASE, service.getOwner(), service.getServiceType()))
+                .toList());
+
+        serviceResponses.addAll(storages.stream()
+                .map(service -> new ServiceResponse(service.getId(), service.getName(), STORAGE, service.getOwner(), service.getServiceType()))
+                .toList());
         return serviceResponses;
     }
 
@@ -95,6 +97,20 @@ public class ServiceManageService {
                 throw new Exception();
         }
     }
+
+    /**
+     * 서비스 단일 항목 조회
+     * getService() 사용하려 했으나, serviceResponse 로 변환처리가 필요해서 분리함.
+     *
+     * @param type
+     * @param name
+     * @return
+     * @throws Exception
+     */
+    public Object getServiceOne(String type, String name) throws Exception {
+        return new ServiceResponse(getService(type, name), type);
+    }
+
 
     /**
      * 서비스 검색
@@ -120,6 +136,7 @@ public class ServiceManageService {
         params.add("q", keyword);
         params.add("from", from);
         params.add("index", index);
+        params.add("size", "1000");
 
         List<Map<String, ?>> hits = (List<Map<String, ?>>) ((Map<?, ?>) searchClient.getSearchList(params).get("hits")).get("hits");
 
@@ -219,7 +236,7 @@ public class ServiceManageService {
             for (Map<String, Object> item : body) {
                 String key = "id";
 
-                Map<String, Object> tempTag = classificationClient.getTag(item.get(key).toString());
+                Map<String, Object> tempTag = classificationTagsClient.getTag(item.get(key).toString());
 
                 DataModelDetailTagDto tag = new DataModelDetailTagDto();
                 tag.setName(tempTag.get("name").toString());

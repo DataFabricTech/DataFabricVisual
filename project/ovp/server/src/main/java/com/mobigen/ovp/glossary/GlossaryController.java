@@ -2,8 +2,8 @@ package com.mobigen.ovp.glossary;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
+import com.mobigen.ovp.common.openmete_client.dto.TermDto;
 import com.mobigen.ovp.glossary.client.dto.GlossaryDto;
-import com.mobigen.ovp.glossary.client.dto.TermDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RequestMapping("/api/glossary")
@@ -30,27 +31,30 @@ public class GlossaryController {
 
     /**
      * 용어 사전 등록
+     *
      * @param dto
      * @return
      */
     @ResponseJsonResult
     @PostMapping()
-    public Object createGlossary(@RequestBody GlossaryDto dto) {
+    public Object createGlossary(@RequestBody GlossaryDto dto) throws Exception {
         return glossaryService.createGlossary(dto);
     }
 
     /**
      * 용어 사전 리스트
+     *
      * @return
      */
     @ResponseJsonResult
     @GetMapping("/list")
-    public Object getGlossaries() {
-        return glossaryService.getGlossaries();
+    public Object getGlossaries(@RequestParam(required = false) String after) {
+        return glossaryService.getGlossaries(after);
     }
 
     /**
      * 용어 사전 수정
+     *
      * @param id
      * @param param
      * @return
@@ -63,6 +67,7 @@ public class GlossaryController {
 
     /**
      * 용어 사전 삭제
+     *
      * @param id
      */
     @ResponseJsonResult(errorMessage = "Open-metadata 용어 사전 삭제 오류")
@@ -73,28 +78,31 @@ public class GlossaryController {
 
     /**
      * 용어 추가
+     *
      * @param dto
      * @return
      */
     @ResponseJsonResult
     @PostMapping("/terms")
-    public Object createTerm(@RequestBody TermDto dto) {
+    public Object createTerm(@RequestBody TermDto dto) throws Exception{
         return glossaryService.createTerm(dto);
     }
 
     /**
      * 용어 리스트
+     *
      * @param term
      * @return
      */
     @ResponseJsonResult
     @GetMapping("/terms")
-    public Object getGlossaryTerms(@RequestParam String term) {
-        return glossaryService.glossaryTerms(term);
+    public Object getGlossaryTerms(@RequestParam String term, @RequestParam(required = false) String after) {
+        return glossaryService.glossaryTerms(term, after);
     }
 
     /**
      * 용어 수정
+     *
      * @param id
      * @param param
      * @return
@@ -107,6 +115,7 @@ public class GlossaryController {
 
     /**
      * 용어 변경 > 데이터 모델 삭제
+     *
      * @param id
      * @param body
      * @return
@@ -119,6 +128,7 @@ public class GlossaryController {
 
     /**
      * 용어 삭제
+     *
      * @param id
      */
     @ResponseJsonResult(errorMessage = "Open-metadata 용어 삭제 오류")
@@ -129,40 +139,56 @@ public class GlossaryController {
 
     /**
      * 용어 사전 활동 기록
+     *
      * @param entityLink
+     * @param after
      * @return
      */
     @ResponseJsonResult
     @GetMapping("/activities")
-    public Object getGlossaryActivities(@RequestParam String entityLink) {
-        return glossaryService.getGlossaryActivities(entityLink);
+    public Object getGlossaryActivities(@RequestParam String entityLink, @RequestParam(required = false) String after) {
+        return glossaryService.getGlossaryActivities(entityLink, after);
+    }
+
+    /**
+     * 용어 사전 활동 기록 개수
+     * @param entityLink
+     * @return
+     */
+    @ResponseJsonResult
+    @GetMapping("/activities/count")
+    public Object getGlossaryActivitiesCount(@RequestParam String entityLink) {
+        return glossaryService.getGlossaryActivitiesCount(entityLink);
     }
 
     /**
      * 태그 리스트 호출
+     *
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/all-tags")
-    public Object getAllTags() throws Exception {
+    public Object getAllTags() {
         return glossaryService.getAllTags();
     }
 
     /**
      * 데이터 모델 리스트
+     *
      * @param q
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/data-models")
-    public Object getDataModels(@RequestParam String q) throws Exception {
-        return glossaryService.getDataModels(q);
+    public Object getDataModels(@RequestParam String search, @RequestParam String name, @RequestParam String from) throws Exception {
+        return glossaryService.getDataModels(search, name, from);
     }
 
     /**
      * 데이터 모델 상세
+     *
      * @param fqn
      * @return
      */
@@ -170,5 +196,17 @@ public class GlossaryController {
     @GetMapping("/data-model")
     public Object getDataModel(@RequestParam String fqn) {
         return glossaryService.getDataModel(fqn);
+    }
+
+    /**
+     * 용어 변경 > 데이터 모델 추가
+     *
+     * @param ids
+     * @return
+     */
+    @ResponseJsonResult
+    @PutMapping("/terms/{id}/data-models")
+    public Object addDataModelsTerm(@PathVariable UUID id, @RequestBody Map<String, List<String>> ids) {
+        return glossaryService.addDataModelsTerm(id, ids);
     }
 }

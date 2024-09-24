@@ -36,6 +36,7 @@
         :mode="props.mode"
         :dropValidator="props.dropValidator"
         :selected-ids="selectedListDataIds"
+        :use-fir-select="false"
         @onItemChecked="onNodeChecked"
         @onItemSelected="onNodeClicked"
       ></tree-vue>

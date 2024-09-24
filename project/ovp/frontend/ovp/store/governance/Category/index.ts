@@ -44,12 +44,13 @@ interface UndefinedTagIdManager {
   get: () => string | null;
 }
 
+// TODO: 데이터모델추가 모달 공통모달로 변경되면서 사용하지 않는 코드가 있으므로 관련 코드 삭제 필요. Category 관련 이슈처리가 완료된 후 정리하는것이 좋을 것 같음.
 export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const { $api } = useNuxtApp();
   const pagingStore = usePagingStore();
   const { setFrom, setDataLoadDone, updateIntersectionHandler } = pagingStore;
   const { from, size } = storeToRefs(pagingStore);
-  const { setQueryFilterByDepth, getTrinoQuery } = useQueryHelpers();
+  const { setQueryFilterByDepth } = useQueryHelpers();
 
   const selectedNode = ref({});
   const categories: Ref<TreeViewItem[]> = ref<TreeViewItem[]>([]);
@@ -335,7 +336,6 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       deleted: false,
       query_filter: JSON.stringify(queryFilter),
       sort_field: "totalVotes",
-      trino_query: JSON.stringify(getTrinoQuery(queryFilter)),
     };
     return new URLSearchParams(params);
   };
@@ -416,6 +416,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const currentTab: Ref<string> = ref("table");
   const changeTab = async (item: string) => {
     checkReachedCount.value = false;
+    selectedDataModelList.value = [];
     initTab.value = item;
     currentTab.value = item;
     await resetReloadList();

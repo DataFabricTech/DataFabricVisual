@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -91,17 +92,43 @@ public class ModelCreationService {
     /**
      * 데이터 모델 생성 > MY 리스트
      *
-     * @param id : 사용자 아이디
-     * @param query : 검색어
+     * @param params
      * @return
-     * @throws Exception
      */
-    public Object getMyList(String id, String query) {
-        Map<String, Object> param = new HashMap<>();
-        param.put("bookmark", getMyModelList(id, query, "follows", null));
-        param.put("owner", getMyModelList(id, query, "owns",null));
+    public Object getMyList(MultiValueMap<String, String> params) {
+        Map<String, Object> userInfo = userClient.getUserWithFields(params.getFirst("id"), "owns,follows");
 
-        return param;
+        List<Map<String, Object>> followsList = (List<Map<String, Object>>) userInfo.get("follows");
+        List<Map<String, Object>> ownerList = (List<Map<String, Object>>) userInfo.get("owns");
+
+        boolean isBookmark = Objects.equals(params.getFirst("type"), "bookmark");
+        String bookmarkQuery = isBookmark ? params.getFirst("query") : "";
+        String ownsQuery = !isBookmark ? params.getFirst("query") : "";
+
+        int from = Integer.parseInt(params.getFirst("from"));
+        int size = Integer.parseInt(params.getFirst("size"));
+        List<DataModelDetailResponse> listData = isBookmark
+                ? getMyModelList(bookmarkQuery, followsList, from, size)
+                : getMyModelList(ownsQuery, ownerList, from, size);
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("bookmark", isBookmark ? listData : new ArrayList<>());
+        data.put("owner", !isBookmark ? listData : new ArrayList<>());
+
+        // 쿼리 + 전체 검색결과
+        // NOTE: User에서 가져오는 정보는 삭제된 데이터도 모두 포함되기 때문에 삭제 처리
+        List<String> followListCount = getMyModelListCount(bookmarkQuery, followsList);
+        List<String> ownsListCount = getMyModelListCount(ownsQuery, ownerList);
+
+        Map<String, Object> totalCount = new HashMap<>();
+        totalCount.put("bookmark", followListCount.size());
+        totalCount.put("owner", ownsListCount.size());
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("data", data);
+        result.put("totalCount", totalCount);
+
+        return result;
     }
 
     /**
@@ -126,7 +153,7 @@ public class ModelCreationService {
             default -> null;
         };
         // follow 데이터 확인 필요
-        List<Map<String, Object>> newResult= addFollowData(resultMap);
+        List<Map<String, Object>> newResult = addFollowData(resultMap);
 
         // 데이터 재정의
         dataMap.put(type, newResult);
@@ -135,23 +162,57 @@ public class ModelCreationService {
     }
 
     /**
-     * 나의 데이터 조회
+     * 나의 데이터 > 목록 수
      *
-     * @param id : 사용자 아이디
      * @param query : 검색 값
-     * @param key : open-metadata key
      * @return
      */
-    public Object getMyModelList(String id, String query, String key, Integer limit) {
-        Map<String, Object> userInfo = userClient.getUserWithFields(id, key);
-        List<Map<String, Object>> followsList = (List<Map<String, Object>>) userInfo.get(key);
-        List<DataModelDetailResponse> tempResult = new ArrayList<>();
+    public List<String> getMyModelListCount(String query, List<Map<String, Object>> listData) {
+        List<String> allList = new ArrayList<>();
+
+        for (Map<String, Object> follow : listData) {
+            // NOTE: 삭제된 데이터 모델 필터링
+            if(follow.containsKey("deleted") && (boolean) follow.get("deleted")) {
+                continue;
+            }
+
+            String dataType = (String) follow.get("type");
+            String newDataType = getDataType(dataType);
+            if (newDataType == null) {
+                continue;
+            }
+
+            // 검색 처리
+            String modelNm = (String) follow.get("name");
+            if (modelNm.toLowerCase().contains(query.toLowerCase())) {
+                allList.add((String) follow.get("id"));
+            }
+
+        }
+        return allList;
+    }
+
+    /**
+     * 나의 데이터 > 목록 정의
+     * @param query
+     * @param listData
+     * @param from
+     * @param size
+     * @return
+     */
+    public List<DataModelDetailResponse> getMyModelList(String query, List<Map<String, Object>> listData, int from, int size) {
         List<DataModelDetailResponse> allList = new ArrayList<>();
 
-        for (Map<String, Object> follow : followsList) {
+        for (Map<String, Object> follow : listData) {
+            // NOTE: 삭제된 데이터 모델 필터링
+            if(follow.containsKey("deleted") && (boolean) follow.get("deleted")) {
+                continue;
+            }
+
             String followId = (String) follow.get("id");
             String dataType = (String) follow.get("type");
             String newDataType = getDataType(dataType);
+
             if (newDataType == null) {
                 continue;
             }
@@ -165,22 +226,22 @@ public class ModelCreationService {
 
             // 검색 처리
             // TODO: Storage의 경우 상세 데이터(dataModelDetail)를 확인해 Bucket 데이터 제외 필요
-            if (dataModelDetail != null && dataModelDetail.getModelNm().contains(query)) {
-                tempResult.add(dataModelDetail);
-            }
-
-            // 갯수에 따른 목록 파싱
-            if (limit != null && limit > 0 && !tempResult.isEmpty()) {
-                for (int i = 0; i < Math.min(limit, tempResult.size()); i++) {
-                    allList.add(tempResult.get(i));
-                }
-            } else {
-                allList = tempResult;
+            if (dataModelDetail != null && dataModelDetail.getModelNm().toLowerCase().contains(query.toLowerCase())) {
+                allList.add(dataModelDetail);
             }
         }
-
-        return allList;
+        int last = Math.min(allList.size(), from + size);
+        if (from > last) {
+            return new ArrayList<>();
+        }
+        return allList.subList(from, last);
     }
+
+    /**
+     * 데이터 상세 > 데이터 상세 조회 시 필요한 데이터 타입으로 변경
+     * @param dataType
+     * @return
+     */
     private String getDataType(String dataType) {
         String newDataType = null;
         for (ModelIndex index : ModelIndex.values()) {
@@ -221,4 +282,23 @@ public class ModelCreationService {
         }
         return newResult;
     }
+
+    public boolean checkDuplicateModelName(Map<String, Object> param) {
+        String modelName = (String) param.get("modelName");
+        String queryFilter = String.format("{\"query\":{\"bool\":{\"must\":[{\"bool\":{\"should\":[{\"term\":{\"fullyQualifiedName\":\"datamodels.internalhive.default.%s\"}}]}}]}}}", modelName);
+        String includeSourceFields = "name";
+
+        Map<String, Object> modelInfo = modelCreationClient.selectDataModelName(queryFilter, includeSourceFields);
+
+        Map<String, Object> hits = (Map<String, Object>) modelInfo.get("hits");
+        Map<String, Object> total = (Map<String, Object>) hits.get("total");
+        int totalValue = (int) total.get("value");
+
+        return totalValue == 1;
+    }
+
+    public Object saveModel(Map<String, Object> param) throws Exception {
+        return dolphinClient.createModel(param);
+    }
+
 }

@@ -72,6 +72,7 @@ public class ModelConvertUtil {
         modifiedSource.put("type", "trino".equals(serviceType) ? "model" : index);
 
         modifiedSource.put("id", source.get("id"));
+        modifiedSource.put("serviceType", serviceType);
         modifiedSource.put("serviceIcon", new StringBuffer("type-img type-img-").append(serviceType).toString());
 
         String[] splitArray = source.get("fullyQualifiedName").toString().split("\\.");

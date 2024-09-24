@@ -10,7 +10,7 @@
     :clickToClose="true"
     :escToClose="true"
     :width="620"
-    :height="580"
+    :height="560"
     swipeToClose="none"
     @before-open="onBeforeOpen"
     @closed="onClosed(false)"

@@ -32,7 +32,7 @@ export function DataModelApiListComposition(
     emitCheckItem,
   );
 
-  const setListData: () => void = () => {
+  const setListDataInApi: () => void = () => {
     // TOOD: store로 빼기 -> listData 초기화를 store에서 진행하기.,
     compos.listData.value = props.data;
   };
@@ -41,7 +41,7 @@ export function DataModelApiListComposition(
    * 리스트 값이 변경되면 일반 리스트의 속성값도 변경되야하므로 다중 watch
    */
   watchEffect(() => {
-    setListData();
+    setListDataInApi();
   });
   compos.setSearchFilter();
 

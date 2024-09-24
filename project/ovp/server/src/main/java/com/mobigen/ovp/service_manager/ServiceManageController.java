@@ -29,6 +29,7 @@ public class ServiceManageController {
 
     /**
      * 서비스 리스트
+     *
      * @return
      */
     @ResponseJsonResult
@@ -39,19 +40,33 @@ public class ServiceManageController {
 
     /**
      * 서비스 검색 리스트
-     * @param search
+     *
+     * @param q    : searchText
      * @param from
      * @return
      * @throws Exception
      */
     @ResponseJsonResult
     @GetMapping("/list/search")
-    public Object searchServices(@RequestParam String search, @RequestParam String from) throws Exception {
-        return serviceManageService.searchServices(search, from);
+    public Object searchServices(@RequestParam String q, @RequestParam String from) throws Exception {
+        return serviceManageService.searchServices(q, from);
+    }
+
+    /**
+     * 서비스 관리 > 서비스 개별 조회
+     *
+     * @param id
+     * @return
+     **/
+    @ResponseJsonResult
+    @GetMapping("/detail/{type}/{name}")
+    public Object getService(@PathVariable String type, @PathVariable String name) throws Exception {
+        return serviceManageService.getServiceOne(type, name);
     }
 
     /**
      * 서비스 수정
+     *
      * @param id
      * @param param
      * @return
@@ -59,7 +74,7 @@ public class ServiceManageController {
     @ResponseJsonResult
     @PatchMapping(value = "/{id}", consumes = "application/json-patch+json")
     public Object patchService(@PathVariable UUID id, @RequestBody List<JsonPatchOperation> param, @RequestParam String type) throws Exception {
-        if(type.equals("database")) {
+        if (type.equals("database")) {
             return serviceManageService.patchServiceDataBase(id, param);
         } else {
             return serviceManageService.patchServiceStorage(id, param);
@@ -68,6 +83,7 @@ public class ServiceManageController {
 
     /**
      * 서비스 태그 수정
+     *
      * @param id
      * @param type
      * @param target
@@ -82,6 +98,7 @@ public class ServiceManageController {
 
     /**
      * 서비스 삭제
+     *
      * @param id
      * @param hardDelete
      * @param recursive
@@ -107,6 +124,7 @@ public class ServiceManageController {
 
     /**
      * 수집 탭 리스트
+     *
      * @param service
      * @return
      */
@@ -124,6 +142,7 @@ public class ServiceManageController {
 
     /**
      * 수집 RUN
+     *
      * @param id
      * @return
      * @throws Exception
@@ -136,6 +155,7 @@ public class ServiceManageController {
 
     /**
      * 수집 동기화
+     *
      * @param id
      * @return
      */
@@ -147,6 +167,7 @@ public class ServiceManageController {
 
     /**
      * 수집 삭제
+     *
      * @param id
      * @return
      * @throws Exception
@@ -159,6 +180,7 @@ public class ServiceManageController {
 
     /**
      * 수집 KILL
+     *
      * @param id
      * @return
      * @throws Exception
@@ -300,7 +322,7 @@ public class ServiceManageController {
      * @return
      **/
     @ResponseJsonResult
-    @PatchMapping( "/repository/storage/description/{id}")
+    @PatchMapping("/repository/storage/description/{id}")
     public Object editRepositoryStorageDescription(@PathVariable String id, @RequestBody List<JsonPatchOperation> param) {
         return serviceManageService.editRepositoryStorageDescription(id, param);
     }
@@ -317,4 +339,5 @@ public class ServiceManageController {
 //    public Object updateIngestionPipelines(@PathVariable String id, List<JsonPatchOperation> params) {
 //        return service.updateIngestionPipelines(id, params);
 //    }
+
 }

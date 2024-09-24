@@ -175,6 +175,7 @@ watch(
   () => {
     setListData();
   },
+  { immediate: true, deep: true },
 );
 setSearchFilter();
 </script>

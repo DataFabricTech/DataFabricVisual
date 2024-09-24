@@ -7,6 +7,8 @@ import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -79,9 +81,37 @@ public class SearchService {
 
             resultSet.forEach((key, value) -> {
                 combinedAggregations.merge(key, value, (oldValue, newValue) -> {
-                    List<Object> mergedList = new ArrayList<>((List<Object>) oldValue);
-                    mergedList.addAll((List<Object>) newValue);
-                    return mergedList;
+                    // 기존 값과 새 값을 모두 리스트로 변환
+                    List<Map<String, Object>> mergedList = new ArrayList<>((List<Map<String, Object>>) oldValue);
+                    List<Map<String, Object>> newList = (List<Map<String, Object>>) newValue;
+
+                    // 중복을 제거하며 합산할 맵 생성
+                    Map<String, Integer> mergedMap = new HashMap<>();
+
+                    // 기존 리스트 항목 처리
+                    for (Map<String, Object> item : mergedList) {
+                        String itemKey = (String) item.get("key");
+                        int docCount = (int) item.get("doc_count");
+                        mergedMap.merge(itemKey, docCount, Integer::sum);
+                    }
+
+                    // 새로운 리스트 항목 처리
+                    for (Map<String, Object> item : newList) {
+                        String itemKey = (String) item.get("key");
+                        int docCount = (int) item.get("doc_count");
+                        mergedMap.merge(itemKey, docCount, Integer::sum);
+                    }
+
+                    // 합산된 결과를 다시 리스트로 변환
+                    List<Map<String, Object>> resultList = new ArrayList<>();
+                    mergedMap.forEach((mergedKey, docCount) -> {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("key", mergedKey);
+                        map.put("doc_count", docCount);
+                        resultList.add(map);
+                    });
+
+                    return resultList;
                 });
             });
         }
@@ -189,12 +219,62 @@ public class SearchService {
         return getList(params);
     }
 
+    private String getQueryFilter(String index, String queryFilter) {
+        // Step 1: queryFilter를 JSON으로 변환
+        JSONObject combinedFilter = new JSONObject(queryFilter);
+
+        // Step 2: trino 필터를 별도로 생성
+        JSONArray trinoShouldArray = new JSONArray();
+        trinoShouldArray.put(new JSONObject().put("term", new JSONObject().put("serviceType", "trino")));
+
+        JSONObject trinoFilter = new JSONObject();
+        trinoFilter.put("bool", new JSONObject().put("should", trinoShouldArray));
+
+        // Step 3: 기존 queryFilter에 bool 필드가 있는지 확인
+        JSONObject queryBoolObject = combinedFilter.optJSONObject("query");
+        if (queryBoolObject == null) {
+            queryBoolObject = new JSONObject();
+            combinedFilter.put("query", queryBoolObject);
+        }
+
+        JSONObject boolObject = queryBoolObject.optJSONObject("bool");
+        if (boolObject == null) {
+            boolObject = new JSONObject();
+            queryBoolObject.put("bool", boolObject);
+        }
+
+        // Step 4: must 또는 must_not에 trino 필터 추가
+        if (index.equals("table") || index.equals("storage")) {
+            // 기존 must_not이 있으면 가져오고, 없으면 새로 생성
+            JSONArray mustNotArray = boolObject.optJSONArray("must_not");
+            if (mustNotArray == null) {
+                mustNotArray = new JSONArray();
+                boolObject.put("must_not", mustNotArray);
+            }
+            // must_not에 trino 필터 추가
+            mustNotArray.put(trinoFilter);
+        } else if (index.equals("model")) {
+            // 기존 must가 있으면 가져오고, 없으면 새로 생성
+            JSONArray mustArray = boolObject.optJSONArray("must");
+            if (mustArray == null) {
+                mustArray = new JSONArray();
+                boolObject.put("must", mustArray);
+            }
+            // must에 trino 필터 추가
+            mustArray.put(trinoFilter);
+        }
+
+        return combinedFilter.toString();
+    }
+
     private Map<String, Object> getTableList(MultiValueMap<String, String> params) throws Exception {
         // 화면에 표시되는 tab 의 항목의 데이터만 조회되면 되기 때문에 해당 tab 이 아닌 경우, 0건 으로 조회한다.
         if (!params.getFirst("index").equals("table")) {
             params.set("size", "0");
         }
         params.set("index", ModelIndex.table.name());
+        params.set("query_filter", getQueryFilter("table", params.getFirst("query_filter")));
+
         return getList(params);
     }
 
@@ -211,9 +291,7 @@ public class SearchService {
             params.set("size", "0");
         }
         params.set("index", ModelIndex.table.name());
-        params.set("query_filter", params.getFirst("trino_query").toString());
-        params.remove("trino_query");
-
+        params.set("query_filter", getQueryFilter("model", params.getFirst("query_filter")));
 
         return getList(params);
     }

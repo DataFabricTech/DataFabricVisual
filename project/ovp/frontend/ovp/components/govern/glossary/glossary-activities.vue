@@ -57,6 +57,8 @@
           }}</span>
         </div>
         <!-- TODO 퍼블리싱 : Created 되는 경우만 있고 DELETE 되는 화면은 없음 -->
+
+        <!-- TODO 퍼블리싱 : 화면 너비 사이즈 줄어들때 태그 ui 변경 필요 -->
         <div
           class="activity-info-contents is-column"
           v-if="
@@ -90,13 +92,24 @@
         </div>
       </div>
     </li>
+    <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+    <Loading
+      id="loader"
+      :use-loader-overlay="true"
+      class="loader-lg is-loader-inner"
+      style="display: none"
+    ></Loading>
   </ul>
   <!--  활동사항 탭 끝-->
 </template>
 <script setup lang="ts">
+import Loading from "@base/loading/Loading.vue";
 import { useGlossaryStore } from "@/store/glossary";
-import type { Activity } from "~/type/glossary";
-const { activities, glossary } = useGlossaryStore();
+import type { Activity } from "@/type/glossary";
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
+
+const { getGlossaryActivities, resetGlossaryActivities, activities, glossary } =
+  useGlossaryStore();
 
 const headerMessage = (activity: Activity): string => {
   const { updatedBy, fieldOperation } = activity;
@@ -116,6 +129,13 @@ const headerMessage = (activity: Activity): string => {
       return commonMsg("posted on");
     case "default":
       return commonMsg("posted on");
+    default:
+      return "";
   }
 };
+
+resetGlossaryActivities();
+await getGlossaryActivities();
+
+const { scrollTrigger } = useIntersectionObserver(getGlossaryActivities);
 </script>

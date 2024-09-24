@@ -5,20 +5,22 @@ import com.mobigen.ovp.category.repository.CategoryRepository;
 import com.mobigen.ovp.common.ModelConvertUtil;
 import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.constants.ModelType;
-import com.mobigen.ovp.common.openmete_client.ClassificationClient;
+import com.mobigen.ovp.common.openmete_client.ClassificationTagsClient;
 import com.mobigen.ovp.common.openmete_client.ContainersClient;
 import com.mobigen.ovp.common.openmete_client.LineageClient;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
+import com.mobigen.ovp.common.openmete_client.dto.Base;
 import com.mobigen.ovp.common.openmete_client.dto.Columns;
 import com.mobigen.ovp.common.openmete_client.dto.Followers;
+import com.mobigen.ovp.common.openmete_client.dto.Profile;
 import com.mobigen.ovp.common.openmete_client.dto.ProfileColumn;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
 import com.mobigen.ovp.common.openmete_client.dto.Tag;
 import com.mobigen.ovp.common.openmete_client.dto.Tags;
-import com.mobigen.ovp.glossary.client.GlossaryClient;
+import com.mobigen.ovp.common.openmete_client.GlossaryClient;
+import com.mobigen.ovp.common.openmete_client.dto.Term;
 import com.mobigen.ovp.glossary.client.dto.TermDto;
-import com.mobigen.ovp.glossary.client.dto.terms.TermResponse;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailTagDto;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailVote;
 import com.mobigen.ovp.search_detail.dto.response.DataModelDetailLineageTableResponse;
@@ -27,6 +29,8 @@ import com.mobigen.ovp.search_detail.dto.response.DataModelDetailSampleDataRespo
 import com.mobigen.ovp.user.UserClient;
 import com.mobigen.ovp.user.UserService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -46,12 +50,13 @@ import java.util.stream.Stream;
 @Service
 public class SearchDetailService {
 
+    private static final Logger log = LoggerFactory.getLogger(SearchDetailService.class);
     private final UserClient userClient;
     private final SearchClient searchClient;
     private final TablesClient tablesClient;
     private final ContainersClient containersClient;
     private final LineageClient lineageClient;
-    private final ClassificationClient classificationClient;
+    private final ClassificationTagsClient classificationTagsClient;
     private final GlossaryClient glossaryClient;
 
     private final UserService userService;
@@ -90,7 +95,7 @@ public class SearchDetailService {
      * @param isStart
      * @return
      */
-    private List<Tag> getTags(List<Tag> tags, String after, boolean isStart) {
+    public List<Tag> getTags(List<Tag> tags, String after, boolean isStart) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("limit", "100");
 
@@ -100,7 +105,7 @@ public class SearchDetailService {
             params.add("after", after);
         }
 
-        Tags res = classificationClient.gatTags(params);
+        Tags res = classificationTagsClient.gatTags(params);
         List<Tag> resTags = res.getData().stream().filter(tag -> {
             String classificationName = tag.getClassification().getName();
             return !(classificationName.contains("ovp_category") || classificationName.contains("PersonalData") || classificationName.contains("PII") || classificationName.contains("Tier"));
@@ -152,8 +157,12 @@ public class SearchDetailService {
         if (!isStart && (after == null || "".equals(after))) {
             return glossaries;
         }
-
-        TermResponse res = glossaryClient.getGlossaryTerms("", "", 100, after);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("limit", "100");
+        if (after != null && !after.equals("undefined") && !after.isEmpty()) {
+            params.add("after", after);
+        }
+        Base<Term> res = glossaryClient.getGlossaryTerms(params);
 
         List mergeTagList = Stream.concat(glossaries.stream(), res.getData().stream()).collect(Collectors.toList());
 
@@ -167,7 +176,9 @@ public class SearchDetailService {
      * @throws Exception
      */
     public Object getGlossaryAll() throws Exception {
-        TermResponse glossaryTerms = glossaryClient.getGlossaryTerms("", "", 300, "");
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("limit", "300");
+        Base<Term> glossaryTerms = glossaryClient.getGlossaryTerms(params);
 
         // TODO: 페이징 처리 필요
         return glossaryTerms.getData().stream().map(term -> {
@@ -320,11 +331,18 @@ public class SearchDetailService {
             Map<String, Object> row = new HashMap<>();
             row.put("name", column.getName());
             row.put("dateTypeDisplay", column.getDataTypeDisplay());
-            row.put("nullCount", column.getProfile().getNullCount());
-            row.put("uniqueCount", column.getProfile().getUniqueCount());
-            row.put("distinctCount", column.getProfile().getDistinctCount());
-            row.put("valueCount", column.getProfile().getValueCount());
 
+            if(column.getProfile() != null) {
+                row.put("nullCount", column.getProfile().getNullCount());
+                row.put("uniqueCount", column.getProfile().getUniqueCount());
+                row.put("distinctCount", column.getProfile().getDistinctCount());
+                row.put("valueCount", column.getProfile().getValueCount());
+            } else {
+                row.put("nullCount", "");
+                row.put("uniqueCount", "");
+                row.put("distinctCount", "");
+                row.put("valueCount", "");
+            }
             columns.add(row);
         }
 
@@ -486,7 +504,7 @@ public class SearchDetailService {
                     key = "tagId";
                 }
 
-                Map<String, Object> tempTag = classificationClient.getTag(item.get(key).toString());
+                Map<String, Object> tempTag = classificationTagsClient.getTag(item.get(key).toString());
 
                 DataModelDetailTagDto tag = new DataModelDetailTagDto();
                 tag.setName(tempTag.get("name").toString());

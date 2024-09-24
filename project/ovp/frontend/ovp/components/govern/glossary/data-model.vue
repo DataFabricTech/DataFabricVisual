@@ -37,8 +37,12 @@
           >
             데이터모델 제외
           </button>
-          <!-- TODO: 카테고리 개발 완료 후 예정 -->
-          <button class="button button-secondary">데이터모델추가</button>
+          <button
+            class="button button-secondary"
+            @click="showDataModelAddModal"
+          >
+            데이터모델추가
+          </button>
         </div>
       </div>
     </div>
@@ -56,52 +60,106 @@
             @preview-click="clickPreview"
             @checked-value-changed="checkDataModel"
           ></resource-box-list>
+          <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+          <Loading
+            id="loader"
+            :use-loader-overlay="true"
+            class="loader-lg is-loader-inner"
+            style="display: none"
+          ></Loading>
         </div>
       </div>
-      <preview
-        :preview-data="dataModel"
+      <Preview
+        :preview-data="previewData"
         :is-show-preview="isShowPreview"
         @change="showPreview"
-      ></preview>
+      ></Preview>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { useModal } from "vue-final-modal";
+import DataModelAddModal from "~/components/govern/common/modal/add-data-model.vue";
 import { useGlossaryStore } from "@/store/glossary";
-const { getDataModels, getDataModel, updateTerm, dataModels, dataModel, term } =
-  useGlossaryStore();
-getDataModels(term.fullyQualifiedName);
+import { useSearchCommonStore } from "@/store/search/common";
+import { onMounted, ref } from "vue";
+import Preview from "~/components/common/preview/preview.vue";
+import Loading from "@base/loading/Loading.vue";
+import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+const {
+  getDataModels,
+  getDataModel,
+  resetDataModels,
+  updateTerm,
+  dataModels,
+  term,
+} = useGlossaryStore();
+const { getPreviewData } = useSearchCommonStore();
+const searchCommonStore = useSearchCommonStore();
+const { previewData } = storeToRefs(searchCommonStore);
+
+onMounted(() => {
+  resetDataModels();
+  getDataModels(term.fullyQualifiedName, keyword.value);
+});
+
+const DATA_MODEL_ADD_MODAL = "data-model-add-modal";
+
+const { open, close } = useModal({
+  component: DataModelAddModal,
+  attrs: {
+    modalId: DATA_MODEL_ADD_MODAL,
+    currentPageType: "glossary",
+    onConfirm() {
+      // TODO: 데이터모델 목록 조회 및 초기화
+      close();
+    },
+    onClose() {
+      close();
+    },
+  },
+});
 
 const keyword = ref("");
-function searchDataModel() {
+
+const showDataModelAddModal = () => {
+  open();
+};
+
+function searchDataModel(): void {
   getDataModels(term.fullyQualifiedName, keyword.value);
+  isShowPreview.value = false;
 }
 
 const isShowPreview = ref(false);
+
 function showPreview(): void {
   isShowPreview.value = !isShowPreview.value;
 }
 
-function clickPreview(data): void {
-  getDataModel(data.fullyQualifiedName);
+function clickPreview(data: object): void {
+  getPreviewData(data.fullyQualifiedName);
   isShowPreview.value = true;
 }
 
-const selectedDataModels = ref([]);
-function checkDataModel(ids: string[]) {
+const selectedDataModels = ref<string[]>([]);
+
+function checkDataModel(ids: string[]): void {
   selectedDataModels.value = [...ids];
 }
 
-function toggleAllCheck(allCheck) {
+function toggleAllCheck(allCheck: boolean): void {
   if (allCheck) {
-    selectedDataModels.value = dataModels.map((dataModel) => dataModel.id);
+    selectedDataModels.value = dataModels.map(
+      (dataModel) => dataModel.id,
+    ) as string[];
   } else {
     selectedDataModels.value = [];
   }
 }
 
-async function deleteDataModel() {
+async function deleteDataModel(): Promise<void> {
   const requestBody: object[] = [];
   selectedDataModels.value.forEach((id) => {
     requestBody.push({ id: id, type: "table" });
@@ -109,4 +167,6 @@ async function deleteDataModel() {
   await updateTerm(term.id, requestBody);
   await getDataModels(term.fullyQualifiedName);
 }
+
+const { scrollTrigger } = useIntersectionObserver(searchDataModel);
 </script>

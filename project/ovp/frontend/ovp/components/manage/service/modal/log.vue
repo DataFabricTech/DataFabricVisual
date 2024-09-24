@@ -7,8 +7,8 @@
     contentTransition="vfm-fade"
     :clickToClose="true"
     :escToClose="true"
-    :width="1080"
-    :height="800"
+    :width="1180"
+    :height="610"
     :lockScroll="true"
     :useCancelBtn="false"
     @before-open="onBeforeOpenModal"
@@ -17,8 +17,9 @@
     @confirm="onCancelModal"
   >
     <template v-slot:body>
-      <div class="flex justify-end w-full gap-2">
+      <div class="flex justify-end w-full gap-2 mb-3">
         <button class="button button-neutral-stroke" @click="refresh">
+          <svg-icon class="button-icon" name="refresh"></svg-icon>
           새로고침
         </button>
         <!--        <button-->

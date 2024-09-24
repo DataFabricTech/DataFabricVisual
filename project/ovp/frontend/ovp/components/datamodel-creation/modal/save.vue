@@ -1,116 +1,188 @@
 <template>
-  <div class="modal-fixed vfm--fixed vfm--inset">
-    <div class="modal modal-padding-16" style="width: 480px">
-      <div class="modal-head">
-        <div class="modal-head-text">
-          <span class="modal-head-title">데이터 모델 저장</span>
+  <Modal
+    title="데이터 모델 저장"
+    background="non-interactive"
+    displayDirective="show"
+    overlayTransition="vfm-fade"
+    contentTransition="vfm-fade"
+    :clickToClose="true"
+    :escToClose="true"
+    :width="480"
+    :height="560"
+    :lockScroll="true"
+    swipeToClose="none"
+    @before-open="onOpenModal"
+    @click-outside="onCancelModal"
+    @cancel="onCancelModal"
+  >
+    <template v-slot:body>
+      <div class="form form-lg">
+        <div class="form-body">
+          <div class="form-item">
+            <label for="data-model-save-name" class="form-label">
+              데이터 모델 이름
+              <span class="required">*</span>
+            </label>
+            <div class="form-detail">
+              <input
+                id="data-model-save-name"
+                class="text-input text-input-lg"
+                placeholder="데이터 모델 이름을 입력하세요."
+                v-model="dataModelName"
+                @input="setDataModelName(dataModelName)"
+              />
+              <div
+                class="notification notification-sm notification-error"
+                v-show="isDuplicate"
+              >
+                <svg-icon class="notification-icon" name="error"></svg-icon>
+                <p class="notification-detail">
+                  중복된 데이터 모델 이름입니다.
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="form-item">
+            <label class="form-label" for="data-model-save-description">
+              데이터 모델 설명
+            </label>
+            <div class="form-detail">
+              <textarea
+                id="data-model-save-description"
+                class="textarea h-28"
+                placeholder="데이터 모델 설명을 입력하세요."
+                v-model="modelDescription"
+                @input="setModelDescription(modelDescription)"
+              ></textarea>
+            </div>
+          </div>
+          <div class="form-item">
+            <span class="form-label"> 카테고리 </span>
+            <div class="form-detail">
+              <menu-search-tree
+                label-key="name"
+                value-key="id"
+                :data="categoryList"
+                :title="cateTitle ? cateTitle : categoryList[0].name"
+                :is-multi="false"
+                :hideGuideLines="false"
+                :firExpandAll="true"
+                :show-open-all-btn="false"
+                :show-close-all-btn="false"
+                :use-draggable="true"
+                :selected-items="tree_selectedItem"
+                :isShowLength="false"
+                mode="view"
+                @single-change="editDoneForCategory"
+              ></menu-search-tree>
+            </div>
+          </div>
+          <div class="form-item">
+            <span class="form-label"> Tag </span>
+            <div class="form-detail">
+              <menu-search-tag
+                :data="tagList"
+                :selected-items="tag_selectedItem"
+                label-key="displayName"
+                value-key="tagFQN"
+                :is-multi="true"
+                title="태그 없음"
+                @multiple-change="changeTags"
+              ></menu-search-tag>
+            </div>
+          </div>
         </div>
-        <button
-          class="button link-button button-sm"
-          type="button"
-          @click="saveDataModel(false)"
+      </div>
+    </template>
+    <template v-slot:footer>
+      <div class="modal-foot-group">
+        <div
+          class="notification notification-sm notification-error"
+          v-show="isNameEmpty"
         >
-          <span class="hidden-text">닫기</span>
-          <svg-icon class="button-icon" name="close"></svg-icon>
+          <svg-icon class="notification-icon" name="error"></svg-icon>
+          <p class="notification-detail">필수값을 입력해주세요.</p>
+        </div>
+        <div
+          class="notification notification-sm notification-error"
+          v-show="!isQueryExecuteValid"
+        >
+          <svg-icon class="notification-icon" name="error"></svg-icon>
+          <p class="notification-detail">
+            쿼리가 정상적으로 동작하지 않습니다.
+          </p>
+        </div>
+        <button class="button button-primary button-lg" @click="onSaveModal">
+          저장
         </button>
       </div>
-      <div class="modal-body">
-        <div class="form form-lg">
-          <div class="form-body">
-            <div class="form-item">
-              <label for="data-model-save-name" class="form-label">
-                데이터 모델 이름
-                <span class="required">*</span>
-              </label>
-              <div class="form-detail">
-                <input
-                  id="data-model-save-name"
-                  class="text-input text-input-lg"
-                  placeholder="데이터 모델 이름을 입력하세요."
-                />
-                <div class="notification notification-sm notification-error">
-                  <svg-icon class="notification-icon" name="error"></svg-icon>
-                  <p class="notification-detail">
-                    중복된 데이터 모델 이름입니다.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div class="form-item">
-              <label class="form-label" for="data-model-save-description">
-                데이터 모델 설명
-              </label>
-              <div class="form-detail">
-                <textarea
-                  id="data-model-save-description"
-                  class="textarea h-28"
-                  placeholder="데이터 모델 설명을 입력하세요."
-                ></textarea>
-              </div>
-            </div>
-            <div class="form-item">
-              <span class="form-label"> 카테고리 </span>
-              <div class="form-detail">
-                <div class="select select-lg">
-                  <button class="select-button">
-                    <div class="tag tag-primary tag-sm">
-                      <span class="tag-text">tag1</span>
-                      <button class="tag-delete-button">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                    <svg-icon
-                      class="svg-icon select-indicator"
-                      name="chevron-down-medium"
-                    ></svg-icon>
-                  </button>
-                  <menu-search style="display: none"></menu-search>
-                </div>
-              </div>
-            </div>
-            <div class="form-item">
-              <span class="form-label"> Tag </span>
-              <div class="form-detail">
-                <div class="select select-lg">
-                  <button class="select-button">
-                    <div class="tag tag-primary tag-sm">
-                      <span class="tag-text">tag1</span>
-                      <button class="tag-delete-button">
-                        <span class="hidden-text">삭제</span>
-                        <svg-icon class="svg-icon" name="close"></svg-icon>
-                      </button>
-                    </div>
-                    <svg-icon
-                      class="svg-icon select-indicator"
-                      name="chevron-down-medium"
-                    ></svg-icon>
-                  </button>
-                  <menu-search style="display: none"></menu-search>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-foot">
-        <div class="modal-foot-group">
-          <div class="notification notification-sm notification-error">
-            <svg-icon class="notification-icon" name="error"></svg-icon>
-            <p class="notification-detail">
-              쿼리가 정상적으로 동작하지 않습니다.
-            </p>
-          </div>
-          <button class="button button-primary button-lg">저장</button>
-        </div>
-      </div>
-    </div>
-  </div>
+    </template>
+  </Modal>
 </template>
 <script setup lang="ts">
-const emit = defineEmits<{ (e: "change", option: boolean): void }>();
-const saveDataModel = (option: boolean) => {
-  emit("change", option);
+import Modal from "@extends/modal/Modal.vue";
+import { useDataModelSaveStore } from "~/store/datamodel-creation/save";
+import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
+import MenuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
+const dataModelSaveStore = useDataModelSaveStore();
+
+const {
+  dataModelName,
+  modelDescription,
+  isNameEmpty,
+  isDuplicate,
+  isQueryExecuteValid,
+  cateTitle,
+  categoryList,
+  tagList,
+  tree_selectedItem,
+  tag_selectedItem,
+} = storeToRefs(dataModelSaveStore);
+const {
+  setCateTitle,
+  setDataModelName,
+  setModelDescription,
+  setTreeSelectionItem,
+  setTagSelectionItem,
+  setIsQueryExecuteValid,
+  getCategoryList,
+  getTagList,
+  saveValidation,
+  resetValidation,
+  saveModel,
+  editDoneForCategory,
+  changeTags,
+} = dataModelSaveStore;
+
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
+
+const onOpenModal = async () => {
+  setCateTitle("");
+  setDataModelName("");
+  setModelDescription("");
+  setTreeSelectionItem([]);
+  setTagSelectionItem([]);
+  resetValidation();
+  await getCategoryList();
+  await getTagList();
+};
+
+const onCancelModal = () => {
+  emit("close");
+};
+
+const onSaveModal = async () => {
+  await saveValidation();
+  if (isDuplicate.value || isNameEmpty.value) {
+    return;
+  }
+  await saveModel();
+  if (!isQueryExecuteValid.value) {
+    return;
+  }
+  emit("close");
 };
 </script>
 <style lang="scss" scoped>

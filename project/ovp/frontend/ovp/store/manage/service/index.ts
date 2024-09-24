@@ -22,7 +22,9 @@ export const useServiceStore = defineStore("service", () => {
   const { $api } = useNuxtApp();
   const dataModelDetailStore = useDataModelDetailStore();
   const { tagList, termList } = storeToRefs(dataModelDetailStore);
-  const tab = ref<string>("repository");
+  const tab = ref<string>("ingestion");
+
+  const isDoneRepoAPI = ref<boolean>(false);
 
   const service = reactive<Service>(<Service>{});
   const serviceList = reactive<Service[]>([]);
@@ -43,6 +45,7 @@ export const useServiceStore = defineStore("service", () => {
     owner: false,
     tag: false,
     term: false,
+    description: false,
   });
 
   // 수정가능상태
@@ -59,6 +62,10 @@ export const useServiceStore = defineStore("service", () => {
   let selectedName: string = "";
   let selectedServiceType: string = "";
 
+  // 설명 관련 코드
+  const defaultDescription = ref("");
+  const newDescription = ref("");
+
   // getRepositoryDescriptionAPI의 params 생성함수
   const getQueryData = () => {
     const params = {
@@ -72,6 +79,7 @@ export const useServiceStore = defineStore("service", () => {
   const getRepositoryDescriptionAPI = async () => {
     const { data }: any = await $api(
       `/api/service-manage/repository/description/${selectedFqn}?${getQueryData()}`,
+      { showLoader: false },
     );
     serviceData.value = data;
   };
@@ -80,36 +88,56 @@ export const useServiceStore = defineStore("service", () => {
   const getRepositoryStorageDescriptionAPI = async () => {
     const { data }: any = await $api(
       `/api/service-manage/repository/storage/description/${selectedFqn}?${getQueryData()}`,
+      {
+        showLoader: false,
+      },
     );
 
     serviceData.value = data;
   };
 
   // 저장소 탭 > 설명 수정 API호출 함수
-  const updateRepositoryDescriptionAPI = (patchData: JsonPatchOperation[]) => {
+  const updateRepositoryDescriptionAPI = async (
+    patchData: JsonPatchOperation[],
+  ) => {
     const serviceType: string = ["MINIO"].includes(
       selectedServiceType.toUpperCase(),
     )
       ? "repository/storage"
       : "repository";
-    return $api(
+    const { result, data } = await $api(
       `/api/service-manage/${serviceType}/description/${selectedID}`,
       {
         method: "PATCH",
         body: patchData,
       },
-    );
+    ).catch((error) => {
+      console.error("API 호출 중 오류 발생: ", error);
+      serviceData.value = defaultDescription;
+    });
+
+    if (result === 1) {
+      alert("수정이 완료되었습니다.");
+      service.description = data.description;
+    } else {
+      alert("수정에 실패하였습니다.");
+      service.description = defaultDescription.value;
+    }
   };
 
   const getDBServiceList = async () => {
+    isDoneRepoAPI.value = true;
     const uri: string = ["MINIO"].includes(selectedServiceType.toUpperCase())
       ? "storage-services"
       : "database-services";
 
     const result: any = await $api(
       `/api/service-manage/${uri}/${selectedName}`,
+      { showLoader: false },
     );
     DBServiceListData.value = result.data;
+
+    isDoneRepoAPI.value = false;
 
     return result;
   };
@@ -125,16 +153,15 @@ export const useServiceStore = defineStore("service", () => {
   }
 
   /**
-   * 서비스 리스트
+   * 서비스 리스트 갱신
    */
   async function getServiceList(): Promise<void> {
-    const res = await $api(`/api/service-manage/list`);
-    const serviceListData: Service[] = res.data;
+    const { data } = await $api(`/api/service-manage/list`);
+    const serviceListData: Service[] = data;
     serviceList.splice(0, serviceList.length, ...serviceListData);
 
-    const serviceData: Service =
-      Object.keys(service).length === 0 ? serviceListData[0] : service;
-    changeCurrentService(serviceData);
+    // 첫번째 항목 자동 선택
+    changeCurrentService(serviceListData[0]);
   }
 
   /**
@@ -147,7 +174,7 @@ export const useServiceStore = defineStore("service", () => {
     from: string,
   ): Promise<void> {
     const res = await $api(
-      `/api/service-manage/list/search?search=*${keyword}*&from=${from}`,
+      `/api/service-manage/list/search?q=*${keyword}*&from=${from}`,
     );
     if (res.data !== null) {
       serviceList.splice(0, serviceList.length, ...res.data);
@@ -162,38 +189,43 @@ export const useServiceStore = defineStore("service", () => {
    * 현재 서비스 엔티티 변경
    * @param source
    */
-  function changeCurrentService(source: Service): void {
+  async function changeCurrentService(source: Service): void {
+    // 서비스 조회
+    const newService = await getServiceInfo(source);
+
     isDescEditable.value = false;
     if (!source.owner) {
       source.owner = [];
     }
-    Object.assign(service, source);
+    Object.assign(service, source, newService);
     disableEditInfo();
     // 서비스관리 목록 클릭시, 설명 API호출
     if (
-      !_.isEmpty(service.fullyQualifiedName) &&
-      !_.isUndefined(service.fullyQualifiedName)
+      !_.isEmpty(newService.fullyQualifiedName) &&
+      !_.isUndefined(newService.fullyQualifiedName)
     ) {
-      selectedFqn = service.fullyQualifiedName;
-      selectedID = service.id;
-      selectedName = service.name;
-      selectedServiceType = service.serviceType;
-      if (
-        ["MYSQL", "MARIADB", "ORACLE", "POSTGRES"].includes(
-          selectedServiceType.toUpperCase(),
-        )
-      ) {
-        // 서비스타입이 데이터베이스 일 경우
-        getRepositoryDescriptionAPI();
-      } else if (["MINIO"].includes(selectedServiceType.toUpperCase())) {
-        // 서비스 타입이 스토리지일 경우
-        getRepositoryStorageDescriptionAPI();
-      } else {
-        // 서비스 타입이 기타일 경우
-      }
+      selectedFqn = newService.fullyQualifiedName;
+      selectedID = newService.id;
+      selectedName = newService.name;
+      selectedServiceType = newService.serviceType;
+      defaultDescription.value = "";
+      newDescription.value = newService.description;
     }
-    getDBServiceList();
   }
+
+  const getServiceRepoList = () => {
+    selectedServiceType.toLowerCase() === "minio"
+      ? getRepositoryStorageDescriptionAPI()
+      : getRepositoryDescriptionAPI();
+  };
+
+  const getServiceInfo = async ({ type, name }) => {
+    const { data } = await $api(
+      `/api/service-manage/detail/${type}/${name}`,
+      {},
+    );
+    return data;
+  };
 
   /**
    * 서비스 삭제
@@ -299,6 +331,12 @@ export const useServiceStore = defineStore("service", () => {
   ): JsonPatchOperation[] {
     const operations: JsonPatchOperation[] = [];
     const foundUser: any = userList.find((user: Owner) => user.id === item.id);
+
+    if (foundUser !== null && foundUser !== undefined) {
+      // 바꾸려는 값이 'admin' 인 경우, admin 은 type 이 'admin'으로 되어있음.
+      // open meta 에 type 을 'admin' 으로 날리면 서버 오류가 남.
+      foundUser.type = "user";
+    }
 
     const isEmpty = item.id === undefined;
     if (service.owner.id === undefined) {
@@ -426,6 +464,7 @@ export const useServiceStore = defineStore("service", () => {
     editInfo.owner = false;
     editInfo.tag = false;
     editInfo.term = false;
+    editInfo.description = false;
   }
 
   /**
@@ -534,6 +573,17 @@ export const useServiceStore = defineStore("service", () => {
     viewConnectionInfo.value = data;
   };
 
+  watch(
+    () => tab.value,
+    (value) => {
+      if (value === "repository") {
+        // repository 저장소 탭을 누를때만 조회한다 (전체조회에 포함하지 않음)
+        getServiceRepoList();
+        getDBServiceList();
+      }
+    },
+  );
+
   return {
     tab,
     servicesById,
@@ -580,5 +630,9 @@ export const useServiceStore = defineStore("service", () => {
     getConnectionInfo,
 
     isDescEditable,
+    isDoneRepoAPI,
+
+    defaultDescription,
+    newDescription,
   };
 });

@@ -161,6 +161,11 @@ export function MenuSearchTreeContentsComposition(
   };
 
   const onReset: () => void = () => {
+    // #explorer 내에 존재하는 모든 체크박스 상태 해제
+    const checkboxes = document.querySelectorAll('#explorer input[type="checkbox"]');
+    checkboxes.forEach((checkbox) => {
+      checkbox.checked = false;
+    });
     // 선택 값 초기화
     selectedListData.value = [];
     listData.value = originListData.value;

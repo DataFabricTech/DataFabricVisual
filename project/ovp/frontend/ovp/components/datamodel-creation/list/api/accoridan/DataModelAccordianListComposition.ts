@@ -146,11 +146,15 @@ export function DataModelAccordianListComposition(
           isChecked: el[props.valueKey] === value ? checked : el.isChecked,
         };
       });
-      const selectedData = $_filter(listData[key], { isChecked: true })[0];
-      checkedList.push(selectedData);
+      const selectedData = $_filter(listData[key], { isChecked: true });
+      checkedList.push(...selectedData);
     }
     const nCheckedList = $_uniqBy(checkedList, props.valueKey);
-    emitCheckItem(nCheckedList);
+
+    const filteredCheckedList = nCheckedList.filter(
+      (item) => item !== null && item !== undefined,
+    );
+    emitCheckItem(filteredCheckedList);
   };
   const onResetSearchFilter: () => void = () => {};
   const onSelectFilter: (filterKey: string, value: string) => void = () => {};

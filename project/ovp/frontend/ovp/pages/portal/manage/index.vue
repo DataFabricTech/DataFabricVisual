@@ -15,9 +15,8 @@
             </div>
           </nuxt-link>
         </li>
-        <li class="card-item" @click="clickMenu">
-          <!--          <nuxt-link to="/portal/manage/user" title="사용자 관리">-->
-          <a href="javascript:void(0);" title="사용자관리">
+        <li class="card-item">
+          <nuxt-link to="/portal/manage/user" title="사용자 관리">
             <svg-icon name="user-setting" class="svg-icon"></svg-icon>
             <div class="flex flex-col gap-[16px]">
               <strong class="card-title">사용자 관리</strong>
@@ -25,8 +24,7 @@
                 서비스를 이용하는 사용자를 효율적으로 관리할 수 있습니다.
               </p>
             </div>
-          </a>
-          <!--          </nuxt-link>-->
+          </nuxt-link>
         </li>
         <!--        <li class="card-item">-->
         <!--          <nuxt-link to="" title="접속 관리">-->
@@ -45,10 +43,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-const clickMenu = () => {
-  alert("개발중 입니다.");
-};
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>
