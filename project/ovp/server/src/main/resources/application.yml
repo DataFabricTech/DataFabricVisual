@@ -35,9 +35,9 @@ spring:
         maximum-pool-size: 10
         minimum-idle: 5
         pool-name: BaseHikariPool
-        jdbc-url: jdbc:postgresql://192.168.105.26:5432/postgres?currentSchema=ovp
-        username: postgres
-        password: postgres
+        jdbc-url: jdbc:postgresql://192.168.109.254:30207/ovp?currentSchema=ovp
+        username: ovp-user
+        password: biris.manse
         driver-class-name: org.postgresql.Driver
     hibernate:
       property:
@@ -131,7 +131,7 @@ properties:
       password: admin
   ovp:
     # openMetadata 연동 URL
-    open-metadata-url: http://192.168.105.26:8585/api/v1
+    open-metadata-url: http://192.168.109.254:31500/api/v1
     dolphin-server-url: http://192.168.105.26:28080/dolphin/v1
 
     # 비밀번호 재설정 관련 설
@@ -152,6 +152,6 @@ spring:
   primary:
     datasource:
       hikari:
-        jdbc-url: jdbc:postgresql://192.168.105.26:5432/postgres?currentSchema=ovp
-        username: postgres
-        password: postgres
+        jdbc-url: jdbc:postgresql://192.168.109.254:30207/ovp?currentSchema=ovp
+        username: ovp-user
+        password: biris.manse

@@ -63,7 +63,12 @@
                 label-key="name"
                 value-key="id"
                 :data="categoryList"
-                :title="cateTitle ? cateTitle : categoryList[0].name"
+                :title="
+                  cateTitle
+                    ? cateTitle
+                    : $constants.SERVICE.CATEGORY_UNDEFINED_NAME
+                "
+                :isResetToFirst="true"
                 :is-multi="false"
                 :hideGuideLines="false"
                 :firExpandAll="true"
@@ -124,6 +129,7 @@ import Modal from "@extends/modal/Modal.vue";
 import { useDataModelSaveStore } from "~/store/datamodel-creation/save";
 import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 import MenuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
+import $constants from "~/utils/constant";
 const dataModelSaveStore = useDataModelSaveStore();
 
 const {

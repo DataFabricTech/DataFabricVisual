@@ -173,8 +173,12 @@ watchEffect(() => {
 
 await getFilters();
 
+onMounted(() => {
+  resetReloadList();
+});
+
 onBeforeMount(() => {
-  changeTab("table");
+  changeTab("table", false);
 });
 
 onBeforeRouteLeave((to, from, next) => {

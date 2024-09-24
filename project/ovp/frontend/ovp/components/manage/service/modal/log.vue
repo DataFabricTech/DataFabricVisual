@@ -22,13 +22,13 @@
           <svg-icon class="button-icon" name="refresh"></svg-icon>
           새로고침
         </button>
-        <!--        <button-->
-        <!--          class="button button-neutral-stroke"-->
-        <!--          ref="copyButton"-->
-        <!--          @click="copyLog"-->
-        <!--        >-->
-        <!--          복사-->
-        <!--        </button>-->
+        <button
+          class="button button-neutral-stroke"
+          ref="copyButton"
+          @click="copyLog"
+        >
+          복사
+        </button>
       </div>
       <!-- TODO: [개발] 로그 화면 구현 -->
       <div class="log-view" style="height: 100%">
@@ -92,7 +92,7 @@ function refresh() {
 }
 
 const copyLog = async () => {
-  copy(collectionLog.value);
+  await navigator.clipboard.writeText(collectionLog.value);
   alert("링크가 복사되었습니다.");
 };
 </script>

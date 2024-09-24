@@ -93,7 +93,7 @@
     </li>
     <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
     <Loading
-      id="loader"
+      id="activitiesLoader"
       :use-loader-overlay="true"
       class="loader-lg is-loader-inner"
       style="display: none"
@@ -114,8 +114,7 @@ import type { Activity } from "@/type/glossary";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { storeToRefs } from "pinia";
 
-const { getGlossaryActivities, resetGlossaryActivities, activities, glossary } =
-  useGlossaryStore();
+const { getGlossaryActivities, activities, glossary } = useGlossaryStore();
 
 const userStore = useUserStore();
 const { profileFirstWord } = storeToRefs(userStore);
@@ -143,8 +142,9 @@ const headerMessage = (activity: Activity): string => {
   }
 };
 
-resetGlossaryActivities();
-await getGlossaryActivities();
-
-const { scrollTrigger } = useIntersectionObserver(getGlossaryActivities);
+const { scrollTrigger } = useIntersectionObserver({
+  callback: getGlossaryActivities,
+  targetId: "activitiesList",
+  loaderId: "activitiesLoader",
+});
 </script>

@@ -345,11 +345,17 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       mySearchResult.value = updateSelection(mySearchResult.value, value);
     }
 
+    nSelectedListData.value = updateSelection(nSelectedListData.value, "");
+
     await resetDetailBox();
   };
 
   const onClickSelectedData = async (value: string) => {
-    setSelectedData(value);
+    const selectedMyModelItem = _.find(nSelectedListData.value, { id: value });
+    selectedItem.value = $_isUndefined(selectedMyModelItem)
+      ? {}
+      : selectedMyModelItem;
+
     nSelectedListData.value = nSelectedListData.value.map((item: any) => {
       return {
         ...item,
