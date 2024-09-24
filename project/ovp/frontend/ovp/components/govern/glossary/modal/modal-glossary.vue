@@ -3,7 +3,7 @@
     title="용어 추가"
     :modal-id="props.modalId"
     :esc-to-close="true"
-    :height="900"
+    :height="600"
     :btn-msg="'저장'"
     @close="closeModal"
     @cancel="closeModal"

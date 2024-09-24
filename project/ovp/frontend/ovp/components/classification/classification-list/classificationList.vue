@@ -11,7 +11,7 @@
       <!-- 로딩 중일 때는 아무것도 표시하지 않음 -->
     </div>
     <!-- 데이터 로딩 후 분류 목록 또는 "등록된 정보가 없습니다." 메시지 표시 -->
-    <div v-else>
+    <div class="work-list-contents" v-else>
       <div v-if="classificationList.length === 0" class="no-result">
         <div class="notification">
           <svg-icon class="notification-icon" name="info"></svg-icon>
