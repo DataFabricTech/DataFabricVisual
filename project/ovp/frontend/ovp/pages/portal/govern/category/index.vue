@@ -25,7 +25,7 @@
             <p class="notification-detail">등록된 정보가 없습니다.</p>
           </div>
         </div>
-        <div class="work-list-tree" v-else>
+        <div class="work-list-contents" v-else>
           <tree-vue
             v-if="categories && categories.length"
             mode="edit"
