@@ -242,6 +242,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const setSortFilter = (item: string | number = "totalVotes_desc") => {
     if (!_.isUndefined(item) && typeof item === "string") {
       isShowPreview.value = false;
+      isBoxSelectedStyle.value = false;
       currentPreviewId.value = "";
       setSortInfo(item);
       resetReloadList();
