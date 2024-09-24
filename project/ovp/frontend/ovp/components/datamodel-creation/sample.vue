@@ -15,7 +15,7 @@
         <div class="data-summary" v-show="props.isItemClicked">
           <span class="data-summary-title">데이터 모델 요약</span>
           <span class="data-summary-name">{{ props.dataModelName }}</span>
-          <span class="data-summary-text">({{ props.dataModelOwner }})</span>
+          <span class="data-summary-text">({{ props.dataModelOwner || '-' }})</span>
         </div>
         <div
           class="data-detail"
