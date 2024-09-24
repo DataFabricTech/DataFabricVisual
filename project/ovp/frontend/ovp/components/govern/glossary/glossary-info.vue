@@ -50,7 +50,7 @@
       <!-- TODO alert 개발 후 얼럿 적용 -->
       <button
         class="button button-error-lighter"
-        v-if="!isGlossaryNull"
+        v-if="!isGlossaryNull()"
         @click="removeGlossary"
       >
         삭제
