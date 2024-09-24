@@ -36,6 +36,7 @@
             @filter-change="onClickApiFilterChange"
             @sort-change="onClickApiSortChange"
             @search-change="onClickApiSearchChange"
+            @filter-reset="onClickApiReset"
           >
             <template v-slot:tab>
               <Tab
@@ -299,6 +300,13 @@ const onClickApiSortChange = async (value: string) => {
 };
 const onClickApiSearchChange = async (value: string) => {
   setSearchKeyword(value);
+  await resetReloadList(nSelectedListData.value);
+};
+
+const onClickApiReset = async (value: string) => {
+  setSelectedFilter(value.selectedFilter);
+  setSortInfo(value.selectedSort);
+  setSearchKeyword(value.searchLabel);
   await resetReloadList(nSelectedListData.value);
 };
 

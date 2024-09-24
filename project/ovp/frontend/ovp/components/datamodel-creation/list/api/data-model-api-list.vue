@@ -198,6 +198,10 @@ const emitSearchChange = (value: string) => {
   emit("search-change", value);
 };
 
+const emitFilterReset = (value: any[]) => {
+  emit("filter-reset", value);
+};
+
 const {
   listData,
   searchLabel,
@@ -222,6 +226,7 @@ const {
   emitSortChange,
   emitSearchChange,
   emitItemCheck,
+  emitFilterReset,
 );
 
 /**

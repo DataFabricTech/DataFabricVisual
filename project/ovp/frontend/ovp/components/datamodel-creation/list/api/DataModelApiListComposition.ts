@@ -23,6 +23,7 @@ export function DataModelApiListComposition(
   emitSortChange: (value: string) => void,
   emitSearchChange: (value: string) => void,
   emitCheckItem: (value: any[]) => void,
+  emitFilterReset: (value: any[]) => void,
 ): DataModelApiListCompositionImpl {
   const compos = DataModelListComposition(
     props,
@@ -92,10 +93,13 @@ export function DataModelApiListComposition(
   const onResetSearchFilter: () => void = () => {
     compos.setSearchFilter();
     selectedSort.value = "";
+    let resetFilterInfo = {
+      searchLabel: compos.searchLabel.value,
+      selectedFilter: compos.selectedFilter,
+      selectedSort: selectedSort.value,
+    };
 
-    emitSearchChange(compos.searchLabel.value);
-    emitFilterChange(compos.selectedFilter);
-    emitSortChange(selectedSort.value);
+    emitFilterReset(resetFilterInfo);
   };
 
   /**
