@@ -84,8 +84,9 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   });
   const selectedFilterItems: Ref<any> = ref([]);
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
-  let UNDEFINED_TAG_ID: string = null;
   const currentPreviewId: Ref<string | number> = ref("");
+  let UNDEFINED_TAG_ID: string = null;
+
   // DATA
   const viewType: Ref<string> = ref<string>("listView");
   const isShowPreview: Ref<boolean> = ref<boolean>(false);
