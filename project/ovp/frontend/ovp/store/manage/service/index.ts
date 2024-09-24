@@ -105,7 +105,6 @@ export const useServiceStore = defineStore("service", () => {
       `/api/service-manage/${uri}/${selectedName}`,
       { showLoader: false },
     );
-    console.log(result);
     DBServiceListData.value = result.data;
 
     isDoneRepoAPI.value = false;
