@@ -10,7 +10,7 @@
     <div class="no-result" v-if="glossaries.length === 0">
       <div class="notification">
         <svg-icon class="notification-icon" name="info"></svg-icon>
-        <p class="notification-detail">등록된 정보가 없습니다.</p>
+        <p class="notification-detail">데이터가 없습니다.</p>
       </div>
     </div>
     <div class="menu border-none" v-if="glossaries.length > 0">

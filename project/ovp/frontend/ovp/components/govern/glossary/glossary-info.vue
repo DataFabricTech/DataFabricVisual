@@ -61,7 +61,7 @@
       <div class="no-result" v-if="Object.keys(glossary).length === 0">
         <div class="notification">
           <svg-icon class="notification-icon" name="info"></svg-icon>
-          <p class="notification-detail">등록된 정보가 없습니다.</p>
+          <p class="notification-detail">데이터가 없습니다.</p>
         </div>
       </div>
       <!-- // 결과 없을 시 no-result 표시  -->
