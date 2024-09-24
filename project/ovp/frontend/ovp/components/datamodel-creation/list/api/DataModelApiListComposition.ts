@@ -50,7 +50,8 @@ export function DataModelApiListComposition(
    * (이벤트) 정렬 변경
    * @param value
    */
-  const selectedSort: Ref<string> = ref("");
+  const selectedSort: Ref<string> = ref("totalVotes_desc");
+
   const onChangeSort: (value: string) => void = (value) => {
     selectedSort.value = value;
     emitSortChange(selectedSort.value);
@@ -92,7 +93,7 @@ export function DataModelApiListComposition(
    */
   const onResetSearchFilter: () => void = () => {
     compos.setSearchFilter();
-    selectedSort.value = "";
+    selectedSort.value = "totalVotes_desc";
     let resetFilterInfo = {
       searchLabel: compos.searchLabel.value,
       selectedFilter: compos.selectedFilter,
