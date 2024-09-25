@@ -125,7 +125,6 @@
           <div class="category-search" v-if="isModalButtonShow">
             <div class="l-top-bar">
               <search-input
-                class="w-[541px]"
                 :is-search-input-default-type="false"
                 :placeholder="'검색어를 입력하세요.'"
                 :inp-value="searchInputValue"
