@@ -64,8 +64,7 @@ const { dataModelType } = storeToRefs(dataModelDetailStore);
 
 onBeforeMount(async () => {
   await getFilters();
-  // TODO: param => (fqn(외부스토어에서 호출), 필터) 추가 필요
-  // await getLineageData(dataModelType, dataModelFqn);
+  await getLineageData(dataModelType.value, getDataModelFqn());
 });
 
 const getPreviewOn = (isPreviewClosed: boolean) => {

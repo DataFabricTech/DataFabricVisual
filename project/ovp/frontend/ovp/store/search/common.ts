@@ -85,7 +85,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const selectedFilterItems: Ref<any> = ref([]);
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
   const currentPreviewId: Ref<string | number> = ref("");
-  let UNDEFINED_TAG_ID: string = null;
+  let UNDEFINED_TAG_ID: string = "";
 
   // DATA
   const viewType: Ref<string> = ref<string>("listView");
@@ -103,7 +103,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
 
   const getSearchListQuery = () => {
-    const queryFilter = getQueryFilter();
+    const queryFilter = getQueryFilter(selectedFilters.value, UNDEFINED_TAG_ID);
     const params: any = {
       // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
       // eslint 예외 제외 코드 추가.
@@ -203,27 +203,32 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     previewData.value = data.data;
   };
 
-  const getCtgIds = () => {
+  const getCtgIds = (undefinedTagId: string) => {
     return !_.has(selectedFilters.value, FILTER_KEYS.CATEGORY)
       ? []
       : selectedFilters.value[FILTER_KEYS.CATEGORY].map(
           (filter: any) =>
             `ovp_category.${
-              filter.id === UNDEFINED_TAG_ID
+              filter.id === undefinedTagId
                 ? $constants.SERVICE.CATEGORY_UNDEFINED_NAME
                 : filter.id
             }`,
         );
   };
 
-  const getQueryFilter = (): QueryFilter => {
+  const getQueryFilter = (
+    selectedFilters: object,
+    undefinedTagId: string,
+  ): QueryFilter => {
     const queryFilter: QueryFilter = {
       query: { bool: { must: [] } },
     };
 
-    for (const key in selectedFilters.value) {
+    for (const key in selectedFilters) {
       const value =
-        key === "category" ? getCtgIds() : selectedFilters.value[key];
+        key === "category"
+          ? getCtgIds(undefinedTagId)
+          : (selectedFilters as SelectedFilters)[key];
       const keyValue = key === "category" ? "tags.tagFQN" : key;
 
       queryFilter.query.bool.must.push(setQueryFilterByDepth(keyValue, value));

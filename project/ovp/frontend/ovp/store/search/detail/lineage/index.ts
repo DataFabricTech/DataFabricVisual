@@ -11,7 +11,7 @@ export interface lineageData {
 export const useLineageStore = defineStore("lineage", () => {
   const { $api } = useNuxtApp();
   const searchCommonStore = useSearchCommonStore();
-  const { getUseFilters } = searchCommonStore;
+  const { getUseFilters, getQueryFilter } = searchCommonStore;
 
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Partial<Filters> => {
@@ -26,7 +26,7 @@ export const useLineageStore = defineStore("lineage", () => {
   const filters = ref<Partial<Filters>>(createDefaultFilters());
   const selectedFilterItems: Ref<any> = ref({});
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
-  let UNDEFINED_TAG_ID: string = null;
+  let UNDEFINED_TAG_ID: string = "";
   const lineageData = ref<lineageData>({} as lineageData);
   const isShowPreview = ref<boolean>(false);
   const lineageRef = ref(null);
@@ -66,22 +66,8 @@ export const useLineageStore = defineStore("lineage", () => {
     selectedFilters.value = {};
   };
 
-  // TODO: (fqn(외부스토어에서 호출, 필터) 파람 추가 필요
   const getLineageData = async (type: string, fqn: string) => {
-    console.log();
-    const queryFilter: any = {
-      query: {
-        bool: {
-          must: [
-            {
-              bool: {
-                should: [],
-              },
-            },
-          ],
-        },
-      },
-    };
+    const queryFilter = getQueryFilter(selectedFilters.value, UNDEFINED_TAG_ID);
     const params: any = {
       fqn: fqn,
       query_filter: encodeURIComponent(JSON.stringify(queryFilter)),
