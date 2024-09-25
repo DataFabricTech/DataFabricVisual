@@ -70,7 +70,9 @@ import { classificationStore } from "@/store/classification/index";
 const useClassificationStore = classificationStore();
 const { getClassificationTags, editClassificationTag } = useClassificationStore;
 
-const { $vfm } = useNuxtApp();
+const emit = defineEmits<{
+  (e: "close"): void;
+}>();
 
 const emit = defineEmits(["close-modal"]);
 
@@ -182,12 +184,12 @@ function saveTag(name: any, description: any) {
     const editData = {
       param: patch,
     };
-    return editClassificationTag(editData);
+    return editClassificationTag(editData, props.formInfo.id);
   }
 }
 
 function closeModal(): void {
-  $vfm.close(props.modalId);
+  emit("close");
 }
 </script>
 

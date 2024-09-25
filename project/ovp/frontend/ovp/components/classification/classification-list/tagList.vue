@@ -1,6 +1,6 @@
 <template>
   <div class="l-top-bar">
-    <button class="button button-secondary ml-auto" @click="openModal">
+    <button class="button button-secondary ml-auto" @click="openTagCreateModal">
       태그추가
     </button>
   </div>
@@ -26,7 +26,7 @@
         <div class="button-group">
           <button
             class="button button button-secondary-stroke"
-            @click="openModifyModal(tag.id, tag.name)"
+            @click="modalOpen(tag)"
           >
             편집
           </button>
@@ -50,63 +50,62 @@
       </td>
     </tr>
   </table>
-  <tag-create :modal-id="MODAL_ID" @close-modal="closeModal"></tag-create>
-  <tag-modify
-    :modal-id="MODAL_MODIFY_ID"
-    @close-modal="closeModifyModal"
-    :formInfo="formInfo"
-  ></tag-modify>
 </template>
 
 <script setup lang="ts">
 import { classificationStore } from "@/store/classification/index";
 import { useModal } from "vue-final-modal";
 import tagCreate from "@/components/classification/modal/tag-create.vue";
+import tagModify from "@/components/classification/modal/tag-modify.vue";
 
 const useClassificationStore = classificationStore();
 const { classificationTagList } = storeToRefs(useClassificationStore);
-const {
-  deleteClassificationTag,
-  getClassificationTags,
-  editFormInfo,
-  setTagId,
-  setTagName,
-} = useClassificationStore;
+const { deleteClassificationTag, getClassificationTags } =
+  useClassificationStore;
 
 // 태그 추가 모달 ID
 const MODAL_ID = "modal-classificationTag";
 // 태그 수정 모달 ID
 const MODAL_MODIFY_ID = "modal-classificationTag-modify";
 
-const { open, close } = useModal({
+// 수정할 태그의 정보
+const formInfo = ref({ name: "", description: "", id: "" });
+
+const { open: openTagCreateModal, close: closeTagCreateModal } = useModal({
   component: tagCreate,
   attrs: {
     modalId: MODAL_ID,
     onClose() {
-      close();
+      closeTagCreateModal();
     },
   },
 });
 
-function openModal() {
-  open();
-}
+const { open: tagModifyOpen, close: closeTagEditModal } = useModal({
+  component: tagModify,
+  attrs: {
+    modalId: MODAL_MODIFY_ID,
+    formInfo: formInfo,
+    onClose() {
+      closeTagEditModal();
+    },
+  },
+});
 
-// 수정할 태그의 정보
-let formInfo = ref({ name: "", description: "" });
-
-async function openModifyModal(tagId: string, tagName: string) {
-  // 선택한 태그의 id, name값을 스토어에 저장
-  setTagId(tagId);
-  setTagName(tagName);
-
-  // 태그정보 가져오기
-  formInfo.value = editFormInfo();
-  $vfm.open(MODAL_MODIFY_ID);
-}
-function closeModifyModal() {
-  $vfm.close(MODAL_MODIFY_ID);
-}
+const modalOpen = ({
+  id,
+  name,
+  description,
+}: {
+  id: string;
+  name: string;
+  description: string;
+}) => {
+  formInfo.value.id = id;
+  formInfo.value.name = name;
+  formInfo.value.description = description;
+  tagModifyOpen();
+};
 
 const confirmDelete = (tagId: string) => {
   if (confirm("삭제하시겠습니까?")) {
