@@ -56,12 +56,10 @@ import sample from "@/components/datamodel-creation/sample.vue";
 import result from "@/components/datamodel-creation/result.vue";
 import addModel from "@/components/datamodel-creation/modal/add.vue";
 import saveModel from "@/components/datamodel-creation/modal/save.vue";
-import { useCreationStore } from "~/store/datamodel-creation/index";
-import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
+import { useCreationStore } from "@/store/datamodel-creation";
+import { useDataModelSearchStore } from "@/store/datamodel-creation/search";
 import { storeToRefs } from "pinia";
 import { useModal } from "vue-final-modal";
-
-const isShowSaveModel = ref(false);
 
 const addModelInstance = useModal({
   component: addModel,
@@ -110,6 +108,15 @@ const dataModelSearchStore = useDataModelSearchStore();
 const { filters, selectedModelList, selectedModelListCnt } =
   storeToRefs(dataModelSearchStore);
 const { updateMainSelectedModelBookmark } = dataModelSearchStore;
+
+onMounted(() => {
+  // 데이터 초기화
+  resetQuery();
+  // 선택된 데이터 모델 초기화
+  selectedModelList.value = [];
+  // 선택한 데이터 모델 값 삭제
+  isItemClicked.value = false;
+});
 </script>
 
 <style scoped></style>
