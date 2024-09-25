@@ -58,36 +58,41 @@
       </div>
       <div class="work-page" v-else>
         <div class="l-top-bar h-[48.8px]">
-          <editable-group
-            compKey="title"
-            :editable="isEditableNode"
-            :parent-edit-mode="isTitleEditMode"
-            @editCancel="editCancel"
-            @editDone="editDone"
-            @editIcon="editIcon"
-          >
-            <template #edit-slot>
-              <label class="hidden-text" for="title-modify"
+          <div class="h-group gap-2">
+            <editable-group
+              class="w-auto"
+              compKey="title"
+              :editable="isEditableNode"
+              :parent-edit-mode="isTitleEditMode"
+              @editCancel="editCancel"
+              @editDone="editDone"
+              @editIcon="editIcon"
+            >
+              <template #edit-slot>
+                <label class="hidden-text" for="title-modify"
                 >카테고리 이름 수정</label
-              >
-              <input
-                v-model="selectedTitleNodeValue"
-                placeholder="카테고리명에 대한 영역입니다."
-                maxlength="20"
-                required
-                id="title-modify"
-                class="text-input w-1/2"
-              />
-            </template>
-            <template #view-slot>
-              <h3 class="editable-group-title">
-                {{ selectedNodeCategory.name }}
-              </h3>
-            </template>
-          </editable-group>
-          <!--          TODO: [퍼블리싱] Notification-->
-          <div v-if="showSelectedTitleNodeNoti">
-            {{ selectedTitleNodeMsg }}
+                >
+                <input
+                  v-model="selectedTitleNodeValue"
+                  placeholder="카테고리명에 대한 영역입니다."
+                  maxlength="20"
+                  required
+                  id="title-modify"
+                  class="text-input w-1/2"
+                />
+              </template>
+              <template #view-slot>
+                <h3 class="editable-group-title">
+                  {{ selectedNodeCategory.name }}
+                </h3>
+              </template>
+            </editable-group>
+            <div class="notification notification-sm notification-error" v-if="showSelectedTitleNodeNoti">
+              <svg-icon class="notification-icon" name="error"></svg-icon>
+              <p class="notification-detail">
+                {{ selectedTitleNodeMsg }}
+              </p>
+            </div>
           </div>
           <button
             class="button button-error-lighter"

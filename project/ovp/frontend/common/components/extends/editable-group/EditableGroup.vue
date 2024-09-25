@@ -7,11 +7,6 @@
         <button class="button button-neutral-lighter" type="button" @click="cancelClick">취소</button>
         <button class="button button-primary-lighter" type="button" @click="doneClick">완료</button>
       </div>
-      <!-- TODO: [개발] 잘못된 입력 시 안내문구 출력 -->
-      <div class="notification notification-sm notification-error">
-        <svg-icon class="notification-icon" name="error"></svg-icon>
-        <p class="notification-detail">이름에는 문자, 숫자, '_', '-', '.', 괄호 ,' &' 만 사용할 수 있습니다.</p>
-      </div>
     </template>
     <template v-else>
       <!-- view 모드 -->
