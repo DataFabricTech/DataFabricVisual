@@ -167,19 +167,26 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
 
   const getFilters = async () => {
-    const { data } = await $api(`/api/search/filters`);
-
-    // 기본값 기준 사용할 필터 key 를 정리
-    const defaultFilters = createDefaultFilters();
-    const useFilters = Object.keys(defaultFilters);
-
-    useFilters.forEach((key: string) => {
-      (filters.value as Filters)[key].data = data[key];
-    });
+    filters.value = (await getUseFilters(createDefaultFilters())) as Filters;
 
     // 미분류 카테고리 ID 저장
     UNDEFINED_TAG_ID = filters.value[FILTER_KEYS.CATEGORY].data.children[0].id;
   };
+
+  const getUseFilters = async (defaultFilters: Filters | Partial<Filters>) => {
+    const { data } = await $api(`/api/search/filters`);
+
+    // 기본값 기준 사용할 필터 key 를 정리
+    const useFilters = Object.keys(defaultFilters);
+
+    const filtersData = defaultFilters;
+    useFilters.forEach((key: string) => {
+      (filtersData as Filters)[key].data = data[key];
+    });
+
+    return filtersData;
+  };
+
   const getFilter = async (filterKey: string) => {
     // TODO : 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
     const data = await $api(`/api/search/filter?field=${filterKey}`);
@@ -281,6 +288,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getSearchList,
     getFilter,
     getFilters,
+    getUseFilters,
     getPreviewData,
     getContainerPreviewData,
     setSortInfo,

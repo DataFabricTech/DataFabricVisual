@@ -1,69 +1,18 @@
 <template>
   <div class="lineage">
     <div class="filters">
-      <div class="select select-clean">
-        <menuSearchButton
-          :data="categoryList"
-          :selected-items="selectedCateList"
-          label-key="id"
-          value-key="value"
-          title="카테고리"
-          :is-multi="true"
-          @multiple-change="cateApplyFilter"
-        ></menuSearchButton>
-      </div>
-      <div class="select select-clean">
-        <menuSearchButton
-          :data="ownerList"
-          :selected-items="selectedOwnerList"
-          label-key="id"
-          value-key="value"
-          title="소유자"
-          :is-multi="true"
-          @multiple-change="ownerApplyFilter"
-        ></menuSearchButton>
-      </div>
-      <div class="select select-clean">
-        <menuSearchButton
-          :data="tagList"
-          :selected-items="selectedTagList"
-          label-key="id"
-          value-key="value"
-          title="태그"
-          :is-multi="true"
-          @multiple-change="tagApplyFilter"
-        ></menuSearchButton>
-      </div>
-      <div class="select select-clean">
-        <menuSearchButton
-          :data="serviceList"
-          :selected-items="selectedSerivceList"
-          label-key="id"
-          value-key="value"
-          title="서비스"
-          :is-multi="true"
-          @multiple-change="serviceApplyFilter"
-        ></menuSearchButton>
-      </div>
-      <button
-        class="button button-error-lighter button-sm"
-        type="button"
-        @click="reset"
-      >
-        <svg-icon class="button-icon" name="reset"></svg-icon>
-        <span class="button-title">초기화</span>
-      </button>
+      <data-lineage-filter :data="filters"></data-lineage-filter>
     </div>
     <Preview
       :preview-data="previewData"
       :model-type="dataModelType"
       @change="getPreviewOn"
-      :is-show-preview="previewOn"
+      :is-show-preview="isShowPreview"
     ></Preview>
     <LineageGraph
       ref="lineageRef"
       :lineageData="lineageData"
-      :previewOn="previewOn"
+      :previewOn="isShowPreview"
       @change="modelChoose"
     ></LineageGraph>
     <div class="lineage-control">
@@ -96,64 +45,39 @@
 </template>
 
 <script setup lang="ts">
-import { type Ref, ref } from "vue";
-import type { NodeData } from "@/components/search/lineage/lineage";
-import { useLineageStore } from "~/store/search/detail/lineage";
-import { useDataModelDetailStore } from "@/store/search/detail/index";
-
+import DataLineageFilter from "@/components/search/lineage/data-lineage-filter.vue";
 import LineageGraph from "~/components/search/lineage/lineage-graph.vue";
 import Preview from "~/components/common/preview/preview.vue";
-import menuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
+
+import type { NodeData } from "@/components/search/lineage/lineage";
+import { useLineageStore } from "@/store/search/detail/lineage";
+import { useDataModelDetailStore } from "@/store/search/detail/index";
 
 const lineageStore = useLineageStore();
-const {
-  lineageData,
-  previewData,
-  categoryList,
-  ownerList,
-  tagList,
-  serviceList,
-} = storeToRefs(lineageStore);
-const {
-  getLineageData,
-  getPreviewData,
-  getCateList,
-  getOwnerList,
-  getTagList,
-  getServiceList,
-} = lineageStore;
+const { getFilters, getLineageData, getPreviewData } = lineageStore;
+const { filters, lineageData, previewData, isShowPreview, lineageRef } =
+  storeToRefs(lineageStore);
 
 const dataModelDetailStore = useDataModelDetailStore();
 const { getDataModelFqn } = dataModelDetailStore;
 const { dataModelType } = storeToRefs(dataModelDetailStore);
 
 onBeforeMount(async () => {
+  await getFilters();
   // TODO: param => (fqn(외부스토어에서 호출), 필터) 추가 필요
   // await getLineageData(dataModelType, dataModelFqn);
-
-  await getCateList();
-
-  await getOwnerList();
-
-  await getTagList();
-
-  await getServiceList();
 });
-
-const lineageRef = ref(null);
-
-const previewOn: Ref<boolean> = ref<boolean>(false);
 
 const getPreviewOn = (isPreviewClosed: boolean) => {
   if (isPreviewClosed === false) {
     lineageRef.value.handleNodeOff();
-    previewOn.value = false;
+    isShowPreview.value = false;
   }
 };
 
 const modelChoose = async (nodeData: NodeData) => {
   if (nodeData) {
-    previewOn.value = true;
+    isShowPreview.value = true;
     console.log(nodeData.fqn);
     await getPreviewData(nodeData.fqn);
     previewData.value.modelInfo.model.name = nodeData.label;
@@ -176,47 +100,6 @@ const resetView = () => {
   if (lineageRef.value) {
     lineageRef.value.resetView();
   }
-};
-
-const reset = async () => {
-  if (lineageRef.value) {
-    selectedCateList.value = [];
-    selectedOwnerList.value = [];
-    selectedTagList.value = [];
-    selectedSerivceList.value = [];
-
-    await getLineageData(dataModelType.value, getDataModelFqn());
-
-    lineageRef.value.reset();
-  }
-
-  previewOn.value = false;
-};
-
-const selectedCateList: Ref<any> = ref([]);
-const selectedOwnerList: Ref<any> = ref([]);
-const selectedTagList: Ref<any> = ref([]);
-const selectedSerivceList: Ref<any> = ref([]);
-
-const cateApplyFilter = async (value) => {
-  selectedCateList.value = value;
-
-  await getLineageData();
-};
-const ownerApplyFilter = async (value) => {
-  selectedOwnerList.value = value;
-
-  await getLineageData(getDataModelType(), getDataModelFqn());
-};
-const tagApplyFilter = async (value) => {
-  selectedTagList.value = value;
-
-  await getLineageData(getDataModelType(), getDataModelFqn());
-};
-const serviceApplyFilter = async (value) => {
-  selectedSerivceList.value = value;
-
-  await getLineageData(getDataModelType(), getDataModelFqn());
 };
 </script>
 
