@@ -41,7 +41,7 @@
           <div class="editable-group w-auto" v-if="serviceStore.editInfo.owner">
             <menu-search-tag
               :data="serviceStore.userSearchList"
-              :selected-items="service.owner"
+              :selected-items="service.owner ?? []"
               label-key="name"
               value-key="id"
               title="값을 선택하세요"
