@@ -75,19 +75,20 @@ const onNodeChecked = (checkedNodes: TreeViewItem[]) => {
 const changeMultiple: (
   value: { key: string }[] | {},
   keyName: string,
-) => void = async (value: any[] | {}, keyName: string) => {
+) => void = (value: any[] | {}, keyName: string) => {
   isShowPreview.value = false;
   setSelectedFilters(keyName, _.map(value, "key"));
   setSelectedFilterItems(keyName, value);
-  await getLineageData(dataModelType.value, getDataModelFqn());
 };
 
-const setSelectedFilters = (keyName: string, selectedIds: any[]) => {
+const setSelectedFilters = async (keyName: string, selectedIds: any[]) => {
   if (_.isEmpty(selectedIds)) {
     delete selectedFilters.value[keyName];
   } else {
     selectedFilters.value[keyName] = selectedIds;
   }
+
+  await getLineageData(dataModelType.value, getDataModelFqn());
 };
 
 const setSelectedFilterItems = (keyName: string, value: any[] | {}) => {
