@@ -73,6 +73,7 @@
               <input
                 v-model="selectedTitleNodeValue"
                 placeholder="카테고리명에 대한 영역입니다."
+                maxlength="20"
                 required
                 id="title-modify"
                 class="text-input w-1/2"
@@ -84,6 +85,10 @@
               </h3>
             </template>
           </editable-group>
+          <!--          TODO: [퍼블리싱] Notification-->
+          <div v-if="showSelectedTitleNodeNoti">
+            {{ selectedTitleNodeMsg }}
+          </div>
           <button
             class="button button-error-lighter"
             @click="_deleteCategory"
@@ -125,7 +130,6 @@
           <div class="category-search" v-if="isModalButtonShow">
             <div class="l-top-bar">
               <search-input
-                class="w-[541px]"
                 :is-search-input-default-type="false"
                 :placeholder="'검색어를 입력하세요.'"
                 :inp-value="searchInputValue"
@@ -281,6 +285,10 @@ let previewIndex: string = "table";
 
 const selectedDescNodeValue = ref(selectedNodeCategory.value.desc || "");
 const isAllModelListChecked = ref<boolean>(false);
+
+const showSelectedTitleNodeNoti = ref(false);
+const selectedTitleNodeMsg = ref("");
+
 watch(
   () => selectedNodeCategory.value.name,
   (newVal) => {
@@ -481,6 +489,7 @@ const editCancel = (key: string) => {
     case "title":
       selectedTitleNodeValue.value = selectedNodeCategory.value.name;
       isTitleEditMode.value = false;
+      showSelectedTitleNodeNoti.value = false;
       break;
     case "desc":
       selectedDescNodeValue.value = selectedNodeCategory.value.desc;
@@ -489,26 +498,48 @@ const editCancel = (key: string) => {
   }
 };
 const editDone = (key: string) => {
+  let hasError = false;
+
   switch (key) {
     case "title":
       if (selectedTitleNodeValue.value === "") {
-        return;
+        selectedTitleNodeMsg.value =
+          $constants.GOVERNANCE.TITLE.EMPTY_ERROR_MSG;
+        hasError = true;
+      } else if (selectedTitleNodeValue.value.length === 1) {
+        selectedTitleNodeMsg.value =
+          $constants.GOVERNANCE.TITLE.MINIMUM_LENGTH_ERROR_MSG;
+        hasError = true;
+      } else if (
+        !$constants.GOVERNANCE.TITLE.REGEX.test(selectedTitleNodeValue.value)
+      ) {
+        selectedTitleNodeMsg.value =
+          $constants.GOVERNANCE.TITLE.REGEX_ERROR_MSG;
+        hasError = true;
+      } else {
+        selectedNodeCategory.value.name = selectedTitleNodeValue.value;
       }
-      selectedNodeCategory.value.name = selectedTitleNodeValue.value;
-      isTitleEditMode.value = false;
+
+      showSelectedTitleNodeNoti.value = hasError;
+      isTitleEditMode.value = hasError;
       break;
+
     case "desc":
       if (selectedDescNodeValue.value === "") {
         selectedNodeCategory.value.desc = "-";
-        return;
+      } else {
+        selectedNodeCategory.value.desc = selectedDescNodeValue.value;
       }
-      selectedNodeCategory.value.desc = selectedDescNodeValue.value;
+
       isDescEditMode.value = false;
       break;
   }
 
-  _editCategory();
+  if (!hasError) {
+    _editCategory();
+  }
 };
+
 const editIcon = (key: string) => {
   switch (key) {
     case "title":

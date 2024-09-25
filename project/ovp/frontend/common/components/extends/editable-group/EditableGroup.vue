@@ -40,8 +40,9 @@ const isEditMode = ref(props.parentEditMode);
 watch(
   () => props.parentEditMode,
   (newVal) => {
-    isEditMode.value = newVal;
-  }
+    isEditMode.value = newVal; // 부모의 변경된 값으로 반영
+  },
+  { immediate: true } // 즉시 값을 반영하기 위해 추가
 );
 
 const emit = defineEmits<{
@@ -55,9 +56,13 @@ const cancelClick = () => {
   emit("editCancel", props.compKey);
 };
 const doneClick = () => {
-  isEditMode.value = false;
   emit("editDone", props.compKey);
+
+  nextTick(() => {
+    isEditMode.value = props.parentEditMode;
+  });
 };
+
 const editIconClick = () => {
   isEditMode.value = true;
   emit("editIcon", props.compKey);
