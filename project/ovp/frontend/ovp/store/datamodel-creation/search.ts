@@ -282,6 +282,8 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * @param item
    */
   const changeTypeTab = (item: string) => {
+    cancelAllSelection();
+    setSelectedItem({});
     currTypeTab.value = item;
     resetReloadList(nSelectedListData.value);
   };
@@ -301,6 +303,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * @param item
    */
   const changeTab = (item: string) => {
+    cancelAllSelection();
+    setSelectedItem({});
+
     currTab.value = item;
     setSearchKeyword("");
 
@@ -330,6 +335,12 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     return resultList.map((item: any) => {
       return { ...item, idShowDetail: item.id === value };
     });
+  };
+
+  const cancelAllSelection = () => {
+    nSelectedListData.value = updateSelection(nSelectedListData.value, "");
+    searchResult.value = updateSelection(searchResult.value, "");
+    mySearchResult.value = updateSelection(mySearchResult.value, "");
   };
 
   /**
@@ -668,5 +679,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     updateSelectedModelBookmark,
     updateMainSelectedModelBookmark,
     setNSelectedListData,
+    cancelAllSelection,
   };
 });
