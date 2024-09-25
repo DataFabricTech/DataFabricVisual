@@ -19,6 +19,7 @@
           id="title-modify"
           class="text-input w-4/5"
           v-model="editData.name"
+          maxlength="20"
         />
         <div class="h-group gap-1">
           <button

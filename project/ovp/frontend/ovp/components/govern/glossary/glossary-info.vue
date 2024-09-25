@@ -21,6 +21,7 @@
           id="title-modify"
           class="text-input w-4/5"
           v-model="editData.name"
+          maxlength="20"
         />
         <div class="h-group gap-1">
           <button
@@ -239,8 +240,16 @@ function syncEditDataWithGlossary() {
 }
 
 async function removeGlossary() {
-  await deleteGlossary(glossary.id);
-  await getGlossaries();
+  if (confirm("데이터모델을 삭제 하시겠습니까?")) {
+    await deleteGlossary(glossary.id);
+    await getGlossaries()
+      .then(() => {
+        alert("삭제되었습니다.");
+      })
+      .catch((error) => {
+        console.error("삭제 중 오류 발생: ", error);
+      });
+  }
 }
 
 async function updateGlossary(
