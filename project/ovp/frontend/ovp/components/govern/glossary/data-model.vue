@@ -167,6 +167,11 @@ function toggleAllCheck(allCheck: boolean): void {
 }
 
 async function deleteDataModel(): Promise<void> {
+  if (selectedDataModels.value.length === 0) {
+    alert(`데이터모델을 선택해주세요`);
+    return;
+  }
+  
   const requestBody: object[] = [];
   selectedDataModels.value.forEach((id) => {
     requestBody.push({ id: id, type: "table" });
