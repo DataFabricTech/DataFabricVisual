@@ -45,9 +45,9 @@ const isEditMode = ref(props.parentEditMode);
 watch(
   () => props.parentEditMode,
   (newVal) => {
-    isEditMode.value = newVal; // 부모의 변경된 값으로 반영
+    isEditMode.value = newVal;
   },
-  { immediate: true } // 즉시 값을 반영하기 위해 추가
+  { immediate: true }
 );
 
 const emit = defineEmits<{

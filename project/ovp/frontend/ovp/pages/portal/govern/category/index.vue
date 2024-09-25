@@ -498,30 +498,30 @@ const editCancel = (key: string) => {
   }
 };
 const editDone = (key: string) => {
-  let hasError = false;
+  const hasError = ref(false);
 
   switch (key) {
     case "title":
       if (selectedTitleNodeValue.value === "") {
         selectedTitleNodeMsg.value =
           $constants.GOVERNANCE.TITLE.EMPTY_ERROR_MSG;
-        hasError = true;
+        hasError.value = true;
       } else if (selectedTitleNodeValue.value.length === 1) {
         selectedTitleNodeMsg.value =
           $constants.GOVERNANCE.TITLE.MINIMUM_LENGTH_ERROR_MSG;
-        hasError = true;
+        hasError.value = true;
       } else if (
         !$constants.GOVERNANCE.TITLE.REGEX.test(selectedTitleNodeValue.value)
       ) {
         selectedTitleNodeMsg.value =
           $constants.GOVERNANCE.TITLE.REGEX_ERROR_MSG;
-        hasError = true;
+        hasError.value = true;
       } else {
         selectedNodeCategory.value.name = selectedTitleNodeValue.value;
       }
 
-      showSelectedTitleNodeNoti.value = hasError;
-      isTitleEditMode.value = hasError;
+      showSelectedTitleNodeNoti.value = hasError.value;
+      isTitleEditMode.value = hasError.value;
       break;
 
     case "desc":
