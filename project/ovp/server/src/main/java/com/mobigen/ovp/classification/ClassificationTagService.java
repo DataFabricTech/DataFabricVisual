@@ -81,17 +81,32 @@ public class ClassificationTagService {
      * 분류내 태그 수정
      */
     public Object editClassificationTag(String tagId, EditTagRequest editTagRequest) throws Exception {
-        // 수정할 태그명의 중복체크를 위한 과정이 필요
-        // TODO : 태그 이름 중복 체크
-        // 중복 체크할 리스트 가져오기
-        ClassificationTagsResponse classificationTags = (ClassificationTagsResponse) classificationService.getClassificationTags(editTagRequest.getClassificationName());
-        List<Tag> classificationTagsList = classificationTags.getClassificationTagList();
-        // 태그 이름 중복 체크
-        boolean isDuplicate = classificationTagsList.stream().anyMatch(classificationTag -> classificationTag.getName().equalsIgnoreCase(editTagRequest.getTagName()));
 
-        if(isDuplicate) {
-            throw new Exception("Duplicate classification name");
+        // 수정할 태그명의 중복체크를 위한 과정
+        boolean isNameChanged = editTagRequest.getParam().stream().anyMatch(op -> op.getPath().equals("/name"));
+
+        // 태그 이름 수정이 있는 경우 중복 체크
+        if(isNameChanged) {
+            // 중복 체크할 리스트 가져오기
+            ClassificationTagsResponse classificationTags = (ClassificationTagsResponse) classificationService.getClassificationTags(editTagRequest.getClassificationName());
+            List<Tag> classificationTagsList = classificationTags.getClassificationTagList();
+
+            // 수정된 이름 가져오기
+            String newTagName = editTagRequest.getParam().stream()
+                    .filter(op -> op.getPath().equals("/name"))
+                    .findFirst()
+                    .map(op -> op.getValue().toString())
+                    .orElse(null);
+
+            // 태그 이름 중복 체크
+            boolean isDuplicate = classificationTagsList.stream()
+                    .anyMatch(classificationTag -> classificationTag.getName().equalsIgnoreCase(newTagName));
+
+            if(isDuplicate) {
+                throw new Exception("Duplicate tag name");
+            }
         }
+
         return classificationTagsClient.editClassificationTag(tagId, editTagRequest.getParam());
     }
 }
