@@ -26,7 +26,7 @@
         <div class="button-group">
           <button
             class="button button button-secondary-stroke"
-            @click="openModifyModal(tag.id)"
+            @click="openModifyModal(tag.id, tag.name)"
           >
             편집
           </button>
@@ -70,6 +70,7 @@ const {
   getClassificationTags,
   editFormInfo,
   setTagId,
+  setTagName,
 } = useClassificationStore;
 
 // 태그 추가 모달 ID
@@ -94,9 +95,11 @@ function openModal() {
 // 수정할 태그의 정보
 let formInfo = ref({ name: "", description: "" });
 
-async function openModifyModal(val: string) {
-  // 선택한 태그의 id값을 스토어에 저장
-  setTagId(val);
+async function openModifyModal(tagId: string, tagName: string) {
+  // 선택한 태그의 id, name값을 스토어에 저장
+  setTagId(tagId);
+  setTagName(tagName);
+
   // 태그정보 가져오기
   formInfo.value = editFormInfo();
   $vfm.open(MODAL_MODIFY_ID);

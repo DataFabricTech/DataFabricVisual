@@ -66,10 +66,9 @@
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
 import { type Ref, ref } from "vue";
-// import { classificationStore } from "@/store/classification/index";
-// const useClassificationStore = classificationStore();
-// const { formInfo } = storeToRefs(useClassificationStore);
-// const { getClassificationTags, editClassificationTag } = useClassificationStore; // TODO : 태그 수정하는 API 가진 함수 호출 할 곳!
+import { classificationStore } from "@/store/classification/index";
+const useClassificationStore = classificationStore();
+const { getClassificationTags, editClassificationTag } = useClassificationStore;
 
 const { $vfm } = useNuxtApp();
 
@@ -82,6 +81,12 @@ const closeModalTag = () => {
 interface TagFormState {
   name: string;
   description: string;
+}
+
+interface JsonPatchOperation {
+  op: string;
+  path: string;
+  value: any;
 }
 
 const props = defineProps({
@@ -100,7 +105,19 @@ const tagFormState: Ref<TagFormState> = ref({
   description: "",
 });
 
+// 기존 태그 정보값 저장
+const defaultInfo: TagFormState = {
+  name: "",
+  description: "",
+};
+
+const patch: JsonPatchOperation[] = [];
+
 watchEffect(() => {
+  // 기존 정보 저장
+  defaultInfo.name = props.formInfo.name;
+  defaultInfo.description = props.formInfo.description;
+
   tagFormState.value.name = props.formInfo.name || "";
   tagFormState.value.description = props.formInfo.description || "";
 });
@@ -111,62 +128,66 @@ const descriptionErrorMsg = "설명을 입력하세요.";
 const isShowNameNoti: Ref<boolean> = ref(false);
 const isShowDescNoti: Ref<boolean> = ref(false);
 
-// function validateForm(): void {
-//   console.log("validate 실행");
-// }
-//
-// function validateForm(): void {
-//   isShowDescNoti.value = false;
-//   if (!tagFormState.description) {
-//     isShowDescNoti.value = true;
-//   }
-//   nameErrorMsg.value = "";
-//   if (!tagFormState.name) {
-//     nameErrorMsg.value = "이름을 입력하세요.";
-//     isShowNameNoti.value = true;
-//     return;
-//   }
-//   nameErrorMsg.value = "";
-//   isShowNameNoti.value = false;
-//   if (!tagFormState.description) {
-//     isShowDescNoti.value = true;
-//     return;
-//   }
-//   isShowDescNoti.value = false;
-//
-//   // saveTag().then((response: any) => {
-//   //   if (response.errorMessage === "Duplicate tag name") {
-//   //     nameErrorMsg.value = "이름이 중복되었습니다.";
-//   //     isShowNameNoti.value = true;
-//   //     return;
-//   //   } else if (response.result === 1) {
-//   //     getClassificationTags(); // 태그 리스트 조회 재호출
-//   //     closeModal();
-//   //   }
-//   // });
-//   saveTag();
-// }
-//
-// function saveTag() {
-//   const editData = {
-//     name: tagFormState.name,
-//     description: tagFormState.description,
-//   };
-//   console.log(
-//     "수정된 에디트 데이터 : 추후 patch형식으로 바꿔야함 ===> ",
-//     editData,
-//   );
-//   return editClassificationTag(editData);
-// }
+function validateForm(): void {
+  isShowDescNoti.value = false;
+  if (!tagFormState.value.description) {
+    isShowDescNoti.value = true;
+  }
+  nameErrorMsg.value = "";
+  // 이름 값이 없을 경우 return 시키기
+  if (!tagFormState.value.name) {
+    nameErrorMsg.value = "이름을 입력하세요.";
+    isShowNameNoti.value = true;
+    return;
+  }
+  nameErrorMsg.value = "";
+  isShowNameNoti.value = false;
+  // 설명 값이 없을 경우 return 시키기
+  if (!tagFormState.value.description) {
+    isShowDescNoti.value = true;
+    return;
+  }
+  isShowDescNoti.value = false;
 
-function closeModal(): void {
-  resetForm();
-  $vfm.close(props.modalId);
+  // store에 있는 edit 호출하기
+  saveTag(tagFormState.value.name, tagFormState.value.description).then(
+    (response: any) => {
+      if (response.errorMessage === "Duplicate tag name") {
+        nameErrorMsg.value = "이름이 중복되었습니다.";
+        isShowNameNoti.value = true;
+        return;
+      } else if (response.result === 1) {
+        getClassificationTags(); // 태그 리스트 조회 재호출
+        closeModal();
+      }
+    },
+  );
 }
 
-function resetForm(): void {
-  // tagFormState.name = "";
-  // tagFormState.description = "";
+function saveTag(name: any, description: any) {
+  // patch 배열 초기화
+  patch.length = 0;
+
+  // 기존 name값과 수정하려는 name값이 다를 경우
+  if (defaultInfo.name !== name) {
+    patch.push({ op: "replace", path: "/name", value: name });
+  }
+
+  // 기존 description값과 수정하려는 description값이 다를 경우
+  if (defaultInfo.description !== description) {
+    patch.push({ op: "replace", path: "/description", value: description });
+  }
+  // patch 배열이 비어있지 않은 경우에만 서버에 요청
+  if (patch.length > 0) {
+    const editData = {
+      param: patch,
+    };
+    return editClassificationTag(editData);
+  }
+}
+
+function closeModal(): void {
+  $vfm.close(props.modalId);
 }
 </script>
 

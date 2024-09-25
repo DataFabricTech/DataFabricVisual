@@ -78,6 +78,7 @@ export const classificationStore = defineStore("classification", () => {
   const currentClassificationID: Ref = ref("");
 
   const tagID: Ref<string> = ref("");
+  const tagNAME: Ref<string> = ref("");
 
   // 현재 태그의 분류 name값
   const currentClassificationTagName: Ref<string> = ref("");
@@ -199,10 +200,13 @@ export const classificationStore = defineStore("classification", () => {
   const setTagId = (tagId: string) => {
     tagID.value = tagId;
   };
+  const setTagName = (tagName: string) => {
+    tagNAME.value = tagName;
+  };
 
   // 태그 수정 버튼을 클릭시 해당 태그의 name, description값을 가져오는 함수
   const editFormInfo = () => {
-    // classificationTagList에서 tagId에 해당하는 태그를 찾기
+    // classificationTagList에서 해당 태그찾기
     const tag = classificationTagList.value.find(
       (tag) => tag.id === tagID.value,
     );
@@ -221,8 +225,11 @@ export const classificationStore = defineStore("classification", () => {
   };
 
   // 태그 수정 API 호출
-  const editClassificationTag = (editData: JsonPatchOperation[]) => {
-    return $api(`/api/tags/edit/${currentClassificationID}`, {
+  const editClassificationTag = (editData: any) => {
+    editData["classificationName"] = currentClassificationTagName.value;
+    editData["tagName"] = tagNAME.value;
+
+    return $api(`/api/tags/edit/${tagID.value}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json-patch+json",
@@ -252,7 +259,7 @@ export const classificationStore = defineStore("classification", () => {
     editFormInfo,
     editClassificationTag,
     setTagId,
+    setTagName,
     tagID,
-    // formInfo,
   };
 });
