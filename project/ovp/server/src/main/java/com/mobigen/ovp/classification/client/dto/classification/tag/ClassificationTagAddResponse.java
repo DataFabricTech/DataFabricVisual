@@ -7,9 +7,11 @@ import lombok.Data;
 public class ClassificationTagAddResponse {
     private String name;
     private String description;
+    private String classification;
 
     public ClassificationTagAddResponse(ClassificationTagAdd classificationTagAdd) {
         this.name = classificationTagAdd.getName();
         this.description = classificationTagAdd.getDescription();
+        this.classification =  classificationTagAdd.getClassification();
     }
 }

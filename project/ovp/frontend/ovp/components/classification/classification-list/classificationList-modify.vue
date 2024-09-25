@@ -1,7 +1,7 @@
 <template>
   <div class="work-page">
     <div class="l-top-bar">
-      <div class="v-group gap-[20px]">
+      <div class="w-[calc(100%-50px)]">
         <editable-group
           :parent-edit-mode="isNameEditable"
           compKey="name"
@@ -93,11 +93,15 @@ interface ClassificationDetail {
 let defaultData: ClassificationDetail = {
   id: "",
   name: "",
-  displayName: "",
+  displayName: "-",
   description: "",
 };
 
 const newData = computed(() => {
+  if (!classificationDetailData.value) {
+    return _.cloneDeep(defaultData);
+  }
+
   if (classificationDetailData.value.description?.length === 0) {
     classificationDetailData.value.description.concat("-");
   }
@@ -188,6 +192,11 @@ const confirmDelete = () => {
       .then(async () => {
         alert("삭제되었습니다.");
         await getClassificationList(); // 분류목록 API 재호출
+
+        if (!classificationDetailData.value.id) {
+          return;
+        }
+
         getClassificationDetail(); // 분류 상세 정보 API 호출
         getClassificationTags(); // 태그 정보 API 호출
       })

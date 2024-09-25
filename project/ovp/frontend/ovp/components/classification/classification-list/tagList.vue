@@ -15,8 +15,12 @@
       <th>설명</th>
       <th>관리</th>
     </tr>
-    <tr v-for="tag in classificationTagList" :key="tag.id">
-      <td>{{ tag.displayName }}</td>
+    <tr
+      v-if="classificationTagList.length !== 0"
+      v-for="tag in classificationTagList"
+      :key="tag.id"
+    >
+      <td>{{ tag.name }}</td>
       <td>{{ tag.description }}</td>
       <td>
         <div class="button-group">
@@ -35,8 +39,17 @@
         </div>
       </td>
     </tr>
+    <tr v-else>
+      <td colspan="3">
+        <div class="no-result">
+          <div class="notification">
+            <svg-icon class="notification-icon" name="info"></svg-icon>
+            <p class="notification-detail">등록된 정보가 없습니다.</p>
+          </div>
+        </div>
+      </td>
+    </tr>
   </table>
-  <tag-create :modal-id="MODAL_ID" @close-modal="closeModal"></tag-create>
   <!--  <tag-modify-->
   <!--    v-if="showModifyTag == true"-->
   <!--    @close-modal="closeModifyTag"-->
@@ -45,7 +58,8 @@
 
 <script setup lang="ts">
 import { classificationStore } from "@/store/classification/index";
-const { $vfm } = useNuxtApp();
+import { useModal } from "vue-final-modal";
+import tagCreate from "@/components/classification/modal/tag-create.vue";
 
 const useClassificationStore = classificationStore();
 const { classificationTagList } = storeToRefs(useClassificationStore);
@@ -55,11 +69,18 @@ const { deleteClassificationTag, getClassificationTags } =
 // 태그 추가 모달 ID
 const MODAL_ID = "modal-classificationTag";
 
+const { open, close } = useModal({
+  component: tagCreate,
+  attrs: {
+    modalId: MODAL_ID,
+    onClose() {
+      close();
+    },
+  },
+});
+
 function openModal() {
-  $vfm.open(MODAL_ID);
-}
-function closeModal() {
-  $vfm.close(MODAL_ID);
+  open();
 }
 
 const confirmDelete = (tagId: string) => {

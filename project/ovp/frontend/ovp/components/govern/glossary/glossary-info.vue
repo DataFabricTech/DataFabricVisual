@@ -56,7 +56,10 @@
         삭제
       </button>
     </div>
-    <div class="work-contents">
+    <div
+      :id="store.tab === 'term' ? 'termList' : 'activitiesList'"
+      class="work-contents"
+    >
       <!-- 결과 없을 시 no-result 표시  -->
       <div class="no-result" v-if="Object.keys(glossary).length === 0">
         <div class="notification">
@@ -160,14 +163,17 @@
       <div v-if="!isGlossaryNull()">
         <div class="tab tab-line">
           <ul class="tab-list">
-            <li :class="getTabItemClassName('term')" @click="changeTab('term')">
+            <li
+              :class="getTabItemClassName('term')"
+              @click="clickedTab('term')"
+            >
               <button class="tab-button">
                 <p class="tab-button-text">용어</p>
               </button>
             </li>
             <li
               :class="getTabItemClassName('activity')"
-              @click="changeTab('activity')"
+              @click="clickedTab('activity')"
             >
               <button class="tab-button">
                 <p class="tab-button-text">활동사항</p>
@@ -193,6 +199,7 @@ import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import type { JsonPatchOperation, Tag } from "~/type/common";
 import { reactive, watch, onMounted, type Ref } from "vue";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
+
 const {
   glossary,
   tags,
@@ -205,10 +212,10 @@ const {
   changeEditGlossaryMode,
   createTagOperation,
   getGlossaryActivitiesCount,
-  resetTerms,
   getTerms,
-  resetGlossaryActivities,
+  resetTerms,
   getGlossaryActivities,
+  resetGlossaryActivities
 } = useGlossaryStore();
 const store = useGlossaryStore();
 
@@ -233,7 +240,6 @@ watch(
 
 onMounted(() => {
   syncEditDataWithGlossary();
-  getGlossaryActivitiesCount(`<%23E::glossary::${glossary.name}>`);
 });
 
 const isGlossaryNull = (): boolean => {
@@ -282,4 +288,15 @@ async function changeTag(items: MenuSearchItemImpl[]): Promise<void> {
   await editGlossary(glossary.id, operations);
   await getGlossaries();
 }
+
+const clickedTab = (tabKey: string) => {
+  changeTab(tabKey);
+  if (tabKey === "term") {
+    resetTerms();
+    getTerms();
+  } else {
+    resetGlossaryActivities();
+    getGlossaryActivities();
+  }
+};
 </script>

@@ -23,6 +23,7 @@ export function DataModelApiListComposition(
   emitSortChange: (value: string) => void,
   emitSearchChange: (value: string) => void,
   emitCheckItem: (value: any[]) => void,
+  emitFilterReset: (value: any[]) => void,
 ): DataModelApiListCompositionImpl {
   const compos = DataModelListComposition(
     props,
@@ -32,7 +33,7 @@ export function DataModelApiListComposition(
     emitCheckItem,
   );
 
-  const setListData: () => void = () => {
+  const setListDataInApi: () => void = () => {
     // TOOD: store로 빼기 -> listData 초기화를 store에서 진행하기.,
     compos.listData.value = props.data;
   };
@@ -41,7 +42,7 @@ export function DataModelApiListComposition(
    * 리스트 값이 변경되면 일반 리스트의 속성값도 변경되야하므로 다중 watch
    */
   watchEffect(() => {
-    setListData();
+    setListDataInApi();
   });
   compos.setSearchFilter();
 
@@ -49,7 +50,8 @@ export function DataModelApiListComposition(
    * (이벤트) 정렬 변경
    * @param value
    */
-  const selectedSort: Ref<string> = ref("");
+  const selectedSort: Ref<string> = ref("totalVotes_desc");
+
   const onChangeSort: (value: string) => void = (value) => {
     selectedSort.value = value;
     emitSortChange(selectedSort.value);
@@ -91,11 +93,14 @@ export function DataModelApiListComposition(
    */
   const onResetSearchFilter: () => void = () => {
     compos.setSearchFilter();
-    selectedSort.value = "";
+    selectedSort.value = "totalVotes_desc";
+    let resetFilterInfo = {
+      searchLabel: compos.searchLabel.value,
+      selectedFilter: compos.selectedFilter,
+      selectedSort: selectedSort.value,
+    };
 
-    emitSearchChange(compos.searchLabel.value);
-    emitFilterChange(compos.selectedFilter);
-    emitSortChange(selectedSort.value);
+    emitFilterReset(resetFilterInfo);
   };
 
   /**

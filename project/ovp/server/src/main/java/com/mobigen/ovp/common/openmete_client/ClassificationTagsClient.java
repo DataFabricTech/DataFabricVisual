@@ -34,7 +34,7 @@ public interface ClassificationTagsClient {
      * @return
      */
     @GetMapping("")
-    ClassificationTag getClassificationTags(@RequestParam(defaultValue = "da") String parent);
+    ClassificationTag getClassificationTags(@RequestParam(defaultValue = "100000") String parent, @RequestParam Integer limit);
 
     @PostMapping("")
     Object createTag(@RequestBody Map<String, Object> params);
@@ -46,5 +46,5 @@ public interface ClassificationTagsClient {
      * @return
      */
     @PostMapping("")
-    ClassificationTagAdd addClassificationTag(@RequestBody ClassificationTagAdd classificationTagAdd);
+    Object addClassificationTag(@RequestBody ClassificationTagAdd classificationTagAdd);
 }

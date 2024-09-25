@@ -1,8 +1,8 @@
 package com.mobigen.ovp.classification;
 
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
+import com.mobigen.ovp.classification.client.dto.request.ClassificationAddRequest;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
-import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationAdd;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,10 +22,11 @@ import java.util.List;
 @RequiredArgsConstructor
 @Slf4j
 public class ClassificationController {
-    private  final ClassificationService classificationService;
+    private final ClassificationService classificationService;
 
     /**
      * 분류 리스트 조회
+     *
      * @return
      */
     @ResponseJsonResult
@@ -36,8 +37,9 @@ public class ClassificationController {
 
     /**
      * 분류 상세 조회
-     * @oaran id
+     *
      * @return
+     * @oaran id
      */
     @ResponseJsonResult
     @GetMapping("/list/{id}")
@@ -49,8 +51,9 @@ public class ClassificationController {
 
     /**
      * 분류와 매칭되는 태그의 정보 조회 - 위에 2개와 같이 호출
-     * @oaran name
+     *
      * @return
+     * @oaran name
      */
     @ResponseJsonResult
     @GetMapping("/name/{name}")
@@ -62,6 +65,7 @@ public class ClassificationController {
 
     /**
      * 분류 수정
+     *
      * @param id
      * @return
      */
@@ -74,12 +78,13 @@ public class ClassificationController {
 
     /**
      * 선택한 분류를 클릭할 때, 할때마다 해당되는 태그목록이 조회되어 불러옴
+     *
      * @param parent
      * @return
      */
     @ResponseJsonResult
     @GetMapping("/tags")
-    public Object getClassificationTags(@RequestParam String parent) throws Exception{
+    public Object getClassificationTags(@RequestParam String parent) throws Exception {
         log.info("");
 
         return classificationService.getClassificationTags(parent);
@@ -87,6 +92,7 @@ public class ClassificationController {
 
     /**
      * 분류 삭제
+     *
      * @param id
      */
     @ResponseJsonResult(errorMessage = "Open-metadata 분류 삭제 오류")
@@ -94,13 +100,15 @@ public class ClassificationController {
     public Object deleteClassification(@PathVariable String id) throws Exception {
         return classificationService.deleteClassification(id);
     }
+
     /**
      * 분류 추가
+     *
      * @return
      */
     @ResponseJsonResult
     @PostMapping("/add")
-    public Object addClassification(@RequestBody ClassificationAdd classificationAdd) throws Exception {
+    public Object addClassification(@RequestBody ClassificationAddRequest classificationAdd) throws Exception {
         return classificationService.addClassification(classificationAdd);
     }
 }

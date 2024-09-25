@@ -98,6 +98,7 @@ const {
   isBoxSelectedStyle,
   isSearchResultNoData,
   searchResultLength,
+  currentPreviewId,
 } = storeToRefs(searchCommonStore);
 
 const layoutHeaderStore = useLayoutHeaderStore();
@@ -106,15 +107,15 @@ const { searchInputValue } = storeToRefs(layoutHeaderStore);
 const getPreviewCloseStatus = (option: boolean) => {
   isShowPreview.value = option;
   isBoxSelectedStyle.value = false;
-  currentPreviewId = "";
+  currentPreviewId.value = "";
 };
 
-let currentPreviewId: string | number = "";
 let previewIndex: string = "table";
 
 const previewClick = async (data: object) => {
   const { id, fqn, type } = data as { id: string; fqn: string; type: string };
-  if (id === currentPreviewId) {
+
+  if (id === currentPreviewId.value) {
     return;
   }
 
@@ -124,7 +125,7 @@ const previewClick = async (data: object) => {
 
   isShowPreview.value = true;
   isBoxSelectedStyle.value = true;
-  currentPreviewId = id;
+  currentPreviewId.value = id;
   previewIndex = type;
 };
 
@@ -172,8 +173,12 @@ watchEffect(() => {
 
 await getFilters();
 
+onMounted(() => {
+  resetReloadList();
+});
+
 onBeforeMount(() => {
-  changeTab("table");
+  changeTab("table", false);
 });
 
 onBeforeRouteLeave((to, from, next) => {

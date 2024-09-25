@@ -16,7 +16,7 @@
         :modelList="selectedModelList"
         :dataModelFilter="filters"
         :modelListCnt="selectedModelListCnt"
-        @change="addModelInstance.open"
+        @change="addModelInstance.open()"
         @delete="deleteDataModel"
         @item-click="onClickDataModelItem"
         @bookmark-change="updateMainSelectedModelBookmark"
@@ -107,14 +107,9 @@ const {
 
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
-const { filters, nSelectedListData, selectedModelList, selectedModelListCnt } =
+const { filters, selectedModelList, selectedModelListCnt } =
   storeToRefs(dataModelSearchStore);
-const { onClickBookmark, updateMainSelectedModelBookmark } =
-  dataModelSearchStore;
-
-onMounted(() => {
-  alert("개발중 입니다.");
-});
+const { updateMainSelectedModelBookmark } = dataModelSearchStore;
 </script>
 
 <style scoped></style>

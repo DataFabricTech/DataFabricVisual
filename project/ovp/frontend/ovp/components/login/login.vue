@@ -79,20 +79,18 @@
               로그인
             </button>
             <div class="form-foot-group">
-              <button
+              <nuxt-link
+                :to="'/portal/login/pw-find'"
                 class="button button-primary-ghost button-sm"
-                type="button"
               >
-                <nuxt-link :to="'/portal/login/pw-find'">
-                  비밀번호 찾기
-                </nuxt-link>
-              </button>
-              <button
+                비밀번호 찾기
+              </nuxt-link>
+              <nuxt-link
+                :to="'/portal/login/sign-up'"
                 class="button button-primary-ghost button-sm"
-                type="button"
               >
-                <nuxt-link :to="'/portal/login/sign-up'"> 회원가입</nuxt-link>
-              </button>
+                회원가입
+              </nuxt-link>
             </div>
           </div>
         </div>
@@ -132,8 +130,8 @@ const login = async () => {
     return;
   }
 
-  let id = loginEmailOrId.value;
-  let password = loginPassword.value;
+  let id = loginEmailOrId.value.trim();
+  let password = loginPassword.value.trim();
 
   loginValidationReset();
 

@@ -29,7 +29,9 @@ export function DataModelListComposition(
         label: item[props.labelKey],
         value: item[props.valueKey],
         isChecked: false, // checkbox 선택 여부
-        idShowDetail: false, // 단일선택(아이템) 여부
+        idShowDetail: $_isUndefined(item.idShowDetail)
+          ? false
+          : item.idShowDetail, // 단일선택(아이템) 여부
         isShowContextMenu: false, // "복사" 컨텍스트 메뉴 클릭 여부
         isShowContextMenuBtn: false, // 컨텍스트 메뉴 버튼 클릭 여부
         isShow: true, // 검색 처리
@@ -105,25 +107,23 @@ export function DataModelListComposition(
    */
   const checkFilter = (item: any): boolean => {
     for (const key in selectedFilter) {
-      let itemValue = item[key];
-
+      const itemValue = item[key];
       // 필터 선택값이 존재하지 않으면 통과
       const selectedFilterValue: any = selectedFilter[key];
       if (_.isEmpty(selectedFilterValue)) {
         continue;
       }
 
-      // 데이터 값 비교
-      if (Array.isArray(itemValue)) {
-        itemValue = itemValue as [];
-        const isValueNotPresent = selectedFilterValue.some((filterValue) =>
-          itemValue.includes(filterValue.key),
-        );
-        if (!isValueNotPresent) {
+      if (key === "category") {
+        const valueExists = selectedFilterValue.some((item) => {
+          return item.id === itemValue.id;
+        });
+
+        if (!valueExists) {
           return false;
         }
       } else {
-        // 문자열 일때 비교
+        // 데이터 값 비교
         const valueExists = selectedFilterValue.some(
           (item) => item.key === itemValue,
         );

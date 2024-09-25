@@ -16,21 +16,24 @@
         :label-text="'데이터 모델 검색'"
         @update:value="updateSearchInputValue"
       ></SearchInput>
-      <div class="profile ml-auto">
+      <div class="profile ml-auto" ref="dropdown">
         <span class="profile-avatar"> {{ profileFirstWord }} </span>
         <div class="profile-text">{{ user.displayName || user.name }}</div>
         <button
           class="button button-sm button-neutral-ghost"
           @click="isDropdownOpen = !isDropdownOpen"
         >
-          <svg-icon class="svg-icon" name="chevron-down-medium"></svg-icon>
+          <svg-icon
+            class="svg-icon button-icon"
+            :class="{ 'rotate-180': isDropdownOpen }"
+            name="chevron-down-medium"
+          />
           <span class="hidden-text">내 메뉴</span>
         </button>
         <div
           class="dropdown"
           style="top: 40px; right: 16px"
           v-if="isDropdownOpen"
-          ref="dropdown"
         >
           <ul class="dropdown-list">
             <li class="dropdown-item">
@@ -62,14 +65,15 @@ import { useSearchCommonStore } from "~/store/search/common";
 import { useUserStore } from "@/store/user/userStore";
 import { useLayoutHeaderStore } from "~/store/layout/header";
 import SearchInput from "@extends/search-input/SearchInput.vue";
+import { useDropdownHelper } from "~/composables/dropDownHelper";
 
 // Store
 const searchCommonStore = useSearchCommonStore();
 const { setSearchKeyword, resetReloadList } = searchCommonStore;
 
 const userStore = useUserStore();
-const { getUserInfo } = userStore;
-const { user } = storeToRefs(userStore);
+const { getUserInfo, setProfileFirstWord } = userStore;
+const { user, profileFirstWord } = storeToRefs(userStore);
 
 const layoutHeaderStore = useLayoutHeaderStore();
 const { searchInputValue } = storeToRefs(layoutHeaderStore);
@@ -79,8 +83,8 @@ const router = useRouter();
 
 const header = ref();
 const dropdown = ref();
-const isDropdownOpen = ref(false);
-const profileFirstWord = ref("");
+
+const { isDropdownOpen, setHandler } = useDropdownHelper();
 
 const updateSearchInputValue = (newValue: string) => {
   searchInputValue.value = newValue;
@@ -96,19 +100,6 @@ const onClickSearch = (value: string) => {
   setSearchKeyword(value);
   resetReloadList();
   router.push({ path: `/portal/search` });
-};
-
-const handleClickOutside = (event: any) => {
-  if (
-    dropdown.value &&
-    !dropdown.value.contains(event.target) &&
-    !header.value.contains(event.target)
-  ) {
-    isDropdownOpen.value = false;
-  }
-};
-const setProfileFirstWord = (name: string) => {
-  profileFirstWord.value = name.slice(0, 1).toUpperCase();
 };
 
 const logOut = async () => {
@@ -127,17 +118,12 @@ const logOut = async () => {
 await getUserInfo();
 
 const moveMyPage = () => {
-  alert("개발중 입니다.");
   isDropdownOpen.value = false;
 };
 
-onMounted(async () => {
+onMounted(() => {
   setProfileFirstWord(user.value.displayName || user.value.name);
-  document.addEventListener("click", handleClickOutside);
-});
-
-onUnmounted(() => {
-  document.removeEventListener("click", handleClickOutside);
+  setHandler(dropdown.value, header.value);
 });
 </script>
 

@@ -416,6 +416,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   const currentTab: Ref<string> = ref("table");
   const changeTab = async (item: string) => {
     checkReachedCount.value = false;
+    selectedDataModelList.value = [];
     initTab.value = item;
     currentTab.value = item;
     await resetReloadList();

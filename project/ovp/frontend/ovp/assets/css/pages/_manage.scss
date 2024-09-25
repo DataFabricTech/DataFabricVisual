@@ -80,6 +80,7 @@
 .service-form {
   @include flex($direction: column, $horizontal: flex-start);
 
+  flex-grow: 1;
   width: 100%;
   max-height: 430px;
   padding: $spacing-16;
@@ -159,6 +160,14 @@
   width: 100%;
   padding: $spacing-16 $spacing-16 0;
   border-top: 1px solid $neutral-100;
+
+  .notification-error {
+    align-items: flex-start;
+
+    .notification-icon {
+      margin-top: $spacing-2;
+    }
+  }
 }
 
 //log modal
@@ -168,6 +177,16 @@
   height: 400px;
 }
 
+//서비스 저장소,수집,연결정보 탭
+.service-page {
+  position: relative;
+  padding-inline: $spacing-16;
+  flex-grow: 1;
+
+  .ag-theme-alpine.ag-theme-quartz {
+    height: 100%;
+  }
+}
 
 //overview
 .overview {
@@ -175,8 +194,13 @@
   flex-direction: column;
   gap: $spacing-40;
 
+  &-info {
+    margin-left: auto;
+    color: $neutral-400;
+  }
+
   &-title {
-    @include font-size('15');
+    @include font-size('16');
 
     font-weight: 600;
   }
@@ -226,6 +250,20 @@
       height: 100%;
       flex-grow: 1;
     }
+  }
+
+  .ag-theme-alpine.ag-theme-quartz .ag-root .ag-header {
+    height: 42px !important;
+    min-height: 42px !important;
+    background-color: $neutral-0;
+  }
+
+  .ag-header-row.ag-header-row-column {
+    height: 42px !important;
+  }
+
+  .ag-theme-alpine .ag-row {
+    border-width: 0;
   }
 }
 

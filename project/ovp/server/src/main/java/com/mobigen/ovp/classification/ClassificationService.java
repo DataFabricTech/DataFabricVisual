@@ -1,21 +1,18 @@
 package com.mobigen.ovp.classification;
 
-import com.mobigen.ovp.classification.client.dto.classification.ClassificationAddResponse;
 import com.mobigen.ovp.classification.client.dto.classification.ClassificationDetailByNameResponse;
 import com.mobigen.ovp.classification.client.dto.classification.ClassificationDetailResponse;
 import com.mobigen.ovp.classification.client.dto.classification.ClassificationEditResponse;
 import com.mobigen.ovp.classification.client.dto.classification.ClassificationResponse;
 import com.mobigen.ovp.classification.client.dto.classification.tag.ClassificationTagsResponse;
+import com.mobigen.ovp.classification.client.dto.request.ClassificationAddRequest;
 import com.mobigen.ovp.common.openmete_client.ClassificationClient;
 import com.mobigen.ovp.common.openmete_client.ClassificationTagsClient;
 import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.dto.classification.Classification;
-import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationAdd;
 import com.mobigen.ovp.common.openmete_client.dto.classification.ClassificationData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,7 +31,7 @@ public class ClassificationService {
      * @return
      */
     public Object getClassifications() {
-        ClassificationData response = classificationClient.getClassifications();
+        ClassificationData response = classificationClient.getClassifications(100000);
         // 제외할 이름들을 리스트로 작성
         List<String> excludedNames = List.of("PersonalData", "PII", "ovp_category", "Tier");
 
@@ -43,7 +40,7 @@ public class ClassificationService {
         List<Classification> filteredList = response.getData().stream()
                 .filter(classification -> {
                     String displayName = classification.getDisplayName();
-                    if(displayName == null) {
+                    if (displayName == null) {
                         displayName = classification.getName();
                     }
                     return !excludedNames.contains(displayName);
@@ -98,7 +95,7 @@ public class ClassificationService {
      * @throws Exception
      */
     public Object getClassificationTags(String parent) {
-        return new ClassificationTagsResponse(classificationTagsClient.getClassificationTags(parent));
+        return new ClassificationTagsResponse(classificationTagsClient.getClassificationTags(parent, 100000));
     }
 
 
@@ -116,7 +113,7 @@ public class ClassificationService {
      *
      * @param classificationAdd
      */
-    public Object addClassification(ClassificationAdd classificationAdd) throws Exception {
+    public Object addClassification(ClassificationAddRequest classificationAddRequest) throws Exception {
         // classificationResponse 가져오기
         ClassificationResponse classificationResponse = (ClassificationResponse) getClassifications();
 
@@ -124,13 +121,13 @@ public class ClassificationService {
         List<Classification> classifications = classificationResponse.getClassificationList();
 
         // 분류 이름 중복 체크
-        boolean isDuplicate = classifications.stream().anyMatch(classification -> classification.getName().equalsIgnoreCase(classificationAdd.getName()));
+        boolean isDuplicate = classifications.stream().anyMatch(classification -> classification.getName().equalsIgnoreCase(classificationAddRequest.getName()));
 
-        if(isDuplicate) {
+        if (isDuplicate) {
             throw new Exception("Duplicate classification name");
         }
 
 
-        return new ClassificationAddResponse(classificationClient.addClassification(classificationAdd));
+        return classificationClient.addClassification(classificationAddRequest);
     }
 }

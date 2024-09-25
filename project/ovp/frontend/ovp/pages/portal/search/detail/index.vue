@@ -151,19 +151,15 @@ async function changeTab(tab: number | string) {
       await getProfile();
       break;
     case "query":
-      alert("개발중 입니다.");
       await getQuery();
       break;
     case "lineage":
-      alert("개발중 입니다.");
       await getLineageData(dataModelType.value, getDataModelFqn());
       // await getFilters();
       break;
     case "knowledge":
-      alert("개발중 입니다.");
       break;
     case "recommended":
-      alert("개발중 입니다.");
       break;
   }
   currentComponent.value = _.find(tabOptions, ["value", tab])?.component;

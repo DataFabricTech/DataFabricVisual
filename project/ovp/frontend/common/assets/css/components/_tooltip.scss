@@ -1,0 +1,10 @@
+.dynamic-tooltip {
+  @include z-index('float');
+  @include font-size('12');
+  @include box-shadow('lg');
+  position: fixed;
+  padding: $spacing-12;
+  border-radius: $border-radius-12;
+  background-color: $primary-700;
+  color: $primary-100;
+}

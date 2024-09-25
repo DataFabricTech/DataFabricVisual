@@ -50,6 +50,8 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
   const getCategoryList = async () => {
     const data = await $api("/api/category/list");
     categoryList.value = data.data.children;
+    cateTitle.value = categoryList.value[0].name;
+    tree_selectedItem.value = categoryList.value[0];
   };
 
   const getTagList = async () => {
@@ -137,6 +139,7 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
         query: query.value,
         referenceModels: referenceModels.value,
       },
+      description: modelDescription.value,
       tags: tags,
     };
 

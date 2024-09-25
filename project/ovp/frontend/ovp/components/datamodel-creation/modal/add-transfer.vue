@@ -11,7 +11,6 @@
         @change="onChangeTab"
       >
         <template #all>
-          <!-- 전체 탭 시작  -->
           <data-model-api-list
             class="h-full"
             :filter="filters"
@@ -23,6 +22,7 @@
             value-key="id"
             :use-item-delete-btn="false"
             :is-multi="true"
+            :use-filter="true"
             :use-sort="true"
             :use-infinite="true"
             :use-live-search="false"
@@ -36,11 +36,12 @@
             @filter-change="onClickApiFilterChange"
             @sort-change="onClickApiSortChange"
             @search-change="onClickApiSearchChange"
+            @filter-reset="onClickApiReset"
           >
             <template v-slot:tab>
               <Tab
                 class="tab-line"
-                :data="$constants.COMMON.DATA_TYPE"
+                :data="searchListDetailTab"
                 label-key="label"
                 value-key="value"
                 current-item-type="value"
@@ -51,21 +52,41 @@
           </data-model-api-list>
         </template>
         <template #my>
-          <data-model-accordian-list
+          <data-model-api-list
+            class="h-full"
             :data="mySearchResult"
+            :filter="[]"
+            :selected-filters="[]"
             :selected-items="nSelectedListData"
             label-key="modelNm"
             value-key="id"
             :use-item-delete-btn="false"
             :is-multi="true"
+            :use-filter="false"
             :use-live-search="false"
+            :use-sort="false"
+            :use-infinite="true"
+            :addSearchList="addMySearchList"
+            :isDoneFirModelListLoad="isDoneFirModelListLoad"
             list-type="non-selected"
             no-data-msg="데이터 모델이 없습니다."
-            @item-check="onSelectAccordData"
-            @item-click="onClickAccordData"
+            @item-check="onSelectMyListData"
+            @item-click="onClickData"
             @bookmark-change="onClickBookmark"
-            @search-change="onClickAccordSearchChange"
-          ></data-model-accordian-list>
+            @search-change="onClickMyListSearchChange"
+          >
+            <template v-slot:tab>
+              <Tab
+                class="tab-line"
+                :data="myListDetailTab"
+                label-key="label"
+                value-key="value"
+                current-item-type="value"
+                :current-item="currTypeMyTab"
+                @change="onChangeTypeMyTab"
+              ></Tab>
+            </template>
+          </data-model-api-list>
         </template>
       </Tab>
     </div>
@@ -100,7 +121,7 @@
         no-data-msg="선택된 데이터 모델이 없습니다."
         @delete="onDeleteListData"
         @item-check="onSelectListData"
-        @item-click="onClickData"
+        @item-click="onClickSelectedData"
         @bookmark-change="updateSelectedModelBookmark"
       ></data-model-list>
     </div>
@@ -111,7 +132,6 @@ import Tab from "@extends/tab/Tab.vue";
 import $constants from "~/utils/constant";
 import DataModelApiList from "~/components/datamodel-creation/list/api/data-model-api-list.vue";
 import DataModelList from "~/components/datamodel-creation/list/base/data-model-list.vue";
-import DataModelAccordianList from "~/components/datamodel-creation/list/api/accoridan/data-model-accordian-list.vue";
 import { ref } from "vue";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 import { storeToRefs } from "pinia";
@@ -120,14 +140,17 @@ import { storeToRefs } from "pinia";
 const dataModelSearchStore = useDataModelSearchStore();
 const {
   addSearchList,
+  addMySearchList,
   resetReloadList,
   changeTypeTab,
+  changeTypeMyTab,
   changeTab,
   setSortInfo,
   setSelectedFilter,
   setSearchKeyword,
   onClickData,
-  onClickAccordData,
+  onClickSelectedData,
+  setSearchMyKeyword,
   onClickBookmark,
   updateSelectedModelBookmark,
 } = dataModelSearchStore;
@@ -135,9 +158,12 @@ const {
   filters,
   selectedFilters,
   searchResult,
+  searchResultLength,
   currTab,
+  currTypeMyTab,
   currTypeTab,
   mySearchResult,
+  mySearchResultLength,
   nSelectedListData,
   isDoneFirModelListLoad,
 } = storeToRefs(dataModelSearchStore);
@@ -145,17 +171,38 @@ const {
 const selectedListLength = computed(() => {
   return nSelectedListData.value ? nSelectedListData.value.length : 0;
 });
+const myListDetailTab = computed(() => {
+  const defaultTab = $_cloneDeep($constants.DATAMODEL_CREATION.ADD.MY_DATA_TAB);
+  defaultTab.map((item) => {
+    const lengthValue = mySearchResultLength.value[item.value];
+    item.label = !!lengthValue ? `${item.label}(${lengthValue})` : item.label;
+  });
+  return defaultTab;
+});
+const searchListDetailTab = computed(() => {
+  const defaultTab = $_cloneDeep($constants.COMMON.DATA_TYPE);
+  defaultTab.map((item) => {
+    const lengthValue = searchResultLength.value[item.value];
+    item.label = !!lengthValue ? `${item.label}(${lengthValue})` : item.label;
+  });
+  return defaultTab;
+});
 
 const onChangeTab = (value: string) => {
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempSelectedListData.value = [];
-  tempAccordSelectedListData.value = [];
+  tempMyListSelectedListData.value = [];
   changeTab(value);
 };
 const onChangeTypeTab = (value: string) => {
   // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
   tempSelectedListData.value = [];
   changeTypeTab(value);
+};
+const onChangeTypeMyTab = (value: string) => {
+  // Tab 변경 시 데이터가 변경되므로 API 리스트의 temp 데이터 초기화
+  tempMyListSelectedListData.value = [];
+  changeTypeMyTab(value);
 };
 
 ////////////// 목록 이동 //////////////
@@ -166,10 +213,10 @@ const onSaveSelectedData = () => {
   // 임시로 저장되어 있던 값을 선택 리스트에 저장
   nSelectedListData.value = nSelectedListData.value
     .concat(tempSelectedListData.value)
-    .concat(tempAccordSelectedListData.value);
+    .concat(tempMyListSelectedListData.value);
 
   tempSelectedListData.value = [];
-  tempAccordSelectedListData.value = [];
+  tempMyListSelectedListData.value = [];
 };
 
 /**
@@ -181,10 +228,21 @@ const onDeleteSelectedData = () => {
     tempDeleteListData.value,
     "id",
   );
+
+  tempDeleteListData.value = [];
   searchResult.value = searchResult.value.map((item: any) => {
     // 선택된 항목 중에 SelectedList에 데이터가 존재하면 값 변경
     if (item.isSelected && !isSelectedData(item.id)) {
       item.isSelected = false;
+      item.isChecked = false;
+    }
+    return item;
+  });
+  mySearchResult.value = mySearchResult.value.map((item: any) => {
+    // 선택된 항목 중에 SelectedList에 데이터가 존재하면 값 변경
+    if (item.isSelected && !isSelectedData(item.id)) {
+      item.isSelected = false;
+      item.isChecked = false;
     }
     return item;
   });
@@ -211,14 +269,27 @@ const onDeleteListData = (value: any[]) => {
 
 const tempDeleteListData = ref([]);
 const onSelectListData = (value: any[]) => {
-  tempDeleteListData.value = value;
+  tempDeleteListData.value = value.map((item) => {
+    return {
+      ...item,
+      isChecked: false,
+    };
+  });
 };
 
 ////////////// API - 전체 목록 //////////////
 const tempSelectedListData = ref([]);
 const onSelectApiData = (value: any[]) => {
   tempSelectedListData.value = value;
+  searchResult.value = searchResult.value.map((item: any) => {
+    let findItem = $_find(value, { id: item.id });
+    return {
+      ...item,
+      isChecked: !!findItem,
+    };
+  });
 };
+
 const onClickApiFilterChange = async (value: []) => {
   setSelectedFilter(value);
   await resetReloadList(nSelectedListData.value);
@@ -232,25 +303,46 @@ const onClickApiSearchChange = async (value: string) => {
   await resetReloadList(nSelectedListData.value);
 };
 
-////////////// API - MY 목록 //////////////
-const tempAccordSelectedListData = ref([]);
-const onSelectAccordData = (value: any[]) => {
-  tempAccordSelectedListData.value = value;
+const onClickApiReset = async (value: string) => {
+  setSelectedFilter(value.selectedFilter);
+  setSortInfo(value.selectedSort);
+  setSearchKeyword(value.searchLabel);
+  setSortInfo("totalVotes_desc");
+  await resetReloadList(nSelectedListData.value);
 };
-const onClickAccordSearchChange = async (value: string) => {
-  setSearchKeyword(value);
+
+////////////// API - MY 목록 //////////////
+const tempMyListSelectedListData = ref([]);
+const onSelectMyListData = (value: any[]) => {
+  tempMyListSelectedListData.value = value;
+  mySearchResult.value = mySearchResult.value.map((item: any) => {
+    let findItem = $_find(value, { id: item.id });
+    return {
+      ...item,
+      isChecked: !!findItem,
+    };
+  });
+};
+const onClickMyListSearchChange = async (value: string) => {
+  setSearchMyKeyword(value);
   await resetReloadList(nSelectedListData.value);
 };
 
 watchEffect(() => {
-  // nSelectedListData.value 의 값이 변경되면 적용되도록
-  searchResult.value = searchResult.value.map((item: any) => {
-    // 선택되지 않은 항목 중에 SelectedList에 데이터가 존재하면 값 변경
-    if (!item.isSelected && isSelectedData(item.id)) {
-      item.isSelected = true;
-    }
-    return item;
-  });
+  const updateSelection = (resultList: any[]) => {
+    return resultList.map((item: any) => {
+      if (!item.isSelected && isSelectedData(item.id)) {
+        item.isSelected = true;
+      }
+      return item;
+    });
+  };
+
+  if (currTab.value === "all") {
+    searchResult.value = updateSelection(searchResult.value);
+  } else {
+    mySearchResult.value = updateSelection(mySearchResult.value);
+  }
 });
 </script>
 <style lang="scss" scoped></style>

@@ -16,6 +16,7 @@
       :is-multi="props.isMulti"
       :data="props.data"
       :selected-items="selectedListData"
+      :isResetToFirst="props.isResetToFirst"
       :label-key="props.labelKey"
       :value-key="props.valueKey"
       :hideGuideLines="props.hideGuideLines"
@@ -54,6 +55,7 @@ const props = withDefaults(defineProps<MenuSearchTreeProps>(), {
   isMulti: false,
   isShow: false,
   isShowLength: true,
+  isResetToFirst: false,
 
   // tree 고유 props
   mode: "view",

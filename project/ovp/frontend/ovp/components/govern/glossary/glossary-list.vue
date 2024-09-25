@@ -25,30 +25,18 @@
             <a class="menu-text">{{ glossary.name }}</a>
           </button>
         </li>
-        <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
-        <Loading
-          id="loader"
-          :use-loader-overlay="true"
-          class="loader-lg is-loader-inner"
-          style="display: none"
-        ></Loading>
       </div>
     </div>
   </div>
-  <modal-glossary-dictionary
-    :modal-id="MODAL_ID"
-    @cancel-model="closeModal"
-  ></modal-glossary-dictionary>
 </template>
 
 <script setup lang="ts">
+import ModalGlossaryDictionary from "@/components/govern/glossary/modal/modal-glossary-dictionary.vue";
+import { useModal } from "vue-final-modal";
 import { useGlossaryStore } from "~/store/glossary";
 import type { Glossary } from "~/type/glossary";
 import { _ } from "lodash";
-import Loading from "@base/loading/Loading.vue";
-import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import { onMounted } from "vue";
-const { $vfm } = useNuxtApp();
 const { glossaries, glossary, getGlossaries, changeCurrentGlossary } =
   useGlossaryStore();
 
@@ -65,13 +53,19 @@ const menuListClass = (data: Glossary): string => {
     : "menu-item";
 };
 
-const { scrollTrigger } = useIntersectionObserver(getGlossaries);
-
 const MODAL_ID = "modal-glossary-dictionary";
+
+const { open, close } = useModal({
+  component: ModalGlossaryDictionary,
+  attrs: {
+    modalId: MODAL_ID,
+    onClose() {
+      close();
+    },
+  },
+});
+
 function openModal() {
-  $vfm.open(MODAL_ID);
-}
-function closeModal() {
-  $vfm.close(MODAL_ID);
+  open();
 }
 </script>

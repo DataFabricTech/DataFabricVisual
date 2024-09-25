@@ -75,10 +75,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, defineProps, defineEmits } from "vue";
+import { ref, onMounted, defineProps, defineEmits, watch } from "vue";
 import type { Service } from "@/type/service";
 import { useServiceStore } from "@/store/manage/service";
 import $constants from "@/utils/constant";
+import { debounce } from "lodash";
 
 const {
   getServiceList,
@@ -89,7 +90,7 @@ const {
   servicesById,
 } = useServiceStore();
 const store = useServiceStore();
-const TAB_REPOSITORY = $constants.SERVICE.TAB[0].value;
+const TAB_INGESTION = $constants.SERVICE.TAB[0].value;
 
 const keyword = ref<string>("");
 
@@ -102,6 +103,21 @@ const menuSelectedClass = (value: Service): string => {
 onMounted(() => {
   getServiceList();
 });
+
+function createDebouncedSearch() {
+  return debounce(async () => {
+    await search();
+  }, 300);
+}
+
+const debouncedSearch = createDebouncedSearch();
+
+watch(
+  () => keyword.value,
+  () => {
+    debouncedSearch();
+  },
+);
 
 async function search(): Promise<void> {
   emptyService();
@@ -116,7 +132,7 @@ async function reset(): Promise<void> {
 
 function changeService(service: Service): void {
   changeCurrentService(service);
-  changeTab(TAB_REPOSITORY);
+  changeTab(TAB_INGESTION);
 }
 
 const props = defineProps({

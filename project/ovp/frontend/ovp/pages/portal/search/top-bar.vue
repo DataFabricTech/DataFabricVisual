@@ -14,7 +14,7 @@
         value-key="value"
         :selectedItem="`${sortKey}_${sortKeyOpt}`"
         :isFirstSelectedEvent="isFirstCheckedEvent"
-        @select="setSortFilter"
+        @select="onSelectSort"
       ></select-box>
       <div class="button-group">
         <input
@@ -65,8 +65,18 @@ const isFirstCheckedEvent: boolean = true;
 
 const onGraphView = () => {
   viewType.value = "listView";
-  alert("개발중 입니다.");
 };
+
+// mounted 되기 전에 호출이 되어 버러서 탐색>목록 api 호출을 2번하기 때문에 아래 코드 삭제
+const isMounted = ref(false);
+const onSelectSort = (item: string | number) => {
+  if (isMounted.value) {
+    setSortFilter(item);
+  }
+};
+onMounted(() => {
+  isMounted.value = true;
+});
 </script>
 
 <style lang="scss" scoped></style>

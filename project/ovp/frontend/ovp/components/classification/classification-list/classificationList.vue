@@ -11,7 +11,7 @@
       <!-- 로딩 중일 때는 아무것도 표시하지 않음 -->
     </div>
     <!-- 데이터 로딩 후 분류 목록 또는 "등록된 정보가 없습니다." 메시지 표시 -->
-    <div v-else>
+    <div class="work-list-contents" v-else>
       <div v-if="classificationList.length === 0" class="no-result">
         <div class="notification">
           <svg-icon class="notification-icon" name="info"></svg-icon>
@@ -37,10 +37,6 @@
       </div>
     </div>
   </div>
-  <classification-create
-    :modal-id="MODAL_ID"
-    @close-modal="closeModal"
-  ></classification-create>
 </template>
 
 <script setup lang="ts">
@@ -48,7 +44,7 @@ import { defineProps } from "vue";
 import { storeToRefs } from "pinia";
 import classificationCreate from "@/components/classification/modal/classification-create.vue";
 import { classificationStore } from "@/store/classification/index";
-const { $vfm } = useNuxtApp();
+import { useModal } from "vue-final-modal";
 
 const useClassificationStore = classificationStore();
 const { classificationList } = storeToRefs(useClassificationStore);
@@ -58,11 +54,18 @@ const { getClassificationDetail, getClassificationTags } =
 // 분류 추가 모달 ID
 const MODAL_ID = "modal-classification";
 
+const { open, close } = useModal({
+  component: classificationCreate,
+  attrs: {
+    modalId: MODAL_ID,
+    onClose() {
+      close();
+    },
+  },
+});
+
 function openModal() {
-  $vfm.open(MODAL_ID);
-}
-function closeModal() {
-  $vfm.close(MODAL_ID);
+  open();
 }
 
 const props = defineProps({

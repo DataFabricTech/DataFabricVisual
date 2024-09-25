@@ -15,7 +15,7 @@
       <th>설명</th>
       <th>관리</th>
     </tr>
-    <tr v-for="term in terms">
+    <tr v-if="terms.length !== 0" v-for="term in terms">
       <td>{{ term.name }}</td>
       <td>{{ term.description }}</td>
       <td>
@@ -35,23 +35,35 @@
         </div>
       </td>
     </tr>
+    <tr v-else>
+      <td colspan="3">
+        <div class="no-result">
+          <div class="notification">
+            <svg-icon class="notification-icon" name="info"></svg-icon>
+            <p class="notification-detail">등록된 정보가 없습니다.</p>
+          </div>
+        </div>
+      </td>
+    </tr>
   </table>
   <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
   <Loading
-    id="loader"
+    id="termLoader"
     :use-loader-overlay="true"
     class="loader-lg is-loader-inner"
     style="display: none"
   ></Loading>
-  <modal-glossary :modal-id="MODAL_ID"></modal-glossary>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from "vue";
+import ModalGlossary from "@/components/govern/glossary/modal/modal-glossary.vue";
 import { useGlossaryStore } from "@/store/glossary";
-import type { Term } from "~/type/glossary";
+import type { Term } from "@/type/glossary";
 import Loading from "@base/loading/Loading.vue";
-import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
+import { useModal } from "vue-final-modal";
+
 const {
   terms,
   openEditTermComponent,
@@ -59,7 +71,6 @@ const {
   deleteTerm,
   getTerms,
 } = useGlossaryStore();
-const { $vfm } = useNuxtApp();
 
 onMounted(() => getTerms());
 
@@ -67,8 +78,6 @@ function onClickTerm(source: Term): void {
   changeCurrentTerm(source);
   openEditTermComponent("term");
 }
-
-const { scrollTrigger } = useIntersectionObserver(getTerms);
 
 async function removeTerm(id: string): Promise<void> {
   if (confirm("용어를 삭제 하시겠습니까?")) {
@@ -83,7 +92,24 @@ async function removeTerm(id: string): Promise<void> {
 }
 
 const MODAL_ID = "modal-glossary";
+
+const { open, close } = useModal({
+  component: ModalGlossary,
+  attrs: {
+    modalId: MODAL_ID,
+    onClose() {
+      close();
+    },
+  },
+});
+
 function openModal(): void {
-  $vfm.open(MODAL_ID);
+  open();
 }
+
+const { scrollTrigger } = useIntersectionObserver({
+  callback: getTerms,
+  targetId: "termList",
+  loaderId: "termLoader",
+});
 </script>
