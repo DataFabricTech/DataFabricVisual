@@ -7,6 +7,7 @@ import com.mobigen.ovp.common.openmete_client.dto.Node;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,25 +23,23 @@ public class DataModelDetailLineageTableResponse {
         rawEdges = new ArrayList<>();
         List<String> nodeIds = new ArrayList<>();
 
-        for(Node node: lineage.getNodes()) {
+        System.out.println("lineage >>> " + lineage);
+
+        for (Node node : lineage.getNodes()) {
             Map<String, String> tempNode = new HashMap<String, String>();
             tempNode.put("id", node.getId());
             tempNode.put("fqn", node.getFullyQualifiedName());
             tempNode.put("name", node.getDisplayName());
 
-            String depth = "";
-            if (!"container".equals(node.getType())) {
-                depth = node.getFullyQualifiedName().replaceAll("\\.[^.]*$", "");
-            } else  {
-                String [] pathList = node.getFullyQualifiedName().split(".");
-                depth = new StringBuffer(pathList[0]).append(".").append(pathList[1]).toString();
-            }
+            // 3depth 까지만 표시
+            String[] pathList = node.getFullyQualifiedName().split("\\.");
+            String depth = String.join(".", Arrays.copyOfRange(pathList, 0, Math.min(3, pathList.length)));
             tempNode.put("path", depth);
 
             rawNodes.add(tempNode);
             nodeIds.add(node.getId());
 
-            for(LineageData lineageData: node.getLineage()) {
+            for (LineageData lineageData : node.getLineage()) {
                 Map<String, String> tempRqwNode = new HashMap<>();
                 Entity toEntity = lineageData.getToEntity();
                 Entity fromEntity = lineageData.getFromEntity();
@@ -50,20 +49,16 @@ public class DataModelDetailLineageTableResponse {
             }
         }
 
-        if (rawNodes.size() == 0 && rawEdges.size() == 0) {
+        if (rawNodes.isEmpty() && rawEdges.isEmpty()) {
             Node entity = lineage.getEntity();
             Map<String, String> tempNode = new HashMap<String, String>();
             tempNode.put("id", entity.getId());
             tempNode.put("fqn", entity.getFullyQualifiedName());
             tempNode.put("name", entity.getDisplayName());
 
-            String depth = "";
-            if (!"container".equals(entity.getEntityType())) {
-                depth = entity.getFullyQualifiedName().replaceAll("\\.[^.]*$", "");
-            } else  {
-                String [] pathList = entity.getFullyQualifiedName().split("\\.");
-                depth = new StringBuffer(pathList[0]).append(".").append(pathList[1]).toString();
-            }
+            // 3depth 까지만 표시
+            String[] pathList = entity.getFullyQualifiedName().split("\\.");
+            String depth = String.join(".", Arrays.copyOfRange(pathList, 0, Math.min(3, pathList.length)));
             tempNode.put("path", depth);
 
             rawNodes.add(tempNode);
