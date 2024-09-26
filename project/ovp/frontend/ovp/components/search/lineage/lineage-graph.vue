@@ -18,6 +18,10 @@ import type {
   CytoscapeEdgeStyle,
 } from "./lineage";
 import lineageStyle from "./lineage-style";
+import { useLineageStore } from "@/store/search/detail/lineage";
+
+const lineageStore = useLineageStore();
+const { isShowPreview, lineageRef } = storeToRefs(lineageStore);
 
 // dagre layout 유형 등록
 cytoscape.use(dagre);
@@ -25,6 +29,22 @@ cytoscapeNodeHtmlLabel(cytoscape);
 
 let cyContainer = ref(null);
 let cyRef = null;
+
+const handleClickInsideLineageGraph = (event: MouseEvent) => {
+  const lineageElement = lineageRef.value?.$el;
+  // LineageGraph 내에서 클릭되고, 미리보기가 열려있으면 닫음
+  if (lineageElement?.contains(event.target) && isShowPreview.value) {
+    isShowPreview.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickInsideLineageGraph);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickInsideLineageGraph);
+});
 
 const tpl = (data: NodeData) => {
   // 라벨 템플릿 정의 메서드

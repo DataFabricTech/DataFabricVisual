@@ -70,23 +70,6 @@ onBeforeMount(async () => {
   await getLineageData(dataModelType.value, getDataModelFqn());
 });
 
-const handleClickInsideLineageGraph = (event: MouseEvent) => {
-  const lineageElement = lineageRef.value?.$el;
-
-  // LineageGraph 내에서 클릭되고, 미리보기가 열려있으면 닫음
-  if (lineageElement?.contains(event.target) && isShowPreview.value) {
-    isShowPreview.value = false;
-  }
-};
-
-onMounted(() => {
-  document.addEventListener("click", handleClickInsideLineageGraph);
-});
-
-onBeforeUnmount(() => {
-  document.removeEventListener("click", handleClickInsideLineageGraph);
-});
-
 const getPreviewOn = (isPreviewClosed: boolean) => {
   if (!isPreviewClosed) {
     lineageRef.value.handleNodeOff();
