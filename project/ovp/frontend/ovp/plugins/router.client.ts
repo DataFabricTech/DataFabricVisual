@@ -21,7 +21,7 @@ export default defineNuxtPlugin(() => {
       console.log(`[권한 테스트 로그] Navigating to: ${url}`);
 
       // 권한이 필요하지 않은 페이지 예외처리
-      const noAuthPages = ["/", "/login"];
+      const noAuthPages = ["/", "/login", "/_pub"];
       if (noAuthPages.includes(url)) {
         return next();
       }
