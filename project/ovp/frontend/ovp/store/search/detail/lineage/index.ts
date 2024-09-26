@@ -12,8 +12,13 @@ export interface lineageData {
 export const useLineageStore = defineStore("lineage", () => {
   const { $api } = useNuxtApp();
   const searchCommonStore = useSearchCommonStore();
-  const { getUseFilters, getQueryFilter, createDefaultPreview, getPreviewAPI } =
-    searchCommonStore;
+  const {
+    getUseFilters,
+    getQueryFilter,
+    createDefaultPreview,
+    getPreviewAPI,
+    getContainerPreviewAPI,
+  } = searchCommonStore;
 
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Partial<Filters> => {
@@ -76,8 +81,11 @@ export const useLineageStore = defineStore("lineage", () => {
     lineageData.value.edges = data.data.rawEdges;
   };
 
-  const getPreviewData = async (fqn: string) => {
-    const data = await getPreviewAPI(fqn);
+  const getPreviewData = async (dataModelType: string, { fqn, id }: any) => {
+    const data =
+      dataModelType === "storage"
+        ? await getContainerPreviewAPI(id)
+        : await getPreviewAPI(fqn);
     previewData.value = data.data;
   };
 

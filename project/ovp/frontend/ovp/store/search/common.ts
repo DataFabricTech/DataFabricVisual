@@ -228,8 +228,12 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
 
   const getContainerPreviewData = async (id: string) => {
-    const data: any = await $api(`/api/containers/${id}`);
+    const data = await getContainerPreviewData(id);
     previewData.value = data.data;
+  };
+
+  const getContainerPreviewAPI = async (id: string) => {
+    return await $api(`/api/containers/${id}`);
   };
 
   const getCtgIds = (undefinedTagId: string) => {
@@ -326,6 +330,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     createDefaultPreview,
     getPreviewAPI,
     getPreviewData,
+    getContainerPreviewAPI,
     getContainerPreviewData,
     setSortInfo,
     setSortFilter,

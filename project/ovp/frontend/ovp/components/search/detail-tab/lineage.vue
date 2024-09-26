@@ -78,7 +78,7 @@ const getPreviewOn = (isPreviewClosed: boolean) => {
 const modelChoose = async (nodeData: NodeData) => {
   if (nodeData) {
     isShowPreview.value = true;
-    await getPreviewData(nodeData.fqn);
+    await getPreviewData(dataModelType.value, nodeData);
   }
 };
 
