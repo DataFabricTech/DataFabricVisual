@@ -210,8 +210,8 @@ export const useGlossaryStore = defineStore("glossary", () => {
     const param: string =
       // eslint-disable-next-line eqeqeq
       activityAfter.value != null
-        ? `entityLink=<%23E::glossary::${glossary.name}>&after=${activityAfter.value}`
-        : `entityLink=<%23E::glossary::${glossary.name}>`;
+        ? `entityLink=<%23E::glossary::${encodeURIComponent(glossary.name)}>&after=${activityAfter.value}`
+        : `entityLink=<%23E::glossary::${encodeURIComponent(glossary.name)}>`;
     const res = await $api(`/api/glossary/activities?${param}`, {
       showLoader: false,
     });
@@ -310,8 +310,6 @@ export const useGlossaryStore = defineStore("glossary", () => {
   async function changeCurrentGlossary(param: Glossary): Promise<void> {
     Object.assign(glossary, param);
     changeTab("term");
-    resetTerms();
-    await getTerms(param.name);
     disableEditModes();
     disableEditTermModes();
     openEditTermComponent("glossary");
