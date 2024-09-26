@@ -3,7 +3,6 @@
     <div class="l-top-bar h-[48.8px]">
       <div class="h-group gap-2">
         <editable-group
-          class="w-auto"
           :parent-edit-mode="isNameEditable"
           compKey="name"
           :editable="true"
@@ -208,6 +207,7 @@ const editDone = async () => {
         newData.value.description = "-";
       }
       classificationDetailData.value = _.cloneDeep(newData.value);
+      getClassificationDetail(newData.value.id);
       isDescEditable.value = false;
       return;
     } else {

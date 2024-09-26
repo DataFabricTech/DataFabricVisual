@@ -103,7 +103,7 @@ export const classificationStore = defineStore("classification", () => {
   };
 
   // 분류 상세 조회 ( name, displayName, description )
-  const getClassificationDetail = async (id: string) => {
+  const getClassificationDetail = async (id?: string) => {
     // [이름 / 설명 ] 수정상태 off
     isNameEditable.value = false;
     isDescEditable.value = false;
