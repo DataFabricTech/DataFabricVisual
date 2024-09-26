@@ -28,9 +28,7 @@
           >
             <button class="menu-button">
               <svg-icon class="svg-icon" name="tag"></svg-icon>
-              <a href="" class="menu-text">{{
-                item.displayName || item.name
-              }}</a>
+              <div class="menu-text">{{ item.displayName || item.name }}</div>
             </button>
           </li>
         </div>
