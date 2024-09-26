@@ -289,18 +289,30 @@ public class SearchDetailService {
      * @return
      */
     public List<Columns> getDataModelSchema(String id, String type) {
-        MultiValueMap params = new LinkedMultiValueMap();
+        Map<String, String> params = new HashMap<>();
 
         // fields=tableConstraints,tablePartition,usageSummary,owner,customMetrics,columns,tags,followers,joins,schemaDefinition,dataModel,extension,testSuite,domain,dataProducts,lifeCycle,sourceHash
-        params.add("include", "all");
+        params.put("include", "all");
+
+        Tables dataModel = new Tables();
+        List<Columns> columns = new ArrayList<>();
 
         if (!ModelType.STORAGE.getValue().equals(type)) {
-            params.add("fields", "columns");
-            return tablesClient.getTablesName(id, params).getColumns();
+            params.put("fields", "columns");
+            dataModel = tablesClient.getTablesName(id, params);
+            if (dataModel != null) {
+                return tablesClient.getTablesName(id, params).getColumns();
+            }
+
         } else {
-            params.add("fields", "dataModel");
-            return containersClient.getStorageById(id, params).getDataModel().getColumns();
+            params.put("fields", "dataModel");
+            dataModel = containersClient.getStorageById(id, params);
+            if (dataModel != null && dataModel.getColumns() != null) {
+                return containersClient.getStorageById(id, params).getDataModel().getColumns();
+            }
         }
+
+        return columns;
     }
 
     /**
