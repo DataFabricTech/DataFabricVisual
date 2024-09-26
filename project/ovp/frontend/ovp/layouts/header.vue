@@ -102,16 +102,19 @@ const onClickSearch = (value: string) => {
   router.push({ path: `/portal/search` });
 };
 
-const logOut = async () => {
-  await $api(`/api/auth/logout`, {
+const logOut = () => {
+  $api(`/api/auth/logout`, {
     method: "POST",
   })
     .then(() => {
       isDropdownOpen.value = false;
-      router.push("/portal/login");
     })
     .catch((err: any) => {
       console.log("err: ", err);
+    })
+    .finally(() => {
+      // 로그아웃 성공 또는 실패 여부와 관계없이 로그인 페이지로 이동
+      router.push("/portal/login");
     });
 };
 

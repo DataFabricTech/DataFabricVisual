@@ -121,6 +121,7 @@ export const useCreationStore = defineStore("creation", () => {
     isFirstExecute.value = false;
     querySuccess.value = false;
     isExecuteQuery.value = false;
+    executeResultErrMsg.value = "";
   };
 
   /**

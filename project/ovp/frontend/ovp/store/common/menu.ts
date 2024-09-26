@@ -16,11 +16,6 @@ export const useMenuStore = defineStore("menuStore", () => {
   const mgmtMenuJson = ref<MenuItem | Record<string, never>>({});
 
   const getMenuData = async () => {
-    // 권한 체크를 위해서 router 쪽에서 먼저 한번 조회하는 경우가 있음
-    // 그 경우 메뉴를 중복 조회 하지 않는다.
-    if (!_.isEmpty(menuJson.value)) {
-      return;
-    }
     const { data }: { data: MenuItem[] } = await $api(`/api/menu/list`);
 
     const lastItem = _.last(data);
