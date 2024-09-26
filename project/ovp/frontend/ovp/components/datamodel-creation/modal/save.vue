@@ -1,5 +1,6 @@
 <template>
   <Modal
+    class="is-no-scroll"
     title="데이터 모델 저장"
     background="non-interactive"
     displayDirective="show"
@@ -8,7 +9,7 @@
     :clickToClose="true"
     :escToClose="true"
     :width="480"
-    :height="560"
+    :height="540"
     :lockScroll="true"
     swipeToClose="none"
     @before-open="onOpenModal"

@@ -104,6 +104,13 @@
       }
     }
   }
+
+  //바디 스크롤 필요없을 시 사용
+  &.is-no-scroll {
+    .modal-body {
+      overflow-y: visible;
+    }
+  }
 }
 
 // 퍼블리싱 전용 스타일

@@ -1,5 +1,6 @@
 <template>
   <Modal
+    class="is-no-scroll"
     title="용어 추가"
     :modal-id="props.modalId"
     :esc-to-close="true"
@@ -48,7 +49,7 @@
             <div class="form-detail">
               <textarea
                 id="data-model-save-description"
-                class="textarea h-28"
+                class="textarea is-textarea-fixed h-20"
                 placeholder="설명을 입력하세요."
                 v-model="termForm.description"
               ></textarea>
