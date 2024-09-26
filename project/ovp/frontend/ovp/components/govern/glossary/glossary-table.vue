@@ -64,18 +64,13 @@ import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { useModal } from "vue-final-modal";
 
-const {
-  terms,
-  openEditTermComponent,
-  changeCurrentTerm,
-  deleteTerm,
-  getTerms,
-} = useGlossaryStore();
+const { terms, openEditTermComponent, deleteTerm, getTerms, getTerm } =
+  useGlossaryStore();
 
 onMounted(() => getTerms());
 
 function onClickTerm(source: Term): void {
-  changeCurrentTerm(source);
+  getTerm(source.name);
   openEditTermComponent("term");
 }
 

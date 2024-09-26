@@ -127,6 +127,12 @@ export const useGlossaryStore = defineStore("glossary", () => {
     terms.splice(0);
   }
 
+  async function getTerm(name: string) {
+    const param = glossary.name + "." + name;
+    const res = await $api(`/api/glossary/terms/${param}`);
+    Object.assign(term, res.data);
+  }
+
   async function getTerms(): Promise<void> {
     // 마지막 데이터까지 조회 완료한 경우, 추가적인 호출 중단
     if (termsAfter.value === null && termsBefore.value !== null) {
@@ -522,6 +528,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
     deleteGlossary,
 
     createTerm,
+    getTerm,
     getTerms,
     resetTerms,
     editTerm,

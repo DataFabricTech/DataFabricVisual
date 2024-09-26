@@ -159,7 +159,7 @@
           <!-- 동의어 있을 경우-->
           <div
             class="tag tag-primary tag-sm"
-            v-if="term.synonyms.length > 0"
+            v-if="term.synonyms && term.synonyms.length > 0"
             v-for="synonym in term.synonyms"
           >
             <span class="tag-text">{{ synonym }}</span>
@@ -262,10 +262,9 @@ const {
   editTermMode,
   menuSearchTagsData,
   menuSearchRelatedTermsData,
-  getTerms,
+  getTerm,
   editTerm,
   deleteTerm,
-  changeCurrentTerm,
   getGlossaries,
   openEditTermComponent,
   disableEditTermModes,
@@ -284,7 +283,7 @@ const editData = reactive({
 
 watch(
   () => store.term,
-  (newTerm) => {
+  (newTerm: Term) => {
     editData.name = newTerm.name;
     editData.description = newTerm.description;
     if (newTerm.synonyms) {
@@ -313,10 +312,7 @@ function syncEditDataWithTerm(): void {
 }
 
 async function refreshTerm(): Promise<void> {
-  const ID = term.id;
-  await getTerms(store.glossary.name);
-  const termData: Term = terms.find((term: Term) => term.id === ID);
-  changeCurrentTerm(termData);
+  await getTerm(store.term.name);
   disableEditTermModes();
 }
 
