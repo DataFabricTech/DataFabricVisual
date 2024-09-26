@@ -230,7 +230,7 @@
         </div>
         <div class="editable-group" v-if="store.editTermMode.relatedTerms">
           <menu-search-tag
-            :data="menuSearchRelatedTermsData"
+            :data="filteredRelatedTerms"
             :selected-items="term.relatedTerms"
             label-key="label"
             value-key="id"
@@ -296,6 +296,12 @@ watch(
 
 onMounted(() => {
   syncEditDataWithTerm();
+});
+
+const filteredRelatedTerms = computed(() => {
+  return menuSearchRelatedTermsData.filter(
+    (item: object) => item.id !== term.id,
+  );
 });
 
 function syncEditDataWithTerm(): void {
