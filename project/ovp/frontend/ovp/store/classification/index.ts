@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import type { Ref } from "vue";
 import _ from "lodash";
+import { ref } from "vue";
 
 interface Classification {
   id: string;
@@ -41,6 +42,7 @@ interface addTagForm {
   name: string;
   description: string;
 }
+
 //TODO : 추후, 태그 paging을 이용한 인피니트스크롤작업을 위해 보류
 
 // interface paging {
@@ -62,6 +64,7 @@ export const classificationStore = defineStore("classification", () => {
   // 분류 목록 조회
   const classificationList: Ref<Classification[]> = ref([]);
   const classificationListTotal: Ref<number | undefined> = ref();
+  const showNameNoti: Ref<boolean> = ref(false);
 
   // 분류 상세 조회
   const classificationDetailData: Ref<ClassificationDetail> = ref({
@@ -196,6 +199,7 @@ export const classificationStore = defineStore("classification", () => {
     currentClassificationID,
     classificationTagList,
     classificationDetailData,
+    showNameNoti,
     getClassificationList,
     getClassificationDetail,
     getClassificationTags,

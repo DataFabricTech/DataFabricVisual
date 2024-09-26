@@ -24,6 +24,7 @@
                 class="text-input text-input-lg"
                 placeholder="이름을 입력하세요."
                 v-model="termForm.name"
+                maxlength="20"
               />
               <div
                 class="notification notification-sm notification-error"

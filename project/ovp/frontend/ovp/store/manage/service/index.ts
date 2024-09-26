@@ -303,7 +303,7 @@ export const useServiceStore = defineStore("service", () => {
     }
 
     const isEmpty = item.id === undefined;
-    if (service.owner.id === undefined) {
+    if (service.owner === null || service.owner.id === undefined) {
       if (item && foundUser) {
         operations.push({
           op: "add",

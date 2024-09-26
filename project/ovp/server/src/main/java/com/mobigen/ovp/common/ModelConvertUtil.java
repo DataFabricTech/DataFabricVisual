@@ -109,12 +109,12 @@ public class ModelConvertUtil {
         if (source.get("tags") != null) {
             List<Map<String, Object>> tags = (List<Map<String, Object>>) source.get("tags");
             for (Map<String, Object> tag : tags) {
-                String displayName = tag.get("displayName").toString();
+                Object displayName = tag.get("displayName");
 
                 if (displayName == null || "".equals(displayName)) {
-                    displayName = tag.get("name").toString();
-                    tag.put("displayName", displayName);
+                    displayName = tag.get("name");
                 }
+                tag.put("displayName", displayName.toString());
 
                 if (tag.get("tagFQN").toString().contains(Constants.OVP_CATEGORY)) {
                     CategoryEntity categoryEntity = getCategoryEntity(tag.get("name").toString());
