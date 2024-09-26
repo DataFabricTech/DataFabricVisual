@@ -63,6 +63,7 @@ const { getDataModelFqn } = dataModelDetailStore;
 const { dataModelType } = storeToRefs(dataModelDetailStore);
 
 onBeforeMount(async () => {
+  isShowPreview.value = false;
   await getFilters();
   await getLineageData(dataModelType.value, getDataModelFqn());
 });
