@@ -103,7 +103,7 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { PreviewData } from "~/type/common";
+import type { PreviewData } from "@/type/common";
 
 import { useRouter } from "nuxt/app";
 

@@ -3,6 +3,7 @@ import { useQueryHelpers } from "@/composables/queryHelpers";
 import _ from "lodash";
 import { ref } from "vue";
 import $constants from "@/utils/constant";
+import type { PreviewData } from "@/type/common";
 
 export const FILTER_KEYS = {
   CATEGORY: "category",
@@ -71,17 +72,41 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       [FILTER_KEYS.COLUMNS]: { text: "컬럼", data: [] },
     };
   };
+  // preview 초기값 부여
+  const createDefaultPreview = (): PreviewData => {
+    return {
+      modelType: "structured",
+      modelInfo: {
+        model: {
+          name: "",
+          displayName: "",
+          desc: "",
+          tableType: "",
+          cnt: 0,
+          ext: "",
+          size: 0,
+        },
+        columns: [
+          {
+            name: "",
+            dataType: "",
+            desc: "",
+            constraint: "NULL",
+          },
+        ],
+        details: "",
+        url: "",
+      },
+      tags: [],
+      glossaries: [],
+    };
+  };
+
   // filter 정보
   const filters = ref<Filters>(createDefaultFilters());
   const currentTab: Ref<string> = ref("table");
   const searchResult: Ref<any[]> = ref([]);
-  const previewData: Ref<any> = ref({
-    modelInfo: {
-      model: {
-        name: "",
-      },
-    },
-  });
+  const previewData: Ref<PreviewData> = ref(createDefaultPreview());
   const selectedFilterItems: Ref<any> = ref([]);
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
   const currentPreviewId: Ref<string | number> = ref("");
@@ -194,8 +219,12 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
 
   const getPreviewData = async (fqn: string) => {
-    const data: any = await $api(`/api/search/preview/${fqn}`);
+    const data = await getPreviewAPI(fqn);
     previewData.value = data.data;
+  };
+
+  const getPreviewAPI = async (fqn: string) => {
+    return await $api(`/api/search/preview/${fqn}`);
   };
 
   const getContainerPreviewData = async (id: string) => {
@@ -294,6 +323,8 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getFilter,
     getFilters,
     getUseFilters,
+    createDefaultPreview,
+    getPreviewAPI,
     getPreviewData,
     getContainerPreviewData,
     setSortInfo,

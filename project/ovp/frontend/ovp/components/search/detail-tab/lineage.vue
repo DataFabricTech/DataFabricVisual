@@ -68,7 +68,7 @@ onBeforeMount(async () => {
 });
 
 const getPreviewOn = (isPreviewClosed: boolean) => {
-  if (isPreviewClosed === false) {
+  if (!isPreviewClosed) {
     lineageRef.value.handleNodeOff();
     isShowPreview.value = false;
   }
@@ -77,9 +77,7 @@ const getPreviewOn = (isPreviewClosed: boolean) => {
 const modelChoose = async (nodeData: NodeData) => {
   if (nodeData) {
     isShowPreview.value = true;
-    console.log(nodeData.fqn);
     await getPreviewData(nodeData.fqn);
-    previewData.value.modelInfo.model.name = nodeData.label;
   }
 };
 

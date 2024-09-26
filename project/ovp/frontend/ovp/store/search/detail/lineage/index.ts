@@ -2,6 +2,7 @@ import type { Filters, SelectedFilters } from "@/store/search/common";
 import { FILTER_KEYS, useSearchCommonStore } from "@/store/search/common";
 import { ref } from "vue";
 import _ from "lodash";
+import type { PreviewData } from "@/type/common";
 
 export interface lineageData {
   nodes: any[];
@@ -11,7 +12,8 @@ export interface lineageData {
 export const useLineageStore = defineStore("lineage", () => {
   const { $api } = useNuxtApp();
   const searchCommonStore = useSearchCommonStore();
-  const { getUseFilters, getQueryFilter } = searchCommonStore;
+  const { getUseFilters, getQueryFilter, createDefaultPreview, getPreviewAPI } =
+    searchCommonStore;
 
   // filters 초기값 부여 (text 처리)
   const createDefaultFilters = (): Partial<Filters> => {
@@ -30,24 +32,7 @@ export const useLineageStore = defineStore("lineage", () => {
   const lineageData = ref<lineageData>({} as lineageData);
   const isShowPreview = ref<boolean>(false);
   const lineageRef = ref(null);
-
-  // TODO: 다른곳에서 preview에 대한 store를 만들기 떄문에 삭제 예정
-  const previewData: Ref<any> = ref({
-    modelType: "structured",
-    modelInfo: {
-      model: {
-        name: "",
-        desc: "",
-        tableType: "",
-        cnt: 0,
-        columns: [],
-      },
-      details: "",
-      url: "",
-    },
-    tags: [],
-    glossaries: [],
-  });
+  const previewData: Ref<PreviewData> = ref(createDefaultPreview());
 
   const getFilters = async () => {
     filters.value = (await getUseFilters(
@@ -91,14 +76,9 @@ export const useLineageStore = defineStore("lineage", () => {
     lineageData.value.edges = data.data.rawEdges;
   };
 
-  // TODO: 다른곳에서 preview에 대한 store를 만들기 떄문에 삭제 예정
-  // TODO: fqn 파람 추가 필요
   const getPreviewData = async (fqn: string) => {
-    // TODO: 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
-    const data: any = await $api(`/api/search/preview/${fqn}`);
-    console.log(data.data);
+    const data = await getPreviewAPI(fqn);
     previewData.value = data.data;
-    // TODO: fqn값을 쿼리파람에 넣어 api 요청 후 previewData 세팅 필요
   };
 
   return {
