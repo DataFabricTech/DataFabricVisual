@@ -54,7 +54,8 @@ import { useLineageStore } from "@/store/search/detail/lineage";
 import { useDataModelDetailStore } from "@/store/search/detail/index";
 
 const lineageStore = useLineageStore();
-const { getFilters, getLineageData, getPreviewData } = lineageStore;
+const { getFilters, setEmptyFilter, getLineageData, getPreviewData } =
+  lineageStore;
 const { filters, lineageData, previewData, isShowPreview, lineageRef } =
   storeToRefs(lineageStore);
 
@@ -64,6 +65,7 @@ const { dataModelType } = storeToRefs(dataModelDetailStore);
 
 onBeforeMount(async () => {
   isShowPreview.value = false;
+  setEmptyFilter();
   await getFilters();
   await getLineageData(dataModelType.value, getDataModelFqn());
 });
