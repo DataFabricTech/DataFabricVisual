@@ -1,5 +1,11 @@
 <template>
-  <div class="data-detail">
+  <div class="no-result" v-if="profileList.length === 0">
+    <div class="notification">
+      <svg-icon class="notification-icon" name="info"></svg-icon>
+      <p class="notification-detail">등록된 정보가 없습니다.</p>
+    </div>
+  </div>
+  <div class="data-detail" v-else>
     <div class="data-detail-group">
       <div class="search-input search-input-lg w-96">
         <label class="hidden-text" for="text-input-example-4">label</label>
