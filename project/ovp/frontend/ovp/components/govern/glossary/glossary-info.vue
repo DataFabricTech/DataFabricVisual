@@ -211,11 +211,10 @@ const {
   changeTab,
   changeEditGlossaryMode,
   createTagOperation,
-  getGlossaryActivitiesCount,
   getTerms,
   resetTerms,
   getGlossaryActivities,
-  resetGlossaryActivities
+  resetGlossaryActivities,
 } = useGlossaryStore();
 const store = useGlossaryStore();
 
@@ -229,7 +228,6 @@ watch(
   async (newGlossary) => {
     editData.name = newGlossary.name;
     editData.description = newGlossary.description;
-    await getGlossaryActivitiesCount(`<%23E::glossary::${glossary.name}>`);
     await resetTerms();
     await getTerms();
     await resetGlossaryActivities();

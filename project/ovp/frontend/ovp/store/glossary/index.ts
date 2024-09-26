@@ -222,6 +222,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
     if (res.data.paging) {
       activityAfter.value = res.data.paging.after;
       activityBefore.value = res.data.paging.before;
+      activitiesCount.value = res.data.paging.total;
     }
   }
 
