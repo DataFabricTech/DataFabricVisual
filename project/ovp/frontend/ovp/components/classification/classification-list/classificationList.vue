@@ -47,7 +47,9 @@ import { classificationStore } from "@/store/classification/index";
 import { useModal } from "vue-final-modal";
 
 const useClassificationStore = classificationStore();
-const { classificationList } = storeToRefs(useClassificationStore);
+const { classificationList, showNameNoti } = storeToRefs(
+  useClassificationStore,
+);
 const { getClassificationDetail, getClassificationTags } =
   useClassificationStore;
 
@@ -77,6 +79,7 @@ const props = defineProps({
 
 // 분류 목록 중 단일 목록 클릭시 실행되는 함수
 const showClassificationDetail = async (id: string, name: string) => {
+  showNameNoti.value = false;
   // 선택한 분류의 상세 조회 API 호출
   await getClassificationDetail(id);
   // 태그 리스트 API 호출

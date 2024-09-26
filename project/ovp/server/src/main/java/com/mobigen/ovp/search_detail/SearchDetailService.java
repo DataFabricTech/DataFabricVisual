@@ -299,7 +299,11 @@ public class SearchDetailService {
             return tablesClient.getTablesName(id, params).getColumns();
         } else {
             params.add("fields", "dataModel");
-            return containersClient.getStorageById(id, params).getDataModel().getColumns();
+            try {
+                return containersClient.getStorageById(id, params).getDataModel().getColumns();
+            } catch (Exception e) {
+                return new ArrayList<>();
+            }
         }
     }
 
@@ -313,7 +317,11 @@ public class SearchDetailService {
         if (!ModelType.STORAGE.getValue().equals(type)) {
             return new DataModelDetailSampleDataResponse(tablesClient.getSampleData(id), type);
         } else {
-            return new DataModelDetailSampleDataResponse(containersClient.getSampleData(id), type);
+            try {
+                return new DataModelDetailSampleDataResponse(containersClient.getSampleData(id), type);
+            } catch (Exception e) {
+                return null;
+            }
         }
     }
 
