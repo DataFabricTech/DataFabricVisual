@@ -25,6 +25,7 @@
                 class="text-input text-input-lg"
                 placeholder="이름을 입력하세요."
                 v-model="classificationForm.name"
+                maxlength="20"
               />
               <div
                 class="notification notification-sm notification-error"
@@ -122,19 +123,21 @@ function validateForm(): void {
   isShowDescNoti.value = false;
 
   // 저장 API 호출
-  saveClassification().then(async (response: { errorMessage: string; result: number }) => {
-    if (response.errorMessage === "Duplicate classification name") {
-      nameErrorMsg.value = "이름이 중복되었습니다.";
-      isShowNameNoti.value = true;
-      return;
-    } else if (response.result === 1) {
-      // 분류항목 리스트 재호출
-      getClassificationList();
-      await getClassificationDetail(response.data.id);
-      // 성공시 모달 닫기
-      closeModal();
-    }
-  });
+  saveClassification().then(
+    async (response: { errorMessage: string; result: number }) => {
+      if (response.errorMessage === "Duplicate classification name") {
+        nameErrorMsg.value = "이름이 중복되었습니다.";
+        isShowNameNoti.value = true;
+        return;
+      } else if (response.result === 1) {
+        // 분류항목 리스트 재호출
+        getClassificationList();
+        await getClassificationDetail(response.data.id);
+        // 성공시 모달 닫기
+        closeModal();
+      }
+    },
+  );
 }
 
 // 모달창 열기전에 실행되는 함수

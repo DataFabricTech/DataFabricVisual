@@ -18,6 +18,7 @@
               required
               id="title-modify"
               class="text-input"
+              maxlength="20"
             />
           </template>
           <template #view-slot>
