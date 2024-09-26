@@ -37,6 +37,7 @@ export const useLineageStore = defineStore("lineage", () => {
   const lineageData = ref<lineageData>({} as lineageData);
   const isShowPreview = ref<boolean>(false);
   const lineageRef = ref(null);
+  const lineageFilterRef = ref(null);
   const previewData: Ref<PreviewData> = ref(createDefaultPreview());
 
   const getFilters = async () => {
@@ -97,6 +98,7 @@ export const useLineageStore = defineStore("lineage", () => {
     previewData,
     isShowPreview,
     lineageRef,
+    lineageFilterRef,
     getFilters,
     setEmptyFilter,
     getLineageData,

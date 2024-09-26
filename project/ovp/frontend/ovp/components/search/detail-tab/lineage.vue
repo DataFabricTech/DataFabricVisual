@@ -1,6 +1,6 @@
 <template>
   <div class="lineage">
-    <div class="filters">
+    <div class="filters" ref="lineageFilterRef">
       <data-lineage-filter :data="filters"></data-lineage-filter>
     </div>
     <Preview
@@ -56,8 +56,14 @@ import { useDataModelDetailStore } from "@/store/search/detail/index";
 const lineageStore = useLineageStore();
 const { getFilters, setEmptyFilter, getLineageData, getPreviewData } =
   lineageStore;
-const { filters, lineageData, previewData, isShowPreview, lineageRef } =
-  storeToRefs(lineageStore);
+const {
+  filters,
+  lineageData,
+  previewData,
+  isShowPreview,
+  lineageRef,
+  lineageFilterRef,
+} = storeToRefs(lineageStore);
 
 const dataModelDetailStore = useDataModelDetailStore();
 const { getDataModelFqn } = dataModelDetailStore;
