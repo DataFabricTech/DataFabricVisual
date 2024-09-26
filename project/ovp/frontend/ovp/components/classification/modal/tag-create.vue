@@ -2,8 +2,9 @@
   <Modal
     title="태그 추가"
     :modal-id="props.modalId"
-    :height="500"
     :width="480"
+    :height="400"
+    :top="380"
     :esc-to-close="true"
     :btn-msg="'저장'"
     @close="closeModal"
@@ -52,7 +53,7 @@
                 v-show="isShowDescNoti"
               >
                 <svg-icon class="notification-icon" name="error"></svg-icon>
-                <p class="notification-detail">{{ descriptionErrorMsg }}</p>
+                <p class="notification-detail">설명을 입력하세요.</p>
               </div>
             </div>
           </div>
@@ -65,6 +66,7 @@
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
 import { classificationStore } from "@/store/classification/index";
+import $constants from "~/utils/constant";
 
 const useClassificationStore = classificationStore();
 const { addClassificationTag, getClassificationTags } = useClassificationStore;
@@ -95,31 +97,36 @@ const initialFormState: FormState = {
 const classificationTagForm = reactive<FormState>({ ...initialFormState });
 
 let nameErrorMsg: Ref<string> = ref("");
-const descriptionErrorMsg = "설명을 입력하세요.";
 
 const isShowNameNoti: Ref<boolean> = ref(false);
 const isShowDescNoti: Ref<boolean> = ref(false);
 
 function validateForm(): void {
-  isShowDescNoti.value = false;
-  if (!classificationTagForm.description) {
-    isShowDescNoti.value = true;
-  }
-  nameErrorMsg.value = "";
-  // 저장 전에 name, description의 값이 빈값일 경우
-  // 이름값이 빈값일 경우,
   if (!classificationTagForm.name) {
-    nameErrorMsg.value = "이름을 입력하세요.";
+    nameErrorMsg.value = $constants.GOVERNANCE.TITLE.EMPTY_ERROR_MSG;
     isShowNameNoti.value = true;
     return;
   }
-  nameErrorMsg.value = "";
+
+  if (classificationTagForm.name.length === 1) {
+    nameErrorMsg.value = $constants.GOVERNANCE.TITLE.MINIMUM_LENGTH_ERROR_MSG;
+    isShowNameNoti.value = true;
+    return;
+  }
+
+  if (!$constants.GOVERNANCE.TITLE.REGEX.test(classificationTagForm.name)) {
+    nameErrorMsg.value = $constants.GOVERNANCE.TITLE.REGEX_ERROR_MSG;
+    isShowNameNoti.value = true;
+    return;
+  }
+
   isShowNameNoti.value = false;
-  // 설명값이 빈값일 경우,
+
   if (!classificationTagForm.description) {
     isShowDescNoti.value = true;
     return;
   }
+
   isShowDescNoti.value = false;
 
   saveClassificationTag().then(

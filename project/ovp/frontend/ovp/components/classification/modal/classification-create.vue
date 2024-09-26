@@ -2,8 +2,9 @@
   <Modal
     title="분류 추가"
     :modal-id="props.modalId"
-    :height="500"
     :width="480"
+    :height="400"
+    :top="380"
     :esc-to-close="true"
     :btn-msg="'저장'"
     @close="closeModal"
@@ -29,7 +30,7 @@
               />
               <div
                 class="notification notification-sm notification-error"
-                v-show="isShowNameNoti"
+                v-if="isShowNameNoti"
               >
                 <svg-icon class="notification-icon" name="error"></svg-icon>
                 <p class="notification-detail">{{ nameErrorMsg }}</p>
@@ -50,10 +51,10 @@
               ></textarea>
               <div
                 class="notification notification-sm notification-error"
-                v-show="isShowDescNoti"
+                v-if="isShowDescNoti"
               >
                 <svg-icon class="notification-icon" name="error"></svg-icon>
-                <p class="notification-detail">{{ descriptionErrorMsg }}</p>
+                <p class="notification-detail">설명을 입력하세요.</p>
               </div>
             </div>
           </div>
@@ -67,6 +68,7 @@
 import Modal from "@extends/modal/Modal.vue";
 import { classificationStore } from "@/store/classification/index";
 import type { Ref } from "vue";
+import $constants from "@/utils/constant";
 
 const useClassificationStore = classificationStore();
 const { addClassification, getClassificationList, getClassificationDetail } =
@@ -95,31 +97,36 @@ const initialFormState: FormState = {
 const classificationForm = reactive<FormState>({ ...initialFormState });
 
 let nameErrorMsg: Ref<string> = ref("");
-const descriptionErrorMsg = "설명을 입력하세요.";
 
 const isShowNameNoti: Ref<boolean> = ref(false);
 const isShowDescNoti: Ref<boolean> = ref(false);
 
 function validateForm(): void {
-  isShowDescNoti.value = false;
-  if (!classificationForm.description) {
-    isShowDescNoti.value = true;
-  }
-  nameErrorMsg.value = "";
-
   if (!classificationForm.name) {
-    // 이름의 값이 없을 경우,
-    nameErrorMsg.value = "이름을 입력하세요.";
+    nameErrorMsg.value = $constants.GOVERNANCE.TITLE.EMPTY_ERROR_MSG;
     isShowNameNoti.value = true;
     return;
   }
-  nameErrorMsg.value = "";
+
+  if (classificationForm.name.length === 1) {
+    nameErrorMsg.value = $constants.GOVERNANCE.TITLE.MINIMUM_LENGTH_ERROR_MSG;
+    isShowNameNoti.value = true;
+    return;
+  }
+
+  if (!$constants.GOVERNANCE.TITLE.REGEX.test(classificationForm.name)) {
+    nameErrorMsg.value = $constants.GOVERNANCE.TITLE.REGEX_ERROR_MSG;
+    isShowNameNoti.value = true;
+    return;
+  }
+
   isShowNameNoti.value = false;
+
   if (!classificationForm.description) {
-    // 설명의 값이 없을 경우,
     isShowDescNoti.value = true;
     return;
   }
+
   isShowDescNoti.value = false;
 
   // 저장 API 호출
