@@ -315,6 +315,7 @@ watch(
 
 // TREE
 const onCategoryNodeClick = async (node: TreeViewItem) => {
+  showSelectedTitleNodeNoti.value = false;
   searchInputValue.value = "";
   selectedModelList.value = [];
   isShowPreview.value = false;
