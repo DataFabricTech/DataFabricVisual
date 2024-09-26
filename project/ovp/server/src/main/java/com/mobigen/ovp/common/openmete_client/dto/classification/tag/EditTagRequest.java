@@ -8,6 +8,5 @@ import java.util.List;
 @Data
 public class EditTagRequest {
     private String classificationName;
-    private String tagName;
     private List<JsonPatchOperation> param;
 }
