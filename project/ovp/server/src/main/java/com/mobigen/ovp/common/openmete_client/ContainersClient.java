@@ -1,6 +1,8 @@
 package com.mobigen.ovp.common.openmete_client;
 
+import com.mobigen.ovp.common.openmete_client.dto.ContainerProfile;
 import com.mobigen.ovp.common.openmete_client.dto.SampleData;
+import com.mobigen.ovp.common.openmete_client.dto.TableProfile;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
 import com.mobigen.ovp.search_detail.dto.request.DataModelDetailVote;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -32,6 +34,9 @@ public interface ContainersClient {
 
     @GetMapping("/name/{fqn}")
     Map<String, Object> getContainersName(@PathVariable String fqn, @RequestParam Map<String, Object> params);
+
+    @GetMapping("/{fqn}/tableProfile/latest")
+    ContainerProfile getContainersTableProfile(@PathVariable("fqn") String fqn);
 
     @PutMapping("/{id}/vote")
     Tables changeVote(@PathVariable("id") String id, @RequestBody DataModelDetailVote dataModelDetailVote);

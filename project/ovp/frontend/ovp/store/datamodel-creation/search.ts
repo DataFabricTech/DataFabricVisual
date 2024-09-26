@@ -11,6 +11,7 @@ import type { Ref } from "vue";
 import $constants from "~/utils/constant";
 import { useQueryHelpers } from "~/composables/queryHelpers";
 import CustomHeader from "@extends/custom-header-cell/custom-header-cell.vue";
+import { $_isEqual } from "../../.nuxt/imports";
 
 interface Filters {
   [FILTER_KEYS.CATEGORY]: Filter;
@@ -439,7 +440,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       if (!fqn) {
         return {};
       }
-      profileData.value = await getProfileData(fqn);
+      profileData.value = await getProfileData(fqn, selectedItem.value.type);
     } else {
       kgData.value = await getKgData();
     }
@@ -489,21 +490,41 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   /**
    * API - 데이터 프로파일링 조회
    */
-  const getProfileData = async (fqn: string) => {
-    return $api(`/api/search/detail/profile/${fqn}`)
-      .then((res: any) => {
-        if (res.result === 1) {
-          return {
-            columnOptions: $constants.COMMON.DATA_PROFILE_RENDER,
-            columnDefs: $constants.COMMON.DATA_PROFILE_COLUMN,
-            rowData: res.data,
-            fqn: fqn,
-          };
-        }
-      })
-      .catch((err: any) => {
-        console.log("err: ", err);
-      });
+  const getProfileData = async (fqn: string, type: string) => {
+    if (_.isEqual(type, "table") || $_isEqual(type, "model")) {
+      console.log("테이블 및 모델 접근 확인");
+      return $api(`/api/search/detail/profile/${fqn}`)
+        .then((res: any) => {
+          if (res.result === 1) {
+            return {
+              columnOptions: $constants.COMMON.DATA_PROFILE_RENDER,
+              columnDefs: $constants.COMMON.DATA_PROFILE_COLUMN,
+              rowData: res.data,
+              fqn: fqn,
+            };
+          }
+        })
+        .catch((err: any) => {
+          console.log("err: ", err);
+        });
+    } else {
+      console.log("스토리지 접근 확인");
+      console.log("fqn: ", fqn);
+      return $api(`/api/search/detail/containers/profile?fqn=${encodeURIComponent(fqn)}`)
+        .then((res: any) => {
+          if (res.result === 1) {
+            return {
+              columnOptions: $constants.COMMON.DATA_PROFILE_RENDER,
+              columnDefs: $constants.COMMON.DATA_PROFILE_COLUMN,
+              rowData: res.data,
+              fqn: fqn,
+            };
+          }
+        })
+        .catch((err: any) => {
+          console.log("err: ", err);
+        });
+    }
   };
 
   /**
