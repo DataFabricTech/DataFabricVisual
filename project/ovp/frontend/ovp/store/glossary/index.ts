@@ -177,12 +177,9 @@ export const useGlossaryStore = defineStore("glossary", () => {
   }
 
   async function deleteTerm(id: string): Promise<void> {
-    const res = await $api(`/api/glossary/terms/${id}`, {
+    return await $api(`/api/glossary/terms/${id}`, {
       method: "DELETE",
     });
-    if (res.data === null) {
-      throw new Error(res.errorMessage);
-    }
   }
 
   function changeCurrentTerm(param: Term): void {

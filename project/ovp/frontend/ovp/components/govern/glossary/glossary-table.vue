@@ -79,15 +79,15 @@ function onClickTerm(source: Term): void {
   openEditTermComponent("term");
 }
 
-async function removeTerm(id: string): Promise<void> {
+function removeTerm(id: string): void {
   if (confirm("용어를 삭제 하시겠습니까?")) {
-    try {
-      await deleteTerm(id);
-    } catch (error) {
-      alert(error);
-    } finally {
-      await getTerms();
-    }
+    deleteTerm(id).then((res) => {
+      if (res.result === 1) {
+        getTerms();
+      } else {
+        alert(res.errorMessage);
+      }
+    });
   }
 }
 
