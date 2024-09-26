@@ -191,7 +191,14 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     const { data, totalCount } = await getSearchListAPI(selectedList);
     searchResult.value = data[currTypeTab.value];
     searchResultLength.value = totalCount;
-    isDoneFirModelListLoad.value = true;
+
+    const types = ["table", "storage", "model"];
+    if (
+      types.includes(currTypeTab.value) &&
+      searchResultLength.value[currTypeTab.value] > 0
+    ) {
+      isDoneFirModelListLoad.value = true;
+    }
 
     // [데이터 갱신] 이 완료되면 호출한다. infiniteScroll 처리하기 위해 필요한 함수. (modal 한정)
     setDataLoadDone();
@@ -210,9 +217,22 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * My 데이터 조회 > 갱신
    */
   const getMyList = async (selectedList: any[] | null = null) => {
+    isDoneFirModelListLoad.value = false;
+
     const { data, totalCount } = await getMyListAPI(selectedList);
     mySearchResult.value = data[currTypeMyTab.value];
     mySearchResultLength.value = totalCount;
+
+    const types = ["owner", "bookmark"];
+    if (
+      types.includes(currTypeMyTab.value) &&
+      mySearchResultLength.value[currTypeMyTab.value] > 0
+    ) {
+      isDoneFirModelListLoad.value = true;
+    }
+
+    // [데이터 갱신] 이 완료되면 호출한다. infiniteScroll 처리하기 위해 필요한 함수. (modal 한정)
+    setDataLoadDone();
   };
   /**
    * 데이터 조회 > 누적
@@ -282,6 +302,8 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * @param item
    */
   const changeTypeTab = (item: string) => {
+    cancelAllSelection();
+    setSelectedItem({});
     currTypeTab.value = item;
     resetReloadList(nSelectedListData.value);
   };
@@ -301,6 +323,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * @param item
    */
   const changeTab = (item: string) => {
+    cancelAllSelection();
+    setSelectedItem({});
+
     currTab.value = item;
     setSearchKeyword("");
 
@@ -330,6 +355,12 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     return resultList.map((item: any) => {
       return { ...item, idShowDetail: item.id === value };
     });
+  };
+
+  const cancelAllSelection = () => {
+    nSelectedListData.value = updateSelection(nSelectedListData.value, "");
+    searchResult.value = updateSelection(searchResult.value, "");
+    mySearchResult.value = updateSelection(mySearchResult.value, "");
   };
 
   /**
@@ -668,5 +699,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     updateSelectedModelBookmark,
     updateMainSelectedModelBookmark,
     setNSelectedListData,
+    cancelAllSelection,
   };
 });
