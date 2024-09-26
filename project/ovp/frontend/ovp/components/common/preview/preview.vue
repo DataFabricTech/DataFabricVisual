@@ -151,7 +151,7 @@ const gotoDetail = () => {
   };
 
   const detailPath = "/portal/search/detail";
-  router.replace({
+  router.push({
     path: detailPath,
     query: {
       type: index,
