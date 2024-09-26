@@ -508,7 +508,11 @@ public class SearchDetailService {
 
                 DataModelDetailTagDto tag = new DataModelDetailTagDto();
                 tag.setName(tempTag.get("name").toString());
-                tag.setDisplayName(tempTag.get("displayName").toString());
+
+                if (tempTag.get("displayName") != null) {
+                    tag.setDisplayName(tempTag.get("displayName").toString());
+                }
+
                 tag.setDescription(tempTag.get("description").toString());
                 tag.setTagFQN(tempTag.get("fullyQualifiedName").toString());
                 tag.setSource(target);
