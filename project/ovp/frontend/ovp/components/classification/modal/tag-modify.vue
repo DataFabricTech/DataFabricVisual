@@ -6,9 +6,9 @@
           <span class="modal-head-title">태그수정</span>
         </div>
         <button
-            class="button link-button button-sm"
-            type="button"
-            @click="closeModalTag"
+          class="button link-button button-sm"
+          type="button"
+          @click="closeModalTag"
         >
           <span class="hidden-text">닫기</span>
           <svg-icon class="button-icon" name="close"></svg-icon>
@@ -24,9 +24,10 @@
               </label>
               <div class="form-detail">
                 <input
-                    id="data-model-save-name"
-                    class="text-input text-input-lg"
-                    placeholder="이름을 입력하세요."
+                  id="data-model-save-name"
+                  class="text-input text-input-lg"
+                  placeholder="이름을 입력하세요."
+                  maxlength="20"
                 />
                 <div class="notification notification-sm notification-error">
                   <svg-icon class="notification-icon" name="error"></svg-icon>
@@ -41,9 +42,9 @@
               </label>
               <div class="form-detail">
                 <textarea
-                    id="data-model-save-description"
-                    class="textarea h-28"
-                    placeholder="설명을 입력하세요."
+                  id="data-model-save-description"
+                  class="textarea h-28"
+                  placeholder="설명을 입력하세요."
                 ></textarea>
                 <div class="notification notification-sm notification-error">
                   <svg-icon class="notification-icon" name="error"></svg-icon>
@@ -56,8 +57,8 @@
       </div>
       <div class="modal-foot">
         <button
-            class="button button-neutral-ghost button-lg"
-            @click="closeModalTag"
+          class="button button-neutral-ghost button-lg"
+          @click="closeModalTag"
         >
           취소
         </button>
@@ -71,12 +72,12 @@
 </template>
 
 <script setup lang="ts">
-import { defineEmits } from 'vue';
+import { defineEmits } from "vue";
 
-const emit = defineEmits(['close-modal']);
+const emit = defineEmits(["close-modal"]);
 
 const closeModalTag = () => {
-  emit('close-modal');
+  emit("close-modal");
 };
 </script>
 

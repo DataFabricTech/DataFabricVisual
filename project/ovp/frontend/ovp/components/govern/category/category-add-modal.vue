@@ -31,6 +31,7 @@
                 class="text-input text-input-lg"
                 placeholder="이름을 입력하세요."
                 v-model="categoryAddName"
+                maxlength="20"
               />
               <div
                 class="notification notification-sm notification-error"
