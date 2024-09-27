@@ -162,7 +162,7 @@ const gotoDetail = () => {
 
   if (detailPath === route.path) {
     // 같은 페이지로 이동시에 페이지 리로드
-    location.reload();
+    router.go(0);
   }
 };
 </script>
