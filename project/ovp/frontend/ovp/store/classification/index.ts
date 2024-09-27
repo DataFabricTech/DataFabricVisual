@@ -76,6 +76,7 @@ export const classificationStore = defineStore("classification", () => {
 
   // 현재 선택된 아이디 분류 ID값(기본값 : classificationList[0]의 ID값)
   const currentClassificationID: Ref = ref("");
+
   // 현재 태그의 분류 name값
   const currentClassificationTagName: Ref<string> = ref("");
 
@@ -193,6 +194,19 @@ export const classificationStore = defineStore("classification", () => {
     });
   };
 
+  // 태그 수정 API 호출
+  const editClassificationTag = (editData: any, tagId: string) => {
+    editData["classificationName"] = currentClassificationTagName.value;
+
+    return $api(`/api/tags/edit/${tagId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json-patch+json",
+      },
+      body: JSON.stringify(editData),
+    });
+  };
+
   return {
     classificationList,
     currentClassificationTagName,
@@ -211,5 +225,6 @@ export const classificationStore = defineStore("classification", () => {
     addClassificationTag,
     isNameEditable,
     isDescEditable,
+    editClassificationTag,
   };
 });

@@ -1,6 +1,6 @@
 <template>
   <div class="l-top-bar">
-    <button class="button button-secondary ml-auto" @click="openModal">
+    <button class="button button-secondary ml-auto" @click="openTagCreateModal">
       태그추가
     </button>
   </div>
@@ -24,12 +24,12 @@
       <td>{{ tag.description }}</td>
       <td>
         <div class="button-group">
-          <!--          <button-->
-          <!--            class="button button button-secondary-stroke"-->
-          <!--            @click="showModifyTag = true"-->
-          <!--          >-->
-          <!--            편집-->
-          <!--          </button>-->
+          <button
+            class="button button button-secondary-stroke"
+            @click="modalOpen(tag)"
+          >
+            편집
+          </button>
           <button
             class="button button button-error-stroke"
             @click="confirmDelete(tag.id)"
@@ -50,16 +50,13 @@
       </td>
     </tr>
   </table>
-  <!--  <tag-modify-->
-  <!--    v-if="showModifyTag == true"-->
-  <!--    @close-modal="closeModifyTag"-->
-  <!--  ></tag-modify>-->
 </template>
 
 <script setup lang="ts">
 import { classificationStore } from "@/store/classification/index";
 import { useModal } from "vue-final-modal";
 import tagCreate from "@/components/classification/modal/tag-create.vue";
+import tagModify from "@/components/classification/modal/tag-modify.vue";
 
 const useClassificationStore = classificationStore();
 const { classificationTagList } = storeToRefs(useClassificationStore);
@@ -68,20 +65,47 @@ const { deleteClassificationTag, getClassificationTags } =
 
 // 태그 추가 모달 ID
 const MODAL_ID = "modal-classificationTag";
+// 태그 수정 모달 ID
+const MODAL_MODIFY_ID = "modal-classificationTag-modify";
 
-const { open, close } = useModal({
+// 수정할 태그의 정보
+const formInfo = ref({ name: "", description: "", id: "" });
+
+const { open: openTagCreateModal, close: closeTagCreateModal } = useModal({
   component: tagCreate,
   attrs: {
     modalId: MODAL_ID,
     onClose() {
-      close();
+      closeTagCreateModal();
     },
   },
 });
 
-function openModal() {
-  open();
-}
+const { open: tagModifyOpen, close: closeTagEditModal } = useModal({
+  component: tagModify,
+  attrs: {
+    modalId: MODAL_MODIFY_ID,
+    formInfo: formInfo,
+    onClose() {
+      closeTagEditModal();
+    },
+  },
+});
+
+const modalOpen = ({
+  id,
+  name,
+  description,
+}: {
+  id: string;
+  name: string;
+  description: string;
+}) => {
+  formInfo.value.id = id;
+  formInfo.value.name = name;
+  formInfo.value.description = description;
+  tagModifyOpen();
+};
 
 const confirmDelete = (tagId: string) => {
   if (confirm("삭제하시겠습니까?")) {
