@@ -21,6 +21,7 @@
       <div v-else class="menu border-none">
         <div class="menu-list">
           <li
+            class="menu-item"
             :class="menuListClass(item.id)"
             v-for="item in classificationList"
             :key="item.id"
@@ -46,16 +47,15 @@ import { useModal } from "vue-final-modal";
 import _ from "lodash";
 
 const useClassificationStore = classificationStore();
-const { classificationList, showNameNoti, currentClassificationID } = storeToRefs(
-  useClassificationStore,
-);
+const { classificationList, showNameNoti, currentClassificationID } =
+  storeToRefs(useClassificationStore);
 const { getClassificationDetail, getClassificationTags } =
   useClassificationStore;
 
 const menuListClass = (data: string): string => {
   return _.isEqual(currentClassificationID.value, data)
-    ? "menu-item is-menu-item-selected"
-    : "menu-item";
+    ? " is-menu-item-selected"
+    : "";
 };
 // 분류 추가 모달 ID
 const MODAL_ID = "modal-classification";
