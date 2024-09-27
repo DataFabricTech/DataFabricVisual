@@ -2,10 +2,10 @@
   <div class="alert-overlay" v-if="isModeless"></div>
   <div class="alert center" :style="{ width: width + 'px' }" v-if="isVisible">
     <div class="alert-body">
-      <div :class="`notification notification-${type}`">
-        <svg-icon class="notification-icon" :name="type"></svg-icon>
-        <p class="notification-detail">{{ message }}</p>
-      </div>
+      <!-- TODO:[개발] 기획변경으로 노티피케이션 생략하고 일반 텍스트 추가하였습니다. -->
+      <p class="alert-text">
+        alert test text
+      </p>
     </div>
     <div class="alert-foot">
       <div class="alert-foot-group">
@@ -35,23 +35,4 @@ const {
 } = useAlert();
 </script>
 <style scoped>
-.alert-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 10000;
-}
-.center {
-  position: absolute;
-  z-index: 11000;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-}
 </style>
