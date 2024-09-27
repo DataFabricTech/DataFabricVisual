@@ -34,11 +34,13 @@
 </template>
 
 <script setup lang="ts">
+import { useNuxtApp } from "nuxt/app";
 import _ from "lodash";
 
 import { ref, shallowRef } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
+const { $alert, $confirm } = useNuxtApp();
 
 import { useDataModelDetailStore } from "@/store/search/detail/index";
 import { useLineageStore } from "@/store/search/detail/lineage/index";
@@ -160,6 +162,7 @@ async function changeTab(tab: number | string) {
     case "knowledge":
       break;
     case "recommended":
+      $alert("개발중입니다.", "info");
       break;
   }
   currentComponent.value = _.find(tabOptions, ["value", tab])?.component;

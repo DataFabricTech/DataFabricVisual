@@ -12,6 +12,7 @@
     </main>
   </div>
   <ModalsContainer />
+  <Alert />
 </template>
 <script setup lang="ts">
 import Header from "./header.vue";
@@ -20,6 +21,7 @@ import Sidebar from "./sidebar.vue";
 import { useRoute, useHead } from "nuxt/app";
 import Loading from "~/components/common/Loading.vue";
 import { ModalsContainer } from "vue-final-modal";
+import Alert from "@extends/alert/Alert.vue";
 
 const route = useRoute();
 </script>
