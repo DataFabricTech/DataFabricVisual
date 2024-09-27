@@ -16,12 +16,12 @@ export default defineNuxtPlugin(() => {
 
   router.beforeEach(async (to, from, next) => {
     try {
-      const path = to.fullPath.replace(/^\/portal/, "");
+      const path = to.path.replace(/^\/portal/, "");
       const url = "/" + path.split("/")[1];
       console.log(`[권한 테스트 로그] Navigating to: ${url}`);
 
       // 권한이 필요하지 않은 페이지 예외처리
-      const noAuthPages = ["/", "/login", "/_pub"];
+      const noAuthPages = ["/", "/login", "/_pub", "/my-page"];
       if (noAuthPages.includes(url)) {
         return next();
       }
@@ -45,7 +45,9 @@ export default defineNuxtPlugin(() => {
         return _.isEmpty(item) ? null : item.linkTo.includes(url);
       });
       if (_.isEmpty(menuObj)) {
-        return next("/portal/login/error");
+        // return next("/portal/login/error");
+        console.error("에러페이지로 이동");
+        return next();
       }
       const menuAuth = menuObj?.menuAuth || "U"; // 기본값 "U"
 
@@ -56,7 +58,9 @@ export default defineNuxtPlugin(() => {
 
       // 일반 사용자 권한 확인
       if (menuAuth === "A") {
-        return next("/portal/login/error"); // 접근 권한 없는 페이지로 이동
+        // return next("/portal/login/error"); // 접근 권한 없는 페이지로 이동
+        console.error("에러페이지로 이동");
+        return next();
       }
 
       // 일반 사용자이지만 메뉴가 'U' 임.
