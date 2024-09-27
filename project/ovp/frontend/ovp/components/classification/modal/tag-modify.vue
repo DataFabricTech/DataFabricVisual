@@ -74,12 +74,6 @@ const emit = defineEmits<{
   (e: "close"): void;
 }>();
 
-const emit = defineEmits(["close-modal"]);
-
-const closeModalTag = () => {
-  emit("close-modal");
-};
-
 interface TagFormState {
   name: string;
   description: string;
