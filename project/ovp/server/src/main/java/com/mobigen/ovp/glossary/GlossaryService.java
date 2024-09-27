@@ -121,6 +121,18 @@ public class GlossaryService {
     }
 
     /**
+     * 용어 조회
+     * @param id
+     * @return
+     */
+    public Object getGlossaryTerm(String id) {
+        final String FIELDS = "tags,relatedTerms";
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("fields", FIELDS);
+        return new Terms(glossaryClient.getGlossaryTerm(id, params));
+    }
+
+    /**
      * 용어 리스트
      * @param directChildrenOf
      * @return

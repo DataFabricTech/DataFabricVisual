@@ -89,6 +89,17 @@ public class GlossaryController {
     }
 
     /**
+     * 용어 조회
+     * @param id
+     * @return
+     */
+    @ResponseJsonResult
+    @GetMapping("/terms/{id}")
+    public Object getGlossaryTerm(@PathVariable String id) {
+        return glossaryService.getGlossaryTerm(id);
+    }
+
+    /**
      * 용어 리스트
      *
      * @param term
