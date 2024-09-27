@@ -103,11 +103,12 @@
 
 <script setup lang="ts">
 import { computed } from "vue";
-import type { PreviewData } from "~/type/common";
+import type { PreviewData } from "@/type/common";
 
-import { useRouter } from "nuxt/app";
+import { useRouter, useRoute } from "nuxt/app";
 
 const router = useRouter();
+const route = useRoute();
 
 interface Props {
   previewData: PreviewData;
@@ -149,14 +150,20 @@ const gotoDetail = () => {
     index: string;
   };
 
+  const detailPath = "/portal/search/detail";
   router.push({
-    path: "/portal/search/detail",
+    path: detailPath,
     query: {
       type: index,
       id: id,
       fqn: fqn,
     },
   });
+
+  if (detailPath === route.path) {
+    // 같은 페이지로 이동시에 페이지 리로드
+    router.go(0);
+  }
 };
 </script>
 
