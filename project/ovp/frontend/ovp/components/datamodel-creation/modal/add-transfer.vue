@@ -213,13 +213,6 @@ const onChangeTypeMyTab = (value: string) => {
  * 선택 데이터 추가 > 오른쪽으로 이동
  */
 const onSaveSelectedData = () => {
-  // if(!_.isEmpty(nSelectedListData.value)) {
-  //   nSelectedListData.value = nSelectedListData.value.map((item: any) => {
-  //     item.isFollow = $_find(searchResult.value, { id: item.id });
-  //     return item;
-  //   });
-  // }
-
   // 임시로 저장된 데이터들과 기존 선택 데이터를 합침
   const combinedList = nSelectedListData.value
     .concat(tempSelectedListData.value)
