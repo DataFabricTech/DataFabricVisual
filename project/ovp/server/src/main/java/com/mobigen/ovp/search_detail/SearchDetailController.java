@@ -111,7 +111,7 @@ public class SearchDetailController {
     }
 
     /**
-     * 프로파일링
+     * 프로파일링 - table
      *
      * @param fqn
      * @return
@@ -122,6 +122,19 @@ public class SearchDetailController {
         log.info("");
 
         return searchDetailService.getTableProfile(fqn);
+    }
+
+    /**
+     * 프로파일링 - container
+     *
+     * @param fqn
+     * @return
+     */
+    @ResponseJsonResult
+    @GetMapping("/containers/profile/{fqn}")
+    Object getContainersTableProfile(@PathVariable String fqn) {
+        log.info("");
+        return searchDetailService.getContainersTableProfile(fqn);
     }
 
     /**

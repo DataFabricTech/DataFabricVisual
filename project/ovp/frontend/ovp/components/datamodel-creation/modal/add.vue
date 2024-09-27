@@ -8,7 +8,7 @@
     :clickToClose="true"
     :escToClose="true"
     :width="900"
-    :height="560"
+    :height="837"
     :lockScroll="true"
     swipeToClose="none"
     @closed="onCloseModal"
@@ -78,11 +78,13 @@ const {
   setSearchKeyword,
   setSelectedItem,
   setSearchMyKeyword,
+  cancelAllSelection,
 } = dataModelSearchStore;
 
 Promise.all([resetReloadList(), getFilters(), resetDetailBox()]);
 
 const onOpenModal = async () => {
+  cancelAllSelection();
   // 전체+MY / 필터 / 내부 선택 목록 데이터 초기화
   setNSelectedListData($_cloneDeep(selectedModelList.value));
 };
@@ -97,7 +99,10 @@ const onCancelModal = () => {
 
 const onConfirmModal = () => {
   // 내부 데이터 저장modalId
-  selectedModelList.value = nSelectedListData.value;
+  selectedModelList.value = nSelectedListData.value.filter((item) => {
+    item.idShowDetail = false;
+    return true;
+  });
   emit("close");
 };
 

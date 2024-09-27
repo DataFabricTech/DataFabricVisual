@@ -156,16 +156,20 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   };
 
   const getSampleData = async () => {
-    const data = await $api(
+    const { data } = await $api(
       `/api/search/detail/sample-data/${dataModelId}?type=${dataModelType.value}`,
     );
-    sampleColumns.value = _.map(data.data.columns, (value) => {
-      return {
-        headerName: `${value.name}(${value.dataType})`,
-        field: value.name,
-      };
-    });
-    sampleList.value = data.data.sampleList;
+    if (data !== null) {
+      sampleColumns.value = _.map(data.columns, (value) => {
+        return {
+          headerName: `${value.name}(${value.dataType})`,
+          field: value.name,
+        };
+      });
+      sampleList.value = data.sampleList;
+    } else {
+      sampleList.value = [];
+    }
   };
 
   const getProfile = async () => {

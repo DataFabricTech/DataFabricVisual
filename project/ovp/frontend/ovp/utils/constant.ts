@@ -166,5 +166,14 @@ const $constants = {
       ],
     },
   },
+  GOVERNANCE: {
+    TITLE: {
+      REGEX: /^[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ_\-\.\(\)&]+$/,
+      EMPTY_ERROR_MSG: "이름을 입력하세요.",
+      MINIMUM_LENGTH_ERROR_MSG: "이름은 2글자 이상 작성되어야 합니다.",
+      REGEX_ERROR_MSG:
+        "허용 가능한 특수 문자 (이름에는 문자, 숫자, '_', '-', '.', 괄호, '&'만 사용할 수 있습니다.",
+    },
+  },
 };
 export default Object.freeze($constants);

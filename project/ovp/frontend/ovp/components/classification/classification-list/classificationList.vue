@@ -11,7 +11,7 @@
       <!-- 로딩 중일 때는 아무것도 표시하지 않음 -->
     </div>
     <!-- 데이터 로딩 후 분류 목록 또는 "등록된 정보가 없습니다." 메시지 표시 -->
-    <div v-else>
+    <div class="work-list-contents" v-else>
       <div v-if="classificationList.length === 0" class="no-result">
         <div class="notification">
           <svg-icon class="notification-icon" name="info"></svg-icon>
@@ -47,7 +47,9 @@ import { classificationStore } from "@/store/classification/index";
 import { useModal } from "vue-final-modal";
 
 const useClassificationStore = classificationStore();
-const { classificationList } = storeToRefs(useClassificationStore);
+const { classificationList, showNameNoti } = storeToRefs(
+  useClassificationStore,
+);
 const { getClassificationDetail, getClassificationTags } =
   useClassificationStore;
 
@@ -77,6 +79,7 @@ const props = defineProps({
 
 // 분류 목록 중 단일 목록 클릭시 실행되는 함수
 const showClassificationDetail = async (id: string, name: string) => {
+  showNameNoti.value = false;
   // 선택한 분류의 상세 조회 API 호출
   await getClassificationDetail(id);
   // 태그 리스트 API 호출

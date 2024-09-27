@@ -25,7 +25,7 @@
             <p class="notification-detail">등록된 정보가 없습니다.</p>
           </div>
         </div>
-        <div class="work-list-tree" v-else>
+        <div class="work-list-contents" v-else>
           <tree-vue
             v-if="categories && categories.length"
             mode="edit"
@@ -58,32 +58,45 @@
       </div>
       <div class="work-page" v-else>
         <div class="l-top-bar h-[48.8px]">
-          <editable-group
-            compKey="title"
-            :editable="isEditableNode"
-            :parent-edit-mode="isTitleEditMode"
-            @editCancel="editCancel"
-            @editDone="editDone"
-            @editIcon="editIcon"
-          >
-            <template #edit-slot>
-              <label class="hidden-text" for="title-modify"
-                >카테고리 이름 수정</label
-              >
-              <input
-                v-model="selectedTitleNodeValue"
-                placeholder="카테고리명에 대한 영역입니다."
-                required
-                id="title-modify"
-                class="text-input w-1/2"
-              />
-            </template>
-            <template #view-slot>
-              <h3 class="editable-group-title">
-                {{ selectedNodeCategory.name }}
-              </h3>
-            </template>
-          </editable-group>
+          <div class="h-group gap-2">
+            <editable-group
+              class="w-auto"
+              compKey="title"
+              :editable="isEditableNode"
+              :parent-edit-mode="isTitleEditMode"
+              @editCancel="editCancel"
+              @editDone="editDone"
+              @editIcon="editIcon"
+            >
+              <template #edit-slot>
+                <label class="hidden-text" for="title-modify"
+                  >카테고리 이름 수정</label
+                >
+                <input
+                  v-model="selectedTitleNodeValue"
+                  placeholder="카테고리명에 대한 영역입니다."
+                  maxlength="20"
+                  required
+                  id="title-modify"
+                  class="text-input w-1/2"
+                />
+              </template>
+              <template #view-slot>
+                <h3 class="editable-group-title">
+                  {{ selectedNodeCategory.name }}
+                </h3>
+              </template>
+            </editable-group>
+            <div
+              class="notification notification-sm notification-error"
+              v-if="showSelectedTitleNodeNoti"
+            >
+              <svg-icon class="notification-icon" name="error"></svg-icon>
+              <p class="notification-detail">
+                {{ selectedTitleNodeMsg }}
+              </p>
+            </div>
+          </div>
           <button
             class="button button-error-lighter"
             @click="_deleteCategory"
@@ -125,7 +138,6 @@
           <div class="category-search" v-if="isModalButtonShow">
             <div class="l-top-bar">
               <search-input
-                class="w-[541px]"
                 :is-search-input-default-type="false"
                 :placeholder="'검색어를 입력하세요.'"
                 :inp-value="searchInputValue"
@@ -281,6 +293,10 @@ let previewIndex: string = "table";
 
 const selectedDescNodeValue = ref(selectedNodeCategory.value.desc || "");
 const isAllModelListChecked = ref<boolean>(false);
+
+const showSelectedTitleNodeNoti = ref(false);
+const selectedTitleNodeMsg = ref("");
+
 watch(
   () => selectedNodeCategory.value.name,
   (newVal) => {
@@ -299,6 +315,7 @@ watch(
 
 // TREE
 const onCategoryNodeClick = async (node: TreeViewItem) => {
+  showSelectedTitleNodeNoti.value = false;
   searchInputValue.value = "";
   selectedModelList.value = [];
   isShowPreview.value = false;
@@ -481,6 +498,7 @@ const editCancel = (key: string) => {
     case "title":
       selectedTitleNodeValue.value = selectedNodeCategory.value.name;
       isTitleEditMode.value = false;
+      showSelectedTitleNodeNoti.value = false;
       break;
     case "desc":
       selectedDescNodeValue.value = selectedNodeCategory.value.desc;
@@ -489,26 +507,48 @@ const editCancel = (key: string) => {
   }
 };
 const editDone = (key: string) => {
+  const hasError = ref(false);
+
   switch (key) {
     case "title":
       if (selectedTitleNodeValue.value === "") {
-        return;
+        selectedTitleNodeMsg.value =
+          $constants.GOVERNANCE.TITLE.EMPTY_ERROR_MSG;
+        hasError.value = true;
+      } else if (selectedTitleNodeValue.value.length === 1) {
+        selectedTitleNodeMsg.value =
+          $constants.GOVERNANCE.TITLE.MINIMUM_LENGTH_ERROR_MSG;
+        hasError.value = true;
+      } else if (
+        !$constants.GOVERNANCE.TITLE.REGEX.test(selectedTitleNodeValue.value)
+      ) {
+        selectedTitleNodeMsg.value =
+          $constants.GOVERNANCE.TITLE.REGEX_ERROR_MSG;
+        hasError.value = true;
+      } else {
+        selectedNodeCategory.value.name = selectedTitleNodeValue.value;
       }
-      selectedNodeCategory.value.name = selectedTitleNodeValue.value;
-      isTitleEditMode.value = false;
+
+      showSelectedTitleNodeNoti.value = hasError.value;
+      isTitleEditMode.value = hasError.value;
       break;
+
     case "desc":
       if (selectedDescNodeValue.value === "") {
         selectedNodeCategory.value.desc = "-";
-        return;
+      } else {
+        selectedNodeCategory.value.desc = selectedDescNodeValue.value;
       }
-      selectedNodeCategory.value.desc = selectedDescNodeValue.value;
+
       isDescEditMode.value = false;
       break;
   }
 
-  _editCategory();
+  if (!hasError.value) {
+    _editCategory();
+  }
 };
+
 const editIcon = (key: string) => {
   switch (key) {
     case "title":

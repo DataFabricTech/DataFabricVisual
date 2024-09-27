@@ -141,6 +141,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       const keyValue = key === "category" ? "tags.tagFQN" : key;
       queryFilter.query.bool.must.push(setQueryFilterByDepth(keyValue, value));
     }
+
+    queryFilter.query.bool.must_not = [{ term: { fileFormats: "hwpx" } }];
+
     return queryFilter;
   };
 
@@ -191,7 +194,14 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     const { data, totalCount } = await getSearchListAPI(selectedList);
     searchResult.value = data[currTypeTab.value];
     searchResultLength.value = totalCount;
-    isDoneFirModelListLoad.value = true;
+
+    const types = ["table", "storage", "model"];
+    if (
+      types.includes(currTypeTab.value) &&
+      searchResultLength.value[currTypeTab.value] > 0
+    ) {
+      isDoneFirModelListLoad.value = true;
+    }
 
     // [데이터 갱신] 이 완료되면 호출한다. infiniteScroll 처리하기 위해 필요한 함수. (modal 한정)
     setDataLoadDone();
@@ -210,9 +220,22 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * My 데이터 조회 > 갱신
    */
   const getMyList = async (selectedList: any[] | null = null) => {
+    isDoneFirModelListLoad.value = false;
+
     const { data, totalCount } = await getMyListAPI(selectedList);
     mySearchResult.value = data[currTypeMyTab.value];
     mySearchResultLength.value = totalCount;
+
+    const types = ["owner", "bookmark"];
+    if (
+      types.includes(currTypeMyTab.value) &&
+      mySearchResultLength.value[currTypeMyTab.value] > 0
+    ) {
+      isDoneFirModelListLoad.value = true;
+    }
+
+    // [데이터 갱신] 이 완료되면 호출한다. infiniteScroll 처리하기 위해 필요한 함수. (modal 한정)
+    setDataLoadDone();
   };
   /**
    * 데이터 조회 > 누적
@@ -282,6 +305,8 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * @param item
    */
   const changeTypeTab = (item: string) => {
+    cancelAllSelection();
+    setSelectedItem({});
     currTypeTab.value = item;
     resetReloadList(nSelectedListData.value);
   };
@@ -301,6 +326,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * @param item
    */
   const changeTab = (item: string) => {
+    cancelAllSelection();
+    setSelectedItem({});
+
     currTab.value = item;
     setSearchKeyword("");
 
@@ -332,6 +360,12 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     });
   };
 
+  const cancelAllSelection = () => {
+    nSelectedListData.value = updateSelection(nSelectedListData.value, "");
+    searchResult.value = updateSelection(searchResult.value, "");
+    mySearchResult.value = updateSelection(mySearchResult.value, "");
+  };
+
   /**
    * 추가 모달 > 데이터 선택(상세보기)
    * @param value
@@ -345,11 +379,17 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       mySearchResult.value = updateSelection(mySearchResult.value, value);
     }
 
+    nSelectedListData.value = updateSelection(nSelectedListData.value, "");
+
     await resetDetailBox();
   };
 
   const onClickSelectedData = async (value: string) => {
-    setSelectedData(value);
+    const selectedMyModelItem = _.find(nSelectedListData.value, { id: value });
+    selectedItem.value = $_isUndefined(selectedMyModelItem)
+      ? {}
+      : selectedMyModelItem;
+
     nSelectedListData.value = nSelectedListData.value.map((item: any) => {
       return {
         ...item,
@@ -402,7 +442,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       if (!fqn) {
         return {};
       }
-      profileData.value = await getProfileData(fqn);
+      profileData.value = await getProfileData(fqn, selectedItem.value.type);
     } else {
       kgData.value = await getKgData();
     }
@@ -452,21 +492,25 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   /**
    * API - 데이터 프로파일링 조회
    */
-  const getProfileData = async (fqn: string) => {
-    return $api(`/api/search/detail/profile/${fqn}`)
-      .then((res: any) => {
-        if (res.result === 1) {
-          return {
-            columnOptions: $constants.COMMON.DATA_PROFILE_RENDER,
-            columnDefs: $constants.COMMON.DATA_PROFILE_COLUMN,
-            rowData: res.data,
-            fqn: fqn,
-          };
-        }
-      })
-      .catch((err: any) => {
-        console.log("err: ", err);
-      });
+  const getProfileData = async (fqn: string, type: string) => {
+    const isTableOrModel = _.isEqual(type, "table") || $_isEqual(type, "model");
+    const url = isTableOrModel
+      ? `/api/search/detail/profile/${fqn}`
+      : `/api/search/detail/containers/profile/${fqn}`;
+
+    try {
+      const res = await $api(url);
+      if (res.result === 1) {
+        return {
+          columnOptions: $constants.COMMON.DATA_PROFILE_RENDER,
+          columnDefs: $constants.COMMON.DATA_PROFILE_COLUMN,
+          rowData: res.data,
+          fqn: fqn,
+        };
+      }
+    } catch (err) {
+      console.log("err: ", err);
+    }
   };
 
   /**
@@ -662,5 +706,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     updateSelectedModelBookmark,
     updateMainSelectedModelBookmark,
     setNSelectedListData,
+    cancelAllSelection,
   };
 });

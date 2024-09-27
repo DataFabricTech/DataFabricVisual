@@ -1,8 +1,9 @@
 <template>
   <div class="work-page">
-    <div class="l-top-bar">
-      <div class="v-group gap-[20px]">
+    <div class="l-top-bar h-[48.8px]">
+      <div class="h-group gap-2">
         <editable-group
+          class="w-auto"
           :parent-edit-mode="isNameEditable"
           compKey="name"
           :editable="true"
@@ -18,12 +19,22 @@
               required
               id="title-modify"
               class="text-input"
+              maxlength="20"
             />
           </template>
           <template #view-slot>
             <h3 class="editable-group-title">{{ newData.name }}</h3>
           </template>
         </editable-group>
+        <div
+          class="notification notification-sm notification-error"
+          v-if="showNameNoti"
+        >
+          <svg-icon class="notification-icon" name="error"></svg-icon>
+          <p class="notification-detail">
+            {{ nameNotiMsg }}
+          </p>
+        </div>
       </div>
       <button class="button button-error-lighter" @click="confirmDelete">
         삭제
@@ -66,11 +77,12 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import _ from "lodash";
 import { classificationStore } from "@/store/classification/index";
 import tagList from "@/components/classification/classification-list/tagList.vue";
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
+import $constants from "~/utils/constant";
 
 const useClassificationStore = classificationStore();
 const {
@@ -80,8 +92,12 @@ const {
   getClassificationDetail,
   getClassificationTags,
 } = useClassificationStore;
-const { classificationDetailData, isNameEditable, isDescEditable } =
-  storeToRefs(useClassificationStore);
+const {
+  classificationDetailData,
+  isNameEditable,
+  isDescEditable,
+  showNameNoti,
+} = storeToRefs(useClassificationStore);
 
 interface ClassificationDetail {
   id: string;
@@ -89,6 +105,8 @@ interface ClassificationDetail {
   displayName: string | null;
   description: string | null;
 }
+
+const nameNotiMsg = ref("");
 
 let defaultData: ClassificationDetail = {
   id: "",
@@ -116,21 +134,41 @@ interface JsonPatchOperation {
 
 // 수정될 내용 형식 만드는 함수
 const createJsonPatch = (oldData: any, newData: any): JsonPatchOperation[] => {
+  const hasError = ref(false);
   const patch: JsonPatchOperation[] = [];
-  if (oldData.name !== newData.name) {
-    patch.push({
-      op: "replace",
-      path: "/name",
-      value: newData.name,
-    });
+
+  if (newData.name === "") {
+    nameNotiMsg.value = $constants.GOVERNANCE.TITLE.EMPTY_ERROR_MSG;
+    hasError.value = true;
+  } else if (newData.name.length === 1) {
+    nameNotiMsg.value = $constants.GOVERNANCE.TITLE.MINIMUM_LENGTH_ERROR_MSG;
+    hasError.value = true;
+  } else if (!$constants.GOVERNANCE.TITLE.REGEX.test(newData.name)) {
+    nameNotiMsg.value = $constants.GOVERNANCE.TITLE.REGEX_ERROR_MSG;
+    hasError.value = true;
   }
-  if (oldData.description !== newData.description) {
-    patch.push({
-      op: "replace",
-      path: "/description",
-      value: newData.description,
-    });
+
+  showNameNoti.value = hasError.value;
+  isNameEditable.value = hasError.value;
+
+  if (!hasError.value) {
+    if (oldData.name !== newData.name) {
+      patch.push({
+        op: "replace",
+        path: "/name",
+        value: newData.name,
+      });
+    }
+
+    if (oldData.description !== newData.description) {
+      patch.push({
+        op: "replace",
+        path: "/description",
+        value: newData.description,
+      });
+    }
   }
+
   return patch;
 };
 
@@ -153,15 +191,10 @@ const editIconClick = (key: string) => {
 
 const editCancel = () => {
   classificationDetailData.value = _.cloneDeep(defaultData);
+  showNameNoti.value = false;
 };
 
 const editDone = async () => {
-  // 분류이름이 빈값으로 수정할 경우, 기존값으로 세팅
-  if (!newData.value.name) {
-    classificationDetailData.value = _.cloneDeep(defaultData);
-    return;
-  }
-
   // 이름이 있을 경우에만 API 호출 로직 수행
   const patchData = createJsonPatch(defaultData, newData.value);
 
@@ -175,10 +208,12 @@ const editDone = async () => {
         newData.value.description = "-";
       }
       classificationDetailData.value = _.cloneDeep(newData.value);
+      isDescEditable.value = false;
       return;
     } else {
       // 서버 수정 실패시, 기존 값으로 복구
       classificationDetailData.value = defaultData;
+      isDescEditable.value = false;
     }
   } catch (error) {
     console.error("API 호출 중 오류 발생: ", error);

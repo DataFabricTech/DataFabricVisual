@@ -36,6 +36,7 @@
             @filter-change="onClickApiFilterChange"
             @sort-change="onClickApiSortChange"
             @search-change="onClickApiSearchChange"
+            @filter-reset="onClickApiReset"
           >
             <template v-slot:tab>
               <Tab
@@ -147,11 +148,13 @@ const {
   setSortInfo,
   setSelectedFilter,
   setSearchKeyword,
+  setSelectedItem,
   onClickData,
   onClickSelectedData,
   setSearchMyKeyword,
   onClickBookmark,
   updateSelectedModelBookmark,
+  cancelAllSelection
 } = dataModelSearchStore;
 const {
   filters,
@@ -209,13 +212,22 @@ const onChangeTypeMyTab = (value: string) => {
  * 선택 데이터 추가 > 오른쪽으로 이동
  */
 const onSaveSelectedData = () => {
-  // 임시로 저장되어 있던 값을 선택 리스트에 저장
-  nSelectedListData.value = nSelectedListData.value
+  // 임시로 저장된 데이터들과 기존 선택 데이터를 합침
+  const combinedList = nSelectedListData.value
     .concat(tempSelectedListData.value)
     .concat(tempMyListSelectedListData.value);
 
+  // 중복 제거: fqn 값을 기준으로 고유한 값을 필터링
+  nSelectedListData.value = combinedList.filter(
+    (item, index) =>
+      index === combinedList.findIndex((t) => t.fqn === item.fqn),
+  );
+
   tempSelectedListData.value = [];
   tempMyListSelectedListData.value = [];
+
+  setSelectedItem({});
+  cancelAllSelection();
 };
 
 /**
@@ -245,6 +257,9 @@ const onDeleteSelectedData = () => {
     }
     return item;
   });
+
+  setSelectedItem({});
+  cancelAllSelection();
 };
 
 const isSelectedData: (item: any) => boolean = (itemId) => {
@@ -299,6 +314,14 @@ const onClickApiSortChange = async (value: string) => {
 };
 const onClickApiSearchChange = async (value: string) => {
   setSearchKeyword(value);
+  await resetReloadList(nSelectedListData.value);
+};
+
+const onClickApiReset = async (value: string) => {
+  setSelectedFilter(value.selectedFilter);
+  setSortInfo(value.selectedSort);
+  setSearchKeyword(value.searchLabel);
+  setSortInfo("totalVotes_desc");
   await resetReloadList(nSelectedListData.value);
 };
 

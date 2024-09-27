@@ -72,8 +72,8 @@ const searchCommonStore = useSearchCommonStore();
 const { setSearchKeyword, resetReloadList } = searchCommonStore;
 
 const userStore = useUserStore();
-const { getUserInfo } = userStore;
-const { user } = storeToRefs(userStore);
+const { getUserInfo, setProfileFirstWord } = userStore;
+const { user, profileFirstWord } = storeToRefs(userStore);
 
 const layoutHeaderStore = useLayoutHeaderStore();
 const { searchInputValue } = storeToRefs(layoutHeaderStore);
@@ -83,7 +83,6 @@ const router = useRouter();
 
 const header = ref();
 const dropdown = ref();
-const profileFirstWord = ref("");
 
 const { isDropdownOpen, setHandler } = useDropdownHelper();
 
@@ -102,20 +101,20 @@ const onClickSearch = (value: string) => {
   resetReloadList();
   router.push({ path: `/portal/search` });
 };
-const setProfileFirstWord = (name: string) => {
-  profileFirstWord.value = name.slice(0, 1).toUpperCase();
-};
 
-const logOut = async () => {
-  await $api(`/api/auth/logout`, {
+const logOut = () => {
+  $api(`/api/auth/logout`, {
     method: "POST",
   })
     .then(() => {
       isDropdownOpen.value = false;
-      router.push("/portal/login");
     })
     .catch((err: any) => {
       console.log("err: ", err);
+    })
+    .finally(() => {
+      // 로그아웃 성공 또는 실패 여부와 관계없이 로그인 페이지로 이동
+      router.push("/portal/login");
     });
 };
 

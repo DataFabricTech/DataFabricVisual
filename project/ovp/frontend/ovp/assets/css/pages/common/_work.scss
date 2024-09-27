@@ -29,16 +29,20 @@
   border-right: 1px solid $neutral-200;
 
   & > .menu,
-  & > .menu-data {
+  & > .menu-data,
+  & > .no-result {
     overflow-y: auto;
     height: calc(100% - 49px);
   }
 
-  &-tree {
+  &-contents {
     overflow-y: auto;
     height: calc(100% - 49px);
-    padding-top: $spacing-12;
-    padding-left: $spacing-12;
+
+    &:has(.tree) {
+      padding-top: $spacing-12;
+      padding-left: $spacing-12;
+    }
 
     .tree-item {
       padding-right: $spacing-12;
@@ -74,6 +78,16 @@
   .code-box {
     overflow: auto;
     flex-grow: 1;
+  }
+
+  .l-top-bar {
+    .text-input {
+      width: 400px;
+    }
+  }
+
+  .editable-group-title {
+    @include ellipsis;
   }
 }
 

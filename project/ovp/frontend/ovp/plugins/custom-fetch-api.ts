@@ -50,6 +50,9 @@ export default defineNuxtPlugin((nuxtApp: any) => {
   });
 
   function errorResponse(data: any) {
+    // TODO : 세션 아웃시 로그아웃 처리 테스트 코드 작성
+    console.log("response error log");
+    console.log(data);
     let errorMessage = data.errorMessage;
     if (errorMessage === null || errorMessage === "") {
       errorMessage = "시스템 오류가 발생 하였습니다.";

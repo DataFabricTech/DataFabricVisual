@@ -594,7 +594,7 @@ public class ServiceManageService {
         Map<String, Object> clients = databaseClient.getDatabase(params);
         List<Map<String, Object>> serviceList = (List<Map<String, Object>>) clients.get("data");
 
-        return processServiceList(serviceList, serviceParam, true);
+        return processDatabaseServiceList(serviceList, serviceParam);
     }
 
     public Object getStorageServiceList(String serviceId) {
@@ -606,7 +606,7 @@ public class ServiceManageService {
         Map<String, Object> clients = containersClient.getContainers(params);
         List<Map<String, Object>> serviceList = (List<Map<String, Object>>) clients.get("data");
 
-        return processServiceList(serviceList, serviceParam, false);
+        return processStorageServiceList(serviceList, serviceParam);
     }
 
     private Map<String, Object> createParams(String serviceId, String fields, String include) {
@@ -627,62 +627,87 @@ public class ServiceManageService {
         return serviceParam;
     }
 
-    private List<Map<String, Object>> processServiceList(List<Map<String, Object>> serviceList,
-                                                         Map<String, Object> serviceParam, boolean isDatabase) {
+    private List<Map<String, Object>> processDatabaseServiceList(List<Map<String, Object>> serviceList,
+                                                                 Map<String, Object> serviceParam) {
         return serviceList.stream()
                 .flatMap(client -> {
                     String fullyQualifiedName = client.get("fullyQualifiedName").toString();
-                    String depth1Name = client.get("name").toString();
-                    if (isDatabase) {
-                        // Database Service Logic
-                        serviceParam.put("database", fullyQualifiedName);
-                        Map<String, Object> result = databaseSchemasClient.getDatabaseSchemas(serviceParam);
-                        List<Map<String, Object>> dataList = (List<Map<String, Object>>) result.get("data");
+                    serviceParam.put("database", fullyQualifiedName);
+                    Map<String, Object> result = databaseSchemasClient.getDatabaseSchemas(serviceParam);
+                    List<Map<String, Object>> dataList = (List<Map<String, Object>>) result.get("data");
 
-                        return dataList.stream().flatMap(dataItem -> {
-                            String schemaName = dataItem.get("name").toString();
-                            String nestedFullyQualifiedName = (String) dataItem.get("fullyQualifiedName");
-                            Map<String, String> tableParam = new HashMap<>();
-                            tableParam.put("databaseSchema", nestedFullyQualifiedName);
-                            tableParam.put("include", "non-deleted");
-                            tableParam.put("limit", "10000");
-                            Map<String, Object> tableInfo = tablesClient.getTablesInfo(tableParam);
+                    return dataList.stream().flatMap(dataItem -> {
+                        String schemaName = dataItem.get("name").toString();
+                        String nestedFullyQualifiedName = (String) dataItem.get("fullyQualifiedName");
+                        Map<String, String> tableParam = new HashMap<>();
+                        tableParam.put("databaseSchema", nestedFullyQualifiedName);
+                        tableParam.put("include", "non-deleted");
+                        tableParam.put("limit", "10000");
+                        Map<String, Object> tableInfo = tablesClient.getTablesInfo(tableParam);
 
-                            List<Map<String, Object>> tableDataList = (List<Map<String, Object>>) tableInfo.get("data");
-                            return tableDataList.stream().map(tableData -> {
-                                tableData.put("customType", schemaName);
-                                return tableData;
-                            });
+                        List<Map<String, Object>> tableDataList = (List<Map<String, Object>>) tableInfo.get("data");
+                        return tableDataList.stream().map(tableData -> {
+                            tableData.put("customType", schemaName);
+                            return tableData;
                         });
-                    } else {
-                        // Storage Service Logic
-                        Map<String, Object> result = containersClient.getContainersName(fullyQualifiedName, serviceParam);
-                        String serviceType = result.get("serviceType").toString();
-                        List<Map<String, Object>> children = (List<Map<String, Object>>) result.get("children");
-                        return children.stream().flatMap(child -> {
-                            String innerFullyQualifiedName = (String) child.get("fullyQualifiedName");
-                            if (innerFullyQualifiedName != null) {
-                                Map<String, Object> resultFromClient = containersClient.getContainersName(innerFullyQualifiedName, serviceParam);
-                                List<Map<String, Object>> innerChildren = (List<Map<String, Object>>) resultFromClient.get("children");
-                                return innerChildren.stream().map(tableData -> {
-                                    tableData.put("customType", depth1Name);
-                                    tableData.put("serviceType", serviceType);
-                                    return tableData;
-                                });
-                            } else {
-                                return Stream.empty();
-                            }
-                        });
-                    }
+                    });
                 })
                 .map(this::processEntry)
                 .collect(Collectors.toList());
     }
 
+    private List<Map<String, Object>> processStorageServiceList(List<Map<String, Object>> serviceList,
+                                                                Map<String, Object> serviceParam) {
+        return serviceList.stream()
+                .flatMap(client -> {
+                    String fullyQualifiedName = client.get("fullyQualifiedName").toString();
+                    String depth1Name = client.get("name").toString();
+                    Map<String, Object> result = containersClient.getContainersName(fullyQualifiedName, serviceParam);
+                    String serviceType = result.get("serviceType").toString();
+                    List<Map<String, Object>> children = (List<Map<String, Object>>) result.get("children");
+
+                    return children.stream().flatMap(child -> processChildrenRecursively(child, serviceParam, depth1Name, serviceType));
+                })
+                .map(this::processEntry)
+                .collect(Collectors.toList());
+    }
+
+    // 재귀적으로 children을 처리하는 메서드
+    private Stream<Map<String, Object>> processChildrenRecursively(Map<String, Object> child,
+                                                                   Map<String, Object> serviceParam,
+                                                                   String depth1Name,
+                                                                   String serviceType) {
+        String innerFullyQualifiedName = (String) child.get("fullyQualifiedName");
+
+        if (innerFullyQualifiedName != null) {
+            Map<String, Object> resultFromClient = containersClient.getContainersName(innerFullyQualifiedName, serviceParam);
+            Object fileFormats = resultFromClient.get("fileFormats");
+
+            if (fileFormats instanceof List && !((List<?>) fileFormats).isEmpty()) {
+                // fileFormats가 있으면 재귀 종료
+                child.put("customType", depth1Name);
+                child.put("serviceType", serviceType);
+                return Stream.of(child);
+            } else {
+                // fileFormats가 없으면 children을 재귀적으로 처리
+                List<Map<String, Object>> innerChildren = (List<Map<String, Object>>) resultFromClient.get("children");
+                return innerChildren.stream().flatMap(innerChild -> processChildrenRecursively(innerChild, serviceParam, depth1Name, serviceType));
+            }
+        } else {
+            return Stream.empty();
+        }
+    }
+
+
     private Map<String, Object> processEntry(Map<String, Object> entry) {
         Map<String, Object> newEntry = new HashMap<>();
         newEntry.put("fqn", entry.get("fullyQualifiedName"));
         newEntry.put("name", entry.get("name"));
+
+        if (entry.get("displayName") != null) {
+            newEntry.put("displayName", entry.get("displayName"));
+        }
+
         newEntry.put("id", entry.get("id"));
         newEntry.put("type", entry.get("customType"));
         newEntry.put("serviceType", determineType(entry.get("serviceType").toString()));

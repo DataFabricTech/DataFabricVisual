@@ -41,7 +41,8 @@ watch(
   () => props.parentEditMode,
   (newVal) => {
     isEditMode.value = newVal;
-  }
+  },
+  { immediate: true }
 );
 
 const emit = defineEmits<{
@@ -55,9 +56,13 @@ const cancelClick = () => {
   emit("editCancel", props.compKey);
 };
 const doneClick = () => {
-  isEditMode.value = false;
   emit("editDone", props.compKey);
+
+  nextTick(() => {
+    isEditMode.value = props.parentEditMode;
+  });
 };
+
 const editIconClick = () => {
   isEditMode.value = true;
   emit("editIcon", props.compKey);

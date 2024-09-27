@@ -299,7 +299,11 @@ public class SearchDetailService {
             return tablesClient.getTablesName(id, params).getColumns();
         } else {
             params.add("fields", "dataModel");
-            return containersClient.getStorageById(id, params).getDataModel().getColumns();
+            try {
+                return containersClient.getStorageById(id, params).getDataModel().getColumns();
+            } catch (Exception e) {
+                return new ArrayList<>();
+            }
         }
     }
 
@@ -313,12 +317,16 @@ public class SearchDetailService {
         if (!ModelType.STORAGE.getValue().equals(type)) {
             return new DataModelDetailSampleDataResponse(tablesClient.getSampleData(id), type);
         } else {
-            return new DataModelDetailSampleDataResponse(containersClient.getSampleData(id), type);
+            try {
+                return new DataModelDetailSampleDataResponse(containersClient.getSampleData(id), type);
+            } catch (Exception e) {
+                return null;
+            }
         }
     }
 
     /**
-     * 프로파일
+     * 프로파일 - table
      *
      * @param id
      * @return
@@ -332,7 +340,39 @@ public class SearchDetailService {
             row.put("name", column.getName());
             row.put("dateTypeDisplay", column.getDataTypeDisplay());
 
-            if(column.getProfile() != null) {
+            if (column.getProfile() != null) {
+                row.put("nullCount", column.getProfile().getNullCount());
+                row.put("uniqueCount", column.getProfile().getUniqueCount());
+                row.put("distinctCount", column.getProfile().getDistinctCount());
+                row.put("valueCount", column.getProfile().getValueCount());
+            } else {
+                row.put("nullCount", "");
+                row.put("uniqueCount", "");
+                row.put("distinctCount", "");
+                row.put("valueCount", "");
+            }
+            columns.add(row);
+        }
+
+        return columns;
+    }
+
+    /**
+     * 프로파일 - container
+     *
+     * @param fqn
+     * @return
+     */
+    public List<Map<String, Object>> getContainersTableProfile(String fqn) {
+        List<ProfileColumn> data = containersClient.getContainersTableProfile(fqn).getDataModel().getColumns();
+        List<Map<String, Object>> columns = new ArrayList<>();
+
+        for (ProfileColumn column : data) {
+            Map<String, Object> row = new HashMap<>();
+            row.put("name", column.getName());
+            row.put("dateTypeDisplay", column.getDataTypeDisplay());
+
+            if (column.getProfile() != null) {
                 row.put("nullCount", column.getProfile().getNullCount());
                 row.put("uniqueCount", column.getProfile().getUniqueCount());
                 row.put("distinctCount", column.getProfile().getDistinctCount());

@@ -71,6 +71,7 @@ const props = withDefaults(defineProps<MenuSearchTreeContentsProps>(), {
   isShow: false,
   isMulti: false,
   outside: false,
+  isResetToFirst: false,
 
   // tree 고유 props
   mode: "view",

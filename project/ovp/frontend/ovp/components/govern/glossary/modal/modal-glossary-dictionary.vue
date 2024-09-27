@@ -3,7 +3,7 @@
     class="is-no-scroll"
     :title="'용어사전 추가'"
     :modal-id="props.modalId"
-    :height="900"
+    :height="500"
     :width="480"
     :esc-to-close="true"
     :btn-msg="'저장'"
@@ -25,6 +25,7 @@
                 class="text-input text-input-lg"
                 placeholder="이름을 입력하세요."
                 v-model="glossaryForm.name"
+                maxlength="20"
               />
               <div
                 class="notification notification-sm notification-error"

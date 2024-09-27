@@ -21,6 +21,7 @@
           id="title-modify"
           class="text-input w-4/5"
           v-model="editData.name"
+          maxlength="20"
         />
         <div class="h-group gap-1">
           <button
@@ -51,7 +52,10 @@
         삭제
       </button>
     </div>
-    <div class="work-contents">
+    <div
+      :id="store.tab === 'term' ? 'termList' : 'activitiesList'"
+      class="work-contents"
+    >
       <!-- 결과 없을 시 no-result 표시  -->
       <div class="no-result" v-if="Object.keys(glossary).length === 0">
         <div class="notification">
@@ -155,14 +159,17 @@
       <div>
         <div class="tab tab-line">
           <ul class="tab-list">
-            <li :class="getTabItemClassName('term')" @click="changeTab('term')">
+            <li
+              :class="getTabItemClassName('term')"
+              @click="clickedTab('term')"
+            >
               <button class="tab-button">
                 <p class="tab-button-text">용어</p>
               </button>
             </li>
             <li
               :class="getTabItemClassName('activity')"
-              @click="changeTab('activity')"
+              @click="clickedTab('activity')"
             >
               <button class="tab-button">
                 <p class="tab-button-text">활동사항</p>
@@ -188,6 +195,7 @@ import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import type { JsonPatchOperation, Tag } from "~/type/common";
 import { reactive, watch, onMounted, type Ref } from "vue";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
+
 const {
   glossary,
   tags,
@@ -200,6 +208,10 @@ const {
   changeEditGlossaryMode,
   createTagOperation,
   getGlossaryActivitiesCount,
+  getTerms,
+  resetTerms,
+  getGlossaryActivities,
+  resetGlossaryActivities,
 } = useGlossaryStore();
 const store = useGlossaryStore();
 
@@ -220,7 +232,6 @@ watch(
 
 onMounted(() => {
   syncEditDataWithGlossary();
-  getGlossaryActivitiesCount(`<%23E::glossary::${glossary.name}>`);
 });
 
 function syncEditDataWithGlossary() {
@@ -229,8 +240,16 @@ function syncEditDataWithGlossary() {
 }
 
 async function removeGlossary() {
-  await deleteGlossary(glossary.id);
-  await getGlossaries();
+  if (confirm("데이터모델을 삭제 하시겠습니까?")) {
+    await deleteGlossary(glossary.id);
+    await getGlossaries()
+      .then(() => {
+        alert("삭제되었습니다.");
+      })
+      .catch((error) => {
+        console.error("삭제 중 오류 발생: ", error);
+      });
+  }
 }
 
 async function updateGlossary(
@@ -265,4 +284,15 @@ async function changeTag(items: MenuSearchItemImpl[]) {
   await editGlossary(glossary.id, operations);
   await getGlossaries();
 }
+
+const clickedTab = (tabKey: string) => {
+  changeTab(tabKey);
+  if (tabKey === "term") {
+    resetTerms();
+    getTerms();
+  } else {
+    resetGlossaryActivities();
+    getGlossaryActivities();
+  }
+};
 </script>

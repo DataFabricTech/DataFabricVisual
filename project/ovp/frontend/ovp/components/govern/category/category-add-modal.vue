@@ -31,13 +31,14 @@
                 class="text-input text-input-lg"
                 placeholder="이름을 입력하세요."
                 v-model="categoryAddName"
+                maxlength="20"
               />
               <div
                 class="notification notification-sm notification-error"
                 v-if="showAddNameNoti"
               >
                 <svg-icon class="notification-icon" name="error"></svg-icon>
-                <p class="notification-detail">이름을 입력하세요.</p>
+                <p class="notification-detail">{{ categoryNameMsg }}</p>
               </div>
             </div>
           </div>
@@ -72,6 +73,7 @@
 import { uuid } from "vue3-uuid";
 import { storeToRefs } from "pinia";
 import { useGovernCategoryStore } from "~/store/governance/Category";
+import $constants from "@/utils/constant";
 import Modal from "@extends/modal/Modal.vue";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
@@ -97,6 +99,8 @@ const emit = defineEmits<{
   (e: "close-category-add-modal"): void;
 }>();
 
+const categoryNameMsg = ref("");
+
 const setNewNodeCategory = () => {
   const newNodeParam: TreeViewItem = {
     id: categoriesId.value !== "" ? categoriesId.value : uuid.v4(),
@@ -114,13 +118,36 @@ const onCancel = () => {
 };
 
 const onConfirm = async () => {
-  showAddNameNoti.value = categoryAddName.value === "";
-  showAddDescNoti.value = categoryAddDesc.value === "";
-
-  if (!showAddNameNoti.value && !showAddDescNoti.value) {
-    await setNewNodeCategory();
-    emit("close-category-add-modal");
+  if (categoryAddName.value === "") {
+    categoryNameMsg.value = $constants.GOVERNANCE.TITLE.EMPTY_ERROR_MSG;
+    showAddNameNoti.value = true;
+    return;
   }
+
+  if (categoryAddName.value.length === 1) {
+    categoryNameMsg.value =
+      $constants.GOVERNANCE.TITLE.MINIMUM_LENGTH_ERROR_MSG;
+    showAddNameNoti.value = true;
+    return;
+  }
+
+  if (!$constants.GOVERNANCE.TITLE.REGEX.test(categoryAddName.value)) {
+    categoryNameMsg.value = $constants.GOVERNANCE.TITLE.REGEX_ERROR_MSG;
+    showAddNameNoti.value = true;
+    return;
+  }
+
+  showAddNameNoti.value = false;
+
+  if (categoryAddDesc.value === "") {
+    showAddDescNoti.value = true;
+    return;
+  }
+
+  showAddDescNoti.value = false;
+
+  await setNewNodeCategory();
+  emit("close-category-add-modal");
 };
 </script>
 

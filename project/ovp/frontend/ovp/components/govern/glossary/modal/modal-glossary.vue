@@ -4,7 +4,8 @@
     title="용어 추가"
     :modal-id="props.modalId"
     :esc-to-close="true"
-    :height="900"
+    :width="480"
+    :height="600"
     :btn-msg="'저장'"
     @close="closeModal"
     @cancel="closeModal"
@@ -24,6 +25,7 @@
                 class="text-input text-input-lg"
                 placeholder="이름을 입력하세요."
                 v-model="termForm.name"
+                maxlength="20"
               />
               <div
                 class="notification notification-sm notification-error"
