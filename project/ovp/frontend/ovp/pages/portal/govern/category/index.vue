@@ -70,7 +70,7 @@
             >
               <template #edit-slot>
                 <label class="hidden-text" for="title-modify"
-                  >카테고리 이름 수정</label
+                >카테고리 이름 수정</label
                 >
                 <input
                   v-model="selectedTitleNodeValue"
@@ -78,7 +78,7 @@
                   maxlength="20"
                   required
                   id="title-modify"
-                  class="text-input w-1/2"
+                  class="text-input"
                 />
               </template>
               <template #view-slot>
@@ -87,10 +87,7 @@
                 </h3>
               </template>
             </editable-group>
-            <div
-              class="notification notification-sm notification-error"
-              v-if="showSelectedTitleNodeNoti"
-            >
+            <div class="notification notification-sm notification-error" v-if="showSelectedTitleNodeNoti">
               <svg-icon class="notification-icon" name="error"></svg-icon>
               <p class="notification-detail">
                 {{ selectedTitleNodeMsg }}

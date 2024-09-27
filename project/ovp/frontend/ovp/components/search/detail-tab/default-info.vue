@@ -65,7 +65,7 @@
               <svg-icon class="button-icon" name="pen"></svg-icon>
             </button>
           </div>
-          <div class="editable-group" v-if="editTagsMode">
+          <div class="editable-group editable-group-unusual" v-if="editTagsMode">
             <menu-search-tag
               :data="tagList"
               :selected-items="mdoelTagList"
@@ -128,7 +128,7 @@
               <svg-icon class="button-icon" name="pen"></svg-icon>
             </button>
           </div>
-          <div class="editable-group" v-if="editTermsMode">
+          <div class="editable-group editable-group-unusual" v-if="editTermsMode">
             <menu-search-tag
               :data="termList"
               :selected-items="dataModel.terms"

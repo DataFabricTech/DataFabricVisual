@@ -3,6 +3,7 @@
   @include flex($horizontal: flex-start, $gap: $spacing-4);
 
   width: 100%;
+  min-height: 32px;
 
   &:has(.editable-group-desc) {
     display: inline;
@@ -32,6 +33,14 @@
     & + .button {
       display: inline;
       vertical-align: middle;
+    }
+  }
+
+  //태그 전체 출력 이슈로 예외적인 스타일 생성
+  &.editable-group-unusual {
+    .menu-search {
+      min-width: 560px;
+      width: auto;
     }
   }
 }

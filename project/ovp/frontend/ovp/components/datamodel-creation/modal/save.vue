@@ -1,5 +1,6 @@
 <template>
   <Modal
+    class="is-modal-no-scroll"
     title="데이터 모델 저장"
     background="non-interactive"
     displayDirective="show"
@@ -8,7 +9,7 @@
     :clickToClose="true"
     :escToClose="true"
     :width="480"
-    :height="560"
+    :height="540"
     :lockScroll="true"
     swipeToClose="none"
     @before-open="onOpenModal"
@@ -49,7 +50,7 @@
             <div class="form-detail">
               <textarea
                 id="data-model-save-description"
-                class="textarea h-28"
+                class="textarea is-textarea-fixed h-20"
                 placeholder="데이터 모델 설명을 입력하세요."
                 v-model="modelDescription"
                 @input="setModelDescription(modelDescription)"

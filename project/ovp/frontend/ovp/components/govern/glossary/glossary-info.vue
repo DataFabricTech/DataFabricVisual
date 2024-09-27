@@ -20,7 +20,7 @@
         </label>
         <input
           id="title-modify"
-          class="text-input w-4/5"
+          class="text-input"
           v-model="editData.name"
           maxlength="20"
         />
@@ -59,7 +59,7 @@
     </div>
     <div
       :id="store.tab === 'term' ? 'termList' : 'activitiesList'"
-      class="work-contents"
+      class="work-contents gap-5"
     >
       <!-- 결과 없을 시 no-result 표시  -->
       <div class="no-result" v-if="Object.keys(glossary).length === 0">
@@ -146,7 +146,7 @@
             <svg-icon class="button-icon" name="pen"></svg-icon>
           </button>
         </div>
-        <div class="editable-group" v-if="store.editGlossaryMode.tag">
+        <div class="editable-group editable-group-unusual" v-if="store.editGlossaryMode.tag">
           <menu-search-tag
             :data="menuSearchTagsData"
             :selected-items="glossary.tags"

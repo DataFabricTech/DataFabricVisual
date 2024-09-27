@@ -1,5 +1,5 @@
 <template>
-  <div v-on-click-outside="onCancel" v-show="props.isShow" class="menu menu-search" style="width: 100%">
+  <div v-on-click-outside="onCancel" v-show="props.isShow" class="menu menu-search">
     <div class="menu-head">
       <!-- 검색 기능 -->
       <!-- TODO: [개발] 접근성 개선 - label/input의 for/id값 사용되는 용도마다 다르게 적용 필요,
