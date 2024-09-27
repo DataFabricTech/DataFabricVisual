@@ -10,7 +10,6 @@
       </button>
     </div>
     <div class="code-box">
-      <!--      <textarea v-model="localQuery.query" @input="emitEdit"></textarea>-->
       <MonacoEditor
         v-model="localQuery.query"
         @input="emitEdit"
@@ -55,6 +54,7 @@ const emitEdit = () => {
 
 // Monaco Editor options 설정
 const editorOptions = {
+  theme: "vs",
   language: "sql", // SQL 구문 강조
   automaticLayout: true, // 창 크기 변경 시 자동 레이아웃
   minimap: {
