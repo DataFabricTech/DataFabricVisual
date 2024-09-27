@@ -113,15 +113,15 @@ export const classificationStore = defineStore("classification", () => {
       currentClassificationID.value = id;
     }
 
-    $api(`/api/classifications/list/${currentClassificationID.value}`).then(
-      (data: any) => {
-        classificationDetailData.value = data.data; // 화면에 보여줄 store 변수로 세팅
-        if (data.data && data.data.description.length === 0) {
-          // 설명이 없을 때,
-          classificationDetailData.value.description = "-";
-        }
-      },
+    const data: any = await $api(
+      `/api/classifications/list/${currentClassificationID.value}`,
     );
+
+    classificationDetailData.value = data.data; // 화면에 보여줄 store 변수로 세팅
+    if (data.data && data.data.description.length === 0) {
+      // 설명이 없을 때,
+      classificationDetailData.value.description = "-";
+    }
   };
 
   // 태그 정보 조회 (기본값 : 분류 목록중 최상단 분류의 태그정보)
