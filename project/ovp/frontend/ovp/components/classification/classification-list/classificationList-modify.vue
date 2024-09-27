@@ -208,6 +208,7 @@ const editDone = async () => {
         newData.value.description = "-";
       }
       classificationDetailData.value = _.cloneDeep(newData.value);
+      getClassificationDetail(newData.value.id);
       isDescEditable.value = false;
       return;
     } else {
