@@ -23,8 +23,6 @@ public class DataModelDetailLineageTableResponse {
         rawEdges = new ArrayList<>();
         List<String> nodeIds = new ArrayList<>();
 
-        System.out.println("lineage >>> " + lineage);
-
         for (Node node : lineage.getNodes()) {
             Map<String, String> tempNode = new HashMap<String, String>();
             tempNode.put("id", node.getId());
