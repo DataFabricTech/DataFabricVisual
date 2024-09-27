@@ -1,6 +1,6 @@
 <template>
   <Modal
-    class="is-no-scroll"
+    class="is-modal-no-scroll"
     title="데이터 모델 저장"
     background="non-interactive"
     displayDirective="show"

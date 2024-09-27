@@ -1,6 +1,6 @@
 <template>
   <Modal
-    class="is-no-scroll"
+    class="is-modal-no-scroll"
     title="용어 추가"
     :modal-id="props.modalId"
     :esc-to-close="true"

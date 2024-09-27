@@ -1,6 +1,6 @@
 <template>
   <Modal
-    class="is-no-scroll"
+    class="is-modal-no-scroll"
     :title="'용어사전 추가'"
     :modal-id="props.modalId"
     :height="500"

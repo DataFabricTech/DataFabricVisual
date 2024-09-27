@@ -106,7 +106,7 @@
   }
 
   //바디 스크롤 필요없을 시 사용
-  &.is-no-scroll {
+  &.is-modal-no-scroll {
     .modal-body {
       overflow-y: visible;
     }
