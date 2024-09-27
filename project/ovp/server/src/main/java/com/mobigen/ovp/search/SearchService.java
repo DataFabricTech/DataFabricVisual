@@ -219,6 +219,42 @@ public class SearchService {
         return getList(params);
     }
 
+    private String getStorageQueryFilter(String queryFilter) {
+        // Step 1: queryFilter를 JSON으로 변환
+        JSONObject combinedFilter = new JSONObject(queryFilter);
+
+        // fileFormats 가 없는 항목은 목록에서 제외시켜야 함.
+        // {"query":{"bool":{"must":{"exists":{"field":"fileFormats"}}}}}
+
+        // Step 2: 추가할 must 쿼리 생성
+        JSONObject mustQuery = new JSONObject();
+        mustQuery.put("exists", new JSONObject().put("field", "fileFormats"));
+
+        // Step 3: 기존 쿼리에서 "bool" 부분을 가져오기
+        JSONObject boolQuery = combinedFilter.getJSONObject("query").getJSONObject("bool");
+
+        // Step 4: "must" 부분이 이미 존재하면 추가하고, 없으면 새로 생성
+        if (boolQuery.has("must")) {
+            Object mustObject = boolQuery.get("must");
+            if (mustObject instanceof JSONArray) {
+                // 이미 "must"가 배열인 경우, 새로운 조건을 추가
+                ((JSONArray) mustObject).put(mustQuery);
+            } else {
+                // "must"가 단일 객체인 경우, 배열로 변환하고 새로운 조건 추가
+                JSONArray newMustArray = new JSONArray();
+                newMustArray.put(mustObject);
+                newMustArray.put(mustQuery);
+                boolQuery.put("must", newMustArray);
+            }
+        } else {
+            // "must"가 없는 경우, 새로 생성
+            boolQuery.put("must", new JSONArray().put(mustQuery));
+        }
+
+        // Step 5: 최종적으로 변환된 JSON을 문자열로 반환
+        return combinedFilter.toString();
+    }
+
     private String getQueryFilter(String index, String queryFilter) {
         // Step 1: queryFilter를 JSON으로 변환
         JSONObject combinedFilter = new JSONObject(queryFilter);
@@ -283,6 +319,8 @@ public class SearchService {
             params.set("size", "0");
         }
         params.set("index", ModelIndex.container.name());
+        params.set("query_filter", getStorageQueryFilter(params.getFirst("query_filter")));
+
         return getList(params);
     }
 

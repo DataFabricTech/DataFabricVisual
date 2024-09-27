@@ -1,11 +1,5 @@
 <template>
-  <div class="no-result" v-if="schemaList.length === 0">
-    <div class="notification">
-      <svg-icon class="notification-icon" name="info"></svg-icon>
-      <p class="notification-detail">등록된 정보가 없습니다.</p>
-    </div>
-  </div>
-  <div class="data-detail" v-else>
+  <div class="data-detail" v-if="schemaList.length > 0">
     <agGrid
       class="ag-theme-alpine ag-theme-quartz"
       :columnDefs="COLUMN_DEFS"
@@ -15,6 +9,13 @@
       :setColumnFit="true"
       :useColumnResize="true"
     ></agGrid>
+  </div>
+  <!-- 결과 없을 시 no-result 표시 -->
+  <div class="no-result h-auto" v-else>
+    <div class="notification">
+      <svg-icon class="notification-icon" name="info"></svg-icon>
+      <p class="notification-detail">등록된 정보가 없습니다.</p>
+    </div>
   </div>
 </template>
 

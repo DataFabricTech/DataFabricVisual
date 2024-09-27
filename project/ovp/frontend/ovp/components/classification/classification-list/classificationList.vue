@@ -22,15 +22,14 @@
         <div class="menu-list">
           <li
             class="menu-item"
+            :class="menuListClass(item.id)"
             v-for="item in classificationList"
             :key="item.id"
             @click="showClassificationDetail(item.id, item.name)"
           >
             <button class="menu-button">
               <svg-icon class="svg-icon" name="tag"></svg-icon>
-              <a href="" class="menu-text">{{
-                item.displayName || item.name
-              }}</a>
+              <a class="menu-text">{{ item.displayName || item.name }}</a>
             </button>
           </li>
         </div>
@@ -45,12 +44,19 @@ import { storeToRefs } from "pinia";
 import classificationCreate from "@/components/classification/modal/classification-create.vue";
 import { classificationStore } from "@/store/classification/index";
 import { useModal } from "vue-final-modal";
+import _ from "lodash";
 
 const useClassificationStore = classificationStore();
-const { classificationList } = storeToRefs(useClassificationStore);
+const { classificationList, showNameNoti, currentClassificationID } =
+  storeToRefs(useClassificationStore);
 const { getClassificationDetail, getClassificationTags } =
   useClassificationStore;
 
+const menuListClass = (data: string): string => {
+  return _.isEqual(currentClassificationID.value, data)
+    ? " is-menu-item-selected"
+    : "";
+};
 // 분류 추가 모달 ID
 const MODAL_ID = "modal-classification";
 
@@ -77,6 +83,7 @@ const props = defineProps({
 
 // 분류 목록 중 단일 목록 클릭시 실행되는 함수
 const showClassificationDetail = async (id: string, name: string) => {
+  showNameNoti.value = false;
   // 선택한 분류의 상세 조회 API 호출
   await getClassificationDetail(id);
   // 태그 리스트 API 호출

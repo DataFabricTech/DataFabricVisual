@@ -92,8 +92,12 @@ const {
   getClassificationDetail,
   getClassificationTags,
 } = useClassificationStore;
-const { classificationDetailData, isNameEditable, isDescEditable } =
-  storeToRefs(useClassificationStore);
+const {
+  classificationDetailData,
+  isNameEditable,
+  isDescEditable,
+  showNameNoti,
+} = storeToRefs(useClassificationStore);
 
 interface ClassificationDetail {
   id: string;
@@ -102,7 +106,6 @@ interface ClassificationDetail {
   description: string | null;
 }
 
-const showNameNoti = ref(false);
 const nameNotiMsg = ref("");
 
 let defaultData: ClassificationDetail = {
@@ -205,6 +208,7 @@ const editDone = async () => {
         newData.value.description = "-";
       }
       classificationDetailData.value = _.cloneDeep(newData.value);
+      getClassificationDetail(newData.value.id);
       isDescEditable.value = false;
       return;
     } else {

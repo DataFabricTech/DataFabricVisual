@@ -141,6 +141,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       const keyValue = key === "category" ? "tags.tagFQN" : key;
       queryFilter.query.bool.must.push(setQueryFilterByDepth(keyValue, value));
     }
+
+    queryFilter.query.bool.must_not = [{ term: { fileFormats: "hwpx" } }];
+
     return queryFilter;
   };
 
@@ -439,7 +442,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       if (!fqn) {
         return {};
       }
-      profileData.value = await getProfileData(fqn);
+      profileData.value = await getProfileData(fqn, selectedItem.value.type);
     } else {
       kgData.value = await getKgData();
     }
@@ -489,21 +492,25 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   /**
    * API - 데이터 프로파일링 조회
    */
-  const getProfileData = async (fqn: string) => {
-    return $api(`/api/search/detail/profile/${fqn}`)
-      .then((res: any) => {
-        if (res.result === 1) {
-          return {
-            columnOptions: $constants.COMMON.DATA_PROFILE_RENDER,
-            columnDefs: $constants.COMMON.DATA_PROFILE_COLUMN,
-            rowData: res.data,
-            fqn: fqn,
-          };
-        }
-      })
-      .catch((err: any) => {
-        console.log("err: ", err);
-      });
+  const getProfileData = async (fqn: string, type: string) => {
+    const isTableOrModel = _.isEqual(type, "table") || $_isEqual(type, "model");
+    const url = isTableOrModel
+      ? `/api/search/detail/profile/${fqn}`
+      : `/api/search/detail/containers/profile/${fqn}`;
+
+    try {
+      const res = await $api(url);
+      if (res.result === 1) {
+        return {
+          columnOptions: $constants.COMMON.DATA_PROFILE_RENDER,
+          columnDefs: $constants.COMMON.DATA_PROFILE_COLUMN,
+          rowData: res.data,
+          fqn: fqn,
+        };
+      }
+    } catch (err) {
+      console.log("err: ", err);
+    }
   };
 
   /**

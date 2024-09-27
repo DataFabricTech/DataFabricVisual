@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import type { Ref } from "vue";
 import _ from "lodash";
+import { ref } from "vue";
 
 interface Classification {
   id: string;
@@ -41,6 +42,7 @@ interface addTagForm {
   name: string;
   description: string;
 }
+
 //TODO : 추후, 태그 paging을 이용한 인피니트스크롤작업을 위해 보류
 
 // interface paging {
@@ -62,6 +64,7 @@ export const classificationStore = defineStore("classification", () => {
   // 분류 목록 조회
   const classificationList: Ref<Classification[]> = ref([]);
   const classificationListTotal: Ref<number | undefined> = ref();
+  const showNameNoti: Ref<boolean> = ref(false);
 
   // 분류 상세 조회
   const classificationDetailData: Ref<ClassificationDetail> = ref({
@@ -72,8 +75,7 @@ export const classificationStore = defineStore("classification", () => {
   });
 
   // 현재 선택된 아이디 분류 ID값(기본값 : classificationList[0]의 ID값)
-  let currentClassificationID = "";
-
+  const currentClassificationID: Ref = ref("");
   // 현재 태그의 분류 name값
   const currentClassificationTagName: Ref<string> = ref("");
 
@@ -94,24 +96,26 @@ export const classificationStore = defineStore("classification", () => {
 
     if (!_.isEmpty(data.data.classificationList)) {
       // 분류목록의 0번째 인덱스 ID값을 currentClassificationID에 저장
-      currentClassificationID = data.data.classificationList[0].id;
+      currentClassificationID.value = data.data.classificationList[0].id;
       // 태그의 기본값 및 선택된 값(매개변수)을 저장
       currentClassificationTagName.value = data.data.classificationList[0].name;
     }
   };
 
   // 분류 상세 조회 ( name, displayName, description )
-  const getClassificationDetail = async (id: string) => {
+  const getClassificationDetail = async (id?: string) => {
     // [이름 / 설명 ] 수정상태 off
     isNameEditable.value = false;
     isDescEditable.value = false;
 
     if (id) {
       // 어떠한 분류를 선택 했을 경우,
-      currentClassificationID = id;
+      currentClassificationID.value = id;
     }
-    const urlID: any = `/api/classifications/list/` + currentClassificationID;
-    const data: any = await $api(urlID); // 분류 상세 조회 API 호출
+
+    const data: any = await $api(
+      `/api/classifications/list/${currentClassificationID.value}`,
+    );
 
     classificationDetailData.value = data.data; // 화면에 보여줄 store 변수로 세팅
     if (data.data && data.data.description.length === 0) {
@@ -137,7 +141,7 @@ export const classificationStore = defineStore("classification", () => {
   // 분류 상세 수정
   const editClassificationDetail = async (editData: JsonPatchOperation[]) => {
     const result = await $api(
-      `/api/classifications/${currentClassificationID}`,
+      `/api/classifications/${currentClassificationID.value}`,
       {
         method: "PATCH",
         headers: {
@@ -164,7 +168,7 @@ export const classificationStore = defineStore("classification", () => {
 
   // 분류 삭제
   const deleteClassification = () => {
-    return $api(`/api/classifications/${currentClassificationID}`, {
+    return $api(`/api/classifications/${currentClassificationID.value}`, {
       method: "delete",
     });
   };
@@ -196,6 +200,7 @@ export const classificationStore = defineStore("classification", () => {
     currentClassificationID,
     classificationTagList,
     classificationDetailData,
+    showNameNoti,
     getClassificationList,
     getClassificationDetail,
     getClassificationTags,
