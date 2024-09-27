@@ -236,10 +236,10 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     return await $api(`/api/containers/${id}`);
   };
 
-  const getCtgIds = (undefinedTagId: string) => {
-    return !_.has(selectedFilters.value, FILTER_KEYS.CATEGORY)
+  const getCtgIds = (undefinedTagId: string, selectedFilters: object) => {
+    return !_.has(selectedFilters, FILTER_KEYS.CATEGORY)
       ? []
-      : selectedFilters.value[FILTER_KEYS.CATEGORY].map(
+      : (selectedFilters[FILTER_KEYS.CATEGORY] as object[]).map(
           (filter: any) =>
             `ovp_category.${
               filter.id === undefinedTagId
@@ -260,7 +260,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     for (const key in selectedFilters) {
       const value =
         key === "category"
-          ? getCtgIds(undefinedTagId)
+          ? getCtgIds(undefinedTagId, selectedFilters)
           : (selectedFilters as SelectedFilters)[key];
       const keyValue = key === "category" ? "tags.tagFQN" : key;
 
