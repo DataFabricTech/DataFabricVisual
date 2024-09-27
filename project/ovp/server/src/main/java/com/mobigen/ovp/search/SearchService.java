@@ -68,55 +68,10 @@ public class SearchService {
     }
 
     public Map<String, Object> getFilter(MultiValueMap<String, String> params) {
-        params.set("q", "{\"query\":{\"bool\":{\"must\":[{\"match\":{\"deleted\":false}}]}}}");
+        params.set("q", "{\"query\":{\"bool\":{\"must\":[{\"match\":{\"deleted\":false}},{\"terms\":{\"_index\":[\"container_search_index\",\"table_search_index\"]}}]}}}");
         params.set("value", ".*.*");
-
-        Map<String, Object> combinedAggregations = new HashMap<>();
-
-        List<String> indices = Arrays.asList("table_search_index", "container_search_index");
-
-        for (String index : indices) {
-            params.set("index", index);
-            Map<String, Object> resultSet = convertAggregations(searchClient.getFilter(params));
-
-            resultSet.forEach((key, value) -> {
-                combinedAggregations.merge(key, value, (oldValue, newValue) -> {
-                    // 기존 값과 새 값을 모두 리스트로 변환
-                    List<Map<String, Object>> mergedList = new ArrayList<>((List<Map<String, Object>>) oldValue);
-                    List<Map<String, Object>> newList = (List<Map<String, Object>>) newValue;
-
-                    // 중복을 제거하며 합산할 맵 생성
-                    Map<String, Integer> mergedMap = new HashMap<>();
-
-                    // 기존 리스트 항목 처리
-                    for (Map<String, Object> item : mergedList) {
-                        String itemKey = (String) item.get("key");
-                        int docCount = (int) item.get("doc_count");
-                        mergedMap.merge(itemKey, docCount, Integer::sum);
-                    }
-
-                    // 새로운 리스트 항목 처리
-                    for (Map<String, Object> item : newList) {
-                        String itemKey = (String) item.get("key");
-                        int docCount = (int) item.get("doc_count");
-                        mergedMap.merge(itemKey, docCount, Integer::sum);
-                    }
-
-                    // 합산된 결과를 다시 리스트로 변환
-                    List<Map<String, Object>> resultList = new ArrayList<>();
-                    mergedMap.forEach((mergedKey, docCount) -> {
-                        Map<String, Object> map = new HashMap<>();
-                        map.put("key", mergedKey);
-                        map.put("doc_count", docCount);
-                        resultList.add(map);
-                    });
-
-                    return resultList;
-                });
-            });
-        }
-
-        return combinedAggregations;
+        params.set("index", "all");
+        return convertAggregations(searchClient.getFilter(params));
     }
 
     public Map<String, Object> getFilters() throws Exception {
@@ -348,33 +303,12 @@ public class SearchService {
     }
 
     public Object getBothSearchList(MultiValueMap<String, String> params) throws Exception {
-        int initSize = Integer.parseInt(params.getFirst("size").toString());
-        int curSize = initSize;
+        params.set("query_filter", "{\"query\":{\"bool\":{\"must\":[{\"terms\":{\"_index\":[\"container_search_index\",\"table_search_index\"]}}],\"should\":[{\"bool\":{\"must\":[{\"term\":{\"_index\":\"container_search_index\"}},{\"exists\":{\"field\":\"fileFormats\"}}]}},{\"term\":{\"_index\":\"table_search_index\"}}],\"minimum_should_match\":1}}}");
 
-        // 데이터가 너무 적을경우 initSize 를 채우기 위해서 무한으로 while 이 실행될꺼기 때문에 5번의 한도를 둔다.
-        int maxAttempts = 5;
-        int limitCnt = 0;
         Map<String, Object> result = getList(params, true);
-        List<Map<String, Object>> data = (List<Map<String, Object>>) result.get("data");
-
-        while (data.size() < initSize && limitCnt < maxAttempts) {
-            limitCnt++;
-            curSize += initSize;
-            params.set("size", String.valueOf(curSize));
-            result = getList(params, true);
-            data = (List<Map<String, Object>>) result.get("data");
-
-            if (data.size() >= initSize) {
-                break;
-            }
-        }
-
-        List<Map<String, Object>> trimmedData = data.stream()
-                .limit(initSize)
-                .collect(Collectors.toList());
-
-        result.put("data", trimmedData);
-        result.put("totalData", trimmedData.size());
+        List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get("data");
+        result.put("data", resultList);
+        result.put("totalData", resultList.size());
 
         return result;
     }
