@@ -61,7 +61,7 @@ export const useCreationStore = defineStore("creation", () => {
       isItemClicked.value = true;
     }
 
-    const result = await getProfileData(selectedModel.fqn);
+    const result = await getProfileData(selectedModel.fqn, selectedModel.type);
     dataProfileList.value = result.rowData;
     columnOptions.value = result.rowData
       .filter((item: any) => item.name)
