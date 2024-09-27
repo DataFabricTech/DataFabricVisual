@@ -587,6 +587,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     const methodType = model.isFollow ? "DELETE" : "PUT";
     $api(`/api/creation/bookmark/${urlType}/${value}`, {
       method: methodType,
+      params: {
+        type: model.type,
+      },
     })
       .then((res: any) => {
         if (res.result === 1) {
@@ -613,6 +616,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
 
     $api(`/api/creation/bookmark/${urlType}/${value}`, {
       method: methodType,
+      params: {
+        type: selectedModel.type,
+      },
     })
       .then((res: any) => {
         if (res.result === 1) {

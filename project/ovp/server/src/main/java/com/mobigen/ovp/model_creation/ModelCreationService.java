@@ -76,16 +76,29 @@ public class ModelCreationService {
         return transformedMap;
     }
 
-    public Object addBookMark(String id) throws Exception {
+    public Object addBookMark(String id, String type) throws Exception {
+
         Map<String, Object> userInfo = userClient.getUserInfo();
         String jsonLoginUserId = "\"" + userInfo.get("id") + "\"";
-        modelCreationClient.addBookMark(id, jsonLoginUserId);
+
+        if (type.equals("table") || type.equals("model")) {
+            modelCreationClient.addTableBookMark(id, jsonLoginUserId);
+        } else {
+            modelCreationClient.addContainerBookMark(id, jsonLoginUserId);
+        }
+
         return null;
     }
 
-    public Object removeBookMark(String id) throws Exception {
+    public Object removeBookMark(String id, String type) throws Exception {
+
         Map<String, Object> userInfo = userClient.getUserInfo();
-        modelCreationClient.deleteBookMark(id, (String) userInfo.get("id"));
+
+        if (type.equals("table") || type.equals("model")) {
+            modelCreationClient.deleteTableBookMark(id, (String) userInfo.get("id"));
+        } else {
+            modelCreationClient.deleteContainerBookMark(id, (String) userInfo.get("id"));
+        }
         return null;
     }
 

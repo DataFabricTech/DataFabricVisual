@@ -135,6 +135,7 @@ import DataModelList from "~/components/datamodel-creation/list/base/data-model-
 import { ref } from "vue";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 import { storeToRefs } from "pinia";
+import _ from "lodash";
 
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
@@ -154,7 +155,7 @@ const {
   setSearchMyKeyword,
   onClickBookmark,
   updateSelectedModelBookmark,
-  cancelAllSelection
+  cancelAllSelection,
 } = dataModelSearchStore;
 const {
   filters,
@@ -234,6 +235,11 @@ const onSaveSelectedData = () => {
  * 선택 데이터 삭제 > 왼쪽으로 이동
  */
 const onDeleteSelectedData = () => {
+  if (!_.isEmpty(tempDeleteListData.value)) {
+    updateIsFollow(tempDeleteListData.value, searchResult.value);
+    updateIsFollow(tempDeleteListData.value, mySearchResult.value);
+  }
+
   nSelectedListData.value = $_differenceBy(
     nSelectedListData.value,
     tempDeleteListData.value,
@@ -340,6 +346,15 @@ const onSelectMyListData = (value: any[]) => {
 const onClickMyListSearchChange = async (value: string) => {
   setSearchMyKeyword(value);
   await resetReloadList(nSelectedListData.value);
+};
+
+const updateIsFollow = (deleteList: any[], searchList: any[]) => {
+  deleteList.forEach((delete_item: any) => {
+    const search_item = _.find(searchList, { id: delete_item.id });
+    if (search_item) {
+      search_item.isFollow = delete_item.isFollow;
+    }
+  });
 };
 
 watchEffect(() => {
