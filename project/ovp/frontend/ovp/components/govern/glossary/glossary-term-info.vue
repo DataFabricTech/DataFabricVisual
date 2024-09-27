@@ -17,7 +17,7 @@
         <label class="hidden-text" for="title-modify">용어 수정</label>
         <input
           id="title-modify"
-          class="text-input w-4/5"
+          class="text-input"
           v-model="editData.name"
           maxlength="20"
         />
@@ -49,7 +49,7 @@
         삭제
       </button>
     </div>
-    <div class="work-contents">
+    <div class="work-contents gap-5">
       <!-- 결과 없을 시 no-result 표시  -->
       <div class="no-result" v-if="Object.keys(term).length === 0">
         <div class="notification">
@@ -134,7 +134,7 @@
             <svg-icon class="button-icon" name="pen"></svg-icon>
           </button>
         </div>
-        <div class="editable-group" v-if="store.editTermMode.tag">
+        <div class="editable-group editable-group-unusual" v-if="store.editTermMode.tag">
           <menu-search-tag
             :data="menuSearchTagsData"
             :selected-items="term.tags"
@@ -181,7 +181,7 @@
           </label>
           <input
             id="synonym-modify"
-            class="text-input w-4/5"
+            class="text-input w-[400px]"
             v-model="editData.synonyms"
           />
           <div class="h-group gap-1">
@@ -229,7 +229,7 @@
             <svg-icon class="button-icon" name="pen"></svg-icon>
           </button>
         </div>
-        <div class="editable-group" v-if="store.editTermMode.relatedTerms">
+        <div class="editable-group editable-group-unusual" v-if="store.editTermMode.relatedTerms">
           <menu-search-tag
             :data="menuSearchRelatedTermsData"
             :selected-items="term.relatedTerms"
