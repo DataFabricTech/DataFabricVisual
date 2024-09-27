@@ -74,8 +74,8 @@
               :is-multi="true"
               title="값을 선택하세요"
               @multiple-change="changeTags"
-              @cancel="editTags"
-              @close="editTagsMode = false"
+              @cancel="closeTags"
+              @close="closeTags"
             ></menu-search-tag>
           </div>
         </td>
@@ -137,8 +137,8 @@
               :is-multi="true"
               title="값을 선택하세요"
               @multiple-change="changeTerms"
-              @cancel="editTags"
-              @close="editTags"
+              @cancel="closeTerms"
+              @close="closeTerms"
             ></menu-search-tag>
           </div>
         </td>
@@ -184,6 +184,9 @@ const editTags = async () => {
     await getTagList();
   }
 };
+const closeTags = () => {
+  editTagsMode.value = false;
+};
 
 const editTerms = async () => {
   editTermsMode.value = !editTermsMode.value;
@@ -191,6 +194,10 @@ const editTerms = async () => {
   if (editTermsMode.value) {
     await getGlossaryList();
   }
+};
+
+const closeTerms = () => {
+  editTermsMode.value = false;
 };
 
 const changeTags = (value: MenuSearchItemImpl[]) => {

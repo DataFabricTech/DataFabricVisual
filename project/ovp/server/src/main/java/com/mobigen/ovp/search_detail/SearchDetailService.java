@@ -289,22 +289,30 @@ public class SearchDetailService {
      * @return
      */
     public List<Columns> getDataModelSchema(String id, String type) {
-        MultiValueMap params = new LinkedMultiValueMap();
+        Map<String, String> params = new HashMap<>();
 
         // fields=tableConstraints,tablePartition,usageSummary,owner,customMetrics,columns,tags,followers,joins,schemaDefinition,dataModel,extension,testSuite,domain,dataProducts,lifeCycle,sourceHash
-        params.add("include", "all");
+        params.put("include", "all");
+
+        Tables dataModel = new Tables();
+        List<Columns> columns = new ArrayList<>();
 
         if (!ModelType.STORAGE.getValue().equals(type)) {
-            params.add("fields", "columns");
-            return tablesClient.getTablesName(id, params).getColumns();
+            params.put("fields", "columns");
+            dataModel = tablesClient.getTablesName(id, params);
+            if (dataModel != null) {
+                return tablesClient.getTablesName(id, params).getColumns();
+            }
+
         } else {
-            params.add("fields", "dataModel");
-            try {
+            params.put("fields", "dataModel");
+            dataModel = containersClient.getStorageById(id, params);
+            if (dataModel != null && dataModel.getColumns() != null) {
                 return containersClient.getStorageById(id, params).getDataModel().getColumns();
-            } catch (Exception e) {
-                return new ArrayList<>();
             }
         }
+
+        return columns;
     }
 
     /**
@@ -548,7 +556,11 @@ public class SearchDetailService {
 
                 DataModelDetailTagDto tag = new DataModelDetailTagDto();
                 tag.setName(tempTag.get("name").toString());
-                tag.setDisplayName(tempTag.get("displayName").toString());
+
+                if (tempTag.get("displayName") != null) {
+                    tag.setDisplayName(tempTag.get("displayName").toString());
+                }
+
                 tag.setDescription(tempTag.get("description").toString());
                 tag.setTagFQN(tempTag.get("fullyQualifiedName").toString());
                 tag.setSource(target);

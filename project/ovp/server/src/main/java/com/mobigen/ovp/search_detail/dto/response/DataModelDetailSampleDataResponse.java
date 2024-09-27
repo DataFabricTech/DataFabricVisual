@@ -12,13 +12,13 @@ import java.util.Map;
 
 @Data
 public class DataModelDetailSampleDataResponse {
-    private List<Columns> columns;
-    private List<Map<String, Object>> sampleList;
+    private List<Columns> columns = new ArrayList<>();
+    private List<Map<String, Object>> sampleList = new ArrayList<>();
 
     public DataModelDetailSampleDataResponse(SampleData sampleData, String type) {
         if (!ModelType.STORAGE.getValue().equals(type)) {
             this.columns = sampleData.getColumns();
-        } else {
+        } else if (sampleData.getDataModel() != null) {
             this.columns = sampleData.getDataModel().getColumns();
         }
 

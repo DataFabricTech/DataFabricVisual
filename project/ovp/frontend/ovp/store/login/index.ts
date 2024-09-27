@@ -107,7 +107,8 @@ export const loginStore = defineStore("login", () => {
     await getPublicKey();
     const rsa = new RSA();
     rsa.setKey(publicKey);
-    param.password = rsa.encrypt(param.password);
+
+    param.password = rsa.encrypt(param.password.value);
 
     return $api(`/api/auth/sign-up`, {
       method: "POST",

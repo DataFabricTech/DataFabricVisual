@@ -14,7 +14,7 @@
   <div class="no-result h-auto" v-else>
     <div class="notification">
       <svg-icon class="notification-icon" name="info"></svg-icon>
-      <p class="notification-detail">스키마 데이터가 없습니다.</p>
+      <p class="notification-detail">등록된 정보가 없습니다.</p>
     </div>
   </div>
 </template>
@@ -39,6 +39,9 @@ const COLUMN_DEFS: ColDef[] = [
     },
   },
 ];
+watchEffect(() => {
+  console.log(schemaList.value.length);
+});
 </script>
 
 <style lang="scss" scoped></style>
