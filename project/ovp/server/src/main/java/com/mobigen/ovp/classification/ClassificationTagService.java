@@ -100,7 +100,7 @@ public class ClassificationTagService {
                     .anyMatch(classificationTag -> classificationTag.getName().equalsIgnoreCase(newTagName));
 
             if(isDuplicate) {
-                throw new Exception("Duplicate tag name");
+                throw new Exception("DUPLICATE_TAG_NAME");
             }
         }
 

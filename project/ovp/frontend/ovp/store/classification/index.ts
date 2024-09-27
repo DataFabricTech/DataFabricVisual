@@ -77,8 +77,6 @@ export const classificationStore = defineStore("classification", () => {
   // 현재 선택된 아이디 분류 ID값(기본값 : classificationList[0]의 ID값)
   const currentClassificationID: Ref = ref("");
 
-  const tagID: Ref<string> = ref("");
-
   // 현재 태그의 분류 name값
   const currentClassificationTagName: Ref<string> = ref("");
 
@@ -228,6 +226,5 @@ export const classificationStore = defineStore("classification", () => {
     isNameEditable,
     isDescEditable,
     editClassificationTag,
-    tagID,
   };
 });

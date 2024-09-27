@@ -66,7 +66,7 @@
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
 import { type Ref, ref } from "vue";
-import { classificationStore } from "@/store/classification/index";
+import { classificationStore } from "@/store/classification";
 const useClassificationStore = classificationStore();
 const { getClassificationTags, editClassificationTag } = useClassificationStore;
 
@@ -148,7 +148,7 @@ function validateForm(): void {
   // store에 있는 edit 호출하기
   saveTag(tagFormState.value.name, tagFormState.value.description).then(
     (response: any) => {
-      if (response.errorMessage === "Duplicate tag name") {
+      if (response.errorMessage === "DUPLICATE_TAG_NAME") {
         nameErrorMsg.value = "이름이 중복되었습니다.";
         isShowNameNoti.value = true;
         return;
