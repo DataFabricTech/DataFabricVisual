@@ -45,8 +45,8 @@ public class ModelCreationController {
      */
     @ResponseJsonResult(errorMessage = "북마크 추가 오류")
     @PutMapping("/bookmark/add/{id}")
-    public Object addBookMark(@PathVariable String id) throws Exception {
-        return modelCreationService.addBookMark(id);
+    public Object addBookMark(@PathVariable String id, @RequestParam String type) throws Exception {
+        return modelCreationService.addBookMark(id, type);
     }
 
     /**
@@ -58,8 +58,8 @@ public class ModelCreationController {
      */
     @ResponseJsonResult(errorMessage = "북마크 삭제 오류")
     @DeleteMapping("/bookmark/remove/{id}")
-    public Object removeBookMark(@PathVariable String id) throws Exception {
-        return modelCreationService.removeBookMark(id);
+    public Object removeBookMark(@PathVariable String id, @RequestParam String type) throws Exception {
+        return modelCreationService.removeBookMark(id, type);
     }
 
     /**

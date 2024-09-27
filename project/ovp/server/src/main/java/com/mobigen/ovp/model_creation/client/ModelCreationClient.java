@@ -14,10 +14,16 @@ import java.util.Map;
 @FeignClient(name = "ModelCreationClient", url = "${properties.ovp.open-metadata-url}", configuration = FeignHttpClientConfiguration.class)
 public interface ModelCreationClient {
     @PutMapping(value = "/tables/{id}/followers", consumes = "application/json")
-    Map<String, Object> addBookMark(@PathVariable String id, @RequestBody String loginUserId);
+    Map<String, Object> addTableBookMark(@PathVariable String id, @RequestBody String loginUserId);
+
+    @PutMapping(value = "/containers/{id}/followers", consumes = "application/json")
+    Map<String, Object> addContainerBookMark(@PathVariable String id, @RequestBody String loginUserId);
 
     @DeleteMapping(value = "/tables/{id}/followers/{loginUserId}")
-    Map<String, Object> deleteBookMark(@PathVariable String id, @PathVariable String loginUserId);
+    Map<String, Object> deleteTableBookMark(@PathVariable String id, @PathVariable String loginUserId);
+
+    @DeleteMapping(value = "/containers/{id}/followers/{loginUserId}")
+    Map<String, Object> deleteContainerBookMark(@PathVariable String id, @PathVariable String loginUserId);
 
     @GetMapping(value = "/search/query")
     Map<String, Object> selectDataModelName(@RequestParam("query_filter") String queryFilter,
