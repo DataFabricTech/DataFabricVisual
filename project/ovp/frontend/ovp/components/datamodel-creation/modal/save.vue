@@ -50,7 +50,7 @@
             <div class="form-detail">
               <textarea
                 id="data-model-save-description"
-                class="textarea h-28"
+                class="textarea is-textarea-fixed h-20"
                 placeholder="데이터 모델 설명을 입력하세요."
                 v-model="modelDescription"
                 @input="setModelDescription(modelDescription)"
