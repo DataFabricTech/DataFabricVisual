@@ -60,6 +60,7 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import { useClipboard } from "@vueuse/core";
+import { useNuxtApp } from "nuxt/app";
 import { storeToRefs } from "pinia";
 
 import { useDataModelDetailStore } from "@/store/search/detail/index";
@@ -72,6 +73,8 @@ const userStore = useUserStore();
 
 const { changeVote, changeFollow, removeDataModel } = dataModelDetailStore;
 const { dataModel } = storeToRefs(dataModelDetailStore);
+
+const { $alert, $confirm } = useNuxtApp();
 
 const { user } = storeToRefs(userStore);
 const currentUrl = ref("");
@@ -91,21 +94,24 @@ const changeDownVote = async () => {
 function copyLink() {
   getURL();
   copy(currentUrl.value);
-  alert("링크가 복사되었습니다.");
+  $alert("링크가 복사되었습니다.");
 }
 
-function deleteDataModel() {
-  if (confirm("데이터모델을 삭제 하시겠습니까?")) {
+async function deleteDataModel() {
+  const result = await $confirm("데이터모델을 삭제 하시겠습니까?");
+  if (result) {
     removeDataModel()
       .then((data) => {
         if (data.result === 1) {
-          alert("삭제되었습니다.");
+          $alert("삭제되었습니다.");
           router.push("/portal/search");
         } else {
-          alert("삭제 실패했습니다. 잠시 후 다시 시도해주세요.");
+          $alert("삭제 실패했습니다. 잠시 후 다시 시도해주세요.");
         }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.error(error);
+      });
   }
 }
 
