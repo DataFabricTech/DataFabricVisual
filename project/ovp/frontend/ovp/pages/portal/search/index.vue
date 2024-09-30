@@ -8,7 +8,7 @@
       :data="tabOptions"
       :label-key="'label'"
       :value-key="'value'"
-      :current-item="initTab"
+      :current-item="currentTab"
       :current-item-type="'value'"
       :use-tab-contents="false"
       @change="changeTab"
@@ -91,6 +91,7 @@ const {
 } = searchCommonStore;
 const {
   filters,
+  currentTab,
   searchResult,
   previewData,
   viewType,
@@ -141,8 +142,6 @@ const modelNmClick = (data: object) => {
   });
 };
 
-const initTab: string = "table";
-
 const tabOptions = ref([
   {
     label: `테이블 (${searchResultLength.value.table})`,
@@ -177,16 +176,15 @@ onMounted(() => {
   resetReloadList();
 });
 
-onBeforeMount(() => {
-  changeTab("table", false);
-});
-
-onBeforeRouteLeave((to, from, next) => {
+onBeforeRouteLeave((to: any, _: any, next: any) => {
   isShowPreview.value = false;
-  setEmptyFilter();
-  setSearchKeyword("");
-  searchInputValue.value = "";
-  resetReloadList();
+  if (to.path !== "/portal/search/detail") {
+    changeTab("table");
+    setEmptyFilter();
+    setSearchKeyword("");
+    searchInputValue.value = "";
+    resetReloadList();
+  }
   next();
 });
 
