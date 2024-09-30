@@ -39,12 +39,12 @@ public class ModelConvertUtil {
                 .filter(hit -> {
                     if (useFilter) {
                         String index = hit.get("_index").toString();
-                        return index.equals("table_search_index") || index.equals("container_search_index");
+                        return index.equals(Constants.TABLE_INDEX) || index.equals(Constants.CONTAINER_INDEX);
                     }
                     return true;
                 })
                 .map(hit -> {
-                    String index = hit.get("_index").toString().equals("table_search_index") ? "table" : "storage";
+                    String index = hit.get("_index").toString().equals(Constants.TABLE_INDEX) ? "table" : "storage";
                     if (hit.containsKey("_source")) {
                         Map<String, Object> source = (Map<String, Object>) hit.get("_source");
                         Map<String, Object> convertedData = convertSourceDataOne(index, source);

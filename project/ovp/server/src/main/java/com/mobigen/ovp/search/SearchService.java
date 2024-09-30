@@ -68,7 +68,7 @@ public class SearchService {
     }
 
     public Map<String, Object> getFilter(MultiValueMap<String, String> params) {
-        params.set("q", "{\"query\":{\"bool\":{\"must\":[{\"match\":{\"deleted\":false}},{\"terms\":{\"_index\":[\"container_search_index\",\"table_search_index\"]}}]}}}");
+        params.set("q", "{\"query\":{\"bool\":{\"must\":[{\"match\":{\"deleted\":false}},{\"terms\":{\"_index\":[\"" + Constants.CONTAINER_INDEX + "\",\"" + Constants.TABLE_INDEX + "\"]}}]}}}");
         params.set("value", ".*.*");
         params.set("index", "all");
         return convertAggregations(searchClient.getFilter(params));
@@ -303,7 +303,7 @@ public class SearchService {
     }
 
     public Object getBothSearchList(MultiValueMap<String, String> params) throws Exception {
-        params.set("query_filter", "{\"query\":{\"bool\":{\"must\":[{\"terms\":{\"_index\":[\"container_search_index\",\"table_search_index\"]}}],\"should\":[{\"bool\":{\"must\":[{\"term\":{\"_index\":\"container_search_index\"}},{\"exists\":{\"field\":\"fileFormats\"}}]}},{\"term\":{\"_index\":\"table_search_index\"}}],\"minimum_should_match\":1}}}");
+        params.set("query_filter", "{\"query\":{\"bool\":{\"must\":[{\"terms\":{\"_index\":[\"" + Constants.CONTAINER_INDEX + "\",\"" + Constants.TABLE_INDEX + "\"]}}],\"should\":[{\"bool\":{\"must\":[{\"term\":{\"_index\":\"" + Constants.CONTAINER_INDEX + "\"}},{\"exists\":{\"field\":\"fileFormats\"}}]}},{\"term\":{\"_index\":\"" + Constants.TABLE_INDEX + "\"}}],\"minimum_should_match\":1}}}");
 
         Map<String, Object> result = getList(params, true);
         List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get("data");
