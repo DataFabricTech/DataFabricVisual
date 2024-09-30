@@ -27,7 +27,7 @@
         )
       "
       :data="filter.data"
-      :selected-items="selectedFilterItems"
+      :selected-items="selectedFilterItems[keyName]"
       label-key="key"
       value-key="key"
       :title="filter.text"
@@ -46,7 +46,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import MenuSearchButton from "@extends/menu-seach/button/menu-search-button.vue";
 import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 
@@ -86,6 +85,7 @@ const changeMultiple: (value: any[] | {}, keyName: any) => void = (
 ) => {
   isShowPreview.value = false;
   setSelectedFilters(keyName, _.map(value, "key"));
+  setSelectedFilterItems(keyName, value);
 };
 
 const setSelectedFilters = (keyName: string, selectedIds: any[]) => {
@@ -96,6 +96,10 @@ const setSelectedFilters = (keyName: string, selectedIds: any[]) => {
   }
 
   resetReloadList();
+};
+
+const setSelectedFilterItems = (keyName: string, value: any[] | {}) => {
+  selectedFilterItems.value[keyName] = value;
 };
 
 const onNodeChecked = (checkedNodes: TreeViewItem[]) => {

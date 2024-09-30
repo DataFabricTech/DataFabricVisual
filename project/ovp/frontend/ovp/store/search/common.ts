@@ -107,7 +107,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const currentTab: Ref<string> = ref("table");
   const searchResult: Ref<any[]> = ref([]);
   const previewData: Ref<PreviewData> = ref(createDefaultPreview());
-  const selectedFilterItems: Ref<any> = ref([]);
+  const selectedFilterItems: Ref<any> = ref({});
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
   const currentPreviewId: Ref<string | number> = ref("");
   let UNDEFINED_TAG_ID: string = "";
@@ -187,7 +187,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
 
   const setEmptyFilter = () => {
-    selectedFilterItems.value = [];
+    selectedFilterItems.value = {};
     selectedFilters.value = {};
   };
 
