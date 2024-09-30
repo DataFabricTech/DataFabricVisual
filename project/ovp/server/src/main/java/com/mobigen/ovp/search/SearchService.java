@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -169,45 +168,75 @@ public class SearchService {
 
     }
 
-    private Map<String, Object> getAllList(MultiValueMap<String, String> params) throws Exception {
-        params.set("index", ModelIndex.all.name());
-        return getList(params);
+    private JSONObject defaultQueryFilterJson() {
+        // Step 1: Construct the "terms" part
+        JSONObject termsObject = new JSONObject();
+        JSONArray indicesArray = new JSONArray();
+        indicesArray.put(Constants.CONTAINER_INDEX);
+        indicesArray.put(Constants.TABLE_INDEX);
+        termsObject.put("_index", indicesArray);
+
+        // Step 2: Construct the "must" part for "containerIndex" and "fileFormats"
+        JSONObject termObject = new JSONObject();
+        termObject.put("_index", Constants.CONTAINER_INDEX);
+
+        JSONObject existsObject = new JSONObject();
+        existsObject.put("field", "fileFormats");
+
+        JSONArray mustArray = new JSONArray();
+        mustArray.put(new JSONObject().put("term", termObject));
+        mustArray.put(new JSONObject().put("exists", existsObject));
+
+        JSONObject boolMustObject = new JSONObject();
+        boolMustObject.put("must", mustArray);
+
+        // Step 3: Construct the "should" part
+        JSONArray shouldArray = new JSONArray();
+        shouldArray.put(new JSONObject().put("bool", boolMustObject));
+        shouldArray.put(new JSONObject().put("term", new JSONObject().put("_index", Constants.TABLE_INDEX)));
+
+        // Step 4: Construct the main "bool" object
+        JSONObject mainBoolObject = new JSONObject();
+        mainBoolObject.put("must", new JSONArray().put(new JSONObject().put("terms", termsObject)));
+        mainBoolObject.put("should", shouldArray);
+        mainBoolObject.put("minimum_should_match", 1);
+
+        // Step 5: Construct the final query filter object
+        JSONObject queryObject = new JSONObject();
+        queryObject.put("bool", mainBoolObject);
+
+        JSONObject finalQueryFilter = new JSONObject();
+        finalQueryFilter.put("query", queryObject);
+
+        // Return the JSON as a string
+        return finalQueryFilter;
     }
 
-    private String getStorageQueryFilter(String queryFilter) {
-        // Step 1: queryFilter를 JSON으로 변환
-        JSONObject combinedFilter = new JSONObject(queryFilter);
+    public JSONObject mergeQueries(String extraQuery) {
+        JSONObject defaultQuery = defaultQueryFilterJson();
 
-        // fileFormats 가 없는 항목은 목록에서 제외시켜야 함.
-        // {"query":{"bool":{"must":{"exists":{"field":"fileFormats"}}}}}
+        JSONObject extraQueryObject = new JSONObject(extraQuery);
+        Object extraMustQueryObj = extraQueryObject.getJSONObject("query").getJSONObject("bool").get("must");
 
-        // Step 2: 추가할 must 쿼리 생성
-        JSONObject mustQuery = new JSONObject();
-        mustQuery.put("exists", new JSONObject().put("field", "fileFormats"));
+        JSONObject boolObject = defaultQuery.getJSONObject("query").getJSONObject("bool");
+        JSONArray mustArray = boolObject.getJSONArray("must");
 
-        // Step 3: 기존 쿼리에서 "bool" 부분을 가져오기
-        JSONObject boolQuery = combinedFilter.getJSONObject("query").getJSONObject("bool");
-
-        // Step 4: "must" 부분이 이미 존재하면 추가하고, 없으면 새로 생성
-        if (boolQuery.has("must")) {
-            Object mustObject = boolQuery.get("must");
-            if (mustObject instanceof JSONArray) {
-                // 이미 "must"가 배열인 경우, 새로운 조건을 추가
-                ((JSONArray) mustObject).put(mustQuery);
-            } else {
-                // "must"가 단일 객체인 경우, 배열로 변환하고 새로운 조건 추가
-                JSONArray newMustArray = new JSONArray();
-                newMustArray.put(mustObject);
-                newMustArray.put(mustQuery);
-                boolQuery.put("must", newMustArray);
+        if (extraMustQueryObj instanceof JSONArray extraMustArray) {
+            for (int i = 0; i < extraMustArray.length(); i++) {
+                mustArray.put(extraMustArray.get(i));
             }
-        } else {
-            // "must"가 없는 경우, 새로 생성
-            boolQuery.put("must", new JSONArray().put(mustQuery));
+        } else if (extraMustQueryObj instanceof JSONObject) {
+            mustArray.put(extraMustQueryObj);
         }
 
-        // Step 5: 최종적으로 변환된 JSON을 문자열로 반환
-        return combinedFilter.toString();
+        return defaultQuery;
+    }
+
+    private Map<String, Object> getAllList(MultiValueMap<String, String> params) throws Exception {
+        params.set("index", ModelIndex.all.name());
+        params.set("query_filter", mergeQueries(params.getFirst("query_filter")).toString());
+
+        return getList(params);
     }
 
     private String getQueryFilter(String index, String queryFilter) {
@@ -274,7 +303,7 @@ public class SearchService {
             params.set("size", "0");
         }
         params.set("index", ModelIndex.container.name());
-        params.set("query_filter", getStorageQueryFilter(params.getFirst("query_filter")));
+        params.set("query_filter", mergeQueries(params.getFirst("query_filter")).toString());
 
         return getList(params);
     }
@@ -303,7 +332,7 @@ public class SearchService {
     }
 
     public Object getBothSearchList(MultiValueMap<String, String> params) throws Exception {
-        params.set("query_filter", "{\"query\":{\"bool\":{\"must\":[{\"terms\":{\"_index\":[\"" + Constants.CONTAINER_INDEX + "\",\"" + Constants.TABLE_INDEX + "\"]}}],\"should\":[{\"bool\":{\"must\":[{\"term\":{\"_index\":\"" + Constants.CONTAINER_INDEX + "\"}},{\"exists\":{\"field\":\"fileFormats\"}}]}},{\"term\":{\"_index\":\"" + Constants.TABLE_INDEX + "\"}}],\"minimum_should_match\":1}}}");
+        params.set("query_filter", defaultQueryFilterJson().toString());
 
         Map<String, Object> result = getList(params, true);
         List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get("data");
