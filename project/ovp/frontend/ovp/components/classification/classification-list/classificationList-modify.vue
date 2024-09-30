@@ -152,7 +152,6 @@ const createJsonPatch = (oldData: any, newData: any): JsonPatchOperation[] => {
   if (hasError.value) {
     showNameNoti.value = true;
     isNameEditable.value = true;
-    classificationDetailData.value.name = "";
     return patch;
   }
 
