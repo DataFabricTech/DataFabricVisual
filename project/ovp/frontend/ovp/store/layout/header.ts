@@ -1,4 +1,10 @@
-export const useLayoutHeaderStore = defineStore("layoutHeader", () => {
-  const searchInputValue = ref("");
-  return { searchInputValue };
-});
+export const useLayoutHeaderStore = defineStore(
+  "layoutHeader",
+  () => {
+    const searchInputValue = ref("");
+    return { searchInputValue };
+  },
+  {
+    persist: true,
+  },
+);
