@@ -1,17 +1,25 @@
 <template>
   <div class="overview">
-    <!--    ag-grid 내에 tooltip을 넣으면 overflow:hidden 때문에 툴팁이 숨겨져 일부만 보이는 이슈가 있어서 밖으로 뺌-->
     <div
       id="dynamicTooltip"
       class="dynamic-tooltip"
       v-show="isOpenAgHeaderTooltip"
     >
-      <p>Queued: 수집 작업이 시작 대기 상태에 있음</p>
-      <p>Running: 현재 수집 작업이 진행 중</p>
-      <p>Success: 수집 작업이 성공적으로 완료됨</p>
-      <p>Failed: 오류가 발생하여 작업이 완료되지 않음</p>
-      <p>PartialSuccess: 일부는 성공적으로 수집되었으나, 일부는 실패함</p>
+      <div v-if="agHeaderTooltipContents === 'event'">
+        <p>등록: 수집 정보가 최초 등록된 경우</p>
+        <p>편집: 수집 정보를 수정한 경우</p>
+        <p>삭제: 수집 정보를 삭제한 경우</p>
+        <p>현황변경: 동기화, 종료 등 기타 이벤트가 발생한 경우</p>
+      </div>
+      <div v-if="agHeaderTooltipContents === 'status'">
+        <p>Queued: 수집 작업이 시작 대기 상태에 있음</p>
+        <p>Running: 현재 수집 작업이 진행 중</p>
+        <p>Success: 수집 작업이 성공적으로 완료됨</p>
+        <p>Failed: 오류가 발생하여 작업이 완료되지 않음</p>
+        <p>PartialSuccess: 일부는 성공적으로 수집되었으나, 일부는 실패함</p>
+      </div>
     </div>
+
     <div class="v-group gap-5">
       <h4 class="overview-title">요약 정보</h4>
       <div class="flex w-full gap-5">
@@ -49,10 +57,9 @@
             id="responseList"
           >
             <dl v-for="(item, index) in serviceResponseData" :key="index">
-              <dt>{{ item.name }}</dt>
-              <dd>{{ item.value }}</dd>
+              <dt>{{ item.serviceName }}</dt>
+              <dd>{{ item.queryExecutionTime }} sec</dd>
             </dl>
-            <!-- NOTE "scrollTrigger" -> useIntersectionObserver 가 return 하는 변수병과 동일해야함. -->
             <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
             <Loading
               id="responseListLoader"
@@ -108,8 +115,7 @@
     <div class="v-group gap-5">
       <div class="h-group w-full">
         <h4 class="overview-title">서비스 상태</h4>
-        <!--     TODO: [개발] 수집일시 api -->
-        <div class="overview-info">수집 일시 : 2024-09-12 00:00:00</div>
+        <div class="overview-info">수집 일시 : {{ collectedDateTime }}</div>
       </div>
       <div class="no-result" v-if="statusDetailData.length === 0">
         <div class="notification">
@@ -164,7 +170,9 @@ import { useIntersectionObserver } from "@/composables/intersectionObserverHelpe
 import { ServiceNameRenderer } from "~/store/manage/service/overview/cell-renderer/serviceNameRenderer";
 import { HistoryServiceNameRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceNameRenderer";
 import { HistoryServiceStatusRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceStatusRenderer";
-import HeaderTooltip from "~/components/manage/service/ag-grid/header-tooltip.vue";
+import { HistoryEventDateRenderer } from "~/store/manage/service/overview/cell-renderer/historyEventDateRenderer";
+import HeaderTooltipStatus from "~/components/manage/service/ag-grid/header-tooltip-status.vue";
+import HeaderTooltipEvent from "~/components/manage/service/ag-grid/header-tooltip-event.vue";
 
 const overviewStore = useOverviewStore();
 const {
@@ -184,7 +192,9 @@ const {
   statusDetailData,
   historyData,
   isOpenAgHeaderTooltip,
+  agHeaderTooltipContents,
   agHeaderCoordinates,
+  collectedDateTime,
 } = storeToRefs(overviewStore);
 
 // Dynamic Tooltip
@@ -206,14 +216,13 @@ watch(
 );
 
 // Common
-const setOverviewData = () => {
-  console.log("1. setOverviewData 실행");
-  getServiceTypeData();
-  getServiceStatusData();
-  getServiceResponseData();
-  getDataCurrentSituationData();
-  getStatusDetailData();
-  getHistoryData();
+const setOverviewData = async () => {
+  await getServiceTypeData();
+  await getServiceStatusData();
+  await getServiceResponseData();
+  await getDataCurrentSituationData();
+  await getStatusDetailData();
+  await getHistoryData();
 };
 
 // Ag-grid
@@ -221,20 +230,20 @@ const serviceColumnDefs = ref([
   {
     headerName: "서비스 이름",
     headerClass: "ag-header-center",
-    field: "name",
+    field: "serviceName",
     cellRenderer: ServiceNameRenderer,
     cellStyle: { textAlign: "center" },
   },
   {
     headerName: "데이터 저장소 유형",
     headerClass: "ag-header-center",
-    field: "type",
+    field: "serviceType",
     cellStyle: { textAlign: "center" },
   },
   {
     headerName: "상태",
     headerClass: "ag-header-center",
-    field: "status",
+    field: "connectionStatus",
     cellStyle: { textAlign: "center" },
   },
 ]);
@@ -243,25 +252,32 @@ const historyColumnDefs = ref([
   {
     headerName: "이벤트 발생 일시",
     headerClass: "ag-header-center",
-    field: "date",
+    field: "eventAt",
+    cellRenderer: HistoryEventDateRenderer,
     cellStyle: { textAlign: "center" },
   },
   {
     headerName: "수집 이름",
     headerClass: "ag-header-center",
-    field: "collectionName",
+    field: "ingestionName",
     cellStyle: { textAlign: "center" },
   },
   {
-    headerName: "이벤트",
+    headerName: "유형",
+    headerClass: "ag-header-center",
+    field: "type",
+    cellStyle: { textAlign: "center" },
+  },
+  {
+    headerComponent: HeaderTooltipEvent,
     headerClass: "ag-header-center",
     field: "event",
     cellStyle: { textAlign: "center" },
   },
   {
-    headerComponent: HeaderTooltip,
+    headerComponent: HeaderTooltipStatus,
     headerClass: "ag-header-center",
-    field: "status",
+    field: "state",
     cellRenderer: HistoryServiceStatusRenderer,
     cellStyle: {
       textAlign: "center",
@@ -270,14 +286,14 @@ const historyColumnDefs = ref([
   {
     headerName: "서비스 이름",
     headerClass: "ag-header-center",
-    field: "name",
-    cellRenderer: HistoryServiceNameRenderer,
+    field: "serviceId",
+    serviceId: HistoryServiceNameRenderer,
     cellStyle: { textAlign: "center" },
   },
   {
     headerName: "저장소 유형",
     headerClass: "ag-header-center",
-    field: "type",
+    field: "dbType",
     cellStyle: { textAlign: "center" },
   },
 ]);
@@ -286,7 +302,6 @@ const historyColumnDefs = ref([
 let currentSituationChart: echarts.ECharts | null = null;
 
 const setECharts = () => {
-  console.log("2. setECharts 실행");
   const typeChartDOM = document.getElementById("typeChart") as HTMLElement;
   const statusChartDOM = document.getElementById("statusChart") as HTMLElement;
   const currentSituationChartDOM = document.getElementById(
