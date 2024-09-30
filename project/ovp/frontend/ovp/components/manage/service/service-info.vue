@@ -185,6 +185,9 @@ import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchCompositi
 import _ from "lodash";
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 
+import { useNuxtApp } from "nuxt/app";
+const { $confirm } = useNuxtApp();
+
 const {
   changeTab,
   getServiceList,
@@ -230,7 +233,9 @@ async function refreshService(): Promise<void> {
 }
 
 async function removeService(): Promise<void> {
-  if (confirm("삭제된 서비스는 복구할 수 없습니다. 정말 삭제하시겠습니까?")) {
+  if (
+    await $confirm("삭제된 서비스는 복구할 수 없습니다. 정말 삭제하시겠습니까?")
+  ) {
     await deleteService(service.id);
     await getServiceList();
     await refreshService();

@@ -4,7 +4,7 @@
     <div class="alert-body">
       <!-- TODO:[개발] 기획변경으로 노티피케이션 생략하고 일반 텍스트 추가하였습니다. -->
       <p class="alert-text">
-        alert test text
+        {{ message }}
       </p>
     </div>
     <div class="alert-foot">
@@ -34,5 +34,4 @@ const {
   handleCancel
 } = useAlert();
 </script>
-<style scoped>
-</style>
+<style scoped></style>

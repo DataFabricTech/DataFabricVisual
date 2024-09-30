@@ -2,6 +2,8 @@ import { TreeProps, TreeViewItem } from "./TreeProps";
 import { uuid } from "vue3-uuid";
 import _ from "lodash";
 
+import { useNuxtApp } from "nuxt/app";
+
 export interface TreeComposition extends TreeProps {
   treeItems: Ref<TreeViewItem[]>;
   showTree: Ref<boolean>;
@@ -13,6 +15,8 @@ export interface TreeComposition extends TreeProps {
 }
 
 export function TreeComposition(props: TreeProps): TreeComposition {
+  const { $alert, $confirm } = useNuxtApp();
+
   const CATEGORY_UNDEFINED_NAME = "미분류";
 
   const showTree = ref(true);
@@ -131,20 +135,18 @@ export function TreeComposition(props: TreeProps): TreeComposition {
 
     // immutableItems 의 항목은 drag/drop 할수없음.
     if (Array.isArray(props.immutableItems) && props.immutableItems.some((item) => thisNode.id.includes(item))) {
-      alert(`${CATEGORY_UNDEFINED_NAME} 항목은 이동 불가능 합니다.`);
+      $alert(`${CATEGORY_UNDEFINED_NAME} 항목은 이동 불가능 합니다.`, "info");
       return false;
     }
 
-    // TODO: NOTIFICATION - confirm 창 구현 완료 되면 아래 window.prompt 창 변경처리 필요.
-    const msg = `${thisNode.name} 카테고리를 ${targetNode.name} 하위로 이동 하시겠습니까?`;
+    $confirm(`${thisNode.name} 카테고리를 ${targetNode.name} 하위로 이동 하시겠습니까?`).then((res: any) => {
+      if (res) {
+        const newNode = _.cloneDeep(thisNode);
+        newNode.parentId = targetNode.id;
 
-    const res = window.prompt(`${msg} (answer : 'yes'`);
-    if (res === "yes") {
-      const newNode = _.cloneDeep(thisNode);
-      newNode.parentId = targetNode.id;
-
-      return props.dropValidator(thisNode, targetNode, newNode);
-    }
+        return props.dropValidator(thisNode, targetNode, newNode);
+      }
+    });
   };
   // vue3-tree-vue 에서는 dropValidator 이 undefined 일때만 drag/drop 이 동작하지 않음.
   const dropValidatorHandler: any = props.useDraggable ? dropValidator : undefined;

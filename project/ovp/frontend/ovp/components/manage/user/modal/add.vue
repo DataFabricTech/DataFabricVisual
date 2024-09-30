@@ -283,6 +283,9 @@ import Modal from "@extends/modal/Modal.vue";
 import _ from "lodash";
 import $constants from "@/utils/constant";
 
+import { useNuxtApp } from "nuxt/app";
+const { $alert } = useNuxtApp();
+
 const { getPwdIconName } = useCommonUtils();
 const userStore = useUserStore();
 const { getRandomPwd, checkDuplicateEmail, checkDuplicateName, addUser } =
@@ -343,9 +346,9 @@ const resetRandomPwd = async () => {
 const pwdCopyBtnClicked = async () => {
   try {
     await navigator.clipboard.writeText(params.value.password);
-    alert("비밀번호가 복사되었습니다.");
+    $alert("비밀번호가 복사되었습니다.", "success");
   } catch (err) {
-    alert("비밀번호 복사에 실패했습니다. 다시 시도해 주세요.");
+    $alert("비밀번호 복사에 실패했습니다. 다시 시도해 주세요.", "error");
   }
 };
 
@@ -370,11 +373,12 @@ const onConfirm = async () => {
   // 사용자 추가
   await addUser(params.value).then((data) => {
     if (_.isEmpty(data)) {
-      alert("사용자 생성 실패했습니다. 잠시 후 다시 시도해주세요.");
+      $alert("사용자 생성 실패했습니다. 잠시 후 다시 시도해주세요.", "error");
     } else {
-      alert("사용자 생성이 완료되었습니다.");
-      emit("close");
-      emit("userAddedSuccess");
+      $alert("사용자 생성이 완료되었습니다.", "success").then(() => {
+        emit("close");
+        emit("userAddedSuccess");
+      });
     }
   });
 };
