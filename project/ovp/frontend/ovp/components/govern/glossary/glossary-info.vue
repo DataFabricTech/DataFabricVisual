@@ -48,7 +48,6 @@
         </div>
       </div>
       <!-- // 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-      <!-- TODO alert 개발 후 얼럿 적용 -->
       <button
         class="button button-error-lighter"
         v-if="!isGlossaryNull()"
@@ -146,7 +145,10 @@
             <svg-icon class="button-icon" name="pen"></svg-icon>
           </button>
         </div>
-        <div class="editable-group editable-group-unusual" v-if="store.editGlossaryMode.tag">
+        <div
+          class="editable-group editable-group-unusual"
+          v-if="store.editGlossaryMode.tag"
+        >
           <menu-search-tag
             :data="menuSearchTagsData"
             :selected-items="glossary.tags"
@@ -200,7 +202,9 @@ import menuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import type { JsonPatchOperation, Tag } from "~/type/common";
 import { reactive, watch, onMounted, type Ref } from "vue";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
+import { useNuxtApp } from "nuxt/app";
 
+const { $alert, $confirm } = useNuxtApp();
 const {
   glossary,
   tags,
@@ -251,11 +255,11 @@ function syncEditDataWithGlossary(): void {
 }
 
 async function removeGlossary() {
-  if (confirm("데이터모델을 삭제 하시겠습니까?")) {
+  if ($confirm("데이터모델을 삭제 하시겠습니까?")) {
     await deleteGlossary(glossary.id);
     await getGlossaries()
       .then(() => {
-        alert("삭제되었습니다.");
+        $alert("삭제되었습니다.", "info");
       })
       .catch((error) => {
         console.error("삭제 중 오류 발생: ", error);

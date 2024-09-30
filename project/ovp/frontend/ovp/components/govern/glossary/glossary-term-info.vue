@@ -44,7 +44,6 @@
           </button>
         </div>
       </div>
-      <!-- TODO alert 개발 후 진행 -->
       <button class="button button-error-lighter" @click="onDeleteTerm">
         삭제
       </button>
@@ -134,7 +133,10 @@
             <svg-icon class="button-icon" name="pen"></svg-icon>
           </button>
         </div>
-        <div class="editable-group editable-group-unusual" v-if="store.editTermMode.tag">
+        <div
+          class="editable-group editable-group-unusual"
+          v-if="store.editTermMode.tag"
+        >
           <menu-search-tag
             :data="menuSearchTagsData"
             :selected-items="term.tags"
@@ -229,7 +231,10 @@
             <svg-icon class="button-icon" name="pen"></svg-icon>
           </button>
         </div>
-        <div class="editable-group editable-group-unusual" v-if="store.editTermMode.relatedTerms">
+        <div
+          class="editable-group editable-group-unusual"
+          v-if="store.editTermMode.relatedTerms"
+        >
           <menu-search-tag
             :data="filteredRelatedTerms"
             :selected-items="term.relatedTerms"
@@ -256,6 +261,9 @@ import { onMounted, reactive, watch } from "vue";
 import type { JsonPatchOperation, Tag } from "~/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import type { Term } from "~/type/glossary";
+import { useNuxtApp } from "nuxt/app";
+
+const { $alert, $confirm } = useNuxtApp();
 const {
   term,
   terms,
@@ -323,9 +331,11 @@ async function updateTerm(op: JsonPatchOperation): Promise<void> {
 }
 
 async function onDeleteTerm(): Promise<void> {
-  await deleteTerm(term.id);
-  await getGlossaries();
-  openEditTermComponent("glossary");
+  if ($confirm("데이터모델을 삭제 하시겠습니까?")) {
+    await deleteTerm(term.id);
+    await getGlossaries();
+    openEditTermComponent("glossary");
+  }
 }
 
 function cancel(property: keyof typeof editTermMode): void {

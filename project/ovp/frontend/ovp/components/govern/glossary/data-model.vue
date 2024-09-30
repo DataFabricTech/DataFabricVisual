@@ -94,12 +94,14 @@ import { onMounted, ref } from "vue";
 import Preview from "~/components/common/preview/preview.vue";
 import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import { useNuxtApp } from "nuxt/app";
 
 const { getDataModels, resetDataModels, updateTerm, dataModels, term } =
   useGlossaryStore();
 const { getPreviewData } = useSearchCommonStore();
 const searchCommonStore = useSearchCommonStore();
 const { previewData } = storeToRefs(searchCommonStore);
+const { $alert, $confirm } = useNuxtApp();
 
 onMounted(async () => {
   resetDataModels();
@@ -171,7 +173,7 @@ function toggleAllCheck(allCheck: boolean): void {
 
 async function deleteDataModel(): Promise<void> {
   if (selectedDataModels.value.length === 0) {
-    alert(`데이터모델을 선택해주세요`);
+    $alert("데이터모델을 선택해주세요.", "info");
     return;
   }
 
