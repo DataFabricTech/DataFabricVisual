@@ -35,6 +35,9 @@ import _ from "lodash";
 import { useRouter } from "vue-router";
 import { loginStore } from "~/store/login";
 import { PasswordComposition } from "~/components/login/PasswordComposition";
+import { useNuxtApp } from "nuxt/app";
+
+const { $alert } = useNuxtApp();
 
 const route = useRoute();
 const router = useRouter();
@@ -63,10 +66,11 @@ const submit = async () => {
   await getPwChangeSuccessState(param, uuid);
 
   if (isPwChangeSuccess.value) {
-    alert("비밀번호가 변경되었습니다.");
-    router.push("/portal/login");
+    $alert("비밀번호가 변경되었습니다.", "success").then(() => {
+      router.push("/portal/login");
+    });
   } else {
-    alert(errorMessage.value);
+    $alert(errorMessage.value, "error");
   }
 };
 </script>

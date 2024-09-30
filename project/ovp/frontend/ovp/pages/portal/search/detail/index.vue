@@ -40,7 +40,7 @@ import _ from "lodash";
 import { ref, shallowRef } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
-const { $alert, $confirm } = useNuxtApp();
+const { $alert } = useNuxtApp();
 
 import { useDataModelDetailStore } from "@/store/search/detail/index";
 import { useLineageStore } from "@/store/search/detail/lineage/index";

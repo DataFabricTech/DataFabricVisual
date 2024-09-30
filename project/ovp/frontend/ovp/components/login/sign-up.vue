@@ -170,6 +170,9 @@ import $constants from "@/utils/constant";
 import { useUserStore } from "@/store/user/userStore";
 import _ from "lodash";
 
+import { useNuxtApp } from "nuxt/app";
+const { $alert } = useNuxtApp();
+
 const {
   newPassword,
   confirmPassword,
@@ -274,9 +277,10 @@ const signUp = async () => {
   });
 
   if (result.result === 0 && result.errorMessage) {
-    alert(result.errorMessage);
+    $alert(result.errorMessage, "error");
   } else {
-    alert("회원가입 성공");
+    // TODO: 기획자 확인 필요
+    // $alert("회원가입되었습니다.", "success").then(() => {});
     router.push("/portal/login");
   }
 };
