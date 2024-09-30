@@ -376,12 +376,12 @@ async function onDelete(id: string): Promise<void> {
     try {
       await updateLoading(id, "delete", true);
       await deleteIngestion(id);
-      $alert("삭제가 완료되었습니다.", "success").then(() => {
+      $alert("삭제가 완료되었습니다.", "success").then(async () => {
         await refreshIngestionList();
+        await updateLoading(id, "delete", false);
       });
     } catch (error) {
       $alert(error, "error");
-    } finally {
       await updateLoading(id, "delete", false);
     }
   }
