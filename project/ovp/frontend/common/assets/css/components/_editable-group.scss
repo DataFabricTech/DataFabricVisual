@@ -3,7 +3,6 @@
   @include flex($horizontal: flex-start, $gap: $spacing-4);
 
   width: 100%;
-  min-height: 32px;
 
   &:has(.editable-group-desc) {
     display: inline;
