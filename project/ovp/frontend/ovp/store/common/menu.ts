@@ -11,6 +11,7 @@ export const useMenuStore = defineStore("menuStore", () => {
   const { $api } = useNuxtApp();
 
   const headerUrl = ref<string>("");
+  const previousUrl = ref<string>("");
 
   const menuJson = ref<MenuItem[]>([]);
   const mgmtMenuJson = ref<MenuItem | Record<string, never>>({});
@@ -29,11 +30,17 @@ export const useMenuStore = defineStore("menuStore", () => {
     headerUrl.value = newUrl;
   };
 
+  const setPreviousUrl = (url: string) => {
+    previousUrl.value = url;
+  };
+
   return {
     menuJson,
     mgmtMenuJson,
     headerUrl,
+    previousUrl,
     getMenuData,
     setHeaderUrl,
+    setPreviousUrl,
   };
 });
