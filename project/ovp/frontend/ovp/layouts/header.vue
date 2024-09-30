@@ -8,8 +8,8 @@
         </nuxt-link>
       </h1>
       <SearchInput
-        @reset="getAllSearchList"
-        @onClickSearch="onClickSearch"
+        @reset="search('')"
+        @onClickSearch="search"
         :placeholder="'검색어를 입력하세요.'"
         :inp-value="searchInputValue"
         :inp-id="'headerInp1'"
@@ -69,7 +69,8 @@ import { useDropdownHelper } from "~/composables/dropDownHelper";
 
 // Store
 const searchCommonStore = useSearchCommonStore();
-const { setSearchKeyword, resetReloadList } = searchCommonStore;
+const { setSearchKeyword, changeTab, setEmptyFilter, resetReloadList } =
+  searchCommonStore;
 
 const userStore = useUserStore();
 const { getUserInfo, setProfileFirstWord } = userStore;
@@ -90,14 +91,10 @@ const updateSearchInputValue = (newValue: string) => {
   searchInputValue.value = newValue;
 };
 
-const getAllSearchList = () => {
-  setSearchKeyword("");
-  resetReloadList();
-  router.push({ path: `/portal/search` });
-};
-
-const onClickSearch = (value: string) => {
+const search = (value: string) => {
   setSearchKeyword(value);
+  changeTab("table");
+  setEmptyFilter();
   resetReloadList();
   router.push({ path: `/portal/search` });
 };
