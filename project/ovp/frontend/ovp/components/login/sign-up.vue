@@ -279,8 +279,6 @@ const signUp = async () => {
   if (result.result === 0 && result.errorMessage) {
     $alert(result.errorMessage, "error");
   } else {
-    // TODO: 기획자 확인 필요
-    // $alert("회원가입되었습니다.", "success").then(() => {});
     router.push("/portal/login");
   }
 };
