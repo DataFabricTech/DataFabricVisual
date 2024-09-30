@@ -133,7 +133,16 @@ const showModalPwChange: () => void = () => {
   open();
 };
 
-await getTargetUserData(route.query.fqn);
+watch(
+  () => route.query.fqn as string,
+  async (fqn: string) => {
+    await getTargetUserData(fqn);
+    await getSearchList();
+  },
+  { deep: true },
+);
+
+await getTargetUserData(route.query.fqn as string);
 await getSearchList();
 
 const tabOptions = [
