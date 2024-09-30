@@ -14,7 +14,7 @@
         <button
           class="search-input-action-button button button-neutral-ghost button-sm"
           type="button"
-          @click="keyword = ''"
+          @click="clearKeyword"
         >
           <span class="hidden-text">지우기</span>
           <svg-icon class="button-icon" name="close"></svg-icon>
@@ -132,8 +132,14 @@ const showDataModelAddModal = () => {
 };
 
 function searchDataModel(): void {
+  resetDataModels();
   getDataModels(term.fullyQualifiedName, keyword.value);
   isShowPreview.value = false;
+}
+
+function clearKeyword() {
+  keyword.value = "";
+  searchDataModel();
 }
 
 const isShowPreview = ref(false);

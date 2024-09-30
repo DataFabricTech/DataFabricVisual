@@ -69,8 +69,8 @@ const { terms, openEditTermComponent, deleteTerm, getTerms, getTerm } =
 
 onMounted(() => getTerms());
 
-function onClickTerm(source: Term): void {
-  getTerm(source.name);
+async function onClickTerm(source: Term): void {
+  await getTerm(source.name);
   openEditTermComponent("term");
 }
 
