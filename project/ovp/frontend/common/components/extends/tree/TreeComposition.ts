@@ -139,8 +139,7 @@ export function TreeComposition(props: TreeProps): TreeComposition {
       return false;
     }
 
-    const msg = `${thisNode.name} 카테고리를 ${targetNode.name} 하위로 이동 하시겠습니까?`;
-    $confirm(`${msg}`).then((res: any) => {
+    $confirm(`${thisNode.name} 카테고리를 ${targetNode.name} 하위로 이동 하시겠습니까?`).then((res: any) => {
       if (res) {
         const newNode = _.cloneDeep(thisNode);
         newNode.parentId = targetNode.id;
