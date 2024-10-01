@@ -171,6 +171,7 @@ import { ServiceNameRenderer } from "~/store/manage/service/overview/cell-render
 import { HistoryServiceNameRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceNameRenderer";
 import { HistoryServiceStatusRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceStatusRenderer";
 import { HistoryEventDateRenderer } from "~/store/manage/service/overview/cell-renderer/historyEventDateRenderer";
+import { HistoryServiceEventRenderer } from "~/store/manage/service/overview/cell-renderer/HistoryServiceEventRenderer";
 import HeaderTooltipStatus from "~/components/manage/service/ag-grid/header-tooltip-status.vue";
 import HeaderTooltipEvent from "~/components/manage/service/ag-grid/header-tooltip-event.vue";
 
@@ -273,6 +274,7 @@ const historyColumnDefs = ref([
     headerComponent: HeaderTooltipEvent,
     headerClass: "ag-header-center",
     field: "event",
+    cellRenderer: HistoryServiceEventRenderer,
     cellStyle: { textAlign: "center" },
   },
   {
