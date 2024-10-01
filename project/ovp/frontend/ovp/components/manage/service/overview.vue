@@ -290,7 +290,7 @@ const historyColumnDefs = ref([
     headerName: "서비스 이름",
     headerClass: "ag-header-center",
     field: "serviceId",
-    serviceId: HistoryServiceNameRenderer,
+    cellRenderer: HistoryServiceNameRenderer,
     cellStyle: { textAlign: "center" },
   },
   {
