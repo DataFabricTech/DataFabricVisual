@@ -195,6 +195,7 @@ const {
   agHeaderTooltipContents,
   agHeaderCoordinates,
   collectedDateTime,
+  slicedCurrentSituationData,
 } = storeToRefs(overviewStore);
 
 // Dynamic Tooltip
@@ -451,14 +452,21 @@ const showNextData = () => {
   }
 };
 
-onMounted(async () => {
-  await setOverviewData();
-  setECharts();
+const checkNextDisabled = () => {
+  currentSituationData.value = [];
+  slicedCurrentSituationData.value = [];
 
-  // 등록된 데이터 모델 현황의 총 개수가 DEFAULT_COUNT 보다 적을 경우 '다음버튼' 비활성화
   if (currentSituationData.value.length + 1 < DEFAULT_COUNT) {
     isNextDisabled.value = true;
+  } else {
+    isNextDisabled.value = false;
   }
+};
+
+onMounted(async () => {
+  checkNextDisabled();
+  await setOverviewData();
+  setECharts();
 });
 
 const { scrollTrigger } = useIntersectionObserver({
