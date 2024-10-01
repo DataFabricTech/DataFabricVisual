@@ -220,9 +220,8 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * My 데이터 조회 > 갱신
    */
   const getMyList = async (selectedList: any[] | null = null) => {
-    isDoneFirModelListLoad.value = false;
 
-    const { data, totalCount } = await getMyListAPI(selectedList);
+    const { data, totalCount } = await getMyListAPI(selectedList, true);
     mySearchResult.value = data[currTypeMyTab.value];
     mySearchResultLength.value = totalCount;
 
@@ -233,9 +232,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     ) {
       isDoneFirModelListLoad.value = true;
     }
-
-    // [데이터 갱신] 이 완료되면 호출한다. infiniteScroll 처리하기 위해 필요한 함수. (modal 한정)
-    setDataLoadDone();
   };
   /**
    * 데이터 조회 > 누적
@@ -253,11 +249,11 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * 목록을 '갱신'하는 경우, from 값을 항상 0으로 주어야 하기 때문에 fn 하나로 묶어서 처리.
    */
 
-  const getMyListQuery = () => {
+  const getMyListQuery = (isFirst: boolean) => {
     const params: any = {
       query: searchMyyKeyword.value,
       type: currTypeMyTab.value, // table or storage or model -> tab
-      from: from.value,
+      from: isFirst ? 0 : from.value,
       size: size.value,
       id: user.value.id,
     };
@@ -559,9 +555,12 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     selectedList: any[] | null = null,
     isFirst = true,
   ) => {
-    const { data } = await $api(`/api/creation/my-list?${getMyListQuery()}`, {
-      showLoader: isFirst,
-    });
+    const { data } = await $api(
+      `/api/creation/my-list?${getMyListQuery(isFirst)}`,
+      {
+        showLoader: isFirst,
+      },
+    );
     const nData = data.data[currTypeMyTab.value] as any[];
     data.data[currTypeMyTab.value] = nData.map((item: any) => {
       return setSearchListItem(selectedList, item);
@@ -591,7 +590,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
         type: model.type,
       },
     })
-      .then((res: any) => {
+      .then(async (res: any) => {
         if (res.result === 1) {
           searchResult.value = searchResult.value.filter((item) => {
             // selectedModel과 일치하는 항목의 isFollow만 false로 변경
@@ -600,6 +599,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
             }
             return true; // 모든 항목을 유지
           });
+          await getMyList([]);
         }
       })
       .catch((err: any) => {
@@ -620,7 +620,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
         type: selectedModel.type,
       },
     })
-      .then((res: any) => {
+      .then(async (res: any) => {
         if (res.result === 1) {
           nSelectedListData.value = nSelectedListData.value.filter((item) => {
             // selectedModel과 일치하는 항목의 isFollow만 false로 변경
@@ -629,6 +629,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
             }
             return true; // 모든 항목을 유지
           });
+          await getMyList([]);
         }
       })
       .catch((err: any) => {
