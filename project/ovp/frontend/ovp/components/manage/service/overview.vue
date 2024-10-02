@@ -425,7 +425,6 @@ const setECharts = () => {
 };
 
 const updateCurrentSituationChart = () => {
-  console.log("update! ", currentSituationData.value);
   if (currentSituationChart) {
     currentSituationChart.setOption({
       dataset: {

@@ -69,7 +69,7 @@ export const useOverviewStore = defineStore("overview", () => {
     count: number = 5,
   ) => {
     const { data } = await $api(
-      `http://localhost:8080/api/service/overview/service-models?pageNumber=0&pageSize=`,
+      `http://localhost:8080/api/service/overview/service-models?pageNumber=0`,
     );
 
     for (const element of data.data) {
@@ -100,7 +100,7 @@ export const useOverviewStore = defineStore("overview", () => {
 
   const getStatusDetailData = async () => {
     const { data } = await $api(
-      `http://localhost:8080/api/service/overview/connection-history?pageNumber=0&pageSize=5`,
+      `http://localhost:8080/api/service/overview/connection-history?pageNumber=0&pageSize=30`,
     );
 
     statusDetailData.value = data.data;
@@ -108,7 +108,7 @@ export const useOverviewStore = defineStore("overview", () => {
   };
   const getHistoryData = async () => {
     const { data } = await $api(
-      `http://localhost:8080/api/service/overview/ingestion-history?pageNumber=0&pageSize=5`,
+      `http://localhost:8080/api/service/overview/ingestion-history?pageNumber=0&pageSize=30`,
     );
 
     historyData.value = data.data;

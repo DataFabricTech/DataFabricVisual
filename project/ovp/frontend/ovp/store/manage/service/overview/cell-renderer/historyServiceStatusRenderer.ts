@@ -16,7 +16,7 @@ export function HistoryServiceStatusRenderer(params: ICellRendererParams) {
       case "failed":
         badgeTheme = "badge-red-lighter";
         break;
-      case "partialsuccess":
+      case "partialSuccess":
         badgeTheme = "badge-yellow-lighter";
         break;
       default:
