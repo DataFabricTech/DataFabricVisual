@@ -75,7 +75,7 @@ export const classificationStore = defineStore("classification", () => {
   });
 
   // 현재 선택된 아이디 분류 ID값(기본값 : classificationList[0]의 ID값)
-  let currentClassificationID = "";
+  const currentClassificationID: Ref = ref("");
 
   // 현재 태그의 분류 name값
   const currentClassificationTagName: Ref<string> = ref("");
@@ -97,24 +97,26 @@ export const classificationStore = defineStore("classification", () => {
 
     if (!_.isEmpty(data.data.classificationList)) {
       // 분류목록의 0번째 인덱스 ID값을 currentClassificationID에 저장
-      currentClassificationID = data.data.classificationList[0].id;
+      currentClassificationID.value = data.data.classificationList[0].id;
       // 태그의 기본값 및 선택된 값(매개변수)을 저장
       currentClassificationTagName.value = data.data.classificationList[0].name;
     }
   };
 
   // 분류 상세 조회 ( name, displayName, description )
-  const getClassificationDetail = async (id: string) => {
+  const getClassificationDetail = async (id?: string) => {
     // [이름 / 설명 ] 수정상태 off
     isNameEditable.value = false;
     isDescEditable.value = false;
 
     if (id) {
       // 어떠한 분류를 선택 했을 경우,
-      currentClassificationID = id;
+      currentClassificationID.value = id;
     }
-    const urlID: any = `/api/classifications/list/` + currentClassificationID;
-    const data: any = await $api(urlID); // 분류 상세 조회 API 호출
+
+    const data: any = await $api(
+      `/api/classifications/list/${currentClassificationID.value}`,
+    );
 
     classificationDetailData.value = data.data; // 화면에 보여줄 store 변수로 세팅
     if (data.data && data.data.description.length === 0) {
@@ -140,7 +142,7 @@ export const classificationStore = defineStore("classification", () => {
   // 분류 상세 수정
   const editClassificationDetail = async (editData: JsonPatchOperation[]) => {
     const result = await $api(
-      `/api/classifications/${currentClassificationID}`,
+      `/api/classifications/${currentClassificationID.value}`,
       {
         method: "PATCH",
         headers: {
@@ -167,7 +169,7 @@ export const classificationStore = defineStore("classification", () => {
 
   // 분류 삭제
   const deleteClassification = () => {
-    return $api(`/api/classifications/${currentClassificationID}`, {
+    return $api(`/api/classifications/${currentClassificationID.value}`, {
       method: "delete",
     });
   };
@@ -192,6 +194,19 @@ export const classificationStore = defineStore("classification", () => {
     });
   };
 
+  // 태그 수정 API 호출
+  const editClassificationTag = (editData: any, tagId: string) => {
+    editData["classificationName"] = currentClassificationTagName.value;
+
+    return $api(`/api/tags/edit/${tagId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json-patch+json",
+      },
+      body: JSON.stringify(editData),
+    });
+  };
+
   return {
     classificationList,
     currentClassificationTagName,
@@ -210,5 +225,6 @@ export const classificationStore = defineStore("classification", () => {
     addClassificationTag,
     isNameEditable,
     isDescEditable,
+    editClassificationTag,
   };
 });

@@ -18,6 +18,11 @@ import type {
   CytoscapeEdgeStyle,
 } from "./lineage";
 import lineageStyle from "./lineage-style";
+import { useLineageStore } from "@/store/search/detail/lineage";
+
+const lineageStore = useLineageStore();
+const { isShowPreview, lineageRef, lineageFilterRef } =
+  storeToRefs(lineageStore);
 
 // dagre layout 유형 등록
 cytoscape.use(dagre);
@@ -26,43 +31,66 @@ cytoscapeNodeHtmlLabel(cytoscape);
 let cyContainer = ref(null);
 let cyRef = null;
 
+const handleClick = (event: MouseEvent) => {
+  // 필터 클릭시, 열려있는 tooltip 제거
+  if (lineageFilterRef.value?.contains(event.target)) {
+    if (tooltip.value) {
+      tooltip.value.remove();
+    }
+  }
+
+  // LineageGraph 내에서 클릭되고, 미리보기가 열려있으면 닫음
+  const lineageElement = lineageRef.value?.$el;
+  if (lineageElement?.contains(event.target) && isShowPreview.value) {
+    isShowPreview.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClick);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClick);
+});
+
 const tpl = (data: NodeData) => {
   // 라벨 템플릿 정의 메서드
   return `<div class="cytoscape-box" style="
     font-family: 'pretendard', 'Segoe UI', 'Open Sans', 'Helvetica Neue';
-    width: 100px;
-    height: 25px;
+    width: 115px;
+    height: 40px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
+    align-items: center;
+    justify-content: center;
     background-color: #f7f9fc;
     outline: none;
     border-radius: 4px;
     overflow: hidden;
   ">
-            <div style="
-              font-size: 8px;
-              font-weight: 300;
-              color: #868C98;
-              line-height: 1.2;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              width: 100px; /* 노드 크기에 맞게 설정 */
-              display: inline-block;
-            ">${data.path}</div>
-            <div style="
-              color: #2b3440;
-              font-size: 11px;
-              line-height: 1.6;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              white-space: nowrap;
-              width: 100px; /* 노드 크기에 맞게 설정 */
-              display: inline-block;
-            ">${data.label}</div>
-          </div>`;
+    <div style="
+      font-size: 8px;
+      font-weight: 300;
+      color: #868C98;
+      line-height: 1.2;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100px; /* 노드 크기에 맞게 설정 */
+      display: inline-block;
+    ">${data.path}</div>
+    <div style="
+      color: #2b3440;
+      font-size: 11px;
+      line-height: 1.6;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 100px; /* 노드 크기에 맞게 설정 */
+      display: inline-block;
+    ">${data.label}</div>
+</div>`;
 };
 
 const props = defineProps<{
@@ -96,6 +124,7 @@ const transformData = (
 };
 
 const style: (CytoscapeNodeStyle | CytoscapeEdgeStyle)[] = lineageStyle;
+const tooltip = ref<HTMLDivElement | null>(null);
 
 const initializeCytoscape = (data: CytoscapeElement[]) => {
   if (cyContainer.value) {
@@ -139,24 +168,24 @@ const initializeCytoscape = (data: CytoscapeElement[]) => {
         const nodeData = node.data(); // 노드 데이터 가져오기
 
         // 툴팁을 HTML 요소로 만들어 추가 (예: div 요소)
-        const tooltip = document.createElement("div");
-        tooltip.className = "cy-tooltip";
-        tooltip.innerHTML = `${nodeData.path}<br>${nodeData.label}`;
-        tooltip.style.position = "absolute";
-        tooltip.style.backgroundColor = "#004D57";
-        tooltip.style.color = "#fff";
-        tooltip.style.padding = "5px";
-        tooltip.style.borderRadius = "4px";
-        tooltip.style.fontSize = "12px";
-        tooltip.style.pointerEvents = "none";
-        tooltip.style.zIndex = "1000";
+        tooltip.value = document.createElement("div");
+        tooltip.value.className = "cy-tooltip";
+        tooltip.value.innerHTML = `${nodeData.path}<br>${nodeData.label}`;
+        tooltip.value.style.position = "absolute";
+        tooltip.value.style.backgroundColor = "#004D57";
+        tooltip.value.style.color = "#fff";
+        tooltip.value.style.padding = "5px";
+        tooltip.value.style.borderRadius = "4px";
+        tooltip.value.style.fontSize = "12px";
+        tooltip.value.style.pointerEvents = "none";
+        tooltip.value.style.zIndex = "1000";
 
-        document.body.appendChild(tooltip);
+        document.body.appendChild(tooltip.value);
 
         // 마우스 위치에 툴팁 배치
         const updateTooltipPosition = (e) => {
-          tooltip.style.left = `${e.pageX + 10}px`;
-          tooltip.style.top = `${e.pageY + 10}px`;
+          tooltip.value.style.left = `${e.pageX + 10}px`;
+          tooltip.value.style.top = `${e.pageY + 10}px`;
         };
 
         updateTooltipPosition(event.originalEvent);
@@ -166,7 +195,9 @@ const initializeCytoscape = (data: CytoscapeElement[]) => {
 
         // 마우스 아웃 시 툴팁 제거
         cyRef.one("mouseout", "node", () => {
-          tooltip.remove();
+          if (tooltip.value) {
+            tooltip.value.remove();
+          }
           cyRef.off("mousemove", updateTooltipPosition);
         });
       });

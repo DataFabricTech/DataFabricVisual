@@ -41,6 +41,9 @@ $error-300: var(--error-300, #f57251);
 $error-500: var(--error-500, #bf2600);
 $error-700: var(--error-700, #991e00);
 $error-900: var(--error-900, #661400);
+$overlay-black: var(--overlay-black, rgba(82, 88, 102, .75));
+$overlay-white: var(--overlay-white, rgba(255, 255, 255, .6));
+
 
 // ------------------------------------------
 // 2. 테마 이름(light / dark / ...) : 테마 별 컬러 셋 (primary-100 ...)

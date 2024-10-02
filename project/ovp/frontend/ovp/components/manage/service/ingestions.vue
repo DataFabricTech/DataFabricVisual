@@ -170,6 +170,8 @@
 import { ref, watch } from "vue";
 import { useModal } from "vue-final-modal";
 import cronstrue from "cronstrue";
+import { useNuxtApp } from "nuxt/app";
+const { $alert, $confirm } = useNuxtApp();
 
 import $constants from "~/utils/constant";
 
@@ -338,7 +340,6 @@ async function updateLoading(
     [id]: { [action]: status },
   };
 }
-//TODO: alert 얼럿
 
 async function run(ingestion: Ingestion): Promise<void> {
   const id = ingestion.id;
@@ -346,9 +347,9 @@ async function run(ingestion: Ingestion): Promise<void> {
     await updateLoading(id, "run", true);
     await runIngestion(id);
     await getStatus(ingestion);
-    alert("실행이 완료되었습니다.");
+    $alert("실행이 완료되었습니다.", "success");
   } catch (error) {
-    alert(error);
+    $alert(error, "error");
   } finally {
     await updateLoading(id, "run", false);
   }
@@ -360,24 +361,27 @@ async function deploy(ingestion: Ingestion): Promise<void> {
     await updateLoading(id, "deploy", true);
     await deployIngestion(id);
     await getStatus(ingestion);
-    alert("동기화가 완료되었습니다.");
+    $alert("동기화가 완료되었습니다.", "success");
   } catch (error) {
-    alert(error);
+    $alert(error, "error");
   } finally {
     await updateLoading(id, "deploy", false);
   }
 }
 
 async function onDelete(id: string): Promise<void> {
-  if (confirm("해당 수집 워크플로우가 영구 삭제되며 복구할 수 없습니다.")) {
+  if (
+    await $confirm("해당 수집 워크플로우가 영구 삭제되며 복구할 수 없습니다.")
+  ) {
     try {
       await updateLoading(id, "delete", true);
       await deleteIngestion(id);
-      alert("삭제가 완료되었습니다.");
-      await refreshIngestionList();
+      $alert("삭제가 완료되었습니다.", "success").then(async () => {
+        await refreshIngestionList();
+        await updateLoading(id, "delete", false);
+      });
     } catch (error) {
-      alert(error);
-    } finally {
+      $alert(error, "error");
       await updateLoading(id, "delete", false);
     }
   }
@@ -386,7 +390,7 @@ async function onDelete(id: string): Promise<void> {
 async function kill(ingestion: Ingestion): Promise<void> {
   const id = ingestion.id;
   if (
-    confirm(
+    await $confirm(
       "실행 중인 워크플로우와 대기열에 있는 워크플로우가 모두 중지되고 실패로 표시됩니다.",
     )
   ) {
@@ -394,9 +398,9 @@ async function kill(ingestion: Ingestion): Promise<void> {
       await updateLoading(id, "kill", true);
       await killIngestion(id);
       await getStatus(ingestion);
-      alert("종료가 완료되었습니다.");
+      $alert("종료가 완료되었습니다.", "success");
     } catch (error) {
-      alert(error);
+      $alert(error, "error");
     } finally {
       await updateLoading(id, "kill", false);
     }

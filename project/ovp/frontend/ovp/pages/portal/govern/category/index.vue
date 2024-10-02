@@ -78,7 +78,7 @@
                   maxlength="20"
                   required
                   id="title-modify"
-                  class="text-input w-1/2"
+                  class="text-input"
                 />
               </template>
               <template #view-slot>
@@ -228,6 +228,7 @@ import { storeToRefs } from "pinia";
 import { useModal } from "vue-final-modal";
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import { useNuxtApp } from "nuxt/app";
 import TreeVue from "@extends/tree/Tree.vue";
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 import SearchInput from "@extends/search-input/SearchInput.vue";
@@ -240,6 +241,7 @@ import type { TreeViewItem } from "@extends/tree/TreeProps";
 import _ from "lodash";
 import $constants from "~/utils/constant";
 
+const { $alert, $confirm } = useNuxtApp();
 const categoryStore = useGovernCategoryStore();
 
 const {
@@ -365,7 +367,7 @@ const addChild = (newNode: TreeViewItem) => {
 
   // 이곳에서 3depth 체크
   if (checkAddLasChild) {
-    alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
+    $alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.", "warning");
     return;
   }
 
@@ -388,21 +390,25 @@ const _editCategory = () => {
 };
 
 const _deleteCategory = async () => {
-  if (confirm("카테고리를 삭제 하시겠습니까?")) {
+  const deleteCategory = await $confirm("카테고리를 삭제 하시겠습니까?");
+  if (deleteCategory) {
     const res = await deleteCategory(selectedNodeCategory.value.id);
     if (res.result === 1) {
       if (res.data === "NOT_ALLOWED_ID") {
-        alert(
+        $alert(
           `${$constants.SERVICE.CATEGORY_UNDEFINED_NAME} 카테고리는 삭제가 불가능합니다.`,
+          "warning",
         );
         return;
       }
-      alert("삭제 되었습니다.");
+      $alert("삭제 되었습니다.", "info");
       await getCategories();
       await onCategoryNodeClick(categories.value[0]);
     } else {
-      alert("삭제가 실행되지 않았습니다.");
+      $alert("삭제가 실행되지 않았습니다.", "info");
     }
+  } else {
+    return;
   }
 };
 
@@ -414,7 +420,7 @@ watch(
   (newVal) => {
     if (newVal) {
       if (dropMsg.value !== null) {
-        alert(dropMsg.value);
+        $alert(dropMsg.value, "error");
       }
       getCategories();
     }
@@ -621,7 +627,7 @@ const showCategoryAddModal = () => {
 
 const showCategoryChangeModal = () => {
   if (selectedModelList.value.length === 0) {
-    alert(`데이터모델을 선택해주세요`);
+    $alert("데이터모델을 선택해주세요", "warning");
     return;
   }
   openCategoryChangeModal();

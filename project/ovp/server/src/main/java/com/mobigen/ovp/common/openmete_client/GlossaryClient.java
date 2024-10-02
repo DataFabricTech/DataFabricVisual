@@ -80,6 +80,14 @@ public interface GlossaryClient {
     ResponseEntity<Object> createTerms(@RequestBody com.mobigen.ovp.common.openmete_client.dto.TermDto dto);
 
     /**
+     * 용어 조회
+     * @param id
+     * @return
+     */
+    @GetMapping("/glossaryTerms/name/{id}")
+    Term getGlossaryTerm(@PathVariable String id, @RequestParam MultiValueMap<String, String> params);
+
+    /**
      * 용어 리스트
      * @param params
      * @return

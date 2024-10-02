@@ -56,6 +56,7 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from "vue";
 import ModalGlossary from "@/components/govern/glossary/modal/modal-glossary.vue";
 import { useGlossaryStore } from "@/store/glossary";
 import type { Term } from "@/type/glossary";
@@ -63,30 +64,25 @@ import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { useModal } from "vue-final-modal";
 
-const {
-  glossary,
-  terms,
-  openEditTermComponent,
-  changeCurrentTerm,
-  deleteTerm,
-  getTerms,
-} = useGlossaryStore();
+const { terms, openEditTermComponent, deleteTerm, getTerms, getTerm } =
+  useGlossaryStore();
+
+onMounted(() => getTerms());
 
 function onClickTerm(source: Term): void {
-  changeCurrentTerm(source);
+  getTerm(source.name);
   openEditTermComponent("term");
 }
 
-async function removeTerm(id: string): Promise<void> {
-  if (confirm("데이터모델을 삭제 하시겠습니까?")) {
-    await deleteTerm(id);
-    await getTerms(glossary.name)
-      .then(() => {
-        alert("삭제되었습니다.");
-      })
-      .catch((error) => {
-        console.error("삭제 중 오류 발생: ", error);
-      });
+function removeTerm(id: string): void {
+  if (confirm("용어를 삭제 하시겠습니까?")) {
+    deleteTerm(id).then((res) => {
+      if (res.result === 1) {
+        getTerms();
+      } else {
+        alert(res.errorMessage);
+      }
+    });
   }
 }
 

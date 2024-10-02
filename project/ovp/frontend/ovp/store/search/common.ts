@@ -3,6 +3,7 @@ import { useQueryHelpers } from "@/composables/queryHelpers";
 import _ from "lodash";
 import { ref } from "vue";
 import $constants from "@/utils/constant";
+import type { PreviewData } from "@/type/common";
 
 export const FILTER_KEYS = {
   CATEGORY: "category",
@@ -71,21 +72,45 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
       [FILTER_KEYS.COLUMNS]: { text: "컬럼", data: [] },
     };
   };
+  // preview 초기값 부여
+  const createDefaultPreview = (): PreviewData => {
+    return {
+      modelType: "structured",
+      modelInfo: {
+        model: {
+          name: "",
+          displayName: "",
+          desc: "",
+          tableType: "",
+          cnt: 0,
+          ext: "",
+          size: 0,
+        },
+        columns: [
+          {
+            name: "",
+            dataType: "",
+            desc: "",
+            constraint: "NULL",
+          },
+        ],
+        details: "",
+        url: "",
+      },
+      tags: [],
+      glossaries: [],
+    };
+  };
+
   // filter 정보
   const filters = ref<Filters>(createDefaultFilters());
   const currentTab: Ref<string> = ref("table");
   const searchResult: Ref<any[]> = ref([]);
-  const previewData: Ref<any> = ref({
-    modelInfo: {
-      model: {
-        name: "",
-      },
-    },
-  });
+  const previewData: Ref<PreviewData> = ref(createDefaultPreview());
   const selectedFilterItems: Ref<any> = ref([]);
   const selectedFilters: Ref<SelectedFilters> = ref({} as SelectedFilters);
   const currentPreviewId: Ref<string | number> = ref("");
-  let UNDEFINED_TAG_ID: string = null;
+  let UNDEFINED_TAG_ID: string = "";
 
   // DATA
   const viewType: Ref<string> = ref<string>("listView");
@@ -103,7 +128,7 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
 
   const getSearchListQuery = () => {
-    const queryFilter = getQueryFilter();
+    const queryFilter = getQueryFilter(selectedFilters.value, UNDEFINED_TAG_ID);
     const params: any = {
       // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
       // eslint 예외 제외 코드 추가.
@@ -167,19 +192,26 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
 
   const getFilters = async () => {
-    const { data } = await $api(`/api/search/filters`);
-
-    // 기본값 기준 사용할 필터 key 를 정리
-    const defaultFilters = createDefaultFilters();
-    const useFilters = Object.keys(defaultFilters);
-
-    useFilters.forEach((key: string) => {
-      (filters.value as Filters)[key].data = data[key];
-    });
+    filters.value = (await getUseFilters(createDefaultFilters())) as Filters;
 
     // 미분류 카테고리 ID 저장
     UNDEFINED_TAG_ID = filters.value[FILTER_KEYS.CATEGORY].data.children[0].id;
   };
+
+  const getUseFilters = async (defaultFilters: Filters | Partial<Filters>) => {
+    const { data } = await $api(`/api/search/filters`);
+
+    // 기본값 기준 사용할 필터 key 를 정리
+    const useFilters = Object.keys(defaultFilters);
+
+    const filtersData = defaultFilters;
+    useFilters.forEach((key: string) => {
+      (filtersData as Filters)[key].data = data[key];
+    });
+
+    return filtersData;
+  };
+
   const getFilter = async (filterKey: string) => {
     // TODO : 서버 연동 후 json 가라 데이터 삭제, 실 데이터로 변경 처리 필요.
     const data = await $api(`/api/search/filter?field=${filterKey}`);
@@ -187,36 +219,49 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
   };
 
   const getPreviewData = async (fqn: string) => {
-    const data: any = await $api(`/api/search/preview/${fqn}`);
+    const data = await getPreviewAPI(fqn);
     previewData.value = data.data;
+  };
+
+  const getPreviewAPI = async (fqn: string) => {
+    return await $api(`/api/search/preview/${fqn}`);
   };
 
   const getContainerPreviewData = async (id: string) => {
-    const data: any = await $api(`/api/containers/${id}`);
+    const data = await getContainerPreviewData(id);
     previewData.value = data.data;
   };
 
-  const getCtgIds = () => {
-    return !_.has(selectedFilters.value, FILTER_KEYS.CATEGORY)
+  const getContainerPreviewAPI = async (id: string) => {
+    return await $api(`/api/containers/${id}`);
+  };
+
+  const getCtgIds = (undefinedTagId: string, selectedFilters: object) => {
+    return !_.has(selectedFilters, FILTER_KEYS.CATEGORY)
       ? []
-      : selectedFilters.value[FILTER_KEYS.CATEGORY].map(
+      : (selectedFilters[FILTER_KEYS.CATEGORY] as object[]).map(
           (filter: any) =>
             `ovp_category.${
-              filter.id === UNDEFINED_TAG_ID
+              filter.id === undefinedTagId
                 ? $constants.SERVICE.CATEGORY_UNDEFINED_NAME
                 : filter.id
             }`,
         );
   };
 
-  const getQueryFilter = (): QueryFilter => {
+  const getQueryFilter = (
+    selectedFilters: object,
+    undefinedTagId: string,
+  ): QueryFilter => {
     const queryFilter: QueryFilter = {
       query: { bool: { must: [] } },
     };
 
-    for (const key in selectedFilters.value) {
+    for (const key in selectedFilters) {
       const value =
-        key === "category" ? getCtgIds() : selectedFilters.value[key];
+        key === "category"
+          ? getCtgIds(undefinedTagId, selectedFilters)
+          : (selectedFilters as SelectedFilters)[key];
       const keyValue = key === "category" ? "tags.tagFQN" : key;
 
       queryFilter.query.bool.must.push(setQueryFilterByDepth(keyValue, value));
@@ -281,7 +326,11 @@ export const useSearchCommonStore = defineStore("searchCommon", () => {
     getSearchList,
     getFilter,
     getFilters,
+    getUseFilters,
+    createDefaultPreview,
+    getPreviewAPI,
     getPreviewData,
+    getContainerPreviewAPI,
     getContainerPreviewData,
     setSortInfo,
     setSortFilter,

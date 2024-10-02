@@ -47,6 +47,9 @@ import { defineEmits } from "vue";
 import { useClipboard } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
+import { useNuxtApp } from "nuxt/app";
+const { $alert } = useNuxtApp();
+
 import { useServiceCollectionLogStore } from "@/store/manage/service/collection-log/index";
 
 import Modal from "@extends/modal/Modal.vue";
@@ -93,6 +96,6 @@ function refresh() {
 
 const copyLog = async () => {
   await navigator.clipboard.writeText(collectionLog.value);
-  alert("링크가 복사되었습니다.");
+  $alert("링크가 복사되었습니다.", "success");
 };
 </script>

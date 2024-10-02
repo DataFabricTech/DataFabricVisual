@@ -148,8 +148,15 @@ const createJsonPatch = (oldData: any, newData: any): JsonPatchOperation[] => {
     hasError.value = true;
   }
 
-  showNameNoti.value = hasError.value;
-  isNameEditable.value = hasError.value;
+  // 이름에 에러가 있으면 편집 상태 열기 및 수정값 유지
+  if (hasError.value) {
+    showNameNoti.value = true;
+    isNameEditable.value = true;
+    return patch;
+  }
+
+  showNameNoti.value = false;
+  isNameEditable.value = false;
 
   if (!hasError.value) {
     if (oldData.name !== newData.name) {
@@ -198,6 +205,9 @@ const editDone = async () => {
   // 이름이 있을 경우에만 API 호출 로직 수행
   const patchData = createJsonPatch(defaultData, newData.value);
 
+  if (patchData.length === 0) {
+    return;
+  }
   // 분류 displayName or description 수정 API 호출
   try {
     const res = await editClassificationDetail(patchData);
@@ -208,6 +218,7 @@ const editDone = async () => {
         newData.value.description = "-";
       }
       classificationDetailData.value = _.cloneDeep(newData.value);
+      getClassificationDetail(newData.value.id);
       isDescEditable.value = false;
       return;
     } else {

@@ -34,4 +34,12 @@
       vertical-align: middle;
     }
   }
+
+  //태그 전체 출력 이슈로 예외적인 스타일 생성
+  &.editable-group-unusual {
+    .menu-search {
+      min-width: 560px;
+      width: auto;
+    }
+  }
 }

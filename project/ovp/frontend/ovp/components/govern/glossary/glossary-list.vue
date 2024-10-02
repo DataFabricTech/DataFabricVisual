@@ -10,7 +10,7 @@
     <div class="no-result" v-if="glossaries.length === 0">
       <div class="notification">
         <svg-icon class="notification-icon" name="info"></svg-icon>
-        <p class="notification-detail">등록된 정보가 없습니다.</p>
+        <p class="notification-detail">데이터가 없습니다.</p>
       </div>
     </div>
     <div class="menu border-none" v-if="glossaries.length > 0">
@@ -32,14 +32,20 @@
 
 <script setup lang="ts">
 import ModalGlossaryDictionary from "@/components/govern/glossary/modal/modal-glossary-dictionary.vue";
-import { useGlossaryStore } from "@/store/glossary";
-import type { Glossary } from "@/type/glossary";
-import _ from "lodash";
 import { useModal } from "vue-final-modal";
-
+import { useGlossaryStore } from "~/store/glossary";
+import type { Glossary } from "~/type/glossary";
+import { _ } from "lodash";
+import { onMounted } from "vue";
 const { glossaries, glossary, getGlossaries, changeCurrentGlossary } =
   useGlossaryStore();
-getGlossaries();
+
+onMounted(async () => {
+  Object.keys(glossary).forEach((key) => {
+    delete glossary[key];
+  });
+  await getGlossaries();
+});
 
 const menuListClass = (data: Glossary): string => {
   return _.isEqual(glossary, data)

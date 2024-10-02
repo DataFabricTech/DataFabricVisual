@@ -14,7 +14,7 @@
   <div class="no-result h-auto" v-else>
     <div class="notification">
       <svg-icon class="notification-icon" name="info"></svg-icon>
-      <p class="notification-detail">샘플 데이터가 없습니다.</p>
+      <p class="notification-detail">등록된 정보가 없습니다.</p>
     </div>
   </div>
 </template>

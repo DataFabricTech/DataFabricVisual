@@ -7,6 +7,7 @@
           class="button button-neutral-ghost button-sm"
           type="button"
           @click="changeEditGlossaryMode('name')"
+          v-if="!isGlossaryNull()"
         >
           <span class="hidden-text">수정</span>
           <svg-icon class="button-icon" name="pen"></svg-icon>
@@ -19,7 +20,7 @@
         </label>
         <input
           id="title-modify"
-          class="text-input w-4/5"
+          class="text-input"
           v-model="editData.name"
           maxlength="20"
         />
@@ -48,23 +49,27 @@
       </div>
       <!-- // 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
       <!-- TODO alert 개발 후 얼럿 적용 -->
-      <button class="button button-error-lighter" @click="removeGlossary">
+      <button
+        class="button button-error-lighter"
+        v-if="!isGlossaryNull()"
+        @click="removeGlossary"
+      >
         삭제
       </button>
     </div>
     <div
       :id="store.tab === 'term' ? 'termList' : 'activitiesList'"
-      class="work-contents"
+      class="work-contents gap-5"
     >
       <!-- 결과 없을 시 no-result 표시  -->
       <div class="no-result" v-if="Object.keys(glossary).length === 0">
         <div class="notification">
           <svg-icon class="notification-icon" name="info"></svg-icon>
-          <p class="notification-detail">등록된 정보가 없습니다.</p>
+          <p class="notification-detail">데이터가 없습니다.</p>
         </div>
       </div>
       <!-- // 결과 없을 시 no-result 표시  -->
-      <div class="v-group gap-2">
+      <div class="v-group gap-2" v-if="!isGlossaryNull()">
         <div class="font-semibold text-neutral-700">설명</div>
         <div
           class="editable-group"
@@ -119,7 +124,7 @@
         </div>
       </div>
       <!-- // 수정 버튼 클릭시 아래 내용으로 전환됩니다 -->
-      <div class="h-group gap-2">
+      <div class="h-group gap-2" v-if="!isGlossaryNull()">
         <div class="font-semibold text-neutral-700 w-16">태그</div>
         <div class="editable-group" v-if="!store.editGlossaryMode.tag">
           <div
@@ -141,7 +146,7 @@
             <svg-icon class="button-icon" name="pen"></svg-icon>
           </button>
         </div>
-        <div class="editable-group" v-if="store.editGlossaryMode.tag">
+        <div class="editable-group editable-group-unusual" v-if="store.editGlossaryMode.tag">
           <menu-search-tag
             :data="menuSearchTagsData"
             :selected-items="glossary.tags"
@@ -156,7 +161,7 @@
         </div>
       </div>
 
-      <div>
+      <div v-if="!isGlossaryNull()">
         <div class="tab tab-line">
           <ul class="tab-list">
             <li
@@ -207,7 +212,6 @@ const {
   changeTab,
   changeEditGlossaryMode,
   createTagOperation,
-  getGlossaryActivitiesCount,
   getTerms,
   resetTerms,
   getGlossaryActivities,
@@ -222,10 +226,13 @@ const editData = reactive({
 
 watch(
   () => store.glossary,
-  (newGlossary) => {
+  async (newGlossary) => {
     editData.name = newGlossary.name;
     editData.description = newGlossary.description;
-    getGlossaryActivitiesCount(`<%23E::glossary::${glossary.name}>`);
+    await resetTerms();
+    await getTerms();
+    await resetGlossaryActivities();
+    await getGlossaryActivities();
   },
   { deep: true },
 );
@@ -234,7 +241,11 @@ onMounted(() => {
   syncEditDataWithGlossary();
 });
 
-function syncEditDataWithGlossary() {
+const isGlossaryNull = (): boolean => {
+  return Object.keys(store.glossary).length === 0;
+};
+
+function syncEditDataWithGlossary(): void {
   editData.name = store.glossary.name;
   editData.description = store.glossary.description;
 }
@@ -271,7 +282,7 @@ const getTabItemClassName = (param: string): string => {
 
 const selectedItems: Ref<string[]> = ref([]);
 
-async function changeTag(items: MenuSearchItemImpl[]) {
+async function changeTag(items: MenuSearchItemImpl[]): Promise<void> {
   selectedItems.value = items.map((item: MenuSearchItemImpl) => item.tagFQN);
   const matchTags: Tag[] = tags.filter((tag) =>
     selectedItems.value.includes(tag.tagFQN),

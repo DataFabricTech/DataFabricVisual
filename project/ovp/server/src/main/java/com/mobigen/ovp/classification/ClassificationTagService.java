@@ -3,7 +3,9 @@ package com.mobigen.ovp.classification;
 import com.mobigen.ovp.classification.client.dto.classification.tag.ClassificationTagsResponse;
 import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.openmete_client.ClassificationTagsClient;
+import com.mobigen.ovp.common.openmete_client.JsonPatchOperation;
 import com.mobigen.ovp.common.openmete_client.dto.classification.tag.ClassificationTagAdd;
+import com.mobigen.ovp.common.openmete_client.dto.classification.tag.EditTagRequest;
 import com.mobigen.ovp.common.openmete_client.dto.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -73,5 +75,35 @@ public class ClassificationTagService {
             throw new Exception("Duplicate classification name");
         }
         return classificationTagsClient.addClassificationTag(classificationTagAdd);
+    }
+
+    /**
+     * 분류내 태그 수정
+     */
+    public Object editClassificationTag(String tagId, EditTagRequest editTagRequest) throws Exception {
+
+          // 수정된 이름 가져오기
+        String newTagName = editTagRequest.getParam().stream()
+                .filter(op -> op.getPath().equals("/name"))
+                .findFirst()
+                .map(op -> op.getValue().toString())
+                .orElse(null);
+
+        // 태그 이름 수정이 있는 경우 중복 체크
+        if(newTagName != null) {
+            // 중복 체크할 리스트 가져오기
+            ClassificationTagsResponse classificationTags = (ClassificationTagsResponse) classificationService.getClassificationTags(editTagRequest.getClassificationName());
+            List<Tag> classificationTagsList = classificationTags.getClassificationTagList();
+
+            // 태그 이름 중복 체크
+            boolean isDuplicate = classificationTagsList.stream()
+                    .anyMatch(classificationTag -> classificationTag.getName().equalsIgnoreCase(newTagName));
+
+            if(isDuplicate) {
+                throw new Exception("DUPLICATE_TAG_NAME");
+            }
+        }
+
+        return classificationTagsClient.editClassificationTag(tagId, editTagRequest.getParam());
     }
 }

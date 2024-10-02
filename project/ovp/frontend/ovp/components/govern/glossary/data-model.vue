@@ -26,6 +26,7 @@
             type="checkbox"
             id="checkbox-menu-1"
             class="checkbox-input"
+            v-model="allCheck"
             @change="toggleAllCheck($event.target.checked)"
           />
           <label for="checkbox-menu-1" class="checkbox-label"> 전체선택 </label>
@@ -94,21 +95,15 @@ import Preview from "~/components/common/preview/preview.vue";
 import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 
-const {
-  getDataModels,
-  getDataModel,
-  resetDataModels,
-  updateTerm,
-  dataModels,
-  term,
-} = useGlossaryStore();
+const { getDataModels, resetDataModels, updateTerm, dataModels, term } =
+  useGlossaryStore();
 const { getPreviewData } = useSearchCommonStore();
 const searchCommonStore = useSearchCommonStore();
 const { previewData } = storeToRefs(searchCommonStore);
 
-onMounted(() => {
+onMounted(async () => {
   resetDataModels();
-  getDataModels(term.fullyQualifiedName, keyword.value);
+  await getDataModels(term.fullyQualifiedName, keyword.value);
 });
 
 const DATA_MODEL_ADD_MODAL = "data-model-add-modal";
@@ -119,7 +114,8 @@ const { open, close } = useModal({
     modalId: DATA_MODEL_ADD_MODAL,
     currentPageType: "glossary",
     onConfirm() {
-      // TODO: 데이터모델 목록 조회 및 초기화
+      resetDataModels();
+      getDataModels(term.fullyQualifiedName, keyword.value);
       close();
     },
     onClose() {
@@ -129,6 +125,7 @@ const { open, close } = useModal({
 });
 
 const keyword = ref("");
+const allCheck = ref(false);
 
 const showDataModelAddModal = () => {
   open();
@@ -171,13 +168,16 @@ async function deleteDataModel(): Promise<void> {
     alert(`데이터모델을 선택해주세요`);
     return;
   }
-  
+
   const requestBody: object[] = [];
   selectedDataModels.value.forEach((id) => {
     requestBody.push({ id: id, type: "table" });
   });
   await updateTerm(term.id, requestBody);
-  await getDataModels(term.fullyQualifiedName);
+  resetDataModels();
+  await getDataModels(term.fullyQualifiedName, keyword.value);
+  isShowPreview.value = false;
+  allCheck.value = false;
 }
 
 const { scrollTrigger } = useIntersectionObserver(searchDataModel);

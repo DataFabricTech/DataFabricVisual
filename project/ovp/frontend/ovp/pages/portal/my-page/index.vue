@@ -133,6 +133,20 @@ const showModalPwChange: () => void = () => {
   open();
 };
 
+watch(
+  () => route.query.fqn as string,
+  async (fqn: string) => {
+    await getTargetUserData(fqn);
+    await getSearchList();
+  },
+  { deep: true },
+);
+
+// 탭 value 초기화
+currentTab.value = "myBookMark";
+
+await getTargetUserData(route.query.fqn as string);
+
 await getTargetUserData(route.query.fqn);
 await getSearchList();
 

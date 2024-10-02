@@ -17,7 +17,7 @@
         <label class="hidden-text" for="title-modify">용어 수정</label>
         <input
           id="title-modify"
-          class="text-input w-4/5"
+          class="text-input"
           v-model="editData.name"
           maxlength="20"
         />
@@ -49,7 +49,7 @@
         삭제
       </button>
     </div>
-    <div class="work-contents">
+    <div class="work-contents gap-5">
       <!-- 결과 없을 시 no-result 표시  -->
       <div class="no-result" v-if="Object.keys(term).length === 0">
         <div class="notification">
@@ -134,7 +134,7 @@
             <svg-icon class="button-icon" name="pen"></svg-icon>
           </button>
         </div>
-        <div class="editable-group" v-if="store.editTermMode.tag">
+        <div class="editable-group editable-group-unusual" v-if="store.editTermMode.tag">
           <menu-search-tag
             :data="menuSearchTagsData"
             :selected-items="term.tags"
@@ -160,7 +160,7 @@
           <!-- 동의어 있을 경우-->
           <div
             class="tag tag-primary tag-sm"
-            v-if="term.synonyms.length > 0"
+            v-if="term.synonyms && term.synonyms.length > 0"
             v-for="synonym in term.synonyms"
           >
             <span class="tag-text">{{ synonym }}</span>
@@ -181,14 +181,14 @@
           </label>
           <input
             id="synonym-modify"
-            class="text-input w-4/5"
+            class="text-input w-[400px]"
             v-model="editData.synonyms"
           />
           <div class="h-group gap-1">
             <button
               class="button button-neutral-stroke"
               type="button"
-              @click="changeEditTermMode('synonyms')"
+              @click="cancelSynonyms"
             >
               취소
             </button>
@@ -229,9 +229,9 @@
             <svg-icon class="button-icon" name="pen"></svg-icon>
           </button>
         </div>
-        <div class="editable-group" v-if="store.editTermMode.relatedTerms">
+        <div class="editable-group editable-group-unusual" v-if="store.editTermMode.relatedTerms">
           <menu-search-tag
-            :data="menuSearchRelatedTermsData"
+            :data="filteredRelatedTerms"
             :selected-items="term.relatedTerms"
             label-key="label"
             value-key="id"
@@ -263,10 +263,9 @@ const {
   editTermMode,
   menuSearchTagsData,
   menuSearchRelatedTermsData,
-  getTerms,
+  getTerm,
   editTerm,
   deleteTerm,
-  changeCurrentTerm,
   getGlossaries,
   openEditTermComponent,
   disableEditTermModes,
@@ -285,7 +284,7 @@ const editData = reactive({
 
 watch(
   () => store.term,
-  (newTerm) => {
+  (newTerm: Term) => {
     editData.name = newTerm.name;
     editData.description = newTerm.description;
     if (newTerm.synonyms) {
@@ -299,6 +298,12 @@ onMounted(() => {
   syncEditDataWithTerm();
 });
 
+const filteredRelatedTerms = computed(() => {
+  return menuSearchRelatedTermsData.filter(
+    (item: object) => item.id !== term.id,
+  );
+});
+
 function syncEditDataWithTerm(): void {
   editData.name = store.term.name;
   editData.description = store.term.description;
@@ -308,10 +313,7 @@ function syncEditDataWithTerm(): void {
 }
 
 async function refreshTerm(): Promise<void> {
-  const ID = term.id;
-  await getTerms(store.glossary.name);
-  const termData: Term = terms.find((term: Term) => term.id === ID);
-  changeCurrentTerm(termData);
+  await getTerm(store.term.name);
   disableEditTermModes();
 }
 
@@ -329,6 +331,11 @@ async function onDeleteTerm(): Promise<void> {
 function cancel(property: keyof typeof editTermMode): void {
   changeEditTermMode(property);
   syncEditDataWithTerm();
+}
+
+function cancelSynonyms(): void {
+  editData.synonyms = term.synonyms;
+  changeEditTermMode("synonyms");
 }
 
 async function changeSynonyms() {

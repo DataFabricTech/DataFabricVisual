@@ -127,7 +127,6 @@
 // 컴포넌트로 분기될 경우 디폴트/모달 스타일 구별해야 함
 .transfer {
   display: flex;
-  height: 350px;
   width: 100%;
 
   .menu-data {
@@ -139,6 +138,7 @@
   }
 
   &-box {
+    height: 350px;
     width: 47%;
     border: 1px solid $neutral-200;
   }

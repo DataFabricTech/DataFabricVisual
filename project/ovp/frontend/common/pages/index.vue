@@ -23,6 +23,10 @@
       <article class="mb-10">
         <div class="flex flex-col gap-5">
           <div class="v-group gap-3 w-72">
+            <h4 class="group-title">Alert</h4>
+            <nuxt-link :to="'/components/alert'" class="button button-primary button-lg">
+              <span class="button-text">Alert 예시 이동</span>
+            </nuxt-link>
             <h4 class="group-title">Select</h4>
             <nuxt-link :to="'/selectbox'" class="button button-primary button-lg">
               <span class="button-text">Select 예시 이동</span>

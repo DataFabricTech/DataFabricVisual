@@ -1,8 +1,9 @@
 .vfm__overlay.vfm--overlay {
-  background-color: rgb(36 46 61 / 35%);
+  @include overlay-black;
 }
 
 .vfm--fixed {
+  @include flex;
   z-index: 8000 !important;
 
   .modal {
@@ -104,14 +105,20 @@
       }
     }
   }
+
+  //바디 스크롤 필요없을 시 사용
+  &.is-modal-no-scroll {
+    .modal-body {
+      overflow-y: visible;
+    }
+  }
 }
 
 // 퍼블리싱 전용 스타일
 .modal-fixed {
-  @include flex;
-
-  z-index: 8001;
-  background-color: rgb(36 46 61 / 35%);
+  //@include flex;
+  //@include overlay-black;
+  //z-index: 8001;
 }
 
 

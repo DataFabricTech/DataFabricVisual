@@ -116,6 +116,9 @@ import { vOnClickOutside } from "@vueuse/components";
 import { defineProps } from "vue";
 import { useClipboard } from "@vueuse/core";
 
+import { useNuxtApp } from "nuxt/app";
+const { $alert } = useNuxtApp();
+
 const currentText = ref("");
 const { copy } = useClipboard({
   source: currentText,
@@ -175,7 +178,7 @@ const hideContextMenuBtn: () => void = () => {
 };
 const copyKeyword: () => void = () => {
   copy(`\`${props.data.fqn}\``);
-  alert("데이터 모델 이름 복사 완료");
+  $alert("데이터 모델 이름 복사 완료", "success");
   hideContextMenu();
 };
 const onOpenDataModelDetail: () => void = () => {
