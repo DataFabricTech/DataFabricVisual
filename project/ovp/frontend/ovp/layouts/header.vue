@@ -64,8 +64,10 @@ import { useRouter } from "vue-router";
 import { useSearchCommonStore } from "~/store/search/common";
 import { useUserStore } from "@/store/user/userStore";
 import { useLayoutHeaderStore } from "~/store/layout/header";
+import { useMenuStore } from "@/store/common/menu";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import { useDropdownHelper } from "~/composables/dropDownHelper";
+import _ from "lodash";
 
 // Store
 const searchCommonStore = useSearchCommonStore();
@@ -79,6 +81,9 @@ const { user, profileFirstWord } = storeToRefs(userStore);
 const layoutHeaderStore = useLayoutHeaderStore();
 const { searchInputValue } = storeToRefs(layoutHeaderStore);
 
+const menuStore = useMenuStore();
+const { headerUrl } = storeToRefs(menuStore);
+
 const { $api } = useNuxtApp();
 const router = useRouter();
 
@@ -86,6 +91,18 @@ const header = ref();
 const dropdown = ref();
 
 const { isDropdownOpen, setHandler } = useDropdownHelper();
+
+watch(
+  () => headerUrl.value,
+  (url) => {
+    if (
+      !_.isEmpty(searchInputValue.value) &&
+      !_.includes(url, "/portal/search")
+    ) {
+      searchInputValue.value = "";
+    }
+  },
+);
 
 const updateSearchInputValue = (newValue: string) => {
   searchInputValue.value = newValue;
