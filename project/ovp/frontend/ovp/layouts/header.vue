@@ -100,6 +100,7 @@ watch(
       !_.includes(url, "/portal/search")
     ) {
       searchInputValue.value = "";
+      setSearchKeyword("");
     }
   },
 );

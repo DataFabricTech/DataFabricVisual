@@ -126,7 +126,7 @@ export const useSearchCommonStore = defineStore(
       },
     );
     // List Query data
-    let searchKeyword: string = "";
+    const searchKeyword: Ref<string> = ref<string>("");
     const sortKey: Ref<string> = ref<string>("totalVotes");
     const sortKeyOpt: Ref<string> = ref<string>("desc");
     const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
@@ -136,11 +136,12 @@ export const useSearchCommonStore = defineStore(
         selectedFilters.value,
         UNDEFINED_TAG_ID,
       );
+
       const params: any = {
         // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
         // eslint 예외 제외 코드 추가.
         // eslint-disable-next-line id-length
-        q: searchKeyword,
+        q: searchKeyword.value,
         index: currentTab.value, // table or storage or model -> tab
         from: from.value,
         size: size.value,
@@ -307,7 +308,7 @@ export const useSearchCommonStore = defineStore(
       }
     };
     const setSearchKeyword = (keyword: string) => {
-      searchKeyword = keyword;
+      searchKeyword.value = keyword;
     };
 
     const changeTab = (item: string, loadList: boolean = true) => {
@@ -320,6 +321,7 @@ export const useSearchCommonStore = defineStore(
     };
 
     return {
+      searchKeyword,
       sortKey,
       sortKeyOpt,
       currentTab,
@@ -358,7 +360,9 @@ export const useSearchCommonStore = defineStore(
     persist: {
       storage: sessionStorage, // 전역설정 해놓았으므로 생략 가능
       // NOTE: store 의 상태 중에서 특정 데이터만 저장
+      // 저장할 데이터는 반응성데이터(ref, reactive) 여야 하며, return 값에 포함되어 있어야함
       pick: [
+        "searchKeyword",
         "sortKey",
         "sortKeyOpt",
         "currentTab",

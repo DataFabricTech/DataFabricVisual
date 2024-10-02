@@ -75,6 +75,7 @@ import DataFilter from "@/components/search/data-filter.vue";
 import TopBar from "./top-bar.vue";
 import { useRouter } from "nuxt/app";
 import { useLayoutHeaderStore } from "~/store/layout/header";
+import { useMenuStore } from "@/store/common/menu";
 
 const router = useRouter();
 
@@ -104,6 +105,9 @@ const {
 
 const layoutHeaderStore = useLayoutHeaderStore();
 const { searchInputValue } = storeToRefs(layoutHeaderStore);
+
+const menuStore = useMenuStore();
+const { previousUrl } = storeToRefs(menuStore);
 
 const getPreviewCloseStatus = (option: boolean) => {
   isShowPreview.value = option;
@@ -172,20 +176,17 @@ watchEffect(() => {
 
 await getFilters();
 
-onMounted(() => {
-  resetReloadList();
-});
-
-onBeforeRouteLeave((to: any, _: any, next: any) => {
+onBeforeMount(() => {
+  // 탐색 상세 페이지가 아닌경우 검색조건 초기화
   isShowPreview.value = false;
-  if (to.path !== "/portal/search/detail") {
+  if (previousUrl.value !== "/portal/search/detail") {
     changeTab("table");
     setEmptyFilter();
-    setSearchKeyword("");
     searchInputValue.value = "";
-    resetReloadList();
+    setSearchKeyword("");
   }
-  next();
+
+  resetReloadList();
 });
 
 const { scrollTrigger } = useIntersectionObserver({ callback: addSearchList });
