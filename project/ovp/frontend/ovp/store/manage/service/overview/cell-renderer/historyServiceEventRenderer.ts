@@ -3,22 +3,19 @@ import { ICellRendererParams } from "@ag-grid-community/core";
 export function HistoryServiceEventRenderer(params: ICellRendererParams) {
   const eventStatus = (status: string) => {
     let eventTheme = "";
-    // TODO: [개발] 상태 별 데이터 명 문의 필요
     switch (status) {
       case "status_change":
         eventTheme = "현황변경";
         break;
-      case "running":
-        eventTheme = "badge-blue-lighter";
+      case "created":
+        eventTheme = "등록";
         break;
-      case "queued":
-        eventTheme = "badge-gray-lighter";
+      case "updated":
+        eventTheme = "편집";
         break;
-      case "failed":
-        eventTheme = "badge-red-lighter";
-        break;
-      case "partialsuccess":
-        eventTheme = "badge-yellow-lighter";
+      // TODO: [개발] 삭제 정보 확인 필요
+      case "delete":
+        eventTheme = "삭제";
         break;
       default:
         eventTheme = "등록";

@@ -134,6 +134,7 @@
         :useRowCheckBox="false"
         :setColumnFit="true"
         :useColumnResize="true"
+        @cellClicked="onCellClicked"
       ></agGrid>
     </div>
     <div class="v-group gap-5">
@@ -155,25 +156,26 @@
         :useRowCheckBox="false"
         :setColumnFit="true"
         :useColumnResize="true"
+        @cellClicked="onCellClicked"
       ></agGrid>
     </div>
   </div>
 </template>
 <script setup lang="ts">
 import * as echarts from "echarts";
+import { useRouter } from "nuxt/app";
 import { onMounted, ref } from "vue";
 import { storeToRefs } from "pinia";
 import agGrid from "@extends/grid/Grid.vue";
 import Loading from "@base/loading/Loading.vue";
 import { useOverviewStore } from "~/store/manage/service/overview";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
-import { ServiceNameRenderer } from "~/store/manage/service/overview/cell-renderer/serviceNameRenderer";
-import { HistoryServiceNameRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceNameRenderer";
 import { HistoryServiceStatusRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceStatusRenderer";
-import { HistoryEventDateRenderer } from "~/store/manage/service/overview/cell-renderer/historyEventDateRenderer";
-import { HistoryServiceEventRenderer } from "~/store/manage/service/overview/cell-renderer/HistoryServiceEventRenderer";
+import { HistoryServiceEventRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceEventRenderer";
 import HeaderTooltipStatus from "~/components/manage/service/ag-grid/header-tooltip-status.vue";
 import HeaderTooltipEvent from "~/components/manage/service/ag-grid/header-tooltip-event.vue";
+
+const router = useRouter();
 
 const overviewStore = useOverviewStore();
 const {
@@ -184,6 +186,7 @@ const {
   getStatusDetailData,
   getHistoryData,
   addServiceResponseData,
+  convertDateTime,
 } = overviewStore;
 const {
   serviceTypeData,
@@ -228,13 +231,26 @@ const setOverviewData = async () => {
 };
 
 // Ag-grid
+const HistoryEventDateRenderer = (params: any) => {
+  return `${convertDateTime(params.data.eventAt)}`;
+};
+
+const onCellClicked = (params: any) => {
+  if (params.column.colDef.field === "serviceName") {
+    router.push(`/portal/manage/${params.data.serviceId}`);
+  }
+};
+
 const serviceColumnDefs = ref([
   {
     headerName: "서비스 이름",
     headerClass: "ag-header-center",
     field: "serviceName",
-    cellRenderer: ServiceNameRenderer,
-    cellStyle: { textAlign: "center" },
+    cellStyle: {
+      textDecoration: "underline",
+      cursor: "pointer",
+      textAlign: "center",
+    },
   },
   {
     headerName: "데이터 저장소 유형",
@@ -289,9 +305,12 @@ const historyColumnDefs = ref([
   {
     headerName: "서비스 이름",
     headerClass: "ag-header-center",
-    field: "serviceId",
-    cellRenderer: HistoryServiceNameRenderer,
-    cellStyle: { textAlign: "center" },
+    field: "serviceName",
+    cellStyle: {
+      textDecoration: "underline",
+      cursor: "pointer",
+      textAlign: "center",
+    },
   },
   {
     headerName: "저장소 유형",
