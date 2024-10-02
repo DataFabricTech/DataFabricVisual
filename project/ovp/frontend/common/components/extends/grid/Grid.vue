@@ -6,6 +6,13 @@
     :rowData="props.rowData"
     :rowId="props.rowId"
     :rowSelection="props.useRowCheckBox ? 'multiple' : ''"
+    :rowBuffer="props.rowBuffer"
+    :rowModelType="props.rowModelType"
+    :cacheBlockSize="props.cacheBlockSize"
+    :maxConcurrentDatasourceRequests="props.maxConcurrentDatasourceRequests"
+    :infiniteInitialRowCount="props.infiniteInitialRowCount"
+    :maxBlocksInCache="props.maxBlocksInCache"
+    :cacheOverflowSize="props.cacheOverflowSize"
     @cellClicked="cellClicked"
     @rowClicked="rowClicked"
     @grid-ready="onGridReady"
@@ -38,6 +45,7 @@ const emit = defineEmits<{
   (e: "cellClicked", item: object): void;
   (e: "rowClicked", item: object): void;
   (e: "selectionChanged", item: any[]): void;
+  (e: "gridReady", param: any): void;
 }>();
 
 const cellClicked = ({
@@ -70,7 +78,7 @@ const selectionChanged = (params: { api: any }) => {
   emit("selectionChanged", params.api.getSelectedRows());
 };
 
-const { onGridReady, getDefs, onGridSizeChanged, setColumnToFit } = GridComposition(props, BTN_FIELD_CONST);
+const { onGridReady, getDefs, onGridSizeChanged, setColumnToFit } = GridComposition(props, BTN_FIELD_CONST, emit);
 
 const gridColumnDefs: Ref<any[]> = ref([]);
 
