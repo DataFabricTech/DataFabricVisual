@@ -53,10 +53,7 @@ export const useOverviewStore = defineStore("overview", () => {
     serviceResponseData.value = data;
   };
 
-  // TODO: [개발] 페이지 최초 진입 시 실행이 안되나, 다른 페이지를 갔다오면 정상 동작함
   const addServiceResponseData = async () => {
-    console.log("누적");
-
     if (responseTotalSize.value - responsePageSize.value < PAGE_SIZE) {
       responsePageSize.value = responseTotalSize.value;
     } else {

@@ -45,14 +45,14 @@
         </div>
         <div class="overview-summary" style="position: relative">
           <span>서비스 응답시간</span>
-          <div class="no-result" v-if="serviceResponseData.length === 0">
+          <div class="no-result" v-show="serviceResponseData.length === 0">
             <div class="notification">
               <svg-icon class="notification-icon" name="info"></svg-icon>
               <p class="notification-detail">등록된 서비스가 없습니다.</p>
             </div>
           </div>
           <div
-            v-else
+            v-show="serviceResponseData.length > 0"
             class="overview-chart p-3 overflow-y-auto"
             id="responseList"
           >
