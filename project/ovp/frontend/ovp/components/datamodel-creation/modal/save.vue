@@ -89,7 +89,8 @@
               <menu-search-tag
                 :data="tagList"
                 :selected-items="tag_selectedItem"
-                label-key="displayName"
+                selected-label-key="displayName"
+                label-key="tagFQN"
                 value-key="tagFQN"
                 :is-multi="true"
                 title="태그 없음"
@@ -131,6 +132,7 @@ import { useDataModelSaveStore } from "~/store/datamodel-creation/save";
 import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 import MenuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import $constants from "~/utils/constant";
+
 const dataModelSaveStore = useDataModelSaveStore();
 
 const {
