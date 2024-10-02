@@ -25,6 +25,14 @@ export default defineNuxtPlugin((nuxtApp: any) => {
       const { response, options } = context;
       const data = response._data;
 
+      // 서버단에서 redirected 가 제대로 동작하지 않아서 아래와 같이 처리함.
+      // 서버에서 response.redirect("/portal/login")으로 처리 했기 때문에
+      // response.redirected 값이 true 로 오게 됨. location.href 값을 url 로 변경해서 처리한다.
+      if (response.redirected) {
+        // 세션아웃
+        location.href = response.url;
+      }
+
       const showLoader = (options as any).showLoader ?? true;
       if (showLoader) {
         nuxtApp.$loading.stop();
@@ -50,9 +58,6 @@ export default defineNuxtPlugin((nuxtApp: any) => {
   });
 
   function errorResponse(data: any) {
-    // TODO : 세션 아웃시 로그아웃 처리 테스트 코드 작성
-    console.log("response error log");
-    console.log(data);
     let errorMessage = data.errorMessage;
     if (errorMessage === null || errorMessage === "") {
       errorMessage = "시스템 오류가 발생 하였습니다.";
