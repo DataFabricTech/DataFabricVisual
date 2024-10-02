@@ -9,3 +9,4 @@
 "com.mobigen.framework.security.SessionManager": "Session Manager Error"
 "com.mobigen.framework.security.SessionManager.changeLocale": "Change Session Locale Error"
 "com.mobigen.sample.SampleController.getErrorApi": "External API ERROR"
+"com.mobigen.framework.exception.GlobalExceptionHandler.NoResourceFoundException": "No Static Resource Found Exception"

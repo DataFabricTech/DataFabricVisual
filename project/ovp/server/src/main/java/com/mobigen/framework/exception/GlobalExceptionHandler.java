@@ -13,6 +13,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.web.servlet.view.RedirectView;
 
 @Slf4j
 @Component
@@ -53,6 +55,16 @@ public class GlobalExceptionHandler {
     public JsonResult accessDeniedExceptionHandler(AccessDeniedException e) {
         log.error(message.get("com.mobigen.framework.exception.GlobalExceptionHandler.accessDeniedExceptionHandler"), e);
         return getExceptionJsonResult(e);
+    }
+
+    // No Static Resource
+    @ExceptionHandler(NoResourceFoundException.class)
+    public RedirectView noStaticResourceFoundExceptionHandler(NoResourceFoundException e) {
+        log.error(message.get("com.mobigen.framework.exception.GlobalExceptionHandler.NoResourceFoundException"), e);
+        /**
+         * 없는 페이지 접근시에 error 페이지로 넘긴다.
+         */
+        return new RedirectView("/portal/login/error");
     }
 
     // Unknown
