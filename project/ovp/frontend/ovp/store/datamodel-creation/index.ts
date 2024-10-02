@@ -4,7 +4,7 @@ import _ from "lodash";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 
 export const useCreationStore = defineStore("creation", () => {
-  const { $api } = useNuxtApp();
+  const { $api, $alert } = useNuxtApp();
 
   // NOTE: 탐색 페이지에서 사용되는 API 활용
   const dataModelSearchStore = useDataModelSearchStore();
@@ -79,6 +79,15 @@ export const useCreationStore = defineStore("creation", () => {
    * */
   async function runQuery(value: any) {
     query.value = value;
+
+    if (_.isEmpty(query.value)) {
+      querySuccess.value = false;
+      isFirstExecute.value = false;
+      isExecuteQuery.value = false;
+      $alert("쿼리를 입력해주세요", "info");
+      return;
+    }
+
     referenceModels.value = selectedModelList.value.map((item) => ({
       id: item.id,
       name: item.modelNm,
