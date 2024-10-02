@@ -62,6 +62,8 @@ const useClassificationStore = classificationStore();
 const { classificationTagList } = storeToRefs(useClassificationStore);
 const { deleteClassificationTag, getClassificationTags } =
   useClassificationStore;
+import { useNuxtApp } from "nuxt/app";
+const { $alert, $confirm } = useNuxtApp();
 
 // 태그 추가 모달 ID
 const MODAL_ID = "modal-classificationTag";
@@ -107,12 +109,13 @@ const modalOpen = ({
   tagModifyOpen();
 };
 
-const confirmDelete = (tagId: string) => {
-  if (confirm("삭제하시겠습니까?")) {
+const confirmDelete = async (tagId: string) => {
+  if (await $confirm("삭제하시겠습니까?")) {
     deleteClassificationTag(tagId)
-      .then(() => {
-        alert("삭제되었습니다.");
-        getClassificationTags(); // 태그 정보 API 호출
+      .then(async () => {
+        $alert("삭제되었습니다.", "success").then(async () => {
+          await getClassificationTags(); // 태그 정보 API 호출
+        });
       })
       .catch((error) => {
         console.error("삭제 중 오류 발생: ", error);
