@@ -220,7 +220,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
    * My 데이터 조회 > 갱신
    */
   const getMyList = async (selectedList: any[] | null = null) => {
-
     const { data, totalCount } = await getMyListAPI(selectedList, true);
     mySearchResult.value = data[currTypeMyTab.value];
     mySearchResultLength.value = totalCount;
@@ -590,7 +589,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
         type: model.type,
       },
     })
-      .then(async (res: any) => {
+      .then((res: any) => {
         if (res.result === 1) {
           searchResult.value = searchResult.value.filter((item) => {
             // selectedModel과 일치하는 항목의 isFollow만 false로 변경
@@ -599,7 +598,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
             }
             return true; // 모든 항목을 유지
           });
-          await getMyList([]);
+          getMyList([]);
         }
       })
       .catch((err: any) => {
@@ -620,7 +619,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
         type: selectedModel.type,
       },
     })
-      .then(async (res: any) => {
+      .then((res: any) => {
         if (res.result === 1) {
           nSelectedListData.value = nSelectedListData.value.filter((item) => {
             // selectedModel과 일치하는 항목의 isFollow만 false로 변경
@@ -629,7 +628,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
             }
             return true; // 모든 항목을 유지
           });
-          await getMyList([]);
+          getMyList([]);
         }
       })
       .catch((err: any) => {
