@@ -294,6 +294,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     profileData.value = value;
     kgData.value = value;
   };
+  const setCurrTab = (value: any) => {
+    currTab.value = value;
+  };
 
   /**
    * 중분류 Tab 변경
@@ -326,6 +329,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
 
     currTab.value = item;
     setSearchKeyword("");
+    setSearchMyKeyword("");
 
     nextTick(() => {
       // 두 tab 다 infinite scroll 이 설정 되어 있기 때문에 tab 전환시 설정 flag 를 초기화해준다.
@@ -700,6 +704,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     setSearchKeyword,
     setSearchMyKeyword,
     setSelectedItem,
+    setCurrTab,
     resetReloadList,
     resetDetailBox,
     changeTypeTab,

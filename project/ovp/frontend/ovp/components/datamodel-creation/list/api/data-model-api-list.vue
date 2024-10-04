@@ -129,7 +129,8 @@ import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 import { storeToRefs } from "pinia";
 const dataModelSearchStore = useDataModelSearchStore();
-const { infiniteScrollSettingDone } = storeToRefs(dataModelSearchStore);
+const { infiniteScrollSettingDone, currTypeTab, currTypeMyTab } =
+  storeToRefs(dataModelSearchStore);
 
 const props = withDefaults(
   defineProps<
@@ -265,6 +266,18 @@ watch(
   (value) => {
     if (value) {
       mount();
+    }
+  },
+);
+
+watch(
+  [() => currTypeTab.value, () => currTypeMyTab.value],
+  ([newCurrTypeTab, newCurrTypeMyTab], [oldCurrTypeTab, oldCurrTypeMyTab]) => {
+    if (
+      newCurrTypeTab !== oldCurrTypeTab ||
+      newCurrTypeMyTab !== oldCurrTypeMyTab
+    ) {
+      onResetSearchText();
     }
   },
 );

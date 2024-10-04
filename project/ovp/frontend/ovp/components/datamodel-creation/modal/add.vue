@@ -78,6 +78,7 @@ const {
   setSearchKeyword,
   setSelectedItem,
   setSearchMyKeyword,
+  setCurrTab,
   cancelAllSelection,
 } = dataModelSearchStore;
 
@@ -107,10 +108,12 @@ const onConfirmModal = () => {
 };
 
 const onCloseModal = () => {
+  const TAB_DEFAULT = $constants.DATAMODEL_CREATION.ADD.TAB[0].value;
   setSearchKeyword("");
   setSearchMyKeyword("");
   setNSelectedListData([]);
   setSelectedItem({});
+  setCurrTab(TAB_DEFAULT);
   infiniteScrollSettingDone.value = false;
 };
 </script>
