@@ -58,6 +58,14 @@ export const useCreationStore = defineStore("creation", () => {
       selectedModel.type,
     );
     if (sampleDataList.value) {
+      sampleDataList.value.columnDefs = sampleDataList.value.columnDefs.map(
+        (column) => {
+          return {
+            ...column, // 기존 속성들 복사
+            minWidth: 150, // minWidth 추가
+          };
+        },
+      );
       isItemClicked.value = true;
     }
 
