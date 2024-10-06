@@ -8,7 +8,7 @@
       :data="tabOptions"
       :label-key="'label'"
       :value-key="'value'"
-      :current-item="initTab"
+      :current-item="currentTab"
       :current-item-type="'value'"
       :use-tab-contents="false"
       @change="changeTab"
@@ -75,6 +75,7 @@ import DataFilter from "@/components/search/data-filter.vue";
 import TopBar from "./top-bar.vue";
 import { useRouter } from "nuxt/app";
 import { useLayoutHeaderStore } from "~/store/layout/header";
+import { useMenuStore } from "@/store/common/menu";
 
 const router = useRouter();
 
@@ -91,6 +92,7 @@ const {
 } = searchCommonStore;
 const {
   filters,
+  currentTab,
   searchResult,
   previewData,
   viewType,
@@ -103,6 +105,9 @@ const {
 
 const layoutHeaderStore = useLayoutHeaderStore();
 const { searchInputValue } = storeToRefs(layoutHeaderStore);
+
+const menuStore = useMenuStore();
+const { previousUrl } = storeToRefs(menuStore);
 
 const getPreviewCloseStatus = (option: boolean) => {
   isShowPreview.value = option;
@@ -141,8 +146,6 @@ const modelNmClick = (data: object) => {
   });
 };
 
-const initTab: string = "table";
-
 const tabOptions = ref([
   {
     label: `테이블 (${searchResultLength.value.table})`,
@@ -173,21 +176,17 @@ watchEffect(() => {
 
 await getFilters();
 
-onMounted(() => {
-  resetReloadList();
-});
-
 onBeforeMount(() => {
-  changeTab("table", false);
-});
-
-onBeforeRouteLeave((to, from, next) => {
+  // 탐색 상세 페이지가 아닌경우 검색조건 초기화
   isShowPreview.value = false;
-  setEmptyFilter();
-  setSearchKeyword("");
-  searchInputValue.value = "";
+  if (previousUrl.value !== "/portal/search/detail") {
+    changeTab("table");
+    setEmptyFilter();
+    searchInputValue.value = "";
+    setSearchKeyword("");
+  }
+
   resetReloadList();
-  next();
 });
 
 const { scrollTrigger } = useIntersectionObserver({ callback: addSearchList });

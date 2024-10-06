@@ -8,8 +8,8 @@
         </nuxt-link>
       </h1>
       <SearchInput
-        @reset="getAllSearchList"
-        @onClickSearch="onClickSearch"
+        @reset="search('')"
+        @onClickSearch="search"
         :placeholder="'검색어를 입력하세요.'"
         :inp-value="searchInputValue"
         :inp-id="'headerInp1'"
@@ -64,12 +64,15 @@ import { useRouter } from "vue-router";
 import { useSearchCommonStore } from "~/store/search/common";
 import { useUserStore } from "@/store/user/userStore";
 import { useLayoutHeaderStore } from "~/store/layout/header";
+import { useMenuStore } from "@/store/common/menu";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import { useDropdownHelper } from "~/composables/dropDownHelper";
+import _ from "lodash";
 
 // Store
 const searchCommonStore = useSearchCommonStore();
-const { setSearchKeyword, resetReloadList } = searchCommonStore;
+const { setSearchKeyword, changeTab, setEmptyFilter, resetReloadList } =
+  searchCommonStore;
 
 const userStore = useUserStore();
 const { getUserInfo, setProfileFirstWord } = userStore;
@@ -77,6 +80,9 @@ const { user, profileFirstWord } = storeToRefs(userStore);
 
 const layoutHeaderStore = useLayoutHeaderStore();
 const { searchInputValue } = storeToRefs(layoutHeaderStore);
+
+const menuStore = useMenuStore();
+const { headerUrl } = storeToRefs(menuStore);
 
 const { $api } = useNuxtApp();
 const router = useRouter();
@@ -86,18 +92,27 @@ const dropdown = ref();
 
 const { isDropdownOpen, setHandler } = useDropdownHelper();
 
+watch(
+  () => headerUrl.value,
+  (url) => {
+    if (
+      !_.isEmpty(searchInputValue.value) &&
+      !_.includes(url, "/portal/search")
+    ) {
+      searchInputValue.value = "";
+      setSearchKeyword("");
+    }
+  },
+);
+
 const updateSearchInputValue = (newValue: string) => {
   searchInputValue.value = newValue;
 };
 
-const getAllSearchList = () => {
-  setSearchKeyword("");
-  resetReloadList();
-  router.push({ path: `/portal/search` });
-};
-
-const onClickSearch = (value: string) => {
+const search = (value: string) => {
   setSearchKeyword(value);
+  changeTab("table");
+  setEmptyFilter();
   resetReloadList();
   router.push({ path: `/portal/search` });
 };
