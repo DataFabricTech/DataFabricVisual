@@ -13,7 +13,6 @@
 <script setup lang="ts">
 import { NetworkDiagram } from "knowledge-graph-canvas";
 import { useSearchCommonStore } from "~/store/search/common";
-// import { Category } from "knowledge-graph-canvas/dist/category-graph";
 // import {
 //   NetworkDiagramEdgeInfo,
 //   NetworkDiagramNodeInfo,
@@ -34,13 +33,13 @@ onMounted(() => {
 
   let idCount = 10;
 
-  const nodes: any[] = [
+  const nodes: NetworkDiagramNodeInfo[] = [
     { id: "n1", width: 100, height: 100, style: { backgroundColor: "red" } },
     { id: "n2", width: 100, height: 100 },
     { id: "n3", width: 100, height: 100 },
     { id: "n4", width: 100, height: 100 },
   ];
-  const edges: any[] = [
+  const edges: NetworkDiagramEdgeInfo[] = [
     {
       id: "e1",
       sources: ["n1"],
@@ -72,12 +71,12 @@ element type:
     eventHandler: {
       onClick: (e, id, type) => {
         if (type === "node" && id) {
-          const nodes: any[] = [
+          const nodes: NetworkDiagramNodeInfo[] = [
             { id: `n${idCount++}`, width: 100, height: 100 },
             { id: `n${idCount++}`, width: 100, height: 100 },
             { id: `n${idCount++}`, width: 100, height: 100 },
           ];
-          const edges: any[] = nodes.map((node) => ({
+          const edges: NetworkDiagramEdgeInfo[] = nodes.map((node) => ({
             id: `${id}_${node.id}`,
             sources: [id],
             targets: [node.id],

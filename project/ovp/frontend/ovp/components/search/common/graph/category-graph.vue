@@ -6,7 +6,7 @@
 <script setup lang="ts">
 import { CategoryGraph } from "knowledge-graph-canvas";
 import { useSearchCommonStore } from "~/store/search/common";
-// import { Category } from "knowledge-graph-canvas/dist/category-graph";
+import { Category } from "knowledge-graph-canvas/dist/category-graph";
 // import {
 //   NetworkDiagramEdgeInfo,
 //   NetworkDiagramNodeInfo,
@@ -43,7 +43,6 @@ onMounted(() => {
     pixelQuality: "middle",
     eventHandler: {
       onClick: (e: any, id: any, type: any) => {
-        console.log(type);
         // if (type === "node" && id) {
         //   const nodes: any[] = [
         //     { id: `n${idCount++}`, width: 100, height: 100 },
