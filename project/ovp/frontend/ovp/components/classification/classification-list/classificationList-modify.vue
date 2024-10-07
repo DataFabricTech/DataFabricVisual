@@ -83,6 +83,8 @@ import { classificationStore } from "@/store/classification/index";
 import tagList from "@/components/classification/classification-list/tagList.vue";
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 import $constants from "~/utils/constant";
+import { useNuxtApp } from "nuxt/app";
+const { $alert, $confirm } = useNuxtApp();
 
 const useClassificationStore = classificationStore();
 const {
@@ -232,19 +234,20 @@ const editDone = async () => {
 };
 
 // 분류 삭제 버튼 클릭
-const confirmDelete = () => {
-  if (confirm("삭제하시겠습니까?")) {
+const confirmDelete = async () => {
+  if (await $confirm("삭제하시겠습니까?")) {
     deleteClassification()
       .then(async () => {
-        alert("삭제되었습니다.");
-        await getClassificationList(); // 분류목록 API 재호출
+        $alert("삭제되었습니다.", "success").then(async () => {
+          await getClassificationList(); // 분류목록 API 재호출
 
-        if (!classificationDetailData.value.id) {
-          return;
-        }
+          if (!classificationDetailData.value.id) {
+            return;
+          }
 
-        getClassificationDetail(); // 분류 상세 정보 API 호출
-        getClassificationTags(); // 태그 정보 API 호출
+          await getClassificationDetail(); // 분류 상세 정보 API 호출
+          await getClassificationTags(); // 태그 정보 API 호출
+        });
       })
       .catch((error) => {
         console.error("삭제 중 오류 발생: ", error);
