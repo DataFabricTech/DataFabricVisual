@@ -1,8 +1,11 @@
 <template>
-  <!--  목록 & 상세에서 공통으로 쓰일 지식 그래프? -->
-  <section>공통 - 지식 그래프</section>
+  <category-graph />
+  <network-diagram />
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import CategoryGraph from "./graph/category-graph.vue";
+import NetworkDiagram from "./graph/network-diagram.vue";
+</script>
 
 <style lang="scss" scoped></style>

@@ -114,6 +114,9 @@ export const useSearchCommonStore = defineStore(
     const currentPreviewId: Ref<string | number> = ref("");
     let UNDEFINED_TAG_ID: string = "";
 
+    // GraphData
+    const graphData: Ref<any[]> = ref([]);
+
     // DATA
     const viewType: Ref<string> = ref<string>("listView");
     const isShowPreview: Ref<boolean> = ref<boolean>(false);
@@ -131,13 +134,13 @@ export const useSearchCommonStore = defineStore(
     const sortKeyOpt: Ref<string> = ref<string>("desc");
     const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
 
-    const getSearchListQuery = () => {
+    const getQueryParam = () => {
       const queryFilter = getQueryFilter(
         selectedFilters.value,
         UNDEFINED_TAG_ID,
       );
 
-      const params: any = {
+      return {
         // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
         // eslint 예외 제외 코드 추가.
         // eslint-disable-next-line id-length
@@ -150,7 +153,15 @@ export const useSearchCommonStore = defineStore(
         sort_field: sortKey.value,
         sort_order: sortKeyOpt.value,
       };
-      return new URLSearchParams(params);
+    };
+    const getSearchListQuery = (): any => {
+      return new URLSearchParams(getQueryParam());
+    };
+    const getGraphQuery = (): any => {
+      const query = getQueryParam();
+      query.size = query.from + query.size;
+      query.from = 0;
+      return new URLSearchParams(query);
     };
 
     // METHODS
@@ -320,6 +331,16 @@ export const useSearchCommonStore = defineStore(
       }
     };
 
+    const getGraphData = async () => {
+      const graphParam: any = getGraphQuery();
+      graphParam.from = 0;
+      console.log(graphParam);
+      const { data } = await $api(`/api/search/graph/list?${graphParam}`, {
+        showLoader: false,
+      });
+      graphData.value = data;
+    };
+
     return {
       searchKeyword,
       sortKey,
@@ -336,6 +357,7 @@ export const useSearchCommonStore = defineStore(
       searchResultLength,
       isSearchResultNoData,
       currentPreviewId,
+      graphData,
       addSearchList,
       getSearchList,
       getFilter,
@@ -354,6 +376,7 @@ export const useSearchCommonStore = defineStore(
       updateIntersectionHandler,
       getQueryFilter,
       setEmptyFilter,
+      getGraphData,
     };
   },
   {

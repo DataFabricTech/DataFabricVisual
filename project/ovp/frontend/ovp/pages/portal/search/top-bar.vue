@@ -8,6 +8,7 @@
     </h4>
     <div class="h-group gap-1">
       <select-box
+        v-if="viewType === 'listView'"
         class="select-clean"
         :data="options"
         label-key="label"
@@ -64,7 +65,7 @@ const options: { [key: string]: string | number }[] =
 const isFirstCheckedEvent: boolean = true;
 
 const onGraphView = () => {
-  viewType.value = "listView";
+  viewType.value = "graphView";
 };
 
 // mounted 되기 전에 호출이 되어 버러서 탐색>목록 api 호출을 2번하기 때문에 아래 코드 삭제
