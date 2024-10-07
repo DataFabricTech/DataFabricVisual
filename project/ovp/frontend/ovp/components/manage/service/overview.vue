@@ -19,13 +19,12 @@
         <p>PartialSuccess: 일부는 성공적으로 수집되었으나, 일부는 실패함</p>
       </div>
     </div>
-
     <div class="v-group gap-5">
       <h4 class="overview-title">요약 정보</h4>
       <div class="flex w-full gap-5">
         <div class="overview-summary">
           <span>서비스 타입 요약</span>
-          <div class="no-result" v-if="serviceTypeData.length === 0">
+          <div class="no-result" v-if="_.isEmpty(serviceTypeData)">
             <div class="notification">
               <svg-icon class="notification-icon" name="info"></svg-icon>
               <p class="notification-detail">등록된 서비스가 없습니다.</p>
@@ -35,7 +34,7 @@
         </div>
         <div class="overview-summary">
           <span>서비스 상태 요약</span>
-          <div class="no-result" v-if="serviceStatusData.length === 0">
+          <div class="no-result" v-if="_.isEmpty(serviceStatusData)">
             <div class="notification">
               <svg-icon class="notification-icon" name="info"></svg-icon>
               <p class="notification-detail">등록된 서비스가 없습니다.</p>
@@ -45,7 +44,7 @@
         </div>
         <div class="overview-summary" style="position: relative">
           <span>서비스 응답시간</span>
-          <div class="no-result" v-show="serviceResponseData.length === 0">
+          <div class="no-result" v-show="_.isEmpty(serviceResponseData)">
             <div class="notification">
               <svg-icon class="notification-icon" name="info"></svg-icon>
               <p class="notification-detail">등록된 서비스가 없습니다.</p>
@@ -73,7 +72,7 @@
       <div class="flex w-full gap-5">
         <div class="overview-summary">
           <span>등록된 데이터 모델 현황</span>
-          <div class="no-result" v-if="currentSituationData.length === 0">
+          <div class="no-result" v-if="_.isEmpty(currentSituationData)">
             <div class="notification">
               <svg-icon class="notification-icon" name="info"></svg-icon>
               <p class="notification-detail">등록된 서비스가 없습니다.</p>
@@ -117,47 +116,62 @@
         <h4 class="overview-title">서비스 상태</h4>
         <div class="overview-info">수집 일시 : {{ collectedDateTime }}</div>
       </div>
-      <div class="no-result" v-if="statusDetailData.length === 0">
+      <div class="no-result" v-if="isEmptyServiceStatus">
         <div class="notification">
           <svg-icon class="notification-icon" name="info"></svg-icon>
           <p class="notification-detail">등록된 서비스가 없습니다.</p>
         </div>
       </div>
-      <!--      TODO: [개발] 30개까지 출력되고 인피니티 스크롤 적용 -->
-      <agGrid
-        v-else
-        :style="'width: 100%; height: 300px'"
-        class="ag-theme-alpine ag-theme-quartz"
-        :columnDefs="serviceColumnDefs"
-        :rowData="statusDetailData"
-        rowId="id"
-        :useRowCheckBox="false"
-        :setColumnFit="true"
-        :useColumnResize="true"
-        @cellClicked="onCellClicked"
-      ></agGrid>
+      <div v-else style="position: relative; width: 100%; height: 300px">
+        <Loading
+          id="collectorHistoryLoading"
+          :use-loader-overlay="true"
+          class="loader-lg is-loader-inner mt-[42px]"
+          v-show="showServiceStatusLoading"
+        ></Loading>
+        <agGrid
+          :style="'width: 100%; height: 300px'"
+          class="ag-theme-alpine ag-theme-quartz"
+          :columnDefs="serviceColumnDefs"
+          :rowModelType="rowModelType"
+          :cacheBlockSize="cacheBlockSize"
+          :infiniteInitialRowCount="infiniteInitialRowCount"
+          @grid-ready="onServiceStatusGrid"
+          @cellClicked="onCellClicked"
+          :setColumnFit="true"
+          :useColumnResize="true"
+          rowId="id"
+        ></agGrid>
+      </div>
     </div>
     <div class="v-group gap-5">
       <h4 class="overview-title">수집 히스토리</h4>
-      <div class="no-result" v-if="historyData.length === 0">
+      <div class="no-result" v-if="isEmptyCollectorHistory">
         <div class="notification">
           <svg-icon class="notification-icon" name="info"></svg-icon>
           <p class="notification-detail">등록된 서비스가 없습니다.</p>
         </div>
       </div>
-      <!--      TODO: [개발] 30개까지 출력되고 인피니티 스크롤 적용 -->
-      <agGrid
-        v-else
-        :style="'width: 100%; height: 300px'"
-        class="ag-theme-alpine ag-theme-quartz"
-        :columnDefs="historyColumnDefs"
-        :rowData="historyData"
-        rowId="id"
-        :useRowCheckBox="false"
-        :setColumnFit="true"
-        :useColumnResize="true"
-        @cellClicked="onCellClicked"
-      ></agGrid>
+      <div v-else style="position: relative; width: 100%; height: 300px">
+        <Loading
+          id="collectorHistoryLoading"
+          :use-loader-overlay="true"
+          class="loader-lg is-loader-inner mt-[42px]"
+          v-show="showCollectorHistoryLoading"
+        ></Loading>
+        <agGrid
+          :style="'width: 100%; height: 300px'"
+          class="ag-theme-alpine ag-theme-quartz"
+          :columnDefs="historyColumnDefs"
+          :rowModelType="rowModelType"
+          :cacheBlockSize="cacheBlockSize"
+          :infiniteInitialRowCount="infiniteInitialRowCount"
+          @grid-ready="onCollectorHistoryGrid"
+          @cellClicked="onCellClicked"
+          :setColumnFit="true"
+          :useColumnResize="true"
+        ></agGrid>
+      </div>
     </div>
   </div>
 </template>
@@ -170,10 +184,9 @@ import agGrid from "@extends/grid/Grid.vue";
 import Loading from "@base/loading/Loading.vue";
 import { useOverviewStore } from "~/store/manage/service/overview";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
-import { HistoryServiceStatusRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceStatusRenderer";
-import { HistoryServiceEventRenderer } from "~/store/manage/service/overview/cell-renderer/historyServiceEventRenderer";
 import HeaderTooltipStatus from "~/components/manage/service/ag-grid/header-tooltip-status.vue";
 import HeaderTooltipEvent from "~/components/manage/service/ag-grid/header-tooltip-event.vue";
+import _ from "lodash";
 
 const router = useRouter();
 
@@ -183,23 +196,24 @@ const {
   getServiceStatusData,
   getServiceResponseData,
   getDataCurrentSituationData,
-  getStatusDetailData,
-  getHistoryData,
   addServiceResponseData,
-  convertDateTime,
+  onCollectorHistoryGrid,
+  onServiceStatusGrid,
 } = overviewStore;
 const {
   serviceTypeData,
   serviceStatusData,
   serviceResponseData,
   currentSituationData,
-  statusDetailData,
-  historyData,
   isOpenAgHeaderTooltip,
   agHeaderTooltipContents,
   agHeaderCoordinates,
   collectedDateTime,
   slicedCurrentSituationData,
+  showCollectorHistoryLoading,
+  showServiceStatusLoading,
+  isEmptyCollectorHistory,
+  isEmptyServiceStatus,
 } = storeToRefs(overviewStore);
 
 // Dynamic Tooltip
@@ -226,26 +240,58 @@ const setOverviewData = async () => {
   await getServiceStatusData();
   await getServiceResponseData();
   await getDataCurrentSituationData();
-  await getStatusDetailData();
-  await getHistoryData();
 };
 
 // Ag-grid
-const HistoryEventDateRenderer = (params: any) => {
-  return `${convertDateTime(params.data.eventAt)}`;
-};
+// 무한 스크롤 방식을 사용하도록 설정
+const rowModelType = ref("infinite");
+// 서버에서 한 번에 가져올 데이터 블록 크기 설정
+const cacheBlockSize = ref(20);
+// 무한 스크롤 시 첫 화면에 표시될 행의 초기 개수
+const infiniteInitialRowCount = ref(20);
 
 const onCellClicked = (params: any) => {
-  if (params.column.colDef.field === "serviceName") {
+  if (params.column.colDef.field === "serviceNameFormatted") {
     router.push(`/portal/manage/${params.data.serviceId}`);
   }
+};
+
+const getBadgeClass = (status: string) => {
+  let badgeTheme = "";
+  switch (status) {
+    case "success":
+      badgeTheme = "badge-green-lighter";
+      break;
+    case "running":
+      badgeTheme = "badge-blue-lighter";
+      break;
+    case "queued":
+      badgeTheme = "badge-gray-lighter";
+      break;
+    case "failed":
+      badgeTheme = "badge-red-lighter";
+      break;
+    case "partialSuccess":
+      badgeTheme = "badge-yellow-lighter";
+      break;
+    default:
+      badgeTheme = "badge";
+  }
+
+  return badgeTheme;
+};
+
+const setBadgeStatus = (params: string) => {
+  const badgeClass = getBadgeClass(params);
+
+  return `<div class="badge ${badgeClass} ag-cell-badge"><p class="badge-text">${params ? params : ""}</p></div>`;
 };
 
 const serviceColumnDefs = ref([
   {
     headerName: "서비스 이름",
     headerClass: "ag-header-center",
-    field: "serviceName",
+    field: "serviceNameFormatted",
     cellStyle: {
       textDecoration: "underline",
       cursor: "pointer",
@@ -270,8 +316,7 @@ const historyColumnDefs = ref([
   {
     headerName: "이벤트 발생 일시",
     headerClass: "ag-header-center",
-    field: "eventAt",
-    cellRenderer: HistoryEventDateRenderer,
+    field: "eventAtFormatted",
     cellStyle: { textAlign: "center" },
   },
   {
@@ -289,15 +334,14 @@ const historyColumnDefs = ref([
   {
     headerComponent: HeaderTooltipEvent,
     headerClass: "ag-header-center",
-    field: "event",
-    cellRenderer: HistoryServiceEventRenderer,
+    field: "eventFormatted",
     cellStyle: { textAlign: "center" },
   },
   {
     headerComponent: HeaderTooltipStatus,
     headerClass: "ag-header-center",
-    field: "state",
-    cellRenderer: HistoryServiceStatusRenderer,
+    field: "statusFormatted",
+    cellRenderer: (params: any) => setBadgeStatus(params.value),
     cellStyle: {
       textAlign: "center",
     },
@@ -305,7 +349,7 @@ const historyColumnDefs = ref([
   {
     headerName: "서비스 이름",
     headerClass: "ag-header-center",
-    field: "serviceName",
+    field: "serviceNameFormatted",
     cellStyle: {
       textDecoration: "underline",
       cursor: "pointer",
@@ -319,7 +363,6 @@ const historyColumnDefs = ref([
     cellStyle: { textAlign: "center" },
   },
 ]);
-
 // ECharts
 let currentSituationChart: echarts.ECharts | null = null;
 
@@ -434,7 +477,7 @@ const updateCurrentSituationChart = () => {
   }
 };
 
-// Data output by number
+// 등록된 데이터 모델 현황
 const DEFAULT_COUNT = 5;
 const startStandard: Ref<number> = ref(0);
 const isPrevDisabled: Ref<boolean> = ref(true);
