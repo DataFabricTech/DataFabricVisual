@@ -15,12 +15,8 @@ export interface GridProps {
 
   columnRender?: object;
 
-  rowBuffer?: number;
   rowSelection?: object;
   rowModelType?: string;
   cacheBlockSize?: number;
-  cacheOverflowSize?: number;
-  maxConcurrentDatasourceRequests?: number;
   infiniteInitialRowCount?: number;
-  maxBlocksInCache?: number;
 }
