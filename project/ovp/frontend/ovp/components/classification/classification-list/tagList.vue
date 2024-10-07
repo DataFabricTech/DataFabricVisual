@@ -113,8 +113,8 @@ const confirmDelete = async (tagId: string) => {
   if (await $confirm("삭제하시겠습니까?")) {
     deleteClassificationTag(tagId)
       .then(async () => {
-        $alert("삭제되었습니다.", "success").then(async () => {
-          await getClassificationTags(); // 태그 정보 API 호출
+        $alert("삭제되었습니다.", "success").then(() => {
+          getClassificationTags(); // 태그 정보 API 호출
         });
       })
       .catch((error) => {
