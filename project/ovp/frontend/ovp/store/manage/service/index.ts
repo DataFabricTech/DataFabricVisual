@@ -19,7 +19,7 @@ import $constants from "@/utils/constant";
 import _ from "lodash";
 
 export const useServiceStore = defineStore("service", () => {
-  const { $api } = useNuxtApp();
+  const { $api, $alert } = useNuxtApp();
   const dataModelDetailStore = useDataModelDetailStore();
   const { tagList, termList } = storeToRefs(dataModelDetailStore);
   const tab = ref<string>("ingestion");
@@ -87,10 +87,10 @@ export const useServiceStore = defineStore("service", () => {
     });
 
     if (result === 1) {
-      alert("수정이 완료되었습니다.");
+      $alert("수정이 완료되었습니다.", "success");
       service.description = data.description;
     } else {
-      alert("수정에 실패하였습니다.");
+      $alert("수정에 실패하였습니다.", "error");
       service.description = defaultDescription.value;
     }
   };
@@ -239,7 +239,7 @@ export const useServiceStore = defineStore("service", () => {
     if (res.data !== null) {
       changeCurrentService(res.data);
     } else {
-      alert(res.errorMessage);
+      $alert(res.errorMessage, "error");
     }
   }
 
@@ -262,7 +262,7 @@ export const useServiceStore = defineStore("service", () => {
     if (res.data !== null) {
       changeCurrentService(res.data);
     } else {
-      alert(res.errorMessage);
+      $alert(res.errorMessage, "error");
     }
   }
 

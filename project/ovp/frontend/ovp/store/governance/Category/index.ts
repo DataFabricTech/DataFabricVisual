@@ -46,7 +46,7 @@ interface UndefinedTagIdManager {
 
 // TODO: 데이터모델추가 모달 공통모달로 변경되면서 사용하지 않는 코드가 있으므로 관련 코드 삭제 필요. Category 관련 이슈처리가 완료된 후 정리하는것이 좋을 것 같음.
 export const useGovernCategoryStore = defineStore("GovernCategory", () => {
-  const { $api } = useNuxtApp();
+  const { $api, $alert } = useNuxtApp();
   const pagingStore = usePagingStore();
   const { setFrom, setDataLoadDone, updateIntersectionHandler } = pagingStore;
   const { from, size } = storeToRefs(pagingStore);
@@ -144,8 +144,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
       !_.isNull(undefinedTagIdManager.get()) &&
       name.trim() === $constants.SERVICE.CATEGORY_UNDEFINED_NAME
     ) {
-      // TODO : [개발] '미분류' 카테고리 명으로 입력 못하게 Notification 표시 추가.
-      alert(`${name} 은 예약어로 등록되어 사용 불가능합니다.`);
+      $alert(`${name} 은 예약어로 등록되어 사용 불가능합니다.`, "info");
       return false;
     }
     return true;
@@ -171,18 +170,18 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
 
     if (res.data === "HAS_SAME_NAME") {
       if (categoryAddName.value !== "") {
-        alert(`${categoryAddName.value} 이미 존재합니다.`);
+        $alert(`${categoryAddName.value} 이미 존재합니다.`, "info");
         categoryAddName.value = "";
         return;
       } else if (selectedTitleNodeValue.value !== "") {
-        alert(`${selectedTitleNodeValue.value} 이미 존재합니다.`);
+        $alert(`${selectedTitleNodeValue.value} 이미 존재합니다.`, "info");
         selectedTitleNodeValue.value = dupliSelectedTitleNodeValue.value;
         selectedNodeCategory.value.name = dupliSelectedTitleNodeValue.value;
       }
     }
     // 모달 창이 뜨기 전에 확인을 해야돼서, 이 시점에는 확인하지 않는다. (추후 사용할 수 있어서 남김)
     // if (res.data === "OVER_DEPTH") {
-    //   alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.");
+    //   $alert("카테고리는 최대 3depth 까지만 추가할 수 있습니다.", "info");
     //   return;
     // }
 
@@ -201,8 +200,9 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
   };
   const deleteCategory = (nodeId: string) => {
     if (nodeId === undefinedTagIdManager.get()) {
-      alert(
+      $alert(
         `${$constants.SERVICE.CATEGORY_UNDEFINED_NAME} 카테고리는 삭제가 불가능합니다.`,
+        "info",
       );
       return;
     }
@@ -440,7 +440,7 @@ export const useGovernCategoryStore = defineStore("GovernCategory", () => {
 
       return await res;
     } catch (error) {
-      alert(`업데이트 실패했습니다.`);
+      $alert(`업데이트 실패했습니다.`, "error");
     }
   };
   const patchModelAddItemAPI = async () => {

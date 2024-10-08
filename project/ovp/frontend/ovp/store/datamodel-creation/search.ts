@@ -12,6 +12,8 @@ import $constants from "~/utils/constant";
 import { useQueryHelpers } from "~/composables/queryHelpers";
 import CustomHeader from "@extends/custom-header-cell/custom-header-cell.vue";
 
+import { useNuxtApp } from "nuxt/app";
+
 interface Filters {
   [FILTER_KEYS.CATEGORY]: Filter;
   [FILTER_KEYS.SERVICE_TYPE]: Filter;
@@ -21,7 +23,7 @@ interface Filters {
 }
 
 export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
-  const { $api } = useNuxtApp();
+  const { $api, $alert } = useNuxtApp();
 
   const userStore = useUserStore();
   const { user } = storeToRefs(userStore);
@@ -578,8 +580,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     const selectedModel = _.find(searchResult.value, { id: value });
     const mySelectedModel = _.find(mySearchResult.value, { id: value });
     if ($_isUndefined(selectedModel) && $_isUndefined(mySelectedModel)) {
-      // TODO: alert 컴포넌트로 변경 예정
-      alert("모델을 찾을 수 없습니다.");
+      $alert("모델을 찾을 수 없습니다.");
       return;
     }
 
