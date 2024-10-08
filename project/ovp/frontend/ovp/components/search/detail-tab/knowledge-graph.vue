@@ -55,14 +55,13 @@
             <li class="visual-legend-item visual-legend-item-rank">
               연관순위
               <!-- TODO: [개발] 툴팁 컴포넌트 개발 후 추가 -->
-              <button class="button button-neutral-ghost button-sm" type="button">
-                <span class="hidden-text">툴팁</span>
-                <svg-icon class="button-icon" name="help-outline"></svg-icon>
-              </button>
+              <div class="tooltip" v-tooltip:right="`연관순위는 낮은 숫자 일수록 연관도가 높습니다.`">
+                <svg-icon class="svg-icon" name="help-outline"></svg-icon>
+              </div>
             </li>
           </ul>
         </div>
-        <!-- 컨트롤러 -->
+        <!--  TODO: [개발] 삭제하시고 컨트롤러는 navigator 적용필요   -->
         <div class="visual-control">
           <button class="button button-lg button-neutral-stroke visual-control-zoom-in" type="button">
             <span class="hidden-text">확대</span>
@@ -98,6 +97,12 @@
 
 <script setup lang="ts">
 import ResourceBox from "~/components/common/resource-box/resource-box.vue";
+
+const isLegendVisible = ref(true);
+
+function toggleLegend() {
+  isLegendVisible.value = !isLegendVisible.value;
+}
 
 let resourceBoxObj: any = {
   id: "1",
