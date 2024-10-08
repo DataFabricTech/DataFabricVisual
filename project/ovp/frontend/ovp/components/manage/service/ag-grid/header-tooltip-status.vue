@@ -2,8 +2,8 @@
   <div class="ag-tooltip-header">
     <div
       class="ag-tooltip-header-inner"
-      @mouseenter="openDynamicTooltip"
-      @mouseleave="closeDynamicTooltip"
+      @mouseenter="openDynamicTooltip($event, 'status')"
+      @mouseleave="closeDynamicTooltip('status')"
     >
       <span class="ag-tooltip-header-title"> 현황 </span>
       <span class="svg-icon">
