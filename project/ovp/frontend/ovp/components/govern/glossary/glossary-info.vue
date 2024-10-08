@@ -255,7 +255,7 @@ function syncEditDataWithGlossary(): void {
 }
 
 async function removeGlossary() {
-  if ($confirm("데이터모델을 삭제 하시겠습니까?")) {
+  if (await $confirm("데이터모델을 삭제 하시겠습니까?")) {
     await deleteGlossary(glossary.id);
     await getGlossaries()
       .then(() => {

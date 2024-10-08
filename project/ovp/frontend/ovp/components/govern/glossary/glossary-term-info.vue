@@ -331,7 +331,7 @@ async function updateTerm(op: JsonPatchOperation): Promise<void> {
 }
 
 async function onDeleteTerm(): Promise<void> {
-  if ($confirm("데이터모델을 삭제 하시겠습니까?")) {
+  if (await $confirm("데이터모델을 삭제 하시겠습니까?")) {
     await deleteTerm(term.id);
     await getGlossaries();
     openEditTermComponent("glossary");

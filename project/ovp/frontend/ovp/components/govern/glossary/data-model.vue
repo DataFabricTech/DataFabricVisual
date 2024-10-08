@@ -101,7 +101,7 @@ const { getDataModels, resetDataModels, updateTerm, dataModels, term } =
 const { getPreviewData } = useSearchCommonStore();
 const searchCommonStore = useSearchCommonStore();
 const { previewData } = storeToRefs(searchCommonStore);
-const { $alert, $confirm } = useNuxtApp();
+const { $alert } = useNuxtApp();
 
 onMounted(async () => {
   resetDataModels();
