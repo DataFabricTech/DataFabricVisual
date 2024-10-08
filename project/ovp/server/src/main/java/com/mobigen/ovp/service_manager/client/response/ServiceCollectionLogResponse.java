@@ -8,6 +8,10 @@ public class ServiceCollectionLogResponse {
     private String log;
 
     public ServiceCollectionLogResponse(Log log) {
-        this.log = log.getProfiler_task();
+        this.log = (log.getProfiler_task() != null && !log.getProfiler_task().isEmpty())
+                ? log.getProfiler_task()
+                : (log.getIngestion_task() != null && !log.getIngestion_task().isEmpty())
+                ? log.getIngestion_task()
+                : null;
     }
 }

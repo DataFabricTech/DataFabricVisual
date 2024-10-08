@@ -26,6 +26,7 @@
       :use-draggable="props.useDraggable"
       :mode="props.mode"
       :dropValidator="props.dropValidator"
+      :use-select-only-last-child="props.useSelectOnlyLastChild"
       @cancel="onCancel"
       @single-change="changeMenuSearch"
       @multiple-change="changeMenuSearch"
@@ -65,7 +66,8 @@ const props = withDefaults(defineProps<MenuSearchTreeProps>(), {
   firExpandAll: false,
   dropValidator: () => {
     return () => false;
-  }
+  },
+  useSelectOnlyLastChild: false
 });
 
 const emit = defineEmits<{

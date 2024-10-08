@@ -29,10 +29,17 @@ import { loginStore } from "~/store/login";
 import { PasswordComposition } from "~/components/login/PasswordComposition";
 import { useRouter } from "#vue-router";
 
+import { useNuxtApp } from "nuxt/app";
+import { useUserStore } from "~/store/user/userStore";
+const { $alert } = useNuxtApp();
+
 const composition = PasswordComposition();
 const router = useRouter();
 const store = loginStore();
 const { getPwChangeInMypage } = store;
+
+const userStore = useUserStore();
+const { user } = storeToRefs(userStore);
 
 const emit = defineEmits<{
   (e: "close"): void;
@@ -46,21 +53,20 @@ const onConfirm = async () => {
   if (!composition.isValidatePwReset()) {
     return;
   }
-  console.log("onSubmit");
-  // TODO: 화면에 저장된 로그인 사용자 정보를 가져와야함. -> user store 개발 이후 적용 필요
   let param = composition.getPwResetParam();
   param = {
     ...param,
-    username: "js06m12",
+    username: user.value.name,
   };
 
   const result = await getPwChangeInMypage(param);
   if (result.result === 1) {
-    alert("비밀번호가 변경되었습니다.");
-    onCancel();
-    router.push("/portal/login");
+    $alert("비밀번호가 변경되었습니다.", "success").then(() => {
+      onCancel();
+      router.push("/portal/login");
+    });
   } else {
-    alert(result.errorMessage.value);
+    $alert(result.errorMessage, "error");
   }
 };
 </script>

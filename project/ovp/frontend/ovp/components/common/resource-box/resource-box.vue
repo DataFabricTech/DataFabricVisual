@@ -236,6 +236,7 @@
                 :show-close-all-btn="false"
                 :use-draggable="false"
                 :selected-items="newData.category"
+                :use-select-only-last-child="true"
                 mode="view"
                 @single-change="editDoneForCategory"
               />

@@ -96,6 +96,6 @@ function refresh() {
 
 const copyLog = async () => {
   await navigator.clipboard.writeText(collectionLog.value);
-  $alert("링크가 복사되었습니다.", "success");
+  $alert("로그가 복사되었습니다.", "success");
 };
 </script>

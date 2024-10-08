@@ -55,6 +55,9 @@ const dataModelTagStore = useDataModelTag();
 const { changeDataModelsCategory } = dataModelTagStore;
 const { tagId } = storeToRefs(dataModelTagStore);
 
+import { useNuxtApp } from "nuxt/app";
+const { $alert } = useNuxtApp();
+
 const props = defineProps({
   modalId: {
     type: String,
@@ -82,7 +85,7 @@ const onCategoryNodeClick = (node: TreeViewItem) => {
 
 const onConfirm = async () => {
   if (selectedModelList.value.length > 20) {
-    alert("선택된 데이터 모델이 많아 시간이 소요될 수 있습니다.");
+    $alert("선택된 데이터 모델이 많아 시간이 소요될 수 있습니다.", "info");
   }
 
   await changeDataModelsCategory().then(async (isSuccess) => {
@@ -90,7 +93,7 @@ const onConfirm = async () => {
       setScrollOptions(0);
       emit("confirm");
     } else {
-      alert("저장 실패했습니다. 잠시 후 다시 시도해주세요.");
+      $alert("저장 실패했습니다. 잠시 후 다시 시도해주세요.", "error");
     }
   });
 };
