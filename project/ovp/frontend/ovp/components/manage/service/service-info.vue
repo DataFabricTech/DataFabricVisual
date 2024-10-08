@@ -203,8 +203,7 @@ const {
   changeCurrentService,
 } = useServiceStore();
 const serviceStore = useServiceStore();
-const { serviceData, defaultDescription, newDescription } =
-  storeToRefs(serviceStore);
+const { defaultDescription, newDescription } = storeToRefs(serviceStore);
 const { updateRepositoryDescriptionAPI } = serviceStore;
 
 const dataModelDetailStore = useDataModelDetailStore();
@@ -295,11 +294,4 @@ const createJsonPatch = (oldData: any, newData: any): JsonPatchOperation[] => {
   }
   return patch;
 };
-
-// JSON Patch 형식으로 데이터 변환 함수
-interface JsonPatchOperation {
-  op: string;
-  path: string;
-  value: any;
-}
 </script>

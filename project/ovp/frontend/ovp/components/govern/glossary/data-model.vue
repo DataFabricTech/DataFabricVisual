@@ -14,7 +14,7 @@
         <button
           class="search-input-action-button button button-neutral-ghost button-sm"
           type="button"
-          @click="keyword = ''"
+          @click="clearKeyword"
         >
           <span class="hidden-text">지우기</span>
           <svg-icon class="button-icon" name="close"></svg-icon>
@@ -94,12 +94,14 @@ import { onMounted, ref } from "vue";
 import Preview from "~/components/common/preview/preview.vue";
 import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import { useNuxtApp } from "nuxt/app";
 
 const { getDataModels, resetDataModels, updateTerm, dataModels, term } =
   useGlossaryStore();
 const { getPreviewData } = useSearchCommonStore();
 const searchCommonStore = useSearchCommonStore();
 const { previewData } = storeToRefs(searchCommonStore);
+const { $alert } = useNuxtApp();
 
 onMounted(async () => {
   resetDataModels();
@@ -132,8 +134,14 @@ const showDataModelAddModal = () => {
 };
 
 function searchDataModel(): void {
+  resetDataModels();
   getDataModels(term.fullyQualifiedName, keyword.value);
   isShowPreview.value = false;
+}
+
+function clearKeyword() {
+  keyword.value = "";
+  searchDataModel();
 }
 
 const isShowPreview = ref(false);
@@ -165,7 +173,7 @@ function toggleAllCheck(allCheck: boolean): void {
 
 async function deleteDataModel(): Promise<void> {
   if (selectedDataModels.value.length === 0) {
-    alert(`데이터모델을 선택해주세요`);
+    $alert("데이터모델을 선택해주세요.", "info");
     return;
   }
 

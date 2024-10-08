@@ -1,7 +1,7 @@
 export interface JsonPatchOperation {
   op: string;
   path: string;
-  value?: string | object;
+  value?: any;
 }
 
 export interface Tag {
