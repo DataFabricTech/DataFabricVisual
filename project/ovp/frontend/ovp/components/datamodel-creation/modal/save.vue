@@ -129,10 +129,13 @@
 </template>
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
-import { useDataModelSaveStore } from "~/store/datamodel-creation/save";
+import { useDataModelSaveStore } from "@/store/datamodel-creation/save";
 import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 import MenuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
-import $constants from "~/utils/constant";
+import $constants from "@/utils/constant";
+
+import { useNuxtApp } from "nuxt/app";
+const { $alert } = useNuxtApp();
 
 const dataModelSaveStore = useDataModelSaveStore();
 
@@ -188,11 +191,16 @@ const onSaveModal = async () => {
   if (isDuplicate.value || isNameEmpty.value) {
     return;
   }
-  await saveModel();
-  if (!isQueryExecuteValid.value) {
-    return;
+  const response = await saveModel();
+  if (response.result === 1) {
+    if (!isQueryExecuteValid.value) {
+      return;
+    }
+    emit("close");
+  } else {
+    // 에러발생
+    $alert(`저장 실패했습니다. 잠시 후 다시 시도해주세요.`, "error");
   }
-  emit("close");
 };
 </script>
 <style lang="scss" scoped>
