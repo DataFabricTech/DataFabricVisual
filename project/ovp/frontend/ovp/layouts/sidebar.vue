@@ -51,6 +51,7 @@
 import _ from "lodash";
 
 import { useRouter } from "vue-router";
+
 const router = useRouter();
 const route = useRoute();
 
@@ -61,7 +62,8 @@ import { useRoute } from "nuxt/app";
 const menuStore = useMenuStore();
 
 const { getMenuData } = menuStore;
-const { headerUrl, menuJson, mgmtMenuJson } = storeToRefs(menuStore);
+const { headerUrl, previousUrl, menuJson, mgmtMenuJson } =
+  storeToRefs(menuStore);
 
 // 메뉴 데이터 조회
 await getMenuData();
@@ -72,6 +74,16 @@ const isSelectedMenu = (pageUrl: string) => {
   if (headerUrl.value === "/portal" || headerUrl.value === "/portal/") {
     return false;
   }
+
+  // 사용자관리 페이지에서 사용자 마이페이지로 이동시, 관리메뉴 하이라이팅 처리
+  if (
+    pageUrl === "/portal/manage" &&
+    previousUrl.value === "/portal/manage/user" &&
+    _.includes(headerUrl.value, "/portal/my-page")
+  ) {
+    return true;
+  }
+
   return _.includes(pageUrl, headerUrl.value);
 };
 

@@ -7,7 +7,14 @@
 
 <script setup lang="ts">
 import { defineProps } from "vue";
+import { useClipboard } from "@vueuse/core";
 import VueContextMenu from "@imengyu/vue3-context-menu";
+
+const currentText = ref("");
+const { copy } = useClipboard({
+  source: currentText,
+  legacy: true
+});
 
 const props = defineProps<{
   params: any;
@@ -22,15 +29,13 @@ const onRightClick = (event: MouseEvent) => {
       {
         label: "복사 (컬럼 이름)",
         onClick: () => {
-          navigator.clipboard.writeText(`${props.params.fqn}.${props.params.displayName}`);
+          copy(`${props.params.fqn}.${props.params.displayName}`);
         }
       },
       {
         label: "복사 (모든 컬럼 이름)",
         onClick: () => {
-          navigator.clipboard.writeText(
-            props.params.gridColumnDefs.map((fieldObj) => `${props.params.fqn}.${fieldObj.field}`).join(", ")
-          );
+          copy(props.params.gridColumnDefs.map((fieldObj) => `${props.params.fqn}.${fieldObj.field}`).join(", "));
         }
       }
     ]

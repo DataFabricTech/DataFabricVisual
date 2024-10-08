@@ -59,6 +59,9 @@ import { ConnectionStatus } from "@/components/manage/service/modal/modal-servic
 import ModalService from "@/components/manage/service/modal/modal-service/modal-service.vue";
 import Loading from "@base/loading/Loading.vue";
 
+import { useNuxtApp } from "nuxt/app";
+const { $alert } = useNuxtApp();
+
 const serviceStore = useServiceStore();
 const { getConnectionInfo } = serviceStore;
 const { service, testConnectionStatus, viewConnectionInfo } =
@@ -109,9 +112,9 @@ const doConnectionTest = async () => {
     : ConnectionStatus.ERROR;
 
   if (result) {
-    alert("연결 테스트에 성공했습니다.");
+    $alert("연결 테스트에 성공했습니다.", "success");
   } else {
-    alert(`연결 테스트에 실패했습니다.\n${errorMessage}`);
+    $alert(`연결 테스트에 실패했습니다.\n${errorMessage}`, "error");
   }
 
   resetTestConnectionStatus();

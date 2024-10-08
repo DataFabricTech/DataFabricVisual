@@ -105,6 +105,9 @@ import { loginStore } from "@/store/login/index";
 import { useRouter } from "vue-router";
 import $constants from "@/utils/constant";
 import { useCommonUtils } from "@/composables/commonUtils";
+import { useNuxtApp } from "nuxt/app";
+
+const { $alert } = useNuxtApp();
 
 const { getPwdIconName } = useCommonUtils();
 
@@ -159,8 +162,7 @@ const login = async () => {
   if (isloginSuccess.value) {
     router.push("/");
   } else {
-    // TODO: 추후 컴포넌트로 교체 예정
-    alert(errorMessage.value);
+    $alert(errorMessage.value, "error");
   }
 };
 

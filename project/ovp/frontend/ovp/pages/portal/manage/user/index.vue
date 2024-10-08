@@ -53,6 +53,9 @@ import agGrid from "@extends/grid/Grid.vue";
 import AddUserModal from "@/components/manage/user/modal/add.vue";
 import DeleteButtonRenderer from "@/components/manage/user/cell-renderer/delete-button.vue";
 
+import { useNuxtApp } from "nuxt/app";
+const { $alert, $confirm } = useNuxtApp();
+
 const router = useRouter();
 const userStore = useUserStore();
 const { setSearchKeyword, getUserList, addUserList, deleteUser } = userStore;
@@ -113,12 +116,13 @@ const columnDefs = ref([
 ]);
 
 const gridContext = {
-  deleteBtnClicked: ({ id }: { id: string }) => {
-    if (confirm("사용자를 삭제하시겠습니까?")) {
+  deleteBtnClicked: async ({ id }: { id: string }) => {
+    if (await $confirm("사용자를 삭제하시겠습니까?")) {
       deleteUser(id)
         .then(() => {
-          alert("삭제되었습니다.");
-          getUserList();
+          $alert("삭제되었습니다.", "success").then(() => {
+            getUserList();
+          });
         })
         .catch((err: any) => {
           console.log("err: ", err);
@@ -149,7 +153,6 @@ const cellClicked = ({
   data: { fqn: string };
   column: { colId: string };
 }) => {
-  // TODO: 마이페이지 개발 완료되면 확인 필요
   // 사용자 이름 컬럼을 클릭했을 때에만 사용자 마이페이지로 이동
   if (column.colId === "displayName") {
     router.push(`/portal/my-page?fqn=${data.fqn}`);

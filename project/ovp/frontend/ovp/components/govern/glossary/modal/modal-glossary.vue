@@ -96,7 +96,7 @@
                   :selected-items="termForm.tags"
                   :is-multi="true"
                   :is-show="isShowMenuSearch.tag"
-                  label-key="displayName"
+                  label-key="tagFQN"
                   value-key="tagFQN"
                   @cancel="showMenuSearch(false, 'tag')"
                   @multiple-change="changeTag"

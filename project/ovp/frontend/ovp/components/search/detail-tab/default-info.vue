@@ -65,11 +65,15 @@
               <svg-icon class="button-icon" name="pen"></svg-icon>
             </button>
           </div>
-          <div class="editable-group editable-group-unusual" v-if="editTagsMode">
+          <div
+            class="editable-group editable-group-unusual"
+            v-if="editTagsMode"
+          >
             <menu-search-tag
               :data="tagList"
               :selected-items="mdoelTagList"
-              label-key="displayName"
+              selected-label-key="displayName"
+              label-key="tagFQN"
               value-key="tagFQN"
               :is-multi="true"
               title="값을 선택하세요"
@@ -128,11 +132,15 @@
               <svg-icon class="button-icon" name="pen"></svg-icon>
             </button>
           </div>
-          <div class="editable-group editable-group-unusual" v-if="editTermsMode">
+          <div
+            class="editable-group editable-group-unusual"
+            v-if="editTermsMode"
+          >
             <menu-search-tag
               :data="termList"
               :selected-items="dataModel.terms"
-              label-key="displayName"
+              selected-label-key="displayName"
+              label-key="tagFQN"
               value-key="tagFQN"
               :is-multi="true"
               title="값을 선택하세요"

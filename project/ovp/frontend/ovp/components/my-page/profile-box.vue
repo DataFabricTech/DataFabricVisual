@@ -70,9 +70,9 @@
           </div>
         </div>
       </div>
-      <div class="profile-list">
+      <div class="profile-list" v-show="isOpenRoleEdit">
         <div>
-          <div class="switch" v-show="isOpenRoleEdit">
+          <div class="switch">
             <input
               type="checkbox"
               id="manager-sw"
