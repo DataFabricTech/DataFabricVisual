@@ -12,6 +12,7 @@ export interface TreeComposition extends TreeProps {
   closeAll(): void;
   dropValidatorHandler: any;
   treeSelectedIds: Ref<any[]>;
+  isNodeLastChildNode(): boolean;
 }
 
 export function TreeComposition(props: TreeProps): TreeComposition {
@@ -22,11 +23,19 @@ export function TreeComposition(props: TreeProps): TreeComposition {
   const showTree = ref(true);
   const treeSelectedIds = ref([""]);
 
+  const isNodeLastChildNode = (node: TreeViewItem) => {
+    return props.useSelectOnlyLastChild && _.has(node, "children") && node.children.length > 0;
+  };
+
   const updateStatus = (items: any[], ids: string[], statusKey: string): void => {
     _.forEach(items, (item) => {
       // ids 배열에 현재 항목의 id가 포함되어 있는지 확인
       if (ids.includes(item.id)) {
         item[statusKey] = true;
+      }
+      // 최하위 노드만 선택 가능하게 하는 옵션
+      if (statusKey === "disabled") {
+        item[statusKey] = isNodeLastChildNode(item);
       }
 
       // 자식 노드가 있는 경우, 재귀적으로 호출
@@ -57,7 +66,7 @@ export function TreeComposition(props: TreeProps): TreeComposition {
     updateStatus(treeItems.value, props.selectedIds, "selected");
   }
   // 비활성화 하는 node id 항목이 있을 경우, 비활성화 여부를 object 에 추가해준다.
-  if (props.disabledIds && props.disabledIds.length > 0) {
+  if ((props.disabledIds && props.disabledIds.length > 0) || props.useSelectOnlyLastChild) {
     updateStatus(treeItems.value, props.disabledIds, "disabled");
   }
 
@@ -193,6 +202,7 @@ export function TreeComposition(props: TreeProps): TreeComposition {
     openAll,
     closeAll,
     dropValidatorHandler,
-    treeSelectedIds
+    treeSelectedIds,
+    isNodeLastChildNode
   };
 }

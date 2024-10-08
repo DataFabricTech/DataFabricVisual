@@ -37,6 +37,7 @@
         :dropValidator="props.dropValidator"
         :selected-ids="selectedListDataIds"
         :use-fir-select="false"
+        :use-select-only-last-child="props.useSelectOnlyLastChild"
         @onItemChecked="onNodeChecked"
         @onItemSelected="onNodeClicked"
       ></tree-vue>
@@ -84,7 +85,8 @@ const props = withDefaults(defineProps<MenuSearchTreeContentsProps>(), {
   firExpandAll: false,
   dropValidator: () => {
     return () => false;
-  }
+  },
+  useSelectOnlyLastChild: false
 });
 
 const emit = defineEmits<{

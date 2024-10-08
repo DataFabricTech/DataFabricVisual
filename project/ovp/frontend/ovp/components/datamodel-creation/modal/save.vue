@@ -78,6 +78,7 @@
                 :use-draggable="true"
                 :selected-items="tree_selectedItem"
                 :isShowLength="false"
+                :use-select-only-last-child="true"
                 mode="view"
                 @single-change="editDoneForCategory"
               ></menu-search-tree>

@@ -21,9 +21,8 @@
       <template v-slot:item-append="treeViewItem">
         <div
           :class="{
-            'node-disabled': props.disabledIds.length > 0 && props.disabledIds.includes(treeViewItem.id),
-            'node-fir-selected':
-              treeSelectedIds.length > 0 && treeSelectedIds.includes(treeViewItem.id) && !isCheckable
+            'node-disabled': isNodeDisabled(treeViewItem),
+            'node-fir-selected': treeSelectedIds.length > 0 && treeSelectedIds.includes(treeViewItem.id) && !isCheckable
           }"
         ></div>
         <div v-if="mode === 'edit' && !props.immutableItems.includes(treeViewItem.id)" class="tree-item-buttons">
@@ -45,6 +44,7 @@ import "vue3-tree-vue/dist/style.css";
 
 import { TreeProps, TreeViewItem } from "./TreeProps";
 import { TreeComposition } from "./TreeComposition";
+import _ from "lodash";
 
 const props = withDefaults(defineProps<TreeProps>(), {
   mode: "view",
@@ -58,7 +58,8 @@ const props = withDefaults(defineProps<TreeProps>(), {
   selectedIds: () => [],
   useFirSelect: true,
   compId: "treeComponent",
-  immutableItems: () => []
+  immutableItems: () => [],
+  useSelectOnlyLastChild: false
 });
 
 const emit = defineEmits<{
@@ -73,6 +74,9 @@ const onItemChecked = (from: TreeViewItem[]) => {
 };
 
 const onItemSelected = (node: TreeViewItem) => {
+  if (node.disabled) {
+    return;
+  }
   // node-fir-select class 를 삭제해준다.
   try {
     treeSelectedIds.value = treeSelectedIds.value.filter((id) => id !== treeItems.value[0].id);
@@ -93,8 +97,21 @@ onMounted(() => {
   }
 });
 
-const { showTree, treeItems, createNewTreeItem, openAll, closeAll, dropValidatorHandler, treeSelectedIds } =
-  TreeComposition(props);
+const isNodeDisabled = (node: TreeViewItem) => {
+  const isDisabledNode = props.disabledIds.length > 0 && props.disabledIds.includes(treeViewItem.id);
+  const isLastChildOpt = isNodeLastChildNode(node);
+  return isDisabledNode || isLastChildOpt;
+};
+const {
+  showTree,
+  treeItems,
+  createNewTreeItem,
+  openAll,
+  closeAll,
+  dropValidatorHandler,
+  treeSelectedIds,
+  isNodeLastChildNode
+} = TreeComposition(props);
 </script>
 
 <style lang="scss">
