@@ -383,13 +383,13 @@ public class SearchService {
 
         List<CategoryDTO> dataModelDTOList = searchList.stream()
                 .map(dataMap -> {
-                    // 여기서 CategoryDTO 객체에 데이터를 매핑합니다
                     CategoryDTO categoryDTO = new CategoryDTO();
 
-                    // 예시로 매핑하는 부분:
                     categoryDTO.setId(dataMap.get("id").toString());
                     categoryDTO.setParentId(dataMap.get("category").toString());
                     categoryDTO.setName(dataMap.get("modelNm").toString());
+                    categoryDTO.setFqn(dataMap.get("fqn").toString());
+                    categoryDTO.setIndex(index);
 
                     return categoryDTO;
                 })

@@ -23,6 +23,9 @@ public class CategoryDTO {
     private Boolean disabled;
     private List<CategoryDTO> children;
 
+    private String index;
+    private String fqn;
+
     public CategoryDTO(CategoryEntity entity) {
         this.id = entity.getId().toString();
         this.parentId = entity.getParentId() != null ? entity.getParentId().toString() : null;
