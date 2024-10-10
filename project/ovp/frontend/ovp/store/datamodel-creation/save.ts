@@ -89,7 +89,7 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
       return;
     }
 
-    let param = {
+    const param = {
       modelName: dataModelName.value,
     };
 
@@ -111,7 +111,7 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
 
   const saveModel = async () => {
     let cateInfo = {};
-    let tags = [];
+    const tags = [];
 
     if (!_.isEmpty(tree_selectedItem.value)) {
       cateInfo = await getCategoryInfo(tree_selectedItem.value.tagId);
@@ -119,13 +119,13 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
     }
 
     if (!_.isEmpty(tag_selectedItem.value)) {
-      let tagMap = tag_selectedItem.value.map((tag) => tag.tagFQN);
+      const tagMap = tag_selectedItem.value.map((tag) => tag.tagFQN);
       tags.push(...tagMap);
     }
 
     if (querySuccess.value && isFirstExecute.value && isExecuteQuery.value) {
       isQueryExecuteValid.value = true;
-      await createModel(tags);
+      return await createModel(tags);
     } else {
       isQueryExecuteValid.value = false;
     }
@@ -143,8 +143,7 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
       tags: tags,
     };
 
-    // TODO: 서버 연동 테스트 필요
-    await $api(`/api/creation/save`, {
+    return await $api(`/api/creation/save`, {
       method: "POST",
       body: param,
     });

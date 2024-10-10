@@ -41,4 +41,6 @@ export interface TreeDetailProps {
   immutableItems?: string[];
 
   dropValidator?: (thisNode: TreeViewItem, targetNode: TreeViewItem, newNode: TreeViewItem) => any;
+
+  useSelectOnlyLastChild?: boolean;
 }

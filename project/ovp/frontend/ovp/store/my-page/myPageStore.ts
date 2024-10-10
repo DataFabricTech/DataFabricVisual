@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
-import { useUserStore } from "~/store/user/userStore";
-import { usePagingStore } from "~/store/common/paging";
+import { useUserStore } from "@/store/user/userStore";
+import { usePagingStore } from "@/store/common/paging";
+import type { QueryFilter } from "@/store/search/common";
 
 export const useMyPageStore = defineStore("my-page", () => {
   const { $api } = useNuxtApp();
@@ -118,6 +119,10 @@ export const useMyPageStore = defineStore("my-page", () => {
     };
   };
 
+  const queryFilter: QueryFilter = {
+    query: { bool: { must: [] } },
+  };
+
   const getSearchListQuery = () => {
     const query =
       currentTab.value === "myBookMark"
@@ -133,6 +138,7 @@ export const useMyPageStore = defineStore("my-page", () => {
       from: from.value,
       size: size.value,
       deleted: false,
+      query_filter: JSON.stringify(queryFilter), // 기본 쿼리 형태는 던져야 backend 에서 오류나지않음.
     };
     return new URLSearchParams(params);
   };

@@ -3,7 +3,7 @@ export interface GridProps {
   class?: string;
   style?: string;
   columnDefs: any[];
-  rowData: any[];
+  rowData?: any[];
 
   useRowCheckBox?: boolean;
   useColumnResize?: boolean;
@@ -14,4 +14,9 @@ export interface GridProps {
   setColumnFit?: boolean;
 
   columnRender?: object;
+
+  rowSelection?: object;
+  rowModelType?: string;
+  cacheBlockSize?: number;
+  infiniteInitialRowCount?: number;
 }

@@ -6,12 +6,15 @@ import _ from "lodash";
 
 export interface GridComposition extends GridProps {
   getDefs(): any[];
+
   onGridReady(params: object): void;
+
   onGridSizeChanged(params: any): void;
+
   setColumnToFit(): void;
 }
 
-export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): GridComposition {
+export function GridComposition(props: GridProps, BTN_FIELD_CONST: string, emit: any): GridComposition {
   const rowId: string | number | undefined = props.rowId || "id";
   const selectedNodes: any[] = props.selectedNodes || [];
   const buttons: any[] = props.buttons || [];
@@ -27,6 +30,8 @@ export function GridComposition(props: GridProps, BTN_FIELD_CONST: string): Grid
       }
     });
     setColumnToFit();
+
+    emit("gridReady", { paramApi });
   };
   const setColumnToFit = () => {
     if (props.setColumnFit) {

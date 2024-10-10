@@ -24,7 +24,7 @@ const defaultSelectedServiceObj: IService = {
 };
 
 export const useServiceStore = defineStore("serviceStore", () => {
-  const { $api } = useNuxtApp();
+  const { $api, $alert } = useNuxtApp();
 
   const userStore = useUserStore();
   const { user } = storeToRefs(userStore);
@@ -510,8 +510,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
     }
 
     if (res.result < 1) {
-      // TODO : [개발] notification 개발 완료 되면 아래 코드 변경
-      alert("저장 실패했습니다. 잠시 후 다시 시도해주세요.");
+      $alert("저장 실패했습니다. 잠시 후 다시 시도해주세요.", "error");
     }
 
     return res.result > 0;
@@ -531,7 +530,7 @@ export const useServiceStore = defineStore("serviceStore", () => {
     } else {
       // MiniO, MySQL, MariaDB, PostgreSQL, Oracle 외의 다른 서비스타입의 경우 모달 오픈시 에러남.
       // 따라서 제공되는 서비스타입 이외의 서비스타입의 경우 모달을 열지못하게 처리.
-      alert("제공하지 않는 서비스 정보입니다.");
+      $alert("제공하지 않는 서비스 정보입니다.", "info");
       selectedServiceObj.value = defaultSelectedServiceObj;
       return false;
     }

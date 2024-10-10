@@ -64,23 +64,26 @@ import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { useModal } from "vue-final-modal";
 
+import { useNuxtApp } from "nuxt/app";
+const { $alert, $confirm } = useNuxtApp();
+
 const { terms, openEditTermComponent, deleteTerm, getTerms, getTerm } =
   useGlossaryStore();
 
 onMounted(() => getTerms());
 
-function onClickTerm(source: Term): void {
-  getTerm(source.name);
+async function onClickTerm(source: Term): void {
+  await getTerm(source.name);
   openEditTermComponent("term");
 }
 
-function removeTerm(id: string): void {
-  if (confirm("용어를 삭제 하시겠습니까?")) {
+async function removeTerm(id: string): void {
+  if (await $confirm("용어를 삭제 하시겠습니까?")) {
     deleteTerm(id).then((res) => {
       if (res.result === 1) {
         getTerms();
       } else {
-        alert(res.errorMessage);
+        $alert(res.errorMessage, "error");
       }
     });
   }
