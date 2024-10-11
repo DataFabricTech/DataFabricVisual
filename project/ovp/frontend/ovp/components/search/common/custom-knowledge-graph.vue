@@ -1,8 +1,8 @@
 <template>
   <category-graph />
-<!--  <network-diagram />-->
+  <!--  <network-diagram />-->
   <!-- 모델 리스트 -->
-  <div class="visual-model-list">
+  <div class="visual-model-list" v-if="showGraphModelListMenu">
     <div class="visual-model-list-head">
       <div class="breadcrumb">
         <ul class="breadcrumb-list">
@@ -14,49 +14,44 @@
           </li>
         </ul>
       </div>
-      <button class="search-input-action-button button button-neutral-ghost button-sm" type="button"
-              @click="closeModellist">
+      <button
+        class="search-input-action-button button button-neutral-ghost button-sm"
+        type="button"
+        @click="closeModelList"
+      >
         <span class="hidden-text">지우기</span>
         <svg-icon class="button-icon" name="close"></svg-icon>
       </button>
     </div>
     <div class="p-3 h-full">
-      <strong>총 <em class="primary">68건</em></strong>
-      <div class="menu menu-data menu-lg">
+      <strong
+        >총 <em class="primary">{{ graphModelList.length }}건</em></strong
+      >
+      <div
+        class="menu menu-data menu-lg"
+        v-if="graphModelList && graphModelList.length !== 0"
+      >
         <ul class="menu-list">
-          <li class="menu-item">
+          <li class="menu-item" v-for="menu in graphModelList" :key="menu">
             <div class="checkbox">
-              <input type="checkbox" id="checkbox-menu-01" class="checkbox-input" checked />
-              <label for="checkbox-menu-01" class="checkbox-label">
-                <span class="hidden-text">label</span>
+              <input type="checkbox" :id="menu.id" class="checkbox-input" />
+              <label :for="menu.id" class="checkbox-label">
+                <span class="hidden-text">{{ menu.modelNm }}</span>
               </label>
             </div>
             <button class="menu-button">
-              <div class="type-img type-img-oracle"></div>
-              <span class="menu-text">데이터 모델</span>
-              <span class="menu-subtext">(소유자)</span>
+              <div :class="menu.serviceIcon"></div>
+              <span class="menu-text">{{ menu.modelNm }}</span>
+              <span class="menu-subtext">
+                ({{
+                  menu.owner === null
+                    ? "소유자 없음"
+                    : (menu.owner.displayName ?? menu.owner.name)
+                }})</span
+              >
             </button>
             <div class="menu-button-group">
               <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환/icon에 .secondary 클래스 추가 -->
-              <button class="button button-neutral-ghost button-sm">
-                <span class="hidden-text">북마크</span>
-                <svg-icon class="svg-icon secondary" name="tag-fill"></svg-icon>
-              </button>
-            </div>
-          </li>
-          <li class="menu-item" v-for="menu in 26" :key="menu">
-            <div class="checkbox">
-              <input type="checkbox" id="checkbox-menu-02" class="checkbox-input" />
-              <label for="checkbox-menu-02" class="checkbox-label">
-                <span class="hidden-text">label</span>
-              </label>
-            </div>
-            <button class="menu-button">
-              <div class="type-img type-img-oracle"></div>
-              <span class="menu-text">데이터 모델</span>
-              <span class="menu-subtext">(소유자)</span>
-            </button>
-            <div class="menu-button-group">
               <button class="button button-neutral-ghost button-sm">
                 <span class="hidden-text">북마크</span>
                 <svg-icon class="svg-icon" name="tag"></svg-icon>
@@ -65,6 +60,13 @@
           </li>
         </ul>
       </div>
+      <!-- 결과 없을 시 no-result 표시 -->
+      <div class="no-result" v-else>
+        <div class="notification">
+          <svg-icon class="notification-icon" name="info"></svg-icon>
+          <p class="notification-detail">등록된 정보가 없습니다.</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -72,6 +74,22 @@
 <script setup lang="ts">
 import CategoryGraph from "./graph/category-graph.vue";
 import NetworkDiagram from "./graph/network-diagram.vue";
+import { useSearchCommonStore } from "~/store/search/common";
+
+const searchCommonStore = useSearchCommonStore();
+const {} = searchCommonStore;
+const { graphModelList, filteredIdAndTagIdData, showGraphModelListMenu } =
+  storeToRefs(searchCommonStore);
+
+const closeModelList = () => {
+  showGraphModelListMenu.value = false;
+};
+
+onBeforeMount(() => {
+  filteredIdAndTagIdData.value = [];
+  graphModelList.value = [];
+  showGraphModelListMenu.value = false;
+});
 </script>
 
 <style lang="scss" scoped></style>

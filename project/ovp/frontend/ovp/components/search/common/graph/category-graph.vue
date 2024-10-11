@@ -49,6 +49,7 @@ import { NetworkDiagramNodeInfo } from "knowledge-graph-canvas/dist/network-diag
 import dropDown from "./unit/drop-down.vue";
 import $constants from "@/utils/constant";
 import { useRouter } from "#vue-router";
+
 const router = useRouter();
 import _ from "lodash";
 
@@ -77,8 +78,17 @@ const getModelNodeList = (node: any): string[] => {
 };
 
 const onClick = ({ compTypeId, nodeId }) => {
+  console.log("filteredIdAndTagIdData: ", filteredIdAndTagIdData.value);
+  const hasDataModelList = _.some(filteredIdAndTagIdData.value, {
+    id: nodeId,
+  });
+  const selectedNode = _.filter(filteredIdAndTagIdData.value, {
+    id: nodeId,
+  });
+  console.log("hasDataModelList: ", hasDataModelList);
+
   if (compTypeId === $constants.GRAPH.TYPE.MODEL_LIST) {
-    // 모델 리스트 조회 -> 우측 패널 오픈
+    // TODO: [확인 필요] 모델 리스트 조회 -> 우측 패널 오픈
   } else {
     // nodeId 기반으로 노드 정보를 찾는다.
     const nodeInfo = _.find(modelNodes, { id: nodeId });
@@ -92,7 +102,16 @@ const onClick = ({ compTypeId, nodeId }) => {
         },
       });
     } else {
-      console.log("node 정보가 없음.");
+      showGraphModelListMenu.value = true;
+      if (hasDataModelList) {
+        getModelList(selectedNode[0].tagId);
+      } else {
+        // TODO: [확인 필요] 기획: 거버넌스>카테고리에서는 자식 요소가 없는 뎁스 | 미분류인 경우에만 모델리스트를 가질 수 있음.
+        // 현재 기획서 상에서는 자식 요소가 있는 뎁스에서도 모델리스트 drop-down을 보여주고 있는데, 어떻게 해야할지 문의 필요
+        // 임시로 빈값 부여
+        graphModelList.value = [];
+        console.log("model list가 없습니다.");
+      }
     }
   }
 };
@@ -104,8 +123,14 @@ function toggleLegend() {
 }
 
 const searchCommonStore = useSearchCommonStore();
-const { getGraphData } = searchCommonStore;
-const { graphData } = storeToRefs(searchCommonStore);
+const { getGraphData, getModelList, setFilteredIdAndTagIdData } =
+  searchCommonStore;
+const {
+  graphData,
+  filteredIdAndTagIdData,
+  graphModelList,
+  showGraphModelListMenu,
+} = storeToRefs(searchCommonStore);
 
 await getGraphData();
 
@@ -129,6 +154,8 @@ const newNode: NetworkDiagramNodeInfo = {
 };
 
 onMounted(() => {
+  setFilteredIdAndTagIdData(graphData.value.nodes);
+
   const categoryContainer = document.getElementById(
     "category",
   ) as HTMLDivElement;
@@ -140,6 +167,9 @@ onMounted(() => {
     eventHandler: {
       onClick: (e: any, id: any, type: any) => {
         if (type === "node" && id) {
+          if (modelNodeIds.includes(id)) {
+            showGraphModelListMenu.value = false;
+          }
           compTypeId.value = modelNodeIds.includes(id)
             ? $constants.GRAPH.TYPE.DETAIL
             : $constants.GRAPH.TYPE.MODEL_LIST;

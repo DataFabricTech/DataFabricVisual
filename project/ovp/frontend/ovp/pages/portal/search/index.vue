@@ -179,6 +179,7 @@ await getFilters();
 onBeforeMount(() => {
   // 탐색 상세 페이지가 아닌경우 검색조건 초기화
   isShowPreview.value = false;
+  viewType.value = "listView";
   if (previousUrl.value !== "/portal/search/detail") {
     changeTab("table");
     setEmptyFilter();

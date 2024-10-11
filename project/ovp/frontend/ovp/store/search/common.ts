@@ -134,6 +134,11 @@ export const useSearchCommonStore = defineStore(
     const sortKeyOpt: Ref<string> = ref<string>("desc");
     const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
 
+    // graphView
+    const filteredIdAndTagIdData: Ref<any[]> = ref([]);
+    const showGraphModelListMenu: Ref<boolean> = ref(false);
+    const graphModelList = ref([]);
+
     const getQueryParam = () => {
       const queryFilter = getQueryFilter(
         selectedFilters.value,
@@ -341,6 +346,53 @@ export const useSearchCommonStore = defineStore(
       graphData.value = data;
     };
 
+    const setFilteredIdAndTagIdData = (data: any) => {
+      const traverseFilteredIdAndTagIdData = (element: any) => {
+        // 현재 요소가 자식이 없거나, 미분류인 경우 필터링된 객체로 추가
+        if (
+          _.isEmpty(element.children) ||
+          element.name === $constants.SERVICE.CATEGORY_UNDEFINED_NAME
+        ) {
+          filteredIdAndTagIdData.value.push({
+            name: element.name,
+            id: element.id,
+            tagId: element.tagId,
+          });
+        } else {
+          // 자식 요소가 있는 경우, 자식들을 재귀적으로 탐색
+          element.children.forEach((child: any) =>
+            traverseFilteredIdAndTagIdData(child),
+          );
+        }
+      };
+
+      // 루트 요소의 모든 자식들을 순회
+      data.children.forEach((element: any) =>
+        traverseFilteredIdAndTagIdData(element),
+      );
+    };
+
+    const getModelListQuery = (tagId: string) => {
+      const params: any = {
+        q: "",
+        tagId: tagId,
+      };
+      return new URLSearchParams(params);
+    };
+
+    const getModelList = async (tagId: string) => {
+      if (_.isEmpty(tagId)) {
+        return;
+      }
+      const { data } = await $api(
+        `/api/category/models?${getModelListQuery(tagId)}`,
+        { showLoader: false },
+      );
+
+      graphModelList.value = data === null ? [] : data;
+      console.log("graphModelList: ", graphModelList.value);
+    };
+
     return {
       searchKeyword,
       sortKey,
@@ -358,6 +410,9 @@ export const useSearchCommonStore = defineStore(
       isSearchResultNoData,
       currentPreviewId,
       graphData,
+      filteredIdAndTagIdData,
+      graphModelList,
+      showGraphModelListMenu,
       addSearchList,
       getSearchList,
       getFilter,
@@ -377,6 +432,8 @@ export const useSearchCommonStore = defineStore(
       getQueryFilter,
       setEmptyFilter,
       getGraphData,
+      getModelList,
+      setFilteredIdAndTagIdData,
     };
   },
   {
