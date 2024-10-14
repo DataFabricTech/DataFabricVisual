@@ -87,6 +87,10 @@
 .visual {
   @include graph-grid;
 
+  > canvas {
+    cursor: pointer;
+  }
+
   &-legend {
     @include graph-legend;
 
@@ -218,6 +222,7 @@
   div:has(.graph_nav_plus_btn) {
     border: none !important;
   }
+
   .graph_nav_plus_btn, .graph_nav_minus_btn, .graph_nav_fullscreen_btn {
     @include flex;
     border: 1px solid $neutral-200 !important;
