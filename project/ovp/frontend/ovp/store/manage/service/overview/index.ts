@@ -20,23 +20,19 @@ export const useOverviewStore = defineStore("overview", () => {
   const PAGE_SIZE = 20;
 
   const getServiceTypeData = async () => {
-    const { data } = await $api(
-      `http://localhost:8080/api/service/overview/summary-info`,
-    );
+    const { data } = await $api(`/api/service/overview/summary-info`);
 
     serviceTypeData.value = data !== null ? data.typeSummary : [];
   };
   const getServiceStatusData = async () => {
-    const { data } = await $api(
-      `http://localhost:8080/api/service/overview/summary-info`,
-    );
+    const { data } = await $api(`/api/service/overview/summary-info`);
 
     serviceStatusData.value = data !== null ? data.statusList : [];
   };
 
   const getServiceResponseAPI = async () => {
     const { data } = await $api(
-      `http://localhost:8080/api/service/overview/response-time?pageNumber=0&pageSize=${responsePageSize.value}`,
+      `/api/service/overview/response-time?pageNumber=0&pageSize=${responsePageSize.value}`,
       {
         showLoader: false,
       },
@@ -68,7 +64,7 @@ export const useOverviewStore = defineStore("overview", () => {
     count: number = 5,
   ) => {
     const { data } = await $api(
-      `http://localhost:8080/api/service/overview/service-models?pageNumber=0`,
+      `/api/service/overview/service-models?pageNumber=0`,
     );
 
     if (data.data !== null) {
@@ -120,36 +116,33 @@ export const useOverviewStore = defineStore("overview", () => {
         // 그리드에 있는 전체 데이터 개수를 나타내는 속성. 무한 스크롤 모드에서는 undefined로 설정하면 전체 데이터의 개수를 알 수 없다고 가정하고, 동적 로딩을 가능하게 한다.
         rowCount: undefined,
         // ag-grid가 필요한 데이터만 가져오기 위해 호출하는 함수. 어떤 데이터 범위를 요청할지를 결정하며, 요청된 범위에 따라 데이터를 서버에서 가져와 제공한다.
-        getRows: (params: any) => {
+        getRows: async (params: any) => {
           showCollectorHistoryLoading.value = true;
-          // 데이터 요청 로직
-          setTimeout(() => {
-            fetch(
-              "http://localhost:8080/api/service/overview/ingestion-history?pageNumber=0",
-            )
-              .then((resp) => {
-                return resp.json();
-              })
-              .then((result) => {
-                const data = result.data.data.map((item: any) => ({
-                  ...item,
-                  serviceNameFormatted:
-                    item.serviceDisplayName ?? item.serviceName,
-                  eventAtFormatted: convertDateTime(item.eventAt),
-                  eventFormatted: setEventStatus(item.event),
-                  statusFormatted: item.state,
-                }));
 
-                const rowsThisPage = data.slice(params.startRow, params.endRow); // 요청 범위만큼 데이터 잘라서 보여줌
-                const lastRow = data.length <= params.endRow ? data.length : -1; // 마지막 페이지 여부 확인 후 lastRow 설정
-                isEmptyCollectorHistory.value = data.length === 0;
+          try {
+            const { data: result } = await $api(
+              `/api/service/overview/ingestion-history?pageNumber=0`,
+            );
 
-                params.successCallback(rowsThisPage, lastRow); // 데이터와 lastRow 콜백 전달
-              })
-              .finally(() => {
-                showCollectorHistoryLoading.value = false;
-              });
-          }, 500); // 서버 응답을 모사하기 위한 500ms 지연
+            const data = result.data.map((item: any) => ({
+              ...item,
+              serviceNameFormatted: item.serviceDisplayName ?? item.serviceName,
+              eventAtFormatted: convertDateTime(item.eventAt),
+              eventFormatted: setEventStatus(item.event),
+              statusFormatted: item.state,
+            }));
+
+            const rowsThisPage = data.slice(params.startRow, params.endRow); // 요청 범위만큼 데이터 잘라서 보여줌
+            const lastRow = data.length <= params.endRow ? data.length : -1; // 마지막 페이지 여부 확인 후 lastRow 설정
+            isEmptyCollectorHistory.value = data.length === 0;
+
+            params.successCallback(rowsThisPage, lastRow); // 데이터와 lastRow 콜백 전달
+          } catch (error) {
+            console.error("Error fetching data:", error);
+            params.failCallback();
+          } finally {
+            showCollectorHistoryLoading.value = false;
+          }
         },
       };
 
@@ -167,33 +160,31 @@ export const useOverviewStore = defineStore("overview", () => {
     if (serviceStatusGridApi.value) {
       const dataSource = {
         rowCount: undefined,
-        getRows: (params: any) => {
+        getRows: async (params: any) => {
           showServiceStatusLoading.value = true;
-          setTimeout(() => {
-            fetch(
-              "http://localhost:8080/api/service/overview/connection-history?pageNumber=0",
-            )
-              .then((resp) => {
-                return resp.json();
-              })
-              .then((result) => {
-                const data = result.data.data.map((item: any) => ({
-                  ...item,
-                  serviceNameFormatted:
-                    item.serviceDisplayName ?? item.serviceName,
-                }));
-                const rowsThisPage = data.slice(params.startRow, params.endRow);
-                const lastRow = data.length <= params.endRow ? data.length : -1;
-                collectedDateTime.value = convertDateTime(
-                  result.data.recentCollectedTime,
-                );
-                isEmptyServiceStatus.value = data.length === 0;
-                params.successCallback(rowsThisPage, lastRow);
-              })
-              .finally(() => {
-                showServiceStatusLoading.value = false;
-              });
-          }, 500);
+
+          try {
+            const { data: result } = await $api(
+              `/api/service/overview/connection-history?pageNumber=0`,
+            );
+
+            const data = result.data.map((item: any) => ({
+              ...item,
+              serviceNameFormatted: item.serviceDisplayName ?? item.serviceName,
+            }));
+            const rowsThisPage = data.slice(params.startRow, params.endRow);
+            const lastRow = data.length <= params.endRow ? data.length : -1;
+            collectedDateTime.value = convertDateTime(
+              result.recentCollectedTime,
+            );
+            isEmptyServiceStatus.value = data.length === 0;
+            params.successCallback(rowsThisPage, lastRow);
+          } catch (error) {
+            console.error("Error fetching data:", error);
+            params.failCallback();
+          } finally {
+            showServiceStatusLoading.value = false;
+          }
         },
       };
 
