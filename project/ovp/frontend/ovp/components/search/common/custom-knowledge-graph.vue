@@ -33,13 +33,11 @@
       >
         <ul class="menu-list">
           <li class="menu-item" v-for="menu in graphModelList" :key="menu">
-<!--            <div class="checkbox">-->
-<!--              <input type="checkbox" :id="menu.id" class="checkbox-input" />-->
-<!--              <label :for="menu.id" class="checkbox-label">-->
-<!--                <span class="hidden-text">{{ menu.modelNm }}</span>-->
-<!--              </label>-->
-<!--            </div>-->
-            <a href="#" class="menu-button">
+            <a
+              href="javascript:void(0);"
+              class="menu-button"
+              @click="modelNmClick(menu)"
+            >
               <div :class="menu.serviceIcon"></div>
               <span class="menu-text">{{ menu.modelNm }}</span>
               <span class="menu-subtext">
@@ -52,7 +50,10 @@
             </a>
             <div class="menu-button-group">
               <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환/icon에 .secondary 클래스 추가 -->
-              <button class="button button-neutral-ghost button-sm">
+              <button
+                class="button button-neutral-ghost button-sm"
+                @click="setCheckedBookmark(menu.checkedBookmark)"
+              >
                 <span class="hidden-text">북마크</span>
                 <svg-icon class="svg-icon" name="tag"></svg-icon>
               </button>
@@ -75,7 +76,9 @@
 import CategoryGraph from "./graph/category-graph.vue";
 import NetworkDiagram from "./graph/network-diagram.vue";
 import { useSearchCommonStore } from "~/store/search/common";
+import { useRouter } from "nuxt/app";
 
+const router = useRouter();
 const searchCommonStore = useSearchCommonStore();
 const {} = searchCommonStore;
 const { graphModelList, filteredIdAndTagIdData, showGraphModelListMenu } =
@@ -83,6 +86,24 @@ const { graphModelList, filteredIdAndTagIdData, showGraphModelListMenu } =
 
 const closeModelList = () => {
   showGraphModelListMenu.value = false;
+};
+
+// TODO: [개발] 현재 클릭한 id를 찾아서 checkedBookmark 를 true로 바꾸고, api 수정한다?
+// api: const changeFollow = async () => { 참고할 것
+const setCheckedBookmark = (item: any) => {
+  console.log("item?", item);
+};
+
+const modelNmClick = (data: object) => {
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
+  router.push({
+    path: "/portal/search/detail",
+    query: {
+      type: type,
+      id: id,
+      fqn: fqn,
+    },
+  });
 };
 
 onBeforeMount(() => {

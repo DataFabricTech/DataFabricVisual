@@ -390,6 +390,10 @@ export const useSearchCommonStore = defineStore(
       );
 
       graphModelList.value = data === null ? [] : data;
+      for (const element of graphModelList.value) {
+        element.checkedBookmark = false;
+      }
+
       console.log("graphModelList: ", graphModelList.value);
     };
 
