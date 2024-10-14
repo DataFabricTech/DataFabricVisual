@@ -33,13 +33,13 @@
       >
         <ul class="menu-list">
           <li class="menu-item" v-for="menu in graphModelList" :key="menu">
-            <div class="checkbox">
-              <input type="checkbox" :id="menu.id" class="checkbox-input" />
-              <label :for="menu.id" class="checkbox-label">
-                <span class="hidden-text">{{ menu.modelNm }}</span>
-              </label>
-            </div>
-            <button class="menu-button">
+<!--            <div class="checkbox">-->
+<!--              <input type="checkbox" :id="menu.id" class="checkbox-input" />-->
+<!--              <label :for="menu.id" class="checkbox-label">-->
+<!--                <span class="hidden-text">{{ menu.modelNm }}</span>-->
+<!--              </label>-->
+<!--            </div>-->
+            <a href="#" class="menu-button">
               <div :class="menu.serviceIcon"></div>
               <span class="menu-text">{{ menu.modelNm }}</span>
               <span class="menu-subtext">
@@ -49,7 +49,7 @@
                     : (menu.owner.displayName ?? menu.owner.name)
                 }})</span
               >
-            </button>
+            </a>
             <div class="menu-button-group">
               <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환/icon에 .secondary 클래스 추가 -->
               <button class="button button-neutral-ghost button-sm">
