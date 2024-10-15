@@ -1,11 +1,9 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css');
+
 @tailwind base;
 
 /* reset */
 @layer base {
-  @include font-face('Pretendard', 'https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Regular', 400);
-  @include font-face('Pretendard', 'https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-SemiBold', 600);
-  @include font-face('Pretendard', 'https://cdn.jsdelivr.net/gh/webfontworld/pretendard/Pretendard-Bold', 700);
-
   * {
     margin: 0;
     padding: 0;
@@ -15,7 +13,7 @@
   }
 
   html {
-    @include font-family(pretendard);
+    @include font-family('pretendard');
     @include font-size('14');
 
     -webkit-font-smoothing: antialiased;
