@@ -89,6 +89,7 @@ import { useUserStore } from "~/store/user/userStore";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import { useRouter } from "nuxt/app";
 import pwResetModal from "@/components/my-page/pw-reset-modal.vue";
+import { onMounted, watch } from "vue";
 
 const { open, close } = useModal({
   component: pwResetModal,
@@ -132,6 +133,10 @@ const router = useRouter();
 const showModalPwChange: () => void = () => {
   open();
 };
+
+onMounted(() => {
+  inputSearchKeyword("");
+});
 
 watch(
   () => route.query.fqn as string,
