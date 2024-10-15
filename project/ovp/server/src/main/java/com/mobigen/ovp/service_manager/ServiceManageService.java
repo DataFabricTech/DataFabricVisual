@@ -213,7 +213,7 @@ public class ServiceManageService {
         return removedBody;
     }
 
-    private List<JsonPatchOperation> makeAddBody(List<Tag> tags, List<Map<String, Object>> body, String target) {
+    private List<JsonPatchOperation> makeAddBody(List<Tag> tags, List<Map<String, Object>> body, String target)  throws IllegalArgumentException{
         List<JsonPatchOperation> addedBody = new ArrayList<>();
         List<DataModelDetailTagDto> bodyList = new ArrayList<>();
         List<DataModelDetailTagDto> tagList = new ArrayList<>();
@@ -236,11 +236,25 @@ public class ServiceManageService {
             for (Map<String, Object> item : body) {
                 String key = "id";
 
-                Map<String, Object> tempTag = classificationTagsClient.getTag(item.get(key).toString());
+                // null 체크
+                if (item == null || item.get(key) == null) {
+                    throw new IllegalArgumentException("id 값이 null입니다.");
+                }
 
+                Map<String, Object> tempTag = classificationTagsClient.getTag(item.get(key).toString());
+                if (tempTag == null || tempTag.get("id") == null) {
+                    throw new IllegalArgumentException("해당 태그의 값이 존재하지 않습니다.");
+                }
                 DataModelDetailTagDto tag = new DataModelDetailTagDto();
                 tag.setName(tempTag.get("name").toString());
-                tag.setDisplayName(tempTag.get("displayName").toString());
+
+                // displayname == null -> name
+                if(tempTag.get("displayName") == null) {
+                    tag.setDisplayName(""); // displayName이 null이면 빈 문자열로 설정
+                } else {
+                    tag.setDisplayName(tempTag.get("displayName").toString()); // null이 아니면 toString()으로 값 설정
+                }
+
                 tag.setDescription(tempTag.get("description").toString());
                 tag.setTagFQN(tempTag.get("fullyQualifiedName").toString());
                 tag.setSource(target);
@@ -251,8 +265,14 @@ public class ServiceManageService {
             }
         } else if ("Glossary".equals(target)) {
             for (Map<String, Object> item : body) {
-                TermDto tempTerm = glossaryClient.getGlossaryTermsById(item.get("id").toString(), "all");
+                if (item == null || item.get("id") == null) {
+                    throw new IllegalArgumentException("id 값이 null입니다.");
+                }
 
+                TermDto tempTerm = glossaryClient.getGlossaryTermsById(item.get("id").toString(), "all");
+                if (tempTerm == null || tempTerm.getName() == null) {
+                    throw new IllegalArgumentException("해당 용어의 값이 존재하지 않습니다.");
+                }
                 DataModelDetailTagDto tag = new DataModelDetailTagDto();
                 tag.setName(tempTerm.getName());
                 tag.setDisplayName(tempTerm.getDisplayName());
