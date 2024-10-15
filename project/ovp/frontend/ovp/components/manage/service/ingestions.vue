@@ -319,8 +319,9 @@ function reset(): void {
 
 async function getStatus(ingestion: Ingestion): Promise<void> {
   let name = service.name + "." + ingestion.name;
-  let endDate = ingestion.endDate ? ingestion.endDate : ingestion.startDate;
-  await getIngestionStatus(name, ingestion.startDate, endDate);
+  let startDate = dayjs().subtract(1, "day").valueOf();
+  let endDate = dayjs().valueOf();
+  await getIngestionStatus(name, startDate, endDate);
 }
 
 async function refreshIngestionList(): Promise<void> {
