@@ -365,12 +365,18 @@ export const useServiceStore = defineStore("service", () => {
         showLoader: false,
       },
     );
-    setIngestionStatus(name, res.data.pipelineState);
+    const latestPipelineState: string = res.data[0].pipelineState;
+    setIngestionStatus(name, latestPipelineState);
   }
 
-  function setIngestionStatus(name: string, pipelineState: string) {
-    // eslint-disable-next-line id-length
-    const index = ingestionList.findIndex((v: Ingestion) => v.name === name);
+  function setIngestionStatus(
+    fullyQualifiedName: string,
+    pipelineState: string,
+  ) {
+    const index = ingestionList.findIndex(
+      (ingestion: Ingestion) =>
+        ingestion.fullyQualifiedName === fullyQualifiedName,
+    );
     if (index !== -1) {
       ingestionList[index].pipelineState = pipelineState;
     }
