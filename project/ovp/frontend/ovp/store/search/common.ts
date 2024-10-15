@@ -304,6 +304,7 @@ export const useSearchCommonStore = defineStore(
      * 목록을 '갱신'하는 경우, from 값을 항상 0으로 주어야 하기 때문에 fn 하나로 묶어서 처리.
      */
     const resetReloadList = async () => {
+      console.log("resetReloadList 실행");
       setFrom(0);
       await getSearchList();
       updateIntersectionHandler(0);
@@ -327,49 +328,28 @@ export const useSearchCommonStore = defineStore(
       searchKeyword.value = keyword;
     };
 
-    const changeTab = (item: string, loadList: boolean = true) => {
+    const changeTab = async (item: string, loadList: boolean = true) => {
       isShowPreview.value = false;
       currentTab.value = item;
 
       if (loadList) {
-        resetReloadList();
+        console.log("viewType.value? ", viewType.value);
+        await resetReloadList();
+        await getGraphData();
+        // viewType.value === "listView"
+        //   ? await resetReloadList()
+        //   : await getGraphData();
       }
     };
 
     const getGraphData = async () => {
       const graphParam: any = getGraphQuery();
       graphParam.from = 0;
-      console.log(graphParam);
       const { data } = await $api(`/api/search/graph/list?${graphParam}`, {
         showLoader: false,
       });
       graphData.value = data;
-    };
-
-    const setFilteredIdAndTagIdData = (data: any) => {
-      const traverseFilteredIdAndTagIdData = (element: any) => {
-        // 현재 요소가 자식이 없거나, 미분류인 경우 필터링된 객체로 추가
-        if (
-          _.isEmpty(element.children) ||
-          element.name === $constants.SERVICE.CATEGORY_UNDEFINED_NAME
-        ) {
-          filteredIdAndTagIdData.value.push({
-            name: element.name,
-            id: element.id,
-            tagId: element.tagId,
-          });
-        } else {
-          // 자식 요소가 있는 경우, 자식들을 재귀적으로 탐색
-          element.children.forEach((child: any) =>
-            traverseFilteredIdAndTagIdData(child),
-          );
-        }
-      };
-
-      // 루트 요소의 모든 자식들을 순회
-      data.children.forEach((element: any) =>
-        traverseFilteredIdAndTagIdData(element),
-      );
+      console.log("getGraphData 실행 1");
     };
 
     const getModelListQuery = (tagId: string) => {
@@ -437,7 +417,6 @@ export const useSearchCommonStore = defineStore(
       setEmptyFilter,
       getGraphData,
       getModelList,
-      setFilteredIdAndTagIdData,
     };
   },
   {

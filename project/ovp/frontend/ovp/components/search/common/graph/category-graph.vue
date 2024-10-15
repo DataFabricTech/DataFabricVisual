@@ -1,5 +1,7 @@
 <template>
-  <div id="category" class="visual">
+  <div class="visual-wrap">
+    <div id="category" class="visual"></div>
+
     <!-- TODO: [개발] 범례 -->
     <div class="visual-legend">
       <button
@@ -51,30 +53,21 @@ import { useRouter } from "#vue-router";
 
 const router = useRouter();
 import _ from "lodash";
+import { ref } from "vue";
+
+const searchCommonStore = useSearchCommonStore();
+const { getGraphData, getModelList } = searchCommonStore;
+const {
+  graphData,
+  filteredIdAndTagIdData,
+  graphModelList,
+  showGraphModelListMenu,
+} = storeToRefs(searchCommonStore);
 
 const top = ref(200);
 const left = ref(200);
 const compTypeId = ref("modelList");
 const selectedNodeId = ref("");
-
-// lib 에서 노드 정보를 주지 않기 때문에, category id 를 일단 빼둔다.
-const getModelNodeList = (node: any): string[] => {
-  let result: string[] = [];
-
-  // tagId가 null인 경우 id 추가
-  if (node.tagId === null) {
-    result.push(node);
-  }
-
-  // 자식이 있는 경우 재귀적으로 탐색
-  if (node.children && node.children.length > 0) {
-    node.children.forEach((child: any) => {
-      result = result.concat(getModelNodeList(child));
-    });
-  }
-
-  return result;
-};
 
 const onClick = ({ compTypeId, nodeId }) => {
   console.log("filteredIdAndTagIdData: ", filteredIdAndTagIdData.value);
@@ -84,7 +77,6 @@ const onClick = ({ compTypeId, nodeId }) => {
   const selectedNode = _.filter(filteredIdAndTagIdData.value, {
     id: nodeId,
   });
-  console.log("hasDataModelList: ", hasDataModelList);
 
   if (compTypeId === $constants.GRAPH.TYPE.MODEL_LIST) {
     // TODO: [확인 필요] 모델 리스트 조회 -> 우측 패널 오픈
@@ -116,52 +108,97 @@ const onClick = ({ compTypeId, nodeId }) => {
 };
 
 const isLegendVisible = ref(true);
-
-function toggleLegend() {
+const toggleLegend = () => {
   isLegendVisible.value = !isLegendVisible.value;
-}
+};
 
-const searchCommonStore = useSearchCommonStore();
-const { getGraphData, getModelList, setFilteredIdAndTagIdData } =
-  searchCommonStore;
-const {
-  graphData,
-  filteredIdAndTagIdData,
-  graphModelList,
-  showGraphModelListMenu,
-} = storeToRefs(searchCommonStore);
+// lib 에서 노드 정보를 주지 않기 때문에, category id 를 일단 빼둔다.
+const getModelNodeList = (node: any): string[] => {
+  let result: string[] = [];
 
-await getGraphData();
+  // tagId가 null인 경우 id 추가
+  if (node.tagId === null) {
+    result.push(node);
+  }
+
+  // 자식이 있는 경우 재귀적으로 탐색
+  if (node.children && node.children.length > 0) {
+    node.children.forEach((child: any) => {
+      result = result.concat(getModelNodeList(child));
+    });
+  }
+
+  return result;
+};
 
 const modelNodes = getModelNodeList(graphData.value.nodes);
 const modelNodeIds = modelNodes.map((node) => node.id);
+const newNode: NetworkDiagramNodeInfo = ref({});
 
-const nodeData: any = graphData.value.nodes;
-const formattedNodeData: NetworkDiagramNodeInfo = nodeData.children.map(
-  (node: any) => ({
-    id: node.id,
-    name: node.name,
-    nodeList: node.children,
-    children: [],
-  }),
-);
-const newNode: NetworkDiagramNodeInfo = {
-  id: nodeData.id,
-  name: nodeData.name,
-  children: formattedNodeData,
-  nodeList: [],
+const setFilteredIdAndTagIdData = () => {
+  const nodeData: any = graphData.value.nodes;
+
+  const traverseFilteredIdAndTagIdData = (element: any) => {
+    // 현재 요소가 자식이 없거나, 미분류인 경우 필터링된 객체로 추가
+    if (
+      _.isEmpty(element.children) ||
+      element.name === $constants.SERVICE.CATEGORY_UNDEFINED_NAME
+    ) {
+      filteredIdAndTagIdData.value.push({
+        name: element.name,
+        id: element.id,
+        tagId: element.tagId,
+      });
+    } else {
+      // 자식 요소가 있는 경우, 자식들을 재귀적으로 탐색
+      element.children.forEach((child: any) =>
+        traverseFilteredIdAndTagIdData(child),
+      );
+    }
+  };
+
+  // 루트 요소의 모든 자식들을 순회
+  nodeData.children.forEach((element: any) =>
+    traverseFilteredIdAndTagIdData(element),
+  );
 };
 
-onMounted(() => {
-  setFilteredIdAndTagIdData(graphData.value.nodes);
+const setNewNode = () => {
+  const nodeData: any = graphData.value.nodes;
 
+  const formattedNodeData: NetworkDiagramNodeInfo = nodeData.children.map(
+    (node: any) => ({
+      id: node.id,
+      name: node.name,
+      nodeList: node.children,
+      children: [],
+    }),
+  );
+
+  newNode.value = {
+    id: nodeData.id,
+    name: nodeData.name,
+    children: formattedNodeData,
+    nodeList: [],
+  };
+};
+
+const setCategoryGraph = () => {
+  console.log("categoryGraph 실행 2");
   const categoryContainer = document.getElementById(
     "category",
   ) as HTMLDivElement;
 
+  if (!categoryContainer) {
+    console.warn("#category 요소를 찾을 수 없습니다.");
+    return;
+  }
+
+  categoryContainer.innerHTML = "";
+
   new CategoryGraph({
     container: categoryContainer,
-    categoryData: newNode,
+    categoryData: newNode.value,
     pixelQuality: "middle",
     eventHandler: {
       onClick: (e: any, id: any, type: any) => {
@@ -181,6 +218,22 @@ onMounted(() => {
       },
     },
   });
+};
+
+watch(
+  () => graphData.value,
+  (newVal) => {
+    console.log("watch 실행");
+    setFilteredIdAndTagIdData();
+    setNewNode();
+    setCategoryGraph();
+  },
+  { immediate: true },
+);
+
+onMounted(async () => {
+  await getGraphData();
+  setCategoryGraph();
 });
 </script>
 
