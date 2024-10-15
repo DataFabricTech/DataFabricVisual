@@ -250,11 +250,12 @@ const cacheBlockSize = ref(20);
 // 무한 스크롤 시 첫 화면에 표시될 행의 초기 개수
 const infiniteInitialRowCount = ref(20);
 
-const onCellClicked = (params: any) => {
-  if (params.column.colDef.field === "serviceNameFormatted") {
-    router.push(`/portal/manage/${params.data.serviceId}`);
-  }
-};
+// TODO: [개발] 페이지 이동 기능 추후 추가할 예정 (현재 데이터 상세로 이동하는 API 개발 안되어 있음)
+// const onCellClicked = (params: any) => {
+//   if (params.column.colDef.field === "serviceNameFormatted") {
+//     router.push(`/portal/manage/${params.data.serviceId}`);
+//   }
+// };
 
 const getBadgeClass = (status: string) => {
   let badgeTheme = "";
@@ -288,13 +289,12 @@ const setBadgeStatus = (params: string) => {
 };
 
 const serviceColumnDefs = ref([
+  // [TODO] 개발: 추후 field: serviceNameFormatted 으로 변경 필요 (데이터 상세 이동하는 api 만들어지면 적용할 것)
   {
     headerName: "서비스 이름",
     headerClass: "ag-header-center",
-    field: "serviceNameFormatted",
+    field: "serviceName",
     cellStyle: {
-      textDecoration: "underline",
-      cursor: "pointer",
       textAlign: "center",
     },
   },
@@ -346,13 +346,12 @@ const historyColumnDefs = ref([
       textAlign: "center",
     },
   },
+  // [TODO] 개발: 추후 field: serviceNameFormatted 으로 변경 필요 (데이터 상세 이동하는 api 만들어지면 적용할 것)
   {
     headerName: "서비스 이름",
     headerClass: "ag-header-center",
-    field: "serviceNameFormatted",
+    field: "serviceName",
     cellStyle: {
-      textDecoration: "underline",
-      cursor: "pointer",
       textAlign: "center",
     },
   },
