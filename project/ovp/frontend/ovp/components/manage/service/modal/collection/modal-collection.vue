@@ -75,7 +75,9 @@ import ConfigStep from "./step/config-step.vue";
 import ScheduleStep from "./step/schedule-step.vue";
 
 import { useServiceCollectionAddStore } from "@/store/manage/service/collection-add";
+import { useServiceStore } from "@/store/manage/service";
 const collectionAddStore = useServiceCollectionAddStore();
+const serviceStore = useServiceStore();
 const {
   isEditModalStatus,
   pipelineType,
@@ -94,6 +96,8 @@ const {
   createIngestion,
   editIngestion,
 } = collectionAddStore;
+const { service } = storeToRefs(serviceStore);
+const { getIngestionList, getIngestionPipelineStatus } = serviceStore;
 
 const emit = defineEmits<{
   (e: "close"): void;
@@ -147,6 +151,8 @@ const gotoNext = async () => {
       await editIngestion();
     } else {
       await createIngestion();
+      await getIngestionPipelineStatus();
+      await getIngestionList(service.value);
     }
 
     if (!isValid.value) {

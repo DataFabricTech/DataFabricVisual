@@ -408,6 +408,10 @@ public class ServiceManageService {
         }
     }
 
+    public Object getIngestionPipelineStatus() {
+        return servicesClient.getIngestionPipelineStatus();
+    }
+
     public Boolean checkDuplicatedNm(MultiValueMap<String, String> params) throws Exception {
         String index = params.getFirst("index").toLowerCase();
         String newIndex = index.equals("minio") ? "storage_service_search_index" : "database_service_search_index";
@@ -550,9 +554,9 @@ public class ServiceManageService {
             // step1.
             Map<String, Object> ipResult = (Map<String, Object>) servicesClient.saveIngestionPipelines(params);
             String id = ipResult.get("id").toString();
-
+            UUID uuid = UUID.fromString(id);
             // step2
-            servicesClient.ingestionPipelinesDeploy(id);
+            servicesClient.deployIngestion(uuid);
         } catch (Exception e) {
             return false;
         }
@@ -569,7 +573,8 @@ public class ServiceManageService {
             // step1.
             servicesClient.updateIngestionPipelines(id, params);
             // step2
-            servicesClient.ingestionPipelinesDeploy(id);
+            UUID uuid = UUID.fromString(id);
+            servicesClient.deployIngestion(uuid);
         } catch (Exception e) {
             return false;
         }

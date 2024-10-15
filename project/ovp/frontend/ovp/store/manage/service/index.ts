@@ -416,6 +416,10 @@ export const useServiceStore = defineStore("service", () => {
     }
   }
 
+  function getIngestionPipelineStatus() {
+    return $api(`/api/service-manage/ingestionPipelines/status`);
+  }
+
   /**
    * input show-hide
    * @param property
@@ -574,6 +578,7 @@ export const useServiceStore = defineStore("service", () => {
     deployIngestion,
     deleteIngestion,
     killIngestion,
+    getIngestionPipelineStatus,
 
     changeEditInfo,
     disableEditInfo,
