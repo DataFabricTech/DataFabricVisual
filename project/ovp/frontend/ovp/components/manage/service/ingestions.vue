@@ -350,7 +350,7 @@ async function run(ingestion: Ingestion): Promise<void> {
     await getStatus(ingestion);
     $alert("실행이 완료되었습니다.", "success");
   } catch (error) {
-    $alert(error, "error");
+    $alert("실행에 실패하였습니다.", "error");
   } finally {
     await updateLoading(id, "run", false);
   }
@@ -364,7 +364,7 @@ async function deploy(ingestion: Ingestion): Promise<void> {
     await getStatus(ingestion);
     $alert("동기화가 완료되었습니다.", "success");
   } catch (error) {
-    $alert(error, "error");
+    $alert("동기화에 실패하였습니다.", "error");
   } finally {
     await updateLoading(id, "deploy", false);
   }
@@ -382,7 +382,7 @@ async function onDelete(id: string): Promise<void> {
         await updateLoading(id, "delete", false);
       });
     } catch (error) {
-      $alert(error, "error");
+      $alert("삭제에 실패하였습니다.", "error");
       await updateLoading(id, "delete", false);
     }
   }
@@ -401,7 +401,7 @@ async function kill(ingestion: Ingestion): Promise<void> {
       await getStatus(ingestion);
       $alert("종료가 완료되었습니다.", "success");
     } catch (error) {
-      $alert(error, "error");
+      $alert("종료에 실패하였습니다.", "error");
     } finally {
       await updateLoading(id, "kill", false);
     }
