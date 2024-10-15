@@ -60,7 +60,7 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
   };
 
   const getCategoryInfo = async (value: any) => {
-    return await $api(`api/category/${value}`);
+    return await $api(`/api/category/${value}`);
   };
 
   const editDoneForCategory = (value: any) => {
@@ -93,20 +93,18 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
       modelName: dataModelName.value,
     };
 
-    await $api(`/api/creation/validation-name`, {
+    const res = await $api(`/api/creation/validation-name`, {
       method: "POST",
       body: param,
-    })
-      .then((res: any) => {
-        if (res.result === 1) {
-          isDuplicate.value = res.data;
-        } else {
-          console.log("err: ", err);
-        }
-      })
-      .catch((err: any) => {
-        console.log("err: ", err);
-      });
+    }).catch((err: any) => {
+      console.log("err: ", err);
+    });
+
+    if (res.result === 1) {
+      isDuplicate.value = res.data;
+    } else {
+      console.log("err: ", err);
+    }
   };
 
   const saveModel = async () => {
