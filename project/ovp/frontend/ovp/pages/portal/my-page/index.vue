@@ -136,6 +136,7 @@ const showModalPwChange: () => void = () => {
 
 onMounted(() => {
   resetSearchKeyword();
+  getPreviewCloseStatus(false);
 });
 
 watch(
