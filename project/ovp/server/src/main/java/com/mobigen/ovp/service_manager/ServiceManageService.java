@@ -242,13 +242,12 @@ public class ServiceManageService {
                 }
 
                 Map<String, Object> tempTag = classificationTagsClient.getTag(item.get(key).toString());
-                if (tempTag == null || tempTag.get("id") == null) {
+                if (tempTag == null || tempTag.get(key) == null) {
                     throw new IllegalArgumentException("해당 태그의 값이 존재하지 않습니다.");
                 }
                 DataModelDetailTagDto tag = new DataModelDetailTagDto();
                 tag.setName(tempTag.get("name").toString());
 
-                // displayname == null -> name
                 if(tempTag.get("displayName") == null) {
                     tag.setDisplayName(""); // displayName이 null이면 빈 문자열로 설정
                 } else {
