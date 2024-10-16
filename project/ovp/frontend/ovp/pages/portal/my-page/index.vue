@@ -89,7 +89,6 @@ import { useUserStore } from "~/store/user/userStore";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import { useRouter } from "nuxt/app";
 import pwResetModal from "@/components/my-page/pw-reset-modal.vue";
-import { onMounted, watch } from "vue";
 
 const { open, close } = useModal({
   component: pwResetModal,
@@ -138,15 +137,6 @@ onMounted(() => {
   resetSearchKeyword();
   getPreviewCloseStatus(false);
 });
-
-watch(
-  () => route.query.fqn as string,
-  async (fqn: string) => {
-    await getTargetUserData(fqn);
-    await getSearchList();
-  },
-  { deep: true },
-);
 
 // 탭 value 초기화
 currentTab.value = "myBookMark";
