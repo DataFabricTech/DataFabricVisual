@@ -261,6 +261,7 @@ const badgeClass = (ingestion: Ingestion): string => {
       success: "badge badge-green-lighter",
       failed: "badge badge-red-lighter",
       running: "badge badge-blue-lighter",
+      queued: "badge badge-gray-lighter",
     }[ingestion.pipelineState] ?? ""
   );
 };
@@ -296,6 +297,8 @@ const statusStr = (pipelineState: string): string => {
       return "Fail";
     case "running":
       return "Running";
+    case "queued":
+      return "Queued";
     default:
       return pipelineState;
   }
