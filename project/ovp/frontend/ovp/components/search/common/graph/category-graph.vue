@@ -165,15 +165,19 @@ const setFilteredIdAndTagIdData = () => {
 
 const setNewNode = () => {
   const nodeData: any = graphData.value.nodes;
+  const mapNodeWithChildren = (node: any) => ({
+    id: node.id,
+    parentId: node.parentId,
+    tagId: node.tagId,
+    name: node.name,
+    desc: node.desc,
+    children: node.children ? node.children.map(mapNodeWithChildren) : [],
+    nodeList: [],
+  });
 
-  const formattedNodeData: NetworkDiagramNodeInfo = nodeData.children.map(
-    (node: any) => ({
-      id: node.id,
-      name: node.name,
-      nodeList: node.children,
-      children: [],
-    }),
-  );
+  // nodeData의 자식들을 재귀적으로 처리하여 새로운 children 구조 생성
+  const formattedNodeData: NetworkDiagramNodeInfo =
+    nodeData.children.map(mapNodeWithChildren);
 
   newNode.value = {
     id: nodeData.id,
