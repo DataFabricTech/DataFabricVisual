@@ -135,7 +135,8 @@ const showModalPwChange: () => void = () => {
 };
 
 onMounted(() => {
-  inputSearchKeyword("");
+  resetSearchKeyword();
+  getPreviewCloseStatus(false);
 });
 
 watch(
@@ -151,9 +152,6 @@ watch(
 currentTab.value = "myBookMark";
 
 await getTargetUserData(route.query.fqn as string);
-
-await getTargetUserData(route.query.fqn);
-await getSearchList();
 
 const tabOptions = [
   { label: "나의 북마크", value: "myBookMark" },
