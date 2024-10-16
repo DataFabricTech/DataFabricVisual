@@ -33,7 +33,7 @@
     </div>
     <!--  TODO: [개발] 페이지 진입 시 모델 리스트 드롭다운이 떠있는 상태임. 처음에는 보여지면 안됨-->
     <drop-down
-      v-if="compTypeId"
+      v-if="compTypeId && showDropDown"
       :top="top"
       :left="left"
       :compTypeId="compTypeId"
@@ -68,9 +68,14 @@ const top = ref(200);
 const left = ref(200);
 const compTypeId = ref("modelList");
 const selectedNodeId = ref("");
+const showDropDown = ref(false);
 
 const onClick = ({ compTypeId, nodeId }) => {
-  console.log("filteredIdAndTagIdData: ", filteredIdAndTagIdData.value);
+  console.log("compTypeId", compTypeId);
+  console.log("nodeId", nodeId);
+  console.log("filteredIdAndTagIdData", filteredIdAndTagIdData.value);
+  console.log("드롭다운", showDropDown.value);
+
   const hasDataModelList = _.some(filteredIdAndTagIdData.value, {
     id: nodeId,
   });
@@ -96,6 +101,7 @@ const onClick = ({ compTypeId, nodeId }) => {
       showGraphModelListMenu.value = true;
       if (hasDataModelList) {
         getModelList(selectedNode[0].tagId);
+        tempGetSearchList();
       } else {
         // TODO: [확인 필요] 기획: 거버넌스>카테고리에서는 자식 요소가 없는 뎁스 | 미분류인 경우에만 모델리스트를 가질 수 있음.
         // 현재 기획서 상에서는 자식 요소가 있는 뎁스에서도 모델리스트 drop-down을 보여주고 있는데, 어떻게 해야할지 문의 필요
@@ -185,10 +191,11 @@ const setNewNode = () => {
     children: formattedNodeData,
     nodeList: [],
   };
+
+  console.log("newNode", newNode);
 };
 
 const setCategoryGraph = () => {
-  console.log("categoryGraph 실행 2");
   const categoryContainer = document.getElementById(
     "category",
   ) as HTMLDivElement;
@@ -206,6 +213,10 @@ const setCategoryGraph = () => {
     pixelQuality: "middle",
     eventHandler: {
       onClick: (e: any, id: any, type: any) => {
+        if (!showDropDown.value) {
+          showDropDown.value = true;
+        }
+
         if (type === "node" && id) {
           if (modelNodeIds.includes(id)) {
             showGraphModelListMenu.value = false;
@@ -227,7 +238,6 @@ const setCategoryGraph = () => {
 watch(
   () => graphData.value,
   (newVal) => {
-    console.log("watch 실행");
     setFilteredIdAndTagIdData();
     setNewNode();
     setCategoryGraph();
