@@ -35,7 +35,7 @@
     "echarts": "^5.5.1",
     "fast-json-patch": "^3.1.1",
     "floating-vue": "^5.2.2",
-    "knowledge-graph-canvas": "^1.0.5",
+    "knowledge-graph-canvas": "^1.0.12",
     "monaco-editor": "^0.51.0",
     "nuxt": "^3.12.2",
     "nuxt-lodash": "^2.5.3",
