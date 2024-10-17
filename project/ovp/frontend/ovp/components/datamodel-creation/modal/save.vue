@@ -196,7 +196,9 @@ const onSaveModal = async () => {
     if (!isQueryExecuteValid.value) {
       return;
     }
-    emit("close");
+    $alert(`저장이 완료되었습니다.`, "success").then(() => {
+      window.location.reload(); // 페이지 새로고침
+    });
   } else {
     // 에러발생
     $alert(`저장 실패했습니다. 잠시 후 다시 시도해주세요.`, "error");
