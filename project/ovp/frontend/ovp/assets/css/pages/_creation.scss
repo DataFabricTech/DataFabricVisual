@@ -101,24 +101,26 @@
   @include flex($direction: column, $horizontal: flex-start, $gap: $spacing-12);
 
   width: 100%;
+  height: 100%;
 
-  .tab-contents {
-    height: calc(100% - 36px);
-    max-height: 448px;
-
-
-    .knowledge {
-      flex-grow: 4;
-      height: 380px;
-      border: 1px solid $neutral-200;
+  .transfer {
+    .tab-contents {
+      height: calc(100% - 36px);
     }
 
-    .data-summary {
-      padding: 0;
-    }
+    & + .tab {
+      .tab-contents {
+        height: calc(100% - 40px);
+      }
 
-    .data-list {
-      flex-grow: 1;
+      .ag-grid,
+      .data-list {
+        height: calc(100% - 20px);
+      }
+
+      .data-summary {
+        padding: 0;
+      }
     }
   }
 }
@@ -127,6 +129,7 @@
 // 컴포넌트로 분기될 경우 디폴트/모달 스타일 구별해야 함
 .transfer {
   display: flex;
+  flex-grow: 0;
   width: 100%;
 
   .menu-data {

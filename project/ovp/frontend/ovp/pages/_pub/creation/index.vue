@@ -608,7 +608,7 @@
   </div>
   <!-- TODO: [개발] modal width:900px height:616px -->
   <div class="modal-fixed vfm--fixed vfm--inset" v-if="showModalAdd">
-    <div class="modal" style="width:900px">
+    <div class="modal" style="width: 900px; height: 837px;">
       <div class="modal-head">
         <div class="modal-head-text">
           <span class="modal-head-title">데이터 모델 추가</span>
@@ -1050,7 +1050,7 @@
               </div>
             </div>
           </div>
-          <div class="tab">
+          <div class="tab h-[350px]">
             <ul class="tab-list">
               <li class="tab-item is-tab-item-selected">
                 <button class="tab-button">
@@ -1075,7 +1075,7 @@
                 <span class="data-summary-text">(소유자)</span>
               </div>
               <!--  샘플데이터 탭 시작-->
-              <div class="table-scroll">
+              <div class="table-scroll" style="display: none">
                 <table>
                   <thead>
                   <tr>
@@ -1167,60 +1167,66 @@
               </div>
               <!--  샘플데이터 탭 끝-->
               <!--  데이터 프로파일링 시작-->
-              <div class="ag-grid h-full" style="display:none"></div>
+              <div class="ag-grid" style="display:none"></div>
               <!--  데이터 프로파일링 끝-->
               <!--  연관데이터 시작-->
-              <div class="l-split" style="display: none">
-                <div class="knowledge">knowledge</div>
                 <div class="data-list">
-                  <div class="menu menu-data w-full">
-                    <ul class="menu-list">
-                      <li class="menu-item is-menu-item-selected">
-                        <button class="menu-button">
-                          <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                          <span class="menu-text">데이터 모델</span>
-                          <span class="menu-subtext">(소유자)</span>
+                  <div class="resource-box" v-for="card in 2" :key="card">
+                    <div class="resource-box-function">
+                      <div class="resource-box-model">
+                        <div class="type-img" />
+                        <div class="breadcrumb">
+                          <ul class="breadcrumb-list">
+                            <li class="breadcrumb-item">
+                              <a href="#" class="breadcrumb-link">1depth</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                              <a href="#" class="breadcrumb-link">2depth</a>
+                            </li>
+                            <li class="breadcrumb-item is-breadcrumb-selected">
+                              <a href="#" class="breadcrumb-link">데이터 모델</a>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="relative">
+                        <button class="button button-sm button-neutral-ghost">
+                          <svg-icon class="svg-icon button-icon" name="kebab-menu"></svg-icon>
+                          <span class="hidden-text">메뉴 보기</span>
                         </button>
-                        <div class="menu-button-group">
-                          <div class="relative">
-                            <button class="button button-neutral-ghost button-sm">
-                              <span class="hidden-text">메뉴보기</span>
-                              <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                            </button>
-                            <div class="dropdown" style="right: 0;">
-                              <ul class="dropdown-list">
-                                <li class="dropdown-item">
-                                  <button class="dropdown-button">
-                                    <span class="dropdown-text">데이터 모델 상세 조회</span>
-                                  </button>
-                                </li>
-                                <li class="dropdown-item">
-                                  <button class="dropdown-button">
-                                    <span class="dropdown-text">데이터 선택(해제)</span>
-                                  </button>
-                                </li>
-                              </ul>
-                            </div>
+                        <div class="dropdown right-0">
+                          <ul class="dropdown-list">
+                            <li class="dropdown-item">
+                              <button class="dropdown-button">
+                                <span class="dropdown-text">데이터 모델 상세조회</span>
+                              </button>
+                            </li>
+                            <li class="dropdown-item">
+                              <button class="dropdown-button">
+                                <span class="dropdown-text">데이터 선택</span>
+                              </button>
+                            </li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                    <h3 class="editable-group-title">세종특별자치시 상하수도요금표</h3>
+                    <span class="editable-group-desc">한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다.한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다한국교통안전공단에서 교통카드를 이용한 대중교통 사용시  1회 이용요금 평균을 조사한 결과 입니다</span>
+                    <div class="resource-box-info">
+                      <dl class="resource-box-list">
+                        <dt>소유자</dt>
+                        <dd>
+                          정설화
+                        </dd>
+                      </dl>
+                      <dl class="resource-box-list">
+                        <dt>카테고리</dt>
+                        <dd>
+                          카테고리 없음
+                        </dd>
+                      </dl>
+                    </div>
 
-                          </div>
-                        </div>
-                      </li>
-                      <li class="menu-item" v-for="item in 5" :key="item">
-                        <button class="menu-button">
-                          <svg-icon class="svg-icon menu-data-icon" name="resource"></svg-icon>
-                          <span class="menu-text">데이터 모델</span>
-                          <span class="menu-subtext">(소유자)</span>
-                        </button>
-                        <div class="menu-button-group">
-                          <div class="relative">
-                            <button class="button button-neutral-ghost button-sm">
-                              <span class="hidden-text">메뉴보기</span>
-                              <svg-icon class="svg-icon" name="kebab-menu"></svg-icon>
-                            </button>
-                          </div>
-                        </div>
-                      </li>
-                    </ul>
                   </div>
                   <div class="no-result" style="display:none">
                     <div class="notification">
@@ -1228,8 +1234,8 @@
                       <p class="notification-detail">샘플 데이터가 없습니다.</p>
                     </div>
                   </div>
+
                 </div>
-              </div>
               <!-- 연관데이터 끝-->
               <!-- 샘플데이터, 데이터프로파일링 결과 없을 시 no-result 표시 -->
               <div class="no-result" style="display:none">
@@ -1255,11 +1261,12 @@
 import SelectBox from "../../../../common/components/extends/select-box/SelectBox.vue";
 import MenuSearch from "../../../../common/components/extends/menu-seach/menu-search.vue";
 import Accordion from "../../../../common/components/base/accordion/accordion.vue";
+import ResourceBox from "../../../components/common/resource-box/resource-box.vue";
 
 
 export default {
   name: "creation",
-  components: { SelectBox, MenuSearch, Accordion },
+  components: { SelectBox, MenuSearch, Accordion, ResourceBox },
   data() {
     return {
       showModalSave: false
@@ -1268,6 +1275,18 @@ export default {
       showModalAdd: false
     };
   }
+};
+
+let resourceBoxObj: any = {
+  id: "155",
+  serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
+  depth: ["1depth", "2depth", "3depth", "데이터모델"],
+  firModelNm: "최초 데이터모델 명",
+  modelNm: "Model Name",
+  modelDesc:
+    "데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. ",
+  owner: "장소라",
+  category: "카테고리",
 };
 
 </script>
