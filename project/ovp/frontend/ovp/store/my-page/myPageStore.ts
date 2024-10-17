@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { useUserStore } from "@/store/user/userStore";
 import { usePagingStore } from "@/store/common/paging";
 import type { QueryFilter } from "@/store/search/common";
+import type { Ref } from "vue";
 
 export const useMyPageStore = defineStore("my-page", () => {
   const { $api } = useNuxtApp();
@@ -128,6 +129,7 @@ export const useMyPageStore = defineStore("my-page", () => {
       currentTab.value === "myBookMark"
         ? ` AND followers:${targetUserInfo.value.id}`
         : ` AND(owner.id:${targetUserInfo.value.id})`;
+
     const params: any = {
       // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
       // eslint 예외 제외 코드 추가.
@@ -148,6 +150,17 @@ export const useMyPageStore = defineStore("my-page", () => {
       showLoader: false,
     });
     return data;
+  };
+
+  const getUserInfo = async (): Promise<void> => {
+    const data: any = await $api(`/api/user/info`);
+    const userId: string = data.data.id;
+
+    return await getBookMarkData(userId);
+  };
+
+  const getBookMarkData = async (id: string): Promise<void> => {
+    return await $api(`/api/main/follows/${id}`);
   };
 
   /**

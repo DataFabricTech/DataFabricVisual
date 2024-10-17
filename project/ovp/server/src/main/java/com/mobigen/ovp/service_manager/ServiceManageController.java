@@ -191,6 +191,11 @@ public class ServiceManageController {
         return serviceManageService.killIngestion(id);
     }
 
+    @ResponseJsonResult
+    @GetMapping("/ingestionPipelines/status")
+    public Object getIngestionPipelineStatus() {
+        return serviceManageService.getIngestionPipelineStatus();
+    }
 
     /**
      * 서비스 명 중복인지 체크

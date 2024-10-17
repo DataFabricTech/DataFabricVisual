@@ -112,7 +112,7 @@
                   <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
                 </button>
                 <!-- TODO: [개발] menu-search 시작 컴포넌트화  -->
-                <div class="menu menu-search">
+                <div class="menu menu-search" style="display: none">
                   <div class="menu-head">
                     <div class="search-input">
                       <label class="hidden-text" for="text-input-example-11">label</label>
@@ -224,7 +224,7 @@
       <div class="tab-contents">
         <div class="data-detail">
           <!--  기본정보 탭 시작-->
-          <table>
+          <table style="display: none">
             <colgroup>
               <col style="width: 20%" />
               <col />
@@ -274,7 +274,6 @@
                   </button>
                 </div>
                 <div class="editable-group">
-                  <!-- TODO: [개발] 수정버튼 클릭시 select 활성화  -->
                   <div class="select select-clean">
                     <button class="select-button">
                       <div class="tag tag-primary tag-sm">
@@ -293,7 +292,6 @@
                       </div>
                       <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
                     </button>
-                    <!-- TODO: [개발] menu-search 시작 컴포넌트화  -->
                     <div class="menu menu-search">
                       <div class="menu-head">
                         <div class="search-input">
@@ -387,6 +385,23 @@
             </tbody>
           </table>
           <!--  스키마, 샘플데이터 탭 끝-->
+          <!--  비정형 샘플데이터 시작 -->
+          <div class="unstructured-sample">
+            <pre>
+<!-- TODO: [개발] 비정형 데이터 내용 출력 -->
+  이름: 김철수
+  나이: 35
+  날씨가 오늘 참 좋네요. 그런데 내일은 비가 올까요?
+  어제 본 영화는 정말 재미있었어요. 주인공이 멋있었는데, 이름이 뭐였더라...?
+
+  이메일: chulsu@example.com
+  전화번호: 010-1234-5678
+
+  "나는 항상 커피를 마시면서 일을 해. 그래야 집중이 잘 되거든."
+  "나는 항상 커피를 마시면서 일을 해. 그래야 집중이 잘 되거든."
+            </pre>
+          </div>
+          <!--  비정형 샘플데이터 끝 -->
           <!--  프로파일링 탭 시작 -->
           <div class="data-detail-group" style="display: none">
             <div class="search-input search-input-lg w-96">
@@ -404,7 +419,7 @@
           </div>
           <!--  프로파일링 탭 끝-->
           <!--  쿼리 탭 시작-->
-          <div class="query" v-for="query in 2" :key="query">
+          <div class="query" style="display: none" v-for="query in 2" :key="query">
             <div class="query-date">2024-06-07 00:00:00</div>
             <div class="code-box"></div>
           </div>
@@ -536,7 +551,7 @@
           </div>
           <!--  데이터리니지 탭 끝-->
           <!--  연관 데이터 모델 시각화 탭 시작 -->
-          <div class="data-detail-group" style="">
+          <div class="data-detail-group" style="display: none">
             <div class="visual visual-detail">
               <!-- 기준 모델 샘플 -->
               <div style="top: 200px;

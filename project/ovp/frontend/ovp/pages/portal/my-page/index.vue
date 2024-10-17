@@ -133,22 +133,15 @@ const showModalPwChange: () => void = () => {
   open();
 };
 
-watch(
-  () => route.query.fqn as string,
-  async (fqn: string) => {
-    await getTargetUserData(fqn);
-    await getSearchList();
-  },
-  { deep: true },
-);
+onMounted(() => {
+  setScrollOptions(0);
+  inputSearchKeyword("");
+});
 
 // 탭 value 초기화
 currentTab.value = "myBookMark";
 
 await getTargetUserData(route.query.fqn as string);
-
-await getTargetUserData(route.query.fqn);
-await getSearchList();
 
 const tabOptions = [
   { label: "나의 북마크", value: "myBookMark" },
@@ -201,7 +194,9 @@ const modelNmClick = (data: object) => {
   });
 };
 
-const { scrollTrigger } = useIntersectionObserver({ callback: addSearchList });
+const { scrollTrigger, setScrollOptions } = useIntersectionObserver({
+  callback: addSearchList,
+});
 </script>
 
 <style scoped></style>

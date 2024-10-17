@@ -169,6 +169,9 @@ public interface ServicesClient {
     @PostMapping("/ingestionPipelines/kill/{id}")
     ResponseEntity<Object> killIngestion(@PathVariable UUID id);
 
+    @GetMapping("/ingestionPipelines/status")
+    Object getIngestionPipelineStatus();
+
     @GetMapping("/testConnectionDefinitions/name/{definitionNm}")
     Map<String, Object> getTestConnectionDefinition(@PathVariable String definitionNm);
 
@@ -212,9 +215,6 @@ public interface ServicesClient {
 
     @PatchMapping(value = "/ingestionPipelines/{id}", consumes = "application/json-patch+json")
     Object updateIngestionPipelines(@PathVariable String id, @RequestBody List<JsonPatchOperation> params);
-
-    @PostMapping("/ingestionPipelines/deploy/{id}")
-    Object ingestionPipelinesDeploy(@PathVariable String id);
 
     @GetMapping("/ingestionPipelines/name/{id}")
     Map<String, Object> getPipelinesData(@PathVariable String id, @RequestParam Map<String, Object> params);

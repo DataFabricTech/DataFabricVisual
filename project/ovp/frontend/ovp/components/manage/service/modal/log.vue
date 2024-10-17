@@ -58,8 +58,9 @@ const serviceCollectionLogStore = useServiceCollectionLogStore();
 const { collectionLog } = storeToRefs(serviceCollectionLogStore);
 const { getCollectionLogData } = serviceCollectionLogStore;
 
+const copyText = ref("");
 const { copy } = useClipboard({
-  source: collectionLog,
+  source: copyText,
   legacy: true,
 });
 
@@ -94,8 +95,8 @@ function refresh() {
   getCollectionLogData();
 }
 
-const copyLog = async () => {
-  await navigator.clipboard.writeText(collectionLog.value);
+const copyLog = () => {
+  copy(collectionLog.value);
   $alert("로그가 복사되었습니다.", "success");
 };
 </script>

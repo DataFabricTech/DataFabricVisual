@@ -213,7 +213,7 @@ public class ServiceManageService {
         return removedBody;
     }
 
-    private List<JsonPatchOperation> makeAddBody(List<Tag> tags, List<Map<String, Object>> body, String target) {
+    private List<JsonPatchOperation> makeAddBody(List<Tag> tags, List<Map<String, Object>> body, String target)  throws IllegalArgumentException{
         List<JsonPatchOperation> addedBody = new ArrayList<>();
         List<DataModelDetailTagDto> bodyList = new ArrayList<>();
         List<DataModelDetailTagDto> tagList = new ArrayList<>();
@@ -236,11 +236,24 @@ public class ServiceManageService {
             for (Map<String, Object> item : body) {
                 String key = "id";
 
-                Map<String, Object> tempTag = classificationTagsClient.getTag(item.get(key).toString());
+                // null 체크
+                if (item == null || item.get(key) == null) {
+                    throw new IllegalArgumentException("id 값이 null입니다.");
+                }
 
+                Map<String, Object> tempTag = classificationTagsClient.getTag(item.get(key).toString());
+                if (tempTag == null || tempTag.get(key) == null) {
+                    throw new IllegalArgumentException("해당 태그의 값이 존재하지 않습니다.");
+                }
                 DataModelDetailTagDto tag = new DataModelDetailTagDto();
                 tag.setName(tempTag.get("name").toString());
-                tag.setDisplayName(tempTag.get("displayName").toString());
+
+                if(tempTag.get("displayName") == null) {
+                    tag.setDisplayName(""); // displayName이 null이면 빈 문자열로 설정
+                } else {
+                    tag.setDisplayName(tempTag.get("displayName").toString()); // null이 아니면 toString()으로 값 설정
+                }
+
                 tag.setDescription(tempTag.get("description").toString());
                 tag.setTagFQN(tempTag.get("fullyQualifiedName").toString());
                 tag.setSource(target);
@@ -251,8 +264,14 @@ public class ServiceManageService {
             }
         } else if ("Glossary".equals(target)) {
             for (Map<String, Object> item : body) {
-                TermDto tempTerm = glossaryClient.getGlossaryTermsById(item.get("id").toString(), "all");
+                if (item == null || item.get("id") == null) {
+                    throw new IllegalArgumentException("id 값이 null입니다.");
+                }
 
+                TermDto tempTerm = glossaryClient.getGlossaryTermsById(item.get("id").toString(), "all");
+                if (tempTerm == null || tempTerm.getName() == null) {
+                    throw new IllegalArgumentException("해당 용어의 값이 존재하지 않습니다.");
+                }
                 DataModelDetailTagDto tag = new DataModelDetailTagDto();
                 tag.setName(tempTerm.getName());
                 tag.setDisplayName(tempTerm.getDisplayName());
@@ -408,6 +427,10 @@ public class ServiceManageService {
         }
     }
 
+    public Object getIngestionPipelineStatus() {
+        return servicesClient.getIngestionPipelineStatus();
+    }
+
     public Boolean checkDuplicatedNm(MultiValueMap<String, String> params) throws Exception {
         String index = params.getFirst("index").toLowerCase();
         String newIndex = index.equals("minio") ? "storage_service_search_index" : "database_service_search_index";
@@ -550,9 +573,9 @@ public class ServiceManageService {
             // step1.
             Map<String, Object> ipResult = (Map<String, Object>) servicesClient.saveIngestionPipelines(params);
             String id = ipResult.get("id").toString();
-
+            UUID uuid = UUID.fromString(id);
             // step2
-            servicesClient.ingestionPipelinesDeploy(id);
+            servicesClient.deployIngestion(uuid);
         } catch (Exception e) {
             return false;
         }
@@ -569,7 +592,8 @@ public class ServiceManageService {
             // step1.
             servicesClient.updateIngestionPipelines(id, params);
             // step2
-            servicesClient.ingestionPipelinesDeploy(id);
+            UUID uuid = UUID.fromString(id);
+            servicesClient.deployIngestion(uuid);
         } catch (Exception e) {
             return false;
         }
