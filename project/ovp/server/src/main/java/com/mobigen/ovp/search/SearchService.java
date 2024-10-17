@@ -1,5 +1,9 @@
 package com.mobigen.ovp.search;
 
+import com.mobigen.ovp.category.dto.CategoryDTO;
+import com.mobigen.ovp.category.entity.CategoryEntity;
+import com.mobigen.ovp.category.repository.CategoryRepository;
+import com.mobigen.ovp.common.CategoryConvertUtil;
 import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.ModelConvertUtil;
 import com.mobigen.ovp.common.entity.ModelIndex;
@@ -17,6 +21,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -26,6 +31,8 @@ public class SearchService {
     private final SearchClient searchClient;
     private final TablesClient tablesClient;
     private final ModelConvertUtil modelConvertUtil;
+    private final CategoryRepository categoryRepository;
+    private final CategoryConvertUtil categoryConvertUtil;
 
     private Map<String, Object> convertAggregations(Map<String, Object> response) {
         Map<String, Object> aggregations = (Map<String, Object>) response.get("aggregations");
@@ -338,6 +345,60 @@ public class SearchService {
         List<Map<String, Object>> resultList = (List<Map<String, Object>>) result.get("data");
         result.put("data", resultList);
         result.put("totalData", resultList.size());
+
+        return result;
+    }
+
+    public Object getGraphCategories(MultiValueMap<String, String> params) throws Exception {
+        List<CategoryEntity> categories = categoryRepository.findAll();
+
+        Map<String, Object> result = new HashMap<>();
+
+        List<Map<String, Object>> edgeList = categories.stream()
+                .map(category -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("id", UUID.randomUUID().toString());
+                    map.put("sources", List.of(category.getParentId()));
+                    map.put("targets", List.of(category.getId()));
+                    return map;
+                })
+                .collect(Collectors.toList());
+
+        result.put("edges", edgeList);
+
+
+        String index = params.getFirst("index").toString();
+
+        // 데이터 조회
+        Map<String, Object> searchData = new HashMap<>();
+        if (index.equals("table")) {
+            searchData = getTableList(params);
+        } else if (index.equals("storage")) {
+            searchData = getStorageList(params);
+        } else if (index.equals("model")) {
+            searchData = getModelList(params);
+        }
+        List<Map<String, Object>> searchList = (List<Map<String, Object>>) searchData.get("data");
+
+
+        List<CategoryDTO> dataModelDTOList = searchList.stream()
+                .map(dataMap -> {
+                    CategoryDTO categoryDTO = new CategoryDTO();
+
+                    categoryDTO.setId(dataMap.get("id").toString());
+                    categoryDTO.setParentId(dataMap.get("category").toString());
+                    categoryDTO.setName(dataMap.get("modelNm").toString());
+                    categoryDTO.setFqn(dataMap.get("fqn").toString());
+                    categoryDTO.setIndex(index);
+
+                    return categoryDTO;
+                })
+                .collect(Collectors.toList());
+
+
+        CategoryDTO nodeObj = categoryConvertUtil.convertCategoryEntityAndDTO(categories, dataModelDTOList);
+
+        result.put("nodes", nodeObj);
 
         return result;
     }

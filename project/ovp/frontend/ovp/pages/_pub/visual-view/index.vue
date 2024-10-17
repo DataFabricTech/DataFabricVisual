@@ -59,7 +59,6 @@
                   position: relative;
                   cursor: pointer"
       >
-        <!-- TODO: [개발] 노드 클릭 시 드롭다운 -->
         <div class="dropdown" style="top: 50px; left: 50px">
           <ul class="dropdown-list">
             <li class="dropdown-item">
@@ -84,7 +83,6 @@
                   cursor: pointer"
            title="마우스오버 시, 전체 내용을 툴 팁으로 제공 함."
       >
-        <!-- TODO: [개발] 노드 클릭 시 드롭다운 -->
         <div class="dropdown" style="top: 50px; left: 50px">
           <ul class="dropdown-list">
             <li class="dropdown-item">

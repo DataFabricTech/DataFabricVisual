@@ -85,7 +85,17 @@
 }
 
 .visual {
+  &-wrap {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
   @include graph-grid;
+
+  > canvas {
+    cursor: pointer;
+  }
 
   &-legend {
     @include graph-legend;
@@ -212,5 +222,49 @@
         padding: 0;
       }
     }
+  }
+
+  //category-graph 스타일
+  div:has(.graph_nav_plus_btn) {
+    border: none !important;
+  }
+
+  .graph_nav_plus_btn, .graph_nav_minus_btn, .graph_nav_fullscreen_btn {
+    @include flex;
+    border: 1px solid $neutral-200 !important;
+
+    &:hover:not(:disabled) {
+      background-color: $neutral-100 !important;
+    }
+
+    &:active:not(:disabled) {
+      border-color: $neutral-500 !important;
+    }
+
+    svg {
+      width: 24px !important;
+      height: 24px !important;
+      color: $neutral-500 !important;
+    }
+  }
+
+  .graph_nav_plus_btn {
+    border-bottom-right-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
+    border-top-left-radius: $border-radius-4 !important;
+    border-top-right-radius: $border-radius-4 !important;
+    border-bottom-color: transparent !important;
+  }
+
+  .graph_nav_minus_btn {
+    border-top-right-radius: 0px !important;
+    border-top-left-radius: 0px !important;
+    border-bottom-left-radius: $border-radius-4 !important;
+    border-bottom-right-radius: $border-radius-4 !important
+  }
+
+  .graph_nav_fullscreen_btn {
+    border-radius: $border-radius-4 !important;
+    margin-top: $spacing-8;
   }
 }

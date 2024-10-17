@@ -175,5 +175,11 @@ const $constants = {
         "허용 가능한 특수 문자 (이름에는 문자, 숫자, '_', '-', '.', 괄호, '&'만 사용할 수 있습니다.",
     },
   },
+  GRAPH: {
+    TYPE: {
+      MODEL_LIST: "modelList",
+      DETAIL: "detail",
+    },
+  },
 };
 export default Object.freeze($constants);
