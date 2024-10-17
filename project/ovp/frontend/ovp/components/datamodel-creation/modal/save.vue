@@ -133,9 +133,10 @@ import { useDataModelSaveStore } from "@/store/datamodel-creation/save";
 import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 import MenuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
 import $constants from "@/utils/constant";
-
+import { useRouter } from "vue-router";
 import { useNuxtApp } from "nuxt/app";
 const { $alert } = useNuxtApp();
+const router = useRouter();
 
 const dataModelSaveStore = useDataModelSaveStore();
 
@@ -197,7 +198,7 @@ const onSaveModal = async () => {
       return;
     }
     $alert(`저장이 완료되었습니다.`, "success").then(() => {
-      window.location.reload(); // 페이지 새로고침
+      router.go(0); // 페이지 새로고침
     });
   } else {
     // 에러발생
