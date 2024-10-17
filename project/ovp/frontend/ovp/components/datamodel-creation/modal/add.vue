@@ -21,7 +21,7 @@
       <div class="data-add">
         <add-transfer></add-transfer>
         <Tab
-          class="h-full"
+          class="h-[350px]"
           :data="$constants.DATAMODEL_CREATION.ADD.DETAIL_TAB"
           label-key="label"
           value-key="value"

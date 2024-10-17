@@ -11,9 +11,9 @@
       <span class="data-summary-name">{{ props.data.fqn }}</span>
       <span class="data-summary-text">{{ owner }}</span>
     </div>
-    <div class="ag-grid h-full">
+    <div class="ag-grid">
       <agGrid
-        :style="'width: 100%; height: 300px'"
+        :style="'height: 100%'"
         class="ag-theme-alpine ag-theme-quartz"
         :columnDefs="props.data.columnDefs"
         :rowData="props.data.rowData"
