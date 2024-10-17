@@ -134,8 +134,8 @@ const showModalPwChange: () => void = () => {
 };
 
 onMounted(() => {
-  resetSearchKeyword();
-  getPreviewCloseStatus(false);
+  setScrollOptions(0);
+  inputSearchKeyword("");
 });
 
 // 탭 value 초기화
@@ -194,7 +194,9 @@ const modelNmClick = (data: object) => {
   });
 };
 
-const { scrollTrigger } = useIntersectionObserver({ callback: addSearchList });
+const { scrollTrigger, setScrollOptions } = useIntersectionObserver({
+  callback: addSearchList,
+});
 </script>
 
 <style scoped></style>

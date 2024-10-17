@@ -125,7 +125,11 @@ export const useMyPageStore = defineStore("my-page", () => {
   };
 
   const getSearchListQuery = () => {
-    const query = ` AND(owner.id:${targetUserInfo.value.id})`;
+    const query =
+      currentTab.value === "myBookMark"
+        ? ` AND followers:${targetUserInfo.value.id}`
+        : ` AND(owner.id:${targetUserInfo.value.id})`;
+
     const params: any = {
       // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
       // eslint 예외 제외 코드 추가.
@@ -168,13 +172,8 @@ export const useMyPageStore = defineStore("my-page", () => {
   };
 
   const getSearchList = async () => {
-    if (currentTab.value === "myBookMark") {
-      const { data } = await getUserInfo();
-      searchResult.value = data;
-    } else {
-      const { data } = await getSearchListAPI();
-      searchResult.value = data.all;
-    }
+    const { data } = await getSearchListAPI();
+    searchResult.value = data.all;
     isSearchResultNoData.value = searchResult.value.length === 0;
   };
 
