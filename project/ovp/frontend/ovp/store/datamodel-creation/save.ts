@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import _ from "lodash";
 import { useCreationStore } from "~/store/datamodel-creation/index";
+import { useUserStore } from "~/store/user/userStore";
 
 export const useDataModelSaveStore = defineStore("dataModelSave", () => {
   const { $api } = useNuxtApp();
@@ -13,6 +14,9 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
     isFirstExecute,
     isExecuteQuery,
   } = storeToRefs(creationStore);
+
+  const userStore = useUserStore();
+  const { user } = storeToRefs(userStore);
 
   const dataModelName = ref("");
   const modelDescription = ref("");
@@ -137,6 +141,7 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
         query: query.value,
         referenceModels: referenceModels.value,
       },
+      owner: user.value.name,
       description: modelDescription.value,
       tags: tags,
     };
