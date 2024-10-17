@@ -73,9 +73,9 @@ const selectedNodeId = ref("");
 
 const onClick = ({ compId, nodeId }) => {
   // 클릭한 nodeId가 마지막 뎁스 목록에 속하는지 판별
-  const hasDataModelList = _.some(filteredIdAndTagIdData.value, {
-    id: nodeId,
-  });
+  // const hasDataModelList = _.some(filteredIdAndTagIdData.value, {
+  //   id: nodeId,
+  // });
 
   // 클릭한 nodeId의 정보를 마지막 뎁스 목록에서 찾는다.
   // const selectedNode = _.filter(filteredIdAndTagIdData.value, {

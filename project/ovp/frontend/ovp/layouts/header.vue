@@ -73,6 +73,7 @@ import _ from "lodash";
 const searchCommonStore = useSearchCommonStore();
 const { setSearchKeyword, changeTab, setEmptyFilter, resetReloadList } =
   searchCommonStore;
+const { viewType } = storeToRefs(searchCommonStore);
 
 const userStore = useUserStore();
 const { getUserInfo, setProfileFirstWord } = userStore;

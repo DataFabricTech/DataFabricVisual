@@ -332,6 +332,7 @@ export const useSearchCommonStore = defineStore(
     const changeTab = async (item: string, loadList: boolean = true) => {
       isShowPreview.value = false;
       showDropDown.value = false;
+      showGraphModelListMenu.value = false;
       currentTab.value = item;
 
       if (loadList) {
@@ -359,6 +360,7 @@ export const useSearchCommonStore = defineStore(
     const graphModelIdList = ref([]);
 
     const findRelatedGraphModelIds = (graphList: any, targetId: string) => {
+    const setGraphModelIdList = (graphList: any, targetId: string) => {
       const result = ref([]);
 
       // targetId가 graphList 또는 하위 노드에 있는지 찾기
@@ -406,7 +408,7 @@ export const useSearchCommonStore = defineStore(
       ) {
         graphModelIdList.value = ["ovp_category.미분류"];
       } else {
-        findRelatedGraphModelIds(graphCategoryList.value, nodeId);
+        setGraphModelIdList(graphCategoryList.value, nodeId);
       }
 
       const shouldTerms = graphModelIdList.value.map((tag) => ({
