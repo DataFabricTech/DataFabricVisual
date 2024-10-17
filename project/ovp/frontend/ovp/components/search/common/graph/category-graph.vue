@@ -56,7 +56,8 @@ import _ from "lodash";
 import { ref } from "vue";
 
 const searchCommonStore = useSearchCommonStore();
-const { getGraphData, getGraphModelList } = searchCommonStore;
+const { getGraphData, getGraphModelList, setGraphCategoryPath } =
+  searchCommonStore;
 const {
   showDropDown,
   graphCategoryList,
@@ -85,6 +86,7 @@ const onClick = ({ compId, nodeId }) => {
   if (compId === $constants.GRAPH.TYPE.MODEL_LIST) {
     showGraphModelListMenu.value = true;
     setFirstNodeName(nodeId);
+    setGraphCategoryPath(graphCategoryList.value, nodeId);
     getGraphModelList(nodeId);
   } else {
     // nodeId 기반으로 노드 정보를 찾는다.

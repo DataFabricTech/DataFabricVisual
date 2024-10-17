@@ -139,12 +139,21 @@ export const useSearchCommonStore = defineStore(
     const filteredIdAndTagIdData: Ref<any[]> = ref([]);
     const showGraphModelListMenu: Ref<boolean> = ref(false);
     const showDropDown = ref(false);
+    const dataModelFromCount = ref(20);
+
+    // TODO: [개발] listView로 돌아갔을 때만 from.value를 dataModelFromCount.value 와 동일해야 한다.
+    // tab 을 변경하면, from.value 기존 방식대로 진행할 것
+    const setFromCount = () => {
+      console.log("강제로 dataModelFromCount과 동일하게 바꿔야해");
+    };
 
     const getQueryParam = () => {
       const queryFilter = getQueryFilter(
         selectedFilters.value,
         UNDEFINED_TAG_ID,
       );
+
+      dataModelFromCount.value = from.value === 0 ? 20 : from.value;
 
       return {
         // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
@@ -334,6 +343,7 @@ export const useSearchCommonStore = defineStore(
       showDropDown.value = false;
       showGraphModelListMenu.value = false;
       currentTab.value = item;
+      dataModelFromCount.value = 20;
 
       if (loadList) {
         await resetReloadList();
@@ -355,42 +365,33 @@ export const useSearchCommonStore = defineStore(
 
     const graphCategoryList: NetworkDiagramNodeInfo = ref({});
     const graphCategoryName = ref("");
+    const graphCategoryPath = ref([]);
+
     const graphModelList = ref([]);
     const graphModelListLength = ref(0);
     const graphModelIdList = ref([]);
 
-    const setGraphCategoryPath = (
-      graphList: any,
-      targetId: string,
-      depth = 0,
-    ) => {
-      console.log("내가 선택한 NODE id", targetId);
-      // 조건에 맞는 이름들을 저장할 배열
-      const result = ref([]);
+    const setGraphCategoryPath = (graphList: any, targetId: string) => {
+      graphCategoryPath.value = [];
 
-      // 현재 노드가 목표 노드와 일치하면 상위, 현재, 하위 순으로 이름을 찾기 시작
-      const traverse = (graphList: any, depth: any) => {
-        if (depth > 2) {
-          return;
-        } // 3 depth 초과하면 중지
-
+      const traverse = (graphList: any) => {
         // 현재 노드가 목표 노드와 일치하면, 상위/현재/하위 탐색 시작
         if (graphList.id === targetId) {
           // 상위 노드부터 저장
-          if (graphList.parentId && graphList.tagId !== null) {
-            result.value.push(graphList.name);
+          if (graphList.parentId && graphList.tagId) {
+            graphCategoryPath.value.push(graphList.name);
           }
           // 하위 노드들도 추가 (재귀)
-          addChildrenNames(graphList.children, depth + 1);
+          addChildrenNames(graphList.children);
           return true;
         }
 
         // 하위 children들을 재귀 탐색
         for (const child of graphList.children) {
-          if (child.tagId !== null && traverse(child, depth + 1)) {
+          if (child.tagId && traverse(child)) {
             // 상위 노드도 결과 배열에 추가
-            if (graphList.tagId !== null) {
-              result.value.unshift(graphList.name);
+            if (graphList.tagId) {
+              graphCategoryPath.value.unshift(graphList.name);
             }
             return true;
           }
@@ -398,22 +399,22 @@ export const useSearchCommonStore = defineStore(
       };
 
       // 하위 children들의 name을 추가하는 함수
-      const addChildrenNames = (children, depth) => {
-        if (depth > 2) {
-          return;
-        } // 최대 3 depth까지만
+      const addChildrenNames = (children: any) => {
         for (const child of children) {
-          if (child.tagId !== null) {
-            result.value.push(child.name);
-            addChildrenNames(child.children, depth + 1);
+          if (child.tagId) {
+            graphCategoryPath.value.push(child.name);
+            addChildrenNames(child.children);
           }
         }
       };
 
-      traverse(graphList, depth);
+      traverse(graphList);
 
-      console.log("result", result);
-      return result;
+      // Root일 경우 ROOT로 출력
+      graphCategoryPath.value =
+        graphCategoryPath.value.length > 3 ? ["ROOT"] : graphCategoryPath.value;
+
+      console.log("경로: ", graphCategoryPath.value);
     };
 
     const setGraphModelIdList = (graphList: any, targetId: string) => {
@@ -495,9 +496,9 @@ export const useSearchCommonStore = defineStore(
 
       const param = {
         q: "",
-        index: currentTab.value, // table or storage or model -> tab
+        index: currentTab.value,
         from: 0,
-        size: 20,
+        size: dataModelFromCount.value,
         query_filter: JSON.stringify(queryFilter),
       };
 
@@ -557,6 +558,7 @@ export const useSearchCommonStore = defineStore(
       graphCategoryList,
       graphCategoryName,
       showDropDown,
+      graphCategoryPath,
       addSearchList,
       getSearchList,
       getFilter,
@@ -577,6 +579,8 @@ export const useSearchCommonStore = defineStore(
       setEmptyFilter,
       getGraphData,
       getGraphModelList,
+      setGraphCategoryPath,
+      setFromCount,
     };
   },
   {

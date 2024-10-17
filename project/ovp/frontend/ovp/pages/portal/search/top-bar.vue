@@ -25,6 +25,7 @@
           name="button-group3"
           value="listView"
           v-model="viewType"
+          @change="onListView"
           checked
         />
         <label for="listView" class="button-group-label">
@@ -56,7 +57,7 @@ import SelectBox from "@extends/select-box/SelectBox.vue";
 import $constants from "~/utils/constant";
 
 const searchCommonStore = useSearchCommonStore();
-const { setSortFilter } = searchCommonStore;
+const { setSortFilter, setFromCount } = searchCommonStore;
 const {
   viewType,
   searchResultLength,
@@ -69,6 +70,10 @@ const {
 const options: { [key: string]: string | number }[] =
   $constants.COMMON.SORT_FILTER;
 const isFirstCheckedEvent: boolean = true;
+
+const onListView = () => {
+  setFromCount();
+};
 
 const onGraphView = () => {
   viewType.value = "graphView";

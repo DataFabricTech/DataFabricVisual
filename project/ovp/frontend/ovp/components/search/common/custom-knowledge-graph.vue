@@ -6,11 +6,12 @@
     <div class="visual-model-list-head">
       <div class="breadcrumb">
         <ul class="breadcrumb-list">
-          <li class="breadcrumb-item">
-            <span class="breadcrumb-link">1depth</span>
-          </li>
-          <li class="breadcrumb-item is-breadcrumb-selected">
-            <span class="breadcrumb-link">데이터 모델</span>
+          <li
+            class="breadcrumb-item"
+            v-for="(item, index) in graphCategoryPath"
+            :key="index"
+          >
+            <span class="breadcrumb-link">{{ item }}</span>
           </li>
         </ul>
       </div>
@@ -90,6 +91,7 @@ const {
   showGraphModelListMenu,
   graphModelList,
   graphModelListLength,
+  graphCategoryPath,
 } = storeToRefs(searchCommonStore);
 
 const closeModelList = () => {
