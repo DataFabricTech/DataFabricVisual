@@ -390,8 +390,7 @@ const _editCategory = () => {
 };
 
 const _deleteCategory = async () => {
-  const deleteCategory = await $confirm("카테고리를 삭제 하시겠습니까?");
-  if (deleteCategory) {
+  if (await $confirm("카테고리를 삭제 하시겠습니까?")) {
     const res = await deleteCategory(selectedNodeCategory.value.id);
     if (res.result === 1) {
       if (res.data === "NOT_ALLOWED_ID") {

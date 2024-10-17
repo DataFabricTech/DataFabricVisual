@@ -98,8 +98,7 @@ function copyLink() {
 }
 
 async function deleteDataModel() {
-  const result = await $confirm("데이터모델을 삭제 하시겠습니까?");
-  if (result) {
+  if (await $confirm("데이터모델을 삭제 하시겠습니까?")) {
     removeDataModel()
       .then((data) => {
         if (data.result === 1) {
