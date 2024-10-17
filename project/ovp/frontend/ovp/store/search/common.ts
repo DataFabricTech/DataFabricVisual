@@ -359,7 +359,63 @@ export const useSearchCommonStore = defineStore(
     const graphModelListLength = ref(0);
     const graphModelIdList = ref([]);
 
-    const findRelatedGraphModelIds = (graphList: any, targetId: string) => {
+    const setGraphCategoryPath = (
+      graphList: any,
+      targetId: string,
+      depth = 0,
+    ) => {
+      console.log("내가 선택한 NODE id", targetId);
+      // 조건에 맞는 이름들을 저장할 배열
+      const result = ref([]);
+
+      // 현재 노드가 목표 노드와 일치하면 상위, 현재, 하위 순으로 이름을 찾기 시작
+      const traverse = (graphList: any, depth: any) => {
+        if (depth > 2) {
+          return;
+        } // 3 depth 초과하면 중지
+
+        // 현재 노드가 목표 노드와 일치하면, 상위/현재/하위 탐색 시작
+        if (graphList.id === targetId) {
+          // 상위 노드부터 저장
+          if (graphList.parentId && graphList.tagId !== null) {
+            result.value.push(graphList.name);
+          }
+          // 하위 노드들도 추가 (재귀)
+          addChildrenNames(graphList.children, depth + 1);
+          return true;
+        }
+
+        // 하위 children들을 재귀 탐색
+        for (const child of graphList.children) {
+          if (child.tagId !== null && traverse(child, depth + 1)) {
+            // 상위 노드도 결과 배열에 추가
+            if (graphList.tagId !== null) {
+              result.value.unshift(graphList.name);
+            }
+            return true;
+          }
+        }
+      };
+
+      // 하위 children들의 name을 추가하는 함수
+      const addChildrenNames = (children, depth) => {
+        if (depth > 2) {
+          return;
+        } // 최대 3 depth까지만
+        for (const child of children) {
+          if (child.tagId !== null) {
+            result.value.push(child.name);
+            addChildrenNames(child.children, depth + 1);
+          }
+        }
+      };
+
+      traverse(graphList, depth);
+
+      console.log("result", result);
+      return result;
+    };
+
     const setGraphModelIdList = (graphList: any, targetId: string) => {
       const result = ref([]);
 

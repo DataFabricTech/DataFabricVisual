@@ -111,6 +111,7 @@ const updateSearchInputValue = (newValue: string) => {
 };
 
 const search = (value: string) => {
+  viewType.value = "listView";
   setSearchKeyword(value);
   changeTab("table");
   setEmptyFilter();
