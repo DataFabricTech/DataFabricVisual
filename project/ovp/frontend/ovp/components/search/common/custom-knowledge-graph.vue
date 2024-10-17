@@ -25,7 +25,7 @@
     </div>
     <div class="p-3 h-full">
       <strong
-        >총 <em class="primary">{{ graphModelList.length }}개</em></strong
+        >총 <em class="primary">{{ graphModelListLength }}개</em></strong
       >
       <div
         class="menu menu-data menu-lg"
@@ -80,17 +80,17 @@
 import CategoryGraph from "./graph/category-graph.vue";
 import NetworkDiagram from "./graph/network-diagram.vue";
 import { useSearchCommonStore } from "~/store/search/common";
-import { useDataModelSearchStore } from "~/store/datamodel-creation/search";
 import { useRouter } from "nuxt/app";
 
 const router = useRouter();
 const searchCommonStore = useSearchCommonStore();
-const dataModelSearchStore = useDataModelSearchStore();
 const {} = searchCommonStore;
-const { graphModelList, filteredIdAndTagIdData, showGraphModelListMenu } =
-  storeToRefs(searchCommonStore);
-
-const { getSearchList } = dataModelSearchStore;
+const {
+  filteredIdAndTagIdData,
+  showGraphModelListMenu,
+  graphModelList,
+  graphModelListLength,
+} = storeToRefs(searchCommonStore);
 
 const closeModelList = () => {
   showGraphModelListMenu.value = false;

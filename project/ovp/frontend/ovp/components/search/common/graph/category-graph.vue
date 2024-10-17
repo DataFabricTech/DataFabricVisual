@@ -56,11 +56,13 @@ import _ from "lodash";
 import { ref } from "vue";
 
 const searchCommonStore = useSearchCommonStore();
-const { getGraphData, getModelList } = searchCommonStore;
+const { getGraphData, getGraphModelList } = searchCommonStore;
 const {
+  showDropDown,
+  graphCategoryList,
+  graphCategoryName,
   graphData,
   filteredIdAndTagIdData,
-  graphModelList,
   showGraphModelListMenu,
 } = storeToRefs(searchCommonStore);
 
@@ -68,26 +70,25 @@ const top = ref(200);
 const left = ref(200);
 const compTypeId = ref("modelList");
 const selectedNodeId = ref("");
-const showDropDown = ref(false);
 
-const onClick = ({ compTypeId, nodeId }) => {
-  console.log("compTypeId", compTypeId);
-  console.log("nodeId", nodeId);
-  console.log("filteredIdAndTagIdData", filteredIdAndTagIdData.value);
-  console.log("드롭다운", showDropDown.value);
-
+const onClick = ({ compId, nodeId }) => {
+  // 클릭한 nodeId가 마지막 뎁스 목록에 속하는지 판별
   const hasDataModelList = _.some(filteredIdAndTagIdData.value, {
     id: nodeId,
   });
-  const selectedNode = _.filter(filteredIdAndTagIdData.value, {
-    id: nodeId,
-  });
 
-  if (compTypeId === $constants.GRAPH.TYPE.MODEL_LIST) {
-    // TODO: [확인 필요] 모델 리스트 조회 -> 우측 패널 오픈
+  // 클릭한 nodeId의 정보를 마지막 뎁스 목록에서 찾는다.
+  // const selectedNode = _.filter(filteredIdAndTagIdData.value, {
+  //   id: nodeId,
+  // });
+
+  if (compId === $constants.GRAPH.TYPE.MODEL_LIST) {
+    showGraphModelListMenu.value = true;
+    setFirstNodeName(nodeId);
+    getGraphModelList(nodeId);
   } else {
     // nodeId 기반으로 노드 정보를 찾는다.
-    const nodeInfo = _.find(modelNodes, { id: nodeId });
+    const nodeInfo = _.find(modelDetailList, { id: nodeId });
     if (nodeInfo !== undefined) {
       router.push({
         path: "/portal/search/detail",
@@ -97,18 +98,6 @@ const onClick = ({ compTypeId, nodeId }) => {
           fqn: nodeInfo.fqn,
         },
       });
-    } else {
-      showGraphModelListMenu.value = true;
-      if (hasDataModelList) {
-        getModelList(selectedNode[0].tagId);
-        tempGetSearchList();
-      } else {
-        // TODO: [확인 필요] 기획: 거버넌스>카테고리에서는 자식 요소가 없는 뎁스 | 미분류인 경우에만 모델리스트를 가질 수 있음.
-        // 현재 기획서 상에서는 자식 요소가 있는 뎁스에서도 모델리스트 drop-down을 보여주고 있는데, 어떻게 해야할지 문의 필요
-        // 임시로 빈값 부여
-        graphModelList.value = [];
-        console.log("model list가 없습니다.");
-      }
     }
   }
 };
@@ -118,30 +107,10 @@ const toggleLegend = () => {
   isLegendVisible.value = !isLegendVisible.value;
 };
 
-// lib 에서 노드 정보를 주지 않기 때문에, category id 를 일단 빼둔다.
-const getModelNodeList = (node: any): string[] => {
-  let result: string[] = [];
-
-  // tagId가 null인 경우 id 추가
-  if (node.tagId === null) {
-    result.push(node);
-  }
-
-  // 자식이 있는 경우 재귀적으로 탐색
-  if (node.children && node.children.length > 0) {
-    node.children.forEach((child: any) => {
-      result = result.concat(getModelNodeList(child));
-    });
-  }
-
-  return result;
-};
-
-const modelNodes = getModelNodeList(graphData.value.nodes);
-const modelNodeIds = modelNodes.map((node) => node.id);
-const newNode: NetworkDiagramNodeInfo = ref({});
-
+// graph 기능: 마지막 뎁스 배열만 담기
 const setFilteredIdAndTagIdData = () => {
+  filteredIdAndTagIdData.value = [];
+
   const nodeData: any = graphData.value.nodes;
 
   const traverseFilteredIdAndTagIdData = (element: any) => {
@@ -169,7 +138,8 @@ const setFilteredIdAndTagIdData = () => {
   );
 };
 
-const setNewNode = () => {
+// graph 기능: graph에 들어갈 전체 데이터 정제
+const setGraphCategoryList = () => {
   const nodeData: any = graphData.value.nodes;
   const mapNodeWithChildren = (node: any) => ({
     id: node.id,
@@ -185,16 +155,39 @@ const setNewNode = () => {
   const formattedNodeData: NetworkDiagramNodeInfo =
     nodeData.children.map(mapNodeWithChildren);
 
-  newNode.value = {
+  graphCategoryList.value = {
     id: nodeData.id,
     name: nodeData.name,
     children: formattedNodeData,
     nodeList: [],
   };
 
-  console.log("newNode", newNode);
+  console.log("그래프 카테고리 목록: ", graphCategoryList.value);
 };
 
+// graph 기능: 상세정보로 가는 모델 목록만 추출 (tagId가 null이면 모델 목록임)
+const getModelDetailList = (node: any): string[] => {
+  let result: string[] = [];
+
+  // tagId가 null인 경우 id 추가
+  if (node.tagId === null) {
+    result.push(node);
+  }
+
+  // 자식이 있는 경우 재귀적으로 탐색
+  if (node.children && node.children.length > 0) {
+    node.children.forEach((child: any) => {
+      result = result.concat(getModelDetailList(child));
+    });
+  }
+
+  return result;
+};
+
+const modelDetailList = getModelDetailList(graphData.value.nodes);
+const modelDetailIds = modelDetailList.map((node) => node.id);
+
+// graph 기능: graph 구현
 const setCategoryGraph = () => {
   const categoryContainer = document.getElementById(
     "category",
@@ -209,7 +202,7 @@ const setCategoryGraph = () => {
 
   new CategoryGraph({
     container: categoryContainer,
-    categoryData: newNode.value,
+    categoryData: graphCategoryList.value,
     pixelQuality: "middle",
     eventHandler: {
       onClick: (e: any, id: any, type: any) => {
@@ -218,10 +211,10 @@ const setCategoryGraph = () => {
         }
 
         if (type === "node" && id) {
-          if (modelNodeIds.includes(id)) {
+          if (modelDetailIds.includes(id)) {
             showGraphModelListMenu.value = false;
           }
-          compTypeId.value = modelNodeIds.includes(id)
+          compTypeId.value = modelDetailIds.includes(id)
             ? $constants.GRAPH.TYPE.DETAIL
             : $constants.GRAPH.TYPE.MODEL_LIST;
           selectedNodeId.value = id;
@@ -235,11 +228,35 @@ const setCategoryGraph = () => {
   });
 };
 
+// graph 기능: graphCategoryList의 1depth 까지만 탐색해서 선택한 id의 미분류를 찾는다.
+const setFirstNodeName = (nodeId: string) => {
+  for (const child of graphCategoryList.value.children) {
+    if (nodeId === child.id) {
+      graphCategoryName.value = child.name;
+      return;
+    }
+
+    // 2, 3depth 도 필요시 사용
+    // for (const secondChild of child.children) {
+    //   if (nodeId === secondChild.id) {
+    //     graphCategoryName.value = secondChild.name;
+    //     return;
+    //   }
+    //
+    //   for (const thirdChild of secondChild.children) {
+    //     if (nodeId === thirdChild.id) {
+    //       graphCategoryName.value = thirdChild.name;
+    //       return;
+    //     }
+    //   }
+    // }
+  }
+};
 watch(
   () => graphData.value,
   (newVal) => {
     setFilteredIdAndTagIdData();
-    setNewNode();
+    setGraphCategoryList();
     setCategoryGraph();
   },
   { immediate: true },

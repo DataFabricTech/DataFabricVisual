@@ -4,6 +4,7 @@ import _ from "lodash";
 import { ref } from "vue";
 import $constants from "@/utils/constant";
 import type { PreviewData } from "@/type/common";
+import { NetworkDiagramNodeInfo } from "knowledge-graph-canvas/dist/network-diagram/layout/layout.type";
 
 export const FILTER_KEYS = {
   CATEGORY: "category",
@@ -137,7 +138,7 @@ export const useSearchCommonStore = defineStore(
     // graphView
     const filteredIdAndTagIdData: Ref<any[]> = ref([]);
     const showGraphModelListMenu: Ref<boolean> = ref(false);
-    const graphModelList = ref([]);
+    const showDropDown = ref(false);
 
     const getQueryParam = () => {
       const queryFilter = getQueryFilter(
@@ -330,10 +331,10 @@ export const useSearchCommonStore = defineStore(
 
     const changeTab = async (item: string, loadList: boolean = true) => {
       isShowPreview.value = false;
+      showDropDown.value = false;
       currentTab.value = item;
 
       if (loadList) {
-        console.log("viewType.value? ", viewType.value);
         await resetReloadList();
         await getGraphData();
         // viewType.value === "listView"
@@ -349,32 +350,129 @@ export const useSearchCommonStore = defineStore(
         showLoader: false,
       });
       graphData.value = data;
-      console.log("getGraphData 실행 1");
     };
 
-    const getModelListQuery = (tagId: string) => {
-      const params: any = {
-        q: "",
-        tagId: tagId,
+    const graphCategoryList: NetworkDiagramNodeInfo = ref({});
+    const graphCategoryName = ref("");
+    const graphModelList = ref([]);
+    const graphModelListLength = ref(0);
+    const graphModelIdList = ref([]);
+
+    const findRelatedGraphModelIds = (graphList: any, targetId: string) => {
+      const result = ref([]);
+
+      // targetId가 graphList 또는 하위 노드에 있는지 찾기
+      const findNode = (graphList: any, parentIds = []) => {
+        if (graphList.id === targetId) {
+          // id 중 parentId가 있는 경우만 result에 담는다.
+          result.value = parentIds
+            .filter((id) => id.parentId)
+            .concat(graphList.id);
+          // 하위 children 노드들의 id도 추가
+          addChildIds(graphList.children);
+          return true;
+        }
+
+        for (const child of graphList.children) {
+          // 하위 노드에서 찾을 경우, 현재 graphList의 id를 parentIds로 전달하며 재귀 호출
+          if (findNode(child, [...parentIds, graphList.id])) {
+            return true;
+          }
+        }
+        return false;
       };
-      return new URLSearchParams(params);
+
+      // 하위 children의 id를 재귀적으로 추가하는 함수
+      const addChildIds = (children: any) => {
+        for (const child of children) {
+          // tagId가 있는 자식 요소 id만 result에 담는다. (tagId가 없으면 모델 목록임)
+          if (child.tagId) {
+            result.value.push(child.id);
+            addChildIds(child.children);
+          }
+        }
+      };
+
+      findNode(graphList);
+
+      // ovp_category 프리픽스가 추가된 id 목록 추출
+      graphModelIdList.value = result.value.map((id) => `ovp_category.${id}`);
     };
 
-    const getModelList = async (tagId: string) => {
-      if (_.isEmpty(tagId)) {
-        return;
+    const getGraphModelQueryFilter = (nodeId: string) => {
+      // 미분류인 경우는 아래와 같이 한글 미분류로 추출
+      if (
+        graphCategoryName.value === $constants.SERVICE.CATEGORY_UNDEFINED_NAME
+      ) {
+        graphModelIdList.value = ["ovp_category.미분류"];
+      } else {
+        findRelatedGraphModelIds(graphCategoryList.value, nodeId);
       }
+
+      const shouldTerms = graphModelIdList.value.map((tag) => ({
+        term: {
+          "tags.tagFQN": tag,
+        },
+      }));
+
+      const queryFilter = {
+        query: {
+          bool: {
+            must: [
+              {
+                bool: {
+                  should: shouldTerms,
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      return queryFilter;
+    };
+
+    const getGraphModelListQuery = (nodeId: string) => {
+      const queryFilter = getGraphModelQueryFilter(nodeId);
+
+      const param = {
+        q: "",
+        index: currentTab.value, // table or storage or model -> tab
+        from: 0,
+        size: 20,
+        query_filter: JSON.stringify(queryFilter),
+      };
+
+      return new URLSearchParams(param);
+    };
+
+    const getGraphModelListAPI = async (nodeId: string) => {
       const { data } = await $api(
-        `/api/category/models?${getModelListQuery(tagId)}`,
-        { showLoader: false },
+        `/api/search/list?${getGraphModelListQuery(nodeId)}`,
+        {
+          showLoader: false,
+        },
       );
+      return (
+        data ?? {
+          data: {
+            model: [],
+            table: [],
+            storage: [],
+          },
+        }
+      );
+    };
 
-      graphModelList.value = data === null ? [] : data;
-      for (const element of graphModelList.value) {
-        element.checkedBookmark = false;
-      }
+    const getGraphModelList = async (nodeId: string) => {
+      // TODO: [개발] 중간 뎁스를 클릭하는 경우, 하위 모든 모델리스트를 불러와야 함
+      // 선택한 node id 전달
+      const { data } = await getGraphModelListAPI(nodeId);
 
-      console.log("graphModelList: ", graphModelList.value);
+      graphModelList.value = data[currentTab.value];
+      graphModelListLength.value = data[currentTab.value].length;
+
+      console.log("우측 모델 리스트: ", graphModelList.value);
     };
 
     return {
@@ -395,8 +493,12 @@ export const useSearchCommonStore = defineStore(
       currentPreviewId,
       graphData,
       filteredIdAndTagIdData,
-      graphModelList,
       showGraphModelListMenu,
+      graphModelList,
+      graphModelListLength,
+      graphCategoryList,
+      graphCategoryName,
+      showDropDown,
       addSearchList,
       getSearchList,
       getFilter,
@@ -416,7 +518,7 @@ export const useSearchCommonStore = defineStore(
       getQueryFilter,
       setEmptyFilter,
       getGraphData,
-      getModelList,
+      getGraphModelList,
     };
   },
   {
