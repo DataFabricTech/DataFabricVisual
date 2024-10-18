@@ -1,8 +1,6 @@
 <template>
   <div class="visual-wrap">
     <div id="category" class="visual"></div>
-
-    <!-- TODO: [개발] 범례 -->
     <div class="visual-legend">
       <button
         class="button button-lg button-neutral-stroke"
@@ -31,7 +29,6 @@
         </li>
       </ul>
     </div>
-    <!--  TODO: [개발] 페이지 진입 시 모델 리스트 드롭다운이 떠있는 상태임. 처음에는 보여지면 안됨-->
     <drop-down
       v-if="compTypeId && showDropDown"
       :top="top"
@@ -64,6 +61,7 @@ const {
   graphCategoryName,
   graphData,
   showGraphModelListMenu,
+  selectedGraphCategoryId,
 } = storeToRefs(searchCommonStore);
 
 const top = ref(200);
@@ -79,11 +77,12 @@ const toggleLegend = () => {
 const onClick = ({ compId, nodeId }) => {
   // 내가 선택한 id가 카테고리인 경우 실행
   if (compId === $constants.GRAPH.TYPE.MODEL_LIST) {
+    selectedGraphCategoryId.value = nodeId;
     showDropDown.value = false;
     showGraphModelListMenu.value = true;
     setFirstNodeName(nodeId);
-    setGraphCategoryPath(graphCategoryList.value, nodeId);
-    getGraphModelList(nodeId);
+    setGraphCategoryPath(graphCategoryList.value);
+    getGraphModelList();
   }
   // 내가 선택한 id가 상세 정보인 경우 실행
   else {

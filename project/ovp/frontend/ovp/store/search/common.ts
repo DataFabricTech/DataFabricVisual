@@ -138,21 +138,15 @@ export const useSearchCommonStore = defineStore(
     // graphView
     const showGraphModelListMenu: Ref<boolean> = ref(false);
     const showDropDown = ref(false);
-    const dataModelFromCount = ref(20);
 
-    // TODO: [개발] listView로 돌아갔을 때만 from.value를 dataModelFromCount.value 와 동일해야 한다.
-    // tab 을 변경하면, from.value 기존 방식대로 진행할 것
-    const setFromCount = () => {
-      console.log("강제로 dataModelFromCount과 동일하게 바꿔야해");
-    };
+    // TODO: [개발] 보기 방식을 이동해도, 내가 보던 모델 리스트 갯수를 동일한 갯수만큼 보여지고, 인피니티 스크롤이 적용돼야함
+    const setFromCount = () => {};
 
     const getQueryParam = () => {
       const queryFilter = getQueryFilter(
         selectedFilters.value,
         UNDEFINED_TAG_ID,
       );
-
-      dataModelFromCount.value = from.value === 0 ? 20 : from.value;
 
       return {
         // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
@@ -341,7 +335,6 @@ export const useSearchCommonStore = defineStore(
       showDropDown.value = false;
       showGraphModelListMenu.value = false;
       currentTab.value = item;
-      dataModelFromCount.value = 20;
 
       if (loadList) {
         viewType.value === "listView"
@@ -359,6 +352,7 @@ export const useSearchCommonStore = defineStore(
       graphData.value = data;
     };
 
+    const selectedGraphCategoryId = ref("");
     const graphCategoryList: NetworkDiagramNodeInfo = ref({});
     const graphCategoryName = ref("");
     const graphCategoryPath = ref([]);
@@ -395,12 +389,12 @@ export const useSearchCommonStore = defineStore(
     };
 
     // 우측 모델 목록의 경로 추출
-    const setGraphCategoryPath = (graphList: any, targetId: string) => {
+    const setGraphCategoryPath = (graphList: any) => {
       graphCategoryPath.value = [];
 
       const traverse = (graphList: any) => {
         // 현재 노드가 목표 노드와 일치하면, 상위/현재/하위 탐색 시작
-        if (graphList.id === targetId) {
+        if (graphList.id === selectedGraphCategoryId.value) {
           // 상위 노드부터 저장
           if (graphList.parentId && graphList.tagId) {
             graphCategoryPath.value.push(graphList.name);
@@ -439,12 +433,12 @@ export const useSearchCommonStore = defineStore(
         graphCategoryPath.value.length > 3 ? ["ROOT"] : graphCategoryPath.value;
     };
 
-    const setGraphModelIdList = (graphList: any, targetId: string) => {
+    const setGraphModelIdList = (graphList: any) => {
       const result = ref([]);
 
       // targetId가 graphList 또는 하위 노드에 있는지 찾기
       const findNode = (graphList: any, parentIds = []) => {
-        if (graphList.id === targetId) {
+        if (graphList.id === selectedGraphCategoryId.value) {
           // id 중 parentId가 있는 경우만 result에 담는다.
           result.value = parentIds
             .filter((id) => id.parentId)
@@ -480,14 +474,14 @@ export const useSearchCommonStore = defineStore(
       graphModelIdList.value = result.value.map((id) => `ovp_category.${id}`);
     };
 
-    const getGraphModelQueryFilter = (nodeId: string) => {
+    const getGraphModelQueryFilter = () => {
       // 미분류인 경우는 아래와 같이 한글 미분류로 추출
       if (
         graphCategoryName.value === $constants.SERVICE.CATEGORY_UNDEFINED_NAME
       ) {
         graphModelIdList.value = ["ovp_category.미분류"];
       } else {
-        setGraphModelIdList(graphCategoryList.value, nodeId);
+        setGraphModelIdList(graphCategoryList.value);
       }
 
       const shouldTerms = graphModelIdList.value.map((tag) => ({
@@ -513,14 +507,15 @@ export const useSearchCommonStore = defineStore(
       return queryFilter;
     };
 
-    const getGraphModelListQuery = (nodeId: string) => {
-      const queryFilter = getGraphModelQueryFilter(nodeId);
+    const getGraphModelListQuery = () => {
+      const queryFilter = getGraphModelQueryFilter();
 
+      // TODO: [개발] 현재 20개에 비해 영역이 더 길어서, 인피니티 스크롤 디폴트 개수를 30개 정도로 해야지 스크롤 실행이 듯
       const param = {
         q: "",
         index: currentTab.value,
-        from: 0,
-        size: dataModelFromCount.value,
+        from: from.value,
+        size: size.value,
         query_filter: JSON.stringify(queryFilter),
         sort_field: sortKey.value,
         sort_order: sortKeyOpt.value,
@@ -529,11 +524,11 @@ export const useSearchCommonStore = defineStore(
       return new URLSearchParams(param);
     };
 
-    const getGraphModelListAPI = async (nodeId: string) => {
+    const getGraphModelListAPI = async () => {
       const { data } = await $api(
-        `/api/creation/list?${getGraphModelListQuery(nodeId)}`,
+        `/api/creation/list?${getGraphModelListQuery()}`,
         {
-          showLoader: true,
+          showLoader: false,
         },
       );
       return (
@@ -543,16 +538,30 @@ export const useSearchCommonStore = defineStore(
             table: [],
             storage: [],
           },
+          totalCount: {
+            model: 0,
+            table: 0,
+            storage: 0,
+          },
         }
       );
     };
 
-    const getGraphModelList = async (nodeId: string) => {
-      // 선택한 node id 전달
-      const { data } = await getGraphModelListAPI(nodeId);
+    const addGraphModelList = async () => {
+      const { data, totalCount } = await getGraphModelListAPI();
 
+      graphModelList.value = graphModelList.value.concat(
+        data[currentTab.value],
+      );
+      graphModelListLength.value = totalCount[currentTab.value];
+    };
+
+    const getGraphModelList = async () => {
+      const { data, totalCount } = await getGraphModelListAPI();
+      setFrom(0);
       graphModelList.value = data[currentTab.value];
-      graphModelListLength.value = data[currentTab.value].length;
+      graphModelListLength.value = totalCount[currentTab.value];
+      updateIntersectionHandler(0);
     };
 
     return {
@@ -579,6 +588,7 @@ export const useSearchCommonStore = defineStore(
       graphCategoryName,
       showDropDown,
       graphCategoryPath,
+      selectedGraphCategoryId,
       addSearchList,
       getSearchList,
       getFilter,
@@ -599,6 +609,7 @@ export const useSearchCommonStore = defineStore(
       setEmptyFilter,
       getGraphData,
       getGraphModelList,
+      addGraphModelList,
       setGraphCategoryPath,
       setFromCount,
       updateIsFollow,

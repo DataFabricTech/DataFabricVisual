@@ -2,7 +2,7 @@
   <category-graph />
   <!--  <network-diagram />-->
   <!-- 모델 리스트 -->
-  <div class="visual-model-list" v-if="showGraphModelListMenu">
+  <div class="visual-model-list" v-show="showGraphModelListMenu">
     <div class="visual-model-list-head">
       <div class="breadcrumb">
         <ul class="breadcrumb-list">
@@ -30,9 +30,10 @@
       >
       <div
         class="menu menu-data menu-lg"
-        v-if="graphModelList && graphModelList.length !== 0"
+        v-show="graphModelList && graphModelList.length !== 0"
+        style="position: relative"
       >
-        <ul class="menu-list">
+        <ul class="menu-list" id="menuList">
           <li class="menu-item" v-for="menu in graphModelList" :key="menu">
             <a
               href="javascript:void(0);"
@@ -63,10 +64,17 @@
               </button>
             </div>
           </li>
+          <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
+          <Loading
+            id="menuLoader"
+            :use-loader-overlay="true"
+            class="loader-lg is-loader-inner"
+            style="display: none"
+          ></Loading>
         </ul>
       </div>
       <!-- 결과 없을 시 no-result 표시 -->
-      <div class="no-result" v-else>
+      <div class="no-result" v-show="graphModelList.length === 0">
         <div class="notification">
           <svg-icon class="notification-icon" name="info"></svg-icon>
           <p class="notification-detail">등록된 정보가 없습니다.</p>
@@ -79,11 +87,13 @@
 <script setup lang="ts">
 import CategoryGraph from "./graph/category-graph.vue";
 import { useSearchCommonStore } from "~/store/search/common";
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { useRouter } from "nuxt/app";
+import Loading from "@base/loading/Loading.vue";
 
 const router = useRouter();
 const searchCommonStore = useSearchCommonStore();
-const { updateIsFollow } = searchCommonStore;
+const { updateIsFollow, addGraphModelList } = searchCommonStore;
 const {
   showGraphModelListMenu,
   graphModelList,
@@ -109,6 +119,12 @@ const modelNmClick = (data: object) => {
 onBeforeMount(() => {
   graphModelList.value = [];
   showGraphModelListMenu.value = false;
+});
+
+const { scrollTrigger } = useIntersectionObserver({
+  callback: addGraphModelList,
+  targetId: "menuList",
+  loaderId: "menuLoader",
 });
 </script>
 
