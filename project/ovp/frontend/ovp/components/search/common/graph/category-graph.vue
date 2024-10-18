@@ -73,22 +73,15 @@ const compTypeId = ref("modelList");
 const selectedNodeId = ref("");
 
 const onClick = ({ compId, nodeId }) => {
-  // 클릭한 nodeId가 마지막 뎁스 목록에 속하는지 판별
-  // const hasDataModelList = _.some(filteredIdAndTagIdData.value, {
-  //   id: nodeId,
-  // });
-
-  // 클릭한 nodeId의 정보를 마지막 뎁스 목록에서 찾는다.
-  // const selectedNode = _.filter(filteredIdAndTagIdData.value, {
-  //   id: nodeId,
-  // });
-
+  // 내가 선택한 id가 카테고리인 경우 실행
   if (compId === $constants.GRAPH.TYPE.MODEL_LIST) {
     showGraphModelListMenu.value = true;
     setFirstNodeName(nodeId);
     setGraphCategoryPath(graphCategoryList.value, nodeId);
     getGraphModelList(nodeId);
-  } else {
+  }
+  // 내가 선택한 id가 상세 정보인 경우 실행
+  else {
     // nodeId 기반으로 노드 정보를 찾는다.
     const nodeInfo = _.find(modelDetailList, { id: nodeId });
     if (nodeInfo !== undefined) {

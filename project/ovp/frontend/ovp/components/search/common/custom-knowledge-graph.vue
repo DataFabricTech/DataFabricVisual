@@ -50,16 +50,15 @@
               >
             </a>
             <div class="menu-button-group">
-              <!-- TODO: [개발] 북마크시 아이콘 tag에서 tag-fill전환/icon에 .secondary 클래스 추가 -->
               <button
                 class="button button-neutral-ghost button-sm"
-                @click="setCheckedBookmark(menu)"
+                @click="updateIsFollow(menu)"
               >
                 <span class="hidden-text">북마크</span>
                 <svg-icon
                   class="svg-icon"
-                  :class="menu.checkBookmark ? 'secondary' : ''"
-                  :name="menu.checkedBookmark ? 'tag-fill' : 'tag'"
+                  :class="menu.isFollow ? 'secondary' : ''"
+                  :name="menu.isFollow ? 'tag-fill' : 'tag'"
                 ></svg-icon>
               </button>
             </div>
@@ -79,13 +78,12 @@
 
 <script setup lang="ts">
 import CategoryGraph from "./graph/category-graph.vue";
-import NetworkDiagram from "./graph/network-diagram.vue";
 import { useSearchCommonStore } from "~/store/search/common";
 import { useRouter } from "nuxt/app";
 
 const router = useRouter();
 const searchCommonStore = useSearchCommonStore();
-const {} = searchCommonStore;
+const { updateIsFollow } = searchCommonStore;
 const {
   filteredIdAndTagIdData,
   showGraphModelListMenu,
@@ -97,16 +95,6 @@ const {
 const closeModelList = () => {
   showGraphModelListMenu.value = false;
 };
-
-// TODO: [개발] 데이터 생성의 추가 api 로 작업 변경할 것.
-const setCheckedBookmark = (menu: any) => {
-  // const node = menu.target;
-  console.log("item?", menu);
-  menu.checkedBookmark = !menu.checkedBookmark;
-
-  console.log("graphModelList?", graphModelList.value);
-};
-
 const modelNmClick = (data: object) => {
   const { id, fqn, type } = data as { id: string; fqn: string; type: string };
   router.push({

@@ -314,7 +314,6 @@ export const useSearchCommonStore = defineStore(
      * 목록을 '갱신'하는 경우, from 값을 항상 0으로 주어야 하기 때문에 fn 하나로 묶어서 처리.
      */
     const resetReloadList = async () => {
-      console.log("resetReloadList 실행");
       setFrom(0);
       await getSearchList();
       updateIntersectionHandler(0);
@@ -371,6 +370,33 @@ export const useSearchCommonStore = defineStore(
     const graphModelListLength = ref(0);
     const graphModelIdList = ref([]);
 
+    // 북마크 업데이트
+    const updateIsFollow = async (menu: any) => {
+      const urlType = menu.isFollow ? "remove" : "add";
+      const methodType = menu.isFollow ? "DELETE" : "PUT";
+
+      $api(`/api/creation/bookmark/${urlType}/${menu.id}`, {
+        method: methodType,
+        params: {
+          type: currentTab.value,
+        },
+      })
+        .then((res: any) => {
+          if (res.result === 1) {
+            graphModelList.value = graphModelList.value.filter((item) => {
+              if (item.id === menu.id) {
+                item.isFollow = !item.isFollow;
+              }
+
+              return true;
+            });
+          }
+        })
+        .catch((err: any) => {
+          console.log("err: ", err);
+        });
+    };
+
     const setGraphCategoryPath = (graphList: any, targetId: string) => {
       graphCategoryPath.value = [];
 
@@ -413,8 +439,6 @@ export const useSearchCommonStore = defineStore(
       // Root일 경우 ROOT로 출력
       graphCategoryPath.value =
         graphCategoryPath.value.length > 3 ? ["ROOT"] : graphCategoryPath.value;
-
-      console.log("경로: ", graphCategoryPath.value);
     };
 
     const setGraphModelIdList = (graphList: any, targetId: string) => {
@@ -500,6 +524,8 @@ export const useSearchCommonStore = defineStore(
         from: 0,
         size: dataModelFromCount.value,
         query_filter: JSON.stringify(queryFilter),
+        sort_field: sortKey.value,
+        sort_order: sortKeyOpt.value,
       };
 
       return new URLSearchParams(param);
@@ -507,9 +533,9 @@ export const useSearchCommonStore = defineStore(
 
     const getGraphModelListAPI = async (nodeId: string) => {
       const { data } = await $api(
-        `/api/search/list?${getGraphModelListQuery(nodeId)}`,
+        `/api/creation/list?${getGraphModelListQuery(nodeId)}`,
         {
-          showLoader: false,
+          showLoader: true,
         },
       );
       return (
@@ -524,7 +550,6 @@ export const useSearchCommonStore = defineStore(
     };
 
     const getGraphModelList = async (nodeId: string) => {
-      // TODO: [개발] 중간 뎁스를 클릭하는 경우, 하위 모든 모델리스트를 불러와야 함
       // 선택한 node id 전달
       const { data } = await getGraphModelListAPI(nodeId);
 
@@ -581,6 +606,7 @@ export const useSearchCommonStore = defineStore(
       getGraphModelList,
       setGraphCategoryPath,
       setFromCount,
+      updateIsFollow,
     };
   },
   {
