@@ -89,6 +89,7 @@ const {
   resetReloadList,
   setEmptyFilter,
   setSearchKeyword,
+  getGraphData,
 } = searchCommonStore;
 const {
   filters,
@@ -188,6 +189,7 @@ onBeforeMount(() => {
   }
 
   resetReloadList();
+  getGraphData();
 });
 
 const { scrollTrigger } = useIntersectionObserver({ callback: addSearchList });

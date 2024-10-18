@@ -344,11 +344,9 @@ export const useSearchCommonStore = defineStore(
       dataModelFromCount.value = 20;
 
       if (loadList) {
-        await resetReloadList();
-        await getGraphData();
-        // viewType.value === "listView"
-        //   ? await resetReloadList()
-        //   : await getGraphData();
+        viewType.value === "listView"
+          ? await resetReloadList()
+          : await getGraphData();
       }
     };
 
