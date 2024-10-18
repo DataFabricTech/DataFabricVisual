@@ -85,7 +85,6 @@ const router = useRouter();
 const searchCommonStore = useSearchCommonStore();
 const { updateIsFollow } = searchCommonStore;
 const {
-  filteredIdAndTagIdData,
   showGraphModelListMenu,
   graphModelList,
   graphModelListLength,
@@ -108,7 +107,6 @@ const modelNmClick = (data: object) => {
 };
 
 onBeforeMount(() => {
-  filteredIdAndTagIdData.value = [];
   graphModelList.value = [];
   showGraphModelListMenu.value = false;
 });

@@ -136,7 +136,6 @@ export const useSearchCommonStore = defineStore(
     const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
 
     // graphView
-    const filteredIdAndTagIdData: Ref<any[]> = ref([]);
     const showGraphModelListMenu: Ref<boolean> = ref(false);
     const showDropDown = ref(false);
     const dataModelFromCount = ref(20);
@@ -397,6 +396,7 @@ export const useSearchCommonStore = defineStore(
         });
     };
 
+    // 우측 모델 목록의 경로 추출
     const setGraphCategoryPath = (graphList: any, targetId: string) => {
       graphCategoryPath.value = [];
 
@@ -555,8 +555,6 @@ export const useSearchCommonStore = defineStore(
 
       graphModelList.value = data[currentTab.value];
       graphModelListLength.value = data[currentTab.value].length;
-
-      console.log("우측 모델 리스트: ", graphModelList.value);
     };
 
     return {
@@ -576,7 +574,6 @@ export const useSearchCommonStore = defineStore(
       isSearchResultNoData,
       currentPreviewId,
       graphData,
-      filteredIdAndTagIdData,
       showGraphModelListMenu,
       graphModelList,
       graphModelListLength,
