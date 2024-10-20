@@ -136,9 +136,11 @@ export const useSearchCommonStore = defineStore(
     const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
 
     // graphView
-    const filteredIdAndTagIdData: Ref<any[]> = ref([]);
     const showGraphModelListMenu: Ref<boolean> = ref(false);
     const showDropDown = ref(false);
+
+    // TODO: [개발] 보기 방식을 이동해도, 내가 보던 모델 리스트 갯수를 동일한 갯수만큼 보여지고, 인피니티 스크롤이 적용돼야함
+    const setFromCount = () => {};
 
     const getQueryParam = () => {
       const queryFilter = getQueryFilter(
@@ -305,7 +307,6 @@ export const useSearchCommonStore = defineStore(
      * 목록을 '갱신'하는 경우, from 값을 항상 0으로 주어야 하기 때문에 fn 하나로 묶어서 처리.
      */
     const resetReloadList = async () => {
-      console.log("resetReloadList 실행");
       setFrom(0);
       await getSearchList();
       updateIntersectionHandler(0);
@@ -336,11 +337,9 @@ export const useSearchCommonStore = defineStore(
       currentTab.value = item;
 
       if (loadList) {
-        await resetReloadList();
-        await getGraphData();
-        // viewType.value === "listView"
-        //   ? await resetReloadList()
-        //   : await getGraphData();
+        viewType.value === "listView"
+          ? await resetReloadList()
+          : await getGraphData();
       }
     };
 
@@ -353,44 +352,64 @@ export const useSearchCommonStore = defineStore(
       graphData.value = data;
     };
 
+    const selectedGraphCategoryId = ref("");
     const graphCategoryList: NetworkDiagramNodeInfo = ref({});
     const graphCategoryName = ref("");
+    const graphCategoryPath = ref([]);
+
     const graphModelList = ref([]);
     const graphModelListLength = ref(0);
     const graphModelIdList = ref([]);
 
-    const setGraphCategoryPath = (
-      graphList: any,
-      targetId: string,
-      depth = 0,
-    ) => {
-      console.log("내가 선택한 NODE id", targetId);
-      // 조건에 맞는 이름들을 저장할 배열
-      const result = ref([]);
+    // 북마크 업데이트
+    const updateIsFollow = async (menu: any) => {
+      const urlType = menu.isFollow ? "remove" : "add";
+      const methodType = menu.isFollow ? "DELETE" : "PUT";
 
-      // 현재 노드가 목표 노드와 일치하면 상위, 현재, 하위 순으로 이름을 찾기 시작
-      const traverse = (graphList: any, depth: any) => {
-        if (depth > 2) {
-          return;
-        } // 3 depth 초과하면 중지
+      $api(`/api/creation/bookmark/${urlType}/${menu.id}`, {
+        method: methodType,
+        params: {
+          type: currentTab.value,
+        },
+      })
+        .then((res: any) => {
+          if (res.result === 1) {
+            graphModelList.value = graphModelList.value.filter((item) => {
+              if (item.id === menu.id) {
+                item.isFollow = !item.isFollow;
+              }
 
+              return true;
+            });
+          }
+        })
+        .catch((err: any) => {
+          console.log("err: ", err);
+        });
+    };
+
+    // 우측 모델 목록의 경로 추출
+    const setGraphCategoryPath = (graphList: any) => {
+      graphCategoryPath.value = [];
+
+      const traverse = (graphList: any) => {
         // 현재 노드가 목표 노드와 일치하면, 상위/현재/하위 탐색 시작
-        if (graphList.id === targetId) {
+        if (graphList.id === selectedGraphCategoryId.value) {
           // 상위 노드부터 저장
-          if (graphList.parentId && graphList.tagId !== null) {
-            result.value.push(graphList.name);
+          if (graphList.parentId && graphList.tagId) {
+            graphCategoryPath.value.push(graphList.name);
           }
           // 하위 노드들도 추가 (재귀)
-          addChildrenNames(graphList.children, depth + 1);
+          addChildrenNames(graphList.children);
           return true;
         }
 
         // 하위 children들을 재귀 탐색
         for (const child of graphList.children) {
-          if (child.tagId !== null && traverse(child, depth + 1)) {
+          if (child.tagId && traverse(child)) {
             // 상위 노드도 결과 배열에 추가
-            if (graphList.tagId !== null) {
-              result.value.unshift(graphList.name);
+            if (graphList.tagId) {
+              graphCategoryPath.value.unshift(graphList.name);
             }
             return true;
           }
@@ -398,30 +417,28 @@ export const useSearchCommonStore = defineStore(
       };
 
       // 하위 children들의 name을 추가하는 함수
-      const addChildrenNames = (children, depth) => {
-        if (depth > 2) {
-          return;
-        } // 최대 3 depth까지만
+      const addChildrenNames = (children: any) => {
         for (const child of children) {
-          if (child.tagId !== null) {
-            result.value.push(child.name);
-            addChildrenNames(child.children, depth + 1);
+          if (child.tagId) {
+            graphCategoryPath.value.push(child.name);
+            addChildrenNames(child.children);
           }
         }
       };
 
-      traverse(graphList, depth);
+      traverse(graphList);
 
-      console.log("result", result);
-      return result;
+      // Root일 경우 ROOT로 출력
+      graphCategoryPath.value =
+        graphCategoryPath.value.length > 3 ? ["ROOT"] : graphCategoryPath.value;
     };
 
-    const setGraphModelIdList = (graphList: any, targetId: string) => {
+    const setGraphModelIdList = (graphList: any) => {
       const result = ref([]);
 
       // targetId가 graphList 또는 하위 노드에 있는지 찾기
       const findNode = (graphList: any, parentIds = []) => {
-        if (graphList.id === targetId) {
+        if (graphList.id === selectedGraphCategoryId.value) {
           // id 중 parentId가 있는 경우만 result에 담는다.
           result.value = parentIds
             .filter((id) => id.parentId)
@@ -457,14 +474,14 @@ export const useSearchCommonStore = defineStore(
       graphModelIdList.value = result.value.map((id) => `ovp_category.${id}`);
     };
 
-    const getGraphModelQueryFilter = (nodeId: string) => {
+    const getGraphModelQueryFilter = () => {
       // 미분류인 경우는 아래와 같이 한글 미분류로 추출
       if (
         graphCategoryName.value === $constants.SERVICE.CATEGORY_UNDEFINED_NAME
       ) {
         graphModelIdList.value = ["ovp_category.미분류"];
       } else {
-        setGraphModelIdList(graphCategoryList.value, nodeId);
+        setGraphModelIdList(graphCategoryList.value);
       }
 
       const shouldTerms = graphModelIdList.value.map((tag) => ({
@@ -490,23 +507,26 @@ export const useSearchCommonStore = defineStore(
       return queryFilter;
     };
 
-    const getGraphModelListQuery = (nodeId: string) => {
-      const queryFilter = getGraphModelQueryFilter(nodeId);
+    const getGraphModelListQuery = () => {
+      const queryFilter = getGraphModelQueryFilter();
 
+      // TODO: [개발] 현재 20개에 비해 영역이 더 길어서, 인피니티 스크롤 디폴트 개수를 30개 정도로 해야지 스크롤 실행이 듯
       const param = {
         q: "",
-        index: currentTab.value, // table or storage or model -> tab
-        from: 0,
-        size: 20,
+        index: currentTab.value,
+        from: from.value,
+        size: size.value,
         query_filter: JSON.stringify(queryFilter),
+        sort_field: sortKey.value,
+        sort_order: sortKeyOpt.value,
       };
 
       return new URLSearchParams(param);
     };
 
-    const getGraphModelListAPI = async (nodeId: string) => {
+    const getGraphModelListAPI = async () => {
       const { data } = await $api(
-        `/api/search/list?${getGraphModelListQuery(nodeId)}`,
+        `/api/creation/list?${getGraphModelListQuery()}`,
         {
           showLoader: false,
         },
@@ -518,19 +538,30 @@ export const useSearchCommonStore = defineStore(
             table: [],
             storage: [],
           },
+          totalCount: {
+            model: 0,
+            table: 0,
+            storage: 0,
+          },
         }
       );
     };
 
-    const getGraphModelList = async (nodeId: string) => {
-      // TODO: [개발] 중간 뎁스를 클릭하는 경우, 하위 모든 모델리스트를 불러와야 함
-      // 선택한 node id 전달
-      const { data } = await getGraphModelListAPI(nodeId);
+    const addGraphModelList = async () => {
+      const { data, totalCount } = await getGraphModelListAPI();
 
+      graphModelList.value = graphModelList.value.concat(
+        data[currentTab.value],
+      );
+      graphModelListLength.value = totalCount[currentTab.value];
+    };
+
+    const getGraphModelList = async () => {
+      const { data, totalCount } = await getGraphModelListAPI();
+      setFrom(0);
       graphModelList.value = data[currentTab.value];
-      graphModelListLength.value = data[currentTab.value].length;
-
-      console.log("우측 모델 리스트: ", graphModelList.value);
+      graphModelListLength.value = totalCount[currentTab.value];
+      updateIntersectionHandler(0);
     };
 
     return {
@@ -550,13 +581,14 @@ export const useSearchCommonStore = defineStore(
       isSearchResultNoData,
       currentPreviewId,
       graphData,
-      filteredIdAndTagIdData,
       showGraphModelListMenu,
       graphModelList,
       graphModelListLength,
       graphCategoryList,
       graphCategoryName,
       showDropDown,
+      graphCategoryPath,
+      selectedGraphCategoryId,
       addSearchList,
       getSearchList,
       getFilter,
@@ -577,6 +609,10 @@ export const useSearchCommonStore = defineStore(
       setEmptyFilter,
       getGraphData,
       getGraphModelList,
+      addGraphModelList,
+      setGraphCategoryPath,
+      setFromCount,
+      updateIsFollow,
     };
   },
   {

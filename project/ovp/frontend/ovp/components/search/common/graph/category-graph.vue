@@ -1,8 +1,6 @@
 <template>
   <div class="visual-wrap">
     <div id="category" class="visual"></div>
-
-    <!-- TODO: [개발] 범례 -->
     <div class="visual-legend">
       <button
         class="button button-lg button-neutral-stroke"
@@ -31,7 +29,6 @@
         </li>
       </ul>
     </div>
-    <!--  TODO: [개발] 페이지 진입 시 모델 리스트 드롭다운이 떠있는 상태임. 처음에는 보여지면 안됨-->
     <drop-down
       v-if="compTypeId && showDropDown"
       :top="top"
@@ -56,37 +53,39 @@ import _ from "lodash";
 import { ref } from "vue";
 
 const searchCommonStore = useSearchCommonStore();
-const { getGraphData, getGraphModelList } = searchCommonStore;
+const { getGraphData, getGraphModelList, setGraphCategoryPath } =
+  searchCommonStore;
 const {
   showDropDown,
   graphCategoryList,
   graphCategoryName,
   graphData,
-  filteredIdAndTagIdData,
   showGraphModelListMenu,
+  selectedGraphCategoryId,
 } = storeToRefs(searchCommonStore);
 
 const top = ref(200);
 const left = ref(200);
 const compTypeId = ref("modelList");
 const selectedNodeId = ref("");
+const isLegendVisible = ref(true);
+
+const toggleLegend = () => {
+  isLegendVisible.value = !isLegendVisible.value;
+};
 
 const onClick = ({ compId, nodeId }) => {
-  // 클릭한 nodeId가 마지막 뎁스 목록에 속하는지 판별
-  // const hasDataModelList = _.some(filteredIdAndTagIdData.value, {
-  //   id: nodeId,
-  // });
-
-  // 클릭한 nodeId의 정보를 마지막 뎁스 목록에서 찾는다.
-  // const selectedNode = _.filter(filteredIdAndTagIdData.value, {
-  //   id: nodeId,
-  // });
-
+  // 내가 선택한 id가 카테고리인 경우 실행
   if (compId === $constants.GRAPH.TYPE.MODEL_LIST) {
+    selectedGraphCategoryId.value = nodeId;
+    showDropDown.value = false;
     showGraphModelListMenu.value = true;
     setFirstNodeName(nodeId);
-    getGraphModelList(nodeId);
-  } else {
+    setGraphCategoryPath(graphCategoryList.value);
+    getGraphModelList();
+  }
+  // 내가 선택한 id가 상세 정보인 경우 실행
+  else {
     // nodeId 기반으로 노드 정보를 찾는다.
     const nodeInfo = _.find(modelDetailList, { id: nodeId });
     if (nodeInfo !== undefined) {
@@ -102,43 +101,7 @@ const onClick = ({ compId, nodeId }) => {
   }
 };
 
-const isLegendVisible = ref(true);
-const toggleLegend = () => {
-  isLegendVisible.value = !isLegendVisible.value;
-};
-
-// graph 기능: 마지막 뎁스 배열만 담기
-const setFilteredIdAndTagIdData = () => {
-  filteredIdAndTagIdData.value = [];
-
-  const nodeData: any = graphData.value.nodes;
-
-  const traverseFilteredIdAndTagIdData = (element: any) => {
-    // 현재 요소가 자식이 없거나, 미분류인 경우 필터링된 객체로 추가
-    if (
-      _.isEmpty(element.children) ||
-      element.name === $constants.SERVICE.CATEGORY_UNDEFINED_NAME
-    ) {
-      filteredIdAndTagIdData.value.push({
-        name: element.name,
-        id: element.id,
-        tagId: element.tagId,
-      });
-    } else {
-      // 자식 요소가 있는 경우, 자식들을 재귀적으로 탐색
-      element.children.forEach((child: any) =>
-        traverseFilteredIdAndTagIdData(child),
-      );
-    }
-  };
-
-  // 루트 요소의 모든 자식들을 순회
-  nodeData.children.forEach((element: any) =>
-    traverseFilteredIdAndTagIdData(element),
-  );
-};
-
-// graph 기능: graph에 들어갈 전체 데이터 정제
+// graph에 들어갈 전체 데이터 정제
 const setGraphCategoryList = () => {
   const nodeData: any = graphData.value.nodes;
   const mapNodeWithChildren = (node: any) => ({
@@ -161,11 +124,9 @@ const setGraphCategoryList = () => {
     children: formattedNodeData,
     nodeList: [],
   };
-
-  console.log("그래프 카테고리 목록: ", graphCategoryList.value);
 };
 
-// graph 기능: 상세정보로 가는 모델 목록만 추출 (tagId가 null이면 모델 목록임)
+// 상세정보로 가는 모델 목록만 추출 (tagId가 null이면 모델 목록임)
 const getModelDetailList = (node: any): string[] => {
   let result: string[] = [];
 
@@ -187,14 +148,13 @@ const getModelDetailList = (node: any): string[] => {
 const modelDetailList = getModelDetailList(graphData.value.nodes);
 const modelDetailIds = modelDetailList.map((node) => node.id);
 
-// graph 기능: graph 구현
+// graph 구현
 const setCategoryGraph = () => {
   const categoryContainer = document.getElementById(
     "category",
   ) as HTMLDivElement;
 
   if (!categoryContainer) {
-    console.warn("#category 요소를 찾을 수 없습니다.");
     return;
   }
 
@@ -228,34 +188,18 @@ const setCategoryGraph = () => {
   });
 };
 
-// graph 기능: graphCategoryList의 1depth 까지만 탐색해서 선택한 id의 미분류를 찾는다.
+// 그래프 카테고리 목록에서 1depth 까지만 탐색해서 선택한 id의 미분류를 찾는다.
 const setFirstNodeName = (nodeId: string) => {
   for (const child of graphCategoryList.value.children) {
     if (nodeId === child.id) {
       graphCategoryName.value = child.name;
       return;
     }
-
-    // 2, 3depth 도 필요시 사용
-    // for (const secondChild of child.children) {
-    //   if (nodeId === secondChild.id) {
-    //     graphCategoryName.value = secondChild.name;
-    //     return;
-    //   }
-    //
-    //   for (const thirdChild of secondChild.children) {
-    //     if (nodeId === thirdChild.id) {
-    //       graphCategoryName.value = thirdChild.name;
-    //       return;
-    //     }
-    //   }
-    // }
   }
 };
 watch(
   () => graphData.value,
   (newVal) => {
-    setFilteredIdAndTagIdData();
     setGraphCategoryList();
     setCategoryGraph();
   },
