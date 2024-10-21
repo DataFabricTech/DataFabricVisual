@@ -164,6 +164,7 @@ const setCategoryGraph = () => {
     container: categoryContainer,
     categoryData: graphCategoryList.value,
     pixelQuality: "middle",
+    isFitScreenInit: true,
     eventHandler: {
       onClick: (e: any, id: any, type: any) => {
         if (!showDropDown.value) {
