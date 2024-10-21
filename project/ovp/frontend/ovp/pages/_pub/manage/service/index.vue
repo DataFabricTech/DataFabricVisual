@@ -194,27 +194,31 @@
                 <col />
                 <col style="width: 35%" />
               </colgroup>
-              <tr>
+              <thead>
+                <tr>
                 <th>구분</th>
                 <th class="align-center">이름</th>
                 <th>설명</th>
                 <th>소유자</th>
                 <th>USAGE</th>
               </tr>
-              <tr v-for="tr in 3" :key="tr">
+              </thead>
+              <tbody>
+                <tr v-for="tr in 3" :key="tr">
                 <td>DB기본정보</td>
                 <td>
                   <a
                     href=""
                     class="link-button link-button link-button-underline"
                     title="상세 페이지 이동"
-                    >DB Table1</a
+                  >DB Table1</a
                   >
                 </td>
                 <td>DB Table에 대한 설명입니다.</td>
                 <td>-</td>
                 <td>0th pctile</td>
               </tr>
+              </tbody>
             </table>
             <!-- 결과 없을 시 no-result 표시 -->
             <div class="no-result max-h-40" style="display: none">
@@ -259,80 +263,84 @@
                 <col />
                 <col style="width: 30%" />
               </colgroup>
-              <tr>
+              <thead>
+                <tr>
                 <th>이름</th>
                 <th>유형</th>
                 <th>스케줄</th>
                 <th class="align-center">현황</th>
                 <th class="align-center">동작</th>
               </tr>
-              <tr>
-                <td>pgv2_metadata_ingestion</td>
-                <td>metadata</td>
-                <td>00***</td>
-                <td>
-                  <div class="badge badge-green-lighter">
-                    <p class="badge-text">Success</p>
-                  </div>
-                </td>
-                <td>
-                  <div class="button-group">
-                    <button class="button button button-secondary-stroke">
-                      실행
-                    </button>
-                    <button class="button button button-secondary-stroke">
-                      동기화
-                    </button>
-                    <button class="button button button-secondary-stroke">
-                      편집
-                    </button>
-                    <button class="button button button-error-stroke">
-                      삭제
-                    </button>
-                    <button class="button button button-error-stroke">
-                      종료
-                    </button>
-                    <button
-                      class="button button button-neutral-stroke"
-                      @click="showModalLog = true"
-                    >
-                      로그
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>pgv2_metadata_ingestion</td>
-                <td>metadata</td>
-                <td>00***</td>
-                <td>
-                  <div class="badge badge-red-lighter">
-                    <p class="badge-text">Fail</p>
-                  </div>
-                </td>
-                <td>
-                  <div class="button-group">
-                    <button class="button button button-secondary-stroke">
-                      실행
-                    </button>
-                    <button class="button button button-secondary-stroke">
-                      동기화
-                    </button>
-                    <button class="button button button-secondary-stroke">
-                      편집
-                    </button>
-                    <button class="button button button-error-stroke">
-                      삭제
-                    </button>
-                    <button class="button button button-error-stroke">
-                      종료
-                    </button>
-                    <button class="button button button-neutral-stroke">
-                      로그
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>pgv2_metadata_ingestion</td>
+                  <td>metadata</td>
+                  <td>00***</td>
+                  <td>
+                    <div class="badge badge-green-lighter">
+                      <p class="badge-text">Success</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="button-group">
+                      <button class="button button button-secondary-stroke">
+                        실행
+                      </button>
+                      <button class="button button button-secondary-stroke">
+                        동기화
+                      </button>
+                      <button class="button button button-secondary-stroke">
+                        편집
+                      </button>
+                      <button class="button button button-error-stroke">
+                        삭제
+                      </button>
+                      <button class="button button button-error-stroke">
+                        종료
+                      </button>
+                      <button
+                        class="button button button-neutral-stroke"
+                        @click="showModalLog = true"
+                      >
+                        로그
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>pgv2_metadata_ingestion</td>
+                  <td>metadata</td>
+                  <td>00***</td>
+                  <td>
+                    <div class="badge badge-red-lighter">
+                      <p class="badge-text">Fail</p>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="button-group">
+                      <button class="button button button-secondary-stroke">
+                        실행
+                      </button>
+                      <button class="button button button-secondary-stroke">
+                        동기화
+                      </button>
+                      <button class="button button button-secondary-stroke">
+                        편집
+                      </button>
+                      <button class="button button button-error-stroke">
+                        삭제
+                      </button>
+                      <button class="button button button-error-stroke">
+                        종료
+                      </button>
+                      <button class="button button button-neutral-stroke">
+                        로그
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
             </table>
             <!-- 결과 없을 시 no-result 표시 -->
             <div class="no-result max-h-40">

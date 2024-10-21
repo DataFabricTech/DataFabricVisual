@@ -20,7 +20,10 @@
       </div>
     </div>
     <div class="v-group gap-5">
-      <h4 class="overview-title">요약 정보</h4>
+      <div class="h-group w-full">
+        <h4 class="overview-title">요약 정보</h4>
+        <div class="overview-info">수집 일시 : {{ collectedDateTime }}</div>
+      </div>
       <div class="flex w-full gap-5">
         <div class="overview-summary">
           <span>서비스 타입 요약</span>
@@ -112,10 +115,7 @@
       </div>
     </div>
     <div class="v-group gap-5">
-      <div class="h-group w-full">
         <h4 class="overview-title">서비스 상태</h4>
-        <div class="overview-info">수집 일시 : {{ collectedDateTime }}</div>
-      </div>
       <div class="no-result" v-if="isEmptyServiceStatus">
         <div class="notification">
           <svg-icon class="notification-icon" name="info"></svg-icon>
