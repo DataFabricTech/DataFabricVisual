@@ -151,18 +151,22 @@ const gotoDetail = () => {
   };
 
   const detailPath = "/portal/search/detail";
-  router.push({
-    path: detailPath,
-    query: {
-      type: index,
-      id: id,
-      fqn: fqn,
-    },
-  });
-
-  if (detailPath === route.path) {
-    // 같은 페이지로 이동시에 페이지 리로드
-    router.go(0);
+  if (route.path === detailPath) {
+    // 동일 경로로 이동할 때 강제로 새로고침
+    router
+      .push({
+        path: detailPath,
+        query: { type: index, id, fqn },
+      })
+      .then(() => {
+        router.go(0); // 페이지 새로고침
+      });
+  } else {
+    // 경로가 다르면 그냥 라우팅
+    router.push({
+      path: detailPath,
+      query: { type: index, id, fqn },
+    });
   }
 };
 </script>
