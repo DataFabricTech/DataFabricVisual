@@ -58,7 +58,7 @@ export const useSearchCommonStore = defineStore(
   () => {
     const { $api } = useNuxtApp();
     const pagingStore = usePagingStore();
-    const { setFrom, updateIntersectionHandler } = pagingStore;
+    const { setFrom, setSize, updateIntersectionHandler } = pagingStore;
     const { from, size } = storeToRefs(pagingStore);
     const { setQueryFilterByDepth } = useQueryHelpers();
 
@@ -510,7 +510,6 @@ export const useSearchCommonStore = defineStore(
     const getGraphModelListQuery = () => {
       const queryFilter = getGraphModelQueryFilter();
 
-      // TODO: [개발] 현재 20개에 비해 영역이 더 길어서, 인피니티 스크롤 디폴트 개수를 30개 정도로 해야지 스크롤 실행이 듯
       const param = {
         q: "",
         index: currentTab.value,
@@ -557,8 +556,11 @@ export const useSearchCommonStore = defineStore(
     };
 
     const getGraphModelList = async () => {
-      const { data, totalCount } = await getGraphModelListAPI();
       setFrom(0);
+      setSize(30);
+
+      const { data, totalCount } = await getGraphModelListAPI();
+
       graphModelList.value = data[currentTab.value];
       graphModelListLength.value = totalCount[currentTab.value];
       updateIntersectionHandler(0);
