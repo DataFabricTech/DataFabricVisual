@@ -459,48 +459,48 @@
         <div class="result">
           <table>
             <thead>
-            <tr>
-              <th>NAME</th>
-              <th>DATA TYPE</th>
-              <th>NAME</th>
-              <th>DATA TYPE</th>
-              <th>NAME</th>
-              <th>DATA TYPE</th>
-            </tr>
+              <tr>
+                <th>NAME</th>
+                <th>DATA TYPE</th>
+                <th>NAME</th>
+                <th>DATA TYPE</th>
+                <th>NAME</th>
+                <th>DATA TYPE</th>
+              </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>항목</td>
-              <td>항목</td>
-              <td>항목</td>
-              <td>항목</td>
-              <td>항목</td>
-              <td>항목</td>
-            </tr>
-            <tr>
-              <td>항목</td>
-              <td>항목</td>
-              <td>항목</td>
-              <td>항목</td>
-              <td>항목</td>
-              <td>항목</td>
-            </tr>
-            <tr>
-              <td>항목</td>
-              <td>항목</td>
-              <td>항목</td>
-              <td>항목항목항목항목항목항목항목항목</td>
-              <td>항목</td>
-              <td>항목</td>
-            </tr>
-            <tr>
-              <td>항목</td>
-              <td>항목</td>
-              <td>항목</td>
-              <td>항목</td>
-              <td>항목</td>
-              <td>항목</td>
-            </tr>
+              <tr>
+                <td>항목</td>
+                <td>항목</td>
+                <td>항목</td>
+                <td>항목</td>
+                <td>항목</td>
+                <td>항목</td>
+              </tr>
+              <tr>
+                <td>항목</td>
+                <td>항목</td>
+                <td>항목</td>
+                <td>항목</td>
+                <td>항목</td>
+                <td>항목</td>
+              </tr>
+              <tr>
+                <td>항목</td>
+                <td>항목</td>
+                <td>항목</td>
+                <td>항목항목항목항목항목항목항목항목</td>
+                <td>항목</td>
+                <td>항목</td>
+              </tr>
+              <tr>
+                <td>항목</td>
+                <td>항목</td>
+                <td>항목</td>
+                <td>항목</td>
+                <td>항목</td>
+                <td>항목</td>
+              </tr>
             </tbody>
           </table>
         </div>

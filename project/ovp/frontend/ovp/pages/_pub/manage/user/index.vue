@@ -29,68 +29,72 @@
         <col style="" />
         <col style="width: 15%" />
       </colgroup>
-      <tr>
+      <thead>
+        <tr>
         <th class="align-center">사용자 이름</th>
         <th class="align-center">역할</th>
         <th>설명</th>
         <th class="align-center">관리</th>
       </tr>
-      <tr>
-        <td>
-          <a href="" class="link-button link-button link-button-underline">홍길동</a>
-        </td>
-        <td class="align-center">사용자</td>
-        <td class="align-left">사용자에 대한 설명 입니다.</td>
-        <td>
-          <div class="button-group">
-            <button class="button button button-error-stroke">
-              삭제
-            </button>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="" class="link-button link-button link-button-underline">홍길동</a>
-        </td>
-        <td class="align-center">관리자</td>
-        <td class="align-left">사용자에 대한 설명 입니다.</td>
-        <td>
-          <div class="button-group">
-            <button class="button button button-error-stroke">
-              삭제
-            </button>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="" class="link-button link-button link-button-underline">홍길동</a>
-        </td>
-        <td class="align-center">사용자</td>
-        <td class="align-left">사용자에 대한 설명 입니다.</td>
-        <td>
-          <div class="button-group">
-            <button class="button button button-error-stroke">
-              삭제
-            </button>
-          </div>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <a href="" class="link-button link-button link-button-underline">홍길동</a>
-        </td>
-        <td class="align-center">관리자</td>
-        <td class="align-left">사용자에 대한 설명 입니다.</td>
-        <td>
-          <div class="button-group">
-            <button class="button button button-error-stroke">
-              삭제
-            </button>
-          </div>
-        </td>
-      </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <a href="" class="link-button link-button link-button-underline">홍길동</a>
+          </td>
+          <td class="align-center">사용자</td>
+          <td class="align-left">사용자에 대한 설명 입니다.</td>
+          <td>
+            <div class="button-group">
+              <button class="button button button-error-stroke">
+                삭제
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="" class="link-button link-button link-button-underline">홍길동</a>
+          </td>
+          <td class="align-center">관리자</td>
+          <td class="align-left">사용자에 대한 설명 입니다.</td>
+          <td>
+            <div class="button-group">
+              <button class="button button button-error-stroke">
+                삭제
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="" class="link-button link-button link-button-underline">홍길동</a>
+          </td>
+          <td class="align-center">사용자</td>
+          <td class="align-left">사용자에 대한 설명 입니다.</td>
+          <td>
+            <div class="button-group">
+              <button class="button button button-error-stroke">
+                삭제
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <a href="" class="link-button link-button link-button-underline">홍길동</a>
+          </td>
+          <td class="align-center">관리자</td>
+          <td class="align-left">사용자에 대한 설명 입니다.</td>
+          <td>
+            <div class="button-group">
+              <button class="button button button-error-stroke">
+                삭제
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
     </table>
   </div>
   <!--  TODO: Modal 카테고리 추가  width:480px height:516px-->
