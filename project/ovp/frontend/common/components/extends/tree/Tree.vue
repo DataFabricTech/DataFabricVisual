@@ -44,7 +44,6 @@ import "vue3-tree-vue/dist/style.css";
 
 import { TreeProps, TreeViewItem } from "./TreeProps";
 import { TreeComposition } from "./TreeComposition";
-import _ from "lodash";
 
 const props = withDefaults(defineProps<TreeProps>(), {
   mode: "view",
@@ -98,7 +97,7 @@ onMounted(() => {
 });
 
 const isNodeDisabled = (node: TreeViewItem) => {
-  const isDisabledNode = props.disabledIds.length > 0 && props.disabledIds.includes(treeViewItem.id);
+  const isDisabledNode = props.disabledIds.length > 0 && props.disabledIds.includes(node.id);
   const isLastChildOpt = isNodeLastChildNode(node);
   return isDisabledNode || isLastChildOpt;
 };
