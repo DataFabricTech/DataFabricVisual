@@ -219,7 +219,6 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   };
 
   const addQuery = async () => {
-    console.log("동작체크");
     const { data } = await getQueryListAPI();
     queryList.value = queryList.value.concat(data);
   };
