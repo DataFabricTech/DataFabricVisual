@@ -1,5 +1,6 @@
 import _ from "lodash";
 import { type Ref } from "vue";
+import { usePagingStore } from "@/store/common/paging";
 
 export interface DataModel {
   serviceType: string;
@@ -33,6 +34,9 @@ export interface Schema {
 
 export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   const { $api } = useNuxtApp();
+
+  const pagingStore = usePagingStore();
+  const { from, size } = storeToRefs(pagingStore);
 
   const dataModel: Ref<DataModel> = ref({
     serviceType: "",
@@ -177,7 +181,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     profileList.value = data.data;
   };
 
-  const getQuery = async () => {
+  const getQueryListAPI = async () => {
     const queryFilter: any = {
       query: {
         bool: {
@@ -191,13 +195,13 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
         },
       },
     };
-    // TODO: paging 처리
+
     const params: any = {
       // eslint-disable-next-line id-length
       q: "*",
       index: "query_search_index",
-      from: "0",
-      size: "10",
+      from: from.value,
+      size: size.value,
       query_filter: encodeURIComponent(JSON.stringify(queryFilter)),
       sort_field: "queryDate",
       sort_order: "desc",
@@ -206,7 +210,17 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
       params: params,
     });
 
-    queryList.value = data.data;
+    return data;
+  };
+
+  const getQuery = async () => {
+    const { data } = await getQueryListAPI();
+    queryList.value = data;
+  };
+
+  const addQuery = async () => {
+    const { data } = await getQueryListAPI();
+    queryList.value = queryList.value.concat(data);
   };
 
   const changeVote = async (state: string) => {
@@ -410,6 +424,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     getSampleData,
     getProfile,
     getQuery,
+    addQuery,
     changeVote,
     changeFollow,
     changeDataModel,
