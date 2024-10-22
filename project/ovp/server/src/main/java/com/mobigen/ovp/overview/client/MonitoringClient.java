@@ -25,7 +25,7 @@ public interface MonitoringClient {
      * @return
      * @throws Exception
      */
-    @GetMapping("/responseTime")
+    @GetMapping("/recResponseTime")
     Map<String, Object> getResponseTime(@RequestParam MultiValueMap<String, String> params) throws Exception;
 
     /**
