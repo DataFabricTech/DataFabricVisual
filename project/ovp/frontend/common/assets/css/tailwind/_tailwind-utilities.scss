@@ -20,4 +20,20 @@
   .h-full {
     height: 100% !important;
   }
+
+  .text-md {
+    @include font-size('16');
+  }
+
+  .text-lg {
+    @include font-size('18');
+  }
+
+  .text-xl {
+    @include font-size('20');
+  }
+
+  .text-2xl {
+    @include font-size('24');
+  }
 }
