@@ -147,6 +147,7 @@
 .query {
   display: flex;
   flex-direction: column;
+  width: 100%;
 
   &-date {
     padding: $spacing-12 $spacing-16;
