@@ -2,7 +2,7 @@
   <div class="wrap is-wrap-height-full">
     <div class="submit-form">
       <h1 class="submit-form-logo">
-        <svg-icon class="svg-icon logo-img" name="logo"></svg-icon>
+        <span class="text-neutral-700 text-lg font-bold">노후시설 재난안전 학습 데이터 관리</span>
       </h1>
       <form class="submit-form-form" @submit.prevent="onSubmit">
         <h2 class="submit-form-title">회원가입</h2>
