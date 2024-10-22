@@ -96,8 +96,11 @@ function refresh() {
 }
 
 const copyLog = () => {
+  console.log("HERE");
   copyText.value = collectionLog.value;
-  copy();
-  $alert("로그가 복사되었습니다.", "success");
+  copy().then(() => {
+    console.log("copy done");
+  });
+  // $alert("로그가 복사되었습니다.", "success");
 };
 </script>
