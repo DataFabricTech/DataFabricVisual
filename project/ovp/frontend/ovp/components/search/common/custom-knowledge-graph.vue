@@ -26,29 +26,31 @@
     </div>
     <div class="p-3 h-full">
       <strong
-        >총 <em class="primary">{{ graphModelListLength }}개</em></strong
+        >총 <em class="primary">{{ filteredSearchList.length }}개</em></strong
       >
       <div
         class="menu menu-data menu-lg"
-        v-show="graphModelList && graphModelList.length !== 0"
+        v-show="filteredSearchList && filteredSearchList.length !== 0"
         style="position: relative"
       >
-        <ul class="menu-list" id="menuList">
-          <li class="menu-item" v-for="menu in graphModelList" :key="menu">
+        <ul class="menu-list">
+          <li class="menu-item" v-for="menu in filteredSearchList" :key="menu">
             <a
               href="javascript:void(0);"
               class="menu-button"
               @click="modelNmClick(menu)"
             >
               <div :class="menu.serviceIcon"></div>
-              <span class="menu-text">{{ menu.modelNm }}</span>
+              <span class="menu-text">{{
+                menu.displayName ?? menu.modelNm
+              }}</span>
               <span class="menu-subtext">
                 ({{
                   menu.owner === null
                     ? "소유자 없음"
                     : (menu.owner.displayName ?? menu.owner.name)
-                }})</span
-              >
+                }})
+              </span>
             </a>
             <div class="menu-button-group">
               <button
@@ -56,25 +58,18 @@
                 @click="updateIsFollow(menu)"
               >
                 <span class="hidden-text">북마크</span>
-                <svg-icon
-                  class="svg-icon"
-                  :class="menu.isFollow ? 'secondary' : ''"
-                  :name="menu.isFollow ? 'tag-fill' : 'tag'"
-                ></svg-icon>
+                <!--                TODO: [개발] 데이터 모델 상세에 있는 북마크 정보로 가져오기 -->
+                <!--
+                                  :class="menu.isFollow ? 'secondary' : ''"
+                                  :name="menu.isFollow ? 'tag-fill' : 'tag'"-->
+                <svg-icon class="svg-icon" name="tag-fill"></svg-icon>
               </button>
             </div>
           </li>
-          <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
-          <Loading
-            id="menuLoader"
-            :use-loader-overlay="true"
-            class="loader-lg is-loader-inner"
-            style="display: none"
-          ></Loading>
         </ul>
       </div>
       <!-- 결과 없을 시 no-result 표시 -->
-      <div class="no-result" v-show="graphModelList.length === 0">
+      <div class="no-result" v-show="filteredSearchList.length === 0">
         <div class="notification">
           <svg-icon class="notification-icon" name="info"></svg-icon>
           <p class="notification-detail">등록된 정보가 없습니다.</p>
@@ -87,18 +82,16 @@
 <script setup lang="ts">
 import CategoryGraph from "./graph/category-graph.vue";
 import { useSearchCommonStore } from "~/store/search/common";
-import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { useRouter } from "nuxt/app";
-import Loading from "@base/loading/Loading.vue";
 
 const router = useRouter();
 const searchCommonStore = useSearchCommonStore();
-const { updateIsFollow, addGraphModelList } = searchCommonStore;
+const { updateIsFollow } = searchCommonStore;
 const {
   showGraphModelListMenu,
   graphModelList,
-  graphModelListLength,
   graphCategoryPath,
+  filteredSearchList,
 } = storeToRefs(searchCommonStore);
 
 const closeModelList = () => {
@@ -119,12 +112,6 @@ const modelNmClick = (data: object) => {
 onBeforeMount(() => {
   graphModelList.value = [];
   showGraphModelListMenu.value = false;
-});
-
-const { scrollTrigger } = useIntersectionObserver({
-  callback: addGraphModelList,
-  targetId: "menuList",
-  loaderId: "menuLoader",
 });
 </script>
 

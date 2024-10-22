@@ -139,9 +139,6 @@ export const useSearchCommonStore = defineStore(
     const showGraphModelListMenu: Ref<boolean> = ref(false);
     const showDropDown = ref(false);
 
-    // TODO: [개발] 보기 방식을 이동해도, 내가 보던 모델 리스트 갯수를 동일한 갯수만큼 보여지고, 인피니티 스크롤이 적용돼야함
-    const setFromCount = () => {};
-
     const getQueryParam = () => {
       const queryFilter = getQueryFilter(
         selectedFilters.value,
@@ -207,6 +204,8 @@ export const useSearchCommonStore = defineStore(
      * 데이터 조회 -> 갱신
      */
     const getSearchList = async () => {
+      setSize(stackedFromCount.value);
+
       const { data, totalCount } = await getSearchListAPI();
       searchResult.value = data[currentTab.value];
       searchResultLength.value = totalCount;
@@ -337,15 +336,13 @@ export const useSearchCommonStore = defineStore(
       currentTab.value = item;
 
       if (loadList) {
-        viewType.value === "listView"
-          ? await resetReloadList()
-          : await getGraphData();
+        resetReloadList();
+        viewType.value === "graphView" ? await getGraphData() : null;
       }
     };
 
     const getGraphData = async () => {
       const graphParam: any = getGraphQuery();
-      graphParam.from = 0;
       const { data } = await $api(`/api/search/graph/list?${graphParam}`, {
         showLoader: false,
       });
@@ -360,6 +357,16 @@ export const useSearchCommonStore = defineStore(
     const graphModelList = ref([]);
     const graphModelListLength = ref(0);
     const graphModelIdList = ref([]);
+
+    const stackedFromCount: Ref<number> = ref(size.value);
+    const filteredSearchList: Ref<any[]> = ref([]);
+
+    // 우측 모델 리스트 저장
+    const setFilteredSearchList = () => {
+      filteredSearchList.value = _.filter(searchResult.value, {
+        category: selectedGraphCategoryId.value,
+      });
+    };
 
     // 북마크 업데이트
     const updateIsFollow = async (menu: any) => {
@@ -527,7 +534,7 @@ export const useSearchCommonStore = defineStore(
       const { data } = await $api(
         `/api/creation/list?${getGraphModelListQuery()}`,
         {
-          showLoader: false,
+          showLoader: true,
         },
       );
       return (
