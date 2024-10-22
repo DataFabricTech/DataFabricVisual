@@ -195,6 +195,10 @@ export const useSearchCommonStore = defineStore(
      * 데이터 조회 -> 누적
      */
     const addSearchList = async () => {
+      setSize(20);
+      setFrom(stackedFromCount.value);
+      stackedFromCount.value = from.value + size.value;
+
       const { data, totalCount } = await getSearchListAPI();
       searchResult.value = searchResult.value.concat(data[currentTab.value]);
       searchResultLength.value = totalCount;
@@ -563,9 +567,6 @@ export const useSearchCommonStore = defineStore(
     };
 
     const getGraphModelList = async () => {
-      setFrom(0);
-      setSize(30);
-
       const { data, totalCount } = await getGraphModelListAPI();
 
       graphModelList.value = data[currentTab.value];
@@ -598,6 +599,8 @@ export const useSearchCommonStore = defineStore(
       showDropDown,
       graphCategoryPath,
       selectedGraphCategoryId,
+      filteredSearchList,
+      stackedFromCount,
       addSearchList,
       getSearchList,
       getFilter,
@@ -620,8 +623,8 @@ export const useSearchCommonStore = defineStore(
       getGraphModelList,
       addGraphModelList,
       setGraphCategoryPath,
-      setFromCount,
       updateIsFollow,
+      setFilteredSearchList,
     };
   },
   {
