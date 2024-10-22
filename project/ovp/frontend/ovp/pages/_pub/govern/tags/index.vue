@@ -137,39 +137,43 @@
                 <col style="width: 25%" />
                 <col style="width: 25%" />
               </colgroup>
-              <tr>
-                <th>태그</th>
-                <th>설명</th>
-                <th>관리</th>
+              <thead>
+                <tr>
+                  <th>태그</th>
+                  <th>설명</th>
+                  <th>관리</th>
               </tr>
-              <tr>
-                <td>태그 01</td>
-                <td>태그에 대한 설명입니다.</td>
-                <td>
-                  <div class="button-group">
-                    <button class="button button button-secondary-stroke">
-                      편집
-                    </button>
-                    <button class="button button button-error-stroke">
-                      삭제
-                    </button>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>태그 02</td>
-                <td>태그에 대한 설명입니다.</td>
-                <td>
-                  <div class="button-group">
-                    <button class="button button button-secondary-stroke">
-                      편집
-                    </button>
-                    <button class="button button button-error-stroke">
-                      삭제
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>태그 01</td>
+                  <td>태그에 대한 설명입니다.</td>
+                  <td>
+                    <div class="button-group">
+                      <button class="button button button-secondary-stroke">
+                        편집
+                      </button>
+                      <button class="button button button-error-stroke">
+                        삭제
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>태그 02</td>
+                  <td>태그에 대한 설명입니다.</td>
+                  <td>
+                    <div class="button-group">
+                      <button class="button button button-secondary-stroke">
+                        편집
+                      </button>
+                      <button class="button button button-error-stroke">
+                        삭제
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>

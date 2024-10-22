@@ -370,14 +370,14 @@
               <col style="width: 60%" />
             </colgroup>
             <thead>
-            <tr>
+              <tr>
               <th>NAME</th>
               <th>DATA TYPE</th>
               <th>Description</th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="tr in 6" :key="tr">
+              <tr v-for="tr in 6" :key="tr">
               <td>요일번호</td>
               <td>integer</td>
               <td>no description</td>

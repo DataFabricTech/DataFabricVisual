@@ -73,10 +73,6 @@
     position: absolute;
     right: 0;
     width: 375px;
-
-    &-title:hover {
-      text-decoration: underline;
-    }
   }
 
   &-control {
@@ -85,13 +81,13 @@
 }
 
 .visual {
+  @include graph-grid;
+
   &-wrap {
     width: 100%;
     height: 100%;
     position: relative;
   }
-
-  @include graph-grid;
 
   > canvas {
     cursor: pointer;
