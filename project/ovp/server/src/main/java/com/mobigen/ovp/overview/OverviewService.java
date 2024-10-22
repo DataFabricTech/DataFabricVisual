@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Service
 public class OverviewService {
-
     private final SearchClient searchClient;
     private final MonitoringClient monitoringClient;
 
@@ -26,35 +25,48 @@ public class OverviewService {
      * @return
      * @throws Exception
      */
-    private List<Map<String, Object>> geTypeSummary() throws Exception {
+    private List<Map<String, Object>> getTypeSummary() throws Exception {
         List<Map<String, Object>> typeList = new ArrayList<>();
 
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("index", "table_search_index");
-        params.add("from", "0");
-        params.add("size", "0");
-        params.add("deleted", "false");
+        MultiValueMap<String, String> dsiParams = new LinkedMultiValueMap<>();
+        dsiParams.add("index", "database_search_index");
+        dsiParams.add("from", "0");
+        dsiParams.add("size", "0");
+        dsiParams.add("deleted", "false");
 
-        Map<String, Object> result = searchClient.getSearchList(params);
+        MultiValueMap<String, String> sssiParams = new LinkedMultiValueMap<>();
+        sssiParams.add("index", "storage_service_search_index");
+        sssiParams.add("from", "0");
+        sssiParams.add("size", "0");
+        sssiParams.add("deleted", "false");
 
+        Map<String, Object> tableResult = searchClient.getSearchList(dsiParams);
+        Map<String, Object> storageResult = searchClient.getSearchList(sssiParams);
+
+        addBucketsToList(typeList, tableResult);
+        addBucketsToList(typeList, storageResult);
+
+        return typeList;
+    }
+
+    private void addBucketsToList(List<Map<String, Object>> typeList, Map<String, Object> result) {
         if (result.get("aggregations") != null) {
             Map<String, Object> aggregations = (Map<String, Object>) result.get("aggregations");
             if (aggregations.get("sterms#serviceType") != null) {
                 Map<String, Object> serviceType = (Map<String, Object>) aggregations.get("sterms#serviceType");
                 if (serviceType.get("buckets") != null) {
                     List<Map<String, Object>> buckets = (List<Map<String, Object>>) serviceType.get("buckets");
-                    typeList = buckets.stream().map(service -> {
+                    List<Map<String, Object>> bucketData = buckets.stream().map(service -> {
                         Map<String, Object> temp = new HashMap<>();
                         temp.put("name", service.get("key"));
                         temp.put("value", service.get("doc_count"));
-
                         return temp;
                     }).collect(Collectors.toList());
+
+                    typeList.addAll(bucketData);
                 }
             }
         }
-
-        return typeList;
     }
 
     /**
@@ -66,20 +78,29 @@ public class OverviewService {
     private List<Map<String, Object>> getStatusSummary() throws Exception {
         List<Map<String, Object>> statusList = new ArrayList<>();
 
-        Map<String, Object> monitoringConnectStatus = (Map<String, Object>) monitoringClient.connectStatus().get("data");
+        Object monitoringConnectStatus = monitoringClient.connectStatus().get("data");
+        List<Map<String, Object>> statusData = (List<Map<String, Object>>) monitoringConnectStatus;
 
-        monitoringConnectStatus.forEach((k, v) -> {
-            Map<String, Object> status = new HashMap<>();
-            if ("total".equals(k)) {
-                return;
-            }
+        // 상태별 개수 집계
+        Map<String, Long> statusCount = statusData.stream()
+                .collect(Collectors.groupingBy(
+                        service -> (String) service.get("connectionStatus"),
+                        Collectors.counting()
+                ));
 
-            status.put("name", k);
-            status.put("value", v);
-            statusList.add(status);
-        });
+        // CONNECTED, DISCONNECTED, CONNECT_ERROR 상태를 포함하는 결과 생성
+        statusList.add(createStatusMap("connected", statusCount.getOrDefault("CONNECTED", 0L)));
+        statusList.add(createStatusMap("disconnected", statusCount.getOrDefault("DISCONNECTED", 0L)));
+        statusList.add(createStatusMap("connectError", statusCount.getOrDefault("CONNECT_ERROR", 0L)));
 
         return statusList;
+    }
+
+    private Map<String, Object> createStatusMap(String name, Long value) {
+        Map<String, Object> status = new HashMap<>();
+        status.put("name", name);
+        status.put("value", value);
+        return status;
     }
 
     /**
@@ -97,7 +118,7 @@ public class OverviewService {
         params.add("size", "0");
         params.add("deleted", "false");
 
-        List<Map<String, Object>> typeSummary = geTypeSummary();
+        List<Map<String, Object>> typeSummary = getTypeSummary();
         List<Map<String, Object>> statusList = getStatusSummary();
 
         result.put("typeSummary", typeSummary);

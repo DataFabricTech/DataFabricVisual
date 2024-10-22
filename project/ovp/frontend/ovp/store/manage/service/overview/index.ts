@@ -27,7 +27,17 @@ export const useOverviewStore = defineStore("overview", () => {
   const getServiceStatusData = async () => {
     const { data } = await $api(`/api/service/overview/summary-info`);
 
-    serviceStatusData.value = data !== null ? data.statusList : [];
+    if (data !== null) {
+      // 모든 value가 0인지 확인
+      const allValuesZero = data.statusList.every(
+        (item: { name: string; value: number }) => item.value === 0,
+      );
+
+      // value가 모두 0이면 빈 배열로 설정, 그렇지 않으면 원래 데이터로 설정
+      serviceStatusData.value = allValuesZero ? [] : data.statusList;
+    } else {
+      serviceStatusData.value = [];
+    }
   };
 
   const getServiceResponseAPI = async () => {
