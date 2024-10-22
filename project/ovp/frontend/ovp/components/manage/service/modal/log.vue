@@ -44,7 +44,7 @@
 </template>
 <script setup lang="ts">
 import { defineEmits } from "vue";
-import { useClipboard } from "@vueuse/core";
+import { useClipboard, usePermission } from "@vueuse/core";
 import { storeToRefs } from "pinia";
 
 import { useNuxtApp } from "nuxt/app";
@@ -58,11 +58,9 @@ const serviceCollectionLogStore = useServiceCollectionLogStore();
 const { collectionLog } = storeToRefs(serviceCollectionLogStore);
 const { getCollectionLogData } = serviceCollectionLogStore;
 
-const copyText = ref("");
-const { copy } = useClipboard({
-  source: copyText,
-  legacy: true,
-});
+const { copy } = useClipboard();
+const permissionRead = usePermission("clipboard-read");
+const permissionWrite = usePermission("clipboard-write");
 
 const options = {
   theme: "vs-dark",
@@ -96,8 +94,22 @@ function refresh() {
 }
 
 const copyLog = () => {
-  copyText.value = collectionLog.value;
-  copy();
+  console.log("start copy log");
+  if (
+    permissionWrite.value.toLowerCase() !== "denied" &&
+    permissionRead.value.toLowerCase() !== "denied"
+  ) {
+    copy(collectionLog.value);
+  } else {
+    const textarea = document.createElement("textarea");
+    textarea.value = collectionLog.value;
+    document.body.appendChild(textarea);
+    textarea.select();
+    textarea.focus(); // 포커스 강제 설정
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+  }
+
   $alert("로그가 복사되었습니다.", "success");
 };
 </script>
