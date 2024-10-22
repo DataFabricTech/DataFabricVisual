@@ -12,19 +12,22 @@
       :valueKey="'value'"
       :useTabContents="false"
       @change="changeTab"
-      :current-item="tabOptions[0].value"
+      :current-item="currentTab"
       :current-item-type="'value'"
     >
     </tab>
   </div>
   <!--      OVERVIEW-->
-  <div class="section-contents overflow-auto" v-if="currentTab === 'overview'">
-    <overview></overview>
+  <div
+    class="section-contents overflow-auto"
+    v-if="currentTab === TAB_OVERVIEW"
+  >
+    <overview @change="changeTab"></overview>
   </div>
   <!--      SERVICE-->
   <div
     class="section-contents p-0 bg-white overflow-auto"
-    v-if="currentTab === 'service'"
+    v-if="currentTab === TAB_SERVICE"
   >
     <div class="l-split">
       <service-list
@@ -47,7 +50,9 @@ import ModalLog from "~/components/manage/service/modal/log.vue";
 import ModalService from "~/components/manage/service/modal/modal-service/modal-service.vue";
 import { useModal } from "vue-final-modal";
 import { useServiceStore } from "~/store/manage/service";
+import { useRouter } from "nuxt/app";
 
+const router = useRouter();
 const SERVICE_ADD_MODAL_ID: string = "service-add-modal";
 
 const { getServiceList } = useServiceStore();
@@ -71,12 +76,22 @@ const modalOpen = (modalId: string) => {
 };
 
 // Tab
-const currentTab = ref("overview");
+const TAB_OVERVIEW: string = "overview";
+const TAB_SERVICE: string = "service";
+
+const currentTab = ref(TAB_OVERVIEW);
 const tabOptions = [
-  { label: "Overview", value: "overview" },
-  { label: "서비스", value: "service" },
+  { label: "Overview", value: TAB_OVERVIEW },
+  { label: "서비스", value: TAB_SERVICE },
 ];
 const changeTab = async (item: string) => {
   currentTab.value = item;
+  if (item === TAB_OVERVIEW) {
+    await clearRouterQuery();
+  }
+};
+
+const clearRouterQuery = async () => {
+  await router.replace({ query: {} });
 };
 </script>
