@@ -57,9 +57,15 @@ import _ from "lodash";
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 
 const searchCommonStore = useSearchCommonStore();
-const { resetReloadList, setEmptyFilter, setSearchKeyword } = searchCommonStore;
-const { selectedFilters, currentTab, selectedFilterItems, isShowPreview } =
-  storeToRefs(searchCommonStore);
+const { resetReloadList, setEmptyFilter, setSearchKeyword, getGraphData } =
+  searchCommonStore;
+const {
+  selectedFilters,
+  currentTab,
+  selectedFilterItems,
+  isShowPreview,
+  viewType,
+} = storeToRefs(searchCommonStore);
 
 const layoutHeaderStore = useLayoutHeaderStore();
 const { searchInputValue } = storeToRefs(layoutHeaderStore);
@@ -77,6 +83,10 @@ const resetFilters = () => {
   searchInputValue.value = "";
   setSearchKeyword("");
   resetReloadList();
+
+  if (viewType.value === "graphView") {
+    getGraphData();
+  }
 };
 
 const changeMultiple: (value: any[] | {}, keyName: any) => void = (
@@ -96,6 +106,10 @@ const setSelectedFilters = (keyName: string, selectedIds: any[]) => {
   }
 
   resetReloadList();
+
+  if (viewType.value === "graphView") {
+    getGraphData();
+  }
 };
 
 const setSelectedFilterItems = (keyName: string, value: any[] | {}) => {
