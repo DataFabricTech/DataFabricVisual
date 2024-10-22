@@ -75,12 +75,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, defineProps, defineEmits, watch } from "vue";
+import {
+  ref,
+  onMounted,
+  defineProps,
+  defineEmits,
+  watch,
+  onUnmounted,
+} from "vue";
 import type { Service } from "@/type/service";
 import { useServiceStore } from "@/store/manage/service";
 import $constants from "@/utils/constant";
 import { debounce } from "lodash";
+import { useRouter } from "nuxt/app";
 
+const router = useRouter();
 const {
   getServiceList,
   searchServiceList,
@@ -102,6 +111,10 @@ const menuSelectedClass = (value: Service): string => {
 
 onMounted(() => {
   getServiceList();
+});
+
+onUnmounted(() => {
+  emptyService();
 });
 
 function createDebouncedSearch() {
@@ -133,6 +146,7 @@ async function reset(): Promise<void> {
 function changeService(service: Service): void {
   changeCurrentService(service);
   changeTab(TAB_INGESTION);
+  router.push(`/portal/manage/service?id=${service.id}`);
 }
 
 const props = defineProps({

@@ -131,7 +131,9 @@ export const useServiceStore = defineStore("service", () => {
     serviceList.splice(0, serviceList.length, ...serviceListData);
 
     // 첫번째 항목 자동 선택
-    changeCurrentService(serviceListData[0]);
+    if (Object.keys(service).length === 0) {
+      await changeCurrentService(serviceListData[0]);
+    }
   }
 
   /**
@@ -151,7 +153,7 @@ export const useServiceStore = defineStore("service", () => {
 
       const serviceData: Service =
         Object.keys(service).length === 0 ? res.data[0] : service;
-      changeCurrentService(serviceData);
+      await changeCurrentService(serviceData);
     }
   }
 
@@ -159,7 +161,7 @@ export const useServiceStore = defineStore("service", () => {
    * 현재 서비스 엔티티 변경
    * @param source
    */
-  async function changeCurrentService(source: Service): void {
+  async function changeCurrentService(source: Service): Promise<void> {
     // 서비스 조회
     const newService = await getServiceInfo(source);
 
