@@ -1,10 +1,12 @@
 import { usePagingStore } from "@/store/common/paging";
+import { useUserStore } from "@/store/user/userStore";
 import { useQueryHelpers } from "@/composables/queryHelpers";
 import _ from "lodash";
 import { ref } from "vue";
 import $constants from "@/utils/constant";
 import type { PreviewData } from "@/type/common";
 import { NetworkDiagramNodeInfo } from "knowledge-graph-canvas/dist/network-diagram/layout/layout.type";
+import { storeToRefs } from "pinia";
 
 export const FILTER_KEYS = {
   CATEGORY: "category",
@@ -61,6 +63,8 @@ export const useSearchCommonStore = defineStore(
     const { setFrom, setSize, updateIntersectionHandler } = pagingStore;
     const { from, size } = storeToRefs(pagingStore);
     const { setQueryFilterByDepth } = useQueryHelpers();
+    const userStore = useUserStore();
+    const { user } = storeToRefs(userStore);
 
     // filters 초기값 부여 (text 처리)
     const createDefaultFilters = (): Filters => {
@@ -353,6 +357,10 @@ export const useSearchCommonStore = defineStore(
       graphData.value = data;
     };
 
+    // TODO: [개발] 시각화 그래프 마우스 오버했을 때 제목 출력
+    // TODO: [개발] 상단 데이터 필터 별로 그래프 갱신 필요 - 필터 개수로 리스트뷰 / 시각화뷰 개수를 동일하게 맞춰야 한다.
+    // TODO: [개발] 상위 카테고리 id를 클릭했을 경우에도 데이터 모델 목록을 보여줘야 한다.
+
     const selectedGraphCategoryId = ref("");
     const graphCategoryList: NetworkDiagramNodeInfo = ref({});
     const graphCategoryName = ref("");
@@ -364,41 +372,83 @@ export const useSearchCommonStore = defineStore(
 
     const stackedFromCount: Ref<number> = ref(size.value);
     const filteredSearchList: Ref<any[]> = ref([]);
+    const bookmarkList: Ref<any[]> = ref([]);
 
-    // 우측 모델 리스트 저장
-    const setFilteredSearchList = () => {
-      filteredSearchList.value = _.filter(searchResult.value, {
-        category: selectedGraphCategoryId.value,
+    const getBookmarkListQuery = () => {
+      const queryFilter: QueryFilter = {
+        query: { bool: { must: [] } },
+      };
+      const query = ` AND followers:${user.value.id}`;
+
+      const params: any = {
+        q: `*${searchKeyword.value}*`,
+        tempQuery: query,
+        index: "all",
+        from: 0,
+        size: 500,
+        deleted: false,
+        query_filter: JSON.stringify(queryFilter), // 기본 쿼리 형태는 던져야 backend 에서 오류나지않음.
+      };
+      return new URLSearchParams(params);
+    };
+
+    const getBookmarkListAPI = async () => {
+      const { data } = await $api(
+        `/api/search/list?${getBookmarkListQuery()}`,
+        {
+          showLoader: true,
+        },
+      );
+      return data;
+    };
+
+    const getBookmarkList = async () => {
+      const { data } = await getBookmarkListAPI();
+      bookmarkList.value = data.all;
+    };
+
+    const setBookmarkList = async () => {
+      filteredSearchList.value = filteredSearchList.value.map((data) => {
+        const isFollow = bookmarkList.value.some(
+          (bookmark) => bookmark.id === data.id,
+        );
+
+        return {
+          ...data, // 기존 데이터 유지
+          isFollow: isFollow, // isFollow 속성 추가
+        };
+      });
+
+      console.log("우측 모델 리스트: ", filteredSearchList.value);
+    };
+
+    const updateBookmarkList = async (menu: any) => {
+      const url: string = `/api/search/detail/${menu.id}/follow?type=${menu.type}`;
+
+      if (menu.isFollow) {
+        await $api(url, { method: "DELETE" });
+      } else {
+        await $api(url, { method: "PUT" });
+      }
+
+      filteredSearchList.value = filteredSearchList.value.filter((item) => {
+        if (item.id === menu.id) {
+          item.isFollow = !item.isFollow;
+        }
+
+        return true;
       });
     };
 
-    // 북마크 업데이트
-    const updateIsFollow = async (menu: any) => {
-      const urlType = menu.isFollow ? "remove" : "add";
-      const methodType = menu.isFollow ? "DELETE" : "PUT";
+    // 우측 모델 목록 추출
+    const setFilteredSearchList = async () => {
+      filteredSearchList.value = _.filter(searchResult.value, {
+        category: selectedGraphCategoryId.value,
+      });
 
-      $api(`/api/creation/bookmark/${urlType}/${menu.id}`, {
-        method: methodType,
-        params: {
-          type: currentTab.value,
-        },
-      })
-        .then((res: any) => {
-          if (res.result === 1) {
-            graphModelList.value = graphModelList.value.filter((item) => {
-              if (item.id === menu.id) {
-                item.isFollow = !item.isFollow;
-              }
-
-              return true;
-            });
-          }
-        })
-        .catch((err: any) => {
-          console.log("err: ", err);
-        });
+      await getBookmarkList();
+      setBookmarkList();
     };
-
     // 우측 모델 목록의 경로 추출
     const setGraphCategoryPath = (graphList: any) => {
       graphCategoryPath.value = [];
@@ -557,6 +607,7 @@ export const useSearchCommonStore = defineStore(
       );
     };
 
+    // 현재 미사용
     const addGraphModelList = async () => {
       const { data, totalCount } = await getGraphModelListAPI();
 
@@ -566,6 +617,7 @@ export const useSearchCommonStore = defineStore(
       graphModelListLength.value = totalCount[currentTab.value];
     };
 
+    // TODO: [개발] 현재 미사용 추후 인피니티 스크롤 적용 시 필요할수도 있을 듯
     const getGraphModelList = async () => {
       const { data, totalCount } = await getGraphModelListAPI();
 
@@ -620,10 +672,8 @@ export const useSearchCommonStore = defineStore(
       getQueryFilter,
       setEmptyFilter,
       getGraphData,
-      getGraphModelList,
-      addGraphModelList,
       setGraphCategoryPath,
-      updateIsFollow,
+      updateBookmarkList,
       setFilteredSearchList,
     };
   },

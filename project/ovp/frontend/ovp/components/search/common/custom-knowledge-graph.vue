@@ -55,14 +55,14 @@
             <div class="menu-button-group">
               <button
                 class="button button-neutral-ghost button-sm"
-                @click="updateIsFollow(menu)"
+                @click="updateBookmarkList(menu)"
               >
                 <span class="hidden-text">북마크</span>
-                <!--                TODO: [개발] 데이터 모델 상세에 있는 북마크 정보로 가져오기 -->
-                <!--
-                                  :class="menu.isFollow ? 'secondary' : ''"
-                                  :name="menu.isFollow ? 'tag-fill' : 'tag'"-->
-                <svg-icon class="svg-icon" name="tag-fill"></svg-icon>
+                <svg-icon
+                  class="svg-icon"
+                  :class="menu.isFollow ? 'secondary' : ''"
+                  :name="menu.isFollow ? 'tag-fill' : 'tag'"
+                ></svg-icon>
               </button>
             </div>
           </li>
@@ -86,7 +86,7 @@ import { useRouter } from "nuxt/app";
 
 const router = useRouter();
 const searchCommonStore = useSearchCommonStore();
-const { updateIsFollow } = searchCommonStore;
+const { updateBookmarkList } = searchCommonStore;
 const {
   showGraphModelListMenu,
   graphModelList,

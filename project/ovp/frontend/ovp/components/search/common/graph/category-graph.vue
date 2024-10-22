@@ -53,12 +53,8 @@ import _ from "lodash";
 import { ref } from "vue";
 
 const searchCommonStore = useSearchCommonStore();
-const {
-  getGraphData,
-  getGraphModelList,
-  setGraphCategoryPath,
-  setFilteredSearchList,
-} = searchCommonStore;
+const { getGraphData, setGraphCategoryPath, setFilteredSearchList } =
+  searchCommonStore;
 const {
   showDropDown,
   graphCategoryList,
@@ -86,7 +82,6 @@ const onClick = ({ compId, nodeId }) => {
     showGraphModelListMenu.value = true;
     setFirstNodeName(nodeId);
     setGraphCategoryPath(graphCategoryList.value);
-    getGraphModelList();
     setFilteredSearchList();
   }
   // 내가 선택한 id가 상세 정보인 경우 실행
