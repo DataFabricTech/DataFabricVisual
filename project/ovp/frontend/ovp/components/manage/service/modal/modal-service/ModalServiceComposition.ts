@@ -21,6 +21,7 @@ export enum ServiceIds {
   MARIA_DB = "MariaDB",
   POSTGRESQL = "Postgres",
   ORACLE = "Oracle",
+  TRINO = "Trino",
 }
 
 export enum ConnectionStatus {
@@ -98,6 +99,12 @@ export const services = ref<IService[]>([
     id: ServiceIds.ORACLE,
     label: "Oracle",
     img: "storage-type_04",
+    imgUrl: "",
+  },
+  {
+    id: ServiceIds.TRINO,
+    label: "Trino",
+    img: "storage-type_07",
     imgUrl: "",
   },
 ]);
