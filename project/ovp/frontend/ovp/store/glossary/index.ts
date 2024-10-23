@@ -257,11 +257,11 @@ export const useGlossaryStore = defineStore("glossary", () => {
    * @param search
    */
   async function getDataModels(name: string, search?: string): Promise<void> {
-    const res = await $api(
+    const { data } = await $api(
       `/api/glossary/data-models?search=${search}&name=${name}&from=${from.value}`,
     );
-    if (res.data !== null) {
-      dataModels.push(...res.data);
+    if (data !== null) {
+      dataModels.push(...data.data);
     }
   }
 

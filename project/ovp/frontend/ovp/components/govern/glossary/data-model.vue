@@ -103,7 +103,7 @@ const router = useRouter();
 
 const { getDataModels, resetDataModels, updateTerm, dataModels, term } =
   useGlossaryStore();
-const { getPreviewData } = useSearchCommonStore();
+const { getPreviewData, getContainerPreviewData } = useSearchCommonStore();
 const searchCommonStore = useSearchCommonStore();
 const { previewData } = storeToRefs(searchCommonStore);
 const { $alert } = useNuxtApp();
@@ -155,8 +155,13 @@ function showPreview(): void {
   isShowPreview.value = !isShowPreview.value;
 }
 
-function clickPreview(data: object): void {
-  getPreviewData(data.fullyQualifiedName);
+async function clickPreview(data: object): void {
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
+
+  type === "storage"
+    ? await getContainerPreviewData(id)
+    : await getPreviewData(fqn);
+
   isShowPreview.value = true;
 }
 const modelNmClick = (data: object) => {
@@ -196,13 +201,10 @@ async function deleteDataModel(): Promise<void> {
   }
 
   const requestBody: object[] = [];
-  const MINIO = "minio";
   selectedDataModels.value.forEach((model) => {
-    // TODO : resourceBox 에 model type 값이 없어서, depth 에 'minIo' 라고 표시되는 항목일 경우 container 로 처리함. minIo 말고 다른게 추가되면, 해당 항목을 추가해주던가, resourceBox 에 type 을 추가해주어야함.
-    const modelType = model.depth[0];
     requestBody.push({
       id: model.id,
-      type: modelType.toLowerCase() === MINIO ? "container" : "table",
+      type: model.type === "storage" ? "container" : "table",
     });
   });
 
