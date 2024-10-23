@@ -53,7 +53,7 @@
           <resource-box-list
             :data-list="dataModels"
             :is-box-selected-style="true"
-            :selected-model-list="selectedDataModels"
+            :selected-model-list="selectedDataModels.map((model) => model.id)"
             :show-owner="true"
             :show-category="true"
             :use-prv-btn="true"
@@ -95,6 +95,7 @@ import Preview from "~/components/common/preview/preview.vue";
 import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import { useNuxtApp } from "nuxt/app";
+import _ from "lodash";
 
 const { getDataModels, resetDataModels, updateTerm, dataModels, term } =
   useGlossaryStore();
@@ -155,16 +156,18 @@ function clickPreview(data: object): void {
   isShowPreview.value = true;
 }
 
-const selectedDataModels = ref<string[]>([]);
+const selectedDataModels = ref<any[]>([]);
 
 function checkDataModel(ids: string[]): void {
-  selectedDataModels.value = [...ids];
+  ids.forEach((id: string) => {
+    selectedDataModels.value.push(_.find(dataModels, { id: id }));
+  });
 }
 
 function toggleAllCheck(allCheck: boolean): void {
   if (allCheck) {
     selectedDataModels.value = dataModels.map(
-      (dataModel) => dataModel.id,
+      (dataModel) => dataModel,
     ) as string[];
   } else {
     selectedDataModels.value = [];
@@ -178,14 +181,24 @@ async function deleteDataModel(): Promise<void> {
   }
 
   const requestBody: object[] = [];
-  selectedDataModels.value.forEach((id) => {
-    requestBody.push({ id: id, type: "table" });
+  const MINIO = "minio";
+  selectedDataModels.value.forEach((model) => {
+    console.log(model);
+    // TODO : resourceBox 에 model type 값이 없어서, depth 에 'minIo' 라고 표시되는 항목일 경우 container 로 처리함. minIo 말고 다른게 추가되면, 해당 항목을 추가해주던가, resourceBox 에 type 을 추가해주어야함.
+    const modelType = model.depth[0];
+    requestBody.push({
+      id: model.id,
+      type: modelType.toLowerCase() === MINIO ? "container" : "table",
+    });
   });
+
   await updateTerm(term.id, requestBody);
   resetDataModels();
   await getDataModels(term.fullyQualifiedName, keyword.value);
   isShowPreview.value = false;
   allCheck.value = false;
+
+  selectedDataModels.value = [];
 }
 
 const { scrollTrigger } = useIntersectionObserver(searchDataModel);
