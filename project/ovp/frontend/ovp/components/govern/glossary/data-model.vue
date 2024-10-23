@@ -58,6 +58,7 @@
             :show-category="true"
             :use-prv-btn="true"
             :use-list-checkbox="true"
+            @modelNmClick="modelNmClick"
             @preview-click="clickPreview"
             @checked-value-changed="checkDataModel"
           ></resource-box-list>
@@ -96,6 +97,9 @@ import Loading from "@base/loading/Loading.vue";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
 import { useNuxtApp } from "nuxt/app";
 import _ from "lodash";
+
+import { useRouter } from "nuxt/app";
+const router = useRouter();
 
 const { getDataModels, resetDataModels, updateTerm, dataModels, term } =
   useGlossaryStore();
@@ -155,6 +159,17 @@ function clickPreview(data: object): void {
   getPreviewData(data.fullyQualifiedName);
   isShowPreview.value = true;
 }
+const modelNmClick = (data: object) => {
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
+  router.push({
+    path: "/portal/search/detail",
+    query: {
+      type: type,
+      id: id,
+      fqn: fqn,
+    },
+  });
+};
 
 const selectedDataModels = ref<any[]>([]);
 
