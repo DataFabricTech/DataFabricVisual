@@ -3,9 +3,9 @@
     <div class="l-top-bar h-[48.8px]">
       <div class="h-group gap-2">
         <img
-          v-if="servicesById[service.serviceType]"
-          :src="servicesById[service.serviceType].imgUrl"
-          :alt="servicesById[service.serviceType].label"
+          v-if="servicesWithTrinoById[service.serviceType]"
+          :src="servicesWithTrinoById[service.serviceType].imgUrl"
+          :alt="servicesWithTrinoById[service.serviceType].label"
           :width="25"
         />
         <h4 class="service-title">{{ service.name }}</h4>
@@ -202,7 +202,7 @@ const {
   changeTag,
   service,
   serviceList,
-  servicesById,
+  servicesWithTrinoById,
   changeCurrentService,
 } = useServiceStore();
 const serviceStore = useServiceStore();
@@ -221,8 +221,9 @@ onMounted(() => {
 
 // 뒤로 가기 클릭시 route query 는 변경 되지만 실제 페이지 전환 X
 // 실제 서비스 변경 필요
+const serviceId = route.query.id;
 watch(
-  () => route.query.id,
+  () => serviceId,
   (newId: string) => {
     const foundService = _.find(serviceList, { id: newId });
     changeCurrentService(foundService);
