@@ -193,8 +193,8 @@ public class GlossaryController {
      */
     @ResponseJsonResult
     @GetMapping("/data-models")
-    public Object getDataModels(@RequestParam String search, @RequestParam String name, @RequestParam String from) throws Exception {
-        return glossaryService.getDataModels(search, name, from);
+    public Object getDataModels(@RequestParam String search, @RequestParam String name, @RequestParam String from, @RequestParam String size) throws Exception {
+        return glossaryService.getDataModels(search, name, from, size);
     }
 
     /**

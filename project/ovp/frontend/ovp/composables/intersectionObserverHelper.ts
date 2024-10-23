@@ -60,8 +60,8 @@ export function useIntersectionObserver({
       intersectionHandler.disconnect();
     }
 
-    setFrom(0);
-    setSize(20);
+    setFrom(pageStoreFrom.value ?? 0);
+    setSize(pageStoreSize.value ?? 20);
 
     intersectionHandler = new IntersectionObserverHandler(
       targetId,

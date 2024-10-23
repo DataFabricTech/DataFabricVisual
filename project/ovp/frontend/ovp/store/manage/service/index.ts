@@ -17,6 +17,7 @@ import {
 import { useDataModelDetailStore } from "@/store/search/detail";
 import $constants from "@/utils/constant";
 import _ from "lodash";
+import type { IService } from "~/components/manage/service/modal/modal-service/ModalServiceProps";
 
 export const useServiceStore = defineStore("service", () => {
   const { $api, $alert } = useNuxtApp();
@@ -28,6 +29,64 @@ export const useServiceStore = defineStore("service", () => {
 
   const service = reactive<Service>(<Service>{});
   const serviceList = reactive<Service[]>([]);
+
+  enum ServiceIdsWithTrino {
+    MINIO = "MinIO",
+    MYSQL = "Mysql",
+    MARIA_DB = "MariaDB",
+    POSTGRESQL = "Postgres",
+    ORACLE = "Oracle",
+    TRINO = "Trino",
+  }
+
+  const servicesWithTrino = ref<IService[]>([
+    {
+      id: ServiceIdsWithTrino.MINIO,
+      label: "MinIO",
+      img: "storage-type_06",
+      imgUrl: "",
+      isDisabled: false,
+    },
+    {
+      id: ServiceIdsWithTrino.MYSQL,
+      label: "MySQL",
+      img: "storage-type_02",
+      imgUrl: "",
+      isDisabled: false,
+    },
+    {
+      id: ServiceIdsWithTrino.MARIA_DB,
+      label: "MariaDB",
+      img: "storage-type_01",
+      imgUrl: "",
+      isDisabled: false,
+    },
+    {
+      id: ServiceIdsWithTrino.POSTGRESQL,
+      label: "PostgreSQL",
+      img: "storage-type_03",
+      imgUrl: "",
+      isDisabled: false,
+    },
+    {
+      id: ServiceIdsWithTrino.ORACLE,
+      label: "Oracle",
+      img: "storage-type_04",
+      imgUrl: "",
+    },
+    {
+      id: ServiceIdsWithTrino.TRINO,
+      label: "Trino",
+      img: "storage-type_07",
+      imgUrl: "",
+    },
+  ]);
+
+  servicesWithTrino.value.forEach(async (service: any) => {
+    const imgUrl: any = await import(`@assetsPublic/images/${service.img}.png`);
+    service.imgUrl = imgUrl.default;
+  });
+  const servicesWithTrinoById = _.keyBy(servicesWithTrino.value, "id");
 
   // 이미지 URL 동적 셋팅
   services.value.forEach(async (service: any) => {
@@ -131,7 +190,9 @@ export const useServiceStore = defineStore("service", () => {
     serviceList.splice(0, serviceList.length, ...serviceListData);
 
     // 첫번째 항목 자동 선택
-    changeCurrentService(serviceListData[0]);
+    if (Object.keys(service).length === 0) {
+      await changeCurrentService(serviceListData[0]);
+    }
   }
 
   /**
@@ -151,7 +212,7 @@ export const useServiceStore = defineStore("service", () => {
 
       const serviceData: Service =
         Object.keys(service).length === 0 ? res.data[0] : service;
-      changeCurrentService(serviceData);
+      await changeCurrentService(serviceData);
     }
   }
 
@@ -159,7 +220,7 @@ export const useServiceStore = defineStore("service", () => {
    * 현재 서비스 엔티티 변경
    * @param source
    */
-  async function changeCurrentService(source: Service): void {
+  async function changeCurrentService(source: Service): Promise<void> {
     // 서비스 조회
     const newService = await getServiceInfo(source);
 
@@ -560,6 +621,7 @@ export const useServiceStore = defineStore("service", () => {
   return {
     tab,
     servicesById,
+    servicesWithTrinoById,
     service,
     serviceList,
     userList,
