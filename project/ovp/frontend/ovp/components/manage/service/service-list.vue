@@ -47,9 +47,9 @@
         >
           <button class="menu-button">
             <img
-              v-if="servicesById[service.serviceType]"
-              :src="servicesById[service.serviceType].imgUrl"
-              :alt="servicesById[service.serviceType].label"
+              v-if="servicesWithTrinoById[service.serviceType]"
+              :src="servicesWithTrinoById[service.serviceType].imgUrl"
+              :alt="servicesWithTrinoById[service.serviceType].label"
               :width="25"
             />
             <span class="menu-text">{{ service.name }}</span>
@@ -96,7 +96,7 @@ const {
   changeCurrentService,
   emptyService,
   changeTab,
-  servicesById,
+  servicesWithTrinoById,
 } = useServiceStore();
 const store = useServiceStore();
 const TAB_INGESTION = $constants.SERVICE.TAB[0].value;
