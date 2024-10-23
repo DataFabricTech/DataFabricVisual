@@ -119,8 +119,10 @@ export const useSearchCommonStore = defineStore(
     const currentPreviewId: Ref<string | number> = ref("");
     let UNDEFINED_TAG_ID: string = "";
 
-    // GraphData
+    // GraphView DATA
     const graphData: Ref<any[]> = ref([]);
+    const showGraphModelListMenu: Ref<boolean> = ref(false);
+    const showDropDown = ref(false);
 
     // DATA
     const viewType: Ref<string> = ref<string>("listView");
@@ -138,10 +140,6 @@ export const useSearchCommonStore = defineStore(
     const sortKey: Ref<string> = ref<string>("totalVotes");
     const sortKeyOpt: Ref<string> = ref<string>("desc");
     const isSearchResultNoData: Ref<boolean> = ref<boolean>(false);
-
-    // graphView
-    const showGraphModelListMenu: Ref<boolean> = ref(false);
-    const showDropDown = ref(false);
 
     const getQueryParam = () => {
       const queryFilter = getQueryFilter(
@@ -358,10 +356,8 @@ export const useSearchCommonStore = defineStore(
     };
 
     // TODO: [개발] 시각화 그래프 마우스 오버했을 때 제목 출력
-    // TODO: [개발] 상단 데이터 필터 별로 그래프 갱신 필요 - 필터 개수로 리스트뷰 / 시각화뷰 개수를 동일하게 맞춰야 한다.
-    // TODO: [개발] 상위 카테고리 id를 클릭했을 경우에도 데이터 모델 목록을 보여줘야 한다.
+    // TODO: [개발] 상위 id도 클릭했을 때, 하위 뎁스의 목록 출력
 
-    const selectedGraphCategoryId = ref("");
     const graphCategoryList: NetworkDiagramNodeInfo = ref({});
     const graphCategoryName = ref("");
     const graphCategoryPath = ref([]);
@@ -441,21 +437,30 @@ export const useSearchCommonStore = defineStore(
     };
 
     // 우측 모델 목록 추출
-    const setFilteredSearchList = async () => {
+    const setFilteredSearchList = async (nodeId: string) => {
+      // 내가 선택한 selectedGraphCategoryId 값의 최하위 뎁스를 찾아서 아래 filter의 값에 넣어준다?
+      // 그리고 뿌리가 여러 개 인 경우, 각각의 최하위 뎁스를 찾아서 더해줘야 할듯...?
+
       filteredSearchList.value = _.filter(searchResult.value, {
-        category: selectedGraphCategoryId.value,
+        category: nodeId,
       });
 
       await getBookmarkList();
       setBookmarkList();
     };
+
     // 우측 모델 목록의 경로 추출
-    const setGraphCategoryPath = (graphList: any) => {
+    const setGraphCategoryPath = (nodeId: string) => {
       graphCategoryPath.value = [];
+
+      if (graphCategoryList.value.id === nodeId) {
+        graphCategoryPath.value = ["ROOT"];
+        return;
+      }
 
       const traverse = (graphList: any) => {
         // 현재 노드가 목표 노드와 일치하면, 상위/현재/하위 탐색 시작
-        if (graphList.id === selectedGraphCategoryId.value) {
+        if (graphList.id === nodeId) {
           // 상위 노드부터 저장
           if (graphList.parentId && graphList.tagId) {
             graphCategoryPath.value.push(graphList.name);
@@ -487,19 +492,20 @@ export const useSearchCommonStore = defineStore(
         }
       };
 
-      traverse(graphList);
+      traverse(graphCategoryList.value);
 
-      // Root일 경우 ROOT로 출력
       graphCategoryPath.value =
-        graphCategoryPath.value.length > 3 ? ["ROOT"] : graphCategoryPath.value;
+        graphCategoryPath.value.length > 4
+          ? graphCategoryPath.value.slice(0, 1)
+          : graphCategoryPath.value;
     };
 
-    const setGraphModelIdList = (graphList: any) => {
+    const setGraphModelIdList = (nodeId: string) => {
       const result = ref([]);
 
       // targetId가 graphList 또는 하위 노드에 있는지 찾기
       const findNode = (graphList: any, parentIds = []) => {
-        if (graphList.id === selectedGraphCategoryId.value) {
+        if (graphList.id === nodeId) {
           // id 중 parentId가 있는 경우만 result에 담는다.
           result.value = parentIds
             .filter((id) => id.parentId)
@@ -529,20 +535,20 @@ export const useSearchCommonStore = defineStore(
         }
       };
 
-      findNode(graphList);
+      findNode(graphCategoryList.value);
 
       // ovp_category 프리픽스가 추가된 id 목록 추출
       graphModelIdList.value = result.value.map((id) => `ovp_category.${id}`);
     };
 
-    const getGraphModelQueryFilter = () => {
+    const getGraphModelQueryFilter = (nodeId: string) => {
       // 미분류인 경우는 아래와 같이 한글 미분류로 추출
       if (
         graphCategoryName.value === $constants.SERVICE.CATEGORY_UNDEFINED_NAME
       ) {
         graphModelIdList.value = ["ovp_category.미분류"];
       } else {
-        setGraphModelIdList(graphCategoryList.value);
+        setGraphModelIdList(nodeId);
       }
 
       const shouldTerms = graphModelIdList.value.map((tag) => ({
@@ -568,8 +574,8 @@ export const useSearchCommonStore = defineStore(
       return queryFilter;
     };
 
-    const getGraphModelListQuery = () => {
-      const queryFilter = getGraphModelQueryFilter();
+    const getGraphModelListQuery = (nodeId: string) => {
+      const queryFilter = getGraphModelQueryFilter(nodeId);
 
       const param = {
         q: "",
@@ -584,9 +590,9 @@ export const useSearchCommonStore = defineStore(
       return new URLSearchParams(param);
     };
 
-    const getGraphModelListAPI = async () => {
+    const getGraphModelListAPI = async (nodeId: string) => {
       const { data } = await $api(
-        `/api/creation/list?${getGraphModelListQuery()}`,
+        `/api/creation/list?${getGraphModelListQuery(nodeId)}`,
         {
           showLoader: true,
         },
@@ -608,8 +614,8 @@ export const useSearchCommonStore = defineStore(
     };
 
     // 현재 미사용
-    const addGraphModelList = async () => {
-      const { data, totalCount } = await getGraphModelListAPI();
+    const addGraphModelList = async (nodeId: string) => {
+      const { data, totalCount } = await getGraphModelListAPI(nodeId);
 
       graphModelList.value = graphModelList.value.concat(
         data[currentTab.value],
@@ -650,7 +656,6 @@ export const useSearchCommonStore = defineStore(
       graphCategoryName,
       showDropDown,
       graphCategoryPath,
-      selectedGraphCategoryId,
       filteredSearchList,
       stackedFromCount,
       addSearchList,

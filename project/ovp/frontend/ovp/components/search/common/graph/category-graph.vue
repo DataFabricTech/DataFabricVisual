@@ -61,7 +61,6 @@ const {
   graphCategoryName,
   graphData,
   showGraphModelListMenu,
-  selectedGraphCategoryId,
 } = storeToRefs(searchCommonStore);
 
 const top = ref(200);
@@ -77,12 +76,13 @@ const toggleLegend = () => {
 const onClick = ({ compId, nodeId }) => {
   // 내가 선택한 id가 카테고리인 경우 실행
   if (compId === $constants.GRAPH.TYPE.MODEL_LIST) {
-    selectedGraphCategoryId.value = nodeId;
     showDropDown.value = false;
     showGraphModelListMenu.value = true;
     setFirstNodeName(nodeId);
     setGraphCategoryPath(graphCategoryList.value);
     setFilteredSearchList();
+    setGraphCategoryPath(nodeId);
+    setFilteredSearchList(nodeId);
   }
   // 내가 선택한 id가 상세 정보인 경우 실행
   else {
