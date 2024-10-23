@@ -2,8 +2,10 @@ package com.mobigen.framework.exception;
 
 import com.mobigen.framework.component.Messages;
 import com.mobigen.framework.result.JsonResult;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.JSONObject;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
@@ -46,6 +48,12 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public JsonResult jsonResultExceptionHandler(JsonResultException e) {
         log.error(message.get("com.mobigen.framework.exception.GlobalExceptionHandler.jsonResultExceptionHandler"), e);
+
+        Throwable cause = e.getCause();
+        if (cause instanceof FeignException feignException) {
+            return feignExceptionHandler(feignException);
+        }
+
         return getExceptionJsonResult(e);
     }
 
@@ -73,6 +81,36 @@ public class GlobalExceptionHandler {
     public JsonResult unknownExceptionHandler(Exception e) {
         log.error(message.get("com.mobigen.framework.exception.GlobalExceptionHandler.unknownExceptionHandler"), e);
         return getExceptionJsonResult(e);
+    }
+
+    public JsonResult feignExceptionHandler(FeignException ex) {
+        log.error("FeignException");
+
+        String errorMessage = "서버 오류가 발생";
+
+        try {
+            // Feign 예외 응답 본문 파싱
+            String responseBody = ex.contentUTF8();
+
+            if (responseBody != null && !responseBody.isEmpty()) {
+                JSONObject json = new JSONObject(responseBody);
+
+                if (json.has("code") && json.getInt("code") == 20001) {
+                    errorMessage = "중복된 컬럼이 있습니다.";
+                } else {
+                    errorMessage = json.toString();
+                }
+            } else {
+                log.warn("Feign 응답 본문이 비어 있음");
+            }
+        } catch (Exception e) {
+            log.error("Feign 응답 처리 중 오류 발생", e);
+        }
+
+        JsonResult js = new JsonResult();
+        js.setErrorMessage(errorMessage);
+
+        return js;
     }
 
     private String getMessageKey(FieldError error) {
