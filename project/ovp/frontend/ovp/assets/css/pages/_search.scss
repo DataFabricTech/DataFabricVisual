@@ -57,6 +57,7 @@
     }
   }
 
+
   &-desc {
     color: $neutral-500;
   }
@@ -84,6 +85,10 @@
     background: $primary-100;
     border-radius: $border-radius-4;
   }
+}
+
+a.preview-title:hover {
+  text-decoration: underline;
 }
 
 .data-page + .preview {

@@ -258,7 +258,7 @@ export const useSearchCommonStore = defineStore(
     };
 
     const getContainerPreviewData = async (id: string) => {
-      const data = await getContainerPreviewData(id);
+      const data = await getContainerPreviewAPI(id);
       previewData.value = data.data;
     };
 

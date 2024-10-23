@@ -64,6 +64,7 @@ export const useUserStore = defineStore("userStore", () => {
   const getUserListQuery = () => {
     const params: any = {
       // open-meta 에서 사용 하는 key 이기 때문에 그대로 사용.
+      // eslint-disable-next-line id-length
       q: `*${searchKeyword}* AND isBot:false`,
       index: "user_search_index",
       from: from.value,
