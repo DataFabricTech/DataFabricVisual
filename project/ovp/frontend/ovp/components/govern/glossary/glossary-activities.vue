@@ -82,11 +82,6 @@
                 }}
               </dd>
             </dl>
-            <dl class="creation-info-item">
-              <dt class="creation-info-label">도메인</dt>
-              <!-- TODO 개발 : 도메인 데이터 구조 확인 -->
-              <dd class="creation-info-value">없음</dd>
-            </dl>
           </div>
         </div>
       </div>
