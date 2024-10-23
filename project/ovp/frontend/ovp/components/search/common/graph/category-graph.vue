@@ -79,8 +79,6 @@ const onClick = ({ compId, nodeId }) => {
     showDropDown.value = false;
     showGraphModelListMenu.value = true;
     setFirstNodeName(nodeId);
-    setGraphCategoryPath(graphCategoryList.value);
-    setFilteredSearchList();
     setGraphCategoryPath(nodeId);
     setFilteredSearchList(nodeId);
   }
