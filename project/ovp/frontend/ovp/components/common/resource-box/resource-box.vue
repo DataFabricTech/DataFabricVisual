@@ -165,7 +165,7 @@
                   }
                 "
                 :data="userList"
-                :selected-items="{ id: newData[ownerKey] }"
+                :selected-items="newData.owner ?? []"
                 label-key="displayName"
                 value-key="id"
                 title="소유자"
