@@ -178,11 +178,12 @@
 <script setup lang="ts">
 import * as echarts from "echarts";
 import { useRouter } from "nuxt/app";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch, defineEmits } from "vue";
 import { storeToRefs } from "pinia";
 import agGrid from "@extends/grid/Grid.vue";
 import Loading from "@base/loading/Loading.vue";
 import { useOverviewStore } from "~/store/manage/service/overview";
+import { useServiceStore } from "@/store/manage/service";
 import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import HeaderTooltipStatus from "~/components/manage/service/ag-grid/header-tooltip-status.vue";
 import HeaderTooltipEvent from "~/components/manage/service/ag-grid/header-tooltip-event.vue";
@@ -216,6 +217,9 @@ const {
   isEmptyServiceStatus,
 } = storeToRefs(overviewStore);
 
+const serviceStore = useServiceStore();
+const { changeCurrentService } = serviceStore;
+const { serviceList } = storeToRefs(serviceStore);
 // Dynamic Tooltip
 watch(
   () => agHeaderCoordinates.value,
@@ -250,12 +254,19 @@ const cacheBlockSize = ref(20);
 // 무한 스크롤 시 첫 화면에 표시될 행의 초기 개수
 const infiniteInitialRowCount = ref(20);
 
-// TODO: [개발] 페이지 이동 기능 추후 추가할 예정 (현재 데이터 상세로 이동하는 API 개발 안되어 있음)
-// const onCellClicked = (params: any) => {
-//   if (params.column.colDef.field === "serviceNameFormatted") {
-//     router.push(`/portal/manage/${params.data.serviceId}`);
-//   }
-// };
+const emit = defineEmits<{ (e: "change", value: string): void }>();
+
+const onCellClicked = (params: any) => {
+  const id: string = params.data.serviceId;
+  emit("change", "service");
+  changeService(id);
+  router.push(`/portal/manage/service?id=${id}`);
+};
+
+function changeService(id: string) {
+  const foundService = _.find(serviceList.value, { id: id });
+  changeCurrentService(foundService);
+}
 
 const getBadgeClass = (status: string) => {
   let badgeTheme = "";

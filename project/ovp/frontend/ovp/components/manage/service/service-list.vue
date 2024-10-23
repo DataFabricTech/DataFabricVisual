@@ -47,9 +47,9 @@
         >
           <button class="menu-button">
             <img
-              v-if="servicesById[service.serviceType]"
-              :src="servicesById[service.serviceType].imgUrl"
-              :alt="servicesById[service.serviceType].label"
+              v-if="servicesWithTrinoById[service.serviceType]"
+              :src="servicesWithTrinoById[service.serviceType].imgUrl"
+              :alt="servicesWithTrinoById[service.serviceType].label"
               :width="25"
             />
             <span class="menu-text">{{ service.name }}</span>
@@ -75,19 +75,28 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, defineProps, defineEmits, watch } from "vue";
+import {
+  ref,
+  onMounted,
+  defineProps,
+  defineEmits,
+  watch,
+  onUnmounted,
+} from "vue";
 import type { Service } from "@/type/service";
 import { useServiceStore } from "@/store/manage/service";
 import $constants from "@/utils/constant";
 import { debounce } from "lodash";
+import { useRouter } from "nuxt/app";
 
+const router = useRouter();
 const {
   getServiceList,
   searchServiceList,
   changeCurrentService,
   emptyService,
   changeTab,
-  servicesById,
+  servicesWithTrinoById,
 } = useServiceStore();
 const store = useServiceStore();
 const TAB_INGESTION = $constants.SERVICE.TAB[0].value;
@@ -102,6 +111,10 @@ const menuSelectedClass = (value: Service): string => {
 
 onMounted(() => {
   getServiceList();
+});
+
+onUnmounted(() => {
+  emptyService();
 });
 
 function createDebouncedSearch() {
@@ -133,6 +146,7 @@ async function reset(): Promise<void> {
 function changeService(service: Service): void {
   changeCurrentService(service);
   changeTab(TAB_INGESTION);
+  router.push(`/portal/manage/service?id=${service.id}`);
 }
 
 const props = defineProps({

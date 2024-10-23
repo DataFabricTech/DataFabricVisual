@@ -3,9 +3,9 @@
     <div class="l-top-bar h-[48.8px]">
       <div class="h-group gap-2">
         <img
-          v-if="servicesById[service.serviceType]"
-          :src="servicesById[service.serviceType].imgUrl"
-          :alt="servicesById[service.serviceType].label"
+          v-if="servicesWithTrinoById[service.serviceType]"
+          :src="servicesWithTrinoById[service.serviceType].imgUrl"
+          :alt="servicesWithTrinoById[service.serviceType].label"
           :width="25"
         />
         <h4 class="service-title">{{ service.name }}</h4>
@@ -175,7 +175,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, computed } from "vue";
+import { onMounted, computed, watch } from "vue";
 import { useServiceStore } from "@/store/manage/service";
 import { useDataModelDetailStore } from "@/store/search/detail";
 import $constants from "@/utils/constant";
@@ -184,9 +184,11 @@ import type { JsonPatchOperation } from "@/type/common";
 import type { MenuSearchItemImpl } from "@extends/menu-seach/MenuSearchComposition";
 import _ from "lodash";
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
+import { storeToRefs } from "pinia";
+import { useNuxtApp, useRoute } from "nuxt/app";
 
-import { useNuxtApp } from "nuxt/app";
 const { $confirm } = useNuxtApp();
+const route = useRoute();
 
 const {
   changeTab,
@@ -199,7 +201,8 @@ const {
   createOwnerOperation,
   changeTag,
   service,
-  servicesById,
+  serviceList,
+  servicesWithTrinoById,
   changeCurrentService,
 } = useServiceStore();
 const serviceStore = useServiceStore();
@@ -216,6 +219,17 @@ onMounted(() => {
   getGlossaryList();
 });
 
+// 뒤로 가기 클릭시 route query 는 변경 되지만 실제 페이지 전환 X
+// 실제 서비스 변경 필요
+const serviceId = route.query.id;
+watch(
+  () => serviceId,
+  (newId: string) => {
+    const foundService = _.find(serviceList, { id: newId });
+    changeCurrentService(foundService);
+  },
+);
+
 const tabSelectedClass = computed(() => (data: string): string => {
   return serviceStore.tab === data
     ? "tab-item is-tab-item-selected"
@@ -227,7 +241,7 @@ const isEmptyService = (): boolean => {
 };
 
 async function refreshService(): Promise<void> {
-  changeCurrentService(service);
+  await changeCurrentService(service);
   disableEditInfo();
 }
 

@@ -26,7 +26,7 @@ public class MainController {
      * @return
      * @throws Exception
      */
-    @ResponseJsonResult(errorMessage = "사용자 북마트 정보 출력 오류")
+    @ResponseJsonResult(errorMessage = "사용자 북마크 정보 출력 오류")
     @GetMapping("/follows/{id}")
     public Object getUserFollows(@PathVariable("id") String id) throws Exception {
         return mainService.getUserFollows(id);
