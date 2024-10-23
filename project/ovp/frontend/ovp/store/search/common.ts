@@ -356,19 +356,14 @@ export const useSearchCommonStore = defineStore(
     };
 
     // TODO: [개발] 시각화 그래프 마우스 오버했을 때 제목 출력
-    // TODO: [개발] 상위 id도 클릭했을 때, 하위 뎁스의 목록 출력
-
     const graphCategoryList: NetworkDiagramNodeInfo = ref({});
-    const graphCategoryName = ref("");
+    const onlyGraphCategoryList = ref([]);
     const graphCategoryPath = ref([]);
-
-    const graphModelList = ref([]);
-    const graphModelListLength = ref(0);
-    const graphModelIdList = ref([]);
 
     const stackedFromCount: Ref<number> = ref(size.value);
     const filteredSearchList: Ref<any[]> = ref([]);
     const bookmarkList: Ref<any[]> = ref([]);
+    const lowestCategoryId = ref("");
 
     const getBookmarkListQuery = () => {
       const queryFilter: QueryFilter = {
@@ -439,12 +434,12 @@ export const useSearchCommonStore = defineStore(
 
     // 우측 모델 목록 추출
     const setFilteredSearchList = async (nodeId: string) => {
-      // 내가 선택한 selectedGraphCategoryId 값의 최하위 뎁스를 찾아서 아래 filter의 값에 넣어준다?
-      // 그리고 뿌리가 여러 개 인 경우, 각각의 최하위 뎁스를 찾아서 더해줘야 할듯...?
-
-      filteredSearchList.value = _.filter(searchResult.value, {
-        category: nodeId,
-      });
+      filteredSearchList.value =
+        graphCategoryList.value.id === nodeId
+          ? searchResult.value
+          : _.filter(searchResult.value, {
+              category: lowestCategoryId.value,
+            });
 
       await getBookmarkList();
       setBookmarkList();
@@ -501,93 +496,6 @@ export const useSearchCommonStore = defineStore(
           : graphCategoryPath.value;
     };
 
-    const setGraphModelIdList = (nodeId: string) => {
-      const result = ref([]);
-
-      // targetId가 graphList 또는 하위 노드에 있는지 찾기
-      const findNode = (graphList: any, parentIds = []) => {
-        if (graphList.id === nodeId) {
-          // id 중 parentId가 있는 경우만 result에 담는다.
-          result.value = parentIds
-            .filter((id) => id.parentId)
-            .concat(graphList.id);
-          // 하위 children 노드들의 id도 추가
-          addChildIds(graphList.children);
-          return true;
-        }
-
-        for (const child of graphList.children) {
-          // 하위 노드에서 찾을 경우, 현재 graphList의 id를 parentIds로 전달하며 재귀 호출
-          if (findNode(child, [...parentIds, graphList.id])) {
-            return true;
-          }
-        }
-        return false;
-      };
-
-      // 하위 children의 id를 재귀적으로 추가하는 함수
-      const addChildIds = (children: any) => {
-        for (const child of children) {
-          // tagId가 있는 자식 요소 id만 result에 담는다. (tagId가 없으면 모델 목록임)
-          if (child.tagId) {
-            result.value.push(child.id);
-            addChildIds(child.children);
-          }
-        }
-      };
-
-      findNode(graphCategoryList.value);
-
-      // ovp_category 프리픽스가 추가된 id 목록 추출
-      graphModelIdList.value = result.value.map((id) => `ovp_category.${id}`);
-    };
-
-    // 재귀 탐색 함수
-    // 우측 모델 목록의 경로 추출
-    const graphCategoryId = ref([]);
-    const findIds = (graphList: any, nodeId: string) => {
-      graphCategoryId.value = [];
-
-      const traverse = (graphList: any) => {
-        // 현재 노드가 목표 노드와 일치하면, 상위/현재/하위 탐색 시작
-        if (graphList.id === nodeId) {
-          // 상위 노드부터 저장
-          // if (graphList.parentId && graphList.tagId) {
-          //   graphCategoryId.value.push(graphList.id);
-          // }
-          // 하위 노드들도 추가 (재귀)
-          addChildrenNames(graphList.children);
-          return true;
-        }
-
-        // 하위 children들을 재귀 탐색
-        for (const child of graphList.children) {
-          if (child.tagId && traverse(child)) {
-            //상위 노드도 결과 배열에 추가
-            if (graphList.tagId) {
-              graphCategoryId.value.unshift(graphList.id);
-            }
-            return true;
-          }
-        }
-      };
-
-      // 하위 children들의 id을 추가하는 함수
-      const addChildrenNames = (children: any) => {
-        for (const child of children) {
-          if (child.tagId) {
-            graphCategoryId.value.push(child.id);
-            addChildrenNames(child.children);
-          }
-        }
-      };
-
-      traverse(graphList);
-
-      // Root일 경우 ROOT로 출력
-      console.log("id 목록", graphCategoryId.value);
-    };
-
     return {
       searchKeyword,
       sortKey,
@@ -606,14 +514,13 @@ export const useSearchCommonStore = defineStore(
       currentPreviewId,
       graphData,
       showGraphModelListMenu,
-      graphModelList,
-      graphModelListLength,
       graphCategoryList,
-      graphCategoryName,
       showDropDown,
       graphCategoryPath,
       filteredSearchList,
       stackedFromCount,
+      onlyGraphCategoryList,
+      lowestCategoryId,
       addSearchList,
       getSearchList,
       getFilter,
@@ -636,7 +543,6 @@ export const useSearchCommonStore = defineStore(
       setGraphCategoryPath,
       updateBookmarkList,
       setFilteredSearchList,
-      findIds,
     };
   },
   {

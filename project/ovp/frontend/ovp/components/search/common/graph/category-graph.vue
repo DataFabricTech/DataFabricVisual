@@ -53,14 +53,18 @@ import _ from "lodash";
 import { ref } from "vue";
 
 const searchCommonStore = useSearchCommonStore();
-const { getGraphData, setGraphCategoryPath, setFilteredSearchList } =
-  searchCommonStore;
+const {
+  getGraphData,
+  setGraphCategoryPath,
+  setFilteredSearchList,
+  onlyGraphCategoryList,
+} = searchCommonStore;
 const {
   showDropDown,
   graphCategoryList,
-  graphCategoryName,
   graphData,
   showGraphModelListMenu,
+  lowestCategoryId,
 } = storeToRefs(searchCommonStore);
 
 const top = ref(200);
@@ -78,7 +82,7 @@ const onClick = ({ compId, nodeId }) => {
   if (compId === $constants.GRAPH.TYPE.MODEL_LIST) {
     showDropDown.value = false;
     showGraphModelListMenu.value = true;
-    setFirstNodeName(nodeId);
+    setLowestCategoryId(nodeId);
     setGraphCategoryPath(nodeId);
     setFilteredSearchList(nodeId);
   }
@@ -123,7 +127,121 @@ const setGraphCategoryList = () => {
     nodeList: [],
   };
 };
+const setOnlyGraphCategoryList = () => {
+  const nodeData: any = graphData.value.nodes;
 
+  // tagId가 null인 경우 해당 객체를 포함하지 않음
+  const mapNodeWithChildren = (node: any) => {
+    if (node.tagId === null) return null; // tagId가 null이면 제외
+
+    return {
+      id: node.id,
+      tagId: node.tagId,
+      children: node.children
+        ? node.children
+            .map(mapNodeWithChildren) // 자식 노드도 재귀적으로 처리
+            .filter((child) => child !== null) // null인 자식은 제외
+        : [],
+    };
+  };
+
+  // nodeData의 자식들을 재귀적으로 처리하여 새로운 children 구조 생성
+  const formattedNodeData = nodeData.children
+    .map(mapNodeWithChildren)
+    .filter((child) => child !== null); // null인 노드를 제외
+
+  onlyGraphCategoryList.value = {
+    id: nodeData.id,
+    children: formattedNodeData,
+  };
+};
+
+// 내가 클릭한 id의 최하위 뎁스 categroy id 추출
+// TODO: [개발] 가지가 두 개 이상으로 뻗어 나갈 때 따로 따로 저장해야함..
+const setLowestCategoryId = (nodeId: string) => {
+  if (graphCategoryList.value.id === nodeId) {
+    return;
+  }
+
+  const found = ref(false); // 찾았는지 여부를 체크하는 플래그
+
+  for (const element of onlyGraphCategoryList.value.children) {
+    if (found.value) {
+      break;
+    }
+
+    if (nodeId === element.id && element.children.length === 0) {
+      lowestCategoryId.value = element.id;
+      found.value = true;
+      break; // 첫 번째 루프 탈출
+    }
+
+    if (nodeId === element.id) {
+      for (const nextEle of element.children) {
+        if (found.value) {
+          break;
+        }
+
+        if (nextEle.children.length === 0) {
+          lowestCategoryId.value = nextEle.id;
+          found.value = true;
+          break;
+        }
+
+        for (const nextNextEle of nextEle.children) {
+          lowestCategoryId.value = nextNextEle.id;
+          found.value = true;
+          break;
+        }
+
+        if (found.value) {
+          break;
+        }
+      }
+
+      break;
+    } else {
+      for (const nextEle of element.children) {
+        if (found.value) {
+          break;
+        }
+
+        if (nodeId === nextEle.id && nextEle.children.length === 0) {
+          lowestCategoryId.value = nextEle.id;
+          found.value = true;
+          break;
+        }
+
+        if (nodeId === nextEle.id) {
+          for (const nextNextEle of nextEle.children) {
+            if (found.value) {
+              break;
+            }
+
+            if (nextNextEle.children.length === 0) {
+              lowestCategoryId.value = nextNextEle.id;
+              found.value = true;
+              break;
+            }
+
+            for (const nextNextNextEle of nextNextEle.children) {
+              if (found.value) {
+                break;
+              }
+              lowestCategoryId.value = nextNextNextEle.id;
+              found.value = true;
+              break;
+            }
+          }
+        }
+
+        if (found.value) {
+          break;
+        }
+      }
+    }
+  }
+};
 // 상세정보로 가는 모델 목록만 추출 (tagId가 null이면 모델 목록임)
 const getModelDetailList = (node: any): string[] => {
   let result: string[] = [];
@@ -187,19 +305,11 @@ const setCategoryGraph = () => {
   });
 };
 
-// 그래프 카테고리 목록에서 1depth 까지만 탐색해서 선택한 id의 미분류를 찾는다.
-const setFirstNodeName = (nodeId: string) => {
-  for (const child of graphCategoryList.value.children) {
-    if (nodeId === child.id) {
-      graphCategoryName.value = child.name;
-      return;
-    }
-  }
-};
 watch(
   () => graphData.value,
   (newVal) => {
     setGraphCategoryList();
+    setOnlyGraphCategoryList();
     setCategoryGraph();
   },
   { immediate: true },

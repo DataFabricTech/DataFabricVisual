@@ -87,12 +87,8 @@ import { useRouter } from "nuxt/app";
 const router = useRouter();
 const searchCommonStore = useSearchCommonStore();
 const { updateBookmarkList } = searchCommonStore;
-const {
-  showGraphModelListMenu,
-  graphModelList,
-  graphCategoryPath,
-  filteredSearchList,
-} = storeToRefs(searchCommonStore);
+const { showGraphModelListMenu, graphCategoryPath, filteredSearchList } =
+  storeToRefs(searchCommonStore);
 
 const closeModelList = () => {
   showGraphModelListMenu.value = false;
@@ -110,7 +106,6 @@ const modelNmClick = (data: object) => {
 };
 
 onBeforeMount(() => {
-  graphModelList.value = [];
   showGraphModelListMenu.value = false;
 });
 </script>
