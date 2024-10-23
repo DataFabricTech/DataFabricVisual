@@ -356,9 +356,11 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   };
 
   const updateSelection = (resultList: any[], value: string) => {
-    return resultList.map((item: any) => {
-      return { ...item, idShowDetail: item.id === value };
-    });
+    return resultList === undefined
+      ? []
+      : resultList.map((item: any) => {
+          return { ...item, idShowDetail: item.id === value };
+        });
   };
 
   const cancelAllSelection = () => {
@@ -566,6 +568,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
         showLoader: isFirst,
       },
     );
+    if (data === null) {
+      return { data: [], totalCount: 0 };
+    }
     const nData = data.data[currTypeMyTab.value] as any[];
     data.data[currTypeMyTab.value] = nData.map((item: any) => {
       return setSearchListItem(selectedList, item);
@@ -643,6 +648,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
 
   // 데이터 생성 메인 > 선택된 데이터 모델 > 북마크 변경
   const updateMainSelectedModelBookmark = async (value: any) => {
+    console.log(value);
     const selectedModel = _.find(selectedModelList.value, { id: value });
 
     const urlType = selectedModel.isFollow ? "remove" : "add";
@@ -650,6 +656,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
 
     $api(`/api/creation/bookmark/${urlType}/${value}`, {
       method: methodType,
+      params: {
+        type: selectedModel.type,
+      },
     })
       .then((res: any) => {
         if (res.result === 1) {
