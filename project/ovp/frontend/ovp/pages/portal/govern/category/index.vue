@@ -194,8 +194,8 @@
                     :show-owner="true"
                     :show-category="true"
                     :is-box-selected-style="isBoxSelectedStyle"
-                    :useDataNmLink="false"
                     :selected-model-list="selectedModelList"
+                    @modelNmClick="modelNmClick"
                     @previewClick="previewClick"
                     @checkedValueChanged="checked"
                   />
@@ -228,7 +228,7 @@ import { storeToRefs } from "pinia";
 import { useModal } from "vue-final-modal";
 import { useGovernCategoryStore } from "~/store/governance/Category";
 import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
-import { useNuxtApp } from "nuxt/app";
+import { useNuxtApp, useRouter } from "nuxt/app";
 import TreeVue from "@extends/tree/Tree.vue";
 import EditableGroup from "@extends/editable-group/EditableGroup.vue";
 import SearchInput from "@extends/search-input/SearchInput.vue";
@@ -240,6 +240,8 @@ import DataModelAddModal from "@/components/govern/common/modal/add-data-model.v
 import type { TreeViewItem } from "@extends/tree/TreeProps";
 import _ from "lodash";
 import $constants from "~/utils/constant";
+import ResourceBox from "~/components/common/resource-box/resource-box.vue";
+const router = useRouter();
 
 const { $alert, $confirm } = useNuxtApp();
 const categoryStore = useGovernCategoryStore();
@@ -495,6 +497,18 @@ const previewClick = async (data: object) => {
   isBoxSelectedStyle.value = true;
   currentPreviewId = id;
   previewIndex = type;
+};
+
+const modelNmClick = (data: object) => {
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
+  router.push({
+    path: "/portal/search/detail",
+    query: {
+      type: type,
+      id: id,
+      fqn: fqn,
+    },
+  });
 };
 
 // EDITABLE-INPUT
