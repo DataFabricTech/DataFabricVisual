@@ -21,19 +21,12 @@
     height: 100% !important;
   }
 
-  .text-md {
-    @include font-size('16');
+  .text-17 {
+    font-size: 17px;
   }
 
-  .text-lg {
-    @include font-size('18');
+  .text-22 {
+    font-size: 22px;
   }
 
-  .text-xl {
-    @include font-size('20');
-  }
-
-  .text-2xl {
-    @include font-size('24');
-  }
 }

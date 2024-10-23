@@ -3,7 +3,7 @@
     <div class="h-group">
       <h1 class="logo">
         <nuxt-link to="/" class="logo-link">
-          <span class="text-neutral-700 text-md font-bold">노후시설 재난안전 학습 데이터 관리</span>
+          <span class="text-neutral-700 text-17 font-bold">노후시설 재난안전 학습 데이터 관리</span>
         </nuxt-link>
       </h1>
       <SearchInput
