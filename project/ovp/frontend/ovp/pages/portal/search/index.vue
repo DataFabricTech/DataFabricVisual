@@ -104,9 +104,6 @@ const {
   currentPreviewId,
 } = storeToRefs(searchCommonStore);
 
-const layoutHeaderStore = useLayoutHeaderStore();
-const { searchInputValue } = storeToRefs(layoutHeaderStore);
-
 const menuStore = useMenuStore();
 const { previousUrl } = storeToRefs(menuStore);
 
@@ -184,8 +181,9 @@ onBeforeMount(() => {
   if (previousUrl.value !== "/portal/search/detail") {
     changeTab("table");
     setEmptyFilter();
-    searchInputValue.value = "";
-    setSearchKeyword("");
+    // 다른 페이지에서 넘어올때도 있기 때문에 검색어는 유지한다.
+    // searchInputValue.value = "";
+    // setSearchKeyword("");
   }
 
   resetReloadList();
