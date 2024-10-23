@@ -9,8 +9,8 @@ import { usePagingStore } from "~/store/common/paging";
 
 export const useGlossaryStore = defineStore("glossary", () => {
   const pagingStore = usePagingStore();
-  const { setFrom, updateIntersectionHandler } = pagingStore;
-  const { from } = storeToRefs(pagingStore);
+  const { setFrom, setSize, updateIntersectionHandler } = pagingStore;
+  const { from, size } = storeToRefs(pagingStore);
 
   const { $api } = useNuxtApp();
 
@@ -258,7 +258,7 @@ export const useGlossaryStore = defineStore("glossary", () => {
    */
   async function getDataModels(name: string, search?: string): Promise<void> {
     const { data } = await $api(
-      `/api/glossary/data-models?search=${search}&name=${name}&from=${from.value}`,
+      `/api/glossary/data-models?search=${search}&name=${name}&from=${from.value}&size=${size.value}`,
     );
     if (data !== null) {
       dataModels.push(...data.data);
@@ -312,6 +312,28 @@ export const useGlossaryStore = defineStore("glossary", () => {
    * @param param
    */
   async function changeCurrentGlossary(param: Glossary): Promise<void> {
+    /**
+     * NOTY : 용어 화면에 infinite scroll 이 2개 들어가있음
+     * 1. 용어 사전 목록 > 선택 > 용어 목록
+     * 2. 용어 목록 > 편집 > 연결된 데이터 모델
+     *
+     * 한 페이지에 infinite scroll 이 두개인데,
+     * paging 이 다중처리가 되어있지 않아서 하나로만 써야함.
+     *
+     * 1번은 size 가 20
+     * 2번은 size 가 10으로 되어있어서
+     * 오동작이 일어남.
+     *
+     * 그래서 size 값을 아래 동작마다 각 페이지에 맞게 reset 해줌.
+     *
+     * 1번용 reset : 용어사전목록에서 용어사전 클릭시
+     * 2번용 reset : 용어목록에서 '편집' 클릭시
+     */
+
+    // 1번용 reset 여기서 처리.
+    setFrom(0);
+    setSize(20);
+
     Object.assign(glossary, param);
     changeTab("term");
     disableEditModes();

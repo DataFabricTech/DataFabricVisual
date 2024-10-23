@@ -276,7 +276,7 @@ public class GlossaryService {
      * @return
      * @throws Exception
      */
-    public Object getDataModels(String search, String name, String from) throws Exception {
+    public Object getDataModels(String search, String name, String from, String size) throws Exception {
         String q;
         if (search != null && !search.isEmpty()) {
             q = "*" + search + "* AND (tags.tagFQN:\"" + name + "\")";
@@ -288,7 +288,7 @@ public class GlossaryService {
         queryParams.add("q", q);
         queryParams.add("index", "all");
         queryParams.add("from", from);
-        queryParams.add("size", "10");
+        queryParams.add("size", size);
 
         Map<String, Object> result = searchClient.getSearchList(queryParams);
         return searchService.convertToMap(result, false);
