@@ -211,7 +211,7 @@ export function MenuSearchComposition(
 
   const onApply: () => void = () => {
     // 원본 데이터로 변경
-    const mapData = _.cloneDeep(selectedListData).value.map((item) => {
+    const mapData = _.cloneDeep(selectedListData.value).map((item) => {
       return {
         [props.labelKey]: item.label,
         [props.valueKey]: item.value
