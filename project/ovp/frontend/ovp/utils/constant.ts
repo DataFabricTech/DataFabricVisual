@@ -98,10 +98,10 @@ const $constants = {
           label: "데이터 프로파일링",
           value: "profile",
         },
-        {
-          label: "연관 데이터",
-          value: "kg",
-        },
+        // {
+        //   label: "연관 데이터",
+        //   value: "kg",
+        // },
       ],
       TAB: [
         {
