@@ -198,7 +198,6 @@ async function deleteDataModel(): Promise<void> {
   const requestBody: object[] = [];
   const MINIO = "minio";
   selectedDataModels.value.forEach((model) => {
-    console.log(model);
     // TODO : resourceBox 에 model type 값이 없어서, depth 에 'minIo' 라고 표시되는 항목일 경우 container 로 처리함. minIo 말고 다른게 추가되면, 해당 항목을 추가해주던가, resourceBox 에 type 을 추가해주어야함.
     const modelType = model.depth[0];
     requestBody.push({
