@@ -159,6 +159,7 @@ const cellClicked = ({
   }
 };
 
+setSearchKeyword("");
 await getUserList();
 const { scrollTrigger } = useIntersectionObserver({ callback: addUserList });
 </script>
