@@ -20,6 +20,8 @@ export const useCreationStore = defineStore("creation", () => {
   const isFirstExecute = ref(false);
   // NOTE: 쿼리 실행여부
   const isExecuteQuery = ref(false);
+  // NOTE: 쿼리 비어있음여부
+  const isQueryEmpty = ref(true);
 
   const executeResult = ref([]);
   const executeResultErrMsg = ref("");
@@ -85,8 +87,7 @@ export const useCreationStore = defineStore("creation", () => {
   /**
    * 데이터 모델 생성 > 쿼리 실행
    * */
-  async function runQuery(value: any) {
-    query.value = value;
+  async function runQuery() {
 
     if (_.isEmpty(query.value)) {
       querySuccess.value = false;
@@ -141,19 +142,12 @@ export const useCreationStore = defineStore("creation", () => {
     executeResultErrMsg.value = "";
   };
 
-  /**
-   * 데이터 모델 생성 > 쿼리 편집
-   * */
-  const editQueryText = (value: string) => {
-    query.value = value;
-    isExecuteQuery.value = false;
-  };
-
   return {
     selectedModelList,
     query,
     referenceModels,
     querySuccess,
+    isQueryEmpty,
     isExecuteQuery,
     isFirstExecute,
     isItemClicked,
@@ -167,7 +161,6 @@ export const useCreationStore = defineStore("creation", () => {
     executeResultErrMsg,
     runQuery,
     resetQuery,
-    editQueryText,
     deleteDataModel,
     onClickDataModelItem,
     showProfile,

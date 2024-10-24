@@ -123,6 +123,9 @@ const $constants = {
         recent: "최근에 조회한 데이터 모델",
       },
     },
+    SAVE: {
+      REGEX: /^[a-zA-Z_][a-zA-Z0-9_]*$/,
+    },
   },
   PATCH_OPERATION: {
     PATH_LIST: {

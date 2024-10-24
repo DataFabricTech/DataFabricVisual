@@ -107,7 +107,7 @@ public class ModelCreationController {
      * @return
      * @throws Exception
      */
-    @ResponseJsonResult(errorMessage = "데이터 모델 저장 오류")
+    @ResponseJsonResult
     @PostMapping("/save")
     public Object saveModel(@RequestBody Map<String, Object> param) throws Exception {
         return modelCreationService.saveModel(param);

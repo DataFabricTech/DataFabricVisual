@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import _ from "lodash";
 import { useCreationStore } from "~/store/datamodel-creation/index";
 import { useUserStore } from "~/store/user/userStore";
+import $constants from "@/utils/constant";
 
 export const useDataModelSaveStore = defineStore("dataModelSave", () => {
   const { $api } = useNuxtApp();
@@ -11,6 +12,7 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
     query,
     referenceModels,
     querySuccess,
+    isQueryEmpty,
     isFirstExecute,
     isExecuteQuery,
   } = storeToRefs(creationStore);
@@ -20,9 +22,12 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
 
   const dataModelName = ref("");
   const modelDescription = ref("");
+  const isSaveButtonClicked = ref(false);
   const isNameEmpty = ref(false);
   const isDuplicate = ref(false);
+  const isNameValid = ref(true);
   const isQueryExecuteValid = ref(true);
+  const saveErrorMsg = ref("");
 
   const cateTitle = ref("");
   const categoryList: Ref<any[]> = ref([]);
@@ -54,7 +59,6 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
   const getCategoryList = async () => {
     const data = await $api("/api/category/list");
     categoryList.value = data.data.children;
-    cateTitle.value = categoryList.value[0].name;
     tree_selectedItem.value = categoryList.value[0];
   };
 
@@ -79,17 +83,46 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
   };
 
   const resetValidation = () => {
+    isSaveButtonClicked.value = false;
     isNameEmpty.value = false;
     isDuplicate.value = false;
     isQueryExecuteValid.value = true;
+    isNameValid.value = true;
+    saveErrorMsg.value = "";
   };
 
   const saveValidation = async () => {
     resetValidation();
 
+    isSaveButtonClicked.value = true;
+
     isNameEmpty.value = _.isEmpty(dataModelName.value);
 
     if (isNameEmpty.value) {
+      saveErrorMsg.value = "필수값을 입력해주세요.";
+      return;
+    }
+
+    isNameValid.value = $constants.DATAMODEL_CREATION.SAVE.REGEX.test(
+      dataModelName.value,
+    );
+
+    if (!isNameValid.value && !isNameEmpty) {
+      return;
+    }
+
+    if (isSaveButtonClicked.value && isQueryEmpty.value) {
+      saveErrorMsg.value = "쿼리를 입력해주세요.";
+      return;
+    }
+
+    if (!isExecuteQuery.value) {
+      saveErrorMsg.value = "쿼리를 실행해주세요.";
+      return;
+    }
+
+    if (!querySuccess.value) {
+      saveErrorMsg.value = "잘못된 쿼리입니다.";
       return;
     }
 
@@ -155,9 +188,12 @@ export const useDataModelSaveStore = defineStore("dataModelSave", () => {
   return {
     dataModelName,
     modelDescription,
+    isSaveButtonClicked,
     isNameEmpty,
+    isNameValid,
     isDuplicate,
     isQueryExecuteValid,
+    saveErrorMsg,
     cateTitle,
     categoryList,
     tagList,
