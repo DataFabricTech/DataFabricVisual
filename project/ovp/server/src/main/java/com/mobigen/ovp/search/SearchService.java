@@ -386,7 +386,7 @@ public class SearchService {
                     CategoryDTO categoryDTO = new CategoryDTO();
 
                     categoryDTO.setId(dataMap.get("id").toString());
-                    categoryDTO.setParentId(dataMap.get("category").toString());
+                    categoryDTO.setParentId(dataMap.get("categoryId").toString());
                     categoryDTO.setName(dataMap.get("modelNm").toString());
                     categoryDTO.setFqn(dataMap.get("fqn").toString());
                     categoryDTO.setIndex(index);
