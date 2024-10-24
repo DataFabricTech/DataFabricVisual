@@ -15,6 +15,7 @@ import com.mobigen.ovp.common.openmete_client.dto.Term;
 import com.mobigen.ovp.glossary.client.response.Glossaries;
 import com.mobigen.ovp.glossary.client.response.GlossaryActivities;
 import com.mobigen.ovp.glossary.client.response.Terms;
+import com.mobigen.ovp.search.SearchService;
 import com.mobigen.ovp.search_detail.SearchDetailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +42,7 @@ public class GlossaryService {
     private final SearchClient searchClient;
     private final TablesClient tablesClient;
     private final SearchDetailService searchDetailService;
+    private final SearchService searchService;
 
     /**
      * 용어 사전 생성
@@ -288,73 +290,8 @@ public class GlossaryService {
         queryParams.add("from", from);
         queryParams.add("size", size);
 
-        List<Map<String, ?>> hits = (List<Map<String, ?>>) ((Map<?, ?>) searchClient.getSearchList(queryParams).get("hits")).get("hits");
-
-        List<Object> source = new ArrayList<>();
-        for(Map<String, ?> data : hits) {
-            source.add(data.get("_source"));
-        }
-
-        List<Map<String, Object>> dataList = new ArrayList<>();
-        for(Object obj : source) {
-            if(obj instanceof Map<?,?>) {
-                Map<String, Object> data = (Map<String, Object>) obj;
-                Map<String, Object> tmp = new HashMap<>();
-                tmp.put("id", data.get("id"));
-                tmp.put("modelDesc", data.get("description"));
-                tmp.put("modelNm", data.get("name"));
-
-                if(data.containsKey("owner") && data.get("owner") != null) {
-                    Map<String, Object> ownerData = (Map<String, Object>) data.get("owner");
-                    tmp.put("owner", ownerData);
-                    tmp.put("ownerDisplayName", ownerData.get("displayName"));
-                }
-
-                String serviceType = Optional.ofNullable(data.get("serviceType"))
-                        .map(Object::toString)
-                        .map(String::toLowerCase)
-                        .orElse("");
-                String serviceIcon = "type-img type-img-" + serviceType;
-                tmp.put("serviceIcon", serviceIcon);
-
-                tmp.put("type", String.valueOf(data.get("tableType")));
-
-                String displayName = (String) data.get("displayName");
-                if (displayName == null || "".equals(displayName)) {
-                    tmp.put("firModelNm", "");
-                } else {
-                    tmp.put("firModelNm", data.get("name"));
-                }
-
-                List<Map<String, Object>> tags = (List<Map<String, Object>>) data.get("tags");
-                List<Map<String, Object>> categoryList = new ArrayList<>();
-
-                if (tags != null && !tags.isEmpty()) {
-                    for (Map<String, Object> tag : tags) {
-                        Object tagFQN = tag.get("tagFQN");
-                        if (tagFQN != null && tagFQN.toString().contains(Constants.OVP_CATEGORY)) {
-                            Map<String, Object> categoryData = new HashMap<>();
-                            categoryData.put("id", tag.get("id"));
-                            categoryData.put("name", tag.get("name"));
-                            categoryData.put("tagDisplayName", tag.get("displayName"));
-                            categoryData.put("tagFQN", tagFQN);
-                            categoryData.put("tagName", tag.get("name"));
-                            categoryData.put("tagDescription", tag.get("description"));
-
-                            categoryList.add(categoryData);
-                        }
-                    }
-                }
-                tmp.put("category", categoryList);
-
-                String fqn = (String) data.get("fullyQualifiedName");
-                tmp.put("fullyQualifiedName", fqn);
-                tmp.put("depth", fqn.split("(?<!\\\\)\\.(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)"));
-
-                dataList.add(tmp);
-            }
-        }
-        return dataList;
+        Map<String, Object> result = searchClient.getSearchList(queryParams);
+        return searchService.convertToMap(result, false);
     }
 
     /**

@@ -139,7 +139,6 @@ public class ModelConvertUtil {
             // 루프가 끝난 후 categoryId가 있으면 추가
             if (!categoryId.isEmpty()) {
                 modifiedSource.put("categoryId", categoryId);
-                System.out.println("HERE");
             }
         }
 
