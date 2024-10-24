@@ -163,38 +163,38 @@ const setLowestCategoryId = (nodeId: string) => {
     return;
   }
 
-  const found = ref(false); // 찾았는지 여부를 체크하는 플래그
+  let found = false; // 찾았는지 여부를 체크하는 플래그
 
   for (const element of onlyGraphCategoryList.value.children) {
-    if (found.value) {
+    if (found) {
       break;
     }
 
     if (nodeId === element.id && element.children.length === 0) {
       lowestCategoryId.value = element.id;
-      found.value = true;
+      found = true;
       break; // 첫 번째 루프 탈출
     }
 
     if (nodeId === element.id) {
       for (const nextEle of element.children) {
-        if (found.value) {
+        if (found) {
           break;
         }
 
         if (nextEle.children.length === 0) {
           lowestCategoryId.value = nextEle.id;
-          found.value = true;
+          found = true;
           break;
         }
 
         for (const nextNextEle of nextEle.children) {
           lowestCategoryId.value = nextNextEle.id;
-          found.value = true;
+          found = true;
           break;
         }
 
-        if (found.value) {
+        if (found) {
           break;
         }
       }
@@ -202,40 +202,40 @@ const setLowestCategoryId = (nodeId: string) => {
       break;
     } else {
       for (const nextEle of element.children) {
-        if (found.value) {
+        if (found) {
           break;
         }
 
         if (nodeId === nextEle.id && nextEle.children.length === 0) {
           lowestCategoryId.value = nextEle.id;
-          found.value = true;
+          found = true;
           break;
         }
 
         if (nodeId === nextEle.id) {
           for (const nextNextEle of nextEle.children) {
-            if (found.value) {
+            if (found) {
               break;
             }
 
             if (nextNextEle.children.length === 0) {
               lowestCategoryId.value = nextNextEle.id;
-              found.value = true;
+              found = true;
               break;
             }
 
             for (const nextNextNextEle of nextNextEle.children) {
-              if (found.value) {
+              if (found) {
                 break;
               }
               lowestCategoryId.value = nextNextNextEle.id;
-              found.value = true;
+              found = true;
               break;
             }
           }
         }
 
-        if (found.value) {
+        if (found) {
           break;
         }
       }
