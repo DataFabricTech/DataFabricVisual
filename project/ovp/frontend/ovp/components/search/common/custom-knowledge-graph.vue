@@ -11,8 +11,15 @@
             v-for="(item, index) in graphCategoryPath"
             :key="index"
           >
-            <span class="breadcrumb-link">{{ item }}</span>
+            <span class="breadcrumb-text">{{ item }}</span>
           </li>
+<!--          <li-->
+<!--            class="breadcrumb-item"-->
+<!--            v-for="(item, index) in graphCategoryPath"-->
+<!--            :key="index"-->
+<!--          >-->
+<!--            <span class="breadcrumb-text">{{ item }}</span>-->
+<!--          </li>-->
         </ul>
       </div>
       <button
