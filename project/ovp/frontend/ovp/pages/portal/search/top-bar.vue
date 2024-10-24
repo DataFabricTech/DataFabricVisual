@@ -57,7 +57,7 @@ import SelectBox from "@extends/select-box/SelectBox.vue";
 import $constants from "~/utils/constant";
 
 const searchCommonStore = useSearchCommonStore();
-const { setSortFilter, setFromCount } = searchCommonStore;
+const { setSortFilter } = searchCommonStore;
 const {
   viewType,
   searchResultLength,
@@ -71,9 +71,7 @@ const options: { [key: string]: string | number }[] =
   $constants.COMMON.SORT_FILTER;
 const isFirstCheckedEvent: boolean = true;
 
-const onListView = () => {
-  setFromCount();
-};
+const onListView = () => {};
 
 const onGraphView = () => {
   viewType.value = "graphView";

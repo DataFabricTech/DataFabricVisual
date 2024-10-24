@@ -73,7 +73,7 @@ import _ from "lodash";
 const searchCommonStore = useSearchCommonStore();
 const { setSearchKeyword, changeTab, setEmptyFilter, resetReloadList } =
   searchCommonStore;
-const { viewType } = storeToRefs(searchCommonStore);
+const { viewType, stackedFromCount } = storeToRefs(searchCommonStore);
 
 const userStore = useUserStore();
 const { getUserInfo, setProfileFirstWord } = userStore;
@@ -112,6 +112,7 @@ const updateSearchInputValue = (newValue: string) => {
 
 const search = (value: string) => {
   viewType.value = "listView";
+  stackedFromCount.value = 20;
   setSearchKeyword(value);
   changeTab("table");
   setEmptyFilter();
