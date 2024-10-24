@@ -78,6 +78,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   let dataModelId: string = "";
   let dataModelFqn: string = "";
   const dataModelType: Ref<string> = ref("");
+  const recommendDataModels: Ref<any[]> = ref([]);
 
   let categoryAllList: any[] = [];
 
@@ -395,6 +396,13 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     );
   };
 
+  const getRecommendDataModels = async (url: string): Promise<void> => {
+    const res = await $api(
+      `/api/search/detail/recommend/${url}/${dataModelId}?type=${dataModelType.value}`,
+    );
+    recommendDataModels.value = res.data;
+  };
+
   return {
     dataModelType,
     userList,
@@ -409,6 +417,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     profileList,
     queryList,
     dataLineage,
+    recommendDataModels,
     setDataModelId,
     setDataModelFqn,
     setDataModelType,
@@ -430,5 +439,6 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     changeDataModel,
     changeTag,
     removeDataModel,
+    getRecommendDataModels,
   };
 });
