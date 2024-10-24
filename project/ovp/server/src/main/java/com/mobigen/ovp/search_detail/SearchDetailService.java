@@ -218,14 +218,10 @@ public class SearchDetailService {
         Tables tables = null;
 
         if (!ModelType.STORAGE.getValue().equals(type)) {
-            log.info(id);
             tables = tablesClient.getTablesName(id, params);
-            log.info(tables.toString());
             dataModelDetailResponse = new DataModelDetailResponse(tables, type, userId);
         } else {
-            log.info(id);
             tables = containersClient.getStorageById(id, params);
-            log.info(tables.toString());
             dataModelDetailResponse = new DataModelDetailResponse(tables, type, userId);
         }
 
