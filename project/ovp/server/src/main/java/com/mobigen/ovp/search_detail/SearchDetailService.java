@@ -1,19 +1,18 @@
 package com.mobigen.ovp.search_detail;
 
 import com.mobigen.ovp.category.entity.CategoryEntity;
-import com.mobigen.ovp.category.repository.CategoryRepository;
 import com.mobigen.ovp.common.ModelConvertUtil;
 import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.openmete_client.ClassificationTagsClient;
 import com.mobigen.ovp.common.openmete_client.ContainersClient;
 import com.mobigen.ovp.common.openmete_client.LineageClient;
+import com.mobigen.ovp.common.openmete_client.RecommendClient;
 import com.mobigen.ovp.common.openmete_client.SearchClient;
 import com.mobigen.ovp.common.openmete_client.TablesClient;
 import com.mobigen.ovp.common.openmete_client.dto.Base;
 import com.mobigen.ovp.common.openmete_client.dto.Columns;
 import com.mobigen.ovp.common.openmete_client.dto.Followers;
-import com.mobigen.ovp.common.openmete_client.dto.Profile;
 import com.mobigen.ovp.common.openmete_client.dto.ProfileColumn;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
 import com.mobigen.ovp.common.openmete_client.dto.Tag;
@@ -31,6 +30,7 @@ import com.mobigen.ovp.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -58,9 +58,9 @@ public class SearchDetailService {
     private final LineageClient lineageClient;
     private final ClassificationTagsClient classificationTagsClient;
     private final GlossaryClient glossaryClient;
+    private final RecommendClient recommendClient;
 
     private final UserService userService;
-    private final CategoryRepository categoryRepository;
     private final ModelConvertUtil modelConvertUtil;
 
     /**
@@ -218,10 +218,14 @@ public class SearchDetailService {
         Tables tables = null;
 
         if (!ModelType.STORAGE.getValue().equals(type)) {
+            log.info(id);
             tables = tablesClient.getTablesName(id, params);
+            log.info(tables.toString());
             dataModelDetailResponse = new DataModelDetailResponse(tables, type, userId);
         } else {
+            log.info(id);
             tables = containersClient.getStorageById(id, params);
+            log.info(tables.toString());
             dataModelDetailResponse = new DataModelDetailResponse(tables, type, userId);
         }
 
@@ -641,5 +645,70 @@ public class SearchDetailService {
         } else {
             return containersClient.delete(id, false, true);
         }
+    }
+
+    /**
+     * 추천 데이터 목록 - CLUSTERING
+     * @param id
+     * @param type
+     * @return
+     * @throws Exception
+     */
+    public Object getRecommendDataModelClustering(String id, String type) throws Exception {
+        Map<String, Object> res = recommendClient.getClustering(id);
+        List<String> ids = new ArrayList<>();
+        if(res != null) {
+            if (res.get("status") instanceof Integer && (Integer) res.get("status") == HttpStatus.OK.value()) {
+                Map<String, Object> data = (Map<String, Object>) res.get("data");
+                if (data != null) {
+                    ids = (List<String>) data.get("recommended");
+                }
+            }
+        }
+        return fetchRecommendDataModels(ids, type);
+    }
+
+    /**
+     * 추천 데이터 목록 - Embedding
+     * @param id
+     * @param type
+     * @return
+     * @throws Exception
+     */
+    public Object getRecommendDataModelEmbedding(String id, String type) throws Exception {
+        Map<String, Object> res = recommendClient.getEmbedding(id);
+        List<String> ids = new ArrayList<>();
+        if(res != null) {
+            if (res.get("status") instanceof Integer && (Integer) res.get("status") == HttpStatus.OK.value()) {
+                Map<String, Object> data = (Map<String, Object>) res.get("data");
+                if (data != null) {
+                    ids = (List<String>) data.get("recommended");
+                }
+            }
+        }
+        return fetchRecommendDataModels(ids, type);
+    }
+
+    private List<DataModelDetailResponse> fetchRecommendDataModels(List<String> ids, String type) throws Exception {
+        List<DataModelDetailResponse> result = new ArrayList<>();
+
+        for (String id : ids) {
+            DataModelDetailResponse dataModelDetailResponse;
+            try {
+                dataModelDetailResponse = getDataModelDetail(id, type);
+            } catch (Exception e) {
+                String alternativeType = ModelType.STORAGE.getValue().equals(type) ?
+                        ModelType.TABLES.getValue() :
+                        ModelType.STORAGE.getValue();
+                try {
+                    dataModelDetailResponse = getDataModelDetail(id, alternativeType);
+                } catch (Exception ex) {
+                    continue;
+                }
+            }
+            result.add(dataModelDetailResponse);
+        }
+
+        return result;
     }
 }

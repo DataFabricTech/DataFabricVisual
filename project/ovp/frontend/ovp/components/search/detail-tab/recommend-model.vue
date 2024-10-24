@@ -1,37 +1,56 @@
 <template>
   <div class="data-detail">
-    <div class="data-detail-group">
-      <div class="recommend" v-for="group in 4" :key="group">
+    <div class="data-detail-group" v-if="recommendDataModels.length > 0">
+      <div class="recommend" v-for="group in groupedRecommendations">
         <!-- TODO: [개발] intersection observer 적용  -->
-        <template v-for="card in 2" :key="card">
+        <template v-for="recommendDataModel in group">
           <resource-box
             class="is-resource-box-no-action"
-            :data-obj="resourceBoxObj"
+            :data-obj="recommendDataModel"
+            :is-box-selected-style="true"
             :show-owner="true"
             :show-category="true"
-            :use-data-nm-link="true"
+            @model-nm-click="clickRecommendDataModel"
           />
         </template>
-        <!-- resource-box 끝  -->
+      </div>
+    </div>
+    <div class="no-result h-auto" v-else>
+      <div class="notification">
+        <svg-icon class="notification-icon" name="info"></svg-icon>
+        <p class="notification-detail">등록된 정보가 없습니다.</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import ResourceBox from "~/components/common/resource-box/resource-box.vue";
+import { useDataModelDetailStore } from "@/store/search/detail/index";
+import { storeToRefs } from "pinia";
+import { useRouter } from "nuxt/app";
+const dataModelDetailStore = useDataModelDetailStore();
+const { recommendDataModels } = storeToRefs(dataModelDetailStore);
+const router = useRouter();
 
-let resourceBoxObj: any = {
-  id: "1",
-  serviceIcon: "http://www.mobigen.com/media/img/common/mobigen_logo.svg",
-  depth: ["1depth", "2depth", "3depth", "데이터모델"],
-  firModelNm: "최초 데이터모델 명",
-  modelNm: "Model Name",
-  modelDesc:
-    "데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. 데이터 모델 설명에 대한 영역입니다. ",
-  owner: "장소라",
-  category: "카테고리",
-};
+const groupedRecommendations = computed(() => {
+  const groups = [];
+  for (let i = 0; i < recommendDataModels.value.length; i += 2) {
+    groups.push(recommendDataModels.value.slice(i, i + 2));
+  }
+  return groups;
+});
+
+function clickRecommendDataModel(data: object) {
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
+  router.push({
+    path: "/portal/search/detail",
+    query: {
+      type: type,
+      id: id,
+      fqn: fqn,
+    },
+  });
+}
 </script>
 
 <style lang="scss" scoped></style>
