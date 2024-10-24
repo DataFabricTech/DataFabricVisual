@@ -438,7 +438,7 @@ export const useSearchCommonStore = defineStore(
         graphCategoryList.value.id === nodeId
           ? searchResult.value
           : _.filter(searchResult.value, {
-              category: lowestCategoryId.value,
+              categoryId: lowestCategoryId.value,
             });
 
       await getBookmarkList();
