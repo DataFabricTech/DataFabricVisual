@@ -159,89 +159,54 @@ const setOnlyGraphCategoryList = () => {
 // 내가 클릭한 id의 최하위 뎁스 categroy id 추출
 // TODO: [개발] 가지가 두 개 이상으로 뻗어 나갈 때 따로 따로 저장해야함..
 const setLowestCategoryId = (nodeId: string) => {
+  // root 카테고리와 비교
   if (graphCategoryList.value.id === nodeId) {
     return;
   }
 
-  const found = ref(false); // 찾았는지 여부를 체크하는 플래그
+  // 특정 카테고리에서 자식 노드 중 가장 깊은 leaf 노드를 찾는 함수
+  const findLowestChildId = (category) => {
+    while (category.children && category.children.length > 0) {
+      category = category.children[0]; // 첫 번째 자식으로 계속 내려감
+    }
+    return category.id;
+  };
 
+  // 1단계 카테고리에서 목표 노드 찾기
   for (const element of onlyGraphCategoryList.value.children) {
-    if (found.value) {
-      break;
+    if (element.id === nodeId) {
+      // 자식이 없으면 바로 해당 카테고리 반환
+      if (element.children.length === 0) {
+        lowestCategoryId.value = element.id;
+        return;
+      }
+      // 자식이 있으면 자식 중 가장 아래 노드 설정
+      lowestCategoryId.value = findLowestChildId(element);
+      return;
     }
 
-    if (nodeId === element.id && element.children.length === 0) {
-      lowestCategoryId.value = element.id;
-      found.value = true;
-      break; // 첫 번째 루프 탈출
-    }
-
-    if (nodeId === element.id) {
-      for (const nextEle of element.children) {
-        if (found.value) {
-          break;
+    // 2단계 카테고리에서 목표 노드 찾기
+    for (const child of element.children) {
+      if (child.id === nodeId) {
+        if (child.children.length === 0) {
+          lowestCategoryId.value = child.id;
+          return;
         }
-
-        if (nextEle.children.length === 0) {
-          lowestCategoryId.value = nextEle.id;
-          found.value = true;
-          break;
-        }
-
-        for (const nextNextEle of nextEle.children) {
-          lowestCategoryId.value = nextNextEle.id;
-          found.value = true;
-          break;
-        }
-
-        if (found.value) {
-          break;
-        }
+        lowestCategoryId.value = findLowestChildId(child);
+        return;
       }
 
-      break;
-    } else {
-      for (const nextEle of element.children) {
-        if (found.value) {
-          break;
-        }
-
-        if (nodeId === nextEle.id && nextEle.children.length === 0) {
-          lowestCategoryId.value = nextEle.id;
-          found.value = true;
-          break;
-        }
-
-        if (nodeId === nextEle.id) {
-          for (const nextNextEle of nextEle.children) {
-            if (found.value) {
-              break;
-            }
-
-            if (nextNextEle.children.length === 0) {
-              lowestCategoryId.value = nextNextEle.id;
-              found.value = true;
-              break;
-            }
-
-            for (const nextNextNextEle of nextNextEle.children) {
-              if (found.value) {
-                break;
-              }
-              lowestCategoryId.value = nextNextNextEle.id;
-              found.value = true;
-              break;
-            }
-          }
-        }
-
-        if (found.value) {
-          break;
+      // 3단계 카테고리에서 목표 노드 찾기
+      for (const grandChild of child.children) {
+        if (grandChild.id === nodeId) {
+          lowestCategoryId.value = grandChild.id;
+          return;
         }
       }
     }
   }
 };
+
 // 상세정보로 가는 모델 목록만 추출 (tagId가 null이면 모델 목록임)
 const getModelDetailList = (node: any): string[] => {
   let result: string[] = [];
