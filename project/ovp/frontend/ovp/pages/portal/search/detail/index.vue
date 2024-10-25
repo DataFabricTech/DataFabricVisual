@@ -54,7 +54,6 @@ import DefaultInfo from "@/components/search/detail-tab/default-info.vue";
 import Schema from "@/components/search/detail-tab/schema.vue";
 import Sample from "@/components/search/detail-tab/sample.vue";
 import Profiling from "@/components/search/detail-tab/profiling.vue";
-import Query from "@/components/search/detail-tab/query.vue";
 import Lineage from "@/components/search/detail-tab/lineage.vue";
 import KnowledgeGraph from "@/components/search/detail-tab/knowledge-graph.vue";
 import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
@@ -69,7 +68,7 @@ const lineageStore = useLineageStore();
 const searchCommonStore = useSearchCommonStore();
 const userStore = useUserStore();
 
-const { dataModelType, userList, categoryList, dataModel, sampleList, defaultInfo } =
+const { dataModelType, userList, categoryList, dataModel, defaultInfo } =
   storeToRefs(dataModelDetailStore);
 
 const {
@@ -92,10 +91,15 @@ const {
 
 const { getLineageData } = lineageStore;
 
+const { getFilters } = searchCommonStore;
+
 const { user } = storeToRefs(userStore);
 
 // computed 속성으로 filteredTabs 정의
 const filteredTabs = computed(() => {
+  const exceptExtList = ["hwp", "hwpx", "doc", "docx"];
+  let includedValues = [];
+
   if (route.query.type !== "storage") {
     // tables가 true이면 모든 탭 옵션을 반환
     return tabOptions;
