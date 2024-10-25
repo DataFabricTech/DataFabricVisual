@@ -47,9 +47,9 @@
         </div>
       </div>
     </div>
-    <div v-if="dataModels.length !== 0" class="l-resource-box l-split mt-3">
+    <div v-show="dataModels.length !== 0" class="l-resource-box l-split mt-3">
       <div class="data-page">
-        <div class="data-list">
+        <div class="data-list" id="glossaryDataList">
           <resource-box-list
             :data-list="dataModels"
             :is-box-selected-style="true"
@@ -64,7 +64,7 @@
           ></resource-box-list>
           <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
           <Loading
-            id="loader"
+            id="glossaryDataListLoader"
             :use-loader-overlay="true"
             class="loader-lg is-loader-inner"
             style="display: none"
@@ -74,10 +74,11 @@
       <Preview
         :preview-data="previewData"
         :is-show-preview="isShowPreview"
+        :model-type="previewIndex"
         @change="showPreview"
       ></Preview>
     </div>
-    <div v-else class="no-result mt-3">
+    <div v-if="dataModels.length < 1" class="no-result mt-3">
       <div class="notification">
         <svg-icon class="notification-icon" name="info"></svg-icon>
         <p class="notification-detail">등록된 정보가 없습니다.</p>
@@ -103,7 +104,7 @@ const router = useRouter();
 
 const { getDataModels, resetDataModels, updateTerm, dataModels, term } =
   useGlossaryStore();
-const { getPreviewData } = useSearchCommonStore();
+const { getPreviewData, getContainerPreviewData } = useSearchCommonStore();
 const searchCommonStore = useSearchCommonStore();
 const { previewData } = storeToRefs(searchCommonStore);
 const { $alert } = useNuxtApp();
@@ -138,6 +139,11 @@ const showDataModelAddModal = () => {
   open();
 };
 
+const addDataModel = () => {
+  getDataModels(term.fullyQualifiedName, keyword.value);
+  isShowPreview.value = false;
+};
+
 function searchDataModel(): void {
   resetDataModels();
   getDataModels(term.fullyQualifiedName, keyword.value);
@@ -155,8 +161,15 @@ function showPreview(): void {
   isShowPreview.value = !isShowPreview.value;
 }
 
-function clickPreview(data: object): void {
-  getPreviewData(data.fullyQualifiedName);
+let previewIndex: string = "";
+async function clickPreview(data: object): void {
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
+
+  type === "storage"
+    ? await getContainerPreviewData(id)
+    : await getPreviewData(fqn);
+
+  previewIndex = type;
   isShowPreview.value = true;
 }
 const modelNmClick = (data: object) => {
@@ -196,13 +209,10 @@ async function deleteDataModel(): Promise<void> {
   }
 
   const requestBody: object[] = [];
-  const MINIO = "minio";
   selectedDataModels.value.forEach((model) => {
-    // TODO : resourceBox 에 model type 값이 없어서, depth 에 'minIo' 라고 표시되는 항목일 경우 container 로 처리함. minIo 말고 다른게 추가되면, 해당 항목을 추가해주던가, resourceBox 에 type 을 추가해주어야함.
-    const modelType = model.depth[0];
     requestBody.push({
       id: model.id,
-      type: modelType.toLowerCase() === MINIO ? "container" : "table",
+      type: model.type === "storage" ? "container" : "table",
     });
   });
 
@@ -215,5 +225,11 @@ async function deleteDataModel(): Promise<void> {
   selectedDataModels.value = [];
 }
 
-const { scrollTrigger } = useIntersectionObserver(searchDataModel);
+const { scrollTrigger } = useIntersectionObserver({
+  callback: addDataModel,
+  targetId: "glossaryDataList",
+  loaderId: "glossaryDataListLoader",
+  from: 0,
+  size: 10,
+});
 </script>

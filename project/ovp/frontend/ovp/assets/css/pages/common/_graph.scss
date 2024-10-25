@@ -190,7 +190,7 @@
     top: 12px;
     background-color: $neutral-0;
     border: 1px solid $neutral-300;
-    border-radius: 4px;
+    border-radius: $border-radius-4;
 
     &-head {
       @include flex($horizontal: space-between);
@@ -205,6 +205,20 @@
         left: 7px;
         bottom: 0;
         border-bottom: 1px solid $neutral-200;
+      }
+
+      .breadcrumb-list {
+        gap: $spacing-24;
+      }
+
+      .breadcrumb-item:not(:last-child)::after {
+        left: 95%;
+      }
+
+      .breadcrumb-text {
+        @include ellipsis;
+
+        max-width: 85px;
       }
     }
 

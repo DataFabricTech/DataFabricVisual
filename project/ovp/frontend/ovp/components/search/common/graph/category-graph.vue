@@ -53,15 +53,18 @@ import _ from "lodash";
 import { ref } from "vue";
 
 const searchCommonStore = useSearchCommonStore();
-const { getGraphData, getGraphModelList, setGraphCategoryPath } =
-  searchCommonStore;
+const {
+  getGraphData,
+  setGraphCategoryPath,
+  setFilteredSearchList,
+  onlyGraphCategoryList,
+} = searchCommonStore;
 const {
   showDropDown,
   graphCategoryList,
-  graphCategoryName,
   graphData,
   showGraphModelListMenu,
-  selectedGraphCategoryId,
+  lowestCategoryId,
 } = storeToRefs(searchCommonStore);
 
 const top = ref(200);
@@ -77,12 +80,11 @@ const toggleLegend = () => {
 const onClick = ({ compId, nodeId }) => {
   // 내가 선택한 id가 카테고리인 경우 실행
   if (compId === $constants.GRAPH.TYPE.MODEL_LIST) {
-    selectedGraphCategoryId.value = nodeId;
     showDropDown.value = false;
     showGraphModelListMenu.value = true;
-    setFirstNodeName(nodeId);
-    setGraphCategoryPath(graphCategoryList.value);
-    getGraphModelList();
+    setLowestCategoryId(nodeId);
+    setGraphCategoryPath(nodeId);
+    setFilteredSearchList(nodeId);
   }
   // 내가 선택한 id가 상세 정보인 경우 실행
   else {
@@ -125,6 +127,85 @@ const setGraphCategoryList = () => {
     nodeList: [],
   };
 };
+const setOnlyGraphCategoryList = () => {
+  const nodeData: any = graphData.value.nodes;
+
+  // tagId가 null인 경우 해당 객체를 포함하지 않음
+  const mapNodeWithChildren = (node: any) => {
+    if (node.tagId === null) return null; // tagId가 null이면 제외
+
+    return {
+      id: node.id,
+      tagId: node.tagId,
+      children: node.children
+        ? node.children
+            .map(mapNodeWithChildren) // 자식 노드도 재귀적으로 처리
+            .filter((child) => child !== null) // null인 자식은 제외
+        : [],
+    };
+  };
+
+  // nodeData의 자식들을 재귀적으로 처리하여 새로운 children 구조 생성
+  const formattedNodeData = nodeData.children
+    .map(mapNodeWithChildren)
+    .filter((child) => child !== null); // null인 노드를 제외
+
+  onlyGraphCategoryList.value = {
+    id: nodeData.id,
+    children: formattedNodeData,
+  };
+};
+
+// 내가 클릭한 id의 최하위 뎁스 categroy id 추출
+// TODO: [개발] 가지가 두 개 이상으로 뻗어 나갈 때 따로 따로 저장해야함..
+const setLowestCategoryId = (nodeId: string) => {
+  // root 카테고리와 비교
+  if (graphCategoryList.value.id === nodeId) {
+    return;
+  }
+
+  // 특정 카테고리에서 자식 노드 중 가장 깊은 leaf 노드를 찾는 함수
+  const findLowestChildId = (category) => {
+    while (category.children && category.children.length > 0) {
+      category = category.children[0]; // 첫 번째 자식으로 계속 내려감
+    }
+    return category.id;
+  };
+
+  // 1단계 카테고리에서 목표 노드 찾기
+  for (const element of onlyGraphCategoryList.value.children) {
+    if (element.id === nodeId) {
+      // 자식이 없으면 바로 해당 카테고리 반환
+      if (element.children.length === 0) {
+        lowestCategoryId.value = element.id;
+        return;
+      }
+      // 자식이 있으면 자식 중 가장 아래 노드 설정
+      lowestCategoryId.value = findLowestChildId(element);
+      return;
+    }
+
+    // 2단계 카테고리에서 목표 노드 찾기
+    for (const child of element.children) {
+      if (child.id === nodeId) {
+        if (child.children.length === 0) {
+          lowestCategoryId.value = child.id;
+          return;
+        }
+        lowestCategoryId.value = findLowestChildId(child);
+        return;
+      }
+
+      // 3단계 카테고리에서 목표 노드 찾기
+      for (const grandChild of child.children) {
+        if (grandChild.id === nodeId) {
+          lowestCategoryId.value = grandChild.id;
+          return;
+        }
+      }
+    }
+  }
+};
 
 // 상세정보로 가는 모델 목록만 추출 (tagId가 null이면 모델 목록임)
 const getModelDetailList = (node: any): string[] => {
@@ -164,6 +245,7 @@ const setCategoryGraph = () => {
     container: categoryContainer,
     categoryData: graphCategoryList.value,
     pixelQuality: "middle",
+    isFitScreenInit: true,
     eventHandler: {
       onClick: (e: any, id: any, type: any) => {
         if (!showDropDown.value) {
@@ -188,19 +270,11 @@ const setCategoryGraph = () => {
   });
 };
 
-// 그래프 카테고리 목록에서 1depth 까지만 탐색해서 선택한 id의 미분류를 찾는다.
-const setFirstNodeName = (nodeId: string) => {
-  for (const child of graphCategoryList.value.children) {
-    if (nodeId === child.id) {
-      graphCategoryName.value = child.name;
-      return;
-    }
-  }
-};
 watch(
   () => graphData.value,
   (newVal) => {
     setGraphCategoryList();
+    setOnlyGraphCategoryList();
     setCategoryGraph();
   },
   { immediate: true },

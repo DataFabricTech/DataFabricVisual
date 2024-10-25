@@ -54,6 +54,7 @@ import DefaultInfo from "@/components/search/detail-tab/default-info.vue";
 import Schema from "@/components/search/detail-tab/schema.vue";
 import Sample from "@/components/search/detail-tab/sample.vue";
 import Profiling from "@/components/search/detail-tab/profiling.vue";
+import Query from "@/components/search/detail-tab/query.vue";
 import Lineage from "@/components/search/detail-tab/lineage.vue";
 import KnowledgeGraph from "@/components/search/detail-tab/knowledge-graph.vue";
 import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
@@ -68,7 +69,7 @@ const lineageStore = useLineageStore();
 const searchCommonStore = useSearchCommonStore();
 const userStore = useUserStore();
 
-const { dataModelType, userList, categoryList, dataModel, sampleList } =
+const { dataModelType, userList, categoryList, dataModel, sampleList, defaultInfo } =
   storeToRefs(dataModelDetailStore);
 
 const {
@@ -99,15 +100,17 @@ const filteredTabs = computed(() => {
     // tables가 true이면 모든 탭 옵션을 반환
     return tabOptions;
   } else {
-    // tables가 false이면 기본정보, 데이터 리니지, Knowledge graph, 추천 데이터 모델 탭만 반환
-    const includedValues = [
-      "default",
-      "schema",
-      "sample",
-      "lineage",
-      "knowledge",
-      "recommended",
-    ];
+    if (_.includes(exceptExtList, defaultInfo.value.modelInfo.model.ext)) {
+      includedValues = [
+        "default",
+        "sample",
+        "lineage",
+        "knowledge",
+        "recommended",
+      ];
+    } else {
+      return tabOptions;
+    }
     return tabOptions.filter((option) => includedValues.includes(option.value));
   }
 });
@@ -117,7 +120,7 @@ const tabOptions = [
   { label: "스키마", value: "schema", component: Schema },
   { label: "샘플데이터", value: "sample", component: Sample },
   { label: "프로파일링", value: "profile", component: Profiling },
-  //{ label: "쿼리", value: "query", component: Query },
+  { label: "쿼리", value: "query", component: Query },
   { label: "데이터 리니지", value: "lineage", component: Lineage },
   {
     label: "연관데이터모델 시각화",

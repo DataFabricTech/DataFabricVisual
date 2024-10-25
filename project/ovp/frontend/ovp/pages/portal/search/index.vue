@@ -34,7 +34,7 @@
           <!-- NOTE "scrollTrigger" -> useIntersectionObserver 가 return 하는 변수병과 동일해야함. -->
           <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
           <Loading
-            id="loader"
+            id="dataLoader"
             :use-loader-overlay="true"
             class="loader-lg is-loader-inner"
             style="display: none"
@@ -102,6 +102,7 @@ const {
   isSearchResultNoData,
   searchResultLength,
   currentPreviewId,
+  stackedFromCount,
 } = storeToRefs(searchCommonStore);
 
 const menuStore = useMenuStore();
@@ -175,9 +176,11 @@ watchEffect(() => {
 await getFilters();
 
 onBeforeMount(() => {
-  // 탐색 상세 페이지가 아닌경우 검색조건 초기화
+  stackedFromCount.value = 20;
   isShowPreview.value = false;
   viewType.value = "listView";
+
+  // 탐색 상세 페이지가 아닌경우 검색조건 초기화
   if (previousUrl.value !== "/portal/search/detail") {
     changeTab("table");
     setEmptyFilter();
@@ -185,12 +188,15 @@ onBeforeMount(() => {
     // searchInputValue.value = "";
     // setSearchKeyword("");
   }
-
   resetReloadList();
   getGraphData();
 });
 
-const { scrollTrigger } = useIntersectionObserver({ callback: addSearchList });
+const { scrollTrigger } = useIntersectionObserver({
+  callback: addSearchList,
+  targetId: "dataList",
+  loaderId: "dataLoader",
+});
 </script>
 
 <style lang="scss" scoped></style>
