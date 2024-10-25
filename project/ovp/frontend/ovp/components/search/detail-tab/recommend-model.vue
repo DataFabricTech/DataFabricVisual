@@ -2,7 +2,6 @@
   <div class="data-detail">
     <div class="data-detail-group" v-show="recommendDataModels.length > 0">
       <div class="recommend" v-for="group in groupedRecommendations">
-        <!-- TODO: [개발] intersection observer 적용  -->
         <template v-for="recommendDataModel in group">
           <resource-box
             class="is-resource-box-no-action"
