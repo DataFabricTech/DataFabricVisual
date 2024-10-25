@@ -56,6 +56,7 @@ import Sample from "@/components/search/detail-tab/sample.vue";
 import Profiling from "@/components/search/detail-tab/profiling.vue";
 import Lineage from "@/components/search/detail-tab/lineage.vue";
 import KnowledgeGraph from "@/components/search/detail-tab/knowledge-graph.vue";
+import Query from "@/components/search/detail-tab/query.vue";
 import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
 
 import { FILTER_KEYS } from "@/store/search/common";
@@ -68,8 +69,14 @@ const lineageStore = useLineageStore();
 const searchCommonStore = useSearchCommonStore();
 const userStore = useUserStore();
 
-const { dataModelType, userList, categoryList, dataModel, defaultInfo } =
-  storeToRefs(dataModelDetailStore);
+const {
+  dataModelType,
+  userList,
+  categoryList,
+  dataModel,
+  defaultInfo,
+  sampleList,
+} = storeToRefs(dataModelDetailStore);
 
 const {
   getUserList,
@@ -177,12 +184,9 @@ async function changeTab(tab: number | string) {
 
 const checkSampleDataValid = async () => {
   await getSampleData();
-  if (sampleList.value.length > 0) {
-    return "embedding";
-  } else {
-    return "clustering";
-  }
+  return sampleList.value.length > 0 ? "embedding" : "clustering";
 };
+
 const editIconClick = (key: string) => {
   if (key === "category") {
     getCategoryList();

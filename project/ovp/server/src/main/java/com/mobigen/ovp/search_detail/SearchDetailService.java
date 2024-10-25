@@ -644,35 +644,14 @@ public class SearchDetailService {
     }
 
     /**
-     * 추천 데이터 목록 - CLUSTERING
+     * 추천 데이터 목록 - Clustering, Embedding
      * @param id
      * @param type
      * @return
      * @throws Exception
      */
-    public Object getRecommendDataModelClustering(String id, String type) throws Exception {
+    public Object getRecommendDataModel(String id, String type) throws Exception {
         Map<String, Object> res = recommendClient.getClustering(id);
-        List<String> ids = new ArrayList<>();
-        if(res != null) {
-            if (res.get("status") instanceof Integer && (Integer) res.get("status") == HttpStatus.OK.value()) {
-                Map<String, Object> data = (Map<String, Object>) res.get("data");
-                if (data != null) {
-                    ids = (List<String>) data.get("recommended");
-                }
-            }
-        }
-        return fetchRecommendDataModels(ids, type);
-    }
-
-    /**
-     * 추천 데이터 목록 - Embedding
-     * @param id
-     * @param type
-     * @return
-     * @throws Exception
-     */
-    public Object getRecommendDataModelEmbedding(String id, String type) throws Exception {
-        Map<String, Object> res = recommendClient.getEmbedding(id);
         List<String> ids = new ArrayList<>();
         if(res != null) {
             if (res.get("status") instanceof Integer && (Integer) res.get("status") == HttpStatus.OK.value()) {

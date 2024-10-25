@@ -1,6 +1,6 @@
 <template>
   <div class="data-detail">
-    <div class="data-detail-group" v-if="recommendDataModels.length > 0">
+    <div class="data-detail-group" v-show="recommendDataModels.length > 0">
       <div class="recommend" v-for="group in groupedRecommendations">
         <!-- TODO: [개발] intersection observer 적용  -->
         <template v-for="recommendDataModel in group">
@@ -15,7 +15,7 @@
         </template>
       </div>
     </div>
-    <div class="no-result h-auto" v-else>
+    <div class="no-result h-auto" v-show="recommendDataModels.length === 0">
       <div class="notification">
         <svg-icon class="notification-icon" name="info"></svg-icon>
         <p class="notification-detail">등록된 정보가 없습니다.</p>

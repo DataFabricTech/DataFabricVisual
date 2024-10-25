@@ -261,7 +261,7 @@ public class SearchDetailController {
     @ResponseJsonResult
     @GetMapping("/recommend/clustering/{id}")
     public Object getRecommendDataModelClustering(@PathVariable String id, @RequestParam String type) throws Exception {
-        return searchDetailService.getRecommendDataModelClustering(id, type);
+        return searchDetailService.getRecommendDataModel(id, type);
     }
 
     /**
@@ -274,6 +274,6 @@ public class SearchDetailController {
     @ResponseJsonResult
     @GetMapping("/recommend/embedding/{id}")
     public Object getRecommendDataModelEmbedding(@PathVariable String id, @RequestParam String type) throws Exception {
-        return searchDetailService.getRecommendDataModelEmbedding(id, type);
+        return searchDetailService.getRecommendDataModel(id, type);
     }
 }

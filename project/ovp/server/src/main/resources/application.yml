@@ -134,7 +134,7 @@ properties:
     open-metadata-url: http://192.168.109.254:31500/api/v1
     dolphin-server-url: http://192.168.109.254:31321/dolphin/v1
     monitoring-service-url: http://192.168.109.254:31923/api/v1
-    reommend-data-model-url: http://192.168.109.254:30628/api/recommend
+    recommend-data-model-url: http://192.168.109.254:30628/api/recommend
 
     # 비밀번호 재설정 관련 설
     mail:

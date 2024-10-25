@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 
-@FeignClient(name = "RecommendClient", url = "http://192.168.109.254:30628/api/recommend")
+@FeignClient(name = "RecommendClient", url = "${properties.ovp.recommend-data-model-url}")
 public interface RecommendClient {
 
     @GetMapping("/clustering")
