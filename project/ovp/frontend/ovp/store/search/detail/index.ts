@@ -81,6 +81,8 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
 
   let categoryAllList: any[] = [];
 
+  const containerMetaInfo: Ref<any> = ref([]);
+
   const setDataModelId = (id: any) => {
     dataModelId = id;
   };
@@ -91,6 +93,10 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
 
   const setDataModelType = (type: any) => {
     dataModelType.value = type;
+  };
+
+  const setContainerMetaInfo = (cmi: any) => {
+    containerMetaInfo.value = cmi;
   };
 
   const getDataModelFqn = () => {
@@ -137,10 +143,18 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
 
   const getDefaultInfo = async () => {
     let data: any = {};
+
+    let metadata: any = {};
+    const exceptExtList = ["hwp", "hwpx", "doc", "docx"];
+
     if (dataModelType.value !== "storage") {
       data = await $api(`/api/search/preview/${dataModelFqn}`);
     } else {
       data = await $api(`/api/containers/${dataModelId}`);
+      if (_.includes(exceptExtList, data.data.modelInfo.model.ext)) {
+        metadata = await $api(`/api/containers/name/${dataModelFqn}`);
+        containerMetaInfo.value = metadata.data;
+      }
     }
 
     if (data.result === 0) {
@@ -403,6 +417,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     termList,
     dataModel,
     defaultInfo,
+    containerMetaInfo,
     schemaList,
     sampleColumns,
     sampleList,
@@ -412,6 +427,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     setDataModelId,
     setDataModelFqn,
     setDataModelType,
+    setContainerMetaInfo,
     getDataModelFqn,
     getUserList,
     getCategoryList,

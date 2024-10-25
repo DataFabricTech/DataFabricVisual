@@ -20,7 +20,13 @@ public class ContainerService {
 
     public Object getContainersObject(String id) {
         Map<String, Object> resultMap = modelConvertUtil.convertPreviewData(containerClient.getContainersObject(id, "dataModel,tags, owner"), "unstructured", null);
-        
+
         return resultMap;
+    }
+
+    public Object getContainersMetadata(String fqn) {
+        Map<String, Object> resultMap = containerClient.getMetaData(fqn);
+        Object rdfs = resultMap.get("rdfs");
+        return rdfs;
     }
 }

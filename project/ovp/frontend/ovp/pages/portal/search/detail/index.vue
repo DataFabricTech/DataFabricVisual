@@ -80,6 +80,7 @@ const {
   setDataModelId,
   setDataModelFqn,
   setDataModelType,
+  setContainerMetaInfo,
   getDataModel,
   getDefaultInfo,
   getSchema,
@@ -196,6 +197,7 @@ const editDone = (data: any) => {
 setDataModelId(route.query.id);
 setDataModelFqn(route.query.fqn);
 setDataModelType(route.query.type);
+setContainerMetaInfo([]);
 getDataModel().then(async (data) => {
   if (data.result === 0) {
     // TODO: 에러페이지 추가

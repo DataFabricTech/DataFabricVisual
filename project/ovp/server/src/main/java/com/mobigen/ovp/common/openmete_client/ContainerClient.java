@@ -14,4 +14,7 @@ public interface ContainerClient {
             @PathVariable("id") String id,
             @RequestParam(value = "fields", required = false) String fields
     );
+
+    @GetMapping("/name/{fqn}")
+    Map<String, Object> getMetaData(@PathVariable("fqn") String fqn);
 }
