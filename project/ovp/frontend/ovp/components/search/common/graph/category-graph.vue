@@ -255,6 +255,8 @@ const setCategoryGraph = () => {
   info.style.left = "0";
   info.style.borderRadius = "12px";
   info.style.color = "01353c";
+  info.style.fontSize = "12px";
+  info.style.boxShadow = "0 16px 20px 0 rgb(162 171 181 / 30%)";
 
   if (!categoryContainer) {
     return;
