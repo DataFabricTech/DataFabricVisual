@@ -37,6 +37,7 @@
       :nodeId="selectedNodeId"
       @click="onClick"
     />
+    <div id="graphTooltip" class="network-info" style="display: none"></div>
   </div>
 </template>
 
@@ -72,6 +73,7 @@ const left = ref(200);
 const compTypeId = ref("modelList");
 const selectedNodeId = ref("");
 const isLegendVisible = ref(true);
+const flatternCategoryList = ref([]);
 
 const toggleLegend = () => {
   isLegendVisible.value = !isLegendVisible.value;
@@ -126,6 +128,7 @@ const setGraphCategoryList = () => {
     children: formattedNodeData,
     nodeList: [],
   };
+  setFlattenCategoryList(graphCategoryList.value);
 };
 const setOnlyGraphCategoryList = () => {
   const nodeData: any = graphData.value.nodes;
@@ -154,6 +157,13 @@ const setOnlyGraphCategoryList = () => {
     id: nodeData.id,
     children: formattedNodeData,
   };
+};
+
+const setFlattenCategoryList = (category: any) => {
+  flatternCategoryList.value.push({ id: category.id, name: category.name });
+  if (category.children && category.children.length > 0) {
+    category.children.forEach(setFlattenCategoryList);
+  }
 };
 
 // 내가 클릭한 id의 최하위 뎁스 categroy id 추출
@@ -235,11 +245,23 @@ const setCategoryGraph = () => {
     "category",
   ) as HTMLDivElement;
 
+  const info = document.getElementById("graphTooltip") as HTMLDivElement;
+
+  // TODO: [퍼블리싱] 스타일 수정 필요
+  info.style.backgroundColor = "#e9f5f7";
+  info.style.padding = "12px";
+  info.style.position = "absolute";
+  info.style.top = "0";
+  info.style.left = "0";
+  info.style.borderRadius = "12px";
+  info.style.color = "01353c";
+
   if (!categoryContainer) {
     return;
   }
 
-  categoryContainer.innerHTML = "";
+  categoryContainer.innerHTML = ``;
+  info.innerHTML = ``;
 
   new CategoryGraph({
     container: categoryContainer,
@@ -266,13 +288,28 @@ const setCategoryGraph = () => {
           compTypeId.value = "";
         }
       },
+      onHover: (e: any, id: any, type: any) => {
+        if (id !== undefined) {
+          const targetObject = flatternCategoryList.value.find(
+            (item) => item.id === id,
+          );
+          const targetName = targetObject ? targetObject.name : null;
+          info.innerHTML = `<div>${targetName || "none"}</div>`;
+          info.style.display = `block`;
+          info.style.top = `${e.offsetY + 10}px`;
+          info.style.left = `${e.offsetX + 10}px`;
+        } else {
+          info.style.display = `none`;
+        }
+      },
     },
   });
 };
 
 watch(
   () => graphData.value,
-  (newVal) => {
+  async (newVal) => {
+    await nextTick(); // DOM이 렌더링된 이후 실행
     setGraphCategoryList();
     setOnlyGraphCategoryList();
     setCategoryGraph();
