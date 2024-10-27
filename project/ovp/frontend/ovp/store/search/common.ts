@@ -364,6 +364,7 @@ export const useSearchCommonStore = defineStore(
     const filteredSearchList: Ref<any[]> = ref([]);
     const bookmarkList: Ref<any[]> = ref([]);
     const lowestCategoryId = ref("");
+    const lowestCategoryIdList: Ref<any[]> = ref([]);
 
     const getBookmarkListQuery = () => {
       const queryFilter: QueryFilter = {
@@ -434,12 +435,25 @@ export const useSearchCommonStore = defineStore(
 
     // 우측 모델 목록 추출
     const setFilteredSearchList = async (nodeId: string) => {
-      filteredSearchList.value =
-        graphCategoryList.value.id === nodeId
-          ? searchResult.value
-          : _.filter(searchResult.value, {
-              categoryId: lowestCategoryId.value,
-            });
+      filteredSearchList.value = [];
+
+      // Root일 경우
+      if (graphCategoryList.value.id === nodeId) {
+        filteredSearchList.value = searchResult.value;
+        // 뎁스 미분기시
+      } else if (lowestCategoryIdList.value.length === 0) {
+        filteredSearchList.value = _.filter(searchResult.value, {
+          categoryId: lowestCategoryId.value,
+        });
+        // 뎁스 분기시
+      } else {
+        for (const item of lowestCategoryIdList.value) {
+          const itemList = _.filter(searchResult.value, {
+            categoryId: item,
+          });
+          filteredSearchList.value = filteredSearchList.value.concat(itemList);
+        }
+      }
 
       await getBookmarkList();
       setBookmarkList();
@@ -521,6 +535,7 @@ export const useSearchCommonStore = defineStore(
       stackedFromCount,
       onlyGraphCategoryList,
       lowestCategoryId,
+      lowestCategoryIdList,
       addSearchList,
       getSearchList,
       getFilter,

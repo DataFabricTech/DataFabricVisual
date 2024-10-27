@@ -66,6 +66,7 @@ const {
   graphData,
   showGraphModelListMenu,
   lowestCategoryId,
+  lowestCategoryIdList,
 } = storeToRefs(searchCommonStore);
 
 const top = ref(200);
@@ -167,14 +168,14 @@ const setFlattenCategoryList = (category: any) => {
 };
 
 // 내가 클릭한 id의 최하위 뎁스 categroy id 추출
-// TODO: [개발] 가지가 두 개 이상으로 뻗어 나갈 때 따로 따로 저장해야함..
 const setLowestCategoryId = (nodeId: string) => {
+  lowestCategoryIdList.value = [];
+
   // root 카테고리와 비교
   if (graphCategoryList.value.id === nodeId) {
     return;
   }
 
-  // 특정 카테고리에서 자식 노드 중 가장 깊은 leaf 노드를 찾는 함수
   const findLowestChildId = (category) => {
     while (category.children && category.children.length > 0) {
       category = category.children[0]; // 첫 번째 자식으로 계속 내려감
@@ -191,7 +192,21 @@ const setLowestCategoryId = (nodeId: string) => {
         return;
       }
       // 자식이 있으면 자식 중 가장 아래 노드 설정
-      lowestCategoryId.value = findLowestChildId(element);
+      if (element.children.length === 1) {
+        lowestCategoryId.value = findLowestChildId(element);
+      } else {
+        for (const item of element.children) {
+          if (item.children.length > 1) {
+            for (const childItem of item.children) {
+              const itemId = findLowestChildId(childItem);
+              lowestCategoryIdList.value.push(itemId);
+            }
+          } else {
+            const itemId = findLowestChildId(item);
+            lowestCategoryIdList.value.push(itemId);
+          }
+        }
+      }
       return;
     }
 
@@ -202,7 +217,14 @@ const setLowestCategoryId = (nodeId: string) => {
           lowestCategoryId.value = child.id;
           return;
         }
-        lowestCategoryId.value = findLowestChildId(child);
+        if (child.children.length === 1) {
+          lowestCategoryId.value = findLowestChildId(child);
+        } else {
+          for (const item of child.children) {
+            const itemId = findLowestChildId(item);
+            lowestCategoryIdList.value.push(itemId);
+          }
+        }
         return;
       }
 

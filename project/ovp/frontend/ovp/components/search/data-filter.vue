@@ -65,6 +65,7 @@ const {
   selectedFilterItems,
   isShowPreview,
   viewType,
+  showGraphModelListMenu,
 } = storeToRefs(searchCommonStore);
 
 const layoutHeaderStore = useLayoutHeaderStore();
@@ -79,6 +80,7 @@ const props = defineProps({
 
 const resetFilters = () => {
   isShowPreview.value = false;
+  showGraphModelListMenu.value = false;
   setEmptyFilter();
   searchInputValue.value = "";
   setSearchKeyword("");
