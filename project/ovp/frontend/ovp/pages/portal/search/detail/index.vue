@@ -37,7 +37,7 @@
 import { useNuxtApp } from "nuxt/app";
 import _ from "lodash";
 
-import { ref, shallowRef } from "vue";
+import { type Ref, ref, shallowRef } from "vue";
 import { storeToRefs } from "pinia";
 import { useRouter } from "vue-router";
 const { $alert } = useNuxtApp();
@@ -54,9 +54,9 @@ import DefaultInfo from "@/components/search/detail-tab/default-info.vue";
 import Schema from "@/components/search/detail-tab/schema.vue";
 import Sample from "@/components/search/detail-tab/sample.vue";
 import Profiling from "@/components/search/detail-tab/profiling.vue";
-import Query from "@/components/search/detail-tab/query.vue";
 import Lineage from "@/components/search/detail-tab/lineage.vue";
 import KnowledgeGraph from "@/components/search/detail-tab/knowledge-graph.vue";
+import Query from "@/components/search/detail-tab/query.vue";
 import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
 
 import { FILTER_KEYS } from "@/store/search/common";
@@ -69,8 +69,14 @@ const lineageStore = useLineageStore();
 const searchCommonStore = useSearchCommonStore();
 const userStore = useUserStore();
 
-const { dataModelType, userList, categoryList, dataModel, defaultInfo } =
-  storeToRefs(dataModelDetailStore);
+const {
+  dataModelType,
+  userList,
+  categoryList,
+  dataModel,
+  defaultInfo,
+  sampleList,
+} = storeToRefs(dataModelDetailStore);
 
 const {
   getUserList,
@@ -87,6 +93,7 @@ const {
   getProfile,
   getQuery,
   changeDataModel,
+  getRecommendDataModels,
 } = dataModelDetailStore;
 
 const { getLineageData } = lineageStore;
@@ -168,11 +175,17 @@ async function changeTab(tab: number | string) {
       $alert("개발중입니다.", "info");
       break;
     case "recommended":
-      $alert("개발중입니다.", "info");
+      const url = await checkSampleDataValid();
+      await getRecommendDataModels(url);
       break;
   }
   currentComponent.value = _.find(tabOptions, ["value", tab])?.component;
 }
+
+const checkSampleDataValid = async () => {
+  await getSampleData();
+  return sampleList.value.length > 0 ? "embedding" : "clustering";
+};
 
 const editIconClick = (key: string) => {
   if (key === "category") {

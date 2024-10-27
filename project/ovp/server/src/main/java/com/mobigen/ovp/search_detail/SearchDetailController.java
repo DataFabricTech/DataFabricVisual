@@ -250,4 +250,30 @@ public class SearchDetailController {
 
         return searchDetailService.deleteDataModel(id, type);
     }
+
+    /**
+     * 추천 데이터 목록 조회 - SAMPLEDATA 없을 경우
+     * @param id
+     * @param type
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/recommend/clustering/{id}")
+    public Object getRecommendDataModelClustering(@PathVariable String id, @RequestParam String type) throws Exception {
+        return searchDetailService.getRecommendDataModel(id, type);
+    }
+
+    /**
+     * 추천 데이터 목록 조회 - SampleData 있을 경우
+     * @param id
+     * @param type
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/recommend/embedding/{id}")
+    public Object getRecommendDataModelEmbedding(@PathVariable String id, @RequestParam String type) throws Exception {
+        return searchDetailService.getRecommendDataModel(id, type);
+    }
 }
