@@ -41,6 +41,16 @@
                   중복된 데이터 모델 이름입니다.
                 </p>
               </div>
+              <div
+                class="notification notification-sm notification-error"
+                v-show="!isNameValid"
+              >
+                <svg-icon class="notification-icon" name="error"></svg-icon>
+                <p class="notification-detail">
+                  데이터 모델 이름은 영문 대소문자, 숫자, 언더바(_)로 작성되어야
+                  하며, 첫 번째 글자는 영문 대소문자, 언더바(_)만 허용됩니다.
+                </p>
+              </div>
             </div>
           </div>
           <div class="form-item">
@@ -106,19 +116,10 @@
       <div class="modal-foot-group">
         <div
           class="notification notification-sm notification-error"
-          v-show="isNameEmpty"
+          v-show="isSaveButtonClicked && saveErrorMsg"
         >
           <svg-icon class="notification-icon" name="error"></svg-icon>
-          <p class="notification-detail">필수값을 입력해주세요.</p>
-        </div>
-        <div
-          class="notification notification-sm notification-error"
-          v-show="!isQueryExecuteValid"
-        >
-          <svg-icon class="notification-icon" name="error"></svg-icon>
-          <p class="notification-detail">
-            쿼리가 정상적으로 동작하지 않습니다.
-          </p>
+          <p class="notification-detail">{{ saveErrorMsg }}</p>
         </div>
         <button class="button button-primary button-lg" @click="onSaveModal">
           저장
@@ -129,6 +130,7 @@
 </template>
 <script setup lang="ts">
 import Modal from "@extends/modal/Modal.vue";
+import { useCreationStore } from "@/store/datamodel-creation";
 import { useDataModelSaveStore } from "@/store/datamodel-creation/save";
 import MenuSearchTree from "@extends/menu-seach/tree/menu-search-tree.vue";
 import MenuSearchTag from "@extends/menu-seach/tag/menu-search-tag.vue";
@@ -138,14 +140,20 @@ import { useNuxtApp } from "nuxt/app";
 const { $alert } = useNuxtApp();
 const router = useRouter();
 
+const creationStore = useCreationStore();
+const { isQueryEmpty, querySuccess } = storeToRefs(creationStore);
+
 const dataModelSaveStore = useDataModelSaveStore();
 
 const {
   dataModelName,
   modelDescription,
+  isSaveButtonClicked,
   isNameEmpty,
+  isNameValid,
   isDuplicate,
   isQueryExecuteValid,
+  saveErrorMsg,
   cateTitle,
   categoryList,
   tagList,
@@ -173,14 +181,7 @@ const emit = defineEmits<{
 }>();
 
 const onOpenModal = async () => {
-  setCateTitle("");
-  setDataModelName("");
-  setModelDescription("");
-  setTreeSelectionItem([]);
-  setTagSelectionItem([]);
   resetValidation();
-  await getCategoryList();
-  await getTagList();
 };
 
 const onCancelModal = () => {
@@ -189,7 +190,13 @@ const onCancelModal = () => {
 
 const onSaveModal = async () => {
   await saveValidation();
-  if (isDuplicate.value || isNameEmpty.value) {
+  if (
+    isDuplicate.value ||
+    isNameEmpty.value ||
+    !isNameValid.value ||
+    (isSaveButtonClicked.value && isQueryEmpty.value) ||
+    !querySuccess.value
+  ) {
     return;
   }
   const response = await saveModel();
@@ -201,8 +208,7 @@ const onSaveModal = async () => {
       router.go(0); // 페이지 새로고침
     });
   } else {
-    // 에러발생
-    $alert(`저장 실패했습니다. 잠시 후 다시 시도해주세요.`, "error");
+    $alert(response.errorMessage, "error");
   }
 };
 </script>

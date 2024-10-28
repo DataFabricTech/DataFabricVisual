@@ -21,12 +21,7 @@
         @item-click="onClickDataModelItem"
         @bookmark-change="updateMainSelectedModelBookmark"
       ></selected-model>
-      <execute-query
-        :query="query"
-        @execute="runQuery"
-        @reset="resetQuery"
-        @edit="editQueryText"
-      ></execute-query>
+      <execute-query></execute-query>
     </div>
     <div class="l-split">
       <sample
@@ -58,6 +53,7 @@ import addModel from "@/components/datamodel-creation/modal/add.vue";
 import saveModel from "@/components/datamodel-creation/modal/save.vue";
 import { useCreationStore } from "@/store/datamodel-creation";
 import { useDataModelSearchStore } from "@/store/datamodel-creation/search";
+import { useDataModelSaveStore } from "@/store/datamodel-creation/save";
 import { storeToRefs } from "pinia";
 import { useModal } from "vue-final-modal";
 
@@ -97,9 +93,7 @@ const {
 const {
   deleteDataModel,
   onClickDataModelItem,
-  runQuery,
   resetQuery,
-  editQueryText,
   showProfile,
 } = creationStore;
 
@@ -109,6 +103,9 @@ const { filters, selectedModelList, selectedModelListCnt } =
   storeToRefs(dataModelSearchStore);
 const { updateMainSelectedModelBookmark } = dataModelSearchStore;
 
+const dataModelSaveStore = useDataModelSaveStore();
+const { getCategoryList, getTagList } = dataModelSaveStore;
+
 onMounted(() => {
   // 데이터 초기화
   resetQuery();
@@ -117,6 +114,9 @@ onMounted(() => {
   // 선택한 데이터 모델 값 삭제
   isItemClicked.value = false;
 });
+
+await getCategoryList();
+await getTagList();
 </script>
 
 <style scoped></style>
