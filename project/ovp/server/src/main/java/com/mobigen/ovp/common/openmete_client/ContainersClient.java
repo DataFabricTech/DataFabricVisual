@@ -32,6 +32,9 @@ public interface ContainersClient {
     @GetMapping("/{id}/sampleData")
     SampleData getSampleData(@PathVariable("id") String id);
 
+    @GetMapping("/{id}/sampleData")
+    Map<String, Object> getExceptionExtSampleData(@PathVariable("id") String id);
+
     @GetMapping("/name/{fqn}")
     Map<String, Object> getContainersName(@PathVariable String fqn, @RequestParam Map<String, Object> params);
 

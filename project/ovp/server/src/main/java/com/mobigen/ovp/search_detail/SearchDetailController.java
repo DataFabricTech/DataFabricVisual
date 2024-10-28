@@ -111,6 +111,19 @@ public class SearchDetailController {
     }
 
     /**
+     * 샘플데이터 - 예외 확장자용 hwp, hwpx, doc, docx
+     *
+     * @param id
+     * @return
+     */
+    @ResponseJsonResult
+    @GetMapping("/sample-data/exception/{id}")
+    Object getExceptionExtSampleData(@PathVariable String id) throws Exception {
+        log.info("");
+        return searchDetailService.getExceptionExtSampleData(id);
+    }
+
+    /**
      * 프로파일링 - table
      *
      * @param fqn

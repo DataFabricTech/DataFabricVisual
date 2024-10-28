@@ -15,6 +15,7 @@ import com.mobigen.ovp.common.openmete_client.dto.Columns;
 import com.mobigen.ovp.common.openmete_client.dto.Followers;
 import com.mobigen.ovp.common.openmete_client.dto.Profile;
 import com.mobigen.ovp.common.openmete_client.dto.ProfileColumn;
+import com.mobigen.ovp.common.openmete_client.dto.SampleData;
 import com.mobigen.ovp.common.openmete_client.dto.Tables;
 import com.mobigen.ovp.common.openmete_client.dto.Tag;
 import com.mobigen.ovp.common.openmete_client.dto.Tags;
@@ -326,11 +327,28 @@ public class SearchDetailService {
             return new DataModelDetailSampleDataResponse(tablesClient.getSampleData(id), type);
         } else {
             try {
+                log.info("여기좀보자:");
+                Object sampleData11 = containersClient.getSampleData(id);
+                log.info("sampleData11: " + sampleData11);
                 return new DataModelDetailSampleDataResponse(containersClient.getSampleData(id), type);
+                //return null;
             } catch (Exception e) {
+                log.error("뭔에러일까: " + e.getMessage(), e);
                 return null;
             }
         }
+    }
+
+    /**
+     * 데이터 모델 샘플 데이터
+     *
+     * @param id
+     * @return
+     */
+    public Object getExceptionExtSampleData(String id) throws Exception {
+        Map<String, Object> exceptionExtSampleData = containersClient.getExceptionExtSampleData(id);
+        Object sampleData = exceptionExtSampleData.get("sampleData");
+        return sampleData;
     }
 
     /**
@@ -643,3 +661,4 @@ public class SearchDetailService {
         }
     }
 }
+
