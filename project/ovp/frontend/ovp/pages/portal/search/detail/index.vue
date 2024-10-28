@@ -86,6 +86,8 @@ const {
   setDataModelId,
   setDataModelFqn,
   setDataModelType,
+  setContainerMetaInfo,
+  setExceptExtSampleData,
   getDataModel,
   getDefaultInfo,
   getSchema,
@@ -209,6 +211,8 @@ const editDone = (data: any) => {
 setDataModelId(route.query.id);
 setDataModelFqn(route.query.fqn);
 setDataModelType(route.query.type);
+setContainerMetaInfo([]);
+setExceptExtSampleData("");
 getDataModel().then(async (data) => {
   if (data.result === 0) {
     // TODO: 에러페이지 추가

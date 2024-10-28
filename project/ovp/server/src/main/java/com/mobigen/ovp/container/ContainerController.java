@@ -26,4 +26,16 @@ public class ContainerController {
     public Object getContainersObject(@PathVariable("id") String id) {
         return containerService.getContainersObject(id);
     }
+
+    /**
+     * 비정형 메타데이터(확장자 hwp, hwpx, doc, docx) 조회
+     *
+     * @return
+     */
+    @ResponseJsonResult(errorMessage = "비정형 메타데이터 조회 오류")
+    @GetMapping("/name/{fqn}")
+    public Object getContainersMetadata(@PathVariable("fqn") String fqn) {
+        return containerService.getContainersMetadata(fqn);
+    }
+
 }

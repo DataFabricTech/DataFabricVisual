@@ -1,5 +1,5 @@
 <template>
-  <div class="data-detail" v-if="sampleList.length > 0">
+  <div class="data-detail" v-if="sampleList.length > 0 && !exceptExtSampleData">
     <agGrid
       class="ag-theme-alpine ag-theme-quartz"
       :columnDefs="sampleColumns"
@@ -9,6 +9,11 @@
       :setColumnFit="true"
       :useColumnResize="true"
     />
+  </div>
+  <div class="data-detail" v-else-if="exceptExtSampleData">
+    <div class="unstructured-sample">
+      <pre>{{ exceptExtSampleData }}</pre>
+    </div>
   </div>
   <!-- 결과 없을 시 no-result 표시 -->
   <div class="no-result h-auto" v-else>
@@ -27,7 +32,8 @@ import { useDataModelDetailStore } from "@/store/search/detail/index";
 
 const dataModelDetailStore = useDataModelDetailStore();
 
-const { sampleColumns, sampleList } = storeToRefs(dataModelDetailStore);
+const { sampleColumns, sampleList, exceptExtSampleData } =
+  storeToRefs(dataModelDetailStore);
 </script>
 
 <style lang="scss" scoped></style>

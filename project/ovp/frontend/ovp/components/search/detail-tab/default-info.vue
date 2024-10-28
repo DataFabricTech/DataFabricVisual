@@ -23,6 +23,14 @@
           <td>{{ defaultInfo.modelInfo.model.ext?.toUpperCase() }}</td>
         </tr>
       </template>
+      <tr
+        v-if="containerMetaInfo.length !== 0"
+        v-for="(rdfs, index) in containerMetaInfo"
+        :key="index"
+      >
+        <th>{{ rdfs.name }}</th>
+        <td>{{ rdfs.object }}</td>
+      </tr>
       <tr>
         <th>태그</th>
         <td class="py-0">
@@ -171,8 +179,14 @@ const userStore = useUserStore();
 
 const { getTagList, getGlossaryList, getDataModel, changeTag } =
   dataModelDetailStore;
-const { dataModelType, tagList, termList, dataModel, defaultInfo } =
-  storeToRefs(dataModelDetailStore);
+const {
+  dataModelType,
+  tagList,
+  termList,
+  dataModel,
+  defaultInfo,
+  containerMetaInfo,
+} = storeToRefs(dataModelDetailStore);
 
 const { user } = storeToRefs(userStore);
 

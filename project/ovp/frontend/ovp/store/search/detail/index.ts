@@ -82,6 +82,11 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
 
   let categoryAllList: any[] = [];
 
+  const containerMetaInfo: Ref<any> = ref([]);
+
+  const exceptExtList = ["hwp", "hwpx", "doc", "docx"];
+  const exceptExtSampleData: Ref<string> = ref("");
+
   const setDataModelId = (id: any) => {
     dataModelId = id;
   };
@@ -92,6 +97,14 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
 
   const setDataModelType = (type: any) => {
     dataModelType.value = type;
+  };
+
+  const setContainerMetaInfo = (cmi: any) => {
+    containerMetaInfo.value = cmi;
+  };
+
+  const setExceptExtSampleData = (value: any) => {
+    exceptExtSampleData.value = value;
   };
 
   const getDataModelFqn = () => {
@@ -138,10 +151,17 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
 
   const getDefaultInfo = async () => {
     let data: any = {};
+
+    let metadata: any = {};
+
     if (dataModelType.value !== "storage") {
       data = await $api(`/api/search/preview/${dataModelFqn}`);
     } else {
       data = await $api(`/api/containers/${dataModelId}`);
+      if (_.includes(exceptExtList, data.data.modelInfo.model.ext)) {
+        metadata = await $api(`/api/containers/name/${dataModelFqn}`);
+        containerMetaInfo.value = metadata.data;
+      }
     }
 
     if (data.result === 0) {
@@ -161,19 +181,26 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   };
 
   const getSampleData = async () => {
-    const { data } = await $api(
-      `/api/search/detail/sample-data/${dataModelId}?type=${dataModelType.value}`,
-    );
-    if (data !== null) {
-      sampleColumns.value = _.map(data.columns, (value) => {
-        return {
-          headerName: `${value.name}(${value.dataType})`,
-          field: value.name,
-        };
-      });
-      sampleList.value = data.sampleList;
+    if (_.includes(exceptExtList, defaultInfo.value.modelInfo.model.ext)) {
+      const seData = await $api(
+        `/api/search/detail/sample-data/exception/${dataModelId}`,
+      );
+      exceptExtSampleData.value = seData.data;
     } else {
-      sampleList.value = [];
+      const { data } = await $api(
+        `/api/search/detail/sample-data/${dataModelId}?type=${dataModelType.value}`,
+      );
+      if (data !== null) {
+        sampleColumns.value = _.map(data.columns, (value) => {
+          return {
+            headerName: `${value.name}(${value.dataType})`,
+            field: value.name,
+          };
+        });
+        sampleList.value = data.sampleList;
+      } else {
+        sampleList.value = [];
+      }
     }
   };
 
@@ -411,9 +438,11 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     termList,
     dataModel,
     defaultInfo,
+    containerMetaInfo,
     schemaList,
     sampleColumns,
     sampleList,
+    exceptExtSampleData,
     profileList,
     queryList,
     dataLineage,
@@ -421,6 +450,8 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
     setDataModelId,
     setDataModelFqn,
     setDataModelType,
+    setContainerMetaInfo,
+    setExceptExtSampleData,
     getDataModelFqn,
     getUserList,
     getCategoryList,
