@@ -37,6 +37,7 @@
       :nodeId="selectedNodeId"
       @click="onClick"
     />
+    <div id="graphTooltip" class="network-info" style="display: none"></div>
   </div>
 </template>
 
@@ -65,6 +66,7 @@ const {
   graphData,
   showGraphModelListMenu,
   lowestCategoryId,
+  lowestCategoryIdList,
 } = storeToRefs(searchCommonStore);
 
 const top = ref(200);
@@ -72,6 +74,7 @@ const left = ref(200);
 const compTypeId = ref("modelList");
 const selectedNodeId = ref("");
 const isLegendVisible = ref(true);
+const flatternCategoryList = ref([]);
 
 const toggleLegend = () => {
   isLegendVisible.value = !isLegendVisible.value;
@@ -126,6 +129,7 @@ const setGraphCategoryList = () => {
     children: formattedNodeData,
     nodeList: [],
   };
+  setFlattenCategoryList(graphCategoryList.value);
 };
 const setOnlyGraphCategoryList = () => {
   const nodeData: any = graphData.value.nodes;
@@ -156,15 +160,22 @@ const setOnlyGraphCategoryList = () => {
   };
 };
 
+const setFlattenCategoryList = (category: any) => {
+  flatternCategoryList.value.push({ id: category.id, name: category.name });
+  if (category.children && category.children.length > 0) {
+    category.children.forEach(setFlattenCategoryList);
+  }
+};
+
 // 내가 클릭한 id의 최하위 뎁스 categroy id 추출
-// TODO: [개발] 가지가 두 개 이상으로 뻗어 나갈 때 따로 따로 저장해야함..
 const setLowestCategoryId = (nodeId: string) => {
+  lowestCategoryIdList.value = [];
+
   // root 카테고리와 비교
   if (graphCategoryList.value.id === nodeId) {
     return;
   }
 
-  // 특정 카테고리에서 자식 노드 중 가장 깊은 leaf 노드를 찾는 함수
   const findLowestChildId = (category) => {
     while (category.children && category.children.length > 0) {
       category = category.children[0]; // 첫 번째 자식으로 계속 내려감
@@ -181,7 +192,21 @@ const setLowestCategoryId = (nodeId: string) => {
         return;
       }
       // 자식이 있으면 자식 중 가장 아래 노드 설정
-      lowestCategoryId.value = findLowestChildId(element);
+      if (element.children.length === 1) {
+        lowestCategoryId.value = findLowestChildId(element);
+      } else {
+        for (const item of element.children) {
+          if (item.children.length > 1) {
+            for (const childItem of item.children) {
+              const itemId = findLowestChildId(childItem);
+              lowestCategoryIdList.value.push(itemId);
+            }
+          } else {
+            const itemId = findLowestChildId(item);
+            lowestCategoryIdList.value.push(itemId);
+          }
+        }
+      }
       return;
     }
 
@@ -192,7 +217,14 @@ const setLowestCategoryId = (nodeId: string) => {
           lowestCategoryId.value = child.id;
           return;
         }
-        lowestCategoryId.value = findLowestChildId(child);
+        if (child.children.length === 1) {
+          lowestCategoryId.value = findLowestChildId(child);
+        } else {
+          for (const item of child.children) {
+            const itemId = findLowestChildId(item);
+            lowestCategoryIdList.value.push(itemId);
+          }
+        }
         return;
       }
 
@@ -235,11 +267,25 @@ const setCategoryGraph = () => {
     "category",
   ) as HTMLDivElement;
 
+  const info = document.getElementById("graphTooltip") as HTMLDivElement;
+
+  // TODO: [퍼블리싱] 스타일 수정 필요
+  info.style.backgroundColor = "#e9f5f7";
+  info.style.padding = "12px";
+  info.style.position = "absolute";
+  info.style.top = "0";
+  info.style.left = "0";
+  info.style.borderRadius = "12px";
+  info.style.color = "01353c";
+  info.style.fontSize = "12px";
+  info.style.boxShadow = "0 16px 20px 0 rgb(162 171 181 / 30%)";
+
   if (!categoryContainer) {
     return;
   }
 
-  categoryContainer.innerHTML = "";
+  categoryContainer.innerHTML = ``;
+  info.innerHTML = ``;
 
   new CategoryGraph({
     container: categoryContainer,
@@ -266,13 +312,28 @@ const setCategoryGraph = () => {
           compTypeId.value = "";
         }
       },
+      onHover: (e: any, id: any, type: any) => {
+        if (id !== undefined) {
+          const targetObject = flatternCategoryList.value.find(
+            (item) => item.id === id,
+          );
+          const targetName = targetObject ? targetObject.name : null;
+          info.innerHTML = `<div>${targetName || "none"}</div>`;
+          info.style.display = `block`;
+          info.style.top = `${e.offsetY + 10}px`;
+          info.style.left = `${e.offsetX + 10}px`;
+        } else {
+          info.style.display = `none`;
+        }
+      },
     },
   });
 };
 
 watch(
   () => graphData.value,
-  (newVal) => {
+  async (newVal) => {
+    await nextTick(); // DOM이 렌더링된 이후 실행
     setGraphCategoryList();
     setOnlyGraphCategoryList();
     setCategoryGraph();
