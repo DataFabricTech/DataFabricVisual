@@ -26,7 +26,6 @@ public class ContainerService {
 
     public Object getContainersMetadata(String fqn) {
         Map<String, Object> resultMap = containerClient.getMetaData(fqn);
-        Object rdfs = resultMap.get("rdfs");
-        return rdfs;
+        return resultMap.get("rdfs");
     }
 }

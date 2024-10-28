@@ -327,7 +327,6 @@ public class SearchDetailService {
             return new DataModelDetailSampleDataResponse(tablesClient.getSampleData(id), type);
         } else {
             try {
-                log.info("여기좀보자:");
                 Object sampleData11 = containersClient.getSampleData(id);
                 log.info("sampleData11: " + sampleData11);
                 return new DataModelDetailSampleDataResponse(containersClient.getSampleData(id), type);
@@ -347,8 +346,7 @@ public class SearchDetailService {
      */
     public Object getExceptionExtSampleData(String id) throws Exception {
         Map<String, Object> exceptionExtSampleData = containersClient.getExceptionExtSampleData(id);
-        Object sampleData = exceptionExtSampleData.get("sampleData");
-        return sampleData;
+        return exceptionExtSampleData.get("sampleData");
     }
 
     /**
