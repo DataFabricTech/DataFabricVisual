@@ -80,7 +80,8 @@
       gap: $spacing-12;
 
       .resource-box {
-        width: 50%;
+        flex: 0 0 49.5%;
+        width: 49.5%;
       }
     }
   }
