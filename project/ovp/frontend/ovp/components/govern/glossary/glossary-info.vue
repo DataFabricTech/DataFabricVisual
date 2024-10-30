@@ -152,7 +152,8 @@
           <menu-search-tag
             :data="menuSearchTagsData"
             :selected-items="glossary.tags"
-            label-key="displayName"
+            selected-label-key="displayName"
+            label-key="tagFQN"
             value-key="tagFQN"
             :is-multi="true"
             title="값을 선택하세요"
