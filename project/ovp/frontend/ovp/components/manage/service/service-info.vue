@@ -77,7 +77,8 @@
             <menu-search-tag
               :data="tagList"
               :selected-items="service.tags"
-              label-key="displayName"
+              selected-label-key="displayName"
+              label-key="tagFQN"
               value-key="tagFQN"
               :is-multi="true"
               title="값을 선택하세요"
