@@ -50,12 +50,23 @@ public class JwtFilter extends OncePerRequestFilter {
                     var authentication = token.getAuthentication(accessToken);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 } else {
-                    token.deleteTokens(request, response);
                     String url = request.getServletPath();
-                    if (!url.startsWith("/_nuxt/") && !url.contains(".")&& !url.startsWith("/api") && !url.startsWith("/portal/login")) {
-                        response.sendRedirect("/portal/login");  // 로그인 페이지로 리다이렉트
-                        return;  // 필터 체인을 계속 진행하지 않도록 리턴
+                    log.debug("token is expire {}", url);
+                    if (!url.startsWith("/api/auth") && !url.startsWith("/portal/login")) {
+                        token.deleteTokens(request, response);
+                        if (!url.startsWith("/_nuxt/") && !url.contains(".") && !url.contains("/api")) {
+                            log.debug("로그인 페이지 리다이렉트");
+                            response.sendRedirect(request.getContextPath() + "/portal/login");
+                            return;
+                        } else if (url.startsWith("/api")) {
+                            // API일 경우 만료되었거나 없는 경우 401 상태 설정
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("Unauthorized");
+                            response.getWriter().flush();
+                            return;
+                        }
                     }
+
                 }
             } catch (Exception e) {
                 log.error(e.getMessage());
