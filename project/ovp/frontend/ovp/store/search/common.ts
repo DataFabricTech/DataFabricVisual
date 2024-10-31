@@ -355,7 +355,6 @@ export const useSearchCommonStore = defineStore(
       graphData.value = data;
     };
 
-    // TODO: [개발] 시각화 그래프 마우스 오버했을 때 제목 출력
     const graphCategoryList: NetworkDiagramNodeInfo = ref({});
     const onlyGraphCategoryList = ref([]);
     const graphCategoryPath = ref([]);
