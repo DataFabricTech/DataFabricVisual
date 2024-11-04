@@ -207,18 +207,28 @@
         border-bottom: 1px solid $neutral-200;
       }
 
-      .breadcrumb-list {
-        gap: $spacing-24;
+      .breadcrumb {
+        flex: 1 1 auto;
+        width: 258px;
       }
 
-      .breadcrumb-item:not(:last-child)::after {
-        left: 95%;
+      .breadcrumb-list {
+        justify-content: flex-start;
+        gap: $spacing-24;
+        width: 100%;
+      }
+
+      .breadcrumb-item {
+        min-width: 0;
+        max-width: 100px;
+
+        &:not(:last-child)::after {
+          left: 95%;
+        }
       }
 
       .breadcrumb-text {
         @include ellipsis;
-
-        max-width: 85px;
       }
     }
 
