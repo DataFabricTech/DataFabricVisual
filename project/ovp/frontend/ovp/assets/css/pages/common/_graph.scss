@@ -225,6 +225,10 @@
         &:not(:last-child)::after {
           left: 95%;
         }
+
+        &:only-child {
+          max-width: fit-content;
+        }
       }
 
       .breadcrumb-text {
