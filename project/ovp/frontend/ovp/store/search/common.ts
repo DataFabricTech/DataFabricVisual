@@ -462,7 +462,7 @@ export const useSearchCommonStore = defineStore(
     const setGraphCategoryPath = (nodeId: string) => {
       graphCategoryPath.value = [];
 
-      const count = ref(0);
+      let count = 0;
       const categoryParentId = graphCategoryList.value.id;
       let selectedCategoryParentId = "";
 
@@ -501,7 +501,7 @@ export const useSearchCommonStore = defineStore(
         for (const child of children) {
           if (child.tagId) {
             if (categoryParentId !== selectedCategoryParentId) {
-              count.value++;
+              count++;
             }
             graphCategoryPath.value.push(child.name);
             addChildrenNames(child.children);
@@ -512,9 +512,9 @@ export const useSearchCommonStore = defineStore(
       traverse(graphCategoryList.value);
 
       graphCategoryPath.value =
-        count.value === 0 && categoryParentId === selectedCategoryParentId
+        count === 0 && categoryParentId === selectedCategoryParentId
           ? graphCategoryPath.value.slice(0, 1)
-          : count.value > 1
+          : count > 1
             ? graphCategoryPath.value.slice(0, 2)
             : graphCategoryPath.value;
     };

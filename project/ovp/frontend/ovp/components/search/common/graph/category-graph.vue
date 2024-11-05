@@ -110,7 +110,8 @@ const onClick = ({ compId, nodeId }) => {
 const setGraphCategoryList = () => {
   const nodeData: any = graphData.value.nodes;
   const mapNodeWithChildren = (node: any, depth: number = 0) => {
-    let bgColor;
+    let bgColor = "";
+
     if (!node.tagId) {
       bgColor = "#BDE3FF";
     } else {
@@ -125,7 +126,7 @@ const setGraphCategoryList = () => {
           bgColor = "#FF9A62";
           break;
         default:
-          bgColor = undefined;
+          bgColor = "#f4f6f9";
       }
     }
     return {
