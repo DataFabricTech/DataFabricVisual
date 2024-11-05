@@ -1,7 +1,9 @@
 import { ofetch } from "ofetch";
 import { defineNuxtPlugin, useRuntimeConfig } from "nuxt/app";
+import { useRouter } from "vue-router";
 
 export default defineNuxtPlugin((nuxtApp: any) => {
+  const router = useRouter();
   // NOTY : api 호출하는 코드에서 'showLoader' options 을 추가할 경우
   // FetchContext type 이 아니라고 typescript 오류라고 판단하기 때문에
   // 아래처럼 한번 더 wrap 한다.
@@ -24,13 +26,8 @@ export default defineNuxtPlugin((nuxtApp: any) => {
     async onResponse(context) {
       const { response, options } = context;
       const data = response._data;
-
-      // 서버단에서 redirected 가 제대로 동작하지 않아서 아래와 같이 처리함.
-      // 서버에서 response.redirect("/portal/login")으로 처리 했기 때문에
-      // response.redirected 값이 true 로 오게 됨. location.href 값을 url 로 변경해서 처리한다.
-      if (response.redirected) {
-        // 세션아웃
-        location.href = response.url;
+      if (response.status === 401) {
+        router.push("/portal/login");
       }
 
       const showLoader = (options as any).showLoader ?? true;
