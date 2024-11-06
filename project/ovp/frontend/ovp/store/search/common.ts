@@ -355,7 +355,6 @@ export const useSearchCommonStore = defineStore(
       graphData.value = data;
     };
 
-    // TODO: [개발] 시각화 그래프 마우스 오버했을 때 제목 출력
     const graphCategoryList: NetworkDiagramNodeInfo = ref({});
     const onlyGraphCategoryList = ref([]);
     const graphCategoryPath = ref([]);
@@ -463,6 +462,10 @@ export const useSearchCommonStore = defineStore(
     const setGraphCategoryPath = (nodeId: string) => {
       graphCategoryPath.value = [];
 
+      let count = 0;
+      const categoryParentId = graphCategoryList.value.id;
+      let selectedCategoryParentId = "";
+
       if (graphCategoryList.value.id === nodeId) {
         graphCategoryPath.value = ["ROOT"];
         return;
@@ -473,6 +476,7 @@ export const useSearchCommonStore = defineStore(
         if (graphList.id === nodeId) {
           // 상위 노드부터 저장
           if (graphList.parentId && graphList.tagId) {
+            selectedCategoryParentId = graphList.parentId;
             graphCategoryPath.value.push(graphList.name);
           }
           // 하위 노드들도 추가 (재귀)
@@ -496,6 +500,9 @@ export const useSearchCommonStore = defineStore(
       const addChildrenNames = (children: any) => {
         for (const child of children) {
           if (child.tagId) {
+            if (categoryParentId !== selectedCategoryParentId) {
+              count++;
+            }
             graphCategoryPath.value.push(child.name);
             addChildrenNames(child.children);
           }
@@ -505,9 +512,11 @@ export const useSearchCommonStore = defineStore(
       traverse(graphCategoryList.value);
 
       graphCategoryPath.value =
-        graphCategoryPath.value.length > 4
+        count === 0 && categoryParentId === selectedCategoryParentId
           ? graphCategoryPath.value.slice(0, 1)
-          : graphCategoryPath.value;
+          : count > 1
+            ? graphCategoryPath.value.slice(0, 2)
+            : graphCategoryPath.value;
     };
 
     return {

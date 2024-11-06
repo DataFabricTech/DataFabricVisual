@@ -109,28 +109,69 @@ const onClick = ({ compId, nodeId }) => {
 // graph에 들어갈 전체 데이터 정제
 const setGraphCategoryList = () => {
   const nodeData: any = graphData.value.nodes;
-  const mapNodeWithChildren = (node: any) => ({
-    id: node.id,
-    parentId: node.parentId,
-    tagId: node.tagId,
-    name: node.name,
-    desc: node.desc,
-    children: node.children ? node.children.map(mapNodeWithChildren) : [],
-    nodeList: [],
-  });
+  const mapNodeWithChildren = (node: any, depth: number = 0) => {
+    let bgColor = "";
+
+    if (!node.tagId) {
+      bgColor = "#BDE3FF";
+    } else {
+      switch (depth) {
+        case 0:
+          bgColor = "#D99BFF";
+          break;
+        case 1:
+          bgColor = "#FFCD29";
+          break;
+        case 2:
+          bgColor = "#FF9A62";
+          break;
+        default:
+          bgColor = "#f4f6f9";
+      }
+    }
+    return {
+      id: node.id,
+      parentId: node.parentId,
+      tagId: node.tagId,
+      name: node.name,
+      desc: node.desc,
+      children: node.children
+        ? node.children.map((child) => mapNodeWithChildren(child, depth + 1))
+        : [],
+      nodeList: [],
+      style: {
+        fontColor: "#2b3440",
+        fontSize: 24,
+        backgroundColor: bgColor,
+        outlineColor: node.tagId ? "transparent" : "#22B4FF",
+        outlineWeight: node.tagId ? 0 : 6,
+      },
+    };
+  };
 
   // nodeData의 자식들을 재귀적으로 처리하여 새로운 children 구조 생성
-  const formattedNodeData: NetworkDiagramNodeInfo =
-    nodeData.children.map(mapNodeWithChildren);
+  const formattedNodeData: NetworkDiagramNodeInfo = nodeData.children.map(
+    (child) => mapNodeWithChildren(child),
+  );
 
   graphCategoryList.value = {
     id: nodeData.id,
     name: nodeData.name,
     children: formattedNodeData,
     nodeList: [],
+    style: {
+      fontColor: "#ffffff",
+      fontSize: 32,
+      fontWeight: "600",
+      outlineColor: "transparent",
+      backgroundColor: "#14AE5C",
+    },
   };
+
   setFlattenCategoryList(graphCategoryList.value);
 };
+
+// 모델 리스트를 제외한 오직 카테고리 목록의 id, tagId만 추출
 const setOnlyGraphCategoryList = () => {
   const nodeData: any = graphData.value.nodes;
 
@@ -269,7 +310,6 @@ const setCategoryGraph = () => {
 
   const info = document.getElementById("graphTooltip") as HTMLDivElement;
 
-  // TODO: [퍼블리싱] 스타일 수정 필요
   info.style.backgroundColor = "#e9f5f7";
   info.style.padding = "12px";
   info.style.position = "absolute";
@@ -312,7 +352,7 @@ const setCategoryGraph = () => {
           compTypeId.value = "";
         }
       },
-      onHover: (e: any, id: any, type: any) => {
+      onHover: (e: any, id: any) => {
         if (id !== undefined) {
           const targetObject = flatternCategoryList.value.find(
             (item) => item.id === id,
