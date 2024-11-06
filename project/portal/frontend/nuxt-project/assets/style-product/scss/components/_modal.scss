@@ -1,0 +1,331 @@
+// -------------------------
+// Modal
+// -------------------------
+
+// TODO: 임시 .modal
+// 기존 .modal에서 position -> relative 처리
+.modal {
+  @include layer("pop-out");
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+  max-height: calc(100vh - rem(40px));
+  min-height: rem(150px);
+  border-radius: rem(10px);
+  background-color: $white;
+  z-index: z("modal");
+}
+
+// 기존 .modal
+//.modal {
+//  @include layer("pop-out");
+//  display: flex;
+//  flex-direction: column;
+//  position: absolute;
+//  height: 100%;
+//  max-height: calc(100vh - rem(40px));
+//  min-height: rem(150px);
+//  border-radius: rem(10px);
+//  background-color: $white;
+//  z-index: z("modal");
+//}
+
+.modal__head {
+  display: flex;
+  align-items: center;
+  padding: 0 rem(30px);
+  height: rem(70px);
+  border-bottom: 1px solid $border-light;
+}
+
+.modal__head-close-button {
+  margin-left: auto;
+
+  .button--icon {
+    margin-right: rem(-10px);
+    border-radius: rem(10px);
+    border: 0;
+
+    .svg-icon {
+      @include svg-icon-size(24px);
+    }
+  }
+}
+
+.modal__head-title {
+  @include text-overflow;
+  display: flex;
+  flex: 1 0 auto;
+  align-items: center;
+  width: calc(100% - 140px);
+}
+
+.modal__head-title-text {
+  @include font-size("22");
+  @include font-weight("bold");
+  color: $text-dark;
+}
+
+.modal__head-subtitle {
+  @include text-overflow;
+  @include line-height("body");
+  @include font-size("13");
+  margin-left: $spacing-2xs;
+  color: $text-dark;
+}
+
+.modal__head-tooltip {
+  margin-left: $spacing-3xs;
+  margin-bottom: $spacing-3xs;
+}
+
+.modal__head-toolbar ~ .modal__head-close-button {
+  margin-left: $spacing-sm;
+}
+
+//   midal body padding
+//   ==========================================
+//   default ||  0
+//   sm      ||  16px
+//   md      ||  32px
+//   lg      ||  48px
+//   ==========================================
+.modal__body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  overflow: auto;
+  position: relative;
+  width: 100%;
+  max-height: calc(100vh - rem(200px));
+  padding: rem(30px);
+
+  table th {
+    color: $text-dark;
+  }
+
+  p {
+    margin-bottom: rem(8px);
+  }
+
+  .bottom {
+    margin-top: rem(20px);
+  }
+}
+
+.modal__body--sm {
+  padding: $layout-2xs;
+}
+
+.modal__body--md {
+  padding: $layout-sm;
+}
+
+.modal__body--lg {
+  padding: $layout-sm $layout-md;
+}
+
+.modal__foot {
+  padding: 0 rem(30px) rem(30px);
+  display: flex;
+  justify-content: center;
+
+  .button {
+    min-width: rem(100px);
+  }
+}
+
+.modal__foot .button,
+.modal__foot div,
+.modal__foot .modal__foot-main-buttons div {
+  margin: 0 rem(6px);
+}
+
+.modal__foot .modal__foot-main-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+//   midal size
+//   ==========================================
+//   xs   ||  350px
+//   sm   ||  480px (450, 418)
+//   md   ||  620px
+//   lg   ||  900px
+//   xl   ||  1180px
+//   ==========================================
+.modal--xs {
+  width: rem(350px);
+  min-height: rem(220px);
+}
+
+.modal--sm {
+  width: rem(480px);
+  min-height: rem(240px);
+}
+
+.modal--md {
+  width: rem(620px);
+}
+
+.modal--lg {
+  width: rem(720px);
+}
+
+.modal--xl {
+  width: rem(900px);
+}
+
+.modal--2xl {
+  width: rem(1180px);
+}
+
+// -------------------------
+// modal 하위에 있는 form, tab overwrite
+// -------------------------
+
+// $spacing-sm / 2 = 6px
+.modal .form__item {
+  padding: $spacing-sm * 0.5 0;
+}
+
+.modal .form--lg .form__item {
+  padding: $spacing-sm 0;
+}
+
+.modal .form--lg .form__item:first-child {
+  padding-top: 0;
+}
+
+.modal .form__label-text {
+  @include font-weight("regular");
+  letter-spacing: rem(-1px);
+}
+
+.modal .form__label {
+  @include make-col(2);
+}
+
+.modal .form--vertical .form__label {
+  width: 100%;
+}
+
+.modal .form--vertical .form__detail {
+  @include line-height("body");
+  margin-top: $spacing-xs;
+}
+
+.modal .form--vertical .form__item {
+  padding: $spacing-sm 0;
+
+  &:first-child {
+    padding-top: 0;
+  }
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+}
+
+.modal .form--complex .text-input {
+  width: auto;
+}
+
+.modal .tab__contents {
+  flex: 1 0 auto;
+  padding-right: $spacing-md;
+  padding-left: $spacing-md;
+}
+
+//modal에서 탭이 포함될때 ul에 아래 기본선 추가
+.modal .tab--horizontal .tab__bar::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: rem(2px);
+  background: $bg-dark;
+}
+
+.modal__body--overflow-hidden {
+  overflow: hidden;
+}
+
+.modal__body-top {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.modal__body-title {
+  display: flex;
+  align-items: center;
+  height: rem(40px);
+
+  p {
+    flex-grow: 1;
+    color: $dark;
+    @include font-size("18");
+    @include font-weight("medium");
+    padding-left: rem(4px);
+  }
+
+  small {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: $info;
+    @include font-size("14");
+    font-weight: 400 !important;
+    height: rem(30px);
+    line-height: rem(30px);
+
+    .svg-icon {
+      margin-right: rem(8px);
+      width: rem(18px);
+      height: auto;
+    }
+  }
+}
+
+.modal__body-content
+.modal__board {
+  border-top: 2px solid $basic;
+
+  .modal__board-list {
+    height: rem(56px);
+    padding: 0 rem(40px);
+    position: relative;
+    @include font-size("18");
+    @include font-weight("medium");
+    color: $dark;
+    border-bottom: 1px solid $border-light;
+    cursor: pointer;
+  }
+
+  .selected {
+    background-color: $primary-pale;
+    color: $primary;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: rem(12px);
+      top: 50%;
+      transform: translateY(-50%);
+      width: rem(20px);
+      height: rem(20px);
+      mask: url(#{$img-path}/icon/check.svg) no-repeat;
+      background-color: $primary;
+    }
+  }
+
+  .modal__board-auto {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+}

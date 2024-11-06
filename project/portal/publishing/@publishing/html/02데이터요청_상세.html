@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>데이터 요청 < 데이터 카탈로그</title>
+    <link href="../css/common.css" rel="stylesheet" />
+    <link href="../css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="__nuxt">
+      <div id="__layout">
+        <div>
+          <!-- DEV nuxt common layout ADD -->
+          <div id="app" class="wrapper wrapper-sub">
+            <!-- 실제 PUB layout / sub화면은 wrapper-sub / admin시 .admin-wrapper 추가됨 -->
+            <!-- skip -->
+            <div class="skiptoContent">
+              <a href="#main">본문 바로가기</a>
+            </div>
+            <!-- //skip -->
+            <!-- header -->
+            <header class="header-sub">
+              <!-- hover시 .open 추가됨 nav 펼침 -->
+              <div class="header">
+                <div class="inner">
+                  <h1 class="logo">
+                    <a href="#" target="_self"><span>데이터 카탈로그</span></a>
+                  </h1>
+                  <div class="gnb-area">
+                    <!-- nav -->
+                    <nav class="nav">
+                      <ul>
+                        <li>
+                          <a href="#"><span>카탈로그 검색</span></a>
+                          <ul>
+                            <li><a href="#">통합검색</a></li>
+                            <li><a href="#">카테고리 검색</a></li>
+                            <li><a href="#">카탈로그 동의어</a></li>
+                          </ul>
+                        </li>
+                        <li class="current">
+                          <a href="#"><span>데이터 요청</span></a>
+                        </li>
+                        <li>
+                          <a href="#"><span>My Catalog</span></a>
+                          <ul>
+                            <li><a href="#">카탈로그 대시보드</a></li>
+                            <li><a href="#">데이터 요청 내역</a></li>
+                            <li><a href="#">동의어 삭제 요청 내역</a></li>
+                            <li><a href="#">추출 데이터</a></li>
+                            <li><a href="#">찜 데이터</a></li>
+                            <li><a href="#">리뷰 데이터</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#"><span>활용사례</span></a>
+                          <ul>
+                            <li><a href="#">분석 활용사례</a></li>
+                            <li><a href="#">통계 활용사례</a></li>
+                            <li><a href="#">외부 데이터</a></li>
+                          </ul>
+                        </li>
+                        <li>
+                          <a href="#"><span>고객지원</span></a>
+                          <ul>
+                            <li><a href="#">공지사항</a></li>
+                            <li><a href="#">FAQ</a></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </nav>
+                    <!-- //nav -->
+                    <ul class="top-menu">
+                      <li>
+                        <a href="/member/join/indexJoinInit.do" class="mu-btn mu-btn-round"><span>Admin</span></a>
+                      </li>
+                      <li>
+                        <button type="button" title="My Catelog" class="mu-btn mu-btn-round mu-btn-icon-only"><i class="mu-icon-svg user"></i></button>
+                      </li>
+                      <li>
+                        <button type="button" title="로그아웃" class="mu-btn mu-btn-round mu-btn-icon-only"><i class="mu-icon-svg logout"></i></button>
+                      </li>
+                      <li>
+                        <button type="button" title="사이트맵" class="mu-btn mu-btn-round mu-btn-icon-only">
+                          <i class="mu-icon-svg menu"></i>
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </header>
+            <!-- //header -->
+            <!-- main-sub -->
+            <main id="main" class="main-sub">
+              <!-- sub page : main-sub class 추가 -->
+              <div class="main-contents">
+                <h2 class="blind">데이터 요청</h2>
+                <!-- 각 메뉴마다 메뉴명이 달라져야 합니다. -->
+                <div class="contents-wrap">
+                  <!-- contents-top -->
+                  <div class="contents-top">
+                    <div class="breadcrumbs-wrap">
+                      <div class="breadcrumbs">
+                        <ol class="mu-path">
+                          <li class="home"><a href="">HOME</a></li>
+                          <li><a href="">데이터 요청</a></li>
+                        </ol>
+                      </div>
+                    </div>
+                    <div class="subject-wrap">
+                      <div class="subject">
+                        <div class="subject-title">
+                          <!-- 게시글 상세보기에서는 컨텐츠 타이틀 비노출 -->
+                        </div>
+                        <!-- 우측 버튼영역 -->
+                      </div>
+                    </div>
+                  </div>
+                  <!-- contents -->
+                  <div class="contents">
+                    <div>
+                      <!-- 제목위치가 컨텐츠 최상단에 위치해야함. -->
+                      <!-- 관리자에서 상태 변경 시, 상태 라벨(신청apply – 검토중review – 진행중ing – 제공supply/미제공unsupply) 변경 -->
+                      <strong class="board-title"><em class="step-process supply">제공</em> ‘요청 데이터명’ 데이터를 요청합니다.</strong>
+
+                      <div class="inner">
+                        <div class="board-wrap">
+                          <div class="board-head">                            
+                            <div class="board-desc">
+                              <div class="data-info">
+                                <dl>
+                                  <dt>요청자</dt>
+                                  <dd>홍길동</dd>
+                                  <dt>요청일</dt>
+                                  <dd>2024.08.30</dd>
+                                </dl>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="board-body">
+                            <!-- mu-formbox -->
+                            <table class="mu-formbox">
+                              <caption>
+                                데이터 요청 게시판
+                              </caption>
+                              <colgroup>
+                                <col style="width: 190px" />
+                                <col />
+                              </colgroup>
+                              <tbody>
+                                <tr>
+                                  <th scope="row">신청 데이터명</th>
+                                  <td>신청 데이터명</td>
+                                </tr>
+                                <tr>
+                                  <th scope="row">신청자</th>
+                                  <td>
+                                    <div class="user-info">
+                                      <span class="name">남궁길동</span><span class="team">(영업1팀)</span
+                                      ><!-- <span class="mail">namgunggildong@mobigen.com </span> 2022-09-01 v1.0.9 DEL : 개인정보때문에 삭제 -->
+                                    </div>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <th scope="row">요청기간</th>
+                                  <td>2022.06.25 ~ 2022.07.30</td>
+                                </tr>
+                                <tr>
+                                  <th scope="row">활용 목적 및 기대효과</th>
+                                  <td>
+                                    <!-- inner-cms : cms영역 -->
+                                    <div class="inner-cms">
+                                      <p>0000 프로젝트에서의 0000 업무에 활용하기 위함</p>
+                                    </div>
+                                    <!-- //inner-cms : cms영역 -->
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <th scope="row">첨부파일</th>
+                                  <td>
+                                    <ul class="file-sch-list">
+                                      <li>
+                                        <a href="#none" title="첨부파일다운로드"><i class="mu-icon-svg file">첨부파일있음</i>첫번째 첨부파일명 2022.csv</a>
+                                      </li>
+                                      <li>
+                                        <a href="#none" title="첨부파일다운로드"><i class="mu-icon-svg file">첨부파일있음</i>두번째 첨부파일.csv</a>
+                                      </li>
+                                      <li>
+                                        <a href="#none" title="첨부파일다운로드"><i class="mu-icon-svg file">첨부파일있음</i>세번째 첨부파일 세번째 첨부파일 첨부파일.doc</a>
+                                      </li>
+                                    </ul>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td colspan="2">
+                                    <!-- inner-cms : cms영역 -->
+                                    <div class="inner-cms">
+                                      <p>안녕하세요. 필요한 자료가 있어 요청 드립니다.<br />2016년부터 2021년까지의 0000 데이터가 필요합니다.</p>
+                                    </div>
+                                    <!-- //inner-cms : cms영역 -->
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <!-- //mu-formbox -->
+                          </div>
+                        </div>
+                        <!-- mu-button-wrap -->
+                        <div class="mu-button-wrap">
+                          <button type="button" class="mu-btn mu-btn-lg"><span>삭제</span></button>
+                          <button type="button" class="mu-btn mu-btn-lg"><span>수정</span></button>
+                          <button type="button" class="mu-btn mu-btn-lg mu-btn-primary"><span>목록</span></button>
+                        </div>
+                        <!-- //mu-button-wrap -->
+                      </div>
+                    </div>
+                    <!-- //layout -->
+                  </div>
+                  <!-- //contents -->
+                </div>
+              </div>
+            </main>
+            <!-- //main-sub -->
+
+            <!-- footer -->
+            <footer>
+              <div class="inner">
+                <!-- footer-info -->
+                <div class="footer-info">
+                  <address>
+                    <p>대표번호 <strong class="tel">031-8090-8114</strong></p>
+                  </address>
+                  <p class="copyright">ⓒ 2024. HYUNDAI ROTEM COMPANY.</p>
+                </div>
+                <!-- footer-logo -->
+                <div class="footer-logo"><span>HYUNDAI Rotem</span></div>
+              </div>
+              <!-- floating-button -->
+              <div class="floating-button">
+                <a href="#" title="맨 위로 가기" class="mu-btn btn-go-top">상단가기</a>
+              </div>
+            </footer>
+            <!-- //footer -->
+          </div>
+          <!-- //DEV nuxt common layout ADD -->
+        </div>
+      </div>
+    </div>
+    <script src="../lib/vue/vue.min.js"></script>
+    <script src="../lib/vue2-datepicker_3.10.2/index.min.js"></script>
+    <!-- vue2-datepicker ver up -->
+    <script src="../lib/vue2-datepicker_3.10.2/locale/ko.js"></script>
+    <!-- vue2-datepicker kor ver -->
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script src="../js/jquery-ui.min.js"></script>
+    <script src="../js/common.js"></script>
+    <!-- 동작 확인용 임시 -->
+  </body>
+</html>

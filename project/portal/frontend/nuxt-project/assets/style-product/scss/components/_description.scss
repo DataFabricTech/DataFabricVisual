@@ -1,0 +1,81 @@
+// -------------------------
+// Description
+// -------------------------
+.description__head-title {
+  @include font-size("16");
+  @include font-weight("medium");
+  display: block;
+}
+
+.description__body {
+  margin-top: $spacing-lg;
+}
+
+.description__item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  height: rem(46px);
+  padding: 0 $spacing-xs;
+}
+
+.description__item + .description__item {
+ border-top: 1px solid $hover-row;
+}
+
+.description__item:last-child:not(:only-child) {
+  border-bottom: 1px solid $hover-row;
+}
+
+.description__title {
+  @include font-weight("medium");
+  width: rem(140px);
+  margin-right: $spacing-2xs;
+  color: $text-dark;
+  word-break: normal;
+}
+
+.description__text {
+  @include text-overflow;
+  flex: 1;
+  color: $text-dark;
+}
+
+.description__foot {
+  display: flex;
+  align-items: center;
+  margin-top: $spacing-sm;
+}
+
+.description__foot-main-buttons {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+
+  .button + .button {
+    margin-left: $spacing-xs;
+  }
+}
+
+// -------------------------
+// Size overwrite
+// -------------------------
+.description--lg {
+  .description__head-title {
+    @include font-size("18");
+  }
+
+  .description__item {
+    height: rem(55px);
+  }
+
+  .description__title {
+    width: rem(180px);
+  }
+
+  .description__title,
+  .description__text {
+    @include font-size("15");
+  }
+}

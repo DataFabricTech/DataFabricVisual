@@ -1,0 +1,130 @@
+### Windows ###
+# Windows thumbnail cache files
+Thumbs.db
+
+
+### macOS ###
+# General
+.DS_Store
+.DS_Store?
+
+
+### SVN ###
+.svn/
+
+
+### Log file###
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+### Node.js ###
+# Dependency directories
+node_modules/
+
+# Optional npm cache directory
+.npm
+
+
+### Java ###
+# Compiled class file
+*.class
+
+
+### Eclipse ###
+.metadata
+*.tmp
+*.bak
+*.swp
+*~.nib
+.settings/
+.loadpath
+.recommenders
+
+# Eclipse Core
+.project
+
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# Java annotation processor (APT)
+.factorypath
+
+
+# STS (Spring Tool Suite)
+.springBeans
+
+# Code Recommenders
+.recommenders/
+
+# Annotation Processing
+.apt_generated/
+.sts4-cache
+
+# for JRebel
+*.iml
+rebel.xml
+rebel-remote.xml
+
+
+### Maven ###
+.mvn/
+!.mvn/wrapper/maven-wrapper.jar
+mvnw
+mvnw.cmd
+*.versionsBackup
+
+
+### IntelliJ ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+
+### Visual Studio Code ###
+.vscode/*
+
+
+### SublimeText ###
+# Workspace files are user-specific
+*.sublime-workspace
+
+
+### NetBeans ###
+**/nbproject/private/
+**/nbproject/Makefile-*.mk
+**/nbproject/Package-*.bash
+nbbuild/
+nbdist/
+.nb-gradle/
+
+
+### e2e ###
+/e2e/*.js
+/e2e/*.map
+
+
+### ETC editors ###
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.iml
+
+
+### IRIS Web Development Framework
+template/
+
+
+### Only this project ###

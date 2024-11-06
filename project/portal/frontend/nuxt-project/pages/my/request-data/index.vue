@@ -1,0 +1,153 @@
+<template>
+        <div class="contents">
+          <div>
+            <div class="inner">
+              <div class="board-list-wrap">
+                <div class="mu-heading">
+                  <!-- board-list-search -->
+                  <Border-list-search :searchObj.sync="searchObj" @searchMethod="getPost" :searchList="searchList"/>
+
+                  <div class="mu-item-group">
+                  <page-size
+                    v-model:pageSize="pagingObj.limit"
+                    @searchMethod="getPost"
+                  />
+                  </div>
+                </div>
+                <div class="board-list">
+                  <table class="mu-grid">
+                    <colgroup>
+                      <col style="width:60px">
+                      <col style="width:auto">
+                      <col style="width:120px" span="4">
+                    </colgroup>
+                    <thead>
+                    <tr>
+                      <th scope="col">번호</th>
+                      <th scope="col">제목</th>
+                      <th scope="col">첨부파일</th>
+                      <th scope="col">신청일</th>
+                      <th scope="col">완료일</th>
+                      <th scope="col">진행상태</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(item, index) in postList" :key="index">
+                        <td>{{ item.rownum }}</td>
+                        <td class="tl">
+                          <NuxtLink :to="'/data/request/detail?id=' + item.id">{{ item.title }}</NuxtLink>
+                          <i v-if="item.new_yn" class="mu-icon-svg new">새로운글</i>
+                        </td><!-- 왼쪽정렬시 .tl 추가 -->
+                        <td><i v-if="item.file_cnt>0" class="mu-icon-svg file">첨부파일 있음</i></td>
+                        <td>{{ item.upload_date }}</td>
+                        <td v-if="item.request_end">{{ item.request_end }}</td>
+                        <td v-else="item.request_end">-</td>
+                        <td>
+                          <em v-bind:class="[ item.process_status=='신청' ? 'apply': item.process_status=='검토중' ? 'review': item.process_status=='진행중' ? 'ing' : item.process_status=='제공' ? 'supply' : item.process_status=='미제공' ? 'unsupply': '', 'step-process']">{{ item.process_status }}</em><!-- 신청apply – 검토중review – 진행중ing – 제공supply/미제공unsupply -->
+                        </td>
+                      </tr>
+                      <tr v-if="postList.length === 0">
+                        <td colspan="6">
+                          <p class="nodata">데이터 요청 내역이 존재하지 않습니다.</p>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- mu-pagination -->
+                <pagination
+                  :paging="pagingObj"
+                  @onClickPage="onClickPage"
+                />
+                <!-- //mu-pagination -->
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- //contents -->
+</template>
+
+<script setup lang="ts">
+import { ref, computed, watchEffect, onMounted } from 'vue'
+import { useUserStore } from '~/store/user';
+import PageSize from "@/pages/admin/manager/system/user/page-size";
+import Pagination from "@functional/pagination/pagination";
+import DatePicker from "@functional/datepicker/date-picker";
+import BorderListSearch from "@functional/border-list-search/border-list-search.vue";
+
+definePageMeta({
+  name: "MyRequestData",
+  layout: 'user',
+})
+
+const { $ofetch } = useNuxtApp();
+const userStore = useUserStore();
+const getUserInfo = computed(() => userStore.getUser)
+const getTabInfo = computed(() => userStore.getTab)
+
+const pagingObj = ref({
+  total: 0,       // 전체 데이터 건수
+  limit: 10,      // 한 페이지에 보여줄 데이터 건수
+  block: 10,      // 한 화면에서 보여줄 페이지 수
+  currentPage: 1, // 현재 페이지 번호
+})
+
+const postList = ref([])
+const searchWord = ref("")
+const searchType = ref("all")
+const checkedList = ref([]) // [데이터 정의 : Array]
+const allChecked = ref(false)
+const searchObj = ref({
+  searchType: "all",// 검색 조건 유형
+  searchWord: "",   // 검색어
+})
+
+const searchList = ref([
+  {
+    value : "title",
+    text : "제목"
+  }
+])
+
+const getPost = async (offset = 1) => {
+  try {
+    let response = await $ofetch(`/api/post/request/list?postType=data-request&pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}`);
+    let result = response.data
+    pagingObj.value = {
+      ...pagingObj.value,
+      total: result.total,
+      currentPage: offset,
+    };
+    postList.value = result.list;
+    checkedList.value = [];
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const selected = (e) => {
+  const selectedItem = postList.value.find(v => v.id == e.target.value);
+  if(selectedItem.selected) {
+    checkedList.value.push(e.target.value);
+  } else {
+    checkedList.value.splice(checkedList.value.findIndex(v => v == e.target.value), 1);
+  }
+
+  for (let i in postList.value) {
+    if(! postList.value[i].selected) {
+      allChecked.value = false;
+      return;
+    } else {
+      allChecked.value = true;
+    }
+  }
+}
+
+const onClickPage = (page) => {
+  getPost(page);
+}
+
+onMounted(() => {
+  getPost()
+})
+</script>

@@ -1,0 +1,27 @@
+<svg id="그룹_2807" data-name="그룹 2807" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: red;
+        opacity: 0;
+      }
+
+      .cls-2 {
+        fill: #fff;
+      }
+
+      .cls-3 {
+        fill: none;
+        stroke: #fff;
+        stroke-linecap: round;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <rect id="area" class="cls-1" width="32" height="32"/>
+  <path id="ico_search" class="cls-2" d="M1310.742,434.808s4.161,4.1,4.56,4.5a1,1,0,0,1,0,1.393.939.939,0,0,1-1.391,0c-.47-.47-4.558-4.5-4.558-4.5a8.861,8.861,0,1,1,1.394-1.392Zm-1.978-.73a6.916,6.916,0,1,0-.147.147Z" transform="translate(-1289 -415)"/>
+  <g id="그룹_2795" data-name="그룹 2795" transform="translate(14.818 10.714) rotate(45)">
+    <path id="패스_2491" data-name="패스 2491" class="cls-3" d="M5.185,5.185,0,0"/>
+    <path id="패스_2492" data-name="패스 2492" class="cls-3" d="M0,5.183,5.183,0" transform="translate(0 0.002)"/>
+  </g>
+</svg>

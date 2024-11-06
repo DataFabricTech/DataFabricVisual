@@ -1,0 +1,237 @@
+// -------------------------
+// Loader
+// -------------------------
+@keyframes loading-spinner-duration {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes loading-spinner-colors {
+  0% {
+    border-color: $loader-start;
+    border-bottom-color: transparent;
+  }
+  25% {
+    border-color: $loader-25;
+    border-bottom-color: transparent;
+  }
+  50% {
+    border-color: $loader-50;
+    border-bottom-color: transparent;
+  }
+  75% {
+    border-color: $loader-75;
+    border-bottom-color: transparent;
+  }
+  100% {
+    border-color: $loader-end;
+    border-bottom-color: transparent;
+  }
+}
+
+@keyframes inverse-loading-spinner-colors {
+  0% {
+    border-color: $inverse-loader-start;
+    border-bottom-color: transparent;
+  }
+  25% {
+    border-color: $inverse-loader-25;
+    border-bottom-color: transparent;
+  }
+  50% {
+    border-color: $inverse-loader-50;
+    border-bottom-color: transparent;
+  }
+  75% {
+    border-color: $inverse-loader-75;
+    border-bottom-color: transparent;
+  }
+  100% {
+    border-color: $inverse-loader-end;
+    border-bottom-color: transparent;
+  }
+}
+
+@keyframes mono-loading-spinner-colors {
+  0% {
+    border-color: $mono-loader-start;
+    border-bottom-color: transparent;
+  }
+  25% {
+    border-color: $mono-loader-25;
+    border-bottom-color: transparent;
+  }
+  50% {
+    border-color: $mono-loader-50;
+    border-bottom-color: transparent;
+  }
+  75% {
+    border-color: $mono-loader-75;
+    border-bottom-color: transparent;
+  }
+  100% {
+    border-color: $mono-loader-end;
+    border-bottom-color: transparent;
+  }
+}
+
+.v--modal-box {
+  box-shadow: none!important;
+  background: none!important
+}
+
+// Loading overlay
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  bottom: 0;
+  z-index: z("overlay");
+  background-color: $overlay-light;
+}
+
+.overlay--fixed {
+  position: fixed;
+}
+
+.overlay--alert {
+  z-index: z("alert-overlay");
+}
+
+.overlay--dark {
+  background-color: $overlay-dark;
+}
+
+.overlay--mono {
+  background-color: $overlay-light;
+}
+
+.overlay-blind {
+  background-color: transparent;
+}
+
+.overlay .loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.loader {
+  display: flex;
+  text-align: center;
+}
+
+.loader__spinner {
+  display: inline-block;
+  width: rem(64px);
+  height: rem(64px);
+}
+
+.loader__spinner::after {
+  content: "";
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+  border: 3px solid $loader-color;
+  border-bottom-color: transparent;
+  border-radius: 100%;
+  background: transparent;
+  animation: loading-spinner-duration 1s linear infinite,
+    loading-spinner-colors 3s linear infinite;
+}
+
+.loader--lg .loader__spinner {
+  width: rem(80px);
+  height: rem(80px);
+}
+
+.loader--sm .loader__spinner {
+  width: rem(20px);
+  height: rem(20px);
+}
+
+.loader--xs .loader__spinner {
+  width: rem(16px);
+  height: rem(16px);
+}
+
+.loader--sm .loader__spinner:after,
+.loader--xs .loader__spinner:after {
+  border-width: 2px;
+}
+
+.loader--sm .loader__text,
+.loader--xs .loader__spinner:after {
+  @include font-size("12");
+  padding-top: $spacing-xs;
+}
+
+.button .loader__spinner::after,
+.overlay--dark .loader__spinner::after {
+  animation: loading-spinner-duration 1s linear infinite,
+    inverse-loading-spinner-colors 3s linear infinite;
+}
+
+.overlay--mono .loader__spinner::after {
+  animation: loading-spinner-duration 1s linear infinite,
+    mono-loading-spinner-colors 3s linear infinite;
+}
+
+// Loading bar
+@keyframes loading-bar {
+  0% {
+    transform: translateX(-102%);
+    opacity: 0.25;
+  }
+  45% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  55% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  90% {
+    transform: translateX(102%);
+    opacity: 0.25;
+  }
+  100% {
+    transform: translateX(102%);
+  }
+}
+
+.loading-bar {
+  display: block;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: rem(4px);
+  overflow-x: hidden;
+  background-color: $bg-dark;
+}
+
+.loading-bar::before {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 102%;
+  background-color: $primary;
+  animation: loading-bar 1.5s cubic-bezier(0.52, 0.04, 0.06, 0.93) infinite;
+}
+
+.loading-bar--mono::before {
+  background-color: $basic;
+}

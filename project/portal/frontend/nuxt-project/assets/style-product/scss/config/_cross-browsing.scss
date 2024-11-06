@@ -1,0 +1,6 @@
+/* IE10+ */
+@mixin ie-resolution{
+  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    @content;
+  }
+}

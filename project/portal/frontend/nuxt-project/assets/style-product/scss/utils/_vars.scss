@@ -1,0 +1,206 @@
+//-------------------------------------------
+//  Vars - TODO: 정리 필요
+// ------------------------------------------
+
+// file path
+$img-path: "../images" !default;
+$font-path: "../fonts" !default;
+
+// button
+$button-border-radius: 0 !default;
+$button-height-xl: 60px !default;
+$button-height-lg: 44px !default;
+$button-height-md: 36px !default;
+$button-height-sm: 32px !default;
+$button-height-xs: 28px !default;
+
+// fields
+$field-border-radius: 4px !default;
+
+// form
+$form-element-height: $button-height-md;
+$form-border-radius: 0 !default;
+
+// loader
+$transition-base: 160ms !default;
+$loader-color: $primary !default;
+$loader-start: $primary !default;
+$loader-25: $secondary !default;
+$loader-50: $primary !default;
+$loader-75: $secondary !default;
+$loader-end: $primary !default;
+$inverse-loader-start: rgba($white, 0.3) !default;
+$inverse-loader-25: rgba($white, 0.8) !default;
+$inverse-loader-50: rgba($white, 0.3) !default;
+$inverse-loader-75: rgba($white, 0.8) !default;
+$inverse-loader-end: rgba($white, 0.3) !default;
+$mono-loader-start: rgba($icon-basic, 0.3) !default;
+$mono-loader-25: rgba($icon-basic, 0.8) !default;
+$mono-loader-50: rgba($icon-basic, 0.3) !default;
+$mono-loader-75: rgba($icon-basic, 0.8) !default;
+$mono-loader-end: rgba($icon-basic, 0.3) !default;
+
+// Grid columns
+$enable-grid-classes: true !default;
+$spacer: 1rem !default;
+$spacers: (
+  0: 0,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3
+) !default;
+$grid-breakpoints: (
+  xs: 0,
+  sm: 640px,
+  md: 768px,
+  lg: 1024px,
+  xl: 1280px,
+  2xl: 1400px
+) !default;
+$grid-columns: 12 !default;
+$grid-gutter-width: 0 !default;
+$grid-row-columns: 6 !default;
+$gutters: $spacers !default;
+
+// layout
+$editor-layout-body__side-penal: 300px !default;
+
+// utilities
+$utilities: () !default;
+$utilities: map-merge(
+	(
+		"display": (
+			property: display,
+			class: display,
+			values: none inline inline-block block table table-row table-cell flex inline-flex grid
+		),
+		"flex": (
+			property: flex,
+			values: (
+				auto: 1 1 0%,
+				fill: 1,
+			)
+		),
+		"flex-direction": (
+			property: flex-direction,
+			class: flex,
+			values: row column row-reverse column-reverse
+		),
+		"flex-grow": (
+			property: flex-grow,
+			class: flex,
+			values: (
+				grow-0: 0,
+				grow-1: 1,
+			)
+		),
+		"flex-shrink": (
+			property: flex-shrink,
+			class: flex,
+			values: (
+				shrink-0: 0,
+				shrink-1: 1,
+			)
+		),
+		"flex-wrap": (
+			property: flex-wrap,
+			class: flex,
+			values: wrap nowrap wrap-reverse
+		),
+		"justify-content": (
+			property: justify-content,
+			values: (
+				start: flex-start,
+				end: flex-end,
+				center: center,
+				between: space-between,
+				around: space-around,
+			)
+		),
+		"justify-self": (
+			property: justify-self,
+			values: (
+				auto: auto,
+				start: flex-start,
+				end: flex-end,
+				center: center,
+				baseline: baseline,
+			)
+		),
+		"align-items": (
+			property: align-items,
+			values: (
+				start: flex-start,
+				end: flex-end,
+				center: center,
+				baseline: baseline,
+				stretch: stretch,
+			)
+		),
+		"align-content": (
+			property: align-content,
+			values: (
+				start: flex-start,
+				end: flex-end,
+				center: center,
+				between: space-between,
+				around: space-around,
+				stretch: stretch,
+			)
+		),
+		"align-self": (
+			property: align-self,
+			values: (
+				auto: auto,
+				start: flex-start,
+				end: flex-end,
+				center: center,
+				baseline: baseline,
+				stretch: stretch,
+			)
+		),
+		"float": (
+			property: float,
+			values: left right none
+		),
+		"overflow": (
+			property: overflow,
+			values: auto hidden,
+		),
+		"font-weight": (
+			property: font-weight,
+			class: font,
+			values: light regular medium bold
+		),
+		"text-align": (
+			property: text-align,
+			class: text,
+			values: left right center justify
+		),
+		"word-break": (
+			property: word-break,
+			class: word,
+			values: break-all keep-all break-word
+		),
+		"white-space": (
+			property: white-space,
+			values: normal nowrap pre pre-line pre-wrap
+		),
+		"text-decoration": (
+			property: text-decoration,
+			class: text,
+			values: (
+        underline: underline,
+        through: line-through,
+      )
+		),
+		"vertical-align": (
+			property: vertical-align,
+			class: vertical,
+			values: baseline top middle bottom
+		),
+	),
+	$utilities
+);

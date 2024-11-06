@@ -1,0 +1,75 @@
+//-------------------------------------------
+//  Font Face
+// ------------------------------------------
+//   theme web font font-face
+//   ==========================================
+//   font family : $font // theme -> $base-font-family
+//   font file name : $font-name // theme -> $base-font-name
+//   font file weight name : $extand-name // theme -> $base-font-weights
+//   ==========================================
+@mixin fontFace($font, $font-name, $extand-name, $weight, $style: "normal") {
+  @font-face {
+    font-family: "#{$font}";
+    src: url("#{$font-path}/#{$font-name}-#{$extand-name}.woff2") format("woff2"),
+      url("#{$font-path}/#{$font-name}-#{$extand-name}.woff") format("woff"),
+      url("#{$font-path}/#{$font-name}-#{$extand-name}.otf") format("opentype");
+    font-weight: $weight;
+    font-style: $style;
+  }
+}
+
+@each $name, $weight in $base-font-weights {
+  @include fontFace($base-font-family, $base-font-name, $name, $weight, normal);
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("#{$font-path}/Roboto-Light.woff2") format("woff2"),
+    url("#{$font-path}/Roboto-Light.woff") format("woff"),
+    url("#{$font-path}/Roboto-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("#{$font-path}/Roboto-Regular.woff2") format("woff2"),
+    url("#{$font-path}/Roboto-Regular.woff") format("woff"),
+    url("#{$font-path}/Roboto-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("#{$font-path}/Roboto-Medium.woff2") format("woff2"),
+    url("#{$font-path}/Roboto-Medium.woff") format("woff"),
+    url("#{$font-path}/Roboto-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Roboto";
+  src: url("#{$font-path}/Roboto-Bold.woff2") format("woff2"),
+    url("#{$font-path}/Roboto-Bold.woff") format("woff"),
+    url("#{$font-path}/Roboto-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Play";
+  src: url("#{$font-path}/Play-Regular.woff") format("woff"),
+    url("#{$font-path}/Play-Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Play";
+  src: url("#{$font-path}/Play-Bold.woff") format("woff"),
+    url("#{$font-path}/Play-Bold.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+}

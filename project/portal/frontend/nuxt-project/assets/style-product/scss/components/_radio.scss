@@ -1,0 +1,388 @@
+// -------------------------
+// Radio
+// -------------------------
+.radio {
+  display: block;
+  position: relative;
+}
+
+.radios {
+  display: flex;
+  flex-wrap: wrap;
+  
+  &:not(.radios--toggle) .radio:not(.radio--toggle):not(:last-child) {
+    margin-right: $spacing-lg - $spacing-2xs;
+  }
+}
+
+.radios--vertical {
+  display: block;
+  gap: 0;
+
+  .radio ~ .radio {
+    margin-top: $spacing-md;
+  }
+}
+
+.radio__input {
+  @include hidden;
+}
+
+.radio__input:focus-visible + .radio__label {
+  outline: 1px dashed #a5a8b3;
+}
+
+.radio__label {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  padding-left: rem(28px);
+  min-height: $layout-xs;
+  line-height: $layout-xs;
+  color: $primary;
+  font-size: rem(15px);
+  white-space: nowrap;
+  user-select: none;
+  cursor: pointer;
+
+  .svg-icon:first-child {
+    margin-right: $spacing-xs;
+  }
+
+  .svg-icon:last-child {
+    margin-left: $spacing-xs;
+  }
+}
+
+.radio__label::before,
+.radio__label::after {
+  box-sizing: border-box;
+  transition: all $duration-fast-01 motion(entrance, productive);
+}
+
+.radio__label::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: calc($spacing-2xs /2);
+  width: rem(20px);
+  height: rem(20px);
+  background-color: $white;
+  border: 1px solid $border-basic;
+  border-radius: 50%;
+}
+
+.radio__label::after {
+  content: "";
+  opacity: 0;
+  position: absolute;
+  top: rem(7px);
+  left: rem(5px);
+  width: rem(10px);
+  height: rem(10px);
+  border-radius: 50%;
+  background-color: $primary;
+}
+
+// -------------------------
+// sort check type
+// -------------------------
+.radio.radio--check {
+  margin-left: 0;
+
+  .radio__label {
+    padding: 0;
+    color: $text-dark;
+    position: relative;
+
+    &:hover {
+      color: $primary;
+    }
+
+    &::before {
+      content: none;
+    }
+  }
+}
+
+.radio.radio--check + .radio.radio--check {
+  &::before {
+    content: "";
+    position: absolute;
+    left: rem(-10px);
+    top: 50%;
+    transform: translateY(-50%);
+    width: rem(3px);
+    height: rem(3px);
+    border-radius: rem(2px);
+    background-color: $border-basic;
+    z-index: -1;
+  }
+}
+
+.radio.radio--check .radio__input:checked + .radio__label {
+  padding: 0 0 0 rem(10px);
+  color: $primary;
+  @include font-weight("medium");
+
+  span:after {
+    content: "";
+    position: absolute;
+    left: rem(-10px);
+    top: rem(2px);
+    width: 1rem;
+    height: 1rem;
+    border-radius: 0;
+    background: $white url("#{$img-path}/icon/check-radio.svg") no-repeat center center;
+    z-index: 1;
+  }
+}
+
+// -------------------------
+// 상태별 스타일
+// -------------------------
+// hover 상태
+.radio__input:focus-visible:not(:disabled) {
+  + .radio__label:before {
+    outline: 2px solid $default-focus;
+  }
+}
+
+.radio__label:hover::before {
+  border-color: $primary;
+}
+
+.radio.radio--check .radio__label:hover {
+  color: $primary;
+}
+
+.radio__input:checked + .radio__label:hover::before {
+  background-color: $white;
+}
+
+// checked 상태
+.radio__input:checked + .radio__label::before {
+  border-color: $primary;
+  background-color: $white;
+}
+
+.radio__input:checked + .radio__label::after {
+  opacity: 1;
+}
+
+// disabled 상태
+.radio--disabled .radio__label,
+.radio__input:disabled + .radio__label {
+  cursor: not-allowed;
+
+  &::before,  
+  &:hover::before {
+    border-color: $border-basic;
+    background-color: $disabled;
+  }
+
+  .badge,
+  .badge__label {
+    border-color: #ccc;
+    color: #999;
+  }
+}
+
+// checked + disabled 상태
+.radio--disabled .radio__input:checked + .radio__label,
+.radio__input:checked:disabled + .radio__label {
+
+  &::before {
+    border-color: $primary;
+    background-color: $primary;
+  }
+
+  &::after {
+    background-color: $white;
+  }
+}
+
+// --------------------------------------------------
+// radio--right: input 과 label 위치가 바뀐 유형
+// --------------------------------------------------
+.radio.radio--right .radio__label {
+  padding-left: 0;
+  padding-right: $spacing-lg - $spacing-2xs;
+}
+
+.radio.radio--right .radio__label:before {
+  left: unset;
+  right: 0;
+}
+
+.radio.radio--right .radio__label::after {
+  right: rem(5px);
+}
+
+// --------------------------------------------------
+// radios--toggle: radio를 감싸는 상위 radios의 신규 테마
+// --------------------------------------------------
+.radios--toggle .radio {
+  margin: 0 0 0 -1px;
+}
+
+.radios--toggle .radio:first-child {
+  margin-left: 0;
+}
+
+.radios--toggle .radio:not(:last-of-type) {
+  margin-right: 0;
+}
+
+.radios--toggle .radio .radio__label {
+  position: relative;
+  height: $button-height-md;
+  padding: 0 $spacing-md;
+  border: 1px solid $border-light;
+  transition: all 0.3s ease;
+
+  .svg-icon {
+    color: inherit;
+    fill: currentColor;
+  }
+}
+
+.radios--toggle .radio .radio__label::before,
+.radios--toggle .radio .radio__label:after {
+  display: none;
+}
+
+.radios--toggle
+  .radio__input:focus-visible:not(:disabled)
+  + .radio__label::before {
+  outline: unset;
+}
+
+.radios--toggle .radio__input:focus-visible:not(:disabled) + .radio__label {
+  outline: 1px dashed $text-dark;
+}
+
+.radios--toggle .radio .radio__input:checked + .radio__label {
+  border-color: $primary;
+  background-color: $primary;
+  color: #fff;
+  z-index: 1;
+}
+
+.radios--toggle .radio:first-child:not(:last-child) .radio__label {
+  border-top-left-radius: $form-border-radius;
+  border-bottom-left-radius: $form-border-radius;
+}
+
+.radios--toggle .radio:last-child:not(:first-child) .radio__label {
+  border-top-right-radius: $form-border-radius;
+  border-bottom-right-radius: $form-border-radius;
+}
+
+// --------------------------------------------------
+// radio--toggle
+// --------------------------------------------------
+.radio--toggle:not(:first-child) {
+  margin-left: $spacing-sm;
+}
+
+.radio--toggle .radio__label {
+  position: relative;
+  height: $button-height-md;
+  padding: 0 1.25rem;
+  border-radius: calc($button-height-md / 2);
+  border: 1px solid $border-light;
+  transition: all 0.3s ease;
+}
+
+.radio--toggle .radio__label::before,
+.radio--toggle .radio__label::after {
+  display: none;
+}
+
+.radio--toggle
+  .radio__input:focus-visible:not(:disabled)
+  + .radio__label::before {
+  outline: unset;
+}
+
+.radio--toggle
+  .radio__input:focus-visible:not(:disabled)
+  + .radio__label {
+  outline: 1px dashed $text-dark;
+}
+
+.radio--toggle .radio__label:hover {
+  border-color: $primary;
+}
+
+.radio--toggle .radio__input:checked + .radio__label {
+  z-index: 1;
+  border-color: $primary;
+  background-color: $primary;
+  color: #fff;
+}
+
+// --------------------------------------------------
+// radio--toggle 크기별 스타일
+// --------------------------------------------------
+
+.radio--toggle.radio--lg {
+  .radio__label {
+    @include font-weight("medium");
+    height: $button-height-lg;
+    padding: 0 $spacing-lg;
+    border-radius: calc($button-height-lg / 2);
+  }
+}
+
+.radio--toggle.radio--sm {
+  .radio__label {
+    @include font-size("14");
+    height: $button-height-sm;
+    padding: 0 $spacing-sm;
+    border-radius: calc($button-height-sm / 2);
+  }
+}
+
+// -------------------------
+// radio--icon only
+// -------------------------
+.radio.radio--icon .radio__label {
+  width: $button-height-md;
+  height: $button-height-md;
+  padding: 0;
+  justify-content: center;
+  background-color: $white;
+}
+
+.radio.radio--icon .radio__label:before,
+.radio.radio--icon .radio__label:after {
+  display: none;
+}
+
+.radio.radio--icon [class*="svg-"] {
+  margin: 0;
+  color: inherit;
+  fill: currentColor;
+}
+
+.radio.radio--icon .radio__input:checked + .radio__label {
+  border: 1px solid $primary;
+}
+
+.radio.radio--icon .radio__input:checked + .radio__label [class*="svg-"] {
+  fill: #fff;
+}
+
+// -------------------------
+// radio only(not text)
+// -------------------------
+.radio--empty {
+  overflow: hidden;
+
+  .radio__label {
+    padding-left: 1rem;
+    text-indent: -9999px;
+  }
+}

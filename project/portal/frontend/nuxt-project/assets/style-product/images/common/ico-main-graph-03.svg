@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="27.607" height="23.823" viewBox="0 0 27.607 23.823">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#linear-gradient);
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #20c28b;
+        stroke-width: 2px;
+      }
+    </style>
+    <linearGradient id="linear-gradient" x1="0.5" x2="0.5" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#20c28b"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <g id="Icon_Graph_R" transform="translate(-319.244 -528.678)">
+    <path id="패스_4703" data-name="패스 4703" class="cls-1" d="M320,541.5l3.811-4.4,4.854,2.357,5.964-1.525,3.328-4.854,4.715,1.526L346,529.2v23.3H320Z" transform="translate(0 0)"/>
+    <path id="패스_4702" data-name="패스 4702" class="cls-2" d="M320,541.5l3.811-4.4,4.854,2.357,5.964-1.525,3.328-4.854,4.715,1.526L346,529.2" transform="translate(0 0)"/>
+  </g>
+</svg>

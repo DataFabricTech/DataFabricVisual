@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>로그인 < 데이터 카탈로그</title>
+    <link href="../css/common.css" rel="stylesheet" />
+    <link href="../css/style.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="__nuxt">
+      <div id="__layout">
+        <div>
+          <!-- DEV nuxt common layout ADD -->
+          <div id="app" class="common-login">
+            <main id="main">
+              <div class="main-contents">
+                <h2 class="blind">로그인</h2>
+                <!-- 각 메뉴마다 메뉴명이 달라져야 합니다. -->
+                <!-- login-wrap -->
+                <div class="login-wrap">
+                  <div class="login-container">
+                    <div class="login-slogan">
+                      <h1 class="logo">
+                        <img src="../images/common/logo-wh.png" alt="HYUNDAI ROTEM">
+                      </h1>
+                      <h2 class="title">HYUNDAI Rotem<br />Data Portal</h2>
+                      <p class="desc">창의적 사고와 끝없는 도전을 통해 새로운 미래를<br />창조함으로써 인류사회의 꿈을 실현하는 현대로템 데이터포털</p>
+                      <p class="copyright">ⓒ 2024. HYUNDAI ROTEM COMPANY.</p>
+                    </div>
+                    <!-- login-content -->
+                    <div class="login-content">
+                      <h3 class="login-title">login</h3>
+                      <form action="">
+                        <fieldset>
+                          <legend>로그인</legend>
+                          <div class="login-box">
+                            <div class="mu-input-id">
+                              <label for="uid">id</label>
+                              <input type="text" id="uid" value="" class="mu-input" placeholder="아이디를 입력해주세요." />
+                              <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>아이디 삭제</span></button>
+                            </div>
+                            <div class="mu-input-pw">
+                              <label for="upw">Password</label>
+                              <input type="password" id="upw" value="" class="mu-input" placeholder="비밀번호를 입력해주세요." /><!-- 비밀번호는 재 입력 해야함 -->
+                              <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>비밀번호 삭제</span></button>
+                              <button type="button" class="mu-btn mu-btn-pw-mask"><i class="mu-icon-svg eye-on"></i><span>비밀번호 숨김 해제</span></button>
+                              <!-- 비밀번호 마스킹 토글버튼 동작확인 -->
+                            </div>
+                            <p class="complete-msg error">로그인 정보가 일치하지 않습니다.</p>
+                            <div class="login-type">
+                              <div class="mu-selectbox border-none">
+                                <!-- 클릭시 .on추가 -->
+                                <button class="mu-value"><span>그룹웨어 인증</span></button>
+                                <ul class="mu-list">
+                                  <!-- .on시 block  -->
+                                  <li class="active"><a href="">그룹웨어 인증</a></li>
+                                  <li><a href="">AD 인증</a></li>
+                                </ul>
+                              </div>
+                            </div>
+                            <button type="button" class="mu-btn mu-btn-primary"><span>로그인</span></button>
+                          </div>
+                        </fieldset>
+                      </form>
+                    </div>
+                    <!-- //login-content -->
+                  </div>
+                </div>
+                <!-- //login-wrap -->
+              </div>
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../lib/vue/vue.min.js"></script>
+    <script src="../lib/vue2-datepicker_3.10.2/index.min.js"></script>
+    <!-- vue2-datepicker ver up -->
+    <script src="../lib/vue2-datepicker_3.10.2/locale/ko.js"></script>
+    <!-- vue2-datepicker kor ver -->
+    <script src="../js/jquery-3.5.1.min.js"></script>
+    <script src="../js/jquery-ui.min.js"></script>
+    <script src="../js/common.js"></script>
+    <!-- 동작 확인용 임시 -->
+    <script>
+      /* 비밀번호 마스킹 토글버튼 */
+      $(function () {
+        var $pw = $(".mu-input-pw");
+        var $mask = $(".mu-input-pw .mu-btn-pw-mask");
+
+        $mask.on("click", function () {
+          $pw.toggleClass("show");
+          if ($(".mu-input-pw").hasClass("show")) {
+            $(this).children("i").toggleClass("eye-on eye-off");
+            $(this).children("span").text("비밀번호 숨김 처리");
+            $pw.find("input").attr("type", "text");
+          } else {
+            $(this).children("i").toggleClass("eye-off eye-on");
+            $(this).children("span").text("비밀번호 숨김 해제");
+            $pw.find("input").attr("type", "password");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

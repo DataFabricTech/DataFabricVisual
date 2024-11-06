@@ -1,0 +1,383 @@
+// -------------------------
+// Tab
+// -------------------------
+.tab {
+  display: flex;
+  position: relative;
+  margin-bottom: rem(12px);
+}
+
+.tab__bar {
+  position: relative;
+  display: flex;
+  border-right: 0;
+
+  &:only-child {
+    flex: 1;
+    width: 100%;
+  }
+}
+
+.tab__item {
+  @include font-size("16");
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  position: relative;
+  height: rem(50px);
+  background-color: #fff;
+  transition-duration: $duration-fast-02;
+  transition-timing-function: ease-in-out;
+  border: 1px solid $border-basic;
+
+  &:not(:last-child) {
+    border-right: none;
+  }
+
+  &:first-child {
+    border-radius: $button-border-radius 0 0 $button-border-radius;
+  }
+
+  &:last-child {
+    border-radius: 0 $button-border-radius $button-border-radius 0;
+  }
+}
+
+.tab__item--selected {
+  border: 1px solid $dark;
+  background-color: $dark;
+
+  .tab__button {
+    @include font-weight("medium");
+    color: $white;
+  }
+}
+
+.tab__item--disabled {
+  opacity: 0.6;
+
+  .tab__button {
+    cursor: not-allowed;
+  }
+}
+
+.tab__button {
+  @include button-normal;
+  @include stable-padding(0, $spacing-sm);
+  @include font-weight("regular");
+  @include font-size("18");
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+  color: $text-dark;
+  line-height: 1.2;
+
+  &:focus-visible:not(:disabled) {
+    outline: 2px solid $default-focus;
+  }
+
+  &-text {
+  }  
+  
+  &-subtext {
+    @include font-size("12");
+  }
+}
+
+.tab__contents {
+  display: none;
+  padding: $spacing-sm;
+}
+
+.tab__contents--active {
+  display: block;
+}
+
+.tab__panel {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  width: 100%;
+}
+
+.tab__panel--hide {
+  display: none !important;
+}
+
+.tab__remove-button {
+  @include button-normal;
+  background-color: $white;
+  width: rem(18px);
+  height: rem(18px);
+  margin-left: -$spacing-xs;
+  padding: 0;
+  border-radius: $field-border-radius;
+  fill: $icon-basic;
+
+  &:hover {
+    background-color: $hover-row;
+  }
+
+  &:active {
+    background-color: $hover-row;
+
+    .svg-icon {
+      fill: $primary;
+    }
+  }
+}
+
+// -------------------------
+// modifier: horizontal
+// -------------------------
+.tab--horizontal {
+  flex-grow: 1;
+  flex-direction: column;
+
+  .tab__item {
+    flex: 1;
+  }
+}
+
+// -------------------------
+// modifier: vertical
+// -------------------------
+.tab--vertical {
+  .tab__bar {
+    flex-direction: column;
+    border-right: 2px solid $border-light;
+  }
+
+  .tab__item {
+    flex: none;
+    
+    &--selected::after {
+      top: 0;
+      right: rem(-2px);
+      width: rem(2px);
+      height: 100%;
+    }
+  }
+
+  .tab__button {
+    justify-content: flex-start;
+  }
+}
+
+// -------------------------
+// modifier: container theme
+// -------------------------
+.tab--container {
+  .tab__bar:after {
+    content: none;
+  }
+
+  .tab__item {
+    background-color: $dark;
+    border-bottom: 1px solid $border-light;
+
+    &:hover {
+      background-color: darken($dark, 6%);
+    }
+
+    &:hover .tab__button-text {
+      color: rgba($text-dark, 0.85);
+    }
+
+    .tab__button {
+      justify-content: center;
+
+      &:focus:not(:disabled) {
+        .tab__button-text {
+          color: $text-dark;
+        }
+      }
+    }
+  }
+
+  .tab__item--selected {
+    background-color: $dark;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+
+    &:hover {
+      background-color: $dark;
+    }
+
+    &:hover .tab__button-text {
+      color: $text-light;
+    }
+
+    &::after {
+      display: none;
+    }
+
+    .tab__button {
+      &:focus:not(:disabled) {
+        .tab__button-text {
+          color: $text-dark;
+        }
+      }
+    }
+  }
+
+  .tab__item--disabled {
+    .tab__button {
+      &:focus:not(:disabled) {
+        .tab__button-text {
+          color: rgba($white, 0.85);
+        }
+      }
+    }
+  }
+
+  &.tab--vertical .tab__item.tab__item--selected {
+    border-color: $border-basic;
+  }
+
+  .tab__item--selected .tab__button-text {
+    color: $text-dark;
+  }
+
+  .tab__item--disabled {
+    &:hover {
+      background-color: darken($bg-dark, 20%);
+    }
+  }
+
+  .tab__button-text {
+    margin-top: $spacing-3xs;
+    color: $text-dark;
+  }
+
+  &.tab--horizontal .tab__item {
+    justify-content: center;
+    border-left: 1px solid $border-light;
+
+    &:first-child {
+      border-left-color: transparent;
+    }
+  }
+
+  &.tab--vertical .tab__bar {
+    border-right: 0;
+  }
+}
+
+// tab--pagination
+.tab--pagination {
+  margin: 0 $spacing-lg;
+}
+
+.tab__previous-button {
+  position: absolute;
+  top: 50%;
+  left: rem(-24px);
+  margin-top: -$spacing-sm;
+}
+
+.tab__next-button {
+  position: absolute;
+  top: 50%;
+  right: rem(-24px);
+  margin-top: -$spacing-sm;
+}
+
+.tab--pagination .tab__bar-wrap {
+  overflow: hidden;
+}
+
+.tab--pagination .tab__item {
+  height: rem(32px);
+  flex: 0 1 auto;
+}
+
+// -------------------------
+// Tab Nav
+// -------------------------
+.tab--nav {
+  display: block;
+  margin-bottom: $spacing-sm;
+
+  .tab__bar {
+    width: 100%;
+    
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      border-bottom: 1px solid $border-basic;
+    }
+  }
+
+  .tab__item {
+    flex: none;
+    min-width: 6.25rem;
+    height: $button-height-md;
+    border: 1px solid $border-basic;
+    border-radius: $button-border-radius $button-border-radius 0 0;
+    background-color: $bg-light;
+
+    &:not(:first-child) {
+      border-left-color: transparent;
+    }
+
+    &.tab__item--selected {
+      z-index: 2;
+      border-color: $dark;
+      border-bottom-color: transparent;
+      background-color: $white;
+
+      .tab__button {
+        color: $text-dark;
+      }
+    }
+
+    .tab__button {
+      @include font-weight("medium");
+      @include font-size("16");
+      padding: 0 1.25rem;
+      color: $text-light;
+    }
+  }
+}
+
+// -------------------------
+// Tab Inline
+// -------------------------
+.tab--inline {
+  display: block;
+
+  .tab__bar {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .tab__item {
+    flex: none;
+    min-width: 6.25rem;
+    height: $button-height-md;
+    border-radius: calc($button-height-md / 2);
+    border: 1px solid $border-light;
+
+    &:hover,
+    &:focus {
+      border-color: $primary;
+    }
+
+    &--selected {
+      border-color: $primary;
+      background-color: $primary;
+    }
+  }
+
+  .tab__button {
+    @include font-size("16");
+    padding: 0 1.25rem;
+    border-radius: calc($button-height-md / 2);
+  }
+}

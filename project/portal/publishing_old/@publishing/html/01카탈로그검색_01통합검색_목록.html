@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="ko">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>통합검색 < 카탈로그 검색 < 데이터 카탈로그</title>
+		<!-- HTLM5shiv ie6~8 -->
+		<!--[if lt IE 9]> 
+			<script src="../js/html5shiv.min.js"></script>
+			<script src="../js/respond.min.js"></script>
+			<script type="text/javascript">
+				alert("현재 당신이 보는 브라우저는 지원하지 않습니다. 최신 브라우저로 업데이트해주세요!");
+			</script>
+		<![endif]-->
+		<link href="../css/common.css" rel="stylesheet" />
+		<link href="../css/style.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div id="__nuxt">
+			<div id="__layout">
+				<div>
+					<!-- DEV nuxt common layout ADD -->
+					<div id="app"><!-- 실제 PUB layout -->	
+						<!-- skip -->
+						<div class="skiptoContent">
+							<a href="#main">본문 바로가기</a>
+						</div>
+						<!-- //skip -->
+						<!-- header -->
+						<header class="header-sub"><!-- hover시 .open 추가됨 nav 펼침 -->
+							<div class="header">
+								<div class="inner">
+									<h1 class="logo"><a href="#" target="_self"><span>데이터 카탈로그</span></a></h1>
+									<div class="gnb-area">
+										<ul class="top-menu">
+											<li><a href="/member/join/indexJoinInit.do"><span>홍길동</span>님</a></li><!-- 2022-08-16 MOD : 디자인적용span추가 -->
+											<li><a href="/member/indexLogin.do">로그아웃</a></li>
+											<li><a href="/member/join/indexJoinInit.do" class="link-home">ADMIN</a></li><!-- 2022-08-17 ADD : 관리자로그인시 -->
+										</ul>
+										<!-- nav -->
+										<nav class="nav">
+											<ul>
+												<li class="current">
+													<a href="#">카탈로그 검색</a>
+													<ul>
+														<li class="current"><a href="#">통합 검색</a></li>
+														<li><a href="#">카테고리 검색</a></li>
+														<li><a href="#">실데이터 위치 조회</a></li>
+														<li><a href="#">카탈로그 용어 사전</a></li>
+													</ul>
+												</li>
+												<li>
+													<a href="#">고객지원</a>
+													<ul>
+														<li><a href="#">공지사항</a></li>
+														<li><a href="#">FAQ</a></li>
+														<li><a href="#">데이터 요청</a></li>
+													</ul>
+												</li>
+												<li>
+													<a href="#">My Catalog</a>
+													<ul>
+														<li><a href="#">카탈로그 대시보드</a></li>
+														<li><a href="#">MY 검색어</a></li>
+														<li><a href="#">MY 데이터</a></li>
+														<li><a href="#">내가 추출한 데이터</a></li>
+														<li><a href="#">내가 찜한 데이터</a></li>
+														<li><a href="#">내가 추천한 데이터</a></li>
+														<li><a href="#">MY 데이터 요청내역</a></li>
+													</ul>
+												</li>
+											</ul>
+										</nav>
+										<!-- //nav -->
+										<div class="nav-dim"></div>
+									</div>
+								</div>
+							</div>
+						</header>
+						<!-- //header -->
+						<!-- main-sub -->
+						<main id="main" class="main-sub"><!-- sub page : main-sub class 추가 -->
+							<div class="main-contents">
+								<h2 class="blind">카탈로그 검색</h2><!-- 각 메뉴마다 메뉴명이 달라져야 합니다. -->
+								<div class="contents-wrap sch-contents"><!-- 통합검색용목록상세/카테고리검색목록에 .sch-contents 추가 -->
+									<!-- contents-top -->
+									<div class="contents-top">
+										<div class="breadcrumbs-wrap">
+											<div class="breadcrumbs">
+												<ol class="mu-path">
+													<li class="home"><a href="">HOME</a></li> 
+													<li><a href="">카탈로그 검색</a></li>
+													<li><a href="">통합검색</a></li>
+												</ol>
+											</div> 
+										</div>				 
+										<div class="subject-wrap">	
+											<div class="subject">  
+												<div class="subject-title">								  
+													<h3>통합검색</h3><!-- 실제 해당 페이지명 --> 
+													<p class="subject-desc">데이터통합포털에서 궁금한 내용을 검색해 보세요.</p>
+												</div> 
+											</div>
+										</div>
+									</div>
+									<!-- contents -->
+									<div class="contents">
+										<div>
+											<!-- content-search-wrap -->
+											<div class="content-search-wrap">
+												<form action="">
+													<fieldset>
+														<legend>통합검색</legend> 
+														<div class="inner-search">
+															<div class="mu-input-icon">
+																<input type="text" class="mu-input" placeholder="검색어를 입력해 주세요." title="검색어입력">
+																<button type="button" class="mu-btn mu-btn-delete">
+																	<i class="mu-icon-svg item-delete"></i>
+																	<span>삭제</span>
+																</button>
+																<button type="button" class="mu-btn mu-btn-sch">
+																	<i class="mu-icon-svg search"></i>
+																	<span>검색</span>
+																</button>
+															</div>
+														</div>
+														<div class="inner-filter">
+															<button type="button" class="mu-btn mu-btn-lg mu-btn-bg-non btn-filter-toggle"><!-- data-filter-wrap를 열고 닫는 버튼 -->
+																<i class="mu-icon-svg filter"></i>
+																<span>Filter</span>
+															</button>
+														</div>
+													</fieldset>
+												</form>
+												<!-- data-filter-wrap --> 
+												<div class="data-filter-wrap">
+													<div class="inner-data-filter">
+														<!-- tab-area 2022-09-16 ADD : 탭테스트용 참고 -->
+														<div class="tab-area">
+															<!-- mu-tab-box : 검색탭 -->
+															<div class="mu-tab-box">
+																<ul class="mu-tab">
+																	<li class="active"><a href="#none"><span>필터검색</span></a></li> 
+																	<li><a href="#none"><span>고급검색</span></a></li>
+																</ul>
+															</div>
+															<!-- //mu-tab-box -->
+															<!-- 필터검색탭 -->
+															<div class="tab-content on">
+																<!-- mu-search-group : 검색단 -->
+																<div class="mu-search-group">
+																	<div class="mu-search-item">
+																		<table>
+																			<caption>필터검색 게시판</caption>
+																			<colgroup>
+																				<col style="width:100px;"><!-- 2022-11-09 MOD -->
+																				<col>
+																			</colgroup>
+																			<tbody>
+																				<tr>
+																					<th scope="row">데이터유형</th>	
+																					<td>
+																						<div class="mu-item-group">
+																							<!-- mu-selectbox -->
+																							<div class="mu-selectbox w240">
+																								<select>
+																									<option value="">유형선택</option>
+																									<option value="">hive</option>
+																									<option value="">sap</option>
+																								</select>
+																							</div>
+																							<!-- mu-selectbox -->
+																							<div class="mu-selectbox w240">
+																								<select>
+																									<option value="">세부유형선택</option>
+																									<option value="">hive db</option>
+																									<option value="">hive db ddl</option>
+																									<option value="">hive table</option>
+																									<option value="">hive_process_execution</option>
+																									<option value="">hive_process_execution hive_process_execution</option>
+																									<option value="">hive_process_execution</option>
+																									<option value="">hive_test</option>
+																								</select>
+																							</div>
+																						</div>
+																					</td>
+																				</tr>
+																				<!-- <tr>
+																					<th scope="row">표준어 검색</th>	
+																					<td>
+																						<input type="text" class="mu-input" placeholder="표준어를 입력하세요" title="표준어검색입력">
+																					</td>
+																				</tr>	 2022-11-09 MOVE : 상세필터영역내부로 -->	
+																				<tr>
+																					<th scope="row">정렬방식</th>	
+																					<td>
+																						<!-- mu-selectbox --> 
+																						<div class="mu-selectbox w240">
+																							<select>
+																								<option value="">없음</option>
+																								<option value="">오름차순</option>
+																								<option value="">내림차순</option>
+																							</select>
+																						</div>
+																					</td>
+																				</tr>
+																			</tbody>	
+																		</table>
+																	</div>
+																	<!-- attribute-filter-item : 추가속성필터영역 -->
+																	<div class="attribute-filter-item slim-scroll">
+																		<!-- filter-item-search 2022-11-09 MOVE : 상세필터영역내부로 구조 추가됨 -->
+																		<dl class="filter-item-search">
+																			<dt>표준어 검색</dt>
+																			<dd><input type="text" class="mu-input" placeholder="표준어를 입력하세요" title="표준어검색입력"></dd>
+																		</dl>
+																		<!-- filter-item-search -->
+																		<!-- filter-item-group : 그룹핑추가 적용예시는 01카탈로그검색_01통합검색_목록_필터.html 참고 -->
+																		<dl class="filter-item-group">
+																			<dt>							
+																				<div class="btn-switch">                  
+																					<div class="mu-radio">
+																						<input type="radio" id="radio1" name="switch1" checked="checked">
+																						<label for="radio1"><span>AND</span></label>
+																					</div>               
+																					<div class="mu-radio">
+																						<input type="radio" id="radio2" name="switch1" disabled="disabled"><!-- 첫 번째 그룹 필터에서 모든 속성 필터 영역이 남아있지 않은 경우 : 비활성 -->
+																						<label for="radio2"><span>OR</span></label>
+																					</div>   
+																				</div>
+																				<div class="button-group">														
+																					<button type="button" class="mu-btn mu-btn-primary"><span>그룹추가</span></button><!-- 그룹추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+																					<button type="button" class="mu-btn mu-btn-primary-line"><span>그룹삭제</span></button><!-- 그룹삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+																				</div>
+																			</dt>
+																			<dd>
+																				<!-- filter-item : row1 -->
+																				<div class="filter-item">	
+																					<div class="form-group">																			
+																						<!-- mu-selectbox -->
+																						<div class="mu-selectbox">
+																							<select>
+																								<option value="">속성을 선택하세요.</option>
+																								<option value="">속성1</option>
+																								<option value="">속성2</option>
+																								<option value="">속성속성속성3</option>
+																								<option value="">속성속성속성속성4</option>
+																								<option value="">속성속성5</option>
+																							</select>
+																						</div>																			
+																						<!-- mu-selectbox -->
+																						<div class="mu-selectbox">
+																							<select>
+																								<option value="">=</option>
+																								<option value="">!=</option>
+																								<option value="">></option>
+																								<option value=""><</option>
+																								<option value="">>=</option>
+																								<option value=""><=</option>
+																								<option value="">begins with</option>
+																								<option value="">is not null</option>
+																							</select>
+																						</div>																				
+																						<!-- mu-selectbox -->
+																						<div class="mu-selectbox">
+																							<select>
+																								<option value="">속성을 선택하세요.</option>
+																								<option value="">속성1</option>
+																								<option value="">속성2</option>
+																								<option value="">속성속성속성3</option>
+																								<option value="">속성속성속성속성4</option>
+																								<option value="">속성속성5</option>
+																							</select>
+																						</div>
+																					</div>			
+																					<div class="button-group">
+																						<button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+																						<button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+																					</div>
+																				</div>
+																				<!-- filter-item : row1 -->
+																				<div class="filter-item">	
+																					<div class="form-group">																
+																						<!-- mu-selectbox -->
+																						<div class="mu-selectbox">
+																							<select>
+																								<option value="">속성을 선택하세요.</option>
+																								<option value="">속성1</option>
+																								<option value="">속성2</option>
+																								<option value="">속성속성속성3</option>
+																								<option value="">속성속성속성속성4</option>
+																								<option value="">속성속성5</option>
+																							</select>
+																						</div>																			
+																						<!-- mu-selectbox -->
+																						<div class="mu-selectbox">
+																							<select>
+																								<option value="">=</option>
+																								<option value="">!=</option>
+																								<option value="">></option>
+																								<option value=""><</option>
+																								<option value="">>=</option>
+																								<option value=""><=</option>
+																							</select>
+																						</div>																				
+																						<!-- mu-selectbox -->
+																						<div class="mu-selectbox">
+																							<select>
+																								<option value="">속성을 선택하세요.</option>
+																								<option value="">속성1</option>
+																								<option value="">속성2</option>
+																								<option value="">속성속성속성3</option>
+																								<option value="">속성속성속성속성4</option>
+																								<option value="">속성속성5</option>
+																							</select>
+																						</div>
+																					</div>			
+																					<div class="button-group">
+																						<button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="해당필터추가"><i class="mu-icon-svg add"></i><span>필터추가</span></button><!-- 필터한row추가 버튼 / 2022-08-25 MOD : 버튼 수정 -->	
+																						<button type="button" class="mu-btn mu-btn-icon-only" title="해당필터삭제"><i class="mu-icon-svg minus"></i><span>필터삭제</span></button><!-- 필터한row삭제 버튼 / 2022-08-25 MOD : 버튼 수정 -->
+																					</div>
+																				</div>
+																			</dd>
+																		</dl>
+																		<!-- //filter-item-group -->
+																	</div>
+																	<!-- //추가속성필터영역 -->
+																	<div class="mu-search-btn">
+																		<button type="button" class="mu-btn mu-btn-lg"><span>초기화</span></button><!-- 2022-08-25 MOD : 버튼 수정 -->
+																		<button type="button" class="mu-btn mu-btn-lg mu-btn-primary"><span>검색</span></button><!-- 2022-08-25 MOD : 버튼 수정 -->
+																	</div>
+																	<!-- open-attribute-filter : 추가속성필터용 버튼영역 2022-08-23 MOVE/ADD -->
+																	<div class="open-attribute-filter">
+																		<button type="button" title="추가속성필터 열기" class="mu-btn mu-btn-bg-non btn-attribute-filter-toggle"><i class="mu-icon-svg chevron-down"></i><span>추가속성필터</span></button><!-- btn-filter-add : 추가 열고닫기버튼 -->
+																	</div>
+																</div>
+																<!-- //mu-search-group -->
+															</div>
+															<!-- 고급검색탭 -->
+															<div class="tab-content">	
+																<!-- mu-search-group : 검색단 -->
+																<div class="mu-search-group">
+																	<div class="mu-search-item">
+																		<table>
+																			<caption>고급검색 게시판</caption>
+																			<colgroup>
+																				<col style="width:100px;"><!-- 2022-11-09 MOD -->
+																				<col>
+																			</colgroup>
+																			<tbody>
+																				<tr>
+																					<th scope="row">데이터유형</th>	
+																					<td>
+																						<div class="mu-item-group">
+																							<!-- mu-selectbox -->
+																							<div class="mu-selectbox w240">
+																								<select>
+																									<option value="">유형선택</option>
+																									<option value="">hive</option>
+																									<option value="">sap</option>
+																								</select>
+																							</div>
+																							<!-- mu-selectbox -->
+																							<div class="mu-selectbox w240">
+																								<select>
+																									<option value="">세부유형선택</option>
+																									<option value="">hive db</option>
+																									<option value="">hive db ddl</option>
+																									<option value="">hive table</option>
+																									<option value="">hive_process_execution</option>
+																									<option value="">hive_process_execution hive_process_execution</option>
+																									<option value="">hive_process_execution</option>
+																									<option value="">hive_test</option>
+																								</select>
+																							</div>
+																						</div>
+																					</td>
+																				</tr>	
+																				<tr>
+																					<th scope="row">DSL검색</th>	
+																					<td>
+																						<textarea title="DSL검색내용" class="mu-area h76"></textarea>
+																					</td>
+																				</tr>
+																			</tbody>	
+																		</table>
+																	</div>
+																	<div class="mu-search-btn">
+																		<button type="button" class="mu-btn mu-btn-lg"><span>초기화</span></button><!-- 2022-08-25 MOD : 버튼 수정 -->
+																		<button type="button" class="mu-btn mu-btn-lg mu-btn-primary"><span>검색</span></button><!-- 2022-08-25 MOD : 버튼 수정 -->
+																	</div>
+																</div>
+																<!-- //mu-search-group -->
+															</div>
+														</div>
+														<!-- //tab-area -->
+													</div>
+												</div>
+												<!-- //data-filter-wrap --> 							
+											</div>
+											<!-- //content-search-wrap --> 
+											<div class="inner">	
+												<!-- mu-section : 영역나누기 -->
+												<div class="mu-section">
+													<!-- category-wrap : L 카테고리리스트 -->
+													<div class="category-wrap">
+														<div class="category-head"><h4>카테고리</h4></div>
+														<div class="category-body">
+															<ul class="category-menu slim-scroll">
+																<!-- 선택된 카테고리의 부모 1Depth 기본 노출 -->
+																<li class="open"> <!-- 자식 카테고리 목록이 있을 경우 .has-sub / 펼쳐지면 열려있음표시 .open -->
+																	<button type="button" class="item-toggle on"><span>펼치기</span></button><!-- .on 추가 -->
+																	<a href="#" class="item-label" title="1줄 까지만 출력 타이틀로 전체 문구 확인가능">카테고리 전체</a>
+																	<ul class="sub-category-menu">
+																		<li><a href="#" class="item-label no-label" title="카테고리 미분류">카테고리 미분류</a></li>
+																		<li class="open">
+																			<button type="button" class="item-toggle on"><span>펼치기</span></button><!-- .on 추가 -->
+																			<a href="#" class="item-label" title="GAPM 성능모니터링 시스템">GAPM 성능모니터링 시스템 GAPM 성능모니터링 시스템</a>
+																			<ul class="sub-category-menu"><!-- sub-category-menu은 하위댑스임 -->
+																				<li class="open">
+																					<button type="button" class="item-toggle on"><span>펼치기</span></button>
+																					<a href="#" class="item-label" title="GAPM 성능모니터링 시스템">성능모니터링 시스템 성능모니터링 시스템</a>
+																					<ul class="sub-category-menu">
+																						<li>
+																							<button type="button" class="item-toggle"><span>펼치기</span></button>
+																							<a href="#" class="item-label" title="3최하위단계">3최하위단계 말줄임테스트 최하위단계 말줄임테스트 최하위단계 말줄임테스트</a>
+																						</li>
+																						<li>
+																							<button type="button" class="item-toggle"><span>펼치기</span></button>
+																							<a href="#" class="item-label" title="3최하위단계">3최하위단계</a>
+																						</li>
+																						<li>
+																							<button type="button" class="item-toggle"><span>펼치기</span></button>
+																							<a href="#" class="item-label" title="3최하위단계">3최하위단계</a>
+																						</li>
+																						<li>
+																							<button type="button" class="item-toggle"><span>펼치기</span></button>
+																							<a href="#" class="item-label" title="3최하위단계">3최하위단계</a>
+																						</li>
+																						<li>
+																							<button type="button" class="item-toggle"><span>펼치기</span></button>
+																							<a href="#" class="item-label" title="3최하위단계 3최하위단계">3최하위단계 3최하위단계</a>
+																						</li>
+																					</ul>
+																				</li>
+																				<li>
+																					<button type="button" class="item-toggle"><span>펼치기</span></button>
+																					<a href="#" class="item-label" title="2depth댑스없음">2depth댑스없음</a>
+																				</li>
+																			</ul>
+																		</li>
+																		<li>
+																			<button type="button" class="item-toggle"><span>펼치기</span></button><!-- .on 추가 -->
+																			<a href="#" class="item-label" title="GAPM 성능모니터링 시스템">테스트 시스템</a>
+																			<ul class="sub-category-menu"><!-- sub-category-menu은 하위댑스임 -->
+																				<li>
+																					<button type="button" class="item-toggle"><span>펼치기</span></button>
+																					<a href="#" class="item-label" title="GAPM 성능모니터링 시스템">2depth GAPM 성능모니터링 시스템</a>
+																					<ul class="sub-category-menu">
+																						<li>
+																							<button type="button" class="item-toggle"><span>펼치기</span></button>
+																							<a href="#" class="item-label" title="3최하위단계">3최하위단계</a>
+																						</li>
+																						<li>
+																							<button type="button" class="item-toggle"><span>펼치기</span></button>
+																							<a href="#" class="item-label" title="3최하위단계 3최하위단계">3최하위단계 3최하위단계</a>
+																						</li>
+																					</ul>
+																				</li>
+																			</ul>
+																		</li>
+																		<li>
+																			<button type="button" class="item-toggle"><span>펼치기</span></button><!-- .on 추가 -->
+																			<a href="#" class="item-label" title="GAPM 성능모니터링 시스템">테스트 테스트 시스템</a>
+																			<ul class="sub-category-menu"><!-- sub-category-menu은 하위댑스임 -->
+																				<li>
+																					<button type="button" class="item-toggle"><span>펼치기</span></button>
+																					<a href="#" class="item-label" title="GAPM 성능모니터링 시스템">2depth GAPM 성능모니터링 시스템</a>
+																					<ul class="sub-category-menu">
+																						<li>
+																							<button type="button" class="item-toggle"><span>펼치기</span></button>
+																							<a href="#" class="item-label" title="3최하위단계">3최하위단계</a>
+																						</li>
+																						<li>
+																							<button type="button" class="item-toggle"><span>펼치기</span></button>
+																							<a href="#" class="item-label" title="3최하위단계 3최하위단계">3최하위단계 3최하위단계</a>
+																						</li>
+																					</ul>
+																				</li>
+																			</ul>
+																		</li>
+																	</ul>
+																</li>
+															</ul>
+														</div>
+													</div>   
+													<!-- //category-wrap -->
+													<!-- data-result-wrap : R 통합검색리스트 -->
+													<div class="data-result-wrap">
+														<!-- mu-heading -->
+														<div class="mu-heading">
+															<h4>총<span><strong>999</strong>개</span></h4>
+															<div class="mu-item-group"><!--  2022-08-09 MOD : 공통수정 클래스명 -->
+																<!-- mu-selectbox / 10개씩 보기(Default) -->
+																<div class="mu-selectbox w160">
+																	<select>
+																		<option value="">10개씩 보기</option>
+																		<option value="">30개씩 보기</option>
+																		<option value="">50개씩 보기</option>
+																		<option value="">100개씩 보기</option>
+																		<option value="">모두 보기</option>
+																	</select> 
+																</div>
+															</div>
+														</div>
+														<!-- //mu-heading -->
+														<div class="data-result">
+															<ul class="data-box-list">
+																<!-- data-box 목록에 li data-box하나가 그대로 상세페이지상단 요약임 -->
+																<li class="data-box">
+																	<div class="inner-data visual">
+																		<i class="ico-data data-01"></i><!-- 데이터 타입 유형 아이콘 출력 (총 13개) ==>2022-09-02  6개 확정 --> 
+																	</div>
+																	<!-- inner-data : 데이터내용 -->
+																	<div class="inner-data">
+																		<!-- category-group : 맵핑된 카테고리출력 (최대 1줄) (모든 카테고리는 상세페이지에 접속하여 확인 가능) -->														
+																		<div class="category-group">
+																			<div class="category">
+																				<em class="category-label">경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">IT</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리 경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																		</div>
+																		<!-- //category-group -->
+																		<!-- title-group -->
+																		<div class="title-group">
+																			<a href="01카탈로그검색_01통합검색_상세.html">
+																				<strong class="data-title">상세로 넘어가는 링크는 타이틀과 설명글까지만</strong><!-- 데이터 타이틀(1줄까지 출력) -->
+																				<p class="data-desc">데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다.</p><!-- Description이 있는 경우 최대 1줄 출력(최대 50자 출력) --> 
+																			</a> 
+																		</div>
+																		<!-- //title-group --> 																	
+																		<!-- tags-group : 맵핑된 표준용어 출력 (최대 1줄) -> column만 가능(모든 표준용어는 상세페이지에 접속하여 확인 가능 -->
+																		<div class="tags-group">
+																			<div class="tag">
+																				<span class="tag-label">#링크삭제공통수정됨</span><!-- 2022-08-03 MOD : 링크삭제공통 -->
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어2</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어3</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어4</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어5</span>
+																			</div>
+																		</div>
+																		<!-- //tags-group -->
+																	</div>
+																</li>
+																<!-- //data-box -->
+																<!-- data-box -->
+																<li class="data-box">
+																	<div class="inner-data visual">
+																		<i class="ico-data data-02"></i>
+																	</div>
+																	<!-- inner-data : 데이터내용 -->
+																	<div class="inner-data">
+																		<!-- category-group -->														
+																		<div class="category-group">
+																			<div class="category">
+																				<em class="category-label">경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">IT</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리 경영지원관리경영지원관리</em>
+																			</div>
+																		</div>
+																		<!-- //category-group  -->
+																		<!-- title-group -->
+																		<div class="title-group">
+																			<a href="#">
+																				<strong class="data-title">데이터 타이틀 한줄말줄임 데이터 타이틀 </strong>
+																				<p class="data-desc">데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다. 데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.</p>  
+																			</a> 
+																		</div>
+																		<!-- //title-group --> 
+																		<!-- tags-group : 맵핑된 표준용어 출력 (최대 1줄) -> column만 가능(모든 표준용어는 상세페이지에 접속하여 확인 가능 -->
+																		<div class="tags-group">
+																			<div class="tag">
+																				<span class="tag-label">#링크삭제공통수정됨</span><!-- 2022-08-03 MOD : 링크삭제공통 -->
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어2</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어3</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어4</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어5</span>
+																			</div>
+																		</div>
+																		<!-- //tags-group -->
+																	</div>
+																</li>
+																<!-- data-box -->
+																<li class="data-box">
+																	<div class="inner-data visual">
+																		<i class="ico-data data-03"></i>
+																	</div>
+																	<!-- inner-data : 데이터내용 -->
+																	<div class="inner-data">
+																		<!-- category-group -->														
+																		<div class="category-group">
+																			<div class="category">
+																				<em class="category-label">경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">IT</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리 경영지원관리경영지원관리</em>
+																			</div>
+																		</div>
+																		<!-- //category-group  -->
+																		<!-- title-group -->
+																		<div class="title-group">
+																			<a href="#">
+																				<strong class="data-title">데이터 타이틀 한줄말줄임 데이터 타이틀 </strong>
+																				<p class="data-desc">데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다. 데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.</p>  
+																			</a> 
+																		</div>
+																		<!-- //title-group --> 
+																		<!-- tags-group : 맵핑된 표준용어 출력 (최대 1줄) -> column만 가능(모든 표준용어는 상세페이지에 접속하여 확인 가능 -->
+																		<div class="tags-group">
+																			<div class="tag">
+																				<span class="tag-label">#링크삭제공통수정됨</span><!-- 2022-08-03 MOD : 링크삭제공통 -->
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어2</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어3</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어4</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어5</span>
+																			</div>
+																		</div>
+																		<!-- //tags-group -->
+																	</div>
+																</li>
+																<!-- data-box -->
+																<li class="data-box">
+																	<div class="inner-data visual">
+																		<i class="ico-data data-04"></i>
+																	</div>
+																	<!-- inner-data : 데이터내용 -->
+																	<div class="inner-data">
+																		<!-- category-group -->														
+																		<div class="category-group">
+																			<div class="category">
+																				<em class="category-label">경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">IT</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리 경영지원관리경영지원관리</em>
+																			</div>
+																		</div>
+																		<!-- //category-group  -->
+																		<!-- title-group -->
+																		<div class="title-group">
+																			<a href="#">
+																				<strong class="data-title">데이터 타이틀 한줄말줄임 데이터 타이틀 </strong>
+																				<p class="data-desc">데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다. 데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.</p>  
+																			</a> 
+																		</div>
+																		<!-- //title-group --> 
+																		<!-- tags-group : 맵핑된 표준용어 출력 (최대 1줄) -> column만 가능(모든 표준용어는 상세페이지에 접속하여 확인 가능 -->
+																		<div class="tags-group">
+																			<div class="tag">
+																				<span class="tag-label">#링크삭제공통수정됨</span><!-- 2022-08-03 MOD : 링크삭제공통 -->
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어2</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어3</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어4</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어5</span>
+																			</div>
+																		</div>
+																		<!-- //tags-group -->
+																	</div>
+																</li>
+																<!-- data-box -->
+																<li class="data-box">
+																	<div class="inner-data visual">
+																		<i class="ico-data data-05"></i>
+																	</div>
+																	<!-- inner-data : 데이터내용 -->
+																	<div class="inner-data">
+																		<!-- category-group -->														
+																		<div class="category-group">
+																			<div class="category">
+																				<em class="category-label">경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">IT</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리 경영지원관리경영지원관리</em>
+																			</div>
+																		</div>
+																		<!-- //category-group  -->
+																		<!-- title-group -->
+																		<div class="title-group">
+																			<a href="#">
+																				<strong class="data-title">데이터 타이틀 한줄말줄임 데이터 타이틀 </strong>
+																				<p class="data-desc">데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다. 데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.</p>  
+																			</a> 
+																		</div>
+																		<!-- //title-group --> 
+																		<!-- tags-group : 맵핑된 표준용어 출력 (최대 1줄) -> column만 가능(모든 표준용어는 상세페이지에 접속하여 확인 가능 -->
+																		<div class="tags-group">
+																			<div class="tag">
+																				<span class="tag-label">#링크삭제공통수정됨</span><!-- 2022-08-03 MOD : 링크삭제공통 -->
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어2</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어3</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어4</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어5</span>
+																			</div>
+																		</div>
+																		<!-- //tags-group -->
+																	</div>
+																</li>
+																<!-- data-box -->
+																<li class="data-box">
+																	<div class="inner-data visual">
+																		<i class="ico-data data-06"></i>
+																	</div>
+																	<!-- inner-data : 데이터내용 -->
+																	<div class="inner-data">
+																		<!-- category-group -->														
+																		<div class="category-group">
+																			<div class="category">
+																				<em class="category-label">경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">IT</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리 경영지원관리경영지원관리</em>
+																			</div>
+																		</div>
+																		<!-- //category-group  -->
+																		<!-- title-group -->
+																		<div class="title-group">
+																			<a href="#">
+																				<strong class="data-title">데이터 타이틀 한줄말줄임 데이터 타이틀 </strong>
+																				<p class="data-desc">데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다. 데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.</p>  
+																			</a> 
+																		</div>
+																		<!-- //title-group --> 
+																		<!-- tags-group : 맵핑된 표준용어 출력 (최대 1줄) -> column만 가능(모든 표준용어는 상세페이지에 접속하여 확인 가능 -->
+																		<div class="tags-group">
+																			<div class="tag">
+																				<span class="tag-label">#링크삭제공통수정됨</span><!-- 2022-08-03 MOD : 링크삭제공통 -->
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어2</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어3</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어4</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어5</span>
+																			</div>
+																		</div>
+																		<!-- //tags-group -->
+																	</div>
+																</li>
+																<!-- data-box -->
+																<li class="data-box">
+																	<div class="inner-data visual">
+																		<i class="ico-data data-01"></i>
+																	</div>
+																	<!-- inner-data : 데이터내용 -->
+																	<div class="inner-data">
+																		<!-- category-group -->														
+																		<div class="category-group">
+																			<div class="category">
+																				<em class="category-label">경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">IT</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리 경영지원관리경영지원관리</em>
+																			</div>
+																		</div>
+																		<!-- //category-group  -->
+																		<!-- title-group -->
+																		<div class="title-group">
+																			<a href="#">
+																				<strong class="data-title">데이터 타이틀 한줄말줄임 데이터 타이틀 </strong>
+																				<p class="data-desc">데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다. 데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.</p>  
+																			</a> 
+																		</div>
+																		<!-- //title-group --> 
+																		<!-- tags-group : 맵핑된 표준용어 출력 (최대 1줄) -> column만 가능(모든 표준용어는 상세페이지에 접속하여 확인 가능 -->
+																		<div class="tags-group">
+																			<div class="tag">
+																				<span class="tag-label">#링크삭제공통수정됨</span><!-- 2022-08-03 MOD : 링크삭제공통 -->
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어2</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어3</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어4</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어5</span>
+																			</div>
+																		</div>
+																		<!-- //tags-group -->
+																	</div>
+																</li>
+																<!-- data-box -->
+																<li class="data-box">
+																	<div class="inner-data visual">
+																		<i class="ico-data data-01"></i>
+																	</div>
+																	<!-- inner-data : 데이터내용 -->
+																	<div class="inner-data">
+																		<!-- category-group -->														
+																		<div class="category-group">
+																			<div class="category">
+																				<em class="category-label">경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">IT</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">경영지원관리경영지원관리 경영지원관리경영지원관리</em>
+																			</div>
+																		</div>
+																		<!-- //category-group  -->
+																		<!-- title-group -->
+																		<div class="title-group">
+																			<a href="#">
+																				<strong class="data-title">데이터 타이틀 한줄말줄임 데이터 타이틀 </strong>
+																				<p class="data-desc">데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다. 데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.</p>  
+																			</a> 
+																		</div>
+																		<!-- //title-group --> 
+																		<!-- tags-group : 맵핑된 표준용어 출력 (최대 1줄) -> column만 가능(모든 표준용어는 상세페이지에 접속하여 확인 가능 -->
+																		<div class="tags-group">
+																			<div class="tag">
+																				<span class="tag-label">#링크삭제공통수정됨</span><!-- 2022-08-03 MOD : 링크삭제공통 -->
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어2</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어3</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어4</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어5</span>
+																			</div>
+																		</div>
+																		<!-- //tags-group -->
+																	</div>
+																</li>
+																<!-- data-box -->
+																<li class="data-box">
+																	<div class="inner-data visual">
+																		<i class="ico-data data-01"></i>
+																	</div>
+																	<!-- inner-data : 데이터내용 -->
+																	<div class="inner-data">
+																		<!-- category-group -->														
+																		<div class="category-group">
+																			<div class="category">
+																				<em class="category-label">경영지원관리</em>
+																			</div>
+																			<div class="category">
+																				<em class="category-label">IT</em>
+																			</div>
+																		</div>
+																		<!-- //category-group  -->
+																		<!-- title-group -->
+																		<div class="title-group">
+																			<a href="#">
+																				<strong class="data-title">데이터 타이틀 한줄말줄임 데이터 타이틀 한줄말줄임 데이터 타이틀</strong>
+																				<p class="data-desc">데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다. 데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.</p>  
+																			</a> 
+																		</div>
+																		<!-- //title-group --> 
+																		<!-- tags-group : 맵핑된 표준용어 출력 (최대 1줄) -> column만 가능(모든 표준용어는 상세페이지에 접속하여 확인 가능 -->
+																		<div class="tags-group">
+																			<div class="tag">
+																				<span class="tag-label">#링크삭제공통수정됨</span><!-- 2022-08-03 MOD : 링크삭제공통 -->
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어2</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어3</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어4</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어5</span>
+																			</div>
+																		</div>
+																		<!-- //tags-group -->
+																	</div>
+																</li>
+																<!-- data-box -->
+																<li class="data-box">
+																	<div class="inner-data visual">
+																		<i class="ico-data data-01"></i>
+																	</div>
+																	<!-- inner-data : 데이터내용 -->
+																	<div class="inner-data">
+																		<!-- category-group -->
+																		<div class="category-group">
+																			<div class="category">
+																				<em class="category-label">경영지원관리</em>
+																			</div>
+																		</div>
+																		<!-- //category-group  -->
+																		<!-- title-group -->
+																		<div class="title-group">
+																			<a href="#">
+																				<strong class="data-title">데이터 타이틀</strong>
+																				<p class="data-desc">데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다. 데이터에 대한 Description이 있는 경우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.우에 최대 1줄이 출력됩니다.</p>  
+																			</a> 
+																		</div>
+																		<!-- //title-group --> 
+																		<!-- tags-group : 맵핑된 표준용어 출력 (최대 1줄) -> column만 가능(모든 표준용어는 상세페이지에 접속하여 확인 가능 -->
+																		<div class="tags-group">
+																			<div class="tag">
+																				<span class="tag-label">#링크삭제공통수정됨</span><!-- 2022-08-03 MOD : 링크삭제공통 -->
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어2</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어3</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어4</span>
+																			</div>
+																			<div class="tag">
+																				<span class="tag-label">#표준용어5</span>
+																			</div>
+																		</div>
+																		<!-- //tags-group -->
+																	</div>
+																</li>
+															</ul>
+														</div>
+												
+														<!-- mu-pagination -->
+														<div class="mu-pagination">
+															<button type="button" class="mu-btn mu-btn-paging"><i class="mu-icon-svg first"></i><span>맨 처음으로 이동</span></button>
+															<button type="button" class="mu-btn mu-btn-paging"><i class="mu-icon-svg prev"></i><span>이전 페이지로 이동</span></button>
+															<ul>
+																<li class="active"><a href="#none">1</a></li>
+																<li><a href="#none">2</a></li>
+																<li><a href="#none">3</a></li>
+																<li><a href="#none">4</a></li>
+																<li><a href="#none">5</a></li>
+																<li><a href="#none">6</a></li>
+																<li><a href="#none">7</a></li>
+																<li><a href="#none">8</a></li>
+																<li><a href="#none">9</a></li>
+																<li><a href="#none">10</a></li>
+															</ul>
+															<button type="button" class="mu-btn mu-btn-paging"><i class="mu-icon-svg next"></i><span>다음 페이지로 이동</span></button>
+															<button type="button" class="mu-btn mu-btn-paging"><i class="mu-icon-svg last"></i><span>맨 마지막으로 이동</span></button>
+														</div>
+														<!-- //mu-pagination -->
+													</div>
+													<!-- //data-result-wrap -->
+												</div>
+												<!-- //mu-section -->
+											</div>
+										</div>
+									</div>
+									<!-- //contents -->
+								</div>
+							</div>				
+						</main>
+						<!-- //main-sub -->
+
+						<!-- footer : 2022-08-18 기획/디자인 수정 공통반영 (footer-menu / family-site DEL) -->
+						<footer>
+							<div class="footer-top">
+								<div class="inner">
+									<!-- footer-logo -->
+									<div class="footer-logo"><span>모비젠</span></div>
+								</div>
+							</div>
+							<div class="footer-bottom">
+								<div class="inner">
+									<!-- footer-info -->
+									<div class="footer-info">
+										<address>
+											<p>(13453) 경기도 성남시 수정구 금토로80번길 37, W동 7,8,9층 (금토동, 인피니티타워) </p> 
+											<p><span>대표전화</span>02-2018-5114</p>
+										</address>
+										<p class="copyright">
+											COPYRIGHT (C) MOBIGEN.  ALL RIGHT RESERVED.
+										</p>
+									</div>
+								</div>
+							</div>
+							<!-- floating-button -->
+							<div class="floating-button">
+								<a href="#" title="맨 위로 가기" class="mu-btn btn-go-top">상단가기</a>
+							</div>
+						</footer>
+						<!-- //footer -->
+					</div>
+					<!-- //DEV nuxt common layout ADD -->
+				</div>
+			</div>
+		</div>
+		<script src="../lib/vue/vue.min.js"></script>
+		<script src="../lib/vue2-datepicker_3.10.2/index.min.js"></script><!-- vue2-datepicker ver up -->
+		<script src="../lib/vue2-datepicker_3.10.2/locale/ko.js"></script><!-- vue2-datepicker kor ver -->
+		<script src="../js/jquery-3.5.1.min.js"></script>
+		<script src="../js/jquery-ui.min.js"></script>
+		<script src="../js/common.js"></script><!-- 동작 확인용 임시 -->
+	</body>
+</html>

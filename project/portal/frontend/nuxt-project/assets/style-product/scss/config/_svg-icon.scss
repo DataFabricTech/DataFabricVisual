@@ -1,0 +1,17 @@
+// reset svg-icon
+.svg-icon {
+  @include svg-icon-size(18px);
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  clip-rule: evenodd;
+  fill-rule: evenodd;
+  fill: $info;
+  color: $icon-basic;
+}
+
+@each $name, $color in $theme-colors {
+  .svg-icon--#{$name} {
+    fill : $color;
+  }
+}

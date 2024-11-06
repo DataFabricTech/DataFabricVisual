@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>메타 데이터 통합 관리 < 메타 데이터 관리 < 데이터 카탈로그</title>
+        <link href="../css/common.css" rel="stylesheet" />
+        <link href="../css/style.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div id="__nuxt">
+            <div id="__layout">
+                <div>
+                    <!-- DEV nuxt common layout ADD -->
+                    <div id="app" class="admin-wrapper">
+                        <!-- 실제 PUB layout + admin -->
+                        <!-- skip -->
+                        <div class="skiptoContent">
+                            <a href="#main">본문 바로가기</a>
+                        </div>
+                        <!-- //skip -->
+                        <!-- header -->
+                        <header class="header-sub">
+                            <!-- hover시 .open 추가됨 nav 펼침 -->
+                            <div class="header">
+                                <div class="inner">
+                                    <h1 class="logo">
+                                        <a href="#" target="_self"><span>데이터 카탈로그</span></a>
+                                    </h1>
+                                    <div class="gnb-area">
+                                        <ul class="top-menu">
+                                            <li><a href="/member/join/indexJoinInit.do"><span>홍길동</span>님</a></li><!-- 2022-08-16 MOD : 디자인적용span추가 -->
+                                            <li><a href="/member/indexLogin.do">로그아웃</a></li>
+                                            <li><a href="/member/join/indexJoinInit.do" class="link-home">사용자홈</a></li><!-- 2022-08-17 ADD : 로그인시 -->
+                                        </ul>
+                                        <!-- nav -->
+                                        <nav class="nav">
+                                            <ul>
+                                                <li>
+                                                    <a href="#">데이터 활용 현황 관리</a>
+                                                    <ul>
+                                                        <li><a href="#">데이터 활용 현황 조회</a></li>
+                                                        <li><a href="#">감사로그</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="current">
+                                                    <a href="#">메타 데이터 관리</a>
+                                                    <ul>
+                                                        <li class="current"><a href="#">메타 데이터 통합 관리</a></li>
+                                                        <li><a href="#">데이터 접근권한 관리</a></li>
+                                                        <li><a href="#">용어사전 관리</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <a href="#">고객 지원 관리</a>
+                                                    <ul>
+                                                        <li><a href="#">데이터 요청 관리</a></li>
+                                                        <li><a href="#">공지사항 관리</a></li>
+                                                        <li><a href="#">FAQ 관리</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <a href="#">시스템 관리</a>
+                                                    <ul>
+                                                        <li><a href="#">사용자/그룹 관리</a></li>
+                                                        <li><a href="#">메인 관리</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                        <!-- //nav -->
+                                        <div class="nav-dim"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+                        <!-- //header -->
+                        <!-- main-sub -->
+                        <main id="main" class="main-sub">
+                            <!-- sub page : main-sub class 추가 -->
+                            <div class="main-contents">
+                                <h2 class="blind">메타 데이터 관리</h2>
+                                <!-- 각 메뉴마다 메뉴명이 달라져야 합니다. -->
+                                <div class="contents-wrap">
+                                    <!-- contents-top -->
+                                    <div class="contents-top">
+                                        <div class="breadcrumbs-wrap">
+                                            <div class="breadcrumbs">
+                                                <ol class="mu-path">
+                                                    <li class="home"><a href="">HOME</a></li>
+                                                    <li><a href="">메타 데이터 관리</a></li>
+                                                    <li><a href="">메타 데이터 통합 관리</a></li>
+                                                </ol>
+                                            </div>
+                                        </div>
+                                        <div class="subject-wrap">
+                                            <div class="subject">
+                                                <div class="subject-title">
+                                                    <h3>메타 데이터 통합 관리</h3>
+                                                    <!-- 실제 해당 페이지명 -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- contents -->
+                                    <div class="contents">
+                                        <div>
+                                            <div class="inner">
+                                                <div class="mu-section">
+                                                    <!-- category-wrap : L 카테고리리스트 -->
+                                                    <div class="category-wrap">
+                                                        <div class="category-options">
+                                                            <button class="mu-btn mu-btn-sm"><span>ADD Item</span><i class="mu-icon-svg add"></i></button>
+                                                            <button class="mu-btn mu-btn-sm"><span>SORT</span><i class="mu-icon-svg refresh"></i></button>
+                                                        </div>
+                                                        <div class="category-head"><h4>카테고리</h4></div>
+                                                        <div class="category-body">
+                                                            <ul class="category-menu slim-scroll">
+                                                                <!-- 선택된 카테고리의 부모 1Depth 기본 노출 -->
+                                                                <li class="open">
+                                                                    <!-- 자식 카테고리 목록이 있을 경우 .has-sub / 펼쳐지면 열려있음표시 .open -->
+                                                                    <button type="button" class="item-toggle on"><span>펼치기</span></button
+                                                                    ><!-- .on 추가 -->
+                                                                    <a href="#" class="item-label" title="1줄 까지만 출력 타이틀로 전체 문구 확인가능">전체 카테고리</a>
+                                                                    <ul class="sub-category-menu">
+                                                                        <li><a href="#" class="item-label no-label" title="카테고리 미분류">카테고리 미분류</a></li>
+                                                                        <li class="open">
+                                                                            <button type="button" class="item-toggle on"><span>펼치기</span></button
+                                                                            ><!-- .on 추가 -->
+                                                                            <a href="#" class="item-label" title="GAPM 성능모니터링 시스템">GAPM 성능모니터링 시스템 GAPM 성능모니터링 시스템</a>
+                                                                            <ul class="sub-category-menu">
+                                                                                <!-- sub-category-menu은 하위댑스임 -->
+                                                                                <li class="open">
+                                                                                    <button type="button" class="item-toggle on"><span>펼치기</span></button>
+                                                                                    <a href="#" class="item-label" title="GAPM 성능모니터링 시스템">2depth GAPM 성능모니터링 시스템</a>
+                                                                                    <ul class="sub-category-menu">
+                                                                                        <li>
+                                                                                            <button type="button" class="item-toggle"><span>펼치기</span></button>
+                                                                                            <a href="#" class="item-label" title="3최하위단계">3최하위단계</a>
+                                                                                            <button type="button" class="item-set"><span>설정</span></button
+                                                                                            ><!-- mu-tooltip arrow-ct가 나오게 -->
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <button type="button" class="item-toggle"><span>펼치기</span></button>
+                                                                                            <a href="#" class="item-label" title="3최하위단계 3최하위단계">3최하위단계 3최하위단계</a>
+                                                                                            <button type="button" class="item-set"><span>설정</span></button
+                                                                                            ><!-- mu-tooltip arrow-ct가 나오게 -->
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <button type="button" class="item-toggle"><span>펼치기</span></button>
+                                                                                    <a href="#" class="item-label" title="2depth최하위 2depth최하위 2depth최하위">2depth최하위 2depth최하위 2depth최하위</a>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </li>
+                                                                        <li class="open">
+                                                                            <button type="button" class="item-toggle on"><span>펼치기</span></button
+                                                                            ><!-- .on 추가 -->
+                                                                            <a href="#" class="item-label" title="GAPM 성능모니터링 시스템">GAPM 성능모니터링 시스템 GAPM 성능모니터링 시스템</a>
+                                                                            <ul class="sub-category-menu">
+                                                                                <!-- sub-category-menu은 하위댑스임 -->
+                                                                                <li class="open">
+                                                                                    <button type="button" class="item-toggle on"><span>펼치기</span></button>
+                                                                                    <a href="#" class="item-label" title="GAPM 성능모니터링 시스템">2depth GAPM 성능모니터링 시스템</a>
+                                                                                    <ul class="sub-category-menu">
+                                                                                        <li>
+                                                                                            <button type="button" class="item-toggle"><span>펼치기</span></button>
+                                                                                            <a href="#" class="item-label" title="3최하위단계">3최하위단계</a>
+                                                                                            <button type="button" class="item-set"><span>설정</span></button
+                                                                                            ><!-- mu-tooltip arrow-ct가 나오게 -->
+                                                                                        </li>
+                                                                                        <li>
+                                                                                            <button type="button" class="item-toggle"><span>펼치기</span></button>
+                                                                                            <a href="#" class="item-label" title="3최하위단계 3최하위단계">3최하위단계 3최하위단계</a>
+                                                                                            <button type="button" class="item-set"><span>설정</span></button
+                                                                                            ><!-- mu-tooltip arrow-ct가 나오게 -->
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <button type="button" class="item-toggle"><span>펼치기</span></button>
+                                                                                    <a href="#" class="item-label" title="2depth최하위 2depth최하위 2depth최하위">2depth최하위 2depth최하위 2depth최하위</a>
+                                                                                    <ul class="sub-category-menu">
+                                                                                        <!-- sub-category-menu은 하위댑스임 -->
+                                                                                        <li class="open">
+                                                                                            <button type="button" class="item-toggle on"><span>펼치기</span></button>
+                                                                                            <a href="#" class="item-label" title="GAPM 성능모니터링 시스템">2depth GAPM 성능모니터링 시스템</a>
+                                                                                            <ul class="sub-category-menu">
+                                                                                                <li>
+                                                                                                    <button type="button" class="item-toggle"><span>펼치기</span></button>
+                                                                                                    <a href="#" class="item-label" title="3최하위단계">3최하위단계</a>
+                                                                                                    <button type="button" class="item-set"><span>설정</span></button
+                                                                                                    ><!-- mu-tooltip arrow-ct가 나오게 -->
+                                                                                                </li>
+                                                                                                <li>
+                                                                                                    <button type="button" class="item-toggle"><span>펼치기</span></button>
+                                                                                                    <a href="#" class="item-label" title="3최하위단계 3최하위단계">3최하위단계 3최하위단계</a>
+                                                                                                    <button type="button" class="item-set"><span>설정</span></button
+                                                                                                    ><!-- mu-tooltip arrow-ct가 나오게 -->
+                                                                                                </li>
+                                                                                            </ul>
+                                                                                        </li>
+                                                                                    </ul>
+                                                                                </li>
+                                                                            </ul>
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                        <!-- 단어/도메인 사전에서는 csv 파일 업로드 기능 존재 2022-08-08 DEL : 기획 공통 삭제
+														<div class="category-foot">
+															<button class="mu-btn mu-btn-primary mu-btn-lg">
+																<span>CSV 파일 업로드</span>
+															</button>
+														</div> -->
+                                                    </div>
+                                                    <!-- //category-wrap -->
+                                                    <!-- page-content : R 서브내용 -->
+                                                    <div class="page-content">
+                                                        <!-- <div class="mu-heading"><h4>카테고리 관리</h4></div> 2022-08-08 DEL : 기획삭제 -->
+                                                        <!-- board-list-wrap -->
+                                                        <div class="board-list-wrap">
+                                                            <!-- data-box : 카테고리/용어사전/표준용어 설명 영역 2022-08-23 MOVE -->
+                                                            <div class="data-box">
+                                                                <div class="inner-data">
+                                                                    <!-- title-group -->
+                                                                    <div class="title-group">
+                                                                        <strong class="category-title">카테고리 1-1</strong
+                                                                        ><!-- 카테고리/용어사전/표준용어 명 필드
+																			-글자 수 제한 20자 - 카테고리의 경우, 영문명은 한글명 우측에 표기 -->
+                                                                        <!-- <p class="category-desc">카테고리 1-1에 대한 Description이 출력됩니다.  카테고리 1-1에 대한 설명입니다. (최대 50자)</p> --><!-- 카테고리/용어사전/표준용어 설명 필드
+																		- 글자 수 제한 없음 (줄 내림 처리) / 2022-08-10 DEL : 기획변경 삭제함 카테고리 Description 영역과, 이와 관련된 Description 입력/수정 영역 모두 삭제될 예정
+																		-->
+                                                                        <b class="category-title-en">Category 1-1</b> <!-- 2022-08-23 ADD : 영문명 -->
+                                                                    </div>
+                                                                    <!-- //title-group -->
+                                                                    <!-- connect-info : 데이터 문의하기 대체 2022-08-08 ADD / 2022-10-19 ADD : type2구조 추가 -->
+                                                                    <div class="connect-info type2">
+                                                                        <dl>
+                                                                            <dt>데이터 담당자</dt>
+                                                                            <dd>
+                                                                                <div class="user-info">
+                                                                                    <span class="name">남궁길동</span><span class="team">(경영지원관리1팀)</span>
+                                                                                    <span class="mail">namgunggildong@mobigen.com </span>
+                                                                                </div>
+                                                                                <div class="user-info">
+                                                                                    <span class="name">남길동</span><span class="team">(경영관리2팀)</span>
+                                                                                    <span class="mail">namgildong@mobigen.com </span>
+                                                                                </div>
+                                                                            </dd>
+                                                                        </dl>
+                                                                    </div>
+                                                                    <!-- //connect-info -->
+                                                                </div>
+                                                                <div class="inner-data buttons">
+                                                                    <button type="button" class="mu-btn mu-btn-primary"><span>카테고리 수정</span><i class="mu-icon-svg modify"></i></button>
+                                                                </div>
+                                                            </div>
+                                                            <!-- 검색영역 정리되면 이영역은 공통수정 발생 / 일단 보류상태 -->
+                                                            <div class="mu-heading">
+                                                                <!-- board-list-search -->
+                                                                <div class="board-list-search">
+                                                                    <form action="">
+                                                                        <fieldset>
+                                                                            <legend>게시물검색</legend>
+                                                                            <div class="inner-search">
+                                                                                <!-- mu-selectbox -->
+                                                                                <div class="mu-selectbox w160">
+                                                                                    <select>
+                                                                                        <option value="">전체</option>
+                                                                                        <option value="">데이터명</option>
+                                                                                        <option value="">오너</option>
+                                                                                        <option value="">유형</option>
+                                                                                        <option value="">카테고리</option>
+                                                                                        <option value="">표준어</option>
+                                                                                    </select>
+                                                                                </div>
+                                                                                <div class="mu-input-icon">
+                                                                                    <input type="text" class="mu-input" placeholder="Search" title="검색어입력" />
+                                                                                    <button type="button" class="mu-btn mu-btn-sch"><i class="mu-icon-svg search"></i><span>검색</span></button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </fieldset>
+                                                                    </form>
+                                                                </div>
+                                                                <!-- //board-list-search -->
+                                                                <div class="mu-item-group">
+                                                                    <div class="board-button-group">
+                                                                        <button type="button" class="mu-btn mu-btn-link"><span>카테고리 맵핑</span></button>
+                                                                        <button type="button" class="mu-btn mu-btn-link"><span>표준어 맵핑</span></button>
+                                                                        <button type="button" class="mu-btn mu-btn-link"><span>접근 권한 설정</span></button>
+                                                                        <button type="button" class="mu-btn mu-btn-link"><span>삭제</span></button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- //mu-heading -->
+                                                            <div class="board-list">
+                                                                <!-- mu-grid mu-grid-data 2022-08-31 ADD : mu-grid-data -->
+                                                                <table class="mu-grid mu-grid-data">
+                                                                    <caption>
+                                                                        카테고리 관리 목록 게시판
+                                                                    </caption>
+                                                                    <colgroup>
+                                                                        <col style="width:30px">
+                                                                        <col style="width:200px"><!-- 2022-08-31 MOD : width -->
+                                                                        <col style="width:95px" span="2">
+                                                                        <col>
+                                                                        <col>
+                                                                        <col style="width:70px">
+                                                                    </colgroup>
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col">
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb1"  />
+                                                                                    <label for="ckb1"><span class="blind">전체선택</span></label>
+                                                                                </div>
+                                                                            </th>
+                                                                            <th scope="col">데이터명</th>
+                                                                            <th scope="col">소유자</th>
+                                                                            <th scope="col">유형</th>
+                                                                            <th scope="col">카테고리</th>
+                                                                            <th scope="col">표준어</th>
+                                                                            <th scope="col">접근권한</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb2" />
+                                                                                    <label for="ckb2"><span class="blind">행선택</span></label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td><a href="관리자_02메타데이터관리_01메타데이터통합관리_상세.html">클릭 시, 데이터 상세조회 페이지로 이동 상세조회 페이지로 이동</a></td>
+                                                                            <td>dl_master</td>
+                                                                            <td>hive_column</td>
+                                                                            <td>
+                                                                                <div class="category-group">
+                                                                                    <div class="category" title="최대6자입니다. 넘어갈 경우 타이틀 출력">
+                                                                                        <em class="category-label">카테고리1</em>
+                                                                                        <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                    </div>
+                                                                                    <div class="category">
+                                                                                        <em class="category-label">카테고리2</em>
+                                                                                        <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                    </div>
+                                                                                    <div class="category">
+                                                                                        <em class="category-label">카테고리길어진다</em>
+                                                                                        <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                    </div>
+                                                                                    <div class="category">
+                                                                                        <em class="category-label">카테고리2</em>
+                                                                                        <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                    </div>
+                                                                                    <div class="category">
+                                                                                        <em class="category-label">카테고리2</em>
+                                                                                        <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                    </div>
+                                                                                    <button type="button" class="mu-btn mu-btn-sm mu-btn-icon-only" title="카테고리 더보기"><i class="mu-icon-svg more"></i><span>카테고리 더보기</span></button
+                                                                                    ><!-- 5개일때 생기는 더보기버튼  -->
+                                                                                    <!-- mu-tooltip : 실제포지션은 개발에서 설정 -->
+                                                                                    <!-- mu-tooltip arrow-ct : 카테고리 더보기 툴팁  -->
+                                                                                    <div class="mu-tooltip arrow-ct" style="top: 100%; left: 65px">
+                                                                                        <div class="mu-tooltip-inner">
+                                                                                            <div class="category-group slim-scroll">
+                                                                                                <div class="category">
+                                                                                                    <span class="category-label">더보기를하면보임</span>
+                                                                                                    <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                                </div>
+                                                                                                <div class="category">
+                                                                                                    <span class="category-label">IT</span>
+                                                                                                    <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                                </div>
+                                                                                                <div class="category">
+                                                                                                    <span class="category-label">경영지원</span>
+                                                                                                    <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                                </div>
+                                                                                                <div class="category">
+                                                                                                    <span class="category-label">경영지원</span>
+                                                                                                    <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                                </div>
+                                                                                                <div class="category">
+                                                                                                    <span class="category-label">경영지원</span>
+                                                                                                    <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                                </div>
+                                                                                                <div class="category">
+                                                                                                    <span class="category-label">경영지원</span>
+                                                                                                    <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                                </div>
+                                                                                                <div class="category">
+                                                                                                    <span class="category-label">경영지원</span>
+                                                                                                    <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                                </div>
+                                                                                                <div class="category">
+                                                                                                    <span class="category-label">경영지원</span>
+                                                                                                    <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                                </div>
+                                                                                                <div class="category">
+                                                                                                    <span class="category-label">경영지원</span>
+                                                                                                    <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                                </div>
+                                                                                                <div class="category">
+                                                                                                    <span class="category-label">카테고리길어진다</span>
+                                                                                                    <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <!-- //mu-tooltip arrow-ct  -->
+                                                                                    <button type="button" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only" title="카테고리 추가"><i class="mu-icon-svg add"></i><span>카테고리 추가</span></button>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <!-- 2022-08-08 MOD :
+																					1) 표준어 최대 1세트 출력 [ 영문명 / 한글용어명 / 영문용어명 ]
+																					2) [개별삭제]버튼은 없어지고 [세트추가] or [세트삭제] 토글 버튼으로 들어감
+																					3) 더보기버튼과 툴팁은 없어짐 -->
+                                                                                <div class="tags-group">
+                                                                                    <div class="tag" title="최대6자입니다. 넘어갈 경우 타이틀 출력">
+                                                                                        <span class="tag-label">#영문명영문명</span>
+                                                                                    </div>
+                                                                                    <div class="tag">
+                                                                                        <span class="tag-label">#한글용어명한글용어명</span>
+                                                                                    </div>
+                                                                                    <div class="tag">
+                                                                                        <span class="tag-label">#영문용어명영문용어명</span>
+                                                                                    </div>
+                                                                                    <!-- <button type="button" class="mu-btn mu-btn-sm mu-btn-icon-only" title="표준어 더보기"><i class="mu-icon-svg more"></i><span>표준어 더보기</span></button> --><!-- 5개일때 생기는 더보기버튼  2022-08-08 기획 DEL -->
+                                                                                    <!-- mu-tooltip arrow-ct : 카테고리 더보기 툴팁  -->
+                                                                                    <!-- mu-tooltip arrow-ct : 표준어 더보기 툴팁  -->
+                                                                                    <!-- <div class="mu-tooltip arrow-ct" style="top:100%; left:65px;">
+																						<div class="mu-tooltip-inner">
+																							<div class="tags-group slim-scroll">
+																								<div class="tag">
+																									<span class="tag-label">#표준용어10</span>
+																									<button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+																								</div>
+																								<div class="tag">
+																									<span class="tag-label">#표준용어표준용어</span>
+																									<button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+																								</div>
+																								<div class="tag">
+																									<span class="tag-label">#표준용어표준용어</span>
+																									<button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+																								</div>
+																								<div class="tag">
+																									<span class="tag-label">#표준용어표준용어</span>
+																									<button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+																								</div>
+																								<div class="tag">
+																									<span class="tag-label">#표준용어표준용어</span>
+																									<button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+																								</div>
+																								<div class="tag">
+																									<span class="tag-label">#표준용어표준용어</span>
+																									<button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+																								</div>
+																								<div class="tag">
+																									<span class="tag-label">#표준용어표준용어</span>
+																									<button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+																								</div>
+																								<div class="tag">
+																									<span class="tag-label">#표준용어표준용어</span>
+																									<button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+																								</div>
+																								<div class="tag">
+																									<span class="tag-label">#표준용어표준용어</span>
+																									<button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+																								</div>
+																								<div class="tag">
+																									<span class="tag-label">#표준용어표준용어</span>
+																									<button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+																								</div>
+																								<div class="tag">
+																									<span class="tag-label">#표준용어표준용어</span>
+																									<button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+																								</div>
+																								<div class="tag">
+																									<span class="tag-label">#표준용어표준용어</span>
+																									<button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+																								</div>
+																								<div class="tag">
+																									<span class="tag-label">#표준용어표준용어</span>
+																									<button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+																								</div>
+																							</div>
+																						</div>
+																					</div> 2022-08-08 기획 DEL -->
+                                                                                    <!-- //mu-tooltip arrow-ct  -->
+                                                                                    <button type="button" class="mu-btn mu-btn-sm mu-btn-icon-only" title="표준어 삭제"><i class="mu-icon-svg minus"></i><span>표준어 삭제</span></button>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button type="button" class="mu-btn mu-btn-sm mu-btn-underline"><span>설정</span></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb3" />
+                                                                                    <label for="ckb3"><span class="blind">행선택</span></label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td><a href="">Data_title_명이 아주 길어진다면 여러줄처리합니다.</a></td>
+                                                                            <td>dl_master</td>
+                                                                            <td>hive_process</td>
+                                                                            <td>
+                                                                                <div class="category-group">
+                                                                                    <div class="category">
+                                                                                        <span class="category-label">카테고리1</span>
+                                                                                        <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                    </div>
+                                                                                    <div class="category">
+                                                                                        <span class="category-label">카테고리길어진다</span>
+                                                                                        <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                    </div>
+                                                                                    <button type="button" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only" title="카테고리 추가"><i class="mu-icon-svg add"></i><span>카테고리 추가</span></button>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="tags-group">
+                                                                                    <button type="button" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only" title="표준어 추가"><i class="mu-icon-svg add"></i><span>표준어 추가</span></button
+                                                                                    ><!-- 표준어 맵핑 불가 상태 (삭제 후 맵핑 가능) -->
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button type="button" class="mu-btn mu-btn-sm mu-btn-underline"><span>설정</span></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb3" />
+                                                                                    <label for="ckb3"><span class="blind">행선택</span></label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td><a href="">Data_title_2</a></td>
+                                                                            <td>dl_master</td>
+                                                                            <td>hive_process</td>
+                                                                            <td>
+                                                                                <div class="category-group">
+                                                                                    <div class="category">
+                                                                                        <span class="category-label">카테고리1</span>
+                                                                                        <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                    </div>
+                                                                                    <button type="button" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only" title="카테고리 추가"><i class="mu-icon-svg add"></i><span>카테고리 추가</span></button>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="tags-group">
+                                                                                    <button type="button" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only" title="표준어 추가"><i class="mu-icon-svg add"></i><span>표준어 추가</span></button
+                                                                                    ><!-- 표준어 맵핑 가능 상태 -->
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button type="button" class="mu-btn mu-btn-sm mu-btn-underline"><span>설정</span></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb3" />
+                                                                                    <label for="ckb3"><span class="blind">행선택</span></label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td><a href="">Data_title_2</a></td>
+                                                                            <td>dl_master</td>
+                                                                            <td>hive_process</td>
+                                                                            <td>
+                                                                                <div class="category-group">
+                                                                                    <div class="category">
+                                                                                        <span class="category-label">카테고리1</span>
+                                                                                        <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                    </div>
+                                                                                    <button type="button" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only" title="카테고리 추가"><i class="mu-icon-svg add"></i><span>카테고리 추가</span></button>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="tags-group">
+                                                                                    <button type="button" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only" title="표준어 추가"><i class="mu-icon-svg add"></i><span>표준어 추가</span></button>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button type="button" class="mu-btn mu-btn-sm mu-btn-underline"><span>설정</span></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb3" />
+                                                                                    <label for="ckb3"><span class="blind">행선택</span></label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td><a href="">Data_title_2</a></td>
+                                                                            <td>dl_master</td>
+                                                                            <td>hive_process</td>
+                                                                            <td>
+                                                                                <div class="category-group">
+                                                                                    <div class="category">
+                                                                                        <span class="category-label">카테고리1</span>
+                                                                                        <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                    </div>
+                                                                                    <div class="category">
+                                                                                        <span class="category-label">카테고리1</span>
+                                                                                        <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                    </div>
+                                                                                    <div class="category">
+                                                                                        <span class="category-label">카테고리1</span>
+                                                                                        <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                    </div>
+                                                                                    <div class="category">
+                                                                                        <span class="category-label">카테고리1</span>
+                                                                                        <button type="button" class="mu-btn mu-btn-delete"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
+                                                                                    </div>
+                                                                                    <button type="button" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only" title="카테고리 추가"><i class="mu-icon-svg add"></i><span>카테고리 추가</span></button>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div class="tags-group">
+                                                                                    <button type="button" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only" title="표준어 추가"><i class="mu-icon-svg add"></i><span>표준어 추가</span></button>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <button type="button" class="mu-btn mu-btn-sm mu-btn-underline"><span>설정</span></button>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                                <!-- //mu-grid mu-grid-data -->
+                                                            </div>
+                                                            <!-- mu-pagination -->
+                                                            <div class="mu-pagination">
+                                                                <button type="button" class="mu-btn mu-btn-paging"><i class="mu-icon-svg first"></i><span>맨 처음으로 이동</span></button>
+                                                                <button type="button" class="mu-btn mu-btn-paging"><i class="mu-icon-svg prev"></i><span>이전 페이지로 이동</span></button>
+                                                                <ul>
+                                                                    <li class="active"><a href="#none">1</a></li>
+                                                                    <li><a href="#none">2</a></li>
+                                                                    <li><a href="#none">3</a></li>
+                                                                    <li><a href="#none">4</a></li>
+                                                                    <li><a href="#none">5</a></li>
+                                                                    <li><a href="#none">6</a></li>
+                                                                    <li><a href="#none">7</a></li>
+                                                                    <li><a href="#none">8</a></li>
+                                                                    <li><a href="#none">9</a></li>
+                                                                    <li><a href="#none">10</a></li>
+                                                                </ul>
+                                                                <button type="button" class="mu-btn mu-btn-paging"><i class="mu-icon-svg next"></i><span>다음 페이지로 이동</span></button>
+                                                                <button type="button" class="mu-btn mu-btn-paging"><i class="mu-icon-svg last"></i><span>맨 마지막으로 이동</span></button>
+                                                            </div>
+                                                            <!-- //mu-pagination -->
+                                                        </div>
+                                                        <!-- //board-list-wrap -->
+                                                    </div>
+                                                    <!-- //page-content -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- //contents -->
+                                </div>
+                            </div>
+                        </main>
+                        <!-- //main-sub -->
+
+						<!-- footer : 2022-08-18 기획/디자인 수정 공통반영 (footer-menu / family-site DEL) -->
+						<footer>
+							<div class="footer-top">
+								<div class="inner">
+									<!-- footer-logo -->
+									<div class="footer-logo"><span>모비젠</span></div>
+								</div>
+							</div>
+							<div class="footer-bottom">
+								<div class="inner">
+									<!-- footer-info -->
+									<div class="footer-info">
+										<address>
+											<p>(13453) 경기도 성남시 수정구 금토로80번길 37, W동 7,8,9층 (금토동, 인피니티타워) </p> 
+											<p><span>대표전화</span>02-2018-5114</p>
+										</address>
+										<p class="copyright">
+											COPYRIGHT (C) MOBIGEN.  ALL RIGHT RESERVED.
+										</p>
+									</div>
+								</div>
+							</div>
+						</footer>
+						<!-- //footer -->
+                    </div>
+                    <!-- //DEV nuxt common layout ADD -->
+                </div>
+
+                <!-- mu-tooltip : 실제포지션은 개발에서 설정 -->
+                <div class="mu-tooltip arrow-ct" style="top: 659px; left: calc(50% - 503px)">
+                    <div class="mu-tooltip-inner">
+                        <ul class="item-add-list">
+                            <li><a href="#">하위카테고리추가</a></li>
+                            <li><a href="#">카테고리삭제</a></li>
+                            <li><a href="#">카테고리수정</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- //mu-tooltip -->
+        <script src="../lib/vue/vue.min.js"></script>
+        <script src="../lib/vue2-datepicker_3.10.2/index.min.js"></script>
+        <!-- vue2-datepicker ver up -->
+        <script src="../lib/vue2-datepicker_3.10.2/locale/ko.js"></script>
+        <!-- vue2-datepicker kor ver -->
+        <script src="../js/jquery-3.5.1.min.js"></script>
+        <script src="../js/jquery-ui.min.js"></script>
+        <script src="../js/common.js"></script>
+        <!-- 동작 확인용 임시 -->
+    </body>
+</html>

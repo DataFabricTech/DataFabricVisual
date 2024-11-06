@@ -1,0 +1,20 @@
+<svg id="Btn_List_Opened" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: red;
+        opacity: 0;
+      }
+
+      .cls-2 {
+        fill: none;
+        stroke: #4d4f55;
+        stroke-width: 2px;
+      }
+    </style>
+  </defs>
+  <rect id="area" class="cls-1" width="24" height="24" transform="translate(0 24) rotate(-90)"/>
+  <g id="Icon_Open" transform="translate(5 8)">
+    <path id="패스_5050" data-name="패스 5050" class="cls-2" d="M2.84,6.657l7,7,7-7" transform="translate(-2.84 -6.657)"/>
+  </g>
+</svg>

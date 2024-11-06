@@ -1,0 +1,139 @@
+// Font Theme Variables
+$base-font-family: "Pretendard" !default;
+$base-font-name: "Pretendard" !default;
+$base-font-weights: (
+  "Light": 300,
+  "Regular": 400,
+  "Medium": 500,
+  "SemiBold": 600,
+  "Bold": 700,
+  "ExtraBold": 800,
+  "Black": 900
+) !default;
+
+$font-families: (
+  "mono": unquote("Consolas, Menlo, 'SFMono-Regular', Courier, monospace"),
+  "sans":
+    unquote(
+      "'Pretendard', AppleSDGothicNeo-Regular, 'Malgun Gothic', '맑은 고딕', sans-serif"
+    ),
+  "serif": unquote("'Georgia', Times, serif"),
+  "base": unquote("'Pretendard'"),
+  "play": unquote("'Play'")
+) !default;
+
+// Color Theme Variables
+$basic: #555 !default;
+$primary: #1a1d3d !default; // active 포함
+$primary-dark: #141f2e !default;
+$primary-pale: #e0e9f8 !default;
+$secondary: #1160DD !default;
+$tertiary: #002261 !default;
+$negative: #ea212a !default;
+$positive: #1160DD !default;
+$success: #009E65 !default;
+$danger: #ef575c !default;
+$warning: #F39200 !default;
+$info: #767676 !default;
+
+$dark: #222 !default;
+$dim: #333 !default;
+$white: #fff !default;
+$black: #000 !default;
+$light: #828391 !default;
+$pale: #e1e1e1 !default;
+$red: $danger !default;
+$blue: $positive !default;
+$green: $success !default;
+
+$theme-colors: () !default;
+$theme-colors: map-merge(
+  (
+    "basic": $basic,
+    "primary": $primary,
+    "secondary": $secondary,
+    "tertiary": $tertiary,
+    "negative": $negative,
+    "positive": $positive,
+    "success": $success,
+    "danger": $danger,
+    "white": $white,
+    "dark": $dark,
+    "light": $light,
+    "pale": $pale
+  ),
+  $theme-colors
+);
+
+$button-colors: () !default;
+$button-colors: map-merge(
+  (
+    "primary": $primary,
+    "secondary": $secondary,
+    "tertiary": $tertiary,
+    "negative": $secondary,
+    "positive": $positive,
+    "dark": $dark
+  ),
+  $button-colors
+);
+
+// border, bg, font
+$border-primary: $primary !default;
+$border-basic: #cccccc !default;
+$border-light: #e5e5e5 !default;
+$border-pale: #eee !default;
+$border-dark: #222 !default;
+
+$bg-basic: #f6f5fa !default;
+$bg-light: #FAFCFF !default;
+$bg-cool: #eff3ff !default;
+$bg-dark: #EDEEF3 !default;
+$overlay-dark: rgba(#000, 0.65) !default;
+$overlay-light: rgba(#fff, 0.85) !default;
+
+$text-base: $basic !default;
+$text-basic: #666b70 !default;
+$text-light: $light !default;
+$text-dark: $dark !default;
+$text-mute: #bbb !default;
+$link: $basic !default;
+
+// common status : 진행상태
+$status-01: $pale !default; // 기본(대기)
+$status-02: $positive !default; // 긍정(승인/접수중/진행중)
+$status-03: $negative !default; // 부정(반려)
+$status-04: $success !default; // 완료(완료)
+$status-05: $pale !default; // 종료(만료)
+
+// common hover : 마우스 오버
+$link-hover: $primary !default;
+$bg-hover: #effaff !default;
+
+// common icon : 아이콘
+$icon-basic: $basic !default;
+$icon-hover: $primary !default;
+$icon-light: $white !default;
+$icon-mute: #ddd !default;
+$icon-dark: $dark !default;
+
+// Interactive Tokens
+$default-focus: $primary !default;
+$hover-primary: #0083ff !default;
+$hover-secondary: #3986FF !default;
+$hover-tertiary: #0038A0 !default;
+$hover-positive: #3985FF !default;
+$hover-negative: #FF5E65 !default;
+$hover-dark: #444 !default;
+$hover-row: $bg-hover !default;
+$odd-row: $bg-light !default;
+$active-primary: #00BD79 !default;
+$active-secondary: #116CFF !default;
+$active-tertiary: #002E84 !default;
+$active-positive: #116CFF !default;
+$active-negative: #FF3C45 !default;
+$active-danger: #ef575c !default;
+$disabled: #f9f9f9 !default;
+
+//common breadcrumb : 페이지 네비게이션
+$breadcrumb-text: $text-light !default;

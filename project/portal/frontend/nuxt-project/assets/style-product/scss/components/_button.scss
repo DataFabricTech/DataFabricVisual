@@ -1,0 +1,553 @@
+// New Design System
+// @button-base                    || 모든 버튼에 사용되는 공통 스타일 믹스인
+// 1. Type 별 Button 클래스         || 형태를 결정하는 버튼 유형 클래스 (기본은 md 사이즈)
+// button                          || 기본 버튼
+// button--icon                    || 아이콘 버튼
+// button-outline                  || 라인 버튼
+// 2. Theme별 Button 클래스
+// @button-theme                   || 믹스인
+// button--primary
+// button--secondary
+// button--tertiary
+// button--positive
+// button--negative
+// button--dark
+// button--link
+// button--support
+// button--danger
+// button--underline
+// 3. Size별 Button 클래스           || 버튼 사이즈를 결정하는 클래스 (버튼 유형마다 여백이 달라짐)
+// button--lg
+// button--md
+// button--sm
+// button--xs                       || 사이즈 추가
+// 4. Button 정렬 클래스             || 버튼 그룹내 정렬 (기본은 가운데 정렬)
+
+// -------------------------
+// button-base
+// -------------------------
+@mixin button-base {
+  @include button-normal;
+  height: $button-height-md;
+  border-radius: $button-border-radius;
+  color: $text-dark;
+  text-align: center;
+
+  &:disabled,
+  &:disabled:hover,
+  &:disabled:focus {
+    cursor: not-allowed;
+  }
+
+  &:focus-visible:not(:disabled) {
+    outline: 2px solid $default-focus;
+  }
+}
+
+// -------------------------
+// button-type
+// -------------------------
+// button: text, text with icon combination
+@mixin button {
+  @include button-base;
+  position: relative;
+  padding: 0 $spacing-lg;
+  border: 1px solid #999;
+  background-color: $white;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $bg-basic;
+    cursor: pointer;
+
+    .svg-icon {
+      clip-rule: evenodd;
+      fill-rule: evenodd;
+      fill: currentColor;
+    }
+
+    .svg-icon--primary {
+      fill : $primary !important;
+    }
+  }
+
+  &:disabled,
+  &:disabled:hover,
+  &:disabled:focus {
+    border-color: $border-basic;
+    background-color: #fff;
+    color: $text-mute;
+  }
+
+  &--rounded {
+    border-radius: calc($button-height-md / 2) !important;
+  }
+
+  .svg-icon {
+    width: rem(18px);
+    height: rem(18px);
+    color: inherit;
+
+    & + .button__text {
+      margin-left: $spacing-3xs;
+    }
+  }
+
+  &:not(&--sm,&--icon, &--link) {
+    .svg-icon:not(:only-child):first-child {
+      transform: translateX(-6px);
+    }
+  }
+}
+
+.button__text {
+  display: flex;
+  align-items: center;
+  padding-top: rem(1px);
+
+  & + .svg-icon {
+    margin-left: $spacing-2xs;
+  }
+}
+
+// button--icon: icon only style
+@mixin button--icon($button-size, $icon-size, $button--icon-padding: false) {
+  width: $button-size;
+  height: $button-size;
+
+  @if ($button--icon-padding) {
+    padding: 0 $button--icon-padding - 1;
+  } @else {
+    padding: 0;
+  }
+
+  &.button--rounded {
+    border-radius: 50% !important;
+  }
+
+  .svg-icon {
+    width: $icon-size;
+    height: $icon-size;
+  }
+}
+
+// button--outline: outline line button
+@mixin button-outline(
+  $bg-color,
+  $font-color,
+  $border-color,
+  $border-width: false
+) {
+  border: 1px solid $border-color;
+  background-color: $bg-color;
+  color: $font-color;
+
+  &:hover {
+    border-color: $border-color;
+    background-color: $bg-color;
+    color: $border-color;
+  }
+
+  &:focus-visible:not(:disabled) {
+    outline: 2px solid $default-focus;
+  }
+
+  &:disabled,
+  &:disabled:hover,
+  &:disabled:focus {
+    border-color: $border-basic;
+    background-color: #fff;
+    color: $border-basic;
+  }
+
+  .svg-icon {
+    fill: $font-color;
+  }
+
+  @if ($border-width) {
+    border-width: $border-width;
+  }
+}
+
+// -------------------------
+// button-theme
+// -------------------------
+@mixin button-theme(
+  $bg-color,
+  $font-color,
+  $hover-bg-color,
+  $border-color: false
+) {
+  border: 0;
+  background-color: $bg-color;
+  color: $font-color;
+
+  &:hover:not(:disabled) {
+    color: $font-color;
+    background-color: $hover-bg-color;
+
+    .svg-icon {
+      fill: currentColor;
+    }
+  }
+
+  &:focus-visible:not(:disabled) {
+    outline: 2px solid $default-focus;
+  }
+
+  &:disabled,
+  &:disabled:hover,
+  &:disabled:focus {
+    border: 0;
+    background-color: #cdcfd8;
+    color: #fff;
+  }
+
+  .svg-icon {
+    fill: currentColor;
+  }
+
+  @if ($border-color) {
+    border: 1px solid $border-color;
+  }
+}
+
+@mixin button--primary {
+  @include button-theme($primary, $white, $hover-primary);
+}
+
+@mixin button--secondary {
+  @include button-theme($secondary, $white, $hover-secondary);
+}
+
+@mixin button--tertiary {
+  @include button-theme($tertiary, $white, $hover-tertiary);
+}
+
+@mixin button--positive {
+  @include button-theme($positive, $white, $hover-positive);
+}
+
+@mixin button--negative {
+  @include button-theme($secondary, $white, $hover-secondary);
+}
+
+@mixin button--dark {
+  @include button-theme($dark, $white, $hover-dark);
+}
+
+@mixin button--link {
+  @include button-theme(transparent, inherit, transparent);
+  padding: 0;
+  &:hover:not(:disabled) {
+    border-color: transparent;
+    color: $text-dark;
+  }
+}
+
+@mixin button--support {
+  @include button-theme($white, $primary, $primary, $primary);
+  // support 예외 사항
+  &:hover:not(:disabled) {
+    color: $primary;
+    border-color: $primary;
+    background-color: $primary-pale;
+  }
+}
+
+@mixin button--danger {
+  @include button-theme($white, $negative, $negative, $bg-dark);
+  // danger 예외 사항
+  &:hover:not(:disabled) {
+    color: $white;
+    border-color: $negative;
+    background-color: $white;
+  }
+}
+
+@mixin button--underline {
+  @include button-theme(transparent, $text-dark, transparent);
+  display: inline-block;
+  position: relative;
+  padding: 0;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    border-bottom: 1px solid currentColor;
+  }
+
+  &:hover:not(:disabled) {
+    color: $text-light;
+
+    .svg-icon {
+      fill: $text-light;
+    }
+  }
+
+  &:active {
+    color: darken($text-dark, 0.25);
+
+    .svg-icon {
+      fill: darken($text-dark, 0.25);
+    }
+  }
+}
+
+// -------------------------
+// button-size
+// -------------------------
+@mixin button-size(
+  $button-height,
+  $border-radius,
+  $icon-size,
+  $button-width: false
+) {
+  height: $button-height;
+
+  &.button--rounded {
+    border-radius: calc($button-height / 2) !important;
+  }
+
+  .svg-icon {
+    width: $icon-size;
+    height: $icon-size;
+
+    & + .button__text {
+      margin-left: $spacing-2xs;
+    }
+  }
+
+  .button__text {
+    & + .svg-icon {
+      margin-left: $spacing-2xs;
+    }
+  }
+
+  .loader:not(.ng-hide) + .button__text {
+    margin-left: $spacing-2xs;
+  }
+
+  @if ($button-width) {
+    width: $button-width;
+  }
+}
+
+@mixin button-padding($padding-right, $padding-left) {
+  padding-right: $padding-right;
+  padding-left: $padding-left;
+}
+
+@mixin button--lg {
+  @include button-size($button-height-lg, 4px, 32px);
+  @include button-padding(40px, 40px);
+  @include font-size("18");
+  @include font-weight("medium");
+}
+
+@mixin button--xl {
+  @include button-size($button-height-xl, 4px, 40px);
+  @include font-size("20");
+  @include font-weight("bold");
+}
+
+@mixin button--2xl {
+  @include button-size(80px, 10px, 32px);
+  @include button-padding(80px, 80px);
+  @include font-size("28");
+  @include font-weight("bold");
+  .svg-icon {
+    margin-left: rem(20px) !important;
+  }
+}
+
+@mixin button--md {
+  @include button-size($button-height-md, 3px, 18px);
+}
+
+@mixin button--sm {
+  @include button-size($button-height-sm, 5px, 18px);
+  @include button-padding(16px, 16px);
+}
+
+@mixin button--xs {
+  @include button-size($button-height-xs, 5px, 16px);
+  @include button-padding($spacing-sm, $spacing-sm);
+  @include font-size("14");
+}
+
+// -------------------------
+// classes
+// -------------------------
+.button {
+  @include button;
+}
+
+.button--icon {
+  @include button--icon($button-height-md, 18px);
+
+  &.button--lg {
+    @include button--icon($button-height-md, 32px);
+  }
+
+  &.button--sm {
+    @include button--icon($button-height-sm, 18px);
+  }
+
+  &.button--xs {
+    @include button--icon($button-height-xs, 18px);
+  }
+
+  &.button--link {
+
+    .svg-icon {
+      width: 100%;
+      height: 100%;
+    }
+  }
+}
+
+// button theme color classes
+.button--primary {
+  @include button--primary;
+}
+
+.button--secondary {
+  @include button--secondary;
+}
+
+.button--tertiary {
+  @include button--tertiary;
+}
+
+.button--positive {
+  @include button--positive;
+}
+
+.button--negative {
+  @include button--negative;
+}
+
+.button--dark {
+  @include button--dark;
+}
+
+.button--link {
+  @include button--link;
+}
+
+.button--support {
+  @include button--support;
+}
+
+.button--danger {
+  @include button--danger;
+}
+
+.button--underline {
+  @include button--underline;
+}
+
+// button theme color bordered classes
+.button--outline {
+  @include button-outline($white, $basic, $border-basic);
+
+  &:hover:not(:disabled) {
+    color: $basic;
+    border-color: $primary;
+  }
+
+  @each $name, $color in $button-colors {
+    &.button--#{$name} {
+      @include button-outline($white, $color, $color);
+    }
+  }
+}
+
+// button size classes
+.button--md {
+  @include button--md;
+}
+
+.button--lg {
+  @include button--lg;
+
+  .svg-icon + .button__text {
+    margin-left: $spacing-xs * 0.75;
+  }
+}
+
+.button--xl {
+  @include button--xl;
+  .svg-icon {
+    @include svg-icon-size(32px);
+  }
+}
+
+.button--2xl {
+  @include button--2xl;
+  border-radius: rem(10px) !important;
+}
+
+.button--sm {
+  @include button--sm;
+  @include font-size("14");
+}
+
+.button--xs {
+  @include button--xs;
+}
+
+// underline 테마 버튼일 때 예외 사항
+.button--lg.button--underline,
+.button--sm.button--underline {
+  @include button-padding(0, 0);
+}
+
+// -------------------------
+// Button group
+// -------------------------
+.button-group {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  min-height: $button-height-lg;
+  // margin-top: rem(60px);
+
+  .button {
+    @include button--lg;
+
+    &.button--icon {
+      @include button--icon($button-height-lg, 24px);
+    }
+
+    .svg-icon {
+      width: rem(20px);
+      height: rem(20px);
+    }
+  }
+
+  .button--right {
+    &:not(:only-child) {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    &:only-child {
+      margin-left: auto;
+    }
+  }
+
+  .button--left {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+}

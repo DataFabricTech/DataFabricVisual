@@ -1,0 +1,108 @@
+//-------------------------------------------
+//  Grid System
+// ------------------------------------------
+
+@use "sass:math";
+
+@mixin make-row($gutter: $grid-gutter-width) {
+  --gutter-x: #{$gutter};
+  --gutter-y: 0;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: calc(var(--gutter-y) * -1);
+  margin-right: calc(var(--gutter-x) * -0.5);
+  margin-left: calc(var(--gutter-x) * -0.5);
+}
+
+@mixin make-col-ready($gutter: $grid-gutter-width) {
+  // 그리드만 로드된 경우 box-sizing 추가
+  box-sizing: if(variable-exists(include-column-box-sizing) and $include-column-box-sizing, border-box, null);
+  flex-shrink: 0;
+  width: 100%; // 그리드의 열이 너무 좁아지는것을 방지
+  max-width: 100%; // `.col-auto`, `.col` (& responsive variants) 이 그리드를 이탈 하는것을 방지
+  padding-right: calc(var(--gutter-x) * 0.5);
+  padding-left: calc(var(--gutter-x) * 0.5);
+  margin-top: var(--gutter-y);
+}
+
+@mixin make-col($size, $columns: $grid-columns) {
+  flex: 0 0 auto;
+  width: percentage(math.div($size, $columns));
+}
+
+@mixin make-col-auto() {
+  flex: 0 0 auto;
+  width: auto;
+}
+
+@mixin make-col-offset($size, $columns: $grid-columns) {
+  $num: math.div($size, $columns);
+  margin-left: if($num == 0, 0, percentage($num));
+}
+
+// Row columns: 상위 요소 (e.g. .row)의 하위항목에 컬럼 갯수를 강제한다.
+@mixin row-cols($count) {
+  > * {
+    flex: 0 0 auto;
+    width: math.div(100%, $count);
+  }
+}
+
+// Grid generation
+@mixin make-grid-columns($columns: $grid-columns, $gutter: $grid-gutter-width, $breakpoints: $grid-breakpoints) {
+  @each $breakpoint in map-keys($breakpoints) {
+    $infix: breakpoint-infix($breakpoint, $breakpoints);
+
+    @include media-breakpoint-up($breakpoint, $breakpoints) {
+      .col#{$infix} {
+        flex: 1 0 0%; // Flexbugs #4: https://github.com/philipwalton/flexbugs#flexbug-4
+      }
+
+      .row-cols#{$infix}-auto > * {
+        @include make-col-auto();
+      }
+
+      @if $grid-row-columns > 0 {
+        @for $i from 1 through $grid-row-columns {
+          .row-cols#{$infix}-#{$i} {
+            @include row-cols($i);
+          }
+        }
+      }
+
+      .col#{$infix}-auto {
+        @include make-col-auto();
+      }
+
+      @if $columns > 0 {
+        @for $i from 1 through $columns {
+          .col#{$infix}-#{$i} {
+            @include make-col($i, $columns);
+          }
+        }
+
+        // 전체 row를 기준으로 offset 할 수 없기 때문에 `$columns - 1`
+        @for $i from 0 through ($columns - 1) {
+          @if not ($infix == "" and $i == 0) { // .offset-0과 같은 불필요한 클래스를 생성하지 않는다
+            .offset#{$infix}-#{$i} {
+              @include make-col-offset($i, $columns);
+            }
+          }
+        }
+      }
+
+      // Gutters
+      @each $key, $value in $gutters {
+        .g#{$infix}-#{$key},
+        .gx#{$infix}-#{$key} {
+          --gutter-x: #{$value};
+        }
+
+        .g#{$infix}-#{$key},
+        .gy#{$infix}-#{$key} {
+          --gutter-y: #{$value};
+        }
+      }
+    }
+  }
+}

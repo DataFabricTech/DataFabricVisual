@@ -1,0 +1,199 @@
+//-------------------------------------------
+//  Font Families
+// ------------------------------------------
+@use "sass:math";
+
+@function font-family($name) {
+  @return map-get($font-families, $name);
+}
+
+@mixin font-family($name) {
+  font-family: font-family($name);
+}
+
+//-------------------------------------------
+//  Font Weight
+// ------------------------------------------
+$font-weights: (
+  "light": 300,
+  "regular": 400,
+  "medium": 500,
+  "semibold": 600,
+  "bold": 700,
+  "extrabold": 800,
+  "black": 900
+);
+
+@function font-weight($weight) {
+  @return map-get($font-weights, $weight);
+}
+
+@mixin font-weight($weight) {
+  font-weight: font-weight($weight);
+}
+
+//-------------------------------------------
+//  Letter Spacing
+// ------------------------------------------
+@mixin letter-spacing {
+  letter-spacing: -0.35px;
+}
+
+// heading 텍스트와 body 텍스트, 두개의 line-height를 선택할 수 있다
+@mixin line-height($el) {
+  @if $el == "heading" {
+    line-height: 1.75;
+  } @else if $el == "body" {
+    line-height: 1.5;
+  } @else if $el == "title" {
+    line-height: 1.2;
+  } @else {
+    @warn '@mixin line-height($el) 을 사용할 수 없습니다. heading, body 또는 title를 사용해 주세요.';
+  }
+}
+
+//-------------------------------------------
+//  Font Size
+// ------------------------------------------
+$base-font-size: 16px !default; // Default
+
+@function rem($px) {
+  @return math.div($px, $base-font-size) * 1rem;
+}
+
+@function em($px) {
+  @return math.div($px, $base-font-size) * 1em;
+}
+
+// 두꺼운 서체에서 사용되는 font-smoothing
+@mixin font-smoothing {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+$font-size-map: (
+  "76": 4.75rem,
+  "72": 4.5rem,
+  // new
+  "54": 3.375rem,
+  "48": 3rem,
+  // new
+  "36": 2.25rem,
+  "32": 2rem,
+  // new
+  "28": 1.75rem,
+  "24": 1.5rem,
+  // new
+  "22": 1.375rem,
+  "20": 1.25rem,
+  "18": 1.125rem,
+  "16": 1rem,
+  "15": 0.938rem,
+  "14": 0.875rem,
+  "12": 0.75rem,
+  "13": 0.8125rem,
+  "11": 0.6875rem,
+  "10": 0.625rem
+);
+
+@mixin font-size($size) {
+  @if map-has-key($font-size-map, $size) {
+    font-size: map-get($font-size-map, $size);
+  } @else {
+    @warn 'IRIS의 폰트 사이즈가 아닙니다! 10, 11, 12, 13, 14, 15, 16, 18, 20, 22, 24, 28, 32, 36, 48, 54, 72, 76 중에서 사용해 주세요.';
+  }
+}
+
+//-------------------------------------------
+//  Typography
+// ------------------------------------------
+//
+//   Type Scale
+//   ==========================================
+//   heading-01
+//   heading-02
+//   heading-03
+//   heading-04
+//   heading-05
+//   heading-06
+//   heading-07
+//   p
+//   desc
+//   label
+//   ==========================================
+//
+//   New Type Scale
+//   ==========================================
+//   heading-04
+//   heading-05
+//   heading-06
+//   text-lg
+//   text-md
+//   text-sm
+//   btn-xlg
+//   btn-lg
+//   btn-md
+//   btn-sm
+//   link-lg
+//   link-md
+// ==========================================
+
+@mixin heading-01 {
+  @include font-size("72");
+  @include font-weight("bold");
+  line-height: 1.2;
+}
+
+@mixin heading-02 {
+  @include font-size("48");
+  @include font-weight("bold");
+  line-height: 1.28;
+}
+
+@mixin heading-03 {
+  @include font-size("32");
+  @include font-weight("bold");
+  line-height: 1.36;
+}
+
+@mixin heading-04 {
+  @include font-size("24");
+  @include font-weight("bold");
+  line-height: 1.4;
+}
+
+@mixin heading-05 {
+  @include font-size("20");
+  @include font-weight("medium");
+  line-height: 1.44;
+}
+
+@mixin heading-06 {
+  @include font-size("18");
+  @include font-weight("bold");
+  line-height: 1.48;
+}
+
+@mixin heading-07 {
+  @include font-size("16");
+  @include font-weight("bold");
+  line-height: 1.5;
+}
+
+@mixin p {
+  @include font-size("14");
+  @include font-weight("regular");
+  line-height: 1.54;
+}
+
+@mixin desc {
+  @include font-size("12");
+  @include font-weight("regular");
+  line-height: 1.36;
+}
+
+@mixin label {
+  @include font-size("12");
+  @include font-weight("regular");
+  line-height: 1.5;
+}

@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 34 34">
+    <g data-name="사각형 49" style="fill:#fff;stroke:#c41d32">
+        <path style="stroke:none" d="M0 0h22v2H0z" transform="translate(6 9)"/>
+        <path style="fill:none" d="M.5.5h21v1H.5z" transform="translate(6 9)"/>
+    </g>
+    <g data-name="사각형 50" style="fill:#fff;stroke:#c41d32">
+        <path style="stroke:none" d="M0 0h22v2H0z" transform="translate(6 16)"/>
+        <path style="fill:none" d="M.5.5h21v1H.5z" transform="translate(6 16)"/>
+    </g>
+    <g data-name="사각형 51" style="fill:#fff;stroke:#c41d32">
+        <path style="stroke:none" d="M0 0h22v2H0z" transform="translate(6 23)"/>
+        <path style="fill:none" d="M.5.5h21v1H.5z" transform="translate(6 23)"/>
+    </g>
+    <g data-name="타원 17" transform="translate(13 7)" style="stroke-width:2px;fill:#fff;stroke:#c41d32">
+        <circle cx="3" cy="3" r="3" style="stroke:none"/>
+        <circle cx="3" cy="3" r="2" style="fill:none"/>
+    </g>
+    <g data-name="타원 18" transform="translate(19 14)" style="stroke-width:2px;fill:#fff;stroke:#c41d32">
+        <circle cx="3" cy="3" r="3" style="stroke:none"/>
+        <circle cx="3" cy="3" r="2" style="fill:none"/>
+    </g>
+    <g data-name="타원 19" transform="translate(9 21)" style="stroke-width:2px;fill:#fff;stroke:#c41d32">
+        <circle cx="3" cy="3" r="3" style="stroke:none"/>
+        <circle cx="3" cy="3" r="2" style="fill:none"/>
+    </g>
+</svg>

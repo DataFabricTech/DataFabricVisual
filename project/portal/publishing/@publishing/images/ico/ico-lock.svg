@@ -1,0 +1,6 @@
+<svg data-name="icon / lock" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <g data-name="icon / lock">
+        <path data-name="Rectangle 4" style="fill:none" d="M0 0h24v24H0z"/>
+        <path data-name="Path 124" d="M16.541 458.271h-.9v-1.792a4.479 4.479 0 1 0-8.958 0v1.792h-.9A1.8 1.8 0 0 0 4 460.062v8.062a1.8 1.8 0 0 0 1.792 1.792h10.75a1.8 1.8 0 0 0 1.792-1.792v-8.062a1.8 1.8 0 0 0-1.793-1.791zm-8.062-1.792a2.687 2.687 0 0 1 5.375 0v1.792H8.479zm8.062 11.646H5.792v-8.062h10.75z" transform="translate(1 -449)" style="fill:#08234f"/>
+    </g>
+</svg>

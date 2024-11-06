@@ -1,0 +1,355 @@
+@charset "utf-8";
+
+/* ---------------------------------------
+	Filename: style.css
+	Description : 개발자용 임시 스타일
+	Author	: mobigen
+	date	: 2022-07
+	비고 : 개발자용 임시 css
+   --------------------------------------- */
+
+@font-face {
+  font-family:'hyundaiL';
+  src:url("../fonts/현대하모니 L.ttf") format("truetype");
+}
+@font-face {
+  font-family:'hyundaiM';
+  src:url("../fonts/현대하모니 M.ttf") format("truetype");
+}
+
+.comment-write { display: block; }
+
+
+/* 상세페이지 - CMS영역, CKEditor5 Style */
+.inner-cms-share { padding:10px 0; line-height:0; white-space:pre-wrap;}
+* + .inner-cms-share {margin:15px 0 0 0;}
+.board-body .inner-cms-share {padding:50px 20px; min-height:200px;}
+.inner-cms .inner-cms-share {overflow: auto;}
+.inner-cms-share p {line-height:1.5;}
+.inner-cms-share p p {line-height:1;}
+.inner-cms-share p a {color: blue; text-decoration: underline; }
+.inner-cms-share p a:hover {color: lightblue; text-decoration: underline; }
+/* .inner-cms-share p span {all: unset; line-height: 1;} */
+.inner-cms-share table {display: table;
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  height: 100%;
+  border: 1px double hsl(0, 0%, 70%);
+}
+.inner-cms-share th {
+ font-weight: bold;
+  background: hsla(0, 0%, 0%, 5%);    min-width: 2em;
+  padding: .4em;
+  border: 1px solid hsl(0, 0%, 75%);
+}
+.inner-cms-share td {
+  min-width: 2em;
+  padding: .4em;
+  border: 1px solid hsl(0, 0%, 75%);
+}
+.inner-cms-share td p { line-height: 1.5; }
+.inner-cms-share blockquote { font-style: italic; font-family: Georgia, Times, "Times New Roman", serif; padding: 2px 0; border-style: solid; border-color: #ccc; border-width: 0 0 0 5px; padding-left: 20px; padding-right: 8px; padding-bottom: 20px; }
+.inner-cms-share strong { font-weight: 700;}
+.inner-cms-share ol { all: unset;}
+.inner-cms-share ol li { margin-left: 40px; list-style: decimal; white-space: normal;}
+.inner-cms-share ul { all: unset; list-style-type: disc; padding-left: 40px;}
+.inner-cms-share ul li { margin-left: 40px; list-style: disc; white-space: normal;}
+.inner-cms-share h2 { font-size:30px; }
+.inner-cms-share h3 { font-size:23px; }
+.inner-cms-share h2 span { font-size:30px; }
+.inner-cms-share h3 span { font-size:23px; }
+.inner-cms-share pre { white-space:pre-wrap; word-wrap:break-word; tab-size: 4; }
+.inner-cms-share pre:has(code) {
+  background: url('/ckeditor/plugins/widget/images/handle.png&quot') rgba(220, 220, 220, 0.5); top: -15px; left: 0px;
+  padding: 10px;
+  border-radius: 0.5em;
+}
+.inner-cms-share pre code {
+  font-size: 14px;
+  color: black;
+}
+
+/* .inner-cms-share p img {
+  min-width: 50%;
+  max-width: 100%;
+  height: auto;
+} */
+
+.inner-cms-share figure img {
+  min-width: 50%;
+  max-width: 100%;
+  height: auto;
+}
+
+.inner-cms-share p span {
+  line-height: 1.0;
+}
+
+.inner-cms-share span.text-tiny{font-size:0.7em}
+.inner-cms-share span.text-small{font-size:0.85em}
+.inner-cms-share span.text-big{font-size:1.4em}
+.inner-cms-share span.text-huge{font-size:1.8em}
+
+.inner-cms-share span.text-tiny strong {
+  font-weight: bold;
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.inner-cms-share span.text-small strong {
+  font-weight: bold;
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.inner-cms-share span strong {
+  font-weight: bold;
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.inner-cms-share span.text-big strong {
+  font-weight: bold;
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.inner-cms-share span.text-huge strong {
+  font-weight: bold;
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.ck .ck-content span.text-tiny i {
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.inner-cms-share span.text-small i {
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.inner-cms-share span i {
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.inner-cms-share span.text-big i {
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.inner-cms-share span.text-huge i {
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+/* strong과 i가 동시에 있을 경우에도 상속 유지 */
+.inner-cms-share .text-big strong i {
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+
+}
+
+.inner-cms {white-space: pre-wrap}
+.inner-cms p {white-space: pre-wrap}
+
+.comment-view .comment-message {white-space: pre-wrap}
+
+.title-group .data-desc {white-space: pre-wrap}
+.title-group a .data-comment {white-space: pre-wrap}
+
+.question p {white-space: pre-wrap}
+.answer p {white-space: pre-wrap}
+
+.mu-accordion .inner-cms-share {line-height: 1.5;}
+.mu-accordion .inner-cms-share ol li { margin-left: 40px; list-style: decimal; white-space: normal; display: list-item; min-height: auto; }
+.mu-accordion .inner-cms-share ul li { margin-left: 40px; list-style: disc; white-space: normal; display: list-item; min-height: auto; }
+
+.mu-accordion-head > div > p { padding: 0; margin: 0;}
+.mu-accordion-body > div > p { padding: 0; margin: 0;}
+
+.data-request-content {padding: 0 !important;}
+
+code {
+  background-color:hsla(0,0%,78%,.3);
+  border-radius:2px;
+  padding:.15em
+}
+pre code {
+  background:unset;
+  border-radius:0;
+  padding:0
+}
+
+.image {
+  margin: 0.9em auto;
+  max-width: 100%;
+  height: auto;
+}
+
+.image_resized {
+  max-width: 100%;
+  height: auto;
+}
+
+.image-inline {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: flex-start;
+  height: auto;
+}
+
+.image-style-align-left {
+  line-height: 0.1;
+  margin: 0 20px 10px 10px;
+  float: left;
+  max-width: 100%;
+  height: auto;
+}
+
+.image-style-align-center {
+  line-height: 0;
+  float: center;
+  max-width: 100%;
+  height: auto;
+}
+.image-style-align-right {
+  line-height: 0.1;
+  margin: 0 0px 10px 10px;
+  float: right;
+  max-width: 100%;
+  height: auto;
+}
+
+.image-style-side {
+  float: right; /* 이미지를 오른쪽에 배치하여 본문 옆에 오도록 설정 */
+  margin: 0 0 1rem 1rem; /* 본문과 이미지 사이에 여백 추가 */
+  max-width: 50%; /* 이미지가 너무 커지지 않도록 최대 너비를 설정 */
+  margin-left: var(--ck-image-style-spacing);
+  margin-bottom: var(--ck-image-style-spacing);
+}
+
+:root {
+  --ck-image-style-spacing: 1.5em;
+  --ck-inline-image-style-spacing: calc(var(--ck-image-style-spacing) / 2);
+}
+
+
+
+/* CKEditor5 에디터 내 스타일 */
+.ck-editor__editable_inline {
+  height: 600px;
+}
+
+.ck .ck-content h2{
+  font-size: 30px;
+}
+
+.ck .ck-content h3{
+  font-size: 23px;
+}
+
+.ck .ck-content span.text-tiny{font-size:0.7em}
+.ck .ck-content span.text-small{font-size:0.85em}
+.ck .ck-content span {font-size:1.0em}
+.ck .ck-content span.text-big{font-size:1.4em}
+.ck .ck-content span.text-huge{font-size:1.8em}
+
+.ck .ck-content .ck-list-bogus-paragraph {
+ all: unset;
+}
+
+.ck .ck-content span.text-tiny strong {
+  font-weight: bold;
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.ck .ck-content span.text-small strong {
+  font-weight: bold;
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.ck .ck-content span strong {
+  font-weight: bold;
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.ck .ck-content span.text-big strong {
+  font-weight: bold;
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.ck .ck-content span.text-huge strong {
+  font-weight: bold;
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.ck .ck-content span.text-tiny i {
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.ck .ck-content span.text-small i {
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.ck .ck-content span i {
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.ck .ck-content span.text-big i {
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+.ck .ck-content span.text-huge i {
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+}
+
+/* strong과 i가 동시에 있을 경우에도 상속 유지 */
+.ck .ck-content .text-big strong i {
+  font-size: inherit; /* 부모의 font-size를 상속받음 */
+  color: inherit; /* 부모의 color를 상속받음 */
+
+}
+
+.ck .ck-content ul li {
+  margin-left: 40px; list-style: disc; white-space: normal;
+}
+
+.ck .ck-content ol li {
+  margin-left: 40px; list-style: decimal; white-space: normal;
+}
+
+/* 태그/키워드 */
+.tags-setting .nodatas {flex-direction:row; gap:10px; padding:20px 0; font-weight:500; font-size:16px; color:#0a2469;}
+.tags-setting p { text-align: center; }
+
+
+/* 메인화면 데이터 개수 오른쪽 정렬 */
+/*.data-count-box dd {text-align: right; font-weight:900; font-size:36px; line-height:1; color:#151721; white-space:nowrap;}*/
+
+/* 메인화면 최신 등록 데이터순 아이콘 */
+.mu-icon-svg.clock {background-image:url("../images/ico/ico-clock.png");}
+
+.data-box .inner-data.visual .data-thumb img {object-fit:fill;}
+.card-box .inner-thumb img {object-fit:fill;}
+
+.admin-wrapper .data-detail-wrap .detail-section.close {
+  border-radius: 0px;
+  height: 36px;
+}
+.admin-wrapper .data-detail-wrap .detail-section {border-radius: 0px !important;}
+
+.board-title .step-process {min-width:100px; height:44px; margin-right:20px; padding:10px 20px; border-radius:22px; font-size:20px;}

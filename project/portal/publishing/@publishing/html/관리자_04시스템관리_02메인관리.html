@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <title>메인 관리 < 시스템 관리 < 데이터 카탈로그</title>
+        <link href="../css/common.css" rel="stylesheet" />
+        <link href="../css/style.css" rel="stylesheet" />
+    </head>
+    <body>
+        <div id="__nuxt">
+            <div id="__layout">
+                <div>
+                    <!-- DEV nuxt common layout ADD -->
+                    <div id="app" class="admin-wrapper">
+                        <!-- 실제 PUB layout + admin -->
+                        <!-- skip -->
+                        <div class="skiptoContent">
+                            <a href="#main">본문 바로가기</a>
+                        </div>
+                        <!-- //skip -->
+                        <!-- header -->
+                        <header class="header-sub">
+                            <!-- hover시 .open 추가됨 nav 펼침 -->
+                            <div class="header">
+                                <div class="inner">
+                                    <h1 class="logo">
+                                        <a href="#" target="_self"><span>데이터 카탈로그</span></a>
+                                    </h1>
+                                    <div class="gnb-area">
+                                        <ul class="top-menu">
+                                            <li><a href="/member/join/indexJoinInit.do"><span>홍길동</span>님</a></li><!-- 2022-08-16 MOD : 디자인적용span추가 -->
+                                            <li><a href="/member/indexLogin.do">로그아웃</a></li>
+                                            <li><a href="/member/join/indexJoinInit.do" class="link-home">사용자홈</a></li><!-- 2022-08-17 ADD : 로그인시 -->
+                                        </ul>
+                                        <!-- nav -->
+                                        <nav class="nav">
+                                            <ul>
+                                                <li>
+                                                    <a href="#">데이터 활용 현황 관리</a>
+                                                    <ul>
+                                                        <li><a href="#">데이터 활용 현황 조회</a></li>
+                                                        <li><a href="#">감사로그</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <a href="#">메타 데이터 관리</a>
+                                                    <ul>
+                                                        <li><a href="#">메타 데이터 통합 관리</a></li>
+                                                        <li><a href="#">데이터 접근권한 관리</a></li>
+                                                        <li><a href="#">용어사전 관리</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li>
+                                                    <a href="#">고객 지원 관리</a>
+                                                    <ul>
+                                                        <li><a href="#">데이터 요청 관리</a></li>
+                                                        <li><a href="#">공지사항 관리</a></li>
+                                                        <li><a href="#">FAQ 관리</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li class="current">
+                                                    <a href="#">시스템 관리</a>
+                                                    <ul>
+                                                        <li><a href="#">사용자/그룹 관리</a></li>
+                                                        <li class="current"><a href="#">메인 관리</a></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                        <!-- //nav -->
+                                        <div class="nav-dim"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </header>
+                        <!-- //header -->
+                        <!-- main-sub -->
+                        <main id="main" class="main-sub">
+                            <!-- sub page : main-sub class 추가 -->
+                            <div class="main-contents">
+                                <h2 class="blind">시스템 관리</h2>
+                                <!-- 각 메뉴마다 메뉴명이 달라져야 합니다. -->
+                                <div class="contents-wrap">
+                                    <!-- contents-top -->
+                                    <div class="contents-top">
+                                        <div class="breadcrumbs-wrap">
+                                            <div class="breadcrumbs">
+                                                <ol class="mu-path">
+                                                    <li class="home"><a href="">HOME</a></li>
+                                                    <li><a href="">시스템 관리</a></li>
+                                                    <li><a href="">메인 관리</a></li>
+                                                </ol>
+                                            </div>
+                                        </div>
+                                        <div class="subject-wrap">
+                                            <div class="subject">
+                                                <div class="subject-title">
+                                                    <h3>메인 관리</h3>
+                                                    <!-- 실제 해당 페이지명 -->
+                                                    <p class="subject-desc"></p>
+                                                </div>
+                                                <!-- 우측 버튼영역 -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- contents -->
+                                    <div class="contents">
+                                        <div>
+                                            <div class="inner">
+                                                <div class="mu-section">
+                                                    <!-- main-system -->
+                                                    <div class="main-system">
+                                                        <!-- Left -->
+                                                        <div class="inner-column">
+                                                            <div class="mu-heading">
+                                                                <h4>추천 검색어 관리</h4>
+                                                            </div>
+                                                            <!-- recommend-keyword -->
+                                                            <dl class="recommend-keyword">
+                                                                <dt>추천검색어 01</dt>
+                                                                <dd><input type="text" id="recommKeyword01" placeholder="추천 검색어를 입력하세요.(최대 10자)" class="mu-input" title="추천검색어 입력" /></dd>
+                                                                <dt>추천검색어 02</dt>
+                                                                <dd><input type="text" id="recommKeyword02" placeholder="추천 검색어를 입력하세요.(최대 10자)" class="mu-input" title="추천검색어 입력" /></dd>
+                                                                <dt>추천검색어 03</dt>
+                                                                <dd><input type="text" id="recommKeyword03" placeholder="추천 검색어를 입력하세요.(최대 10자)" class="mu-input" title="추천검색어 입력" /></dd>
+                                                                <dt>추천검색어 04</dt>
+                                                                <dd><input type="text" id="recommKeyword04" placeholder="추천 검색어를 입력하세요.(최대 10자)" class="mu-input" title="추천검색어 입력" /></dd>
+                                                                <dt>추천검색어 05</dt>
+                                                                <dd><input type="text" id="recommKeyword05" placeholder="추천 검색어를 입력하세요.(최대 10자)" class="mu-input" title="추천검색어 입력" /></dd>
+                                                            </dl>
+                                                            <!-- //recommend-keyword -->
+                                                            <!-- mu-button-wrap -->
+                                                            <div class="mu-button-wrap">
+                                                                <button type="button" class="mu-btn mu-btn-primary"><span>적용</span></button>
+                                                            </div>
+                                                            <!-- //mu-button-wrap -->
+                                                        </div>
+                                                        <!-- Right -->
+                                                        <div class="inner-column">
+                                                            <div class="mu-heading">
+                                                                <h4>추천 데이터 관리</h4>
+                                                            </div>
+                                                            
+                                                            <!-- mu-search-group -->
+                                                            <div class="mu-search-group">
+                                                                <div class="mu-search-item">
+                                                                    <table>
+                                                                        <caption>데이터 검색 게시판</caption>
+                                                                        <colgroup>
+                                                                            <col style="width:100px;"> 
+                                                                            <col>
+                                                                        </colgroup>
+                                                                        <tbody>
+                                                                            <tr>
+                                                                                <th scope="row">데이터유형</th>
+                                                                                <td>
+                                                                                    <!-- mu-selectbox -->
+                                                                                    <div class="mu-selectbox">
+                                                                                        <select title="데이터유형선택">
+                                                                                            <option value="">hive_table</option>
+                                                                                            <option value="">hive</option>
+                                                                                            <option value="">hive_process_execution</option>
+                                                                                            <option value="">hive_column</option>
+                                                                                        </select>
+                                                                                    </div>
+                                                                                </td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <th scope="row">데이터명</th>
+                                                                                <td>
+                                                                                    <input type="text" placeholder="검색어를 입력하세요." class="mu-input" title="데이터명 입력" value="">
+                                                                                </td>
+                                                                            </tr>
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div> 
+                                                                <div class="mu-search-btn">
+                                                                    <button type="button" class="mu-btn mu-btn-primary"><i class="mu-icon-svg search"></i><span>검색</span></button>
+                                                                </div>
+                                                            </div>
+                                                            <!-- //mu-search-group -->
+
+                                                            <div class="mu-heading">
+                                                                <h5>데이터목록</h5>
+                                                            </div>
+                                                            <!-- board-list-search 2022-09-16 DEL : 기획변경 -->
+                                                            <!-- table-scroll -->
+                                                            <div class="table-scroll max-h300 slim-scroll">
+                                                                <table class="mu-grid">
+                                                                    <caption>
+                                                                        데이터 접근 권한 목록 게시판
+                                                                    </caption>
+                                                                    <colgroup>
+                                                                        <col style="width:40px">
+                                                                        <col style="width:auto" span="3">
+                                                                    </colgroup>
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col">
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb1"  />
+                                                                                    <label for="ckb1"><span class="blind">전체선택</span></label>
+                                                                                </div>
+                                                                            </th>
+                                                                            <th scope="col">데이터명</th>
+                                                                            <th scope="col">오너</th>
+                                                                            <th scope="col">데이터 유형</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb2" />
+                                                                                    <label for="ckb2"><span class="blind">행선택</span></label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>Data_title_1</td>
+                                                                            <td>dl_master</td>
+                                                                            <td>hive_column</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb3" />
+                                                                                    <label for="ckb3"><span class="blind">행선택</span></label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>Data_title_2</td>
+                                                                            <td>dl_master</td>
+                                                                            <td>hive_column</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb4" />
+                                                                                    <label for="ckb4"><span class="blind">행선택</span></label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>Data_title_2</td>
+                                                                            <td>dl_master</td>
+                                                                            <td>hive_column</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb5" />
+                                                                                    <label for="ckb5"><span class="blind">행선택</span></label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>Data_title_2</td>
+                                                                            <td>dl_master</td>
+                                                                            <td>hive_column</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb6" />
+                                                                                    <label for="ckb6"><span class="blind">행선택</span></label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>Data_title_2</td>
+                                                                            <td>dl_master</td>
+                                                                            <td>hive_column</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb7" />
+                                                                                    <label for="ckb7"><span class="blind">행선택</span></label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>Data_title_2</td>
+                                                                            <td>dl_master</td>
+                                                                            <td>hive_column</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb8" />
+                                                                                    <label for="ckb8"><span class="blind">행선택</span></label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>Data_title_2</td>
+                                                                            <td>dl_master</td>
+                                                                            <td>hive_column</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb9" />
+                                                                                    <label for="ckb9"><span class="blind">행선택</span></label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>Data_title_2</td>
+                                                                            <td>dl_master</td>
+                                                                            <td>hive_column</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>
+                                                                                <div class="mu-checkbox">
+                                                                                    <input type="checkbox" id="ckb10" />
+                                                                                    <label for="ckb10"><span class="blind">행선택</span></label>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>Data_title_2</td>
+                                                                            <td>dl_master</td>
+                                                                            <td>hive_column</td>
+                                                                        </tr>
+                                                                        <!-- <td colspan="4"> 
+                                                                            <p class="nodata">검색 결과가 존재하지 않습니다.<span>다른 검색어를 입력해주세요.</span></p>
+                                                                        </td> 검색결과가 없을때 -->
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                            <!-- //table-scroll -->
+                                                            <div class="mu-heading mt20">
+                                                                <h5>선택된 추천 데이터</h5>
+                                                                <div class="mu-item-group">
+                                                                    <button type="button" class="mu-btn mu-btn-icon-only" title="선택 초기화">
+                                                                        <i class="mu-icon-svg refresh"></i>
+                                                                        <span>초기화</span>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <!-- mu-grid : 선택된 추천 데이터는 3row 고정 2022-09-16 ADD : 기획변경(Drag&Drop 기능은 삭제로 최종 결정) /
+                                                                1) 데이터 목록에서 선택된 순서대로 ‘선택된 추천 데이터’ 리스트에 정렬/ 2) 선택된 추천 데이터 삭제 시, 데이터 목록에서 선택 취소 (체크해제) 선택된 추천 데이터 목록에서 제외(다음 순번이 위로 올라감) -->
+                                                            <table class="mu-grid">
+                                                                <caption>
+                                                                    데이터 접근 권한 목록 게시판
+                                                                </caption>
+                                                                <colgroup>
+                                                                    <col style="width:60px">
+                                                                    <col style="width:auto" span="3">
+                                                                    <col style="width:60px">
+                                                                </colgroup>
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th scope="col">No</th>
+                                                                        <th scope="col">데이터명</th>
+                                                                        <th scope="col">오너</th>
+                                                                        <th scope="col">데이터 유형</th>
+                                                                        <th scope="col"></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td>1(좌측)</td>
+                                                                        <td>Data_title_1</td>
+                                                                        <td>dl_master</td>
+                                                                        <td>hive_column</td>
+                                                                        <td><button class="mu-btn mu-btn-sm mu-btn-underline"><span>삭제</span></button></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>2(중앙)</td>
+                                                                        <td>Data_title_2</td>
+                                                                        <td>dl_master</td>
+                                                                        <td>hive_column</td>
+                                                                        <td><button class="mu-btn mu-btn-sm mu-btn-underline"><span>삭제</span></button></td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td>3(우측)</td>
+                                                                        <td>Data_title_3</td>
+                                                                        <td>dl_master</td>
+                                                                        <td>hive_process</td>
+                                                                        <td><button class="mu-btn mu-btn-sm mu-btn-underline"><span>삭제</span></button></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            <!-- //mu-grid -->
+                                                            <!-- mu-button-wrap -->
+                                                            <div class="mu-button-wrap">
+                                                                <button type="button" class="mu-btn mu-btn-primary"><span>적용</span></button>
+                                                            </div>
+                                                            <!-- //mu-button-wrap -->
+                                                        </div>
+                                                    </div>
+                                                    <!-- //mu-row -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- //contents -->
+                                </div>
+                            </div>
+                        </main>
+                        <!-- //main-sub -->
+
+						<!-- footer : 2022-08-18 기획/디자인 수정 공통반영 (footer-menu / family-site DEL) -->
+						<footer>
+							<div class="footer-top">
+								<div class="inner">
+									<!-- footer-logo -->
+									<div class="footer-logo"><span>모비젠</span></div>
+								</div>
+							</div>
+							<div class="footer-bottom">
+								<div class="inner">
+									<!-- footer-info -->
+									<div class="footer-info">
+										<address>
+											<p>(13453) 경기도 성남시 수정구 금토로80번길 37, W동 7,8,9층 (금토동, 인피니티타워) </p> 
+											<p><span>대표전화</span>02-2018-5114</p>
+										</address>
+										<p class="copyright">
+											COPYRIGHT (C) MOBIGEN.  ALL RIGHT RESERVED.
+										</p>
+									</div>
+								</div>
+							</div>
+						</footer>
+						<!-- //footer -->
+                    </div>
+                    <!-- //DEV nuxt common layout ADD -->
+                </div>
+            </div>
+        </div>
+        <script src="../lib/vue/vue.min.js"></script>
+        <script src="../lib/vue2-datepicker_3.10.2/index.min.js"></script>
+        <!-- vue2-datepicker ver up -->
+        <script src="../lib/vue2-datepicker_3.10.2/locale/ko.js"></script>
+        <!-- vue2-datepicker kor ver -->
+        <script src="../js/jquery-3.5.1.min.js"></script>
+        <script src="../js/jquery-ui.min.js"></script>
+        <script src="../js/common.js"></script>
+        <!-- 동작 확인용 임시 -->
+    </body>
+</html>

@@ -1,0 +1,156 @@
+// -------------------------
+// Accordion
+// -------------------------
+.accordion {
+  border: 1px solid $border-light;
+}
+
+.accordion-vertical {
+  @include list;
+}
+
+.accordion-horizontal {
+  @include button-list;
+  width: 100%;
+}
+
+.accordion-horizontal__item {
+  border-radius: $button-border-radius;
+}
+
+.accordion-horizontal__button {
+  padding: $spacing-xs $spacing-3xs $spacing-xs $spacing-3xs;
+
+  &:focus-visible:not(:disabled) {
+    border: 2px solid $default-focus;
+  }
+}
+
+.accordion-horizontal__text {
+  @include font-weight("medium");
+  @include line-height("title");
+  margin-top: $spacing-2xs;
+  color: $text-light;
+  overflow: visible;
+  white-space: normal;
+  word-break: keep-all;
+}
+
+.accordion-horizontal__item--selected {
+  border: 1px solid $primary;
+}
+
+.accordion-horizontal__item--selected .accordion-horizontal__text {
+  color: $primary;
+}
+
+.accordion-horizontal__item--selected .accordion-horizontal__icon {
+  fill: $primary;
+}
+
+.accordion__item:last-child .accordion__body {
+  border-bottom-width: 0;
+}
+
+.accordion__head {
+  @include button-normal;
+  justify-content: flex-start;
+  width: 100%;
+  height: $button-height-md;
+  padding: $spacing-2xs $spacing-xs;
+  background-color: $hover-row;
+
+  &:focus-visible:not(:disabled) {
+    border: 2px solid $default-focus;
+  }
+}
+
+.accordion__head-icon {
+  @include svg-icon-size($button-height-sm);
+  transition: all $duration-fast-02 motion(entrance, productive);
+}
+
+.accordion__head-title {
+  @include font-size("14");
+  @include font-weight("medium");
+  @include line-height("title");
+  display: flex;
+  flex-grow: 1;
+  text-align: left;
+  color: $text-light;
+
+  .v-tooltip {
+    margin-left: $spacing-2xs;
+  }
+}
+
+.accordion__head-title-text {
+  @include text-overflow;
+  @include font-size("14");
+  @include font-weight("medium");
+  @include line-height("title");
+  color: $text-dark;
+}
+
+.accordion__head-subtitle {
+  @include font-weight("regular");
+  @include line-height("title");
+  margin-left: $spacing-2xs;
+  color: $text-dark;
+}
+
+.accordion__head-icon + .accordion__head-title {
+  margin-left: $spacing-2xs;
+}
+
+.accordion__head-icon--right {
+  margin-left: auto;
+  transform: rotate(180deg);
+}
+
+.accordion__body {
+  display: none;
+  background-color: $white;
+  border-bottom: 1px solid $border-light;
+}
+
+.accordion-vertical__text {
+  @include text-overflow;
+  width: 100%;
+  margin: 0;
+}
+
+.accordion-vertical__item + .accordion-vertical__item {
+  border-top: 1px solid $border-light;
+}
+
+// -------------------------
+// default 열고 닫을 경우 스타일
+// -------------------------
+.accordion__head--open .accordion__head-icon {
+  transform: rotate(-90deg);
+}
+
+.accordion__head--open .accordion__head-icon--right {
+  transform: rotate(0deg);
+}
+
+.accordion__head--open + .accordion__body {
+  display: block;
+}
+
+// -------------------------
+// accordion-horizontal--lg
+// -------------------------
+
+.accordion-horizontal--lg {
+  .accordion-horizontal__button {
+    height: rem(74px);
+    padding: $spacing-xs $spacing-2xs;
+  }
+
+  .accordion-horizontal__icon {
+    width: rem(36px);
+    height: rem(36px);
+  }
+}

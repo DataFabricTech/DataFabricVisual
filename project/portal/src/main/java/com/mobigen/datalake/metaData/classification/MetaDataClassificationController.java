@@ -1,0 +1,146 @@
+package com.mobigen.datalake.metaData.classification;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.mobigen.framework.result.annotation.ResponseJsonResult;
+
+import lombok.AllArgsConstructor;
+
+@RequestMapping("/api/metadata/classification")
+@RestController
+@AllArgsConstructor
+public class MetaDataClassificationController {
+
+    private final MetaDataClassificationService metaDataClassificationService;
+
+    /**
+     * 메타 데이터 관리 > 카테고리 담당부서 조회
+     *
+     * @param  name         카테고리명
+     * @return Object       카테고리 담당부서 정보 반환
+     */
+    @ResponseJsonResult
+    @GetMapping("/dept/{name}")
+    public Object getClassificationDept(@PathVariable("name") String name) throws Exception {
+        return metaDataClassificationService.getClassificationDept(name);
+    }
+
+    /**
+     * 메타 데이터 관리 > 카테고리 Depth 조회
+     *
+     * @param  name         카테고리명
+     * @return Object       카테고리 Depth 반환
+     */
+    @ResponseJsonResult
+    @GetMapping("/depth")
+    public Object getClassificationDepth(@RequestParam("name") String name) throws Exception {
+        return metaDataClassificationService.getClassificationDepth(name);
+    }
+
+    /**
+     * 메타 데이터 관리 > 하위 카테고리 추가
+     *
+     * @params Map          처리 대상 데이터 Map
+     * @return Object       처리 성공 데이터 수
+     */
+    @ResponseJsonResult
+    @PostMapping("/insert")
+    public Object insertClassification(@RequestBody Map<String, Object> params) throws Exception {
+        String level =(String) metaDataClassificationService.getClassificationDepth((String)params.get("name"));
+
+        // 루트 카테고리의 경우
+        if (level == null) {
+            level = "1";
+        } else {
+            int levelInt =  Integer.parseInt(level) + 1;
+            level = Integer.toString(levelInt);
+        }
+
+        Map<String, Object> forRDB = (Map<String, Object>) params.get("forRDB");
+        forRDB.put("level", level);
+        
+        return metaDataClassificationService.insertClassification(params);
+    }
+
+    /**
+     * 메타 데이터 관리 > 카테고리 수정
+     *
+     * @params Map          처리 대상 데이터 Map
+     * @return Object       처리 성공 데이터 수
+     */
+    @ResponseJsonResult
+    @PutMapping
+    public Object updateClassification(@RequestBody Map<String, Object> params) throws Exception {
+        return metaDataClassificationService.updateClassification(params);
+    }
+
+    /**
+     * 메타 데이터 관리 > 카테고리 삭제
+     *
+     * @param  name         카테고리명
+     * @return Map          API 호출 결과 반환
+     */
+    @ResponseJsonResult
+    @PostMapping("/{name}")
+    public Object deleteClassification(@PathVariable("name") String name) throws Exception {
+        return metaDataClassificationService.deleteClassification(name);
+    }
+
+    /**
+     * 메타 데이터 관리 > 카테고리 맵핑
+     *
+     * @params Map          처리 대상 데이터 Map
+     * @return Object       API 호출 결과 반환
+     */
+    @ResponseJsonResult
+    @PostMapping("/map")
+    public Object mapClassification(@RequestBody Map<String, Object> params) throws Exception {
+        return metaDataClassificationService.mapClassification(params);
+    }
+
+    /**
+     * 메타 데이터 관리 > 카테고리 맵핑 제거
+     *
+     * @param name          삭제할 classification 이름
+     * @param params        카테고리 맵핑 제거 대상 엔티티의 guid, 테이블 타입 여부 flag
+     * @return Object       처리 성공 데이터 수
+     */
+    @ResponseJsonResult
+    @PutMapping("/map/{name}")
+    public Object deleteMapClassification(@PathVariable("name") String name,
+                                          @RequestBody Map<String, Object> params) throws Exception {
+        return metaDataClassificationService.deleteMapClassification(name, params);
+    }
+
+    /**
+     * 메타 데이터 관리 >       순서 변경을 위한 카테고리 목록 조회
+     *
+     * @return Object       카테고리 목록 반환
+     */
+    @ResponseJsonResult
+    @GetMapping("/list")
+    public Object getClassificationList(@RequestParam("level") String level) throws Exception {
+        return metaDataClassificationService.getClassificationList(level);
+    }
+
+    /**
+     * 메타 데이터 관리 >       순서 변경
+     *
+     * @return Object       카테고리 목록 반환
+     */
+    @ResponseJsonResult
+    @PostMapping("/updateClassificationOrdNo")
+    public Object updateClassificationOrdNo(@RequestBody List<Map<String, Object>> params) throws Exception {
+        return metaDataClassificationService.updateClassificationOrdNo(params);
+    }
+}

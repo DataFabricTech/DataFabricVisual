@@ -1,0 +1,16 @@
+<svg id="Btn_Opened" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: red;
+        opacity: 0;
+      }
+
+      .cls-2 {
+        fill: #b4b5b8;
+      }
+    </style>
+  </defs>
+  <rect id="area" class="cls-1" width="16" height="16"/>
+  <path id="Icon_down" class="cls-2" d="M5,0l5,5H0Z" transform="translate(13 11) rotate(180)"/>
+</svg>

@@ -1,0 +1,32 @@
+// -------------------------
+// Timepicker
+// -------------------------
+.time-picker {
+  @include picker;
+}
+
+// dropdown container
+.time-picker-container {
+  @include list;
+  flex: auto;
+  height: rem(258px);
+  width: 100%;
+  min-width: rem(128px);
+}
+
+.time-picker-container__list {
+  width: 33.33%;
+  overflow-y: auto;
+
+  &:not(:last-child) {
+    border-right: 1px solid $border-light;
+  }
+}
+
+.time-picker-container__button {
+  text-align: center;
+}
+
+.time-picker-container__list + .time-picker-container__list::before {
+  display: none;
+}
