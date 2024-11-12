@@ -348,7 +348,9 @@
 
 
                 <pre id="code-content" class="sample-url" style="color: #ffffff">
-# Python 샘플 예제
+# ========================================
+# json 추출 코드 (대용량 데이터 추천)
+# ========================================
 
 import json, requests
 
@@ -360,11 +362,7 @@ payload = json.dumps({
     "user_id": "{{ userStore.getUser.user_id }}", # 사용자 아이디
     "password": "******", # 사용자 비밀번호
     "select": "", # 컬럼명 리스트 또는 전체 컬럼(* 또는 ""), ex: column1, column2, column3 ...
-    "from": "{{
-                    props.eliminateModal.entity.entity.attributes.qualifiedName.split(
-                      "@"
-                    )[0]
-                  }}", # DB명.테이블명
+    "from": "{{ props.eliminateModal.entity.entity.attributes.qualifiedName.split("@")[0] }}", # DB명.테이블명
     "where": "" # 데이터 조회 조건(WHERE)문, ex: where column = 'value'
 })
 
@@ -380,98 +378,65 @@ while True:
     res = requests.request("GET", nextUri)
     print(res.json())
 
+# ========================================
+# Dataframe 추출 코드 (저용량 데이터 추천)
+# ========================================
 
+import json
+import requests
+import pandas as pd
+import time
 
+# API 요청 정보 설정
+url = "https://{{ currentHostname }}:13200/data/extract"
+headers = {'Content-Type': 'application/json'}
+payload = json.dumps({
+    "system": "hive",
+    "user_id": "{{ userStore.getUser.user_id }}",
+    "password": "사용자비밀번호",
+    "select": "*",
+    "from": "{{ props.eliminateModal.entity.entity.attributes.qualifiedName.split("@")[0] }}",
+    "where": ""
+})
 
-# [POST] https://{{ currentHostname }}:13200/data/extract
+# 데이터 추출 POST 요청
+res = requests.post(url, headers=headers, data=payload)
+response_data = res.json()
 
-# {
-#     "system" : "시스템명 (default : hive)",
-#     "user_id" : "사용자 사번",
-#     "password" : "사용자 비밀번호",
-#     "select": "컬럼명",
-#     "from" : "DB명.TABLE명",
-#     "where" :  "where 데이터 조회 조건"
-# }
+# 컬럼명과 데이터를 저장할 리스트
+column_names = []
+data = []
 
-# Example) 변수 전체
+# 초기 응답에서 컬럼 정보 확인
+if 'columns' in response_data:
+    column_names = [col['name'] for col in response_data['columns']]
 
-# Content-Type : application/json
-# {
-#     "system" : "hive",
-#     "user_id" : "******",
-#     "password" : "**********",
-#     "select" : "*",
-#     "from" : "dw_erp.dw_pc_erp_ekbe",
-#     "where" : ""
-# }
+# 반복적으로 데이터 수집
+while True:
+    if 'data' in response_data:
+        data.extend(response_data['data'])  # JSON 형식의 'data' 추가
 
-# Example) 필수 변수만 사용한 경우
+    # 'nextUri'가 없을 경우 종료
+    if 'nextUri' not in response_data:
+        break
 
-# Content-Type : application/json
-# {
-#     "user_id" : "******",
-#     "password" : "**********",
-#     "from" : "dw_erp.dw_pc_erp_ekbe"
-# }
+    # 다음 URI로 GET 요청
+    nextUri = response_data['nextUri']
+    res = requests.get(nextUri)
+    response_data = res.json()
 
-# =================================================================
+    # 컬럼 정보가 없는 경우 재확인
+    if not column_names and 'columns' in response_data:
+        column_names = [col['name'] for col in response_data['columns']]
 
-# import json
-# import requests
-# import pandas as pd
-# import time
+    time.sleep(2)  # 대기 시간 설정
 
-# # API 요청 정보 설정
-# url = "https://{{ currentHostname }}:13200/data/extract"
-# headers = {'Content-Type': 'application/json'}
-# payload = json.dumps({
-#     "system": "hive",
-#     "user_id": "사용자아이디",
-#     "password": "사용자비밀번호",
-#     "select": "*",
-#     "from": "dev_dw_erp.dw_fm_erp_tcurr",
-#     "where": ""
-# })
-
-# # 데이터 추출 POST 요청
-# res = requests.post(url, headers=headers, data=payload)
-# response_data = res.json()
-
-# # 컬럼명과 데이터를 저장할 리스트
-# column_names = []
-# data = []
-
-# # 초기 응답에서 컬럼 정보 확인
-# if 'columns' in response_data:
-#     column_names = [col['name'] for col in response_data['columns']]
-
-# # 반복적으로 데이터 수집
-# while True:
-#     if 'data' in response_data:
-#         data.extend(response_data['data'])  # JSON 형식의 'data' 추가
-
-#     # 'nextUri'가 없을 경우 종료
-#     if 'nextUri' not in response_data:
-#         break
-
-#     # 다음 URI로 GET 요청
-#     nextUri = response_data['nextUri']
-#     res = requests.get(nextUri)
-#     response_data = res.json()
-
-#     # 컬럼 정보가 없는 경우 재확인
-#     if not column_names and 'columns' in response_data:
-#         column_names = [col['name'] for col in response_data['columns']]
-
-#     time.sleep(2)  # 대기 시간 설정
-
-# # JSON 데이터를 DataFrame으로 변환
-# if column_names and data:
-#     df = pd.DataFrame(data, columns=column_names)
-#     print(df)
-# else:
-#     print("컬럼 정보 또는 데이터를 가져오지 못했습니다.")
+# JSON 데이터를 DataFrame으로 변환
+if column_names and data:
+    df = pd.DataFrame(data, columns=column_names)
+    print(df)
+else:
+    print("컬럼 정보 또는 데이터를 가져오지 못했습니다.")
 </pre>
               </div>
             </div>

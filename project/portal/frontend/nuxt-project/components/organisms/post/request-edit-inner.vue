@@ -210,6 +210,14 @@ const request_start = ref<string>(null);
 const request_end = ref<string>(null);
 const dataNameDisabled = ref<boolean>(false);
 
+watch(() => props.post.request_start, (newVal, oldVal) => {
+  request_start.value = props.post.request_start
+})
+
+watch(() => props.post.request_end, (newVal, oldVal) => {
+  request_end.value = props.post.request_end
+})
+
 // 체크박스 클릭 이벤트
 const selected = (event, option) => {
   if (event.target.checked) {

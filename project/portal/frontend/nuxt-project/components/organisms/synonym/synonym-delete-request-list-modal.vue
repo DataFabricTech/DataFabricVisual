@@ -69,7 +69,7 @@
             <tr>
               <th scope="row">반려 사유<strong class="required">필수</strong></th>
               <td>
-                <textarea class="mu-area h100" placeholder="반려 사유를 입력해주세요.(최대 100자)"  title="반려 사유 입력" v-model="response"></textarea>
+                <textarea class="mu-area h100" placeholder="반려 사유를 입력해주세요.(최대 100자)"  title="반려 사유 입력" v-model="response" maxlength="100"></textarea>
               </td>
             </tr>
           </tbody>

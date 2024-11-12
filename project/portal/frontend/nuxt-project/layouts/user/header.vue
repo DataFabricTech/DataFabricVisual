@@ -53,11 +53,11 @@
           <div class="sitemap">
             <div class="sitemap-header">
               <div class="inner">
-                <ul class="sitemap-util">
+                <!-- <ul class="sitemap-util">
                   <li v-if="user.authority == 'Super-Admin' || user.authority == 'Manager'"><a @click="goToAdminPage()"><i class="mu-icon-svg admin"></i> 관리자 홈으로 이동</a></li>
                   <li><a @click="goToMyCatalog()"><i class="mu-icon-svg user"></i> 마이페이지</a></li>
                   <li><a @click="logout()"><i class="mu-icon-svg logout" @click="logout()"></i> 로그아웃</a></li>
-                </ul>
+                </ul> -->
                 <button type="button" title="전체메뉴 닫기" class="mu-btn mu-btn-icon-only mu-btn-close" @click="closeSitemap()">
                   <i class="mu-icon-svg close"></i>
                 </button>
@@ -79,11 +79,12 @@
                         <NuxtLink :to="getFirstDepthHref(item)" @click="closeSitemap()"><span>{{ item.title }}</span></NuxtLink>
                         <ul>
                           <template v-for="(subItem, subIndex) in item.child" :key="subIndex">
-                            <li v-if="subItem.menu_visible" :class="tab && subItem.menu_path === tab.currentPath ? 'current' : ''">
+                            <li v-if="subItem.menu_visible" :style="getStyle(subItem)">
                               <NuxtLink :to='getSubDepthHref(subItem)' @click="closeSitemap()">
                                 {{ subItem.menu_name }}
                               </NuxtLink>
                             </li>
+
                           </template>
                         </ul>
                       </li>
@@ -119,6 +120,11 @@ const isSitemap = ref(false)
 const isLnbOpen = ref(false);
 
 const categoryStore = useCategoryStore()
+
+// 사이트맵 배치 조정
+const getStyle = (item) => {
+  return 'width: 154px;'
+}
 
 // 마우스 올린 대메뉴 지정
 const addActive = (index, item) => {

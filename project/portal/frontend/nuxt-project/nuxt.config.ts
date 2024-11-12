@@ -31,6 +31,12 @@ function _routeAlias(route: any) {
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  app: {
+    head: {
+      title: '현대로템 BIGS 데이터 포털'
+    }
+  },
+
   devtools: {enabled: false},
 
   typescript: {

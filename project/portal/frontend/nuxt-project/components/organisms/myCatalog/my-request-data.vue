@@ -13,10 +13,10 @@
         <a @click="goToMyRequestDataDetail(item.id)">{{ item.title }}</a>
         <span class="date">{{ formatDate(item.upload_date) }}</span>
       </li>
-    </ul>
       <div v-if="dataList.length == 0">
         <p class="nodata">데이터 요청 내역이 없습니다.</p>
       </div>
+    </ul>
   </div>
 </template>
 

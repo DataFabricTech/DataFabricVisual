@@ -193,7 +193,7 @@ public class PostService {
                 i++;
             }
 
-            message.setSubject("[BIGS DATA PORTAL] 데이터 요청 - " + params.get("data_name")); // 메일 제목
+            message.setSubject("[BIGS DATA PORTAL 데이터 요청] " + params.get("data_name")); // 메일 제목
             message.setFrom("rotem_portal@hyundai-rotem.co.kr"); // 보낸 사람
             message.addRecipients(Message.RecipientType.TO, toAddress); // 받는 사람
 
@@ -317,7 +317,7 @@ public class PostService {
                 i++;
             }
 
-            message.setSubject("[BIGS DATA PORTAL] 데이터 요청 답변 - " + post.get("data_name")); // 메일 제목
+            message.setSubject("[BIGS DATA PORTAL 데이터 요청 답변] " + post.get("data_name")); // 메일 제목
             message.setFrom("rotem_portal@hyundai-rotem.co.kr"); // 보낸 사람
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(params.get("writer_email").toString(), params.get("writer_user_nm").toString(), "UTF-8")); // 받는 사람
             message.addRecipients(Message.RecipientType.CC, toAddress); // 참조자

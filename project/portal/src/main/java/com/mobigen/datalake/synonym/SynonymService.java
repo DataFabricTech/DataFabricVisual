@@ -508,7 +508,7 @@ public class SynonymService {
                 i++;
             }
 
-            message.setSubject("[BIGS DATA PORTAL] 동의어 삭제 요청 - " + (String) params.get("term")); // 메일 제목
+            message.setSubject("[BIGS DATA PORTAL 동의어 삭제 요청] " + (String) params.get("term")); // 메일 제목
             message.setFrom("rotem_portal@hyundai-rotem.co.kr"); // 보낸 사람
             message.addRecipients(Message.RecipientType.TO, toAddress); // 받는 사람
 
@@ -570,7 +570,7 @@ public class SynonymService {
                 i++;
             }
 
-            message.setSubject("[BIGS DATA PORTAL] 동의어 삭제 요청 결과 안내 - " + (String) params.get("term")); // 메일 제목
+            message.setSubject("[BIGS DATA PORTAL 동의어 삭제 요청 결과 안내] " + (String) params.get("term")); // 메일 제목
             message.setFrom("rotem_portal@hyundai-rotem.co.kr"); // 보낸 사람
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(params.get("writer_email").toString(), params.get("writer_user_nm").toString(), "UTF-8")); // 받는 사람
             message.addRecipients(Message.RecipientType.CC, toAddress); // 참조자
@@ -632,7 +632,7 @@ public class SynonymService {
                 i++;
             }
 
-            message.setSubject("[BIGS DATA PORTAL] 동의어 삭제 요청 결과 안내 - " + (String) params.get("term")); // 메일 제목
+            message.setSubject("[BIGS DATA PORTAL 동의어 삭제 요청 결과 안내] " + (String) params.get("term")); // 메일 제목
             message.setFrom("rotem_portal@hyundai-rotem.co.kr"); // 보낸 사람
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(params.get("writer_email").toString(), params.get("writer_user_nm").toString(), "UTF-8")); // 받는 사람
             message.addRecipients(Message.RecipientType.CC, toAddress); // 참조자
@@ -1043,6 +1043,12 @@ public class SynonymService {
 </body>
 </html>         
                 """;
+
+        // 신청자 스타일 지정
+        String[] ruiArr = request_user_info.split(" ");
+        ruiArr[0] = "<span style=\"color: #1F497D\">" + ruiArr[0] + "</span>";
+        ruiArr[2] = "<span style=\"color: #1F497D\">" + ruiArr[2] + "</span>";
+        request_user_info = String.join(" ", ruiArr);
 
         List<Map> synonyms = (List) params.get("synonyms");
         String synonymListStr = "[";

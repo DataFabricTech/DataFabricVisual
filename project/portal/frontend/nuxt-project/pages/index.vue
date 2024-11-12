@@ -22,6 +22,7 @@
 <script>
 export default {
   name: 'index',
+  title: '데이터 포털',
 };
 
 onMounted(async () => {
