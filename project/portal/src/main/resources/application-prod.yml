@@ -29,9 +29,9 @@ spring:
       enabled: true
   datasource:
     hikari:
-      jdbc-url: jdbc:postgresql://<INTERNAL_HOST>:5432/rotem
-      username: ENC(vEkKr4P7VQfvrRVbUegAnA==)
-      password: ENC(YzgDmniFAT89iA1dc4EC8hlAEtY3hjox)
+      jdbc-url: jdbc:postgresql://<INTERNAL_HOST>:5432/data_catalog
+      username: <USER>
+      password: <PASSWORD>
       driver-class-name: org.postgresql.Driver
       maximumPoolSize: 3
       connection-test-query: select
@@ -77,7 +77,7 @@ server:
   ssl:
     enabled: true
     enabled-protocols: TLSv1.2
-    key-store:  "/Users/sch/workspace/rotem_catalog_portal/source/src/main/resources/keystore/certificate.p12"
+    key-store:  "/Users/sch/workspace/ot_data_catalog_portal_v2/source/src/main/resources/keystore/certificate.p12"
     key-store-type: "PKCS12"  # "JKS"
     key-store-password: ENC(bzTkiVKgLirHJc6v7mPW0aqRChnOU8V6)  # jks 또는 pfx 암호
     ciphers: TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA256,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
@@ -85,17 +85,6 @@ server:
     #trust-store: # (필요시) "sslcert.co.kr.jks" 또는 "sslcert.co.kr.pfx" 지정. CSR 직접 생성시에는, 루트/체인 스토어 파일 지정
     #trust-store-password: "xxxxxxxx"  # (필요시) jks 또는 pfx 암호
   max-http-request-header-size: 30000
-
-sso:
-  hkmcenc-id: BDPDCDEV # 개발: BDPDCDEV  운영: BDPDCPROD
-  redirect-url: https://dataportaldev.rotem.co.kr/sso # 개발: dataportaldev 운영: dataportal
-
-shadowcube: # shadowcube 파일 암복호화 정보
-  enabled: false
-  serial-id: dataportal
-  password: ENC(9krYUCA43qB80cZ4fcwiygKW7EahTo81)
-  license: 128654
-  certificate-path: /root/.ShadowCube
 
 i18n:
   basenames: i18n/messages, i18n/exception, i18n/validation
@@ -112,8 +101,8 @@ http-client-configuration:
 properties:
   isSumExternal: true # 메인화면 > 전체 데이터 수 (외부데이터 포함 여부)
   maxFileSize: 1GB # GB, MB, KB
-  fileUploadPath: /data1/rotem_catalog_portal/data/
-  fileUploadPathSample: /data1/rotem_catalog_portal/data/sample
+  fileUploadPath: /data1/ot_data_catalog_portal_v2/data/
+  fileUploadPathSample: /data1/ot_data_catalog_portal_v2/data/sample
   allowedExtension: zip,pptx,pptm,ppt,xls,xlsx,xlsm,csv,pdf,jpg,jpeg,png
   allowedImgExtension: jpg,jpeg,png
   allowMetaInfo:
@@ -123,7 +112,7 @@ properties:
   iris:
     security:
       ignores: /css/**, /fonts/**, /img/**, /js/**, /favicon.ico
-      permit-alls: /css/**, /fonts/**, /img/**, /js/**, /favicon.icom, /api/**, /_nuxt/**, /, /api/authenticate/key, /api/authenticate, /api/authenticateGW, /api/authenticateAD, /api/authenticate/ldap, /api/csrf-token, /h2-console/**, /sample/public-key, /sample/authenticate, /error, /test, /sso, /ssoLogin
+      permit-alls: /css/**, /fonts/**, /img/**, /js/**, /favicon.icom, /api/**, /_nuxt/**, /, /api/authenticate/key, /api/authenticate, /api/authenticate/ldap, /api/csrf-token, /h2-console/**, /sample/public-key, /sample/authenticate, /error, /test, /sso, /ssoLogin
       redirect-url: /
       iframe-option: same-origin #disable, same-origin, deny
       csrf: true
@@ -160,10 +149,7 @@ properties:
       user: ENC(AI/U3JYykxzsihPnRiQUnA==)
   superadmin:
     id: admin
-    passwd: ENC(<ENCRYPTED>)
-  tempuser:
-    ids: dpadmin,dpuser01,dpuser02
-    passwds: ENC(Un/IeUZpQYbFb9jQVx5ixBYv1i82xdCFw/4hPx/MQKz9fYggOhqRkqPiqiFyCdad) # <PASSWORD> # 계정 순서대로 패스워드
+    passwd: <PASSWORD>
 
 solr:
   isProd: true

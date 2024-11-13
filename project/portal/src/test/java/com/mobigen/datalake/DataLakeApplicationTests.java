@@ -36,7 +36,7 @@ class DataLakeApplicationTests extends AbstractRestDocTest {
     @Test
     void testEnc(){
         // 암호화
-        String postgresUsername = "rotem";
+        String postgresUsername = "<DB_USER>";
         String postgresPassword = "<PASSWORD>";
 
         String keystorePassword = "<PASSWORD>";

@@ -4,11 +4,11 @@
         <div class="login-container">
           <div class="login-slogan">
             <h1 class="logo">
-              <img src="../../assets/style-product/images/common/logo-wh.png" alt="HYUNDAI ROTEM">
+              <img src="../../assets/style-product/images/common/logo-wh.png" alt="MOBIGEN">
             </h1>
-            <h2 class="title">BIGS<br />Data Portal</h2>
-            <p class="desc">창의적 사고와 끝없는 도전을 통해 새로운 미래를<br />창조함으로써 인류사회의 꿈을 실현하는 현대로템 데이터포털</p>
-            <p class="copyright">ⓒ 2024. HYUNDAI ROTEM COMPANY.</p>
+            <h2 class="title">Mobigen<br />Data Catalog</h2>
+            <p class="desc">창의적 사고와 끝없는 도전을 통해 새로운 미래를<br />창조함으로써 인류사회의 꿈을 실현하는 모비젠 데이터 카탈로그</p>
+            <p class="copyright">ⓒ 2024. MOBIGEN.</p>
           </div>
           <!-- login-content -->
           <div class="login-content">
@@ -29,15 +29,6 @@
                     <button type="button" class="mu-btn mu-btn-pw-mask" v-on:click="isShowPassword = !isShowPassword"><i :class="isShowPassword ? 'mu-icon-svg eye-on' : 'mu-icon-svg eye-off'"></i><span>비밀번호 숨김 해제</span></button>
                   </div>
                   <p v-if="login_error" class="complete-msg error">{{ login_result_message }}</p>
-                  <div class="login-type">
-
-                    <div class="mu-selectbox border-none">
-                      <select v-model="authType">
-                        <option value="GW">그룹웨어 인증</option>
-                        <option value="AD">AD 인증</option>
-                      </select>
-                    </div>
-                  </div>
                   <button type="button" class="mu-btn mu-btn-primary" @click.prevent="onLogin"><span>로그인</span></button>
                 </div>
               </fieldset>
@@ -66,16 +57,12 @@ const emits = defineEmits(['login'])
 
 const username = ref("")
 const password = ref("")
-const otp = ref("");
-const authType = ref("GW"); // 그룹웨어, AD
 const isShowPassword = ref(false)
 
 const onLogin = () => {
   const params = {
     username: username.value,
-    password: password.value,
-    otp: otp.value,
-    authType: authType.value
+    password: password.value
   }
   emits('login', params)
 }

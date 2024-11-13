@@ -10,7 +10,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const userStore = useUserStore()
 
   // 세션 초기화
-  const clearSession = async (long = false) => {
+  const clearSession = async () => {
     if (cookies.keys().includes('x-access-token')) cookies.remove('x-access-token');
     if (cookies.keys().includes('x-refresh-token')) cookies.remove('x-refresh-token');
     let user = {
@@ -24,11 +24,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
       adminMenu: [],
     };
     userStore.setUser(user);
-    if (long) {
-      return navigateTo('/logoutNotice')
-    } else {
-      return navigateTo('/')
-    }
+    return navigateTo('/')
   }
 
   // // Token 만료시간 조회
@@ -76,7 +72,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
       // 메뉴 정보가 없는 경우
       if (!result || result.length == 0) {
         await defaultAlert('로그아웃되었습니다. 다시 로그인 해주시기 바랍니다.')
-        clearSession(true)
+        clearSession()
       }
 
       // Token
@@ -92,8 +88,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
         if (xAccessTokenLeftTime <= 60) {
           // 1.1. Refresh Token 만료된 경우
           if (xRefreshTokenLeftTime <= 0) {
-            await defaultAlert("장시간 활동이 없어 자동으로 로그아웃되었습니다. <br>그룹웨어 Autoway 나의 업무 데이터 포털 메뉴를 클릭하여 로그인해 주세요");
-            clearSession(true)
+            await defaultAlert("장시간 활동이 없어 자동으로 로그아웃되었습니다.");
+            clearSession()
           }
           // 1.2. Refresh Token 만료되지 않은 경우
           else {
@@ -110,7 +106,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
                 }
               } else {
                 await errorAlert("인증 오류가 발생하였습니다.. 다시 로그인 해주시기 바랍니다.");
-                clearSession(true);
+                clearSession();
               }
             }
           }
@@ -166,16 +162,11 @@ export default defineNuxtRouteMiddleware((to, from) => {
     }
   }
 
-  if (to.path === '/' || to.path === '/logoutNotice') {
+  if (to.path === '/') {
     if(cookies.get('x-access-token') && cookies.get('x-refresh-token')) {
       return navigateTo('/main')
     } else {
       clearSession()
-    }
-  } else if (to.path === '/login') {
-    console.log('관리자 로그인')
-    if(cookies.get('x-access-token') && cookies.get('x-refresh-token')) {
-      return navigateTo('/main')
     }
   } else if (to.path === '/error') {
     console.log('에러 페이지')

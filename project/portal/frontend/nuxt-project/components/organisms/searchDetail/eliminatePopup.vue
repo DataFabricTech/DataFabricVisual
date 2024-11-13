@@ -252,7 +252,7 @@
                 <tr>
                   <th scope="row">API명</th>
                   <td>
-                    현대로템 데이터에 대한 API명 <br />(API Name for Hyundai ROTEM Data)
+                    모비젠 데이터에 대한 API명 <br />(API Name for MOBIGEN Data)
                   </td>
                 </tr>
                 <tr>
@@ -314,7 +314,7 @@
                   </tr>
                   <tr>
                     <th scope="row">설명</th>
-                    <td>현대로템 데이터카탈로그 시스템의 API 데이터 추출 기능입니다.</td>
+                    <td>모비젠 데이터 카탈로그 시스템의 API 데이터 추출 기능입니다.</td>
                   </tr>
                   <tr>
                     <th scope="row">요청주소</th>
@@ -377,66 +377,6 @@ while True:
     nextUri = res.json()['nextUri']
     res = requests.request("GET", nextUri)
     print(res.json())
-
-# ========================================
-# Dataframe 추출 코드 (저용량 데이터 추천)
-# ========================================
-
-import json
-import requests
-import pandas as pd
-import time
-
-# API 요청 정보 설정
-url = "https://{{ currentHostname }}:13200/data/extract"
-headers = {'Content-Type': 'application/json'}
-payload = json.dumps({
-    "system": "hive",
-    "user_id": "{{ userStore.getUser.user_id }}",
-    "password": "사용자비밀번호",
-    "select": "*",
-    "from": "{{ props.eliminateModal.entity.entity.attributes.qualifiedName.split("@")[0] }}",
-    "where": ""
-})
-
-# 데이터 추출 POST 요청
-res = requests.post(url, headers=headers, data=payload)
-response_data = res.json()
-
-# 컬럼명과 데이터를 저장할 리스트
-column_names = []
-data = []
-
-# 초기 응답에서 컬럼 정보 확인
-if 'columns' in response_data:
-    column_names = [col['name'] for col in response_data['columns']]
-
-# 반복적으로 데이터 수집
-while True:
-    if 'data' in response_data:
-        data.extend(response_data['data'])  # JSON 형식의 'data' 추가
-
-    # 'nextUri'가 없을 경우 종료
-    if 'nextUri' not in response_data:
-        break
-
-    # 다음 URI로 GET 요청
-    nextUri = response_data['nextUri']
-    res = requests.get(nextUri)
-    response_data = res.json()
-
-    # 컬럼 정보가 없는 경우 재확인
-    if not column_names and 'columns' in response_data:
-        column_names = [col['name'] for col in response_data['columns']]
-
-    time.sleep(2)  # 대기 시간 설정
-
-# JSON 데이터를 DataFrame으로 변환
-if column_names and data:
-    df = pd.DataFrame(data, columns=column_names)
-    print(df)
-else:
-    print("컬럼 정보 또는 데이터를 가져오지 못했습니다.")
 </pre>
               </div>
             </div>
@@ -1504,7 +1444,7 @@ const onClickFileEliminateButton = async () => {
     // 성공시 {}
     if (res && res.errorMessage && res.errorMessage != "") {
       queryError.value = true;
-      queryErrorMessage.value = res.errorMessage.replace("[ROTEM] ", "");
+      queryErrorMessage.value = res.errorMessage.replace("[MOBIGEN] ", "");
       errorAlert(queryErrorMessage.value)
       return;
     }

@@ -153,12 +153,6 @@ public class MetaDataManageController {
                 searchQuery.append(" AND ");
                 searchQuery.append(status + ":ACTIVE");
 
-                // 사내 테스트 시 dw_ dm_ 테이블이 없어 해당 아래 구문 제거 후 테스트
-                // 운영서버인 경우
-                if (isProd) searchQuery.append(" AND ((" + qualifiedName + ":dw_* OR " + qualifiedName + ":dm_*) AND -" + qualifiedName + ":dev_* )");
-                // 개발서버인 경우
-                else searchQuery.append(" AND (" + qualifiedName + ":dev_dw_* OR " + qualifiedName + ":dev_dm_*)");
-
                 searchQuery.append(" AND ");
                 
                 if (!searchQueryArr[0].toString().equals("")) {
@@ -182,12 +176,6 @@ public class MetaDataManageController {
                 searchQuery.append(typeName + ":" + param.get("typeName"));
                 searchQuery.append(" AND ");
                 searchQuery.append(status + ":ACTIVE");
-
-                // 사내 테스트 시 dw_ dm_ 테이블이 없어 해당 아래 구문 제거 후 테스트
-                // 운영서버인 경우
-                if (isProd) searchQuery.append(" AND ((" + qualifiedName + ":dw_* OR " + qualifiedName + ":dm_*) AND -" + qualifiedName + ":dev_* )");
-                // 개발서버인 경우
-                else searchQuery.append(" AND (" + qualifiedName + ":dev_dw_* OR " + qualifiedName + ":dev_dm_*)");
 
                 searchQuery.append(" AND ");
                 searchQuery.append("((");

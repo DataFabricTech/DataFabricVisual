@@ -8,15 +8,6 @@
 	비고 : 개발자용 임시 css
    --------------------------------------- */
 
-@font-face {
-  font-family:'hyundaiL';
-  src:url("../fonts/현대하모니 L.ttf") format("truetype");
-}
-@font-face {
-  font-family:'hyundaiM';
-  src:url("../fonts/현대하모니 M.ttf") format("truetype");
-}
-
 .comment-write { display: block; }
 
 
@@ -345,6 +336,10 @@ pre code {
 
 .data-box .inner-data.visual .data-thumb img {object-fit:fill;}
 .card-box .inner-thumb img {object-fit:fill;}
+
+.data-title.share {
+  font-size: 18px;
+}
 
 .admin-wrapper .data-detail-wrap .detail-section.close {
   border-radius: 0px;

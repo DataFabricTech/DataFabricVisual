@@ -33,7 +33,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       // Handle the request errors
     },
     onResponse({ request, response, options }) {
-      if (request != '/api/heartbeatToken') {
+      if (!request.includes('heartbeatToken')) {
         hideLoader()
         console.log("onResponse")
       }

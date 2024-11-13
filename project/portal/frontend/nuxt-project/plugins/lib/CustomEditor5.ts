@@ -164,8 +164,6 @@ class Editor extends ClassicEditor {
           'Times New Roman, Times, serif',
           'Trebuchet MS, Helvetica, sans-serif',
           'Verdana, Geneva, sans-serif',
-          '현대하모니 L, hyundaiL',
-          '현대하모니 M, hyundaiM',
       ],
       supportAllValues: true // 사용자가 지정하는 모든 폰트 지원
   },

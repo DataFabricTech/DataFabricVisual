@@ -27,12 +27,6 @@
             </ul>
           </nav>
           <ul class="top-menu">
-            <!-- <li>
-              <a @click="goToMenualPage()" class="mu-btn mu-btn-round"><div class="link-home">메뉴얼</div></a>
-            </li>
-            <li>
-              <a @click="goToAnalysisToolPage()" class="mu-btn mu-btn-round"><div class="link-home">분석도구</div></a>
-            </li> -->
             <li>
               <a @click="goToMyCatalog()"><span>{{ user.username }}</span>님</a>
             </li>
@@ -58,8 +52,8 @@
             <div class="sitemap-container">
               <div class="inner">
                 <div class="sitemap-slogan">
-                  <h2>HYUNDAI Rotem<br />Data Portal</h2>
-                  <p>창의적 사고와 끝없는 도전을 통해 새로운 미래를<br />창조함으로써 인류사회의 꿈을 실현하는 현대로템 데이터포털</p>
+                  <h2>Mobigen<br />Data Catalog</h2>
+                  <p>창의적 사고와 끝없는 도전을 통해 새로운 미래를<br />창조함으로써 인류사회의 꿈을 실현하는 모비젠 데이터 카탈로그</p>
                 </div>
                 <div class="sitemap-nav">
                   <!-- nav -->
@@ -110,8 +104,7 @@ const isLnbOpen = ref(false);
 
 // 마우스 올린 대메뉴 지정
 const addActive = (index, item) => {
-  // 활용사례의 경우 active되지 않도록 설정
-  if (item.title != '활용 사례 관리') activeIndex.value = index;
+  activeIndex.value = index;
 }
 
 // 마우스 올린 대메뉴 지정 해제

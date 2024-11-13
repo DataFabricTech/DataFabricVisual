@@ -2,6 +2,15 @@
   <div class="contents">
     <div>
       <div class="inner">
+        <div class="board-list-toolbar">
+          <h4>활용 사례</h4>
+          <div class="mu-item-group">
+            <button @click="onClickRegisterButton" type="button" class="mu-btn mu-btn-lg mu-btn-primary">
+              <i class="mu-icon-svg add"></i>
+              <span>등록하기</span>
+            </button>
+          </div>
+        </div>
         <div class="data-usecase-wrap">
           <div class="mu-heading">
             <!-- board-list-search -->
@@ -12,49 +21,36 @@
 
             <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getPost" />
           </div>
-          <ul class="data-box-list">
-            <li class="data-box" v-for="(item, index) in postList" :key="index">
-              <div class="inner-data visual">
-                <div class="data-thumb" v-html="item.image_html"></div>
-              </div>
-              <div class="inner-data">
-                <!-- title-group -->
-                <div class="title-group">
-                  <NuxtLink :to="'/share/board/detail?id=' + item.id">
-                    <strong class="data-title">{{ item.title }}</strong
-                    ><!-- 게시물 제목(1줄까지 출력) -->
-                    <p class="data-desc inner-cms-share" v-html="limitedContent(item.post_content)"></p>
-                    <!-- Description이 있는 경우 최대 1줄 출력(최대 50자 출력) -->
-                  </NuxtLink>
+          <hr><br>
+          <ul class="card-list">
+            <li class="card-box" v-for="(item, index) in postList" :key="index">
+              <NuxtLink :to="'/share/board/detail?id=' + item.id">
+                <div class="inner-thumb">
+                  <div v-html="item.image_html"></div>
                 </div>
-                <!-- //title-group -->
-                <div class="data-info">
-                  <dl>
-                    <dt class="blind">게시일</dt>
-                    <dd>{{ item.upload_date }}</dd>
-                  </dl>
+                <div class="inner-data">
+                  <div class="card-category">
+                      <strong class="data-title share">{{ item.title }}</strong
+                      ><!-- 게시물 제목(1줄까지 출력) -->
+                      <p class="card-desc" v-html="limitedContent(item.post_content)"></p>
+
+                  </div>
+                  <div class="data-info">
+                    <dl>
+                      <dt class="blind">게시일</dt>
+                      <dd>{{ item.upload_date }}</dd>
+                    </dl>
+                  </div>
                 </div>
-              </div>
-            </li>
-            <li v-if="postList.length == 0">
-              <p class="nodata">활용 사례 게시글이 존재하지 않습니다.</p>
+              </NuxtLink>
             </li>
           </ul>
+          <div>
+            <p class="nodata">활용 사례 게시글이 존재하지 않습니다.</p>
+          </div>
 
           <pagination :paging="pagingObj" @onClickPage="onClickPage" />
         </div>
-
-        <!-- mu-button-wrap -->
-        <!-- <div class="mu-button-wrap">
-          <button
-            type="button"
-            class="mu-btn mu-btn-lg mu-btn-primary"
-            @click="onClickRegisterButton"
-          >
-            <span>등록</span>
-          </button>
-        </div> -->
-        <!-- //mu-button-wrap -->
       </div>
     </div>
   </div>
@@ -109,7 +105,7 @@ onMounted(() => getPost(1));
 const postType = ref<string>("share_board");
 const pagingObj = ref<PagingObj>({
   total: 0, // 전체 데이터 건수
-  limit: 10, // 한 페이지에 보여줄 데이터 건수
+  limit: 8, // 한 페이지에 보여줄 데이터 건수
   block: 10, // 한 화면에서 보여줄 페이지 수
   currentPage: 1, // 현재 페이지 번호
 });
@@ -120,13 +116,57 @@ const searchObj = ref<SearchObj>({
 });
 const maxLength = ref<number>(100);
 
+// 이미지 제거
 const limitedContent = (post_content: string): string => {
-  if (post_content.length > maxLength.value) {
-    return post_content.slice(0, maxLength.value) + "...";
-  } else {
-    return post_content;
+  const tempDiv = document.createElement('div')
+
+  const images = tempDiv.querySelectorAll('img');
+  images.forEach(img => img.remove())
+
+  const textWithLineBreaks = post_content
+        .replace(/<[^>]+>/g, '') // HTML 태그 제거
+        // .replace(/<p><\/p>/g, '') // p 태그 제거
+        // .replace(/<\/[^>]+>/g, '\n') // 닫는 태그 뒤에 줄바꿈 추가
+        // .replace(/<\/?span>/g, '') // span 태그 제거
+        .replace(/\n+/g, '\n') // 연속된 줄바꿈을 하나로 줄임
+        .replace(/^\s*[\r\n]/gm, "") // 빈 줄바꿈만 제거
+
+  // 줄바꿈으로 나누고, 첫 1줄만 가져오기
+  const lines = textWithLineBreaks.split('\n');
+  post_content = lines.slice(0, 1).join('\n');
+
+  // 가로 길이가 1줄을 넘어가면 ... 처리
+  const maxWidth = 195
+  const truncated = truncateText(post_content, maxWidth)
+  tempDiv.innerHTML = truncated
+
+  // 내용이 없는 경우 ...
+  if (tempDiv.innerHTML == '') {
+    tempDiv.innerHTML = '<p>...</p>'
   }
+
+  return tempDiv.innerHTML
 };
+
+const truncateText = (content, maxWidth) => {
+  // Canvas 생성
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
+
+  // 텍스트 길이 측정
+  let truncatedText = content;
+  if (context.measureText(content).width > maxWidth) {
+    // 텍스트가 길이를 초과하면 `...` 포함한 텍스트로 줄이기
+    for (let i = content.length - 1; i > 0; i--) {
+      truncatedText = content.slice(0, i) + "...";
+      if (context.measureText(truncatedText).width <= maxWidth) {
+        break;
+      }
+    }
+  }
+
+  return truncatedText;
+}
 
 // 공지사항 목록 조회
 const getPost = async (offset: number = 1): Promise<void> => {

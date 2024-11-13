@@ -5,8 +5,8 @@
       <div class="inner">
         <div class="left-channel">
           <div class="subject">
-            <h2 class="title">BIGS <br>Data Portal</h2>
-            <p class="desc">Bigdata Information Gathering & analysis System</p>
+            <h2 class="title">MOBIGEN <br>DATA CATALOG</h2>
+            <p class="desc">mobigen data catalog</p>
           </div>
           <!-- total-channel-search -->
           <div class="total-channel-search">

@@ -22,11 +22,6 @@ import java.util.Map;
 @Controller
 @AllArgsConstructor
 public class UserController {
-
-    @Value("${properties.tempuser.ids}")
-    private final String[] tempUsers;
-    
-
     private final SessionManager sessionManager;
     private final UserService userService;
 
@@ -61,24 +56,6 @@ public class UserController {
         // String password = sessionManager.decryptRSAString(request, (String)param.get("password")); // RSA PRIVATE KEY null 상태 탐색중
         String password = param.get("password");
         return userService.authenticate(request, response, username, password);
-    }
-
-    @ResponseJsonResult
-    @PostMapping("/authenticateGW")
-    public Object authenticateGW(@RequestBody Map<String, String> param, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String username = param.get("username");
-        // String password = sessionManager.decryptRSAString(request, (String)param.get("password")); // RSA PRIVATE KEY null 상태 탐색중
-        String password = param.get("password");
-        return userService.authenticateGW(request, response, username, password);
-    }
-
-    @ResponseJsonResult
-    @PostMapping("/authenticateAD")
-    public Object authenticateAD(@RequestBody Map<String, String> param, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String username = param.get("username");
-        // String password = sessionManager.decryptRSAString(request, (String)param.get("password")); // RSA PRIVATE KEY null 상태 탐색중
-        String password = param.get("password");
-        return userService.authenticateAD(request, response, username, password);
     }
 
     @ResponseJsonResult

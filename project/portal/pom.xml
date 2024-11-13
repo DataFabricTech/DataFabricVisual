@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.mobigen.iris</groupId>
-    <artifactId>rotem-catalog</artifactId>
+    <artifactId>mobigen-catalog</artifactId>
     <version>3.2.5</version>
 <!--    <packaging>war</packaging>-->
     <packaging>jar</packaging>
 
-    <name>ROTEM-CATALOG</name>
+    <name>MOBIGEN-CATALOG</name>
     <description>IRIS Web development framework - Servlet Stack</description>
 
     <parent>
@@ -23,7 +23,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring.boot.mainclass>com.mobigen.datalake.DataLakeApplication</spring.boot.mainclass>
         <java.version>21</java.version>
-        <finalName>rotem-catalog</finalName>
+        <finalName>mobigen-catalog</finalName>
     </properties>
 
     <dependencies>
@@ -222,15 +222,6 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
     
-        <!-- Maven에서 사용할 수 있도록 암호화 모듈 추가 -->
-        <dependency>
-            <groupId>com.duruan.shadowcube</groupId>
-            <artifactId>scdkjava</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/libs/scdkjava.jar</systemPath>
-        </dependency>
-
         <!-- XSS 방어를 위한 jsoup 추가 -->
         <dependency>
             <groupId>org.jsoup</groupId>

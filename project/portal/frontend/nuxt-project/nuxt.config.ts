@@ -33,7 +33,7 @@ function _routeAlias(route: any) {
 export default defineNuxtConfig({
   app: {
     head: {
-      title: '현대로템 BIGS 데이터 포털'
+      title: '모비젠 카탈로그 포털'
     }
   },
 

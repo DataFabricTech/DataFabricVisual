@@ -26,11 +26,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.duruan.shadowcube.SecureStreamCreator;
-import com.duruan.shadowcube.SecureStreamException;
-import com.duruan.shadowcube.SecureStreamReader;
 import com.mobigen.framework.security.SessionManager;
-import com.mobigen.framework.utility.FileEncDecUtil;
 
 import io.trino.jdbc.$internal.joda.time.LocalDateTime;
 import io.trino.jdbc.$internal.joda.time.format.DateTimeFormatter;
@@ -55,21 +51,6 @@ public class DetailEliminateService {
 
     @Value("${properties.maxFileSize}")
     private String maxFileSize;
-
-    @Value("${shadowcube.enabled}")
-    private String ENABLED;
-
-    @Value("${shadowcube.serial-id}")
-    private String SERIAL_ID;
-
-    @Value("${shadowcube.password}")
-    private String PASSWORD;
-
-    @Value("${shadowcube.license}")
-    private String LICENSE;
-
-    @Value("${shadowcube.certificate-path}")
-    private String CERTIFICATE_PATH;
 
     /**
      * 파일 추출 이력 저장
@@ -433,116 +414,34 @@ public class DetailEliminateService {
             long fileSize = file.length();
             log.info("file size : " + fileSize);
 
-            log.info("use secureFile : " + ENABLED);
-
-            // 암호화 처리
-            String ldPath = System.getenv("LD_LIBRARY_PATH");
-            log.info("LD_LIBRARY_PATH : " + ldPath);
-            
-            if (ENABLED.equals("true")) {
-                String encFileName = parameter.get("fileName") + "_" + formattedDateTime + "_enc";
-                encFilePath = fileUploadPath + "/" + encFileName + ".csv";
-                    
-                log.info("SecureStreamCreateor.Init() start !!");
-                SecureStreamCreator.Init(LICENSE, PASSWORD, CERTIFICATE_PATH);
-                log.info("SecureStreamCreateor.Init() end !!");
+            try (FileInputStream fis = new FileInputStream(file)) {
+                response.setContentType("application/octet-stream");
+                response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".csv");
+                response.setContentLength((int) fileSize);
                 
-                log.info("SecureStreamReader encryptor create start !!");
-                SecureStreamReader ssr = new SecureStreamCreator().CreateEncryptReader(filePath, 0, 0);
-                log.info("SecureStreamReader encryptor create end !!");
+                // 파일 내용을 클라이언트에 직접 출력
+                log.info("outputStream write start !!");
+                byte[] buffer = new byte[4096]; // 4KB 버퍼 생성
+                int bytesRead;
 
-                if (ssr != null) {
-                    log.info("SecureStreamReader ReadAllToFile() start !!");
-                    ssr.ReadAllToFile(encFilePath, null);
-                    log.info("SecureStreamReader ReadAllToFile() end !!");
-                    
-                    log.info("SecureStreamReader Close() start !!");
-                    ssr.Close();
-                    log.info("SecureStreamReader Close() start !!");
-                    log.info("original file encoded !!");
+                // 파일을 바이트 단위로 읽어서 OutputStream에 씁니다.
+                while ((bytesRead = fis.read(buffer)) != -1) {
+                    os.write(buffer, 0, bytesRead);
                 }
 
-                // 파일 복호화 처리
-                // String decFileName = parameter.get("fileName") + "_" + formattedDateTime + "_dec";
-                // String decFilePath = fileUploadPath + "/" + decFileName + ".csv";
+                os.flush(); // OutputStream의 버퍼를 강제로 비워서 데이터를 전송합니다.
+                // os.close();
+                log.info("outputStream write end !!");
 
-                // log.info("SecureStreamReader decryptor create start !!");
-                // SecureStreamReader dssr = new SecureStreamCreator().CreateDecryptReader(encFilePath);
-                // log.info("SecureStreamReader decryptor create end !!");
-
-                // if (dssr != null)
-                // {
-                //     if (dssr.IsSecureSource() == true) {
-                //         log.info("IsSecureSource : true");
-                //         log.info("SecureStreamReader ReadAllToFile() start !!");
-                //         dssr.ReadAllToFile(decFilePath, null);
-                //         log.info("SecureStreamReader ReadAllToFile() end !!");
-                //     }
-                //     dssr.Close();
-                // }
-
-                try (FileInputStream efis = new FileInputStream(encFilePath)) {
-                    // ============== 암호화된 파일을 읽어서 응답으로 스트리밍 ==============
-
-                    File encFile = new File(encFilePath);
-
-                    long encFileSize = encFile.length();
-                    log.info("encFile size : " + encFileSize);
-
-                    response.setContentType("application/octet-stream");
-                    response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".csv");
-                    response.setContentLength((int) encFileSize);
-                    
-                    log.info("encFile outputStream write start !!");
-                    byte[] buffer = new byte[4096];
-                    int bytesRead;
-                    while ((bytesRead = efis.read(buffer)) != -1) {
-                        os.write(buffer, 0, bytesRead);
-                    }
-
-                    os.flush(); // 버퍼의 내용을 클라이언트로 전송
-                    // os.close();
-                    log.info("encFile outputStream write end !!");
-
-                    // finally에서 처리
-                    // efis.close();
-                    // rs.close();
-                    // statement.close();
-                    // connection.close();
-                } catch (IOException e) {
-                    log.error("Error while reading the encrypted file: ", e);
-                    throw new Exception("Failed to read encrypted file", e);
-                }
-                // =============================================================
-            } else {
-                try (FileInputStream fis = new FileInputStream(file)) {
-                    response.setContentType("application/octet-stream");
-                    response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".csv");
-                    response.setContentLength((int) fileSize);
-                    
-                    // 파일 내용을 클라이언트에 직접 출력
-                    log.info("outputStream write start !!");
-                    byte[] buffer = new byte[4096]; // 4KB 버퍼 생성
-                    int bytesRead;
-    
-                    // 파일을 바이트 단위로 읽어서 OutputStream에 씁니다.
-                    while ((bytesRead = fis.read(buffer)) != -1) {
-                        os.write(buffer, 0, bytesRead);
-                    }
-    
-                    os.flush(); // OutputStream의 버퍼를 강제로 비워서 데이터를 전송합니다.
-                    // os.close();
-                    log.info("outputStream write end !!");
-    
-                    // finally에서 처리
-                    // rs.close();
-                    // statement.close();
-                    // connection.close();
-                } catch (Exception e) {
-                    log.error("Error while processing the CSV file: ", e);
-                    throw new Exception("Failed to read or send CSV file", e);
-                }
+                // finally에서 처리
+                // rs.close();
+                // statement.close();
+                // connection.close();
+            } catch (Exception e) {
+                log.error("Error while processing the CSV file: ", e);
+                throw new Exception("Failed to read or send CSV file", e);
             }
+        
         } catch (Exception e) {// 응답 설정
             // 해당 파일이 있는 경우 제거
             if (!filePath.equals("")) {

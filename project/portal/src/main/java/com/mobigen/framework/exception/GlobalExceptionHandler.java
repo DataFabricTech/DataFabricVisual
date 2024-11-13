@@ -150,7 +150,7 @@ public class GlobalExceptionHandler {
         }
 
         JsonResult js = new JsonResult();
-        js.setErrorMessage("[ROTEM] " + msg);
+        js.setErrorMessage("[MOBIGEN] " + msg);
 
         // sentry
         // Sentry.captureException(exception, msg);

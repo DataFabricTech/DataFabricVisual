@@ -8,14 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -65,9 +61,9 @@ public class WebSecurityConfiguration {
         // Set perimssions on endpoints
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers(properties.getSecurity().getPermitAlls()).permitAll()
-                .requestMatchers("/admin/*", "/api/admin/*").hasAuthority("Super-Admin")
-                .requestMatchers("/admin/manager/*", "/api/admin/manager/*").hasAuthority("Admin")
                 .requestMatchers("/admin/data/*", "/api/admin/data/*").hasAuthority("Manager")
+                .requestMatchers("/admin/manager/*", "/api/admin/manager/*").hasAuthority("Admin")
+                .requestMatchers("/admin/*", "/api/admin/*").hasAuthority("Super-Admin")
                 .requestMatchers("/**", "/api/**").hasAuthority("User")
                 .anyRequest()
                 .authenticated());
