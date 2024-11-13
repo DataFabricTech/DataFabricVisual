@@ -332,6 +332,9 @@ const setCategoryGraph = () => {
     categoryData: graphCategoryList.value,
     pixelQuality: "middle",
     isFitScreenInit: true,
+    edgeStyle: {
+      color: "#BABFC8",
+    },
     eventHandler: {
       onClick: (e: any, id: any, type: any) => {
         if (!showDropDown.value) {
