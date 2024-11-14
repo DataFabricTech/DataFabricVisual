@@ -14,6 +14,7 @@ export interface NodeData {
   label: string;
   path: string;
   fqn: string;
+  entityType: string;
 }
 
 export interface EdgeData {

@@ -5,7 +5,7 @@
     </div>
     <Preview
       :preview-data="previewData"
-      :model-type="dataModelType"
+      :model-type="previewModelType"
       @change="getPreviewOn"
       :is-show-preview="isShowPreview"
     ></Preview>
@@ -69,6 +69,8 @@ const dataModelDetailStore = useDataModelDetailStore();
 const { getDataModelFqn } = dataModelDetailStore;
 const { dataModelType } = storeToRefs(dataModelDetailStore);
 
+let previewModelType = "table";
+
 onBeforeMount(async () => {
   isShowPreview.value = false;
   setEmptyFilter();
@@ -85,8 +87,11 @@ const getPreviewOn = (isPreviewClosed: boolean) => {
 
 const modelChoose = async (nodeData: NodeData) => {
   if (nodeData) {
+    previewModelType =
+      nodeData.entityType === "container" ? "storage" : "table";
+
     isShowPreview.value = true;
-    await getPreviewData(dataModelType.value, nodeData);
+    await getPreviewData(previewModelType, nodeData);
   }
 };
 
