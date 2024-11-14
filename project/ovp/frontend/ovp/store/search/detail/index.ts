@@ -205,7 +205,14 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   };
 
   const getProfile = async () => {
-    const data = await $api(`/api/search/detail/profile/${dataModelFqn}`);
+    let type = defaultInfo.value.index;
+
+    const isTableOrModel = _.isEqual(type, "table") || $_isEqual(type, "model");
+    const url = isTableOrModel
+        ? `/api/search/detail/profile/${dataModelFqn}`
+        : `/api/search/detail/containers/profile/${dataModelFqn}`;
+    const data = await $api(url);
+
     profileList.value = data.data;
   };
 
