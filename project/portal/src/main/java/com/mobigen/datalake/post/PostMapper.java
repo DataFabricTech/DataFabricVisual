@@ -11,8 +11,6 @@ public interface PostMapper {
     List getPostList(Map<String, String> parma) throws Exception;
     Integer getPostListTotal(Map<String, String> parma) throws Exception;
 
-    List getPostAnswerList(String postId);
-
     Map<String, Object> getPostOne(String postId) throws Exception;
     void updateViewCount(String postId) throws Exception;
     Integer insertPost(Map<String, Object> param) throws Exception;
@@ -20,11 +18,6 @@ public interface PostMapper {
     Integer updatePostFaqOrdNo(Map<String, Object> param) throws Exception;
 
     Integer deletePost(Integer id, String post_type) throws Exception;
-    
-    Integer updateAdminReply(Map<String, Object> param) throws Exception;
-    Integer insertPostAnswer(Map<String, Object> param) throws Exception;
-    Integer updatePostAnswer(Map<String, Object> param) throws Exception;
-    Integer deleteAdminReply(Integer answer_id) throws Exception;
 
     List getMailUserList() throws Exception;
 }

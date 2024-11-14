@@ -2,7 +2,7 @@
   <div class="contents">
     <div>
       <request-edit-inner
-        :post="post"
+        :dataRequest="dataRequest"
         @cancelMethod="onClickCancelButton"
         @saveMethod="onClickSaveButton"
         :isUpdate="true"
@@ -55,14 +55,14 @@
 </template>
 
 <script setup lang="ts">
-import RequestEditInner from "@organisms/post/request-edit-inner";
+import RequestEditInner from "@organisms/dataRequest/request-edit-inner";
 import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import { useNuxtApp, useRoute, useRouter } from "nuxt/app";
 import { onMounted, ref } from "vue";
 import { successAlert } from "@/components/functional/alert/alert-default";
 
 definePageMeta({
-  name: "DataRequestPostUpdate",
+  name: "DataRequestUpdate",
   layout: "user",
 });
 
@@ -70,24 +70,20 @@ const { $ofetch } = useNuxtApp();
 const route = useRoute();
 const router = useRouter();
 
-interface Post {
-  admin_reply_status: boolean;
-  benefit_content: string;
-  category: string;
-  data_name: string;
-  dept_nm: string;
-  id: number;
-  is_open: boolean;
-  post_content: string;
-  post_type: string;
-  process_status: string;
-  title: string;
-  upload_date: string;
-  user_nm: string;
-  view_count: number;
-  writer: string;
-  request_start?: string;
-  request_end?: string;
+interface DataRequest {
+  id: number
+	writer: string
+	request_type: number
+	title: string
+	data_name: string
+	contents: string
+	request_start?: string
+	request_end?: string
+	benefit_content: string
+	create_date: string
+	update_date: string
+	process_status: number
+	finish_date: string
 }
 
 interface File {
@@ -104,47 +100,40 @@ interface File {
 
 onMounted(() => {
   let id = route.query.id;
-  getPost(id);
+  getDataRequestOne(id);
 });
 
 const files = ref<Array<File>>([]);
 const delete_files = ref<Array<File>>([]);
-const post = ref<Post>({
-  admin_reply_status: false,
-  benefit_content: "",
-  category: "",
-  data_name: "",
-  dept_nm: "",
+const dataRequest = ref<DataRequest>({
   id: 0,
-  is_open: false,
-  post_content: "",
-  post_type: "",
-  process_status: "",
-  title: "",
-  upload_date: "",
-  user_nm: "",
-  view_count: 0,
-  writer: "",
+	writer: "",
+	request_type: 0,
+	title: "",
+	data_name: "",
+	contents: "",
+	request_start: "",
+	request_end: "",
+	benefit_content: "",
+	create_date: "",
+	update_date: "",
+	process_status: 0,
+	finish_date: ""
 });
 
-const getPost = async (id: number): Promise<void> => {
+const getDataRequestOne = async (id: number): Promise<void> => {
   try {
-    let { data: result } = await $ofetch(`/api/post/one?postId=${id}`);
+    let { data: result } = await $ofetch(`/api/dataRequest/one?id=${id}`);
     files.value = result.fileList;
-    post.value = result.post;
+    dataRequest.value = result.dataRequest;
 
     // 데이터 요청의 경우 앞에 구분 설정
-    const start_category = post.value.title.indexOf("[");
-    const end_category = post.value.title.indexOf("]");
-    post.value.category = post.value.category;
-    post.value.request_start = post.value.request_start
-      ? post.value.request_start.replace(/([.])/g, "-")
+    dataRequest.value.request_start = dataRequest.value.request_start
+      ? dataRequest.value.request_start.replace(/([.])/g, "-")
       : "";
-    post.value.request_end = post.value.request_end
-      ? post.value.request_end.replace(/([.])/g, "-")
+    dataRequest.value.request_end = dataRequest.value.request_end
+      ? dataRequest.value.request_end.replace(/([.])/g, "-")
       : "";
-    // this.$refs.requestEditInner.request_start = post.value.request_start;
-    // this.$refs.requestEditInner.request_end = post.value.request_end;
   } catch (error) {
     console.log(error);
   }
@@ -202,32 +191,31 @@ const onClickSaveButton = async (): Promise<void> => {
       formData.append("delete_files", file.file_id);
     });
 
-    formData.append("post.id", post.value.id);
-    formData.append("post.post_type", post.value.post_type);
-    formData.append("post.title", post.value.title);
-    formData.append("post.data_name", post.value.data_name);
-    formData.append("post.post_content", post.value.post_content);
-    formData.append("post.process_status", post.value.process_status);
-    formData.append("post.benefit_content", post.value.benefit_content);
-    formData.append("post.category", post.value.category);
+    formData.append("dataRequest.id", dataRequest.value.id);
+    formData.append("dataRequest.request_type", dataRequest.value.request_type);
+    formData.append("dataRequest.title", dataRequest.value.title);
+    formData.append("dataRequest.data_name", dataRequest.value.data_name);
+    formData.append("dataRequest.contents", dataRequest.value.contents);
+    formData.append("dataRequest.process_status", dataRequest.value.process_status);
+    formData.append("dataRequest.benefit_content", dataRequest.value.benefit_content);
     formData.append(
-      "post.request_start",
-      post.value.request_start == null ? "" : post.value.request_start
+      "dataRequest.request_start",
+      dataRequest.value.request_start == null ? "" : dataRequest.value.request_start
     );
     formData.append(
-      "post.request_end",
-      post.value.request_end == null ? "" : post.value.request_end
+      "dataRequest.request_end",
+      dataRequest.value.request_end == null ? "" : dataRequest.value.request_end
     );
 
-    $ofetch("/api/post/update/saveFile", {
+    $ofetch("/api/dataRequest/update/saveFile", {
       method: "POST",
       body: formData,
     }).then(async (res: { errorMessage: string }) => {
       if (res) {
         if (res.errorMessage && res.errorMessage != "") {
-          await errorAlert("저장에 실패하였습니다.");
+          await errorAlert("수정에 실패하였습니다.");
         } else {
-          await successAlert("글이 저장되었습니다.");
+          await successAlert("글이 수정되었습니다.");
           router.push({ path: "/data/request" });
         }
       }

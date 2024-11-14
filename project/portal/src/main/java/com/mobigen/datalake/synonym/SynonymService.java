@@ -10,6 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -22,10 +23,10 @@ import jakarta.mail.Message;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class SynonymService {
 
     private final PostMapper postMapper;
@@ -33,6 +34,10 @@ public class SynonymService {
     private final SynonymMapper synonymMapper;
     private final SessionManager sessionManager;
     private final JavaMailSender javaMailSender;
+    
+    @Value("${properties.activeSendMail.synonym}")
+	public boolean activeSendMail;
+    
 
     // 동의어 목록 조회
     public List<Map> getSynonymList(Map params) throws Exception {
@@ -161,7 +166,10 @@ public class SynonymService {
             addDeleteRequestItemResult += synonymMapper.addDeleteRequestItemInfo(req_params);
         }
 
-        sendDeleteRequestMail(params, request);
+        // 메일발송기능 활성화 여부
+        if (activeSendMail) {
+            sendDeleteRequestMail(params, request);
+        }
 
         result.put("addDeleteRequestResult", addDeleteRequestResult);
         result.put("addDeleteRequestItemResult", addDeleteRequestItemResult);
@@ -329,20 +337,22 @@ public class SynonymService {
         if (deleteSynonym >= 0) {
             confirmResult = synonymMapper.confirmSynonymRequestOne(params);
 
-            // 메일 처리
-            Map writer = (Map) userMapper.getUserMaster((String) params.get("req_user"));
+            // 메일발송기능 활성화 여부
+            if (activeSendMail) {
+                Map writer = (Map) userMapper.getUserMaster((String) params.get("req_user"));
 
-            String strUserEmail = (String) writer.get("user_email");
+                String strUserEmail = (String) writer.get("user_email");
 
-            if (strUserEmail != null && !"".equals(strUserEmail)) {
-                // String strUserEmailDecode = Crypto.AES_Decode(strUserEmail);
-                // if (strUserEmailDecode != null && !"".equals(strUserEmailDecode)) {
-                // decode
-                // params.put("writer_email", strUserEmailDecode);
                 if (strUserEmail != null && !"".equals(strUserEmail)) {
-                    params.put("writer_email", strUserEmail);
-                    params.put("writer_user_nm", (String) writer.get("user_nm"));
-                    sendConfirmMail(params, request);
+                    // String strUserEmailDecode = Crypto.AES_Decode(strUserEmail);
+                    // if (strUserEmailDecode != null && !"".equals(strUserEmailDecode)) {
+                    // decode
+                    // params.put("writer_email", strUserEmailDecode);
+                    if (strUserEmail != null && !"".equals(strUserEmail)) {
+                        params.put("writer_email", strUserEmail);
+                        params.put("writer_user_nm", (String) writer.get("user_nm"));
+                        sendConfirmMail(params, request);
+                    }
                 }
             }
         }
@@ -359,20 +369,22 @@ public class SynonymService {
 
         rejectResult = synonymMapper.rejectSynonymRequestOne(params);
 
-        // 메일 처리
-        Map writer = (Map) userMapper.getUserMaster((String) params.get("req_user"));
+        // 메일발송기능 활성화 여부
+        if (activeSendMail) {
+            Map writer = (Map) userMapper.getUserMaster((String) params.get("req_user"));
 
-        String strUserEmail = (String) writer.get("user_email");
+            String strUserEmail = (String) writer.get("user_email");
 
-        if (strUserEmail != null && !"".equals(strUserEmail)) {
-            // String strUserEmailDecode = Crypto.AES_Decode(strUserEmail);
-            // if (strUserEmailDecode != null && !"".equals(strUserEmailDecode)) {
-            // decode
-            // params.put("writer_email", strUserEmailDecode);
             if (strUserEmail != null && !"".equals(strUserEmail)) {
-                params.put("writer_email", strUserEmail);
-                params.put("writer_user_nm", (String) writer.get("user_nm"));
-                sendRejectMail(params, request);
+                // String strUserEmailDecode = Crypto.AES_Decode(strUserEmail);
+                // if (strUserEmailDecode != null && !"".equals(strUserEmailDecode)) {
+                // decode
+                // params.put("writer_email", strUserEmailDecode);
+                if (strUserEmail != null && !"".equals(strUserEmail)) {
+                    params.put("writer_email", strUserEmail);
+                    params.put("writer_user_nm", (String) writer.get("user_nm"));
+                    sendRejectMail(params, request);
+                }
             }
         }
 
@@ -394,25 +406,28 @@ public class SynonymService {
             deleteAllParams.put("response", params.get("response"));
             rejectAllResult += synonymMapper.rejectSynonymRequestAll(deleteAllParams);
 
-            // 메일 처리
-            params.put("req_user", req.get("req_user"));
-            params.put("term", req.get("term"));
-            params.put("synonyms", req.get("synonyms"));
-            params.put("request", req.get("request"));
-            
-            Map writer = (Map) userMapper.getUserMaster((String) params.get("req_user"));
+            // 메일발송기능 활성화 여부
+            if (activeSendMail) {
 
-            String strUserEmail = (String) writer.get("user_email");
+                params.put("req_user", req.get("req_user"));
+                params.put("term", req.get("term"));
+                params.put("synonyms", req.get("synonyms"));
+                params.put("request", req.get("request"));
+                
+                Map writer = (Map) userMapper.getUserMaster((String) params.get("req_user"));
 
-            if (strUserEmail != null && !"".equals(strUserEmail)) {
-                // String strUserEmailDecode = Crypto.AES_Decode(strUserEmail);
-                // if (strUserEmailDecode != null && !"".equals(strUserEmailDecode)) {
-                // decode
-                // params.put("writer_email", strUserEmailDecode);
+                String strUserEmail = (String) writer.get("user_email");
+
                 if (strUserEmail != null && !"".equals(strUserEmail)) {
-                    params.put("writer_email", strUserEmail);
-                    params.put("writer_user_nm", (String) writer.get("user_nm"));
-                    sendRejectMail(params, request);
+                    // String strUserEmailDecode = Crypto.AES_Decode(strUserEmail);
+                    // if (strUserEmailDecode != null && !"".equals(strUserEmailDecode)) {
+                    // decode
+                    // params.put("writer_email", strUserEmailDecode);
+                    if (strUserEmail != null && !"".equals(strUserEmail)) {
+                        params.put("writer_email", strUserEmail);
+                        params.put("writer_user_nm", (String) writer.get("user_nm"));
+                        sendRejectMail(params, request);
+                    }
                 }
             }
         }
@@ -455,25 +470,27 @@ public class SynonymService {
             confirmAllResult += synonymMapper.confirmSynonymRequestAll(req_info);
             deleteManyResult += synonymMapper.deleteSynonymAll(req_info);
 
-            // 메일 처리
-            params.put("req_user", req_info.get("req_user"));
-            params.put("term", req_info.get("term"));
-            params.put("synonyms", req_info.get("synonyms"));
-            params.put("request", req_info.get("request"));
-            
-            Map writer = (Map) userMapper.getUserMaster((String) params.get("req_user"));
+            // 메일발송기능 활성화 여부
+            if (activeSendMail) {
+                params.put("req_user", req_info.get("req_user"));
+                params.put("term", req_info.get("term"));
+                params.put("synonyms", req_info.get("synonyms"));
+                params.put("request", req_info.get("request"));
+                
+                Map writer = (Map) userMapper.getUserMaster((String) params.get("req_user"));
 
-            String strUserEmail = (String) writer.get("user_email");
+                String strUserEmail = (String) writer.get("user_email");
 
-            if (strUserEmail != null && !"".equals(strUserEmail)) {
-                // String strUserEmailDecode = Crypto.AES_Decode(strUserEmail);
-                // if (strUserEmailDecode != null && !"".equals(strUserEmailDecode)) {
-                // decode
-                // params.put("writer_email", strUserEmailDecode);
                 if (strUserEmail != null && !"".equals(strUserEmail)) {
-                    params.put("writer_email", strUserEmail);
-                    params.put("writer_user_nm", (String) writer.get("user_nm"));
-                    sendConfirmMail(params, request);
+                    // String strUserEmailDecode = Crypto.AES_Decode(strUserEmail);
+                    // if (strUserEmailDecode != null && !"".equals(strUserEmailDecode)) {
+                    // decode
+                    // params.put("writer_email", strUserEmailDecode);
+                    if (strUserEmail != null && !"".equals(strUserEmail)) {
+                        params.put("writer_email", strUserEmail);
+                        params.put("writer_user_nm", (String) writer.get("user_nm"));
+                        sendConfirmMail(params, request);
+                    }
                 }
             }
         }

@@ -99,6 +99,9 @@ http-client-configuration:
   idle-timeout: 60
 
 properties:
+  activeSendMail:
+    data-request: false
+    synonym: false
   isSumExternal: true # 메인화면 > 전체 데이터 수 (외부데이터 포함 여부)
   maxFileSize: 1GB # GB, MB, KB
   fileUploadPath: /data1/ot_data_catalog_portal_v2/data/

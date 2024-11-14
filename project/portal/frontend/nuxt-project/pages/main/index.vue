@@ -228,9 +228,9 @@
               <div :class="myRequestDataList && myRequestDataList.length > 0 ? 'main-board' : ''">
                 <ul v-if="myRequestDataList && myRequestDataList.length > 0 " class="main-article-list">
                   <li v-for="(dr, idx) in myRequestDataList" style="list-style-type: none;">
-                    <span :class="getClassFromStatus(dr.process_status)">{{ dr.process_status }}</span>
+                    <span :class="getClassFromStatus(dr.process_status)">{{ getProcessStatus(dr.process_status) }}</span>
                     <a @click="goToRequestDataDetail(dr.id)" class="mu-ellipsis">{{ dr.title }}</a>
-                    <span class="date">{{ yyyyMMdddot(dr.upload_date)}}</span>
+                    <span class="date">{{ yyyyMMdddot(dr.create_date)}}</span>
                   </li>
                 </ul>
                 <div v-else class="data-banner">
@@ -826,12 +826,21 @@ const goToMetaDataDetail = (id) => {
 // 데이터 요청 상태 스타일 지정
 const getClassFromStatus = (status) => {
   let className = 'step-process'
-  if (status == '신청') return className + ' apply'
-  if (status == '검토중') return className + ' review'
-  if (status == '제공') return className + ' supply'
-  if (status == '미제공') return className + ' unsupply'
-  if (status == '진행중') return className + ' ing'
-  else className
+  if (status == 0) return 'apply ' + className
+  if (status == 1) return 'review ' + className
+  if (status == 2) return 'ing ' + className
+  if (status == 3) return 'supply ' + className
+  if (status == 4) return 'unsupply ' + className
+  else return className
+}
+
+const getProcessStatus = (status) => {
+  if (status == 0) return '신청'
+  if (status == 1) return '검토중'
+  if (status == 2) return '진행중'
+  if (status == 3) return '제공'
+  if (status == 4) return '미제공'
+  if (status == 5) return '삭제됨'
 }
 
 // 왼쪽 하단 탭 클릭 이벤트

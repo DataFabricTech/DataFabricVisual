@@ -4,12 +4,12 @@
       <!-- board-wrap -->
       <div class="board-wrap">
         <div class="board-head">
-          <strong class="board-title">{{ post.title }}</strong>
+          <strong class="board-title">{{ dataRequest.title }}</strong>
           <div class="board-desc">
             <div class="data-info">
               <dl>
                 <dt class="blind">게시일</dt>
-                <dd>{{ post.upload_date }}</dd>
+                <dd>{{ dataRequest.create_date }}</dd>
               </dl>
             </div>
           </div>
@@ -27,20 +27,26 @@
             <tbody>
               <tr>
                 <th scope="row">분류</th>
+                  <td>
+                    <span>{{ getClassification(dataRequest) }}</span>
+                  </td>
+                </tr>
+              <tr>
+                <th scope="row">신청 상태</th>
                 <td>
-                  <span v-for="cat in getClassification(post?.category)" :style="'margin-right: 15px;'">{{ cat }}</span>
+                  <span :class="getProcessStyle(dataRequest.process_status)">{{ getProcessStatus(dataRequest.process_status) }}</span>
                 </td>
               </tr>
               <tr>
                 <th scope="row">신청 데이터명</th>
-                <td>{{ post.data_name }}</td>
+                <td>{{ dataRequest.data_name }}</td>
               </tr>
               <tr>
                 <th scope="row">신청자</th>
                 <td>
                   <div class="user-info">
-                    <span class="name">{{ post.user_nm }}</span>
-                    <span class="team">({{ post.dept_nm }})</span>
+                    <span class="name">{{ dataRequest.user_nm }}</span>
+                    <span class="team">({{ dataRequest.dept_nm }})</span>
                   </div>
                 </td>
               </tr>
@@ -49,21 +55,21 @@
                 <td>
                   <!-- inner-cms : cms영역 -->
                   <div class="inner-cms">
-                    <p>{{ post.post_content }}</p>
+                    <p>{{ dataRequest.contents }}</p>
                   </div>
                   <!-- //inner-cms : cms영역 -->
                 </td>
               </tr>
               <tr>
                 <th scope="row">요청기간</th>
-                <td>{{ post.request_start }} ~ {{ post.request_end }}</td>
+                <td>{{ dataRequest.request_start }} ~ {{ dataRequest.request_end }}</td>
               </tr>
               <tr>
                 <th scope="row">활용 목적 및 기대효과</th>
                 <td>
                   <!-- inner-cms : cms영역 -->
                   <div class="inner-cms">
-                    <p>{{ post.benefit_content }}</p>
+                    <p>{{ dataRequest.benefit_content }}</p>
                   </div>
                   <!-- //inner-cms : cms영역 -->
                 </td>
@@ -88,7 +94,7 @@
             <button
               type="button"
               class="mu-btn mu-btn-lg"
-              @click="onClickDeletePostButton"
+              @click="onClickDeleteDataRequestButton"
             >
               <span>삭제</span></button
             ><!-- 게시글 삭제용 -->
@@ -118,7 +124,7 @@
                             type="radio"
                             id="r1"
                             name="r1"
-                            value="검토중"
+                            value=1
                             v-model="answer.process_status"
                             checked="checked"
                           /><label for="r1"
@@ -130,7 +136,7 @@
                             type="radio"
                             id="r2"
                             name="r2"
-                            value="진행중"
+                            value=2
                             v-model="answer.process_status"
                           />
                           <label for="r2"><em class="step-process ing">진행중</em></label>
@@ -140,7 +146,7 @@
                             type="radio"
                             id="r3"
                             name="r3"
-                            value="제공"
+                            value=3
                             v-model="answer.process_status"
                           />
                           <label for="r3"
@@ -152,7 +158,7 @@
                             type="radio"
                             id="r4"
                             name="r4"
-                            value="미제공"
+                            value=4
                             v-model="answer.process_status"
                           />
                           <label for="r4"
@@ -176,17 +182,15 @@
                 </tbody>
               </table>
               <!-- //mu-formbox -->
-              <div class="modify-btn">
+              <div class="modify-btn" style="margin-top: 10px;">
                 <button type="button" class="mu-btn" @click="onClickListButton">
-                  <span>답변 취소</span></button
-                ><!-- 답변취소용 -->
+                  <span>답변 취소</span></button> &nbsp;
                 <button
                   type="button"
                   class="mu-btn mu-btn-primary"
                   @click="onClickSaveButton"
                 >
-                  <span>답변 확인</span></button
-                ><!-- 목록으로 돌아가기 -->
+                  <span>답변 확인</span></button>
               </div>
             </div>
           </div>
@@ -194,9 +198,9 @@
             <button
               type="button"
               class="mu-btn mu-btn-lg mu-btn-primary"
-              @click="onClickListButton(post.id)"
+              @click="onClickListButton(dataRequest.id)"
             >
-              <span>목록</span>
+              <span>취소</span>
             </button>
           </div>
         </div>
@@ -216,7 +220,7 @@ import { useNuxtApp, useRoute, useRouter } from "nuxt/app";
 import { onMounted, ref } from "vue";
 
 definePageMeta({
-  name: "AdminDataRequestPostUpdate",
+  name: "AdminDataRequestUpdate",
   layout: "admin",
 });
 
@@ -225,23 +229,20 @@ const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
 
-interface Post {
-  admin_reply_status: boolean;
-  benefit_content: string;
-  data_name: string;
-  dept_nm: string;
-  id: number;
-  is_open: boolean;
-  post_content: string;
-  post_type: string;
-  process_status: string;
-  title: string;
-  upload_date: string;
-  user_nm: string;
-  view_count: number;
-  writer: string;
-  request_start?: string;
-  request_end?: string;
+interface DataRequest {
+  id: number
+	writer: string
+	request_type: number
+	title: string
+	data_name: string
+	contents: string
+	request_start: string
+	request_end: string
+	benefit_content: string
+	create_date: string
+	update_date: string
+	process_status: number
+	finish_date: string
 }
 
 interface File {
@@ -255,81 +256,109 @@ interface File {
 }
 
 interface Answer {
-  admin_reply: string;
-  answer_id?: number;
-  create_date?: string;
-  dept_nm?: string;
-  id: number;
-  process_status: string;
-  upload_date?: string;
-  user_nm?: string;
+  id?: number;
+  data_request_id: number;
   writer?: string;
-  post_type?: string;
+  process_status: number;
+  admin_reply: string;
+  create_date?: string;
+  update_date?: string;
+  user_nm?: string;
   newFlag?: string;
   lastFlag?: string;
 }
 
 onMounted(() => {
   let id = route.query.id;
-  getPost(id);
+  getDataRequestOne(id);
 });
 
-const post = ref<Post>({
-  admin_reply_status: false,
-  benefit_content: "",
-  data_name: "",
-  dept_nm: "",
+const dataRequest = ref<DataRequest>({
   id: 0,
-  is_open: false,
-  post_content: "",
-  post_type: "",
-  process_status: "",
-  title: "",
-  upload_date: "",
-  user_nm: "",
-  view_count: 0,
-  writer: "",
+	writer: "",
+	request_type: 0,
+	title: "",
+	data_name: "",
+	contents: "",
+	request_start: "",
+	request_end: "",
+	benefit_content: "",
+	create_date: "",
+	update_date: "",
+	process_status: 0,
+	finish_date: ""
 });
+
 const files = ref<Array<File>>([]);
 const answerList = ref<Array<Answer>>([]);
 const answer = ref<Answer>({
   admin_reply: "",
-  id: 0,
-  process_status: "",
+  data_request_id: 0,
+  process_status: 0,
 });
 const newFlag = ref<string>("N"); // 첫 답변인 경우
 const lastFlag = ref<string>("N"); // 마지막 답변인 경우
 
-const getPost = async (id: number): Promise<void> => {
+const getClassification = (dataRequest) => {
+  if (dataRequest) {
+    if (dataRequest.request_type == 0) return "수집"
+    if (dataRequest.request_type == 1) return "권한"
+    if (dataRequest.request_type == 2) return "수집, 권한"
+  } else {
+    return ''
+  }
+}
+
+const getProcessStyle = (status) => {
+  let className = 'step-process'
+  if (status == 0) return 'apply ' + className
+  if (status == 1) return 'review ' + className
+  if (status == 2) return 'ing ' + className
+  if (status == 3) return 'supply ' + className
+  if (status == 4) return 'unsupply ' + className
+  else return ' ' + className
+}
+
+const getProcessStatus = (status) => {
+  if (status == 0) return '신청'
+  if (status == 1) return '검토중'
+  if (status == 2) return '진행중'
+  if (status == 3) return '제공'
+  if (status == 4) return '미제공'
+  if (status == 5) return '삭제됨'
+}
+
+const getDataRequestOne = async (id: number): Promise<void> => {
   try {
-    let { data: result } = await $ofetch(`/api/post/one?postId=${id}`);
-    result.post.post_content = result.post.post_content ? result.post.post_content : "";
-    result.post.benefit_content = result.post.benefit_content
-      ? result.post.benefit_content
+    let { data: result } = await $ofetch(`/api/dataRequest/one?id=${id}`);
+    result.dataRequest.contents = result.dataRequest.contents ? result.dataRequest.contents : "";
+    result.dataRequest.benefit_content = result.dataRequest.benefit_content
+      ? result.dataRequest.benefit_content
       : "";
     result.files = result.fileList;
     result.answerList.forEach((el) => {
-      if (el.process_status != '삭제됨') {
+      if (el.process_status != 5) {
         answerList.value.push(el)
       }
 
     });
+
     if (userStore.getAnswerId < 0) {
       // 첫 답변인 경우
       newFlag.value = "Y";
-      answer.value = { id: result.post.id, process_status: "검토중", admin_reply: "" };
+      answer.value = { data_request_id: result.dataRequest.id, process_status: 1, admin_reply: "" };
     } else {
-      lastFlag.value =
-        userStore.getAnswerId == answerList.value[answerList.value.length - 1].answer_id
+      if (answerList.value && answerList.value.length > 0) {
+        lastFlag.value =
+        userStore.getAnswerId == answerList.value[answerList.value.length - 1].id
           ? "Y"
           : "N";
-      answer.value =
-        answerList.value[
-          answerList.value.findIndex((el) => el.answer_id === userStore.getAnswerId)
-        ];
+        answer.value = answerList.value[answerList.value.findIndex((el) => el.id === userStore.getAnswerId)];
+      }
+
     }
 
-    post.value = result.post;
+    dataRequest.value = result.dataRequest;
   } catch (error) {
     console.log(error);
   }
@@ -338,17 +367,16 @@ const getPost = async (id: number): Promise<void> => {
 // 저장 버튼 클릭 이벤트 핸들러
 const onClickSaveButton = async (): Promise<void> => {
   if (await confirmAlert("저장하시겠습니까?")) {
-    post.value.process_status = answer.value.process_status;
+    dataRequest.value.process_status = answer.value.process_status;
     let param = {
-      post: post.value,
+      dataRequest: dataRequest.value,
       answer: answer.value,
     };
 
-    answer.value.post_type = post.value.post_type;
     answer.value.newFlag = newFlag.value;
     answer.value.lastFlag = lastFlag.value;
 
-    $ofetch("/api/post/updateAdminReply", {
+    $ofetch("/api/dataRequest/updateAdminReply", {
       method: "POST",
       body: param,
     }).then(async (res: { errorMessage: string }) => {
@@ -367,7 +395,7 @@ const onClickSaveButton = async (): Promise<void> => {
   }
 };
 
-// 목록 버튼, 답변 취소 클릭 이벤트 핸들러
+// 취소, 답변 취소 클릭 이벤트 핸들러
 const onClickListButton = async (id: number): Promise<void> => {
   if (await confirmAlert("작성중인 내용을 취소하시겠습니까?")) {
     router.push({
@@ -378,14 +406,13 @@ const onClickListButton = async (id: number): Promise<void> => {
 };
 
 // 삭제 버튼 클릭 이벤트 핸들러
-const onClickDeletePostButton = async (): Promise<void> => {
+const onClickDeleteDataRequestButton = async (): Promise<void> => {
   if (await confirmAlert("정말로 삭제하시겠습니까?")) {
     let param = {
-      deleteList: [post.value.id],
-      post_type: post.value.post_type,
+      deleteList: [dataRequest.value.id],
     };
 
-    $ofetch("/api/post/delete", {
+    $ofetch("/api/dataRequest/delete", {
       method: "POST",
       body: param,
     }).then(async (res: { errorMessage: string }) => {
@@ -404,16 +431,4 @@ const onClickDeletePostButton = async (): Promise<void> => {
   }
 };
 
-const getClassification = (category) => {
-  let list = []
-
-  if (category) {
-    category.split(",").forEach((el) => {
-      if (el.includes("수집")) list.push(" □ 데이터 수집 ");
-      if (el.includes("권한")) list.push(" □ 데이터 권한 ");
-    })
-  }
-
-  return list
-}
 </script>

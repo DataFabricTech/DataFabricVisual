@@ -11,6 +11,10 @@ import org.springframework.stereotype.Repository;
 public interface MyCatalogMapper {
     List<HashMap<String, Object>> getSearchDataList(Map<String, String> param);
 
+    List<HashMap<String, Object>> getDataRequestList(Map<String, String> param);
+    Integer getDataRequestListCount(Map<String, String> param);
+
+
     List<Map<String, Object>> getSynonymDeleteRequestList(Map<String, String> param);
 
     List<Map<String,String>> getExtractedDataList(Map<String, String> param);

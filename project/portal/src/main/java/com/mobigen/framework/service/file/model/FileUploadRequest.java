@@ -16,4 +16,6 @@ public class FileUploadRequest {
 	private PostVO post;
 	private Integer post_id;
 	private List<String> delete_files;
+	private DataRequestVO dataRequest;
+	private Integer dataRequestId;
 }

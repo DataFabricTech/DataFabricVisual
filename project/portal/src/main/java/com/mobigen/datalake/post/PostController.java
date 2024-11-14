@@ -63,46 +63,7 @@ public class PostController {
     }
 
     /**
-     * 마이 데이터 요청 내역 조회
-     * @param pageSize              페이지 크기
-     * @param pnum                  페이지 번호
-     * @param postType              게시글 종류
-     * @param searchType            검색 종류
-     * @param searchWord            검색어
-     * @return
-     * @throws Exception
-     */
-    @ResponseJsonResult
-    @GetMapping("/post/request/list")
-    public Object getMyRequestList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum,
-                                   @RequestParam("postType") String postType,
-                                   @RequestParam("searchType") String searchType,
-                                   @RequestParam("searchWord") String searchWord,
-                                   HttpServletRequest request) throws Exception {
-
-
-        Map<String, String> param = new HashMap<>();
-        param.put("postType", postType);
-        param.put("searchType", searchType);
-        param.put("searchWord", searchWord);
-        param.put("limit", String.valueOf(pageSize));
-        param.put("offset", String.valueOf(pageSize * (pnum - 1)));
-
-        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-        param.put("user_id", user.get("user_id").toString());
-
-        int total = postService.getPostListTotal(param);
-        
-        List<Map> list = postService.getPostList(param);
-        Map resultMap = new HashMap<>();
-        resultMap.put("list", list);
-        resultMap.put("total", total);
-
-        return resultMap;
-    }
-
-    /**
-     * 공지사항, 데이터요청, FAQ 목록 조회
+     * 공지사항, FAQ 목록 조회
      * @param pageSize                  페이지 크기
      * @param pnum                      페이지 번호
      * @param postType                  게시글 종류
@@ -136,7 +97,7 @@ public class PostController {
     }
 
     /**
-     * 공지사항, 데이터요청, FAQ 단건 조회
+     * 공지사항, FAQ 단건 조회
      * @param postId                    게시글 ID
      * @return
      * @throws Exception
@@ -148,7 +109,7 @@ public class PostController {
     }
 
     /**
-     * 공지사항, 데이터요청, FAQ 저장
+     * 공지사항, FAQ 저장
      * @param param                     게시글 정보
      * @return
      * @throws Exception
@@ -170,7 +131,7 @@ public class PostController {
     }
 
     /**
-     * 공지사항, 데이터요청, FAQ 삭제
+     * 공지사항, FAQ 삭제
      * @param param                 게시글 정보
      * @return
      * @throws Exception
@@ -225,7 +186,7 @@ public class PostController {
     }
 
     /**
-     * 공지사항, 데이터요청 저장 : 파일저장포함
+     * 공지사항 저장 : 파일저장포함
      * @param uploadForm                파일
      * @param request
      * @return
@@ -266,7 +227,7 @@ public class PostController {
     }
 
     /**
-     * 공지사항, 데이터요청 수정 : 파일저장포함
+     * 공지사항 수정: 파일저장포함
      * @param uploadForm             파일
      * @param request
      * @return
@@ -351,7 +312,7 @@ public class PostController {
     }
 
     /**
-     * 공지사항, 데이터요청, FAQ 수정
+     * 공지사항, FAQ 수정
      * @param param                 게시글 수정 내용
      * @return
      * @throws Exception
@@ -392,31 +353,5 @@ public class PostController {
     @ResponseBody
     public Object updatePostFaqOrdNo(@RequestBody Map<String, Object> param) throws Exception {
         return postService.updatePostFaqOrdNo(param);
-    }
-
-    /**
-     * 데이터요청 답변 저장
-     * @param param                 답변 정보
-     * @return
-     * @throws Exception
-     */
-    @ResponseJsonResult
-    @PostMapping("/post/updateAdminReply")
-    @ResponseBody
-    public Object updateAdminReply(@RequestBody Map<String, Object> param, HttpServletRequest request) throws Exception {
-        return postService.updateAdminReply(param, request);
-    }
-
-    /**
-     * 데이터 요청 답변 삭제
-     * @param param                 데이터 요청 답변 정보
-     * @return
-     * @throws Exception
-     */
-    @ResponseJsonResult
-    @PostMapping("/post/deleteAdminReply")
-    @ResponseBody
-    public Object deleteAdminReply(@RequestBody Map<String, Object> param) throws Exception {
-        return postService.deleteAdminReply(param);
     }
 }

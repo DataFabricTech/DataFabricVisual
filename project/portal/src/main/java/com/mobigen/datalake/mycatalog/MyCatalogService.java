@@ -14,9 +14,19 @@ import lombok.AllArgsConstructor;
 public class MyCatalogService {
     private final MyCatalogMapper myCatalogMapper;
 
-    // My 조회 데이터, 데이터 요청 내역 목록 조회
+    // My 조회 데이터
     public List<HashMap<String, Object>> getSearchDataList(Map<String, String> param) {
         return myCatalogMapper.getSearchDataList(param);
+    }
+    
+    // My 데이터 요청 내역 목록 조회
+    public List<HashMap<String, Object>> getDataRequestList(Map<String, String> param) {
+        return myCatalogMapper.getDataRequestList(param);
+    }
+
+    // My 데이터 요청 내역 목록 전체개수 조회
+    public int getDataRequestListCount(Map<String, String> param) {
+        return myCatalogMapper.getDataRequestListCount(param);
     }
 
     // My 동의어 삭제 요청 내역 목록 조회

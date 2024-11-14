@@ -5,12 +5,12 @@
               <div class="board-list-wrap">
                 <div class="mu-heading">
                   <!-- board-list-search -->
-                  <Border-list-search :searchObj.sync="searchObj" @searchMethod="getPost" :searchList="searchList"/>
+                  <Border-list-search :searchObj.sync="searchObj" @searchMethod="getDataRequestList" :searchList="searchList"/>
 
                   <div class="mu-item-group">
                   <page-size
                     v-model:pageSize="pagingObj.limit"
-                    @searchMethod="getPost"
+                    @searchMethod="getDataRequestList"
                   />
                   </div>
                 </div>
@@ -32,21 +32,20 @@
                     </tr>
                     </thead>
                     <tbody>
-                      <tr v-for="(item, index) in postList" :key="index">
+                      <tr v-for="(item, index) in dataRequestList" :key="index">
                         <td>{{ item.rownum }}</td>
                         <td class="tl">
                           <NuxtLink :to="'/data/request/detail?id=' + item.id">{{ item.title }}</NuxtLink>
                           <i v-if="item.new_yn" class="mu-icon-svg new">새로운글</i>
                         </td><!-- 왼쪽정렬시 .tl 추가 -->
                         <td><i v-if="item.file_cnt>0" class="mu-icon-svg file">첨부파일 있음</i></td>
-                        <td>{{ item.upload_date }}</td>
-                        <td v-if="item.request_end">{{ item.request_end }}</td>
-                        <td v-else="item.request_end">-</td>
+                        <td>{{ yyyyMMdd(item.create_date) }}</td>
+                        <td>{{ yyyyMMdd(item.finish_date) }}</td>
                         <td>
-                          <em v-bind:class="[ item.process_status=='신청' ? 'apply': item.process_status=='검토중' ? 'review': item.process_status=='진행중' ? 'ing' : item.process_status=='제공' ? 'supply' : item.process_status=='미제공' ? 'unsupply': '', 'step-process']">{{ item.process_status }}</em><!-- 신청apply – 검토중review – 진행중ing – 제공supply/미제공unsupply -->
+                          <em :class="getProcessStyle(item.process_status)">{{ getProcessStatus(item.process_status) }}</em>
                         </td>
                       </tr>
-                      <tr v-if="postList.length === 0">
+                      <tr v-if="dataRequestList.length === 0">
                         <td colspan="6">
                           <p class="nodata">데이터 요청 내역이 존재하지 않습니다.</p>
                         </td>
@@ -92,7 +91,7 @@ const pagingObj = ref({
   currentPage: 1, // 현재 페이지 번호
 })
 
-const postList = ref([])
+const dataRequestList = ref([])
 const searchWord = ref("")
 const searchType = ref("all")
 const checkedList = ref([]) // [데이터 정의 : Array]
@@ -109,16 +108,51 @@ const searchList = ref([
   }
 ])
 
-const getPost = async (offset = 1) => {
+onMounted(() => {
+  getDataRequestList()
+})
+
+const getProcessStyle = (status) => {
+  let className = 'step-process'
+  if (status == 0) return 'apply ' + className
+  if (status == 1) return 'review ' + className
+  if (status == 2) return 'ing ' + className
+  if (status == 3) return 'supply ' + className
+  if (status == 4) return 'unsupply ' + className
+  else return ' ' + className
+}
+
+const getProcessStatus = (status) => {
+  if (status == 0) return '신청'
+  if (status == 1) return '검토중'
+  if (status == 2) return '진행중'
+  if (status == 3) return '제공'
+  if (status == 4) return '미제공'
+  if (status == 5) return '삭제됨'
+}
+
+const getDataRequestList = async (offset = 1) => {
   try {
-    let response = await $ofetch(`/api/post/request/list?postType=data-request&pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}`);
-    let result = response.data
-    pagingObj.value = {
-      ...pagingObj.value,
-      total: result.total,
-      currentPage: offset,
+    const param = {
+      offset,
+      limit: pagingObj.value.limit,
+      searchWord: searchObj.value.searchWord,
     };
-    postList.value = result.list;
+    const result = await $ofetch("/api/myCatalog/myDataRequestList", {
+        method: 'POST',
+        body: JSON.stringify(param),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (result.data.list) {
+      pagingObj.value = {
+        ...pagingObj.value,
+        total: result.data.total,
+        currentPage: offset,
+      };
+      dataRequestList.value = result.data.list;
+    }
     checkedList.value = [];
   } catch (error) {
     console.log(error);
@@ -126,15 +160,15 @@ const getPost = async (offset = 1) => {
 }
 
 const selected = (e) => {
-  const selectedItem = postList.value.find(v => v.id == e.target.value);
+  const selectedItem = dataRequestList.value.find(v => v.id == e.target.value);
   if(selectedItem.selected) {
     checkedList.value.push(e.target.value);
   } else {
     checkedList.value.splice(checkedList.value.findIndex(v => v == e.target.value), 1);
   }
 
-  for (let i in postList.value) {
-    if(! postList.value[i].selected) {
+  for (let i in dataRequestList.value) {
+    if(! dataRequestList.value[i].selected) {
       allChecked.value = false;
       return;
     } else {
@@ -143,11 +177,22 @@ const selected = (e) => {
   }
 }
 
-const onClickPage = (page) => {
-  getPost(page);
-}
+const yyyyMMdd = (value) => {
+  let date = new Date(value);
+  let year = date.getFullYear();
+  let month = String(date.getMonth() + 1).padStart(2, "0");
+  let day = String(date.getDate()).padStart(2, "0");
+  // let hours = String(date.getHours()).padStart(2, "0");
+  // let min = String(date.getMinutes()).padStart(2, "0");
+  // let sec = String(date.getSeconds()).padStart(2, "0");
+  if (value == null || value == undefined) {
+    return "-";
+  }
+  // return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
+  return year + "-" + month + "-" + day;
+};
 
-onMounted(() => {
-  getPost()
-})
+const onClickPage = (page) => {
+  getDataRequestList(page);
+}
 </script>

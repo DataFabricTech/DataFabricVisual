@@ -30,7 +30,7 @@
                     @change="selected($event, item)"
                     :checked="isChecked(item)"
                   />
-                  <label :for="idx"><span>{{ item }}<span style="color: grey; padding-left: 5px;">({{ getClassificationDescription(item) }})</span></span></label>
+                  <label :for="idx"><span>{{ item }}</span></label>
                 </div>
                 <span v-if="!selectedCheckBoxListValid" class="complete-msg error">분류를 선택해 주세요.</span>
               </td>
@@ -43,7 +43,7 @@
                   placeholder="제목은 50자 이내로 입력 가능합니다."
                   v-bind:class="[!titleValid ? 'error' : '', 'mu-input']"
                   title="제목 입력 필수"
-                  v-model="post.title"
+                  v-model="dataRequest.title"
                   maxlength="50"
                 />
                 <p v-if="!titleValid" class="complete-msg error">내용을 입력해주세요.</p>
@@ -57,7 +57,7 @@
                   placeholder=""
                   v-bind:class="[!dataNameValid ? 'error' : '', 'mu-input']"
                   title="신청데이터명 입력"
-                  v-model="post.data_name"
+                  v-model="dataRequest.data_name"
                   maxlength="100"
                   :disabled="dataNameDisabled"
                 />
@@ -71,12 +71,12 @@
               <td>
                 <textarea
                   rows="5"
-                  v-bind:class="[!postContentValid ? 'error' : '', 'mu-area']"
+                  v-bind:class="[!dataRequestContentValid ? 'error' : '', 'mu-area']"
                   placeholder="내용을 입력하세요"
                   title="신청 내용 입력 필수"
-                  v-model="post.post_content"
+                  v-model="dataRequest.contents"
                 ></textarea>
-                <p v-if="!postContentValid" class="complete-msg error">
+                <p v-if="!dataRequestContentValid" class="complete-msg error">
                   내용을 입력해주세요.
                 </p>
               </td>
@@ -115,7 +115,7 @@
                   v-bind:class="[!benefitContentValid ? 'error' : '', 'mu-area h80']"
                   placeholder="내용을 입력하세요"
                   title="활용 목적 및 기대효과 입력 필수"
-                  v-model="post.benefit_content"
+                  v-model="dataRequest.benefit_content"
                 ></textarea>
                 <p v-if="!benefitContentValid" class="complete-msg error">
                   내용을 입력해주세요.
@@ -160,8 +160,8 @@ import DatePicker from "@functional/datepicker/date-picker";
 import { useRoute } from "nuxt/app";
 import { ref, onMounted, computed, ComputedRef } from "vue";
 
-const emit = defineEmits(["cancelMethod", "saveMethod", "update:post"]);
-const props = defineProps(["post", "isUpdate"]);
+const emit = defineEmits(["cancelMethod", "saveMethod", "update:dataRequest"]);
+const props = defineProps(["dataRequest", "isUpdate"]);
 
 const route = useRoute();
 
@@ -183,24 +183,20 @@ const timePickerOptions = {
             format: "A hh:mm"
           }
 
-interface Post {
-  admin_reply_status: boolean;
-  benefit_content: string;
-  category: string;
-  data_name: string;
-  dept_nm: string;
-  id: number;
-  is_open: boolean;
-  post_content: string;
-  post_type: string;
-  process_status: string;
-  title: string;
-  upload_date: string;
-  user_nm: string;
-  view_count: number;
-  writer: string;
-  request_start?: string;
-  request_end?: string;
+interface DataRequest {
+  id: number
+	writer: string
+	request_type: string
+	title: string
+	data_name: string
+	contents: string
+	request_start?: string
+	request_end?: string
+	benefit_content: string
+	create_date: string
+	update_date: string
+	process_status: number
+	finish_date: string
 }
 
 const selectedCheckBoxList = ref<Array<Object>>([])
@@ -210,12 +206,12 @@ const request_start = ref<string>(null);
 const request_end = ref<string>(null);
 const dataNameDisabled = ref<boolean>(false);
 
-watch(() => props.post.request_start, (newVal, oldVal) => {
-  request_start.value = props.post.request_start
+watch(() => props.dataRequest.request_start, (newVal, oldVal) => {
+  request_start.value = props.dataRequest.request_start
 })
 
-watch(() => props.post.request_end, (newVal, oldVal) => {
-  request_end.value = props.post.request_end
+watch(() => props.dataRequest.request_end, (newVal, oldVal) => {
+  request_end.value = props.dataRequest.request_end
 })
 
 // 체크박스 클릭 이벤트
@@ -236,14 +232,17 @@ const isChecked = (item) => {
       return true
     }
   }
-
 }
 
-const post: ComputedRef<Post> = computed(() => {
-  if (props.post.category) {
-    selectedCheckBoxList.value = props.post.category.split(",")
+const dataRequest: ComputedRef<DataRequest> = computed(() => {
+  if (props.dataRequest.request_type) {
+    if (props.dataRequest.request_type == 0) selectedCheckBoxList.value = ["수집"]
+    if (props.dataRequest.request_type == 1) selectedCheckBoxList.value = ["권한"]
+    if (props.dataRequest.request_type == 2) {
+      selectedCheckBoxList.value = ["수집", "권한"]
+    }
   }
-  return props.post
+  return props.dataRequest
 });
 
 const selectedCheckBoxListValid: ComputedRef<boolean> = computed(() => {
@@ -255,35 +254,29 @@ const selectedCheckBoxListValid: ComputedRef<boolean> = computed(() => {
 const titleValid: ComputedRef<boolean> = computed(() => {
   //필수체크
   if (!required_flag.value) return true;
-  else return props.post.title.length > 0 ? true : false;
+  else return props.dataRequest.title.length > 0 ? true : false;
 });
 
 const dataNameValid: ComputedRef<boolean> = computed(() => {
   //필수체크
   if (!required_flag.value) return true;
-  else return props.post.data_name.length > 0 ? true : false;
+  else return props.dataRequest.data_name.length > 0 ? true : false;
 });
 
-const postContentValid: ComputedRef<boolean> = computed(() => {
+const dataRequestContentValid: ComputedRef<boolean> = computed(() => {
   //필수체크
   if (!required_flag.value) return true;
-  else return props.post.post_content.length > 0 ? true : false;
+  else return props.dataRequest.contents.length > 0 ? true : false;
 });
 
 const benefitContentValid: ComputedRef<boolean> = computed(() => {
   //필수체크
   if (!required_flag.value) return true;
-  else return props.post.benefit_content.length > 0 ? true : false;
+  else return props.dataRequest.benefit_content.length > 0 ? true : false;
 });
 
 onMounted(() => {
 });
-
-const getClassificationDescription = (item) => {
-  if (item == '수집') return '포털 내 미존재 데이터'
-  if (item == '권한') return '데이터 접근 권한'
-  return item
-}
 
 const onClickCancelButton = () => {
   emit("cancelMethod");
@@ -295,15 +288,22 @@ const onClickSaveButton = () => {
     !selectedCheckBoxListValid.value ||
     !titleValid.value ||
     !dataNameValid.value ||
-    !postContentValid.value ||
+    !dataRequestContentValid.value ||
     !benefitContentValid.value
   )
     return;
-  post.value.request_start = request_start.value;
-  post.value.request_end = request_end.value;
-  post.value.category = selectedCheckBoxList.value.join(',');
 
-  emit("update:post", post.value);
+  dataRequest.value.request_start = request_start.value;
+  dataRequest.value.request_end = request_end.value;
+
+  if (selectedCheckBoxList.value.length == 2){ // 수집, 권한 2개
+    dataRequest.value.request_type = 2
+  } else if (selectedCheckBoxList.value.length == 1) { // 수집 또는 권한
+    if (selectedCheckBoxList.value[0] == '수집') dataRequest.value.request_type = 0
+    if (selectedCheckBoxList.value[0] == '권한') dataRequest.value.request_type = 1
+  }
+
+  emit("update:dataRequest", dataRequest.value);
   emit("saveMethod");
 };
 </script>

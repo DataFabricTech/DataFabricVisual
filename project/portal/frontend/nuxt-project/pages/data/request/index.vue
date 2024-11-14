@@ -21,10 +21,10 @@
             <!-- board-list-search -->
             <request-border-list-search
               :searchObj.sync="searchObj"
-              @searchMethod="getPost"
+              @searchMethod="getDataRequestList"
             />
 
-            <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getPost" />
+            <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getDataRequestList" />
           </div>
           <div class="board-list">
             <table class="mu-grid">
@@ -45,7 +45,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(item, index) in postList" :key="index">
+                <tr v-for="(item, index) in dataRequestList" :key="index">
                   <td>{{ item.rownum }}</td>
                   <td class="tl">
                     <a v-on:click="onClickDetail(item.id, item.writer)">{{
@@ -59,30 +59,15 @@
                     <i v-if="item.file_cnt === 0" >-</i>
                   </td>
                   <td>{{ item.user_nm }}</td>
-                  <td>{{ item.upload_date }}</td>
+                  <td>{{ item.create_date }}</td>
                   <td v-if="item.finish_date">{{ item.finish_date }}</td>
                   <td v-else="item.finish_date">-</td>
                   <td>
-                    <em
-                      v-bind:class="[
-                        item.process_status == '신청'
-                          ? 'apply'
-                          : item.process_status == '검토중'
-                          ? 'review'
-                          : item.process_status == '진행중'
-                          ? 'ing'
-                          : item.process_status == '제공'
-                          ? 'supply'
-                          : item.process_status == '미제공'
-                          ? 'unsupply'
-                          : '',
-                        'step-process',
-                      ]"
-                      >{{ item.process_status }}</em
+                    <em :class="getProcessStyle(item.process_status)" >{{ getProcessStatus(item.process_status) }}</em
                     ><!-- 신청apply – 검토중review – 진행중ing – 제공supply/미제공unsupply -->
                   </td>
                 </tr>
-                <tr v-if="postList.length == 0">
+                <tr v-if="dataRequestList.length == 0">
                   <td colspan="7">
                     <p class="nodata">데이터 요청 내역이 존재하지 않습니다.</p>
                   </td>
@@ -100,8 +85,8 @@
 </template>
 
 <script setup lang="ts">
-import RequestContentFloatingWrap from "@organisms/post/request-content-floating-wrap";
-import RequestBorderListSearch from "@organisms/post/request-border-list-search";
+import RequestContentFloatingWrap from "@organisms/dataRequest/request-content-floating-wrap";
+import RequestBorderListSearch from "@organisms/dataRequest/request-border-list-search";
 import PageSize from "@/pages/admin/manager/system/user/page-size";
 import Pagination from "@functional/pagination/pagination";
 import { defaultAlert } from "@functional/alert/alert-default";
@@ -125,26 +110,20 @@ interface PagingObj {
   currentPage: number;
 }
 
-interface Post {
-  admin_reply: string;
-  admin_reply_status: boolean;
-  benefit_content: string;
-  data_name: string;
-  file_cnt: number;
-  id: number;
-  is_open: boolean;
-  new_yn: boolean;
-  post_content: string;
-  post_type: string;
-  process_status: string;
-  request_end: string;
-  rownum: number;
-  title: string;
-  upload_date: string;
-  user_nm: string;
-  view_count: number;
-  writer: string;
-  selected?: boolean;
+interface DataRequest {
+  id: number
+	writer: string
+	request_type: number
+	title: string
+	data_name: string
+	contents: string
+	request_start: string
+	request_end: string
+	benefit_content: string
+	create_date: string
+	update_date: string
+	process_status: number
+	finish_date: string
 }
 
 interface SearchObj {
@@ -152,7 +131,7 @@ interface SearchObj {
   searchWord: string;
 }
 
-onMounted(() => getPost());
+onMounted(() => getDataRequestList());
 
 // 페이징 처리 제어
 const pagingObj = ref<PagingObj>({
@@ -162,7 +141,7 @@ const pagingObj = ref<PagingObj>({
   currentPage: 1, // 현재 페이지 번호
 });
 
-const postList = ref<Array<Post>>([]);
+const dataRequestList = ref<Array<DataRequest>>([]);
 const checkedList = ref<Array<number>>([]);
 const allChecked = ref<boolean>(false);
 const searchObj = ref<SearchObj>({
@@ -170,18 +149,37 @@ const searchObj = ref<SearchObj>({
   searchWord: "", // 검색어
 });
 
+const getProcessStyle = (status) => {
+  let className = 'step-process'
+  if (status == 0) return 'apply ' + className
+  if (status == 1) return 'review ' + className
+  if (status == 2) return 'ing ' + className
+  if (status == 3) return 'supply ' + className
+  if (status == 4) return 'unsupply ' + className
+  else return ' ' + className
+}
+
+const getProcessStatus = (status) => {
+  if (status == 0) return '신청'
+  if (status == 1) return '검토중'
+  if (status == 2) return '진행중'
+  if (status == 3) return '제공'
+  if (status == 4) return '미제공'
+  if (status == 5) return '삭제됨'
+}
+
 // 데이터요청 목록 조회
-const getPost = async (offset: number = 1): Promise<void> => {
+const getDataRequestList = async (offset: number = 1): Promise<void> => {
   try {
     let { data: result } = await $ofetch(
-      `/api/post/list?postType=data-request&pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}`
+      `/api/dataRequest/list?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}`
     );
     pagingObj.value = {
       ...pagingObj.value,
       total: result.total,
       currentPage: offset,
     };
-    postList.value = result.list;
+    dataRequestList.value = result.list;
     checkedList.value = [];
   } catch (error) {
     console.log(error);
@@ -191,11 +189,11 @@ const getPost = async (offset: number = 1): Promise<void> => {
 // 전체선택 체크박스 클릭 이벤트
 const checkedAll = (checked: boolean): void => {
   allChecked.value = checked;
-  for (let i in postList.value) {
-    postList.value[i].selected = allChecked.value;
+  for (let i in dataRequestList.value) {
+    dataRequestList.value[i].selected = allChecked.value;
     if (allChecked.value) {
-      if (checkedList.value.findIndex((v) => v == postList.value[i].id) >= 0) continue;
-      checkedList.value.push(postList.value[i].id);
+      if (checkedList.value.findIndex((v) => v == dataRequestList.value[i].id) >= 0) continue;
+      checkedList.value.push(dataRequestList.value[i].id);
     } else {
       checkedList.value = [];
     }
@@ -204,7 +202,7 @@ const checkedAll = (checked: boolean): void => {
 
 // 체크박스 클릭 이벤트
 const selected = (e: any): void => {
-  const selectedItem = postList.value.find((v) => v.id == e.target.value);
+  const selectedItem = dataRequestList.value.find((v) => v.id == e.target.value);
   if (selectedItem.selected) {
     checkedList.value.push(e.target.value);
   } else {
@@ -214,8 +212,8 @@ const selected = (e: any): void => {
     );
   }
 
-  for (let i in postList.value) {
-    if (!postList.value[i].selected) {
+  for (let i in dataRequestList.value) {
+    if (!dataRequestList.value[i].selected) {
       allChecked.value = false;
       return;
     } else {
@@ -236,6 +234,6 @@ const onClickRegisterButton = (): void => {
 
 // 페이지 번호 클릭 이벤트 핸들러
 const onClickPage = (page: number): void => {
-  getPost(page);
+  getDataRequestList(page);
 };
 </script>

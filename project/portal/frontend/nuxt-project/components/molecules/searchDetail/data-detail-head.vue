@@ -186,7 +186,7 @@ const onClickAuthRequest = async () => {
     // 데이터 권한 요청
     const newRouterObj = {
       path: "/data/request/register",
-      query: {}
+      query: {request_type: 1}
     };
     router.push(newRouterObj);
   }

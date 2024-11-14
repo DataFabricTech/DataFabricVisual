@@ -2,7 +2,7 @@
   <div class="contents">
     <div>
       <request-edit-inner
-        :post="post"
+        :dataRequest="dataRequest"
         @cancelMethod="onClickCancelButton"
         @saveMethod="onClickSaveButton"
         :isUpdate="false"
@@ -29,11 +29,6 @@
                   @change="onChange"
                 />
               </div>
-              <!-- <div class="mu-file-btn">
-                <button type="button" class="mu-btn">
-                  <label for="sample-file" @click="downloadSample">파일양식</label>
-                </button>
-              </div> -->
             </div>
             <!-- 첨부파일 : 리스트 개발삭제 가능함 -->
             <ul class="file-sch-list">
@@ -60,7 +55,7 @@
 </template>
 
 <script setup lang="ts">
-import RequestEditInner from "@organisms/post/request-edit-inner";
+import RequestEditInner from "@organisms/dataRequest/request-edit-inner";
 import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import { useUserStore } from "@/store/user";
 import { useNuxtApp, useRouter, useRuntimeConfig } from "nuxt/app";
@@ -76,24 +71,20 @@ const { $ofetch } = useNuxtApp();
 const userStore = useUserStore();
 const router = useRouter();
 
-interface Post {
-  admin_reply_status: boolean;
-  benefit_content: string;
-  category: string;
-  data_name: string;
-  dept_nm: string;
-  id: number;
-  is_open: boolean;
-  post_content: string;
-  post_type: string;
-  process_status: string;
-  title: string;
-  upload_date: string;
-  user_nm: string;
-  view_count: number;
-  writer: string;
-  request_start?: string;
-  request_end?: string;
+interface DataRequest {
+  id: number
+	writer: string
+	request_type: string
+	title: string
+	data_name: string
+	contents: string
+	request_start?: string
+	request_end?: string
+	benefit_content: string
+	create_date: string
+	update_date: string
+	process_status: number
+	finish_date: string
 }
 
 interface File {
@@ -110,22 +101,20 @@ interface File {
 
 const files = ref<Array<File>>([]);
 const sample_files = ref<Array<File>>([]);
-const post = ref<Post>({
-  admin_reply_status: false,
-  benefit_content: "",
-  category: "",
-  data_name: "",
-  dept_nm: "",
+const dataRequest = ref<DataRequest>({
   id: 0,
-  is_open: false,
-  post_content: "",
-  post_type: "data-request",
-  process_status: "신청",
-  title: "",
-  upload_date: "",
-  user_nm: "",
-  view_count: 0,
-  writer: "",
+	writer: "",
+	request_type: 0,
+	title: "",
+	data_name: "",
+	contents: "",
+	request_start: "",
+	request_end: "",
+	benefit_content: "",
+	create_date: "",
+	update_date: "",
+	process_status: 0,
+	finish_date: ""
 });
 
 onMounted(() => getSampleFileList());
@@ -181,29 +170,28 @@ const onClickSaveButton = async (): Promise<void> => {
       formData.append("files", file);
     });
 
-    formData.append("post.post_type", post.value.post_type);
-    formData.append("post.writer", userStore.getUser.user_id);
-    formData.append("post.title", post.value.title);
-    formData.append("post.data_name", post.value.data_name);
-    formData.append("post.post_content", post.value.post_content);
-    formData.append("post.process_status", post.value.process_status);
-    formData.append("post.benefit_content", post.value.benefit_content);
-    formData.append("post.category", post.value.category);
+    formData.append("dataRequest.writer", userStore.getUser.user_id);
+    formData.append("dataRequest.title", dataRequest.value.title);
+    formData.append("dataRequest.data_name", dataRequest.value.data_name);
+    formData.append("dataRequest.contents", dataRequest.value.contents);
+    formData.append("dataRequest.process_status", dataRequest.value.process_status);
+    formData.append("dataRequest.benefit_content", dataRequest.value.benefit_content);
+    formData.append("dataRequest.request_type", dataRequest.value.request_type);
     formData.append(
-      "post.request_start",
-      post.value.request_start == null ? "" : post.value.request_start
+      "dataRequest.request_start",
+      dataRequest.value.request_start == null ? "" : dataRequest.value.request_start
     );
     formData.append(
-      "post.request_end",
-      post.value.request_end == null ? "" : post.value.request_end
+      "dataRequest.request_end",
+      dataRequest.value.request_end == null ? "" : dataRequest.value.request_end
     );
 
-    $ofetch("/api/post/add/saveFile", {
+    $ofetch("/api/dataRequest/add/saveFile", {
       method: "POST",
       body: formData,
     }).then(async (res: { errorMessage: string }) => {
       if (res) {
-        if (res.errorMessage && res.errorMessage != "") {
+        if ((res.errorMessage && res.errorMessage != "")) {
           await errorAlert("저장에 실패하였습니다.");
         } else {
           await successAlert("글이 저장되었습니다.");
@@ -214,31 +202,4 @@ const onClickSaveButton = async (): Promise<void> => {
   }
 };
 
-const downloadSample = async (): Promise<void> => {
-  sample_files.value.forEach(async (element) => {
-    const res = await $ofetch(`/api/service/file/fileDownload?fileId=${element.file_id}`);
-
-    if (res.errorMessage && res.errorMessage != "") {
-      await errorAlert("샘플파일 다운로드에 실패하였습니다.");
-    } else {
-      const config = useRuntimeConfig();
-      const link = document.createElement("a");
-      let url = "";
-
-      if (document.location.href.indexOf("localhost") > -1) {
-        url =
-          config.public.baseURL +
-          `api/service/file/fileDownload?fileId=${element.file_id}`;
-      } else {
-        url = `/api/service/file/fileDownload?fileId=${element.file_id}`;
-      }
-
-      link.href = url;
-      link.style.cssText = "display:none";
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    }
-  });
-};
 </script>

@@ -98,8 +98,8 @@ public class MainPageService {
 
     // My 데이터 요청내역 조회
     public Object getMyRequestDataList(String user_id) throws Exception {
-        List<Map<String, Object>> shareDataList = mainPageMapper.getMyRequestDataList(user_id);
-        return shareDataList;
+        List<Map<String, Object>> dataRequestList = mainPageMapper.getMyRequestDataList(user_id);
+        return dataRequestList;
     }
 
     private final SearchDetailService searchDetailService;

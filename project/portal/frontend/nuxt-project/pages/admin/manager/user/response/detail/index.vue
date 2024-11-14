@@ -4,12 +4,12 @@
       <!-- board-wrap -->
       <div class="board-wrap">
         <div class="board-head">
-          <strong class="board-title">{{ post.title }}</strong>
+          <strong class="board-title">{{ dataRequest.title }}</strong>
           <div class="board-desc">
             <div class="data-info">
               <dl>
                 <dt class="blind">게시일</dt>
-                <dd>{{ post.upload_date }}</dd>
+                <dd>{{ yyyyMMdd(dataRequest.create_date) }}</dd>
               </dl>
             </div>
           </div>
@@ -26,21 +26,27 @@
             </colgroup>
             <tbody>
               <tr>
-                <th scope="row">분류</th>
+                  <th scope="row">분류</th>
+                  <td>
+                    <span>{{ getClassification(dataRequest) }}</span>
+                  </td>
+                </tr>
+              <tr>
+                <th scope="row">신청 상태</th>
                 <td>
-                  <span v-for="cat in getClassification(post?.category)" :style="'margin-right: 15px;'">{{ cat }}</span>
+                  <span :class="getProcessStyle(dataRequest.process_status)">{{ getProcessStatus(dataRequest.process_status) }}</span>
                 </td>
               </tr>
               <tr>
                 <th scope="row">신청 데이터명</th>
-                <td>{{ post.data_name }}</td>
+                <td>{{ dataRequest.data_name }}</td>
               </tr>
               <tr>
                 <th scope="row">신청자</th>
                 <td>
                   <div class="user-info">
-                    <span class="name">{{ post.user_nm }}</span
-                    ><span class="team">({{ getDeptNm(post) }})</span>
+                    <span class="name">{{ dataRequest.user_nm }}</span
+                    ><span class="team">({{ getDeptNm(dataRequest) }})</span>
                   </div>
                 </td>
               </tr>
@@ -49,21 +55,21 @@
                 <td>
                   <!-- inner-cms : cms영역 -->
                   <div class="inner-cms">
-                    <p>{{ post.post_content }}</p>
+                    <p>{{ dataRequest.contents }}</p>
                   </div>
                   <!-- //inner-cms : cms영역 -->
                 </td>
               </tr>
               <tr>
                 <th scope="row">요청기간</th>
-                <td>{{ post.request_start }} ~ {{ post.request_end }}</td>
+                <td>{{ dataRequest.request_start }} ~ {{ dataRequest.request_end }}</td>
               </tr>
               <tr>
                 <th scope="row">활용 목적 및 기대효과</th>
                 <td>
                   <!-- inner-cms : cms영역 -->
                   <div class="inner-cms">
-                    <p>{{ post.benefit_content }}</p>
+                    <p>{{ dataRequest.benefit_content }}</p>
                   </div>
                   <!-- //inner-cms : cms영역 -->
                 </td>
@@ -88,7 +94,7 @@
             <button
               type="button"
               class="mu-btn mu-btn-lg"
-              @click="onClickDeletePostButton"
+              @click="onClickDeletedataRequestButton"
             >
               <span>삭제</span></button
             ><!-- 게시글 삭제용 -->
@@ -102,7 +108,7 @@
           <h4>처리내용</h4>
         </div>
 
-        <div v-for="(item, index) in answerList" :key="index" class="reply-form">
+        <div v-for="(item, index) in answerList" :key="index" class="reply-form" style="margin-top: 20px;">
           <!-- mu-formbox 답변 등록 -->
           <table class="mu-formbox">
             <caption>
@@ -117,24 +123,10 @@
                 <th scope="row">처리 상태</th>
                 <td>
                   <div class="reply-info">
-                    <em
-                      v-bind:class="[
-                        item.process_status == '검토중'
-                          ? 'review'
-                          : item.process_status == '진행중'
-                          ? 'ing'
-                          : item.process_status == '제공'
-                          ? 'supply'
-                          : item.process_status == '미제공'
-                          ? 'unsupply'
-                          : '',
-                        'step-process',
-                      ]"
-                      >{{ item.process_status }}</em
-                    >
-                    <span class="name">{{ item.user_nm }}</span
-                    ><span class="team">({{ getDeptNm(item) }})</span>
-                    <span class="date"> {{ yyyyMMddHHmmSS(item.upload_date) }} </span>
+                    <em :class="getProcessStyle(item.process_status)">{{ getProcessStatus(item.process_status) }}</em>&nbsp;
+                    <span class="name">{{ item.user_nm }}</span> &nbsp;
+                    <span class="team">({{ getDeptNm(item) }})</span> &nbsp;
+                    <span class="date"> {{ yyyyMMddHHmmSS(item.create_date) }} </span>
                   </div>
                 </td>
               </tr>
@@ -151,18 +143,17 @@
           <!-- //mu-formbox 답변 등록 -->
 
           <!-- mu-button-wrap 이미 답변이 등록된 상태에서는 수정 / 삭제 기능만 수행 가능 -->
-          <div class="modify-btn">
+          <div class="modify-btn" style="margin-top: 5px;">
             <button
               type="button"
               class="mu-btn"
-              @click="onClickUpdateReplyButton(item.id, item.answer_id)"
+              @click="onClickUpdateReplyButton(item.data_request_id, item.id)"
             >
-              <span>답변 수정</span></button
-            ><!-- 작성된 답변이 등록된 상태로 등록하기 페이지의 입력폼으로 이동 -->
+              <span>답변 수정</span></button>&nbsp;
             <button
               type="button"
               class="mu-btn"
-              @click="onClickDeleteReplyButton(item.answer_id)"
+              @click="onClickDeleteReplyButton(item.id)"
             >
               <span>답변 삭제</span>
             </button>
@@ -172,7 +163,7 @@
             <button
               type="button"
               class="mu-btn mu-btn-lg"
-              @click="onClickRegisterReplyButton(item.id)"
+              @click="onClickRegisterReplyButton(item.data_request_id)"
             >
               <span>답변 추가</span></button
             ><!-- 작성된 답변이 등록된 상태로 등록하기 페이지의 입력폼으로 이동 -->
@@ -192,7 +183,7 @@
         <button
           type="button"
           class="mu-btn mu-btn-lg"
-          @click="onClickRegisterReplyButton(post.id)"
+          @click="onClickRegisterReplyButton(dataRequest.id)"
         >
           <span>답변 추가</span></button
         ><!-- 작성된 답변이 등록된 상태로 등록하기 페이지의 입력폼으로 이동 -->
@@ -217,7 +208,7 @@ import { useNuxtApp, useRoute, useRouter, useRuntimeConfig } from "nuxt/app";
 import { onMounted, ref, computed, ComputedRef } from "vue";
 
 definePageMeta({
-  name: "AdminDataRequestPost",
+  name: "AdminDataRequestDetail",
   layout: "admin",
 });
 
@@ -226,23 +217,20 @@ const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
 
-interface Post {
-  admin_reply_status: boolean;
-  benefit_content: string;
-  data_name: string;
-  dept_nm: string;
-  id: number;
-  is_open: boolean;
-  post_content: string;
-  post_type: string;
-  process_status: string;
-  title: string;
-  upload_date: string;
-  user_nm: string;
-  view_count: number;
-  writer: string;
-  request_start?: string;
-  request_end?: string;
+interface DataRequest {
+  id: number
+	writer: string
+	request_type: number
+	title: string
+	data_name: string
+	contents: string
+	request_start: string
+	request_end: string
+	benefit_content: string
+	create_date: string
+	update_date: string
+	process_status: number
+	finish_date: string
 }
 
 interface File {
@@ -256,29 +244,27 @@ interface File {
 }
 
 interface Answer {
-  admin_reply: string;
-  answer_id?: number;
-  create_date?: string;
-  dept_nm?: string;
-  id: number;
-  process_status: string;
-  upload_date?: string;
-  user_nm?: string;
+  id?: number;
+  data_request_id: number;
   writer?: string;
-  post_type?: string;
+  process_status: number;
+  admin_reply: string;
+  create_date?: string;
+  update_date?: string;
+  user_nm?: string;
   newFlag?: string;
   lastFlag?: string;
 }
 
 onMounted(() => {
   let id = route.query.id;
-  getPost(id);
+  getDataRequestOne(id);
 });
 
 const lastVisibleAnswerIndex: ComputedRef<number> = computed(() => {
   // 마지막 답변 인덱스
   let index = answerList.value.length - 1;
-  while (index >= 0 && answerList.value[index].process_status === "삭제됨") {
+  while (index >= 0 && answerList.value[index].process_status == 5) {
     index--;
   }
   return index;
@@ -290,13 +276,13 @@ const hasDeletedAnswers: ComputedRef<boolean> = computed(() => {
     return true;
   }
   let index = answerList.value.length - 1;
-  while (index >= 0 && answerList.value[index].process_status === "삭제됨") {
+  while (index >= 0 && answerList.value[index].process_status == 5) {
     index--;
   }
   return index === -1;
 });
 
-const post = ref<Post>({});
+const dataRequest = ref<DataRequest>({});
 const files = ref<Array<File>>([]);
 const answerList = ref<Array<Answer>>([]);
 
@@ -308,23 +294,52 @@ const getDeptNm = (item) => {
   return ""
 }
 
-const getPost = async (id: number): Promise<void> => {
+const getClassification = (dataRequest) => {
+  if (dataRequest) {
+    if (dataRequest.request_type == 0) return "수집"
+    if (dataRequest.request_type == 1) return "권한"
+    if (dataRequest.request_type == 2) return "수집, 권한"
+  } else {
+    return ''
+  }
+}
+
+const getProcessStyle = (status) => {
+  let className = 'step-process'
+  if (status == 0) return 'apply ' + className
+  if (status == 1) return 'review ' + className
+  if (status == 2) return 'ing ' + className
+  if (status == 3) return 'supply ' + className
+  if (status == 4) return 'unsupply ' + className
+  else return ' ' + className
+}
+
+const getProcessStatus = (status) => {
+  if (status == 0) return '신청'
+  if (status == 1) return '검토중'
+  if (status == 2) return '진행중'
+  if (status == 3) return '제공'
+  if (status == 4) return '미제공'
+  if (status == 5) return '삭제됨'
+}
+
+const getDataRequestOne = async (id: number): Promise<void> => {
   try {
-    let { data: result } = await $ofetch(`/api/post/one?postId=${id}`);
-    result.post.post_content = result.post.post_content ? result.post.post_content : "";
-    result.post.benefit_content = result.post.benefit_content
-      ? result.post.benefit_content
+    let { data: result } = await $ofetch(`/api/dataRequest/one?id=${id}`);
+    result.dataRequest.contents = result.dataRequest.contents ? result.dataRequest.contents : "";
+    result.dataRequest.benefit_content = result.dataRequest.benefit_content
+      ? result.dataRequest.benefit_content
       : "";
     files.value = result.fileList;
     answerList.value = result.answerList.filter(
-      (answer: Answer) => answer.process_status != "삭제됨"
+      (answer: Answer) => answer.process_status != 5
     );
     for (let i = 0; i < answerList.value.length; i++) {
       answerList.value[i].admin_reply = answerList.value[i].admin_reply
         ? answerList.value[i].admin_reply
         : "";
     }
-    post.value = result.post;
+    dataRequest.value = result.dataRequest;
   } catch (error) {
     console.log(error);
   }
@@ -336,13 +351,12 @@ const onClickListButton = (): void => {
 };
 
 // 삭제 버튼 클릭 이벤트 핸들러
-const onClickDeletePostButton = async (): Promise<void> => {
+const onClickDeleteDataRequestButton = async (): Promise<void> => {
   if (await confirmAlert("정말로 삭제하시겠습니까?")) {
     let param = {
-      deleteList: [post.value.id],
-      post_type: post.value.post_type,
+      deleteList: [dataRequest.value.id]
     };
-    $ofetch("/api/post/delete", {
+    $ofetch("/api/dataRequest/delete", {
       method: "POST",
       body: param,
     }).then(async (res: { errorMessage: string }) => {
@@ -359,29 +373,28 @@ const onClickDeletePostButton = async (): Promise<void> => {
 };
 
 // 답변 추가 버튼 클릭 이벤트 핸들러
-const onClickRegisterReplyButton = (id: number): void => {
+const onClickRegisterReplyButton = (data_request_id: number): void => {
   userStore.setAnswerId(-1);
-  router.push("/admin/manager/user/response/update?id=" + id);
+  router.push("/admin/manager/user/response/update?id=" + data_request_id);
 };
 
 // 답변 수정 버튼 클릭 이벤트 핸들러
-const onClickUpdateReplyButton = (id: number, answer_id: number): void => {
-  userStore.setAnswerId(answer_id);
-  router.push("/admin/manager/user/response/update?id=" + id);
+const onClickUpdateReplyButton = (data_request_id: number, id: number): void => {
+  userStore.setAnswerId(id);
+  router.push("/admin/manager/user/response/update?id=" + data_request_id);
 };
 
 // 답변 삭제 버튼 클릭 이벤트 핸들러
-const onClickDeleteReplyButton = async (answer_id: number): Promise<void> => {
+const onClickDeleteReplyButton = async (id: number): Promise<void> => {
   if (await confirmAlert("답변을 정말로 삭제하시겠습니까?")) {
     let param = {
-      id: post.value.id,
-      post_type: post.value.post_type,
-      process_status: post.value.process_status,
+      data_request_id: dataRequest.value.id,
+      process_status: dataRequest.value.process_status,
       admin_reply: "",
-      answer_id: answer_id,
+      id: id,
     };
 
-    $ofetch("/api/post/deleteAdminReply", {
+    $ofetch("/api/dataRequest/deleteAdminReply", {
       method: "POST",
       body: param,
     }).then(async (res: { errorMessage: string }) => {
@@ -392,7 +405,7 @@ const onClickDeleteReplyButton = async (answer_id: number): Promise<void> => {
           await errorAlert("답변 삭제에 실패하였습니다.");
         } else {
           await successAlert("답변 삭제되었습니다.");
-          getPost(route.query.id);
+          getDataRequestOne(route.query.id);
         }
       }
     });
@@ -422,19 +435,6 @@ const fileDownload = async (file_id: number): Promise<void> => {
   }
 };
 
-const getClassification = (category) => {
-  let list = []
-
-  if (category) {
-    category.split(",").forEach((el) => {
-      if (el.includes("수집")) list.push(" □ 데이터 수집 ");
-      if (el.includes("권한")) list.push(" □ 데이터 권한 ");
-    })
-  }
-
-  return list
-}
-
 const yyyyMMddHHmmSS = (value: string): string => {
   let date = new Date(value);
   let year = date.getFullYear();
@@ -447,5 +447,19 @@ const yyyyMMddHHmmSS = (value: string): string => {
     return "";
   }
   return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
+};
+
+const yyyyMMdd = (value: string): string => {
+  let date = new Date(value);
+  let year = date.getFullYear();
+  let month = String(date.getMonth() + 1).padStart(2, "0");
+  let day = String(date.getDate()).padStart(2, "0");
+  // let hours = String(date.getHours()).padStart(2, "0");
+  // let min = String(date.getMinutes()).padStart(2, "0");
+  // let sec = String(date.getSeconds()).padStart(2, "0");
+  if (value == null || value == undefined) {
+    return "";
+  }
+  return year + "-" + month + "-" + day;
 };
 </script>

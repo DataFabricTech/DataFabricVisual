@@ -9,7 +9,7 @@
           <div class="mu-selectbox w160">
             <select v-model="props.searchObj.searchType">
               <option value="all">전체</option>
-              <option value="title">제목</option>
+              <!-- <option value="title">제목</option> -->
             </select>
           </div>
           <div class="mu-input-icon">

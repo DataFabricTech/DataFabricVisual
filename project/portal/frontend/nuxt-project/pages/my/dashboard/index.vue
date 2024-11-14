@@ -28,7 +28,7 @@
               <div class="mu-row gap-20">
                 <my-search-data :dataList_s="mySearchDataList"></my-search-data>
 
-                <my-request-data :dataList_s="myRequestDataList"> </my-request-data>
+                <my-request-data :dataList_s="myDataRequestList"> </my-request-data>
 
                 <my-synonym-delete-request-data
                   :dataList_s="mySynonymDeleteRequestList"
@@ -83,28 +83,20 @@ interface MySearchData {
   user_id: string;
 }
 
-interface MyRequestData {
-  list: [
-    {
-      admin_reply_status: boolean;
-      benefit_content: string;
-      data_name: string;
-      file_cnt: number;
-      id: number;
-      is_open: boolean;
-      new_yn: boolean;
-      post_content: string;
-      post_type: string;
-      process_status: string;
-      rownum: number;
-      title: string;
-      upload_date: string;
-      user_nm: string;
-      view_count: number;
-      writer: string;
-    }
-  ];
-  total: number;
+interface MyDataRequest {
+  id: number
+	writer: string
+	request_type: string
+	title: string
+	data_name: string
+	contents: string
+	request_start?: string
+	request_end?: string
+	benefit_content: string
+	create_date: string
+	update_date: string
+	process_status: number
+	finish_date: string
 }
 
 interface MyExtractedData {
@@ -186,7 +178,7 @@ const { $ofetch } = useNuxtApp();
 const userStore = useUserStore();
 
 const mySearchDataList = ref<Array<MySearchData>>([]);
-const myRequestDataList = ref<Array<MyRequestData>>([]);
+const myDataRequestList = ref<Array<MyDataRequest>>([]);
 const myExtractedDataList = ref<Array<MyExtractedData>>([]);
 const myWishedDataList = ref<Array<MyWishedData>>([]);
 const mySuggestedDataList = ref<Array<MySuggestedData>>([]);
@@ -194,7 +186,7 @@ const mySynonymDeleteRequestList = ref<Array<MySynonymDeleteRequestData>>([]);
 
 onMounted(() => {
   getMySearchDataList();
-  getMyRequestDataList();
+  getMyDataRequestList();
   getMyExtractedDataList();
   getMyWishedDataList();
   getMySuggestedDataList();
@@ -209,11 +201,12 @@ const getMySearchDataList = async (): Promise<void> => {
   mySearchDataList.value = result.data;
 };
 
-const getMyRequestDataList = async (): Promise<void> => {
-  const result = await $ofetch(
-    "/api/post/request/list?postType=data-request&pageSize=5&pnum=1&searchType=all&searchWord="
-  );
-  myRequestDataList.value = result.data;
+const getMyDataRequestList = async (): Promise<void> => {
+  const result = await $ofetch("/api/myCatalog/myDataRequestList", {
+    method: "POST",
+    body: param,
+  });
+  myDataRequestList.value = result.data;
 };
 
 const getMyExtractedDataList = async (): Promise<void> => {
