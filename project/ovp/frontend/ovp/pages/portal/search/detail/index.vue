@@ -174,7 +174,7 @@ async function changeTab(tab: number | string) {
       // await getFilters();
       break;
     case "knowledge":
-      $alert("개발중입니다.", "info");
+      // $alert("개발중입니다.", "info");
       break;
     case "recommended":
       const url = await checkSampleDataValid();
