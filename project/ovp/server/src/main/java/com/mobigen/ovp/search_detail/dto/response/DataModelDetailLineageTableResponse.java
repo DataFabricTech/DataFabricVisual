@@ -28,6 +28,7 @@ public class DataModelDetailLineageTableResponse {
             tempNode.put("id", node.getId());
             tempNode.put("fqn", node.getFullyQualifiedName());
             tempNode.put("name", node.getDisplayName());
+            tempNode.put("entityType", node.getEntityType());
 
             // 3depth 까지만 표시
             String[] pathList = node.getFullyQualifiedName().split("\\.");

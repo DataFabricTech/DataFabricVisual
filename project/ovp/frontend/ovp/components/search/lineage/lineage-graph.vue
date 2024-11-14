@@ -110,6 +110,7 @@ const transformData = (
       label: node.name,
       path: node.path,
       fqn: node.fqn,
+      entityType: node.entityType,
     },
   }));
 

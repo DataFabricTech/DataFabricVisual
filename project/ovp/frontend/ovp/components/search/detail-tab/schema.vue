@@ -39,9 +39,6 @@ const COLUMN_DEFS: ColDef[] = [
     },
   },
 ];
-watchEffect(() => {
-  console.log(schemaList.value.length);
-});
 </script>
 
 <style lang="scss" scoped></style>
