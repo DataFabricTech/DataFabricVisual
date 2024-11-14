@@ -195,6 +195,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
           return {
             headerName: `${value.name}(${value.dataType})`,
             field: value.name,
+            maxWidth: 150
           };
         });
         sampleList.value = data.sampleList;
