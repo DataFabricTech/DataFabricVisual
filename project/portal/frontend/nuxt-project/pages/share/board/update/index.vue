@@ -1,7 +1,7 @@
 <template>
   <div>
     <board-wrap
-      :post="post"
+      :share="share"
       @cancelMethod="onClickListButton"
       @saveMethod="onClickSaveButton"
     >
@@ -83,7 +83,8 @@
 import { successAlert, confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import { useNuxtApp, useRoute, useRouter } from "nuxt/app";
 import { onMounted, ref, computed, ComputedRef } from "vue";
-import BoardWrap from "@organisms/post/share-borad-edit-inner";
+import BoardWrap from "@organisms/share/share-board-edit-inner";
+import { useUserStore } from "@/store/user";
 
 definePageMeta({
   name: "sharePostUpdate",
@@ -95,9 +96,11 @@ const editor = $ckeditor5.customEditor5;
 const route = useRoute();
 const router = useRouter();
 
+const userStore = useUserStore()
+
 onMounted(() => {
   let id = route.query.id;
-  getPost(id);
+  getShareOne(id);
 });
 
 const thumbFiles = ref<Array<File>>([]);
@@ -111,26 +114,18 @@ const delete_files = ref<Array<File>>([]);
   file_location: string;
   file_size: string;
   name: string;
-  post_id: number;
+  share_id: number;
   reg_date: string;
   reg_user: string;
 }
 
-interface Post {
-  writer: string;
-  post_type: string;
-  title: string;
-  post_content: string;
-  admin_reply_status?: boolean;
-  file_cnt?: number;
+interface Share {
   id?: number;
-  image?: string;
-  is_open?: boolean;
-  new_yn?: boolean;
-  rownum?: number;
-  upload_date?: string;
-  user_nm?: string;
-  view_count?: number;
+  writer: string;
+  title: string;
+  contents: string;
+  create_date?: string;
+  update_date?: string;
 }
 
 interface EditorConfig {
@@ -150,11 +145,10 @@ interface EditorConfig {
 }
 
 const required_flag = ref<boolean>(false);
-const post = ref<Post>({
-  writer: "",
-  post_type: "",
+const share = ref<Share>({
+  writer: userStore.getUser.user_id,
   title: "",
-  post_content: "",
+  contents: "",
 });
 
 const isLocal = (): boolean => {
@@ -243,21 +237,21 @@ const editorConfig = ref<EditorConfig>({
 const titleValid: ComputedRef<boolean> = computed(() => {
   // 필수값체크
   if (!required_flag.value) return true;
-  else return post.value.title.length > 0 ? true : false;
+  else return share.value.title.length > 0 ? true : false;
 });
-const postContentValid: ComputedRef<boolean> = computed(() => {
+const shareContentValid: ComputedRef<boolean> = computed(() => {
   //필수값체크
   if (!required_flag.value) return true;
-  else return post.value.post_content.length > 0 ? true : false;
+  else return share.value.contents.length > 0 ? true : false;
 });
 
 // 조회
-const getPost = async (id: number): Promise<void> => {
+const getShareOne = async (id: number): Promise<void> => {
   try {
-    let { data: result } = await $ofetch(`/api/post/one?postId=${id}`);
+    let { data: result } = await $ofetch(`/api/share/one?id=${id}`);
     files.value = result.fileList;
     thumbFiles.value = result.thumbList;
-    post.value = result.post;
+    share.value = result.share;
   } catch (error) {
     console.log(error);
   }
@@ -287,13 +281,11 @@ const onClickSaveButton = async () => {
 
     formData.append("delete_thumb_flag", delete_thumb_flag.value);
 
-    formData.append("post.id", post.value.id);
-    formData.append("post.post_type", post.value.post_type);
-    formData.append("post.title", post.value.title);
-    formData.append("post.post_content", post.value.post_content);
-    formData.append("post.category", post.value.category);
+    formData.append("share.id", share.value.id);
+    formData.append("share.title", share.value.title);
+    formData.append("share.contents", share.value.contents);
 
-    $ofetch("/api/post/update/saveFile", {
+    $ofetch("/api/share/update/saveFile", {
       method: "POST",
       body: formData,
     }).then(async (res: { errorMessage: string }) => {
@@ -313,11 +305,11 @@ const onClickSaveButton = async () => {
 // // 저장 버튼 클릭 이벤트
 // const onClickSaveButton = async (): Promise<void> => {
 //   required_flag.value = true;
-//   if (!titleValid.value || !postContentValid.value) return;
+//   if (!titleValid.value || !shareContentValid.value) return;
 //   if (!(await confirmAlert("저장하시겠습니까?"))) return;
-//   $ofetch("/api/post/update", {
+//   $ofetch("/api/share/update", {
 //     method: "POST",
-//     body: post.value,
+//     body: share.value,
 //   }).then(async (res: { errorMessage: string }) => {
 //     if (res) {
 //       if (res.errorMessage && res.errorMessage != "") {

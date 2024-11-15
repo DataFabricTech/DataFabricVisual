@@ -1004,10 +1004,10 @@ const getDataManagerInfoList = async () => {
     ""
   );
   if (classificationsList !== "") {
-    const imdbParam = { classificationsList };
-    const result = await $ofetch("/api/search/detail/getImdbData", {
+    const dataManagerInfoParam = { classificationsList };
+    const result = await $ofetch("/api/search/detail/getDataManagerInfoList", {
       method: "POST",
-      body: imdbParam,
+      body: dataManagerInfoParam,
     });
     dataManagerInfoList.value = result.data;
   }

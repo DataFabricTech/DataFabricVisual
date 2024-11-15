@@ -126,7 +126,7 @@ public class DataRequestController {
     }
 
     /**
-     * 공지사항, 데이터요청, FAQ 삭제
+     * 데이터요청 삭제
      * @param param                 게시글 정보
      * @return
      * @throws Exception

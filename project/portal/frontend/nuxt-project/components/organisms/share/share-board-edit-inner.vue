@@ -31,7 +31,7 @@
                     title="제목 입력 필수"
                     rows="5"
                     class="mu-input"
-                    v-model="props.post.title"
+                    v-model="props.share.title"
                     v-bind:class="[!titleValid ? 'error' : '', 'mu-area']"
                     maxlength="40"
                   ></textarea>
@@ -46,8 +46,8 @@
                 <strong class="required">필수</strong>
               </th>
               <td>
-                <ckeditor :editor="editor" v-model="props.post.post_content"></ckeditor>
-                <p v-if="!postContentReplyValid" class="complete-msg error bul-refer">
+                <ckeditor :editor="editor" v-model="props.share.contents"></ckeditor>
+                <p v-if="!shareContentReplyValid" class="complete-msg error bul-refer">
                   내용을 입력해주세요.
                 </p>
               </td>
@@ -101,8 +101,8 @@ const editor = $ckeditor5.customEditor5;
 const radioList = ref<Array<string>>(["공지", "시스템", "이벤트", "안내", "기타"]);
 const required_flag = ref<boolean>(false);
 
-const emit = defineEmits(["cancelMethod", "update:post", "saveMethod"]);
-const props = defineProps(["post", "cancelMethod", "saveMethod"]);
+const emit = defineEmits(["cancelMethod", "update:share", "saveMethod"]);
+const props = defineProps(["share", "cancelMethod", "saveMethod"]);
 
 const files = ref<Array<File>>([]);
   interface File {
@@ -113,34 +113,31 @@ const files = ref<Array<File>>([]);
   type: string;
   webkitRelativePath: string;
 }
-const post = ref<Post>({
-  post_type: "share_board",
-  title: "",
-  post_content: "",
-  category: "활용사례",
-});
-interface Post {
-  category: string;
-  post_content: string;
-  post_type: string;
+
+interface Share {
+  id?: number;
+  writer: string;
   title: string;
+  contents: string;
+  create_date?: string;
+  update_date?: string;
 }
 
-const postContentReplyValid: ComputedRef<boolean> = computed(() => {
+const shareContentReplyValid: ComputedRef<boolean> = computed(() => {
   // 필수값 체크
   if (!required_flag.value) return true;
 
-  // props.post나 props.post.post_content가 없는 경우를 대비해 안전하게 접근
-  return props.post && props.post.post_content && props.post.post_content.length > 0 ? true : false;
+  // props.share나 props.share.contents가 없는 경우를 대비해 안전하게 접근
+  return props.share && props.share.contents && props.share.contents.length > 0 ? true : false;
 });
 
 const titleValid: ComputedRef<boolean> = computed(() => {
   if (!required_flag.value) return true;
-  else return props.post.title.length > 0 ? true : false;
+  else return props.share.title.length > 0 ? true : false;
 });
-const postContentValid: ComputedRef<boolean> = computed(() => {
+const shareContentValid: ComputedRef<boolean> = computed(() => {
   if (!required_flag.value) return true;
-  else return props.post.post_content.length > 0 ? true : false;
+  else return props.share.contents.length > 0 ? true : false;
 });
 
 const onClickListButton = (): void => {
@@ -150,9 +147,9 @@ const onClickListButton = (): void => {
 
 // 파일 저장 버튼 클릭
 const onClickSaveButton = async (): Promise<void> => {
-  if (!titleValid.value || !postContentValid.value) return;
+  if (!titleValid.value || !shareContentValid.value) return;
 
-  emit("update:post", props.post);
+  emit("update:share", props.share);
   emit("saveMethod");
 };
 

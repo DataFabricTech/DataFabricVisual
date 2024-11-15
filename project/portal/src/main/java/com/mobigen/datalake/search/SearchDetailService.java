@@ -992,10 +992,10 @@ public class SearchDetailService {
     //     return result;
     // }
 
-    // Imdb 데이터 조회
-    public Object getImdbData(Map<String, Object> params) {
+    // 데이터 담당 부서 조회
+    public Object getDataManagerInfoList(Map<String, Object> params) {
         JsonResult result = new JsonResult();
-        List<Map<String, String>> imdbDataList = new ArrayList<>();
+        List<Map<String, String>> dataManagerInfoList = new ArrayList<>();
         try {
             List<Object> classificationsList = (List<Object>) params.get("classificationsList");
             List<String> paramList = new ArrayList<>();
@@ -1004,23 +1004,23 @@ public class SearchDetailService {
                 paramList.add(data.get("typeName"));
             }
 
-            List<Map<String, String>> getImdbDataList = searchDetailMapper.selectImdbData();
+            List<Map<String, String>> infoList = searchDetailMapper.getDataManagerInfoList();
             
-            for (Map<String, String> getImdbData : getImdbDataList) {
-                Map<String, String> imdbData = new LinkedHashMap<>();
-                imdbData.put("user_nm", getImdbData.get("user_nm"));
-                imdbData.put("dept_nm", getImdbData.get("dept_nm"));
-                imdbData.put("dept_nm2", getImdbData.get("dept_nm2"));
-//                if(getImdbData.get("user_email_ext") != null){                    // 현진 담장자의 이메일을 사용하지 않아 주석처리
-//                    imdbData.put("user_email", Crypto.AES_Decode(getImdbData.get("user_email_ext")));
+            for (Map<String, String> info : infoList) {
+                Map<String, String> dataManagerInfo = new LinkedHashMap<>();
+                dataManagerInfo.put("user_nm", info.get("user_nm"));
+                dataManagerInfo.put("dept_nm", info.get("dept_nm"));
+                dataManagerInfo.put("dept_nm2", info.get("dept_nm2"));
+//                if(info.get("user_email_ext") != null){                    // 현진 담장자의 이메일을 사용하지 않아 주석처리
+//                    dataManagerInfo.put("user_email", Crypto.AES_Decode(info.get("user_email_ext")));
 //                }else{
-//                    if(getImdbData.get("user_email") != null){
-//                        imdbData.put("user_email", Crypto.AES_Decode(getImdbData.get("user_email")));
+//                    if(info.get("user_email") != null){
+//                        dataManagerInfo.put("user_email", Crypto.AES_Decode(info.get("user_email")));
 //                    }
 //                }
-                imdbDataList.add(imdbData);
+                dataManagerInfoList.add(dataManagerInfo);
             }
-            result.setData(imdbDataList);
+            result.setData(dataManagerInfoList);
         }catch (Exception e){
             e.printStackTrace();
         }

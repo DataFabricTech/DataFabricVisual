@@ -16,14 +16,14 @@
             <!-- board-list-search -->
             <notice-border-list-search
               :searchObj.sync="searchObj"
-              @searchMethod="getPost"
+              @searchMethod="getShareList"
             />
 
-            <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getPost" />
+            <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getShareList" />
           </div>
           <hr><br>
           <ul class="card-list">
-            <li class="card-box" v-for="(item, index) in postList" :key="index">
+            <li class="card-box" v-for="(item, index) in shareList" :key="index">
               <NuxtLink :to="'/share/board/detail?id=' + item.id">
                 <div class="inner-thumb">
                   <div v-html="item.image_html"></div>
@@ -32,20 +32,20 @@
                   <div class="card-category">
                       <strong class="data-title share">{{ item.title }}</strong
                       ><!-- 게시물 제목(1줄까지 출력) -->
-                      <p class="card-desc" v-html="limitedContent(item.post_content)"></p>
+                      <p class="card-desc" v-html="limitedContent(item.contents)"></p>
 
                   </div>
                   <div class="data-info">
                     <dl>
                       <dt class="blind">게시일</dt>
-                      <dd>{{ item.upload_date }}</dd>
+                      <dd>{{ item.create_date }}</dd>
                     </dl>
                   </div>
                 </div>
               </NuxtLink>
             </li>
           </ul>
-          <div>
+          <div v-if="!shareList">
             <p class="nodata">활용 사례 게시글이 존재하지 않습니다.</p>
           </div>
 
@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import PageSize from "@/pages/admin/manager/system/user/page-size";
 import Pagination from "@functional/pagination/pagination";
-import NoticeBorderListSearch from "@organisms/post/notice-border-list-search";
+import NoticeBorderListSearch from "@organisms/share/share-board-list-search";
 import { useNuxtApp, useRouter } from "nuxt/app";
 import { onMounted, ref } from "vue";
 
@@ -75,21 +75,13 @@ interface PagingObj {
   currentPage: number;
 }
 
-interface Post {
-  writer: string;
-  post_type: string;
-  title: string;
-  post_content: string;
-  admin_reply_status?: boolean;
-  file_cnt?: number;
+interface Share {
   id?: number;
-  image?: string;
-  is_open?: boolean;
-  new_yn?: boolean;
-  rownum?: number;
-  upload_date?: string;
-  user_nm?: string;
-  view_count?: number;
+  writer: string;
+  title: string;
+  contents: string;
+  create_date?: string;
+  update_date?: string;
 }
 
 interface SearchObj {
@@ -100,16 +92,15 @@ interface SearchObj {
 const { $ofetch } = useNuxtApp();
 const router = useRouter();
 
-onMounted(() => getPost(1));
+onMounted(() => getShareList(1));
 
-const postType = ref<string>("share_board");
 const pagingObj = ref<PagingObj>({
   total: 0, // 전체 데이터 건수
   limit: 8, // 한 페이지에 보여줄 데이터 건수
   block: 10, // 한 화면에서 보여줄 페이지 수
   currentPage: 1, // 현재 페이지 번호
 });
-const postList = ref<Array<Post>>([]);
+const shareList = ref<Array<Share>>([]);
 const searchObj = ref<SearchObj>({
   searchType: "all", // 검색 조건 유형
   searchWord: "", // 검색어
@@ -117,13 +108,13 @@ const searchObj = ref<SearchObj>({
 const maxLength = ref<number>(100);
 
 // 이미지 제거
-const limitedContent = (post_content: string): string => {
+const limitedContent = (contents: string): string => {
   const tempDiv = document.createElement('div')
 
   const images = tempDiv.querySelectorAll('img');
   images.forEach(img => img.remove())
 
-  const textWithLineBreaks = post_content
+  const textWithLineBreaks = contents
         .replace(/<[^>]+>/g, '') // HTML 태그 제거
         // .replace(/<p><\/p>/g, '') // p 태그 제거
         // .replace(/<\/[^>]+>/g, '\n') // 닫는 태그 뒤에 줄바꿈 추가
@@ -133,11 +124,11 @@ const limitedContent = (post_content: string): string => {
 
   // 줄바꿈으로 나누고, 첫 1줄만 가져오기
   const lines = textWithLineBreaks.split('\n');
-  post_content = lines.slice(0, 1).join('\n');
+  contents = lines.slice(0, 1).join('\n');
 
   // 가로 길이가 1줄을 넘어가면 ... 처리
   const maxWidth = 195
-  const truncated = truncateText(post_content, maxWidth)
+  const truncated = truncateText(contents, maxWidth)
   tempDiv.innerHTML = truncated
 
   // 내용이 없는 경우 ...
@@ -168,11 +159,11 @@ const truncateText = (content, maxWidth) => {
   return truncatedText;
 }
 
-// 공지사항 목록 조회
-const getPost = async (offset: number = 1): Promise<void> => {
+// 활용사례 목록 조회
+const getShareList = async (offset: number = 1): Promise<void> => {
   try {
     let { data: result } = await $ofetch(
-      `/api/post/list?postType=${postType.value}&pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}`
+      `/api/share/list?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}`
     );
 
     pagingObj.value = {
@@ -180,16 +171,16 @@ const getPost = async (offset: number = 1): Promise<void> => {
       total: result.total,
       currentPage: offset,
     };
-    postList.value = result.list;
+    shareList.value = result.list;
 
     // 버그로 인해 forEach 대신 for...of 사용
-    for (const element of postList.value) {
+    for (const element of shareList.value) {
 
       // const modifiedText = text.replace(/<img\b[^>]*>/g, '');
       // const regex = /<img[^>]+src=[\"']?([^>\"']+)[\"']?[^>]*>/g;
 
       // let imgTag;
-      // while ((imgTag = regex.exec(element.post_content))) {
+      // while ((imgTag = regex.exec(element.contents))) {
       //   if (imgTag[1].indexOf("http://") == -1 && imgTag[1].indexOf("https://") == -1) {
       //     element.image = imgTag[0];
       //     break;
@@ -231,17 +222,17 @@ const getPost = async (offset: number = 1): Promise<void> => {
       }
 
       // 게시글 내용 미리보기 위해 처리
-      element.post_content = element.post_content.replace(/<figure[^>]*>[\s\S]*?<\/figure>/gi, ''); // 이미지 태그 부분
-      element.post_content = element.post_content.replace(/&nbsp;/g, ''); // Enter 기호
+      element.contents = element.contents.replace(/<figure[^>]*>[\s\S]*?<\/figure>/gi, ''); // 이미지 태그 부분
+      element.contents = element.contents.replace(/&nbsp;/g, ''); // Enter 기호
 
-      const textWithLineBreaks = element.post_content
+      const textWithLineBreaks = element.contents
         .replace(/<\/[^>]+>/g, '\n') // 닫는 태그 뒤에 줄바꿈 추가
         .replace(/<[^>]+>/g, '') // HTML 태그 제거
         .replace(/\n+/g, '\n'); // 연속된 줄바꿈을 하나로 줄임
 
       // 줄바꿈으로 나누고, 첫 2줄만 가져오기
       const lines = textWithLineBreaks.split('\n');
-      element.post_content = lines.slice(0, 2).join('\n');
+      element.contents = lines.slice(0, 2).join('\n');
 
     };
   } catch (error) {
@@ -256,6 +247,6 @@ const onClickRegisterButton = (): void => {
 
 // 페이지 번호 클릭 이벤트 핸들러
 const onClickPage = (page: number): void => {
-  getPost(page);
+  getShareList(page);
 };
 </script>

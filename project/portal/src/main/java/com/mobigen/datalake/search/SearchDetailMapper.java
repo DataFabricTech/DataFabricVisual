@@ -63,5 +63,5 @@ public interface SearchDetailMapper {
 
     void insertSearchMetaHistory(Map<String, Object> saveData);
 
-    List<Map<String,String>> selectImdbData();
+    List<Map<String,String>> getDataManagerInfoList();
 }

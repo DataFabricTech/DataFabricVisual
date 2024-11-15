@@ -156,7 +156,7 @@
                 </div>
                 <strong class="card-title">{{ share.title }}</strong>
                 <p class="card-desc">
-                  <div v-html="limitedContent(share.post_content)"></div>
+                  <div v-html="limitedContent(share.contents)"></div>
                 </p>
               </div>
             </a>
@@ -428,13 +428,13 @@ onMounted(async () => {
 })
 
 // 이미지 제거
-const limitedContent = (post_content: string): string => {
+const limitedContent = (contents: string): string => {
   const tempDiv = document.createElement('div')
 
   const images = tempDiv.querySelectorAll('img');
   images.forEach(img => img.remove())
 
-  const textWithLineBreaks = post_content
+  const textWithLineBreaks = contents
         .replace(/<[^>]+>/g, '') // HTML 태그 제거
         // .replace(/<p><\/p>/g, '') // p 태그 제거
         // .replace(/<\/[^>]+>/g, '\n') // 닫는 태그 뒤에 줄바꿈 추가
@@ -444,11 +444,11 @@ const limitedContent = (post_content: string): string => {
 
   // 줄바꿈으로 나누고, 첫 1줄만 가져오기
   const lines = textWithLineBreaks.split('\n');
-  post_content = lines.slice(0, 1).join('\n');
+  contents = lines.slice(0, 1).join('\n');
 
   // 가로 길이가 1줄을 넘어가면 ... 처리
   const maxWidth = 195
-  const truncated = truncateText(post_content, maxWidth)
+  const truncated = truncateText(contents, maxWidth)
   tempDiv.innerHTML = truncated
 
   // 내용이 없는 경우 ...
@@ -580,7 +580,7 @@ const getShareData = async () => {
       // const regex = /<img[^>]+src=[\"']?([^>\"']+)[\"']?[^>]*>/g;
 
       // let imgTag;
-      // while ((imgTag = regex.exec(element.post_content))) {
+      // while ((imgTag = regex.exec(element.contents))) {
       //   if (imgTag[1].indexOf("http://") == -1 && imgTag[1].indexOf("https://") == -1) {
       //     const tempDiv = document.createElement('div')
       //     tempDiv.innerHTML = imgTag[0]
@@ -640,11 +640,11 @@ const getShareData = async () => {
       }
 
       // 게시글 내용 미리보기 위해 처리
-      element.post_content = element.post_content.replace(/<figure[^>]*>[\s\S]*?<\/figure>/gi, ''); // 이미지 태그 부분
-      element.post_content = element.post_content.replace(/&nbsp;/g, ''); // Enter 기호
-      element.post_content = element.post_content.replace(/\s*style=["'][^"']*["']/gi, '');
-      element.post_content = element.post_content.replace(/\s*class=["'][^"']*["']/gi, '');
-      element.post_content = element.post_content.replace(/<\/?(i|strong)>/gi, '');
+      element.contents = element.contents.replace(/<figure[^>]*>[\s\S]*?<\/figure>/gi, ''); // 이미지 태그 부분
+      element.contents = element.contents.replace(/&nbsp;/g, ''); // Enter 기호
+      element.contents = element.contents.replace(/\s*style=["'][^"']*["']/gi, '');
+      element.contents = element.contents.replace(/\s*class=["'][^"']*["']/gi, '');
+      element.contents = element.contents.replace(/<\/?(i|strong)>/gi, '');
 
     }
   }

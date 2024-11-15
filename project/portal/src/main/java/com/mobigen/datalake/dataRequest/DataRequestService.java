@@ -54,7 +54,7 @@ public class DataRequestService {
         return dataRequestList;
     }
 
-    // 공지사항, 데이터요청, FAQ 단건 조회
+    // 데이터요청 단건 조회
     public Map<String, Object> getDataRequestOne(String id, HttpServletRequest request) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
         Map<String, Object> dataRequest = dataRequestMapper.getDataRequestOne(id);
@@ -216,7 +216,7 @@ public class DataRequestService {
             message.setContent(htmlBody, "text/html; charset=utf-8");
             javaMailSender.send(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new Exception("이메일 발송에 실패하였습니다.");
         }
     }
 
@@ -274,7 +274,7 @@ public class DataRequestService {
             message.setContent(htmlBody, "text/html; charset=utf-8");
             javaMailSender.send(message);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new Exception("이메일 발송에 실패하였습니다.");
         }
     }
 

@@ -316,15 +316,15 @@ public class DetailController {
     }
 
     /**
-     * Imdb 데이터 조회
+     * 데이터 담당 부서 조회
      *
      * @param params            조회용 파라미터
-     * @return Object           Imdb 데이터
+     * @return Object           데이터 담당 부서 목록
      */
     @ResponseJsonResult
-    @PostMapping("/getImdbData")
+    @PostMapping("/getDataManagerInfoList")
     @ResponseBody
-    public Object postImdbData(@RequestBody Map<String, Object> params) {
-        return searchDetailService.getImdbData(params);
+    public Object getDataManagerInfoList(@RequestBody Map<String, Object> params) {
+        return searchDetailService.getDataManagerInfoList(params);
     }
 }

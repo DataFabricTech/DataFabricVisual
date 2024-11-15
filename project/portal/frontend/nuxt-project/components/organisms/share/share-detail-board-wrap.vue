@@ -1,14 +1,14 @@
 <template>
   <div class="board-wrap">
     <div class="board-head">
-        <strong v-if="props.isAdmin" class="board-title">{{ props.post.title }}</strong>
+        <strong v-if="props.isAdmin" class="board-title">{{ props.share.title }}</strong>
         <div class="board-desc">
             <div class="data-info">
               <dl>
                 <dt v-if="props.isAdmin">등록자</dt>
-                <dd v-if="props.isAdmin">{{ props.post.writer }}</dd>
+                <dd v-if="props.isAdmin">{{ props.share.writer }}</dd>
                 <dt>등록일</dt>
-                <dd>{{ props.post.upload_date }}</dd>
+                <dd>{{ props.share.create_date }}</dd>
               </dl>
             </div>
         </div>
@@ -16,7 +16,7 @@
     <div class="board-body">
       <!-- inner-cms : cms영역 -->
       <div class="inner-cms">
-        <p class="inner-cms-share" v-html="props.post.post_content"></p>
+        <p class="inner-cms-share" v-html="props.share.contents"></p>
       </div>
       <!-- //inner-cms : cms영역 -->
       <!-- <slot name="thumb"></slot> -->
@@ -28,7 +28,7 @@
             </a>
           </li>
         </ul>
-      </div>      
+      </div>
     </div>
   </div>
 </template>
@@ -41,7 +41,7 @@ import { useUserStore } from "~/store/user";
 const { $ofetch } = useNuxtApp();
 const userStore = useUserStore();
 
-const props = defineProps(["post", "fileList", "isAdmin"]);
+const props = defineProps(["share", "fileList", "isAdmin"]);
 
 // 첨부파일 다운로드
 const fileDownload = async (file_id: number): Promise<void> => {
