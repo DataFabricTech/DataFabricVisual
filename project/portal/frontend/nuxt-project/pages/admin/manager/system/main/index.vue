@@ -78,7 +78,7 @@
       <div class="main-system">
         <div class="inner-column">
           <div class="mu-heading">
-            <h4>포탈 설정 관리</h4>
+            <h4>카탈로그 설정 관리</h4>
           </div>
           <!-- recommend-keyword -->
           <dl class="recommend-keyword">

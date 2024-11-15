@@ -72,6 +72,8 @@ const changeRouter = (): void => {
   userStore.onChangeRouter(createContext(), { to: { fullPath, params } });
 };
 
+const goToCurrentPathDepth = () => {}
+
 onMounted(() => {
   changeRouter();
 });

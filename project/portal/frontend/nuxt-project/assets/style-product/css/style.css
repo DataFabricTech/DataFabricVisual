@@ -2,10 +2,10 @@
 
 /* ---------------------------------------
 	Filename: style.css
-	Description : 데이터 포털
+	Description : 데이터 카탈로그
 	Author	: mobigen
 	date	: 2022-07
-	비고 : 
+	비고 :
    --------------------------------------- */
 
 body, body * {font-family:'Pretendard', 'roboto', 'Malgun Gothic', '맑은 고딕', sans-serif; font-size:14px; line-height:1.5; color:#4D4F55; word-break:break-all;}
@@ -14,11 +14,11 @@ body, body * {font-family:'Pretendard', 'roboto', 'Malgun Gothic', '맑은 고�
 body {background-color:#f0f2f7;}
 
 /* skipNavigation */
-.skiptoContent, 
+.skiptoContent,
 .skiptoContent a {position:absolute;}
 .skiptoContent {top:0; left:0; right:0 ; margin:0 auto; z-index:99999;}
 .skiptoContent a {top:-50px; width:100%; font-size:0;}
-.skiptoContent a:active, 
+.skiptoContent a:active,
 .skiptoContent a:focus {display:block; top:0; line-height:18px; color:#fff; font-size:12px; font-weight:500; text-align:center; outline:0; background:#272d34;}
 
 /* common i tag blind */
@@ -59,101 +59,101 @@ i.mu-icon-svg {overflow:hidden; font-size:0; text-indent:-9999px;}
 .mu-icon-svg.time {background-image:url("../images/ico/ico-time.svg");}
 
 /* hover,active type */
-.mu-icon-svg.link, 
+.mu-icon-svg.link,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.link {background-image:url("../images/ico/ico-link_n.svg")}
-[class^="mu-btn"]:hover .mu-icon-svg.link, 
+[class^="mu-btn"]:hover .mu-icon-svg.link,
 [class^="mu-btn"].active .mu-icon-svg.link {background-image:url("../images/ico/ico-link_o.svg")}
 
-.mu-icon-svg.view, 
+.mu-icon-svg.view,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.view {background-image:url("../images/ico/ico-view_n.svg")}
 [class^="mu-btn"]:hover .mu-icon-svg.view {background-image:url("../images/ico/ico-view_o.svg")}
 [class^="mu-btn"].mu-btn-primary .mu-icon-svg.view,
 [class^="mu-btn"].mu-btn-primary:hover .mu-icon-svg.view {background-image:url("../images/ico/ico-view-wh.svg")}
 
-.mu-icon-svg.external-link, 
+.mu-icon-svg.external-link,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.external-link {background-image:url("../images/ico/ico-external-link_n.svg")}
 [class^="mu-btn"]:hover .mu-icon-svg.external-link {background-image:url("../images/ico/ico-external-link_o.svg")}
 [class^="mu-btn"].mu-btn-bg-non:hover .mu-icon-svg.external-link {background-image:url("../images/ico/ico-external-link-gr.svg")}
 [class^="mu-btn"].mu-btn-primary .mu-icon-svg.external-link,
 [class^="mu-btn"].mu-btn-primary:hover .mu-icon-svg.external-link {background-image:url("../images/ico/ico-external-link-wh.svg")}
 
-.mu-icon-svg.download, 
+.mu-icon-svg.download,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.download {background-image:url("../images/ico/ico-download_n.svg")}
 [class^="mu-btn"]:hover .mu-icon-svg.download {background-image:url("../images/ico/ico-download_o.svg")}
 [class^="mu-btn"].mu-btn-primary .mu-icon-svg.download,
 [class^="mu-btn"].mu-btn-primary:hover .mu-icon-svg.download {background-image:url("../images/ico/ico-download-wh.svg")}
 
-.mu-icon-svg.search, 
+.mu-icon-svg.search,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.search {background-image:url("../images/ico/ico-search_n.svg");}
 [class^="mu-btn"]:hover .mu-icon-svg.search {background-image:url("../images/ico/ico-search_n.svg");}
 [class^="mu-btn"].mu-btn-primary .mu-icon-svg.search,
 [class^="mu-btn"].mu-btn-primary:hover .mu-icon-svg.search {background-image:url("../images/ico/ico-search-wh.svg")}
 
-.mu-icon-svg.refresh, 
+.mu-icon-svg.refresh,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.refresh {background-image:url("../images/ico/ico-refresh_n.svg");}
 [class^="mu-btn"]:hover .mu-icon-svg.refresh {background-image:url("../images/ico/ico-refresh_o.svg");}
 
-.mu-icon-svg.arrow-top, 
+.mu-icon-svg.arrow-top,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.arrow-top,
 [class^="mu-btn"]:hover .mu-icon-svg.arrow-top {background-image:url("../images/ico/ico-arrow-double.svg");}
-[class^="mu-btn"].mu-btn-primary .mu-icon-svg.arrow-top, 
+[class^="mu-btn"].mu-btn-primary .mu-icon-svg.arrow-top,
 [class^="mu-btn"].mu-btn-primary:disabled:hover .mu-icon-svg.arrow-top,
 [class^="mu-btn"].mu-btn-primary:hover .mu-icon-svg.arrow-top,
-[class^="mu-btn"].mu-btn-secondary .mu-icon-svg.arrow-top, 
+[class^="mu-btn"].mu-btn-secondary .mu-icon-svg.arrow-top,
 [class^="mu-btn"].mu-btn-secondary:disabled:hover .mu-icon-svg.arrow-top,
 [class^="mu-btn"].mu-btn-secondary:hover .mu-icon-svg.arrow-top {background-image:url("../images/ico/ico-arrow-double-wh.svg");}
 
-.mu-icon-svg.arrow-bottom, 
+.mu-icon-svg.arrow-bottom,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.arrow-bottom,
 [class^="mu-btn"]:hover .mu-icon-svg.arrow-bottom {background-image:url("../images/ico/ico-arrow-double.svg"); transform:rotate(-180deg);}
-[class^="mu-btn"].mu-btn-primary .mu-icon-svg.arrow-bottom, 
+[class^="mu-btn"].mu-btn-primary .mu-icon-svg.arrow-bottom,
 [class^="mu-btn"].mu-btn-primary:disabled:hover .mu-icon-svg.arrow-bottom,
 [class^="mu-btn"].mu-btn-primary:hover .mu-icon-svg.arrow-bottom,
-[class^="mu-btn"].mu-btn-secondary .mu-icon-svg.arrow-bottom, 
+[class^="mu-btn"].mu-btn-secondary .mu-icon-svg.arrow-bottom,
 [class^="mu-btn"].mu-btn-secondary:disabled:hover .mu-icon-svg.arrow-bottom,
 [class^="mu-btn"].mu-btn-secondary:hover .mu-icon-svg.arrow-bottom {background-image:url("../images/ico/ico-arrow-double-wh.svg");}
 
-.mu-icon-svg.arrow-down, 
+.mu-icon-svg.arrow-down,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.arrow-down,
 [class^="mu-btn"]:hover .mu-icon-svg.arrow-down {background-image:url("../images/ico/ico-arrow-right.svg"); transform:rotate(90deg);}
-[class^="mu-btn"].mu-btn-primary .mu-icon-svg.arrow-down, 
+[class^="mu-btn"].mu-btn-primary .mu-icon-svg.arrow-down,
 [class^="mu-btn"].mu-btn-primary:disabled:hover .mu-icon-svg.arrow-down,
 [class^="mu-btn"].mu-btn-primary:hover .mu-icon-svg.arrow-down,
-[class^="mu-btn"].mu-btn-secondary .mu-icon-svg.arrow-down, 
+[class^="mu-btn"].mu-btn-secondary .mu-icon-svg.arrow-down,
 [class^="mu-btn"].mu-btn-secondary:disabled:hover .mu-icon-svg.arrow-down,
 [class^="mu-btn"].mu-btn-secondary:hover .mu-icon-svg.arrow-down {background-image:url("../images/ico/ico-arrow-right-wh.svg");}
 
-.mu-icon-svg.arrow-up, 
+.mu-icon-svg.arrow-up,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.arrow-up,
 [class^="mu-btn"]:hover .mu-icon-svg.arrow-up {background-image:url("../images/ico/ico-arrow-right.svg"); transform:rotate(-90deg);}
-[class^="mu-btn"].mu-btn-primary .mu-icon-svg.arrow-up, 
+[class^="mu-btn"].mu-btn-primary .mu-icon-svg.arrow-up,
 [class^="mu-btn"].mu-btn-primary:disabled:hover .mu-icon-svg.arrow-up,
 [class^="mu-btn"].mu-btn-primary:hover .mu-icon-svg.arrow-up,
-[class^="mu-btn"].mu-btn-secondary .mu-icon-svg.arrow-up, 
+[class^="mu-btn"].mu-btn-secondary .mu-icon-svg.arrow-up,
 [class^="mu-btn"].mu-btn-secondary:disabled:hover .mu-icon-svg.arrow-up,
 [class^="mu-btn"].mu-btn-secondary:hover .mu-icon-svg.arrow-up {background-image:url("../images/ico/ico-arrow-right-wh.svg"); transform:rotate(-90deg);}
 
-.mu-icon-svg.arrow-left, 
+.mu-icon-svg.arrow-left,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.arrow-left,
 [class^="mu-btn"]:hover .mu-icon-svg.arrow-left {background-image:url("../images/ico/ico-arrow-right.svg"); transform:rotate(-180deg);}
 
-.mu-icon-svg.arrow-right, 
+.mu-icon-svg.arrow-right,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.arrow-right,
 [class^="mu-btn"]:hover .mu-icon-svg.arrow-right {background-image:url("../images/ico/ico-arrow-right.svg");}
 
-.mu-icon-svg.chevron-up, 
+.mu-icon-svg.chevron-up,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.chevron-up,
 [class^="mu-btn"]:hover .mu-icon-svg.chevron-up {background-image:url("../images/ico/ico-chevron-down.svg"); transform:rotate(180deg);}
 
-.mu-icon-svg.chevron-down, 
+.mu-icon-svg.chevron-down,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.chevron-down,
 [class^="mu-btn"]:hover .mu-icon-svg.chevron-down {background-image:url("../images/ico/ico-chevron-down.svg");}
 
-.mu-icon-svg.chevron-left, 
+.mu-icon-svg.chevron-left,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.chevron-left,
 [class^="mu-btn"]:hover .mu-icon-svg.chevron-left {background-image:url("../images/ico/ico-chevron-down.svg"); transform:rotate(90deg);}
 
-.mu-icon-svg.chevron-right, 
+.mu-icon-svg.chevron-right,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.chevron-right,
 [class^="mu-btn"]:hover .mu-icon-svg.chevron-right {background-image:url("../images/ico/ico-chevron-down.svg"); transform:rotate(-90deg);}
 
@@ -161,13 +161,13 @@ i.mu-icon-svg {overflow:hidden; font-size:0; text-indent:-9999px;}
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.minus {background-image:url("../images/ico/ico-minus_n.svg");}
 [class^="mu-btn"]:hover .mu-icon-svg.minus {background-image:url("../images/ico/ico-minus_o.svg");}
 
-.mu-icon-svg.add, 
+.mu-icon-svg.add,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.add {background-image:url("../images/ico/ico-add_n.svg");}
 [class^="mu-btn"]:hover .mu-icon-svg.add {background-image:url("../images/ico/ico-add_o.svg");}
-[class^="mu-btn"].mu-btn-primary .mu-icon-svg.add, 
+[class^="mu-btn"].mu-btn-primary .mu-icon-svg.add,
 [class^="mu-btn"].mu-btn-primary:disabled:hover .mu-icon-svg.add,
 [class^="mu-btn"].mu-btn-primary:hover .mu-icon-svg.add,
-[class^="mu-btn"].mu-btn-secondary .mu-icon-svg.add, 
+[class^="mu-btn"].mu-btn-secondary .mu-icon-svg.add,
 [class^="mu-btn"].mu-btn-secondary:disabled:hover .mu-icon-svg.add,
 [class^="mu-btn"].mu-btn-secondary:hover .mu-icon-svg.add {background-image:url("../images/ico/ico-add-wh.svg");}
 
@@ -184,55 +184,55 @@ i.mu-icon-svg {overflow:hidden; font-size:0; text-indent:-9999px;}
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.more {background-image:url("../images/ico/ico-set-more_n.svg"); transform:rotate(90deg);}
 [class^="mu-btn"]:hover .mu-icon-svg.more {background-image:url("../images/ico/ico-set-more_o.svg");}
 
-.mu-icon-svg.edit, 
+.mu-icon-svg.edit,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.edit {background-image:url("../images/ico/ico-edit_n.svg")}
 
-.mu-icon-svg.modify, 
+.mu-icon-svg.modify,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.modify {background-image:url("../images/ico/ico-edit_n.svg")}
 [class^="mu-btn"].mu-btn-primary .mu-icon-svg.modify,
 [class^="mu-btn"].mu-btn-primary:hover .mu-icon-svg.modify {background-image:url("../images/ico/ico-edit-wh.svg")}
 
-.mu-icon-svg.check, 
+.mu-icon-svg.check,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.check {background-image:url("../images/ico/ico-check_n.svg")}
 
-.mu-icon-svg.del, 
+.mu-icon-svg.del,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.del {background-image:url("../images/ico/ico-trash_n.svg")}
 
-.mu-icon-svg.filter, 
+.mu-icon-svg.filter,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.link {width:34px; height:34px; background-image:url("../images/ico/ico-filter_n.svg")}
-[class^="mu-btn"]:hover .mu-icon-svg.link, 
+[class^="mu-btn"]:hover .mu-icon-svg.link,
 [class^="mu-btn"].active .mu-icon-svg.link {background-image:url("../images/ico/ico-filter_o.svg")}
 
-.mu-icon-svg.api, 
+.mu-icon-svg.api,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.api {background-image:url("../images/ico/ico-api_n.svg")}
 [class^="mu-btn"]:hover .mu-icon-svg.api {background-image:url("../images/ico/ico-api_o.svg")}
 
-.mu-icon-svg.heart, 
+.mu-icon-svg.heart,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.heart {background-image:url("../images/ico/ico-heart_lg_n.svg")}
 [class^="mu-btn"].active .mu-icon-svg.heart {background-image:url("../images/ico/ico-heart_lg_o.svg")}
 
-.mu-icon-svg.like, 
+.mu-icon-svg.like,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.like {background-image:url("../images/ico/ico-like_lg_n.svg")}
 [class^="mu-btn"].active .mu-icon-svg.like {background-image:url("../images/ico/ico-like_lg_o.svg")}
 
-.mu-icon-svg.dislike, 
+.mu-icon-svg.dislike,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.dislike {background-image:url("../images/ico/ico-dislike_lg_n.svg")}
 [class^="mu-btn"].active .mu-icon-svg.dislike {background-image:url("../images/ico/ico-dislike_lg_o.svg")}
 
 /* pagination, datepicker type */
-.mu-icon-svg.first, 
+.mu-icon-svg.first,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.first {width:30px; height:30px; background-image:url("../images/ico/ico-last_n.svg"); transform:rotate(180deg);}
 [class^="mu-btn"]:hover .mu-icon-svg.first {background-image:url("../images/ico/ico-last_o.svg");}
 
-.mu-icon-svg.prev, 
+.mu-icon-svg.prev,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.prev {width:30px; height:30px; background-image:url("../images/ico/ico-next_n.svg"); transform:rotate(180deg);}
 [class^="mu-btn"]:hover .mu-icon-svg.prev {background-image:url("../images/ico/ico-next_o.svg");}
 
-.mu-icon-svg.next, 
+.mu-icon-svg.next,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.next {width:30px; height:30px; background-image:url("../images/ico/ico-next_n.svg");}
 [class^="mu-btn"]:hover .mu-icon-svg.next {background-image:url("../images/ico/ico-next_o.svg");}
 
-.mu-icon-svg.last, 
+.mu-icon-svg.last,
 [class^="mu-btn"]:disabled:hover .mu-icon-svg.last {width:30px; height:30px; background-image:url("../images/ico/ico-last_n.svg");}
 [class^="mu-btn"]:hover .mu-icon-svg.last {background-image:url("../images/ico/ico-last_o.svg");}
 
@@ -337,7 +337,7 @@ footer > .inner {display:flex; justify-content:space-between; align-items:center
 .footer-info address strong {font-weight:600;}
 .footer-info .copyright {margin:6px 0 0 auto; font-size:13px; line-height:1; color:#95969c; text-transform:uppercase;}
 
-/* contents-wrap 
+/* contents-wrap
 ***************************************************************************/
 .contents-wrap {position:relative;}
 .contents-wrap .contents {max-width:1400px; margin:0 auto;}
@@ -408,7 +408,7 @@ footer > .inner {display:flex; justify-content:space-between; align-items:center
 .mu-tooltip .mu-tooltip-inner .tags-group .term {width:114px; padding:0 6px;}
 
 /* 데이터 - 검색 태그 링크 없음 */
-/* .tags-group span.term {overflow:hidden; color:#909090; white-space:nowrap; text-overflow:ellipsis;} 
+/* .tags-group span.term {overflow:hidden; color:#909090; white-space:nowrap; text-overflow:ellipsis;}
 .tags-group span.term:not(:last-child):after {content:""; display:block; position:absolute; right:0; top:calc(50% - 6px); width:1px; height:12px; background:#ddd;}
  */
 /* 데이터 - 검색 태그 링크 있음, 사이즈 분리 */
@@ -417,13 +417,13 @@ footer > .inner {display:flex; justify-content:space-between; align-items:center
 /* 데이터 - hive,sap icon 총 6개 타입 */
 .ico-data {display:inline-flex; align-items:center; justify-content:center; width:120px; height:120px; border-radius:20px; background-color:#f6f6f9;}
 .ico-data:before {content:""; display:block; width:60px; height:60px;}
-.ico-data.data-01:before {background-image:url(../images/ico/ico-data-01.png);}/* column */ 
-.ico-data.data-02:before {background-image:url(../images/ico/ico-data-02.png);}/* db */ 
-.ico-data.data-03:before {background-image:url(../images/ico/ico-data-03.png);}/* process */ 
-.ico-data.data-04:before {background-image:url(../images/ico/ico-data-04.png);}/* storage */ 
-.ico-data.data-05:before {background-image:url(../images/ico/ico-data-05.png);}/* table */ 
-.ico-data.data-06:before {background-image:url(../images/ico/ico-data-06.png);}/* etc */ 
-.ico-data.data-07:before {background-image:url(../images/ico/ico-data-07.png);}/* link */ 
+.ico-data.data-01:before {background-image:url(../images/ico/ico-data-01.png);}/* column */
+.ico-data.data-02:before {background-image:url(../images/ico/ico-data-02.png);}/* db */
+.ico-data.data-03:before {background-image:url(../images/ico/ico-data-03.png);}/* process */
+.ico-data.data-04:before {background-image:url(../images/ico/ico-data-04.png);}/* storage */
+.ico-data.data-05:before {background-image:url(../images/ico/ico-data-05.png);}/* table */
+.ico-data.data-06:before {background-image:url(../images/ico/ico-data-06.png);}/* etc */
+.ico-data.data-07:before {background-image:url(../images/ico/ico-data-07.png);}/* link */
 
 /* 링크 텍스트타입 */
 .link-url:hover {color:#1e9cff; text-decoration:underline;}
@@ -458,7 +458,7 @@ main#main:not(.main-sub) + footer .floating-button.show {display:none;}/* 메인
 .content-search-wrap .mu-input-icon .mu-btn.mu-btn-sch {position:absolute; right:24px; min-width:32px; height:32px; margin:0; padding:0;}
 .content-search-wrap .mu-input-icon .mu-btn.mu-btn-sch i + span {overflow:hidden; width:0; height:0; line-height:0; font-size:0; text-indent:-9999px;}/* 버튼에 blind처리 */
 .content-search-wrap .mu-selectbox select {width:100%; height:100%;}
-.content-search-wrap .mu-btn.mu-btn-sch .mu-icon-svg.search, 
+.content-search-wrap .mu-btn.mu-btn-sch .mu-icon-svg.search,
 .content-search-wrap .mu-btn.mu-btn-sch .mu-icon-svg.search:hover {width:32px; height:32px; margin:0; background-image:url("../images/ico/ico-search_lg.svg");}
 /* 상세검색 */
 .content-detail-search {position:relative; margin-top:30px; padding:40px; border-radius:20px; background-color:#f6f6f9;}
@@ -686,7 +686,7 @@ main#main:not(.main-sub) + footer .floating-button.show {display:none;}/* 메인
 
 /* 공통 데이터 안내 */
 .data-info dl {display:flex; align-items:center;}
-.data-info dl dt:not(.blind) {margin-right:10px;} 
+.data-info dl dt:not(.blind) {margin-right:10px;}
 
 /* 데이터 흐름 조회(데이터 리니지) */
 .data-info2 {border-top:1px solid #b4b5b8;}
@@ -704,7 +704,7 @@ button .view-count {margin:0 0 0 4px; color:#95969c;}
 /* 상세페이지 - CMS영역 */
 .inner-cms {padding:20px 0; line-height:1.8;}
 .inner-cms img {width:auto; max-width:100%;}
-* + .inner-cms {margin:15px 0 0 0;} 
+* + .inner-cms {margin:15px 0 0 0;}
 
 /* 타이틀명칭분리 */
 .data-label {position:relative; display:block; width:auto; height:24px; line-height:24px;}
@@ -814,7 +814,7 @@ button .view-count {margin:0 0 0 4px; color:#95969c;}
 /* attribute-filter border */
 .attribute-filter-item .filter-item-group dt:before {content:""; position:absolute; top:24px; left:-10px; width:20px; border-top:1px solid #83befe;}
 .attribute-filter-item .filter-item-group dt:first-child:before {content:none;}
-.attribute-filter-item dd>*:after, 
+.attribute-filter-item dd>*:after,
 .attribute-filter-item dd>*:before {content:""; position:absolute; left:-44px; width:44px; height:calc(50% + 4px);  border-color:#83befe; border-style:solid;}
 .attribute-filter-item dd>*:first-child:before {top:-16px;}
 .attribute-filter-item dd>*:last-child:after {border:none;}
@@ -875,7 +875,7 @@ button .view-count {margin:0 0 0 4px; color:#95969c;}
 .board-list-search .inner-search .mu-input-icon .mu-input {position:relative;}
 .board-list-search .inner-search .mu-input-icon .mu-btn-sch {position:absolute; right:0; top:0; min-width:36px; height:36px; padding:0;}
 .board-list-search .inner-search .mu-input-icon .mu-btn-sch span {font-size:0;}
-.board-list-search .inner-search .mu-input-icon .mu-btn-sch .mu-icon-svg.search, 
+.board-list-search .inner-search .mu-input-icon .mu-btn-sch .mu-icon-svg.search,
 .board-list-search .inner-search .mu-input-icon .mu-btn-sch .mu-icon-svg.search:hover {width:18px; height:18px; background-image:url(../images/ico/ico-search.svg);}
 .filter-wrap .board-list-search {width:100%; margin-left:0;}
 .mu-heading .board-list-search {margin-bottom:0;}
@@ -953,9 +953,9 @@ button .view-count {margin:0 0 0 4px; color:#95969c;}
 .filter-box .filter-body .mu-radio {width:calc(100% - 28px); padding-left:35px; white-space:nowrap;}
 .filter-box .filter-body .mu-radio label span {color:#666;}
 .filter-box .filter-body {display:none;}
-.filter-box .filter-body.open {display:block;} 
+.filter-box .filter-body.open {display:block;}
 .filter-box .filter-body li {position:relative; display:flex; align-items:center; padding:2px 0;}
-.filter-box .filter-body li:after, 
+.filter-box .filter-body li:after,
 .filter-box .filter-body li:before {content:""; position:absolute; left:18px; width:13px; height:calc(50% + 4px); border-color:#ccc; border-style:solid;}
 .filter-box .filter-body li:last-child:after {border:none;}
 .filter-box .filter-body li:before {top:-4px; border-width:0 0 1px 1px;}
@@ -974,7 +974,7 @@ button .view-count {margin:0 0 0 4px; color:#95969c;}
 .sortable-list .user-info li {display:flex; align-items:center;} */
 
 /* 카탈로그용어사전 :  표준단어 수, 표준도메인 수, 표준용어 수 */
-.standard-count-box {display:flex; align-items:center; width:100%; height:232px; padding:30px 0;} 
+.standard-count-box {display:flex; align-items:center; width:100%; height:232px; padding:30px 0;}
 .standard-count-box .standard-count {position:relative; width:calc(100% /3);}
 .standard-count-box .standard-count:not(:first-child):after {content:""; position:absolute; top:0; left:0; width:1px; height:100%; background:#eee;}
 .standard-count {display:flex; flex-direction:column; align-items:center; justify-content:center; white-space:nowrap;}
@@ -1119,14 +1119,14 @@ button .view-count {margin:0 0 0 4px; color:#95969c;}
 .total-channel-search .mu-input-icon .mu-btn-delete .mu-icon-svg {width:24px; height:24px;}
 .total-channel-search .mu-btn.mu-btn-sch {position:absolute; top:50%; right:15px; width:34px; height:34px; padding:0; font-size:0; background:none; box-shadow:none; transform:translateY(-50%);}
 .total-channel-search .mu-btn.mu-btn-sch i + span {overflow:hidden; width:0; height:0; line-height:0; font-size:0; text-indent:-9999px;}/* 버튼에 blind처리 */
-.total-channel-search .mu-btn-sch .mu-icon-svg.search, 
+.total-channel-search .mu-btn-sch .mu-icon-svg.search,
 .total-channel-search .mu-btn-sch .mu-icon-svg.search:hover {width:34px; height:34px; margin:0; background-image:url("../images/ico/ico-search-wh_lg.svg");}
 
 /* main 인기검색어 */
 .favorite-keyword {display:flex; margin-top:20px; padding:0 10px;}
 .favorite-keyword dt {display:none;}
 .favorite-keyword .keyword-group {display:flex; flex-wrap:wrap; overflow:hidden; height:24px;}
-.favorite-keyword .keyword-group .keyword-label {font-weight:normal; line-height:1.5; color:#fff; white-space:nowrap;} 
+.favorite-keyword .keyword-group .keyword-label {font-weight:normal; line-height:1.5; color:#fff; white-space:nowrap;}
 .favorite-keyword .keyword-group .keyword-label:not(:first-child)::before {content:"/"; opacity:0.4; margin:0 10px;}
 
 /* main 데이터 정보 */
@@ -1283,7 +1283,7 @@ button .view-count {margin:0 0 0 4px; color:#95969c;}
 .login-content .login-box > div + div {margin-top:40px;}
 .login-content .login-box > div .mu-btn {position:absolute; bottom:15px; right:18px;}
 .login-content .login-box .mu-input-id .mu-icon-svg.item-delete,
-.login-content .login-box .mu-input-pw .mu-icon-svg.item-delete {width:24px; height:24px; background-image:url("../images/ico/ico-close.svg");} 
+.login-content .login-box .mu-input-pw .mu-icon-svg.item-delete {width:24px; height:24px; background-image:url("../images/ico/ico-close.svg");}
 .login-content .login-box .mu-input-pw .mu-btn-delete {right:50px;}
 .login-content .login-box .mu-input-pw .mu-btn-pw-mask {right:20px;}
 .login-content .login-box .mu-input-pw .mu-btn-pw-mask .mu-icon-svg {width:20px; height:20px;}

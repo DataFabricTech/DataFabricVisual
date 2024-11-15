@@ -99,7 +99,5 @@ const checkCurrentPath = (): boolean => {
   return !cleanPath.endsWith('/detail')
 }
 
-const goToCurrentPathDepth = () => {
-  return
-}
+const goToCurrentPathDepth = () => {}
 </script>
