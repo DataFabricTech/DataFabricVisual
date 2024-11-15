@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Slf4j
 @Service
@@ -152,6 +153,8 @@ public class ModelCreationService {
      * @throws Exception
      */
     public Object getSearchList(MultiValueMap<String, String> params) throws Exception {
+        AtomicInteger removedCount = new AtomicInteger();
+
         String type = params.getFirst("index");
         Map<String, Object> result = type.equals("all")
                 ? searchService.getAllSearchList(params) :
@@ -165,12 +168,34 @@ public class ModelCreationService {
             case "model" -> (List<Map<String, Object>>) dataMap.get("model");
             default -> null;
         };
+
+        resultMap.removeIf(row -> {
+            List<String> fileFormats = (List<String>) row.get("fileFormat");
+            boolean shouldRemove = fileFormats != null && fileFormats.stream().anyMatch(format ->
+                    format.equalsIgnoreCase("hwp") ||
+                            format.equalsIgnoreCase("hwpx") ||
+                            format.equalsIgnoreCase("doc") ||
+                            format.equalsIgnoreCase("docx"));
+            if (shouldRemove) {
+                removedCount.getAndIncrement();
+            }
+            return shouldRemove;
+        });
+
+        // storage의 totalCount 업데이트
+        Map<String, Object> totalCount = (Map<String, Object>) result.get("totalCount");
+        if (totalCount.containsKey("storage")) {
+            int originalStorageCount = (int) totalCount.get("storage");
+            totalCount.put("storage", originalStorageCount - removedCount.get());
+        }
+
         // follow 데이터 확인 필요
         List<Map<String, Object>> newResult = addFollowData(resultMap);
 
         // 데이터 재정의
         dataMap.put(type, newResult);
         result.put("data", dataMap);
+        result.put("totalCount", totalCount);
         return result;
     }
 

@@ -195,6 +195,8 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
           return {
             headerName: `${value.name}(${value.dataType})`,
             field: value.name,
+            minWidth: 140,
+            flex: 1
           };
         });
         sampleList.value = data.sampleList;
@@ -205,7 +207,14 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   };
 
   const getProfile = async () => {
-    const data = await $api(`/api/search/detail/profile/${dataModelFqn}`);
+    let type = defaultInfo.value.index;
+
+    const isTableOrModel = _.isEqual(type, "table") || $_isEqual(type, "model");
+    const url = isTableOrModel
+        ? `/api/search/detail/profile/${dataModelFqn}`
+        : `/api/search/detail/containers/profile/${dataModelFqn}`;
+    const data = await $api(url);
+
     profileList.value = data.data;
   };
 

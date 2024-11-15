@@ -479,6 +479,8 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
             gridColumnDefs: fields,
             fqn: fqn,
           },
+          minWidth: 140, // minWidth 추가
+          flex: 1
         }));
 
         return {

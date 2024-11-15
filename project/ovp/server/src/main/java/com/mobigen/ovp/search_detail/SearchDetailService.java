@@ -5,6 +5,7 @@ import com.mobigen.ovp.common.ModelConvertUtil;
 import com.mobigen.ovp.common.constants.Constants;
 import com.mobigen.ovp.common.constants.ModelType;
 import com.mobigen.ovp.common.openmete_client.ClassificationTagsClient;
+import com.mobigen.ovp.common.openmete_client.ContainerClient;
 import com.mobigen.ovp.common.openmete_client.ContainersClient;
 import com.mobigen.ovp.common.openmete_client.LineageClient;
 import com.mobigen.ovp.common.openmete_client.RecommendClient;
@@ -56,6 +57,7 @@ public class SearchDetailService {
     private final SearchClient searchClient;
     private final TablesClient tablesClient;
     private final ContainersClient containersClient;
+    private final ContainerClient containerClient;
     private final LineageClient lineageClient;
     private final ClassificationTagsClient classificationTagsClient;
     private final GlossaryClient glossaryClient;
@@ -308,7 +310,8 @@ public class SearchDetailService {
         } else {
             params.put("fields", "dataModel");
             dataModel = containersClient.getStorageById(id, params);
-            if (dataModel != null && dataModel.getColumns() != null) {
+
+            if (dataModel != null && dataModel.getDataModel().getColumns() != null) {
                 return containersClient.getStorageById(id, params).getDataModel().getColumns();
             }
         }
@@ -327,8 +330,6 @@ public class SearchDetailService {
             return new DataModelDetailSampleDataResponse(tablesClient.getSampleData(id), type);
         } else {
             try {
-                Object sampleData11 = containersClient.getSampleData(id);
-                log.info("sampleData11: " + sampleData11);
                 return new DataModelDetailSampleDataResponse(containersClient.getSampleData(id), type);
                 //return null;
             } catch (Exception e) {
@@ -661,6 +662,7 @@ public class SearchDetailService {
 
     /**
      * 추천 데이터 목록 - Clustering, Embedding
+     *
      * @param id
      * @param type
      * @return
@@ -669,7 +671,7 @@ public class SearchDetailService {
     public Object getRecommendDataModel(String id, String type) throws Exception {
         Map<String, Object> res = recommendClient.getClustering(id);
         List<String> ids = new ArrayList<>();
-        if(res != null) {
+        if (res != null) {
             if (res.get("status") instanceof Integer && (Integer) res.get("status") == HttpStatus.OK.value()) {
                 Map<String, Object> data = (Map<String, Object>) res.get("data");
                 if (data != null) {

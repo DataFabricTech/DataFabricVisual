@@ -64,7 +64,8 @@ export const useCreationStore = defineStore("creation", () => {
         (column) => {
           return {
             ...column, // 기존 속성들 복사
-            minWidth: 150, // minWidth 추가
+            minWidth: 140, // minWidth 추가
+            flex: 1
           };
         },
       );
