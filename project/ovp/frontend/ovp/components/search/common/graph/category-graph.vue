@@ -300,7 +300,11 @@ const getModelDetailList = (node: any): string[] => {
 };
 
 const modelDetailList = getModelDetailList(graphData.value.nodes);
-const modelDetailIds = modelDetailList.map((node) => node.id);
+const modelDetailIds = ref([]);
+
+const getModelDetailIds = () => {
+  modelDetailIds.value = modelDetailList.map((node) => node.id);
+};
 
 // graph 구현
 const setCategoryGraph = () => {
@@ -342,10 +346,10 @@ const setCategoryGraph = () => {
         }
 
         if (type === "node" && id) {
-          if (modelDetailIds.includes(id)) {
+          if (modelDetailIds.value.includes(id)) {
             showGraphModelListMenu.value = false;
           }
-          compTypeId.value = modelDetailIds.includes(id)
+          compTypeId.value = modelDetailIds.value.includes(id)
             ? $constants.GRAPH.TYPE.DETAIL
             : $constants.GRAPH.TYPE.MODEL_LIST;
           selectedNodeId.value = id;
@@ -380,6 +384,14 @@ watch(
     setGraphCategoryList();
     setOnlyGraphCategoryList();
     setCategoryGraph();
+
+    const updatedModelDetailList = getModelDetailList(newVal.nodes);
+    modelDetailList.splice(
+      0,
+      modelDetailList.length,
+      ...updatedModelDetailList,
+    ); // 기존 배열 내용 교체
+    getModelDetailIds(); // modelDetailIds 갱신
   },
   { immediate: true },
 );
