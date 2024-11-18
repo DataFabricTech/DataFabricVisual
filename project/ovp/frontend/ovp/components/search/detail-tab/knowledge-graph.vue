@@ -1,7 +1,43 @@
 <template>
   <div class="data-detail-group h-auto pb-3">
-    <div class="visual visual-detail">
-      <img :src="imageSrc" />
+    <div class="visual visual-detail" style="">
+      <div class="visual-legend">
+        <button class="button button-lg button-neutral-stroke" type="button" @click="toggleLegend">
+          <span class="hidden-text">범례</span>
+          <svg-icon class="button-icon" name="legend"></svg-icon>
+        </button>
+        <ul class="visual-legend-content" v-show="isLegendVisible">
+          <li class="visual-legend-item visual-legend-item-standard">
+            기준모델
+          </li>
+          <li class="visual-legend-item visual-legend-item-relation">
+            연관모델
+          </li>
+          <li class="visual-legend-item visual-legend-item-rank">
+            연관순위
+            <!-- TODO: [개발] 툴팁 컴포넌트 개발 후 추가 -->
+            <button class="button button-neutral-ghost button-sm" type="button">
+              <span class="hidden-text">툴팁</span>
+              <svg-icon class="button-icon" name="help-outline"></svg-icon>
+            </button>
+          </li>
+        </ul>
+      </div>
+      <div class="visual-control">
+        <button class="button button-lg button-neutral-stroke visual-control-zoom-in" type="button">
+          <span class="hidden-text">확대</span>
+          <svg-icon class="button-icon" name="plus"></svg-icon>
+        </button>
+        <button class="button button-lg button-neutral-stroke visual-control-zoom-out" type="button">
+          <span class="hidden-text">축소</span>
+          <svg-icon class="button-icon" name="minus"></svg-icon>
+        </button>
+        <button class="button button-lg button-neutral-stroke mt-2" type="button">
+          <span class="hidden-text">원좌표</span>
+          <svg-icon class="button-icon" name="target-lock"></svg-icon>
+        </button>
+      </div>
+      <div class="visual-detail-sample"></div>
     </div>
     <div v-if="false" class="visual visual-detail">
       <!-- 기준 모델 샘플 -->
@@ -139,4 +175,14 @@ let resourceBoxObj: any = {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.visual-detail-sample {
+  background: url('../../../assets/images/knowledge-graph-sample.png') no-repeat center/contain;
+  width: 60%;
+  height: 550px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+</style>
