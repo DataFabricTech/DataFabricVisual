@@ -169,18 +169,18 @@ public class ModelCreationService {
             default -> null;
         };
 
-        resultMap.removeIf(row -> {
-            List<String> fileFormats = (List<String>) row.get("fileFormat");
-            boolean shouldRemove = fileFormats != null && fileFormats.stream().anyMatch(format ->
-                    format.equalsIgnoreCase("hwp") ||
-                            format.equalsIgnoreCase("hwpx") ||
-                            format.equalsIgnoreCase("doc") ||
-                            format.equalsIgnoreCase("docx"));
-            if (shouldRemove) {
-                removedCount.getAndIncrement();
-            }
-            return shouldRemove;
-        });
+//        resultMap.removeIf(row -> {
+//            List<String> fileFormats = (List<String>) row.get("fileFormat");
+//            boolean shouldRemove = fileFormats != null && fileFormats.stream().anyMatch(format ->
+//                    format.equalsIgnoreCase("hwp") ||
+//                            format.equalsIgnoreCase("hwpx") ||
+//                            format.equalsIgnoreCase("doc") ||
+//                            format.equalsIgnoreCase("docx"));
+//            if (shouldRemove) {
+//                removedCount.getAndIncrement();
+//            }
+//            return shouldRemove;
+//        });
 
         // storage의 totalCount 업데이트
         Map<String, Object> totalCount = (Map<String, Object>) result.get("totalCount");

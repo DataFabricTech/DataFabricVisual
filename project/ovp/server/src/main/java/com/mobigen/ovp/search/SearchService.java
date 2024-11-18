@@ -220,24 +220,54 @@ public class SearchService {
     }
 
     public JSONObject mergeQueries(String extraQuery) {
+        // 기본 쿼리 (index 정보 등)
         JSONObject defaultQuery = defaultQueryFilterJson();
 
+        // 추가 쿼리 -> json 변형
         JSONObject extraQueryObject = new JSONObject(extraQuery);
-        Object extraMustQueryObj = extraQueryObject.getJSONObject("query").getJSONObject("bool").get("must");
 
-        JSONObject boolObject = defaultQuery.getJSONObject("query").getJSONObject("bool");
-        JSONArray mustArray = boolObject.getJSONArray("must");
-
-        if (extraMustQueryObj instanceof JSONArray extraMustArray) {
-            for (int i = 0; i < extraMustArray.length(); i++) {
-                mustArray.put(extraMustArray.get(i));
-            }
-        } else if (extraMustQueryObj instanceof JSONObject) {
-            mustArray.put(extraMustQueryObj);
+        // merge 하기 위해 추가 쿼리에서 bool 부분 추출
+        JSONObject extraBoolObject = extraQueryObject.getJSONObject("query").optJSONObject("bool");
+        if (extraBoolObject == null) {
+            return defaultQuery; // 추가 쿼리에 bool이 없으면 기본 쿼리를 반환
         }
+
+        // 기본 쿼리에서 bool 부분 추출
+        JSONObject boolObject = defaultQuery.getJSONObject("query").getJSONObject("bool");
+
+        // must 병합
+        mergeArrayFields(boolObject, extraBoolObject, "must");
+
+        // must_not 병합
+        mergeArrayFields(boolObject, extraBoolObject, "must_not");
 
         return defaultQuery;
     }
+
+    // 배열 필드 병합 메서드
+    private void mergeArrayFields(JSONObject targetBool, JSONObject sourceBool, String fieldName) {
+        // targetBool에서 fieldName 배열 가져오기
+        JSONArray targetArray = targetBool.optJSONArray(fieldName);
+        if (targetArray == null) {
+            targetArray = new JSONArray();
+            targetBool.put(fieldName, targetArray);
+        }
+
+        // sourceBool에서 fieldName 배열 가져오기
+        Object sourceArrayObj = sourceBool.opt(fieldName);
+
+        // sourceArrayObj가 배열이면 항목을 추가
+        if (sourceArrayObj instanceof JSONArray sourceArray) {
+            for (int i = 0; i < sourceArray.length(); i++) {
+                targetArray.put(sourceArray.get(i));
+            }
+        }
+        // sourceArrayObj가 객체이면 객체를 추가
+        else if (sourceArrayObj instanceof JSONObject sourceObject) {
+            targetArray.put(sourceObject);
+        }
+    }
+
 
     private Map<String, Object> getAllList(MultiValueMap<String, String> params) throws Exception {
         params.set("index", ModelIndex.all.name());

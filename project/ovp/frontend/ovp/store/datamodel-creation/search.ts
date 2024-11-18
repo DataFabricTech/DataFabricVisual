@@ -144,8 +144,9 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       queryFilter.query.bool.must.push(setQueryFilterByDepth(keyValue, value));
     }
 
-    queryFilter.query.bool.must_not = [{ term: { fileFormats: "hwpx" } }];
-
+    queryFilter.query.bool.must_not = [
+      { terms: { fileFormats: ["hwp", "hwpx", "doc", "docs"] } },
+    ];
     return queryFilter;
   };
 
@@ -480,7 +481,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
             fqn: fqn,
           },
           minWidth: 140, // minWidth 추가
-          flex: 1
+          flex: 1,
         }));
 
         return {
