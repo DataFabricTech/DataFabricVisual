@@ -119,6 +119,17 @@ export const useCreationStore = defineStore("creation", () => {
     }).then((res: any) => {
       if (res.result === 1) {
         executeResult.value = res.data;
+        if (executeResult.value) {
+          executeResult.value.columnDefs = executeResult.value.columnDefs.map(
+              (column) => {
+                return {
+                  ...column, // 기존 속성들 복사
+                  minWidth: 140, // minWidth 추가
+                  flex: 1
+                };
+              },
+          );
+        }
         isFirstExecute.value = true;
         isExecuteQuery.value = true;
         querySuccess.value = true;
