@@ -330,8 +330,19 @@ export const useServiceStore = defineStore("service", () => {
   /**
    * 유저 리스트
    */
-  async function getUserList(): Promise<void> {
+  async function getUserList(useEmptyOption: boolean = false): Promise<void> {
     const res = await $api(`/api/user/all`);
+
+    if (useEmptyOption) {
+      res.data.unshift({
+        id: "EMPTY_USER",
+        name: "소유자 없음",
+        type: "",
+        displayName: "사용자 없음",
+        fullyQualifiedName: "EMPTY_USER",
+      });
+    }
+
     if (res.data !== null) {
       // eslint-disable-next-line id-length
       res.data.forEach((v: Owner) => {
@@ -363,7 +374,7 @@ export const useServiceStore = defineStore("service", () => {
       foundUser.type = "user";
     }
 
-    const isEmpty = item.id === undefined;
+    const isEmpty = item.id === undefined || item.id === "EMPTY_USER";
     if (service.owner === null || service.owner.id === undefined) {
       if (item && foundUser) {
         operations.push({
