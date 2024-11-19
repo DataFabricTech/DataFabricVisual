@@ -438,33 +438,27 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
         selectedItem.value.fqn,
         selectedItem.value.type,
       );
-      // console.log("sampledata value값 : ", sampleData.value);
     } else if (
       value === $constants.DATAMODEL_CREATION.ADD.DETAIL_TAB[1].value
     ) {
       const fqn = selectedItem.value.fqn;
-      console.log("sdf: ", fqn);
       if (!fqn) {
-        return {};
+        return;
       }
       profileData.value = await getProfileData(fqn, selectedItem.value.type);
     } else if (
       value === $constants.DATAMODEL_CREATION.ADD.DETAIL_TAB[2].value
     ) {
       const id = selectedItem.value.id;
-      console.log("sdf: ", id);
       if (!id) {
-        return {};
+        return;
       }
 
-      const apiType = sampleData.value > 0 ? "embedding" : "clustering";
-
-      const res = await getRecommendDataByApiType(
+      recommendData.value = await getRecommendDataByApiType(
         id,
         selectedItem.value.type,
-        apiType,
+        sampleData.value > 0 ? "embedding" : "clustering",
       );
-      recommendData.value = res;
     }
   };
 

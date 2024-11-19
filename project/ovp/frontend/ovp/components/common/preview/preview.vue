@@ -152,15 +152,15 @@ const gotoDetail = () => {
 
   const detailPath = "/portal/search/detail";
   if (route.path === detailPath) {
-    // 동일 경로로 이동할 때 강제로 새로고침
-    router
-      .push({
-        path: detailPath,
-        query: { type: index, id, fqn },
-      })
-      .then(() => {
-        router.go(0); // 페이지 새로고침
-      });
+    const queryParams = new URLSearchParams({
+      type: index,
+      id,
+      fqn,
+    }).toString();
+
+    const fullPath = `${route.path}?${queryParams}`;
+
+    window.open(fullPath, "_blank", "noopener,noreferrer");
   } else {
     // 경로가 다르면 그냥 라우팅
     router.push({
