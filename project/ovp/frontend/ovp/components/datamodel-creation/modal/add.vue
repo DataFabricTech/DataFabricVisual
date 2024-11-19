@@ -44,40 +44,19 @@
             ></add-detail-grid>
           </template>
           <template #recommend>
-            <RecommendModel
-              :data="recommendData"
-              :owner="selectedItemOwner"
-              no-data-msg="추천 데이터 정보가 없습니다."
-            ></RecommendModel>
-            <!--            <div class="data-detail">-->
-            <!--              <div-->
-            <!--                class="data-detail-group"-->
-            <!--                v-show="recommendDataModels.length > 0"-->
-            <!--              >-->
-            <!--                <div class="recommend" v-for="group in groupedRecommendations">-->
-            <!--                  <template v-for="recommendData in group">-->
-            <!--                    <resource-box-->
-            <!--                      class="is-resource-box-no-action"-->
-            <!--                      :owner="selectedItemOwner"-->
-            <!--                      no-data-msg="추천 데이터 정보가 없습니다."-->
-            <!--                      :data-obj="recommendData"-->
-            <!--                      :is-box-selected-style="true"-->
-            <!--                      :show-owner="true"-->
-            <!--                      :show-category="true"-->
-            <!--                    />-->
-            <!--                  </template>-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--              <div-->
-            <!--                class="no-result h-auto"-->
-            <!--                v-show="recommendDataModels.length === 0"-->
-            <!--              >-->
-            <!--                <div class="notification">-->
-            <!--                  <svg-icon class="notification-icon" name="info"></svg-icon>-->
-            <!--                  <p class="notification-detail">등록된 정보가 없습니다.</p>-->
-            <!--                </div>-->
-            <!--              </div>-->
-            <!--            </div>-->
+            <div class="data-detail-group">
+              <div class="recommend">
+                <template v-for="Data in recommendData">
+                  <resource-box
+                    class="is-resource-box-no-action"
+                    :data-obj="Data"
+                    :is-box-selected-style="true"
+                    :show-owner="true"
+                    :show-category="true"
+                  />
+                </template>
+              </div>
+            </div>
           </template>
         </Tab>
       </div>

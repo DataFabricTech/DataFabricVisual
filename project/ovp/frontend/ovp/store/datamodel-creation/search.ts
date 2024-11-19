@@ -456,10 +456,8 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
       if (!id) {
         return {};
       }
-      console.log("?>>sampledata value값 : ", sampleData.value);
 
       const apiType = sampleData.value > 0 ? "embedding" : "clustering";
-      console.log(apiType);
 
       const res = await getRecommendDataByApiType(
         id,
