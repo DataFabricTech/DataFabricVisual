@@ -15,14 +15,15 @@
         <div class="board-list">
           <table class="mu-grid">
             <colgroup>
-              <col style="width: 30px" />
-              <col style="width: 60px" />
-              <col style="width: 120px" />
+              <col style="width: 3%" />
+              <col style="width: 6%" />
+              <col style="width: 6%" />
+              <col style="width: 6%" />
               <col style="width: auto" />
-              <col style="width: 100px" />
-              <col style="width: 120px" />
-              <col style="width: 120px" />
-              <col style="width: 80px" />
+              <col style="width: 7%" />
+              <col style="width: 10%" />
+              <col style="width: 8%" />
+              <col style="width: 6%" />
               <!-- <col style="width: 80px" /> -->
             </colgroup>
             <thead>
@@ -41,6 +42,7 @@
                 </th>
                 <th scope="col">No.</th>
                 <th scope="col">구분</th>
+                <th scope="col">메인롤링</th>
                 <th scope="col">제목</th>
                 <th scope="col">첨부파일</th>
                 <th scope="col">등록자</th>
@@ -68,6 +70,9 @@
                 <td>{{ item.rownum }}</td>
                 <td>
                   <em class="data-label">{{ item.category }}</em>
+                </td>
+                <td>
+                  <em class="data-label">{{ getIsRolling(item.is_open) }}</em>
                 </td>
                 <td class="tl">
                   <NuxtLink :to="'/admin/manager/user/notice/detail?id=' + item.id">{{
@@ -272,4 +277,10 @@ const onClickRegisterButton = (): void => {
 const onClickPage = (page: number): void => {
   getPost(page);
 };
+
+// 메인 롤링 여부 표기
+const getIsRolling = (is_open) => {
+  if (is_open) return "사용"
+  else return "미사용"
+}
 </script>

@@ -1,6 +1,7 @@
 <template>
   <div class="board-wrap">
     <div v-if="props.isAdmin" class="board-head">
+        <strong class="board-label"><em class="data-label">{{ props.post.category }}</em></strong>
         <strong class="board-title">{{ props.post.title }}</strong>
         <div class="board-desc">
             <div class="data-info">

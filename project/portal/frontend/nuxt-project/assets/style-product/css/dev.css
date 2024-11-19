@@ -348,3 +348,10 @@ pre code {
 .admin-wrapper .data-detail-wrap .detail-section {border-radius: 0px !important;}
 
 .board-title .step-process {min-width:100px; height:44px; margin-right:20px; padding:10px 20px; border-radius:22px; font-size:20px;}
+
+/* 관리자 공지사항 왼쪽 구분 라벨*/
+.board-wrap .board-head .data-label:before {content:none;}
+.board-wrap .board-head .data-label:after {content:none;}
+
+.board-label .data-label {height:34px; margin-right:20px; padding:5px 20px; border-radius:22px; font-size:14px;}
+.board-label .data-label {background-color:#2855ce; color:#fff;}

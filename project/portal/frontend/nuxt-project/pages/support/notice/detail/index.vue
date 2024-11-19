@@ -2,7 +2,7 @@
   <div class="contents">
     <div>
       <!-- 제목위치가 컨텐츠 최상단에 위치해야함. -->
-      <strong class="board-title"><em class="data-label">공지사항</em> {{ post.title }}</strong>
+      <strong class="board-title"><em class="data-label">{{ post.category }}</em> {{ post.title }}</strong>
 
       <div class="inner">
         <board-wrap :fileList="fileList" :post="post" />

@@ -17,7 +17,8 @@
             <table class="mu-grid">
               <colgroup>
                 <col style="width: 60px" />
-                <col style="width: 120px" />
+                <col style="width: 70px" />
+                <col style="width: 90px" />
                 <col style="width: auto" />
                 <col style="width: 100px" />
                 <col style="width: 120px" />
@@ -28,6 +29,7 @@
                 <tr>
                   <th scope="col">No.</th>
                   <th scope="col">구분</th>
+                  <th scope="col">메인롤링</th>
                   <th scope="col">제목</th>
                   <th scope="col">첨부파일</th>
                   <th scope="col">등록자</th>
@@ -40,6 +42,7 @@
                   v-for="{
                     rownum,
                     category,
+                    is_open,
                     id,
                     title,
                     new_yn,
@@ -54,6 +57,9 @@
                   <td>{{ rownum }}</td>
                   <td>
                     <em class="data-label">{{ category }}</em>
+                  </td>
+                  <td>
+                    {{ getIsRolling(is_open) }}
                   </td>
                   <td class="tl">
                     <NuxtLink :to="'/support/notice/detail?id=' + id">{{
@@ -168,4 +174,10 @@ const getPost = async (offset: number = 1): Promise<void> => {
 const onClickPage = (page: number): void => {
   getPost(page);
 };
+
+// 메인 롤링 여부 표기
+const getIsRolling = (is_open) => {
+  if (is_open) return "사용"
+  else return "미사용"
+}
 </script>
