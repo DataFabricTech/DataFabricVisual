@@ -93,7 +93,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   // 추가 모달 > 선택 항목에 대한 상세 조회 데이터
   const sampleData: Ref<object> = ref<object>({});
   const profileData: Ref<object> = ref<object>({});
-  const kgData: Ref<object> = ref<object>({});
+  const recommendData: Ref<object> = ref<object>({});
   /**
    * 데이터 조회 > 쿼리 파라미터 처리
    */
@@ -294,7 +294,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     selectedItem.value = value;
     sampleData.value = value;
     profileData.value = value;
-    kgData.value = value;
+    recommendData.value = value;
   };
   const setCurrTab = (value: any) => {
     currTab.value = value;
@@ -438,16 +438,35 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
         selectedItem.value.fqn,
         selectedItem.value.type,
       );
+      // console.log("sampledata value값 : ", sampleData.value);
     } else if (
       value === $constants.DATAMODEL_CREATION.ADD.DETAIL_TAB[1].value
     ) {
       const fqn = selectedItem.value.fqn;
+      console.log("sdf: ", fqn);
       if (!fqn) {
         return {};
       }
       profileData.value = await getProfileData(fqn, selectedItem.value.type);
-    } else {
-      kgData.value = await getKgData();
+    } else if (
+      value === $constants.DATAMODEL_CREATION.ADD.DETAIL_TAB[2].value
+    ) {
+      const id = selectedItem.value.id;
+      console.log("sdf: ", id);
+      if (!id) {
+        return {};
+      }
+      console.log("?>>sampledata value값 : ", sampleData.value);
+
+      const apiType = sampleData.value > 0 ? "embedding" : "clustering";
+      console.log(apiType);
+
+      const res = await getRecommendDataByApiType(
+        id,
+        selectedItem.value.type,
+        apiType,
+      );
+      recommendData.value = res;
     }
   };
 
@@ -480,7 +499,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
             fqn: fqn,
           },
           minWidth: 140, // minWidth 추가
-          flex: 1
+          flex: 1,
         }));
 
         return {
@@ -519,6 +538,16 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
   };
 
   /**
+   * API - 추천 데이터 조회
+   */
+  const getRecommendDataByApiType = async (id, type, apiType) => {
+    const { data } = await $api(
+      `/api/search/detail/recommend/${apiType}/${id}?type=${type}`,
+    );
+    return data;
+  };
+
+  /**
    * API- 필터 조회
    */
   const getFilters = async () => {
@@ -531,13 +560,6 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     useFilters.forEach((key: string) => {
       (filters.value as Filters)[key].data = data[key];
     });
-  };
-
-  /**
-   * API - 연관데이터 조회
-   */
-  const getKgData = async () => {
-    return null;
   };
 
   /**
@@ -698,7 +720,7 @@ export const useDataModelSearchStore = defineStore("dataModelSearch", () => {
     currDetailTab,
     sampleData,
     profileData,
-    kgData,
+    recommendData,
     selectedItemOwner,
     nSelectedListData,
     selectedModelList,

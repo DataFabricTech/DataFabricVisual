@@ -43,7 +43,42 @@
               no-data-msg="데이터 프로파일링 정보가 없습니다."
             ></add-detail-grid>
           </template>
-          <template #kg></template>
+          <template #recommend>
+            <RecommendModel
+              :data="recommendData"
+              :owner="selectedItemOwner"
+              no-data-msg="추천 데이터 정보가 없습니다."
+            ></RecommendModel>
+            <!--            <div class="data-detail">-->
+            <!--              <div-->
+            <!--                class="data-detail-group"-->
+            <!--                v-show="recommendDataModels.length > 0"-->
+            <!--              >-->
+            <!--                <div class="recommend" v-for="group in groupedRecommendations">-->
+            <!--                  <template v-for="recommendData in group">-->
+            <!--                    <resource-box-->
+            <!--                      class="is-resource-box-no-action"-->
+            <!--                      :owner="selectedItemOwner"-->
+            <!--                      no-data-msg="추천 데이터 정보가 없습니다."-->
+            <!--                      :data-obj="recommendData"-->
+            <!--                      :is-box-selected-style="true"-->
+            <!--                      :show-owner="true"-->
+            <!--                      :show-category="true"-->
+            <!--                    />-->
+            <!--                  </template>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--              <div-->
+            <!--                class="no-result h-auto"-->
+            <!--                v-show="recommendDataModels.length === 0"-->
+            <!--              >-->
+            <!--                <div class="notification">-->
+            <!--                  <svg-icon class="notification-icon" name="info"></svg-icon>-->
+            <!--                  <p class="notification-detail">등록된 정보가 없습니다.</p>-->
+            <!--                </div>-->
+            <!--              </div>-->
+            <!--            </div>-->
+          </template>
         </Tab>
       </div>
     </template>
@@ -57,6 +92,7 @@ import { storeToRefs } from "pinia";
 import Tab from "@extends/tab/Tab.vue";
 import $constants from "~/utils/constant";
 import AddDetailGrid from "~/components/datamodel-creation/modal/add-detail-grid.vue";
+import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
 
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
@@ -64,6 +100,7 @@ const {
   currDetailTab,
   sampleData,
   profileData,
+  recommendData,
   selectedItemOwner,
   selectedModelList,
   nSelectedListData,
