@@ -41,7 +41,15 @@
           <div class="editable-group w-auto" v-if="serviceStore.editInfo.owner">
             <menu-search-tag
               :data="serviceStore.userSearchList"
-              :selected-items="service.owner ?? []"
+              :selected-items="
+                service.owner ?? [
+                  {
+                    id: 'EMPTY_USER',
+                    displayName: '소유자 없음',
+                    name: '소유자 없음',
+                  },
+                ]
+              "
               label-key="name"
               value-key="id"
               title="값을 선택하세요"
@@ -215,7 +223,7 @@ const { getTagList, getGlossaryList } = dataModelDetailStore;
 const { tagList, termList } = storeToRefs(dataModelDetailStore);
 
 onMounted(() => {
-  getUserList();
+  getUserList(true);
   getTagList();
   getGlossaryList();
 });

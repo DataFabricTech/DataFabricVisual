@@ -3,13 +3,18 @@
     <div class="select select-clean">
       <button class="select-button" @click.stop="onClickOpenMenuSearch">
         <span class="select-button-title" v-if="selectedListData.length < 1">{{ props.title }}</span>
-        <div class="tag tag-primary tag-sm" v-else v-for="item in selectedListData">
+        <div
+          class="tag tag-primary tag-sm"
+          v-else-if="selectedListData[0].id !== 'EMPTY_USER'"
+          v-for="item in selectedListData"
+        >
           <span class="tag-text">{{ item[props.selectedLabelKey || props.labelKey] }}</span>
           <button class="tag-delete-button" @click.stop="onDeleteTag(item)">
             <span class="hidden-text">삭제</span>
             <svg-icon class="svg-icon" name="close"></svg-icon>
           </button>
         </div>
+        <template v-else> 소유자 없음 </template>
 
         <svg-icon class="svg-icon select-indicator" name="chevron-down-medium"></svg-icon>
       </button>

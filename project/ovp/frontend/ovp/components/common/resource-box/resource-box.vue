@@ -186,7 +186,11 @@
                   }
                 "
                 :data="userList"
-                :selected-items="newData.owner ?? []"
+                :selected-items="
+                  newData.owner ?? [
+                    { id: 'EMPTY_USER', displayName: '소유자 없음' },
+                  ]
+                "
                 label-key="displayName"
                 value-key="id"
                 title="소유자"
@@ -385,7 +389,7 @@ const editDoneForOwner = (value: any, key: string) => {
 
   if (owner == null) {
     data.op = "add";
-  } else if (owner && !value) {
+  } else if (owner && (!value || value.id === "EMPTY_USER")) {
     data.op = "remove";
   } else if (owner && value && value.id && owner.id !== value.id) {
     data.op = "replace";
