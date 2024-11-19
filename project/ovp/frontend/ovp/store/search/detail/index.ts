@@ -112,9 +112,17 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   };
 
   const getUserList = async () => {
-    const data = await $api(`/api/search/detail/user/all`);
+    const { data } = await $api(`/api/search/detail/user/all`);
 
-    userList.value = data.data;
+    data.unshift({
+      id: "EMPTY_USER",
+      name: "소유자 없음",
+      type: "",
+      displayName: "사용자 없음",
+      fullyQualifiedName: "",
+    });
+
+    userList.value = data;
   };
 
   const getCategoryList = async () => {
@@ -196,7 +204,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
             headerName: `${value.name}(${value.dataType})`,
             field: value.name,
             minWidth: 140,
-            flex: 1
+            flex: 1,
           };
         });
         sampleList.value = data.sampleList;
@@ -207,12 +215,12 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   };
 
   const getProfile = async () => {
-    let type = defaultInfo.value.index;
+    const type = defaultInfo.value.index;
 
     const isTableOrModel = _.isEqual(type, "table") || $_isEqual(type, "model");
     const url = isTableOrModel
-        ? `/api/search/detail/profile/${dataModelFqn}`
-        : `/api/search/detail/containers/profile/${dataModelFqn}`;
+      ? `/api/search/detail/profile/${dataModelFqn}`
+      : `/api/search/detail/containers/profile/${dataModelFqn}`;
     const data = await $api(url);
 
     profileList.value = data.data;
@@ -339,6 +347,7 @@ export const useDataModelDetailStore = defineStore("dataModelDetail", () => {
   };
 
   const makeUserBody = (data: any) => {
+    console.log(data);
     const user = _.find(userList.value, { id: data.id });
     let body: any[] = [];
 
