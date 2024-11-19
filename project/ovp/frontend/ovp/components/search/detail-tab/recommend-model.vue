@@ -9,6 +9,7 @@
             :is-box-selected-style="true"
             :show-owner="true"
             :show-category="true"
+            :use-data-nm-link="true"
             @model-nm-click="clickRecommendDataModel"
           />
         </template>
@@ -24,12 +25,13 @@
 </template>
 
 <script setup lang="ts">
-import { useDataModelDetailStore } from "@/store/search/detail/index";
+import { useDataModelDetailStore } from "@/store/search/detail";
 import { storeToRefs } from "pinia";
-import { useRouter } from "nuxt/app";
+import { useRouter, useRoute } from "nuxt/app";
 const dataModelDetailStore = useDataModelDetailStore();
 const { recommendDataModels } = storeToRefs(dataModelDetailStore);
 const router = useRouter();
+const route = useRoute();
 
 const groupedRecommendations = computed(() => {
   const groups = [];
@@ -41,14 +43,15 @@ const groupedRecommendations = computed(() => {
 
 function clickRecommendDataModel(data: object) {
   const { id, fqn, type } = data as { id: string; fqn: string; type: string };
-  router.push({
-    path: "/portal/search/detail",
-    query: {
-      type: type,
-      id: id,
-      fqn: fqn,
-    },
-  });
+  const queryParams = new URLSearchParams({
+    type,
+    id,
+    fqn,
+  }).toString();
+
+  const fullPath = `${route.path}?${queryParams}`;
+
+  window.open(fullPath, "_blank", "noopener,noreferrer");
 }
 </script>
 

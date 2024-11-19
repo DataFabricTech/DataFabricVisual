@@ -37,6 +37,27 @@
           </ul>
         </div>
       </div>
+
+      <div v-if="props.useContextBox" class="relative">
+        <button class="button button-sm button-neutral-ghost" @click="showMenu">
+          <svg-icon class="svg-icon button-icon" name="kebab-menu"></svg-icon>
+          <span class="hidden-text">메뉴 보기</span>
+        </button>
+        <div class="dropdown right-0">
+          <ul class="dropdown-list">
+            <li class="dropdown-item">
+              <button class="dropdown-button" @click="getDetail">
+                <span class="dropdown-text">데이터 모델 상세조회</span>
+              </button>
+            </li>
+            <li class="dropdown-item">
+              <button class="dropdown-button" @click="selectData">
+                <span class="dropdown-text">데이터 선택</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
     <div class="resource-box-initial-name" v-if="useFirModelNm">
       {{ props.dataObj.firModelNm }}
@@ -291,6 +312,7 @@ const props = withDefaults(defineProps<ResourceBoxProps>(), {
   user: () => {
     return {};
   },
+  useContextBox: false,
 });
 
 const isChecked = computed(() => {
@@ -406,6 +428,19 @@ const updateIsEditMode = (key: string, value: boolean) => {
 const checked = ($evt: Event, id: string | number) => {
   const target = $evt.target as HTMLInputElement;
   emit("checked", { id: id, checked: target.checked });
+};
+
+// TODO : 추후 개발
+const showMenu = () => {
+  emit("showMenu");
+};
+// TODO : 추후 개발
+const getDetail = () => {
+  emit("getDetail");
+};
+// TODO : 추후 개발
+const selectData = () => {
+  emit("selectData");
 };
 </script>
 
