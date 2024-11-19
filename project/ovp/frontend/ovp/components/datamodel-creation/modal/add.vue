@@ -44,7 +44,7 @@
             ></add-detail-grid>
           </template>
           <template #recommend>
-            <div class="data-list">
+            <div class="data-list" v-if="recommendData.length > 0">
               <template v-for="Data in recommendData">
                 <resource-box
                   class="is-resource-box-no-action"
@@ -57,6 +57,15 @@
                   @model-nm-click="clickRecommendDataModel"
                 />
               </template>
+            </div>
+
+            <div v-else class="no-result">
+              <div class="notification">
+                <svg-icon class="notification-icon" name="info"></svg-icon>
+                <p class="notification-detail">
+                  추천 데이터 모델 정보가 없습니다.
+                </p>
+              </div>
             </div>
           </template>
         </Tab>
