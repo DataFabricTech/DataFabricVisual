@@ -99,7 +99,7 @@ const $constants = {
           value: "profile",
         },
         {
-          label: "추천 데이터",
+          label: "추천 데이터 모델",
           value: "recommend",
         },
       ],
