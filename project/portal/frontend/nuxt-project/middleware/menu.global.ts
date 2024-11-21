@@ -171,21 +171,22 @@ export default defineNuxtRouteMiddleware((to, from) => {
   } else if (to.path === '/error') {
     console.log('에러 페이지')
   } else {
-    if(userStore.getTimeoutTimer != null) {
-      clearTimeout(userStore.getTimeoutTimer)
-    }
-    let timeoutTimer = null
-    const heartBeatFunction = function() {
-      if(cookies.get('x-access-token') && cookies.get('x-refresh-token')) {
-        $ofetch("/api/heartbeatToken").then((res) => {
-          timeoutTimer = setTimeout(heartBeatFunction, 2000);
-          userStore.setTimeoutTimer(timeoutTimer)
-        })
-      }
-    }
-    timeoutTimer = setTimeout(heartBeatFunction, 100);
-    userStore.setTimeoutTimer(timeoutTimer)
+    getMenu()
+    // if(userStore.getTimeoutTimer != null) {
+    //   clearTimeout(userStore.getTimeoutTimer)
+    // }
+    // let timeoutTimer = null
+    // const heartBeatFunction = function() {
+    //   if(cookies.get('x-access-token') && cookies.get('x-refresh-token')) {
+    //     $ofetch("/api/heartbeatToken").then((res) => {
+    //       timeoutTimer = setTimeout(heartBeatFunction, 2000);
+    //       userStore.setTimeoutTimer(timeoutTimer)
+    //     })
+    //   }
+    // }
+    // timeoutTimer = setTimeout(heartBeatFunction, 100);
+    // userStore.setTimeoutTimer(timeoutTimer)
 
-    setTimeout(getMenu, 100);
+    // setTimeout(getMenu, 100);
   }
 })
