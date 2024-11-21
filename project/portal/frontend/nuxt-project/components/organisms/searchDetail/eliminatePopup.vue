@@ -20,7 +20,7 @@
           <div class="mu-heading">
             <h5>
               {{ props.eliminateModal.entity.attributes.name }} (
-              {{ props.eliminateModal.entity.attributes.comment }} )
+              {{ props.eliminateModal.entity.attributes.description }} )
             </h5>
           </div>
           <div class="detail-box" v-show="showData">
@@ -95,8 +95,8 @@
           </div>
           <div class="mu-heading">
             <h5>
-              {{ props.eliminateModal.entity.entity.attributes.name }} (
-              {{ props.eliminateModal.entity.entity.attributes.comment }} )
+              {{ props.eliminateModal.entity.attributes.name }} (
+              {{ props.eliminateModal.entity.attributes.comment }} )
             </h5>
           </div>
           <div class="detail-box" v-show="showData">
@@ -348,10 +348,6 @@
 
 
                 <pre id="code-content" class="sample-url" style="color: #ffffff">
-# ========================================
-# json 추출 코드 (대용량 데이터 추천)
-# ========================================
-
 import json, requests
 
 '''Rest API 요청 정보 설정'''
@@ -362,7 +358,7 @@ payload = json.dumps({
     "user_id": "{{ userStore.getUser.user_id }}", # 사용자 아이디
     "password": "******", # 사용자 비밀번호
     "select": "", # 컬럼명 리스트 또는 전체 컬럼(* 또는 ""), ex: column1, column2, column3 ...
-    "from": "{{ props.eliminateModal.entity.entity.attributes.qualifiedName.split("@")[0] }}", # DB명.테이블명
+    "from": "{{ props.eliminateModal.entity.qualifiedname.split("@")[0] }}", # DB명.테이블명
     "where": "" # 데이터 조회 조건(WHERE)문, ex: where column = 'value'
 })
 
