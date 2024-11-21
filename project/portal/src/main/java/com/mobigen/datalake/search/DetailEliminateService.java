@@ -72,151 +72,6 @@ public class DetailEliminateService {
      * @return
      * @throws SQLException
      */
-    public byte[] getCSVbyByte(HashMap<String, String> parameter, List userDescriptionList, List commentList)
-            throws Exception {
-        // 저장 위치 및 파일명
-        StringWriter sw = new StringWriter();
-        CSVPrinter csvPrinter = null;
-
-        Connection connection = null;
-        Statement statement = null;
-        ResultSet rs = null;
-
-        try {
-            String query = "";
-            // hive_column
-            if (parameter.get("typeName").toString().endsWith("_column")) {
-                String queryStrSplit[] = parameter.get("qualifiedName").toString().split("@");
-                String queryStr = queryStrSplit[0];
-                String queryStrname[] = queryStr.split("\\.");
-                StringBuilder tableName = new StringBuilder();
-                for (int i = 0; i < queryStrname.length - 1; i++) {
-                    if (!tableName.toString().equals("")) {
-                        tableName.append(".").append("\"" + queryStrname[i] + "\"");
-                    } else {
-                        tableName.append("\"" + queryStrname[i] + "\"");
-                    }
-                }
-                query = "select " + parameter.get("querySelect").toString() + " from " + tableName
-                        + parameter.get("queryWhere").toString();// + " limit 10";
-            }
-
-            // hive_table
-            if (parameter.get("typeName").toString().endsWith("_table")) {
-                String queryStrSplit[] = parameter.get("qualifiedName").toString().split("@");
-                String tableNameStr = queryStrSplit[0];
-                String[] tableNameArr = tableNameStr.split("\\.");
-                StringBuilder tableName = new StringBuilder();
-                if (tableNameArr.length > 1) {
-                    for (int i = 0; i < tableNameArr.length; i++) {
-                        if (!tableName.toString().equals("")) {
-                            tableName.append(".").append("\"" + tableNameArr[i] + "\"");
-                        } else {
-                            tableName.append("\"" + tableNameArr[i] + "\"");
-                        }
-                    }
-                } else {
-                    tableName.append("\"" + tableNameStr + "\"");
-                }
-
-                query = "select " + parameter.get("querySelect").toString() + " from " + tableName
-                        + parameter.get("queryWhere").toString();// + " limit 10";
-            }
-
-            Properties properties = new Properties();
-            properties.setProperty("user", parameter.get("user_id").toString());
-            properties.setProperty("SSL", "false");
-            connection = DriverManager.getConnection(trinoJdbcUrl, properties);
-
-            statement = connection.createStatement();
-
-            rs = statement.executeQuery(query);
-
-            csvPrinter = CSVFormat.DEFAULT.withHeader(rs.getMetaData()).print(sw);
-            int columnCount = rs.getMetaData().getColumnCount();
-
-            Object[] userDescriptionArray = userDescriptionList.toArray();
-
-            if (userDescriptionArray.length > 0) {
-                for (int i = 0; i < userDescriptionArray.length; i++) {
-                    csvPrinter.print(userDescriptionArray[i]);
-                }
-                csvPrinter.println();
-            }
-
-            Object[] commentArray = commentList.toArray();
-            if (commentArray.length > 0) {
-                for (int i = 0; i < commentArray.length; i++) {
-                    csvPrinter.print(commentArray[i]);
-                }
-                csvPrinter.println();
-            }
-
-            while (rs.next()) {
-                for (int i = 1; i <= columnCount; i++) {
-                    csvPrinter.print(rs.getObject(i));
-                }
-                csvPrinter.println();
-            }
-
-
-            rs.close();
-            statement.close();
-            connection.close();
-
-            sw.flush();
-
-            return sw.toString().getBytes("UTF-8");
-
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            if (e.getMessage().indexOf("Access Denied") != -1) { // 권한이 없는 경우
-                log.info(e.getMessage());
-                throw new Exception("파일 추출 권한이 없습니다.");
-            } else if (e.getMessage().indexOf("Column") != -1 ||
-                       e.getMessage().indexOf("mismatched input") != -1 ||
-                       e.getMessage().indexOf("Unknown resolvedType:") != -1 ||
-                       e.getMessage().indexOf("Query failed") != -1) {
-                log.info(e.getMessage());
-                throw new Exception("쿼리가 잘못되었습니다.");
-            } else if (e.getMessage().indexOf("OutOfMemoryError") != -1) { // 용량이 너무 큰 경우
-                log.info(e.getMessage());
-                throw new Exception("용량이 너무 커서 다운로드 받을 수 없습니다.");
-            } else if (e.getMessage().indexOf("Iceberg") != -1) {
-                log.info(e.getMessage());
-                throw new Exception("Iceberg 테이블입니다.");
-            } else {
-                throw e;
-            }
-
-        } finally {
-            if (rs != null)
-                try {
-                    rs.close();
-                } catch (Exception e) {
-                }
-            if (statement != null)
-                try {
-                    statement.close();
-                } catch (Exception e) {
-                }
-            if (connection != null)
-                try {
-                    connection.close();
-                } catch (Exception e) {
-                }
-            if (csvPrinter != null)
-                csvPrinter.close();
-        }
-    }
-
-    /**
-     * 파일 추출
-     * 
-     * @param parameter
-     * @return
-     * @throws SQLException
-     */
     public void getCSVFile(Map<String, Object> parameter, HttpServletRequest request, HttpServletResponse response)
             throws Exception {
 
@@ -231,7 +86,7 @@ public class DetailEliminateService {
         try {
             String query = "";
             // hive_column
-            if (parameter.get("typeName").toString().endsWith("_column")) {
+            if (parameter.get("typeName").toString().endsWith("column")) {
                 String queryStrSplit[] = parameter.get("qualifiedName").toString().split("@");
                 String queryStr = queryStrSplit[0];
                 String queryStrname[] = queryStr.split("\\.");
@@ -251,9 +106,12 @@ public class DetailEliminateService {
             }
 
             // hive_table
-            if (parameter.get("typeName").toString().endsWith("_table")) {
-                String queryStrSplit[] = parameter.get("qualifiedName").toString().split("@");
-                String tableNameStr = queryStrSplit[0];
+            if (parameter.get("typeName").toString().endsWith("table")) {
+                String[] queryStrSplit = parameter.get("qualifiedName").toString().split("\\.");
+                String catalog = queryStrSplit[0];
+                String dbName = queryStrSplit[1];
+                String tableSchema = queryStrSplit[2];
+                String tableNameStr = queryStrSplit[3];
                 String[] tableNameArr = tableNameStr.split("\\.");
                 StringBuilder tableName = new StringBuilder();
                 if (tableNameArr.length > 1) {
@@ -268,7 +126,7 @@ public class DetailEliminateService {
                     tableName.append("\"" + tableNameStr + "\"");
                 }
 
-                query = "select " + parameter.get("querySelect").toString() + " from " + tableName
+                query = "select " + parameter.get("querySelect").toString() + " from \"" + catalog + "\".\"" + tableSchema + "\"." + tableName
                         + parameter.get("queryWhere").toString();// + " limit 10";
                         
                 if (parameter.get("limit") != null && !parameter.get("limit").toString().equals("")) {
@@ -347,18 +205,18 @@ public class DetailEliminateService {
             log.info("write userDescription end !!");
             csvPrinter.println();
 
-            // 헤더 작성 : comment
-            log.info("write comment !!");
-            if (parameter.get("commentList") != null) {
-                Object[] commentArray = ((List) parameter.get("commentList")).toArray();
+            // 헤더 작성 : description
+            log.info("write description !!");
+            if (parameter.get("descriptionList") != null) {
+                Object[] descriptionArray = ((List) parameter.get("descriptionList")).toArray();
 
-                if (commentArray.length > 0) {
-                    for (int i = 0; i < commentArray.length; i++) {
-                        csvPrinter.print(commentArray[i]);
+                if (descriptionArray.length > 0) {
+                    for (int i = 0; i < descriptionArray.length; i++) {
+                        csvPrinter.print(descriptionArray[i]);
                     }
                 }
             }
-            log.info("write comment end !!");
+            log.info("write description end !!");
             csvPrinter.println();
 
             // 결과를 스트리밍 방식으로 CSV 작성
@@ -527,6 +385,7 @@ public class DetailEliminateService {
                 response.getOutputStream().flush();
                 throw new Exception(errorMessage);
             } else {
+                e.printStackTrace();
                 log.info(e.getMessage());
                 String errorMessage = "파일 다운로드에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.";
                 responseMap.put("errorMessage", errorMessage);

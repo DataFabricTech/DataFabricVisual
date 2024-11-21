@@ -19,8 +19,8 @@
           </div>
           <div class="mu-heading">
             <h5>
-              {{ props.eliminateModal.entity.entity.attributes.name }} (
-              {{ props.eliminateModal.entity.entity.attributes.comment }} )
+              {{ props.eliminateModal.entity.attributes.name }} (
+              {{ props.eliminateModal.entity.attributes.comment }} )
             </h5>
           </div>
           <div class="detail-box" v-show="showData">
@@ -54,7 +54,7 @@
                           -webkit-box-orient: vertical;
                         "
                       >
-                        {{ commentEllipsis(index, props.eliminateModal.entity) }}</span
+                      {{ descriptionEllipsis(index, props.eliminateModal.entity) }}</span
                       >
                       <span style="border-bottom: 1px solid #666">
                         {{
@@ -847,6 +847,7 @@ const iframePath = ref(
 );
 const type = ref(""); // column인지 table인지
 const referredEntities = ref({}); // 파라미터로 받을 내용 : 컬럼 파라미터 정보
+const columnEntities = ref({}); // 파라미터로 받을 내용 : 컬럼 파라미터 정보
 const querySelect = ref(""); // 조회 쿼리
 const queryWhere = ref(""); // 쿼리 조건
 const queryError = ref(false); // 쿼리 오류 여부
@@ -1010,21 +1011,26 @@ const copyCode = () => {
     });
 }
 
-const commentEllipsis = (val, entity) => {
-  const referredEntities = Object.values(entity.referredEntities);
-  let comment;
-  referredEntities.filter((item) => {
-    if (item.attributes.name === val) {
-      if (item.attributes.comment !== "") {
-        comment = item.attributes.comment;
-      }
+const descriptionEllipsis = (val, entity) => {
+  const attributes = entity.attributes
+
+  let description;
+  if (attributes) {
+    const columns = attributes.columns
+    if (columns) {
+      columns.filter((item) => {
+        if (item.name === val) {
+          if (item.description !== "") {
+            description = item.description;
+          }
+        }
+      });
     }
-  });
-  if (comment !== undefined) {
-    if (comment !== null) {
-      return comment;
-    } else {
-      return "";
+  }
+
+  if (description !== undefined) {
+    if (description !== null) {
+      return description;
     }
   } else {
     return "";
@@ -1032,25 +1038,25 @@ const commentEllipsis = (val, entity) => {
 };
 
 const typeEllipsis = (val, entity) => {
-  let referredEntities = Object.values(entity.referredEntities);
-  if (referredEntities.length === 0) {
-    referredEntities = Object.values(entity);
-  }
-  let type = "";
-  referredEntities.filter((item) => {
-    if (item.attributes) {
-      if (item.attributes.name === val) {
-        if (item.attributes.type !== "") {
-          type = item.attributes.type;
+  const attributes = entity.attributes
+
+  let dataType;
+  if (attributes) {
+    const columns = attributes.columns
+    if (columns) {
+      columns.filter((item) => {
+        if (item.name === val) {
+          if (item.dataType !== "") {
+            dataType = item.dataType;
+          }
         }
-      }
+      });
     }
-  });
-  if (type !== undefined) {
-    if (type !== null) {
-      return type;
-    } else {
-      return ""
+  }
+
+  if (dataType !== undefined) {
+    if (dataType !== null) {
+      return dataType;
     }
   } else {
     return "";
@@ -1058,21 +1064,25 @@ const typeEllipsis = (val, entity) => {
 };
 
 const userDescriptionEllipsis = (val, entity) => {
-  const referredEntities = Object.values(entity.referredEntities);
+  const attributes = entity.attributes
 
-  let userDescription = "hey";
-  referredEntities.filter((item) => {
-    if (item.attributes.name === val) {
-      if (item.attributes.userDescription !== "") {
-        userDescription = item.attributes.userDescription;
-      }
+  let userDescription;
+  if (attributes) {
+    const columns = attributes.columns
+    if (columns) {
+      columns.filter((item) => {
+        if (item.name === val) {
+          if (item.userDescription !== "") {
+            userDescription = item.userDescription;
+          }
+        }
+      });
     }
-  });
+  }
+
   if (userDescription !== undefined) {
     if (userDescription !== null) {
       return userDescription;
-    } else {
-      return "";
     }
   } else {
     return "";
@@ -1107,72 +1117,21 @@ const yyyyMMdd = (value) => {
   return year + "-" + month + "-" + day;
 };
 
+// 컬럼 순서 설정, 파티션키 맨 마지막에 추가
 const getReferredEntities = () => {
-  // 컬럼 position 정보
-  if (type.value == "column") {
-    columnPositionData.value = new Array(1);
-    columnPositionData.value[0] = ObjectUtils.getPropertyValue(
-      props.eliminateModal.entity,
-      "entity/attributes/name",
-      ""
-    );
-    return;
-  } else {
-    referredEntities.value = ObjectUtils.getPropertyValue(
-      props.eliminateModal.entity,
-      "referredEntities",
-      ""
-    );
+  let sortedColumnEntities = []
 
-    // 파티션 키 정보는 따로담기
-    const tempPartitionKeys = ObjectUtils.getPropertyValue(
-      props.eliminateModal.entity,
-      "entity/attributes/partitionKeys",
-      []
-    );
-    for (let i = 0; i < tempPartitionKeys.length; i++) {
-      partitionKeys.value.push(tempPartitionKeys[i].guid);
-    }
-    // 파티션 키를 guid로 가지고 있음
-    columnPositionData.value = new Array(Object.keys(referredEntities.value).length - 1);
-    columnPositionData.value = [];
+  // 1. 컬럼 순서 설정
+  columnEntities.value = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "attributes/columns", [])
+  const tempPartitionKey = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "attributes/tablePartition", "")
+  // partitionKeys.value.push(tempPartitionKey)
+  sortedColumnEntities = columnEntities.value.sort((a, b) => a.ordinalPosition - b.ordinalPosition)
 
-    for (let key in referredEntities.value) {
-      if (
-        !ObjectUtils.hasPropertyValue(referredEntities.value[key], "attributes/position")
-      )
-        continue;
+  columnPositionData.value = sortedColumnEntities.map((item) => item.name)
+  if (tempPartitionKey)
+    columnPositionData.value.push(tempPartitionKey)
 
-      // 파티션 컬럼의 경우 guid만 가지고 있기 때문에 객체에 이름 추가
-      if (
-        partitionKeys.value.findIndex(
-          (v) =>
-            v ==
-            ObjectUtils.getPropertyValue(referredEntities.value[key], "guid")
-        ) >= 0
-      ) {
-
-        for (let j=0; j<partitionKeys.value.length; j++) {
-          if (partitionKeys.value[j] == key)
-          partitionKeys.value[j] = ObjectUtils.getPropertyValue(referredEntities.value[key], "attributes/name")
-        }
-
-        continue;
-      }
-
-      for (let subKey in referredEntities.value[key]) {
-        if (subKey == "attributes") {
-          columnPositionData.value[referredEntities.value[key][subKey]["position"]] =
-            referredEntities.value[key][subKey]["name"];
-        }
-      }
-    }
-
-    for (let i = 0; i < partitionKeys.value.length; i++) {
-      columnPositionData.value.push(partitionKeys.value[i]);
-    }
-    partitionKeys.value = [];
-  }
+  return sortedColumnEntities
 };
 
 const fnSelectQueryMake = () => {
@@ -1362,7 +1321,7 @@ const onClickFileEliminateButton = async () => {
   queryError.value = false;
   queryErrorMessage.value = "";
   querySelect.value = " ";
-  getReferredEntities();
+  const sortedColumnEntities = getReferredEntities();
 
 
   fnSelectQueryMake();
@@ -1373,49 +1332,42 @@ const onClickFileEliminateButton = async () => {
 
   let typeName = ObjectUtils.getPropertyValue(
     props.eliminateModal.entity,
-    "entity/typeName",
+    "metatype",
     ""
   );
   let qualifiedName = ObjectUtils.getPropertyValue(
     props.eliminateModal.entity,
-    "entity/attributes/qualifiedName",
+    "qualifiedname",
     ""
   );
-  let guid = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "entity/guid", "");
+  let guid = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "id", "");
   let name = ObjectUtils.getPropertyValue(
     props.eliminateModal.entity,
-    "entity/attributes/name",
+    "attributes/name",
     ""
   );
   let description = ObjectUtils.getPropertyValue(
     props.eliminateModal.entity,
-    "entity/attributes/comment",
+    "description",
     ""
   );
-  let referredEntities = Object.values(props.eliminateModal.entity.referredEntities);
+
   let userDescriptionList = [];
-  let commentList = [];
+  let descriptionList = [];
 
-  const keys = Object.keys(sampleDataHeader.value);
-  keys.forEach((e) => {
-    for (const element of referredEntities) {
-      if (addUserdescription.value && element.attributes.userDescription !== undefined) {
-        let userDescription = element.attributes.userDescription;
-        let name = element.attributes.name;
-        if (e === name) {
-          userDescriptionList.push(userDescription);
-        }
-      }
+  for (let i=0; i<sortedColumnEntities.length; i++) {
+    // description
+    if (sortedColumnEntities[i].description)
+      descriptionList.push(sortedColumnEntities[i].description)
+    else
+      descriptionList.push("")
 
-      if (addComment.value && element.attributes.comment !== undefined) {
-        let comment = element.attributes.comment;
-        let name = element.attributes.name;
-        if (e === name) {
-          commentList.push(comment);
-        }
-      }
-    }
-  });
+    // userDescription
+    if (sortedColumnEntities[i].userdescription)
+      userDescriptionList.push(sortedColumnEntities[i].userdescription)
+    else
+      userDescriptionList.push("")
+  }
 
   let paramQueryWhere = "";
   if (queryWhere.value.trim() == "") paramQueryWhere = "";
@@ -1432,7 +1384,7 @@ const onClickFileEliminateButton = async () => {
     queryWhere: paramQueryWhere,
     fileName: name,
     userDescriptionList: userDescriptionList,
-    commentList: commentList,
+    descriptionList: descriptionList,
     limit: extractLimit.value
   }
 
