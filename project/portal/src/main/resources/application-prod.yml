@@ -56,7 +56,7 @@ logging:
       mobigen: debug
 
 server:
-  port: 28080
+  port: 38080
   servlet:
     session:
       timeout: 7200
@@ -121,7 +121,7 @@ properties:
       csrf: true
       cors:
         pattern: /** #/auth/**
-        allowed-origins: http://<INTERNAL_HOST>, http://<INTERNAL_HOST>:28080 #"*" #http://server-name:port
+        allowed-origins: http://<INTERNAL_HOST>, http://<INTERNAL_HOST>:38080 #"*" #http://server-name:port
         allowed-methods: "*" #PUT,DELETE,GET,POST ...
         allowed-headers: "*" #Context-Type, ...
         allow-credentials: true

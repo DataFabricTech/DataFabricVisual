@@ -363,7 +363,7 @@ watch(
         categoryImageFileId.value = localCategoryImageFileId;
         tempCategoryImageFileId.value = localCategoryImageFileId;
         if (location.hostname === "localhost" && localCategoryImageFileId !== "") {
-          categoryImageFile.value = "http://localhost:28080/api/ckeditor/attachFile/" + localCategoryImageFileId;
+          categoryImageFile.value = "http://localhost:38080/api/ckeditor/attachFile/" + localCategoryImageFileId;
         } else {
           categoryImageFile.value = "/api/ckeditor/attachFile/" + localCategoryImageFileId;
         }
@@ -669,7 +669,7 @@ const fileUpload = (e) => {
   }).then((res) => {
     if (location.hostname === "localhost") {
       categoryImageFileId.value = res.data[0].file_id;
-      categoryImageFile.value = "http://localhost:28080/api/ckeditor/attachFile/" + res.data[0].file_id;
+      categoryImageFile.value = "http://localhost:38080/api/ckeditor/attachFile/" + res.data[0].file_id;
     } else {
       categoryImageFileId.value = res.data[0].file_id;
       categoryImageFile.value = "/api/ckeditor/attachFile/" + res.data[0].file_id;

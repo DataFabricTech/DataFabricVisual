@@ -160,14 +160,14 @@ const editorConfig = ref<EditorConfig>({
   height: 400,
   enterMode: "ENTER_BR",
   uploadUrl: isLocal()
-    ? "http://localhost:28080/api/ckeditor/attachFile"
+    ? "http://localhost:38080/api/ckeditor/attachFile"
     : "/api/ckeditor/attachFile",
   filebrowserUploadUrl: isLocal()
-    ? "http://localhost:28080/api/ckeditor/attachFile"
+    ? "http://localhost:38080/api/ckeditor/attachFile"
     : "/api/ckeditor/attachFile",
   filebrowserUploadMethod: "POST",
-  // localhost:3000으로 테스트할 시 28080 서버와 쿠키의 값이 달라서 안됩니다.
-  // npm run generate -> npm install 후 localhost:28080 으로 접속하여 테스트 해야합니다.
+  // localhost:3000으로 테스트할 시 38080 서버와 쿠키의 값이 달라서 안됩니다.
+  // npm run generate -> npm install 후 localhost:38080 으로 접속하여 테스트 해야합니다.
   withCredentials: true,
   extraPlugins: "image2,clipboard,pastefromword,colorbutton,font,codesnippet",
   toolbarGroups: [

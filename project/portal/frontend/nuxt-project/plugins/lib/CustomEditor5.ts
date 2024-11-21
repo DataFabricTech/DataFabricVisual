@@ -130,7 +130,7 @@ class Editor extends ClassicEditor {
 		},
     simpleUpload: {
       uploadUrl: isLocal()
-      ? "http://localhost:28080/api/ckeditor/attachFile"
+      ? "http://localhost:38080/api/ckeditor/attachFile"
       : "/api/ckeditor/attachFile",
       withCredentials: true,
       headers: {

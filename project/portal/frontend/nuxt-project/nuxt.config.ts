@@ -160,7 +160,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      baseURL: process.env.NUXT_PUBLIC_API_BASE === "development" ? "http://localhost:28080/" : "/",
+      baseURL: process.env.NUXT_PUBLIC_API_BASE === "development" ? "http://localhost:38080/" : "/",
       API_URL: `${process.env.API_PREFIX}`,
       SYNC_API_URL: `${process.env.SYNC_API_VERSION}${process.env.SYNC_API_PREFIX}`
     }

@@ -11,7 +11,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   const { cookies } = useCookies()
 
   const $ofetch = $fetch.create({
-    baseURL: process.env.NODE_ENV === "development" ? "http://localhost:28080/" : "/",
+    baseURL: process.env.NODE_ENV === "development" ? "http://localhost:38080/" : "/",
     credentials: 'include', // 쿠키 자동 전송 설정
     onRequest({ request, options, error }) {
       if (request != '/api/heartbeatToken') {
