@@ -3,6 +3,7 @@ package com.mobigen.framework.exception;
 import com.mobigen.framework.component.Messages;
 import com.mobigen.framework.result.JsonResult;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,7 +65,13 @@ public class GlobalExceptionHandler {
     // Unknown
     @ExceptionHandler(Exception.class)
     @ResponseBody
-    public JsonResult unknownExceptionHandler(Exception e) {
+    public JsonResult unknownExceptionHandler(Exception e, HttpServletRequest request) {
+
+        System.out.println("=================== ERROR URL ====================");
+        String url = request.getRequestURI();
+        System.out.println(url);
+        System.out.println("=================== ERROR URL END ====================");
+        
         log.error(message.get("com.mobigen.framework.exception.GlobalExceptionHandler.unknownExceptionHandler"), e);
         return getExceptionJsonResult(e, e);
     }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mobigen.framework.result.JsonResult;
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 import com.mobigen.framework.security.SessionManager;
 import com.mobigen.framework.utility.RegexUtils;
@@ -107,7 +108,6 @@ public class DetailController {
     @GetMapping("/getRowCount")
     @ResponseBody
     public Object getRowCount(@RequestParam String guid, HttpServletRequest request) throws Exception {
-        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         return searchDetailService.getRowCount(guid);
     }
 
@@ -311,7 +311,7 @@ public class DetailController {
     @ResponseJsonResult
     @PostMapping("/attributes")
     @ResponseBody
-    public Object saveEntityAttributes(@RequestBody Map<String, Object> params) {
+    public Object saveEntityAttributes(@RequestBody Map<String, Object> params) throws Exception {
         return searchDetailService.saveEntityAttributes(params);
     }
 

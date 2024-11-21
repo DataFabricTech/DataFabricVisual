@@ -3,67 +3,92 @@
     <div class="inner">
       <div class="mu-section">
         <!-- 카테고리 관리 & 더보기 툴팁 -->
-        <meta-data-tooltip :tooltip-obj="tooltipObj" :selected-category="selectedCategory"
-        @onClickMenu="onClickCategoryManageMenu" />
+        <meta-data-tooltip
+          :tooltip-obj="tooltipObj"
+          :selected-category="selectedCategory"
+          @onClickMenu="onClickCategoryManageMenu"
+        />
 
-        <left-menu-list @onClickMenuItem="onClickMenuItem" @onClickOptionalButtons="onClickOptionalButtons"
-                        @onClickCategoryOrderChange="onClickCategoryOrderChange"/>
+        <!-- 카테고리 목록 -->
+        <left-menu-list
+          @onClickMenuItem="onClickMenuItem"
+          @onClickOptionalButtons="onClickOptionalButtons"
+          @onClickCategoryOrderChange="onClickCategoryOrderChange"
+        />
 
-        <classification-ord-update-modal ref="classificationOrdupdateModal" :visible.sync="visible" @searchMethod="getCategoryList" 
-                                          @onSearchCategories="onSearchCategories" />
-        
+        <classification-ord-update-modal
+          ref="classificationOrdupdateModal"
+          :visible.sync="visible"
+          @searchMethod="getCategoryList"
+          @onSearchCategories="onSearchCategories"
+        />
+
         <!-- 카테고리 리스트 사이즈 조절 바 -->
-        <div data-v-10a51f6f id="divider" @mousedown="mouseDown($event)" ></div>
+        <div data-v-10a51f6f id="divider" @mousedown="mouseDown($event)"></div>
 
         <!-- page-content : R 서브내용 -->
         <div class="page-content">
           <div class="board-list-wrap">
             <classification-info :selected-category="selectedCategory" @onClickUpdate="onClickCategoryManageMenu" />
 
-            <meta-data-table-header :filter-search-obj="filterSearchObj"
-                            @onClickButtons="onClickTableHeaderButtons" @onChangeFilter="onChangeFilter"
-                            @onFilterSearch="onSearchDataList" :pagingObj="pagingObj" />
+            <meta-data-table-header
+              :filter-search-obj="filterSearchObj"
+              @onClickButtons="onClickTableHeaderButtons"
+              @onChangeFilter="onChangeFilter"
+              @onFilterSearch="onSearchDataList"
+              :pagingObj="pagingObj"
+            />
 
             <meta-data-table :data-list="dataList" :selected-data="selectedData" @onSelectItems="onSelectItems" />
-            
-            <pagination :paging="pagingObj" @onClickPage="onClickPage" />                        
-          </div>          
+
+            <pagination :paging="pagingObj" @onClickPage="onClickPage" />
+          </div>
         </div>
         <!-- //page-content -->
       </div>
 
       <!-- 카테고리 추가/수정/매핑 처리 모달 -->
-      <manage-classification-modal :manage-modal="manageModalObj" @onCloseModal="onToggleManageModal" 
-                @onSubmit="onSubmitCategory" />
+      <manage-classification-modal
+        ref="refManageModal"
+        :manage-modal="manageModalObj"
+        @onCloseModal="onToggleManageModal"
+        @onSubmit="onSubmitCategory"
+      />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "~/store/user.ts";
-import { useCategoryStore } from "~/store/category.ts";
-import { useEventStore  } from "~/store/event.ts";
+import { useUserStore } from "@store/user.ts";
+import { useCategoryStore } from "@store/category.ts";
+import { useEventStore } from "@store/event.ts";
 import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
 import ClassificationInfo from "@organisms/metaDataManage/classification-info";
 import MetaDataTableHeader from "@organisms/metaDataManage/meta-data-table-header";
 import MetaDataTable from "@organisms/metaDataManage/meta-data-table";
 import MetaDataTooltip from "@molecules/metaDataManage/meta-data-tooltip";
-import ManageClassificationModal from '@functional/classificationModal/manage-classification-modal';
-import ClassificationOrdUpdateModal from '@organisms/metaDataManage/classification-ord-update-modal';
-import ObjectUtils from "~/utils/ObjectUtils";
+import ManageClassificationModal from "@functional/classificationModal/manage-classification-modal";
+import ClassificationOrdUpdateModal from "@organisms/metaDataManage/classification-ord-update-modal";
+import ObjectUtils from "@utils/ObjectUtils";
 import Pagination from "@functional/pagination/pagination";
-import { useNuxtApp, useRoute, useRouter } from "nuxt/app";
-import { onMounted, onUnmounted, ref, computed } from 'vue';
-import portalConfirm from '@functional/confirm/portal-confirm';
-import { errorAlert } from "@functional/alert/alert-default";
+import { useNuxtApp, useRoute, useRouter, useRuntimeConfig } from "nuxt/app";
+import { onMounted, onUnmounted, ref } from "vue";
+import portalConfirm from "@functional/confirm/portal-confirm";
+import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
+import { $R, isEmpties } from "@composables/ramda";
+import { storeToRefs } from "pinia";
+import {useApi} from "@composables/useApi";
+import {useConstants} from "@composables/useConstants";
 
 definePageMeta({
   name: "AdminMetaDataManage",
-  layout: "admin",
+  layout: "admin"
 });
 
-
 const { $ofetch } = useNuxtApp();
+const {setEventLog, setMetaSync} = useApi()
+const { CONSTANT } = useConstants();
+const runConfig = useRuntimeConfig().public;
 
 // route
 const route = useRoute();
@@ -75,8 +100,8 @@ const fromPath = userStore.getFromPath;
 const params = userStore.getParams;
 
 const categoryStore = useCategoryStore();
-const getOriginalList = categoryStore.getOriginalList
-const selectedGuid = categoryStore.getSelectedItemGuid
+const getOriginalList = categoryStore.getOriginalList;
+const selectedId = categoryStore.getSelectedItemId;
 
 const eventStore = useEventStore();
 
@@ -88,9 +113,9 @@ interface FilterOption {
 }
 
 interface FilterSearchObj {
-  searchType1: string;   // 첫번째 필터 조건 - hive_table or hive_column
-  searchType2: string;   // 두번째 필터 조건 - 데이터명, 오너 등
-  word: string;          // 검색어
+  searchType1: string; // 첫번째 필터 조건 - table or column
+  searchType2: string; // 두번째 필터 조건 - 데이터명, 오너 등
+  word: string; // 검색어
   options: FilterOption[];
 }
 
@@ -106,22 +131,25 @@ const pagingObj = ref<PagingObj>({
   total: 0, // 전체 데이터 건수
   limit: 10, // 한 페이지에 보여줄 데이터 건수
   block: 10, // 한 화면에서 보여줄 페이지 수
-  currentPage: 1, // 현재 페이지 번호
+  currentPage: 1 // 현재 페이지 번호
 });
 
 interface SelectedCategory {
+  id: string;
+  parent_id: string;
+  level: string;
   name: string;
   description: string;
-  guid: string;
   dept: { [key: string]: any };
   file_id: string;
+  ord_no: number;
 }
 
 interface TooltipObj {
   display: boolean;
   type: string;
-  e: Event | {},
-  targets: any
+  e: Event | {};
+  targets: any;
 }
 
 interface ManageModalObj {
@@ -178,45 +206,52 @@ const catSelectedData = ref<any>(null); // 카테고리 체크박스 체크한 �
 
 // 필터검색 제어
 const filterSearchObj = ref<FilterSearchObj>({
-  searchType1: 'hive_table',  
-  searchType2: '', 
-  word: '', 
+  searchType1: "table",
+  searchType2: "",
+  word: "",
   options: [
-        { // 두번째 필터 선택 가능 옵션 목록
-            value: '',
-            desc: '전체'
-        }, {
-            value: 'comment',
-            desc: '데이터설명'
-        }, {
-            value: 'name',
-            desc: '데이터명'
-        }, {
-            value: 'owner',
-            desc: '소유자'
-        }
+    {
+      // 두번째 필터 선택 가능 옵션 목록
+      value: "",
+      desc: "전체"
+    },
+    {
+      value: "comment",
+      desc: "데이터설명"
+    },
+    {
+      value: "name",
+      desc: "데이터명"
+    },
+    {
+      value: "owner",
+      desc: "소유자"
+    }
   ]
 });
 
 // 선택된 카테고리 정보
 const selectedCategory = ref<SelectedCategory>({
-    name: '',
-    description: '전체',
-    guid: '',
-    dept: {
-        dept_cd: '',
-        dept_nm: ''
-    },
-    file_id: ''
+  ord_no: 0,
+  id: "",
+  parent_id: "",
+  name: "",
+  description: "전체 카테고리",
+  level: "",
+  dept: {
+    dept_cd: "",
+    dept_nm: ""
+  },
+  file_id: ""
 });
 
 // 툴팁 제어
 const tooltipObj = ref<TooltipObj>({
-  display: false,  // 툴팁 화면 렌더 여부 flag
-  type: '',
+  display: false, // 툴팁 화면 렌더 여부 flag
+  type: "",
   e: {},
   targets: null
-}); 
+});
 
 // 카테고리 관리 모달 제어
 const manageModalObj = ref<ManageModalObj>({
@@ -225,14 +260,19 @@ const manageModalObj = ref<ManageModalObj>({
   target: null
 });
 
+// 카테고리 모달 ref
+const refManageModal = ref<any>(null);
+
 await categoryStore.fetchCategories();
+const { _categoryMap } = storeToRefs(categoryStore);
 
 onMounted(() => {
-  categoryStore.setCalledFrom({ from: 'metaDataManage' });
-  
+  // NOTE: 카테고리 목록 컴포넌트 import한 페이지 정보 저장
+  categoryStore.setCalledFrom({ from: "metaDataManage" });
+
   const path = ObjectUtils.getPropertyValue(params, "path", "");
 
-  if (fromPath.value === '/admin/data/meta-data/detail' && path === '/admin/data/meta-data/manage') {
+  if (fromPath.value === "/admin/data/meta-data/detail" && path === "/admin/data/meta-data/manage") {
     // 상세 조회 페이지에서 메타 데이터 통합 관리 페이지로 이동 시, 상세 페이지 이동 직전 사용자가 세팅한 검색조건으로 목록 조회
     onFetchPageDataByPrevCondition();
   } else {
@@ -240,19 +280,19 @@ onMounted(() => {
     onFetchPageData();
   }
 
-  // event bus에 이벤트 핸들러 등록  
-  eventStore.on('onToggleMetaDataTooltip', onToggleTooltip); // 툴팁 제어 핸들러
-  eventStore.on('onClickTableBodyButtons', onClickTableBodyButtons); //테이블 내 버튼 클릭 이벤트 핸들러
-  
+  // event bus에 이벤트 핸들러 등록
+  eventStore.on("onToggleMetaDataTooltip", onToggleTooltip); // 툴팁 제어 핸들러
+  eventStore.on("onClickTableBodyButtons", onClickTableBodyButtons); //테이블 내 버튼 클릭 이벤트 핸들러
+
   // 전체 페이지 컴포넌트 내 클릭 이벤트 리스너 바인딩, 버튼 이외의 영역 클릭 시 툴팁 제거
-  document.addEventListener('click', (e) => onToggleTooltip(e));
+  document.addEventListener("click", (e) => onToggleTooltip(e));
 
-  eventStore.on('onCategorySelect', onCategorySelect);
+  eventStore.on("onCategorySelect", onCategorySelect);
 
-  // 조절할 창 및 조절 요소 설정  
+  // 조절할 창 및 조절 요소 설정
   divider.value = document.getElementById("divider");
-  leftSide.value = divider.value.previousElementSibling
-  rightSide.value = divider.value.nextElementSibling  
+  leftSide.value = divider.value.previousElementSibling;
+  rightSide.value = divider.value.nextElementSibling;
 });
 
 onUnmounted(() => {
@@ -260,46 +300,44 @@ onUnmounted(() => {
   const paging = pagingObj.value.currentPage !== 1 ? pagingObj.value : null;
 
   // 조회 조건 중 검색어 변경 시 필터검색 제어 파라미터 저장
-  const condition = filterSearchObj.value.searchType1 === '_ALL_ENTITY_TYPES' ? null : filterSearchObj.value;
+  const condition = filterSearchObj.value.searchType1 === "all" ? null : filterSearchObj.value;
 
   // 좌측 메뉴 목록에서 카테고리 선택하여 조회 시 선택된 카테고리 정보 저장
-  const category = selectedGuid.value ? selectedCategory.value : null;
+  const category = selectedId.value ? selectedCategory.value : null;
 
   // 검색에 사용된 파라미터 중 default 값과 상이한 값이 없으면 path를 empty string으로 저장하여 저장된 파라미터 초기화
-  const path = paging || condition || category
-            ? '/admin/data/meta-data/manage'
-            : '';
+  const path = paging || condition || category ? "/admin/data/meta-data/manage" : "";
 
   const params = {
-            path,
-            paging,
-            condition,
-            category
-        };
+    path,
+    paging,
+    condition,
+    category
+  };
 
-  setParams(params)
+  setParams(params);
 
   // 등록했던 툴팁 제어 핸들러 바인딩 제거
-  eventStore.off('onToggleMetaDataTooltip', onToggleTooltip); 
-  eventStore.off('onClickTableBodyButtons', onClickTableBodyButtons);
-  eventStore.off('onCategorySelect', onCategorySelect);
+  eventStore.off("onToggleMetaDataTooltip", onToggleTooltip);
+  eventStore.off("onClickTableBodyButtons", onClickTableBodyButtons);
+  eventStore.off("onCategorySelect", onCategorySelect);
 
-  document.removeEventListener('click', onToggleTooltip);
+  document.removeEventListener("click", onToggleTooltip);
 });
 
 //method
 const fetchCategories = async (payload: any) => {
   await categoryStore.fetchCategories(payload);
 
-  return categoryStore.getCategoryList
+  return categoryStore.getCategoryList;
 };
 
-const setSelectedItemGuid = (guid: string) => {  
-  categoryStore.setSelectedItemGuid(guid);
+const setSelectedItemId = (guid: string) => {
+  categoryStore.setSelectedItemId(guid);
 };
 
-const setParams = (params: any) => {  
-  userStore.setParams(params)
+const setParams = (params: any) => {
+  userStore.setParams(params);
 };
 
 const mouseDown = (e: MouseEvent) => {
@@ -311,8 +349,8 @@ const mouseDown = (e: MouseEvent) => {
     leftWidth.value = leftSide.value.getBoundingClientRect().width;
 
     // 마우스 이벤트 등록
-    document.addEventListener('mousemove', mouseDragging);
-    document.addEventListener('mouseup', mouseUp);
+    document.addEventListener("mousemove", mouseDragging);
+    document.addEventListener("mouseup", mouseUp);
   }
 };
 
@@ -332,9 +370,7 @@ const mouseDragging = (e: any): void => {
 
   // (처음 왼쪽 너비 값 + 마우스 드래그 거리) / 왼쪽, 오른쪽 DOM 부모 너비 사이즈 --> 퍼센티지 계산
   // 계산된 퍼센티지는 새롭게 left의 width로 적용
-  let newLeftWidth =
-    ((leftWidth.value + dx) * 100) /
-    divider.value.parentNode.getBoundingClientRect().width;
+  let newLeftWidth = ((leftWidth.value + dx) * 100) / divider.value.parentNode.getBoundingClientRect().width;
 
   // 사이즈 조절 범위 제한
   if (newLeftWidth >= 10 && newLeftWidth <= 40) {
@@ -360,15 +396,15 @@ const mouseUp = (): void => {
 };
 
 // 화면 구성에 필요한 데이터 조회
-const onFetchPageData = ():void => {
+const onFetchPageData = (): void => {
   // onSearchCategories();
   onSearchDataList();
 };
 
 const onFetchPageDataByPrevCondition = () => {
-  const paging = ObjectUtils.getDeepCopiedPropertyValue(params.value, 'paging', null);
-  const condition = ObjectUtils.getDeepCopiedPropertyValue(params.value, 'condition', null);
-  const category = ObjectUtils.getDeepCopiedPropertyValue(params.value, 'category', null);
+  const paging = ObjectUtils.getDeepCopiedPropertyValue(params.value, "paging", null);
+  const condition = ObjectUtils.getDeepCopiedPropertyValue(params.value, "condition", null);
+  const category = ObjectUtils.getDeepCopiedPropertyValue(params.value, "category", null);
 
   let offset = 0;
   const item: any = {};
@@ -394,8 +430,8 @@ const onFetchPageDataByPrevCondition = () => {
 const getCategoryList = async () => {
   const level = 1;
   // 카테고리 목록의 Level 1만 조회
-  const result = await $ofetch(`/api/metadata/classification/list?level=${level}`, { method: 'GET' });
-  categoryStore.setCategoryList(result)  
+  const result = await $ofetch(`${runConfig.API_URL}/metadata/classification/list?level=${level}`, { method: "GET" });
+  categoryStore.setCategoryList(result);
 };
 
 const onClickCategoryOrderChange = async () => {
@@ -408,50 +444,54 @@ const onSearchCategories = async (item: { name?: string } = {}) => {
   const { name = null } = item;
 
   // 카테고리 목록 조회
-  const list = await fetchCategories({ from: 'metaDataManage' });
-  
+  const list = await fetchCategories({ from: "metaDataManage" });
+
   // 실제 조회된 카테고리와 store에 저장된 선택 카테고리가 상이할 경우 발생, 일치하도록 조정
   if (name) {
-    const matched = list.find(el => el.name === name);
-    if (matched && matched.guid !== selectedGuid.value) {
-      setSelectedItemGuid(matched.guid);      
-    } 
+    const matched = list.find((el) => el.name === name);
+    if (matched && matched.guid !== selectedId.value) {
+      setSelectedItemId(matched.guid);
+    }
   } else {
     // 전체 카테고리 데이터 조회 시
-    if (selectedGuid.value !== '') {
-      setSelectedItemGuid('');      
+    if (selectedId.value !== "") {
+      setSelectedItemId("");
     }
-    onClickMenuItem()
+    onClickMenuItem();
   }
 };
 
 // 카테고리 삭제 이벤트 핸들러
 const onDeleteCategory = async (target: any) => {
   const confirm = await portalConfirm({
-    message: "선택한 <strong>*구분</strong>을 영구적으로 삭제합니다.<br>정말 삭제 하시겠습니까?"
+    message: "선택한 <strong>*카테고리</strong>를 영구적으로 삭제합니다.<br>정말 삭제 하시겠습니까?"
   });
 
   if (confirm) {
     if (Array.isArray(target) && target.length > 0) {
       for (let index = 0; index < target.length; index++) {
         try {
-          await $ofetch(`/api/metadata/classification/${target[index].name}`, {
-            method: "POST",            
+          await $ofetch(`${runConfig.API_URL}/metadata/classification/${target[index].id}`, {
+            method: "POST"
           }).then((res) => {
-            if (!res.data || res.data.isFailed) {
-              const msg = '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
+            const resData = res.data || {};
+            if (!resData || resData.isFailed) {
+              const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
               errorAlert(msg);
             } else {
               // 카테고리 삭제 성공 시 좌측 카테고리 목록 & 테이블 데이터 재조회
               selectedCategory.value = {
-                name: '',
-                description: '전체',
-                guid: '',
+                id: "",
+                level: "",
+                ord_no: 0,
+                parent_id: "",
+                name: "",
+                description: "전체 카테고리",
                 dept: {
-                  dept_cd: '',
-                  dept_nm: ''
+                  dept_cd: "",
+                  dept_nm: ""
                 },
-                file_id: ''
+                file_id: ""
               };
               onSearchCategories(); // 좌측 카테고리 목록 데이터 조회
               onSearchDataList(0); // 테이블 데이터 조회
@@ -459,28 +499,34 @@ const onDeleteCategory = async (target: any) => {
             }
           });
         } catch (error) {
-          errorAlert('요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.');
+          errorAlert("요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.");
         }
       }
     } else {
       try {
-        await $ofetch(`/api/metadata/classification/${target.name}`, {
-          method: "POST",
+        await $ofetch(`${runConfig.API_URL}/metadata/classification/${target.id}`, {
+          method: "POST"
         }).then((res) => {
-          if (!res.data || res.data.isFailed) {
-            const msg = res.data.errorMessage ? res.data.errorMessage : '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
+          const resData = res.data || {};
+          if (!resData || resData.isFailed) {
+            const msg = resData.errorMessage
+              ? resData.errorMessage
+              : "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
             errorAlert(msg);
           } else {
             // 카테고리 삭제 성공 시 좌측 카테고리 목록 & 테이블 데이터 재조회
             selectedCategory.value = {
-              name: '',
-              description: '전체',
-              guid: '',
+              id: "",
+              level: "",
+              ord_no: 0,
+              parent_id: "",
+              name: "",
+              description: "전체 카테고리",
               dept: {
-                dept_cd: '',
-                dept_nm: ''
+                dept_cd: "",
+                dept_nm: ""
               },
-              file_id: ''
+              file_id: ""
             };
             onSearchCategories(); // 좌측 카테고리 목록 데이터 조회
             onSearchDataList(0); // 테이블 데이터 조회
@@ -488,7 +534,7 @@ const onDeleteCategory = async (target: any) => {
           }
         });
       } catch (error) {
-        errorAlert('요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.');
+        errorAlert("요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.");
       }
     }
   }
@@ -498,17 +544,17 @@ const onDeleteCategory = async (target: any) => {
 const onToggleManageModal = (type: string | null, targets: any = null) => {
   let target = null;
   const toggle = manageModalObj.value.toggle;
-  
+
   if (!toggle) {
     // 모달 여는 시점에만 관련 데이터 세팅
     switch (type) {
-      case 'add': // 카테고리 목록 상단 추가 버튼 클릭 시
+      case "add": // 카테고리 목록 상단 추가 버튼 클릭 시
         break;
-      case 'insert': // 카테고리 추가 버튼 클릭 시
-      case 'update': // 카테고리 수정 버튼 클릭 시
+      case "insert": // 카테고리 추가 버튼 클릭 시
+      case "update": // 카테고리 수정 버튼 클릭 시
         target = selectedCategory.value;
         break;
-      case 'map': // 카테고리 맵핑 시
+      case "map": // 카테고리 맵핑 시
         target = targets;
         break;
     }
@@ -522,7 +568,7 @@ const onToggleManageModal = (type: string | null, targets: any = null) => {
 };
 
 // 툴팁 토글 이벤트 핸들러
-const onToggleTooltip = (e: Event, item: any = null, type: string = '') => {
+const onToggleTooltip = (e: Event, item: any = null, type: string = "") => {
   if (item && !tooltipObj.value.display) {
     // 툴팁 제어 버튼 클릭 시
     tooltipObj.value.display = true;
@@ -530,47 +576,46 @@ const onToggleTooltip = (e: Event, item: any = null, type: string = '') => {
     tooltipObj.value.e = e;
     tooltipObj.value.targets = item;
 
-    // 더보기 툴팁 렌더할 경우 카테고리 목록 데이터 전달    
-    if (type === 'more') {
+    // 더보기 툴팁 렌더할 경우 카테고리 목록 데이터 전달
+    if (type === "more") {
       tooltipObj.value.targets = item;
     }
-    
-  } else if ( tooltipObj.value.display ) {
+  } else if (tooltipObj.value.display) {
     tooltipObj.value.display = false;
-    tooltipObj.value.type = '';
+    tooltipObj.value.type = "";
     tooltipObj.value.e = {};
     tooltipObj.value.targets = null;
   }
-
 };
 
 // 테이블 내 카테고리 맵핑/카테고리 맵핑 삭제 버튼 클릭 이벤트 핸들러
-const onClickTableBodyButtons = (type: string = '', target: any = null) => {
+const onClickTableBodyButtons = (type: string = "", target: any = null) => {
   switch (type) {
-    case 'category-map': // 카테고리 맵핑
-      onToggleManageModal('map', target);
+    case "category-map": // 카테고리 맵핑
+      onToggleManageModal("map", target);
       break;
-    case 'category-del': // 카테고리 맵핑 삭제
+    case "category-del": // 카테고리 맵핑 삭제
       onDeleteCategoryMap(target);
       break;
   }
 };
 
 const onCategorySelect = () => {
-  catSelectedData.value = selectedData.value
+  catSelectedData.value = selectedData.value;
 };
 
 // 카테고리 추가/수정/맵핑 이벤트 핸들러
-const onSubmitCategory = async (params: Params) => {
+const onSubmitCategory = async (params: any) => {
   switch (manageModalObj.value.type) {
-    case 'update': // 카테고리 수정
+    case "update": // 카테고리 수정
       try {
-        await $ofetch(`/api/metadata/classification`, {
+        await $ofetch(`${runConfig.API_URL}/metadata/classification`, {
           method: "PUT",
-          body: params,
+          body: params
         }).then((res) => {
-          if (!res.data || res.data.isFailed) {
-            const msg = '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
+          const resData = res.data || {};
+          if (!resData || resData.isFailed) {
+            const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
             errorAlert(msg);
           } else {
             // 카테고리 수정 성공 시
@@ -580,59 +625,98 @@ const onSubmitCategory = async (params: Params) => {
         });
       } catch (error) {
         console.error(error);
-        errorAlert('요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.');
+        errorAlert("요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.");
       }
       break;
-    case 'map': // 카테고리 맵핑
+    case "map": // 카테고리 맵핑
       try {
-        const { entities, superTypes, tableTypes } = params;
-        await $ofetch(`/api/metadata/classification/map`, {
+        await $ofetch(`${runConfig.API_URL}/metadata/classification/map`, {
           method: "POST",
-          body: { entities, superTypes, tableTypes },
+          body: params
         }).then((res) => {
-          if (!res.data || res.data.isFailed) {
-            const msg = '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
+          const resData = res.data || {};
+          if (!resData || resData.isFailed) {
+            const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
             errorAlert(msg);
           } else {
-            // 카테고리 맵핑 성공 시 테이블 데이터 재조회
-            onSearchDataList(pagingObj.value.currentPage - 1);
-            onSearchCategories();
+            // 카테고리 맵핑 성공 시
+            for(const entity of params.entityTargets) {
+              setEventLog({
+                event_type: CONSTANT.EVENT.TYPE.METADATA,
+                event_status: CONSTANT.EVENT.STATUS.MODIFY,
+                event_name: "메타 데이터 카테고리 매핑[변경]",
+                event_by: user.user_id,
+                meta_id: entity.id,
+                meta_name: entity.name,
+                qualifiedname: entity.qualifiedname
+              })
+            }
+            onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
+            onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
           }
         });
       } catch (error) {
         console.error(error);
-        errorAlert('요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.');
+        errorAlert("요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.");
       }
       break;
     default: // 카테고리 추가
+      let check = !(await checkBeforeInsert(params.name));
+      if (!check) {
+        if (
+          !(await confirmAlert(`이미 같은 카테고리명으로 등록된 카테고리가 있습니다.<br/>그래도 등록 하시겠습니까?`))
+        ) {
+          return;
+        }
+      }
+
       try {
-        await $ofetch(`/api/metadata/classification/insert`, {
+        await $ofetch(`${runConfig.API_URL}/metadata/classification/insert`, {
           method: "POST",
-          body: params,
-        }).then((res) => {
-          if (!res.data || res.data.isFailed) {
-            const msg = '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
-            if (res.data.errorMessage && res.data.errorMessage.indexOf("Given type " + params.forRDB.name + " already exists") !== -1) {
-              errorAlert("이미 사용중인 구분 입니다.");
-            } else {
-              errorAlert(msg);
-            }
+          body: params
+        }).then((res: any) => {
+          const resData = res.data || {};
+          if (!resData || resData.isFailed) {
+            errorAlert(
+              !isEmpties(resData.errorMessage)
+                ? resData.errorMessage
+                : "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요."
+            );
           } else {
             // 카테고리 추가 성공 시 좌측 카테고리 목록 재조회
             onSearchCategories(selectedCategory.value);
           }
-        });        
-      } catch (error) {
-        console.error(error);
-        errorAlert('요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.');
+        });
+      } catch (e) {
+        console.error(e);
+        errorAlert("요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.");
       }
       break;
   }
+  refManageModal.value.onClose();
+  selectedData.value = [];
+};
+
+// 카테고리명 중복 체크
+const checkBeforeInsert = async (name) => {
+  let isDup = false;
+  try {
+    await $ofetch(`${runConfig.API_URL}/metadata/classification/check/${name}`, {
+      method: "GET"
+    }).then(async (res: any) => {
+      const resData: any = res.data || {};
+      isDup = resData.isDuplicate;
+    });
+  } catch (e) {
+    console.error(e);
+    errorAlert("요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.");
+  }
+  return isDup;
 };
 
 // 카테고리 세팅 툴팁 내 추가/삭제/수정 버튼 클릭 이벤트 핸들러
 const onClickCategoryManageMenu = (type) => {
-  if (type === 'delete') {
+  if (type === "delete") {
     onDeleteCategory(selectedCategory.value); // 카테고리 삭제 실행
   } else {
     onToggleManageModal(type); // 카테고리 추가/수정 모달 제어
@@ -644,94 +728,27 @@ const onClickTableHeaderButtons = (type) => {
   if (selectedData.value.length > 0) {
     let targets: SelectedDataItem[] = [];
     switch (type) {
-      case 'category': // 카테고리 맵핑 버튼 클릭 시
+      case "category": // 카테고리 맵핑 버튼 클릭 시
         // 테이블 유형에 대해서만 카테고리 맵핑 가능
-        targets = selectedData.value.filter(el => el.typeName.endsWith('_table'));
+        targets = selectedData.value.filter((el) => el.metatype.includes("table"));
         if (targets.length > 0) {
-          onToggleManageModal('map', targets);
+          onToggleManageModal("map", targets);
         } else {
-          errorAlert('선택된 데이터 중 구분 맵핑 가능한 데이터가<br/>없습니다.<br/>※ 구분는 테이블 유형에만 맵핑됩니다.');
+          errorAlert(
+            "선택된 데이터 중 카테고리 맵핑 가능한 데이터가<br/>없습니다.<br/>※ 카테고리는 테이블 유형에만 맵핑됩니다."
+          );
         }
         break;
     }
   } else {
+    // 선택된 데이터가 없을 경우
     const MESSAGE_MAP = new Map<string, string>([
-      ['category', '구분 맵핑'],
-      ['delete', '삭제']
+      ["category", "카테고리 맵핑"],
+      ["delete", "삭제"]
     ]);
 
     errorAlert(`${MESSAGE_MAP.get(type)} 대상 데이터를 먼저 선택하시기 바랍니다.`);
   }
-};
-
-// 목록 조회 시 특정 카테고리 선택 여부에 따라 API 서버에 전송할 classification 파라미터 가공
-const setClassificationParam = (isSpecificCategory: boolean, name: string, params: any) => {
-  if (isSpecificCategory) {
-    // 특정 카테고리 선택하여 검색 시
-    params.classification = name
-      ? name
-      : ObjectUtils.getPropertyValue(selectedCategory.value, 'name', '');
-  } else {
-    params.classification = '';
-  }
-}
-
-const createFilterCondition = (params: any) => {
-  const entityFilters: EntityFilters = {
-    criterion: []
-  };
-
-  const { searchType1, word } = filterSearchObj.value;
-
-  if (searchType1 === '_ALL_ENTITY_TYPES') {
-    // 첫번째 필터 조건 미설정 시
-    entityFilters.condition = 'OR';
-    ['hive_table', 'hive_column'].forEach(attr => {
-      entityFilters.criterion.push({ attributeName: '__typeName', operator: 'eq', attributeValue: attr });
-    });
-  } else {
-    // 첫번째 필터 조건 설정 시
-    entityFilters.condition = 'AND';
-    entityFilters.criterion.push({ attributeName: '__typeName', operator: 'eq', attributeValue: searchType1 });
-
-    // 검색어 입력 시 두번째 필터 조건에 맞춰 검색 조건 추가 가공
-    const searchWord = word.trim();
-    if (searchWord) {
-      createSecondFilterCondition(entityFilters, searchWord);
-    }
-  }
-
-  params.typeName = searchType1;
-  params.entityFilters = entityFilters;
-}
-
-// 두번째 필터 조건 선택값에 따라 API 서버에 전송할 파라미터 추가 가공
-const createSecondFilterCondition = (entityFilters: EntityFilters, searchWord: string) => {
-  const filter: Filter = {
-    criterion: []
-  };
-  const attributes: string[] = [];
-
-  const { searchType1, searchType2 } = filterSearchObj.value;
-  attributes.push(searchType2);
-  filter.condition = 'AND';
-
-  if (searchType2 === '') {
-    filter.condition = 'OR';
-    filterSearchObj.value.options.forEach(element => {
-      attributes.push(element.value);
-    });
-  }
-
-  attributes.forEach(attr => {
-    filter.criterion.push({
-      attributeName: attr,
-      operator: 'contains',
-      attributeValue: attr.indexOf('standard') > -1 ? searchWord.toUpperCase() : searchWord
-    });
-  });
-
-  entityFilters.criterion.push(filter);
 };
 
 // 페이지 번호 클릭 이벤트 핸들러
@@ -744,20 +761,20 @@ const onChangeFilter = (name: string, value: string) => {
   const searchObj = JSON.parse(JSON.stringify(filterSearchObj.value)) as FilterSearchObj;
   searchObj[name] = value;
 
-  if (name === 'searchType1') {
+  if (name === "searchType1") {
     let options: FilterOption[] = [];
 
-    if (value === '_ALL_ENTITY_TYPES') {
+    if (value === "all") {
       // 첫번째 검색 조건 옵션 선택 안할 경우 나머지 검색 조건 초기화
-      searchObj.word = '';
-      searchObj.searchType2 = '';
+      searchObj.word = "";
+      searchObj.searchType2 = "";
     } else {
       // 첫번째 검색 조건 옵션 선택 시 두번째 검색 조건 옵션 관련 값 세팅
       options = [
-        { value: '', desc: '전체' },
-        { value: 'comment', desc: '데이터설명' },
-        { value: 'name', desc: '데이터명' },
-        { value: 'owner', desc: '소유자' }
+        { value: "", desc: "전체" },
+        { value: "comment", desc: "데이터설명" },
+        { value: "name", desc: "데이터명" },
+        { value: "owner", desc: "소유자" }
       ];
     }
 
@@ -770,117 +787,113 @@ const onChangeFilter = (name: string, value: string) => {
 // 메타 데이터 통합 관리 목록 조회
 const onSearchDataList = async (offset = 0, item = {}) => {
   const params = {
-      word: filterSearchObj.value.word,
-      offset: offset * pagingObj.value.limit,
-      limit: pagingObj.value.limit
+    word: filterSearchObj.value.word,
+    offset: offset * pagingObj.value.limit,
+    limit: pagingObj.value.limit
   }; // 데이터 조회 파라미터 객체
-  const { name = '' } = item;
-  const categoryName = ObjectUtils.getPropertyValue(selectedCategory.value, 'name', '');
-  const isSpecificCategory = (name || categoryName) ? true : false;
 
-  setClassificationParam(isSpecificCategory, name, params);
-  createFilterCondition(params);
+  // 카테고리 검색
+  params.searchClassification = ObjectUtils.getPropertyValue(selectedCategory.value, "id", "");
 
-  // 두번째 필터가 전체 검색인 경우 필터 제거
-  if (filterSearchObj.value.searchType2 == ''){
-    params.entityFilters = null
-    params.searchType2 = 'all'
-  }
+  const { searchType1, word } = filterSearchObj.value;
+  params.searchType1 = searchType1;
+  params.searchType2 = filterSearchObj.value.searchType2 === "" ? "all" : filterSearchObj.value.searchType2;
+  params.word = word.trim();
 
   // 테이블 데이터 조회
-  const res = await $ofetch("/api/metadata/manage/list", { method: "POST", body: params });     
+  const res = await $ofetch(`${runConfig.API_URL}/metadata/manage/list`, { method: "POST", body: params });
   let result = res.data;
-  
+
   // 조회 결과 추출
-  const list = ObjectUtils.getPropertyValue(result, 'entities', []); // 테이블 데이터
-  dataList.value = list;
+  const list: any = ObjectUtils.getPropertyValue(result, "list", []); // 테이블 데이터
+  dataList.value = list.map((el: { [key: string]: any }) => {
+    return {
+      ...el,
+      attributes: !isEmpties(el.attributes) ? JSON.parse(el.attributes) : {}
+    };
+  });
 
-  // 타입이 컬럼일때 테이블 이름 출력  
-  if (dataList.value.length > 0) {
-    if (dataList.value[0].typeName === "hive_column") {
-      dataList.value.forEach(item => {
-        const temp = item.attributes.qualifiedName;
-        const tableName = temp.split('.');
-        item.attributes.qualifiedName = tableName[1];
-      });
-    }
+  // // 타입이 컬럼일때 테이블 이름 출력
+  // if (dataList.value.length > 0) {
+  //   if (dataList.value[0].typeName === "hive_column") {
+  //     dataList.value.forEach((item) => {
+  //       const temp = item.attributes.qualifiedName;
+  //       const tableName = temp.split(".");
+  //       item.attributes.qualifiedName = tableName[1];
+  //     });
+  //   }
+  // }
+
+  if (result.totalCount > 0) {
+    pagingObj.value = <PagingObj>{
+      ...pagingObj.value,
+      total: ObjectUtils.getPropertyValue(result, "totalCount", 0),
+      currentPage: offset + 1
+    };
+  } else {
+    pagingObj.value = {
+      ...pagingObj.value,
+      total: 0,
+      currentPage: 1
+    };
   }
-
-  if (result.approximateCount > 0) {
-      pagingObj.value = {
-        ...pagingObj.value,
-        total: ObjectUtils.getPropertyValue(result, "approximateCount", 0),
-        currentPage: offset + 1,
-      };
-    } else {
-      pagingObj.value = {
-        ...pagingObj.value,
-        total: 0,
-        currentPage: 1,
-      };
-    }
-        
 };
 
-const onSearchDept = async (item = {}) => {      
-  const {
-    name = null,
-    guid = '',
-    description = '',
-    file_id = ''
-  } = item;
+const onSearchDept = async (item = {}) => {
+  const { id = "", parent_id = "", level = "", name = null, description = "", file_id = "", ord_no = 0 } = item;
 
   const result = {
+    id,
+    parent_id,
+    level,
     name,
-    guid,
     description,
     dept: {
-      dept_cd: '', // 담당부서코드
-      dept_nm: '', // 담당부서명
+      dept_cd: "", // 담당부서코드
+      dept_nm: "" // 담당부서명
     },
-    file_id
+    file_id,
+    ord_no
   };
 
-  if (name && name !== '_NOT_CLASSIFIED') {
-    const response = await $ofetch(`/api/metadata/classification/dept/${name}`, { method: "GET" });        
+  if (name && name !== "_NOT_CLASSIFIED") {
+    const response = await $ofetch(`${runConfig.API_URL}/metadata/classification/dept/${name}`, { method: "GET" });
 
     const dept = {
-      dept_cd: response.data?.dept_cd || '',
-      dept_nm: response.data?.dept_nm || '',
-      dept_cd2: response.data?.dept_cd2 || '',
-      dept_nm2: response.data?.dept_nm2 || ''
+      dept_cd: response.data?.dept_cd || "",
+      dept_nm: response.data?.dept_nm || ""
     };
 
-    const description = response.data?.description || '';
+    const description = response.data?.description || "";
     if (description) {
       result.description = description;
     }
 
     result.dept = dept;
   } else {
-    result.description = name == '_NOT_CLASSIFIED' ? '미분류' : '전체';
+    result.description = name == "_NOT_CLASSIFIED" ? "카테고리 미분류" : "전체 카테고리";
   }
 
   selectedCategory.value = result;
 };
 
 // 좌측 카테고리 리스트 내 노드 클릭 이벤트 핸들러
-const onClickMenuItem = (item: any = null): void => {
+const onClickMenuItem = async (item: any = null) => {
   if (!item) {
-    onSearchDept();
+    await onSearchDept();
     onSearchDataList();
   } else {
-    onSearchDept(item);
-    onSearchDataList(0, item);    
-  }  
+    await onSearchDept(item);
+    onSearchDataList(0, item);
+  }
 };
 
 // 좌측 카테고리 목록 상단 추가 옵션 버튼 클릭 이벤트 핸들러
 const onClickOptionalButtons = (type: any): void => {
-  if (type === 'add') {
+  if (type === "add") {
     // 추가 버튼 클릭 시 카테고리 추가 모달 생성
     onToggleManageModal(type);
-  } else if (type === 'refresh'){
+  } else if (type === "refresh") {
     // 새로고침 버튼 클릭 시 좌측 카테고리 목록 새로고침
     onSearchCategories();
   }
@@ -894,41 +907,54 @@ const onSelectItems = (selected: any) => {
 // 카테고리 맵핑 삭제 이벤트 핸들러
 const onDeleteCategoryMap = async (target: any) => {
   const confirm = await portalConfirm({
-    message: "선택한 <strong>*구분 맵핑</strong>을 영구적으로 삭제합니다.<br>정말 삭제 하시겠습니까?"
+    message: "선택한 <strong>*카테고리 맵핑</strong>을 영구적으로 삭제합니다.<br>정말 삭제 하시겠습니까?"
   });
 
   if (confirm) {
-    const { item } = target;
+    const { targetId, item } = target;
     let isTableType = false;
 
     // 해당 엔티티가 테이블 유형일 경우 하위 컬럼에 대해서도 동일 처리 가능하도록 flag 전달
-    if (item.typeName.endsWith('_table')) {
+    if (item.metatype.includes("table")) {
       isTableType = true;
     }
 
+    const targetCategory = _categoryMap.value[targetId] || {};
+    let subTypes = targetCategory.subTypes || [];
+    subTypes = subTypes.map((el: { [key: string]: any }) => el.id);
+
     try {
-      await $ofetch(`/api/metadata/classification/map/${target.name}`, {
+      await $ofetch(`${runConfig.API_URL}/metadata/classification/map/${targetId}`, {
         method: "PUT",
-        body: {guid: item.guid, isTableType},
+        body: { deleteMapping: { id: targetId, subTypes }, isTableType, ...item }
       }).then((res) => {
-        if (!res || res.isFailed) {
-          const msg = '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
+        const resData = res.data || {};
+        if (!resData || resData.isFailed) {
+          const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
           errorAlert(msg);
         } else {
           // 더보기 툴팁에서 렌더하던 카테고리 삭제 시 더보기 툴팁 화면에서 제거
           onToggleTooltip();
-          // 카테고리 맵핑 삭제 성공 시 테이블 데이터 재조회
-          onSearchDataList(pagingObj.value.currentPage - 1);
-          onSearchCategories();
+          // 카테고리 맵핑 삭제 성공 시
+          setEventLog({
+            event_type: CONSTANT.EVENT.TYPE.METADATA,
+            event_status: CONSTANT.EVENT.STATUS.DELETE,
+            event_name: "메타 데이터 카테고리 매핑[삭제]",
+            event_by: user.user_id,
+            meta_id: item.id,
+            meta_name: item.name,
+            qualifiedname: item.qualifiedname
+          })
+          onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
+          onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
         }
-      });      
+      });
     } catch (error) {
-      errorAlert('요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.');
+      errorAlert("요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.");
     }
   }
 };
-
 </script>
 <style lang="scss">
-  @import "index";
+@import "index";
 </style>

@@ -24,4 +24,6 @@ public interface DiagramMapper {
     Integer deleteNodeLink(Integer linkID) throws Exception;
     int checkDuplicate(String data);
     Integer insertNodeLinks(Map<String, Object> params) throws Exception;
+    List getMetaDataForTooltip(List<String> guidList) throws Exception;
+    List<Map<String, Object>> getClassificationList(String[] ids);
 }

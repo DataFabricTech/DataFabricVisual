@@ -23,7 +23,11 @@ public interface SearchDetailMapper {
 
     Integer updateUserDescription(Map<String, Object> params);
 
-    Integer deleteUserDescription(int params);
+    int updateMetaUserDescription(Map<String, Object> params);
+
+    int deleteUserDescription(Map<String, Object> params);
+
+    int deleteMetaUserDescription(String guid);
 
     Integer getUserDescriptionFavoriteCounts(Map<String, Object> params);
 
@@ -57,11 +61,19 @@ public interface SearchDetailMapper {
 
     Integer insertDataFavorite(Map<String, Object> params);
 
+    int updateMetaBusinessAttributes(Map<String, Object> params);
+
     Integer deleteDataFavorite(Map<String, Object> params);
 
     // List<Map> getAuthCheckList(Map<String, Object> params);
 
     void insertSearchMetaHistory(Map<String, Object> saveData);
 
+    Map<String, Object> getDbInfo(String systemname);
+
+    List<Map<String, Object>> getClassificationList(String[] ids);
+
     List<Map<String,String>> getDataManagerInfoList();
+    
+    Map<String, Object> getDetailData(String id);
 }

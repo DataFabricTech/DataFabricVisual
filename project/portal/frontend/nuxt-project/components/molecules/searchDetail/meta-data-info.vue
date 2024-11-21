@@ -3,26 +3,34 @@
     <div class="mu-heading">
       <h5>메타속성</h5>
     </div>
-    <div class="table-wrap">
-      <table class="mu-formbox">
+    <div class="max-h600">
+      <table class="mu-grid mu-grid-data">
         <colgroup>
           <col style="width: 200px" />
           <col style="width: auto" />
         </colgroup>
+        <thead>
+          <tr>
+            <th scope="col">메타명</th>
+            <th scope="col">메타값</th>
+          </tr>
+        </thead>
         <tbody>
           <tr v-for="(value, key) in metaDataInfo" :key="key">
-            <th scope="row">{{ getKrKey(key) }}</th>
+            <td style="vertical-align: middle;">{{ key }} <br> ({{ getKrKey(key) }})</td>
             <td>
               <!-- 데이터 타입이 object이고 key가 columns일 경우 -->
               <div
                 v-if="getTypeByValue(key, value) === 'DIV'"
+                class="mu-area h100 tl"
+                style="white-space: nowrap; overflow-x: auto"
               >
                 <span v-for="(item2, idx) in value" :key="idx">
-                  <a v-on:click="arrayToLinkGuid(key, item2)">
-                    {{ value[idx] }}({{ refComment[idx] }})</a
+                  <a v-on:click="onClickDataName(key, item2)">
+                    {{ value[idx].name }}({{ value[idx].description }})</a
                   >
-                  &emsp;
-                  <!-- <br v-if="(idx + 1) % 10 == 0" /> -->
+                  <span>&nbsp; &nbsp;</span>
+                  <br v-if="(idx + 1) % 10 == 0" />
                 </span>
               </div>
               <!-- 데이터 타입이 object이고 key가 columns가 아닐 경우 -->
@@ -31,11 +39,12 @@
                 class="mu-area h100 tl"
                 readonly="readonly"
                 v-html="arrayToTextArea(value)"
+                style="white-space: pre-line"
               />
 
               <!-- 데이터 타입이 object가 아니고 key가 table일 경우 -->
               <span v-if="getTypeByValue(key, value) === 'SPAN_LINK'">
-                <a v-on:click="arrayToLinkGuid(key, value)">{{ value }}</a>
+                <a v-on:click="onClickDataName(key, value)">{{ value }}</a>
               </span>
 
               <!-- 데이터 타입이 object가 아니고 key가 table이 아닐 경우 -->
@@ -49,19 +58,12 @@
               >
                 {{ value }}
               </span>
-              <!-- <span
-                v-else-if="
-                  key === 'parameters' && key.toLowerCase().indexOf('time') === -1 && ( value !== undefined && value.last_modified_time !== undefined )
-                "
-              >
-                {{ getUNIXDate(value.last_modified_time) }}
-              </span> -->
               <span
                 v-else-if="
-                  key === 'parameters'
+                  key === 'parameters' && key.toLowerCase().indexOf('time') === -1
                 "
               >
-                {{ value && value.modified_date ? getModifiedDate(value.modified_date) : '-' }}
+                {{ value.last_modified_time }}
               </span>
               <span
                 v-if="
@@ -88,68 +90,22 @@ const router = useRouter();
 const userStore = useUserStore();
 
 const emit = defineEmits(["onClickDataName"]);
-const props = defineProps(["entity", "referredEntitiesAttributes", "metaDataInfoResult", "refComment", "allowColumnInfo"]);
+const props = defineProps(["entity", "referredEntitiesAttributes"]);
 
-const refComment = ref([]);
-const relationshipAttributes = computed(() =>
-  ObjectUtils.getPropertyValue(props.entity, "entity/relationshipAttributes", "")
-);
+const desiredOrder = ref([
+  "name", "description", "columns", "systemType", "tableType", "sourceHash", "databaseSchema"
+]) // 메타속성 항목 순서 목록
+const noEntries = ref([
+  "viewDefinition"
+]) // 메타속성 제외 목록
+
 const metaDataInfo = computed(() => {
-  const obj = ObjectUtils.getPropertyValue(props.entity, "entity/attributes", {});
-  const relationshipAttributes_l = relationshipAttributes.value;
-
-  const metaDataInfoResult = props.metaDataInfoResult;
-  refComment.value = props.refComment
+  const obj = ObjectUtils.getPropertyValue(props.entity, 'attributes', {})
 
   // 화면 렌더에 필요한 형태로 데이터 가공
-  /*
-  const metaDataInfoResult = {};
-  Object.keys(obj).forEach((key) => {
-    if (typeof obj[key] !== "object") {
-      metaDataInfoResult[key] = obj[key];
-    } else {
-      if (Array.isArray(obj[key])) {
-        const guidByDisplayText = [];
-        if (key === "columns") {
-          props.referredEntitiesAttributes.filter((ref_item) => {
-            obj[key].forEach((value) => {
-              if (value.guid) {
-                relationshipAttributes_l[key].forEach((attr) => {
-                  if (attr.guid && attr.guid === value.guid) {
-                    if (ref_item.name === attr.displayText) {
-                      refComment.value.push(ref_item.comment);
-                      value.displayText = attr.displayText;
-                      guidByDisplayText.push(attr.displayText);
-                    }
-                  }
-                });
-              }
-            });
-          });
-        } else {
-          obj[key].forEach((value) => {
-            if (value.guid) {
-              relationshipAttributes_l[key].forEach((attr) => {
-                if (attr.guid && attr.guid === value.guid) {
-                  value.displayText = attr.displayText;
-                  guidByDisplayText.push(attr.displayText);
-                }
-              });
-            }
-          });
-        }
-        metaDataInfoResult[key] = guidByDisplayText;
-      } else {
-        if (obj[key] != null) {
-          metaDataInfoResult[key] =
-            obj[key].guid != null ? relationshipAttributes_l[key].displayText : obj[key];
-        }
-      }
-    }
-  });
-  */
+  const metaDataInfoResult = obj
 
-  const columns = metaDataInfoResult.columns;
+  const columns = obj.columns;
   if (columns) {
     const uniqueColumns = columns.filter((el, idx) => {
       return columns.indexOf(el) === idx;
@@ -158,153 +114,56 @@ const metaDataInfo = computed(() => {
     metaDataInfoResult.columns = uniqueColumns;
   }
 
-  let desiredOrder = []; // 순서
-  let noEntries = []; // 미사용 항목
-
-  // 속성에 따라 순서 및 미표시 항목 설정
-  if (props.entity && props.entity != undefined) {
-    if (props.entity.entity && props.entity.entity != undefined) {
-      let type = props.entity.entity.typeName;
-      if (type == "hive_table") {
-        desiredOrder = [
-          "name",
-          "comment",
-          "userDescription",
-          "columns",
-          "parameters",
-          "db",
-        ];
-        noEntries = [
-          "owner",
-          "temporary",
-          "qualifiedName",
-          "partitionKeys",
-          "parameters",
-          "displayName",
-          "description",
-          "tableType",
-          "createTime",
-          "lastAccessTime",
-          "aliases",
-          "replicatedTo",
-          "replicatedFrom",
-          "sd",
-          "retention"
-        ];
-
-        // View 테이블 미사용 항목
-        noEntries.push("viewExpandedText");
-        noEntries.push("viewOriginalText");
-      } else if (type == "hive_column") {
-        desiredOrder = ["table", "name", "comment", "userDescription"];
-        noEntries = ["owner", "qualifiedName", "position", "type", "description", "replicatedTo", "replicatedFrom", "displayName"];
-      }
-    }
-  }
-
-  const sortedEntries = desiredOrder
+  const sortedEntries = desiredOrder.value
     .map((key) => [key, metaDataInfoResult[key]])
     .concat(
       Object.entries(metaDataInfoResult).filter(
-        ([key]) => !desiredOrder.includes(key) && !noEntries.includes(key)
+        ([key]) => !desiredOrder.value.includes(key) && !noEntries.value.includes(key)
       )
     );
 
   const sortedMetaData = Object.fromEntries(sortedEntries);
-
-  // 사용하지 않는 속성 제거
-  if (props.entity && props.entity != undefined) {
-    if (props.entity.entity && props.entity.entity != undefined) {
-      let type = props.entity.entity.typeName;
-      if (type == "hive_table") {
-      } else if (type == "hive_column") {
-      }
-    }
-  }
-
-  if(!props.allowColumnInfo){
-    delete sortedMetaData.columns;
-  }
-
   return sortedMetaData;
 });
-
-// 한글명
-const getUNIXDate = (dt) => {
-  // Unix 타임스탬프 (초 단위)
-  const unixTimestamp = dt;
-
-  // 초를 밀리초로 변환
-  const date = new Date(unixTimestamp * 1000);
-
-  // 각 요소 추출
-  const year = date.getUTCFullYear();
-  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
-  const day = String(date.getUTCDate()).padStart(2, '0');
-  const hours = String(date.getUTCHours()).padStart(2, '0');
-  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-  const seconds = String(date.getUTCSeconds()).padStart(2, '0');
-
-  // yyyy-MM-dd HH:mm:ss 형식으로 포맷
-  const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-
-  return formattedDate
-}
 
 // 한글명으로 수정
 const getKrKey = (key) => {
   if (props.entity && props.entity != undefined) {
-    if (props.entity.entity && props.entity.entity != undefined) {
-      let type = props.entity.entity.typeName;
-      if (type == "hive_table") {
-        if (key == "name") return "데이터 정보(테이블)";
-        if (key == "comment") return "데이터 설명";
-        if (key == "userDescription") return "사용자 데이터 설명";
-        if (key == "columns") return "테이블 컬럼 정보";
-        if (key == "lastAccessTime") return "최종 업데이트 날짜";
-        if (key == "parameters") return "최종 업데이트 날짜"; // parameters의 lastAccessTime으로 이용
-        if (key == "db") return "데이터베이스";
-        return key;
-      } else if (type == "hive_column") {
-        if (key == "table") return "대상 테이블";
-        if (key == "name") return "데이터 정보(컬럼)";
-        if (key == "comment") return "데이터 설명";
-        if (key == "userDescription") return "사용자 데이터 설명";
-        return key;
-      } else {
-        return key;
-      }
-    } else {
-      return key;
-    }
-  } else {
+    if (key == "name") return "시스템명";
+    if (key == "description") return "메타데이터 description";
+    if (key == "columns") return "컬럼 목록";
+    if (key == "systemType") return "시스템 타입";
+    if (key == "tableType") return "테이블 형식";
+    if (key == "sourceHash") return "Source hash of the entity";
+    if (key == "databaseSchema") return "스키마";
+    if (key == "sourceHash") return "소스 해시값";
+    if (key == "tags") return "사용자 정의 태그";
+    if (key == "owner") return "테이블 소유자 계정";
+    // if (key == "domain") return "도메인";
+    // if (key == "extension") return "소스 해시값";
+    if (key == "lifeCycle") return "보관 주기";
+    // if (key == "sourceUrl") return "소스 URL";
+    if (key == "fileFormat") return "파일 형식";
+    if (key == "displayName") return "화면 표출 메타명";
+    // if (key == "dataProducts") return "데이터 제품";
+    if (key == "tablePartition") return "테이블 파티션 키";
+    if (key == "retentionPeriod") return "보존 기간";
+    if (key == "tableConstraints") return "테이블 제약 조건";
+    if (key == "viewDefinition") return "데이터 추출 SQL 원본"
+    // if (key == "tableProfilerConfig") return "테이블 프로파일러 설정";
     return key;
   }
+  return key;
 };
-
-// 최종 업데이트 날짜 포맷 수정
-const getModifiedDate = (strDate) => {
-  // 연도, 월, 일 부분을 추출하고 포맷 변경
-  if (strDate) {
-    return `${strDate.slice(0, 4)}-${strDate.slice(4, 6)}-${strDate.slice(6, 8)} ${strDate.slice(9)}`;
-  } else {
-    return '-'
-  }
-}
 
 // 데이터 유형에 따른 컴포넌트 유형 계산
 const getTypeByValue = (key, value) => {
   let type = "";
 
   if (typeof value === "object") {
-    // if (value && key === 'columns') {
-    //     type = 'DIV';
-    // } else if (value && key !== 'columns') {
-    //     type = 'TEXT_AREA';
-    // }
-    if (value && (key === "테이블 컬럼 정보" || key === "columns")) {
+    if (value && key === "columns") {
       type = "DIV";
-    } else if (value && (key === "테이블 컬럼 정보" || key === "columns")) {
+    } else if (value && key === "columns") {
       type = "TEXT_AREA";
     }
   } else {
@@ -314,31 +173,6 @@ const getTypeByValue = (key, value) => {
   }
 
   return type;
-};
-
-// 컬럼 또는 테이블 링크 클릭 이벤트 핸들러
-const arrayToLinkGuid = (key, value) => {
-  if (key === "columns") {
-    if (metaDataInfo.value.columns) {
-      const matched = relationshipAttributes.value.columns.find(
-        (el) => el.displayText === value
-      );
-      if (matched) {
-        onClickDataName(matched);
-      }
-    }
-  } else {
-    if (metaDataInfo.value.table) {
-      const table = ObjectUtils.getPropertyValue(
-        relationshipAttributes.value,
-        "table",
-        null
-      );
-      if (table && table.displayText && table.displayText === value) {
-        onClickDataName(table);
-      }
-    }
-  }
 };
 
 // text area에 출력할 수 있는 형태로 데이터 가공
@@ -360,9 +194,12 @@ const arrayToTextArea = (textVal) => {
 
 // 선택된 컬럼 또는 테이블 엔티티 상세 조회 화면으로 이동
 const onClickDataName = (item) => {
+  console.log('go To Meta Page')
+  return
   // emit("onClickData", item.guid);
   router.push(`/search/detail?guid=${item.guid}`);
   userStore.setGuid(item.guid);
   window.scrollTo(0, 0);
 };
+
 </script>

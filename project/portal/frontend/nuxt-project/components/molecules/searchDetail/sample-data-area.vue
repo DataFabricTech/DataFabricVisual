@@ -26,7 +26,7 @@
               <th scope="col" v-for="(item, index) in props.list[0]" :key="index">
                 <span>{{ index }}</span><br>
                 <span class="color-light">
-                  {{ commentEllipsis(index, props.entity) }}
+                  {{ descriptionEllipsis(index, props.entity) }}
                 </span><br>
                 <span style="border-bottom: 1px solid #666">{{
                   userDescriptionEllipsis(index, props.entity)
@@ -55,8 +55,6 @@
 </template>
 
 <script setup lang="ts">
-import ObjectUtils from "@/utils/ObjectUtils";
-
 const props = defineProps(["sampleDataDenied", "list", "entity"]);
 
 const showData = ref(false);
@@ -71,25 +69,26 @@ const toggleShowData = () => {
   }
 };
 
-const commentEllipsis = (val, entity) => {
-  // 컬럼인 경우
-  let typeName = ObjectUtils.getPropertyValue(entity, "entity/typeName", "")
-  if (typeName == 'hive_column') {
-    return ObjectUtils.getPropertyValue(entity, "entity/attributes/comment", "")
+const descriptionEllipsis = (val, entity) => {
+  const attributes = entity.attributes
+
+  let description;
+  if (attributes) {
+    const columns = attributes.columns
+    if (columns) {
+      columns.filter((item) => {
+        if (item.name === val) {
+          if (item.description !== "") {
+            description = item.description;
+          }
+        }
+      });
+    }
   }
 
-  const referredEntities = Object.values(entity.referredEntities);
-  let comment;
-  referredEntities.filter((item) => {
-    if (item.attributes.name === val) {
-      if (item.attributes.comment !== "") {
-        comment = item.attributes.comment;
-      }
-    }
-  });
-  if (comment !== undefined) {
-    if (comment !== null) {
-      return comment;
+  if (description !== undefined) {
+    if (description !== null) {
+      return description;
     }
   } else {
     return "";
@@ -97,23 +96,25 @@ const commentEllipsis = (val, entity) => {
 };
 
 const typeEllipsis = (val, entity) => {
-  let referredEntities = Object.values(entity.referredEntities);
-  if (referredEntities.length === 0) {
-    referredEntities = Object.values(entity);
-  }
-  let type;
-  referredEntities.filter((item) => {
-    if (item.attributes) {
-      if (item.attributes.name === val) {
-        if (item.attributes.type !== "") {
-          type = item.attributes.type;
+  const attributes = entity.attributes
+
+  let dataType;
+  if (attributes) {
+    const columns = attributes.columns
+    if (columns) {
+      columns.filter((item) => {
+        if (item.name === val) {
+          if (item.dataType !== "") {
+            dataType = item.dataType;
+          }
         }
-      }
+      });
     }
-  });
-  if (type !== undefined) {
-    if (type !== null) {
-      return type;
+  }
+
+  if (dataType !== undefined) {
+    if (dataType !== null) {
+      return dataType;
     }
   } else {
     return "";
@@ -121,22 +122,22 @@ const typeEllipsis = (val, entity) => {
 };
 
 const userDescriptionEllipsis = (val, entity) => {
-  // 컬럼인 경우
-  let typeName = ObjectUtils.getPropertyValue(entity, "entity/typeName", "")
-  if (typeName == 'hive_column') {
-    return ObjectUtils.getPropertyValue(entity, "entity/attributes/userDescription", "")
-  }
-
-  const referredEntities = Object.values(entity.referredEntities);
+  const attributes = entity.attributes
 
   let userDescription;
-  referredEntities.filter((item) => {
-    if (item.attributes.name === val) {
-      if (item.attributes.userDescription !== "") {
-        userDescription = item.attributes.userDescription;
-      }
+  if (attributes) {
+    const columns = attributes.columns
+    if (columns) {
+      columns.filter((item) => {
+        if (item.name === val) {
+          if (item.userDescription !== "") {
+            userDescription = item.userDescription;
+          }
+        }
+      });
     }
-  });
+  }
+
   if (userDescription !== undefined) {
     if (userDescription !== null) {
       return userDescription;

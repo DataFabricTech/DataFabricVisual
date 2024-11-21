@@ -42,10 +42,10 @@ import { onMounted, ref } from "vue";
 import { useNuxtApp, useRouter } from "nuxt/app";
 
 const emit = defineEmits(["onClickUpdate"]);
-const props = defineProps({ 
+const props = defineProps({
   selectedCategory : {
     type: Object,
-    default: () => ({      
+    default: () => ({
       name: '',
       description: '전체',
       guid: '',

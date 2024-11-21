@@ -1,16 +1,12 @@
 package com.mobigen.datalake.metaData.manage;
 
-import java.util.Arrays;
+import com.mobigen.framework.result.JsonResult;
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.stereotype.Service;
-
-import com.mobigen.datalake.atlas.AtlasRestAPI;
-import com.mobigen.framework.result.JsonResult;
-
-import lombok.AllArgsConstructor;
 
 
 @Service
@@ -18,41 +14,34 @@ import lombok.AllArgsConstructor;
 public class MetaDataManageService {
 
     private final MetaDataManageMapper metaDataManageMapper;
-    private final AtlasRestAPI atlasRestAPI;
 
 
     // 메타 데이터 통합 관리 대상 목록 조회
-    public Object getMetaDataList(Map<String, Object> params) {
-        String URL = "/search/basic";
-        
-        // 아래내용이 왜 있는지 모르겠으나 그냥 조회시 모든 데이터가 다 나와서 일단 주석처리함. keh
-        // params.remove("entityFilters");
-        // params.put("entityFilters", new HashMap() {
-        //     {
-        //         put("condition", "OR");
-        //         put("criterion", Arrays.asList(
-        //             new HashMap() {
-        //                 {
-        //                     put("attributeName", "__typeName");
-        //                     put("operator", "eq");
-        //                     put("attributeValue", "hive_table");
-        //                 }
-        //             }, new HashMap() {
-        //                 {
-        //                     put("attributeName", "__typeName");
-        //                     put("operator", "eq");
-        //                     put("attributeValue", "hive_column");
-        //                 }
-        //             }));
-        //     }
-        // });
+    public Map<String, Object> getMetaDataManageList(Map<String, Object> params) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
 
-        JsonResult result = atlasRestAPI.post(URL, params);
-        Map<String, Object> data = (Map<String, Object>) result.getData();
-        List entities = (List) data.get("entities");
+        int totCnt = metaDataManageMapper.getMetaDataManageListTotCnt(params);
+        List<Map<String, Object>> resultList = metaDataManageMapper.getMetaDataManageList(params);
 
-
+        result.put("totalCount", totCnt);
+        result.put("list", resultList);
 
         return result;
+    }
+
+    public List<Map<String, Object>> getMappedMetaDataManageListByClassificationId(Map<String, Object> params) throws Exception {
+        return metaDataManageMapper.getMappedMetaDataManageListByClassificationId(params);
+    };
+
+    public List<Map<String, Object>> getMetaDataListByParentId(String parentId) throws Exception {
+        return metaDataManageMapper.getMetaDataListByParentId(parentId);
+    }
+
+    public int updateMetaDataClassification(Map<String, Object> params) throws Exception {
+        return metaDataManageMapper.updateMetaDataClassification(params);
+    }
+
+    public int deleteMetaDataClassification(Map<String, Object> params) throws Exception {
+        return metaDataManageMapper.deleteMetaDataClassification(params);
     }
 }

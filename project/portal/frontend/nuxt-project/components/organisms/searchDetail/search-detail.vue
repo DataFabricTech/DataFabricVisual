@@ -29,9 +29,6 @@
           <meta-data-info
             :entity="entity"
             :referredEntitiesAttributes="referredEntitiesAttributes"
-            :metaDataInfoResult="metaDataInfoResult" :refComment="refComment"
-            :sampleDataPermission="sampleDataPermission"
-            :allowColumnInfo="allowColumnInfo"
             @onClickData="getAllDataByGuid"
           />
           <!-- detail-box : 데이터 정보 > 비지니스 속성 -->
@@ -251,7 +248,7 @@ onMounted(async () => {
 
 // 엔티티 유형
 const typeName = computed(() =>
-  ObjectUtils.getPropertyValue(entity.value, "entity/typeName", "")
+  ObjectUtils.getPropertyValue(entity.value, "metatype", "")
 );
 
 // entity 값이 변동되면 파라미터도 동기화
@@ -271,20 +268,20 @@ watch(
 
 // 사용자 리뷰 등록/수정, 데이터 추천, 데이터 찜하기 처리 시 필요 파라미터 계산
 const getUserDataParam = () => {
-  const guid = ObjectUtils.getPropertyValue(entity.value, "entity/guid", "");
-  const typeName = ObjectUtils.getPropertyValue(entity.value, "entity/typeName", "");
-  const name = ObjectUtils.getPropertyValue(entity.value, "entity/attributes/name", "");
+  const guid = ObjectUtils.getPropertyValue(entity.value, "id", "");
+  const typeName = ObjectUtils.getPropertyValue(entity.value, "metatype", "");
+  const name = ObjectUtils.getPropertyValue(entity.value, "name", "");
   const qualifiedName = ObjectUtils.getPropertyValue(
     entity.value,
-    "entity/attributes/qualifiedName",
+    "qualifiedname",
     ""
   );
   const comment = ObjectUtils.getPropertyValue(
     entity.value,
-    "entity/attributes/comment",
+    "attributes/description",
     ""
   );
-  const type = ObjectUtils.getPropertyValue(entity.value, "entity/attributes/type", "");
+  const type = ObjectUtils.getPropertyValue(entity.value, "attributes/systemType", "");
   const tableGuid = ObjectUtils.getPropertyValue(
     entity.value,
     "entity/relationshipAttributes/table/guid",
@@ -292,7 +289,7 @@ const getUserDataParam = () => {
   );
   const tableTypeName = ObjectUtils.getPropertyValue(
     entity.value,
-    "entity/relationshipAttributes/table/typeName",
+    "attributes/tableType",
     ""
   );
 
@@ -317,7 +314,7 @@ const isEdited = () => {
   // 비지니스 속성을 제외한 나머지 항목은 바로 서버에 반영하게 되는 구조이므로 비지니스 속성만 수정 여부 판별
   const targets = Object.assign([], businessAttributes.value);
   const originals = Object.entries(
-    ObjectUtils.getPropertyValue(entity.value, "entity/customAttributes", {})
+    ObjectUtils.getPropertyValue(entity.value, "businessattributes", {})
   ).map(([key, value]) => ({ key, value }));
 
   // 목록 길이 다를 경우 무조건 true 반환
@@ -376,7 +373,7 @@ const getAllDataByGuid = async (newGuid, favoriteEvent) => {
   const guid = newGuid ? newGuid : route.query.guid;
 
   getDetailDataByGuid(guid).then(() => {
-    getDetailMetadatainfo(guid);
+    // getDetailMetadatainfo(guid);
     setBusinessAttributes();
     setDataLineageStartNode();
 
@@ -420,52 +417,22 @@ const getAllDataByGuid = async (newGuid, favoriteEvent) => {
 
 // GUID 기준 데이터 상세 조회
 const getDetailDataByGuid = async (newGuid) => {
-  // 연관 데이터 항목 클릭 이벤트에 의한 재조회가 아니면 store 또는 router param에서 guid 추출
-  // const guid = newGuid ? newGuid : await userStore.getParameterGuid();
   const guid = newGuid ? newGuid : route.query.guid;
   currentGuid.value = guid;
 
   if (currentGuid.value) {
     const result = await $ofetch(`/api/search/detail/${currentGuid.value}`);
 
-    if (result) {
-      if (result.errorMessage) {
-        await errorAlert(result.errorMessage);
-        router.go(-1)
-        isHistory.value = true
-        return;
-      }
-      if (result.data.errorMessage){
-        await errorAlert("데이터가 존재하지 않습니다.");
-        router.go(-1)
-        isHistory.value = true
-        return;
-      }
+    if (result && result.errorMessage) {
+      await errorAlert(result.errorMessage);
+      return;
     }
 
     entity.value = result.data;
 
-    sampleDataPermission.value = ObjectUtils.getPropertyValue(
-      entity.value,
-      "sampleDataPermission",
-      false
-    );
-
-    allowColumnInfo.value = ObjectUtils.getPropertyValue(
-      entity.value,
-      "allowColumnInfo",
-      false
-    );
-
-    allowDataProfile.value = ObjectUtils.getPropertyValue(
-      entity.value,
-      "allowDataProfile",
-      false
-    );
-
     labelList.value = ObjectUtils.getPropertyValue(
       entity.value,
-      "entity/labels",
+      "tags",
       []
     );
 
@@ -484,8 +451,6 @@ const getDetailDataByGuid = async (newGuid) => {
       "referredEntities",
       []
     );
-
-    /*
     if (relationColumnsDataList.length > 0) {
       let dataCnt = 0;
       for (const relationColumnsData of relationColumnsDataList) {
@@ -514,7 +479,6 @@ const getDetailDataByGuid = async (newGuid) => {
     }
 
     referredEntitiesAttributes.value.sort((a, b) => a.position - b.position);
-    */
   } else {
     errorAlert("조회할 guid가 없습니다.").then(() => {
       return Promise.resolve(false);
@@ -524,6 +488,7 @@ const getDetailDataByGuid = async (newGuid) => {
 
 // referredEntitiesAttributes, metaDataInfoResult, refComment 처리 로직 java로 이전
 const getDetailMetadatainfo = async (newGuid) => {
+  return;
   const guid = newGuid ? newGuid : route.query.guid;
   currentGuid.value = guid;
 
@@ -588,7 +553,7 @@ const getDetailMetadatainfo = async (newGuid) => {
 const setBusinessAttributes = () => {
   const tempAttributes = ObjectUtils.getPropertyValue(
     entity.value,
-    "entity/customAttributes",
+    "businessattributes",
     []
   );
   businessAttributes.value = Object.entries(tempAttributes).map(([key, value]) => ({
@@ -600,39 +565,39 @@ const setBusinessAttributes = () => {
 // 데이터 프로파일링 영역 내 표시 데이터 조회
 const getDetailDataProfile = () => {
   const params = {};
-  const typeName = ObjectUtils.getPropertyValue(entity.value, "entity/typeName", "");
+  const typeName = ObjectUtils.getPropertyValue(entity.value, "metatype", "");
 
   if (
-    typeName.endsWith("_table") ||
-    typeName.endsWith("_db") ||
-    typeName.endsWith("_column")
+    typeName.endsWith("table") ||
+    typeName.endsWith("db") ||
+    typeName.endsWith("column")
   ) {
-    params.guid = ObjectUtils.getPropertyValue(entity.value, "entity/guid", "");
+    params.guid = ObjectUtils.getPropertyValue(entity.value, "id", "");
     params.typeName = typeName;
 
-    const relationData = ObjectUtils.getPropertyValue(
+    const columnData = ObjectUtils.getPropertyValue(
       entity.value,
-      "entity/relationshipAttributes/columns",
+      "attributes/columns",
       ""
     );
     const partitionKeysDataList = ObjectUtils.getPropertyValue(
       entity.value,
-      "entity/relationshipAttributes/partitionKeys",
+      "relationshipAttributes/partitionKeys",
       ""
     );
     if (partitionKeysDataList.length > 0) {
       for (const partitionKeysData of partitionKeysDataList) {
-        relationData.push(partitionKeysData);
+        columnData.push(partitionKeysData);
       }
     }
 
-    if (relationData) {
-      params.relationData = relationData.map((item) => item.guid);
+    if (columnData) {
+      params.columnData = columnData.map((item) => item.fullyQualifiedName);
     }
 
     const attributes = ObjectUtils.getPropertyValue(
       entity.value,
-      "entity/attributes",
+      "attributes",
       ""
     );
     if (attributes && attributes.db) {
@@ -692,14 +657,12 @@ const getSampleData = () => {
 
   let sampleDataCount = userStore.getSampleDataCount;
 
+  const qualifiedName = ObjectUtils.getPropertyValue(entity.value, "qualifiedname", "")
   const params = {
     columns: trinoColumns,
-    typeName: ObjectUtils.getPropertyValue(entity.value, "entity/typeName", ""),
-    qualifiedName: ObjectUtils.getPropertyValue(
-      entity.value,
-      "entity/attributes/qualifiedName",
-      ""
-    ),
+    typeName: ObjectUtils.getPropertyValue(entity.value, "metatype", ""),
+    systemname: qualifiedName.split(".")[0],
+    qualifiedName: qualifiedName,
     limit: sampleDataCount,
   };
 
@@ -708,18 +671,18 @@ const getSampleData = () => {
       method: "POST",
       body: params,
     }).then((res) => {
-      if (res && res.data.hasOwnProperty("sampleData")) {
+      if (res && res.data && res.data.hasOwnProperty("sampleData")) {
         sampleData.value = ObjectUtils.getPropertyValue(res.data, "sampleData", []);
       }
-      if (res && res.data.hasOwnProperty("sampleDataDenied")) {
+      if (res && res.data && res.data.hasOwnProperty("sampleDataDenied")) {
         sampleDataDenied.value = res.data.sampleDataDenied;
       }
 
-      let typeName = ObjectUtils.getPropertyValue(entity.value, "entity/typeName", "")
+      let typeName = ObjectUtils.getPropertyValue(entity.value, "metatype", "")
 
       // 테이블인 경우 테이블 row 건수 조회
-      if (typeName == 'hive_table') {
-        let guid = ObjectUtils.getPropertyValue(entity.value, "entity/guid", "")
+      if (typeName == 'table') {
+        let guid = ObjectUtils.getPropertyValue(entity.value, "id", "")
 
         $ofetch(`/api/search/detail/getRowCount?guid=${guid}`).then((rs) => {
           eliminateModalObj.value.num_rows = rs.data
@@ -727,8 +690,8 @@ const getSampleData = () => {
       }
 
       // 컬럼인 경우 샘플데이터 항목 해당 컬럼만 넣어두기
-      if (typeName == 'hive_column') {
-        let colName = ObjectUtils.getPropertyValue(entity.value, "entity/attributes/name", "")
+      if (typeName == 'column') {
+        let colName = ObjectUtils.getPropertyValue(entity.value, "name", "")
 
         let tmpSampleData = []
         sampleData.value.forEach((el) => {
@@ -745,7 +708,6 @@ const getSampleData = () => {
 
         sampleData.value = tmpSampleData
       }
-
     });
   } catch (e) {
     console.log(e);
@@ -753,18 +715,12 @@ const getSampleData = () => {
 };
 
 // 데이터 흐름도 시작 노드 설정
+// 데이터 흐름도 시작 노드 설정
 const setDataLineageStartNode = () => {
   let nodeGuid = "";
 
-  if (typeName.value.includes("_table")) {
-    nodeGuid = ObjectUtils.getPropertyValue(entity.value, "entity/guid", "");
-  } else if (typeName.value.includes("_column")) {
-    // 현재 엔티티 유형이 컬럼일 경우 해당 컬럼이 속한 테이블의 GUID를 시작 노드로 설정
-    nodeGuid = ObjectUtils.getPropertyValue(
-      entity.value,
-      "entity/relationshipAttributes/table/guid",
-      ""
-    );
+  if (typeName.value.includes("table")) {
+    nodeGuid = ObjectUtils.getPropertyValue(entity.value, "id", "");
   }
 
   if (nodeGuid) {
@@ -774,42 +730,42 @@ const setDataLineageStartNode = () => {
 
 // 연관 데이터 조회
 const getBasicSearch = () => {
-  try {
-    const tmp_classifications = ObjectUtils.getPropertyValue(
-      entity.value,
-      "entity/classifications",
-      ""
-    );
-    if (tmp_classifications.length > 0) {
-      const param = {
-        tagFilters: null,
-        attributes: [],
-        limit: 5,
-        offset: 0,
-        typeName: "hive_table",
-        classification: null,
-        termName: null,
-      };
+  // try {
+  //   const tmp_classifications = ObjectUtils.getPropertyValue(
+  //     entity.value,
+  //     "entity/classifications",
+  //     ""
+  //   );
+  //   if (tmp_classifications.length > 0) {
+  //     const param = {
+  //       tagFilters: null,
+  //       attributes: [],
+  //       limit: 5,
+  //       offset: 0,
+  //       typeName: "hive_table",
+  //       classification: null,
+  //       termName: null,
+  //     };
 
-      param.classificationNames = tmp_classifications.map((d) => (d.typeName))
+  //     param.classificationNames = tmp_classifications.map((d) => (d.typeName))
 
-      $ofetch(`/api/search/keywordRef`, {
-        method: "POST",
-        body: param,
-      }).then((res) => {
-        if (res && !res.errorMessage && res.data.hasOwnProperty("entities")) {
-          classifications_data.value = ObjectUtils.getPropertyValue(res.data, "entities");
-        }
-      });
-    }
-  } catch (error) {
-    console.log(error);
-  }
+  //     $ofetch(`/api/search/keywordRef`, {
+  //       method: "POST",
+  //       body: param,
+  //     }).then((res) => {
+  //       if (res && !res.errorMessage && res.data.hasOwnProperty("entities")) {
+  //         classifications_data.value = ObjectUtils.getPropertyValue(res.data, "entities");
+  //       }
+  //     });
+  //   }
+  // } catch (error) {
+  //   console.log(error);
+  // }
 };
 
 // 사용자 데이터 설명 조회
 const getUserDescriptionList = (userDescriptionOrderType) => {
-  const guid = ObjectUtils.getPropertyValue(entity.value, "entity/guid", "");
+  const guid = ObjectUtils.getPropertyValue(entity.value, "id", "");
 
   const params = {
     guid: guid,
@@ -834,7 +790,7 @@ const getUserDescriptionList = (userDescriptionOrderType) => {
 
 // 사용자 리뷰 목록 조회
 const getReviewDataList = () => {
-  const guid = ObjectUtils.getPropertyValue(entity.value, "entity/guid", "");
+  const guid = ObjectUtils.getPropertyValue(entity.value, "id", "");
   if (guid) {
     $ofetch(`/api/search/detail/reviewdatalist`, {
       method: "POST",
@@ -854,7 +810,7 @@ const getReviewDataList = () => {
 // 데이터 찜하기 & 추천 여부 조회
 const getRecommendStatus = () => {
   const params = {
-    guid: ObjectUtils.getPropertyValue(entity.value, "entity/guid", ""),
+    guid: ObjectUtils.getPropertyValue(entity.value, "id", ""),
     userID: userStore.getUser.user_id,
   };
 
@@ -877,7 +833,7 @@ const onToggleCategoryModal = () => {
   let target = {};
   if (!status) {
     target = {
-      ...ObjectUtils.getPropertyValue(entity.value, "entity", ""),
+      ...entity.value
     };
   }
 
@@ -890,13 +846,13 @@ const onToggleCategoryModal = () => {
 
 // 카테고리 맵핑 추가 이벤트 핸들러
 const onAddCategoryMapping = (params) => {
-  const { entities, superTypes, tableTypes } = params;
+  const { entity, superTypes, tableTypes } = params;
 
   $ofetch("/api/metadata/classification/map", {
     method: "POST",
-    body: { entities, superTypes, tableTypes },
+    body: { entity, superTypes, tableTypes },
   }).then((res) => {
-    if (!res || res.isFailed) {
+    if (!res || res.data.isFailed) {
       const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
       errorAlert(msg);
     } else {
@@ -934,20 +890,20 @@ const onCancel = async () => {
 const createEditedParams = () => {
   const qualifiedName = ObjectUtils.getPropertyValue(
     entity.value,
-    "entity/attributes/qualifiedName",
+    "attributes/qualifiedName",
     ""
   );
-  const name = ObjectUtils.getPropertyValue(entity.value, "entity/attributes/name", "");
-  const typeName = ObjectUtils.getPropertyValue(entity.value, "entity/typeName", "");
-  const guid = ObjectUtils.getPropertyValue(entity.value, "entity/guid", "");
+  const name = ObjectUtils.getPropertyValue(entity.value, "attributes/name", "");
+  const typeName = ObjectUtils.getPropertyValue(entity.value, "metatype", "");
+  const guid = ObjectUtils.getPropertyValue(entity.value, "id", "");
 
-  const customAttributes = {};
+  const businessattributes = {};
   const tempAttributeList = Object.assign([], businessAttributes.value).filter(
     (el) => el.key && el.value
   );
 
   tempAttributeList.forEach((el) => {
-    customAttributes[el.key] = el.value;
+    businessattributes[el.key] = el.value;
   });
 
   return {
@@ -955,7 +911,7 @@ const createEditedParams = () => {
       attributes: { qualifiedName, name },
       typeName,
       guid,
-      customAttributes,
+      businessattributes,
     },
   };
 };
@@ -971,12 +927,12 @@ const onClickConfirm = async () => {
       method: "POST",
       body: params,
     }).then((res) => {
-      if (!res || res.isFailed) {
-        const msg =
-          "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
-        errorAlert(msg);
-      } else {
+      if (res.data && res.data > 0) {
         getDetailDataByGuid().then(() => setBusinessAttributes());
+      } else {
+        const msg =
+          "적용에 실패하였습니다. <br> 관리자에게 문의해 주시기 바랍니다.";
+        errorAlert(msg);
       }
     });
   }
@@ -1000,14 +956,14 @@ const onToggleEliminateModal = () => {
 const getDataManagerInfoList = async () => {
   const classificationsList = ObjectUtils.getPropertyValue(
     entity.value,
-    "entity/classifications",
+    "classifications",
     ""
   );
   if (classificationsList !== "") {
-    const dataManagerInfoParam = { classificationsList };
+    const param = { classificationsList };
     const result = await $ofetch("/api/search/detail/getDataManagerInfoList", {
       method: "POST",
-      body: dataManagerInfoParam,
+      body: param,
     });
     dataManagerInfoList.value = result.data;
   }

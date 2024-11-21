@@ -1,26 +1,31 @@
 package com.mobigen.datalake.metaData.classification;
 
+import com.mobigen.datalake.metaData.manage.MetaDataManageService;
+import com.mobigen.framework.result.JsonResult;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.stereotype.Service;
-
-import com.mobigen.datalake.atlas.AtlasRestAPI;
-import com.mobigen.framework.result.JsonResult;
-import com.mobigen.framework.utility.AtlasErrorMap;
-
-import lombok.AllArgsConstructor;
-
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MetaDataClassificationService {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MetaDataClassificationService.class);
+
+    @Value("${properties.essync.url}")
+    private String esSyncUrl;
 
     private final MetaDataClassificationMapper metaDataClassificationMapper;
-    private final AtlasRestAPI atlasRestAPI;
-
-    private final String BASE_URL = "/types/typedefs?type=classification";
+    private final MetaDataManageService metaDataManageService;
 
     // 카테고리 담당부서 조회
     public Object getClassificationDept(String name) throws Exception {
@@ -32,78 +37,83 @@ public class MetaDataClassificationService {
         return metaDataClassificationMapper.getClassificationDepth(name);
     }
 
-    // 하위 카테고리 추가
+    // 카테고리 추가
     public Object insertClassification(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<>();
-        Boolean isFailed = false;
 
-        Map atlasParam = (Map) params.get("forAtlas"); // Atlas API 호출 시 사용 파라미터
-        Map tableParam = (Map) params.get("forRDB"); // <table> insert 시 사용 파라미터
+        String level = (String) metaDataClassificationMapper.getClassificationDepth((String)params.get("superTypeName"));
 
-        JsonResult atlasResult = atlasRestAPI.post(BASE_URL, atlasParam);
-        if (atlasResult.getResult() > 0) {
-            // Atlas 추가 성공 시 테이블에도 추가
-            metaDataClassificationMapper.insertClassification(tableParam);
-
-            metaDataClassificationMapper.createClassificationCount(tableParam);
+        // 루트 카테고리의 경우
+        if (level == null || level.equals("")) {
+            level = "1";
         } else {
-            // 삭제 불가 시 Atlas 에러 메시지 리턴
-            result.put("errorMessage", AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage()));
-            isFailed = true;
+            int levelInt =  Integer.parseInt(level) + 1;
+            level = Integer.toString(levelInt);
+        }
+        params.put("level", level);
+
+        int resultCount = metaDataClassificationMapper.insertClassification(params);
+        if(resultCount > 0) {
+            metaDataClassificationMapper.createClassificationCount(params);
         }
 
-        result.put("isFailed", isFailed);
+        result.put("isFailed", resultCount < 0);
         return result;
     }
 
     // 카테고리 수정
     public Object updateClassification(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<>();
-        Boolean isFailed = false;
 
-        Map atlasParam = (Map) params.get("forAtlas"); // Atlas API 호출 시 사용 파라미터
-        Map tableParam = (Map) params.get("forRDB"); // <table> insert 시 사용 파라미터
+        int resultCount = metaDataClassificationMapper.updateClassification(params);
 
-        JsonResult atlasResult = atlasRestAPI.put(BASE_URL, atlasParam, false);
-        if (atlasResult.getResult() > 0) {
-            // Atlas 수정 성공 시 테이블에도 추가
-            metaDataClassificationMapper.updateClassification(tableParam);
-        } else {
-            // 삭제 불가 시 Atlas 에러 메시지 리턴
-            result.put("errorMessage", AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage()));
-            isFailed = true;
-        }
-
-        result.put("isFailed", isFailed);
+        result.put("isFailed", resultCount <= 0);
         return result;
     }
 
     // 카테고리 삭제
-    public Object deleteClassification(String name) throws Exception {
+    public Object deleteClassification(String id) throws Exception {
         Map<String, Object> result = new HashMap<>();
-        Boolean isFailed = false;
 
-        String URL = "/types/typedef/name/" + name;
+        String errorMessage = "";
 
-        // Atlas API 호출, 삭제 불가 시 Atlas 에러 메시지를 그대로 사용자에게 리턴
-        JsonResult atlasResult = atlasRestAPI.delete(URL, null, false);
-        if (atlasResult.getResult() > 0) {
-            // Atlas 삭제 성공 시 리턴값 없음. 테이블에서도 삭제
-            metaDataClassificationMapper.deleteClassification(name);
-        } else {
-            // 삭제 불가 시 Atlas 에러 메시지 리턴
-            String errorMessage = AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage());
-
-            // 카테고리를 참조하는 경우
-            if (errorMessage.indexOf("Given type " + name + " has references") != -1 || (errorMessage.startsWith("Given type") && errorMessage.endsWith(" has references"))) {
-                result.put("errorMessage", name + " 카테고리를 참조하고 있는 개체가 있습니다.");
-            } else {
-                result.put("errorMessage", errorMessage);
-            }
-            isFailed = true;
+        // 매핑된 메타 데이터가 있는지 확인
+        List<Map<String, Object>> mappedDataList = metaDataManageService.getMappedMetaDataManageListByClassificationId(new HashMap<String, Object>(){{
+            put("id", id);
+        }});
+        if(!mappedDataList.isEmpty()) {
+            errorMessage = "해당 카테고리를 참조하고 있는 개체가 있습니다.";
+            result.put("errorMessage", errorMessage);
+            result.put("isFailed", true);
+            return result;
         }
 
-        result.put("isFailed", isFailed);
+        // 하위 카테고리가 있는지 확인
+        List<Map<String, Object>> childrenList = metaDataClassificationMapper.getClassificationChildrenById(id);
+        if(!childrenList.isEmpty()) {
+            errorMessage = "해당 카테고리를 참조하고 있는 개체가 있습니다.";
+            result.put("errorMessage", errorMessage);
+            result.put("isFailed", true);
+            return result;
+        }
+
+        // 그 외의 경우 카테고리 삭제
+        int resultCount = metaDataClassificationMapper.deleteClassification(id);
+        if(resultCount > 0) {
+            metaDataClassificationMapper.deleteClassificationCount(id);
+        }
+
+        result.put("isFailed", resultCount <= 0);
+
+        return result;
+    }
+
+    // 카테고리명(영문명) 중복 여부 조회
+    public Object checkDuplicateClassificationName(String name) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        List<Map<String, Object>> resultList = metaDataClassificationMapper.getClassificationListByName(name);
+        
+        result.put("isDuplicate", resultList.size() > 0);
         return result;
     }
 
@@ -112,223 +122,204 @@ public class MetaDataClassificationService {
         Map<String, Object> result = new HashMap<>();
         Boolean isFailed = false;
 
-        // Map entity = (Map) params.get("entity");
-        List<Map> entities = (List) params.get("entities");
-        // List entityGuids = (List) entity.get("entityGuids");
-        // int entityGuidsCount = entityGuids.size();
-        List superTypes = (List) params.get("superTypes");
+        // 매핑 카테고리 아이디
+        String classificationId = params.get("classificationId").toString();
+        // 매핑 대상 entity 아이디 목록
+        List<String> entityIds = (List<String>) params.get("entityIds");
+        int entityIdsCount = entityIds.size();
+        // 매핑 카테고리의 상위 타입 목록
+        List<String> superTypes = (List<String>) params.get("superTypes");
 
-        // 테이블 유형일 경우 하위 컬럼 GUID 목록 추출하여 함께 카테고리 맵핑
+        // 테이블 유형일 경우 하위 컬럼 ID 목록 추출하여 함께 카테고리 맵핑
         List<String> tableTypes = (List<String>) params.get("tableTypes");
-        // if (tableTypes.size() > 0) {
-        //     List<String> columnGuids = new ArrayList<>();
+        if (tableTypes.size() > 0) {
+            List<String> columnIds = new ArrayList<>();
 
-        //     for (String tableTypeGuid : tableTypes) {
-        //         columnGuids.addAll(this.getColumns(tableTypeGuid));
-        //     }
-
-        //     entityGuids.addAll(columnGuids);
-        // }
-
-        // 선택된 엔티티 맵핑
-        String URL = "/entity/bulk/classification";
-
-        for (Map entity : entities){
-            List entityGuids = (List) entity.get("entityGuids");
-            int entityGuidsCount = entityGuids.size();
-
-            if (tableTypes.size() > 0) {
-                List<String> columnGuids = new ArrayList<>();
-    
-                for (String tableTypeGuid : tableTypes) {
-                    columnGuids.addAll(this.getColumns(tableTypeGuid));
-                }
-    
-                entityGuids.addAll(columnGuids);
+            for (String tableTypeId : tableTypes) {
+                columnIds.addAll(this.getColumns(tableTypeId));
             }
 
-            JsonResult atlasResult = atlasRestAPI.post(URL, entity, false);
+            entityIds.addAll(columnIds);
+        }
 
-            if (atlasResult.getResult() > 0) {
-                // Atlas 매핑 성공 시 count증가
-                // 한번에 여러개 매핑시 count 증가분을 1이 아닌 guid 개수만큼
-                
-                metaDataClassificationMapper.mapperCountMulti(entity, entityGuidsCount);
+        // 중복된 카테고리 매핑이 있는 엔티티 제거
+        entityIds = removeDuplicateMappingEntity(classificationId, entityIds);
+        entityIdsCount = entityIds.size();
+
+        if(entityIds.size() <= 0) {
+            return result;
+        }
+
+        // 메타 데이터 카테고리 매핑
+        Map<String, Object> updateParam = new HashMap<>();
+        updateParam.put("classificationId", classificationId);
+        updateParam.put("entityIds", entityIds);
+        int resultCount = metaDataManageService.updateMetaDataClassification(updateParam);
+
+        // 매핑 성공 시
+        if(resultCount > 0) {
+            // update classification count
+            updateParam.put("entityIdsCount", entityIdsCount);
+            metaDataClassificationMapper.mapperCountMulti(updateParam);
+
+            // 맵핑 성공 시 상위 카테고리 맵핑 대상 확인 후 처리
+            if (superTypes.size() > 0) {
+                this.mapSuperTypeClassification(entityIds, superTypes);
             }
+        }
 
-            if (atlasResult.getResult() == 0) {
-                // 이미 맵핑된 카테고리일 경우 화면에 에러 메시지 출력하지 않음
-                // 기맵핑된 카테고리 선택 시 에러 메시지 예시) invalid parameters: entity:
-                // 4e586f8d-820d-4216-850a-c5f638bdfa00, already associated with classification:
-                // AS
-                String errorMessage = AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage());
-                if (errorMessage.indexOf("already associated with classification") == -1) {
-                    result.put("errorMessage", errorMessage);
-                    isFailed = true;
+        //es sync api 호출
+        Integer failCount = 0;
+        for(String id : entityIds) {
+            Map<String, Object> restResponse = essyncUpdate(id, 2, "카테고리 매핑");
+
+            boolean esResult = false;            
+            if (!restResponse.isEmpty()) {
+                Map<String, String> res = (Map<String, String>) restResponse.get("result");
+                if (res.get("result").equals("success")) {                    
+                    esResult = true;
+                } else {
+                    failCount++;                    
+                    esResult = false;
                 }
             }
         }
 
-
-
-
-        // 이후는 old code
-        // JsonResult atlasResult = atlasRestAPI.post(URL, entity, false);
-
-        // if (atlasResult.getResult() > 0) {
-        //     // Atlas 매핑 성공 시 count증가
-        //     // 한번에 여러개 매핑시 count 증가분을 1이 아닌 guid 개수만큼
-            
-        //     metaDataClassificationMapper.mapperCountMulti(entity, entityGuidsCount);
-        // }
-        // if (atlasResult.getResult() == 0) {
-        //     // 이미 맵핑된 카테고리일 경우 화면에 에러 메시지 출력하지 않음
-        //     // 기맵핑된 카테고리 선택 시 에러 메시지 예시) invalid parameters: entity:
-        //     // 4e586f8d-820d-4216-850a-c5f638bdfa00, already associated with classification:
-        //     // AS
-        //     String errorMessage = AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage());
-        //     if (errorMessage.indexOf("already associated with classification") == -1) {
-        //         result.put("errorMessage", errorMessage);
-        //         isFailed = true;
-        //     }
-        // } else {
-        //     // 맵핑 성공 시 상위 카테고리 맵핑 대상 확인 후 처리
-        //     if (superTypes.size() > 0) {
-        //         Map superTypeMapResult = this.mapSuperTypeClassification(entityGuids, superTypes);
-        //         Boolean superTypeMapFailed = (Boolean) superTypeMapResult.get("isFailed");
-        //         if (superTypeMapFailed) {
-        //             // 이미 맵핑된 카테고리일 경우 화면에 에러 메시지 출력하지 않음
-        //             String superErrorMessage = (String) superTypeMapResult.get("errorMessage");
-        //             if (superErrorMessage.indexOf("already associated with classification") == -1) {
-        //                 result.put("errorMessage", superErrorMessage);
-        //                 isFailed = true;
-        //             }
-        //         }
-        //     }
-        // }
-
-        result.put("isFailed", isFailed);
+        result.put("isFailed", resultCount < 0 || failCount > 0);
         return result;
     }
 
     // 상위 카테고리 맵핑
-    public Map mapSuperTypeClassification(List guids, List superTypes) throws Exception {
-        Map<String, Object> result = new HashMap<>();
-        Boolean isFailed = false;        
+    public void mapSuperTypeClassification(List<String> ids, List<String> superTypes) throws Exception {
+        for (int j = 0; j < superTypes.size(); j++) {
+            String classificationId = superTypes.get(j);
+            List<String> entityIds = removeDuplicateMappingEntity(classificationId, ids);
+            if(entityIds.size() < 0) {
+                continue;
+            }
 
-        for (int i = 0; i < guids.size(); i++) {
-            String URL = "/entity/guid/" + guids.get(i) + "/classifications";
-            JsonResult atlasResult = atlasRestAPI.post(URL, superTypes, false);
-
-            if (atlasResult.getResult() == 0) {
-                result.put("errorMessage", AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage()));
-                isFailed = true;                
-                break;
+            Map<String, Object> updateParam = new HashMap<>();
+            updateParam.put("classificationId", classificationId);
+            updateParam.put("entityIds", entityIds);
+            int resultCount = metaDataManageService.updateMetaDataClassification(updateParam);
+            // 상위 카테고리 매핑시 에러 없으면 카운트 증가
+            if(resultCount > 0) {
+                updateParam.put("entityIdsCount", entityIds.size());
+                metaDataClassificationMapper.mapperCountMulti(updateParam);
             }
         }
-
-        for (int j = 0; j < superTypes.size(); j++) {
-            Map<String, Object> superType = (Map<String, Object>)superTypes.get(j);
-            String typeName = superType.get("typeName").toString();
-
-            // 상위 카테고리 매핑시 에러 없으면 카운트 증가
-            // 상위 카테고리 매핑시 에러 있고, 카테고리 이름으로 있으면 중복이라 판단하고, 없을 경우만 증가
-            if( !result.containsKey("errorMessage") )
-                metaDataClassificationMapper.supperMapperCount(superType);
-            else if(result.containsKey("errorMessage") && !result.get("errorMessage").toString().contains(typeName))
-                metaDataClassificationMapper.supperMapperCount(superType);
-        }
-
-        result.put("isFailed", isFailed);
-        return result;
     }
 
     // 카테고리 맵핑 제거
-    public Object deleteMapClassification(String name, Map<String, Object> params) throws Exception {
-        Map<String, Object> result = new HashMap<String, Object>() {
-            {
-                put("isFailed", false);
-            }
-        };
+    public Object deleteMapClassification(String id, Map<String, Object> params) throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
 
-        List<String> targetGuids = new ArrayList<>(); // 카테고리 맵핑 제거 대상 guid 목록
-        String guid = (String) params.get("guid"); // 사용자가 선택한 엔티티 guid
-        targetGuids.add(guid);
+        List<String> targetIds = new ArrayList<>(); // 카테고리 맵핑 제거 대상 id 목록
+        String guid = (String) params.get("id"); // 사용자가 선택한 엔티티 guid
+        targetIds.add(guid);
 
         Boolean isTableType = (Boolean) params.get("isTableType");
         if (isTableType) {
-            // 테이블 유형일 경우 하위 컬럼 목록 조회 및 추가
-            targetGuids.addAll(this.getColumns(guid));
-        } else {
-            // 컬럼 유형일 경우 현재 엔티티가 속한 테이블 & 해당 테이블의 하위 컬럼(현재 엔티티 제외) 목록 조회 및 추가
-            targetGuids.addAll(this.getTableWithOtherColumns(guid));
+            // 테이블 유형일 경우 하위 목록 조회 및 추가
+            targetIds.addAll(this.getColumns(guid));
         }
+//         else {
+//             // 컬럼 유형일 경우 현재 엔티티가 속한 테이블 & 해당 테이블의 하위 컬럼(현재 엔티티 제외) 목록 조회 및 추가
+//             targetIds.addAll(this.getTableWithOtherColumns(guid));
+//         }
 
-        for (String targetGuid : targetGuids) {
-            String DEFAULT_URL = "/entity/guid/";
-            String url = DEFAULT_URL + targetGuid + "/classification/" + name;
-            JsonResult atlasResult = atlasRestAPI.delete(url, null, false);
-            if (atlasResult.getResult() == 0) {
-                String errorMessage = AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage());
-                // 매핑이 이미 없는 경우도 오류로 처리하지 않음
-                if (errorMessage.indexOf("No classifications associated with entity: " + targetGuid) == 0) {
-                    result.put("isFailed", false);
-                    result.put("errorMessage", AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage()));
-                } else if (errorMessage.indexOf("Classification " + name + " is not associated with entity") == 0) {
-                    result.put("isFailed", false);
-                    result.put("errorMessage", AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage()));
-                } else {
-                    result.put("isFailed", true);
-                    result.put("errorMessage", AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage()));
-                    break;
+        for (String targetId : targetIds) {
+            // 선택된 classification 정보
+            Map<String, Object> removeMapping = (Map<String, Object>) params.get("deleteMapping");
+            // 기존 classification mapping 정보(id 목록)
+            List<String> orgMappingList = (List<String>) params.get("classifications"); // ["1", "5"]
+
+            // 선택된 classification id의 하위 목록 탐색 후 삭제 대상에 추가
+            String removeId = removeMapping.get("id").toString(); // ["1"]
+            List<String> subTypes = (List<String>) removeMapping.get("subTypes"); // ["2"]
+            List<String> removeIds = new ArrayList<>();
+            removeIds.add(removeId);
+            removeIds.addAll(subTypes);
+
+            // 기존 mapping list에서 지워지는 id 목록 제거 후 해당 데이터로 업데이트
+            List<String> updateIds = new ArrayList<>();
+            for(String mapId : orgMappingList) {
+                // 삭제 id 목록에 포함되지 않은 id일 경우 update id 목록에 추가
+                if(!removeIds.contains(mapId)) {
+                    updateIds.add(mapId);
+                }
+            }
+
+            Map<String, Object> delParams = new HashMap<>();
+            delParams.put("id", targetId);
+            delParams.put("classificationIds", updateIds);
+
+            int resultCount = metaDataManageService.deleteMetaDataClassification(delParams);
+            if(resultCount > 0) {
+                // update classification count
+                for(String rId : removeIds) {
+                    // 기존에 매핑되어 있던 아이디일 경우에만 count down
+                    if(orgMappingList.contains(rId)) {
+                        metaDataClassificationMapper.mapperCountDown(rId);
+                    }
                 }
             }
         }
-        metaDataClassificationMapper.mapperCountDown(name);
+
+        //es sync api 호출
+        Integer failCount = 0;
+        for(String target : targetIds) {
+            Map<String, Object> restResponse = essyncUpdate(target, 2, "카테고리 매핑");
+
+            if (!restResponse.isEmpty()) {
+                Map<String, String> res = (Map<String, String>) restResponse.get("result");
+                if (res.get("result").equals("success")) {
+                } else {
+                    failCount++;                    
+                }
+            }
+        }
+
+        if(failCount > 0){
+            result.put("essyncIsFailed", true);
+        }
 
         return result;
     }
 
-    // 하위 컬럼 guid 목록 추출
-    private List<String> getColumns(String guid) {
-        List<String> guids = new ArrayList<>();
+    // 하위 컬럼 id 목록 추출
+    private List<String> getColumns(String id) throws Exception {
+        List<String> ids = new ArrayList<>();
 
-        // guid 기준 상세 조회
-        JsonResult detail = this.atlasRestAPI.get("/entity/guid/" + guid);
-        if (detail.getResult() > 0) {
-            Map data = (Map) detail.getData();
-            Object columnList = this.findNestedMapValue(data, "entity/attributes/columns");
-            if (columnList instanceof List) {
-                for (Map item : (List<Map>) columnList) {
-                    String columnGuid = (String) item.get("guid");
-                    guids.add(columnGuid);
-                }
-            }
+        List<Map<String, Object>> childrenList = metaDataManageService.getMetaDataListByParentId(id);
+        for (Map<String, Object> item : childrenList) {
+            String columnId = (String) item.get("id");
+            ids.add(columnId);
         }
 
-        return guids;
+        return ids;
     }
 
     // 테이블 guid 및 선택 컬럼을 제외한 나머지 하위 컬럼 guid 목록 추출
     private List<String> getTableWithOtherColumns(String guid) {
         List<String> guids = new ArrayList<>();
 
-        JsonResult detail = this.atlasRestAPI.get("/entity/guid/" + guid);
-        if (detail.getResult() > 0) {
-            Map data = (Map) detail.getData();
-            Object tableGuid = this.findNestedMapValue(data, "entity/attributes/table/guid");
-
-            if (tableGuid != null && tableGuid instanceof String) {
-                guids.add((String) tableGuid);
-
-                List<String> columns = this.getColumns((String) tableGuid);
-                for (String column : columns) {
-                    if (!guid.equals(column)) {
-                        guids.add(column);
-                    }
-                }
-            }
-        }
+//         JsonResult detail = this.atlasRestAPI.get("/entity/guid/" + guid);
+//         if (detail.getResult() > 0) {
+//             Map data = (Map) detail.getData();
+//             Object tableGuid = this.findNestedMapValue(data, "entity/attributes/table/guid");
+//
+//             if (tableGuid != null && tableGuid instanceof String) {
+//                 guids.add((String) tableGuid);
+//
+//                 List<String> columns = this.getColumns((String) tableGuid);
+//                 for (String column : columns) {
+//                     if (!guid.equals(column)) {
+//                         guids.add(column);
+//                     }
+//                 }
+//             }
+//         }
 
         return guids;
     }
@@ -371,4 +362,45 @@ public class MetaDataClassificationService {
 
         return updateResult;
     }
-}
+
+    // 중복된 매핑이 있는지 검사 후 삭제
+    private List<String> removeDuplicateMappingEntity(String classificationId, List<String> entityIds) throws Exception {
+
+        // 중복된 카테고리 매핑이 있는 엔티티 검색
+        Map<String, Object> findParam = new HashMap<>();
+        findParam.put("id", classificationId);
+        findParam.put("entityIds", entityIds);
+        List<Map<String, Object>> findDuplicateCategory = metaDataManageService.getMappedMetaDataManageListByClassificationId(findParam);
+
+        // 중복된 카테고리 매핑이 있을 경우 해당 entity 삭제
+        List<String> removeEntityIds = new ArrayList<>();
+        if(!findDuplicateCategory.isEmpty()) {
+            for(Map<String, Object> item : findDuplicateCategory) {
+                String id = item.get("id").toString();
+                removeEntityIds.add(id);
+            }
+            LOGGER.info("invalid parameters: entity: {}, already associated with classification: {}", removeEntityIds, classificationId);
+        }
+
+        List<String> newEntityIds = new ArrayList<>();
+        for(String id : entityIds) {
+            if (!removeEntityIds.contains(id)) {
+                newEntityIds.add(id);
+            }
+        }
+
+        return newEntityIds;
+    }
+
+    public Map<String, Object> essyncUpdate(String guid, Integer eventStatus, String eventName) throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+        
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("metaid", guid);
+        requestBody.put("event_status", eventStatus); // 1=생성, 2=수정, 3=삭제
+        requestBody.put("event_name", eventName);
+        Map<String, Object> restResponse = restTemplate.postForObject(esSyncUrl, requestBody, HashMap.class);
+
+        return restResponse;
+    }
+ }

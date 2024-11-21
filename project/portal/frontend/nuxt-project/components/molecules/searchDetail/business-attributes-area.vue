@@ -26,8 +26,8 @@
         </colgroup>
         <thead>
           <tr>
-            <th scope="col">구분</th>
-            <th scope="col">설명</th>
+            <th scope="col">Key</th>
+            <th scope="col">Value</th>
           </tr>
         </thead>
         <tbody>

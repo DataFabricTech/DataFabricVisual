@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mobigen.datalake.atlas.AtlasRestAPI;
 import com.mobigen.datalake.metaData.manage.MetaDataManageService;
 import com.mobigen.framework.result.JsonResult;
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
@@ -32,7 +31,6 @@ import com.mobigen.framework.result.annotation.ResponseJsonResult;
 @AllArgsConstructor
 public class DiagramController {
     private final DiagramService diagramService;
-    private final AtlasRestAPI atlasRestAPI;
     private final MetaDataManageService metaDataManageService;
 
     /**
@@ -90,33 +88,34 @@ public class DiagramController {
     @ResponseJsonResult
     @PostMapping("/node/tooltip")
     public Object getNodeInfoTooltip(@RequestBody Map<String, Object> params) throws Exception {
-        String URL = "/search/basic";
+        // String URL = "/search/basic";
 
-        params.put("offset", 0);
-        params.put("limit", 25);
-        params.put("classification", "");
-        params.put("typeName", "hive_table");
-        params.put("excludeDeletedEntities", true);
-        params.put("includeSubClassifications", true);
-        params.put("includeSubTypes", true);
-        params.put("includeClassificationAttributes", true);
-        params.put("attributes", Arrays.asList("comment"));
-        params.put("entityFilters", new HashMap() {
-            {
-                put("condition", "AND");
-                put(
-                        "criterion",
-                        Arrays.asList(
-                                new HashMap() {
-                                    {
-                                        put("attributeName", "__guid");
-                                        put("operator", "eq");
-                                        put("attributeValue", params.get("guid"));
-                                    }
-                                }));
-            }
-        });
-        JsonResult result = atlasRestAPI.post(URL, params);
+        // params.put("offset", 0);
+        // params.put("limit", 25);
+        // params.put("classification", "");
+        // params.put("typeName", "hive_table");
+        // params.put("excludeDeletedEntities", true);
+        // params.put("includeSubClassifications", true);
+        // params.put("includeSubTypes", true);
+        // params.put("includeClassificationAttributes", true);
+        // params.put("attributes", Arrays.asList("comment"));
+        // params.put("entityFilters", new HashMap() {
+        //     {
+        //         put("condition", "AND");
+        //         put(
+        //                 "criterion",
+        //                 Arrays.asList(
+        //                         new HashMap() {
+        //                             {
+        //                                 put("attributeName", "__guid");
+        //                                 put("operator", "eq");
+        //                                 put("attributeValue", params.get("guid"));
+        //                             }
+        //                         }));
+        //     }
+        // });
+        // JsonResult result = atlasRestAPI.post(URL, params);
+        JsonResult result = null;
         return result;
     }
 
@@ -258,65 +257,73 @@ public class DiagramController {
     @ResponseJsonResult
     @PostMapping("/node/search")
     public Object getMetaDataList(@RequestBody Map<String, Object> params) {
-        int limit = 100;
+        // int limit = 100;
 
-        params.put("offset", (int) params.get("offset"));
-        params.put("limit", limit);
-        params.put("classification", "");
-        params.put("typeName", "hive_table");
-        params.put("excludeDeletedEntities", true);
-        params.put("includeSubClassifications", true);
-        params.put("includeSubTypes", true);
-        params.put("includeClassificationAttributes", true);
-        params.put("attributes", Arrays.asList("comment"));
-        if (params.get("searchType").equals("all")) {
-            params.put("entityFilters", new HashMap() {
-                {
-                    put("condition", "OR");
-                    put(
-                            "criterion",
-                            Arrays.asList(
-                                    new HashMap() {
-                                        {
-                                            put("attributeName", "name");
-                                            put("operator", "contains");
-                                            put("attributeValue", params.get("searchWord"));
-                                        }
-                                    },
-                                    new HashMap() {
-                                        {
-                                            put("attributeName", "__guid");
-                                            put("operator", "contains");
-                                            put("attributeValue", params.get("searchWord"));
-                                        }
-                                    },
-                                    new HashMap() {
-                                        {
-                                            put("attributeName", "description");
-                                            put("operator", "contains");
-                                            put("attributeValue", params.get("searchWord"));
-                                        }
-                                    }));
-                }
-            });
-        } else {
-            params.put("entityFilters", new HashMap() {
-                {
-                    put("condition", "AND");
-                    put(
-                            "criterion",
-                            Arrays.asList(
-                                    new HashMap() {
-                                        {
-                                            put("attributeName", params.get("searchType"));
-                                            put("operator", "contains");
-                                            put("attributeValue", params.get("searchWord"));
-                                        }
-                                    }));
-                }
-            });
-        }
+        // params.put("offset", (int) params.get("offset"));
+        // params.put("limit", limit);
+        // params.put("classification", "");
+        // params.put("typeName", "hive_table");
+        // params.put("excludeDeletedEntities", true);
+        // params.put("includeSubClassifications", true);
+        // params.put("includeSubTypes", true);
+        // params.put("includeClassificationAttributes", true);
+        // params.put("attributes", Arrays.asList("comment"));
+        // if (params.get("searchType").equals("all")) {
+        //     params.put("entityFilters", new HashMap() {
+        //         {
+        //             put("condition", "OR");
+        //             put(
+        //                     "criterion",
+        //                     Arrays.asList(
+        //                             new HashMap() {
+        //                                 {
+        //                                     put("attributeName", "name");
+        //                                     put("operator", "contains");
+        //                                     put("attributeValue", params.get("searchWord"));
+        //                                 }
+        //                             },
+        //                             new HashMap() {
+        //                                 {
+        //                                     put("attributeName", "__guid");
+        //                                     put("operator", "contains");
+        //                                     put("attributeValue", params.get("searchWord"));
+        //                                 }
+        //                             },
+        //                             new HashMap() {
+        //                                 {
+        //                                     put("attributeName", "description");
+        //                                     put("operator", "contains");
+        //                                     put("attributeValue", params.get("searchWord"));
+        //                                 }
+        //                             }));
+        //         }
+        //     });
+        // } else {
+        //     params.put("entityFilters", new HashMap() {
+        //         {
+        //             put("condition", "AND");
+        //             put(
+        //                     "criterion",
+        //                     Arrays.asList(
+        //                             new HashMap() {
+        //                                 {
+        //                                     put("attributeName", params.get("searchType"));
+        //                                     put("operator", "contains");
+        //                                     put("attributeValue", params.get("searchWord"));
+        //                                 }
+        //                             }));
+        //         }
+        //     });
+        // }
 
-        return metaDataManageService.getMetaDataList(params);
+        // return metaDataManageService.getMetaDataList(params);
+        return null;
+    }
+
+    @ResponseJsonResult
+    @PostMapping("/node/getMetaDataForTooltip")
+    public Object getMetaDataForTooltip(@RequestBody List<String> guidList) throws Exception {
+        List<Map<String, Object>> metaDataInfo = diagramService.getMetaDataForTooltip(guidList);
+        return metaDataInfo;
     }
 }

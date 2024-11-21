@@ -1,5 +1,7 @@
 package com.mobigen.datalake.diagram;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobigen.framework.component.Messages;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,32 +17,24 @@ import java.util.Map;
 public class DiagramService {
     private final Messages message;
     private final DiagramMapper diagramMapper;
+    private final ObjectMapper objectMapper;
 
     public Object getMessage() {
         return message.get("sample.data");
     }
 
     public HashMap getNodeRelation(String direction, String nodeId) throws Exception {
+        HashMap param = new HashMap();
+        param.put("nodeId", nodeId);
+        param.put("direction", direction);
+
+        ArrayList nodeList = diagramMapper.getNodeInfo(param);
+
+        param.put("nodeList", nodeList);
+        ArrayList linkList = diagramMapper.getLinkInfo(param);
         HashMap returmMap = new HashMap<>();
-
-        try{
-            HashMap param = new HashMap();
-            param.put("nodeId", nodeId);
-            param.put("direction", direction);
-    
-            ArrayList nodeList = diagramMapper.getNodeInfo(param);
-    
-            param.put("nodeList", nodeList);
-    
-            ArrayList linkList = diagramMapper.getLinkInfo(param);
-            
-            returmMap.put("nodeInfo", nodeList);
-            returmMap.put("linkInfo", linkList);
-        } catch (Exception e) {
-            returmMap.put("nodeInfo", new ArrayList<>());
-            returmMap.put("linkInfo", new ArrayList<>());
-        }
-
+        returmMap.put("nodeInfo", nodeList);
+        returmMap.put("linkInfo", linkList);
         return returmMap;
     }
 
@@ -180,5 +174,42 @@ public class DiagramService {
 
     public Object saveNodeLink(Map<String, Object> params)throws Exception {
         return diagramMapper.insertNodeLinks(params);
+    }
+
+    public List<Map<String, Object>> getMetaDataForTooltip(List<String> guidList) throws Exception {
+        List<Map<String, Object>> metaInfoList = diagramMapper.getMetaDataForTooltip(guidList);
+
+        for (int i=0; i<metaInfoList.size(); i++) {
+            // Postgresql jsonb 타입(JSON 문자열) Map 형태로 변환
+            metaInfoList.get(i).put("attributes", convertJsonbToMap(metaInfoList.get(i).get("attributes")));
+            metaInfoList.get(i).put("businessattributes", convertJsonbToMap(metaInfoList.get(i).get("businessattributes")));
+            metaInfoList.get(i).put("customattributes", convertJsonbToMap(metaInfoList.get(i).get("customattributes")));
+            
+            // _varchar 객체 배열 Map 형태로 변환 (카테고리)
+            String[] ids = (String[]) metaInfoList.get(i).get("classifications");
+
+            if (ids != null) {
+                List<Map<String, Object>> classificationList = diagramMapper.getClassificationList(ids);
+                metaInfoList.get(i).put("classifications", classificationList);
+            }
+        }
+
+        return metaInfoList;
+    }
+
+    // Jsonb => Map 타입 변환 함수
+    public Map<String, Object> convertJsonbToMap(Object jsonb) throws Exception {
+        if (jsonb != null) {
+            return objectMapper.readValue((String) jsonb, new TypeReference<Map<String, Object>>() {});    
+        }
+        return null;
+    }
+
+    // _varchar => List<Map> 타입 변환 함수
+    public List<Map<String, String>> convert_varcharToListMap(Object _varchar) throws Exception {
+        if (_varchar != null) {
+            return objectMapper.readValue((String) _varchar, new TypeReference<List<Map<String, String>>>() {});    
+        }
+        return null;
     }
 }

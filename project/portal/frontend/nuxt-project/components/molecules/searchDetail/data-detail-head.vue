@@ -3,10 +3,7 @@
     <!-- data-box 목록에 li data-box하나가 그대로 상세페이지상단 요약임 div로 -->
     <div class="data-box">
       <div class="inner-data visual">
-        <i class="ico-data data-01" v-if="props.typeName.includes('_column')" />
-        <i class="ico-data data-02" v-else-if="props.typeName.includes('_db')" />
-        <i class="ico-data data-05" v-else-if="props.typeName.includes('_table')" />
-        <i class="ico-data data-03" v-else />
+        <i class="ico-data data-05" />
       </div>
       <!-- inner-data : 데이터내용 -->
       <div class="inner-data">
@@ -18,7 +15,7 @@
             :key="index"
             class="category"
           >
-            <em class="category-label">{{ getKrName(item.typeName) }}</em>
+            <em class="category-label">{{ item.c_description }}</em>
             <button
               v-if="props.isAdmin"
               type="button"
@@ -38,13 +35,18 @@
             <i class="mu-icon-svg add"></i><span>카테고리 추가</span>
           </button>
         </div>
+        <div class="category-group" v-else>
+          <div class="category">
+            <em class="category-label">카테고리 미지정</em>
+          </div>
+        </div>
         <!-- //category-group  -->
 
         <!-- title-group -->
         <div class="title-group">
-          <strong class="data-title">{{ entityComment }}</strong>
+          <strong class="data-title">{{ entityDescription }}</strong>
           <p class="data-name">{{ entityName }}</p>
-          <p class="data-desc">
+          <p class="data-desc" v-if="entityUserDescription != ''">
             {{ entityUserDescription }}
           </p>
         </div>
@@ -52,7 +54,7 @@
       </div>
       <div
         class="inner-data buttons"
-        v-show="typeName.includes('_table') || typeName.includes('_column')"
+        v-show="typeName.includes('table') || typeName.includes('column')"
       >
         <data-recommend-status-top
           v-if="!props.isAdmin"
@@ -63,13 +65,13 @@
         />
         <button type="button" class="mu-btn mu-btn-lg mu-btn-primary"
           @click="onClickEliminate"
-          v-if="!typeName.includes('_column') && !props.sampleDataDenied">
+          v-if="!typeName.includes('column') && !props.sampleDataDenied">
           <i class="mu-icon-svg apply"></i>
           <span>데이터 추출</span>
         </button>
         <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" style="background-color: lightgrey;"
           @click="onClickAuthRequest()"
-          v-else-if="!typeName.includes('_column') && props.sampleDataDenied">
+          v-else-if="!typeName.includes('column') && props.sampleDataDenied">
           <i class="mu-icon-svg apply"></i>
           <span>권한 요청</span>
         </button>
@@ -103,23 +105,24 @@ const props = defineProps([
   "sampleDataDenied"
 ]);
 
-const entityCategories = computed(() =>
-  ObjectUtils.getPropertyValue(props.entity, "entity/classifications", "")
+const entityCategories = computed(() =>{
+    return ObjectUtils.getPropertyValue(props.entity, "classifications", "")
+  }
 );
 const entityName = computed(() =>
-  ObjectUtils.getPropertyValue(props.entity, "entity/attributes/name", "")
+  ObjectUtils.getPropertyValue(props.entity, "name", "")
 );
-const entityComment = computed(() =>
-  ObjectUtils.getPropertyValue(props.entity, "entity/attributes/comment", "")
+const entityDescription = computed(() =>
+  ObjectUtils.getPropertyValue(props.entity, "description", "") ? ObjectUtils.getPropertyValue(props.entity, "description", "") : ObjectUtils.getPropertyValue(props.entity, "attributes/description", "")
 );
 const entityUserDescription = computed(() =>
-  ObjectUtils.getPropertyValue(props.entity, "entity/attributes/userDescription", "")
+  ObjectUtils.getPropertyValue(props.entity, "userdescription", "")
 );
 const entityTags = computed(() =>
-  ObjectUtils.getPropertyValue(props.entity, "entity/labels", ""))
-
+  ObjectUtils.getPropertyValue(props.entity, "tags", "")
+)
 const showCategoryMapButton = computed(
-  () => props.isAdmin && props.typeName.endsWith("_table")
+  () => props.isAdmin && props.typeName.value?.endsWith("table")
 );
 
 const isFavoriteData = computed(() =>
@@ -152,7 +155,7 @@ const onClickDeleteMapping = async (item) => {
     let isTableType = false;
 
     // 해당 엔티티가 테이블 유형일 경우 하위 컬럼에 대해서도 맵핑 삭제하도록 flag 전달
-    if (props.typeName.endsWith("_table")) {
+    if (props.typeName.endsWith("table")) {
       isTableType = true;
     }
 
@@ -168,16 +171,6 @@ const onClickDeleteMapping = async (item) => {
         emit("reload");
       }
     });
-  }
-};
-
-// 한글명 가져오기
-const getKrName = (key) => {
-  if (key) {
-    return categoryStore.getClassificationNameKr(key);
-  } else {
-    // 카테고리 미분류
-    return "";
   }
 };
 

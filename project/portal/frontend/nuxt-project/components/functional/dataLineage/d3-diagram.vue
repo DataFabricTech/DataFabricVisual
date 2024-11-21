@@ -62,7 +62,6 @@ watch(
 onMounted(() => {
   // 데이터 흐름 수정 모달 내에서 데이터 수정 후 화면에 반영되도록 event bus에 함수 등록
   eventStore.on('onChangeLineage', redraw);
-
   initDiagram();
   draw();
 });
@@ -260,7 +259,7 @@ const makeInitData = (responseData, startNodeId) => {
     links: [], // [["id1", "u1"], ["id2", "u3"]
   };
 
-  let appendGuid = ""; // 툴팁 렌더용 데이터 조회 시 사용할 파라미터 가공
+  let guidList = []
 
   nodeList.forEach((element) => {
     const { node_id, childcnt, parentcnt, node_type } = element;
@@ -271,7 +270,7 @@ const makeInitData = (responseData, startNodeId) => {
 
     // 툴팁 렌더 대상일 경우 조회 파라미터 추가
     if (!node_type == 1) {
-      appendGuid += `&guid=${node_id}`;
+      guidList.push(node_id)
     }
 
     element.children = linkList
@@ -301,29 +300,23 @@ const makeInitData = (responseData, startNodeId) => {
     }
   });
 
-  if (appendGuid) {
+  if (guidList.length > 0) {
     // 툴팁 렌더용 데이터 조회
-    getEntitiesForTooltip(appendGuid);
+    getMetaDatasForTooltip(guidList);
   }
 
   return initData;
 };
 
-// 툴팁 렌더용 데이터 조회
-const getEntitiesForTooltip = (guids) => {
-  const param = {
-    url: `/entity/bulk?ignoreRelationships=true&minExtInfo=false${guids}`,
-    params: {},
-  };
-
-  $ofetch("/api/search/getApiSearch", {
-    method: "POST",
-    body: param,
-  }).then((res) => {
-    const nodeInfo = ObjectUtils.getPropertyValue(res.data, "entities", []);
-    nodeInfoList.value.push(...nodeInfo);
-  });
-};
+// 툴팁 랜더용 데이터 조회
+const getMetaDatasForTooltip = async (guidList) => {
+  const response = await $ofetch('/api/node/getMetaDataForTooltip', {
+    method: 'POST',
+    body: guidList
+  })
+  const nodeInfo = ObjectUtils.getPropertyValue(response, "data", [])
+  nodeInfoList.value.push(...nodeInfo)
+}
 
 // 노드 id에 대한 node_info 존재 여부
 const hasNode = (nodeMap, node_id) => {
@@ -388,7 +381,7 @@ const expandClick = async (event, node) => {
   });
 
   if (notCircle) {
-    let appendGuid = ""; // 툴팁 렌더용 데이터 조회 시 사용할 파라미터 가공
+    let guidList = []; // 툴팁 렌더용 데이터 조회 시 사용할 파라미터 가공
     nodeList.forEach((element) => {
       const { node_id, childcnt, parentcnt, node_type, children = [] } = element;
 
@@ -398,7 +391,7 @@ const expandClick = async (event, node) => {
 
       // 툴팁 렌더 대상일 경우 조회 파라미터 추가
       if (!node_type == 1) {
-        appendGuid += `&guid=${node_id}`;
+        guidList.push(node_id)
       }
 
       //데이터 생성
@@ -442,9 +435,9 @@ const expandClick = async (event, node) => {
       }
     });
 
-    if (appendGuid) {
+    if (guidList.length > 0) {
       // 툴팁 렌더용 데이터 조회
-      getEntitiesForTooltip(appendGuid);
+      getMetaDatasForTooltip(guidList);
     }
     node.data.direction = "";
     drawInitData();
@@ -735,7 +728,7 @@ const update = (source) => {
 const showTooltip = (e, node) => {
   const { id } = node;
 
-  const matched = nodeInfoList.value.find((el) => el.guid === id);
+  const matched = nodeInfoList.value.find((el) => el.id === id);
   if (matched) {
     matched.display = "block";
     matched.e = e;

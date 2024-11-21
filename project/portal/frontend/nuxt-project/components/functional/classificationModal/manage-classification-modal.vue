@@ -4,12 +4,12 @@
 
     <div :class="['mu-dialog', props.manageModal.type === 'map' ? 'w600' : 'w720']">
       <div class="mu-dialog-head">
-        <p class="title">구분 {{ modalTypeText }}</p>
+        <p class="title">카테고리 {{ modalTypeText }}</p>
       </div>
       <div class="mu-dialog-body">
         <table class="mu-formbox">
           <caption>
-            구분
+            카테고리
             {{
               modalTypeText
             }}
@@ -23,23 +23,9 @@
           <!-- 카테고리 맵핑 -->
           <tbody v-if="props.manageModal.type === 'map'">
             <tr>
-              <th scope="row">카테고리</th>
+              <th scope="row">카테고리명(한글)</th>
               <td>
-                <auto-select
-                  :placeholder="placeholder"
-                  :options="lowerCategories"
-                  @setData="onChangeMappingCategory"
-                />
-              </td>
-            </tr>
-            <tr>
-              <th scope="row">시스템</th>
-              <td>
-                <auto-select
-                  :placeholder="placeholder"
-                  :options="lowerSystems"
-                  @setData="onChangeMappingSystem"
-                />
+                <auto-select :placeholder="placeholder" :options="upperCategories" @setData="onChangeMappingCategory" />
               </td>
             </tr>
           </tbody>
@@ -47,8 +33,91 @@
 
           <!-- 카테고리 추가/수정 -->
           <tbody v-else>
+            <tr>
+              <th scope="row">카테고리명(한글)<strong class="required">필수</strong></th>
+              <td>
+                <input
+                  type="text"
+                  placeholder="카테고리명(한글)을 입력하세요. (최대 20자)"
+                  class="mu-input"
+                  title="카테고리명(한글) 입력"
+                  name="krName"
+                  maxlength="20"
+                  v-model="krName"
+                />
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">카테고리명(영문)<strong class="required">필수</strong></th>
+              <td style="display: flex">
+                <input
+                  type="text"
+                  placeholder="카테고리명(영문)을 입력하세요. (최대 20자)"
+                  class="mu-input"
+                  title="카테고리명(영문) 입력"
+                  name="enName"
+                  maxlength="20"
+                  :disabled="props.manageModal.type === 'update' || upperCategory.value !== ''"
+                  v-model="enName"
+                  @input="onInput"
+                />
+                <input
+                  type="text"
+                  placeholder="카테고리명(영문)을 입력하세요. (최대 20자)"
+                  class="mu-input"
+                  title="카테고리명(영문) 입력"
+                  style="margin-left: 10px"
+                  v-if="props.manageModal.type !== 'update' && upperCategory.value !== ''"
+                  name="enName2"
+                  maxlength="20"
+                  :disabled="props.manageModal.type === 'update'"
+                  v-model="enName2"
+                  @input="onInput2"
+                />
+              </td>
+            </tr>
+            <tr v-if="upperCategory.value === ''">
+              <th scope="row">카테고리 이미지<strong class="required">필수</strong></th>
+              <td>
+                <div class="mu-item-group">
+                  <img
+                    :src="categoryImageFile"
+                    style="width: 70px; height: 70px; background-size: cover"
+                    :class="['ico-category', 'category-11']"
+                  />
+                  <input
+                    id="categoryImageFileInput"
+                    type="file"
+                    name="categoryImage"
+                    @change="fileUpload"
+                    v-show="false"
+                  />
+                  <label for="categoryImageFileInput" class="mu-btn" v-if="!categoryImageFile">이미지업로드</label>
+                  <label for="categoryImageFileInput" class="mu-btn" v-if="categoryImageFile">이미지수정</label>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">데이터 문의처</th>
+              <td>
+                <div class="mu-item-group">
+                  <span class="label w130">담당부서</span>
+                  <input
+                    type="text"
+                    placeholder="담당부서를 선택하세요."
+                    class="mu-input"
+                    title="담당부서"
+                    :value="deptInfo"
+                    readonly
+                  />
+                  <button type="button" class="mu-btn" @click="onToggleDeptModal">
+                    <span>찾아보기</span>
+                  </button>
+                </div>
+              </td>
+            </tr>
             <tr v-if="props.manageModal.type !== 'update'">
-              <th scope="row">구분<strong class="required">필수</strong></th>
+              <th scope="row">상위카테고리</th>
               <td>
                 <!-- 카테고리 수정 모달일 경우 안보이게 처리 -->
                 <auto-select
@@ -60,50 +129,6 @@
                 />
               </td>
             </tr>
-            <tr>
-              <th scope="row">이름(한글)<strong class="required">필수</strong></th>
-              <td>
-                <input
-                  type="text"
-                  placeholder="이름(한글)을 입력하세요. (최대 20자)"
-                  class="mu-input"
-                  title="이름(한글) 입력"
-                  name="krName"
-                  maxlength="20"
-                  v-model="krName"
-                />
-              </td>
-            </tr>
-            <tr v-if="props.manageModal.type !== 'update'">
-              <th scope="row">코드(영문)<strong class="required">필수</strong></th>
-              <td style="display: flex">
-                <input
-                  type="text"
-                  placeholder="코드(영문)를 입력하세요. (최대 20자)"
-                  class="mu-input"
-                  title="코드(영문) 입력"
-                  name="enName"
-                  maxlength="20"
-                  v-if="false"
-                  :disabled="
-                    props.manageModal.type === 'update' || upperCategory.value !== ''
-                  "
-                  v-model="enName"
-                  @input="onInput"
-                />
-                <input
-                  type="text"
-                  placeholder="코드(영문)를 입력하세요. (최대 20자)"
-                  class="mu-input"
-                  title="코드(영문) 입력"                  
-                  name="enName2"
-                  maxlength="20"                  
-                  :disabled="props.manageModal.type === 'update'"
-                  v-model="enName2"
-                  @input="onInput2"
-                />
-              </td>
-            </tr>            
           </tbody>
         </table>
       </div>
@@ -131,16 +156,17 @@
       </div>
       <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
       <div class="mu-dialog-close-btn">
-        <button
-          type="button"
-          class="mu-btn mu-btn-close"
-          title="해당 팝업 닫기"
-          @click="onClose"
-        >
+        <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="onClose">
           <i class="mu-icon-svg close"></i><span>팝업닫기</span>
         </button>
       </div>
-    </div>    
+    </div>
+
+    <select-dept-modal
+      :toggle-dept-modal="toggleDeptModal"
+      @onSelect="onSelectDept"
+      @onCloseModal="onToggleDeptModal"
+    />
   </div>
 </template>
 
@@ -148,10 +174,12 @@
 import ObjectUtils from "@utils/ObjectUtils";
 
 import AutoSelect from "@functional/autoSelect/auto-select";
+import SelectDeptModal from "@organisms/metaDataManage/select-department-modal";
 import { errorAlert } from "@functional/alert/alert-default";
-import { useCategoryStore } from "~/store/category";
-import { useNuxtApp, useRoute, useRouter } from "nuxt/app";
-import { onMounted, onUnmounted, ref, computed } from 'vue';
+import { useCategoryStore } from "@store/category";
+import { useNuxtApp } from "nuxt/app";
+import { computed, ref } from "vue";
+import { isEmpties } from "@composables/ramda";
 
 const { $ofetch } = useNuxtApp();
 
@@ -161,36 +189,39 @@ const props = defineProps(["manageModal", "onCloseModal", "onSubmit"]);
 
 const krName = ref(""); // 카테고리명(한글. description)
 const originalKrName = ref(""); // 수정전 카테고리명(한글. description)
+const categoryImageFileId = ref(""); // 카테고리 이미지 파일 아이디
 
+const tempCategoryImageFileId = ref(""); // 수정 버튼 활성화용 카테고리 이미지 파일 아이디 temp
 const enName = ref(""); // 카테고리명(영문. name)
 const enName2 = ref(""); // 카테고리 추가시 입력가능한 영문명
 const upperCategory = ref({
   description: "",
   value: "",
-  level: "",
+  level: ""
 }); // 상위 카테고리
 const upperCategory2 = ref({
   description: "",
   value: "",
-  level: "",
+  level: ""
 }); // 2는 데이터 레이크 담당부서
 const originalUpperCategory = ref(""); // 수정전 상위 카테고리
+const selectedDept = ref({}); // 담당부서정보
+const originalDeptCd = ref(""); // 수정전 담당부서 코드
 const isEdited = ref(false); // 카테고리 수정 모달에서 항목 수정 여부 판별 flag
 const mappingCategory = ref({
   description: "",
   value: "",
+  id: ""
 }); // 매핑 카테고리, 카테고리 매핑 모달일 경우 사용
-const mappingCategory2 = ref({
-  description: "",
-  value: "",
-}); // 매핑 카테고리, 카테고리 매핑 모달일 경우 사용
+const categoryImageFile = ref("");
+const toggleDeptModal = ref(false);
 
 const modalTypeText = computed(() => {
   const TYPE_MAP = new Map([
     ["add", "추가"], // 카테고리 목록 상단 추가 버튼 클릭 시
     ["insert", "추가"], // 카테고리 관리 툴팁에서 '추가' 선택 시
     ["update", "수정"],
-    ["map", "맵핑"],
+    ["map", "맵핑"]
   ]);
 
   return TYPE_MAP.get(props.manageModal.type);
@@ -199,16 +230,12 @@ const modalTypeText = computed(() => {
 const placeholder = computed(() => {
   // auto-select 컴포넌트에 표시할 placeholder 텍스트 계산
   const { type = "" } = props.manageModal;
-  return type === "map" ? "맵핑할 분류를 선택하세요" : "분류를 선택하세요.";
+  return type === "map" ? "맵핑할 카테고리를 선택하세요" : "카테고리를 선택하세요.";
 });
 // auto-select 컴포넌트에 선택값으로 전달할 값 계산
 const selectValue = computed(() => {
   let name = ObjectUtils.getPropertyValue(props.manageModal, "target/name", "");
-  let description = ObjectUtils.getPropertyValue(
-    props.manageModal,
-    "target/description",
-    ""
-  );
+  let description = ObjectUtils.getPropertyValue(props.manageModal, "target/description", "");
   enName.value = name;
 
   if (props.manageModal.type === "update") {
@@ -217,9 +244,7 @@ const selectValue = computed(() => {
     if (matched) {
       const { superTypes = [] } = matched;
       if (superTypes.length > 0) {
-        const superItem = categoryStore.getOriginalList.find(
-          (el) => el.name === superTypes[0]
-        );
+        const superItem = categoryStore.getOriginalList.find((el) => el.name === superTypes[0]);
         if (superItem) {
           name = superItem.name;
           description = superItem.description;
@@ -233,47 +258,45 @@ const selectValue = computed(() => {
 
   return {
     description,
-    value: name,
+    value: name
   };
 });
 
 // 카테고리 Select 옵션 계산
 const upperCategories = computed(() => {
-  // 최상위 카테고리만 골라내기
-  let superList = categoryStore.getOriginalList
-                    .filter(el => el.name === 'CAT' || el.name === 'SYS')
-                    .sort((el1, el2) => el1.name.localeCompare(el2.name));
-  
-  return superList.map((el) => ({
+  return categoryStore.getOriginalList.map((el) => ({
     description: el.description,
     value: el.name,
-    name: el.name,
+    id: el.id
   }));
 });
 
-// 카테고리 하위 Select 옵션 계산
-const lowerCategories = computed(() => {
-  let lowerList = categoryStore.getOriginalList
-                    .filter(el => el.name.startsWith('CAT') && el.subTypes.length === 0)                    
-  
-  return lowerList.map((el) => ({
-    description: el.description,
-    value: el.name,
-    name: el.name.substring(3),
-  }));
+// 담당부서 정보
+const deptInfo = computed(() => {
+  let deptInfo = "";
+
+  const deptNm = ObjectUtils.getPropertyValue(selectedDept.value, "dept_nm", "");
+  const deptCd = ObjectUtils.getPropertyValue(selectedDept.value, "dept_cd", "");
+
+  if (deptNm) {
+    deptInfo = `${deptNm} (${deptCd})`;
+  }
+
+  return deptInfo;
 });
 
-// 시스템 하위 Select 옵션 계산
-const lowerSystems = computed(() => {
-  let lowerList = categoryStore.getOriginalList
-                    .filter(el => el.name.startsWith('SYS') && el.subTypes.length === 0)                    
-  
-  return lowerList.map((el) => ({
-    description: el.description,
-    value: el.name,
-    name: el.name.substring(3),
-  }));
-});
+// const deptInfo2 = computed(() => {
+//   let deptInfo = "";
+
+//   const deptNm = ObjectUtils.getPropertyValue(selectedDept2.value, "dept_nm", "");
+//   const deptCd = ObjectUtils.getPropertyValue(selectedDept2.value, "dept_cd", "");
+
+//   if (deptNm) {
+//     deptInfo = `${deptNm} (${deptCd})`;
+//   }
+
+//   return deptInfo;
+// });
 
 // 확인/수정 버튼 비활성화 여부 계산
 const isDisabled = computed(() => {
@@ -281,7 +304,7 @@ const isDisabled = computed(() => {
 
   switch (props.manageModal.type) {
     case "map": // 카테고리 매핑 모달일 경우
-      if( (mappingCategory.value.value && mappingCategory.value.description) || (mappingCategory2.value.value && mappingCategory2.value.description) ){
+      if (mappingCategory.value.id && mappingCategory.value.value && mappingCategory.value.description) {
         // 맵핑할 카테고리를 선택한 경우에만 활성화
         isDisabled = false;
       }
@@ -291,20 +314,21 @@ const isDisabled = computed(() => {
       const { description, value } = upperCategory.value;
       if (value) {
         if (
-          // 카테고리명(한글명 & 영문명 & 상위 카테고리) 필수입력값
+          // 카테고리명(한글명 & 영문명) 필수입력값
           krName.value &&
           enName.value &&
           enName2.value && // 상위 카테고리는 필수값이 아니지만 유효한 값 입력 시에만 확인 버튼 활성화
-          (value && description)          
+          ((value && description) || (!value && !description))
         ) {
           isDisabled = false;
         }
       } else {
         if (
-          // 카테고리명(한글명 & 영문명 & 상위 카테고리) 필수입력값
+          // 카테고리명(한글명 & 영문명) 필수입력값
           krName.value &&
-          enName.value &&          
-          (value && description)
+          enName.value &&
+          categoryImageFile.value && // 상위 카테고리는 필수값이 아니지만 유효한 값 입력 시에만 확인 버튼 활성화
+          ((value && description) || (!value && !description))
         ) {
           isDisabled = false;
         }
@@ -329,62 +353,83 @@ watch(
       const target = ObjectUtils.getPropertyValue(newVal, "target", null);
       if (newVal.type === "update") {
         // 카테고리 수정 시
-        const description = ObjectUtils.getPropertyValue(
-          newVal,
-          "target/description",
-          ""
-        );
+        const description = ObjectUtils.getPropertyValue(newVal, "target/description", "");
         const name = ObjectUtils.getPropertyValue(newVal, "target/name", "");
-        
+        const localCategoryImageFileId = ObjectUtils.getPropertyValue(newVal, "target/file_id", "");
+
         krName.value = description;
         originalKrName.value = description;
-        enName.value = name;        
+        enName.value = name;
+        categoryImageFileId.value = localCategoryImageFileId;
+        tempCategoryImageFileId.value = localCategoryImageFileId;
+        if (location.hostname === "localhost" && localCategoryImageFileId !== "") {
+          categoryImageFile.value = "http://localhost:28080/api/ckeditor/attachFile/" + localCategoryImageFileId;
+        } else {
+          categoryImageFile.value = "/api/ckeditor/attachFile/" + localCategoryImageFileId;
+        }
 
         // 수정일 경우 옵션 목록 내에서 현재 카테고리의 상위 카테고리를 선택값으로 처리
-        const matched = categoryStore.getOriginalList.find(
-          (el) => el.name === target.name
-        );
+        const matched = categoryStore._categoryMap[target.id];
         if (matched && matched.superTypes.length > 0) {
           originalUpperCategory.value = matched.superTypes[0];
 
-          const superItem = categoryStore.getOriginalList.find(
-            (el) => el.name === matched.superTypes[0]
-          );
-          $ofetch(`/api/metadata/classification/depth?name=${superItem.name}`).then(
-            (res) => {
-              if (superItem) {
-                upperCategory.value = {
-                  description: superItem.description,
-                  value: superItem.name,
-                  level: parseInt(res),
-                };
-              }
-            }
-          );
-        }
-        
-      } else if (newVal.type === "insert") {
-        // 카테고리 추가 시 상위 카테고리 옵션 목록 중 현재 카테고리를 선택값으로 처리. 카테고리 목록 상단 추가 버튼 클릭 시에는 값 세팅하지 않음
-        originalUpperCategory.value = target.name;
-
-        const superItem = categoryStore.getOriginalList.find(
-          (el) => el.name === target.name
-        );
-        $ofetch(`/api/metadata/classification/depth?name=${superItem.name}`).then(
-          (res) => {
+          const superItem = categoryStore._categoryMap[matched.superTypes[0]];
+          $ofetch(`/api/metadata/classification/depth?name=${superItem.name}`).then((res) => {
             if (superItem) {
               upperCategory.value = {
                 description: superItem.description,
                 value: superItem.name,
-                level: parseInt(res),
+                level: parseInt(res)
               };
             }
+          });
+        }
+
+        // 기존 담당부서 정보 있을 경우 담당부서 정보 세팅
+        const dept = ObjectUtils.getPropertyValue(newVal, "target/dept", null);
+        if (dept) {
+          selectedDept.value = dept;
+        }
+        // if (dept.dept_cd2) {
+        //   selectedDept2.value.dept_cd = dept.dept_cd2;
+        //   selectedDept2.value.dept_nm = dept.dept_nm2;
+        // }
+      } else if (newVal.type === "insert") {
+        // 카테고리 추가 시 상위 카테고리 옵션 목록 중 현재 카테고리를 선택값으로 처리. 카테고리 목록 상단 추가 버튼 클릭 시에는 값 세팅하지 않음
+        originalUpperCategory.value = target.name;
+
+        const superItem = categoryStore.getOriginalList.find((el) => el.name === target.name);
+        $ofetch(`/api/metadata/classification/depth?name=${superItem.name}`).then((res) => {
+          if (superItem) {
+            upperCategory.value = {
+              description: superItem.description,
+              value: superItem.name,
+              level: parseInt(res)
+            };
           }
-        );
+        });
       }
     }
   }
 );
+
+// 부서 변경 시
+watch(
+  () => selectedDept.value,
+  (newVal, oldVal) => {
+    // 카테고리 수정 모달일 경우에만 변경 여부 비교 계산
+    if (props.manageModal.type === "update") {
+      let tempIsEdited = false;
+
+      if (newVal !== originalDeptCd.value) {
+        tempIsEdited = true;
+      }
+
+      isEdited.value = tempIsEdited;
+    }
+  }
+);
+
 
 // 카테고리 한글명 변경 시
 watch(
@@ -405,17 +450,25 @@ watch(
   }
 );
 
+// 카테고리 이미지 변경 시
+watch(
+  () => categoryImageFileId.value,
+  (newVal, oldVal) => {
+    isEdited.value = newVal !== tempCategoryImageFileId.value;
+  }
+);
+
 // 카테고리명(영문) 입력 이벤트 핸들러
 const onInput = (e) => {
   const {
-    target: { value },
+    target: { value }
   } = e;
   enName.value = value.replaceAll(/[^a-zA-Z0-9]/gi, "").toUpperCase();
 };
 
 const onInput2 = (e) => {
   const {
-    target: { value },
+    target: { value }
   } = e;
   enName2.value = value.replaceAll(/[^a-zA-Z0-9]/gi, "").toUpperCase();
 };
@@ -437,146 +490,48 @@ const onChangeMappingCategory = (option) => {
   mappingCategory.value = option;
 };
 
-//매핑 시스템 변경 이벤트 핸들러
-const onChangeMappingSystem = (option) => {
-  mappingCategory2.value = option;
-};
-
-
 // 상위 카테고리 변경 이벤트 핸들러
 const onChangeUpperCategory = (option) => {
   enName.value = option.value;
   upperCategory.value = option;
 };
 
-// 카테고리 추가/수정 시 필요한 파라미터 가공
-const createParams = async () => {
-  let params = {};
-  let level = 1; // <table> 테이블 내 저장할 메뉴 depth
-  let superTypeName = ""; // 상위 카테고리명
-  if (upperCategory.value.value) {
-    // 상위 카테고리 선택한 경우
-    const superType = categoryStore.getOriginalList.find(
-      (el) => el.name === upperCategory.value.value
-    );
-
-    // 상위 카테고리 변경 시
-    let tempIsEdited = false;
-
-    await $ofetch(`/api/metadata/classification/depth?name=${superType.name}`, { method: 'GET' })
-      .then((res) => {
-        upperCategory2.value = {
-          description: superType.description,
-          value: superType.name,
-          level: res,
-        };
-      });
-    isEdited.value = tempIsEdited;
-
-    if (superType) {
-      level = parseInt(upperCategory2.value.level) + 1;
-      superTypeName = superType.name;
-    }
-  }
-  // Atlas API 호출 시 사용 파라미터
-  const forAtlas = {
-    name: enName.value,
-    description: krName.value,
-    superTypes: superTypeName ? [superTypeName] : [],
-  };
-
-  if (props.manageModal.type === "update") {
-    // 카테고리 수정일 경우
-    params = {
-      forAtlas: {
-        classificationDefs: [forAtlas],
-      },
-    };
-  } else {
-    // 카테고리 추가일 경우
-    params = {
-      forAtlas: {
-        classificationDefs: [
-          {
-            ...forAtlas,
-            attributeDefs: [],
-          },
-        ],
-        entityDefs: [],
-        enumDefs: [],
-        structDefs: [],
-      },
-    };
-  }
-
-  // <table> 테이블 내 저장 시 사용 파라미터
-  const forRDB = {
-    level: `${level}`,
-    name: enName.value,
-    description: krName.value,
-    superTypeName: `${superTypeName}`,    
-  };
-  
-  params.forRDB = forRDB;
-
-  params.name = superTypeName;
-
-  return params;
-};
-
 // 카테고리 매핑 시 필요한 파라미터 가공
 const createMappingParams = () => {
-  let guids = []; // 선택한 카테고리를 맵핑할 엔티티의 guid 목록
-  let superTypeSet = new Set(); // 맵핑 카테고리의 상위 타입 목록. 중복값 처리 막기 위해 Set으로 선언
-  const superTypes = [];
-  const tableTypes = []; // _table 유형 엔티티일 경우 하위 컬럼도 맵핑 대상에 추가
-  const tempTargets = []; // 테이블 타입 엔티티 guid 추출용 임시 변수
+  const categoryMap = categoryStore._categoryMap
+
+  let entityIds = []; // 선택한 카테고리를 맵핑할 엔티티의 id 목록
+  let superTypes = []; // 맵핑 카테고리의 상위 타입 목록
+  const tableTypes = []; // table 유형 엔티티일 경우 하위 컬럼도 맵핑 대상에 추가
+  const tempTargets = []; // 테이블 타입 엔티티 id 추출용 임시 변수
 
   if (Array.isArray(props.manageModal.target)) {
     // 테이블에서 체크박스로 데이터 선택하여 모달 진입한 경우
-    guids = props.manageModal.target.map((el) => el.guid);
+    entityIds = props.manageModal.target.map((el) => el.id);
     tempTargets.push(...props.manageModal.target);
   } else {
     // 테이블 내에서 카테고리 맵핑 버튼 클릭하여 모달 진입한 경우
-    guids = [props.manageModal.target.guid];
+    entityIds = [props.manageModal.target.id];
     tempTargets.push(props.manageModal.target);
   }
 
   tempTargets.forEach((el) => {
-    const { typeName, guid } = el;
-    if (typeName.endsWith("_table")) {
+    const { metatype, id } = el;
+    if (metatype.includes("table")) {
       // 엔티티 유형이 테이블일 경우 변수에 추가 저장
-      tableTypes.push(guid);
+      tableTypes.push(id);
     }
   });
 
-  // 상위 카테고리 탐색
-  const getSuperTypes = (guid) => {
-    if (guid) {
-      const curItem = categoryStore.getOriginalList.find((el) => el.guid === guid);
-      const targetSuperTypes = ObjectUtils.getPropertyValue(curItem, "superTypes", []);
-
-      if (targetSuperTypes.length > 0) {
-        const superTypeName = targetSuperTypes[0];
-        const superItem = categoryStore.getOriginalList.find(
-          (el) => el.name === superTypeName
-        );
-        if (superItem) {
-          superTypeSet.add(`${superTypeName}`);
-          getSuperTypes(superItem.guid);
-        }
-      }
-    }
-  };
-
   // 선택한 맵핑 카테고리의 상위 타입 목록 탐색
-  const mappingItem = categoryStore.getOriginalList.find(
-    (el) => el.name === mappingCategory.value.value
-  ); // 맵핑 카테고리
-  // 상위 카테고리 불필요
-  // getSuperTypes(mappingItem.guid);
-  
-  return { guids, superTypes, tableTypes };
+  const mappingItem = categoryMap[mappingCategory.value.id]; // 맵핑 카테고리
+  // 맵핑 카테고리의 상위 타입이 있을 경우 파라미터 추가 가공
+  if(!isEmpties(mappingItem.superTypes)) {
+    superTypes = mappingItem.superTypes;
+  }
+
+
+  return { entityIds, superTypes, tableTypes, entityTargets:  tempTargets};
 };
 
 // 확인 버튼 클릭 이벤트 핸들러
@@ -585,109 +540,73 @@ const onConfirm = async () => {
 
   if (props.manageModal.type === "map") {
     // 카테고리 맵핑 모달일 경우
-    if (mappingCategory.value.value || mappingCategory2.value.value) {
-      // 선택한 카테고리를 맵핑할 엔티티의 GUID 가공
-      const { guids, superTypes, tableTypes } = createMappingParams();
-
-      const entities = [];
-      
-      if (mappingCategory.value.value) {
-        let entity = {
-          classification: {
-            typeName: mappingCategory.value.value,
-            propagate: false,
-            removePropagationsOnEntityDelete: false,
-          },
-          entityGuids: guids,
-        }
-        entities.push(entity);
-      }
-
-      if (mappingCategory2.value.value) {
-        let entity = {
-          classification: {
-            typeName: mappingCategory2.value.value,
-            propagate: false,
-            removePropagationsOnEntityDelete: false,
-          },
-          entityGuids: guids,
-        }
-        entities.push(entity);
-      }
-      
+    if (mappingCategory.value.id) {
+      // 선택한 카테고리를 맵핑할 엔티티의 ID 가공
+      const { entityIds, superTypes, tableTypes, entityTargets } = createMappingParams();
 
       params = {
-        entities: entities,
-
+        // 선택된 카테고리의 맵핑용 파라미터
+        entityIds, // 선택된 entity id 목록
+        classificationId: mappingCategory.value.id, // 선택된 카테고리 아이디
         superTypes, // 상위 카테고리 맵핑용 파라미터
         tableTypes, // 테이블 유형 선택 시 하위 컬럼 맵핑용 파라미터
+        entityTargets // 선택된 entity object 목록
       };
     }
   } else {
     // 카테고리 추가 모달일 경우
-    params = {};
     let level = 1; // <table> 테이블 내 저장할 메뉴 depth
     let superTypeName = ""; // 상위 카테고리명
+    let superTypeId = ""; // 상위 카테고리 아이디
     const enNameConcat = enName.value.concat(enName2.value);
     if (upperCategory.value.value) {
       // 상위 카테고리 선택한 경우
-      const superType = categoryStore.getOriginalList.find(
-        (el) => el.name === upperCategory.value.value
-      );
+      const superType = categoryStore.getOriginalList.find((el) => el.name === upperCategory.value.value);
 
       // 상위 카테고리 변경 시
-      let localIsEdited = false;
-
-      isEdited.value = localIsEdited;
+      isEdited.value = false;
 
       if (superType) {
         level = 1;
         superTypeName = superType.name;
+        superTypeId = superType.id;
       }
     }
-    // Atlas API 호출 시 사용 파라미터
-    const forAtlas = {
-      name: enName2.value !== "" ? enNameConcat : enName.value,
-      description: krName.value,
-      superTypes: superTypeName ? [superTypeName] : [],
-    };
 
     // 카테고리 추가일 경우
     params = {
-      forAtlas: {
-        classificationDefs: [
-          {
-            ...forAtlas,
-            attributeDefs: [],
-          },
-        ],
-        entityDefs: [],
-        enumDefs: [],
-        structDefs: [],
-      },
-    };
-
-    // <table> 테이블 내 저장 시 사용 파라미터
-    const forRDB = {
       level: `${level}`,
       name: enName2.value !== "" ? enNameConcat : enName.value,
       description: krName.value,
-      superTypeName: `${superTypeName}`,
+      superTypeName: superTypeName,
+      superTypeId: isEmpties(superTypeId) ? null : superTypeId,
+      categoryImageFileId: categoryImageFileId.value !== "" ? categoryImageFileId.value : null
     };
 
-    params.forRDB = forRDB;
-
-    params.name = superTypeName;
+    if (selectedDept.value.dept_cd) {
+      params.deptCd = selectedDept.value.dept_cd;
+    }
   }
   emit("onSubmit", params);
-  onClose();
 };
 
 // 수정 버튼 클릭 이벤트 핸들러
 const onUpdate = async () => {
-  let params = await createParams();
+  // 카테고리 수정 시 필요한 파라미터 가공
+  const target: any = ObjectUtils.getPropertyValue(props.manageModal, "target", null);
+
+  let params = {
+    id: target.id,
+    level: target.level,
+    description: krName.value,
+    categoryImageFileId: categoryImageFileId.value !== "" ? categoryImageFileId.value : null
+  };
+
+  if (selectedDept.value.dept_cd) {
+    params.deptCd = selectedDept.value.dept_cd;
+  }
+
   emit("onSubmit", params);
-  onClose();
 };
 
 // 입력값 초기화 이벤트 핸들러
@@ -699,8 +618,66 @@ const onClear = () => {
   upperCategory.value = { description: "", value: "", level: "" };
   originalUpperCategory.value = "";
   upperCategory2.value = { description: "", value: "", level: "" };
+  selectedDept.value = {};
+  originalDeptCd.value = "";
+  // selectedDept2.value = {};
+  // originalDeptCd2.value = "";
   isEdited.value = false;
-  mappingCategory.value = { description: "", value: "" };
+  mappingCategory.value = { description: "", value: "", id: "" };
+  categoryImageFile.value = "";
 };
 
+// 담당부서 선택 모달 토글 제어
+const onToggleDeptModal = () => {
+  if (toggleDeptModal.value) {
+    toggleDeptModal.value = false;
+    // this.$modal.hide("dept-modal1");
+  } else {
+    toggleDeptModal.value = true;
+    // this.$modal.show("dept-modal1");
+  }
+};
+
+// 담당부서 선택 이벤트 핸들러
+const onSelectDept = (info) => {
+  selectedDept.value = info;
+};
+
+// const onSelectDept2 = (info) => {
+//   selectedDept2.value = info;
+// };
+
+// 카테고리 이미지 파일 업로드
+const fileUpload = (e) => {
+  if (!e.target.files[0]) {
+    return false;
+  }
+
+  let formData = new FormData();
+  let fileName = e.target.files[0].name.substring(e.target.files[0].name.lastIndexOf(".") + 1);
+  let reg = /jpg|jpeg|png/i;
+
+  if (!reg.test(fileName)) {
+    errorAlert("JPG, JPEG, PNG 파일만 업로드 할 수 있습니다.");
+    return false;
+  }
+
+  formData.append("files", e.target.files[0]);
+  $ofetch("/api/service/file/fileUpload.do", {
+    method: "POST",
+    body: formData
+  }).then((res) => {
+    if (location.hostname === "localhost") {
+      categoryImageFileId.value = res.data[0].file_id;
+      categoryImageFile.value = "http://localhost:28080/api/ckeditor/attachFile/" + res.data[0].file_id;
+    } else {
+      categoryImageFileId.value = res.data[0].file_id;
+      categoryImageFile.value = "/api/ckeditor/attachFile/" + res.data[0].file_id;
+    }
+  });
+};
+
+defineExpose({
+  onClose
+})
 </script>

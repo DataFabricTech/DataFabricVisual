@@ -49,7 +49,10 @@ export default defineNuxtConfig({
     "@organisms": fileURLToPath(new URL("./components/organisms", import.meta.url)),
     "@molecules": fileURLToPath(new URL("./components/molecules", import.meta.url)),
     "@atoms": fileURLToPath(new URL("./components/atoms", import.meta.url)),
-    "@utils": fileURLToPath(new URL("./utils", import.meta.url))
+    "@store": fileURLToPath(new URL("./store", import.meta.url)),
+    "@assets": fileURLToPath(new URL("./assets", import.meta.url)),
+    "@utils": fileURLToPath(new URL("./utils", import.meta.url)),
+    "@composables": fileURLToPath(new URL("./composables", import.meta.url)),
   },
 
   components: true,
@@ -95,6 +98,18 @@ export default defineNuxtConfig({
   },
 
   vite: {
+    server: {
+      proxy: {
+        "/api": {
+          target: `${process.env.API_URL}`,
+          changeOrigin: true
+        },
+        "/v1/essync": {
+          target: `${process.env.SYNC_API_URL}`,
+          changeOrigin: true
+        }
+      }
+    },
     optimizeDeps: {
       include: ['vue', 'vuex', 'vue-router'],
       exclude: ['@vue/server-renderer']
@@ -145,7 +160,9 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      baseURL: process.env.NUXT_PUBLIC_API_BASE === "development" ? "http://localhost:28080/" : "/"
+      baseURL: process.env.NUXT_PUBLIC_API_BASE === "development" ? "http://localhost:28080/" : "/",
+      API_URL: `${process.env.API_PREFIX}`,
+      SYNC_API_URL: `${process.env.SYNC_API_VERSION}${process.env.SYNC_API_PREFIX}`
     }
   },
 

@@ -2,7 +2,6 @@ package com.mobigen.datalake.system.manage;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import com.mobigen.datalake.atlas.AtlasRestAPI;
 import com.mobigen.framework.result.JsonResult;
 import com.mobigen.framework.security.SessionManager;
 import com.mobigen.framework.utility.AtlasErrorMap;

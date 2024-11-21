@@ -48,7 +48,7 @@ public class MetaDataClassificationController {
     }
 
     /**
-     * 메타 데이터 관리 > 하위 카테고리 추가
+     * 메타 데이터 관리 > 카테고리 추가
      *
      * @params Map          처리 대상 데이터 Map
      * @return Object       처리 성공 데이터 수
@@ -56,19 +56,6 @@ public class MetaDataClassificationController {
     @ResponseJsonResult
     @PostMapping("/insert")
     public Object insertClassification(@RequestBody Map<String, Object> params) throws Exception {
-        String level =(String) metaDataClassificationService.getClassificationDepth((String)params.get("name"));
-
-        // 루트 카테고리의 경우
-        if (level == null) {
-            level = "1";
-        } else {
-            int levelInt =  Integer.parseInt(level) + 1;
-            level = Integer.toString(levelInt);
-        }
-
-        Map<String, Object> forRDB = (Map<String, Object>) params.get("forRDB");
-        forRDB.put("level", level);
-        
         return metaDataClassificationService.insertClassification(params);
     }
 
@@ -87,13 +74,13 @@ public class MetaDataClassificationController {
     /**
      * 메타 데이터 관리 > 카테고리 삭제
      *
-     * @param  name         카테고리명
+     * @param  id         카테고리 아이디
      * @return Map          API 호출 결과 반환
      */
     @ResponseJsonResult
-    @PostMapping("/{name}")
-    public Object deleteClassification(@PathVariable("name") String name) throws Exception {
-        return metaDataClassificationService.deleteClassification(name);
+    @PostMapping("/{id}")
+    public Object deleteClassification(@PathVariable("id") String id) throws Exception {
+        return metaDataClassificationService.deleteClassification(id);
     }
 
     /**
@@ -111,15 +98,15 @@ public class MetaDataClassificationController {
     /**
      * 메타 데이터 관리 > 카테고리 맵핑 제거
      *
-     * @param name          삭제할 classification 이름
-     * @param params        카테고리 맵핑 제거 대상 엔티티의 guid, 테이블 타입 여부 flag
+     * @param id          삭제할 classification 아이디
+     * @param params        카테고리 맵핑 제거 대상 엔티티의 id, 테이블 타입 여부 flag
      * @return Object       처리 성공 데이터 수
      */
     @ResponseJsonResult
-    @PutMapping("/map/{name}")
-    public Object deleteMapClassification(@PathVariable("name") String name,
+    @PutMapping("/map/{id}")
+    public Object deleteMapClassification(@PathVariable("id") String id,
                                           @RequestBody Map<String, Object> params) throws Exception {
-        return metaDataClassificationService.deleteMapClassification(name, params);
+        return metaDataClassificationService.deleteMapClassification(id, params);
     }
 
     /**
@@ -143,4 +130,17 @@ public class MetaDataClassificationController {
     public Object updateClassificationOrdNo(@RequestBody List<Map<String, Object>> params) throws Exception {
         return metaDataClassificationService.updateClassificationOrdNo(params);
     }
+
+    /**
+     * 메타 데이터 관리 > 카테고리 중복 여부 조회
+     *
+     * @param  name         카테고리명
+     * @return Object       카테고리 중복 여부 반환
+     */
+    @ResponseJsonResult
+    @GetMapping("/check/{name}")
+    public Object checkDuplicateClassificationName(@PathVariable("name") String name) throws Exception {
+        return metaDataClassificationService.checkDuplicateClassificationName(name);
+    }
+
 }

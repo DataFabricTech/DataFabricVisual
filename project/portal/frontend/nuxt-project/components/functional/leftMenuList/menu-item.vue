@@ -4,18 +4,15 @@
       v-for="(item, index) in props.list"
       :key="index"
       :class="getTagStyle('li', item)"
+      style="min-width: 186px; width: max-content"
     >
       <div>{{ item.checked }}</div>
 
-      <button
-        type="button"
-        :class="getTagStyle('button', item)"
-        @click="onToggle(item.name)"
-      >
+      <button type="button" :class="getTagStyle('button', item)" @click="onToggle(item.id)">
         <span>펼치기</span>
       </button>
       <a
-        v-if="item.guid === '_NOT_CLASSIFIED'"
+        v-if="item.id === '_NOT_CLASSIFIED'"
         href="javascript:void(0);"
         :class="getTagStyle('a', item)"
         style="overflow: visible"
@@ -30,20 +27,19 @@
         :class="getTagStyle('a', item)"
         style="overflow: visible; max-width: max-content"
         :title="item.description"
-        :id="item.guid"
+        :id="item.id"
         @click="() => onClick(item)"
       >
-      <!-- {{ item.description }}&nbsp;&nbsp;[{{ item.tableCount }}] -->
-      {{ item.description }}&nbsp;&nbsp;{{ item.depth != 1 ? '[' + item.tableCount + ']' : '' }}
+        {{ item.description }}&nbsp;&nbsp;[{{ item.tableCount }}]
       </a>
       <!-- 메타 데이터 통합 관리 페이지에서 호출 시에만 추가 버튼 세팅 -->
       <button
         style="width: max-content"
-        v-if="calledFrom === 'metaDataManage' && item.guid !== '_NOT_CLASSIFIED' && checkShowSetupButton(item)"
-        v-show="selectedGuid === item.guid"
+        v-if="calledFrom === 'metaDataManage' && item.id !== '_NOT_CLASSIFIED'"
+        v-show="selectedId === item.id"
         type="button"
         class="item-set"
-        :id="`setup_${item.guid}`"
+        :id="`setup_${item.id}`"
         @click.stop="(e) => onToggleTooltip(e, item, 'setup')"
       >
         <span>설정</span>
@@ -53,7 +49,7 @@
         v-if="item.subTypes"
         :list="item.subTypes"
         :toggle-targets="toggleTargets"
-        :selected-guid="selectedGuid"
+        :selected-id="selectedId"
         @onToggleNode="onToggle"
         @onClickMenuItem="onClick"
         @onClickSetup="onToggleTooltip"
@@ -64,35 +60,35 @@
 
 <script setup lang="ts">
 import { useCategoryStore } from "~/store/category.ts";
-import { useEventStore  } from "~/store/event.ts";
+import { useEventStore } from "~/store/event.ts";
 
-const emit = defineEmits(["onToggleNode", "onClickMenuItem", "onToggleMetaDataTooltip"])
+const emit = defineEmits(["onToggleNode", "onClickMenuItem", "onToggleMetaDataTooltip"]);
 const props = defineProps({
   list: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   toggleTargets: {
     type: Object,
-    default: () => {},
+    default: () => {}
   },
-  selectedGuid: {
+  selectedId: {
     type: String,
-    default: () => "",
+    default: () => ""
   },
   // 하위 메뉴 토글 이벤트 핸들러
   onToggleNode: {
-    type: Function,
+    type: Function
   },
   // 카테고리 메뉴 클릭 이벤트 핸들러
   onClickMenuItem: {
-    type: Function,
+    type: Function
   },
   // 카테고리 설정 버튼 클릭 이벤트 핸들러`
   onClickSetup: {
-    type: Function,
-  },
-})
+    type: Function
+  }
+});
 
 const categoryStore = useCategoryStore();
 const eventStore = useEventStore();
@@ -102,22 +98,18 @@ const selectedData = ref([]);
 
 // computed
 const calledFrom = categoryStore.getCalledFrom; // 카테고리 목록 컴포넌트 호출 페이지
-const getSelectedItemGuid = categoryStore.getSelectedItemGuid; // 선택된 메뉴 guid
+const getSelectedItemId = categoryStore.getSelectedItemId; // 선택된 메뉴 id
 
 // 하위 메뉴 토글 버튼 클릭 이벤트 핸들러
 const onToggle = (menuName) => {
   emit("onToggleNode", menuName);
-}
+};
 
 // 카테고리 메뉴 클릭 이벤트 핸들러
 const onClick = (item) => {
-  categoryStore.setSelectedItemGuid(item && item.guid ? item.guid : "");
-  if (item.name != 'SYS' && item.name != 'CAT') {
-    emit("onClickMenuItem", item);
-  } else {
-    categoryStore.setToggleTargetOnClick(item.name);
-  }
-}
+  categoryStore.setSelectedItemId(item && item.id ? item.id : "");
+  emit("onClickMenuItem", item);
+};
 
 const onClickFromTreeMap = (item) => {
   const styles = [];
@@ -131,13 +123,13 @@ const onClickFromTreeMap = (item) => {
   styles.push("item-label");
   let adjustStyles = styles.join(" ");
   a.className = adjustStyles;
-}
+};
 // defineExpose({onClickFromTreeMap})
 
 // 카테고리 설정 툴팁 토글 핸들러
 const onToggleTooltip = (e, item, type) => {
-  eventStore.emit('onToggleMetaDataTooltip', e, item, type);
-}
+  eventStore.emit("onToggleMetaDataTooltip", e, item, type);
+};
 
 // 적용 클래스 계산
 const getTagStyle = (tagType, item) => {
@@ -149,26 +141,26 @@ const getTagStyle = (tagType, item) => {
         styles.push("has-sub");
       }
 
-      if (item && props.toggleTargets && props.toggleTargets[item.name]) {
+      if (item && props.toggleTargets && props.toggleTargets[item.id]) {
         styles.push("open");
       }
       break;
     case "button":
       styles.push("item-toggle");
 
-      if (item && props.toggleTargets && props.toggleTargets[item.name]) {
+      if (item && props.toggleTargets && props.toggleTargets[item.id]) {
         styles.push("on");
       }
       break;
     case "a":
-      if (item.guid == getSelectedItemGuid.value) {
+      if (item.id == getSelectedItemId.value) {
         styles.push("active");
       }
       styles.push("item-label");
 
       if (item) {
         // 카테고리 미분류일 경우에만 클래스 추가
-        if (item.guid === "_NOT_CLASSIFIED") {
+        if (item.id === "_NOT_CLASSIFIED") {
           styles.push("no-label");
         }
       }
@@ -176,26 +168,7 @@ const getTagStyle = (tagType, item) => {
   }
 
   return styles.join(" ");
-}
-
-const checkShowSetupButton = (item):boolean => {
-  if( item ){
-    //지정 카테고리만 설정 버튼 보이기
-
-    //상위 카테고리인지 체크
-    if(item.name !== 'CAT' && item.name !== 'SYS'){
-      return true;
-    }
-
-    //하위 카테고리인지 체크
-    if(item.superTypes.length > 0 && item.superTypes.some(type => type === 'CAT' || type === 'SYS')){
-      return true;
-    }
-  }
-
-  return false;
-}
-
+};
 </script>
 
 <style scoped="scoped">

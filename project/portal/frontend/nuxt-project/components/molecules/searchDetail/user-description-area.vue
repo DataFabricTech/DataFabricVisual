@@ -21,9 +21,9 @@
             <div class="comment-form">
               <textarea
                 class="mu-area"
-                placeholder="데이터 설명을 작성해주세요. 엔터키는 지원하지 않습니다. (최대500자)"
+                placeholder="데이터 설명을 작성해주세요. 엔터키는 지원하지 않습니다. (최대50자)"
                 title="데이터 설명 입력"
-                maxlength="500"
+                maxlength="50"
                 v-model="userDescription"
                 @keydown="preventNewline"
               />
@@ -37,7 +37,7 @@
             </div>
             <div class="comment-write-bottom">
               <div class="letter-count">
-                <strong>{{ userDescriptionTextCounts }}</strong> / 500자
+                <strong>{{ userDescriptionTextCounts }}</strong> / 50자
               </div>
             </div>
           </div>

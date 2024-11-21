@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mobigen.datalake.atlas.AtlasRestAPI;
 import com.mobigen.datalake.search.SearchDetailService;
 import com.mobigen.framework.result.JsonResult;
 
@@ -25,20 +24,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MainPageService {
     private final MainPageMapper mainPageMapper;
-    private final AtlasRestAPI atlasRestAPI;
-
-    @Value("${solr.isProd}")
-    private boolean isProd;
-
-    @Value("${solr.type-name}")
-    private String typeName;
-
-    @Value("${solr.qualified-name}")
-    private String qualifiedName;
-
-    @Value("${solr.status}")
-    private String status;
-
     @Value("${properties.isSumExternal}")
     private boolean isSumExternal;
 
@@ -147,126 +132,125 @@ public class MainPageService {
 
     // Atlas에서 조회수가 많은 데이터 (6건) 조회
     public Object getPopularData() throws Exception {
-
-        // 1. 조회수 높은 데이터 조회
-        List<Map<String, Object>> popularList = mainPageMapper.getPopularDataList();
+        // // 1. 조회수 높은 데이터 조회
+        // List<Map<String, Object>> popularList = mainPageMapper.getPopularDataList();
         
-        // 2. 해당 조회수 높은 데이터들을 이용하여 guid를 이용하여 Atlas API로 상세정보 검색
-        String URL = "/search/basic";
+        // // 2. 해당 조회수 높은 데이터들을 이용하여 guid를 이용하여 Atlas API로 상세정보 검색
+        // String URL = "/search/basic";
 
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("excludeDeletedEntities", true);
-        params.put("includeClassificationAttributes", true);
-        params.put("includeSubClassifications", true);
-        params.put("includeSubTypes", true);
+        // Map<String, Object> params = new HashMap<String, Object>();
+        // params.put("excludeDeletedEntities", true);
+        // params.put("includeClassificationAttributes", true);
+        // params.put("includeSubClassifications", true);
+        // params.put("includeSubTypes", true);
 
-        Map<String, Object> entityFilters = new HashMap<>();
+        // Map<String, Object> entityFilters = new HashMap<>();
 
-        List<Map<String, Object>> criterion = new ArrayList<>();
-        for (int i=0; i<popularList.size(); i++) {
-            Map<String, Object> criterionMap = new HashMap<>();
-            Map<String, Object> popularData = (Map<String, Object>) popularList.get(i);
-            criterionMap.put("attributeName", "__guid");
-            criterionMap.put("operator", "eq");
-            criterionMap.put("attributeValue", popularData.get("guid"));
-            criterion.add(criterionMap);
-        }
-        entityFilters.put("condition", "OR");
-        entityFilters.put("criterion", criterion);
+        // List<Map<String, Object>> criterion = new ArrayList<>();
+        // for (int i=0; i<popularList.size(); i++) {
+        //     Map<String, Object> criterionMap = new HashMap<>();
+        //     Map<String, Object> popularData = (Map<String, Object>) popularList.get(i);
+        //     criterionMap.put("attributeName", "__guid");
+        //     criterionMap.put("operator", "eq");
+        //     criterionMap.put("attributeValue", popularData.get("guid"));
+        //     criterion.add(criterionMap);
+        // }
+        // entityFilters.put("condition", "OR");
+        // entityFilters.put("criterion", criterion);
 
 
-        params.put("entityFilters", entityFilters);
+        // params.put("entityFilters", entityFilters);
         
-        params.put("attributes", Arrays.asList("__guid", "comment"));
-        // params.put("sortBy", "__timestamp");
-        // params.put("sortOrder", "DESCENDING");
-        params.put("limit", 50);
-        params.put("offset", 0);
-        params.put("typeName", "hive_table");
-        params.put("classification", null);
-        params.put("tagFilters", null);
-        params.put("termName", null);
+        // params.put("attributes", Arrays.asList("__guid", "comment"));
+        // // params.put("sortBy", "__timestamp");
+        // // params.put("sortOrder", "DESCENDING");
+        // params.put("limit", 50);
+        // params.put("offset", 0);
+        // params.put("typeName", "hive_table");
+        // params.put("classification", null);
+        // params.put("tagFilters", null);
+        // params.put("termName", null);
 
-        JsonResult result = atlasRestAPI.post(URL, params);
-        Map<String, Object> resultMap = (Map<String, Object>) result.getData();
-        if (resultMap != null) {
-            List<Map<String, Object>> entities = (List<Map<String, Object>>) resultMap.get("entities");
-            // 3. 조회수가 높은 순서로 정렬
-            // 조회 순서대로 받아온 guid 항목을 하나씩 탐색
-            int matchedCount = 0;
-            List<Map<String, Object>> sortedList = new ArrayList<>();
-            for (int i=0; i<popularList.size(); i++) {
-                if (entities != null) {
-                    for (int j=0; j<entities.size(); j++) {
-                        if (popularList.get(i).get("guid").toString().equals(entities.get(j).get("guid").toString())) {
-                            matchedCount++;
-                            sortedList.add(entities.get(j));
-                            if (matchedCount == 6) break;
-                        }
-                    }
-                }
-                if (matchedCount == 6) break;
-            }
+        // JsonResult result = atlasRestAPI.post(URL, params);
+        // Map<String, Object> resultMap = (Map<String, Object>) result.getData();
+        // if (resultMap != null) {
+        //     List<Map<String, Object>> entities = (List<Map<String, Object>>) resultMap.get("entities");
+        //     // 3. 조회수가 높은 순서로 정렬
+        //     // 조회 순서대로 받아온 guid 항목을 하나씩 탐색
+        //     int matchedCount = 0;
+        //     List<Map<String, Object>> sortedList = new ArrayList<>();
+        //     for (int i=0; i<popularList.size(); i++) {
+        //         if (entities != null) {
+        //             for (int j=0; j<entities.size(); j++) {
+        //                 if (popularList.get(i).get("guid").toString().equals(entities.get(j).get("guid").toString())) {
+        //                     matchedCount++;
+        //                     sortedList.add(entities.get(j));
+        //                     if (matchedCount == 6) break;
+        //                 }
+        //             }
+        //         }
+        //         if (matchedCount == 6) break;
+        //     }
 
-            // 4. 카테고리, 시스템 가공 후 반환
-            return processSysCatSort(sortedList);
-        }
+        //     // 4. 카테고리, 시스템 가공 후 반환
+        //     return processSysCatSort(sortedList);
+        // }
 
         return new ArrayList<>();
     }
 
     // Atlas에서 최신 등록 데이터 (6건) 조회
     public Object getLatestData() throws Exception {
-        String URL = "/search/basic";
+        // String URL = "/search/basic";
 
-        StringBuffer searchQuery = new StringBuffer();
-        searchQuery.append(typeName + ":" + "hive_table");
-        searchQuery.append(" AND ");
-        searchQuery.append(status + ":ACTIVE");
+        // StringBuffer searchQuery = new StringBuffer();
+        // searchQuery.append(typeName + ":" + "hive_table");
+        // searchQuery.append(" AND ");
+        // searchQuery.append(status + ":ACTIVE");
 
-        Map<String, Object> params = new HashMap<String, Object>() {{
-            put("excludeDeletedEntities", true);
-            put("includeSubClassifications", true);
-            put("excludeDeletedEntities", true);
-            put("includeSubClassifications", true);
-            put("includeSubTypes", true);
-            put("includeClassificationAttributes", true);
-            put(
-                "entityFilters",
-                new HashMap() {{
-                    put("condition", "AND");
-                    put(
-                        "criterion",
-                        Arrays.asList(
-                            new HashMap() {{
-                                put("attributeName", "__timestamp");
-                                put("operator", "timerange");
-                                put("attributeValue", "LAST_30_DAYS");
-                            }}
-                        )
-                    );
-                }}
-            );
-            put("attributes", Arrays.asList("comment", "name", "description"));
-            put("sortBy", "__timestamp");
-            put("sortOrder", "DESCENDING");
-            put("limit", 6);
-            put("offset", 0);
-            put("typeName", "hive_table");
-            put("classification", null);
-            put("termName", null);
-            put("query", searchQuery);
+        // Map<String, Object> params = new HashMap<String, Object>() {{
+        //     put("excludeDeletedEntities", true);
+        //     put("includeSubClassifications", true);
+        //     put("excludeDeletedEntities", true);
+        //     put("includeSubClassifications", true);
+        //     put("includeSubTypes", true);
+        //     put("includeClassificationAttributes", true);
+        //     put(
+        //         "entityFilters",
+        //         new HashMap() {{
+        //             put("condition", "AND");
+        //             put(
+        //                 "criterion",
+        //                 Arrays.asList(
+        //                     new HashMap() {{
+        //                         put("attributeName", "__timestamp");
+        //                         put("operator", "timerange");
+        //                         put("attributeValue", "LAST_30_DAYS");
+        //                     }}
+        //                 )
+        //             );
+        //         }}
+        //     );
+        //     put("attributes", Arrays.asList("comment", "name", "description"));
+        //     put("sortBy", "__timestamp");
+        //     put("sortOrder", "DESCENDING");
+        //     put("limit", 6);
+        //     put("offset", 0);
+        //     put("typeName", "hive_table");
+        //     put("classification", null);
+        //     put("termName", null);
+        //     put("query", searchQuery);
             
-        }};
+        // }};
 
-        JsonResult result = atlasRestAPI.post(URL, params);
-        Map<String, Object> resultMap = (Map<String, Object>) result.getData();
+        // JsonResult result = atlasRestAPI.post(URL, params);
+        // Map<String, Object> resultMap = (Map<String, Object>) result.getData();
 
 
         Object sortedList = new ArrayList<>();
-        if (resultMap.get("entities") != null) {
-            sortedList = resultMap.get("entities");
-        }
+        // if (resultMap.get("entities") != null) {
+        //     sortedList = resultMap.get("entities");
+        // }
 
         return processSysCatSort(sortedList);
     }
@@ -274,69 +258,69 @@ public class MainPageService {
     // Atlas에서 추천수가 많은 데이터 (6건) 조회
     public Object getRecommendData() throws Exception {
 
-        // 1. 추천수 높은 데이터 조회
-        List<Map<String, Object>> recommendList = mainPageMapper.getRecommendDataList();
+        // // 1. 추천수 높은 데이터 조회
+        // List<Map<String, Object>> recommendList = mainPageMapper.getRecommendDataList();
         
-        // 2. 해당 조회수 높은 데이터들을 이용하여 guid를 이용하여 Atlas API로 상세정보 검색
-        String URL = "/search/basic";
+        // // 2. 해당 조회수 높은 데이터들을 이용하여 guid를 이용하여 Atlas API로 상세정보 검색
+        // String URL = "/search/basic";
 
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("excludeDeletedEntities", true);
-        params.put("includeClassificationAttributes", true);
-        params.put("includeSubClassifications", true);
-        params.put("includeSubTypes", true);
+        // Map<String, Object> params = new HashMap<String, Object>();
+        // params.put("excludeDeletedEntities", true);
+        // params.put("includeClassificationAttributes", true);
+        // params.put("includeSubClassifications", true);
+        // params.put("includeSubTypes", true);
 
-        Map<String, Object> entityFilters = new HashMap<>();
+        // Map<String, Object> entityFilters = new HashMap<>();
 
-        List<Map<String, Object>> criterion = new ArrayList<>();
-        for (int i=0; i<recommendList.size(); i++) {
-            Map<String, Object> criterionMap = new HashMap<>();
-            Map<String, Object> recommendData = (Map<String, Object>) recommendList.get(i);
-            criterionMap.put("attributeName", "__guid");
-            criterionMap.put("operator", "eq");
-            criterionMap.put("attributeValue", recommendData.get("guid"));
-            criterion.add(criterionMap);
-        }
-        entityFilters.put("condition", "OR");
-        entityFilters.put("criterion", criterion);
+        // List<Map<String, Object>> criterion = new ArrayList<>();
+        // for (int i=0; i<recommendList.size(); i++) {
+        //     Map<String, Object> criterionMap = new HashMap<>();
+        //     Map<String, Object> recommendData = (Map<String, Object>) recommendList.get(i);
+        //     criterionMap.put("attributeName", "__guid");
+        //     criterionMap.put("operator", "eq");
+        //     criterionMap.put("attributeValue", recommendData.get("guid"));
+        //     criterion.add(criterionMap);
+        // }
+        // entityFilters.put("condition", "OR");
+        // entityFilters.put("criterion", criterion);
 
 
-        params.put("entityFilters", entityFilters);
+        // params.put("entityFilters", entityFilters);
         
-        params.put("attributes", Arrays.asList("__guid", "comment"));
-        // params.put("sortBy", "__timestamp");
-        // params.put("sortOrder", "DESCENDING");
-        params.put("limit", 50);
-        params.put("offset", 0);
-        params.put("typeName", "hive_table");
-        params.put("classification", null);
-        params.put("tagFilters", null);
-        params.put("termName", null);
+        // params.put("attributes", Arrays.asList("__guid", "comment"));
+        // // params.put("sortBy", "__timestamp");
+        // // params.put("sortOrder", "DESCENDING");
+        // params.put("limit", 50);
+        // params.put("offset", 0);
+        // params.put("typeName", "hive_table");
+        // params.put("classification", null);
+        // params.put("tagFilters", null);
+        // params.put("termName", null);
 
-        JsonResult result = atlasRestAPI.post(URL, params);
-        Map<String, Object> resultMap = (Map<String, Object>) result.getData();
-        if (resultMap != null) {
-            List<Map<String, Object>> entities = (List<Map<String, Object>>) resultMap.get("entities");
-            // 3. 조회수가 높은 순서로 정렬
-            // 조회 순서대로 받아온 guid 항목을 하나씩 탐색
-            int matchedCount = 0;
-            List<Map<String, Object>> sortedList = new ArrayList<>();
-            for (int i=0; i<recommendList.size(); i++) {
-                if (entities != null) {
-                    for (int j=0; j<entities.size(); j++) {
-                        if (recommendList.get(i).get("guid").toString().equals(entities.get(j).get("guid").toString())) {
-                            matchedCount++;
-                            sortedList.add(entities.get(j));
-                            if (matchedCount == 6) break;
-                        }
-                    }
-                }
-                if (matchedCount == 6) break;
-            }
+        // JsonResult result = atlasRestAPI.post(URL, params);
+        // Map<String, Object> resultMap = (Map<String, Object>) result.getData();
+        // if (resultMap != null) {
+        //     List<Map<String, Object>> entities = (List<Map<String, Object>>) resultMap.get("entities");
+        //     // 3. 조회수가 높은 순서로 정렬
+        //     // 조회 순서대로 받아온 guid 항목을 하나씩 탐색
+        //     int matchedCount = 0;
+        //     List<Map<String, Object>> sortedList = new ArrayList<>();
+        //     for (int i=0; i<recommendList.size(); i++) {
+        //         if (entities != null) {
+        //             for (int j=0; j<entities.size(); j++) {
+        //                 if (recommendList.get(i).get("guid").toString().equals(entities.get(j).get("guid").toString())) {
+        //                     matchedCount++;
+        //                     sortedList.add(entities.get(j));
+        //                     if (matchedCount == 6) break;
+        //                 }
+        //             }
+        //         }
+        //         if (matchedCount == 6) break;
+        //     }
 
-            // 4. 카테고리, 시스템 가공 후 반환
-            return processSysCatSort(sortedList);
-        }
+        //     // 4. 카테고리, 시스템 가공 후 반환
+        //     return processSysCatSort(sortedList);
+        // }
 
         return new ArrayList<>();
     }

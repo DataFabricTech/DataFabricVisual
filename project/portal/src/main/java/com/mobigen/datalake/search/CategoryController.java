@@ -7,7 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.mobigen.datalake.atlas.AtlasRestAPI;
 import com.mobigen.framework.result.JsonResult;
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
 
@@ -19,23 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @AllArgsConstructor
 public class CategoryController {
-
-    private final AtlasRestAPI atlasRestAPI;
     private final CategoryService categoryService;
 
     // 좌측 카테고리 리스트 조회
     @ResponseJsonResult
     @GetMapping("/list")
     public Object getCategoryList() {
-        JsonResult result = new JsonResult();
-
-        String url = "/types/typedefs";
-        Map<String, String> params = new HashMap<String, String>() {{
-            put("type", "classification");
-        }};
-
-        result = atlasRestAPI.get(url, params);
-        return result;
+        return categoryService.getCategoryList();
     }
 
     // 카테고리 1레벨 목록 조회 (차트 색상 설정)
@@ -57,13 +46,6 @@ public class CategoryController {
     @GetMapping("/counts")
     public Object getTableCountsByClassification() {
         return categoryService.getTableCountsByClassification();
-    }
-
-    // 통합검색 상세필터 정보 조회
-    @ResponseJsonResult
-    @GetMapping("/detailFilters")
-    public Object getDetailFilters() {
-        return categoryService.getDetailFilters();
     }
 
 }

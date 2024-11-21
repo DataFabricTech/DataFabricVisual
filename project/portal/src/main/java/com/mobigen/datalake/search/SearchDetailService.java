@@ -19,8 +19,10 @@ import java.util.Comparator;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.client.RestTemplate;
 
-import com.mobigen.datalake.atlas.AtlasRestAPI;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobigen.framework.result.JsonResult;
 import com.mobigen.framework.utility.AtlasErrorMap;
 import com.mobigen.framework.utility.Crypto;
@@ -33,166 +35,157 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class SearchDetailService {
     private final SearchDetailMapper searchDetailMapper;
-    private final AtlasRestAPI atlasRestAPI;
+    private final ObjectMapper objectMapper;
 
     @Value("${properties.trino.hikari.jdbc-url}")
     private String trinoJdbcUrl;
 
-    @Value("${properties.allowMetaInfo.columnInfo}")
-    private Boolean allowColumnInfo;
-
-    @Value("${properties.allowMetaInfo.dataProfile}")
-    private Boolean allowDataProfile;
-
     // 데이터 상세 조회
-    public Object getDetailData(Map<String, Object> params) {
-        // Atlas API URL
-        String url = "/entity/guid/" + params.get("guid").toString();
+    public Object getDetailData(Map<String, Object> params) throws Exception {
+        Map<String, Object> result = searchDetailMapper.getDetailData(params.get("guid").toString());
+        // Postgresql jsonb 타입(JSON 문자열) Map 형태로 변환
+        result.put("attributes", convertJsonbToMap(result.get("attributes")));
+        result.put("businessattributes", convertJsonbToMap(result.get("businessattributes")));
+        result.put("customattributes", convertJsonbToMap(result.get("customattributes")));
 
-        // Atlas URL 호출
-        JsonResult result = atlasRestAPI.get(url);
-        
-        // guid가 올바르지 않은 경우 처리
-        // {"errorCode":"ATLAS-404-00-005","errorMessage":"Given instance guid af7a8abf-7c9a-40e7-82f5-b83c826623651 is invalid/not found"}
-        if (!result.getErrorMessage().equals("")) {
-            Map resultMap = new HashMap<>();
-            if (result.getErrorMessage().indexOf("Given instance guid " + params.get("guid").toString() + " is invalid/not found") != -1) {
-                resultMap.put("errorMessage", "guid가 올바르지 않거나 존재하지 않습니다.");                
-            } else {
-                resultMap.put("errorMessage", "조회에 실패하였습니다. 관리지에게 문의해 주시기 바랍니다.");
-            }
-            
-            return resultMap;
+        // _varchar 객체 배열에 있는 값으로 카테고리 정보 조회하여 Map 형태로 변환
+        String[] ids = (String[]) result.get("classifications");
+
+        // 카테고리 정보 목록 조회
+        // 구조 [{ c_id, c_name, c_description }]
+        if (ids != null) {
+            List<Map<String, Object>> classificationList = searchDetailMapper.getClassificationList(ids);
+            result.put("classifications", classificationList);
         }
+        
+        // for (Map.Entry<String, Object> entry : result.entrySet()) {
+        //     System.out.println(entry.getKey() + ": " + entry.getValue());
+        // }
 
-        Map data = (Map) result.getData();
-
-        Map entity = (Map) data.get("entity");
-        Map attributes = (Map) entity.get("attributes");        
-
+        // 상세 페이지 조회 이력 저장
         Map<String, Object> saveData = new LinkedHashMap<>();
         saveData.put("user_id", params.get("user_id"));
-        saveData.put("guid", entity.get("guid"));
-        saveData.put("name", attributes.get("name"));
-        saveData.put("type_name", entity.get("typeName"));
-        saveData.put("qualified_name", attributes.get("qualifiedName"));
-        saveData.put("comment", attributes.get("comment"));
-
-        // 검색 이력 저장
+        saveData.put("guid", params.get("guid"));
+        saveData.put("name", result.get("name"));
+        saveData.put("type_name", result.get("metatype"));
+        saveData.put("qualified_name", result.get("qualifiedname"));
+        saveData.put("description", result.get("description"));
         searchDetailMapper.insertSearchMetaHistory(saveData);
-        
-        //샘플 데이터 조회 여부를 이용해 권한 체크
-        Boolean currPermission = checkSampleDataPermission(saveData);
-        data.put("sampleDataPermission", checkSampleDataPermission(saveData));
-        data.put("allowColumnInfo", allowColumnInfo || currPermission);
-        data.put("allowDataProfile", allowDataProfile || currPermission);
-        result.setData(data);
-        
+
         return result;
     }
 
-    public Boolean checkSampleDataPermission(Map<String, Object> params) {
-        // 샘플 데이터 조회 쿼리 제작
-        String query = "";
-        Boolean permission = false;
-
-        // 테이블 Type인 경우
-        if (params.get("type_name").toString().endsWith("_table")) {
-            String[] queryStrSplit = params.get("qualified_name").toString().split("@");
-            String tableNameStr = queryStrSplit[0];
-            String[] tableNameArr = tableNameStr.split("\\.");
-            StringBuilder tableName = new StringBuilder();
-            if(tableNameArr.length > 1){
-                for(int i =0; i<tableNameArr.length; i++){
-                    if (!tableName.toString().equals("")) {
-                        tableName.append(".").append("\""+ tableNameArr[i]+"\"");
-                    }else{
-                        tableName.append("\""+ tableNameArr[i] + "\"");
-                    }
-                }
-            }else{
-                tableName.append("\""+ tableNameStr + "\"");
-            }
-            
-            query = "select 1 from " + tableName + " limit 1";
-
-            // Trino 조회
-            if (!query.equals("")) {
-                Connection connection = null;
-                Statement statement = null;
-                ResultSet rs = null;
-                try {
-
-                    Properties properties = new Properties();
-                    properties.setProperty("user", params.get("user_id").toString());                    
-                    properties.setProperty("SSL", "false");
-                    connection = DriverManager.getConnection(trinoJdbcUrl, properties);
-
-                    statement = connection.createStatement();
-                    rs = statement.executeQuery(query);
-
-                    permission = true;
-
-                    rs.close();
-                    statement.close();
-                    connection.close();                    
-
-                } catch (Exception e) {
-                    // 권한 문제
-                    if(e.getMessage().indexOf("Access Denied") != -1) {
-                        permission = false;
-                    }
-                    
-                    e.printStackTrace();
-                } finally {
-                    if(rs != null) try{ rs.close();} catch (Exception e){e.printStackTrace();}
-                    if(statement != null) try{ statement.close();} catch (Exception e){e.printStackTrace();}
-                    if(connection != null) try{ connection.close();} catch (Exception e){e.printStackTrace();}
-                }
-            }
-        } else {
-            permission = false;
+    // Jsonb => Map 타입 변환 함수
+    public Map<String, Object> convertJsonbToMap(Object jsonb) throws Exception {
+        if (jsonb != null) {
+            return objectMapper.readValue((String) jsonb, new TypeReference<Map<String, Object>>() {});    
         }
-
-        return permission;
+        return null;
     }
+
+    // public Boolean checkSampleDataPermission(Map<String, Object> params) {
+    //     // 샘플 데이터 조회 쿼리 제작
+    //     String query = "";
+    //     Boolean permission = false;
+
+    //     // 테이블 Type인 경우
+    //     if (params.get("type_name").toString().endsWith("_table")) {
+    //         String[] queryStrSplit = params.get("qualified_name").toString().split("@");
+    //         String tableNameStr = queryStrSplit[0];
+    //         String[] tableNameArr = tableNameStr.split("\\.");
+    //         StringBuilder tableName = new StringBuilder();
+    //         if(tableNameArr.length > 1){
+    //             for(int i =0; i<tableNameArr.length; i++){
+    //                 if (!tableName.toString().equals("")) {
+    //                     tableName.append(".").append("\""+ tableNameArr[i]+"\"");
+    //                 }else{
+    //                     tableName.append("\""+ tableNameArr[i] + "\"");
+    //                 }
+    //             }
+    //         }else{
+    //             tableName.append("\""+ tableNameStr + "\"");
+    //         }
+            
+    //         query = "select 1 from " + tableName + " limit 1";
+
+    //         // Trino 조회
+    //         if (!query.equals("")) {
+    //             Connection connection = null;
+    //             Statement statement = null;
+    //             ResultSet rs = null;
+    //             try {
+
+    //                 Properties properties = new Properties();
+    //                 properties.setProperty("user", params.get("user_id").toString());                    
+    //                 properties.setProperty("SSL", "false");
+    //                 connection = DriverManager.getConnection(trinoJdbcUrl, properties);
+
+    //                 statement = connection.createStatement();
+    //                 rs = statement.executeQuery(query);
+
+    //                 permission = true;
+
+    //                 rs.close();
+    //                 statement.close();
+    //                 connection.close();                    
+
+    //             } catch (Exception e) {
+    //                 // 권한 문제
+    //                 if(e.getMessage().indexOf("Access Denied") != -1) {
+    //                     permission = false;
+    //                 }
+                    
+    //                 e.printStackTrace();
+    //             } finally {
+    //                 if(rs != null) try{ rs.close();} catch (Exception e){e.printStackTrace();}
+    //                 if(statement != null) try{ statement.close();} catch (Exception e){e.printStackTrace();}
+    //                 if(connection != null) try{ connection.close();} catch (Exception e){e.printStackTrace();}
+    //             }
+    //         }
+    //     } else {
+    //         permission = false;
+    //     }
+
+    //     return permission;
+    // }
 
     // 데이터 상세 조회 - 메타데이터 가공
     public Object getDetailMetadatainfo(Map<String, Object> params) {
-        // Atlas API URL
-        String url = "/entity/guid/" + params.get("guid").toString();
+        JsonResult result = null;
+        // // Atlas API URL
+        // String url = "/entity/guid/" + params.get("guid").toString();
 
-        // Atlas URL 호출
-        JsonResult result = atlasRestAPI.get(url);
+        // // Atlas URL 호출
+        // JsonResult result = atlasRestAPI.get(url);
 
-        // guid가 올바르지 않은 경우 처리
-        // {"errorCode":"ATLAS-404-00-005","errorMessage":"Given instance guid af7a8abf-7c9a-40e7-82f5-b83c826623651 is invalid/not found"}
-        if (!result.getErrorMessage().equals("")) {
-            Map resultMap = new HashMap<>();
-            if (result.getErrorMessage().indexOf("Given instance guid " + params.get("guid").toString() + " is invalid/not found") != -1) {
-                resultMap.put("errorMessage", "guid가 올바르지 않거나 존재하지 않습니다.");                
-            } else {
-                resultMap.put("errorMessage", "조회에 실패하였습니다. 관리지에게 문의해 주시기 바랍니다.");
-            }
+        // // guid가 올바르지 않은 경우 처리
+        // // {"errorCode":"ATLAS-404-00-005","errorMessage":"Given instance guid af7a8abf-7c9a-40e7-82f5-b83c826623651 is invalid/not found"}
+        // if (!result.getErrorMessage().equals("")) {
+        //     Map resultMap = new HashMap<>();
+        //     if (result.getErrorMessage().indexOf("Given instance guid " + params.get("guid").toString() + " is invalid/not found") != -1) {
+        //         resultMap.put("errorMessage", "guid가 올바르지 않거나 존재하지 않습니다.");                
+        //     } else {
+        //         resultMap.put("errorMessage", "조회에 실패하였습니다. 관리지에게 문의해 주시기 바랍니다.");
+        //     }
             
-            return resultMap;
-        }
+        //     return resultMap;
+        // }
 
-        Map data = (Map) result.getData();
-        Map resultData = new HashMap<>();
+        // Map data = (Map) result.getData();
+        // Map resultData = new HashMap<>();
         
-        List referredEntitiesAttributes = makeReferredEntitiesAttributes(data);
-        if(referredEntitiesAttributes != null && referredEntitiesAttributes.size() > 0){
-            resultData.put("referredEntitiesAttributes", referredEntitiesAttributes);            
-        }
+        // List referredEntitiesAttributes = makeReferredEntitiesAttributes(data);
+        // if(referredEntitiesAttributes != null && referredEntitiesAttributes.size() > 0){
+        //     resultData.put("referredEntitiesAttributes", referredEntitiesAttributes);            
+        // }
 
-        Map metaDataInfoResult = makeMetaDataInfoResult(data, referredEntitiesAttributes);
-        if(metaDataInfoResult != null){
-            resultData.put("metaDataInfoResult", metaDataInfoResult.get("metaDataInfoResult"));
-            resultData.put("refComment", metaDataInfoResult.get("refComment"));            
-        }
+        // Map metaDataInfoResult = makeMetaDataInfoResult(data, referredEntitiesAttributes);
+        // if(metaDataInfoResult != null){
+        //     resultData.put("metaDataInfoResult", metaDataInfoResult.get("metaDataInfoResult"));
+        //     resultData.put("refComment", metaDataInfoResult.get("refComment"));            
+        // }
 
-        result.setData(resultData);
+        // result.setData(resultData);
 
         return result;
     }
@@ -409,37 +402,17 @@ public class SearchDetailService {
         JsonResult result = new JsonResult();
         Map<String, Object> resultData = new LinkedHashMap<>();
         List<Map> list = new ArrayList<Map>();
-        String limit = params.get("limit") != null ? params.get("limit").toString() : "10";
 
         // 샘플 데이터 조회 쿼리 제작
-        String query = "";        
+        String query = "";
 
-        // 컬럼 Type인 경우
-        if (params.get("typeName").toString().endsWith("_column")) {
-            String[] queryStrSplit = params.get("qualifiedName").toString().split("@");
-            String queryStr = queryStrSplit[0];
-            String[] queryStrname = queryStr.split("\\.");
-            String columnName = queryStrname[queryStrname.length - 1];
-            StringBuilder tableName = new StringBuilder();
-            for (int i = 0; i < queryStrname.length - 1; i++) {
-                if (!tableName.toString().equals("")) {
-                    tableName.append(".").append("\""+ queryStrname[i]+"\"");
-                } else {
-                    tableName.append("\""+queryStrname[i]+"\"");
-                }
-            }
-
-            if(params.get("columns") != null && params.get("columns") != "") {
-                query = "select  \"" + columnName + "\" from " + tableName + " limit " + limit;
-            } else {
-                query = "select * from " + tableName + " limit " + limit;
-            }
-        }
-
-        // 테이블 Type인 경우
-        if (params.get("typeName").toString().endsWith("_table")) {
-            String[] queryStrSplit = params.get("qualifiedName").toString().split("@");
-            String tableNameStr = queryStrSplit[0];
+        // 테이블 Type인 경우 => DB 스키마 : Test-Postgres.data_catalog.public / 
+        if (params.get("typeName").toString().endsWith("table")) {
+            String[] queryStrSplit = params.get("qualifiedName").toString().split("\\.");
+            String catalog = queryStrSplit[0];
+            String dbName = queryStrSplit[1];
+            String tableSchema = queryStrSplit[2];
+            String tableNameStr = queryStrSplit[3];
             String[] tableNameArr = tableNameStr.split("\\.");
             StringBuilder tableName = new StringBuilder();
             if(tableNameArr.length > 1){
@@ -455,9 +428,11 @@ public class SearchDetailService {
             }
 
             if(params.get("columns") != null && params.get("columns") != "") {
-                query = "select " + params.get("columns") + " from " + tableName + " limit " + limit;
+                // query = "select " + params.get("columns") + " from \"" + dbName + "\".\"" + catalog + "\".\"" + tableSchema + "." + tableName + " limit 10";
+                query = "select " + params.get("columns") + " from \"" + catalog + "\".\"" + tableSchema + "." + tableName + " limit 10";
             } else {
-                query = "select * from " + tableName + " limit " + limit;
+                // query = "select * from \"" + dbName + "\".\"" + catalog + "\".\"" + tableSchema + "\"." + tableName + " limit 10";
+                query = "select * from \"" + catalog + "\".\"" + tableSchema + "\"." + tableName + " limit 10";
             }
         }
 
@@ -469,10 +444,21 @@ public class SearchDetailService {
             try {
 
                 Properties properties = new Properties();
-                properties.setProperty("user", params.get("user_id").toString());
-                // properties.setProperty("password", "secret");
                 properties.setProperty("SSL", "false");
-                connection = DriverManager.getConnection(trinoJdbcUrl, properties);
+                // properties.setProperty("user", params.get("user_id").toString());
+                // properties.setProperty("password", "secret");
+
+                // 샘플데이터 조회를 위한 정보 조회
+                String connectionUrl = "";
+                Map<String, Object> dbInfo = searchDetailMapper.getDbInfo(params.get("systemname").toString());
+                if (dbInfo != null) {
+                    properties.setProperty("user", "admin");
+                    // properties.setProperty("password", dbInfo.get("password").toString());
+                    connectionUrl = trinoJdbcUrl + dbInfo.get("systemname").toString().toLowerCase() + "/" + dbInfo.get("database");
+                }
+                
+                if (connectionUrl == null || connectionUrl.equals("")) { return null; }
+                connection = DriverManager.getConnection(connectionUrl, properties);
 
                 statement = connection.createStatement();
                 rs = statement.executeQuery(query);
@@ -503,6 +489,8 @@ public class SearchDetailService {
                     resultData.put("errorMessage", e.getMessage());
                     resultData.put("sampleDataDenied", true);
                 }
+                
+                e.printStackTrace();
             } finally {
                 if(rs != null) try{ rs.close();} catch (Exception e){e.printStackTrace();}
                 if(statement != null) try{ statement.close();} catch (Exception e){e.printStackTrace();}
@@ -529,189 +517,194 @@ public class SearchDetailService {
 
     // 사용자 데이터 설명 등록
     public Object insertUserDescription(Map<String, Object> params) {
-        Map<String, Object> result = new LinkedHashMap<>(); // Atlas API 호출 결과
-        int insertResult = 0; // postgres 등록 여부
-        Boolean isFailed = false; // Atlas API 호출 성공 여부
-        Boolean atlasUpdated = false; // 사용자 데이터 설명 Atlas 변경됬는지 여부
+        Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
+        int insertResult = 0; // userdescription postgres 등록 여부
+        int updateMetaResult = 0; // <table> 테이블에 등록 여부
+        Boolean isFailed = false; // ES 업데이트 API 호출 성공 여부
+        Boolean esUpdated = false; // 사용자 데이터 설명 ES 변경됬는지 여부
 
+        // 1. postgres 등록
         insertResult = searchDetailMapper.insertUserDescription(params);
 
-        // Atlas에 description을 등록할 지 결정하는 로직
-        // 사용자 데이터 설명이 등록된 경우
         if (insertResult > 0) {
+            // ES에 description 등록 결정 로직
             Map favoriteData = searchDetailMapper.getUserDescription((String) params.get("guid"));
-            // 데이터가 있는 경우
             if (!ObjectUtils.isEmpty(favoriteData)) {
                 // 조회된 데이터 설명 추천수가 0이면
                 if ((int) favoriteData.get("favorite") == 0) {
-                    // Atlas 신규 description 등록
-                    String url = "/entity"; // Atlas API URL
+                    // 2. MetaData 테이블에 userdescription 업데이트
+                    updateMetaResult = searchDetailMapper.updateMetaUserDescription(params);
 
-                    // Atlas API 호출 시 사용되는 파라미터
-                    Map atlasParams = new LinkedHashMap<String, Object>() {{
-                        put("entity", new LinkedHashMap<String, Object>() {{
-                            put("guid", params.get("guid"));
-                            put("typeName", params.get("typeName"));
-                            put("attributes", new LinkedHashMap<String, Object>() {{
-                                put("qualifiedName", params.get("qualifiedName"));
-                                put("name", params.get("name"));
-                                put("description", params.get("userDescription"));
-                                put("userDescription", params.get("userDescription"));
-                                // 컬럼의 경우 table 정보 추가
-                                if (params.get("typeName").toString().contains("_column")) {
-                                    put("type", params.get("type"));
-                                    put("table", new LinkedHashMap<String, Object>(){{
-                                        put("guid", params.get("tableGuid"));
-                                        put("typeName", params.get("tableTypeName"));
-                                    }});
-                                }
-                               
-                            }});
-                        }});
-                    }};
-
-                    // 아틀라스 수행 결과
-                    JsonResult atlasResult = atlasRestAPI.post(url, atlasParams);
-
-                    if ( atlasResult.getResult() > 0 ) { // Atlas 등록 성공
-                        atlasUpdated = true;
-                    } else { // Atlas 등록 실패
-                        result.put("errorMessage", AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage()));
-                        isFailed = true;
+                    // 3. ES 신규 userdescription 등록
+                    // ES 업데이트 API 수행 결과 - API 호출 필요
+                    RestTemplate restTemplate = new RestTemplate();
+                    String updateUrl = "http://<INTERNAL_HOST>:8000/v1/essync/update";
+                    Map<String, Object> requestBody = new HashMap<>();
+                    requestBody.put("metaid", params.get("guid"));
+                    requestBody.put("event_status", 1); // 1=생성, 2=수정, 3=삭제
+                    requestBody.put("event_name", "create userdescription");
+                    Map<String, Object> restResponse = restTemplate.postForObject(updateUrl, requestBody, HashMap.class);
+                    
+                    boolean esResult = false;
+                    if (!restResponse.isEmpty()) {
+                        Map<String, String> res = (Map<String, String>) restResponse.get("result");
+                        if (res.get("result").equals("success")) {
+                            isFailed = false;
+                            esResult = true;
+                        } else {
+                            isFailed = true;
+                            esResult = false;
+                        }
                     }
+
+                    if ( esResult ) { // ES 등록 성공
+                        esUpdated = true;
+                    } else { // ES 등록 실패
+                        result.put("errorMessage", "ES 업데이트 실패");
+                        isFailed = true;
+                    }                    
                 }
             }
         }
 
         result.put("insertResult", insertResult);
-        result.put("isFailed", isFailed);
-        result.put("atlasUpdated", atlasUpdated);
+        result.put("updateMetaResult", updateMetaResult);
+        result.put("isFail", isFailed);
+        result.put("esUpdated", esUpdated);
 
         return result;
     }
 
     // 사용자 데이터 설명 수정
     public Object updateUserDescription(Map<String, Object> params) {
-        Map<String, Object> result = new LinkedHashMap<>(); // Atlas API 호출 결과
-        int updateResult = 0; // postgres 수정 여부
-        Boolean isFailed = false; // Atlas API 호출 실패 여부
-        Boolean atlasUpdated = false; // 사용자 데이터 설명 Atlas 변경됬는지 여부
+        Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
+        int updateResult = 0; // userdescription postgres 수정 여부
+        int updateMetaResult = 0; // <table> 테이블에 등록 여부
+        Boolean isFailed = false; // ES 업데이트 API 호출 성공 여부
+        Boolean esUpdated = false; // 사용자 데이터 설명 ES 변경됬는지 여부
 
+        // 1. postgres 수정
         updateResult = searchDetailMapper.updateUserDescription(params);
 
-        // Atlas에 description을 수정할 지 결정하는 로직
-        // 사용자 데이터 설명이 수정된 경우
         if (updateResult > 0) {
-            // 사용자 데이터 설명 추천수 높은 1건 조회
+            // ES에 description 등록 결정 로직
+            // 사용자 데이터  설명 추천수 높은 1건 조회
             Map favoriteData = searchDetailMapper.getUserDescription((String) params.get("guid"));
-            // 데이터가 있는 경우
             if (!ObjectUtils.isEmpty(favoriteData)) {
                 // 조회된 id와 수정하려는 id가 같은 경우
                 if (favoriteData.get("id").toString().equals(params.get("id").toString())) {
-                    // Atlas에 수정된 description 등록
-                    String url = "/entity"; // Atlas API URL
+                    // 2. MetaData 테이블에 userdescription 업데이트
+                    updateMetaResult = searchDetailMapper.updateMetaUserDescription(params);
 
-                    // Atlas API 호출 시 사용되는 파라미터
-                    Map atlasParams = new LinkedHashMap<String, Object>() {{
-                        put("entity", new LinkedHashMap<String, Object>() {{
-                            put("guid", params.get("guid"));
-                            put("typeName", params.get("typeName"));
-                            put("attributes", new LinkedHashMap<String, Object>() {{
-                                put("qualifiedName", params.get("qualifiedName"));
-                                put("name", params.get("name"));
-                                put("description", params.get("userDescription"));
-                                put("userDescription", params.get("userDescription"));
-                                // 컬럼의 경우 table 정보 추가
-                                if (params.get("typeName").toString().contains("_column")) {
-                                    put("type", params.get("type"));
-                                    put("table", new LinkedHashMap<String, Object>(){{
-                                        put("guid", params.get("tableGuid"));
-                                        put("typeName", params.get("tableTypeName"));
-                                    }});
-                                }
-                            }});
-                        }});
-                    }};
-
-                    // 아틀라스 수행 결과
-                    JsonResult atlasResult = atlasRestAPI.post(url, atlasParams);
-
-                    if ( atlasResult.getResult() > 0 ) { // Atlas 수정 성공
-                        atlasUpdated = true;
-                    } else { // Atlas 수정 실패
-                        result.put("errorMessage", AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage()));
-                        isFailed = true;
+                    // 3. ES 신규 userdescription 등록
+                    // ES 업데이트 API 수행 결과 - API 호출 필요
+                    RestTemplate restTemplate = new RestTemplate();
+                    String updateUrl = "http://<INTERNAL_HOST>:8000/v1/essync/update";
+                    Map<String, Object> requestBody = new HashMap<>();
+                    requestBody.put("metaid", params.get("guid"));
+                    requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
+                    requestBody.put("event_name", "update userdescription");
+                    Map<String, Object> restResponse = restTemplate.postForObject(updateUrl, requestBody, HashMap.class);
+                    
+                    boolean esResult = false;
+                    if (!restResponse.isEmpty()) {
+                        Map<String, String> res = (Map<String, String>) restResponse.get("result");
+                        if (res.get("result").equals("success")) {
+                            isFailed = false;
+                            esResult = true;
+                        } else {
+                            isFailed = true;
+                            esResult = false;
+                        }
                     }
+
+                    if ( esResult ) { // ES 수정 성공
+                        esUpdated = true;
+                    } else { // ES 등록 실패
+                        result.put("errorMessage", "ES 업데이트 실패");
+                        isFailed = true;
+                    }                    
                 }
             }
         }
+
         result.put("updateResult", updateResult);
-        result.put("isFailed", isFailed);
-        result.put("atlasUpdated", atlasUpdated);
+        result.put("updateMetaResult", updateMetaResult);
+        result.put("isFail", isFailed);
+        result.put("esUpdated", esUpdated);
 
         return result;
     }
 
     // 사용자 데이터 설명 삭제
     public Object deleteUserDescription(Map<String, Object> params) {
-        Map<String, Object> result = new LinkedHashMap<>(); // Atlas API 호출 결과
-        int deleteResult = 0;  // postgres 삭제 여부
-        Boolean isFailed = false; // Atlas API 호출 실패 여부
-        Boolean atlasUpdated = false; // 사용자 데이터 설명 Atlas 변경됬는지 여부
+        Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
+        int deleteResult = 0; // userdescription postgres 삭제 여부
+        int updateMetaResult = 0; // <table> 테이블에 업데이트 여부
+        int deleteMetaResult = 0; // <table> 테이블에서 null 처리 여부
+        Boolean isFailed = false; // ES 업데이트 API 호출 성공 여부
+        Boolean esUpdated = false; // 사용자 데이터 설명 ES 변경됬는지 여부
 
-        deleteResult = searchDetailMapper.deleteUserDescription((Integer) params.get("id"));
-
-        // Atlas에 description을 삭제할 지 결정하는 로직
-        // 사용자 데이터 설명이 삭제된 경우
+        // 1. postgres 등록
+        deleteResult = searchDetailMapper.deleteUserDescription(params);
+        
         if (deleteResult > 0) {
-            // 사용자 데이터 설명 추천수 높은 1건 조회
+            // ES에 description 등록 결정 로직
+            // 사용자 데이터  설명 추천수 높은 1건 조회
             Map favoriteData = searchDetailMapper.getUserDescription((String) params.get("guid"));
 
-            // Atlas에 description 설정
-            String url = "/entity"; // Atlas API url
+            // 3. ES 신규 userdescription 등록
+            // ES 업데이트 API 수행 결과 - API 호출 필요
+            RestTemplate restTemplate = new RestTemplate();
+            String updateUrl = "http://<INTERNAL_HOST>:8000/v1/essync/update";
+            Map<String, Object> requestBody = new HashMap<>();
+        
+            if (!ObjectUtils.isEmpty(favoriteData)) { // 조회된 데이터가 있으면 해당 값으로 설정
+                requestBody.put("metaid", favoriteData.get("guid"));    
+                requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
+                requestBody.put("event_name", "delete userdescription");
+                
+                // MetaData 테이블에 해당 데이터로 userdescription 업데이트
+                Map<String, Object> newParams = new HashMap<>();
+                newParams.put("guid", params.get("guid"));
+                newParams.put("userDescription", favoriteData.get("userdescription"));
+                updateMetaResult = searchDetailMapper.updateMetaUserDescription(newParams);
+            } else {
+                requestBody.put("metaid", params.get("guid"));    
+                requestBody.put("event_status", 3); // 1=생성, 2=수정, 3=삭제
+                requestBody.put("event_name", "delete userdescription");
 
-            // Atlas API 호출 시 사용 파라미터
-            Map atlasParams = new LinkedHashMap<String, Object>() {{
-                put("entity", new LinkedHashMap<String, Object>() {{
-                    put("guid", params.get("guid"));
-                    put("typeName", params.get("typeName"));
-                    put("attributes", new LinkedHashMap<String, Object>() {{
-                        put("qualifiedName", params.get("qualifiedName"));
-                        put("name", params.get("name"));
-                        if (!ObjectUtils.isEmpty(favoriteData)) { // 조회된 데이터가 있으면 설정
-                            put("description", favoriteData.get("userdescription"));
-                            put("userDescription", favoriteData.get("userdescription"));
-                        } else { // 없으면 null
-                            put("description", null);
-                            put("userDescription", null);
-                        }
-                        // 컬럼의 경우 table 정보 추가
-                        if (params.get("typeName").equals("hive_column")) {
-                            put("type", params.get("type"));
-                            put("table", new LinkedHashMap<String, Object>() {{
-                                put("guid", params.get("tableGuid"));
-                                put("typeName", params.get("tableTypeName"));
-                            }});
-                        }
-
-                    }});
-                }});
-            }};
-
-            // 아틀라스 수행 결과
-            JsonResult atlasResult = atlasRestAPI.post(url, atlasParams);
-
-            if ( atlasResult.getResult() > 0 ) { // Atlas 설정 성공
-                atlasUpdated = true;
-            } else { // Atlas 설정 실패
-                result.put("errorMessage", AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage()));
-                isFailed = true;
+                // MetaData 테이블에 해당 데이터로 userdescription Null 처리
+                deleteMetaResult = searchDetailMapper.deleteMetaUserDescription((String) params.get("guid"));
             }
+            
+            Map<String, Object> restResponse = restTemplate.postForObject(updateUrl, requestBody, HashMap.class);
+            
+            boolean esResult = false;
+            if (!restResponse.isEmpty()) {
+                Map<String, String> res = (Map<String, String>) restResponse.get("result");
+                if (res.get("result").equals("success")) {
+                    isFailed = false;
+                    esResult = true;
+                } else {
+                    isFailed = true;
+                    esResult = false;
+                }
+            }
+
+            if ( esResult ) { // ES 삭제 성공
+                esUpdated = true;
+            } else { // ES 등록 실패
+                result.put("errorMessage", "ES 업데이트 실패");
+                isFailed = true;
+            }   
         }
 
         result.put("deleteResult", deleteResult);
-        result.put("isFailed", isFailed);
-        result.put("atlasUpdated", atlasUpdated);
+        result.put("updateMetaResult", updateMetaResult);
+        result.put("deleteMetaResult", deleteMetaResult);
+        result.put("isFail", isFailed);
+        result.put("esUpdated", esUpdated);
 
         return result;
     }
@@ -738,18 +731,18 @@ public class SearchDetailService {
 
     // 사용자 데이터 설명 추천
     public Object insertUserDescriptionFavorite(Map<String, Object> params) {
-        Map<String, Object> result = new LinkedHashMap<>(); // Atlas API 호출 결과
+        Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
         int insertResult = 0; // postgres 등록 여부
         int addResult = 0;  // postgres count + 1 여부
-        Boolean isFailed = false; // Atlas API 호출 성공 여부
         Boolean isFavorite = false; // 좋아요 클릭 여부
         int favoriteCounts = 0; // 해당 설명에 대한 전체 추천수
-        Boolean atlasUpdated = false; // 사용자 데이터 설명 Atlas 변경됬는지 여부
+        int updateMetaResult = 0; // <table> 테이블에 업데이트 여부
+        Boolean isFailed = false; // ES 업데이트 API 호출 성공 여부
+        Boolean esUpdated = false; // 사용자 데이터 설명 ES 변경됬는지 여부
 
         insertResult = searchDetailMapper.insertUserDescriptionFavorite(params);
         addResult = searchDetailMapper.addUserDescriptionFavoriteCount((Integer)params.get("id"));
 
-        // Atlas에 description을 수정할 지 결정하는 로직
         // 추천 등록 성공
         if (insertResult == 1 && addResult == 1) {
             isFavorite = true;
@@ -761,41 +754,41 @@ public class SearchDetailService {
             if (!ObjectUtils.isEmpty(favoriteData)) {
                 // 내가 추천한 글이 가장 높은 추천수인 경우
                 if (favoriteData.get("id").toString().equals(params.get("id").toString())) {
-                // Atlas에 해당 description으로 수정
-                String url = "/entity"; // Atlas API url
+                    // 2. MetaData 테이블에 userdescription 업데이트
+                    Map<String, Object> newParams = new HashMap<>();
+                    newParams.put("guid", favoriteData.get("guid"));
+                    newParams.put("userDescription", favoriteData.get("userdescription"));
+                    updateMetaResult = searchDetailMapper.updateMetaUserDescription(newParams);
 
-                    // Atlas API 호출 시 사용하는 파라미터
-                    Map atlasParams = new LinkedHashMap<String, Object>() {{
-                        put("entity", new LinkedHashMap<String, Object>() {{
-                            put("guid", favoriteData.get("guid"));
-                            put("typeName", favoriteData.get("type_name"));
-                            put("attributes", new LinkedHashMap<String, Object>() {{
-                                put("qualifiedName", favoriteData.get("qualified_name"));
-                                put("name", favoriteData.get("name"));
-                                put("description", favoriteData.get("userdescription"));
-                                put("userDescription", favoriteData.get("userdescription"));
-                                // 컬럼의 경우 table 정보 추가
-                                if (params.get("typeName").equals("hive_column")) {
-                                    put("type", params.get("type"));
-                                    put("table", new LinkedHashMap<String, Object>() {{
-                                        put("guid", params.get("tableGuid"));
-                                        put("typeName", params.get("tableTypeName"));
-                                    }});
-                                }
-                            }});
-                        }});
-                    }};
-
-                    // 아틀라스 수행 결과
-                    JsonResult atlasResult = atlasRestAPI.post(url, atlasParams);
-
-                    if ( atlasResult.getResult() > 0 ) { // Atlas 수정 성공
-                        atlasUpdated = true;
-                    } else { // Atlas 수정 실패
-                        result.put("errorMessage", AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage()));
-                        isFailed = true;
+                    // 3. ES 신규 userdescription 등록
+                    // ES 업데이트 API 수행 결과 - API 호출 필요
+                    RestTemplate restTemplate = new RestTemplate();
+                    String updateUrl = "http://<INTERNAL_HOST>:8000/v1/essync/update";
+                    Map<String, Object> requestBody = new HashMap<>();
+                    requestBody.put("metaid", params.get("guid"));
+                    requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
+                    requestBody.put("event_name", "update userdescription");
+                    Map<String, Object> restResponse = restTemplate.postForObject(updateUrl, requestBody, HashMap.class);
+                    
+                    boolean esResult = false;
+                    if (!restResponse.isEmpty()) {
+                        Map<String, String> res = (Map<String, String>) restResponse.get("result");
+                        if (res.get("result").equals("success")) {
+                            isFailed = false;
+                            esResult = true;
+                        } else {
+                            isFailed = true;
+                            esResult = false;
+                        }
                     }
-                }
+
+                    if ( esResult ) { // ES 수정 성공
+                        esUpdated = true;
+                    } else { // ES 등록 실패
+                        result.put("errorMessage", "ES 업데이트 실패");
+                        isFailed = true;
+                    }                    
+               }
             }
         }
 
@@ -804,72 +797,71 @@ public class SearchDetailService {
         result.put("isFailed", isFailed);
         result.put("isFavorite", isFavorite);
         result.put("favoriteCounts", favoriteCounts);
-        result.put("atlasUpdated", atlasUpdated);
+        result.put("esUpdated", esUpdated);
+        result.put("updateMetaResult", updateMetaResult);
 
         return result;
     }
 
     // 사용자 데이터 설명 추천 취소
     public Object deleteUserDescriptionFavorite(Map<String, Object> params) {
-        Map<String, Object> result = new LinkedHashMap<>(); // Atlas API 호출 결과
-        int deleteResult = 0; // postgres 삭제 여부
-        int subResult = 0; // postgres count - 1 여부
-        Boolean isFailed = false; // Atlas API 호출 성공 여부
-        Boolean isFavorite = true; // 좋아요 클릭 여부
+        Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
+        int deleteResult = 0; // postgres 등록 여부
+        int subResult = 0;  // postgres count -1 여부
+        Boolean isFavorite = false; // 좋아요 클릭 여부
         int favoriteCounts = 0; // 해당 설명에 대한 전체 추천수
-        Boolean atlasUpdated = false; // 사용자 데이터 설명 Atlas 변경됬는지 여부
+        int updateMetaResult = 0; // <table> 테이블에 업데이트 여부
+        Boolean isFailed = false; // ES 업데이트 API 호출 성공 여부
+        Boolean esUpdated = false; // 사용자 데이터 설명 ES 변경됬는지 여부
 
         deleteResult = searchDetailMapper.deleteUserDescriptionFavorite(params);
         subResult = searchDetailMapper.subUserDescriptionFavoriteCount((Integer)params.get("id"));
 
-        // 추천수 높은 1건 조회
-        Map<String, Object> favoriteData = searchDetailMapper.getUserDescription((String) params.get("guid"));
-
-        // Atlas에 description을 수정할 지 결정하는 로직
-        // 추천 취소 성공
+        // 추천 등록 성공
         if (deleteResult == 1 && subResult == 1) {
             isFavorite = false;
-            favoriteCounts = searchDetailMapper.getUserDescriptionFavoriteCounts(params);
+            favoriteCounts = searchDetailMapper.getUserDescriptionFavoriteCounts(params); // 해당 설명에 대한 전체 추천수
 
+            // 추천수 높은 1건 조회
+            Map<String, Object> favoriteData = searchDetailMapper.getUserDescription((String) params.get("guid"));
             if (!ObjectUtils.isEmpty(favoriteData)) {
-                // 추천 취소한 설명이 가장 추천수가 높은 경우
+                // 추천취소한 설명과 가장 높은 추천수 데이터가 다른 경우 수정
                 if (!favoriteData.get("id").toString().equals(params.get("id").toString())) {
-                    // Atlas에 해당 userdescription으로 수정
-                    String url = "/entity"; // Atlas API url
+                    // MetaData 테이블에 해당 데이터로 userdescription 업데이트
+                    Map<String, Object> newParams = new HashMap<>();
+                    newParams.put("guid", favoriteData.get("guid"));
+                    newParams.put("userDescription", favoriteData.get("userdescription"));
+                    updateMetaResult = searchDetailMapper.updateMetaUserDescription(newParams);
 
-                    // Atlas API 호출 시 사용 파라미터
-                    Map atlasParams = new LinkedHashMap<String, Object>() {{
-
-                        put("entity", new LinkedHashMap<String, Object>() {{
-                            put("guid", favoriteData.get("guid"));
-                            put("typeName", favoriteData.get("type_name"));
-                            put("attributes", new LinkedHashMap<String, Object>() {{
-                                put("qualifiedName", favoriteData.get("qualified_name"));
-                                put("name", favoriteData.get("name"));
-                                put("description", favoriteData.get("userdescription"));
-                                put("userDescription", favoriteData.get("userdescription"));
-                                // 컬럼의 경우 table 정보 추가
-                                if (params.get("typeName").equals("hive_column")) {
-                                    put("type", params.get("type"));
-                                    put("table", new LinkedHashMap<String, Object>() {{
-                                        put("guid", params.get("tableGuid"));
-                                        put("typeName", params.get("tableTypeName"));
-                                    }});
-                                }
-                            }});
-                        }});
-                    }};
-
-                    // 아틀라스 수행 결과
-                    JsonResult atlasResult = atlasRestAPI.post(url, atlasParams);
-
-                    if ( atlasResult.getResult() > 0 ) { // Atlas 수정 성공
-                        atlasUpdated = true;
-                    } else { // Atlas 수정 실패
-                        result.put("errorMessage", AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage()));
-                        isFailed = true;
+                    // ES 신규 userdescription 등록
+                    // ES 업데이트 API 수행 결과 - API 호출 필요
+                    RestTemplate restTemplate = new RestTemplate();
+                    String updateUrl = "http://<INTERNAL_HOST>:8000/v1/essync/update";
+                    Map<String, Object> requestBody = new HashMap<>();
+                    requestBody.put("metaid", params.get("guid"));
+                    requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
+                    requestBody.put("event_name", "update userdescription");
+                    Map<String, Object> restResponse = restTemplate.postForObject(updateUrl, requestBody, HashMap.class);
+                    
+                    boolean esResult = false;
+                    if (!restResponse.isEmpty()) {
+                        Map<String, String> res = (Map<String, String>) restResponse.get("result");
+                        if (res.get("result").equals("success")) {
+                            isFailed = false;
+                            esResult = true;
+                        } else {
+                            isFailed = true;
+                            esResult = false;
+                        }
                     }
-                }
+
+                    if ( esResult ) { // ES 수정 성공
+                        esUpdated = true;
+                    } else { // ES 등록 실패
+                        result.put("errorMessage", "ES 업데이트 실패");
+                        isFailed = true;
+                    }                    
+               }
             }
         }
 
@@ -878,7 +870,8 @@ public class SearchDetailService {
         result.put("isFailed", isFailed);
         result.put("isFavorite", isFavorite);
         result.put("favoriteCounts", favoriteCounts);
-        result.put("atlasUpdated", atlasUpdated);
+        result.put("esUpdated", esUpdated);
+        result.put("updateMetaResult", updateMetaResult);
 
         return result;
     }
@@ -955,21 +948,16 @@ public class SearchDetailService {
         }
     }
 
-    // 비지니스 속성 Atlas에 등록
-    public Object saveEntityAttributes(Map<String, Object> params) {
-        Map<String, Object> result = new LinkedHashMap<>();
-        Boolean isFailed = false; // Atlas API 호출 여부
+    // 비지니스 속성 등록
+    public Object saveEntityAttributes(Map<String, Object> params) throws Exception {
+        // 비즈니스 속성 업데이트를 위한 값 가공
+        Map<String, Object> entity = (Map<String, Object>) params.get("entity");
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("guid", entity.get("guid"));
+        paramMap.put("businessattributes", objectMapper.writeValueAsString(entity.get("businessattributes")));
 
-        String URL = "/entity";
-        JsonResult atlasResult = atlasRestAPI.post(URL, params, false);
-
-        if ( atlasResult.getResult() == 0 ) {
-            result.put("errorMessage", AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage()));
-            isFailed = true;
-        }
-
-        result.put("isFailed", isFailed);
-        return result;
+        int insertResult = searchDetailMapper.updateMetaBusinessAttributes(paramMap);
+        return insertResult;
     }
 
     // 데이터 조회 사용자 권한 확인

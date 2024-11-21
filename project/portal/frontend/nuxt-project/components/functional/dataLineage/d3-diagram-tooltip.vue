@@ -12,19 +12,12 @@
           <dd>{{ comment }}</dd>
         </dl>
         <dl>
-          <dt>분류</dt>
+          <dt>카테고리</dt>
           <dd>
             <div class="category-group">
-              <!-- <div class="category" v-for="(cla, idx) in classifications" :key="idx">
-                <span em class="category-label">{{ cla.typeName }}</span>
-              </div> -->
-              <category-label
-                v-for="(cla, idx) in classifications"
-                :key="idx"
-                :category="cla"
-                :item="props.targetNode"
-                :readOnly=true
-              />
+              <div class="category" v-for="(c, idx) in classifications" :key="idx">
+                <span em class="category-label">{{ c.c_description }}</span>
+              </div>
             </div>
           </dd>
         </dl>
@@ -36,7 +29,6 @@
 
 <script setup lang="ts">
 import ObjectUtils from "@/utils/ObjectUtils";
-import CategoryLabel from "@functional/categoryLabel/category-label";
 
 const props = defineProps(["targetNode"]);
 // 툴팁 표시 및 위치 스타일
@@ -50,12 +42,12 @@ const tooltipPosition = computed(() => {
 
 // 툴팁 헤더 이름
 const name = computed(() => {
-  return ObjectUtils.getPropertyValue(props.targetNode, "attributes/name", "");
+  return ObjectUtils.getPropertyValue(props.targetNode, "name", "");
 });
 
 // 툴팁 내 표시할 데이터 설명
 const comment = computed(() => {
-  return ObjectUtils.getPropertyValue(props.targetNode, "attributes/comment", "");
+  return ObjectUtils.getPropertyValue(props.targetNode, "description", "");
 });
 
 // 툴팁 내 표시할 카테고리 목록

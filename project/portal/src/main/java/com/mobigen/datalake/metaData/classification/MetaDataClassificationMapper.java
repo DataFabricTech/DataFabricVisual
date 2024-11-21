@@ -19,15 +19,23 @@ public interface MetaDataClassificationMapper {
 
     Integer mapperCount(Map<String, Object> entity) throws Exception;
 
-    Integer mapperCountMulti(Map<String, Object> entity, int entityGuidsCount) throws Exception;
+    Integer mapperCountMulti(Map<String, Object> params) throws Exception;
 
     Integer supperMapperCount(Map<String, Object> entity) throws Exception;
 
     Integer deleteClassification(String name) throws Exception;
 
-    Integer mapperCountDown (String name) throws Exception;
+    Integer deleteClassificationCount(String name) throws Exception;
+
+    Integer mapperCountDown (String id) throws Exception;
 
     List<Map<String, Object>> getClassificationList(String level) throws Exception;
 
     Integer updateClassificationOrdNo(Map<String, Object> param) throws Exception;
+
+    // 하위 카테고리 목록 검색
+    List<Map<String, Object>> getClassificationChildrenById(String id) throws Exception;
+
+    List<Map<String, Object>> getClassificationListByName(String name) throws Exception;
+
 }
