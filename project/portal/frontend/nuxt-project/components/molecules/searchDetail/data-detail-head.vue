@@ -193,33 +193,11 @@ const onClickEliminate = () => {
 
 // 데이터 추천 버튼 클릭 이벤트 핸들러
 const onToggleRecommend = async () => {
-  const params = {
-    ...props.params,
-    isDeleting: isRecommendedData.value,
-  };
-
-  $ofetch(`/api/search/detail/recommend`, {
-    method: "POST",
-    body: params,
-  }).then(async () => {
-    await emit("reloadRecommendStatus")
-    // await emit("reload")
-  });
+  await emit("reloadRecommendStatus")
 };
 
 // 데이터 찜하기 버튼 클릭 이벤트 핸들러
-const onToggleFavorite = () => {
-  const params = {
-    ...props.params,
-    isDeleting: isFavoriteData.value,
-  };
-
-  $ofetch(`/api/search/detail/favorite`, {
-    method: "POST",
-    body: params,
-  }).then(async () => {
-    await emit("reloadRecommendStatus")
-    // await emit("reload")
-  });
+const onToggleFavorite = async () => {
+  await emit("reloadRecommendStatus")
 };
 </script>
