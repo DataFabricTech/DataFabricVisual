@@ -198,16 +198,17 @@ public class UserService {
     public Object authenticate(HttpServletRequest request, HttpServletResponse response, String user_id, String password) throws Exception {
         Map<String, String> result = new HashMap<String, String>();
 
-        // 입력 값 유효성 검증
-        if (user_id == null || user_id.trim().isEmpty() ) {
-            throw new IllegalArgumentException("Invalid user ID");
+        // 1. 입력 값 유효성 검증
+        if (user_id == null || user_id.trim().isEmpty() ) { // 계정
+            result.put("login_result", "N");
+            result.put("login_result_message", "사용자 계정을 올바르게 입력해 주세요.");
+            return result;
         }
-
-        if (password == null || password.trim().isEmpty()) {
-            throw new IllegalArgumentException("Password cannot be empty");
+        if (password == null || password.trim().isEmpty()) { // 비밀번호
+            result.put("login_result", "N");
+            result.put("login_result_message", "비밀번호를 입력해 주세요.");
+            return result;
         }
-
-        result.put("login_result", "Y");
 
         // 사용자 조회
         Map user = (Map) userMapper.getUserMaster(user_id);
@@ -233,10 +234,10 @@ public class UserService {
             }
         }
 
-        // 3. 패스워드 확인
+        // 3. 비밀번호 일치여부 확인
         if (!password.equals(user.get("password"))) {
             result.put("login_result", "N");
-            result.put("login_result_message", "패스워드가 올바르지 않습니다.");
+            result.put("login_result_message", "비밀번호가 올바르지 않습니다.");
             userMapper.updateLoginFailCount(user_id);
             return result;
         }
@@ -248,6 +249,8 @@ public class UserService {
                     Integer.toString(loginDeactivationDateThreshold) + "일 이상 접속하지 않아 로그인이 차단되었습니다. 관리자에게 문의해주시기 바랍니다.");
             return result;                
         }
+
+        result.put("login_result", "Y");
 
         userMapper.updateLoginUser(user_id); // 사용자 정보 업데이트
         
@@ -288,7 +291,7 @@ public class UserService {
 
         Map authUser = (Map) userMapper.getUserMaster(user_id);
         if (authUser != null) {
-            if (password.equals(authUser.get("password"))) { // 1. 패스워드 검증 성공
+            if (password.equals(authUser.get("password"))) { // 1. 비밀번호 검증 성공
                 if (authUser != null) {
                     // 로그인 실패 횟수 확인
                     if( (Integer) authUser.get("login_fail_cnt") >= 5 ){
@@ -314,7 +317,7 @@ public class UserService {
             }
         }
 
-        if (password.equals(authUser.get("password"))) { // 1. 패스워드 검증 성공
+        if (password.equals(authUser.get("password"))) { // 1. 비밀번호 검증 성공
             if (authUser != null) {
                 // 로그인 실패 횟수 확인
                 if( (Integer) authUser.get("login_fail_cnt") >= 5 ){
@@ -338,7 +341,7 @@ public class UserService {
                 userMapper.updateLoginUser(user_id); // 사용자 정보 업데이트
                 isAuth = true;
             }
-        } else { // 2. 패스워드 검증 실패
+        } else { // 2. 비밀번호 검증 실패
             // 사용자 로그인 실패 횟수 증가 처리
             // 사용자가 등록되어 있지 않은 경우
             if (authUser != null) {

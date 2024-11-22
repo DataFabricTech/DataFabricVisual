@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     // Model Validation
     @ExceptionHandler(BindException.class)
     @ResponseBody
-    public JsonResult bindExceptionHandler(BindException e) {
+    public JsonResult bindExceptionHandler(BindException e, HttpServletRequest request) {
         log.error(message.get("com.mobigen.framework.exception.GlobalExceptionHandler.bindExceptionHandler"), e);
         return getExceptionJsonResult(e, e.getFieldError());
     }
@@ -39,7 +39,9 @@ public class GlobalExceptionHandler {
     // JSON Validation
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
-    public JsonResult methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
+    public JsonResult methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e, HttpServletRequest request) {
+        String url = request.getRequestURI();
+        log.info("ERROR URL : " + url + "====================");
         log.error(message.get("com.mobigen.framework.exception.GlobalExceptionHandler.methodArgumentNotValidExceptionHandler"), e);
 
         BindingResult bindingResult = e.getBindingResult();
@@ -49,7 +51,9 @@ public class GlobalExceptionHandler {
     // Controller
     @ExceptionHandler(JsonResultException.class)
     @ResponseBody
-    public JsonResult jsonResultExceptionHandler(JsonResultException e) {
+    public JsonResult jsonResultExceptionHandler(JsonResultException e, HttpServletRequest request) {
+        String url = request.getRequestURI();
+        log.info("ERROR URL : " + url + "====================");
         log.error(message.get("com.mobigen.framework.exception.GlobalExceptionHandler.jsonResultExceptionHandler"), e);
         return getExceptionJsonResult(e, e);
     }
@@ -57,7 +61,9 @@ public class GlobalExceptionHandler {
     // Authentication
     @ExceptionHandler(AccessDeniedException.class)
     @ResponseBody
-    public JsonResult accessDeniedExceptionHandler(AccessDeniedException e) {
+    public JsonResult accessDeniedExceptionHandler(AccessDeniedException e, HttpServletRequest request) {
+        String url = request.getRequestURI();
+        log.info("ERROR URL : " + url + "====================");
         log.error(message.get("com.mobigen.framework.exception.GlobalExceptionHandler.accessDeniedExceptionHandler"), e);
         return getExceptionJsonResult(e, e);
     }
@@ -66,12 +72,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public JsonResult unknownExceptionHandler(Exception e, HttpServletRequest request) {
-
-        System.out.println("=================== ERROR URL ====================");
         String url = request.getRequestURI();
-        System.out.println(url);
-        System.out.println("=================== ERROR URL END ====================");
-        
+        log.info("ERROR URL : " + url + "====================");
         log.error(message.get("com.mobigen.framework.exception.GlobalExceptionHandler.unknownExceptionHandler"), e);
         return getExceptionJsonResult(e, e);
     }
@@ -79,7 +81,9 @@ public class GlobalExceptionHandler {
     // No Static Resource (Nuxt)
     @ExceptionHandler(NoResourceFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public void NoResourceFoundException(NoResourceFoundException ex, HttpServletResponse response) throws Exception {
+    public void NoResourceFoundException(NoResourceFoundException ex, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String url = request.getRequestURI();
+        log.info("ERROR URL : " + url + "====================");
         // 프론트엔드의 에러 페이지 URL로 리다이렉트
         log.error(message.get("com.mobigen.framework.exception.GlobalExceptionHandler.noResourceFoundException"), ex);
         response.sendRedirect("/error");

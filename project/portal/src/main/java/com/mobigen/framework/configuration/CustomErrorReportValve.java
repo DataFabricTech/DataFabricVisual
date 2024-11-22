@@ -29,7 +29,7 @@ public class CustomErrorReportValve extends ValveBase {
         if (!isValidPath(path)) {
             // response.getWriter().write("{result:\"0\", errorMessage:\"Bad Request\"}");
             // 특수 문자가 있는 경우 '/'로 리다이렉트
-            response.sendRedirect("/error");
+            response.sendRedirect("/");
             log.error("Bad request - invalid characters in path: " + path);
             return;
         }
