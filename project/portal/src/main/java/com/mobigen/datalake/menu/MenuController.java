@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -78,6 +79,12 @@ public class MenuController {
     @GetMapping("/menu")
     public Object getMenu(HttpServletRequest request) throws Exception {
         return menuService.getMenu(request);
+    }
+
+    @ResponseJsonResult
+    @PostMapping("/log")
+    public void postLog(HttpServletRequest request) throws Exception {
+        log.info("No static Resource fix : '/api/log'");
     }
 
     @ResponseJsonResult
