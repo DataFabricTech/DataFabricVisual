@@ -365,7 +365,7 @@ watch(
         if (location.hostname === "localhost" && localCategoryImageFileId != "") {
           categoryImageFile.value = "http://localhost:38080/api/ckeditor/attachFile/" + localCategoryImageFileId;
         } else if (localCategoryImageFileId == "") {
-          return
+
         } else {
           categoryImageFile.value = "/api/ckeditor/attachFile/" + localCategoryImageFileId;
         }
