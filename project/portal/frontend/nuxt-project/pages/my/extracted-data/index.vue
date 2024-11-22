@@ -92,8 +92,6 @@ interface PostItem {
   name: string;
 }
 
-defineProps<{ layout: string }>(); // props 정의
-
 const { $ofetch } = useNuxtApp();
 
 const searchList = ref([])

@@ -11,7 +11,7 @@
       :item="item"
     />
     <category-control-button
-      v-show="item.guid != -1"
+      v-if="item.id !== -1"
       buttonType="add"
       :item="item"
     />
@@ -19,20 +19,24 @@
 </template>
 
 <script setup lang="ts">
-import ObjectUtils from "~/utils/ObjectUtils";
+import ObjectUtils from "@utils/ObjectUtils";
 
 import CategoryLabel from "@functional/categoryLabel/category-label";
 import CategoryControlButton from "@atoms/metaDataManage/category-control-button";
 
 import { computed } from 'vue';
 
-// interface
-interface Props {
-  item: any;
-  classifications: string;    
-}
-
-const props = defineProps<Props>();
+const props = defineProps({
+  item: {
+    type: Object
+  },
+  classifications: {
+    type: Array,
+    default: () => {
+      return []
+    }
+  }
+});
 
 // 화면 렌더 대상 카테고리 라벨 목록 계산
 const categories = computed(() => {

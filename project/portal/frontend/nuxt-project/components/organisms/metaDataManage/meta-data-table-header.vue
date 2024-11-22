@@ -12,8 +12,8 @@
                 :value="props.filterSearchObj.searchType1"
                 @change="onChange"
               >
-                <option value="hive_table">Table</option>
-                <option value="hive_column">Column</option>
+                <option value="table">Table</option>
+                <option value="column">Column</option>
               </select>
             </div>
             <div class="mu-selectbox w120">

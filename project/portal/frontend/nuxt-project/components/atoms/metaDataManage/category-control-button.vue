@@ -37,7 +37,7 @@ const eventStore = useEventStore();
 const buttonText = computed(() => {
       return `카테고리 ${props.buttonType === 'add' ? '추가' : '더보기'}`;
     });
-    
+
 const showButton = computed(() => {
     let show = false;
 
@@ -49,7 +49,7 @@ const showButton = computed(() => {
       }
     } else {
       // 추가 버튼 렌더 시
-      if (props.item.typeName.endsWith('_table')) {
+      if (props.item.metatype.endsWith('table')) {
         // 테이블 유형 엔티티에 대해서만 추가 버튼 생성
         show = true;
       }
@@ -61,10 +61,10 @@ const showButton = computed(() => {
 //method
 const onClick = (e) => {
     if (props.buttonType === 'more') {
-      // 더보기 버튼일 경우      
+      // 더보기 버튼일 경우
       eventStore.emit('onToggleMetaDataTooltip', e, props.item, 'more');
     } else {
-      // 추가 버튼일 경우      
+      // 추가 버튼일 경우
       eventStore.emit('onClickTableBodyButtons', 'category-map', props.item);
     }
   };
