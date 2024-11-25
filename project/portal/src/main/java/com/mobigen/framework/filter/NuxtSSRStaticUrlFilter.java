@@ -46,7 +46,7 @@ public class NuxtSSRStaticUrlFilter implements Filter {
                 @Override
                 public String getRequestURI() {
                     String url = ((HttpServletRequest) servletRequest).getRequestURI();
-                    log.info("NuxtSSRStaticUrlFilter URL : " + url + " ==================== ");
+                    // log.info("NuxtSSRStaticUrlFilter URL : " + url + " ==================== ");
 
                     String searchHtmlFile = "static" + url + "/index.html";
                     if (url.equals("/")) {

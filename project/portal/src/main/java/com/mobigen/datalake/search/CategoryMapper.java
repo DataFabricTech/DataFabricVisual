@@ -15,4 +15,9 @@ public interface CategoryMapper {
     List<Map<String, Object>> getDbClassification();
 
     List getCategoryListForChart();
+
+    List getCategoryListForFilter();
+    List getSystemListForFilter();
+    List getMetaListForFilter();
+    List getTagListForFilter();
 }

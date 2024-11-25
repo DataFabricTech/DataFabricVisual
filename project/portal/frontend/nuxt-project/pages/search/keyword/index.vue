@@ -7,6 +7,15 @@
             <legend>통합검색</legend>
             <div class="inner-search">
               <div class="mu-input-icon">
+                <div class="category-group" v-if="checkUseFilter">
+                  <div class="category">
+                    <em class="category-label">
+                      필터적용중 <span>
+                      <button @click="deleteCategoryTag()"><i class="mu-icon-svg item-delete"></i></button>
+                    </span>
+                    </em>
+                  </div>
+                </div>
                 <input
                   type="text"
                   class="mu-input"
@@ -41,53 +50,44 @@
             </div>
           </fieldset>
         </form>
-
-        <div class="data-filter-wrap" v-show="showFilterWrap1" style="display: block">
-          <div class="inner-data-filter">
+        <dl class="synonym-keyword" v-if="printSynonymList.length > 0">
+          <dt>동의어</dt>
+          <dd>
+            <div class="tags-group">
+              <div class="tag" v-for="item in printSynonymList">
+                <span class="tag-label" :style="isTermStyle(item)">{{ item.name }}</span>
+              </div>
+            </div>
+          </dd>
+        </dl>
+        <div class="data-filter-wrap" v-show="!showFilterWrap1" style="display: block">
+          <div class="content-detail-search">
+            <div class="mu-heading">
+              <h4>상세필터</h4>
+            </div>
+            <div class="detail-search-form">
+              <div class="mu-form mu-form-vertical">
+                <div class="mu-form-item" v-for="(df, idx) in detailFilters" >
+                  <div class="btn-category">
+                    <div class="mu-checkbox all">
+                      <input :type="df.all ? 'radio' : 'checkbox'" :name="idx" :id="'ckbox_'+idx" value="ALLs" checked disabled>
+                      <label :for="'ckbox_'+idx"> <span>{{ getRootDescription(idx) }}</span></label>
+                    </div>
+                    <div class="mu-checkbox all">
+                      <input :type="df.all ? 'radio' : 'checkbox'" :name="idx" :id="'ckb_'+idx" value="ALL" @change="onChangeCheckBox(idx, $event);" :checked="df.all">
+                      <label :for="'ckb_'+idx"> <span>{{ getRootDescription(idx) }}</span></label>
+                    </div>
+                    <div v-for="(tg, idx2) in df.content" class="mu-checkbox">
+                      <input :type="idx == 'ORDER' ? 'radio' : 'checkbox'" :name="idx" :id="'ckbox_'+tg.name" :value="tg.name" @change="onChangeCheckBox(idx, $event)" :checked="false" disabled>
+                      <label :for="'ckbox_'+tg.name"><span>{{ tg.description }}<em v-if="idx != 'TAG' && idx != 'ORDER'">({{ tg.count }})</em></span></label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="on tab-content">
               <div class="mu-search-group">
                 <div class="mu-search-item">
-                  <table>
-                    <caption>
-                      필터검색 게시판
-                    </caption>
-                    <colgroup>
-                      <col style="width: 100px" />
-                      <col />
-                    </colgroup>
-                    <tbody>
-                      <tr>
-                        <th scope="row">데이터유형</th>
-                        <td>
-                          <div class="mu-item-group">
-                            <div class="mu-selectbox w240">
-                              <select v-model="systemtype">
-                                <option value="" selected>전체선택</option>
-                                <option :value="systemtype" v-for="(systemtype, idx) in filterSystemtypes">{{ getSystemtypeDesc(systemtype) }}</option>
-                              </select>
-                            </div>
-                            <div class="mu-selectbox w240">
-                              <select v-model="metatype">
-                                <option value="" selected>전체선택</option>
-                                <option :value="metatype" v-for="(metatype, idx) in filterMetatypes">{{ getMetatypesDesc(metatype) }}</option>
-                              </select>
-                            </div>
-                          </div>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th scope="row">정렬방식</th>
-                        <td>
-                          <div class="mu-selectbox w240">
-                              <select v-model="sortOrder">
-                                <option value="" selected>전체선택</option>
-                                <option :value="sort" v-for="(sort, idx) in filterSortOrders">{{ getSortOrderDesc(sort) }}</option>
-                              </select>
-                            </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
                 </div>
                 <div
                   class="attribute-filter-item slim-scroll"
@@ -111,7 +111,7 @@
                     <span>검색</span>
                   </button>
                 </div>
-                <div class="open-attribute-filter">
+              </div><div class="open-attribute-filter">
                   <button
                     type="button"
                     title="추가속성필터 열기"
@@ -123,21 +123,9 @@
                     <span>추가속성필터</span>
                   </button>
                 </div>
-              </div>
             </div>
           </div>
         </div>
-
-        <dl class="synonym-keyword" v-if="printSynonymList.length > 0">
-          <dt>동의어</dt>
-          <dd>
-            <div class="tags-group">
-              <div class="tag" v-for="item in printSynonymList">
-                <span class="tag-label" :style="isTermStyle(item)">{{ item.name }}</span>
-              </div>
-            </div>
-          </dd>
-        </dl>
       </div>
 
       <div class="inner">
@@ -165,11 +153,20 @@
                 </div>
               </div>
             </div>
-            <div class="data-result" v-for="data in listData">
+            <div class="data-result" >
               <ul class="data-box-list">
-                <li class="data-box">
-                  <div class="inner-data visual">
-                    <i class="ico-data data-05"></i>
+                <li class="data-box" v-if="listData" v-for="data in listData">
+                  <div class="inner-data visual" @click="onSelectDetailPage(data)">
+                    <i v-if="data.metatype && data.metatype.toUpperCase() == 'CONTAINER'" class="ico-data data-04"></i>
+                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'DATABASE'" class="ico-data data-02"></i>
+                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'DATABASESCHEMA'" class="ico-data data-06"></i>
+                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'DATABASESERVICE'" class="ico-data data-06"></i>
+                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'DIRECTORY'" class="ico-data data-06"></i>
+                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'FILESYSTEMSERVICE'" class="ico-data data-06"></i>
+                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'STORAGESERVICE'" class="ico-data data-04"></i>
+                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'TABLE'" class="ico-data data-05"></i>
+                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'COLUMN'" class="ico-data data-01"></i>
+                    <i v-else class="ico-data data-06"></i>
                   </div>
                   <div class="inner-data">
                     <div class="category-group" v-if="data && data.classifications && data.classifications.length > 0">
@@ -186,9 +183,7 @@
                       <a @click="onSelectDetailPage(data)">
                         <strong class="data-title">{{ data && data.attributes && data.attributes.description ? data.attributes.description : data.description }}</strong>
                         <p class="data-name"> {{ data && data.name ? data.name : ''}} </p>
-                        <p class="data-desc">
-                          {{data && data.userdescription? data.userdescription : ''}}
-                        </p>
+                        <p class="data-desc">{{data && data.userdescription? data.userdescription : ''}}</p>
                       </a>
                     </div>
                     <!-- LABELS -->
@@ -204,37 +199,18 @@
                       </em>
                     </div>
                   </div>
-                  <div class="inner-data options">
-                    <div class="data-info-group">
-                      <div class="data-info">
-                        <dl>
-                          <dt><span>DB</span></dt>
-                          <dd>
-                            {{data && data.attributes && data.attributes.databaseSchema ? data.attributes.databaseSchema : ''}}
-                          </dd>
-                        </dl>
-                        <dl>
-                          <dt>
-                            <span>테이블</span>
-                          </dt>
-                          <dd>
-                            <a @click="onSelectDetailPage(data)"
-                            >
-                              {{data && data.name ? data.name : ''}}
-                            </a>
-                          </dd>
-                        </dl>
-                      </div>
-                    </div>
+                  <div class="inner-data option">
+                    <p >생성일 : {{ yyyyMMdd(data.createtime) }}</p>
+                    <p >수정일 : {{ yyyyMMdd(data.updatetime) }}</p>
+                    <p >최종접근시간 : {{ yyyyMMddHHmmSS(data.lastaccesstime ? data.lastaccesstime: null) }}</p>
+                    <p v-html="checkDataAccess(data.dataAccess)"></p>
+                    <p >시스템 타입 : {{ data.systemtype }}</p>
+                    <p >메타 타입 : {{ data.metatype }}</p>
+                    <p v-if="data.qualifiedname">DB : {{ getDbName(data.qualifiedname) }}</p>
+                    <p v-if="data.qualifiedname && data.qualifiedname.split('.')[2]">스키마 : {{ getSchemaName(data.qualifiedname) }}</p>
                   </div>
                 </li>
-              </ul>
-              <ul class="data-box-list">
-                <li v-if="!listData">
-                  <p class="nodata">
-                    검색 결과가 존재하지 않습니다.<span>다른 검색어를 입력해주세요.</span>
-                  </p>
-                </li>
+                <li v-else><p class="nodata">검색결과가 존재하지 않습니다.<span>다른 검색어를 입력해주세요.</span></p></li>
               </ul>
             </div>
             <pagination :paging="pagingObj" @onClickPage="onClickPage" />
@@ -290,6 +266,104 @@ const searchParams = ref({
   sortOrder: "",
   entityFilters: {}
 });
+
+// 카테고리, 데이터유형, 태그, 등록일
+const detailFilters = ref({
+  CATEGORY: {
+    all: true,
+    ord: 1,
+    name: '카테고리',
+    content: [
+    {
+        "root": "CATEGORY",
+        "rootDescription": "카테고리",
+        "id": 1,
+        "name": "MG",
+        "description": "경영",
+        "count": 2,
+        "checked": false,
+      },
+    ],
+    count: 0
+  },
+  SYSTEMTYPE: {
+    all: true,
+    ord: 2,
+    name: '시스템 타입',
+    content: [
+    {
+      "root": "SYSTEMTYPE",
+      "rootDescription": "시스템 타입",
+      "id": 1,
+      "name": "Postgres",
+      "description": "Postgres",
+      "count": 0,
+      "checked": false,
+    },
+    ],
+    count: 0
+  },
+  METATYPE: {
+    all: true,
+    ord: 3,
+    name: '시스템 타입',
+    content: [
+    {
+      "root": "METATYPE",
+      "rootDescription": "메타 타입",
+      "id": 1,
+      "name": "databaseSchema",
+      "description": "databaseSchema",
+      "count": 0,
+      "checked": false,
+    },
+    ],
+    count: 0
+  },
+  TAG: {
+    all: true,
+    ord: 4,
+    name: '태그',
+    content: [
+      {
+        "root": "TAG",
+        "rootDescription": "태그",
+        "id": 1,
+        "name": "태그1",
+        "description": "태그1",
+        "count": 0,
+        "checked": false,
+      },
+    ],
+    count: 0
+  },
+  ORDER: {
+    all: true,
+    ord: 5,
+    name: '정렬기준',
+    content: [
+      {
+        "root": "ORDER",
+        "rootDescription": "정렬기준",
+        "id": 1,
+        "name": "ASC",
+        "description": "오름차순",
+        "count": 0,
+        "checked": false,
+      },
+      {
+        "root": "ORDER",
+        "rootDescription": "정렬기준",
+        "id": 1,
+        "name": "DESC",
+        "description": "내림차순",
+        "count": 0,
+        "checked": false,
+      },
+    ],
+    count: 0
+  }
+})
 
 // data
 const divider = ref<HTMLElement>(null); // 패널 사이즈 조절 DOM
@@ -349,15 +423,20 @@ onMounted(async () => {
   leftSide.value = divider.value.previousElementSibling;
   rightSide.value = divider.value.nextElementSibling;
 
+  await getDetailFilters()
+
   searchParams.value = searchStore.getSearchParams // 검색 조건 불러오기
 
   // 메인화면, 카테고리 검색에서 넘어온 경우
   if (fromPath == '/main' || fromPath == '/search/category') {
     // 단순히 메뉴를 클릭한 경우
 
-
     word.value = searchParams.value.query // 검색어
-    classification.value = searchParams.value.classification // 카테고리
+    classification.value = searchParams.value.classification ? searchParams.value.classification : {
+      id: "",
+      name: "",
+      description: ""
+    } // 카테고리
     categoryStore.setSelectedItemId(classification.value.id); // 체크 처리
     categoryStore.setToggleTargetOnClickTreemap(classification.value.id); // 메뉴 활성화
     const matched = getOriginalList.find((el) => el.id === classification.value.id);
@@ -385,18 +464,38 @@ onMounted(async () => {
     searchStore.setSearchParams(searchParams.value)
   }
 
-  await getFilterOption();
   getSearch(pagingObj.value.currentPage - 1);
 });
 
-const getFilterOption = async () => {
-  await $ofetch(`/api/search/filterData`, {
-    method: 'GET'
-  }).then((res) => {
+const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
+  return false
+})
+
+// 가공된 상세필터 정보 가져오기
+const getDetailFilters = async () => {
+  // 카테고리, 시스템, 태그, 등록일
+  await $ofetch('/api/search/category/detailFilters').then(async (res) => {
     if (res && !res.errorMessage) {
-      filterSystemtypes.value = res.data.systemtypes
-      filterMetatypes.value = res.data.metatypes
+      // 키의 배열을 원하는 순서로 정렬
+      // let keys = ["CAT", "SYS", "TAG", "DATE"];
+      let keys = ["CATEGORY", "SYSTEMTYPE", "METATYPE", "TAG", "ORDER"];
+      let reorderedObject = {};
+
+      // 정렬된 순서에 따라 새로운 객체 생성
+      keys.forEach(key => {
+          if (res.data[key]) {
+            reorderedObject[key] = res.data[key];
+          }
+      });
+      detailFilters.value = reorderedObject
+
+      let searchParams = {
+        word: word.value,
+        detailFilters: detailFilters.value
+      }
+      await searchStore.setSearchParams(searchParams)
     }
+    console.log(detailFilters.value)
   }).catch((e) => {
     console.log(e)
   })
@@ -414,17 +513,8 @@ const toggleParents = (matched) => {
   }
 }
 
-// 한글명 가져오기
-const getKrName = (key: string): string => {
-  if (key) {
-    return categoryStore.getClassificationNameKr(key);
-  } else {
-    // 카테고리 미분류
-    return "";
-  }
-};
-
 const getSystemtypeDesc = (sys) => {
+  console.log(sys)
   return sys
 }
 
@@ -447,7 +537,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     metatype: metatype.value,
     limit: pagingObj.value.limit,
     offset: offset,
-    classification: classification.value.name, // 검색할 때는 name값 사용
+    classification: classification.value && classification.value.name ? classification.value.name : "", // 검색할 때는 name값 사용
     sortOrder: sortOrder.value,
     entityFilters: {}
   };
@@ -606,7 +696,30 @@ const isTermStyle = (item: any): { fontWeight: number } | {} => {
 // 필터 검색 조건 초기화
 const resetSearchParam = (): void => {
   word.value = "";
-  word.value = "";
+
+  detailFilters.value['CATEGORY'].all = true
+  detailFilters.value['CATEGORY'].content.forEach((el) => {
+    el.checked = false
+  })
+  detailFilters.value['SYSTEMTYPE'].all = true
+  detailFilters.value['SYSTEMTYPE'].content.forEach((el) => {
+    el.checked = false
+  })
+
+  detailFilters.value['METATYPE'].all = true
+  detailFilters.value['METATYPE'].content.forEach((el) => {
+    el.checked = false
+  })
+
+  detailFilters.value['TAG'].all = true
+  detailFilters.value['TAG'].content.forEach((el) => {
+    el.checked = false
+  })
+
+  detailFilters.value['ORDER'].all = true
+  detailFilters.value['ORDER'].content.forEach((el) => {
+    el.checked = false
+  })
 };
 
 // 상세 데이터 이동
@@ -625,10 +738,21 @@ const onClickMenuItem = (item: any): void => {
       name: "",
       description: ""
     };
+
   } else {
     categoryStore.setToggleTargetOnClickTreemap(item.id)
     classification.value = item;
+
+    // 상세필터 카테고리 체크 설정
+    detailFilters.value.CATEGORY.content.forEach((el) => {
+      if (el.id == item.id) {
+        el.checked = true;
+      } else {
+        el.checked = false;
+      }
+    })
   }
+
   getSearch(0);
 };
 
@@ -676,4 +800,103 @@ const showSearchOptionSub = (): void => {
 const onClickDeleteButton = (): void => {
   word.value = "";
 };
+
+// 날짜변환
+const getDateFormat = (datetime) => {
+  if(datetime == null || datetime == undefined || datetime == ""){
+    return " - "
+  }
+
+  let [dateStr, timeStr] = datetime.split(' ');
+
+  // 날짜 부분 변환
+  let year = dateStr.substring(0, 4);
+  let month = dateStr.substring(5, 7);
+  let day = dateStr.substring(8, 10);
+
+  let formattedDateTime = `${year}-${month}-${day}`;
+
+  return formattedDateTime;
+}
+
+const yyyyMMdd = (value) => {
+  let date = new Date(value);
+  let year = date.getFullYear();
+  let month = String(date.getMonth() + 1).padStart(2, "0");
+  let day = String(date.getDate()).padStart(2, "0");
+  let hours = String(date.getHours()).padStart(2, "0");
+  let min = String(date.getMinutes()).padStart(2, "0");
+  let sec = String(date.getSeconds()).padStart(2, "0");
+  if (value == null || value == undefined) {
+    return "-";
+  }
+  return year + "-" + month + "-" + day;
+};
+
+const yyyyMMddHHmmSS = (value) => {
+  let date = new Date(value);
+  let year = date.getFullYear();
+  let month = String(date.getMonth() + 1).padStart(2, "0");
+  let day = String(date.getDate()).padStart(2, "0");
+  let hours = String(date.getHours()).padStart(2, "0");
+  let min = String(date.getMinutes()).padStart(2, "0");
+  let sec = String(date.getSeconds()).padStart(2, "0");
+  if (value == null || value == undefined) {
+    return "-";
+  }
+  return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
+};
+
+const checkDataAccess = (flag) => {
+  let dataAccessComment = "데이터 조회권한 ";
+  dataAccessComment += flag ? "<span style='color: blue;'>있음</span>" : "<span style='color: red;'>없음</span>" ;
+
+  return dataAccessComment;
+}
+
+// 검색에서 필터적용중 삭제
+const deleteCategoryTag = (): void => {
+  console.log('필터 전체 제거')
+};
+
+const getRootDescription = (key) => {
+  if (key == 'CATEGORY') return "카테고리"
+  else if (key == 'SYSTEMTYPE') return "시스템 타입"
+  else if (key == 'METATYPE') return "메타 타입"
+  else if (key == 'TAG') return "태그"
+  else if (key == "ORDER") return "정렬기준"
+  else return ""
+}
+
+// 조건 클릭 이벤트
+const onChangeCheckBox = async (key, event: any) => {
+  if (event.target.value == 'ALL') {
+    detailFilters.value[key].content.forEach((el) => {el.checked = false})
+    detailFilters.value[key].all = true
+    detailFilters.value[key].count = 0
+
+  }
+
+  // 아무것도 선택하지 않은 상태인 경우 전체 표시
+  if (detailFilters.value[key].count == 0) detailFilters.value[key].all = true
+
+  getSearch(0)
+}
+
+// DB명
+const getDbName = (qualifiedName) => {
+  if (qualifiedName) {
+    return qualifiedName.split(".")[1]
+  }
+  return ""
+}
+
+// 스키마명
+const getSchemaName = (qualifiedName) => {
+  if (qualifiedName) {
+    return qualifiedName.split(".")[2]
+  }
+  return ""
+}
+
 </script>

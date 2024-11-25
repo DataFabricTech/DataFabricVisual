@@ -355,3 +355,14 @@ pre code {
 
 .board-label .data-label {height:34px; margin-right:20px; padding:5px 20px; border-radius:22px; font-size:14px;}
 .board-label .data-label {background-color:#2855ce; color:#fff;}
+
+/* 데이터 - hive,sap icon 타입 */
+.ico-data {display:inline-flex; align-items:center; justify-content:center; width:120px; height:120px; border-radius:20px; background-color:#f6f6f9;}
+.ico-data:before {content:""; display:block; width:60px; height:60px;}
+.ico-data.data-01:before {background-image:url(../images/ico/ico-data-01.png);}/* column */
+.ico-data.data-02:before {background-image:url(../images/ico/ico-data-02.png);}/* db */
+.ico-data.data-03:before {background-image:url(../images/ico/ico-data-03.png);}/* process */
+.ico-data.data-04:before {background-image:url(../images/ico/ico-data-04.png);}/* storage */
+.ico-data.data-05:before {background-image:url(../images/ico/ico-data-05.png);}/* table */
+.ico-data.data-06:before {background-image:url(../images/ico/ico-data-06.png);}/* etc */
+.ico-data.data-07:before {background-image:url(../images/ico/ico-data-07.png);}/* link */

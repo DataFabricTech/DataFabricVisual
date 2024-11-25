@@ -48,4 +48,10 @@ public class CategoryController {
         return categoryService.getTableCountsByClassification();
     }
 
+    // 통합검색 상세필터 정보 조회
+    @ResponseJsonResult
+    @GetMapping("/detailFilters")
+    public Object getDetailFilters() {
+        return categoryService.getDetailFilters();
+    }
 }

@@ -34,6 +34,10 @@ export const useSearchStore = defineStore('searchStore', () => {
 
   // action
   const setSearchParams = (data: any) => { _searchParams.value = data }
+   // 상세필터 조건 저장
+   const setSearchParamsDetailFilters = (payload) => { return _searchParams.value.detailFilters = payload }
+   // 페이징 조건 저장
+   const setSearchParamsPagingObj = (payload) => { return _searchParams.value.pagingObj = payload }
   const setQuery = (data: any) => { _searchParams.value.query = data }
   const setSystemtype = (data: any) => { _searchParams.value.systemtype = data }
   const setMetatype = (data: any) => { _searchParams.value.metatype = data }
@@ -56,6 +60,8 @@ export const useSearchStore = defineStore('searchStore', () => {
     getSortOrder,
     getEntitiyFilters,
     setSearchParams,
+    setSearchParamsPagingObj,
+    setSearchParamsDetailFilters,
     setQuery,
     setSystemtype,
     setMetatype,
