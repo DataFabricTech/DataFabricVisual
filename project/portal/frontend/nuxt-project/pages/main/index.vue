@@ -336,6 +336,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import { useSearchStore } from "@/store/search";
 
 
 definePageMeta({
@@ -347,6 +348,7 @@ const { $ofetch } = useNuxtApp()
 const router = useRouter();
 const userStore = useUserStore()
 const categoryStore = useCategoryStore()
+const searchStore = useSearchStore()
 
 const word: Ref<string> = ref("");
 const recommendedWordList = ref(["추천 검색어1", "추천 검색어2"]); // 추천 검색어들, 최대 5개
@@ -562,8 +564,8 @@ const getCategoryIcon = (idx) => {
 
 // 차트 카테고리 클릭 시 검색페이지로 이동
 const goToSearch = async (cat) => {
-  await categoryStore.setMainSelectCategory(cat);
-  await categoryStore.setMainSearch(true);
+  await searchStore.setMainSelectCategory(cat);
+  await searchStore.setMainSearch(true);
   router.push("/search/keyword")
 }
 
@@ -714,22 +716,44 @@ const onSearch = async (e: any) => {
     return
   }
   e.preventDefault(); // 창이 다시 실행되는 것 방지
-  categoryStore.setMainSearch(true) // 메인화면에서 통합검색으로 이동했는지 true
-  categoryStore.setSearchParams({
-    word: word.value,
+  searchStore.setMainSearch(true) // 메인화면에서 통합검색으로 이동했는지 true
+  searchStore.setSearchParams({
+    query: word.value,
     detailFilters: {},
-    pagingObj: {}
+    pagingObj: {},
+    systemtype: "",
+    metatype: "",
+    limit: 10,
+    offset: 0,
+    classification: {
+      id: "",
+      name: "",
+      description: ""
+    },
+    sortOrder: "",
+    entityFilters: {}
   })
   router.push("/search/keyword")
 }
 
 // 추천 검색어 클릭 이벤트 핸들러
 const onClickRecommendedWord = (word) => {
-  categoryStore.setMainSearch(true) // 메인화면에서 통합검색으로 이동했는지 true
-  categoryStore.setSearchParams({
-    word: word,
+  searchStore.setMainSearch(true) // 메인화면에서 통합검색으로 이동했는지 true
+  searchStore.setSearchParams({
+    query: word,
     detailFilters: {},
-    pagingObj: {}
+    pagingObj: {},
+    systemtype: "",
+    metatype: "",
+    limit: 10,
+    offset: 0,
+    classification: {
+      id: "",
+      name: "",
+      description: ""
+    },
+    sortOrder: "",
+    entityFilters: {}
   })
   router.push("/search/keyword");
 }

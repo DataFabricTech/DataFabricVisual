@@ -22,7 +22,6 @@
                   placeholder="테이블을 제외한 컬럼/타 메타 검색결과를 조회하려면 상세필터로 검색하세요"
                   title="검색어를 입력해 주세요."
                   @keypress.enter.prevent="checkValidate(word)"
-                  @input="checkValidateInput(word)"
                  v-model="word"
                 />
                 <button v-if="word"
@@ -247,7 +246,6 @@ const params = userStore.getParams;
 
 const categoryStore = useCategoryStore();
 const getOriginalList = categoryStore.getOriginalList;
-const getCategoryList = categoryStore.getCategoryList;
 
 const searchStore = useSearchStore();
 const searchParams = ref({
@@ -271,6 +269,7 @@ const detailFilters = ref({
     all: true,
     ord: 1,
     name: '카테고리',
+    level: "1",
     content: [
     {
         "root": "CATEGORY",
@@ -421,64 +420,136 @@ onMounted(async () => {
   leftSide.value = divider.value.previousElementSibling;
   rightSide.value = divider.value.nextElementSibling;
 
-  await getDetailFilters()
-
   searchParams.value = searchStore.getSearchParams // 검색 조건 불러오기
 
-  // 메인화면, 카테고리 검색에서 넘어온 경우
-  if (fromPath == '/main' || fromPath == '/search/category') {
-    // 단순히 메뉴를 클릭한 경우
+  if (fromPath == '/search/detail') {
+    if (!searchParams.query &&
+    (Object.keys(searchParams.detailFilters).length === 0 && searchParams.detailFilters.constructor === Object)) {
+      // 상세필터 조회
+      await getDetailFilters()
+      pagingObj.value = {
+        total: 0,
+        limit: 10,
+        block: 10,
+        currentPage: 1,
+      }; // 페이징 초기화
 
-    word.value = searchParams.value.query // 검색어
-    classification.value = searchParams.value.classification ? searchParams.value.classification : {
-      id: "",
-      name: "",
-      description: ""
-    } // 카테고리
-    openLeftSubCategoryMenu(classification.value.id) // 하위메뉴 열기
-    setLeftCategoryBold(classification.value.id); // 선택메뉴 Bold 처리
+      await getSearch(0) // 통합검색
+    } else {
+      // 기존 검색어, 상세필터 내용 가져오기
+      word.value = searchParams.value.query ? searchParams.value.query : "" // 검색어
+      detailFilters.value = searchParams.detailFilters
+      pagingObj.value = searchParams.pagingObj
 
-    const matched = getOriginalList.find((el) => el.id === classification.value.id);
-    toggleParents(matched)
-  } else if (fromPath.includes('/search/detail')) { // 상세페이지에서 넘어온 경우
-    word.value = searchParams.value.query ? searchParams.value.query : "" // 검색어
-    classification.value = searchParams.value.classification ? searchParams.value.classification : {
-      id: "",
-      name: "",
-      description: ""
+      classification.value = searchParams.value.classification ? searchParams.value.classification : {
+        id: "",
+        name: "",
+        description: ""
+      }
+
+      systemtype.value = searchParams.value.systemtype ? searchParams.value.systemtype : "" // 시스템타입
+      metatype.value = searchParams.value.metatype ? searchParams.value.metatype : "" // 메타타입
+      sortOrder.value = searchParams.value.sortOrder ? searchParams.value.sortOrder : "" // 정렬방식
+      pagingObj.value.currentPage = searchParams.value.offset + 1 // 현재 페이지
+      pagingObj.value.limit = searchParams.value.limit // 보여줄 개수
+
+      // 왼쪽메뉴 활성화 처리
+      openLeftSubCategoryMenu(searchParams.value.classification.id ? searchParams.value.classification.id : "") // 하위메뉴 열기
+      setLeftCategoryBold(searchParams.value.classification.id ? searchParams.value.classification.id : ""); // 선택메뉴 Bold 처리
+      const matched = getOriginalList.find((el) => el.id === searchParams.value.classification.id);
+      toggleParents(matched)
+
+      await getSearch(pagingObj.value.currentPage - 1)
     }
+  } else {
+    // 상세필터 조회
+    await getDetailFilters()
+    pagingObj.value = {
+      total: 0, // 전체 데이터 건수
+      limit: 10, // 한 페이지에 보여줄 데이터 건수
+      block: 10, // 한 화면에서 보여줄 페이지 수
+      currentPage: 1, // 현재 페이지 번호
+    }; // 페이징 초기화
 
-    systemtype.value = searchParams.value.systemtype ? searchParams.value.systemtype : "" // 시스템타입
-    metatype.value = searchParams.value.metatype ? searchParams.value.metatype : "" // 메타타입
-    sortOrder.value = searchParams.value.sortOrder ? searchParams.value.sortOrder : "" // 정렬방식
-    pagingObj.value.currentPage = searchParams.value.offset + 1 // 현재 페이지
-    pagingObj.value.limit = searchParams.value.limit // 보여줄 개수
+    // 메인화면에서 통합검색으로 넘어온 경우
+    if (fromPath == '/main' && searchStore.getMainSearch) {
+      // 메인에서 카테고리 클릭으로 넘어온 경우
+      if (searchStore.getMainSelectCategory && searchStore.getMainSelectCategory.name) {
+        // 상세필터에서 카테고리 필터 선택 상태로 설정
+        if (detailFilters.value['CATEGORY'].content) {
+          detailFilters.value['CATEGORY'].content.forEach((el) => {
+            if (searchStore.getMainSelectCategory.id == el.id) {
+              el.checked = true
+              detailFilters.value['CATEGORY'].all = false
+              openLeftSubCategoryMenu(el.id) // 하위메뉴 열기
+              setLeftCategoryBold(el.id); // 선택메뉴 Bold 처리
 
-    // 왼쪽메뉴 활성화 처리
-    openLeftSubCategoryMenu(searchParams.value.classification.id ? searchParams.value.classification.id : "") // 하위메뉴 열기
-    setLeftCategoryBold(searchParams.value.classification.id ? searchParams.value.classification.id : ""); // 선택메뉴 Bold 처리
-    const matched = getOriginalList.find((el) => el.id === searchParams.value.classification.id);
-    toggleParents(matched)
+              // 상위메뉴도 펼치기
+              if (el.level && el.level > 1) {
+                const matched = getOriginalList.find((el2) => el2.id === el.id);
+                toggleParents(matched)
+              }
+            } else {
+              el.checked = false
+            }
+          })
+          await searchStore.setSearchParamsDetailFilters(detailFilters.value)
+        }
+      } else { // 메인화면 검색어 입력 or 추천검색어 클릭
+        word.value = searchParams.value.query ? searchParams.value.query : "" // 검색어
+        classification.value = searchParams.value.classification ? searchParams.value.classification : {
+          id: "",
+          name: "",
+          description: ""
+        } // 카테고리
+      }
+      searchStore.setMainSearch(false) // 검색화면으로 왔으므로 false 처리
+      searchStore.setMainSelectCategory(null)
 
-  } else { // 그 외 검색조건 초기화
-    searchStore.setSearchParams(searchParams.value)
+    } else if (fromPath.includes('/search/category')) {
+      word.value = searchParams.value.query ? searchParams.value.query : "" // 검색어
+      classification.value = searchParams.value.classification ? searchParams.value.classification : {
+        id: "",
+        name: "",
+        description: ""
+      }
+      // 상세필터에서 카테고리 필터 선택 상태로 설정
+      if (detailFilters.value['CATEGORY'].content) {
+        detailFilters.value['CATEGORY'].content.forEach((el) => {
+          if (classification.value.id == el.id) {
+            el.checked = true
+            detailFilters.value['CATEGORY'].all = false
+            openLeftSubCategoryMenu(el.id) // 하위메뉴 열기
+            setLeftCategoryBold(el.id); // 선택메뉴 Bold 처리
+
+            // 상위메뉴도 펼치기
+            if (el.level && el.level > 1) {
+              const matched = getOriginalList.find((el2) => el2.id === el.id);
+              toggleParents(matched)
+            }
+          } else {
+            el.checked = false
+          }
+        })
+        await searchStore.setSearchParamsDetailFilters(detailFilters.value)
+      }
+    } else { // 그 외 검색조건 초기화
+      searchStore.setSearchParams(searchParams.value)
+    }
   }
 
-  getSearch(pagingObj.value.currentPage - 1);
+  await getSearch(pagingObj.value.currentPage - 1);
 });
 
 // 검색 유효성 체크
 const checkValidate = async (word: string): Promise<void> => {
-  if (word.length == 1) {
-    await errorAlert("최소 2글자 이상 입력하세요");
-  } else {
-    getSearch(0)
-  }
+  // if (word.length == 1) {
+  //   await errorAlert("최소 2글자 이상 입력하세요");
+  // } else {
+  //   getSearch(0)
+  // }
+  getSearch(0)
 };
-
-const checkValidateInput = async (input: string) => {
-  word.value = input.replace(/\bAND\b/g, 'and').replace(/\bOR\b/g, 'or');
-}
 
 // 가공된 상세필터 정보 가져오기
 const getDetailFilters = async () => {
@@ -499,7 +570,7 @@ const getDetailFilters = async () => {
       detailFilters.value = reorderedObject
 
       let searchParams = {
-        word: word.value,
+        query: word.value,
         detailFilters: detailFilters.value
       }
 
@@ -530,7 +601,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     systemtype: systemtype.value ? systemtype.value : "",
     metatype: metatype.value ? metatype.value : "",
     limit: pagingObj.value.limit ? pagingObj.value.limit : 10,
-    offset: offset,
+    offset: offset ? offset : 0,
     classification: classification.value && classification.value.name ? classification.value.name : "", // 검색할 때는 name값 사용
     sortOrder: sortOrder.value ? sortOrder.value : "",
     entityFilters: {}

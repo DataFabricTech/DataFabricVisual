@@ -55,6 +55,7 @@ public class CategoryService {
             Map<String, Object> content = new HashMap<>();
             if (category.get("name").toString().equals("CATEGORY")) continue;
 
+            content.put("level", category.get("Level"));
             content.put("root", category.get("parent"));
             content.put("rootDescription", category.get("parent_description"));
             content.put("id", category.get("id"));

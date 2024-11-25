@@ -156,10 +156,6 @@ import { useCategoryStore } from "~/store/category.ts";
 import { onBeforeRouteLeave } from "vue-router";
 import { ref } from "vue";
 
-definePageMeta({
-  layout: "user",
-});
-
 const { $ofetch } = useNuxtApp();
 
 const route = useRoute();
