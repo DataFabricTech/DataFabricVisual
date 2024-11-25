@@ -484,12 +484,9 @@ onMounted(async () => {
               detailFilters.value['CATEGORY'].all = false
               openLeftSubCategoryMenu(el.id) // 하위메뉴 열기
               setLeftCategoryBold(el.id); // 선택메뉴 Bold 처리
-
               // 상위메뉴도 펼치기
-              if (el.level && el.level > 1) {
-                const matched = getOriginalList.find((el2) => el2.id === el.id);
-                toggleParents(matched)
-              }
+              const matched = getOriginalList.find((el2) => el2.id === el.id);
+              toggleParents(matched)
             } else {
               el.checked = false
             }
@@ -524,10 +521,8 @@ onMounted(async () => {
             setLeftCategoryBold(el.id); // 선택메뉴 Bold 처리
 
             // 상위메뉴도 펼치기
-            if (el.level && el.level > 1) {
-              const matched = getOriginalList.find((el2) => el2.id === el.id);
-              toggleParents(matched)
-            }
+            const matched = getOriginalList.find((el2) => el2.id === el.id);
+            toggleParents(matched)
           } else {
             el.checked = false
           }
