@@ -21,10 +21,11 @@
                   class="mu-input"
                   placeholder="테이블을 제외한 컬럼/타 메타 검색결과를 조회하려면 상세필터로 검색하세요"
                   title="검색어를 입력해 주세요."
-                  @keypress.enter.prevent="getSearch(0)"
-                  v-model="word"
+                  @keypress.enter.prevent="checkValidate(word)"
+                  @input="checkValidateInput(word)"
+                 v-model="word"
                 />
-                <button
+                <button v-if="word"
                   type="button"
                   class="mu-btn mu-btn-delete"
                   @click="onClickDeleteButton"
@@ -70,15 +71,11 @@
                 <div class="mu-form-item" v-for="(df, idx) in detailFilters" >
                   <div class="btn-category">
                     <div class="mu-checkbox all">
-                      <input :type="df.all ? 'radio' : 'checkbox'" :name="idx" :id="'ckbox_'+idx" value="ALLs" checked disabled>
-                      <label :for="'ckbox_'+idx"> <span>{{ getRootDescription(idx) }}</span></label>
-                    </div>
-                    <div class="mu-checkbox all">
                       <input :type="df.all ? 'radio' : 'checkbox'" :name="idx" :id="'ckb_'+idx" value="ALL" @change="onChangeCheckBox(idx, $event);" :checked="df.all">
                       <label :for="'ckb_'+idx"> <span>{{ getRootDescription(idx) }}</span></label>
                     </div>
                     <div v-for="(tg, idx2) in df.content" class="mu-checkbox">
-                      <input :type="idx == 'ORDER' ? 'radio' : 'checkbox'" :name="idx" :id="'ckbox_'+tg.name" :value="tg.name" @change="onChangeCheckBox(idx, $event)" :checked="false" disabled>
+                      <input :type="idx == 'ORDER' ? 'radio' : 'checkbox'" :name="idx" :id="'ckbox_'+tg.name" :value="tg.name" @change="onChangeCheckBox(idx, $event)" :checked="tg.checked">
                       <label :for="'ckbox_'+tg.name"><span>{{ tg.description }}<em v-if="idx != 'TAG' && idx != 'ORDER'">({{ tg.count }})</em></span></label>
                     </div>
                   </div>
@@ -207,7 +204,8 @@
                     <p >시스템 타입 : {{ data.systemtype }}</p>
                     <p >메타 타입 : {{ data.metatype }}</p>
                     <p v-if="data.qualifiedname">DB : {{ getDbName(data.qualifiedname) }}</p>
-                    <p v-if="data.qualifiedname && data.qualifiedname.split('.')[2]">스키마 : {{ getSchemaName(data.qualifiedname) }}</p>
+                    <p v-if="data.systemtype && data.systemtype.toUpperCase() == 'COLUMN'"> 테이블 {{ getTableName(data.qualifiedname) }}</p>
+                    <p v-if="data.systemtype && data.systemtype.toUpperCase() != 'HIVE' && data.qualifiedname && data.qualifiedname.split('.')[2]">스키마 : {{ getSchemaName(data.qualifiedname) }}</p>
                   </div>
                 </li>
                 <li v-else><p class="nodata">검색결과가 존재하지 않습니다.<span>다른 검색어를 입력해주세요.</span></p></li>
@@ -437,8 +435,9 @@ onMounted(async () => {
       name: "",
       description: ""
     } // 카테고리
-    categoryStore.setSelectedItemId(classification.value.id); // 체크 처리
-    categoryStore.setToggleTargetOnClickTreemap(classification.value.id); // 메뉴 활성화
+    openLeftSubCategoryMenu(classification.value.id) // 하위메뉴 열기
+    setLeftCategoryBold(classification.value.id); // 선택메뉴 Bold 처리
+
     const matched = getOriginalList.find((el) => el.id === classification.value.id);
     toggleParents(matched)
   } else if (fromPath.includes('/search/detail')) { // 상세페이지에서 넘어온 경우
@@ -448,6 +447,7 @@ onMounted(async () => {
       name: "",
       description: ""
     }
+
     systemtype.value = searchParams.value.systemtype ? searchParams.value.systemtype : "" // 시스템타입
     metatype.value = searchParams.value.metatype ? searchParams.value.metatype : "" // 메타타입
     sortOrder.value = searchParams.value.sortOrder ? searchParams.value.sortOrder : "" // 정렬방식
@@ -455,8 +455,8 @@ onMounted(async () => {
     pagingObj.value.limit = searchParams.value.limit // 보여줄 개수
 
     // 왼쪽메뉴 활성화 처리
-    categoryStore.setSelectedItemId(searchParams.value.classification.id ? searchParams.value.classification.id : ""); // 체크 처리
-    categoryStore.setToggleTargetOnClickTreemap(searchParams.value.classification.id ? searchParams.value.classification.id : ""); // 메뉴 활성화
+    openLeftSubCategoryMenu(searchParams.value.classification.id ? searchParams.value.classification.id : "") // 하위메뉴 열기
+    setLeftCategoryBold(searchParams.value.classification.id ? searchParams.value.classification.id : ""); // 선택메뉴 Bold 처리
     const matched = getOriginalList.find((el) => el.id === searchParams.value.classification.id);
     toggleParents(matched)
 
@@ -467,9 +467,18 @@ onMounted(async () => {
   getSearch(pagingObj.value.currentPage - 1);
 });
 
-const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
-  return false
-})
+// 검색 유효성 체크
+const checkValidate = async (word: string): Promise<void> => {
+  if (word.length == 1) {
+    await errorAlert("최소 2글자 이상 입력하세요");
+  } else {
+    getSearch(0)
+  }
+};
+
+const checkValidateInput = async (input: string) => {
+  word.value = input.replace(/\bAND\b/g, 'and').replace(/\bOR\b/g, 'or');
+}
 
 // 가공된 상세필터 정보 가져오기
 const getDetailFilters = async () => {
@@ -493,9 +502,9 @@ const getDetailFilters = async () => {
         word: word.value,
         detailFilters: detailFilters.value
       }
+
       await searchStore.setSearchParams(searchParams)
     }
-    console.log(detailFilters.value)
   }).catch((e) => {
     console.log(e)
   })
@@ -513,32 +522,17 @@ const toggleParents = (matched) => {
   }
 }
 
-const getSystemtypeDesc = (sys) => {
-  console.log(sys)
-  return sys
-}
-
-const getMetatypesDesc = (meta) => {
-  return meta
-}
-
-const getSortOrderDesc = (order) => {
-  if (order == 'DESC') return "내림차순"
-  if (order == 'ASC') return "오름차순"
-  return order
-}
-
 // 검색
 const getSearch = async (offset: number = 0): Promise<void> => {
   printSynonymList.value = [];
   const params = {
     query: word.value ? word.value : "",
-    systemtype: systemtype.value,
-    metatype: metatype.value,
-    limit: pagingObj.value.limit,
+    systemtype: systemtype.value ? systemtype.value : "",
+    metatype: metatype.value ? metatype.value : "",
+    limit: pagingObj.value.limit ? pagingObj.value.limit : 10,
     offset: offset,
     classification: classification.value && classification.value.name ? classification.value.name : "", // 검색할 때는 name값 사용
-    sortOrder: sortOrder.value,
+    sortOrder: sortOrder.value ? sortOrder.value : "",
     entityFilters: {}
   };
 
@@ -557,7 +551,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
   };
 
   // 검색을 했을 때만 동의어 리스트 조회
-  if (word.value != "") {
+  if (word.value && word.value != "") {
     synonymList.value = [];
 
     if (word.value.includes(" ")) {
@@ -693,6 +687,19 @@ const isTermStyle = (item: any): { fontWeight: number } | {} => {
   }
 };
 
+const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
+  if (detailFilters.value['CATEGORY']
+  && detailFilters.value['SYSTEMTYPE']
+  && detailFilters.value['METATYPE']
+  && detailFilters.value['TAG']
+   && detailFilters.value['ORDER']) {
+    if (detailFilters.value['CATEGORY'].all && detailFilters.value['SYSTEMTYPE'].all && detailFilters.value['METATYPE'].all && detailFilters.value['TAG'].all && detailFilters.value['ORDER'].all) {
+      return false
+    }
+  }
+  return true
+})
+
 // 필터 검색 조건 초기화
 const resetSearchParam = (): void => {
   word.value = "";
@@ -701,15 +708,19 @@ const resetSearchParam = (): void => {
   detailFilters.value['CATEGORY'].content.forEach((el) => {
     el.checked = false
   })
+
+
   detailFilters.value['SYSTEMTYPE'].all = true
   detailFilters.value['SYSTEMTYPE'].content.forEach((el) => {
     el.checked = false
   })
+  systemtype.value = ""
 
   detailFilters.value['METATYPE'].all = true
   detailFilters.value['METATYPE'].content.forEach((el) => {
     el.checked = false
   })
+  metatype.value = ""
 
   detailFilters.value['TAG'].all = true
   detailFilters.value['TAG'].content.forEach((el) => {
@@ -720,6 +731,7 @@ const resetSearchParam = (): void => {
   detailFilters.value['ORDER'].content.forEach((el) => {
     el.checked = false
   })
+  sortOrder.value = ""
 };
 
 // 상세 데이터 이동
@@ -731,7 +743,7 @@ function onSelectDetailPage(item: any): void {
 
 // 좌측 카테고리 리스트 내 노드 클릭 이벤트 핸들러
 const onClickMenuItem = (item: any): void => {
-  console.log(item)
+  // 카테고리 전체 클릭
   if (!item) {
     classification.value = {
       id: "",
@@ -739,14 +751,29 @@ const onClickMenuItem = (item: any): void => {
       description: ""
     };
 
+    detailFilters.value["CATEGORY"].content.forEach((el) => {el.checked = false})
+    detailFilters.value["CATEGORY"].all = true
+    detailFilters.value["CATEGORY"].count = 0
+
+  } else if (item.id == "_NOT_CLASSIFIED") {
+    classification.value = {
+      id: "",
+      name: "",
+      description: ""
+    };
+
+    detailFilters.value["CATEGORY"].content.forEach((el) => {el.checked = false})
+    detailFilters.value["CATEGORY"].all = true
+    detailFilters.value["CATEGORY"].count = 0
   } else {
-    categoryStore.setToggleTargetOnClickTreemap(item.id)
+    openLeftSubCategoryMenu(item.id) // 하위메뉴 열기
     classification.value = item;
 
     // 상세필터 카테고리 체크 설정
     detailFilters.value.CATEGORY.content.forEach((el) => {
-      if (el.id == item.id) {
+      if (el.name == item.name) {
         el.checked = true;
+        detailFilters.value.CATEGORY.all = false
       } else {
         el.checked = false;
       }
@@ -801,24 +828,6 @@ const onClickDeleteButton = (): void => {
   word.value = "";
 };
 
-// 날짜변환
-const getDateFormat = (datetime) => {
-  if(datetime == null || datetime == undefined || datetime == ""){
-    return " - "
-  }
-
-  let [dateStr, timeStr] = datetime.split(' ');
-
-  // 날짜 부분 변환
-  let year = dateStr.substring(0, 4);
-  let month = dateStr.substring(5, 7);
-  let day = dateStr.substring(8, 10);
-
-  let formattedDateTime = `${year}-${month}-${day}`;
-
-  return formattedDateTime;
-}
-
 const yyyyMMdd = (value) => {
   let date = new Date(value);
   let year = date.getFullYear();
@@ -856,8 +865,33 @@ const checkDataAccess = (flag) => {
 
 // 검색에서 필터적용중 삭제
 const deleteCategoryTag = (): void => {
-  console.log('필터 전체 제거')
+  detailFilters.value['CATEGORY'].all = true
+  detailFilters.value['CATEGORY'].content.forEach((el) => {
+    el.checked = false
+  })
+  detailFilters.value['SYSTEMTYPE'].all = true
+  detailFilters.value['SYSTEMTYPE'].content.forEach((el) => {
+    el.checked = false
+  })
+
+  detailFilters.value['METATYPE'].all = true
+  detailFilters.value['METATYPE'].content.forEach((el) => {
+    el.checked = false
+  })
+
+  detailFilters.value['TAG'].all = true
+  detailFilters.value['TAG'].content.forEach((el) => {
+    el.checked = false
+  })
+
+  detailFilters.value['ORDER'].all = true
+  detailFilters.value['ORDER'].content.forEach((el) => {
+    el.checked = false
+  })
+
+  getSearch(0)
 };
+
 
 const getRootDescription = (key) => {
   if (key == 'CATEGORY') return "카테고리"
@@ -874,6 +908,72 @@ const onChangeCheckBox = async (key, event: any) => {
     detailFilters.value[key].content.forEach((el) => {el.checked = false})
     detailFilters.value[key].all = true
     detailFilters.value[key].count = 0
+
+    // 카테고리인 경우 왼쪽메뉴 연동 처리
+    if (key == 'CATEGORY') { // 카테고리일 경우만 왼쪽메뉴 연동 처리
+      openLeftSubCategoryMenu("") // 하위메뉴 열기
+      setLeftCategoryBold(""); // 선택메뉴 Bold 처리
+
+      classification.value = {
+        id: "",
+        name: "",
+        description: ""
+      };
+    }
+
+    // 시스템 타입
+    if (key == 'SYSTEMTYPE') {
+      systemtype.value = ""
+    }
+
+    // 메타 타입
+    if (key == 'METATYPE') {
+      metatype.value = ""
+    }
+
+    // 정렬
+    if (key == 'ORDER') {
+      sortOrder.value = ""
+    }
+
+  } else {
+    detailFilters.value[key].content.forEach((el) => {
+      if (el.name == event.target.value) {
+        el.checked = event.target.checked
+
+        // 카테고리일 경우만 왼쪽메뉴 연동 처리
+        if (key == 'CATEGORY') {
+          openLeftSubCategoryMenu(el.id) // 왼하위메뉴 열기
+          setLeftCategoryBold(el.id) //
+
+          classification.value = {
+            id: el.id,
+            name: el.name,
+            description: el.description
+          };
+        }
+
+        // 시스템 타입
+        if (key == 'SYSTEMTYPE') {
+          systemtype.value = el.name
+        }
+
+        // 메타 타입
+        if (key == 'METATYPE') {
+          metatype.value = el.name
+        }
+
+        // 정렬
+        if (key == 'ORDER') {
+          sortOrder.value = el.name
+        }
+      }
+      else el.checked = false // 단일로 체크되도록 설정
+    })
+
+
+    detailFilters.value[key].count = detailFilters.value[key].content.filter((el) => el.checked == true).length
+    detailFilters.value[key].all = false
 
   }
 
@@ -897,6 +997,25 @@ const getSchemaName = (qualifiedName) => {
     return qualifiedName.split(".")[2]
   }
   return ""
+}
+
+// 테이블명
+const getTableName = (qualifiedName) => {
+  if (qualifiedName) {
+    return qualifiedName.split(".")[3]
+  }
+  return ""
+}
+
+// 왼쪽메뉴 열기 처리
+const openLeftSubCategoryMenu = (id) => {
+  categoryStore.setToggleTargetOnClickTreemap(id ? id : "") // 하위메뉴 열기
+}
+
+
+// 왼쪽메뉴 선택 카테고리 Bold 처리
+const setLeftCategoryBold = (id) => {
+  categoryStore.setSelectedItemId(id ? id : ""); // 선택메뉴 Bold 처리
 }
 
 </script>

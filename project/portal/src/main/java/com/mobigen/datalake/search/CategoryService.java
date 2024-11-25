@@ -57,6 +57,7 @@ public class CategoryService {
 
             content.put("root", category.get("parent"));
             content.put("rootDescription", category.get("parent_description"));
+            content.put("id", category.get("id"));
             content.put("name", category.get("name"));
             content.put("description", category.get("description"));
             content.put("count", category.get("type_count"));
@@ -71,11 +72,14 @@ public class CategoryService {
         systemInfo.put("name", "시스템 타입");
         systemInfo.put("content", new ArrayList<Map<String, Object>>());
 
+        int i=0;
         for (Map<String, Object> system : systemList) {
             Map<String, Object> content = new HashMap<>();
 
             content.put("root", "SYSTEMTYPE");
             content.put("rootDescription", "시스템 타입");
+            i = i + 1;
+            content.put("id", i);
             content.put("name", system.get("systemtype"));
             content.put("description", system.get("systemtype"));
             content.put("count", system.get("type_count"));
@@ -91,11 +95,14 @@ public class CategoryService {
         metaInfo.put("name", "메타 타입");
         metaInfo.put("content", new ArrayList<Map<String, Object>>());
 
+        i=0;
         for (Map<String, Object> meta : metaList) {
             Map<String, Object> content = new HashMap<>();
 
             content.put("root", "METATYPE");
             content.put("rootDescription", "메타 타입");
+            i = i + 1;
+            content.put("id", i);
             content.put("name", meta.get("metatype"));
             content.put("description", meta.get("metatype"));
             content.put("count", meta.get("type_count"));
@@ -111,10 +118,13 @@ public class CategoryService {
         tagInfo.put("name", "태그");
         tagInfo.put("content", new ArrayList<Map<String, Object>>());
 
+        i=0;
         for (Map<String, Object> tag : tagList) {
             Map<String, Object> content = new HashMap<>();
             content.put("root", "TAG");
             content.put("rootDescription", "태그");
+            i = i + 1;
+            content.put("id", i);
             content.put("name", tag.get("tag_name"));
             content.put("description", tag.get("tag_name"));
             content.put("count", tag.get("count"));
@@ -132,6 +142,7 @@ public class CategoryService {
         Map<String, Object> ascContent = new HashMap<>();
         ascContent.put("root", "ORDER");
         ascContent.put("rootDescription", "정렬기준");
+        ascContent.put("id", 1);
         ascContent.put("name", "ASC");
         ascContent.put("description", "오름차순");
         ascContent.put("count", 0);
@@ -140,6 +151,7 @@ public class CategoryService {
         Map<String, Object> descContent = new HashMap<>();
         descContent.put("root", "ORDER");
         descContent.put("rootDescription", "정렬기준");
+        descContent.put("id", 2);
         descContent.put("name", "DESC");
         descContent.put("description", "내림차순");
         descContent.put("count", 0);
