@@ -424,8 +424,8 @@ onMounted(async () => {
 
   searchParams.value = searchStore.getSearchParams // 검색 조건 불러오기
 
-  if (fromPath == '/search/detail') {
-    if (!searchParams.query && (Object.keys(searchParams.detailFilters).length === 0 && searchParams.detailFilters.constructor === Object)) {
+  if (fromPath.includes('/search/detail')) {
+    if (!searchParams.value.query && (Object.keys(searchParams.value.detailFilters).length === 0 && searchParams.value.detailFilters.constructor === Object)) {
       // 상세필터 조회
       await getDetailFilters()
       pagingObj.value = {
@@ -439,8 +439,8 @@ onMounted(async () => {
     } else {
       // 기존 검색어, 상세필터 내용 가져오기
       word.value = searchParams.value.query ? searchParams.value.query : "" // 검색어
-      detailFilters.value = searchParams.detailFilters
-      pagingObj.value = searchParams.pagingObj
+      detailFilters.value = searchParams.value.detailFilters
+      pagingObj.value = searchParams.value.pagingObj
 
       classification.value = searchParams.value.classification ? searchParams.value.classification : {
         id: "",
@@ -460,7 +460,7 @@ onMounted(async () => {
       const matched = getOriginalList.find((el) => el.id === searchParams.value.classification.id);
       toggleParents(matched)
 
-      await getSearch(pagingObj.value.currentPage - 1)
+      await getSearch(pagingObj.value.currentPage - 1);
     }
   } else {
     // 상세필터 조회
@@ -537,9 +537,10 @@ onMounted(async () => {
     } else { // 그 외 검색조건 초기화
       searchStore.setSearchParams(searchParams.value)
     }
+
+    await getSearch(pagingObj.value.currentPage - 1);
   }
 
-  await getSearch(pagingObj.value.currentPage - 1);
 });
 
 // 검색 유효성 체크
@@ -596,7 +597,6 @@ const toggleParents = (matched) => {
 
 // 검색
 const getSearch = async (offset: number = 0): Promise<void> => {
-  console.log('getSearch')
   printSynonymList.value = [];
   const params = {
     query: word.value ? word.value : "",
@@ -609,6 +609,8 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     sortOrder: sortOrder.value ? sortOrder.value : "",
     entityFilters: {}
   };
+
+  console.log(params);
 
   await $ofetch(`/api/search/getEsSearch`, {
     method: "POST",
@@ -698,7 +700,13 @@ const getSearch = async (offset: number = 0): Promise<void> => {
 
   // 검색 조건 저장
   params.classification = classification.value // 카테고리 검색조건 저장용으로 변경
-  searchStore.setSearchParams(params)
+  // 검색어, 카테고리 저장
+  searchStore.setSearchParams({
+    query: word.value,
+    detailFilters: detailFilters.value,
+    pagingObj: pagingObj.value,
+    ...params
+  })
 };
 
 
@@ -783,6 +791,11 @@ const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
 // 필터 검색 조건 초기화
 const resetSearchParam = (): void => {
   word.value = "";
+  classification.value = {
+    id: "",
+    name: "",
+    description: "",
+  }
 
   detailFilters.value['CATEGORY'].all = true
   detailFilters.value['CATEGORY'].content.forEach((el) => {
@@ -874,6 +887,7 @@ const onClickPage = (page: number): void => {
     ...pagingObj.value,
     total: page
   };
+  searchStore.setSearchParamsPagingObj(pagingObj.value)
 
   getSearch(page);
 
