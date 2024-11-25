@@ -11,6 +11,7 @@ export const useSearchStore = defineStore('searchStore', () => {
     pagingObj: {},
     systemtype: "",
     metatype: "",
+    tag: "",
     limit: 10,
     offset: 0,
     classification: {

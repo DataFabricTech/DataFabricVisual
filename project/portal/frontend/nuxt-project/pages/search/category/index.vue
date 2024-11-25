@@ -540,6 +540,7 @@ const moveToSearchPage = (obj) => {
     pagingObj: {},
     systemtype: "",
     metatype: "",
+    tag: "",
     limit: 10,
     offset: 0,
     classification: obj,

@@ -60,7 +60,7 @@
             </div>
           </dd>
         </dl>
-        <div class="data-filter-wrap" v-show="!showFilterWrap1" style="display: block">
+        <div class="data-filter-wrap" v-show="showFilterWrap1" style="display: block">
           <div class="content-detail-search">
             <div class="mu-heading">
               <h4>상세필터</h4>
@@ -150,8 +150,8 @@
               </div>
             </div>
             <div class="data-result" >
-              <ul class="data-box-list">
-                <li class="data-box" v-if="listData" v-for="data in listData">
+              <ul class="data-box-list" v-if="listData && listData.length > 0">
+                <li class="data-box" v-for="data in listData">
                   <div class="inner-data visual" @click="onSelectDetailPage(data)">
                     <i v-if="data.metatype && data.metatype.toUpperCase() == 'CONTAINER'" class="ico-data data-04"></i>
                     <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'DATABASE'" class="ico-data data-02"></i>
@@ -207,7 +207,9 @@
                     <p v-if="data.systemtype && data.systemtype.toUpperCase() != 'HIVE' && data.qualifiedname && data.qualifiedname.split('.')[2]">스키마 : {{ getSchemaName(data.qualifiedname) }}</p>
                   </div>
                 </li>
-                <li v-else><p class="nodata">검색결과가 존재하지 않습니다.<span>다른 검색어를 입력해주세요.</span></p></li>
+              </ul>
+              <ul v-else class="data-box-list">
+                <li><p class="nodata">검색결과가 존재하지 않습니다.<span>다른 검색어를 입력해주세요.</span></p></li>
               </ul>
             </div>
             <pagination :paging="pagingObj" @onClickPage="onClickPage" />
@@ -250,8 +252,11 @@ const getOriginalList = categoryStore.getOriginalList;
 const searchStore = useSearchStore();
 const searchParams = ref({
   query: "",
+  detailFilters: {},
+  pagingObj: {},
   systemtype: "",
   metatype: "",
+  tag: "",
   limit: 10,
   offset: 0,
   classification: {
@@ -371,12 +376,9 @@ const leftWidth = ref<number>(0); // 왼쪽 DOM 너비
 
 const word = ref<string>(""); // 검색어
 
-const filterSystemtypes = ref<Array<string>>([]); // 시스템 타입 필터 항목
-const filterMetatypes = ref<Array<string>>([]); // 메타데이터 타입 필터 항목
-const filterSortOrders = ref<Array<string>>(["ASC", "DESC"]); // 정렬 필터 항목
-
 const systemtype = ref<string>(""); // 시스템 타입 (hive, hbase, postgreSQL 등 시스템 종류)
 const metatype = ref<string>(""); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미
+const tag = ref<string>(""); // 태그
 const sortOrder = ref<string>(""); // 정렬
 const classification = ref({
   id: "",
@@ -423,8 +425,7 @@ onMounted(async () => {
   searchParams.value = searchStore.getSearchParams // 검색 조건 불러오기
 
   if (fromPath == '/search/detail') {
-    if (!searchParams.query &&
-    (Object.keys(searchParams.detailFilters).length === 0 && searchParams.detailFilters.constructor === Object)) {
+    if (!searchParams.query && (Object.keys(searchParams.detailFilters).length === 0 && searchParams.detailFilters.constructor === Object)) {
       // 상세필터 조회
       await getDetailFilters()
       pagingObj.value = {
@@ -595,11 +596,13 @@ const toggleParents = (matched) => {
 
 // 검색
 const getSearch = async (offset: number = 0): Promise<void> => {
+  console.log('getSearch')
   printSynonymList.value = [];
   const params = {
     query: word.value ? word.value : "",
     systemtype: systemtype.value ? systemtype.value : "",
     metatype: metatype.value ? metatype.value : "",
+    tag: "",
     limit: pagingObj.value.limit ? pagingObj.value.limit : 10,
     offset: offset ? offset : 0,
     classification: classification.value && classification.value.name ? classification.value.name : "", // 검색할 때는 name값 사용
@@ -607,19 +610,25 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     entityFilters: {}
   };
 
-  const result = await $ofetch(`/api/search/getEsSearch`, {
+  await $ofetch(`/api/search/getEsSearch`, {
     method: "POST",
     body: params,
-  });
+  }).then((res) => {
+    if (res && res.data && res.data.result && res.data.result.results) {
+      listData.value = res.data.result.results
+      // 페이징
+      pagingObj.value = {
+        ...pagingObj.value,
+        total: res.data.result.total_count,
+        currentPage: res.data.result.page_index
+      };
+    } else {
+      listData.value = []
+    }
 
-  listData.value = result.data.result.results
-
-  // 페이징
-  pagingObj.value = {
-    ...pagingObj.value,
-    total: result.data.result.total_count,
-    currentPage: result.data.result.page_index
-  };
+  }).catch((err) => {
+    console.log(err)
+  })
 
   // 검색을 했을 때만 동의어 리스트 조회
   if (word.value && word.value != "") {
@@ -940,6 +949,9 @@ const deleteCategoryTag = (): void => {
   detailFilters.value['CATEGORY'].content.forEach((el) => {
     el.checked = false
   })
+  openLeftSubCategoryMenu("")
+  setLeftCategoryBold("")
+
   detailFilters.value['SYSTEMTYPE'].all = true
   detailFilters.value['SYSTEMTYPE'].content.forEach((el) => {
     el.checked = false
