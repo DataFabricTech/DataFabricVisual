@@ -531,7 +531,7 @@ onMounted(async () => {
 // 검색 유효성 체크
 const checkValidate = async (word: string): Promise<void> => {
   // if (word.length == 1) {
-  //   await errorAlert("최소 2글자 이상 입력하세요");
+  //   await errorAlert("2글자 이상 입력하세요.");
   // } else {
   //   getSearch(0)
   // }
@@ -544,8 +544,8 @@ const getDetailFilters = async () => {
   await $ofetch('/api/search/category/detailFilters').then(async (res) => {
     if (res && !res.errorMessage) {
       // 키의 배열을 원하는 순서로 정렬
-      // let keys = ["CAT", "SYS", "TAG", "DATE"];
-      let keys = ["CATEGORY", "SYSTEMTYPE", "METATYPE", "TAG", "ORDER"];
+      // let keys = ["CATEGORY", "SYSTEMTYPE", "METATYPE", "TAG", "ORDER"];
+      let keys = Object.keys(detailFilters.value);
       let reorderedObject = {};
 
       // 정렬된 순서에 따라 새로운 객체 생성
@@ -569,7 +569,7 @@ const getDetailFilters = async () => {
 }
 
 // methods
-// 좌측 메뉴 펼치기 처리
+// 좌측 상위메뉴 펼치기 처리
 const toggleParents = (matched) => {
   if (matched) {
     const parent_matched = getOriginalList.find((el2) => el2.id === matched.parent_id)
