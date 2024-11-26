@@ -82,7 +82,7 @@
       </thead>
       <tbody>
         <tr v-for="(item, index) in column" :key="index">
-          <td :title="getColumnComent(item.name, '')" v-html="getColumnComent(item.name,'<br>')">            
+          <td :title="getColumnComent(item.name, '')" v-html="getColumnComent(item.name,'<br>')">
           </td>
           <td>
             <span class="mu-ellipsis" :title="numberComma(item.null_count)">
@@ -94,7 +94,7 @@
               {{ numberComma(item.distinct_count) }}
             </span>
           </td>
-          
+
           <template v-if="checkInvaildNumberColumn(item)">
             <td>
               <span class="mu-ellipsis" :title="numberComma(item.min_value)">
@@ -128,8 +128,8 @@
                 해당 컬럼에는 숫자가 아닌 값들이 포함되어 있습니다.
               </span>
             </td>
-          </template>                    
-          <td v-html="yyyyMMddHHmmSS(item.update_date, '<br>')"></td>
+          </template>
+          <td v-html="$yyyyMMddHHmmSS_Sep(item.update_date, '<br>')"></td>
         </tr>
       </tbody>
     </table>
@@ -186,34 +186,18 @@ const numberComma = (val) => {
   if (isNaN(num)) {
     return "해당 컬럼에는 숫자가 아닌 값들이 포함되어 있습니다.";
   }
-  
+
   // 정수와 소수 부분을 분리
   let [integerPart, decimalPart] = String(num).split(".");
-  
+
   // 정수 부분에 쉼표 추가
   integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  
+
   // 소수점이 있을 경우 처리
-  return decimalPart ? `${integerPart}.${decimalPart}` : integerPart;  
+  return decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
 };
 
-const yyyyMMddHHmmSS = (value, sep) => {
-  if (value == null || value == undefined) {
-    return "";
-  }
-
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  
-  return year + "-" + month + "-" + day + sep + hours + ":" + min + ":" + sec;
-};
-
-const getColumnComent = (column, sep) => {  
+const getColumnComent = (column, sep) => {
   return column + sep + "(" + props.columnCommentMap[column] + ")";
 }
 
@@ -224,7 +208,7 @@ const checkInvaildNumberColumn = (column) => {
           column.hasOwnProperty('var_value') &&
           column.hasOwnProperty('std_value') )
     return true;
-  else 
+  else
     return false;
 }
 

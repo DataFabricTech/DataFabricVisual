@@ -23,7 +23,7 @@
           <td>{{ comman(table.num_rows) }}</td>
           <th scope="col">테이블프로파일링 일시</th>
           <!-- <td>{{ table.total_size | numberComma }}</td> -->
-          <td>{{ yyyyMMddHHmmSS(table.update_date) }}</td>
+          <td>{{ $yyyyMMddHHmmSS(table.update_date) }}</td>
         </tr>
       </tbody>
     </table>
@@ -62,17 +62,4 @@ const comman = (val) => {
   }
 };
 
-const yyyyMMddHHmmSS = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
-};
 </script>

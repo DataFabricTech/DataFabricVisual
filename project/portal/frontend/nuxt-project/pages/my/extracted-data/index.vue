@@ -42,7 +42,7 @@
                               {{ item.description && item.description.length > 0 ? `${item.description} (${item.name})` : item.name }}
                             </a>
                           </td><!-- 왼쪽정렬시 .tl 추가 -->
-                          <td>{{ yyyyMMddHHmmSS(item.download_date) }}</td>
+                          <td>{{ $yyyyMMddHHmmSS(item.download_date) }}</td>
                           <td>{{ item.download_type == '1' ? 'API' : 'FILE' }}</td>
                       </tr>
                       <tr v-if="postList.length === 0">
@@ -143,35 +143,6 @@ const onClickDataName = (item: PostItem) => {
 
 const onClickPage = (page: number) => {
   getMyExtractedDataList(page);
-};
-
-const yyyyMMddHHmmSS = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
-};
-
-const yyyyMMdd = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  // return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
-  return year + "-" + month + "-" + day;
 };
 
 onMounted(() => {

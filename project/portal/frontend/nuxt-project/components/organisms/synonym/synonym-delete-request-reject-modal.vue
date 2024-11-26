@@ -20,7 +20,7 @@
             <th> 요청자 </th>
             <td>  {{ props.synonymDeleteRequestOne.user_nm }} </td>
             <th> 요청일 </th>
-            <td> {{ yyyyMMddHHmmSS(props.synonymDeleteRequestOne.req_date) }} </td>
+            <td> {{ $yyyyMMddHHmmSS(props.synonymDeleteRequestOne.req_date) }} </td>
           </tr>
           <tr>
             <th scope="row"> 대표어 </th>
@@ -85,17 +85,4 @@ const onClose = async () => {
   emit('onCloseModal')
 }
 
-const yyyyMMddHHmmSS = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
-};
 </script>

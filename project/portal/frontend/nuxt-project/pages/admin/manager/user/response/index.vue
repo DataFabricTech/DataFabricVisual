@@ -73,8 +73,8 @@
                   <i v-if="item.file_cnt > 0" class="mu-icon-svg file">첨부파일 있음</i>
                 </td>
                 <td>{{ item.user_nm }}</td>
-                <td>{{ yyyyMMdd(item.create_date) }}</td>
-                <td>{{ yyyyMMdd(item.finish_date) }}</td>
+                <td>{{ $yyyyMMdd(item.create_date) }}</td>
+                <td>{{ $yyyyMMdd(item.finish_date) }}</td>
                 <td>
                   <em :class="getProcessStyle(item.process_status)">{{ getProcessStatus(item.process_status) }}</em>
                 </td>
@@ -301,18 +301,4 @@ const onClickDeleteButton = async (): Promise<void> => {
   }
 };
 
-const yyyyMMdd = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  // let hours = String(date.getHours()).padStart(2, "0");
-  // let min = String(date.getMinutes()).padStart(2, "0");
-  // let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "-";
-  }
-  // return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
-  return year + "-" + month + "-" + day;
-};
 </script>

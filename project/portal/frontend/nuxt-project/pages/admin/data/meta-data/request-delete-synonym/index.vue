@@ -69,7 +69,7 @@
                   </div>
                 </td>
                 <td>{{ item.user_nm }} </td>
-                <td>{{ yyyyMMdd(item.req_date) }} <br> {{ HHmmSS(item.req_date) }} </td>
+                <td>{{ $yyyyMMdd(item.req_date) }} <br> {{ $HHmmSS(item.req_date) }} </td>
                 <td>
                   <button type="button" class="mu-btn mu-btn-sm mu-btn-underline status-delete" v-if="item.status == 1" @click="onToggleSynonymDeleteRequestListModal(item.id)"><span>삭제요청</span></button>
                   <button type="button" class="mu-btn mu-btn-sm mu-btn-underline status-approval" v-if="item.status == 2" @click="onToggleSynonymDeleteRequestConfirmModal(item.id)"><span>승인</span></button>
@@ -429,31 +429,4 @@ const onClickPage = (page, req_status) => {
   getDeleteRequestList(page, req_status);
 }
 
-const yyyyMMdd = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  return year + "-" + month + "-" + day;
-};
-
-const HHmmSS = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  return hours + ":" + min + ":" + sec;
-};
 </script>

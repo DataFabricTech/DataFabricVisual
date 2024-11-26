@@ -161,7 +161,7 @@ definePageMeta({
   layout: "admin",
 });
 
-const { $ofetch } = useNuxtApp();
+const { $ofetch, $yyyyMMdd } = useNuxtApp();
 const route = useRoute();
 const router = useRouter();
 const categoryStore = useCategoryStore()
@@ -317,25 +317,9 @@ const initExternalData = async () => {
     dataDescription.value = externalData.value.description // 데이터 설명
     selectedTags.value = externalData.value.tags // 태그
     selectDate.value = new Date(externalData.value.create_date).getTime() // 등록일
-    selectDateText.value = yyyyMMdd(externalData.value.create_date) // 등록일 스트링
+    selectDateText.value = $yyyyMMdd(externalData.value.create_date) // 등록일 스트링
   }
 }
-
-// 날짜 변환
-const yyyyMMdd = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  // let hours = String(date.getHours()).padStart(2, "0");
-  // let min = String(date.getMinutes()).padStart(2, "0");
-  // let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  // return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
-  return year + "-" + month + "-" + day;
-};
 
 // 카테고리, 시스템 클릭 이벤트
 const onChangeCheckBox = (key, event: any) => {

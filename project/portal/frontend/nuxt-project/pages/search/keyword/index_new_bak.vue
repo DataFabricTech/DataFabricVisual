@@ -264,7 +264,7 @@
                     </div>
                   </div>
                   <div class="inner-data option">
-                    <p>등록일 : {{ yyyyMMdd(item.create_date) }}</p>
+                    <p>등록일 : {{ $yyyyMMdd(item.create_date) }}</p>
                   </div>
                 </li>
                 <li v-else><p class="nodata">검색결과가 존재하지 않습니다.<span>다른 검색어를 입력해주세요.</span></p></li>
@@ -1246,23 +1246,6 @@ const getSearchExternalCount = async (offset: number = 0) => {
     console.log(error);
   }
 }
-
-
-// 날짜 변환
-const yyyyMMdd = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  // let hours = String(date.getHours()).padStart(2, "0");
-  // let min = String(date.getMinutes()).padStart(2, "0");
-  // let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  // return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
-  return year + "-" + month + "-" + day;
-};
 
 // 카테고리 한글명
 const getDescription = (key) => {

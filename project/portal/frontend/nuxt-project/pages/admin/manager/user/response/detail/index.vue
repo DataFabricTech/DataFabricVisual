@@ -9,7 +9,7 @@
             <div class="data-info">
               <dl>
                 <dt class="blind">게시일</dt>
-                <dd>{{ yyyyMMdd(dataRequest.create_date) }}</dd>
+                <dd>{{ $yyyyMMdd(dataRequest.create_date) }}</dd>
               </dl>
             </div>
           </div>
@@ -126,7 +126,7 @@
                     <em :class="getProcessStyle(item.process_status)">{{ getProcessStatus(item.process_status) }}</em>&nbsp;
                     <span class="name">{{ item.user_nm }}</span> &nbsp;
                     <span class="team">({{ getDeptNm(item) }})</span> &nbsp;
-                    <span class="date"> {{ yyyyMMddHHmmSS(item.create_date) }} </span>
+                    <span class="date"> {{ $yyyyMMddHHmmSS(item.create_date) }} </span>
                   </div>
                 </td>
               </tr>
@@ -435,31 +435,4 @@ const fileDownload = async (file_id: number): Promise<void> => {
   }
 };
 
-const yyyyMMddHHmmSS = (value: string): string => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
-};
-
-const yyyyMMdd = (value: string): string => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  // let hours = String(date.getHours()).padStart(2, "0");
-  // let min = String(date.getMinutes()).padStart(2, "0");
-  // let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  return year + "-" + month + "-" + day;
-};
 </script>

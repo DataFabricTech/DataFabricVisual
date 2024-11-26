@@ -13,7 +13,7 @@
         <div class="synonym-keyword tags-group" v-on:click="onClickDataName(item)">
           <div class="tag"><span class="tag-label">{{ item.term }}</span></div>
         </div>
-        <span class="date" @click="onClickDataName(item)">{{ yyyyMMdd(item.req_date) }}</span>
+        <span class="date" @click="onClickDataName(item)">{{ $yyyyMMdd(item.req_date) }}</span>
       </li>
       <div v-if="dataList.length == 0">
         <p class="nodata">동의어 삭제 요청 내역이 없습니다.</p>
@@ -53,18 +53,4 @@ const onClickDataName = (item: any) => {
 const goToDeleteSynonymRequest = () => {
   router.push('/my/request-delete-synonym')
 }
-
-const yyyyMMdd = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  return year + "-" + month + "-" + day;
-};
 </script>

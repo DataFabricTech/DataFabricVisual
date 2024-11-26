@@ -161,7 +161,7 @@ definePageMeta({
   layout: "admin",
 });
 
-const { $ofetch } = useNuxtApp();
+const { $ofetch, $yyyyMMdd } = useNuxtApp();
 const route = useRoute();
 const router = useRouter();
 const categoryStore = useCategoryStore()
@@ -263,7 +263,7 @@ const getExternalInfo = async (): Promise<void> => {
         tags.value = res.data.tags
         // 등록일 기본값 설정
         selectDate.value = new Date().getTime()
-        selectDateText.value = yyyyMMdd(selectDate.value)
+        selectDateText.value = $yyyyMMdd(selectDate.value)
       }
     });
   } catch (error) {
@@ -316,24 +316,8 @@ const onClickDeleteTag = async (list) => {
 
 const onSelectDate = (event) => {
   selectDate.value = new Date(event).getTime()
-  selectDateText.value = yyyyMMdd(event)
+  selectDateText.value = $yyyyMMdd(event)
 }
-
-// 날짜 변환
-const yyyyMMdd = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  // let hours = String(date.getHours()).padStart(2, "0");
-  // let min = String(date.getMinutes()).padStart(2, "0");
-  // let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  // return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
-  return year + "-" + month + "-" + day;
-};
 
 // 카테고리 한글명
 const getDescription = (key) => {
@@ -378,7 +362,7 @@ const onClickRegisterButton = async () => {
     link: dataLink.value,
     description: dataDescription.value,
     tags: selectedTags.value,
-    create_date: selectDateText.value ? selectDateText.value : yyyyMMdd(new Date()) + ' 00:00'
+    create_date: selectDateText.value ? selectDateText.value : $yyyyMMdd(new Date()) + ' 00:00'
   }
 
   if (await confirmAlert("등록하시겠습니까?")) {

@@ -17,7 +17,7 @@
                   <div class="profile-info">
                     <span class="use"><i class="mu-icon-svg use"></i>{{ getKrName(userStore.getUser.authority) }}</span>
                     <span class="email"><i class="mu-icon-svg email"></i>{{ userStore.getUser.user_email }}</span>
-                    <span class="date"><i class="mu-icon-svg time"></i>최종접속시간 {{ yyyyMMddHHmmSS(userStore.getUser.last_login) }}</span>
+                    <span class="date"><i class="mu-icon-svg time"></i>최종접속시간 {{ $yyyyMMddHHmmSS(userStore.getUser.last_login) }}</span>
                   </div>
                 </div>
               </div>
@@ -246,24 +246,4 @@ const getKrName = (auth) => {
   if (auth == 'Manager') return '데이터 엔지니어'
   if (auth == 'User') return '사용자'
 }
-
-const yyyyMMddHHmmSS = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-
-  // NaN-NaN-NaN 처리
-  if (year == 'NaN' || month == 'NaN' || day == 'NaN' || hours == 'NaN' || min == 'NaN' || sec == 'NaN') {
-    return ''
-  } else {
-    return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
-  }
-};
 </script>

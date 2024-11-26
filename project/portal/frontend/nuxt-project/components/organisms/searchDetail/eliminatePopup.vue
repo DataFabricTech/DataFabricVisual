@@ -827,7 +827,7 @@ import { errorAlert } from "@functional/alert/alert-default";
 import DatePicker from "@functional/datepicker/date-picker";
 import { onUpdated } from "vue";
 
-const { $ofetch } = useNuxtApp();
+const { $ofetch, $yyyyMMdd } = useNuxtApp();
 const userStore = useUserStore();
 const emit = defineEmits(["onCloseModal"]);
 const props = defineProps(["sampleDataDenied", "eliminateModal"]);
@@ -1052,7 +1052,7 @@ const typeEllipsis = (val, entity) => {
 
   if (dataType !== undefined) {
     if (dataType !== null) {
-      return dataType;
+      return dataType.toLowerCase();
     }
   } else {
     return "";
@@ -1092,26 +1092,10 @@ const userDescriptionEllipsis = (val, entity) => {
 
 const onSelectDate = (item, event) => {
   selectDate.value = new Date(event).getTime()
-  selectDateText.value = yyyyMMdd(event)
+  selectDateText.value = $yyyyMMdd(event)
   item.filterInput = selectDate.value
   item.filterInputValue = selectDateText.value
 }
-
-// 날짜 변환
-const yyyyMMdd = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  // let hours = String(date.getHours()).padStart(2, "0");
-  // let min = String(date.getMinutes()).padStart(2, "0");
-  // let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  // return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
-  return year + "-" + month + "-" + day;
-};
 
 // 컬럼 순서 설정, 파티션키 맨 마지막에 추가
 const getReferredEntities = () => {

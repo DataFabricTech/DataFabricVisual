@@ -43,7 +43,7 @@
                         </div>
                         </div>
                     </td>
-                    <td>{{ yyyyMMddHHmmSS(item.req_date) }}</td>
+                    <td>{{ $yyyyMMddHHmmSS(item.req_date) }}</td>
                     <td>
                       <button type="button" class="mu-btn mu-btn-sm mu-btn-underline status-delete" v-if="item.status == 1" @click="onToggleSynonymDeleteRequestListModal(item.id)"><span>삭제요청</span></button>
                       <button type="button" class="mu-btn mu-btn-sm mu-btn-underline status-approval" v-if="item.status == 2" @click="onToggleSynonymDeleteRequestConfirmModal(item.id)"><span>승인</span></button>
@@ -237,20 +237,6 @@ const onToggleSynonymDeleteRequestRejectModal = async (req_id: number) => {
 
 const onClickPage = (page: number, req_statusValue?: string) => {
   getDeleteRequestList(page, req_statusValue);
-};
-
-const yyyyMMddHHmmSS = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "";
-  }
-  return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
 };
 
 onMounted(() => {
