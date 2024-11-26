@@ -71,6 +71,9 @@ const options: { [key: string]: string | number }[] =
   $constants.COMMON.SORT_FILTER;
 const isFirstCheckedEvent: boolean = true;
 
+// 연관도 순 기본값 처리
+sortKey.value = "_score";
+
 const onListView = () => {};
 
 const onGraphView = () => {
@@ -81,6 +84,7 @@ const onGraphView = () => {
 // mounted 되기 전에 호출이 되어 버러서 탐색>목록 api 호출을 2번하기 때문에 아래 코드 삭제
 const isMounted = ref(false);
 const onSelectSort = (item: string | number) => {
+  console.log(item);
   if (isMounted.value) {
     setSortFilter(item);
   }

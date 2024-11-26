@@ -317,9 +317,9 @@ export const useSearchCommonStore = defineStore(
       updateIntersectionHandler(0);
     };
     const setSortInfo = (item: string) => {
-      const items = item.split("_");
-      sortKey.value = items.shift() ?? ""; // undefined 오류 예외처리
-      sortKeyOpt.value = items.pop() ?? "";
+      const lastUnderscoreIndex = item.lastIndexOf("_");
+      sortKey.value = item.slice(0, lastUnderscoreIndex);
+      sortKeyOpt.value = item.slice(lastUnderscoreIndex + 1);
     };
 
     const setSortFilter = (item: string | number = "totalVotes_desc") => {
