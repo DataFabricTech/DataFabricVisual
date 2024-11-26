@@ -70,11 +70,11 @@
                 <div class="mu-form-item" v-for="(df, idx) in detailFilters" >
                   <div class="btn-category">
                     <div class="mu-checkbox all">
-                      <input :type="df.all ? 'radio' : 'checkbox'" :name="idx" :id="'ckb_'+idx" value="ALL" @change="onChangeCheckBox(idx, $event);" :checked="df.all">
+                      <input :type="df.allChecked ? 'radio' : 'checkbox'" :name="idx" :id="'ckb_'+idx" value="ALL" @change="onChangeCheckBox(idx, $event);" :checked="df.allChecked">
                       <label :for="'ckb_'+idx"> <span>{{ getRootDescription(idx) }}</span></label>
                     </div>
                     <div v-for="(tg, idx2) in df.content" class="mu-checkbox">
-                      <input :type="idx == 'ORDER' ? 'radio' : 'checkbox'" :name="idx" :id="'ckbox_'+tg.name" :value="tg.name" @change="onChangeCheckBox(idx, $event)" :checked="tg.checked">
+                      <input :type="'checkbox'" :name="idx" :id="'ckbox_'+tg.name" :value="tg.name" @change="onChangeCheckBox(idx, $event)" :checked="tg.checked">
                       <label :for="'ckbox_'+tg.name"><span>{{ tg.description }}<em v-if="idx != 'TAG' && idx != 'ORDER'">({{ tg.count }})</em></span></label>
                     </div>
                   </div>
@@ -196,9 +196,9 @@
                     </div>
                   </div>
                   <div class="inner-data option">
-                    <p >생성일 : {{ yyyyMMdd(data.createtime) }}</p>
-                    <p >수정일 : {{ yyyyMMdd(data.updatetime) }}</p>
-                    <p >최종접근시간 : {{ yyyyMMddHHmmSS(data.lastaccesstime ? data.lastaccesstime: null) }}</p>
+                    <p >생성일 : {{ $yyyyMMdd(data.createtime) }}</p>
+                    <p >수정일 : {{ $yyyyMMdd(data.updatetime) }}</p>
+                    <p >최종접근시간 : {{ $yyyyMMddHHmmSS(data.lastaccesstime ? data.lastaccesstime: null) }}</p>
                     <p v-html="checkDataAccess(data.dataAccess)"></p>
                     <p >시스템 타입 : {{ data.systemtype }}</p>
                     <p >메타 타입 : {{ data.metatype }}</p>
@@ -286,7 +286,7 @@ const detailFilters = ref({
         "checked": false,
       },
     ],
-    count: 0
+    checkedCount: 0
   },
   SYSTEMTYPE: {
     all: true,
@@ -303,7 +303,7 @@ const detailFilters = ref({
       "checked": false,
     },
     ],
-    count: 0
+    checkedCount: 0
   },
   METATYPE: {
     all: true,
@@ -320,7 +320,7 @@ const detailFilters = ref({
       "checked": false,
     },
     ],
-    count: 0
+    checkedCount: 0
   },
   TAG: {
     all: true,
@@ -337,7 +337,7 @@ const detailFilters = ref({
         "checked": false,
       },
     ],
-    count: 0
+    checkedCount: 0
   },
   ORDER: {
     all: true,
@@ -363,7 +363,7 @@ const detailFilters = ref({
         "checked": false,
       },
     ],
-    count: 0
+    checkedCount: 0
   }
 })
 
@@ -395,7 +395,6 @@ const searchOption = ref<string>("mu-btn mu-btn-lg mu-btn-bg-non btn-filter-togg
 
 const showFilterWrap2 = ref<boolean>(false);
 const searchOptionSub = ref<string>("mu-btn btn-attribute-filter-toggle");
-
 
 interface PagingObj {
   total: number;
@@ -455,11 +454,7 @@ onMounted(async () => {
       pagingObj.value.limit = searchParams.value.limit // 보여줄 개수
 
       // 왼쪽메뉴 활성화 처리
-      openLeftSubCategoryMenu(searchParams.value.classification.id ? searchParams.value.classification.id : "") // 하위메뉴 열기
-      setLeftCategoryBold(searchParams.value.classification.id ? searchParams.value.classification.id : ""); // 선택메뉴 Bold 처리
-      const matched = getOriginalList.find((el) => el.id === searchParams.value.classification.id);
-      toggleParents(matched)
-
+      leftMenuToggleAndBold(searchParams.value.classification.id ? searchParams.value.classification.id : "")
       await getSearch(pagingObj.value.currentPage - 1);
     }
   } else {
@@ -481,12 +476,8 @@ onMounted(async () => {
           detailFilters.value['CATEGORY'].content.forEach((el) => {
             if (searchStore.getMainSelectCategory.id == el.id) {
               el.checked = true
-              detailFilters.value['CATEGORY'].all = false
-              openLeftSubCategoryMenu(el.id) // 하위메뉴 열기
-              setLeftCategoryBold(el.id); // 선택메뉴 Bold 처리
-              // 상위메뉴도 펼치기
-              const matched = getOriginalList.find((el2) => el2.id === el.id);
-              toggleParents(matched)
+              detailFilters.value['CATEGORY'].allChecked = false
+              leftMenuToggleAndBold(el.id)
             } else {
               el.checked = false
             }
@@ -516,9 +507,8 @@ onMounted(async () => {
         detailFilters.value['CATEGORY'].content.forEach((el) => {
           if (classification.value.id == el.id) {
             el.checked = true
-            detailFilters.value['CATEGORY'].all = false
-            openLeftSubCategoryMenu(el.id) // 하위메뉴 열기
-            setLeftCategoryBold(el.id); // 선택메뉴 Bold 처리
+            detailFilters.value['CATEGORY'].allChecked = false
+            leftMenuToggleAndBold(el.id)
 
             // 상위메뉴도 펼치기
             const matched = getOriginalList.find((el2) => el2.id === el.id);
@@ -604,8 +594,6 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     sortOrder: sortOrder.value ? sortOrder.value : "",
     entityFilters: {}
   };
-
-  console.log(params);
 
   await $ofetch(`/api/search/getEsSearch`, {
     method: "POST",
@@ -776,7 +764,7 @@ const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
   && detailFilters.value['METATYPE']
   && detailFilters.value['TAG']
    && detailFilters.value['ORDER']) {
-    if (detailFilters.value['CATEGORY'].all && detailFilters.value['SYSTEMTYPE'].all && detailFilters.value['METATYPE'].all && detailFilters.value['TAG'].all && detailFilters.value['ORDER'].all) {
+    if (detailFilters.value['CATEGORY'].allChecked && detailFilters.value['SYSTEMTYPE'].allChecked && detailFilters.value['METATYPE'].allChecked && detailFilters.value['TAG'].allChecked && detailFilters.value['ORDER'].allChecked) {
       return false
     }
   }
@@ -785,42 +773,41 @@ const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
 
 // 필터 검색 조건 초기화
 const resetSearchParam = (): void => {
-  word.value = "";
-  classification.value = {
-    id: "",
-    name: "",
-    description: "",
+  word.value = ""; // 1. 검색어
+
+  let filterKeys = Object.keys(detailFilters.value)
+
+  // 2. 상세필터 내 체크박스상태 false 처리
+  for (let i=0; i<filterKeys.length; i++) {
+    clearFilter(filterKeys[i])
+  }
+};
+
+// 상세필터 내 카테고리 및 카테고리 초기화
+const clearFilter = (key) => {
+  if (key == 'CATEGORY') {
+    classification.value = {
+      id: "",
+      name: "",
+      description: ""
+    };
+    leftMenuToggleAndBold("") // 왼쪽메뉴 연동
+  } else if (key == 'SYSTEMTYPE') {
+    systemtype.value = ""
+  } else if (key == 'METATYPE') {
+    metatype.value = ""
+  } else if (key == 'TAG') {
+    tag.value = ""
+  } else if (key == 'ORDER') {
+    sortOrder.value = ""
+  } else {
+    return
   }
 
-  detailFilters.value['CATEGORY'].all = true
-  detailFilters.value['CATEGORY'].content.forEach((el) => {
-    el.checked = false
-  })
-
-
-  detailFilters.value['SYSTEMTYPE'].all = true
-  detailFilters.value['SYSTEMTYPE'].content.forEach((el) => {
-    el.checked = false
-  })
-  systemtype.value = ""
-
-  detailFilters.value['METATYPE'].all = true
-  detailFilters.value['METATYPE'].content.forEach((el) => {
-    el.checked = false
-  })
-  metatype.value = ""
-
-  detailFilters.value['TAG'].all = true
-  detailFilters.value['TAG'].content.forEach((el) => {
-    el.checked = false
-  })
-
-  detailFilters.value['ORDER'].all = true
-  detailFilters.value['ORDER'].content.forEach((el) => {
-    el.checked = false
-  })
-  sortOrder.value = ""
-};
+  detailFilters.value[key].content.forEach((el) => {el.checked = false})
+  detailFilters.value[key].allChecked = true
+  detailFilters.value[key].checkedCount = 0
+}
 
 // 상세 데이터 이동
 function onSelectDetailPage(item: any): void {
@@ -831,37 +818,22 @@ function onSelectDetailPage(item: any): void {
 
 // 좌측 카테고리 리스트 내 노드 클릭 이벤트 핸들러
 const onClickMenuItem = (item: any): void => {
-  // 카테고리 전체 클릭
+  // 1. 카테고리 전체
   if (!item) {
-    classification.value = {
-      id: "",
-      name: "",
-      description: ""
-    };
+    clearFilter("CATEGORY")
 
-    detailFilters.value["CATEGORY"].content.forEach((el) => {el.checked = false})
-    detailFilters.value["CATEGORY"].all = true
-    detailFilters.value["CATEGORY"].count = 0
+  } else if (item.id == "_NOT_CLASSIFIED") { // 2. 카테고리 미분류
+    clearFilter("CATEGORY")
 
-  } else if (item.id == "_NOT_CLASSIFIED") {
-    classification.value = {
-      id: "",
-      name: "",
-      description: ""
-    };
-
-    detailFilters.value["CATEGORY"].content.forEach((el) => {el.checked = false})
-    detailFilters.value["CATEGORY"].all = true
-    detailFilters.value["CATEGORY"].count = 0
-  } else {
-    openLeftSubCategoryMenu(item.id) // 하위메뉴 열기
+  } else { // 3. 카테고리들
+    leftMenuToggleAndBold(item.id)
     classification.value = item;
 
     // 상세필터 카테고리 체크 설정
     detailFilters.value.CATEGORY.content.forEach((el) => {
       if (el.name == item.name) {
         el.checked = true;
-        detailFilters.value.CATEGORY.all = false
+        detailFilters.value.CATEGORY.allChecked = false
       } else {
         el.checked = false;
       }
@@ -878,13 +850,10 @@ const onSelectChange = (): void => {
 
 // 페이지 번호 클릭
 const onClickPage = (page: number): void => {
-  pagingObj.value = {
-    ...pagingObj.value,
-    total: page
-  };
+  pagingObj.value.currentPage = page
   searchStore.setSearchParamsPagingObj(pagingObj.value)
 
-  getSearch(page);
+  getSearch(pagingObj.value.currentPage - 1);
 
 };
 
@@ -917,34 +886,6 @@ const onClickDeleteButton = (): void => {
   word.value = "";
 };
 
-const yyyyMMdd = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "-";
-  }
-  return year + "-" + month + "-" + day;
-};
-
-const yyyyMMddHHmmSS = (value) => {
-  let date = new Date(value);
-  let year = date.getFullYear();
-  let month = String(date.getMonth() + 1).padStart(2, "0");
-  let day = String(date.getDate()).padStart(2, "0");
-  let hours = String(date.getHours()).padStart(2, "0");
-  let min = String(date.getMinutes()).padStart(2, "0");
-  let sec = String(date.getSeconds()).padStart(2, "0");
-  if (value == null || value == undefined) {
-    return "-";
-  }
-  return year + "-" + month + "-" + day + " " + hours + ":" + min + ":" + sec;
-};
-
 const checkDataAccess = (flag) => {
   let dataAccessComment = "데이터 조회권한 ";
   dataAccessComment += flag ? "<span style='color: blue;'>있음</span>" : "<span style='color: red;'>없음</span>" ;
@@ -954,33 +895,17 @@ const checkDataAccess = (flag) => {
 
 // 검색에서 필터적용중 삭제
 const deleteCategoryTag = (): void => {
-  detailFilters.value['CATEGORY'].all = true
-  detailFilters.value['CATEGORY'].content.forEach((el) => {
-    el.checked = false
-  })
-  openLeftSubCategoryMenu("")
-  setLeftCategoryBold("")
+  let filterKeys = Object.keys(detailFilters.value)
 
-  detailFilters.value['SYSTEMTYPE'].all = true
-  detailFilters.value['SYSTEMTYPE'].content.forEach((el) => {
-    el.checked = false
-  })
+  // 1. 상세필터 내 체크박스상태 false 처리
+  for (let i=0; i<filterKeys.length; i++) {
+    clearFilter(filterKeys[i])
+  }
 
-  detailFilters.value['METATYPE'].all = true
-  detailFilters.value['METATYPE'].content.forEach((el) => {
-    el.checked = false
-  })
+  // 2. 카테고리 왼쪽메뉴 토글 및 Bold 해제
+  leftMenuToggleAndBold("")
 
-  detailFilters.value['TAG'].all = true
-  detailFilters.value['TAG'].content.forEach((el) => {
-    el.checked = false
-  })
-
-  detailFilters.value['ORDER'].all = true
-  detailFilters.value['ORDER'].content.forEach((el) => {
-    el.checked = false
-  })
-
+  // 3. 검색
   getSearch(0)
 };
 
@@ -996,81 +921,38 @@ const getRootDescription = (key) => {
 
 // 조건 클릭 이벤트
 const onChangeCheckBox = async (key, event: any) => {
+  // 전체 클릭
   if (event.target.value == 'ALL') {
-    detailFilters.value[key].content.forEach((el) => {el.checked = false})
-    detailFilters.value[key].all = true
-    detailFilters.value[key].count = 0
-
-    // 카테고리인 경우 왼쪽메뉴 연동 처리
-    if (key == 'CATEGORY') { // 카테고리일 경우만 왼쪽메뉴 연동 처리
-      openLeftSubCategoryMenu("") // 하위메뉴 열기
-      setLeftCategoryBold(""); // 선택메뉴 Bold 처리
-
-      classification.value = {
-        id: "",
-        name: "",
-        description: ""
-      };
-    }
-
-    // 시스템 타입
-    if (key == 'SYSTEMTYPE') {
-      systemtype.value = ""
-    }
-
-    // 메타 타입
-    if (key == 'METATYPE') {
-      metatype.value = ""
-    }
-
-    // 정렬
-    if (key == 'ORDER') {
-      sortOrder.value = ""
-    }
-
+    clearFilter(key)
   } else {
     detailFilters.value[key].content.forEach((el) => {
       if (el.name == event.target.value) {
         el.checked = event.target.checked
 
-        // 카테고리일 경우만 왼쪽메뉴 연동 처리
+        // 카테고리
         if (key == 'CATEGORY') {
-          openLeftSubCategoryMenu(el.id) // 왼하위메뉴 열기
-          setLeftCategoryBold(el.id) //
-
           classification.value = {
             id: el.id,
             name: el.name,
             description: el.description
           };
+          leftMenuToggleAndBold(el.id) // 왼쪽메뉴 연동 처리
         }
-
-        // 시스템 타입
-        if (key == 'SYSTEMTYPE') {
-          systemtype.value = el.name
-        }
-
-        // 메타 타입
-        if (key == 'METATYPE') {
-          metatype.value = el.name
-        }
-
-        // 정렬
-        if (key == 'ORDER') {
-          sortOrder.value = el.name
-        }
+        if (key == 'SYSTEMTYPE') systemtype.value = el.name
+        if (key == 'METATYPE') metatype.value = el.name
+        if (key == 'TAG') tag.value = el.name
+        if (key == 'ORDER') sortOrder.value = el.name
+      } else {
+        el.checked = false // 단일로 체크되도록 설정
       }
-      else el.checked = false // 단일로 체크되도록 설정
     })
 
+    detailFilters.value[key].checkedCount = detailFilters.value[key].content.filter((el) => el.checked == true).length
+    detailFilters.value[key].allChecked = false
 
-    detailFilters.value[key].count = detailFilters.value[key].content.filter((el) => el.checked == true).length
-    detailFilters.value[key].all = false
-
+    // 아무것도 선택하지 않은 상태인 경우 전체 표시
+    if (detailFilters.value[key].checkedCount == 0) clearFilter(key)
   }
-
-  // 아무것도 선택하지 않은 상태인 경우 전체 표시
-  if (detailFilters.value[key].count == 0) detailFilters.value[key].all = true
 
   getSearch(0)
 }
@@ -1099,15 +981,19 @@ const getTableName = (qualifiedName) => {
   return ""
 }
 
-// 왼쪽메뉴 열기 처리
-const openLeftSubCategoryMenu = (id) => {
-  categoryStore.setToggleTargetOnClickTreemap(id ? id : "") // 하위메뉴 열기
-}
+// 카테고리 왼쪽메뉴 Open 및 선택한 카테고리 Bold 처리
+const leftMenuToggleAndBold = (id) => {
+  // 1. 현재 카테고리명 하위메뉴 열기
+  categoryStore.setToggleTargetOnClickTreemap(id ? id : "")
 
+  // 2. 현재 카테고리명 Bold 처리
+  categoryStore.setSelectedItemId(id ? id : "");
 
-// 왼쪽메뉴 선택 카테고리 Bold 처리
-const setLeftCategoryBold = (id) => {
-  categoryStore.setSelectedItemId(id ? id : ""); // 선택메뉴 Bold 처리
+  // 3. 현재 카테고리에명 상위메뉴 열기
+  if (id) {
+    const matched = getOriginalList.find((ol) => ol.id === id);
+    toggleParents(matched)
+  }
 }
 
 </script>

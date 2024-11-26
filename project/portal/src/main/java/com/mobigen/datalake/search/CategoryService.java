@@ -46,7 +46,7 @@ public class CategoryService {
         
         // 카테고리 정보
         List<Map<String, Object>> categoryList = categoryMapper.getCategoryListForFilter();
-        categoryInfo.put("all", true);
+        categoryInfo.put("allChecked", true);
         categoryInfo.put("ord", 1);
         categoryInfo.put("name", "카테고리");
         categoryInfo.put("content", new ArrayList<Map<String, Object>>());
@@ -65,10 +65,11 @@ public class CategoryService {
             content.put("checked", false);
             ((List<Map<String, Object>>) categoryInfo.get("content")).add(content);
         }
+        categoryInfo.put("checkedCount", 0);
         
         // 시스템 타입 정보
         List<Map<String, Object>> systemList = categoryMapper.getSystemListForFilter();
-        systemInfo.put("all", true);
+        systemInfo.put("allChecked", true);
         systemInfo.put("ord", 2);
         systemInfo.put("name", "시스템 타입");
         systemInfo.put("content", new ArrayList<Map<String, Object>>());
@@ -87,11 +88,11 @@ public class CategoryService {
             content.put("checked", false);
             ((List<Map<String, Object>>) systemInfo.get("content")).add(content);
         }
-        systemInfo.put("count", 0);
+        systemInfo.put("checkedCount", 0);
 
         // 메타 타입 정보
         List<Map<String, Object>> metaList = categoryMapper.getMetaListForFilter();
-        metaInfo.put("all", true);
+        metaInfo.put("allChecked", true);
         metaInfo.put("ord", 3);
         metaInfo.put("name", "메타 타입");
         metaInfo.put("content", new ArrayList<Map<String, Object>>());
@@ -110,11 +111,11 @@ public class CategoryService {
             content.put("checked", false);
             ((List<Map<String, Object>>) metaInfo.get("content")).add(content);
         }
-        metaInfo.put("count", 0);
+        metaInfo.put("checkedCount", 0);
 
         // 태그 정보
         List<Map<String, Object>> tagList = categoryMapper.getTagListForFilter();
-        tagInfo.put("all", true);
+        tagInfo.put("allChecked", true);
         tagInfo.put("ord", 4);
         tagInfo.put("name", "태그");
         tagInfo.put("content", new ArrayList<Map<String, Object>>());
@@ -132,10 +133,10 @@ public class CategoryService {
             content.put("checked", false);
             ((List<Map<String, Object>>) tagInfo.get("content")).add(content);
         }
-        tagInfo.put("count", 0);
+        tagInfo.put("checkedCount", 0);
 
         // 정렬 오름차순, 내림차순
-        orderInfo.put("all", true);
+        orderInfo.put("allChecked", true);
         orderInfo.put("ord", 5);
         orderInfo.put("name", "정렬기준");
         orderInfo.put("content", new ArrayList<Map<String, Object>>());
@@ -159,7 +160,7 @@ public class CategoryService {
         descContent.put("checked", false);
         ((List<Map<String, Object>>) orderInfo.get("content")).add(descContent);
 
-        orderInfo.put("count", 0);
+        orderInfo.put("checkedCount", 0);
 
         detailFilters.put("CATEGORY", categoryInfo);
         detailFilters.put("SYSTEMTYPE", systemInfo);
