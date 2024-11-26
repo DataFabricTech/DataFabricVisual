@@ -71,6 +71,9 @@ const options: { [key: string]: string | number }[] =
   $constants.COMMON.SORT_FILTER;
 const isFirstCheckedEvent: boolean = true;
 
+// 연관도 순 기본값 처리
+sortKey.value = "_score";
+
 const onListView = () => {};
 
 const onGraphView = () => {

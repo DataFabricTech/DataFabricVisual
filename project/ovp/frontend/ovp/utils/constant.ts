@@ -30,6 +30,10 @@ const $constants = {
     ],
     SORT_FILTER: [
       {
+        label: "연관도 순",
+        value: "_score_desc",
+      },
+      {
         label: "추천 많은 순 ↓",
         value: "totalVotes_desc",
       },
