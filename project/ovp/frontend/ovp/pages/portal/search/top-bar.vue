@@ -84,7 +84,6 @@ const onGraphView = () => {
 // mounted 되기 전에 호출이 되어 버러서 탐색>목록 api 호출을 2번하기 때문에 아래 코드 삭제
 const isMounted = ref(false);
 const onSelectSort = (item: string | number) => {
-  console.log(item);
   if (isMounted.value) {
     setSortFilter(item);
   }
