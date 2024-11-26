@@ -781,6 +781,8 @@ const resetSearchParam = (): void => {
   for (let i=0; i<filterKeys.length; i++) {
     clearFilter(filterKeys[i])
   }
+
+  getSearch(0)
 };
 
 // 상세필터 내 카테고리 및 카테고리 초기화
@@ -801,6 +803,17 @@ const clearFilter = (key) => {
   } else if (key == 'ORDER') {
     sortOrder.value = ""
   } else {
+    if (key == '_NOT_CLASSIFIED') {
+      leftMenuToggleAndBold("_NOT_CLASSIFIED")
+      detailFilters.value['CATEGORY'].content.forEach((el) => {el.checked = false})
+      detailFilters.value['CATEGORY'].allChecked = true
+      detailFilters.value['CATEGORY'].checkedCount = 0
+      classification.value = {
+      id: "",
+      name: "_NOT_CLASSIFIED",
+      description: "_NOT_CLASSIFIED"
+    };
+    }
     return
   }
 
@@ -823,7 +836,7 @@ const onClickMenuItem = (item: any): void => {
     clearFilter("CATEGORY")
 
   } else if (item.id == "_NOT_CLASSIFIED") { // 2. 카테고리 미분류
-    clearFilter("CATEGORY")
+    clearFilter("_NOT_CLASSIFIED")
 
   } else { // 3. 카테고리들
     leftMenuToggleAndBold(item.id)
