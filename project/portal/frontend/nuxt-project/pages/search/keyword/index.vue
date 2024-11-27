@@ -88,8 +88,15 @@
                 <div
                   class="attribute-filter-item slim-scroll"
                   v-show="showFilterWrap2"
-                  style="display: block"
+                  style="display: block;"
                 >
+                  <searchfilter
+                    :filterCnt="filterCnt"
+                    :entityFiltersList="entityFiltersList"
+                    :entityFilterCondition="entityFilterCondition"
+                    :entityFilterCriterion="entityFilterCriterion"
+                    @deleteGroupNothing="deleteGroupNothing()"
+                  />
                 </div>
                 <div class="mu-search-btn">
                   <button
@@ -229,6 +236,7 @@ import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
 import { useNuxtApp, useRoute, useRouter } from "nuxt/app";
 import { onMounted, ref } from "vue";
 import { useSearchStore } from "@/store/search";
+import searchfilter from "./searchfilter.vue";
 
 definePageMeta({
   layout: "user",
@@ -396,6 +404,76 @@ const searchOption = ref<string>("mu-btn mu-btn-lg mu-btn-bg-non btn-filter-togg
 const showFilterWrap2 = ref<boolean>(false);
 const searchOptionSub = ref<string>("mu-btn btn-attribute-filter-toggle");
 
+// 추가 속성 필터
+const filterCnt = ref(0) // 필터 개수
+const entityFiltersList = ref([])
+const entityFilters = ref({
+  "condition": "AND",
+  "criterion": [
+    {
+      "attributeName": "id",
+      "operator": "eq",
+      "attributeValue": "aa"
+    }
+  ]
+})
+const entityFilterCriterion = ref([
+  {
+    name: "id",
+    typeName: "string"
+  },
+  {
+    name: "qualifiedname",
+    typeName: "string"
+  },
+  {
+    name: "systemtype",
+    typeName: "string"
+  },
+  {
+    name: "metatype",
+    typeName: "string"
+  },
+  {
+    name: "displayname",
+    typeName: "string"
+  },
+  {
+    name: "description",
+    typeName: "string"
+  },
+  {
+    name: "userdescription",
+    typeName: "string"
+  },
+  {
+    name: "label",
+    typeName: "string"
+  },
+  {
+    name: "tags",
+    typeName: "string"
+  },
+  {
+    name: "createtime",
+    typeName: "date"
+  },
+  {
+    name: "updatetime",
+    typeName: "date"
+  },
+  {
+    name: "lastaccesstime",
+    typeName: "date"
+  }
+])
+const entityFilterCondition = ref({
+  condition1: ['=', '!=', 'contains', 'startsWith', 'endsWith', 'isNull', 'notNull'],
+  condition2: ['=', '!=', 'isNull', 'notNull'],
+  condition3: ['=', '!=', '>', '<', '>=', '<=', 'isNull', 'notNull']
+})
+
+
 interface PagingObj {
   total: number;
   limit: number;
@@ -434,7 +512,6 @@ onMounted(async () => {
         currentPage: 1,
       }; // 페이징 초기화
 
-      await getSearch(0) // 통합검색
     } else {
       // 기존 검색어, 상세필터 내용 가져오기
       word.value = searchParams.value.query ? searchParams.value.query : "" // 검색어
@@ -455,8 +532,25 @@ onMounted(async () => {
 
       // 왼쪽메뉴 활성화 처리
       leftMenuToggleAndBold(searchParams.value.classification.id ? searchParams.value.classification.id : "")
-      await getSearch(pagingObj.value.currentPage - 1);
     }
+    // 추가속성 필터
+    // 추가속성필터 store에 있는 경우 entityFilter 설정
+    if (searchParams.value.entityFilters && Object.keys(searchParams.value.entityFilters).length > 0) {
+      entityFiltersList.value = []
+      entityFiltersList.value.push(searchStore.getEntityFilters)
+      entityFilters.value = searchStore.getEntityFilters
+
+      // 추가속성필터가 있는 경우 필터 열어두기
+      if (entityFilters.value && entityFilters.value.criterion.length > 0 && entityFilters.value.criterion[0].attributeValue && entityFilters.value.criterion[0].attributeValue != "") {
+        showFilterWrap1.value = true
+        showFilterWrap2.value = true
+      }
+    } else {
+      initSubFilter()
+    }
+
+    // 필터를 열고 간 경우 열린 상태로 표기
+
   } else {
     // 상세필터 조회
     await getDetailFilters()
@@ -521,10 +615,11 @@ onMounted(async () => {
       }
     } else { // 그 외 검색조건 초기화
       searchStore.setSearchParams(searchParams.value)
+      initSubFilter()
     }
 
-    await getSearch(pagingObj.value.currentPage - 1);
   }
+  await getSearch(pagingObj.value.currentPage - 1);
 
 });
 
@@ -582,7 +677,21 @@ const toggleParents = (matched) => {
 
 // 검색
 const getSearch = async (offset: number = 0): Promise<void> => {
-  printSynonymList.value = [];
+  printSynonymList.value = []; // 동의어
+
+  // 추가속성필터 유효성 체크
+  if (showFilterWrap2.value) {
+    let checkVal = checkFilterSearch(entityFiltersList.value)
+    if (typeof checkVal !== undefined) {
+      if (checkVal === true) {
+        errorAlert('추가속성필터를 삭제 또는 입력해주세요');
+        return
+      }
+    }
+  }
+
+  let paramEntityFilters = Object.assign(entityFiltersList.value[0])
+
   const params = {
     query: word.value ? word.value : "",
     systemtype: systemtype.value ? systemtype.value : "",
@@ -592,7 +701,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     offset: offset ? offset : 0,
     classification: classification.value && classification.value.name ? classification.value.name : "", // 검색할 때는 name값 사용
     sortOrder: sortOrder.value ? sortOrder.value : "",
-    entityFilters: {}
+    entityFilters: showFilterWrap2.value ? paramEntityFilters : {}
   };
 
   await $ofetch(`/api/search/getEsSearch`, {
@@ -683,6 +792,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
 
   // 검색 조건 저장
   params.classification = classification.value // 카테고리 검색조건 저장용으로 변경
+  params.entityFilters = paramEntityFilters // 추가속성필터 검색조건 저장용으로 변경
   // 검색어, 카테고리 저장
   searchStore.setSearchParams({
     query: word.value,
@@ -691,6 +801,48 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     ...params
   })
 };
+
+// entityFilter의 criterion 내 미사용 필드 제거
+const filterCondition = (criterion) => {
+  let criterionJsonData = JSON.parse(JSON.stringify(criterion))
+  if (criterionJsonData) {
+    criterion.filter(item => {
+      if (item.criterion === undefined) {
+        delete item.condition
+        if (item.idx !== undefined) delete item.idx
+        if (item.attributeValueText !== undefined) delete item.attributeValueText
+        if (item.typeName !== undefined) delete item.typeName
+      } else {
+        filterCondition(item.criterion)
+      }
+      return item
+    })
+    return criterionJsonData
+  } else {
+    return criterion
+  }
+}
+
+// 추가 속성 필터 사용 시 값을 입력했는지 여부
+const checkFilterSearch = (filterData) => {
+  let returnVal = false
+  function filterRoof(data) {
+    for (const item of data) {
+      if (typeof item.criterion !== 'undefined') {
+        filterRoof(item.criterion)
+      } else {
+        if (item.attributeValue !== null && item.attributeValue === '') {
+          if (item.operator !== 'isNull' && item.operator !== 'notNull') {
+            returnVal = true
+            break
+          }
+        }
+      }
+    }
+  }
+  filterRoof(filterData);
+  return returnVal
+}
 
 
 // 마우스를 클릭했을 때 (divider)
@@ -768,6 +920,12 @@ const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
       return false
     }
   }
+
+  // 추가 속성 필터 사용중 여부
+  if (showFilterWrap2.value == false) {
+    return false
+  }
+
   return true
 })
 
@@ -782,7 +940,13 @@ const resetSearchParam = (): void => {
     clearFilter(filterKeys[i])
   }
 
-  getSearch(0)
+  // 3. 추가 속성 필터 초기화
+  entityFiltersList.value.splice(0);
+  initSubFilter();
+  showFilterWrap2.value = true
+  showSearchOptionSub();
+
+  // getSearch(0)
 };
 
 // 상세필터 내 카테고리 및 카테고리 초기화
@@ -894,6 +1058,66 @@ const showSearchOptionSub = (): void => {
   }
 };
 
+// 추가속성필터 설정
+const initSubFilter = () => {
+  // 추가 속성 필터의 기본 필드 값 설정
+  if (entityFilterCriterion.value.length > 0) {
+    const filterDetailData = filterDetailCondition(entityFilterCriterion.value[0])
+
+    let filterAttributeValue = ''
+    let filterAttributeValueText = ''
+
+    // 기본 필터 조건 값 설정
+    entityFiltersList.value[0] = {
+      condition: 'AND',
+      criterion: [{
+        idx: 0,
+        attributeName: filterDetailData.name,
+        typeName: filterDetailData.typeName,
+        operator: filterDetailData.filterOperator,
+        attributeValue: filterAttributeValue,
+        attributeValueText: filterAttributeValueText
+      }]
+    }
+    entityFilters.value = Object.assign(entityFiltersList.value[0])
+  } else {
+
+  }
+}
+
+// 추가속성필터의 필드 타입에 따라 operator 및 값부분 설정
+const filterDetailCondition = (criterion) => {
+  const filterDetailData = {}
+  let filterOperator
+  let typeName = criterion.typeName
+  let name = criterion.name
+  if (typeName === 'string') {
+    filterOperator = entityFilterCondition.value.condition1[0]
+  }
+  else if (typeName === 'hive_principal_type') {
+    filterOperator = entityFilterCondition.value.condition1[0]
+  }
+  else if (typeName === 'sap_principal_type') {
+    filterOperator = entityFilterCondition.value.condition1[0]
+  }
+  else if (typeName === 'boolean') {
+    filterOperator = entityFilterCondition.value.condition2[0]
+  }
+  else if (typeName === 'int') {
+    filterOperator = entityFilterCondition.value.condition3[0]
+  }
+  else if (typeName === 'date') {
+    filterOperator = entityFilterCondition.value.condition3[0]
+  } else {
+    filterOperator = entityFilterCondition.value.condition1[0]
+  }
+  filterDetailData.name = name
+  filterDetailData.typeName = typeName
+  filterDetailData.filterOperator = filterOperator
+
+  return filterDetailData
+}
+
 // X 버튼
 const onClickDeleteButton = (): void => {
   word.value = "";
@@ -918,7 +1142,10 @@ const deleteCategoryTag = (): void => {
   // 2. 카테고리 왼쪽메뉴 토글 및 Bold 해제
   leftMenuToggleAndBold("")
 
-  // 3. 검색
+  // 3. 추가속성 필터 해제
+  initSubFilter()
+
+  // 4. 검색
   getSearch(0)
 };
 
@@ -1007,6 +1234,11 @@ const leftMenuToggleAndBold = (id) => {
     const matched = getOriginalList.find((ol) => ol.id === id);
     toggleParents(matched)
   }
+}
+
+const deleteGroupNothing = () => {
+  initSubFilter()
+  showFilterWrap2.value = false
 }
 
 </script>

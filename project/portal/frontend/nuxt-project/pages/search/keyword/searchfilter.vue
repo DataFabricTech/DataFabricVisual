@@ -1,89 +1,40 @@
 <template>
-  <div>
-    <searchFilterGroup
-      v-for="item in filterAddFilter"
-      :key="item.idx"
-      :item="item"
-      :attributeDefsArr_s="props.attributeDefsArr_s"
-      :filterAddFilter_s="props.filterAddFilter_s"
-      :filterDataTypeVal_s="props.filterDataTypeVal_s"
-      :filterCnt_s="props.filterCnt_s"
-      :filterCondition_s="filterCondition"
-      :filterFactor_s="filterFactor"
-      @addGroup="addGroup"
-      @deleteGroup="deleteGroup"
-      @addFilter="addFilter"
-      @deleteFilter="deleteFilter"
-      :datetimeType_s="datetimeType"
-      :startTimeOptions_s="startTimeOptions"
-      :timePickerOptions_s="timePickerOptions"
-      :startDate_s="startDate"
-      :lang_s="lang"
-    />
-  </div>
+  <searchFilterGroup
+    v-for="item in props.entityFiltersList"
+    :key="item.idx"
+    :item="item"
+    :entityFilterCondition="props.entityFilterCondition"
+    :entityFilterCriterion="props.entityFilterCriterion"
+    :datetimeType="datetimeType"
+    :timePickerOptions="timePickerOptions"
+    :lang="lang"
+    :startDate="startDate"
+    :filterCnt="filterCnt"
+    @getFilterGrpNum="getFilterGrpNum"
+    @addGroup="addGroup"
+    @deleteGroup="deleteGroup"
+    @addFilter="addFilter"
+    @deleteFilter="deleteFilter"
+  />
 </template>
 
 <script setup lang="ts">
+import { onMounted } from "vue";
 import searchFilterGroup from "./searchfilterGroup.vue";
-import { ref, computed, ComputedRef } from "vue";
 
-const emit = defineEmits(["deleteGroupInit"]);
-const props = defineProps({
-  filterAddFilter_s: Array,
-  filterDataTypeSubObj_s: Object,
-  filterDataTypeSubVal_s: String,
-  attributeDefsArr_s: Array,
-  filterDataTypeVal_s: String,
-  filterCnt_s: Number,
-  filterCondition_s: Object,
-  filterFactor_s: Object,
-});
+const emit = defineEmits(["deleteGroupNothing"]);
+const props = defineProps(["entityFilterCondition", "entityFilterCriterion", "entityFiltersList", "filterCnt"]);
 
-// data
-const filterAddFilter = ref<any>(props.filterAddFilter_s);
-const attributeDefsArr: ComputedRef<any> = computed(() => props.attributeDefsArr_s);
-const filterCnt = ref<number>(props.filterCnt_s);
-
-const filterCondition = ref<any>(props.filterCondition_s);
-const filterFactor = ref<any>(props.filterFactor_s);
-
-const datetimeType = ref<string>("datetime");
-
-interface TimeOptions {
-  start: string;
-  step: string;
-  end: string;
-  format: string;
-  timePickerIncrement?: number;
-}
-
-const startTimeOptions = ref<TimeOptions>({
-  start: "00:00",
-  step: "00:30",
-  end: "23:45",
-  format: "hh:mm",
-});
-const timePickerOptions = ref<TimeOptions>({
+const datetimeType = ref("datetime")
+const timePickerOptions = ref({
   start: "00:00",
   step: "00:30",
   end: "23:30",
   format: "hh:mm",
   timePickerIncrement: 30,
-});
-const startDate = ref<number>(new Date().getTime());
-
-interface Lang {
-  yearFormat: string;
-  days: Array<string>;
-  months: Array<string>;
-  pickers: Array<string>;
-  placeholder: {
-    date: string;
-    dateRange: string;
-  }
-}
-
-const lang = ref<Lang>({
+})
+const startDate = ref(new Date().getTime())
+const lang = ref({
   yearFormat: "YYYY년",
   days: ["일", "월", "화", "수", "목", "금", "토"],
   months: [
@@ -105,16 +56,21 @@ const lang = ref<Lang>({
     date: "Select Date",
     dateRange: "Select Date Range",
   },
-});
+})
 
-const getFilterGrpNum = (): number => {
-  filterCnt.value = filterCnt.value + 1;
-  return filterCnt.value;
-};
+onMounted(() => {
+})
 
-const addGroup = (item: any): void => {
-  let attributeValue_s: string|number = "";
-  if (props.attributeDefsArr_s[0].typeName === "date") {
+const filterCnt = ref(props.filterCnt)
+
+const getFilterGrpNum = () => {
+  filterCnt.value = filterCnt.value + 1
+  return filterCnt.value
+}
+
+const addGroup = (item) => {
+  let attributeValue_s = "";
+  if (props.entityFiltersList[0].typeName === "date") {
     attributeValue_s = startDate.value;
   }
 
@@ -125,23 +81,23 @@ const addGroup = (item: any): void => {
       {
         idx: getFilterGrpNum(),
         condition: "AND",
-        attributeName: props.attributeDefsArr_s[0].name,
+        attributeName: props.entityFilterCriterion[0].name,
         operator: "=",
-        typeName: props.attributeDefsArr_s[0].typeName,
+        typeName: props.entityFilterCriterion[0].typeName,
         attributeValue: attributeValue_s,
       },
     ],
   };
   let index = 0;
   if (item === 0) {
-    index = filterAddFilter.value.length;
-    filterAddFilter.value.splice(index, 0, groupMap);
+    index = props.entityFiltersList.length;
+    props.entityFiltersList.splice(index, 0, groupMap);
   } else {
-    setAddFilter(filterAddFilter.value, item, groupMap);
+    setAddFilter(props.entityFiltersList, item, groupMap);
   }
-};
+}
 
-const setAddFilter = (data: any, subItem: any, groupMap: any): void => {
+const setAddFilter = (data, subItem, groupMap) => {
   if (Array.isArray(data)) {
     data.filter((item, idx) => {
       if (item.idx === subItem.idx) {
@@ -153,19 +109,18 @@ const setAddFilter = (data: any, subItem: any, groupMap: any): void => {
       }
     });
   }
-};
+}
 
-const deleteGroup = (item: any): void => {
+const deleteGroup = (item) => {
   // 그룹 필터 내용이 전혀 없는 경우
   if (item.idx == null) {
-    filterAddFilter.value.splice(0);
-    emit("deleteGroupInit");
+    emit("deleteGroupNothing")
   } else {
-    deleteGroupItem(filterAddFilter.value, item);
+    deleteGroupItem(props.entityFiltersList, item);
   }
-};
+}
 
-const deleteGroupItem = (data: any, subItem: any): void => {
+const deleteGroupItem = (data, subItem) => {
   if (Array.isArray(data)) {
     data.filter((item, idx) => {
       if (item.idx === subItem.idx) {
@@ -175,25 +130,25 @@ const deleteGroupItem = (data: any, subItem: any): void => {
       }
     });
   }
-};
+}
 
-const addFilter = (item: any): void => {
-  let attributeValue_s: string | number = "";
-  if (attributeDefsArr.value[0].typeName === "date") {
-    attributeValue_s = startDate.value;
+const addFilter = (item) => {
+  let attributeValue_s = "";
+  if (props.entityFilterCriterion[0].typeName === "date") {
+    attributeValue_s = this.startDate;
   }
   const filterMap = {
     idx: getFilterGrpNum(),
     condition: "AND",
-    attributeName: attributeDefsArr.value[0].name,
+    attributeName: props.entityFilterCriterion[0].name,
     operator: "=",
-    typeName: attributeDefsArr.value[0].typeName,
+    typeName: props.entityFilterCriterion[0].typeName,
     attributeValue: attributeValue_s,
   };
-  setSubAddFilter(filterAddFilter.value, item, filterMap);
-};
+  setSubAddFilter(props.entityFiltersList, item, filterMap);
+}
 
-const setSubAddFilter = (data: any, subItem: any, filterMap: any): void => {
+const setSubAddFilter = (data, subItem, filterMap) => {
   if (Array.isArray(data)) {
     data.filter((item, idx) => {
       if (item.idx === subItem.idx) {
@@ -206,16 +161,16 @@ const setSubAddFilter = (data: any, subItem: any, filterMap: any): void => {
       }
     });
   }
-};
+}
 
-const deleteFilter = (item: any): void => {
+const deleteFilter = (item) => {
   if (item.idx !== 0) {
-    deleteFilterItem(filterAddFilter.value, item);
+    deleteFilterItem(props.entityFiltersList, item);
   } else {
   }
-};
+}
 
-const deleteFilterItem = (data: any, subItem: any): void => {
+const deleteFilterItem = (data, subItem) => {
   if (Array.isArray(data)) {
     data.filter((item, idx) => {
       if (item.idx === subItem.idx) {
@@ -225,5 +180,7 @@ const deleteFilterItem = (data: any, subItem: any): void => {
       }
     });
   }
-};
+}
+
+
 </script>

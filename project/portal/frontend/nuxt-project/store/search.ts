@@ -35,7 +35,7 @@ export const useSearchStore = defineStore('searchStore', () => {
   const getOffset = computed(() => _searchParams.value.offset)
   const getClassification = computed(() => _searchParams.value.classification)
   const getSortOrder = computed(() => _searchParams.value.sortOrder)
-  const getEntitiyFilters = computed(() => _searchParams.value.entityFilters)
+  const getEntityFilters = computed(() => _searchParams.value.entityFilters)
 
   const getMainSearch = computed(() => _mainSearch.value)
   const getMainSelectCategory = computed(() => _mainSelectCategory.value)
@@ -53,7 +53,7 @@ export const useSearchStore = defineStore('searchStore', () => {
   const setOffset = (data: any) => { _searchParams.value.offset = data }
   const setClassification = (data: any) => { _searchParams.value.classification = data }
   const setSortOrder = (data: any) => { _searchParams.value.sortOrder = data }
-  const setEntitiyFilters = (data: any) => { _searchParams.value.entityFilters = data }
+  const setEntityFilters = (data: any) => { _searchParams.value.entityFilters = data }
   // 메인화면에서 검색기능으로 통합검색으로 이동했는지 여부
   const setMainSearch = (payload) => { return _mainSearch.value = payload}
 
@@ -70,7 +70,7 @@ export const useSearchStore = defineStore('searchStore', () => {
     getOffset,
     getClassification,
     getSortOrder,
-    getEntitiyFilters,
+    getEntityFilters,
     getMainSearch,
     getMainSelectCategory,
     setSearchParams,
@@ -83,7 +83,7 @@ export const useSearchStore = defineStore('searchStore', () => {
     setOffset,
     setClassification,
     setSortOrder,
-    setEntitiyFilters,
+    setEntityFilters,
     setMainSearch,
     setMainSelectCategory,
   }
