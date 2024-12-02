@@ -669,7 +669,7 @@ public class SearchDetailService {
      * @throws Exception
      */
     public Object getRecommendDataModel(String id, String type) throws Exception {
-        Map<String, Object> res = recommendClient.getClustering(id);
+        Map<String, Object> res = recommendClient.getEmbedding(id);
         List<String> ids = new ArrayList<>();
         if (res != null) {
             if (res.get("status") instanceof Integer && (Integer) res.get("status") == HttpStatus.OK.value()) {
