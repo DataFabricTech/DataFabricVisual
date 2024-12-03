@@ -413,7 +413,7 @@ const entityFilters = ref({
     {
       "attributeName": "id",
       "operator": "eq",
-      "attributeValue": "aa"
+      "attributeValue": ""
     }
   ]
 })
@@ -548,9 +548,6 @@ onMounted(async () => {
     } else {
       initSubFilter()
     }
-
-    // 필터를 열고 간 경우 열린 상태로 표기
-
   } else {
     // 상세필터 조회
     await getDetailFilters()
@@ -565,6 +562,11 @@ onMounted(async () => {
     if (fromPath == '/main' && searchStore.getMainSearch) {
       // 메인에서 카테고리 클릭으로 넘어온 경우
       if (searchStore.getMainSelectCategory && searchStore.getMainSelectCategory.name) {
+        classification.value = searchParams.value.classification ? searchParams.value.classification : {
+          id: "",
+          name: "",
+          description: ""
+        }
         // 상세필터에서 카테고리 필터 선택 상태로 설정
         if (detailFilters.value['CATEGORY'].content) {
           detailFilters.value['CATEGORY'].content.forEach((el) => {
@@ -588,6 +590,9 @@ onMounted(async () => {
       }
       searchStore.setMainSearch(false) // 검색화면으로 왔으므로 false 처리
       searchStore.setMainSelectCategory(null)
+
+      // 추가속성 필터
+      initSubFilter()
 
     } else if (fromPath.includes('/search/category')) {
       word.value = searchParams.value.query ? searchParams.value.query : "" // 검색어
@@ -613,9 +618,12 @@ onMounted(async () => {
         })
         await searchStore.setSearchParamsDetailFilters(detailFilters.value)
       }
+
+      // 추가속성 필터
+      initSubFilter()
     } else { // 그 외 검색조건 초기화
       searchStore.setSearchParams(searchParams.value)
-      initSubFilter()
+      initSubFilter() // 추가속성 필터
     }
 
   }
@@ -918,6 +926,8 @@ const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
    && detailFilters.value['ORDER']) {
     if (detailFilters.value['CATEGORY'].allChecked && detailFilters.value['SYSTEMTYPE'].allChecked && detailFilters.value['METATYPE'].allChecked && detailFilters.value['TAG'].allChecked && detailFilters.value['ORDER'].allChecked) {
       return false
+    } else {
+      return true
     }
   }
 

@@ -564,8 +564,28 @@ const getCategoryIcon = (idx) => {
 
 // 차트 카테고리 클릭 시 검색페이지로 이동
 const goToSearch = async (cat) => {
+  let obj = {
+    id: cat.id,
+    name: cat.name,
+    description: cat.description
+  }
+
   await searchStore.setMainSelectCategory(cat);
   await searchStore.setMainSearch(true);
+  // 검색어, 카테고리 저장
+  searchStore.setSearchParams({
+    query: word.value,
+    detailFilters: {},
+    pagingObj: {},
+    systemtype: "",
+    metatype: "",
+    tag: "",
+    limit: 10,
+    offset: 0,
+    classification: obj,
+    sortOrder: "",
+    entityFilters: {}
+  })
   router.push("/search/keyword")
 }
 
