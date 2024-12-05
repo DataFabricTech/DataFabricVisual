@@ -1249,6 +1249,7 @@ const leftMenuToggleAndBold = (id) => {
 const deleteGroupNothing = () => {
   initSubFilter()
   showFilterWrap2.value = false
+  searchOptionSub.value = "mu-btn btn-attribute-filter-toggle";
 }
 
 </script>
