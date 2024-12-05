@@ -6,7 +6,7 @@
             <div class="data-info">
               <dl>
                 <dt v-if="props.isAdmin">등록자</dt>
-                <dd v-if="props.isAdmin">{{ props.share.writer }}</dd>
+                <dd v-if="props.isAdmin">{{ props.share.user_nm }}</dd>
                 <dt>등록일</dt>
                 <dd>{{ props.share.create_date }}</dd>
               </dl>
