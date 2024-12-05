@@ -819,14 +819,20 @@ const onSelectPopularDataSort = async (order) => {
   await getPopularDataList(order);
 }
 
-// 카테고리 2개까지 표기 처리
+// 카테고리 2개까지 표기 처리 (c_name, c_description 오름차순)
 const getClassificationList = (data) => {
+  let tmpData = Object.assign(data)
+  tmpData.sort((a, b) => {
+    const nameCompare = a.c_name.localeCompare(b.c_name, "ko")
+    if (nameCompare !== 0) return nameCompare; // name이 다르면 비교 결과 반환
+    return a.description.localeCompare(b.description, "ko"); // name이 같으면 description 비교
+  });
   let list = new Array()
-  for (let i=0; i<data.length; i++) {
+  for (let i=0; i<tmpData.length; i++) {
     if (i >= 2) {
       break;
     }
-    list.push(data[i])
+    list.push(tmpData[i])
   }
   return list
 }
