@@ -3,13 +3,20 @@ package com.mobigen.datalake.main;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.Comparator;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobigen.datalake.search.SearchDetailService;
@@ -26,6 +33,11 @@ public class MainPageService {
     private final MainPageMapper mainPageMapper;
     @Value("${properties.isSumExternal}")
     private boolean isSumExternal;
+    
+    @Value("${properties.fastapi.server.host}")
+    private String fastApiHost;
+    @Value("${properties.fastapi.server.port}")
+    private String fastApiPort;
 
     // 추천 검색어 조회
     public Object getRecommendedWordList() throws Exception {
@@ -133,238 +145,144 @@ public class MainPageService {
     // Atlas에서 조회수가 많은 데이터 (6건) 조회
     public Object getPopularData() throws Exception {
         // // 1. 조회수 높은 데이터 조회
-        // List<Map<String, Object>> popularList = mainPageMapper.getPopularDataList();
+        List<Map<String, Object>> popularList = mainPageMapper.getPopularDataList();
+
+        List<String> guids = new ArrayList<>();
+        for (int i=0; i<popularList.size(); i++) {
+            Map<String, Object> popularData = (Map<String, Object>) popularList.get(i);
+            guids.add(popularData.get("guid").toString());
+        }
+
+        RestTemplate restTemplate = new RestTemplate();
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
         
-        // // 2. 해당 조회수 높은 데이터들을 이용하여 guid를 이용하여 Atlas API로 상세정보 검색
-        // String URL = "/search/basic";
+        // FastAPI의 URL 생성
+        String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/popularData";
+        log.info("call fastapi : " + fastUrl);
 
-        // Map<String, Object> params = new HashMap<String, Object>();
-        // params.put("excludeDeletedEntities", true);
-        // params.put("includeClassificationAttributes", true);
-        // params.put("includeSubClassifications", true);
-        // params.put("includeSubTypes", true);
-
-        // Map<String, Object> entityFilters = new HashMap<>();
-
-        // List<Map<String, Object>> criterion = new ArrayList<>();
-        // for (int i=0; i<popularList.size(); i++) {
-        //     Map<String, Object> criterionMap = new HashMap<>();
-        //     Map<String, Object> popularData = (Map<String, Object>) popularList.get(i);
-        //     criterionMap.put("attributeName", "__guid");
-        //     criterionMap.put("operator", "eq");
-        //     criterionMap.put("attributeValue", popularData.get("guid"));
-        //     criterion.add(criterionMap);
-        // }
-        // entityFilters.put("condition", "OR");
-        // entityFilters.put("criterion", criterion);
-
-
-        // params.put("entityFilters", entityFilters);
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("guids", guids);
+        Map<String, Object> restResponse = restTemplate.postForObject(fastUrl, requestBody, HashMap.class);
         
-        // params.put("attributes", Arrays.asList("__guid", "comment"));
-        // // params.put("sortBy", "__timestamp");
-        // // params.put("sortOrder", "DESCENDING");
-        // params.put("limit", 50);
-        // params.put("offset", 0);
-        // params.put("typeName", "hive_table");
-        // params.put("classification", null);
-        // params.put("tagFilters", null);
-        // params.put("termName", null);
-
-        // JsonResult result = atlasRestAPI.post(URL, params);
-        // Map<String, Object> resultMap = (Map<String, Object>) result.getData();
-        // if (resultMap != null) {
-        //     List<Map<String, Object>> entities = (List<Map<String, Object>>) resultMap.get("entities");
-        //     // 3. 조회수가 높은 순서로 정렬
-        //     // 조회 순서대로 받아온 guid 항목을 하나씩 탐색
-        //     int matchedCount = 0;
-        //     List<Map<String, Object>> sortedList = new ArrayList<>();
-        //     for (int i=0; i<popularList.size(); i++) {
-        //         if (entities != null) {
-        //             for (int j=0; j<entities.size(); j++) {
-        //                 if (popularList.get(i).get("guid").toString().equals(entities.get(j).get("guid").toString())) {
-        //                     matchedCount++;
-        //                     sortedList.add(entities.get(j));
-        //                     if (matchedCount == 6) break;
-        //                 }
-        //             }
-        //         }
-        //         if (matchedCount == 6) break;
-        //     }
-
-        //     // 4. 카테고리, 시스템 가공 후 반환
-        //     return processSysCatSort(sortedList);
-        // }
-
-        return new ArrayList<>();
+        if (!restResponse.isEmpty()) {
+            Map<String, Object> body = (Map<String, Object>)restResponse.get("result");
+            if (body != null) {
+                result.put("result", body.get("result"));
+                result.put("results", body.get("results"));
+                result.put("total_count", body.get("total_count"));
+            }
+            
+            if (body.get("result") != null) {
+                List<Map<String, Object>> entities = (List<Map<String, Object>>)body.get("results");
+                // 3. 조회수가 높은 순서로 정렬
+                // 조회 순서대로 받아온 guid 항목을 하나씩 탐색
+                int matchedCount = 0;
+                List<Map<String, Object>> sortedList = new ArrayList<>();
+                for (int i=0; i<popularList.size(); i++) {
+                    if (entities != null) {
+                        for (int j=0; j<entities.size(); j++) {
+                            if (popularList.get(i).get("guid").toString().equals(entities.get(j).get("id").toString())) {
+                                matchedCount++;
+                                sortedList.add(entities.get(j));
+                                if (matchedCount == 6) break;
+                            }
+                        }
+                    }
+                    if (matchedCount == 6) break;
+                }
+                result.put("results", sortedList);
+            }
+        }
+        return result;
     }
 
     // Atlas에서 최신 등록 데이터 (6건) 조회
     public Object getLatestData() throws Exception {
-        // String URL = "/search/basic";
+        RestTemplate restTemplate = new RestTemplate();
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
+        
+        // FastAPI의 URL 생성
+        String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/latestData";
+        log.info("call fastapi : " + fastUrl);
 
-        // StringBuffer searchQuery = new StringBuffer();
-        // searchQuery.append(typeName + ":" + "hive_table");
-        // searchQuery.append(" AND ");
-        // searchQuery.append(status + ":ACTIVE");
+        ResponseEntity<HashMap> responseEntity = restTemplate.getForEntity(fastUrl, HashMap.class);
+        if (responseEntity != null) {
+            Map<String, Object> body = responseEntity.getBody();
+            if (body != null) {
+                LinkedHashMap res = (LinkedHashMap) body.get("result");
+                if (res != null) {
+                    result.put("result", res.get("result"));
 
-        // Map<String, Object> params = new HashMap<String, Object>() {{
-        //     put("excludeDeletedEntities", true);
-        //     put("includeSubClassifications", true);
-        //     put("excludeDeletedEntities", true);
-        //     put("includeSubClassifications", true);
-        //     put("includeSubTypes", true);
-        //     put("includeClassificationAttributes", true);
-        //     put(
-        //         "entityFilters",
-        //         new HashMap() {{
-        //             put("condition", "AND");
-        //             put(
-        //                 "criterion",
-        //                 Arrays.asList(
-        //                     new HashMap() {{
-        //                         put("attributeName", "__timestamp");
-        //                         put("operator", "timerange");
-        //                         put("attributeValue", "LAST_30_DAYS");
-        //                     }}
-        //                 )
-        //             );
-        //         }}
-        //     );
-        //     put("attributes", Arrays.asList("comment", "name", "description"));
-        //     put("sortBy", "__timestamp");
-        //     put("sortOrder", "DESCENDING");
-        //     put("limit", 6);
-        //     put("offset", 0);
-        //     put("typeName", "hive_table");
-        //     put("classification", null);
-        //     put("termName", null);
-        //     put("query", searchQuery);
-            
-        // }};
+                    List<Map<String, Object>> results = (List<Map<String, Object>>) res.get("results");
+                    List<Map<String, Object>> newResults = new ArrayList<>();
+                    for (int i=0; i<results.size(); i++) {
+                        if (i > 5) break;
+                        newResults.add(results.get(i));
+                    }
+                    result.put("results", newResults);
+                    
+                    result.put("total_count", res.get("total_count"));
+                }
+            }    
+        }
 
-        // JsonResult result = atlasRestAPI.post(URL, params);
-        // Map<String, Object> resultMap = (Map<String, Object>) result.getData();
-
-
-        Object sortedList = new ArrayList<>();
-        // if (resultMap.get("entities") != null) {
-        //     sortedList = resultMap.get("entities");
-        // }
-
-        return processSysCatSort(sortedList);
+        return result;
     }
 
     // Atlas에서 추천수가 많은 데이터 (6건) 조회
     public Object getRecommendData() throws Exception {
+        // 1. 추천수 높은 데이터 조회
+        List<Map<String, Object>> recommendList = mainPageMapper.getRecommendDataList();
+        List<String> guids = new ArrayList<>();
+        for (int i=0; i<recommendList.size(); i++) {
+            Map<String, Object> popularData = (Map<String, Object>) recommendList.get(i);
+            guids.add(popularData.get("guid").toString());
+        }
 
-        // // 1. 추천수 높은 데이터 조회
-        // List<Map<String, Object>> recommendList = mainPageMapper.getRecommendDataList();
+        RestTemplate restTemplate = new RestTemplate();
+        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
         
-        // // 2. 해당 조회수 높은 데이터들을 이용하여 guid를 이용하여 Atlas API로 상세정보 검색
-        // String URL = "/search/basic";
+        // FastAPI의 URL 생성
+        String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/popularData";
+        log.info("call fastapi : " + fastUrl);
 
-        // Map<String, Object> params = new HashMap<String, Object>();
-        // params.put("excludeDeletedEntities", true);
-        // params.put("includeClassificationAttributes", true);
-        // params.put("includeSubClassifications", true);
-        // params.put("includeSubTypes", true);
-
-        // Map<String, Object> entityFilters = new HashMap<>();
-
-        // List<Map<String, Object>> criterion = new ArrayList<>();
-        // for (int i=0; i<recommendList.size(); i++) {
-        //     Map<String, Object> criterionMap = new HashMap<>();
-        //     Map<String, Object> recommendData = (Map<String, Object>) recommendList.get(i);
-        //     criterionMap.put("attributeName", "__guid");
-        //     criterionMap.put("operator", "eq");
-        //     criterionMap.put("attributeValue", recommendData.get("guid"));
-        //     criterion.add(criterionMap);
-        // }
-        // entityFilters.put("condition", "OR");
-        // entityFilters.put("criterion", criterion);
-
-
-        // params.put("entityFilters", entityFilters);
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("guids", guids);
+        Map<String, Object> restResponse = restTemplate.postForObject(fastUrl, requestBody, HashMap.class);
         
-        // params.put("attributes", Arrays.asList("__guid", "comment"));
-        // // params.put("sortBy", "__timestamp");
-        // // params.put("sortOrder", "DESCENDING");
-        // params.put("limit", 50);
-        // params.put("offset", 0);
-        // params.put("typeName", "hive_table");
-        // params.put("classification", null);
-        // params.put("tagFilters", null);
-        // params.put("termName", null);
-
-        // JsonResult result = atlasRestAPI.post(URL, params);
-        // Map<String, Object> resultMap = (Map<String, Object>) result.getData();
-        // if (resultMap != null) {
-        //     List<Map<String, Object>> entities = (List<Map<String, Object>>) resultMap.get("entities");
-        //     // 3. 조회수가 높은 순서로 정렬
-        //     // 조회 순서대로 받아온 guid 항목을 하나씩 탐색
-        //     int matchedCount = 0;
-        //     List<Map<String, Object>> sortedList = new ArrayList<>();
-        //     for (int i=0; i<recommendList.size(); i++) {
-        //         if (entities != null) {
-        //             for (int j=0; j<entities.size(); j++) {
-        //                 if (recommendList.get(i).get("guid").toString().equals(entities.get(j).get("guid").toString())) {
-        //                     matchedCount++;
-        //                     sortedList.add(entities.get(j));
-        //                     if (matchedCount == 6) break;
-        //                 }
-        //             }
-        //         }
-        //         if (matchedCount == 6) break;
-        //     }
-
-        //     // 4. 카테고리, 시스템 가공 후 반환
-        //     return processSysCatSort(sortedList);
-        // }
-
-        return new ArrayList<>();
+        if (!restResponse.isEmpty()) {
+            Map<String, Object> body = (Map<String, Object>)restResponse.get("result");
+            if (body != null) {
+                result.put("result", body.get("result"));
+                result.put("results", body.get("results"));
+                result.put("total_count", body.get("total_count"));
+            }
+            
+            if (body.get("result") != null) {
+                List<Map<String, Object>> entities = (List<Map<String, Object>>)body.get("results");
+                // 3. 추천수가 높은 순서로 정렬
+                // 추천 순서대로 받아온 guid 항목을 하나씩 탐색
+                int matchedCount = 0;
+                List<Map<String, Object>> sortedList = new ArrayList<>();
+                for (int i=0; i<recommendList.size(); i++) {
+                    if (entities != null) {
+                        for (int j=0; j<entities.size(); j++) {
+                            if (recommendList.get(i).get("guid").toString().equals(entities.get(j).get("id").toString())) {
+                                matchedCount++;
+                                sortedList.add(entities.get(j));
+                                if (matchedCount == 6) break;
+                            }
+                        }
+                    }
+                    if (matchedCount == 6) break;
+                }
+                result.put("results", sortedList);
+            }
+        }
+        return result;
     }
 
     public Object getChartCategoryList() throws Exception {
         return mainPageMapper.getChartCategoryList();
-    }
-
-    public Object processSysCatSort(Object sortedList) throws Exception {
-
-        // 1. 카테고리, 시스템이 들어있는 항목 확인
-        for (int a=0; a <((List<Map<String, Object>>) sortedList).size(); a++) {
-            List<String> classificationNames = (List<String>) ((List<Map<String, Object>>) sortedList).get(a).get("classificationNames");
-            List<String> sysList = new ArrayList<>();
-            List<String> catList = new ArrayList<>();
-            List<String> newClassificationNames = new ArrayList<>();
-            for (int i=0; i<classificationNames.size(); i++) {
-                if (classificationNames.get(i) != null) {
-                    String cn = classificationNames.get(i);
-                    // 2. 시스템 항목 1개 추출
-                    if (cn.startsWith("SYS")) {
-                        sysList.add(cn);
-                        continue;
-                    }
-
-                    // 3. 카테고리 항목 1개 추출
-                    if (cn.startsWith("CAT")) {
-                        catList.add(cn);
-                        continue;
-                    }
-                }
-            }
-
-            // 4. 시스템 항목, 카테고리 항목 1개씩 추가
-            if (sysList.size() > 0) {
-                newClassificationNames.add(sysList.get(0));
-            }
-            if (catList.size() > 0) {
-                newClassificationNames.add(catList.get(0));
-            }
-
-            // 3. classificationNames에 덮어쓰기
-            ((List<Map<String, Object>>) sortedList).get(a).put("classificationNames", newClassificationNames);
-        }
-        return sortedList;
     }
 }

@@ -173,20 +173,25 @@
                 </div>
               </div>
             </div>
-            <a @click="goToMetaDataList()" class="mu-btn"><span>데이터 전체보기</span></a>
+            <a @click="goToMetaDataList()" class="mu-btn"><span>전체보기</span></a>
           </div>
           <div class="best-data">
             <ul class="data-box-list" style="counter-reset: best-data -1">
               <li v-if="currentDataList" class="data-box" v-for="(ld, idx) in currentDataList">
-                <a @click="goToMetaDataDetail(ld.guid)" style="content: counter(best-data); counter-increment: best-data">
-                  <div class="category-group" v-if="ld.classificationNames">
-                    <div class="category" v-for="cat in getClassificationList(ld.classificationNames)">
-                      <em class="category-label">{{ getDescription(cat) }}</em>
+                <a @click="goToMetaDataDetail(ld.id)" style="content: counter(best-data); counter-increment: best-data">
+                  <div class="category-group" v-if="ld.classifications">
+                    <div class="category" v-for="cat in getClassificationList(ld.classifications)">
+                      <em class="category-label">{{ cat.c_description ? cat.c_description : cat.c_name }}</em>
+                    </div>
+                  </div>
+                  <div class="category-group" v-else>
+                    <div class="category">
+                      <em class="category-label">카테고리 미지정</em>
                     </div>
                   </div>
                   <div class="title-group">
-                    <strong class="data-title">{{ ld.attributes ? ld.attributes.comment : "" }}</strong>
-                    <p class="data-name">{{ ld.attributes ? ld.attributes.name : "" }}</p>
+                    <strong class="data-title">{{ ld.description ? ld.description : ld.name }}</strong>
+                    <p class="data-name">{{ ld.dscription ? ld.dscription : ld.name }}</p>
                   </div>
                 </a>
               </li>
@@ -340,8 +345,8 @@ const newDataCount = ref(0) // 신규 데이터 수
 const noticeList = ref([]) // 공지사항
 const faqList = ref([]) // FAQ
 const shareDataList = ref([]) // 활용사례
-const popularSortOrderList = ref(["bestDataSortHits", "bestDataSortNew", "bestDataSortRec"]) // 인기 데이터 라디오 버튼 항목
-const dataSortOrder = ref("bestDataSortHits") // 인기 데이터 조회 순서, bestDataSortHits(조회수), bestDataSortNew(최신)
+const popularSortOrderList = ref(["bestDataSortNew", "bestDataSortHits", "bestDataSortRec"]) // 인기 데이터 라디오 버튼 항목
+const dataSortOrder = ref("bestDataSortNew") // 인기 데이터 조회 순서, bestDataSortNew(최신), bestDataSortHits(조회수), bestDataSortRec(추천수)
 const currentDataList = ref([]) // 인기 데이터 > 현재 보여줄 데이터 목록
 const popularDataList = ref([]) // 인기 데이터 > 조회수 높은 순
 const latestDataList = ref([]) // 인기 데이터 > 최신 데이터 순
@@ -655,37 +660,49 @@ const getShareData = async () => {
 }
 
 // 인기 데이터, 최신 등록 데이터 조회
-const getPopularDataList = async (order = 'bestDataSortHits') => {
-  // 조회수가 가장 높은 순 조회
+const getPopularDataList = async (order = 'bestDataSortNew') => {
+  // 조회수 높은 순 조회
   if (order == 'bestDataSortHits') {
     await $ofetch(`/api/main/popularDataList`).then((res) => {
       if (res && !res.errorMessage) {
         // popularDataList.value = res.data
-        currentDataList.value = res.data
+        if (res.data && res.data.results) {
+          currentDataList.value = res.data.results
+        } else {
+          currentDataList.value = []
+        }
       }
     }).catch((e) => {
       console.log(e)
     })
   }
 
-  // 최신 등록 데이터 조회
+  // 최신 데이터 조회
   if (order == 'bestDataSortNew') {
     await $ofetch(`/api/main/latestDataList`).then((res) => {
       if (res && !res.errorMessage) {
         // latestDataList.value = res.data
-        currentDataList.value = res.data
+        if (res.data && res.data.results) {
+          currentDataList.value = res.data.results
+        } else {
+          currentDataList.value = []
+        }
       }
     }).catch((e) => {
       console.log(e)
     })
   }
 
-  // 추천수가 가장 많은 순 조회
+  // 추천수 높은 순 조회
   if (order == 'bestDataSortRec') {
     await $ofetch(`/api/main/recommendDataList`).then((res) => {
       if (res && !res.errorMessage) {
         // recommendDataList.value = res.data
-        currentDataList.value = res.data
+        if (res.data && res.data.results) {
+          currentDataList.value = res.data.results
+        } else {
+          currentDataList.value = []
+        }
       }
     }).catch((e) => {
       console.log(e)
@@ -812,13 +829,6 @@ const getClassificationList = (data) => {
     list.push(data[i])
   }
   return list
-}
-
-// 카테고리 한글명 조회
-// 카테고리 한글명
-const getDescription = (key) => {
-  let description = categoryStore.getClassificationNameKr(key) ? categoryStore.getClassificationNameKr(key) : ""
-  return description
 }
 
 const getPostContent = (content) => {

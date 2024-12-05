@@ -10,11 +10,11 @@
                 <div class="category-group" v-if="checkUseFilter">
                   <div class="category">
                     <em class="category-label">
-                      필터적용중 <span>
+                      필터적용중<span>
                       <button @click="deleteCategoryTag()"><i class="mu-icon-svg item-delete"></i></button>
                     </span>
                     </em>
-                  </div>
+                  </div>&nbsp;
                 </div>
                 <input
                   type="text"
