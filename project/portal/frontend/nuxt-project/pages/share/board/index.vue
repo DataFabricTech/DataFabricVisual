@@ -209,7 +209,7 @@ const getShareList = async (offset: number = 1): Promise<void> => {
                     type: response.type
                 });
                 const imageUrl = URL.createObjectURL(imageBlob);
-                element.image_html = `<img alt='활용사례' src='${imageUrl}' style="width: 335px; height: 220px;'/>`;
+                element.image_html = `<img alt='활용사례' src='${imageUrl}' style='width: 335px; height: 220px;'/>`;
             } else {
                 // 응답이 유효하지 않은 경우 기본 이미지로 설정
                 element.image_html = "<img alt='활용사례' src='/share_basic.png' style='width: 335px; height: 220px;'></img>";
