@@ -213,7 +213,7 @@ const getShareList = async (offset: number = 1): Promise<void> => {
 
       // 썸네일 없는 경우 기본값 설정
       if (!element.image) {
-        element.image_html = "<img alt='활용사례' src='/share_basic.png'></img>"
+        element.image_html = "<img alt='활용사례' src='/share_basic.png' style='width: 335px; height: 220px;'></img>"
       } else {
         // 이미 이미지가 존재하면 해당 이미지는 바로 화면에 랜더링하기
         if (element.image.indexOf('src=') > -1) break
@@ -231,15 +231,15 @@ const getShareList = async (offset: number = 1): Promise<void> => {
                     type: response.type
                 });
                 const imageUrl = URL.createObjectURL(imageBlob);
-                element.image_html = `<img alt='활용사례' src='${imageUrl}'/>`;
+                element.image_html = `<img alt='활용사례' src='${imageUrl}' style='width: 335px; height: 220px;'/>`;
             } else {
                 // 응답이 유효하지 않은 경우 기본 이미지로 설정
-                element.image_html = "<img alt='활용사례' src='/share_basic.png'></img>";
+                element.image_html = "<img alt='활용사례' src='/share_basic.png' style='width: 335px; height: 220px;'></img>";
             }
         } catch (error) {
             // console.error("파일 등록 API 호출 중 오류 발생:", error);
             // 썸네일 파일 못 찾는 경우 기본값 설정
-            element.image_html = "<img alt='활용사례' src='/share_basic.png'></img>"
+            element.image_html = "<img alt='활용사례' src='/share_basic.png' style='width: 335px; height: 220px;'></img>"
         }
       }
 

@@ -104,22 +104,10 @@
               </swiper-slide>
           </swiper>
         </div>
-
-<!--        <div class="section-wrap notice-article">-->
-<!--          <div class="main-heading">-->
-<!--            <h3 @click="goToNoticeList()">공지사항</h3>-->
-<!--          </div>-->
-<!--          <ul class="notice-list" style="">-->
-<!--            <li v-for="(nt, idx) in noticeList">-->
-<!--              <a @click="goToNotice(nt.id)">{{ nt.title }}</a>-->
-<!--              <p class="date">{{ yyyyMMdddot(nt.upload_date) }}</p>-->
-<!--            </li>-->
-<!--          </ul>-->
-<!--        </div>-->
         <!-- section-wrap : FAQ -->
         <div class="section-wrap faq-article">
           <div class="main-heading">
-            <h3><a href="javascript:void(0)" @click="goToFaqList()">자주 묻는 질문</a></h3>
+            <h3><a href="javascript:void(0)" @click="goToFaqList()">FAQ</a></h3>
           </div>
           <swiper :modules="[Autoplay]" direction="vertical" @swiper="onSwiper" class="article-swiper" >
             <swiper-slide class="swiper-slide" v-for="(faq, idx) in faqList">
@@ -237,8 +225,6 @@
                   <strong>데이터 요청 내역</strong>
                   <p>
                     데이터 요청 내역이 없습니다.
-                    <br />
-                    지금 데이터를 요청하고 분석을 통해 인사이트를 얻으세요.
                   </p>
                 </div>
               </div>
@@ -263,9 +249,7 @@
                     찜데이터 내역
                   </strong>
                   <p>
-                  분석에 필요한 데이터를 찜해보세요.
-                  <br />
-                  나만의 데이터 컬렉션을 완성해 보세요.
+                  찜 데이터 내역이 없습니다.
                   </p>
                 </div>
               </div>
@@ -290,8 +274,7 @@
                 <div class="banner banner-01">
                   <strong>데이터 요청</strong>
                   <p>
-                    데이터 분석과 업무에 필요한 데이터를 쉽게 요청하고,<br>
-                    인사이트 도출에 필요한 데이터를 신속하게 받을 수 있습니다.
+                    데이터가 필요한 업무에 사용하기 위해<br>데이터를 요청할 수 있습니다.
                   </p>
                   <button type="button" class="mu-btn" @click="goToRequestDataList()"><span>데이터 요청하기</span></button>
                 </div>
@@ -302,8 +285,7 @@
                 <div class="banner banner-02">
                   <strong>카탈로그 동의어</strong>
                   <p>
-                    동일한 데이터를 가리키는 다양한 용어들을 연결하여<br>
-                    사용자가 데이터 탐색을 보다 쉽게 할 수 있도록 도와줍니다.
+                    데이터의 검색 및 활용에 효과적인<br>동의어를 확인할 수 있습니다.
                   </p>
                   <button type="button" class="mu-btn" @click="goToSynonymList()"><span>카탈로그 동의어 보기</span></button>
                 </div>
@@ -361,9 +343,9 @@ const shareDataList = ref([]) // 활용사례
 const popularSortOrderList = ref(["bestDataSortHits", "bestDataSortNew", "bestDataSortRec"]) // 인기 데이터 라디오 버튼 항목
 const dataSortOrder = ref("bestDataSortHits") // 인기 데이터 조회 순서, bestDataSortHits(조회수), bestDataSortNew(최신)
 const currentDataList = ref([]) // 인기 데이터 > 현재 보여줄 데이터 목록
-const popularDataList = ref([]) // 인기 데이터 > 조회수가 가장 높은 순
-const latestDataList = ref([]) // 인기 데이터 > 최신 등록 데이터 순
-const recommendDataList = ref([]) // 인기 데이터 > 추천수가 가장 높은 순
+const popularDataList = ref([]) // 인기 데이터 > 조회수 높은 순
+const latestDataList = ref([]) // 인기 데이터 > 최신 데이터 순
+const recommendDataList = ref([]) // 인기 데이터 > 추천수가 높은 순
 const myRequestDataList = ref([]) // 데이터 요청 내역
 const myWishDataList = ref([]) // 찜 데이터
 const currentLeftTab = ref(0) // 데이터 요청내역||찜 데이터 탭
@@ -851,9 +833,9 @@ const getPostContent = (content) => {
 
 // 인기 데이터 한글값 표기
 const getKrName = (content) => {
-  if (content == 'bestDataSortHits') return '조회수가 가장 높은 순'
-  if (content == 'bestDataSortNew') return '최신 등록 데이터 순'
-  if (content == 'bestDataSortRec') return '추천수가 가장 높은 순'
+  if (content == 'bestDataSortHits') return '조회수 높은 순'
+  if (content == 'bestDataSortNew') return '최신 데이터 순'
+  if (content == 'bestDataSortRec') return '추천수 높은 순'
   return content
 }
 
