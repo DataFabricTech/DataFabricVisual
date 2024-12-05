@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +41,8 @@ public class UserService {
     private final UserMapper userMapper;
     private final SessionManager sessionManager;
     private final IRISProperties properties;
+    
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Value("${properties.superadmin.id}")
     String adminId;
@@ -235,9 +238,11 @@ public class UserService {
         }
 
         // 3. 비밀번호 일치여부 확인
-        if (!password.equals(user.get("password"))) {
+        String inputPassword = password;
+        String userPw = user.get("password").toString();
+        if (!passwordEncoder.matches(inputPassword, userPw)) { // 패스워드 불일치
             result.put("login_result", "N");
-            result.put("login_result_message", "비밀번호가 올바르지 않습니다.");
+            result.put("login_result_message", "비밀번호가 일치하지 않습니다.");
             userMapper.updateLoginFailCount(user_id);
             return result;
         }
@@ -251,7 +256,6 @@ public class UserService {
         }
 
         result.put("login_result", "Y");
-
         userMapper.updateLoginUser(user_id); // 사용자 정보 업데이트
         
         if(user.get("role_name") == null) user.put("role_name", "User"); // 권한값이 없는 경우 User 권한 설정
@@ -286,93 +290,7 @@ public class UserService {
         return userMapper.getAllDepartments(word);
     }
 
-    public boolean basicAuth(String user_id, String password) throws Exception {
-        boolean isAuth = false;
-
-        Map authUser = (Map) userMapper.getUserMaster(user_id);
-        if (authUser != null) {
-            if (password.equals(authUser.get("password"))) { // 1. 비밀번호 검증 성공
-                if (authUser != null) {
-                    // 로그인 실패 횟수 확인
-                    if( (Integer) authUser.get("login_fail_cnt") >= 5 ){
-                        Timestamp now = new Timestamp(System.currentTimeMillis());
-                        Timestamp loginTime = (Timestamp) authUser.get("last_login");
-                        long milliseconds = now.getTime() - loginTime.getTime();
-                        int seconds = (int) milliseconds / 1000;
-                        int miniutes = seconds / 60;
-                        if(miniutes < 60) {
-                            userMapper.updateLoginFailCount(user_id); // 로그인 fail 개수 증가 처리
-                            isAuth = false;
-                        } else {
-                            userMapper.updateLoginUser(user_id);// 로그인 fail 개수 초기화
-                            isAuth = true;
-                        }
-                    } else {
-                        isAuth = true;    
-                    }
-                }
-            } else {
-                userMapper.updateLoginFailCount(user_id); // 로그인 fail 개수 증가 처리
-                isAuth = false;
-            }
-        }
-
-        if (password.equals(authUser.get("password"))) { // 1. 비밀번호 검증 성공
-            if (authUser != null) {
-                // 로그인 실패 횟수 확인
-                if( (Integer) authUser.get("login_fail_cnt") >= 5 ){
-                    Timestamp now = new Timestamp(System.currentTimeMillis());
-                    Timestamp loginTime = (Timestamp) authUser.get("last_login");
-                    long milliseconds = now.getTime() - loginTime.getTime();
-                    int seconds = (int) milliseconds / 1000;
-                    int miniutes = seconds / 60;
-                    if(miniutes < 60) {
-                        userMapper.updateLoginFailCount(user_id); // 로그인 fail 개수 증가 처리
-                        isAuth = false;
-                    } else {
-                        userMapper.updateLoginUser(user_id);// 로그인 fail 개수 초기화
-                        isAuth = true;
-                    }
-                } else {
-                    isAuth = true;    
-                }
-                
-            } else { // 사용자가 등록되어 있지 않은 경우 첫 로그인이기에 업데이트
-                userMapper.updateLoginUser(user_id); // 사용자 정보 업데이트
-                isAuth = true;
-            }
-        } else { // 2. 비밀번호 검증 실패
-            // 사용자 로그인 실패 횟수 증가 처리
-            // 사용자가 등록되어 있지 않은 경우
-            if (authUser != null) {
-                // 로그인 실패 횟수 확인
-                if( (Integer) authUser.get("login_fail_cnt") >= 5 ){
-                    Timestamp now = new Timestamp(System.currentTimeMillis());
-                    Timestamp loginTime = (Timestamp) authUser.get("last_login");
-                    long milliseconds = now.getTime() - loginTime.getTime();
-                    int seconds = (int) milliseconds / 1000;
-                    int miniutes = seconds / 60;
-                    if(miniutes < 60) {
-                        isAuth = false;
-                    } else {
-                        userMapper.updateLoginUser(user_id);// 로그인 fail 개수 초기화
-                        isAuth = false;
-                    }
-                }
-
-                userMapper.updateLoginFailCount(user_id); // 로그인 fail 개수 증가 처리
-                isAuth = false;
-                
-            } else { // 첫 로그인이기에 업데이트
-                userMapper.updateLoginUser(user_id); // 신규 사용자 정보 업데이트
-                userMapper.updateLoginFailCount(user_id); // 로그인 fail 개수 증가 처리
-                isAuth = false;
-            }
-        }
-
-        return isAuth;
-    }
-
+    // 로그인 이력 저장
     public Integer insertLoginHistory(HttpServletRequest request, String token) throws Exception {
         Map<String, Object> userInfo = sessionManager.getUserByAccessTokenValue(token);
 
@@ -380,15 +298,7 @@ public class UserService {
         param.put("user_id", userInfo.get("user_id").toString());
         param.put("username", userInfo.get("username").toString());
         param.put("user_ip_addr", IpAddressUtil.getClientIp(request));
-        // param.put("last_login_token", token);
 
         return userMapper.insertLoginHistory(param);
-    }
-
-    /**
-     * 특정 사용자의 마지막 로그인 시간을 반환
-     */
-    public String lastLoginDate(String userId) throws Exception{
-        return userMapper.getLastLoginTime(userId);
     }
 }

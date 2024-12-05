@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.ResultActions;
 
 import jakarta.servlet.http.Cookie;
@@ -80,5 +81,19 @@ class DataLakeApplicationTests extends AbstractRestDocTest {
         config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
         encryptor.setConfig(config);
         return encryptor;
+    }
+
+    @Test
+    public void passwordEncoder() {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    
+        // 비밀번호 해싱
+        String rawPassword = "<PASSWORD>";
+        String hashedPassword = passwordEncoder.encode(rawPassword);
+        System.out.println("Hashed Password: " + hashedPassword);
+    
+        // 비밀번호 검증
+        boolean isMatch = passwordEncoder.matches(rawPassword, hashedPassword);
+        System.out.println("Password matches: " + isMatch);
     }
 }
