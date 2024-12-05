@@ -1280,6 +1280,29 @@ const fnWhereQueryMake = () => {
       }
     }
   }
+
+  // 추출조건을 유효성 체크
+  let createSuccess = false
+  let noFilterCnt = 0
+  for (let a=0; a<filter.value.length; a++) {
+    // 두번째 쿼리부터는 입력값이 없으면 성공, 일부만 입력한 경우 오류 처리
+    if (filter.value[a].filterHeader == "" && filter.value[a].filterInput == "" && filter.value[a].filterOperator == "") {
+      noFilterCnt += 1
+      createSuccess = true
+    } else {
+      if (!filter.value[a].filterHeader || !filter.value[a].filterInput || !filter.value[a].filterOperator) {
+        createSuccess = false
+        break;
+      }
+    }
+
+    if (noFilterCnt == 3) {
+      createSuccess = false
+      break;
+    }
+  }
+
+  return createSuccess
 };
 
 const onClickFileEliminateButton = async () => {
@@ -1305,6 +1328,18 @@ const onClickFileEliminateButton = async () => {
 
 
   fnSelectQueryMake();
+
+  let createWhereQuerySuccess = false
+  if (filterLogic.value != "") {
+    createWhereQuerySuccess = fnWhereQueryMake();
+  } else {
+    createWhereQuerySuccess = true
+  }
+
+  if (!createWhereQuerySuccess) {
+    errorAlert("추출조건을 '선택없음' 으로 변경하거나 조건을 하나 이상 입력해 주세요.")
+    return;
+  }
 
   if (filterLogic.value != "") {
     fnWhereQueryMake();
