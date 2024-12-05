@@ -20,18 +20,34 @@
             <td style="vertical-align: middle;">{{ key }} <br> ({{ getKrKey(key) }})</td>
             <td>
               <!-- 데이터 타입이 object이고 key가 columns일 경우 -->
-              <div
-                v-if="getTypeByValue(key, value) === 'DIV'"
-                class="mu-area h100 tl"
-                style="white-space: nowrap; overflow-x: auto"
-              >
-                <span v-for="(item2, idx) in value" :key="idx">
-                  <a v-on:click="onClickDataName(key, item2)">
-                    {{ value[idx].name }}({{ value[idx].description }})</a
-                  >
-                  <span>&nbsp; &nbsp;</span>
-                  <br v-if="(idx + 1) % 10 == 0" />
-                </span>
+              <div v-if="getTypeByValue(key, value) === 'DIV'">
+                <div class="table-scroll max-h550">
+                  <table class="mu-grid mu-grid-data mu-grid-narrow">
+                    <colgroup>
+                      <col style="width:10%">
+                      <col style="width:25%">
+                      <col>
+                      <col style="width:15%">
+                    </colgroup>
+                    <thead>
+                      <tr>
+                        <th scope="col">순번</th>
+                        <th scope="col">컬럼명</th>
+                        <th scope="col">컬럼 설명</th>
+                        <th scope="col">타입</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="(item2, idx) in value">
+                        <td>{{ idx + 1 }}</td>
+                        <!-- <td><a @click="onClickDataName(key, item2)">{{ value[idx].name }}</a></td> -->
+                        <td :title="value[idx].name">{{ value[idx].name }}</td>
+                        <td :title="value[idx].description">{{ value[idx].description }}</td>
+                        <td :title="value[idx].dataType">{{ value[idx].dataType }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
               </div>
               <!-- 데이터 타입이 object이고 key가 columns가 아닐 경우 -->
               <textarea
@@ -39,8 +55,7 @@
                 class="mu-area h100 tl"
                 readonly="readonly"
                 v-html="arrayToTextArea(value)"
-                style="white-space: pre-line"
-              />
+                style="white-space: pre-line" />
 
               <!-- 데이터 타입이 object가 아니고 key가 table일 경우 -->
               <span v-if="getTypeByValue(key, value) === 'SPAN_LINK'">
@@ -48,7 +63,6 @@
               </span>
 
               <!-- 데이터 타입이 object가 아니고 key가 table이 아닐 경우 -->
-
               <span
                 v-if="
                   getTypeByValue(key, value) === '' &&
@@ -106,6 +120,7 @@ const metaDataInfo = computed(() => {
   const metaDataInfoResult = obj
 
   const columns = obj.columns;
+  console.log(columns)
   if (columns) {
     const uniqueColumns = columns.filter((el, idx) => {
       return columns.indexOf(el) === idx;
