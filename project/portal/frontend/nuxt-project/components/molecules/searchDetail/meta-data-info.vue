@@ -6,8 +6,8 @@
     <div class="max-h600">
       <table class="mu-grid mu-grid-data">
         <colgroup>
-          <col style="width: 200px" />
-          <col style="width: auto" />
+          <col style="width: 20%" />
+          <col style="width: 80%" />
         </colgroup>
         <thead>
           <tr>
