@@ -213,9 +213,11 @@ public class MainPageService {
 
                     List<Map<String, Object>> results = (List<Map<String, Object>>) res.get("results");
                     List<Map<String, Object>> newResults = new ArrayList<>();
-                    for (int i=0; i<results.size(); i++) {
-                        if (i > 5) break;
-                        newResults.add(results.get(i));
+                    if (results != null) {
+                        for (int i=0; i<results.size(); i++) {
+                            if (i > 5) break;
+                            newResults.add(results.get(i));
+                        }
                     }
                     result.put("results", newResults);
                     

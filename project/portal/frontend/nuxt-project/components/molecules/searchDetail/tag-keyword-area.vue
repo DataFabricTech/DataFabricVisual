@@ -76,9 +76,12 @@ const toggleShowData = () => {
 
 // 랜더링 후 안보이도록 하기 위함
 // onMounted(() => { showData.value = false})
+onMounted(() => {
+  console.log(props.entity)
+})
 
 const guid = computed(() =>
-  ObjectUtils.getPropertyValue(props.entity, "entity/guid", "")
+  ObjectUtils.getPropertyValue(props.entity, "id", "")
 );
 
 const onClickDeleteTag = async (tag) => {

@@ -15,4 +15,6 @@ public interface TagManageMapper {
   Integer insertTagCount(String tag_name) throws Exception;  
   Integer mapperCount(String tag_name) throws Exception;
   Integer mapperCountDown (String tag_name) throws Exception;
+  int updateMetaDataTag(Map<String, Object> params) throws Exception;
+  int upsertMetaDataTag(Map<String, Object> params) throws Exception;
 }

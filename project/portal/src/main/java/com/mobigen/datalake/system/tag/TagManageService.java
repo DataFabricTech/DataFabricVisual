@@ -66,48 +66,61 @@ public class TagManageService {
   //tag 매핑
   public Object mapLabels(Map<String, Object> param, HttpServletRequest request) throws Exception {
     Map<String, Object> result = new HashMap<>();
-    // Boolean isFailed = false;
+    Boolean isFailed = false;
 
-    // String guid = param.get("guid").toString();
-    // List<String> tagList = (List<String>)param.get("tagList");
-    // List<String> deleteTagList = (List<String>)param.get("deleteTagList");
+    String guid = param.get("guid").toString();
+    List<String> tagList = (List<String>)param.get("tagList");
+    List<String> deleteTagList = (List<String>)param.get("deleteTagList");
 
-    // // 선택된 엔티티 맵핑
-    // String URL = "/entity/guid/" + guid + "/labels";
+    //post는 기존꺼 초기화 하고 새로 넣기 (tag 매핑 삭제시 사용)
+    //put은 기존꺼에 append , 중복은 덮어씀 (tag 매핑 추가시 사용)
+    int updateResult = 0;
+    if(request.getMethod().equals("POST")){
+      Map<String, Object> upsertParams = new HashMap<>();
+      upsertParams.put("guid", guid);
 
-    // JsonResult atlasResult = null;
+      String[] stringArray = tagList.toArray(new String[0]);
+      upsertParams.put("tags", stringArray);
 
-    // //post는 기존꺼 초기화 하고 새로 넣기 (tag 매핑 삭제시 사용)
-    // //put은 기존꺼에 append , 중복은 덮어씀 (tag 매핑 추가시 사용)
-    // if(request.getMethod().equals("POST")){
-    //   atlasResult = atlasRestAPI.post(URL, tagList, false);
-    //   //delete tag 목록은 개수 -1 함
-    //   for (String tag_name : deleteTagList) {        
-    //     tagManageMapper.mapperCountDown(tag_name);        
-    //   }
+      // 1. 전체 태그 덮어쓰기로 저장
+      updateResult += tagManageMapper.upsertMetaDataTag(upsertParams);
       
-    // }else if(request.getMethod().equals("PUT")){
-    //   atlasResult = atlasRestAPI.put(URL, tagList, false);
 
-    //   // 매핑된 태그는 개수 +1 하고, count 테이블에 태그가 입력 안되어 있으면 insert 함.
-    //   for (String tag_name : tagList) {
-    //     Integer tag_cnt = tagManageMapper.checkTagCount(tag_name);
-    //     if(tag_cnt == 0){
-    //       tagManageMapper.insertTagCount(tag_name);
-    //     }else{
-    //       tagManageMapper.mapperCount(tag_name);
-    //     }
-    //   }      
-    // }
+      //delete tag 목록은 개수 -1 함
+      for (String tag_name : deleteTagList) {        
+        tagManageMapper.mapperCountDown(tag_name);        
+      }
+      
+    }else if(request.getMethod().equals("PUT")){
+      // 매핑된 태그는 개수 +1 하고, count 테이블에 태그가 입력 안되어 있으면 insert 함.
+      int isUpdated = 0;
+      for (String tag_name : tagList) {
+        Map<String, Object> insertParams = new HashMap<>();
+        insertParams.put("guid", guid);
+        insertParams.put("tag_name", tag_name);
+        isUpdated = tagManageMapper.updateMetaDataTag(insertParams);
 
-    // if (atlasResult == null){
-    //   isFailed = true;
-    // }else if (atlasResult != null && atlasResult.getResult() == 0) {      
-    //   result.put("isFailed", true);
-    //   result.put("errorMessage", AtlasErrorMap.getErrorMessage(atlasResult.getErrorMessage()));      
-    // }
+        if (isUpdated == 0) { // 이미 추가된 데이터였으면 태그 카운트 증가하지 않음
+          continue;
+        } else {
+          updateResult += isUpdated;
+          isUpdated = 0;
+        }
 
-    // result.put("isFailed", isFailed);
+        Integer tag_cnt = tagManageMapper.checkTagCount(tag_name);
+        if(tag_cnt == 0){
+          tagManageMapper.insertTagCount(tag_name);
+        }else{
+          tagManageMapper.mapperCount(tag_name);
+        }
+      }      
+    }
+
+    if (updateResult == 0){
+      isFailed = true;
+    }
+
+    result.put("isFailed", isFailed);
     return result;
   }
 }

@@ -120,7 +120,6 @@ const metaDataInfo = computed(() => {
   const metaDataInfoResult = obj
 
   const columns = obj.columns;
-  console.log(columns)
   if (columns) {
     const uniqueColumns = columns.filter((el, idx) => {
       return columns.indexOf(el) === idx;
