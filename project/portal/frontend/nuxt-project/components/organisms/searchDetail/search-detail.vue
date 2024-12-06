@@ -67,7 +67,7 @@
           :isAdmin="props.isAdmin"
           :startNode="startNode"
           :entity="entity"
-          :atlasData="userDataParam"
+          :userDataParam="userDataParam"
         />
         <!-- detail-section : 연관 데이터 -->
         <related-data

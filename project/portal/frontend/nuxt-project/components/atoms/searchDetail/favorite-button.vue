@@ -56,7 +56,7 @@ const onToggleUserDescriptionFavorite = (favoriteId) => {
     }).then((res) => {
       isFavorite.value = res.data["isFavorite"];
       favoriteCounts.value = res.data["favoriteCounts"];
-      if (res.data["atlasUpdated"]) emit("reload", props.params.guid, true);
+      emit("reload", props.params.guid, true);
     });
 
     // 추천을 하지 않은 상태
@@ -68,7 +68,7 @@ const onToggleUserDescriptionFavorite = (favoriteId) => {
     }).then((res) => {
       isFavorite.value = res.data["isFavorite"];
       favoriteCounts.value = res.data["favoriteCounts"];
-      if (res.data["atlasUpdated"]) emit("reload", props.params.guid, true);
+      emit("reload", props.params.guid, true);
     });
   }
 };

@@ -51,6 +51,11 @@
           </p>
         </div>
         <!-- //title-group -->
+        <div class="tags-group" style="margin-top: 10px;">
+          <em v-for="(tag, idx1) in entityTags" :key="idx1" class="tag">
+            <span class="tag-label">{{ tag }}</span>
+          </em>
+        </div>
       </div>
       <div
         class="inner-data buttons"
@@ -85,6 +90,7 @@
 import ObjectUtils from "@/utils/ObjectUtils";
 import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import DataRecommendStatusTop from "@molecules/searchDetail/data-recommend-status-top";
+import { onUpdated } from "vue";
 import { useCategoryStore } from "~/store/category";
 
 const { $ofetch } = useNuxtApp();
@@ -124,19 +130,6 @@ const entityTags = computed(() =>
 const showCategoryMapButton = computed(
   () => props.isAdmin && props.typeName.value?.endsWith("table")
 );
-
-const isFavoriteData = computed(() =>
-  ObjectUtils.getPropertyValue(props.data, "isFavored", false)
-); // 데이터 찜하기 선택 여부
-const isRecommendedData = computed(() =>
-  ObjectUtils.getPropertyValue(props.data, "isRecommended", false)
-); // 데이터 추천 여부
-const recommendedCounts = computed(() =>
-  ObjectUtils.getPropertyValue(props.data, "counts", 0)
-); // 데이터 추천수
-const favoriteCounts = computed(() =>
-  ObjectUtils.getPropertyValue(props.data, "counts", 0)
-); // 데이터 추천수
 
 // 카테고리 맵핑 버튼 클릭 이벤트 핸들러
 const onClickAddMapping = () => {

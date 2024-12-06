@@ -33,7 +33,7 @@
       :toggle="toggleLineageModal"
       :entity="props.entity"
       @onCloseModal="onToggleLineageModal"
-      :atlasData="props.atlasData"
+      :userDataParam="props.userDataParam"
     />
 </template>
 
@@ -41,7 +41,7 @@
 import D3Diagram from "@functional/dataLineage/d3-diagram";
 import DataLineageModal from "@organisms/searchDetail/data-lineage-modal";
 
-const props = defineProps(['isAdmin', 'startNode', 'entity', 'atlasData'])
+const props = defineProps(['isAdmin', 'startNode', 'entity', 'userDataParam'])
 
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
