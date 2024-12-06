@@ -287,6 +287,91 @@ public class MetaDataClassificationService {
         return result;
     }
 
+    public Object deleteMappingClassification(Map<String, Object> params) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        boolean isFailed = false;
+        Boolean esUpdated = false; // 사용자 데이터 설명 ES 변경됬는지 여부
+
+        try {
+            String guid = params.get("guid").toString();
+            String deleteCategoryId = params.get("deleteCategoryId").toString();
+    
+            // 1. 삭제할 카테고리 id에 대한 하위 카테고리 모두 조회 (본인 id 포함된 결과)
+            List<String> list = metaDataClassificationMapper.getClassificationChildByParentId(deleteCategoryId);
+
+            // 2. 현재 메타에 있는 카테고리 항목 조회
+            List<String> originClassifications = metaDataClassificationMapper.getClassifications(guid);
+
+            // 3. 존재하는 카테고리에 대한 목록 생성
+            List<String> realDeleteIdsList = new ArrayList<>();
+            for (int i=0; i<originClassifications.size(); i++) {
+                for (int j=0; j<list.size(); j++) {   
+                    String originIds = originClassifications.get(i).toString();
+                    if (originIds.equals(list.get(j).toString())) {
+                        realDeleteIdsList.add(originIds);
+                    }
+                }
+            }
+
+            String[] deleteIds = realDeleteIdsList.toArray(new String[0]);
+
+            // 4. <table> 테이블에서 해당 카테고리 id값들 모두 제거
+            Map<String, Object> map = new HashMap<>();
+            map.put("guid", guid);
+            map.put("deleteIds", deleteIds);
+            int deleteResult = metaDataClassificationMapper.deleteMappingClassification(map);
+            
+            int downCount = 0;
+            if (deleteResult > 0) {
+                // 해당 카테고리 id에 대한 카운트 감소
+                for (int i=0; i< deleteIds.length; i++) {
+                    downCount += metaDataClassificationMapper.mapperCountDown(deleteIds[i]);
+                }
+            }
+
+            // 5. ES Sync 처리
+            // ES 업데이트 API 수행 결과 - API 호출 필요
+            RestTemplate restTemplate = new RestTemplate();
+            String updateUrl = "http://<INTERNAL_HOST>:8000/v1/essync/update";
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("metaid", guid);
+            requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
+            requestBody.put("event_name", "delete mapping categories");
+            Map<String, Object> restResponse = restTemplate.postForObject(updateUrl, requestBody, HashMap.class);
+            
+            boolean esResult = false;
+            if (!restResponse.isEmpty()) {
+                Map<String, String> res = (Map<String, String>) restResponse.get("result");
+                if (res.get("result").equals("success")) {
+                    isFailed = false;
+                    esResult = true;
+                } else {
+                    isFailed = true;
+                    esResult = false;
+                }
+            }
+
+            if ( esResult ) { // ES 등록 성공
+                esUpdated = true;
+            } else { // ES 등록 실패
+                result.put("errorMessage", "ES 업데이트 실패");
+                isFailed = true;
+            }
+            
+            result.put("deleteResult", deleteResult);
+            result.put("downCount", downCount);
+            result.put("isFailed", isFailed);
+            result.put("esUpdated", esUpdated);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("isFailed", true);
+            result.put("esUpdated", esUpdated);
+        }
+
+        // 3. ES Sync 처리
+        return result;
+    }
+
     // 하위 컬럼 id 목록 추출
     private List<String> getColumns(String id) throws Exception {
         List<String> ids = new ArrayList<>();

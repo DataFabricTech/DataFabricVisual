@@ -53,28 +53,35 @@ public class SearchService {
         List<Map<String, Object>> classifications = searchMapper.getMetaDataClassifications(params);
         Map<String, Object> map = classifications.get(0);
 
-        // 2. 카테고리를 가지고 있는 메타데이터 id 조회
-        params.put("classifications", map.get("classifications"));
-        List<String> guids = searchMapper.getMetaDataInfoFromClassifications(params);
+        if (map != null) {
+            // 2. 카테고리를 가지고 있는 메타데이터 id 조회
+            params.put("classifications", map.get("classifications"));
+            List<String> guids = searchMapper.getMetaDataInfoFromClassifications(params);
 
-        RestTemplate restTemplate = new RestTemplate();
-        
-        // FastAPI의 URL 생성
-        String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/keywordRef";
-        log.info("call fastapi : " + fastUrl);
+            RestTemplate restTemplate = new RestTemplate();
+            
+            // FastAPI의 URL 생성
+            String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/keywordRef";
+            log.info("call fastapi : " + fastUrl);
 
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("guids", guids);
-        Map<String, Object> restResponse = restTemplate.postForObject(fastUrl, requestBody, HashMap.class);
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("guids", guids);
+            Map<String, Object> restResponse = restTemplate.postForObject(fastUrl, requestBody, HashMap.class);
 
-        if (!restResponse.isEmpty()) {
-            Map<String, String> res = (Map<String, String>) restResponse.get("result");
-            if (res.get("result").equals("success")) {
-                resultMap.put("results", res.get("results"));
-                resultMap.put("total_count", res.get("total_count"));
-                return resultMap;
+            if (!restResponse.isEmpty()) {
+                Map<String, String> res = (Map<String, String>) restResponse.get("result");
+                if (res.get("result").equals("success")) {
+                    resultMap.put("results", res.get("results"));
+                    resultMap.put("total_count", res.get("total_count"));
+                    return resultMap;
+                }
             }
+        } else {
+            resultMap.put("results", new ArrayList<>());
+            resultMap.put("total_count", 0);
         }
+
+        
 
         return resultMap;
     }

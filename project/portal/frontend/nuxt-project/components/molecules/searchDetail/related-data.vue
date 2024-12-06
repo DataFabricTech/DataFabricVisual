@@ -14,7 +14,7 @@
         </button>
       </div>
     </div>
-    <div class="detail-box">
+    <div class="detail-box" v-if="classifications && classifications.length > 0">
       <ul class="connection-list">
         <li v-for="(item, index) in classifications" :key="index">
           <div class="datatype">

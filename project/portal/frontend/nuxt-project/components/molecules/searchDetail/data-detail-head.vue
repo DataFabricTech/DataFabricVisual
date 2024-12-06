@@ -143,18 +143,12 @@ const onClickDeleteMapping = async (item) => {
   );
 
   if (confirm) {
-    const guid = ObjectUtils.getPropertyValue(props.entity, "entity/guid", "");
-    const categoryName = item.typeName;
-    let isTableType = false;
+    const guid = ObjectUtils.getPropertyValue(props.entity, "id", "");
+    const deleteCategoryId = item.c_id
 
-    // 해당 엔티티가 테이블 유형일 경우 하위 컬럼에 대해서도 맵핑 삭제하도록 flag 전달
-    if (props.typeName.endsWith("table")) {
-      isTableType = true;
-    }
-
-    $ofetch(`/api/metadata/classification/map/${categoryName}`, {
-      method: "PUT",
-      body: { guid, isTableType },
+    $ofetch(`/api/metadata/classification/deleteMapping`, {
+      method: "POST",
+      body: { guid, deleteCategoryId },
     }).then((res) => {
       if (!res || res.isFailed) {
         const msg =

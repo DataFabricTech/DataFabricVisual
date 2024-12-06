@@ -38,4 +38,10 @@ public interface MetaDataClassificationMapper {
 
     List<Map<String, Object>> getClassificationListByName(String name) throws Exception;
 
+    // 모든 하위 카테고리 목록 조회
+    List<String> getClassificationChildByParentId(String parent_id) throws Exception;
+
+    int deleteMappingClassification(Map<String, Object> map) throws Exception;
+
+    List<String> getClassifications(String guid) throws Exception;
 }

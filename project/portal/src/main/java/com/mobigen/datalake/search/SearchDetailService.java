@@ -53,7 +53,7 @@ public class SearchDetailService {
 
         // 카테고리 정보 목록 조회
         // 구조 [{ c_id, c_name, c_description }]
-        if (ids != null) {
+        if (ids != null && ids.length > 0) {
             List<Map<String, Object>> classificationList = searchDetailMapper.getClassificationList(ids);
             result.put("classifications", classificationList);
         }

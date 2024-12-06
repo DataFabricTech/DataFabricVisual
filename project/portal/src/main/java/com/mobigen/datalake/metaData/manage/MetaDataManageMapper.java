@@ -26,5 +26,4 @@ public interface MetaDataManageMapper {
     // 메타 데이터 classification 매핑 삭제
 
     int deleteMetaDataClassification(Map<String, Object> params) throws Exception;
-
 }

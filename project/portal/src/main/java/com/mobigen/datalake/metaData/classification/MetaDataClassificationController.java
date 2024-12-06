@@ -110,6 +110,18 @@ public class MetaDataClassificationController {
     }
 
     /**
+     * 메타 데이터 관리 > 상세조회 > 카테고리 맵핑 제거
+     *
+     * @param params        카테고리 맵핑 제거 대상 엔티티의 id, 테이블 타입 여부 flag
+     * @return Object       처리 성공 데이터 수
+     */
+    @ResponseJsonResult
+    @PostMapping("/deleteMapping")
+    public Object deleteMapClassification(@RequestBody Map<String, Object> params) throws Exception {
+        return metaDataClassificationService.deleteMappingClassification(params);
+    }
+
+    /**
      * 메타 데이터 관리 >       순서 변경을 위한 카테고리 목록 조회
      *
      * @return Object       카테고리 목록 반환
