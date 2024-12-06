@@ -94,6 +94,13 @@ public class SearchController {
         return searchService.getTableTotal();
     }
 
+    // 연관 데이터 검색
+    @ResponseJsonResult
+    @GetMapping("/search/keywordRef")
+    public Object getRelatedData(@RequestParam("guid") String guid, HttpServletRequest request, HttpServletResponse response) throws Exception  {
+        return searchService.getRelatedData(guid);
+    }
+
     // 카테고리 목록 조회
 //    @ResponseJsonResult
 //    @GetMapping("/search/category/list")

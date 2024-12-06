@@ -10,4 +10,6 @@ public interface SearchMapper {
     int getTableTotal();
     List<String> getSystemtypes();
     List<String> getMetatypes();
+    List<Map<String, Object>>  getMetaDataClassifications(Map<String, Object> params) throws Exception;
+    List<String> getMetaDataInfoFromClassifications(Map<String, Object> params) throws Exception;
 }

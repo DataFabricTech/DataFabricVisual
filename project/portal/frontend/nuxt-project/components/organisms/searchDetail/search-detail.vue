@@ -382,7 +382,7 @@ const getAllDataByGuid = async (newGuid, favoriteEvent) => {
       promises = [
         Promise.resolve(getDetailDataProfile()),
         Promise.resolve(getSampleData()),
-        Promise.resolve(getBasicSearch()),
+        Promise.resolve(getRelatedData()),
         Promise.resolve(getDataManagerInfoList()),
         Promise.resolve(getUserDescriptionList("favorite")),
         // 사용자 페이지에서 진입한 경우에만 리뷰 & 추천 관련 데이터 조회
@@ -393,7 +393,7 @@ const getAllDataByGuid = async (newGuid, favoriteEvent) => {
       promises = [
         Promise.resolve(getDetailDataProfile()),
         Promise.resolve(getSampleData()),
-        Promise.resolve(getBasicSearch()),
+        Promise.resolve(getRelatedData()),
         Promise.resolve(getDataManagerInfoList()),
         // 사용자 페이지에서 진입한 경우에만 리뷰 & 추천 관련 데이터 조회
         Promise.resolve(props.isAdmin ? true : getReviewDataList()),
@@ -479,69 +479,6 @@ const getDetailDataByGuid = async (newGuid) => {
     errorAlert("조회할 guid가 없습니다.").then(() => {
       return Promise.resolve(false);
     });
-  }
-};
-
-// referredEntitiesAttributes, metaDataInfoResult, refComment 처리 로직 java로 이전
-const getDetailMetadatainfo = async (newGuid) => {
-  return;
-  const guid = newGuid ? newGuid : route.query.guid;
-  currentGuid.value = guid;
-
-  if (currentGuid.value) {
-    const result = await $ofetch(`/api/search/detail/metadatainfo/${currentGuid.value}`);
-
-    if (result) {
-      if (result.errorMessage) {
-        if(!isHistory.value){
-          await errorAlert(result.errorMessage);
-          router.go(-1)
-        }
-        return;
-      }
-      if (result.data.errorMessage){
-        if(!isHistory.value) {
-          await errorAlert("데이터가 존재하지 않습니다.");
-          router.go(-1)
-        }
-        return;
-      }
-    }
-
-    referredEntitiesAttributes.value = ObjectUtils.getPropertyValue(
-      result.data,
-      "referredEntitiesAttributes",
-      []
-    );
-
-    metaDataInfoResult.value = ObjectUtils.getPropertyValue(
-      result.data,
-      "metaDataInfoResult",
-      {}
-    );
-
-    refComment.value = ObjectUtils.getPropertyValue(
-      result.data,
-      "refComment",
-      []
-    );
-
-    columnNameList.value = ObjectUtils.getPropertyValue(
-      result.data,
-      "metaDataInfoResult/columns",
-      []
-    );
-
-    if(columnNameList.value.length > 0 && refComment.value.length > 0){
-      if(columnNameList.value.length === refComment.value.length){
-        let colMap = {};
-        for (let i = 0; i < columnNameList.value.length; i++){
-          colMap[columnNameList.value[i]] = refComment.value[i];
-        }
-        columnCommentMap.value = colMap;
-      }
-    }
-
   }
 };
 
@@ -725,38 +662,19 @@ const setDataLineageStartNode = () => {
 };
 
 // 연관 데이터 조회
-const getBasicSearch = () => {
-  // try {
-  //   const tmp_classifications = ObjectUtils.getPropertyValue(
-  //     entity.value,
-  //     "entity/classifications",
-  //     ""
-  //   );
-  //   if (tmp_classifications.length > 0) {
-  //     const param = {
-  //       tagFilters: null,
-  //       attributes: [],
-  //       limit: 5,
-  //       offset: 0,
-  //       typeName: "hive_table",
-  //       classification: null,
-  //       termName: null,
-  //     };
+const getRelatedData = () => {
+  let guid = route.query.guid ? route.query.guid : ""
 
-  //     param.classificationNames = tmp_classifications.map((d) => (d.typeName))
+  $ofetch(`/api/search/keywordRef?guid=${guid}`).then((res) => {
+    if (res && !res.errorMessage) {
+      if (res.data && res.data.results) {
+        classifications_data.value = res.data.results
+      } else {
+        classifications_data.value = []
+      }
 
-  //     $ofetch(`/api/search/keywordRef`, {
-  //       method: "POST",
-  //       body: param,
-  //     }).then((res) => {
-  //       if (res && !res.errorMessage && res.data.hasOwnProperty("entities")) {
-  //         classifications_data.value = ObjectUtils.getPropertyValue(res.data, "entities");
-  //       }
-  //     });
-  //   }
-  // } catch (error) {
-  //   console.log(error);
-  // }
+    }
+  });
 };
 
 // 사용자 데이터 설명 조회

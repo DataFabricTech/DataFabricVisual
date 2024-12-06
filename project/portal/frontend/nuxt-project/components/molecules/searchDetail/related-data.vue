@@ -17,12 +17,15 @@
     <div class="detail-box">
       <ul class="connection-list">
         <li v-for="(item, index) in classifications" :key="index">
-          <!-- <div class="datatype">
-            <em class="datatype-label">{{ item.typeName }}</em>
-          </div> -->
-          <a v-on:click="onClickDataName(item)"
-            ><span>{{ item.attributes && item.attributes.comment ? item.attributes.comment : item.displayText }}</span>
-            <!-- <span class="datatype-desc">{{ item.attributes.comment }}</span> -->
+          <div class="datatype">
+            <em class="datatype-label">{{ item.systemtype }}</em>
+          </div>
+          <div class="datatype">
+            <em class="datatype-label">{{ item.metatype }}</em>
+          </div>
+          <a v-on:click="onClickDataName(item)">
+            <span>{{ item.name }}</span>
+            <span class="datatype-desc">{{ item.description }}</span>
           </a>
         </li>
       </ul>
@@ -31,6 +34,7 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "~/store/user";
 
@@ -53,11 +57,10 @@ const toggleShowData = () => {
 };
 
 const onClickDataName = (item) => {
-  // 페이지 리로드 없이 URL 변경
-  router.push({ query: { guid: item.guid } }).then(() => {
+  router.push({ query: { guid: item.id } }).then(() => {
     // 페이지를 강제로 새로고침
-    userStore.setGuid(item.guid);
-    emit("onClickData", item.guid);
+    userStore.setGuid(item.id);
+    emit("onClickData", item.id);
     window.scrollTo(0, 0);
   });
 }
