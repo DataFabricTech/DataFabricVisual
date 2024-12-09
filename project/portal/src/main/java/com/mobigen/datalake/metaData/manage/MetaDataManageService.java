@@ -4,6 +4,7 @@ import com.mobigen.framework.result.JsonResult;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,9 +20,11 @@ public class MetaDataManageService {
     // 메타 데이터 통합 관리 대상 목록 조회
     public Map<String, Object> getMetaDataManageList(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
+        int totCnt = 0;
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
 
-        int totCnt = metaDataManageMapper.getMetaDataManageListTotCnt(params);
-        List<Map<String, Object>> resultList = metaDataManageMapper.getMetaDataManageList(params);
+        totCnt = metaDataManageMapper.getMetaDataManageListTotCnt(params);
+        resultList = metaDataManageMapper.getMetaDataManageList(params);
 
         result.put("totalCount", totCnt);
         result.put("list", resultList);
