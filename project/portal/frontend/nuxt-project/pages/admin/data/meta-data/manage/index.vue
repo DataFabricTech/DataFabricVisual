@@ -957,7 +957,6 @@ const onSelectItems = (selected: any) => {
 
 // 카테고리 맵핑 삭제 버튼 클릭 이벤트 핸들러
 const onDeleteCategoryMap = async (target) => {
-  console.log(target)
   const confirm = await confirmAlert(
     "선택한 <strong>*카테고리 맵핑</strong>을 영구적으로 삭제합니다.<br>정말 삭제 하시겠습니까?"
   );
