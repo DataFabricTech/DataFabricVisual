@@ -206,7 +206,6 @@
                     <p >생성일 : {{ $yyyyMMdd(data.createtime) }}</p>
                     <p >수정일 : {{ $yyyyMMdd(data.updatetime) }}</p>
                     <p >최종접근시간 : {{ $yyyyMMddHHmmSS(data.lastaccesstime ? data.lastaccesstime: null) }}</p>
-                    <p v-html="checkDataAccess(data.dataAccess)"></p>
                     <p >시스템 타입 : {{ data.systemtype }}</p>
                     <p >메타 타입 : {{ data.metatype }}</p>
                     <p v-if="data.qualifiedname">DB : {{ getDbName(data.qualifiedname) }}</p>
@@ -472,7 +471,6 @@ const entityFilterCondition = ref({
   condition2: ['=', '!=', 'isNull', 'notNull'],
   condition3: ['=', '!=', '>', '<', '>=', '<=', 'isNull', 'notNull']
 })
-
 
 interface PagingObj {
   total: number;

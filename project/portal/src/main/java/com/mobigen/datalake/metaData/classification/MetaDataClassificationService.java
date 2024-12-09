@@ -194,7 +194,7 @@ public class MetaDataClassificationService {
         for (int j = 0; j < superTypes.size(); j++) {
             String classificationId = superTypes.get(j);
             List<String> entityIds = removeDuplicateMappingEntity(classificationId, ids);
-            if(entityIds.size() < 0) {
+            if(entityIds.size() <= 0) {
                 continue;
             }
 
@@ -331,14 +331,10 @@ public class MetaDataClassificationService {
 
             // 5. ES Sync 처리
             // ES 업데이트 API 수행 결과 - API 호출 필요
-            RestTemplate restTemplate = new RestTemplate();
-            String updateUrl = "http://<INTERNAL_HOST>:8000/v1/essync/update";
-            Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("metaid", guid);
-            requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
-            requestBody.put("event_name", "delete mapping categories");
-            Map<String, Object> restResponse = restTemplate.postForObject(updateUrl, requestBody, HashMap.class);
-            
+            //es sync api 호출
+            Integer failCount = 0;
+            Map<String, Object> restResponse = essyncUpdate(guid, 3, "카테고리 매핑 제거");
+
             boolean esResult = false;
             if (!restResponse.isEmpty()) {
                 Map<String, String> res = (Map<String, String>) restResponse.get("result");

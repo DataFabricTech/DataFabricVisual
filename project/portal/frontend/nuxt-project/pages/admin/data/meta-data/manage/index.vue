@@ -905,55 +905,85 @@ const onSelectItems = (selected: any) => {
 };
 
 // 카테고리 맵핑 삭제 이벤트 핸들러
-const onDeleteCategoryMap = async (target: any) => {
-  const confirm = await portalConfirm({
-    message: "선택한 <strong>*카테고리 맵핑</strong>을 영구적으로 삭제합니다.<br>정말 삭제 하시겠습니까?"
-  });
+// const onDeleteCategoryMap = async (target: any) => {
+//   const confirm = await portalConfirm({
+//     message: "선택한 <strong>*카테고리 맵핑</strong>을 영구적으로 삭제합니다.<br>정말 삭제 하시겠습니까?"
+//   });
+
+//   if (confirm) {
+//     const { targetId, item } = target;
+//     let isTableType = false;
+
+//     // 해당 엔티티가 테이블 유형일 경우 하위 컬럼에 대해서도 동일 처리 가능하도록 flag 전달
+//     if (item.metatype.includes("table")) {
+//       isTableType = true;
+//     }
+
+//     const targetCategory = _categoryMap.value[targetId] || {};
+//     let subTypes = targetCategory.subTypes || [];
+//     subTypes = subTypes.map((el: { [key: string]: any }) => el.id);
+
+//     try {
+//       await $ofetch(`${runConfig.API_URL}/metadata/classification/map/${targetId}`, {
+//         method: "PUT",
+//         body: { deleteMapping: { id: targetId, subTypes }, isTableType, ...item }
+//       }).then((res) => {
+//         const resData = res.data || {};
+//         if (!resData || resData.isFailed) {
+//           const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
+//           errorAlert(msg);
+//         } else {
+//           // 더보기 툴팁에서 렌더하던 카테고리 삭제 시 더보기 툴팁 화면에서 제거
+//           onToggleTooltip();
+//           // 카테고리 맵핑 삭제 성공 시
+//           setEventLog({
+//             event_type: CONSTANT.EVENT.TYPE.METADATA,
+//             event_status: CONSTANT.EVENT.STATUS.DELETE,
+//             event_name: "메타 데이터 카테고리 매핑[삭제]",
+//             event_by: user.user_id,
+//             meta_id: item.id,
+//             meta_name: item.name,
+//             qualifiedname: item.qualifiedname
+//           })
+//           onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
+//           onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
+//         }
+//       });
+//     } catch (error) {
+//       errorAlert("요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.");
+//     }
+//   }
+// };
+
+// 카테고리 맵핑 삭제 버튼 클릭 이벤트 핸들러
+const onDeleteCategoryMap = async (target) => {
+  console.log(target)
+  const confirm = await confirmAlert(
+    "선택한 <strong>*카테고리 맵핑</strong>을 영구적으로 삭제합니다.<br>정말 삭제 하시겠습니까?"
+  );
 
   if (confirm) {
-    const { targetId, item } = target;
-    let isTableType = false;
+    const guid = target.item.id
+    const deleteCategoryId = target.targetId
 
-    // 해당 엔티티가 테이블 유형일 경우 하위 컬럼에 대해서도 동일 처리 가능하도록 flag 전달
-    if (item.metatype.includes("table")) {
-      isTableType = true;
-    }
-
-    const targetCategory = _categoryMap.value[targetId] || {};
-    let subTypes = targetCategory.subTypes || [];
-    subTypes = subTypes.map((el: { [key: string]: any }) => el.id);
-
-    try {
-      await $ofetch(`${runConfig.API_URL}/metadata/classification/map/${targetId}`, {
-        method: "PUT",
-        body: { deleteMapping: { id: targetId, subTypes }, isTableType, ...item }
-      }).then((res) => {
-        const resData = res.data || {};
-        if (!resData || resData.isFailed) {
-          const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
-          errorAlert(msg);
-        } else {
-          // 더보기 툴팁에서 렌더하던 카테고리 삭제 시 더보기 툴팁 화면에서 제거
-          onToggleTooltip();
-          // 카테고리 맵핑 삭제 성공 시
-          setEventLog({
-            event_type: CONSTANT.EVENT.TYPE.METADATA,
-            event_status: CONSTANT.EVENT.STATUS.DELETE,
-            event_name: "메타 데이터 카테고리 매핑[삭제]",
-            event_by: user.user_id,
-            meta_id: item.id,
-            meta_name: item.name,
-            qualifiedname: item.qualifiedname
-          })
-          onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
-          onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
-        }
-      });
-    } catch (error) {
-      errorAlert("요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.");
-    }
+    $ofetch(`/api/metadata/classification/deleteMapping`, {
+      method: "POST",
+      body: { guid, deleteCategoryId },
+    }).then((res) => {
+      if (!res || res.isFailed) {
+        const msg =
+          "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
+        errorAlert(msg);
+      } else {
+        onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
+        onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
+      }
+    });
   }
 };
+
+
+
 </script>
 <style lang="scss">
 @import "index";
