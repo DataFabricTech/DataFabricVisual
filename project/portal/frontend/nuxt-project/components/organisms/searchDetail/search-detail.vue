@@ -153,8 +153,10 @@ import DataRecommendStatus from "@molecules/searchDetail/data-recommend-status";
 import EliminateModal from "@organisms/searchDetail/eliminatePopup";
 import { useUserStore } from "~/store/user.ts";
 import { useCategoryStore } from "~/store/category.ts";
+import {useConstants} from "@composables/useConstants";
 import { onBeforeRouteLeave } from "vue-router";
 import { ref } from "vue";
+import { useApi } from "@/composables/useApi";
 
 const { $ofetch } = useNuxtApp();
 
@@ -163,7 +165,10 @@ const router = useRouter();
 
 const props = defineProps(["isAdmin"]);
 
+const {setEventLog, setMetaSync} = useApi()
+const { CONSTANT } = useConstants();
 const userStore = useUserStore();
+const user = userStore.getUser;
 const categoryStore = useCategoryStore();
 
 const entity = ref({}); // 데이터 상세 정보
@@ -760,19 +765,34 @@ const onToggleCategoryModal = () => {
 
 // 카테고리 맵핑 추가 이벤트 핸들러
 const onAddCategoryMapping = (params) => {
-  const { entity, superTypes, tableTypes } = params;
-
   $ofetch("/api/metadata/classification/map", {
     method: "POST",
-    body: { entity, superTypes, tableTypes },
+    body: params,
   }).then((res) => {
-    if (!res || res.data.isFailed) {
+    if (res && !res.errorMessage) {
+      if (!res || res.data.isFailed) {
+        const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
+        errorAlert(msg);
+      } else {
+        // 카테고리 맵핑 성공 시
+        for(const entity of params.entityTargets) {
+          setEventLog({
+            event_type: CONSTANT.EVENT.TYPE.METADATA,
+            event_status: CONSTANT.EVENT.STATUS.MODIFY,
+            event_name: "메타 데이터 카테고리 매핑[변경]",
+            event_by: user.user_id,
+            meta_id: entity.id,
+            meta_name: entity.name,
+            qualifiedname: entity.qualifiedname
+          })
+        }
+        getAllDataByGuid();
+      }
+    } else {
       const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
       errorAlert(msg);
-    } else {
-      // 카테고리 맵핑 성공 시 데이터 재조회
-      getDetailDataByGuid();
     }
+
   });
 };
 
