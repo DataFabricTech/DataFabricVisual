@@ -710,6 +710,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     entityFilters: showFilterWrap2.value ? paramEntityFilters : {}
   };
 
+
   await $ofetch(`/api/search/getEsSearch`, {
     method: "POST",
     body: params,
