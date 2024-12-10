@@ -19,6 +19,7 @@ export const useSearchStore = defineStore('searchStore', () => {
       name: "",
       description: ""
     },
+    sortBy: "createtime",
     sortOrder: "",
     entityFilters: {},
   }); // 상세

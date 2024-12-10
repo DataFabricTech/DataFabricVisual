@@ -271,6 +271,7 @@ const searchParams = ref({
     name: "",
     description: ""
   },
+  sortBy: "createtime",
   sortOrder: "",
   entityFilters: {}
 });
@@ -386,6 +387,7 @@ const word = ref<string>(""); // 검색어
 const systemtype = ref<string>(""); // 시스템 타입 (hive, hbase, postgreSQL 등 시스템 종류)
 const metatype = ref<string>(""); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미
 const tag = ref<string>(""); // 태그
+const sortBy = ref<string>("createtime") // 정렬 필드
 const sortOrder = ref<string>(""); // 정렬
 const classification = ref({
   id: "",
@@ -706,6 +708,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     limit: pagingObj.value.limit ? pagingObj.value.limit : 10,
     offset: offset ? offset : 0,
     classification: classification.value && classification.value.name ? classification.value.name : "", // 검색할 때는 name값 사용
+    sortBy: sortBy.value ? sortBy.value : "createtime",
     sortOrder: sortOrder.value ? sortOrder.value : "",
     entityFilters: showFilterWrap2.value ? paramEntityFilters : {}
   };
