@@ -802,35 +802,45 @@ const onSearchDataList = async (offset = 0, item = {}) => {
 
   // 테이블 데이터 조회
   const res = await $ofetch(`${runConfig.API_URL}/metadata/manage/list`, { method: "POST", body: params });
-  let result = res.data;
+  console.log(res)
+  if (res && !res.errorMessage) {
+    let result = res.data;
 
-  // 조회 결과 추출
-  const list: any = ObjectUtils.getPropertyValue(result, "list", []); // 테이블 데이터
-  dataList.value = list.map((el: { [key: string]: any }) => {
-    return {
-      ...el,
-      attributes: !isEmpties(el.attributes) ? JSON.parse(el.attributes) : {}
-    };
-  });
+    // 조회 결과 추출
+    const list: any = ObjectUtils.getPropertyValue(result, "list", []); // 테이블 데이터
+    dataList.value = list.map((el: { [key: string]: any }) => {
+      return {
+        ...el,
+        attributes: !isEmpties(el.attributes) ? JSON.parse(el.attributes) : {}
+      };
+    });
 
-  // // 타입이 컬럼일때 테이블 이름 출력
-  // if (dataList.value.length > 0) {
-  //   if (dataList.value[0].typeName === "hive_column") {
-  //     dataList.value.forEach((item) => {
-  //       const temp = item.attributes.qualifiedName;
-  //       const tableName = temp.split(".");
-  //       item.attributes.qualifiedName = tableName[1];
-  //     });
-  //   }
-  // }
+    // // 타입이 컬럼일때 테이블 이름 출력
+    // if (dataList.value.length > 0) {
+    //   if (dataList.value[0].typeName === "hive_column") {
+    //     dataList.value.forEach((item) => {
+    //       const temp = item.attributes.qualifiedName;
+    //       const tableName = temp.split(".");
+    //       item.attributes.qualifiedName = tableName[1];
+    //     });
+    //   }
+    // }
 
-  if (result.totalCount > 0) {
-    pagingObj.value = <PagingObj>{
-      ...pagingObj.value,
-      total: ObjectUtils.getPropertyValue(result, "totalCount", 0),
-      currentPage: offset + 1
-    };
+    if (result.totalCount > 0) {
+      pagingObj.value = <PagingObj>{
+        ...pagingObj.value,
+        total: ObjectUtils.getPropertyValue(result, "totalCount", 0),
+        currentPage: offset + 1
+      };
+    } else {
+      pagingObj.value = {
+        ...pagingObj.value,
+        total: 0,
+        currentPage: 1
+      };
+    }
   } else {
+    dataList.value = []
     pagingObj.value = {
       ...pagingObj.value,
       total: 0,
