@@ -715,7 +715,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
       pagingObj.value = {
         ...pagingObj.value,
         total: res.data.result.total_count,
-        currentPage: res.data.result.page_index
+        currentPage: offset + 1
       };
     } else {
       listData.value = []
