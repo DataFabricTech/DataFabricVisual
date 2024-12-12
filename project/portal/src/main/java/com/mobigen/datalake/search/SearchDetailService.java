@@ -40,6 +40,9 @@ public class SearchDetailService {
     @Value("${properties.trino.hikari.jdbc-url}")
     private String trinoJdbcUrl;
 
+    @Value("${properties.essync.url.update}")
+    private String esSyncUrlUpdate;
+
     // 데이터 상세 조회
     public Object getDetailData(Map<String, Object> params) throws Exception {
         Map<String, Object> result = searchDetailMapper.getDetailData(params.get("guid").toString());
@@ -516,7 +519,7 @@ public class SearchDetailService {
     }
 
     // 사용자 데이터 설명 등록
-    public Object insertUserDescription(Map<String, Object> params) {
+    public Object insertUserDescription(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
         int insertResult = 0; // userdescription postgres 등록 여부
         int updateMetaResult = 0; // <table> 테이블에 등록 여부
@@ -537,13 +540,11 @@ public class SearchDetailService {
 
                     // 3. ES 신규 userdescription 등록
                     // ES 업데이트 API 수행 결과 - API 호출 필요
-                    RestTemplate restTemplate = new RestTemplate();
-                    String updateUrl = "http://<INTERNAL_HOST>:8000/v1/essync/update";
                     Map<String, Object> requestBody = new HashMap<>();
                     requestBody.put("metaid", params.get("guid"));
                     requestBody.put("event_status", 1); // 1=생성, 2=수정, 3=삭제
                     requestBody.put("event_name", "create userdescription");
-                    Map<String, Object> restResponse = restTemplate.postForObject(updateUrl, requestBody, HashMap.class);
+                    Map<String, Object> restResponse = essyncUpdate(requestBody);
                     
                     boolean esResult = false;
                     if (!restResponse.isEmpty()) {
@@ -576,7 +577,7 @@ public class SearchDetailService {
     }
 
     // 사용자 데이터 설명 수정
-    public Object updateUserDescription(Map<String, Object> params) {
+    public Object updateUserDescription(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
         int updateResult = 0; // userdescription postgres 수정 여부
         int updateMetaResult = 0; // <table> 테이블에 등록 여부
@@ -598,13 +599,11 @@ public class SearchDetailService {
 
                     // 3. ES 신규 userdescription 등록
                     // ES 업데이트 API 수행 결과 - API 호출 필요
-                    RestTemplate restTemplate = new RestTemplate();
-                    String updateUrl = "http://<INTERNAL_HOST>:8000/v1/essync/update";
                     Map<String, Object> requestBody = new HashMap<>();
                     requestBody.put("metaid", params.get("guid"));
                     requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
                     requestBody.put("event_name", "update userdescription");
-                    Map<String, Object> restResponse = restTemplate.postForObject(updateUrl, requestBody, HashMap.class);
+                    Map<String, Object> restResponse = essyncUpdate(requestBody);
                     
                     boolean esResult = false;
                     if (!restResponse.isEmpty()) {
@@ -637,7 +636,7 @@ public class SearchDetailService {
     }
 
     // 사용자 데이터 설명 삭제
-    public Object deleteUserDescription(Map<String, Object> params) {
+    public Object deleteUserDescription(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
         int deleteResult = 0; // userdescription postgres 삭제 여부
         int updateMetaResult = 0; // <table> 테이블에 업데이트 여부
@@ -655,8 +654,6 @@ public class SearchDetailService {
 
             // 3. ES 신규 userdescription 등록
             // ES 업데이트 API 수행 결과 - API 호출 필요
-            RestTemplate restTemplate = new RestTemplate();
-            String updateUrl = "http://<INTERNAL_HOST>:8000/v1/essync/update";
             Map<String, Object> requestBody = new HashMap<>();
         
             if (!ObjectUtils.isEmpty(favoriteData)) { // 조회된 데이터가 있으면 해당 값으로 설정
@@ -678,7 +675,7 @@ public class SearchDetailService {
                 deleteMetaResult = searchDetailMapper.deleteMetaUserDescription((String) params.get("guid"));
             }
             
-            Map<String, Object> restResponse = restTemplate.postForObject(updateUrl, requestBody, HashMap.class);
+            Map<String, Object> restResponse = essyncUpdate(requestBody);
             
             boolean esResult = false;
             if (!restResponse.isEmpty()) {
@@ -730,7 +727,7 @@ public class SearchDetailService {
     }
 
     // 사용자 데이터 설명 추천
-    public Object insertUserDescriptionFavorite(Map<String, Object> params) {
+    public Object insertUserDescriptionFavorite(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
         int insertResult = 0; // postgres 등록 여부
         int addResult = 0;  // postgres count + 1 여부
@@ -762,13 +759,11 @@ public class SearchDetailService {
 
                     // 3. ES 신규 userdescription 등록
                     // ES 업데이트 API 수행 결과 - API 호출 필요
-                    RestTemplate restTemplate = new RestTemplate();
-                    String updateUrl = "http://<INTERNAL_HOST>:8000/v1/essync/update";
                     Map<String, Object> requestBody = new HashMap<>();
                     requestBody.put("metaid", params.get("guid"));
                     requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
                     requestBody.put("event_name", "update userdescription");
-                    Map<String, Object> restResponse = restTemplate.postForObject(updateUrl, requestBody, HashMap.class);
+                    Map<String, Object> restResponse = essyncUpdate(requestBody);
                     
                     boolean esResult = false;
                     if (!restResponse.isEmpty()) {
@@ -804,7 +799,7 @@ public class SearchDetailService {
     }
 
     // 사용자 데이터 설명 추천 취소
-    public Object deleteUserDescriptionFavorite(Map<String, Object> params) {
+    public Object deleteUserDescriptionFavorite(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
         int deleteResult = 0; // postgres 등록 여부
         int subResult = 0;  // postgres count -1 여부
@@ -835,13 +830,11 @@ public class SearchDetailService {
 
                     // ES 신규 userdescription 등록
                     // ES 업데이트 API 수행 결과 - API 호출 필요
-                    RestTemplate restTemplate = new RestTemplate();
-                    String updateUrl = "http://<INTERNAL_HOST>:8000/v1/essync/update";
                     Map<String, Object> requestBody = new HashMap<>();
                     requestBody.put("metaid", params.get("guid"));
                     requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
                     requestBody.put("event_name", "update userdescription");
-                    Map<String, Object> restResponse = restTemplate.postForObject(updateUrl, requestBody, HashMap.class);
+                    Map<String, Object> restResponse = essyncUpdate(requestBody);
                     
                     boolean esResult = false;
                     if (!restResponse.isEmpty()) {
@@ -1013,5 +1006,17 @@ public class SearchDetailService {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public Map<String, Object> essyncUpdate(Map<String, Object> params) throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+        
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("metaid", params.get("metaid"));
+        requestBody.put("event_status", params.get("event_status")); // 1=생성, 2=수정, 3=삭제
+        requestBody.put("event_name", params.get("event_name"));
+        Map<String, Object> restResponse = restTemplate.postForObject(esSyncUrlUpdate, requestBody, HashMap.class);
+
+        return restResponse;
     }
 }
