@@ -375,5 +375,10 @@ pre code {
 /* footer 로고 사이즈 조정 */
 .footer-logo {width:120px; height:44px; background:url("../images/common/logo-footer.png") no-repeat center center; background-size:contain;}
 
-/*  */
+/* 통합검색 목록 > 오른쪽 메타정보 */
 .data-box .inner-data.option {display:flex; flex-direction:column; align-items:flex-start; flex:none;}
+
+/* data-result-wrap(목록) > data-box */
+.data-result {overflow:auto; min-height:870px; margin-top:14px; border-bottom:1px solid #e9e9e9;}
+.data-result .data-box-list {border-bottom:1px solid #e9e9e9;}
+.data-result .data-box:last-child {border-bottom:0;}

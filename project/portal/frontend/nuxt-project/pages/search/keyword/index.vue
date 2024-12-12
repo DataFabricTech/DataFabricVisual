@@ -206,7 +206,7 @@
                 </li>
               </ul>
               <ul v-else class="data-box-list">
-                <li><p class="nodata">검색결과가 존재하지 않습니다.<span>다른 검색어를 입력해주세요.</span></p></li>
+                <li style="height: 867px; align-content: center;"><p class="nodata">검색결과가 존재하지 않습니다.<span>다른 검색어를 입력해주세요.</span></p></li>
               </ul>
             </div>
             <pagination :paging="pagingObj" @onClickPage="onClickPage" />
