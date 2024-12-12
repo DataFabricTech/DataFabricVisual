@@ -134,7 +134,7 @@ public class DetailController {
     @ResponseJsonResult
     @PostMapping("/userdescriptionInsert")
     @ResponseBody
-    public Object insertUserDescription(@RequestBody Map<String, Object> params) {
+    public Object insertUserDescription(@RequestBody Map<String, Object> params) throws Exception {
         return searchDetailService.insertUserDescription(params);
     }
 
@@ -147,7 +147,7 @@ public class DetailController {
     @ResponseJsonResult
     @PutMapping("/userdescriptionUpdate")
     @ResponseBody
-    public Object updateUserDescription(@RequestBody Map<String, Object> params) {
+    public Object updateUserDescription(@RequestBody Map<String, Object> params) throws Exception {
         return searchDetailService.updateUserDescription(params);
     }
 
@@ -160,7 +160,7 @@ public class DetailController {
     @ResponseJsonResult
     @PostMapping("/userdescriptionDelete")
     @ResponseBody
-    public Object deleteUserDescription(@RequestBody Map<String, Object> params) {
+    public Object deleteUserDescription(@RequestBody Map<String, Object> params) throws Exception {
         return searchDetailService.deleteUserDescription(params);
     }
 
