@@ -194,14 +194,14 @@
                     </div>
                   </div>
                   <div class="inner-data option">
-                    <p >생성일 : {{ $yyyyMMdd(data.createtime) }}</p>
-                    <p >수정일 : {{ $yyyyMMdd(data.updatetime) }}</p>
-                    <p >최종접근시간 : {{ $yyyyMMddHHmmSS(data.lastaccesstime ? data.lastaccesstime: null) }}</p>
-                    <p >시스템 타입 : {{ data.systemtype }}</p>
-                    <p >메타 타입 : {{ data.metatype }}</p>
-                    <p v-if="data.qualifiedname">DB : {{ getDbName(data.qualifiedname) }}</p>
-                    <p v-if="data.systemtype && data.systemtype.toUpperCase() == 'COLUMN'"> 테이블 {{ getTableName(data.qualifiedname) }}</p>
-                    <p v-if="data.systemtype && data.systemtype.toUpperCase() != 'HIVE' && data.qualifiedname && data.qualifiedname.split('.')[2]">스키마 : {{ getSchemaName(data.qualifiedname) }}</p>
+                    <p >생 성 일 : <strong>{{ $yyyyMMdd(data.createtime) }}</strong></p>
+                    <p >수 정 일 : <strong>{{ $yyyyMMdd(data.updatetime) }}</strong></p>
+                    <p >최종 접근시간 : <strong>{{ $yyyyMMddHHmmSS(data.lastaccesstime ? data.lastaccesstime: null) }}</strong></p>
+                    <p >시스템 타입 : <strong>{{ data.systemtype }}</strong></p>
+                    <p >메타 타입 : <strong>{{ data.metatype }}</strong></p>
+                    <p v-if="data.qualifiedname">DB : <strong>{{ getDbName(data.qualifiedname) }}</strong></p>
+                    <p v-if="data.systemtype && data.systemtype.toUpperCase() == 'COLUMN'"> 테이블 <strong>{{ getTableName(data.qualifiedname) }}</strong></p>
+                    <p v-if="data.systemtype && data.systemtype.toUpperCase() != 'HIVE' && data.qualifiedname && data.qualifiedname.split('.')[2]">스키마 : <strong>{{ getSchemaName(data.qualifiedname) }}</strong></p>
                   </div>
                 </li>
               </ul>
