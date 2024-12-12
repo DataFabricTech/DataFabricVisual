@@ -371,3 +371,6 @@ pre code {
 .inner-data .tags-group em {
   height: 24px;
 }
+
+/* footer 로고 사이즈 조정 */
+.footer-logo {width:120px; height:44px; background:url("../images/common/logo-footer.png") no-repeat center center; background-size:contain;}

@@ -10,7 +10,7 @@
         <p class="copyright">COPYRIGHT (C) MOBIGEN.  ALL RIGHT RESERVED.</p>
       </div>
       <!-- footer-logo -->
-      <div class="footer-logo"><span>Mobigen</span></div>
+      <div class="footer-logo"></div>
     </div>
     <!-- floating-button -->
     <div class="floating-button">

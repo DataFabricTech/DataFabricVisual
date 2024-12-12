@@ -179,7 +179,7 @@
             <ul class="data-box-list" style="counter-reset: best-data -1">
               <li v-if="currentDataList" class="data-box" v-for="(ld, idx) in currentDataList">
                 <a @click="goToMetaDataDetail(ld.id)" style="content: counter(best-data); counter-increment: best-data">
-                  <div class="category-group" v-if="ld.classifications">
+                  <div class="category-group" v-if="ld.classifications && ld.classifications.length > 0">
                     <div class="category" v-for="cat in getClassificationList(ld.classifications)">
                       <em class="category-label">{{ cat.c_description ? cat.c_description : cat.c_name }}</em>
                     </div>

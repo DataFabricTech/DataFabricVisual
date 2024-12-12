@@ -21,8 +21,11 @@ import java.util.Map;
 public class MetaDataClassificationService {
     private static final Logger LOGGER = LoggerFactory.getLogger(MetaDataClassificationService.class);
 
-    @Value("${properties.essync.url}")
-    private String esSyncUrl;
+    @Value("${properties.essync.url.update}")
+    private String esSyncUrlUpdate;
+
+    @Value("${properties.essync.url.convertcategory}")
+    private String esSyncUrlConvertcategory;
 
     private final MetaDataClassificationMapper metaDataClassificationMapper;
     private final MetaDataManageService metaDataManageService;
@@ -64,10 +67,39 @@ public class MetaDataClassificationService {
     // 카테고리 수정
     public Object updateClassification(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<>();
+        boolean isFailed = true;
+        boolean esUpdated = false;        
 
         int resultCount = metaDataClassificationMapper.updateClassification(params);
 
-        result.put("isFailed", resultCount <= 0);
+        if (resultCount > 0) {
+
+            Map<String, Object> restResponse = essyncConvertCategory(params);
+
+            boolean esResult = false;
+            if (!restResponse.isEmpty()) {
+                Map<String, String> res = (Map<String, String>) restResponse.get("result");
+                if (res.get("result").equals("success")) {
+                    isFailed = false;
+                    esResult = true;
+                } else {
+                    isFailed = true;
+                    esResult = false;
+                }
+            }
+
+            if ( esResult ) { // ES 등록 성공
+                esUpdated = true;
+            } else { // ES 등록 실패
+                result.put("errorMessage", "ES 업데이트 실패");
+                isFailed = true;
+            }
+        } else {
+
+        }
+        
+        result.put("isFailed", isFailed);
+        result.put("esUpdated", esUpdated);
         return result;
     }
 
@@ -480,7 +512,18 @@ public class MetaDataClassificationService {
         requestBody.put("metaid", guid);
         requestBody.put("event_status", eventStatus); // 1=생성, 2=수정, 3=삭제
         requestBody.put("event_name", eventName);
-        Map<String, Object> restResponse = restTemplate.postForObject(esSyncUrl, requestBody, HashMap.class);
+        Map<String, Object> restResponse = restTemplate.postForObject(esSyncUrlUpdate, requestBody, HashMap.class);
+
+        return restResponse;
+    }
+
+    public Map<String, Object> essyncConvertCategory(Map<String, Object> params) throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+        
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("c_id", params.get("id"));        
+        requestBody.put("c_description", params.get("description"));
+        Map<String, Object> restResponse = restTemplate.postForObject(esSyncUrlConvertcategory, requestBody, HashMap.class);
 
         return restResponse;
     }
