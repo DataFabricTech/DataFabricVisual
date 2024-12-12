@@ -156,7 +156,7 @@
                 </div>
               </div>
             </div>
-            <div class="data-result" >
+            <div class="data-results" >
               <ul class="data-box-list" v-if="listData && listData.length > 0">
                 <li class="data-box" v-for="data in listData">
                   <div class="inner-data visual" @click="onSelectDetailPage(data)">

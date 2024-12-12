@@ -580,75 +580,80 @@ const getDetailDataProfile = () => {
 
 // 샘플 데이터 목록 조회
 const getSampleData = () => {
-  let trinoColumns = "";
-  for (
-    let columnNum = 0;
-    columnNum < referredEntitiesAttributes.value.length;
-    columnNum++
-  ) {
-    if (trinoColumns !== "") {
-      trinoColumns += "," + '"' + referredEntitiesAttributes.value[columnNum].name + '"';
-    } else {
-      trinoColumns += '"' + referredEntitiesAttributes.value[columnNum].name + '"';
-    }
-  }
-
-  let sampleDataCount = userStore.getSampleDataCount;
-
+  const metatype = ObjectUtils.getPropertyValue(entity.value, "metatype", "")
   const qualifiedName = ObjectUtils.getPropertyValue(entity.value, "qualifiedname", "")
-  const params = {
-    columns: trinoColumns,
-    typeName: ObjectUtils.getPropertyValue(entity.value, "metatype", ""),
-    systemname: qualifiedName.split(".")[0],
-    qualifiedName: qualifiedName,
-    limit: sampleDataCount,
-  };
+  const systemname = qualifiedName.split(".")[0]
 
-  try {
-    $ofetch("/api/search/detail/sampledata", {
-      method: "POST",
-      body: params,
-    }).then((res) => {
-      if (res && res.data && res.data.hasOwnProperty("sampleData")) {
-        sampleData.value = ObjectUtils.getPropertyValue(res.data, "sampleData", []);
+  if (metatype && metatype.toUpperCase() == 'TABLE') {
+    let trinoColumns = "";
+    for (
+      let columnNum = 0;
+      columnNum < referredEntitiesAttributes.value.length;
+      columnNum++
+    ) {
+      if (trinoColumns !== "") {
+        trinoColumns += "," + '"' + referredEntitiesAttributes.value[columnNum].name + '"';
+      } else {
+        trinoColumns += '"' + referredEntitiesAttributes.value[columnNum].name + '"';
       }
-      if (res && res.data && res.data.hasOwnProperty("sampleDataDenied")) {
-        sampleDataDenied.value = res.data.sampleDataDenied;
-      }
+    }
 
-      let typeName = ObjectUtils.getPropertyValue(entity.value, "metatype", "")
+    let sampleDataCount = userStore.getSampleDataCount;
 
-      // 테이블인 경우 테이블 row 건수 조회
-      if (typeName == 'table') {
-        let guid = ObjectUtils.getPropertyValue(entity.value, "id", "")
+    const params = {
+      columns: trinoColumns,
+      typeName: metatype,
+      systemname: systemname,
+      qualifiedName: qualifiedName,
+      limit: sampleDataCount,
+    };
 
-        $ofetch(`/api/search/detail/getRowCount?guid=${guid}`).then((rs) => {
-          eliminateModalObj.value.num_rows = rs.data
-        })
-      }
+    try {
+      $ofetch("/api/search/detail/sampledata", {
+        method: "POST",
+        body: params,
+      }).then((res) => {
+        if (res && res.data && res.data.hasOwnProperty("sampleData")) {
+          sampleData.value = ObjectUtils.getPropertyValue(res.data, "sampleData", []);
+        }
+        if (res && res.data && res.data.hasOwnProperty("sampleDataDenied")) {
+          sampleDataDenied.value = res.data.sampleDataDenied;
+        }
 
-      // 컬럼인 경우 샘플데이터 항목 해당 컬럼만 넣어두기
-      if (typeName == 'column') {
-        let colName = ObjectUtils.getPropertyValue(entity.value, "name", "")
+        let typeName = ObjectUtils.getPropertyValue(entity.value, "metatype", "")
 
-        let tmpSampleData = []
-        sampleData.value.forEach((el) => {
-          let tmpSampleDataRow = {}
-          let keyList = Object.keys(el)
-          keyList.forEach((k) => {
-            if (k == colName) {
-              tmpSampleDataRow[k] = el[k]
-            }
+        // 테이블인 경우 테이블 row 건수 조회
+        if (typeName == 'table') {
+          let guid = ObjectUtils.getPropertyValue(entity.value, "id", "")
+
+          $ofetch(`/api/search/detail/getRowCount?guid=${guid}`).then((rs) => {
+            eliminateModalObj.value.num_rows = rs.data
           })
-          tmpSampleData.push(tmpSampleDataRow)
-          return
-        })
+        }
 
-        sampleData.value = tmpSampleData
-      }
-    });
-  } catch (e) {
-    console.log(e);
+        // 컬럼인 경우 샘플데이터 항목 해당 컬럼만 넣어두기
+        if (typeName == 'column') {
+          let colName = ObjectUtils.getPropertyValue(entity.value, "name", "")
+
+          let tmpSampleData = []
+          sampleData.value.forEach((el) => {
+            let tmpSampleDataRow = {}
+            let keyList = Object.keys(el)
+            keyList.forEach((k) => {
+              if (k == colName) {
+                tmpSampleDataRow[k] = el[k]
+              }
+            })
+            tmpSampleData.push(tmpSampleDataRow)
+            return
+          })
+
+          sampleData.value = tmpSampleData
+        }
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 };
 

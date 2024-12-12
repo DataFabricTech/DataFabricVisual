@@ -158,7 +158,7 @@
       <div class="inner">
         <div class="best-data-wrap">
           <div class="main-heading">
-            <h3>데이터 모아보기</h3>
+            <h3>인기 데이터</h3>
             <p class="heading-desc">인기 데이터를 한 눈에 확인할 수 있습니다.</p>
             <div class="best-data-sort">
               <div class="btn-sort">

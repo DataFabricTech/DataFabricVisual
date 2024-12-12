@@ -177,22 +177,25 @@ public class DiagramService {
     }
 
     public List<Map<String, Object>> getMetaDataForTooltip(List<String> guidList) throws Exception {
-        List<Map<String, Object>> metaInfoList = diagramMapper.getMetaDataForTooltip(guidList);
+        List<Map<String, Object>> metaInfoList = new ArrayList<>();
+        if (guidList != null && guidList.size() > 0) {
+            metaInfoList = diagramMapper.getMetaDataForTooltip(guidList);
 
-        for (int i=0; i<metaInfoList.size(); i++) {
-            // Postgresql jsonb 타입(JSON 문자열) Map 형태로 변환
-            metaInfoList.get(i).put("attributes", convertJsonbToMap(metaInfoList.get(i).get("attributes")));
-            metaInfoList.get(i).put("businessattributes", convertJsonbToMap(metaInfoList.get(i).get("businessattributes")));
-            metaInfoList.get(i).put("customattributes", convertJsonbToMap(metaInfoList.get(i).get("customattributes")));
-            
-            // _varchar 객체 배열 Map 형태로 변환 (카테고리)
-            String[] ids = (String[]) metaInfoList.get(i).get("classifications");
+            for (int i=0; i<metaInfoList.size(); i++) {
+                // Postgresql jsonb 타입(JSON 문자열) Map 형태로 변환
+                metaInfoList.get(i).put("attributes", convertJsonbToMap(metaInfoList.get(i).get("attributes")));
+                metaInfoList.get(i).put("businessattributes", convertJsonbToMap(metaInfoList.get(i).get("businessattributes")));
+                metaInfoList.get(i).put("customattributes", convertJsonbToMap(metaInfoList.get(i).get("customattributes")));
+                
+                // _varchar 객체 배열 Map 형태로 변환 (카테고리)
+                String[] ids = (String[]) metaInfoList.get(i).get("classifications");
 
-            if (ids != null) {
-                List<Map<String, Object>> classificationList = diagramMapper.getClassificationList(ids);
-                metaInfoList.get(i).put("classifications", classificationList);
+                if (ids != null && ids.length > 0) {
+                    List<Map<String, Object>> classificationList = diagramMapper.getClassificationList(ids);
+                    metaInfoList.get(i).put("classifications", classificationList);
+                }
             }
-        }
+        } 
 
         return metaInfoList;
     }
