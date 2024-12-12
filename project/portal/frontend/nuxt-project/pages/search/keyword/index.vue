@@ -160,16 +160,7 @@
               <ul class="data-box-list" v-if="listData && listData.length > 0">
                 <li class="data-box" v-for="data in listData">
                   <div class="inner-data visual" @click="onSelectDetailPage(data)">
-                    <i v-if="data.metatype && data.metatype.toUpperCase() == 'CONTAINER'" class="ico-data data-04"></i>
-                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'DATABASE'" class="ico-data data-02"></i>
-                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'DATABASESCHEMA'" class="ico-data data-06"></i>
-                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'DATABASESERVICE'" class="ico-data data-06"></i>
-                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'DIRECTORY'" class="ico-data data-06"></i>
-                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'FILESYSTEMSERVICE'" class="ico-data data-06"></i>
-                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'STORAGESERVICE'" class="ico-data data-04"></i>
-                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'TABLE'" class="ico-data data-05"></i>
-                    <i v-else-if="data.metatype && data.metatype.toUpperCase() == 'COLUMN'" class="ico-data data-01"></i>
-                    <i v-else class="ico-data data-06"></i>
+                    <i :class="getMetaIcon(data.metatype)"></i>
                   </div>
                   <div class="inner-data">
                     <div class="category-group" v-if="data && data.classifications && data.classifications.length > 0">
@@ -1252,6 +1243,21 @@ const deleteGroupNothing = () => {
   initSubFilter()
   showFilterWrap2.value = false
   searchOptionSub.value = "mu-btn btn-attribute-filter-toggle";
+}
+
+// 아이콘 클래스명
+const getMetaIcon = (type) => {
+  if (type && type.toUpperCase() == 'CONTAINER') return "ico-data data-04"
+  if (type && type.toUpperCase() == 'DATABASE') return "ico-data data-02"
+  if (type && type.toUpperCase() == 'DATABASESCHEMA') return "ico-data data-06"
+  if (type && type.toUpperCase() == 'DATABASESERVICE') return "ico-data data-06"
+  if (type && type.toUpperCase() == 'DIRECTORY') return "ico-data data-06"
+  if (type && type.toUpperCase() == 'FILESYSTEMSERVICE') return "ico-data data-06"
+  if (type && type.toUpperCase() == 'STORAGESERVICE') return "ico-data data-04"
+  if (type && type.toUpperCase() == 'TABLE') return "ico-data data-05"
+  if (type && type.toUpperCase() == 'COLUMN') return "ico-data data-01"
+
+  return 'ico-data data-06'
 }
 
 </script>

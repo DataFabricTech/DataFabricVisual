@@ -3,7 +3,7 @@
     <!-- data-box 목록에 li data-box하나가 그대로 상세페이지상단 요약임 div로 -->
     <div class="data-box">
       <div class="inner-data visual">
-        <i class="ico-data data-05" />
+        <i :class="getMetaIcon(props.typeName)" />
       </div>
       <!-- inner-data : 데이터내용 -->
       <div class="inner-data">
@@ -187,4 +187,19 @@ const onToggleRecommend = async () => {
 const onToggleFavorite = async () => {
   await emit("reloadRecommendStatus")
 };
+
+// 아이콘 클래스명
+const getMetaIcon = (type) => {
+  if (type && type.toUpperCase() == 'CONTAINER') return "ico-data data-04"
+  if (type && type.toUpperCase() == 'DATABASE') return "ico-data data-02"
+  if (type && type.toUpperCase() == 'DATABASESCHEMA') return "ico-data data-06"
+  if (type && type.toUpperCase() == 'DATABASESERVICE') return "ico-data data-06"
+  if (type && type.toUpperCase() == 'DIRECTORY') return "ico-data data-06"
+  if (type && type.toUpperCase() == 'FILESYSTEMSERVICE') return "ico-data data-06"
+  if (type && type.toUpperCase() == 'STORAGESERVICE') return "ico-data data-04"
+  if (type && type.toUpperCase() == 'TABLE') return "ico-data data-05"
+  if (type && type.toUpperCase() == 'COLUMN') return "ico-data data-01"
+
+  return 'ico-data data-06'
+}
 </script>
