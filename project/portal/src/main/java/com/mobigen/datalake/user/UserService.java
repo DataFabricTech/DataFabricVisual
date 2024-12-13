@@ -301,4 +301,61 @@ public class UserService {
 
         return userMapper.insertLoginHistory(param);
     }
+
+    public Object register(Map<String, String> params) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            // 해당 ID 중복확인
+            String user_id = params.get("reg_userid");
+
+            int dupCnt = userMapper.checkDupUserId(user_id);
+            if (dupCnt > 0) {
+                result.put("register_result", "N");
+                result.put("register_result_message", "중복되는 계정입니다.");
+                return result;
+            }
+            
+            // 회원 등록
+            // 1. 비밀번호 암호화
+            String encPassword = passwordEncoder.encode(params.get("reg_password"));
+            params.put("reg_password", encPassword);
+
+            int insertResult = userMapper.registerUser(params);
+            int insertMasterResult = userMapper.registerUserMaster(params);
+            if (insertResult > 0 && insertMasterResult > 0) {
+                result.put("register_result", "Y");
+            } else {
+                result.put("register_result", "N");
+                result.put("register_result_message", "회원가입에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
+            }
+            
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("register_result", "N");
+            result.put("register_result_message", "회원가입에 실패하였습니다. 관리자에게 문의해주시기 바랍니다.");
+        }
+
+        return result;
+    }
+
+    public Object checkDupUserId(String user_id) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            // 해당 ID 중복확인
+            int dupCnt = userMapper.checkDupUserId(user_id);
+            if (dupCnt > 0) {
+                result.put("register_result", "N");
+                result.put("register_result_message", "중복되는 계정입니다.");
+            } else {
+                result.put("register_result", "Y");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("register_result", "N");
+            result.put("register_result_message", "아이디 중복확인에 실패하였습니다. 관리자에게 문의해주시기 바랍니다.");
+        }
+
+        return result;
+    }
 }

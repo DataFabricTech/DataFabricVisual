@@ -14,4 +14,7 @@ public interface UserMapper {
     Integer insertLoginHistory(Map<String, String> param) throws Exception;    
     String getLastLoginTime(String user_id) throws Exception;
     List<Map> getAllDepartments(String word) throws Exception;
+    int checkDupUserId(String user_id) throws Exception;
+    int registerUser(Map<String, String> params) throws Exception;
+    int registerUserMaster(Map<String, String> params) throws Exception;
 }

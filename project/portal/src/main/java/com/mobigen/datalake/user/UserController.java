@@ -36,8 +36,8 @@ public class UserController {
     @PostMapping("/regenerateAccessToken")
     public Object regenerateToken(@RequestBody Map<String, String> param, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> user_map = sessionManager.getUserByAccessToken(request);
-        String username = user_map.get("user_id").toString();
-        return userService.regenerateAccessToken(username);
+        String userid = user_map.get("user_id").toString();
+        return userService.regenerateAccessToken(userid);
     }
 
     // Refresh Token 재발급
@@ -45,17 +45,29 @@ public class UserController {
     @PostMapping("/regenerateRefreshToken")
     public Object regenerateRefreshToken(@RequestBody Map<String, String> param, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> user_map = sessionManager.getUserByAccessToken(request);
-        String username = user_map.get("user_id").toString();
-        return userService.regenerateRefreshToken(username);
+        String userid = user_map.get("user_id").toString();
+        return userService.regenerateRefreshToken(userid);
     }
 
     @ResponseJsonResult
     @PostMapping("/authenticate")
     public Object authenticate(@RequestBody Map<String, String> param, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String username = param.get("username");
+        String user_id = param.get("user_id");
         // String password = sessionManager.decryptRSAString(request, (String)param.get("password")); // RSA PRIVATE KEY null 상태 탐색중
         String password = param.get("password");
-        return userService.authenticate(request, response, username, password);
+        return userService.authenticate(request, response, user_id, password);
+    }
+
+    @ResponseJsonResult
+    @GetMapping("/checkDupUserId")
+    public Object checkDupUserId(@RequestParam("reg_userid") String reg_userid) throws Exception {
+        return userService.checkDupUserId(reg_userid);
+    }
+
+    @ResponseJsonResult
+    @PostMapping("/register")
+    public Object register(@RequestBody Map<String, String> param, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return userService.register(param);
     }
 
     @ResponseJsonResult

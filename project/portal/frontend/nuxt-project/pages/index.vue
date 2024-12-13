@@ -1,9 +1,21 @@
 <template>
   <div v-if="!shouldRender">
     <Login
+      v-if="!showRegisterForm"
       @login="onLogin"
+      @toggleRegisterForm="toggleRegisterForm"
       :login_error="login_error"
       :login_result_message="login_result_message"
+    />
+    <Register
+      v-else-if="showRegisterForm"
+      @register="onRegister"
+      @toggleRegisterForm="toggleRegisterForm"
+      @checkDupUserId="checkDupUserId"
+      @updateCheckedDupUserId="updateCheckedDupUserId"
+      :checkedDupUserId="checkedDupUserId"
+      :register_error="register_error"
+      :register_result_message="register_result_message"
     />
   </div>
 </template>
@@ -13,15 +25,22 @@ import { useCookies } from "vue3-cookies";
 import RSA from "rsajs";
 import { jwtDecode } from "jwt-decode";
 import { useUserStore } from "~/store/user";
+import Register from "@functional/register/register"
+import { confirmAlert, defaultAlert, errorAlert, successAlert } from "@/components/functional/alert/alert-default";
 
 const { $ofetch } = useNuxtApp();
 const router = useRouter();
 const { cookies } = useCookies();
 const userStore = useUserStore();
 
-const shouldRender = ref("");
+const shouldRender = ref(false);
 const login_error = ref(false);
 const login_result_message = ref("");
+
+const showRegisterForm = ref(false)
+const register_error = ref(false);
+const register_result_message = ref("");
+const checkedDupUserId = ref(false)
 
 onMounted(() => {
   sessionStorage.clear();
@@ -36,8 +55,8 @@ const onLogin = async (param) => {
     }
 
     // Access Token, Refresh Token
-    // let tokenObject = await auth(param.username, password); // RSA PRIVATE KEY 오류 탐색중
-    let result = await auth(param.username, param.password, param.authType);
+    // let tokenObject = await auth(param.user_id, password); // RSA PRIVATE KEY 오류 탐색중
+    let result = await auth(param.user_id, param.password, param.authType);
 
     let xAccessToken = result["x-access-token"];
     let xRefreshToken = result["x-refresh-token"];
@@ -99,10 +118,10 @@ const getPublicKey = async () => {
   return data;
 };
 
-const auth = async (username, password) => {
+const auth = async (user_id, password) => {
   const { data } = await $ofetch("/api/authenticate", {
     method: "POST",
-    body: { username: username, password: password },
+    body: { user_id: user_id, password: password },
   });
 
   return data;
@@ -113,4 +132,77 @@ const encrypt = (key, source) => {
   encrypt.setKey(key);
   return encrypt.encrypt(source);
 };
+
+const checkDupUserId = async (reg_userid) => {
+  if (reg_userid && reg_userid != "") {
+    await $ofetch(`/api/checkDupUserId?reg_userid=${reg_userid}`).then(async (res) => {
+      if (res && res.data) {
+          if (res.data.register_result == 'Y') {
+            await defaultAlert("사용 가능한 아이디입니다.")
+            checkedDupUserId.value = true
+          } else {
+            checkedDupUserId.value = false
+            if (res && res.data && res.data.register_result_message) {
+              errorAlert(res.data.register_result_message);
+            } else {
+              errorAlert("아이디 중복확인에 실패하였습니다.")
+            }
+          }
+        } else {
+          checkedDupUserId.value = false
+          if (res && res.data) {
+            register_result_message.value = res.data.register_result_message
+          } else {
+            register_result_message.value = "아이디 중복확인에 실패하였습니다."
+          }
+        }
+    })
+  } else {
+    errorAlert("아이디를 입력해주세요.")
+  }
+}
+
+const updateCheckedDupUserId = () => {
+  checkedDupUserId.value = false
+}
+
+const onRegister = async (params) => {
+  if (!checkedDupUserId.value) {
+    errorAlert("아이디 중복확인이 필요합니다.")
+    return
+  }
+
+  if (await confirmAlert("회원가입을 진행하시겠습니까?")) {
+    await $ofetch("/api/register", {
+      method: "POST",
+      body: params
+    }).then(async (res) => {
+      if (res && res.data) {
+        if (res.data.register_result == 'Y') {
+          await successAlert("회원가입이 완료되었습니다.")
+          showRegisterForm.value = false
+        } else {
+          if (res && res.data) {
+            register_result_message.value = res.data.register_result_message
+          } else {
+            register_result_message.value = "회원가입에 실패하였습니다."
+          }
+        }
+      } else {
+        if (res && res.data) {
+          register_result_message.value = res.data.register_result_message
+        } else {
+          register_result_message.value = "회원가입에 실패하였습니다."
+        }
+      }
+    })
+
+
+  }
+}
+
+const toggleRegisterForm = () => {
+  showRegisterForm.value = !showRegisterForm.value
+  shouldRender.vaue = !shouldRender.value
+}
 </script>
