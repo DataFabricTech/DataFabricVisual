@@ -25,9 +25,19 @@
             <tr>
               <th scope="col" v-for="(item, index) in props.list[0]" :key="index">
                 <span>{{ index }}</span><br>
-                <span class="color-light">
+                <span
+                    style="
+                      color: #9b9b9b;
+                      margin-top: 2px;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      display: -webkit-box;
+                      -webkit-line-clamp: 2;
+                      -webkit-box-orient: vertical;
+                    "
+                  >
                   {{ descriptionEllipsis(index, props.entity) }}
-                </span><br>
+                </span>
                 <span style="border-bottom: 1px solid #666">{{
                   userDescriptionEllipsis(index, props.entity)
                 }}</span><br>

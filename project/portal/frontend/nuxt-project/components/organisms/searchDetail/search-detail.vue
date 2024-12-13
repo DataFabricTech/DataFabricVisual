@@ -57,6 +57,7 @@
         <data-profile-area :data-profile="dataProfile" v-if="allowDataProfile" :columnCommentMap="columnCommentMap"/>
         <!-- detail-section : 샘플 데이터 -->
         <sample-data-area
+          v-if="typeName && typeName.toUpperCase() == 'TABLE'"
           :list="sampleData"
           :entity="entity"
           :sampleDataDenied="sampleDataDenied"
@@ -191,7 +192,7 @@ const dataProfile = ref({
   db: {},
   column: [],
 });
-const sampleDataDenied = ref(true);
+const sampleDataDenied = ref(false);
 const sampleData = ref([]);
 
 const startNode = ref(""); // 데이터 흐름도 렌더 시 시작 노드 guid
@@ -616,6 +617,7 @@ const getSampleData = () => {
         if (res && res.data && res.data.hasOwnProperty("sampleData")) {
           sampleData.value = ObjectUtils.getPropertyValue(res.data, "sampleData", []);
         }
+
         if (res && res.data && res.data.hasOwnProperty("sampleDataDenied")) {
           sampleDataDenied.value = res.data.sampleDataDenied;
         }
@@ -623,7 +625,7 @@ const getSampleData = () => {
         let typeName = ObjectUtils.getPropertyValue(entity.value, "metatype", "")
 
         // 테이블인 경우 테이블 row 건수 조회
-        if (typeName == 'table') {
+        if (typeName.toUpperCase() == 'TABLE') {
           let guid = ObjectUtils.getPropertyValue(entity.value, "id", "")
 
           $ofetch(`/api/search/detail/getRowCount?guid=${guid}`).then((rs) => {
