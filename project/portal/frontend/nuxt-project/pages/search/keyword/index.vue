@@ -691,19 +691,19 @@ const getSearch = async (offset: number = 0): Promise<void> => {
 
   let paramEntityFilters = Object.assign(entityFiltersList.value[0])
 
+  let currentLimit = pagingObj.value.limit ? pagingObj.value.limit : 10
   const params = {
     query: word.value ? word.value : "",
     systemtype: systemtype.value ? systemtype.value : "",
     metatype: metatype.value ? metatype.value : "",
     tag: "",
-    limit: pagingObj.value.limit ? pagingObj.value.limit : 10,
-    offset: offset ? offset : 0,
+    limit: currentLimit,
+    offset: offset ? offset * currentLimit : 0,
     classification: classification.value && classification.value.name ? classification.value.name : "", // 검색할 때는 name값 사용
     sortBy: sortBy.value ? sortBy.value : "createtime",
     sortOrder: sortOrder.value ? sortOrder.value : "",
     entityFilters: showFilterWrap2.value ? paramEntityFilters : {}
   };
-
 
   await $ofetch(`/api/search/getEsSearch`, {
     method: "POST",
