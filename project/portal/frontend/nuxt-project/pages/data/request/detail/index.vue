@@ -115,7 +115,7 @@
                 <div class="user-info">
                   <span class="name">{{ item.user_nm }}</span>
                   <span class="team">({{ getDeptNm(item) }})</span>
-                  <span class="date">({{ formatDate(item.upload_date) }})</span>
+                  <span class="date">({{ formatDate(item.update_date) }})</span>
                 </div>
                 <div class="inner-cms">
                   <p>{{ item.admin_reply }}</p>
@@ -178,7 +178,7 @@ interface Answer {
   user_nm: string;
   dept_nm: string;
   admin_reply: string;
-  upload_date: Date;
+  update_date: Date;
 }
 
 interface DataRequest {
