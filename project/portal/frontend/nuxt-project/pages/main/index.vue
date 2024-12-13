@@ -823,9 +823,10 @@ const onSelectPopularDataSort = async (order) => {
 const getClassificationList = (data) => {
   let tmpData = Object.assign(data)
   tmpData.sort((a, b) => {
-    const nameCompare = a.c_name.localeCompare(b.c_name, "ko")
-    if (nameCompare !== 0) return nameCompare; // name이 다르면 비교 결과 반환
-    return a.description.localeCompare(b.description, "ko"); // name이 같으면 description 비교
+    return a.c_id - b.c_id
+    // const nameCompare = a.c_name.localeCompare(b.c_name, "ko")
+    // if (nameCompare !== 0) return nameCompare; // name이 다르면 비교 결과 반환
+    // return a.description.localeCompare(b.description, "ko"); // name이 같으면 description 비교
   });
   let list = new Array()
   for (let i=0; i<tmpData.length; i++) {

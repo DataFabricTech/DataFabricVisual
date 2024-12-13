@@ -717,6 +717,13 @@ const getSearch = async (offset: number = 0): Promise<void> => {
         total: res.data.result.total_count,
         currentPage: offset + 1
       };
+
+      // 카테고리의 항목 순서 정렬
+      listData.value.forEach(el => {
+        if (el.classifications && el.classifications.length > 1) {
+          el.classifications.sort((a, b) => a.c_id - b.c_id);
+        }
+      });
     } else {
       listData.value = []
     }
