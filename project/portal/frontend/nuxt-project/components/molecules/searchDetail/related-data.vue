@@ -30,6 +30,8 @@
         </li>
       </ul>
     </div>
+    <p v-else class="nodata">연관 데이터가 존재하지 않습니다.</p>
+
   </div>
 </template>
 

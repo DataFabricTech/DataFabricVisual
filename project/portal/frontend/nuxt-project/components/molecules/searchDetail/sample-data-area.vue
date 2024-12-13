@@ -67,8 +67,10 @@
 <script setup lang="ts">
 const props = defineProps(["sampleDataDenied", "list", "entity"]);
 
-const showData = ref(false);
-const toggleShowDataText = ref("펼치기");
+// const showData = ref(false);
+// const toggleShowDataText = ref("펼치기");
+const showData = ref(true);
+const toggleShowDataText = ref("접기");
 
 const toggleShowData = () => {
   showData.value = !showData.value;
