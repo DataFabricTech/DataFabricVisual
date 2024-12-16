@@ -800,6 +800,7 @@ const onAddCategoryMapping = (params) => {
             qualifiedname: entity.qualifiedname
           })
         }
+        onToggleCategoryModal();
         getAllDataByGuid();
       }
     } else {
