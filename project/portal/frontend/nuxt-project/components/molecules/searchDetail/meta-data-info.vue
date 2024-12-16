@@ -70,7 +70,7 @@
                   key !== 'parameters'
                 "
               >
-                {{ value }}
+                {{ value ? value : '-' }}
               </span>
               <span
                 v-else-if="
@@ -85,7 +85,7 @@
                   key.toLowerCase().indexOf('time') !== -1
                 "
               >
-                {{ value }}
+                {{ value ? $yyyyMMddHHmmSS(value) : '-' }}
               </span>
             </td>
           </tr>
@@ -107,13 +107,14 @@ const emit = defineEmits(["onClickDataName"]);
 const props = defineProps(["entity", "referredEntitiesAttributes"]);
 
 const desiredOrder = ref([
-  "name", "description", "columns", "systemType", "tableType", "sourceHash", "databaseSchema"
+  "name", "description", "columns", "createtime", "lastaccesstime", "systemType", "tableType", "sourceHash", "databaseSchema"
 ]) // 메타속성 항목 순서 목록
 const noEntries = ref([
   "viewDefinition"
 ]) // 메타속성 제외 목록
 
 const metaDataInfo = computed(() => {
+  const entity = props.entity
   const obj = ObjectUtils.getPropertyValue(props.entity, 'attributes', {})
 
   // 화면 렌더에 필요한 형태로 데이터 가공
@@ -137,6 +138,9 @@ const metaDataInfo = computed(() => {
     );
 
   const sortedMetaData = Object.fromEntries(sortedEntries);
+
+  sortedMetaData.createtime = entity.createtime
+  sortedMetaData.lastaccesstime = entity.lastaccesstime
   return sortedMetaData;
 });
 
