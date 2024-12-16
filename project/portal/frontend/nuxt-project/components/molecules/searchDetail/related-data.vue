@@ -25,7 +25,7 @@
           </div>
           <a v-on:click="onClickDataName(item)">
             <span>{{ item.name }}</span>
-            <span class="datatype-desc">{{ item.description }}</span>
+            <span class="datatype-desc" v-if="item.description"> | {{ item.description }}</span>
           </a>
         </li>
       </ul>

@@ -43,13 +43,15 @@ import DataLineageModal from "@organisms/searchDetail/data-lineage-modal";
 
 const props = defineProps(['isAdmin', 'startNode', 'entity', 'userDataParam'])
 
-const showData = ref(true);
-const toggleShowDataText = ref("접기");
+// const showData = ref(true);
+// const toggleShowDataText = ref("접기");
+const showData = ref(false);
+const toggleShowDataText = ref("펼치기");
 
-// onMounted(() => {
-//   // 리니지를 한번은 그리고 접어두기 위해 설정
-//   showData.value = false
-// })
+onMounted(() => {
+  // 리니지를 한번은 그리고 접어두기 위해 설정
+  showData.value = false
+})
 
 const toggleShowData = () => {
   showData.value = !showData.value;

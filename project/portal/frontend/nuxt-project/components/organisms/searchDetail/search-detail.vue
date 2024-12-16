@@ -675,9 +675,16 @@ const setDataLineageStartNode = () => {
 
 // 연관 데이터 조회
 const getRelatedData = () => {
-  let guid = route.query.guid ? route.query.guid : ""
+  let params = {
+    guid: route.query.guid ? route.query.guid : "",
+    systemtype: entity.value.systemtype ? entity.value.systemtype : '',
+    metatype: entity.value.metatype ? entity.value.metatype : ''
+  }
 
-  $ofetch(`/api/search/keywordRef?guid=${guid}`).then((res) => {
+  $ofetch(`/api/search/keywordRef`, {
+    method: 'POST',
+    body: params
+  }).then((res) => {
     if (res && !res.errorMessage) {
       if (res.data && res.data.results) {
         classifications_data.value = res.data.results

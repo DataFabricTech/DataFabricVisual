@@ -96,9 +96,9 @@ public class SearchController {
 
     // 연관 데이터 검색
     @ResponseJsonResult
-    @GetMapping("/search/keywordRef")
-    public Object getRelatedData(@RequestParam("guid") String guid, HttpServletRequest request, HttpServletResponse response) throws Exception  {
-        return searchService.getRelatedData(guid);
+    @PostMapping("/search/keywordRef")
+    public Object getRelatedData(@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse response) throws Exception  {
+        return searchService.getRelatedData(param);
     }
 
     // 카테고리 목록 조회
