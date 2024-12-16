@@ -89,8 +89,8 @@ public class CkeditorFileUploadService {
       log.error("Download Error", e);
     } finally {
       try {
-        inputStream.close();
-        outStream.close();
+        if (inputStream != null) inputStream.close();
+        if (outStream != null) outStream.close();
       } catch (Exception e1) {
         log.error("Download Error", e1);
       }
