@@ -430,7 +430,7 @@ const onFetchPageDataByPrevCondition = () => {
 const getCategoryList = async () => {
   const level = 1;
   // 카테고리 목록의 Level 1만 조회
-  const result = await $ofetch(`${runConfig.API_URL}/metadata/classification/list?level=${level}`, { method: "GET" });
+  const result = await $ofetch(`/api/metadata/classification/list?level=${level}`, { method: "GET" });
   categoryStore.setCategoryList(result);
 };
 
@@ -471,7 +471,7 @@ const onDeleteCategory = async (target: any) => {
     if (Array.isArray(target) && target.length > 0) {
       for (let index = 0; index < target.length; index++) {
         try {
-          await $ofetch(`${runConfig.API_URL}/metadata/classification/${target[index].id}`, {
+          await $ofetch(`/api/metadata/classification/${target[index].id}`, {
             method: "POST"
           }).then((res) => {
             const resData = res.data || {};
@@ -504,7 +504,7 @@ const onDeleteCategory = async (target: any) => {
       }
     } else {
       try {
-        await $ofetch(`${runConfig.API_URL}/metadata/classification/${target.id}`, {
+        await $ofetch(`/api/metadata/classification/${target.id}`, {
           method: "POST"
         }).then((res) => {
           const resData = res.data || {};
@@ -609,7 +609,7 @@ const onSubmitCategory = async (params: any) => {
   switch (manageModalObj.value.type) {
     case "update": // 카테고리 수정
       try {
-        await $ofetch(`${runConfig.API_URL}/metadata/classification`, {
+        await $ofetch(`/api/metadata/classification`, {
           method: "PUT",
           body: params
         }).then((res) => {
@@ -630,7 +630,7 @@ const onSubmitCategory = async (params: any) => {
       break;
     case "map": // 카테고리 맵핑
       try {
-        await $ofetch(`${runConfig.API_URL}/metadata/classification/map`, {
+        await $ofetch(`/api/metadata/classification/map`, {
           method: "POST",
           body: params
         }).then((res) => {
@@ -671,7 +671,7 @@ const onSubmitCategory = async (params: any) => {
       }
 
       try {
-        await $ofetch(`${runConfig.API_URL}/metadata/classification/insert`, {
+        await $ofetch(`/api/metadata/classification/insert`, {
           method: "POST",
           body: params
         }).then((res: any) => {
@@ -701,7 +701,7 @@ const onSubmitCategory = async (params: any) => {
 const checkBeforeInsert = async (name) => {
   let isDup = false;
   try {
-    await $ofetch(`${runConfig.API_URL}/metadata/classification/check/${name}`, {
+    await $ofetch(`/api/metadata/classification/check/${name}`, {
       method: "GET"
     }).then(async (res: any) => {
       const resData: any = res.data || {};
@@ -871,7 +871,7 @@ const onSearchDept = async (item = {}) => {
   };
 
   if (name && name !== "_NOT_CLASSIFIED") {
-    const response = await $ofetch(`${runConfig.API_URL}/metadata/classification/dept/${name}`, { method: "GET" });
+    const response = await $ofetch(`/api/metadata/classification/dept/${name}`, { method: "GET" });
 
     const dept = {
       dept_cd: response.data?.dept_cd || "",
