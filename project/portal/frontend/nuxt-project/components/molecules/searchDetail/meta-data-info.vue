@@ -146,6 +146,8 @@ const getKrKey = (key) => {
     if (key == "name") return "시스템명";
     if (key == "description") return "메타데이터 description";
     if (key == "columns") return "컬럼 목록";
+    if (key == "createtime") return "메타 데이터 생성일자";
+    if (key == "lastaccesstime") return "최종 접근 시간";
     if (key == "systemType") return "시스템 타입";
     if (key == "tableType") return "테이블 형식";
     if (key == "sourceHash") return "Source hash of the entity";

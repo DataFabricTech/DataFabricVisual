@@ -18,7 +18,6 @@
               <colgroup>
                 <col style="width: 60px" />
                 <col style="width: 70px" />
-                <col style="width: 90px" />
                 <col style="width: auto" />
                 <col style="width: 100px" />
                 <col style="width: 120px" />
@@ -29,7 +28,6 @@
                 <tr>
                   <th scope="col">No.</th>
                   <th scope="col">구분</th>
-                  <th scope="col">메인롤링</th>
                   <th scope="col">제목</th>
                   <th scope="col">첨부파일</th>
                   <th scope="col">등록자</th>
@@ -57,9 +55,6 @@
                   <td>{{ rownum }}</td>
                   <td>
                     <em class="data-label">{{ category }}</em>
-                  </td>
-                  <td>
-                    {{ getIsRolling(is_open) }}
                   </td>
                   <td class="tl">
                     <NuxtLink :to="'/support/notice/detail?id=' + id">{{

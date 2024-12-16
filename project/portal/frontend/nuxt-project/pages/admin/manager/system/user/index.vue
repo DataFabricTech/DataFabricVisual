@@ -15,7 +15,7 @@
                       <option value="all">전체</option>
                       <option value="user_nm">이름</option>
                       <option value="user_id">사번</option>
-                      <option value="dept_cd">부서</option>                      
+                      <option value="dept_cd">부서</option>
                       <option value="role_name">권한</option>
                     </select>
                   </div>
@@ -71,10 +71,10 @@
                   <td> {{ ((index + 1) + ((pagingObj.currentPage - 1) * pagingObj.limit)) }}</td>
                   <td><a @click="onClickUserUpdateButton(item.user_id, false)">{{ item.user_nm }}</a></td><!-- 클릭 시, 사용자 정보 확인 팝업창 출력 -->
                   <td>{{ item.user_id }}</td>
-                  <td>{{ item.dept_nm ? item.dept_nm : item.dept_cd }}</td>
-                  <td>{{ getKrName(item.role_name) }}</td>                  
+                  <td>{{ item.dept_nm ? item.dept_nm ? item.dept_nm : item.dept_cd : '-' }}</td>
+                  <td>{{ getKrName(item.role_name) }}</td>
                   <td>
-                    <button type="button" class="mu-btn mu-btn-sm" v-on:click="onClickUserUpdateButton(item.user_id, true)"><span>수정</span></button>                    
+                    <button type="button" class="mu-btn mu-btn-sm" v-on:click="onClickUserUpdateButton(item.user_id, true)"><span>수정</span></button>
                   </td>
                   <td v-html="getWrapperDatetimeStr(item.last_login)"></td>
                   <td>
@@ -183,7 +183,7 @@ const getKrName = (auth) => {
 }
 
 const onClickUnlockLoginDeactivation = async (user) => {
-  try{    
+  try{
 
     if (await confirmAlert(`${user.user_nm} 계정에 대한 장기 미접속 해제를 하시겠습니까?`)) {
       $ofetch('/api/admin/manager/user/UnlockLoginDeactivation', {

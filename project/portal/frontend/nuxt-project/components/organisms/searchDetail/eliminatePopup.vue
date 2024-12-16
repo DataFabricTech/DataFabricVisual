@@ -53,16 +53,12 @@
                           -webkit-line-clamp: 2;
                           -webkit-box-orient: vertical;
                         "
+                        :title="descriptionEllipsis(index, props.eliminateModal.entity)"
                       >
                       {{ descriptionEllipsis(index, props.eliminateModal.entity) }}</span
                       >
-                      <span style="border-bottom: 1px solid #666">
-                        {{
-                          userDescriptionEllipsis(index, props.eliminateModal.entity)
-                        }}</span
-                      ><br>
                       <strong
-                        >({{ typeEllipsis(index, props.eliminateModal.entity) }})</strong
+                        :title="typeEllipsis(index, props.eliminateModal.entity)">({{ typeEllipsis(index, props.eliminateModal.entity) }})</strong
                       >
                     </th>
                   </tr>
@@ -1398,7 +1394,7 @@ const onClickFileEliminateButton = async () => {
     querySelect: querySelect.value,
     queryWhere: paramQueryWhere,
     fileName: name,
-    userDescriptionList: userDescriptionList,
+    // userDescriptionList: userDescriptionList,
     descriptionList: descriptionList,
     limit: extractLimit.value
   }

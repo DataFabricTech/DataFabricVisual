@@ -193,17 +193,17 @@ public class DetailEliminateService {
             // csvPrinter.println();
 
             // 헤더 작성 : userDescription
-            log.info("write userDescription !!");
-            if (parameter.get("userDescriptionList") != null) {
-                Object[] userDescriptionArray = ((List) parameter.get("userDescriptionList")).toArray();
-                if (userDescriptionArray.length > 0) {
-                    for (int i = 0; i < userDescriptionArray.length; i++) {
-                        csvPrinter.print(userDescriptionArray[i]);
-                    }
-                }
-            }
-            log.info("write userDescription end !!");
-            csvPrinter.println();
+            // log.info("write userDescription !!");
+            // if (parameter.get("userDescriptionList") != null) {
+            //     Object[] userDescriptionArray = ((List) parameter.get("userDescriptionList")).toArray();
+            //     if (userDescriptionArray.length > 0) {
+            //         for (int i = 0; i < userDescriptionArray.length; i++) {
+            //             csvPrinter.print(userDescriptionArray[i]);
+            //         }
+            //     }
+            // }
+            // log.info("write userDescription end !!");
+            // csvPrinter.println();
 
             // 헤더 작성 : description
             log.info("write description !!");

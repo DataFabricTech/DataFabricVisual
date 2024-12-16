@@ -35,13 +35,11 @@
                       -webkit-line-clamp: 2;
                       -webkit-box-orient: vertical;
                     "
+                        :title="descriptionEllipsis(index, props.entity)"
                   >
                   {{ descriptionEllipsis(index, props.entity) }}
                 </span>
-                <span style="border-bottom: 1px solid #666">{{
-                  userDescriptionEllipsis(index, props.entity)
-                }}</span><br>
-                <span>({{ typeEllipsis(index, props.entity) }})</span>
+                <span :title="typeEllipsis(index, props.entity)">({{ typeEllipsis(index, props.entity) }})</span>
               </th>
             </tr>
           </thead>
