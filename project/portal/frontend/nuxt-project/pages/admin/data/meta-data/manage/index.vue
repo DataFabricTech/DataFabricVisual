@@ -719,7 +719,12 @@ const onClickCategoryManageMenu = (type) => {
   if (type === "delete") {
     onDeleteCategory(selectedCategory.value); // 카테고리 삭제 실행
   } else {
-    onToggleManageModal(type); // 카테고리 추가/수정 모달 제어
+    if (selectedCategory.value) {
+      // 전체 카테고리, 카테고리 미분류는 수정할 수 없도록 지정
+      if (selectedCategory.value.id != '' && selectedCategory.value.id != '_NOT_CLASSIFIED') {
+        onToggleManageModal(type); // 카테고리 추가/수정 모달 제어
+      }
+    }
   }
 };
 

@@ -60,7 +60,7 @@ const props = defineProps({
 
 const isReadOnly = computed(() => {
   // '전체 카테고리', '카테고리 미분류' 선택 시 담당부서 정보 및 수정 버튼 렌더하지 않음
-  return ['전체', '미분류'].includes(props.selectedCategory.description);
+  return ['전체 카테고리', '카테고리 미분류'].includes(props.selectedCategory.description);
 });
 
 const deptInfo = computed(() => {
