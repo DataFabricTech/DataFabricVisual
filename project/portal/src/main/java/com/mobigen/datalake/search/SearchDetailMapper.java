@@ -13,7 +13,7 @@ public interface SearchDetailMapper {
 
     Map<String, Object> getDbData(String guid);
 
-    List<Map> getColumnData(List<String> relationData);
+    List<Map> getColumnData(List<String> columnData);
 
     Map<String, Object> getUserDescription(String guid);
 

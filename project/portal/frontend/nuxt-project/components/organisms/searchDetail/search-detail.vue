@@ -54,7 +54,7 @@
           @reload="getAllDataByGuid"
         />
         <!-- detail-section : 데이터 프로파일링 -->
-        <data-profile-area :data-profile="dataProfile" v-if="allowDataProfile" :columnCommentMap="columnCommentMap"/>
+        <data-profile-area :data-profile="dataProfile" :columnCommentMap="columnCommentMap"/>
         <!-- detail-section : 샘플 데이터 -->
         <sample-data-area
           v-if="typeName && typeName.toUpperCase() == 'TABLE'"
@@ -224,8 +224,6 @@ const userDataParam = ref({}); // 사용자 데이터 파라미터
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
 const sampleDataPermission = ref(false);
-const allowColumnInfo = ref(false);
-const allowDataProfile = ref(false);
 
 const toggleShowData = () => {
   showData.value = !showData.value;
@@ -531,7 +529,9 @@ const getDetailDataProfile = () => {
     }
 
     if (columnData) {
-      params.columnData = columnData.map((item) => item.fullyQualifiedName);
+      params.columnData = columnData.map((item) => {
+        return entity.value.qualifiedname + "." + item.name
+      });
     }
 
     const attributes = ObjectUtils.getPropertyValue(

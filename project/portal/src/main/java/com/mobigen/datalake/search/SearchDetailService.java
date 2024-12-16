@@ -375,9 +375,9 @@ public class SearchDetailService {
         resultData.put("dbData", dbData);
 
         // 컬럼 프로파일 데이터
-        if (params.get("relationData") != null) {
-            if (!((List)params.get("relationData")).isEmpty()) {
-                List<Map> columnData = searchDetailMapper.getColumnData((List<String>) params.get("relationData"));
+        if (params.get("columnData") != null) {
+            if (!((List)params.get("columnData")).isEmpty()) {
+                List<Map> columnData = searchDetailMapper.getColumnData((List<String>) params.get("columnData"));
                 resultData.put("columnData", columnData);
             }
         }
@@ -492,7 +492,15 @@ public class SearchDetailService {
                     resultData.put("errorMessage", e.getMessage());
                     resultData.put("sampleDataDenied", true);
                 }
-                
+                // 쿼리 문제
+                else if (e.getMessage().indexOf("Query failed") != -1) {
+                    if (e.getMessage().indexOf(" UCP-0: Unable to start the Universal Connection Pool") != -1) { // ORACLE
+                        resultData.put("errorMessage", e.getMessage());
+                        resultData.put("sampleDataDenied", false);
+                    }
+                } else {
+                    resultData.put("errorMessage", "샘플데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
+                }
                 e.printStackTrace();
             } finally {
                 if(rs != null) try{ rs.close();} catch (Exception e){e.printStackTrace();}

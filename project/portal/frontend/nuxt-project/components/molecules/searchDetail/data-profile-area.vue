@@ -28,7 +28,7 @@
           <td>{{ comman(table.num_rows) }}</td>
           <th scope="col">테이블프로파일링 일시</th>
           <!-- <td>{{ table.total_size | numberComma }}</td> -->
-          <td>{{ yyyyMMddHHmmSS(table.update_date, " ") }}</td>
+          <td>{{ $yyyyMMddHHmmSS(table.update_date, " ") }}</td>
         </tr>
         </tbody>
       </table>
@@ -52,7 +52,7 @@
           <td>{{ comman(table.num_rows) }}</td>
           <th scope="col">테이블프로파일링 일시</th>
           <!-- <td>{{ table.total_size | numberComma }}</td> -->
-          <td>{{ yyyyMMddHHmmSS(table.update_date, " ") }}</td>
+          <td>{{ $yyyyMMddHHmmSS(table.update_date, " ") }}</td>
         </tr>
         </tbody>
       </table>
@@ -82,7 +82,8 @@
       </thead>
       <tbody>
         <tr v-for="(item, index) in column" :key="index">
-          <td :title="getColumnComent(item.name, '')" v-html="getColumnComent(item.name,'<br>')">
+          <td>
+            <span :title="item.name + '(' + item.type_name">{{ item.name ? item.name : "-" }}<br>({{ item.type_name ? item.type_name : "-" }})</span>
           </td>
           <td>
             <span class="mu-ellipsis" :title="numberComma(item.null_count)">
@@ -163,13 +164,14 @@ const table = computed(() =>
 );
 
 const column = computed(() => {
+  console.log(ObjectUtils.getPropertyValue(props.dataProfile, "column", []))
   return ObjectUtils.getPropertyValue(props.dataProfile, "column", []);
 });
 
 
 const showDbArea = computed(() => Object.keys(db.value).length > 0);
 const showTableArea = computed(() => Object.keys(table.value).length > 0);
-const showColumnArea = computed(() => Object.keys(table.value).length > 0);
+const showColumnArea = computed(() => Object.keys(column.value).length > 0);
 
 const comman = (val) => {
   if (val !== undefined) {
