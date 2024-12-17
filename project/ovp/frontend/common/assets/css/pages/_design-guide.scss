@@ -1,0 +1,400 @@
+.guide {
+  @include flex($vertical: flex-start);
+
+  position: relative;
+  height: 100vh;
+
+  &-container {
+    height: 100%;
+    margin: 0 auto;
+  }
+
+  &-lnb {
+    position: fixed;
+    left: 0;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    width: 230px;
+    height: 100%;
+    background: $primary-900;
+  }
+
+  .lnb-top-container {
+    padding: $spacing-32 0 $spacing-32 $spacing-24;
+  }
+
+  .lnb-logo-link {
+    @include font-size('24');
+
+    color: $neutral-0;
+
+    span:first-child {
+      font-weight: 600;
+    }
+
+    span:last-child {
+      margin-left: $spacing-4;
+    }
+  }
+
+  .lnb-bottom-container {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: $spacing-24;
+
+    &::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      background: rgb(255 255 255 / 35%);
+
+      &:hover {
+        background: rgb(255 255 255 / 40%);
+      }
+    }
+
+    .lnb-list + .lnb-list {
+      margin-top: $spacing-32;
+    }
+
+    .lnb-item {
+      &-title {
+        height: 32px;
+        color: $secondary-300;
+        font-weight: 600;
+      }
+    }
+
+    .sub-item {
+      &-link {
+        display: flex;
+        align-items: center;
+        height: 32px;
+        width: 100%;
+        color: $neutral-0;
+
+        &:hover {
+          color: $primary-300;
+        }
+      }
+    }
+  }
+
+  &-main {
+    padding: 88px 40px 120px 200px;
+    width: 1400px;
+  }
+}
+
+.guide-section {
+  width: 100%;
+  padding: 0 $spacing-48 96px;
+  margin: 0 auto;
+}
+
+.section-title {
+  margin-bottom: $spacing-48;
+  line-height: 100%;
+  font-size: 40px;
+  font-weight: 700;
+  color: $primary-500;
+  text-align: start;
+}
+
+.section-type {
+  color: $neutral-400;
+  margin-bottom: $spacing-4;
+}
+
+.section-summary {
+  color: $neutral-800;
+  font-size: 18px;
+  line-height: 1.8;
+
+}
+
+.section-subtitle {
+  margin: $spacing-64 0 $spacing-32;
+  color: $neutral-800;
+  font-weight: 700;
+  font-size: 20px;
+}
+
+.group-description {
+  width: 33.33%;
+  color: $neutral-500;
+
+  ul {
+    list-style: disc;
+    list-style-position: inside;
+
+    li {
+      margin-top: $spacing-4;
+    }
+  }
+
+  code {
+    @include font-size('13');
+
+    padding: 0 $spacing-4;
+    border-radius: $border-radius-4;
+    border: 1px solid $neutral-200;
+    background: $neutral-100;
+  }
+}
+
+.group-title {
+  font-size: 18px;
+  color: $neutral-800;
+  font-weight: 600;
+  margin-bottom: $spacing-12;
+}
+
+.group-summary {
+  line-height: 1.8;
+}
+
+.section-figure {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-16;
+  flex-grow: 1;
+  border: 1px dotted $neutral-200;
+  padding: $spacing-32;
+  border-radius: $border-radius-8;
+}
+
+$primary-colors: (
+        #{$primary-900},
+        #{$primary-700},
+        #{$primary-500},
+        #{$primary-300},
+        #{$primary-100}
+);
+$secondary-colors: (
+        #{$secondary-900},
+        #{$secondary-700},
+        #{$secondary-500},
+        #{$secondary-300},
+        #{$secondary-100}
+);
+$neutral-colors: (
+        #{$neutral-900},
+        #{$neutral-800},
+        #{$neutral-700},
+        #{$neutral-600},
+        #{$neutral-500},
+        #{$neutral-400},
+        #{$neutral-300},
+        #{$neutral-200},
+        #{$neutral-100},
+        #{$neutral-0}
+);
+$info-colors: (
+        #{$info-900},
+        #{$info-700},
+        #{$info-500},
+        #{$info-300},
+        #{$info-100}
+);
+$success-colors: (
+        #{$success-900},
+        #{$success-700},
+        #{$success-500},
+        #{$success-300},
+        #{$success-100}
+);
+$warning-colors: (
+        #{$warning-900},
+        #{$warning-700},
+        #{$warning-500},
+        #{$warning-300},
+        #{$warning-100}
+);
+$error-colors: (
+        #{$error-900},
+        #{$error-700},
+        #{$error-500},
+        #{$error-300},
+        #{$error-100}
+);
+
+.color-list {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: $spacing-12;
+
+  .color-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-grow: 1;
+    gap: $spacing-4;
+    padding: 0 $spacing-12;
+    width: 20%;
+    height: 100px;
+    border-radius: 0;
+    font-size: 13px;
+    color: $neutral-100;
+
+    &:last-child {
+      color: $neutral-600;
+    }
+  }
+
+  &.primary {
+    .color-item {
+      @for $i from 1 through length($primary-colors) {
+        &:nth-child(#{$i}) {
+          background-color: nth($primary-colors, $i);
+        }
+      }
+    }
+  }
+
+  &.secondary {
+    .color-item {
+      @for $i from 1 through length($secondary-colors) {
+        &:nth-child(#{$i}) {
+          background-color: nth($secondary-colors, $i);
+        }
+      }
+    }
+  }
+
+  &.neutral {
+    .color-item {
+      @for $i from 1 through length($neutral-colors) {
+        &:nth-child(#{$i}) {
+          background-color: nth($neutral-colors, $i);
+        }
+      }
+
+      &:nth-child(8),
+      &:nth-child(9) {
+        color: $neutral-600;
+      }
+    }
+  }
+
+  &.info {
+    .color-item {
+      @for $i from 1 through length($info-colors) {
+        &:nth-child(#{$i}) {
+          background-color: nth($info-colors, $i);
+        }
+      }
+    }
+  }
+
+  &.success {
+    .color-item {
+      @for $i from 1 through length($success-colors) {
+        &:nth-child(#{$i}) {
+          background-color: nth($success-colors, $i);
+        }
+      }
+    }
+  }
+
+  &.warning {
+    .color-item {
+      @for $i from 1 through length($warning-colors) {
+        &:nth-child(#{$i}) {
+          background-color: nth($warning-colors, $i);
+        }
+      }
+    }
+  }
+
+  &.error {
+    .color-item {
+      @for $i from 1 through length($error-colors) {
+        &:nth-child(#{$i}) {
+          background-color: nth($error-colors, $i);
+        }
+      }
+    }
+  }
+
+  &.shadows {
+    gap: $spacing-24;
+
+    li {
+      padding-top: $spacing-36;
+      width: 200px;
+      height: 100px;
+      text-align: center;
+      color: $neutral-500;
+      background-color: $neutral-100;
+
+      @for $i from 1 through length($box-shadows) {
+        &:nth-child(#{$i}) {
+          @include box-shadow(nth(map-keys($box-shadows), $i));
+        }
+      }
+    }
+  }
+}
+
+.icon-home {
+  $icon-sizes: (
+          'xs',
+          'sm',
+          'md',
+          'lg',
+          'xl'
+  );
+
+  @for $i from 1 through length($icon-sizes) {
+    &:nth-child(#{$i}) {
+      @include icon-size(nth($icon-sizes, $i));
+    }
+  }
+
+  &:not(:first-child) {
+    margin-left: $spacing-36;
+  }
+
+  &:nth-child(3) {
+    @extend .svg-icon-primary;
+  }
+}
+
+.icon-trash {
+  @include icon-size(40px);
+  @include icon-color($error-500);
+
+  margin-left: $spacing-36;
+}
+
+.link-buttons {
+  @include flex($horizontal: flex-start);
+
+  gap: $spacing-16;
+
+  button {
+    border-radius: $border-radius-2;
+    padding: 0 $spacing-8;
+    height: 32px;
+    color: $secondary-500;
+
+    &:hover {
+      background: $secondary-100;
+    }
+  }
+}
+
+@media only screen and (width <= 1400px) {
+  .guide-main {
+    padding-left: 320px;
+  }
+}

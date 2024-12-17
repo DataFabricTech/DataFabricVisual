@@ -1,0 +1,23 @@
+@tailwind utilities;
+
+@layer utilities {
+  .primary {
+    @include icon-color($primary-500);
+  }
+
+  .secondary {
+    @include icon-color($secondary-500);
+  }
+
+  .bg-neutral-100 {
+    background-color: $neutral-100;
+  }
+
+  .text-neutral-700 {
+    color: $neutral-700;
+  }
+
+  .h-full {
+    height: 100% !important;
+  }
+}

@@ -1,0 +1,88 @@
+//.l- class
+.l-split {
+  display: flex;
+  flex-grow: 1;
+
+  &:has(.work-contents) {
+    height: calc(100% - 48px);
+  }
+}
+
+.section-contents:has(.work-list + .work-page) {
+  .l-split:only-of-type {
+    height: calc(100% - 48px);
+  }
+
+  // 4개 레이아웃 (데이터 생성)
+  &:has(.l-split + .l-split) {
+    .l-split:nth-child(1) {
+      height: 60%;
+      border-bottom: 1px solid $neutral-200;
+    }
+
+    .l-split:nth-child(2) {
+      height: 40%;
+    }
+  }
+}
+
+.section-contents:has(.main-content + .main-content) {
+  gap: $spacing-16;
+  height: auto;
+
+  .l-split {
+    gap: $spacing-16;
+    width: calc(100% - 16px);
+  }
+}
+
+
+.l-between {
+  @include flex($horizontal: space-between);
+}
+
+.l-top-bar {
+  @include flex($horizontal: space-between);
+
+  width: 100%;
+  min-height: 45px;
+  flex-shrink: 0;
+  padding: $spacing-8;
+
+  & + .l-split {
+    flex-grow: 1;
+    height: calc(100% - 60px);
+  }
+
+  .title {
+    @include font-size('16');
+
+    font-weight: 600;
+    color: $neutral-800;
+  }
+}
+
+.tab-line + .l-top-bar + .l-split {
+  height: calc(100% - 105px);
+}
+
+.l-sidebar {
+  @include flex($direction: column, $horizontal: space-between);
+
+  padding: $spacing-24 0 $spacing-8;
+  width: 100%;
+  height: 100%;
+}
+
+// 검색결과 공통
+.search-result {
+  @include font-size('15');
+  color: $neutral-700;
+
+  &-num {
+    font-weight: 600;
+    color: $primary-500;
+  }
+}
+
+

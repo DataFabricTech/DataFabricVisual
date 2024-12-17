@@ -1,0 +1,91 @@
+.button-group {
+  @include flex;
+
+  position: relative;
+  background-color: $neutral-0;
+
+  &-input {
+    @include hidden-input;
+
+    &:checked {
+      & + label {
+        background-color: $primary-500;
+        color: $neutral-0;
+        border-color: $primary-500;
+
+        .svg-icon {
+          @include icon-color($neutral-0);
+        }
+      }
+    }
+
+    &:disabled + label {
+      background-color: $neutral-100;
+    }
+  }
+
+  &-label {
+    @include flex($horizontal: flex-start, $gap: $spacing-2);
+    @include font-size('13');
+
+    font-weight: 600;
+    height: 32px;
+    padding: 0 $spacing-12;
+    color: $neutral-700;
+    cursor: pointer;
+    border: 1px solid $neutral-200;
+    border-right: none;
+
+    &:nth-child(2) {
+      border-top-left-radius: $border-radius-4;
+      border-bottom-left-radius: $border-radius-4;
+    }
+
+    &:last-child {
+      border-top-right-radius: $border-radius-4;
+      border-bottom-right-radius: $border-radius-4;
+      border-right: 1px solid $neutral-200;
+    }
+
+    &:hover {
+      background-color: $neutral-100;
+    }
+
+    .svg-icon {
+      @include icon-size('sm');
+    }
+  }
+
+  &:has(.hidden-text) {
+    label {
+      padding: 0 $spacing-6;
+    }
+  }
+
+  &-sm {
+    .button-group {
+      &-label {
+        @include font-size('12');
+
+        height: 28px;
+        padding: 0 $spacing-8;
+
+        .svg-icon {
+          @include icon-size(18px);
+        }
+      }
+    }
+  }
+
+  .count-text {
+    &::after {
+      content: "";
+      position: relative;
+      display: inline-block;
+      background: $neutral-200;
+      width: 1px;
+      height: 10px;
+      margin: 0 $spacing-8;
+    }
+  }
+}

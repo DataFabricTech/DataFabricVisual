@@ -1,0 +1,178 @@
+.resource-box-full + .tab {
+  margin-top: $spacing-32;
+  flex-grow: 1;
+  height: 100%;
+  min-height: 0;
+
+  .tab-list {
+    flex-shrink: 0;
+  }
+
+  .tab-button {
+    padding: 0;
+  }
+
+  .tab-contents {
+    height: 100%;
+    min-height: 0;
+    padding-bottom: 0;
+  }
+}
+
+.interaction-buttons {
+  @include flex($gap: $spacing-8);
+
+  position: absolute;
+  right: 32px;
+  top: 32px;
+}
+
+.data-detail {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-12;
+  height: 100%;
+  padding: $spacing-4 0;
+
+  &-list {
+    @include flex($direction: column, $horizontal: flex-start, $gap: $spacing-12);
+
+    overflow-y: auto;
+    height: 100%;
+    max-height: 650px;
+    padding: $spacing-4;
+  }
+}
+
+
+
+//----------------------------
+//데이터 상세 - 탭 페이지
+//----------------------------
+.data-detail-group {
+  display: flex;
+  gap: $spacing-12;
+
+  &:has(.visual-detail) {
+    .data-detail-list {
+      width: 40%;
+    }
+  }
+
+  &:has(.profiling) {
+    flex-direction: column;
+    height: 100%;
+
+    .profiling {
+      display: flex;
+      overflow: auto;
+      height: 100%;
+    }
+  }
+
+  &:has(.recommend) {
+    flex-direction: column;
+    width: 100%;
+
+    .recommend {
+      display: flex;
+      gap: $spacing-12;
+
+      .resource-box {
+        flex: 0 0 49.5%;
+        width: 49.5%;
+      }
+    }
+  }
+
+
+
+  .visual-detail {
+    width: 60%;
+    height: 100%;
+    min-height: 650px;
+  }
+
+  .visual-legend-item {
+    &-standard::before {
+      background-color: #85E0A3;
+      border: 2px solid #359F67;
+    }
+
+    &-relation::before {
+      background-color: #BDE3FF;
+      border: 2px solid #22B4FF;
+    }
+
+    &-rank {
+      &::before {
+        content: '[순위]';
+        width: 28px;
+        font-size: 11px;
+        line-height: 1.5;
+        color: $neutral-500;
+      }
+
+      .button {
+        margin-left: -6px;
+      }
+
+      .tooltip {
+        width: 18px;
+        height: 18px;
+
+        .svg-icon {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+}
+
+.unstructured-sample {
+  overflow-y: auto;
+  background-color: #f7f9fc;
+  width: 100%;
+  height: 100%;
+  max-height: 1000px;
+  padding: $spacing-16;
+  color: $neutral-500;
+
+  pre {
+    @include font-family('pretendard');
+  }
+}
+
+.query {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &-date {
+    padding: $spacing-12 $spacing-16;
+    color: $neutral-500;
+    background: $neutral-100;
+  }
+
+  & + & {
+    margin-top: $spacing-8;
+  }
+
+  .code-box {
+    @include box-shadow('sm');
+
+    overflow-y: auto;
+    width: 100%;
+    height: 180px;
+    border: 1px solid $neutral-100;
+  }
+}
+
+
+
+
+
+
+

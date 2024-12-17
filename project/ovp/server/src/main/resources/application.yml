@@ -1,0 +1,159 @@
+---
+spring:
+  profiles:
+    active: ovp
+  web:
+    locale: ko
+    resources:
+      chain:
+        compressed: true
+        cache: true
+      add-mappings: true
+
+  output:
+    ansi:
+      enabled: detect
+
+  devtools:
+    livereload:
+      enabled: true
+    restart:
+      enabled: true
+
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+  primary:
+    datasource:
+      hikari:
+        idle-timeout: 10000
+        maximum-pool-size: 10
+        minimum-idle: 5
+        pool-name: BaseHikariPool
+        jdbc-url: jdbc:postgresql://192.168.109.254:30207/ovp?currentSchema=ovp
+        username: ovp-user
+        password: biris.manse
+        driver-class-name: org.postgresql.Driver
+    hibernate:
+      property:
+        "[hibernate.dialect]": org.hibernate.dialect.PostgreSQLDialect
+        "[hibernate.show_sql]": true
+        "[hibernate.format_sql]": true
+        "[hibernate.hbm2ddl.auto]": none
+        "[hibernate.cache.use_second_level_cache]": false
+        "[hibernate.cache.use_query_cache]": false
+        "[hibernate.globally_quoted_identifiers]": true
+  h2:
+    console:
+      enabled: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: datafabric.test
+    password: ukpcbqzuqlpdmwpi # 개인 계정이므로 배포 시 변경 필요
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          debug: true
+logging:
+  level:
+    root: info
+    com:
+      mobigen: debug
+
+server:
+  port: 8080
+  servlet:
+    session:
+      timeout: 7200
+      cookie:
+        name: ovp-session-id
+    encoding:
+      charset: UTF-8
+    context-path: /
+  compression:
+    enabled: true
+  tomcat:
+    uri-encoding: UTF-8
+  error:
+    whitelabel:
+      enabled: false
+    path: /error
+
+i18n:
+  basenames: i18n/messages, i18n/exception, i18n/validation
+
+http-client-configuration:
+  max-total: 300
+  default-max-per-route: 50
+  default-keep-alive-duration: -1
+  connection-reqeust-timeout: 3000
+  connection-timeout: 3000
+  socket-timeout: -1
+  idle-timeout: 60
+
+
+# 사용자 정의 설정들
+properties:
+  framework:
+    security:
+      ignores: /css/**, /fonts/**, /img/**, /js/**, /_nuxt/**, /favicon.ico
+      permit-alls: /, /portal/login/**, /api/email/**, /api/auth/login/**, /api/auth/sign-up/**, /api/user/check-name/** #/login, /h2-console/**, /error, /test, /api/**, /api/auth/iag/**,
+      redirect-url: /
+      iframe-option: disable #disable, same-origin, deny
+      csrf: false
+      cors:
+        pattern: /** #/auth/**
+        allowed-origins: http://localhost:3300/ #"*" #http://server-name:port
+        allowed-methods: "*" #PUT,DELETE,GET,POST ...
+        allowed-headers: "*" #Context-Type, ...
+        allow-credentials: true
+      same-site: Lax #None, Lax, Strict
+    token:
+      access-token: accessToken
+      refresh-token: refreshToken
+      secret: jwt-secrect-b-iris # Keycloak "HS256" 알고리즘 secret 값
+    route:
+      locales: ko,en,zh,ja
+    auth:
+      rsa-enabled: true
+    test:
+      username: admin
+      password: admin
+  ovp:
+    # openMetadata 연동 URL
+    open-metadata-url: http://192.168.109.254:31500/api/v1
+    dolphin-server-url: http://192.168.109.254:31321/dolphin/v1
+    monitoring-service-url: http://192.168.109.254:31923/api/v1
+    recommend-data-model-url: http://192.168.109.254:30628/api/recommend
+
+    # 비밀번호 재설정 관련 설
+    mail:
+      valid_time: 60
+      href: /api/email/pw-reset
+      redirect_url: /portal/login/pw-reset
+      redirect_error_url: /portal/login/error
+      contents_file_path: "templates/ovp_pwReset.html"
+      title: "Open-Vdap-Platform  비밀번호 재 설정"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: ovp
+
+  primary:
+    datasource:
+      hikari:
+        jdbc-url: jdbc:postgresql://192.168.109.254:30207/ovp?currentSchema=ovp
+        username: ovp-user
+        password: biris.manse

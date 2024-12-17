@@ -1,0 +1,122 @@
+table,
+.table {
+  width: 100%;
+  border: 1px solid $neutral-200;
+
+  caption {
+    @include caption-out;
+  }
+
+  $table-align-map: (
+          "left": left,
+          "center": center,
+          "right": right
+  );
+
+  @each $value, $align in $table-align-map {
+    &-align-#{$value} {
+      td {
+        text-align: $align;
+      }
+    }
+
+    th.align-#{$value},
+    td.align-#{$value} {
+      text-align: $align;
+    }
+  }
+
+  th, td {
+    padding: $spacing-12;
+    border-right: 1px solid $neutral-200;
+    border-bottom: 1px solid $neutral-200;
+    color: $neutral-700;
+    vertical-align: middle;
+    overflow-wrap: break-word;
+    word-break: keep-all;
+    text-align: left;
+  }
+
+  th {
+    background-color: $neutral-100;
+  }
+
+  td {
+    background-color: $neutral-0;
+
+    &:has(.table-data) {
+      padding: 0;
+    }
+  }
+
+  .button-group {
+    @include flex($gap: $spacing-16);
+
+    .button {
+      position: relative;
+    }
+
+    .button:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      right: -10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 50%;
+      background-color: $neutral-200;
+    }
+  }
+}
+
+.l-top-bar + table {
+  margin-top: $spacing-8;
+}
+
+.search-input + table {
+  margin-top: $spacing-8;
+}
+
+.table-scroll {
+  overflow: auto;
+  height: 100%;
+
+  td {
+    word-break: break-all;
+  }
+}
+
+//table 헤더 고정 스크롤
+.table-fixed {
+  border-top-width: 0px;
+
+  thead {
+    @include z-index('float');
+
+    position: sticky;
+    top: 0;
+
+    th {
+      position: relative;
+      border-bottom-width: 0px;
+
+      &::before,
+      &::after {
+        position: absolute;
+        content: '';
+        left: 0;
+        width: 100%;
+        height: 1px;
+        background-color: $neutral-200;
+      }
+
+      &::before {
+        top: 0;
+      }
+
+      &::after {
+        bottom: 0;
+      }
+    }
+  }
+}

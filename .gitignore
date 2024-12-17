@@ -29,7 +29,6 @@ node_modules/
 
 # Optional npm cache directory
 .npm
-package-lock.json
 
 # Optional eslint cache
 .eslintcache
@@ -140,3 +139,4 @@ nbdist/
 **/docker/target/
 
 # nuxt build
+/project/ovp/server/src/main/resources/static

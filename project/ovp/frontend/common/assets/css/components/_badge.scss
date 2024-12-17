@@ -1,0 +1,130 @@
+@mixin badge-color($color, $bg, $border: transparent) {
+  color: $color;
+  background-color: $bg;
+  border: 1px solid $border;
+
+  .badge-icon {
+    @include icon-color($color);
+  }
+}
+
+
+.badge {
+  @include flex($gap: $spacing-2);
+
+  height: 20px;
+  padding: 0 $spacing-4;
+  border-radius: $border-radius-2;
+
+  &-icon {
+    @include icon-size(14px);
+  }
+
+  &-text {
+    @include font-size('12');
+
+    font-weight: 600;
+  }
+
+  &:not(:has(.badge-text)){
+    padding: $spacing-2;
+  }
+
+  // Color Theme
+  &-red {
+    @include badge-color($color: $neutral-0, $bg: $error-500);
+
+    &-lighter {
+      @include badge-color($color: $error-500, $bg: $error-100);
+    }
+
+    &-stroke {
+      @include badge-color($color: $error-500, $bg: $neutral-0, $border: $error-500);
+    }
+  }
+
+  &-yellow {
+    @include badge-color($color: $neutral-0, $bg: $warning-500);
+
+    &-lighter {
+      @include badge-color($color: $warning-500, $bg: $warning-100);
+    }
+
+    &-stroke {
+      @include badge-color($color: $warning-500, $bg: $neutral-0, $border: $warning-500);
+    }
+  }
+
+  &-green {
+    @include badge-color($color: $neutral-0, $bg: $success-500);
+
+    &-lighter {
+      @include badge-color($color: $success-500, $bg: $success-100);
+    }
+
+    &-stroke {
+      @include badge-color($color: $success-500, $bg: $neutral-0, $border: $success-500);
+    }
+  }
+
+  &-blue {
+    @include badge-color($color: $neutral-0, $bg: $info-500);
+
+    &-lighter {
+      @include badge-color($color: $info-500, $bg: $info-100);
+    }
+
+    &-stroke {
+      @include badge-color($color: $info-500, $bg: $neutral-0, $border: $info-500);
+    }
+  }
+
+  &-purple {
+    @include badge-color($color: $neutral-0, $bg: #5A00CD);
+
+    &-lighter {
+      @include badge-color($color: #5A00CD, $bg: #EFE6FA);
+    }
+
+    &-stroke {
+      @include badge-color($color: #5A00CD, $bg: $neutral-0, $border: #5A00CD);
+    }
+  }
+
+  &-gray {
+    @include badge-color($color: $neutral-0, $bg: $neutral-400);
+
+    &-lighter {
+      @include badge-color($color: $neutral-500, $bg: $neutral-200);
+    }
+
+    &-stroke {
+      @include badge-color($color: $neutral-500, $bg: $neutral-0, $border: $neutral-500);
+    }
+  }
+
+  &-primary {
+    @include badge-color($color: $neutral-0, $bg: $primary-500);
+
+    &-lighter {
+      @include badge-color($color: $primary-500, $bg: $primary-100);
+    }
+
+    &-stroke {
+      @include badge-color($color: $primary-500, $bg: $neutral-0, $border: $primary-500);
+    }
+  }
+
+  &-secondary {
+    @include badge-color($color: $neutral-0, $bg: $secondary-500);
+
+    &-lighter {
+      @include badge-color($color: $secondary-500, $bg: $secondary-100);
+    }
+
+    &-stroke {
+      @include badge-color($color: $secondary-500, $bg: $neutral-0, $border: $secondary-500);
+    }
+  }
+}
+

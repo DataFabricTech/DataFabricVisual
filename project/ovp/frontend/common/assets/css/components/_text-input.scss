@@ -1,0 +1,51 @@
+@mixin text-input-size($font-size: null , $size: 32px, $right-padding: $spacing-6, $left-padding: $spacing-8, $input-icon-size: 18px) {
+  @if $font-size != null {
+    @include font-size($font-size);
+  }
+
+  height: $size;
+  padding: 0 $right-padding 0 $left-padding;
+
+  &::placeholder {
+    @if $font-size != null {
+      @include font-size($font-size);
+    }
+  }
+
+  & ~ .text-input-icon {
+    @include icon-size($input-icon-size);
+  }
+}
+
+.text-input {
+  @include text-input-size;
+
+  &:focus:not(:invalid) {
+    & ~ .text-input-icon {
+      @include icon-color($primary-500);
+    }
+  }
+
+  &[disabled],
+  &[disabled]:hover,
+  &[disabled]:focus {
+    & ~ .text-input-icon {
+      @include icon-color($neutral-300);
+    }
+  }
+
+
+
+  // text-input Size
+  &-lg {
+    @include text-input-size($size: 36px, $right-padding: $spacing-8, $left-padding: 10px, $input-icon-size: sm)
+  }
+
+  &-sm {
+    @include text-input-size($font-size: '13', $size: 28px, $right-padding: $spacing-6, $left-padding: $spacing-8)
+  }
+}
+
+
+
+

@@ -1,0 +1,43 @@
+{
+  "extends": [
+    "stylelint-config-standard-scss",
+    "stylelint-config-recommended-scss"
+  ],
+  "plugins": [
+    "stylelint-scss"
+  ],
+  "rules": {
+    "at-rule-no-unknown": [
+      true,
+      {
+        "ignoreAtRules": [
+          "mixin",
+          "include",
+          "if",
+          "else",
+          "for",
+          "each",
+          "while",
+          "function",
+          "return",
+          "extend",
+          "warn",
+          "tailwind"
+        ]
+      }
+    ],
+    "declaration-block-single-line-max-declarations": 1,
+    "number-max-precision": 2,
+    "no-duplicate-selectors": true,
+    "font-weight-notation": "numeric",
+    "unit-disallowed-list": [
+      "pt",
+      "cm",
+      "mm",
+      "in",
+      "pc",
+      "em",
+      "rem"
+    ]
+  }
+}

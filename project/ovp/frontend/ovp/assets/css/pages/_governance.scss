@@ -1,0 +1,198 @@
+.card {
+  @include flex($horizontal: flex-start, $vertical: stretch, $gap: $spacing-24);
+
+  flex-wrap: wrap;
+
+  &-item {
+    @include flex;
+
+    width: calc(33.33333% - 24px);
+    background-color: $neutral-0;
+    border: 1px solid $neutral-200;
+    border-radius: $spacing-8;
+
+    .svg-icon {
+      width: 54px;
+      height: 54px;
+    }
+
+    a {
+      @include flex($gap: $spacing-48);
+
+      width: 100%;
+      height: 100%;
+      padding: $spacing-40 $spacing-32;
+    }
+  }
+
+  &-item:hover {
+    @include box-shadow('md');
+
+    border: 1px solid $primary-300;
+  }
+
+  &-title {
+    @include font-size('18');
+
+    color: $neutral-800;
+  }
+
+  &-desc {
+    color: $neutral-500;
+  }
+}
+
+//거버넌스 - 활동사항 탭 스타일
+.activity-info {
+  width: 100%;
+  margin-top: $spacing-8;
+
+  &-item {
+    @include flex($direction: row, $horizontal: flex-start, $vertical: flex-start, $gap: $spacing-16);
+
+    padding: $spacing-20 $spacing-16;
+  }
+
+  &-item:not(:last-child) {
+    border-bottom: 1px solid $neutral-200;
+  }
+
+  &-wrap {
+    @include flex($direction: column, $vertical: flex-start, $gap: $spacing-12);
+
+    width: 100%;
+  }
+
+  &-head {
+    @include flex;
+
+    width: 100%;
+  }
+
+  &-title {
+    @include flex($gap: $spacing-4);
+  }
+
+  &-ago {
+    margin-left: auto;
+    color: $neutral-400;
+    font-size: 13px;
+  }
+
+  .tag {
+    flex-shrink: 0;
+  }
+
+  &-contents {
+    @include flex($horizontal: flex-start);
+
+    width: 100%;
+    padding: $spacing-12;
+    border: 1px solid $neutral-200;
+
+    &.is-column {
+      @include flex($direction: column, $horizontal: flex-start, $vertical: flex-start);
+
+      gap: $spacing-4;
+    }
+
+    &:has(.tag) {
+      gap: $spacing-8;
+    }
+  }
+}
+
+.diff {
+  &-added {
+    padding: $spacing-4;
+    background-color: $warning-100;
+    color: $warning-500;
+    font-weight: 600;
+  }
+
+  &-removed {
+    text-decoration: line-through;
+    color: $neutral-400;
+  }
+
+  &-description {
+    color: $neutral-500;
+  }
+}
+
+.creation-info {
+  @include flex($gap: $spacing-16);
+
+  &-item {
+    @include flex($direction: row, $vertical: flex-start, $gap: $spacing-12);
+  }
+
+  &-label, &-value {
+    color: $neutral-500;
+    font-size: 13px;
+  }
+
+  &-value {
+    position: relative;
+    padding-left: $spacing-4;
+
+    &::before {
+      content: '•';
+      position: absolute;
+      left: -7px;
+      color: gray;
+    }
+  }
+}
+
+.data-info {
+  display: flex;
+  flex-direction: column;
+  max-height: 400px;
+  gap: $spacing-8;
+  width: 100%;
+
+  .table-scroll {
+    width: 100%;
+  }
+
+  table {
+    table-layout: fixed;
+  }
+}
+
+.table-data {
+  @include flex($direction: column, $vertical: flex-start, $gap: $spacing-4);
+
+  width: 100%;
+  padding: $spacing-8 $spacing-12;
+
+  .l-between {
+    width: 100%;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+    margin-right: $spacing-8;
+    flex-shrink: 0;
+  }
+
+
+  &-title {
+    @include ellipsis;
+    @include font-size('15');
+
+    width: 100%;
+    font-weight: 600;
+    color: $neutral-700;
+  }
+}
+
+.category-search {
+  height: calc(100% - 92px);
+
+  .data-page + .preview {
+    margin-left: $spacing-16;
+  }
+}

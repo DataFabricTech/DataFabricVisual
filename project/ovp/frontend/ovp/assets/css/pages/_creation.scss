@@ -1,0 +1,168 @@
+.data-summary {
+  @include flex($horizontal: flex-start, $gap: $spacing-4);
+
+  font-weight: 500;
+  white-space: nowrap;
+  margin-bottom: $spacing-8;
+  padding: 0 $spacing-8;
+
+  &-title {
+    color: $neutral-700;
+  }
+
+  &-name {
+    @include ellipsis;
+
+    color: $secondary-500;
+  }
+
+  &-text {
+    @include font-size('12');
+
+    font-weight: 400;
+    color: $neutral-400;
+  }
+}
+
+.profiling-detail {
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-8;
+  padding: 0 $spacing-8 $spacing-8;
+  margin-bottom: $spacing-8;
+  height: 100%;
+
+  .select {
+    width: 100%;
+    flex-shrink: 0;
+  }
+
+  &-title {
+    @include font-size('13');
+
+    color: $neutral-500;
+    font-weight: 600;
+  }
+
+  dl {
+    @include font-size('13');
+
+    display: flex;
+    gap: $spacing-8;
+    padding: 0 $spacing-8;
+  }
+
+  dt {
+    width: 122px;
+    color: $neutral-500;
+  }
+
+  dd {
+    @include font-size('13');
+
+    margin-left: $spacing-4;
+    color: $neutral-800;
+  }
+
+  .profiling-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-8;
+    padding: $spacing-8;
+    border: 1px solid $neutral-200;
+    border-radius: $border-radius-4;
+  }
+}
+
+.result-info {
+  @include flex($horizontal: space-between);
+
+  width: 655px;
+}
+
+.result {
+  display: flex;
+  overflow-y: auto;
+  height: 100%;
+  background: $success-100;
+
+  &-error {
+    @include font-size('13');
+
+    padding: $spacing-8 $spacing-12;
+    color: $error-500;
+    background: $error-100;
+  }
+}
+
+//데이터모델추가 모달 스타일
+.data-add {
+  @include flex($direction: column, $horizontal: flex-start, $gap: $spacing-12);
+
+  width: 100%;
+  height: 100%;
+
+  .transfer {
+    .tab-contents {
+      height: calc(100% - 36px);
+    }
+
+    & + .tab {
+      .tab-contents {
+        height: calc(100% - 40px);
+      }
+
+      .ag-grid,
+      .data-list {
+        height: calc(100% - 20px);
+      }
+
+      .data-summary {
+        padding: 0;
+      }
+    }
+  }
+}
+
+//transfer 스타일
+// 컴포넌트로 분기될 경우 디폴트/모달 스타일 구별해야 함
+.transfer {
+  display: flex;
+  flex-grow: 0;
+  width: 100%;
+
+  .menu-data {
+    height: calc(100% - 40px);
+
+    .menu-item .checkbox-label::after {
+      top: 9px;
+    }
+  }
+
+  &-box {
+    height: 350px;
+    width: 47%;
+    border: 1px solid $neutral-200;
+  }
+
+  &-handle {
+    @include flex($direction: column, $gap: $spacing-8);
+
+    padding: $spacing-12;
+  }
+
+  &-head {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 0 $spacing-16;
+    border-bottom: 1px solid $neutral-200;
+    font-weight: 600;
+  }
+
+  .accordion-group {
+    height: calc(100% - 12px);
+  }
+}
+

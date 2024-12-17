@@ -1,0 +1,56 @@
+{
+  "result": 1,
+  "errorMessage": "",
+  "data": {
+    "data": [
+      {
+        "owner": "관리자",
+        "fqn": "df2.test_db.test_db.Active_Employees",
+        "depth": [
+          "df2",
+          "test_db",
+          "test_db",
+          "Active_Employees"
+        ],
+        "serviceIcon": "",
+        "modelNm": "Active_Employees",
+        "modelDesc": "수정수정",
+        "id": "801abfe5-eee7-434c-8570-84033dc8d447",
+        "firModelNm": "Active_Employees",
+        "category": ""
+      },
+      {
+        "owner": "",
+        "fqn": "df2.test_db.test_db.Employee",
+        "depth": [
+          "df2",
+          "test_db",
+          "test_db",
+          "Employee"
+        ],
+        "serviceIcon": "",
+        "modelNm": "Employee",
+        "modelDesc": "",
+        "id": "6ef96a3a-837b-40a5-9afe-a286e50e6ae4",
+        "firModelNm": "",
+        "category": ""
+      },
+      {
+        "owner": "",
+        "fqn": "vdap2.sample.sample.sampledata_chart_02",
+        "depth": [
+          "vdap2",
+          "sample",
+          "sample",
+          "sampledata_chart_02"
+        ],
+        "serviceIcon": "",
+        "modelNm": "sampledata_chart_02",
+        "modelDesc": null,
+        "id": "02ab816f-88e1-47df-bb87-926dcbcc20f0",
+        "firModelNm": "sampledata_chart_02",
+        "category": ""
+      }
+    ]
+  }
+}

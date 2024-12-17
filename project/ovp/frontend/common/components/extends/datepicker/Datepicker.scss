@@ -1,0 +1,252 @@
+.datepicker {
+  &.mx-datepicker {
+    width: 100%;
+
+    &.disabled {
+      .mx-input {
+        border: 1px solid $neutral-200;
+        background: $neutral-100;
+        color: $neutral-300;
+      }
+    }
+  }
+
+  .mx-input {
+    border: 1px solid $neutral-200;
+    color: $neutral-700;
+    box-shadow: none;
+
+    &::placeholder {
+      color: $neutral-400;
+    }
+
+    &:hover:not(:disabled) {
+      background: $neutral-100;
+      border: 1px solid $neutral-200;
+    }
+
+    &:focus:not(:disabled) {
+      background: $neutral-0;
+      border: 1px solid $secondary-500;
+      box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
+    }
+  }
+
+  .mx-icon-calendar {
+    color: $neutral-500;
+  }
+}
+
+// datepicker popup 스타일
+.mx-datepicker-main.mx-datepicker-popup {
+  @include font-family('pretendard');
+  @include box-shadow('md');
+  @include z-index('alert');
+
+  margin-top: $spacing-6;
+
+  .mx-btn-current-year,
+  .mx-btn-current-month,
+  .mx-calendar-header-label {
+    font-weight: 600;
+  }
+
+  .mx-table-year,
+  .mx-table-month {
+    border: none;
+
+    th, td {
+      text-align: center;
+      border: none;
+    }
+  }
+
+  .mx-calendar-header-label {
+    color: $neutral-500;
+    height: 28px;
+
+    .mx-btn-text {
+      padding: 0;
+      color: $neutral-500;
+
+      &:hover {
+        color: $neutral-500;
+        text-decoration: underline;
+      }
+
+      &:not(:first-child) {
+        margin-left: $spacing-4;
+      }
+    }
+  }
+
+  .mx-btn-icon {
+    &-double-left,
+    &-double-right,
+    &-left,
+    &-right {
+      @include flex;
+
+      height: 28px;
+      width: 28px;
+      margin-top: 3px;
+
+      &:hover:not(:disabled) {
+        background: $neutral-100;
+      }
+
+      &:active:not(:disabled) {
+        background: $neutral-300;
+      }
+
+      & > i {
+        width: 100%;
+        color: $neutral-500;
+      }
+    }
+  }
+
+  .mx-icon-double-left {
+    &::before {
+      left: 9px;
+    }
+
+    &::after {
+      left: -6px;
+    }
+  }
+
+  .mx-icon-double-right {
+    &::before {
+      left: 6px;
+    }
+
+    &::after {
+      left: -9px;
+    }
+  }
+
+  .mx-icon-left::before {
+    left: 7px;
+  }
+
+  .mx-icon-right::before {
+    left: 4px;
+  }
+
+  .mx-table-date {
+    border: none;
+
+    th {
+      border: none;
+      text-align: center;
+      font-weight: 700;
+      background: $neutral-0;
+      color: $neutral-500;
+    }
+
+    td {
+      border: none;
+      text-align: center;
+    }
+
+    .cell.not-current-month {
+      color: $neutral-200;
+
+      &:hover {
+        background: $neutral-0;
+      }
+
+      &.active,
+      &.in-range {
+        background: $neutral-100;
+        color: $neutral-200;
+      }
+    }
+  }
+
+  .mx-calendar-content .cell {
+    color: $neutral-500;
+
+    &.today {
+      color: $secondary-500;
+    }
+
+    &:hover {
+      background: $neutral-100;
+    }
+
+    &.active {
+      background: $secondary-500;
+      color: $neutral-0;
+    }
+
+    &.in-range,
+    &.hover-in-range {
+      background: $secondary-100;
+      color: $secondary-700;
+    }
+
+    &.disabled {
+      background: $neutral-100;
+      color: $neutral-200;
+    }
+  }
+
+  .mx-datepicker-footer {
+    border-top: 1px solid $neutral-200;
+  }
+
+  .mx-datepicker-btn-confirm {
+    border-color: $secondary-500;
+    color: $secondary-500;
+
+    &:hover {
+      background: $secondary-100;
+      color: $secondary-500;
+      border-color: transparent;
+    }
+
+    &:active {
+      border-color: $secondary-500;
+    }
+  }
+
+  .mx-btn-text {
+    @include font-size('14');
+
+    color: $neutral-500;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+      color: $neutral-500;
+    }
+
+    &:active {
+      color: $neutral-700;
+    }
+  }
+
+  .mx-time-content {
+    height: 230px;
+  }
+
+  .mx-time-column .mx-time-item {
+    color: $neutral-500;
+
+    &:hover {
+      background: $neutral-100;
+    }
+
+    &.active {
+      color: $secondary-500;
+      font-weight: 400;
+    }
+
+    &.disabled {
+      background: $neutral-100;
+      color: $neutral-200;
+    }
+  }
+}

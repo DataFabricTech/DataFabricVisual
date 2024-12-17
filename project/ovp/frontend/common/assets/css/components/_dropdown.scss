@@ -1,0 +1,65 @@
+@mixin dropdown-size($font-size: null, $size: 32px, $icon-size: 18px, $padding-right: $spacing-8) {
+  .dropdown-item {
+    height: $size;
+
+    &:not(:has(.button-neutral-ghost)) {
+      padding-right: $padding-right;
+    }
+
+    .dropdown-button {
+      > .svg-icon {
+        @include icon-size($icon-size);
+      }
+
+      .dropdown-text {
+        @if $font-size != null {
+          @include font-size($font-size);
+        }
+      }
+    }
+  }
+}
+
+.dropdown {
+  position: absolute;
+
+  @include box-shadow('md');
+  @include dropdown-size;
+
+  .dropdown-item {
+    font-weight: 400;
+
+    .checkbox-label::after {
+      top: 7px;
+    }
+
+    &-line {
+      border-top: 1px solid $neutral-100;
+    }
+  }
+
+  // Size
+  &-lg {
+    @include dropdown-size($size: 36px, $icon-size: sm, $padding-right: 10px);
+
+    .dropdown-item {
+      .checkbox-label::after {
+        top: 9px;
+      }
+    }
+  }
+
+  &-sm {
+    @include dropdown-size($font-size: '13', $size: 28px);
+
+    .dropdown-item {
+      .checkbox {
+        @extend .checkbox-sm;
+
+        .checkbox-label::after {
+          top: 6px;
+        }
+      }
+    }
+  }
+}

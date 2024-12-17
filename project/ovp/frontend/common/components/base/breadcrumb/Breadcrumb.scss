@@ -1,0 +1,74 @@
+.breadcrumb {
+  display: flex;
+  height: 24px;
+
+  &-list {
+    @include flex;
+
+    gap: $spacing-32;
+  }
+
+  &-item {
+    @include flex;
+
+    position: relative;
+    gap: $spacing-6;
+
+    .svg-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+    &:last-child {
+      .svg-icon {
+        @include icon-color($neutral-800);
+      }
+
+      .breadcrumb-text {
+        font-weight: 600;
+        color: $neutral-800;
+      }
+    }
+
+    &.is-breadcrumb-selected {
+      .svg-icon {
+        @include icon-color($neutral-800);
+      }
+
+      .breadcrumb-link {
+        color: $neutral-800;
+        text-decoration: underline;
+      }
+    }
+
+    &:not(:last-child)::after {
+      content: url("../../assets/images/icon/chevron-right-medium.svg");
+      position: absolute;
+      left: 100%;
+      top: -6px;
+      transform: scale(0.6);
+
+    }
+  }
+
+  &-link,
+  &-text {
+    font-size: 13px;
+    font-weight: 500;
+    color: $neutral-600;
+
+    &-link {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &.breadcrumb-slash {
+    .breadcrumb-item {
+      &:not(:last-child)::after {
+        content: url("../../assets/images/icon/slash.svg");
+      }
+    }
+  }
+}

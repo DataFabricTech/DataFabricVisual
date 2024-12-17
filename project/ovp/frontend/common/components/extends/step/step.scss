@@ -1,0 +1,142 @@
+.step {
+  @include flex($vertical: flex-start);
+
+  min-width: 250px;
+  width: 100%;
+
+  &-item {
+    @include flex($direction: column);
+
+    gap: $spacing-4;
+    position: relative;
+    flex: 1;
+    padding: 0 $spacing-8;
+
+    &:not(:last-child)::before {
+      content: "";
+      position: absolute;
+      top: 15px;
+      left: calc(50% + 24px);
+      right: calc(-50% + 24px);
+      flex: auto;
+      display: block;
+      border-top: 2px solid $neutral-200;
+    }
+
+    &.is-step-item-complete {
+      .step-button {
+        background: $primary-500;
+        border-color: transparent;
+      }
+
+      .step-number {
+        display: none;
+      }
+
+      .step-icon {
+        display: block;
+      }
+
+      &:not(:last-child)::before {
+        border-color: $primary-500;
+      }
+
+      .step-title {
+        color: $primary-500;
+      }
+    }
+
+    &.is-step-item-selected {
+      .step-button {
+        border-color: $primary-500;
+        box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
+      }
+
+      .step-number {
+        color: $primary-500;
+      }
+
+      .step-title {
+        color: $primary-500;
+      }
+    }
+  }
+
+  &-button {
+    @include flex;
+
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: $border-radius-round;
+    background: $neutral-0;
+    border: 2px solid $neutral-200;
+  }
+
+  &-number {
+    @include font-size('13');
+
+    color: $neutral-300;
+    font-weight: 700;
+  }
+
+  &-icon {
+    @include icon-size('md');
+    @include icon-color($neutral-0);
+
+    display: none;
+  }
+
+  &-title {
+    @include font-size('13');
+
+    width: 100%;
+    font-weight: 600;
+    color: $neutral-400;
+    text-align: center;
+  }
+
+  &-vertical {
+    flex-direction: column;
+    min-width: auto;
+    height: 100%;
+
+    .step-item {
+      align-items: flex-start;
+      gap: $spacing-8;
+      flex-direction: row;
+
+      &:not(:last-child)::before {
+        @include z-index('hidden');
+
+        top: auto;
+        left: 23px;
+        right: auto;
+        width: 2px;
+        height: 100%;
+        border-top: none;
+        border-left: 2px solid $neutral-200;
+      }
+
+      &:last-child {
+        flex-grow: 0;
+      }
+
+      &.is-step-item-complete:not(:last-child)::before {
+        border-color: $primary-500;
+      }
+    }
+
+    .step-title {
+      margin-top: $spacing-6;
+    }
+  }
+
+  &-dotted {
+    .step-item:not(:last-child)::before {
+      border-style: dotted;
+    }
+  }
+}
+
+

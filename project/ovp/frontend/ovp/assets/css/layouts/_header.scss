@@ -1,0 +1,42 @@
+#header {
+  @include z-index('header');
+  @include box-shadow('md');
+
+  position: fixed;
+  width: 100%;
+  height: 50px;
+  padding: $spacing-8 $spacing-16;
+  background: $neutral-0;
+
+  .search-input {
+    width: 330px;
+    margin-left: $spacing-24;
+  }
+}
+
+.logo-img {
+  width: 208px;
+  height: 26px;
+}
+
+.profile {
+  @include flex($gap: $spacing-8);
+
+  &-avatar {
+    @include flex;
+
+    width: 32px;
+    height: 32px;
+    border-radius: $border-radius-round;
+    background: $primary-500;
+    color: $neutral-0;
+  }
+
+  &-img {
+    display: flex;
+    flex: 1 1 100%;
+    width: 100%;
+    height: 100%;
+    border-radius: $border-radius-round;
+  }
+}

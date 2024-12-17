@@ -1,0 +1,236 @@
+$input-classes: checkbox, radio;
+$input-field-classes: text-input, textarea;
+
+@each $input in $input-classes {
+  .#{$input} {
+    position: relative;
+
+    @include flex($vertical: flex-start);
+
+    &-input {
+      @include hidden-input;
+
+      &:checked {
+        & + label {
+          &::before {
+            box-shadow: none;
+            background-color: $primary-500;
+            border-color: $primary-500;
+          }
+
+          &:hover::before {
+            background-color: $primary-700;
+            border-color: $primary-700;
+          }
+
+          &:active::before {
+            background-color: $primary-900;
+            border-color: $primary-900;
+          }
+        }
+      }
+    }
+
+    &-label {
+      @include flex($horizontal: flex-start);
+
+      font-weight: 600;
+      color: $neutral-800;
+      white-space: nowrap;
+      cursor: pointer;
+
+      &:hover::before {
+        border-color: $neutral-400;
+      }
+
+      &:active::before {
+        border-color: $primary-500;
+        background-color: $primary-100;
+      }
+
+      &::before,
+      &::after {
+        box-sizing: border-box;
+      }
+
+      &::before {
+        @include box-shadow('sm');
+
+        content: "";
+        flex-shrink: 0;
+        display: block;
+        width: 18px;
+        height: 18px;
+        margin-right: $spacing-8;
+        background-color: $neutral-0;
+        border: 1px solid $neutral-200;
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        background: none;
+        transform-origin: bottom right;
+      }
+
+      &:not(:has(.checkbox-subtext)) {
+        .checkbox-text {
+          @include ellipsis;
+        }
+      }
+
+      &:has(.hidden-text) {
+        &::before {
+          margin-right: 0;
+        }
+      }
+    }
+
+    &-text {
+      font-weight: 600;
+      color: $neutral-800;
+
+    }
+
+    &-subtext {
+      margin-left: $spacing-2;
+      font-weight: 400;
+      color: $neutral-500;
+    }
+
+    &-sm {
+      .#{$input} {
+        &-label {
+          @include font-size('12');
+
+          &::before {
+            margin-right: $spacing-6;
+            width: 16px;
+            height: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  .#{$input}-button {
+    @include flex;
+
+    position: relative;
+    background-color: $neutral-0;
+
+    &-input {
+      @include hidden-input;
+
+      &:checked {
+        & + label {
+          background-color: $primary-500;
+          color: $neutral-0;
+          border-color: $primary-500;
+
+          .svg-icon {
+            @include icon-color($neutral-0);
+          }
+        }
+      }
+
+      &:disabled + label {
+        background-color: $neutral-100;
+      }
+    }
+
+    &-label {
+      @include flex($horizontal: flex-start);
+      @include font-size('13');
+
+      gap: $spacing-2;
+      font-weight: 600;
+      height: 32px;
+      padding: 0 $spacing-12;
+      color: $neutral-700;
+      cursor: pointer;
+      border: 1px solid $neutral-200;
+      border-radius: $border-radius-4;
+
+      &:hover {
+        background-color: $neutral-100;
+      }
+    }
+
+    .svg-icon {
+      @include icon-size('sm');
+    }
+
+    &-sm {
+      .#{$input}-button {
+        &-label {
+          @include font-size('12');
+
+          height: 28px;
+          padding: 0 $spacing-8;
+
+          .svg-icon {
+            @include icon-size(18px);
+          }
+        }
+      }
+    }
+
+    .count-text {
+      &::after {
+        content: "";
+        position: relative;
+        display: inline-block;
+        background: $neutral-200;
+        width: 1px;
+        height: 10px;
+        margin: 0 $spacing-8;
+      }
+    }
+  }
+}
+
+@each $field in $input-field-classes {
+  .#{$field} {
+    @include box-shadow('sm');
+
+    width: 100%;
+    border-radius: $border-radius-4;
+    border: 1px solid $neutral-200;
+    color: $neutral-900;
+
+    &::placeholder {
+      color: $neutral-400;
+    }
+
+    &:hover {
+      background: $neutral-100;
+    }
+
+    &:focus:not(:invalid),
+    &:active:not(:invalid) {
+      background: $neutral-0;
+      border: 1px solid $secondary-500;
+      box-shadow: 0 0 0 2px $neutral-0, 0 0 0 4px #DDF0F3;
+    }
+
+    &[disabled],
+    &[disabled]:hover,
+    &[disabled]:focus {
+      color: $neutral-300;
+      background: $neutral-100;
+      box-shadow: none;
+      border: none;
+      cursor: not-allowed;
+
+      &::placeholder {
+        color: $neutral-300;
+      }
+    }
+
+    // 값 오류 스타일 (추후 수정 가능성)
+    &:invalid {
+      border: 1px solid $error-500;
+    }
+  }
+}

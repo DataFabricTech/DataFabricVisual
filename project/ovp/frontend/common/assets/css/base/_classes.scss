@@ -1,0 +1,62 @@
+// h-group & v-group
+$directions: (
+        "vertical": v,
+        "hozizontal": h
+);
+$gaps: (0, 4, 8, 12, 16, 20, 24, 32);
+
+@each $attr, $direction in $directions {
+  @each $gap in $gaps {
+    .#{$direction}-group#{if($gap != 0, "-#{$gap}", "")} {
+      @if $attr == "vertical" {
+        @include flex($vertical: flex-start, $direction: column);
+      } @else {
+        @include flex($horizontal: flex-start);
+      }
+
+      @if $gap != 0 {
+        gap: #{$gap}px;
+      }
+    }
+  }
+}
+
+
+
+// color themes - 아이콘 / 텍스트 주요 컬러 테마
+$theme-colors: (
+        "neutral": #{$neutral-400},
+        "primary": #{$primary-500},
+        "secondary": #{$secondary-500},
+        "info": #{$info-500},
+        "success": #{$success-500},
+        "warning": #{$warning-500},
+        "error": #{$error-500},
+);
+
+@each $attr, $color in $theme-colors {
+  .svg-icon-#{$attr} {
+    @include icon-color($color);
+  }
+
+  .color-#{$attr} {
+    color: $color;
+  }
+}
+
+.ellipsis {
+  @include ellipsis;
+}
+
+.ellipsis-multi {
+  @include ellipsis-multi;
+}
+
+.hidden-text {
+  @include hidden-text;
+}
+
+.caption-out {
+  @include caption-out;
+}
+

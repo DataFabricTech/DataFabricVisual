@@ -1,0 +1,112 @@
+//----------------------------
+// .l-split 안
+// 작업 패널, 작업 페이지 유형 ui
+//----------------------------
+
+.work-list,
+.work-page {
+  .l-top-bar {
+    border-bottom: 1px solid $neutral-200;
+
+    .service-title {
+      @extend .editable-group-title;
+    }
+  }
+
+  .title {
+    @include font-size('15');
+
+    margin-top: 0;
+    font-weight: 600;
+    color: $neutral-600;
+  }
+}
+
+// 작업 패널
+.work-list {
+  width: 310px;
+  flex: 0 0 310px;
+  border-right: 1px solid $neutral-200;
+
+  & > .menu,
+  & > .menu-data,
+  & > .no-result {
+    overflow-y: auto;
+    height: calc(100% - 49px);
+  }
+
+  &-contents {
+    overflow-y: auto;
+    height: calc(100% - 49px);
+
+    &:has(.tree) {
+      padding-top: $spacing-12;
+      padding-left: $spacing-12;
+    }
+
+    .tree-item {
+      padding-right: $spacing-12;
+    }
+  }
+
+  .tab-line {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tab-contents {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 46px);
+    padding: $spacing-8 0 0 0;
+  }
+}
+
+.section-contents:has(.l-split + .l-split) {
+  .work-list > .menu {
+    overflow-y: visible;
+  }
+}
+
+//작업 페이지
+.work-page {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+
+  .code-box {
+    overflow: auto;
+    flex-grow: 1;
+  }
+
+  .l-top-bar {
+    .text-input {
+      width: 400px;
+    }
+  }
+
+  .editable-group-title {
+    @include ellipsis;
+  }
+}
+
+//작업 페이지 안 컨텐츠
+.work-contents {
+  @include flex($direction: column, $vertical: null, $horizontal: null, $gap: $spacing-32);
+
+  overflow: auto;
+  height: 100%;
+  padding: $spacing-16;
+
+  .l-top-bar {
+    @include flex($vertical: flex-start, $direction: column, $gap: $spacing-8);
+
+    padding: 0;
+    border: 0;
+  }
+
+  .l-resource-box {
+    height: calc(100% - 70px);
+  }
+}

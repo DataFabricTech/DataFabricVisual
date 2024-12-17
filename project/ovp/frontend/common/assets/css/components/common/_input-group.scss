@@ -1,0 +1,77 @@
+$input-group-classes: text-input-group, search-input;
+
+@each $group in $input-group-classes {
+  .#{$group} {
+    position: relative;
+
+    .text-input-icon {
+      @include icon-color($neutral-600);
+
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .#{$group}-action-button {
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(calc(-50% + 10px));
+    }
+
+    label.hidden-text ~ .button,
+    &:not(:has(label)) .button {
+      transform: translateY(-50%);
+    }
+
+    &:has(.text-input-icon) {
+      .text-input {
+        padding-left: $spacing-32;
+
+        &:placeholder-shown + .text-input-icon {
+          @include icon-color($neutral-400);
+        }
+      }
+    }
+
+    &:has(.#{$group}-action-button, .svg-icon) {
+      .text-input {
+        padding-right: $spacing-32;
+      }
+    }
+
+    & ~ .notification {
+      margin-top: $spacing-4;
+    }
+
+
+    &-lg {
+      .text-input {
+        @include text-input-size($size: 36px, $right-padding: $spacing-8, $left-padding: 10px, $input-icon-size: sm);
+      }
+    }
+
+    &-sm {
+      .text-input {
+        @include text-input-size($font-size: '13', $size: 28px, $right-padding: $spacing-6, $left-padding: $spacing-8);
+      }
+    }
+  }
+
+  .text-input {
+    &[disabled],
+    &[disabled]:hover,
+    &[disabled]:focus {
+      & ~ .#{$group}-action-button {
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+.text-input-group {
+  display: flex;
+  width: 100%;
+  gap: $spacing-8;
+}

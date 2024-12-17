@@ -1,0 +1,106 @@
+@mixin menu-size($font-size: '13', $size: 36px, $icon-size: 18px) {
+  .menu-item {
+    height: $size;
+
+    .svg-icon {
+      @include icon-size($icon-size);
+    }
+
+    .menu-text {
+      @include font-size($font-size);
+    }
+
+    .menu-subtext {
+      @include font-size($font-size);
+    }
+  }
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+  height: fit-content;
+  box-shadow: none;
+  border-color: $neutral-200;
+
+  @include menu-size;
+
+  &-button-group {
+    @include flex;
+
+  }
+
+  &-item {
+    .checkbox-label::after {
+      top: 9px;
+    }
+
+    .checkbox-sm {
+      .checkbox-label::after {
+        top: 11px;
+      }
+    }
+  }
+
+  &-head {
+    flex-shrink: 0;
+    padding: $spacing-8;
+    border-bottom: 1px solid $neutral-200;
+  }
+
+  &-text {
+    font-weight: 600;
+  }
+
+  &-subtext {
+    margin-left: $spacing-2;
+    font-weight: 400;
+    color: $neutral-500;
+  }
+
+  &-lg {
+    @include menu-size($font-size: '14', $size: 40px, $icon-size: sm);
+
+    .menu-item {
+      .checkbox-label::after {
+        top: 12px;
+      }
+    }
+  }
+}
+
+.menu-search {
+  position: absolute;
+  min-width: 200px;
+
+  .menu-list {
+    max-height: 165px;
+    overflow-y: auto;
+
+    .tree {
+      padding: 0 $spacing-8;
+
+      .guide-line::before {
+        left: -0.8px;
+      }
+
+      .node-child .tree-item-node-parent .tree-item-node:not(:last-child)::before {
+        left: -0.8px;
+      }
+    }
+  }
+
+  .menu-foot {
+    display: flex;
+    align-items: center;
+    padding: $spacing-8 $spacing-12;
+
+    &-group {
+      display: flex;
+      gap: $spacing-8;
+      margin-left: auto;
+    }
+  }
+}
+
+

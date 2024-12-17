@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: prod
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  primary:
+    datasource:
+      hikari:
+        jdbc-url: jdbc:postgresql://postgres-svc:5432/postgres?currentSchema=ovp
+        username: postgres
+        password: postgres

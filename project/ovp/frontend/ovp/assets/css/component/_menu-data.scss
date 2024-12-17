@@ -1,0 +1,49 @@
+.menu-data {
+  border: none;
+
+  .search-input {
+    flex-grow: 1;
+  }
+
+  & > .menu-head {
+    border-bottom: none;
+  }
+
+
+  & > .menu-list {
+    overflow-y: auto;
+    flex-grow: 1;
+    padding: $spacing-2 $spacing-8;
+
+    .menu-item {
+      position: relative;
+      background: #F7F9FC;
+      border-radius: $border-radius-4;
+      border: 1px solid $neutral-200;
+
+      &:not(:first-child) {
+        margin-top: $spacing-4;
+      }
+
+      .checkbox {
+        width: auto;
+        flex: 0 0 auto;
+      }
+
+      &.is-menu-item-selected {
+        border: 1px solid $primary-500;
+        background-color: $primary-100;
+      }
+    }
+  }
+}
+
+.accordion-list {
+  .menu-data {
+    background: transparent;
+  }
+
+  .menu-list {
+    padding: 0;
+  }
+}

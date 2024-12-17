@@ -1,0 +1,32 @@
+// common
+@import "../../../common/assets/css/base";
+
+// layouts
+@import "./layouts/common";
+@import "./layouts/header";
+@import "./layouts/sidebar";
+@import "./layouts/main";
+@import "./layouts/section";
+@import "./layouts/no-result";
+
+// component
+@import "./component/resource-box";
+@import "./component/menu-data";
+@import "./component/filters";
+@import "./component/type-img";
+
+
+// pages
+@import "pages/common/graph";
+@import "pages/common/work";
+@import "./pages/submit-form";
+@import "./pages/governance";
+@import "assets/css/pages/manage";
+@import "./pages/search";
+@import "./pages/search-detail";
+@import "./pages/creation";
+@import "./pages/main";
+@import "./pages/my-page";
+
+// utility 스타일 우선순위 조정
+@import "../../../common/assets/css/utility";
