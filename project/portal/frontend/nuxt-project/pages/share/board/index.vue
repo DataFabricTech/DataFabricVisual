@@ -22,7 +22,7 @@
             <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getShareList" />
           </div>
           <hr><br>
-          <ul class="card-list">
+          <ul class="card-list" v-if="shareList && shareList.length > 0">
             <li class="card-box" v-for="(item, index) in shareList" :key="index">
               <NuxtLink :to="'/share/board/detail?id=' + item.id">
                 <div class="inner-thumb">
@@ -45,7 +45,7 @@
               </NuxtLink>
             </li>
           </ul>
-          <div v-if="!shareList">
+          <div v-else>
             <p class="nodata">활용 사례 게시글이 존재하지 않습니다.</p>
           </div>
 

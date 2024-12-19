@@ -12,7 +12,7 @@
           <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getShareList" />
         </div>
         <hr>
-        <ul class="card-list">
+        <ul class="card-list" v-if="shareList && shareList.length > 0">
           <li v-for="(item, index) in shareList" :key="index" class="card-box">
             <div class="actions">
               <div class="mu-checkbox">
@@ -49,10 +49,10 @@
               </div>
             </NuxtLink>
           </li>
-          <li v-if="shareList.length == 0">
-            <p class="nodata">활용 사례 게시글이 존재하지 않습니다.</p>
-          </li>
         </ul>
+        <div v-else>
+          <p class="nodata">활용 사례 게시글이 존재하지 않습니다.</p>
+        </div>
 
         <pagination :paging="pagingObj" @onClickPage="onClickPage" />
       </div>

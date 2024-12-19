@@ -76,9 +76,9 @@
               </tbody>
             </table>
           </div>
-          <div class="mu-item-group">
-            <p class="bul-ast">동의어 적용은 갱신 주기에 따라 일괄 적용됩니다. (최대 1일, Airflow 스케쥴 적용)</p>
-          </div>
+          <!-- <div class="mu-item-group">
+            <p class="bul-ast">동의어 안내 문구 </p>
+          </div> -->
 
           <!-- 동의어 세트수정 모달 -->
           <synonym-modify-set-modal

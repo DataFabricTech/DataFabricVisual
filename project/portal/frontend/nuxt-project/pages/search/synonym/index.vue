@@ -55,9 +55,9 @@
               </tbody>
             </table>
           </div>
-          <div class="mu-item-group" style="padding-top: 10px;">
-            <p class="bul-ast">동의어 적용은 갱신 주기에 따라 일괄 적용됩니다. (최대 1일, Airflow 스케쥴 적용)</p>
-          </div>
+          <!-- <div class="mu-item-group" style="padding-top: 10px;">
+            <p class="bul-ast">동의어 안내 문구</p>
+          </div> -->
 
           <!-- 동의어 추가 모달 -->
           <synonym-add-modal

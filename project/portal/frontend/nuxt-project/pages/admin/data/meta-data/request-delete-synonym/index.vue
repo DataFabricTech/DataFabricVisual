@@ -239,7 +239,6 @@ const getDeleteRequestList = async (page = 1, status) => {
   await $ofetch(`/api/synonym/deleteRequestList?status=${req_status.value}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}&isAdmin=${true}`)
     .then((res) => {
       if (res && !res.errorMessage) {
-
         if (res.data && res.data.length > 0) {
             pagingObj.value = {
             ...pagingObj.value,
@@ -278,6 +277,14 @@ const getDeleteRequestList = async (page = 1, status) => {
           }
 
           pagingSynonymDeleteRequestList.value = list;
+        } else {
+          pagingObj.value = {
+            ...pagingObj.value,
+            total: 0,
+            currentPage: 1,
+          }
+          synonymDeleteRequestList.value = [];
+          pagingSynonymDeleteRequestList.value = [];
         }
       } else {
         synonymDeleteRequestList.value = [];
