@@ -57,7 +57,7 @@ public class MenuService {
             List childMenu = menuMapper.getMenu((String) map.get("menu_id"));
 
             allMenu.put("title", parentMenu.get("menu_name"));
-            allMenu.put("authority", map.get("menu_authority"));
+            allMenu.put("authority", map.get("menu_role_name"));
             allMenu.put("menu_visible", parentMenu.get("menu_visible"));
             allMenu.put("child", childMenu);
 
