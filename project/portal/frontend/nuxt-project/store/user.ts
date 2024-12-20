@@ -102,7 +102,7 @@ export const useUserStore = defineStore('userStore', () => {
   // 메뉴 사용 이력 insert
   const insertMenuHistory = async (payload: any) => {
     try {
-      const res = await $ofetch(`/api/menu/click?menuID=${payload}&userID=${_user.value.user_id}`)
+      const res = await $ofetch(`/api/menu/click?menuID=${payload}&userID=${_user.value.user_id}&deptID=${_user.value.dept_nm}`)
     } catch (e) {
       console.log(e)
     }

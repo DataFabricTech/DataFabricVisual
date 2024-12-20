@@ -89,8 +89,8 @@ public class MenuController {
 
     @ResponseJsonResult
     @GetMapping("/menu/click")
-    public Object clickMenu(@RequestParam("menuID") String menuID, @RequestParam("userID") String userID) throws Exception {
-        return menuService.clickMenu(userID, menuID);
+    public Object clickMenu(@RequestParam("menuID") String menuID, @RequestParam("userID") String userID, @RequestParam("deptID") String deptID) throws Exception {
+        return menuService.clickMenu(userID, menuID, deptID);
     }
 
     @ResponseJsonResult

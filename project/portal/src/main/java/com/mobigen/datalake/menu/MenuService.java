@@ -66,8 +66,8 @@ public class MenuService {
         return menu;
     }
 
-    public Object clickMenu(String userID, String menuID) throws Exception {
-        return menuMapper.clickMenu(userID, menuID);
+    public Object clickMenu(String userID, String menuID, String deptID) throws Exception {
+        return menuMapper.clickMenu(userID, menuID, deptID);
     }
 
     public List<Map> getMenuHistory() throws Exception {
