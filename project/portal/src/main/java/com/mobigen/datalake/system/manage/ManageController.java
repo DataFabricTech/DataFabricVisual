@@ -27,27 +27,27 @@ public class ManageController {
      * @return
      * @throws Exception
      */
-    @ResponseJsonResult
-    @PostMapping("/update")
-    @ResponseBody
-    public Object updateConfigInfo(@RequestBody Map<String, String> param, HttpServletRequest request) throws Exception {
-        return manageService.updateConfigInfo(param, request);
-    }
+    // @ResponseJsonResult
+    // @PostMapping("/update")
+    // @ResponseBody
+    // public Object updateConfigInfo(@RequestBody Map<String, String> param, HttpServletRequest request) throws Exception {
+    //     return manageService.updateConfigInfo(param, request);
+    // }
 
     /**
      * config 목록 조회
      * @return
      * @throws Exception
      */
-    @ResponseJsonResult
-    @GetMapping("/list")
-    public Object getConfigList() throws Exception {
-        List<Map> list = manageService.getConfigList(null);
-        Map resultMap = new HashMap<>();
-        resultMap.put("list", list);        
+    // @ResponseJsonResult
+    // @GetMapping("/list")
+    // public Object getConfigList() throws Exception {
+    //     List<Map> list = manageService.getConfigList(null);
+    //     Map resultMap = new HashMap<>();
+    //     resultMap.put("list", list);        
 
-        return resultMap;
-    }
+    //     return resultMap;
+    // }
 
     /**
      * 샘플데이터 카운트수 조회
@@ -57,13 +57,23 @@ public class ManageController {
     @ResponseJsonResult
     @GetMapping("/sampleDataCount")
     public Object getSampleDataCount() throws Exception {
-        Map param = new HashMap<>();
-        param.put("config_name", "sampleDataCount");
-        List<Map> list = manageService.getConfigList(param);
-        if(list.size() > 0){
-            return list.get(0);
-        }else{
-            return new HashMap<>();
-        }
+        // <table> t/b 미사용으로 아래 구문으로 대체체
+        //Map param = new HashMap<>();
+        //param.put("config_name", "sampleDataCount");
+        //List<Map> list = manageService.getConfigList(param);
+        // if(list.size() > 0){
+        //     return list.get(0);
+        // }else{
+        //     return new HashMap<>();
+        // }
+
+        // 데이터가 없을 경우 빈 HashMap을 반환
+        Map<String, Object> configMap = new HashMap<>();
+        configMap.put("id", 1);
+        configMap.put("config_name", "sampleDataCount");
+        configMap.put("config_value", 10);
+        configMap.put("config_desc", "샘플데이터 조회 개수");
+        configMap.put("use_yn", true);
+        return configMap;
     }
 }

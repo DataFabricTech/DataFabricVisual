@@ -75,37 +75,6 @@
           </div>
         </div>
       </div>
-      <div class="main-system">
-        <div class="inner-column">
-          <div class="mu-heading">
-            <h4>카탈로그 설정 관리</h4>
-          </div>
-          <!-- recommend-keyword -->
-          <dl class="recommend-keyword">
-            <template v-for="(config, index) in configList" :key="index">
-              <dt>{{config.config_name}}({{ config.config_desc }})</dt>
-              <dd>
-                <div class="mu-item-group">
-                  <input
-                    type="number"
-                    v-model="config.config_value"
-                    class="mu-input"
-                    placeholder="숫자만 입력해 주세요. (기본값 : 5)"
-                  />
-                  <button type="button" class="mu-btn mu-btn-primary" @click="updateConfigInfo(config)">
-                    <div class="mu-icon-svg add"></div>
-                    <span>수정</span>
-                  </button>
-                </div>
-              </dd>
-            </template>
-          </dl>
-          <!-- //recommend-keyword -->
-        </div>
-        <div class="inner-column">
-
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -132,12 +101,10 @@ const recommendSearchList = ref([
 
 const inputTagName = ref('');
 const tagList = ref([]);
-const configList = ref([]);
 
 onMounted(() => {
   getRecommendList();
   searchTagList();
-  getConfigList();
 })
 
 const getRecommendList = async () => {
@@ -333,49 +300,6 @@ const deleteTaginfo = async (tagName) => {
   } catch (error) {
     console.error(error);
     errorAlert('요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.');
-  }
-}
-
-//설정 조회
-const getConfigList = async () =>{
-  try {
-
-    await $ofetch(`/api/admin/system/manage/list`)
-    .then((res) => {
-      if (res && !res.errorMessage) {
-        configList.value = res.data.list;
-      }
-    })
-    .catch((err) => {
-      console.log(err)
-    });
-
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-const updateConfigInfo = async (config) =>{
-  // 없는 경우기본값 5 설정
-  if (config && config.config_value == "") config.config_value = 5
-  // 음수 입력할 경우 기본값 5 설정
-  if (config.config_value < 0) config.config_value = 5
-  try{
-
-    await $ofetch(`/api/admin/system/manage/update`, {
-        method: "POST",
-        body: config,
-    }).then((res) => {
-        if (!res || res.isFailed) {
-          const msg = '요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.';
-          errorAlert(msg);
-        }else {
-          getConfigList();
-        }
-    });
-
-  } catch (error) {
-    console.log(error);
   }
 }
 </script>
