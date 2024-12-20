@@ -51,8 +51,9 @@ public class MainPageService {
         if (isSumExternal) {
             // 외부데이터 전체 개수 합산
             int lakeCount = mainPageMapper.getTotalDataCount();
-            int exCount = mainPageMapper.getExternalTotalCount();
-            dataCountMap.put("totalDataCount", lakeCount + exCount);
+            //int exCount = mainPageMapper.getExternalTotalCount();
+            //dataCountMap.put("totalDataCount", lakeCount + exCount);
+            dataCountMap.put("totalDataCount", lakeCount);
         } else {
             dataCountMap.put("totalDataCount", mainPageMapper.getTotalDataCount());
         }

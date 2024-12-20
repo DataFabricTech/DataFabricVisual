@@ -20,35 +20,6 @@ import java.util.Map;
 public class ManageController {
     private final ManageService manageService;
   
-
-    /**
-     * config 수정
-     * @param param
-     * @return
-     * @throws Exception
-     */
-    // @ResponseJsonResult
-    // @PostMapping("/update")
-    // @ResponseBody
-    // public Object updateConfigInfo(@RequestBody Map<String, String> param, HttpServletRequest request) throws Exception {
-    //     return manageService.updateConfigInfo(param, request);
-    // }
-
-    /**
-     * config 목록 조회
-     * @return
-     * @throws Exception
-     */
-    // @ResponseJsonResult
-    // @GetMapping("/list")
-    // public Object getConfigList() throws Exception {
-    //     List<Map> list = manageService.getConfigList(null);
-    //     Map resultMap = new HashMap<>();
-    //     resultMap.put("list", list);        
-
-    //     return resultMap;
-    // }
-
     /**
      * 샘플데이터 카운트수 조회
      * @return
@@ -57,17 +28,6 @@ public class ManageController {
     @ResponseJsonResult
     @GetMapping("/sampleDataCount")
     public Object getSampleDataCount() throws Exception {
-        // <table> t/b 미사용으로 아래 구문으로 대체체
-        //Map param = new HashMap<>();
-        //param.put("config_name", "sampleDataCount");
-        //List<Map> list = manageService.getConfigList(param);
-        // if(list.size() > 0){
-        //     return list.get(0);
-        // }else{
-        //     return new HashMap<>();
-        // }
-
-        // 데이터가 없을 경우 빈 HashMap을 반환
         Map<String, Object> configMap = new HashMap<>();
         configMap.put("id", 1);
         configMap.put("config_name", "sampleDataCount");

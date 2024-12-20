@@ -17,20 +17,5 @@ import java.util.Map;
 public class ManageService {
   private final ManageMapper manageMapper;    
   
-  /**
-   * config 수정
-   */
-  // public Object updateConfigInfo(Map<String, String> param, HttpServletRequest request) throws Exception {    
-  //   Object result = manageMapper.updateConfigInfo(param);
-  //   return result;
-  // }
-
-  /**
-   * config 목록 조회
-   */
-  // public List<Map> getConfigList(Map<String, String> param) throws Exception {
-  //   List<Map> list = (List<Map>) manageMapper.getConfigList(param);
-  //   return list;
-  // }
  
 }
