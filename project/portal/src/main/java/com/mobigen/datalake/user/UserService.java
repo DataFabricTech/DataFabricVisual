@@ -299,6 +299,13 @@ public class UserService {
         param.put("username", userInfo.get("username").toString());
         param.put("user_ip_addr", IpAddressUtil.getClientIp(request));
 
+        //TO-DO : 부서코드가 user 정보에 없어서 수정 필요
+        param.put("dept_id", "-");
+        param.put("dept_name", userInfo.get("dept_nm").toString());
+        
+        //TO-DO : 로그인 타입 (0: 로그인 화면 1: SSO), SSO시 변경 필요요 
+        param.put("login_type", "0");
+
         return userMapper.insertLoginHistory(param);
     }
 
