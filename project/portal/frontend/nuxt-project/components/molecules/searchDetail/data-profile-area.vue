@@ -164,7 +164,7 @@ const table = computed(() =>
 );
 
 const column = computed(() => {
-  console.log(ObjectUtils.getPropertyValue(props.dataProfile, "column", []))
+  //console.log(ObjectUtils.getPropertyValue(props.dataProfile, "column", []))
   return ObjectUtils.getPropertyValue(props.dataProfile, "column", []);
 });
 

@@ -80,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
+import { confirmAlert, errorAlert, successAlert } from "@functional/alert/alert-default";
 import { onMounted, ref } from 'vue';
 
 definePageMeta({
