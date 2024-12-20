@@ -328,8 +328,7 @@ public class UserService {
             params.put("reg_password", encPassword);
 
             int insertResult = userMapper.registerUser(params);
-            int insertMasterResult = userMapper.registerUserMaster(params);
-            if (insertResult > 0 && insertMasterResult > 0) {
+            if (insertResult > 0) {
                 result.put("register_result", "Y");
             } else {
                 result.put("register_result", "N");

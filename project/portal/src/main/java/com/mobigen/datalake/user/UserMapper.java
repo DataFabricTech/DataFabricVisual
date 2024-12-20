@@ -16,5 +16,4 @@ public interface UserMapper {
     List<Map> getAllDepartments(String word) throws Exception;
     int checkDupUserId(String user_id) throws Exception;
     int registerUser(Map<String, String> params) throws Exception;
-    int registerUserMaster(Map<String, String> params) throws Exception;
 }
