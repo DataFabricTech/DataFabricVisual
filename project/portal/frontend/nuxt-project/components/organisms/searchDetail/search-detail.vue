@@ -130,6 +130,8 @@
         @onCloseModal="onToggleEliminateModal"
       />
     </div>
+
+    <scroll-to-top />
   </div>
 </template>
 
@@ -152,6 +154,7 @@ import RelatedData from "@molecules/searchDetail/related-data";
 import UserReviewArea from "@molecules/searchDetail/user-review-area";
 import DataRecommendStatus from "@molecules/searchDetail/data-recommend-status";
 import EliminateModal from "@organisms/searchDetail/eliminatePopup";
+import ScrollToTop from "@functional/scroll/scroll-to-top";
 import { useUserStore } from "~/store/user.ts";
 import { useCategoryStore } from "~/store/category.ts";
 import {useConstants} from "@composables/useConstants";
