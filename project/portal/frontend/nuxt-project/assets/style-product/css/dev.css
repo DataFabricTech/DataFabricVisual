@@ -401,3 +401,33 @@ pre code {
 .login-content .login-box .mu-btn-primary {
   margin: 50px 0 30px 0;
 }
+
+/* 기본탭-2 */
+.mu-tab-box-2 {margin-bottom:20px; background-color: white;; padding: 10px; border-radius: 30px; }
+.mu-tab-box-2 .mu-tab {display:flex; flex-wrap:wrap; justify-content: center;}
+.mu-tab-box-2 .mu-tab li {flex:1; position:relative; height:48px; margin: 0 5px;}
+.mu-tab-box-2 .mu-tab li a {display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; border-radius:10px; background-color:#f0f1f5; font-size:15px; line-height:1; color:#1f1f1f;}
+.mu-tab-box-2 .mu-tab li.active a {background-color:#151721; color:#fff;}
+.mu-tab-box-2 .mu-tab li.active a span {color:#eee;}
+
+/* nav가 고정된 상태일 때의 스타일 */
+.mu-tab-box-2.fixed-mu-tab-box-2 {
+  position: fixed;
+  top: 0;
+  width: 1400px;
+  z-index: 1000;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* nav가 고정된 상태일 때의 스타일 */
+.mu-tab-box-2.fixed-mu-tab-box-3 {
+  position: fixed;
+  top: 0;
+  width: 1280px;
+  z-index: 1000;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.content-block {
+  margin-top: 20px;
+}

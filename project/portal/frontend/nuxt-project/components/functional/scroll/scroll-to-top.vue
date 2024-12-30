@@ -7,7 +7,6 @@
     >
       <i class="mu-icon-svg arrow-top"></i><span>이동</span>
     </button>
-    <button type="button" class="mu-btn mu-btn-icon-only mu-btn-secondary" title="멘위로 이동"><i class="mu-icon-svg arrow-top"></i><span>이동</span></button>
   </div>
 </template>
 
@@ -40,12 +39,10 @@ onUnmounted(() => {
 <style scoped>
 .scroll-to-top {
   position: fixed;
-  bottom: 40px;
-  right: 40px;
+  bottom: 135px;
+  right: 30px;
   transition: opacity 0.3s ease, visibility 0.3s ease;
+  z-index: 999;
 }
 
-/* .scroll-to-top[v-cloak] {
-  display: none;
-} */
 </style>

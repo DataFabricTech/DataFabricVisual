@@ -13,26 +13,23 @@
       :sampleDataDenied="sampleDataDenied"
     />
     <div class="inner">
+      <scroll-to-tab
+        :tabs="tabs"
+        :isAdmin="props.isAdmin"
+        :isSticky="isSticky"
+        :sectionRefs="sectionRefs"
+        @scrollToSection="scrollToSection"
+      />
       <!-- data-detail-wrap : 통합검색리스트 > 상세 -->
       <div class="data-detail-wrap">
         <!-- detail-section : 데이터 정보 -->
-        <div class="detail-section" :class="showData ? 'open' : 'close'">
-          <div class="mu-heading">
-            <h4>데이터 정보</h4>
-            <div class="mu-item-group">
-              <button type="button" class="mu-btn mu-btn-bg-non btn-section-toggle" @click="toggleShowData()">
-                <span>{{ toggleShowDataText }}</span>
-              </button>
-            </div>
-          </div>
-          <!-- detail-box : 데이터 정보 > 메타속성 -->
-          <meta-data-info
+        <div
+          :ref="el => sectionRefs['data-info-area'] = el"
+          class="content-block">
+          <data-info-area
             :entity="entity"
             :referredEntitiesAttributes="referredEntitiesAttributes"
             @onClickData="getAllDataByGuid"
-          />
-          <!-- detail-box : 데이터 정보 > 비지니스 속성 -->
-          <business-attributes-area
             :isAdmin="props.isAdmin"
             :attributes="businessAttributes"
             @onClickAddRow="onClickAddBusinessAttributes"
@@ -40,49 +37,85 @@
           />
         </div>
         <!-- tag-box : 태그/키워드 관리 -->
-        <tag-keyword-area :list="labelList" :allTagList="allTagList" :entity="entity"
-          @onClickAddTag="onClickAddTag" :isAdmin="props.isAdmin"
-          @reload="getDetailDataByGuid"
-        />
+        <div
+          :ref="el => sectionRefs['tag-keyword-area'] = el"
+          class="content-block">
+          <tag-keyword-area
+            ref="tag-keyword-area"
+            :list="labelList" :allTagList="allTagList" :entity="entity"
+            @onClickAddTag="onClickAddTag" :isAdmin="props.isAdmin"
+            @reload="getDetailDataByGuid"
+          />
+        </div>
         <!-- detail-section : 사용자 데이터 설명 -->
-        <user-description-area
-          :isAdmin="true"
-          :list="userDescriptionList"
-          :params="userDataParam"
-          :initUserDescription="initUserDescription"
-          @reloadUserDescriptionList="getUserDescriptionList"
-          @reload="getAllDataByGuid"
-        />
+        <div
+          :ref="el => sectionRefs['user-description-area'] = el"
+          class="content-block">
+          <user-description-area
+            :isAdmin="props.isAdmin"
+            :list="userDescriptionList"
+            :params="userDataParam"
+            :initUserDescription="initUserDescription"
+            @reloadUserDescriptionList="getUserDescriptionList"
+            @reload="getAllDataByGuid"
+          />
+        </div>
         <!-- detail-section : 데이터 프로파일링 -->
-        <data-profile-area :data-profile="dataProfile" :columnCommentMap="columnCommentMap"/>
+        <div
+          :ref="el => sectionRefs['data-profile-area'] = el"
+          class="content-block">
+          <data-profile-area :isAdmin="props.isAdmin" :data-profile="dataProfile" :columnCommentMap="columnCommentMap"/>
+        </div>
         <!-- detail-section : 샘플 데이터 -->
-        <sample-data-area
+        <div
           v-if="typeName && typeName.toUpperCase() == 'TABLE'"
-          :list="sampleData"
-          :entity="entity"
-          :sampleDataDenied="sampleDataDenied"
-          :referredEntitiesAttributes="referredEntitiesAttributes"
-        />
+          :ref="el => sectionRefs['sample-data-area'] = el"
+          class="content-block">
+          <sample-data-area
+            v-if="typeName && typeName.toUpperCase() == 'TABLE'"
+            :isAdmin="props.isAdmin"
+            :list="sampleData"
+            :entity="entity"
+            :sampleDataDenied="sampleDataDenied"
+            :referredEntitiesAttributes="referredEntitiesAttributes"
+          />
+        </div>
         <!-- detail-section : 데이터 흐름조회 -->
-        <data-lineage-area
-          :isAdmin="props.isAdmin"
-          :startNode="startNode"
-          :entity="entity"
-          :userDataParam="userDataParam"
-        />
+        <div
+          v-if="typeName && typeName.toUpperCase() == 'TABLE'"
+          :ref="el => sectionRefs['data-lineage-area'] = el"
+          class="content-block">
+          <data-lineage-area
+            :isAdmin="props.isAdmin"
+            :startNode="startNode"
+            :entity="entity"
+            :userDataParam="userDataParam"
+          />
+        </div>
         <!-- detail-section : 연관 데이터 -->
-        <related-data
-          :classifications="classifications_data"
-          @onClickData="getAllDataByGuid"
-        />
+        <div
+          v-if="typeName && typeName.toUpperCase() == 'TABLE'"
+          :ref="el => sectionRefs['related-data'] = el"
+          class="content-block">
+          <related-data
+            :isAdmin="props.isAdmin"
+            :classifications="classifications_data"
+            @onClickData="getAllDataByGuid"
+          />
+        </div>
         <!-- detail-section : 사용자 리뷰 -->
-        <user-review-area
-          v-if="!props.isAdmin"
-          :list="reviewDatalist"
-          :params="userDataParam"
-          :initUserReview="initUserReview"
-          @reload="getReviewDataList"
-        />
+        <div
+          v-if="typeName && typeName.toUpperCase() == 'TABLE'"
+          :ref="el => sectionRefs['user-review-area'] = el"
+          class="content-block">
+          <user-review-area
+            v-if="!props.isAdmin"
+            :list="reviewDatalist"
+            :params="userDataParam"
+            :initUserReview="initUserReview"
+            @reload="getReviewDataList"
+          />
+        </div>
         <!-- recommend-section  -->
         <data-recommend-status
           v-if="!props.isAdmin"
@@ -132,15 +165,15 @@
     </div>
 
     <scroll-to-top />
+    <scroll-to-bottom />
   </div>
 </template>
 
 <script setup lang="ts">
 import ObjectUtils from "@/utils/ObjectUtils";
 import { successAlert, confirmAlert, errorAlert } from "@functional/alert/alert-default";
+import DataInfoArea from "@molecules/searchDetail/data-info-area";
 import DataDetailHead from "@molecules/searchDetail/data-detail-head";
-import MetaDataInfo from "@molecules/searchDetail/meta-data-info";
-import BusinessAttributesArea from "@molecules/searchDetail/business-attributes-area";
 import UserDescriptionArea from "@molecules/searchDetail/user-description-area";
 import TagKeywordArea from "@molecules/searchDetail/tag-keyword-area";
 import DataProfileArea from "@molecules/searchDetail/data-profile-area";
@@ -154,7 +187,9 @@ import RelatedData from "@molecules/searchDetail/related-data";
 import UserReviewArea from "@molecules/searchDetail/user-review-area";
 import DataRecommendStatus from "@molecules/searchDetail/data-recommend-status";
 import EliminateModal from "@organisms/searchDetail/eliminatePopup";
+import ScrollToTab from "@functional/scroll/scroll-to-tab";
 import ScrollToTop from "@functional/scroll/scroll-to-top";
+import ScrollToBottom from "@functional/scroll/scroll-to-bottom";
 import { useUserStore } from "~/store/user.ts";
 import { useCategoryStore } from "~/store/category.ts";
 import {useConstants} from "@composables/useConstants";
@@ -174,6 +209,10 @@ const { CONSTANT } = useConstants();
 const userStore = useUserStore();
 const user = userStore.getUser;
 const categoryStore = useCategoryStore();
+
+const tabs = ref(['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'data-lineage-area', 'related-data', 'user-review-area'])
+const sectionRefs = ref({}); // 탭 클릭 시 이동할 DOM
+const isSticky = ref(false) // 탭이 보이지 않는 곳으로 스크롤이 되었는지 여부
 
 const entity = ref({}); // 데이터 상세 정보
 const referredEntitiesAttributes = ref([]);
@@ -243,6 +282,7 @@ onBeforeRouteLeave((to, from, next) => {
 })
 
 onMounted(async () => {
+  window.addEventListener('scroll', handleScroll);
   userStore.setForceRenderLoader(true); // 강제 loader 유지 설정
   categoryStore.fetchCategories(); // 카테고리 정보 조회
   await getAllDataByGuid();
@@ -268,6 +308,44 @@ watch(
     getAllDataByGuid();
   }
 );
+
+const navTopOffset = ref(0)
+
+// 스크롤 위치 계산
+const handleScroll = () => {
+  const scrollY = window.scrollY;
+
+  // nav의 원래 위치 (nav가 화면에 처음 나오는 위치)
+  if (navTopOffset.value === 0) {
+    const navElement = document.querySelector('.nav');
+    if (navElement) {
+      navTopOffset.value = navElement.getBoundingClientRect().top + scrollY;
+    }
+  }
+
+  // nav가 고정되어야 할 위치
+  if (scrollY > 580) {
+    isSticky.value = true; // 화면 상단에 고정
+  } else {
+    isSticky.value = false; // 원래 위치로 돌아감
+  }
+}
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll);
+});
+
+// 특정 섹션으로 스크롤
+const scrollToSection = (params) => {
+  const { key } = params
+  const target = sectionRefs.value[key];
+  if (target) {
+    window.scrollTo({
+      top: target.offsetTop,
+      behavior: 'smooth',
+    });
+  }
+};
 
 // 사용자 리뷰 등록/수정, 데이터 추천, 데이터 찜하기 처리 시 필요 파라미터 계산
 const getUserDataParam = () => {
@@ -944,4 +1022,10 @@ const searchTagList = async (offset = 1) =>{
     console.log(error);
   }
 }
+
 </script>
+
+<style scoped>
+
+
+</style>

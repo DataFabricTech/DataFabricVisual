@@ -1,49 +1,51 @@
 <template>
-  <div class="detail-section" :class="showData ? 'open' : 'close'">
-    <div class="mu-heading">
-      <h4>태그/키워드</h4>
-      <div class="mu-item-group">
-        <button
-          type="button"
-          class="mu-btn mu-btn-bg-non btn-section-toggle"
-          title="접기"
-          @click="toggleShowData()"
-          style="margin-left: 10px"
-        >
-          <span>{{ toggleShowDataText }}</span>
-        </button>
-      </div>
-    </div>
-    <div class="tags-setting" v-show="showData">
-      <div v-if="props.list.length > 0" class="tags-group">
-        <div
-          v-if="props.list.length > 0"
-          v-for="(tag, index) in props.list"
-          :key="index"
-          class="tag"
-        >
-          <span class="tag-label">{{ tag }}</span>
-          <button type="button" class="mu-btn mu-btn-delete" v-if="props.isAdmin"
-            @click="onClickDeleteTag(tag)">
-            <i class="mu-icon-svg item-delete"></i><span>삭제</span>
+  <div :class="props.isAdmin ? 'data-box-wrap' : ''" :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
+    <div class="detail-section" :class="showData ? 'open' : 'close'">
+      <div class="mu-heading">
+        <h4>태그/키워드</h4>
+        <div class="mu-item-group">
+          <button
+            type="button"
+            class="mu-btn mu-btn-bg-non btn-section-toggle"
+            title="접기"
+            @click="toggleShowData()"
+            style="margin-left: 10px"
+          >
+            <span>{{ toggleShowDataText }}</span>
           </button>
         </div>
       </div>
-    </div>
-    <div class="mt20 overflow-auto">
-      <div class="mu-item-group fr">
-        <tag-auto-select
-          :disabled="false"
-          :options="props.allTagList"
-          @setData="onChangeTag"
-        />
-        <button
-          type="button"
-          class="mu-btn mu-btn-primary"
-          @click="addSelectedTag()"
-        >
-          <span>추가</span>
-        </button>
+      <div class="tags-setting" v-show="showData">
+        <div v-if="props.list.length > 0" class="tags-group">
+          <div
+            v-if="props.list.length > 0"
+            v-for="(tag, index) in props.list"
+            :key="index"
+            class="tag"
+          >
+            <span class="tag-label">{{ tag }}</span>
+            <button type="button" class="mu-btn mu-btn-delete" v-if="props.isAdmin"
+              @click="onClickDeleteTag(tag)">
+              <i class="mu-icon-svg item-delete"></i><span>삭제</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="mt20 overflow-auto">
+        <div class="mu-item-group fr">
+          <tag-auto-select
+            :disabled="false"
+            :options="props.allTagList"
+            @setData="onChangeTag"
+          />
+          <button
+            type="button"
+            class="mu-btn mu-btn-primary"
+            @click="addSelectedTag()"
+          >
+            <span>추가</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="data-box-wrap">
+  <div class="data-box-wrap" style="margin-bottom: 20px;">
     <!-- data-box 목록에 li data-box하나가 그대로 상세페이지상단 요약임 div로 -->
     <div class="data-box">
       <div class="inner-data visual">

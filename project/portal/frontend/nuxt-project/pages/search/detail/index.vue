@@ -1,8 +1,6 @@
 <template>
   <!-- <div class="contents"> -->
-    <div>
       <search-detail :isAdmin="false" />
-    </div>
   <!-- </div> -->
 </template>
 
