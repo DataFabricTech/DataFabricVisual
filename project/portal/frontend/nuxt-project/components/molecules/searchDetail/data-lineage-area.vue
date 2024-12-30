@@ -3,7 +3,7 @@
     <div class="detail-section" :class="showData ? 'open' : 'close'">
       <div class="mu-heading">
         <h4>데이터 흐름조회</h4>
-        <div class="mu-item-group" v-if="!props.isAdmin">
+        <div class="mu-item-group">
           <button
             type="button"
             class="mu-btn mu-btn-bg-non btn-section-toggle"
@@ -14,7 +14,13 @@
             <span>{{ toggleShowDataText }}</span>
           </button>
         </div>
-        <div v-show="props.isAdmin" class="mu-item-group">
+      </div>
+      <div class="detail-box" v-show="showData">
+        <div
+          v-show="props.isAdmin"
+          class="mu-item-group"
+          style="display: block; margin-bottom: 20px; text-align: right;"
+        >
           <button
             type="button"
             class="mu-btn mu-btn-primary"
@@ -23,8 +29,6 @@
             <span>데이터 흐름 수정</span>
           </button>
         </div>
-      </div>
-      <div class="detail-box" v-show="showData">
         <d3-diagram :startNode="props.startNode" />
       </div>
     </div>
