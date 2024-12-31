@@ -31,7 +31,7 @@ const props = defineProps(["startNode"]);
 const firstNodeId = ref(""); // 데이터 흐름도 시작 노드 guid
 const data = ref({}); // 데이터 흐름도 렌더 데이터 저장
 const nodeInfoList = ref([]); // 툴팁 렌더 시 사용할 데이터 저장
-const showDataLineage = ref(false); // 데이터 흐름 구성 렌더 여부 flag
+const showDataLineage = ref(true); // 데이터 흐름 구성 렌더 여부 flag
 const targetNode = ref({
   // 툴팁 렌더 제어
   display: "none",
@@ -304,7 +304,6 @@ const makeInitData = (responseData, startNodeId) => {
     // 툴팁 렌더용 데이터 조회
     getMetaDatasForTooltip(guidList);
   }
-
   return initData;
 };
 

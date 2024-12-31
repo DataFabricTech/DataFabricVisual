@@ -68,7 +68,7 @@
               @addModalShow="addFromModalShow"
               @deleteNodelinks="deleteFromNodelinks"
               @selectEntity="selectFromEntity"
-              @Refreshbtn="fromRefreshbtn"
+              @refreshbtn="fromRefreshbtn"
               nodeField="from"
               :selectedId="selectedId"
             />
@@ -77,7 +77,7 @@
               @addModalShow="addToModalShow"
               @deleteNodelinks="deleteToNodelinks"
               @selectEntity="selectToEntity"
-              @Refreshbtn="toRefreshbtn"
+              @refreshbtn="toRefreshbtn"
               node-field="to"
               :selectedId="selectedId"
             />
@@ -120,7 +120,6 @@
       @AddToNode="AddToNode"
       @addSelfFromNode="addSelfFromNode"
       @addSelfToNode="addSelfToNode"
-      ref="nodeAddPopup"
     />
   </div>
 </template>
@@ -138,7 +137,7 @@ const { $ofetch } = useNuxtApp();
 const eventStore = useEventStore();
 
 const emit = defineEmits(["onCloseModal", "onChangeLineage"]);
-const props = defineProps(["toggle", "entity", "atlasData"]);
+const props = defineProps(["toggle", "entity", "userDataParam"]);
 const nodeLinks = ref([]);
 const toNodeLinks = ref([]);
 const fromNodeLinks = ref([]);
@@ -157,7 +156,7 @@ const add_self_list = ref([]);
 
 // const nodeAddPopup = ref<InstanceType<typeof NodeAddPopup> | null>(null);
 
-const id = computed(() => ObjectUtils.getPropertyValue(props.entity, "entity/guid", ""));
+const id = computed(() => ObjectUtils.getPropertyValue(props.entity, "id", ""));
 const name = computed(() =>
   ObjectUtils.getPropertyValue(props.entity, "entity/attributes/name", "")
 );
@@ -174,18 +173,6 @@ watch(
   (newVal, oldVal) => {
     if (newVal && !oldVal) {
       // 모달 open 시점에 조회 API 호출
-      let guid = ObjectUtils.getPropertyValue(props.entity, "entity/guid", "");
-
-      const typeName = ObjectUtils.getPropertyValue(props.entity, "entity/typeName", "");
-      if (typeName.includes("_column")) {
-        // 해당 엔티티 유형이 컬럼일 경우 부모 테이블 엔티티의 guid로 목록 조회하도록 값 세팅
-        guid = ObjectUtils.getPropertyValue(
-          props.entity,
-          "entity/relationshipAttributes/table/guid",
-          ""
-        );
-      }
-
       if (newVal) {
         selectEntity();
       }
@@ -206,16 +193,16 @@ const fromRefreshbtn = async () => {
         guid: guid,
       };
 
-      let tooltipList = await $ofetch(`/api/node/tooltip`, {
+      const tooltipList = await $ofetch(`/api/node/tooltip`, {
         method: "POST",
         body: params,
       });
 
-      const tooltiplist = ObjectUtils.getPropertyValue(tooltipList, "entities", []); // 테이블 데이터
+      const tooltip = ObjectUtils.getPropertyValue(tooltipList, "data", []); // 테이블 데이터
 
-      element.tooltip = tooltiplist[0];
+      element.tooltip = tooltip;
 
-      if (!tooltipList.entities) {
+      if (tooltip) {
         let dbTooltipList = await $ofetch(`/api/node/detail/tooltip/${guid}`);
 
         let dataTooltiplist = ObjectUtils.getPropertyValue(dbTooltipList, "data", []);
@@ -224,9 +211,9 @@ const fromRefreshbtn = async () => {
 
         element.tooltip.attributes = [];
 
-        element.tooltip.attributes.comment = dataTooltiplist[0].description;
+        element.tooltip.description = dataTooltiplist[0].description;
 
-        element.tooltip.displayText = dataTooltiplist[0].node_name;
+        element.tooltip.name = dataTooltiplist[0].node_name;
 
         element.tooltip.typeName = dataTooltiplist[0].type_name;
       }
@@ -247,17 +234,16 @@ const toRefreshbtn = async () => {
       const params = {
         guid: guid,
       };
-
-      const tooltipList = $ofetch(`/api/node/tooltip`, {
-        mehod: "POST",
+      const tooltipList = await $ofetch(`/api/node/tooltip`, {
+        method: "POST",
         body: params,
       });
 
-      const tooltiplist = ObjectUtils.getPropertyValue(tooltipList, "entities", []); // 테이블 데이터
+      const tooltip = ObjectUtils.getPropertyValue(tooltipList, "data", []); // 테이블 데이터
 
-      element.tooltip = tooltiplist[0];
+      element.tooltip = tooltip;
 
-      if (!tooltipList.entities) {
+      if (tooltip) {
         let dbTooltipList = await $ofetch(`/api/node/detail/tooltip/${guid}`);
 
         let dataTooltiplist = ObjectUtils.getPropertyValue(dbTooltipList, "data", []);
@@ -266,9 +252,9 @@ const toRefreshbtn = async () => {
 
         element.tooltip.attributes = [];
 
-        element.tooltip.attributes.comment = dataTooltiplist[0].description;
+        element.tooltip.description = dataTooltiplist[0].description;
 
-        element.tooltip.displayText = dataTooltiplist[0].node_name;
+        element.tooltip.name = dataTooltiplist[0].node_name;
 
         element.tooltip.typeName = dataTooltiplist[0].type_name;
       }
@@ -278,8 +264,8 @@ const toRefreshbtn = async () => {
 
 //이전 노드 추가 모달창 보여주기
 const addFromModalShow = async () => {
-  if (addShow.value && NodeAddPopup)
-    NodeAddPopup.addClear();
+  // if (addShow.value && NodeAddPopup)
+  //   NodeAddPopup.addClear();
 
   addValue.value = "from";
   addShow.value = true;
@@ -287,8 +273,8 @@ const addFromModalShow = async () => {
 
 //이후 노드 추가 모달창 보여주기
 const addToModalShow = async () => {
-  if (addShow.value && NodeAddPopup)
-    NodeAddPopup.addClear();
+  // if (addShow.value && NodeAddPopup)
+  //   NodeAddPopup.addClear();
 
   addValue.value = "to";
   addShow.value = true;
@@ -298,7 +284,7 @@ const AddFromNode = async (selectedAddData) => {
   const promiseList = [];
   for (const element of selectedAddData) {
     const params = {
-      guid: element.guid,
+      guid: element.id,
     };
     const tooltipPromise = $ofetch(`/api/node/tooltip`, {
       method: "POST",
@@ -309,11 +295,10 @@ const AddFromNode = async (selectedAddData) => {
   }
   const responseList = await Promise.all(promiseList);
   for (let j = 0; j < responseList.length; j++) {
-    const tooltipList = ObjectUtils.getPropertyValue(responseList[j], "data/entities", []);
-    const tooltip = tooltipList[0];
+    const tooltip = ObjectUtils.getPropertyValue(responseList[j], "data", {});
     const node = {
-      from_node_id: selectedAddData[j].guid,
-      from_node_name: selectedAddData[j].displayText,
+      from_node_id: selectedAddData[j].id,
+      from_node_name: selectedAddData[j].name,
       link_id: null,
       to_node_id: selectedId.value,
       to_node_name: selectedName.value,
@@ -336,7 +321,7 @@ const AddToNode = async (selectedAddData) => {
   const promiseList = [];
   for (const element of selectedAddData) {
     const params = {
-      guid: element.guid,
+      guid: element.id,
     };
     const tooltipPromise = $ofetch(`/api/node/tooltip`, {
       method: "POST",
@@ -347,14 +332,13 @@ const AddToNode = async (selectedAddData) => {
   }
   const responseList = await Promise.all(promiseList);
   for (let j = 0; j < responseList.length; j++) {
-    const tooltipList = ObjectUtils.getPropertyValue(responseList[j], "data/entities", []);
-    const tooltip = tooltipList[0];
+    const tooltip = ObjectUtils.getPropertyValue(responseList[j], "data", {});
     const node = {
       from_node_id: selectedId.value,
       from_node_name: selectedName.value,
       link_id: null,
-      to_node_id: selectedAddData[j].guid,
-      to_node_name: selectedAddData[j].displayText,
+      to_node_id: selectedAddData[j].id,
+      to_node_name: selectedAddData[j].name,
       tooltip,
     };
     toNodeLinks.value.push(node);
@@ -591,16 +575,16 @@ const onClickConfirm = async () => {
         params: { data: id.value },
       });
 
-      if (!basicResult.data) {
+      if (!basicResult) {
         const params = {
-          guid: props.atlasData.guid,
-          displayText: props.atlasData.name,
-          typeName: props.atlasData.typeName,
+          guid: props.userDataParam.guid,
+          displayText: props.userDataParam.name,
+          typeName: props.userDataParam.typeName,
           attributes: {
-            comment: props.atlasData.comment,
-            qualifiedName: props.atlasData.qualifiedName,
+            comment: props.userDataParam.comment,
+            qualifiedName: props.userDataParam.qualifiedName,
           },
-          dbName: props.atlasData.qualifiedName.split(".")[0],
+          dbName: props.userDataParam.qualifiedName.split(".")[0],
         };
         await $ofetch("/api/node/self", {
           method: "PUT",

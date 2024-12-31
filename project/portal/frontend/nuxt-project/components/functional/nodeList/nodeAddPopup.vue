@@ -35,10 +35,8 @@
                     <div class="mu-selectbox w120">
                       <select v-model="searchType">
                         <option value="all">전체</option>
-                        <option value="__guid">노드 ID</option>
-                        <option value="name">노드 이름</option>
-                        <option value="">데이터 이름</option>
-                        <option value="description">데이터 설명</option>
+                        <option value="node_id">노드 ID</option>
+                        <option value="node_name">노드 이름</option>
                       </select>
                     </div>
                     <div class="mu-input-icon">
@@ -48,12 +46,12 @@
                         placeholder="Search"
                         title="검색어입력"
                         class="mu-input"
-                        @keypress.enter.prevent="searchNode()"
+                        @keypress.enter.prevent="searchNode(0)"
                       />
                       <button
                         type="button"
                         class="mu-btn mu-btn-sch"
-                        @click="searchNode()"
+                        @click="searchNode(0)"
                       >
                         <i class="mu-icon-svg search"></i>
                         <span>검색</span>
@@ -89,7 +87,7 @@
                             nodeList.length > 0 &&
                             selectedAddData.length === nodeList.length
                           "
-                          @click.stop="(e) => onToggleAddCheckbox(e, true)"
+                          @click.stop="(e) => onToggleAddCheckbox(e, true, null)"
                         />
                         <label for="ckbAdd">
                           <span class="blind">전체선택</span>
@@ -101,50 +99,49 @@
                     <th scope="col">상세</th>
                   </tr>
                 </thead>
-                <tbody>                  
+                <tbody v-if="nodeList && nodeList.length > 0">
                   <tr
                     v-for="(node, index) in nodeList"
                     :key="index"
-                    v-if="isNodeValid(node)" 
                   >
-                    <td>
-                      <div class="mu-checkbox">                        
+                    <td v-if="isNodeValid(node)">
+                      <div class="mu-checkbox">
                         <input
                           type="checkbox"
                           title="행선택"
-                          :id="index"
+                          :id="'chkAdd_' + index"
                           :checked="isAddChecked(node)"
                           @click.stop="(e) => onToggleAddCheckbox(e, false, node)"
                         />
-                        <label :for="index">
+                        <label :for="'chkAdd_' + index">
                           <span class="blind">행선택</span>
                         </label>
                       </div>
                     </td>
                     <td>
                       <span class="mu-ellipsis">
-                        {{ node.guid }}
+                        {{ node.id }}
                       </span>
                     </td>
                     <td>
                       <span class="mu-ellipsis">
-                        {{ node.displayText }}
+                        {{ node.name }}
                       </span>
                     </td>
                     <td>
                       <div class="mu-tooltip-icon">
                         <i
                           :id="'img' + index"
-                          class="mu-icon-svg help"
+                          class="mu-icon-svg view"
                           @mouseover="showTooltip(index)"
                           @mouseleave="hideTooltip()"
                         ></i>
                         <div
-                          class="mu-tooltip arrow-ct w250"
+                          class="mu-tooltip arrow-ct w400"
                           v-if="isTooltipVisible && hoveredAddIndex == index"
                           :style="{
                             position: 'fixed',
-                            left: mouseX - 125 + 'px',
+                            left: mouseX - 400 + 'px',
                             top: mouseY + 'px',
                           }"
                         >
@@ -152,15 +149,15 @@
                             <div class="data-info2">
                               <dl>
                                 <dt>데이터 이름</dt>
-                                <dd>{{ node.displayText }}</dd>
+                                <dd>{{ node.name }}</dd>
                               </dl>
                               <dl>
                                 <dt>데이터 설명</dt>
-                                <dd>{{ node.attributes.comment }}</dd>
+                                <dd>{{ node.description ? node.description : '-' }}</dd>
                               </dl>
                               <dl>
                                 <dt>데이터 유형</dt>
-                                <dd>{{ node.typeName }}</dd>
+                                <dd>{{ node.metatype }}</dd>
                               </dl>
                             </div>
                           </div>
@@ -169,7 +166,7 @@
                     </td>
                   </tr>
                 </tbody>
-                <tbody v-if="nodeList.length == 0">
+                <tbody v-else>
                   <tr>
                     <td colspan="4">
                       <p class="nodata">노드 정보가 없습니다.</p>
@@ -186,7 +183,7 @@
               노드 추가 게시판
             </caption>
             <colgroup>
-              <col style="width: 120px" />
+              <col style="width: 130px" />
               <col />
             </colgroup>
             <tbody>
@@ -245,7 +242,7 @@
                 <td>
                   <div class="mu-selectbox">
                     <select v-model="add_db_type">
-                      <option value="hive_table">hive_table</option>
+                      <option v-for="(dbname, idx) in dbList" :value="dbname">{{ dbname }}</option>
                     </select>
                   </div>
                 </td>
@@ -270,6 +267,8 @@
         </div>
       </div>
     </div>
+    <pagination :paging="pagingObj" @onClickPage="onClickPage" />
+
     <div class="mu-dialog-foot">
       <button
         v-if="props.addValue == 'from' && currentTab == '데이터베이스'"
@@ -307,8 +306,6 @@
       >
         추가
       </button>
-      <div v-if="isLoadingMore">로딩 중...</div>
-      <button v-if="showMoreButton" @click="handleMoreButtonClick">더보기</button>
     </div>
     <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
     <div class="mu-dialog-close-btn">
@@ -325,8 +322,17 @@
 </template>
 <script setup lang="ts">
 import ObjectUtils from "@/utils/ObjectUtils";
+import pagination from "@functional/pagination/pagination.vue";
 import { onBeforeMount, onMounted, onUnmounted, ref, computed } from 'vue';
 import { useNuxtApp } from "nuxt/app";
+
+// 페이징
+const pagingObj = ref({
+  total: 0, // 전체 데이터 건수
+  limit: 10, // 한 페이지에 보여줄 데이터 건수
+  block: 10, // 한 화면에서 보여줄 페이지 수
+  currentPage: 1, // 현재 페이지 번호
+});
 
 const { $ofetch } = useNuxtApp();
 
@@ -346,9 +352,7 @@ const nodeList = ref<any>([]);
 const currentTab = ref<string>('데이터베이스');
 const searchType = ref<string>('all');
 const searchWord = ref<string>("");
-const isLoadingMore = ref<boolean>(false);
 const showMoreButton = ref<boolean>(false);
-const count = ref<number>(0);
 const add_node_id = ref<string>('');
 const add_node_name = ref<string>('');
 const add_db_name = ref<string>('');
@@ -356,19 +360,39 @@ const add_table_description = ref<string>('');
 const isDuplicate = ref<boolean>(false);
 const checkDuplicate = ref<boolean>(false);
 const newListLength = ref<number>(1);
-const add_db_type = ref<string>('hive_table');
+const dbList = ref(["Postgres"])
+const add_db_type = ref<string>('Postgres');
 const tooltipStyle = ref<any>(null);
 const mouseX = ref<number>(0);
 const mouseY = ref<number>(0);
-const checkSelectIdCount = ref<number>(0);
 
 const tableWrapper = ref();
 
-onMounted(() => {
-  window.addEventListener("mousemove", handleMousemove);  
+onMounted(async () => {
+  addClear()
+  window.addEventListener("mousemove", handleMousemove);
+
+  // DB 종류 조회
+  await getDbType();
 });
 
 onUnmounted(() => window.removeEventListener("mousemove", handleMousemove));
+
+watch(() => props.addValue, (newVal, oldVal) => {
+  // 이전 노드 정보, 이후 노드 정보 추가 버튼 클릭 시 초기화
+  if (newVal != oldVal) {
+    addClear()
+  }
+})
+
+const getDbType = async () => {
+  await $ofetch(`/api/node/getDbList`).then((res) => {
+    if (res && !res.errorMessage) {
+      dbList.value = res.data
+    }}).catch((err) => {
+      console.log(err)
+  });
+}
 
 //마우스 위치
 const handleMousemove = (event) => {
@@ -386,7 +410,7 @@ const onAddClose = () => {
   add_node_id.value = "";
   add_node_name.value = "";
   add_db_name.value = "";
-  add_db_type.value = "";
+  add_db_type.value = "Postgres";
   add_table_description.value = "";
   emit("close");
 };
@@ -396,19 +420,26 @@ const addClear = () => {
   add_node_id.value = "";
   add_node_name.value = "";
   add_db_name.value = "";
-  add_db_type.value = "";
+  add_db_type.value = "Postgres";
   add_table_description.value = "";
+  nodeList.value = []
+  pagingObj.value = {
+    total: 0, // 전체 데이터 건수
+    limit: 10, // 한 페이지에 보여줄 데이터 건수
+    block: 10, // 한 화면에서 보여줄 페이지 수
+    currentPage: 1, // 현재 페이지 번호
+  }
 };
 
-const isNodeValid = async (node) => {  
-  if(node == undefined){
+const isNodeValid = async (node) => {
+  if (node == undefined) {
     return true;
-  }else{
-    let guid = ObjectUtils.getPropertyValue(node, "guid", ''); 
+  } else {
+    let id = ObjectUtils.getPropertyValue(node, "id", '');
 
-    if(guid !== ''){
-      return guid !== props.selectedId;
-    }else{
+    if(id !== ''){
+      return id !== props.selectedId;
+    } else {
       return true;
     }
   }
@@ -425,7 +456,7 @@ const AddToNode = async () => {
 };
 
 const isAddChecked = (node) => {
-  const matched = selectedAddData.value.find((el) => el.guid === node.guid);
+  const matched = selectedAddData.value.find((el) => el.id === node.id);
   return matched;
 };
 
@@ -442,7 +473,7 @@ const onToggleAddCheckbox = (e, isAll, node) => {
     if (checked) {
       newItems.push(node);
     } else {
-      const targetIndex = newItems.findIndex((el) => el.guid === node.guid);
+      const targetIndex = newItems.findIndex((el) => el.id === node.id);
       newItems.splice(targetIndex, 1);
     }
   }
@@ -459,69 +490,36 @@ const hideTooltip = () => {
   hoveredAddIndex.value = null;
 };
 
-const handleMoreButtonClick = async () => {
-  // 추가 데이터 로딩 중이면 중복 요청 방지
-  if (isLoadingMore.value) {
-    return;
-  }
-  // 추가 데이터 로딩 중 표시
-  isLoadingMore.value = true;
-
-  const params = {
-    offset: count.value,
-    searchType: searchType.value,
-    searchWord: searchWord.value,
-  };
-
-  // 서버에 추가 데이터 요청
-  const result = await $ofetch(`/api/node/search`, {
-    method: "POST",
-    body: params,
-  });
-
-  const list = ObjectUtils.getPropertyValue(result, "data/entities", []); // 테이블 데이터
-
-  newListLength.value = list.length;
-
-  // 받아온 데이터 리스트에 추가
-  nodeList.value = [...nodeList.value, ...list];
-  // 추가 데이터 로딩 완료
-  isLoadingMore.value = false;
-  // 현재 데이터 개수 업데이트
-  count.value = nodeList.value.length;
-  // 더보기 버튼 표시 여부 업데이트
-  showMoreButton.value = false;
-};
-
 const changeTab1 = (param) => {
   currentTab.value = param;
 };
 
 const searchNode = async (offset = 0) => {
-  checkSelectIdCount.value = 0;
   const params = {
-    offset,
+    offset: offset * 10,
     searchType: searchType.value,
     searchWord: searchWord.value,
   };
-  const result = await $ofetch(`/api/node/search`, {
+
+  await $ofetch(`/api/node/search`, {
     method: "POST",
     body: params,
+  }).then((res) => {
+    if (res && !res.errorMessage) {
+      nodeList.value = ObjectUtils.getPropertyValue(res, "data/list", []);
+      pagingObj.value = {
+        ...pagingObj.value,
+        total: ObjectUtils.getPropertyValue(res, "data/total", 0), // 테이블 총 카운트
+        currentPage: offset + 1
+      }
+    }
   });
-
-  const list = ObjectUtils.getPropertyValue(result, "data/entities", []); // 테이블 데이터
-
-  nodeList.value = list;
-
-  count.value = list.length;
 };
-
-searchNode();
 
 const addSelfFromNode = () => {
   const selfInsertNode = {
     node_id: add_node_id.value,
-    guid: add_node_id.value,
+    id: add_node_id.value,
     displayText: add_node_name.value,
     typeName: add_db_type.value,
     dbName: add_db_name.value,
@@ -551,7 +549,7 @@ const addSelfFromNode = () => {
 const addSelfToNode = () => {
   const selfInsertNode = {
     node_id: add_node_id.value,
-    guid: add_node_id.value,
+    id: add_node_id.value,
     displayText: add_node_name.value,
     typeName: add_db_type.value,
     dbName: add_db_name.value,
@@ -601,6 +599,11 @@ const handleScroll = () => {
     showMoreButton.value = false;
   }
 };
+
+const onClickPage = (page) => {
+  const goPage = typeof page === 'number' ? page : 1
+  searchNode(goPage - 1)
+}
 
 defineExpose({
   addClear

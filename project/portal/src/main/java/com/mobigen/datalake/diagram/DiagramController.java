@@ -85,38 +85,16 @@ public class DiagramController {
         return diagramService.getNodeLinksInfo(guid);
     }
 
+    /**
+     * 데이터 흐름 수정 모달 툴팁 조회
+     *
+     * @param guid 조회 대상 guid
+     * @return Object 툴팁을 위한 메타 정보 목록 반환
+     */
     @ResponseJsonResult
     @PostMapping("/node/tooltip")
     public Object getNodeInfoTooltip(@RequestBody Map<String, Object> params) throws Exception {
-        // String URL = "/search/basic";
-
-        // params.put("offset", 0);
-        // params.put("limit", 25);
-        // params.put("classification", "");
-        // params.put("typeName", "hive_table");
-        // params.put("excludeDeletedEntities", true);
-        // params.put("includeSubClassifications", true);
-        // params.put("includeSubTypes", true);
-        // params.put("includeClassificationAttributes", true);
-        // params.put("attributes", Arrays.asList("comment"));
-        // params.put("entityFilters", new HashMap() {
-        //     {
-        //         put("condition", "AND");
-        //         put(
-        //                 "criterion",
-        //                 Arrays.asList(
-        //                         new HashMap() {
-        //                             {
-        //                                 put("attributeName", "__guid");
-        //                                 put("operator", "eq");
-        //                                 put("attributeValue", params.get("guid"));
-        //                             }
-        //                         }));
-        //     }
-        // });
-        // JsonResult result = atlasRestAPI.post(URL, params);
-        JsonResult result = null;
-        return result;
+        return diagramService.getMetaDataForTooltipOne(params);
     }
 
     /**
@@ -173,18 +151,12 @@ public class DiagramController {
     @PostMapping("/node/insert")
     @ResponseBody
     public Object saveNode(@RequestBody Map<String, Object> params) throws Exception {
-        
         Map<String, Object> tooltipMap = (Map<String, Object>) params.get("tooltip");
-        Object guidObj = tooltipMap.get("guid");
-        String guid = (String) guidObj;
-        Map<String, Object> attributes = (Map<String, Object>) tooltipMap.get("attributes");
-        Object qu = attributes.get("qualifiedName");
-        String qualifiedName = (String) qu;
-        if (qualifiedName != null) {
-            String db_name = qualifiedName.split("\\.")[0];
-            tooltipMap.put("dbName", db_name);
-        }
-        if (diagramService.checkDuplicate(guid)) {
+        Object idObj = tooltipMap.get("id");
+        String id = (String) idObj;
+        String db_name = (String) tooltipMap.get("systemtype");
+        tooltipMap.put("dbName", db_name);
+        if (diagramService.checkDuplicate(id)) {
             diagramService.updateSelfNode(tooltipMap);
         } else {
             diagramService.saveSelfNode(tooltipMap);
@@ -256,68 +228,8 @@ public class DiagramController {
 
     @ResponseJsonResult
     @PostMapping("/node/search")
-    public Object getMetaDataList(@RequestBody Map<String, Object> params) {
-        // int limit = 100;
-
-        // params.put("offset", (int) params.get("offset"));
-        // params.put("limit", limit);
-        // params.put("classification", "");
-        // params.put("typeName", "hive_table");
-        // params.put("excludeDeletedEntities", true);
-        // params.put("includeSubClassifications", true);
-        // params.put("includeSubTypes", true);
-        // params.put("includeClassificationAttributes", true);
-        // params.put("attributes", Arrays.asList("comment"));
-        // if (params.get("searchType").equals("all")) {
-        //     params.put("entityFilters", new HashMap() {
-        //         {
-        //             put("condition", "OR");
-        //             put(
-        //                     "criterion",
-        //                     Arrays.asList(
-        //                             new HashMap() {
-        //                                 {
-        //                                     put("attributeName", "name");
-        //                                     put("operator", "contains");
-        //                                     put("attributeValue", params.get("searchWord"));
-        //                                 }
-        //                             },
-        //                             new HashMap() {
-        //                                 {
-        //                                     put("attributeName", "__guid");
-        //                                     put("operator", "contains");
-        //                                     put("attributeValue", params.get("searchWord"));
-        //                                 }
-        //                             },
-        //                             new HashMap() {
-        //                                 {
-        //                                     put("attributeName", "description");
-        //                                     put("operator", "contains");
-        //                                     put("attributeValue", params.get("searchWord"));
-        //                                 }
-        //                             }));
-        //         }
-        //     });
-        // } else {
-        //     params.put("entityFilters", new HashMap() {
-        //         {
-        //             put("condition", "AND");
-        //             put(
-        //                     "criterion",
-        //                     Arrays.asList(
-        //                             new HashMap() {
-        //                                 {
-        //                                     put("attributeName", params.get("searchType"));
-        //                                     put("operator", "contains");
-        //                                     put("attributeValue", params.get("searchWord"));
-        //                                 }
-        //                             }));
-        //         }
-        //     });
-        // }
-
-        // return metaDataManageService.getMetaDataList(params);
-        return null;
+    public Object getMetaDataList(@RequestBody Map<String, Object> params) throws Exception {
+        return diagramService.getMetaDataList(params);
     }
 
     @ResponseJsonResult
@@ -325,5 +237,11 @@ public class DiagramController {
     public Object getMetaDataForTooltip(@RequestBody List<String> guidList) throws Exception {
         List<Map<String, Object>> metaDataInfo = diagramService.getMetaDataForTooltip(guidList);
         return metaDataInfo;
+    }
+
+    @ResponseJsonResult
+    @GetMapping("/node/getDbList")
+    public Object getDbList() throws Exception {
+        return diagramService.getDbList();
     }
 }

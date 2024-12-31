@@ -14,9 +14,14 @@
         <dl>
           <dt>카테고리</dt>
           <dd>
-            <div class="category-group">
+            <div class="category-group" v-if="classifications && classifications.length > 0">
               <div class="category" v-for="(c, idx) in classifications" :key="idx">
                 <span em class="category-label">{{ c.c_description }}</span>
+              </div>
+            </div>
+            <div class="category-group" v-else>
+              <div class="category">
+                <span em class="category-label">카테고리 미지정</span>
               </div>
             </div>
           </dd>
@@ -47,7 +52,7 @@ const name = computed(() => {
 
 // 툴팁 내 표시할 데이터 설명
 const comment = computed(() => {
-  return ObjectUtils.getPropertyValue(props.targetNode, "description", "");
+  return ObjectUtils.getPropertyValue(props.targetNode, "description", "-");
 });
 
 // 툴팁 내 표시할 카테고리 목록

@@ -200,6 +200,10 @@ public class DiagramService {
         return metaInfoList;
     }
 
+    public Map<String, Object> getMetaDataForTooltipOne(Map<String, Object> params) throws Exception {
+        return diagramMapper.getMetaDataForTooltipOne(params);
+    }
+
     // Jsonb => Map 타입 변환 함수
     public Map<String, Object> convertJsonbToMap(Object jsonb) throws Exception {
         if (jsonb != null) {
@@ -214,5 +218,23 @@ public class DiagramService {
             return objectMapper.readValue((String) _varchar, new TypeReference<List<Map<String, String>>>() {});    
         }
         return null;
+    }
+
+    // 노드 검색
+    public Map<String, Object> getMetaDataList(Map<String, Object> params) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", diagramMapper.getMetaDataList(params));
+        result.put("total", diagramMapper.getMetaDataListTotal(params));
+        return result;
+    }
+
+    // 노드 검색 총 개수
+    public int getMetaDataListTotal(Map<String, Object> params) throws Exception {
+        return diagramMapper.getMetaDataListTotal(params);
+    }
+
+    // DB 목록 조회
+    public List<String> getDbList() throws Exception {
+        return diagramMapper.getDbList();
     }
 }

@@ -23,12 +23,12 @@
           <span>삭제</span>
         </div>
         <!-- 기본적으로 비활성화노드 정보 영역에 변경 내역 발생 시 활성화되며, 변경 내역 초기화(기존 값으로 초기화)-->
-        <button class="mu-btn mu-btn-sm" @click="RefreshBtn()" type="button">
+        <button class="mu-btn mu-btn-sm" @click="refreshBtn()" type="button">
           <span>초기화</span>
         </button>
       </div>
     </div>
-    <div class="board-list table-scroll h300 slim-scroll">
+    <div class="board-list table-scroll h430 slim-scroll">
       <table class="mu-grid">
         <colgroup>
           <col style="width: 40px" />
@@ -91,32 +91,33 @@
               <div class="mu-tooltip-icon">
                 <i
                   :id="'img' + index"
-                  class="mu-icon-svg help"
+                  class="mu-icon-svg view"
                   @mouseover="showTooltip(index)"
                   @mouseleave="hideTooltip()"
                 ></i>
                 <div
-                  class="mu-tooltip arrow-ct w250"
+                  class="mu-tooltip arrow-ct w400"
                   v-if="show && hoveredIndex == index"
                   :style="{
                     position: 'fixed',
-                    left: mouseX - 125 + 'px',
+                    left: mouseX - 325 + 'px',
                     top: mouseY + 'px',
+                    'z-index': 9999,
                   }"
                 >
                   <div class="mu-tooltip-inner">
                     <div class="data-info2">
                       <dl>
                         <dt>데이터 이름</dt>
-                        <dd>{{ node.tooltip.displayText }}</dd>
+                        <dd>{{ node.tooltip.node_name ? node.tooltip.node_name : node.tooltip.name ? node.tooltip.name : "-" }}</dd>
                       </dl>
                       <dl>
                         <dt>데이터 설명</dt>
-                        <dd>{{ node.tooltip.attributes.comment }}</dd>
+                        <dd>{{ node.tooltip.description ? node.tooltip.description : "-" }}</dd>
                       </dl>
                       <dl>
                         <dt>데이터 유형</dt>
-                        <dd>{{ node.tooltip.typeName }}</dd>
+                        <dd>{{ node.tooltip.typeName ? node.tooltip.typeName : node.tooltip.metatype ? node.tooltip.metatype : "-" }}</dd>
                       </dl>
                     </div>
                   </div>
@@ -137,7 +138,7 @@
         <tbody v-if="props.NodeLinks.length == 0">
           <tr>
             <td colspan="5">
-              <p class="nodata">노드 정보가 없습니다.</p>
+              <p class="nodata" >노드 정보가 없습니다.</p>
             </td>
           </tr>
         </tbody>
@@ -152,7 +153,7 @@ import { onMounted, onUnmounted, ref, computed } from 'vue';
 const emit = defineEmits([
   "addModalShow",
   "selectEntity",
-  "Refreshbtn",
+  "refreshbtn",
   "deleteNodelinks",
 ]);
 const props = defineProps(["NodeLinks", "nodeField", "selectedId"]);
@@ -187,8 +188,8 @@ const hideTooltip = () => {
   show.value = false;
 };
 
-const RefreshBtn = () => {
-  emit("Refreshbtn");
+const refreshBtn = () => {
+  emit("refreshbtn");
   selectedData.value = [];
 };
 
