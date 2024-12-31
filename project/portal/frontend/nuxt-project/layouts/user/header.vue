@@ -45,53 +45,6 @@
             </li> -->
           </ul>
         </div>
-        <template v-if="isSitemap">
-          <div class="sitemap">
-            <div class="sitemap-header">
-              <div class="inner">
-                <!-- <ul class="sitemap-util">
-                  <li v-if="user.authority == 'Super-Admin' || user.authority == 'Manager'"><a @click="goToAdminPage()"><i class="mu-icon-svg admin"></i> 관리자 홈으로 이동</a></li>
-                  <li><a @click="goToMyCatalog()"><i class="mu-icon-svg user"></i> 마이페이지</a></li>
-                  <li><a @click="logout()"><i class="mu-icon-svg logout" @click="logout()"></i> 로그아웃</a></li>
-                </ul> -->
-                <button type="button" title="전체메뉴 닫기" class="mu-btn mu-btn-icon-only mu-btn-close" @click="closeSitemap()">
-                  <i class="mu-icon-svg close"></i>
-                </button>
-              </div>
-            </div>
-            <div class="sitemap-container">
-              <div class="inner">
-                <div class="sitemap-slogan">
-                  <h2>MOBIGEN<br />Data Catalog</h2>
-                  <p>창의적 사고와 끝없는 도전을 통해 새로운 미래를<br />창조함으로써 인류사회의 꿈을 실현하는 모비젠 데이터 카탈로그</p>
-                </div>
-                <div class="sitemap-nav">
-                  <!-- nav -->
-                  <nav class="nav">
-                    <ul>
-                      <li v-for="(item, index) in user.userMenu"
-                        :class="tab && item.title === tab.currentPathDepth1 ? 'current' : ''"
-                        :key="index">
-                        <NuxtLink :to="getFirstDepthHref(item)" @click="closeSitemap()"><span>{{ item.title }}</span></NuxtLink>
-                        <ul>
-                          <template v-for="(subItem, subIndex) in item.child" :key="subIndex">
-                            <li v-if="subItem.menu_visible" :style="getStyle(subItem)">
-                              <NuxtLink :to='getSubDepthHref(subItem)' @click="closeSitemap()">
-                                {{ subItem.menu_name }}
-                              </NuxtLink>
-                            </li>
-
-                          </template>
-                        </ul>
-                      </li>
-                    </ul>
-                  </nav>
-                  <!-- //nav -->
-                </div>
-              </div>
-            </div>
-          </div>
-        </template>
       </div>
     </div>
   </header>

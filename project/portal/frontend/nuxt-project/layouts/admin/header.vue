@@ -49,35 +49,6 @@
                 </button>
               </div>
             </div>
-            <div class="sitemap-container">
-              <div class="inner">
-                <div class="sitemap-slogan">
-                  <h2>Mobigen<br />Data Catalog</h2>
-                  <p>창의적 사고와 끝없는 도전을 통해 새로운 미래를<br />창조함으로써 인류사회의 꿈을 실현하는 모비젠 데이터 카탈로그</p>
-                </div>
-                <div class="sitemap-nav">
-                  <!-- nav -->
-                  <nav class="nav">
-                    <ul>
-                      <li v-for="(item, index) in user.adminMenu"
-                        :class="tab && item.title === tab.currentPathDepth1 ? 'current' : ''"
-                        :key="index">
-                        <NuxtLink :to="getFirstDepthHref(item)"><span>{{ item.title }}</span></NuxtLink>
-                        <ul>
-                          <li v-for="(subItem, subIndex) in item.child" :key="subIndex"
-                            :class="tab && subItem.menu_path === tab.currentPath ? 'current' : ''">
-                            <NuxtLink :to='getSubDepthHref(subItem)' v-if="subItem.menu_visible">
-                              {{ subItem.menu_name }}
-                            </NuxtLink>
-                          </li>
-                        </ul>
-                      </li>
-                    </ul>
-                  </nav>
-                  <!-- //nav -->
-                </div>
-              </div>
-            </div>
           </div>
         </template>
       </div>
