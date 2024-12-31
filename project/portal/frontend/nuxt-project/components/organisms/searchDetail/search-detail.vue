@@ -494,6 +494,8 @@ const getAllDataByGuid = async (newGuid, favoriteEvent) => {
 };
 
 const settingTabOption = (entity) => {
+  tabs.value = ['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'data-lineage-area', 'related-data', 'user-review-area']
+
   // 샘플데이터 탭 유무
   if (entity && entity.metatype && entity.metatype.toUpperCase() != 'TABLE')
     tabs.value = tabs.value.filter((el) => el != 'sample-data-area')

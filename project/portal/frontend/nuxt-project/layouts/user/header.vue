@@ -28,21 +28,14 @@
           </nav>
           <ul class="top-menu">
             <li>
-              <!-- <button type="button" title="My Catalog" class="mu-btn mu-btn-round mu-btn-icon-only" @click="goToMyCatalog()"><i class="mu-icon-svg user"></i></button> -->
               <a @click="goToMyCatalog()">&nbsp;&nbsp;<span>{{ user.username }}</span> 님&nbsp;</a>
             </li>
             <li>
-              <!-- <button type="button" title="로그아웃" class="mu-btn mu-btn-round mu-btn-icon-only" @:click="logout"><NuxtLink href="/"><i class="mu-icon-svg logout"></i></NuxtLink></button> -->
               <li><a @click="logout">로그아웃</a></li>
             </li>
             <li v-if="user.authority == 'Super-Admin' || user.authority == 'Manager'">
               <a @click="goToAdminPage()" class="mu-btn mu-btn-round"><div class="link-home">관리자 홈</div></a>
             </li>
-            <!-- <li>
-              <button type="button" title="사이트맵" class="mu-btn mu-btn-round mu-btn-icon-only" @click="openSitemap">
-                <i class="mu-icon-svg menu"></i>
-              </button>
-            </li> -->
           </ul>
         </div>
       </div>

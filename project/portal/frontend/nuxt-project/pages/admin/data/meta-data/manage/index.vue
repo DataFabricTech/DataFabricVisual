@@ -812,7 +812,6 @@ const onSearchDataList = async (offset = 0, item = {}) => {
   params.word = word.trim();
 
   // 테이블 데이터 조회
-  console.log(params)
   const res = await $ofetch(`/api/metadata/manage/list`, { method: "POST", body: params });
   if (res && !res.errorMessage) {
     let result = res.data;
