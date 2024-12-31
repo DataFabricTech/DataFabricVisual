@@ -11,130 +11,137 @@
         </div>
       </div>
       <!-- detail-box : DB 프로필 -->
-      <div class="detail-box" v-if="showDbArea">
-        <div class="mu-heading">
-          <h5>DB 프로필</h5>
+      <div v-if="(db && db.status) || (table && table.status) || (column && column.status)">
+        <div class="detail-box" v-if="showDbArea">
+          <div class="mu-heading">
+            <h5>DB 프로필</h5>
+          </div>
+          <table class="mu-formbox">
+            <colgroup>
+              <col style="width: 200px" />
+              <col />
+              <col style="width: 200px" />
+              <col />
+            </colgroup>
+            <tbody>
+              <tr>
+              <th scope="col">행수</th>
+              <!-- <th scope="col">테이블 크기(Byte)</th> -->
+              <td>{{ comman(table.num_rows) }}</td>
+              <th scope="col">테이블프로파일링 일시</th>
+              <!-- <td>{{ table.total_size | numberComma }}</td> -->
+              <td>{{ $yyyyMMddHHmmSS(table.update_date, " ") }}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
-        <table class="mu-formbox">
-          <colgroup>
-            <col style="width: 200px" />
-            <col />
-            <col style="width: 200px" />
-            <col />
-          </colgroup>
-          <tbody>
-            <tr>
-            <th scope="col">행수</th>
-            <!-- <th scope="col">테이블 크기(Byte)</th> -->
-            <td>{{ comman(table.num_rows) }}</td>
-            <th scope="col">테이블프로파일링 일시</th>
-            <!-- <td>{{ table.total_size | numberComma }}</td> -->
-            <td>{{ $yyyyMMddHHmmSS(table.update_date, " ") }}</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-      <!-- detail-box : 테이블 프로필 -->
-      <div class="detail-box" v-if="showTableArea">
-        <div class="mu-heading">
-          <h5>테이블 프로필</h5>
+        <!-- detail-box : 테이블 프로필 -->
+        <div class="detail-box" v-if="showTableArea">
+          <div class="mu-heading">
+            <h5>테이블 프로필</h5>
+          </div>
+          <table class="mu-formbox">
+            <colgroup>
+              <col style="width: 200px" />
+              <col />
+              <col style="width: 200px" />
+              <col />
+            </colgroup>
+            <tbody>
+              <tr>
+              <th scope="col">행수</th>
+              <!-- <th scope="col">테이블 크기(Byte)</th> -->
+              <td>{{ comman(table.num_rows) }}</td>
+              <th scope="col">테이블프로파일링 일시</th>
+              <!-- <td>{{ table.total_size | numberComma }}</td> -->
+              <td>{{ $yyyyMMddHHmmSS(table.update_date, " ") }}</td>
+            </tr>
+            </tbody>
+          </table>
         </div>
-        <table class="mu-formbox">
-          <colgroup>
-            <col style="width: 200px" />
-            <col />
-            <col style="width: 200px" />
-            <col />
-          </colgroup>
-          <tbody>
-            <tr>
-            <th scope="col">행수</th>
-            <!-- <th scope="col">테이블 크기(Byte)</th> -->
-            <td>{{ comman(table.num_rows) }}</td>
-            <th scope="col">테이블프로파일링 일시</th>
-            <!-- <td>{{ table.total_size | numberComma }}</td> -->
-            <td>{{ $yyyyMMddHHmmSS(table.update_date, " ") }}</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
 
-      <!-- detail-box : 컬럼 프로필 -->
-      <div class="detail-box" v-if="showColumnArea">
-        <div class="mu-heading">
-          <h5>컬럼 프로필</h5>
-        </div>
-        <table class="mu-grid mu-grid-data" v-show="showData">
-        <colgroup>
-          <col style="width: 150px" />
-        </colgroup>
-        <thead>
-          <tr>
-            <th scope="col">컬럼명</th>
-            <th scope="col">결측값이 있는 행수</th>
-            <th scope="col">고유값 수</th>
-            <th scope="col">최소값</th>
-            <th scope="col">최대값</th>
-            <th scope="col">평균</th>
-            <th scope="col">분산</th>
-            <th scope="col">편차</th>
-            <th scope="col">업데이트날짜</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, index) in column" :key="index">
-            <td>
-              <span :title="item.name + '(' + item.type_name">{{ item.name ? item.name : "-" }}<br>({{ item.type_name ? item.type_name : "-" }})</span>
-            </td>
-            <td>
-              <span class="mu-ellipsis" :title="numberComma(item.null_count)">
-                {{ numberComma(item.null_count) }}
-              </span>
-            </td>
-            <td>
-              <span class="mu-ellipsis" :title="numberComma(item.distinct_count)">
-                {{ numberComma(item.distinct_count) }}
-              </span>
-            </td>
+        <!-- detail-box : 컬럼 프로필 -->
+        <div class="detail-box" v-if="showColumnArea">
+          <div class="mu-heading">
+            <h5>컬럼 프로필</h5>
+          </div>
+          <div class="table-scroll max-h630">
+            <table class="mu-grid mu-grid-data" v-show="showData">
+              <colgroup>
+                <col style="width: 150px" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th scope="col">컬럼명</th>
+                  <th scope="col">결측값이 있는 행수</th>
+                  <th scope="col">고유값 수</th>
+                  <th scope="col">최소값</th>
+                  <th scope="col">최대값</th>
+                  <th scope="col">평균</th>
+                  <th scope="col">분산</th>
+                  <th scope="col">편차</th>
+                  <th scope="col">업데이트날짜</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, index) in column" :key="index">
+                  <td>
+                    <span :title="item.name + '(' + item.type_name">{{ item.name ? item.name : "-" }}<br>({{ item.type_name ? item.type_name : "-" }})</span>
+                  </td>
+                  <td>
+                    <span class="mu-ellipsis" :title="numberComma(item.null_count)">
+                      {{ numberComma(item.null_count) }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="mu-ellipsis" :title="numberComma(item.distinct_count)">
+                      {{ numberComma(item.distinct_count) }}
+                    </span>
+                  </td>
 
-            <template v-if="checkInvaildNumberColumn(item)">
-              <td>
-                <span class="mu-ellipsis" :title="numberComma(item.min_value)">
-                  {{ numberComma(item.min_value) }}
-                </span>
-              </td>
-              <td>
-                <span class="mu-ellipsis" :title="numberComma(item.max_value)">
-                  {{ numberComma(item.max_value) }}
-                </span>
-              </td>
-              <td>
-                <span class="mu-ellipsis" :title="numberComma(item.avg_value)">
-                  {{ numberComma(item.avg_value) }}
-                </span>
-              </td>
-              <td>
-                <span class="mu-ellipsis" :title="numberComma(item.var_value)">
-                  {{ numberComma(item.var_value) }}
-                </span>
-              </td>
-              <td>
-                <span class="mu-ellipsis" :title="numberComma(item.std_value)">
-                  {{ numberComma(item.std_value) }}
-                </span>
-              </td>
-            </template>
-            <template v-else>
-              <td colspan="5">
-                <span class="mu-ellipsis">
-                  해당 컬럼에는 숫자가 아닌 값들이 포함되어 있습니다.
-                </span>
-              </td>
-            </template>
-            <td v-html="$yyyyMMddHHmmSS_Sep(item.update_date, '<br>')"></td>
-          </tr>
-        </tbody>
-      </table>
+                  <template v-if="checkInvaildNumberColumn(item)">
+                    <td>
+                      <span class="mu-ellipsis" :title="numberComma(item.min_value)">
+                        {{ numberComma(item.min_value) }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="mu-ellipsis" :title="numberComma(item.max_value)">
+                        {{ numberComma(item.max_value) }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="mu-ellipsis" :title="numberComma(item.avg_value)">
+                        {{ numberComma(item.avg_value) }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="mu-ellipsis" :title="numberComma(item.var_value)">
+                        {{ numberComma(item.var_value) }}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="mu-ellipsis" :title="numberComma(item.std_value)">
+                        {{ numberComma(item.std_value) }}
+                      </span>
+                    </td>
+                  </template>
+                  <template v-else>
+                    <td colspan="5">
+                      <span class="mu-ellipsis">
+                        해당 컬럼에는 숫자가 아닌 값들이 포함되어 있습니다.
+                      </span>
+                    </td>
+                  </template>
+                  <td v-html="$yyyyMMddHHmmSS_Sep(item.update_date, '<br>')"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="data-result" v-else>
+        <p class="nodata">데이터 프로파일이 존재하지 않습니다.</p>
       </div>
     </div>
   </div>

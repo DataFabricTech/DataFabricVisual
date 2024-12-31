@@ -17,7 +17,7 @@
       </div>
       <div class="detail-box" v-if="props.list.length > 0 && !props.sampleDataDenied">
         <!-- 샘플 데이터 최대 10개 출력 전체, 데이터 수 10개 미만인 경우 모든 데이터 출력/샘플 데이터 스크롤바, 컬럼 내용이 긴 경우 가로 스크롤을 이용하여 노출되지 않은 값까지 확인 가능 -->
-        <div class="table-scroll">
+        <div class="table-scroll max-h630">
           <table class="mu-grid mu-grid-data">
             <colgroup>
               <col style="width: 200px" :span="Object.keys(props.list[0]).length" />

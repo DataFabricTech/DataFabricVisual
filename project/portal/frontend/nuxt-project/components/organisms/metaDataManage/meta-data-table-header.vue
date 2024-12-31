@@ -12,15 +12,14 @@
                 :value="props.filterSearchObj.searchType1"
                 @change="onChange"
               >
-                <option value="table">Table</option>
-                <option value="column">Column</option>
+                <option value="all">전체</option>
+                <option v-for="(item, idx) in filterOptions" :value="item">{{ item }}</option>
               </select>
             </div>
             <div class="mu-selectbox w120">
               <select
                 name="searchType2"
                 :value="props.filterSearchObj.searchType2"
-                :disabled="props.filterSearchObj.searchType1 === '_ALL_ENTITY_TYPES'"
                 @change="onChange"
               >
                 <option
@@ -40,7 +39,6 @@
                 title="검색어입력"
                 name="word"
                 :value="props.filterSearchObj.word"
-                :disabled="props.filterSearchObj.searchType1 === '_ALL_ENTITY_TYPES'"
                 @keyup="onChange"
               />
               <button type="button" class="mu-btn mu-btn-sch" @click.prevent="onSearch">
@@ -69,7 +67,7 @@
 import PageSize from "@/pages/admin/manager/system/user/page-size";
 
 const emit = defineEmits(["onChangeFilter", "onClickButtons", "onFilterSearch"]);
-const props = defineProps(["filterSearchObj", "pagingObj"]);
+const props = defineProps(["filterSearchObj", "pagingObj", "filterOptions"]);
 
 // 필터검색 input 변경 이벤트 핸들러
 const onChange = (e) => {

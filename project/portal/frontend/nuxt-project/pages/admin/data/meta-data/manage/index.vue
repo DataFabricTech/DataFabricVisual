@@ -32,6 +32,7 @@
             <classification-info :selected-category="selectedCategory" @onClickUpdate="onClickCategoryManageMenu" />
 
             <meta-data-table-header
+              :filterOptions="filterOptions"
               :filter-search-obj="filterSearchObj"
               @onClickButtons="onClickTableHeaderButtons"
               @onChangeFilter="onChangeFilter"
@@ -205,8 +206,9 @@ const selectedData = ref<any>([]); // 테이블 내 체크박스 체크한 데�
 const catSelectedData = ref<any>(null); // 카테고리 체크박스 체크한 데이터 목록
 
 // 필터검색 제어
+const filterOptions = ref<any[]>([]) // 필터옵션 첫번째 항목 데이터
 const filterSearchObj = ref<FilterSearchObj>({
-  searchType1: "table",
+  searchType1: "all",
   searchType2: "",
   word: "",
   options: [
@@ -267,6 +269,8 @@ await categoryStore.fetchCategories();
 const { _categoryMap } = storeToRefs(categoryStore);
 
 onMounted(() => {
+  // 필터옵션 조회
+  getFilterOptions();
   // NOTE: 카테고리 목록 컴포넌트 import한 페이지 정보 저장
   categoryStore.setCalledFrom({ from: "metaDataManage" });
 
@@ -326,6 +330,14 @@ onUnmounted(() => {
 });
 
 //method
+const getFilterOptions = () => {
+  $ofetch(`/api/metadata/manage/getFilterOptions`).then((res) => {
+    if (res && res.data && !res.errorMessage) {
+      filterOptions.value = res.data
+    }
+  })
+}
+
 const fetchCategories = async (payload: any) => {
   await categoryStore.fetchCategories(payload);
 
@@ -769,19 +781,13 @@ const onChangeFilter = (name: string, value: string) => {
   if (name === "searchType1") {
     let options: FilterOption[] = [];
 
-    if (value === "all") {
-      // 첫번째 검색 조건 옵션 선택 안할 경우 나머지 검색 조건 초기화
-      searchObj.word = "";
-      searchObj.searchType2 = "";
-    } else {
-      // 첫번째 검색 조건 옵션 선택 시 두번째 검색 조건 옵션 관련 값 세팅
-      options = [
-        { value: "", desc: "전체" },
-        { value: "comment", desc: "데이터설명" },
-        { value: "name", desc: "데이터명" },
-        { value: "owner", desc: "소유자" }
-      ];
-    }
+    // 첫번째 검색 조건 옵션 선택 시 두번째 검색 조건 옵션 관련 값 세팅
+    options = [
+      { value: "", desc: "전체" },
+      { value: "comment", desc: "데이터설명" },
+      { value: "name", desc: "데이터명" },
+      { value: "owner", desc: "소유자" }
+    ];
 
     searchObj.options = options;
   }
@@ -806,6 +812,7 @@ const onSearchDataList = async (offset = 0, item = {}) => {
   params.word = word.trim();
 
   // 테이블 데이터 조회
+  console.log(params)
   const res = await $ofetch(`/api/metadata/manage/list`, { method: "POST", body: params });
   if (res && !res.errorMessage) {
     let result = res.data;

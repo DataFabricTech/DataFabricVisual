@@ -42,7 +42,7 @@
                         <td>{{ idx + 1 }}</td>
                         <!-- <td><a @click="onClickDataName(key, item2)">{{ value[idx].name }}</a></td> -->
                         <td :title="value[idx].name">{{ value[idx].name }}</td>
-                        <td :title="value[idx].description">{{ value[idx].description }}</td>
+                        <td :title="value[idx].description">{{ value[idx].description ? value[idx].description : "-" }}</td>
                         <td :title="value[idx].dataType">{{ value[idx].dataType }}</td>
                       </tr>
                     </tbody>

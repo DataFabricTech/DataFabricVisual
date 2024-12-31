@@ -47,4 +47,8 @@ public class MetaDataManageService {
     public int deleteMetaDataClassification(Map<String, Object> params) throws Exception {
         return metaDataManageMapper.deleteMetaDataClassification(params);
     }
+
+    public List<String> getFilterOptions() throws Exception {
+        return metaDataManageMapper.getFilterOptions();
+    }
 }

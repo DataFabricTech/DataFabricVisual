@@ -82,7 +82,6 @@
         </div>
         <!-- detail-section : 데이터 흐름조회 -->
         <div
-          v-if="typeName && typeName.toUpperCase() == 'TABLE'"
           :ref="el => sectionRefs['data-lineage-area'] = el"
           class="content-block">
           <data-lineage-area
@@ -94,7 +93,6 @@
         </div>
         <!-- detail-section : 연관 데이터 -->
         <div
-          v-if="typeName && typeName.toUpperCase() == 'TABLE'"
           :ref="el => sectionRefs['related-data'] = el"
           class="content-block">
           <related-data
@@ -105,7 +103,6 @@
         </div>
         <!-- detail-section : 사용자 리뷰 -->
         <div
-          v-if="typeName && typeName.toUpperCase() == 'TABLE'"
           :ref="el => sectionRefs['user-review-area'] = el"
           class="content-block">
           <user-review-area
@@ -496,6 +493,16 @@ const getAllDataByGuid = async (newGuid, favoriteEvent) => {
   });
 };
 
+const settingTabOption = (entity) => {
+  // 샘플데이터 탭 유무
+  if (entity && entity.metatype && entity.metatype.toUpperCase() != 'TABLE')
+    tabs.value = tabs.value.filter((el) => el != 'sample-data-area')
+
+  // 사용자 리뷰 탭 유무
+  if (props.isAdmin)
+    tabs.value = tabs.value.filter((el) => el != 'user-review-area')
+}
+
 // GUID 기준 데이터 상세 조회
 const getDetailDataByGuid = async (newGuid) => {
   const guid = newGuid ? newGuid : route.query.guid;
@@ -510,6 +517,9 @@ const getDetailDataByGuid = async (newGuid) => {
     }
 
     entity.value = result.data;
+
+    // 탭 유무 처리
+    settingTabOption(entity.value)
 
     labelList.value = ObjectUtils.getPropertyValue(
       entity.value,

@@ -25,16 +25,18 @@ public class DiagramService {
 
     public HashMap getNodeRelation(String direction, String nodeId) throws Exception {
         HashMap param = new HashMap();
+        HashMap returmMap = new HashMap<>();
+
         param.put("nodeId", nodeId);
         param.put("direction", direction);
 
         ArrayList nodeList = diagramMapper.getNodeInfo(param);
 
         param.put("nodeList", nodeList);
-        ArrayList linkList = diagramMapper.getLinkInfo(param);
-        HashMap returmMap = new HashMap<>();
+
+        if (nodeList.size() > 0) returmMap.put("linkInfo", diagramMapper.getLinkInfo(param));
         returmMap.put("nodeInfo", nodeList);
-        returmMap.put("linkInfo", linkList);
+        
         return returmMap;
     }
 
