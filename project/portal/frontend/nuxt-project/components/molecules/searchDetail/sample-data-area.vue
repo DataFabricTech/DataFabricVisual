@@ -1,7 +1,7 @@
 <template>
   <div :class="props.isAdmin ? 'data-box-wrap' : ''" :style="props.isAdmin ? 'padding-top: 5px; padding-bottom: 35px' : ''">
     <div class="detail-section" :class="showData ? 'open' : 'close'">
-      <div class="mu-heading">
+      <div class="mu-heading" :style="props.isModal ? 'margin-bottom: 0px;' : ''">
         <h4>샘플 데이터</h4>
         <div class="mu-item-group">
           <button
@@ -15,9 +15,15 @@
           </button>
         </div>
       </div>
-      <div class="detail-box" v-if="props.list.length > 0 && !props.sampleDataDenied">
+      <div class="mu-heading" v-if="props.isModal">
+        <h5>
+          {{ props.entity.name }} (
+          {{ props.entity.description }} )
+        </h5>
+      </div>
+      <div class="detail-box" v-if="props.list && props.list[0] && !props.sampleDataDenied">
         <!-- 샘플 데이터 최대 10개 출력 전체, 데이터 수 10개 미만인 경우 모든 데이터 출력/샘플 데이터 스크롤바, 컬럼 내용이 긴 경우 가로 스크롤을 이용하여 노출되지 않은 값까지 확인 가능 -->
-        <div class="table-scroll max-h630">
+        <div class="table-scroll max-h630 h400">
           <table class="mu-grid mu-grid-data">
             <colgroup>
               <col style="width: 200px" :span="Object.keys(props.list[0]).length" />
@@ -65,7 +71,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps(["sampleDataDenied", "list", "entity", "isAdmin"]);
+const props = defineProps(["sampleDataDenied", "list", "entity", "isAdmin", "isModal"]);
 
 // const showData = ref(false);
 // const toggleShowDataText = ref("펼치기");

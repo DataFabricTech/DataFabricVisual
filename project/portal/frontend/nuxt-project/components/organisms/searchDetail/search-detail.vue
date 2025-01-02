@@ -251,8 +251,10 @@ const manageModalObj = ref({
 const eliminateModalObj = ref({
   toggle: false,
   sampleData: [],
+  sampleDataDenied: false,
   entity: {},
   num_rows: 0,
+  referredEntitiesAttributes: []
 });
 
 const dataManagerInfoList = ref([]); // 데이터 담당 부서 목록
