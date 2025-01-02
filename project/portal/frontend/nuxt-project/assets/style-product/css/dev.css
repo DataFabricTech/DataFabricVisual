@@ -415,7 +415,7 @@ pre code {
   position: fixed;
   top: 0;
   width: 1400px;
-  z-index: 1000;
+  z-index: 100;
   box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
