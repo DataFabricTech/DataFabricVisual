@@ -52,12 +52,7 @@
                 <tr v-if="currentExtractTab == 0">
                   <th scope="row">추출 건수</th>
                   <td>
-                    <div class="mu-item-group">
-                      <div class="mu-radio">
-                        <input type="radio" :id="'10man'" name="listSorting" checked/>
-                        <label :for="'10man'"><span>10만건</span></label>
-                      </div>
-                    </div>
+                    <span>10만건</span>
                   </td>
                 </tr>
                 <tr v-if="currentExtractTab == 1">
@@ -232,7 +227,7 @@ const columnPositionData = ref([]); // 컬럼정보 (Position 정보 포함)
 const columnUpdateIndex = ref([]);
 const columnData = ref([]); // 컬럼 정보
 const sampleTestData = ref([]); // 파라미터로 받을 내용(샘플데이터)
-const currentTab = ref(1); // API 현재 탭
+const currentTab = ref(0); // API 현재 탭
 const dataCount = ref(null); // 조회된 데이터 Row 개수
 
 const extractLimitTypeList = ref(["all", "custom"])
@@ -368,32 +363,6 @@ const resetFilter = () => {
   queryErrorMessage.value = "";
 };
 
-const descriptionEllipsis = (val, entity) => {
-  const attributes = entity.attributes
-
-  let description;
-  if (attributes) {
-    const columns = attributes.columns
-    if (columns) {
-      columns.filter((item) => {
-        if (item.name === val) {
-          if (item.description !== "") {
-            description = item.description;
-          }
-        }
-      });
-    }
-  }
-
-  if (description !== undefined) {
-    if (description !== null) {
-      return description;
-    }
-  } else {
-    return "";
-  }
-};
-
 const typeEllipsis = (val, entity) => {
   const attributes = entity.attributes
 
@@ -414,32 +383,6 @@ const typeEllipsis = (val, entity) => {
   if (dataType !== undefined) {
     if (dataType !== null) {
       return dataType.toLowerCase();
-    }
-  } else {
-    return "";
-  }
-};
-
-const userDescriptionEllipsis = (val, entity) => {
-  const attributes = entity.attributes
-
-  let userDescription;
-  if (attributes) {
-    const columns = attributes.columns
-    if (columns) {
-      columns.filter((item) => {
-        if (item.name === val) {
-          if (item.userDescription !== "") {
-            userDescription = item.userDescription;
-          }
-        }
-      });
-    }
-  }
-
-  if (userDescription !== undefined) {
-    if (userDescription !== null) {
-      return userDescription;
     }
   } else {
     return "";
@@ -661,11 +604,8 @@ const fnWhereQueryMake = () => {
   return createSuccess
 };
 
+// 일반 데이터 추출, 대용량 데이터 추출 요청 버튼 클릭
 const onClickFileEliminateButton = async () => {
-  if (!await confirmAlert("파일을 다운로드하시겠습니까?")) {
-    return
-  }
-
   if (props.sampleDataDenied) {
     errorAlert("데이터 접근 권한이 없습니다. 관리자에게 문의해 주시기 바랍니다.")
     return
@@ -677,11 +617,14 @@ const onClickFileEliminateButton = async () => {
     return;
   }
 
+  if (!await confirmAlert("파일을 다운로드하시겠습니까?")) {
+    return
+  }
+
   queryError.value = false;
   queryErrorMessage.value = "";
   querySelect.value = " ";
   const sortedColumnEntities = getReferredEntities();
-
 
   fnSelectQueryMake();
 
@@ -756,7 +699,14 @@ const onClickFileEliminateButton = async () => {
     fileName: name,
     // userDescriptionList: userDescriptionList,
     descriptionList: descriptionList,
-    limit: extractLimit.value
+  }
+
+  if (currentExtractTab.value == 0) { // 일반 데이터 추출
+    params.limit = 100000
+  } else if (currentExtractTab.value == 1) { // 대용량 데이터 추출, 직접입력 선택한 경우만 limit 필드 추가
+    if (extractLimitType.value == 'custom') {
+      params.limit = extractLimit.value
+    }
   }
 
     const res = await $ofetch(`/api/search/detail/eliminate/file/download`, {
@@ -850,13 +800,6 @@ const onClickFileEliminateButton = async () => {
     // }
 };
 
-// 대용량 데이터 추출 요청 버튼 클릭
-const onClickBigFileEliminateButton = () => {
-  // extractLimitType이 all인 경우는 LIMIT 없음
-  console.log('대용량 데이터 추출 요청')
-
-}
-
 // 추출건수 유효성 검증
 const validateInput = () => {
   if (Number(extractLimit.value) < 0 || !extractLimit.value) {
@@ -864,11 +807,13 @@ const validateInput = () => {
   }
 }
 
+// 모달 닫기
 const close = () => {
   columnUpdateIndex.value = [];
   emit("onCloseModal");
 };
 
+// 추출 조건 제거버튼
 const deleteFilter = (idx) => {
   filter.value[idx].filterHeader = "";
   filter.value[idx].filterInput = "";
