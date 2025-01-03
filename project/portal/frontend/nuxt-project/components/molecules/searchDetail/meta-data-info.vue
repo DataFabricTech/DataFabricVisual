@@ -107,7 +107,7 @@ const emit = defineEmits(["onClickDataName"]);
 const props = defineProps(["entity", "referredEntitiesAttributes"]);
 
 const desiredOrder = ref([
-  "name", "description", "columns", "createtime", "lastaccesstime", "systemType", "tableType", "sourceHash", "databaseSchema"
+  "name", "description", "columns", "qualifiedname", "createtime", "lastaccesstime", "systemType", "tableType", "sourceHash", "databaseSchema"
 ]) // 메타속성 항목 순서 목록
 const noEntries = ref([
   "viewDefinition"
@@ -141,6 +141,7 @@ const metaDataInfo = computed(() => {
 
   sortedMetaData.createtime = entity.createtime
   sortedMetaData.lastaccesstime = entity.lastaccesstime
+  sortedMetaData.qualifiedname = entity.qualifiedname
   return sortedMetaData;
 });
 
@@ -150,6 +151,7 @@ const getKrKey = (key) => {
     if (key == "name") return "시스템명";
     if (key == "description") return "메타데이터 description";
     if (key == "columns") return "컬럼 목록";
+    if (key == "qualifiedname") return "객체 고유명"
     if (key == "createtime") return "메타 데이터 생성일자";
     if (key == "lastaccesstime") return "최종 접근 시간";
     if (key == "systemType") return "시스템 타입";
