@@ -19,13 +19,13 @@
         <ul class="connection-list">
           <li v-for="(item, index) in classifications" :key="index">
             <div class="datatype">
-              <em class="datatype-label">{{ item.systemtype }}</em>
+              <em class="datatype-label">{{ item.system_type }}</em>
             </div>
             <div class="datatype">
-              <em class="datatype-label">{{ item.metatype }}</em>
+              <em class="datatype-label">{{ item.meta_type }}</em>
             </div>
             <a v-on:click="onClickDataName(item)">
-              <span>{{ item.name }}</span>
+              <span>{{ item.meta_name }}</span>
               <span class="datatype-desc" v-if="item.description"> - {{ item.description }}</span>
             </a>
           </li>

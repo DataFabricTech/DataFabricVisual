@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 public interface SearchMapper {
     void insertSearchTextHistory(Map<String, Object> textHistoryParam);
     int getTableTotal();
-    List<String> getSystemtypes();
-    List<String> getMetatypes();
+    List<String> getSystemTypes();
+    List<String> getMetaTypes();
     List<Map<String, Object>>  getMetaDataClassifications(Map<String, Object> params) throws Exception;
     List<String> getMetaDataInfoFromClassifications(Map<String, Object> params) throws Exception;
 }

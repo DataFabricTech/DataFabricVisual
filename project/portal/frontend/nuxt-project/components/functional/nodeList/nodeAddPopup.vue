@@ -125,7 +125,7 @@
                     </td>
                     <td>
                       <span class="mu-ellipsis">
-                        {{ node.name }}
+                        {{ node.meta_name }}
                       </span>
                     </td>
                     <td>
@@ -149,7 +149,7 @@
                             <div class="data-info2">
                               <dl>
                                 <dt>데이터 이름</dt>
-                                <dd>{{ node.name }}</dd>
+                                <dd>{{ node.meta_name }}</dd>
                               </dl>
                               <dl>
                                 <dt>데이터 설명</dt>
@@ -157,7 +157,7 @@
                               </dl>
                               <dl>
                                 <dt>데이터 유형</dt>
-                                <dd>{{ node.metatype }}</dd>
+                                <dd>{{ node.meta_type }}</dd>
                               </dl>
                             </div>
                           </div>

@@ -107,72 +107,79 @@ const emit = defineEmits(["onClickDataName"]);
 const props = defineProps(["entity", "referredEntitiesAttributes"]);
 
 const desiredOrder = ref([
-  "name", "description", "columns", "qualifiedname", "createtime", "lastaccesstime", "systemType", "tableType", "sourceHash", "databaseSchema"
+  "meta_name", "description", "columns", "qualified_name", "create_time", "last_access_time", "system_type", "table_type", "source_hash", "database_schema"
 ]) // 메타속성 항목 순서 목록
-const noEntries = ref([
-  "viewDefinition"
-]) // 메타속성 제외 목록
+// const noEntries = ref([
+//   "view_definition"
+// ]) // 메타속성 제외 목록
+
+const noEntries = ref([]) // 메타속성 제외 목록
 
 const metaDataInfo = computed(() => {
   const entity = props.entity
-  const obj = ObjectUtils.getPropertyValue(props.entity, 'attributes', {})
+  if (entity != null && entity != undefined) {
+    const obj = ObjectUtils.getPropertyValue(props.entity, 'attributes', {})
 
-  // 화면 렌더에 필요한 형태로 데이터 가공
-  const metaDataInfoResult = obj
+    // 화면 렌더에 필요한 형태로 데이터 가공
+    const metaDataInfoResult = obj
 
-  const columns = obj.columns;
-  if (columns) {
-    const uniqueColumns = columns.filter((el, idx) => {
-      return columns.indexOf(el) === idx;
-    });
+    const columns = obj.columns;
+    if (columns) {
+      const uniqueColumns = columns.filter((el, idx) => {
+        return columns.indexOf(el) === idx;
+      });
 
-    metaDataInfoResult.columns = uniqueColumns;
+      metaDataInfoResult.columns = uniqueColumns;
+    }
+
+    const sortedEntries = desiredOrder.value
+      .map((key) => [key, metaDataInfoResult[key]])
+      .concat(
+        Object.entries(metaDataInfoResult).filter(
+          ([key]) => !desiredOrder.value.includes(key) && !noEntries.value.includes(key)
+        )
+      );
+
+    const sortedMetaData = Object.fromEntries(sortedEntries);
+
+    sortedMetaData.create_time = entity.create_time
+    sortedMetaData.last_access_time = entity.last_access_time
+    sortedMetaData.qualified_name = entity.qualified_name
+
+    return sortedMetaData;
   }
 
-  const sortedEntries = desiredOrder.value
-    .map((key) => [key, metaDataInfoResult[key]])
-    .concat(
-      Object.entries(metaDataInfoResult).filter(
-        ([key]) => !desiredOrder.value.includes(key) && !noEntries.value.includes(key)
-      )
-    );
-
-  const sortedMetaData = Object.fromEntries(sortedEntries);
-
-  sortedMetaData.createtime = entity.createtime
-  sortedMetaData.lastaccesstime = entity.lastaccesstime
-  sortedMetaData.qualifiedname = entity.qualifiedname
-  return sortedMetaData;
+  return {};
 });
 
 // 한글명으로 수정
 const getKrKey = (key) => {
   if (props.entity && props.entity != undefined) {
-    if (key == "name") return "시스템명";
+    if (key == "meta_name") return "시스템명";
     if (key == "description") return "메타데이터 description";
     if (key == "columns") return "컬럼 목록";
-    if (key == "qualifiedname") return "객체 고유명"
-    if (key == "createtime") return "메타 데이터 생성일자";
-    if (key == "lastaccesstime") return "최종 접근 시간";
-    if (key == "systemType") return "시스템 타입";
-    if (key == "tableType") return "테이블 형식";
-    if (key == "sourceHash") return "Source hash of the entity";
-    if (key == "databaseSchema") return "스키마";
-    if (key == "sourceHash") return "소스 해시값";
+    if (key == "qualified_name") return "객체 고유명"
+    if (key == "create_time") return "메타 데이터 생성일자";
+    if (key == "last_access_time") return "최종 접근 시간";
+    if (key == "system_type") return "시스템 타입";
+    if (key == "table_type") return "테이블 형식";
+    if (key == "source_hash") return "Source hash of the entity";
+    if (key == "database_schema") return "스키마";
+    if (key == "source_hash") return "소스 해시값";
     if (key == "tags") return "사용자 정의 태그";
     if (key == "owner") return "테이블 소유자 계정";
     // if (key == "domain") return "도메인";
     // if (key == "extension") return "소스 해시값";
-    if (key == "lifeCycle") return "보관 주기";
-    // if (key == "sourceUrl") return "소스 URL";
-    if (key == "fileFormat") return "파일 형식";
-    if (key == "displayName") return "화면 표출 메타명";
-    // if (key == "dataProducts") return "데이터 제품";
-    if (key == "tablePartition") return "테이블 파티션 키";
-    if (key == "retentionPeriod") return "보존 기간";
-    if (key == "tableConstraints") return "테이블 제약 조건";
-    if (key == "viewDefinition") return "데이터 추출 SQL 원본"
-    // if (key == "tableProfilerConfig") return "테이블 프로파일러 설정";
+    if (key == "life_cycle") return "보관 주기";
+    // if (key == "source_url") return "소스 URL";
+    if (key == "file_format") return "파일 형식";
+    if (key == "display_name") return "화면 표출 메타명";
+    // if (key == "data_products") return "데이터 제품";
+    if (key == "table_partition") return "테이블 파티션 키";
+    if (key == "retention_period") return "보존 기간";
+    if (key == "table_constraints") return "테이블 제약 조건";
+    if (key == "view_definition") return "데이터 추출 SQL 원본"
+    // if (key == "table_profiler_config") return "테이블 프로파일러 설정";
     return key;
   }
   return key;

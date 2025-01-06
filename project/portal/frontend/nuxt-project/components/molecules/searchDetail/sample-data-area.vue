@@ -17,7 +17,7 @@
       </div>
       <div class="mu-heading" v-if="props.isModal">
         <h5>
-          {{ props.entity.name }} (
+          {{ props.entity.meta_name }} (
           {{ props.entity.description }} )
         </h5>
       </div>

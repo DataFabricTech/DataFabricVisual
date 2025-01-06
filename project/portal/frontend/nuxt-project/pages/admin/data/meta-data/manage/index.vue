@@ -660,7 +660,7 @@ const onSubmitCategory = async (params: any) => {
                 event_by: user.user_id,
                 meta_id: entity.id,
                 meta_name: entity.name,
-                qualifiedname: entity.qualifiedname
+                qualified_name: entity.qualified_name
               })
             }
             onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
@@ -747,7 +747,7 @@ const onClickTableHeaderButtons = (type) => {
     switch (type) {
       case "category": // 카테고리 맵핑 버튼 클릭 시
         // 테이블 유형에 대해서만 카테고리 맵핑 가능
-        targets = selectedData.value.filter((el) => el.metatype.includes("table"));
+        targets = selectedData.value.filter((el) => el.meta_type.includes("table"));
         if (targets.length > 0) {
           onToggleManageModal("map", targets);
         } else {
@@ -829,9 +829,9 @@ const onSearchDataList = async (offset = 0, item = {}) => {
     // if (dataList.value.length > 0) {
     //   if (dataList.value[0].typeName === "hive_column") {
     //     dataList.value.forEach((item) => {
-    //       const temp = item.attributes.qualifiedName;
+    //       const temp = item.attributes.qualified_name;
     //       const tableName = temp.split(".");
-    //       item.attributes.qualifiedName = tableName[1];
+    //       item.attributes.qualified_name = tableName[1];
     //     });
     //   }
     // }
@@ -935,7 +935,7 @@ const onSelectItems = (selected: any) => {
 //     let isTableType = false;
 
 //     // 해당 엔티티가 테이블 유형일 경우 하위 컬럼에 대해서도 동일 처리 가능하도록 flag 전달
-//     if (item.metatype.includes("table")) {
+//     if (item.meta_type.includes("table")) {
 //       isTableType = true;
 //     }
 
@@ -963,7 +963,7 @@ const onSelectItems = (selected: any) => {
 //             event_by: user.user_id,
 //             meta_id: item.id,
 //             meta_name: item.name,
-//             qualifiedname: item.qualifiedname
+//             qualified_name: item.qualified_name
 //           })
 //           onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
 //           onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회

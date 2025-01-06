@@ -16,7 +16,7 @@
       </dl>
     </div>
     <!-- 추출한 데이터 최신순으로 ‘데이터명’ 3개 정렬 -->
-    <ul class="basic-list">      
+    <ul class="basic-list">
       <li v-for="(item, index) in dataList" :key="index">
         <a v-if="item.description != null && item.description != ''" v-on:click="onClickDataName(item)">{{item.description}}</a>
         <a v-else v-on:click="onClickDataName(item)">{{ item.name }}</a>
@@ -38,17 +38,17 @@ const props = defineProps(["dataList_s"]);
 
 interface MyExtractedData {
   conditional: string;
-      description: string;
-      download_date: string;
-      download_id: number;
-      download_type: number;
-      guid: string;
-      name: string;
-      qualified_name: string;
-      rownum: number;
-      type_name: string;
-      user_id: string;
-      user_nm: string;
+  description: string;
+  download_date: string;
+  download_id: number;
+  download_type: number;
+  guid: string;
+  name: string;
+  qualified_name: string;
+  rownum: number;
+  type_name: string;
+  user_id: string;
+  user_nm: string;
 }
 
 const dataList: ComputedRef<Array<MyExtractedData>> = computed(() => (props.dataList_s.list ? props.dataList_s.list : []));

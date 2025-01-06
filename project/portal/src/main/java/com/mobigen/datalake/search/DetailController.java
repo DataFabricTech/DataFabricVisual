@@ -91,9 +91,9 @@ public class DetailController {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         params.put("user_id", user.get("user_id"));
 
-        // qualifiedName 검증
-        String qualifiedName = params.get("qualifiedName").toString();
-        RegexUtils.sanitizeInput(qualifiedName);
+        // qualified_name 검증
+        String qualified_name = params.get("qualified_name").toString();
+        RegexUtils.sanitizeInput(qualified_name);
 
         return searchDetailService.getSampleData(params);
     }
@@ -119,7 +119,7 @@ public class DetailController {
      * @return Object           사용자 데이터 설명 목록
      */
     @ResponseJsonResult
-    @PostMapping("/userdescriptionList")
+    @PostMapping("/userDescriptionList")
     @ResponseBody
     public Object getUserDescriptionList(@RequestBody Map<String, Object> params) {
         return searchDetailService.getUserDescriptionList(params);
@@ -132,7 +132,7 @@ public class DetailController {
      * @return Object           사용자 데이터 설명 등록 결과
      */
     @ResponseJsonResult
-    @PostMapping("/userdescriptionInsert")
+    @PostMapping("/userDescriptionInsert")
     @ResponseBody
     public Object insertUserDescription(@RequestBody Map<String, Object> params) throws Exception {
         return searchDetailService.insertUserDescription(params);
@@ -145,7 +145,7 @@ public class DetailController {
      * @return Object           사용자 데이터 설명 수정 결과
      */
     @ResponseJsonResult
-    @PutMapping("/userdescriptionUpdate")
+    @PutMapping("/userDescriptionUpdate")
     @ResponseBody
     public Object updateUserDescription(@RequestBody Map<String, Object> params) throws Exception {
         return searchDetailService.updateUserDescription(params);
@@ -158,7 +158,7 @@ public class DetailController {
      * @return Object           사용자 데이터 설명 삭제 결과
      */
     @ResponseJsonResult
-    @PostMapping("/userdescriptionDelete")
+    @PostMapping("/userDescriptionDelete")
     @ResponseBody
     public Object deleteUserDescription(@RequestBody Map<String, Object> params) throws Exception {
         return searchDetailService.deleteUserDescription(params);
@@ -171,7 +171,7 @@ public class DetailController {
      * @return Object           사용자 데이터 설명 추천 상태 1건
      */
     @ResponseJsonResult
-    @GetMapping("/userdescriptionFavoriteStatus/{id}")
+    @GetMapping("/userDescriptionFavoriteStatus/{id}")
     @ResponseBody
     public Object getUserDescriptionFavoriteStatus(@PathVariable("id") int id, HttpServletRequest request) throws Exception {
         Map<String, Object> params = new LinkedHashMap<>();
@@ -188,7 +188,7 @@ public class DetailController {
      * @return Object           사용자 데이터 설명 추천 등록 결과
      */
     @ResponseJsonResult
-    @PostMapping("/userdescriptionFavoriteInsert")
+    @PostMapping("/userDescriptionFavoriteInsert")
     @ResponseBody
     public Object insertUserDescriptionFavorite(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
@@ -203,7 +203,7 @@ public class DetailController {
      * @return Object           사용자 데이터 설명 추천 취소 결과
      */
     @ResponseJsonResult
-    @PostMapping("/userdescriptionFavoriteDelete")
+    @PostMapping("/userDescriptionFavoriteDelete")
     @ResponseBody
     public Object deleteUserDescriptionFavorite(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);

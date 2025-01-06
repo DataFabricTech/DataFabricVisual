@@ -49,7 +49,7 @@ const showButton = computed(() => {
       }
     } else {
       // 추가 버튼 렌더 시
-      if (props.item.metatype.endsWith('table')) {
+      if (props.item.meta_type.endsWith('table')) {
         // 테이블 유형 엔티티에 대해서만 추가 버튼 생성
         show = true;
       }

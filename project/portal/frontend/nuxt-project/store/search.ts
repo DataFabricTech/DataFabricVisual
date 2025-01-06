@@ -9,8 +9,8 @@ export const useSearchStore = defineStore('searchStore', () => {
     query: "",
     detailFilters: {},
     pagingObj: {},
-    systemtype: "",
-    metatype: "",
+    system_type: "",
+    meta_type: "",
     tag: "",
     limit: 10,
     offset: 0,
@@ -30,8 +30,8 @@ export const useSearchStore = defineStore('searchStore', () => {
   // getters
   const getSearchParams = computed(() => _searchParams.value)
   const getQuery = computed(() => _searchParams.value.query)
-  const getSystemtype = computed(() => _searchParams.value.systemtype)
-  const getMetatype = computed(() => _searchParams.value.metatype)
+  const getSystemType = computed(() => _searchParams.value.system_type)
+  const getMetaType = computed(() => _searchParams.value.meta_type)
   const getLimit = computed(() => _searchParams.value.limit)
   const getOffset = computed(() => _searchParams.value.offset)
   const getClassification = computed(() => _searchParams.value.classification)
@@ -43,13 +43,13 @@ export const useSearchStore = defineStore('searchStore', () => {
 
   // action
   const setSearchParams = (data: any) => { _searchParams.value = data }
-   // 상세필터 조건 저장
-   const setSearchParamsDetailFilters = (payload) => { return _searchParams.value.detailFilters = payload }
-   // 페이징 조건 저장
+  // 상세필터 조건 저장
+  const setSearchParamsDetailFilters = (payload) => { return _searchParams.value.detailFilters = payload }
+  // 페이징 조건 저장
   const setSearchParamsPagingObj = (payload) => { return _searchParams.value.pagingObj = payload }
   const setQuery = (data: any) => { _searchParams.value.query = data }
-  const setSystemtype = (data: any) => { _searchParams.value.systemtype = data }
-  const setMetatype = (data: any) => { _searchParams.value.metatype = data }
+  const setSystemType = (data: any) => { _searchParams.value.system_type = data }
+  const setMetaType = (data: any) => { _searchParams.value.meta_type = data }
   const setLimit = (data: any) => { _searchParams.value.limit = data }
   const setOffset = (data: any) => { _searchParams.value.offset = data }
   const setClassification = (data: any) => { _searchParams.value.classification = data }
@@ -65,8 +65,8 @@ export const useSearchStore = defineStore('searchStore', () => {
     _searchParams,
     getSearchParams,
     getQuery,
-    getSystemtype,
-    getMetatype,
+    getSystemType,
+    getMetaType,
     getLimit,
     getOffset,
     getClassification,
@@ -78,8 +78,8 @@ export const useSearchStore = defineStore('searchStore', () => {
     setSearchParamsPagingObj,
     setSearchParamsDetailFilters,
     setQuery,
-    setSystemtype,
-    setMetatype,
+    setSystemType,
+    setMetaType,
     setLimit,
     setOffset,
     setClassification,

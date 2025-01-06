@@ -154,7 +154,7 @@ public class DiagramController {
         Map<String, Object> tooltipMap = (Map<String, Object>) params.get("tooltip");
         Object idObj = tooltipMap.get("id");
         String id = (String) idObj;
-        String db_name = (String) tooltipMap.get("systemtype");
+        String db_name = (String) tooltipMap.get("system_type");
         tooltipMap.put("dbName", db_name);
         if (diagramService.checkDuplicate(id)) {
             diagramService.updateSelfNode(tooltipMap);

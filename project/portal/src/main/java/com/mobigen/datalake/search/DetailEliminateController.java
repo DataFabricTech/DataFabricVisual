@@ -71,7 +71,7 @@ public class DetailEliminateController {
     /**
      * 데이터 추출 : 파일
      * @param typeName              메타 타입 (hive_table, hive_column)         
-     * @param qualifiedName         메타 고유명
+     * @param qualified_name         메타 고유명
      * @param querySelect           데이터 추출 Trino 쿼리
      * @param queryWhere            데이터 추출 Trino
      * @param fileName              파일명

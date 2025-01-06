@@ -116,13 +116,13 @@ const entityCategories = computed(() =>{
   }
 );
 const entityName = computed(() =>
-  ObjectUtils.getPropertyValue(props.entity, "name", "")
+  ObjectUtils.getPropertyValue(props.entity, "meta_name", "")
 );
 const entityDescription = computed(() =>
   ObjectUtils.getPropertyValue(props.entity, "description", "") ? ObjectUtils.getPropertyValue(props.entity, "description", "") : ObjectUtils.getPropertyValue(props.entity, "attributes/description", "")
 );
 const entityUserDescription = computed(() =>
-  ObjectUtils.getPropertyValue(props.entity, "userdescription", "")
+  ObjectUtils.getPropertyValue(props.entity, "user_description", "")
 );
 const entityTags = computed(() =>
   ObjectUtils.getPropertyValue(props.entity, "tags", "")

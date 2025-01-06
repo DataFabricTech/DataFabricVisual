@@ -18,7 +18,7 @@ public interface MetaDataManageMapper {
     int getMetaDataManageListTotCnt(Map<String, Object> params) throws Exception;
 
     // 하위 메타 데이터 목록
-    List<Map<String, Object>> getMetaDataListByParentId(@Param("parentId") String parentId) throws Exception;
+    List<Map<String, Object>> getMetaDataListByParentId(@Param("parent_id") String parent_id) throws Exception;
 
     // 메타 데이터 classification 업데이트
     int updateMetaDataClassification(Map<String, Object> params) throws Exception;

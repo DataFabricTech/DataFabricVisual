@@ -160,7 +160,7 @@
               <ul class="data-box-list" v-if="listData && listData.length > 0">
                 <li class="data-box" v-for="data in listData">
                   <div class="inner-data visual" @click="onSelectDetailPage(data)">
-                    <i :class="getMetaIcon(data.metatype)"></i>
+                    <i :class="getMetaIcon(data.meta_type)"></i>
                   </div>
                   <div class="inner-data">
                     <div class="category-group" v-if="data && data.classifications && data.classifications.length > 0">
@@ -177,7 +177,7 @@
                       <a @click="onSelectDetailPage(data)">
                         <strong class="data-title">{{ data && data.attributes && data.attributes.description ? data.attributes.description : data.description }}</strong>
                         <p class="data-name"> {{ data && data.name ? data.name : ''}} </p>
-                        <p class="data-desc">{{data && data.userdescription? data.userdescription : ''}}</p>
+                        <p class="data-desc">{{data && data.user_description ? data.user_description : ''}}</p>
                       </a>
                     </div>
                     <!-- LABELS -->
@@ -194,14 +194,14 @@
                     </div>
                   </div>
                   <div class="inner-data option">
-                    <p >생 성 일 : <strong>{{ $yyyyMMdd(data.createtime) }}</strong></p>
-                    <p >수 정 일 : <strong>{{ $yyyyMMdd(data.updatetime) }}</strong></p>
-                    <p >최종 접근시간 : <strong>{{ $yyyyMMddHHmmSS(data.lastaccesstime ? data.lastaccesstime: null) }}</strong></p>
-                    <p >시스템 타입 : <strong>{{ data.systemtype }}</strong></p>
-                    <p >메타 타입 : <strong>{{ data.metatype }}</strong></p>
-                    <p v-if="data.qualifiedname">DB : <strong>{{ getDbName(data.qualifiedname) }}</strong></p>
-                    <p v-if="data.systemtype && data.systemtype.toUpperCase() == 'COLUMN'"> 테이블 <strong>{{ getTableName(data.qualifiedname) }}</strong></p>
-                    <p v-if="data.systemtype && data.systemtype.toUpperCase() != 'HIVE' && data.qualifiedname && data.qualifiedname.split('.')[2]">스키마 : <strong>{{ getSchemaName(data.qualifiedname) }}</strong></p>
+                    <p >생 성 일 : <strong>{{ $yyyyMMdd(data.create_time) }}</strong></p>
+                    <p >수 정 일 : <strong>{{ $yyyyMMdd(data.update_time) }}</strong></p>
+                    <p >최종 접근시간 : <strong>{{ $yyyyMMddHHmmSS(data.last_access_time ? data.last_access_time: null) }}</strong></p>
+                    <p >시스템 타입 : <strong>{{ data.system_type }}</strong></p>
+                    <p >메타 타입 : <strong>{{ data.meta_type }}</strong></p>
+                    <p v-if="data.qualified_name">DB : <strong>{{ getDbName(data.qualified_name) }}</strong></p>
+                    <p v-if="data.system_type && data.system_type.toUpperCase() == 'COLUMN'"> 테이블 <strong>{{ getTableName(data.qualified_name) }}</strong></p>
+                    <p v-if="data.system_type && data.system_type.toUpperCase() != 'HIVE' && data.qualified_name && data.qualified_name.split('.')[2]">스키마 : <strong>{{ getSchemaName(data.qualified_name) }}</strong></p>
                   </div>
                 </li>
               </ul>
@@ -252,8 +252,8 @@ const searchParams = ref({
   query: "",
   detailFilters: {},
   pagingObj: {},
-  systemtype: "",
-  metatype: "",
+  system_type: "",
+  meta_type: "",
   tag: "",
   limit: 10,
   offset: 0,
@@ -262,8 +262,8 @@ const searchParams = ref({
     name: "",
     description: ""
   },
-  sortBy: "createtime",
-  sortOrder: "",
+  sort_by: "createtime",
+  sort_order: "",
   entityFilters: {}
 });
 
@@ -375,11 +375,11 @@ const leftWidth = ref<number>(0); // 왼쪽 DOM 너비
 
 const word = ref<string>(""); // 검색어
 
-const systemtype = ref<string>(""); // 시스템 타입 (hive, hbase, postgreSQL 등 시스템 종류)
-const metatype = ref<string>(""); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미
+const system_type = ref<string>(""); // 시스템 타입 (hive, hbase, postgreSQL 등 시스템 종류)
+const meta_type = ref<string>(""); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미
 const tag = ref<string>(""); // 태그
-const sortBy = ref<string>("createtime") // 정렬 필드
-const sortOrder = ref<string>(""); // 정렬
+const sort_by = ref<string>("createtime") // 정렬 필드
+const sort_order = ref<string>(""); // 정렬
 const classification = ref({
   id: "",
   name: "",
@@ -411,23 +411,23 @@ const entityFilters = ref({
 })
 const entityFilterCriterion = ref([
   {
-    name: "id",
+    name: "meta_id",
     typeName: "string"
   },
   {
-    name: "qualifiedname",
+    name: "qualified_name",
     typeName: "string"
   },
   {
-    name: "systemtype",
+    name: "system_type",
     typeName: "string"
   },
   {
-    name: "metatype",
+    name: "meta_type",
     typeName: "string"
   },
   {
-    name: "displayname",
+    name: "display_name",
     typeName: "string"
   },
   {
@@ -435,7 +435,7 @@ const entityFilterCriterion = ref([
     typeName: "string"
   },
   {
-    name: "userdescription",
+    name: "user_description",
     typeName: "string"
   },
   {
@@ -447,15 +447,15 @@ const entityFilterCriterion = ref([
     typeName: "string"
   },
   {
-    name: "createtime",
+    name: "create_time",
     typeName: "date"
   },
   {
-    name: "updatetime",
+    name: "update_time",
     typeName: "date"
   },
   {
-    name: "lastaccesstime",
+    name: "last_access_time",
     typeName: "date"
   }
 ])
@@ -515,9 +515,9 @@ onMounted(async () => {
         description: ""
       }
 
-      systemtype.value = searchParams.value.systemtype ? searchParams.value.systemtype : "" // 시스템타입
-      metatype.value = searchParams.value.metatype ? searchParams.value.metatype : "" // 메타타입
-      sortOrder.value = searchParams.value.sortOrder ? searchParams.value.sortOrder : "" // 정렬방식
+      system_type.value = searchParams.value.system_type ? searchParams.value.system_type : "" // 시스템타입
+      meta_type.value = searchParams.value.meta_type ? searchParams.value.meta_type : "" // 메타타입
+      sort_order.value = searchParams.value.sort_order ? searchParams.value.sort_order : "" // 정렬방식
       pagingObj.value.currentPage = searchParams.value.offset + 1 // 현재 페이지
       pagingObj.value.limit = searchParams.value.limit // 보여줄 개수
 
@@ -694,14 +694,14 @@ const getSearch = async (offset: number = 0): Promise<void> => {
   let currentLimit = pagingObj.value.limit ? pagingObj.value.limit : 10
   const params = {
     query: word.value ? word.value : "",
-    systemtype: systemtype.value ? systemtype.value : "",
-    metatype: metatype.value ? metatype.value : "",
+    system_type: system_type.value ? system_type.value : "",
+    meta_type: meta_type.value ? meta_type.value : "",
     tag: "",
     limit: currentLimit,
     offset: offset ? offset * currentLimit : 0,
     classification: classification.value && classification.value.name ? classification.value.name : "", // 검색할 때는 name값 사용
-    sortBy: sortBy.value ? sortBy.value : "createtime",
-    sortOrder: sortOrder.value ? sortOrder.value : "",
+    sort_by: sort_by.value ? sort_by.value : "createtime",
+    sort_order: sort_order.value ? sort_order.value : "",
     entityFilters: showFilterWrap2.value ? paramEntityFilters : {}
   };
 
@@ -969,13 +969,13 @@ const clearFilter = (key) => {
     };
     leftMenuToggleAndBold("") // 왼쪽메뉴 연동
   } else if (key == 'SYSTEMTYPE') {
-    systemtype.value = ""
+    system_type.value = ""
   } else if (key == 'METATYPE') {
-    metatype.value = ""
+    meta_type.value = ""
   } else if (key == 'TAG') {
     tag.value = ""
   } else if (key == 'ORDER') {
-    sortOrder.value = ""
+    sort_order.value = ""
   } else {
     if (key == '_NOT_CLASSIFIED') {
       leftMenuToggleAndBold("_NOT_CLASSIFIED")
@@ -1188,10 +1188,10 @@ const onChangeCheckBox = async (key, event: any) => {
           };
           leftMenuToggleAndBold(el.id) // 왼쪽메뉴 연동 처리
         }
-        if (key == 'SYSTEMTYPE') systemtype.value = el.name
-        if (key == 'METATYPE') metatype.value = el.name
+        if (key == 'SYSTEMTYPE') system_type.value = el.name
+        if (key == 'METATYPE') meta_type.value = el.name
         if (key == 'TAG') tag.value = el.name
-        if (key == 'ORDER') sortOrder.value = el.name
+        if (key == 'ORDER') sort_order.value = el.name
       } else {
         el.checked = false // 단일로 체크되도록 설정
       }
@@ -1208,25 +1208,25 @@ const onChangeCheckBox = async (key, event: any) => {
 }
 
 // DB명
-const getDbName = (qualifiedName) => {
-  if (qualifiedName) {
-    return qualifiedName.split(".")[1]
+const getDbName = (qualified_name) => {
+  if (qualified_name) {
+    return qualified_name.split(".")[1]
   }
   return ""
 }
 
 // 스키마명
-const getSchemaName = (qualifiedName) => {
-  if (qualifiedName) {
-    return qualifiedName.split(".")[2]
+const getSchemaName = (qualified_name) => {
+  if (qualified_name) {
+    return qualified_name.split(".")[2]
   }
   return ""
 }
 
 // 테이블명
-const getTableName = (qualifiedName) => {
-  if (qualifiedName) {
-    return qualifiedName.split(".")[3]
+const getTableName = (qualified_name) => {
+  if (qualified_name) {
+    return qualified_name.split(".")[3]
   }
   return ""
 }

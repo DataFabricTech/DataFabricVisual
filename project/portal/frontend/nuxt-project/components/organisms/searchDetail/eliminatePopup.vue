@@ -646,18 +646,18 @@ const onClickFileEliminateButton = async () => {
 
   let typeName = ObjectUtils.getPropertyValue(
     props.eliminateModal.entity,
-    "metatype",
+    "meta_type",
     ""
   );
-  let qualifiedName = ObjectUtils.getPropertyValue(
+  let qualified_name = ObjectUtils.getPropertyValue(
     props.eliminateModal.entity,
-    "qualifiedname",
+    "qualified_name",
     ""
   );
   let guid = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "id", "");
-  let name = ObjectUtils.getPropertyValue(
+  let meta_name = ObjectUtils.getPropertyValue(
     props.eliminateModal.entity,
-    "name",
+    "meta_name",
     ""
   );
   let description = ObjectUtils.getPropertyValue(
@@ -677,8 +677,8 @@ const onClickFileEliminateButton = async () => {
       descriptionList.push("")
 
     // userDescription
-    if (sortedColumnEntities[i].userdescription)
-      userDescriptionList.push(sortedColumnEntities[i].userdescription)
+    if (sortedColumnEntities[i].user_description)
+      userDescriptionList.push(sortedColumnEntities[i].user_description)
     else
       userDescriptionList.push("")
   }
@@ -693,10 +693,10 @@ const onClickFileEliminateButton = async () => {
 
   const params = {
     typeName: typeName,
-    qualifiedName: qualifiedName,
+    qualified_name: qualified_name,
     querySelect: querySelect.value,
     queryWhere: paramQueryWhere,
-    fileName: name,
+    fileName: meta_name,
     // userDescriptionList: userDescriptionList,
     descriptionList: descriptionList,
   }
@@ -727,7 +727,7 @@ const onClickFileEliminateButton = async () => {
         const url = URL.createObjectURL(data);
         const link = document.createElement("a");
         link.href = url;
-        link.setAttribute("download", `${name}` + ".csv");
+        link.setAttribute("download", `${meta_name}` + ".csv");
         link.style.cssText = "display:none";
         document.body.appendChild(link);
         link.click();
@@ -736,9 +736,9 @@ const onClickFileEliminateButton = async () => {
 
       let historyParams = {
         guid: guid,
-        name: name,
+        name: meta_name,
         type_name: typeName,
-        qualified_name: qualifiedName,
+        qualified_name: qualified_name,
         queryWhere: queryWhere.value,
         download_type: 0, // 다운로드 방식 (0:file 1:API)';
         description: description,
@@ -767,7 +767,7 @@ const onClickFileEliminateButton = async () => {
 
     //     const link = document.createElement("a");
     //     link.href = url;
-    //     link.setAttribute("download", `${name}` + ".csv");
+    //     link.setAttribute("download", `${meta_name}` + ".csv");
     //     link.style.cssText = "display:none";
     //     document.body.appendChild(link);
     //     link.click();
@@ -776,9 +776,9 @@ const onClickFileEliminateButton = async () => {
 
     //   let historyParams = {
     //     guid: guid,
-    //     name: name,
+    //     name: meta_name,
     //     type_name: typeName,
-    //     qualified_name: qualifiedName,
+    //     qualified_name: qualified_name,
     //     queryWhere: queryWhere.value,
     //     download_type: 0, // 다운로드 방식 (0:file 1:API)';
     //     description: description,

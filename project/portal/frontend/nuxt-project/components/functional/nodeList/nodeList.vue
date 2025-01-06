@@ -117,7 +117,7 @@
                       </dl>
                       <dl>
                         <dt>데이터 유형</dt>
-                        <dd>{{ node.tooltip.typeName ? node.tooltip.typeName : node.tooltip.metatype ? node.tooltip.metatype : "-" }}</dd>
+                        <dd>{{ node.tooltip.typeName ? node.tooltip.typeName : node.tooltip.meta_type ? node.tooltip.meta_type : "-" }}</dd>
                       </dl>
                     </div>
                   </div>

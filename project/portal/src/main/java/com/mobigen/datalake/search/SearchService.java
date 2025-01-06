@@ -30,12 +30,12 @@ public class SearchService {
         searchMapper.insertSearchTextHistory(textHistoryParam);
     }
 
-    public List<String> getSystemtypes() {
-        return searchMapper.getSystemtypes();
+    public List<String> getSystemTypes() {
+        return searchMapper.getSystemTypes();
     }
 
-    public List<String> getMetatypes() {
-        return searchMapper.getMetatypes();
+    public List<String> getMetaTypes() {
+        return searchMapper.getMetaTypes();
     }
 
     // hive_table 전체 개수 조회
@@ -52,7 +52,7 @@ public class SearchService {
         Map<String, Object> map = classifications.get(0);
 
         if (map != null) {
-            // 2. 카테고리를 가지고 있는 메타데이터 id 조회 (systemtype, metatype 동일한 데이터로 createtime 내림차순)
+            // 2. 카테고리를 가지고 있는 메타데이터 id 조회 (system_type, meta_type 동일한 데이터로 createtime 내림차순)
             params.put("classifications", map.get("classifications"));
             List<String> guids = searchMapper.getMetaDataInfoFromClassifications(params);
             if (guids != null && guids.size() > 0) {

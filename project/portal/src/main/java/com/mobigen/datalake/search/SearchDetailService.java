@@ -46,34 +46,35 @@ public class SearchDetailService {
     // 데이터 상세 조회
     public Object getDetailData(Map<String, Object> params) throws Exception {
         Map<String, Object> result = searchDetailMapper.getDetailData(params.get("guid").toString());
-        // Postgresql jsonb 타입(JSON 문자열) Map 형태로 변환
-        result.put("attributes", convertJsonbToMap(result.get("attributes")));
-        result.put("businessattributes", convertJsonbToMap(result.get("businessattributes")));
-        result.put("customattributes", convertJsonbToMap(result.get("customattributes")));
+        if (result != null) {
+            // Postgresql jsonb 타입(JSON 문자열) Map 형태로 변환
+            result.put("attributes", convertJsonbToMap(result.get("attributes")));
+            result.put("business_attributes", convertJsonbToMap(result.get("business_attributes")));
 
-        // _varchar 객체 배열에 있는 값으로 카테고리 정보 조회하여 Map 형태로 변환
-        String[] ids = (String[]) result.get("classifications");
+            // _varchar 객체 배열에 있는 값으로 카테고리 정보 조회하여 Map 형태로 변환
+            String[] ids = (String[]) result.get("classifications");
 
-        // 카테고리 정보 목록 조회
-        // 구조 [{ c_id, c_name, c_description }]
-        if (ids != null && ids.length > 0) {
-            List<Map<String, Object>> classificationList = searchDetailMapper.getClassificationList(ids);
-            result.put("classifications", classificationList);
+            // 카테고리 정보 목록 조회
+            // 구조 [{ c_id, c_name, c_description }]
+            if (ids != null && ids.length > 0) {
+                List<Map<String, Object>> classificationList = searchDetailMapper.getClassificationList(ids);
+                result.put("classifications", classificationList);
+            }
+            
+            // for (Map.Entry<String, Object> entry : result.entrySet()) {
+            //     System.out.println(entry.getKey() + ": " + entry.getValue());
+            // }
+
+            // 상세 페이지 조회 이력 저장
+            Map<String, Object> saveData = new LinkedHashMap<>();
+            saveData.put("user_id", params.get("user_id"));
+            saveData.put("guid", params.get("guid"));
+            saveData.put("name", result.get("name"));
+            saveData.put("type_name", result.get("meta_type"));
+            saveData.put("qualified_name", result.get("qualified_name"));
+            saveData.put("description", result.get("description"));
+            searchDetailMapper.insertSearchMetaHistory(saveData);
         }
-        
-        // for (Map.Entry<String, Object> entry : result.entrySet()) {
-        //     System.out.println(entry.getKey() + ": " + entry.getValue());
-        // }
-
-        // 상세 페이지 조회 이력 저장
-        Map<String, Object> saveData = new LinkedHashMap<>();
-        saveData.put("user_id", params.get("user_id"));
-        saveData.put("guid", params.get("guid"));
-        saveData.put("name", result.get("name"));
-        saveData.put("type_name", result.get("metatype"));
-        saveData.put("qualified_name", result.get("qualifiedname"));
-        saveData.put("description", result.get("description"));
-        searchDetailMapper.insertSearchMetaHistory(saveData);
 
         return result;
     }
@@ -411,7 +412,7 @@ public class SearchDetailService {
 
         // 테이블 Type인 경우 => DB 스키마 : Test-Postgres.data_catalog.public / 
         if (params.get("typeName").toString().endsWith("table")) {
-            String[] queryStrSplit = params.get("qualifiedName").toString().split("\\.");
+            String[] queryStrSplit = params.get("qualified_name").toString().split("\\.");
             String catalog = queryStrSplit[0];
             String dbName = queryStrSplit[1];
             String tableSchema = queryStrSplit[2];
@@ -453,11 +454,11 @@ public class SearchDetailService {
 
                 // 샘플데이터 조회를 위한 정보 조회
                 String connectionUrl = "";
-                Map<String, Object> dbInfo = searchDetailMapper.getDbInfo(params.get("systemname").toString());
+                Map<String, Object> dbInfo = searchDetailMapper.getDbInfo(params.get("system_name").toString());
                 if (dbInfo != null) {
                     properties.setProperty("user", "admin");
                     // properties.setProperty("password", dbInfo.get("password").toString());
-                    connectionUrl = trinoJdbcUrl + dbInfo.get("systemname").toString().toLowerCase() + "/" + dbInfo.get("database");
+                    connectionUrl = trinoJdbcUrl + dbInfo.get("system_name").toString().toLowerCase() + "/" + dbInfo.get("database");
                 }
                 
                 if (connectionUrl == null || connectionUrl.equals("")) { return null; }
@@ -529,7 +530,7 @@ public class SearchDetailService {
     // 사용자 데이터 설명 등록
     public Object insertUserDescription(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
-        int insertResult = 0; // userdescription postgres 등록 여부
+        int insertResult = 0; // user_description postgres 등록 여부
         int updateMetaResult = 0; // <table> 테이블에 등록 여부
         Boolean isFailed = false; // ES 업데이트 API 호출 성공 여부
         Boolean esUpdated = false; // 사용자 데이터 설명 ES 변경됬는지 여부
@@ -543,15 +544,15 @@ public class SearchDetailService {
             if (!ObjectUtils.isEmpty(favoriteData)) {
                 // 조회된 데이터 설명 추천수가 0이면
                 if ((int) favoriteData.get("favorite") == 0) {
-                    // 2. MetaData 테이블에 userdescription 업데이트
+                    // 2. MetaData 테이블에 user_description 업데이트
                     updateMetaResult = searchDetailMapper.updateMetaUserDescription(params);
 
-                    // 3. ES 신규 userdescription 등록
+                    // 3. ES 신규 user_description 등록
                     // ES 업데이트 API 수행 결과 - API 호출 필요
                     Map<String, Object> requestBody = new HashMap<>();
                     requestBody.put("metaid", params.get("guid"));
                     requestBody.put("event_status", 1); // 1=생성, 2=수정, 3=삭제
-                    requestBody.put("event_name", "create userdescription");
+                    requestBody.put("event_name", "create user_description");
                     Map<String, Object> restResponse = essyncUpdate(requestBody);
                     
                     boolean esResult = false;
@@ -587,7 +588,7 @@ public class SearchDetailService {
     // 사용자 데이터 설명 수정
     public Object updateUserDescription(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
-        int updateResult = 0; // userdescription postgres 수정 여부
+        int updateResult = 0; // user_description postgres 수정 여부
         int updateMetaResult = 0; // <table> 테이블에 등록 여부
         Boolean isFailed = false; // ES 업데이트 API 호출 성공 여부
         Boolean esUpdated = false; // 사용자 데이터 설명 ES 변경됬는지 여부
@@ -602,15 +603,15 @@ public class SearchDetailService {
             if (!ObjectUtils.isEmpty(favoriteData)) {
                 // 조회된 id와 수정하려는 id가 같은 경우
                 if (favoriteData.get("id").toString().equals(params.get("id").toString())) {
-                    // 2. MetaData 테이블에 userdescription 업데이트
+                    // 2. MetaData 테이블에 user_description 업데이트
                     updateMetaResult = searchDetailMapper.updateMetaUserDescription(params);
 
-                    // 3. ES 신규 userdescription 등록
+                    // 3. ES 신규 user_description 등록
                     // ES 업데이트 API 수행 결과 - API 호출 필요
                     Map<String, Object> requestBody = new HashMap<>();
                     requestBody.put("metaid", params.get("guid"));
                     requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
-                    requestBody.put("event_name", "update userdescription");
+                    requestBody.put("event_name", "update user_description");
                     Map<String, Object> restResponse = essyncUpdate(requestBody);
                     
                     boolean esResult = false;
@@ -646,7 +647,7 @@ public class SearchDetailService {
     // 사용자 데이터 설명 삭제
     public Object deleteUserDescription(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new LinkedHashMap<>(); // ES 업데이트 API 호출 결과
-        int deleteResult = 0; // userdescription postgres 삭제 여부
+        int deleteResult = 0; // user_description postgres 삭제 여부
         int updateMetaResult = 0; // <table> 테이블에 업데이트 여부
         int deleteMetaResult = 0; // <table> 테이블에서 null 처리 여부
         Boolean isFailed = false; // ES 업데이트 API 호출 성공 여부
@@ -660,26 +661,26 @@ public class SearchDetailService {
             // 사용자 데이터  설명 추천수 높은 1건 조회
             Map favoriteData = searchDetailMapper.getUserDescription((String) params.get("guid"));
 
-            // 3. ES 신규 userdescription 등록
+            // 3. ES 신규 user_description 등록
             // ES 업데이트 API 수행 결과 - API 호출 필요
             Map<String, Object> requestBody = new HashMap<>();
         
             if (!ObjectUtils.isEmpty(favoriteData)) { // 조회된 데이터가 있으면 해당 값으로 설정
                 requestBody.put("metaid", favoriteData.get("guid"));    
                 requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
-                requestBody.put("event_name", "delete userdescription");
+                requestBody.put("event_name", "delete user_description");
                 
-                // MetaData 테이블에 해당 데이터로 userdescription 업데이트
+                // MetaData 테이블에 해당 데이터로 user_description 업데이트
                 Map<String, Object> newParams = new HashMap<>();
                 newParams.put("guid", params.get("guid"));
-                newParams.put("userDescription", favoriteData.get("userdescription"));
+                newParams.put("userDescription", favoriteData.get("user_description"));
                 updateMetaResult = searchDetailMapper.updateMetaUserDescription(newParams);
             } else {
                 requestBody.put("metaid", params.get("guid"));    
                 requestBody.put("event_status", 3); // 1=생성, 2=수정, 3=삭제
-                requestBody.put("event_name", "delete userdescription");
+                requestBody.put("event_name", "delete user_description");
 
-                // MetaData 테이블에 해당 데이터로 userdescription Null 처리
+                // MetaData 테이블에 해당 데이터로 user_description Null 처리
                 deleteMetaResult = searchDetailMapper.deleteMetaUserDescription((String) params.get("guid"));
             }
             
@@ -759,18 +760,18 @@ public class SearchDetailService {
             if (!ObjectUtils.isEmpty(favoriteData)) {
                 // 내가 추천한 글이 가장 높은 추천수인 경우
                 if (favoriteData.get("id").toString().equals(params.get("id").toString())) {
-                    // 2. MetaData 테이블에 userdescription 업데이트
+                    // 2. MetaData 테이블에 user_description 업데이트
                     Map<String, Object> newParams = new HashMap<>();
                     newParams.put("guid", favoriteData.get("guid"));
-                    newParams.put("userDescription", favoriteData.get("userdescription"));
+                    newParams.put("userDescription", favoriteData.get("user_description"));
                     updateMetaResult = searchDetailMapper.updateMetaUserDescription(newParams);
 
-                    // 3. ES 신규 userdescription 등록
+                    // 3. ES 신규 user_description 등록
                     // ES 업데이트 API 수행 결과 - API 호출 필요
                     Map<String, Object> requestBody = new HashMap<>();
                     requestBody.put("metaid", params.get("guid"));
                     requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
-                    requestBody.put("event_name", "update userdescription");
+                    requestBody.put("event_name", "update user_description");
                     Map<String, Object> restResponse = essyncUpdate(requestBody);
                     
                     boolean esResult = false;
@@ -830,18 +831,18 @@ public class SearchDetailService {
             if (!ObjectUtils.isEmpty(favoriteData)) {
                 // 추천취소한 설명과 가장 높은 추천수 데이터가 다른 경우 수정
                 if (!favoriteData.get("id").toString().equals(params.get("id").toString())) {
-                    // MetaData 테이블에 해당 데이터로 userdescription 업데이트
+                    // MetaData 테이블에 해당 데이터로 user_description 업데이트
                     Map<String, Object> newParams = new HashMap<>();
                     newParams.put("guid", favoriteData.get("guid"));
-                    newParams.put("userDescription", favoriteData.get("userdescription"));
+                    newParams.put("userDescription", favoriteData.get("user_description"));
                     updateMetaResult = searchDetailMapper.updateMetaUserDescription(newParams);
 
-                    // ES 신규 userdescription 등록
+                    // ES 신규 user_description 등록
                     // ES 업데이트 API 수행 결과 - API 호출 필요
                     Map<String, Object> requestBody = new HashMap<>();
                     requestBody.put("metaid", params.get("guid"));
                     requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
-                    requestBody.put("event_name", "update userdescription");
+                    requestBody.put("event_name", "update user_description");
                     Map<String, Object> restResponse = essyncUpdate(requestBody);
                     
                     boolean esResult = false;
@@ -955,7 +956,7 @@ public class SearchDetailService {
         Map<String, Object> entity = (Map<String, Object>) params.get("entity");
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("guid", entity.get("guid"));
-        paramMap.put("businessattributes", objectMapper.writeValueAsString(entity.get("businessattributes")));
+        paramMap.put("business_attributes", objectMapper.writeValueAsString(entity.get("business_attributes")));
 
         int insertResult = searchDetailMapper.updateMetaBusinessAttributes(paramMap);
         return insertResult;

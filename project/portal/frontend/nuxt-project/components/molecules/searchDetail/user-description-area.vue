@@ -71,7 +71,7 @@
                 />
               </div>
               <div class="comment-message">
-                {{ item.userdescription }}
+                {{ item.user_description }}
               </div>
               <!-- 사용자 추천 설명 수정 버튼 : 내 데이터 설명에서만 수정 -->
               <div
@@ -220,7 +220,7 @@ const isUserDescriptionEdited = () => {
   let isEdited = false;
   const originalUserDescription = ObjectUtils.getPropertyValue(
     editingUserDescriptionObj.value,
-    "userdescription",
+    "user_description",
     ""
   );
   if (originalUserDescription !== editingUserDescription.value) {
@@ -262,7 +262,7 @@ const saveUserDescription = () => {
       userDescription: userDescription.value,
     };
 
-    $ofetch(`/api/search/detail/userdescriptionInsert`, {
+    $ofetch(`/api/search/detail/userDescriptionInsert`, {
       method: "POST",
       body: params,
     }).then((res) => {
@@ -280,7 +280,7 @@ const onClickDeleteUserDescription = async (id) => {
       ...props.params,
       id,
     };
-    $ofetch(`/api/search/detail/userdescriptionDelete`, {
+    $ofetch(`/api/search/detail/userDescriptionDelete`, {
       method: "POST",
       body: params,
     }).then((res) => {
@@ -291,7 +291,7 @@ const onClickDeleteUserDescription = async (id) => {
 
 // 사용자 추천 설명 수정 버튼 클릭 이벤트 핸들러
 const onClickEditUserDescription = (userDescription) => {
-  editingUserDescription.value = userDescription.userdescription;
+  editingUserDescription.value = userDescription.user_description;
 
   editingUserDescriptionObj.value = {
     display: true,
@@ -319,7 +319,7 @@ const onSaveEditUserDescription = (e) => {
       id: editingUserDescriptionObj.value.userDescription.id,
     };
 
-    $ofetch(`/api/search/detail/userdescriptionUpdate`, {
+    $ofetch(`/api/search/detail/userDescriptionUpdate`, {
       method: "PUT",
       body: params,
     }).then((res) => {

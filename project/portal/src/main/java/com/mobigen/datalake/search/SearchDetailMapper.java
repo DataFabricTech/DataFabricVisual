@@ -69,7 +69,7 @@ public interface SearchDetailMapper {
 
     void insertSearchMetaHistory(Map<String, Object> saveData);
 
-    Map<String, Object> getDbInfo(String systemname);
+    Map<String, Object> getDbInfo(String system_name);
 
     List<Map<String, Object>> getClassificationList(String[] ids);
 

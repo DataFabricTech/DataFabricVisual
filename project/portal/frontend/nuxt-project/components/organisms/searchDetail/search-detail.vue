@@ -284,13 +284,14 @@ onMounted(async () => {
   window.addEventListener('scroll', handleScroll);
   userStore.setForceRenderLoader(true); // 강제 loader 유지 설정
   categoryStore.fetchCategories(); // 카테고리 정보 조회
-  await getAllDataByGuid();
+  await getAllDataByGuid()
   await searchTagList();
 });
 
+
 // 엔티티 유형
 const typeName = computed(() =>
-  ObjectUtils.getPropertyValue(entity.value, "metatype", "")
+  ObjectUtils.getPropertyValue(entity.value, "meta_type", "")
 );
 
 // entity 값이 변동되면 파라미터도 동기화
@@ -349,19 +350,19 @@ const scrollToSection = (params) => {
 // 사용자 리뷰 등록/수정, 데이터 추천, 데이터 찜하기 처리 시 필요 파라미터 계산
 const getUserDataParam = () => {
   const guid = ObjectUtils.getPropertyValue(entity.value, "id", "");
-  const typeName = ObjectUtils.getPropertyValue(entity.value, "metatype", "");
-  const name = ObjectUtils.getPropertyValue(entity.value, "name", "");
-  const qualifiedName = ObjectUtils.getPropertyValue(
+  const typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "");
+  const meta_name = ObjectUtils.getPropertyValue(entity.value, "meta_name", "");
+  const qualified_name = ObjectUtils.getPropertyValue(
     entity.value,
-    "qualifiedname",
+    "qualified_name",
     ""
   );
   const comment = ObjectUtils.getPropertyValue(
     entity.value,
-    "attributes/description",
+    "description",
     ""
   );
-  const type = ObjectUtils.getPropertyValue(entity.value, "attributes/systemType", "");
+  const type = ObjectUtils.getPropertyValue(entity.value, "system_type", "");
   const tableGuid = ObjectUtils.getPropertyValue(
     entity.value,
     "entity/relationshipAttributes/table/guid",
@@ -377,9 +378,9 @@ const getUserDataParam = () => {
     guid,
     userID: userStore.getUser.user_id,
     userName: userStore.getUser.username,
-    name,
+    meta_name,
     typeName,
-    qualifiedName,
+    qualified_name,
     comment,
     type,
     tableGuid,
@@ -394,7 +395,7 @@ const isEdited = () => {
   // 비지니스 속성을 제외한 나머지 항목은 바로 서버에 반영하게 되는 구조이므로 비지니스 속성만 수정 여부 판별
   const targets = Object.assign([], businessAttributes.value);
   const originals = Object.entries(
-    ObjectUtils.getPropertyValue(entity.value, "businessattributes", {})
+    ObjectUtils.getPropertyValue(entity.value, "business_attributes", {})
   ).map(([key, value]) => ({ key, value }));
 
   // 목록 길이 다를 경우 무조건 true 반환
@@ -499,12 +500,17 @@ const settingTabOption = (entity) => {
   tabs.value = ['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'data-lineage-area', 'related-data', 'user-review-area']
 
   // 샘플데이터 탭 유무
-  if (entity && entity.metatype && entity.metatype.toUpperCase() != 'TABLE')
+  if (entity && entity.meta_type && entity.meta_type.toUpperCase() != 'TABLE')
     tabs.value = tabs.value.filter((el) => el != 'sample-data-area')
 
   // 사용자 리뷰 탭 유무
   if (props.isAdmin)
     tabs.value = tabs.value.filter((el) => el != 'user-review-area')
+}
+
+// 객체 키 유무 확인
+const isEmptyObject = (obj) => {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
 }
 
 // GUID 기준 데이터 상세 조회
@@ -521,6 +527,12 @@ const getDetailDataByGuid = async (newGuid) => {
     }
 
     entity.value = result.data;
+
+    // 조회된 데이터가 없는 경우 뒤로가기
+    if (entity.value == null || isEmptyObject(entity.value)) {
+      await errorAlert("조회된 데이터가 없습니다.")
+      history.go(-1)
+    }
 
     // 탭 유무 처리
     settingTabOption(entity.value)
@@ -585,7 +597,7 @@ const getDetailDataByGuid = async (newGuid) => {
 const setBusinessAttributes = () => {
   const tempAttributes = ObjectUtils.getPropertyValue(
     entity.value,
-    "businessattributes",
+    "business_attributes",
     []
   );
   businessAttributes.value = Object.entries(tempAttributes).map(([key, value]) => ({
@@ -597,7 +609,7 @@ const setBusinessAttributes = () => {
 // 데이터 프로파일링 영역 내 표시 데이터 조회
 const getDetailDataProfile = () => {
   const params = {};
-  const typeName = ObjectUtils.getPropertyValue(entity.value, "metatype", "");
+  const typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "");
 
   if (
     typeName.endsWith("table") ||
@@ -625,7 +637,7 @@ const getDetailDataProfile = () => {
 
     if (columnData) {
       params.columnData = columnData.map((item) => {
-        return entity.value.qualifiedname + "." + item.name
+        return entity.value.qualified_name + "." + item.name
       });
     }
 
@@ -676,11 +688,11 @@ const getDetailDataProfile = () => {
 
 // 샘플 데이터 목록 조회
 const getSampleData = () => {
-  const metatype = ObjectUtils.getPropertyValue(entity.value, "metatype", "")
-  const qualifiedName = ObjectUtils.getPropertyValue(entity.value, "qualifiedname", "")
-  const systemname = qualifiedName.split(".")[0]
+  const meta_type = ObjectUtils.getPropertyValue(entity.value, "meta_type", "")
+  const qualified_name = ObjectUtils.getPropertyValue(entity.value, "qualified_name", "")
+  const system_name = qualified_name.split(".")[0]
 
-  if (metatype && metatype.toUpperCase() == 'TABLE') {
+  if (meta_type && meta_type.toUpperCase() == 'TABLE') {
     let trinoColumns = "";
     for (
       let columnNum = 0;
@@ -698,9 +710,9 @@ const getSampleData = () => {
 
     const params = {
       columns: trinoColumns,
-      typeName: metatype,
-      systemname: systemname,
-      qualifiedName: qualifiedName,
+      typeName: meta_type,
+      system_name: system_name,
+      qualified_name: qualified_name,
       limit: sampleDataCount,
     };
 
@@ -717,7 +729,7 @@ const getSampleData = () => {
           sampleDataDenied.value = res.data.sampleDataDenied;
         }
 
-        let typeName = ObjectUtils.getPropertyValue(entity.value, "metatype", "")
+        let typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "")
 
         // 테이블인 경우 테이블 row 건수 조회
         if (typeName.toUpperCase() == 'TABLE') {
@@ -770,25 +782,27 @@ const setDataLineageStartNode = () => {
 
 // 연관 데이터 조회
 const getRelatedData = () => {
-  let params = {
-    guid: route.query.guid ? route.query.guid : "",
-    systemtype: entity.value.systemtype ? entity.value.systemtype : '',
-    metatype: entity.value.metatype ? entity.value.metatype : ''
-  }
-
-  $ofetch(`/api/search/keywordRef`, {
-    method: 'POST',
-    body: params
-  }).then((res) => {
-    if (res && !res.errorMessage) {
-      if (res.data && res.data.results) {
-        classifications_data.value = res.data.results
-      } else {
-        classifications_data.value = []
-      }
-
+  if (entity.value != null && entity.value != undefined) {
+    let params = {
+      guid: route.query.guid ? route.query.guid : "",
+      system_type: entity.value.system_type ? entity.value.system_type : '',
+      meta_type: entity.value.meta_type ? entity.value.meta_type : ''
     }
-  });
+
+    $ofetch(`/api/search/keywordRef`, {
+      method: 'POST',
+      body: params
+    }).then((res) => {
+      if (res && !res.errorMessage) {
+        if (res.data && res.data.results) {
+          classifications_data.value = res.data.results
+        } else {
+          classifications_data.value = []
+        }
+
+      }
+    });
+  }
 };
 
 // 사용자 데이터 설명 조회
@@ -801,7 +815,7 @@ const getUserDescriptionList = (userDescriptionOrderType) => {
   };
 
   if (guid) {
-    $ofetch(`/api/search/detail/userdescriptionList`, {
+    $ofetch(`/api/search/detail/userDescriptionList`, {
       method: "POST",
       body: params,
     }).then((res) => {
@@ -891,8 +905,8 @@ const onAddCategoryMapping = (params) => {
             event_name: "메타 데이터 카테고리 매핑[변경]",
             event_by: user.user_id,
             meta_id: entity.id,
-            meta_name: entity.name,
-            qualifiedname: entity.qualifiedname
+            meta_name: entity.meta_name,
+            qualified_name: entity.qualified_name
           })
         }
         onToggleCategoryModal();
@@ -932,30 +946,30 @@ const onCancel = async () => {
 
 // 상세 페이지 내 수정/저장 항목 저장 위한 파라미터 가공
 const createEditedParams = () => {
-  const qualifiedName = ObjectUtils.getPropertyValue(
+  const qualified_name = ObjectUtils.getPropertyValue(
     entity.value,
-    "attributes/qualifiedName",
+    "qualified_name",
     ""
   );
-  const name = ObjectUtils.getPropertyValue(entity.value, "attributes/name", "");
-  const typeName = ObjectUtils.getPropertyValue(entity.value, "metatype", "");
+  const meta_name = ObjectUtils.getPropertyValue(entity.value, "meta_name", "");
+  const typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "");
   const guid = ObjectUtils.getPropertyValue(entity.value, "id", "");
 
-  const businessattributes = {};
+  const business_attributes = {};
   const tempAttributeList = Object.assign([], businessAttributes.value).filter(
     (el) => el.key && el.value
   );
 
   tempAttributeList.forEach((el) => {
-    businessattributes[el.key] = el.value;
+    business_attributes[el.key] = el.value;
   });
 
   return {
     entity: {
-      attributes: { qualifiedName, name },
+      attributes: { qualified_name, meta_name },
       typeName,
       guid,
-      businessattributes,
+      business_attributes,
     },
   };
 };

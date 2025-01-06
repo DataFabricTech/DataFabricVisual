@@ -87,7 +87,7 @@ public class DetailEliminateService {
             String query = "";
             // hive_column
             if (parameter.get("typeName").toString().endsWith("column")) {
-                String queryStrSplit[] = parameter.get("qualifiedName").toString().split("@");
+                String queryStrSplit[] = parameter.get("qualified_name").toString().split("@");
                 String queryStr = queryStrSplit[0];
                 String queryStrname[] = queryStr.split("\\.");
                 StringBuilder tableName = new StringBuilder();
@@ -107,7 +107,7 @@ public class DetailEliminateService {
 
             // hive_table
             if (parameter.get("typeName").toString().endsWith("table")) {
-                String[] queryStrSplit = parameter.get("qualifiedName").toString().split("\\.");
+                String[] queryStrSplit = parameter.get("qualified_name").toString().split("\\.");
                 String catalog = queryStrSplit[0];
                 String dbName = queryStrSplit[1];
                 String tableSchema = queryStrSplit[2];

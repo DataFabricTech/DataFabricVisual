@@ -518,8 +518,8 @@ const createMappingParams = () => {
   }
 
   tempTargets.forEach((el) => {
-    const { metatype, id } = el;
-    if (metatype.includes("table")) {
+    const { meta_type, id } = el;
+    if (meta_type.includes("table")) {
       // 엔티티 유형이 테이블일 경우 변수에 추가 저장
       tableTypes.push(id);
     }

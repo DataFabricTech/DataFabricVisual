@@ -158,7 +158,7 @@ const add_self_list = ref([]);
 
 const id = computed(() => ObjectUtils.getPropertyValue(props.entity, "id", ""));
 const name = computed(() =>
-  ObjectUtils.getPropertyValue(props.entity, "entity/attributes/name", "")
+  ObjectUtils.getPropertyValue(props.entity, "meta_name", "")
 );
 const selectedId = computed(() => selectedIdData.value);
 const selectedName = computed(() => selectedNameData.value);
@@ -582,9 +582,9 @@ const onClickConfirm = async () => {
           typeName: props.userDataParam.typeName,
           attributes: {
             comment: props.userDataParam.comment,
-            qualifiedName: props.userDataParam.qualifiedName,
+            qualified_name: props.userDataParam.qualified_name,
           },
-          dbName: props.userDataParam.qualifiedName.split(".")[0],
+          dbName: props.userDataParam.qualified_name.split(".")[0],
         };
         await $ofetch("/api/node/self", {
           method: "PUT",

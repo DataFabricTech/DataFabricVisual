@@ -32,7 +32,7 @@ watch(
 
 // 데이터 설명 추천 상태 조회
 const getUserDescriptionFavoriteStatus = (favoriteId) => {
-  $ofetch(`/api/search/detail/userdescriptionFavoriteStatus/${favoriteId}`).then(
+  $ofetch(`/api/search/detail/userDescriptionFavoriteStatus/${favoriteId}`).then(
     (res) => {
       isFavorite.value = res.data["isFavorite"];
       favoriteCounts.value = res.data["favoriteCounts"];
@@ -50,7 +50,7 @@ const onToggleUserDescriptionFavorite = (favoriteId) => {
   // 추천을 한 상태
   if (isFavorite.value) {
     // 추천 정보 삭제
-    $ofetch(`/api/search/detail/userdescriptionFavoriteDelete`, {
+    $ofetch(`/api/search/detail/userDescriptionFavoriteDelete`, {
       method: "POST",
       body: params,
     }).then((res) => {
@@ -62,7 +62,7 @@ const onToggleUserDescriptionFavorite = (favoriteId) => {
     // 추천을 하지 않은 상태
   } else {
     // 추천 정보 등록
-    $ofetch(`/api/search/detail/userdescriptionFavoriteInsert`, {
+    $ofetch(`/api/search/detail/userDescriptionFavoriteInsert`, {
       method: "POST",
       body: params,
     }).then((res) => {

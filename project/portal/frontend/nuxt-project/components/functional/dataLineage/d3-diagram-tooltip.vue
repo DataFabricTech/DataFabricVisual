@@ -1,7 +1,7 @@
 <template>
   <div id="tooltip" class="mu-tooltip-info w360" :style="tooltipPosition">
     <div class="mu-tooltip-head">
-      <p>{{ name }}</p>
+      <p>{{ meta_name }}</p>
     </div>
 
     <div class="mu-tooltip-body">
@@ -9,7 +9,7 @@
       <div class="data-info2">
         <dl>
           <dt>데이터 설명</dt>
-          <dd>{{ comment }}</dd>
+          <dd>{{ description }}</dd>
         </dl>
         <dl>
           <dt>카테고리</dt>
@@ -46,12 +46,12 @@ const tooltipPosition = computed(() => {
 });
 
 // 툴팁 헤더 이름
-const name = computed(() => {
-  return ObjectUtils.getPropertyValue(props.targetNode, "name", "");
+const meta_name = computed(() => {
+  return ObjectUtils.getPropertyValue(props.targetNode, "meta_name", "");
 });
 
 // 툴팁 내 표시할 데이터 설명
-const comment = computed(() => {
+const description = computed(() => {
   return ObjectUtils.getPropertyValue(props.targetNode, "description", "-");
 });
 

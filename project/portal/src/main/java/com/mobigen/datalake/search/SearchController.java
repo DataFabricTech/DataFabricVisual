@@ -81,8 +81,8 @@ public class SearchController {
     public Object getFilterData() throws Exception {
         Map<String, Object> filterData = new HashMap<>();
 
-        filterData.put("systemtypes", searchService.getSystemtypes());
-        filterData.put("metatypes", searchService.getMetatypes());
+        filterData.put("system_types", searchService.getSystemTypes());
+        filterData.put("meta_types", searchService.getMetaTypes());
 
         return filterData;
     }

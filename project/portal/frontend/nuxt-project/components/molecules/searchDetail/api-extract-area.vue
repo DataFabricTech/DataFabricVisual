@@ -124,7 +124,7 @@ payload = json.dumps({
 "user_id": "{{ userStore.getUser.user_id }}", # 사용자 아이디
 "password": "******", # 사용자 비밀번호
 "select": "", # 컬럼명 리스트 또는 전체 컬럼(* 또는 ""), ex: column1, column2, column3 ...
-"from": "{{ props.eliminateModal.entity.qualifiedname.split("@")[0] }}", # DB명.테이블명
+"from": "{{ props.eliminateModal.entity.qualified_name.split("@")[0] }}", # DB명.테이블명
 "where": "" # 데이터 조회 조건(WHERE)문, ex: where column = 'value'
 })
 

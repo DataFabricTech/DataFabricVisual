@@ -55,7 +55,7 @@ public class CategoryService {
             Map<String, Object> content = new HashMap<>();
             if (category.get("name").toString().equals("CATEGORY")) continue;
 
-            content.put("level", category.get("Level"));
+            content.put("level", category.get("level"));
             content.put("root", category.get("parent"));
             content.put("rootDescription", category.get("parent_description"));
             content.put("id", category.get("id"));
@@ -82,8 +82,8 @@ public class CategoryService {
             content.put("rootDescription", "시스템 타입");
             i = i + 1;
             content.put("id", i);
-            content.put("name", system.get("systemtype"));
-            content.put("description", system.get("systemtype"));
+            content.put("name", system.get("system_type"));
+            content.put("description", system.get("system_type"));
             content.put("count", system.get("type_count"));
             content.put("checked", false);
             ((List<Map<String, Object>>) systemInfo.get("content")).add(content);
@@ -105,8 +105,8 @@ public class CategoryService {
             content.put("rootDescription", "메타 타입");
             i = i + 1;
             content.put("id", i);
-            content.put("name", meta.get("metatype"));
-            content.put("description", meta.get("metatype"));
+            content.put("name", meta.get("meta_type"));
+            content.put("description", meta.get("meta_type"));
             content.put("count", meta.get("type_count"));
             content.put("checked", false);
             ((List<Map<String, Object>>) metaInfo.get("content")).add(content);

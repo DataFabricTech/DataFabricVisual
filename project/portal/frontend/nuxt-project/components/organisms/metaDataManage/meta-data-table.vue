@@ -48,8 +48,8 @@
           </td>
           <td>
             <!-- 데이터명 -->
-            <a v-if="item.id == -1" :title="item.name">{{ item.name }}</a>
-            <a v-else :title="item.name" @click="onClickDataName(item)">{{ item.name }}</a>
+            <a v-if="item.id == -1" :title="item.meta_name">{{ item.meta_name }}</a>
+            <a v-else :title="item.name" @click="onClickDataName(item)">{{ item.meta_name }}</a>
           </td>
           <td>
             <!-- 소유자 -->
@@ -57,7 +57,7 @@
           </td>
           <td>
             <!-- 유형 -->
-            {{ item.metatype }}
+            {{ item.meta_type }}
           </td>
           <td>
             <!-- 카테고리 -->
