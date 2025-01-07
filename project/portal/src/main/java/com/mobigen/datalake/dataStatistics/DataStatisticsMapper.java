@@ -1,6 +1,8 @@
 package com.mobigen.datalake.dataStatistics;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface DataStatisticsMapper {
     /**
@@ -207,6 +209,20 @@ public interface DataStatisticsMapper {
      */
     List getDataRequestHourChartData(String startDate, String endDate) throws Exception;
 
+    // 로그인 이력 조회
+    int getLoginHistoryListTotal(Map<String, Object> params) throws Exception;
+    List<LinkedHashMap<String, Object>> getLoginHistoryList(Map<String, Object> params) throws Exception;
 
+    // 다운로드 이력 조회
+    int getDownloadHistoryListTotal(Map<String, Object> params) throws Exception;
+    List<LinkedHashMap<String, Object>> getDownloadHistoryList(Map<String, Object> params) throws Exception;
+
+    // 다운로드 이력 조회
+    int getSearchMetaHistoryListTotal(Map<String, Object> params) throws Exception;
+    List<LinkedHashMap<String, Object>> getSearchMetaHistoryList(Map<String, Object> params) throws Exception;
+
+    // 데이터 요청 이력 조회
+    int getDataRequestHistoryListTotal(Map<String, Object> params) throws Exception;
+    List<LinkedHashMap<String, Object>> getDataRequestHistoryList(Map<String, Object> params) throws Exception;
 
 }

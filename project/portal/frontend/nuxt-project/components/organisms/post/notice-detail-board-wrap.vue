@@ -27,10 +27,6 @@
               <dt>조회수</dt>
               <dd>{{ props.post.view_count }}</dd>
             </dl>
-<!--          <dl>-->
-<!--            <dt>등록일</dt>-->
-<!--            <dd>{{ props.post.upload_date }}</dd>-->
-<!--          </dl>-->
         </div>
       </div>
     </div>

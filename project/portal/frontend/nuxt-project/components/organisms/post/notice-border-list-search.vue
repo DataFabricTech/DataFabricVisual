@@ -11,7 +11,6 @@
               <option value="all">전체</option>
               <option value="title">제목</option>
               <option value="postContent">내용</option>
-              <!-- <option value="upload_date">등록일</option> -->
             </select>
           </div>
           <div class="mu-input-icon">
