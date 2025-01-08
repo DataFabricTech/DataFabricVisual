@@ -143,7 +143,7 @@ const onClickDeleteMapping = async (item) => {
   );
 
   if (confirm) {
-    const guid = ObjectUtils.getPropertyValue(props.entity, "id", "");
+    const guid = ObjectUtils.getPropertyValue(props.entity, "meta_id", "");
     const deleteCategoryId = item.c_id
 
     $ofetch(`/api/metadata/classification/deleteMapping`, {

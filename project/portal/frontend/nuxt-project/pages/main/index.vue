@@ -238,13 +238,10 @@
               <div :class="myWishDataList && myWishDataList.length > 0 ? 'main-board' : ''">
                 <ul v-if="myWishDataList && myWishDataList.length > 0" class="main-article-list">
                   <li v-for="(wd, idx) in myWishDataList" :key="idx" style="list-style-type: none;">
-                    <span class="step-process unsupply" v-if="wd.entity && wd.entity.classifications && wd.entity.classifications.length > 0" style="width:100px">
-                      # {{ getDescription(wd.entity.classifications[0].typeName) }}
-                    </span>
-                    <span class="step-process unsupply" v-else style="width:100px"># 찜데이터</span>
+                    <span class="step-process unsupply" style="width:100px"># 찜데이터</span>
 
                     <a @click="goToWishDataDetail(wd.guid)" class="mu-ellipsis">
-                      {{ wd.description ? `${wd.description} (${wd.name})` : wd.name }}
+                      {{ wd.description ? `${wd.description} (${wd.meta_name})` : wd.meta_name }}
                     </a>
                     <span class="date">{{ yyyyMMdddot(wd.favorite_date) }}</span>
                   </li>

@@ -46,9 +46,8 @@
           <div class="user-image"><i class="mu-icon-svg user"></i></div>
           <div class="comment-cont">
             <div class="comment-info">
-              <span class="name">{{ item.user_nm }}</span>
-              <span class="team" v-if="item.dept_nm">({{ item.dept_nm }})</span>
-              <span class="team" v-if="item.dept_nm == undefined">(부서 없음)</span>
+              <span class="name">{{ item.user_name ? item.user_name : "이름없음" }}</span>
+              <span class="team">({{ item.dept_name ? item.dept_name : "부서없음" }})</span>
               <span class="date">{{ item.review_date }}</span>
             </div>
             <div class="comment-message">
@@ -116,7 +115,7 @@
                 </form>
               </div>
             </div>
-            <!-- // 리뷰 수정 폼-->        
+            <!-- // 리뷰 수정 폼-->
           </div>
         </div>
         <!-- // 리뷰 뷰 폼-->

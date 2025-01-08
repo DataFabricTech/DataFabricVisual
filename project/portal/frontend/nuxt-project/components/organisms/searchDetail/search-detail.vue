@@ -349,7 +349,7 @@ const scrollToSection = (params) => {
 
 // 사용자 리뷰 등록/수정, 데이터 추천, 데이터 찜하기 처리 시 필요 파라미터 계산
 const getUserDataParam = () => {
-  const guid = ObjectUtils.getPropertyValue(entity.value, "id", "");
+  const guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
   const typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "");
   const meta_name = ObjectUtils.getPropertyValue(entity.value, "meta_name", "");
   const qualified_name = ObjectUtils.getPropertyValue(
@@ -365,12 +365,12 @@ const getUserDataParam = () => {
   const type = ObjectUtils.getPropertyValue(entity.value, "system_type", "");
   const tableGuid = ObjectUtils.getPropertyValue(
     entity.value,
-    "entity/relationshipAttributes/table/guid",
+    "meta_id",
     ""
   );
   const tableTypeName = ObjectUtils.getPropertyValue(
     entity.value,
-    "attributes/tableType",
+    "attributes/table_type",
     ""
   );
 
@@ -616,7 +616,7 @@ const getDetailDataProfile = () => {
     typeName.endsWith("db") ||
     typeName.endsWith("column")
   ) {
-    params.guid = ObjectUtils.getPropertyValue(entity.value, "id", "");
+    params.guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
     params.typeName = typeName;
 
     const columnData = ObjectUtils.getPropertyValue(
@@ -733,7 +733,7 @@ const getSampleData = () => {
 
         // 테이블인 경우 테이블 row 건수 조회
         if (typeName.toUpperCase() == 'TABLE') {
-          let guid = ObjectUtils.getPropertyValue(entity.value, "id", "")
+          let guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "")
 
           $ofetch(`/api/search/detail/getRowCount?guid=${guid}`).then((rs) => {
             eliminateModalObj.value.num_rows = rs.data
@@ -767,12 +767,11 @@ const getSampleData = () => {
 };
 
 // 데이터 흐름도 시작 노드 설정
-// 데이터 흐름도 시작 노드 설정
 const setDataLineageStartNode = () => {
   let nodeGuid = "";
 
   if (typeName.value.includes("table")) {
-    nodeGuid = ObjectUtils.getPropertyValue(entity.value, "id", "");
+    nodeGuid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
   }
 
   if (nodeGuid) {
@@ -807,7 +806,7 @@ const getRelatedData = () => {
 
 // 사용자 데이터 설명 조회
 const getUserDescriptionList = (userDescriptionOrderType) => {
-  const guid = ObjectUtils.getPropertyValue(entity.value, "id", "");
+  const guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
 
   const params = {
     guid: guid,
@@ -832,7 +831,7 @@ const getUserDescriptionList = (userDescriptionOrderType) => {
 
 // 사용자 리뷰 목록 조회
 const getReviewDataList = () => {
-  const guid = ObjectUtils.getPropertyValue(entity.value, "id", "");
+  const guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
   if (guid) {
     $ofetch(`/api/search/detail/reviewdatalist`, {
       method: "POST",
@@ -852,7 +851,7 @@ const getReviewDataList = () => {
 // 데이터 찜하기 & 추천 여부 조회
 const getRecommendStatus = () => {
   const params = {
-    guid: ObjectUtils.getPropertyValue(entity.value, "id", ""),
+    guid: ObjectUtils.getPropertyValue(entity.value, "meta_id", ""),
     userID: userStore.getUser.user_id,
   };
 
@@ -953,7 +952,7 @@ const createEditedParams = () => {
   );
   const meta_name = ObjectUtils.getPropertyValue(entity.value, "meta_name", "");
   const typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "");
-  const guid = ObjectUtils.getPropertyValue(entity.value, "id", "");
+  const guid = ObjectUtils.getPropertyValue(entity.value, "meta_id", "");
 
   const business_attributes = {};
   const tempAttributeList = Object.assign([], businessAttributes.value).filter(

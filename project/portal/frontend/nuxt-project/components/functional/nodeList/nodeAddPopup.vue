@@ -120,7 +120,7 @@
                     </td>
                     <td>
                       <span class="mu-ellipsis">
-                        {{ node.id }}
+                        {{ node.meta_id }}
                       </span>
                     </td>
                     <td>
@@ -456,11 +456,12 @@ const AddToNode = async () => {
 };
 
 const isAddChecked = (node) => {
-  const matched = selectedAddData.value.find((el) => el.id === node.id);
+  const matched = selectedAddData.value.find((el) => el.meta_id === node.meta_id);
   return matched;
 };
 
 const onToggleAddCheckbox = (e, isAll, node) => {
+  console.log(node)
   const {
     target: { checked },
   } = e;
@@ -473,7 +474,7 @@ const onToggleAddCheckbox = (e, isAll, node) => {
     if (checked) {
       newItems.push(node);
     } else {
-      const targetIndex = newItems.findIndex((el) => el.id === node.id);
+      const targetIndex = newItems.findIndex((el) => el.meta_id === node.meta_id);
       newItems.splice(targetIndex, 1);
     }
   }

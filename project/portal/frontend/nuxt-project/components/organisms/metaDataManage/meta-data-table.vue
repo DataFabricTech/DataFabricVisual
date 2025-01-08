@@ -101,7 +101,7 @@ _selectedData.value = $R.clone(props.selectedData)
 
 // 체크박스 체크 표시 여부 계산
 const isChecked = (item: any): boolean => {
-  const matched = _selectedData.value.some((el:any) => el.id === item.id);
+  const matched = _selectedData.value.some((el:any) => el.meta_id === item.meta_id);
   return matched;
 };
 
@@ -118,7 +118,7 @@ const onToggleCheckbox = (e, isAll:boolean, item: any) => {
     if (checked) {
       newItems.push(item);
     } else {
-      const targetIndex = newItems.findIndex((el:any) => el.id === item.id);
+      const targetIndex = newItems.findIndex((el:any) => el.meta_id === item.meta_id);
       newItems.splice(targetIndex, 1);
     }
   }

@@ -95,9 +95,11 @@ const descriptionEllipsis = (val, entity) => {
     const columns = attributes.columns
     if (columns) {
       columns.filter((item) => {
-        if (item.name === val) {
-          if (item.description !== "") {
+        if (item.meta_name === val) {
+          if (item.description != null && item.description != "") {
             description = item.description;
+          } else {
+            description = "-"
           }
         }
       });
@@ -121,9 +123,9 @@ const typeEllipsis = (val, entity) => {
     const columns = attributes.columns
     if (columns) {
       columns.filter((item) => {
-        if (item.name === val) {
-          if (item.dataType !== "") {
-            dataType = item.dataType;
+        if (item.meta_name === val) {
+          if (item.column_type !== "") {
+            dataType = item.column_type;
           }
         }
       });
@@ -139,34 +141,8 @@ const typeEllipsis = (val, entity) => {
   }
 };
 
-const userDescriptionEllipsis = (val, entity) => {
-  const attributes = entity.attributes
-
-  let userDescription;
-  if (attributes) {
-    const columns = attributes.columns
-    if (columns) {
-      columns.filter((item) => {
-        if (item.name === val) {
-          if (item.userDescription !== "") {
-            userDescription = item.userDescription;
-          }
-        }
-      });
-    }
-  }
-
-  if (userDescription !== undefined) {
-    if (userDescription !== null) {
-      return userDescription;
-    }
-  } else {
-    return "";
-  }
-};
-
 const nullToNa = (val) => {
-  if (val === null) return "N/A";
+  if (val === null) return "-";
   else {
     return val;
   }

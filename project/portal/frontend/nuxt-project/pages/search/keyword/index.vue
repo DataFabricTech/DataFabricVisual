@@ -175,8 +175,9 @@
                     </div>
                     <div class="title-group">
                       <a @click="onSelectDetailPage(data)">
-                        <strong class="data-title">{{ data && data.attributes && data.attributes.description ? data.attributes.description : data.description }}</strong>
-                        <p class="data-name"> {{ data && data.name ? data.name : ''}} </p>
+                        <!-- <strong class="data-title">{{ data && data.attributes && data.attributes.description ? data.attributes.description : data.description }}</strong> -->
+                        <strong class="data-title">{{ data && data.description ? data.description : '' }}</strong>
+                        <p class="data-name"> {{ data && data.meta_name ? data.meta_name : ''}} </p>
                         <p class="data-desc">{{data && data.user_description ? data.user_description : ''}}</p>
                       </a>
                     </div>
@@ -252,8 +253,8 @@ const searchParams = ref({
   query: "",
   detailFilters: {},
   pagingObj: {},
-  system_type: "",
-  meta_type: "",
+  systemtype: "",
+  metatype: "",
   tag: "",
   limit: 10,
   offset: 0,
@@ -262,8 +263,8 @@ const searchParams = ref({
     name: "",
     description: ""
   },
-  sort_by: "createtime",
-  sort_order: "",
+  sortBy: "createtime",
+  sortOrder: "",
   entityFilters: {}
 });
 
@@ -375,11 +376,11 @@ const leftWidth = ref<number>(0); // 왼쪽 DOM 너비
 
 const word = ref<string>(""); // 검색어
 
-const system_type = ref<string>(""); // 시스템 타입 (hive, hbase, postgreSQL 등 시스템 종류)
-const meta_type = ref<string>(""); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미
+const systemtype = ref<string>(""); // 시스템 타입 (hive, hbase, postgreSQL 등 시스템 종류)
+const metatype = ref<string>(""); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미
 const tag = ref<string>(""); // 태그
-const sort_by = ref<string>("createtime") // 정렬 필드
-const sort_order = ref<string>(""); // 정렬
+const sortBy = ref<string>("createtime") // 정렬 필드
+const sortOrder = ref<string>(""); // 정렬
 const classification = ref({
   id: "",
   name: "",
@@ -515,9 +516,9 @@ onMounted(async () => {
         description: ""
       }
 
-      system_type.value = searchParams.value.system_type ? searchParams.value.system_type : "" // 시스템타입
-      meta_type.value = searchParams.value.meta_type ? searchParams.value.meta_type : "" // 메타타입
-      sort_order.value = searchParams.value.sort_order ? searchParams.value.sort_order : "" // 정렬방식
+      systemtype.value = searchParams.value.systemtype ? searchParams.value.systemtype : "" // 시스템타입
+      metatype.value = searchParams.value.metatype ? searchParams.value.metatype : "" // 메타타입
+      sortOrder.value = searchParams.value.sortOrder ? searchParams.value.sortOrder : "" // 정렬방식
       pagingObj.value.currentPage = searchParams.value.offset + 1 // 현재 페이지
       pagingObj.value.limit = searchParams.value.limit // 보여줄 개수
 
@@ -694,14 +695,14 @@ const getSearch = async (offset: number = 0): Promise<void> => {
   let currentLimit = pagingObj.value.limit ? pagingObj.value.limit : 10
   const params = {
     query: word.value ? word.value : "",
-    system_type: system_type.value ? system_type.value : "",
-    meta_type: meta_type.value ? meta_type.value : "",
+    systemtype: systemtype.value ? systemtype.value : "",
+    metatype: metatype.value ? metatype.value : "",
     tag: "",
     limit: currentLimit,
     offset: offset ? offset * currentLimit : 0,
     classification: classification.value && classification.value.name ? classification.value.name : "", // 검색할 때는 name값 사용
-    sort_by: sort_by.value ? sort_by.value : "createtime",
-    sort_order: sort_order.value ? sort_order.value : "",
+    sortBy: sortBy.value ? sortBy.value : "createtime",
+    sortOrder: sortOrder.value ? sortOrder.value : "",
     entityFilters: showFilterWrap2.value ? paramEntityFilters : {}
   };
 
@@ -969,13 +970,13 @@ const clearFilter = (key) => {
     };
     leftMenuToggleAndBold("") // 왼쪽메뉴 연동
   } else if (key == 'SYSTEMTYPE') {
-    system_type.value = ""
+    systemtype.value = ""
   } else if (key == 'METATYPE') {
-    meta_type.value = ""
+    metatype.value = ""
   } else if (key == 'TAG') {
     tag.value = ""
   } else if (key == 'ORDER') {
-    sort_order.value = ""
+    sortOrder.value = ""
   } else {
     if (key == '_NOT_CLASSIFIED') {
       leftMenuToggleAndBold("_NOT_CLASSIFIED")
@@ -998,8 +999,8 @@ const clearFilter = (key) => {
 
 // 상세 데이터 이동
 function onSelectDetailPage(item: any): void {
-  router.push(`/search/detail?guid=${item.id}`);
-  userStore.setGuid(item.id);
+  router.push(`/search/detail?guid=${item.meta_id}`);
+  userStore.setGuid(item.meta_id);
   window.scrollTo(0, 0);
 }
 
@@ -1188,10 +1189,10 @@ const onChangeCheckBox = async (key, event: any) => {
           };
           leftMenuToggleAndBold(el.id) // 왼쪽메뉴 연동 처리
         }
-        if (key == 'SYSTEMTYPE') system_type.value = el.name
-        if (key == 'METATYPE') meta_type.value = el.name
+        if (key == 'SYSTEMTYPE') systemtype.value = el.name
+        if (key == 'METATYPE') metatype.value = el.name
         if (key == 'TAG') tag.value = el.name
-        if (key == 'ORDER') sort_order.value = el.name
+        if (key == 'ORDER') sortOrder.value = el.name
       } else {
         el.checked = false // 단일로 체크되도록 설정
       }

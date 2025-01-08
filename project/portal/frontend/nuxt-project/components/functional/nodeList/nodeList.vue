@@ -148,7 +148,7 @@
 </template>
 <script setup lang="ts">
 import { confirmAlert } from "@functional/alert/alert-default";
-import { onMounted, onUnmounted, ref, computed } from 'vue';
+import { onMounted, onUnmounted, ref, computed, onUpdated } from 'vue';
 
 const emit = defineEmits([
   "addModalShow",
@@ -164,6 +164,9 @@ const hoveredIndex = ref(null);
 const mouseX = ref(0);
 const mouseY = ref(0);
 
+onUpdated(() => {
+  console.log(props.NodeLinks)
+})
 onMounted(() => window.addEventListener("mousemove", handleMousemove));
 onUnmounted(() => window.removeEventListener("mousemove", handleMousemove));
 

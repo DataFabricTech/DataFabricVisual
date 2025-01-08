@@ -509,19 +509,19 @@ const createMappingParams = () => {
 
   if (Array.isArray(props.manageModal.target)) {
     // 테이블에서 체크박스로 데이터 선택하여 모달 진입한 경우
-    entityIds = props.manageModal.target.map((el) => el.id);
+    entityIds = props.manageModal.target.map((el) => el.meta_id);
     tempTargets.push(...props.manageModal.target);
   } else {
     // 테이블 내에서 카테고리 맵핑 버튼 클릭하여 모달 진입한 경우
-    entityIds = [props.manageModal.target.id];
+    entityIds = [props.manageModal.target.meta_id];
     tempTargets.push(props.manageModal.target);
   }
 
   tempTargets.forEach((el) => {
-    const { meta_type, id } = el;
+    const { meta_type, meta_id } = el;
     if (meta_type.includes("table")) {
       // 엔티티 유형이 테이블일 경우 변수에 추가 저장
-      tableTypes.push(id);
+      tableTypes.push(meta_id);
     }
   });
 
@@ -531,7 +531,6 @@ const createMappingParams = () => {
   if(!isEmpties(mappingItem.superTypes)) {
     superTypes = mappingItem.superTypes;
   }
-
 
   return { entityIds, superTypes, tableTypes, entityTargets:  tempTargets};
 };

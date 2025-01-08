@@ -218,11 +218,11 @@ const filterSearchObj = ref<FilterSearchObj>({
       desc: "전체"
     },
     {
-      value: "comment",
-      desc: "데이터설명"
+      value: "description",
+      desc: "데이터 설명"
     },
     {
-      value: "name",
+      value: "meta_name",
       desc: "데이터명"
     },
     {
@@ -658,8 +658,8 @@ const onSubmitCategory = async (params: any) => {
                 event_status: CONSTANT.EVENT.STATUS.MODIFY,
                 event_name: "메타 데이터 카테고리 매핑[변경]",
                 event_by: user.user_id,
-                meta_id: entity.id,
-                meta_name: entity.name,
+                meta_id: entity.meta_id,
+                meta_name: entity.meta_name,
                 qualified_name: entity.qualified_name
               })
             }
@@ -784,8 +784,8 @@ const onChangeFilter = (name: string, value: string) => {
     // 첫번째 검색 조건 옵션 선택 시 두번째 검색 조건 옵션 관련 값 세팅
     options = [
       { value: "", desc: "전체" },
-      { value: "comment", desc: "데이터설명" },
-      { value: "name", desc: "데이터명" },
+      { value: "description", desc: "데이터 설명" },
+      { value: "meta_name", desc: "데이터명" },
       { value: "owner", desc: "소유자" }
     ];
 
@@ -982,7 +982,7 @@ const onDeleteCategoryMap = async (target) => {
   );
 
   if (confirm) {
-    const guid = target.item.id
+    const guid = target.item.meta_id
     const deleteCategoryId = target.targetId
 
     $ofetch(`/api/metadata/classification/deleteMapping`, {

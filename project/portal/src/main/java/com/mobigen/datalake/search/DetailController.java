@@ -101,7 +101,7 @@ public class DetailController {
     /**
      * 데이터 테이블 프로파일링 카운트 조회
      *
-     * @param guid            조회용 guid
+     * @param meta_id            조회용 guid
      * @return Object         개수
      */
     @ResponseJsonResult

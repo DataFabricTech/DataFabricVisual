@@ -60,9 +60,8 @@
           >
             <div class="comment-cont">
               <div class="comment-info">
-                <span class="name">{{ item.user_nm }}</span>
-                <span class="team" v-if="item.dept_nm">({{ item.dept_nm }})</span>
-                <span class="team" v-if="item.dept_nm == undefined">(부서 없음)</span>
+                <span class="name">{{ item.user_name }}</span>
+                <span class="team">({{ item.dept_name ? item.dept_name : "부서없음" }})</span>
                 <span class="date">{{ item.create_date }}</span>
                 <favorite-button
                   :favoriteId="item.id"
@@ -212,7 +211,11 @@ const userDescriptionTextCounts = computed(() => userDescription.value.length);
 
 // 수정 중인 사용자 추천 설명 글자수 계산
 const editingUserDescriptionTextCounts = () => {
-  return editingUserDescription.value.length;
+  if (editingUserDescription.value) {
+    return editingUserDescription.value.length;
+  } else {
+    return 0
+  }
 };
 
 // 사용자 추천 설명 수정 여부 계산
@@ -259,7 +262,7 @@ const saveUserDescription = () => {
     // 데이터 입력 확인
     const params = {
       ...props.params,
-      userDescription: userDescription.value,
+      user_description: userDescription.value,
     };
 
     $ofetch(`/api/search/detail/userDescriptionInsert`, {
@@ -303,7 +306,7 @@ const onClickEditUserDescription = (userDescription) => {
 const onCancelEditUserDescription = () => {
   editingUserDescriptionObj.value = {
     display: false,
-    userDescription: null,
+    user_description: null,
   };
   editingUserDescription.value = "";
 };
@@ -315,7 +318,7 @@ const onSaveEditUserDescription = (e) => {
   if (editingUserDescription.value) {
     const params = {
       ...props.params,
-      userDescription: editingUserDescription.value,
+      user_description: editingUserDescription.value,
       id: editingUserDescriptionObj.value.userDescription.id,
     };
 

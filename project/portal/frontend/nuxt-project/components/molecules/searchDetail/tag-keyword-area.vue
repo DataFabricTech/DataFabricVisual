@@ -82,7 +82,7 @@ onMounted(() => {
 })
 
 const guid = computed(() =>
-  ObjectUtils.getPropertyValue(props.entity, "id", "")
+  ObjectUtils.getPropertyValue(props.entity, "meta_id", "")
 );
 
 const onClickDeleteTag = async (tag) => {

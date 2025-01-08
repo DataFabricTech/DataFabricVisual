@@ -666,14 +666,14 @@ public class SearchDetailService {
             Map<String, Object> requestBody = new HashMap<>();
         
             if (!ObjectUtils.isEmpty(favoriteData)) { // 조회된 데이터가 있으면 해당 값으로 설정
-                requestBody.put("metaid", favoriteData.get("guid"));    
+                requestBody.put("metaid", favoriteData.get("meta_id"));    
                 requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
                 requestBody.put("event_name", "delete user_description");
                 
                 // MetaData 테이블에 해당 데이터로 user_description 업데이트
                 Map<String, Object> newParams = new HashMap<>();
-                newParams.put("guid", params.get("guid"));
-                newParams.put("userDescription", favoriteData.get("user_description"));
+                newParams.put("meta_id", params.get("guid"));
+                newParams.put("user_description", favoriteData.get("user_description"));
                 updateMetaResult = searchDetailMapper.updateMetaUserDescription(newParams);
             } else {
                 requestBody.put("metaid", params.get("guid"));    
@@ -762,8 +762,8 @@ public class SearchDetailService {
                 if (favoriteData.get("id").toString().equals(params.get("id").toString())) {
                     // 2. MetaData 테이블에 user_description 업데이트
                     Map<String, Object> newParams = new HashMap<>();
-                    newParams.put("guid", favoriteData.get("guid"));
-                    newParams.put("userDescription", favoriteData.get("user_description"));
+                    newParams.put("guid", favoriteData.get("meta_id"));
+                    newParams.put("user_description", favoriteData.get("user_description"));
                     updateMetaResult = searchDetailMapper.updateMetaUserDescription(newParams);
 
                     // 3. ES 신규 user_description 등록
@@ -833,8 +833,8 @@ public class SearchDetailService {
                 if (!favoriteData.get("id").toString().equals(params.get("id").toString())) {
                     // MetaData 테이블에 해당 데이터로 user_description 업데이트
                     Map<String, Object> newParams = new HashMap<>();
-                    newParams.put("guid", favoriteData.get("guid"));
-                    newParams.put("userDescription", favoriteData.get("user_description"));
+                    newParams.put("guid", favoriteData.get("meta_id"));
+                    newParams.put("user_description", favoriteData.get("user_description"));
                     updateMetaResult = searchDetailMapper.updateMetaUserDescription(newParams);
 
                     // ES 신규 user_description 등록

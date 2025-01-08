@@ -156,7 +156,7 @@ const add_self_list = ref([]);
 
 // const nodeAddPopup = ref<InstanceType<typeof NodeAddPopup> | null>(null);
 
-const id = computed(() => ObjectUtils.getPropertyValue(props.entity, "id", ""));
+const id = computed(() => ObjectUtils.getPropertyValue(props.entity, "meta_id", ""));
 const name = computed(() =>
   ObjectUtils.getPropertyValue(props.entity, "meta_name", "")
 );
@@ -318,6 +318,7 @@ const AddFromNode = async (selectedAddData) => {
 };
 //이후 노드 추가 이벤트 핸들러
 const AddToNode = async (selectedAddData) => {
+  console.log(selectedAddData)
   const promiseList = [];
   for (const element of selectedAddData) {
     const params = {
@@ -577,8 +578,8 @@ const onClickConfirm = async () => {
 
       if (!basicResult) {
         const params = {
-          guid: props.userDataParam.guid,
-          displayText: props.userDataParam.name,
+          guid: props.userDataParam.meta_id,
+          displayText: props.userDataParam.meta_name,
           typeName: props.userDataParam.typeName,
           attributes: {
             comment: props.userDataParam.comment,

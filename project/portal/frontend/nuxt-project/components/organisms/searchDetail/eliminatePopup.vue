@@ -402,11 +402,11 @@ const getReferredEntities = () => {
 
   // 1. 컬럼 순서 설정
   columnEntities.value = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "attributes/columns", [])
-  const tempPartitionKey = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "attributes/tablePartition", "")
+  const tempPartitionKey = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "attributes/table_partition", "")
   // partitionKeys.value.push(tempPartitionKey)
   sortedColumnEntities = columnEntities.value.sort((a, b) => a.ordinalPosition - b.ordinalPosition)
 
-  columnPositionData.value = sortedColumnEntities.map((item) => item.name)
+  columnPositionData.value = sortedColumnEntities.map((item) => item.meta_name)
   if (tempPartitionKey)
     columnPositionData.value.push(tempPartitionKey)
 
@@ -758,46 +758,6 @@ const onClickFileEliminateButton = async () => {
       });
       queryWhere.value = "";
     }
-
-    // if (res.size && res.size > 0) {
-    //   await new Response(res).text().then((data) => {
-    //     const url = window.URL.createObjectURL(
-    //       new Blob(["\uFEFF" + data], { type: "text/csv; charset=utf-8;" })
-    //     );
-
-    //     const link = document.createElement("a");
-    //     link.href = url;
-    //     link.setAttribute("download", `${meta_name}` + ".csv");
-    //     link.style.cssText = "display:none";
-    //     document.body.appendChild(link);
-    //     link.click();
-    //     link.remove();
-    //   });
-
-    //   let historyParams = {
-    //     guid: guid,
-    //     name: meta_name,
-    //     type_name: typeName,
-    //     qualified_name: qualified_name,
-    //     queryWhere: queryWhere.value,
-    //     download_type: 0, // 다운로드 방식 (0:file 1:API)';
-    //     description: description,
-    //   };
-    //   historyParams.http_rqst_val = JSON.stringify(historyParams);
-    //   $ofetch("/api/search/detail/eliminate/history/add", {
-    //     method: "POST",
-    //     body: historyParams,
-    //   }).then((res) => {
-    //     if (res && res.data.hasOwnProperty("sampleData")) {
-    //       props.eliminateModal.sampleData = ObjectUtils.getPropertyValue(
-    //         res.data,
-    //         "sampleData",
-    //         []
-    //       );
-    //     }
-    //   });
-    //   queryWhere.value = "";
-    // }
 };
 
 // 추출건수 유효성 검증

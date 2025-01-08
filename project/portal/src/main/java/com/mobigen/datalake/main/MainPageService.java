@@ -112,7 +112,7 @@ public class MainPageService {
         for (int i = 0; i < shareDataList.size(); i++) {
             Map<String, Object> params = new LinkedHashMap<>();
             params.put("user_id", user_id);
-            params.put("guid", shareDataList.get(i).get("guid"));
+            params.put("guid", shareDataList.get(i).get("meta_id"));
     
             // getDetailData 호출
             Object detailData = searchDetailService.getDetailData(params);
@@ -149,7 +149,7 @@ public class MainPageService {
         List<String> guids = new ArrayList<>();
         for (int i=0; i<popularList.size(); i++) {
             Map<String, Object> popularData = (Map<String, Object>) popularList.get(i);
-            guids.add(popularData.get("guid").toString());
+            guids.add(popularData.get("meta_id").toString());
         }
 
         RestTemplate restTemplate = new RestTemplate();
@@ -237,7 +237,7 @@ public class MainPageService {
         List<String> guids = new ArrayList<>();
         for (int i=0; i<recommendList.size(); i++) {
             Map<String, Object> popularData = (Map<String, Object>) recommendList.get(i);
-            guids.add(popularData.get("guid").toString());
+            guids.add(popularData.get("meta_id").toString());
         }
 
         RestTemplate restTemplate = new RestTemplate();
