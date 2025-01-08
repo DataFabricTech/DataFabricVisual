@@ -107,7 +107,9 @@ public class DiagramService {
     }
 
     public Object getNodeInfo(String guid)throws Exception {
-        return diagramMapper.findTooltip(guid);
+        List<Map<String, Object>> result = null;
+        result = diagramMapper.findTooltip(guid);
+        return result;
     }
 
     public Integer saveNodeInfo(List<Map<String, Object>> params)throws Exception {
@@ -224,8 +226,26 @@ public class DiagramService {
     // 노드 검색
     public Map<String, Object> getMetaDataList(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<>();
-        result.put("list", diagramMapper.getMetaDataList(params));
-        result.put("total", diagramMapper.getMetaDataListTotal(params));
+        List<Map<String, Object>> metaInfoList = new ArrayList<>();
+
+        metaInfoList = diagramMapper.getMetaDataList(params);
+        if (metaInfoList != null) {
+            for (int i=0; i<metaInfoList.size(); i++) {
+                // Postgresql jsonb 타입(JSON 문자열) Map 형태로 변환
+                metaInfoList.get(i).put("attributes", convertJsonbToMap(metaInfoList.get(i).get("attributes")));
+                metaInfoList.get(i).put("business_attributes", convertJsonbToMap(metaInfoList.get(i).get("business_attributes")));
+                
+                // _varchar 객체 배열 Map 형태로 변환 (카테고리)
+                String[] ids = (String[]) metaInfoList.get(i).get("classifications");
+    
+                if (ids != null && ids.length > 0) {
+                    List<Map<String, Object>> classificationList = diagramMapper.getClassificationList(ids);
+                    metaInfoList.get(i).put("classifications", classificationList);
+                }
+            }
+            result.put("list", metaInfoList);
+            result.put("total", diagramMapper.getMetaDataListTotal(params));
+        }
         return result;
     }
 

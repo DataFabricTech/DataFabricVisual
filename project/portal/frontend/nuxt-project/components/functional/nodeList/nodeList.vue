@@ -79,12 +79,12 @@
             </td>
             <td>
               <span class="mu-ellipsis" :title="node[props.nodeField + '_node_id']">
-                {{ node[props.nodeField + "_node_id"] }}</span
+                {{ node[props.nodeField + "_node_id"] ? node[props.nodeField + "_node_id"] : "-" }}</span
               >
             </td>
             <td>
               <span class="mu-ellipsis" :title="node[props.nodeField + '_node_name']">
-                {{ node[props.nodeField + "_node_name"] }}
+                {{ node[props.nodeField + "_node_name"] ? node[props.nodeField + "_node_name"] : "-" }}
               </span>
             </td>
             <td>
@@ -109,15 +109,15 @@
                     <div class="data-info2">
                       <dl>
                         <dt>데이터 이름</dt>
-                        <dd>{{ node.tooltip.node_name ? node.tooltip.node_name : node.tooltip.name ? node.tooltip.name : "-" }}</dd>
+                        <dd>{{ node.tooltip && node.tooltip.node_id ? node.tooltip.node_id : "-" }}</dd>
                       </dl>
                       <dl>
                         <dt>데이터 설명</dt>
-                        <dd>{{ node.tooltip.description ? node.tooltip.description : "-" }}</dd>
+                        <dd>{{ node.tooltip && node.tooltip.displayText ? node.tooltip.displayText : "-" }}</dd>
                       </dl>
                       <dl>
                         <dt>데이터 유형</dt>
-                        <dd>{{ node.tooltip.typeName ? node.tooltip.typeName : node.tooltip.meta_type ? node.tooltip.meta_type : "-" }}</dd>
+                        <dd>{{ node.tooltip && node.tooltip.typeName ? node.tooltip.typeName : "-" }}</dd>
                       </dl>
                     </div>
                   </div>
@@ -164,9 +164,6 @@ const hoveredIndex = ref(null);
 const mouseX = ref(0);
 const mouseY = ref(0);
 
-onUpdated(() => {
-  console.log(props.NodeLinks)
-})
 onMounted(() => window.addEventListener("mousemove", handleMousemove));
 onUnmounted(() => window.removeEventListener("mousemove", handleMousemove));
 

@@ -56,8 +56,8 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>{{ selectedId }}</td>
-                  <td>{{ selectedName }}</td>
+                  <td>{{ selectedId ? selectedId : "-" }}</td>
+                  <td>{{ selectedName ? selectedName : "-" }}</td>
                 </tr>
               </tbody>
             </table>
@@ -202,7 +202,7 @@ const fromRefreshbtn = async () => {
 
       element.tooltip = tooltip;
 
-      if (tooltip) {
+      if (tooltip && tooltip.length > 0) {
         let dbTooltipList = await $ofetch(`/api/node/detail/tooltip/${guid}`);
 
         let dataTooltiplist = ObjectUtils.getPropertyValue(dbTooltipList, "data", []);
@@ -243,7 +243,7 @@ const toRefreshbtn = async () => {
 
       element.tooltip = tooltip;
 
-      if (tooltip) {
+      if (tooltip && tooltip.length > 0) {
         let dbTooltipList = await $ofetch(`/api/node/detail/tooltip/${guid}`);
 
         let dataTooltiplist = ObjectUtils.getPropertyValue(dbTooltipList, "data", []);
@@ -297,8 +297,8 @@ const AddFromNode = async (selectedAddData) => {
   for (let j = 0; j < responseList.length; j++) {
     const tooltip = ObjectUtils.getPropertyValue(responseList[j], "data", {});
     const node = {
-      from_node_id: selectedAddData[j].id,
-      from_node_name: selectedAddData[j].name,
+      from_node_id: selectedAddData[j].meta_id,
+      from_node_name: selectedAddData[j].meta_name,
       link_id: null,
       to_node_id: selectedId.value,
       to_node_name: selectedName.value,
@@ -338,8 +338,8 @@ const AddToNode = async (selectedAddData) => {
       from_node_id: selectedId.value,
       from_node_name: selectedName.value,
       link_id: null,
-      to_node_id: selectedAddData[j].id,
-      to_node_name: selectedAddData[j].name,
+      to_node_id: selectedAddData[j].meta_id,
+      to_node_name: selectedAddData[j].meta_name,
       tooltip,
     };
     toNodeLinks.value.push(node);
@@ -456,7 +456,7 @@ const getNodeLinks = async () => {
 
       element.tooltip = tooltiplist[0];
 
-      if (!tooltipList.entities) {
+      if (!tooltipList) {
         let dbTooltipList = await $ofetch(`/api/node/detail/tooltip/${guid}`);
         let dataTooltiplist = ObjectUtils.getPropertyValue(dbTooltipList, "data", []);
 
