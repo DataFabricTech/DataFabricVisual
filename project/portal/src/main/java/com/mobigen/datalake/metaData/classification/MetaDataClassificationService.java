@@ -489,7 +489,7 @@ public class MetaDataClassificationService {
         List<String> removeEntityIds = new ArrayList<>();
         if(!findDuplicateCategory.isEmpty()) {
             for(Map<String, Object> item : findDuplicateCategory) {
-                String id = item.get("id").toString();
+                String id = item.get("meta_id").toString();
                 removeEntityIds.add(id);
             }
             LOGGER.info("invalid parameters: entity: {}, already associated with classification: {}", removeEntityIds, classificationId);

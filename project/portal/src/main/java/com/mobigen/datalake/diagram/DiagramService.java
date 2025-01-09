@@ -234,7 +234,12 @@ public class DiagramService {
                 metaInfo.put("classifications", classificationList);
             }
 
+        // 리니지 정보에서 조회
+        } else {
+            metaInfo = diagramMapper.getNodeInfoOne(params);
         }
+
+        
     
         return metaInfo;
     }

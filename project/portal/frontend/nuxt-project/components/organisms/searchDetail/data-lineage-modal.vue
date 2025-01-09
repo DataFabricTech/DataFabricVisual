@@ -202,20 +202,12 @@ const fromRefreshbtn = async () => {
 
       element.tooltip = tooltip;
 
-      if (tooltip && tooltip.length > 0) {
+      if (!element.tooltip) {
         let dbTooltipList = await $ofetch(`/api/node/detail/tooltip/${guid}`);
 
         let dataTooltiplist = ObjectUtils.getPropertyValue(dbTooltipList, "data", []);
 
         element.tooltip = dataTooltiplist[0];
-
-        element.tooltip.attributes = [];
-
-        element.tooltip.description = dataTooltiplist[0].description;
-
-        element.tooltip.name = dataTooltiplist[0].node_name;
-
-        element.tooltip.typeName = dataTooltiplist[0].type_name;
       }
     }
   }
@@ -243,20 +235,12 @@ const toRefreshbtn = async () => {
 
       element.tooltip = tooltip;
 
-      if (tooltip && tooltip.length > 0) {
+      if (!element.tooltip) {
         let dbTooltipList = await $ofetch(`/api/node/detail/tooltip/${guid}`);
 
         let dataTooltiplist = ObjectUtils.getPropertyValue(dbTooltipList, "data", []);
 
         element.tooltip = dataTooltiplist[0];
-
-        element.tooltip.attributes = [];
-
-        element.tooltip.description = dataTooltiplist[0].description;
-
-        element.tooltip.name = dataTooltiplist[0].node_name;
-
-        element.tooltip.typeName = dataTooltiplist[0].type_name;
       }
     }
   }
@@ -318,7 +302,6 @@ const AddFromNode = async (selectedAddData) => {
 };
 //이후 노드 추가 이벤트 핸들러
 const AddToNode = async (selectedAddData) => {
-  console.log(selectedAddData)
   const promiseList = [];
   for (const element of selectedAddData) {
     const params = {
@@ -447,28 +430,20 @@ const getNodeLinks = async () => {
         guid: guid,
       };
 
-      let tooltipList = await $ofetch(`/api/node/tooltip`, {
+      const tooltipList = await $ofetch(`/api/node/tooltip`, {
         method: "POST",
         body: params,
       });
 
-      const tooltiplist = ObjectUtils.getPropertyValue(tooltipList, "entities", []); // 테이블 데이터
+      const tooltiplist = ObjectUtils.getPropertyValue(tooltipList, "data", []); // 테이블 데이터
 
       element.tooltip = tooltiplist[0];
 
-      if (!tooltipList) {
+      if (!element.tooltip) {
         let dbTooltipList = await $ofetch(`/api/node/detail/tooltip/${guid}`);
         let dataTooltiplist = ObjectUtils.getPropertyValue(dbTooltipList, "data", []);
 
         element.tooltip = dataTooltiplist[0];
-
-        element.tooltip.attributes = [];
-
-        element.tooltip.attributes.comment = dataTooltiplist[0].description;
-
-        element.tooltip.displayText = dataTooltiplist[0].node_name;
-
-        element.tooltip.typeName = dataTooltiplist[0].type_name;
       }
     }
 
@@ -484,23 +459,15 @@ const getNodeLinks = async () => {
         body: params,
       });
 
-      const tooltiplist = ObjectUtils.getPropertyValue(tooltipList, "entities", []); // 테이블 데이터
+      const tooltiplist = ObjectUtils.getPropertyValue(tooltipList, "data", []); // 테이블 데이터
 
       element.tooltip = tooltiplist[0];
 
-      if (!tooltipList.entities) {
+      if (!element.tooltip) {
         let dbTooltipList = await $ofetch(`/api/node/detail/tooltip/${guid}`);
         let dataTooltiplist = ObjectUtils.getPropertyValue(dbTooltipList, "data", []);
 
         element.tooltip = dataTooltiplist[0];
-
-        element.tooltip.attributes = [];
-
-        element.tooltip.attributes.comment = dataTooltiplist[0].description;
-
-        element.tooltip.displayText = dataTooltiplist[0].node_name;
-
-        element.tooltip.typeName = dataTooltiplist[0].type_name;
       }
     }
 

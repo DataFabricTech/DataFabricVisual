@@ -10,6 +10,7 @@ import java.util.List;
 @Repository("diagramMapper")
 public interface DiagramMapper {
     ArrayList getNodeInfo(HashMap param) throws Exception;
+    Map<String, Object> getNodeInfoOne(Map<String, Object> param) throws Exception;
     ArrayList getLinkInfo(HashMap param) throws Exception;
     ArrayList getChildNodeLink(String nodeID) throws Exception;
     ArrayList getParentNodeLink(String nodeID) throws Exception;

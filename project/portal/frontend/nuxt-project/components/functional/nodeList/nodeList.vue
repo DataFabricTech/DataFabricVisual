@@ -109,19 +109,26 @@
                     <div class="data-info2">
                       <dl>
                         <dt>메타 명</dt>
-                        <dd>{{ node.tooltip && node.tooltip.meta_name ? node.tooltip.meta_name : "-" }}</dd>
+                        <dd v-if="node.tooltip && node.tooltip.node_name">{{ node.tooltip.node_name }}</dd>
+                        <dd v-else-if="node.tooltip && node.tooltip.meta_name">{{ node.tooltip.meta_name }}</dd>
+                        <dd v-else>-</dd>
                       </dl>
                       <dl>
                         <dt>메타 설명</dt>
-                        <dd>{{ node.tooltip && node.tooltip.description ? node.tooltip.description : "-" }}</dd>
+                        <dd v-if="node.tooltip && node.tooltip.description">{{ node.tooltip.description }}</dd>
+                        <dd v-else>-</dd>
                       </dl>
                       <dl>
-                        <dt>메타 유형</dt>
-                        <dd>{{ node.tooltip && node.tooltip.meta_type ? node.tooltip.meta_type : "-" }}</dd>
+                        <dt>DB 명</dt>
+                        <dd v-if="node.tooltip && node.tooltip.db_name">{{ node.tooltip.db_name }}</dd>
+                        <dd v-else-if="node.tooltip && node.tooltip.qualified_name">{{ node.tooltip.qualified_name.split(".")[1] ? node.tooltip.qualified_name.split(".")[1] : "-" }}</dd>
+                        <dd v-else>-</dd>
                       </dl>
                       <dl>
-                        <dt>시스템 유형</dt>
-                        <dd>{{ node.tooltip && node.tooltip.system_type ? node.tooltip.system_type : "-" }}</dd>
+                        <dt>DB 종류</dt>
+                        <dd v-if="node.tooltip && node.tooltip.type_name">{{ node.tooltip.type_name }}</dd>
+                        <dd v-else-if="node.tooltip && node.tooltip.system_type">{{ node.tooltip.system_type }}</dd>
+                        <dd v-else>-</dd>
                       </dl>
                     </div>
                   </div>

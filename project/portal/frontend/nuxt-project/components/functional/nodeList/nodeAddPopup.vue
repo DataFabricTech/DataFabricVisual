@@ -148,7 +148,7 @@
                           <div class="mu-tooltip-inner">
                             <div class="data-info2">
                               <dl>
-                                <dt>메타 이름</dt>
+                                <dt>메타 명</dt>
                                 <dd>{{ node.meta_name }}</dd>
                               </dl>
                               <dl>
@@ -156,11 +156,11 @@
                                 <dd>{{ node.description ? node.description : '-' }}</dd>
                               </dl>
                               <dl>
-                                <dt>메타 유형</dt>
-                                <dd>{{ node.meta_type ? node.meta_type : "-" }}</dd>
+                                <dt>DB 명</dt>
+                                <dd>{{ node.qualified_name ? (node.qualified_name.split(".")[1] ? node.qualified_name.split(".")[1] : "-") : "-" }}</dd>
                               </dl>
                               <dl>
-                                <dt>시스템 유형</dt>
+                                <dt>DB 종류</dt>
                                 <dd>{{ node.system_type ? node.system_type : "-" }}</dd>
                               </dl>
                             </div>
@@ -271,7 +271,7 @@
         </div>
       </div>
     </div>
-    <pagination :paging="pagingObj" @onClickPage="onClickPage" />
+    <pagination v-show="currentTab == '데이터베이스'" :paging="pagingObj" @onClickPage="onClickPage" />
 
     <div class="mu-dialog-foot">
       <button
@@ -520,18 +520,16 @@ const searchNode = async (offset = 0) => {
   });
 };
 
+// 이전노드 추가 직접입력
 const addSelfFromNode = () => {
   const selfInsertNode = {
     node_id: add_node_id.value,
     id: add_node_id.value,
-    displayText: add_node_name.value,
-    typeName: add_db_type.value,
-    dbName: add_db_name.value,
+    node_name: add_node_name.value,
+    type_name: add_db_type.value,
+    db_name: add_db_name.value,
     self: true,
-    // description: add_table_description.value,
-    attributes: {
-      comment: add_table_description.value,
-    },
+    description: add_table_description.value,
   };
 
   const selfNode = {
@@ -550,19 +548,19 @@ const addSelfFromNode = () => {
   emit("addSelfFromNode", data);
 };
 
+// 이후노드 추가 직접입력
 const addSelfToNode = () => {
   const selfInsertNode = {
     node_id: add_node_id.value,
     id: add_node_id.value,
-    displayText: add_node_name.value,
-    typeName: add_db_type.value,
-    dbName: add_db_name.value,
+    node_name: add_node_name.value,
+    type_name: add_db_type.value,
+    db_name: add_db_name.value,
     self: true,
-    attributes: {
-      comment: add_table_description.value,
-    },
+    description: add_table_description.value,
   };
 
+  // 데이터베이스
   const selfNode = {
     from_node_id: props.selectedId,
     from_node_name: props.selectedName,

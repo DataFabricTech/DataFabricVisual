@@ -156,10 +156,14 @@ public class DiagramController {
         String id = (String) idObj;
         String qualified_name = (String) tooltipMap.get("qualified_name");
         String db_name = qualified_name != null ? qualified_name.split("\\.")[1] : "";
-        tooltipMap.put("node_id", tooltipMap.get("meta_id"));
-        tooltipMap.put("node_name", tooltipMap.get("meta_name"));
-        tooltipMap.put("type_name", tooltipMap.get("system_type"));
-        tooltipMap.put("db_name", db_name);
+        // 직접입력이 아닌 "데이터베이스"에 있는 데이터를 추가할 경우 값 지정
+        if (tooltipMap.get("self") == null || !(Boolean) tooltipMap.get("self")) {
+            tooltipMap.put("node_id", tooltipMap.get("meta_id"));
+            tooltipMap.put("node_name", tooltipMap.get("meta_name"));
+            tooltipMap.put("type_name", tooltipMap.get("system_type"));
+            tooltipMap.put("db_name", db_name);
+        }
+
         if (diagramService.checkDuplicate(id)) {
             diagramService.updateSelfNode(tooltipMap);
         } else {
@@ -201,26 +205,6 @@ public class DiagramController {
     public Object saveSelfNodeInfo(@RequestBody Map<String, Object> params) throws Exception {
         JsonResult result = new JsonResult();
         int executed = diagramService.saveSelfNode(params);
-        if (executed > 0) {
-            result.setResult(JsonResult.RESULT_SUCCESS);
-        } else {
-            result.setResult(JsonResult.RESULT_FAIL);
-        }
-
-        return result;
-    }
-
-    /**
-     *
-     * @param params
-     * @return Object
-     */
-    @ResponseJsonResult
-    @PatchMapping("/node/self/update")
-    @ResponseBody
-    public Object updateSelfNodeInfo(@RequestBody Map<String, Object> params) throws Exception {
-        JsonResult result = new JsonResult();
-        int executed = diagramService.updateSelfNode(params);
         if (executed > 0) {
             result.setResult(JsonResult.RESULT_SUCCESS);
         } else {

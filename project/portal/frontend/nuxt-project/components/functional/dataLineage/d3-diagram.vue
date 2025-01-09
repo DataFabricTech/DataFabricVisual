@@ -727,7 +727,7 @@ const update = (source) => {
 const showTooltip = (e, node) => {
   const { id } = node;
 
-  const matched = nodeInfoList.value.find((el) => el.id === id);
+  const matched = nodeInfoList.value.find((el) => el.meta_id === id);
   if (matched) {
     matched.display = "block";
     matched.e = e;
