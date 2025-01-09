@@ -253,8 +253,8 @@ const searchParams = ref({
   query: "",
   detailFilters: {},
   pagingObj: {},
-  systemtype: "",
-  metatype: "",
+  system_type: "",
+  meta_type: "",
   tag: "",
   limit: 10,
   offset: 0,
@@ -263,7 +263,7 @@ const searchParams = ref({
     name: "",
     description: ""
   },
-  sortBy: "createtime",
+  sortBy: "create_time",
   sortOrder: "",
   entityFilters: {}
 });
@@ -376,10 +376,10 @@ const leftWidth = ref<number>(0); // 왼쪽 DOM 너비
 
 const word = ref<string>(""); // 검색어
 
-const systemtype = ref<string>(""); // 시스템 타입 (hive, hbase, postgreSQL 등 시스템 종류)
-const metatype = ref<string>(""); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미
+const system_type = ref<string>(""); // 시스템 타입 (hive, hbase, postgreSQL 등 시스템 종류)
+const meta_type = ref<string>(""); // 메타데이터 타입으로 대상 system에서 수집되는 메타 종류를 의미
 const tag = ref<string>(""); // 태그
-const sortBy = ref<string>("createtime") // 정렬 필드
+const sortBy = ref<string>("create_time") // 정렬 필드
 const sortOrder = ref<string>(""); // 정렬
 const classification = ref({
   id: "",
@@ -516,8 +516,8 @@ onMounted(async () => {
         description: ""
       }
 
-      systemtype.value = searchParams.value.systemtype ? searchParams.value.systemtype : "" // 시스템타입
-      metatype.value = searchParams.value.metatype ? searchParams.value.metatype : "" // 메타타입
+      system_type.value = searchParams.value.system_type ? searchParams.value.system_type : "" // 시스템타입
+      meta_type.value = searchParams.value.meta_type ? searchParams.value.meta_type : "" // 메타타입
       sortOrder.value = searchParams.value.sortOrder ? searchParams.value.sortOrder : "" // 정렬방식
       pagingObj.value.currentPage = searchParams.value.offset + 1 // 현재 페이지
       pagingObj.value.limit = searchParams.value.limit // 보여줄 개수
@@ -695,13 +695,13 @@ const getSearch = async (offset: number = 0): Promise<void> => {
   let currentLimit = pagingObj.value.limit ? pagingObj.value.limit : 10
   const params = {
     query: word.value ? word.value : "",
-    systemtype: systemtype.value ? systemtype.value : "",
-    metatype: metatype.value ? metatype.value : "",
+    system_type: system_type.value ? system_type.value : "",
+    meta_type: meta_type.value ? meta_type.value : "",
     tag: "",
     limit: currentLimit,
     offset: offset ? offset * currentLimit : 0,
     classification: classification.value && classification.value.name ? classification.value.name : "", // 검색할 때는 name값 사용
-    sortBy: sortBy.value ? sortBy.value : "createtime",
+    sortBy: sortBy.value ? sortBy.value : "create_time",
     sortOrder: sortOrder.value ? sortOrder.value : "",
     entityFilters: showFilterWrap2.value ? paramEntityFilters : {}
   };
@@ -970,9 +970,9 @@ const clearFilter = (key) => {
     };
     leftMenuToggleAndBold("") // 왼쪽메뉴 연동
   } else if (key == 'SYSTEMTYPE') {
-    systemtype.value = ""
+    system_type.value = ""
   } else if (key == 'METATYPE') {
-    metatype.value = ""
+    meta_type.value = ""
   } else if (key == 'TAG') {
     tag.value = ""
   } else if (key == 'ORDER') {
@@ -1189,8 +1189,8 @@ const onChangeCheckBox = async (key, event: any) => {
           };
           leftMenuToggleAndBold(el.id) // 왼쪽메뉴 연동 처리
         }
-        if (key == 'SYSTEMTYPE') systemtype.value = el.name
-        if (key == 'METATYPE') metatype.value = el.name
+        if (key == 'SYSTEMTYPE') system_type.value = el.name
+        if (key == 'METATYPE') meta_type.value = el.name
         if (key == 'TAG') tag.value = el.name
         if (key == 'ORDER') sortOrder.value = el.name
       } else {

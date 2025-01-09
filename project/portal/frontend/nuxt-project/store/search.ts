@@ -9,8 +9,8 @@ export const useSearchStore = defineStore('searchStore', () => {
     query: "",
     detailFilters: {},
     pagingObj: {},
-    systemtype: "",
-    metatype: "",
+    system_type: "",
+    meta_type: "",
     tag: "",
     limit: 10,
     offset: 0,
@@ -19,7 +19,7 @@ export const useSearchStore = defineStore('searchStore', () => {
       name: "",
       description: ""
     },
-    sortBy: "createtime",
+    sortBy: "create_time",
     sortOrder: "",
     entityFilters: {},
   }); // 상세
