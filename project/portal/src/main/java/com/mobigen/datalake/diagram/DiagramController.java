@@ -152,10 +152,14 @@ public class DiagramController {
     @ResponseBody
     public Object saveNode(@RequestBody Map<String, Object> params) throws Exception {
         Map<String, Object> tooltipMap = (Map<String, Object>) params.get("tooltip");
-        Object idObj = tooltipMap.get("id");
+        Object idObj = tooltipMap.get("meta_id");
         String id = (String) idObj;
-        String db_name = (String) tooltipMap.get("system_type");
-        tooltipMap.put("dbName", db_name);
+        String qualified_name = (String) tooltipMap.get("qualified_name");
+        String db_name = qualified_name != null ? qualified_name.split("\\.")[1] : "";
+        tooltipMap.put("node_id", tooltipMap.get("meta_id"));
+        tooltipMap.put("node_name", tooltipMap.get("meta_name"));
+        tooltipMap.put("type_name", tooltipMap.get("system_type"));
+        tooltipMap.put("db_name", db_name);
         if (diagramService.checkDuplicate(id)) {
             diagramService.updateSelfNode(tooltipMap);
         } else {

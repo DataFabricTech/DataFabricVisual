@@ -148,16 +148,20 @@
                           <div class="mu-tooltip-inner">
                             <div class="data-info2">
                               <dl>
-                                <dt>데이터 이름</dt>
+                                <dt>메타 이름</dt>
                                 <dd>{{ node.meta_name }}</dd>
                               </dl>
                               <dl>
-                                <dt>데이터 설명</dt>
+                                <dt>메타 설명</dt>
                                 <dd>{{ node.description ? node.description : '-' }}</dd>
                               </dl>
                               <dl>
-                                <dt>데이터 유형</dt>
-                                <dd>{{ node.meta_type }}</dd>
+                                <dt>메타 유형</dt>
+                                <dd>{{ node.meta_type ? node.meta_type : "-" }}</dd>
+                              </dl>
+                              <dl>
+                                <dt>시스템 유형</dt>
+                                <dd>{{ node.system_type ? node.system_type : "-" }}</dd>
                               </dl>
                             </div>
                           </div>
@@ -461,7 +465,6 @@ const isAddChecked = (node) => {
 };
 
 const onToggleAddCheckbox = (e, isAll, node) => {
-  console.log(node)
   const {
     target: { checked },
   } = e;
@@ -555,7 +558,6 @@ const addSelfToNode = () => {
     typeName: add_db_type.value,
     dbName: add_db_name.value,
     self: true,
-    //  description: add_table_description.value,
     attributes: {
       comment: add_table_description.value,
     },

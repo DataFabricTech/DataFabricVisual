@@ -284,7 +284,7 @@ const AddFromNode = async (selectedAddData) => {
   const promiseList = [];
   for (const element of selectedAddData) {
     const params = {
-      guid: element.id,
+      guid: element.meta_id,
     };
     const tooltipPromise = $ofetch(`/api/node/tooltip`, {
       method: "POST",
@@ -322,7 +322,7 @@ const AddToNode = async (selectedAddData) => {
   const promiseList = [];
   for (const element of selectedAddData) {
     const params = {
-      guid: element.id,
+      guid: element.meta_id,
     };
     const tooltipPromise = $ofetch(`/api/node/tooltip`, {
       method: "POST",
@@ -570,22 +570,20 @@ const getInsertedNodeLinks = () => {
 const onClickConfirm = async () => {
   if (await confirmAlert("현재 리니지 정보를 저장합니다. 정말 저장 하시겠습니까?")) {
     try {
-      const deletedLinks = getDeletedNodeLinks();
-      const insertedLinks = getInsertedNodeLinks();
-      const basicResult = await $ofetch("/api/node/check", {
+      const deletedLinks = getDeletedNodeLinks(); // 삭제할 리니지 정보
+      const insertedLinks = getInsertedNodeLinks(); // 추가할 리니지 정보
+      const basicResult = await $ofetch("/api/node/check", { // meta_id 중복체크
         params: { data: id.value },
       });
 
       if (!basicResult) {
         const params = {
-          guid: props.userDataParam.meta_id,
-          displayText: props.userDataParam.meta_name,
-          typeName: props.userDataParam.typeName,
-          attributes: {
-            comment: props.userDataParam.comment,
-            qualified_name: props.userDataParam.qualified_name,
-          },
-          dbName: props.userDataParam.qualified_name.split(".")[0],
+          node_id: props.userDataParam.guid,
+          node_name: props.userDataParam.meta_name,
+          type_name: props.userDataParam.type,
+          description: props.userDataParam.comment,
+          qualified_name: props.userDataParam.qualified_name,
+          db_name: props.userDataParam.qualified_name.split(".")[1],
         };
         await $ofetch("/api/node/self", {
           method: "PUT",

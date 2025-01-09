@@ -108,16 +108,20 @@
                   <div class="mu-tooltip-inner">
                     <div class="data-info2">
                       <dl>
-                        <dt>데이터 이름</dt>
-                        <dd>{{ node.tooltip && node.tooltip.node_id ? node.tooltip.node_id : "-" }}</dd>
+                        <dt>메타 명</dt>
+                        <dd>{{ node.tooltip && node.tooltip.meta_name ? node.tooltip.meta_name : "-" }}</dd>
                       </dl>
                       <dl>
-                        <dt>데이터 설명</dt>
-                        <dd>{{ node.tooltip && node.tooltip.displayText ? node.tooltip.displayText : "-" }}</dd>
+                        <dt>메타 설명</dt>
+                        <dd>{{ node.tooltip && node.tooltip.description ? node.tooltip.description : "-" }}</dd>
                       </dl>
                       <dl>
-                        <dt>데이터 유형</dt>
-                        <dd>{{ node.tooltip && node.tooltip.typeName ? node.tooltip.typeName : "-" }}</dd>
+                        <dt>메타 유형</dt>
+                        <dd>{{ node.tooltip && node.tooltip.meta_type ? node.tooltip.meta_type : "-" }}</dd>
+                      </dl>
+                      <dl>
+                        <dt>시스템 유형</dt>
+                        <dd>{{ node.tooltip && node.tooltip.system_type ? node.tooltip.system_type : "-" }}</dd>
                       </dl>
                     </div>
                   </div>

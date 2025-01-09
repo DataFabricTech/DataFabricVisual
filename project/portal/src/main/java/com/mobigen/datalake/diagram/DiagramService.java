@@ -107,9 +107,23 @@ public class DiagramService {
     }
 
     public Object getNodeInfo(String guid)throws Exception {
-        List<Map<String, Object>> result = null;
-        result = diagramMapper.findTooltip(guid);
-        return result;
+        List<Map<String, Object>> metaInfoList = new ArrayList<>();
+        metaInfoList = diagramMapper.findTooltip(guid);
+
+        for (int i=0; i<metaInfoList.size(); i++) {
+            // Postgresql jsonb 타입(JSON 문자열) Map 형태로 변환
+            metaInfoList.get(i).put("attributes", convertJsonbToMap(metaInfoList.get(i).get("attributes")));
+            metaInfoList.get(i).put("business_attributes", convertJsonbToMap(metaInfoList.get(i).get("business_attributes")));
+            
+            // _varchar 객체 배열 Map 형태로 변환 (카테고리)
+            String[] ids = (String[]) metaInfoList.get(i).get("classifications");
+
+            if (ids != null && ids.length > 0) {
+                List<Map<String, Object>> classificationList = diagramMapper.getClassificationList(ids);
+                metaInfoList.get(i).put("classifications", classificationList);
+            }
+        }
+        return metaInfoList;
     }
 
     public Integer saveNodeInfo(List<Map<String, Object>> params)throws Exception {
@@ -166,7 +180,7 @@ public class DiagramService {
 
     public Integer saveSelfNode(Map<String, Object> params) {
         Integer result = 0;
-         result = diagramMapper.saveSelfNode(params);
+        result = diagramMapper.saveSelfNode(params);
         return result;
     }
 
@@ -204,7 +218,25 @@ public class DiagramService {
     }
 
     public Map<String, Object> getMetaDataForTooltipOne(Map<String, Object> params) throws Exception {
-        return diagramMapper.getMetaDataForTooltipOne(params);
+        Map<String, Object> metaInfo = null;
+        metaInfo = diagramMapper.getMetaDataForTooltipOne(params);
+
+        // Postgresql jsonb 타입(JSON 문자열) Map 형태로 변환
+        if (metaInfo != null) {
+            metaInfo.put("attributes", convertJsonbToMap(metaInfo.get("attributes")));
+            metaInfo.put("business_attributes", convertJsonbToMap(metaInfo.get("business_attributes")));
+            
+            // _varchar 객체 배열 Map 형태로 변환 (카테고리)
+            String[] ids = (String[]) metaInfo.get("classifications");
+    
+            if (ids != null && ids.length > 0) {
+                List<Map<String, Object>> classificationList = diagramMapper.getClassificationList(ids);
+                metaInfo.put("classifications", classificationList);
+            }
+
+        }
+    
+        return metaInfo;
     }
 
     // Jsonb => Map 타입 변환 함수
