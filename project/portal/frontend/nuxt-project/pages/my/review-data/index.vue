@@ -21,7 +21,7 @@
                     <div class="inner-data">
                       <div class="title-group">
                         <a @click="onClickDataName(item)">
-                          <strong class="data-title">{{ item.description && item.description.length > 0 ? `${item.description} (${item.name})` : item.name }}</strong>
+                          <strong class="data-title">{{ item.description ? `${item.description} (${item.meta_name})` : item.meta_name }}</strong>
                           <p class="data-comment">{{ item.review }}</p>
                         </a>
                       </div>
@@ -58,7 +58,7 @@ import Pagination from "@functional/pagination/pagination";
 import BorderListSearchReview from "@functional/border-list-search/border-list-search-review.vue";
 
 definePageMeta({
-  name: "MySuggestedData",
+  name: "MyReviewData",
   layout: 'user',
 })
 
@@ -134,7 +134,7 @@ const getPost = async (offset: number = 1) => {
   };
 
   try {
-    const result = await postApiData("/api/myCatalog/mySuggestedDataList", param);
+    const result = await postApiData("/api/myCatalog/myReviewDataList", param);
     if (result.list) {
       pagingObj.value = {
         ...pagingObj.value,
@@ -152,10 +152,10 @@ const onClickPage = (page: number) => {
   getPost(page);
 };
 
-const onClickDataName = async (item: { guid: string; }) => {
+const onClickDataName = async (item: { meta_id: string; }) => {
   await router.push({
     path: "/search/detail",
-    query: { guid: item.guid }
+    query: { guid: item.meta_id }
   });
 }
 

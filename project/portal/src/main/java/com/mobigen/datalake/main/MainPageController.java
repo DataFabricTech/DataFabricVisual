@@ -85,12 +85,12 @@ public class MainPageController {
 
     // 찜데이터 조회
     @ResponseJsonResult
-    @GetMapping("/myWishDataList")
-    public Object getMyWishDataList(HttpServletRequest request) throws Exception {
+    @GetMapping("/myFavoriteData")
+    public Object getMyFavoriteDataList(HttpServletRequest request) throws Exception {
         // 세션 사용자 ID와 실제 DB의 게시글 작성자 일치 여부 확인
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         String userId = user.get("user_id").toString();
-        return mainPageService.getMyWishDataList(userId);
+        return mainPageService.getMyFavoriteDataList(userId);
     }
 
     // 카테고리 항목 조회 (스와이프 차트)

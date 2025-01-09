@@ -21,13 +21,13 @@ public interface MyCatalogMapper {
 
     Integer getExtractedDataListCount(Map<String, String> param);
 
-    List<Map<String,String>> getWishedDataList(Map<String, String> param);
+    List<Map<String,String>> getFavoriteDataList(Map<String, String> param);
 
-    Integer getWishedDataListCount(Map<String, String> param);
+    Integer getFavoriteDataListCount(Map<String, String> param);
 
-    List<Map<String, String>> getSuggestedDataList(Map<String, String> param);
+    List<Map<String, String>> getMyReviewDataList(Map<String, String> param);
 
-    Integer getSuggestedDataListCount(Map<String, String> param);
+    Integer getMyReviewDataListCount(Map<String, String> param);
 
     List<Map<String, Object>> getMySynonymDeleteRequestList(Map<String, String> param);
 }

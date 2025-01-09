@@ -44,8 +44,11 @@ public class DetailController {
     public Object getDetailData(@PathVariable("guid") String guid, HttpServletRequest request) throws Exception {
         Map<String, Object> params = new LinkedHashMap<>();
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-        params.put("user_id", user.get("user_id").toString());
-        params.put("guid", guid);
+        params.put("user_id", user.get("user_id"));
+        params.put("user_name", user.get("username"));
+        params.put("dept_id", user.get("dept_id"));
+        params.put("dept_name", user.get("dept_nm"));
+        params.put("meta_id", guid);
         return searchDetailService.getDetailData(params);
     }
 

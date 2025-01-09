@@ -36,7 +36,7 @@ public class MyCatalogController {
     @PostMapping("/myCatalog/mySearchDataList")
     public Object PostMySearchDataList(@RequestBody Map<String, String> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-        params.put("userId", user.get("user_id").toString());
+        params.put("user_id", user.get("user_id").toString());
         return myCatalogService.getSearchDataList(params);
     }
 
@@ -51,7 +51,7 @@ public class MyCatalogController {
     public Object PostMyDataRequestList(@RequestBody Map<String, String> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         Map<String, String> param = new HashMap<>();
-        param.put("userId", user.get("user_id").toString());
+        param.put("user_id", user.get("user_id").toString());
         param.put("searchWord", params.get("searchWord"));
         param.put("limit", String.valueOf(params.get("limit")));
         param.put("offset", String.valueOf(Integer.parseInt(params.get("limit")) * (Integer.parseInt(params.get("offset")) - 1)));
@@ -76,7 +76,7 @@ public class MyCatalogController {
     @PostMapping("/myCatalog/getMySynonymDeleteRequestList")
     public Object PostMyRequestDataList(@RequestBody Map<String, String> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-        params.put("userId", user.get("user_id").toString());
+        params.put("user_id", user.get("user_id").toString());
         return myCatalogService.getMySynonymDeleteRequestList(params);
     }
 
@@ -90,7 +90,7 @@ public class MyCatalogController {
     @PostMapping("/myCatalog/mySynonymDeleteRequestList")
     public Object PostMySynonymDeleteRequestList(@RequestBody Map<String, String> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-        params.put("userId", user.get("user_id").toString());
+        params.put("user_id", user.get("user_id").toString());
         return myCatalogService.getSynonymDeleteRequestList(params);
     }
 
@@ -105,7 +105,7 @@ public class MyCatalogController {
     public Object PostMyExtractedDataList(@RequestBody Map<String, String> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         Map<String, String> param = new HashMap<>();
-        param.put("userId", user.get("user_id").toString());
+        param.put("user_id", user.get("user_id").toString());
         param.put("searchWord", params.get("searchWord"));
         param.put("limit", String.valueOf(params.get("limit")));
         param.put("offset", String.valueOf(Integer.parseInt(params.get("limit")) * (Integer.parseInt(params.get("offset")) - 1)));
@@ -127,18 +127,18 @@ public class MyCatalogController {
      * @throws Exception
      */
     @ResponseJsonResult
-    @PostMapping("/myCatalog/myWishedDataList")
-    public Object PostMyWishedDataList(@RequestBody Map<String, String> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @PostMapping("/myCatalog/myFavoriteDataList")
+    public Object PostMyFavoriteDataList(@RequestBody Map<String, String> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         Map<String, String> param = new HashMap<>();
-        param.put("userId", user.get("user_id").toString());
+        param.put("user_id", user.get("user_id").toString());
         param.put("searchWord", params.get("searchWord"));
         param.put("limit", String.valueOf(params.get("limit")));
         param.put("offset", String.valueOf(Integer.parseInt(params.get("limit")) * (Integer.parseInt(params.get("offset")) - 1)));
 
-        int total = myCatalogService.getWishedDataListCount(param);
+        int total = myCatalogService.getFavoriteDataListCount(param);
         
-        List<Map<String, String>> list = myCatalogService.getWishedDataList(param);
+        List<Map<String, String>> list = myCatalogService.getFavoriteDataList(param);
         Map resultMap = new HashMap<>();
         resultMap.put("list", list);
         resultMap.put("total", total);
@@ -154,19 +154,19 @@ public class MyCatalogController {
      * @throws Exception
      */
     @ResponseJsonResult
-    @PostMapping("/myCatalog/mySuggestedDataList")
-    public Object PostMySuggestedDataList(@RequestBody Map<String, String> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    @PostMapping("/myCatalog/myReviewDataList")
+    public Object PostMyReviewDataList(@RequestBody Map<String, String> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         Map<String, String> param = new HashMap<>();
-        param.put("userId", user.get("user_id").toString());
+        param.put("user_id", user.get("user_id").toString());
         param.put("searchWord", params.get("searchWord"));
         param.put("searchType", params.get("searchType"));
         param.put("limit", String.valueOf(params.get("limit")));
         param.put("offset", String.valueOf((Integer.parseInt(params.get("offset")) - 1)));
 
-        int total = myCatalogService.getSuggestedDataListCount(param);
+        int total = myCatalogService.getMyReviewDataListCount(param);
         
-        List<Map<String, String>> list = myCatalogService.getSuggestedDataList(param);
+        List<Map<String, String>> list = myCatalogService.getMyReviewDataList(param);
         Map resultMap = new HashMap<>();
         resultMap.put("list", list);
         resultMap.put("total", total);

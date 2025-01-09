@@ -45,23 +45,23 @@ public class MyCatalogService {
     }
 
     // My 찜 데이터 목록 조회
-    public List<Map<String,String>> getWishedDataList(Map<String, String> param) {
-        return myCatalogMapper.getWishedDataList(param);
+    public List<Map<String,String>> getFavoriteDataList(Map<String, String> param) {
+        return myCatalogMapper.getFavoriteDataList(param);
     }
 
     // My 찜 데이터 목록 전체개수 조회
-    public int getWishedDataListCount(Map<String, String> param) {
-        return myCatalogMapper.getWishedDataListCount(param);
+    public int getFavoriteDataListCount(Map<String, String> param) {
+        return myCatalogMapper.getFavoriteDataListCount(param);
     }
 
     // My 추출 데이터 목록 조회
-    public List<Map<String, String>> getSuggestedDataList(Map<String, String> param) {
-        return myCatalogMapper.getSuggestedDataList(param);
+    public List<Map<String, String>> getMyReviewDataList(Map<String, String> param) {
+        return myCatalogMapper.getMyReviewDataList(param);
     }
     
     // My 추출 데이터 목록 전체개수 조회
-    public int getSuggestedDataListCount(Map<String, String> param) {
-        return myCatalogMapper.getSuggestedDataListCount(param);
+    public int getMyReviewDataListCount(Map<String, String> param) {
+        return myCatalogMapper.getMyReviewDataListCount(param);
     }
 
     public Object getMySynonymDeleteRequestList(Map<String, String> param) {

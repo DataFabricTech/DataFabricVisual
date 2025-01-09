@@ -101,9 +101,9 @@ public class MainPageService {
     private final SearchDetailService searchDetailService;
 
     // My 찜데이터 조회
-    public Object getMyWishDataList(String user_id) throws Exception {
+    public Object getMyFavoriteDataList(String user_id) throws Exception {
         // 결과를 저장할 리스트
-        List<Map<String, Object>> shareDataList = mainPageMapper.getMyWishDataList(user_id);
+        List<Map<String, Object>> shareDataList = mainPageMapper.getMyFavoriteDataList(user_id);
     
         // JSON 데이터를 처리하기 위한 ObjectMapper 생성
         ObjectMapper objectMapper = new ObjectMapper();
@@ -112,7 +112,7 @@ public class MainPageService {
         for (int i = 0; i < shareDataList.size(); i++) {
             Map<String, Object> params = new LinkedHashMap<>();
             params.put("user_id", user_id);
-            params.put("guid", shareDataList.get(i).get("meta_id"));
+            params.put("meta_id", shareDataList.get(i).get("meta_id"));
     
             // getDetailData 호출
             Object detailData = searchDetailService.getDetailData(params);
@@ -180,7 +180,7 @@ public class MainPageService {
                 for (int i=0; i<popularList.size(); i++) {
                     if (entities != null) {
                         for (int j=0; j<entities.size(); j++) {
-                            if (popularList.get(i).get("guid").toString().equals(entities.get(j).get("id").toString())) {
+                            if (popularList.get(i).get("meta_id").toString().equals(entities.get(j).get("meta_id").toString())) {
                                 matchedCount++;
                                 sortedList.add(entities.get(j));
                                 if (matchedCount == 6) break;
@@ -268,7 +268,7 @@ public class MainPageService {
                 for (int i=0; i<recommendList.size(); i++) {
                     if (entities != null) {
                         for (int j=0; j<entities.size(); j++) {
-                            if (recommendList.get(i).get("guid").toString().equals(entities.get(j).get("id").toString())) {
+                            if (recommendList.get(i).get("meta_id").toString().equals(entities.get(j).get("meta_id").toString())) {
                                 matchedCount++;
                                 sortedList.add(entities.get(j));
                                 if (matchedCount == 6) break;

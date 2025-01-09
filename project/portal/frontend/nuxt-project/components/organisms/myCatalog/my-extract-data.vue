@@ -19,7 +19,7 @@
     <ul class="basic-list">
       <li v-for="(item, index) in dataList" :key="index">
         <a v-if="item.description != null && item.description != ''" v-on:click="onClickDataName(item)">{{item.description}}</a>
-        <a v-else v-on:click="onClickDataName(item)">{{ item.name }}</a>
+        <a v-else v-on:click="onClickDataName(item)">{{ item.meta_name }}</a>
         <span class="date" @click="onClickDataName(item)">{{ formatDate(item.download_date) }}</span>
       </li>
       <div v-if="dataList.length == 0">
@@ -42,11 +42,11 @@ interface MyExtractedData {
   download_date: string;
   download_id: number;
   download_type: number;
-  guid: string;
-  name: string;
+  meta_id: string;
+  meta_name: string;
   qualified_name: string;
   rownum: number;
-  type_name: string;
+  meta_type: string;
   user_id: string;
   user_nm: string;
 }
@@ -72,7 +72,7 @@ const goToExtractData = () => {
 }
 
 const onClickDataName = (item: any) => {
-  router.push(`/search/detail?guid=${item.guid}`);
+  router.push(`/search/detail?guid=${item.meta_id}`);
 };
 </script>
 

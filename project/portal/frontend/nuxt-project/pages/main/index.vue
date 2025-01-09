@@ -178,7 +178,7 @@
           <div class="best-data">
             <ul class="data-box-list" style="counter-reset: best-data -1">
               <li v-if="currentDataList" class="data-box" v-for="(ld, idx) in currentDataList">
-                <a @click="goToMetaDataDetail(ld.id)" style="content: counter(best-data); counter-increment: best-data">
+                <a @click="goToMetaDataDetail(ld.meta_id)" style="content: counter(best-data); counter-increment: best-data">
                   <div class="category-group" v-if="ld.classifications && ld.classifications.length > 0">
                     <div class="category" v-for="cat in getClassificationList(ld.classifications)">
                       <em class="category-label">{{ cat.c_description ? cat.c_description : cat.c_name }}</em>
@@ -190,8 +190,8 @@
                     </div>
                   </div>
                   <div class="title-group">
-                    <strong class="data-title">{{ ld.description ? ld.description : ld.name }}</strong>
-                    <p class="data-name">{{ ld.dscription ? ld.dscription : ld.name }}</p>
+                    <strong class="data-title">{{ ld.description ? ld.description : "-" }}</strong>
+                    <p class="data-name">{{ ld.meta_name ? ld.meta_name : ld.meta_name }}</p>
                   </div>
                 </a>
               </li>
@@ -235,12 +235,12 @@
               </div>
             </div>
             <div :class="currentLeftTab == 1 ? 'tab-content on' : 'tab-content'">
-              <div :class="myWishDataList && myWishDataList.length > 0 ? 'main-board' : ''">
-                <ul v-if="myWishDataList && myWishDataList.length > 0" class="main-article-list">
-                  <li v-for="(wd, idx) in myWishDataList" :key="idx" style="list-style-type: none;">
+              <div :class="myFavoriteData && myFavoriteData.length > 0 ? 'main-board' : ''">
+                <ul v-if="myFavoriteData && myFavoriteData.length > 0" class="main-article-list">
+                  <li v-for="(wd, idx) in myFavoriteData" :key="idx" style="list-style-type: none;">
                     <span class="step-process unsupply" style="width:100px"># 찜데이터</span>
 
-                    <a @click="goToWishDataDetail(wd.guid)" class="mu-ellipsis">
+                    <a @click="goToFavoriteDataDetail(wd.guid)" class="mu-ellipsis">
                       {{ wd.description ? `${wd.description} (${wd.meta_name})` : wd.meta_name }}
                     </a>
                     <span class="date">{{ yyyyMMdddot(wd.favorite_date) }}</span>
@@ -349,7 +349,7 @@ const popularDataList = ref([]) // 인기 데이터 > 조회수 높은 순
 const latestDataList = ref([]) // 인기 데이터 > 최신 데이터 순
 const recommendDataList = ref([]) // 인기 데이터 > 추천수가 높은 순
 const myRequestDataList = ref([]) // 데이터 요청 내역
-const myWishDataList = ref([]) // 찜 데이터
+const myFavoriteData = ref([]) // 찜 데이터
 const currentLeftTab = ref(0) // 데이터 요청내역||찜 데이터 탭
 const currentRightTab = ref(0) // 데이터 요청||카탈로그 동의어 탭
 
@@ -408,7 +408,7 @@ onMounted(async () => {
 
   // 7. 데이터 요청 내역, 찜데이터
   await getMyRequestData();
-  await getMyWishData();
+  await getMyFavoriteData();
 
 
 })
@@ -717,10 +717,10 @@ const getMyRequestData = async () => {
 }
 
 // My 데이터 조회
-const getMyWishData = async () => {
-  await $ofetch('/api/main/myWishDataList').then((res) => {
+const getMyFavoriteData = async () => {
+  await $ofetch('/api/main/myFavoriteData').then((res) => {
     if (res && !res.errorMessage) {
-      myWishDataList.value = res.data
+      myFavoriteData.value = res.data
     }
   })
 }
@@ -899,7 +899,7 @@ const goToRequestDataDetail = (id) => {
 }
 
 // 찜 데이터 상세로 이동
-const goToWishDataDetail = (guid) => {
+const goToFavoriteDataDetail = (guid) => {
   router.push(`/search/detail?guid=${guid}`)
 }
 

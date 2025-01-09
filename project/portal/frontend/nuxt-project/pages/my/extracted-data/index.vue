@@ -39,7 +39,7 @@
                           <td class="tl">
                             <!-- <a v-on:click="onClickDataName(item)">{{item.name}}</a>왼쪽정렬시 .tl 추가 -->
                             <a @click="onClickDataName(item)">
-                              {{ item.description && item.description.length > 0 ? `${item.description} (${item.name})` : item.name }}
+                              {{ item.description && item.description.length > 0 ? `${item.description} (${item.meta_name})` : item.meta_name }}
                             </a>
                           </td><!-- 왼쪽정렬시 .tl 추가 -->
                           <td>{{ $yyyyMMddHHmmSS(item.download_date) }}</td>
@@ -133,10 +133,10 @@ const getMyExtractedDataList = async (offset = 1) => {
 };
 
 const onClickDataName = (item: PostItem) => {
-  if (item.guid) {
+  if (item.meta_id) {
     router.push({
       path: "/search/detail",
-      query: { guid: item.guid },
+      query: { guid: item.meta_id },
     });
   }
 };

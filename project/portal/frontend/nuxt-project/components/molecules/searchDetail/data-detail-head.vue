@@ -59,7 +59,7 @@
       </div>
       <div
         class="inner-data buttons"
-        v-show="typeName.includes('table') || typeName.includes('column')"
+        v-show="typeName.includes('table')"
       >
         <data-recommend-status-top
           v-if="!props.isAdmin"
@@ -68,15 +68,20 @@
           @reloadFavorite="onToggleFavorite"
           @reloadRecommend="onToggleRecommend"
         />
-        <button type="button" class="mu-btn mu-btn-lg mu-btn-primary"
-          @click="onClickEliminate"
-          v-if="!typeName.includes('column') && !props.sampleDataDenied">
+        <button
+          v-if="typeName.includes('table') && !props.sampleDataDenied"
+          type="button"
+          class="mu-btn mu-btn-lg mu-btn-primary"
+          @click="onClickEliminate">
           <i class="mu-icon-svg apply"></i>
           <span>데이터 추출</span>
         </button>
-        <button type="button" class="mu-btn mu-btn-lg mu-btn-primary" style="background-color: lightgrey;"
-          @click="onClickAuthRequest()"
-          v-else-if="!typeName.includes('column') && props.sampleDataDenied">
+        <button
+          v-else
+          type="button"
+          class="mu-btn mu-btn-lg mu-btn-primary"
+          style="background-color: lightgrey;"
+          @click="onClickAuthRequest()">
           <i class="mu-icon-svg apply"></i>
           <span>권한 요청</span>
         </button>

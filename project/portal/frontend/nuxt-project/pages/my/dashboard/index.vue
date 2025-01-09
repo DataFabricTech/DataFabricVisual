@@ -38,9 +38,9 @@
               <div class="mu-row gap-20">
                 <my-extract-data :dataList_s="myExtractedDataList"> </my-extract-data>
 
-                <my-wish-data :dataList_s="myWishedDataList"> </my-wish-data>
+                <my-favorite-data :dataList_s="myFavoriteDataList"> </my-favorite-data>
 
-                <my-suggest-data :dataList_s="mySuggestedDataList"> </my-suggest-data>
+                <my-review-data :dataList_s="myReviewDataList"> </my-review-data>
               </div>
             </div>
           </div>
@@ -52,10 +52,10 @@
 </template>
 <script setup lang="ts">
 import MySearchData from "@organisms/myCatalog/my-search-data";
-import MyWishData from "@organisms/myCatalog/my-wish-data";
+import MyFavoriteData from "@organisms/myCatalog/my-favorite-data";
 import MyExtractData from "@organisms/myCatalog/my-extract-data";
 import MyRequestData from "@organisms/myCatalog/my-request-data";
-import MySuggestData from "@organisms/myCatalog/my-suggest-data";
+import MyReviewData from "@organisms/myCatalog/my-review-data";
 import MySynonymDeleteRequestData from "@organisms/myCatalog/my-synonym-delete-request-data";
 import { useUserStore } from "@/store/user";
 import { useNuxtApp } from "nuxt/app";
@@ -74,12 +74,12 @@ interface ParamType {
 
 interface MySearchData {
   description: string;
-  guid: string;
-  name: string;
+  meta_id: string;
+  meta_name: string;
   qualified_name: string;
   search_date: string;
   search_meta_id: number;
-  type_name: string;
+  meta_type: string;
   user_id: string;
 }
 
@@ -107,19 +107,19 @@ interface MyExtractedData {
       download_date: string;
       download_id: number;
       download_type: number;
-      guid: string;
-      name: string;
+      meta_id: string;
+      meta_name: string;
       qualified_name: string;
       rownum: number;
-      type_name: string;
+      meta_type: string;
       user_id: string;
-      user_nm: string;
+      user_name: string;
     }
   ];
   total: number;
 }
 
-interface MyWishedData {
+interface MyFavoriteData {
   list: [
     {
       description: string;
@@ -136,20 +136,20 @@ interface MyWishedData {
   total: number;
 }
 
-interface MySuggestedData {
+interface MyReviewData {
   list: [
     {
       description: string;
-      guid: string;
-      name: string;
+      meta_id: string;
+      meta_name: string;
       qualified_name: string;
       review: string;
       review_date: string;
       review_id: number;
       rownum: number;
-      type_name: string;
+      meta_type: string;
       user_id: string;
-      user_nm: string;
+      user_name: string;
     }
   ];
   total: number;
@@ -180,16 +180,16 @@ const userStore = useUserStore();
 const mySearchDataList = ref<Array<MySearchData>>([]);
 const myDataRequestList = ref<Array<MyDataRequest>>([]);
 const myExtractedDataList = ref<Array<MyExtractedData>>([]);
-const myWishedDataList = ref<Array<MyWishedData>>([]);
-const mySuggestedDataList = ref<Array<MySuggestedData>>([]);
+const myFavoriteDataList = ref<Array<MyFavoriteData>>([]);
+const myReviewDataList = ref<Array<MyReviewData>>([]);
 const mySynonymDeleteRequestList = ref<Array<MySynonymDeleteRequestData>>([]);
 
 onMounted(() => {
   getMySearchDataList();
   getMyDataRequestList();
   getMyExtractedDataList();
-  getMyWishedDataList();
-  getMySuggestedDataList();
+  getMyFavoriteDataList();
+  getMyReviewDataList();
   getMySynonymDeleteRequestDataList();
 });
 
@@ -217,20 +217,20 @@ const getMyExtractedDataList = async (): Promise<void> => {
   myExtractedDataList.value = result.data;
 };
 
-const getMyWishedDataList = async (): Promise<void> => {
-  const result = await $ofetch("/api/myCatalog/myWishedDataList", {
+const getMyFavoriteDataList = async (): Promise<void> => {
+  const result = await $ofetch("/api/myCatalog/myFavoriteDataList", {
     method: "POST",
     body: param,
   });
-  myWishedDataList.value = result.data;
+  myFavoriteDataList.value = result.data;
 };
 
-const getMySuggestedDataList = async (): Promise<void> => {
-  const result = await $ofetch("/api/myCatalog/mySuggestedDataList", {
+const getMyReviewDataList = async (): Promise<void> => {
+  const result = await $ofetch("/api/myCatalog/myReviewDataList", {
     method: "POST",
     body: param,
   });
-  mySuggestedDataList.value = result.data;
+  myReviewDataList.value = result.data;
 };
 
 const getMySynonymDeleteRequestDataList = async (): Promise<void> => {

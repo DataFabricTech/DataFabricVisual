@@ -5,7 +5,7 @@
     </div>
     <ul class="basic-list">
       <li v-for="item in dataList">
-        <a v-on:click="onClickDataName(item)">{{ item.description ? item.description : item.name }}</a>
+        <a :title="item.description ? item.description : item.meta_name" v-on:click="onClickDataName(item)">{{ item.description ? item.description : item.meta_name }}</a>
         <span class="date" @click="onClickDataName(item)">{{
           formatDate(item.search_date)
         }}</span>
@@ -26,12 +26,12 @@ const props = defineProps(["dataList_s"]);
 
 interface MySearchData {
   description: string;
-  guid: string;
+  meta_id: string;
   meta_name: string;
   qualified_name: string;
   search_date: string;
   search_meta_id: number;
-  type_name: string;
+  meta_type: string;
   user_id: string;
 }
 
@@ -51,8 +51,8 @@ const formatDate = (value: string | number | Date): string => {
 };
 
 const onClickDataName = (item: MySearchData): void => {
-  if (item.guid) {
-    router.push(`/search/detail?guid=${item.guid}`);
+  if (item.meta_id) {
+    router.push(`/search/detail?guid=${item.meta_id}`);
   }
 };
 </script>

@@ -654,7 +654,7 @@ const onClickFileEliminateButton = async () => {
     "qualified_name",
     ""
   );
-  let guid = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "id", "");
+  let guid = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "meta_id", "");
   let meta_name = ObjectUtils.getPropertyValue(
     props.eliminateModal.entity,
     "meta_name",
@@ -735,9 +735,9 @@ const onClickFileEliminateButton = async () => {
       })
 
       let historyParams = {
-        guid: guid,
-        name: meta_name,
-        type_name: typeName,
+        meta_id: guid,
+        meta_name: meta_name,
+        meta_type: typeName,
         qualified_name: qualified_name,
         queryWhere: queryWhere.value,
         download_type: 0, // 다운로드 방식 (0:file 1:API)';

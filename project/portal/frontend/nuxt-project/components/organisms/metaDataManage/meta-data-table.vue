@@ -35,29 +35,21 @@
               <label :for="`checkbox${index}`"><span class="blind">행선택</span></label>
             </div>
           </td>
-          <td v-if="item.description" class="tl">
+          <td>
             <!-- 데이터설명 -->
-            <a :title="item.description" @click="onClickDataName(item)">{{ item.description }}</a>
-          </td>
-          <td v-else-if="item.id == -1" class="tl">
-            <a :title="item.description">* 권한이 필요합니다. *</a>
-          </td>
-          <td v-else class="tl">
-            <!-- 데이터설명 -->
-            <a @click="onClickDataName(item)">데이터 설명이 없습니다.</a>
+            <a :title="item.description ? item.description : '-'" @click="onClickDataName(item)">{{ item.description ? item.description : '-' }}</a>
           </td>
           <td>
             <!-- 데이터명 -->
-            <a v-if="item.id == -1" :title="item.meta_name">{{ item.meta_name }}</a>
-            <a v-else :title="item.name" @click="onClickDataName(item)">{{ item.meta_name }}</a>
+            <a :title="item.meta_name ? item.meta_name : '-'" @click="onClickDataName(item)">{{ item.meta_name ? item.meta_name : '-' }}</a>
           </td>
-          <td>
+          <td :title="item.attributes && item.attributes.owner ? item.attributes.owner : '-'">
             <!-- 소유자 -->
-            {{ item.id == -1 ? '권한필요' : item.owner }}
+            {{ item.attributes && item.attributes.owner ? item.attributes : "-" }}
           </td>
-          <td>
+          <td :title="item.meta_type ? item.meta_type : '-'">
             <!-- 유형 -->
-            {{ item.meta_type }}
+            {{ item.meta_type ? item.meta_type : "-" }}
           </td>
           <td>
             <!-- 카테고리 -->
@@ -128,7 +120,7 @@ const onToggleCheckbox = (e, isAll:boolean, item: any) => {
 };
 
 const onClickDataName = (item) => {
-  router.push("/admin/data/meta-data/detail?guid=" + item.id);
+  router.push("/admin/data/meta-data/detail?guid=" + item.meta_id);
 };
 
 </script>

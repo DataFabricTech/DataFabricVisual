@@ -45,7 +45,7 @@ public class SearchDetailService {
 
     // 데이터 상세 조회
     public Object getDetailData(Map<String, Object> params) throws Exception {
-        Map<String, Object> result = searchDetailMapper.getDetailData(params.get("guid").toString());
+        Map<String, Object> result = searchDetailMapper.getDetailData(params.get("meta_id").toString());
         if (result != null) {
             // Postgresql jsonb 타입(JSON 문자열) Map 형태로 변환
             result.put("attributes", convertJsonbToMap(result.get("attributes")));
@@ -60,19 +60,18 @@ public class SearchDetailService {
                 List<Map<String, Object>> classificationList = searchDetailMapper.getClassificationList(ids);
                 result.put("classifications", classificationList);
             }
-            
-            // for (Map.Entry<String, Object> entry : result.entrySet()) {
-            //     System.out.println(entry.getKey() + ": " + entry.getValue());
-            // }
 
             // 상세 페이지 조회 이력 저장
             Map<String, Object> saveData = new LinkedHashMap<>();
             saveData.put("user_id", params.get("user_id"));
-            saveData.put("guid", params.get("guid"));
-            saveData.put("name", result.get("name"));
-            saveData.put("type_name", result.get("meta_type"));
+            saveData.put("meta_id", params.get("meta_id"));
+            saveData.put("meta_name", result.get("meta_name"));
+            saveData.put("meta_type", result.get("meta_type"));
             saveData.put("qualified_name", result.get("qualified_name"));
             saveData.put("description", result.get("description"));
+            saveData.put("user_name", params.get("user_name"));
+            saveData.put("dept_id", result.get("dept_id"));
+            saveData.put("dept_name", params.get("dept_name"));
             searchDetailMapper.insertSearchMetaHistory(saveData);
         }
 
@@ -87,110 +86,9 @@ public class SearchDetailService {
         return null;
     }
 
-    // public Boolean checkSampleDataPermission(Map<String, Object> params) {
-    //     // 샘플 데이터 조회 쿼리 제작
-    //     String query = "";
-    //     Boolean permission = false;
-
-    //     // 테이블 Type인 경우
-    //     if (params.get("type_name").toString().endsWith("_table")) {
-    //         String[] queryStrSplit = params.get("qualified_name").toString().split("@");
-    //         String tableNameStr = queryStrSplit[0];
-    //         String[] tableNameArr = tableNameStr.split("\\.");
-    //         StringBuilder tableName = new StringBuilder();
-    //         if(tableNameArr.length > 1){
-    //             for(int i =0; i<tableNameArr.length; i++){
-    //                 if (!tableName.toString().equals("")) {
-    //                     tableName.append(".").append("\""+ tableNameArr[i]+"\"");
-    //                 }else{
-    //                     tableName.append("\""+ tableNameArr[i] + "\"");
-    //                 }
-    //             }
-    //         }else{
-    //             tableName.append("\""+ tableNameStr + "\"");
-    //         }
-            
-    //         query = "select 1 from " + tableName + " limit 1";
-
-    //         // Trino 조회
-    //         if (!query.equals("")) {
-    //             Connection connection = null;
-    //             Statement statement = null;
-    //             ResultSet rs = null;
-    //             try {
-
-    //                 Properties properties = new Properties();
-    //                 properties.setProperty("user", params.get("user_id").toString());                    
-    //                 properties.setProperty("SSL", "false");
-    //                 connection = DriverManager.getConnection(trinoJdbcUrl, properties);
-
-    //                 statement = connection.createStatement();
-    //                 rs = statement.executeQuery(query);
-
-    //                 permission = true;
-
-    //                 rs.close();
-    //                 statement.close();
-    //                 connection.close();                    
-
-    //             } catch (Exception e) {
-    //                 // 권한 문제
-    //                 if(e.getMessage().indexOf("Access Denied") != -1) {
-    //                     permission = false;
-    //                 }
-                    
-    //                 e.printStackTrace();
-    //             } finally {
-    //                 if(rs != null) try{ rs.close();} catch (Exception e){e.printStackTrace();}
-    //                 if(statement != null) try{ statement.close();} catch (Exception e){e.printStackTrace();}
-    //                 if(connection != null) try{ connection.close();} catch (Exception e){e.printStackTrace();}
-    //             }
-    //         }
-    //     } else {
-    //         permission = false;
-    //     }
-
-    //     return permission;
-    // }
-
     // 데이터 상세 조회 - 메타데이터 가공
     public Object getDetailMetadatainfo(Map<String, Object> params) {
         JsonResult result = null;
-        // // Atlas API URL
-        // String url = "/entity/guid/" + params.get("guid").toString();
-
-        // // Atlas URL 호출
-        // JsonResult result = atlasRestAPI.get(url);
-
-        // // guid가 올바르지 않은 경우 처리
-        // // {"errorCode":"ATLAS-404-00-005","errorMessage":"Given instance guid af7a8abf-7c9a-40e7-82f5-b83c826623651 is invalid/not found"}
-        // if (!result.getErrorMessage().equals("")) {
-        //     Map resultMap = new HashMap<>();
-        //     if (result.getErrorMessage().indexOf("Given instance guid " + params.get("guid").toString() + " is invalid/not found") != -1) {
-        //         resultMap.put("errorMessage", "guid가 올바르지 않거나 존재하지 않습니다.");                
-        //     } else {
-        //         resultMap.put("errorMessage", "조회에 실패하였습니다. 관리지에게 문의해 주시기 바랍니다.");
-        //     }
-            
-        //     return resultMap;
-        // }
-
-        // Map data = (Map) result.getData();
-        // Map resultData = new HashMap<>();
-        
-        // List referredEntitiesAttributes = makeReferredEntitiesAttributes(data);
-        // if(referredEntitiesAttributes != null && referredEntitiesAttributes.size() > 0){
-        //     resultData.put("referredEntitiesAttributes", referredEntitiesAttributes);            
-        // }
-
-        // Map metaDataInfoResult = makeMetaDataInfoResult(data, referredEntitiesAttributes);
-        // if(metaDataInfoResult != null){
-        //     resultData.put("metaDataInfoResult", metaDataInfoResult.get("metaDataInfoResult"));
-        //     resultData.put("refComment", metaDataInfoResult.get("refComment"));            
-        // }
-
-        // result.setData(resultData);
-
         return result;
     }
 

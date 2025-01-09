@@ -30,7 +30,7 @@
                   <td>{{ item.rownum }}</td>
                   <td class="tl">
                     <a @click="onClickDataName(item)">
-                      {{ item.description && item.description.length > 0 ? `${item.description} (${item.name})` : item.name }}
+                      {{ item.description ? `${item.description} (${item.meta_name})` : item.meta_name }}
                     </a>
                   </td>
                   <td>{{ formatDate(item.favorite_date)}}</td>
@@ -62,7 +62,7 @@ import BorderListSearch from "@functional/border-list-search/border-list-search.
 import { useRouter, useRoute } from 'vue-router';
 
 definePageMeta({
-  name: "MyWishedData",
+  name: "MyFavoriteData",
   layout: 'user',
 })
 
@@ -143,7 +143,7 @@ const getPost = async (offset: number = 1) => {
   };
 
   try {
-    const result = await postApiData('/api/myCatalog/myWishedDataList', param);
+    const result = await postApiData('/api/myCatalog/myFavoriteDataList', param);
     if (result.list) {
 
       pagingObj.value = {
@@ -162,10 +162,10 @@ const onClickPage = (page: any) =>{
   getPost(page);
 }
 
-const onClickDataName = async (item: { guid: string; }) => {
+const onClickDataName = async (item: { meta_id: string; }) => {
   await router.push({
     path: "/search/detail",
-    query: { guid: item.guid }
+    query: { guid: item.meta_id }
   });
 }
 
