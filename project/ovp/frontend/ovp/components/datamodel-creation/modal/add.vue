@@ -43,31 +43,6 @@
               no-data-msg="데이터 프로파일링 정보가 없습니다."
             ></add-detail-grid>
           </template>
-          <template #recommend>
-            <div class="data-list" v-if="recommendData.length > 0">
-              <template v-for="Data in recommendData">
-                <resource-box
-                  class="is-resource-box-no-action"
-                  :data-obj="Data"
-                  :is-box-selected-style="true"
-                  :show-owner="true"
-                  :show-category="true"
-                  :use-data-nm-link="true"
-                  :use-context-box="false"
-                  @model-nm-click="clickRecommendDataModel"
-                />
-              </template>
-            </div>
-
-            <div v-else class="no-result">
-              <div class="notification">
-                <svg-icon class="notification-icon" name="info"></svg-icon>
-                <p class="notification-detail">
-                  추천 데이터 모델 정보가 없습니다.
-                </p>
-              </div>
-            </div>
-          </template>
         </Tab>
       </div>
     </template>
@@ -81,11 +56,6 @@ import { storeToRefs } from "pinia";
 import Tab from "@extends/tab/Tab.vue";
 import $constants from "~/utils/constant";
 import AddDetailGrid from "~/components/datamodel-creation/modal/add-detail-grid.vue";
-import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
-
-import { useRouter } from "nuxt/app";
-
-const router = useRouter();
 
 // 탐색 > 데이터 모델 조회 Store
 const dataModelSearchStore = useDataModelSearchStore();
@@ -93,7 +63,6 @@ const {
   currDetailTab,
   sampleData,
   profileData,
-  recommendData,
   selectedItemOwner,
   selectedModelList,
   nSelectedListData,
@@ -131,7 +100,6 @@ const onCancelModal = () => {
 const onConfirmModal = () => {
   // 내부 데이터 저장modalId
   selectedModelList.value = nSelectedListData.value.filter((item) => {
-    item.idShowDetail = false;
     return true;
   });
   emit("close");
@@ -145,21 +113,6 @@ const onCloseModal = () => {
   setSelectedItem({});
   setCurrTab(TAB_DEFAULT);
   infiniteScrollSettingDone.value = false;
-};
-
-const clickRecommendDataModel = (data: object) => {
-  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
-
-  const queryParams = new URLSearchParams({
-    type,
-    id,
-    fqn,
-  }).toString();
-
-  const detailPath = "/portal/search/detail";
-  const fullPath = `${detailPath}?${queryParams}`;
-
-  window.open(fullPath, "_blank", "noopener,noreferrer");
 };
 </script>
 <style lang="scss" scoped></style>

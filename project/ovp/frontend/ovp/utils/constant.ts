@@ -102,10 +102,6 @@ const $constants = {
           label: "데이터 프로파일링",
           value: "profile",
         },
-        {
-          label: "추천 데이터 모델",
-          value: "recommend",
-        },
       ],
       TAB: [
         {
