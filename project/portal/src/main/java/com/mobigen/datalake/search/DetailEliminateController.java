@@ -63,6 +63,9 @@ public class DetailEliminateController {
 
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         param.put("user_id", user.get("user_id").toString());
+        param.put("user_name", user.get("username").toString());
+        param.put("dept_id", user.get("dept_id") != null ? user.get("dept_id").toString() : "-");
+        param.put("dept_name", user.get("dept_nm").toString());
         param.put("download_type", "0");
 
         return detailEliminateService.insertDownloadHistory(param);
