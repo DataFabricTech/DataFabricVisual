@@ -29,9 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MainPageService {
     private final MainPageMapper mainPageMapper;
-    @Value("${properties.isSumExternal}")
-    private boolean isSumExternal;
-    
+
     @Value("${properties.fastapi.server.host}")
     private String fastApiHost;
     @Value("${properties.fastapi.server.port}")
@@ -46,18 +44,7 @@ public class MainPageService {
     // 전체 데이터 수, 데이터 활용 횟수, 신규 데이터 조회
     public Object getDataCountData() throws Exception {
         Map<String, Object> dataCountMap = new HashMap<>();
-
-        // 전체 데이터수 => (데이터레이크) or (데이터레이크 + 외부데이터) 적용 여부
-        if (isSumExternal) {
-            // 외부데이터 전체 개수 합산
-            int lakeCount = mainPageMapper.getTotalDataCount();
-            //int exCount = mainPageMapper.getExternalTotalCount();
-            //dataCountMap.put("totalDataCount", lakeCount + exCount);
-            dataCountMap.put("totalDataCount", lakeCount);
-        } else {
-            dataCountMap.put("totalDataCount", mainPageMapper.getTotalDataCount());
-        }
-        
+        dataCountMap.put("totalDataCount", mainPageMapper.getTotalDataCount());
         dataCountMap.put("useDataCount", mainPageMapper.getUseDataCount());
         dataCountMap.put("newDataCount", mainPageMapper.getNewDataCount());
         return dataCountMap;

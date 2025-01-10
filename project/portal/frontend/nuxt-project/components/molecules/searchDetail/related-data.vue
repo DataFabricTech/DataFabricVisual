@@ -61,7 +61,7 @@ const toggleShowData = () => {
 };
 
 const onClickDataName = (item) => {
-  router.push({ query: { guid: item.id } }).then(() => {
+  router.push({ query: { guid: item.meta_id } }).then(() => {
     // 페이지를 강제로 새로고침
     userStore.setGuid(item.meta_id);
     emit("onClickData", item.meta_id);

@@ -30,7 +30,7 @@ spring:
   datasource:
     hikari:
       jdbc-url: jdbc:postgresql://<INTERNAL_HOST>:5432/data_catalog
-      username: <USER>
+      username: data_catalog
       password: <PASSWORD>
       driver-class-name: org.postgresql.Driver
       maximumPoolSize: 3
@@ -51,9 +51,9 @@ spring:
 
 logging:
   level:
-    root: debug
+    root: info
     com:
-      mobigen: debug
+      mobigen: info
 
 server:
   port: 38080
@@ -77,7 +77,7 @@ server:
   ssl:
     enabled: true
     enabled-protocols: TLSv1.2
-    key-store:  "/Users/sch/workspace/ot_data_catalog_portal_v2/source/src/main/resources/keystore/certificate.p12"
+    key-store:  "/opt/ovp/portal/keystore/certificate.p12"
     key-store-type: "PKCS12"  # "JKS"
     key-store-password: ENC(bzTkiVKgLirHJc6v7mPW0aqRChnOU8V6)  # jks 또는 pfx 암호
     ciphers: TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA256,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
@@ -102,26 +102,23 @@ properties:
   activeSendMail:
     data-request: false
     synonym: false
-  isSumExternal: true # 메인화면 > 전체 데이터 수 (외부데이터 포함 여부)
   maxFileSize: 1GB # GB, MB, KB
-  fileUploadPath: /data1/ot_data_catalog_portal_v2/data/
-  fileUploadPathSample: /data1/ot_data_catalog_portal_v2/data/sample
+  fileUploadPath: /opt/ovp/portal/data
+  csvFileUploadPath: /opt/ovp/portal/csv
+  fileUploadPathSample: /opt/ovp/portal/sample
   allowedExtension: zip,pptx,pptm,ppt,xls,xlsx,xlsm,csv,pdf,jpg,jpeg,png
   allowedImgExtension: jpg,jpeg,png
-  allowMetaInfo:
-    columnInfo: false
-    dataProfile: false
   loginDeactivationDateThreshold: 90
   iris:
     security:
       ignores: /css/**, /fonts/**, /img/**, /js/**, /favicon.ico
-      permit-alls: /css/**, /fonts/**, /img/**, /js/**, /favicon.icom, /api/**, /_nuxt/**, /, /api/authenticate/key, /api/authenticate, /api/authenticate/ldap, /api/csrf-token, /h2-console/**, /sample/public-key, /sample/authenticate, /error, /test, /sso, /ssoLogin
+      permit-alls: /css/**, /fonts/**, /img/**, /js/**, /favicon.icom, /api/**, /_nuxt/**, /, /api/authenticate/key, /api/authenticate, /api/csrf-token, /h2-console/**, /sample/public-key, /sample/authenticate, /error, /register, /test, /sso, /ssoLogin
       redirect-url: /
       iframe-option: same-origin #disable, same-origin, deny
       csrf: true
       cors:
         pattern: /** #/auth/**
-        allowed-origins: http://<INTERNAL_HOST>, http://<INTERNAL_HOST>:38080 #"*" #http://server-name:port
+        allowed-origins: http://<INTERNAL_HOST>:38080 #"*" #http://server-name:port
         allowed-methods: "*" #PUT,DELETE,GET,POST ...
         allowed-headers: "*" #Context-Type, ...
         allow-credentials: true
@@ -129,43 +126,35 @@ properties:
     access-token:
       name: x-access-token
       secret: jwt-secrect-b-iris
-      max-age: 300
+      max-age: 60
     refresh-token:
       name: x-refresh-token
       secret: jwt-secrect-b-iris
-      max-age: 3600
+      max-age: 28800 # 3600
     route:
       locales: ko,en,zh,ja
     auth:
       rsa-enabled: true
-  atlas:
+  trino:
+    hikari:
+      jdbc-url: jdbc:trino://<INTERNAL_HOST>:8080/
+      user: admin
+  elastic:
     server:
       scheme: http
       host: <INTERNAL_HOST>
-      port: 21000
-      url: /api/atlas/v2
-      user: ENC(DY/Jv3s5nqesXbi2fQEgCQ==)
-      passwd: ENC(XhCDJv/slb/z3GuJFKSa3Q==)
-  trino:
-    hikari:
-      jdbc-url: jdbc:trino://<INTERNAL_HOST>:8090/hive/
-      user: ENC(AI/U3JYykxzsihPnRiQUnA==)
+      port: 9200
+  fastapi:
+    server:
+      scheme: http
+      host: <INTERNAL_HOST>
+      port: 28800
   superadmin:
     id: admin
-    passwd: <PASSWORD>
-
-solr:
-  isProd: true
-  type-name: 'f0l_t'
-  comment: 'e2h1_t'
-  comment2: 'em85_t'
-  description: '426d_t'
-  qualified-name: '3thh_t'
-  user-description: '42yt_s'
-  name: '3z0l_s'
-  display-name: '40lh_s'
-  status: 'jr9_t'
-  category: 'mx1_t'
-  label: '12px_t'
-  createtime: 'i6d_l'
-  specialCharacter: '\ + - & | ! ( ) { } [ ] ^ " ~ * ? : /'
+    passwd: <PASSWORD> # <PASSWORD>
+  essync:
+    url: 
+      update: http://<INTERNAL_HOST>:8000/v1/essync/update
+      convertcategory: http://<INTERNAL_HOST>:8000/v1/essync/convertcategory
+  synonymsync:
+    url: http://<INTERNAL_HOST>:8000/v1/essync/synonym
