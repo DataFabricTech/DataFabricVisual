@@ -135,14 +135,14 @@ public class FileController {
 			}
 		} catch (Exception e) {
 			logger.error("Download Error", e);
-			throw e;
+			throw new Exception("파일 다운로드에 실패하였습니다.");
 		} finally {
 			try {
 				if (inputStream != null) inputStream.close();
 				if (outStream != null) outStream.close();
 			} catch (Exception e1) {
 				logger.error("Download Error", e1);
-				throw e1;
+				throw new Exception("파일 다운로드에 실패하였습니다.");
 			}
 		}
 	}
