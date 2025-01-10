@@ -431,3 +431,30 @@ pre code {
 .content-block {
   margin-top: 20px;
 }
+
+/* preloader */
+.mu-preloader-wrap {display:flex; align-items:center; justify-content:center; width:100%; height:100%;}
+.mu-preloader-wrap p {position:absolute; bottom:40px; color:#222; font-size:14px; font-weight:500; text-align:center;}
+.mu-preloader-wrap p span {display:block; margin-top:6px; font-size:12px; font-weight:400;}
+.mu-preloader {position:relative; display:flex; justify-content:center; width:180px; height:160px; padding:50px; background-color:#fff; z-index:101; border-radius: 30px;}
+
+.loader,
+.loader:before,
+.loader:after {background:#fa0000; animation:ani-loading 1s infinite ease-in-out; width:8px; height:40px;}
+.loader {position:relative; color:#fa0000; -webkit-transform:translateZ(0); transform:translateZ(0); animation-delay:-0.16s;}
+.loader:before,
+.loader:after {content:""; position:absolute; top:0;}
+.loader:before {left:-16px; animation-delay:-0.32s;}
+.loader:after {left:16px;}
+@keyframes ani-loading {
+  0%,
+  80%,
+  100% {
+    box-shadow:0 0;
+    height:20px;
+  }
+  40% {
+    box-shadow:0 -1.5em;
+    height:30px;
+  }
+}
