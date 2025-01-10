@@ -4,7 +4,6 @@ import java.util.List;
 
 public interface MainPageMapper {
     List getRecommendedWordList() throws Exception;
-    int getExternalTotalCount() throws Exception;
     int getTotalDataCount() throws Exception;
     int getUseDataCount() throws Exception;
     int getNewDataCount() throws Exception;

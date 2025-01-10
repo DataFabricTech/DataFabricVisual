@@ -26,7 +26,7 @@ export const useUserStore = defineStore('userStore', () => {
   const _params = ref({ // 통합 검색, 메타 데이터 통합 관리 화면에서 엔티티 목록 조회 시 사용한 파라미터
     path: '' // 파라미터 출처 페이지 경로
   })
-  const _currentSearchTab = ref(0) // 통합검색 탭 (0: 데이터 레이크, 1: 외부 데이터)
+  const _currentSearchTab = ref(0) // 통합검색 탭 (0: 데이터 레이크)
   const _enableLoader = ref(false) // loader 컴포넌트 활성화 여부 flag
   const _forceRenderLoader = ref(false) // loader 컴포넌트 강제 활성화 여부 flag
   const _answerId = ref(-1) // 데이터요청 상세화면 진입시 조회 파라미터로 사용할 답변id
@@ -71,12 +71,6 @@ export const useUserStore = defineStore('userStore', () => {
     } = payload;
 
     let fullPath = originalFullPath;
-
-    // 통합 검색 > 데이터 검색 > 외부 데이터인 경우 현재 메뉴 데이터와 일치하도록 경로를 수정
-    // fullPath가 '/search/external/detail'인 경우,이를 '/search/external'로 변경하여 메뉴명(menu_path)을 올바르게 매칭하도록 한다.
-    if (fullPath.includes('/search/external/detail')) {
-      fullPath = '/search/external'
-    }
 
     if (fullPath !== _tab.currentPath) {
       // 이동하려는 메뉴 정보를 추출

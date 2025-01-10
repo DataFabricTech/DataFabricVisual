@@ -93,8 +93,8 @@ const checkCurrentPath = (): boolean => {
   const path = userStore.getTab.currentPath
   const cleanPath = path.split('?')[0];
 
-  // 데이터 검색 > 통합검색 > 상세조회 || 데이터 검색 > 외부데이터 > 상세조회 페이지의 경우 표기
-  if (cleanPath == '/search/detail' || cleanPath == '/search/external/detail') return true
+  // 데이터 검색 > 통합검색 > 상세조회 페이지의 경우 표기
+  if (cleanPath == '/search/detail') return true
 
   return !cleanPath.endsWith('/detail')
 }
