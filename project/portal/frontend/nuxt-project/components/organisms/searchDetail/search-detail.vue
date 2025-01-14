@@ -688,7 +688,7 @@ const getDetailDataProfile = () => {
 
 // 샘플 데이터 목록 조회
 const getSampleData = () => {
-  const meta_type = ObjectUtils.getPropertyValue(entity.value, "meta_type", "")
+  const meta_type = ObjectUtils.getPropertyValue(entity.value, "meta_type", "table")
   const qualified_name = ObjectUtils.getPropertyValue(entity.value, "qualified_name", "")
   const system_name = qualified_name.split(".")[0]
 
@@ -729,7 +729,7 @@ const getSampleData = () => {
           sampleDataDenied.value = res.data.sampleDataDenied;
         }
 
-        let typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "")
+        let typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "table")
 
         // 테이블인 경우 테이블 row 건수 조회
         if (typeName.toUpperCase() == 'TABLE') {
@@ -785,7 +785,7 @@ const getRelatedData = () => {
     let params = {
       guid: route.query.guid ? route.query.guid : "",
       system_type: entity.value.system_type ? entity.value.system_type : '',
-      meta_type: entity.value.meta_type ? entity.value.meta_type : ''
+      meta_type: entity.value.meta_type ? entity.value.meta_type : 'table'
     }
 
     $ofetch(`/api/search/keywordRef`, {

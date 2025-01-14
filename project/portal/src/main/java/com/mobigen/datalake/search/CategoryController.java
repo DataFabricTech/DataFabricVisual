@@ -44,7 +44,7 @@ public class CategoryController {
     // 카탈로그 검색 > 카테고리 검색 > 우측 트리맵 렌더용 데이터 조회
     @ResponseJsonResult
     @GetMapping("/counts")
-    public Object getTableCountsByClassification() {
+    public Object getTableCountsByClassification() throws Exception {
         return categoryService.getTableCountsByClassification();
     }
 

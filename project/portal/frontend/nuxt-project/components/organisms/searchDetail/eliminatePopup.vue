@@ -647,7 +647,7 @@ const onClickFileEliminateButton = async () => {
   let typeName = ObjectUtils.getPropertyValue(
     props.eliminateModal.entity,
     "meta_type",
-    ""
+    "table"
   );
   let qualified_name = ObjectUtils.getPropertyValue(
     props.eliminateModal.entity,
@@ -737,7 +737,7 @@ const onClickFileEliminateButton = async () => {
       let historyParams = {
         meta_id: guid,
         meta_name: meta_name,
-        meta_type: typeName,
+        meta_type: "table",
         qualified_name: qualified_name,
         queryWhere: queryWhere.value,
         download_type: 0, // 다운로드 방식 (0:file 1:API)';

@@ -562,7 +562,7 @@ const goToSearch = async (cat) => {
     detailFilters: {},
     pagingObj: {},
     system_type: "",
-    meta_type: "",
+    meta_type: "table",
     tag: "",
     limit: 10,
     offset: 0,
@@ -738,7 +738,7 @@ const onSearch = async (e: any) => {
     detailFilters: {},
     pagingObj: {},
     system_type: "",
-    meta_type: "",
+    meta_type: "table",
     limit: 10,
     offset: 0,
     classification: {
@@ -760,7 +760,7 @@ const onClickRecommendedWord = (word) => {
     detailFilters: {},
     pagingObj: {},
     system_type: "",
-    meta_type: "",
+    meta_type: "table",
     limit: 10,
     offset: 0,
     classification: {

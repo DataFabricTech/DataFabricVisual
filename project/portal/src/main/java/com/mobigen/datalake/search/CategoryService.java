@@ -5,15 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CategoryService {
-
     private final CategoryMapper categoryMapper;
+
+    @Value("${properties.categorycount.url}")
+    private String categoryCountUrl;
 
     // 좌측 카테고리 리스트 조회
     public List<Map<String, Object>> getCategoryList() {
@@ -21,8 +26,43 @@ public class CategoryService {
     }
 
     // 카테고리별 테이블 수 전체 조회
-    public Object getTableCountsByClassification() {
-        return categoryMapper.getTableCountsByClassification();
+    public Object getTableCountsByClassification() throws Exception {
+        List<Map<String, Object>> resultList = new ArrayList<>();
+
+        // 1. 카테고리 정보 테이블 조회
+        List<Map<String, Object>> originList = getCategoryList();
+        
+        // 카테고리 항목 확인
+        // [{ id: 1, name: "MG", count: 0 }]
+        Map<String, Object> restResponse = getClassificationCountFromApi();
+        if (!restResponse.isEmpty()) {
+            Map<String, Object> res = (Map<String, Object>) restResponse.get("result");
+            if (res.get("result") != null && res.get("result").toString().equals("success")) {                    
+                // API에서 받아온 카테고리 매핑 개수 Map
+                Map<String, Object> count = (Map<String, Object>) res.get("count");
+
+                // 2. 갱신된 카테고리 카운트 정보와 연동하여 리스트로 출력
+                if (originList != null) {
+                    for (int i=0; i<originList.size(); i++) {
+                        String c_id = originList.get(i).get("id").toString();
+                        if (count.get(c_id) != null) {
+                            originList.get(i).put("count", count.get(c_id));
+                        } else {
+                            originList.get(i).put("count", 0);
+                        }
+                    }
+                }
+
+                resultList = originList;
+                
+            } else {                  
+                return new ArrayList<>();
+            }
+        } else {
+            return new ArrayList<>();
+        }
+        // return categoryMapper.getTableCountsByClassification()
+        return resultList;
     }
 
     // DB의 카테고리 목록 데이터 반환
@@ -91,49 +131,49 @@ public class CategoryService {
         systemInfo.put("checkedCount", 0);
 
         // 메타 타입 정보
-        List<Map<String, Object>> metaList = categoryMapper.getMetaListForFilter();
-        metaInfo.put("allChecked", true);
-        metaInfo.put("ord", 3);
-        metaInfo.put("name", "메타 타입");
-        metaInfo.put("content", new ArrayList<Map<String, Object>>());
+        // List<Map<String, Object>> metaList = categoryMapper.getMetaListForFilter();
+        // metaInfo.put("allChecked", true);
+        // metaInfo.put("ord", 3);
+        // metaInfo.put("name", "메타 타입");
+        // metaInfo.put("content", new ArrayList<Map<String, Object>>());
 
-        i=0;
-        for (Map<String, Object> meta : metaList) {
-            Map<String, Object> content = new HashMap<>();
+        // i=0;
+        // for (Map<String, Object> meta : metaList) {
+        //     Map<String, Object> content = new HashMap<>();
 
-            content.put("root", "METATYPE");
-            content.put("rootDescription", "메타 타입");
-            i = i + 1;
-            content.put("id", i);
-            content.put("name", meta.get("meta_type"));
-            content.put("description", meta.get("meta_type"));
-            content.put("count", meta.get("type_count"));
-            content.put("checked", false);
-            ((List<Map<String, Object>>) metaInfo.get("content")).add(content);
-        }
-        metaInfo.put("checkedCount", 0);
+        //     content.put("root", "METATYPE");
+        //     content.put("rootDescription", "메타 타입");
+        //     i = i + 1;
+        //     content.put("id", i);
+        //     content.put("name", meta.get("meta_type"));
+        //     content.put("description", meta.get("meta_type"));
+        //     content.put("count", meta.get("type_count"));
+        //     content.put("checked", false);
+        //     ((List<Map<String, Object>>) metaInfo.get("content")).add(content);
+        // }
+        // metaInfo.put("checkedCount", 0);
 
         // 태그 정보
-        List<Map<String, Object>> tagList = categoryMapper.getTagListForFilter();
-        tagInfo.put("allChecked", true);
-        tagInfo.put("ord", 4);
-        tagInfo.put("name", "태그");
-        tagInfo.put("content", new ArrayList<Map<String, Object>>());
+        // List<Map<String, Object>> tagList = categoryMapper.getTagListForFilter();
+        // tagInfo.put("allChecked", true);
+        // tagInfo.put("ord", 4);
+        // tagInfo.put("name", "태그");
+        // tagInfo.put("content", new ArrayList<Map<String, Object>>());
 
-        i=0;
-        for (Map<String, Object> tag : tagList) {
-            Map<String, Object> content = new HashMap<>();
-            content.put("root", "TAG");
-            content.put("rootDescription", "태그");
-            i = i + 1;
-            content.put("id", i);
-            content.put("name", tag.get("tag_name"));
-            content.put("description", tag.get("tag_name"));
-            content.put("count", tag.get("count"));
-            content.put("checked", false);
-            ((List<Map<String, Object>>) tagInfo.get("content")).add(content);
-        }
-        tagInfo.put("checkedCount", 0);
+        // i=0;
+        // for (Map<String, Object> tag : tagList) {
+        //     Map<String, Object> content = new HashMap<>();
+        //     content.put("root", "TAG");
+        //     content.put("rootDescription", "태그");
+        //     i = i + 1;
+        //     content.put("id", i);
+        //     content.put("name", tag.get("tag_name"));
+        //     content.put("description", tag.get("tag_name"));
+        //     content.put("count", tag.get("count"));
+        //     content.put("checked", false);
+        //     ((List<Map<String, Object>>) tagInfo.get("content")).add(content);
+        // }
+        // tagInfo.put("checkedCount", 0);
 
         // 정렬 오름차순, 내림차순
         orderInfo.put("allChecked", true);
@@ -164,10 +204,17 @@ public class CategoryService {
 
         detailFilters.put("CATEGORY", categoryInfo);
         detailFilters.put("SYSTEMTYPE", systemInfo);
-        detailFilters.put("METATYPE", metaInfo);
-        detailFilters.put("TAG", tagInfo);
+        // detailFilters.put("METATYPE", metaInfo);
+        // detailFilters.put("TAG", tagInfo);
         detailFilters.put("ORDER", orderInfo);
 
         return detailFilters;
+    }
+
+    // 카테고리 카운트 조회 API 호출
+    public Map<String, Object> getClassificationCountFromApi() throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+        Map<String, Object> restResponse = restTemplate.getForObject(categoryCountUrl, HashMap.class);
+        return restResponse;
     }
 }

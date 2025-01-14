@@ -158,3 +158,5 @@ properties:
       convertcategory: http://<INTERNAL_HOST>:8000/v1/essync/convertcategory
   synonymsync:
     url: http://<INTERNAL_HOST>:8000/v1/essync/synonym
+  categorycount:
+    url: http://<INTERNAL_HOST>:8000/v1/essync/getclassificationcount

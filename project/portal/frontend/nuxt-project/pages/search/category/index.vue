@@ -539,7 +539,7 @@ const moveToSearchPage = (obj) => {
     detailFilters: {},
     pagingObj: {},
     system_type: "",
-    meta_type: "",
+    meta_type: "table",
     tag: "",
     limit: 10,
     offset: 0,
