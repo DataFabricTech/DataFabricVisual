@@ -10,31 +10,7 @@
           </button>
         </div>
       </div>
-      <!-- detail-box : DB 프로필 -->
-      <div v-if="(db && db.status) || (table && table.status) || (column && column.status)">
-        <div class="detail-box" v-if="showDbArea">
-          <div class="mu-heading">
-            <h5>DB 프로필</h5>
-          </div>
-          <table class="mu-formbox">
-            <colgroup>
-              <col style="width: 200px" />
-              <col />
-              <col style="width: 200px" />
-              <col />
-            </colgroup>
-            <tbody>
-              <tr>
-              <th scope="col">행수</th>
-              <!-- <th scope="col">테이블 크기(Byte)</th> -->
-              <td>{{ comman(table.num_rows) }}</td>
-              <th scope="col">테이블프로파일링 일시</th>
-              <!-- <td>{{ table.total_size | numberComma }}</td> -->
-              <td>{{ $yyyyMMddHHmmSS(table.update_date, " ") }}</td>
-            </tr>
-            </tbody>
-          </table>
-        </div>
+      <div v-if="(table && table.status) || (column && column.status)">
         <!-- detail-box : 테이블 프로필 -->
         <div class="detail-box" v-if="showTableArea">
           <div class="mu-heading">
@@ -163,22 +139,15 @@ const toggleShowData = () => {
   }
 };
 
-// 랜더링 후 안보이도록 하기 위함
-// onMounted(() => { showData.value = false})
-
-const db = computed(() => ObjectUtils.getPropertyValue(props.dataProfile, "db", {}));
-
 const table = computed(() =>
   ObjectUtils.getPropertyValue(props.dataProfile, "table", {})
 );
 
-const column = computed(() => {
-  //console.log(ObjectUtils.getPropertyValue(props.dataProfile, "column", []))
-  return ObjectUtils.getPropertyValue(props.dataProfile, "column", []);
-});
+const column = computed(() =>
+  ObjectUtils.getPropertyValue(props.dataProfile, "column", [])
+);
 
 
-const showDbArea = computed(() => Object.keys(db.value).length > 0);
 const showTableArea = computed(() => Object.keys(table.value).length > 0);
 const showColumnArea = computed(() => Object.keys(column.value).length > 0);
 
@@ -207,10 +176,6 @@ const numberComma = (val) => {
   // 소수점이 있을 경우 처리
   return decimalPart ? `${integerPart}.${decimalPart}` : integerPart;
 };
-
-const getColumnComent = (column, sep) => {
-  return column + sep + "(" + props.columnCommentMap[column] + ")";
-}
 
 const checkInvaildNumberColumn = (column) => {
   if( column.hasOwnProperty('min_value') &&

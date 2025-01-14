@@ -269,10 +269,6 @@ public class SearchDetailService {
         Map<String, Object> tableData = searchDetailMapper.getTableData((String) params.get("guid"));
         resultData.put("tableData", tableData);
 
-        // DB 프로파일 데이터
-        Map<String, Object> dbData = searchDetailMapper.getDbData((String) params.get("guid"));
-        resultData.put("dbData", dbData);
-
         // 컬럼 프로파일 데이터
         if (params.get("columnData") != null) {
             if (!((List)params.get("columnData")).isEmpty()) {

@@ -100,30 +100,4 @@ public class SearchController {
     public Object getRelatedData(@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse response) throws Exception  {
         return searchService.getRelatedData(param);
     }
-
-    // 카테고리 목록 조회
-//    @ResponseJsonResult
-//    @GetMapping("/search/category/list")
-//    public List<Map<String, Object>> getCategoryList(@RequestParam String param) {
-//
-//        return null;
-//    }
-//
-//    // 카테고리별 개수 조회
-//    @ResponseJsonResult
-//    @GetMapping("/search/category/counts")
-//    public List<Map<String, Object>> getCategoryCounts(@RequestParam String param) {
-//
-//        return null;
-//    }
-
-    // DB 목록 조회
-    // @ResponseJsonResult
-    // @GetMapping("/search/category/dbList")
-    // public List<Map<String, Object>> getMethodName(@RequestParam String param) {
-        
-    //     return null;
-    // }
-    
-
 }
