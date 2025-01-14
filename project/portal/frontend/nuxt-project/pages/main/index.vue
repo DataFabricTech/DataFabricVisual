@@ -816,7 +816,7 @@ const onSelectPopularDataSort = async (order) => {
   await getPopularDataList(order);
 }
 
-// 카테고리 2개까지 표기 처리 (c_name, c_description 오름차순)
+// 카테고리 2개까지 표기 처리
 const getClassificationList = (data) => {
   let tmpData = Object.assign(data)
   tmpData.sort((a, b) => {

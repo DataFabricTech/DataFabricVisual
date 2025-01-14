@@ -117,7 +117,14 @@ const props = defineProps([
 ]);
 
 const entityCategories = computed(() =>{
-    return ObjectUtils.getPropertyValue(props.entity, "classifications", "")
+    let categories = ObjectUtils.getPropertyValue(props.entity, "classifications", "")
+    if (categories) {
+      categories.sort((a, b) => a.c_id - b.c_id) // c_id 오름차순 정렬
+      // categories.sort((a, b) => a.c_name - b.c_name) // c_name 오름차순 정렬
+      // categories.sort((a, b) => a.c_description - b.c_description) // c_description 오름차순 정렬
+
+    }
+    return categories
   }
 );
 const entityName = computed(() =>
