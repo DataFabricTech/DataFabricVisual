@@ -57,7 +57,7 @@ public class MetaDataClassificationService {
 
         int resultCount = metaDataClassificationMapper.insertClassification(params);
         if(resultCount > 0) {
-            metaDataClassificationMapper.createClassificationCount(params);
+            // metaDataClassificationMapper.createClassificationCount(params);
         }
 
         result.put("isFailed", resultCount < 0);
@@ -132,7 +132,7 @@ public class MetaDataClassificationService {
         // 그 외의 경우 카테고리 삭제
         int resultCount = metaDataClassificationMapper.deleteClassification(id);
         if(resultCount > 0) {
-            metaDataClassificationMapper.deleteClassificationCount(id);
+            // metaDataClassificationMapper.deleteClassificationCount(id);
         }
 
         result.put("isFailed", resultCount <= 0);
@@ -192,7 +192,7 @@ public class MetaDataClassificationService {
         if(resultCount > 0) {
             // update classification count
             updateParam.put("entityIdsCount", entityIdsCount);
-            metaDataClassificationMapper.mapperCountMulti(updateParam);
+            // metaDataClassificationMapper.mapperCountMulti(updateParam);
 
             // 맵핑 성공 시 상위 카테고리 맵핑 대상 확인 후 처리
             if (superTypes.size() > 0) {
@@ -237,7 +237,7 @@ public class MetaDataClassificationService {
             // 상위 카테고리 매핑시 에러 없으면 카운트 증가
             if(resultCount > 0) {
                 updateParam.put("entityIdsCount", entityIds.size());
-                metaDataClassificationMapper.mapperCountMulti(updateParam);
+                // metaDataClassificationMapper.mapperCountMulti(updateParam);
             }
         }
     }
@@ -292,7 +292,7 @@ public class MetaDataClassificationService {
                 for(String rId : removeIds) {
                     // 기존에 매핑되어 있던 아이디일 경우에만 count down
                     if(orgMappingList.contains(rId)) {
-                        metaDataClassificationMapper.mapperCountDown(rId);
+                        // metaDataClassificationMapper.mapperCountDown(rId);
                     }
                 }
             }
@@ -357,7 +357,7 @@ public class MetaDataClassificationService {
             if (deleteResult > 0) {
                 // 해당 카테고리 id에 대한 카운트 감소
                 for (int i=0; i< deleteIds.length; i++) {
-                    downCount += metaDataClassificationMapper.mapperCountDown(deleteIds[i]);
+                    // downCount += metaDataClassificationMapper.mapperCountDown(deleteIds[i]);
                 }
             }
 
