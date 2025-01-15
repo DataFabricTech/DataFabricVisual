@@ -1,7 +1,17 @@
 <template>
   <div class="detail-box">
     <div class="mu-heading">
-      <h5>메타속성</h5>
+      <h5 style="display:">메타속성</h5>
+      <div class="btn-switch" style="display: flex; justify-content: flex-end; width: 95%;">
+        <div class="mu-radio">
+          <input type="radio" id="radio111" name="switch111" @click="toggleShowField(true)" :checked="showEmptyField">
+          <label for="radio111"><span>표기</span></label>
+        </div>
+        <div class="mu-radio">
+          <input type="radio" id="radio222" name="switch111" @click="toggleShowField(false)" :checked="!showEmptyField">
+          <label for="radio222"><span>미표기</span></label>
+        </div>
+      </div>
     </div>
     <div class="max-h600">
       <table class="mu-grid mu-grid-data">
@@ -106,6 +116,7 @@ const userStore = useUserStore();
 const emit = defineEmits(["onClickDataName"]);
 const props = defineProps(["entity", "referredEntitiesAttributes"]);
 
+// 메타속성 항목 순서 목록
 const desiredOrder = ref([
   "meta_name",
   "description",
@@ -117,12 +128,22 @@ const desiredOrder = ref([
   "table_type",
   "source_hash",
   "database_schema"
-]) // 메타속성 항목 순서 목록
-// const noEntries = ref([
-//   "view_definition"
-// ]) // 메타속성 제외 목록
+])
+// 메타속성 제외 목록
+const noEntries = ref([])
 
-const noEntries = ref([]) // 메타속성 제외 목록
+const showEmptyField = ref(false) // 메타속성 데이터 없는 필드 보여주기 여부
+const fixEntries = ref([
+  "meta_name",
+  "description",
+  "columns",
+  "qualified_name",
+  "create_time",
+  "last_access_time",
+  "system_type",
+  "table_type",
+  "database_schema"
+]) // 메타속성 데이터 없어도 보여줄 항목 여부
 
 const metaDataInfo = computed(() => {
   const entity = props.entity
@@ -155,7 +176,8 @@ const metaDataInfo = computed(() => {
     sortedMetaData.last_access_time = entity.last_access_time
     sortedMetaData.qualified_name = entity.qualified_name
 
-    removeEmptyFields(sortedMetaData)
+    // 값이 없는 데이터 필드 보여주기 여부
+    if (!showEmptyField.value) removeEmptyFields(sortedMetaData)
 
     return sortedMetaData;
   }
@@ -163,11 +185,23 @@ const metaDataInfo = computed(() => {
   return {};
 });
 
+// 객체 키값이 없는 데이터 표기/미표기
+const toggleShowField = (bool) => {
+  showEmptyField.value = bool
+}
+
+
 // 객체 키값에 값이 없는 데이터 제거
 const removeEmptyFields = (obj) => {
   for (let key in obj) {
+    // 지우면 안되는 필드는 지우지 않도록 조건 추가
+    if (fixEntries.value && fixEntries.value.length > 0) {
+      let list = fixEntries.value.filter((el) => el == key)
+      if (list && list.length > 0) continue
+    }
+
     if (obj[key] === undefined || obj[key] === null || obj[key] === '') {
-      delete obj[key];
+        delete obj[key];
     }
   }
 }

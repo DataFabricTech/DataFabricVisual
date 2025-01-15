@@ -27,7 +27,7 @@
               <tr>
               <th scope="col">행수</th>
               <!-- <th scope="col">테이블 크기(Byte)</th> -->
-              <td>{{ comman(table.num_rows) }}</td>
+              <td>{{ comman(table.num_rows) ? comman(table.num_rows) : "-" }}</td>
               <th scope="col">테이블프로파일링 일시</th>
               <!-- <td>{{ table.total_size | numberComma }}</td> -->
               <td>{{ $yyyyMMddHHmmSS(table.update_date, " ") }}</td>
