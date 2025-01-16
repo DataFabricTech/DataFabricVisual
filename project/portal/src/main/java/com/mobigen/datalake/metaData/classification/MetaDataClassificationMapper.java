@@ -13,21 +13,9 @@ public interface MetaDataClassificationMapper {
 
     Integer insertClassification(Map<String, Object> params) throws Exception;
 
-    Integer createClassificationCount(Map<String, Object> params) throws Exception;
-
     Integer updateClassification(Map<String, Object> params) throws Exception;
 
-    Integer mapperCount(Map<String, Object> entity) throws Exception;
-
-    Integer mapperCountMulti(Map<String, Object> params) throws Exception;
-
-    Integer supperMapperCount(Map<String, Object> entity) throws Exception;
-
     Integer deleteClassification(String name) throws Exception;
-
-    Integer deleteClassificationCount(String name) throws Exception;
-
-    Integer mapperCountDown (String id) throws Exception;
 
     List<Map<String, Object>> getClassificationList(String level) throws Exception;
 

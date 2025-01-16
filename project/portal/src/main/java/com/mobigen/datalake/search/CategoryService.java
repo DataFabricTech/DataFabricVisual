@@ -61,7 +61,6 @@ public class CategoryService {
         } else {
             return new ArrayList<>();
         }
-        // return categoryMapper.getTableCountsByClassification()
         return resultList;
     }
 
@@ -76,7 +75,7 @@ public class CategoryService {
     }
 
     // 상세필터 정보 조회
-    public Object getDetailFilters() {
+    public Object getDetailFilters() throws Exception {
         Map<String, Object> detailFilters = new HashMap<>();
         Map<String, Object> categoryInfo = new HashMap<>();
         Map<String, Object> systemInfo = new HashMap<>();
@@ -84,6 +83,17 @@ public class CategoryService {
         Map<String, Object> tagInfo = new HashMap<>();
         Map<String, Object> orderInfo = new HashMap<>();
         
+        // 카테고리 카운트 정보
+        Map<String, Object> countMap = new HashMap<>();
+        Map<String, Object> restResponse = getClassificationCountFromApi();
+        if (!restResponse.isEmpty()) {
+            Map<String, Object> res = (Map<String, Object>) restResponse.get("result");
+            if (res.get("result") != null && res.get("result").toString().equals("success")) {                    
+                // API에서 받아온 카테고리 매핑 개수 Map
+                countMap = (Map<String, Object>) res.get("count");
+            }
+        }
+
         // 카테고리 정보
         List<Map<String, Object>> categoryList = categoryMapper.getCategoryListForFilter();
         categoryInfo.put("allChecked", true);
@@ -101,7 +111,11 @@ public class CategoryService {
             content.put("id", category.get("id"));
             content.put("name", category.get("name"));
             content.put("description", category.get("description"));
-            content.put("count", category.get("type_count"));
+            int count = 0;
+            if (countMap.get(category.get("id")) != null) {
+                count = (int) countMap.get(category.get("id"));
+            }
+            content.put("count", count);
             content.put("checked", false);
             ((List<Map<String, Object>>) categoryInfo.get("content")).add(content);
         }

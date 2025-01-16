@@ -51,7 +51,7 @@ public class CategoryController {
     // 통합검색 상세필터 정보 조회
     @ResponseJsonResult
     @GetMapping("/detailFilters")
-    public Object getDetailFilters() {
+    public Object getDetailFilters() throws Exception {
         return categoryService.getDetailFilters();
     }
 }
