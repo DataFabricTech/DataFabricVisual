@@ -163,16 +163,16 @@ public class MetaDataClassificationService {
         List<String> superTypes = (List<String>) params.get("superTypes");
 
         // 테이블 유형일 경우 하위 컬럼 ID 목록 추출하여 함께 카테고리 맵핑
-        List<String> tableTypes = (List<String>) params.get("tableTypes");
-        if (tableTypes.size() > 0) {
-            List<String> columnIds = new ArrayList<>();
+        // List<String> tableTypes = (List<String>) params.get("tableTypes");
+        // if (tableTypes.size() > 0) {
+        //     List<String> columnIds = new ArrayList<>();
 
-            for (String tableTypeId : tableTypes) {
-                columnIds.addAll(this.getColumns(tableTypeId));
-            }
+        //     for (String tableTypeId : tableTypes) {
+        //         columnIds.addAll(this.getColumns(tableTypeId));
+        //     }
 
-            entityIds.addAll(columnIds);
-        }
+        //     entityIds.addAll(columnIds);
+        // }
 
         // 중복된 카테고리 매핑이 있는 엔티티 제거
         entityIds = removeDuplicateMappingEntity(classificationId, entityIds);
@@ -250,11 +250,11 @@ public class MetaDataClassificationService {
         String guid = (String) params.get("id"); // 사용자가 선택한 엔티티 guid
         targetIds.add(guid);
 
-        Boolean isTableType = (Boolean) params.get("isTableType");
-        if (isTableType) {
-            // 테이블 유형일 경우 하위 목록 조회 및 추가
-            targetIds.addAll(this.getColumns(guid));
-        }
+        // Boolean isTableType = (Boolean) params.get("isTableType");
+        // if (isTableType) {
+        //     // 테이블 유형일 경우 하위 목록 조회 및 추가
+        //     targetIds.addAll(this.getColumns(guid));
+        // }
 //         else {
 //             // 컬럼 유형일 경우 현재 엔티티가 속한 테이블 & 해당 테이블의 하위 컬럼(현재 엔티티 제외) 목록 조회 및 추가
 //             targetIds.addAll(this.getTableWithOtherColumns(guid));
@@ -401,17 +401,17 @@ public class MetaDataClassificationService {
     }
 
     // 하위 컬럼 id 목록 추출
-    private List<String> getColumns(String id) throws Exception {
-        List<String> ids = new ArrayList<>();
+    // private List<String> getColumns(String id) throws Exception {
+    //     List<String> ids = new ArrayList<>();
 
-        List<Map<String, Object>> childrenList = metaDataManageService.getMetaDataListByParentId(id);
-        for (Map<String, Object> item : childrenList) {
-            String columnId = (String) item.get("id");
-            ids.add(columnId);
-        }
+    //     List<Map<String, Object>> childrenList = metaDataManageService.getMetaDataListByParentId(id);
+    //     for (Map<String, Object> item : childrenList) {
+    //         String columnId = (String) item.get("id");
+    //         ids.add(columnId);
+    //     }
 
-        return ids;
-    }
+    //     return ids;
+    // }
 
     // 테이블 guid 및 선택 컬럼을 제외한 나머지 하위 컬럼 guid 목록 추출
     private List<String> getTableWithOtherColumns(String guid) {
