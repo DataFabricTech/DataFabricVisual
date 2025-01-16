@@ -424,6 +424,10 @@ const entityFilterCriterion = ref([
     typeName: "string"
   },
   {
+    name: "system_name",
+    typeName: "string"
+  },
+  {
     name: "meta_type",
     typeName: "string"
   },
@@ -461,9 +465,41 @@ const entityFilterCriterion = ref([
   }
 ])
 const entityFilterCondition = ref({
-  condition1: ['=', '!=', 'contains', 'startsWith', 'endsWith', 'isNull', 'notNull'],
-  condition2: ['=', '!=', 'isNull', 'notNull'],
-  condition3: ['=', '!=', '>', '<', '>=', '<=', 'isNull', 'notNull']
+  condition1: [
+    { name: '=', description: '=' },
+    { name: '!=', description: '!='},
+    { name: 'contains', description: 'contains' },
+    { name: 'startsWith', description: 'startsWith' },
+    { name: 'endsWith', description: 'endsWith' },
+    { name: 'isNull', description: 'isNull' },
+    { name: 'notNull', description: 'notNull' }
+  ],
+  condition2: [
+    { name: '=', description: '=' },
+    { name: '=', description: '!=' },
+    { name: 'isNull', description: 'isNull' },
+    { name: 'notNull', description: 'notNull' }
+  ],
+  condition3: [
+    { name: 'dateEqual', description: '=' },
+    { name: 'dateNotEqual', description: '!=' },
+    { name: '>', description: '>' },
+    { name: '<', description: '<' },
+    { name: '>=', description: '>=' },
+    { name: '<=', description: '<=' },
+    { name: 'isNull', description: 'isNull' },
+    { name: 'notNull', description: 'notNull' }
+  ],
+  condition4: [
+    { name: '=', description: '=' },
+    { name: '!=', description: '!=' },
+    { name: '>', description: '>' },
+    { name: '<', description: '<' },
+    { name: '>=', description: '>=' },
+    { name: '<=', description: '<=' },
+    { name: 'isNull', description: 'isNull' },
+    { name: 'notNull', description: 'notNull' }
+  ]
 })
 
 interface PagingObj {
@@ -1103,24 +1139,24 @@ const filterDetailCondition = (criterion) => {
   let typeName = criterion.typeName
   let name = criterion.name
   if (typeName === 'string') {
-    filterOperator = entityFilterCondition.value.condition1[0]
+    filterOperator = entityFilterCondition.value.condition1[0].name
   }
   else if (typeName === 'hive_principal_type') {
-    filterOperator = entityFilterCondition.value.condition1[0]
+    filterOperator = entityFilterCondition.value.condition1[0].name
   }
   else if (typeName === 'sap_principal_type') {
-    filterOperator = entityFilterCondition.value.condition1[0]
+    filterOperator = entityFilterCondition.value.condition1[0].name
   }
   else if (typeName === 'boolean') {
-    filterOperator = entityFilterCondition.value.condition2[0]
+    filterOperator = entityFilterCondition.value.condition2[0].name
   }
   else if (typeName === 'int') {
-    filterOperator = entityFilterCondition.value.condition3[0]
+    filterOperator = entityFilterCondition.value.condition4[0].name
   }
   else if (typeName === 'date') {
-    filterOperator = entityFilterCondition.value.condition3[0]
+    filterOperator = entityFilterCondition.value.condition3[0].name
   } else {
-    filterOperator = entityFilterCondition.value.condition1[0]
+    filterOperator = entityFilterCondition.value.condition1[0].name
   }
   filterDetailData.name = name
   filterDetailData.typeName = typeName
@@ -1133,13 +1169,6 @@ const filterDetailCondition = (criterion) => {
 const onClickDeleteButton = (): void => {
   word.value = "";
 };
-
-const checkDataAccess = (flag) => {
-  let dataAccessComment = "데이터 조회권한 ";
-  dataAccessComment += flag ? "<span style='color: blue;'>있음</span>" : "<span style='color: red;'>없음</span>" ;
-
-  return dataAccessComment;
-}
 
 // 검색에서 필터적용중 삭제
 const deleteCategoryTag = (): void => {

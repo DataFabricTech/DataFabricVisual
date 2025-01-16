@@ -11,13 +11,16 @@
       </div>
       <div class="mu-selectbox">
         <select v-if="props.item.typeName === 'string'" v-model="props.item.operator">
-          <option v-for="(conitem,cidx) in props.entityFilterCondition.condition1" :key="cidx" :value="conitem">{{ conitem }}</option>
+          <option v-for="(conitem,cidx) in props.entityFilterCondition.condition1" :key="cidx" :value="conitem.name">{{ conitem.description }}</option>
         </select>
         <select v-else-if="props.item.typeName === 'boolean'" v-model="props.item.operator">
-          <option v-for="(conitem,cidx) in props.entityFilterCondition.condition2" :key="cidx" :value="conitem">{{ conitem }}</option>
+          <option v-for="(conitem,cidx) in props.entityFilterCondition.condition2" :key="cidx" :value="conitem.name">{{ conitem.description }}</option>
         </select>
-        <select v-else-if="props.item.typeName === 'date' || props.item.typeName === 'int' " v-model="props.item.operator">
-          <option v-for="(conitem,cidx) in props.entityFilterCondition.condition3" :key="cidx" :value="conitem">{{ conitem }}</option>
+        <select v-else-if="props.item.typeName === 'date'" v-model="props.item.operator">
+          <option v-for="(conitem,cidx) in props.entityFilterCondition.condition3" :key="cidx" :value="conitem.name">{{ conitem.description }}</option>
+        </select>
+        <select v-else-if="props.item.typeName === 'int' " v-model="props.item.operator">
+          <option v-for="(conitem,cidx) in props.entityFilterCondition.condition4" :key="cidx" :value="conitem.name">{{ conitem.description }}</option>
         </select>
       </div>
       <div class="mu-selectbox" v-if="props.item.typeName === 'string' || props.item.typeName === 'int'">
@@ -105,12 +108,21 @@ import { onMounted, ref } from "vue";
 const emit = defineEmits(["toggleAndOr", "addGroup", "deleteGroup", "addFilter", "deleteFilter", "getFilterGrpNum"]);
 const props = defineProps(["item", "entityFilterCondition", "datetimeType", "timePickerOptions", "lang", "startDate", "entityFilterCriterion", "filterCnt"]);
 
-onMounted(() => {
+// 필터의 조건 필드가 변경될 경우 조건 연산자를 '=' 값으로 설정
+// date필드는 ES 검색에서 사용하는 명칭으로 변경 dateEqual(=)
+watch(() => props.item.attributeName, (newVal, oldVal) => {
+  props.item.operator = '='
+  if (props.item.typeName == 'date') {
+    props.item.operator = 'dateEqual'
+  }
 })
 
-// 필터의 조건 필드가 변경될 경우 조건 연산자를 '=' 값으로 설정
-watch(() => props.item.attributeName, (newVal, oldVal) => {
-  props.item.operator = "="
+watch(() => props.item.typeName, (newVal, oldVal) => {
+  if (props.item.typeName == 'date') {
+    props.item.operator = 'dateEqual'
+  } else {
+    props.item.operator = '='
+  }
 })
 
 // methods
@@ -148,7 +160,17 @@ const deleteFilter = (item) => {
 
 // 날짜 선택
 const selectDate = (item, selectedDate) => {
-  item.attributeValueText = selectedDate
+  if (selectedDate) {
+    let date = new Date(selectedDate)
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1 해줘야 맞습니다.
+    const day = String(date.getDate()).padStart(2, '0'); // 일의 자릿수를 맞추기 위해 padStart 사용
+
+    const formattedDate = `${year}-${month}-${day}`;
+    item.attributeValueText = formattedDate
+  } else {
+    item.attributeValueText = selectedDate
+  }
   item.attributeValue = new Date(selectedDate).getTime();
 
   // const selectedStartDate = new Date(selectedDate + '-01-01')
