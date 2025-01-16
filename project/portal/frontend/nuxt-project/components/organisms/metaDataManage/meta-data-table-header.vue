@@ -6,7 +6,7 @@
         <fieldset>
           <legend>게시물검색</legend>
           <div class="inner-search">
-            <div class="mu-selectbox w120">
+            <!-- <div class="mu-selectbox w120">
               <select
                 name="searchType1"
                 :value="props.filterSearchObj.searchType1"
@@ -15,7 +15,7 @@
                 <option value="all">전체</option>
                 <option v-for="(item, idx) in filterOptions" :value="item">{{ item }}</option>
               </select>
-            </div>
+            </div> -->
             <div class="mu-selectbox w120">
               <select
                 name="searchType2"
