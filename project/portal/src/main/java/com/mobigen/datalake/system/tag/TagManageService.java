@@ -1,6 +1,10 @@
 package com.mobigen.datalake.system.tag;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.mobigen.framework.result.JsonResult;
 import com.mobigen.framework.security.SessionManager;
@@ -13,10 +17,13 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TagManageService {
   private final TagManageMapper tagManageMapper;
   private final SessionManager sessionManager;
+  
+  @Value("${properties.essync.url.update}")
+  private String esSyncUrlUpdate;
   
   /**
    * Tag 추가
@@ -32,6 +39,21 @@ public class TagManageService {
     param.put("login_id", loginId);
 
     Object result = tagManageMapper.insertTagInfo(param);
+
+    //es sync api 호출
+    Integer failCount = 0;
+    String guid = param.get("guid");
+    Map<String, Object> restResponse = essyncUpdate(guid, 2, "카테고리 매핑");
+    if (!restResponse.isEmpty()) {
+        Map<String, String> res = (Map<String, String>) restResponse.get("result");
+        if (res.get("result").equals("success")) {
+        } else {
+            failCount++;                    
+        }
+    }
+    if(failCount > 0){
+        result.put("essyncIsFailed", true);
+    }
     return result;
   }
 
@@ -116,6 +138,20 @@ public class TagManageService {
       }      
     }
 
+    //es sync api 호출
+    Integer failCount = 0;
+    Map<String, Object> restResponse = essyncUpdate(guid, 2, "카테고리 매핑");
+    if (!restResponse.isEmpty()) {
+        Map<String, String> res = (Map<String, String>) restResponse.get("result");
+        if (res.get("result").equals("success")) {
+        } else {
+            failCount++;                    
+        }
+    }
+    if(failCount > 0){
+        result.put("essyncIsFailed", true);
+    }
+
     if (updateResult == 0){
       isFailed = true;
     }
@@ -123,4 +159,16 @@ public class TagManageService {
     result.put("isFailed", isFailed);
     return result;
   }
+
+  public Map<String, Object> essyncUpdate(String guid, Integer eventStatus, String eventName) throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+        
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("metaid", guid);
+        requestBody.put("event_status", eventStatus); // 1=생성, 2=수정, 3=삭제
+        requestBody.put("event_name", eventName);
+        Map<String, Object> restResponse = restTemplate.postForObject(esSyncUrlUpdate, requestBody, HashMap.class);
+
+        return restResponse;
+    }
 }
