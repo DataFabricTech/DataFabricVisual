@@ -29,7 +29,7 @@ public class TagManageService {
    * Tag 추가
    */
   public Object insertTagInfo(Map<String, String> param, HttpServletRequest request) throws Exception {
-
+    Map<String, Object> result = new HashMap<>();
     Map<String, Object> user = sessionManager.getUserByAccessToken(request);
     String loginId = "";
     if(user != null) {
@@ -38,7 +38,7 @@ public class TagManageService {
 
     param.put("login_id", loginId);
 
-    Object result = tagManageMapper.insertTagInfo(param);
+    Object insertResult = tagManageMapper.insertTagInfo(param);
 
     //es sync api 호출
     Integer failCount = 0;
@@ -54,7 +54,7 @@ public class TagManageService {
     if(failCount > 0){
         result.put("essyncIsFailed", true);
     }
-    return result;
+    return insertResult;
   }
 
   /**
