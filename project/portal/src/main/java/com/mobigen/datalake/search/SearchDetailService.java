@@ -846,6 +846,10 @@ public class SearchDetailService {
 
     // 비지니스 속성 등록
     public Object saveEntityAttributes(Map<String, Object> params) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        boolean isFailed = false;
+        boolean esUpdated = false;
+
         // 비즈니스 속성 업데이트를 위한 값 가공
         Map<String, Object> entity = (Map<String, Object>) params.get("entity");
         Map<String, Object> paramMap = new HashMap<>();
@@ -853,6 +857,32 @@ public class SearchDetailService {
         paramMap.put("business_attributes", objectMapper.writeValueAsString(entity.get("business_attributes")));
 
         int insertResult = searchDetailMapper.updateMetaBusinessAttributes(paramMap);
+        // 3. ES 신규 business_attributes 등록
+        // ES 업데이트 API 수행 결과 - API 호출 필요
+        Map<String, Object> requestBody = new HashMap<>();
+        requestBody.put("metaid", params.get("guid"));
+        requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
+        requestBody.put("event_name", "update business_attributes");
+        Map<String, Object> restResponse = essyncUpdate(requestBody);
+        
+        boolean esResult = false;
+        if (!restResponse.isEmpty()) {
+            Map<String, String> res = (Map<String, String>) restResponse.get("result");
+            if (res.get("result").equals("success")) {
+                isFailed = false;
+                esResult = true;
+            } else {
+                isFailed = true;
+                esResult = false;
+            }
+        }
+
+        if ( esResult ) { // ES 등록 성공
+            esUpdated = true;
+        } else { // ES 등록 실패
+            result.put("errorMessage", "ES 업데이트 실패");
+            isFailed = true;
+        }              
         return insertResult;
     }
 

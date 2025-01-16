@@ -306,7 +306,7 @@ public class DetailController {
     }
 
     /**
-     * 비즈니스 속성 Atlas에 등록
+     * 비즈니스 속성 등록
      *
      * @param params            등록용 파라미터
      * @return Object           비지니스 속성 Atlas에 등록 결과
