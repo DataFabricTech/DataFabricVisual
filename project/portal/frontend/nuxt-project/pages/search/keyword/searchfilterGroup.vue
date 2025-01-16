@@ -108,6 +108,11 @@ const props = defineProps(["item", "entityFilterCondition", "datetimeType", "tim
 onMounted(() => {
 })
 
+// 필터의 조건 필드가 변경될 경우 조건 연산자를 '=' 값으로 설정
+watch(() => props.item.attributeName, (newVal, oldVal) => {
+  props.item.operator = "="
+})
+
 // methods
 
 // 그룹필터 AND OR 선택
