@@ -124,6 +124,7 @@ const desiredOrder = ref([
   "qualified_name",
   "create_time",
   "last_access_time",
+  "system_name",
   "system_type",
   "table_type",
   "source_hash",
@@ -140,6 +141,7 @@ const fixEntries = ref([
   "qualified_name",
   "create_time",
   "last_access_time",
+  "system_name",
   "system_type",
   "table_type",
   "database_schema"
@@ -175,6 +177,7 @@ const metaDataInfo = computed(() => {
     sortedMetaData.create_time = entity.create_time
     sortedMetaData.last_access_time = entity.last_access_time
     sortedMetaData.qualified_name = entity.qualified_name
+    sortedMetaData.system_name = entity.system_name
 
     // 값이 없는 데이터 필드 보여주기 여부
     if (!showEmptyField.value) removeEmptyFields(sortedMetaData)
@@ -209,11 +212,11 @@ const removeEmptyFields = (obj) => {
 // 한글명으로 수정
 const getKrKey = (key) => {
   if (props.entity && props.entity != undefined) {
-    if (key == "meta_name") return "시스템명";
+    if (key == "meta_name") return "메타데이터 명";
+    if (key == "system_name") return "시스템 명";
     if (key == "description") return "메타데이터 description";
     if (key == "user_description") return "메타데이터 description";
     if (key == "columns") return "컬럼 목록";
-    if (key == "column_name") return "메타 명";
     if (key == "column_type") return "컬럼 데이터 타입";
     if (key == "display_name") return "화면 표출 메타명";
     if (key == "qualified_name") return "객체 고유명"
