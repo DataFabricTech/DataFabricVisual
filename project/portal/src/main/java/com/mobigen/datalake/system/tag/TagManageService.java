@@ -29,7 +29,6 @@ public class TagManageService {
    * Tag 추가
    */
   public Object insertTagInfo(Map<String, String> param, HttpServletRequest request) throws Exception {
-    Map<String, Object> result = new HashMap<>();
     Map<String, Object> user = sessionManager.getUserByAccessToken(request);
     String loginId = "";
     if(user != null) {
@@ -39,21 +38,6 @@ public class TagManageService {
     param.put("login_id", loginId);
 
     Object insertResult = tagManageMapper.insertTagInfo(param);
-
-    //es sync api 호출
-    Integer failCount = 0;
-    String guid = param.get("guid");
-    Map<String, Object> restResponse = essyncUpdate(guid, 2, "카테고리 매핑");
-    if (!restResponse.isEmpty()) {
-        Map<String, String> res = (Map<String, String>) restResponse.get("result");
-        if (res.get("result").equals("success")) {
-        } else {
-            failCount++;                    
-        }
-    }
-    if(failCount > 0){
-        result.put("essyncIsFailed", true);
-    }
     return insertResult;
   }
 
