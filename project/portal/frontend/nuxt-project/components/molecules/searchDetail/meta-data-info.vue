@@ -3,14 +3,8 @@
     <div class="mu-heading">
       <h5 style="display:">메타속성</h5>
       <div class="btn-switch" style="display: flex; justify-content: flex-end; width: 95%;">
-        <div class="mu-radio">
-          <input type="radio" id="radio111" name="switch111" @click="toggleShowField(true)" :checked="showEmptyField">
-          <label for="radio111"><span>표기</span></label>
-        </div>
-        <div class="mu-radio">
-          <input type="radio" id="radio222" name="switch111" @click="toggleShowField(false)" :checked="!showEmptyField">
-          <label for="radio222"><span>미표기</span></label>
-        </div>
+        <input type="checkbox" id ="toggle-slider" @click="toggleShowField" :title="showEmptyField ? 'Show Empty Field' : 'Hide Empty Field'">
+        <label class="show-label" for="toggle-slider" :title="showEmptyField ? 'Show Empty Field' : 'Hide Empty Field'">표기/미표기</label>
       </div>
     </div>
     <div class="max-h600">
@@ -189,8 +183,8 @@ const metaDataInfo = computed(() => {
 });
 
 // 객체 키값이 없는 데이터 표기/미표기
-const toggleShowField = (bool) => {
-  showEmptyField.value = bool
+const toggleShowField = () => {
+  showEmptyField.value = !showEmptyField.value
 }
 
 
@@ -198,10 +192,10 @@ const toggleShowField = (bool) => {
 const removeEmptyFields = (obj) => {
   for (let key in obj) {
     // 지우면 안되는 필드는 지우지 않도록 조건 추가
-    if (fixEntries.value && fixEntries.value.length > 0) {
-      let list = fixEntries.value.filter((el) => el == key)
-      if (list && list.length > 0) continue
-    }
+    // if (fixEntries.value && fixEntries.value.length > 0) {
+    //   let list = fixEntries.value.filter((el) => el == key)
+    //   if (list && list.length > 0) continue
+    // }
 
     if (obj[key] === undefined || obj[key] === null || obj[key] === '') {
         delete obj[key];

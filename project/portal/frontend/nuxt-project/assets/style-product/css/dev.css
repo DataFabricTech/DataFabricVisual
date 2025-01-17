@@ -458,3 +458,44 @@ pre code {
     height:30px;
   }
 }
+
+.w1150 {width:1150px !important;}
+.w1200 {width:1200px !important;}
+.w1250 {width:1250px !important;}
+
+/* 토글 */
+#toggle-slider {
+  display: none;
+}
+
+#toggle-slider:checked + label {
+  background-color: #0a2469;
+}
+
+#toggle-slider:checked + label::after {
+  left:calc(100% - 20px);
+  background-color: #fff;
+}
+
+.show-label {
+  text-indent: -999em;
+  cursor: pointer;
+  width: 40px;
+  height: 25px;
+  background-color: #e0e0e0;
+  border-radius: 25px;
+  position:relative;
+  transition: 0.5s ease-out;
+}
+
+.show-label::after {
+  content: '';
+  width: 15px;
+  height: 15px;
+  background-color: #fff;
+  position: absolute;
+  border-radius: 50%;
+  top: 5px;
+  left: 5px;
+  transition: 0.5s ease-out;
+}
