@@ -499,3 +499,7 @@ pre code {
   left: 5px;
   transition: 0.5s ease-out;
 }
+
+
+/* 추가 속성 필터 date-picker가 스크롤로 가려져서 설정 */
+.data-filter-wrap .attribute-filter-item {display:none; position: relative; width:100%;}

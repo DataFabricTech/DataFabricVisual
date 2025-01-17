@@ -784,7 +784,7 @@ button .view-count {margin:0 0 0 4px; color:#95969c;}
 .data-filter-wrap .inner-data-filter .mu-tab-box {margin-bottom:10px;}
 .data-filter-wrap .inner-data-filter .mu-search-group {padding:0; background-color:#fff;}
 .data-filter-wrap .inner-data-filter .mu-search-group .mu-search-btn {padding-bottom:30px;}
-.data-filter-wrap .attribute-filter-item {display:none; overflow-y:auto; width:100%; max-height:400px;}
+/* .data-filter-wrap .attribute-filter-item {display:none; overflow-y:auto; width:100%; max-height:400px;} */
 .open-attribute-filter {height:64px; line-height:64px; border-top:1px solid #f0f0f0; text-align:center;}/* 버튼 디자인구조상 이동 */
 .data-filter-wrap .btn-attribute-filter-toggle {display:inline-flex; flex-direction:column-reverse;}
 .data-filter-wrap .btn-attribute-filter-toggle i {transform:rotate(0deg);}

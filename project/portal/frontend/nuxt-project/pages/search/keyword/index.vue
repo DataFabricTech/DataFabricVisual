@@ -11,7 +11,7 @@
                   <div class="category">
                     <em class="category-label">
                       필터적용중<span>
-                      <button @click="deleteCategoryTag()"><i class="mu-icon-svg item-delete"></i></button>
+                      <button @click="deleteCategoryTag"><i class="mu-icon-svg item-delete"></i></button>
                     </span>
                     </em>
                   </div>&nbsp;
@@ -83,10 +83,8 @@
             </div>
             <div class="on tab-content">
               <div class="mu-search-group">
-                <div class="mu-search-item">
-                </div>
                 <div
-                  class="attribute-filter-item slim-scroll"
+                  class="attribute-filter-item"
                   v-show="showFilterWrap2"
                   style="display: block;"
                 >
@@ -720,7 +718,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     let checkVal = checkFilterSearch(entityFiltersList.value)
     if (typeof checkVal !== undefined) {
       if (checkVal === true) {
-        errorAlert('추가속성필터를 삭제 또는 입력해주세요');
+        await errorAlert('추가속성필터를 삭제 또는 입력해주세요');
         return
       }
     }
@@ -1170,22 +1168,21 @@ const onClickDeleteButton = (): void => {
 };
 
 // 검색에서 필터적용중 삭제
-const deleteCategoryTag = (): void => {
+const deleteCategoryTag = async (): void => {
   let filterKeys = Object.keys(detailFilters.value)
-
   // 1. 상세필터 내 체크박스상태 false 처리
   for (let i=0; i<filterKeys.length; i++) {
-    clearFilter(filterKeys[i])
+    await clearFilter(filterKeys[i])
   }
 
   // 2. 카테고리 왼쪽메뉴 토글 및 Bold 해제
-  leftMenuToggleAndBold("")
+  await leftMenuToggleAndBold("")
 
-  // 3. 추가속성 필터 해제
-  initSubFilter()
+  // 3. 추가속성 필터 해제 및 유효성 검사 안하도록 설정
+  await initSubFilter()
 
   // 4. 검색
-  getSearch(0)
+  await getSearch(0)
 };
 
 

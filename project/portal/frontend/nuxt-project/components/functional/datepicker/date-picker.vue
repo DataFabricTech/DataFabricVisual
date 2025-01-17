@@ -150,7 +150,7 @@ const disabledDate = (date: any) => {
   line-height:36px;
   padding:0 15px;
   border:1px solid #d6dce2;
-  border-radius:3px;
+  border-radius:8px;
   background:#fff;
 }
 
