@@ -860,7 +860,7 @@ public class SearchDetailService {
         // 3. ES 신규 business_attributes 등록
         // ES 업데이트 API 수행 결과 - API 호출 필요
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("metaid", params.get("guid"));
+        requestBody.put("metaid", entity.get("guid"));
         requestBody.put("event_status", 2); // 1=생성, 2=수정, 3=삭제
         requestBody.put("event_name", "update business_attributes");
         Map<String, Object> restResponse = essyncUpdate(requestBody);
