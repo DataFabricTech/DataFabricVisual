@@ -304,10 +304,10 @@ public class SearchDetailService {
         // 샘플 데이터 조회 쿼리 제작
         String query = "";
 
-        // 테이블 Type인 경우 => DB 스키마 : Test-Postgres.data_catalog.public / 
+        // 테이블 Type인 경우 => DB 스키마 : 109ae637-9e13-44f9-9686-a79cf1e12499.data_catalog.public / 
         if (params.get("typeName").toString().endsWith("table")) {
             String[] queryStrSplit = params.get("qualified_name").toString().split("\\.");
-            String catalog = queryStrSplit[0];
+            String system_id = queryStrSplit[0];
             String dbName = queryStrSplit[1];
             String tableSchema = queryStrSplit[2];
             String tableNameStr = queryStrSplit[3];
@@ -327,10 +327,10 @@ public class SearchDetailService {
 
             if(params.get("columns") != null && params.get("columns") != "") {
                 // query = "select " + params.get("columns") + " from \"" + dbName + "\".\"" + catalog + "\".\"" + tableSchema + "." + tableName + " limit 10";
-                query = "select " + params.get("columns") + " from \"" + catalog + "\".\"" + tableSchema + "." + tableName + " limit 10";
+                query = "select " + params.get("columns") + " from \"" + system_id + "\".\"" + tableSchema + "." + tableName + " limit 10";
             } else {
                 // query = "select * from \"" + dbName + "\".\"" + catalog + "\".\"" + tableSchema + "\"." + tableName + " limit 10";
-                query = "select * from \"" + catalog + "\".\"" + tableSchema + "\"." + tableName + " limit 10";
+                query = "select * from \"" + system_id + "\".\"" + tableSchema + "\"." + tableName + " limit 10";
             }
         }
 

@@ -690,7 +690,7 @@ const getDetailDataProfile = () => {
 const getSampleData = () => {
   const meta_type = ObjectUtils.getPropertyValue(entity.value, "meta_type", "table")
   const qualified_name = ObjectUtils.getPropertyValue(entity.value, "qualified_name", "")
-  const system_name = qualified_name.split(".")[0]
+  const system_name = ObjectUtils.getPropertyValue(entity.value, "system_name", "")
 
   if (meta_type && meta_type.toUpperCase() == 'TABLE') {
     let trinoColumns = "";
