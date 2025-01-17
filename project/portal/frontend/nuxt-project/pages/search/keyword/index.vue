@@ -957,13 +957,12 @@ const isTermStyle = (item: any): { fontWeight: number } | {} => {
 
 const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
   if (detailFilters.value['CATEGORY']
-  && detailFilters.value['SYSTEMTYPE']
-  && detailFilters.value['METATYPE']
-  && detailFilters.value['TAG']
-   && detailFilters.value['ORDER']) {
-    if (detailFilters.value['CATEGORY'].allChecked && detailFilters.value['SYSTEMTYPE'].allChecked && detailFilters.value['METATYPE'].allChecked && detailFilters.value['TAG'].allChecked && detailFilters.value['ORDER'].allChecked) {
-      return false
-    } else {
+      && detailFilters.value['SYSTEMTYPE']
+      && detailFilters.value['ORDER']
+    ) {
+    if (!detailFilters.value['CATEGORY'].allChecked
+        || !detailFilters.value['SYSTEMTYPE'].allChecked
+        || !detailFilters.value['ORDER'].allChecked) {
       return true
     }
   }
