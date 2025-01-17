@@ -49,7 +49,7 @@
             </tr>
             <tr>
               <th scope="row">카테고리명(영문)<strong class="required">필수</strong></th>
-              <td style="display: flex">
+              <td>
                 <input
                   type="text"
                   placeholder="카테고리명(영문)을 입력하세요. (최대 20자)"
@@ -57,22 +57,9 @@
                   title="카테고리명(영문) 입력"
                   name="enName"
                   maxlength="20"
-                  :disabled="props.manageModal.type === 'update' || upperCategory.value !== ''"
+                  :disabled="props.manageModal.type === 'update'"
                   v-model="enName"
                   @input="onInput"
-                />
-                <input
-                  type="text"
-                  placeholder="카테고리명(영문)을 입력하세요. (최대 20자)"
-                  class="mu-input"
-                  title="카테고리명(영문) 입력"
-                  style="margin-left: 10px"
-                  v-if="props.manageModal.type !== 'update' && upperCategory.value !== ''"
-                  name="enName2"
-                  maxlength="20"
-                  :disabled="props.manageModal.type === 'update'"
-                  v-model="enName2"
-                  @input="onInput2"
                 />
               </td>
             </tr>
@@ -193,7 +180,6 @@ const categoryImageFileId = ref(""); // 카테고리 이미지 파일 아이디
 
 const tempCategoryImageFileId = ref(""); // 수정 버튼 활성화용 카테고리 이미지 파일 아이디 temp
 const enName = ref(""); // 카테고리명(영문. name)
-const enName2 = ref(""); // 카테고리 추가시 입력가능한 영문명
 const upperCategory = ref({
   description: "",
   value: "",
@@ -236,7 +222,7 @@ const placeholder = computed(() => {
 const selectValue = computed(() => {
   let name = ObjectUtils.getPropertyValue(props.manageModal, "target/name", "");
   let description = ObjectUtils.getPropertyValue(props.manageModal, "target/description", "");
-  enName.value = name;
+  // enName.value = name;
 
   if (props.manageModal.type === "update") {
     // 카테고리 수정 모달일 경우 현재 카테고리의 상위 카테고리를 선택값으로 처리
@@ -316,8 +302,7 @@ const isDisabled = computed(() => {
         if (
           // 카테고리명(한글명 & 영문명) 필수입력값
           krName.value &&
-          enName.value &&
-          enName2.value && // 상위 카테고리는 필수값이 아니지만 유효한 값 입력 시에만 확인 버튼 활성화
+          enName.value &&// 상위 카테고리는 필수값이 아니지만 유효한 값 입력 시에만 확인 버튼 활성화
           ((value && description) || (!value && !description))
         ) {
           isDisabled = false;
@@ -468,13 +453,6 @@ const onInput = (e) => {
   enName.value = value.replaceAll(/[^a-zA-Z0-9]/gi, "").toUpperCase();
 };
 
-const onInput2 = (e) => {
-  const {
-    target: { value }
-  } = e;
-  enName2.value = value.replaceAll(/[^a-zA-Z0-9]/gi, "").toUpperCase();
-};
-
 // 취소 버튼 클릭 이벤트 핸들러
 const onCancel = () => {
   onClear();
@@ -494,7 +472,6 @@ const onChangeMappingCategory = (option) => {
 
 // 상위 카테고리 변경 이벤트 핸들러
 const onChangeUpperCategory = (option) => {
-  enName.value = option.value;
   upperCategory.value = option;
 };
 
@@ -559,7 +536,6 @@ const onConfirm = async () => {
     let level = 1; // <table> 테이블 내 저장할 메뉴 depth
     let superTypeName = ""; // 상위 카테고리명
     let superTypeId = ""; // 상위 카테고리 아이디
-    const enNameConcat = enName.value.concat(enName2.value);
     if (upperCategory.value.value) {
       // 상위 카테고리 선택한 경우
       const superType = categoryStore.getOriginalList.find((el) => el.name === upperCategory.value.value);
@@ -577,7 +553,7 @@ const onConfirm = async () => {
     // 카테고리 추가일 경우
     params = {
       level: `${level}`,
-      name: enName2.value !== "" ? enNameConcat : enName.value,
+      name: enName.value,
       description: krName.value,
       superTypeName: superTypeName,
       superTypeId: isEmpties(superTypeId) ? null : superTypeId,
@@ -615,7 +591,6 @@ const onClear = () => {
   krName.value = "";
   originalKrName.value = "";
   enName.value = "";
-  enName2.value = "";
   upperCategory.value = { description: "", value: "", level: "" };
   originalUpperCategory.value = "";
   upperCategory2.value = { description: "", value: "", level: "" };
