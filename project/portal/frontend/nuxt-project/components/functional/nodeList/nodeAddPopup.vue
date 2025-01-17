@@ -500,6 +500,7 @@ const changeTab1 = (param) => {
 
 const searchNode = async (offset = 0) => {
   const params = {
+    selectedId: props.selectedId,
     offset: offset * 10,
     searchType: searchType.value,
     searchWord: searchWord.value,
