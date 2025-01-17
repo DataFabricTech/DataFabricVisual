@@ -34,7 +34,7 @@
       </div>
       <div class="mu-selectbox" v-else-if="props.item.typeName === 'date'">
         <div class="period-set" v-if="props.item.operator !== 'notNull' && props.item.operator !== 'isNull'">
-          <date-picker @change="selectDate(props.item,$event)" :date.sync="props.item.attributeValueText" v-model="props.item.attributeValue" :type="props.datetimeType" :time-picker-options="props.timePickerOptions" :lang="lang" :clearable="false" placeholder="시작일"></date-picker>
+          <date-picker @change="selectDate(props.item,$event)" :date.sync="props.item.attributeValueText" v-model="props.item.attributeValue" :type="props.datetimeType" :time-picker-options="props.timePickerOptions" :lang="lang" :clearable="false" placeholder="시작일" style="width: 245px;"></date-picker>
         </div>
       </div>
       <div class="mu-selectbox" v-else-if="props.item.typeName === 'hive_principal_type' || props.item.typeName === 'sap_principal_type'">

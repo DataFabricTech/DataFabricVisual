@@ -11,7 +11,7 @@
                   <div class="category">
                     <em class="category-label">
                       필터적용중<span>
-                      <button @click="deleteCategoryTag"><i class="mu-icon-svg item-delete"></i></button>
+                      <button type="button" @click="deleteCategoryTag"><i class="mu-icon-svg item-delete"></i></button>
                     </span>
                     </em>
                   </div>&nbsp;
@@ -396,6 +396,7 @@ const showFilterWrap2 = ref<boolean>(false);
 const searchOptionSub = ref<string>("mu-btn btn-attribute-filter-toggle");
 
 // 추가 속성 필터
+const checkFilterWrap2 = ref(true)
 const filterCnt = ref(0) // 필터 개수
 const entityFiltersList = ref([])
 const entityFilters = ref({
@@ -714,14 +715,19 @@ const getSearch = async (offset: number = 0): Promise<void> => {
   printSynonymList.value = []; // 동의어
 
   // 추가속성필터 유효성 체크
-  if (showFilterWrap2.value) {
+  if (showFilterWrap2.value && checkFilterWrap2.value) {
     let checkVal = checkFilterSearch(entityFiltersList.value)
     if (typeof checkVal !== undefined) {
       if (checkVal === true) {
         await errorAlert('추가속성필터를 삭제 또는 입력해주세요');
         return
       }
+    } else {
+
     }
+  } else {
+    showFilterWrap2.value = false
+    checkFilterWrap2.value = false
   }
 
   let paramEntityFilters = Object.assign(entityFiltersList.value[0])
@@ -1095,9 +1101,11 @@ const showSearchOption = (): void => {
 const showSearchOptionSub = (): void => {
   if (showFilterWrap2.value === false) {
     showFilterWrap2.value = true;
+    checkFilterWrap2.value = true;
     searchOptionSub.value = "mu-btn btn-attribute-filter-toggle on";
   } else {
     showFilterWrap2.value = false;
+    checkFilterWrap2.value = true;
     searchOptionSub.value = "mu-btn btn-attribute-filter-toggle";
   }
 };
@@ -1127,6 +1135,7 @@ const initSubFilter = () => {
   } else {
 
   }
+  checkFilterWrap2.value = false
 }
 
 // 추가속성필터의 필드 타입에 따라 operator 및 값부분 설정
