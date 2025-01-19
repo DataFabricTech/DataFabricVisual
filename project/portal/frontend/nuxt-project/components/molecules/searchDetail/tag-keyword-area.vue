@@ -143,13 +143,7 @@ const addSelectedTag = async () => {
 
 const validateTag = ():boolean => {
   if(!selectedTagName.value){
-    errorAlert("추가할 태그를 선택하세요.");
-    return false;
-  }
-
-  const matched = props.allTagList.find((el) => el.tag_name === selectedTagName.value);
-  if (!matched) {
-    errorAlert("잘못된 태그를 입력했습니다.");
+    errorAlert("추가할 태그를 입력하세요.");
     return false;
   }
 

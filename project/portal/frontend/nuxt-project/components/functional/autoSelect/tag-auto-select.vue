@@ -4,7 +4,7 @@
       <input
         type="text"
         :class="inputClass"
-        placeholder="추가할 태그를 선택하세요."
+        placeholder="태그를 입력하세요."
         :disabled="props.disabled"
         :value="selectedOption.tag_name"
         @input="onChangeInput"
@@ -93,14 +93,6 @@ const showDeleteButton = computed(() =>
 // 입력란 class 목록 계산
 const inputClass = computed(() => {
   const classNames = ["mu-input"];
-
-  const { tag_name } = selectedOption.value;
-  if (tag_name) {
-    // 입력값이 있을 때 그 입력값이 유효하면 테두리 색상 파란색으로, 유효하지 않으면 붉은색으로 처리
-    const className = isInvalid.value ? "error" : "success";
-    classNames.push(className);
-  }
-
   return classNames.join(" ");
 });
 
