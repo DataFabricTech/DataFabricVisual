@@ -44,6 +44,7 @@
     "ramda": "^0.30.0",
     "rsajs": "^2.0.0",
     "swiper": "^11.1.12",
+    "uuid": "^11.0.5",
     "vite-svg-loader": "^5.1.0",
     "vue": "^3.4.21",
     "vue-final-modal": "^4.5.4",
