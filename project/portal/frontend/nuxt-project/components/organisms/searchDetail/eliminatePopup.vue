@@ -201,7 +201,7 @@ const props = defineProps(["sampleDataDenied", "eliminateModal"]);
 
 const tabs = ref([
   {idx: 0, key: "일반 데이터 추출"},
-  {idx: 1, key: "대용량 데이터 추출"},
+  // {idx: 1, key: "대용량 데이터 추출"},
   {idx: 2, key: "API 추출"}
 ])
 const currentExtractTab = ref(0)

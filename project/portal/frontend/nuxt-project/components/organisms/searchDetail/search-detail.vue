@@ -659,7 +659,6 @@ const getDetailDataProfile = () => {
         // 프로파일링 정보에 description, posotion 값 추가
         let tmpList = res.data.columnData ? res.data.columnData : []
         tmpList.forEach((colData) => {
-          console.log(colData)
           columnData.forEach((col) => {
             if (colData.qualified_name == col.qualified_name) {
               colData.position = col.position
