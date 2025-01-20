@@ -62,7 +62,7 @@
               <tbody>
                 <tr v-for="(item, index) in column" :key="index">
                   <td>
-                    <span :title="item.name + '(' + item.type_name">{{ item.name ? item.name : "-" }}<br>({{ item.type_name ? item.type_name : "-" }})</span>
+                    <span :title="item.name + '(' + item.column_type + ')'">{{ item.name ? item.name : "-" }}<br>({{ item.column_type ? item.column_type : "-" }})</span>
                   </td>
                   <td>
                     <span class="mu-ellipsis" :title="numberComma(item.null_count)">

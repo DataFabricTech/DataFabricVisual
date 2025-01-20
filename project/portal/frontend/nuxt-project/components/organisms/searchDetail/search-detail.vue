@@ -626,7 +626,7 @@ const getDetailDataProfile = () => {
     );
     const partitionKeysDataList = ObjectUtils.getPropertyValue(
       entity.value,
-      "relationshipAttributes/partitionKeys",
+      "attributes/table_partition",
       ""
     );
     if (partitionKeysDataList.length > 0) {
@@ -637,17 +637,8 @@ const getDetailDataProfile = () => {
 
     if (columnData) {
       params.columnData = columnData.map((item) => {
-        return entity.value.qualified_name + "." + item.name
+        return item.qualified_name
       });
-    }
-
-    const attributes = ObjectUtils.getPropertyValue(
-      entity.value,
-      "attributes",
-      ""
-    );
-    if (attributes && attributes.db) {
-      params.db_guid = attributes.db.guid;
     }
 
     $ofetch("/api/search/detail/dataprofile", {
@@ -665,20 +656,22 @@ const getDetailDataProfile = () => {
       }
 
       if (res.data.hasOwnProperty("columnData")) {
-        const columnData = res.data.columnData;
-        columnData.filter((item) => {
-          referredEntitiesAttributes.value.filter((ref_item) => {
-            if (ref_item.name === item.name) {
-              item.position = ref_item.position;
+        // 프로파일링 정보에 description, posotion 값 추가
+        let tmpList = res.data.columnData ? res.data.columnData : []
+        tmpList.forEach((colData) => {
+          console.log(colData)
+          columnData.forEach((col) => {
+            if (colData.qualified_name == col.qualified_name) {
+              colData.position = col.position
+              colData.column_type = col.column_type
+              colData.description = col.description
+              colData.user_description = col.user_description
             }
-          });
-        });
+          })
+        })
+
         resDataProfile.column = res.data.columnData;
         resDataProfile.column.sort((a, b) => a.position - b.position);
-      }
-
-      if (res.data.hasOwnProperty("dbData")) {
-        resDataProfile.db = res.data.dbData;
       }
 
       dataProfile.value = resDataProfile;
