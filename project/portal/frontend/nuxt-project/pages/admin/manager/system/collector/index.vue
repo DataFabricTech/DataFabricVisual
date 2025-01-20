@@ -239,7 +239,7 @@ const popupCollectorCreateModal = () => {
 
 // 수동 수집 실행 버튼 클릭
 const startCollecton = async (item) => {
-  await $ofetch(`/api/admin/system/collector/directCollect?system_id=${item.system_id}}}`).then(async (res) => {
+  await $ofetch(`/api/admin/system/collector/directCollect?system_id=${item.system_id}`).then(async (res) => {
     successAlert("수동 수집이 실행되었습니다.")
     // if (res && !res.errorMessage && res.data) {
     //   await successAlert("수동 수집이 실행되었습니다.")
