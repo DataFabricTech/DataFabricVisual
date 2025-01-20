@@ -443,10 +443,6 @@ const entityFilterCriterion = ref([
     typeName: "string"
   },
   {
-    name: "label",
-    typeName: "string"
-  },
-  {
     name: "tags",
     typeName: "string"
   },
@@ -766,11 +762,24 @@ const getSearch = async (offset: number = 0): Promise<void> => {
         }
       });
     } else {
+      // 페이징
+      pagingObj.value = {
+        ...pagingObj.value,
+        total: 0,
+        currentPage: 1
+      };
       listData.value = []
     }
 
   }).catch((err) => {
     console.log(err)
+    // 페이징
+    pagingObj.value = {
+      ...pagingObj.value,
+      total: 0,
+      currentPage: 1
+    };
+    listData.value = []
   })
 
   // 검색을 했을 때만 동의어 리스트 조회
