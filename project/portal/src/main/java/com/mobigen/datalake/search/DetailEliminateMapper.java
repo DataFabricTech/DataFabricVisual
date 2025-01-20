@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository("detailEliminateMapper")
 public interface DetailEliminateMapper {
     Integer insertDownloadHistory(Map<String, String> params);
+    int downloadRequest(Map<String, Object> params) throws Exception;
 }

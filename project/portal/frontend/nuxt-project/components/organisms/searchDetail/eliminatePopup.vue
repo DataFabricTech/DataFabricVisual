@@ -45,7 +45,7 @@
                   <th scope="row">전체 건수</th>
                   <td>
                     <div class="mu-item-group">
-                      {{ props.eliminateModal.num_rows }} 건
+                      {{ numberComma(props.eliminateModal.num_rows) }} 건
                     </div>
                   </td>
                 </tr>
@@ -154,7 +154,7 @@
           <button v-if="currentExtractTab == 0" type="button" class="mu-btn" @click="onClickFileEliminateButton">
             <i class="mu-icon-svg download"></i><span>File 추출</span>
           </button><!-- file 추출 버튼 클릭 시, 연결된 브라우저에서 파일 다운로드 -->
-          <button v-if="currentExtractTab == 1" type="button" class="mu-btn" @click="onClickBigFileEliminateButton">
+          <button v-if="currentExtractTab == 1" type="button" class="mu-btn" @click="onClickFileEliminateButton">
             <i class="mu-icon-svg view"></i><span>추출 요청</span>
           </button><!-- file 추출 버튼 클릭 시, 연결된 브라우저에서 파일 다운로드 -->
         </div>
@@ -186,7 +186,7 @@
 </template>
 
 <script setup lang="ts">
-import { confirmAlert, defaultAlert } from "@/components/functional/alert/alert-default";
+import { confirmAlert, defaultAlert, successAlert } from "@/components/functional/alert/alert-default";
 import ObjectUtils from "@/utils/ObjectUtils";
 import { errorAlert } from "@functional/alert/alert-default";
 import SampleDataArea from "@molecules/searchDetail/sample-data-area";
@@ -201,7 +201,7 @@ const props = defineProps(["sampleDataDenied", "eliminateModal"]);
 
 const tabs = ref([
   {idx: 0, key: "일반 데이터 추출"},
-  // {idx: 1, key: "대용량 데이터 추출"},
+  {idx: 1, key: "대용량 데이터 추출"},
   {idx: 2, key: "API 추출"}
 ])
 const currentExtractTab = ref(0)
@@ -617,7 +617,9 @@ const onClickFileEliminateButton = async () => {
     return;
   }
 
-  if (!await confirmAlert("파일을 다운로드하시겠습니까?")) {
+  let downloadMessage = "파일을 다운로드하시겠습니까?";
+  if (currentExtractTab.value == 1) downloadMessage = "다운로드를 요청하시겠습니까?"
+  if (!await confirmAlert(downloadMessage)) {
     return
   }
 
@@ -654,7 +656,7 @@ const onClickFileEliminateButton = async () => {
     "qualified_name",
     ""
   );
-  let guid = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "meta_id", "");
+  let meta_id = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "meta_id", "");
   let meta_name = ObjectUtils.getPropertyValue(
     props.eliminateModal.entity,
     "meta_name",
@@ -703,11 +705,6 @@ const onClickFileEliminateButton = async () => {
 
   if (currentExtractTab.value == 0) { // 일반 데이터 추출
     params.limit = 100000
-  } else if (currentExtractTab.value == 1) { // 대용량 데이터 추출, 직접입력 선택한 경우만 limit 필드 추가
-    if (extractLimitType.value == 'custom') {
-      params.limit = extractLimit.value
-    }
-  }
 
     const res = await $ofetch(`/api/search/detail/eliminate/file/download`, {
       method: 'POST',
@@ -735,7 +732,7 @@ const onClickFileEliminateButton = async () => {
       })
 
       let historyParams = {
-        meta_id: guid,
+        meta_id: meta_id,
         meta_name: meta_name,
         meta_type: "table",
         qualified_name: qualified_name,
@@ -758,6 +755,41 @@ const onClickFileEliminateButton = async () => {
       });
       queryWhere.value = "";
     }
+  } else if (currentExtractTab.value == 1) { // 대용량 데이터 추출, 직접입력 선택한 경우만 limit 필드 추가
+    if (extractLimitType.value == 'custom') {
+      params.limit = extractLimit.value
+    }
+
+    // download_query 제작
+    const system_id = qualified_name.split(".")[0]
+    const db_name = qualified_name.split(".")[1]
+    const schema = qualified_name.split(".")[2]
+    const name = qualified_name.split(".")[3] ? qualified_name.split(".")[3] : meta_name
+
+    let big_params = {
+      meta_id,
+      meta_name,
+      status: 0,
+      qualified_name,
+      download_query: `SELECT ${querySelect.value} FROM "${system_id}"."${schema}"."${name}" ${queryWhere.value} limit ${params.limit}`,
+      data_delimiter: ",",
+      data_lineterm: "\n"
+    }
+
+    await $ofetch("/api/search/detail/eliminate/file/downloadRequest", {
+      method: "POST",
+      body: big_params,
+    }).then((res) => {
+      console.log(res)
+      if (res && res.result) {
+        successAlert("요청이 완료되었습니다. <br> My Catalog > 추출 데이터 에서 진행상태를 확인할 수 있습니다.")
+      } else {
+        errorAlert("대용량 데이터 추출 요청에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+      }
+    }).catch((err) => {
+      errorAlert("대용량 데이터 추출 요청에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+    });
+  }
 };
 
 // 추출건수 유효성 검증
@@ -821,4 +853,30 @@ const getKrName = (key) => {
   if (key == 'all') return '전체'
   if (key == 'custom') return '직접입력'
 }
+
+// 숫자 콤마
+const numberComma = (val) => {
+  if (!!Number(val)) {
+    if (Number(val) > 1) {
+      let textArr = String(val).split(".");
+      if (Number(textArr[0]) > 1) {
+        if (textArr.length > 1) {
+          return (
+            String(textArr[0]).replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "." + textArr[1]
+          );
+        } else {
+          return String(textArr[0]).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
+      } else {
+        return val;
+      }
+    } else {
+      return val;
+    }
+  } else {
+    if (Number(val) === 0) {
+      return val;
+    }
+  }
+};
 </script>

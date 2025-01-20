@@ -92,4 +92,17 @@ public class DetailEliminateController {
 
         detailEliminateService.getCSVFile(params, request, response);
     }
+
+    /**
+     * 대용량 데이터 추출 요청
+     * @return
+     * @throws SQLException
+     */
+    @PostMapping(value = "/file/downloadRequest")
+    public Object downloadRequest(@RequestBody Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        params.put("user_id", user.get("user_id").toString());
+        params.put("accept_user_id", user.get("user_id").toString());
+        return detailEliminateService.downloadRequest(params);
+    }
 }

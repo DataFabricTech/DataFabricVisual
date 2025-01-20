@@ -419,6 +419,22 @@ public class DetailEliminateService {
         }
     }
 
+    // 대용량 다운로드 요청
+    public Object downloadRequest(Map<String, Object> params) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            int insertResult = detailEliminateMapper.downloadRequest(params);
+            if (insertResult > 0) {
+                result.put("result", true);
+            } else {
+                result.put("result", false);
+            }
+        } catch (Exception e) {
+            result.put("result", false);
+        }
+        return result;
+    }
+
     // 파일 최대 크기 반환
     public static long parseFileSize(String sizeStr) {
         sizeStr = sizeStr.toUpperCase().trim();
