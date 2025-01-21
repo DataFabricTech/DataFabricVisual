@@ -405,7 +405,7 @@ const entityFilters = ref({
   "condition": "AND",
   "criterion": [
     {
-      "attributeName": "id",
+      "attributeName": "meta_id",
       "operator": "eq",
       "attributeValue": ""
     }

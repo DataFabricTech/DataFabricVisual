@@ -6,7 +6,7 @@
           v-model="item.attributeName"
           @change="select1(item,$event.target)"
         >
-          <option v-for="(items,idx) in props.entityFilterCriterion" :key="idx">{{ items.displayName }}</option>
+          <option v-for="(items,idx) in props.entityFilterCriterion" :key="idx" :value="items.name">{{ items.displayName }}</option>
         </select>
       </div>
       <div class="mu-selectbox">
