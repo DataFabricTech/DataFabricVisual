@@ -417,6 +417,10 @@ const entityFilterCriterion = ref([
     typeName: "string"
   },
   {
+    name: "meta_name",
+    typeName: "string"
+  },
+  {
     name: "qualified_name",
     typeName: "string"
   },
