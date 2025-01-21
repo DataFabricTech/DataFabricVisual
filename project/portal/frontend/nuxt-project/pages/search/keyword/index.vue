@@ -194,10 +194,12 @@
                   </div>
                   <div class="inner-data option">
                     <p >생 성 일 : <strong>{{ $yyyyMMdd(data.create_time) }}</strong></p>
+                    <!-- <p >생 성 자 : <strong>{{ data.create_by ? data.create_by : "-" }}</strong></p> -->
                     <p >수 정 일 : <strong>{{ $yyyyMMdd(data.update_time) }}</strong></p>
+                    <!-- <p >수 정 자 : <strong>{{ data.update_by ? data.update_by : "-" }}</strong></p> -->
                     <p >최종 접근시간 : <strong>{{ $yyyyMMddHHmmSS(data.last_access_time ? data.last_access_time: null) }}</strong></p>
-                    <p >시스템 타입 : <strong>{{ data.system_type }}</strong></p>
-                    <p >메타 타입 : <strong>{{ data.meta_type }}</strong></p>
+                    <p >시스템 타입 : <strong>{{ data.system_type ? data.system_type : "-" }}</strong></p>
+                    <p >메타 타입 : <strong>{{ data.meta_type ? data.meta_type : "-" }}</strong></p>
                     <p v-if="data.qualified_name">DB : <strong>{{ getDbName(data.qualified_name) }}</strong></p>
                     <p v-if="data.system_type && data.system_type.toUpperCase() == 'COLUMN'"> 테이블 <strong>{{ getTableName(data.qualified_name) }}</strong></p>
                     <p v-if="data.system_type && data.system_type.toUpperCase() != 'HIVE' && data.qualified_name && data.qualified_name.split('.')[2]">스키마 : <strong>{{ getSchemaName(data.qualified_name) }}</strong></p>
@@ -403,7 +405,7 @@ const entityFilters = ref({
   "condition": "AND",
   "criterion": [
     {
-      "attributeName": "id",
+      "attributeName": "meta_id",
       "operator": "eq",
       "attributeValue": ""
     }
@@ -412,50 +414,87 @@ const entityFilters = ref({
 const entityFilterCriterion = ref([
   {
     name: "meta_id",
+    displayName: "meta_id",
+    typeName: "string"
+  },
+  {
+    name: "meta_name.keyword",
+    displayName: "meta_name",
     typeName: "string"
   },
   {
     name: "qualified_name",
+    displayName: "qualified_name",
     typeName: "string"
   },
   {
     name: "system_type",
+    displayName: "system_type",
+    typeName: "string"
+  },
+  {
+    name: "system_id",
+    displayName: "system_id",
     typeName: "string"
   },
   {
     name: "system_name",
+    displayName: "system_name",
     typeName: "string"
   },
   {
-    name: "meta_type",
+    name: "attributes.table_type",
+    displayName: "table_type",
     typeName: "string"
   },
   {
-    name: "display_name",
+    name: "description.keyword",
+    displayName: "description",
     typeName: "string"
   },
   {
-    name: "description",
+    name: "user_description.keyword",
+    displayName: "user_description",
     typeName: "string"
   },
   {
-    name: "user_description",
+    name: "attributes.columns.meta_name.keyword",
+    displayName: "column_name",
+    typeName: "string"
+  },
+  {
+    name: "attributes.columns.description.keyword",
+    displayName: "column_description",
+    typeName: "string"
+  },
+  {
+    name: "classifications.c_description.keyword",
+    displayName: "classifications",
     typeName: "string"
   },
   {
     name: "tags",
+    displayName: "tags",
     typeName: "string"
   },
   {
     name: "create_time",
+    displayName: "create_time",
     typeName: "date"
   },
   {
     name: "update_time",
+    displayName: "update_time",
     typeName: "date"
   },
   {
     name: "last_access_time",
+    displayName: "last_access_time",
+    typeName: "date"
+  },
+  {
+    name: "meta_sync_time",
+    displayName: "meta_sync_time",
     typeName: "date"
   }
 ])
@@ -1256,7 +1295,7 @@ const getDbName = (qualified_name) => {
   if (qualified_name) {
     return qualified_name.split(".")[1]
   }
-  return ""
+  return "-"
 }
 
 // 스키마명
@@ -1264,7 +1303,7 @@ const getSchemaName = (qualified_name) => {
   if (qualified_name) {
     return qualified_name.split(".")[2]
   }
-  return ""
+  return "-"
 }
 
 // 테이블명
@@ -1272,7 +1311,7 @@ const getTableName = (qualified_name) => {
   if (qualified_name) {
     return qualified_name.split(".")[3]
   }
-  return ""
+  return "-"
 }
 
 // 카테고리 왼쪽메뉴 Open 및 선택한 카테고리 Bold 처리

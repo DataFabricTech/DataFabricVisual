@@ -21,8 +21,8 @@ public class CollectorService {
   private final CollectorMapper collectorMapper;    
   private final ObjectMapper objectMapper;
   
-  @Value("${properties.intergration.url}")
-  private String intergrationExecuteUrl;
+  @Value("${properties.ingestion.url}")
+  private String ingestionExecuteUrl;
   
   Map<String, Object> getCollectorListInfo(Map<String, Object> params) throws Exception {
       Map resultMap = new HashMap<>();
@@ -96,39 +96,34 @@ public class CollectorService {
     Map<String, Object> result = new HashMap<>();
 
     try {
-      Map<String, Object> restResponse = intergrationExecute(system_id); 
-
-      // 반환값 확인 필요
-      if (restResponse != null && !restResponse.isEmpty()) {
-          Map<String, Object> res = (Map<String, Object>) restResponse.get("result");
-          if (res.get("result").equals("success")) {
-            result.put("result", true);
-          } else {
-            result.put("result", false);
-          }
-        }
+      ResponseEntity<HashMap> restResponse = ingestionExecute(system_id);
+      
+      if (restResponse != null && restResponse.getStatusCode().is2xxSuccessful()) {
+        result.put("result", true);
+      } else {
+        result.put("result", false);
+      }
     } catch (Exception e) {
       result.put("result", false);
-      e.printStackTrace();
     }
     return result;
   }
  
   // Jsonb => Map 타입 변환 함수
   public Map<String, Object> convertJsonbToMap(Object jsonb) throws Exception {
-      if (jsonb != null) {
-          return objectMapper.readValue((String) jsonb, new TypeReference<Map<String, Object>>() {});    
-      }
-      return null;
+    if (jsonb != null) {
+        return objectMapper.readValue((String) jsonb, new TypeReference<Map<String, Object>>() {});    
+    }
+    return null;
   }
  
   // 수동 수집 실행 POST, system_id는 queryString
-  public Map<String, Object> intergrationExecute(String system_id) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
-        String executeUrl = intergrationExecuteUrl + "?system_id=" + system_id;
+  public ResponseEntity<HashMap> ingestionExecute(String system_id) throws Exception {
+    RestTemplate restTemplate = new RestTemplate();
+    String executeUrl = ingestionExecuteUrl + "?system_id=" + system_id;
 
-        Map<String, Object> requestBody = new HashMap<>();
-        Map<String, Object> restResponse = restTemplate.postForObject(executeUrl, requestBody, HashMap.class);
-        return restResponse;
-    }
+    Map<String, Object> requestBody = new HashMap<>();
+    ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
+    return responseEntity;
+  }
 }

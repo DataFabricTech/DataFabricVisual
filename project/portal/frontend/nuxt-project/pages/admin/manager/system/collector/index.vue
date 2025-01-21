@@ -240,12 +240,13 @@ const popupCollectorCreateModal = () => {
 // 수동 수집 실행 버튼 클릭
 const startCollecton = async (item) => {
   await $ofetch(`/api/admin/system/collector/directCollect?system_id=${item.system_id}`).then(async (res) => {
-    successAlert("수동 수집이 실행되었습니다.")
-    // if (res && !res.errorMessage && res.data) {
-    //   await successAlert("수동 수집이 실행되었습니다.")
-    // } else {
-    //   errorAlert("수동 수집 실행에 실패하였습니다.")
-    // }
+    console.log(res)
+    if (res && res.data && res.data.result) {
+      await successAlert("수동 수집이 실행되었습니다.")
+      getCollectorList()
+    } else {
+      errorAlert("수동 수집 실행에 실패하였습니다.")
+    }
   }).catch((err) => {
     errorAlert("수동 수집 실행에 실패하였습니다.")
   })
@@ -266,7 +267,6 @@ const deleteCollector = async (system_id) => {
     await $ofetch(`/api/admin/system/collector/delete?system_id=${system_id}`).then(async (res) => {
       if (res && !res.errorMessage && res.data) {
         await successAlert("삭제에 성공하였습니다.")
-        getCollectorList()
       } else {
         errorAlert("삭제에 실패하였습니다.")
       }

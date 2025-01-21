@@ -422,6 +422,12 @@ watch(
 watch(
   () => krName.value,
   (newVal, oldVal) => {
+    // 한글명, 띄어쓰기 특수문자 불가
+    const koreanOnly = /^[ㄱ-ㅎ가-힣]*$/;
+    if (!koreanOnly.test(newVal)) {
+      krName.value = newVal.replace(/[^ㄱ-ㅎ가-힣]/g, '');
+    }
+
     // 카테고리 수정 모달일 경우에만 변경 여부 비교 계산
     if (props.manageModal.type === "update") {
       isEdited.value = newVal !== originalKrName.value;
