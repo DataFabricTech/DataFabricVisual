@@ -433,8 +433,18 @@ const entityFilterCriterion = ref([
     typeName: "string"
   },
   {
+    name: "system_id",
+    displayName: "system_id",
+    typeName: "string"
+  },
+  {
     name: "system_name",
     displayName: "system_name",
+    typeName: "string"
+  },
+  {
+    name: "attributes.table_type",
+    displayName: "table_type",
     typeName: "string"
   },
   {
@@ -445,6 +455,21 @@ const entityFilterCriterion = ref([
   {
     name: "user_description.keyword",
     displayName: "user_description",
+    typeName: "string"
+  },
+  {
+    name: "attributes.columns.meta_name.keyword",
+    displayName: "column_name",
+    typeName: "string"
+  },
+  {
+    name: "attributes.columns.description.keyword",
+    displayName: "column_description",
+    typeName: "string"
+  },
+  {
+    name: "classifications.c_description",
+    displayName: "classifications",
     typeName: "string"
   },
   {
