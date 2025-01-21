@@ -503,3 +503,13 @@ pre code {
 
 /* 추가 속성 필터 date-picker가 스크롤로 가려져서 설정 */
 .data-filter-wrap .attribute-filter-item {display:none; position: relative; width:100%;}
+
+
+.category-menu {overflow-y:auto; height:100%;}
+.category-menu li {position:relative; display:flex; align-items:center; flex-wrap:wrap; text-align:left;}
+.category-menu li:not(.has-sub) .item-toggle {display:block; visibility: hidden;}
+.category-menu li:not(.has-sub) .item-toggle.no-label {display:none;}
+.category-menu li:not(.has-sub) .item-toggle.on.no-label {display:none;}
+.category-menu .sub-category-menu li:not(.has-sub) .item-label {padding-left:0px; color:#70727a;}/* 최하위3 */
+.category-menu .sub-category-menu li ul li li,
+.category-menu .sub-category-menu li ul li.open .item-label:last-child {padding-left:3px !important; color:#70727a;}

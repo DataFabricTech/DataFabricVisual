@@ -151,6 +151,13 @@ const getTagStyle = (tagType, item) => {
       if (item && props.toggleTargets && props.toggleTargets[item.id]) {
         styles.push("on");
       }
+
+      if (item) {
+        // 카테고리 미분류일 경우에만 클래스 추가
+        if (item.id === "_NOT_CLASSIFIED") {
+          styles.push("no-label");
+        }
+      }
       break;
     case "a":
       if (item.id == getSelectedItemId.value) {
