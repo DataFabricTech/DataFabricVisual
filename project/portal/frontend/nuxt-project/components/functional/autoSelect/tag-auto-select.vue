@@ -6,7 +6,7 @@
         :class="inputClass"
         placeholder="태그를 입력하세요."
         :disabled="props.disabled"
-        :value="selectedOption.tag_name"
+        v-model="selectedOption.tag_name"
         @input="onChangeInput"
         @focus="toggleOptionList(true)"
         @blur="toggleOptionList(false)"
@@ -95,6 +95,13 @@ const inputClass = computed(() => {
   const classNames = ["mu-input"];
   return classNames.join(" ");
 });
+
+watch(() => selectedOption.value.tag_name, (newVal, oldVal) => {
+  const krEnOnly = /^[ㄱ-ㅎ가-힣]*$/;
+  if (!krEnOnly.test(newVal)) {
+    selectedOption.value.tag_name = newVal.replace(/[^ㄱ-ㅎ가-힣a-zA-Z]/g, '');
+  }
+})
 
 // 옵션 목록 아이템 스타일 계산
 const optionItemStyle = () => {
