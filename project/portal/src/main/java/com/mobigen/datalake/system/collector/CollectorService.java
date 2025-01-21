@@ -21,8 +21,8 @@ public class CollectorService {
   private final CollectorMapper collectorMapper;    
   private final ObjectMapper objectMapper;
   
-  @Value("${properties.intergration.url}")
-  private String intergrationExecuteUrl;
+  @Value("${properties.ingestion.url}")
+  private String ingestionExecuteUrl;
   
   Map<String, Object> getCollectorListInfo(Map<String, Object> params) throws Exception {
       Map resultMap = new HashMap<>();
@@ -96,7 +96,7 @@ public class CollectorService {
     Map<String, Object> result = new HashMap<>();
 
     try {
-      Map<String, Object> restResponse = intergrationExecute(system_id); 
+      Map<String, Object> restResponse = ingestionExecute(system_id); 
 
       // 반환값 확인 필요
       if (restResponse != null && !restResponse.isEmpty()) {
@@ -123,9 +123,9 @@ public class CollectorService {
   }
  
   // 수동 수집 실행 POST, system_id는 queryString
-  public Map<String, Object> intergrationExecute(String system_id) throws Exception {
+  public Map<String, Object> ingestionExecute(String system_id) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
-        String executeUrl = intergrationExecuteUrl + "?system_id=" + system_id;
+        String executeUrl = ingestionExecuteUrl + "?system_id=" + system_id;
 
         Map<String, Object> requestBody = new HashMap<>();
         Map<String, Object> restResponse = restTemplate.postForObject(executeUrl, requestBody, HashMap.class);
