@@ -414,58 +414,62 @@ const entityFilters = ref({
 const entityFilterCriterion = ref([
   {
     name: "meta_id",
+    displayName: "meta_id",
     typeName: "string"
   },
   {
-    name: "meta_name",
+    name: "meta_name.keyword",
+    displayName: "meta_name",
     typeName: "string"
   },
   {
     name: "qualified_name",
+    displayName: "qualified_name",
     typeName: "string"
   },
   {
     name: "system_type",
+    displayName: "system_type",
     typeName: "string"
   },
   {
     name: "system_name",
+    displayName: "system_name",
     typeName: "string"
   },
   {
-    name: "meta_type",
+    name: "description.keyword",
+    displayName: "description",
     typeName: "string"
   },
   {
-    name: "display_name",
-    typeName: "string"
-  },
-  {
-    name: "description",
-    typeName: "string"
-  },
-  {
-    name: "user_description",
+    name: "user_description.keyword",
+    displayName: "user_description",
     typeName: "string"
   },
   {
     name: "tags",
+    displayName: "tags",
     typeName: "string"
   },
   {
     name: "create_time",
+    displayName: "create_time",
     typeName: "date"
   },
   {
     name: "update_time",
+    displayName: "update_time",
     typeName: "date"
   },
   {
     name: "last_access_time",
+    displayName: "last_access_time",
     typeName: "date"
   },
   {
     name: "meta_sync_time",
+    displayName: "meta_sync_time",
     typeName: "date"
   }
 ])

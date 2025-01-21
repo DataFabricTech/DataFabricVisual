@@ -6,7 +6,7 @@
           v-model="item.attributeName"
           @change="select1(item,$event.target)"
         >
-          <option v-for="(items,idx) in props.entityFilterCriterion" :key="idx">{{ items.name }}</option>
+          <option v-for="(items,idx) in props.entityFilterCriterion" :key="idx">{{ items.displayName }}</option>
         </select>
       </div>
       <div class="mu-selectbox">
@@ -114,6 +114,13 @@ watch(() => props.item.attributeName, (newVal, oldVal) => {
   props.item.operator = '='
   if (props.item.typeName == 'date') {
     props.item.operator = 'dateEqual'
+  }
+})
+
+// date 타입 외의 경우 attributeValueText에 attributeValue 값 설정
+watch(() => props.item.attributeValue, (newVal, oldVal) => {
+  if (props.item.typeName != 'date') {
+    props.item.attributeValueText = newVal
   }
 })
 
