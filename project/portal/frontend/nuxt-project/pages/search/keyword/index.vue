@@ -468,7 +468,7 @@ const entityFilterCriterion = ref([
     typeName: "string"
   },
   {
-    name: "classifications.c_description",
+    name: "classifications.c_description.keyword",
     displayName: "classifications",
     typeName: "string"
   },
