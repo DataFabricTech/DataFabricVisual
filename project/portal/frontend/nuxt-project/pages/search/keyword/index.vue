@@ -194,10 +194,12 @@
                   </div>
                   <div class="inner-data option">
                     <p >생 성 일 : <strong>{{ $yyyyMMdd(data.create_time) }}</strong></p>
+                    <!-- <p >생 성 자 : <strong>{{ data.create_by ? data.create_by : "-" }}</strong></p> -->
                     <p >수 정 일 : <strong>{{ $yyyyMMdd(data.update_time) }}</strong></p>
+                    <!-- <p >수 정 자 : <strong>{{ data.update_by ? data.update_by : "-" }}</strong></p> -->
                     <p >최종 접근시간 : <strong>{{ $yyyyMMddHHmmSS(data.last_access_time ? data.last_access_time: null) }}</strong></p>
-                    <p >시스템 타입 : <strong>{{ data.system_type }}</strong></p>
-                    <p >메타 타입 : <strong>{{ data.meta_type }}</strong></p>
+                    <p >시스템 타입 : <strong>{{ data.system_type ? data.system_type : "-" }}</strong></p>
+                    <p >메타 타입 : <strong>{{ data.meta_type ? data.meta_type : "-" }}</strong></p>
                     <p v-if="data.qualified_name">DB : <strong>{{ getDbName(data.qualified_name) }}</strong></p>
                     <p v-if="data.system_type && data.system_type.toUpperCase() == 'COLUMN'"> 테이블 <strong>{{ getTableName(data.qualified_name) }}</strong></p>
                     <p v-if="data.system_type && data.system_type.toUpperCase() != 'HIVE' && data.qualified_name && data.qualified_name.split('.')[2]">스키마 : <strong>{{ getSchemaName(data.qualified_name) }}</strong></p>
@@ -456,6 +458,10 @@ const entityFilterCriterion = ref([
   },
   {
     name: "last_access_time",
+    typeName: "date"
+  },
+  {
+    name: "meta_sync_time",
     typeName: "date"
   }
 ])
@@ -1256,7 +1262,7 @@ const getDbName = (qualified_name) => {
   if (qualified_name) {
     return qualified_name.split(".")[1]
   }
-  return ""
+  return "-"
 }
 
 // 스키마명
@@ -1264,7 +1270,7 @@ const getSchemaName = (qualified_name) => {
   if (qualified_name) {
     return qualified_name.split(".")[2]
   }
-  return ""
+  return "-"
 }
 
 // 테이블명
@@ -1272,7 +1278,7 @@ const getTableName = (qualified_name) => {
   if (qualified_name) {
     return qualified_name.split(".")[3]
   }
-  return ""
+  return "-"
 }
 
 // 카테고리 왼쪽메뉴 Open 및 선택한 카테고리 Bold 처리
