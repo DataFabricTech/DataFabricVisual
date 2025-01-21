@@ -505,9 +505,10 @@ pre code {
 .data-filter-wrap .attribute-filter-item {display:none; position: relative; width:100%;}
 
 
+/* 왼쪽메뉴 카테고리 배치 조정 */
 .category-menu {overflow-y:auto; height:100%;}
 .category-menu li {position:relative; display:flex; align-items:center; flex-wrap:wrap; text-align:left;}
-.category-menu li:not(.has-sub) .item-toggle {display:block; visibility: hidden;}
+.category-menu li:not(.has-sub) .item-toggle {display:block; padding: 3px;}
 .category-menu li:not(.has-sub) .item-toggle.no-label {display:none;}
 .category-menu li:not(.has-sub) .item-toggle.on.no-label {display:none;}
 .category-menu .sub-category-menu li:not(.has-sub) .item-label {padding-left:0px; color:#70727a;}/* 최하위3 */
