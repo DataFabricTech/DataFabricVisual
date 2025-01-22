@@ -521,3 +521,13 @@ pre code {
 .wrapper-sub .contents-wrap .contents-top .subject-wrap { margin-top: 24px; }
 .mu-path > li a {color:#fff;}
 .subject-wrap .subject h3 {font-weight:700; font-size:40px; color:#fff;}
+
+/* 대용량 추출 관련 스타일 */
+.step-process.request {background-color:#bad6f2; color:#656d78; font-weight: 500;} /* 요청 */
+.step-process.confirm {background-color:#ffe699; color:#656d78; font-weight: 500;} /* 승인 */
+.step-process.reject {background-color:#7f7f7f; color:#ffffff; font-weight: 500;} /* 반려 */
+.step-process.processing {background-color:#bfe5c3; color:#656d78; font-weight: 500;} /* 진행중 */
+.step-process.finish {background-color:#f2d7c2; color:#656d78; font-weight: 500;} /* 완료 */
+.step-process.upload {background-color:#e2e7c2; color:#656d78; font-weight: 500;} /* 업로드 */
+.step-process.limit {background-color:#d9d9d9; color:#656d78; font-weight: 500;} /* 만료 */
+.step-process.err {background-color:#d9d9d9; color:#bb0000; font-weight: 500;} /* 에러 */
