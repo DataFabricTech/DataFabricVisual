@@ -514,3 +514,10 @@ pre code {
 .category-menu .sub-category-menu li:not(.has-sub) .item-label {padding-left:0px; color:#70727a;}/* 최하위3 */
 .category-menu .sub-category-menu li ul li li,
 .category-menu .sub-category-menu li ul li.open .item-label:last-child {padding-left:3px !important; color:#70727a;}
+
+/* 사용자 페이지 메뉴 표기부분 배너 이미지 */
+.wrapper-sub .contents-wrap .contents-top {max-width:1400px; height:180px; margin-bottom:30px; background:#14163A url("../images/common/bg-contents-top-admin.png") center no-repeat; background-size:auto; border-radius: 30px;}
+.wrapper-sub .contents-wrap .contents-top .mu-path { padding-right: 30px; }
+.wrapper-sub .contents-wrap .contents-top .subject-wrap { margin-top: 24px; }
+.mu-path > li a {color:#fff;}
+.subject-wrap .subject h3 {font-weight:700; font-size:40px; color:#fff;}
