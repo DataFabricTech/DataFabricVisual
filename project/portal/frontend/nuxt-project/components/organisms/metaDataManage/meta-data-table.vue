@@ -14,7 +14,7 @@
           <th scope="col">
             <div class="mu-checkbox">
               <input type="checkbox" id="ckb1" title="전체선택"
-                :checked="dataList.length > 0 && _selectedData.length === dataList.length"
+                :checked="isAllChecked()"
                 @click.stop="e => onToggleCheckbox(e, true)">
               <label for="ckb1"><span class="blind">전체선택</span></label>
             </div>
@@ -91,10 +91,15 @@ const props = defineProps<Props>();
 const _selectedData = ref<Array<{[key:string]:any}>>([])
 _selectedData.value = $R.clone(props.selectedData)
 
+// 전체 체크박스 체크 표시 여부 계산
+const isAllChecked = () => {
+  return props.dataList.length > 0 && props.selectedData.length === props.dataList.length
+}
+
 // 체크박스 체크 표시 여부 계산
 const isChecked = (item: any): boolean => {
-  const matched = _selectedData.value.some((el:any) => el.meta_id === item.meta_id);
-  return matched;
+  if (item && item.checked) return true
+  else return false
 };
 
 // 체크박스 클릭 이벤트 핸들러
@@ -104,9 +109,14 @@ const onToggleCheckbox = (e, isAll:boolean, item: any) => {
 
   if (isAll) {
     // 테이블 최상단 체크박스 클릭 시 전체 선택/해제
-    newItems = checked ? [...props.dataList] : [];
+    let tmpList = props.dataList
+    tmpList.forEach((el) => {
+      el.checked = checked
+    })
+    newItems = checked ? [...tmpList] : [];
   } else {
     // 각 행별 체크박스 클릭 시
+    item.checked = checked
     if (checked) {
       newItems.push(item);
     } else {

@@ -857,6 +857,8 @@ const onSearchDataList = async (offset = 0, item = {}) => {
       currentPage: 1
     };
   }
+
+  selectedData.value = [];
 };
 
 const onSearchDept = async (item = {}) => {
