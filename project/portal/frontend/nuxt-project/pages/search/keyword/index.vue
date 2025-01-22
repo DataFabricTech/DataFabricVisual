@@ -517,10 +517,10 @@ const entityFilterCondition = ref({
   condition3: [
     { name: 'dateEqual', description: '=' },
     { name: 'dateNotEqual', description: '!=' },
-    { name: '>', description: '>' },
-    { name: '<', description: '<' },
-    { name: '>=', description: '>=' },
-    { name: '<=', description: '<=' },
+    { name: 'date>', description: '>' },
+    { name: 'date<', description: '<' },
+    { name: 'date>=', description: '>=' },
+    { name: 'date<=', description: '<=' },
     { name: 'isNull', description: 'isNull' },
     { name: 'notNull', description: 'notNull' }
   ],
@@ -928,6 +928,12 @@ const checkFilterSearch = (filterData) => {
       if (typeof item.criterion !== 'undefined') {
         filterRoof(item.criterion)
       } else {
+        // 날짜 타입의 경우 attributeValueText 값이 없으면 안됨
+        if (item.typeName == 'date') {
+          if (!item.attributeValueText) {
+            returnVal = true
+          }
+        }
         if (item.attributeValue !== null && item.attributeValue === '') {
           if (item.operator !== 'isNull' && item.operator !== 'notNull') {
             returnVal = true

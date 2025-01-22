@@ -114,6 +114,7 @@ watch(() => props.item.attributeName, (newVal, oldVal) => {
   props.item.operator = '='
   if (props.item.typeName == 'date') {
     props.item.operator = 'dateEqual'
+    props.item.attributeValueText = ""
   }
 })
 
