@@ -11,9 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.client.RestTemplate;
 
 import com.mobigen.datalake.post.PostMapper;
 import com.mobigen.datalake.user.UserMapper;
@@ -37,6 +39,9 @@ public class SynonymService {
     
     @Value("${properties.activeSendMail.synonym}")
 	public boolean activeSendMail;
+
+    @Value("${properties.synonymsync.url}")
+    public String synonymsyncUrl;
     
 
     // 동의어 목록 조회
@@ -84,6 +89,10 @@ public class SynonymService {
             addResult += synonymMapper.addSynonym(params);
         }
 
+        // 동의어 ESSYNC API 호출
+        boolean esUpdate = esSynonymSyncUpdate();
+        result.put("esUpdate", esUpdate);
+
         result.put("addResult", addResult);
         return result;
     }
@@ -98,6 +107,10 @@ public class SynonymService {
         paramMap.put("addedSynonymList", params.get("addedSynonymList"));
 
         addSetResult = synonymMapper.addSynonymSet(paramMap);
+
+        // 동의어 ESSYNC API 호출
+        boolean esUpdate = esSynonymSyncUpdate();
+        result.put("esUpdate", esUpdate);
 
         result.put("addSetResult", addSetResult);
         return result;
@@ -134,6 +147,10 @@ public class SynonymService {
             paramMap.put("addedSynonymList", params.get("addedSynonymList"));
             addSetResult = synonymMapper.addSynonymSet(paramMap);
         }
+
+        // 동의어 ESSYNC API 호출
+        boolean esUpdate = esSynonymSyncUpdate();
+        result.put("esUpdate", esUpdate);
 
         result.put("modifyTermResult", modifyTermResult);
         result.put("deleteSetResult", deleteSetResult);
@@ -357,6 +374,10 @@ public class SynonymService {
             }
         }
 
+        // 동의어 ESSYNC API 호출
+        boolean esUpdate = esSynonymSyncUpdate();
+        result.put("esUpdate", esUpdate);
+
         result.put("confirmResult", confirmResult);
         result.put("deleteSynonym", deleteSynonym);
         return result;
@@ -443,6 +464,10 @@ public class SynonymService {
         int deleteResult = 0; // 동의어 삭제 결과
         deleteResult = synonymMapper.deleteMySynonym(params);
 
+        // 동의어 ESSYNC API 호출
+        boolean esUpdate = esSynonymSyncUpdate();
+        result.put("esUpdate", esUpdate);
+
         result.put("deleteResult", deleteResult);
         return result;
     }
@@ -453,6 +478,10 @@ public class SynonymService {
         int deleteResult = 0; // 동의어 삭제 결과
 
         deleteResult = synonymMapper.deleteSynonym(params);
+
+        // 동의어 ESSYNC API 호출
+        boolean esUpdate = esSynonymSyncUpdate();
+        result.put("esUpdate", esUpdate);
 
         result.put("deleteResult", deleteResult);
         return result;
@@ -494,6 +523,10 @@ public class SynonymService {
                 }
             }
         }
+
+        // 동의어 ESSYNC API 호출
+        boolean esUpdate = esSynonymSyncUpdate();
+        result.put("esUpdate", esUpdate);
 
         result.put("deleteManyResult", deleteManyResult);
         result.put("confirmAllResult", confirmAllResult);
@@ -1110,6 +1143,33 @@ public class SynonymService {
         System.out.println(resultMailBody);
 
         return resultMailBody;
+    }
+
+    // 동의어 동기화 ESSYNC API
+    public Boolean esSynonymSyncUpdate() throws Exception {
+        boolean esUpdate = false;
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<HashMap> restResponse = restTemplate.getForEntity(synonymsyncUrl, HashMap.class);
+
+            if (restResponse != null && restResponse.getBody() != null) {
+                Map<String, Object> body = restResponse.getBody();
+                if (body.get("result") != null) {
+                    Map<String, Object> bodyResultMap = (Map<String, Object>) body.get("result");
+                    if (bodyResultMap != null) {
+                        String result = bodyResultMap.get("result").toString();
+                        if (result.equals("success")) {
+                            esUpdate = true;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            esUpdate = false;
+        }
+
+        return esUpdate;
     }
 
 }
