@@ -1,6 +1,6 @@
 <template>
   <header class="header-sub">
-    <div class="header" :class='isSitemap ? "header-overlay" : ""'>
+    <div class="header">
       <div class="inner">
         <h1 class="logo">
           <NuxtLink to="/main" @click.native="onClickLogo">
@@ -8,7 +8,7 @@
           </NuxtLink>
         </h1>
         <div class="gnb-area" v-if="user">
-          <nav class="nav" :class="isSitemap ? 'hidden' : ''">
+          <nav class="nav">
             <ul>
               <li v-for="(item, index) in user.adminMenu"
                 @mouseover="addActive(index, item)" @mouseout="removeActive()"
@@ -35,22 +35,6 @@
             <li><a @click="onClickLogo()" class="link-home">사용자 홈</a></li>
           </ul>
         </div>
-        <template v-if="isSitemap">
-          <div class="sitemap">
-            <div class="sitemap-header">
-              <div class="inner">
-                <ul class="sitemap-util">
-                  <li><a @click="goToMainPage()"><i class="mu-icon-svg admin"></i> 사용자 홈으로 이동</a></li>
-                  <li><a @click="goToMyCatalog()"><i class="mu-icon-svg user"></i> 마이페이지</a></li>
-                  <li><a @click="logout()"><i class="mu-icon-svg logout" @click="logout()"></i> 로그아웃</a></li>
-                </ul>
-                <button type="button" title="전체메뉴 닫기" class="mu-btn mu-btn-icon-only mu-btn-close" @click="openSitemap">
-                  <i class="mu-icon-svg close"></i>
-                </button>
-              </div>
-            </div>
-          </div>
-        </template>
       </div>
     </div>
   </header>
@@ -70,7 +54,6 @@ const tab = computed(() => userStore._tab);
 const activeIndex = ref(null);
 
 const width = ref(0)
-const isSitemap = ref(false)
 const isLnbOpen = ref(false);
 
 // 마우스 올린 대메뉴 지정
@@ -113,22 +96,6 @@ const clearStore = (): void => {
 
 const goToMyCatalog = () => {
   router.push('/my/dashboard')
-}
-
-const goToMainPage = () => {
-  router.push('/main')
-}
-
-const goToMenualPage = () => {
-  router.push('/support/notice/detail?id=82')
-}
-
-const goToAnalysisToolPage = () => {
-  router.push('/support/notice/detail?id=83')
-}
-
-const openSitemap = () => {
-  isSitemap.value = !isSitemap.value
 }
 
 const logout = () => {

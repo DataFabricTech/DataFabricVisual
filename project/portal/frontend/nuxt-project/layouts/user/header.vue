@@ -1,6 +1,6 @@
 <template>
   <header class="header-sub">
-    <div class="header" :class='isSitemap ? "header-overlay" : ""'>
+    <div class="header">
       <div class="inner">
         <h1 class="logo">
           <NuxtLink to="/main" @click.native="onClickLogo">
@@ -8,24 +8,6 @@
           </NuxtLink>
         </h1>
         <div class="gnb-area" v-if="user">
-          <nav class="nav" :class="isSitemap ? 'hidden' : ''">
-            <ul>
-              <li v-for="(item, index) in user.userMenu"
-                @mouseover="addActive(index, item)" @mouseout="removeActive()"
-                :class="tab && item.title === tab.currentPathDepth1 ? 'current' + (activeIndex === index ? ' active' : '') : (activeIndex === index ? ' active' : '')"
-                :key="index">
-                <NuxtLink @focus="isLnbOpen = true" :to="getFirstDepthHref(item)">{{ item.title }}</NuxtLink>
-                <ul>
-                  <li v-for="(subItem, subIndex) in item.child" :key="subIndex"
-                    :class="tab && subItem.menu_path === tab.currentPath ? 'current' : ''">
-                    <NuxtLink :to='getSubDepthHref(subItem)' v-if="subItem.menu_visible">
-                      {{ subItem.menu_name }}
-                    </NuxtLink>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </nav>
           <ul class="top-menu">
             <li>
               <a @click="goToMyCatalog()">&nbsp;&nbsp;<span>{{ user.username }}</span> 님&nbsp;</a>
@@ -58,7 +40,6 @@ const tab = computed(() => userStore._tab);
 const activeIndex = ref(null);
 
 const width = ref(0)
-const isSitemap = ref(false)
 const isLnbOpen = ref(false);
 
 const categoryStore = useCategoryStore()
@@ -112,22 +93,6 @@ const goToMyCatalog = () => {
 
 const goToAdminPage = () => {
   router.push('/admin/data/status/lookup')
-}
-
-const goToMenualPage = () => {
-  router.push('/support/notice/detail?id=82')
-}
-
-const goToAnalysisToolPage = () => {
-  router.push('/support/notice/detail?id=83')
-}
-
-const openSitemap = () => {
-  isSitemap.value = true
-}
-
-const closeSitemap = () => {
-  isSitemap.value = false
 }
 
 const logout = () => {
