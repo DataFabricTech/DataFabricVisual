@@ -30,6 +30,16 @@ public class NuxtSSRStaticUrlFilter implements Filter {
 
     public static HashMap blacklistToken = new HashMap();
 
+    // 
+    private static final String ROOT_URL = "/";
+    private static final String[] PUBLIC_API_PATTERNS = {
+        "authenticate",
+        "/api/depts",
+        "/api/checkDupUserId",
+        "register"
+    };
+    private static final String API_PREFIX = "/api";
+
     @Autowired
     private SessionManager sessionManager;
     
@@ -61,6 +71,24 @@ public class NuxtSSRStaticUrlFilter implements Filter {
         } else {
             hr.sendRedirect("/");
         }
+    }
+
+    private boolean isPublicUrl(String url) {
+        if (url.equals(ROOT_URL)) {
+            return true;
+        }
+        
+        for (String pattern : PUBLIC_API_PATTERNS) {
+            if (url.contains(pattern)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    private boolean needsTokenValidation(String url) {
+        return url.contains(API_PREFIX) && !isPublicUrl(url);
     }
 
     @Override
@@ -95,9 +123,9 @@ public class NuxtSSRStaticUrlFilter implements Filter {
                 }
             } else {
                 String url = ((HttpServletRequest) servletRequest).getRequestURI();
-                if(!url.equals("/") && url.indexOf("authenticate") < 0 && url.indexOf("/api") > -1) {
-                     removeToken(servletRequest, servletResponse);
-                 log.info(url);
+                if (needsTokenValidation(url)) {
+                    removeToken(servletRequest, servletResponse);
+                    log.info(url);
                 }
             }
 
@@ -127,9 +155,9 @@ public class NuxtSSRStaticUrlFilter implements Filter {
                 }
             } else {
                 String url = ((HttpServletRequest) servletRequest).getRequestURI();
-                if(!url.equals("/") && url.indexOf("authenticate") < 0 && url.indexOf("/api") > -1) {
-                     removeToken(servletRequest, servletResponse);
-                 log.info(url);
+                if (needsTokenValidation(url)) {
+                    removeToken(servletRequest, servletResponse);
+                    log.info(url);
                 }
             }
         

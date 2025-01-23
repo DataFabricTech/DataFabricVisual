@@ -26,6 +26,7 @@ public class User implements UserDetails {
     private String updateFlag;
     private String createDate;
     private String name;
+    private String deptId;
     private String deptName;
     private String email;
     private String phone;

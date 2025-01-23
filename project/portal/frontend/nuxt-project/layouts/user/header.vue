@@ -33,7 +33,7 @@
             <li>
               <li><a @click="logout">로그아웃</a></li>
             </li>
-            <li v-if="user.authority == 'Super-Admin' || user.authority == 'Manager'">
+            <li v-if="user.authority == 'Super-Admin' || user.authority == 'Manager' || user.authority == 'Admin'">
               <a @click="goToAdminPage()" class="mu-btn mu-btn-round"><div class="link-home">관리자 홈</div></a>
             </li>
           </ul>

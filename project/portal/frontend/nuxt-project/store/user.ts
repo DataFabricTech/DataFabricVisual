@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { computed } from "vue";
 
 export const useUserStore = defineStore('userStore', () => {
-  const { $ofetch } = useNuxtApp()
+  const nuxtApp = useNuxtApp();
   const { router } = useRouter()
 
   // state
@@ -96,7 +96,7 @@ export const useUserStore = defineStore('userStore', () => {
   // 메뉴 사용 이력 insert
   const insertMenuHistory = async (payload: any) => {
     try {
-      const res = await $ofetch(`/api/menu/click?menuID=${payload}&userID=${_user.value.user_id}&deptID=${_user.value.dept_nm}`)
+      const res = await nuxtApp.$ofetch(`/api/menu/click?menuID=${payload}&userID=${_user.value.user_id}&deptID=${_user.value.dept_nm}`)
     } catch (e) {
       console.log(e)
     }

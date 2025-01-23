@@ -32,6 +32,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -96,9 +97,12 @@ public class UserService {
         map.put("authority", setUserEmptyRoleName(user.get("role_name")));
         map.put("username", (String) user.get("user_nm"));
         map.put("user_id", String.valueOf(user.get("user_id")));
+        map.put("dept_id", String.valueOf(user.get("dept_cd")));
         map.put("dept_nm", String.valueOf(user.get("dept_nm")));
         map.put("user_email", String.valueOf(user.get("user_email")));
         map.put("last_login", String.valueOf(user.get("last_login")));
+        map.put("role_id", String.valueOf(user.get("role_id")));
+
 
         sessionManager.lastLoginDate.put(String.valueOf(user.get("user_id")), String.valueOf(user.get("last_login")));
         // Date expireDate = getTokenExpiredDate();
@@ -119,9 +123,11 @@ public class UserService {
         map.put("authority", setUserEmptyRoleName(user.get("role_name")));
         map.put("username", (String) user.get("user_nm"));
         map.put("user_id", String.valueOf(user.get("user_id")));
+        map.put("dept_id", String.valueOf(user.get("dept_cd")));
         map.put("dept_nm", String.valueOf(user.get("dept_nm")));
         map.put("user_email", String.valueOf(user.get("user_email")));
         map.put("last_login", String.valueOf(user.get("last_login")));
+        map.put("role_id", String.valueOf(user.get("role_id")));
 
         sessionManager.lastLoginDate.put(String.valueOf(user.get("user_id")), String.valueOf(user.get("last_login")));
         // Date expireDate = getTokenExpiredDate();
@@ -151,9 +157,11 @@ public class UserService {
         map.put("authority", setUserEmptyRoleName(user.get("role_name")));
         map.put("username", (String) user.get("user_nm"));
         map.put("user_id", String.valueOf(user.get("user_id")));
+        map.put("dept_id", String.valueOf(user.get("dept_cd")));
         map.put("dept_nm", String.valueOf(user.get("dept_nm")));
         map.put("user_email", String.valueOf(user.get("user_email")));
         map.put("last_login", String.valueOf(user.get("last_login")));
+        map.put("role_id", String.valueOf(user.get("role_id")));
 
         sessionManager.lastLoginDate.put(String.valueOf(user.get("user_id")), String.valueOf(user.get("last_login")));
         // Date expireDate = getTokenExpiredDate();
@@ -186,9 +194,11 @@ public class UserService {
         map.put("authority", setUserEmptyRoleName(user.get("role_name")));
         map.put("username", (String) user.get("user_nm"));
         map.put("user_id", String.valueOf(user.get("user_id")));
+        map.put("dept_id", String.valueOf(user.get("dept_cd")));
         map.put("dept_nm", String.valueOf(user.get("dept_nm")));
         map.put("user_email", String.valueOf(user.get("user_email")));
         map.put("last_login", String.valueOf(user.get("last_login")));
+        map.put("role_id", String.valueOf(user.get("role_id")));
 
         sessionManager.lastLoginDate.put(String.valueOf(user.get("user_id")), String.valueOf(user.get("last_login")));
         // Date expireDate = getTokenExpiredDate();
@@ -213,8 +223,17 @@ public class UserService {
             return result;
         }
 
+        // 미승인 유저 조회
+        Map user = (Map) userMapper.getPendingApprovalUsers(user_id);
+
+        if (user != null) {
+            result.put("login_result", "N");
+            result.put("login_result_message", "승인되지 않는 계정입니다.");
+            return result;
+        }
+
         // 사용자 조회
-        Map user = (Map) userMapper.getUserMaster(user_id);
+        user = (Map) userMapper.getApprovalUserMaster(user_id);
 
         // 1. DB에 사용자 정보 없음
         if (user == null) {
@@ -265,6 +284,7 @@ public class UserService {
                 .roleName((String) user.get("role_name"))
                 .name((String) user.get("user_nm"))
                 .userId(String.valueOf(user.get("user_id")))
+                .deptId((String) user.get("dept_cd"))
                 .deptName((String) user.get("dept_nm"))
                 .email((String) user.get("user_email"))
                 .build();
@@ -286,8 +306,38 @@ public class UserService {
     }
 
     // 부서 목록 전체 조회
-    public Object getDeptsByCategory(String word) throws Exception {
-        return userMapper.getAllDepartments(word);
+    public Object getDepartments(String word) throws Exception {
+        return userMapper.getDepartments(word);
+    }
+
+    // 부서 등록
+    public Object deptRegister(Map<String, String> params) throws Exception {
+        return userMapper.deptRegister(params);
+    }
+
+    // 부서 삭제
+    public Object deptDelete(Map<String, String> params) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            int userCount = userMapper.getCheckUserExists(params);
+
+            if(userCount > 0){
+                result.put("register_result", "N");
+                result.put("errorMessage", "해당 조직에 속한 사용자가 존재합니다.");
+                return result;
+            } else {
+                userMapper.deptDelete(params);
+
+                result.put("register_result", "Y");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("register_result", "N");
+            result.put("register_result_message", "부서 삭제중에 실패하였습니다. 관리자에게 문의해주시기 바랍니다.");
+        }
+
+        return result;
     }
 
     // 로그인 이력 저장
@@ -298,12 +348,8 @@ public class UserService {
         param.put("user_id", userInfo.get("user_id").toString());
         param.put("username", userInfo.get("username").toString());
         param.put("user_ip_addr", IpAddressUtil.getClientIp(request));
-
-        //TO-DO : 부서코드가 user 정보에 없어서 수정 필요
-        param.put("dept_id", "-");
+        param.put("dept_id", userInfo.get("dept_id").toString());
         param.put("dept_name", userInfo.get("dept_nm").toString());
-        
-        //TO-DO : 로그인 타입 (0: 로그인 화면 1: SSO), SSO시 변경 필요요 
         param.put("login_type", "0");
 
         return userMapper.insertLoginHistory(param);
@@ -345,6 +391,19 @@ public class UserService {
         return result;
     }
 
+    public Object delete(Map<String, String> params) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            userMapper.delete(params);
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.put("register_result", "N");
+            result.put("register_result_message", "회원 삭제중에 실패하였습니다. 관리자에게 문의해주시기 바랍니다.");
+        }
+
+        return result;
+    }
+
     public Object checkDupUserId(String user_id) throws Exception {
         Map<String, Object> result = new HashMap<>();
         try {
@@ -364,4 +423,15 @@ public class UserService {
 
         return result;
     }
+
+    // roll list 조회
+    public Object getRollList(String role_type) throws Exception {
+        return userMapper.getRollList(role_type);
+    }
+
+    // 부서 정보 조회
+    public Object getDeptInfo(String role_type) throws Exception {
+        return userMapper.getDeptInfo(role_type);
+    }
+    
 }

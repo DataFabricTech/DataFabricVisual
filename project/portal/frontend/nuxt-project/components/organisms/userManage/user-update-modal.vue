@@ -8,7 +8,7 @@
       <div class="mu-dialog-body">
         <table class="mu-formbox">
           <caption>
-              사용자 정보 수정 게시판
+              사용자 정보 수정
           </caption>
           <colgroup>
               <col style="width: 150px" />
@@ -28,20 +28,28 @@
               </td>
             </tr>
             <tr>
-              <th scope="row">부서</th>
+              <th scope="row">조직명</th>
               <td>
-                <input type="text" placeholder="" class="mu-input" title="부서" value="경영지원팀" readonly="readonly" v-model="props.modalParam.userObject.dept_nm" />
+                <input type="text" placeholder="" class="mu-input w220" title="부서" value="경영지원팀" readonly="readonly" v-model="props.modalParam.userObject.dept_nm" />
+                <button type="button" class="mu-btn" @click="onToggleDeptModal" style="margin-left:10px" :disabled="!props.updateFlag">
+                  <span>찾아보기</span>
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <th scope="row">이메일</th>
+              <td>
+                <input type="text" placeholder="" class="mu-input" title="부서" value="" readonly="readonly" v-model="props.modalParam.userObject.user_email" />
               </td>
             </tr>
             <tr>
               <th scope="row">권한</th>
               <td>
-                <!-- mu-selectbox -->
                 <div v-if="props.updateFlag" class="mu-selectbox">
                   <select v-model="props.modalParam.userObject.role_name">
-                    <option value="User">사용자</option>
-                    <option value="Manager">데이터 엔지니어</option>
-                    <option value="Super-Admin">시스템 관리자</option>
+                    <option v-for="role in selectRollList" :key="role.role_id" :value="role.role_id">
+                      {{role.role_name}}
+                    </option>
                   </select>
                 </div>
                 <input v-if="!props.updateFlag" type="text" placeholder="" class="mu-input" readonly="readonly" :value="getKrName(props.modalParam.userObject.role_name)" />
@@ -55,28 +63,42 @@
           <button v-if="props.updateFlag" type="button" class="mu-btn" @click="close"><span>취소</span></button>
           <button v-if="props.updateFlag" type="button" class="mu-btn mu-btn-primary" @click="onClickSaveButton"><span>확인</span></button>
       </div>
-      <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
+
       <div class="mu-dialog-close-btn">
           <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="close"><i class="mu-icon-svg close"></i><span>팝업닫기</span></button>
       </div>
     </div>
+
+    <select-dept-modal
+      :toggle-dept-modal="toggleDeptModal"
+      @onSelect="onSelectDept"
+      @onCloseModal="onToggleDeptModal"
+    />
+
   </div>
 </template>
 
 <script setup lang="ts">
 import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import { successAlert } from "@/components/functional/alert/alert-default";
+import selectDeptModal from "@organisms/metaDataManage/select-department-modal";
 
 const { $ofetch } = useNuxtApp()
-
 const emit = defineEmits(['update:visibleUpdateModal', 'searchMethod'])
 const props = defineProps(['visibleUpdateModal', 'updateFlag', 'modalParam'])
 
+const toggleDeptModal = ref(false);
+const selectRollList = ref();
+
+// 
+onMounted(() => getRollList());
+
+// 
 const close = () => {
   emit('update:visibleUpdateModal', false)
 }
 
-// 저장버튼 클릭 이벤트
+// 
 const onClickSaveButton = async () => {
   const result = await confirmAlert("저장하시겠습니까?");
   if(!result) return;
@@ -84,6 +106,8 @@ const onClickSaveButton = async () => {
   let param = {
       "user_id" : props.modalParam.userObject.user_id,
       "role_name" : props.modalParam.userObject.role_name,
+      "dept_cd" : props.modalParam.userObject.dept_cd,
+      "email" : props.modalParam.userObject.user_email,
   }
   $ofetch('/api/admin/manager/user/update', {
     method: 'POST',
@@ -91,16 +115,45 @@ const onClickSaveButton = async () => {
   })
     .then(async (res) => {
       if(res && !res.errorMessage) {
-        await successAlert('저장되었습니다.');
-        emit('searchMethod'); // 사용자 Tab: 사용자목록조회 함수 호출
-        close(); // 창닫기
+        await successAlert('저장 되었습니다.');
+        emit('searchMethod');
+        close();
       }
     })
 }
 
+// 
+const getRollList = async () => {
+  await $ofetch(`/api/rollList?role_type=0`)
+      .then((res) => {
+        if (res && !res.errorMessage) {
+          selectRollList.value = res.data.filter(role => role.role_type === 0);
+        }
+      })
+      .catch((err) => {
+        console.log(err)
+      });
+}
+
+// 
 const getKrName = (auth) => {
   if (auth == 'Super-Admin') return '시스템 관리자'
   if (auth == 'Manager') return '데이터 엔지니어'
   if (auth == 'User') return '사용자'
 }
+
+// 
+const onToggleDeptModal = () => {
+  if (toggleDeptModal.value) {
+    toggleDeptModal.value = false;
+  } else {
+    toggleDeptModal.value = true;
+  }
+};
+
+// 
+const onSelectDept = (info) => {
+  props.modalParam.userObject.dept_nm = info.dept_nm;
+  props.modalParam.userObject.dept_cd = info.dept_cd;
+};
 </script>

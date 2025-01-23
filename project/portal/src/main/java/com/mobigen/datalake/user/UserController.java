@@ -71,6 +71,12 @@ public class UserController {
     }
 
     @ResponseJsonResult
+    @PostMapping("/delete")
+    public Object delete(@RequestBody Map<String, String> param, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return userService.delete(param);
+    }
+
+    @ResponseJsonResult
     @GetMapping("/user")
     public Object user(@AuthenticationPrincipal User user) {
         return user.getUsername();
@@ -92,8 +98,36 @@ public class UserController {
      */
     @ResponseJsonResult
     @GetMapping("/depts")
-    public Object getDeptsByCategory(@RequestParam("word") String word) throws Exception {
-        return userService.getDeptsByCategory(word);
+    public Object getDepartments(@RequestParam("word") String word) throws Exception {
+        return userService.getDepartments(word);
     }
+
+    // 부서 등록
+    @ResponseJsonResult
+    @PostMapping("/deptRegister")
+    public Object deptRegister(@RequestBody Map<String, String> param) throws Exception {
+        return userService.deptRegister(param);
+    }
+
+    // 부서 삭제
+    @ResponseJsonResult
+    @PostMapping("/deptDelete")
+    public Object deptDelete(@RequestBody Map<String, String> param) throws Exception {
+        return userService.deptDelete(param);
+    }
+
+     // roll list 조회
+     @ResponseJsonResult
+     @GetMapping("/rollList")
+     public Object getRollList(@RequestParam("role_type") String role_type) throws Exception {
+    return userService.getRollList(role_type);
+     }
+
+     // 부서 정보 조회
+     @ResponseJsonResult
+     @GetMapping("/getDeptInfo")
+     public Object getDeptInfo(@RequestParam("dept_id") String dept_id) throws Exception {
+        return userService.getDeptInfo(dept_id);
+     }
 
 }

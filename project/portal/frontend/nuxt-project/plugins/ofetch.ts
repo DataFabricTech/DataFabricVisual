@@ -1,6 +1,8 @@
+import { jwtDecode } from "jwt-decode"
 import { useCookies } from 'vue3-cookies';
 import { defaultAlert, errorAlert } from "@/components/functional/alert/alert-default";
 import { defineNuxtPlugin, navigateTo, useRuntimeConfig } from 'nuxt/app';
+import { useUserStore } from '~/store/user';
 
 export default defineNuxtPlugin((nuxtApp) => {
   const config = useRuntimeConfig()
@@ -9,6 +11,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   const hideLoader = () => { nuxtApp.callHook('page:finish') }
 
   const { cookies } = useCookies()
+  const userStore = useUserStore();
 
   const $ofetch = $fetch.create({
     baseURL: process.env.NODE_ENV === "development" ? "http://localhost:38080/" : "/",
@@ -19,13 +22,28 @@ export default defineNuxtPlugin((nuxtApp) => {
         showLoader()
       }
 
-
-      const xAccessToken = cookies.get('x-access-token')
+      // Token
+      const xAccessToken = cookies.get("x-access-token");
+      const xRefreshToken = cookies.get("x-refresh-token");
 
       if (xAccessToken) {
         // Add Authorization header
         options.headers = options.headers || {}
         options.headers.authorization = `${xAccessToken}`
+      }
+
+      if (xAccessToken && xRefreshToken && !request.includes('/api/menu')) {
+        // Token 만료 시간 계산
+        let xAccessTokenLeftTime = getTokenExp(xAccessToken)
+        let xRefreshTokenLeftTime = getTokenExp(xRefreshToken)
+
+        // 1. Access Token 만료된 경우
+        if (xAccessTokenLeftTime <= 60) {
+          // 1.1. Refresh Token 만료된 경우
+          if (xRefreshTokenLeftTime <= 0) {
+            clearSession('Y')
+          }
+        }
       }
     },
     onRequestError({ request, options, error }) {
@@ -37,6 +55,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         hideLoader()
         console.log("onResponse")
       }
+
       // Process the response data
       let data = response._data;
 
@@ -48,13 +67,40 @@ export default defineNuxtPlugin((nuxtApp) => {
         if(errorMessage === 'expired token') {
           cookies.remove('x-access-token')
           cookies.remove('x-refresh-token')
-          defaultAlert("로그인이 만료 되었습니다.", {
-            confirm: async () => {
-              await new Promise((response) => setTimeout(response, 100));
-              return document.location.href = '/logoutNotice'
-            }
-          });
+          navigateTo('/?err=expired');
+        }
+      } else {
+        if (data.hasOwnProperty("result")
+            && !request.includes('/api/authenticate') 
+            && !request.includes('/api/regenerateRefreshToken') 
+            && !request.includes('/api/regenerateAccessToken') 
+            && !request.includes('/api/menu')
+            && !request.includes('/api/heartbeatToken')) {
 
+          let errorMessage = data.errorMessage;
+          if (errorMessage === null || errorMessage === "") {
+            let currentUserId = "";
+            
+            if (userStore.getUser) {
+              if (userStore.getUser.user_id && userStore.getUser.user_id != "") {
+                currentUserId = userStore.getUser.user_id
+
+                // Refresh Token 갱신 시도
+                regenerateRefreshToken(currentUserId).then(() => {
+                }).catch(() => {
+                  // 갱신 실패 시 로그아웃 처리
+                  navigateTo('/?err=expired');
+                });
+
+                // Acess Token 갱신 시도
+                regenerateAccessToken(currentUserId).then(() => {
+                }).catch(() => {
+                  // 갱신 실패 시 로그아웃 처리
+                  navigateTo('/?err=expired');
+                });
+              }
+            }
+          }
         }
       }
     },
@@ -71,6 +117,93 @@ export default defineNuxtPlugin((nuxtApp) => {
       }
     }
   })
+
+  // 토큰(refresh token) 갱신 처리 함수
+  const regenerateRefreshToken = async (id: string) => {
+    const refreshToken = cookies.get('x-refresh-token');
+    const body = {
+      username: id,
+    }
+    if (refreshToken) {
+      try {
+        const response = await $ofetch("/api/regenerateRefreshToken", {
+          method: 'POST',
+          body: body
+        });
+
+        if(response){
+          cookies.set('x-refresh-token', response.data);
+          return true;
+        }
+      } catch (error) {
+        console.error("Failed to regenerate refresh tokens: ", error);
+        throw new Error("Refresh token regeneration failed");
+      }
+    } else {
+      throw new Error("No refresh token available");
+    }
+  }
+
+  // 토큰(acceess token) 갱신 처리 함수
+  const regenerateAccessToken = async (id: string) => {
+    const accessToken = cookies.get('x-access-token');
+    const body = {
+      username: id,
+    }
+    if (accessToken) {
+      try {
+        const response = await $ofetch("/api/regenerateAccessToken", {
+          method: 'POST',
+          body: body
+        });
+
+        if(response){
+          cookies.set('x-access-token', response.data);
+          return true;
+        }
+      } catch (error) {
+        console.error("Failed to regenerate access tokens: ", error);
+        throw new Error("Access token regeneration failed");
+      }
+    } else {
+      throw new Error("No refresh token available");
+    }
+  }
+
+  // // Token 만료시간 조회
+  const getTokenExp = (token: string) => {
+    let decodedToken = jwtDecode(token);
+
+    const now = Math.floor(new Date().getTime() / 1000);
+    let tokenLeftTime = decodedToken.exp - now
+
+    return tokenLeftTime
+  }
+
+  // 세션 초기화
+  const clearSession = async (isTokenExpireYn) => {
+    if (cookies.keys().includes('x-access-token')) cookies.remove('x-access-token');
+    if (cookies.keys().includes('x-refresh-token')) cookies.remove('x-refresh-token');
+    let user = {
+      user_id: "",
+      username: "",
+      authority: "",
+      dept_id: "",
+      dept_nm: "",
+      last_login: "",
+      user_email: "",
+      userMenu: [],
+      adminMenu: [],
+    };
+    userStore.setUser(user);
+    
+    if (isTokenExpireYn === 'Y') {
+      return navigateTo('/?err=expired')
+    }else{
+      return navigateTo('/')
+    }
+  }
+
   // Expose to useNuxtApp().$ofetch
   return {
     provide: {

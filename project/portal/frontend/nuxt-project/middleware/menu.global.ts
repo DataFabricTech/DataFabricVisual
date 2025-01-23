@@ -9,14 +9,41 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const { cookies } = useCookies()
   const userStore = useUserStore()
 
+  // 파라미터를 제거한 경로를 가져오는 함수
+  const getPathWithoutParams = (path) => {
+    const url = new URL(path, window.location.origin); 
+    return url.pathname.replace(/\/$/, '');
+  };
+
+  // 권한 체크
+  const searchMenuPath = (rollMenuList : List) => {
+    let isMenuExists = false;
+    
+    for (const menu of rollMenuList) {
+      if (getPathWithoutParams(menu.menu_path) === getPathWithoutParams(to.path)) {
+        isMenuExists = true;
+        return true;
+      }
+
+      if (menu.child && menu.child.length > 0) {
+        if (searchMenuPath(menu.child)) {
+          return true;
+        }
+      }
+    }
+
+    return isMenuExists;
+  };
+
   // 세션 초기화
-  const clearSession = async () => {
+  const clearSession = async (isTokenExpireYn) => {
     if (cookies.keys().includes('x-access-token')) cookies.remove('x-access-token');
     if (cookies.keys().includes('x-refresh-token')) cookies.remove('x-refresh-token');
     let user = {
       user_id: "",
       username: "",
       authority: "",
+      dept_id: "",
       dept_nm: "",
       last_login: "",
       user_email: "",
@@ -24,7 +51,12 @@ export default defineNuxtRouteMiddleware((to, from) => {
       adminMenu: [],
     };
     userStore.setUser(user);
-    return navigateTo('/')
+
+    if (isTokenExpireYn === 'Y') {
+      return navigateTo('/?err=expired')
+    }else{
+      return navigateTo('/')
+    }
   }
 
   // // Token 만료시간 조회
@@ -71,7 +103,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
       // 메뉴 정보가 없는 경우
       if (!result || result.length == 0) {
-        await defaultAlert('로그아웃되었습니다. 다시 로그인 해주시기 바랍니다.')
+        await defaultAlert('로그아웃 되었습니다. 다시 로그인 해주시기 바랍니다.')
         clearSession()
       }
 
@@ -88,8 +120,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
         if (xAccessTokenLeftTime <= 60) {
           // 1.1. Refresh Token 만료된 경우
           if (xRefreshTokenLeftTime <= 0) {
-            await defaultAlert("장시간 활동이 없어 자동으로 로그아웃되었습니다.");
-            clearSession()
+            // await defaultAlert("장시간 활동이 없어 자동으로 로그아웃되었습니다.");
+            clearSession('Y')
           }
           // 1.2. Refresh Token 만료되지 않은 경우
           else {
@@ -125,18 +157,22 @@ export default defineNuxtRouteMiddleware((to, from) => {
         let decodedToken = jwtDecode(cookies.get('x-access-token'));
 
         // 권한별 메뉴 정보 설정
-        const userMenu = result.filter((a: { authority: string; menu_visible: boolean; }) => a.authority == "User" && a.menu_visible);
-        const adminMenu = result.filter((a: { authority: string; menu_visible: boolean; }) => (a.authority == "Manager" || a.authority == "Admin") && a.menu_visible);
+        const userMenu = result[0].rollMenuList.filter((a: { authority: string; menu_visible: boolean; }) => a.authority == "User" && a.menu_visible);
+        const adminMenu = result[0].rollMenuList.filter((a: { authority: string; menu_visible: boolean; }) => (a.authority == "Manager" || a.authority == "Admin") && a.menu_visible);
+        
+        let decodedRollMenuList = result[1].decodeRollMenuList;
 
         let user = {
           user_id: decodedToken.user_id,
           username: decodedToken.username,
           authority: decodedToken.authority,
+          dept_id: decodedToken.dept_id,
           dept_nm: decodedToken.dept_nm ? (decodedToken.dept_nm != "null" ? decodedToken.dept_nm : "부서없음") : "부서없음",
           last_login: decodedToken.last_login,
           user_email: decodedToken.user_email,
           userMenu: userMenu,
           adminMenu: adminMenu,
+          rollMenu: decodedRollMenuList
         };
 
         userStore.setUser(user);
@@ -156,37 +192,33 @@ export default defineNuxtRouteMiddleware((to, from) => {
   userStore.setFromPath(from.path) // 이전경로 저장
   // 라우팅 시 권한 확인 로직
   if (to.path.startsWith('/admin')) {
-    if (userStore.getUser.authority != 'Super-Admin' && userStore.getUser.authority != 'Manager') {
+    if (userStore.getUser.authority != 'Super-Admin' && userStore.getUser.authority != 'Manager' && userStore.getUser.authority != 'Admin') {
       errorAlert('권한이 없습니다.')
       return navigateTo('/main')
     }
   }
-
+  
   if (to.path === '/') {
     if(cookies.get('x-access-token') && cookies.get('x-refresh-token')) {
       return navigateTo('/main')
     } else {
       clearSession()
     }
+  } else if (to.path === '/main') {
+    // cookies.set('redirected', 'false', { path: '/' });  // 리디렉션을 기록
+    getMenu()
   } else if (to.path === '/error') {
     console.log('에러 페이지')
   } else {
-    getMenu()
-    // if(userStore.getTimeoutTimer != null) {
-    //   clearTimeout(userStore.getTimeoutTimer)
-    // }
-    // let timeoutTimer = null
-    // const heartBeatFunction = function() {
-    //   if(cookies.get('x-access-token') && cookies.get('x-refresh-token')) {
-    //     $ofetch("/api/heartbeatToken").then((res) => {
-    //       timeoutTimer = setTimeout(heartBeatFunction, 2000);
-    //       userStore.setTimeoutTimer(timeoutTimer)
-    //     })
-    //   }
-    // }
-    // timeoutTimer = setTimeout(heartBeatFunction, 100);
-    // userStore.setTimeoutTimer(timeoutTimer)
-
-    // setTimeout(getMenu, 100);
+    if(userStore._user.rollMenu && userStore._user.rollMenu != ""){
+      let decodedRollMenuList = jwtDecode(userStore._user.rollMenu);
+      
+      if(!searchMenuPath(decodedRollMenuList.rollMenuList)){
+        errorAlert('잘못된 접근입니다.');
+        // cookies.set('redirected', 'true', { path: '/' });  // 리디렉션을 기록
+        return navigateTo('/main')
+      }
+    }
   }
+
 })

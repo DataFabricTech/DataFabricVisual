@@ -23,8 +23,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @RequestMapping("/api")
@@ -98,5 +100,19 @@ public class MenuController {
     public Object getMenuHistory() throws Exception {
         return menuService.getMenuHistory();
     }
+
+    @ResponseJsonResult
+    @GetMapping("/rollMenu")
+    public Object getRollMenu(@RequestParam("rollType") String rollType) throws Exception {
+        return menuService.getRollMenu(rollType);
+    }
+
+    @ResponseJsonResult
+    @PostMapping("/rollMenuSave")
+    @ResponseBody
+    public Object rollMenuSave(@RequestBody Map<String, Object> param) throws Exception {
+        return menuService.rollMenuSave(param);
+    }
+    
 
 }

@@ -14,4 +14,5 @@ public interface AdminMapper {
     List getUserListWithRoleName(Map<String, Object> param) throws Exception;
     Integer getUserListTotalWithRoleName(Map<String, Object> param) throws Exception;
     Integer UnlockLoginDeactivation(Map<String, Object> param) throws Exception;    
+    Integer initPassword(Map<String, String> param) throws Exception;
 }

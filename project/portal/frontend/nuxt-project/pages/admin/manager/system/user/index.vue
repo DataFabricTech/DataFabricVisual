@@ -1,213 +1,309 @@
 <template>
   <div>
     <div class="inner">
-      <div class="board-list-wrap">
-        <div class="mu-heading">
-          <!-- board-list-search -->
-          <div class="board-list-search">
-            <form action="">
-              <fieldset>
-                <legend>게시물검색</legend>
-                <div class="inner-search">
-                  <!-- mu-selectbox -->
-                  <div class="mu-selectbox w160">
-                    <select v-model="searchType">
-                      <option value="all">전체</option>
-                      <option value="user_nm">이름</option>
-                      <option value="user_id">사번</option>
-                      <option value="dept_cd">부서</option>
-                      <option value="role_name">권한</option>
-                    </select>
-                  </div>
-                  <div class="mu-input-icon">
-                    <input type="text" class="mu-input" placeholder="Search" title="검색어입력"
-                        v-model="searchWord" @keypress.enter.prevent='getUser(1)'/>
-                    <button type="button" class="mu-btn mu-btn-sch" @click="getUser(1)">
-                      <i class="mu-icon-svg search"></i>
-                      <span>검색</span>
-                    </button>
-                  </div>
-                </div>
-              </fieldset>
-            </form>
-          </div>
-
-          <!-- 사용자정보수정 -->
-          <user-update-modal
-            v-model:visibleUpdateModal="visibleUpdateModal"
-            v-model:updateFlag="updateFlag"
-            v-model:modalParam="modalParam"
-            @searchMethod="getUser" />
-
-          <page-size
-            v-model:pageSize="pagingObj.limit"
-            @searchMethod="getUser"
-          />
-
-        </div>
-        <div class="board-list">
-          <table class="mu-grid">
-            <colgroup>
-              <col style="width:60px" />
-              <col style="width:150px" />
-              <col style="width:140px" />
-              <col style="width:auto" span="2" />
-              <col style="width:100px" />
-            </colgroup>
-            <thead>
-              <tr>
-                <th scope="col">No.</th>
-                <th scope="col">이름</th>
-                <th scope="col">사번</th>
-                <th scope="col">부서</th>
-                <th scope="col">권한</th>
-                <th scope="col">관리</th>
-                <th scope="col">최근 로그인 시간</th>
-                <th scope="col">장기 미접속 해제</th>
-              </tr>
-            </thead>
-              <tbody>
-                <tr v-for="(item, index) in userList" :key="index">
-                  <td> {{ ((index + 1) + ((pagingObj.currentPage - 1) * pagingObj.limit)) }}</td>
-                  <td><a @click="onClickUserUpdateButton(item.user_id, false)">{{ item.user_nm }}</a></td><!-- 클릭 시, 사용자 정보 확인 팝업창 출력 -->
-                  <td>{{ item.user_id }}</td>
-                  <td>{{ item.dept_nm ? item.dept_nm ? item.dept_nm : item.dept_cd : '-' }}</td>
-                  <td>{{ getKrName(item.role_name) }}</td>
-                  <td>
-                    <button type="button" class="mu-btn mu-btn-sm" v-on:click="onClickUserUpdateButton(item.user_id, true)"><span>수정</span></button>
-                  </td>
-                  <td v-html="getWrapperDatetimeStr(item.last_login)"></td>
-                  <td>
-                    <button type="button" class="mu-btn mu-btn-sm" v-if="item.longterm_login_yn==='Y'" @click="onClickUnlockLoginDeactivation(item)">
-                      <span>해제</span>
-                    </button>
-                  </td>
-                </tr>
-                <tr v-if="userList.length === 0">
-                  <td colspan="8">
-                    <p class="nodata">사용자가 존재하지 않습니다.</p>
-                  </td>
-                </tr>
-              </tbody>
-          </table>
-        </div>
-
-        <pagination
-          :paging="pagingObj"
-          @onClickPage="onClickPage"
+      <div class="mu-section">
+        <dept-data-tooltip
+          :tooltip-obj="tooltipObj"
+          :selected-category="selectedCategory"
+          @onClickMenu="onClickDeptManageMenu"
         />
+        
+        <left-dept-list
+        @onClickDeptRegistClick="onClickDeptRegistClick"
+        @onClickToggleItem="onClickToggleItem"
+        @onClickMenuItem="onClickMenuItem"
+        />
+
+        <div data-v-10a51f6f id="divider" @mousedown="mouseDown($event)"></div>
+
+        <div class="page-content">
+          <div class="board-list-wrap">
+            <user-list-manage
+            :tooltip-obj="tooltipObj"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
+
+  <manage-dept-updateModal
+    v-model:modalParam="modalParam"
+    v-model:visibleDeptManageModal="visibleDeptManageModal"
+    v-model:visibleDeptManageButton="visibleDeptManageButton"
+    @onCloseModal="onClickDeptManageButton"
+    />
 </template>
 
 <script setup lang="ts">
-import PageSize from '@/pages/admin/manager/system/user/page-size';
-import Pagination from '@functional/pagination/pagination';
-import UserUpdateModal from "@organisms/userManage/user-update-modal";
-import { confirmAlert } from "@functional/alert/alert-default";
-import { successAlert } from "@/components/functional/alert/alert-default";
+import { useUserStore } from "@store/user.ts";
+import { useCategoryStore } from "@store/category.ts";
+import { useEventStore } from "@store/event.ts";
+import LeftDeptList from "@functional/dept/left-dept-list.vue";
+import ObjectUtils from "@utils/ObjectUtils";
+import { useNuxtApp, useRoute, useRouter, useRuntimeConfig } from "nuxt/app";
+import { onMounted, onUnmounted, ref } from "vue";
+import portalConfirm from "@functional/confirm/portal-confirm";
+import { confirmAlert, errorAlert, successAlert } from "@functional/alert/alert-default";
+import { $R, isEmpties } from "@composables/ramda";
+import { storeToRefs } from "pinia";
+import {useApi} from "@composables/useApi";
+import {useConstants} from "@composables/useConstants";
+
+import userListManage from "@/pages/admin/manager/system/user/user-list-manage";
+
+import deptDataTooltip from "@functional/dept/dept-data-tooltip";
+import manageDeptUpdateModal from "@functional/dept/manage-dept-updateModal.vue";
 
 definePageMeta({
   name: 'AdminManagerUser',
   layout: 'admin'
 })
 
-const { $ofetch } = useNuxtApp()
+const { $ofetch } = useNuxtApp();
+const {setEventLog, setMetaSync} = useApi()
+const { CONSTANT } = useConstants();
+const runConfig = useRuntimeConfig().public;
 
-// 페이징 처리 제어
-const pagingObj = ref({
-  total: 0,       // 전체 데이터 건수
-  limit: 10,      // 한 페이지에 보여줄 데이터 건수
-  block: 10,      // 한 화면에서 보여줄 페이지 수
-  currentPage: 1, // 현재 페이지 번호
-})
-const searchType = ref("all")
-const searchWord = ref("")
-const userList = ref([])
-const visibleUpdateModal = ref(false)
-const updateFlag = ref(true) // 사용자정보팝업 수정여부
+// route
+const route = useRoute();
+const router = useRouter();
+
+const userStore = useUserStore();
+const user = userStore.getUser;
+const fromPath = userStore.getFromPath;
+const params = userStore.getParams;
+
+const categoryStore = useCategoryStore();
+const getOriginalList = categoryStore.getOriginalList;
+const selectedId = categoryStore.getSelectedItemId;
+
+const eventStore = useEventStore();
+
+const catSelectedData = ref<any>(null);
+
+const visibleDeptManageModal = ref(false);
+const visibleDeptManageButton = ref(false);
 const modalParam = ref({})
 
-onMounted(() => {
-  getUser();
-})
 
-// 사용자 정보 목록 조회
-const getUser = async (offset = 1) =>{
-  try {
-    await $ofetch(`/api/admin/manager/user/list?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchType.value}&searchWord=${searchWord.value}`)
-    .then((res) => {
-      if (res && !res.errorMessage) {
-        pagingObj.value = {
-          ...pagingObj.value,
-          total: res.data.total,
-          currentPage: offset,
+// 
+const tooltipObj = ref<TooltipObj>({
+  display: false,
+  type: "",
+  e: {},
+  targets: null
+});
+
+interface TooltipObj {
+  display: boolean;
+  type: string;
+  e: Event | {};
+  targets: any;
+}
+
+interface SelectedCategory {
+  id: string;
+  parent_id: string;
+  parent_nm: string;
+  level: string;
+  name: string;
+  description: string;
+  dept_id: string;
+  dept_nm: string;
+  file_id: string;
+  ord_no: number;
+}
+
+// 
+onMounted(() => {
+  eventStore.on("onToggleMetaDataTooltip", onToggleTooltip); // 툴팁 제어 핸들러
+
+  document.addEventListener("click", (e) => onToggleTooltip(e));
+
+  eventStore.on("onCategorySelect", onCategorySelect);
+});
+
+//
+onUnmounted(() => {
+  eventStore.off("onToggleMetaDataTooltip", onToggleTooltip);
+  eventStore.off("onCategorySelect", onCategorySelect);
+
+  document.removeEventListener("click", onToggleTooltip);
+});
+
+// 
+const onCategorySelect = () => {
+  catSelectedData.value = selectedData.value;
+};
+
+// 
+const mouseDown = (e: MouseEvent) => {
+  if (leftSide.value) {
+    x.value = e.clientX;
+
+    leftWidth.value = leftSide.value.getBoundingClientRect().width;
+
+    document.addEventListener("mousemove", mouseDragging);
+    document.addEventListener("mouseup", mouseUp);
+  }
+};
+
+// 
+const onClickMenuItem = async (item: any = null) => {
+};
+
+// 
+const selectedCategory = ref<SelectedCategory>({
+  ord_no: 0,
+  id: "",
+  parent_id: "",
+  parent_nm: "",
+  name: "",
+  description: "전체 부서",
+  level: "",
+  dept_id: "",
+  dept_nm: ""
+});
+
+// 
+const onToggleTooltip = (e: Event, item: any = null, type: string = "") => {
+  if (item && !tooltipObj.value.display) {
+    tooltipObj.value.display = true;
+    tooltipObj.value.type = type;
+    tooltipObj.value.e = e;
+    tooltipObj.value.targets = item;
+
+    if (type === "more") {
+      tooltipObj.value.targets = item;
+    }
+  } else if (tooltipObj.value.display) {
+    tooltipObj.value.display = false;
+    tooltipObj.value.type = "";
+    tooltipObj.value.e = {};
+    tooltipObj.value.targets = null;
+  }
+};
+
+//
+const onClickToggleItem = (item) => {
+  selectedCategory.value = {
+    ord_no: item.ordNo,
+    id: item.id,
+    parent_id: item.parentId,
+    parent_nm: item.parentNm,
+    name: item.name,
+    description: item.description,
+    level: item.deptLevel,
+    dept_id: item.id,
+    dept_nm: item.name,
+  };
+}
+
+// 
+const onClickDeptManageMenu = (type) => {
+  if (type === "delete") {
+    onDeleteCategory(selectedCategory.value);
+  } else if (type === "insert") {
+    initSelectedCategory();
+
+    onToggleManageModal(type);
+  } else {
+    onToggleManageModal(type);
+  }
+};
+
+// 
+const onDeleteCategory = async (target: any) => {
+  const confirm = await portalConfirm({
+    message: "선택한 <strong>*조직</strong>을 영구적으로 삭제합니다.<br>정말 삭제 하시겠습니까?"
+  });
+
+  if (confirm) {
+    let param = { dept_id : selectedCategory.value.id };
+
+    $ofetch('/api/deptDelete', {
+      method: 'POST',
+      body: param
+    })
+    .then(async (res) => {
+      if (res.data.errorMessage && res.data.errorMessage != "") {
+        await errorAlert(res.data.errorMessage);
+      } else {
+        await successAlert('저장되었습니다.');
+        eventStore.emit('departmentRegistered');
+        selectedCategory.value = {
+          ord_no: 0,
+          id: "",
+          parent_id: "",
+          parent_nm: "",
+          name: "",
+          description: "전체 부서",
+          level: "",
+          dept_id: "",
+          dept_nm: ""
         };
-        userList.value = res.data.list;
       }
     })
-    .catch((err) => {
-      console.log(err)
-    });
-
-
-  } catch (error) {
-    console.log(error);
   }
+};
+
+// 
+const onToggleManageModal = (type: string | null, targets: any = null) => {
+  let target = null;
+  const toggle = type;
+
+  if (!toggle) {
+    switch (type) {
+      case "add":
+        break;
+      case "insert":
+      case "update":
+        target = selectedCategory.value;
+        break;
+      case "map":
+        target = targets;
+        break;
+    }
+  }
+
+  onClickDeptManageButton();
+};
+
+//
+const onClickDeptRegistClick = () => {
+  initSelectedCategory();
+
+  onClickDeptManageButton();
 }
 
-// 수정 버튼 클릭 이벤트
-const onClickUserUpdateButton = async (user_id, flag) => {
+//
+const initSelectedCategory = () => {
+  selectedCategory.value = {
+          ord_no: 0,
+          id: "",
+          parent_id: "",
+          parent_nm: "",
+          name: "",
+          description: "",
+          level: "",
+          dept_id: "",
+          dept_nm: ""
+        };
+}
+
+// 
+const onClickDeptManageButton = () => {
   try {
-    const userListIndex = userList.value.findIndex(v => v.user_id == user_id)
+    visibleDeptManageModal.value = !visibleDeptManageModal.value;
+    visibleDeptManageButton.value = true;
+
     modalParam.value = {
-      userObject : {...userList.value[userListIndex]},
-    }
-    updateFlag.value = flag;
-    visibleUpdateModal.value = !visibleUpdateModal.value;
+        userObject : {...selectedCategory.value},
+      }
   } catch (error) {
     console.log(error);
   }
 }
 
-// 페이지 번호 클릭 이벤트 핸들러
-const onClickPage = (page) => {
-  getUser(page);
-}
-
-const getKrName = (auth) => {
-  if (auth == 'Super-Admin') return '시스템 관리자'
-  if (auth == 'Manager') return '데이터 엔지니어'
-  if (auth == 'User') return '사용자'
-}
-
-const onClickUnlockLoginDeactivation = async (user) => {
-  try{
-
-    if (await confirmAlert(`${user.user_nm} 계정에 대한 장기 미접속 해제를 하시겠습니까?`)) {
-      $ofetch('/api/admin/manager/user/UnlockLoginDeactivation', {
-        method: 'POST',
-        body: user
-      })
-      .then(async (res) => {
-        if(res && !res.errorMessage) {
-          await successAlert('해제 되었습니다.');
-          getUser();
-        }
-      })
-    }
-  }catch (error){
-    console.log(error);
-  }
-}
-
-const getWrapperDatetimeStr = (datetime:string) => {
-  if(datetime) return datetime.replace(/ /g, '<br>');
-  else return '';
-}
 </script>
-<style>
-.admin-wrapper .mu-grid th {width: 200px;}
-.admin-wrapper .mu-grid td {width: 200px;}
-</style>

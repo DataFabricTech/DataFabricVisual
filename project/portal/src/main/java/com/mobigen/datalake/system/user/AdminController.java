@@ -35,9 +35,10 @@ public class AdminController {
      */
     @ResponseJsonResult
     @GetMapping("/user/list")
-    public Object getUserList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord) throws Exception {
+    public Object getUserList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("userType") String userType) throws Exception {
         Map<String, Object> param = new HashMap<>();
         param.put("searchType", searchType);
+        param.put("userType", userType);
 
         int total = 0;
         List list = new ArrayList<Map>();
@@ -122,5 +123,18 @@ public class AdminController {
     @ResponseBody
     public Object unlockLoginDeactivation(@RequestBody Map<String, Object> param, HttpServletRequest request) throws Exception {
         return adminService.unlockLoginDeactivation(param, request);
+    }
+
+    /**
+     * 패스워드 초기화
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PostMapping("/user/initPassword")
+    @ResponseBody
+    public Object initPassword(@RequestBody Map<String, Object> param, HttpServletRequest request) throws Exception {
+        return adminService.initPassword(param, request);
     }
 }
