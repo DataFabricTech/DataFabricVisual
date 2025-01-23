@@ -8,6 +8,24 @@
           </NuxtLink>
         </h1>
         <div class="gnb-area" v-if="user">
+          <nav class="nav">
+            <ul>
+              <li v-for="(item, index) in user.userMenu"
+                @mouseover="addActive(index, item)" @mouseout="removeActive()"
+                :class="tab && item.title === tab.currentPathDepth1 ? 'current' + (activeIndex === index ? ' active' : '') : (activeIndex === index ? ' active' : '')"
+                :key="index">
+                <NuxtLink @focus="isLnbOpen = true" :to="getFirstDepthHref(item)">{{ item.title }}</NuxtLink>
+                <ul>
+                  <li v-for="(subItem, subIndex) in item.child" :key="subIndex"
+                    :class="tab && subItem.menu_path === tab.currentPath ? 'current' : ''">
+                    <NuxtLink :to='getSubDepthHref(subItem)' v-if="subItem.menu_visible">
+                      {{ subItem.menu_name }}
+                    </NuxtLink>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </nav>
           <ul class="top-menu">
             <li>
               <a @click="goToMyCatalog()">&nbsp;&nbsp;<span>{{ user.username }}</span> 님&nbsp;</a>
