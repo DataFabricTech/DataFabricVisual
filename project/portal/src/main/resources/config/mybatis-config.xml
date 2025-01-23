@@ -13,6 +13,8 @@
         <setting name="safeRowBoundsEnabled" value="false" />
         <setting name="localCacheScope" value="SESSION" />
         <setting name="jdbcTypeForNull" value="OTHER" />
+        <setting name="callSettersOnNulls" value="true" /> <!-- column 단위로 null값 반환하도록 설정-->
+        <setting name="returnInstanceForEmptyRow" value="true" /> <!-- row가 모두 null값이여도 반환하도록 설정 -->
     </settings>
     <typeAliases>
         <typeAlias alias="CamelListMap" type="com.mobigen.framework.utility.CamelListMap" />
