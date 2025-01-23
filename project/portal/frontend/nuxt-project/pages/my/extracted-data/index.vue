@@ -68,6 +68,7 @@
                 <col style="width: 90px" />
                 <col style="width: 180px" />
                 <col style="width: 180px" />
+                <col style="width: 180px" />
                 <col style="width: 110px" />
                 <col style="width: 110px" />
               </colgroup>
@@ -76,8 +77,9 @@
                 <th scope="col">번호</th>
                 <th scope="col">데이터명</th>
                 <th scope="col">추출방법</th>
-                <th scope="col">추출 일시</th>
+                <th scope="col">추출일시</th>
                 <th scope="col">완료일시</th>
+                <th scope="col">만료일</th>
                 <th scope="col">파일 다운로드</th>
                 <th scope="col">상태</th>
               </tr>
@@ -95,8 +97,9 @@
                   <td>{{ getDownloadType(item.download_type) }}</td>
                   <td>{{ $yyyyMMddHHmmSS(item.download_date) }}</td>
                   <td>{{ $yyyyMMddHHmmSS(item.end_time) }}</td>
+                  <td>{{ $yyyyMMddHHmmSS(item.download_limit) }}</td>
                   <td v-if="item.status && item.status == 3">
-                    <button type="button" class="mu-btn mu-btn-sm mu-icon-svg download" @click="downloadBigFile(item)">
+                    <button type="button" class="mu-btn mu-btn-sm mu-icon-svg download" @click="downloadBigFile(item.share_url)">
                       <span class="blind">다운로드</span>
                     </button>
                   </td>
@@ -105,7 +108,7 @@
 
               </tr>
               <tr v-if="postList.length === 0">
-                <td colspan="7">
+                <td colspan="8">
                   <p class="nodata">추출 데이터가 존재하지 않습니다.</p>
                 </td>
               </tr>
