@@ -1,7 +1,7 @@
 <template>
   <div class="mu-col mu-col-4">
     <div class="mu-heading">
-      <h4>추출 데이터</h4>
+      <h4>데이터 추출 내역</h4>
       <div class="mu-item-group">
         <button type="button" title="더보기" class="mu-btn mu-btn-round mu-btn-icon-only"
           @click="goToExtractData()"><i class="mu-icon-svg add"></i>
@@ -36,22 +36,14 @@ import { computed, ComputedRef } from "vue";
 const router = useRouter();
 const props = defineProps(["dataList_s"]);
 
-interface MyExtractedData {
-  conditional: string;
+interface MyAllExtractedData {
+  rownum: number;
+  meta_name: string;
   description: string;
   download_date: string;
-  download_id: number;
-  download_type: number;
-  meta_id: string;
-  meta_name: string;
-  qualified_name: string;
-  rownum: number;
-  meta_type: string;
-  user_id: string;
-  user_nm: string;
 }
 
-const dataList: ComputedRef<Array<MyExtractedData>> = computed(() => (props.dataList_s.list ? props.dataList_s.list : []));
+const dataList: ComputedRef<Array<MyAllExtractedData>> = computed(() => (props.dataList_s.list ? props.dataList_s.list : []));
 const total: ComputedRef<number> = computed(() => (props.dataList_s.total ? props.dataList_s.total : 0));
 
 const formatDate = (value: string | number | Date): string => {

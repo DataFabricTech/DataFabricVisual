@@ -18,16 +18,16 @@
               : '',
           ]"
         >
-          <div class="contents-top" v-if="userStore.getTab.currentPath !== '/main'">
+          <div :class="!userStore.getIsDetailBannerVisible ? 'contents-top' : 'contents-top no-image'" v-if="userStore.getTab.currentPath !== '/main'">
             <div class="breadcrumbs-wrap">
               <div class="breadcrumbs">
                 <ol class="mu-path">
                   <li class="home"><a href="">HOME</a></li>
                   <li>
-                    <a @click="goToCurrentPathDepth()">{{ userStore.getTab.currentPathDepth1 }}</a>
+                    <a :class="!userStore.getIsDetailBannerVisible ? '' : 'font-grey-color'" @click="goToCurrentPathDepth()">{{ userStore.getTab.currentPathDepth1 }}</a>
                   </li>
                   <li>
-                    <a @click="goToCurrentPathDepth()">{{ userStore.getTab.currentPathDepth2 }}</a>
+                    <a :class="!userStore.getIsDetailBannerVisible ? '' : 'font-grey-color'" @click="goToCurrentPathDepth()">{{ userStore.getTab.currentPathDepth2 }}</a>
                   </li>
                 </ol>
               </div>
@@ -101,3 +101,9 @@ const checkCurrentPath = (): boolean => {
 
 const goToCurrentPathDepth = () => {}
 </script>
+<style scoped>
+.wrapper-sub .contents-wrap .contents-top.no-image {background:unset;}
+.font-grey-color {
+  color: #95969c
+}
+</style>

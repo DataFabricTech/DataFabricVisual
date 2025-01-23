@@ -190,6 +190,14 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
   // 실행 코드 시작 부분
   userStore.setFromPath(from.path) // 이전경로 저장
+  // 공지사항, 데이터 요청 상세페이지의 배너 배경 제거 flag
+
+  if (to.path.endsWith('/detail')) {
+    userStore.setIsDetailBannerVisible(true)
+  } else {
+    userStore.setIsDetailBannerVisible(false)
+  }
+
   // 라우팅 시 권한 확인 로직
   if (to.path.startsWith('/admin')) {
     if (userStore.getUser.authority != 'Super-Admin' && userStore.getUser.authority != 'Manager' && userStore.getUser.authority != 'Admin') {

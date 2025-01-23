@@ -17,8 +17,12 @@ public interface MyCatalogMapper {
 
     List<Map<String, Object>> getSynonymDeleteRequestList(Map<String, String> param);
 
+    List<Map<String,String>> getAllExtractedDataList(Map<String, String> param);
+    List<Map<String,String>> getExtractedBigDataList(Map<String, String> param);
     List<Map<String,String>> getExtractedDataList(Map<String, String> param);
 
+    Integer getAllExtractedDataListCount(Map<String, String> param);
+    Integer getExtractedBigDataListCount(Map<String, String> param);
     Integer getExtractedDataListCount(Map<String, String> param);
 
     List<Map<String,String>> getFavoriteDataList(Map<String, String> param);

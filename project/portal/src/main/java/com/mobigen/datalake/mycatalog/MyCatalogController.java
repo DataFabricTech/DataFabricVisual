@@ -101,10 +101,37 @@ public class MyCatalogController {
      * @throws Exception
      */
     @ResponseJsonResult
+    @PostMapping("/myCatalog/myAllExtractedDataList")
+    public Object PostMyAllExtractedDataList(@RequestBody Map<String, String> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        Map<String, String> param = new HashMap<>();
+        param.put("user_id", user.get("user_id").toString());
+        param.put("searchWord", params.get("searchWord"));
+        param.put("limit", String.valueOf(params.get("limit")));
+        param.put("offset", String.valueOf(Integer.parseInt(params.get("limit")) * (Integer.parseInt(params.get("offset")) - 1)));
+
+        int total = myCatalogService.getAllExtractedDataListCount(param);
+        
+        List<Map<String, String>> list = myCatalogService.getAllExtractedDataList(param);
+        Map resultMap = new HashMap<>();
+        resultMap.put("list", list);
+        resultMap.put("total", total);
+
+        return resultMap;
+    }
+
+    /**
+     * My 추출 데이터 목록 조회
+     * @param param                 조회 정보
+     * @return                      My 추출 데이터 목록
+     * @throws Exception
+     */
+    @ResponseJsonResult
     @PostMapping("/myCatalog/myExtractedDataList")
     public Object PostMyExtractedDataList(@RequestBody Map<String, String> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         Map<String, String> param = new HashMap<>();
+        param.put("select_type", params.get("select_type").toString());
         param.put("user_id", user.get("user_id").toString());
         param.put("searchWord", params.get("searchWord"));
         param.put("limit", String.valueOf(params.get("limit")));

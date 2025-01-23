@@ -36,7 +36,7 @@
                 </my-synonym-delete-request-data>
               </div>
               <div class="mu-row gap-20">
-                <my-extract-data :dataList_s="myExtractedDataList"> </my-extract-data>
+                <my-extract-data :dataList_s="myAllExtractedDataList"> </my-extract-data>
 
                 <my-favorite-data :dataList_s="myFavoriteDataList"> </my-favorite-data>
 
@@ -99,21 +99,13 @@ interface MyDataRequest {
 	finish_date: string
 }
 
-interface MyExtractedData {
+interface MyAllExtractedDataList {
   list: [
     {
-      conditional: string;
+      rownum: number;
+      meta_name: string;
       description: string;
       download_date: string;
-      download_id: number;
-      download_type: number;
-      meta_id: string;
-      meta_name: string;
-      qualified_name: string;
-      rownum: number;
-      meta_type: string;
-      user_id: string;
-      user_name: string;
     }
   ];
   total: number;
@@ -179,7 +171,7 @@ const userStore = useUserStore();
 
 const mySearchDataList = ref<Array<MySearchData>>([]);
 const myDataRequestList = ref<Array<MyDataRequest>>([]);
-const myExtractedDataList = ref<Array<MyExtractedData>>([]);
+const myAllExtractedDataList = ref<Array<MyAllExtractedDataList>>([]);
 const myFavoriteDataList = ref<Array<MyFavoriteData>>([]);
 const myReviewDataList = ref<Array<MyReviewData>>([]);
 const mySynonymDeleteRequestList = ref<Array<MySynonymDeleteRequestData>>([]);
@@ -187,7 +179,7 @@ const mySynonymDeleteRequestList = ref<Array<MySynonymDeleteRequestData>>([]);
 onMounted(() => {
   getMySearchDataList();
   getMyDataRequestList();
-  getMyExtractedDataList();
+  getMyAllExtractedDataList();
   getMyFavoriteDataList();
   getMyReviewDataList();
   getMySynonymDeleteRequestDataList();
@@ -209,12 +201,12 @@ const getMyDataRequestList = async (): Promise<void> => {
   myDataRequestList.value = result.data;
 };
 
-const getMyExtractedDataList = async (): Promise<void> => {
-  const result = await $ofetch("/api/myCatalog/myExtractedDataList", {
+const getMyAllExtractedDataList = async (): Promise<void> => {
+  const result = await $ofetch("/api/myCatalog/myAllExtractedDataList", {
     method: "POST",
     body: param,
   });
-  myExtractedDataList.value = result.data;
+  myAllExtractedDataList.value = result.data;
 };
 
 const getMyFavoriteDataList = async (): Promise<void> => {

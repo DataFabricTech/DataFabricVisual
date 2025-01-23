@@ -2,6 +2,11 @@
   <div class="contents">
     <div>
       <div class="inner">
+        <select-tab
+          :tabs="tabs"
+          :activeTab="currentExtractTab"
+          @onSelectTab="onSelectCurrentTab"
+        />
         <div class="board-list-wrap">
           <div class="mu-heading">
             <!-- board-list-search -->
@@ -16,7 +21,46 @@
               />
             </div>
           </div>
-          <div class="board-list">
+          <!-- 추출 데이터 -->
+          <div class="board-list" v-if="currentExtractTab == 0">
+            <table class="mu-grid">
+              <colgroup>
+                <col style="width: 60px" />
+                <col style="width: auto" />
+                <col style="width: 90px" />
+                <col style="width: 180px" />
+              </colgroup>
+              <thead>
+              <tr>
+                <th scope="col">번호</th>
+                <th scope="col">데이터명</th>
+                <th scope="col">추출방법</th>
+                <th scope="col">추출 일시</th>
+              </tr>
+              </thead>
+              <tbody>
+
+              <tr v-for="(item, index) in postList" :key="index">
+                  <td>{{ item.rownum }}</td>
+                  <td class="tl">
+                    <!-- <a v-on:click="onClickDataName(item)">{{item.name}}</a>왼쪽정렬시 .tl 추가 -->
+                    <a @click="onClickDataName(item)">
+                      {{ item.description && item.description.length > 0 ? `${item.description} (${item.meta_name})` : item.meta_name }}
+                    </a>
+                  </td><!-- 왼쪽정렬시 .tl 추가 -->
+                  <td>{{ getDownloadType(item.download_type) }}</td>
+                  <td>{{ $yyyyMMddHHmmSS(item.download_date) }}</td>
+              </tr>
+              <tr v-if="postList.length === 0">
+                <td colspan="4">
+                  <p class="nodata">추출 데이터가 존재하지 않습니다.</p>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- 대용량 추출 -->
+          <div class="board-list" v-if="currentExtractTab == 1">
             <table class="mu-grid">
               <colgroup>
                 <col style="width: 60px" />
@@ -35,7 +79,7 @@
                 <th scope="col">추출 일시</th>
                 <th scope="col">완료일시</th>
                 <th scope="col">파일 다운로드</th>
-                <th scope="col">진행상태</th>
+                <th scope="col">상태</th>
               </tr>
               </thead>
               <tbody>
@@ -51,7 +95,7 @@
                   <td>{{ getDownloadType(item.download_type) }}</td>
                   <td>{{ $yyyyMMddHHmmSS(item.download_date) }}</td>
                   <td>{{ $yyyyMMddHHmmSS(item.end_time) }}</td>
-                  <td v-if="item.download_type && item.download_type == 2 && item.status && item.status == 3">
+                  <td v-if="item.status && item.status == 3">
                     <button type="button" class="mu-btn mu-btn-sm mu-icon-svg download" @click="downloadBigFile(item)">
                       <span class="blind">다운로드</span>
                     </button>
@@ -69,9 +113,9 @@
             </table>
           </div>
           <!-- mu-pagination -->
+        </div>
           <pagination :paging="pagingObj" @onClickPage="onClickPage" />
           <!-- //mu-pagination -->
-        </div>
       </div>
     </div>
   </div>
@@ -81,6 +125,7 @@
 import { useRouter } from 'vue-router';
 import PageSize from "@/pages/admin/manager/system/user/page-size";
 import Pagination from "@functional/pagination/pagination";
+import selectTab from "@/components/functional/selectTab/select-tab.vue";
 import BorderListSearch from "@functional/border-list-search/border-list-search.vue";
 
 definePageMeta({
@@ -89,6 +134,12 @@ definePageMeta({
 })
 
 const { $ofetch } = useNuxtApp();
+
+const tabs = ref([
+  {idx: 0, key: "일반 데이터 추출"},
+  {idx: 1, key: "대용량 데이터 추출"}
+])
+const currentExtractTab = ref(0)
 
 const searchList = ref([])
 
@@ -102,15 +153,18 @@ const postList = ref([]);
 const searchObj = ref({
   searchType: "all",
   searchWord: "",
+  changedTab: false,
 });
 const router = useRouter();
 
 const getMyExtractedDataList = async (offset = 1) => {
   const param = {
+    select_type: currentExtractTab.value,
     offset,
     limit: pagingObj.value.limit,
     searchWord: searchObj.value.searchWord,
   };
+
   const result = await $ofetch("/api/myCatalog/myExtractedDataList", {
       method: 'POST',
       body: JSON.stringify(param),
@@ -179,4 +233,31 @@ onMounted(() => {
   getMyExtractedDataList();
 });
 
+// 추출 데이터 / 대용량 추출 탭
+const onSelectCurrentTab = (curTabObj) => {
+  if (curTabObj) {
+    currentExtractTab.value = curTabObj.idx
+  } else {
+    currentExtractTab.value = 0
+  }
+
+  initSearchOption()
+  getMyExtractedDataList()
+}
+
+const initSearchOption = () => {
+  searchObj.value = {
+    ...searchObj.value,
+    searchType: "all",
+    searchWord: "",
+  }
+
+  pagingObj.value = {
+    ...pagingObj.value,
+    total: 0,
+    limit: 10,
+    block: 10,
+    currentPage: 1,
+  };
+}
 </script>
