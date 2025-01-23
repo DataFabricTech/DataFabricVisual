@@ -161,4 +161,4 @@ properties:
   categorycount:
     url: http://<INTERNAL_HOST>:8000/v1/essync/getclassificationcount
   ingestion:
-    url: http://<INTERNAL_HOST>:8585/api/v1/metadata/ingestion/execute
+    url: http://<INTERNAL_HOST>:8585/api/v1/ingestion/execute
