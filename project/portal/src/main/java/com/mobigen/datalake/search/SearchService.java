@@ -88,9 +88,23 @@ public class SearchService {
             resultMap.put("total_count", 0);
         }
 
-        
-
         return resultMap;
+    }
+
+     // 특정 사용자 role_id 조회
+    public List<String> getRoleIds(Map<String, Object> user) throws Exception {
+        List<String> result = new ArrayList<>();
+        try {
+            // 1. 사용자가 가지고 있는 role_id 모두 조회 (user_id, dept_id)
+            List<String> roleIdsFromUser = searchMapper.getRoleIdsFromUser(user.get("user_id").toString(), user.get("dept_id").toString());
+
+            if (roleIdsFromUser != null && roleIdsFromUser.size() > 0) {
+                result = roleIdsFromUser;
+            }
+        } catch (Exception e) {
+            result = new ArrayList<>();
+        }
+        return result;
     }
 
 }

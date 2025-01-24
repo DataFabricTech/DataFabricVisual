@@ -12,4 +12,4 @@ public interface SearchMapper {
     List<String> getMetaTypes();
     List<Map<String, Object>>  getMetaDataClassifications(Map<String, Object> params) throws Exception;
     List<String> getMetaDataInfoFromClassifications(Map<String, Object> params) throws Exception;
-}
+    List<String> getRoleIdsFromUser(String user_id, String dept_id) throws Exception;}

@@ -785,12 +785,12 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     method: "POST",
     body: params,
   }).then((res) => {
-    if (res && res.data && res.data.result && res.data.result.results) {
-      listData.value = res.data.result.results
+    if (res && res.data) {
+      listData.value = res.data.results
       // 페이징
       pagingObj.value = {
         ...pagingObj.value,
-        total: res.data.result.total_count,
+        total: res.data.total_count,
         currentPage: offset + 1
       };
 

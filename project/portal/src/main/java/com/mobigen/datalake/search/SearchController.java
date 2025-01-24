@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -53,26 +54,63 @@ public class SearchController {
     @ResponseJsonResult
     @PostMapping("/search/getEsSearch")
     public Object PostSearchBasic(@RequestBody Map<String, Object> param, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
-        
-        // FastAPI의 URL 생성
-        String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/keyword";
-        log.info("call fastapi : " + fastUrl);
+        Map<String, Object> result = new HashMap<>();
 
-        HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(param);
-        ResponseEntity<HashMap> responseEntity = restTemplate.exchange(fastUrl, HttpMethod.POST, requestEntity, HashMap.class);
-
-        // 검색어 입력 이력 저장
-        if(param.get("query") != null){
+        try {
             Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-            Map<String, Object> textHistoryParam = new HashMap<>();
 
-            textHistoryParam.put("search_string", param.get("query"));
-            textHistoryParam.put("userId", user.get("user_id"));
-            searchService.insertSearchTextHistory(textHistoryParam);
+            // 사용자 데이터 권한(role_id) 확인
+            List<String> role_ids = searchService.getRoleIds(user);
+            param.put("roleids", role_ids);
+
+            RestTemplate restTemplate = new RestTemplate();
+        
+            // FastAPI의 URL 생성
+            String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/keyword";
+            log.info("call fastapi : " + fastUrl);
+
+            HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(param);
+            ResponseEntity<HashMap> responseEntity = restTemplate.exchange(fastUrl, HttpMethod.POST, requestEntity, HashMap.class);
+
+            // 검색어 입력 이력 저장
+            if(param.get("query") != null){
+                Map<String, Object> textHistoryParam = new HashMap<>();
+                textHistoryParam.put("search_string", param.get("query"));
+                textHistoryParam.put("userId", user.get("user_id"));
+                searchService.insertSearchTextHistory(textHistoryParam);
+            }
+            
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                Map<String, Object> body = responseEntity.getBody();
+
+                if (body != null) {
+                    Map<String, Object> rs = (Map<String, Object>) body.get("result");
+                    if (rs != null) {
+                        List<Map<String, Object>> esResults = (List<Map<String, Object>>) rs.get("results");
+                        if (esResults != null && esResults.size() > 0) {
+                            result.put("results", esResults);
+                            result.put("total_count", rs.get("total_count"));
+                        }
+                    }
+                }
+
+                // 권한 관련 키,값 제거
+                if (body != null && body.containsKey("release")) body.remove("release");
+                if (body != null && body.containsKey("role_id")) body.remove("role_id");
+                
+            } else {
+                result.put("results", new ArrayList<>());
+                result.put("total_count", 0);
+                throw new Exception("통합 검색에 실패하였습니다.");
+            }
+            
+        } catch (Exception e) {
+            result.put("results", new ArrayList<>());
+            result.put("total_count", 0);
+            throw new Exception("통합검색에 실패하였습니다.");
         }
 
-        return responseEntity.getBody();
+        return result;
     }
 
     // 통합 검색
