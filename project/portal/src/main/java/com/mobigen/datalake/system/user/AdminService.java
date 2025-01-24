@@ -163,7 +163,7 @@ public class AdminService {
             passwordParam.put("user_id", param.get("user_id").toString());
             passwordParam.put("user_nm", param.get("user_nm").toString());
             passwordParam.put("password", encPassword.toString());
-            passwordParam.put("email", param.get("email").toString());
+            passwordParam.put("email", param.get("user_email").toString());
             
             // 비밀번호 업데이트
             adminMapper.initPassword(passwordParam);

@@ -237,40 +237,14 @@ const onClickSaveButton = async (): Promise<void> => {
 
 // 
 const isSelectRoleAll = (id: string) => {
-  let isSelected = false;
-  const roleIndex = isSelectAllRole.value.findIndex(role => role.id === id);
+  tableHeaders.value[1].forEach(element => {
+    const checkboxId = `checkbox_${id}_${element.menu_id}`;
+    const checkbox = document.getElementById(checkboxId) as HTMLInputElement;
+    if (checkbox) {
+      checkbox.checked = !checkbox.checked;
 
-  if (roleIndex === -1) {
-    isSelectAllRole.value.push({ id, isSelected: true });
-    isSelected = true;
-
-    rollMenuExists.value.forEach(menu => {
-      if (menu.menu_role_name === id) {
-        menu.selected = true;
-        isSelected = true;
-      }
-    });
-  } else {
-    isSelectAllRole.value.splice(roleIndex, 1);
-    isSelected = false;
-
-    rollMenuExists.value.forEach(menu => {
-      if (menu.menu_role_name === id) {
-        menu.selected = false;
-        isSelected = false;
-      }
-    });
-  }
-
-  // 
-  rollMenuExists.value.forEach(menu => {
-      const checkboxId = `checkbox_${id}_${menu.menu_id}`;
-      const checkbox = document.getElementById(checkboxId) as HTMLInputElement;
-      if (checkbox) {
-        checkbox.checked = isSelected;
-
-        handleCheckboxChange({menu_id : menu.menu_id}, {role_id: id});
-      }
+      handleCheckboxChange({menu_id : element.menu_id}, {role_id: id});
+    }
   });
 };
 </script>

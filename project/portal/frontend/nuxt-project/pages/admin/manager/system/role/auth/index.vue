@@ -408,7 +408,7 @@
     if(item.role_type === 1){
       router.push({
         path: "/admin/manager/system/role/auth/detail",
-        query: { roleId: item.role_id, roleType: item.role_type, updateFlag:false }
+        query: { roleId: item.role_id, roleType: item.role_type, updateFlag:true }
       });
     }
   };
