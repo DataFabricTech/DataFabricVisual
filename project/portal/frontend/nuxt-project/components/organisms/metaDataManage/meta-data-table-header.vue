@@ -54,6 +54,13 @@
       <page-size v-model:pageSize="props.pagingObj.limit" @searchMethod="onSearch" />
       <button
         type="button"
+        class="mu-btn"
+        @click.stop="onClickButton('roles')"
+      >
+        <span>공개설정</span>
+      </button>
+      <button
+        type="button"
         class="mu-btn mu-btn-primary"
         @click.stop="onClickButton('category')"
       >

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,6 +44,18 @@ public class MetaDataManageController {
     @GetMapping("/getFilterOptions")
     public Object getFilterOptions() throws Exception {
         return metaDataManageService.getFilterOptions();
+    }
+
+    /**
+     * 메타 데이터 통합 관리 > 데이터 공개설정 권한 처리
+    *
+    * @params Object       
+    * @return Object       성공여부
+    */
+    @ResponseJsonResult
+    @PutMapping("/setDataAuth")
+    public Object setDataAuth(@RequestBody Map<String, Object> param) throws Exception {
+        return metaDataManageService.setDataAuth(param);
     }
 
 }

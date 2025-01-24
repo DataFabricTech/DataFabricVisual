@@ -3,11 +3,13 @@
     <table class="mu-grid mu-grid-data">
       <caption>카테고리 관리 목록 게시판</caption>
       <colgroup>
-        <col style="width:60px">
+        <col style="width:30px">
         <col style="width:200px">
-        <col style="width:auto">
-        <col style="width:95px" span="2">
-        <col style="width:260px">
+        <col style="width:200px">
+        <col style="width:200px">
+        <col style="width:95px">
+        <col style="width:200px">
+        <col style="width:95px">
       </colgroup>
       <thead>
         <tr>
@@ -20,10 +22,11 @@
             </div>
           </th>
           <th scope="col">데이터 설명</th>
-          <th scope="col">데이터명</th>
-          <th scope="col">소유자</th>
+          <th scope="col">데이터 명</th>
+          <th scope="col">시스템 명</th>
           <th scope="col">유형</th>
           <th scope="col">카테고리</th>
+          <th scope="col">공개설정</th>
         </tr>
       </thead>
       <tbody>
@@ -43,9 +46,9 @@
             <!-- 데이터명 -->
             <a :title="item.meta_name ? item.meta_name : '-'" @click="onClickDataName(item)">{{ item.meta_name ? item.meta_name : '-' }}</a>
           </td>
-          <td :title="item.attributes && item.attributes.owner ? item.attributes.owner : '-'">
-            <!-- 소유자 -->
-            {{ item.attributes && item.attributes.owner ? item.attributes : "-" }}
+          <td :title="item.system_name ? item.system_name : '-'">
+            <!-- 시스템명 -->
+            {{ item.system_name ? item.system_name : "-" }}
           </td>
           <td :title="item.meta_type ? item.meta_type : '-'">
             <!-- 유형 -->
@@ -55,9 +58,12 @@
             <!-- 카테고리 -->
             <category-group :classifications="item.classifications" :item="item" />
           </td>
+          <td :title="item.release ? item.release : '-'">
+            {{ getRelease(item.release) }}
+          </td>
         </tr>
         <tr v-if="dataList.length === 0">
-          <td colspan="6">
+          <td colspan="7">
             <p class="nodata">검색 결과가 존재하지 않습니다.</p>
           </td>
         </tr>
@@ -132,6 +138,13 @@ const onToggleCheckbox = (e, isAll:boolean, item: any) => {
 const onClickDataName = (item) => {
   router.push("/admin/data/meta-data/detail?guid=" + item.meta_id);
 };
+
+const getRelease = (release) => {
+  if (release == 0) return 'secret'
+  else if (release == 1) return 'public'
+  else if (release == 2) return 'private'
+  else return release
+}
 
 </script>
 

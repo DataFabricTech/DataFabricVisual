@@ -40,7 +40,12 @@
               :pagingObj="pagingObj"
             />
 
-            <meta-data-table :data-list="dataList" :selected-data="selectedData" @onSelectItems="onSelectItems" />
+            <meta-data-table
+              ref="refMetaDataTable"
+              :data-list="dataList"
+              :selected-data="selectedData"
+              @onSelectItems="onSelectItems"
+            />
 
             <pagination :paging="pagingObj" @onClickPage="onClickPage" />
           </div>
@@ -54,6 +59,14 @@
         :manage-modal="manageModalObj"
         @onCloseModal="onToggleManageModal"
         @onSubmit="onSubmitCategory"
+      />
+
+      <!-- 공개설정 처리 모달 -->
+      <manage-role-mapping-modal
+        ref="refManageRoleMappingModal"
+        :auth-modal="authModalObj"
+        @onCloseModal="onToggleAuthModal"
+        @onSubmit="onSubmitAuth"
       />
     </div>
   </div>
@@ -69,6 +82,7 @@ import MetaDataTableHeader from "@organisms/metaDataManage/meta-data-table-heade
 import MetaDataTable from "@organisms/metaDataManage/meta-data-table";
 import MetaDataTooltip from "@molecules/metaDataManage/meta-data-tooltip";
 import ManageClassificationModal from "@functional/classificationModal/manage-classification-modal";
+import ManageRoleMappingModal from "@functional/roleMappingModal/manage-role-mapping-modal";
 import ClassificationOrdUpdateModal from "@organisms/metaDataManage/classification-ord-update-modal";
 import ObjectUtils from "@utils/ObjectUtils";
 import Pagination from "@functional/pagination/pagination";
@@ -159,6 +173,12 @@ interface ManageModalObj {
   target: null;
 }
 
+interface AuthModalObj {
+  toggle: boolean;
+  type: string | number;
+  target: null;
+}
+
 interface SelectedDataItem {
   typeName: string;
 }
@@ -224,10 +244,6 @@ const filterSearchObj = ref<FilterSearchObj>({
     {
       value: "meta_name",
       desc: "데이터명"
-    },
-    {
-      value: "owner",
-      desc: "소유자"
     }
   ]
 });
@@ -261,9 +277,16 @@ const manageModalObj = ref<ManageModalObj>({
   type: null,
   target: null
 });
+const refManageModal = ref<any>(null); // 카테고리 모달 ref
 
-// 카테고리 모달 ref
-const refManageModal = ref<any>(null);
+// 공개설정 관리 모달 제어
+const authModalObj = ref<AuthModalObj>({
+  toggle: false,
+  type: null,
+  target: null
+});
+const refManageRoleMappingModal = ref<any>(null); // 공개설정 모달 ref
+const refMetaDataTable = ref<any>(null) // 데이터 목록 컴포넌트 ref
 
 await categoryStore.fetchCategories();
 const { _categoryMap } = storeToRefs(categoryStore);
@@ -579,6 +602,22 @@ const onToggleManageModal = (type: string | null, targets: any = null) => {
   };
 };
 
+// 공개설정 제어 모달
+const onToggleAuthModal = (type: string | null, targets: any = null) => {
+  let target = null;
+  const toggle = authModalObj.value.toggle;
+
+  if (!toggle) { // 모달 여는 시점에만 관련 데이터 세팅
+    target = targets;
+  }
+
+  authModalObj.value = {
+    type: type ? type : null,
+    toggle: !toggle,
+    target
+  };
+};
+
 // 툴팁 토글 이벤트 핸들러
 const onToggleTooltip = (e: Event, item: any = null, type: string = "") => {
   if (item && !tooltipObj.value.display) {
@@ -706,7 +745,6 @@ const onSubmitCategory = async (params: any) => {
       break;
   }
   refManageModal.value.onClose();
-  selectedData.value = [];
 };
 
 // 카테고리명 중복 체크
@@ -756,11 +794,23 @@ const onClickTableHeaderButtons = (type) => {
           );
         }
         break;
+      case "roles":
+        // 테이블 유형에 대해서만 카테고리 맵핑 가능
+        targets = selectedData.value;
+        if (targets.length > 0) {
+          onToggleAuthModal("roles", targets);
+        } else {
+          errorAlert(
+            "선택된 데이터 중 공개설정이 가능한 데이터가<br/>없습니다.<br/>※ 공개설정은 테이블 유형에 설정됩니다."
+          );
+        }
+        break;
     }
   } else {
     // 선택된 데이터가 없을 경우
     const MESSAGE_MAP = new Map<string, string>([
       ["category", "카테고리 맵핑"],
+      ["roles", "공개설정"],
       ["delete", "삭제"]
     ]);
 
@@ -786,7 +836,6 @@ const onChangeFilter = (name: string, value: string) => {
       { value: "", desc: "전체" },
       { value: "description", desc: "데이터 설명" },
       { value: "meta_name", desc: "데이터명" },
-      { value: "owner", desc: "소유자" }
     ];
 
     searchObj.options = options;
@@ -825,17 +874,6 @@ const onSearchDataList = async (offset = 0, item = {}) => {
       };
     });
 
-    // // 타입이 컬럼일때 테이블 이름 출력
-    // if (dataList.value.length > 0) {
-    //   if (dataList.value[0].typeName === "hive_column") {
-    //     dataList.value.forEach((item) => {
-    //       const temp = item.attributes.qualified_name;
-    //       const tableName = temp.split(".");
-    //       item.attributes.qualified_name = tableName[1];
-    //     });
-    //   }
-    // }
-
     if (result.totalCount > 0) {
       pagingObj.value = <PagingObj>{
         ...pagingObj.value,
@@ -857,8 +895,6 @@ const onSearchDataList = async (offset = 0, item = {}) => {
       currentPage: 1
     };
   }
-
-  selectedData.value = [];
 };
 
 const onSearchDept = async (item = {}) => {
@@ -926,57 +962,6 @@ const onSelectItems = (selected: any) => {
   selectedData.value = selected;
 };
 
-// 카테고리 맵핑 삭제 이벤트 핸들러
-// const onDeleteCategoryMap = async (target: any) => {
-//   const confirm = await portalConfirm({
-//     message: "선택한 <strong>*카테고리 맵핑</strong>을 영구적으로 삭제합니다.<br>정말 삭제 하시겠습니까?"
-//   });
-
-//   if (confirm) {
-//     const { targetId, item } = target;
-//     let isTableType = false;
-
-//     // 해당 엔티티가 테이블 유형일 경우 하위 컬럼에 대해서도 동일 처리 가능하도록 flag 전달
-//     if (item.meta_type.includes("table")) {
-//       isTableType = true;
-//     }
-
-//     const targetCategory = _categoryMap.value[targetId] || {};
-//     let subTypes = targetCategory.subTypes || [];
-//     subTypes = subTypes.map((el: { [key: string]: any }) => el.id);
-
-//     try {
-//       await $ofetch(`${runConfig.API_URL}/metadata/classification/map/${targetId}`, {
-//         method: "PUT",
-//         body: { deleteMapping: { id: targetId, subTypes }, isTableType, ...item }
-//       }).then((res) => {
-//         const resData = res.data || {};
-//         if (!resData || resData.isFailed) {
-//           const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
-//           errorAlert(msg);
-//         } else {
-//           // 더보기 툴팁에서 렌더하던 카테고리 삭제 시 더보기 툴팁 화면에서 제거
-//           onToggleTooltip();
-//           // 카테고리 맵핑 삭제 성공 시
-//           setEventLog({
-//             event_type: CONSTANT.EVENT.TYPE.METADATA,
-//             event_status: CONSTANT.EVENT.STATUS.DELETE,
-//             event_name: "메타 데이터 카테고리 매핑[삭제]",
-//             event_by: user.user_id,
-//             meta_id: item.id,
-//             meta_name: item.name,
-//             qualified_name: item.qualified_name
-//           })
-//           onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
-//           onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
-//         }
-//       });
-//     } catch (error) {
-//       errorAlert("요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.");
-//     }
-//   }
-// };
-
 // 카테고리 맵핑 삭제 버튼 클릭 이벤트 핸들러
 const onDeleteCategoryMap = async (target) => {
   const confirm = await confirmAlert(
@@ -1003,6 +988,32 @@ const onDeleteCategoryMap = async (target) => {
   }
 };
 
+// 공개설정 버튼 이벤트 핸들러
+const onSubmitAuth = async (params: any) => {
+  let auth_params = {
+    meta_ids: selectedData.value.map((item: any) => item.meta_id),
+    release: params.updatedRelease
+  }
+
+  if (await confirmAlert("권한을 설정하시겠습니까?")) {
+    await $ofetch(`/api/metadata/manage/setDataAuth`, {
+      method: "PUT",
+      body: auth_params,
+    }).then((res) => {
+      if (res && res.data && res.data.result) {
+        onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
+        onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
+        refManageRoleMappingModal.value.onClose();
+      } else {
+        const msg =
+          "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
+        errorAlert(msg);
+      }
+    }).catch((err) => {
+      console.log(err)
+    });
+  }
+}
 
 
 </script>

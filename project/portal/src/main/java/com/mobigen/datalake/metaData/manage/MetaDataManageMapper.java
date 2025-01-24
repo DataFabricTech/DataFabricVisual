@@ -29,4 +29,7 @@ public interface MetaDataManageMapper {
     // 검색 필터옵션 조회
     List<String> getFilterOptions() throws Exception;
 
+    // 메타 데이터 권한 수정 
+    int updateMetaDataRelease(Map<String, Object> params) throws Exception;
+
 }
