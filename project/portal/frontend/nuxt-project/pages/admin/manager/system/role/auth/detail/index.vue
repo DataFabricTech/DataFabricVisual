@@ -978,7 +978,9 @@
       role_type: rollDetailInfo.value.role_type,
       role_name: rollDetailInfo.value.role_name,
       role_description: rollDetailInfo.value.role_description,
+      role_auth: rollDetailInfo.value.role_auth,
       etc: '',
+      updateFlag : updateFlag.value ? "Y" : "N",
     };
 
     if ( !role_id_valid.value
@@ -986,8 +988,8 @@
         || !role_name_valid.value) {
       return;
     }
-
-    if (!checkedDupRoleId.value) {
+    
+    if (!checkedDupRoleId.value && !updateFlag.value) {
       await errorAlert("권한 중복확인 하세요.")
       return;
     }

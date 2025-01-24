@@ -217,15 +217,15 @@ export default defineNuxtRouteMiddleware((to, from) => {
   } else if (to.path === '/error') {
     console.log('에러 페이지')
   } else {
-    // if(userStore._user.rollMenu && userStore._user.rollMenu != ""){
-    //   let decodedRollMenuList = jwtDecode(userStore._user.rollMenu);
+    if(userStore._user.rollMenu && userStore._user.rollMenu != ""){
+      let decodedRollMenuList = jwtDecode(userStore._user.rollMenu);
       
-    //   if(!searchMenuPath(decodedRollMenuList.rollMenuList)){
-    //     errorAlert('잘못된 접근입니다.');
-    //     // cookies.set('redirected', 'true', { path: '/' });  // 리디렉션을 기록
-    //     return navigateTo('/main')
-    //   }
-    // }
+      if(!searchMenuPath(decodedRollMenuList.rollMenuList)){
+        errorAlert('잘못된 접근입니다.');
+        // cookies.set('redirected', 'true', { path: '/' });  // 리디렉션을 기록
+        return navigateTo('/main')
+      }
+    }
   }
 
 })
