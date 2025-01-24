@@ -18,8 +18,11 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobigen.datalake.search.SearchDetailService;
+import com.mobigen.datalake.search.SearchService;
 import com.mobigen.framework.result.JsonResult;
+import com.mobigen.framework.security.SessionManager;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +32,8 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class MainPageService {
     private final MainPageMapper mainPageMapper;
+    private final SessionManager sessionManager;
+    private final SearchService searchService;
 
     @Value("${properties.fastapi.server.host}")
     private String fastApiHost;
@@ -65,18 +70,18 @@ public class MainPageService {
     }
 
     // 인기 데이터 > 조회수가 가장 높은 순 조회 (Atlas API)
-    public Object getPopularDataList() throws Exception {
-        return getPopularData();
+    public Object getPopularDataList(HttpServletRequest request) throws Exception {
+        return getPopularData(request);
     }
 
     // 인기 데이터 > 최신 등록 데이터 순 조회 (Atlas API)
-    public Object getLatestDataList() throws Exception {
-        return getLatestData();
+    public Object getLatestDataList(HttpServletRequest request) throws Exception {
+        return getLatestData(request);
     }
 
     // 인기 데이터 > 추천수가 가장 높은 순 조회 (Atlas API)
-    public Object getRecommendDataList() throws Exception {
-        return getRecommendData();
+    public Object getRecommendDataList(HttpServletRequest request) throws Exception {
+        return getRecommendData(request);
     }
 
     // My 데이터 요청내역 조회
@@ -129,7 +134,7 @@ public class MainPageService {
     }
 
     // Atlas에서 조회수가 많은 데이터 (6건) 조회
-    public Object getPopularData() throws Exception {
+    public Object getPopularData(HttpServletRequest request) throws Exception {
         // // 1. 조회수 높은 데이터 조회
         List<Map<String, Object>> popularList = mainPageMapper.getPopularDataList();
 
@@ -183,7 +188,7 @@ public class MainPageService {
     }
 
     // Atlas에서 최신 등록 데이터 (6건) 조회
-    public Object getLatestData() throws Exception {
+    public Object getLatestData(HttpServletRequest request) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
         
@@ -191,7 +196,16 @@ public class MainPageService {
         String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/latestData";
         log.info("call fastapi : " + fastUrl);
 
-        ResponseEntity<HashMap> responseEntity = restTemplate.getForEntity(fastUrl, HashMap.class);
+        Map<String, Object> requestBody = new HashMap<>();
+
+        // 사용자 데이터 권한(role_id) 확인
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        List<String> role_ids = searchService.getRoleIds(user);
+        
+        requestBody.put("roleids", role_ids);
+        
+        ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(fastUrl, requestBody, HashMap.class);
+        
         if (responseEntity != null) {
             Map<String, Object> body = responseEntity.getBody();
             if (body != null) {
@@ -207,8 +221,7 @@ public class MainPageService {
                             newResults.add(results.get(i));
                         }
                     }
-                    result.put("results", newResults);
-                    
+                    result.put("results", newResults); 
                     result.put("total_count", res.get("total_count"));
                 }
             }    
@@ -218,7 +231,7 @@ public class MainPageService {
     }
 
     // Atlas에서 추천수가 많은 데이터 (6건) 조회
-    public Object getRecommendData() throws Exception {
+    public Object getRecommendData(HttpServletRequest request) throws Exception {
         // 1. 추천수 높은 데이터 조회
         List<Map<String, Object>> recommendList = mainPageMapper.getRecommendDataList();
         List<String> guids = new ArrayList<>();

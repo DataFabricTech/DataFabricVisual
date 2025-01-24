@@ -91,7 +91,7 @@ public class SearchService {
         return resultMap;
     }
 
-     // 특정 사용자 role_id 조회
+    // 특정 사용자 role_id 조회
     public List<String> getRoleIds(Map<String, Object> user) throws Exception {
         List<String> result = new ArrayList<>();
         try {
