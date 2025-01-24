@@ -3,8 +3,13 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -64,9 +69,11 @@ public class CollectorService {
   // 수집대상 등록
   public Object addCollector(Map<String, Object> params) throws Exception {
     boolean result = false;
+    boolean apiResult = false;
     int addCount = collectorMapper.addCollector(params);
     if (addCount > 0) {
       result = true;
+      apiResult = addIngestionDagApi(params.get("system_id").toString());
     }
     return result;
   }
@@ -84,9 +91,11 @@ public class CollectorService {
   // 수집대상 삭제
   public Object deleteCollector(String system_id) throws Exception {
     boolean result = false;
+    boolean apiResult = false;
     int deleteCount = collectorMapper.deleteCollector(system_id);
     if (deleteCount > 0) {
       result = true;
+      apiResult = deleteIngestionDagApi(system_id);
     }
     return result;
   }
@@ -94,18 +103,7 @@ public class CollectorService {
   // 수동 수집 실행
   public Object directCollect(String system_id) throws Exception {
     Map<String, Object> result = new HashMap<>();
-
-    try {
-      ResponseEntity<HashMap> restResponse = ingestionExecute(system_id);
-      
-      if (restResponse != null && restResponse.getStatusCode().is2xxSuccessful()) {
-        result.put("result", true);
-      } else {
-        result.put("result", false);
-      }
-    } catch (Exception e) {
-      result.put("result", false);
-    }
+    result.put("result", ingestionExecute(system_id));
     return result;
   }
  
@@ -118,12 +116,59 @@ public class CollectorService {
   }
  
   // 수동 수집 실행 POST, system_id는 queryString
-  public ResponseEntity<HashMap> ingestionExecute(String system_id) throws Exception {
+  public boolean ingestionExecute(String system_id) throws Exception {
     RestTemplate restTemplate = new RestTemplate();
-    String executeUrl = ingestionExecuteUrl + "?system_id=" + system_id;
+    String executeUrl = ingestionExecuteUrl + "/execute?system_id=" + system_id;
 
     Map<String, Object> requestBody = new HashMap<>();
     ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
-    return responseEntity;
+    if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
+      return true;
+    }
+    
+    return false;
+  }
+
+  // 수집등록 시 DAG 등록 API
+  private boolean addIngestionDagApi(String system_id) throws Exception {
+    RestTemplate restTemplate = new RestTemplate();
+    String executeUrl = ingestionExecuteUrl + "/dag";
+
+    Map<String, Object> requestBody = new HashMap<>();
+    requestBody.put("system_id", system_id);
+    try {
+      ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
+      if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
+        return true;
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+
+    return false;
+  }
+
+  // 수집삭제 시 DAG 삭제 API
+  private boolean deleteIngestionDagApi(String system_id) throws Exception {
+    RestTemplate restTemplate = new RestTemplate();
+    String executeUrl = ingestionExecuteUrl + "/dag";
+
+    try {
+      HttpHeaders headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      String requestBody = "{ \"system_id\": \"" + system_id + "\" }";
+      HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+      ResponseEntity<HashMap> responseEntity = restTemplate.exchange(executeUrl, HttpMethod.DELETE, requestEntity, HashMap.class);
+      if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
+        return true;
+      }
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+
+    return false;
   }
 }

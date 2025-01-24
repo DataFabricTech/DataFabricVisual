@@ -267,6 +267,7 @@ const deleteCollector = async (system_id) => {
     await $ofetch(`/api/admin/system/collector/delete?system_id=${system_id}`).then(async (res) => {
       if (res && !res.errorMessage && res.data) {
         await successAlert("삭제에 성공하였습니다.")
+        getCollectorList()
       } else {
         errorAlert("삭제에 실패하였습니다.")
       }
