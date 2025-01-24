@@ -81,9 +81,11 @@ public class CollectorService {
   // 수집대상 수정
   public Object updateCollector(Map<String, Object> params) throws Exception {
     boolean result = false;
+    boolean apiResult = false;
     int updateCount = collectorMapper.updateCollector(params);
     if (updateCount > 0) {
       result = true;
+      apiResult = putIngestionDagApi(params.get("system_id").toString());
     }
     return result;
   }
@@ -141,6 +143,29 @@ public class CollectorService {
       if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
         return true;
       }
+    } catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
+
+    return false;
+  }
+
+  // 수집수정 시 DAG 수정 API
+  private boolean putIngestionDagApi(String system_id) throws Exception {
+    RestTemplate restTemplate = new RestTemplate();
+    String executeUrl = ingestionExecuteUrl + "/dag";
+
+    try {
+      HttpHeaders headers = new HttpHeaders();
+      headers.setContentType(MediaType.APPLICATION_JSON);
+      String requestBody = "{ \"system_id\": \"" + system_id + "\" }";
+      HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers);
+      ResponseEntity<HashMap> responseEntity = restTemplate.exchange(executeUrl, HttpMethod.PUT, requestEntity, HashMap.class);
+      if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
+        return true;
+      }
+
     } catch (Exception e) {
       e.printStackTrace();
       return false;
