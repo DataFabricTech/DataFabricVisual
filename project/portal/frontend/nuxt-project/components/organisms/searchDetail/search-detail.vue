@@ -269,6 +269,7 @@ const userDataParam = ref({}); // 사용자 데이터 파라미터
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
 const userDataAuth = ref(0) // 데이터 접근 권한
+const release = ref(0); // 데이터 공개 여부 (2일 경우만 role_auth 확인)
 
 onBeforeRouteLeave((to, from, next) => {
   userStore.setFromPath(from.path) // 상세페이지에서 검색화면으로 이동했는지 확인용
@@ -276,12 +277,12 @@ onBeforeRouteLeave((to, from, next) => {
 })
 
 onMounted(async () => {
+  await getUserDataAuth();
   window.addEventListener('scroll', handleScroll);
   userStore.setForceRenderLoader(true); // 강제 loader 유지 설정
   categoryStore.fetchCategories(); // 카테고리 정보 조회
   await getAllDataByGuid()
   await searchTagList();
-  await getUserDataAuth();
 });
 
 
@@ -1048,15 +1049,24 @@ const searchTagList = async (offset = 1) =>{
 
 // 사용자의 role
 const getUserDataAuth = async () => {
-  await $ofetch(`/api/search/detail/getUserDataAuth?meta_id=${currentGuid.value}`).then((res) => {
+  currentGuid.value = route.query.guid
+  await $ofetch(`/api/search/detail/getUserDataAuth?meta_id=${currentGuid.value}`).then(async (res) => {
     if (res && res.data) {
       userDataAuth.value = res.data.role_auth
     } else {
-      userDataAuth.value = 0
+      userDataAuth.value = -1
+      await errorAlert("데이터 접근 권한이 없습니다.")
+      history.go(-1);
     }
-  }).catch((err) => {
-    userDataAuth.value = 0
+  }).catch(async (err) => {
+    userDataAuth.value = -1
   });
+
+  // 권한 확인 실패 시
+  if (userDataAuth.value == -1) {
+    await errorAlert("데이터 접근 권한이 없습니다.")
+    history.go(-1);
+  }
 }
 
 </script>

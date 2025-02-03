@@ -946,13 +946,27 @@ public class SearchDetailService {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            Integer authValue = searchDetailMapper.getUserDataAuth(params);
-            int role_auth = (authValue != null) ? authValue : 0;
-            result.put("role_auth", role_auth);
             
+            String meta_id = params.get("meta_id").toString();
+            Integer release = searchDetailMapper.getMetaDataRelease(meta_id);
+
+            // release (1: 모두허용, 2: 권한체크)
+            if (release != null) {
+                if (release == 2) {
+                    Integer authValue = searchDetailMapper.getUserDataAuth(params);
+                    int role_auth = (authValue != null) ? authValue : -1;
+                    result.put("role_auth", role_auth);
+                } else if (release == 1) {
+                    result.put("role_auth", 2);
+                } else { // 나머지는 -1 처리
+                    result.put("role_auth", -1);
+                }
+            } else {
+                result.put("role_auth", -1);
+            }   
         } catch (Exception e) {
             log.error("권한 조회 실패");
-            result.put("result", 0);
+            result.put("role_auth", -1);
         }
         
         return result;
