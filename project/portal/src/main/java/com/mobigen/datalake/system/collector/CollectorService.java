@@ -66,19 +66,19 @@ public class CollectorService {
       }
   }
 
-  // 수집대상 등록
+  // 수집대상 등록 (put으로 같이 사용)
   public Object addCollector(Map<String, Object> params) throws Exception {
     boolean result = false;
     boolean apiResult = false;
     int addCount = collectorMapper.addCollector(params);
     if (addCount > 0) {
       result = true;
-      apiResult = addIngestionDagApi(params.get("system_id").toString());
+      apiResult = putIngestionDagApi(params.get("system_id").toString());
     }
     return result;
   }
 
-  // 수집대상 수정
+  // 수집대상 수정 (put으로 같이 사용)
   public Object updateCollector(Map<String, Object> params) throws Exception {
     boolean result = false;
     boolean apiResult = false;
@@ -131,27 +131,27 @@ public class CollectorService {
     return false;
   }
 
-  // 수집등록 시 DAG 등록 API
-  private boolean addIngestionDagApi(String system_id) throws Exception {
-    RestTemplate restTemplate = new RestTemplate();
-    String executeUrl = ingestionExecuteUrl + "/dag";
+  // 수집등록 시 DAG 등록 API (POST)
+  // private boolean addIngestionDagApi(String system_id) throws Exception {
+  //   RestTemplate restTemplate = new RestTemplate();
+  //   String executeUrl = ingestionExecuteUrl + "/dag";
 
-    Map<String, Object> requestBody = new HashMap<>();
-    requestBody.put("system_id", system_id);
-    try {
-      ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
-      if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
-        return true;
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-      return false;
-    }
+  //   Map<String, Object> requestBody = new HashMap<>();
+  //   requestBody.put("system_id", system_id);
+  //   try {
+  //     ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
+  //     if (responseEntity != null && responseEntity.getStatusCode().is2xxSuccessful()) {
+  //       return true;
+  //     }
+  //   } catch (Exception e) {
+  //     e.printStackTrace();
+  //     return false;
+  //   }
 
-    return false;
-  }
+  //   return false;
+  // }
 
-  // 수집수정 시 DAG 수정 API
+  // 수집수정 시 DAG 수정 API (PUT)
   private boolean putIngestionDagApi(String system_id) throws Exception {
     RestTemplate restTemplate = new RestTemplate();
     String executeUrl = ingestionExecuteUrl + "/dag";
