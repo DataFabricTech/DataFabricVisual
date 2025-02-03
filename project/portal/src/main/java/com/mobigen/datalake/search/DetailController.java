@@ -1,6 +1,8 @@
 package com.mobigen.datalake.search;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -330,4 +332,23 @@ public class DetailController {
     public Object getDataManagerInfoList(@RequestBody Map<String, Object> params) {
         return searchDetailService.getDataManagerInfoList(params);
     }
+
+    /**
+     * 데이터 접근 권한 조회
+     * @return Object           데이터 접근 권한 결과
+     * @throws Exception 
+    */
+    @ResponseJsonResult
+    @GetMapping("/getUserDataAuth")
+    @ResponseBody
+    public Object getUserDataAuth(@RequestParam String meta_id, HttpServletRequest request) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        Map<String, Object> params = new HashMap<>();
+        params.put("user", user);
+        params.put("meta_id", meta_id);
+        
+        // 사용자 데이터 권한(role_id) 확인
+        return searchDetailService.getUserDataAuth(params);
+    }
+    
 }

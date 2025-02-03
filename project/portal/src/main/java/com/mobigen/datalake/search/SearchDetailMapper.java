@@ -76,4 +76,6 @@ public interface SearchDetailMapper {
     List<Map<String,String>> getDataManagerInfoList();
     
     Map<String, Object> getDetailData(String id);
+
+    Integer getUserDataAuth(Map<String, Object> params);
 }

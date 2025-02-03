@@ -941,6 +941,23 @@ public class SearchDetailService {
         return result;
     }
 
+    // 사용자의 권한 조회
+    public Map<String, Object> getUserDataAuth(Map<String, Object> params) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            Integer authValue = searchDetailMapper.getUserDataAuth(params);
+            int role_auth = (authValue != null) ? authValue : 0;
+            result.put("role_auth", role_auth);
+            
+        } catch (Exception e) {
+            log.error("권한 조회 실패");
+            result.put("result", 0);
+        }
+        
+        return result;
+    }
+
     public Map<String, Object> essyncUpdate(Map<String, Object> params) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
         

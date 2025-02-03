@@ -1,6 +1,7 @@
 <template>
   <div>
     <data-detail-head
+      :userDataAuth="userDataAuth"
       :isAdmin="props.isAdmin"
       :entity="entity"
       :typeName="typeName"
@@ -64,7 +65,7 @@
         <div
           :ref="el => sectionRefs['data-profile-area'] = el"
           class="content-block">
-          <data-profile-area :isAdmin="props.isAdmin" :data-profile="dataProfile" :columnCommentMap="columnCommentMap"/>
+          <data-profile-area :userDataAuth="userDataAuth" :isAdmin="props.isAdmin" :data-profile="dataProfile" :columnCommentMap="columnCommentMap"/>
         </div>
         <!-- detail-section : 샘플 데이터 -->
         <div
@@ -76,6 +77,7 @@
             :isAdmin="props.isAdmin"
             :list="sampleData"
             :entity="entity"
+            :userDataAuth="userDataAuth"
             :sampleDataDenied="sampleDataDenied"
             :referredEntitiesAttributes="referredEntitiesAttributes"
           />
@@ -193,6 +195,7 @@ import {useConstants} from "@composables/useConstants";
 import { onBeforeRouteLeave } from "vue-router";
 import { ref } from "vue";
 import { useApi } from "@/composables/useApi";
+import { defaultAlert } from "@/components/functional/alert/alert-default";
 
 const { $ofetch } = useNuxtApp();
 
@@ -254,7 +257,8 @@ const eliminateModalObj = ref({
   sampleDataDenied: false,
   entity: {},
   num_rows: 0,
-  referredEntitiesAttributes: []
+  referredEntitiesAttributes: [],
+  userDataAuth: 0,
 });
 
 const dataManagerInfoList = ref([]); // 데이터 담당 부서 목록
@@ -264,16 +268,7 @@ const userDataParam = ref({}); // 사용자 데이터 파라미터
 
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
-const sampleDataPermission = ref(false);
-
-const toggleShowData = () => {
-  showData.value = !showData.value;
-  if (showData.value) {
-    toggleShowDataText.value = "접기";
-  } else {
-    toggleShowDataText.value = "펼치기";
-  }
-};
+const userDataAuth = ref(0) // 데이터 접근 권한
 
 onBeforeRouteLeave((to, from, next) => {
   userStore.setFromPath(from.path) // 상세페이지에서 검색화면으로 이동했는지 확인용
@@ -286,6 +281,7 @@ onMounted(async () => {
   categoryStore.fetchCategories(); // 카테고리 정보 조회
   await getAllDataByGuid()
   await searchTagList();
+  await getUserDataAuth();
 });
 
 
@@ -987,17 +983,25 @@ const onClickConfirm = async () => {
   }
 };
 
-const onToggleEliminateModal = () => {
-  // 데이터추출
-  const status = eliminateModalObj.value.toggle;
-  if (status) {
-    eliminateModalObj.value.sampleData = null;
-    eliminateModalObj.value.entity = null;
-    eliminateModalObj.value.toggle = !status;
+const onToggleEliminateModal = async () => {
+  // 데이터 권한이 없는 경우 추출 불가
+  if (userDataAuth.value == 2) {
+    // 데이터추출
+    const status = eliminateModalObj.value.toggle;
+    if (status) {
+      eliminateModalObj.value.sampleData = null;
+      eliminateModalObj.value.entity = null;
+      eliminateModalObj.value.toggle = !status;
+      eliminateModalObj.value.userDataAuth = userDataAuth.value;
+    } else {
+      eliminateModalObj.value.sampleData = { ...sampleData.value };
+      eliminateModalObj.value.entity = { ...entity.value };
+      eliminateModalObj.value.toggle = !status;
+      eliminateModalObj.value.userDataAuth = userDataAuth.value;
+    }
   } else {
-    eliminateModalObj.value.sampleData = { ...sampleData.value };
-    eliminateModalObj.value.entity = { ...entity.value };
-    eliminateModalObj.value.toggle = !status;
+    await defaultAlert("데이터 추출 권한이 없습니다.");
+    return
   }
 };
 
@@ -1040,6 +1044,19 @@ const searchTagList = async (offset = 1) =>{
   } catch (error) {
     console.log(error);
   }
+}
+
+// 사용자의 role
+const getUserDataAuth = async () => {
+  await $ofetch(`/api/search/detail/getUserDataAuth?meta_id=${currentGuid.value}`).then((res) => {
+    if (res && res.data) {
+      userDataAuth.value = res.data.role_auth
+    } else {
+      userDataAuth.value = 0
+    }
+  }).catch((err) => {
+    userDataAuth.value = 0
+  });
 }
 
 </script>

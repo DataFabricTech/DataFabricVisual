@@ -28,8 +28,9 @@
           </li>
         </ul>
       </div>
-      <p v-else class="nodata">연관 데이터가 존재하지 않습니다.</p>
-
+      <div class="data-result h300" v-else>
+        <p class="nodata">연관 데이터가 존재하지 않습니다.</p>
+      </div>
     </div>
   </div>
 </template>

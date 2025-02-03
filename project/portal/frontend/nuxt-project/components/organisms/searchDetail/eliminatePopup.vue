@@ -9,6 +9,7 @@
       <div class="mu-dialog-body">
         <!-- detail-section : 원본 샘플 데이터 -->
         <sample-data-area
+          :userDataAuth="props.eliminateModal.userDataAuth"
           :isAdmin="false"
           :isModal="true"
           :list="props.eliminateModal.sampleData"
@@ -606,7 +607,7 @@ const fnWhereQueryMake = () => {
 
 // 일반 데이터 추출, 대용량 데이터 추출 요청 버튼 클릭
 const onClickFileEliminateButton = async () => {
-  if (props.sampleDataDenied) {
+  if (props.sampleDataDenied || props.eliminateModal.userDataAuth != 2) {
     errorAlert("데이터 접근 권한이 없습니다. 관리자에게 문의해 주시기 바랍니다.")
     return
   }

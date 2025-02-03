@@ -10,7 +10,7 @@
           </button>
         </div>
       </div>
-      <div v-if="(table && table.status) || (column && column.status)">
+      <div v-if="(props.userDataAuth == 1 || props.userDataAuth == 2) && ((table && table.status) || (column && column.status))">
         <!-- detail-box : 테이블 프로필 -->
         <div class="detail-box" v-if="showTableArea">
           <div class="mu-heading">
@@ -42,7 +42,7 @@
             <h5>컬럼 프로필</h5>
           </div>
           <div class="table-scroll max-h630">
-            <table class="mu-grid mu-grid-data" v-show="showData">
+            <table class="mu-grid mu-grid-data" v-if="showData">
               <colgroup>
                 <col style="width: 150px" />
               </colgroup>
@@ -116,8 +116,9 @@
           </div>
         </div>
       </div>
-      <div class="data-result" v-else>
-        <p class="nodata">데이터 프로파일이 존재하지 않습니다.</p>
+      <div class="data-result h300" v-else>
+        <p class="nodata" v-if="props.userDataAuth != 0">데이터 프로파일이 존재하지 않습니다.</p>
+        <p class="nodata" v-else>데이터 접근 권한이 없습니다.</p>
       </div>
     </div>
   </div>
@@ -125,7 +126,7 @@
 
 <script setup lang="ts">
 import ObjectUtils from "@/utils/ObjectUtils";
-const props = defineProps(["dataProfile", "columnCommentMap", "isAdmin"]);
+const props = defineProps(["dataProfile", "columnCommentMap", "isAdmin", "userDataAuth"]);
 
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
