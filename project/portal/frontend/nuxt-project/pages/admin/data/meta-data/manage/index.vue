@@ -31,14 +31,61 @@
           <div class="board-list-wrap">
             <classification-info :selected-category="selectedCategory" @onClickUpdate="onClickCategoryManageMenu" />
 
-            <meta-data-table-header
-              :filterOptions="filterOptions"
-              :filter-search-obj="filterSearchObj"
-              @onClickButtons="onClickTableHeaderButtons"
-              @onChangeFilter="onChangeFilter"
-              @onFilterSearch="onSearchDataList"
-              :pagingObj="pagingObj"
-            />
+            <!-- 테이블 헤더  -->
+            <div class="mu-heading">
+              <!-- board-list-search -->
+              <div class="board-list-search">
+                <form action="" @submit.prevent="onFilterSearch">
+                  <fieldset>
+                    <legend>게시물검색</legend>
+                    <div class="inner-search">
+                      <!-- <div class="mu-selectbox w120">
+              <select
+                name="searchType1"
+                :value="props.filterSearchObj.searchType1"
+                @change="onChange"
+              >
+                <option value="all">전체</option>
+                <option v-for="(item, idx) in filterOptions" :value="item">{{ item }}</option>
+              </select>
+            </div> -->
+                      <div class="mu-selectbox w120">
+                        <select name="searchType2" :value="filterSearchObj.searchType2" @change="onChange">
+                          <option v-for="(option, index) in filterSearchObj.options" :key="index" :value="option.value">
+                            {{ option.desc }}
+                          </option>
+                        </select>
+                      </div>
+                      <div class="mu-input-icon">
+                        <input
+                          type="text"
+                          class="mu-input"
+                          placeholder="Search"
+                          title="검색어입력"
+                          name="word"
+                          :value="filterSearchObj.word"
+                          @keyup="onChange"
+                        />
+                        <button type="button" class="mu-btn mu-btn-sch" @click.prevent="onFilterSearch">
+                          <i class="mu-icon-svg search"></i><span>검색</span>
+                        </button>
+                      </div>
+                    </div>
+                  </fieldset>
+                </form>
+              </div>
+              <!-- //board-list-search -->
+              <div class="mu-item-group">
+                <page-size v-model:pageSize="pagingObj.limit" @searchMethod="onFilterSearch" />
+                <button type="button" class="mu-btn" @click.stop="onClickButton('roles')">
+                  <span>공개설정</span>
+                </button>
+                <button type="button" class="mu-btn mu-btn-primary" @click.stop="onClickButton('category')">
+                  <span>분류맵핑</span>
+                </button>
+              </div>
+            </div>
+            <!-- //테이블 헤더  -->
 
             <meta-data-table
               ref="refMetaDataTable"
@@ -92,8 +139,9 @@ import portalConfirm from "@functional/confirm/portal-confirm";
 import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import { $R, isEmpties } from "@composables/ramda";
 import { storeToRefs } from "pinia";
-import {useApi} from "@composables/useApi";
-import {useConstants} from "@composables/useConstants";
+import { useApi } from "@composables/useApi";
+import { useConstants } from "@composables/useConstants";
+import PageSize from "@/pages/admin/manager/system/user/page-size";
 
 definePageMeta({
   name: "AdminMetaDataManage",
@@ -101,7 +149,7 @@ definePageMeta({
 });
 
 const { $ofetch } = useNuxtApp();
-const {setEventLog, setMetaSync} = useApi()
+const { setEventLog, setMetaSync } = useApi();
 const { CONSTANT } = useConstants();
 const runConfig = useRuntimeConfig().public;
 
@@ -226,7 +274,7 @@ const selectedData = ref<any>([]); // 테이블 내 체크박스 체크한 데�
 const catSelectedData = ref<any>(null); // 카테고리 체크박스 체크한 데이터 목록
 
 // 필터검색 제어
-const filterOptions = ref<any[]>([]) // 필터옵션 첫번째 항목 데이터
+const filterOptions = ref<any[]>([]); // 필터옵션 첫번째 항목 데이터
 const filterSearchObj = ref<FilterSearchObj>({
   searchType1: "all",
   searchType2: "",
@@ -286,7 +334,7 @@ const authModalObj = ref<AuthModalObj>({
   target: null
 });
 const refManageRoleMappingModal = ref<any>(null); // 공개설정 모달 ref
-const refMetaDataTable = ref<any>(null) // 데이터 목록 컴포넌트 ref
+const refMetaDataTable = ref<any>(null); // 데이터 목록 컴포넌트 ref
 
 await categoryStore.fetchCategories();
 const { _categoryMap } = storeToRefs(categoryStore);
@@ -356,10 +404,10 @@ onUnmounted(() => {
 const getFilterOptions = () => {
   $ofetch(`/api/metadata/manage/getFilterOptions`).then((res) => {
     if (res && res.data && !res.errorMessage) {
-      filterOptions.value = res.data
+      filterOptions.value = res.data;
     }
-  })
-}
+  });
+};
 
 const fetchCategories = async (payload: any) => {
   await categoryStore.fetchCategories(payload);
@@ -607,7 +655,8 @@ const onToggleAuthModal = (type: string | null, targets: any = null) => {
   let target = null;
   const toggle = authModalObj.value.toggle;
 
-  if (!toggle) { // 모달 여는 시점에만 관련 데이터 세팅
+  if (!toggle) {
+    // 모달 여는 시점에만 관련 데이터 세팅
     target = targets;
   }
 
@@ -691,7 +740,7 @@ const onSubmitCategory = async (params: any) => {
             errorAlert(msg);
           } else {
             // 카테고리 맵핑 성공 시
-            for(const entity of params.entityTargets) {
+            for (const entity of params.entityTargets) {
               setEventLog({
                 event_type: CONSTANT.EVENT.TYPE.METADATA,
                 event_status: CONSTANT.EVENT.STATUS.MODIFY,
@@ -700,7 +749,7 @@ const onSubmitCategory = async (params: any) => {
                 meta_id: entity.meta_id,
                 meta_name: entity.meta_name,
                 qualified_name: entity.qualified_name
-              })
+              });
             }
             onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
             onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
@@ -771,7 +820,7 @@ const onClickCategoryManageMenu = (type) => {
   } else {
     if (selectedCategory.value) {
       // 전체 카테고리, 카테고리 미분류는 수정할 수 없도록 지정
-      if (selectedCategory.value.id != '' && selectedCategory.value.id != '_NOT_CLASSIFIED') {
+      if (selectedCategory.value.id != "" && selectedCategory.value.id != "_NOT_CLASSIFIED") {
         onToggleManageModal(type); // 카테고리 추가/수정 모달 제어
       }
     }
@@ -779,7 +828,7 @@ const onClickCategoryManageMenu = (type) => {
 };
 
 // 테이블 상단 버튼 그룹 내 버튼 클릭 이벤트 핸들러
-const onClickTableHeaderButtons = (type) => {
+const onClickButton = (type) => {
   if (selectedData.value.length > 0) {
     let targets: SelectedDataItem[] = [];
     switch (type) {
@@ -824,7 +873,10 @@ const onClickPage = (page: number) => {
 };
 
 // 필터 검색 조건 변경 이벤트 핸들러
-const onChangeFilter = (name: string, value: string) => {
+const onChange = (e) => {
+  const {
+    target: { name, value }
+  } = e;
   const searchObj = JSON.parse(JSON.stringify(filterSearchObj.value)) as FilterSearchObj;
   searchObj[name] = value;
 
@@ -835,7 +887,7 @@ const onChangeFilter = (name: string, value: string) => {
     options = [
       { value: "", desc: "전체" },
       { value: "description", desc: "데이터 설명" },
-      { value: "meta_name", desc: "데이터명" },
+      { value: "meta_name", desc: "데이터명" }
     ];
 
     searchObj.options = options;
@@ -844,8 +896,13 @@ const onChangeFilter = (name: string, value: string) => {
   filterSearchObj.value = searchObj;
 };
 
+const onFilterSearch = () => {
+  onSearchDataList();
+};
+
 // 메타 데이터 통합 관리 목록 조회
 const onSearchDataList = async (offset = 0, item = {}) => {
+  console.log(filterSearchObj.value);
   const params = {
     word: filterSearchObj.value.word,
     offset: offset * pagingObj.value.limit,
@@ -888,7 +945,7 @@ const onSearchDataList = async (offset = 0, item = {}) => {
       };
     }
   } else {
-    dataList.value = []
+    dataList.value = [];
     pagingObj.value = {
       ...pagingObj.value,
       total: 0,
@@ -969,16 +1026,15 @@ const onDeleteCategoryMap = async (target) => {
   );
 
   if (confirm) {
-    const guid = target.item.meta_id
-    const deleteCategoryId = target.targetId
+    const guid = target.item.meta_id;
+    const deleteCategoryId = target.targetId;
 
     $ofetch(`/api/metadata/classification/deleteMapping`, {
       method: "POST",
-      body: { guid, deleteCategoryId },
+      body: { guid, deleteCategoryId }
     }).then((res) => {
       if (!res || res.isFailed) {
-        const msg =
-          "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
+        const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
         errorAlert(msg);
       } else {
         onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
@@ -993,29 +1049,28 @@ const onSubmitAuth = async (params: any) => {
   let auth_params = {
     meta_ids: selectedData.value.map((item: any) => item.meta_id),
     release: params.updatedRelease
-  }
+  };
 
   if (await confirmAlert("권한을 설정하시겠습니까?")) {
     await $ofetch(`/api/metadata/manage/setDataAuth`, {
       method: "PUT",
-      body: auth_params,
-    }).then((res) => {
-      if (res && res.data && res.data.result) {
-        onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
-        onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
-        refManageRoleMappingModal.value.onClose();
-      } else {
-        const msg =
-          "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
-        errorAlert(msg);
-      }
-    }).catch((err) => {
-      console.log(err)
-    });
+      body: auth_params
+    })
+      .then((res) => {
+        if (res && res.data && res.data.result) {
+          onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
+          onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
+          refManageRoleMappingModal.value.onClose();
+        } else {
+          const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
+          errorAlert(msg);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
-}
-
-
+};
 </script>
 <style lang="scss">
 @import "index";
