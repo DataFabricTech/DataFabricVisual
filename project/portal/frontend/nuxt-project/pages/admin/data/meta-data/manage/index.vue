@@ -835,9 +835,6 @@ const onSubmitCategory = async (params: any) => {
             onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
           }
         });
-
-        // 체크한 데이터 목록 초기화
-        selectedData.value = [];
       } catch (error) {
         console.error(error);
         errorAlert("요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.");
@@ -985,6 +982,9 @@ const onFilterSearch = () => {
 
 // 메타 데이터 통합 관리 목록 조회
 const onSearchDataList = async (offset = 0, item = {}) => {
+  // 체크한 데이터 목록 초기화
+  selectedData.value = [];
+
   const params = {
     word: filterSearchObj.value.word,
     offset: offset * pagingObj.value.limit,
@@ -1196,9 +1196,6 @@ const onSubmitAuth = async (params: any) => {
         console.log(err);
       });
   }
-
-  // 체크한 데이터 목록 초기화
-  selectedData.value = [];
 };
 </script>
 <style lang="scss">
