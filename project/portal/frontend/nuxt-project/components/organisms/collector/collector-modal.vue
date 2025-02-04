@@ -38,7 +38,14 @@
             </tr>
             <tr>
               <th>시스템 타입</th>
-              <td><input type="text" v-model="currentCollector.system_type" :title="currentCollector.system_type" placeholder="" class="mu-input" :readonly="isDetail || isUpdate"></td>
+              <td>
+                <div class="mu-selectbox">
+                  <select v-model="currentCollector.system_type" :readonly="isDetail || isUpdate">
+                    <option value="" disabled>시스템 타입을 선택하세요</option>
+                    <option v-for="item in system_types" :value="item">{{ item }}</option>
+                  </select>
+                </div>
+              </td>
               <th>Database</th>
               <td colspan="3"><input type="text" v-model="currentCollector.database" :title="currentCollector.database" class="mu-input" :readonly="isDetail"></td>
             </tr>
@@ -146,11 +153,16 @@ const props = defineProps([
 const userStore = useUserStore()
 const isCheckSystemIdDup = ref(false)
 
+onMounted(() => {
+  getSystemTypes();
+})
+
 // 등록, 수정, 조회에 따른 동적 데이터 사용
 watch(() => props.collector, (newVal, oldVal) => {
   currentCollector.value = newVal
 })
 
+const system_types = ref([]) // 시스템 타입 목록
 const currentCollector = ref({
   flag: 'add',
   system_id: "",
@@ -186,6 +198,19 @@ watch(() => currentCollector.value.port, (newVal, oldVal) => {
     currentCollector.value.port = ''
   }
 })
+
+// 시스템 타입 조회
+const getSystemTypes = async () => {
+  await $ofetch(`/api/admin/system/collector/getSystemTypes`).then((res) => {
+    if (res && res.data) {
+      system_types.value = res.data.list
+    } else {
+      system_types.value = []
+    }
+  }).catch((err) => {
+    system_types.value = []
+  })
+}
 
 // 시스템 ID 중복확인
 const systemIdDupCheck = async (system_id) => {
@@ -251,7 +276,7 @@ const isValidInput = () => {
     return false
   }
   if (!props.isUpdate && !currentCollector.value.system_type || currentCollector.value.system_type == '') { // 시스템 타입
-    errorAlert("시스템 타입을 입력해 주세요.")
+    errorAlert("시스템 타입을 선택해 주세요.")
     return false
   }
   if (!currentCollector.value.database || currentCollector.value.database == '') { // Database

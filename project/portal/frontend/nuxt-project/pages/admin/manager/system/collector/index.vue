@@ -178,7 +178,7 @@ const getKrCollectFlag = (content) => {
   else return '미수집'
 }
 
-// 이력 목록 조회
+// 수집대상 목록 조회
 const getCollectorList = async (offset: number = 1): Promise<void> => {
   try {
     await $ofetch(`/api/admin/system/collector/collectorList?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}`)

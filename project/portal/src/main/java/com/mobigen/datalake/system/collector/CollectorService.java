@@ -196,4 +196,24 @@ public class CollectorService {
 
     return false;
   }
+
+  // 시스템 타입 조회
+  public Object getSystemTypes() throws Exception {
+    Map<String, Object> result = new HashMap<>();
+
+    try {
+      List<String> list = collectorMapper.getSystemTypes();
+      if (list != null) {
+        result.put("list", list);
+      } else {
+        result.put("list", new ArrayList<>());
+      }
+      
+      
+    } catch(Exception e) {
+      result.put("list", new ArrayList<>());
+    }
+
+    return result;
+  }
 }

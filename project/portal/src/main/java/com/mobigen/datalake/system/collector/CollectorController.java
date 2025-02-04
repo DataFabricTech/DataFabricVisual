@@ -108,5 +108,14 @@ public class CollectorController {
         return collectorService.directCollect(system_id);
     }
 
-
+    /**
+     * 시스템 타입 조회
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/getSystemTypes")
+    public Object getSystemTypes() throws Exception {
+        return collectorService.getSystemTypes();
+    }
 }
