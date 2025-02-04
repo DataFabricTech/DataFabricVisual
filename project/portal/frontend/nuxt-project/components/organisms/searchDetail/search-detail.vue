@@ -690,14 +690,12 @@ const getSampleData = () => {
       }
     }
 
-    let sampleDataCount = userStore.getSampleDataCount;
-
     const params = {
       columns: trinoColumns,
       typeName: meta_type,
       system_name: system_name,
       qualified_name: qualified_name,
-      limit: sampleDataCount,
+      limit: 10,
     };
 
     try {

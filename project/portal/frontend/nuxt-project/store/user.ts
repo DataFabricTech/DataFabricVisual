@@ -31,7 +31,6 @@ export const useUserStore = defineStore('userStore', () => {
   const _forceRenderLoader = ref(false) // loader 컴포넌트 강제 활성화 여부 flag
   const _answerId = ref(-1) // 데이터요청 상세화면 진입시 조회 파라미터로 사용할 답변id
   const _faqId = ref(null) // 메인화면에서 FAQ 클릭하여 진입 시 열어두기 위해 사용
-  const _sampleDataCount = ref(10)  // 상세 조회에 있는 샘플데이터에 대해 한번에 보여주는 row 갯수
   const _isDetailBannerVisible = ref(false) // 공지사항, 데이터 요청 상세페이지의 배너 배경 제거 flag
 
   // getters
@@ -45,7 +44,6 @@ export const useUserStore = defineStore('userStore', () => {
   const getAnswerId = computed(() => _answerId.value)
   const getParams = computed(() => _params.value)
   const getFaqId = computed(() => _faqId.value)
-  const getSampleDataCount = computed(() => _sampleDataCount.value)
   const getTimeoutTimer = computed(() => _timeoutTimer.value)
   const getIsDetailBannerVisible = computed(() => _isDetailBannerVisible.value)
 
@@ -60,7 +58,6 @@ export const useUserStore = defineStore('userStore', () => {
   const setAnswerId = (data: any) => { _answerId.value = data}
   const setParams = (data: any) => { _params.value = data}
   const setFaqId = (data: any) => { _faqId.value = data}
-  const setSampleDataCount = (data: any) => { _sampleDataCount.value = data}
   const setTimeoutTimer = (data: any) => { _timeoutTimer.value = data}
   const setIsDetailBannerVisible = (data: any) => { _isDetailBannerVisible.value = data}
 
@@ -249,7 +246,6 @@ export const useUserStore = defineStore('userStore', () => {
     getForceRenderLoader,
     getAnswerId,
     getFaqId,
-    getSampleDataCount,
     getTimeoutTimer,
     getIsDetailBannerVisible,
     setUser,
@@ -270,7 +266,6 @@ export const useUserStore = defineStore('userStore', () => {
     getRouterName,
     getTargetMenu,
     setFaqId,
-    setSampleDataCount,
     setIsDetailBannerVisible
   }
 },

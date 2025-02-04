@@ -11,14 +11,14 @@ export default defineNuxtRouteMiddleware((to, from) => {
 
   // 파라미터를 제거한 경로를 가져오는 함수
   const getPathWithoutParams = (path) => {
-    const url = new URL(path, window.location.origin); 
+    const url = new URL(path, window.location.origin);
     return url.pathname.replace(/\/$/, '');
   };
 
   // 권한 체크
   const searchMenuPath = (rollMenuList : List) => {
     let isMenuExists = false;
-    
+
     for (const menu of rollMenuList) {
       if (getPathWithoutParams(menu.menu_path) === getPathWithoutParams(to.path)) {
         isMenuExists = true;
@@ -159,7 +159,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
         // 권한별 메뉴 정보 설정
         const userMenu = result[0].rollMenuList.filter((a: { authority: string; menu_visible: boolean; }) => a.authority == "User" && a.menu_visible);
         const adminMenu = result[0].rollMenuList.filter((a: { authority: string; menu_visible: boolean; }) => (a.authority == "Manager" || a.authority == "Admin") && a.menu_visible);
-        
+
         let decodedRollMenuList = result[1].decodeRollMenuList;
 
         let user = {
@@ -180,8 +180,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
         await clearSession()
       }
 
-      let sdcResult = await $ofetch('/api/admin/system/manage/sampleDataCount')
-      userStore.setSampleDataCount(parseInt(sdcResult.data.config_value,10));
     } catch (error) {
       cookies.remove('x-access-token');
       cookies.remove('x-refresh-token');
@@ -204,7 +202,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
       return navigateTo('/main')
     }
   }
-  
+
   if (to.path === '/') {
     if(cookies.get('x-access-token') && cookies.get('x-refresh-token')) {
       return navigateTo('/main')
@@ -219,7 +217,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
   } else {
     if(userStore._user.rollMenu && userStore._user.rollMenu != ""){
       let decodedRollMenuList = jwtDecode(userStore._user.rollMenu);
-      
+
       if(!searchMenuPath(decodedRollMenuList.rollMenuList)){
         errorAlert('잘못된 접근입니다.');
         // cookies.set('redirected', 'true', { path: '/' });  // 리디렉션을 기록
