@@ -11,7 +11,6 @@
       :data="recommendStatus"
       :params="userDataParam"
       @reloadRecommendStatus="getRecommendStatus"
-      :sampleDataDenied="sampleDataDenied"
     />
     <div class="inner">
       <scroll-to-tab
@@ -78,7 +77,6 @@
             :list="sampleData"
             :entity="entity"
             :userDataAuth="userDataAuth"
-            :sampleDataDenied="sampleDataDenied"
             :referredEntitiesAttributes="referredEntitiesAttributes"
           />
         </div>
@@ -157,7 +155,6 @@
       />
       <!-- 데이터추출 모달 -->
       <eliminate-modal
-        :sampleDataDenied="sampleDataDenied"
         :eliminate-modal="eliminateModalObj"
         @onCloseModal="onToggleEliminateModal"
       />
@@ -234,7 +231,6 @@ const dataProfile = ref({
   db: {},
   column: [],
 });
-const sampleDataDenied = ref(false);
 const sampleData = ref([]);
 
 const startNode = ref(""); // 데이터 흐름도 렌더 시 시작 노드 guid
@@ -254,7 +250,6 @@ const manageModalObj = ref({
 const eliminateModalObj = ref({
   toggle: false,
   sampleData: [],
-  sampleDataDenied: false,
   entity: {},
   num_rows: 0,
   referredEntitiesAttributes: [],
@@ -714,10 +709,6 @@ const getSampleData = () => {
           sampleData.value = ObjectUtils.getPropertyValue(res.data, "sampleData", []);
         }
 
-        if (res && res.data && res.data.hasOwnProperty("sampleDataDenied")) {
-          sampleDataDenied.value = res.data.sampleDataDenied;
-        }
-
         let typeName = ObjectUtils.getPropertyValue(entity.value, "meta_type", "table")
 
         // 테이블인 경우 테이블 row 건수 조회
@@ -1049,14 +1040,20 @@ const searchTagList = async (offset = 1) =>{
 
 // 사용자의 role
 const getUserDataAuth = async () => {
-  currentGuid.value = route.query.guid
-  await $ofetch(`/api/search/detail/getUserDataAuth?meta_id=${currentGuid.value}`).then(async (res) => {
+  let params = {
+    meta_id: route.query.guid,
+    menu_path: userStore.getTab.currentPath
+  }
+  await $ofetch(`/api/search/detail/getUserDataAuth`, {
+    method: "POST",
+    body: params
+  }).then(async (res) => {
     if (res && res.data) {
       userDataAuth.value = res.data.role_auth
     } else {
       userDataAuth.value = -1
       await errorAlert("데이터 접근 권한이 없습니다.")
-      history.go(-1);
+      router.go(-1)
     }
   }).catch(async (err) => {
     userDataAuth.value = -1
@@ -1065,7 +1062,7 @@ const getUserDataAuth = async () => {
   // 권한 확인 실패 시
   if (userDataAuth.value == -1) {
     await errorAlert("데이터 접근 권한이 없습니다.")
-    history.go(-1);
+    router.go(-1)
   }
 }
 

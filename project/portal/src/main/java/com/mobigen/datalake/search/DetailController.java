@@ -339,13 +339,12 @@ public class DetailController {
      * @throws Exception 
     */
     @ResponseJsonResult
-    @GetMapping("/getUserDataAuth")
+    @PostMapping("/getUserDataAuth")
     @ResponseBody
-    public Object getUserDataAuth(@RequestParam String meta_id, HttpServletRequest request) throws Exception {
+    public Object getUserDataAuth(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-        Map<String, Object> params = new HashMap<>();
         params.put("user", user);
-        params.put("meta_id", meta_id);
+        params.put("menu_path", params.get("menu_path"));
         
         // 사용자 데이터 권한(role_id) 확인
         return searchDetailService.getUserDataAuth(params);

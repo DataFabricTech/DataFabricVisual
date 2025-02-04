@@ -3,7 +3,7 @@
     <table class="mu-grid mu-grid-data">
       <caption>카테고리 관리 목록 게시판</caption>
       <colgroup>
-        <col style="width:30px">
+        <col style="width:40px">
         <col style="width:200px">
         <col style="width:200px">
         <col style="width:200px">

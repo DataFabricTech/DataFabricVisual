@@ -379,19 +379,16 @@ public class SearchDetailService {
                 statement.close();
                 connection.close();
                 resultData.put("sampleData", list);
-                resultData.put("sampleDataDenied", false);
 
             } catch (Exception e) {
                 // 권한 문제
                 if(e.getMessage().indexOf("Access Denied") != -1) {
                     resultData.put("errorMessage", e.getMessage());
-                    resultData.put("sampleDataDenied", true);
                 }
                 // 쿼리 문제
                 else if (e.getMessage().indexOf("Query failed") != -1) {
                     if (e.getMessage().indexOf(" UCP-0: Unable to start the Universal Connection Pool") != -1) { // ORACLE
                         resultData.put("errorMessage", e.getMessage());
-                        resultData.put("sampleDataDenied", false);
                     }
                 } else {
                     resultData.put("errorMessage", "샘플데이터 조회에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
@@ -946,24 +943,32 @@ public class SearchDetailService {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            
-            String meta_id = params.get("meta_id").toString();
-            Integer release = searchDetailMapper.getMetaDataRelease(meta_id);
-
-            // release (1: 모두허용, 2: 권한체크)
-            if (release != null) {
-                if (release == 2) {
-                    Integer authValue = searchDetailMapper.getUserDataAuth(params);
-                    int role_auth = (authValue != null) ? authValue : -1;
-                    result.put("role_auth", role_auth);
-                } else if (release == 1) {
-                    result.put("role_auth", 2);
-                } else { // 나머지는 -1 처리
-                    result.put("role_auth", -1);
-                }
+            // 1. 메타 데이터 관리 > 메타 데이터 통합 관리 메뉴권한이 있는 경우 모두 허용처리
+            // 현재 메뉴, role_id 확인하여 권한있으면 모두 허용
+            System.out.println(params.get("user"));
+            Integer authCnt = searchDetailMapper.getMetaDataAdminAuthCnt(params);
+            if (authCnt != null && authCnt > 0) {
+                result.put("role_auth", 2);
             } else {
-                result.put("role_auth", -1);
-            }   
+                // 2. release (1: 모두허용, 2: 권한체크)
+                String meta_id = params.get("meta_id").toString();
+                Integer release = searchDetailMapper.getMetaDataRelease(meta_id);
+
+                if (release != null) {
+                    if (release == 2) {
+                        Integer authValue = searchDetailMapper.getUserDataAuth(params);
+                        int role_auth = (authValue != null) ? authValue : -1;
+                        result.put("role_auth", role_auth);
+                    } else if (release == 1) {
+                        result.put("role_auth", 2);
+                    } else { // 나머지는 -1 처리
+                        result.put("role_auth", -1);
+                    }
+                } else {
+                    result.put("role_auth", -1);
+                }   
+            }
+            
         } catch (Exception e) {
             log.error("권한 조회 실패");
             result.put("role_auth", -1);

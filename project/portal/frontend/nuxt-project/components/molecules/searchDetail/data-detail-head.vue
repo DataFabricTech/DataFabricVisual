@@ -69,7 +69,7 @@
           @reloadRecommend="onToggleRecommend"
         />
         <button
-          v-if="typeName.includes('table') && !props.sampleDataDenied"
+          v-if="typeName.includes('table')"
           type="button"
           class="mu-btn mu-btn-lg mu-btn-primary"
           @click="onClickEliminate">
@@ -113,7 +113,6 @@ const props = defineProps([
   "params",
   "onOpenEliminateModal",
   "typeName",
-  "sampleDataDenied"
 ]);
 
 const entityCategories = computed(() =>{

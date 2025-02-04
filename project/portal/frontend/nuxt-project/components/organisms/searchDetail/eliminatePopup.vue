@@ -14,7 +14,6 @@
           :isModal="true"
           :list="props.eliminateModal.sampleData"
           :entity="props.eliminateModal.entity"
-          :sampleDataDenied="props.sampleDataDenied"
           :referredEntitiesAttributes="props.eliminateModal.referredEntitiesAttributes"
         />
         <!-- //detail-section -->
@@ -198,7 +197,7 @@ import { onUpdated } from "vue";
 
 const { $ofetch, $yyyyMMdd } = useNuxtApp();
 const emit = defineEmits(["onCloseModal"]);
-const props = defineProps(["sampleDataDenied", "eliminateModal"]);
+const props = defineProps(["eliminateModal"]);
 
 const tabs = ref([
   {idx: 0, key: "일반 데이터 추출"},
@@ -607,7 +606,7 @@ const fnWhereQueryMake = () => {
 
 // 일반 데이터 추출, 대용량 데이터 추출 요청 버튼 클릭
 const onClickFileEliminateButton = async () => {
-  if (props.sampleDataDenied || props.eliminateModal.userDataAuth != 2) {
+  if (props.eliminateModal.userDataAuth != 2) {
     errorAlert("데이터 접근 권한이 없습니다. 관리자에게 문의해 주시기 바랍니다.")
     return
   }
