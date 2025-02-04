@@ -272,14 +272,24 @@ onBeforeRouteLeave((to, from, next) => {
 })
 
 onMounted(async () => {
-  await getUserDataAuth();
-  window.addEventListener('scroll', handleScroll);
-  userStore.setForceRenderLoader(true); // 강제 loader 유지 설정
-  categoryStore.fetchCategories(); // 카테고리 정보 조회
-  await getAllDataByGuid()
-  await searchTagList();
+  // 권한 체크
+  await getUserDataAuth().then(async (res) => {
+    if (res && res == true) {
+      window.addEventListener('scroll', handleScroll);
+      userStore.setForceRenderLoader(true); // 강제 loader 유지 설정
+      categoryStore.fetchCategories(); // 카테고리 정보 조회
+      await getAllDataByGuid()
+      await searchTagList();
+    } else {
+      await errorAlert("데이터 접근 권한이 없습니다.")
+      router.push('/search/keyword')
+    }
+  })
+  .catch(async (err) => {
+    await errorAlert("조회에 실패하였습니다.")
+    router.push('/search/keyword')
+  });
 });
-
 
 // 엔티티 유형
 const typeName = computed(() =>
@@ -523,7 +533,7 @@ const getDetailDataByGuid = async (newGuid) => {
     // 조회된 데이터가 없는 경우 뒤로가기
     if (entity.value == null || isEmptyObject(entity.value)) {
       await errorAlert("조회된 데이터가 없습니다.")
-      history.go(-1)
+      router.push('/search/keyword')
     }
 
     // 탭 유무 처리
@@ -1040,7 +1050,8 @@ const searchTagList = async (offset = 1) =>{
 const getUserDataAuth = async () => {
   let params = {
     meta_id: route.query.guid,
-    menu_path: userStore.getTab.currentPath
+    menu_path: userStore.getTab.currentPath,
+    is_admin: props.isAdmin
   }
   await $ofetch(`/api/search/detail/getUserDataAuth`, {
     method: "POST",
@@ -1050,8 +1061,6 @@ const getUserDataAuth = async () => {
       userDataAuth.value = res.data.role_auth
     } else {
       userDataAuth.value = -1
-      await errorAlert("데이터 접근 권한이 없습니다.")
-      router.go(-1)
     }
   }).catch(async (err) => {
     userDataAuth.value = -1
@@ -1059,8 +1068,9 @@ const getUserDataAuth = async () => {
 
   // 권한 확인 실패 시
   if (userDataAuth.value == -1) {
-    await errorAlert("데이터 접근 권한이 없습니다.")
-    router.go(-1)
+    return false
+  } else {
+    return true
   }
 }
 

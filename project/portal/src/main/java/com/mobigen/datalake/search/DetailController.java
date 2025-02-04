@@ -344,7 +344,6 @@ public class DetailController {
     public Object getUserDataAuth(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         params.put("user", user);
-        params.put("menu_path", params.get("menu_path"));
         
         // 사용자 데이터 권한(role_id) 확인
         return searchDetailService.getUserDataAuth(params);

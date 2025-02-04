@@ -938,19 +938,26 @@ public class SearchDetailService {
         return result;
     }
 
-    // 사용자의 권한 조회
+    // 사용자의 데이터 접근 권한 조회
     public Map<String, Object> getUserDataAuth(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            // 1. 메타 데이터 관리 > 메타 데이터 통합 관리 메뉴권한이 있는 경우 모두 허용처리
+            // 1. 데이터 관리자 확인
+            // 메타 데이터 관리 > 메타 데이터 통합 관리의 상세페이지인 경우, 메뉴권한이 있는 경우 모두 허용처리
             // 현재 메뉴, role_id 확인하여 권한있으면 모두 허용
-            System.out.println(params.get("user"));
-            Integer authCnt = searchDetailMapper.getMetaDataAdminAuthCnt(params);
-            if (authCnt != null && authCnt > 0) {
-                result.put("role_auth", 2);
+            Integer authCnt = 0;
+            boolean isAdmin = params.get("is_admin") != null ? (Boolean) params.get("is_admin") : false;
+
+            // 관리자 페이지에서 상세조회
+            if (isAdmin) {
+                authCnt = searchDetailMapper.getMetaDataAdminAuthCnt(params);
+                if (authCnt != null && authCnt > 0) {
+                    result.put("role_auth", 2);
+                }
+                // 사용자 페이지에서 상세조회
             } else {
-                // 2. release (1: 모두허용, 2: 권한체크)
+                // 2. release 확인 (0: secret, 1: 모두허용, 2: 권한체크)
                 String meta_id = params.get("meta_id").toString();
                 Integer release = searchDetailMapper.getMetaDataRelease(meta_id);
 
@@ -966,9 +973,10 @@ public class SearchDetailService {
                     }
                 } else {
                     result.put("role_auth", -1);
-                }   
+                }
             }
-            
+   
+            return result;
         } catch (Exception e) {
             log.error("권한 조회 실패");
             result.put("role_auth", -1);
