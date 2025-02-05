@@ -771,7 +771,7 @@ const onClickFileEliminateButton = async () => {
       meta_name,
       status: 0,
       qualified_name,
-      download_query: `SELECT ${querySelect.value} FROM "${system_id}"."${schema}"."${name}" ${queryWhere.value} limit ${params.limit}`,
+      download_query: `SELECT ${querySelect.value} FROM "${system_id}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
       data_delimiter: ",",
       data_lineterm: "\n"
     }
