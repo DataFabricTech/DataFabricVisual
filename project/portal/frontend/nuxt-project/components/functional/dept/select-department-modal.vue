@@ -236,7 +236,7 @@ onBeforeUnmount(() => {
 
 //
 const onDeptDataLoad = async () => {
-  await deptStore.fetchDepts();
+  await deptStore.fetchDepts({ from: "deptDataManage" });
   const { _deptMap } = storeToRefs(deptStore);
 
   departments.value = _deptMap.value;

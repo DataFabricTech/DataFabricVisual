@@ -31,7 +31,7 @@
       </a>
       <button
         style="width: max-content"
-        v-if="calledFrom === 'metaDataManage' && item.id !== '_NOT_CLASSIFIED'"
+        v-if="calledFrom === 'deptDataManage' && item.id !== '_NOT_CLASSIFIED'"
         v-show="selectedId === item.id"
         type="button"
         class="item-set"

@@ -101,7 +101,7 @@
   // 
   onMounted(() => {
     // 조직 우측 이벤트 핸들러 노출
-    deptStore.setCalledFrom({ from: "metaDataManage" });
+    deptStore.setCalledFrom({ from: "deptDataManage" });
 
     document.addEventListener("click", (e) => onToggleTooltip(e));
 
@@ -268,7 +268,7 @@
   const onSearchDepts = async (item: { name?: string } = {}) => {
     const { name = null } = item;
 
-    const list = await fetchDepts({ from: "metaDataManage" });
+    const list = await fetchDepts({ from: "deptDataManage" });
     
     eventStore.emit('deptSelected', {dept_cd: ""});
   };
