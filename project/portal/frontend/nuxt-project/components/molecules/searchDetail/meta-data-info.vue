@@ -173,7 +173,9 @@ const metaDataInfo = computed(() => {
     sortedMetaData.system_name = entity.system_name
     sortedMetaData.system_type = entity.system_type
     sortedMetaData.meta_type = entity.meta_type
-    sortedMetaData.database = getDbName(entity.qualified_name)
+    if (entity.system_type && entity.system_type.toUpperCase() != 'MYSQL') {
+      sortedMetaData.database = getDbName(entity.qualified_name)
+    }
     if (entity.system_type && entity.system_type.toUpperCase() != 'HIVE') {
       sortedMetaData.database_schema = getSchemaName(entity.qualified_name)
     }
