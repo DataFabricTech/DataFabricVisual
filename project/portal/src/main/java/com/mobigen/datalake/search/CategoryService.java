@@ -192,12 +192,12 @@ public class CategoryService {
         // 정렬 오름차순, 내림차순
         orderInfo.put("allChecked", true);
         orderInfo.put("ord", 5);
-        orderInfo.put("name", "정렬기준");
+        orderInfo.put("name", "수집일");
         orderInfo.put("content", new ArrayList<Map<String, Object>>());
 
         Map<String, Object> ascContent = new HashMap<>();
         ascContent.put("root", "ORDER");
-        ascContent.put("rootDescription", "정렬기준");
+        ascContent.put("rootDescription", "수집일");
         ascContent.put("id", 1);
         ascContent.put("name", "ASC");
         ascContent.put("description", "오름차순");
@@ -206,7 +206,7 @@ public class CategoryService {
         ((List<Map<String, Object>>) orderInfo.get("content")).add(ascContent);
         Map<String, Object> descContent = new HashMap<>();
         descContent.put("root", "ORDER");
-        descContent.put("rootDescription", "정렬기준");
+        descContent.put("rootDescription", "수집일");
         descContent.put("id", 2);
         descContent.put("name", "DESC");
         descContent.put("description", "내림차순");

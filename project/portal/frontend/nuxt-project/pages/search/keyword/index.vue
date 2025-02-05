@@ -336,11 +336,11 @@ const detailFilters = ref({
   ORDER: {
     all: true,
     ord: 5,
-    name: '정렬기준',
+    name: '수집일',
     content: [
       {
         "root": "ORDER",
-        "rootDescription": "정렬기준",
+        "rootDescription": "수집일",
         "id": 1,
         "name": "ASC",
         "description": "오름차순",
@@ -349,7 +349,7 @@ const detailFilters = ref({
       },
       {
         "root": "ORDER",
-        "rootDescription": "정렬기준",
+        "rootDescription": "수집일",
         "id": 1,
         "name": "DESC",
         "description": "내림차순",
@@ -1248,7 +1248,7 @@ const getRootDescription = (key) => {
   else if (key == 'SYSTEMTYPE') return "시스템 타입"
   else if (key == 'METATYPE') return "메타 타입"
   else if (key == 'TAG') return "태그"
-  else if (key == "ORDER") return "정렬기준"
+  else if (key == "ORDER") return "수집일"
   else return ""
 }
 
