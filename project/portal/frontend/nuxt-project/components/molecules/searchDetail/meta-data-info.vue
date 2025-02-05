@@ -127,7 +127,7 @@ const desiredOrder = ref([
   "meta_type",
   "table_type",
   "database",
-  "database_schema"
+  "schema"
 ])
 // 메타속성 제외 목록
 const noEntries = ref([])
@@ -177,7 +177,7 @@ const metaDataInfo = computed(() => {
       sortedMetaData.database = getDbName(entity.qualified_name)
     }
     if (entity.system_type && entity.system_type.toUpperCase() != 'HIVE') {
-      sortedMetaData.database_schema = getSchemaName(entity.qualified_name)
+      sortedMetaData.schema = getSchemaName(entity.qualified_name)
     }
 
     // 값이 없는 데이터 필드 보여주기 여부
@@ -231,6 +231,7 @@ const getKrKey = (key) => {
     if (key == "meta_sync_time") return "최종 수집일";
     if (key == "database") return "데이터베이스";
     if (key == "database_schema") return "스키마";
+    if (key == "schema") return "스키마";
     if (key == "source_hash") return "소스 해시값";
     if (key == "tags") return "사용자 정의 태그";
     if (key == "owner") return "테이블 소유자 계정";
