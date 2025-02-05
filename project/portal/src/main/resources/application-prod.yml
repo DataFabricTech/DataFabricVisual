@@ -155,6 +155,7 @@ properties:
   essync:
     url: 
       update: http://<INTERNAL_HOST>:8000/v1/essync/update
+      updates: http://<INTERNAL_HOST>:8000/v1/essync/updates
       roleupdates: http://<INTERNAL_HOST>:8000/v1/essync/roleupdates
       convertcategory: http://<INTERNAL_HOST>:8000/v1/essync/convertcategory
   synonymsync:
