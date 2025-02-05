@@ -531,3 +531,5 @@ pre code {
 .step-process.upload {background-color:#e2e7c2; color:#656d78; font-weight: 500;} /* 업로드 */
 .step-process.limit {background-color:#d9d9d9; color:#656d78; font-weight: 500;} /* 만료 */
 .step-process.err {background-color:#d9d9d9; color:#bb0000; font-weight: 500;} /* 에러 */
+
+.data-box .inner-data.option {display:flex; flex-direction:column; justify-content: center; align-items:flex-start; flex:none;}
