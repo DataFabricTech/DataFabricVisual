@@ -211,7 +211,7 @@ const removeEmptyFields = (obj) => {
 // 한글명으로 수정
 const getKrKey = (key) => {
   if (props.entity && props.entity != undefined) {
-    if (key == "meta_id") return "메타데이터 명";
+    if (key == "meta_id") return "메타데이터 ID";
     if (key == "meta_name") return "메타데이터 명";
     if (key == "meta_type") return "메타데이터 타입";
     if (key == "system_id") return "시스템 ID";
