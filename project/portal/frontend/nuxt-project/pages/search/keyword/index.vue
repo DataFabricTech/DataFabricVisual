@@ -437,6 +437,16 @@ const entityFilterCriterion = ref([
     typeName: "string"
   },
   {
+    name: "db",
+    displayName: "db",
+    typeName: "string"
+  },
+  {
+    name: "db_schema",
+    displayName: "schema",
+    typeName: "string"
+  },
+  {
     name: "attributes.table_type",
     displayName: "table_type",
     typeName: "string"
@@ -490,16 +500,6 @@ const entityFilterCriterion = ref([
     name: "meta_sync_time",
     displayName: "meta_sync_time",
     typeName: "date"
-  },
-  {
-    name: "db",
-    displayName: "db",
-    typeName: "string"
-  },
-  {
-    name: "db_schema",
-    displayName: "schema",
-    typeName: "string"
   },
 ])
 const entityFilterCondition = ref({
@@ -1264,6 +1264,20 @@ const getRootDescription = (key) => {
 
 // 조건 클릭 이벤트
 const onChangeCheckBox = async (key, event: any) => {
+  // 추가속성필터가 열려있는 경우 유효성 체크
+  if (showFilterWrap2.value && checkFilterWrap2.value) {
+    let checkVal = checkFilterSearch(entityFiltersList.value)
+    if (typeof checkVal !== undefined) {
+      if (checkVal === true) {
+        event.target.checked = !event.target.checked
+        await errorAlert('추가속성필터를 삭제 또는 입력해주세요');
+        return
+      }
+    } else {
+
+    }
+  }
+
   // 전체 클릭
   if (event.target.value == 'ALL') {
     clearFilter(key)
