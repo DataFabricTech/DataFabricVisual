@@ -13,9 +13,11 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RoleManagementService {
@@ -248,8 +250,12 @@ public class RoleManagementService {
             
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("roleids", roleIds);
+
             ResponseEntity<String> restResponse = restTemplate.postForEntity(esSyncUrlRoleUpdates, requestBody, String.class);
-            
+
+            // for debug
+            log.info("\n\n\n\n\n\n========================\nrest param : " + requestBody +"\nrest Response : "+ restResponse.getBody() +"\n========================\n\n");
+
             if (restResponse != null && restResponse.getBody() != null) {
                 ObjectMapper objectMapper = new ObjectMapper();
                 Map<String, Object> body = objectMapper.readValue(restResponse.getBody(), new TypeReference<Map<String, Object>>(){});

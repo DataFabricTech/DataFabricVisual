@@ -96,6 +96,18 @@ export const useDeptStore = defineStore("deptStore", () => {
   const setSelectedSubDeptLevelMaxOrdNo = (payload) => {
     return (_selectedSubDeptLevelMaxOrdNo.value = payload);
   };
+  // 전체 트리 펼치기
+  const expandAll = (deptList) => {
+    deptList.forEach(dept => {
+      _toggleTargets.value[dept.id] = true;
+    });
+  };
+  // 전체 트리 접기
+  const collapseAll = (deptList) => {
+    deptList.forEach(dept => {
+      _toggleTargets.value[dept.id] = false;
+    });
+  };
 
   // 부서 목록 데이터 조회
   const fetchDepts = async (payload:any, word:string) => {
@@ -252,6 +264,8 @@ export const useDeptStore = defineStore("deptStore", () => {
     fetchDepts,
     getDbData,
     setSelectedDeptLevelMaxOrdNo,
-    setSelectedSubDeptLevelMaxOrdNo
+    setSelectedSubDeptLevelMaxOrdNo,
+    expandAll,
+    collapseAll
   };
 });

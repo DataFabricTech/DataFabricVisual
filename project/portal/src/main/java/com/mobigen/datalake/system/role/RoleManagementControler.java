@@ -609,4 +609,30 @@ public class RoleManagementControler {
         return result;
     }
 
+    /**
+     * 권한 관리 - es 동기화 호출
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PostMapping("/esSyncCall")
+    public Object esSyncCall(@RequestBody Map<String, Object> param)  throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        if(param.get("role_id") != null) {
+            String[] roleIds = {param.get("role_id").toString()};
+            boolean roleEsUpdateResult = roleManagementService.essyncRolesUpdates(Arrays.asList(roleIds), "update");
+            
+            if (!roleEsUpdateResult) {
+                String errorMessage = "요청을 처리하는 중 에러가 발생하였습니다.";
+                result.put("errorMessage", errorMessage);
+                result.put("isFailed", true);
+            } else {
+                result.put("isFailed", false);
+            }
+        }
+
+        return result;
+    }
+
 }

@@ -29,11 +29,11 @@
                     <col style="width: 220px" />
                     <col style="width: 190px" />
                     <col style="width: 130px" />
-                    <col style="width: 260px" />
+                    <col style="width: 250px" />
                     <col style="width: 110px" />
                     <col style="width: 100px" />
                     <col style="width: 100px" />
-                    <col style="width: 150px" />
+                    <col style="width: 180px" />
                   </colgroup>
                   <thead>
                     <tr>
@@ -70,6 +70,7 @@
                       <td>
                         <!-- <button type="button" class="mu-btn mu-btn-sm" :disabled="modifyDisabledState(item)" v-on:click="onClickUpdateButton(item)"><i class="mu-icon-svg edit"></i><span>수정</span></button> -->
                         <button type="button" class="mu-btn mu-btn-sm" :disabled="deleteDisabledState(item)" v-on:click="onClickDeleteButton(item)" style="margin-left:5px"><i class="mu-icon-svg del"></i><span>삭제</span></button>
+                        <button class="mu-btn mu-btn-sm" style="margin-left:5px;" v-on:click="onClickSyncButton(item)"><span>Sync</span><i class="mu-icon-svg refresh"></i></button>
                       </td>
                     </tr>
                     <tr v-if="dataAuthList.length === 0">
@@ -314,6 +315,22 @@
           } else {
             getWebDataAuthList();
           }
+        }
+      }
+    });
+  };
+
+  // 
+  const onClickSyncButton = (item) => {
+    $ofetch("api/admin/system/role/esSyncCall", {
+      method: "POST",
+      body: { role_id: item.role_id },
+    }).then(async (res: { errorMessage: string }) => {
+      if (res) {
+        if (res.data.errorMessage && res.data.errorMessage != "") {
+          await errorAlert(res.data.errorMessage);
+        } else {
+          await successAlert("처리 되었습니다.");
         }
       }
     });

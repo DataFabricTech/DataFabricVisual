@@ -8,7 +8,7 @@
       <div class="mu-dialog-body">
         <div class="filter-wrap">
           <div class="mu-search-group" style="padding: 10px;">
-            <div class="mu-search-item">
+            <div class="mu-search-item" style="padding: 0px;">
               <table>
                 <caption>조직 검색 게시판</caption>
                 <colgroup>
@@ -43,8 +43,21 @@
             <div class="mu-search-btn"></div>
           </div>
           
-          <div class="mu-heading">
+          <div class="mu-heading" style="justify-content: space-between;margin-top: auto;">
             <h4>조직 목록</h4>
+            <div class="detail-section" :class="showData ? 'open' : 'close'" style="height: auto;">
+              <div class="mu-item-group">
+                <button
+                  type="button"
+                  class="mu-btn mu-btn-bg-non btn-section-toggle"
+                  title="접기"
+                  @click="toggleShowData()"
+                  style="margin-left: 10px"
+                >
+                  <span>{{ toggleShowDataText }}</span>
+                </button>
+              </div>
+            </div>
           </div>
           
           <div class="department-tree" style="overflow: auto; border: 1px solid #cecece;height: 400px">
@@ -163,17 +176,23 @@ const selectedId = deptStore.getSelectedItemId;
 const isActive = ref(false);
 const zIndex = ref(101);
 
+const showData = ref(true);
+const toggleShowDataText = ref("접기");
+
+const toggleShowData = () => {
+  showData.value = !showData.value;
+  if (showData.value) {
+    toggleShowDataText.value = "접기";
+    deptStore.expandAll(deptList.value);
+  } else {
+    toggleShowDataText.value = "펼치기";
+    deptStore.collapseAll(deptList.value);
+  }
+};
+
 //
 const onClear = () => {
-  // deptStore.fetchDepts(null, word.value);
-  // const { _deptMap } = storeToRefs(deptStore);
-
-  // TO-DO : class를 has-sub로 변경
-  // var departmentTree = document.querySelector('.sub-category-menu');
-  // var listItems = departmentTree.querySelectorAll('li');
-  // listItems.forEach(function(item) {
-  //     item.className = 'has-sub';
-  // });
+  deptStore.collapseAll(deptList.value);
 
   word.value = "";
 
@@ -297,6 +316,8 @@ const filterDepartmentsWithParents = (departments, searchTerm) => {
       });
     }
   });
+
+  deptStore.expandAll(filteredDepartments);
 
   return filteredDepartments;
 };
