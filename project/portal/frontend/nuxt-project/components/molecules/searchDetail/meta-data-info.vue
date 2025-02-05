@@ -132,7 +132,7 @@ const desiredOrder = ref([
 // 메타속성 제외 목록
 const noEntries = ref([])
 
-const showEmptyField = ref(true) // 메타속성 데이터 없는 필드 보여주기 여부
+const showEmptyField = ref(false) // 메타속성 데이터 없는 필드 보여주기 여부
 
 const metaDataInfo = computed(() => {
   const entity = props.entity
