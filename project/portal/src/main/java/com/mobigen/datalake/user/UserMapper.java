@@ -12,6 +12,7 @@ public interface UserMapper {
     Object getUserMaster(String username) throws Exception;
     Object getApprovalUserMaster(String username) throws Exception;
     Object getPendingApprovalUsers(String username) throws Exception;
+    int getCheckDeptExists(Map<String, String> param) throws Exception;
     int getCheckUserExists(Map<String, String> param) throws Exception;
     Integer updateLoginUser(String user_id) throws Exception;
     Integer updateLoginFailCount(String user_id) throws Exception;    

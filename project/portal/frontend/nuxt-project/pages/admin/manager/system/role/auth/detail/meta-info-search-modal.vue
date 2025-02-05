@@ -14,7 +14,7 @@
           @onClickMenuItem="onClickMenuItem"
         />
 
-        <div class="main-system" style="width: 915px;min-height:709px;">
+        <div class="main-system" style="width: 890px;min-height:709px;">
           <div class="inner-column">
             <div class="board-list-search">
               <form action="">
@@ -45,14 +45,14 @@
             </div>
 
             <div class="board-list">
-              <table class="mu-grid">
+              <table class="mu-grid mu-grid-data">
                 <colgroup>
                   <col style="width: 40px" />
-                  <col style="width: 182px" />
+                  <col style="width: 150px" />
                   <col style="width: 150px" />
                   <col style="width: 130px" />
                   <col style="width: 120px" />
-                  <col style="width: 240px" />
+                  <col style="width: 250px" />
                 </colgroup>
                 <thead>
                   <tr>
@@ -66,7 +66,7 @@
                     </th>
                     <th scope="col">데이터 설명</th>
                     <th scope="col">데이터 명</th>
-                    <th scope="col">데이터 타입</th>
+                    <th scope="col">시스템 타입</th>
                     <th scope="col">유형</th>
                     <th scope="col">카테고리</th>
                   </tr>
@@ -86,13 +86,9 @@
                         <label :for="'check_' + item.meta_id"><span class="blind">행선택</span></label>
                       </div>
                     </td>
-                    <td>
-                      <div style="width:200px;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                        {{ item.description }}
-                      </div>
-                    </td>
+                    <td> {{ item.description }} </td>
                     <td> {{ item.meta_name }} </td>
-                    <td> {{ item.system_name }} </td>
+                    <td> {{ item.system_type }} </td>
                     <td> {{ item.meta_type }} </td>
                     <td>
                       <!-- 카테고리 -->
@@ -237,8 +233,8 @@ const onSearchDataList = async (offset = 0, item) =>{
       params.searchClassification = item.id;
     }
 
-    // 
-    const res = await $ofetch(`/api/metadata/manage/list`, { method: "POST", body: params });
+    // /api/metadata/manage/list
+    const res = await $ofetch(`/api/admin/system/role/metaDatalist`, { method: "POST", body: params });
     if (res && !res.errorMessage) {
       let result = res.data;
 

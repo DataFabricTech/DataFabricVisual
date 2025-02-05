@@ -31,6 +31,7 @@
                 v-model="props.modalParam.role_id"
                 v-bind:class="[!role_id_valid ? 'error' : '', 'mu-input']"
                 :disabled="props.updateFlag"
+                oninput="this.value = this.value.replace(/[^a-zA-Z0-9_]/g, '')"
               />
               <button type="button" class="mu-btn" @click="checkDupRoleId" style="margin-left:10px" :disabled="props.updateFlag">
                 <span>중복확인</span>
@@ -38,7 +39,7 @@
               <p v-if="!role_id_valid" class="complete-msg error">권한ID를 입력해 주세요.</p>
             </td>
           </tr>
-          <tr>
+          <tr v-if="false">
             <th scope="row">권한 타입<strong class="required">필수</strong></th>
             <td style="display: block;">
               <div class="mu-radio">
@@ -49,6 +50,7 @@
                       value="0"
                       v-model="props.modalParam.role_type"
                       :checked="props.modalParam.role_type == 0"
+                      :disabled="props.modalParam.role_type == 0"
                       v-bind:class="[!role_type_valid ? 'error' : '', 'mu-input']"
                       />
                   <label for="menu_role_type" >
@@ -63,6 +65,7 @@
                       value="1"
                       v-model="props.modalParam.role_type"
                       :checked="props.modalParam.role_type == 1"
+                      :disabled="props.modalParam.role_type == 0"
                       v-bind:class="[!role_type_valid ? 'error' : '', 'mu-input']"
                   />
                   <label for="data_role_type" >
@@ -132,7 +135,6 @@ const emit = defineEmits(["onCloseModal", "onSubmit"]);
 
 const checkedDupRoleId = ref(false);
 
-
 // 
 const onCancel = () => {
   emit("onCloseModal");
@@ -144,10 +146,12 @@ const onClose = () => {
   emit("onCloseModal");
 };
 
+// 
 const onClear = () => {
   checkedDupRoleId.value = false;
 };
 
+// 
 const role_id_dup_valid: ComputedRef<boolean> = computed(() => {
   if (!props.modalParam.role_id) {
     return false;
@@ -156,6 +160,7 @@ const role_id_dup_valid: ComputedRef<boolean> = computed(() => {
   }
 });
 
+// 
 const role_id_valid: ComputedRef<boolean> = computed(() => {
   if (!props.modalParam.role_id) {
     return false;
@@ -164,10 +169,12 @@ const role_id_valid: ComputedRef<boolean> = computed(() => {
   }
 });
 
+// 
 const role_type_valid: ComputedRef<boolean> = computed(() => {
   return props.modalParam.role_type !== undefined;
 });
 
+// 
 const role_name_valid: ComputedRef<boolean> = computed(() => {
   if (!props.modalParam.role_name) {
     return false;
@@ -176,13 +183,14 @@ const role_name_valid: ComputedRef<boolean> = computed(() => {
   }
 });
 
-
+// 
 const onRegister = async () => {
   let params = {
     role_id: props.modalParam.role_id,
     role_type: props.modalParam.role_type,
     role_name: props.modalParam.role_name,
     role_description: props.modalParam.role_description,
+    role_auth: 0,
     etc: props.modalParam.etc,
     updateFlag: props.updateFlag ? "Y" : "N",
   };
@@ -215,6 +223,7 @@ const onRegister = async () => {
   }
 }
 
+// 
 const checkDupRoleId = async () => {
   if (props.modalParam.role_id && props.modalParam.role_id != "") {
     await $ofetch(`/api/admin/system/role/checkDupRoleId?role_id=${props.modalParam.role_id}`).then(async (res) => {
@@ -231,6 +240,7 @@ const checkDupRoleId = async () => {
   }
 }
 
+// 
 defineExpose({
   onClose
 })

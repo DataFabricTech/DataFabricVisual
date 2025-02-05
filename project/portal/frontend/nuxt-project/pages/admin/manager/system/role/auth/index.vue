@@ -2,24 +2,16 @@
     <div>
       <div class="inner">
         <div class="detail-section">
-          <div class="mu-heading">
-            <div class="tabs">
-              <div
-                class="tab"
-                :class="{'active': activeTab === 0}"
-                @click="changeTab(0)"
-              >
-                데이터 권한
-              </div>
-              <div
-                class="tab"
-                :class="{'active': activeTab === 1}"
-                @click="changeTab(1)"
-              >
-                웹포털 권한
+          <!-- <div class="mu-heading"> -->
+            <div class="w500">
+              <div class="mu-tab-box-2">
+                <ul class="mu-tab">
+                  <li :class="{active: activeTab === 0}"><a href="javascript:void(0)" @click="changeTab(0)" class="mu-switch" title="선택됨">데이터 권한</a></li>
+                  <li :class="{active: activeTab === 1}"><a href="javascript:void(0)" @click="changeTab(1)" class="mu-switch" title="">웹포털 권한</a></li>
+                </ul>
               </div>
             </div>
-          </div>
+          <!-- </div> -->
 
           <div v-if="activeTab === 0">
             <div class="board-list-wrap">
@@ -37,11 +29,11 @@
                     <col style="width: 220px" />
                     <col style="width: 190px" />
                     <col style="width: 130px" />
-                    <col style="width: 230px" />
+                    <col style="width: 260px" />
                     <col style="width: 110px" />
                     <col style="width: 100px" />
                     <col style="width: 100px" />
-                    <col style="width: 180px" />
+                    <col style="width: 150px" />
                   </colgroup>
                   <thead>
                     <tr>
@@ -76,7 +68,7 @@
                       <td>{{item.user_cnt}}</td>
                       <td>{{item.dept_cnt}}</td>
                       <td>
-                        <button type="button" class="mu-btn mu-btn-sm" :disabled="modifyDisabledState(item)" v-on:click="onClickUpdateButton(item)"><i class="mu-icon-svg edit"></i><span>수정</span></button>
+                        <!-- <button type="button" class="mu-btn mu-btn-sm" :disabled="modifyDisabledState(item)" v-on:click="onClickUpdateButton(item)"><i class="mu-icon-svg edit"></i><span>수정</span></button> -->
                         <button type="button" class="mu-btn mu-btn-sm" :disabled="deleteDisabledState(item)" v-on:click="onClickDeleteButton(item)" style="margin-left:5px"><i class="mu-icon-svg del"></i><span>삭제</span></button>
                       </td>
                     </tr>
@@ -304,6 +296,7 @@
 
     let param = {
       role_id: item.role_id,
+      role_type: item.role_type,
     };
   
     $ofetch("api/admin/system/role/delete", {
@@ -388,6 +381,8 @@
     try {
       modalParam.value = param;
 
+      console.log("param", param);
+
       visibleDeptManageModal.value = !visibleDeptManageModal.value;
       visibleDeptManageButton.value = true;
 
@@ -412,34 +407,10 @@
       });
     }
   };
-  </script>
+</script>
   
 <style scoped>
 .detail-section > .mu-heading:first-child {
     padding-bottom: 0px !important;
 }
-.tabs {
-  display: flex;
-  cursor: pointer;
-}
-.tab {
-  padding: 10px 20px;
-  margin-right: 0px;
-  border: 1px solid #ccc;
-  border-radius: 0px;
-  width: 150px;
-  text-align: center;
-  display: block;
-}
-.tab.active {
-  background-color: #f0f1f5;
-  color: #000000;
-}
-/* .board-list-wrap {
-  margin-top: 20px;
-}
-.board-list-wrap h3 {
-  font-size: 1.5rem;
-  margin-bottom: 10px;
-} */
 </style>

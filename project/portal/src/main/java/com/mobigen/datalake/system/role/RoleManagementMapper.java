@@ -40,4 +40,5 @@ public interface RoleManagementMapper {
     Integer getUserDataListCount(Map<String, Object> param) throws Exception;
     List getUserMetaDataList(Map<String, Object> param) throws Exception;
     Integer getUserMetaDataListCount(Map<String, Object> param) throws Exception;
+    List searchMetaRoleInfo(Map<String, Object> param) throws Exception;
 }

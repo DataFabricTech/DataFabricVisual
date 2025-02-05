@@ -161,7 +161,7 @@
 import ObjectUtils from "@utils/ObjectUtils";
 
 import AutoSelect from "@functional/autoSelect/auto-select";
-import SelectDeptModal from "@organisms/metaDataManage/select-department-modal";
+import selectDeptModal from "@functional/dept/select-department-modal";
 import { errorAlert } from "@functional/alert/alert-default";
 import { useCategoryStore } from "@store/category";
 import { useNuxtApp } from "nuxt/app";

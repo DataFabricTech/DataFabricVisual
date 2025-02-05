@@ -1,18 +1,28 @@
 package com.mobigen.datalake.system.role;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import lombok.RequiredArgsConstructor;
+
+import com.fasterxml.jackson.core.type.TypeReference;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class RoleManagementService {
     private final RoleManagementMapper roleManagementMapper;
+
+    @Value("${properties.essync.url.roleupdates}")
+    private String esSyncUrlRoleUpdates;
 
     // 권한 관리 리스트 조회
     public List<Map> getRoleManagementSearchList(Map<String, Object> param) throws Exception {
@@ -140,7 +150,7 @@ public class RoleManagementService {
         return total;
     }
 
-    // 권한 관리 조회 - 데이타타 삭제
+    // 권한 관리 조회 - 데이타 삭제
     public Integer deleteMetaRoleItem(List<Map<String, Object>> list) throws Exception {
         Integer total = roleManagementMapper.deleteMetaRoleItem(list);
         return total;
@@ -208,6 +218,62 @@ public class RoleManagementService {
     public Integer getUserMetaDataListCount(Map<String, Object> param) throws Exception {
         Integer total = roleManagementMapper.getUserMetaDataListCount(param);
         return total;
+    }
+
+    // es - 권한 동기화
+    public boolean essyncRolesUpdates(List<String> roleIds, String roleStauts) throws Exception {
+        boolean result = false;
+
+        try {
+            // 권한 타입이 데이터 권한인 경우에만 동기화
+            Map<String, Object> param = new HashMap<String, Object>();
+            param.put("role_id", roleIds.get(0));
+            List<Map> searchList = roleManagementMapper.searchRoleItem(param);
+
+            if (searchList.size() > 0 && searchList.get(0).get("role_type").toString().equals("0")) {
+                return true;
+            }
+
+            // role id로 meta role 조회
+            if(!"delete".equals(roleStauts)) {
+                searchList = roleManagementMapper.searchMetaRoleInfo(param);
+
+                if (searchList == null || searchList.size() == 0) {
+                    return true;
+                }
+            }
+
+            // rest api 호출
+            RestTemplate restTemplate = new RestTemplate();
+            
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("roleids", roleIds);
+            ResponseEntity<String> restResponse = restTemplate.postForEntity(esSyncUrlRoleUpdates, requestBody, String.class);
+            
+            if (restResponse != null && restResponse.getBody() != null) {
+                ObjectMapper objectMapper = new ObjectMapper();
+                Map<String, Object> body = objectMapper.readValue(restResponse.getBody(), new TypeReference<Map<String, Object>>(){});
+                if (body != null && body.get("result") != null) {
+                    Map<String, Object> bodyResultMap = (Map<String, Object>) body.get("result");
+                    if (bodyResultMap != null) {
+                        String rs = bodyResultMap.get("result").toString();
+                        if (rs.equals("success")) {
+                            result = true;
+                        }
+
+                        // 
+                        if (bodyResultMap.get("message").toString().contains("roleids Meta Not Found")) {
+                            result = true;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            result = false;
+        }
+        
+        return result;
     }
 
 }

@@ -1,285 +1,237 @@
 <template>
-  <div>
-    <div class="inner">
-      <div class="mu-section">
-        <dept-data-tooltip
-          :tooltip-obj="tooltipObj"
-          :selected-category="selectedCategory"
-          @onClickMenu="onClickDeptManageMenu"
-        />
-        
-        <left-dept-list
-        @onClickDeptRegistClick="onClickDeptRegistClick"
-        @onClickToggleItem="onClickToggleItem"
-        @onClickMenuItem="onClickMenuItem"
-        />
-
-        <div data-v-10a51f6f id="divider" @mousedown="mouseDown($event)"></div>
-
-        <div class="page-content">
-          <div class="board-list-wrap">
-            <user-list-manage
+    <div>
+      <div class="inner">
+        <div class="mu-section">
+          <dept-data-tooltip
             :tooltip-obj="tooltipObj"
-            />
+            :selected-category="selectedDept"
+            @onClickMenu="onClickCategoryManageMenu"
+          />
+  
+          <left-menu-list
+            @onClickMenuItem="onClickMenuItem"
+            @onClickOptionalButtons="onClickOptionalButtons"
+            @onClickCategoryOrderChange="onClickCategoryOrderChange"
+          />
+  
+          <div data-v-10a51f6f id="divider" @mousedown="mouseDown($event)"></div>
+  
+          <div class="page-content">
+            <div class="board-list-wrap">
+                <user-list-manage
+                />
+            </div>
           </div>
         </div>
+  
+        <manage-dept-updateModal
+            v-model:modalParam="modalParam"
+            v-model:visibleDeptManageModal="visibleDeptManageModal"
+            v-model:visibleDeptManageButton="visibleDeptManageButton"
+            @onCloseModal="onClickDeptManageButton"
+        />
+
       </div>
     </div>
-  </div>
+  </template>
+  
+  <script setup lang="ts">
+  import { useUserStore } from "@store/user.ts";
+  import { storeToRefs } from "pinia";
+  import { onMounted, onUnmounted, ref } from "vue";
+  import { useEventStore } from "~/store/event.ts";
+  import { confirmAlert, errorAlert, successAlert } from "@functional/alert/alert-default";
+  import portalConfirm from "@functional/confirm/portal-confirm";
 
-  <manage-dept-updateModal
-    v-model:modalParam="modalParam"
-    v-model:visibleDeptManageModal="visibleDeptManageModal"
-    v-model:visibleDeptManageButton="visibleDeptManageButton"
-    @onCloseModal="onClickDeptManageButton"
-    />
-</template>
+  import { useDeptStore } from "@store/dept.ts";
+  import deptDataTooltip from "@functional/dept/dept-data-tooltip";
+  import manageDeptUpdateModal from "@functional/dept/manage-dept-updateModal";
+  import LeftMenuList from "@/pages/admin/manager/system/user/left-menu-list";
+  import userListManage from "@/pages/admin/manager/system/user/user-list-manage";
+  
+  
+  definePageMeta({
+    name: "AdminUserManagement1",
+    layout: "admin"
+  });
+  
+  const { $ofetch } = useNuxtApp();
+  const eventStore = useEventStore();
+  const deptStore = useDeptStore();
 
-<script setup lang="ts">
-import { useUserStore } from "@store/user.ts";
-import { useCategoryStore } from "@store/category.ts";
-import { useEventStore } from "@store/event.ts";
-import LeftDeptList from "@functional/dept/left-dept-list.vue";
-import ObjectUtils from "@utils/ObjectUtils";
-import { useNuxtApp, useRoute, useRouter, useRuntimeConfig } from "nuxt/app";
-import { onMounted, onUnmounted, ref } from "vue";
-import portalConfirm from "@functional/confirm/portal-confirm";
-import { confirmAlert, errorAlert, successAlert } from "@functional/alert/alert-default";
-import { $R, isEmpties } from "@composables/ramda";
-import { storeToRefs } from "pinia";
-import {useApi} from "@composables/useApi";
-import {useConstants} from "@composables/useConstants";
+  const visibleDeptManageModal = ref(false);
+  const visibleDeptManageButton = ref(false);
+  const modalParam = ref({})
+  const toggleDeptModal = ref(false);
 
-import userListManage from "@/pages/admin/manager/system/user/user-list-manage";
-
-import deptDataTooltip from "@functional/dept/dept-data-tooltip";
-import manageDeptUpdateModal from "@functional/dept/manage-dept-updateModal.vue";
-
-definePageMeta({
-  name: 'AdminManagerUser',
-  layout: 'admin'
-})
-
-const { $ofetch } = useNuxtApp();
-const {setEventLog, setMetaSync} = useApi()
-const { CONSTANT } = useConstants();
-const runConfig = useRuntimeConfig().public;
-
-// route
-const route = useRoute();
-const router = useRouter();
-
-const userStore = useUserStore();
-const user = userStore.getUser;
-const fromPath = userStore.getFromPath;
-const params = userStore.getParams;
-
-const categoryStore = useCategoryStore();
-const getOriginalList = categoryStore.getOriginalList;
-const selectedId = categoryStore.getSelectedItemId;
-
-const eventStore = useEventStore();
-
-const catSelectedData = ref<any>(null);
-
-const visibleDeptManageModal = ref(false);
-const visibleDeptManageButton = ref(false);
-const modalParam = ref({})
-
-
-// 
-const tooltipObj = ref<TooltipObj>({
-  display: false,
-  type: "",
-  e: {},
-  targets: null
-});
-
-interface TooltipObj {
-  display: boolean;
-  type: string;
-  e: Event | {};
-  targets: any;
-}
-
-interface SelectedCategory {
-  id: string;
-  parent_id: string;
-  parent_nm: string;
-  level: string;
-  name: string;
-  description: string;
-  dept_id: string;
-  dept_nm: string;
-  file_id: string;
-  ord_no: number;
-}
-
-// 
-onMounted(() => {
-  eventStore.on("onToggleMetaDataTooltip", onToggleTooltip); // 툴팁 제어 핸들러
-
-  document.addEventListener("click", (e) => onToggleTooltip(e));
-
-  eventStore.on("onCategorySelect", onCategorySelect);
-});
-
-//
-onUnmounted(() => {
-  eventStore.off("onToggleMetaDataTooltip", onToggleTooltip);
-  eventStore.off("onCategorySelect", onCategorySelect);
-
-  document.removeEventListener("click", onToggleTooltip);
-});
-
-// 
-const onCategorySelect = () => {
-  catSelectedData.value = selectedData.value;
-};
-
-// 
-const mouseDown = (e: MouseEvent) => {
-  if (leftSide.value) {
-    x.value = e.clientX;
-
-    leftWidth.value = leftSide.value.getBoundingClientRect().width;
-
-    document.addEventListener("mousemove", mouseDragging);
-    document.addEventListener("mouseup", mouseUp);
+  // 툴팁 제어
+  const tooltipObj = ref<TooltipObj>({
+    display: false, // 툴팁 화면 렌더 여부 flag
+    type: "",
+    e: {},
+    targets: null
+  });
+  interface TooltipObj {
+    display: boolean;
+    type: string;
+    e: Event | {};
+    targets: any;
   }
-};
 
-// 
-const onClickMenuItem = async (item: any = null) => {
-};
-
-// 
-const selectedCategory = ref<SelectedCategory>({
-  ord_no: 0,
-  id: "",
-  parent_id: "",
-  parent_nm: "",
-  name: "",
-  description: "전체 부서",
-  level: "",
-  dept_id: "",
-  dept_nm: ""
-});
-
-// 
-const onToggleTooltip = (e: Event, item: any = null, type: string = "") => {
-  if (item && !tooltipObj.value.display) {
-    tooltipObj.value.display = true;
-    tooltipObj.value.type = type;
-    tooltipObj.value.e = e;
-    tooltipObj.value.targets = item;
-
-    if (type === "more") {
-      tooltipObj.value.targets = item;
-    }
-  } else if (tooltipObj.value.display) {
-    tooltipObj.value.display = false;
-    tooltipObj.value.type = "";
-    tooltipObj.value.e = {};
-    tooltipObj.value.targets = null;
-  }
-};
-
-//
-const onClickToggleItem = (item) => {
-  selectedCategory.value = {
-    ord_no: item.ordNo,
-    id: item.id,
-    parent_id: item.parentId,
-    parent_nm: item.parentNm,
-    name: item.name,
-    description: item.description,
-    level: item.deptLevel,
-    dept_id: item.id,
-    dept_nm: item.name,
+  // 선택된 조직 정보
+  const selectedDept = {
+    ord_no: 0,
+    id: "",
+    parent_id: "",
+    parent_nm: "",
+    name: "",
+    description: "전체 조직",
+    level: "",
+    dept: {
+        dept_cd: "",
+        dept_nm: ""
+    },
+    file_id: ""
   };
-}
+  
+  // 초기 부서 데이터
+  await deptStore.fetchDepts();
+  const { _deptMap } = storeToRefs(deptStore);
 
-// 
-const onClickDeptManageMenu = (type) => {
-  if (type === "delete") {
-    onDeleteCategory(selectedCategory.value);
-  } else if (type === "insert") {
-    initSelectedCategory();
+  // 
+  onMounted(() => {
+    // 조직 우측 이벤트 핸들러 노출
+    deptStore.setCalledFrom({ from: "metaDataManage" });
 
-    onToggleManageModal(type);
-  } else {
-    onToggleManageModal(type);
-  }
-};
+    document.addEventListener("click", (e) => onToggleTooltip(e));
 
-// 
-const onDeleteCategory = async (target: any) => {
-  const confirm = await portalConfirm({
-    message: "선택한 <strong>*조직</strong>을 영구적으로 삭제합니다.<br>정말 삭제 하시겠습니까?"
+    // 이벤트 핸들러 등록
+    eventStore.on("onToggleMetaDataTooltip", onToggleTooltip); // 툴팁 제어 핸들러
+  });
+  
+  // 
+  onUnmounted(() => {
+    // 등록했던 툴팁 제어 핸들러 바인딩 제거
+    eventStore.off("onToggleMetaDataTooltip", onToggleTooltip);
+
+    document.removeEventListener("click", onToggleTooltip);
   });
 
-  if (confirm) {
-    let param = { dept_id : selectedCategory.value.id };
+  // 툴팁 토글 이벤트 핸들러
+  const onToggleTooltip = (e: Event, item: any = null, type: string = "") => {
+    if (item && !tooltipObj.value.display) {
+        // 툴팁 제어 버튼 클릭 시
+        tooltipObj.value.display = true;
+        tooltipObj.value.type = type;
+        tooltipObj.value.e = e;
+        tooltipObj.value.targets = item;
 
-    $ofetch('/api/deptDelete', {
-      method: 'POST',
-      body: param
-    })
-    .then(async (res) => {
-      if (res.data.errorMessage && res.data.errorMessage != "") {
-        await errorAlert(res.data.errorMessage);
-      } else {
-        await successAlert('저장되었습니다.');
-        eventStore.emit('departmentRegistered');
-        selectedCategory.value = {
-          ord_no: 0,
-          id: "",
-          parent_id: "",
-          parent_nm: "",
-          name: "",
-          description: "전체 부서",
-          level: "",
-          dept_id: "",
-          dept_nm: ""
+        // 더보기 툴팁 렌더할 경우 카테고리 목록 데이터 전달
+        if (type === "more") {
+            tooltipObj.value.targets = item;
+        }
+    } else if (tooltipObj.value.display) {
+        tooltipObj.value.display = false;
+        tooltipObj.value.type = "";
+        tooltipObj.value.e = {};
+        tooltipObj.value.targets = null;
+    }
+  };
+  
+  //
+  const mouseDown = (e: MouseEvent) => {
+    if (leftSide.value) {
+        x.value = e.clientX;
+
+        leftWidth.value = leftSide.value.getBoundingClientRect().width;
+
+        document.addEventListener("mousemove", mouseDragging);
+        document.addEventListener("mouseup", mouseUp);
+    }
+  };
+  
+  // 
+  const onClickMenuItem = async (item: any = null) => {
+    if (item){
+        selectedDept.value = {
+            ord_no: item.ord_no,
+            id: item.id,
+            parent_id: item.parent_id,
+            parent_nm: item.parent_nm,
+            name: item.name,
+            description: item.description,
+            level: item.level,
+            dept: {
+                dept_cd: "",
+                dept_nm: ""
+            },
+            file_id: ""
         };
-      }
-    })
+    } else {
+        initselectedDept();
+    }
+
+    eventStore.emit('deptSelected', {dept_cd: item ? item.name : ""});
   }
-};
 
-// 
-const onToggleManageModal = (type: string | null, targets: any = null) => {
-  let target = null;
-  const toggle = type;
-
-  if (!toggle) {
-    switch (type) {
-      case "add":
-        break;
-      case "insert":
-      case "update":
-        target = selectedCategory.value;
-        break;
-      case "map":
-        target = targets;
-        break;
+  // 
+  const onClickOptionalButtons = (type: any): void => {
+    switch (type){
+        case "add":
+            onClickDeptManageButton(type);
+            break;
+        case "refresh":
+            onSearchDepts();
+            break;
     }
   }
 
-  onClickDeptManageButton();
-};
+  // 
+  const onClickDeptManageButton = (type: any) => {
+    try {
+        visibleDeptManageModal.value = !visibleDeptManageModal.value;
+        visibleDeptManageButton.value = true;
 
-//
-const onClickDeptRegistClick = () => {
-  initSelectedCategory();
+        let param = { userObject : {dept_id : "", dept_nm : "", description: "", parent_id: "", ord_no: 0 }, updatefalg: false, mode: "" };
 
-  onClickDeptManageButton();
-}
+        if (type != "add" && type != "insert" && selectedDept.value) {
+            param.userObject.dept_id = selectedDept.value.id;
+            param.userObject.dept_nm = selectedDept.value.name;
+            param.userObject.description = selectedDept.value.description;
+            param.userObject.parent_id = selectedDept.value.parent_id;
+            param.userObject.ord_no = selectedDept.value.ord_no;
+            param.updatefalg = true;
+            param.mode = type;
+        }
 
-//
-const initSelectedCategory = () => {
-  selectedCategory.value = {
+        if (type == "insert") {
+            param.mode = type;
+            param.userObject.parent_id = selectedDept.value.id;
+            param.userObject.parent_nm = selectedDept.value.name;
+            param.userObject.ord_no = parseInt(deptStore.getSelectedSubDeptLevelMaxOrdNo.value) + 1;
+        }
+
+        if (type == "add") {
+            param.userObject.ord_no = parseInt(deptStore.getSelectedDeptLevelMaxOrdNo.value) + 1;
+        }
+
+        modalParam.value = param;
+
+        if (!visibleDeptManageModal.value) {
+            onSearchDepts();
+        }
+    } catch (error) {
+        console.log(error);
+    }
+  }
+  
+  // 
+  const onClickCategoryOrderChange = async () => {
+  }
+
+  //
+  const initselectedDept = () => {
+    selectedDept.value = {
           ord_no: 0,
           id: "",
           parent_id: "",
@@ -290,20 +242,61 @@ const initSelectedCategory = () => {
           dept_id: "",
           dept_nm: ""
         };
-}
-
-// 
-const onClickDeptManageButton = () => {
-  try {
-    visibleDeptManageModal.value = !visibleDeptManageModal.value;
-    visibleDeptManageButton.value = true;
-
-    modalParam.value = {
-        userObject : {...selectedCategory.value},
-      }
-  } catch (error) {
-    console.log(error);
   }
-}
+
+  // 조직 세팅 툴팁 내 추가/삭제/수정 버튼 클릭 이벤트 핸들러
+  const onClickCategoryManageMenu = (type) => {
+    if (type === "delete") {
+        onDeleteCategory(selectedDept.value);
+    } else if (type === "insert") {
+        //initselectedDept();
+
+        onClickDeptManageButton(type);
+    } else if (type === "update") {
+        onClickDeptManageButton(type);
+    }
+  }
+
+  // 
+  const fetchDepts = async (payload: any) => {
+    await deptStore.fetchDepts(payload);
+
+    return deptStore.getDeptList;
+  };
+
+  // 
+  const onSearchDepts = async (item: { name?: string } = {}) => {
+    const { name = null } = item;
+
+    const list = await fetchDepts({ from: "metaDataManage" });
+    
+    eventStore.emit('deptSelected', {dept_cd: ""});
+  };
+
+  // 
+  const onDeleteCategory = async (target: any) => {
+    const confirm = await portalConfirm({
+        message: "선택한 <strong>*조직</strong>을 영구적으로 삭제합니다.<br>정말 삭제 하시겠습니까?"
+    });
+
+    if (confirm) {
+        let param = { dept_id : selectedDept.value.id };
+
+        $ofetch('/api/deptDelete', {
+            method: 'POST',
+            body: param
+        })
+        .then(async (res) => {
+            if (res.data.errorMessage && res.data.errorMessage != "") {
+                await errorAlert(res.data.errorMessage);
+            } else {
+                await successAlert('삭제 되었습니다.');
+                initselectedDept();
+                onSearchDepts();
+            }
+        })
+    }
+  };
 
 </script>
+  

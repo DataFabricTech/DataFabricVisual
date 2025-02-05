@@ -2,22 +2,12 @@
   <div>
     <div class="inner">
       <div class="detail-section">
-        <div class="mu-heading">
-          <div class="tabs">
-            <div
-              class="tab"
-              :class="{'active': activeTab === 0}"
-              @click="changeTab(0)"
-            >
-              사용자
-            </div>
-            <div
-              class="tab"
-              :class="{'active': activeTab === 1}"
-              @click="changeTab(1)"
-            >
-              가입요청
-            </div>
+        <div class="w500">
+          <div class="mu-tab-box-2">
+            <ul class="mu-tab">
+              <li :class="{active: activeTab === 0}"><a href="javascript:void(0)" @click="changeTab(0)" class="mu-switch" title="선택됨">사용자</a></li>
+              <li :class="{active: activeTab === 1}"><a href="javascript:void(0)" @click="changeTab(1)" class="mu-switch" title="">가입요청</a></li>
+            </ul>
           </div>
         </div>
 
@@ -64,7 +54,7 @@
             </div>
             
             <div class="board-list">
-              <table class="mu-grid">
+              <table class="mu-grid mu-grid-data">
                 <colgroup>
                   <col style="width:50px" />
                   <col style="width:80px" />
@@ -93,11 +83,11 @@
                   <tbody>
                     <tr v-for="(item, index) in userList" :key="index">
                       <td> {{ ((index + 1) + ((pagingObj.currentPage - 1) * pagingObj.limit)) }}</td>
-                      <td><a @click="onClickUserUpdateButton(item.user_id, false)">{{ item.user_nm }}</a></td>
+                      <td><a @click="onClickUserUpdateButton(item.user_id, false)" :title="item.user_id">{{ item.user_nm }}</a></td>
                       <td>{{ item.user_id }}</td>
                       <td>{{ item.dept_nm ? item.dept_nm ? item.dept_nm : item.dept_cd : '-' }}</td>
                       <td>{{ item.user_email }}</td>
-                      <td>{{ getKrName(item.role_name) }}</td>
+                      <td>{{ item.role_name_desc }}</td>
                       <td v-html="getWrapperDatetimeStr(item.last_login)"></td>
                       <td>
                         <button type="button" class="mu-btn mu-btn-sm" @click="onClickUserPasswordInitButton(item)">
@@ -141,12 +131,12 @@
 </template>
 
 <script setup lang="ts">
-import PageSize from '@/pages/admin/manager/system/user/page-size';
-import Pagination from '@functional/pagination/pagination';
-import UserUpdateModal from "@organisms/userManage/user-update-modal";
 import { confirmAlert } from "@functional/alert/alert-default";
 import { successAlert } from "@/components/functional/alert/alert-default";
 import { useEventStore } from "@store/event.ts";
+import PageSize from '@/pages/admin/manager/system/user/page-size';
+import Pagination from '@functional/pagination/pagination';
+import UserUpdateModal from "@organisms/userManage/user-update-modal";
 
 const emit = defineEmits(["onFilterSearch"]);
 
@@ -273,13 +263,6 @@ const onClickPage = (page) => {
 }
 
 // 
-const getKrName = (auth) => {
-  if (auth == 'Super-Admin') return '시스템 관리자'
-  if (auth == 'Manager') return '데이터 엔지니어'
-  if (auth == 'User') return '사용자'
-}
-
-// 
 const onClickUnlockLoginDeactivation = async (user) => {
   try{
     if (await confirmAlert(`${user.user_nm} 계정에 대한 장기 미접속 해제를 하시겠습니까?`)) {
@@ -310,7 +293,7 @@ const getWrapperDatetimeStr = (datetime:string) => {
 <style scoped>
 .page-content .board-list-wrap > .mu-heading:first-child {
   margin-bottom: 10px !important;
-  padding-bottom: 0px !important;;
+  padding-bottom: 0px !important;
   border-bottom: 0px !important;
 }
 .detail-section > .mu-heading:first-child {
@@ -319,22 +302,5 @@ const getWrapperDatetimeStr = (datetime:string) => {
   margin-bottom: 30px;
   padding-bottom: 0px !important;
   border-bottom: 1px solid #eee;
-}
-.tabs {
-  display: flex;
-  cursor: pointer;
-}
-.tab {
-  padding: 10px 20px;
-  margin-right: 0px;
-  border: 1px solid #ccc;
-  border-radius: 0px;
-  width: 150px;
-  text-align: center;
-  display: block;
-}
-.tab.active {
-  background-color: #f0f1f5;
-  color: #000000;
 }
 </style>

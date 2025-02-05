@@ -37,7 +37,7 @@
                     <tr>
                       <th scope="row">권한 ID<strong class="required">필수</strong></th>
                       <td>
-                        <input type="text" placeholder="" class="mu-input w220" title="권한 ID" id="role_id" name="role_id" v-model="rollDetailInfo.role_id" v-bind:class="[!role_id_valid ? 'error' : '', 'mu-input']" maxlength="20"  :disabled="updateFlag"/>
+                        <input type="text" placeholder="" class="mu-input w220" title="권한 ID" id="role_id" name="role_id" v-model="rollDetailInfo.role_id" v-bind:class="[!role_id_valid ? 'error' : '', 'mu-input']" maxlength="20" :disabled="updateFlag" oninput="this.value = this.value.replace(/[^a-zA-Z0-9_]/g, '')"/>
                         <button type="button" class="mu-btn" @click="checkDupRoleId" style="margin-left:10px" :disabled="updateFlag">
                           <span>중복확인</span>
                         </button>
@@ -360,7 +360,7 @@
                       </th>
                       <th>데이터 설명</th>
                       <th>데이터 명</th>
-                      <th>데이터 타입</th>
+                      <th>시스템 타입</th>
                       <th>유형</th>
                       <th>카테고리</th>
                       <th>tag</th>
@@ -382,7 +382,7 @@
                       </th>
                       <th>{{item.description}}</th>
                       <th>{{item.meta_name}}</th>
-                      <th>{{item.system_name}}</th>
+                      <th>{{item.system_type}}</th>
                       <th>{{item.meta_type}}</th>
                       <th>
                         <div class="category-group">
@@ -466,7 +466,7 @@
   import { useCategoryStore } from "@store/category.ts";
   import userInfoSearchModal from "@/pages/admin/manager/system/role/auth/detail/user-info-search-modal";
   import metaInfoSearchModal from "@/pages/admin/manager/system/role/auth/detail/meta-info-search-modal";
-  import selectDeptModal from "@organisms/metaDataManage/select-department-modal";
+  import selectDeptModal from "@functional/dept/select-department-modal";
   
   interface userPagingObj {
     total: number;
@@ -1007,6 +1007,9 @@
 
             roleId.value = rollDetailInfo.value.role_id;
             roleType.value = rollDetailInfo.value.role_type;
+
+            // update flag 변경
+            updateFlag.value = true;
             
             initSearch(roleId.value);
           }

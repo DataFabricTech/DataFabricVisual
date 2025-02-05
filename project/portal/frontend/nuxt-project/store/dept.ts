@@ -15,6 +15,8 @@ export const useDeptStore = defineStore("deptStore", () => {
   const _calledFrom = ref(null); // 좌측 부서 메뉴 목록 컴포넌트 호출 페이지
   const _deptMap = ref({});
   const _dbData = ref({});
+  const _selectedDeptLevelMaxOrdNo = ref(0);
+  const _selectedSubDeptLevelMaxOrdNo = ref(0);
 
   // getters
   // 가공 전 부서 목록 데이타
@@ -40,21 +42,13 @@ export const useDeptStore = defineStore("deptStore", () => {
   const getDeptList = computed(() => {
     const depts = JSON.parse(JSON.stringify(_list.value));
 
-    // 메타 데이터 통합 관리에서 호출 시 '부서 미분류' 추가
-    depts.unshift({
-      name: "_NOT_CLASSIFIED",
-      description: "부서 미분류",
-      id: "_NOT_CLASSIFIED",
-      ord_no: 0,
-      level: 1,
-      subTypes: [],
-      superTypes: []
-    });
     return depts;
   });
   const getToggleTargets = computed(() => _toggleTargets);
   const getSelectedItemId = computed(() => _selectedItemId);
   const getCalledFrom = computed(() => _calledFrom);
+  const getSelectedDeptLevelMaxOrdNo = computed(() => _selectedDeptLevelMaxOrdNo);
+  const getSelectedSubDeptLevelMaxOrdNo = computed(() => _selectedSubDeptLevelMaxOrdNo);
 
   // actions
   // 부서 목록 컴포넌트 import 선언한 페이지 세팅. 부서 검색 페이지에서만 별도로 동작하기 위해 추가 작업
@@ -94,28 +88,40 @@ export const useDeptStore = defineStore("deptStore", () => {
   const setDbData = (payload) => {
     return (_dbData.value = payload);
   };
+  //
+  const setSelectedDeptLevelMaxOrdNo = (payload) => {
+    return (_selectedDeptLevelMaxOrdNo.value = payload);
+  };
+  //
+  const setSelectedSubDeptLevelMaxOrdNo = (payload) => {
+    return (_selectedSubDeptLevelMaxOrdNo.value = payload);
+  };
 
   // 부서 목록 데이터 조회
-  const fetchDepts = async (payload) => {
+  const fetchDepts = async (payload:any, word:string) => {
     let originalList: Array<{ [key: string]: any }> = [];
+    word = word ? word : "";
 
     const promises = [
-      await Promise.resolve($ofetch("/api/search/dept/list", { method: "GET" })), // 부서 목록 조회
-      await Promise.resolve($ofetch("/api/search/dept/counts", { method: "GET" })) // 부서별 테이블 개수 목록 조회
+      await Promise.resolve($ofetch(`/api/depts?word=${word}`, { method: "GET" })), // 부서 목록 조회
+      // await Promise.resolve($ofetch("/api/search/dept/counts", { method: "GET" })) // 부서별 테이블 개수 목록 조회
     ];
 
     return Promise.allSettled(promises).then((result) => {
-      if (result[0].status === "fulfilled" && result[1].status === "fulfilled") {
+      // if (result[0].status === "fulfilled" && result[1].status === "fulfilled") {
+      if( result[0]) {
         // 부서 목록
         const data = result[0].value ? result[0].value.data : [];
+
         // 부서별 테이블 개수 목록
-        const tableCounts = result[1].value ? result[1].value.data : [];
+        // const tableCounts = result[1].value ? result[1].value.data : [];
+        const tableCounts = [];
 
         // 부서 목록 가공
         originalList = data;
         let newDeptList: Array<{ [key: string]: any }> = [];
 
-        // 하위 메뉴 토글 제어 객체 가공
+        // // 하위 메뉴 토글 제어 객체 가공
         const toggleTargetObject = { all: true };
         originalList.forEach((el) => {
           // 부서별 테이블 개수 추가
@@ -127,10 +133,10 @@ export const useDeptStore = defineStore("deptStore", () => {
           el.tableCount = tableCountItem ? tableCountItem.count : 0;
         });
 
-        // 부서 목록 데이터 가공 시작
+        // // 부서 목록 데이터 가공 시작
         newDeptList = buildDeptTree(originalList);
 
-        // store에 부서 관련 정보 저장
+        // // store에 부서 관련 정보 저장
         setOriginalList(originalList);
         setTableCountList(tableCounts);
         setDeptList(newDeptList);
@@ -150,8 +156,16 @@ export const useDeptStore = defineStore("deptStore", () => {
 
     // 각 부서를 Dept 객체로 변환하여 map에 저장
     totalList.forEach((deptData) => {
-      deptMap[deptData.id] = {
-        ...deptData,
+      deptMap[deptData.dept_cd] = {
+        ord_no: deptData.ord_no,
+        level: deptData.dept_level,
+        parent_id: deptData.parent_dept_id,
+        parent_nm: deptData.parent_dept_nm,
+        file_id: null,
+        name: deptData.dept_nm,
+        description: deptData.description,
+        id: deptData.dept_cd,
+        dept_id: null,
         superTypes: [],
         subTypes: []
       };
@@ -215,6 +229,7 @@ export const useDeptStore = defineStore("deptStore", () => {
     _calledFrom,
     _deptMap,
     _dbData,
+    _selectedDeptLevelMaxOrdNo,
     getOriginalList,
     getClassificationNameKr,
     getDbDescription,
@@ -223,6 +238,8 @@ export const useDeptStore = defineStore("deptStore", () => {
     getToggleTargets,
     getSelectedItemId,
     getCalledFrom,
+    getSelectedDeptLevelMaxOrdNo,
+    getSelectedSubDeptLevelMaxOrdNo,
     setCalledFrom,
     setDeptList,
     setOriginalList,
@@ -233,6 +250,8 @@ export const useDeptStore = defineStore("deptStore", () => {
     setSelectedItemId,
     setDbData,
     fetchDepts,
-    getDbData
+    getDbData,
+    setSelectedDeptLevelMaxOrdNo,
+    setSelectedSubDeptLevelMaxOrdNo
   };
 });

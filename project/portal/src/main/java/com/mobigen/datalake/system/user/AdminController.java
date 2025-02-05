@@ -39,52 +39,21 @@ public class AdminController {
         Map<String, Object> param = new HashMap<>();
         param.put("searchType", searchType);
         param.put("userType", userType);
+        param.put("searchWord", searchWord);
+        param.put("limit", String.valueOf(pageSize));
+        param.put("offset", String.valueOf(pageSize * (pnum - 1)));
 
         int total = 0;
         List list = new ArrayList<Map>();
 
-        // 검색 조건이 권한일 경우 다음 단어
-        if (!searchWord.equals("") && searchType.equals("role_name")) {
-            
-            Map<String, String> wordMap = new HashMap<String, String>();
-            wordMap.put("사용자", "User");
-            wordMap.put("시스템 관리자", "Super-Admin");
-            wordMap.put("데이터 엔지니어", "Manager");
-
-            List<String> searchWordList = new ArrayList<>();
-            for (Entry<String, String> word : wordMap.entrySet()) {
-                if (word.getKey().contains(searchWord)) {
-                    searchWordList.add(word.getValue());
-                }
-            }
-
-            param.put("limit", String.valueOf(pageSize));
-            param.put("offset", String.valueOf(pageSize * (pnum - 1)));
-
-            if (searchWordList.size() > 0) {
-                param.put("searchWordList", searchWordList);
-                total = adminService.getUserListTotalWithRoleName(param);
-                list = adminService.getUserListWithRoleName(param);
-            }
-
-        } else {
-
-            param.put("searchWord", searchWord);
-            param.put("limit", String.valueOf(pageSize));
-            param.put("offset", String.valueOf(pageSize * (pnum - 1)));
-    
-            total = adminService.getUserListTotal(param);
-            
-            list = adminService.getUserList(param);
-            
-        }
+        total = adminService.getUserListTotal(param);
+        list = adminService.getUserList(param);
 
         Map resultMap = new HashMap<>();
         resultMap.put("list", list);
         resultMap.put("total", total);
 
-        return resultMap;            
-
+        return resultMap;
     }
 
     /**

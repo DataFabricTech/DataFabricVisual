@@ -320,17 +320,31 @@ public class UserService {
         Map<String, Object> result = new HashMap<>();
 
         try {
+            int deptCount = userMapper.getCheckDeptExists(params);
+
+            if(deptCount > 0){
+                result.put("register_result", "N");
+                result.put("errorMessage", "하위 조직이 존재합니다.");
+                return result;
+            }
+            
             int userCount = userMapper.getCheckUserExists(params);
 
             if(userCount > 0){
                 result.put("register_result", "N");
                 result.put("errorMessage", "해당 조직에 속한 사용자가 존재합니다.");
                 return result;
-            } else {
-                userMapper.deptDelete(params);
-
-                result.put("register_result", "Y");
             }
+
+            int deleteDeptCount = userMapper.deptDelete(params);
+
+            if (deleteDeptCount > 0){
+                result.put("register_result", "Y");
+            } else {
+                result.put("register_result", "N");
+                result.put("errorMessage", "부서 삭제중에 실패하였습니다. 관리자에게 문의해주시기 바랍니다.");
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
             result.put("register_result", "N");

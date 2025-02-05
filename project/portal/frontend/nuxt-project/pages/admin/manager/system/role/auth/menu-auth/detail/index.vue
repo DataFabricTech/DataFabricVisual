@@ -67,9 +67,9 @@
               <col style="width: 70px" />
               <col style="width: 140px" />
               <col style="width: 160px" />
-              <col style="width: 200px" />
-              <col style="width: 180px" />
               <col style="width: 170px" />
+              <col style="width: 150px" />
+              <col style="width: 240px" />
               <col style="width: 190px" />
               <col style="width: 190px" />
               <!-- <col style="width: 80px" /> -->
@@ -232,7 +232,7 @@ const onSearchDataList = async (offset = 1) =>{
   }
 }
 
-// 페이지 번호 클릭 이벤트 핸들러
+// 
 const onClickPage = (page) => {
   onSearchDataList(page);
 }
@@ -246,7 +246,6 @@ const onClickListButton = () => {
 const getKrName = (key) => {
   return key ? categoryStore.getClassificationNameKr(key) : '';
 }
-
 
 </script>
 

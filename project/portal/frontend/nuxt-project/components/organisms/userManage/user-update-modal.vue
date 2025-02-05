@@ -18,7 +18,7 @@
             <tr>
               <th scope="row">이름</th>
               <td>
-                <input type="text" placeholder="" class="mu-input" title="이름" readonly="readonly" v-model="props.modalParam.userObject.user_nm" />
+                <input type="text" placeholder="" class="mu-input" title="이름" v-model="props.modalParam.userObject.user_nm" :disabled="!props.updateFlag"/>
               </td>
             </tr>
             <tr>
@@ -30,7 +30,7 @@
             <tr>
               <th scope="row">조직명</th>
               <td>
-                <input type="text" placeholder="" class="mu-input w220" title="부서" value="경영지원팀" readonly="readonly" v-model="props.modalParam.userObject.dept_nm" />
+                <input type="text" placeholder="" class="mu-input w220" title="조직명" value="경영지원팀" readonly="readonly" v-model="props.modalParam.userObject.dept_nm" />
                 <button type="button" class="mu-btn" @click="onToggleDeptModal" style="margin-left:10px" :disabled="!props.updateFlag">
                   <span>찾아보기</span>
                 </button>
@@ -39,20 +39,19 @@
             <tr>
               <th scope="row">이메일</th>
               <td>
-                <input type="text" placeholder="" class="mu-input" title="부서" value="" readonly="readonly" v-model="props.modalParam.userObject.user_email" />
+                <input type="text" placeholder="" class="mu-input" title="이메일" value="" v-model="props.modalParam.userObject.user_email" :disabled="!props.updateFlag"/>
               </td>
             </tr>
             <tr>
               <th scope="row">권한</th>
               <td>
-                <div v-if="props.updateFlag" class="mu-selectbox">
-                  <select v-model="props.modalParam.userObject.role_name">
+                <div class="mu-selectbox">
+                  <select v-model="props.modalParam.userObject.role_name" :disabled="!props.updateFlag">
                     <option v-for="role in selectRollList" :key="role.role_id" :value="role.role_id">
                       {{role.role_name}}
                     </option>
                   </select>
                 </div>
-                <input v-if="!props.updateFlag" type="text" placeholder="" class="mu-input" readonly="readonly" :value="getKrName(props.modalParam.userObject.role_name)" />
               </td>
             </tr>
           </tbody>
@@ -81,7 +80,7 @@
 <script setup lang="ts">
 import { confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import { successAlert } from "@/components/functional/alert/alert-default";
-import selectDeptModal from "@organisms/metaDataManage/select-department-modal";
+import selectDeptModal from "@functional/dept/select-department-modal";
 
 const { $ofetch } = useNuxtApp()
 const emit = defineEmits(['update:visibleUpdateModal', 'searchMethod'])
@@ -105,6 +104,7 @@ const onClickSaveButton = async () => {
 
   let param = {
       "user_id" : props.modalParam.userObject.user_id,
+      "user_nm" : props.modalParam.userObject.user_nm,
       "role_name" : props.modalParam.userObject.role_name,
       "dept_cd" : props.modalParam.userObject.dept_cd,
       "email" : props.modalParam.userObject.user_email,
@@ -124,10 +124,11 @@ const onClickSaveButton = async () => {
 
 // 
 const getRollList = async () => {
-  await $ofetch(`/api/rollList?role_type=0`)
+  await $ofetch(`/api/rollList?role_type=`)
       .then((res) => {
         if (res && !res.errorMessage) {
-          selectRollList.value = res.data.filter(role => role.role_type === 0);
+          // selectRollList.value = res.data.filter(role => role.role_type === 0);
+          selectRollList.value = res.data;
         }
       })
       .catch((err) => {
@@ -136,11 +137,11 @@ const getRollList = async () => {
 }
 
 // 
-const getKrName = (auth) => {
-  if (auth == 'Super-Admin') return '시스템 관리자'
-  if (auth == 'Manager') return '데이터 엔지니어'
-  if (auth == 'User') return '사용자'
-}
+// const getKrName = (auth) => {
+//   if (auth == 'Super-Admin') return '시스템 관리자'
+//   if (auth == 'Manager') return '데이터 엔지니어'
+//   if (auth == 'User') return '사용자'
+// }
 
 // 
 const onToggleDeptModal = () => {

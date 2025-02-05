@@ -26,7 +26,7 @@
                   name="dept_id"
                   v-model="props.modalParam.userObject.dept_id"
                   v-bind:class="[!reg_deptId_valid ? 'error' : '', 'mu-input']"
-                  :disabled="!!props.modalParam.userObject.dept_id"
+                  :disabled="props.modalParam.updatefalg"
                   required
                 />
                 <p v-if="!reg_deptId_valid" class="complete-msg error">조직 ID를 입력해주세요.</p>
@@ -78,7 +78,7 @@
                   v-model="props.modalParam.userObject.parent_id"
                   v-show="false"
                 />
-                <button type="button" class="mu-btn" @click="onToggleDeptModal" style="margin-left:10px">
+                <button type="button" class="mu-btn" @click="onToggleDeptModal" style="margin-left:10px" :disabled="props.modalParam.mode === 'insert'">
                   <span>찾아보기</span>
                 </button>
               </td>
@@ -103,7 +103,6 @@
         <button type="button" class="mu-btn" @click="onCancel"><span>취소</span></button>
         <button type="button" class="mu-btn" @click="onRegister"><span>확인</span></button>
       </div>
-      <!-- 접근성 : 내용을 읽고 나서 닫기 나중으로 빼준다  -->
       <div class="mu-dialog-close-btn">
         <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="onClose">
           <i class="mu-icon-svg close"></i><span>팝업닫기</span>
@@ -124,8 +123,7 @@
   import ObjectUtils from "@utils/ObjectUtils";
   import { useNuxtApp } from "nuxt/app";
   import { computed, ref } from "vue";
-  import selectDeptModal from "@organisms/metaDataManage/select-department-modal";
-  // import EventBus from '@/pages/admin/manager/system/user/event-bus';  // EventBus import
+  import selectDeptModal from "@functional/dept/select-department-modal";
   import { useEventStore } from "@store/event.ts";
 
   const props = defineProps(['visibleDeptManageModal', 'modalParam'])

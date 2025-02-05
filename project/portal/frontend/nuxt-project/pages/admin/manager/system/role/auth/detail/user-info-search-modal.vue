@@ -123,7 +123,7 @@ import Pagination from "@functional/pagination/pagination";
 import { useNuxtApp } from "nuxt/app";
 import { onMounted, computed, ref } from "vue";
 import { useEventStore } from "@store/event.ts";
-import LeftDeptList from "@functional/dept/left-dept-list.vue";
+import LeftDeptList from "@functional/dept/left-dept-list";
 
 const props = defineProps(['visibleUserModal', 'updateFlag', 'modalParam'])
 const { $ofetch } = useNuxtApp();

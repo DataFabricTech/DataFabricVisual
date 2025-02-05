@@ -100,8 +100,8 @@
             <tbody>
               <tr v-for="(item, index) in dataList" :key="index">
                 <td>{{ item.rownum }}</td>
-                <td><a :title="item.user_id ? item.user_id : '-'" @click="onClickUserInfoModal(item)">{{ item.user_id }}</a></td>
-                <td>{{ item.user_name }}</td>
+                <td><a :title="item.user_name ? item.user_name : '-'" @click="onClickUserInfoModal(item)">{{ item.user_name }}</a></td>
+                <td>{{ item.user_id }}</td>
                 <td>{{ item.dept_nm }}</td>
                 <td>{{ item.email }}</td>
                 <td>{{ item.role_name }}</td>
@@ -250,6 +250,7 @@ const onClickListButton = () => {
 const onClickUserInfoModal = async (item, flag) => {
   try {
     const userListIndex = dataList.value.findIndex(v => v.user_id == item.user_id)
+
     modalParam.value = {
       userObject : {
         user_nm: item.user_name, 
@@ -257,7 +258,7 @@ const onClickUserInfoModal = async (item, flag) => {
         dept_nm: item.dept_nm,
         dept_cd: item.dept_cd,
         user_email: item.email,
-        role_name: item.role_name,
+        role_name: item.role_id,
         role_id: item.role_id,
       },
     }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class RoleManagementControler {
         param.put("limit", String.valueOf(pageSize));
         param.put("offset", String.valueOf(pageSize * (pnum - 1)));
         param.put("roleType", roleType);
-
+        
         total = roleManagementService.getRoleManagementSearchListCount(param);
         list = (List<Map>) roleManagementService.getRoleManagementSearchList(param);
            
@@ -72,18 +73,26 @@ public class RoleManagementControler {
                 return result;
             }
 
-            /*
-            TO-DO : 로직 검토 필요
-            <table> t/b 일괄 삭제
-            <table> t/b 일괄 삭제
-            <table> t/b 일괄 삭제
-            */
+            // 권한 타입이 데이터 권한인 경우에만 동기화
+            List<Map> searchList = roleManagementService.searchRoleItem(param);
 
+            // 
             int count = 0;
             count = roleManagementService.deleteRoleItem(param);
+            
+            if (searchList.size() > 0 && searchList.get(0).get("role_type").toString().equals("0")) {
+                result.put("errorMessage", "");
+                result.put("isFailed", false);
+                
+                return result;
+            }
 
-            if (count <= 0){
-                String errorMessage = "삭제 처리 실패했습니다.";
+            // ES 동기화 처리
+            String[] roleIds = {param.get("role_id").toString()};
+            boolean roleEsUpdateResult = roleManagementService.essyncRolesUpdates(Arrays.asList(roleIds), "delete");
+
+            if(!roleEsUpdateResult) {
+                String errorMessage = "요청을 처리하는 중 에러가 발생하였습니다.";
                 result.put("errorMessage", errorMessage);
                 result.put("isFailed", true);
             }
@@ -119,6 +128,18 @@ public class RoleManagementControler {
 
                 if (count <= 0){
                     String errorMessage = "등록에 실패하였습니다.";
+                    result.put("errorMessage", errorMessage);
+                    result.put("isFailed", true);
+                }
+            }
+
+            if ("Y".equals(param.get("updateFlag"))) {
+                // ES 동기화 처리
+                String[] roleIds = {param.get("role_id").toString()};
+                boolean roleEsUpdateResult = roleManagementService.essyncRolesUpdates(Arrays.asList(roleIds), "update");
+
+                if(!roleEsUpdateResult) {
+                    String errorMessage = "요청을 처리하는 중 에러가 발생하였습니다.";
                     result.put("errorMessage", errorMessage);
                     result.put("isFailed", true);
                 }
@@ -274,26 +295,16 @@ public class RoleManagementControler {
         Map<String, Object> result = new HashMap<String, Object>();
 
         try{
-            // List userlist = roleManagementService.searchUserRole(param);
+            List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("list");
 
-            // if (userlist.size() > 0) {
-            //     String errorMessage = "이미 등록된 사용자입니다.";
-            //     result.put("errorMessage", errorMessage);
-            //     result.put("isFailed", true);
+            int count = 0;
+            count = roleManagementService.registerUserRoleItem(list);
 
-            //     return result;
-            // } else {
-                List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("list");
-
-                int count = 0;
-                count = roleManagementService.registerUserRoleItem(list);
-
-                if (count <= 0){
-                    String errorMessage = "등록에 실패하였습니다.";
-                    result.put("errorMessage", errorMessage);
-                    result.put("isFailed", true);
-                }
-            // }
+            if (count <= 0){
+                String errorMessage = "등록에 실패하였습니다.";
+                result.put("errorMessage", errorMessage);
+                result.put("isFailed", true);
+            }
         } catch (Exception e) {
             log.info(e.getMessage());
         }
@@ -340,26 +351,16 @@ public class RoleManagementControler {
         Map<String, Object> result = new HashMap<String, Object>();
 
         try{
-            // List deptlist = roleManagementService.searchDeptRole(param);
+            List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("list");
 
-            // if (deptlist.size() > 0) {
-            //     String errorMessage = "이미 등록된 조직입니다.";
-            //     result.put("errorMessage", errorMessage);
-            //     result.put("isFailed", true);
+            int count = 0;
+            count = roleManagementService.registerDeptRoleItem(list);
 
-            //     return result;
-            // } else {
-                List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("list");
-
-                int count = 0;
-                count = roleManagementService.registerDeptRoleItem(list);
-
-                if (count <= 0){
-                    String errorMessage = "등록에 실패하였습니다.";
-                    result.put("errorMessage", errorMessage);
-                    result.put("isFailed", true);
-                }
-            // }
+            if (count <= 0){
+                String errorMessage = "등록에 실패하였습니다.";
+                result.put("errorMessage", errorMessage);
+                result.put("isFailed", true);
+            }
         } catch (Exception e) {
             log.info(e.getMessage());
         }
@@ -406,26 +407,37 @@ public class RoleManagementControler {
         Map<String, Object> result = new HashMap<String, Object>();
 
         try{
-            // List metalist = roleManagementService.searchMetaRole(param);
+            List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("list");
+            
+            int count = 0;
+            count = roleManagementService.registerMetaRoleItem(list);
 
-            // if (metalist.size() > 0) {
-            //     String errorMessage = "이미 등록된 데이타입니다.";
-            //     result.put("errorMessage", errorMessage);
-            //     result.put("isFailed", true);
+            if (count <= 0){
+                String errorMessage = "등록에 실패하였습니다.";
+                result.put("errorMessage", errorMessage);
+                result.put("isFailed", true);
+            }
 
-            //     return result;
-            // } else {
-                List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("list");
 
-                int count = 0;
-                count = roleManagementService.registerMetaRoleItem(list);
+            if (list.isEmpty()) {
+                String errorMessage = "등록할 데이타가 없습니다.";
+                result.put("errorMessage", errorMessage);
+                result.put("isFailed", true);
 
-                if (count <= 0){
-                    String errorMessage = "등록에 실패하였습니다.";
+                return result;
+            }
+
+            if (list.size() > 0 && list.get(0).containsKey("role_id")) {
+                // ES 동기화 처리
+                String[] roleIds = {list.get(0).get("role_id").toString()};
+                boolean roleEsUpdateResult = roleManagementService.essyncRolesUpdates(Arrays.asList(roleIds), "update");
+
+                if(!roleEsUpdateResult) {
+                    String errorMessage = "요청을 처리하는 중 에러가 발생하였습니다.";
                     result.put("errorMessage", errorMessage);
                     result.put("isFailed", true);
                 }
-            // }
+            }
         } catch (Exception e) {
             log.info(e.getMessage());
         }
@@ -445,6 +457,26 @@ public class RoleManagementControler {
 
         try{
             List<Map<String, Object>> list = (List<Map<String, Object>>) param.get("list");
+
+            if (list.isEmpty()) {
+                String errorMessage = "삭제할 데이타가 없습니다.";
+                result.put("errorMessage", errorMessage);
+                result.put("isFailed", true);
+
+                return result;
+            }
+
+            if (list.size() > 0 && list.get(0).containsKey("role_id")) {
+                // 삭제전에 ES 동기화 처리
+                String[] roleIds = {list.get(0).get("role_id").toString()};
+                boolean roleEsUpdateResult = roleManagementService.essyncRolesUpdates(Arrays.asList(roleIds), "delete");
+
+                if(!roleEsUpdateResult) {
+                    String errorMessage = "요청을 처리하는 중 에러가 발생하였습니다.";
+                    result.put("errorMessage", errorMessage);
+                    result.put("isFailed", true);
+                }
+            }
 
             int count = 0;
             count = roleManagementService.deleteMetaRoleItem(list);

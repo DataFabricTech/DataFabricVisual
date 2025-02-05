@@ -75,7 +75,7 @@
 <script setup lang="ts">
 import { confirmAlert, errorAlert } from '../alert/alert-default';
 
-import SelectDeptModal from "@organisms/metaDataManage/select-department-modal";
+import selectDeptModal from "@functional/dept/select-department-modal";
 
 const props = defineProps({
 register_error: {
@@ -125,7 +125,7 @@ const reg_password_valid: ComputedRef<boolean> = computed(() => {
 });
 
 const reg_password_ok_valid: ComputedRef<boolean> = computed(() => {
-  return reg_password_ok.value.length > 0 ? true : false;
+  return reg_password_ok.value.length > 0 && reg_password.value == reg_password_ok.value ? true : false;
 });
 
 const reg_userdept_valid: ComputedRef<boolean> = computed(() => {

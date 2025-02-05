@@ -58,11 +58,11 @@
                         <table class="mu-grid mu-grid-data">
                             <colgroup>
                                 <col style="width: 160px" />
-                                <col style="width: auto" />
+                                <col style="width: 190px" />
                                 <col style="width: 150px" />
-                                <col style="width: 95px" />
-                                <col style="width: 220px" />
-                                <col style="width: 220px" />
+                                <col style="width: 80px" />
+                                <col style="width: 240px" />
+                                <col style="width: 240px" />
                             </colgroup>
                             <thead>
                                 <tr>
@@ -77,7 +77,7 @@
                             <tbody>
                                 <tr v-for="(item, index) in dataList" :key="index">
                                     <td>
-                                        <div style="width:200px;white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                        <div>
                                             {{ item.description }}
                                         </div>
                                     </td>
