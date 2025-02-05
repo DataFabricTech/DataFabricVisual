@@ -112,34 +112,27 @@ const props = defineProps(["entity", "referredEntitiesAttributes"]);
 
 // 메타속성 항목 순서 목록
 const desiredOrder = ref([
+  "meta_id",
   "meta_name",
   "description",
   "columns",
   "qualified_name",
   "create_time",
+  "update_time",
   "last_access_time",
+  "meta_sync_time",
+  "system_id",
   "system_name",
   "system_type",
+  "meta_type",
   "table_type",
-  "source_hash",
+  "database",
   "database_schema"
 ])
 // 메타속성 제외 목록
 const noEntries = ref([])
 
-const showEmptyField = ref(false) // 메타속성 데이터 없는 필드 보여주기 여부
-const fixEntries = ref([
-  "meta_name",
-  "description",
-  "columns",
-  "qualified_name",
-  "create_time",
-  "last_access_time",
-  "system_name",
-  "system_type",
-  "table_type",
-  "database_schema"
-]) // 메타속성 데이터 없어도 보여줄 항목 여부
+const showEmptyField = ref(true) // 메타속성 데이터 없는 필드 보여주기 여부
 
 const metaDataInfo = computed(() => {
   const entity = props.entity
@@ -168,10 +161,22 @@ const metaDataInfo = computed(() => {
 
     const sortedMetaData = Object.fromEntries(sortedEntries);
 
+    // attributes 속성에 없는 데이터 추가
+    sortedMetaData.meta_id = entity.meta_id
+    sortedMetaData.description = entity.description
     sortedMetaData.create_time = entity.create_time
+    sortedMetaData.update_time = entity.update_time
     sortedMetaData.last_access_time = entity.last_access_time
+    sortedMetaData.meta_sync_time = entity.meta_sync_time
     sortedMetaData.qualified_name = entity.qualified_name
+    sortedMetaData.system_id = entity.system_id
     sortedMetaData.system_name = entity.system_name
+    sortedMetaData.system_type = entity.system_type
+    sortedMetaData.meta_type = entity.meta_type
+    sortedMetaData.database = getDbName(entity.qualified_name)
+    if (entity.system_type && entity.system_type.toUpperCase() != 'HIVE') {
+      sortedMetaData.database_schema = getSchemaName(entity.qualified_name)
+    }
 
     // 값이 없는 데이터 필드 보여주기 여부
     if (!showEmptyField.value) removeEmptyFields(sortedMetaData)
@@ -206,8 +211,12 @@ const removeEmptyFields = (obj) => {
 // 한글명으로 수정
 const getKrKey = (key) => {
   if (props.entity && props.entity != undefined) {
+    if (key == "meta_id") return "메타데이터 명";
     if (key == "meta_name") return "메타데이터 명";
+    if (key == "meta_type") return "메타데이터 타입";
+    if (key == "system_id") return "시스템 ID";
     if (key == "system_name") return "시스템 명";
+    if (key == "system_type") return "시스템 타입";
     if (key == "description") return "메타데이터 description";
     if (key == "user_description") return "메타데이터 description";
     if (key == "columns") return "컬럼 목록";
@@ -215,8 +224,10 @@ const getKrKey = (key) => {
     if (key == "display_name") return "화면 표출 메타명";
     if (key == "qualified_name") return "객체 고유명"
     if (key == "create_time") return "메타 데이터 생성일자";
+    if (key == "update_time") return "메타 수정일";
     if (key == "last_access_time") return "최종 접근 시간";
-    if (key == "system_type") return "시스템 타입";
+    if (key == "meta_sync_time") return "최종 수집일";
+    if (key == "database") return "데이터베이스";
     if (key == "database_schema") return "스키마";
     if (key == "source_hash") return "소스 해시값";
     if (key == "tags") return "사용자 정의 태그";
@@ -281,5 +292,21 @@ const onClickDataName = (item) => {
   userStore.setGuid(item.guid);
   window.scrollTo(0, 0);
 };
+
+// DB명
+const getDbName = (qualified_name) => {
+  if (qualified_name) {
+    return qualified_name.split(".")[1]
+  }
+  return "-"
+}
+
+// 스키마명
+const getSchemaName = (qualified_name) => {
+  if (qualified_name) {
+    return qualified_name.split(".")[2]
+  }
+  return "-"
+}
 
 </script>
