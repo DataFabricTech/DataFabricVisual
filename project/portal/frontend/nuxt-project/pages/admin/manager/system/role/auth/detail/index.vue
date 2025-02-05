@@ -12,7 +12,7 @@
           </div>
 
           <div class="main-system">
-            <div class="inner-column" style="">
+            <div class="inner-column">
               <div class="mu-dialog-body" style="padding: 0;min-height: auto;">
                 <table class="mu-formbox">
                   <colgroup>
@@ -145,7 +145,7 @@
                 </form>
               </div>
 
-              <div class="board-list" style="overflow-x: auto;white-space: nowrap; min-height: 529px;">
+              <div class="board-list" style="overflow-x: auto;white-space: nowrap; min-height: 356px;">
                 <table class="mu-grid" style="table-layout: auto;margin-top:0px;">
                   <colgroup>
                     <col style="width: 70px" />
@@ -237,7 +237,7 @@
                 </form>
               </div>
 
-              <div class="board-list" style="overflow-x: auto;white-space: nowrap; min-height: 529px;">
+              <div class="board-list" style="overflow-x: auto;white-space: nowrap; min-height: 356px;">
                 <table class="mu-grid" style="table-layout: auto;margin-top:0px;">
                   <colgroup>
                     <col style="width: 70px" />
@@ -337,7 +337,7 @@
                 </form>
               </div>
 
-              <div class="board-list" style="overflow-x: auto;white-space: nowrap; min-height: 529px;">
+              <div class="board-list" style="overflow-x: auto;white-space: nowrap; min-height: 356px;">
                 <table class="mu-grid" style="table-layout: auto;margin-top:0px;">
                   <colgroup>
                     <col style="width: 70px" />
