@@ -40,7 +40,7 @@
               <th>시스템 타입</th>
               <td>
                 <div class="mu-selectbox">
-                  <select v-model="currentCollector.system_type" :readonly="isDetail || isUpdate">
+                  <select v-model="currentCollector.system_type" :disabled="isDetail || isUpdate">
                     <option value="" disabled>시스템 타입을 선택하세요</option>
                     <option v-for="item in system_types" :value="item">{{ item }}</option>
                   </select>
