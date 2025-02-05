@@ -194,7 +194,7 @@
                   </div>
                   <div class="inner-data option">
                     <p >시스템 타입 : <strong>{{ data.system_type ? data.system_type : "-" }}</strong></p>
-                    <p v-if="data.qualified_name && data.system_type && data.system_type.toUpperCase() != 'MYSQL'">DB : <strong>{{ getDbName(data.qualified_name) }}</strong></p>
+                    <p v-if="data.qualified_name && data.system_type && data.system_type.toUpperCase() != 'MYSQL'">database : <strong>{{ getDbName(data.qualified_name) }}</strong></p>
                     <p v-if="data.system_type && data.system_type.toUpperCase() != 'HIVE' && data.qualified_name && data.qualified_name.split('.')[2]">스키마 : <strong>{{ getSchemaName(data.qualified_name) }}</strong></p>
                     <p >최종 수집일 : <strong>{{ $yyyyMMddHHmmSS(data.meta_sync_time ? data.meta_sync_time : null) }}</strong></p>
                   </div>
@@ -490,7 +490,17 @@ const entityFilterCriterion = ref([
     name: "meta_sync_time",
     displayName: "meta_sync_time",
     typeName: "date"
-  }
+  },
+  {
+    name: "db",
+    displayName: "db",
+    typeName: "string"
+  },
+  {
+    name: "db_schema",
+    displayName: "schema",
+    typeName: "string"
+  },
 ])
 const entityFilterCondition = ref({
   condition1: [
