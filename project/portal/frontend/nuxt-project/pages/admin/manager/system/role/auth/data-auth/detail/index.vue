@@ -53,7 +53,7 @@
                 <div class="inner-search">
                   <!-- mu-selectbox -->
                   <div class="mu-selectbox w160">
-                    <select>
+                    <select v-model="searchType">
                       <option value="all">전체</option>
                       <option value="user_nm">이름</option>
                       <option value="user_id">사번</option>

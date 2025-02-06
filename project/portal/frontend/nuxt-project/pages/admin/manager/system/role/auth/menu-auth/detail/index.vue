@@ -43,7 +43,7 @@
                 <div class="inner-search">
                   <!-- mu-selectbox -->
                   <div class="mu-selectbox w160">
-                    <select>
+                    <select v-model="searchType">
                       <option value="all">전체</option>
                       <option value="description">데이터 설명</option>
                       <option value="meta_name">데이터명</option>

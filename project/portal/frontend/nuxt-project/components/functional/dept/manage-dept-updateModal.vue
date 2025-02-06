@@ -27,6 +27,7 @@
                   v-model="props.modalParam.userObject.dept_id"
                   v-bind:class="[!reg_deptId_valid ? 'error' : '', 'mu-input']"
                   :disabled="props.modalParam.updatefalg"
+                  oninput="this.value = this.value.replace(/[^a-zA-Z]/g, '')"
                   required
                 />
                 <p v-if="!reg_deptId_valid" class="complete-msg error">조직 ID를 입력해주세요.</p>
@@ -42,8 +43,12 @@
                   title="조직명을 입력"
                   v-model="props.modalParam.userObject.dept_nm"
                   v-bind:class="[!reg_deptNm_valid ? 'error' : '', 'mu-input']"
+                  @keypress.enter.prevent='onDeptGenerate()'
                   required
                 />
+                <button type="button" class="mu-btn" @click="onDeptGenerate" style="margin-left:10px" v-show="false">
+                  <span>Generate</span>
+                </button>
                 <p v-if="!reg_deptNm_valid" class="complete-msg error">조직명을 입력해주세요.</p>
               </td>
             </tr>
@@ -125,6 +130,7 @@
   import { computed, ref } from "vue";
   import selectDeptModal from "@functional/dept/select-department-modal";
   import { useEventStore } from "@store/event.ts";
+  import { useDeptStore } from "@store/dept.ts";
 
   const props = defineProps(['visibleDeptManageModal', 'modalParam'])
   const { $ofetch } = useNuxtApp();
@@ -132,6 +138,7 @@
   
   const eventStore = useEventStore();
   const toggleDeptModal = ref(false);
+  const deptStore = useDeptStore();
 
   const reg_deptId_valid: ComputedRef<boolean> = computed(() => {
     return props.modalParam.userObject.dept_id.length > 0 ? true : false;
@@ -195,6 +202,14 @@
   //
   const onClear = () => {
   };
+
+  //
+  const onDeptGenerate = () => {
+    // try{
+      // props.modalParam.userObject.dept_id = deptStore.getGenerateDeptCode(props.modalParam.userObject.dept_nm);
+    // }catch(e){
+    // }
+  }
 
   defineExpose({
     onClose
