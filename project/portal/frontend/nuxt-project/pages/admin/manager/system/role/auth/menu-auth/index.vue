@@ -44,7 +44,7 @@
                                 </fieldset>
                             </form>
                         </div>
-                        <page-size v-model:pageSize="pagingObj.limit" @searchMethod="onSearchDataList" v-show="true"/>
+                        <page-size v-model:pageSize="pagingObj.limit" @searchMethod="onSearchDataList(0)" v-show="true"/>
                       </div>
 
                       <div class="board-list">
@@ -60,13 +60,34 @@
                         </colgroup>
                         <thead>
                           <tr>
-                            <th scope="col">이름</th>
-                            <th scope="col">사번</th>
-                            <th scope="col">부서</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">메뉴권한</th>
-                            <th scope="col">최근 로그인 시간</th>
-                            <th scope="col">데이타 권한</th>
+                            <th scope="col">
+                              이름
+                              <!-- <span @click.stop="sortTable('user_name')" style="cursor: pointer;">{{ sortKey === 'user_name' && sortOrder === 'asc' ? '▲' : '▼' }}</span> -->
+                            </th>
+                            <th scope="col">
+                              사번
+                              <!-- <span @click.stop="sortTable('user_id')" style="cursor: pointer;">{{ sortKey === 'user_id' && sortOrder === 'asc' ? '▲' : '▼' }}</span> -->
+                            </th>
+                            <th scope="col">
+                              부서
+                              <!-- <span @click.stop="sortTable('dept_nm')" style="cursor: pointer;">{{ sortKey === 'dept_nm' && sortOrder === 'asc' ? '▲' : '▼' }}</span> -->
+                            </th>
+                            <th scope="col">
+                              Email
+                              <!-- <span @click.stop="sortTable('email')" style="cursor: pointer;">{{ sortKey === 'email' && sortOrder === 'asc' ? '▲' : '▼' }}</span> -->
+                            </th>
+                            <th scope="col">
+                              메뉴권한
+                              <!-- <span @click.stop="sortTable('role_name')" style="cursor: pointer;">{{ sortKey === 'role_name' && sortOrder === 'asc' ? '▲' : '▼' }}</span> -->
+                            </th>
+                            <th scope="col">
+                              최근 로그인 시간
+                              <!-- <span @click.stop="sortTable('last_login')" style="cursor: pointer;">{{ sortKey === 'last_login' && sortOrder === 'asc' ? '▲' : '▼' }}</span> -->
+                            </th>
+                            <th scope="col">
+                              데이타 권한
+                              <!-- <span @click.stop="sortTable('role_ids')" style="cursor: pointer;">{{ sortKey === 'role_ids' && sortOrder === 'asc' ? '▲' : '▼' }}</span> -->
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -172,7 +193,7 @@ const onClickMenuItem = async (item: any = null) => {
 const onSearchDataList = async (offset = 0, item: { id: string; }) =>{
   try {
     const params = {
-      offset: offset * pagingObj.value.limit,
+       offset: offset ? offset * pagingObj.value.limit : 0,
       limit: pagingObj.value.limit,
       searchClassification: "",
       searchType: `${searchType.value}`,
@@ -241,5 +262,31 @@ const getKrName = (key: any) => {
   return key ? categoryStore.getClassificationNameKr(key) : '';
 }
 
+//
+const sortKey = ref('');
+const sortOrder = ref('asc');
+const sortTable = (key) => {
+  if (sortKey.value === key) {
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortKey.value = key;
+    sortOrder.value = 'asc';
+  }
+
+  sortData();
+}
+
+// 
+const sortData = () => {
+  dataList.value.sort((a, b) => {
+    let result = 0;
+    if (a[sortKey.value] < b[sortKey.value]) {
+      result = -1;
+    } else if (a[sortKey.value] > b[sortKey.value]) {
+      result = 1;
+    }
+    return sortOrder.value === 'asc' ? result : -result;
+  });
+}
 </script>
   

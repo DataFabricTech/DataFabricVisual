@@ -48,7 +48,7 @@
                                         </button>
                                     </div>
 
-                                    <page-size v-model:pageSize="pagingObj.limit" @searchMethod="onSearchDataList" v-show="true"/>
+                                    <page-size v-model:pageSize="pagingObj.limit" @searchMethod="onSearchDataList(0)" v-show="true"/>
                                 </div>
                                 </fieldset>
                             </form>
@@ -191,7 +191,7 @@ const onSearchDataList = async (offset = 0, item: any = null) =>{
   let userType = 0;
   try {
     const params = {
-      offset: offset * pagingObj.value.limit,
+      offset: offset ? offset * pagingObj.value.limit : 0,
       limit: pagingObj.value.limit,
       searchClassification: "",
       searchType1: `${searchType1.value}`,
