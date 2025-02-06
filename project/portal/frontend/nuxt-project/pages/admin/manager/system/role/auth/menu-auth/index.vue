@@ -18,31 +18,33 @@
                   </div>
 
                   <div class="board-list-wrap">
-                      <div class="board-list-search">
-                          <form action="">
-                              <fieldset>
-                              <legend>검색</legend>
-                              <div class="inner-search">
-                                  <div class="mu-selectbox w160">
-                                    <select v-model="searchType" value="all">
-                                      <option value="all">전체</option>
-                                      <option value="user_nm">이름</option>
-                                      <option value="user_id">사번</option>
-                                      <option value="dept_cd">부서</option>
-                                      <option value="role_name">권한</option>
-                                    </select>
-                                  </div>
-                                  <div class="mu-input-icon">
-                                    <input type="text" class="mu-input" placeholder="Search" title="검색어입력" name="word" value="" v-model="searchWord" @keypress.enter.prevent='onSearchDataList()'>
-                                    <button type="button" class="mu-btn mu-btn-sch"  @click="onSearchDataList()">
-                                        <i class="mu-icon-svg search"></i>
-                                        <span>검색</span>
-                                    </button>
-                                  </div>
-                                  <page-size v-model:pageSize="pagingObj.limit" @searchMethod="onSearchDataList" v-show="true"/>
-                              </div>
-                              </fieldset>
-                          </form>
+                      <div class="mu-heading" style="margin-bottom: 10px; padding-bottom: 0px; border-bottom: 0px;">
+                        <div class="board-list-search">
+                            <form action="">
+                                <fieldset>
+                                    <legend>게시물검색</legend>
+                                    <div class="inner-search">
+                                        <div class="mu-selectbox w160">
+                                          <select v-model="searchType" value="all">
+                                            <option value="all">전체</option>
+                                            <option value="user_nm">이름</option>
+                                            <option value="user_id">사번</option>
+                                            <option value="dept_cd">부서</option>
+                                            <option value="role_name">권한</option>
+                                          </select>
+                                        </div>
+                                        <div class="mu-input-icon">
+                                          <input type="text" class="mu-input" placeholder="Search" title="검색어입력" name="word" value="" v-model="searchWord" @keypress.enter.prevent='onSearchDataList()'>
+                                          <button type="button" class="mu-btn mu-btn-sch"  @click="onSearchDataList()">
+                                              <i class="mu-icon-svg search"></i>
+                                              <span>검색</span>
+                                          </button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                        <page-size v-model:pageSize="pagingObj.limit" @searchMethod="onSearchDataList" v-show="true"/>
                       </div>
 
                       <div class="board-list">
