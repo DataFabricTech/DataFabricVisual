@@ -64,13 +64,16 @@ public class SearchDetailService {
             // 상세 페이지 조회 이력 저장
             Map<String, Object> saveData = new LinkedHashMap<>();
             saveData.put("user_id", params.get("user_id"));
+            saveData.put("system_id", result.get("system_id"));
+            saveData.put("system_name", result.get("system_name"));
+            saveData.put("system_type", result.get("system_type"));
             saveData.put("meta_id", params.get("meta_id"));
             saveData.put("meta_name", result.get("meta_name"));
             saveData.put("meta_type", result.get("meta_type"));
             saveData.put("qualified_name", result.get("qualified_name"));
             saveData.put("description", result.get("description"));
             saveData.put("user_name", params.get("user_name"));
-            saveData.put("dept_id", result.get("dept_id"));
+            saveData.put("dept_id", params.get("dept_id"));
             saveData.put("dept_name", params.get("dept_name"));
             searchDetailMapper.insertSearchMetaHistory(saveData);
         }
