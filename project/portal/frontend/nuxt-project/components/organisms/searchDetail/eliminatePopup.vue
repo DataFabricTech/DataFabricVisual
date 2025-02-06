@@ -646,27 +646,19 @@ const onClickFileEliminateButton = async () => {
     fnWhereQueryMake();
   }
 
-  let typeName = ObjectUtils.getPropertyValue(
-    props.eliminateModal.entity,
-    "meta_type",
-    "table"
-  );
-  let qualified_name = ObjectUtils.getPropertyValue(
-    props.eliminateModal.entity,
-    "qualified_name",
-    ""
-  );
+  let typeName = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "meta_type", "table");
+  let qualified_name = ObjectUtils.getPropertyValue(props.eliminateModal.entity,"qualified_name", "");
+  let system_id = ObjectUtils.getPropertyValue(props.eliminateModal.entity,"system_id", "");
+  let system_name = ObjectUtils.getPropertyValue(props.eliminateModal.entity,"system_name", "");
+  let system_type = ObjectUtils.getPropertyValue(props.eliminateModal.entity,"system_type", "");
   let meta_id = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "meta_id", "");
-  let meta_name = ObjectUtils.getPropertyValue(
-    props.eliminateModal.entity,
-    "meta_name",
-    ""
-  );
-  let description = ObjectUtils.getPropertyValue(
-    props.eliminateModal.entity,
-    "description",
-    ""
-  );
+  let meta_name = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "meta_name", "");
+  let description = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "description", "");
+
+  // download_query 제작
+  const db_name = qualified_name.split(".")[1]
+  const schema = qualified_name.split(".")[2]
+  const name = qualified_name.split(".")[3] ? qualified_name.split(".")[3] : meta_name
 
   let userDescriptionList = [];
   let descriptionList = [];
@@ -706,6 +698,32 @@ const onClickFileEliminateButton = async () => {
   if (currentExtractTab.value == 0) { // 일반 데이터 추출
     params.limit = 100000
 
+    let historyParams = {
+      meta_id: meta_id,
+      system_id: system_id,
+      system_name: system_name,
+      system_type: system_type,
+      meta_name: meta_name,
+      meta_type: "table",
+      qualified_name: qualified_name,
+      query: `SELECT ${querySelect.value} FROM "${system_id}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
+      download_type: 0, // 다운로드 방식 (0:file 1:API)';
+      description: description,
+    };
+    historyParams.http_rqst_val = JSON.stringify(historyParams);
+    $ofetch("/api/search/detail/eliminate/history/add", {
+      method: "POST",
+      body: historyParams,
+    }).then((res) => {
+      if (res && res.data.hasOwnProperty("sampleData")) {
+        props.eliminateModal.sampleData = ObjectUtils.getPropertyValue(
+          res.data,
+          "sampleData",
+          []
+        );
+      }
+    });
+
     const res = await $ofetch(`/api/search/detail/eliminate/file/download`, {
       method: 'POST',
       body: params
@@ -731,40 +749,12 @@ const onClickFileEliminateButton = async () => {
         document.body.removeChild(link);
       })
 
-      let historyParams = {
-        meta_id: meta_id,
-        meta_name: meta_name,
-        meta_type: "table",
-        qualified_name: qualified_name,
-        queryWhere: queryWhere.value,
-        download_type: 0, // 다운로드 방식 (0:file 1:API)';
-        description: description,
-      };
-      historyParams.http_rqst_val = JSON.stringify(historyParams);
-      $ofetch("/api/search/detail/eliminate/history/add", {
-        method: "POST",
-        body: historyParams,
-      }).then((res) => {
-        if (res && res.data.hasOwnProperty("sampleData")) {
-          props.eliminateModal.sampleData = ObjectUtils.getPropertyValue(
-            res.data,
-            "sampleData",
-            []
-          );
-        }
-      });
       queryWhere.value = "";
     }
   } else if (currentExtractTab.value == 1) { // 대용량 데이터 추출, 직접입력 선택한 경우만 limit 필드 추가
     if (extractLimitType.value == 'custom') {
       params.limit = extractLimit.value
     }
-
-    // download_query 제작
-    const system_id = qualified_name.split(".")[0]
-    const db_name = qualified_name.split(".")[1]
-    const schema = qualified_name.split(".")[2]
-    const name = qualified_name.split(".")[3] ? qualified_name.split(".")[3] : meta_name
 
     let big_params = {
       meta_id,
