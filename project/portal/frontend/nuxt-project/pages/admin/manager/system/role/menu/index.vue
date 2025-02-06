@@ -12,7 +12,19 @@
             </colgroup>
             <thead>
               <tr>
-                <th rowspan="3" class="sticky-column">구분</th>
+                <th rowspan="3" class="sticky-column">
+                  구분
+                  <span @click.stop="sortTable('role_id')" style="cursor: pointer;">{{ sortKey === 'role_id' && sortOrder === 'asc' ? '▲' : '▼' }}</span>
+                  <br><br>
+                  <input
+                  type="text"
+                  placeholder="권한명"
+                  class="mu-input w100"
+                  title="권한명 입력"
+                  v-model="role_name"
+                  @keypress.enter.prevent='onFilterRoleName()'
+                />
+                </th>
                 <th v-for="(header, index) in systemRoleGubun" :key="index" :colspan="header.collength || 1">
                   {{ header.title }}
                 </th>
@@ -33,6 +45,7 @@
               <tr v-for="(item, index1) in roleTypeList" :key="index1">
                 <td class="sticky-column">
                   <a href="javascript:void(0);" :title="`${item.role_id}`" @click="isSelectRoleAll(item.role_id)">{{ item.role_id }}</a>
+                  <br>({{ item.role_name }})
                 </td>
                 <td v-for="(header1, index2) in tableHeaders[1]" :key="index2">
                   <div class="mu-checkbox">
@@ -47,7 +60,7 @@
                 </td>
               </tr>
               <tr v-if="roleTypeList != null && roleTypeList.length === 0">
-                <td colspan="6">
+                <td :colspan="tableHeaders[1]?.length + 2 || 1">
                   <p class="nodata">데이터가 존재하지 않습니다.</p>
                 </td>
               </tr>
@@ -78,7 +91,7 @@
 <script setup lang="ts">
 import { successAlert, confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import { useNuxtApp, useRouter } from "nuxt/app";
-import { onMounted, ref } from "vue";
+import { onMounted, ref, reactive } from "vue";
 
 definePageMeta({
   name: "MenuAuthSetting",
@@ -95,6 +108,7 @@ const roleMenuExists = ref([]);
 const tableHeaders = ref([]);
 const selectedItems = ref([]);
 const isSelectAllRole =  ref([]);
+const originalRoleTypeList = ref([]); // for filter
 
 onMounted(() => {
   onMenuDataLoad();
@@ -156,6 +170,8 @@ const onMenuDataLoad = async () => {
     if(result.data[2] && result.data[2].roleMenuExistsList) {
       roleMenuExists.value = result.data[2].roleMenuExistsList;
     }
+
+    originalRoleTypeList.value = roleTypeList.value;
   }
 };
 
@@ -247,6 +263,45 @@ const isSelectRoleAll = (id: string) => {
     }
   });
 };
+
+//
+const sortKey = ref('');
+const sortOrder = ref('asc');
+const sortTable = (key) => {
+  if (sortKey.value === key) {
+    sortOrder.value = sortOrder.value === 'asc' ? 'desc' : 'asc';
+  } else {
+    sortKey.value = key;
+    sortOrder.value = 'asc';
+  }
+
+  sortData();
+}
+
+// 
+const sortData = () => {
+  roleTypeList.value.sort((a, b) => {
+    let result = 0;
+    if (a[sortKey.value] < b[sortKey.value]) {
+      result = -1;
+    } else if (a[sortKey.value] > b[sortKey.value]) {
+      result = 1;
+    }
+    return sortOrder.value === 'asc' ? result : -result;
+  });
+}
+
+// 
+const role_name = ref('');
+const onFilterRoleName = () => {
+  if (!role_name.value) {
+    selectedItems.value = [];
+    
+    roleTypeList.value = [...originalRoleTypeList.value];
+  } else {
+    roleTypeList.value = roleTypeList.value.filter(item => item.role_name.includes(role_name.value));
+  }
+}
 </script>
 
 <style scoped>
@@ -255,6 +310,7 @@ const isSelectRoleAll = (id: string) => {
   border: 1px solid #ddd;
 }
 .sticky-column {
+  min-width: 150px;
   position: -webkit-sticky;
   position: sticky;
   left: 0;

@@ -18,6 +18,7 @@
                     <span class="use"><i class="mu-icon-svg use"></i>{{ getKrName(userStore.getUser.authority) }}</span>
                     <span class="email"><i class="mu-icon-svg email"></i>{{ userStore.getUser.user_email }}</span>
                     <span class="date"><i class="mu-icon-svg time"></i>최종접속시간 {{ $yyyyMMddHHmmSS(userStore.getUser.last_login) }}</span>
+                    <span class="date" style="cursor:pointer;" @click="onPasswordInitModalCall"><i class="mu-icon-svg refresh"></i>패스워드 변경</span>
                   </div>
                 </div>
               </div>
@@ -49,6 +50,11 @@
       </div>
     </main>
   </div>
+
+  <user-password-change-modal
+    v-model:visibleUpdateModal="visibleUpdateModal"
+    v-model:modalParam="modalParam"
+  />
 </template>
 <script setup lang="ts">
 import MySearchData from "@organisms/myCatalog/my-search-data";
@@ -60,6 +66,9 @@ import MySynonymDeleteRequestData from "@organisms/myCatalog/my-synonym-delete-r
 import { useUserStore } from "@/store/user";
 import { useNuxtApp } from "nuxt/app";
 import { onMounted, ref } from "vue";
+
+import UserPasswordChangeModal from "@/pages/my/dashboard/user-password-change-modal";
+
 
 definePageMeta({
   name: "MyDashboard",
@@ -238,4 +247,18 @@ const getKrName = (auth) => {
   if (auth == 'Manager') return '데이터 엔지니어'
   if (auth == 'User') return '사용자'
 }
+
+// 
+const visibleUpdateModal = ref(false)
+const modalParam = ref({})
+const onPasswordInitModalCall = async () => {
+  try {
+    modalParam.value = {
+    }
+    visibleUpdateModal.value = !visibleUpdateModal.value;
+  } catch (error) {
+    console.log(error);
+  }
+}
 </script>
+<!--  -->

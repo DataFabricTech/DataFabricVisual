@@ -421,7 +421,7 @@
         <div class="mu-button-wrap">
           <button
             type="button"
-            class="mu-btn mu-btn-lg mu-btn-primary"
+            class="mu-btn mu-btn-lg"
             @click="onClickCancelButton"
           >
             <span>취소</span>

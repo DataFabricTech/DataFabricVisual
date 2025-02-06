@@ -26,5 +26,5 @@ public interface UserMapper {
     List<Map> getRoleList(String role_type) throws Exception;
     List<Map> getDeptInfo(String role_type) throws Exception;
     Integer delete(Map<String, String> param) throws Exception;    
-    
+    Integer updatePassword(Map<String, String> param) throws Exception;
 }

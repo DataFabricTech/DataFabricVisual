@@ -394,8 +394,6 @@ public class UserService {
                 result.put("register_result", "N");
                 result.put("register_result_message", "회원가입에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
             }
-            
-
         } catch (Exception e) {
             e.printStackTrace();
             result.put("register_result", "N");
@@ -448,4 +446,90 @@ public class UserService {
         return userMapper.getDeptInfo(role_type);
     }
     
+    // 패스워드 인증
+    public Object getVerifyPassword(String user_id, String password) throws Exception {
+        Map<String, String> result = new HashMap<String, String>();
+
+        // 1. 입력 값 유효성 검증
+        if (password == null || password.trim().isEmpty()) { // 비밀번호
+            result.put("login_result", "N");
+            result.put("login_result_message", "비밀번호를 입력해 주세요.");
+            return result;
+        }
+
+        // 미승인 유저 조회
+        Map user = (Map) userMapper.getPendingApprovalUsers(user_id);
+
+        if (user != null) {
+            result.put("login_result", "N");
+            result.put("login_result_message", "승인되지 않는 계정입니다.");
+            return result;
+        }
+
+        // 사용자 조회
+        user = (Map) userMapper.getApprovalUserMaster(user_id);
+
+        // 1. DB에 사용자 정보 없음
+        if (user == null) {
+            result.put("login_result", "N");
+            result.put("login_result_message", "계정이 존재하지 않습니다.");
+            return result;
+        }
+
+        // 2. 로그인 fail 개수 체크
+        if( (Integer) user.get("login_fail_cnt") >= 5 ){
+            Timestamp now = new Timestamp(System.currentTimeMillis());
+            Timestamp loginTime = (Timestamp) user.get("last_login");
+            long milliseconds = now.getTime() - loginTime.getTime();
+            int seconds = (int) milliseconds / 1000;
+            int miniutes = seconds / 60;
+            if(miniutes < 60) {
+                result.put("login_result", "N");
+                result.put("login_result_message", "5회이상 비밀번호을 잘못입력하였습니다. 1시간이후 재로그인하기 바랍니다.");
+                return result;
+            }
+        }
+
+        // 3. 비밀번호 일치여부 확인
+        String inputPassword = password;
+        String userPw = user.get("password").toString();
+        if (!passwordEncoder.matches(inputPassword, userPw)) { // 패스워드 불일치
+            result.put("login_result", "N");
+            result.put("login_result_message", "비밀번호가 일치하지 않습니다.");
+            return result;
+        }
+
+        // 4. 장기 미접속자 체크
+        if( (Integer) user.get("login_term") >= loginDeactivationDateThreshold ){
+            result.put("login_result", "N");
+            result.put("login_result_message", 
+                    Integer.toString(loginDeactivationDateThreshold) + "일 이상 접속하지 않아 로그인이 차단되었습니다. 관리자에게 문의해주시기 바랍니다.");
+            return result;                
+        }
+
+        result.put("login_result", "Y");
+        
+        return result;
+    }
+
+    // 패스워드 변경
+    public Object changePassword(String user_id, String password) throws Exception {
+        Map<String, String> result = new HashMap<String, String>();
+
+        // 비밀번호 암호화
+        String encPassword = passwordEncoder.encode(password);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("user_id", user_id);
+        params.put("password", encPassword);
+
+        int insertResult = userMapper.updatePassword(params);
+        if (insertResult > 0) {
+            result.put("register_result", "Y");
+        } else {
+            result.put("register_result", "N");
+            result.put("register_result_message", "변경 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
+        }
+        
+        return result;
+    }
 }

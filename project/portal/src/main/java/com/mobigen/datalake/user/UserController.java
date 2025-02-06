@@ -130,4 +130,24 @@ public class UserController {
         return userService.getDeptInfo(dept_id);
      }
 
+     // 패스워드 확인
+     @ResponseJsonResult
+     @PostMapping("/verifyPassword")
+     public Object getVerifyPassword(@RequestBody Map<String, String> param) throws Exception {
+        String user_id = param.get("user_id");
+        String password = param.get("password");
+
+        return userService.getVerifyPassword(user_id, password);
+     }
+
+     // 패스워드 변경
+     @ResponseJsonResult
+     @PostMapping("/changePassword")
+     public Object tVerifyPassword(@RequestBody Map<String, String> param) throws Exception {
+        String user_id = param.get("user_id");
+        String password = param.get("password");
+
+        return userService.changePassword(user_id, password);
+     }
+
 }
