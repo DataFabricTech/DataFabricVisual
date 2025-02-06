@@ -116,11 +116,11 @@ public class UserController {
         return userService.deptDelete(param);
     }
 
-     // roll list 조회
+     // role list 조회
      @ResponseJsonResult
-     @GetMapping("/rollList")
-     public Object getRollList(@RequestParam("role_type") String role_type) throws Exception {
-    return userService.getRollList(role_type);
+     @GetMapping("/roleList")
+     public Object getRoleList(@RequestParam("role_type") String role_type) throws Exception {
+    return userService.getRoleList(role_type);
      }
 
      // 부서 정보 조회

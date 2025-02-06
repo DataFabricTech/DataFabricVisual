@@ -24,11 +24,11 @@
                       <th scope="row">권한 타입<strong class="required">필수</strong></th>
                       <td>
                         <div class="mu-radio">
-                          <input type="radio" id="isData" value="1" v-model="rollDetailInfo.role_type" v-bind:class="[!role_type_valid ? 'error' : '', 'mu-input']" disabled/>
+                          <input type="radio" id="isData" value="1" v-model="roleDetailInfo.role_type" v-bind:class="[!role_type_valid ? 'error' : '', 'mu-input']" disabled/>
                           <label for="isData"><span>데이터 권한</span></label>
                         </div>
                         <div class="mu-radio">
-                          <input type="radio" id="isPortal" value="0" v-model="rollDetailInfo.role_type" v-bind:class="[!role_type_valid ? 'error' : '', 'mu-input']" disabled/>
+                          <input type="radio" id="isPortal" value="0" v-model="roleDetailInfo.role_type" v-bind:class="[!role_type_valid ? 'error' : '', 'mu-input']" disabled/>
                           <label for="isPortal"><span>웹포털 권한</span></label>
                         </div>
                         <p v-if="!role_type_valid" class="complete-msg error" style="white-space: pre-line;">권한을 선택해 주세요.</p>
@@ -37,7 +37,7 @@
                     <tr>
                       <th scope="row">권한 ID<strong class="required">필수</strong></th>
                       <td>
-                        <input type="text" placeholder="" class="mu-input w220" title="권한 ID" id="role_id" name="role_id" v-model="rollDetailInfo.role_id" v-bind:class="[!role_id_valid ? 'error' : '', 'mu-input']" maxlength="20" :disabled="updateFlag" oninput="this.value = this.value.replace(/[^a-zA-Z0-9_]/g, '')"/>
+                        <input type="text" placeholder="" class="mu-input w220" title="권한 ID" id="role_id" name="role_id" v-model="roleDetailInfo.role_id" v-bind:class="[!role_id_valid ? 'error' : '', 'mu-input']" maxlength="20" :disabled="updateFlag" oninput="this.value = this.value.replace(/[^a-zA-Z0-9_]/g, '')"/>
                         <button type="button" class="mu-btn" @click="checkDupRoleId" style="margin-left:10px" :disabled="updateFlag">
                           <span>중복확인</span>
                         </button>
@@ -47,7 +47,7 @@
                     <tr>
                       <th scope="row">권한 명<strong class="required">필수</strong></th>
                       <td>
-                        <input type="text" placeholder="" class="mu-input" title="권한 명" v-model="rollDetailInfo.role_name" autocomplete="off"
+                        <input type="text" placeholder="" class="mu-input" title="권한 명" v-model="roleDetailInfo.role_name" autocomplete="off"
                         v-bind:class="[!role_name_valid ? 'error' : '', 'mu-input']"/>
                         <p v-if="!role_name_valid" class="complete-msg error" style="white-space: pre-line;">권한명을 입력해 주세요.</p>
                       </td>
@@ -70,15 +70,15 @@
                       <td>
                         <div class="mu-item-group">
                           <div class="mu-radio">
-                            <input type="radio" id="isSearch" value="0" v-model="rollDetailInfo.role_auth"/>
+                            <input type="radio" id="isSearch" value="0" v-model="roleDetailInfo.role_auth"/>
                             <label for="isSearch"><span>Data Search</span></label>
                           </div>
                           <div class="mu-radio">
-                            <input type="radio" id="isView" value="1" v-model="rollDetailInfo.role_auth"/>
+                            <input type="radio" id="isView" value="1" v-model="roleDetailInfo.role_auth"/>
                             <label for="isView"><span>Data View</span></label>
                           </div>
                           <div class="mu-radio">
-                            <input type="radio" id="isDownload" value="2" v-model="rollDetailInfo.role_auth"/>
+                            <input type="radio" id="isDownload" value="2" v-model="roleDetailInfo.role_auth"/>
                             <label for="isDownload"><span>Data Download</span></label>
                           </div>
                         </div>
@@ -87,7 +87,7 @@
                     <tr>
                       <th scope="row">권한 설명</th>
                       <td>
-                        <textarea rows="10" placeholder="내용을 입력하세요" title="활용 목적 및 기대효과 입력 필수" class="mu-area h80" v-model="rollDetailInfo.role_description"></textarea>
+                        <textarea rows="10" placeholder="내용을 입력하세요" title="활용 목적 및 기대효과 입력 필수" class="mu-area h80" v-model="roleDetailInfo.role_description"></textarea>
                       </td>
                     </tr>
                   </tbody>
@@ -516,7 +516,7 @@
 
   const categoryStore = useCategoryStore();
 
-  const rollDetailInfo = ref({});
+  const roleDetailInfo = ref({});
   const roleId = ref("");
   const roleType = ref("");
   const checkedDupRoleId = ref(false);
@@ -548,7 +548,7 @@
   onMounted(() => {
     roleId.value = route.query.roleId;
     roleType.value = route.query.roleType;
-    rollDetailInfo.value = {role_id: roleId.value, role_type: roleType.value};
+    roleDetailInfo.value = {role_id: roleId.value, role_type: roleType.value};
     updateFlag.value = route.query.updateFlag;
 
     initSearch(roleId.value);
@@ -564,24 +564,24 @@
 
   // 
   const role_type_valid: ComputedRef<boolean> = computed(() => {
-    if(!rollDetailInfo.value.role_type) return;
+    if(!roleDetailInfo.value.role_type) return;
 
-    let roleType = rollDetailInfo.value.role_type;
+    let roleType = roleDetailInfo.value.role_type;
 
     return roleType !== undefined;
   });
   const role_id_valid: ComputedRef<boolean> = computed(() => {
-    if (!rollDetailInfo.value.role_id) {
+    if (!roleDetailInfo.value.role_id) {
       return false;
     } else {
-      return rollDetailInfo.value.role_id.length > 0;
+      return roleDetailInfo.value.role_id.length > 0;
     }
   });
   const role_name_valid: ComputedRef<boolean> = computed(() => {
-    if (!rollDetailInfo.value.role_name) {
+    if (!roleDetailInfo.value.role_name) {
       return false;
     } else {
-      return rollDetailInfo.value.role_name.length > 0;
+      return roleDetailInfo.value.role_name.length > 0;
     }
   });
 
@@ -604,7 +604,7 @@
   const initSearch = async (roleId) => {
     try {
       if(roleId != null && roleId != ''){
-        onRollDetailInfoList();
+        onroleDetailInfoList();
         onSearchUserList(1);
         onSearchDeptList(1);
         onSearchMetaList(1);
@@ -616,7 +616,7 @@
   };
 
   // 
-  const onRollDetailInfoList = async (): Promise<void> => {
+  const onroleDetailInfoList = async (): Promise<void> => {
     try {
       let { data } = await $ofetch(
         "/api/admin/system/role/searchDetail?roleId="+ roleId.value
@@ -626,7 +626,7 @@
         roleId.value = data.list[0].role_id;
         roleType.value = data.list[0].role_type;
 
-        rollDetailInfo.value = data.list[0];
+        roleDetailInfo.value = data.list[0];
       }
     } catch (error) {
       console.log(error);
@@ -651,8 +651,8 @@
 
   // 
   const checkDupRoleId = async () => {
-    if (rollDetailInfo.value.role_id != "") {
-      await $ofetch(`/api/admin/system/role/checkDupRoleId?role_id=${rollDetailInfo.value.role_id}`).then(async (res) => {
+    if (roleDetailInfo.value.role_id != "") {
+      await $ofetch(`/api/admin/system/role/checkDupRoleId?role_id=${roleDetailInfo.value.role_id}`).then(async (res) => {
         if (res && res.data) {
             if (res.data.register_result == 'Y') {
               await defaultAlert("사용 가능한 권한입니다.")
@@ -669,12 +669,12 @@
   // 
   const onSelectUser = (info) => {
     if (info.value.length > 0) {
-      onUserrollSave(info);
+      onUserroleSave(info);
     }
   }
 
   // 
-  const onUserrollSave = (info) => {
+  const onUserroleSave = (info) => {
     let param = {
       list: info.value.map(item => {
         return {
@@ -685,7 +685,7 @@
       }),
     };
 
-    $ofetch("/api/admin/system/role/userRollSave", {
+    $ofetch("/api/admin/system/role/userRoleSave", {
       method: "POST",
       body: param,
     }).then(async (res: { errorMessage: string }) => {
@@ -775,7 +775,7 @@
   // 
   const onSelectDept = (info) => {
     if (info && info.dept_cd != '') {
-      onDeptrollSave(info);
+      onDeptroleSave(info);
     }
   }
 
@@ -800,13 +800,13 @@
   };
 
   // 
-  const onDeptrollSave = (info) => {
+  const onDeptroleSave = (info) => {
     let param = {
       list: [{ dept_id: info.dept_cd,
                role_id: roleId.value }]
     };
 
-    $ofetch("/api/admin/system/role/deptRollSave", {
+    $ofetch("/api/admin/system/role/deptRoleSave", {
       method: "POST",
       body: param,
     }).then(async (res: { errorMessage: string }) => {
@@ -911,7 +911,7 @@
       }),
     };
 
-    $ofetch("/api/admin/system/role/metaRollSave", {
+    $ofetch("/api/admin/system/role/metaRoleSave", {
       method: "POST",
       body: param,
     }).then(async (res: { errorMessage: string }) => {
@@ -974,11 +974,11 @@
   //
   const onClickRoleRegistButton = async () => {
     let params = {
-      role_id: rollDetailInfo.value.role_id,
-      role_type: rollDetailInfo.value.role_type,
-      role_name: rollDetailInfo.value.role_name,
-      role_description: rollDetailInfo.value.role_description,
-      role_auth: rollDetailInfo.value.role_auth,
+      role_id: roleDetailInfo.value.role_id,
+      role_type: roleDetailInfo.value.role_type,
+      role_name: roleDetailInfo.value.role_name,
+      role_description: roleDetailInfo.value.role_description,
+      role_auth: roleDetailInfo.value.role_auth,
       etc: '',
       updateFlag : updateFlag.value ? "Y" : "N",
     };
@@ -1005,8 +1005,8 @@
           } else {
             await successAlert("등록 되었습니다.");
 
-            roleId.value = rollDetailInfo.value.role_id;
-            roleType.value = rollDetailInfo.value.role_type;
+            roleId.value = roleDetailInfo.value.role_id;
+            roleType.value = roleDetailInfo.value.role_type;
 
             // update flag 변경
             updateFlag.value = true;

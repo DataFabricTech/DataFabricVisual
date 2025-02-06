@@ -438,9 +438,9 @@ public class UserService {
         return result;
     }
 
-    // roll list 조회
-    public Object getRollList(String role_type) throws Exception {
-        return userMapper.getRollList(role_type);
+    // role list 조회
+    public Object getRoleList(String role_type) throws Exception {
+        return userMapper.getRoleList(role_type);
     }
 
     // 부서 정보 조회

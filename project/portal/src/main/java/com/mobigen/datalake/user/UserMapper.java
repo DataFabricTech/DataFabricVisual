@@ -23,7 +23,7 @@ public interface UserMapper {
     int deptDelete(Map<String, String> params) throws Exception;
     int checkDupUserId(String user_id) throws Exception;
     int registerUser(Map<String, String> params) throws Exception;
-    List<Map> getRollList(String role_type) throws Exception;
+    List<Map> getRoleList(String role_type) throws Exception;
     List<Map> getDeptInfo(String role_type) throws Exception;
     Integer delete(Map<String, String> param) throws Exception;    
     

@@ -16,10 +16,10 @@ export default defineNuxtRouteMiddleware((to, from) => {
   };
 
   // 권한 체크
-  const searchMenuPath = (rollMenuList : List) => {
+  const searchMenuPath = (roleMenuList : List) => {
     let isMenuExists = false;
 
-    for (const menu of rollMenuList) {
+    for (const menu of roleMenuList) {
       if (getPathWithoutParams(menu.menu_path) === getPathWithoutParams(to.path)) {
         isMenuExists = true;
         return true;
@@ -157,10 +157,10 @@ export default defineNuxtRouteMiddleware((to, from) => {
         let decodedToken = jwtDecode(cookies.get('x-access-token'));
 
         // 권한별 메뉴 정보 설정
-        const userMenu = result[0].rollMenuList.filter((a: { authority: string; menu_visible: boolean; }) => a.authority == "User" && a.menu_visible);
-        const adminMenu = result[0].rollMenuList.filter((a: { authority: string; menu_visible: boolean; }) => (a.authority == "Manager" || a.authority == "Admin") && a.menu_visible);
+        const userMenu = result[0].roleMenuList.filter((a: { authority: string; menu_visible: boolean; }) => a.authority == "User" && a.menu_visible);
+        const adminMenu = result[0].roleMenuList.filter((a: { authority: string; menu_visible: boolean; }) => (a.authority == "Manager" || a.authority == "Admin") && a.menu_visible);
 
-        let decodedRollMenuList = result[1].decodeRollMenuList;
+        let decodedRoleMenuList = result[1].decodeRoleMenuList;
 
         let user = {
           user_id: decodedToken.user_id,
@@ -172,7 +172,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
           user_email: decodedToken.user_email,
           userMenu: userMenu,
           adminMenu: adminMenu,
-          rollMenu: decodedRollMenuList
+          roleMenu: decodedRoleMenuList
         };
 
         userStore.setUser(user);
@@ -215,10 +215,10 @@ export default defineNuxtRouteMiddleware((to, from) => {
   } else if (to.path === '/error') {
     console.log('에러 페이지')
   } else {
-    if(userStore._user.rollMenu && userStore._user.rollMenu != ""){
-      let decodedRollMenuList = jwtDecode(userStore._user.rollMenu);
+    if(userStore._user.roleMenu && userStore._user.roleMenu != ""){
+      let decodedRoleMenuList = jwtDecode(userStore._user.roleMenu);
 
-      if(!searchMenuPath(decodedRollMenuList.rollMenuList)){
+      if(!searchMenuPath(decodedRoleMenuList.roleMenuList)){
         errorAlert('잘못된 접근입니다.');
         // cookies.set('redirected', 'true', { path: '/' });  // 리디렉션을 기록
         return navigateTo('/main')

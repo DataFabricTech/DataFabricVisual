@@ -102,16 +102,16 @@ public class MenuController {
     }
 
     @ResponseJsonResult
-    @GetMapping("/rollMenu")
-    public Object getRollMenu(@RequestParam("rollType") String rollType) throws Exception {
-        return menuService.getRollMenu(rollType);
+    @GetMapping("/roleMenu")
+    public Object getRoleMenu(@RequestParam("roleType") String roleType) throws Exception {
+        return menuService.getRoleMenu(roleType);
     }
 
     @ResponseJsonResult
-    @PostMapping("/rollMenuSave")
+    @PostMapping("/roleMenuSave")
     @ResponseBody
-    public Object rollMenuSave(@RequestBody Map<String, Object> param) throws Exception {
-        return menuService.rollMenuSave(param);
+    public Object roleMenuSave(@RequestBody Map<String, Object> param) throws Exception {
+        return menuService.roleMenuSave(param);
     }
     
 

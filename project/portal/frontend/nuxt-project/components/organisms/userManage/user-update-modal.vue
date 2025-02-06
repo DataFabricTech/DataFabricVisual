@@ -47,7 +47,7 @@
               <td>
                 <div class="mu-selectbox">
                   <select v-model="props.modalParam.userObject.role_name" :disabled="!props.updateFlag">
-                    <option v-for="role in selectRollList" :key="role.role_id" :value="role.role_id">
+                    <option v-for="role in selectRoleList" :key="role.role_id" :value="role.role_id">
                       {{role.role_name}}
                     </option>
                   </select>
@@ -87,10 +87,10 @@ const emit = defineEmits(['update:visibleUpdateModal', 'searchMethod'])
 const props = defineProps(['visibleUpdateModal', 'updateFlag', 'modalParam'])
 
 const toggleDeptModal = ref(false);
-const selectRollList = ref();
+const selectRoleList = ref();
 
 // 
-onMounted(() => getRollList());
+onMounted(() => getRoleList());
 
 // 
 const close = () => {
@@ -123,12 +123,12 @@ const onClickSaveButton = async () => {
 }
 
 // 
-const getRollList = async () => {
-  await $ofetch(`/api/rollList?role_type=`)
+const getRoleList = async () => {
+  await $ofetch(`/api/roleList?role_type=`)
       .then((res) => {
         if (res && !res.errorMessage) {
-          // selectRollList.value = res.data.filter(role => role.role_type === 0);
-          selectRollList.value = res.data;
+          // selectRoleList.value = res.data.filter(role => role.role_type === 0);
+          selectRoleList.value = res.data;
         }
       })
       .catch((err) => {

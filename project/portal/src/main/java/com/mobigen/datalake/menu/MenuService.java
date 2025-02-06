@@ -79,7 +79,7 @@ public class MenuService {
 
     // 
     public List<Map> getMenuHierarchy(List<Map> menuList) {
-        List<Map> rollMenuList = new ArrayList<>();
+        List<Map> roleMenuList = new ArrayList<>();
         Map<String, Map> menuMapById = new HashMap<>();
         Map<String, List<Map>> childrenMapById = new HashMap<>();
 
@@ -99,7 +99,7 @@ public class MenuService {
             String parentMenuId = (String) item.get("parent_menu_id");
             if (parentMenuId == null || parentMenuId.isEmpty()) {
                 Map<String, Object> menuMap = createMenuMap(item);
-                rollMenuList.add(menuMap);
+                roleMenuList.add(menuMap);
                 addChildren(menuMap, childrenMapById);
             }
         }
@@ -110,13 +110,13 @@ public class MenuService {
                 List<Map> orphans = entry.getValue();
                 for (Map orphan : orphans) {
                     Map<String, Object> orphanMap = createMenuMap(orphan);
-                    rollMenuList.add(orphanMap);
+                    roleMenuList.add(orphanMap);
                     addChildren(orphanMap, childrenMapById);
                 }
             }
         }
 
-        return rollMenuList;
+        return roleMenuList;
     }
     
     // 
@@ -170,26 +170,26 @@ public class MenuService {
 
         List<Map> menuList = menuMapper.getUserMenubyRole((String) user.get("role_id")); 
 
-        List<Map> rollMenuList = getMenuHierarchy(menuList);
+        List<Map> roleMenuList = getMenuHierarchy(menuList);
 
         // menu_visible이 true인 항목만 필터링
-        List<Map> filteredRollMenuList = rollMenuList.stream()
+        List<Map> filteredRoleMenuList = roleMenuList.stream()
             .filter(item -> Boolean.TRUE.equals(item.get("menu_visible"))) // menu_visible이 true인 항목만 필터
             .collect(Collectors.toList());
 
         HashMap menuListMap = new HashMap();
-        menuListMap.put("rollMenuList", filteredRollMenuList);
+        menuListMap.put("roleMenuList", filteredRoleMenuList);
         menu.add(menuListMap);
 
-        // roll menu(검증용)
+        // role menu(검증용)
         Algorithm algorithm = Algorithm.HMAC256(properties.getAccessToken().getSecret());
-        HashMap menuRollListMap = new HashMap();
+        HashMap menuRoleListMap = new HashMap();
 
         Map<String, Object> payloadMap = new HashMap<>();
-        payloadMap.put("rollMenuList", rollMenuList);
-        menuRollListMap.put("decodeRollMenuList", JWT.create().withPayload(payloadMap).withExpiresAt(new Date()).sign(algorithm));
+        payloadMap.put("roleMenuList", roleMenuList);
+        menuRoleListMap.put("decodeRoleMenuList", JWT.create().withPayload(payloadMap).withExpiresAt(new Date()).sign(algorithm));
         
-        menu.add(menuRollListMap);
+        menu.add(menuRoleListMap);
 
         return menu;
     }
@@ -224,30 +224,30 @@ public class MenuService {
     }
 
     // 
-    public List<Map> getRollMenu(String rollType) throws Exception {
+    public List<Map> getRoleMenu(String roleType) throws Exception {
         List<Map> menu = new ArrayList<>();
 
         try{
-            String[] rollSplitText = rollType.split(",");
+            String[] roleSplitText = roleType.split(",");
             
-            List<Map> rollMenuList = new ArrayList<>();
-            for (String roll : rollSplitText) {
-                List<Map> menuList = menuMapper.getRollMenu(roll);
+            List<Map> roleMenuList = new ArrayList<>();
+            for (String role : roleSplitText) {
+                List<Map> menuList = menuMapper.getRoleMenu(role);
 
-                rollMenuList.addAll(getMenuHierarchy(menuList));
+                roleMenuList.addAll(getMenuHierarchy(menuList));
             }
 
             HashMap menuListMap = new HashMap();
-            menuListMap.put("rollMenuList", rollMenuList);
+            menuListMap.put("roleMenuList", roleMenuList);
             menu.add(menuListMap);
 
-            HashMap rollTypeMap = new HashMap();
-            rollTypeMap.put("rollTypeList", menuMapper.getRollType("0"));
-            menu.add(rollTypeMap);
+            HashMap roleTypeMap = new HashMap();
+            roleTypeMap.put("roleTypeList", menuMapper.getRoleType("0"));
+            menu.add(roleTypeMap);
 
-            HashMap rollMenuMap = new HashMap();
-            rollMenuMap.put("rollMenuExistsList", menuMapper.getRollMenuExists());
-            menu.add(rollMenuMap);
+            HashMap roleMenuMap = new HashMap();
+            roleMenuMap.put("roleMenuExistsList", menuMapper.getRoleMenuExists());
+            menu.add(roleMenuMap);
             
         } catch(Exception e) {
             
@@ -257,7 +257,7 @@ public class MenuService {
     }
 
     // 
-    public Object rollMenuSave(@RequestBody Map<String, Object> param) throws Exception {
+    public Object roleMenuSave(@RequestBody Map<String, Object> param) throws Exception {
         Map<String, Object> result = new HashMap<>();
 
         String errorMessage = "";
@@ -273,7 +273,7 @@ public class MenuService {
                 .collect(Collectors.toList());
 
         if (inactiveList.size() > 0) {
-            int inactiveListResult = menuMapper.menuRollDelete(inactiveList);
+            int inactiveListResult = menuMapper.menuRoleDelete(inactiveList);
             if (inactiveListResult <= 0){
                 errorMessage = "삭제 처리 실패했습니다.";
                 result.put("errorMessage", errorMessage);
@@ -283,7 +283,7 @@ public class MenuService {
         }
 
         if (activeList.size() > 0) {
-            int activeListResult = menuMapper.menuRollInsert(activeList);
+            int activeListResult = menuMapper.menuRoleInsert(activeList);
             if(activeListResult <= 0){
                 errorMessage = "입력 처리 실패했습니다.";
                 result.put("errorMessage", errorMessage);

@@ -206,7 +206,7 @@ public class RoleManagementControler {
      */
     @ResponseJsonResult
     @GetMapping("/userSearch")
-    public Object getUserRollList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("role_id") String roleId)  throws Exception {
+    public Object getUserRoleList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("role_id") String roleId)  throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
         int total = 0;
@@ -234,7 +234,7 @@ public class RoleManagementControler {
      */
     @ResponseJsonResult
     @GetMapping("/deptSearch")
-    public Object getDeptRollList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("role_id") String roleId)  throws Exception {
+    public Object getDeptRoleList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("role_id") String roleId)  throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
         int total = 0;
@@ -262,7 +262,7 @@ public class RoleManagementControler {
      */
     @ResponseJsonResult
     @GetMapping("/metaSearch")
-    public Object getMetaRollList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("role_id") String roleId)  throws Exception {
+    public Object getMetaRoleList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("role_id") String roleId)  throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
         int total = 0;
@@ -289,9 +289,9 @@ public class RoleManagementControler {
      * @throws Exception
      */
     @ResponseJsonResult
-    @PostMapping("/userRollSave")
+    @PostMapping("/userRoleSave")
     @ResponseBody
-    public Object userRollSave(@RequestBody Map<String, Object> param)  throws Exception {
+    public Object userRoleSave(@RequestBody Map<String, Object> param)  throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
 
         try{
@@ -345,7 +345,7 @@ public class RoleManagementControler {
      * @throws Exception
      */
     @ResponseJsonResult
-    @PostMapping("/deptRollSave")
+    @PostMapping("/deptRoleSave")
     @ResponseBody
     public Object registerDeptRoleItem(@RequestBody Map<String, Object> param)  throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();
@@ -401,7 +401,7 @@ public class RoleManagementControler {
      * @throws Exception
      */
     @ResponseJsonResult
-    @PostMapping("/metaRollSave")
+    @PostMapping("/metaRoleSave")
     @ResponseBody
     public Object registerMetaRoleItem(@RequestBody Map<String, Object> param)  throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();

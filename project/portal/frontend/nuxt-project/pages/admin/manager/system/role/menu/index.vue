@@ -13,7 +13,7 @@
             <thead>
               <tr>
                 <th rowspan="3" class="sticky-column">구분</th>
-                <th v-for="(header, index) in systemRollGubun" :key="index" :colspan="header.collength || 1">
+                <th v-for="(header, index) in systemRoleGubun" :key="index" :colspan="header.collength || 1">
                   {{ header.title }}
                 </th>
                 <th rowspan="3">삭제</th>
@@ -30,7 +30,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(item, index1) in rollTypeList" :key="index1">
+              <tr v-for="(item, index1) in roleTypeList" :key="index1">
                 <td class="sticky-column">
                   <a href="javascript:void(0);" :title="`${item.role_id}`" @click="isSelectRoleAll(item.role_id)">{{ item.role_id }}</a>
                 </td>
@@ -42,11 +42,11 @@
                     </label>
                   </div>
                 </td>
-                <td :colspan="systemRollGubun.collength || 1">
+                <td :colspan="systemRoleGubun.collength || 1">
                   <button type="button" class="mu-btn mu-btn-sm" v-on:click="onClickDeleteButton(item)"><i class="mu-icon-svg del"></i><span>삭제</span></button>
                 </td>
               </tr>
-              <tr v-if="rollTypeList != null && rollTypeList.length === 0">
+              <tr v-if="roleTypeList != null && roleTypeList.length === 0">
                 <td colspan="6">
                   <p class="nodata">데이터가 존재하지 않습니다.</p>
                 </td>
@@ -88,10 +88,10 @@ definePageMeta({
 const { $ofetch } = useNuxtApp();
 const router = useRouter();
 
-const systemRollGubun = ref([ {title:'사용자', id:'U', collength:0}
+const systemRoleGubun = ref([ {title:'사용자', id:'U', collength:0}
                             , {title:'관리자', id:'A', collength:0}]);
-const rollTypeList = ref([]);
-const rollMenuExists = ref([]);  
+const roleTypeList = ref([]);
+const roleMenuExists = ref([]);  
 const tableHeaders = ref([]);
 const selectedItems = ref([]);
 const isSelectAllRole =  ref([]);
@@ -107,8 +107,8 @@ const roleDataInit = () => {
   selectedItems.value = [];
   isSelectAllRole.value = [];
 
-  rollTypeList.value.forEach(role => {
-    rollMenuExists.value.forEach(menu => {
+  roleTypeList.value.forEach(role => {
+    roleMenuExists.value.forEach(menu => {
         const checkboxId = `checkbox_${role.role_id}_${menu.menu_id}`;
         const checkbox = document.getElementById(checkboxId) as HTMLInputElement;
 
@@ -121,27 +121,27 @@ const roleDataInit = () => {
 
 // 
 const onMenuDataLoad = async () => {
-  const rollType = systemRollGubun.value.map(item => item.id).join(',');
+  const roleType = systemRoleGubun.value.map(item => item.id).join(',');
 
-  const result = await $ofetch(`/api/rollMenu?rollType=${rollType}`);
+  const result = await $ofetch(`/api/roleMenu?roleType=${roleType}`);
 
   if (result.data && Array.isArray(result.data)) {
     const headers = [];
     const childHeaders = [];
 
-    systemRollGubun.value.forEach(item => {
+    systemRoleGubun.value.forEach(item => {
       item.collength = 0;
     });
 
-    result.data[0].rollMenuList.forEach(menu => {
+    result.data[0].roleMenuList.forEach(menu => {
       headers.push({ menu_name: menu.menu_name, colspan: menu.child.length });
       
       menu.child.filter(child => child.menu_visible === true).forEach(child => {
         childHeaders.push(child);
 
-        for (let i=0; i<systemRollGubun.value.length; i++) {
-          if(systemRollGubun.value[i].id === menu.menu_auth) {
-            systemRollGubun.value[i].collength++;
+        for (let i=0; i<systemRoleGubun.value.length; i++) {
+          if(systemRoleGubun.value[i].id === menu.menu_auth) {
+            systemRoleGubun.value[i].collength++;
           }
         }
       });
@@ -149,19 +149,19 @@ const onMenuDataLoad = async () => {
 
     tableHeaders.value = [headers, childHeaders];
 
-    if(result.data[1] && result.data[1].rollTypeList) {
-      rollTypeList.value = result.data[1].rollTypeList;
+    if(result.data[1] && result.data[1].roleTypeList) {
+      roleTypeList.value = result.data[1].roleTypeList;
     }
 
-    if(result.data[2] && result.data[2].rollMenuExistsList) {
-      rollMenuExists.value = result.data[2].rollMenuExistsList;
+    if(result.data[2] && result.data[2].roleMenuExistsList) {
+      roleMenuExists.value = result.data[2].roleMenuExistsList;
     }
   }
 };
 
 // 
 const isChecked = (role_id: any, menu_id: any) => {
-  return rollMenuExists.value.some(item => item.menu_role_name === role_id && item.menu_id === menu_id);
+  return roleMenuExists.value.some(item => item.menu_role_name === role_id && item.menu_id === menu_id);
 }
 
 // 
@@ -219,7 +219,7 @@ const onClickSaveButton = async (): Promise<void> => {
       list: selectedItems.value,
     };
 
-    $ofetch("/api/rollMenuSave", {
+    $ofetch("/api/roleMenuSave", {
       method: "POST",
       body: param,
     }).then(async (res: { errorMessage: string }) => {
