@@ -25,8 +25,9 @@
                       <select v-model="searchType">
                         <option value="all">전체</option>
                         <option value="description">데이터 설명</option>
-                        <option value="meta_name">데이터명</option>
+                        <option value="meta_name">데이터 명</option>
                         <option value="owner">소유자</option>
+                        <option value="system_name">시스템 명</option>
                       </select>
                     </div>
                     <div class="mu-input-icon">
@@ -66,7 +67,7 @@
                     </th>
                     <th scope="col">데이터 설명</th>
                     <th scope="col">데이터 명</th>
-                    <th scope="col">시스템 타입</th>
+                    <th scope="col">시스템 명</th>
                     <th scope="col">유형</th>
                     <th scope="col">카테고리</th>
                   </tr>
@@ -88,7 +89,7 @@
                     </td>
                     <td> {{ item.description }} </td>
                     <td> {{ item.meta_name }} </td>
-                    <td> {{ item.system_type }} </td>
+                    <td> {{ item.system_name }} </td>
                     <td> {{ item.meta_type }} </td>
                     <td>
                       <!-- 카테고리 -->

@@ -312,7 +312,8 @@
                         <select v-model="metaSearchType" :disabled="roleId === ''">
                           <option value="all">전체</option>
                           <option value="description">데이터 설명</option>
-                          <option value="meta_name">데이터명</option>
+                          <option value="meta_name">데이터 명</option>
+                          <option value="system_name">시스템 명</option>
                         </select>
                       </div>
                       <div class="mu-input-icon">
@@ -360,7 +361,7 @@
                       </th>
                       <th>데이터 설명</th>
                       <th>데이터 명</th>
-                      <th>시스템 타입</th>
+                      <th>시스템 명</th>
                       <th>유형</th>
                       <th>카테고리</th>
                       <th>tag</th>
@@ -382,7 +383,7 @@
                       </th>
                       <th>{{item.description}}</th>
                       <th>{{item.meta_name}}</th>
-                      <th>{{item.system_type}}</th>
+                      <th>{{item.system_name}}</th>
                       <th>{{item.meta_type}}</th>
                       <th>
                         <div class="category-group">
