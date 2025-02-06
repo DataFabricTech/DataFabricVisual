@@ -53,6 +53,13 @@ public class SynonymController {
 
         return resultMap;
     }
+
+    // 동의어 목록 조회 (통합검색 표기용)
+    @ResponseJsonResult
+    @PostMapping("/list")
+    public Object getSynonymList(@RequestBody Map<String, Object> params) throws Exception {
+        return synonymService.getSynonymListForSearch(params);
+    }
     
     /**
      * 동의어 삭제 요청 내역 목록 조회

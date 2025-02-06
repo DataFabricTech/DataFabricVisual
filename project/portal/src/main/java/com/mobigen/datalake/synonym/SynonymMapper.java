@@ -34,4 +34,7 @@ public interface SynonymMapper {
     int confirmSynonymRequestAll(Map<String, Object> params) throws Exception;
     int deleteSynonymAll(Map<String, Object> params) throws Exception;
 
+    List getDistinctTermListForSearchOne(String searchWord) throws Exception;
+    List getDistinctTermListForSearch(Map<String, Object> params) throws Exception;
+    List getSynonymListOneForSearch(String term) throws Exception;
 }

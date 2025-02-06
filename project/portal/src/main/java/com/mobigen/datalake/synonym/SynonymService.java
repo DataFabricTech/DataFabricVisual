@@ -26,7 +26,9 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SynonymService {
@@ -77,6 +79,71 @@ public class SynonymService {
     public int getSynonymListTotal(Map params) throws Exception {
         return synonymMapper.getSynonymListTotal(params);
     }
+
+
+    // 검색 시 표기용 동의어 항목 조회
+    public Map<String, Object> getSynonymListForSearch(Map<String, Object> params) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            // 가공된 동의어 목록
+            List<Map> updatedTermList = new ArrayList<>();
+
+            // 검색어 목록
+            List<String> searchWords = ((List)params.get("searchWords"));
+
+            if (searchWords != null) {
+                // 데이터가 있는 경우
+                for(int a=0; a<searchWords.size(); a++) {
+                    // 대표어 중복 제거 목록 조회
+                    List<Map> termList = synonymMapper.getDistinctTermListForSearchOne(searchWords.get(a).toString());
+                    if (!termList.isEmpty()) {
+                        // 동의어 목록 조회
+                        for (int i = 0; i < termList.size(); i++) {
+                            // 대표어 1개에 들어가는 목록 생성
+                            Map<String, Object> termMap = new LinkedHashMap<>();
+                            String term_1 = termList.get(i).get("term").toString();
+                            termMap.put("rownum", termList.size() - i);
+                            termMap.put("searchWord", searchWords.get(a));
+                            termMap.put("term", term_1);
+    
+                            List synonyms = new ArrayList<>(); // 동의어 추가할 리스트 부분
+    
+                            List oneList = synonymMapper.getSynonymListOneForSearch(term_1);
+                            if (oneList != null) {
+                                for (int j=0; j<oneList.size(); j++) {
+                                    synonyms.add((((Map<String, Object>) oneList.get(j)).get("synonym")));
+                                }
+                            }
+                            termMap.put("synonyms", synonyms);
+    
+                            // 가공된 동의어 목록에 가공한 데이터 추가
+                            updatedTermList.add(termMap);
+                        }
+                    } else {
+                        // 앞에 검색어가 동일한 데이터가 있는 경우 제거
+                        Map<String, Object> termMap = new LinkedHashMap<>();
+                        termMap.put("rownum", a);
+                        termMap.put("searchWord", searchWords.get(a));
+                        termMap.put("term", "");
+                        termMap.put("synonyms", new ArrayList<>());
+    
+                        // 가공된 동의어 목록에 가공한 데이터 추가
+                        updatedTermList.add(termMap);
+                    }
+                }
+            }
+
+            result.put("list", updatedTermList);
+            
+        } catch(Exception e) {
+            log.error("동의어 항목 조회에 실패하였습니다.");
+            result.put("list", new ArrayList<>());
+        }
+
+        return result;
+    }
+
 
     // 동의어 추가
     public Object addSynonym(Map<String, Object> params) throws Exception {

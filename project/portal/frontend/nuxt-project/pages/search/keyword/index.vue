@@ -54,8 +54,8 @@
           <dt>동의어</dt>
           <dd>
             <div class="tags-group">
-              <div class="tag" v-for="item in printSynonymList">
-                <span class="tag-label" :style="isTermStyle(item)">{{ item.name }}</span>
+              <div class="tag" v-for="synonyms in printSynonymList">
+                <span class="tag-label" :style="isTermStyle(synonyms)">{{ synonyms.name }}</span>
               </div>
             </div>
           </dd>
@@ -829,64 +829,88 @@ const getSearch = async (offset: number = 0): Promise<void> => {
   if (word.value && word.value != "") {
     synonymList.value = [];
 
+    let words = []
     if (word.value.includes(" ")) {
       // " "을 포함하는지 확인
-      var words = word.value.split(" "); // 공백을 기준으로 단어 분할
+      words = [...word.value.split(" ")]; // 공백을 기준으로 단어 분할
     } else {
-      var words = [word.value];
+      words = [word.value];
     }
 
-    var filteredWords = words.filter(function (word) {
+    let filteredWords = words.filter(function (word) {
       return word !== "";
     });
-    let originUniqueList = [];
+
     printSynonymList.value = [];
-    for (let k in filteredWords) {
-      const param = encodeURI(filteredWords[k]);
-      let keywordList = [];
-      let temp = {};
-      temp.name = filteredWords[k];
-      temp.isTerm = true;
-      keywordList.push(temp);
 
-      await $ofetch(
-        `/api/synonym/list?pageSize=-1&pnum=-1&searchType=all&searchWord=${param}`,
-        { method: "GET" }
-      ).then((res: { data: { list: any; }; }) => {
-        let cur_synonym_list = res.data.list;
-        for (let i in cur_synonym_list) {
-          let temp = JSON.parse(JSON.stringify(cur_synonym_list[i]));
-          temp.name = cur_synonym_list[i].term;
-          keywordList.push(temp);
-          synonymList.value.push(cur_synonym_list[i].term);
-          for (let j in cur_synonym_list[i].synonyms) {
-            let subtemp = JSON.parse(JSON.stringify(cur_synonym_list[i].synonyms[j]));
-            subtemp.name = subtemp.synonym;
-            keywordList.push(subtemp);
-            synonymList.value.push(cur_synonym_list[i].synonyms[j].synonym);
-          }
-        }
-      });
-
-      // 동의어가 있는 경우만 정렬 처리 후 저장
-      if (keywordList.length > 1) {
-        let uniqueKeywordList = keywordList.filter((item, i) => {
-          return (
-            keywordList.findIndex((item2, j) => {
-              return item.name == item2.name;
-            }) === i
-          );
-        });
-
-        originUniqueList.push(uniqueKeywordList);
-      }
+    let params = {
+      searchType: 'all',
+      searchWords: filteredWords,
+      pnum: -1,
+      pageSize: -1
     }
 
-    originUniqueList.forEach((el) => {
-      el.forEach((el2) => {
-        printSynonymList.value.push(el2);
-      });
-    });
+    await $ofetch(`/api/synonym/list`, {
+      method: 'POST',
+      body: params
+    }).then((res) => {
+      if (res && res.data && res.data.list && res.data.list.length > 0) {
+        const tmpList = []
+        const nameSet = new Set(); // 동의어 중복 제거 확인용 이름 목록
+        const searchWordSet = new Set(); // 동의어 중복 제거 확인용 검색어 목록
+
+        const originUniqueList = res.data.list
+        console.log(originUniqueList)
+        for (let i=0; i<originUniqueList.length; i++) {
+          // 중복 검색어 처리
+          const printSynonymSearchWord = {
+            isTerm: true,
+            name: originUniqueList[i].searchWord
+          }
+          tmpList.push(printSynonymSearchWord)
+          nameSet.add(originUniqueList[i].searchWord)
+          searchWordSet.add(originUniqueList[i].searchWord)
+
+          const printSynonymTerm = {
+            isTerm: false,
+            name: originUniqueList[i].term
+          }
+          tmpList.push(printSynonymTerm)
+          nameSet.add(originUniqueList[i].term)
+
+          // 중복 동의어 처리
+          for (let j=0; j<originUniqueList[i].synonyms.length; j++) {
+            const printSynonym = {
+              isTerm: false,
+              name: originUniqueList[i].synonyms[j]
+            }
+            tmpList.push(printSynonym)
+            nameSet.add(originUniqueList[i].searchWord)
+          }
+        }
+
+        console.log(tmpList)
+
+        // 검색어와 동일한 이름의 동의어 중복 제거
+        const dupSet = new Set();
+        // for (let i = 0; i < tmpList.length - 1; i++) {
+        //   for (let j = i + 1; j < tmpList.length; j++) {
+        //     // isTerm: true 값과 isTerm: false
+        //     if (tmpList[i].isTerm == false)
+        //   }
+        // }
+
+        printSynonymList.value = tmpList
+      } else {
+        printSynonymList.value = []
+      }
+
+
+    }).catch((err) => {
+      // error
+        printSynonymList.value = []
+    })
+
   } else {
     synonymList.value = [];
   }
