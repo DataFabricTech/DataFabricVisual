@@ -24,7 +24,9 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.mobigen.framework.security.SessionManager;
 
@@ -51,6 +53,12 @@ public class DetailEliminateService {
 
     @Value("${properties.maxFileSize}")
     private String maxFileSize;
+
+    @Value("${properties.bigExtractToken}")
+    private String bigExtractToken;
+
+    @Value("${properties.bigextract.url}")
+    private String bigExtractUrl;
 
     /**
      * 파일 추출 이력 저장
@@ -422,14 +430,20 @@ public class DetailEliminateService {
     // 대용량 다운로드 요청
     public Object downloadRequest(Map<String, Object> params) throws Exception {
         Map<String, Object> result = new HashMap<>();
+        params.put("token", BCryptEncoder(bigExtractToken)); // 대용량 데이터 추출 토큰
         try {
-            int insertResult = detailEliminateMapper.downloadRequest(params);
-            if (insertResult > 0) {
-                result.put("result", true);
-            } else {
-                result.put("result", false);
+
+            Map<String, Object> restResponse = bigExtractRequestApi(params);
+            if (!restResponse.isEmpty()) {
+                Map<String, String> res = (Map<String, String>) restResponse.get("result");
+                if (res.get("result").equals("success")) {
+                    result.put("result", true);
+                } else {
+                    result.put("result", false);
+                }
             }
         } catch (Exception e) {
+            log.error("대용량 다운로드 요청 실패");
             result.put("result", false);
         }
         return result;
@@ -473,4 +487,25 @@ public class DetailEliminateService {
         return jsonBuilder.toString();
     }
 
+    // 대용량 데이터 추출 토큰 인코딩용
+    public String BCryptEncoder(String value) throws Exception {
+        String token = "";
+        try {
+
+            if (value != null && !value.equals("")) {
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                // 비밀번호 해싱
+                token = passwordEncoder.encode(value);
+            }
+        } catch (Exception e) {
+            log.error("대용량 데이터 추출 토큰 인코딩 실패");
+        }
+        return token;
+    }
+
+    public Map<String, Object> bigExtractRequestApi(Map<String, Object> requestBody) throws Exception {
+        RestTemplate restTemplate = new RestTemplate();
+        Map<String, Object> restResponse = restTemplate.postForObject(bigExtractUrl, requestBody, HashMap.class);
+        return restResponse;
+    }
 }

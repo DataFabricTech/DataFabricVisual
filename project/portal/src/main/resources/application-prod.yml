@@ -102,6 +102,7 @@ properties:
   activeSendMail:
     data-request: false
     synonym: false
+  bigExtractToken: <EXTRACT_TOKEN>
   maxFileSize: 1GB # GB, MB, KB
   fileUploadPath: /opt/ovp/portal/data
   csvFileUploadPath: /opt/ovp/portal/csv
@@ -164,3 +165,5 @@ properties:
     url: http://<INTERNAL_HOST>:8000/v1/essync/getclassificationcount
   ingestion:
     url: http://<INTERNAL_HOST>:8585/api/v1/ingestion/execute
+  bigextract:
+    url: http://<INTERNAL_HOST>:13200/largedata/requestdata

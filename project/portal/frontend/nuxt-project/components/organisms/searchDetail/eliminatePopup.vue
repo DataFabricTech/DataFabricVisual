@@ -758,12 +758,7 @@ const onClickFileEliminateButton = async () => {
 
     let big_params = {
       meta_id,
-      meta_name,
-      status: 0,
-      qualified_name,
-      download_query: `SELECT ${querySelect.value} FROM "${system_id}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
-      data_delimiter: ",",
-      data_lineterm: "\n"
+      query: `SELECT ${querySelect.value} FROM "${system_id}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
     }
 
     await $ofetch("/api/search/detail/eliminate/file/downloadRequest", {

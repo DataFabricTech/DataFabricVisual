@@ -102,7 +102,7 @@ public class DetailEliminateController {
     public Object downloadRequest(@RequestBody Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         params.put("user_id", user.get("user_id").toString());
-        params.put("accept_user_id", user.get("user_id").toString());
+        params.put("user_ip", IpAddressUtil.getClientIp(request));
         return detailEliminateService.downloadRequest(params);
     }
 }
