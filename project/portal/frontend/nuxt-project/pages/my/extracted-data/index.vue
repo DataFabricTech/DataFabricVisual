@@ -139,7 +139,7 @@ definePageMeta({
 const { $ofetch } = useNuxtApp();
 
 const tabs = ref([
-  {idx: 0, key: "일반 데이터 추출"},
+  {idx: 0, key: "데이터 추출 이력"},
   {idx: 1, key: "대용량 데이터 추출"}
 ])
 const currentExtractTab = ref(0)
