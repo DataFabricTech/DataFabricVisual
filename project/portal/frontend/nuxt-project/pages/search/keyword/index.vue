@@ -667,22 +667,37 @@ onMounted(async () => {
         name: "",
         description: ""
       }
-      // 상세필터에서 카테고리 필터 선택 상태로 설정
-      if (detailFilters.value['CATEGORY'].content) {
-        detailFilters.value['CATEGORY'].content.forEach((el) => {
-          if (classification.value.id == el.id) {
-            el.checked = true
-            detailFilters.value['CATEGORY'].allChecked = false
-            leftMenuToggleAndBold(el.id)
 
-            // 상위메뉴도 펼치기
-            const matched = getOriginalList.find((el2) => el2.id === el.id);
-            toggleParents(matched)
-          } else {
-            el.checked = false
+      // 선택된 카테고리의 최상위 카테고리 확인
+      if (classification.value && classification.value.id) {
+        // 최상위 카테고리 가져오기
+        const root_classification = getRootClassification(classification.value)
+
+        // 상세필터에서 카테고리 필터 선택 상태로 설정
+        // 미분류 클릭해서 온 경우 처리
+        if (classification.value.id == '_NOT_CLASSIFIED') {
+          leftMenuToggleAndBold("_NOT_CLASSIFIED")
+        } else {
+          if (detailFilters.value['CATEGORY'].content) {
+            detailFilters.value['CATEGORY'].content.forEach((el) => {
+              // 최상위 카테고리(1depth) 확인
+              if (root_classification.id == el.id) {
+                el.checked = true
+                detailFilters.value['CATEGORY'].allChecked = false
+                leftMenuToggleAndBold(classification.value.id)
+
+                // 상위메뉴도 펼치기
+                const matched = getOriginalList.find((el2) => el2.id === classification.value.parent_id);
+                toggleParents(matched)
+              } else {
+                el.checked = false
+              }
+            })
+
+            await searchStore.setSearchParamsDetailFilters(detailFilters.value)
           }
-        })
-        await searchStore.setSearchParamsDetailFilters(detailFilters.value)
+        }
+
       }
 
       // 추가속성 필터
@@ -749,6 +764,19 @@ const toggleParents = (matched) => {
   }
 }
 
+const getRootClassification = (obj) => {
+  if (obj && obj.parent_id && obj.parent_id != "" && obj.parent_id != null && obj.parent_id != undefined) {
+    let parent_obj = getOriginalList.find((el) => el.id == obj.parent_id)
+    if (parent_obj && parent_obj != null && parent_obj != undefined) {
+      return getRootClassification(parent_obj)
+    } else {
+      return obj
+    }
+  } else {
+    return obj
+  }
+}
+
 // 검색
 const getSearch = async (offset: number = 0): Promise<void> => {
   printSynonymList.value = []; // 동의어
@@ -789,7 +817,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
     method: "POST",
     body: params,
   }).then((res) => {
-    if (res && res.data) {
+    if (res && res.data && res.data.results) {
       listData.value = res.data.results
       // 페이징
       pagingObj.value = {
@@ -1032,6 +1060,10 @@ const isTermStyle = (item: any): { fontWeight: number } | {} => {
 };
 
 const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
+  if (classification.value.id == "") {
+    return false
+  }
+
   if (detailFilters.value['CATEGORY']
       && detailFilters.value['SYSTEMTYPE']
       && detailFilters.value['ORDER']
@@ -1129,8 +1161,10 @@ const onClickMenuItem = (item: any): void => {
     classification.value = item;
 
     // 상세필터 카테고리 체크 설정
+    // 최상위 뎁스만 있기 때문에 최상위 뎁스에 대해 카테고리 필터 선택 처리
+    const root_classification = getRootClassification(item)
     detailFilters.value.CATEGORY.content.forEach((el) => {
-      if (el.name == item.name) {
+      if (el.name == root_classification.name) {
         el.checked = true;
         detailFilters.value.CATEGORY.allChecked = false
       } else {

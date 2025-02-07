@@ -57,6 +57,7 @@ import LeftMenuList from "@functional/leftMenuList/left-menu-list";
 import { errorAlert } from "@functional/alert/alert-default";
 import { useCategoryStore } from "@/store/category";
 import { useSearchStore } from "@/store/search";
+import { useUserStore } from "@/store/user";
 
 definePageMeta({
   name: "SearchCategory",
@@ -68,8 +69,14 @@ const route = useRoute();
 const router = useRouter();
 const categoryStore = useCategoryStore();
 const searchStore = useSearchStore();
+const userStore = useUserStore();
 
 const heatmap = ref({});
+const currentClassification = ref({
+  id: "",
+  name: "",
+  description: ""
+})
 
 // 창 조절 요소
 const divider = ref(null); // 패널 사이즈 조절 DOM
@@ -121,6 +128,11 @@ const chartOptions = ref({
             if (breadcrumbs.level > 0) {
               categoryStore.setSelectedItemId(breadcrumbs.levelOptions.point.id);
               categoryStore.setToggleTargetOnClickTreemap(breadcrumbs.levelOptions.point.id);
+              searchStore.setClassification({
+                id: breadcrumbs.levelOptions.point.options.id,
+                name: breadcrumbs.levelOptions.point.options.catName,
+                description: breadcrumbs.levelOptions.point.options.name
+              })
             } else {
               categoryStore.setSelectedItemId("");
             }
@@ -270,6 +282,7 @@ const chartOptions = ref({
 await categoryStore.fetchCategories();
 
 onMounted(async () => {
+  await initSearchParams(); // 검색조건 초기화 처리
   await initCategoryColor();
   await getCategoryData();
 
@@ -445,7 +458,7 @@ const onClickDeleteButton = () => {
 const onSearchWord = () => {
   // 통합 검색 화면으로 이동
   if (word.value.length >= 2) {
-    moveToSearchPage();
+    moveToSearchPage(currentClassification.value);
   } else {
     errorAlert("최소 2글자 이상 입력하세요");
   }
@@ -468,7 +481,19 @@ const onClickMenuItem = (item) => {
   if (!item) {
     // 카테고리 전체
     for (let i = 0; i < 5; i++) heatmap.value.series[0].drillUp();
+    currentClassification.value = {
+      id: "",
+      name: "",
+      description: ""
+    }
     return;
+  }
+
+  currentClassification.value = {
+    id: item.id,
+    name: item.name,
+    description: item.description,
+    parent_id: item.parent_id
   }
 
   let obj = categoryIdMap.value[item.id];
@@ -511,6 +536,13 @@ const onClickMenuItem = (item) => {
 
 // 트리맵 내 노드 클릭 이벤트 핸들러
 const onClickTreeMapNode = (e) => {
+  currentClassification.value = {
+    id: e.point.options.id,
+    name: e.point.options.catName,
+    description: e.point.options.name,
+    parent_id: e.point.options.parent
+  }
+
   if (!e || !e.point || !e.point.id) return;
   let obj = categoryIdMap.value[e.point.options.id];
   if (!obj.subTypes || obj.subTypes.length < 1) {
@@ -528,6 +560,27 @@ const onClickTreeMapNode = (e) => {
     }
   }
 };
+
+// 데이터 검색필터 초기화
+const initSearchParams = () => {
+  searchStore.setSearchParams({
+    query: word.value,
+    detailFilters: {},
+    pagingObj: {},
+    system_type: "",
+    meta_type: "table",
+    tag: "",
+    limit: 10,
+    offset: 0,
+    classification: {
+      id: "",
+      name: "",
+      description: ""
+    },
+    sortOrder: "",
+    entityFilters: {}
+  })
+}
 
 // 데이터 상세 검색 페이지 이동 이벤트 핸들러
 const moveToSearchPage = (obj) => {
