@@ -860,9 +860,7 @@ const getSearch = async (offset: number = 0): Promise<void> => {
         const searchWordSet = new Set(); // 동의어 중복 제거 확인용 검색어 목록
 
         const originUniqueList = res.data.list
-        console.log(originUniqueList)
         for (let i=0; i<originUniqueList.length; i++) {
-          // 중복 검색어 처리
           const printSynonymSearchWord = {
             isTerm: true,
             name: originUniqueList[i].searchWord
@@ -871,12 +869,15 @@ const getSearch = async (offset: number = 0): Promise<void> => {
           nameSet.add(originUniqueList[i].searchWord)
           searchWordSet.add(originUniqueList[i].searchWord)
 
-          const printSynonymTerm = {
-            isTerm: false,
-            name: originUniqueList[i].term
+
+          if (originUniqueList[i].term && originUniqueList[i].term != "") {
+            const printSynonymTerm = {
+              isTerm: false,
+              name: originUniqueList[i].term
+            }
+            tmpList.push(printSynonymTerm)
+            nameSet.add(originUniqueList[i].term)
           }
-          tmpList.push(printSynonymTerm)
-          nameSet.add(originUniqueList[i].term)
 
           // 중복 동의어 처리
           for (let j=0; j<originUniqueList[i].synonyms.length; j++) {
@@ -888,17 +889,6 @@ const getSearch = async (offset: number = 0): Promise<void> => {
             nameSet.add(originUniqueList[i].searchWord)
           }
         }
-
-        console.log(tmpList)
-
-        // 검색어와 동일한 이름의 동의어 중복 제거
-        const dupSet = new Set();
-        // for (let i = 0; i < tmpList.length - 1; i++) {
-        //   for (let j = i + 1; j < tmpList.length; j++) {
-        //     // isTerm: true 값과 isTerm: false
-        //     if (tmpList[i].isTerm == false)
-        //   }
-        // }
 
         printSynonymList.value = tmpList
       } else {
