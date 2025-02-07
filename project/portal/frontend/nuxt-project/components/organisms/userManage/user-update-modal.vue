@@ -16,15 +16,17 @@
           </colgroup>
           <tbody>
             <tr>
-              <th scope="row">이름</th>
+              <th scope="row">이름<strong class="required">필수</strong></th>
               <td>
                 <input type="text" placeholder="" class="mu-input" title="이름" v-model="props.modalParam.userObject.user_nm" :disabled="!props.updateFlag"/>
+                <p v-if="!reg_username_valid" class="complete-msg error">이름을 입력해주세요.</p>
               </td>
             </tr>
             <tr>
-              <th scope="row">사번</th>
+              <th scope="row">사번<strong class="required">필수</strong></th>
               <td>
                 <input type="text" placeholder="" class="mu-input" title="사번" readonly="readonly" v-model="props.modalParam.userObject.user_id" />
+                <p v-if="!reg_userid_valid" class="complete-msg error">사번을 입력해주세요.</p>
               </td>
             </tr>
             <tr>
@@ -90,6 +92,16 @@ const toggleDeptModal = ref(false);
 const selectRoleList = ref();
 
 // 
+const reg_username_valid: ComputedRef<boolean> = computed(() => {
+  return props.modalParam.userObject.user_nm.length > 0 ? true : false;
+});
+
+// 
+const reg_userid_valid: ComputedRef<boolean> = computed(() => {
+  return props.modalParam.userObject.user_id.length > 0 ? true : false;
+});
+
+// 
 onMounted(() => getRoleList());
 
 // 
@@ -99,6 +111,9 @@ const close = () => {
 
 // 
 const onClickSaveButton = async () => {
+  if (!reg_username_valid.value
+  || !reg_userid_valid.value) return;
+
   const result = await confirmAlert("저장하시겠습니까?");
   if(!result) return;
 
