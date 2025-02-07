@@ -20,7 +20,7 @@
       <li v-for="(item, index) in dataList" :key="index">
         <a v-if="item.description != null && item.description != ''" v-on:click="onClickDataName(item)">{{item.description}}</a>
         <a v-else v-on:click="onClickDataName(item)">{{ item.meta_name }}</a>
-        <span class="date" @click="onClickDataName(item)">{{ $yyyyMMddHHmmSS(item.download_date) }}</span>
+        <span class="date" @click="onClickDataName(item)">{{ formatDate(item.download_date) }}</span>
       </li>
       <div v-if="dataList.length == 0">
         <p class="nodata">추출 데이터가 없습니다.</p>
