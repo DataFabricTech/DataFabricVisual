@@ -31,7 +31,7 @@
               <th scope="row">기존 패스워드<strong class="required">필수</strong></th>
               <td>
                 <div class="mu-input-pw">
-                  <input type="text" placeholder="" class="mu-input" title="기존 패스워드" style="width:230px" v-model="verify_password" @keydown.enter.prevent='verifyPassword'/>
+                  <input type="password" placeholder="" class="mu-input" title="기존 패스워드" style="width:230px" v-model="verify_password" @keydown.enter.prevent='verifyPassword'/>
                   <button type="button" class="mu-btn" @click="verifyPassword()" style="margin-left:10px">
                     <span>확인</span>
                   </button>
