@@ -68,8 +68,18 @@ public class DetailEliminateService {
      * @throws Exception
      */
     public Object insertDownloadHistory(Map<String, String> param) throws Exception {
-        Integer result = detailEliminateMapper.insertDownloadHistory(param);
-
+        Map<String, Object> result = new HashMap<>();
+        try {
+            Integer insertCount = detailEliminateMapper.insertDownloadHistory(param);
+            if (insertCount > 0) {
+                result.put("result", true);
+            } else {
+                result.put("result", false);
+            }
+        } catch(Exception e) {
+            result.put("result", false);
+        }
+        
         return result;
     }
 

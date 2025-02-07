@@ -52,7 +52,6 @@ public class DetailEliminateController {
      */
     @ResponseJsonResult
     @PostMapping("/history/add")
-    @ResponseBody
     public Object insertDownloadHistory(@RequestBody Map<String, String> param, HttpServletRequest request) throws Exception {
         // HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         // String ip = req.getHeader("X-FORWARDED-FOR");
@@ -66,7 +65,6 @@ public class DetailEliminateController {
         param.put("user_name", user.get("username").toString());
         param.put("dept_id", user.get("dept_id") != null ? user.get("dept_id").toString() : "-");
         param.put("dept_name", user.get("dept_nm").toString());
-        param.put("download_type", "0");
 
         return detailEliminateService.insertDownloadHistory(param);
     }
@@ -98,6 +96,7 @@ public class DetailEliminateController {
      * @return
      * @throws SQLException
      */
+    @ResponseJsonResult
     @PostMapping(value = "/file/downloadRequest")
     public Object downloadRequest(@RequestBody Map<String, Object> params, HttpServletRequest request, HttpServletResponse response) throws Exception {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);

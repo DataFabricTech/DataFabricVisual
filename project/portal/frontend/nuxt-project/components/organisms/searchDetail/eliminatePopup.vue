@@ -707,22 +707,11 @@ const onClickFileEliminateButton = async () => {
       meta_type: "table",
       qualified_name: qualified_name,
       query: `SELECT ${querySelect.value} FROM "${system_id}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
-      download_type: 0, // 다운로드 방식 (0:file 1:API)';
+      download_type: 0, // 다운로드 방식 (0:FILE 1:API 2:BIG)';
       description: description,
     };
-    historyParams.http_rqst_val = JSON.stringify(historyParams);
-    $ofetch("/api/search/detail/eliminate/history/add", {
-      method: "POST",
-      body: historyParams,
-    }).then((res) => {
-      if (res && res.data.hasOwnProperty("sampleData")) {
-        props.eliminateModal.sampleData = ObjectUtils.getPropertyValue(
-          res.data,
-          "sampleData",
-          []
-        );
-      }
-    });
+
+    await insertDownloadHistory(historyParams);
 
     const res = await $ofetch(`/api/search/detail/eliminate/file/download`, {
       method: 'POST',
@@ -756,6 +745,20 @@ const onClickFileEliminateButton = async () => {
       params.limit = extractLimit.value
     }
 
+    let historyParams = {
+      meta_id: meta_id,
+      system_id: system_id,
+      system_name: system_name,
+      system_type: system_type,
+      meta_name: meta_name,
+      meta_type: "table",
+      qualified_name: qualified_name,
+      query: `SELECT ${querySelect.value} FROM "${system_id}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
+      download_type: 2, // 다운로드 방식 (0:FILE 1:API 2:BIG)';
+      description: description,
+    };
+    await insertDownloadHistory(historyParams);
+
     let big_params = {
       meta_id,
       query: `SELECT ${querySelect.value} FROM "${system_id}"."${schema}"."${name}" ${queryWhere.value}${params.limit ? 'limit ' + params.limit : ''}`,
@@ -765,8 +768,7 @@ const onClickFileEliminateButton = async () => {
       method: "POST",
       body: big_params,
     }).then((res) => {
-      console.log(res)
-      if (res && res.result) {
+      if (res && res.data && res.data.result) {
         successAlert("요청이 완료되었습니다. <br> My Catalog > 데이터 추출 내역에서 진행상태를 확인할 수 있습니다.")
       } else {
         errorAlert("대용량 데이터 추출 요청에 실패하였습니다.")
@@ -776,6 +778,22 @@ const onClickFileEliminateButton = async () => {
     });
   }
 };
+
+const insertDownloadHistory = async (historyParams) => {
+  await $ofetch("/api/search/detail/eliminate/history/add", {
+    method: "POST",
+    body: historyParams,
+  }).then((res) => {
+    if (res && res.data && res.data.result) {
+      console.log('이력 저장 성공')
+    } else {
+      console.log('이력 저장 실패')
+    }
+  }).catch((err) => {
+    // 이력 저장 실패
+    console.log('이력 저장 실패')
+  });
+}
 
 // 추출건수 유효성 검증
 const validateInput = () => {
