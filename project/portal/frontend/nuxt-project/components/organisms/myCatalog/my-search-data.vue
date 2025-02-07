@@ -7,7 +7,7 @@
       <li v-for="item in dataList">
         <a :title="item.description ? item.description : item.meta_name" v-on:click="onClickDataName(item)">{{ item.description ? item.description : item.meta_name }}</a>
         <span class="date" @click="onClickDataName(item)">{{
-          formatDate(item.search_date)
+          $yyyyMMddHHmmSS(item.search_date)
         }}</span>
       </li>
       <div v-if="dataList.length == 0">

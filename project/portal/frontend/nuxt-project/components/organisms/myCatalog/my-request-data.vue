@@ -11,7 +11,7 @@
     <ul class="basic-list">
       <li v-for="item in dataList">
         <a @click="goToMyRequestDataDetail(item.id)">{{ item.title }}</a>
-        <span class="date">{{ formatDate(item.create_date) }}</span>
+        <span class="date">{{ $yyyyMMddHHmmSS(item.create_date) }}</span>
       </li>
       <div v-if="dataList.length == 0">
         <p class="nodata">데이터 요청 내역이 없습니다.</p>

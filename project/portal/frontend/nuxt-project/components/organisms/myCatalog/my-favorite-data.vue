@@ -19,7 +19,7 @@
     <ul class="basic-list">
       <li v-for="(item, index) in dataList" :key="index">
         <a :title="item.description ? item.description : item.meta_name" v-on:click="onClickDataName(item)">{{ item.description ? item.description : item.meta_name }}</a>
-        <span class="date" @click="onClickDataName(item)">{{ formatDate(item.favorite_date) }}</span>
+        <span class="date" @click="onClickDataName(item)">{{ $yyyyMMddHHmmSS(item.favorite_date) }}</span>
       </li>
       <div v-if="dataList.length == 0">
         <p class="nodata">찜 데이터가 없습니다.</p>

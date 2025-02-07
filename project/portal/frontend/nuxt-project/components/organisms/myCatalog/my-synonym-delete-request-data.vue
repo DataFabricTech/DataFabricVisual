@@ -13,7 +13,7 @@
         <div class="synonym-keyword tags-group" v-on:click="onClickDataName(item)">
           <div class="tag"><span class="tag-label">{{ item.term }}</span></div>
         </div>
-        <span class="date" @click="onClickDataName(item)">{{ $yyyyMMdd(item.req_date) }}</span>
+        <span class="date" @click="onClickDataName(item)">{{ $yyyyMMddHHmmSS(item.req_date) }}</span>
       </li>
       <div v-if="dataList.length == 0">
         <p class="nodata">동의어 삭제 요청 내역이 없습니다.</p>
