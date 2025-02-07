@@ -97,9 +97,9 @@
                   <td>{{ getDownloadType(item.download_type) }}</td>
                   <td>{{ $yyyyMMddHHmmSS(item.download_date) }}</td>
                   <td>{{ $yyyyMMddHHmmSS(item.end_time) }}</td>
-                  <td>{{ $yyyyMMddHHmmSS(item.download_limit) }}</td>
-                  <td v-if="item.status && item.status == 3">
-                    <button type="button" class="mu-btn mu-btn-sm mu-icon-svg download" @click="downloadBigFile(item.share_url)">
+                  <td>{{ $yyyyMMddHHmmSS(item.download_limit_time) }}</td>
+                  <td v-if="item.status && item.status == 2">
+                    <button type="button" class="mu-btn mu-btn-sm mu-icon-svg download" @click="downloadBigFile(item)">
                       <span class="blind">다운로드</span>
                     </button>
                   </td>
@@ -130,6 +130,7 @@ import PageSize from "@/pages/admin/manager/system/user/page-size";
 import Pagination from "@functional/pagination/pagination";
 import selectTab from "@/components/functional/selectTab/select-tab.vue";
 import BorderListSearch from "@functional/border-list-search/border-list-search.vue";
+import { defaultAlert, errorAlert } from '@/components/functional/alert/alert-default';
 
 definePageMeta({
   name: "MyExtractedData",
@@ -168,21 +169,28 @@ const getMyExtractedDataList = async (offset = 1) => {
     searchWord: searchObj.value.searchWord,
   };
 
-  const result = await $ofetch("/api/myCatalog/myExtractedDataList", {
+  await $ofetch("/api/myCatalog/myExtractedDataList", {
       method: 'POST',
       body: JSON.stringify(param),
       headers: {
           'Content-Type': 'application/json'
       }
+  }).then(async (res) => {
+    if (res && res.data && res.data.list) {
+      pagingObj.value = {
+        ...pagingObj.value,
+        total: res.data.total,
+        currentPage: offset,
+      };
+      postList.value = res.data.list;
+    } else {
+      initListData()
+      await errorAlert("조회에 실패하였습니다.")
+    }
+  }).catch(async (err) => {
+    initListData()
+    await errorAlert("조회에 실패하였습니다.")
   });
-  if (result.data.list) {
-    pagingObj.value = {
-      ...pagingObj.value,
-      total: result.data.total,
-      currentPage: offset,
-    };
-    postList.value = result.data.list;
-  }
 };
 
 const onClickDataName = (item) => {
@@ -207,29 +215,53 @@ const getDownloadType = (dt) => {
 
 const getStatusStyle = (status) => {
   let className = 'step-process'
-  if (status == 0) return 'request ' + className
-  if (status == 1) return 'confirm ' + className
-  if (status == 2) return 'processing ' + className
-  if (status == 3) return 'finish ' + className
-  if (status == 4) return 'upload ' + className
-  if (status == 5) return 'limit ' + className
-  if (status == 9) return 'err ' + className
+  if (status == 0) return 'request ' + className // 대기
+  if (status == 1) return 'processing ' + className // 진행
+  if (status == 2) return 'finish ' + className // 성공
+  if (status == 3) return 'err ' + className // 실패
   else return ' ' + className
 }
 
 const getStatus = (st) => {
-  if (st == 0) return '요청'
-  if (st == 1) return '승인'
-  if (st == 2) return '진행'
-  if (st == 3) return '완료'
-  if (st == 4) return '업로드'
-  if (st == 5) return '만료'
-  if (st == 9) return '오류'
-  return st
+  if (st == 0) return '대기'
+  if (st == 1) return '진행'
+  if (st == 2) return '성공'
+  if (st == 3) return '실패'
+  return '-'
 }
 
-const downloadBigFile = (share_url) => {
-  console.log(share_url)
+// 대용량 데이터 다운로드
+const downloadBigFile = async (item) => {
+  // 1. 만료되었는지 확인
+  try {
+    const now = new Date().getTime()
+    const limit_time = new Date(item.download_limit_time).getTime()
+
+    // 다운로드 만료일을 넘긴 경우
+    if (now > limit_time) {
+      defaultAlert("다운로드 기한이 만료되었습니다.")
+      return
+    }
+
+  } catch (err) {
+    errorAlert("다운로드에 실패하였습니다.")
+    return
+  }
+
+  // 2. 다운로드 URL 유무 확인
+  if (item.share_url) {
+    try {
+      const a = document.createElement("a");
+      a.href = item.share_url;
+      a.download = item.minio_object_name
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    } catch (error) {
+      await errorAlert("다운로드에 실패하였습니다.")
+      return
+    }
+  }
 }
 
 onMounted(() => {
@@ -262,5 +294,15 @@ const initSearchOption = () => {
     block: 10,
     currentPage: 1,
   };
+}
+
+const initListData = () => {
+  postList.value = []
+  pagingObj.value = {
+    total: 0,
+    limit: 10,
+    block: 10,
+    currentPage: 1,
+  }
 }
 </script>
