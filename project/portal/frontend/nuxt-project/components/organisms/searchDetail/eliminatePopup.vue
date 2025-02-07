@@ -769,10 +769,10 @@ const onClickFileEliminateButton = async () => {
       if (res && res.result) {
         successAlert("요청이 완료되었습니다. <br> My Catalog > 데이터 추출 내역에서 진행상태를 확인할 수 있습니다.")
       } else {
-        errorAlert("대용량 데이터 추출 요청에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+        errorAlert("대용량 데이터 추출 요청에 실패하였습니다.")
       }
     }).catch((err) => {
-      errorAlert("대용량 데이터 추출 요청에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.")
+      errorAlert("대용량 데이터 추출 요청에 실패하였습니다.")
     });
   }
 };
