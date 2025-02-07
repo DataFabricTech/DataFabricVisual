@@ -18,7 +18,7 @@ import java.util.Map;
 @RequestMapping("/api/admin/system/role")
 @Controller
 @AllArgsConstructor
-public class RoleManagementControler {
+public class RoleManagementController {
     private final RoleManagementService roleManagementService;
   
     /**
