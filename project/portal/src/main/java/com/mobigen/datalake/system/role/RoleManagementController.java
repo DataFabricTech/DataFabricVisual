@@ -55,7 +55,7 @@ public class RoleManagementController {
      * @throws Exception
      */
     @ResponseJsonResult
-    @PostMapping("/delete")
+    @PostMapping("/roleDelete")
     @ResponseBody
     public Object deleteRoleItem(@RequestBody Map<String, Object> param)  throws Exception {
         Map<String, Object> result = new HashMap<String, Object>();

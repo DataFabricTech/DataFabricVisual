@@ -49,7 +49,7 @@
                 </td>
                 <td v-for="(header1, index2) in tableHeaders[1]" :key="index2">
                   <div class="mu-checkbox">
-                    <input type="checkbox" title="행선택" :id="`checkbox_${item.role_id}_${header1.menu_id}`" :checked="isChecked(item.role_id, header1.menu_id)" @change="handleCheckboxChange(header1, item)">
+                    <input type="checkbox" title="role 선택" :id="`checkbox_${item.role_id}_${header1.menu_id}`" :checked="isChecked(item.role_id, header1.menu_id)" @change="handleCheckboxChange(header1, item, $event)">
                     <label :for="`checkbox_${item.role_id}_${header1.menu_id}`">
                       <span></span>
                     </label>
@@ -180,8 +180,62 @@ const isChecked = (role_id: any, menu_id: any) => {
   return roleMenuExists.value.some(item => item.menu_role_name === role_id && item.menu_id === menu_id);
 }
 
+//
+const handleCheckboxChange = (header: any, item: any, event: any) => {
+  const isChecked = event.target.checked;
+
+  handleCheckboxChangeData(header, item);
+
+  // 데이터 활용 현황 조회
+  const dataUsageOverviewMenu = 'AS11';
+  if (header.menu_id != dataUsageOverviewMenu && header.menu_id.startsWith('A')) {
+    const as11Item = tableHeaders.value[1].find(i => i.menu_id === dataUsageOverviewMenu);
+
+    if (as11Item) {
+      const hasMenuIdStartingWithA = selectedItems.value.find(existingItem => existingItem.menu_id.startsWith('A') && existingItem.menu_id != dataUsageOverviewMenu && existingItem.role_name === item.role_id && existingItem.use_yn === 'Y');
+      
+      if (hasMenuIdStartingWithA){
+        isSelectRoleItem(item.role_id, dataUsageOverviewMenu, hasMenuIdStartingWithA ? true : false);
+      }
+    }
+  }
+
+  if(header.menu_id === dataUsageOverviewMenu ) {
+    const availableMenus = roleMenuExists.value.filter(existingItem => 
+      existingItem.menu_depth === 2 && 
+      existingItem.menu_id.startsWith('A') && 
+      existingItem.menu_role_name === item.role_id &&
+      existingItem.menu_id !== dataUsageOverviewMenu
+    );
+
+    const selectedMenuIds = selectedItems.value.filter(existingItem => 
+      existingItem.menu_id.startsWith('A') &&
+      existingItem.role_name === item.role_id &&
+      existingItem.menu_id !== dataUsageOverviewMenu
+    );
+
+    selectedMenuIds.forEach(selectedItem => {
+      const index = availableMenus.findIndex(availableItem => availableItem.menu_id === selectedItem.menu_id && selectedItem.use_yn === 'N');
+      if (index > -1) {
+        availableMenus.splice(index, 1);
+      }
+
+      const index1 = availableMenus.findIndex(availableItem => availableItem.menu_id === selectedItem.menu_id);
+      if (selectedItem.use_yn === 'Y') {
+        availableMenus.push({menu_role_name: selectedItem.role_id, use_yn: 'Y', menu_id: selectedItem.menu_id});
+      }
+    });
+
+    // 
+    if (availableMenus.length > 0) {
+      errorAlert("관리자 메뉴에서 필수 화면입니다.");
+      isSelectRoleItem(item.role_id, header.menu_id, true);
+    }
+  }
+}
+
 // 
-const handleCheckboxChange = (header: any, item: any) => {
+const handleCheckboxChangeData = (header: any, item: any) => {
   const checkbox = document.getElementById(`checkbox_${item.role_id}_${header.menu_id}`) as HTMLInputElement;
   const statusText = checkbox.checked ? 'Y' : 'N';
 
@@ -208,7 +262,7 @@ const onClickDeleteButton = async (item): Promise<void> => {
       role_id: item.role_id,
     };
   
-    $ofetch("api/admin/system/role/delete", {
+    $ofetch("api/admin/system/role/roleDelete", {
       method: "POST",
       body: param,
     }).then(async (res: { errorMessage: string }) => {
@@ -259,8 +313,19 @@ const isSelectRoleAll = (id: string) => {
     if (checkbox) {
       checkbox.checked = !checkbox.checked;
 
-      handleCheckboxChange({menu_id : element.menu_id}, {role_id: id});
+      handleCheckboxChangeData({menu_id : element.menu_id}, {role_id: id});
     }
+  });
+};
+
+// 
+const isSelectRoleItem = (id: string, menuId: string, checkYn: boolean) => {
+  tableHeaders.value[1].forEach(element => {
+    const checkboxId = `checkbox_${id}_${menuId}`;
+    const checkbox = document.getElementById(checkboxId) as HTMLInputElement;
+    checkbox.checked = checkYn;
+
+    handleCheckboxChangeData({menu_id : menuId}, {role_id: id});
   });
 };
 

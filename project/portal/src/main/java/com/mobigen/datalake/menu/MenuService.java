@@ -273,23 +273,11 @@ public class MenuService {
                 .collect(Collectors.toList());
 
         if (inactiveList.size() > 0) {
-            int inactiveListResult = menuMapper.menuRoleDelete(inactiveList);
-            if (inactiveListResult <= 0){
-                errorMessage = "삭제 처리 실패했습니다.";
-                result.put("errorMessage", errorMessage);
-                result.put("isFailed", true);
-                return result;
-            }
+            menuMapper.menuRoleDelete(inactiveList);
         }
 
         if (activeList.size() > 0) {
-            int activeListResult = menuMapper.menuRoleInsert(activeList);
-            if(activeListResult <= 0){
-                errorMessage = "입력 처리 실패했습니다.";
-                result.put("errorMessage", errorMessage);
-                result.put("isFailed", true);
-                return result;
-            }
+            menuMapper.menuRoleInsert(activeList);
         }
 
         return result;
