@@ -883,50 +883,82 @@ const getSearch = async (offset: number = 0): Promise<void> => {
       body: params
     }).then((res) => {
       if (res && res.data && res.data.list && res.data.list.length > 0) {
-        const tmpList = []
+        let tmpList = []
         const nameSet = new Set(); // 동의어 중복 제거 확인용 이름 목록
         const searchWordSet = new Set(); // 동의어 중복 제거 확인용 검색어 목록
 
-        const originUniqueList = res.data.list
-        for (let i=0; i<originUniqueList.length; i++) {
+        const originList = res.data.list
+
+        // 1. 검색어에 대한 대표어, 동의어가 없는 경우 항목에서 제거
+        let tmpOriginList = originList.filter((el) => el.synonyms && el.synonyms.length > 0)
+
+        for (let i=0; i<tmpOriginList.length; i++) {
           const printSynonymSearchWord = {
             isTerm: true,
-            name: originUniqueList[i].searchWord
+            name: tmpOriginList[i].searchWord
           }
           tmpList.push(printSynonymSearchWord)
-          nameSet.add(originUniqueList[i].searchWord)
-          searchWordSet.add(originUniqueList[i].searchWord)
+          nameSet.add(tmpOriginList[i].searchWord)
+          searchWordSet.add(tmpOriginList[i].searchWord)
 
 
-          if (originUniqueList[i].term && originUniqueList[i].term != "") {
+          if (tmpOriginList[i].term && tmpOriginList[i].term != "") {
             const printSynonymTerm = {
               isTerm: false,
-              name: originUniqueList[i].term
+              name: tmpOriginList[i].term
             }
             tmpList.push(printSynonymTerm)
-            nameSet.add(originUniqueList[i].term)
+            nameSet.add(tmpOriginList[i].term)
           }
 
           // 중복 동의어 처리
-          for (let j=0; j<originUniqueList[i].synonyms.length; j++) {
+          for (let j=0; j<tmpOriginList[i].synonyms.length; j++) {
             const printSynonym = {
               isTerm: false,
-              name: originUniqueList[i].synonyms[j]
+              name: tmpOriginList[i].synonyms[j]
             }
             tmpList.push(printSynonym)
-            nameSet.add(originUniqueList[i].searchWord)
+            nameSet.add(tmpOriginList[i].searchWord)
           }
         }
 
-        printSynonymList.value = tmpList
+        // 2. 중복단어 저장
+        let uniqueTmpList = []
+        const dupIsTermNameSet = new Set()
+        const dupNameSet = new Set()
+        tmpList.forEach((el) => {
+          // 검색어는 일단 추가
+          if (el.isTerm) {
+            // 동일한 이름으로 이미 있는 경우는 추가하지 않음
+            if (dupIsTermNameSet.has(el.name)) {
+              uniqueTmpList.push(el)
+              dupNameSet.add(el.name)
+              dupIsTermNameSet.add(el.name)
+            }
+          } else {
+            // 검색어든 이미 표기가 되어있는 경우
+            if (!dupNameSet.has(el.name)) {
+              uniqueTmpList.push(el)
+              dupNameSet.add(el.name)
+            }
+          }
+        })
+
+        // 3. 검색어와 일치하는 단어를 진하게 표기
+        uniqueTmpList.forEach((el) => {
+          if (searchWordSet.has(el.name)) {
+            el.isTerm = true
+          }
+        })
+
+        printSynonymList.value = uniqueTmpList
       } else {
         printSynonymList.value = []
       }
 
-
     }).catch((err) => {
       // error
-        printSynonymList.value = []
+      printSynonymList.value = []
     })
 
   } else {
