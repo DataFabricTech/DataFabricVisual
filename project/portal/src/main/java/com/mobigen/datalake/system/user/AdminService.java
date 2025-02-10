@@ -228,7 +228,7 @@ public class AdminService {
         }
     }
 
-    // 이메일 전송 본문문
+    // 이메일 전송 본문
     public String makeHtmlMailBody(Map<String, Object> params) throws Exception{
         String mailBody = """
             <!DOCTYPE html>
