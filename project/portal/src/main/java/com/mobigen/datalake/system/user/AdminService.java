@@ -164,6 +164,7 @@ public class AdminService {
             passwordParam.put("user_nm", param.get("user_nm").toString());
             passwordParam.put("password", encPassword.toString());
             passwordParam.put("email", param.get("user_email").toString());
+            passwordParam.put("init_password", password.toString());
             
             // 비밀번호 업데이트
             adminMapper.initPassword(passwordParam);
@@ -214,7 +215,7 @@ public class AdminService {
             String userId = user.get("user_id").toString();
             Map<String, Object> mailMap = (Map<String, Object>) userMapper.getUserMaster(params.get("user_id").toString());
             mailMap.put("title", "패스워드 초기화 안내 메일");
-            mailMap.put("password", params.get("password").toString());
+            mailMap.put("password", params.get("init_password").toString());
 
             //메일 본문
             String htmlBody = makeHtmlMailBody(mailMap);
