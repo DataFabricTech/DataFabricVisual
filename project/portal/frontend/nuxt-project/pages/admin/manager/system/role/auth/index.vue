@@ -300,7 +300,7 @@
       role_type: item.role_type,
     };
   
-    $ofetch("api/admin/system/role/delete", {
+    $ofetch("/api/admin/system/role/delete", {
       method: "POST",
       body: param,
     }).then(async (res: { errorMessage: string }) => {
@@ -322,7 +322,7 @@
 
   // 
   const onClickSyncButton = (item) => {
-    $ofetch("api/admin/system/role/esSyncCall", {
+    $ofetch("/api/admin/system/role/esSyncCall", {
       method: "POST",
       body: { role_id: item.role_id },
     }).then(async (res: { errorMessage: string }) => {
