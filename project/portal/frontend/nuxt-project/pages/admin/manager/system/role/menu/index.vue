@@ -256,26 +256,26 @@ const handleCheckboxChangeData = (header: any, item: any) => {
 
 // 
 const onClickDeleteButton = async (item): Promise<void> => {
-    if (!(await confirmAlert("권한을 삭제 하시겠습니까?"))) return;
+  if (!(await confirmAlert("권한을 삭제 하시겠습니까?"))) return;
 
-    let param = {
-      role_id: item.role_id,
-    };
-  
-    $ofetch("api/admin/system/role/roleDelete", {
-      method: "POST",
-      body: param,
-    }).then(async (res: { errorMessage: string }) => {
-      if (res) {
-        if (res.data.errorMessage && res.data.errorMessage != "") {
-          await errorAlert(res.data.errorMessage);
-        } else {
-          await successAlert("삭제 되었습니다.");
-          onMenuDataLoad();
-        }
-      }
-    });
+  let param = {
+    role_id: item.role_id,
   };
+
+  $ofetch("/api/admin/system/role/roleDelete", {
+    method: "POST",
+    body: param,
+  }).then(async (res: { errorMessage: string }) => {
+    if (res) {
+      if (res.data.errorMessage && res.data.errorMessage != "") {
+        await errorAlert(res.data.errorMessage);
+      } else {
+        await successAlert("삭제 되었습니다.");
+        onMenuDataLoad();
+      }
+    }
+  });
+};
 
 // 
 const onClickSaveButton = async (): Promise<void> => {
