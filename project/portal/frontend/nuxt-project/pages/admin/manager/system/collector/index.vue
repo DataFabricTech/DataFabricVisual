@@ -27,6 +27,7 @@
               <col style="width: 8%" />
               <col style="width: 8%" />
               <col style="width: 8%" />
+              <col style="width: 8%" />
             </colgroup>
             <thead>
               <tr>
@@ -39,6 +40,7 @@
                 <th scope="col">최종 수집 시간</th>
                 <th scope="col">수집 여부</th>
                 <th scope="col">수동 수집</th>
+                <th scope="col">시스템 상태</th>
                 <th scope="col">action</th>
               </tr>
             </thead>
@@ -55,6 +57,7 @@
                 <td>
                   <button type="button" class="mu-btn mu-btn-sm" @click="startCollecton(item)"><span>실행</span></button>
                 </td>
+                <td>{{ item.status ? item.status : "-" }}</td>
                 <td>
                   <button type="button" class="mu-btn mu-btn-sm" @click="popupCollectorUpdateModal(item)"><i class="mu-icon-svg edit"></i><span>수정</span></button>
                   <br>
@@ -128,6 +131,7 @@ const collector = ref({
   password: "",
   collect_flag: false,
   meta_sync_time: "",
+  status: "",
   create_user: userStore.getUser.user_id,
   create_user_name: userStore.getUser.username,
   create_date: new Date().toISOString().split('T')[0],
@@ -240,7 +244,6 @@ const popupCollectorCreateModal = () => {
 // 수동 수집 실행 버튼 클릭
 const startCollecton = async (item) => {
   await $ofetch(`/api/admin/system/collector/directCollect?system_id=${item.system_id}`).then(async (res) => {
-    console.log(res)
     if (res && res.data && res.data.result) {
       await successAlert("수동 수집이 실행되었습니다.")
       getCollectorList()

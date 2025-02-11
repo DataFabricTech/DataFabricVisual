@@ -99,6 +99,7 @@ http-client-configuration:
   idle-timeout: 60
 
 properties:
+  cryptKey: <CRYPT_KEY>
   activeSendMail:
     data-request: false
     synonym: false

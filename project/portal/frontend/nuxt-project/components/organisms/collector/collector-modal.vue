@@ -3,7 +3,9 @@
     <div class="mu-dialog-background"></div>
     <div class="mu-dialog w1250">
       <div class="mu-dialog-head">
-        <p class="title">시스템 수집 등록</p>
+        <p class="title" v-if="isDetail">시스템 수집 상세</p>
+        <p class="title" v-else-if="isUpdate">시스템 수집 수정</p>
+        <p class="title" v-else>시스템 수집 등록</p>
       </div>
       <div class="mu-dialog-body">
         <table class="mu-formbox">
@@ -72,12 +74,20 @@
                 </div>
               </td>
               <th>최종 수집 시간</th>
-              <td>-</td>
+              <td colspan="3">{{ $yyyyMMddHHmmSS(currentCollector.meta_sync_time) }}</td>
+            </tr>
+            <tr v-if="isUpdate || isDetail">
+              <th>시스템 상태</th>
+              <td colspan="5">{{ currentCollector.status ? currentCollector.status : '-' }}</td>
+            </tr>
+            <tr v-if="isUpdate || isDetail">
+              <th>오류 내용</th>
+              <td colspan="5">{{ currentCollector.err_description ? currentCollector.err_description : '-' }}</td>
             </tr>
           </tbody>
         </table>
         <br>
-        <table class="mu-formbox">
+        <table class="mu-formbox" v-if="isUpdate || isDetail">
           <caption>
             시스템 수집 등록
           </caption>
@@ -176,6 +186,7 @@ const currentCollector = ref({
   password: "",
   collect_flag: false,
   meta_sync_time: "",
+  status: "",
   create_user: userStore.getUser.user_id,
   create_user_name: userStore.getUser.username,
   create_date: new Date().toISOString().split('T')[0],
@@ -295,9 +306,12 @@ const isValidInput = () => {
     errorAlert("수집 주기를 입력해 주세요.")
     return false
   }
+
   if (!currentCollector.value.password || currentCollector.value.password == '') { // Password
-    errorAlert("Password를 입력해 주세요.")
-    return false
+    if (!props.isUpdate) {
+      errorAlert("Password를 입력해 주세요.")
+      return false
+    }
   }
 
   // 2. 시스템 ID 중복체크

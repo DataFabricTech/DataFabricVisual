@@ -1,25 +1,32 @@
 package com.mobigen.datalake.system.collector;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+import org.jasypt.encryption.StringEncryptor;
+import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
+import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mobigen.framework.utility.AESGCMUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CollectorService {
@@ -28,6 +35,9 @@ public class CollectorService {
   
   @Value("${properties.ingestion.url}")
   private String ingestionExecuteUrl;
+
+  @Value("${properties.cryptKey}")
+  private String cryptKey;
   
   Map<String, Object> getCollectorListInfo(Map<String, Object> params) throws Exception {
       Map resultMap = new HashMap<>();
@@ -69,11 +79,15 @@ public class CollectorService {
   // 수집대상 등록 (put으로 같이 사용)
   public Object addCollector(Map<String, Object> params) throws Exception {
     boolean result = false;
-    boolean apiResult = false;
+
+    // 비밀번호 암호화
+    AESGCMUtil encoder = new AESGCMUtil(cryptKey);
+    params.put("password", encoder.encrypt(params.get("password").toString()));
+    
     int addCount = collectorMapper.addCollector(params);
     if (addCount > 0) {
       result = true;
-      apiResult = putIngestionDagApi(params.get("system_id").toString());
+      putIngestionDagApi(params.get("system_id").toString());
     }
     return result;
   }
@@ -81,11 +95,21 @@ public class CollectorService {
   // 수집대상 수정 (put으로 같이 사용)
   public Object updateCollector(Map<String, Object> params) throws Exception {
     boolean result = false;
-    boolean apiResult = false;
-    int updateCount = collectorMapper.updateCollector(params);
+    int updateCount = 0;
+
+    // 비밀번호를 입력한 경우는 암호화해서 같이 저장
+    if (params.get("password") != null && !params.get("password").equals("")) {
+      AESGCMUtil encoder = new AESGCMUtil(cryptKey);
+      params.put("password", encoder.encrypt(params.get("password").toString()));
+      updateCount = collectorMapper.updateCollector(params);
+    } else {
+      params.remove("password");
+      updateCount = collectorMapper.updateCollectorNoPassword(params);
+    }
+
     if (updateCount > 0) {
       result = true;
-      apiResult = putIngestionDagApi(params.get("system_id").toString());
+      putIngestionDagApi(params.get("system_id").toString());
     }
     return result;
   }
