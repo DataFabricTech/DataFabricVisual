@@ -42,6 +42,7 @@ export default defineNuxtPlugin((nuxtApp) => {
           // 1.1. Refresh Token 만료된 경우
           if (xRefreshTokenLeftTime <= 0) {
             clearSession('Y')
+            return Promise.reject(new Error("Session expired")); // 요청 차단
           }
         }
       }
