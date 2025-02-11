@@ -30,8 +30,7 @@ public class AESGCMUtil {
     public String encrypt(String data) throws Exception {
         // 랜덤 IV 생성
         byte[] iv = new byte[GCM_IV_LENGTH];
-        SecureRandom secureRandom = new SecureRandom();
-        secureRandom.nextBytes(iv);
+        new SecureRandom().nextBytes(iv);
 
         // AES-GCM 암호화 수행
         Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
@@ -39,10 +38,19 @@ public class AESGCMUtil {
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, parameterSpec);
         byte[] encryptedData = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
 
-        // IV + 암호문 조합하여 Base64 인코딩
-        byte[] result = new byte[GCM_IV_LENGTH + encryptedData.length];
-        System.arraycopy(iv, 0, result, 0, GCM_IV_LENGTH);
-        System.arraycopy(encryptedData, 0, result, GCM_IV_LENGTH, encryptedData.length);
+        // 암호문에서 태그를 추출
+        byte[] authTag = new byte[GCM_TAG_LENGTH];
+        System.arraycopy(encryptedData, encryptedData.length - GCM_TAG_LENGTH, authTag, 0, GCM_TAG_LENGTH);
+
+        // 암호문에서 태그를 제외한 부분 추출
+        byte[] cipherTextWithoutTag = new byte[encryptedData.length - GCM_TAG_LENGTH];
+        System.arraycopy(encryptedData, 0, cipherTextWithoutTag, 0, cipherTextWithoutTag.length);
+
+        // **IV + 태그 + 암호문** 순서로 조합
+        byte[] result = new byte[GCM_IV_LENGTH + GCM_TAG_LENGTH + cipherTextWithoutTag.length];
+        System.arraycopy(iv, 0, result, 0, GCM_IV_LENGTH); // IV 복사
+        System.arraycopy(authTag, 0, result, GCM_IV_LENGTH, GCM_TAG_LENGTH); // 태그 복사
+        System.arraycopy(cipherTextWithoutTag, 0, result, GCM_IV_LENGTH + GCM_TAG_LENGTH, cipherTextWithoutTag.length); // 암호문 복사
 
         return Base64.getEncoder().encodeToString(result);
     }
