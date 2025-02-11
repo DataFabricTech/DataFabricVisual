@@ -99,32 +99,32 @@
               <div class="board-list">
                 <table class="mu-grid">
                   <colgroup>
-                    <col style="width: 150px" />
-                    <col style="width: 200px" />
-                    <col style="width: 150px" />
-                    <col style="width: 110px" />
-                    <col style="width: 200px" />
-                    <col style="width: 100px" />
-                    <col style="width: 100px" />
-                    <col style="width: 100px" />
-                    <col style="width: 170px" />
+                    <!-- <col style="width: 150px" /> -->
+                    <col style="width: 260px" />
+                    <col style="width: 210px" />
+                    <!-- <col style="width: 170px" /> -->
+                    <col style="width: 260px" />
+                    <!-- <col style="width: 100px" /> -->
+                    <col style="width: 160px" />
+                    <!-- <col style="width: 100px" /> -->
+                    <col style="width: 230px" />
                   </colgroup>
                   <thead>
                     <tr>
-                      <th scope="col">권한 타입</th>
+                      <!-- <th scope="col">권한 타입</th> -->
                       <th scope="col">권한 ID</th>
                       <th scope="col">권한명</th>
-                      <th scope="col">권한 종류</th>
+                      <!-- <th scope="col">권한 종류</th> -->
                       <th scope="col">Role 설명</th>
-                      <th scope="col">적용 대상</th>
+                      <!-- <th scope="col">적용 대상</th> -->
                       <th scope="col">적용 사용자</th>
-                      <th scope="col">적용 조직</th>
+                      <!-- <th scope="col">적용 조직</th> -->
                       <th scope="col">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="(item, index) in webAuthList" :key="index">
-                      <td class="tl">{{ item.role_type_name }}</td>
+                      <!-- <td class="tl">{{ item.role_type_name }}</td> -->
                       <td class="tl">
                         <a v-if="item.role_type === 1" @click="onClickDataName(item)">
                           {{ item.role_id }}
@@ -136,13 +136,13 @@
                       <td class="tl">
                         <em class="data-label">{{ item.role_name }}</em>
                       </td>
-                      <td class="tl">
+                      <!-- <td class="tl">
                         <em class="data-label">{{ item.role_auth_name }}</em>
-                      </td>
+                      </td> -->
                       <td class="tl">{{item.role_description}}</td>
-                      <td>{{item.meta_cnt}}</td>
-                      <td>{{item.user_cnt}}</td>
-                      <td>{{item.dept_cnt}}</td>
+                      <!-- <td>{{item.meta_cnt}}</td> -->
+                      <td>{{item.web_role_user_cnt}}</td>
+                      <!-- <td>{{item.dept_cnt}}</td> -->
                       <td>
                         <button type="button" class="mu-btn mu-btn-sm" :disabled="modifyDisabledState(item)" v-on:click="onClickUpdateButton(item)"><i class="mu-icon-svg edit"></i><span>수정</span></button>
                         <button type="button" class="mu-btn mu-btn-sm" :disabled="deleteDisabledState(item)" v-on:click="onClickDeleteButton(item)" style="margin-left:5px"><i class="mu-icon-svg del"></i><span>삭제</span></button>
@@ -300,7 +300,7 @@
       role_type: item.role_type,
     };
   
-    $ofetch("/api/admin/system/role/delete", {
+    $ofetch("/api/admin/system/role/roleDelete", {
       method: "POST",
       body: param,
     }).then(async (res: { errorMessage: string }) => {

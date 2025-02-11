@@ -9,6 +9,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const { cookies } = useCookies()
   const userStore = useUserStore()
 
+  console.log(to, from);
+
   // 파라미터를 제거한 경로를 가져오는 함수
   const getPathWithoutParams = (path) => {
     const url = new URL(path, window.location.origin);
@@ -219,7 +221,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
       let decodedRoleMenuList = jwtDecode(userStore._user.roleMenu);
 
       if(!searchMenuPath(decodedRoleMenuList.roleMenuList)){
-        errorAlert('잘못된 접근입니다.');
+        errorAlert('접근 권한이 없습니다.');
         // cookies.set('redirected', 'true', { path: '/' });  // 리디렉션을 기록
         return navigateTo('/main')
       }

@@ -112,7 +112,7 @@ const reg_username_valid: ComputedRef<boolean> = computed(() => {
 });
 
 const reg_useremail_valid: ComputedRef<boolean> = computed(() => {
-  return reg_useremail.value.length > 0 ? true : false;
+  return reg_useremail.value.length > 0 && validateEmail(reg_useremail.value) ? true : false;
 });
 
 const reg_userid_valid: ComputedRef<boolean> = computed(() => {
@@ -139,12 +139,6 @@ const onRegister = async () => {
   || !reg_password_valid.value
   || !reg_password_ok_valid.value
   || !reg_userdept_valid.value) return;
-
-  // 이메일 양식 검사
-  if (!validateEmail(reg_useremail.value)) {
-    errorAlert("이메일 양식이 잘못되었습니다.")
-    return
-  }
 
   const params = {
     reg_username: reg_username.value,
