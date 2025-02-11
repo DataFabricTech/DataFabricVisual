@@ -613,7 +613,7 @@ const onClickFileEliminateButton = async () => {
 
   // 파일 추출
   if (!sampleDataHeader.value && sampleDataHeader.value == undefined) {
-    errorAlert("추출할 데이터가 없습니다.");
+    defaultAlert("추출할 데이터가 없습니다.");
     return;
   }
 

@@ -89,19 +89,46 @@ const categoryIdMap = ref({});
 const categoryNameMap = ref([]);
 const rootCategory = ref({ id: "rootCategory", name: "Root Category", subTypes: [] });
 const categoryList = ref([]); // 카테고리 아이콘 렌더 위한 목록
-const colorList = ref([ // 색상 로테이션 리스트
-  'rgb(255, 99, 71)',   // #FF6347 (Tomato)
-  'rgb(30, 144, 255)',  // #1E90FF (DodgerBlue)
-  'rgb(60, 179, 113)',  // #3CB371 (MediumSeaGreen)
-  'rgb(255, 165, 0)',  // #FFA500 (Orange)
-  'rgb(75, 0, 130)',  // #4B0082 (Indigo)
-  'rgb(255, 192, 203)',  // #FFC0CB (Pink)
-  'rgb(123, 104, 238)',  // #7B68EE (MediumSlateBlue)
-  'rgb(34, 139, 34)',  // #228B22 (ForestGreen)
-  'rgb(255, 215, 0)',  // #FFD700 (Gold)
-  'rgb(255, 20, 147)',  // #FF1493 (DeepPink)
-  'rgb(70, 130, 180)',  // #4682B4 (SteelBlue)
-])
+// const colorList = ref([ // 색상 로테이션 리스트
+//   'rgb(83,120,217)',  // #5378d9
+//   'rgb(136,169,255)',  // #88a9ff
+//   'rgb(35,209,222)',  // #23d1de
+//   'rgb(119,225,230)',  // #77e1e6
+//   'rgb(22,225,176)',  // #16e1b0
+//   'rgb(146,236,212)',  // #92ecd4
+//   'rgb(239,159,149)',  // #ef9f95
+//   'rgb(226,127,107)',  // #e27f6b
+//   'rgb(235,201,89)',  // #ebc959
+//   'rgb(44,76,161)',   // #2c4ca1
+// ])
+
+const colorList = ref([
+  "rgb(136, 169, 255)", // 가장 연한 색
+  "rgb(122, 156, 240)",
+  "rgb(110, 145, 225)",
+  "rgb(100, 135, 210)",
+  "rgb(90, 125, 195)",
+  "rgb(80, 115, 185)",
+  "rgb(70, 105, 175)",
+  "rgb(60, 95, 168)",
+  "rgb(52, 85, 164)",
+  "rgb(44, 76, 161)"  // 가장 진한 색
+]);
+
+// const colorList = ref([ // 색상 로테이션 리스트
+//   'rgb(255, 99, 71)',   // #FF6347 (Tomato)
+//   'rgb(30, 144, 255)',  // #1E90FF (DodgerBlue)
+//   'rgb(60, 179, 113)',  // #3CB371 (MediumSeaGreen)
+//   'rgb(255, 165, 0)',  // #FFA500 (Orange)
+//   'rgb(75, 0, 130)',  // #4B0082 (Indigo)
+//   'rgb(255, 192, 203)',  // #FFC0CB (Pink)
+//   'rgb(123, 104, 238)',  // #7B68EE (MediumSlateBlue)
+//   'rgb(34, 139, 34)',  // #228B22 (ForestGreen)
+//   'rgb(255, 215, 0)',  // #FFD700 (Gold)
+//   'rgb(255, 20, 147)',  // #FF1493 (DeepPink)
+//   'rgb(70, 130, 180)',  // #4682B4 (SteelBlue)
+// ])
+
 const chartOptions = ref({
   chart: { height: "850px", width: "1030" },
   credits: { enabled: false },
