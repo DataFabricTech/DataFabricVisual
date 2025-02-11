@@ -235,7 +235,7 @@ const isChecked = (item) => {
 }
 
 const dataRequest: ComputedRef<DataRequest> = computed(() => {
-  if (props.dataRequest.request_type) {
+  if (props.dataRequest && props.dataRequest != null && props.dataRequest != undefined) {
     if (props.dataRequest.request_type == 0) selectedCheckBoxList.value = ["수집"]
     if (props.dataRequest.request_type == 1) selectedCheckBoxList.value = ["권한"]
     if (props.dataRequest.request_type == 2) {
