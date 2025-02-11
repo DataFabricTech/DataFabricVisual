@@ -52,7 +52,7 @@
                 <tr v-if="currentExtractTab == 0">
                   <th scope="row">추출 건수</th>
                   <td>
-                    <span>10만건</span>
+                    <span>1000 건</span>
                   </td>
                 </tr>
                 <tr v-if="currentExtractTab == 1">
@@ -115,10 +115,10 @@
                             typeEllipsis(
                               filter[idx].filterHeader,
                               props.eliminateModal.entity
-                            ) == 'timestamp' || typeEllipsis(
+                            ).includes('timestamp') || typeEllipsis(
                               filter[idx].filterHeader,
                               props.eliminateModal.entity
-                            ) == 'date'
+                            ).includes('date')
                           "
                         >
                           <div class="period-set">
@@ -232,7 +232,7 @@ const dataCount = ref(null); // 조회된 데이터 Row 개수
 
 const extractLimitTypeList = ref(["all", "custom"])
 const extractLimitType = ref("all")
-const extractLimit = ref(100000);
+const extractLimit = ref(1000);
 
 const filterLogic = ref("");
 const filter = ref([
@@ -334,6 +334,18 @@ watch(
   }
 ); // 선택 없음을 클릭하는 경우
 
+watch(
+  () => filter.value.map(item => item.filterHeader),
+  (newVals, oldVals) => {
+    newVals.forEach((newVal, index) => {
+      if (newVal !== oldVals[index]) {
+        filter.value[index].filterInput = '';
+        filter.value[index].filterOperator = '';
+      }
+    });
+  }
+);
+
 // 데이터 추출 Where 조건 필터 초기화
 const resetFilter = () => {
   filterLogic.value = "";
@@ -371,9 +383,9 @@ const typeEllipsis = (val, entity) => {
     const columns = attributes.columns
     if (columns) {
       columns.filter((item) => {
-        if (item.name === val) {
-          if (item.dataType !== "") {
-            dataType = item.dataType;
+        if (item.meta_name === val) {
+          if (item.column_type !== "") {
+            dataType = item.column_type;
           }
         }
       });
@@ -592,6 +604,8 @@ const fnWhereQueryMake = () => {
       if (!filter.value[a].filterHeader || !filter.value[a].filterInput || !filter.value[a].filterOperator) {
         createSuccess = false
         break;
+      } else {
+        createSuccess = true
       }
     }
 
@@ -696,7 +710,7 @@ const onClickFileEliminateButton = async () => {
   }
 
   if (currentExtractTab.value == 0) { // 일반 데이터 추출
-    params.limit = 100000
+    params.limit = 1000
 
     let historyParams = {
       meta_id: meta_id,
