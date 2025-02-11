@@ -281,12 +281,12 @@ onMounted(async () => {
       await searchTagList();
     } else {
       await errorAlert("데이터 접근 권한이 없습니다.")
-      router.push('/search/keyword')
+      history.go(-1)
     }
   })
   .catch(async (err) => {
     await errorAlert("조회에 실패하였습니다.")
-    router.push('/search/keyword')
+    history.go(-1)
   });
 });
 
