@@ -2,15 +2,6 @@
   <div class="contents">
     <div>
       <div class="inner">
-        <div class="board-list-toolbar">
-          <h4>활용 사례</h4>
-          <div class="mu-item-group">
-            <button @click="onClickRegisterButton" type="button" class="mu-btn mu-btn-lg mu-btn-primary">
-              <i class="mu-icon-svg add"></i>
-              <span>등록하기</span>
-            </button>
-          </div>
-        </div>
         <div class="data-usecase-wrap">
           <div class="mu-heading">
             <!-- board-list-search -->

@@ -8,8 +8,13 @@
             :searchObj.sync="searchObj"
             @searchMethod="getShareList"
           />
-
-          <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getShareList" />
+          <div class="mu-item-group">
+            <button @click="onClickRegisterButton" type="button" class="mu-btn mu-btn mu-btn-primary">
+              <i class="mu-icon-svg add"></i>
+              <span>등록하기</span>
+            </button>
+          </div>
+          <page-size style="margin-left: 10px" v-model:pageSize="pagingObj.limit" @searchMethod="getShareList" />
         </div>
         <hr>
         <ul class="card-list" v-if="shareList && shareList.length > 0">
@@ -61,13 +66,6 @@
       <div class="mu-button-wrap">
         <button type="button" class="mu-btn mu-btn-lg" @click="onClickDeleteButton">
           <span>삭제</span>
-        </button>
-        <button
-          type="button"
-          class="mu-btn mu-btn-lg mu-btn-primary"
-          @click="onClickRegisterButton"
-        >
-          <span>등록</span>
         </button>
       </div>
       <!-- //mu-button-wrap -->
