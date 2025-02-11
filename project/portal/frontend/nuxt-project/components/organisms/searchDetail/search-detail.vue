@@ -280,7 +280,7 @@ onMounted(async () => {
       await getAllDataByGuid()
       await searchTagList();
     } else {
-      await errorAlert("데이터 접근 권한이 없습니다.")
+      await defaultAlert("데이터 접근 권한이 없습니다.")
       history.go(-1)
     }
   })
