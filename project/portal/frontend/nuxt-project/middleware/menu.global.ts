@@ -59,7 +59,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     }
   }
 
-  // // Token 만료시간 조회
+  // Token 만료시간 조회
   const getTokenExp = (token: string) => {
     let decodedToken = jwtDecode(token);
 
@@ -69,7 +69,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     return tokenLeftTime
   }
 
-  // // Refresh Token 재발급
+  // Refresh Token 재발급
   const regenerateRefreshToken = async (id: string) => {
     const body = {
       username: id,
@@ -83,7 +83,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
     cookies.set('x-refresh-token', resultRefreshToken);
   }
 
-  // // Access Token 재발급
+  // Access Token 재발급
   const regenerateAccessToken = async (id: string) => {
     const body = {
       username: id,
