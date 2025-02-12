@@ -26,6 +26,7 @@
                 v-bind:class="[!reg_menuId_valid ? 'error' : '', 'mu-input']"
                 v-model="props.modalParam.userObject.menu_id"
                 :readonly="props.modalParam.updatefalg"
+                oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '')"
                 required
               />
               <p v-if="!reg_menuId_valid" class="complete-msg error">메뉴ID를 입력해주세요.</p>
