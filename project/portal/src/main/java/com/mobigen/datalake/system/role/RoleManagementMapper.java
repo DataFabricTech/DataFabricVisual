@@ -41,4 +41,9 @@ public interface RoleManagementMapper {
     List getUserMetaDataList(Map<String, Object> param) throws Exception;
     Integer getUserMetaDataListCount(Map<String, Object> param) throws Exception;
     List searchMetaRoleInfo(Map<String, Object> param) throws Exception;
+    Integer getMenuListCount(Map<String, Object> param) throws Exception;
+    List getMenuList(Map<String, Object> param) throws Exception;
+    Integer menuDelete(Map<String, Object> param) throws Exception;
+    Integer menuRegister(Map<String, Object> param) throws Exception;
+    List menuDeleteCheck(Map<String, Object> param) throws Exception;
 }

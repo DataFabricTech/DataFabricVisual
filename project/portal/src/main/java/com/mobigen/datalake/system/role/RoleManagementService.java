@@ -282,4 +282,34 @@ public class RoleManagementService {
         return result;
     }
 
+    // 메뉴 - 리스트 조회
+    public List<Map> getMenuList(Map<String, Object> param) throws Exception {
+        List<Map> searchList = (List<Map>) roleManagementMapper.getMenuList(param);
+        return searchList;
+    }
+
+    // 메뉴 - 리스트 조회 건수
+    public Integer getMenuListCount(Map<String, Object> param) throws Exception {
+        Integer total = roleManagementMapper.getMenuListCount(param);
+        return total;
+    }
+
+    // 메뉴 - 등록/수정
+    public Integer menuRegister(Map<String, Object> param) throws Exception {
+        Integer total = roleManagementMapper.menuRegister(param);
+        return total;
+    }
+
+    // 메뉴 - 삭제
+    public Integer menuDelete(Map<String, Object> param) throws Exception {
+        Integer total = roleManagementMapper.menuDelete(param);
+        return total;
+    }
+
+    // 메뉴 - 삭제전 하위 메뉴 조회
+    public List<Map> menuDeleteCheck(Map<String, Object> param) throws Exception {
+        List<Map> searchList = (List<Map>) roleManagementMapper.menuDeleteCheck(param);
+        return searchList;
+    }
+
 }
