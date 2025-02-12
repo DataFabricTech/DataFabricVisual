@@ -280,7 +280,15 @@ onMounted(async () => {
       await getAllDataByGuid()
       await searchTagList();
     } else {
-      await defaultAlert("데이터 접근 권한이 없습니다.")
+      if (route.query.guid == ""
+       || route.query.guid == null
+       || route.query.guid == undefined
+       || route.query.guid == 'undefined'
+       || route.query.guid == 'null') {
+        await defaultAlert("조회에 실패하였습니다.")
+      } else {
+        await defaultAlert("데이터 접근 권한이 없습니다.")
+      }
       history.go(-1)
     }
   })

@@ -240,7 +240,7 @@
                   <li v-for="(wd, idx) in myFavoriteData" :key="idx" style="list-style-type: none;">
                     <span class="step-process unsupply" style="width:100px"># 찜데이터</span>
 
-                    <a @click="goToFavoriteDataDetail(wd.guid)" class="mu-ellipsis">
+                    <a @click="goToFavoriteDataDetail(wd.meta_id)" class="mu-ellipsis">
                       {{ wd.description ? `${wd.description} (${wd.meta_name})` : wd.meta_name }}
                     </a>
                     <span class="date">{{ yyyyMMdddot(wd.favorite_date) }}</span>
