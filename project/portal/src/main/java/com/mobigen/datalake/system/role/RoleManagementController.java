@@ -635,4 +635,88 @@ public class RoleManagementController {
         return result;
     }
 
+    /**
+     * 메뉴 - 리스트 조회
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/menuList")
+    public Object getMenuList(@RequestParam("menuType") String menuType, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord)  throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        int total = 0;
+        List list = new ArrayList<Map>();
+
+        Map<String, Object> param = new HashMap<>();
+        param.put("menuType", menuType);
+        param.put("searchType", searchType);
+        param.put("searchWord", searchWord);
+
+        list = (List<Map>) roleManagementService.getMenuList(param);
+           
+        result.put("list", list);
+        return result;
+    }
+
+    /**
+     * 메뉴 관리 - 등록 / 수정
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PostMapping("/menuRegister")
+    @ResponseBody
+    public Object menuRegister(@RequestBody Map<String, Object> param)  throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        try{
+            int count = 0;
+            count = roleManagementService.menuRegister(param);
+            
+            if (count <= 0){
+                String errorMessage = "저장 처리 실패했습니다.";
+                result.put("errorMessage", errorMessage);
+                result.put("isFailed", true);
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+        return result;
+    }
+
+    /**
+     * 메뉴 관리 - 삭제
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @PostMapping("/menuDelete")
+    @ResponseBody
+    public Object menuDelete(@RequestBody Map<String, Object> param)  throws Exception {
+        Map<String, Object> result = new HashMap<String, Object>();
+
+        try{
+            List<Map> searchList = roleManagementService.menuDeleteCheck(param);
+            if(!searchList.isEmpty()){
+                String errorMessage = "하위 메뉴가 있습니다.";
+                result.put("errorMessage", errorMessage);
+                result.put("isFailed", true);
+                return result;
+            }
+
+            int count = 0;
+            count = roleManagementService.menuDelete(param);
+
+            if (count <= 0){
+                String errorMessage = "삭제 처리 실패했습니다.";
+                result.put("errorMessage", errorMessage);
+                result.put("isFailed", true);
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+        return result;
+    }
+    
 }
