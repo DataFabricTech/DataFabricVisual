@@ -84,7 +84,7 @@
             </tr>
             <tr>
               <th scope="row">요청주소</th>
-              <td>https://{{ currentHostname }}:13200/data/extract</td>
+              <td>http://{{ currentHostname }}:13200/data/extract</td>
             </tr>
             <tr>
               <th scope="row">사용방법</th>
@@ -114,31 +114,40 @@
 
 
           <pre id="code-content" class="sample-url" style="color: #ffffff">
+"""데이터 추출 POST API 예제"""
+
+
 import json, requests
 
-'''Rest API 요청 정보 설정'''
-url = f"https://{{ currentHostname }}:13200/data/extract" # API Server URL
+# API Server URL
+url = f"http://{{ currentHostname }}:13200/data/extract"
+
+#Header
 headers = { 'Content-Type': 'application/json' }
+
+#Body
 payload = json.dumps({
-"system": "hive", # 시스템명(hive), ex: hive(default)
-"user_id": "{{ userStore.getUser.user_id }}", # 사용자 아이디
-"password": "******", # 사용자 비밀번호
-"select": "", # 컬럼명 리스트 또는 전체 컬럼(* 또는 ""), ex: column1, column2, column3 ...
-"from": "{{ props.eliminateModal.entity.qualified_name.split("@")[0] }}", # DB명.테이블명
-"where": "" # 데이터 조회 조건(WHERE)문, ex: where column = 'value'
+    "user_id": "{{ userStore.getUser.user_id }}",
+    "password": "******",
+    "select": "",
+    "system_id": "{{ props.eliminateModal.entity.qualified_name.split(".")[0] }}",
+    "db": "{{ props.eliminateModal.entity.qualified_name.split(".")[1] }}",
+    "db_schema": "{{ props.eliminateModal.entity.qualified_name.split(".")[2] }}",
+    "table": "{{ props.eliminateModal.entity.qualified_name.split(".")[3] }}",
+    "condition": "",
 })
 
-'''데이터 추출 POST 요청'''
+#Request
 res = requests.request("POST", url, headers=headers, data=payload)
 print(res.json())
 
-'''결과값 nextUri로 GET 요청 반복'''
+#printResult
 while True:
-if 'nextUri' not in res.json().keys():
-  break
-nextUri = res.json()['nextUri']
-res = requests.request("GET", nextUri)
-print(res.json())
+	if 'nextUri' not in res.json()['result'].keys():
+		break
+	nextUri = res.json()['result']['nextUri']
+	res = requests.request("GET", nextUri)
+	print(res.json()['result'])
 </pre>
         </div>
       </div>
@@ -151,14 +160,16 @@ print(res.json())
             요청변수 안내
           </caption>
           <colgroup>
-            <col style="width: auto" span="3" />
-            <col style="width: 300px" />
+            <col style="width: 120px;"/>
+            <col style="width: 250px" />
+            <col style="width: 100px" />
+            <col style="width: 200px" />
             <col style="width: auto" />
           </colgroup>
           <thead>
             <tr>
               <th scope="col">요청변수</th>
-              <th scope="col">값</th>
+              <th scope="col">타입</th>
               <th scope="col">조건</th>
               <th scope="col">설명</th>
               <th scope="col">예시</th>
@@ -169,64 +180,62 @@ print(res.json())
               <td>user_id</td>
               <td>String</td>
               <td>필수</td>
-              <td class="tl">사용자 사번</td>
-              <td></td>
+              <td class="tl">사용자 ID</td>
+              <td>{{ userStore.getUser.user_id }}</td>
             </tr>
             <tr>
               <td>password</td>
               <td>String</td>
               <td>필수</td>
               <td class="tl">사용자 비밀번호</td>
-              <td></td>
+              <td>******</td>
             </tr>
             <tr>
               <td>select</td>
               <td>String</td>
-              <td>선택</td>
+              <td>필수</td>
               <td class="tl">검색 대상 Columns 지정</td>
               <td>*</td>
             </tr>
             <tr>
-              <td>from</td>
+              <td>system_id</td>
               <td>String</td>
               <td>필수</td>
-              <td class="tl">조회 대상 DB명.테이블명(db.table)</td>
-              <td>dw_lms.dw_ma_lms_x_alram_trans</td>
+              <td class="tl">시스템 ID</td>
+              <td>{{ props.eliminateModal.entity.qualified_name.split(".")[0] }}</td>
             </tr>
             <tr>
-              <td>where</td>
+              <td>db</td>
               <td>String</td>
-              <td>선택</td>
-              <td class="tl">데이터 조회 상세 조건 설정</td>
-              <td>where line_cd = ‘1’</td>
+              <td>필수</td>
+              <td class="tl">DB 명</td>
+              <td>{{ props.eliminateModal.entity.qualified_name.split(".")[1] }}</td>
+            </tr>
+            <tr>
+              <td>db_schema</td>
+              <td>String</td>
+              <td>필수</td>
+              <td class="tl">스키마 명</td>
+              <td>{{ props.eliminateModal.entity.qualified_name.split(".")[2] }}</td>
+            </tr>
+            <tr>
+              <td>table</td>
+              <td>String</td>
+              <td>필수</td>
+              <td class="tl">테이블 명</td>
+              <td>{{ props.eliminateModal.entity.qualified_name.split(".")[3] }}</td>
+            </tr>
+            <tr>
+              <td>condition</td>
+              <td>String</td>
+              <td>필수</td>
+              <td class="tl">검색 조건</td>
+              <td>1=1 LIMIT 1</td>
             </tr>
           </tbody>
         </table>
         <!-- //mu-grid -->
       </div>
-      <!-- 샘플 예제 -->
-      <!-- <div v-bind:class="[currentTab === 2 ? 'on' : '', 'tab-content']">
-        <table class="mu-formbox">
-          <caption>
-            샘플 URL/제공 데이터 예제
-          </caption>
-          <colgroup>
-            <col style="width: 150px" />
-            <col />
-          </colgroup>
-          <tbody>
-            <tr>
-              <th scope="row">POST</th>
-              <td>https://{{ currentHostname }}:13200/data/extract</td>
-            </tr>
-            <tr>
-              <td colspan="2">
-                <iframe :src="iframePath" width="1000px" height="600px"></iframe>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
       <!-- 출력결과 -->
       <div v-bind:class="[currentTab === 3 ? 'on' : '', 'tab-content']">
         <div class="code-box">
@@ -235,9 +244,10 @@ API 응답은 Paging 되어 수신하는 형태로 nextUri 의 반복 요청을 
 
 실데이터 추출 API Response Step
 -------------------------------------------------------------------------------------------------------------------------
-① 응답 메시지의 상태는 nextUri 에 포함되어 전송되며 아래의 두가지 상태가 있습니다.
-queued : 데이터를 검색하는 상태
-executing : 데이터를 검색 후 전달하는 상태
+① 응답 메시지의 상태는 status 에 포함되어 전송되며 아래의 3가지 상태가 있습니다.
+QUEUED : 데이터를 검색 하기 전 대기하는 상태
+RUNNING : 데이터를 검색 후 처리중인 상태
+FINISHED : 데이터 검색 및 처리가 종료된 상태
 ② API 데이터 요청 후 데이터 검색 중인 경우 nextUri : ~/v1/data/queued/~ 로 응답
 ③ 데이터 검색이 완료되어 데이터 수신 상태인 경우 nextUri : ~/v1/data/executing/~ 로 응답
 ④ 데이터 수신 완료 후 nextUri 요청 시 Data가 Body로 전송
@@ -247,9 +257,34 @@ executing : 데이터를 검색 후 전달하는 상태
         </div>
 
         <div class="mu-heading">
-          <h4>쿼리 결과 속성</h4>
+          <h4>쿼리 속성</h4>
         </div>
-
+        <!-- mu-grid -->
+        <table class="mu-grid mu-grid-data">
+          <colgroup>
+            <col style="width: 250px" />
+            <col />
+          </colgroup>
+          <thead>
+            <tr>
+              <th scope="col">항목명</th>
+              <th scope="col">항목설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>status</td>
+              <td class="tl">상태 코드</td>
+            </tr>
+            <tr>
+              <td>result</td>
+              <td class="tl">조회 결과</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="mu-heading">
+          <h4>쿼리 조회 결과 속성</h4>
+        </div>
         <!-- mu-grid -->
         <table class="mu-grid mu-grid-data">
           <colgroup>
@@ -265,47 +300,35 @@ executing : 데이터를 검색 후 전달하는 상태
           <tbody>
             <tr>
               <td>id</td>
-              <td class="tl">쿼리의 ID</td>
+              <td class="tl">요청 ID</td>
             </tr>
             <tr>
               <td>nextUri</td>
-              <td class="tl">
-                응답 데이터에 존재하는 경우, 후속 GET 요청에 사용할 URL 값,<br />
-                존재하지 않는 경우는 쿼리가 완료되었거나 오류로 종료됩니다.
-              </td>
+              <td class="tl">다음 요청 주소</td>
             </tr>
             <tr>
-              <td>columns</td>
-              <td class="tl">쿼리에 의해 반환된 열의 이름 및 타입 목록</td>
-            </tr>
-            <tr>
-              <td>data</td>
-              <td class="tl">
-                데이터 속성은 쿼리 요청에 의해 반환된 행 목록을 포함합니다.<br />
-                각 행은 열 속성으로 지정된 순서대로 행에 있는 열 값을 포함하는
-                리스트입니다.
-              </td>
-            </tr>
-            <tr>
-              <td>updateType</td>
-              <td class="tl">
-                연산을 나타내는 사람이 읽을 수 있는 문자열입니다.<br />
-                CREATE TABLE 요청의 경우 업데이트 유형은 “CREATE TABLE” 입니다.
-              </td>
+              <td>state</td>
+              <td class="tl">진행 상태</td>
             </tr>
             <tr>
               <td>error</td>
-              <td class="tl">
-                쿼리가 실패하면 오류 특성에 QueryError 개체가 포함됩니다.<br />
-                해당 개체에는 오류에 대한 메시지, 오류 코드 및 기타 정보가 포함되어
-                있습니다.
-              </td>
+              <td class="tl">데이터 처리 에러 발생시 표시되는 오류 정보</td>
+            </tr>
+            <tr>
+              <td>columns</td>
+              <td class="tl">데이터 Header</td>
+            </tr>
+            <tr>
+              <td>data</td>
+              <td class="tl">실제 데이터 배열</td>
+            </tr>
+            <tr>
+              <td>errorMessage</td>
+              <td class="tl">서버 요청 오류 발생시 표시되는 에러 메세지</td>
             </tr>
           </tbody>
-        </table>
-        <!-- //mu-grid -->
-        <div class="mu-heading">
-          <h4>쿼리 결과 진단 속성</h4>
+        </table><div class="mu-heading">
+          <h4>쿼리 조회 결과 에러 속성</h4>
         </div>
         <!-- mu-grid -->
         <table class="mu-grid mu-grid-data">
@@ -321,28 +344,51 @@ executing : 데이터를 검색 후 전달하는 상태
           </thead>
           <tbody>
             <tr>
-              <td>queryError</td>
-              <td class="tl">
-                쿼리로 인해 오류가 발생한 경우에만 Null 이 아닙니다.
-              </td>
+              <td>message</td>
+              <td class="tl">에러 메세지</td>
             </tr>
             <tr>
-              <td>failureInfo</td>
-              <td class="tl">
-                failureInfo 에는 스택 추적을 포함한 실패 원인에 대한 세부 정보와<br />FailureInfo.errorLocation
-                이 포함되어 있어 오류가 감지된 쿼리 줄 번호와 열 번호를 제공합니다.
-              </td>
+              <td>errorCode</td>
+              <td class="tl">에러 코드</td>
             </tr>
             <tr>
-              <td>warnings</td>
-              <td class="tl">일반적으로 비어 있는 경고 목록입니다.</td>
+              <td>errorName</td>
+              <td class="tl">에러 명</td>
             </tr>
             <tr>
-              <td>stats</td>
-              <td class="tl">
-                쿼리 실행에 대한 통계를 포함한 정보입니다.<br />
-                rootStage 는 쿼리 처리의 각 단계의 실행에 대한 통계를 제공합니다.
-              </td>
+              <td>errorType</td>
+              <td class="tl">에러 타입</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- //mu-grid -->
+        <div class="mu-heading">
+          <h4>쿼리 결과 Header 속성</h4>
+        </div>
+        <!-- mu-grid -->
+        <table class="mu-grid mu-grid-data">
+          <colgroup>
+            <col style="width: 250px" />
+            <col />
+          </colgroup>
+          <thead>
+            <tr>
+              <th scope="col">항목명</th>
+              <th scope="col">항목설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>name</td>
+              <td class="tl">컬럼명</td>
+            </tr>
+            <tr>
+              <td>type</td>
+              <td class="tl">컬럼 타입</td>
+            </tr>
+            <tr>
+              <td>typeSignature</td>
+              <td class="tl">컬럼 세부정보</td>
             </tr>
           </tbody>
         </table>
@@ -356,32 +402,31 @@ executing : 데이터를 검색 후 전달하는 상태
           요청합니다.
           <pre>
 Example) 요청한 쿼리가 Processing 중인 경우 response body 예시
+
 {
-"id": "20230404_044338_00023_e73eb",
-"infoUri": "None",
-<span style="font-weight: bold;">"nextUri": "https://{{ currentHostname }}:13200/v1/data/<span style="color:red;">queued</span>/20230404_044338_00023_e73eb
-                                                  /y3c47979a7e6c3673595fd029152b1c3696fb471c/1",</span>
-"stats": {
-  "state": "QUEUED",
-  "queued": true,
-  "scheduled": false,
-  "nodes": 0,
-  "totalSplits": 0,
-  "queuedSplits": 0,
-  "runningSplits": 0,
-  "completedSplits": 0,
-  "cpuTimeMillis": 0,
-  "wallTimeMillis": 0,
-  "queuedTimeMillis": 0,
-  "elapsedTimeMillis": 0,
-  "processedRows": 0,
-  "processedBytes": 0,
-  "physicalInputBytes": 0,
-  "peakMemoryBytes": 0,
-  "spilledBytes": 0
-},
-"warnings": []
-}</pre>
+    "status_code": 200,
+    "result": {
+
+      "id": "20230404_044338_00023_e73eb",
+  <span style="font-weight: bold;">    "nextUri": "https://{{ currentHostname }}:13200/v1/data/<span style="color:red;">queued</span>/20230404_044338_00023_e73eb
+                                                        /y3c47979a7e6c3673595fd029152b1c3696fb471c/1"</span>
+    }
+}
+</pre>
+          <!-- </pre> -->
+        </div>
+        <div class="code-box" style="max-height: 700px">
+          초기 요청에 실패할 경우 아래와 같이 데이터를 수신합니다.
+          <br /><br />
+          <pre>
+Example) 초기 요청한 쿼리가 실패한 경우 response body 예시
+{
+    "status_code": 500,
+    "result": {
+        "errorMessage": "<span style="font-weight: bold;"><span style="color:red;">User id is Not Valid</span></span>"
+    }
+}
+</pre>
           <!-- </pre> -->
         </div>
 
@@ -393,31 +438,15 @@ Example) 요청한 쿼리가 Processing 중인 경우 response body 예시
 Example) 요청한 쿼리가 완료된 상태의 response body 예시
 
 {
-"id": "20230404_044338_00023_e73eb",
-"infoUri": "None",
-<span style="font-weight: bold;">"nextUri": "https://{{ currentHostname }}:13200/v1/data/<span style="color:red;">executing</span>/20230404_044338_00023_e73eb
-                                                  /y181327fffba2b28ee6d6a273b5d14cc271c0179d/0",</span>
-"stats": {
-    "state": "QUEUED",
-    "queued": true,
-    "scheduled": false,
-    "nodes": 0,
-    "totalSplits": 0,
-    "queuedSplits": 0,
-    "runningSplits": 0,
-    "completedSplits": 0,
-    "cpuTimeMillis": 0,
-    "wallTimeMillis": 0,
-    "queuedTimeMillis": 1,
-    "elapsedTimeMillis": 6413,
-    "processedRows": 0,
-    "processedBytes": 0,
-    "physicalInputBytes": 0,
-    "peakMemoryBytes": 0,
-    "spilledBytes": 0
-},
-"warnings": []
-}</pre>
+  "status_code": 200,
+  "result": {
+
+    "id": "20230404_044338_00023_e73eb",
+    <span style="font-weight: bold;"> "nextUri": "https://{{ currentHostname }}:13200/v1/data/<span style="color:red;">executing</span>/20230404_044338_00023_e73eb
+                                                        /y181327fffba2b28ee6d6a273b5d14cc271c0179d/0"</span>
+    }
+  }
+</pre>
         </div>
 
         <div class="code-box" style="max-height: 1000px">
@@ -426,54 +455,46 @@ Example) 요청한 쿼리가 완료된 상태의 response body 예시
 Example) 요청한 데이터를 Paging 하여 수신 하는 상태의 response body 예시
 
 {
-"id": "20230404_044338_00023_e73eb",
-"infoUri": "None",
-"partialCancelUri": "https://{{ currentHostname }}:13200/v1/data/executing/partialCancel
-                                          /20230404_044338_00023_e73eb/0/y720b5cf1a468a5254536ef414fdfd5110d4ad074/1"",
-<span style="font-weight: bold;">"nextUri": "https://{{ currentHostname }}:13200/v1/data/<span style="color:red;">executing</span>/20230404_044338_00023_e73eb
-                                          /y720b5cf1a468a5254536ef414fdfd5110d4ad074/<span style="color:red;">1</span>",</span>
-"columns": [
-  {
-      "name": "line_cd",
-      "type": "varchar(10)",
-      "typeSignature": {
-          "rawType": "varchar",
-          "arguments": [
-              {
-                  "kind": "LONG",
-                  "value": 10
-              }
-          ]
-      }
-  }, ….
-],
-"data": [
-  [
-      "P1A3"
-      "Pi"
-      " STIR"
-      "AB00-1060"
-      "FR8-2580"
-      "AB00-1060_FR8-2580_0490",
-      "SERIAL NO #1 (35R HUB IM 2D)"
-      "454964J1002304211732B008",
-      "None"
-      "20230517114304",
-      "Y",
-      "20230517113929"
-      "45497-4J1002304073094A01" null,
-      "O",
-      "None"
-  ], ….
-],
-"stats": {
-  "state": "RUNNING",
-  "queued": false,
-  ….
-  },
-  "progressPercentage": 100.0
-},
-"warnings": []
+  "status_code": 200,
+  "result": {
+    "id": "20230404_044338_00023_e73eb",
+    <span style="font-weight: bold;">"nextUri": "https://{{ currentHostname }}:13200/v1/data/<span style="color:red;">executing</span>/20230404_044338_00023_e73eb
+                                              /y720b5cf1a468a5254536ef414fdfd5110d4ad074/<span style="color:red;">1</span>",</span>
+    "columns": [
+      {
+          "name": "line_cd",
+          "type": "varchar(10)",
+          "typeSignature": {
+              "rawType": "varchar",
+              "arguments": [
+                  {
+                      "kind": "LONG",
+                      "value": 10
+                  }
+              ]
+          }
+      }, ….
+    ],
+    "data": [
+      [
+          "P1A3"
+          "Pi"
+          " STIR"
+          "AB00-1060"
+          "FR8-2580"
+          "AB00-1060_FR8-2580_0490",
+          "SERIAL NO #1 (35R HUB IM 2D)"
+          "454964J1002304211732B008",
+          "None"
+          "20230517114304",
+          "Y",
+          "20230517113929"
+          "45497-4J1002304073094A01" null,
+          "O",
+          "None"
+      ], ….
+    ]
+  }
 }
       </pre>
         </div>
@@ -485,19 +506,22 @@ Example) 요청한 데이터를 Paging 하여 수신 하는 상태의 response b
 Example) 요청한 데이터를 모두 수신 한 상태의 response body 예시
 
 {
-"id": "20230602_064235_00010_nAcjr",
-"infoUri": "None",
-"columns": [
-  {
-      "name": "line_cd",
-      "type": "varchar(10)",
-      "typeSignature": {
-        ………
+  "status_code": 200,
+  "result": {
+    "id": "20230602_064235_00010_nAcjr",
+    "columns": [
+      {
+          "name": "line_cd",
+          "type": "varchar(10)",
+          "typeSignature": {
+            ………
 
-  }, ........
-],
-........
-}
+      }, ........
+    ],
+    ........
+    }
+  }
+
       </pre
           >
         </div>
@@ -507,55 +531,35 @@ Example) 요청한 데이터를 모두 수신 한 상태의 response body 예시
         <!-- mu-grid -->
         <table class="mu-grid mu-grid-data">
           <colgroup>
-            <col style="width: 250px" />
+            <col style="width: 400px" />
             <col />
           </colgroup>
           <thead>
             <tr>
-              <th scope="col">에러코드</th>
+              <th scope="col">에러 메세지</th>
               <th scope="col">설명</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>WhereStatementError</td>
-              <td class="tl">‘Where’ is not valid</td>
+              <td>SystemID/DB/DB_Schema/Table names' is not valid</td>
+              <td class="tl">추출 메타 대상이 존재하지 않거나 권한이 없음</td>
             </tr>
             <tr>
-              <td>UserIdError</td>
-              <td class="tl">‘User id’ is not valid</td>
+              <td>Internal Error</td>
+              <td class="tl">서버 내부 오류</td>
             </tr>
             <tr>
-              <td>FromStatementError</td>
-              <td class="tl">‘DB and Table names’ is not valid</td>
+              <td>User id is Not Valid</td>
+              <td class="tl">사용자 인증 실패</td>
             </tr>
             <tr>
-              <td>SelectStatementError</td>
-              <td class="tl">‘Column’ is not valid</td>
+              <td>Column is not valid</td>
+              <td class="tl">select 컬럼 오류</td>
             </tr>
             <tr>
-              <td>AtlasServerError</td>
-              <td class="tl">Atlas server response error</td>
-            </tr>
-            <tr>
-              <td>TrinoServerError</td>
-              <td class="tl">Trino server response error</td>
-            </tr>
-            <tr>
-              <td>DataBaseError</td>
-              <td class="tl">There was a problem with the PostgreSQL connection</td>
-            </tr>
-            <tr>
-              <td>PERMISSION_DENIED</td>
-              <td class="tl">User does not have Ranger permissions for the specified table</td>
-            </tr>
-            <tr>
-              <td>etc</td>
-              <td class="tl">
-                쿼리가 실패하면 오류 특성에 QueryError 개체에 포함됩니다.<br />
-                해당 개체에는 오류에 대한 메시지, 오류 코드 및 기타 정보가 포함되어
-                있습니다.
-              </td>
+              <td>Server Response Error</td>
+              <td class="tl">Trino 요청 응답 오류</td>
             </tr>
           </tbody>
         </table>
