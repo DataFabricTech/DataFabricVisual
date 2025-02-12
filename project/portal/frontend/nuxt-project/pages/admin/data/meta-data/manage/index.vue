@@ -76,6 +76,13 @@
               </div>
               <!-- //board-list-search -->
               <div class="mu-item-group">
+                <div class="mu-selectbox w120">
+                  <select name="searchType3" :value="currentRelease" @change="onChangeRelease">
+                    <option v-for="(item, index) in filterReleaseList" :key="index" :value="item.value">
+                      {{ item.desc }}
+                    </option>
+                  </select>
+                </div>
                 <page-size v-model:pageSize="pagingObj.limit" @searchMethod="onFilterSearch" />
                 <button type="button" class="mu-btn" @click.stop="onClickButton('roles')">
                   <span>공개설정</span>
@@ -263,6 +270,11 @@ interface FilterSearchObj {
   options: FilterOption[];
 }
 
+interface FilterRelease {
+  value: number | string; // 두번째 필터 조건 - 데이터명, 오너 등
+  desc: string; // 검색어
+}
+
 interface PagingObj {
   total: number;
   limit: number;
@@ -373,9 +385,34 @@ const filterSearchObj = ref<FilterSearchObj>({
     {
       value: "meta_name",
       desc: "데이터명"
-    }
+    },
+    {
+      value: "system_name",
+      desc: "시스템명"
+    },
   ]
 });
+
+// 공개설정 필터 항목
+const filterReleaseList = ref<Array<FilterRelease>>([
+  {
+    value: "",
+    desc: "전체"
+  },
+  {
+    value: 0,
+    desc: "secret"
+  },
+  {
+    value: 1,
+    desc: "public"
+  },
+  {
+    value: 2,
+    desc: "private"
+  },
+])
+const currentRelease = ref<number | string>("");
 
 // 선택된 카테고리 정보
 const selectedCategory = ref<SelectedCategory>({
@@ -976,6 +1013,11 @@ const onChange = (e) => {
   filterSearchObj.value = searchObj;
 };
 
+const onChangeRelease = (e) => {
+  currentRelease.value = e.target.value
+  onSearchDataList();
+}
+
 const onFilterSearch = () => {
   onSearchDataList();
 };
@@ -997,6 +1039,7 @@ const onSearchDataList = async (offset = 0, item = {}) => {
   const { searchType1, word } = filterSearchObj.value;
   params.searchType1 = searchType1;
   params.searchType2 = filterSearchObj.value.searchType2 === "" ? "all" : filterSearchObj.value.searchType2;
+  params.release = currentRelease.value
   params.word = word.trim();
 
   // 테이블 데이터 조회
