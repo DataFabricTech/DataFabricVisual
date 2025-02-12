@@ -102,7 +102,7 @@ public class UserService {
         map.put("user_email", String.valueOf(user.get("user_email")));
         map.put("last_login", String.valueOf(user.get("last_login")));
         map.put("role_id", String.valueOf(user.get("role_id")));
-
+        map.put("user_role_name", String.valueOf(user.get("user_role_name")));
 
         sessionManager.lastLoginDate.put(String.valueOf(user.get("user_id")), String.valueOf(user.get("last_login")));
         // Date expireDate = getTokenExpiredDate();
@@ -128,6 +128,7 @@ public class UserService {
         map.put("user_email", String.valueOf(user.get("user_email")));
         map.put("last_login", String.valueOf(user.get("last_login")));
         map.put("role_id", String.valueOf(user.get("role_id")));
+        map.put("user_role_name", String.valueOf(user.get("user_role_name")));
 
         sessionManager.lastLoginDate.put(String.valueOf(user.get("user_id")), String.valueOf(user.get("last_login")));
         // Date expireDate = getTokenExpiredDate();
@@ -162,6 +163,7 @@ public class UserService {
         map.put("user_email", String.valueOf(user.get("user_email")));
         map.put("last_login", String.valueOf(user.get("last_login")));
         map.put("role_id", String.valueOf(user.get("role_id")));
+        map.put("user_role_name", String.valueOf(user.get("user_role_name")));
 
         sessionManager.lastLoginDate.put(String.valueOf(user.get("user_id")), String.valueOf(user.get("last_login")));
         // Date expireDate = getTokenExpiredDate();
@@ -199,6 +201,7 @@ public class UserService {
         map.put("user_email", String.valueOf(user.get("user_email")));
         map.put("last_login", String.valueOf(user.get("last_login")));
         map.put("role_id", String.valueOf(user.get("role_id")));
+        map.put("user_role_name", String.valueOf(user.get("user_role_name")));
 
         sessionManager.lastLoginDate.put(String.valueOf(user.get("user_id")), String.valueOf(user.get("last_login")));
         // Date expireDate = getTokenExpiredDate();
@@ -515,7 +518,7 @@ public class UserService {
     // 패스워드 변경
     public Object changePassword(String user_id, String password) throws Exception {
         Map<String, String> result = new HashMap<String, String>();
-
+        
         // 비밀번호 암호화
         String encPassword = passwordEncoder.encode(password);
         Map<String, String> params = new HashMap<String, String>();

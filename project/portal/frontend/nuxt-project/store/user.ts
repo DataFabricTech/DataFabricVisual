@@ -13,6 +13,7 @@ export const useUserStore = defineStore('userStore', () => {
     authority: "",
     userMenu: "",
     adminMenu: "",
+    user_role_name: ""
   })
   const _tab = ref({
     adminPath: '/admin/data/status/lookup', // 사용자 화면에서 메뉴바의 'ADMIN' 버튼 클릭 시 이동 대상 메뉴 path

@@ -9,8 +9,6 @@ export default defineNuxtRouteMiddleware((to, from) => {
   const { cookies } = useCookies()
   const userStore = useUserStore()
 
-  console.log(to, from);
-
   // 파라미터를 제거한 경로를 가져오는 함수
   const getPathWithoutParams = (path) => {
     const url = new URL(path, window.location.origin);
@@ -172,6 +170,7 @@ export default defineNuxtRouteMiddleware((to, from) => {
           dept_nm: decodedToken.dept_nm ? (decodedToken.dept_nm != "null" ? decodedToken.dept_nm : "부서없음") : "부서없음",
           last_login: decodedToken.last_login,
           user_email: decodedToken.user_email,
+          user_role_name: decodedToken.user_role_name,
           userMenu: userMenu,
           adminMenu: adminMenu,
           roleMenu: decodedRoleMenuList

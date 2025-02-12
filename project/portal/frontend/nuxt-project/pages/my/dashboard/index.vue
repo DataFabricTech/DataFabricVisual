@@ -15,7 +15,7 @@
                 <div class="profile">
                   <strong class="name">{{ userStore.getUser.username }}<span>({{ userStore.getUser.dept_nm }})</span></strong>
                   <div class="profile-info">
-                    <span class="use"><i class="mu-icon-svg use"></i>{{ getKrName(userStore.getUser.authority) }}</span>
+                    <span class="use"><i class="mu-icon-svg use"></i>{{ userStore.getUser.user_role_name }}</span>
                     <span class="email"><i class="mu-icon-svg email"></i>{{ userStore.getUser.user_email }}</span>
                     <span class="date"><i class="mu-icon-svg time"></i>최종접속시간 {{ $yyyyMMddHHmmSS(userStore.getUser.last_login) }}</span>
                     <span class="date" style="cursor:pointer;" @click="onPasswordInitModalCall"><i class="mu-icon-svg refresh"></i>패스워드 변경</span>
