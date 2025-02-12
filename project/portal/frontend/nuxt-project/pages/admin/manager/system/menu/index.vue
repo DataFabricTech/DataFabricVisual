@@ -50,9 +50,9 @@
                 <col style="width: 30px" />
                 <col style="width: 90px" />
                 <col style="width: 320px" />
-                <col style="width: 280px" />
+                <col style="width: 300px" />
                 <col style="width: 150px" />
-                <col style="width: 140px" />
+                <col style="width: 120px" />
                 <col style="width: 70px" />
                 <col style="width: 200px" />
               </colgroup>
