@@ -411,12 +411,25 @@ public class SearchDetailService {
 
     // 사용자 데이터 설명 목록 조회
     public Object getUserDescriptionList(Map<String, Object> params) {
-        JsonResult result = new JsonResult();
-        Map<String, Object> resultData = new LinkedHashMap<>();
+        Map<String, Object> result = new HashMap<>();
 
-        List<Map> userDescriptionList = searchDetailMapper.getUserDescriptionList(params);
-        resultData.put("userDescriptionList", userDescriptionList);
-        result.setData(resultData);
+        try {
+            // 목록 조회
+            List<Map> userDescriptionList = searchDetailMapper.getUserDescriptionList(params);
+            result.put("userDescriptionList", userDescriptionList);
+
+            // 메뉴 권한 조회
+            int authCount = searchDetailMapper.getUserDescriptionAdminAuthCnt(params);
+            if (authCount > 0) {
+                result.put("isUserDescriptionMenuAuth", true);
+            }
+
+        } catch (Exception e) {
+            log.error("사용자 데이터 설명 목록 조회 실패");
+            result.put("userDescriptionList", new ArrayList<>());
+            result.put("isUserDescriptionMenuAuth", false);
+        }
+        
 
         return result;
     }

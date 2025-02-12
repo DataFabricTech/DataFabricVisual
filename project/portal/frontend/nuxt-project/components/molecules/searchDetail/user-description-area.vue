@@ -72,31 +72,9 @@
               <div class="comment-message">
                 {{ item.user_description }}
               </div>
-              <!-- 사용자 추천 설명 수정 버튼 : 내 데이터 설명에서만 수정 -->
-              <div
-                class="modify-btn"
-                v-if="userStore.getUser.authority != 'Admin' && userStore.getUser.authority != 'Super-Admin'"
-              >
-                <button
-                  v-if="userStore.getUser.user_id === item.user_id"
-                  type="button"
-                  class="mu-btn mu-btn-sm mu-btn-bg-non"
-                  title="해당 데이터 설명 수정"
-                  @click="onClickEditUserDescription(item)"
-                >
-                  <span>수정</span><i class="mu-icon-svg edit"></i>
-                </button>
-                <button
-                  v-if="userStore.getUser.user_id === item.user_id"
-                  type="button"
-                  class="mu-btn mu-btn-sm mu-btn-bg-non"
-                  title="해당 데이터 설명 삭제"
-                  @click="onClickDeleteUserDescription(item.id)"
-                >
-                  <span>삭제</span><i class="mu-icon-svg del"></i>
-                </button>
-              </div>
-              <div class="modify-btn" v-else>
+              <!-- 사용자 추천 설명 수정 버튼 : 사용자페이지는 내 데이터 설명에서만 수정/삭제, 관리자는 삭제만 가능 -->
+              <!--                        관리자페이지는 내 데이터 설명에서만 수정/삭제, 관리자는 삭제만 가능 -->
+              <div class="modify-btn" v-if="props.isAdmin || userStore.getUser.user_id === item.user_id || props.isUserDescriptionMenuAuth">
                 <button
                   v-if="userStore.getUser.user_id === item.user_id"
                   type="button"
@@ -177,7 +155,7 @@ import { useUserStore } from "~/store/user";
 const { $ofetch } = useNuxtApp();
 const userStore = useUserStore();
 const emit = defineEmits(["reload", "reloadUserDescriptionList"]);
-const props = defineProps(["list", "params", "initUserDescription", "isAdmin"]);
+const props = defineProps(["list", "params", "initUserDescription", "isAdmin", "isUserDescriptionMenuAuth"]);
 
 const showData = ref(true);
 const toggleShowDataText = ref("접기");

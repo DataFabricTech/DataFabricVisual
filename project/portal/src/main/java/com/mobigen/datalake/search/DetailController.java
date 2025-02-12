@@ -126,7 +126,10 @@ public class DetailController {
     @ResponseJsonResult
     @PostMapping("/userDescriptionList")
     @ResponseBody
-    public Object getUserDescriptionList(@RequestBody Map<String, Object> params) {
+    public Object getUserDescriptionList(@RequestBody Map<String, Object> params, HttpServletRequest request) throws Exception {
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        params.put("user", user);
+
         return searchDetailService.getUserDescriptionList(params);
     }
 

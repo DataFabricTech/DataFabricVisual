@@ -53,6 +53,7 @@
           class="content-block">
           <user-description-area
             :isAdmin="props.isAdmin"
+            :isUserDescriptionMenuAuth="isUserDescriptionMenuAuth"
             :list="userDescriptionList"
             :params="userDataParam"
             :initUserDescription="initUserDescription"
@@ -264,6 +265,7 @@ const userDataParam = ref({}); // 사용자 데이터 파라미터
 const showData = ref(true);
 const toggleShowDataText = ref("접기");
 const userDataAuth = ref(0) // 데이터 접근 권한
+const isUserDescriptionMenuAuth = ref(false) // 사용자 데이터 설명 권한
 
 onBeforeRouteLeave((to, from, next) => {
   userStore.setFromPath(from.path) // 상세페이지에서 검색화면으로 이동했는지 확인용
@@ -818,6 +820,11 @@ const getUserDescriptionList = (userDescriptionOrderType) => {
           res.data,
           "userDescriptionList",
           []
+        );
+        isUserDescriptionMenuAuth.value = ObjectUtils.getPropertyValue(
+          res.data,
+          "isUserDescriptionMenuAuth",
+          false
         );
       }
     });
