@@ -124,6 +124,7 @@ public class DataRequestService {
             try {
                 sendMail(params, request); // 데이터 요청 메일 발송
             } catch (Exception e) {
+                e.printStackTrace();
                 log.error("이메일 발송에 실패하였습니다.");
             }
         }
@@ -216,6 +217,7 @@ public class DataRequestService {
             message.setContent(htmlBody, "text/html; charset=utf-8");
             javaMailSender.send(message);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception("이메일 발송에 실패하였습니다.");
         }
     }
@@ -274,6 +276,7 @@ public class DataRequestService {
             message.setContent(htmlBody, "text/html; charset=utf-8");
             javaMailSender.send(message);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception("이메일 발송에 실패하였습니다.");
         }
     }

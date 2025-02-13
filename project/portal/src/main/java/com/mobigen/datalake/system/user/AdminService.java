@@ -224,6 +224,7 @@ public class AdminService {
             message.setContent(htmlBody, "text/html; charset=utf-8");
             javaMailSender.send(message);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception("이메일 발송에 실패하였습니다.");
         }
     }
