@@ -16,14 +16,14 @@
             게시판
           </caption>
           <colgroup>
-            <col style="width: 150px" />
+            <col style="width: 170px" />
             <col />
           </colgroup>
 
           <!-- 카테고리 맵핑 -->
           <tbody v-if="props.manageModal.type === 'map'">
             <tr>
-              <th scope="row">카테고리명(한글)</th>
+              <th scope="row">카테고리 명</th>
               <td>
                 <auto-select :placeholder="placeholder" :options="upperCategories" @setData="onChangeMappingCategory" />
               </td>
@@ -34,13 +34,13 @@
           <!-- 카테고리 추가/수정 -->
           <tbody v-else>
             <tr>
-              <th scope="row">카테고리명(한글)<strong class="required">필수</strong></th>
+              <th scope="row">카테고리 명<strong class="required">필수</strong></th>
               <td>
                 <input
                   type="text"
-                  placeholder="카테고리명(한글)을 입력하세요. (최대 20자)"
+                  placeholder="카테고리 명을 입력하세요. (최대 20자)"
                   class="mu-input"
-                  title="카테고리명(한글) 입력"
+                  title="카테고리 명 입력"
                   name="krName"
                   maxlength="20"
                   v-model="krName"
@@ -48,13 +48,13 @@
               </td>
             </tr>
             <tr>
-              <th scope="row">카테고리명(영문)<strong class="required">필수</strong></th>
+              <th scope="row">카테고리 ID<strong class="required">필수</strong></th>
               <td>
                 <input
                   type="text"
-                  placeholder="카테고리명(영문)을 입력하세요. (최대 20자)"
+                  placeholder="카테고리 ID를 입력하세요. (최대 20자)"
                   class="mu-input"
-                  title="카테고리명(영문) 입력"
+                  title="카테고리 ID 입력"
                   name="enName"
                   maxlength="20"
                   :disabled="props.manageModal.type === 'update'"
@@ -64,11 +64,16 @@
               </td>
             </tr>
             <tr v-if="upperCategory.value === ''">
-              <th scope="row">카테고리 이미지<strong class="required">필수</strong></th>
+              <th scope="row">카테고리 이미지</th>
               <td>
                 <div class="mu-item-group">
-                  <img
+                  <img v-if="categoryImageFile"
                     :src="categoryImageFile"
+                    style="width: 70px; height: 70px; background-size: cover"
+                    :class="['ico-category', 'category-11']"
+                  />
+                  <img v-else
+                    src="/category_basic.png"
                     style="width: 70px; height: 70px; background-size: cover"
                     :class="['ico-category', 'category-11']"
                   />
@@ -293,7 +298,6 @@ const isDisabled = computed(() => {
           // 카테고리명(한글명 & 영문명) 필수입력값
           krName.value &&
           enName.value &&
-          categoryImageFile.value && // 상위 카테고리는 필수값이 아니지만 유효한 값 입력 시에만 확인 버튼 활성화
           ((value && description) || (!value && !description))
         ) {
           isDisabled = false;
