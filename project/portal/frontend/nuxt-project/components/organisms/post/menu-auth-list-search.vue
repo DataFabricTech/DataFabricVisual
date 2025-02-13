@@ -11,7 +11,7 @@
               <option value="all">전체</option>
               <option value="id">권한 ID</option>
               <option value="title">권한 명</option>
-              <option value="type">권한 종류</option>
+              <option v-if="props.searchObj.searchRoleType === '0'" value="type">권한 종류</option>
               <option value="desc">권한 설명</option>
             </select>
           </div>

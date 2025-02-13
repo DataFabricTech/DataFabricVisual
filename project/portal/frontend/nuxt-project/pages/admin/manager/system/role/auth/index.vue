@@ -223,6 +223,7 @@
   interface SearchObj {
     searchType: string;
     searchWord: string;
+    searchRoleType: string;
   }
   
   const dataPagingObj = ref<dataPagingObj>({
@@ -243,6 +244,7 @@
   const searchObj = ref<SearchObj>({
     searchType: "all",
     searchWord: "",
+    searchRoleType: "0",
   });
 
   onMounted(() => {
@@ -369,6 +371,7 @@
   // 
   const changeTab = (index: number) => {
     activeTab.value = index;
+    searchObj.value.searchRoleType = index.toString();
 
     if(index === 0) {
       getDataAuthList();
