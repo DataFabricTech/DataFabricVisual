@@ -125,7 +125,7 @@
     </div>
     <div class="mu-dialog-foot">
       <button type="button" class="mu-btn" @click="onCancel"><span>취소</span></button>
-      <button type="button" class="mu-btn" @click="onRegister"><span>확인</span></button>
+      <button type="button" class="mu-btn mu-btn-primary" @click="onRegister"><span>확인</span></button>
     </div>
     <div class="mu-dialog-close-btn">
       <button type="button" class="mu-btn mu-btn-close" title="해당 팝업 닫기" @click="onClose">
