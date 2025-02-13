@@ -77,6 +77,7 @@
                   <button
                     class="text-input-group-action-button button button-neutral-ghost button-sm"
                     type="button"
+                    v-tooltip:right="`패스워드 보기`"
                     @click="isHidePw"
                   >
                     <span class="hidden-text">비밀번호 보기 해제</span>
@@ -120,6 +121,7 @@
                   <button
                     class="text-input-group-action-button button button-neutral-ghost button-sm"
                     type="button"
+                    v-tooltip:right="`패스워드 보기`"
                     @click="isHideConfirmPw"
                   >
                     <span class="hidden-text">지우기</span>
