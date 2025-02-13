@@ -84,25 +84,6 @@
                 </div>
               </td>
             </tr>
-            <tr>
-              <th scope="row">데이터 문의처</th>
-              <td>
-                <div class="mu-item-group">
-                  <span class="label w130">담당부서</span>
-                  <input
-                    type="text"
-                    placeholder="담당부서를 선택하세요."
-                    class="mu-input"
-                    title="담당부서"
-                    :value="deptInfo"
-                    readonly
-                  />
-                  <button type="button" class="mu-btn" @click="onToggleDeptModal">
-                    <span>찾아보기</span>
-                  </button>
-                </div>
-              </td>
-            </tr>
             <tr v-if="props.manageModal.type !== 'update'">
               <th scope="row">상위카테고리</th>
               <td>
