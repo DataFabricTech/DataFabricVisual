@@ -35,11 +35,12 @@ public class AdminController {
      */
     @ResponseJsonResult
     @GetMapping("/user/list")
-    public Object getUserList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("userType") String userType) throws Exception {
+    public Object getUserList(@RequestParam("pageSize") int pageSize, @RequestParam("pnum") int pnum, @RequestParam("searchType") String searchType, @RequestParam("searchWord") String searchWord, @RequestParam("userType") String userType, @RequestParam("searchSelectDeptcd") String searchSelectDeptcd) throws Exception {
         Map<String, Object> param = new HashMap<>();
         param.put("searchType", searchType);
         param.put("userType", userType);
         param.put("searchWord", searchWord);
+        param.put("searchSelectDeptcd", searchSelectDeptcd);
         param.put("limit", String.valueOf(pageSize));
         param.put("offset", String.valueOf(pageSize * (pnum - 1)));
 

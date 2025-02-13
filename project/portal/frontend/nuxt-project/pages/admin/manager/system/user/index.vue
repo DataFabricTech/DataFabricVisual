@@ -171,7 +171,7 @@
         initselectedDept();
     }
 
-    eventStore.emit('deptSelected', {dept_cd: item ? item.name : ""});
+    eventStore.emit('deptSelected', {dept_cd: item ? item.id : ""});
   }
 
   // 

@@ -2,7 +2,11 @@
   <div>
       <div class="inner">
           <div class="mu-section">
-              <left-menu-list
+              <!-- <left-menu-list
+              @onClickMenuItem="onClickMenuItem"
+              /> -->
+
+              <left-dept-list
               @onClickMenuItem="onClickMenuItem"
               />
 
@@ -135,15 +139,16 @@ import ObjectUtils from "@utils/ObjectUtils";
 import { isEmpties } from "@composables/ramda";
 
 import { useCategoryStore } from "@store/category.ts";
-import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
+// import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
+import LeftDeptList from "@functional/dept/left-dept-list";
 
 definePageMeta({
 name: "AdminMenuAuthManage",
 layout: "admin"
 });
 
-const categoryList = computed(() => categoryStore.getCategoryList);
-const categoryStore = useCategoryStore();
+// const categoryList = computed(() => categoryStore.getCategoryList);
+// const categoryStore = useCategoryStore();
 
 interface pagingObj {
   total: number;
@@ -164,7 +169,7 @@ const route = useRoute();
 
 const searchType = ref("all")
 const searchWord = ref("")
-const categoryTitle = ref("전체 카테고리")
+const categoryTitle = ref("전체 조직")
 
 // 
 const dataList = ref<any[]>([]); 
@@ -175,17 +180,16 @@ onMounted(() => {
 });
 
 // 
-await categoryStore.fetchCategories();
-const fetchCategories = async (payload: any) => {
-  await categoryStore.fetchCategories(payload);
+// await categoryStore.fetchCategories();
+// const fetchCategories = async (payload: any) => {
+//   await categoryStore.fetchCategories(payload);
 
-  return categoryStore.getCategoryList;
-};
+//   return categoryStore.getCategoryList;
+// };
 
 // 
 const onClickMenuItem = async (item: any = null) => {
-  categoryTitle.value = item ? item.description : '전체 카테고리';
-
+  // categoryTitle.value = item ? item.description : '전체 카테고리';
   onSearchDataList(0, item);
 };
 
@@ -193,16 +197,18 @@ const onClickMenuItem = async (item: any = null) => {
 const onSearchDataList = async (offset = 0, item: { id: string; }) =>{
   try {
     const params = {
-       offset: offset ? offset * pagingObj.value.limit : 0,
+      offset: offset ? offset * pagingObj.value.limit : 0,
       limit: pagingObj.value.limit,
       searchClassification: "",
+      searchDeptid: "",
       searchType: `${searchType.value}`,
       searchWord: `${searchWord.value}`
     };
 
     // 
     if(item && item.id) {
-      params.searchClassification = item.id;
+      // params.searchClassification = item.id;
+      params.searchDeptid =item.id;
     }
     
     // 

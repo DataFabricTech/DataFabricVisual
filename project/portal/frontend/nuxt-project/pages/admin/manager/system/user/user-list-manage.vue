@@ -152,6 +152,7 @@ const pagingObj = ref({
 })
 const searchType = ref("all")
 const searchWord = ref("")
+const searchSelectDeptcd = ref("")
 const userList = ref([])
 const visibleUpdateModal = ref(false)
 const updateFlag = ref(true)
@@ -161,8 +162,9 @@ const activeTab = ref(0);
 // 
 onMounted(() => {
   eventStore.on('deptSelected', (dept) => {
-    searchType.value = 'dept_cd';
-    searchWord.value = dept.dept_cd;
+    // searchType.value = 'dept_cd';
+    // searchWord.value = dept.dept_cd;
+    searchSelectDeptcd.value = dept.dept_cd;
 
     getUser();
   });
@@ -186,7 +188,7 @@ const changeTab = (index: number) => {
 const getUser = async (offset = 1) =>{
   let userType = activeTab.value === 0 ? 0 : 2;
   try {
-    await $ofetch(`/api/admin/manager/user/list?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchType.value}&searchWord=${searchWord.value}&userType=${userType}`)
+    await $ofetch(`/api/admin/manager/user/list?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchType.value}&searchWord=${searchWord.value}&userType=${userType}&searchSelectDeptcd=${searchSelectDeptcd.value}`)
     .then((res) => {
       if (res && !res.errorMessage) {
         pagingObj.value = {

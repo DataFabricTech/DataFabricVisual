@@ -71,6 +71,8 @@ const onClick = (item) => {
   } else {
     eventStore.emit('deptSelected', {dept_cd: ''});
   }
+
+  emit("onClickMenuItem", item);
 };
 
 // 
