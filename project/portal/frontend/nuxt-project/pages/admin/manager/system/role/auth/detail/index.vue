@@ -66,7 +66,7 @@
                   </colgroup>
                   <tbody>
                     <tr>
-                      <th scope="row">권한 종류</th>
+                      <th scope="row">권한 종류<strong class="required">필수</strong></th>
                       <td>
                         <div class="mu-item-group">
                           <div class="mu-radio">
@@ -82,6 +82,7 @@
                             <label for="isDownload"><span>Data Download</span></label>
                           </div>
                         </div>
+                        <p v-if="!role_auth_valid" class="complete-msg error" style="white-space: pre-line;">권한 종류를 선택해 주세요.</p>
                       </td>
                     </tr>
                     <tr>
@@ -306,7 +307,7 @@
               <div class="board-list-search">
                 <form action="">
                   <fieldset>
-                    <legend>데이터 검색색</legend>
+                    <legend>데이터 검색</legend>
                     <div class="inner-search">
                       <div class="mu-selectbox w160">
                         <select v-model="metaSearchType" :disabled="roleId === ''">
@@ -583,6 +584,13 @@
       return false;
     } else {
       return roleDetailInfo.value.role_name.length > 0;
+    }
+  });
+  const role_auth_valid: ComputedRef<boolean> = computed(() => {
+    if (!roleDetailInfo.value.role_auth) {
+      return false;
+    } else {
+      return roleDetailInfo.value.role_auth.length > 0;
     }
   });
 
@@ -986,7 +994,8 @@
 
     if ( !role_id_valid.value
         || !role_type_valid.value
-        || !role_name_valid.value) {
+        || !role_name_valid.value
+        || !role_auth_valid.value) {
       return;
     }
     
