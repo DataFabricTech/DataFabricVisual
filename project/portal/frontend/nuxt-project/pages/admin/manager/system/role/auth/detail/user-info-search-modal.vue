@@ -203,7 +203,7 @@ const onClickMenuItem = async (item: any = null) => {
 const getUser = async (offset = 1) =>{
   let userType = 0;
   try {
-    await $ofetch(`/api/admin/manager/user/list?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchType.value}&searchWord=${searchWord.value}&userType=${userType}`)
+    await $ofetch(`/api/admin/manager/user/list?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchType.value}&searchWord=${searchWord.value}&userType=${userType}&searchSelectDeptcd=`)
     .then((res) => {
       if (res && !res.errorMessage) {
         pagingObj.value = {

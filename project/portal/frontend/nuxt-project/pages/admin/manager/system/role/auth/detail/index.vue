@@ -550,7 +550,7 @@
   onMounted(() => {
     roleId.value = route.query.roleId;
     roleType.value = route.query.roleType;
-    roleDetailInfo.value = {role_id: roleId.value, role_type: roleType.value};
+    roleDetailInfo.value = {role_id: roleId.value, role_type: roleType.value, role_auth:""};
     updateFlag.value = route.query.updateFlag;
 
     initSearch(roleId.value);
@@ -587,10 +587,10 @@
     }
   });
   const role_auth_valid: ComputedRef<boolean> = computed(() => {
-    if (!roleDetailInfo.value.role_auth) {
+    if (!String(roleDetailInfo.value.role_auth)) {
       return false;
     } else {
-      return roleDetailInfo.value.role_auth.length > 0;
+      return String(roleDetailInfo.value.role_auth).length > 0;
     }
   });
 
