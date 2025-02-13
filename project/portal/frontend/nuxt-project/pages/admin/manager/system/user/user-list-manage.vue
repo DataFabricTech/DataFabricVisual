@@ -211,6 +211,7 @@ const onClickUserUpdateButton = async (user_id, flag) => {
     const userListIndex = userList.value.findIndex(v => v.user_id == user_id)
     modalParam.value = {
       userObject : {...userList.value[userListIndex]},
+      roleType : 0,
     }
     updateFlag.value = flag;
     visibleUpdateModal.value = !visibleUpdateModal.value;

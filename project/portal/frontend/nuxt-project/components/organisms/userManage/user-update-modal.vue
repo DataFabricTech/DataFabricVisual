@@ -105,6 +105,11 @@ const reg_userid_valid: ComputedRef<boolean> = computed(() => {
 onMounted(() => getRoleList());
 
 // 
+watch(() => props.visibleUpdateModal, (newVal) => {
+  getRoleList();
+})
+
+// 
 const close = () => {
   emit('update:visibleUpdateModal', false)
 }
@@ -142,8 +147,11 @@ const getRoleList = async () => {
   await $ofetch(`/api/roleList?role_type=`)
       .then((res) => {
         if (res && !res.errorMessage) {
-          // selectRoleList.value = res.data.filter(role => role.role_type === 0);
-          selectRoleList.value = res.data;
+          if(props.modalParam.roleType === 0){
+            selectRoleList.value = res.data.filter(role => role.role_type === 0);
+          } else {
+            selectRoleList.value = res.data;
+          }
         }
       })
       .catch((err) => {
