@@ -145,6 +145,7 @@ const pagingObj = ref<PagingObj>({
 });
 const searchType = ref("all")
 const searchWord = ref("")
+const searchSelectDeptcd = ref("")
 const userList = ref([])
 const checkedList = ref<Array<number>>([]);
 
@@ -157,19 +158,11 @@ interface SearchObj {
 
 // 
 onMounted(() => {
-  eventStore.on('deptSelected', (dept) => {
-    searchType.value = 'dept_cd';
-    searchWord.value = dept.dept_cd;
-
-    getUser();
-  });
-
   getUser();
 })
 
 // 
 onUnmounted(() => {
-  eventStore.off('deptSelected');
 });
 
 //
@@ -194,8 +187,10 @@ const onClear = () => {
 
 // 
 const onClickMenuItem = async (item: any = null) => {
-  if (!item) {
-  } else {
+  if (item) {
+    searchSelectDeptcd.value = item.id;
+
+    getUser();
   }
 };
 
@@ -203,7 +198,7 @@ const onClickMenuItem = async (item: any = null) => {
 const getUser = async (offset = 1) =>{
   let userType = 0;
   try {
-    await $ofetch(`/api/admin/manager/user/list?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchType.value}&searchWord=${searchWord.value}&userType=${userType}&searchSelectDeptcd=`)
+    await $ofetch(`/api/admin/manager/user/list?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchType.value}&searchWord=${searchWord.value}&userType=${userType}&searchSelectDeptcd=${searchSelectDeptcd.value}`)
     .then((res) => {
       if (res && !res.errorMessage) {
         pagingObj.value = {
