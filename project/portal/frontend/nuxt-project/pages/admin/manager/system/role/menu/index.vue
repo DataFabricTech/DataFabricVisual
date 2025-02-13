@@ -51,7 +51,7 @@
                     </th>
                   </tr>
                   <tr>
-                    <th v-for="(header, index) in tableHeaders[1]" :key="index"  :style="{ backgroundColor: header.menu_id.startsWith('A') ? '#86848A' : '#f6f6f9' }">
+                    <th v-for="(header, index) in tableHeaders[1]" :key="index" :style="{ backgroundColor: header.menu_id.startsWith('A') ? '#86848A' : '#f6f6f9' }">
                       <span :style="{ color: header.menu_id.startsWith('A') ? 'white' : 'black' }">{{ header.menu_name }}</span>
                     </th>
                   </tr>
@@ -99,11 +99,22 @@
               </thead>
               <tbody>
                 <tr v-for="(menu, menuIndex) in tableHeaders[1]" :key="menuIndex">
-                  <td v-if="menuIndex == 0 || menuIndex == systemRoleGubun[0].collength" :rowspan="menuIndex == 0 ? systemRoleGubun[0].collength : (menuIndex == systemRoleGubun[0].collength ? systemRoleGubun[1].collength : 1)"lass="sticky-column">{{ systemRoleGubun[0].collength > menuIndex ? systemRoleGubun[0].title : systemRoleGubun[1].title }}</td>
-                  <td v-if="tableHeaders[0] && tableHeaders[0].some(item => item.index === menuIndex)" :rowspan="tableHeaders[0].find(item => item.index === menuIndex)?.colspan || 0"  class="sticky-column">
+                  <td v-if="menuIndex == 0 || menuIndex == systemRoleGubun[0].collength" 
+                      :rowspan="menuIndex == 0 ? systemRoleGubun[0].collength : (menuIndex == systemRoleGubun[0].collength ? systemRoleGubun[1].collength : 1)"
+                      class="sticky-column"
+                      :style="{ backgroundColor: systemRoleGubun[0].collength > menuIndex ? '#ffffff' : '#86848A', 'font-weight': 'bold' }"
+                      >
+                      {{ systemRoleGubun[0].collength > menuIndex ? systemRoleGubun[0].title : systemRoleGubun[1].title }}
+                  </td>
+                  <td v-if="tableHeaders[0] && tableHeaders[0].some(item => item.index === menuIndex)" 
+                      :rowspan="tableHeaders[0].find(item => item.index === menuIndex)?.colspan || 0" 
+                      class="sticky-column"
+                      :style="{ backgroundColor: tableHeaders[0].find(item => item.index === menuIndex)?.menu_id.startsWith('A') ? '#86848A' : '#ffffff'
+                            , 'font-weight': 'bold' }"
+                      >
                     {{ tableHeaders[0].find(item => item.index === menuIndex)?.menu_name }}
                   </td>
-                  <td class="sticky-column">
+                  <td class="sticky-column" :style="{ backgroundColor: menu.menu_id.startsWith('A') ? '#86848A' : '#ffffff', 'font-weight': 'bold' }">
                     {{ menu.menu_name }}
                   </td>
                   <td v-for="(item, itemIndex) in roleTypeList" :key="itemIndex">
@@ -124,8 +135,6 @@
             </table>
           </div>
         </div>
-
-
 
       </div>
       <div class="mu-button-wrap">
@@ -233,8 +242,6 @@ const onMenuDataLoad = async () => {
     });
 
     tableHeaders.value = [headers, childHeaders];
-
-    console.log('tableHeaders.value', tableHeaders.value);
 
     if(result.data[1] && result.data[1].roleTypeList) {
       roleTypeList.value = result.data[1].roleTypeList;
