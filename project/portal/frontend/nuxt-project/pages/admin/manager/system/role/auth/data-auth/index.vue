@@ -23,7 +23,7 @@
                                 <fieldset>
                                 <legend>사용자 검색</legend>
                                 <div class="inner-search">
-                                    <div class="mu-selectbox w120">
+                                    <div class="mu-selectbox w120" v-show="false">
                                         <select v-model="searchType1" value="all">
                                             <option value="all">전체</option>
                                             <option value="database">database</option>
@@ -37,7 +37,7 @@
                                             <option value="all">전체</option>
                                             <option value="description">데이터 설명</option>
                                             <option value="meta_name">데이터명</option>
-                                            <option value="owner">소유자</option>
+                                            <option value="system_name">시스템 명</option>
                                         </select>
                                     </div>
                                     <div class="mu-input-icon">
