@@ -93,13 +93,23 @@
               <th scope="row">상위카테고리</th>
               <td>
                 <!-- 카테고리 수정 모달일 경우 안보이게 처리 -->
-                <auto-select
+                <!-- <auto-select
                   :value="selectValue"
                   :placeholder="placeholder"
                   :options="upperCategories"
                   :disabled="props.manageModal.type === 'update'"
                   @setData="onChangeUpperCategory"
-                />
+                /> -->
+                {{ upperCategory && upperCategory.description ? upperCategory.description + '(' + upperCategory.value + ')' : "없음" }}
+                <i v-if="upperCategory && upperCategory.value" class="mu-icon-svg del" @click="deleteUpperCategory"></i><span></span>
+                <button
+                  type="button"
+                  class="mu-btn mu-btn-primary"
+                  @click="openSelectCategoryModal"
+                  style="margin-left:10px"
+                >
+                  <i class="mu-icon-svg search"></i><span>찾아보기</span>
+                </button>
               </td>
             </tr>
           </tbody>
@@ -135,10 +145,12 @@
       </div>
     </div>
 
-    <select-dept-modal
-      :toggle-dept-modal="toggleDeptModal"
-      @onSelect="onSelectDept"
-      @onCloseModal="onToggleDeptModal"
+    <select-category-modal
+      v-if="toggleSelectCategoryModal"
+      :upperCategory="upperCategory"
+      :toggle-select-category-modal="toggleSelectCategoryModal"
+      @onSelect="onSelectCategory"
+      @onCloseModal="onClickCategoryInfoSearchCloseButton"
     />
   </div>
 </template>
@@ -147,16 +159,18 @@
 import ObjectUtils from "@utils/ObjectUtils";
 
 import AutoSelect from "@functional/autoSelect/auto-select";
-import selectDeptModal from "@functional/dept/select-department-modal";
 import { errorAlert } from "@functional/alert/alert-default";
 import { useCategoryStore } from "@store/category";
 import { useNuxtApp } from "nuxt/app";
 import { computed, ref } from "vue";
 import { isEmpties } from "@composables/ramda";
+import selectCategoryModal from "@functional/classificationModal/select-classification-modal";
+import { useCategoryTreeStore } from "@store/categoryTree";
 
 const { $ofetch } = useNuxtApp();
 
 const categoryStore = useCategoryStore();
+const categoryTreeStore = useCategoryTreeStore();
 const emit = defineEmits(["onCloseModal", "onSubmit"]);
 const props = defineProps(["manageModal", "onCloseModal", "onSubmit"]);
 
@@ -169,13 +183,10 @@ const enName = ref(""); // 카테고리명(영문. name)
 const upperCategory = ref({
   description: "",
   value: "",
-  level: ""
+  level: "",
+  parent_id: "",
+  id: "",
 }); // 상위 카테고리
-const upperCategory2 = ref({
-  description: "",
-  value: "",
-  level: ""
-}); // 2는 데이터 레이크 담당부서
 const originalUpperCategory = ref(""); // 수정전 상위 카테고리
 const selectedDept = ref({}); // 담당부서정보
 const originalDeptCd = ref(""); // 수정전 담당부서 코드
@@ -186,7 +197,7 @@ const mappingCategory = ref({
   id: ""
 }); // 매핑 카테고리, 카테고리 매핑 모달일 경우 사용
 const categoryImageFile = ref("");
-const toggleDeptModal = ref(false);
+const toggleSelectCategoryModal = ref(false); // 상위카테고리 선택 모달
 
 const modalTypeText = computed(() => {
   const TYPE_MAP = new Map([
@@ -351,7 +362,9 @@ watch(
               upperCategory.value = {
                 description: superItem.description,
                 value: superItem.name,
-                level: parseInt(res)
+                level: parseInt(res),
+                parent_id: superItem.parent_id,
+                id: superItem.id,
               };
             }
           });
@@ -376,7 +389,9 @@ watch(
             upperCategory.value = {
               description: superItem.description,
               value: superItem.name,
-              level: parseInt(res)
+              level: parseInt(res),
+              parent_id: superItem.parent_id,
+              id: superItem.id
             };
           }
         });
@@ -461,11 +476,6 @@ const onChangeMappingCategory = (option) => {
   mappingCategory.value = option;
 };
 
-// 상위 카테고리 변경 이벤트 핸들러
-const onChangeUpperCategory = (option) => {
-  upperCategory.value = option;
-};
-
 // 카테고리 매핑 시 필요한 파라미터 가공
 const createMappingParams = () => {
   const categoryMap = categoryStore._categoryMap
@@ -527,10 +537,9 @@ const onConfirm = async () => {
     let level = 1; // <table> 테이블 내 저장할 메뉴 depth
     let superTypeName = ""; // 상위 카테고리명
     let superTypeId = ""; // 상위 카테고리 아이디
-    if (upperCategory.value.value) {
+    if (upperCategory.value && upperCategory.value.value) {
       // 상위 카테고리 선택한 경우
       const superType = categoryStore.getOriginalList.find((el) => el.name === upperCategory.value.value);
-
       // 상위 카테고리 변경 시
       isEdited.value = false;
 
@@ -584,7 +593,6 @@ const onClear = () => {
   enName.value = "";
   upperCategory.value = { description: "", value: "", level: "" };
   originalUpperCategory.value = "";
-  upperCategory2.value = { description: "", value: "", level: "" };
   selectedDept.value = {};
   originalDeptCd.value = "";
   // selectedDept2.value = {};
@@ -593,26 +601,6 @@ const onClear = () => {
   mappingCategory.value = { description: "", value: "", id: "" };
   categoryImageFile.value = "";
 };
-
-// 담당부서 선택 모달 토글 제어
-const onToggleDeptModal = () => {
-  if (toggleDeptModal.value) {
-    toggleDeptModal.value = false;
-    // this.$modal.hide("dept-modal1");
-  } else {
-    toggleDeptModal.value = true;
-    // this.$modal.show("dept-modal1");
-  }
-};
-
-// 담당부서 선택 이벤트 핸들러
-const onSelectDept = (info) => {
-  selectedDept.value = info;
-};
-
-// const onSelectDept2 = (info) => {
-//   selectedDept2.value = info;
-// };
 
 // 카테고리 이미지 파일 업로드
 const fileUpload = (e) => {
@@ -643,6 +631,46 @@ const fileUpload = (e) => {
     }
   });
 };
+
+// 상위 카테고리 검색 모달
+const onSelectCategory = (info) => {
+  if (info) {
+    upperCategory.value = {
+      description: info.description,
+      value: info.value,
+      level: info.level,
+      parent_id: info.parent_id,
+      id: info.id
+    }
+  }
+}
+
+// 상위 카테고리 찾아보기 버튼 클릭
+const openSelectCategoryModal = () => {
+  toggleSelectCategoryModal.value = !toggleSelectCategoryModal.value
+}
+
+// 상위 카테고리 닫기 버튼 클릭
+const onClickCategoryInfoSearchCloseButton = (param) => {
+  try {
+    toggleSelectCategoryModal.value = !toggleSelectCategoryModal.value;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+const deleteUpperCategory = () => {
+  upperCategory.value = {
+    description: "",
+    value: "",
+    level: "",
+    parent_id: "",
+    id: "",
+  }
+  categoryTreeStore.setSelectedItemId("");
+  categoryTreeStore.setToggleTargetOnClick("")
+  categoryTreeStore.collapseAll()
+}
 
 defineExpose({
   onClose

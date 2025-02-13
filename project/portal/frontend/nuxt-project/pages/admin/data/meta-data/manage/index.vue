@@ -211,6 +211,7 @@
 <script setup lang="ts">
 import { useUserStore } from "@store/user.ts";
 import { useCategoryStore } from "@store/category.ts";
+import { useCategoryTreeStore } from "@store/categoryTree.ts";
 import { useEventStore } from "@store/event.ts";
 import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
 import ClassificationInfo from "@organisms/metaDataManage/classification-info";
@@ -251,6 +252,7 @@ const fromPath = userStore.getFromPath;
 const params = userStore.getParams;
 
 const categoryStore = useCategoryStore();
+const categoryTreeStore = useCategoryTreeStore();
 const getOriginalList = categoryStore.getOriginalList;
 const selectedId = categoryStore.getSelectedItemId;
 
@@ -454,6 +456,7 @@ const authModalObj = ref<AuthModalObj>({
 const refManageRoleMappingModal = ref<any>(null); // 공개설정 모달 ref
 
 await categoryStore.fetchCategories();
+await categoryTreeStore.fetchCategories()
 const { _categoryMap } = storeToRefs(categoryStore);
 
 onMounted(() => {
