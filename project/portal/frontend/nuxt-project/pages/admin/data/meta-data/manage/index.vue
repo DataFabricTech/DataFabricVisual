@@ -539,6 +539,10 @@ const setSelectedItemId = (guid: string) => {
   categoryStore.setSelectedItemId(guid);
 };
 
+const setToggleTargetOnClick = (value) => {
+  categoryStore.setToggleTargetOnClick(value);
+}
+
 const setParams = (params: any) => {
   userStore.setParams(params);
 };
@@ -642,18 +646,33 @@ const onClickCategoryOrderChange = async () => {
   visible.value = !visible.value;
 };
 
+// 좌측 상위메뉴 펼치기 처리
+const toggleParents = (matched) => {
+  if (matched) {
+    const parent_matched = categoryStore.getOriginalList.find((el) => {
+      return el.id === matched.parent_id
+    })
+    if (parent_matched) {
+      categoryStore.getToggleTargets.value[parent_matched.id] = true
+      toggleParents(parent_matched)
+    }
+  }
+}
+
 const onSearchCategories = async (item: { name?: string } = {}) => {
   // 선택된 카테고리의 name 추출
   const { name = null } = item;
 
   // 카테고리 목록 조회
-  const list = await fetchCategories({ from: "metaDataManage" });
+  await fetchCategories({ from: "metaDataManage" });
+  await categoryTreeStore.fetchCategories()
 
   // 실제 조회된 카테고리와 store에 저장된 선택 카테고리가 상이할 경우 발생, 일치하도록 조정
   if (name) {
-    const matched = list.find((el) => el.name === name);
+    const matched = categoryStore.getOriginalList.find((el) => el.name === name);
     if (matched && matched.id !== selectedId.value) {
       setSelectedItemId(matched.id);
+      toggleParents(matched)
       selectedCategory.value.ord_no = matched.ord_no
     }
   } else {

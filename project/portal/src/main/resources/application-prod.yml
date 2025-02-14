@@ -36,8 +36,8 @@ spring:
       maximumPoolSize: 3
       connection-test-query: select
   mail:
-    host: <INTERNAL_HOST>
-    port: 25
+    host: mail.mobigen.com
+    port: 2526
     properties:
       mail:
         debug: true

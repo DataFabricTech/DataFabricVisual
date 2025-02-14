@@ -153,6 +153,27 @@ export const useCategoryTreeStore = defineStore("categoryTreeStore", () => {
     });
   };
 
+  const sortDataByOrdNo = (data) => {
+    // 재귀적으로 정렬하는 함수
+    const sortRecursive = (items) => {
+        if (!items || items.length === 0) return items;
+
+        // 현재 배열을 ord_no 기준으로 오름차순 정렬
+        items.sort((a, b) => a.ord_no - b.ord_no);
+
+        // 하위 subTypes도 정렬
+        items.forEach(item => {
+            if (item.subTypes && item.subTypes.length > 0) {
+                item.subTypes = sortRecursive(item.subTypes);
+            }
+        });
+
+        return items;
+    }
+
+    return sortRecursive(data);
+  }
+
   // 카테고리 데이터를 트리 구조로 변환
   const buildCategoryTree = (totalList) => {
     let categoryMap: { [key: string]: any } = {};
@@ -186,6 +207,7 @@ export const useCategoryTreeStore = defineStore("categoryTreeStore", () => {
     });
 
     _categoryMap.value = $R.clone(categoryMap);
+    sortDataByOrdNo(rootCategories)
 
     return rootCategories;
   };
