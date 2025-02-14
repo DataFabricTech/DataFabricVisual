@@ -112,6 +112,20 @@
                 </button>
               </td>
             </tr>
+            <tr>
+              <th scope="row">Ord no</th>
+              <td>
+                <input
+                  type="number"
+                  placeholder="카테고리 순서"
+                  class="mu-input"
+                  title="Ord no"
+                  name="ordNo"
+                  maxlength="1000"
+                  v-model="categoryOrdNo"
+                />
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>
@@ -188,6 +202,7 @@ const upperCategory = ref({
   id: "",
 }); // 상위 카테고리
 const originalUpperCategory = ref(""); // 수정전 상위 카테고리
+const categoryOrdNo = ref(0);
 const selectedDept = ref({}); // 담당부서정보
 const originalDeptCd = ref(""); // 수정전 담당부서 코드
 const isEdited = ref(false); // 카테고리 수정 모달에서 항목 수정 여부 판별 flag
@@ -337,7 +352,9 @@ watch(
         const description = ObjectUtils.getPropertyValue(newVal, "target/description", "");
         const name = ObjectUtils.getPropertyValue(newVal, "target/name", "");
         const localCategoryImageFileId = ObjectUtils.getPropertyValue(newVal, "target/file_id", "");
+        const ordNo = ObjectUtils.getPropertyValue(newVal, "target/ord_no", 0);
 
+        categoryOrdNo.value = ordNo
         krName.value = description;
         originalKrName.value = description;
         enName.value = name;
@@ -555,6 +572,7 @@ const onConfirm = async () => {
       level: `${level}`,
       name: enName.value,
       description: krName.value,
+      ord_no: categoryOrdNo.value,
       superTypeName: superTypeName,
       superTypeId: isEmpties(superTypeId) ? null : superTypeId,
       categoryImageFileId: categoryImageFileId.value !== "" ? categoryImageFileId.value : null
@@ -576,6 +594,7 @@ const onUpdate = async () => {
     id: target.id,
     level: target.level,
     description: krName.value,
+    ord_no: categoryOrdNo.value,
     categoryImageFileId: categoryImageFileId.value !== "" ? categoryImageFileId.value : null
   };
 
@@ -592,6 +611,7 @@ const onClear = () => {
   originalKrName.value = "";
   enName.value = "";
   upperCategory.value = { description: "", value: "", level: "" };
+  categoryOrdNo.value = 0
   originalUpperCategory.value = "";
   selectedDept.value = {};
   originalDeptCd.value = "";

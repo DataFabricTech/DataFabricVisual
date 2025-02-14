@@ -652,8 +652,9 @@ const onSearchCategories = async (item: { name?: string } = {}) => {
   // 실제 조회된 카테고리와 store에 저장된 선택 카테고리가 상이할 경우 발생, 일치하도록 조정
   if (name) {
     const matched = list.find((el) => el.name === name);
-    if (matched && matched.guid !== selectedId.value) {
-      setSelectedItemId(matched.guid);
+    if (matched && matched.id !== selectedId.value) {
+      setSelectedItemId(matched.id);
+      selectedCategory.value.ord_no = matched.ord_no
     }
   } else {
     // 전체 카테고리 데이터 조회 시
@@ -832,15 +833,15 @@ const onSubmitCategory = async (params: any) => {
         await $ofetch(`/api/metadata/classification`, {
           method: "PUT",
           body: params
-        }).then((res) => {
+        }).then(async (res) => {
           const resData = res.data || {};
           if (!resData || resData.isFailed) {
             const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
             errorAlert(msg);
           } else {
             // 카테고리 수정 성공 시
-            onSearchDept(selectedCategory.value); // 기존 선택 카테고리 담당부서 정보 재조회
-            onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
+            await onSearchDept(selectedCategory.value); // 기존 선택 카테고리 담당부서 정보 재조회
+            await onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
           }
         });
       } catch (error) {
