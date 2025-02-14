@@ -10,32 +10,38 @@
       <div class="search-input search-input-lg w-96">
         <label class="hidden-text" for="text-input-example-4">label</label>
         <input
-          id="text-input-example-4"
-          class="text-input"
-          placeholder="이름으로 검색하세요."
-          v-model="keyword"
+            id="text-input-example-4"
+            class="text-input"
+            placeholder="이름으로 검색하세요."
+            v-model="keyword"
         />
         <svg-icon class="text-input-icon" name="search"></svg-icon>
         <button
-          class="search-input-action-button button button-neutral-ghost button-sm"
-          type="button"
-          @click="clearInput"
+            class="search-input-action-button button button-neutral-ghost button-sm"
+            type="button"
+            @click="clearInput"
         >
           <span class="hidden-text">지우기</span>
           <svg-icon class="button-icon" name="close"></svg-icon>
         </button>
       </div>
-      <div class="profiling">
+      <div v-if="filteredProfileList.length === 0" class="profiling no-result">
+        <div class="notification">
+          <svg-icon class="notification-icon" name="info"></svg-icon>
+          <p class="notification-detail">검색 결과가 없습니다.</p>
+        </div>
+      </div>
+      <div v-else class="profiling">
         <agGrid
-          class="ag-theme-alpine ag-theme-quartz"
-          :columnDefs="COLUMN_DEFS"
-          :rowData="profileList"
-          rowId="id"
-          :column-width-list="[100, 100, 100, 100, 100, 100]"
-          :setColumnFit="true"
-          :useColumnResize="true"
-          :quickFilterText="keyword"
-          :column-render="$constants.COMMON.DATA_PROFILE_RENDER"
+            class="ag-theme-alpine ag-theme-quartz"
+            :columnDefs="COLUMN_DEFS"
+            :rowData="profileList"
+            rowId="id"
+            :column-width-list="[100, 100, 100, 100, 100, 100]"
+            :setColumnFit="true"
+            :useColumnResize="true"
+            :quickFilterText="keyword"
+            :column-render="$constants.COMMON.DATA_PROFILE_RENDER"
         >
         </agGrid>
       </div>
@@ -58,6 +64,14 @@ const keyword = ref("");
 const clearInput = (): void => {
   keyword.value = "";
 };
+
+// 검색어를 기준으로 필터링된 리스트 생성
+const filteredProfileList = computed(() => {
+  if (!keyword.value.trim()) return profileList.value;
+  return profileList.value.filter((profile) =>
+      profile.name.toLowerCase().includes(keyword.value.toLowerCase())
+  );
+});
 
 const COLUMN_DEFS: ColDef[] = $constants.COMMON.DATA_PROFILE_COLUMN;
 </script>
