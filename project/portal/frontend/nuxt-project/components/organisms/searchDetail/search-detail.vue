@@ -1062,9 +1062,11 @@ const searchTagList = async (offset = 1) =>{
 
 // 사용자의 role
 const getUserDataAuth = async () => {
+  const url = userStore.getTab.currentPath
+  const cleanUrl = url.split("?")[0]
   let params = {
     meta_id: route.query.guid,
-    menu_path: userStore.getTab.currentPath,
+    menu_path: cleanUrl,
     is_admin: props.isAdmin
   }
   await $ofetch(`/api/search/detail/getUserDataAuth`, {
