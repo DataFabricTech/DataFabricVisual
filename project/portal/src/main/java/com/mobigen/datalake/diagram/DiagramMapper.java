@@ -31,4 +31,6 @@ public interface DiagramMapper {
     List<String> getDbList() throws Exception;
     List<Map<String, Object>> getMetaDataList(Map<String, Object> params) throws Exception;
     int getMetaDataListTotal(Map<String, Object> params) throws Exception;
+    int deleteNodeLinks(List<Map<String, Object>> deleteLinks) throws Exception;
+    int deleteNodeInfos(List<Map<String, Object>> deleteInfos) throws Exception;
 }

@@ -559,13 +559,31 @@ const onClickConfirm = async () => {
       }
 
       if (deletedLinks.length > 0) {
-        await Promise.all(
-          deletedLinks.map((link) =>
-            $ofetch(`/api/node/${link.link_id}`, {
-              method: "DELETE",
-            })
-          )
-        );
+        const filteredTooltips = deletedLinks
+            .map(item => item.tooltip) // tooltip객체만 저장
+            .filter(tooltip => tooltip.node_type === 1); // node_type이 1인 것만 필터링
+
+        const params = {
+          deletedLinks: deletedLinks,
+          deleteInfos: filteredTooltips
+        }
+
+        await $ofetch('/api/node/deleteNodeLinks', {
+          method: "POST",
+          body: params
+        }).then((res) => {
+          console.log(res)
+        }).catch((err) => {
+          console.log(err)
+        })
+
+        // await Promise.all(
+        //   deletedLinks.map((link) =>
+        //     $ofetch(`/api/node/${link.link_id}`, {
+        //       method: "DELETE",
+        //     })
+        //   )
+        // );
       }
 
       if (insertedLinks.length > 0) {

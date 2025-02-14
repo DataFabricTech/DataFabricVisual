@@ -163,6 +163,14 @@
                                 <dt>DB 종류</dt>
                                 <dd>{{ node.system_type ? node.system_type : "-" }}</dd>
                               </dl>
+                              <dl>
+                                <dt>시스템 ID</dt>
+                                <dd>{{ node.system_id ? node.system_id : "-" }}</dd>
+                              </dl>
+                              <dl>
+                                <dt>시스템 명</dt>
+                                <dd>{{ node.system_name ? node.system_name : "-" }}</dd>
+                              </dl>
                             </div>
                           </div>
                         </div>
@@ -202,8 +210,11 @@
                       @input="resetCheckDuplicate"
                       class="mu-input"
                     />
-                    <button type="button" class="mu-btn" @click="searchSameThing()">
+                    <button v-if="add_node_id && add_node_id.length > 0" type="button" class="mu-btn" @click="searchSameThing()">
                       <span>중복확인</span>
+                    </button>
+                    <button v-else type="button" class="mu-btn" @click="createNewSystemId()">
+                      <span>ID 생성</span>
                     </button>
                   </div>
                   <p v-if="isDuplicate" class="complete-msg error">
@@ -329,6 +340,7 @@ import ObjectUtils from "@/utils/ObjectUtils";
 import pagination from "@functional/pagination/pagination.vue";
 import { onBeforeMount, onMounted, onUnmounted, ref, computed } from 'vue';
 import { useNuxtApp } from "nuxt/app";
+import { v4 as uuidv4 } from 'uuid';
 
 // 페이징
 const pagingObj = ref({
@@ -605,6 +617,11 @@ const handleScroll = () => {
 const onClickPage = (page) => {
   const goPage = typeof page === 'number' ? page : 1
   searchNode(goPage - 1)
+}
+
+// 시스템 ID 신규생성
+const createNewSystemId = () => {
+  add_node_id.value = uuidv4()
 }
 
 defineExpose({

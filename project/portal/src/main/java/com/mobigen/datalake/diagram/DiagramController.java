@@ -145,6 +145,18 @@ public class DiagramController {
     }
 
     /**
+     * 데이터 흐름 항목 삭제
+     *
+     * @param deletedLinks
+     * @return 삭제 실행 결과
+     */
+    @PostMapping("/node/deleteNodeLinks")
+    @ResponseBody
+    public Object deleteNodeLinks(@RequestBody Map<String, Object> params) throws Exception {       
+        return diagramService.deleteNodeLinks(params);
+    }
+
+    /**
      * @param params 수정 대상 node link 목록
      * @return
      */

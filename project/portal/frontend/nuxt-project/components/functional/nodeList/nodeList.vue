@@ -130,6 +130,16 @@
                         <dd v-else-if="node.tooltip && node.tooltip.system_type">{{ node.tooltip.system_type }}</dd>
                         <dd v-else>-</dd>
                       </dl>
+                      <dl>
+                        <dt>시스템 ID</dt>
+                        <dd v-if="node && node.system_id">{{ node.system_id }}</dd>
+                        <dd v-else>-</dd>
+                      </dl>
+                      <dl>
+                        <dt>시스템 명</dt>
+                        <dd v-if="node && node.system_name">{{ node.system_name }}</dd>
+                        <dd v-else>-</dd>
+                      </dl>
                     </div>
                   </div>
                 </div>

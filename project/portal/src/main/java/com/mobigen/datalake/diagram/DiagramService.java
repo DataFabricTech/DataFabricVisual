@@ -4,6 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mobigen.framework.component.Messages;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -12,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class DiagramService {
@@ -171,6 +174,36 @@ public class DiagramService {
 
     public Object deleteNodeLink(Integer linkID)throws Exception {
         return diagramMapper.deleteNodeLink(linkID);
+    }    
+
+    public Object deleteNodeLinks(Map<String, Object> params)throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        int deleteNodeLinkCnt = 0;
+        int deleteNodeInfoCnt = 0;
+        try {
+            List deletedLinks = (List<Map<String, Object>>) params.get("deletedLinks");
+            if (deletedLinks != null && deletedLinks.size() > 0) {
+                deleteNodeLinkCnt = diagramMapper.deleteNodeLinks(deletedLinks);
+            }
+            
+            // 직접입력으로 생성했던 노드인 경우 info 정보도 삭제
+            List deleteInfos = (List<Map<String, Object>>) params.get("deleteInfos");
+
+            if (deleteInfos != null && deleteInfos.size() > 0) {
+                deleteNodeInfoCnt = diagramMapper.deleteNodeInfos(deleteInfos);
+            }
+
+            if (deleteNodeLinkCnt + deleteNodeInfoCnt > 1) {
+                result.put("result", true);
+            } else {
+                result.put("result", false);
+            }
+            
+        } catch (Exception e) {
+            log.error("리니지 노드 링크 삭제 실패");
+            result.put("result", false);
+        }
+        return result;
     }    
 
     public Boolean checkDuplicate(String data) {
