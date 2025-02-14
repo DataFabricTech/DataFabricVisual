@@ -55,11 +55,11 @@
                       <table class="mu-grid mu-grid-data">
                         <colgroup>
                           <col style="width: 120px" />
-                          <col style="width: 120px" />
+                          <col style="width: 110px" />
                           <col style="width: 150px" />
                           <col style="width: 170px" />
                           <col style="width: 110px" />
-                          <col style="width: 150px" />
+                          <col style="width: 160px" />
                           <col style="width: 240px" />
                         </colgroup>
                         <thead>
