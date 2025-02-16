@@ -61,15 +61,15 @@
               <tr>
                 <th scope="row">답변 내용 <strong class="required">필수</strong></th>
                 <td>
-                  <!-- <textarea
+                  <textarea
                     id="textarea02"
                     placeholder="답변내용을 입력하세요"
                     title="FAQ 답변내용 입력"
                     rows="10"
                     v-model="post.admin_reply"
                     v-bind:class="[!adminReplyValid ? 'error' : '', 'mu-area']"
-                  ></textarea> -->
-                  <ckeditor :editor="editor" v-model="post.admin_reply"></ckeditor>
+                  ></textarea>
+                  <!-- <ckeditor :editor="editor" v-model="post.admin_reply"></ckeditor> -->
                   <p v-if="!adminReplyValid" class="complete-msg error">
                     내용을 입력해주세요.
                   </p>
