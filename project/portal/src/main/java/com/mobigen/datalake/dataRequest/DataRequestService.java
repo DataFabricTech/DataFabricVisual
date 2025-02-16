@@ -646,20 +646,26 @@ public class DataRequestService {
 
         // 메일발송기능 활성화 여부
         if (activeSendMail) {
-            if( "Y".equals((String) answer.get("newFlag")) || "Y".equals((String) answer.get("lastFlag")) ) {
-                // 첫 답변이거나 마지막 답변인 경우 이메일 발송
-                Map writer = (Map) userMapper.getUserMaster((String) dataRequest.get("writer"));
-                String strUserEmail = (String) writer.get("user_email");
-                if (strUserEmail != null && !"".equals(strUserEmail)) {
-                    // String strUserEmailDecode = Crypto.AES_Decode(strUserEmail); // 인코딩 되어있는 경우
-                    String strUserEmailDecode = strUserEmail;
-                    if (strUserEmailDecode != null && !"".equals(strUserEmailDecode)) {
-                        params.put("writer_email", strUserEmailDecode);
-                        params.put("writer_user_nm", (String) writer.get("user_nm"));
-                        sendMailReply(params);
+            try {
+                if( "Y".equals((String) answer.get("newFlag")) || "Y".equals((String) answer.get("lastFlag")) ) {
+                    // 첫 답변이거나 마지막 답변인 경우 이메일 발송
+                    Map writer = (Map) userMapper.getUserMaster((String) dataRequest.get("writer"));
+                    String strUserEmail = (String) writer.get("user_email");
+                    if (strUserEmail != null && !"".equals(strUserEmail)) {
+                        // String strUserEmailDecode = Crypto.AES_Decode(strUserEmail); // 인코딩 되어있는 경우
+                        String strUserEmailDecode = strUserEmail;
+                        if (strUserEmailDecode != null && !"".equals(strUserEmailDecode)) {
+                            params.put("writer_email", strUserEmailDecode);
+                            params.put("writer_user_nm", (String) writer.get("user_nm"));
+                            sendMailReply(params);
+                        }
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("이메일 발송에 실패하였습니다.");
             }
+            
         }
 
         return result;

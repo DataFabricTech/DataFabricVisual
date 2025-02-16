@@ -65,10 +65,9 @@
                     <i v-if="item.file_cnt > 0" class="mu-icon-svg file">첨부파일 있음</i>
                     <i v-if="item.file_cnt === 0" >-</i>
                   </td>
-                  <td>{{ item.user_nm }}</td>
-                  <td>{{ item.create_date }}</td>
-                  <td v-if="item.finish_date">{{ item.finish_date }}</td>
-                  <td v-else="item.finish_date">-</td>
+                  <td>{{ item.user_nm ? item.user_nm : "-" }}</td>
+                  <td>{{ $yyyyMMdd(item.create_date) }}</td>
+                  <td>{{ $yyyyMMdd(item.finish_date) }}</td>
                   <td>
                     <em :class="getProcessStyle(item.process_status)" >{{ getProcessStatus(item.process_status) }}</em
                     ><!-- 신청apply – 검토중review – 진행중ing – 제공supply/미제공unsupply -->

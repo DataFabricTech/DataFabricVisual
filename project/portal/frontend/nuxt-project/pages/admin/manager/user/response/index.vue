@@ -81,7 +81,7 @@
                 <td>
                   <i v-if="item.file_cnt > 0" class="mu-icon-svg file">첨부파일 있음</i>
                 </td>
-                <td>{{ item.user_nm }}</td>
+                <td>{{ item.user_nm ? item.user_nm : "-" }}</td>
                 <td>{{ $yyyyMMdd(item.create_date) }}</td>
                 <td>{{ $yyyyMMdd(item.finish_date) }}</td>
                 <td>
