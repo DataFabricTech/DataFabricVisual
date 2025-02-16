@@ -53,11 +53,13 @@ public class DataRequestController {
     public Object getDataRequestList(@RequestParam("pageSize") int pageSize, 
                                      @RequestParam("pnum") int pnum,
                                      @RequestParam("searchType") String searchType,
-                                     @RequestParam("searchWord") String searchWord) throws Exception {
+                                     @RequestParam("searchWord") String searchWord,
+                                     @RequestParam("searchStatus") String searchStatus) throws Exception {
 
         Map<String, String> param = new HashMap<>();
         param.put("searchType", searchType);
         param.put("searchWord", searchWord);
+        param.put("searchStatus", searchStatus);
         param.put("limit", String.valueOf(pageSize));
         param.put("offset", String.valueOf(pageSize * (pnum - 1)));
 

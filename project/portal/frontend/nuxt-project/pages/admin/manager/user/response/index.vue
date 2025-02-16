@@ -12,7 +12,16 @@
             @searchMethod="getDataRequestList"
           />
 
-          <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getDataRequestList" />
+          <div class="mu-item-group">
+              <div class="mu-selectbox w120">
+                <select name="searchType3" :value="searchObj.searchStatus" @change="onChangeProcessStatus">
+                  <option v-for="(item, index) in processStatusfilterList" :key="index" :value="item.value">
+                    {{ item.desc }}
+                  </option>
+                </select>
+              </div>
+              <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getDataRequestList" />
+            </div>
         </div>
         <div class="board-list">
           <table class="mu-grid">
@@ -160,6 +169,12 @@ interface DataRequest {
 interface SearchObj {
   searchType: string;
   searchWord: string;
+  searchStatus: string;
+}
+
+interface FilterOption {
+  value: number | string; // 두번째 필터 조건
+  desc: string; // 검색어
 }
 
 onMounted(() => getDataRequestList());
@@ -197,13 +212,42 @@ const allChecked = ref<boolean>(false);
 const searchObj = ref<SearchObj>({
   searchType: "all", // 검색 조건 유형
   searchWord: "", // 검색어
+  searchStatus: "", // 진행상태 필터값값
 });
+
+// 데이터 요청 진행상태 필터목록
+const processStatusfilterList = ref<Array<FilterOption>>([
+  {
+    value: "",
+    desc: "전체"
+  },
+  {
+    value: 0,
+    desc: "신청"
+  },
+  {
+    value: 1,
+    desc: "검토중"
+  },
+  {
+    value: 2,
+    desc: "진행중"
+  },
+  {
+    value: 3,
+    desc: "제공"
+  },
+  {
+    value: 4,
+    desc: "미제공"
+  },
+])
 
 // 데이터요청 목록 조회
 const getDataRequestList = async (offset: number = 1): Promise<void> => {
   try {
     let { data: result } = await $ofetch(
-      `/api/dataRequest/list?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}`
+      `/api/dataRequest/list?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}&searchStatus=${searchObj.value.searchStatus}`
     );
     pagingObj.value = {
       ...pagingObj.value,
@@ -300,5 +344,11 @@ const onClickDeleteButton = async (): Promise<void> => {
     });
   }
 };
+
+// 진행상태 필터 변경 이벤트
+const onChangeProcessStatus = (e) => {
+  searchObj.value.searchStatus = e.target.value
+  getDataRequestList();
+}
 
 </script>

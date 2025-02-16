@@ -3,8 +3,6 @@
     <div>
       <!-- content-floating-wrap -->
       <request-content-floating-wrap />
-
-
       <div class="inner">
         <div class="board-list-wrap">
           <div class="board-list-toolbar">
@@ -23,8 +21,17 @@
               :searchObj.sync="searchObj"
               @searchMethod="getDataRequestList"
             />
-
-            <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getDataRequestList" />
+            <div class="mu-item-group">
+              <div class="mu-selectbox w120">
+                <select name="searchType3" :value="searchObj.searchStatus" @change="onChangeProcessStatus">
+                  <option v-for="(item, index) in processStatusfilterList" :key="index" :value="item.value">
+                    {{ item.desc }}
+                  </option>
+                </select>
+              </div>
+              <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getDataRequestList" />
+            </div>
+            
           </div>
           <div class="board-list">
             <table class="mu-grid">
@@ -129,6 +136,12 @@ interface DataRequest {
 interface SearchObj {
   searchType: string;
   searchWord: string;
+  searchStatus: string;
+}
+
+interface FilterOption {
+  value: number | string; // 두번째 필터 조건
+  desc: string; // 검색어
 }
 
 onMounted(() => getDataRequestList());
@@ -143,11 +156,39 @@ const pagingObj = ref<PagingObj>({
 
 const dataRequestList = ref<Array<DataRequest>>([]);
 const checkedList = ref<Array<number>>([]);
-const allChecked = ref<boolean>(false);
 const searchObj = ref<SearchObj>({
   searchType: "all", // 검색 조건 유형
   searchWord: "", // 검색어
+  searchStatus: "", // 진행상태 필터값값
 });
+
+// 데이터 요청 진행상태 필터목록
+const processStatusfilterList = ref<Array<FilterOption>>([
+  {
+    value: "",
+    desc: "전체"
+  },
+  {
+    value: 0,
+    desc: "신청"
+  },
+  {
+    value: 1,
+    desc: "검토중"
+  },
+  {
+    value: 2,
+    desc: "진행중"
+  },
+  {
+    value: 3,
+    desc: "제공"
+  },
+  {
+    value: 4,
+    desc: "미제공"
+  },
+])
 
 const getProcessStyle = (status) => {
   let className = 'step-process'
@@ -172,7 +213,7 @@ const getProcessStatus = (status) => {
 const getDataRequestList = async (offset: number = 1): Promise<void> => {
   try {
     let { data: result } = await $ofetch(
-      `/api/dataRequest/list?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}`
+      `/api/dataRequest/list?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}&searchStatus=${searchObj.value.searchStatus}`
     );
     pagingObj.value = {
       ...pagingObj.value,
@@ -183,42 +224,6 @@ const getDataRequestList = async (offset: number = 1): Promise<void> => {
     checkedList.value = [];
   } catch (error) {
     console.log(error);
-  }
-};
-
-// 전체선택 체크박스 클릭 이벤트
-const checkedAll = (checked: boolean): void => {
-  allChecked.value = checked;
-  for (let i in dataRequestList.value) {
-    dataRequestList.value[i].selected = allChecked.value;
-    if (allChecked.value) {
-      if (checkedList.value.findIndex((v) => v == dataRequestList.value[i].id) >= 0) continue;
-      checkedList.value.push(dataRequestList.value[i].id);
-    } else {
-      checkedList.value = [];
-    }
-  }
-};
-
-// 체크박스 클릭 이벤트
-const selected = (e: any): void => {
-  const selectedItem = dataRequestList.value.find((v) => v.id == e.target.value);
-  if (selectedItem.selected) {
-    checkedList.value.push(e.target.value);
-  } else {
-    checkedList.value.splice(
-      checkedList.value.findIndex((v) => v == e.target.value),
-      1
-    );
-  }
-
-  for (let i in dataRequestList.value) {
-    if (!dataRequestList.value[i].selected) {
-      allChecked.value = false;
-      return;
-    } else {
-      allChecked.value = true;
-    }
   }
 };
 
@@ -236,4 +241,10 @@ const onClickRegisterButton = (): void => {
 const onClickPage = (page: number): void => {
   getDataRequestList(page);
 };
+
+// 진행상태 필터 변경 이벤트
+const onChangeProcessStatus = (e) => {
+  searchObj.value.searchStatus = e.target.value
+  getDataRequestList();
+}
 </script>

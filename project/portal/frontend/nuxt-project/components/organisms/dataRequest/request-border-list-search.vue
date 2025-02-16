@@ -9,7 +9,9 @@
           <div class="mu-selectbox w160">
             <select v-model="props.searchObj.searchType">
               <option value="all">전체</option>
-              <!-- <option value="title">제목</option> -->
+              <option value="data_name">데이터명</option>
+              <option value="writer">신청자</option>
+              <option value="contents">신청내용</option>
             </select>
           </div>
           <div class="mu-input-icon">
