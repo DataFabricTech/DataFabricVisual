@@ -4,7 +4,7 @@
       <div class="board-list-wrap">
         <div class="mu-heading">
           <!-- board-list-search -->
-          <notice-border-list-search
+          <share-border-list-search
             :searchObj.sync="searchObj"
             @searchMethod="getShareList"
           />
@@ -76,7 +76,7 @@
 <script setup lang="ts">
 import PageSize from "@/pages/admin/manager/system/user/page-size";
 import Pagination from "@functional/pagination/pagination";
-import NoticeBorderListSearch from "@organisms/share/share-board-list-search";
+import ShareBorderListSearch from "@organisms/share/share-board-list-search";
 import { successAlert, confirmAlert, errorAlert } from "@functional/alert/alert-default";
 import { useNuxtApp, useRouter } from "nuxt/app";
 import { onMounted, ref } from "vue";
