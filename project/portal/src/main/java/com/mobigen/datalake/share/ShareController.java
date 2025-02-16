@@ -114,7 +114,7 @@ public class ShareController {
                 js.setData(uploadResult);
             } else {
                 js.setData(0);
-                js.setErrorMessage("데이터 요청 저장에 실패하였습니다.");
+                js.setErrorMessage("활용사례 저장에 실패하였습니다.");
             }
 
         } catch (Exception e) {
@@ -183,7 +183,7 @@ public class ShareController {
     }
 
     /**
-     * 데이터요청 수정
+     * 활용사례 수정
      * @param param                 게시글 수정 내용
      * @return
      * @throws Exception
@@ -214,7 +214,7 @@ public class ShareController {
     }
 
     /**
-     * 데이터요청 수정 : 파일저장 포함
+     * 활용사례 수정 : 파일저장 포함
      * @param uploadForm             파일
      * @param request
      * @return

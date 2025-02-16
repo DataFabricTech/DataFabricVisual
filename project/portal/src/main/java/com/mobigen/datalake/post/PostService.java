@@ -9,6 +9,7 @@ import com.mobigen.framework.security.SessionManager;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -93,8 +94,9 @@ public class PostService {
 
         Integer result = postMapper.updatePost(params);
         if ( !ObjectUtils.isEmpty(delete_files) ) {
-            for (String item : delete_files) {
-                fileMapper.deleteFile(item);
+            for (String f_id : delete_files) {
+                // 실제 파일 삭제 처리
+                deleteRealFileFromFileId(Integer.parseInt(f_id));
             }
         }
         return result;
@@ -111,8 +113,10 @@ public class PostService {
         Integer result = 0;
         String postType = (String) params.get("post_type");
         ArrayList<Integer> deleteList = (ArrayList<Integer>) params.get("deleteList");
-        for (Integer id : deleteList) {
-            result += postMapper.deletePost(id, postType);
+        for (Integer post_id : deleteList) {
+            // 실제 파일 삭제 처리
+            deleteRealFileFromPostId(post_id);
+            result += postMapper.deletePost(post_id, postType);
         }
 
         return result;
@@ -164,5 +168,94 @@ public class PostService {
 
         // Jsoup을 사용하여 허용된 태그만 남기고 정리
         return Jsoup.clean(htmlContent, safelist);
+    }
+
+    // 실제 파일 삭제
+    private void deleteRealFileFromPostId(Integer post_id) throws Exception {
+        List<Map<String, Object>> fileInfoList = new ArrayList<>();
+        // 해당 파일의 첨부파일이 있는지 확인하여 있는 경우 첨부파일도 삭제 처리
+        try {
+            fileInfoList = postMapper.getPostFileInfoList(post_id);
+        } catch (Exception e) {
+            log.error("Fail to load FileInfoList");
+        }
+        if (fileInfoList != null && fileInfoList.size() > 0) {
+            try {
+                for (int i=0; i<fileInfoList.size(); i++) {
+                    String file_id = fileInfoList.get(i).get("file_id").toString();
+                    String file_location = fileInfoList.get(i).get("file_location").toString();
+                    log.info("deleting real file id : " + file_id);
+
+                    File file = new File(file_location);
+
+                    if (file.exists()) {
+                        boolean deleted = file.delete();
+                        if (deleted) {
+                            log.info("Success to delete file in server..");
+                            
+                            // DB에서 내역 삭제
+                            try {
+                                fileMapper.deleteFile(file_id);
+                            } catch (Exception e) {
+                                log.error("Fail to delete file info..");
+                            }
+                        } else {
+                            log.error("Fail to delete file in server..");
+                        }
+                    } else {
+                        log.info("No Exist file in server..");
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("Fail to delete file in server..");
+            }
+        } else {
+            log.error("No fileInfo..");
+        }
+    }
+
+    // 실제 파일 삭제
+    private void deleteRealFileFromFileId(Integer f_id) throws Exception {
+        Map<String, Object> fileInfo = new HashMap<>();
+        // 해당 파일의 첨부파일이 있는지 확인하여 있는 경우 첨부파일도 삭제 처리
+        try {
+            fileInfo = postMapper.getFileInfo(f_id);
+        } catch (Exception e) {
+            log.error("Fail to load FileInfo");
+        }
+        if (fileInfo != null && fileInfo.size() > 0) {
+            try {
+                String file_id = f_id.toString();
+                String file_location = fileInfo.get("file_location").toString();
+                
+                log.info("deleting real file id : " + file_id);
+
+                File file = new File(file_location);
+
+                if (file.exists()) {
+                    boolean deleted = file.delete();
+                    if (deleted) {
+                        log.info("Success to delete file in server..");
+                        
+                        // DB에서 내역 삭제
+                        try {
+                            fileMapper.deleteFile(file_id);
+                        } catch (Exception e) {
+                            log.error("Fail to delete file info..");
+                        }
+                    } else {
+                        log.error("Fail to delete file in server..");
+                    }
+                } else {
+                    log.info("No Exist file in server..");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("Fail to delete file in server..");
+            }
+        } else {
+            log.error("No fileInfo..");
+        }
     }
 }

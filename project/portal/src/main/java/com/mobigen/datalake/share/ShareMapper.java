@@ -14,6 +14,9 @@ public interface ShareMapper {
     Integer deleteShare(Integer id) throws Exception;
     Integer updateShare(Map<String, Object> param) throws Exception;
 
-    List<Map<String, Object>> getShareFileInfoList (int post_id) throws Exception;
+    List<Map<String, Object>> getShareFileInfoList (Integer id) throws Exception;
+    List<Map<String, Object>> getShareThumbFileInfoList (Integer id) throws Exception;
+
+    Map<String, Object> getFileInfo(Integer file_id) throws Exception;
 
 }

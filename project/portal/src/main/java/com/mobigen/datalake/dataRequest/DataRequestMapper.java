@@ -24,4 +24,7 @@ public interface DataRequestMapper {
     Integer deleteAdminReply(Integer id) throws Exception;
 
     Integer getLatestAnswerProcessStatus(Integer data_request_id) throws Exception;
+
+    List<Map<String, Object>> getDataRequestFileInfoList(Integer id) throws Exception;
+    Map<String, Object> getFileInfo(Integer file_id) throws Exception;
 }

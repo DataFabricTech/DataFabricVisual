@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -39,13 +40,13 @@ public class ShareService {
     @Value("${properties.activeSendMail.data-request}")
 	public boolean activeSendMail;
     
-    // 데이터요청 목록 전체개수 조회
+    // 활용사례 목록 전체개수 조회
     public int getShareListTotal(Map<String, String> param) throws Exception {
         int total = shareMapper.getShareListTotal(param);
         return total;
     }
     
-    // 데이터요청 목록 조회
+    // 활용사례례 목록 조회
     public List<Map> getShareList(Map<String, String> param) throws Exception {
         List<Map> dataRequestList = (List<Map>) shareMapper.getShareList(param);
         return dataRequestList;
@@ -67,23 +68,6 @@ public class ShareService {
     
     }
 
-//     // 데이터 요청 url 접근 시 작성자 여부 확인
-//     public Boolean isWriter(String writer, Map<String, Object> user) throws Exception {
-//         String logonId = user.get("user_id").toString();
-//         String roleName = user.get("authority").toString();
-
-//         Boolean result = false;
-
-//         // 관리자인 경우, 작성자인 경우 true
-//         if (roleName.equals("Admin")
-//          || roleName.equals("Super-Admin")
-//          || logonId.equals(writer)) {
-//             result = true;
-//         }
-
-//         return result;
-//     }
-
     // 활용사례 등록
     public Integer createShare(Map<String, Object> params, HttpServletRequest request) throws Exception {
         Integer result = 0;
@@ -96,7 +80,7 @@ public class ShareService {
             result = shareMapper.insertShare(params);
         } catch (Exception e) {
             log.error(e.getMessage());
-            log.error("데이터 요청 등록에 실패하였습니다.");
+            log.error("활용사례 등록에 실패하였습니다.");
         }
         return result;
     }
@@ -138,8 +122,9 @@ public class ShareService {
     public Object deleteShare(Map<String, Object> params) throws Exception {
         Integer result = 0;
         ArrayList<Integer> deleteList = (ArrayList<Integer>) params.get("deleteList");
-        for (Integer id : deleteList) {
-            result += shareMapper.deleteShare(id);
+        for (Integer share_id : deleteList) {
+            deleteRealFileFromShareId(share_id);
+            result += shareMapper.deleteShare(share_id);
         }
 
         return result;
@@ -160,8 +145,9 @@ public class ShareService {
 
         Integer result = shareMapper.updateShare(params);
         if ( !ObjectUtils.isEmpty(delete_files) ) {
-            for (String item : delete_files) {
-                fileMapper.deleteFile(item);
+            for (String f_id : delete_files) {
+                // 실제 파일 삭제 처리
+                deleteRealFileFromFileId(Integer.parseInt(f_id));
             }
         }
         return result;
@@ -169,7 +155,145 @@ public class ShareService {
 
     // 활용사례 썸네일 삭제
     public void deleteThumb(Map<String, Object> params) throws Exception {
-        fileMapper.deleteThumb((Integer) params.get("id"));                
+        try {
+            deleteRealThumbFileFromShareId((Integer) params.get("id"));
+        } catch (Exception e) {
+            log.error("Fail to delete thumbnail file in server..");
+        }
+        // fileMapper.deleteThumb((Integer) params.get("id"));                
         return;
+    }
+
+    // 실제 파일 삭제
+    private void deleteRealFileFromShareId(Integer share_id) throws Exception {
+        List<Map<String, Object>> fileInfoList = new ArrayList<>();
+        // 해당 파일의 첨부파일이 있는지 확인하여 있는 경우 첨부파일도 삭제 처리
+        try {
+            fileInfoList = shareMapper.getShareFileInfoList(share_id);
+        } catch (Exception e) {
+            log.error("Fail to load FileInfoList");
+        }
+        if (fileInfoList != null && fileInfoList.size() > 0) {
+            try {
+                for (int i=0; i<fileInfoList.size(); i++) {
+                    String file_id = fileInfoList.get(i).get("file_id").toString();
+                    String file_location = fileInfoList.get(i).get("file_location").toString();
+                    log.info("deleting real file id : " + file_id);
+
+                    File file = new File(file_location);
+
+                    if (file.exists()) {
+                        boolean deleted = file.delete();
+                        if (deleted) {
+                            log.info("Success to delete file in server..");
+                            
+                            // DB에서 내역 삭제
+                            try {
+                                fileMapper.deleteFile(file_id);
+                            } catch (Exception e) {
+                                log.error("Fail to delete file info..");
+                            }
+                        } else {
+                            log.error("Fail to delete file in server..");
+                        }
+                    } else {
+                        log.info("No Exist file in server..");
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("Fail to delete file in server..");
+            }
+        } else {
+            log.error("No fileInfo..");
+        }
+    }
+
+    // 실제 파일 삭제
+    private void deleteRealFileFromFileId(Integer f_id) throws Exception {
+        Map<String, Object> fileInfo = new HashMap<>();
+        // 해당 파일의 첨부파일이 있는지 확인하여 있는 경우 첨부파일도 삭제 처리
+        try {
+            fileInfo = shareMapper.getFileInfo(f_id);
+        } catch (Exception e) {
+            log.error("Fail to load FileInfo");
+        }
+        if (fileInfo != null && fileInfo.size() > 0) {
+            try {
+                String file_id = f_id.toString();
+                String file_location = fileInfo.get("file_location").toString();
+                
+                log.info("deleting real file id : " + file_id);
+
+                File file = new File(file_location);
+
+                if (file.exists()) {
+                    boolean deleted = file.delete();
+                    if (deleted) {
+                        log.info("Success to delete file in server..");
+                        
+                        // DB에서 내역 삭제
+                        try {
+                            fileMapper.deleteFile(file_id);
+                        } catch (Exception e) {
+                            log.error("Fail to delete file info..");
+                        }
+                    } else {
+                        log.error("Fail to delete file in server..");
+                    }
+                } else {
+                    log.info("No Exist file in server..");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("Fail to delete file in server..");
+            }
+        } else {
+            log.error("No fileInfo..");
+        }
+    }
+
+    private void deleteRealThumbFileFromShareId(Integer share_id) throws Exception {
+        List<Map<String, Object>> fileInfoList = new ArrayList<>();
+        // 해당 파일의 첨부파일이 있는지 확인하여 있는 경우 첨부파일도 삭제 처리
+        try {
+            fileInfoList = shareMapper.getShareThumbFileInfoList(share_id);
+        } catch (Exception e) {
+            log.error("Fail to load FileInfoList");
+        }
+        if (fileInfoList != null && fileInfoList.size() > 0) {
+            try {
+                for (int i=0; i<fileInfoList.size(); i++) {
+                    String file_id = fileInfoList.get(i).get("file_id").toString();
+                    String file_location = fileInfoList.get(i).get("file_location").toString();
+                    log.info("deleting real file id : " + file_id);
+
+                    File file = new File(file_location);
+
+                    if (file.exists()) {
+                        boolean deleted = file.delete();
+                        if (deleted) {
+                            log.info("Success to delete file in server..");
+                            
+                            // DB에서 내역 삭제
+                            try {
+                                fileMapper.deleteFile(file_id);
+                            } catch (Exception e) {
+                                log.error("Fail to delete file info..");
+                            }
+                        } else {
+                            log.error("Fail to delete file in server..");
+                        }
+                    } else {
+                        log.info("No Exist file in server..");
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("Fail to delete file in server..");
+            }
+        } else {
+            log.error("No fileInfo..");
+        }
     }
 }

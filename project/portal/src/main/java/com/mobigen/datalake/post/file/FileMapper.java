@@ -26,5 +26,4 @@ public interface FileMapper {
 	Map<String, Object> getDataRequestFileInfo(int file_id);
 
     Integer fineFileId();
-
 }
