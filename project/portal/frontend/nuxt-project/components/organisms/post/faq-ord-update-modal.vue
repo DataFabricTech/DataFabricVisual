@@ -169,6 +169,11 @@ defineExpose({ getPost });
 
 // 저장 버튼 클릭 이벤트
 const onClickSaveButton = (): void => {
+  // 현재 리스트 상태로 ord_no값 지
+  for (let i in postList.value) {
+    postList.value[i].ord_no = parseInt(i + 1)
+  }
+
   let param = {
     postList: postList.value,
   };
