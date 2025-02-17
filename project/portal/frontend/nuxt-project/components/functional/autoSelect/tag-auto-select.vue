@@ -49,7 +49,6 @@
 </template>
 
 <script setup lang="ts">
-import ObjectUtils from "@/utils/ObjectUtils";
 import { onMounted, ref, computed, nextTick, watch } from 'vue';
 
 const emit = defineEmits(["setData"]);
@@ -99,7 +98,7 @@ const inputClass = computed(() => {
 watch(() => selectedOption.value.tag_name, (newVal, oldVal) => {
   const krEnOnly = /^[ㄱ-ㅎ가-힣]*$/;
   if (!krEnOnly.test(newVal)) {
-    selectedOption.value.tag_name = newVal.replace(/[^ㄱ-ㅎ가-힣a-zA-Z]/g, '');
+    selectedOption.value.tag_name = newVal.replace(/[^ㄱ-ㅎ가-힣a-zA-Z0-9]/g, '');
   }
 })
 
