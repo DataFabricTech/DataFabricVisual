@@ -102,12 +102,12 @@
                 </caption>
                 <colgroup>
                   <col style="width: 40px" />
-                  <col style="width: 200px" />
-                  <col style="width: 200px" />
-                  <col style="width: 200px" />
-                  <col style="width: 95px" />
-                  <col style="width: 200px" />
-                  <col style="width: 95px" />
+                  <col style="width: 180px" />
+                  <col style="width: 180px" />
+                  <col style="width: 180px" />
+                  <col style="width: 85px" />
+                  <col style="width: 250px" />
+                  <col style="width: 85px" />
                 </colgroup>
                 <thead>
                   <tr>

@@ -101,7 +101,6 @@
                   @setData="onChangeUpperCategory"
                 /> -->
                 {{ upperCategory && upperCategory.description ? upperCategory.description + '(' + upperCategory.value + ')' : "없음" }}
-                <i v-if="upperCategory && upperCategory.value" class="mu-icon-svg del" @click="deleteUpperCategory"></i><span></span>
                 <button
                   type="button"
                   class="mu-btn mu-btn-primary"
