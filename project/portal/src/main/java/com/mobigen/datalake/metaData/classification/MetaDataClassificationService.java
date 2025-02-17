@@ -1,10 +1,9 @@
 package com.mobigen.datalake.metaData.classification;
 
-import com.mobigen.datalake.metaData.manage.MetaDataManageService;
-import com.mobigen.framework.result.JsonResult;
-import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +11,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.mobigen.datalake.metaData.manage.MetaDataManageService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -25,6 +24,9 @@ public class MetaDataClassificationService {
 
     @Value("${properties.essync.url.update}")
     private String esSyncUrlUpdate;
+
+    @Value("${properties.essync.url.updates}")
+    private String esSyncUrlUpdates;
 
     @Value("${properties.essync.url.convertcategory}")
     private String esSyncUrlConvertcategory;
@@ -489,28 +491,46 @@ public class MetaDataClassificationService {
             requestBody.put("metaid", guid);
             requestBody.put("event_status", eventStatus); // 1=생성, 2=수정, 3=삭제
             requestBody.put("event_name", eventName);
-            restResponse = restTemplate.postForObject(esSyncUrlUpdate, requestBody, HashMap.class);    
+            restResponse = restTemplate.postForObject(esSyncUrlUpdate, requestBody, HashMap.class);
         } catch (Exception e) {
-            log.error("essyncUpdate API 호출 오류");
+            log.error("Failed essync Update");
         }
+        
+        return restResponse;
+    }
 
+    public Map<String, Object> essyncUpdates(Map<String, Object> params) throws Exception {
+        Map<String, Object> restResponse = new HashMap<>();
+        List<String> meta_ids = (List<String>) params.get("meta_ids");
+        Integer eventStatus = Integer.parseInt(params.get("event_status").toString());
+        String eventName = params.get("event_name").toString();
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("metaids", meta_ids);
+            requestBody.put("event_status", eventStatus); // 1=생성, 2=수정, 3=삭제
+            requestBody.put("event_name", eventName);
+            restResponse = restTemplate.postForObject(esSyncUrlUpdate, requestBody, HashMap.class);
+        } catch (Exception e) {
+            log.error("Failed essync Updates");
+        }
+        
         return restResponse;
     }
 
     public Map<String, Object> essyncConvertCategory(Map<String, Object> params) throws Exception {
         Map<String, Object> restResponse = new HashMap<>();
-
         try {
             RestTemplate restTemplate = new RestTemplate();
-        
+            
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("c_id", params.get("id"));        
             requestBody.put("c_description", params.get("description"));
             restResponse = restTemplate.postForObject(esSyncUrlConvertcategory, requestBody, HashMap.class);
         } catch (Exception e) {
-            log.error("essyncConvertCategory API 호출 오류");
+            log.error("Failed essync convert category");
         }
-
         return restResponse;
     }
  }

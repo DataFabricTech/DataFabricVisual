@@ -16,12 +16,12 @@
           @onClickCategoryOrderChange="onClickCategoryOrderChange"
         />
 
-        <classification-ord-update-modal
+        <!-- <classification-ord-update-modal
           ref="classificationOrdupdateModal"
           :visible.sync="visible"
           @searchMethod="getCategoryList"
           @onSearchCategories="onSearchCategories"
-        />
+        /> -->
 
         <!-- 카테고리 리스트 사이즈 조절 바 -->
         <div data-v-10a51f6f id="divider" @mousedown="mouseDown($event)"></div>
@@ -873,24 +873,35 @@ const onSubmitCategory = async (params: any) => {
         await $ofetch(`/api/metadata/classification/map`, {
           method: "POST",
           body: params
-        }).then((res) => {
+        }).then(async (res) => {
           const resData = res.data || {};
           if (!resData || resData.isFailed) {
             const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
             errorAlert(msg);
           } else {
             // 카테고리 맵핑 성공 시
-            for (const entity of params.entityTargets) {
-              setEventLog({
-                event_type: CONSTANT.EVENT.TYPE.METADATA,
-                event_status: CONSTANT.EVENT.STATUS.MODIFY,
-                event_name: "메타 데이터 카테고리 매핑[변경]",
-                event_by: user.user_id,
-                meta_id: entity.meta_id,
-                meta_name: entity.meta_name,
-                qualified_name: entity.qualified_name
-              });
+            const syncParams = {
+              meta_ids: [],
+              event_status: 2,
+              event_name: "메타 데이터 카테고리 매핑[변경]"
             }
+
+            for (const entity of params.entityTargets) {
+              syncParams.meta_ids.push(entity.meta_id)
+            }
+
+            await $ofetch(`/api/metadata/classification/essyncUpdates`, {
+              method: 'POST',
+              body: syncParams
+            }).then((res) => {
+              if (res && res.data) {
+                console.log(res.data)
+              }
+            }).catch((err) => {
+              const msg = "ES SYNC 요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
+              console.log(msg);
+            })
+            
             onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
             onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
           }

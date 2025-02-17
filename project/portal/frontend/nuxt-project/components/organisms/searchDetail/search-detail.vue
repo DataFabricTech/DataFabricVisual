@@ -189,6 +189,7 @@ import ScrollToTop from "@functional/scroll/scroll-to-top";
 import ScrollToBottom from "@functional/scroll/scroll-to-bottom";
 import { useUserStore } from "~/store/user.ts";
 import { useCategoryStore } from "~/store/category.ts";
+import { useCategoryTreeStore } from "~/store/categoryTree.ts";
 import {useConstants} from "@composables/useConstants";
 import { onBeforeRouteLeave } from "vue-router";
 import { ref } from "vue";
@@ -207,6 +208,7 @@ const { CONSTANT } = useConstants();
 const userStore = useUserStore();
 const user = userStore.getUser;
 const categoryStore = useCategoryStore();
+const categoryTreeStore = useCategoryTreeStore();
 
 const tabs = ref(['data-info-area', 'tag-keyword-area', 'user-description-area', 'data-profile-area', 'sample-data-area', 'data-lineage-area', 'related-data', 'user-review-area'])
 const sectionRefs = ref({}); // 탭 클릭 시 이동할 DOM
@@ -279,6 +281,7 @@ onMounted(async () => {
       window.addEventListener('scroll', handleScroll);
       userStore.setForceRenderLoader(true); // 강제 loader 유지 설정
       categoryStore.fetchCategories(); // 카테고리 정보 조회
+      categoryTreeStore.fetchCategories(); // 카테고리 정보 조회
       await getAllDataByGuid()
       await searchTagList();
     } else {
@@ -892,24 +895,35 @@ const onAddCategoryMapping = (params) => {
   $ofetch("/api/metadata/classification/map", {
     method: "POST",
     body: params,
-  }).then((res) => {
+  }).then(async (res) => {
     if (res && !res.errorMessage) {
       if (!res || res.data.isFailed) {
         const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
         errorAlert(msg);
       } else {
         // 카테고리 맵핑 성공 시
-        for(const entity of params.entityTargets) {
-          setEventLog({
-            event_type: CONSTANT.EVENT.TYPE.METADATA,
-            event_status: CONSTANT.EVENT.STATUS.MODIFY,
-            event_name: "메타 데이터 카테고리 매핑[변경]",
-            event_by: user.user_id,
-            meta_id: entity.id,
-            meta_name: entity.meta_name,
-            qualified_name: entity.qualified_name
-          })
+        const syncParams = {
+          meta_ids: [],
+          event_status: 2,
+          event_name: "메타 데이터 카테고리 매핑[변경]"
         }
+
+        for (const entity of params.entityTargets) {
+          syncParams.meta_ids.push(entity.meta_id)
+        }
+
+        await $ofetch(`/api/metadata/classification/essyncUpdates`, {
+          method: 'POST',
+          body: syncParams
+        }).then((res) => {
+          if (res && res.data) {
+            console.log(res.data)
+          }
+        }).catch((err) => {
+          const msg = "ES SYNC 요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
+          console.log(msg);
+        })
+        
         onToggleCategoryModal();
         getAllDataByGuid();
       }

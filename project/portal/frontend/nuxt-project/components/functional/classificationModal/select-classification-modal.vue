@@ -189,6 +189,26 @@ const toggleShowData = () => {
 
 //
 const onClear = () => {
+  if (props.upperCategory && props.upperCategory.id) {
+    selected.value = {
+      description: props.upperCategory.description,
+      value: props.upperCategory.name,
+      level: props.upperCategory.level,
+      parent_id: props.upperCategory.parent_id,
+      id: props.upperCategory.id,
+    }
+    categoryTreeStore.setSelectedItemId(props.upperCategory.id);
+  } else {
+    selected.value = {
+      description: "",
+      value: "",
+      level: "",
+      parent_id: "",
+      id: "",
+    }
+    categoryTreeStore.setSelectedItemId("");
+  }
+
   word.value = "";
   collapseAll()
 };
@@ -278,8 +298,10 @@ const openModal = () => {
   searchedCategoryList.value = categoryTreeStore.getCategoryList
   if(props.upperCategory) {
     selected.value = props.upperCategory
+    categoryTreeStore.setSelectedItemId(props.upperCategory.id);
     // 현재 선택된 카테고리의 상위 메뉴 열기 처리
     toggleParents(selected.value)
+
   }
 
   isActive.value = true;

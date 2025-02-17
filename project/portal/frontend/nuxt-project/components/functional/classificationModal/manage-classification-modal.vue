@@ -25,7 +25,17 @@
             <tr>
               <th scope="row">카테고리 명</th>
               <td>
-                <auto-select :placeholder="placeholder" :options="upperCategories" @setData="onChangeMappingCategory" />
+                <td>
+                  {{ upperCategory && upperCategory.description ? upperCategory.description + '(' + upperCategory.value + ')' : "없음" }}
+                  <button
+                    type="button"
+                    class="mu-btn mu-btn-primary"
+                    @click="openSelectCategoryModal"
+                    style="margin-left:10px"
+                  >
+                    <i class="mu-icon-svg search"></i><span>찾아보기</span>
+                  </button>
+                </td>
               </td>
             </tr>
           </tbody>
@@ -301,7 +311,7 @@ const isDisabled = computed(() => {
 
   switch (props.manageModal.type) {
     case "map": // 카테고리 매핑 모달일 경우
-      if (mappingCategory.value.id && mappingCategory.value.value && mappingCategory.value.description) {
+      if (upperCategory.value.id && upperCategory.value.value && upperCategory.value.description) {
         // 맵핑할 카테고리를 선택한 경우에만 활성화
         isDisabled = false;
       }
@@ -487,11 +497,6 @@ const onClose = () => {
   emit("onCloseModal");
 };
 
-// 맵핑 카테고리 변경 이벤트 핸들러
-const onChangeMappingCategory = (option) => {
-  mappingCategory.value = option;
-};
-
 // 카테고리 매핑 시 필요한 파라미터 가공
 const createMappingParams = () => {
   const categoryMap = categoryStore._categoryMap
@@ -520,7 +525,7 @@ const createMappingParams = () => {
   });
 
   // 선택한 맵핑 카테고리의 상위 타입 목록 탐색
-  const mappingItem = categoryMap[mappingCategory.value.id]; // 맵핑 카테고리
+  const mappingItem = categoryMap[upperCategory.value.id]; // 맵핑 카테고리
   // 맵핑 카테고리의 상위 타입이 있을 경우 파라미터 추가 가공
   if(!isEmpties(mappingItem.superTypes)) {
     superTypes = mappingItem.superTypes;
@@ -535,14 +540,14 @@ const onConfirm = async () => {
 
   if (props.manageModal.type === "map") {
     // 카테고리 맵핑 모달일 경우
-    if (mappingCategory.value.id) {
+    if (upperCategory.value.id) {
       // 선택한 카테고리를 맵핑할 엔티티의 ID 가공
       const { entityIds, superTypes, tableTypes, entityTargets } = createMappingParams();
 
       params = {
         // 선택된 카테고리의 맵핑용 파라미터
         entityIds, // 선택된 entity id 목록
-        classificationId: mappingCategory.value.id, // 선택된 카테고리 아이디
+        classificationId: upperCategory.value.id, // 선택된 카테고리 아이디
         superTypes, // 상위 카테고리 맵핑용 파라미터
         tableTypes, // 테이블 유형 선택 시 하위 컬럼 맵핑용 파라미터
         entityTargets // 선택된 entity object 목록
@@ -617,7 +622,7 @@ const onClear = () => {
   // selectedDept2.value = {};
   // originalDeptCd2.value = "";
   isEdited.value = false;
-  mappingCategory.value = { description: "", value: "", id: "" };
+  // mappingCategory.value = { description: "", value: "", id: "" };
   categoryImageFile.value = "";
 };
 

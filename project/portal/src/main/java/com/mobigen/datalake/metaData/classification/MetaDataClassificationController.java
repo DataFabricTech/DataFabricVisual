@@ -1,5 +1,6 @@
 package com.mobigen.datalake.metaData.classification;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -94,6 +95,34 @@ public class MetaDataClassificationController {
     public Object mapClassification(@RequestBody Map<String, Object> params) throws Exception {
         return metaDataClassificationService.mapClassification(params);
     }
+
+    /**
+     * 메타 데이터 관리 > 카테고리 맵핑 > ES Sync Updates API
+     *
+     * @params Map          처리 대상 데이터 Map
+     * @return Object       API 호출 결과 반환
+     */
+    @ResponseJsonResult
+    @PostMapping("/essyncUpdates")
+    public Object essyncUpdates(@RequestBody Map<String, Object> params) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            Map<String, Object> restResponse = metaDataClassificationService.essyncUpdates(params);
+            if (!restResponse.isEmpty()) {
+                Map<String, String> res = (Map<String, String>) restResponse.get("result");
+                if (res.get("result").equals("success")) {                    
+                    result.put("esResult", true);
+                } else {
+                    result.put("esResult", false);
+                }
+            }
+        } catch (Exception e) {
+            result.put("esResult", false);
+        }
+        
+        return result;
+    }
+
 
     /**
      * 메타 데이터 관리 > 카테고리 맵핑 제거
