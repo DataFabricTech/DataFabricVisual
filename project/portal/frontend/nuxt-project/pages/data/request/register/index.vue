@@ -15,7 +15,7 @@
                 type="text"
                 id="file-name"
                 class="mu-input"
-                placeholder="파일 첨부 크기는 최대 5MB까지 가능합니다."
+                placeholder="파일 첨부 크기는 최대 100MB까지 가능합니다."
                 readonly
               />
               <div class="mu-file-btn" style="margin-left: 10px">
