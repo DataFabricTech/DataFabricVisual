@@ -118,4 +118,16 @@ public class CollectorController {
     public Object getSystemTypes() throws Exception {
         return collectorService.getSystemTypes();
     }
+
+    /**
+     * 수집대상 조회
+     * @param system_id                검색 종류
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/collectorOne")
+    public Object getCollectorOneInfo(@RequestParam("system_id") String system_id) throws Exception {
+        return collectorService.getCollectorOneInfo(system_id);
+    }
 }

@@ -23,11 +23,12 @@
               <col style="width: 14%" />
               <col style="width: 10%" />
               <col style="width: 10%" />
-              <col style="width: 12%" />
               <col style="width: 8%" />
               <col style="width: 8%" />
               <col style="width: 8%" />
               <col style="width: 8%" />
+              <col style="width: 6%"/>
+              <col style="width: 5%"/>
             </colgroup>
             <thead>
               <tr>
@@ -37,11 +38,11 @@
                 <th scope="col">host</th>
                 <th scope="col">Database</th>
                 <th scope="col">Interval</th>
-                <th scope="col">최종 수집 시간</th>
+                <th scope="col">최종 수집시간</th>
                 <th scope="col">수집 여부</th>
                 <th scope="col">수동 수집</th>
                 <th scope="col">시스템 상태</th>
-                <th scope="col">action</th>
+                <th colspan="2">action</th>
               </tr>
             </thead>
             <tbody>
@@ -55,13 +56,19 @@
                 <td>{{ item.meta_sync_time ? $yyyyMMddHHmmSS(item.meta_sync_time) : "-" }}</td>
                 <td>{{ getKrCollectFlag(item.collect_flag) }}</td>
                 <td>
-                  <button type="button" class="mu-btn mu-btn-sm" @click="startCollecton(item)"><span>실행</span></button>
+                  <button :disabled="!item.isActiveIngestion" type="button" class="mu-btn mu-btn-sm" @click="startCollecton(item, index)"><span>실행</span></button>
                 </td>
-                <td>{{ item.status ? item.status : "-" }}</td>
+                <td>{{ item.status_value ? item.status_value : "-" }}</td>
                 <td>
                   <button type="button" class="mu-btn mu-btn-sm" @click="popupCollectorUpdateModal(item)"><i class="mu-icon-svg edit"></i><span>수정</span></button>
                   <br>
                   <button type="button" class="mu-btn mu-btn-sm" @click="deleteCollector(item.system_id)"><i class="mu-icon-svg del"></i><span>삭제</span></button>
+                </td>
+                <td>
+                  <button type="button" class="mu-btn mu-btn-icon-only" title="초기화" @click="onClickReloadOneButton(item, index)">
+                      <i class="mu-icon-svg refresh"></i>
+                      <span>초기화</span>
+                  </button>
                 </td>
               </tr>
               <tr v-if="collectorList.length === 0">
@@ -132,6 +139,8 @@ const collector = ref({
   collect_flag: false,
   meta_sync_time: "",
   status: "",
+  status_value: "",
+  isActiveIngestion: false,
   create_user: userStore.getUser.user_id,
   create_user_name: userStore.getUser.username,
   create_date: new Date().toISOString().split('T')[0],
@@ -246,7 +255,7 @@ const startCollecton = async (item) => {
   await $ofetch(`/api/admin/system/collector/directCollect?system_id=${item.system_id}`).then(async (res) => {
     if (res && res.data && res.data.result) {
       await successAlert("수동 수집이 실행되었습니다.")
-      getCollectorList()
+      item.isActiveIngestion = false
     } else {
       errorAlert("수동 수집 실행에 실패하였습니다.")
     }
@@ -292,19 +301,45 @@ const updateCollector = async (newCollector) => {
     method: 'POST',
     body: newCollector
   }).then(async (res) => {
-    if (res && !res.errorMessage && res.data) {
-      if (suffix == 'add') await successAlert("등록되었습니다.")
-      if (suffix == 'update') await successAlert("수정되었습니다.")
-      toggleCollectorModal.value = false
-      getCollectorList()
-    } else {
-      if (suffix == 'add') errorAlert("등록에 실패하였습니다.")
-      if (suffix == 'update') errorAlert("수정에 실패하였습니다.")
+    if (suffix == 'add') {
+      if (res && res.data && res.data.addCount > 0) {
+        await successAlert("등록되었습니다.")
+      } else {
+        await errorAlert("등록에 실패하였습니다.")
+      }
     }
+
+    if (suffix == 'update') {
+      if (res && res.data && res.data.updateCount > 0) {
+        await successAlert("수정되었습니다.")
+      } else {
+        await errorAlert("수정에 실패하였습니다.")
+      }
+    }
+
+    toggleCollectorModal.value = false
+    getCollectorList()
   }).catch((err) => {
       if (suffix == 'add') errorAlert("등록에 실패하였습니다.")
       if (suffix == 'update') errorAlert("수정에 실패하였습니다.")
   })
+}
+
+const onClickReloadOneButton = async (collector, index) => {
+  await $ofetch(`/api/admin/system/collector/collectorOne?system_id=${collector.system_id}`).then((res) => {
+    if (res && res.data && res.data.result) {
+      collectorList.value[index] = {
+        rownum: collector.rownum,
+        ...res.data.collector
+      }
+    } else {
+      errorAlert("수집 항목 새로고침 실패");
+    }
+
+  }).catch(async (err) => {
+    errorAlert("수집 항목 새로고침 실패");
+  })
+
 }
 
 </script>

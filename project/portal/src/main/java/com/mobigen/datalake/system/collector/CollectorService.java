@@ -50,7 +50,26 @@ public class CollectorService {
 
         if (list != null && list.size() > 0) {
           for (int i=0; i<list.size(); i++) {
+            // filter_config값 Map 형태로 변환
             list.get(i).put("filter_config", convertJsonbToMap(list.get(i).get("filter_config")));
+
+            // 상태값에 따라 수동수집 버튼 활성화 여부 값 설정
+            String status = list.get(i).get("status") != null ? list.get(i).get("status").toString() : null;
+            if (status != null) {
+              // 비활성화(1. 등록 직후, 2. 즉시수집 클릭 직후 및 INGESTION 상태)
+              // 활성화(REGISTER_COMPLETED, INGESTION_COMPLETED, INGESTION_FAILED)
+              if (!status.equals("INGESTION") &&
+                  (status.equals("REGISTER_COMPLETED")
+                 ||status.equals("INGESTION_COMPLETED")
+                 ||status.equals("INGESTION_FAILED")
+                )) {
+                list.get(i).put("isActiveIngestion", true);
+              } else {
+                list.get(i).put("isActiveIngestion", false);
+              }
+            } else {
+              list.get(i).put("isActiveIngestion", false);
+            }
           }
         }
 
@@ -78,17 +97,24 @@ public class CollectorService {
 
   // 수집대상 등록 (put으로 같이 사용)
   public Object addCollector(Map<String, Object> params) throws Exception {
-    boolean result = false;
+    Map<String, Object> result = new HashMap<>();
+    int addCount = 0;
 
-    // 비밀번호 암호화
-    AESGCMUtil encoder = new AESGCMUtil(cryptKey);
-    params.put("password", encoder.encrypt(params.get("password").toString()));
-    
-    int addCount = collectorMapper.addCollector(params);
-    if (addCount > 0) {
-      result = true;
-      putIngestionDagApi(params.get("system_id").toString());
+    try {
+      // 비밀번호 암호화
+      AESGCMUtil encoder = new AESGCMUtil(cryptKey);
+      params.put("password", encoder.encrypt(params.get("password").toString()));
+      
+      addCount = collectorMapper.addCollector(params);
+      if (addCount > 0) {
+        putIngestionDagApi(params.get("system_id").toString());
+      }
+
+      result.put("addCount", addCount);
+    } catch (Exception e) {
+      result.put("addCount", 0);
     }
+    
     return result;
   }
 
@@ -236,6 +262,46 @@ public class CollectorService {
       
     } catch(Exception e) {
       result.put("list", new ArrayList<>());
+    }
+
+    return result;
+  }
+
+  // 시스템 정보 1개 조회
+  public Object getCollectorOneInfo(String system_id) throws Exception {
+    Map<String, Object> result = new HashMap<>();
+
+    try {
+      Map<String, Object> collector = collectorMapper.getCollectorOne(system_id);
+      if (collector != null) {
+        String status = collector.get("status") != null ? collector.get("status").toString() : null;
+        if (status != null) {
+          // 비활성화(1. 등록 직후, 2. 즉시수집 클릭 직후 및 INGESTION 상태)
+          // 활성화(REGISTER_COMPLETED, INGESTION_COMPLETED, INGESTION_FAILED)
+          if (!status.equals("INGESTION") &&
+              (status.equals("REGISTER_COMPLETED")
+              ||status.equals("INGESTION_COMPLETED")
+              ||status.equals("INGESTION_FAILED")
+            )) {
+            collector.put("isActiveIngestion", true);
+          } else {
+            collector.put("isActiveIngestion", false);
+          }
+        } else {
+          collector.put("isActiveIngestion", false);
+        }
+        
+        result.put("result", true);
+        result.put("collector", collector);
+      } else {
+        result.put("result", false);
+        result.put("collector", null);
+      }
+    } catch (Exception e) {
+      log.error("Fail to select one system info..");
+      
+      result.put("result", false);
+      result.put("collector", null);
     }
 
     return result;

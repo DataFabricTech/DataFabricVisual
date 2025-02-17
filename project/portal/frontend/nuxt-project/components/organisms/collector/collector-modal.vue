@@ -59,7 +59,7 @@
             </tr>
             <tr>
               <th>수집 주기</th>
-              <td><input type="text" v-model="currentCollector.interval" :title="currentCollector.interval" placeholder="" class="mu-input" :readonly="isDetail"></td>
+              <td><input type="text" v-model="currentCollector.interval" :title="currentCollector.interval" placeholder="ex) * * * * *" class="mu-input" :readonly="isDetail"></td>
               <th>Password</th>
               <td colspan="3"><input type="text" v-model="currentCollector.password" :title="currentCollector.password" class="mu-input" :readonly="isDetail"></td>
             </tr>
@@ -73,17 +73,17 @@
                   </select>
                 </div>
               </td>
-              <th>최종 수집 시간</th>
+              <th>최종 수집시간</th>
               <td colspan="3">{{ $yyyyMMddHHmmSS(currentCollector.meta_sync_time) }}</td>
             </tr>
             <tr v-if="isUpdate || isDetail">
               <th>시스템 상태</th>
-              <td colspan="5">{{ currentCollector.status ? currentCollector.status : '-' }}</td>
+              <td colspan="5">{{ currentCollector.status_value ? currentCollector.status_value : '-' }}</td>
             </tr>
-            <tr v-if="isUpdate || isDetail">
-              <th>오류 내용</th>
+            <!-- <tr v-if="isUpdate || isDetail">
+              <th>오류</th>
               <td colspan="5">{{ currentCollector.err_description ? currentCollector.err_description : '-' }}</td>
-            </tr>
+            </tr> -->
           </tbody>
         </table>
         <br>
@@ -187,6 +187,7 @@ const currentCollector = ref({
   collect_flag: false,
   meta_sync_time: "",
   status: "",
+  status_value: "",
   create_user: userStore.getUser.user_id,
   create_user_name: userStore.getUser.username,
   create_date: new Date().toISOString().split('T')[0],
