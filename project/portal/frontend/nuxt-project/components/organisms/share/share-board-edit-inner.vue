@@ -25,16 +25,15 @@
             <tr>
               <th scope="row">제목 <strong class="required">필수</strong></th>
               <td>
-                <textarea
-                    id="textarea01"
+                <input
+                    type="text"
                     placeholder="제목은 40자 이내로 입력 가능합니다."
                     title="제목 입력 필수"
-                    rows="5"
                     class="mu-input"
                     v-model="props.share.title"
-                    v-bind:class="[!titleValid ? 'error' : '', 'mu-area']"
+                    v-bind:class="[!titleValid ? 'error' : '']"
                     maxlength="40"
-                  ></textarea>
+                  />
                   <p v-if="!titleValid" class="complete-msg error bul-refer">
                     제목을 입력해주세요.
                   </p>

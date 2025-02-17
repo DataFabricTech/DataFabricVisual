@@ -16,22 +16,6 @@
         <!-- mu-button-wrap -->
         <div class="mu-button-wrap">
           <button
-            v-if="share.writer == userStore.getUser.user_id"
-            type="button"
-            class="mu-btn mu-btn-lg"
-            @click="onClickDeleteButton"
-          >
-            <span>삭제</span>
-          </button>
-          <button
-            v-if="share.writer == userStore.getUser.user_id"
-            type="button"
-            class="mu-btn mu-btn-lg"
-            @click="onClickUpdateButton"
-          >
-            <span>수정</span>
-          </button>
-          <button
             type="button"
             class="mu-btn mu-btn-lg mu-btn-primary"
             @click="onClickListButton"
