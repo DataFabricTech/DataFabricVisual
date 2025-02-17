@@ -593,7 +593,7 @@ onMounted(async () => {
       system_type.value = searchParams.value.system_type ? searchParams.value.system_type : "" // 시스템타입
       meta_type.value = searchParams.value.meta_type ? searchParams.value.meta_type : "table" // 메타타입
       sortOrder.value = searchParams.value.sortOrder ? searchParams.value.sortOrder : "" // 정렬방식
-      pagingObj.value.currentPage = searchParams.value.offset + 1 // 현재 페이지
+      pagingObj.value.currentPage = searchParams.value.pagingObj.currentPage // 현재 페이지
       pagingObj.value.limit = searchParams.value.limit // 보여줄 개수
 
       // 왼쪽메뉴 활성화 처리
