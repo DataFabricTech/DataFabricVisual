@@ -31,7 +31,7 @@
           </div>
         </div>
       </div>
-      <div class="mt20 overflow-auto">
+      <div v-if="props.isAdmin" class="mt20 overflow-auto">
         <div class="mu-item-group fr">
           <tag-auto-select
             :disabled="false"
