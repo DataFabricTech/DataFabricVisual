@@ -133,7 +133,9 @@ public class MyCatalogController {
         Map<String, String> param = new HashMap<>();
         param.put("select_type", params.get("select_type").toString());
         param.put("user_id", user.get("user_id").toString());
+        param.put("searchType", params.get("searchType"));
         param.put("searchWord", params.get("searchWord"));
+        param.put("searchStatus", params.get("searchStatus"));
         param.put("limit", String.valueOf(params.get("limit")));
         param.put("offset", String.valueOf(Integer.parseInt(params.get("limit")) * (Integer.parseInt(params.get("offset")) - 1)));
 
@@ -159,6 +161,7 @@ public class MyCatalogController {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         Map<String, String> param = new HashMap<>();
         param.put("user_id", user.get("user_id").toString());
+        param.put("searchType", params.get("searchType"));
         param.put("searchWord", params.get("searchWord"));
         param.put("limit", String.valueOf(params.get("limit")));
         param.put("offset", String.valueOf(Integer.parseInt(params.get("limit")) * (Integer.parseInt(params.get("offset")) - 1)));

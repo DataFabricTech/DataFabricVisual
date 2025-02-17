@@ -15,13 +15,17 @@
             <table class="mu-grid">
               <colgroup>
                 <col style="width: 60px" />
-                <col style="width: auto" />
-                <col style="width: 200px" />
+                <col style="width: 250px" />
+                <col style="width: 250px" />
+                <col style="width: 150px" />
+                <col style="width: 150px" />
               </colgroup>
               <thead>
                 <tr>
                   <th scope="col">번호</th>
-                  <th scope="col">데이터명</th>
+                  <th scope="col">데이터 설명</th>
+                  <th scope="col">데이터 명</th>
+                  <th scope="col">시스템 명</th>
                   <th scope="col">찜한 날짜</th>
                 </tr>
               </thead>
@@ -30,13 +34,15 @@
                   <td>{{ item.rownum }}</td>
                   <td class="tl">
                     <a @click="onClickDataName(item)">
-                      {{ item.description ? `${item.description} (${item.meta_name})` : item.meta_name }}
+                      {{ item.description ? item.description : '-' }}
                     </a>
                   </td>
+                  <td>{{ item.meta_name ? item.meta_name : '-' }}</td>
+                  <td>{{ item.system_name ? item.system_name : '-' }}</td>
                   <td>{{ formatDate(item.favorite_date)}}</td>
                 </tr>
                 <tr v-if="postList.length === 0">
-                  <td colspan="3">
+                  <td colspan="5">
                     <p class="nodata">찜 데이터가 존재하지 않습니다.</p>
                   </td>
                 </tr>
@@ -78,8 +84,9 @@ interface SearchObj {
 }
 interface Post {
   rownum: number;
-  name: string;
+  meta_name: string;
   description: string;
+  system_name: string;
   user_nm: string;
   favorite_date: string;
   guid: string;
@@ -101,9 +108,17 @@ const searchObj = ref<SearchObj>({
 })
 const searchList = ref([
   {
-    value : "title",
-    text : "제목"
-  }
+    value : "description",
+    text : "데이터 설명"
+  },
+  {
+    value : "meta_name",
+    text : "데이터 명"
+  },
+  {
+    value : "system_name",
+    text : "시스템 명"
+  },
 ])
 
 const postList = ref<Post[]>([]);
@@ -139,6 +154,7 @@ const getPost = async (offset: number = 1) => {
   const param = {
     offset,
     limit: pagingObj.value.limit,
+    searchType: searchObj.value.searchType,
     searchWord: searchObj.value.searchWord,
   };
 

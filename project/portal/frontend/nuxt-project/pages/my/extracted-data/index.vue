@@ -14,7 +14,13 @@
 
             <!-- //board-list-search -->
             <div class="mu-item-group">
-              <!-- mu-selectbox / 10개씩 보기(Default) -->
+              <div v-if="currentExtractTab == 1" class="mu-selectbox w120">
+                <select name="searchType3" :value="currentStatus" @change="onChangeStatus">
+                  <option v-for="(item, index) in filterStatusList" :key="index" :value="item.name">
+                    {{ item.description }}
+                  </option>
+                </select>
+              </div>
               <page-size
                 v-model:pageSize="pagingObj.limit"
                 @searchMethod="getMyExtractedDataList"
@@ -26,14 +32,18 @@
             <table class="mu-grid">
               <colgroup>
                 <col style="width: 60px" />
-                <col style="width: auto" />
-                <col style="width: 90px" />
+                <col style="width: 250px" />
+                <col style="width: 250px" />
+                <col style="width: 150px" />
+                <col style="width: 60px" />
                 <col style="width: 180px" />
               </colgroup>
               <thead>
               <tr>
                 <th scope="col">번호</th>
-                <th scope="col">데이터명</th>
+                <th scope="col">데이터 설명</th>
+                <th scope="col">데이터 명</th>
+                <th scope="col">시스템 명</th>
                 <th scope="col">추출방법</th>
                 <th scope="col">추출 일시</th>
               </tr>
@@ -42,17 +52,18 @@
 
               <tr v-for="(item, index) in postList" :key="index">
                   <td>{{ item.rownum }}</td>
-                  <td class="tl">
-                    <!-- <a v-on:click="onClickDataName(item)">{{item.name}}</a>왼쪽정렬시 .tl 추가 -->
-                    <a @click="onClickDataName(item)">
-                      {{ item.description && item.description.length > 0 ? `${item.description} (${item.meta_name})` : item.meta_name }}
+                  <td>
+                    <a @click="onClickDataName(item)" :title="item.description ? item.description : '-'">
+                      {{ item.description ? item.description : '-' }}
                     </a>
-                  </td><!-- 왼쪽정렬시 .tl 추가 -->
+                  </td>
+                  <td :title="item.meta_name ? item.meta_name : '-'">{{ item.meta_name ? item.meta_name : '-' }}</td>
+                  <td :title="item.system_name ? item.system_name : '-'">{{ item.system_name ? item.system_name : '-' }}</td>
                   <td>{{ getDownloadType(item.download_type) }}</td>
                   <td>{{ $yyyyMMddHHmmSS(item.download_date) }}</td>
               </tr>
               <tr v-if="postList.length === 0">
-                <td colspan="4">
+                <td colspan="6">
                   <p class="nodata">추출 데이터가 존재하지 않습니다.</p>
                 </td>
               </tr>
@@ -64,18 +75,22 @@
             <table class="mu-grid">
               <colgroup>
                 <col style="width: 60px" />
-                <col style="width: auto" />
+                <col style="width: 200px" />
+                <col style="width: 200px" />
+                <col style="width: 150px" />
                 <col style="width: 90px" />
-                <col style="width: 180px" />
-                <col style="width: 180px" />
-                <col style="width: 180px" />
+                <col style="width: 110px" />
+                <col style="width: 110px" />
+                <col style="width: 110px" />
                 <col style="width: 110px" />
                 <col style="width: 110px" />
               </colgroup>
               <thead>
               <tr>
                 <th scope="col">번호</th>
-                <th scope="col">데이터명</th>
+                <th scope="col">데이터 설명</th>
+                <th scope="col">데이터 명</th>
+                <th scope="col">시스템 명</th>
                 <th scope="col">추출방법</th>
                 <th scope="col">추출일시</th>
                 <th scope="col">완료일시</th>
@@ -88,12 +103,13 @@
 
               <tr v-for="(item, index) in postList" :key="index">
                   <td>{{ item.rownum }}</td>
-                  <td class="tl">
-                    <!-- <a v-on:click="onClickDataName(item)">{{item.name}}</a>왼쪽정렬시 .tl 추가 -->
-                    <a @click="onClickDataName(item)">
-                      {{ item.description && item.description.length > 0 ? `${item.description} (${item.meta_name})` : item.meta_name }}
+                  <td>
+                    <a @click="onClickDataName(item)" :title="item.description ? item.description : '-'">
+                      {{ item.description ? item.description : '-' }}
                     </a>
-                  </td><!-- 왼쪽정렬시 .tl 추가 -->
+                  </td>
+                  <td :title="item.meta_name ? item.meta_name : '-'">{{ item.meta_name ? item.meta_name : '-' }}</td>
+                  <td :title="item.system_name ? item.system_name : '-'">{{ item.system_name ? item.system_name : '-' }}</td>
                   <td>{{ getDownloadType(item.download_type) }}</td>
                   <td>{{ $yyyyMMddHHmmSS(item.download_date) }}</td>
                   <td>{{ $yyyyMMddHHmmSS(item.end_time) }}</td>
@@ -108,7 +124,7 @@
 
               </tr>
               <tr v-if="postList.length === 0">
-                <td colspan="8">
+                <td colspan="10">
                   <p class="nodata">추출 데이터가 존재하지 않습니다.</p>
                 </td>
               </tr>
@@ -143,10 +159,33 @@ const tabs = ref([
   {idx: 0, key: "데이터 추출 이력"},
   {idx: 1, key: "대용량 데이터 추출"}
 ])
+
+// 대용량 데이터 추출 필터 항목
+const filterStatusList = ref([
+  {
+    name: "",
+    description: "전체"
+  },
+  {
+    name: 0,
+    description: "대기"
+  },
+  {
+    name: 1,
+    description: "진행"
+  },
+  {
+    name: 2,
+    description: "성공"
+  },
+  {
+    name: 3,
+    description: "실패"
+  },
+])
+const currentStatus = ref("");
+
 const currentExtractTab = ref(0)
-
-const searchList = ref([])
-
 const pagingObj = ref({
   total: 0,
   limit: 10,
@@ -159,6 +198,21 @@ const searchObj = ref({
   searchWord: "",
   changedTab: false,
 });
+const searchList = ref([
+  {
+    value : "description",
+    text : "데이터 설명"
+  },
+  {
+    value : "meta_name",
+    text : "데이터 명"
+  },
+  {
+    value : "system_name",
+    text : "시스템 명"
+  },
+])
+
 const router = useRouter();
 
 const getMyExtractedDataList = async (offset = 1) => {
@@ -166,7 +220,9 @@ const getMyExtractedDataList = async (offset = 1) => {
     select_type: currentExtractTab.value,
     offset,
     limit: pagingObj.value.limit,
+    searchType: searchObj.value.searchType,
     searchWord: searchObj.value.searchWord,
+    searchStatus: currentStatus.value,
   };
 
   await $ofetch("/api/myCatalog/myExtractedDataList", {
@@ -305,4 +361,10 @@ const initListData = () => {
     currentPage: 1,
   }
 }
+
+const onChangeStatus = (e) => {
+  currentStatus.value = e.target.value
+  getMyExtractedDataList();
+}
+
 </script>

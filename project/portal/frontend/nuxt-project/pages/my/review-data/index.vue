@@ -1,61 +1,71 @@
 <template>
-        <div class="contents">
-          <div>
-            <div class="inner">
-              <div class="board-list-wrap">
-                <div class="mu-heading">
-                  <!-- board-list-search -->
-                  <Border-list-search-review :searchObj="searchObj" @searchMethod="getPost" :searchList="searchList"/>
-
-                  <div class="mu-item-group">
-                    <!-- mu-selectbox / 10개씩 보기(Default) -->
-                    <page-size
-                      v-model:pageSize="pagingObj.limit"
-                      @searchMethod="getPost"
-                    />
-                  </div>
-                </div>
-                <ul class="data-box-list">
-                  <li class="data-box" v-for="(item, index) in postList" :key="index">
-                    <div class="inner-data no">{{ item.rownum }}</div>
-                    <div class="inner-data">
-                      <div class="title-group">
-                        <a @click="onClickDataName(item)">
-                          <strong class="data-title">{{ item.description ? `${item.description} (${item.meta_name})` : item.meta_name }}</strong>
-                          <p class="data-comment">{{ item.review }}</p>
-                        </a>
-                      </div>
-                      <div class="data-info">
-                        <dl>
-                          <dt class="blind">리뷰 등록일</dt>
-                          <dd>{{ formatDate(item.review_date) }}</dd>
-                        </dl>
-                      </div>
-                    </div>
-                  </li>
-                  <li v-if="postList.length === 0">
-                    <p class="nodata">리뷰 데이터가 존재하지 않습니다.</p>
-                  </li>
-                </ul>
-                <!-- mu-pagination -->
-                <pagination
-                  :paging="pagingObj"
-                  @onClickPage="onClickPage"
-                />
-                <!-- //mu-pagination -->
-              </div>
+  <div class="contents">
+    <div>
+      <div class="inner">
+        <div class="board-list-wrap">
+          <div class="mu-heading">
+            <!-- board-list-search -->
+            <Border-list-search :searchObj="searchObj" @searchMethod="getPost" :searchList="searchList" />
+            <div class="mu-item-group">
+              <!-- mu-selectbox / 10개씩 보기(Default) -->
+              <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getPost" />
             </div>
           </div>
+          <div class="board-list">
+            <table class="mu-grid">
+              <colgroup>
+                <col style="width: 60px" />
+                <col style="width: 250px" />
+                <col style="width: 250px" />
+                <col style="width: 150px" />
+                <col style="width: 150px" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th scope="col">번호</th>
+                  <th scope="col">데이터 설명</th>
+                  <th scope="col">데이터 명</th>
+                  <th scope="col">시스템 명</th>
+                  <th scope="col">찜한 날짜</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, index) in postList" :key="index">
+                  <td>{{ item.rownum }}</td>
+                  <td class="tl">
+                    <a @click="onClickDataName(item)">
+                      {{ item.description ? item.description : '-' }}
+                    </a>
+                  </td>
+                  <td>{{ item.meta_name ? item.meta_name : '-' }}</td>
+                  <td>{{ item.system_name ? item.system_name : '-' }}</td>
+                  <td>{{ formatDate(item.review_date)}}</td>
+                </tr>
+                <tr v-if="postList.length === 0">
+                  <td colspan="5">
+                    <p class="nodata">리뷰 데이터가 존재하지 않습니다.</p>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- mu-pagination -->
+          <pagination :paging="pagingObj" @onClickPage="onClickPage" />
+          <!-- //mu-pagination -->
         </div>
+      </div>
+    </div>
+    <!-- //layout -->
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import { useRouter } from 'vue-router';
+import {ref, onMounted, computed} from "vue";
 import PageSize from "@/pages/admin/manager/system/user/page-size";
 import Pagination from "@functional/pagination/pagination";
-// import DatePicker from "@functional/datepicker/date-picker";
-import BorderListSearchReview from "@functional/border-list-search/border-list-search-review.vue";
+import DatePicker from "@functional/datepicker/date-picker";
+import BorderListSearch from "@functional/border-list-search/border-list-search.vue";
+import { useRouter, useRoute } from 'vue-router';
 
 definePageMeta({
   name: "MyReviewData",
@@ -74,16 +84,17 @@ interface SearchObj {
 }
 interface Post {
   rownum: number;
-  name: string;
+  meta_name: string;
   description: string;
-  review: string;
+  system_name: string;
   user_nm: string;
   review_date: string;
   guid: string;
 }
 
 const { $ofetch } = useNuxtApp();
-const router = useRouter()
+const router = useRouter();
+const route = useRoute();
 
 const pagingObj = ref<PagingObj>({
   total: 0,
@@ -91,26 +102,40 @@ const pagingObj = ref<PagingObj>({
   block: 10,
   currentPage: 1,
 });
-const postList = ref<Post[]>([]);
-const searchWord = ref("");
-const searchType = ref("all");
-const checkedList = ref([]); // [데이터 정의 : Array]
-const allChecked = ref(false);
-
 const searchObj = ref<SearchObj>({
-  searchType: "all", // 검색 조건 유형
-  searchWord: "",    // 검색어
-});
+  searchType: "all",// 검색 조건 유형
+  searchWord: "",   // 검색어
+})
 const searchList = ref([
   {
-    value: "name",
-    text: "데이터명",
+    value : "description",
+    text : "데이터 설명"
   },
   {
-    value: "review",
-    text: "리뷰내용",
+    value : "meta_name",
+    text : "데이터 명"
   },
-]);
+  {
+    value : "system_name",
+    text : "시스템 명"
+  },
+])
+
+const postList = ref<Post[]>([]);
+const guid = computed(() => route.query.guid);
+
+const formatDate = (dateStr: string): string => {
+  const date = new Date(dateStr);
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  // return `${year}-${month}-${day}`;
+};
 
 const postApiData = async (urlStr: string, param: any) => {
   try {
@@ -127,20 +152,21 @@ const postApiData = async (urlStr: string, param: any) => {
 
 const getPost = async (offset: number = 1) => {
   const param = {
-    offset: offset,
+    offset,
     limit: pagingObj.value.limit,
-    searchWord: searchObj.value.searchWord,
     searchType: searchObj.value.searchType,
+    searchWord: searchObj.value.searchWord,
   };
 
   try {
-    const result = await postApiData("/api/myCatalog/myReviewDataList", param);
+    const result = await postApiData('/api/myCatalog/myReviewDataList', param);
     if (result.list) {
+
       pagingObj.value = {
         ...pagingObj.value,
         total: result.total,
-        currentPage: offset,
-      };
+        currentPage: offset
+      }
       postList.value = result.list;
     }
   } catch (error) {
@@ -148,9 +174,9 @@ const getPost = async (offset: number = 1) => {
   }
 };
 
-const onClickPage = (page: number) => {
+const onClickPage = (page: any) =>{
   getPost(page);
-};
+}
 
 const onClickDataName = async (item: { meta_id: string; }) => {
   await router.push({
@@ -158,18 +184,6 @@ const onClickDataName = async (item: { meta_id: string; }) => {
     query: { guid: item.meta_id }
   });
 }
-
-const formatDate = (value: string | number | Date): string => {
-  const date = new Date(value);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  const seconds = String(date.getSeconds()).padStart(2, "0");
-
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-};
 
 onMounted(() => {
   getPost();
