@@ -22,6 +22,7 @@ public interface DataRequestMapper {
     Integer insertDataRequestAnswer(Map<String, Object> param) throws Exception;
     Integer updateDataRequestAnswer(Map<String, Object> param) throws Exception;
     Integer deleteAdminReply(Integer id) throws Exception;
+    Integer deleteAdminReplyFromDataRequest(Integer id) throws Exception;
 
     Integer getLatestAnswerProcessStatus(Integer data_request_id) throws Exception;
 

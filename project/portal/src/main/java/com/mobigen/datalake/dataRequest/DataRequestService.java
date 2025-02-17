@@ -594,13 +594,24 @@ public class DataRequestService {
 
     // 데이터요청 삭제
     public Object deleteDataRequest(Map<String, Object> params) throws Exception {
-        Integer result = 0;
+        Map<String, Object> result = new HashMap<>();
+        int deleteCnt = 0;
+        int deleteReplyCnt = 0;
         ArrayList<Integer> deleteList = (ArrayList<Integer>) params.get("deleteList");
-        for (Integer request_id : deleteList) {
-            // 실제 파일 삭제 처리
-            deleteRealFileFromRequestId(request_id);
-            result += dataRequestMapper.deleteDataRequest(request_id);
+        try {
+            for (Integer request_id : deleteList) {
+                // 실제 파일 삭제 처리
+                deleteRealFileFromRequestId(request_id);
+                deleteCnt += dataRequestMapper.deleteDataRequest(request_id);
+                deleteReplyCnt += dataRequestMapper.deleteAdminReplyFromDataRequest(request_id);
+            }
+
+        } catch (Exception e) {
+            log.error("Fail to delete dataRequest..");
         }
+
+        result.put("deleteCnt", deleteCnt);
+        result.put("deleteCnt", deleteReplyCnt);
 
         return result;
     }
@@ -679,7 +690,7 @@ public class DataRequestService {
     public Object deleteAdminReply(Map<String, Object> params) throws Exception {
         Integer result = 0;
         int id = (int) params.get("id");
-        result = dataRequestMapper.deleteAdminReply(id);
+        result = dataRequestMapper.deleteAdminReply(id); // 답글 삭제 처리
 
         // 답글 유무에 따라 분류 설정
         int data_request_id = (int) params.get("data_request_id");

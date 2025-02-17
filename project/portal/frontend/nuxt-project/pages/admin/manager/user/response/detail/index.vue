@@ -94,7 +94,7 @@
             <button
               type="button"
               class="mu-btn mu-btn-lg"
-              @click="onClickDeletedataRequestButton"
+              @click="onClickDeleteDataRequestButton"
             >
               <span>삭제</span></button
             ><!-- 게시글 삭제용 -->
@@ -174,7 +174,6 @@
             >
               <span>목록</span>
             </button>
-            123
           </div>
         </div>
       </div>
@@ -320,7 +319,7 @@ const getProcessStatus = (status) => {
   if (status == 2) return '진행중'
   if (status == 3) return '제공'
   if (status == 4) return '미제공'
-  if (status == 5) return '삭제됨'
+  return '-'
 }
 
 const getDataRequestOne = async (id: number): Promise<void> => {
