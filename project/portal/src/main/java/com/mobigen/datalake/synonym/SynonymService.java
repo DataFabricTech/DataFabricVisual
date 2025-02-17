@@ -1233,6 +1233,7 @@ public class SynonymService {
                 }
             }
         } catch (Exception e) {
+            log.error("esSynonymSync API 호출 오류");
             esUpdate = false;
         }
 

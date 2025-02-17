@@ -3,6 +3,7 @@ package com.mobigen.datalake.metaData.manage;
 import com.mobigen.framework.result.JsonResult;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MetaDataManageService {
@@ -83,6 +84,7 @@ public class MetaDataManageService {
         return result;
     }
 
+    // ES 동기화 API 호출
     public boolean essyncUpdates(List<String> meta_ids, Integer eventStatus, String eventName) throws Exception {
         boolean result = false;
 
@@ -107,7 +109,7 @@ public class MetaDataManageService {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("essyncUpdates API 호출 오류");
             result = false;
         }
         

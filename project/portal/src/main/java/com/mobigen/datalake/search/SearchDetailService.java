@@ -1002,13 +1002,20 @@ public class SearchDetailService {
     }
 
     public Map<String, Object> essyncUpdate(Map<String, Object> params) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
+        Map<String, Object> restResponse = new HashMap<>();
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
         
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("metaid", params.get("metaid"));
-        requestBody.put("event_status", params.get("event_status")); // 1=생성, 2=수정, 3=삭제
-        requestBody.put("event_name", params.get("event_name"));
-        Map<String, Object> restResponse = restTemplate.postForObject(esSyncUrlUpdate, requestBody, HashMap.class);
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("metaid", params.get("metaid"));
+            requestBody.put("event_status", params.get("event_status")); // 1=생성, 2=수정, 3=삭제
+            requestBody.put("event_name", params.get("event_name"));
+            restResponse = restTemplate.postForObject(esSyncUrlUpdate, requestBody, HashMap.class);
+        } catch (Exception e) {
+            log.error("essyncUpdate API 호출 오류");
+        }
+        
 
         return restResponse;
     }

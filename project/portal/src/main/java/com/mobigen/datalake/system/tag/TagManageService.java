@@ -1,6 +1,7 @@
 package com.mobigen.datalake.system.tag;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TagManageService {
@@ -145,14 +147,19 @@ public class TagManageService {
   }
 
   public Map<String, Object> essyncUpdate(String guid, Integer eventStatus, String eventName) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
-        
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("metaid", guid);
-        requestBody.put("event_status", eventStatus); // 1=생성, 2=수정, 3=삭제
-        requestBody.put("event_name", eventName);
-        Map<String, Object> restResponse = restTemplate.postForObject(esSyncUrlUpdate, requestBody, HashMap.class);
-
-        return restResponse;
+    Map<String, Object> restResponse = new HashMap<>();
+    try {
+      RestTemplate restTemplate = new RestTemplate();
+      
+      Map<String, Object> requestBody = new HashMap<>();
+      requestBody.put("metaid", guid);
+      requestBody.put("event_status", eventStatus); // 1=생성, 2=수정, 3=삭제
+      requestBody.put("event_name", eventName);
+      restResponse = restTemplate.postForObject(esSyncUrlUpdate, requestBody, HashMap.class);
+    } catch (Exception e) {
+      log.error("essyncUpdate API 호출 오류");
     }
+      
+    return restResponse;
+  }
 }

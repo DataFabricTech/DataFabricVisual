@@ -4,6 +4,7 @@ import com.mobigen.datalake.metaData.manage.MetaDataManageService;
 import com.mobigen.framework.result.JsonResult;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MetaDataClassificationService {
@@ -479,24 +481,35 @@ public class MetaDataClassificationService {
     }
 
     public Map<String, Object> essyncUpdate(String guid, Integer eventStatus, String eventName) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
+        Map<String, Object> restResponse = new HashMap<>();
+        try {
+            RestTemplate restTemplate = new RestTemplate();
         
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("metaid", guid);
-        requestBody.put("event_status", eventStatus); // 1=생성, 2=수정, 3=삭제
-        requestBody.put("event_name", eventName);
-        Map<String, Object> restResponse = restTemplate.postForObject(esSyncUrlUpdate, requestBody, HashMap.class);
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("metaid", guid);
+            requestBody.put("event_status", eventStatus); // 1=생성, 2=수정, 3=삭제
+            requestBody.put("event_name", eventName);
+            restResponse = restTemplate.postForObject(esSyncUrlUpdate, requestBody, HashMap.class);    
+        } catch (Exception e) {
+            log.error("essyncUpdate API 호출 오류");
+        }
 
         return restResponse;
     }
 
     public Map<String, Object> essyncConvertCategory(Map<String, Object> params) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
+        Map<String, Object> restResponse = new HashMap<>();
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
         
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("c_id", params.get("id"));        
-        requestBody.put("c_description", params.get("description"));
-        Map<String, Object> restResponse = restTemplate.postForObject(esSyncUrlConvertcategory, requestBody, HashMap.class);
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("c_id", params.get("id"));        
+            requestBody.put("c_description", params.get("description"));
+            restResponse = restTemplate.postForObject(esSyncUrlConvertcategory, requestBody, HashMap.class);
+        } catch (Exception e) {
+            log.error("essyncConvertCategory API 호출 오류");
+        }
 
         return restResponse;
     }
