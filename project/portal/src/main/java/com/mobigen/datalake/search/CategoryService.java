@@ -11,7 +11,9 @@ import org.springframework.web.client.RestTemplate;
 
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CategoryService {
@@ -227,8 +229,13 @@ public class CategoryService {
 
     // 카테고리 카운트 조회 API 호출
     public Map<String, Object> getClassificationCountFromApi() throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
-        Map<String, Object> restResponse = restTemplate.getForObject(categoryCountUrl, HashMap.class);
+        Map<String, Object> restResponse = new HashMap<>();
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            restResponse = restTemplate.getForObject(categoryCountUrl, HashMap.class);   
+        } catch (Exception e) {
+            log.error("Fail to Execute Category Count API");
+        }
         return restResponse;
     }
 }
