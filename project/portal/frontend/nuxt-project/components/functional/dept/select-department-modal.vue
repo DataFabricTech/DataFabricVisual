@@ -60,7 +60,7 @@
             </div>
           </div>
           
-          <div class="department-tree" style="overflow: auto; border: 1px solid #cecece;height: 400px">
+          <div class="department-tree" style="overflow: auto; border: 1px solid #cecece;height: 400px;">
             <!-- 부서 목록 Tree S -->
             <ul class="category-menu slim-scroll" style="padding: 10px;">
               <li :class="[toggleTargets.all ? 'open' : '', 'has-sub']">
