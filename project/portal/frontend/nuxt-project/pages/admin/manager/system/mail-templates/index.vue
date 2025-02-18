@@ -89,14 +89,14 @@
                   </td>
                   <td>
                     <div class="category-group">
-                        <div v-if="item.sender.length > 0" v-for="sender in item.sender" :key="sender.email" class="category" style="width:220px;">
+                        <div v-if="item.sender.length > 0 && item.sender[0] !== '[]'" v-for="sender in item.sender" :key="sender.email" class="category" style="width:220px;">
                             <em class="category-label" :title="sender.name" style="max-width:220px;">{{ sender.name }} {{ sender.email }}</em>
                         </div>
                     </div>
                   </td>
                   <td class="tl">
                     <div class="category-group">
-                        <div v-if="item.receiver.length > 0" v-for="receiver in item.receiver && item.receiver.length > 0" :key="receiver.email" class="category" style="width:220px;">
+                        <div v-if="item.receiver.length > 0 && item.receiver[0] !== '[]'" v-for="receiver in item.receiver" :key="receiver.email" class="category" style="width:220px;">
                             <em class="category-label" :title="receiver.name" style="max-width:220px;">{{ receiver.name }} {{ receiver.email }}</em>
                         </div>
                     </div>
@@ -235,21 +235,22 @@
                         });
                     };
 
-                    if (Array.isArray(item.sender)) {
-                        item.sender = parseSenders(item.sender);
+                    const processRecipients = (property) => {
+                        if (Array.isArray(item[property])) {
+                            const validRecipients = item[property].map(recipient => {
+                                return recipient === '[]' || (Array.isArray(recipient) && recipient.length === 0) ? null : recipient;
+                            }).filter(recipient => recipient != null && recipient !== '');
+                            
+                            if (validRecipients.length > 0) {
+                                item[property] = parseSenders(validRecipients);
+                            }
+                        }
                     }
 
-                    if (Array.isArray(item.receiver)) {
-                        item.receiver = parseSenders(item.receiver);
-                    }
-
-                    if (Array.isArray(item.cc_receiver)) {
-                        item.cc_receiver = parseSenders(item.cc_receiver);
-                    }
-
-                    if (Array.isArray(item.bcc_receiver)) {
-                        item.bcc_receiver = parseSenders(item.bcc_receiver);
-                    }
+                    processRecipients('sender');
+                    processRecipients('receiver');
+                    processRecipients('cc_recipients');
+                    processRecipients('bcc_recipients');
                 });
 
                 pagingObj.value = {

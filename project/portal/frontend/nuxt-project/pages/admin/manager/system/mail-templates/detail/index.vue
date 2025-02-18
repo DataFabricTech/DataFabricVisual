@@ -116,7 +116,6 @@
   
     files.value.splice(files.value.length, 1, e.target.files[0]); // [10, 20]
   };
-  console.log('route.params.template_id : ', route.query.template_id)
 
   onMounted(() => {
     if (route.query.template_id) {
@@ -146,29 +145,27 @@
                         });
                     };
 
-                    if (Array.isArray(post.value.sender)) {
-                        post.value.sender = parseSenders(post.value.sender);
+                    const processRecipients = (property) =>{
+                        if (Array.isArray(post.value[property])) {
+                            const validRecipients = post.value[property].filter(recipient => recipient != null && recipient !== '' && recipient !== '[]');
+                            if (validRecipients.length > 0) {
+                                post.value[property] = parseSenders(validRecipients);
+                            }
+                        }
                     }
 
-                    if (Array.isArray(post.value.receiver)) {
-                        post.value.receiver = parseSenders(post.value.receiver);
-                    }
+                    processRecipients('sender');
+                    processRecipients('receiver');
+                    processRecipients('cc_recipients' );
+                    processRecipients('bcc_recipients');
 
-                    if (Array.isArray(post.value.cc_receiver)) {
-                        post.value.cc_receiver = parseSenders(post.value.cc_receiver);
-                    }
-
-                    if (Array.isArray(post.value.bcc_receiver)) {
-                        post.value.bcc_receiver = parseSenders(post.value.bcc_receiver);
-                    }
-
+                    // 
                     if (post.value && !post.value.template_variables) {
                         post.value.template_variables = [];
                     }
 
-                    if(post.value && !post.value.template_variables) {
-                        post.value.template_variables = [];
-                    }
+                    // 
+                    cleanData(post);
                 }
             }
         })
@@ -176,6 +173,25 @@
       console.log(error);
     }
   };
+
+  //
+  const cleanData = (data) => {
+    if (data.value.sender && Array.isArray(data.value.sender)) {
+        data.value.sender = data.value.sender.filter(sender => sender !== "[]");
+    }
+    if (data.value.receiver && Array.isArray(data.value.receiver)) {
+        data.value.receiver = data.value.receiver.filter(receiver => receiver !== "[]");
+    }
+    if (data.value.cc_recipients && Array.isArray(data.value.cc_recipients)) {
+        data.value.cc_recipients = data.value.cc_recipients.filter(recipient => recipient !== "[]");
+    }
+    if (data.value.bcc_recipients && Array.isArray(data.value.bcc_recipients)) {
+        data.value.bcc_recipients = data.value.bcc_recipients.filter(bcc => bcc !== "[]");
+    }
+    if (data.value.template_variables && Array.isArray(data.value.template_variables)) {
+        data.value.template_variables = data.value.template_variables.filter(variable => variable !== "[]");
+    }
+  }
   
   // 목록 버튼 클릭
   const onClickListButton = async (): Promise<void> => {

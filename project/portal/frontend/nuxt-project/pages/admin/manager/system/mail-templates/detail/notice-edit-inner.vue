@@ -153,8 +153,8 @@
                       <input type="radio" id="r444" name="name2" v-model="props.post.use_yn" value="N" :checked="props.post.use_yn === 'N'">
                       <label for="r444"><em class="step-process unsupply">미사용</em></label>
                   </div>
-                  <p v-if="!templateUseYn_Valid" class="complete-msg error">사용 여부를 선택해주세요.</p>
                 </div>
+                <p v-if="!templateUseYn_Valid" class="complete-msg error">사용 여부를 선택해주세요.</p>
               </td>
             </tr>
           </tbody>

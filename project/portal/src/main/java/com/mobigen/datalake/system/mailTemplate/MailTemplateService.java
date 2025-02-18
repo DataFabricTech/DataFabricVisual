@@ -140,7 +140,7 @@ public class MailTemplateService {
                             }
                         })
                         .filter(Objects::nonNull)
-                        .collect(Collectors.joining(", ", "", ""));
+                        .collect(Collectors.joining(", ", "{", "}"));
             }
         }
         return "[]";
@@ -150,6 +150,9 @@ public class MailTemplateService {
     private String normalConvertToJsonArray(Object fieldValue) {
         if (fieldValue instanceof List) {
             List<?> list = (List<?>) fieldValue;
+
+            if(list.size() == 0 || list.get(0) == null) return "[]";
+
             String jsonArray = list.stream()
                                    .map(Object::toString)
                                    .collect(Collectors.joining(","));
@@ -186,6 +189,12 @@ public class MailTemplateService {
         }
 
         Map<String, Object> mailTemplate = mailTemplateInfo.get(0);
+
+        if (mailTemplate.get("use_yn") == null || mailTemplate.get("use_yn").equals("N")) {
+            result.put("result", "fail");
+            result.put("message", "사용 가능한 템플릿이 없습니다.");
+            return result;
+        }
 
         // 메일 제목
         String mailTitle = (String) mailTemplate.get("template_title");
@@ -259,12 +268,12 @@ public class MailTemplateService {
             message.setContent(htmlBody, "text/html; charset=utf-8");
 
             // 메일 정보 출력
-            System.out.println("메일 제목: " + message.getSubject());
-            System.out.println("발신자: " + Arrays.toString(message.getFrom()));
-            System.out.println("수신자: " + Arrays.toString(message.getRecipients(Message.RecipientType.TO)));
-            System.out.println("참조자: " + Arrays.toString(message.getRecipients(Message.RecipientType.CC)));
-            System.out.println("내용: " + message.getContent());
-            System.out.println("메일내용: " + htmlBody);
+            log.info("메일 제목: " + message.getSubject());
+            log.info("발신자: " + Arrays.toString(message.getFrom()));
+            log.info("수신자: " + Arrays.toString(message.getRecipients(Message.RecipientType.TO)));
+            log.info("참조자: " + Arrays.toString(message.getRecipients(Message.RecipientType.CC)));
+            log.info("내용: " + message.getContent());
+            log.info("메일내용: " + htmlBody);
 
             javaMailSender.send(message);
         } catch (Exception e) {
@@ -351,8 +360,6 @@ public class MailTemplateService {
             } else {
                 value = entry.getValue().toString();
             }
-
-System.out.println("##################3333333333333-2222222222222"+ entry.getKey() + " : " + value);
 
             template = template.replace(entry.getKey(), value);
         }
