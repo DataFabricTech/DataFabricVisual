@@ -108,12 +108,12 @@
                       <div class="mu-checkbox">
                         <input
                           type="checkbox"
-                          id="chkAll"
+                          id="pUserChkAll"
                           title="전체선택"
                           v-model="allUserChecked"
                           @click="checkedUserAll($event.target.checked)"
                         />
-                        <label for="chkAll"><span class="blind">전체선택</span></label>
+                        <label for="pUserChkAll"><span class="blind">전체선택</span></label>
                       </div>
                     </th>
                     <th scope="col">이름</th>

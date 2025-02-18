@@ -30,7 +30,24 @@
             </td>
           </tr>
           <tr>
-            <th scope="row">수신자<strong class="required">필수</strong></th>
+            <th scope="row">발신자</th>
+            <td>
+              <div id="sender-tags" class="tags-group">
+                <div v-if="props.modalParam.sender && props.modalParam.sender.length > 0 && props.modalParam.sender.some(sender => sender.name && sender.email)" 
+                      v-for="sender in props.modalParam.sender" :key="sender" class="tag tag-sm">
+                    <span class="mail-label">{{ sender.name }} {{ sender.email }}</span>
+                    <button type="button" class="mu-btn mu-btn-delete" @click="onRemoveSender(sender)">
+                        <i class="mu-icon-svg item-delete"></i><span>삭제</span>
+                    </button>
+                </div>
+                <button type="button" title="사원 찾아보기" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only" @click="onToggleDeptModal('sender')">
+                    <i class="mu-icon-svg add"></i><span>찾아보기</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">수신자</th>
             <td>
               <div id="receiver-tags" class="tags-group">
                 <div v-if="props.modalParam.receiver && props.modalParam.receiver.length > 0 && props.modalParam.receiver.some(receiver => receiver.name && receiver.email)" 
@@ -43,6 +60,42 @@
                 <button type="button" title="사원 찾아보기" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only" @click="onToggleDeptModal('receiver')">
                     <i class="mu-icon-svg add"></i><span>찾아보기</span>
                 </button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">참조자</th>
+            <td>
+              <div id="cc_recipients-tags" class="tags-group">
+                <div v-if="props.modalParam.cc_recipients && props.modalParam.cc_recipients.length > 0 && props.modalParam.cc_recipients.some(cc_recipients => cc_recipients.name && cc_recipients.email)" 
+                      v-for="cc_recipients in props.modalParam.cc_recipients" :key="cc_recipients" class="tag tag-sm">
+                    <span class="mail-label">{{ cc_recipients.name }} {{ cc_recipients.email }}</span>
+                    <button type="button" class="mu-btn mu-btn-delete" @click="onRemoveCcReceiver(cc_recipients)">
+                        <i class="mu-icon-svg item-delete"></i><span>삭제</span>
+                    </button>
+                </div>
+                <button type="button" title="사원 찾아보기" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only" @click="onToggleDeptModal('cc_recipients')">
+                    <i class="mu-icon-svg add"></i><span>찾아보기</span>
+                </button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">변수</th>
+            <td>
+              <div id="variables-tags" class="tags-group">
+                <input type="text" placeholder="변수명" v-model="variable._name" class="mu-input w140" title="변수명 입력" />
+                <input type="text" placeholder="변수값" v-model="variable._value" class="mu-input w140" title="변수값 입력" />
+                <button type="button" title="변수 입력" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only" @click="onAddVariable()">
+                    <i class="mu-icon-svg add"></i><span>찾아보기</span>
+                </button>
+                <div v-if="props.modalParam.variables && props.modalParam.variables.length > 0" 
+                    v-for="variable in props.modalParam.variables" :key="variable" class="tag tag-sm">
+                  <span class="mail-label">{{ variable._name }} : {{ variable._value }}</span>
+                  <button type="button" class="mu-btn mu-btn-delete" @click="onRemoveVariable(variable)">
+                      <i class="mu-icon-svg item-delete"></i><span>삭제</span>
+                  </button>
+                </div>                
               </div>
             </td>
           </tr>
@@ -82,6 +135,14 @@ const emit = defineEmits(["onCloseModal", "onSubmit"]);
 const toggleDeptModal = ref(false);
 const select_user_type = ref('receiver');
 
+const variable = ref({
+  _name : "",
+  _value : "",
+})
+const add_sender = ref({
+  _name : "",
+  _value : "",
+})
 
 // 
 const onRegister = async() => {
@@ -91,10 +152,28 @@ const onRegister = async() => {
   let params = {
     template_id: props.modalParam.template_id,
     variables : {
+      add_sender : [],
       add_recipients : props.modalParam.receiver,
-      '_mailTitle_' : "@@@@@@@@@@@@@@@@@@@@@@@@@@메일 제목",
-      '_initPassword_' : "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@test123",
+      add_cc_recipients : [],
     }
+  }
+
+  if (props.modalParam.sender.length > 0) {
+    params.variables.add_sender.push(...props.modalParam.sender);
+  }
+
+  if (props.modalParam.receiver.length > 0) {
+    params.variables.add_recipients.push(...props.modalParam.receiver);
+  }
+
+  if (props.modalParam.cc_recipients.length > 0) {
+    params.variables.add_cc_recipients.push(...props.modalParam.cc_recipients);
+  }
+
+  if (props.modalParam.variables) {
+    props.modalParam.variables.forEach((variable) => {
+      params.variables[variable._name] = variable._value;
+    });
   }
 
   $ofetch('/api/admin/system/mailTemplate/sendMailWithTemplate', {
@@ -127,6 +206,8 @@ const onClear = () => {
 
 // 
 const onToggleDeptModal = (type: string) => {
+  select_user_type.value = type;
+
   if (toggleDeptModal.value) {
     toggleDeptModal.value = false;
   } else {
@@ -135,19 +216,65 @@ const onToggleDeptModal = (type: string) => {
 };
 
 // 
-const onSelectDept = (info) => {
+const onSelectDept = (info:any) => {
   if(info.length > 0){
+    let i = 0;
     info.forEach((item) => {
+      if(select_user_type.value === 'sender'){
+        if (!props.modalParam.sender.some(existingItem => existingItem.email === item.email)) {
+          if (i === 0) {
+            if(props.modalParam.sender.length < 1) {
+              props.modalParam.sender.push(item);
+              i++;
+            }
+          } else {
+            return;
+          }
+        }
+      } else if(select_user_type.value === 'receiver'){
         if (!props.modalParam.receiver.some(existingItem => existingItem.email === item.email)) {
           props.modalParam.receiver.push(item);
         }
+      } else if(select_user_type.value === 'cc_recipients'){
+        if (!props.modalParam.cc_recipients.some(existingItem => existingItem.email === item.email)) {
+          props.modalParam.cc_recipients.push(item);
+        }
+      }
     })
   }
 };
 
+//
+const onRemoveSender = (sender:any) => {
+  props.modalParam.sender.splice(props.modalParam.sender.indexOf(sender), 1);
+}
+
+//
+const onRemoveCcReceiver = (cc_recipients:any) => {
+  props.modalParam.cc_recipients.splice(props.modalParam.cc_recipients.indexOf(cc_recipients), 1);
+}
+
 // 
-const onRemoveReceiver = (receiver) => {
+const onRemoveReceiver = (receiver:any) => {
   props.modalParam.receiver.splice(props.modalParam.receiver.indexOf(receiver), 1);
+}
+
+//
+const onAddVariable = () => {
+  if(!variable.value._name || !variable.value._value) return;
+
+  props.modalParam.variables.push({
+    _name : variable.value._name,
+    _value : variable.value._value,
+  })
+
+  variable.value._name = "";
+  variable.value._value = "";
+}
+
+//
+const onRemoveVariable = (variable:any) => {
+  props.modalParam.variables.splice(props.modalParam.variables.indexOf(variable), 1);
 }
 
 // 

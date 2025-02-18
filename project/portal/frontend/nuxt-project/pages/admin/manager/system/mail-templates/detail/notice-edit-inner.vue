@@ -111,6 +111,14 @@
               <td>
                 <!-- <ckeditor :editor="editor" v-model="props.post.template_content"></ckeditor> -->
                  <textarea v-model="props.post.template_content" style="width:100%; height:500px"></textarea>
+
+                 <button type="button" class="mu-btn mu-btn-primary" @click="togglePreview">
+                  <i class="mu-icon-svg add"></i><span>미리보기</span>
+                 </button>
+                 <div v-if="showPreview" class="preview">
+                  <h3>Preview</h3>
+                  <div v-html="formattedContent"></div>
+                </div>
                 <p v-if="!templateContent_Valid" class="complete-msg error">내용을 입력해주세요.</p>
               </td>
             </tr>
@@ -215,6 +223,7 @@ const props = defineProps(["post", "cancelMethod", "saveMethod"]);
 
 const toggleDeptModal = ref(false);
 const select_user_type = ref('');
+const showPreview = ref(false);
 
 const templateId_Valid: ComputedRef<boolean> = computed(() => {
   return props.post.template_id.length > 0 ? true : false;
@@ -234,6 +243,14 @@ const templateContent_Valid: ComputedRef<boolean> = computed(() => {
 const templateUseYn_Valid: ComputedRef<boolean> = computed(() => {
   return props.post.use_yn.length > 0 ? true : false;
 });
+
+const formattedContent = computed(() => {
+  return props.post.template_content;
+});
+
+const togglePreview = (): void => {
+  showPreview.value = !showPreview.value;
+}
 
 const onClickListButton = (): void => {
   emit("cancelMethod");
@@ -341,3 +358,11 @@ const onAddVariable = () => {
   }
 }
 </script>
+<style>
+.preview {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin-top: 10px;
+  background-color: #f9f9f9;
+}
+</style>

@@ -350,7 +350,7 @@
       visibleMailTemplateManageModal.value = !visibleMailTemplateManageModal.value;
       
       if(item != null){
-        modalParam.value = {template_id: item.template_id, receiver: []};
+        modalParam.value = {template_id: item.template_id, sender: [], receiver: [], cc_recipients: [], bcc_recipients: [], variables: []};
       }
     } catch (error) {
         console.log(error);
