@@ -83,25 +83,14 @@
             <div class="category-area">
               <!-- category-list 2023-11-09 고객요청 : 순서 변경 확인 / 필요없는 클래스 .active삭제 - 기능없음 -->
               <ul class="category-list">
-                <li v-for="(cat, idx2) in cats" class="category">
+                <li v-for="(cat, idx2) in categoryList.filter(item => item.dept_id).slice(0, 10)" class="category">
                   <a @click="goToSearch(cat)" class="category">
                     <i :class="getCategoryIcon(idx2 + 1)"></i>
                     <em class="category-label">{{ cat.description }}</em>
+                    <span class="count">{{ cat.tableCount.toLocaleString() }}</span>
                   </a>
                 </li>
               </ul>
-              <!-- <ul class="category-list">
-                <li><a href="#none" class="category"><i class="ico-category category-05"></i><em class="category-label">생산</em><span class="count">841</span></a></li>
-                <li><a href="#none" class="category"><i class="ico-category category-09"></i><em class="category-label">품질</em><span class="count">266</span></a></li>
-                <li><a href="#none" class="category"><i class="ico-category category-04"></i><em class="category-label">구매</em><span class="count">163</span></a></li>
-                <li><a href="#none" class="category"><i class="ico-category category-07"></i><em class="category-label">연구</em><span class="count">13</span></a></li>
-                <li><a href="#none" class="category"><i class="ico-category category-08"></i><em class="category-label">영업</em><span class="count">56</span></a></li>
-                <li><a href="#none" class="category"><i class="ico-category category-01"></i><em class="category-label">재무</em><span class="count">1,234</span></a></li>
-                <li><a href="#none" class="category"><i class="ico-category category-02"></i><em class="category-label">경영지원관리</em><span class="count">14</span></a></li>
-                <li><a href="#none" class="category"><i class="ico-category category-06"></i><em class="category-label">IT</em><span class="count">46</span></a></li>
-                <li><a href="#none" class="category"><i class="ico-category category-03"></i><em class="category-label">공통</em><span class="count">111</span></a></li>
-                <li><a href="#none" class="category"><i class="ico-category category-10"></i><em class="category-label">미분류</em><span class="count">111</span></a></li>
-              </ul> -->
             </div>
           </div>
         </div>
@@ -283,6 +272,7 @@
   </div>
 </template>
 
+
 <script setup lang="ts">
 import type { Ref } from "@vue/reactivity";
 import { ref } from "@vue/reactivity";
@@ -303,6 +293,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useSearchStore } from "@/store/search";
+import Highcharts from 'highcharts';
 
 
 definePageMeta({
@@ -335,7 +326,7 @@ const myFavoriteDataList = ref([]) // 찜 데이터
 const myReviewDataList = ref([]) // 리뷰 데이터
 const myExtractedDataList = ref([]) // 데이터 추출 내역
 
-const categoryList = ref([]) // 차트 카테고리 목록
+const categoryList = computed(() => categoryStore.getCategoryList); // 차트 카테고리 목록
 const currentSwiperStatus  = ref(1) // swiper 현재 위치
 const swiperRef = ref(null); // swiper Instance
 const swiperNoticeRef = ref(null); // swiper Instance
@@ -487,13 +478,92 @@ const getPostData = async () => {
 
 // 카테고리 데이터 조회
 const getCategoryData = async () => {
-  let res = await $ofetch('/api/main/getChartCategoryList')
-  if (res && res.data && !res.errorMessage) {
-    // 카테고리 순서 설정
-    let tmpList = res.data.sort((a, b) => a.ord_no - b.ord_no)
-    categoryList.value = chunkArray(tmpList, 8)
-  }
+  categeoryChart(categoryList.value);
 }
+
+// 
+const categeoryChart = (categoryList) => {
+  var chartCategory = Highcharts.chart("chartCategory", {
+    chart: {
+      type: "column",
+      height: 150,
+      backgroundColor: "transparent"
+    },
+    title: {
+      text: ""
+    },
+    credits: {
+      enabled: false
+    },
+    legend: {
+      enabled: false
+    },
+    xAxis: {
+      categories: categoryList.filter(item => item.dept_id).map(item => item.description).slice(0, 10), // dept_id가 있는 항목만 필터링
+      labels: {
+        enabled: false
+      },
+      lineColor: 'rgba(125, 125, 125, 1)',
+      lineWidth: 1,
+      tickWidth: 0
+    },
+    yAxis: {
+      title: {
+        text: ""
+      },
+      labels: {
+        enabled: false
+      },
+      gridLineColor: 'rgba(255, 255, 255, 0.3)',
+      gridLineDashStyle: 'dash'
+    },
+    plotOptions: {
+      column: {
+        stacking: 'normal',
+        borderRadius: 0,
+        borderWidth: 0,
+        pointWidth: 8,
+      }
+    },
+    series: [
+      {
+        name: "",
+        data: categoryList.filter(item => item.dept_id).map(item => item.tableCount).slice(0, 10),
+        color: "#00b9ff",
+        states: {
+          hover: {
+            color: '#ff4530'
+          }
+        }
+      },
+    ],
+    tooltip: {
+      shared: true,
+      useHTML: true,
+      padding: 8,
+      borderWidth: 0,
+      borderRadius: 10,
+      backgroundColor: "rgba(0,0,0,.85)",
+      style: {
+        zIndex: 10,
+        fontSize: "13px",
+        fontFamily: "Pretendard",
+        color: "#fff"
+      },
+      formatter: function() {
+        var category = this.points[0].key; // xAxis.categories
+        var tooltipContent = `<div style="color:#fff">${category}`;
+
+        this.points.forEach(point => {
+          tooltipContent += `${point.series.name} ${point.y}<br/>`; // name과 value 추가
+        });
+
+        tooltipContent += '</div>';
+        return tooltipContent;
+      }
+    },
+  });
+};
 
 // 배열 나누어 저장
 const chunkArray = (array, chunk) => {
@@ -526,8 +596,9 @@ const swiperButtonActiveStatus = (cnt) => {
 
 // 카테고리 아이콘 설정
 const getCategoryIcon = (idx) => {
-  let i = Math.floor(idx / 10)
-  return `ico-category category-${i}${idx}`
+  let i = Math.floor(idx / 10);
+  const categoryIndex = idx > 10 ? 10 : idx; 
+  return `ico-category category-${categoryIndex < 10 ? String(i) + String(categoryIndex) : String(categoryIndex)}`;
 }
 
 // 차트 카테고리 클릭 시 검색페이지로 이동
