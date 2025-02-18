@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <property name="BASE_PATH" value="/data_catalog_portal"></property>
+
+     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${BASE_PATH}/logs/mobigen_catalog.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- <fileNamePattern>${BASE_PATH}/logs/mobigen_catalog-%d{yyyyMMddHHmmss}.log</fileNamePattern> -->
+            <fileNamePattern>${BASE_PATH}/logs/mobigen_catalog-%d.log</fileNamePattern>
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>3GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="DEBUG">
+        <appender-ref ref="FILE" />
+    </root>
+
+</configuration>

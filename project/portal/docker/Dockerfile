@@ -1,53 +1,42 @@
-FROM openjdk:11.0.11-9-slim
+#base 이미지 선언
+FROM rockylinux:8.9
 
-ARG SERVICE_ID
-ARG CONTAINER_HOME
-ARG SERVICE_HOME
+# ps 설치
+RUN dnf -y install procps-ng
 
-# locales 설치
-RUN sed -i 's/deb.debian.org/ftp.kr.debian.org/g' /etc/apt/sources.list \
- && apt-get -o Acquire::Check-Valid-Until=false update \
- && apt-get install -y --no-install-recommends locales \
- && apt-get clean \
- && localedef -f UTF-8 -i ko_KR ko_KR.UTF-8
+#timezone 설정
+RUN ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime && dnf install -y tzdata && dnf clean all
+ENV TZ=Asia/Seoul
 
-# directory 구조
-# /home/docker/                         // ${CONTAINER_HOME}
-#     app/
-#         ${SERVICE_ID}/               // ${SERVICE_HOME}
-#             conf/
-#                 docker.conf
-#                 *.yml
-#             lib/
-#                 ${SERVICE_ID}.jar
-#             sbin/
-#                 start.sh
-#             env.sh
-#     entry-point/
-#         *-entrypoint.sh
+# java 설치
+COPY ../java21 /java21
+RUN dnf install /java21/*.rpm -y
+RUN java -version
 
-ENV DOCKER_ENV=true \
-    SERVICE_ID=${SERVICE_ID} \
-    CONTAINER_HOME=${CONTAINER_HOME} \
-    SERVICE_HOME=${SERVICE_HOME}
+#경로 지정
+WORKDIR /data_catalog_portal
 
-# 빌드 파일 복사
-COPY target/app ${CONTAINER_HOME}/app
-COPY target/entry-point ${CONTAINER_HOME}/entry-point
+#필요한 내부 폴더 생성
+RUN mkdir /data_catalog_portal/logs
+RUN mkdir /data_catalog_portal/keystore
+RUN mkdir /data_catalog_portal/conf
+RUN mkdir /data_catalog_portal/data
+RUN mkdir /data_catalog_portal/data/csv
+RUN mkdir /data_catalog_portal/data/sample
 
-# create user & home dir
-RUN mkdir -p ${CONTAINER_HOME} \
- && useradd -d ${CONTAINER_HOME} -u 1001 -g root -p hello.docker docker \
- && chown -R docker:root ${CONTAINER_HOME}
+#volume 구성을 위한 기본 복제
+RUN mkdir /defaultfile
 
-# JAVA 버전 확인
-# RUN echo java --version
+#필요 데이터를 도커 안으로 이동
+COPY ../scripts/docker_start.sh /data_catalog_portal/docker_start.sh
+COPY ../conf/application-docker.yml /data_catalog_portal/conf/application.yml
+COPY ../conf/logback.xml /data_catalog_portal/conf/logback.xml
+COPY ../mobigen-catalog.jar /data_catalog_portal/mobigen-catalog.jar
 
-# NOTE: windows 환경에서 빌드시 실행파일 권한 문제 해결을 위해 chmod 추가 수행
-RUN find ${CONTAINER_HOME} -name "*.sh" -exec chmod 0755 {} \;
+#기본 데이터 보존용 파일 복제
+RUN cp -r /data_catalog_portal /defaultfile/data_catalog_portal
 
-# change user
-USER docker
-WORKDIR ${SERVICE_HOME}
+#권한 설정
+RUN chmod 755 /data_catalog_portal/*.sh
 
-# CMD ["java", "-jar", "${SERVICE_ID}.jar"]
+CMD ["sh", "-c", "set -e; /data_catalog_solution/docker_start.sh"]
