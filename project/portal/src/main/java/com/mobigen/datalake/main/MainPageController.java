@@ -72,7 +72,7 @@ public class MainPageController {
         return mainPageService.getRecommendDataList(request);
     }
 
-    // 데이터 요청 조회
+    // My 데이터 요청 조회
     @ResponseJsonResult
     @GetMapping("/myRequestDataList")
     public Object getMyRequestDataList(HttpServletRequest request) throws Exception {
@@ -83,7 +83,7 @@ public class MainPageController {
         return mainPageService.getMyRequestDataList(userId);
     }
 
-    // 찜데이터 조회
+    // My 찜 데이터 조회
     @ResponseJsonResult
     @GetMapping("/myFavoriteData")
     public Object getMyFavoriteDataList(HttpServletRequest request) throws Exception {
@@ -91,6 +91,26 @@ public class MainPageController {
         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
         String userId = user.get("user_id").toString();
         return mainPageService.getMyFavoriteDataList(userId);
+    }
+
+    // My 리뷰데이터 조회
+    @ResponseJsonResult
+    @GetMapping("/myReviewData")
+    public Object getMyReviewDataList(HttpServletRequest request) throws Exception {
+        // 세션 사용자 ID와 실제 DB의 게시글 작성자 일치 여부 확인
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        String userId = user.get("user_id").toString();
+        return mainPageService.getMyReviewDataList(userId);
+    }
+
+    // My 데이터 추출 내역 조회
+    @ResponseJsonResult
+    @GetMapping("/myExtractedData")
+    public Object getMyExtractedDataList(HttpServletRequest request) throws Exception {
+        // 세션 사용자 ID와 실제 DB의 게시글 작성자 일치 여부 확인
+        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+        String userId = user.get("user_id").toString();
+        return mainPageService.getMyExtractedDataList(userId);
     }
 
     // 카테고리 항목 조회 (스와이프 차트)

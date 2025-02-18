@@ -14,5 +14,7 @@ public interface MainPageMapper {
     List getRecommendDataList() throws Exception;
     List getMyRequestDataList(String user_id) throws Exception;
     List getMyFavoriteDataList(String user_id) throws Exception;
+    List getMyReviewDataList(String user_id) throws Exception;
+    List getMyExtractedDataList(String user_id) throws Exception;
     List getChartCategoryList() throws Exception;
 }

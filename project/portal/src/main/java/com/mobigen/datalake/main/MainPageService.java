@@ -69,17 +69,17 @@ public class MainPageService {
         return shareDataList;
     }
 
-    // 인기 데이터 > 조회수가 가장 높은 순 조회 (Atlas API)
+    // 인기 데이터 > 조회수가 가장 높은 순 조회 (ES API)
     public Object getPopularDataList(HttpServletRequest request) throws Exception {
         return getPopularData(request);
     }
 
-    // 인기 데이터 > 최신 등록 데이터 순 조회 (Atlas API)
+    // 인기 데이터 > 최신 등록 데이터 순 조회 (ES API)
     public Object getLatestDataList(HttpServletRequest request) throws Exception {
         return getLatestData(request);
     }
 
-    // 인기 데이터 > 추천수가 가장 높은 순 조회 (Atlas API)
+    // 인기 데이터 > 추천수가 가장 높은 순 조회 (ES API)
     public Object getRecommendDataList(HttpServletRequest request) throws Exception {
         return getRecommendData(request);
     }
@@ -133,7 +133,54 @@ public class MainPageService {
         return shareDataList;
     }
 
-    // Atlas에서 조회수가 많은 데이터 (6건) 조회
+    // My 리뷰 데이터 조회
+    public Object getMyReviewDataList(String user_id) throws Exception {
+        // 결과를 저장할 리스트
+        List<Map<String, Object>> shareDataList = mainPageMapper.getMyReviewDataList(user_id);
+    
+        // JSON 데이터를 처리하기 위한 ObjectMapper 생성
+        ObjectMapper objectMapper = new ObjectMapper();
+    
+        // 각 guid에 대해 detail 데이터를 가져와서 shareDataList에 추가
+        for (int i = 0; i < shareDataList.size(); i++) {
+            Map<String, Object> params = new LinkedHashMap<>();
+            params.put("user_id", user_id);
+            params.put("meta_id", shareDataList.get(i).get("meta_id"));
+    
+            // getDetailData 호출
+            Object detailData = searchDetailService.getDetailData(params);
+    
+            // detailData가 JSON 형식일 경우 처리
+            if (detailData != null) {
+                // JSON 결과를 Map 형태로 변환
+                Map<String, Object> detailDataMap = objectMapper.convertValue(detailData, Map.class);
+    
+                // "data" 필드가 있는지 확인
+                if (detailDataMap.containsKey("data")) {
+                    Object data = detailDataMap.get("data");
+    
+                    // "data"가 LinkedHashMap인 경우 처리
+                    LinkedHashMap<String, Object> dataMap = (LinkedHashMap<String, Object>) data;
+
+                    // "entity" 키가 있는지 확인하여 shareDataList에 추가
+                    if (dataMap.containsKey("entity")) {
+                        shareDataList.get(i).put("entity", dataMap.get("entity"));
+                    }
+                }
+            }
+        }
+    
+        // shareDataList를 리턴
+        return shareDataList;
+    }
+
+    // My 데이터 요청내역 조회
+    public Object getMyExtractedDataList(String user_id) throws Exception {
+        List<Map<String, Object>> dataRequestList = mainPageMapper.getMyExtractedDataList(user_id);
+        return dataRequestList;
+    }
+
+    // ES에서 조회수가 많은 데이터 (4건) 조회
     public Object getPopularData(HttpServletRequest request) throws Exception {
         // // 1. 조회수 높은 데이터 조회
         List<Map<String, Object>> popularList = mainPageMapper.getPopularDataList();
@@ -175,11 +222,11 @@ public class MainPageService {
                             if (popularList.get(i).get("meta_id").toString().equals(entities.get(j).get("meta_id").toString())) {
                                 matchedCount++;
                                 sortedList.add(entities.get(j));
-                                if (matchedCount == 6) break;
+                                if (matchedCount == 4) break;
                             }
                         }
                     }
-                    if (matchedCount == 6) break;
+                    if (matchedCount == 4) break;
                 }
                 result.put("results", sortedList);
             }
@@ -187,7 +234,7 @@ public class MainPageService {
         return result;
     }
 
-    // Atlas에서 최신 등록 데이터 (6건) 조회
+    // ES 에서 최신 등록 데이터 (4건) 조회
     public Object getLatestData(HttpServletRequest request) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
         LinkedHashMap<String, Object> result = new LinkedHashMap<>();
@@ -217,7 +264,7 @@ public class MainPageService {
                     List<Map<String, Object>> newResults = new ArrayList<>();
                     if (results != null) {
                         for (int i=0; i<results.size(); i++) {
-                            if (i > 5) break;
+                            if (i > 4) break;
                             newResults.add(results.get(i));
                         }
                     }
@@ -230,7 +277,7 @@ public class MainPageService {
         return result;
     }
 
-    // Atlas에서 추천수가 많은 데이터 (6건) 조회
+    // ES 에서 추천수가 많은 데이터 (4건) 조회
     public Object getRecommendData(HttpServletRequest request) throws Exception {
         // 1. 추천수 높은 데이터 조회
         List<Map<String, Object>> recommendList = mainPageMapper.getRecommendDataList();
@@ -271,11 +318,11 @@ public class MainPageService {
                             if (recommendList.get(i).get("meta_id").toString().equals(entities.get(j).get("meta_id").toString())) {
                                 matchedCount++;
                                 sortedList.add(entities.get(j));
-                                if (matchedCount == 6) break;
+                                if (matchedCount == 4) break;
                             }
                         }
                     }
-                    if (matchedCount == 6) break;
+                    if (matchedCount == 4) break;
                 }
                 result.put("results", sortedList);
             }

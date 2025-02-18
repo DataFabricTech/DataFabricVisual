@@ -1,21 +1,20 @@
 <template>
   <div class="main-container">
     <!-- total-channel -->
-    <div class="main-section total-channel">
+    <div class="total-channel">
       <div class="inner">
         <div class="left-channel">
           <div class="subject">
-            <h2 class="title">MOBIGEN <br>DATA CATALOG</h2>
-            <p class="desc">mobigen data catalog</p>
+            <h2>Mobigen<br />Data Catalog</h2>
           </div>
           <!-- total-channel-search -->
           <div class="total-channel-search">
-            <form>
+            <form action="">
               <fieldset>
                 <legend>통합검색</legend>
                 <div class="inner-search">
                   <div class="mu-input-icon">
-                    <input type="text" class="mu-input" placeholder="데이터를 쉽고 빠르게 검색해 보세요" title="검색어입력" v-model="word" @keypress.enter.prevent='onSearch($event)' />
+                    <input type="text" class="mu-input" placeholder="데이터를 쉽고 빠르게 검색해보세요" title="검색어입력" v-model="word" @keypress.enter.prevent='onSearch($event)' />
                     <button type="button" class="mu-btn mu-btn-delete" @click="onDeleteKeyword()">
                       <i class="mu-icon-svg item-delete"></i>
                       <span>삭제</span>
@@ -41,157 +40,201 @@
           </dl>
         </div>
         <div class="right-channel">
-          <div class="data-count-box">
-            <dl class="data-count">
-              <dt>전체 데이터</dt>
+          <!-- section-wrap : 공지사항 -->
+          <div class="section-wrap notice-article">
+            <div class="main-heading">
+              <h3><a href="javascript:void(0)" @click="goToNoticeList()">공지사항</a></h3>
+            </div>
+            <swiper :modules="[Autoplay]" direction="vertical" @swiper="onSwiper" class="article-swiper" >
+                <swiper-slide class="swiper-slide" v-for="(nt, idx) in noticeList">
+                  <a href="javascript:void(0)" @click="goToNotice(nt.id)">{{ nt.title }}</a>
+                  <p class="date">{{ yyyyMMdddot(nt.upload_date) }}</p>
+                </swiper-slide>
+            </swiper>
+          </div>
+          <!-- section-wrap : FAQ -->
+          <div class="section-wrap faq-article">
+            <div class="main-heading">
+              <h3><a href="javascript:void(0)" @click="goToFaqList()">FAQ</a></h3>
+            </div>
+            <swiper :modules="[Autoplay]" direction="vertical" @swiper="onSwiper" class="article-swiper" >
+              <swiper-slide class="swiper-slide" v-for="(faq, idx) in faqList">
+                <a href="javascript:void(0)" @click="goToFaq(faq.id)">{{ getPostContent(faq.post_content) }}</a>
+                <p class="date">{{ yyyyMMdddot(faq.upload_date) }}</p>
+              </swiper-slide>
+            </swiper>
+          </div>
+        </div>
+        <div class="bottom-channel">
+          <!-- data-set -->
+          <div class="data-set">
+            <dl>
+              <dt>등록된 데이터</dt>
               <dd>{{ numberComma(totalDataCount) }}</dd>
             </dl>
-            <dl class="data-count">
+            <dl>
               <dt>데이터 활용 횟수</dt>
               <dd>{{ numberComma(useDataCount) }}</dd>
             </dl>
-            <dl class="data-count">
-              <dt>신규 데이터</dt>
-              <dd>{{ numberComma(newDataCount) }}</dd>
-            </dl>
           </div>
-          <div class="category-swiper">
-            <!-- <div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets" style="width: 540px;">
-              <span
-                v-for="cnt in categoryList.length"
-                :class="swiperButtonActiveStatus(cnt)"
-                @click="onClickSwiperButton(cnt)"></span>
-            </div> -->
-              <swiper
-                ref="swiperRef"
-                class="swiper-container"
-                :modules="swiperOptions.modules"
-                :slides-per-view="1"
-                :space-between="10"
-                :pagination="swiperOptions.pagination"
-                @slideChange="onSlideChange"
-              >
-                <swiper-slide v-for="(cats, idx) in categoryList">
-                  <div class="swiper-slide">
-                    <ul class="category-list">
-                      <li v-for="(cat, idx2) in cats">
-                        <a @click="goToSearch(cat)" class="category">
-                          <i :class="getCategoryIcon(idx2 + 1)"></i>
-                          <em class="category-label">{{ cat.description }}</em>
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </swiper-slide>
-              </swiper>
+          <!-- main-category-group -->
+          <div class="main-category-group">
+            <div class="chart-area" id="chartCategory"></div>
+            <div class="category-area">
+              <!-- category-list 2023-11-09 고객요청 : 순서 변경 확인 / 필요없는 클래스 .active삭제 - 기능없음 -->
+              <ul class="category-list">
+                <li v-for="(cat, idx2) in cats" class="category">
+                  <a @click="goToSearch(cat)" class="category">
+                    <i :class="getCategoryIcon(idx2 + 1)"></i>
+                    <em class="category-label">{{ cat.description }}</em>
+                  </a>
+                </li>
+              </ul>
+              <!-- <ul class="category-list">
+                <li><a href="#none" class="category"><i class="ico-category category-05"></i><em class="category-label">생산</em><span class="count">841</span></a></li>
+                <li><a href="#none" class="category"><i class="ico-category category-09"></i><em class="category-label">품질</em><span class="count">266</span></a></li>
+                <li><a href="#none" class="category"><i class="ico-category category-04"></i><em class="category-label">구매</em><span class="count">163</span></a></li>
+                <li><a href="#none" class="category"><i class="ico-category category-07"></i><em class="category-label">연구</em><span class="count">13</span></a></li>
+                <li><a href="#none" class="category"><i class="ico-category category-08"></i><em class="category-label">영업</em><span class="count">56</span></a></li>
+                <li><a href="#none" class="category"><i class="ico-category category-01"></i><em class="category-label">재무</em><span class="count">1,234</span></a></li>
+                <li><a href="#none" class="category"><i class="ico-category category-02"></i><em class="category-label">경영지원관리</em><span class="count">14</span></a></li>
+                <li><a href="#none" class="category"><i class="ico-category category-06"></i><em class="category-label">IT</em><span class="count">46</span></a></li>
+                <li><a href="#none" class="category"><i class="ico-category category-03"></i><em class="category-label">공통</em><span class="count">111</span></a></li>
+                <li><a href="#none" class="category"><i class="ico-category category-10"></i><em class="category-label">미분류</em><span class="count">111</span></a></li>
+              </ul> -->
             </div>
+          </div>
         </div>
       </div>
     </div>
-    <!-- board-section : 공지사항 / FAQ -->
-    <div class="main-section board-section">
+    <!-- main-section : 최신 등록 데이터 / 카틸로그 동의어 / 데이터 요청 -->
+    <div class="main-section">
       <div class="inner">
-        <!-- section-wrap : 공지사항 -->
-
-        <div class="section-wrap notice-article">
-          <div class="main-heading">
-            <h3><a href="javascript:void(0)" @click="goToNoticeList()">공지사항</a></h3>
-          </div>
-          <swiper :modules="[Autoplay]" direction="vertical" @swiper="onSwiper" class="article-swiper" >
-              <swiper-slide class="swiper-slide" v-for="(nt, idx) in noticeList">
-                <a href="javascript:void(0)" @click="goToNotice(nt.id)">{{ nt.title }}</a>
-                <p class="date">{{ yyyyMMdddot(nt.upload_date) }}</p>
-              </swiper-slide>
-          </swiper>
-        </div>
-        <!-- section-wrap : FAQ -->
-        <div class="section-wrap faq-article">
-          <div class="main-heading">
-            <h3><a href="javascript:void(0)" @click="goToFaqList()">FAQ</a></h3>
-          </div>
-          <swiper :modules="[Autoplay]" direction="vertical" @swiper="onSwiper" class="article-swiper" >
-            <swiper-slide class="swiper-slide" v-for="(faq, idx) in faqList">
-              <a href="javascript:void(0)" @click="goToFaq(faq.id)">{{ getPostContent(faq.post_content) }}</a>
-              <p class="date">{{ yyyyMMdddot(faq.upload_date) }}</p>
-            </swiper-slide>
-          </swiper>
-        </div>
-      </div>
-    </div>
-    <!-- //board-section : 공지사항 / FAQ -->
-    <!-- data-section : 데이터 활용 사례 -->
-    <div class="main-section data-section">
-      <div class="inner">
-        <div class="main-heading">
-          <h3>데이터 활용 사례</h3>
-          <div class="more">
-            <button type="button" class="mu-btn mu-btn-icon-only" title="데이터 활용 사례 더보기" @click="goToShareList()">
-              <i class="mu-icon-svg add"></i>
-            </button>
-          </div>
-        </div>
-        <ul class="card-list">
-          <li class="card-box" v-for="(share, idx) in shareDataList">
-            <a @click="goToShare(share.id)">
-              <div class="inner-thumb" >
-                <div v-html="share.image_html"></div>
-              </div>
-              <div class="inner-data">
-                <div class="card-category">
-                  <!-- <div class="category">
-                    <em class="category-label">IT</em>
-                  </div> -->
-                </div>
-                <strong class="card-title">{{ share.title }}</strong>
-                <p class="card-desc">
-                  <div v-html="limitedContent(share.contents)"></div>
-                </p>
-              </div>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- //data-section -->
-    <!-- data-section : 인기 데이터 -->
-    <div class="main-section data-section">
-      <div class="inner">
-        <div class="best-data-wrap">
-          <div class="main-heading">
-            <h3>인기 데이터</h3>
-            <p class="heading-desc">인기 데이터를 한 눈에 확인할 수 있습니다.</p>
-            <div class="best-data-sort">
-              <div class="btn-sort">
-                <div class="mu-radio" v-for="(pso, idx) in popularSortOrderList">
-                  <input type="radio" :id="pso" name="bestDataSort" @click="onSelectPopularDataSort(pso)" :checked="dataSortOrder == pso">
-                  <label :for="pso">
-                    <i v-if="pso == 'bestDataSortHits'" class="mu-icon-svg eye"></i>
-                    <i v-else-if="pso == 'bestDataSortNew'" class="mu-icon-svg clock"></i>
-                    <i v-else-if="pso == 'bestDataSortRec'" class="mu-icon-svg like"></i>
-                    <span>{{ getKrName(pso) }}</span>
-                  </label>
-                </div>
-              </div>
+        <div class="main-wrap data-group">
+          <div class="main-head">
+            <h3 class="main-title">최신 등록 데이터</h3>
+            <div class="more" @click="goToMetaDataList()">
+              <button type="button" title="더보기" class="mu-btn mu-btn-icon-only">
+                <i class="mu-icon-svg view-more-lg"></i>
+              </button>
             </div>
-            <a @click="goToMetaDataList()" class="mu-btn"><span>전체보기</span></a>
           </div>
-          <div class="best-data">
-            <ul class="data-box-list" style="counter-reset: best-data -1">
+          <div class="main-body">
+            <ul class="data-list">
               <li v-if="currentDataList" class="data-box" v-for="(ld, idx) in currentDataList">
-                <a @click="goToMetaDataDetail(ld.meta_id)" style="content: counter(best-data); counter-increment: best-data">
-                  <div class="category-group" v-if="ld.classifications && ld.classifications.length > 0">
-                    <div class="category" v-for="cat in getClassificationList(ld.classifications)">
-                      <em class="category-label">{{ cat.c_description ? cat.c_description : cat.c_name }}</em>
-                    </div>
+                <a @click="goToMetaDataDetail(ld.meta_id)" style="text-decoration-line:none;">
+                  <div class="inner-data">
+                    <strong class="data-title">{{ ld.description ? ld.description : '-' }}</strong>
+                    <p class="data-desc">{{ ld.meta_name ? ld.meta_name : '-;' }}</p>
                   </div>
-                  <div class="category-group" v-else>
-                    <div class="category">
-                      <em class="category-label">카테고리 미지정</em>
-                    </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="main-wrap banner-group">
+          <div class="banner banner-01">
+            <strong>카탈로그 동의어</strong>
+            <p>메타데이터의 동의어를<br>조회할 수 있습니다.</p><!-- 최대 두줄이 출력될 수 있습니다 -->
+            <a @click="goToSynonymList()" class="mu-btn">
+              <span>바로가기</span><i class="mu-icon-svg chevron-right"></i>
+            </a>
+          </div>
+          <div class="banner banner-02">
+            <strong>데이터 요청</strong>
+            <p>데이터 요청 게시판을 통해<br>데이터를 등재할 수 있습니다.</p><!-- 최대 두줄이 출력될 수 있습니다 -->
+            <a @click="goToRequestDataList()" class="mu-btn">
+              <span>바로가기</span><i class="mu-icon-svg chevron-right"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- main-section : 데이터 요청 내역 / 찜 데이터 등등 -->
+    <div class="main-section">
+      <div class="inner">
+        <div class="main-wrap">
+          <div class="main-head">
+            <h3 class="main-title">데이터 요청 내역</h3>
+            <div class="more">
+              <button type="button" title="더보기" class="mu-btn mu-btn-icon-only" @click="goToDataRequestList()">
+                <i class="mu-icon-svg view-more-lg"></i>
+              </button>
+            </div>
+          </div>
+          <div class="main-body">
+            <ul class="data-list">
+              <li v-for="(data, idx) in myRequestDataList">
+                <a @click="goToRequestDataDetail(data.id)">
+                  <div class="inner-data">
+                    <strong class="data-title">{{ data.title }}</strong>
+                    <p class="data-desc">{{ data.contents }}</p>
                   </div>
-                  <div class="title-group">
-                    <strong class="data-title">{{ ld.description ? ld.description : "-" }}</strong>
-                    <p class="data-name">{{ ld.meta_name ? ld.meta_name : ld.meta_name }}</p>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="main-wrap">
+          <div class="main-head">
+            <h3 class="main-title">찜 데이터</h3>
+            <div class="more">
+              <button type="button" title="더보기" class="mu-btn mu-btn-icon-only" @click="goToFavoriteDataList()">
+                <i class="mu-icon-svg view-more-lg"></i>
+              </button>
+            </div>
+          </div>
+          <div class="main-body">
+            <ul class="data-list">
+              <li v-for="(data, idx) in myFavoriteDataList">
+                <a @click="goToMetaDataDetail(data.meta_id)">
+                  <div class="inner-data">
+                    <strong class="data-title">{{ data.description ? data.description : '-' }}</strong>
+                    <p class="data-desc">{{ data.meta_name ? data.meta_name : '-' }}</p>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="main-wrap">
+          <div class="main-head">
+            <h3 class="main-title">리뷰 데이터</h3>
+            <div class="more">
+              <button type="button" title="더보기" class="mu-btn mu-btn-icon-only" @click="goToReviewDataList()">
+                <i class="mu-icon-svg view-more-lg"></i>
+              </button>
+            </div>
+          </div>
+          <div class="main-body">
+            <ul class="data-list">
+              <li v-for="(data, idx) in myFavoriteDataList">
+                <a @click="goToMetaDataDetail(data.meta_id)">
+                  <div class="inner-data">
+                    <strong class="data-title">{{ data.description ? data.description : '-' }}</strong>
+                    <p class="data-desc">{{ data.meta_name ? data.meta_name : '-' }}</p>
+                  </div>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="main-wrap">
+          <div class="main-head">
+            <h3 class="main-title">데이터 추출 내역</h3>
+            <div class="more">
+              <button type="button" title="더보기" class="mu-btn mu-btn-icon-only" @click="goToExtractedDataList()">
+                <i class="mu-icon-svg view-more-lg"></i>
+              </button>
+            </div>
+          </div>
+          <div class="main-body">
+            <ul class="data-list">
+              <li v-for="(data, idx) in myExtractedDataList">
+                <a @click="goToMetaDataDetail(data.meta_id)">
+                  <div class="inner-data">
+                    <strong class="data-title">{{ data.description ? data.description : '-' }}</strong>
+                    <p class="data-desc">{{ data.meta_name ? data.meta_name : '-' }}</p>
                   </div>
                 </a>
               </li>
@@ -200,104 +243,43 @@
         </div>
       </div>
     </div>
-    <!-- //data-section -->
-    <!-- banner-section : 데이터 요청 내역 / 찜 데이터 / 데이터 요청 / 카탈로그 동의어 -->
-    <div class="main-section banner-section">
+    <!-- main-section : 데이터 활용 사례 -->
+    <div class="main-section data-section">
       <div class="inner">
-        <!-- section-wrap : 데이터 요청 내역 / 찜 데이터 -->
-        <div class="section-wrap">
-          <div class="tab-area">
-            <div class="mu-tab-box text-tab">
-              <ul class="mu-tab">
-                <li :class="currentLeftTab == 0 ? 'active' : ''">
-                  <a @click="onClickCurrentLeftTab(0)" title="선택됨">데이터 요청 내역</a>
-                </li>
-                <li :class="currentLeftTab == 1 ? 'active' : ''">
-                  <a @click="onClickCurrentLeftTab(1)">찜 데이터</a>
-                </li>
-              </ul>
-            </div>
-            <div :class="currentLeftTab == 0 ? 'tab-content on' : 'tab-content'">
-              <div :class="myRequestDataList && myRequestDataList.length > 0 ? 'main-board' : ''">
-                <ul v-if="myRequestDataList && myRequestDataList.length > 0 " class="main-article-list">
-                  <li v-for="(dr, idx) in myRequestDataList" style="list-style-type: none;">
-                    <span :class="getClassFromStatus(dr.process_status)">{{ getProcessStatus(dr.process_status) }}</span>
-                    <a @click="goToRequestDataDetail(dr.id)" class="mu-ellipsis">{{ dr.title }}</a>
-                    <span class="date">{{ yyyyMMdddot(dr.create_date)}}</span>
-                  </li>
-                </ul>
-                <div v-else class="data-banner">
-                  <strong>데이터 요청 내역</strong>
-                  <p>
-                    데이터 요청 내역이 없습니다.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div :class="currentLeftTab == 1 ? 'tab-content on' : 'tab-content'">
-              <div :class="myFavoriteData && myFavoriteData.length > 0 ? 'main-board' : ''">
-                <ul v-if="myFavoriteData && myFavoriteData.length > 0" class="main-article-list">
-                  <li v-for="(wd, idx) in myFavoriteData" :key="idx" style="list-style-type: none;">
-                    <span class="step-process unsupply" style="width:100px"># 찜데이터</span>
-
-                    <a @click="goToFavoriteDataDetail(wd.meta_id)" class="mu-ellipsis">
-                      {{ wd.description ? `${wd.description} (${wd.meta_name})` : wd.meta_name }}
-                    </a>
-                    <span class="date">{{ yyyyMMdddot(wd.favorite_date) }}</span>
-                  </li>
-                </ul>
-                <div v-else class='wish-banner'>
-                  <strong>
-                    찜데이터 내역
-                  </strong>
-                  <p>
-                  찜 데이터 내역이 없습니다.
-                  </p>
-                </div>
-              </div>
+        <div class="main-wrap">
+          <div class="main-head">
+            <h3 class="main-title">데이터 활용 사례</h3>
+            <div class="more" @click="goToShareList()">
+              <button type="button" title="더보기" class="mu-btn mu-btn-icon-only">
+                <i class="mu-icon-svg view-more-lg"></i>
+              </button>
             </div>
           </div>
-        </div>
-        <!-- section-wrap : 데이터 요청 / 카탈로그 동의어 -->
-        <div class="section-wrap">
-          <div class="tab-area">
-            <div class="mu-tab-box text-tab">
-              <ul class="mu-tab">
-                <li :class="currentRightTab == 0 ? 'active' : ''">
-                  <a @click="onClickCurrentRightTab(0)" title="선택됨">데이터 요청</a>
-                </li>
-                <li :class="currentRightTab == 1 ? 'active' : ''">
-                  <a @click="onClickCurrentRightTab(1)">카탈로그 동의어</a>
-                </li>
-              </ul>
-            </div>
-            <div :class="currentRightTab == 0 ? 'tab-content on' : 'tab-content'">
-              <div class="banner-wrap">
-                <div class="banner banner-01">
-                  <strong>데이터 요청</strong>
-                  <p>
-                    데이터가 필요한 업무에 사용하기 위해<br>데이터를 요청할 수 있습니다.
-                  </p>
-                  <button type="button" class="mu-btn" @click="goToRequestDataList()"><span>데이터 요청하기</span></button>
-                </div>
-              </div>
-            </div>
-            <div :class="currentRightTab == 1 ? 'tab-content on' : 'tab-content'">
-              <div class="banner-wrap">
-                <div class="banner banner-02">
-                  <strong>카탈로그 동의어</strong>
-                  <p>
-                    데이터의 검색 및 활용에 효과적인<br>동의어를 확인할 수 있습니다.
-                  </p>
-                  <button type="button" class="mu-btn" @click="goToSynonymList()"><span>카탈로그 동의어 보기</span></button>
-                </div>
-              </div>
-            </div>
+          <div class="main-body">
+            <ul class="card-list">
+              <li class="card-box" v-for="(share, idx) in shareDataList">
+                <a @click="goToShare(share.id)">
+                  <div class="inner-thumb" >
+                    <div v-html="share.image_html"></div>
+                  </div>
+                  <div class="inner-data">
+                    <div class="card-category">
+                      <!-- <div class="category">
+                        <em class="category-label">IT</em>
+                      </div> -->
+                    </div>
+                    <strong class="card-title">{{ share.title }}</strong>
+                    <p class="card-desc">
+                      <div v-html="limitedContent(share.contents)"></div>
+                    </p>
+                  </div>
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
     </div>
-    <!-- //banner-section -->
   </div>
 </template>
 
@@ -349,9 +331,9 @@ const popularDataList = ref([]) // 인기 데이터 > 조회수 높은 순
 const latestDataList = ref([]) // 인기 데이터 > 최신 데이터 순
 const recommendDataList = ref([]) // 인기 데이터 > 추천수가 높은 순
 const myRequestDataList = ref([]) // 데이터 요청 내역
-const myFavoriteData = ref([]) // 찜 데이터
-const currentLeftTab = ref(0) // 데이터 요청내역||찜 데이터 탭
-const currentRightTab = ref(0) // 데이터 요청||카탈로그 동의어 탭
+const myFavoriteDataList = ref([]) // 찜 데이터
+const myReviewDataList = ref([]) // 리뷰 데이터
+const myExtractedDataList = ref([]) // 데이터 추출 내역
 
 const categoryList = ref([]) // 차트 카테고리 목록
 const currentSwiperStatus  = ref(1) // swiper 현재 위치
@@ -406,9 +388,11 @@ onMounted(async () => {
   await getShareData(); // 5. 데이터 활용 사례
   await getPopularDataList(); // 6. 인기 데이터 (조회수 순, 최신등록순)
 
-  // 7. 데이터 요청 내역, 찜데이터
+  // 7. 데이터 요청 내역, 찜데이터, 리뷰 데이터, 데이터 추출 내역
   await getMyRequestData();
   await getMyFavoriteData();
+  await getMyReviewData();
+  await getMyExtractedData();
 
 
 })
@@ -657,7 +641,7 @@ const getShareData = async () => {
 }
 
 // 인기 데이터, 최신 등록 데이터 조회
-const getPopularDataList = async (order = 'bestDataSortNew') => {
+const getPopularDataList = async (order = 'bestDataSortHits') => {
   // 조회수 높은 순 조회
   if (order == 'bestDataSortHits') {
     await $ofetch(`/api/main/popularDataList`).then((res) => {
@@ -720,7 +704,25 @@ const getMyRequestData = async () => {
 const getMyFavoriteData = async () => {
   await $ofetch('/api/main/myFavoriteData').then((res) => {
     if (res && !res.errorMessage) {
-      myFavoriteData.value = res.data
+      myFavoriteDataList.value = res.data
+    }
+  })
+}
+
+// My 리뷰 데이터
+const getMyReviewData = async () => {
+  await $ofetch('/api/main/myReviewData').then((res) => {
+    if (res && !res.errorMessage) {
+      myReviewDataList.value = res.data
+    }
+  })
+}
+
+// My 데이터 추출 내역
+const getMyExtractedData = async () => {
+  await $ofetch('/api/main/myExtractedData').then((res) => {
+    if (res && !res.errorMessage) {
+      myExtractedDataList.value = res.data
     }
   })
 }
@@ -883,24 +885,29 @@ const getProcessStatus = (status) => {
   if (status == 5) return '삭제됨'
 }
 
-// 왼쪽 하단 탭 클릭 이벤트
-const onClickCurrentLeftTab = (no) => {
-  currentLeftTab.value = no
+// My Catalog > 데이터 요청 내역
+const goToDataRequestList = () => {
+  router.push(`/my/request-data`)
 }
 
-// 오른쪽 하단 탭 클릭 이벤트
-const onClickCurrentRightTab = (no) => {
-  currentRightTab.value = no
-}
-
-// 데이터 요청 상세로 이동
+// 데이터 요청 상세
 const goToRequestDataDetail = (id) => {
   router.push(`/data/request/detail?id=${id}`)
 }
 
-// 찜 데이터 상세로 이동
-const goToFavoriteDataDetail = (guid) => {
-  router.push(`/search/detail?guid=${guid}`)
+// My Catalog > 찜 데이터
+const goToFavoriteDataList = () => {
+  router.push(`/my/favorite-data`)
+}
+
+// My Catalog > 리뷰 데이터
+const goToReviewDataList = () => {
+  router.push(`/my/review-data`)
+}
+
+// My Catalog > 데이터 추출
+const goToExtractedDataList = () => {
+  router.push(`/my/extracted-data`)
 }
 
 // 데이터 요청 목록으로 이동
