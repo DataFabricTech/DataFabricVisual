@@ -44,16 +44,16 @@
               <tr>
                 <th scope="row">질문 내용 <strong class="required">필수</strong></th>
                 <td>
-                  <textarea
-                    id="textarea01"
+                  <input
+                    type="text"
                     placeholder="질문내용을 입력하세요"
                     title="FAQ 질문내용 입력"
-                    rows="5"
+                    class="mu-input"
                     v-model="post.post_content"
-                    v-bind:class="[!postContentValid ? 'error' : '', 'mu-area']"
-                  ></textarea>
+                    v-bind:class="[!postContentValid ? 'error' : '']"
+                  />
                   <p v-if="!postContentValid" class="complete-msg error">
-                    내용을 입력해주세요.
+                    질문을 입력해주세요.
                   </p>
                   <!-- 필수 항목을 입력하지 않았을 때 문구노출 -->
                 </td>
