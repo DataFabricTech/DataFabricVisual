@@ -209,6 +209,18 @@ public class MailTemplateService {
         // 참조자
         List<Map<String, String>> mailCcUserList = extractUserInfo(mailTemplate.get("cc_recipients"));
 
+        // 강제 발신자 변경
+        if (variables.containsKey("add_sender")) {
+            Object senderObject = variables.get("add_sender");
+            if (senderObject instanceof List) {
+                List<Map<String, String>> addSender = addExtractUserInfo(senderObject);
+                mailSenderUserList.clear();
+                mailSenderUserList.addAll(addSender);
+            } else {
+                log.error("add_sender는 List 형식이어야 합니다. 현재 형식: " + senderObject.getClass().getName());
+            }
+        }
+
         // 추가 수신자(템플릿 수신자 예외)
         if (variables.containsKey("add_recipients")) {
             Object recipientsObject = variables.get("add_recipients");
@@ -217,6 +229,17 @@ public class MailTemplateService {
                 mailReceiverUserList.addAll(addRecipients);
             } else {
                 log.error("add_recipients는 List 형식이어야 합니다. 현재 형식: " + recipientsObject.getClass().getName());
+            }
+        }
+
+        // cc 추가 수신자(템플릿 수신자 예외)
+        if (variables.containsKey("add_cc_recipients")) {
+            Object ccRecipientsObject = variables.get("add_cc_recipients");
+            if (ccRecipientsObject instanceof List) {
+                List<Map<String, String>> addCcRecipientsObject = addExtractUserInfo(ccRecipientsObject);
+                mailCcUserList.addAll(addCcRecipientsObject);
+            } else {
+                log.error("add_cc_recipients는 List 형식이어야 합니다. 현재 형식: " + ccRecipientsObject.getClass().getName());
             }
         }
 
