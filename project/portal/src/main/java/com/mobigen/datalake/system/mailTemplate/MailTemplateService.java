@@ -216,16 +216,16 @@ public class MailTemplateService {
             result.put("message", "발신자가 없습니다.");
             return result;
         }
-        if (mailReceiverUserList.isEmpty() ){
-            result.put("result", "fail");
-            result.put("message", "수신자가 없습니다.");
-            return result;
-        }
+        // if (mailReceiverUserList.isEmpty() ){
+        //     result.put("result", "fail");
+        //     result.put("message", "수신자가 없습니다.");
+        //     return result;
+        // }
 
         try {
             // 메일 제목
-            message.setSubject(mailTitle); 
-            
+            message.setSubject(mailTitle);
+
             // 보낸 사람(발신자는 1명만 지원하므로 덮어 씌우는걸로 )
             for (Map<String, String> sender : mailSenderUserList) {
                 String name = sender.get("name");
@@ -258,14 +258,13 @@ public class MailTemplateService {
             // 메일 양식 html로 저장
             message.setContent(htmlBody, "text/html; charset=utf-8");
 
-
             // 메일 정보 출력
-            log.info("메일 제목: " + message.getSubject());
-            log.info("발신자: " + Arrays.toString(message.getFrom()));
-            log.info("수신자: " + Arrays.toString(message.getRecipients(Message.RecipientType.TO)));
-            log.info("참조자: " + Arrays.toString(message.getRecipients(Message.RecipientType.CC)));
-            log.info("내용: " + message.getContent());
-            log.info("메일내용: " + htmlBody);
+            System.out.println("메일 제목: " + message.getSubject());
+            System.out.println("발신자: " + Arrays.toString(message.getFrom()));
+            System.out.println("수신자: " + Arrays.toString(message.getRecipients(Message.RecipientType.TO)));
+            System.out.println("참조자: " + Arrays.toString(message.getRecipients(Message.RecipientType.CC)));
+            System.out.println("내용: " + message.getContent());
+            System.out.println("메일내용: " + htmlBody);
 
             javaMailSender.send(message);
         } catch (Exception e) {
@@ -347,9 +346,14 @@ public class MailTemplateService {
             String value;
             if (entry.getValue() instanceof List) {
                 value = entry.getValue().toString();
-            } else {
+            } else if (entry.getValue() instanceof String) {
                 value = (String) entry.getValue();
+            } else {
+                value = entry.getValue().toString();
             }
+
+System.out.println("##################3333333333333-2222222222222"+ entry.getKey() + " : " + value);
+
             template = template.replace(entry.getKey(), value);
         }
         return template;

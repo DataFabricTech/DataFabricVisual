@@ -272,18 +272,13 @@ const onSelectDept = (info) => {
       if(select_user_type.value === 'sender') {
         if (!props.post.sender.some(existingItem => existingItem.email === item.email)) {
           if (i === 0) {
-            if(info.length > 0){
-              errorAlert("보내는 사람은 한명만 선택할 수 있습니다.");
-            }
-
             if(props.post.sender.length < 1) {
               props.post.sender.push(item);
+              i++;
             }
           } else {
             return;
           }
-          
-          i++;
         }
       } else if(select_user_type.value === 'receiver') {
         if (!props.post.receiver.some(existingItem => existingItem.email === item.email)) {

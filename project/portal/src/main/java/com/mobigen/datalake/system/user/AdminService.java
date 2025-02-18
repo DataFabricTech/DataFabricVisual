@@ -11,6 +11,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.mobigen.datalake.dataRequest.DataRequestMapper;
 import com.mobigen.datalake.post.file.FileMapper;
+import com.mobigen.datalake.system.mailTemplate.MailTemplateService;
 import com.mobigen.datalake.user.UserMapper;
 import com.mobigen.framework.security.SessionManager;
 
@@ -24,6 +25,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +40,8 @@ public class AdminService {
 
     private final DataRequestMapper dataRequestMapper;
     private final JavaMailSender javaMailSender;
+
+    private final MailTemplateService mailTemplateService;
 
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -170,7 +174,26 @@ public class AdminService {
             adminMapper.initPassword(passwordParam);
 
             // 안내 메일 발송
-            sendMail(passwordParam, request);
+            // sendMail(passwordParam, request);
+
+            // 
+            Map<String, Object> mailTemplateParam = new HashMap<>();
+            mailTemplateParam.put("_mailTitle_", "패스워드 초기화 안내 메일");
+            mailTemplateParam.put("_initPassword_", password.toString());
+            mailTemplateParam.put("add_recipients", new ArrayList<Map<String, String>>() {{
+                Map<String, String> recipient = new HashMap<>();
+                recipient.put("email", param.get("user_email").toString());
+                recipient.put("name", param.get("user_nm").toString());
+                add(recipient);
+            }});
+
+            // 안내 메일 발송
+            Map<String, Object> mailTemplateResult = mailTemplateService.sendMail("TEMPLATE_01", mailTemplateParam);
+
+            if(mailTemplateResult != null && mailTemplateResult.get("result").equals("fail")){
+                result.put("register_result", "N");
+                result.put("register_result_message", "패스워드 초기화 실패하였습니다다. 관리자에게 문의해주시기 바랍니다.");
+            }
         } catch(Exception e) {
             e.printStackTrace();
             result.put("register_result", "N");
@@ -210,7 +233,7 @@ public class AdminService {
             message.addRecipient(Message.RecipientType.TO, new InternetAddress(params.get("email").toString(), params.get("user_nm").toString(), "UTF-8")); // 받는 사람
             message.addRecipients(Message.RecipientType.CC, toAddress); // 참조자
 
-            // 데이터 요청 신청자 조회
+            // 사용자 정보
             Map<String, Object> user = sessionManager.getUserByAccessToken(request);
             String userId = user.get("user_id").toString();
             Map<String, Object> mailMap = (Map<String, Object>) userMapper.getUserMaster(params.get("user_id").toString());
