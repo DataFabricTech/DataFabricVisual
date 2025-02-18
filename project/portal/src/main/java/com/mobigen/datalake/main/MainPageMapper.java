@@ -1,6 +1,7 @@
 package com.mobigen.datalake.main;
 
 import java.util.List;
+import java.util.Map;
 
 public interface MainPageMapper {
     List getRecommendedWordList() throws Exception;
@@ -17,4 +18,11 @@ public interface MainPageMapper {
     List getMyReviewDataList(String user_id) throws Exception;
     List getMyExtractedDataList(String user_id) throws Exception;
     List getChartCategoryList() throws Exception;
+    List<Map<String, Object>> getMainBannerSubject() throws Exception;
+    int deleteCodeTableFromName(Map<String, Object> params) throws Exception;
+    int updateCodeTableFromName(Map<String, Object> params) throws Exception;
+    int insertCodeTable(Map<String, Object> params) throws Exception;
+    List<Map<String, Object>> getLayoutList() throws Exception;
+    List<Map<String, Object>> getFooterList() throws Exception;
+    Map<String, Object> getLayoutInfoFromName(Map<String, Object> params) throws Exception;
 }

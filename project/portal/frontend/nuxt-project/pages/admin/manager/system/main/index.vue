@@ -75,6 +75,79 @@
           </div>
         </div>
       </div>
+      <div class="main-system">
+        <div class="inner-column">
+          <div class="mu-heading">
+            <h4>레이아웃 관리</h4>
+          </div>
+          <dl class="recommend-keyword">
+            <div v-for="(layoutInfo, idx) in layoutList">
+              <dt>{{ layoutInfo.description }}</dt>
+                <dd><input type="text" v-model="layoutInfo.value" :id="layoutInfo.name"
+                    :placeholder="layoutInfo.description" class="mu-input" :title="layoutInfo.description" /></dd>
+            </div>
+          </dl>
+          <div class="mu-button-wrap">
+            <button type="button" class="mu-btn mu-btn-primary" @click="onClickSaveLayoutManage()"><span>적용</span></button>
+          </div>
+        </div>
+        <!-- <div class="inner-column">
+          <div class="mu-heading">
+            <h4>로고 이미지 관리</h4>
+          </div>
+          <dl class="recommend-keyword">
+            <table>
+              <colgroup>
+                <col style="width: 10%" />
+                <col style="width: 90%"/>
+              </colgroup>
+              <tbody>
+                <tr>
+                  <td></td>
+                  <td>
+                    <div class="mu-item-group">
+                      <img v-if="logoImageFile"
+                        :src="logoImageFile"
+                        style="width: 120px; height: 44px; background-size: cover"
+                        :class="['ico-category', 'category-11']"
+                      />
+                      <img v-else
+                        src="/logo-basic.png"
+                        style="width: 120px; height: 44px; background-size: cover"
+                        :class="['ico-category', 'category-11']"
+                      />
+                      &nbsp;
+                      <input
+                        id="logoImageFileInput"
+                        type="file"
+                        name="categoryImage"
+                        @change="fileUpload"
+                        v-show="false"
+                      />
+                      <label for="categoryImageFileInput" class="mu-btn" v-if="!logoImageFile">이미지업로드</label>
+                      <label for="categoryImageFileInput" class="mu-btn" v-if="logoImageFile">이미지수정</label>
+                      &nbsp;
+                      &nbsp;
+                      <ul class="bul-refer mt20">
+                        <li>
+                          <b>이미지 가이드</b>
+                          <ul class="bul-dot bul-txt">
+                            <li>확장자 : jpg, jpeg, png</li>
+                            <li>사이즈 : 120 x 44</li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </dl>
+          <div class="mu-button-wrap">
+            <button type="button" class="mu-btn mu-btn-primary" @click="onClickSaveLogoImage()"><span>적용</span></button>
+          </div>
+        </div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -101,10 +174,46 @@ const recommendSearchList = ref([
 
 const inputTagName = ref('');
 const tagList = ref([]);
+const layoutList = ref([
+  {
+    name: "MAIN_BANNER_SUBJECT1",
+    value: "",
+    description: "메인화면 배너명1",
+    type: "portal_config"
+  },
+  {
+    name: "MAIN_BANNER_SUBJECT2",
+    value: "", 
+    description: "메인화면 배너명2",
+    type: "portal_config"
+  },
+  {
+    name: "FOOTER_CONTENT1",
+    value: "",
+    description: "하단 설명1",
+    type: "portal_config"
+  },
+  {
+    name: "FOOTER_CONTENT2",
+    value: "", 
+    description: "하단 설명2",
+    type: "portal_config"
+  },
+  {
+    name: "FOOTER_CONTENT3",
+    value: "", 
+    description: "하단 설명3",
+    type: "portal_config"
+  }
+])
+
+const logoImageFileId = ref(""); // 로고 이미지 파일 아이디
+const logoImageFile = ref("")
 
 onMounted(() => {
   getRecommendList();
   searchTagList();
+  getLayoutList();
 })
 
 const getRecommendList = async () => {
@@ -302,4 +411,77 @@ const deleteTaginfo = async (tagName) => {
     errorAlert('요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.');
   }
 }
+
+// 레이아웃 관리 목록 조회
+const getLayoutList = async () => {
+  $ofetch(`/api/main/layoutList`).then((res) => {
+    if (res && res.data) {
+      if (res.data.layoutList && res.data.layoutList.length > 1) {
+        res.data.layoutList.forEach((el, idx) => {
+          layoutList.value[idx] = el
+        })
+      }
+    }
+  })
+}
+
+// 레이아웃 관리 적용 버튼 클릭
+const onClickSaveLayoutManage = () => {
+  const params = {
+    list: layoutList.value
+  }
+  $ofetch(`/api/main/updateCodeTable`, {
+    method: 'POST',
+    body: params
+  }).then((res) => {
+    if (res && res.data) {
+      if (res.data.result) {
+        successAlert("레이아웃이 저장되었습니다.")
+      } else {
+        errorAlert("레이아웃 저장에 실패하였습니다.")
+      }
+    }
+  }).catch((err) => {
+    errorAlert("레이아웃 저장에 실패하였습니다.")
+  })
+}
+
+// 로고 이미지 업로드 버튼 클릭
+// 카테고리 이미지 파일 업로드
+const fileUpload = (e) => {
+  if (!e.target.files[0]) {
+    return false;
+  }
+
+  let formData = new FormData();
+  let fileName = e.target.files[0].name.substring(e.target.files[0].name.lastIndexOf(".") + 1);
+  let reg = /jpg|jpeg|png/i;
+
+  if (!reg.test(fileName)) {
+    errorAlert("JPG, JPEG, PNG 파일만 업로드 할 수 있습니다.");
+    return false;
+  }
+
+  formData.append("files", e.target.files[0]);
+  return;
+  
+  $ofetch("/api/service/file/fileUpload.do", {
+    method: "POST",
+    body: formData
+  }).then((res) => {
+    if (location.hostname === "localhost") {
+      logoImageFileId.value = res.data[0].file_id;
+      logoImageFile.value = "http://localhost:38080/api/ckeditor/attachFile/" + res.data[0].file_id;
+    } else {
+      logoImageFileId.value = res.data[0].file_id;
+      logoImageFile.value = "/api/ckeditor/attachFile/" + res.data[0].file_id;
+    }
+  });
+};
+
+// 로고 이미지 관리 적용 버튼 클릭
+const onClickSaveLogoImage = () => {
+  console.log('onClickSaveLogoImage')
+}
+
 </script>

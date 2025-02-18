@@ -4,6 +4,9 @@ import java.util.Map;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -120,4 +123,31 @@ public class MainPageController {
         return mainPageService.getChartCategoryList();
     }
 
+    // 메인화면 배너 제목 조회
+    @ResponseJsonResult
+    @GetMapping("/mainBannerSubject")
+    public Object getMainBannerSubject(HttpServletRequest request) throws Exception {
+        return mainPageService.getMainBannerSubject();
+    }
+
+    // 레이아웃 관리 목록 조회
+    @ResponseJsonResult
+    @GetMapping("/layoutList")
+    public Object getLayoutList(HttpServletRequest request) throws Exception {
+        return mainPageService.getLayoutList();
+    }
+
+    // 레이아웃 관리 적용 저장
+    @ResponseJsonResult
+    @PostMapping("/updateCodeTable")
+    public Object updateCodeTable(@RequestBody Map<String, Object> params) throws Exception {
+        return mainPageService.updateCodeTable(params);
+    }
+
+    // 레이아웃 관리 목록 조회
+    @ResponseJsonResult
+    @GetMapping("/footerList")
+    public Object getFooterList(HttpServletRequest request) throws Exception {
+        return mainPageService.getFooterList();
+    }
 }

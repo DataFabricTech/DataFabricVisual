@@ -3,9 +3,7 @@
     <div class="inner">
       <!-- footer-info -->
       <div class="footer-info">
-        <p>(13453) 경기도 성남시 수정구 금토로80번길 37, W동 7, 8, 9층 (금토동, 인피니티타워) </p>
-        <p>대표번호<strong class="tel"> 02-2018-5114</strong></p>
-        <p class="copyright">COPYRIGHT (C) MOBIGEN.  ALL RIGHT RESERVED.</p>
+        <p v-for="(info, idx) in footerList" :class="idx != footerList.length - 1 ? 'copyright' : ''">{{ info.value }}</p>
       </div>
       <!-- footer-logo -->
       <div class="footer-logo"><span>Mobigen</span></div>
@@ -17,4 +15,42 @@
   </footer>
 </template>
 
-<script></script>
+<script setup>
+const { $ofetch } = useNuxtApp()
+
+const footerList = ref([
+  {
+    name: "FOOTER_CONTENT1",
+    value: "",
+    description: "하단 설명1",
+    type: "portal_config"
+  },
+  {
+    name: "FOOTER_CONTENT2",
+    value: "", 
+    description: "하단 설명2",
+    type: "portal_config"
+  },
+  {
+    name: "FOOTER_CONTENT3",
+    value: "", 
+    description: "하단 설명3",
+    type: "portal_config"
+  }
+])
+
+onMounted(() => {
+  getLayoutList()
+})
+
+// 레이아웃 관리 목록 조회
+const getLayoutList = async () => {
+  $ofetch(`/api/main/footerList`).then((res) => {
+    if (res && res.data) {
+      if (res.data.footerList && res.data.footerList.length == 3) {
+        footerList.value = res.data.footerList
+      }
+    }
+  })
+}
+</script>

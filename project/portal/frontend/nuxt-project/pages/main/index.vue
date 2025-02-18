@@ -5,7 +5,7 @@
       <div class="inner">
         <div class="left-channel">
           <div class="subject">
-            <h2>Mobigen<br />Data Catalog</h2>
+            <h2>{{ mainBannerSubjectList[0].value }}<br />{{ mainBannerSubjectList[1].value }}</h2>
           </div>
           <!-- total-channel-search -->
           <div class="total-channel-search">
@@ -282,7 +282,7 @@ import {
   errorAlert,
   successAlert,
 } from "@/components/functional/alert/alert-default";
-import { onMounted } from "vue";
+import { onBeforeMount, onMounted } from "vue";
 import { useUserStore } from "@/store/user";
 import { useCategoryStore } from "@/store/category";
 import MyRequestData from "@/components/organisms/myCatalog/my-request-data.vue";
@@ -355,6 +355,62 @@ const noticeSwiperOptions = {
   speed: 500,
 };
 
+const mainBannerSubjectList = ref([
+  {
+    name: "MAIN_BANNER_SUBJECT1",
+    value: "",
+    description: "메인화면 배너명 상단",
+    type: "portal_config"
+  },
+  {
+    name: "MAIN_BANNER_SUBJECT2",
+    value: "", 
+    description: "메인화면 배너명 하단",
+    type: "portal_config"
+  }
+])
+
+// 메인화면 배너 제목 조회
+const getMainBannerSubject = async () => {
+  $ofetch(`/api/main/mainBannerSubject`).then((res) => {
+    if (res && res.data) {
+      if (res.data.subjectList && res.data.subjectList.length > 1) {
+        mainBannerSubjectList.value = res.data.subjectList
+      }
+    } else {
+      mainBannerSubjectList.value = [
+        {
+          name: "MAIN_BANNER_SUBJECT1",
+          value: "",
+          description: "메인화면 배너명 상단",
+          type: "portal_config"
+        },
+        {
+          name: "MAIN_BANNER_SUBJECT2",
+          value: "",
+          description: "메인화면 배너명 상단",
+          type: "portal_config"
+        }
+      ]
+    }
+  }).catch((err) => {
+    mainBannerSubjectList.value = [
+      {
+        name: "MAIN_BANNER_SUBJECT1",
+        value: "",
+        description: "메인화면 배너명 상단",
+        type: "portal_config"
+      },
+      {
+        name: "MAIN_BANNER_SUBJECT2",
+        value: "",
+        description: "메인화면 배너명 하단",
+        type: "portal_config"
+      }
+    ]
+  })
+}
+
 const onSwiper = (swiper) => {
   const observer = new IntersectionObserver(
     ([entry]) => {
@@ -369,6 +425,7 @@ const onSwiper = (swiper) => {
 };
 
 onMounted(async () => {
+  await getMainBannerSubject(); // 메인화면 배너 제목 조회
   await categoryStore.fetchCategories() // 카테고리 목록 조회 (차트, 한글명 조회)
 
   // 메인화면 필요 데이터 조회

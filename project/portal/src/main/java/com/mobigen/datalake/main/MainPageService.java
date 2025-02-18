@@ -333,4 +333,90 @@ public class MainPageService {
     public Object getChartCategoryList() throws Exception {
         return mainPageMapper.getChartCategoryList();
     }
+
+    public Map<String, Object> getMainBannerSubject() throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            List<Map<String, Object>> list = mainPageMapper.getMainBannerSubject();
+            if (list != null && list.size() > 0) {
+                result.put("subjectList", list);
+            } else {
+                result.put("subjectList", new ArrayList<>());
+            }
+        } catch (Exception e) {
+            log.error("Fail to load Main Banner Subject");
+            result.put("subjectList", new ArrayList<>());
+        }
+
+        return result;
+    }
+
+    public Object updateCodeTable(Map<String, Object> params) throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            List<Map<String, Object>> list = (List<Map<String, Object>>) params.get("list");
+
+            if (list != null && list.size() > 0) {
+                int updateCnt = 0;
+                int saveCnt = 0;
+                for (int i=0; i<list.size(); i++) {
+                    // 기존 데이터 조회
+                    Map<String, Object> originInfo = mainPageMapper.getLayoutInfoFromName(list.get(i));
+                    if (originInfo != null) {
+                        updateCnt = mainPageMapper.updateCodeTableFromName(list.get(i));
+                    } else {
+                        // 기존 데이터가 없는 경우 신규 데이터 추가
+                        saveCnt += mainPageMapper.insertCodeTable(list.get(i));
+                    }
+                }
+                result.put("result", true);
+            } else {
+                result.put("result", false);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error("Fail to save layout Info");
+            result.put("result", false);
+        }
+
+        return result;
+    }
+
+    public Map<String, Object> getLayoutList() throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            List<Map<String, Object>> list = mainPageMapper.getLayoutList();
+            if (list != null && list.size() > 0) {
+                result.put("layoutList", list);
+            } else {
+                result.put("layoutList", new ArrayList<>());
+            }
+        } catch (Exception e) {
+            log.error("Fail to load Main Banner Subject");
+            result.put("layoutList", new ArrayList<>());
+        }
+
+        return result;
+    }
+
+    public Map<String, Object> getFooterList() throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            List<Map<String, Object>> list = mainPageMapper.getFooterList();
+            if (list != null && list.size() > 0) {
+                result.put("footerList", list);
+            } else {
+                result.put("footerList", new ArrayList<>());
+            }
+        } catch (Exception e) {
+            log.error("Fail to load Main Banner Subject");
+            result.put("footerList", new ArrayList<>());
+        }
+
+        return result;
+    }
 }
