@@ -130,6 +130,10 @@ public class CategoryService {
         systemInfo.put("name", "시스템 타입");
         systemInfo.put("content", new ArrayList<Map<String, Object>>());
 
+        // 코드 테이블에 선언한 시스템 타입 항목이 없는 정보는 제거
+        List<String> systemTypes = categoryMapper.getSystemTypes();
+        systemList.removeIf(item -> !systemTypes.contains(item.get("system_type")));
+
         int i=0;
         for (Map<String, Object> system : systemList) {
             Map<String, Object> content = new HashMap<>();

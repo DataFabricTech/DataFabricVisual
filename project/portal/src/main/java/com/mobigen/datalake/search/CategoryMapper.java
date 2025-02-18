@@ -18,6 +18,7 @@ public interface CategoryMapper {
 
     List getCategoryListForFilter();
     List getSystemListForFilter();
+    List getSystemTypes();
     List getMetaListForFilter();
     List getTagListForFilter();
 }
