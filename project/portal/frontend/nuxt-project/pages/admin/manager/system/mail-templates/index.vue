@@ -89,14 +89,14 @@
                   </td>
                   <td>
                     <div class="category-group">
-                        <div v-for="sender in item.sender" :key="sender.email" class="category" style="width:220px;">
+                        <div v-if="item.sender.length > 0" v-for="sender in item.sender" :key="sender.email" class="category" style="width:220px;">
                             <em class="category-label" :title="sender.name" style="max-width:220px;">{{ sender.name }} {{ sender.email }}</em>
                         </div>
                     </div>
                   </td>
                   <td class="tl">
                     <div class="category-group">
-                        <div v-for="receiver in item.receiver" :key="receiver.email" class="category" style="width:220px;">
+                        <div v-if="item.receiver.length > 0" v-for="receiver in item.receiver && item.receiver.length > 0" :key="receiver.email" class="category" style="width:220px;">
                             <em class="category-label" :title="receiver.name" style="max-width:220px;">{{ receiver.name }} {{ receiver.email }}</em>
                         </div>
                     </div>
