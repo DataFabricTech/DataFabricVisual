@@ -2,6 +2,7 @@ package com.mobigen.datalake.synonym;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -448,6 +449,7 @@ public class SynonymService {
                     if (strUserEmail != null && !"".equals(strUserEmail)) {
                         params.put("writer_email", strUserEmail);
                         params.put("writer_user_nm", (String) writer.get("user_nm"));
+                        params.put("status", "승인");
                         sendDeleteResponseMail(params, request);
                     }
                 }
@@ -484,6 +486,7 @@ public class SynonymService {
                 if (strUserEmail != null && !"".equals(strUserEmail)) {
                     params.put("writer_email", strUserEmail);
                     params.put("writer_user_nm", (String) writer.get("user_nm"));
+                    params.put("status", "반려");
                     sendDeleteResponseMail(params, request);
                 }
             }
@@ -509,7 +512,7 @@ public class SynonymService {
 
             // 메일발송기능 활성화 여부
             if (activeSendMail) {
-
+                params.put("req_date", req.get("req_date"));
                 params.put("req_user", req.get("req_user"));
                 params.put("term", req.get("term"));
                 params.put("synonyms", req.get("synonyms"));
@@ -527,6 +530,7 @@ public class SynonymService {
                     if (strUserEmail != null && !"".equals(strUserEmail)) {
                         params.put("writer_email", strUserEmail);
                         params.put("writer_user_nm", (String) writer.get("user_nm"));
+                        params.put("status", "반려");
                         sendDeleteResponseMail(params, request);
                     }
                 }
@@ -581,6 +585,7 @@ public class SynonymService {
 
             // 메일발송기능 활성화 여부
             if (activeSendMail) {
+                params.put("req_date", req_info.get("req_date"));
                 params.put("req_user", req_info.get("req_user"));
                 params.put("term", req_info.get("term"));
                 params.put("synonyms", req_info.get("synonyms"));
@@ -598,6 +603,7 @@ public class SynonymService {
                     if (strUserEmail != null && !"".equals(strUserEmail)) {
                         params.put("writer_email", strUserEmail);
                         params.put("writer_user_nm", (String) writer.get("user_nm"));
+                        params.put("status", "승인");
                         sendDeleteResponseMail(params, request);
                     }
                 }
@@ -686,7 +692,7 @@ public class SynonymService {
             // 요청일
             LocalDateTime req_date = params.get("req_date") != null ? (LocalDateTime) params.get("req_date") : null;
             if (req_date != null) {
-                DateTimeFormatter formatterDatetime = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
+                DateTimeFormatter formatterDatetime = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
                 String formattedDateTime = req_date.format(formatterDatetime);
                 mailTemplateParam.put("_req_date_", formattedDateTime);
             } else {
@@ -773,22 +779,22 @@ public class SynonymService {
             List<Map<String, Object>> ccRecipients = new ArrayList<>();
 
             // 발신자
-            Map<String, Object> senderMap = new HashMap<>();
-            senderMap.put("name", params.get("writer_user_nm"));
-            senderMap.put("email", params.get("writer_email"));
-            sender.add(senderMap);
-
-            // 수신자
             for (String key : mailDefaultAdminMap.keySet()) {
-                Map<String, Object> receiverMap = new HashMap<>();
+                Map<String, Object> senderMap = new HashMap<>();
                 // 기본 관리자 계정 중 하나만 이용
                 if (((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email") != null) {
-                    receiverMap.put("name", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_nm").toString());
-                    receiverMap.put("email", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email").toString());
-                    receiver.add(receiverMap);
+                    senderMap.put("name", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_nm").toString());
+                    senderMap.put("email", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email").toString());
+                    sender.add(senderMap);
                     break;
                 }
             }
+
+            // 수신자
+            Map<String, Object> receiverMap = new HashMap<>();
+            receiverMap.put("name", params.get("writer_user_nm"));
+            receiverMap.put("email", params.get("writer_email"));
+            receiver.add(receiverMap);
 
             // 참조자
             for (String key : mailAdminMap.keySet()) {
@@ -800,14 +806,16 @@ public class SynonymService {
 
             // 메일 전송 파라미터
             Map<String, Object> mailTemplateParam = new HashMap<>();
-            mailTemplateParam.put("_title_", "동의어 삭제 요청");
+            mailTemplateParam.put("_title_", "동의어 삭제 요청 결과");
             mailTemplateParam.put("_writer_", params.get("writer_user_nm"));
 
-            // 요청일
-            LocalDateTime req_date = params.get("req_date") != null ? (LocalDateTime) params.get("req_date") : null;
+            // 요청일 (req_date)
+            // req_date 문자열을 ZonedDateTime 객체로 파싱
+            String req_date = params.get("req_date") != null ? params.get("req_date").toString() : null;
             if (req_date != null) {
-                DateTimeFormatter formatterDatetime = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
-                String formattedDateTime = req_date.format(formatterDatetime);
+                ZonedDateTime zonedDateTime = ZonedDateTime.parse(req_date);
+                DateTimeFormatter formatterDatetime = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
+                String formattedDateTime = zonedDateTime.format(formatterDatetime);
                 mailTemplateParam.put("_req_date_", formattedDateTime);
             } else {
                 mailTemplateParam.put("_req_date_", "-");
@@ -827,6 +835,7 @@ public class SynonymService {
                 synonymsText = "-";
             }
             mailTemplateParam.put("_synonyms_", synonymsText);
+            mailTemplateParam.put("_status_", params.get("status") != null ? params.get("status").toString() : "-");
             mailTemplateParam.put("_request_", params.get("request") != null ? params.get("request").toString() : "-");
             mailTemplateParam.put("_response_", params.get("response") != null ? params.get("response").toString() : "-");
             mailTemplateParam.put("add_sender", sender);
@@ -858,85 +867,6 @@ public class SynonymService {
             e.printStackTrace();
         }
     }
-
-    // // 메일 처리 - 동의어 삭제 요청 반려
-    // public void sendRejectMail(Map<String, Object> params, HttpServletRequest request) throws Exception {
-    //     MimeMessage message = javaMailSender.createMimeMessage();
-
-    //     // 관리자 이메일 조회
-    //     List<Map> mailUserList = postMapper.getMailUserList();
-    //     Map<String, Object> map = new HashMap<>();
-
-    //     // 이메일이 있는 사용자만 발송
-    //     for (Map mailUser : mailUserList) {
-    //         if (!ObjectUtils.isEmpty(mailUser.get("user_email"))) {
-    //             map.put(mailUser.get("user_id").toString(), mailUser);
-    //         }
-    //     }
-
-    //     if (map.size() == 0) return;
-    //     try {
-    //         InternetAddress[] toAddress = new InternetAddress[map.size()];
-
-    //         int i = 0;
-    //         for (String key : map.keySet()) {      
-    //             toAddress[i] = new InternetAddress(((Map<String, String>)map.get(key)).get("user_email").toString(), ((Map<String, String>)map.get(key)).get("user_nm").toString(), "UTF-8");
-    //             i++;
-    //         }
-
-    //         message.setSubject("[MOBIGEN DATA CATALOG 동의어 삭제 요청 결과 안내] " + (String) params.get("term")); // 메일 제목
-    //         message.setFrom("mobigen_portal@mobigen.com"); // 보낸 사람
-    //         message.addRecipient(Message.RecipientType.TO, new InternetAddress(params.get("writer_email").toString(), params.get("writer_user_nm").toString(), "UTF-8")); // 받는 사람
-    //         message.addRecipients(Message.RecipientType.CC, toAddress); // 참조자
-
-    //         // 동의어 삭제 요청자 조회
-    //         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-    //         String userId = user.get("user_id").toString();
-    //         Map<String, Object> userinfo = (Map<String, Object>) userMapper.getUserMaster(userId);
-    //         String userName = (String) userinfo.get("user_nm");
-    //         String deptName = (String) userinfo.get("dept_nm");
-    //         String jwName = (String) userinfo.get("jw_nm");
-
-    //         if (deptName == null) {
-    //             deptName = "부서없음";
-    //         }
-
-    //         if (jwName == null) {
-    //             jwName = "직급없음";
-    //         }
-
-    //         // 동의어 삭제요청 목록 조회
-    //         List<Map> synonyms = (List) params.get("synonyms");
-    //         for (Map synonym : synonyms) {
-    //             synonym.get("synonyms") ;
-    //         }
-            
-    //         // 안내 메일 발송
-    //         // 메일 템플릿 ID 조회
-    //         Map<String, Object> commonCodeParam = new HashMap<>();
-    //         commonCodeParam.put("type", "email_template");
-    //         commonCodeParam.put("name", "DATA_REQUEST_RESPONSE");
-    //         List<Map<String, Object>> commonCodeList = adminService.getCommonCodeList(commonCodeParam);
-
-    //         String templateId = "";
-    //         if (commonCodeList != null && commonCodeList.size() > 0) {
-    //             templateId = commonCodeList.get(0).get("value").toString();
-    //         }
-    //         if(templateId == null || templateId.isEmpty() || templateId.equals("")) {
-    //             log.error("이메일 템플릿 조회 실패");
-    //             return;
-    //         }
-
-    //         // 메일 발송
-    //         Map<String, Object> mailTemplateResult = mailTemplateService.sendMail(templateId, mailTemplateParam);
-    //         if(mailTemplateResult != null && mailTemplateResult.get("result").equals("fail")){
-    //             log.error("이메일 발송 실패");
-    //         }
-
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
 
     // 동의어 동기화 ESSYNC API
     public Boolean esSynonymSyncUpdate() throws Exception {
@@ -986,24 +916,24 @@ public class SynonymService {
                         <h1 style="text-align: center; font-size: 24px; margin-bottom: 15px; margin-top: 15px;">_title_</h1>
                         <table style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;">
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">요청자</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_writer_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">요청자</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_writer_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">요청일</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_create_date_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">요청일</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_req_date_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">대표어</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_term_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">대표어</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_term_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">삭제요청 목록</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_synonyms_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">삭제요청 목록</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_synonyms_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">삭제요청 사유</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_request_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">삭제요청 사유</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_request_</td>
                             </tr>
                         </table>
                     </td>
@@ -1035,32 +965,32 @@ public class SynonymService {
                         <h1 style="text-align: center; font-size: 24px; margin-bottom: 15px; margin-top: 15px;">_title_</h1>
                         <table style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;">
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">요청자</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_writer_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">요청자</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_writer_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">요청일</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_create_date_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">요청일</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_req_date_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">대표어</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_term_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">대표어</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_term_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">삭제요청 목록</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_synonyms_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">삭제요청 목록</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_synonyms_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">삭제요청 사유</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_request_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">삭제요청 사유</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_request_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">결과</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_status_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">결과</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_status_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">반려 사유</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_response_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">반려 사유</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_response_</td>
                             </tr>
                         </table>
                     </td>
@@ -1073,4 +1003,5 @@ public class SynonymService {
     </div>
 </body>
 </html>
+
  */

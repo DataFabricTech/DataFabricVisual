@@ -169,6 +169,7 @@ const onClickRequestConfirm = async (req) => {
       id: req.req_id,
       request: req.request,
       req_user: req.req_user,
+      req_date: req.req_date,
       term: req.term,
       synonyms: req.synonyms,
     }
@@ -198,6 +199,7 @@ const onClickRequestReject = async (req) => {
       id: req.req_id,
       request: req.request,
       response: response.value,
+      req_date: req.req_date,
       req_user: req.req_user,
       term: req.term,
       synonyms: req.synonyms
