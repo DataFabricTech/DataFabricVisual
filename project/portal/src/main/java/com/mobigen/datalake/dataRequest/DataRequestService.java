@@ -121,7 +121,7 @@ public class DataRequestService {
             
             // 신청일시
             LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatterDatetime = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
+            DateTimeFormatter formatterDatetime = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
             String formattedDateTime = now.format(formatterDatetime);
             if (params.get("create_date") == null) params.put("create_date", now);
 
@@ -263,7 +263,7 @@ public class DataRequestService {
             // 신청일시
             LocalDateTime create_date = params.get("create_date") != null ? (LocalDateTime) params.get("create_date") : null;
             if (create_date != null) {
-                DateTimeFormatter formatterDatetime = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
+                DateTimeFormatter formatterDatetime = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
                 String formattedDateTime = create_date.format(formatterDatetime);
                 mailTemplateParam.put("_create_date_", formattedDateTime);
             } else {
