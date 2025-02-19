@@ -125,8 +125,8 @@
             <tr>
               <th>템플릿 변수</th>
               <td>
-                <span style="color:blue">※ 템플릿 변수는 영문 대소문자, 숫자, 특수문자(-, _[]) 만 허용됩니다.<br></span>ex) _tmp_variable-1_<br><br>
-                <input type="text" id="variable" placeholder="변수를 입력해주세요." class="mu-input w300" title="변수 입력" value="" oninput="this.value = this.value.replace(/[^a-zA-Z0-9\[\]_-]/g, '')">
+                <span style="color:blue">※ 템플릿 변수는 영문 대소문자, 숫자, 특수문자(-, _) 만 허용됩니다.<br></span>ex) _tmp_variable-1_<br><br>
+                <input type="text" id="variable" placeholder="변수를 입력해주세요." class="mu-input w300" title="변수 입력" value="" oninput="this.value = this.value.replace(/[^a-zA-Z0-9_-]/g, '')">
                 <button type="button" title="변수 추가" class="mu-btn mu-btn-sm mu-btn-primary mu-btn-icon-only" style="margin-left: 5px;" @click="onAddVariable">
                   <i class="mu-icon-svg add"></i><span>변수 추가</span>
                 </button>
