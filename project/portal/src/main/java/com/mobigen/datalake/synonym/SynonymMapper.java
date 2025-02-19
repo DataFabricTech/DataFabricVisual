@@ -37,4 +37,6 @@ public interface SynonymMapper {
     List getDistinctTermListForSearchOne(String searchWord) throws Exception;
     List getDistinctTermListForSearch(Map<String, Object> params) throws Exception;
     List getSynonymListOneForSearch(String term) throws Exception;
+    List getMailUserList() throws Exception;
+    List getDefaultAdminList() throws Exception;
 }

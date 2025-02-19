@@ -28,4 +28,7 @@ public interface DataRequestMapper {
 
     List<Map<String, Object>> getDataRequestFileInfoList(Integer id) throws Exception;
     Map<String, Object> getFileInfo(Integer file_id) throws Exception;
+
+    List<Map<String, Object>> getDefaultAdminList() throws Exception;
+    String getMailTemplateId(String template_code) throws Exception;
 }

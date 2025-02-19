@@ -270,7 +270,7 @@ const getProcessStatus = (dataRequest) => {
     if (dataRequest.process_status == 2) return '진행중'
     if (dataRequest.process_status == 3) return '제공'
     if (dataRequest.process_status == 4) return '미제공'
-  if (status == 5) return '삭제됨'
+    if (dataRequest.process_status == 5) return '-'
   } else {
     return ''
   }

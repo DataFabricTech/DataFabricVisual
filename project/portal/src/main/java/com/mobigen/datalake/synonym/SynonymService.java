@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.mobigen.datalake.post.PostMapper;
+import com.mobigen.datalake.system.mailTemplate.MailTemplateService;
+import com.mobigen.datalake.system.user.AdminService;
 import com.mobigen.datalake.user.UserMapper;
 import com.mobigen.framework.security.SessionManager;
 
@@ -36,6 +40,8 @@ public class SynonymService {
     private final PostMapper postMapper;
     private final UserMapper userMapper;
     private final SynonymMapper synonymMapper;
+    private final AdminService adminService;
+    private final MailTemplateService mailTemplateService;
     private final SessionManager sessionManager;
     private final JavaMailSender javaMailSender;
     
@@ -231,12 +237,19 @@ public class SynonymService {
         int addDeleteRequestResult = 0; //
         int addDeleteRequestItemResult = 0;
 
+        // 요청일
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatterDatetime = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
+        String formattedDateTime = now.format(formatterDatetime);
+        if (params.get("req_date") == null) params.put("req_date", now);
+
         // 삭제 요청 정보 등록
         params.put("type", 0); // 요청 타입(0:삭제요청)
         addDeleteRequestResult = synonymMapper.addDeleteRequestInfo(params);
 
         // 최근 삭제 요청 정보 id 조회
         int req_id = synonymMapper.getRecentDeleteRequestInfoId();
+
 
         // 삭제 요청 동의어 등록
         List<Map> list = (List<Map>) params.get("synonyms");
@@ -435,7 +448,7 @@ public class SynonymService {
                     if (strUserEmail != null && !"".equals(strUserEmail)) {
                         params.put("writer_email", strUserEmail);
                         params.put("writer_user_nm", (String) writer.get("user_nm"));
-                        sendConfirmMail(params, request);
+                        sendDeleteResponseMail(params, request);
                     }
                 }
             }
@@ -471,7 +484,7 @@ public class SynonymService {
                 if (strUserEmail != null && !"".equals(strUserEmail)) {
                     params.put("writer_email", strUserEmail);
                     params.put("writer_user_nm", (String) writer.get("user_nm"));
-                    sendRejectMail(params, request);
+                    sendDeleteResponseMail(params, request);
                 }
             }
         }
@@ -514,7 +527,7 @@ public class SynonymService {
                     if (strUserEmail != null && !"".equals(strUserEmail)) {
                         params.put("writer_email", strUserEmail);
                         params.put("writer_user_nm", (String) writer.get("user_nm"));
-                        sendRejectMail(params, request);
+                        sendDeleteResponseMail(params, request);
                     }
                 }
             }
@@ -585,7 +598,7 @@ public class SynonymService {
                     if (strUserEmail != null && !"".equals(strUserEmail)) {
                         params.put("writer_email", strUserEmail);
                         params.put("writer_user_nm", (String) writer.get("user_nm"));
-                        sendConfirmMail(params, request);
+                        sendDeleteResponseMail(params, request);
                     }
                 }
             }
@@ -602,615 +615,328 @@ public class SynonymService {
 
     // 메일 처리 - 동의어 삭제 요청
     public void sendDeleteRequestMail(Map<String, Object> params, HttpServletRequest request) throws Exception {
-        MimeMessage message = javaMailSender.createMimeMessage();
-
-        // 관리자 이메일 조회
-        List<Map> mailUserList = postMapper.getMailUserList();
-        Map<String, Object> map = new HashMap<>();
-
-        // 이메일이 있는 사용자만 발송
-        for (Map mailUser : mailUserList) {
-            if (!ObjectUtils.isEmpty(mailUser.get("user_email"))) {
-                map.put(mailUser.get("user_id").toString(), mailUser);
-            }
-        }
-
-        if (map.size() == 0) return;
         try {
-            InternetAddress[] toAddress = new InternetAddress[map.size()];
-
-            int i = 0;
-            for (String key : map.keySet()) {
-                toAddress[i] = new InternetAddress(((Map<String, String>)map.get(key)).get("user_email").toString(), ((Map<String, String>)map.get(key)).get("user_nm").toString(), "UTF-8");
-                i++;
-            }
-
-            message.setSubject("[MOBIGEN DATA CATALOG 동의어 삭제 요청] " + (String) params.get("term")); // 메일 제목
-            message.setFrom("mobigen_portal@mobigen.com"); // 보낸 사람
-            message.addRecipients(Message.RecipientType.TO, toAddress); // 받는 사람
-
-            // 동의어 삭제 요청자 조회
-            Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-            String userId = user.get("user_id").toString();
-            Map<String, Object> userinfo = (Map<String, Object>) userMapper.getUserMaster(userId);
-            String userName = (String) userinfo.get("user_nm");
-            String deptName = (String) userinfo.get("dept_nm");
-            String jwName = (String) userinfo.get("jw_nm");
-
-            if (deptName == null) {
-                deptName = "부서없음";
-            }
-
-            if (jwName == null) {
-                jwName = "직급없음";
-            }
-
-            // 동의어 삭제요청 목록 조회
-            List<Map> synonyms = (List) params.get("synonyms");
-            for (Map synonym : synonyms) {
-                synonym.get("synonyms") ;
-            }
-
-            //메일 본문
-            String htmlBody = makeHtmlMailBody(params, deptName + " " + userName + " " + jwName, "request");
-            // 메일 양식 html로 저장
-            message.setContent(htmlBody, "text/html; charset=utf-8");            
-            javaMailSender.send(message);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    // 메일 처리 - 동의어 삭제 요청 승인
-    public void sendConfirmMail(Map<String, Object> params, HttpServletRequest request) throws Exception {
-        MimeMessage message = javaMailSender.createMimeMessage();
-
-        // 관리자 이메일 조회
-        List<Map> mailUserList = postMapper.getMailUserList();
-        Map<String, Object> map = new HashMap<>();
-
-        // 이메일이 있는 사용자만 발송
-        for (Map mailUser : mailUserList) {
-            if (!ObjectUtils.isEmpty(mailUser.get("user_email"))) {
-                map.put(mailUser.get("user_id").toString(), mailUser);
-            }
-        }
-
-        if (map.size() == 0) return;
-        try {
-            InternetAddress[] toAddress = new InternetAddress[map.size()];
-
-            int i = 0;
-            for (String key : map.keySet()) {
-                toAddress[i] = new InternetAddress(((Map<String, String>)map.get(key)).get("user_email").toString(), ((Map<String, String>)map.get(key)).get("user_nm").toString(), "UTF-8");
-                i++;
-            }
-
-            message.setSubject("[MOBIGEN DATA CATALOG 동의어 삭제 요청 결과 안내] " + (String) params.get("term")); // 메일 제목
-            message.setFrom("mobigen_portal@mobigen.com"); // 보낸 사람
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(params.get("writer_email").toString(), params.get("writer_user_nm").toString(), "UTF-8")); // 받는 사람
-            message.addRecipients(Message.RecipientType.CC, toAddress); // 참조자
-
-            // 동의어 삭제 요청자 조회
-            Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-            String userId = user.get("user_id").toString();
-            Map<String, Object> userinfo = (Map<String, Object>) userMapper.getUserMaster(userId);
-            String userName = (String) userinfo.get("user_nm");
-            String deptName = (String) userinfo.get("dept_nm");
-            String jwName = (String) userinfo.get("jw_nm");
-
-            if (deptName == null) {
-                deptName = "부서없음";
-            }
-
-            if (jwName == null) {
-                jwName = "직급없음";
-            }
-
-            // 동의어 삭제요청 목록 조회
-            List<Map> synonyms = (List) params.get("synonyms");
-            for (Map synonym : synonyms) {
-                synonym.get("synonyms") ;
-            }
-           
-            //메일 본문
-            String htmlBody = makeHtmlMailBody(params, deptName + " " + userName + " " + jwName, "approval");
-            // 메일 양식 html로 저장
-            message.setContent(htmlBody, "text/html; charset=utf-8");
-            javaMailSender.send(message);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    // 메일 처리 - 동의어 삭제 요청 반려
-    public void sendRejectMail(Map<String, Object> params, HttpServletRequest request) throws Exception {
-        MimeMessage message = javaMailSender.createMimeMessage();
-
-        // 관리자 이메일 조회
-        List<Map> mailUserList = postMapper.getMailUserList();
-        Map<String, Object> map = new HashMap<>();
-
-        // 이메일이 있는 사용자만 발송
-        for (Map mailUser : mailUserList) {
-            if (!ObjectUtils.isEmpty(mailUser.get("user_email"))) {
-                map.put(mailUser.get("user_id").toString(), mailUser);
-            }
-        }
-
-        if (map.size() == 0) return;
-        try {
-            InternetAddress[] toAddress = new InternetAddress[map.size()];
-
-            int i = 0;
-            for (String key : map.keySet()) {      
-                toAddress[i] = new InternetAddress(((Map<String, String>)map.get(key)).get("user_email").toString(), ((Map<String, String>)map.get(key)).get("user_nm").toString(), "UTF-8");
-                i++;
-            }
-
-            message.setSubject("[MOBIGEN DATA CATALOG 동의어 삭제 요청 결과 안내] " + (String) params.get("term")); // 메일 제목
-            message.setFrom("mobigen_portal@mobigen.com"); // 보낸 사람
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(params.get("writer_email").toString(), params.get("writer_user_nm").toString(), "UTF-8")); // 받는 사람
-            message.addRecipients(Message.RecipientType.CC, toAddress); // 참조자
-
-            // 동의어 삭제 요청자 조회
-            Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-            String userId = user.get("user_id").toString();
-            Map<String, Object> userinfo = (Map<String, Object>) userMapper.getUserMaster(userId);
-            String userName = (String) userinfo.get("user_nm");
-            String deptName = (String) userinfo.get("dept_nm");
-            String jwName = (String) userinfo.get("jw_nm");
-
-            if (deptName == null) {
-                deptName = "부서없음";
-            }
-
-            if (jwName == null) {
-                jwName = "직급없음";
-            }
-
-            // 동의어 삭제요청 목록 조회
-            List<Map> synonyms = (List) params.get("synonyms");
-            for (Map synonym : synonyms) {
-                synonym.get("synonyms") ;
+            // 1. 관리자 이메일 기본값 조회
+            List<Map<String, Object>> defaultAdminList = synonymMapper.getDefaultAdminList();
+            Map<String, Object> mailDefaultAdminMap = new HashMap<>();
+            for (Map default_admin : defaultAdminList) {
+                if (!ObjectUtils.isEmpty(default_admin.get("user_email"))) {
+                    mailDefaultAdminMap.put("default_admin", default_admin);
+                    break;
+                }
             }
             
-            //메일 본문
-            String htmlBody = makeHtmlMailBody(params, deptName + " " + userName + " " + jwName, "reject");
-            // 메일 양식 html로 저장
-            message.setContent(htmlBody, "text/html; charset=utf-8");
-            javaMailSender.send(message);
+            // 2. 참조 관리자 조회
+            List<Map> adminList = synonymMapper.getMailUserList();
+            Map<String, Object> mailAdminMap = new HashMap<>();
+            for (Map admin : adminList) {
+                if (!ObjectUtils.isEmpty(admin.get("user_email"))) {
+                    mailAdminMap.put(admin.get("user_id").toString(), admin);
+                }
+            }
+
+            // 받는 사람이 없는 경우 이메일 발송 X
+            if (mailDefaultAdminMap.size() == 0 && mailAdminMap.size() == 0) {
+                log.info("No Email Recipient");
+                return;
+            }
+            
+            // 3. 메일 발송 파라미터
+            List<Map<String, Object>> sender = new ArrayList<>();
+            List<Map<String, Object>> receiver = new ArrayList<>();
+            List<Map<String, Object>> ccRecipients = new ArrayList<>();
+
+            // 발신자
+            Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+            Map<String, Object> senderMap = new HashMap<>();
+            senderMap.put("name", user.get("username"));
+            senderMap.put("email", user.get("user_email"));
+            sender.add(senderMap);
+
+            // 수신자
+            for (String key : mailDefaultAdminMap.keySet()) {
+                Map<String, Object> receiverMap = new HashMap<>();
+                // 기본 관리자 계정 중 하나만 이용
+                if (((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email") != null) {
+                    receiverMap.put("name", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_nm").toString());
+                    receiverMap.put("email", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email").toString());
+                    receiver.add(receiverMap);
+                    break;
+                }
+            }
+
+            // 참조자
+            for (String key : mailAdminMap.keySet()) {
+                Map<String, Object> ccRecipientsMap = new HashMap<>();
+                ccRecipientsMap.put("name", ((Map<String, String>)mailAdminMap.get(key)).get("user_nm").toString());
+                ccRecipientsMap.put("email", ((Map<String, String>)mailAdminMap.get(key)).get("user_email").toString());
+                ccRecipients.add(ccRecipientsMap);
+            }
+
+            // 메일 전송 파라미터
+            Map<String, Object> mailTemplateParam = new HashMap<>();
+            mailTemplateParam.put("_title_", "동의어 삭제 요청");
+            
+            String writer = "";
+            String user_nm = user.get("username") != null ? user.get("username").toString() : "-";
+            String dept_nm = user.get("dept_nm") != null ? user.get("dept_nm").toString() : "-";
+            writer = user_nm + " (" + dept_nm + ")";
+            mailTemplateParam.put("_writer_", writer);
+
+            // 요청일
+            LocalDateTime req_date = params.get("req_date") != null ? (LocalDateTime) params.get("req_date") : null;
+            if (req_date != null) {
+                DateTimeFormatter formatterDatetime = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
+                String formattedDateTime = req_date.format(formatterDatetime);
+                mailTemplateParam.put("_req_date_", formattedDateTime);
+            } else {
+                mailTemplateParam.put("_req_date_", "-");
+            }
+            
+            mailTemplateParam.put("_term_", params.get("term") != null ? params.get("term").toString() : "-");
+            
+            // 동의어 목록
+            String synonymsText = "";
+            List<Map<String, Object>> synonyms = (List<Map<String, Object>>) params.get("synonyms");
+            if (synonyms != null && synonyms.size() > 0) {
+                synonymsText = synonyms.stream()
+                        .map(map -> (String) map.get("synonym"))
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.joining(","));
+            } else {
+                synonymsText = "-";
+            }
+            mailTemplateParam.put("_synonyms_", synonymsText);
+            mailTemplateParam.put("_request_", params.get("request") != null ? params.get("request").toString() : "-");
+            mailTemplateParam.put("add_sender", sender);
+            mailTemplateParam.put("add_receiver", receiver);
+            mailTemplateParam.put("add_cc_recipients", ccRecipients);
+
+            // 안내 메일 발송
+            // 메일 템플릿 ID 조회
+            Map<String, Object> commonCodeParam = new HashMap<>();
+            commonCodeParam.put("type", "email_template");
+            commonCodeParam.put("name", "SYNONYM_DELETE_REQUEST");
+            List<Map<String, Object>> commonCodeList = adminService.getCommonCodeList(commonCodeParam);
+
+            String templateId = "";
+            if (commonCodeList != null && commonCodeList.size() > 0) {
+                templateId = commonCodeList.get(0).get("value").toString();
+            }
+            if(templateId == null || templateId.isEmpty() || templateId.equals("")) {
+                log.error("이메일 발송 실패");
+                return;
+            }
+
+            // 메일 발송
+            Map<String, Object> mailTemplateResult = mailTemplateService.sendMail(templateId, mailTemplateParam);
+            if(mailTemplateResult != null && mailTemplateResult.get("result").equals("fail")){
+                log.error("이메일 발송 실패");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    // 메일 처리 - 동의어 삭제 요청 처리 메일
+    public void sendDeleteResponseMail(Map<String, Object> params, HttpServletRequest request) throws Exception {
+        try {
+            // 1. 관리자 이메일 기본값 조회
+            List<Map<String, Object>> defaultAdminList = synonymMapper.getDefaultAdminList();
+            Map<String, Object> mailDefaultAdminMap = new HashMap<>();
+            for (Map default_admin : defaultAdminList) {
+                if (!ObjectUtils.isEmpty(default_admin.get("user_email"))) {
+                    mailDefaultAdminMap.put("default_admin", default_admin);
+                    break;
+                }
+            }
+            
+            // 2. 참조 관리자 조회
+            List<Map> adminList = synonymMapper.getMailUserList();
+            Map<String, Object> mailAdminMap = new HashMap<>();
+            for (Map admin : adminList) {
+                if (!ObjectUtils.isEmpty(admin.get("user_email"))) {
+                    mailAdminMap.put(admin.get("user_id").toString(), admin);
+                }
+            }
+
+            // 받는 사람이 없는 경우 이메일 발송 X
+            if (mailDefaultAdminMap.size() == 0 && mailAdminMap.size() == 0) {
+                log.info("No Email Recipient");
+                return;
+            }
+            
+            // 3. 메일 발송 파라미터
+            List<Map<String, Object>> sender = new ArrayList<>();
+            List<Map<String, Object>> receiver = new ArrayList<>();
+            List<Map<String, Object>> ccRecipients = new ArrayList<>();
+
+            // 발신자
+            Map<String, Object> senderMap = new HashMap<>();
+            senderMap.put("name", params.get("writer_user_nm"));
+            senderMap.put("email", params.get("writer_email"));
+            sender.add(senderMap);
+
+            // 수신자
+            for (String key : mailDefaultAdminMap.keySet()) {
+                Map<String, Object> receiverMap = new HashMap<>();
+                // 기본 관리자 계정 중 하나만 이용
+                if (((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email") != null) {
+                    receiverMap.put("name", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_nm").toString());
+                    receiverMap.put("email", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email").toString());
+                    receiver.add(receiverMap);
+                    break;
+                }
+            }
+
+            // 참조자
+            for (String key : mailAdminMap.keySet()) {
+                Map<String, Object> ccRecipientsMap = new HashMap<>();
+                ccRecipientsMap.put("name", ((Map<String, String>)mailAdminMap.get(key)).get("user_nm").toString());
+                ccRecipientsMap.put("email", ((Map<String, String>)mailAdminMap.get(key)).get("user_email").toString());
+                ccRecipients.add(ccRecipientsMap);
+            }
+
+            // 메일 전송 파라미터
+            Map<String, Object> mailTemplateParam = new HashMap<>();
+            mailTemplateParam.put("_title_", "동의어 삭제 요청");
+            mailTemplateParam.put("_writer_", params.get("writer_user_nm"));
+
+            // 요청일
+            LocalDateTime req_date = params.get("req_date") != null ? (LocalDateTime) params.get("req_date") : null;
+            if (req_date != null) {
+                DateTimeFormatter formatterDatetime = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
+                String formattedDateTime = req_date.format(formatterDatetime);
+                mailTemplateParam.put("_req_date_", formattedDateTime);
+            } else {
+                mailTemplateParam.put("_req_date_", "-");
+            }
+            
+            mailTemplateParam.put("_term_", params.get("term") != null ? params.get("term").toString() : "-");
+            
+            // 동의어 목록
+            String synonymsText = "";
+            List<Map<String, Object>> synonyms = (List<Map<String, Object>>) params.get("synonyms");
+            if (synonyms != null && synonyms.size() > 0) {
+                synonymsText = synonyms.stream()
+                        .map(map -> (String) map.get("synonym"))
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.joining(","));
+            } else {
+                synonymsText = "-";
+            }
+            mailTemplateParam.put("_synonyms_", synonymsText);
+            mailTemplateParam.put("_request_", params.get("request") != null ? params.get("request").toString() : "-");
+            mailTemplateParam.put("_response_", params.get("response") != null ? params.get("response").toString() : "-");
+            mailTemplateParam.put("add_sender", sender);
+            mailTemplateParam.put("add_receiver", receiver);
+            mailTemplateParam.put("add_cc_recipients", ccRecipients);
+
+            // 안내 메일 발송
+            // 메일 템플릿 ID 조회
+            Map<String, Object> commonCodeParam = new HashMap<>();
+            commonCodeParam.put("type", "email_template");
+            commonCodeParam.put("name", "SYNONYM_DELETE_RESPONSE");
+            List<Map<String, Object>> commonCodeList = adminService.getCommonCodeList(commonCodeParam);
+
+            String templateId = "";
+            if (commonCodeList != null && commonCodeList.size() > 0) {
+                templateId = commonCodeList.get(0).get("value").toString();
+            }
+            if(templateId == null || templateId.isEmpty() || templateId.equals("")) {
+                log.error("이메일 발송 실패");
+                return;
+            }
+
+            // 메일 발송
+            Map<String, Object> mailTemplateResult = mailTemplateService.sendMail(templateId, mailTemplateParam);
+            if(mailTemplateResult != null && mailTemplateResult.get("result").equals("fail")){
+                log.error("이메일 발송 실패");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public String makeHtmlMailBody(Map<String, Object> params, String request_user_info, String mailType) throws Exception{
-        LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatterDatetime = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 HH시 mm분 ss초");
-        String formattedDateTime = now.format(formatterDatetime);
-        DateTimeFormatter formatterDate = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일");
-        String formattedDate = now.format(formatterDate);
+    // // 메일 처리 - 동의어 삭제 요청 반려
+    // public void sendRejectMail(Map<String, Object> params, HttpServletRequest request) throws Exception {
+    //     MimeMessage message = javaMailSender.createMimeMessage();
 
-        String logoDataImage = "data:image/png;base64,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";
+    //     // 관리자 이메일 조회
+    //     List<Map> mailUserList = postMapper.getMailUserList();
+    //     Map<String, Object> map = new HashMap<>();
 
-        String requestMailBody = """
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOBIGEN DATA CATALOG</title>
-    <style>
-        body {
-            font-family:"맑은 고딕";
-            color:black;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: auto;
-        }
-        .container {
-            width: 600px; background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px; border-radius: 8px;
-        }
-        h1 {
-            text-align: center; font-size: 24px; margin-bottom: 30px;
-        }
-        table {
-            width: 100%%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            border-top: 2px solid #333; /* 테이블 상단 굵은 선 */
-        }
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd; /* 하단에만 선 */
-            text-align: left;
-        }
-        th {
-            font-size: 14px;
-            background-color: #f4f4f4;
-            font-weight: 700;
-            width: 30%%;
-            text-align: center;
-        }
-        td {
-            color: #333;
-            font-size: 14px;
-        }
-        th:first-child, td:first-child {
-            border-left: none; /* 왼쪽 선 제거 */
-        }
-        th:last-child, td:last-child {
-            border-right: none; /* 오른쪽 선 제거 */
-        }
-        .highlight {
-            color: #007bff;
-            font-weight: bold;
-            text-decoration: none;
-            display: block;
-            margin-top: 10px;
-        }
-        .footer {
-            font-size: 14px;
-            color: #555;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <table>
-            <tbody>
-                <tr>
-                    <td>
-                        <p style="text-align: center;">
-                            <span>
-                                <img src="%s" alt="MOBIGEN" class="logo" style="width: 120px;">
-                            </span>
-                        </p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h1>동의어 삭제 요청</h1>
-                        <table>
-                            <tr>
-                                <th>요&nbsp;&nbsp; 청&nbsp;&nbsp; 자</th>
-                                <td>%s</td>
-                            </tr>
-                            <tr>
-                                <th>요&nbsp;&nbsp; 청&nbsp;&nbsp; 일</th>
-                                <td>%s</td>
-                            </tr>
-                            <tr>
-                                <th>대&nbsp;&nbsp; 표&nbsp;&nbsp; 어</th>
-                                <td>%s</td>
-                            </tr>
-                            <tr>
-                                <th>삭제요청&nbsp; 목록</th>
-                                <td>%s</td>
-                            </tr>
-                            <tr>
-                                <th>삭제요청&nbsp; 사유</th>
-                                <td>%s</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="footer" style="text-align: center; margin-top: 10px; color: #0073e6; font-weight: bold;">
-            MOBIGEN DATA CATALOG
-        </div>
-    </div>
-</body>
-</html>
-        """;
+    //     // 이메일이 있는 사용자만 발송
+    //     for (Map mailUser : mailUserList) {
+    //         if (!ObjectUtils.isEmpty(mailUser.get("user_email"))) {
+    //             map.put(mailUser.get("user_id").toString(), mailUser);
+    //         }
+    //     }
 
-        String requestApprovalMailBody = """
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOBIGEN DATA CATALOG</title>
-    <style>
-        body {
-            font-family:"맑은 고딕";
-            color:black;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: auto;
-        }
-        .container {
-            width: 600px; background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px; border-radius: 8px;
-        }
-        h1 {
-            text-align: center; font-size: 24px; margin-bottom: 30px;
-        }
-        table {
-            width: 100%%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            border-top: 2px solid #333; /* 테이블 상단 굵은 선 */
-        }
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd; /* 하단에만 선 */
-            text-align: left;
-        }
-        th {
-            font-size: 14px;
-            background-color: #f4f4f4;
-            font-weight: 700;
-            width: 30%%;
-            text-align: center;
-        }
-        td {
-            color: #333;
-            font-size: 14px;
-        }
-        th:first-child, td:first-child {
-            border-left: none; /* 왼쪽 선 제거 */
-        }
-        th:last-child, td:last-child {
-            border-right: none; /* 오른쪽 선 제거 */
-        }
-        .highlight {
-            color: #007bff;
-            font-weight: bold;
-            text-decoration: none;
-            display: block;
-            margin-top: 10px;
-        }
-        .footer {
-            font-size: 14px;
-            color: #555;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <table>
-            <tbody>
-                <tr>
-                    <td>
-                        <p style="text-align: center;">
-                            <span>
-                                <img src="%s" alt="MOBIGEN" class="logo" style="width: 120px;">
-                            </span>
-                        </p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h1>동의어 삭제 요청 결과</h1>
-                        <table>
-                            <tr>
-                                <th>요&nbsp;&nbsp; 청&nbsp;&nbsp; 자</th>
-                                <td>%s</td>
-                            </tr>
-                            <tr>
-                                <th>요&nbsp;&nbsp; 청&nbsp;&nbsp; 일</th>
-                                <td>%s</td>
-                            </tr>
-                            <tr>
-                                <th>대&nbsp;&nbsp; 표&nbsp;&nbsp; 어</th>
-                                <td>%s</td>
-                            </tr>
-                            <tr>
-                                <th>삭제요청&nbsp; 목록</th>
-                                <td>%s</td>
-                            </tr>
-                            <tr>
-                                <th>삭제요청&nbsp; 사유</th>
-                                <td>%s</td>
-                            </tr>
-                            <tr>
-                                <th>결&nbsp;&nbsp;&nbsp;&nbsp;과</th>
-                                <td>승인</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="footer" style="text-align: center; margin-top: 10px; color: #0073e6; font-weight: bold;">
-            MOBIGEN DATA CATALOG
-        </div>
-    </div>
-</body>
-</html>
-        """;
+    //     if (map.size() == 0) return;
+    //     try {
+    //         InternetAddress[] toAddress = new InternetAddress[map.size()];
 
-        String requestRejectMailBody = """
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOBIGEN DATA CATALOG</title>
-    <style>
-        body {
-            font-family:"맑은 고딕";
-            color:black;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: auto;
-        }
-        .container {
-            width: 600px; background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px; border-radius: 8px;
-        }
-        h1 {
-            text-align: center; font-size: 24px; margin-bottom: 30px;
-        }
-        table {
-            width: 100%%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            border-top: 2px solid #333; /* 테이블 상단 굵은 선 */
-        }
-        th, td {
-            padding: 10px;
-            border-bottom: 1px solid #ddd; /* 하단에만 선 */
-            text-align: left;
-        }
-        th {
-            font-size: 14px;
-            background-color: #f4f4f4;
-            font-weight: 700;
-            width: 30%%;
-            text-align: center;
-        }
-        td {
-            color: #333;
-            font-size: 14px;
-        }
-        th:first-child, td:first-child {
-            border-left: none; /* 왼쪽 선 제거 */
-        }
-        th:last-child, td:last-child {
-            border-right: none; /* 오른쪽 선 제거 */
-        }
-        .highlight {
-            color: #007bff;
-            font-weight: bold;
-            text-decoration: none;
-            display: block;
-            margin-top: 10px;
-        }
-        .footer {
-            font-size: 14px;
-            color: #555;
-            margin-top: 20px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <table>
-            <tbody>
-                <tr>
-                    <td>
-                        <p style="text-align: center;">
-                            <span>
-                                <img src="%s" alt="MOBIGEN" class="logo" style="width: 120px;">
-                            </span>
-                        </p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <h1>동의어 삭제 요청 결과</h1>
-                        <table>
-                            <tr>
-                                <th>요&nbsp;&nbsp; 청&nbsp;&nbsp; 자</th>
-                                <td>%s</td>
-                            </tr>
-                            <tr>
-                                <th>요&nbsp;&nbsp; 청&nbsp;&nbsp; 일</th>
-                                <td>%s</td>
-                            </tr>
-                            <tr>
-                                <th>대&nbsp;&nbsp; 표&nbsp;&nbsp; 어</th>
-                                <td>%s</td>
-                            </tr>
-                            <tr>
-                                <th>삭제요청&nbsp; 목록</th>
-                                <td>%s</td>
-                            </tr>
-                            <tr>
-                                <th>삭제요청&nbsp; 사유</th>
-                                <td>%s</td>
-                            </tr>
-                            <tr>
-                                <th>결&nbsp;&nbsp;&nbsp;&nbsp;과</th>
-                                <td>반려</td>
-                            </tr>
-                            <tr>
-                                <th>반려&nbsp; 사유</th>
-                                <td>%s</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        
-        <div class="footer" style="text-align: center; margin-top: 10px; color: #0073e6; font-weight: bold;">
-            MOBIGEN DATA CATALOG
-        </div>
-    </div>
-</body>
-</html>         
-                """;
+    //         int i = 0;
+    //         for (String key : map.keySet()) {      
+    //             toAddress[i] = new InternetAddress(((Map<String, String>)map.get(key)).get("user_email").toString(), ((Map<String, String>)map.get(key)).get("user_nm").toString(), "UTF-8");
+    //             i++;
+    //         }
 
-        // 신청자 스타일 지정
-        String[] ruiArr = request_user_info.split(" ");
-        ruiArr[0] = "<span style=\"color: #1F497D\">" + ruiArr[0] + "</span>";
-        ruiArr[2] = "<span style=\"color: #1F497D\">" + ruiArr[2] + "</span>";
-        request_user_info = String.join(" ", ruiArr);
+    //         message.setSubject("[MOBIGEN DATA CATALOG 동의어 삭제 요청 결과 안내] " + (String) params.get("term")); // 메일 제목
+    //         message.setFrom("mobigen_portal@mobigen.com"); // 보낸 사람
+    //         message.addRecipient(Message.RecipientType.TO, new InternetAddress(params.get("writer_email").toString(), params.get("writer_user_nm").toString(), "UTF-8")); // 받는 사람
+    //         message.addRecipients(Message.RecipientType.CC, toAddress); // 참조자
 
-        List<Map> synonyms = (List) params.get("synonyms");
-        String synonymListStr = "[";
-        for (int x = 0; x < synonyms.size(); x++) {
-            synonymListStr +=  (String)synonyms.get(x).get("synonym");
-            if (x < synonyms.size() - 1) synonymListStr += ", ";
-        }
-        synonymListStr += "]";
+    //         // 동의어 삭제 요청자 조회
+    //         Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+    //         String userId = user.get("user_id").toString();
+    //         Map<String, Object> userinfo = (Map<String, Object>) userMapper.getUserMaster(userId);
+    //         String userName = (String) userinfo.get("user_nm");
+    //         String deptName = (String) userinfo.get("dept_nm");
+    //         String jwName = (String) userinfo.get("jw_nm");
 
-        String resultMailBody = "";
-        if(mailType.equals("request")){     //동의어 삭제 요청
-            resultMailBody = String.format(requestMailBody,
-                logoDataImage,
-                request_user_info,
-                formattedDate,
-                params.get("term"),
-                synonymListStr,
-                params.get("request")
-                );
-        }else if(mailType.equals("approval")){  //동의어 삭제 요청 - 승인
-            resultMailBody = String.format(requestApprovalMailBody,
-                logoDataImage,
-                request_user_info,
-                formattedDate,
-                params.get("term"),
-                synonymListStr,
-                params.get("request")
-                );
-        }else if(mailType.equals("reject")){    //동의어 삭제 요청 - 반려
-                resultMailBody = String.format(requestRejectMailBody,
-                logoDataImage,
-                request_user_info,
-                formattedDate,
-                params.get("term"),
-                synonymListStr,
-                params.get("request"),
-                params.get("response")                
-                );
+    //         if (deptName == null) {
+    //             deptName = "부서없음";
+    //         }
 
-        }
+    //         if (jwName == null) {
+    //             jwName = "직급없음";
+    //         }
 
-        System.out.println(resultMailBody);
+    //         // 동의어 삭제요청 목록 조회
+    //         List<Map> synonyms = (List) params.get("synonyms");
+    //         for (Map synonym : synonyms) {
+    //             synonym.get("synonyms") ;
+    //         }
+            
+    //         // 안내 메일 발송
+    //         // 메일 템플릿 ID 조회
+    //         Map<String, Object> commonCodeParam = new HashMap<>();
+    //         commonCodeParam.put("type", "email_template");
+    //         commonCodeParam.put("name", "DATA_REQUEST_RESPONSE");
+    //         List<Map<String, Object>> commonCodeList = adminService.getCommonCodeList(commonCodeParam);
 
-        return resultMailBody;
-    }
+    //         String templateId = "";
+    //         if (commonCodeList != null && commonCodeList.size() > 0) {
+    //             templateId = commonCodeList.get(0).get("value").toString();
+    //         }
+    //         if(templateId == null || templateId.isEmpty() || templateId.equals("")) {
+    //             log.error("이메일 템플릿 조회 실패");
+    //             return;
+    //         }
+
+    //         // 메일 발송
+    //         Map<String, Object> mailTemplateResult = mailTemplateService.sendMail(templateId, mailTemplateParam);
+    //         if(mailTemplateResult != null && mailTemplateResult.get("result").equals("fail")){
+    //             log.error("이메일 발송 실패");
+    //         }
+
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
     // 동의어 동기화 ESSYNC API
     public Boolean esSynonymSyncUpdate() throws Exception {
@@ -1241,3 +967,110 @@ public class SynonymService {
     }
 
 }
+
+
+/* // 동의어 삭제 요청 등록 메일
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOBIGEN DATA CATALOG</title>
+</head>
+<body style="font-family:'맑은 고딕'; color: black; background-color: #f4f4f4; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: auto;">
+    <div style="width: 600px; background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px; border-radius: 8px;">
+        <table style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;">
+            <tbody>
+                <tr>
+                    <td style="padding: 0; border: none;">
+                        <h1 style="text-align: center; font-size: 24px; margin-bottom: 15px; margin-top: 15px;">_title_</h1>
+                        <table style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;">
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">요청자</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_writer_</td>
+                            </tr>
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">요청일</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_create_date_</td>
+                            </tr>
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">대표어</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_term_</td>
+                            </tr>
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">삭제요청 목록</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_synonyms_</td>
+                            </tr>
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">삭제요청 사유</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_request_</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="font-size: 14px; color: #555; margin-top: 20px; text-align: center; font-weight: bold;">
+            MOBIGEN DATA CATALOG
+        </div>
+    </div>
+</body>
+</html>
+ */
+
+ /* // 동의어 삭제 요청 처리 결과 메일
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOBIGEN DATA CATALOG</title>
+</head>
+<body style="font-family:'맑은 고딕'; color: black; background-color: #f4f4f4; margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: auto;">
+    <div style="width: 600px; background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 20px; border-radius: 8px;">
+        <table style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;">
+            <tbody>
+                <tr>
+                    <td style="padding: 0; border: none;">
+                        <h1 style="text-align: center; font-size: 24px; margin-bottom: 15px; margin-top: 15px;">_title_</h1>
+                        <table style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;">
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">요청자</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_writer_</td>
+                            </tr>
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">요청일</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_create_date_</td>
+                            </tr>
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">대표어</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_term_</td>
+                            </tr>
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">삭제요청 목록</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_synonyms_</td>
+                            </tr>
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">삭제요청 사유</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_request_</td>
+                            </tr>
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">결과</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_status_</td>
+                            </tr>
+                            <tr>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">반려 사유</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_response_</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div style="font-size: 14px; color: #555; margin-top: 20px; text-align: center; font-weight: bold;">
+            MOBIGEN DATA CATALOG
+        </div>
+    </div>
+</body>
+</html>
+ */

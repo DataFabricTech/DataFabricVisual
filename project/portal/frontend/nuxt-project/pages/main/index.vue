@@ -364,7 +364,7 @@ const mainBannerSubjectList = ref([
   },
   {
     name: "MAIN_BANNER_SUBJECT2",
-    value: "", 
+    value: "",
     description: "메인화면 배너명 하단",
     type: "portal_config"
   }
@@ -538,7 +538,7 @@ const getCategoryData = async () => {
   categeoryChart(categoryList.value);
 }
 
-// 
+//
 const categeoryChart = (categoryList) => {
   var chartCategory = Highcharts.chart("chartCategory", {
     chart: {
@@ -654,7 +654,7 @@ const swiperButtonActiveStatus = (cnt) => {
 // 카테고리 아이콘 설정
 const getCategoryIcon = (idx) => {
   let i = Math.floor(idx / 10);
-  const categoryIndex = idx > 10 ? 10 : idx; 
+  const categoryIndex = idx > 10 ? 10 : idx;
   return `ico-category category-${categoryIndex < 10 ? String(i) + String(categoryIndex) : String(categoryIndex)}`;
 }
 
@@ -1010,7 +1010,7 @@ const getProcessStatus = (status) => {
   if (status == 2) return '진행중'
   if (status == 3) return '제공'
   if (status == 4) return '미제공'
-  if (status == 5) return '삭제됨'
+  if (status == 5) return '-'
 }
 
 // My Catalog > 데이터 요청 내역

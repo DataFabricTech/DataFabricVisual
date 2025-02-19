@@ -124,8 +124,8 @@
                 <td>
                   <div class="reply-info">
                     <em :class="getProcessStyle(item.process_status)">{{ getProcessStatus(item.process_status) }}</em>&nbsp;
-                    <span class="name">{{ item.user_nm }}</span> &nbsp;
-                    <span class="team">({{ getDeptNm(item) }})</span> &nbsp;
+                    <span class="name">{{ item.user_nm }}</span>
+                    <span class="team">({{ getDeptNm(item) }})</span>&nbsp;
                     <span class="date"> {{ $yyyyMMddHHmmSS(item.create_date) }} </span>
                   </div>
                 </td>

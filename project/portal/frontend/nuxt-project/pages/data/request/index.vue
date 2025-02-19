@@ -31,7 +31,7 @@
               </div>
               <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getDataRequestList" />
             </div>
-            
+
           </div>
           <div class="board-list">
             <table class="mu-grid">
@@ -205,7 +205,7 @@ const getProcessStatus = (status) => {
   if (status == 2) return '진행중'
   if (status == 3) return '제공'
   if (status == 4) return '미제공'
-  if (status == 5) return '삭제됨'
+  if (status == 5) return '-'
 }
 
 // 데이터요청 목록 조회

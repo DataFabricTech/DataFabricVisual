@@ -128,7 +128,7 @@ const getProcessStatus = (status) => {
   if (status == 2) return '진행중'
   if (status == 3) return '제공'
   if (status == 4) return '미제공'
-  if (status == 5) return '삭제됨'
+  if (status == 5) return '-'
 }
 
 const getDataRequestList = async (offset = 1) => {
