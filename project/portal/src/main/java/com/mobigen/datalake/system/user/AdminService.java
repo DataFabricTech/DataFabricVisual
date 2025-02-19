@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -186,9 +187,26 @@ public class AdminService {
                 recipient.put("name", param.get("user_nm").toString());
                 add(recipient);
             }});
+            
+            // 메일 템플릿 ID 조회
+            Map<String, Object> commonCodeParam = new HashMap<>();
+            commonCodeParam.put("type", "email_template");
+            commonCodeParam.put("name", "INIT_PASSWORD");
+
+            List<Map<String, Object>> commonCodeList = getCommonCodeList(commonCodeParam);
+
+            String templateId = "";
+            if (commonCodeList != null && commonCodeList.size() > 0) {
+                templateId = commonCodeList.get(0).get("value").toString();
+            }
+
+            if(templateId == null || templateId.isEmpty() || templateId.equals("")) {
+                result.put("register_result", "N");
+                result.put("register_result_message", "패스워드 초기화 실패하였습니다다. 관리자에게 문의해주시기 바랍니다.");
+            }
 
             // 안내 메일 발송
-            Map<String, Object> mailTemplateResult = mailTemplateService.sendMail("TEMPLATE_01", mailTemplateParam);
+            Map<String, Object> mailTemplateResult = mailTemplateService.sendMail(templateId, mailTemplateParam);
 
             if(mailTemplateResult != null && mailTemplateResult.get("result").equals("fail")){
                 result.put("register_result", "N");
@@ -387,4 +405,28 @@ public class AdminService {
 
         return result;
     }
+
+    /**
+     * 공통코드 리스트 조회
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    public List<Map<String, Object>> getCommonCodeList(Map<String, Object> param) throws Exception {
+        Map<String, String> tParam = new HashMap<>();
+
+        if(param.containsKey("type") && param.get("type") != null && !((String) param.get("type")).isEmpty()) {
+            tParam.put("type", (String) param.get("type"));
+        }
+        if(param.containsKey("name") && param.get("name") != null && !((String) param.get("name")).isEmpty()) {
+            tParam.put("name", (String) param.get("name"));
+        }
+        
+        // 중복 제거
+        List<Map<String, Object>> list = adminMapper.getCommonCodeList(tParam);
+        List<Map<String, Object>> distinctList = list.stream().distinct().collect(Collectors.toList());
+
+        return distinctList;
+    }
+    
 }

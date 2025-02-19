@@ -119,4 +119,11 @@ public class AdminController {
     public Object getEmailManageList() throws Exception {
         return adminService.getEmailManageList();
     }
+    
+
+    @ResponseJsonResult
+    @GetMapping("/commonCodeList")
+    public Object getCommonCodeList(@RequestBody Map<String, Object> param) throws Exception {
+        return adminService.getCommonCodeList(param);
+    }
 }
