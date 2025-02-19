@@ -24,5 +24,5 @@ public interface MainPageMapper {
     int insertCodeTable(Map<String, Object> params) throws Exception;
     List<Map<String, Object>> getLayoutList() throws Exception;
     List<Map<String, Object>> getFooterList() throws Exception;
-    Map<String, Object> getLayoutInfoFromName(Map<String, Object> params) throws Exception;
+    Map<String, Object> getCodeInfo(Map<String, Object> params) throws Exception;
 }

@@ -91,6 +91,21 @@
             <button type="button" class="mu-btn mu-btn-primary" @click="onClickSaveLayoutManage()"><span>적용</span></button>
           </div>
         </div>
+        <div class="inner-column">
+          <div class="mu-heading">
+            <h4>관리자 이메일 관리</h4>
+          </div>
+          <dl class="recommend-keyword">
+            <div v-for="(adminEmail, idx) in adminEmailList">
+              <dt>{{ adminEmail.description }}</dt>
+                <dd><input type="text" v-model="adminEmail.value" :id="adminEmail.name"
+                    :placeholder="adminEmail.description" class="mu-input" :title="adminEmail.description" /></dd>
+            </div>
+          </dl>
+          <div class="mu-button-wrap">
+            <button type="button" class="mu-btn mu-btn-primary" @click="onClickSaveAdminMailList()"><span>적용</span></button>
+          </div>
+        </div>
         <!-- <div class="inner-column">
           <div class="mu-heading">
             <h4>로고 이미지 관리</h4>
@@ -183,7 +198,7 @@ const layoutList = ref([
   },
   {
     name: "MAIN_BANNER_SUBJECT2",
-    value: "", 
+    value: "",
     description: "메인화면 배너명2",
     type: "portal_config"
   },
@@ -195,16 +210,37 @@ const layoutList = ref([
   },
   {
     name: "FOOTER_CONTENT2",
-    value: "", 
+    value: "",
     description: "하단 설명2",
     type: "portal_config"
   },
   {
     name: "FOOTER_CONTENT3",
-    value: "", 
+    value: "",
     description: "하단 설명3",
     type: "portal_config"
   }
+])
+
+const adminEmailList = ref([
+  {
+      name: "ADMIN_EMAIL",
+      value: "",
+      description: "관리자 이메일1",
+      type: "admin_email"
+  },
+  {
+      name: "ADMIN_EMAIL",
+      value: "",
+      description: "관리자 이메일1",
+      type: "admin_email"
+  },
+  {
+      name: "ADMIN_EMAIL",
+      value: "",
+      description: "관리자 이메일1",
+      type: "admin_email"
+  },
 ])
 
 const logoImageFileId = ref(""); // 로고 이미지 파일 아이디
@@ -214,6 +250,7 @@ onMounted(() => {
   getRecommendList();
   searchTagList();
   getLayoutList();
+  getAdminEmailList();
 })
 
 const getRecommendList = async () => {
@@ -446,6 +483,40 @@ const onClickSaveLayoutManage = () => {
   })
 }
 
+// 관리자 이메일 목록 조회
+const getAdminEmailList = async () => {
+  $ofetch(`/api/admin/manager/adminEmailList`).then((res) => {
+    if (res && res.data) {
+      if (res.data.adminEmailList && res.data.adminEmailList.length > 1) {
+        res.data.adminEmailList.forEach((el, idx) => {
+          if (idx < 3) adminEmailList.value[idx] = el
+        })
+      }
+    }
+  })
+}
+
+// 관리자 이메일 관리 적용 버튼 클릭
+const onClickSaveAdminMailList = () => {
+  const params = {
+    list: adminEmailList.value
+  }
+  $ofetch(`/api/main/updateCodeTable`, {
+    method: 'POST',
+    body: params
+  }).then((res) => {
+    if (res && res.data) {
+      if (res.data.result) {
+        successAlert("관리자 이메일이 저장되었습니다.")
+      } else {
+        errorAlert("관리자 이메일 저장에 실패하였습니다.")
+      }
+    }
+  }).catch((err) => {
+    errorAlert("관리자 이메일 저장에 실패하였습니다.")
+  })
+}
+
 // 로고 이미지 업로드 버튼 클릭
 // 카테고리 이미지 파일 업로드
 const fileUpload = (e) => {
@@ -464,7 +535,7 @@ const fileUpload = (e) => {
 
   formData.append("files", e.target.files[0]);
   return;
-  
+
   $ofetch("/api/service/file/fileUpload.do", {
     method: "POST",
     body: formData

@@ -107,4 +107,16 @@ public class AdminController {
     public Object initPassword(@RequestBody Map<String, Object> param, HttpServletRequest request) throws Exception {
         return adminService.initPassword(param, request);
     }
+
+    /**
+     * 관리자 이메일 관리
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/adminEmailList")
+    public Object getAdminMailList() throws Exception {
+        return adminService.getAdminMailList();
+    }
 }

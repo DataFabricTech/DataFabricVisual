@@ -363,7 +363,7 @@ public class MainPageService {
                 int saveCnt = 0;
                 for (int i=0; i<list.size(); i++) {
                     // 기존 데이터 조회
-                    Map<String, Object> originInfo = mainPageMapper.getLayoutInfoFromName(list.get(i));
+                    Map<String, Object> originInfo = mainPageMapper.getCodeInfo(list.get(i));
                     if (originInfo != null) {
                         updateCnt = mainPageMapper.updateCodeTableFromName(list.get(i));
                     } else {
