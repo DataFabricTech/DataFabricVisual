@@ -115,8 +115,8 @@ public class AdminController {
      * @throws Exception
      */
     @ResponseJsonResult
-    @GetMapping("/adminEmailList")
-    public Object getAdminMailList() throws Exception {
-        return adminService.getAdminMailList();
+    @GetMapping("/emailManageList")
+    public Object getEmailManageList() throws Exception {
+        return adminService.getEmailManageList();
     }
 }

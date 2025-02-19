@@ -370,19 +370,19 @@ public class AdminService {
     }
 
     // 관리자 이메일 목록 조회
-    public Map<String, Object> getAdminMailList() throws Exception {
+    public Map<String, Object> getEmailManageList() throws Exception {
         Map<String, Object> result = new HashMap<>();
 
         try {
-            List<Map<String, Object>> list = adminMapper.getAdminMailList();
+            List<Map<String, Object>> list = adminMapper.getEmailManageList();
             if (list != null && list.size() > 0) {
-                result.put("adminEmailList", list);
+                result.put("emailManageList", list);
             } else {
-                result.put("adminEmailList", new ArrayList<>());
+                result.put("emailManageList", new ArrayList<>());
             }
         } catch (Exception e) {
             log.error("Fail to load Main Banner Subject");
-            result.put("adminEmailList", new ArrayList<>());
+            result.put("emailManageList", new ArrayList<>());
         }
 
         return result;

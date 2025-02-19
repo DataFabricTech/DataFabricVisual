@@ -93,17 +93,17 @@
         </div>
         <div class="inner-column">
           <div class="mu-heading">
-            <h4>관리자 이메일 관리</h4>
+            <h4>이메일 관리</h4>
           </div>
           <dl class="recommend-keyword">
-            <div v-for="(adminEmail, idx) in adminEmailList">
-              <dt>{{ adminEmail.description }}</dt>
-                <dd><input type="text" v-model="adminEmail.value" :id="adminEmail.name"
-                    :placeholder="adminEmail.description" class="mu-input" :title="adminEmail.description" /></dd>
+            <div v-for="(em, idx) in emailManageList">
+              <dt>{{ em.description }}</dt>
+                <dd><input type="text" v-model="em.value" :id="em.name"
+                    :placeholder="em.description" class="mu-input" :title="em.description" /></dd>
             </div>
           </dl>
           <div class="mu-button-wrap">
-            <button type="button" class="mu-btn mu-btn-primary" @click="onClickSaveAdminMailList()"><span>적용</span></button>
+            <button type="button" class="mu-btn mu-btn-primary" @click="onClickSaveEmailManageList()"><span>적용</span></button>
           </div>
         </div>
         <!-- <div class="inner-column">
@@ -222,7 +222,7 @@ const layoutList = ref([
   }
 ])
 
-const adminEmailList = ref([
+const emailManageList = ref([
   {
       name: "ADMIN_EMAIL",
       value: "",
@@ -230,16 +230,46 @@ const adminEmailList = ref([
       type: "admin_email"
   },
   {
-      name: "ADMIN_EMAIL",
+      name: "ADMIN_EMAIL2",
       value: "",
-      description: "관리자 이메일1",
+      description: "관리자 이메일2",
       type: "admin_email"
   },
   {
-      name: "ADMIN_EMAIL",
+      name: "ADMIN_EMAIL3",
       value: "",
-      description: "관리자 이메일1",
+      description: "관리자 이메일3",
       type: "admin_email"
+  },
+  {
+      name: "INIT_PASSWORD",
+      value: "",
+      description: "패스워드 초기화 이메일 템플릿 ID",
+      type: "email_template"
+  },
+  {
+      name: "DATA_REQUEST",
+      value: "",
+      description: "데이터 요청 등록 이메일 템플릿 ID",
+      type: "email_template"
+  },
+  {
+      name: "DATA_REQUEST_RESPONSE",
+      value: "",
+      description: "데이터 요청 답변 이메일 템플릿 ID",
+      type: "email_template"
+  },
+  {
+      name: "SYNONYM_DELETE_REQUEST",
+      value: "",
+      description: "동의어 삭제 요청 등록 이메일 템플릿 ID",
+      type: "email_template"
+  },
+  {
+      name: "SYNONYM_DELETE_RESPONSE",
+      value: "",
+      description: "동의어 삭제 요청 처리 결과 이메일 템플릿 ID",
+      type: "email_template"
   },
 ])
 
@@ -250,7 +280,7 @@ onMounted(() => {
   getRecommendList();
   searchTagList();
   getLayoutList();
-  getAdminEmailList();
+  getEmailManageList();
 })
 
 const getRecommendList = async () => {
@@ -455,7 +485,11 @@ const getLayoutList = async () => {
     if (res && res.data) {
       if (res.data.layoutList && res.data.layoutList.length > 1) {
         res.data.layoutList.forEach((el, idx) => {
-          layoutList.value[idx] = el
+          for (let i=0; i<layoutList.value.length; i++) {
+            if (layoutList.value[i].name == el.name) {
+              layoutList.value[i] = el
+            }
+          }
         })
       }
     }
@@ -473,33 +507,38 @@ const onClickSaveLayoutManage = () => {
   }).then((res) => {
     if (res && res.data) {
       if (res.data.result) {
-        successAlert("레이아웃이 저장되었습니다.")
+        successAlert("저장되었습니다.")
       } else {
-        errorAlert("레이아웃 저장에 실패하였습니다.")
+        errorAlert("저장에 실패하였습니다.")
       }
     }
   }).catch((err) => {
-    errorAlert("레이아웃 저장에 실패하였습니다.")
+    errorAlert("저장에 실패하였습니다.")
   })
 }
 
-// 관리자 이메일 목록 조회
-const getAdminEmailList = async () => {
-  $ofetch(`/api/admin/manager/adminEmailList`).then((res) => {
+// 이메일 관리 목록 조회
+const getEmailManageList = async () => {
+  $ofetch(`/api/admin/manager/emailManageList`).then((res) => {
     if (res && res.data) {
-      if (res.data.adminEmailList && res.data.adminEmailList.length > 1) {
-        res.data.adminEmailList.forEach((el, idx) => {
-          if (idx < 3) adminEmailList.value[idx] = el
+      if (res.data.emailManageList && res.data.emailManageList.length > 1) {
+        res.data.emailManageList.forEach((el, idx) => {
+          for (let i=0; i<emailManageList.value.length; i++) {
+            if (emailManageList.value[i].name == el.name) {
+              emailManageList.value[i] = el
+            }
+          }
+
         })
       }
     }
   })
 }
 
-// 관리자 이메일 관리 적용 버튼 클릭
-const onClickSaveAdminMailList = () => {
+// 이메일 관리 적용 버튼 클릭
+const onClickSaveEmailManageList = () => {
   const params = {
-    list: adminEmailList.value
+    list: emailManageList.value
   }
   $ofetch(`/api/main/updateCodeTable`, {
     method: 'POST',
@@ -507,13 +546,13 @@ const onClickSaveAdminMailList = () => {
   }).then((res) => {
     if (res && res.data) {
       if (res.data.result) {
-        successAlert("관리자 이메일이 저장되었습니다.")
+        successAlert("저장되었습니다.")
       } else {
-        errorAlert("관리자 이메일 저장에 실패하였습니다.")
+        errorAlert("저장에 실패하였습니다.")
       }
     }
   }).catch((err) => {
-    errorAlert("관리자 이메일 저장에 실패하였습니다.")
+    errorAlert("저장에 실패하였습니다.")
   })
 }
 
