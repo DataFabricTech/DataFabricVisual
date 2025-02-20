@@ -69,19 +69,9 @@ public class MainPageService {
         return shareDataList;
     }
 
-    // 인기 데이터 > 조회수가 가장 높은 순 조회 (ES API)
-    public Object getPopularDataList(HttpServletRequest request) throws Exception {
-        return getPopularData(request);
-    }
-
-    // 인기 데이터 > 최신 등록 데이터 순 조회 (ES API)
+    // 최신 등록 데이터 순 조회 (ES API)
     public Object getLatestDataList(HttpServletRequest request) throws Exception {
         return getLatestData(request);
-    }
-
-    // 인기 데이터 > 추천수가 가장 높은 순 조회 (ES API)
-    public Object getRecommendDataList(HttpServletRequest request) throws Exception {
-        return getRecommendData(request);
     }
 
     // My 데이터 요청내역 조회
@@ -180,60 +170,6 @@ public class MainPageService {
         return dataRequestList;
     }
 
-    // ES에서 조회수가 많은 데이터 (4건) 조회
-    public Object getPopularData(HttpServletRequest request) throws Exception {
-        // // 1. 조회수 높은 데이터 조회
-        List<Map<String, Object>> popularList = mainPageMapper.getPopularDataList();
-
-        List<String> guids = new ArrayList<>();
-        for (int i=0; i<popularList.size(); i++) {
-            Map<String, Object> popularData = (Map<String, Object>) popularList.get(i);
-            guids.add(popularData.get("meta_id").toString());
-        }
-
-        RestTemplate restTemplate = new RestTemplate();
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-        
-        // FastAPI의 URL 생성
-        String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/popularData";
-        log.info("call fastapi : " + fastUrl);
-
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("guids", guids);
-        Map<String, Object> restResponse = restTemplate.postForObject(fastUrl, requestBody, HashMap.class);
-        
-        if (!restResponse.isEmpty()) {
-            Map<String, Object> body = (Map<String, Object>)restResponse.get("result");
-            if (body != null) {
-                result.put("result", body.get("result"));
-                result.put("results", body.get("results"));
-                result.put("total_count", body.get("total_count"));
-            }
-            
-            if (body.get("result") != null) {
-                List<Map<String, Object>> entities = (List<Map<String, Object>>)body.get("results");
-                // 3. 조회수가 높은 순서로 정렬
-                // 조회 순서대로 받아온 guid 항목을 하나씩 탐색
-                int matchedCount = 0;
-                List<Map<String, Object>> sortedList = new ArrayList<>();
-                for (int i=0; i<popularList.size(); i++) {
-                    if (entities != null) {
-                        for (int j=0; j<entities.size(); j++) {
-                            if (popularList.get(i).get("meta_id").toString().equals(entities.get(j).get("meta_id").toString())) {
-                                matchedCount++;
-                                sortedList.add(entities.get(j));
-                                if (matchedCount == 4) break;
-                            }
-                        }
-                    }
-                    if (matchedCount == 4) break;
-                }
-                result.put("results", sortedList);
-            }
-        }
-        return result;
-    }
-
     // ES 에서 최신 등록 데이터 (4건) 조회
     public Object getLatestData(HttpServletRequest request) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
@@ -274,59 +210,6 @@ public class MainPageService {
             }    
         }
 
-        return result;
-    }
-
-    // ES 에서 추천수가 많은 데이터 (4건) 조회
-    public Object getRecommendData(HttpServletRequest request) throws Exception {
-        // 1. 추천수 높은 데이터 조회
-        List<Map<String, Object>> recommendList = mainPageMapper.getRecommendDataList();
-        List<String> guids = new ArrayList<>();
-        for (int i=0; i<recommendList.size(); i++) {
-            Map<String, Object> popularData = (Map<String, Object>) recommendList.get(i);
-            guids.add(popularData.get("meta_id").toString());
-        }
-
-        RestTemplate restTemplate = new RestTemplate();
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-        
-        // FastAPI의 URL 생성
-        String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/popularData";
-        log.info("call fastapi : " + fastUrl);
-
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("guids", guids);
-        Map<String, Object> restResponse = restTemplate.postForObject(fastUrl, requestBody, HashMap.class);
-        
-        if (!restResponse.isEmpty()) {
-            Map<String, Object> body = (Map<String, Object>)restResponse.get("result");
-            if (body != null) {
-                result.put("result", body.get("result"));
-                result.put("results", body.get("results"));
-                result.put("total_count", body.get("total_count"));
-            }
-            
-            if (body.get("result") != null) {
-                List<Map<String, Object>> entities = (List<Map<String, Object>>)body.get("results");
-                // 3. 추천수가 높은 순서로 정렬
-                // 추천 순서대로 받아온 guid 항목을 하나씩 탐색
-                int matchedCount = 0;
-                List<Map<String, Object>> sortedList = new ArrayList<>();
-                for (int i=0; i<recommendList.size(); i++) {
-                    if (entities != null) {
-                        for (int j=0; j<entities.size(); j++) {
-                            if (recommendList.get(i).get("meta_id").toString().equals(entities.get(j).get("meta_id").toString())) {
-                                matchedCount++;
-                                sortedList.add(entities.get(j));
-                                if (matchedCount == 4) break;
-                            }
-                        }
-                    }
-                    if (matchedCount == 4) break;
-                }
-                result.put("results", sortedList);
-            }
-        }
         return result;
     }
 

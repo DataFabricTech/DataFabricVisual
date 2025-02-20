@@ -91,9 +91,9 @@
                 :effect="sliderSwiperOptions.effect"
                 @slideChange="onSlideChange"
               >
-              <!-- 
+              <!--
               :pagination="sliderSwiperOptions.pagination"
-              :navigation="sliderSwiperOptions.navigation" 
+              :navigation="sliderSwiperOptions.navigation"
               -->
                 <swiper-slide v-for="(cats, idx) in filterCategoryList">
                   <div class="swiper-slide">
@@ -129,8 +129,8 @@
             </div>
           </div>
           <div class="main-body">
-            <ul class="data-list">
-              <li v-if="currentDataList" class="data-box" v-for="(ld, idx) in currentDataList">
+            <ul v-if="latestDataList && latestDataList.length > 0" class="data-list">
+              <li class="data-box" v-for="(ld, idx) in latestDataList">
                 <a @click="goToMetaDataDetail(ld.meta_id)" style="text-decoration-line:none;">
                   <div class="inner-data">
                     <strong class="data-title">{{ ld.description ? ld.description : '-' }}</strong>
@@ -138,6 +138,9 @@
                   </div>
                 </a>
               </li>
+            </ul>
+            <ul v-else>
+              <p class="nodata">최신 등록 데이터가 존재하지 않습니다.</p>
             </ul>
           </div>
         </div>
@@ -172,7 +175,7 @@
             </div>
           </div>
           <div class="main-body">
-            <ul class="data-list">
+            <ul v-if="myRequestDataList && myRequestDataList.length > 0" class="data-list">
               <li v-for="(data, idx) in myRequestDataList">
                 <a @click="goToRequestDataDetail(data.id)">
                   <div class="inner-data">
@@ -181,6 +184,9 @@
                   </div>
                 </a>
               </li>
+            </ul>
+            <ul v-else>
+              <p class="nodata">데이터 요청 내역이 존재하지 않습니다.</p>
             </ul>
           </div>
         </div>
@@ -194,7 +200,7 @@
             </div>
           </div>
           <div class="main-body">
-            <ul class="data-list">
+            <ul v-if="myFavoriteDataList && myFavoriteDataList.length > 0" class="data-list">
               <li v-for="(data, idx) in myFavoriteDataList">
                 <a @click="goToMetaDataDetail(data.meta_id)">
                   <div class="inner-data">
@@ -203,6 +209,9 @@
                   </div>
                 </a>
               </li>
+            </ul>
+            <ul v-else>
+              <p class="nodata">찜 데이터가 존재하지 않습니다.</p>
             </ul>
           </div>
         </div>
@@ -216,7 +225,7 @@
             </div>
           </div>
           <div class="main-body">
-            <ul class="data-list">
+            <ul v-if="myFavoriteDataList && myFavoriteDataList.length > 0" class="data-list">
               <li v-for="(data, idx) in myFavoriteDataList">
                 <a @click="goToMetaDataDetail(data.meta_id)">
                   <div class="inner-data">
@@ -225,6 +234,9 @@
                   </div>
                 </a>
               </li>
+            </ul>
+            <ul v-else>
+              <p class="nodata">리뷰 데이터가 존재하지 않습니다.</p>
             </ul>
           </div>
         </div>
@@ -238,7 +250,7 @@
             </div>
           </div>
           <div class="main-body">
-            <ul class="data-list">
+            <ul v-if="myExtractedDataList && myExtractedDataList.length > 0" class="data-list">
               <li v-for="(data, idx) in myExtractedDataList">
                 <a @click="goToMetaDataDetail(data.meta_id)">
                   <div class="inner-data">
@@ -247,6 +259,9 @@
                   </div>
                 </a>
               </li>
+            </ul>
+            <ul v-else>
+              <p class="nodata">데이터 추출 내역이 존재하지 않습니다.</p>
             </ul>
           </div>
         </div>
@@ -265,7 +280,7 @@
             </div>
           </div>
           <div class="main-body">
-            <ul class="card-list">
+            <ul v-if="shareDataList && shareDataList.length > 0" class="card-list">
               <li class="card-box" v-for="(share, idx) in shareDataList">
                 <a @click="goToShare(share.id)">
                   <div class="inner-thumb" >
@@ -284,6 +299,9 @@
                   </div>
                 </a>
               </li>
+            </ul>
+            <ul v-else>
+              <p class="nodata">데이터 활용 사례가 존재하지 않습니다.</p>
             </ul>
           </div>
         </div>
@@ -335,12 +353,8 @@ const newDataCount = ref(0) // 신규 데이터 수
 const noticeList = ref([]) // 공지사항
 const faqList = ref([]) // FAQ
 const shareDataList = ref([]) // 활용사례
-const popularSortOrderList = ref(["bestDataSortNew", "bestDataSortHits", "bestDataSortRec"]) // 인기 데이터 라디오 버튼 항목
-const dataSortOrder = ref("bestDataSortNew") // 인기 데이터 조회 순서, bestDataSortNew(최신), bestDataSortHits(조회수), bestDataSortRec(추천수)
 const currentDataList = ref([]) // 인기 데이터 > 현재 보여줄 데이터 목록
-const popularDataList = ref([]) // 인기 데이터 > 조회수 높은 순
-const latestDataList = ref([]) // 인기 데이터 > 최신 데이터 순
-const recommendDataList = ref([]) // 인기 데이터 > 추천수가 높은 순
+const latestDataList = ref([]) // 최신 데이터 순
 const myRequestDataList = ref([]) // 데이터 요청 내역
 const myFavoriteDataList = ref([]) // 찜 데이터
 const myReviewDataList = ref([]) // 리뷰 데이터
@@ -365,7 +379,7 @@ const swiperOptions = {
 
 const sliderSwiperOptions = {
   modules: [Autoplay, Pagination, Navigation],
-  pagination: {  
+  pagination: {
     el: ".swiper-pagination",
     clickable: true,
   },
@@ -465,11 +479,11 @@ onMounted(async () => {
 
   // 메인화면 필요 데이터 조회
   await getRecommendedWordList(); // 1. 추천검색어
-  await getCountData(); // 2. 전체 데이터 수, 데이터 활용 횟수, 신규 데이터
+  await getCountData(); // 2. 등록된 데이터(전체 데이터), 데이터 활용 횟수
   await getCategoryData(); // 3. 카테고리 목록 조회
   await getPostData(); // 4. 공지사항, FAQ
   await getShareData(); // 5. 데이터 활용 사례
-  await getPopularDataList(); // 6. 인기 데이터 (조회수 순, 최신등록순)
+  await getLatestDataList(); // 6. 최신 등록 데이터
 
   // 7. 데이터 요청 내역, 찜데이터, 리뷰 데이터, 데이터 추출 내역
   await getMyRequestData();
@@ -577,7 +591,7 @@ const getCategoryData = async () => {
   categeoryChart(filterCategoryList.value[0]);
 }
 
-// 
+//
 const categeoryChart = (categoryList) => {
   var chartCategory = Highcharts.chart("chartCategory", {
     chart: {
@@ -694,7 +708,7 @@ const swiperButtonActiveStatus = (cnt) => {
 // 카테고리 아이콘 설정
 const getCategoryIcon = (idx: number) => {
   let i = Math.floor(idx / 10);
-  const categoryIndex = idx > 10 ? 10 : idx; 
+  const categoryIndex = idx > 10 ? 10 : idx;
   return `ico-category category-${categoryIndex < 10 ? String(i) + String(categoryIndex) : String(categoryIndex)}`;
 }
 
@@ -808,55 +822,20 @@ const getShareData = async () => {
   }
 }
 
-// 인기 데이터, 최신 등록 데이터 조회
-const getPopularDataList = async (order = 'bestDataSortHits') => {
-  // 조회수 높은 순 조회
-  if (order == 'bestDataSortHits') {
-    await $ofetch(`/api/main/popularDataList`).then((res) => {
-      if (res && !res.errorMessage) {
-        // popularDataList.value = res.data
-        if (res.data && res.data.results) {
-          currentDataList.value = res.data.results
-        } else {
-          currentDataList.value = []
-        }
-      }
-    }).catch((e) => {
-      console.log(e)
-    })
-  }
-
+// 최신 등록 데이터 조회
+const getLatestDataList = async () => {
   // 최신 데이터 조회
-  if (order == 'bestDataSortNew') {
-    await $ofetch(`/api/main/latestDataList`).then((res) => {
-      if (res && !res.errorMessage) {
-        // latestDataList.value = res.data
-        if (res.data && res.data.results) {
-          currentDataList.value = res.data.results
-        } else {
-          currentDataList.value = []
-        }
+  await $ofetch(`/api/main/latestDataList`).then((res) => {
+    if (res && !res.errorMessage) {
+      if (res.data && res.data.results) {
+        latestDataList.value = res.data.results
+      } else {
+        latestDataList.value = []
       }
-    }).catch((e) => {
-      console.log(e)
-    })
-  }
-
-  // 추천수 높은 순 조회
-  if (order == 'bestDataSortRec') {
-    await $ofetch(`/api/main/recommendDataList`).then((res) => {
-      if (res && !res.errorMessage) {
-        // recommendDataList.value = res.data
-        if (res.data && res.data.results) {
-          currentDataList.value = res.data.results
-        } else {
-          currentDataList.value = []
-        }
-      }
-    }).catch((e) => {
-      console.log(e)
-    })
-  }
+    }
+  }).catch((e) => {
+    console.log(e)
+  })
 }
 
 // My 데이터 요청 조회
@@ -978,12 +957,6 @@ const goToShareList = () => {
 // 활용사례 상세로 이동
 const goToShare = (id) => {
   router.push(`/share/board/detail?id=${id}`)
-}
-
-// 인기 데이터 라디오 버튼 클릭 이벤트
-const onSelectPopularDataSort = async (order) => {
-  dataSortOrder.value = order
-  await getPopularDataList(order);
 }
 
 // 카테고리 2개까지 표기 처리

@@ -54,25 +54,11 @@ public class MainPageController {
         return mainPageService.getShareDataList();
     }
 
-    // 인기 데이터 > 조회수 높은 순 조회
-    @ResponseJsonResult
-    @GetMapping("/popularDataList")
-    public Object getPopularDataList(HttpServletRequest request) throws Exception {
-        return mainPageService.getPopularDataList(request);
-    }
-
-    // 인기 데이터 > 최신 데이터 순 조회
+    // 최신 등록 데이터 목록 조회
     @ResponseJsonResult
     @GetMapping("/latestDataList")
     public Object getLatestDataList(HttpServletRequest request) throws Exception {
         return mainPageService.getLatestDataList(request);
-    }
-
-    // 인기 데이터 > 추천수 높은 순 조회
-    @ResponseJsonResult
-    @GetMapping("/recommendDataList")
-    public Object getRecommendDataList(HttpServletRequest request) throws Exception {
-        return mainPageService.getRecommendDataList(request);
     }
 
     // My 데이터 요청 조회
