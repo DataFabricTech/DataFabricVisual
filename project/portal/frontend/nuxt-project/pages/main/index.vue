@@ -587,10 +587,22 @@ const getCategoryData = async () => {
   const data = categoryList.value.filter((item: any) => item.level == 1 && item.id != '_NOT_CLASSIFIED');
 
   // 
+  let i = 0;
   for (const item of data) {
     if (item.file_location != null && item.file_location != '') {
-      item.imageTag = await fetchImageAsBlob(item.file_location, '', '', 'width: 44px; height: 44px;');
+      try {
+        const response = await fetchImageTagAsBlob(item.file_location, '', getCategoryIcon(i + 1), 'width: 44px; height: 44px;');
+        if (response) {
+          item.imageTag = response;
+        } else {
+          item.imageTag = "<i class="+ getCategoryIcon(i + 1) +"></i>";
+        }
+      } catch (error) {
+        item.imageTag = "<i class="+ getCategoryIcon(i + 1) +"></i>";
+      }
     }
+
+    i++;
   }
 
   filterCategoryList.value = chunkArray(data, 10);
@@ -684,7 +696,7 @@ const categeoryChart = (categoryList) => {
 };
 
 // 
-const fetchImageAsBlob = async (imageUrl: string, defaultImageUrl: string, defaultClass: string, style: string) => {
+const fetchImageTagAsBlob = async (imageUrl: string, defaultImageUrl: string, defaultClass: string, style: string) => {
   if (!imageUrl) {
     return `<img src='${defaultImageUrl}' class='${defaultClass}' style='${style}' />`;
   }
@@ -699,12 +711,12 @@ const fetchImageAsBlob = async (imageUrl: string, defaultImageUrl: string, defau
       const imageBlob = new Blob([response], { type: response.type });
       const blobUrl = URL.createObjectURL(imageBlob);
 
-      return `<img src='${blobUrl}' class='${defaultClass}' style='${style}' />`;
+      return `src='${blobUrl}' class='${defaultClass}' style='${style}'`;
     } else {
-      return `<img src='${defaultImageUrl}' class='${defaultClass}' style='${style}' />`;
+      return `src='${defaultImageUrl}' class='${defaultClass}' style='${style}'`;
     }
   } catch (error) {
-    return `<img src='${defaultImageUrl}' class='${defaultClass}' style='${style}' />`;
+    return `src='${defaultImageUrl}' class='${defaultClass}' style='${style}'`;
   }
 };
 
