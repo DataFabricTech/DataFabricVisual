@@ -73,24 +73,44 @@
               <dd>{{ numberComma(totalDataCount) }}</dd>
             </dl>
             <dl>
-              <dt>데이터 활용 횟수</dt>
+              <dt style="width: 110px;">데이터 활용 횟수</dt>
               <dd>{{ numberComma(useDataCount) }}</dd>
             </dl>
           </div>
           <!-- main-category-group -->
           <div class="main-category-group">
             <div class="chart-area" id="chartCategory"></div>
-            <div class="category-area">
-              <!-- category-list 2023-11-09 고객요청 : 순서 변경 확인 / 필요없는 클래스 .active삭제 - 기능없음 -->
-              <ul class="category-list">
-                <li v-for="(cat, idx2) in categoryList.filter(item => item.dept_id).slice(0, 10)" class="category">
-                  <a @click="goToSearch(cat)" class="category">
-                    <i :class="getCategoryIcon(idx2 + 1)"></i>
-                    <em class="category-label">{{ cat.description }}</em>
-                    <span class="count">{{ cat.tableCount.toLocaleString() }}</span>
-                  </a>
-                </li>
-              </ul>
+            <div class="category-swiper" style="width: 919px; padding: 0 30px 0 40px;">
+              <swiper
+                ref="swiperRef"
+                class="swiper-container"
+                :modules="sliderSwiperOptions.modules"
+                :slides-per-view="1"
+                :space-between="10"
+                :autoplay="sliderSwiperOptions.autoplay"
+                :effect="sliderSwiperOptions.effect"
+                @slideChange="onSlideChange"
+              >
+              <!-- 
+              :pagination="sliderSwiperOptions.pagination"
+              :navigation="sliderSwiperOptions.navigation" 
+              -->
+                <swiper-slide v-for="(cats, idx) in filterCategoryList">
+                  <div class="swiper-slide">
+                    <ul class="category-list">
+                      <li v-for="(cat, idx2) in cats">
+                        <a @click="goToSearch(cat)" class="category">
+                          <i v-if="cat.file_location == '' || cat.file_location == null" :class="getCategoryIcon(idx2 + 1)"></i>
+                          <img v-else :src="cat.file_location" style="width: 44px; height: 44px;"/>
+                          <em class="category-label">{{ cat.description }}</em>
+                          <span class="count">{{ cat.tableCount.toLocaleString() }}</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </swiper-slide>
+                <div class="swiper-pagination"></div>
+              </swiper>
             </div>
           </div>
         </div>
@@ -327,6 +347,7 @@ const myReviewDataList = ref([]) // 리뷰 데이터
 const myExtractedDataList = ref([]) // 데이터 추출 내역
 
 const categoryList = computed(() => categoryStore.getCategoryList); // 차트 카테고리 목록
+const filterCategoryList = ref([]);
 const currentSwiperStatus  = ref(1) // swiper 현재 위치
 const swiperRef = ref(null); // swiper Instance
 const swiperNoticeRef = ref(null); // swiper Instance
@@ -342,6 +363,20 @@ const swiperOptions = {
   navigation: true,
 };
 
+const sliderSwiperOptions = {
+  modules: [Autoplay, Pagination, Navigation],
+  pagination: {  
+    el: ".swiper-pagination",
+    clickable: true,
+  },
+  navigation: true,
+  autoplay: {
+          delay: 5000,
+          disableOnInteraction: true,
+        },
+  effect: 'fade', // fade, slide
+  speed: 1000,
+};
 
 // Swiper 설정
 const noticeSwiperOptions = {
@@ -535,10 +570,14 @@ const getPostData = async () => {
 
 // 카테고리 데이터 조회
 const getCategoryData = async () => {
-  categeoryChart(categoryList.value);
+  const data = categoryList.value.filter((item: any) => item.level == 1 && item.id != '_NOT_CLASSIFIED');
+
+  filterCategoryList.value = chunkArray(data, 10);
+
+  categeoryChart(filterCategoryList.value[0]);
 }
 
-//
+// 
 const categeoryChart = (categoryList) => {
   var chartCategory = Highcharts.chart("chartCategory", {
     chart: {
@@ -556,7 +595,7 @@ const categeoryChart = (categoryList) => {
       enabled: false
     },
     xAxis: {
-      categories: categoryList.filter(item => item.dept_id).map(item => item.description).slice(0, 10), // dept_id가 있는 항목만 필터링
+      categories: categoryList.map(item => item.level == 1 && item.id != '_NOT_CLASSIFIED'),
       labels: {
         enabled: false
       },
@@ -585,7 +624,7 @@ const categeoryChart = (categoryList) => {
     series: [
       {
         name: "",
-        data: categoryList.filter(item => item.dept_id).map(item => item.tableCount).slice(0, 10),
+        data: categoryList.filter(item => item.level == 1 && item.id != '_NOT_CLASSIFIED').map(item => item.tableCount).slice(0, 10),
         color: "#00b9ff",
         states: {
           hover: {
@@ -608,11 +647,12 @@ const categeoryChart = (categoryList) => {
         color: "#fff"
       },
       formatter: function() {
-        var category = this.points[0].key; // xAxis.categories
-        var tooltipContent = `<div style="color:#fff">${category}`;
+        var categoryIndex = this.point.index;
+        var categoryDescription = categoryList[categoryIndex].description;
+        var tooltipContent = `<div style="color:#fff">${categoryDescription}`;
 
         this.points.forEach(point => {
-          tooltipContent += `${point.series.name} ${point.y}<br/>`; // name과 value 추가
+          tooltipContent += `${point.series.name} ${point.y.toLocaleString()}<br/>`;
         });
 
         tooltipContent += '</div>';
@@ -634,7 +674,7 @@ const chunkArray = (array, chunk) => {
 
 // swiper 변경 이벤트
 const onSlideChange = (swiper) => {
-  // console.log(swiper)
+  categeoryChart(filterCategoryList.value[swiper.realIndex]);
 }
 
 // swiper 버튼 활성화 여부
@@ -652,9 +692,9 @@ const swiperButtonActiveStatus = (cnt) => {
 // }
 
 // 카테고리 아이콘 설정
-const getCategoryIcon = (idx) => {
+const getCategoryIcon = (idx: number) => {
   let i = Math.floor(idx / 10);
-  const categoryIndex = idx > 10 ? 10 : idx;
+  const categoryIndex = idx > 10 ? 10 : idx; 
   return `ico-category category-${categoryIndex < 10 ? String(i) + String(categoryIndex) : String(categoryIndex)}`;
 }
 
