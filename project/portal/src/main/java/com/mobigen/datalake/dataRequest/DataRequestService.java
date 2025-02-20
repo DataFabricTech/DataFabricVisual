@@ -209,7 +209,7 @@ public class DataRequestService {
             
             // 3. 메일 발송 파라미터
             List<Map<String, Object>> sender = new ArrayList<>();
-            List<Map<String, Object>> receiver = new ArrayList<>();
+            List<Map<String, Object>> recipients = new ArrayList<>();
             List<Map<String, Object>> ccRecipients = new ArrayList<>();
 
             // 발신자
@@ -221,12 +221,12 @@ public class DataRequestService {
 
             // 수신자
             for (String key : mailDefaultAdminMap.keySet()) {
-                Map<String, Object> receiverMap = new HashMap<>();
+                Map<String, Object> recipientsMap = new HashMap<>();
                 // 기본 관리자 계정 중 하나만 이용
                 if (((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email") != null) {
-                    receiverMap.put("name", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_nm").toString());
-                    receiverMap.put("email", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email").toString());
-                    receiver.add(receiverMap);
+                    recipientsMap.put("name", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_nm").toString());
+                    recipientsMap.put("email", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email").toString());
+                    recipients.add(recipientsMap);
                     break;
                 }
             }
@@ -278,7 +278,7 @@ public class DataRequestService {
             mailTemplateParam.put("_contents_", params.get("contents") != null ? params.get("contents").toString() : "-");
             mailTemplateParam.put("_benefit_content_", params.get("benefit_content") != null ? params.get("benefit_content").toString() : "-");
             mailTemplateParam.put("add_sender", sender);
-            mailTemplateParam.put("add_receiver", receiver);
+            mailTemplateParam.put("add_recipients", recipients);
             mailTemplateParam.put("add_cc_recipients", ccRecipients);
 
             // 안내 메일 발송
@@ -352,7 +352,7 @@ public class DataRequestService {
             
             // 메일 발송 파라미터
             List<Map<String, Object>> sender = new ArrayList<>();
-            List<Map<String, Object>> receiver = new ArrayList<>();
+            List<Map<String, Object>> recipients = new ArrayList<>();
             List<Map<String, Object>> ccRecipients = new ArrayList<>();
 
             // 발신자
@@ -370,10 +370,10 @@ public class DataRequestService {
                 return;
             }
             
-            Map<String, Object> receiverMap = new HashMap<>();
-            receiverMap.put("name", writer_user_nm);
-            receiverMap.put("email", writer_email);
-            receiver.add(receiverMap);
+            Map<String, Object> recipientsMap = new HashMap<>();
+            recipientsMap.put("name", writer_user_nm);
+            recipientsMap.put("email", writer_email);
+            recipients.add(recipientsMap);
 
             // 참조자
             for (String key : mailAdminMap.keySet()) {
@@ -454,7 +454,7 @@ public class DataRequestService {
             mailTemplateParam.put("_process_status_", styledStatus);
             mailTemplateParam.put("_admin_reply_", params.get("admin_reply") != null ? params.get("admin_reply").toString() : "-");
             mailTemplateParam.put("add_sender", sender);
-            mailTemplateParam.put("add_receiver", receiver);
+            mailTemplateParam.put("add_recipients", recipients);
             mailTemplateParam.put("add_cc_recipients", ccRecipients);
 
             // 안내 메일 발송

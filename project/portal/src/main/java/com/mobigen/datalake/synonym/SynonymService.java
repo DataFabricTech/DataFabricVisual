@@ -649,7 +649,7 @@ public class SynonymService {
             
             // 3. 메일 발송 파라미터
             List<Map<String, Object>> sender = new ArrayList<>();
-            List<Map<String, Object>> receiver = new ArrayList<>();
+            List<Map<String, Object>> recipients = new ArrayList<>();
             List<Map<String, Object>> ccRecipients = new ArrayList<>();
 
             // 발신자
@@ -661,12 +661,12 @@ public class SynonymService {
 
             // 수신자
             for (String key : mailDefaultAdminMap.keySet()) {
-                Map<String, Object> receiverMap = new HashMap<>();
+                Map<String, Object> recipientsMap = new HashMap<>();
                 // 기본 관리자 계정 중 하나만 이용
                 if (((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email") != null) {
-                    receiverMap.put("name", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_nm").toString());
-                    receiverMap.put("email", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email").toString());
-                    receiver.add(receiverMap);
+                    recipientsMap.put("name", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_nm").toString());
+                    recipientsMap.put("email", ((Map<String, String>)mailDefaultAdminMap.get(key)).get("user_email").toString());
+                    recipients.add(recipientsMap);
                     break;
                 }
             }
@@ -715,7 +715,7 @@ public class SynonymService {
             mailTemplateParam.put("_synonyms_", synonymsText);
             mailTemplateParam.put("_request_", params.get("request") != null ? params.get("request").toString() : "-");
             mailTemplateParam.put("add_sender", sender);
-            mailTemplateParam.put("add_receiver", receiver);
+            mailTemplateParam.put("add_recipients", recipients);
             mailTemplateParam.put("add_cc_recipients", ccRecipients);
 
             // 안내 메일 발송
@@ -775,7 +775,7 @@ public class SynonymService {
             
             // 3. 메일 발송 파라미터
             List<Map<String, Object>> sender = new ArrayList<>();
-            List<Map<String, Object>> receiver = new ArrayList<>();
+            List<Map<String, Object>> recipients = new ArrayList<>();
             List<Map<String, Object>> ccRecipients = new ArrayList<>();
 
             // 발신자
@@ -791,10 +791,10 @@ public class SynonymService {
             }
 
             // 수신자
-            Map<String, Object> receiverMap = new HashMap<>();
-            receiverMap.put("name", params.get("writer_user_nm"));
-            receiverMap.put("email", params.get("writer_email"));
-            receiver.add(receiverMap);
+            Map<String, Object> recipientsMap = new HashMap<>();
+            recipientsMap.put("name", params.get("writer_user_nm"));
+            recipientsMap.put("email", params.get("writer_email"));
+            recipients.add(recipientsMap);
 
             // 참조자
             for (String key : mailAdminMap.keySet()) {
@@ -839,7 +839,7 @@ public class SynonymService {
             mailTemplateParam.put("_request_", params.get("request") != null ? params.get("request").toString() : "-");
             mailTemplateParam.put("_response_", params.get("response") != null ? params.get("response").toString() : "-");
             mailTemplateParam.put("add_sender", sender);
-            mailTemplateParam.put("add_receiver", receiver);
+            mailTemplateParam.put("add_recipients", recipients);
             mailTemplateParam.put("add_cc_recipients", ccRecipients);
 
             // 안내 메일 발송
