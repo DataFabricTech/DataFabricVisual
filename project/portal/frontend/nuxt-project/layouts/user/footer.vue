@@ -10,6 +10,7 @@
         <img v-if="logoImageFile"
           :src="logoImageFile"
           style="width: 120px; height: 44px; background-size: cover"
+          @error="setDefaultImage"
         />
       </div>
     </div>
@@ -84,5 +85,11 @@ const getLogoImage = async () => {
   }).catch((err) => {
     logoImageFileId.value = ""
   })
+}
+
+// 로고 이미지 경로에 파일이 없는 경우 처리
+const setDefaultImage = () => {
+  logoImageFileId.value = ""
+  logoImageFile.value = "/logo-basic.png"
 }
 </script>

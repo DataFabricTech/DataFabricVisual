@@ -97,12 +97,10 @@
                           <img v-if="logoImageFile"
                             :src="logoImageFile"
                             style="width: 120px; height: 44px; background-size: cover"
-                            :class="['ico-category', 'category-11']"
                           />
                           <img v-else
                             src="/logo-basic.png"
                             style="width: 120px; height: 44px; background-size: cover"
-                            :class="['ico-category', 'category-11']"
                           />
                           &nbsp;
                           &nbsp;
