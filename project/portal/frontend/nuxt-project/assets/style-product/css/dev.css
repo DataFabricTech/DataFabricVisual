@@ -537,69 +537,70 @@ pre code {
 
 
 
+
 .chart-category {
-  width: 44px !important;
-  height: 96px !important;
+  width: 44px;
+  height: 96px;
 }
 .chart-category-swiper {
-  margin-top: 0px !important;
+  margin-top: 0px;
 }
 .chart-swiper-container {
-  height: 170px !important;
+  height: 170px;
 }
 .chart-category-swiper .chart-swiper-container {
-  margin-top: 0px !important;
+  margin-top: 0px;
 }
 .chart-category-swiper .chart-category-list {
   display: grid;
-  grid-template-columns: repeat(10, 1fr) !important;
+  grid-template-columns: repeat(10, 1fr);
   gap: 10px;
   justify-content: space-between;
 }
 
 .chart-category-area {
-  flex: 1 !important;
-  padding: 0 30px 0 40px !important;
+  flex: 1;
+  padding: 0 30px 0 40px;
 }
 .chart-category-list {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  height: 100%  !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100% ;
 }
 .chart-category-list li {
-  width: 44px !important;
-  height: 96px !important;
-  margin: 0 !important;
-  transition: transform 0.3sease-in-out !important;
+  width: 44px;
+  height: 96px;
+  margin: 0;
+  transition: transform 0.3sease-in-out;
 }
 .chart-category-list a.chart-category {
-  display: flex !important;
-  flex-direction: column !important;
-  justify-content: space-between !important;
-  align-items: center !important;
-  gap: 10px !important;
-  height: 100% !important;
-  padding: 0 !important;
-  border: none !important;
-  background-color: transparent !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  height: 100%;
+  padding: 0;
+  border: none;
+  background-color: transparent;
 }
 .chart-category-list .chart-category-label {
-  margin-top: 0px !important;
-  display: block !important;
-  line-height: 1 !important;
-  color: #fff !important;
+  margin-top: 0px;
+  display: block;
+  line-height: 1;
+  color: #fff;
 }
 .chart-category-list .chart-count {
-  /* width: 70px !important; */
-  display: block !important;
-  line-height: 1 !important;
-  color: #fff !important;
-  font-size: 18px !important;
-  font-weight: 500 !important;
+  /* width: 70px; */
+  display: block;
+  line-height: 1;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
 }
 .chart-ico-category {
-  display: inline-block !important;
-  width: 44px !important;
-  height: 44px !important;
+  display: inline-block;
+  width: 44px;
+  height: 44px;
 }

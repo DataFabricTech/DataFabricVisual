@@ -101,7 +101,7 @@
                       <li v-for="(cat, idx2) in cats">
                         <a @click="goToSearch(cat)" class="chart-category">
                           <i v-if="cat.file_location == '' || cat.file_location == null" :class="getCategoryIcon(idx2 + 1)"></i>
-                          <img v-else :src="cat.file_location" style="width: 44px; height: 44px;"/>
+                          <img v-else v-html="cat.imageTag" />
                           <em class="chart-category-label">{{ cat.description }}</em>
                           <span class="chart-count">{{ cat.tableCount.toLocaleString() }}</span>
                         </a>
@@ -586,6 +586,13 @@ const getPostData = async () => {
 const getCategoryData = async () => {
   const data = categoryList.value.filter((item: any) => item.level == 1 && item.id != '_NOT_CLASSIFIED');
 
+  // 
+  for (const item of data) {
+    if (item.file_location != null && item.file_location != '') {
+      item.imageTag = await fetchImageAsBlob(item.file_location, '', '', 'width: 44px; height: 44px;');
+    }
+  }
+
   filterCategoryList.value = chunkArray(data, 10);
 
   categeoryChart(filterCategoryList.value[0]);
@@ -674,6 +681,31 @@ const categeoryChart = (categoryList) => {
       }
     },
   });
+};
+
+// 
+const fetchImageAsBlob = async (imageUrl: string, defaultImageUrl: string, defaultClass: string, style: string) => {
+  if (!imageUrl) {
+    return `<img src='${defaultImageUrl}' class='${defaultClass}' style='${style}' />`;
+  }
+
+  let response = null;
+  try {
+    response = await $ofetch(`/api/images?path=${encodeURIComponent(imageUrl)}`, {
+      responseType: 'blob'
+    });
+
+    if (response) {
+      const imageBlob = new Blob([response], { type: response.type });
+      const blobUrl = URL.createObjectURL(imageBlob);
+
+      return `<img src='${blobUrl}' class='${defaultClass}' style='${style}' />`;
+    } else {
+      return `<img src='${defaultImageUrl}' class='${defaultClass}' style='${style}' />`;
+    }
+  } catch (error) {
+    return `<img src='${defaultImageUrl}' class='${defaultClass}' style='${style}' />`;
+  }
 };
 
 // 배열 나누어 저장
