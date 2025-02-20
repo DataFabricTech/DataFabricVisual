@@ -61,9 +61,10 @@ public class CkeditorFileUploadService {
 
       // 경로가 기본 디렉토리를 벗어나지 않도록 확인
 			if (!downloadFile.getCanonicalPath().startsWith(baseDir.getCanonicalPath())) {
-				throw new SecurityException("허가되지 않은 파일 접근 시도.");
+        log.error("Out of default directory path !!");
+        return;
 			}
-
+ 
       inputStream = new FileInputStream(downloadFile);
 
       String mimeType = context.getMimeType(fullPath);

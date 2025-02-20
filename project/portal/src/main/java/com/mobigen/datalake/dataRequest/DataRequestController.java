@@ -173,7 +173,9 @@ public class DataRequestController {
             
             // 검증 성공한 경우만 삭제 처리
             if (isValid) {
-                js.setData(Integer.parseInt(dataRequestService.deleteDataRequest(param).toString()));
+                Map<String, Object> result = (Map<String, Object>) dataRequestService.deleteDataRequest(param);
+                Integer deleteCnt = result.get("deleteCnt") != null ? Integer.parseInt(result.get("deleteCnt").toString()) : 0;
+                js.setData(deleteCnt);
             } else {
                 js.setData(0);
             }

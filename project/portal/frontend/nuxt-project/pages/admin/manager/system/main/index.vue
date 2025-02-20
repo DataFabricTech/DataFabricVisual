@@ -138,7 +138,7 @@
                 <p v-else-if="layoutInfo.name.includes('FOOTER_CONTENT')" class="bul-ast" style="font-weight: 400">100자 이내 권고</p>
               </dt>
                 <dd><input type="text" v-model="layoutInfo.value" :id="layoutInfo.name"
-                    :placeholder="layoutInfo.description" class="mu-input" :title="layoutInfo.description" :maxlength="layoutInfo.name.includes('MAIN_BANNER_SUBJECT') ? 17 : 100"/></dd>
+                    :placeholder="layoutInfo.description" class="mu-input" :title="layoutInfo.description"/></dd>
             </div>
           </dl>
           <div class="mu-button-wrap">

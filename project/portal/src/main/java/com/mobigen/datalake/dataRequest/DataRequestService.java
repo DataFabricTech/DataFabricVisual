@@ -503,7 +503,7 @@ public class DataRequestService {
         }
 
         result.put("deleteCnt", deleteCnt);
-        result.put("deleteCnt", deleteReplyCnt);
+        result.put("deleteReplyCnt", deleteReplyCnt);
 
         return result;
     }
@@ -706,32 +706,32 @@ public class DataRequestService {
                         <h1 style="text-align: center; font-size: 24px; margin-bottom: 15px; margin-top: 15px;">_title_</h1>
                         <table style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;">
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">신청 분류</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_category_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">신청 분류</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_category_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">신청 데이터명</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_data_name_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">신청 데이터명</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_data_name_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">신청자</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_writer_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">신청자</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_writer_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">신청일</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_create_date_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">신청일</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_create_date_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">신청 내용</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_contents_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">신청 내용</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_contents_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">요청기간</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_request_start_ ~ _request_end_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">요청기간</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_request_start_ ~ _request_end_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">활용 목적</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_benefit_content_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">활용 목적</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_benefit_content_</td>
                             </tr>
                         </table>
                     </td>
@@ -763,40 +763,40 @@ public class DataRequestService {
                         <h1 style="text-align: center; font-size: 24px; margin-bottom: 15px; margin-top: 15px;">_title_</h1>
                         <table style="width: 600px; border-collapse: collapse; margin-bottom: 20px; border-top: 2px solid #333;">
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">신청 분류</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_category_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">신청 분류</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_category_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">신청 데이터명</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_data_name_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">신청 데이터명</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_data_name_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">신청자</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_writer_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">신청자</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_writer_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">신청일</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_create_date_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">신청일</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_create_date_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">신청 내용</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_contents_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">신청 내용</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_contents_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">요청기간</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_request_start_ ~ _request_end_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">요청기간</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_request_start_ ~ _request_end_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">활용 목적</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_benefit_content_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">활용 목적</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_benefit_content_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">진행상태</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_process_status_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">진행상태</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_process_status_</td>
                             </tr>
                             <tr>
-                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 20%; border-left: none; border-right: none;">관리자 답변</th>
-                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 80%; border-left: none; border-right: none;">_admin_reply_</td>
+                                <th style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center; background-color: #f4f4f4; font-weight: 700; width: 30%; border-left: none; border-right: none;">관리자 답변</th>
+                                <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: left; color: #333; font-size: 14px; width: 70%; border-left: none; border-right: none;">_admin_reply_</td>
                             </tr>
                         </table>
                     </td>
