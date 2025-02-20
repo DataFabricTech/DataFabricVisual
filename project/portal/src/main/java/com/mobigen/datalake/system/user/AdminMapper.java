@@ -16,5 +16,6 @@ public interface AdminMapper {
     Integer UnlockLoginDeactivation(Map<String, Object> param) throws Exception;    
     Integer initPassword(Map<String, String> param) throws Exception;
     List<Map<String, Object>> getEmailManageList() throws Exception;
+    List<Map<String, Object>> getLogoImageList() throws Exception;
     List<Map<String, Object>> getCommonCodeList(Map<String, String> param) throws Exception;
 }

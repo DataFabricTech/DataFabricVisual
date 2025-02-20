@@ -399,8 +399,27 @@ public class AdminService {
                 result.put("emailManageList", new ArrayList<>());
             }
         } catch (Exception e) {
-            log.error("Fail to load Main Banner Subject");
+            log.error("Fail to load email manage list");
             result.put("emailManageList", new ArrayList<>());
+        }
+
+        return result;
+    }
+
+    // 관리자 로고 이미지 목록 조회
+    public Map<String, Object> getLogoImageList() throws Exception {
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            List<Map<String, Object>> list = adminMapper.getLogoImageList();
+            if (list != null && list.size() > 0) {
+                result.put("logoImageList", list);
+            } else {
+                result.put("logoImageList", new ArrayList<>());
+            }
+        } catch (Exception e) {
+            log.error("Fail to load logo image info");
+            result.put("logoImageList", new ArrayList<>());
         }
 
         return result;

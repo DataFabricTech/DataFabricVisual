@@ -120,6 +120,17 @@ public class AdminController {
         return adminService.getEmailManageList();
     }
     
+    /**
+     * 로고 이미지 정보 조회
+     * @param param
+     * @return
+     * @throws Exception
+     */
+    @ResponseJsonResult
+    @GetMapping("/logoImageList")
+    public Object getLogoImageList() throws Exception {
+        return adminService.getLogoImageList();
+    }    
 
     @ResponseJsonResult
     @GetMapping("/commonCodeList")
