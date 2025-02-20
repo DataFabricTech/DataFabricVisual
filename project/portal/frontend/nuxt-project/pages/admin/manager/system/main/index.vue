@@ -81,10 +81,66 @@
             <h4>레이아웃 관리</h4>
           </div>
           <dl class="recommend-keyword">
+            <div>
+              <dt>로고 설정</dt>
+              <dd style="border: 1px solid #d2d3d6; border-radius: 8px;">
+                <table>
+                  <colgroup>
+                    <col style="width: 0px" />
+                    <col />
+                  </colgroup>
+                  <tbody>
+                    <tr>
+                      <td></td>
+                      <td style=" padding-left: 50px;">
+                        <div class="mu-item-group">
+                          <img v-if="logoImageFile"
+                            :src="logoImageFile"
+                            style="width: 120px; height: 44px; background-size: cover"
+                            :class="['ico-category', 'category-11']"
+                          />
+                          <img v-else
+                            src="/logo-basic.png"
+                            style="width: 120px; height: 44px; background-size: cover"
+                            :class="['ico-category', 'category-11']"
+                          />
+                          &nbsp;
+                          &nbsp;
+                          <input
+                            id="logoImageFileInput"
+                            type="file"
+                            name="categoryImage"
+                            @change="fileUpload"
+                            v-show="false"
+                          />
+                          <label for="logoImageFileInput" class="mu-btn" v-if="!logoImageFile">이미지업로드</label>
+                          <label for="logoImageFileInput" class="mu-btn" v-if="logoImageFile">이미지수정</label>
+                          &nbsp;
+                          &nbsp;
+                          &nbsp;
+                          <ul class="bul-refer mt10">
+                            <li>
+                              <b>이미지 가이드</b>
+                              <ul class="bul-dot bul-txt">
+                                <li>확장자 : jpg, jpeg, png</li>
+                                <li>사이즈 : 120 x 44</li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </dd>
+            </div>
             <div v-for="(layoutInfo, idx) in layoutList">
-              <dt>{{ layoutInfo.description }}</dt>
+              <dt style="display: flex; justify-content: space-between; width: 100%;">{{ layoutInfo.description }}
+                <p v-if="layoutInfo.name.includes('MAIN_BANNER_SUBJECT')" class="bul-ast" style="font-weight: 400;">17자 이내 권고</p>
+                <p v-else-if="layoutInfo.name.includes('FOOTER_CONTENT')" class="bul-ast" style="font-weight: 400">100자 이내 권고</p>
+              </dt>
                 <dd><input type="text" v-model="layoutInfo.value" :id="layoutInfo.name"
-                    :placeholder="layoutInfo.description" class="mu-input" :title="layoutInfo.description" /></dd>
+                    :placeholder="layoutInfo.description" class="mu-input" :title="layoutInfo.description" :maxlength="layoutInfo.name.includes('MAIN_BANNER_SUBJECT') ? 17 : 100"/></dd>
             </div>
           </dl>
           <div class="mu-button-wrap">
@@ -106,62 +162,6 @@
             <button type="button" class="mu-btn mu-btn-primary" @click="onClickSaveEmailManageList()"><span>적용</span></button>
           </div>
         </div>
-        <!-- <div class="inner-column">
-          <div class="mu-heading">
-            <h4>로고 이미지 관리</h4>
-          </div>
-          <dl class="recommend-keyword">
-            <table>
-              <colgroup>
-                <col style="width: 10%" />
-                <col style="width: 90%"/>
-              </colgroup>
-              <tbody>
-                <tr>
-                  <td></td>
-                  <td>
-                    <div class="mu-item-group">
-                      <img v-if="logoImageFile"
-                        :src="logoImageFile"
-                        style="width: 120px; height: 44px; background-size: cover"
-                        :class="['ico-category', 'category-11']"
-                      />
-                      <img v-else
-                        src="/logo-basic.png"
-                        style="width: 120px; height: 44px; background-size: cover"
-                        :class="['ico-category', 'category-11']"
-                      />
-                      &nbsp;
-                      <input
-                        id="logoImageFileInput"
-                        type="file"
-                        name="categoryImage"
-                        @change="fileUpload"
-                        v-show="false"
-                      />
-                      <label for="categoryImageFileInput" class="mu-btn" v-if="!logoImageFile">이미지업로드</label>
-                      <label for="categoryImageFileInput" class="mu-btn" v-if="logoImageFile">이미지수정</label>
-                      &nbsp;
-                      &nbsp;
-                      <ul class="bul-refer mt20">
-                        <li>
-                          <b>이미지 가이드</b>
-                          <ul class="bul-dot bul-txt">
-                            <li>확장자 : jpg, jpeg, png</li>
-                            <li>사이즈 : 120 x 44</li>
-                          </ul>
-                        </li>
-                      </ul>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </dl>
-          <div class="mu-button-wrap">
-            <button type="button" class="mu-btn mu-btn-primary" @click="onClickSaveLogoImage()"><span>적용</span></button>
-          </div>
-        </div> -->
       </div>
     </div>
   </div>
@@ -273,6 +273,13 @@ const emailManageList = ref([
   },
 ])
 
+const logoImageList = ref([{
+    name: "LOGO_IMAGE_FILE_ID",
+    value: "",
+    description: "포털 로고 이미지 파일 ID",
+    type: "portal_config"
+}]);
+
 const logoImageFileId = ref(""); // 로고 이미지 파일 아이디
 const logoImageFile = ref("")
 
@@ -281,6 +288,7 @@ onMounted(() => {
   searchTagList();
   getLayoutList();
   getEmailManageList();
+  getLogoImageList();
 })
 
 const getRecommendList = async () => {
@@ -498,8 +506,12 @@ const getLayoutList = async () => {
 
 // 레이아웃 관리 적용 버튼 클릭
 const onClickSaveLayoutManage = () => {
+  // 로고 이미지 정보도 추가
+  let tmpList = []
+  tmpList = Object.assign(layoutList.value)
+  tmpList.push(logoImageList.value[0])
   const params = {
-    list: layoutList.value
+    list: tmpList
   }
   $ofetch(`/api/main/updateCodeTable`, {
     method: 'POST',
@@ -508,6 +520,9 @@ const onClickSaveLayoutManage = () => {
     if (res && res.data) {
       if (res.data.result) {
         successAlert("저장되었습니다.")
+        // 로고 이미지 localStorage 변경
+        localStorage.setItem('cachedLogo', logoImageFile.value) // localStorage에 저장
+        getLogoImageList()
       } else {
         errorAlert("저장에 실패하였습니다.")
       }
@@ -515,6 +530,7 @@ const onClickSaveLayoutManage = () => {
   }).catch((err) => {
     errorAlert("저장에 실패하였습니다.")
   })
+  layoutList.value = layoutList.value.filter((el) => el.name != 'LOGO_IMAGE_FILE_ID')
 }
 
 // 이메일 관리 목록 조회
@@ -556,6 +572,34 @@ const onClickSaveEmailManageList = () => {
   })
 }
 
+// 로고 이미지 파일 목록 조회
+const getLogoImageList = async () => {
+  await $ofetch(`/api/admin/manager/logoImageList`).then((res) => {
+    if (res && res.data) {
+      if (res.data.logoImageList && res.data.logoImageList.length > 0) {
+        res.data.logoImageList.forEach((el, idx) => {
+          for (let i=0; i<logoImageList.value.length; i++) {
+            if (logoImageList.value[i].name == el.name) {
+              logoImageList.value[i] = el
+              logoImageFileId.value = el.value
+              // file_id가 있는 경우 해당 파일 조회
+              if (logoImageFileId.value != "") {
+                if (location.hostname === "localhost" && logoImageFileId.value != "") {
+                  logoImageFile.value = "http://localhost:38080/api/ckeditor/attachFile/" + logoImageFileId.value;
+                } else if (logoImageFileId.value == "") {
+
+                } else {
+                  logoImageFile.value = "/api/ckeditor/attachFile/" + logoImageFileId.value;
+                }
+              }
+            }
+          }
+        })
+      }
+    }
+  })
+}
+
 // 로고 이미지 업로드 버튼 클릭
 // 카테고리 이미지 파일 업로드
 const fileUpload = (e) => {
@@ -573,7 +617,6 @@ const fileUpload = (e) => {
   }
 
   formData.append("files", e.target.files[0]);
-  return;
 
   $ofetch("/api/service/file/fileUpload.do", {
     method: "POST",
@@ -582,9 +625,11 @@ const fileUpload = (e) => {
     if (location.hostname === "localhost") {
       logoImageFileId.value = res.data[0].file_id;
       logoImageFile.value = "http://localhost:38080/api/ckeditor/attachFile/" + res.data[0].file_id;
+      logoImageList.value[0].value = res.data[0].file_id
     } else {
       logoImageFileId.value = res.data[0].file_id;
       logoImageFile.value = "/api/ckeditor/attachFile/" + res.data[0].file_id;
+      logoImageList.value[0].value = res.data[0].file_id
     }
   });
 };

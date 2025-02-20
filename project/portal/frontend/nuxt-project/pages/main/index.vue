@@ -279,7 +279,7 @@
               </button>
             </div>
           </div>
-          <div class="main-body">
+          <div class="main-body" style="min-height: 340px;">
             <ul v-if="shareDataList && shareDataList.length > 0" class="card-list">
               <li class="card-box" v-for="(share, idx) in shareDataList">
                 <a @click="goToShare(share.id)">
@@ -300,9 +300,7 @@
                 </a>
               </li>
             </ul>
-            <ul v-else>
-              <p class="nodata">데이터 활용 사례가 존재하지 않습니다.</p>
-            </ul>
+            <p v-else p class="nodata">데이터 활용 사례가 존재하지 않습니다.</p>
           </div>
         </div>
       </div>
@@ -586,7 +584,7 @@ const getPostData = async () => {
 const getCategoryData = async () => {
   const data = categoryList.value.filter((item: any) => item.level == 1 && item.id != '_NOT_CLASSIFIED');
 
-  // 
+  //
   let i = 0;
   for (const item of data) {
     if (item.file_location != null && item.file_location != '') {
@@ -695,7 +693,7 @@ const categeoryChart = (categoryList) => {
   });
 };
 
-// 
+//
 const fetchImageTagAsBlob = async (imageUrl: string, defaultImageUrl: string, defaultClass: string, style: string) => {
   if (!imageUrl) {
     return `<img src='${defaultImageUrl}' class='${defaultClass}' style='${style}' />`;

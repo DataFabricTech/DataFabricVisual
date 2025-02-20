@@ -8,7 +8,12 @@
         </address>
       </div>
       <!-- footer-logo -->
-      <div class="footer-logo"><span>Mobigen</span></div>
+      <div class="footer-logo-custom">
+        <img v-if="logoImageFile"
+          :src="logoImageFile"
+          style="width: 120px; height: 44px; background-size: cover"
+        />
+      </div>
     </div>
     <!-- floating-button -->
     <div class="floating-button">
@@ -29,20 +34,24 @@ const footerList = ref([
   },
   {
     name: "FOOTER_CONTENT2",
-    value: "", 
+    value: "",
     description: "하단 설명2",
     type: "portal_config"
   },
   {
     name: "FOOTER_CONTENT3",
-    value: "", 
+    value: "",
     description: "하단 설명3",
     type: "portal_config"
   }
 ])
 
+const logoImageFileId = ref("")
+const logoImageFile = ref("")
+
 onMounted(() => {
   getLayoutList()
+  getLogoImage()
 })
 
 // 레이아웃 관리 목록 조회
@@ -53,6 +62,29 @@ const getLayoutList = async () => {
         footerList.value = res.data.footerList
       }
     }
+  })
+}
+
+// 로고 이미지 파일 조회
+const getLogoImage = async () => {
+  await $ofetch(`/api/admin/manager/logoImageList`).then((res) => {
+    if (res && res.data) {
+      if (res.data.logoImageList && res.data.logoImageList.length > 0) {
+        logoImageFileId.value = res.data.logoImageList[0].value
+        // file_id가 있는 경우 해당 파일 조회
+        if (logoImageFileId.value != "") {
+          if (location.hostname === "localhost" && logoImageFileId.value != "") {
+            logoImageFile.value = "http://localhost:38080/api/ckeditor/attachFile/" + logoImageFileId.value;
+          } else if (logoImageFileId.value == "") {
+
+          } else {
+            logoImageFile.value = "/api/ckeditor/attachFile/" + logoImageFileId.value;
+          }
+        }
+      }
+    }
+  }).catch((err) => {
+    logoImageFileId.value = ""
   })
 }
 </script>

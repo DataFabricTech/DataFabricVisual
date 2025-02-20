@@ -2,9 +2,12 @@
   <header class="header-sub">
     <div class="header">
       <div class="inner">
-        <h1 class="logo">
+        <h1 class="logo-custom">
           <NuxtLink to="/main" @click.native="onClickLogo">
-            <span>데이터 카탈로그</span>
+              <img v-if="logoImageFile"
+                :src="logoImageFile"
+                style="width: 120px; height: 44px; background-size: cover"
+              />
           </NuxtLink>
         </h1>
         <div class="gnb-area" v-if="user">
@@ -45,7 +48,9 @@ import { useCookies } from 'vue3-cookies';
 import { computed, ref ,onMounted, onUnmounted } from 'vue';
 import { useUserStore } from '@/store/user';
 import { useRouter } from 'vue-router';
+import { useNuxtApp } from 'nuxt/app';
 
+const { $ofetch } = useNuxtApp()
 const router = useRouter()
 const { cookies } = useCookies()
 const userStore = useUserStore()
@@ -55,6 +60,9 @@ const activeIndex = ref(null);
 
 const width = ref(0)
 const isLnbOpen = ref(false);
+
+const logoImageFileId = ref("")
+const logoImageFile = ref("")
 
 // 마우스 올린 대메뉴 지정
 const addActive = (index, item) => {
@@ -70,7 +78,11 @@ const clearResize = (event: any): void => {
   width.value = window.innerWidth
 }
 
-onMounted(() => { window.addEventListener('resize', clearResize )})
+onMounted(() => {
+  window.addEventListener('resize', clearResize )
+  getLogoImage()
+})
+
 onUnmounted(() => { window.removeEventListener('resize', clearResize )})
 
 const clearStore = (): void => {
@@ -128,6 +140,29 @@ const onClickLogo = (): void => {
   };
   userStore.setTab(tab)
   router.push({ path: '/main'})
+}
+
+// 로고 이미지 파일 조회
+const getLogoImage = async () => {
+  await $ofetch(`/api/admin/manager/logoImageList`).then((res) => {
+    if (res && res.data) {
+      if (res.data.logoImageList && res.data.logoImageList.length > 0) {
+        logoImageFileId.value = res.data.logoImageList[0].value
+        // file_id가 있는 경우 해당 파일 조회
+        if (logoImageFileId.value != "") {
+          if (location.hostname === "localhost" && logoImageFileId.value != "") {
+            logoImageFile.value = "http://localhost:38080/api/ckeditor/attachFile/" + logoImageFileId.value;
+          } else if (logoImageFileId.value == "") {
+
+          } else {
+            logoImageFile.value = "/api/ckeditor/attachFile/" + logoImageFileId.value;
+          }
+        }
+      }
+    }
+  }).catch((err) => {
+    logoImageFileId.value = ""
+  })
 }
 
 </script>

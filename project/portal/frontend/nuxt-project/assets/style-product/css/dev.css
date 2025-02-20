@@ -372,9 +372,6 @@ pre code {
   height: 24px;
 }
 
-/* footer 로고 사이즈 조정 */
-.footer-logo {width:120px; height:44px; background:url("../images/common/logo-footer.png") no-repeat center center; background-size:contain;}
-
 /* 통합검색 목록 > 오른쪽 메타정보 */
 .data-box .inner-data.option {display:flex; flex-direction:flex-end; align-items:flex-start; flex:none; min-width: 240px; max-width: 240px;}
 
@@ -604,3 +601,9 @@ pre code {
   width: 44px;
   height: 44px;
 }
+
+/* header logo */
+h1.logo-custom {width:120px; height:44px; margin-top:28px; background:"no-repeat center center";}
+
+/* footer logo */
+.footer-logo-custom {width:120px; height:44px; background:"no-repeat center center";}
