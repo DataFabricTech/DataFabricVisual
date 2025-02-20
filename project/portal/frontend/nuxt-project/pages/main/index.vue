@@ -86,22 +86,19 @@
                 class="chart-swiper-container"
                 :modules="sliderSwiperOptions.modules"
                 :slides-per-view="1"
-                :space-between="10"
+                :slides-per-group="1"
+                :space-between="0"
                 :autoplay="sliderSwiperOptions.autoplay"
                 :effect="sliderSwiperOptions.effect"
                 @slideChange="onSlideChange"
               >
-              <!--
-              :pagination="sliderSwiperOptions.pagination"
-              :navigation="sliderSwiperOptions.navigation"
-              -->
                 <swiper-slide v-for="(cats, idx) in filterCategoryList">
                   <div class="swiper-slide">
                     <ul class="chart-category-list">
                       <li v-for="(cat, idx2) in cats">
                         <a @click="goToSearch(cat)" class="chart-category">
                           <i v-if="cat.file_location == '' || cat.file_location == null" :class="getCategoryIcon(idx2 + 1)"></i>
-                          <img v-else v-html="cat.imageTag" />
+                          <img v-else :src="cat.imageSrc" :class="cat.imageClass" :style="cat.imageStyle" />
                           <em class="chart-category-label">{{ cat.description }}</em>
                           <span class="chart-count">{{ cat.tableCount.toLocaleString() }}</span>
                         </a>
@@ -393,7 +390,7 @@ const sliderSwiperOptions = {
 // Swiper 설정
 const noticeSwiperOptions = {
   modules: [Autoplay],
-  direction: 'vertical',
+  direction: 'horizontal',
   autoplay: {
     delay: 3000,
     pauseOnMouseEnter: true,
@@ -584,19 +581,22 @@ const getPostData = async () => {
 const getCategoryData = async () => {
   const data = categoryList.value.filter((item: any) => item.level == 1 && item.id != '_NOT_CLASSIFIED');
 
-  //
+  // 
   let i = 0;
   for (const item of data) {
     if (item.file_location != null && item.file_location != '') {
       try {
-        const response = await fetchImageTagAsBlob(item.file_location, '', getCategoryIcon(i + 1), 'width: 44px; height: 44px;');
+        const response = await fetchImageTagAsBlob(item.file_location, '');
         if (response) {
-          item.imageTag = response;
+          item.imageSrc = response;
+          item.imageClass = "";
+          item.imageStyle = "width: 44px; height: 44px;";
         } else {
-          item.imageTag = "<i class="+ getCategoryIcon(i + 1) +"></i>";
+          item.imageSrc = "";
+          item.imageClass = getCategoryIcon(i + 1);
+          item.imageStyle = "width: 44px; height: 44px;";
         }
       } catch (error) {
-        item.imageTag = "<i class="+ getCategoryIcon(i + 1) +"></i>";
       }
     }
 
@@ -694,11 +694,7 @@ const categeoryChart = (categoryList) => {
 };
 
 //
-const fetchImageTagAsBlob = async (imageUrl: string, defaultImageUrl: string, defaultClass: string, style: string) => {
-  if (!imageUrl) {
-    return `<img src='${defaultImageUrl}' class='${defaultClass}' style='${style}' />`;
-  }
-
+const fetchImageTagAsBlob = async (imageUrl: string, defaultImageUrl: string) => {
   let response = null;
   try {
     response = await $ofetch(`/api/images?path=${encodeURIComponent(imageUrl)}`, {
@@ -709,12 +705,12 @@ const fetchImageTagAsBlob = async (imageUrl: string, defaultImageUrl: string, de
       const imageBlob = new Blob([response], { type: response.type });
       const blobUrl = URL.createObjectURL(imageBlob);
 
-      return `src='${blobUrl}' class='${defaultClass}' style='${style}'`;
+      return `${blobUrl}`;
     } else {
-      return `src='${defaultImageUrl}' class='${defaultClass}' style='${style}'`;
+      return `${defaultImageUrl}`;
     }
   } catch (error) {
-    return `src='${defaultImageUrl}' class='${defaultClass}' style='${style}'`;
+    return `${defaultImageUrl}`;
   }
 };
 
@@ -723,6 +719,14 @@ const chunkArray = (array, chunk) => {
   const result = []
   for (let i=0; i<array.length; i += chunk) {
     result.push(array.slice(i, i + chunk))
+  }
+
+  const lastChunk = result[result.length - 1];
+  if (lastChunk.length < chunk) {
+    const needed = chunk - lastChunk.length;
+    const uniqueItems = array.filter(item => !lastChunk.includes(item));
+    const itemsToAdd = uniqueItems.slice(0, needed);
+    lastChunk.push(...itemsToAdd);
   }
 
   return result
