@@ -71,7 +71,68 @@ public class MainPageService {
 
     // 최신 등록 데이터 순 조회 (ES API)
     public Object getLatestDataList(HttpServletRequest request) throws Exception {
-        return getLatestData(request);
+        Map<String, Object> result = new HashMap<>();
+
+        try {
+            Map<String, Object> params = new HashMap<>();
+            Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+
+            // ES 검색쿼리 설정
+            params.put("classification", "");
+            params.put("entityFilters", new HashMap<>());
+            params.put("limit", 4);
+            params.put("meta_type", "table");
+            params.put("offset", 0);
+            params.put("query", "");
+            params.put("sortBy", "create_time");
+            params.put("sortOrder", "DESC");
+            params.put("system_type", "");
+            params.put("tag", "");
+
+            // 사용자 데이터 권한(role_id) 확인
+            List<String> role_ids = searchService.getRoleIds(user);
+            params.put("roleids", role_ids);
+
+            RestTemplate restTemplate = new RestTemplate();
+        
+            // FastAPI의 URL 생성
+            String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/keyword";
+            log.info("call fastapi : " + fastUrl);
+
+            HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(params);
+            ResponseEntity<HashMap> responseEntity = restTemplate.exchange(fastUrl, HttpMethod.POST, requestEntity, HashMap.class);
+            
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                Map<String, Object> body = responseEntity.getBody();
+
+                if (body != null) {
+                    Map<String, Object> rs = (Map<String, Object>) body.get("result");
+                    if (rs != null) {
+                        List<Map<String, Object>> esResults = (List<Map<String, Object>>) rs.get("results");
+                        if (esResults != null && esResults.size() > 0) {
+                            result.put("results", esResults);
+                            result.put("total_count", rs.get("total_count"));
+                        }
+                    }
+                }
+
+                // 권한 관련 키,값 제거
+                if (body != null && body.containsKey("release")) body.remove("release");
+                if (body != null && body.containsKey("role_id")) body.remove("role_id");
+                
+            } else {
+                result.put("results", new ArrayList<>());
+                result.put("total_count", 0);
+                throw new Exception("최신 등록 데이터 검색에 실패하였습니다.");
+            }
+            
+        } catch (Exception e) {
+            result.put("results", new ArrayList<>());
+            result.put("total_count", 0);
+            throw new Exception("최신 등록 데이터 검색에 실패하였습니다.");
+        }
+
+        return result;
     }
 
     // My 데이터 요청내역 조회
@@ -168,49 +229,6 @@ public class MainPageService {
     public Object getMyExtractedDataList(String user_id) throws Exception {
         List<Map<String, Object>> dataRequestList = mainPageMapper.getMyExtractedDataList(user_id);
         return dataRequestList;
-    }
-
-    // ES 에서 최신 등록 데이터 (4건) 조회
-    public Object getLatestData(HttpServletRequest request) throws Exception {
-        RestTemplate restTemplate = new RestTemplate();
-        LinkedHashMap<String, Object> result = new LinkedHashMap<>();
-        
-        // FastAPI의 URL 생성
-        String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/latestData";
-        log.info("call fastapi : " + fastUrl);
-
-        Map<String, Object> requestBody = new HashMap<>();
-
-        // 사용자 데이터 권한(role_id) 확인
-        Map<String, Object> user = sessionManager.getUserByAccessToken(request);
-        List<String> role_ids = searchService.getRoleIds(user);
-        
-        requestBody.put("roleids", role_ids);
-        
-        ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(fastUrl, requestBody, HashMap.class);
-        
-        if (responseEntity != null) {
-            Map<String, Object> body = responseEntity.getBody();
-            if (body != null) {
-                LinkedHashMap res = (LinkedHashMap) body.get("result");
-                if (res != null) {
-                    result.put("result", res.get("result"));
-
-                    List<Map<String, Object>> results = (List<Map<String, Object>>) res.get("results");
-                    List<Map<String, Object>> newResults = new ArrayList<>();
-                    if (results != null) {
-                        for (int i=0; i<results.size(); i++) {
-                            if (i > 4) break;
-                            newResults.add(results.get(i));
-                        }
-                    }
-                    result.put("results", newResults); 
-                    result.put("total_count", res.get("total_count"));
-                }
-            }    
-        }
-
-        return result;
     }
 
     public Object getChartCategoryList() throws Exception {
