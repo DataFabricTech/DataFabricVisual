@@ -80,10 +80,10 @@
           <!-- main-category-group -->
           <div class="main-category-group">
             <div class="chart-area" id="chartCategory"></div>
-            <div class="category-swiper" style="width: 919px; padding: 0 30px 0 40px;">
+            <div class="chart-category-swiper" style="width: 919px; padding: 0 30px 0 40px;">
               <swiper
                 ref="swiperRef"
-                class="swiper-container"
+                class="chart-swiper-container"
                 :modules="sliderSwiperOptions.modules"
                 :slides-per-view="1"
                 :space-between="10"
@@ -97,13 +97,13 @@
               -->
                 <swiper-slide v-for="(cats, idx) in filterCategoryList">
                   <div class="swiper-slide">
-                    <ul class="category-list">
+                    <ul class="chart-category-list">
                       <li v-for="(cat, idx2) in cats">
-                        <a @click="goToSearch(cat)" class="category">
+                        <a @click="goToSearch(cat)" class="chart-category">
                           <i v-if="cat.file_location == '' || cat.file_location == null" :class="getCategoryIcon(idx2 + 1)"></i>
                           <img v-else :src="cat.file_location" style="width: 44px; height: 44px;"/>
-                          <em class="category-label">{{ cat.description }}</em>
-                          <span class="count">{{ cat.tableCount.toLocaleString() }}</span>
+                          <em class="chart-category-label">{{ cat.description }}</em>
+                          <span class="chart-count">{{ cat.tableCount.toLocaleString() }}</span>
                         </a>
                       </li>
                     </ul>

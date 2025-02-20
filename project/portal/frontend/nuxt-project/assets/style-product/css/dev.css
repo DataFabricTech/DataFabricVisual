@@ -537,43 +537,43 @@ pre code {
 
 
 
-.category {
+.chart-category {
   width: 44px !important;
   height: 96px !important;
 }
-.category-swiper {
+.chart-category-swiper {
   margin-top: 0px !important;
 }
-.swiper-container {
+.chart-swiper-container {
   height: 170px !important;
 }
-.category-swiper .swiper-container {
+.chart-category-swiper .chart-swiper-container {
   margin-top: 0px !important;
 }
-.category-swiper .category-list {
+.chart-category-swiper .chart-category-list {
   display: grid;
   grid-template-columns: repeat(10, 1fr) !important;
   gap: 10px;
   justify-content: space-between;
 }
 
-.category-area {
+.chart-category-area {
   flex: 1 !important;
   padding: 0 30px 0 40px !important;
 }
-.category-list {
+.chart-category-list {
   display: flex !important;
   align-items: center !important;
   justify-content: space-between !important;
   height: 100%  !important;
 }
-.category-list li {
+.chart-category-list li {
   width: 44px !important;
   height: 96px !important;
   margin: 0 !important;
   transition: transform 0.3sease-in-out !important;
 }
-.category-list a.category {
+.chart-category-list a.chart-category {
   display: flex !important;
   flex-direction: column !important;
   justify-content: space-between !important;
@@ -584,21 +584,21 @@ pre code {
   border: none !important;
   background-color: transparent !important;
 }
-.category-list .category-label {
+.chart-category-list .chart-category-label {
   margin-top: 0px !important;
   display: block !important;
   line-height: 1 !important;
   color: #fff !important;
 }
-.category-list .count {
-  width: 70px !important;
+.chart-category-list .chart-count {
+  /* width: 70px !important; */
   display: block !important;
   line-height: 1 !important;
   color: #fff !important;
   font-size: 18px !important;
   font-weight: 500 !important;
 }
-.ico-category {
+.chart-ico-category {
   display: inline-block !important;
   width: 44px !important;
   height: 44px !important;
