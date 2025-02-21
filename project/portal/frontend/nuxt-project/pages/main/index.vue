@@ -581,7 +581,7 @@ const getPostData = async () => {
 const getCategoryData = async () => {
   const data = categoryList.value.filter((item: any) => item.level == 1 && item.id != '_NOT_CLASSIFIED');
 
-  // 
+  //
   let i = 0;
   for (const item of data) {
     if (item.file_location != null && item.file_location != '') {
@@ -603,9 +603,10 @@ const getCategoryData = async () => {
     i++;
   }
 
-  filterCategoryList.value = chunkArray(data, 10);
-
-  categeoryChart(filterCategoryList.value[0]);
+  if (data && data.length > 0) {
+    filterCategoryList.value = chunkArray(data, 10);
+    categeoryChart(filterCategoryList.value[0]);
+}
 }
 
 //
