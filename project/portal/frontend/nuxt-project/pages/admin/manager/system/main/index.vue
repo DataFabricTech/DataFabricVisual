@@ -97,6 +97,7 @@
                           <img v-if="logoImageFile"
                             :src="logoImageFile"
                             style="width: 120px; height: 44px; background-size: cover"
+                            @error="setDefaultImage"
                           />
                           <img v-else
                             src="/logo-basic.png"
@@ -632,9 +633,10 @@ const fileUpload = (e) => {
   });
 };
 
-// 로고 이미지 관리 적용 버튼 클릭
-const onClickSaveLogoImage = () => {
-  console.log('onClickSaveLogoImage')
+// 로고 이미지 경로에 파일이 없는 경우 처리
+const setDefaultImage = () => {
+  logoImageFileId.value = ""
+  logoImageFile.value = "/logo-basic.png"
 }
 
 </script>
