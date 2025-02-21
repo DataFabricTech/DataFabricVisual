@@ -105,7 +105,7 @@ properties:
     synonym: false
   bigExtractToken: <EXTRACT_TOKEN>
   maxFileSize: 1GB # GB, MB, KB
-  systemConfigPath: /opt/ovp/config
+  systemConfigPath: /data_catalog_portal/data/hive_system_config
   fileUploadPath: /opt/ovp/portal/data
   csvFileUploadPath: /opt/ovp/portal/csv
   fileUploadPathSample: /opt/ovp/portal/sample
