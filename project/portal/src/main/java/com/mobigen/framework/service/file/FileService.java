@@ -9,6 +9,7 @@ import java.security.SecureRandom;
 import jakarta.servlet.http.HttpServletRequest;
 
 import com.mobigen.datalake.post.file.FileMapper;
+import com.mobigen.framework.iris.User;
 import com.mobigen.framework.security.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -143,6 +144,23 @@ public class FileService {
 					isValidate = true;
 				}
 			}
+		}
+		return isValidate;
+	}
+
+	private boolean validateUploadHiveConfigFile(List<MultipartFile> files) {
+		boolean isValidate = false;
+
+		for (MultipartFile multipartFile : files)
+		{
+			String originalFileName = multipartFile.getOriginalFilename();
+			String extType = originalFileName.substring(originalFileName.indexOf("."));
+
+			// 확장자 확인
+			if(extType.toLowerCase().endsWith(".xml")) {
+				isValidate = true;
+			}
+			
 		}
 		return isValidate;
 	}
@@ -328,6 +346,62 @@ public class FileService {
 				
 				result.add(fure);}
 
+		}
+		return result;
+	}
+
+	/**
+	 * Hive 설정파일 업로드
+	 * @param uploadForm
+	 * @return
+	 * @throws Exception
+	 */
+	public List<FileUploadResponse> fileHiveConfigUpload(FileUploadRequest uploadForm, String savePath, HttpServletRequest request) throws Exception {
+		List<FileUploadResponse> result = new ArrayList<FileUploadResponse>();
+		String system_id = uploadForm.getSystemId();
+
+		MultipartFile coreSiteFile = uploadForm.getCoreSiteFile();
+		MultipartFile hdfsSiteFile = uploadForm.getHdfsSiteFile();
+		List<MultipartFile> files = new ArrayList<>();
+		if (coreSiteFile != null) files.add(coreSiteFile);
+		if (hdfsSiteFile != null) files.add(hdfsSiteFile);
+
+		if(null != files && files.size() > 0) {
+			// 확장자 확인
+			if(!validateUploadHiveConfigFile(files)) {
+				throw new Exception("확장자가 잘못되었습니다.");
+			}
+
+			for (MultipartFile multipartFile : files) {
+				String originalFileName = multipartFile.getOriginalFilename();
+
+				String extType = originalFileName.substring(originalFileName.lastIndexOf("."), originalFileName.length());
+				
+				String newSavePath = savePath + "/" + system_id;
+				String saveFileName = originalFileName;
+				String path = getUploadPath(newSavePath, saveFileName);
+
+				File f = new File(path);
+				multipartFile.transferTo(f);
+
+				String fullFileName = newSavePath + "/" + saveFileName;
+				String loginId = "";
+				Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+				if(user != null) {
+					loginId = user.get("user_id").toString();
+				}
+
+				int file_id =fileMapper.fineFileId() + 1;
+
+				FileUploadResponse fure = new FileUploadResponse(originalFileName, fullFileName, uploadForm.getType(), loginId, multipartFile.getSize(),file_id);
+				
+				// system_id를 post_id에 설정
+				fure.setPost_id(null);
+				fure.setFile_type("config");
+				fileMapper.insertFile(fure);
+				
+				result.add(fure);
+			}
 		}
 		return result;
 	}

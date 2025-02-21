@@ -15,6 +15,7 @@ public class FileUploadResponse {
 	long fileSize;
 	Integer post_id;
 	String file_type;
+	String system_id;
 	
 	public FileUploadResponse() {
 	}

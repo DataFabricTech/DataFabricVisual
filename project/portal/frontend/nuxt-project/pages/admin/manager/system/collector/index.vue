@@ -132,6 +132,8 @@ const collector = ref({
   port: "",
   system_type: "",
   database: "",
+  schema: "",
+  hive_thrift_port: "",
   system_name: "",
   login: "",
   interval: "",
@@ -146,7 +148,9 @@ const collector = ref({
   create_date: new Date().toISOString().split('T')[0],
   update_user: "",
   update_user_name: "",
-  update_date: ""
+  update_date: "",
+  core_site_file: null,
+  hdfs_site_file: null
 }); // 시스템 수집 등록 모달 파라미터
 const isDetail = ref(false)
 const isUpdate = ref(false)
@@ -245,7 +249,9 @@ const popupCollectorCreateModal = () => {
     create_date: new Date().toISOString().split('T')[0],
     update_user: "",
     update_user_name: "",
-    update_date: ""
+    update_date: "",
+    core_site_file: null,
+    hdfs_site_file: null,
   }
   toggleCollectorModal.value = true
 }
@@ -297,10 +303,39 @@ const onCloseCollectorModal = async () => {
 // 수집대상 등록, 수정
 const updateCollector = async (newCollector) => {
   let suffix = newCollector.flag
+  console.log(newCollector)
+
+  // Hive의 경우 파일 등록 처리
+  if (newCollector.system_type.toUpperCase().includes('HIVE')
+   && newCollector.core_site_file
+   && newCollector.hdfs_site_file) {
+
+    const formData = new FormData()
+    formData.append("systemId", newCollector.system_id)
+    if (newCollector.core_site_file) formData.append("coreSiteFile", newCollector.core_site_file)
+    if (newCollector.hdfs_site_file) formData.append("hdfsSiteFile", newCollector.hdfs_site_file)
+
+    await $ofetch(`/api/admin/system/collector/add/saveFile`, {
+      method: 'POST',
+      body: formData
+    }).then(async (res) => {
+      console.log(res)
+      if (res) {
+        if ((res.errorMessage && res.errorMessage != "")) {
+          await errorAlert("파일 저장에 실패하였습니다.");
+          return;
+        } else {
+
+        }
+      }
+    })
+  }
+
   await $ofetch(`/api/admin/system/collector/${suffix}`, {
     method: 'POST',
     body: newCollector
   }).then(async (res) => {
+    console.log(res)
     if (suffix == 'add') {
       if (res && res.data && res.data.addCount > 0) {
         await successAlert("등록되었습니다.")

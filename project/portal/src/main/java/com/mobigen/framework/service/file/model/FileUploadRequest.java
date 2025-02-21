@@ -19,4 +19,7 @@ public class FileUploadRequest {
 	private DataRequestVO dataRequest;
 	private ShareVO share;
 	private Integer dataRequestId;
+    private String systemId;
+	private MultipartFile coreSiteFile;
+	private MultipartFile hdfsSiteFile;
 }

@@ -16,4 +16,6 @@ public interface CollectorMapper {
   int deleteCollector(String system_id) throws Exception;
   List<String> getSystemTypes() throws Exception;
   Map<String, Object> getCollectorOne(String system_id) throws Exception;
+  List<Map<String, Object>> getFileInfoList(String system_id) throws Exception;
+  List<Map<String, Object>> getCollectorFileInfoList(String system_id) throws Exception;
 }

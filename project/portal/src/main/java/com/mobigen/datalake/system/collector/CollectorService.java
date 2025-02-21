@@ -19,8 +19,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mobigen.datalake.post.file.FileMapper;
 import com.mobigen.framework.utility.AESGCMUtil;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +34,7 @@ import java.util.Map;
 public class CollectorService {
   private final CollectorMapper collectorMapper;    
   private final ObjectMapper objectMapper;
+  private final FileMapper fileMapper;
   
   @Value("${properties.ingestion.url}")
   private String ingestionExecuteUrl;
@@ -70,6 +73,24 @@ public class CollectorService {
             } else {
               list.get(i).put("isActiveIngestion", false);
             }
+
+            // HIVE인 경우 core-site.xml, hdfs-site.xml 파일 조회
+            String system_id = list.get(i).get("system_id").toString();
+            List<Map<String, Object>> fileInfoList = collectorMapper.getFileInfoList(system_id);
+            Map<String, Object> coreSiteFileInfo = null;
+            Map<String, Object> hdfsSiteFileInfo = null;
+            if (fileInfoList != null) {
+              for (int j=0; j<fileInfoList.size(); j++) {
+                if (fileInfoList.get(j).get("file_name").toString().equals("core-site.xml")) {
+                  coreSiteFileInfo = fileInfoList.get(j);
+                } else if (fileInfoList.get(j).get("file_name").toString().equals("hdfs-site.xml")) {
+                  hdfsSiteFileInfo = fileInfoList.get(j);
+                }
+              }
+            }
+
+            list.get(i).put("core_site_file", coreSiteFileInfo);
+            list.get(i).put("hdfs_site_file", hdfsSiteFileInfo);
           }
         }
 
@@ -120,23 +141,29 @@ public class CollectorService {
 
   // 수집대상 수정 (put으로 같이 사용)
   public Object updateCollector(Map<String, Object> params) throws Exception {
-    boolean result = false;
+    Map<String, Object> result = new HashMap<>();
     int updateCount = 0;
 
-    // 비밀번호를 입력한 경우는 암호화해서 같이 저장
-    if (params.get("password") != null && !params.get("password").equals("")) {
-      AESGCMUtil encoder = new AESGCMUtil(cryptKey);
-      params.put("password", encoder.encrypt(params.get("password").toString()));
-      updateCount = collectorMapper.updateCollector(params);
-    } else {
-      params.remove("password");
-      updateCount = collectorMapper.updateCollectorNoPassword(params);
-    }
+    try {
+      // 비밀번호를 입력한 경우는 암호화해서 같이 저장
+      if (params.get("password") != null && !params.get("password").equals("")) {
+        AESGCMUtil encoder = new AESGCMUtil(cryptKey);
+        params.put("password", encoder.encrypt(params.get("password").toString()));
+        updateCount = collectorMapper.updateCollector(params);
+      } else {
+        params.remove("password");
+        updateCount = collectorMapper.updateCollectorNoPassword(params);
+      }
 
-    if (updateCount > 0) {
-      result = true;
-      putIngestionDagApi(params.get("system_id").toString());
+      if (updateCount > 0) {
+        putIngestionDagApi(params.get("system_id").toString());
+      }
+
+      result.put("updateCount", updateCount);
+    } catch (Exception e) {
+      result.put("updateCount", 0);
     }
+    
     return result;
   }
 
@@ -146,6 +173,8 @@ public class CollectorService {
     boolean apiResult = false;
     int deleteCount = collectorMapper.deleteCollector(system_id);
     if (deleteCount > 0) {
+      // 실제 파일 삭제 처리
+      deleteRealFileFromSystemId(system_id);
       result = true;
       apiResult = deleteIngestionDagApi(system_id);
     }
@@ -290,6 +319,23 @@ public class CollectorService {
         } else {
           collector.put("isActiveIngestion", false);
         }
+
+        // HIVE인 경우 core-site.xml, hdfs-site.xml 파일 조회
+        List<Map<String, Object>> fileInfoList = collectorMapper.getFileInfoList(system_id);
+        Map<String, Object> coreSiteFileInfo = null;
+        Map<String, Object> hdfsSiteFileInfo = null;
+        if (fileInfoList != null) {
+          for (int j=0; j<fileInfoList.size(); j++) {
+            if (fileInfoList.get(j).get("file_name").toString().equals("core-site.xml")) {
+              coreSiteFileInfo = fileInfoList.get(j);
+            } else if (fileInfoList.get(j).get("file_name").toString().equals("hdfs-site.xml")) {
+              hdfsSiteFileInfo = fileInfoList.get(j);
+            }
+          }
+        }
+
+        collector.put("core_site_file", coreSiteFileInfo);
+        collector.put("hdfs_site_file", hdfsSiteFileInfo);
         
         result.put("result", true);
         result.put("collector", collector);
@@ -305,5 +351,76 @@ public class CollectorService {
     }
 
     return result;
+  }
+
+  // 실제 파일 삭제
+    private void deleteRealFileFromSystemId(String system_id) throws Exception {
+        List<Map<String, Object>> fileInfoList = new ArrayList<>();
+        // 해당 파일의 첨부파일이 있는지 확인하여 있는 경우 첨부파일도 삭제 처리
+        try {
+            fileInfoList = collectorMapper.getCollectorFileInfoList(system_id);
+        } catch (Exception e) {
+            log.error("Fail to load FileInfoList");
+        }
+        if (fileInfoList != null && fileInfoList.size() > 0) {
+            try {
+                for (int i=0; i<fileInfoList.size(); i++) {
+                    String file_id = fileInfoList.get(i).get("file_id").toString();
+                    String file_location = fileInfoList.get(i).get("file_location").toString();
+                    log.info("deleting real file id : " + file_id);
+                    log.info("deleting real file path : " + file_location);
+
+                    File file = new File(file_location);
+                    File parentDir = file.getParentFile();
+
+                    if (file.exists()) {
+                        boolean deleted = file.delete();
+                        if (deleted) {
+                            log.info("Success to delete file in server..");
+                            
+                            // DB에서 내역 삭제
+                            try {
+                                fileMapper.deleteFile(file_id);
+                            } catch (Exception e) {
+                                log.error("Fail to delete file info..");
+                            }
+                        } else {
+                            log.error("Fail to delete file in server..");
+                        }
+                    } else {
+                        log.info("No Exist file in server..");
+                    }
+
+                    // 마지막 파일까지 삭제 후 디렉토리 삭제
+                    if (i == fileInfoList.size() - 1 && parentDir != null) {
+                      deleteDirectory(parentDir);
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("Fail to delete file in server..");
+            }
+        } else {
+            log.error("No fileInfo..");
+        }
+    }
+
+    private void deleteDirectory(File dir) {
+      if (dir.exists()) {
+          File[] files = dir.listFiles();
+          if (files != null) { // 내부 파일 및 폴더 삭제
+              for (File file : files) {
+                  if (file.isDirectory()) {
+                      deleteDirectory(file); // 재귀 호출
+                  } else {
+                      file.delete();
+                  }
+              }
+          }
+          dir.delete(); // 최종적으로 빈 폴더 삭제
+          log.info("success to delete directory..");
+      } else {
+        log.info("No exists directory..");
+      }
   }
 }

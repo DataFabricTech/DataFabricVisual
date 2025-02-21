@@ -598,7 +598,7 @@ public class DataRequestService {
         return result;
    }
 
-   // 실제 파일 삭제
+    // 실제 파일 삭제
     private void deleteRealFileFromRequestId(Integer request_id) throws Exception {
         List<Map<String, Object>> fileInfoList = new ArrayList<>();
         // 해당 파일의 첨부파일이 있는지 확인하여 있는 경우 첨부파일도 삭제 처리

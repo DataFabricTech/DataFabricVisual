@@ -1,30 +1,47 @@
 package com.mobigen.datalake.system.collector;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mobigen.framework.result.JsonResult;
 import com.mobigen.framework.result.annotation.ResponseJsonResult;
+import com.mobigen.framework.security.SessionManager;
+import com.mobigen.framework.service.file.FileService;
+import com.mobigen.framework.service.file.model.FileUploadRequest;
+import com.mobigen.framework.service.file.model.FileUploadResponse;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequestMapping("/api/admin/system/collector")
 @Controller
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CollectorController {
     private final CollectorService collectorService;
+    private final FileService fileService;
+    private final SessionManager sessionManager;
+    
+    @Value("${properties.systemConfigPath}")
+	public String systemConfigPath;
     
     /**
      * 수집대상 목록 조회
@@ -129,5 +146,40 @@ public class CollectorController {
     @GetMapping("/collectorOne")
     public Object getCollectorOneInfo(@RequestParam("system_id") String system_id) throws Exception {
         return collectorService.getCollectorOneInfo(system_id);
+    }
+
+    /**
+     * Hive 수집대상 파일저장
+     * @param uploadForm                파일
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/add/saveFile", method = RequestMethod.POST)
+    @ResponseBody
+    public JsonResult insertFile(@ModelAttribute FileUploadRequest uploadForm, HttpServletRequest request)  {
+        JsonResult js = new JsonResult();
+
+        try {
+            // 세션의 사용자 ID 확인
+            Map<String, Object> user = sessionManager.getUserByAccessToken(request);
+
+            if (user != null) {
+                // 파일 업로드 경로 숨기기
+                List<FileUploadResponse> uploadResult = fileService.fileHiveConfigUpload(uploadForm, systemConfigPath, request);
+                if (uploadResult.size() != 0)
+                    uploadResult.get(0).setSaveFileName(null);
+                    
+                js.setData(uploadResult);
+            } else {
+                js.setData(0);
+                js.setErrorMessage("Hive 설정파일 저장에 실패하였습니다.");
+            }
+
+        } catch (Exception e) {
+            js.setErrorMessage(e.getMessage());
+            js.setErrorMessage("파일 업데이트에 실패하였습니다. 관리자에게 문의해 주시기 바랍니다.");
+        }
+
+        return js;
     }
 }
