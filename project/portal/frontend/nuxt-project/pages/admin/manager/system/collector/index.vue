@@ -303,12 +303,9 @@ const onCloseCollectorModal = async () => {
 // 수집대상 등록, 수정
 const updateCollector = async (newCollector) => {
   let suffix = newCollector.flag
-  console.log(newCollector)
 
   // Hive의 경우 파일 등록 처리
-  if (newCollector.system_type.toUpperCase().includes('HIVE')
-   && newCollector.core_site_file
-   && newCollector.hdfs_site_file) {
+  if (newCollector.system_type.toUpperCase().includes('HIVE')) {
 
     const formData = new FormData()
     formData.append("systemId", newCollector.system_id)

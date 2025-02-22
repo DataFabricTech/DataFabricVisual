@@ -409,7 +409,7 @@ const onConfirm = async () => {
         currentCollector.value.update_user = userStore.getUser.user_id
         // 수정된 파일만 추가
         currentCollector.value.core_site_file = currentCollector.value.core_site_file instanceof File ? currentCollector.value.core_site_file : null
-        currentCollector.value.hdfs_site_file = currentCollector.value.hdfs_site_file instanceof File ? currentCollector.value.core_site_file : null
+        currentCollector.value.hdfs_site_file = currentCollector.value.hdfs_site_file instanceof File ? currentCollector.value.hdfs_site_file : null
       } else {
         currentCollector.value.flag = 'add'
       }

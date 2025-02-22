@@ -398,7 +398,16 @@ public class FileService {
 				// system_id를 post_id에 설정
 				fure.setPost_id(null);
 				fure.setFile_type("config");
-				fileMapper.insertFile(fure);
+
+				// 기존에 경로가 있으면 DB reg_date만 업데이트, 신규추가하지 않음
+				Map<String, Object> param = new HashMap<>();
+				param.put("system_id", system_id);
+				param.put("file_name", saveFileName);
+				Integer dupCnt = fileMapper.getFileDupCnt(param);
+				if (dupCnt != null && dupCnt > 0) 
+					fileMapper.updateFileRegDate(param);
+				else 
+					fileMapper.insertFile(fure); 
 				
 				result.add(fure);
 			}

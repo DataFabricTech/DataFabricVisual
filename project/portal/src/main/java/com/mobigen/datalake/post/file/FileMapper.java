@@ -26,4 +26,7 @@ public interface FileMapper {
 	Map<String, Object> getDataRequestFileInfo(int file_id);
 
     Integer fineFileId();
+
+    Integer getFileDupCnt(Map<String, Object> params) throws Exception;
+    Integer updateFileRegDate(Map<String, Object> params) throws Exception;
 }
