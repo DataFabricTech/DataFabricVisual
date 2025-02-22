@@ -70,9 +70,9 @@ const tooltipLocation = computed(() => {
       // 툴팁 left 위치 설정
       const targetBtnWidth = targetBtn?.clientWidth || 0;
       const textWidth = targetBtn?.previousElementSibling?.clientWidth || 0;
-      const tooltip_left = targetBtnWidth + textWidth + 5;
+      const tooltip_left = targetBtnWidth + textWidth + 150;
 
-      return `top: ${top}px; left: ${tooltip_left}px`;
+      return `top: ${top}px; right: ${tooltip_left}px`;
     } else {
       // 카테고리 세팅 툴팁
       const top = pageY - offsetY - ADJUST_HEIGHT - EXTRA_ADJUST;
