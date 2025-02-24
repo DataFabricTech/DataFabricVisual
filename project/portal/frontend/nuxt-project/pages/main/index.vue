@@ -97,7 +97,7 @@
                     <ul class="chart-category-list">
                       <li v-for="(cat, idx2) in cats">
                         <a @click="goToSearch(cat)" class="chart-category">
-                          <i v-if="cat.file_location == '' || cat.file_location == null" :class="getCategoryIcon(idx2 + 1)"></i>
+                          <i v-if="cat.file_location == '' || cat.file_location == null" :class="getCategoryIcon(9 + 1)"></i>
                           <img v-else :src="cat.imageSrc" :class="cat.imageClass" :style="cat.imageStyle" />
                           <em class="chart-category-label">{{ cat.description }}</em>
                           <span class="chart-count">{{ cat.tableCount.toLocaleString() }}</span>

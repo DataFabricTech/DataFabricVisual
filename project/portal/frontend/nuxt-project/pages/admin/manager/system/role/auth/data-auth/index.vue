@@ -6,6 +6,13 @@
                 @onClickMenuItem="onClickMenuItem"
                 />
 
+                <!-- 카테고리 관리 & 더보기 툴팁 -->
+                <auth-data-tooltip
+                  :tooltip-obj="tooltipObj"
+                  :selected-auth="selectedAuth"
+                  :page-name="pageName"
+                />
+
                 <div class="page-content">
                     <div class="board-list-wrap">
                         <div class="data-box">
@@ -92,11 +99,13 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="category-group">
+                                        <!-- <div class="category-group">
                                             <div v-for="roleId in item.role_ids" :key="roleId" class="category">
                                               <em class="category-label" :title="roleId">{{ roleId }}</em>
                                             </div>
-                                        </div>
+                                        </div> -->
+
+                                        <auth-group :item="item" />
                                     </td>
                                 </tr>
                                 <tr v-if="dataList.length === 0">
@@ -130,6 +139,20 @@ import { isEmpties } from "@composables/ramda";
 
 import { useCategoryStore } from "@store/category.ts";
 import LeftMenuList from "@functional/leftMenuList/left-menu-list.vue";
+import authGroup from "@/pages/admin/manager/system/role/auth/auth-group";
+import AuthDataTooltip from "@/pages/admin/manager/system/role/auth/auth-data-tooltip";
+
+import { useEventStore } from "@store/event.ts";
+const eventStore = useEventStore();
+
+// 툴팁 제어
+const tooltipObj = ref<TooltipObj>({
+  display: false, // 툴팁 화면 렌더 여부 flag
+  type: "",
+  e: {},
+  targets: null
+});
+const pageName = ref<string>("dataAuth");
 
 definePageMeta({
   name: "AdminDataAuthManage",
@@ -152,6 +175,13 @@ const pagingObj = ref<pagingObj>({
     currentPage: 1,
 });
 
+interface TooltipObj {
+  display: boolean;
+  type: string;
+  e: Event | {};
+  targets: any;
+}
+const selectedAuth = ref<any>({});
 
 const { $ofetch } = useNuxtApp();
 const router = useRouter();
@@ -168,7 +198,22 @@ const dataList = ref<any[]>([]);
 
 
 onMounted(() => {
-    onSearchDataList(0);
+  onSearchDataList(0);
+
+  // event bus에 이벤트 핸들러 등록
+  eventStore.on("onToggleMetaDataTooltip", onToggleTooltip); // 툴팁 제어 핸들러
+  eventStore.on("onClickTableBodyButtons", onClickTableBodyButtons); //테이블 내 버튼 클릭 이벤트 핸들러
+
+  // 전체 페이지 컴포넌트 내 클릭 이벤트 리스너 바인딩, 버튼 이외의 영역 클릭 시 툴팁 제거
+  document.addEventListener("click", (e) => onToggleTooltip(e));
+});
+
+onUnmounted(() => {
+  // 등록했던 툴팁 제어 핸들러 바인딩 제거
+  eventStore.off("onToggleMetaDataTooltip", onToggleTooltip);
+  eventStore.off("onClickTableBodyButtons", onClickTableBodyButtons);
+
+  document.removeEventListener("click", onToggleTooltip);
 });
 
 // 
@@ -210,9 +255,16 @@ const onSearchDataList = async (offset = 0, item: any = null) =>{
       let result = res.data;
 
       const list: any = ObjectUtils.getPropertyValue(result, "list", []);
-      dataList.value = list.map((el: { [key: string]: any }) => {
+      // dataList.value = list.map((el: { [key: string]: any }) => {
+      //   return {
+      //     ...el,
+      //     attributes: !isEmpties(el.attributes) ? JSON.parse(el.attributes) : {}
+      //   };
+      // });
+      dataList.value = list.map((el: { [key: string]: any }, index: number) => {
         return {
           ...el,
+          guid: index + 1,
           attributes: !isEmpties(el.attributes) ? JSON.parse(el.attributes) : {}
         };
       });
@@ -261,5 +313,38 @@ const getKrName = (key: any) => {
   return key ? categoryStore.getClassificationNameKr(key) : '';
 }
 
+// 툴팁 토글 이벤트 핸들러
+const onToggleTooltip = (e: Event, item: any = null, type: string = "") => {
+  if (item && !tooltipObj.value.display) {
+    // 툴팁 제어 버튼 클릭 시
+    tooltipObj.value.display = true;
+    tooltipObj.value.type = type;
+    tooltipObj.value.e = e;
+    tooltipObj.value.targets = item;
+
+    // 더보기 툴팁 렌더할 경우 카테고리 목록 데이터 전달
+    if (type === "more") {
+      tooltipObj.value.targets = item;
+      selectedAuth.value = item;
+    }
+  } else if (tooltipObj.value.display) {
+    tooltipObj.value.display = false;
+    tooltipObj.value.type = "";
+    tooltipObj.value.e = {};
+    tooltipObj.value.targets = null;
+  }
+};
+
+// 테이블 내 카테고리 맵핑/카테고리 맵핑 삭제 버튼 클릭 이벤트 핸들러
+const onClickTableBodyButtons = (type: string = "", target: any = null) => {
+  // switch (type) {
+  //   case "category-map": // 카테고리 맵핑
+  //     onToggleManageModal("map", target);
+  //     break;
+  //   case "category-del": // 카테고리 맵핑 삭제
+  //     onDeleteCategoryMap(target);
+  //     break;
+  // }
+};
 </script>
     

@@ -17,7 +17,7 @@
                   <th>System type</th>
                   <td>{{ metaDataInfo.system_type }}</td>
                   <th>시스템 명</th>
-                  <td>{{ metaDataInfo.system_id }}</td>
+                  <td>{{ metaDataInfo.system_name }}</td>
                 </tr>
                 <tr>
                   <th>Meta name</th>
@@ -29,17 +29,19 @@
                   <th>Meta Type</th>
                   <td>{{ metaDataInfo.meta_type }}</td>
                   <th>Qulifided_name</th>
-                  <td>{{ metaDataInfo.meta_id }}</td>
+                  <td>{{ metaDataInfo.qualified_name }}</td>
                 </tr>
                 <tr>
                   <th>카테고리</th>
-                  <td colspan="3">
+                  <td>
                     <div class="category-group">
                         <div v-for="category in metaDataInfo.classifications" :key="category.id" class="category">
                         <em class="category-label" :title="getKrName(category)">{{ getKrName(category) }}</em>
                         </div>
                     </div>
                   </td>
+                  <th>Meta ID</th>
+                  <td>{{ metaDataInfo.meta_id }}</td>
                 </tr>
               </tbody>
             </table>
