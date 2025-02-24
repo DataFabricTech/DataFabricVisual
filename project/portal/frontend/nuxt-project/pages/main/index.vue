@@ -81,33 +81,32 @@
           <div class="main-category-group">
             <div class="chart-area" id="chartCategory"></div>
             <div class="chart-category-swiper" style="width: 919px; padding: 0 30px 0 40px;">
-              <swiper
-                ref="swiperRef"
-                class="chart-swiper-container"
-                :modules="sliderSwiperOptions.modules"
-                :slides-per-view="1"
-                :slides-per-group="1"
-                :space-between="0"
-                :autoplay="sliderSwiperOptions.autoplay"
-                :effect="sliderSwiperOptions.effect"
-                @slideChange="onSlideChange"
+              <Swiper
+                @swiper="onSwiper"
+                @mouseenter="controlSwiper(false)"
+                @mouseleave="controlSwiper(true)"
+                @touch-end="controlSwiper(null)"
+                class="swiper"
+                :modules="[Autoplay]"
+                slidesPerView="10"
+                :autoplay="{delay: 1000, disableOnInteraction: true,}"
+                :speed="1000"
+                loop
+                loopAdditionalSlides="1"
               >
-                <swiper-slide v-for="(cats, idx) in filterCategoryList">
-                  <div class="swiper-slide">
-                    <ul class="chart-category-list">
-                      <li v-for="(cat, idx2) in cats">
-                        <a @click="goToSearch(cat)" class="chart-category">
-                          <i v-if="cat.file_location == '' || cat.file_location == null" :class="getCategoryIcon(9 + 1)"></i>
-                          <img v-else :src="cat.imageSrc" :class="cat.imageClass" :style="cat.imageStyle" />
-                          <em class="chart-category-label">{{ cat.description }}</em>
-                          <span class="chart-count">{{ cat.tableCount.toLocaleString() }}</span>
-                        </a>
-                      </li>
-                    </ul>
+                <swiper-slide v-for="(cat, idx) in addCategoryList">
+                  <div style="width: 100%; height: 100%;margin-top: 30px; justify-content: center; align-items: center; text-align: center;">
+                    <a @click="goToSearch(cat)" class="chart-category">
+                      <i v-if="cat.file_location == '' || cat.file_location == null" :class="getCategoryIcon(9 + 1)"></i>
+                      <img v-else :src="cat.imageSrc" :class="cat.imageClass" :style="cat.imageStyle" />
+                      <br>
+                      <em class="chart-category-label" style="margin-top: 10px;display: block;line-height: 1;color: #fff; width: 84px; height: 14px; text-align: center; overflow: hidden;;">{{ cat.description }}</em>
+                      <br>
+                      <span class="chart-count" style="width: 84px;display: block;line-height: 1;color: #fff;font-size: 18px;font-weight: 500; text-align: center;">{{ cat.tableCount.toLocaleString() }}</span>
+                    </a>
                   </div>
                 </swiper-slide>
-                <div class="swiper-pagination"></div>
-              </swiper>
+              </Swiper>
             </div>
           </div>
         </div>
@@ -327,6 +326,54 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useSearchStore } from "@/store/search";
 import Highcharts from 'highcharts';
+
+const addCategoryList = ref([]);
+const swiperEl = ref(null);
+const playStatus = ref(true);
+const duration = ref(0);
+const touch = ref(false);
+
+// 스와이퍼 로드
+// const onSwiper = (swiper) => {
+//   swiperEl.value = swiper;
+// };
+
+// 슬라이드 플레이 컨트롤
+const controlSwiper = (play) => {
+  if (play === null) {
+    touch.value = true;
+    return;
+  }
+
+  if (play) {
+    if (touch.value) {
+      // 터치 후 플레이
+      setTimeout(() => {
+        swiperEl.value.autoplay.start();
+      }, 2000);
+
+      touch.value = false;
+      return;
+    }
+
+    const distance = swiperEl.value.width * swiperEl.value.activeIndex + swiperEl.value.getTranslate();
+    duration.value = distance !== 0 ? duration.value : 0;
+    swiperEl.value.slideTo(swiperEl.value.activeIndex, duration.value);
+    swiperEl.value.autoplay.start();
+    playStatus.value = true;
+  } else {
+    swiperEl.value.setTranslate(swiperEl.value.getTranslate()); // 즉시 멈춤
+    const currentSlideWidth = swiperEl.value.slides[swiperEl.value.activeIndex].offsetWidth;
+    const distanceRatio = Math.abs(
+      (currentSlideWidth * swiperEl.value.activeIndex +
+        swiperEl.value.getTranslate()) /
+        currentSlideWidth
+    );
+    duration.value = swiperEl.value.params.speed * distanceRatio;
+    swiperEl.value.autoplay.stop();
+    playStatus.value = false;
+  }
+};
 
 
 definePageMeta({
@@ -604,8 +651,11 @@ const getCategoryData = async () => {
   }
 
   if (data && data.length > 0) {
-    filterCategoryList.value = chunkArray(data, 10);
-    categeoryChart(filterCategoryList.value[0]);
+    // filterCategoryList.value = chunkArray(data, 10);
+    const chartData = categoryList.value.filter((item: any) => item.level == 1 && item.id != '_NOT_CLASSIFIED');
+    categeoryChart(chartData);
+
+    addCategoryList.value = [...chartData];
 }
 }
 
@@ -656,7 +706,7 @@ const categeoryChart = (categoryList) => {
     series: [
       {
         name: "",
-        data: categoryList.filter(item => item.level == 1 && item.id != '_NOT_CLASSIFIED').map(item => item.tableCount).slice(0, 10),
+        data: categoryList.filter(item => item.level == 1 && item.id != '_NOT_CLASSIFIED').map(item => item.tableCount),
         color: "#00b9ff",
         states: {
           hover: {
@@ -735,7 +785,7 @@ const chunkArray = (array, chunk) => {
 
 // swiper 변경 이벤트
 const onSlideChange = (swiper) => {
-  categeoryChart(filterCategoryList.value[swiper.realIndex]);
+  categeoryChart(addCategoryList.value);
 }
 
 // swiper 버튼 활성화 여부
