@@ -68,7 +68,7 @@
             <div class="detail-search-form">
               <div class="mu-form mu-form-vertical">
                 <div class="mu-form-item" v-for="(df, idx) in detailFilters" >
-                  <div class="btn-category">
+                  <div class="btn-category" v-if="df.content && df.content.length > 0">
                     <div class="mu-checkbox all">
                       <input :type="df.allChecked ? 'radio' : 'checkbox'" :name="idx" :id="'ckb_'+idx" value="ALL" @change="onChangeCheckBox(idx, $event);" :checked="df.allChecked">
                       <label :for="'ckb_'+idx"> <span>{{ getRootDescription(idx) }}</span></label>

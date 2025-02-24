@@ -135,19 +135,43 @@ public class CategoryService {
         systemList.removeIf(item -> !systemTypes.contains(item.get("system_type")));
 
         int i=0;
-        for (Map<String, Object> system : systemList) {
-            Map<String, Object> content = new HashMap<>();
-
-            content.put("root", "SYSTEMTYPE");
-            content.put("rootDescription", "시스템 타입");
+        for (String systemType : systemTypes) {
             i = i + 1;
-            content.put("id", i);
-            content.put("name", system.get("system_type"));
-            content.put("description", system.get("system_type"));
-            content.put("count", system.get("type_count"));
-            content.put("checked", false);
-            ((List<Map<String, Object>>) systemInfo.get("content")).add(content);
-        }
+            boolean added = false;
+            for (Map<String, Object> system : systemList) {
+                // 코드 테이블에 있는 값만 추가
+                if (system.get("system_type").toString().equals(systemType)) {
+
+                    Map<String, Object> content = new HashMap<>();
+
+                    content.put("root", "SYSTEMTYPE");
+                    content.put("rootDescription", "시스템 타입");
+                    
+                    content.put("id", i);
+                    content.put("name", system.get("system_type"));
+                    content.put("description", system.get("system_type"));
+                    content.put("count", system.get("type_count"));
+                    content.put("checked", false);
+                    ((List<Map<String, Object>>) systemInfo.get("content")).add(content);
+                    added = true;
+                    break;
+                }
+            }
+
+            if (!added) {
+                Map<String, Object> content = new HashMap<>();
+
+                content.put("root", "SYSTEMTYPE");
+                content.put("rootDescription", "시스템 타입");
+                
+                content.put("id", i);
+                content.put("name", systemType);
+                content.put("description", systemType);
+                content.put("count", 0);
+                content.put("checked", false);
+                ((List<Map<String, Object>>) systemInfo.get("content")).add(content);
+            }
+        }        
         systemInfo.put("checkedCount", 0);
 
         // 메타 타입 정보
