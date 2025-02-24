@@ -18,7 +18,7 @@
           <button
             class="text-input-group-action-button button button-neutral-ghost button-sm"
             type="button"
-            :title="composition.inputPasswordType.value === 'password' ? '비밀번호 보기' : ''"
+            :title="composition.inputPasswordType.value === 'password' ? '비밀번호 보기' : '비밀번호 숨기기'"
             @click="composition.isHidePw"
           >
             <span class="hidden-text">비밀번호 보기 해제</span>
@@ -61,7 +61,7 @@
           <button
             class="text-input-group-action-button button button-neutral-ghost button-sm"
             type="button"
-            :title="composition.inputConfirmPasswordType.value === 'password' ? '비밀번호 보기' : ''"
+            :title="composition.inputConfirmPasswordType.value === 'password' ? '비밀번호 보기' : '비밀번호 숨기기'"
             @click="composition.isHideConfirmPw"
           >
             <span class="hidden-text">비밀번호 보기</span>
