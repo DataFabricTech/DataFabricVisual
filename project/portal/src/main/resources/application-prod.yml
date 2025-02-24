@@ -29,7 +29,7 @@ spring:
       enabled: true
   datasource:
     hikari:
-      jdbc-url: jdbc:postgresql://<INTERNAL_HOST>:5432/data_catalog
+      jdbc-url: jdbc:postgresql://127.0.0.1:5432/data_catalog
       username: data_catalog
       password: <PASSWORD>
       driver-class-name: org.postgresql.Driver
@@ -121,7 +121,7 @@ properties:
       csrf: true
       cors:
         pattern: /** #/auth/**
-        allowed-origins: http://<INTERNAL_HOST>:38080 #"*" #http://server-name:port
+        allowed-origins: http://127.0.0.1:38080 #"*" #http://server-name:port
         allowed-methods: "*" #PUT,DELETE,GET,POST ...
         allowed-headers: "*" #Context-Type, ...
         allow-credentials: true
@@ -140,32 +140,29 @@ properties:
       rsa-enabled: true
   trino:
     hikari:
-      jdbc-url: jdbc:trino://<INTERNAL_HOST>:8080/
+      jdbc-url: jdbc:trino://127.0.0.1:8080/
       user: admin
   elastic:
     server:
       scheme: http
-      host: <INTERNAL_HOST>
+      host: 127.0.0.1
       port: 9200
   fastapi:
     server:
       scheme: http
-      host: <INTERNAL_HOST>
+      host: 127.0.0.1
       port: 28800
-  superadmin:
-    id: admin
-    passwd: <PASSWORD> # <PASSWORD>
   essync:
     url: 
-      update: http://<INTERNAL_HOST>:8000/v1/essync/update
-      updates: http://<INTERNAL_HOST>:8000/v1/essync/updates
-      roleupdates: http://<INTERNAL_HOST>:8000/v1/essync/roleupdates
-      convertcategory: http://<INTERNAL_HOST>:8000/v1/essync/convertcategory
+      update: http://127.0.0.1:8000/v1/essync/update
+      updates: http://127.0.0.1:8000/v1/essync/updates
+      roleupdates: http://127.0.0.1:8000/v1/essync/roleupdates
+      convertcategory: http://127.0.0.1:8000/v1/essync/convertcategory
   synonymsync:
-    url: http://<INTERNAL_HOST>:8000/v1/essync/synonym
+    url: http://127.0.0.1:8000/v1/essync/synonym
   categorycount:
-    url: http://<INTERNAL_HOST>:8000/v1/essync/getclassificationcount
+    url: http://127.0.0.1:8000/v1/essync/getclassificationcount
   ingestion:
-    url: http://<INTERNAL_HOST>:8585/api/v1/ingestion/execute
+    url: http://127.0.0.1:8585/api/v1/ingestion/execute
   bigextract:
-    url: http://<INTERNAL_HOST>:13200/largedata/requestdata
+    url: http://127.0.0.1:13200/largedata/requestdata

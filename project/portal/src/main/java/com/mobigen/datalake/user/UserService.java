@@ -45,12 +45,6 @@ public class UserService {
     
     BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @Value("${properties.superadmin.id}")
-    String adminId;
-
-    @Value("${properties.superadmin.passwd}")
-    String adminPasswd;
-
     @Value("${properties.loginDeactivationDateThreshold}")
     int loginDeactivationDateThreshold;
 
