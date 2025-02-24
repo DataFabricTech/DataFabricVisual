@@ -127,7 +127,7 @@
           </div>
           <div class="main-body">
             <ul v-if="latestDataList && latestDataList.length > 0" class="data-list">
-              <li class="data-box" v-for="(ld, idx) in latestDataList">
+              <li v-for="(ld, idx) in latestDataList">
                 <a @click="goToMetaDataDetail(ld.meta_id)" style="text-decoration-line:none;">
                   <div class="inner-data">
                     <strong class="data-title">{{ ld.description ? ld.description : '-' }}</strong>
