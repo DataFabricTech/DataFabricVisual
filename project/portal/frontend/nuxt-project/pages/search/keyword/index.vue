@@ -75,7 +75,8 @@
                     </div>
                     <div v-for="(tg, idx2) in df.content" class="mu-checkbox">
                       <input :type="'checkbox'" :name="idx" :id="'ckbox_'+tg.name" :value="tg.name" @change="onChangeCheckBox(idx, $event)" :checked="tg.checked">
-                      <label :for="'ckbox_'+tg.name"><span>{{ tg.description }}<em v-if="idx != 'TAG' && idx != 'ORDER'">({{ tg.count }})</em></span></label>
+                      <!-- <label :for="'ckbox_'+tg.name"><span>{{ tg.description }}<em v-if="idx != 'TAG' && idx != 'ORDER'">({{ tg.count }})</em></span></label> -->
+                      <label :for="'ckbox_'+tg.name"><span>{{ tg.description }}</span></label>
                     </div>
                   </div>
                 </div>
@@ -1094,7 +1095,7 @@ const isTermStyle = (item: any): { fontWeight: number } | {} => {
 const checkUseFilter = computed(() => { // 상세검색 필터 사용중 여부
   if (showFilterWrap2.value) { // 추가속성필터 사용중인 경우 처리
     return true;
-  } 
+  }
 
   if (classification.value.id == "") { // 카테고리 필터 적용중인 경우 처리
     return false

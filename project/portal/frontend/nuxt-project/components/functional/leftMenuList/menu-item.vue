@@ -30,7 +30,8 @@
         :id="item.id"
         @click="() => onClick(item)"
       >
-        {{ item.description }}&nbsp;&nbsp;[{{ item.tableCount }}]
+      <!-- {{ item.description }}&nbsp;&nbsp;[{{ item.tableCount }}] -->
+      {{ item.description }}
       </a>
       <!-- 메타 데이터 통합 관리 페이지에서 호출 시에만 추가 버튼 세팅 -->
       <button

@@ -19,7 +19,8 @@
         :id="item.id"
         @click="() => onClick(item)"
       >
-        {{ item.description }}&nbsp;&nbsp;[{{ item.tableCount }}]
+      <!-- {{ item.description }}&nbsp;&nbsp;[{{ item.tableCount }}] -->
+      {{ item.description }}
       </a>
       <category-item
         v-if="item.subTypes"
