@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import PageSize from "@/pages/admin/manager/system/user/page-size";
+import PageSize from "@functional/share/page-size";
 import Pagination from "@functional/pagination/pagination";
 import ShareBorderListSearch from "@organisms/share/share-board-list-search";
 import { useNuxtApp, useRouter } from "nuxt/app";
@@ -87,7 +87,7 @@ onMounted(() => getShareList(1));
 
 const pagingObj = ref<PagingObj>({
   total: 0, // 전체 데이터 건수
-  limit: 10, // 한 페이지에 보여줄 데이터 건수
+  limit: 8, // 한 페이지에 보여줄 데이터 건수
   block: 10, // 한 화면에서 보여줄 페이지 수
   currentPage: 1, // 현재 페이지 번호
 });
