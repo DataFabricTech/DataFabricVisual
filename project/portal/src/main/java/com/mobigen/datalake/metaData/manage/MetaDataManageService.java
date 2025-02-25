@@ -21,8 +21,12 @@ import java.util.Map;
 public class MetaDataManageService {
     private final MetaDataManageMapper metaDataManageMapper;
 
-    @Value("${properties.essync.url.updates}")
+    @Value("${properties.ESSync.base_url}")
+    private String esSyncBaseUrl;
+
+    @Value("${properties.ESSync.url.updates}")
     private String esSyncUrlUpdates;
+    
 
     // 메타 데이터 통합 관리 대상 목록 조회
     public Map<String, Object> getMetaDataManageList(Map<String, Object> params) throws Exception {
@@ -95,7 +99,9 @@ public class MetaDataManageService {
             requestBody.put("metaids", meta_ids);
             requestBody.put("event_status", eventStatus); // 1=생성, 2=수정, 3=삭제
             requestBody.put("event_name", eventName);
-            ResponseEntity<HashMap> restResponse = restTemplate.postForEntity(esSyncUrlUpdates, requestBody, HashMap.class);
+
+            String url = esSyncBaseUrl + esSyncUrlUpdates;
+            ResponseEntity<HashMap> restResponse = restTemplate.postForEntity(url, requestBody, HashMap.class);
             if (restResponse != null && restResponse.getBody() != null) {
                 Map<String, Object> body = restResponse.getBody();
                 if (body != null && body.get("result") != null) {

@@ -19,8 +19,11 @@ import lombok.extern.slf4j.Slf4j;
 public class CategoryService {
     private final CategoryMapper categoryMapper;
 
-    @Value("${properties.categorycount.url}")
-    private String categoryCountUrl;
+    @Value("${properties.ESSync.base_url}")
+    private String esSyncBaseUrl;
+
+    @Value("${properties.ESSync.url.categorycount}")
+    private String esSyncUrlCategorycount;
 
     // 좌측 카테고리 리스트 조회
     public List<Map<String, Object>> getCategoryList() {
@@ -260,7 +263,9 @@ public class CategoryService {
         Map<String, Object> restResponse = new HashMap<>();
         try {
             RestTemplate restTemplate = new RestTemplate();
-            restResponse = restTemplate.getForObject(categoryCountUrl, HashMap.class);   
+            
+            String url = esSyncBaseUrl + esSyncUrlCategorycount;
+            restResponse = restTemplate.getForObject(url, HashMap.class);   
         } catch (Exception e) {
             log.error("Fail to Execute Category Count API");
         }

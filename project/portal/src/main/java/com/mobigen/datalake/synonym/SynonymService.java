@@ -49,8 +49,11 @@ public class SynonymService {
     @Value("${properties.activeSendMail.synonym}")
 	public boolean activeSendMail;
 
-    @Value("${properties.synonymsync.url}")
-    public String synonymsyncUrl;
+    @Value("${properties.ESSync.base_url}")
+    private String esSyncBaseUrl;
+
+    @Value("${properties.ESSync.url.synonymsync}")
+    private String esSyncUrlSynonymsync;
     
 
     // 동의어 목록 조회
@@ -874,7 +877,9 @@ public class SynonymService {
 
         try {
             RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<HashMap> restResponse = restTemplate.getForEntity(synonymsyncUrl, HashMap.class);
+
+            String url = esSyncBaseUrl + esSyncUrlSynonymsync;
+            ResponseEntity<HashMap> restResponse = restTemplate.getForEntity(url, HashMap.class);
 
             if (restResponse != null && restResponse.getBody() != null) {
                 Map<String, Object> body = restResponse.getBody();

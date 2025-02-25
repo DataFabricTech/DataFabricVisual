@@ -35,10 +35,10 @@ public class MainPageService {
     private final SessionManager sessionManager;
     private final SearchService searchService;
 
-    @Value("${properties.fastapi.server.host}")
-    private String fastApiHost;
-    @Value("${properties.fastapi.server.port}")
-    private String fastApiPort;
+    @Value("${properties.ESSearch.server.host}")
+    private String esSearchApiHost;
+    @Value("${properties.ESSearch.server.port}")
+    private String esSearchApiPort;
 
     // 추천 검색어 조회
     public Object getRecommendedWordList() throws Exception {
@@ -95,9 +95,9 @@ public class MainPageService {
 
             RestTemplate restTemplate = new RestTemplate();
         
-            // FastAPI의 URL 생성
-            String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/keyword";
-            log.info("call fastapi : " + fastUrl);
+            // esSearch API의 URL 생성
+            String fastUrl = "http://" + esSearchApiHost + ":" + esSearchApiPort + "/api/v1/search/keyword";
+            log.info("call essearch api : " + fastUrl);
 
             HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(params);
             ResponseEntity<HashMap> responseEntity = restTemplate.exchange(fastUrl, HttpMethod.POST, requestEntity, HashMap.class);

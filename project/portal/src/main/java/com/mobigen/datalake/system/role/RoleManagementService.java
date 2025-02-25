@@ -23,7 +23,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 public class RoleManagementService {
     private final RoleManagementMapper roleManagementMapper;
 
-    @Value("${properties.essync.url.roleupdates}")
+    @Value("${properties.ESSync.base_url}")
+    private String esSyncBaseUrl;
+
+    @Value("${properties.ESSync.url.roleupdates}")
     private String esSyncUrlRoleUpdates;
 
     // 권한 관리 리스트 조회
@@ -251,7 +254,8 @@ public class RoleManagementService {
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("roleids", roleIds);
 
-            ResponseEntity<String> restResponse = restTemplate.postForEntity(esSyncUrlRoleUpdates, requestBody, String.class);
+            String url = esSyncBaseUrl + esSyncUrlRoleUpdates;
+            ResponseEntity<String> restResponse = restTemplate.postForEntity(url, requestBody, String.class);
 
             // for debug
             log.info("\n\n\n\n\n\n========================\nrest param : " + requestBody +"\nrest Response : "+ restResponse.getBody() +"\n========================\n\n");

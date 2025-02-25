@@ -20,10 +20,10 @@ import lombok.extern.slf4j.Slf4j;
 public class SearchService {
     private final SearchMapper searchMapper;
 
-    @Value("${properties.fastapi.server.host}")
-    private String fastApiHost;
-    @Value("${properties.fastapi.server.port}")
-    private String fastApiPort;
+    @Value("${properties.ESSearch.server.host}")
+    private String esSearchApiHost;
+    @Value("${properties.ESSearch.server.port}")
+    private String esSearchApiPort;
 
     // 검색 이력 저장
     public void insertSearchTextHistory(Map<String, Object> textHistoryParam) {
@@ -58,9 +58,9 @@ public class SearchService {
             if (guids != null && guids.size() > 0) {
                 RestTemplate restTemplate = new RestTemplate();
             
-                // FastAPI의 URL 생성
-                String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/keywordRef";
-                log.info("call fastapi : " + fastUrl);
+                // esSearch API의 URL 생성
+                String fastUrl = "http://" + esSearchApiHost + ":" + esSearchApiPort + "/api/v1/search/keywordRef";
+                log.info("call essearch api : " + fastUrl);
 
                 Map<String, Object> requestBody = new HashMap<>();
                 requestBody.put("guids", guids);

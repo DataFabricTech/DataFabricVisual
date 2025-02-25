@@ -57,8 +57,11 @@ public class DetailEliminateService {
     @Value("${properties.bigExtractToken}")
     private String bigExtractToken;
 
-    @Value("${properties.bigextract.url}")
-    private String bigExtractUrl;
+    @Value("${properties.DataExtractAPI.base_url}")
+    private String dataExtractApiBaseUrl;
+
+    @Value("${properties.DataExtractAPI.url.largedata}")
+    private String dataExtractApiUrlLargedata;
 
     /**
      * 파일 추출 이력 저장
@@ -515,7 +518,9 @@ public class DetailEliminateService {
 
     public Map<String, Object> bigExtractRequestApi(Map<String, Object> requestBody) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
-        Map<String, Object> restResponse = restTemplate.postForObject(bigExtractUrl, requestBody, HashMap.class);
+
+        String url = dataExtractApiBaseUrl + dataExtractApiUrlLargedata;
+        Map<String, Object> restResponse = restTemplate.postForObject(url, requestBody, HashMap.class);
         return restResponse;
     }
 }

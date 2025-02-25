@@ -40,7 +40,10 @@ public class SearchDetailService {
     @Value("${properties.trino.hikari.jdbc-url}")
     private String trinoJdbcUrl;
 
-    @Value("${properties.essync.url.update}")
+    @Value("${properties.ESSync.base_url}")
+    private String esSyncBaseUrl;
+
+    @Value("${properties.ESSync.url.update}")
     private String esSyncUrlUpdate;
 
     // 데이터 상세 조회
@@ -1011,7 +1014,9 @@ public class SearchDetailService {
             requestBody.put("metaid", params.get("metaid"));
             requestBody.put("event_status", params.get("event_status")); // 1=생성, 2=수정, 3=삭제
             requestBody.put("event_name", params.get("event_name"));
-            restResponse = restTemplate.postForObject(esSyncUrlUpdate, requestBody, HashMap.class);
+
+            String url = esSyncBaseUrl + esSyncUrlUpdate;
+            restResponse = restTemplate.postForObject(url, requestBody, HashMap.class);
         } catch (Exception e) {
             log.error("essyncUpdate API 호출 오류");
         }

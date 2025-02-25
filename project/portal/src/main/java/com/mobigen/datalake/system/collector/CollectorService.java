@@ -36,8 +36,14 @@ public class CollectorService {
   private final ObjectMapper objectMapper;
   private final FileMapper fileMapper;
   
-  @Value("${properties.ingestion.url}")
-  private String ingestionExecuteUrl;
+  @Value("${properties.catalog-api.base_url}")
+  private String catalogApiBaseUrl;
+
+  @Value("${properties.catalog-api.url.execute}")
+  private String catalogApiUrlExecute;
+
+  @Value("${properties.catalog-api.url.dag}")
+  private String catalogApiUrlDag;
 
   @Value("${properties.cryptKey}")
   private String cryptKey;
@@ -199,7 +205,8 @@ public class CollectorService {
   // 수동 수집 실행 POST, system_id는 queryString
   public boolean ingestionExecute(String system_id) throws Exception {
     RestTemplate restTemplate = new RestTemplate();
-    String executeUrl = ingestionExecuteUrl + "/execute?system_id=" + system_id;
+
+    String executeUrl = catalogApiBaseUrl + catalogApiUrlExecute + "?system_id=" + system_id;
 
     Map<String, Object> requestBody = new HashMap<>();
     ResponseEntity<HashMap> responseEntity = restTemplate.postForEntity(executeUrl, requestBody, HashMap.class);
@@ -233,7 +240,7 @@ public class CollectorService {
   // 수집수정 시 DAG 수정 API (PUT)
   private boolean putIngestionDagApi(String system_id) throws Exception {
     RestTemplate restTemplate = new RestTemplate();
-    String executeUrl = ingestionExecuteUrl + "/dag";
+    String executeUrl = catalogApiBaseUrl + catalogApiUrlDag + "/dag";
 
     try {
       HttpHeaders headers = new HttpHeaders();
@@ -256,7 +263,7 @@ public class CollectorService {
   // 수집삭제 시 DAG 삭제 API
   private boolean deleteIngestionDagApi(String system_id) throws Exception {
     RestTemplate restTemplate = new RestTemplate();
-    String executeUrl = ingestionExecuteUrl + "/dag";
+    String executeUrl = catalogApiBaseUrl + catalogApiUrlDag + "/dag";
 
     try {
       HttpHeaders headers = new HttpHeaders();

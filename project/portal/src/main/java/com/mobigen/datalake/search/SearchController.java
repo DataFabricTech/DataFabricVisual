@@ -45,10 +45,10 @@ public class SearchController {
     private final SessionManager sessionManager;
     private final SearchService searchService;
 
-    @Value("${properties.fastapi.server.host}")
-    private String fastApiHost;
-    @Value("${properties.fastapi.server.port}")
-    private String fastApiPort;
+    @Value("${properties.ESSearch.server.host}")
+    private String esSearchApiHost;
+    @Value("${properties.ESSearch.server.port}")
+    private String esSearchApiPort;
 
     // 통합 검색
     @ResponseJsonResult
@@ -65,9 +65,9 @@ public class SearchController {
 
             RestTemplate restTemplate = new RestTemplate();
         
-            // FastAPI의 URL 생성
-            String fastUrl = "http://" + fastApiHost + ":" + fastApiPort + "/api/v1/search/keyword";
-            log.info("call fastapi : " + fastUrl);
+            // esSearch API의 URL 생성
+            String fastUrl = "http://" + esSearchApiHost + ":" + esSearchApiPort + "/api/v1/search/keyword";
+            log.info("call essearch api : " + fastUrl);
 
             HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(param);
             ResponseEntity<HashMap> responseEntity = restTemplate.exchange(fastUrl, HttpMethod.POST, requestEntity, HashMap.class);

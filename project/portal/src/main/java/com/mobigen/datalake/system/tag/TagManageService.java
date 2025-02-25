@@ -24,7 +24,10 @@ public class TagManageService {
   private final TagManageMapper tagManageMapper;
   private final SessionManager sessionManager;
   
-  @Value("${properties.essync.url.update}")
+  @Value("${properties.ESSync.base_url}")
+  private String esSyncBaseUrl;
+
+  @Value("${properties.ESSync.url.update}")
   private String esSyncUrlUpdate;
   
   /**
@@ -126,7 +129,12 @@ public class TagManageService {
 
     //es sync api 호출
     Integer failCount = 0;
-    Map<String, Object> restResponse = essyncUpdate(guid, 2, "카테고리 매핑");
+
+    Map<String, Object> esParam = new HashMap<>();
+    esParam.put("meta_id", guid);
+    esParam.put("event_status", 2);
+    esParam.put("meta_id", "카테고리 매핑");
+    Map<String, Object> restResponse = essyncUpdate(esParam);
     if (!restResponse.isEmpty()) {
         Map<String, String> res = (Map<String, String>) restResponse.get("result");
         if (res.get("result").equals("success")) {
@@ -146,16 +154,18 @@ public class TagManageService {
     return result;
   }
 
-  public Map<String, Object> essyncUpdate(String guid, Integer eventStatus, String eventName) throws Exception {
+  public Map<String, Object> essyncUpdate(Map<String, Object> params) throws Exception {
     Map<String, Object> restResponse = new HashMap<>();
     try {
       RestTemplate restTemplate = new RestTemplate();
       
       Map<String, Object> requestBody = new HashMap<>();
-      requestBody.put("metaid", guid);
-      requestBody.put("event_status", eventStatus); // 1=생성, 2=수정, 3=삭제
-      requestBody.put("event_name", eventName);
-      restResponse = restTemplate.postForObject(esSyncUrlUpdate, requestBody, HashMap.class);
+      requestBody.put("metaid", params.get("meta_id"));
+      requestBody.put("event_status", params.get("event_status")); // 1=생성, 2=수정, 3=삭제
+      requestBody.put("event_name", params.get("event_name"));
+
+      String url = esSyncBaseUrl + esSyncUrlUpdate;
+      restResponse = restTemplate.postForObject(url, requestBody, HashMap.class);
     } catch (Exception e) {
       log.error("essyncUpdate API 호출 오류");
     }
