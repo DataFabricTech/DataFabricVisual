@@ -82,7 +82,7 @@
             <div class="chart-area" id="chartCategory"></div>
             <div class="chart-category-swiper" style="width: 919px; padding: 0 30px 0 40px;">
               <Swiper
-                @swiper="onSwiper"
+                @swiper="onSwiperChartCategory"
                 @mouseenter="controlSwiper(false)"
                 @mouseleave="controlSwiper(true)"
                 @touch-end="controlSwiper(null)"
@@ -334,9 +334,18 @@ const duration = ref(0);
 const touch = ref(false);
 
 // 스와이퍼 로드
-// const onSwiper = (swiper) => {
-//   swiperEl.value = swiper;
-// };
+const onSwiper = (swiper) => {
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        swiper.autoplay.start();
+        observer.disconnect();
+      }
+    },
+    { threshold: 0 }
+  );
+  observer.observe(swiper.el);
+};
 
 // 슬라이드 플레이 컨트롤
 const controlSwiper = (play) => {
@@ -502,7 +511,7 @@ const getMainBannerSubject = async () => {
   })
 }
 
-const onSwiper = (swiper) => {
+const onSwiperChartCategory = (swiper) => {
   const observer = new IntersectionObserver(
     ([entry]) => {
       if (entry.isIntersecting) {
@@ -513,6 +522,7 @@ const onSwiper = (swiper) => {
     { threshold: 0 }
   );
   observer.observe(swiper.el);
+  swiperEl.value = swiper
 };
 
 onMounted(async () => {
