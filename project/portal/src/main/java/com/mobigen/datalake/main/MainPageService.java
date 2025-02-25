@@ -158,7 +158,7 @@ public class MainPageService {
             params.put("meta_id", shareDataList.get(i).get("meta_id"));
     
             // getDetailData 호출
-            Object detailData = searchDetailService.getDetailData(params);
+            Object detailData = searchDetailService.getDetailDataForMain(params);
     
             // detailData가 JSON 형식일 경우 처리
             if (detailData != null) {
@@ -199,7 +199,7 @@ public class MainPageService {
             params.put("meta_id", shareDataList.get(i).get("meta_id"));
     
             // getDetailData 호출
-            Object detailData = searchDetailService.getDetailData(params);
+            Object detailData = searchDetailService.getDetailDataForMain(params);
     
             // detailData가 JSON 형식일 경우 처리
             if (detailData != null) {

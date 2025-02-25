@@ -84,6 +84,28 @@ public class SearchDetailService {
         return result;
     }
 
+    // 데이터 상세 조회
+    public Object getDetailDataForMain(Map<String, Object> params) throws Exception {
+        Map<String, Object> result = searchDetailMapper.getDetailData(params.get("meta_id").toString());
+        if (result != null) {
+            // Postgresql jsonb 타입(JSON 문자열) Map 형태로 변환
+            result.put("attributes", convertJsonbToMap(result.get("attributes")));
+            result.put("business_attributes", convertJsonbToMap(result.get("business_attributes")));
+
+            // _varchar 객체 배열에 있는 값으로 카테고리 정보 조회하여 Map 형태로 변환
+            String[] ids = (String[]) result.get("classifications");
+
+            // 카테고리 정보 목록 조회
+            // 구조 [{ c_id, c_name, c_description }]
+            if (ids != null && ids.length > 0) {
+                List<Map<String, Object>> classificationList = searchDetailMapper.getClassificationList(ids);
+                result.put("classifications", classificationList);
+            }
+        }
+
+        return result;
+    }
+
     // Jsonb => Map 타입 변환 함수
     public Map<String, Object> convertJsonbToMap(Object jsonb) throws Exception {
         if (jsonb != null) {
