@@ -220,7 +220,7 @@ public class CollectorService {
   // 수집등록 시 DAG 등록 API (POST)
   // private boolean addIngestionDagApi(String system_id) throws Exception {
   //   RestTemplate restTemplate = new RestTemplate();
-  //   String executeUrl = ingestionExecuteUrl + "/dag";
+  //   String executeUrl = catalogApiBaseUrl + catalogApiUrlDag;
 
   //   Map<String, Object> requestBody = new HashMap<>();
   //   requestBody.put("system_id", system_id);
@@ -240,7 +240,7 @@ public class CollectorService {
   // 수집수정 시 DAG 수정 API (PUT)
   private boolean putIngestionDagApi(String system_id) throws Exception {
     RestTemplate restTemplate = new RestTemplate();
-    String executeUrl = catalogApiBaseUrl + catalogApiUrlDag + "/dag";
+    String executeUrl = catalogApiBaseUrl + catalogApiUrlDag;
 
     try {
       HttpHeaders headers = new HttpHeaders();
@@ -263,7 +263,7 @@ public class CollectorService {
   // 수집삭제 시 DAG 삭제 API
   private boolean deleteIngestionDagApi(String system_id) throws Exception {
     RestTemplate restTemplate = new RestTemplate();
-    String executeUrl = catalogApiBaseUrl + catalogApiUrlDag + "/dag";
+    String executeUrl = catalogApiBaseUrl + catalogApiUrlDag;
 
     try {
       HttpHeaders headers = new HttpHeaders();

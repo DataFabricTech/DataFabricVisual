@@ -239,6 +239,7 @@ const getMyExtractedDataList = async (offset = 1) => {
         currentPage: offset,
       };
       postList.value = res.data.list;
+      console.log(postList.value)
     } else {
       initListData()
       await errorAlert("조회에 실패하였습니다.")

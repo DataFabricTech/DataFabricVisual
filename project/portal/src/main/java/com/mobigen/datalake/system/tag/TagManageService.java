@@ -133,7 +133,7 @@ public class TagManageService {
     Map<String, Object> esParam = new HashMap<>();
     esParam.put("meta_id", guid);
     esParam.put("event_status", 2);
-    esParam.put("meta_id", "카테고리 매핑");
+    esParam.put("event_name", "카테고리 매핑");
     Map<String, Object> restResponse = essyncUpdate(esParam);
     if (!restResponse.isEmpty()) {
         Map<String, String> res = (Map<String, String>) restResponse.get("result");

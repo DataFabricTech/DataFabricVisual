@@ -27,6 +27,9 @@ public class MetaDataClassificationService {
 
     @Value("${properties.ESSync.url.update}")
     private String esSyncUrlUpdate;
+
+    @Value("${properties.ESSync.url.updates}")
+    private String esSyncUrlUpdates;
     
     @Value("${properties.ESSync.url.convertcategory}")
     private String esSyncUrlConvertcategory;
@@ -353,7 +356,7 @@ public class MetaDataClassificationService {
 
             Map<String, Object> esParam = new HashMap<>();
             esParam.put("meta_id", guid);
-            esParam.put("event_status", 3);
+            esParam.put("event_status", 2);
             esParam.put("event_name", "카테고리 매핑 제거");
             Map<String, Object> restResponse = essyncUpdate(esParam);
 
@@ -509,6 +512,28 @@ public class MetaDataClassificationService {
             restResponse = restTemplate.postForObject(url, requestBody, HashMap.class);
         } catch (Exception e) {
             log.error("Failed essync Update");
+        }
+        
+        return restResponse;
+    }
+
+    public Map<String, Object> essyncUpdates(Map<String, Object> params) throws Exception {
+        Map<String, Object> restResponse = new HashMap<>();
+        List<String> meta_ids = (List<String>) params.get("meta_ids");
+        Integer eventStatus = Integer.parseInt(params.get("event_status").toString());
+        String eventName = params.get("event_name").toString();
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            
+            Map<String, Object> requestBody = new HashMap<>();
+            requestBody.put("metaids", meta_ids);
+            requestBody.put("event_status", eventStatus); // 1=생성, 2=수정, 3=삭제
+            requestBody.put("event_name", eventName);
+
+            String url = esSyncBaseUrl + esSyncUrlUpdates;
+            restResponse = restTemplate.postForObject(url, requestBody, HashMap.class);
+        } catch (Exception e) {
+            log.error("Failed essync Updates");
         }
         
         return restResponse;

@@ -61,7 +61,7 @@ public class CkeditorFileUploadService {
 
       // 경로가 기본 디렉토리를 벗어나지 않도록 확인
 			if (!downloadFile.getCanonicalPath().startsWith(baseDir.getCanonicalPath())) {
-        log.error("Out of default directory path !!");
+        log.info("Out of default directory path !!!!");
         return;
 			}
  
