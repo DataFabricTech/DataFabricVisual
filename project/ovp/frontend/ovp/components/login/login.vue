@@ -48,6 +48,7 @@
                   <button
                     class="text-input-group-action-button button button-neutral-ghost button-sm"
                     type="button"
+                    :title="inpType === 'password' ? '비밀번호 보기' : '비밀번호 숨기기'"
                     @click="isHidePw"
                   >
                     <span class="hidden-text">지우기</span>
