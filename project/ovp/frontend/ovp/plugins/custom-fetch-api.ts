@@ -27,7 +27,9 @@ export default defineNuxtPlugin((nuxtApp: any) => {
       const { response, options } = context;
       const data = response._data;
       if (response.status === 401) {
-        router.push("/portal/login");
+        nuxtApp.$alert("로그아웃 되었습니다.", "info").then(() => {
+          router.push("/portal/login");
+        });
       }
 
       const showLoader = (options as any).showLoader ?? true;
