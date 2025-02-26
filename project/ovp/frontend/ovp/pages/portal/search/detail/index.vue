@@ -132,19 +132,7 @@ const tabOptions = [
   { label: "기본정보", value: "default", component: DefaultInfo },
   { label: "스키마", value: "schema", component: Schema },
   { label: "샘플데이터", value: "sample", component: Sample },
-  { label: "프로파일링", value: "profile", component: Profiling },
-  { label: "쿼리", value: "query", component: Query },
   { label: "데이터 리니지", value: "lineage", component: Lineage },
-  {
-    label: "연관데이터모델 시각화",
-    value: "knowledge",
-    component: KnowledgeGraph,
-  },
-  {
-    label: "추천 데이터 모델",
-    value: "recommended",
-    component: RecommendModel,
-  },
 ];
 
 const initTabValue: Ref<any> = ref("default");
