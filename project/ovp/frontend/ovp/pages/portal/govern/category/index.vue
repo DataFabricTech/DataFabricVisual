@@ -193,6 +193,7 @@
                     :use-list-checkbox="true"
                     :show-owner="true"
                     :show-category="true"
+                    :use-prv-btn="true"
                     :is-box-selected-style="isBoxSelectedStyle"
                     :selected-model-list="selectedModelList"
                     @modelNmClick="modelNmClick"

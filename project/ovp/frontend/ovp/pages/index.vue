@@ -23,7 +23,6 @@
           </div>
           <resource-box-list
             v-else
-            :use-prv-btn="false"
             :data-list="upVotesData"
             :use-list-checkbox="false"
             :show-owner="true"
@@ -53,7 +52,6 @@
         </div>
         <resource-box-list
           v-else
-          :use-prv-btn="false"
           :data-list="lastUpdatedData"
           :use-list-checkbox="false"
           :show-owner="true"
@@ -80,7 +78,6 @@
         </div>
         <resource-box-list
           v-else
-          :use-prv-btn="false"
           :data-list="bookmarkData"
           :use-list-checkbox="false"
           :show-owner="true"

@@ -33,7 +33,7 @@ const selectedList: Ref<Array<string | number>> = ref([]);
 const selectedResourceBoxId: Ref<string | number> = ref("");
 
 const props = withDefaults(defineProps<ResourceBoxListProps>(), {
-  usePrvBtn: true,
+  usePrvBtn: false,
   useFirModelNm: false,
   useListCheckbox: false,
   useDataNmLink: true,

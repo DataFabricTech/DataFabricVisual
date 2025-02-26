@@ -28,6 +28,7 @@
 import { useDataModelDetailStore } from "@/store/search/detail";
 import { storeToRefs } from "pinia";
 import { useRouter, useRoute } from "nuxt/app";
+import ResourceBox from "@/components/common/resource-box/resource-box.vue";
 const dataModelDetailStore = useDataModelDetailStore();
 const { recommendDataModels } = storeToRefs(dataModelDetailStore);
 const router = useRouter();

@@ -282,6 +282,7 @@
         </template>
       </editable-group>
     </div>
+    <button v-show="props.usePrvBtn" @click="previewClick">미리보기</button>
   </div>
 </template>
 
@@ -317,6 +318,7 @@ const props = withDefaults(defineProps<ResourceBoxProps>(), {
     return {};
   },
   useContextBox: false,
+  usePrvBtn: false,
 });
 
 const isChecked = computed(() => {

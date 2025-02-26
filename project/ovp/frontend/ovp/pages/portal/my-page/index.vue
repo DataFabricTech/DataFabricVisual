@@ -44,6 +44,7 @@
               :use-list-checkbox="false"
               :show-owner="true"
               :show-category="true"
+              :use-prv-btn="usePrvBtn"
               :is-box-selected-style="isBoxSelectedStyle"
               @previewClick="previewClick"
               @modelNmClick="modelNmClick"
@@ -78,15 +79,15 @@
 import { storeToRefs } from "pinia";
 import Tab from "@extends/tab/Tab.vue";
 import Loading from "@base/loading/Loading.vue";
-import resourceBoxList from "~/components/common/resource-box/resource-box-list.vue";
-import Preview from "~/components/common/preview/preview.vue";
+import resourceBoxList from "@/components/common/resource-box/resource-box-list.vue";
+import Preview from "@/components/common/preview/preview.vue";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import { useRoute } from "vue-router";
 import { useModal } from "vue-final-modal";
-import profileBox from "~/components/my-page/profile-box.vue";
-import { useMyPageStore } from "~/store/my-page/myPageStore";
+import profileBox from "@/components/my-page/profile-box.vue";
+import { useMyPageStore } from "@/store/my-page/myPageStore";
 import { useUserStore } from "~/store/user/userStore";
-import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { useRouter } from "nuxt/app";
 import pwResetModal from "@/components/my-page/pw-reset-modal.vue";
 
@@ -140,6 +141,9 @@ onMounted(() => {
 
 // 탭 value 초기화
 currentTab.value = "myBookMark";
+
+// 미리보기 show 유무
+const usePrvBtn:Ref = ref(true);
 
 await getTargetUserData(route.query.fqn as string);
 

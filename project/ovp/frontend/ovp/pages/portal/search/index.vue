@@ -28,6 +28,7 @@
             :show-owner="true"
             :show-category="true"
             :is-box-selected-style="isBoxSelectedStyle"
+            :use-prv-btn="true"
             @previewClick="previewClick"
             @modelNmClick="modelNmClick"
           />
@@ -74,7 +75,7 @@ import DataFilter from "@/components/search/data-filter.vue";
 
 import TopBar from "./top-bar.vue";
 import { useRouter } from "nuxt/app";
-import { useLayoutHeaderStore } from "~/store/layout/header";
+import { useLayoutHeaderStore } from "@/store/layout/header";
 import { useMenuStore } from "@/store/common/menu";
 
 const router = useRouter();
