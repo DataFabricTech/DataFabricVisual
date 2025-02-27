@@ -80,7 +80,7 @@
               <th></th>
               <td></td>
               <th>Thrift port</th>
-              <td colspan="3"><input type="number" v-model="currentCollector.hive_thrift_port" :title="currentCollector.password" class="mu-input" :readonly="isDetail"></td>
+              <td colspan="3"><input type="number" v-model="currentCollector.hive_thrift_port" :title="currentCollector.hive_thrift_port" class="mu-input" :readonly="isDetail"></td>
             </tr>
             <tr v-if="currentCollector.system_type.toUpperCase().includes('HIVE') && !isDetail">
               <th></th>
