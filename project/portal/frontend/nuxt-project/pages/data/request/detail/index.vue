@@ -107,7 +107,7 @@
               <div class="reply-head">
                 <h4><i class="mu-icon-svg complete"></i> 처리내용</h4>
                 <div class="mu-item-group">
-                  <em class="step-process supply">제공</em>
+                  <em :class="getProcessStyle(item)">{{ getProcessStatus(item) }}</em>
                 </div>
               </div>
               <!-- reply-box : 관리자답변보기 -->
