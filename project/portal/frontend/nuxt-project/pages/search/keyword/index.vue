@@ -515,7 +515,7 @@ const entityFilterCondition = ref({
   ],
   condition2: [
     { name: '=', description: '=' },
-    { name: '=', description: '!=' },
+    { name: '!=', description: '!=' },
     { name: 'isNull', description: 'isNull' },
     { name: 'notNull', description: 'notNull' }
   ],
