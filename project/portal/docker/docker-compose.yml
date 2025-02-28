@@ -1,12 +1,12 @@
 version: '0.1'
 
 services:
-  DataCatalogPortal:
+  data-catalog-portal:
     build:
       context: ../
       dockerfile: docker/Dockerfile
     image: data-catalog-portal:0.1
-    container_name: DataCatalogPortal
+    container_name: data-catalog-portal
     ports:
       - "443:443"
       - "38080:80"
