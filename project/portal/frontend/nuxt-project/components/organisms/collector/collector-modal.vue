@@ -369,6 +369,11 @@ const getSystemTypes = async () => {
 
 // 시스템 ID 중복확인
 const systemIdDupCheck = async (system_id) => {
+  if (!props.isUpdate && !props.isDetail && currentCollector.value.system_id.includes(" ")) { // 공백 여부
+    errorAlert("시스템 ID 값은 공백이 포함될 수 없습니다.")
+    return false;
+  }
+
   await $ofetch(`/api/admin/system/collector/systemIdDupCheck?system_id=${system_id}`).then((res) => {
     if (res && res.data) {
       isCheckSystemIdDup.value = true
@@ -424,6 +429,9 @@ const isValidInput = () => {
   if (!props.isUpdate && !currentCollector.value.system_id || currentCollector.value.system_id == '') { // 시스템 ID
     errorAlert("시스템 ID 값을 입력해 주세요.")
     return false
+  } else if (!props.isUpdate && !props.isDetail && currentCollector.value.system_id.includes(" ")) { // 공백 여부
+    errorAlert("시스템 ID 값은 공백이 포함될 수 없습니다.")
+    return false;
   }
   if (!currentCollector.value.host || currentCollector.value.host == '') { // Host
     errorAlert("Host 값을 입력해 주세요.")
