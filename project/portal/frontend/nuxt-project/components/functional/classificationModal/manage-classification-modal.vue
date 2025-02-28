@@ -79,12 +79,12 @@
                 <div class="mu-item-group">
                   <img v-if="categoryImageFile"
                     :src="categoryImageFile"
-                    style="width: 70px; height: 70px; background-size: cover"
+                    style="width: 70px; height: 70px; background-color: #0D2254; background-size: cover"
                     :class="['ico-category', 'category-11']"
                   />
                   <img v-else
                     src="/category_basic.png"
-                    style="width: 70px; height: 70px; background-size: cover"
+                    style="width: 70px; height: 70px; background-color: #0D2254; background-size: cover"
                     :class="['ico-category', 'category-11']"
                   />
                   <input
