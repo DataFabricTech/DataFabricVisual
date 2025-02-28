@@ -5,7 +5,7 @@ services:
     build:
       context: ../
       dockerfile: docker/Dockerfile
-    image: data-catalog-portal:0.1
+    image: data-catalog-portal:$DATA_CATALOG_PORTAL_IMG_VERSION
     container_name: data-catalog-portal
     ports:
       - "443:443"
