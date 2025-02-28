@@ -16,4 +16,5 @@ services:
       - $DATA_CATALOG_SOLUTION_DATA/data-catalog-portal/keystore:/data_catalog_portal/keystore
       - $DATA_CATALOG_SOLUTION_DATA/data-catalog-portal/logs:/data_catalog_portal/logs
       - $DATA_CATALOG_SOLUTION_DATA/ingestion/system_config:/data_catalog_portal/data/hive_system_config
+    working_dir: /data_catalog_portal
     command: ["sh", "-c", "set -e; /data_catalog_portal/docker_start.sh"]
