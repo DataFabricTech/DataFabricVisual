@@ -57,7 +57,7 @@
               <th scope="row">보내는 사람<strong class="required">필수</strong></th>
               <td>
                 <div class="tags-group">
-                    <div v-if="props.post.sender && props.post.sender.length > 0 && props.post.sender.some(sender => sender.name && sender.email)" id="sender-tags" 
+                    <div v-if="props.post.sender && props.post.sender.length > 0 && props.post.sender.some(sender => sender.name && sender.email)" id="sender-tags"
                          v-for="sender in props.post.sender" :key="sender.email" class="tag tag-sm">
                         <span class="mail-label">{{ sender.name }} {{ sender.email }}</span>
                         <button type="button" class="mu-btn mu-btn-delete" @click="onRemoveSender(sender)">
@@ -75,7 +75,7 @@
               <th scope="row">받는 사람</th>
               <td>
                 <div id="receiver-tags" class="tags-group">
-                  <div v-if="props.post.receiver && props.post.receiver.length > 0 && props.post.receiver.some(receiver => receiver.name && receiver.email)" 
+                  <div v-if="props.post.receiver && props.post.receiver.length > 0 && props.post.receiver.some(receiver => receiver.name && receiver.email)"
                        v-for="receiver in props.post.receiver" :key="receiver" class="tag tag-sm">
                       <span class="mail-label">{{ receiver.name }} {{ receiver.email }}</span>
                       <button type="button" class="mu-btn mu-btn-delete" @click="onRemoveReceiver(receiver)">
@@ -93,7 +93,7 @@
               <th scope="row">참조</th>
               <td>
                 <div class="tags-group">
-                  <div v-if="props.post.cc_recipients && props.post.cc_recipients.length > 0 && props.post.cc_recipients.some(recipient => recipient.name && recipient.email)" id="cc-recipients-tags" 
+                  <div v-if="props.post.cc_recipients && props.post.cc_recipients.length > 0 && props.post.cc_recipients.some(recipient => recipient.name && recipient.email)" id="cc-recipients-tags"
                        v-for="cc_recipient in props.post.cc_recipients" :key="cc_recipient" class="tag tag-sm">
                       <span class="mail-label">{{ cc_recipient.name }} {{ cc_recipient.email }}</span>
                       <button type="button" class="mu-btn mu-btn-delete" @click="onRemoveCcRecipient(cc_recipient)">
@@ -143,12 +143,12 @@
                 </div>
               </td>
             </tr>
-            <tr>
+            <!-- <tr>
               <th scope="row">SMS 메세지</th>
               <td>
                 <textarea rows="10" placeholder="SMS 발송 메세지를 입력해주세요." title="SMS 발송 메세지 입력" class="mu-area h80" v-model="props.post.template_sms_content">{{ props.post.template_sms_content }}</textarea>
               </td>
-            </tr>
+            </tr> -->
             <tr>
               <th scope="row">사용여부</th>
               <td>
@@ -258,7 +258,7 @@ const onClickListButton = (): void => {
 
 const onClickSaveButton = (): void => {
   // required_flag.value = true;
-  if (   !templateId_Valid.value 
+  if (   !templateId_Valid.value
       || !templateTitle_Valid.value
       || !templateSender_Valid.value
       // || !templateReceiver_Valid.value
@@ -270,7 +270,7 @@ const onClickSaveButton = (): void => {
   emit("saveMethod");
 };
 
-// 
+//
 const onToggleDeptModal = (type: string) => {
   select_user_type.value = type;
 
@@ -281,7 +281,7 @@ const onToggleDeptModal = (type: string) => {
   }
 };
 
-// 
+//
 const onSelectDept = (info) => {
   if(info.length > 0){
     let i = 0;
@@ -314,27 +314,27 @@ const onSelectDept = (info) => {
   }
 };
 
-// 
+//
 const onRemoveSender = (sender) => {
   props.post.sender.splice(props.post.sender.indexOf(sender), 1);
 }
 
-// 
+//
 const onRemoveReceiver = (receiver) => {
   props.post.receiver.splice(props.post.receiver.indexOf(receiver), 1);
 }
 
-// 
+//
 const onRemoveCcRecipient = (cc_recipient) => {
   props.post.cc_recipients.splice(props.post.cc_recipients.indexOf(cc_recipient), 1);
 }
 
-// 
+//
 const onRemoveBccRecipient = (bcc_recipient) => {
   props.post.bcc_recipients.splice(props.post.bcc_recipients.indexOf(bcc_recipient), 1);
 }
 
-// 
+//
 const onRemoveVariable = (variable) => {
   props.post.template_variables.splice(props.post.template_variables.indexOf(variable), 1);
 }
@@ -349,11 +349,11 @@ const onAddVariable = () => {
 
   props.post.template_variables = props.post.template_variables.filter(v => v !== null && v !== '');
 
-  // 
+  //
   if (!props.post.template_variables.includes(variable)) {
     props.post.template_variables.push(variable);
 
-    // 
+    //
     document.getElementById('variable').value = '';
   }
 }

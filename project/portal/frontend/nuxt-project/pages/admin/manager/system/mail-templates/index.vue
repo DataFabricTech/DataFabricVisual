@@ -37,10 +37,10 @@
                 </fieldset>
                 </form>
             </div>
-  
+
             <page-size v-model:pageSize="pagingObj.limit" @searchMethod="getSearch" />
           </div>
-  
+
           <div class="board-list">
             <table class="mu-grid">
               <colgroup>
@@ -50,7 +50,7 @@
                 <col style="width: 140px" />
                 <col style="width: 140px" />
                 <col style="width: 60px" />
-                <col style="width: 60px" />
+                <!-- <col style="width: 60px" /> -->
               </colgroup>
               <thead>
                 <tr>
@@ -65,7 +65,7 @@
                   <th scope="col">발신자</th>
                   <th scope="col">수신자</th>
                   <th scope="col">사용 여부</th>
-                  <th scope="col">전송</th>
+                  <!-- <th scope="col">전송</th> -->
                 </tr>
               </thead>
               <tbody>
@@ -102,11 +102,11 @@
                     </div>
                   </td>
                   <td>{{item.use_yn}}</td>
-                  <td>
+                  <!-- <td>
                     <button type="button" class="mu-btn mu-btn-sm" @click="onClickSendButton(item)">
                       <span>전송</span>
                     </button>
-                  </td>
+                  </td> -->
                 </tr>
                 <tr v-if="mailTemplateList.length === 0">
                   <td colspan="7">
@@ -116,10 +116,10 @@
               </tbody>
             </table>
           </div>
-  
+
           <pagination :paging="pagingObj" @onClickPage="onClickPage" />
         </div>
-  
+
         <!-- mu-button-wrap -->
         <div class="mu-button-wrap">
           <button type="button" class="mu-btn mu-btn-lg" @click="onClickDeleteButton">
@@ -143,7 +143,7 @@
         @onCloseModal="onClickMenuManageButton"
       />
   </template>
-  
+
   <script setup lang="ts">
   import PageSize from "@/pages/admin/manager/user/page-size";
   import Pagination from "@functional/pagination/pagination";
@@ -152,25 +152,25 @@
   import { onMounted, ref } from "vue";
 
   import TemplateMailSendModal from "@/pages/admin/manager/system/mail-templates/template-mail-sendModal";
-  
+
   definePageMeta({
     name: "AdminManagerMailTemplates",
     layout: "admin",
   });
-  
+
   const { $ofetch } = useNuxtApp();
   const router = useRouter();
 
   const visibleMailTemplateManageModal = ref(false);
   const modalParam = ref({})
-  
+
   interface PagingObj {
     total: number;
     limit: number;
     block: number;
     currentPage: number;
   }
-  
+
   interface Post {
     admin_reply_status: boolean;
     category: string;
@@ -188,23 +188,23 @@
     writer: string;
     selected?: boolean;
   }
-  
+
   interface SearchObj {
     searchType: string;
     searchWord: string;
   }
-  
+
   onMounted(() => {
     getSearch();
   });
-  
+
   const pagingObj = ref<PagingObj>({
     total: 0,
     limit: 10,
     block: 10,
     currentPage: 1,
   });
-  
+
   const mailTemplateList = ref<Array<Post>>([]);
   const checkedList = ref<Array<number>>([]);
   const allChecked = ref<boolean>(false);
@@ -212,8 +212,8 @@
     searchType: "all",
     searchWord: "",
   });
-  
-  // 
+
+  //
   const getSearch = async (offset: number = 1): Promise<void> => {
     try {
         await $ofetch(`/api/admin/system/mailTemplate/getMailTemplateList?pageSize=${pagingObj.value.limit}&pnum=${offset}&searchType=${searchObj.value.searchType}&searchWord=${searchObj.value.searchWord}`)
@@ -240,7 +240,7 @@
                             const validRecipients = item[property].map(recipient => {
                                 return recipient === '[]' || (Array.isArray(recipient) && recipient.length === 0) ? null : recipient;
                             }).filter(recipient => recipient != null && recipient !== '');
-                            
+
                             if (validRecipients.length > 0) {
                                 item[property] = parseSenders(validRecipients);
                             }
@@ -264,20 +264,20 @@
       console.log(error);
     }
   };
-  
+
   // 삭제버튼 클릭
   const onClickDeleteButton = async (): Promise<void> => {
     if (checkedList.value.length < 1) {
       await errorAlert("한건이상 체크후 삭제하시기 바랍니다.");
       return;
     }
-  
+
     if (!(await confirmAlert("정말로 삭제하시겠습니까?"))) return;
-  
+
     let param = {
       deleteList: checkedList.value,
     };
-  
+
     $ofetch("/api/admin/system/mailTemplate/deleteMailTemplate", {
       method: "POST",
       body: param,
@@ -292,7 +292,7 @@
       }
     });
   };
-  
+
   // 전체선택 체크박스 클릭
   const checkedAll = (checked: boolean): void => {
     allChecked.value = checked;
@@ -306,7 +306,7 @@
       }
     }
   };
-  
+
   // 체크박스 클릭
   const selected = (templateId: number): void => {
     const selectedItem = mailTemplateList.value.find((v) => v.template_id == templateId);
@@ -318,7 +318,7 @@
         1
       );
     }
-  
+
     for (let i in mailTemplateList.value) {
       if (!mailTemplateList.value[i].selected) {
         allChecked.value = false;
@@ -328,27 +328,27 @@
       }
     }
   };
-  
+
   // 추가버튼 클릭
   const onClickRegisterButton = (): void => {
     router.push("/admin/manager/system/mail-templates/detail?template_id=&mode=add");
   };
-  
+
   // 페이지 번호 클릭
   const onClickPage = (page: number): void => {
     getSearch(page);
   };
-  
-  // 
+
+  //
   const onClickSendButton = (item: any): void => {
     onClickMenuManageButton(item, "send");
   }
 
-  // 
+  //
   const onClickMenuManageButton = (item: any, type: any) => {
     try {
       visibleMailTemplateManageModal.value = !visibleMailTemplateManageModal.value;
-      
+
       if(item != null){
         modalParam.value = {template_id: item.template_id, sender: [], receiver: [], cc_recipients: [], bcc_recipients: [], variables: []};
       }
@@ -357,4 +357,3 @@
     }
   }
   </script>
-  
