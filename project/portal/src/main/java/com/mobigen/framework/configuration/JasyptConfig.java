@@ -3,24 +3,20 @@ package com.mobigen.framework.configuration;
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.mobigen.framework.utility.AESGCMEncryptor;
+
 @Configuration
 public class JasyptConfig {
+    @Value("${properties.cryptKey}")
+    private String SECRET_KEY;
 
+    // 서버와 공통으로 사용하는 암호화 AES GCM Nopadding
     @Bean("jasyptStringEncryptor")
-    public StringEncryptor stringEncryptor() {
-        PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
-        SimpleStringPBEConfig config = new SimpleStringPBEConfig();
-        config.setPassword("datalakeEnc"); //암호화에 사용할 키 -> 중요
-        config.setAlgorithm("PBEWithMD5AndDES"); //사용할 알고리즘
-        config.setKeyObtentionIterations("1000");
-        config.setPoolSize("1");
-        config.setProviderName("SunJCE");
-        config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
-        config.setStringOutputType("base64");
-        encryptor.setConfig(config);
-        return encryptor;
+    public StringEncryptor stringEncryptor() throws Exception {
+        return new AESGCMEncryptor(SECRET_KEY);
     }
 }

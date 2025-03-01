@@ -3,24 +3,21 @@ package com.mobigen.datalake;
 import com.mobigen.framework.iris.IRISProperties;
 import com.mobigen.framework.iris.Token;
 import com.mobigen.framework.test.AbstractRestDocTest;
+import com.mobigen.framework.utility.AESGCMEncryptor;
+
 import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.web.servlet.ResultActions;
-
-import jakarta.servlet.http.Cookie;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 
 class DataLakeApplicationTests extends AbstractRestDocTest {
+    @Value("${properties.cryptKey}")
+    private String SECRET_KEY;
+
     @Autowired
     private Token token;
 
@@ -35,52 +32,26 @@ class DataLakeApplicationTests extends AbstractRestDocTest {
 
     // 설정파일 암호화
     @Test
-    void testEnc(){
+    void testEnc() throws Exception {
         // 암호화
-        String postgresUsername = "<DB_USER>";
+        StringEncryptor encryptor = stringEncryptor();
+
         String postgresPassword = "<PASSWORD>";
-
-        String keystorePassword = "<PASSWORD>";
-        
-        String atlasUsername = "admin";
-        String atlasPassword = "<PASSWORD>";
-
-        String trinoUsername = "<USER>";
-
-        String superAdminPassword = "<PASSWORD>";
-
-        String tempuserPasswordList = "<PASSWORD>";
+        String encryptedString = encryptor.encrypt(postgresPassword);
         System.out.println("=========== 암호화 내역 ====================");
-        System.out.println("postgres username : " + stringEncryptor().encrypt(postgresUsername));
-        System.out.println("postgres password : " + stringEncryptor().encrypt(postgresPassword));
-        System.out.println("keystore password : " + stringEncryptor().encrypt(keystorePassword));
-        System.out.println("atlas username : " + stringEncryptor().encrypt(atlasUsername));
-        System.out.println("atlas password : " + stringEncryptor().encrypt(atlasPassword));
-        System.out.println("trino username : " + stringEncryptor().encrypt(trinoUsername));
-        System.out.println("SuperAdmin password : " + stringEncryptor().encrypt(superAdminPassword));
-        System.out.println("dpadmin password : " + stringEncryptor().encrypt(superAdminPassword));
-        System.out.println("dpuser01 password : " + stringEncryptor().encrypt(superAdminPassword));
-        System.out.println("dpuser02 password : " + stringEncryptor().encrypt(superAdminPassword));
-        System.out.println("tempuser passwordList : " + stringEncryptor().encrypt(tempuserPasswordList));
+        System.out.println("postgres password : " + encryptedString);
         System.out.println("==========================================");
 
         // 복호화가 필요한 경우 다음과 같이 사용
-        // String encValue = "value";
-        // System.out.println(stringEncryptor().decrypt(encValue));
+        String decryptedString = encryptor.decrypt(encryptedString);
+        System.out.println("=========== 복호화 내역 ====================");
+        System.out.println("postgres password : " + decryptedString);
+        System.out.println("==========================================");
     }
 
     // 암호화 메서드
-    public StringEncryptor stringEncryptor() {
-        PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
-        SimpleStringPBEConfig config = new SimpleStringPBEConfig();
-        config.setPassword("datalakeEnc");
-        config.setAlgorithm("PBEWithMD5AndDES"); //사용할 알고리즘
-        config.setKeyObtentionIterations("1000");
-        config.setPoolSize("1");
-        config.setProviderName("SunJCE");
-        config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
-        encryptor.setConfig(config);
-        return encryptor;
+    public StringEncryptor stringEncryptor() throws Exception {
+        return new AESGCMEncryptor(SECRET_KEY);
     }
 
     @Test

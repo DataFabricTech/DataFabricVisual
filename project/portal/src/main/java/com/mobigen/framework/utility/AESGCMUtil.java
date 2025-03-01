@@ -38,15 +38,13 @@ public class AESGCMUtil {
         cipher.init(Cipher.ENCRYPT_MODE, secretKey, parameterSpec);
         byte[] encryptedData = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
 
-        // 암호문에서 태그를 추출
+        // 암호문에서 태그, 암호문 추출
         byte[] authTag = new byte[GCM_TAG_LENGTH];
-        System.arraycopy(encryptedData, encryptedData.length - GCM_TAG_LENGTH, authTag, 0, GCM_TAG_LENGTH);
-
-        // 암호문에서 태그를 제외한 부분 추출
         byte[] cipherTextWithoutTag = new byte[encryptedData.length - GCM_TAG_LENGTH];
+        System.arraycopy(encryptedData, encryptedData.length - GCM_TAG_LENGTH, authTag, 0, GCM_TAG_LENGTH);
         System.arraycopy(encryptedData, 0, cipherTextWithoutTag, 0, cipherTextWithoutTag.length);
 
-        // **IV + 태그 + 암호문** 순서로 조합
+        // **Python과 연동을 위해 IV + 태그 + 암호문 순서로 재조합
         byte[] result = new byte[GCM_IV_LENGTH + GCM_TAG_LENGTH + cipherTextWithoutTag.length];
         System.arraycopy(iv, 0, result, 0, GCM_IV_LENGTH); // IV 복사
         System.arraycopy(authTag, 0, result, GCM_IV_LENGTH, GCM_TAG_LENGTH); // 태그 복사
@@ -55,22 +53,35 @@ public class AESGCMUtil {
         return Base64.getEncoder().encodeToString(result);
     }
 
-    // AES-GCM 복호화 (암호문에서 IV 추출)
+    // AES-GCM 복호화
     public String decrypt(String encryptedBase64) throws Exception {
+        // Base64 디코딩을 통해 암호화된 데이터를 바이트 배열로 변환
         byte[] encryptedDataWithIv = Base64.getDecoder().decode(encryptedBase64);
-
-        // IV와 암호문 분리
+    
+        // IV와 암호문 분리 (암호문 앞부분이 IV, 뒤에는 태그 + 암호문)
         byte[] iv = new byte[GCM_IV_LENGTH];
         byte[] encryptedData = new byte[encryptedDataWithIv.length - GCM_IV_LENGTH];
+        System.arraycopy(encryptedDataWithIv, 0, iv, 0, GCM_IV_LENGTH); // IV 추출
+        System.arraycopy(encryptedDataWithIv, GCM_IV_LENGTH, encryptedData, 0, encryptedData.length); // 암호문 + 인증 태그 추출
+    
+        // 태그, 암호문 분리
+        byte[] authTag = new byte[GCM_TAG_LENGTH];
+        byte[] cipherTextWithoutTag = new byte[encryptedData.length - GCM_TAG_LENGTH];
+        System.arraycopy(encryptedData, 0, authTag, 0, GCM_TAG_LENGTH); // 인증 태그
+        System.arraycopy(encryptedData, GCM_TAG_LENGTH, cipherTextWithoutTag, 0, encryptedData.length - GCM_TAG_LENGTH); // 암호문
 
-        System.arraycopy(encryptedDataWithIv, 0, iv, 0, GCM_IV_LENGTH);
-        System.arraycopy(encryptedDataWithIv, GCM_IV_LENGTH, encryptedData, 0, encryptedData.length);
-
+        // **Java에서는 복호화 시 암호문+태그 순서로 조합한 데이터를 복호화 요청해야함
+        byte[] newEncryptedData = new byte [GCM_TAG_LENGTH + cipherTextWithoutTag.length];
+        System.arraycopy(cipherTextWithoutTag, 0, newEncryptedData, 0, cipherTextWithoutTag.length);
+        System.arraycopy(authTag, 0, newEncryptedData, cipherTextWithoutTag.length, GCM_TAG_LENGTH);
+    
         // AES-GCM 복호화 수행
         Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
-        GCMParameterSpec parameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, iv);
+        GCMParameterSpec parameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, iv); // GCMTagLength는 비트 단위
         cipher.init(Cipher.DECRYPT_MODE, secretKey, parameterSpec);
-
-        return new String(cipher.doFinal(encryptedData), StandardCharsets.UTF_8);
+    
+        byte[] decryptedData = cipher.doFinal(newEncryptedData); // 복호화
+    
+        return new String(decryptedData, StandardCharsets.UTF_8); // 결과를 문자열로 변환
     }
 }
