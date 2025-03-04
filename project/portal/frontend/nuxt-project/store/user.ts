@@ -223,6 +223,13 @@ export const useUserStore = defineStore('userStore', () => {
       }
     }
 
+    // 상세조회의 경우 ? 쿼리스트링 없는 값 추가
+    if (targetMenu.currentPath.includes('/search/detail')) {
+      targetMenu.currentPath = targetMenu.currentPath.split('?')[0]
+      targetMenu.currentPathDepth1 = "데이터 검색";
+      targetMenu.currentPathDepth2 = "상세 조회";
+    }
+
     return { targetMenu, menuId };
   };
 
