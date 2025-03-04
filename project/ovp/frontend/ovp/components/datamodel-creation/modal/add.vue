@@ -54,7 +54,8 @@
                   :show-category="true"
                   :use-data-nm-link="true"
                   :use-context-box="false"
-                  @model-nm-click="clickRecommendDataModel"
+                  :use-detail-btn="true"
+                  @open-detail-page="openDetailPage"
                 />
               </template>
             </div>
@@ -84,6 +85,7 @@ import AddDetailGrid from "~/components/datamodel-creation/modal/add-detail-grid
 import RecommendModel from "@/components/search/detail-tab/recommend-model.vue";
 
 import { useRouter } from "nuxt/app";
+import ResourceBox from "~/components/common/resource-box/resource-box.vue";
 
 const router = useRouter();
 
@@ -147,19 +149,18 @@ const onCloseModal = () => {
   infiniteScrollSettingDone.value = false;
 };
 
-const clickRecommendDataModel = (data: object) => {
+function openDetailPage(data: object) {
   const { id, fqn, type } = data as { id: string; fqn: string; type: string };
-
   const queryParams = new URLSearchParams({
     type,
     id,
     fqn,
   }).toString();
 
-  const detailPath = "/portal/search/detail";
-  const fullPath = `${detailPath}?${queryParams}`;
+  const fullPath = `/portal/search/detail?${queryParams}`;
 
   window.open(fullPath, "_blank", "noopener,noreferrer");
-};
+}
+
 </script>
 <style lang="scss" scoped></style>

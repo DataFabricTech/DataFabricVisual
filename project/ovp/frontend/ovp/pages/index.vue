@@ -23,13 +23,13 @@
           </div>
           <resource-box-list
             v-else
-            :use-prv-btn="false"
             :data-list="upVotesData"
             :use-list-checkbox="false"
             :show-owner="true"
             :show-category="true"
             :is-box-selected-style="false"
-            @modelNmClick="modelNmClick"
+            :use-detail-btn="true"
+            @open-detail-page="openDetailPage"
           />
         </div>
       </div>
@@ -53,7 +53,6 @@
         </div>
         <resource-box-list
           v-else
-          :use-prv-btn="false"
           :data-list="lastUpdatedData"
           :use-list-checkbox="false"
           :show-owner="true"
@@ -80,7 +79,6 @@
         </div>
         <resource-box-list
           v-else
-          :use-prv-btn="false"
           :data-list="bookmarkData"
           :use-list-checkbox="false"
           :show-owner="true"
@@ -133,17 +131,18 @@ const setSearchConditionUrl = (item: string) => {
   });
 };
 
-const modelNmClick = (data: object) => {
+function openDetailPage(data: object) {
   const { id, fqn, type } = data as { id: string; fqn: string; type: string };
-  router.push({
-    path: "/portal/search/detail",
-    query: {
-      id: id,
-      fqn: fqn,
-      type: type,
-    },
-  });
-};
+  const queryParams = new URLSearchParams({
+    type,
+    id,
+    fqn,
+  }).toString();
+
+  const fullPath = `/portal/search/detail?${queryParams}`;
+
+  window.open(fullPath, "_blank", "noopener,noreferrer");
+}
 
 onMounted(() => {
   if (loader.value) {

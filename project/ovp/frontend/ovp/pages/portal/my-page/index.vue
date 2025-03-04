@@ -44,9 +44,11 @@
               :use-list-checkbox="false"
               :show-owner="true"
               :show-category="true"
+              :use-prv-btn="usePrvBtn"
+              :use-detail-btn="useDetailBtn"
               :is-box-selected-style="isBoxSelectedStyle"
               @previewClick="previewClick"
-              @modelNmClick="modelNmClick"
+              @open-detail-page="openDetailPage"
             />
             <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
             <Loading
@@ -78,15 +80,15 @@
 import { storeToRefs } from "pinia";
 import Tab from "@extends/tab/Tab.vue";
 import Loading from "@base/loading/Loading.vue";
-import resourceBoxList from "~/components/common/resource-box/resource-box-list.vue";
-import Preview from "~/components/common/preview/preview.vue";
+import resourceBoxList from "@/components/common/resource-box/resource-box-list.vue";
+import Preview from "@/components/common/preview/preview.vue";
 import SearchInput from "@extends/search-input/SearchInput.vue";
 import { useRoute } from "vue-router";
 import { useModal } from "vue-final-modal";
-import profileBox from "~/components/my-page/profile-box.vue";
-import { useMyPageStore } from "~/store/my-page/myPageStore";
-import { useUserStore } from "~/store/user/userStore";
-import { useIntersectionObserver } from "~/composables/intersectionObserverHelper";
+import profileBox from "@/components/my-page/profile-box.vue";
+import { useMyPageStore } from "@/store/my-page/myPageStore";
+import { useUserStore } from "@/store/user/userStore";
+import { useIntersectionObserver } from "@/composables/intersectionObserverHelper";
 import { useRouter } from "nuxt/app";
 import pwResetModal from "@/components/my-page/pw-reset-modal.vue";
 
@@ -141,6 +143,10 @@ onMounted(() => {
 // 탭 value 초기화
 currentTab.value = "myBookMark";
 
+// 미리보기버튼 / 상세보기버튼 사용유무
+const usePrvBtn:Ref = ref(true);
+const useDetailBtn:Ref = ref(true);
+
 await getTargetUserData(route.query.fqn as string);
 
 const tabOptions = [
@@ -182,17 +188,18 @@ const previewClick = async (data: object) => {
   previewIndex = type;
 };
 
-const modelNmClick = (data: object) => {
+function openDetailPage(data: object) {
   const { id, fqn, type } = data as { id: string; fqn: string; type: string };
-  router.push({
-    path: "/portal/search/detail",
-    query: {
-      type: type,
-      id: id,
-      fqn: fqn,
-    },
-  });
-};
+  const queryParams = new URLSearchParams({
+    type,
+    id,
+    fqn,
+  }).toString();
+
+  const fullPath = `/portal/search/detail?${queryParams}`;
+
+  window.open(fullPath, "_blank", "noopener,noreferrer");
+}
 
 const { scrollTrigger, setScrollOptions } = useIntersectionObserver({
   callback: addSearchList,

@@ -78,6 +78,7 @@ export const useMyPageStore = defineStore("my-page", () => {
 
   const changeTab = async (item: string) => {
     currentTab.value = item;
+    isShowPreview.value = false; // 미리보기 창 닫기
     resetReloadList();
   };
 
