@@ -283,6 +283,7 @@
       </editable-group>
     </div>
     <button v-show="props.usePrvBtn" @click="previewClick">미리보기</button>
+    <button v-show="props.useDetailBtn" @click="openDetailPage">상세보기</button>
   </div>
 </template>
 
@@ -319,6 +320,7 @@ const props = withDefaults(defineProps<ResourceBoxProps>(), {
   },
   useContextBox: false,
   usePrvBtn: false,
+  useDetailBtn: false,
 });
 
 const isChecked = computed(() => {
@@ -345,7 +347,7 @@ const newData: ComputedRef<DataModel> = computed(() => {
 
 const emit = defineEmits<{
   (e: "previewClick", data: object): void;
-  (e: "modelNmClick", data: object): void;
+  (e: "openDetailPage", data: object): void;
   (e: "checked", data: any): void;
   (e: "editIconClick", id: string): void;
   (e: "editDoneForModel", data: object): void;
@@ -357,9 +359,16 @@ const previewClick = () => {
     emit("previewClick", props.dataObj);
   }
 };
+
 const modelNmClick = () => {
-  emit("modelNmClick", props.dataObj);
+  emit("openDetailPage", props.dataObj);
 };
+
+const openDetailPage = () => {
+  if(props.useDetailBtn) {
+    modelNmClick();
+  }
+}
 
 const editCancel = (key: string) => {
   tempData.value[key] = newData.value[key];

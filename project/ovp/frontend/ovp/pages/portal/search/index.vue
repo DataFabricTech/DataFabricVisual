@@ -29,8 +29,8 @@
             :show-category="true"
             :is-box-selected-style="isBoxSelectedStyle"
             :use-prv-btn="true"
+            :use-detail-btn="true"
             @previewClick="previewClick"
-            @modelNmClick="modelNmClick"
           />
           <!-- NOTE "scrollTrigger" -> useIntersectionObserver 가 return 하는 변수병과 동일해야함. -->
           <div ref="scrollTrigger" class="w-full h-[1px] mt-px"></div>
@@ -132,18 +132,6 @@ const previewClick = async (data: object) => {
   isBoxSelectedStyle.value = true;
   currentPreviewId.value = id;
   previewIndex = type;
-};
-
-const modelNmClick = (data: object) => {
-  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
-  router.push({
-    path: "/portal/search/detail",
-    query: {
-      type: type,
-      id: id,
-      fqn: fqn,
-    },
-  });
 };
 
 const tabOptions = ref([

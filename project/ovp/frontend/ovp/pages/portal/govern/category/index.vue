@@ -194,9 +194,11 @@
                     :show-owner="true"
                     :show-category="true"
                     :use-prv-btn="true"
+                    :use-detail-btn="true"
                     :is-box-selected-style="isBoxSelectedStyle"
                     :selected-model-list="selectedModelList"
                     @modelNmClick="modelNmClick"
+                    @open-detail-page="openDetailPage"
                     @previewClick="previewClick"
                     @checkedValueChanged="checked"
                   />
@@ -500,17 +502,18 @@ const previewClick = async (data: object) => {
   previewIndex = type;
 };
 
-const modelNmClick = (data: object) => {
+function openDetailPage(data: object) {
   const { id, fqn, type } = data as { id: string; fqn: string; type: string };
-  router.push({
-    path: "/portal/search/detail",
-    query: {
-      type: type,
-      id: id,
-      fqn: fqn,
-    },
-  });
-};
+  const queryParams = new URLSearchParams({
+    type,
+    id,
+    fqn,
+  }).toString();
+
+  const fullPath = `/portal/search/detail?${queryParams}`;
+
+  window.open(fullPath, "_blank", "noopener,noreferrer");
+}
 
 // EDITABLE-INPUT
 const editCancel = (key: string) => {

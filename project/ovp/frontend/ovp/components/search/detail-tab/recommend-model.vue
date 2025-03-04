@@ -10,7 +10,8 @@
             :show-owner="true"
             :show-category="true"
             :use-data-nm-link="true"
-            @model-nm-click="clickRecommendDataModel"
+            :use-detail-btn="true"
+            @open-detail-page="openDetailPage"
           />
         </template>
       </div>
@@ -27,12 +28,9 @@
 <script setup lang="ts">
 import { useDataModelDetailStore } from "@/store/search/detail";
 import { storeToRefs } from "pinia";
-import { useRouter, useRoute } from "nuxt/app";
 import ResourceBox from "@/components/common/resource-box/resource-box.vue";
 const dataModelDetailStore = useDataModelDetailStore();
 const { recommendDataModels } = storeToRefs(dataModelDetailStore);
-const router = useRouter();
-const route = useRoute();
 
 const groupedRecommendations = computed(() => {
   const groups = [];
@@ -42,7 +40,7 @@ const groupedRecommendations = computed(() => {
   return groups;
 });
 
-function clickRecommendDataModel(data: object) {
+function openDetailPage(data: object) {
   const { id, fqn, type } = data as { id: string; fqn: string; type: string };
   const queryParams = new URLSearchParams({
     type,
@@ -50,10 +48,11 @@ function clickRecommendDataModel(data: object) {
     fqn,
   }).toString();
 
-  const fullPath = `${route.path}?${queryParams}`;
+  const fullPath = `/portal/search/detail?${queryParams}`;
 
   window.open(fullPath, "_blank", "noopener,noreferrer");
 }
+
 </script>
 
 <style lang="scss" scoped></style>

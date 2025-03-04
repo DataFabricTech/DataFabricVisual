@@ -14,6 +14,7 @@ export interface DataModel {
 
 export interface ResourceBoxCommonProps {
   usePrvBtn?: boolean;
+  useDetailBtn?: boolean;
   showOwner?: boolean;
   showCategory?: boolean;
   useFirModelNm?: boolean;

@@ -145,6 +145,8 @@
           :show-owner="true"
           :show-category="true"
           :use-data-nm-link="true"
+          :use-detail-btn="true"
+          @open-detail-page="openDetailPage"
         />
       </template>
       <!-- resource-box 끝  -->
@@ -155,6 +157,9 @@
 <script setup lang="ts">
 import ResourceBox from "@/components/common/resource-box/resource-box.vue";
 import imageSrc from "@/assets/images/knowledge-graph-sample.jpg";
+import { useRoute, useRouter } from "nuxt/app";
+const router = useRouter();
+const route = useRoute();
 
 const isLegendVisible = ref(true);
 
@@ -173,6 +178,19 @@ let resourceBoxObj: any = {
   owner: "장소라",
   category: "카테고리",
 };
+
+function openDetailPage(data: object) {
+  const { id, fqn, type } = data as { id: string; fqn: string; type: string };
+  const queryParams = new URLSearchParams({
+    type,
+    id,
+    fqn,
+  }).toString();
+
+  const fullPath = `/portal/search/detail?${queryParams}`;
+
+  window.open(fullPath, "_blank", "noopener,noreferrer");
+}
 </script>
 
 <style lang="scss" scoped>
