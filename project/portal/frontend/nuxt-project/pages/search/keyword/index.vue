@@ -21,7 +21,7 @@
                   class="mu-input"
                   placeholder="테이블을 제외한 컬럼/타 메타 검색결과를 조회하려면 상세필터로 검색하세요"
                   title="검색어를 입력해 주세요."
-                  @keypress.enter.prevent="checkValidate(word)"
+                  @keypress.enter.prevent="getSearch(0)"
                  v-model="word"
                 />
                 <button v-if="word"
@@ -75,7 +75,6 @@
                     </div>
                     <div v-for="(tg, idx2) in df.content" class="mu-checkbox">
                       <input :type="'checkbox'" :name="idx" :id="'ckbox_'+tg.name" :value="tg.name" @change="onChangeCheckBox(idx, $event)" :checked="tg.checked">
-                      <!-- <label :for="'ckbox_'+tg.name"><span>{{ tg.description }}<em v-if="idx != 'TAG' && idx != 'ORDER'">({{ tg.count }})</em></span></label> -->
                       <label :for="'ckbox_'+tg.name"><span>{{ tg.description }}</span></label>
                     </div>
                   </div>
@@ -174,18 +173,11 @@
                     </div>
                     <div class="title-group">
                       <a @click="onSelectDetailPage(data)">
-                        <!-- <strong class="data-title">{{ data && data.attributes && data.attributes.description ? data.attributes.description : data.description }}</strong> -->
                         <strong class="data-title">{{ data && data.description ? data.description : '' }}</strong>
                         <p class="data-name"> {{ data && data.meta_name ? data.meta_name : ''}} </p>
                         <p class="data-desc">{{data && data.user_description ? data.user_description : ''}}</p>
                       </a>
                     </div>
-                    <!-- LABELS -->
-                    <!-- <div class="tags-group">
-                      <em v-for="(label, idx1) in data.labels" :key="idx1" class="tag">
-                        <span class="tag-label">{{ label }}</span>
-                      </em>
-                    </div> -->
                     <!-- TAGS -->
                     <div class="tags-group" style="margin-top: 10px;">
                       <em v-for="(tag, idx1) in data.tags" :key="idx1" class="tag">
@@ -195,8 +187,8 @@
                   </div>
                   <div class="inner-data option">
                     <p >시스템 명 : <strong>{{ data.system_name ? data.system_name : "-" }}</strong></p>
-                    <p v-if="data.qualified_name && data.system_type && data.system_type.toUpperCase() != 'MYSQL'">데이터베이스 : <strong>{{ getDbName(data.qualified_name) }}</strong></p>
-                    <p v-if="data.system_type && data.system_type.toUpperCase() != 'HIVE' && data.qualified_name && data.qualified_name.split('.')[2]">스키마 : <strong>{{ getSchemaName(data.qualified_name) }}</strong></p>
+                    <p v-if="data.qualified_name && data.system_type && data.system_type.toUpperCase() != 'MYSQL' && data.system_type.toUpperCase() != 'HIVE'">데이터베이스 : <strong>{{ getDbName(data.qualified_name) }}</strong></p>
+                    <p v-if="data.system_type && data.qualified_name && data.qualified_name.split('.')[2]">스키마 : <strong>{{ getSchemaName(data.qualified_name) }}</strong></p>
                     <p >최종 수집일 : <strong>{{ $yyyyMMddHHmmSS(data.meta_sync_time ? data.meta_sync_time : null) }}</strong></p>
                   </div>
                 </li>
@@ -297,40 +289,6 @@ const detailFilters = ref({
       "count": 0,
       "checked": false,
     },
-    ],
-    checkedCount: 0
-  },
-  METATYPE: {
-    all: true,
-    ord: 3,
-    name: '시스템 타입',
-    content: [
-    {
-      "root": "METATYPE",
-      "rootDescription": "메타 타입",
-      "id": 1,
-      "name": "table",
-      "description": "table",
-      "count": 0,
-      "checked": false,
-    },
-    ],
-    checkedCount: 0
-  },
-  TAG: {
-    all: true,
-    ord: 4,
-    name: '태그',
-    content: [
-      {
-        "root": "TAG",
-        "rootDescription": "태그",
-        "id": 1,
-        "name": "태그1",
-        "description": "태그1",
-        "count": 0,
-        "checked": false,
-      },
     ],
     checkedCount: 0
   },
@@ -712,16 +670,6 @@ onMounted(async () => {
   await getSearch(pagingObj.value.currentPage - 1);
 
 });
-
-// 검색 유효성 체크
-const checkValidate = async (word: string): Promise<void> => {
-  // if (word.length == 1) {
-  //   await errorAlert("2글자 이상 입력하세요.");
-  // } else {
-  //   getSearch(0)
-  // }
-  getSearch(0)
-};
 
 // 가공된 상세필터 정보 가져오기
 const getDetailFilters = async () => {
@@ -1152,10 +1100,6 @@ const clearFilter = (key) => {
     leftMenuToggleAndBold("") // 왼쪽메뉴 연동
   } else if (key == 'SYSTEMTYPE') {
     system_type.value = ""
-  } else if (key == 'METATYPE') {
-    meta_type.value = "table"
-  } else if (key == 'TAG') {
-    tag.value = ""
   } else if (key == 'ORDER') {
     sortOrder.value = ""
   } else {
@@ -1382,8 +1326,6 @@ const onChangeCheckBox = async (key, event: any) => {
           leftMenuToggleAndBold(el.id) // 왼쪽메뉴 연동 처리
         }
         if (key == 'SYSTEMTYPE') system_type.value = el.name
-        if (key == 'METATYPE') meta_type.value = 'table'
-        if (key == 'TAG') tag.value = el.name
         if (key == 'ORDER') sortOrder.value = el.name
       } else {
         el.checked = false // 단일로 체크되도록 설정
@@ -1412,14 +1354,6 @@ const getDbName = (qualified_name) => {
 const getSchemaName = (qualified_name) => {
   if (qualified_name) {
     return qualified_name.split(".")[2]
-  }
-  return "-"
-}
-
-// 테이블명
-const getTableName = (qualified_name) => {
-  if (qualified_name) {
-    return qualified_name.split(".")[3]
   }
   return "-"
 }
