@@ -96,11 +96,6 @@ public class TagManageService {
       // 1. 전체 태그 덮어쓰기로 저장
       updateResult += tagManageMapper.upsertMetaDataTag(upsertParams);
       
-
-      //delete tag 목록은 개수 -1 함
-      for (String tag_name : deleteTagList) {        
-        tagManageMapper.mapperCountDown(tag_name);        
-      }
       
     }else if(request.getMethod().equals("PUT")){
       // 매핑된 태그는 개수 +1 하고, count 테이블에 태그가 입력 안되어 있으면 insert 함.
@@ -116,13 +111,6 @@ public class TagManageService {
         } else {
           updateResult += isUpdated;
           isUpdated = 0;
-        }
-
-        Integer tag_cnt = tagManageMapper.checkTagCount(tag_name);
-        if(tag_cnt == 0){
-          tagManageMapper.insertTagCount(tag_name);
-        }else{
-          tagManageMapper.mapperCount(tag_name);
         }
       }      
     }

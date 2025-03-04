@@ -200,28 +200,6 @@ public class CategoryService {
         // }
         // metaInfo.put("checkedCount", 0);
 
-        // 태그 정보
-        // List<Map<String, Object>> tagList = categoryMapper.getTagListForFilter();
-        // tagInfo.put("allChecked", true);
-        // tagInfo.put("ord", 4);
-        // tagInfo.put("name", "태그");
-        // tagInfo.put("content", new ArrayList<Map<String, Object>>());
-
-        // i=0;
-        // for (Map<String, Object> tag : tagList) {
-        //     Map<String, Object> content = new HashMap<>();
-        //     content.put("root", "TAG");
-        //     content.put("rootDescription", "태그");
-        //     i = i + 1;
-        //     content.put("id", i);
-        //     content.put("name", tag.get("tag_name"));
-        //     content.put("description", tag.get("tag_name"));
-        //     content.put("count", tag.get("count"));
-        //     content.put("checked", false);
-        //     ((List<Map<String, Object>>) tagInfo.get("content")).add(content);
-        // }
-        // tagInfo.put("checkedCount", 0);
-
         // 정렬 오름차순, 내림차순
         orderInfo.put("allChecked", true);
         orderInfo.put("ord", 5);
