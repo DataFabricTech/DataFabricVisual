@@ -107,6 +107,8 @@
                             <option value="<">&lt;</option>
                             <option value=">=">&gt;=</option>
                             <option value="<=">&lt;=</option>
+                            <option value="isNull">IS NULL</option>
+                            <option value="isNotNull">IS NOT NULL</option>
                           </select>
                         </div>
                         <div
@@ -134,7 +136,7 @@
                           </div>
                         </div>
                         <div v-else>
-                          <input type="text" title="??? 입력하세요." id="" name="" class="mu-input" v-model="value.filterInput">
+                          <input type="text" title="조건값을 입력하세요." id="" name="" class="mu-input" v-model="value.filterInput" :disabled="value.filterOperator == '' || value.filterOperator == 'isNull' || value.filterOperator == 'isNotNull'">
                         </div>
                         <button type="button" title="조건 삭제" class="mu-btn mu-btn-icon-only" @click="deleteFilter(idx)">
                           <i class="mu-icon-svg minus"></i>
@@ -334,6 +336,7 @@ watch(
   }
 ); // 선택 없음을 클릭하는 경우
 
+// 조건 필드 변경 시 입력값 초기화
 watch(
   () => filter.value.map(item => item.filterHeader),
   (newVals, oldVals) => {
@@ -341,6 +344,18 @@ watch(
       if (newVal !== oldVals[index]) {
         filter.value[index].filterInput = '';
         filter.value[index].filterOperator = '';
+      }
+    });
+  }
+);
+
+// 조건 부호 변경 시 입력값 초기화
+watch(
+  () => filter.value.map(item => item.filterOperator),
+  (newVals, oldVals) => {
+    newVals.forEach((newVal, index) => {
+      if (newVal !== oldVals[index]) {
+        filter.value[index].filterInput = '';
       }
     });
   }
@@ -453,24 +468,57 @@ const fnWhereQueryMake = () => {
       ) {
         const filterInputResult = `CAST ('${element.filterInput}' AS TIMESTAMP)`;
         if (!firstElementProcessed) {
-          inputQuery =
+          if (element.filterOperator == 'isNull') {
+            inputQuery =
+              element.filterHeader +
+              " " +
+              "IS NULL" +
+              " ";
+          } else if (element.filterOperator == 'isNotNull') {
+            inputQuery =
+              element.filterHeader +
+              " " +
+              "IS NOT NULL" +
+              " ";
+          } else {
+            inputQuery =
             element.filterHeader +
             " " +
             element.filterOperator +
             " " +
             filterInputResult +
             " ";
+          }
+
           firstElementProcessed = true;
         } else {
-          inputQuery =
-            filterLogic.value +
-            " " +
-            element.filterHeader +
-            " " +
-            element.filterOperator +
-            " " +
-            filterInputResult +
-            " ";
+          if (element.filterOperator == 'isNull') {
+            inputQuery =
+              filterLogic.value +
+              " " +
+              element.filterHeader +
+              " " +
+              "IS NULL" +
+              " ";
+          } else if (element.filterOperator == 'isNotNull') {
+            inputQuery =
+              filterLogic.value +
+              " " +
+              element.filterHeader +
+              " " +
+              "IS NOT NULL" +
+              " ";
+          } else {
+            inputQuery =
+              filterLogic.value +
+              " " +
+              element.filterHeader +
+              " " +
+              element.filterOperator +
+              " " +
+              filterInputResult +
+              " ";
+          }
         }
         queryWhere.value += inputQuery;
       } else if (
@@ -485,24 +533,55 @@ const fnWhereQueryMake = () => {
         )
       ) {
         if (!firstElementProcessed) {
-          inputQuery =
-            element.filterHeader +
-            " " +
-            element.filterOperator +
-            " '" +
-            element.filterInput +
-            "' ";
+          if (element.filterOperator == 'isNull') {
+            inputQuery =
+              element.filterHeader +
+              " " +
+              "IS NULL" +
+              " ";
+          } else if (element.filterOperator == 'isNotNull') {
+            inputQuery =
+              element.filterHeader +
+              " " +
+              "IS NOT NULL" +
+              " ";
+          } else {
+            inputQuery =
+              element.filterHeader +
+              " " +
+              element.filterOperator +
+              " '" +
+              element.filterInput +
+              "' ";
+          }
           firstElementProcessed = true;
         } else {
-          inputQuery =
-            filterLogic.value +
-            " " +
-            element.filterHeader +
-            " " +
-            element.filterOperator +
-            " '" +
-            element.filterInput +
-            "' ";
+          if (element.filterOperator == 'isNull') {
+            inputQuery =
+              filterLogic.value +
+              " " +
+              element.filterHeader +
+              " " +
+              "IS NULL" +
+              " ";
+          } else if (element.filterOperator == 'isNotNull') {
+            inputQuery =
+              filterLogic.value +
+              " " +
+              element.filterHeader +
+              "IS NOT NULL" +
+              " ";
+          } else {
+            inputQuery =
+              filterLogic.value +
+              " " +
+              element.filterHeader +
+              " " +
+              element.filterOperator +
+              " '" +
+              element.filterInput +
+              "' ";
+          }
         }
         queryWhere.value += inputQuery;
       } else if (
@@ -513,24 +592,57 @@ const fnWhereQueryMake = () => {
         typeEllipsis(element.filterHeader, props.eliminateModal.entity).includes("bigint")
       ) {
         if (!firstElementProcessed) {
-          inputQuery =
+          if (element.filterOperator == 'isNull') {
+            inputQuery =
+              element.filterHeader +
+              " " +
+              "IS NULL" +
+              " ";
+
+          } else if (element.filterOperator == 'isNotNull') {
+            inputQuery =
             element.filterHeader +
             " " +
-            element.filterOperator +
-            " " +
-            element.filterInput +
+            "IS NOT NULL" +
             " ";
+          } else {
+            inputQuery =
+              element.filterHeader +
+              " " +
+              element.filterOperator +
+              " " +
+              element.filterInput +
+              " ";
+          }
           firstElementProcessed = true;
         } else {
-          inputQuery =
-            filterLogic.value +
-            " " +
-            element.filterHeader +
-            " " +
-            element.filterOperator +
-            " " +
-            element.filterInput +
-            " ";
+          if (element.filterOperator == 'isNull') {
+            inputQuery =
+              filterLogic.value +
+              " " +
+              element.filterHeader +
+              " " +
+              "IS NULL" +
+              " ";
+          } else if (element.filterOperator == 'isNotNull') {
+            inputQuery =
+              filterLogic.value +
+              " " +
+              element.filterHeader +
+              " " +
+              "IS NOT NULL" +
+              " ";
+          } else {
+            inputQuery =
+              filterLogic.value +
+              " " +
+              element.filterHeader +
+              " " +
+              element.filterOperator +
+              " " +
+              element.filterInput +
+              " ";
+          }
         }
         queryWhere.value += inputQuery;
       } else if (
@@ -545,13 +657,28 @@ const fnWhereQueryMake = () => {
         )
       ) {
         if (!firstElementProcessed) {
-          inputQuery =
+          if (element.filterOperator == 'isNull') {
+            inputQuery =
+              element.filterHeader +
+              " " +
+              "IS NULL" +
+              " ";
+
+          } else if (element.filterOperator == 'isNotNull') {
+            inputQuery =
             element.filterHeader +
             " " +
-            element.filterOperator +
-            " " +
-            element.filterInput +
+            "IS NOT NULL" +
             " ";
+          } else {
+            inputQuery =
+              element.filterHeader +
+              " " +
+              element.filterOperator +
+              " " +
+              element.filterInput +
+              " ";
+          }
           firstElementProcessed = true;
         } else {
           inputQuery =
@@ -568,24 +695,58 @@ const fnWhereQueryMake = () => {
       } else {
         // 그외 타입
         if (!firstElementProcessed) {
-          inputQuery =
+          if (element.filterOperator == 'isNull') {
+            inputQuery =
+              element.filterHeader +
+              " " +
+              "IS NULL" +
+              " ";
+
+          } else if (element.filterOperator == 'isNotNull') {
+            inputQuery =
             element.filterHeader +
             " " +
-            element.filterOperator +
-            " " +
-            element.filterInput +
+            "IS NOT NULL" +
             " ";
+          } else {
+            inputQuery =
+              element.filterHeader +
+              " " +
+              element.filterOperator +
+              " " +
+              element.filterInput +
+              " ";
+          }
           firstElementProcessed = true;
         } else {
-          inputQuery =
-            filterLogic.value +
-            " " +
-            element.filterHeader +
-            " " +
-            element.filterOperator +
-            " " +
-            element.filterInput +
-            " ";
+          if (element.filterOperator == 'isNull') {
+            inputQuery =
+              filterLogic.value +
+              " " +
+              element.filterHeader +
+              " " +
+              "IS NULL" +
+              " ";
+
+          } else if (element.filterOperator == 'isNotNull') {
+            inputQuery =
+              filterLogic.value +
+              " " +
+              element.filterHeader +
+              " " +
+              "IS NOT NULL" +
+              " ";
+          } else {
+            inputQuery =
+              filterLogic.value +
+              " " +
+              element.filterHeader +
+              " " +
+              element.filterOperator +
+              " " +
+              element.filterInput +
+              " ";
+          }
         }
         queryWhere.value += inputQuery;
       }
@@ -602,8 +763,13 @@ const fnWhereQueryMake = () => {
       createSuccess = true
     } else {
       if (!filter.value[a].filterHeader || !filter.value[a].filterInput || !filter.value[a].filterOperator) {
-        createSuccess = false
-        break;
+        // isNull, isNotNull은 예외
+        if (filter.value[a].filterHeader && filter.value[a].filterOperator && (filter.value[a].filterOperator == 'isNull' || filter.value[a].filterOperator == 'isNotNull')) {
+          createSuccess = true
+        } else {
+          createSuccess = false
+          break;
+        }
       } else {
         createSuccess = true
       }
