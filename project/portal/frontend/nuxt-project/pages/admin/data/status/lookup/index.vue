@@ -349,11 +349,10 @@ interface Result {
 
 const getMinimumView = (type) => {
   // date | month | year | datetime
-  if (type == 'date') return 'date'
-  if (type == 'month') return 'month'
-  if (type == 'year') return 'year'
-  if (type == 'datetime') return 'day'
-  return 'day'
+  if (type == 'date') return 'day'
+  else if (type == 'month') return 'month'
+  else if (type == 'year') return 'year'
+  else return 'day'
 }
 
 const getChartDataList = async (): Promise<void> => {
