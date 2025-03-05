@@ -94,7 +94,7 @@
                           <select title="검색조건 선택" v-model="value.filterHeader">
                             <option value="" selected>선택 없음</option>
                             <option v-for="(item, index) in sampleDataHeader" :value="index">
-                              {{ index }}
+                              {{ item }}
                             </option>
                           </select>
                         </div>
@@ -314,19 +314,14 @@ const lang = ref<Lang>({
   },
 });
 
-const typeName = computed(() =>
-  ObjectUtils.getPropertyValue(props.eliminateModal.entity, "entity/typeName", "")
-);
-
-const relationshipAttributes = computed(() =>
-  ObjectUtils.getPropertyValue(
-    props.eliminateModal.entity,
-    "entity/relationshipAttributes",
-    ""
-  )
-);
-const sampleDataHeader = computed(() =>
-  props.eliminateModal.sampleData ? props.eliminateModal.sampleData[0] : []
+const sampleDataHeader = computed(() => {
+  let header = []
+  const columns = ObjectUtils.getPropertyValue(props.eliminateModal.entity, "attributes/columns", [])
+  if (columns && columns.length > 0) {
+    columns.forEach((el) => header.push(el.meta_name))
+  }
+  return header
+}
 );
 
 watch(
@@ -792,7 +787,9 @@ const onClickFileEliminateButton = async () => {
   }
 
   // 파일 추출
-  if (!sampleDataHeader.value && sampleDataHeader.value == undefined) {
+  if (props.eliminateModal.sampleData && props.eliminateModal.sampleData.length > 0) {
+
+  } else {
     defaultAlert("추출할 데이터가 없습니다.");
     return;
   }

@@ -1022,8 +1022,8 @@ const onToggleEliminateModal = async () => {
       eliminateModalObj.value.toggle = !status;
       eliminateModalObj.value.userDataAuth = userDataAuth.value;
     } else {
-      eliminateModalObj.value.sampleData = { ...sampleData.value };
-      eliminateModalObj.value.entity = { ...entity.value };
+      eliminateModalObj.value.sampleData = sampleData.value;
+      eliminateModalObj.value.entity = entity.value;
       eliminateModalObj.value.toggle = !status;
       eliminateModalObj.value.userDataAuth = userDataAuth.value;
     }
