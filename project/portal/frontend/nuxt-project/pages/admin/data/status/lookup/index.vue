@@ -131,7 +131,7 @@
 </template>
 
 <script setup lang="ts">
-import DatePicker  from "@functional/datepicker/date-picker";
+import DatePicker  from "@functional/datepicker/lookup-date-picker";
 import moment from "moment";
 import { errorAlert } from "@functional/alert/alert-default";
 import {onMounted, watch, reactive, ref} from "vue";
