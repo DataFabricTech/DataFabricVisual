@@ -56,14 +56,14 @@
                     <div class="mu-item-group item-ml-auto">
                         <!-- period-set : 기간 -->
                         <div class="period-set">
-                            <date-picker v-model:date="startDate" :disabledMaxDate="endDate" :type="datetimeType"  :clearable="false" placeholder="시작일" :confirm="false"></date-picker>
+                            <date-picker v-model:date="startDate" :disabledMaxDate="endDate" :type="datetimeType" :clearable="false" placeholder="시작일" :confirm="false" :minimumView="getMinimumView(datetimeType)"></date-picker>
                             <div v-if="searchDateType=='hour'" class="mu-selectbox w90">
                                 <select v-model="startTime">
                                   <option v-for="item in timeObj" :key="item" :value="item">{{item}}</option>
                                 </select>
                             </div>
                             <span>~</span>
-                            <date-picker v-model:date="endDate" :disabledMinDate="startDate" :type="datetimeType" :clearable="false" placeholder="종료일" :confirm="false"></date-picker>
+                            <date-picker v-model:date="endDate" :disabledMinDate="startDate" :type="datetimeType" :clearable="false" placeholder="종료일" :confirm="false" :minimumView="getMinimumView(datetimeType)"></date-picker>
                             <div v-if="searchDateType=='hour'" class="mu-selectbox w90">
                                 <select v-model="endTime">
                                   <option v-for="item in timeObj" :key="item" :value="item">{{item}}</option>
@@ -346,6 +346,16 @@ interface ResultData {
 interface Result {
   data: ResultData;
 }
+
+const getMinimumView = (type) => {
+  // date | month | year | datetime
+  if (type == 'date') return 'date'
+  if (type == 'month') return 'month'
+  if (type == 'year') return 'year'
+  if (type == 'datetime') return 'day'
+  return 'day'
+}
+
 const getChartDataList = async (): Promise<void> => {
   try {
     let result: Result;

@@ -12,6 +12,7 @@
       :placeholder="props.placeholder"
       :disabledDates="{ predicate: disabledDate }"
       :lang="props.lang"
+      :minimumView="props.minimumView"
       @change="emit('change', $event)"
     />
   </div>
@@ -28,6 +29,10 @@ const props = defineProps({
   endDate: String,
   format: String,
   // date |datetime|year|month|time|week
+  minimumView: {
+    type: String,
+    default: "day",
+  },
   type: {
     type: String,
     default: "date",
