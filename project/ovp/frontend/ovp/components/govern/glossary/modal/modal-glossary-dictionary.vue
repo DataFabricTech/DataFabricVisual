@@ -6,7 +6,7 @@
     :height="500"
     :width="480"
     :esc-to-close="true"
-    :btn-msg="'저장'"
+    :confirm-btn-msg="'저장'"
     @close="closeModal"
     @cancel="closeModal"
     @confirm="validateForm"

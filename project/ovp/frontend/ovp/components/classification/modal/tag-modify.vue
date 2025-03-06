@@ -6,7 +6,7 @@
     :height="500"
     :width="480"
     :esc-to-close="true"
-    :btn-msg="'저장'"
+    :confirm-btn-msg="'저장'"
     @close="closeModal"
     @cancel="closeModal"
     @confirm="validateForm"
@@ -180,6 +180,9 @@ function saveTag(name: any, description: any) {
     };
     return editClassificationTag(editData, props.formInfo.id);
   }
+
+  // 변경 사항이 없을 경우에도 Promise 반환
+  return Promise.resolve({ result: 0 }); // result 0 → 변경 사항 없음
 }
 
 function closeModal(): void {
