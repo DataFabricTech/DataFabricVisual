@@ -6,7 +6,7 @@
     :height="500"
     :width="480"
     :esc-to-close="true"
-    :btn-msg="'저장'"
+    :confirm-btn-msg="'저장'"
     @close="closeModal"
     @cancel="closeModal"
     @confirm="validateForm"
@@ -145,6 +145,8 @@ function validateForm(): void {
   }
   isShowDescNoti.value = false;
 
+
+// TODO : 수정하지 않고 저장 버튼 클릭시, saveTag로 undefined로 넘어오는 문제 해결
   // store에 있는 edit 호출하기
   saveTag(tagFormState.value.name, tagFormState.value.description).then(
     (response: any) => {
