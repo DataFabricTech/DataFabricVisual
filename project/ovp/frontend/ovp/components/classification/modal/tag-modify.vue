@@ -145,8 +145,6 @@ function validateForm(): void {
   }
   isShowDescNoti.value = false;
 
-
-// TODO : 수정하지 않고 저장 버튼 클릭시, saveTag로 undefined로 넘어오는 문제 해결
   // store에 있는 edit 호출하기
   saveTag(tagFormState.value.name, tagFormState.value.description).then(
     (response: any) => {
@@ -182,6 +180,9 @@ function saveTag(name: any, description: any) {
     };
     return editClassificationTag(editData, props.formInfo.id);
   }
+
+  // 변경 사항이 없을 경우에도 Promise 반환
+  return Promise.resolve({ result: 0 }); // result 0 → 변경 사항 없음
 }
 
 function closeModal(): void {
