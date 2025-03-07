@@ -716,8 +716,8 @@ const onDeleteCategory = async (target: any) => {
                 },
                 file_id: ""
               };
-              onSearchCategories(); // 좌측 카테고리 목록 데이터 조회
-              onSearchDataList(0); // 테이블 데이터 조회
+              // onSearchCategories(); // 좌측 카테고리 목록 데이터 조회
+              onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 조회
               onSearchDept(); // 카테고리 담당부서 조회
             }
           });
@@ -751,7 +751,7 @@ const onDeleteCategory = async (target: any) => {
               },
               file_id: ""
             };
-            onSearchCategories(); // 좌측 카테고리 목록 데이터 조회
+            // onSearchCategories(); // 좌측 카테고리 목록 데이터 조회
             onSearchDataList(0); // 테이블 데이터 조회
             onSearchDept(); // 카테고리 담당부서 조회
           }
@@ -901,9 +901,9 @@ const onSubmitCategory = async (params: any) => {
               const msg = "ES SYNC 요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
               console.log(msg);
             })
-            
+
             onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
-            onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
+            // onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
           }
         });
       } catch (error) {
@@ -1100,7 +1100,7 @@ const onSearchDataList = async (offset = 0, item = {}) => {
       pagingObj.value = {
         ...pagingObj.value,
         total: 0,
-        currentPage: 1
+        currentPage: offset + 1
       };
     }
   } else {
@@ -1241,7 +1241,7 @@ const onDeleteCategoryMap = async (target) => {
         errorAlert(msg);
       } else {
         onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
-        onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
+        // onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
       }
     });
   }
@@ -1262,7 +1262,6 @@ const onSubmitAuth = async (params: any) => {
       .then((res) => {
         if (res && res.data && res.data.result) {
           onSearchDataList(pagingObj.value.currentPage - 1); // 테이블 데이터 재조회
-          onSearchCategories(selectedCategory.value); // 좌측 카테고리 목록 재조회
           refManageRoleMappingModal.value.onClose();
         } else {
           const msg = "요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
