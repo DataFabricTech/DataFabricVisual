@@ -85,6 +85,7 @@ interface DateFormat {
   DATETIME: string;
   YEAR: string;
   MONTH: string;
+  MONTH_DATE: string;
   TIME: string;
 }
 
@@ -93,11 +94,13 @@ const DATE_FORMAT = ref<DateFormat>({
   DATETIME: "YYYY-MM-DD HH:mm",
   YEAR: "YYYY",
   MONTH: "YYYY-MM",
+  MONTH_DATE: "YYYY-MM-DD",
   TIME: "HH:mm:ss",
 });
 
 const dateFormat: ComputedRef<DateFormat> = computed(
   () => props.format || DATE_FORMAT.value[props.type.toUpperCase()]
+
 );
 
 const dateValue = computed({
@@ -105,8 +108,6 @@ const dateValue = computed({
     return props.date ? new Date(props.date) : null
   },
   set(newVal: any) {
-    // emit('change', newVal == "Invalid date" ? moment(new Date()).format(dateFormat.value) : moment(newVal).format(dateFormat.value))
-    // emit("update:date", newVal == "Invalid date" ? moment(new Date()).format(dateFormat.value) : moment(newVal).format(dateFormat.value));
     emit('change', newVal == "Invalid date" ? null : moment(newVal).format(dateFormat.value))
     emit("update:date", newVal == "Invalid date" ? null : moment(newVal).format(dateFormat.value));
   },
@@ -150,7 +151,7 @@ const disabledDate = (date: any) => {
 @import "date-picker";
 
 .v3dp__input_wrapper input {
-  width:100%;
+  width:200px;
   height:36px;
   line-height:36px;
   padding:0 15px;

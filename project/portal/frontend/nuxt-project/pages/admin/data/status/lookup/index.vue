@@ -294,7 +294,10 @@ watch(searchDateType, (newValue, oldValue) => {
     startDate.value = moment().subtract(30, "d").format("YYYY-MM-DD");
     endDate.value = moment().format("YYYY-MM-DD");
   } else if (newValue === "month") { // 월별
-    datetimeType.value = "month";
+    // The specified value "2024-03-01" does not conform to the required format.
+    // The format is "yyyy-MM" where yyyy is year in four or more digits, and MM is 01-12
+    // DATE_FORMAT 필드의 MONTH_DATE 필드 추가하여 YYYY-MM-DD 포맷 사용
+    datetimeType.value = "month_date";
     startDate.value = moment().subtract(12, "M").format("YYYY-MM");
     endDate.value = moment().format("YYYY-MM");
   } else if (newValue === "year") { // 년별
@@ -351,6 +354,7 @@ const getMinimumView = (type) => {
   // date | month | year | datetime
   if (type == 'date') return 'day'
   else if (type == 'month') return 'month'
+  else if (type == 'month_date') return 'month'
   else if (type == 'year') return 'year'
   else return 'day'
 }
@@ -358,10 +362,22 @@ const getMinimumView = (type) => {
 const getChartDataList = async (): Promise<void> => {
   try {
     let result: Result;
+
+    // 월별인 경우 조회 파라미터 수정
+    let startDt = startDate.value
+    let endDt = endDate.value
     if (searchDateType.value === "hour") {
-      result = await $ofetch(`/api/datastat/chart?searchType=${searchType.value}&searchDateType=${searchDateType.value}&startDate=${startDate.value} ${startTime.value}&endDate=${endDate.value} ${endTime.value}`);
+      if (searchDateType.value === 'month') {
+        startDt = moment(new Date(startDate.value)).format("YYYY-MM")
+        endDt = moment(new Date(endDate.value)).format("YYYY-MM")
+      }
+      result = await $ofetch(`/api/datastat/chart?searchType=${searchType.value}&searchDateType=${searchDateType.value}&startDate=${startDt} ${startTime.value}&endDate=${endDt} ${endTime.value}`);
     } else {
-      result = await $ofetch(`/api/datastat/chart?searchType=${searchType.value}&searchDateType=${searchDateType.value}&startDate=${startDate.value}&endDate=${endDate.value}`);
+      if (searchDateType.value === 'month') {
+        startDt = moment(new Date(startDate.value)).format("YYYY-MM")
+        endDt = moment(new Date(endDate.value)).format("YYYY-MM")
+      }
+      result = await $ofetch(`/api/datastat/chart?searchType=${searchType.value}&searchDateType=${searchDateType.value}&startDate=${startDt}&endDate=${endDt}`);
     }
 
     const chartDataList = result.data.chartDataList;
@@ -420,7 +436,10 @@ const onClickClearButton = () => {
     startDate.value = moment().subtract(30, "d").format("YYYY-MM-DD");
     endDate.value = moment().format("YYYY-MM-DD");
   } else if(value == "month") { // 월별
-    datetimeType.value = "month";
+    // The specified value "2024-03-01" does not conform to the required format.
+    // The format is "yyyy-MM" where yyyy is year in four or more digits, and MM is 01-12
+    // date-picker의 DATE_FORMAT 필드의 MONTH_DATE 필드 추가하여 YYYY-MM-DD 포맷 사용
+    datetimeType.value = "month_date";//date |datetime|year|month|time|week
     startDate.value = moment().subtract(12, "M").format("YYYY-MM");
     endDate.value = moment().format("YYYY-MM");
   } else if(value == "year") { // 년별
