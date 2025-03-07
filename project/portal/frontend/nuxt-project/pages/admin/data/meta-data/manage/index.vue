@@ -248,8 +248,6 @@ const router = useRouter();
 
 const userStore = useUserStore();
 const user = userStore.getUser;
-const fromPath = userStore.getFromPath;
-const params = userStore.getParams;
 
 const categoryStore = useCategoryStore();
 const categoryTreeStore = useCategoryTreeStore();
@@ -465,9 +463,10 @@ onMounted(() => {
   // NOTE: 카테고리 목록 컴포넌트 import한 페이지 정보 저장
   categoryStore.setCalledFrom({ from: "metaDataManage" });
 
-  const path = ObjectUtils.getPropertyValue(params, "path", "");
-
-  if (fromPath.value === "/admin/data/meta-data/detail" && path === "/admin/data/meta-data/manage") {
+  const userParams = userStore.getParams
+  const fromPath = userStore.getFromPath
+  const path = ObjectUtils.getPropertyValue(userParams, "path", "");
+  if (fromPath === '/admin/data/meta-data/detail' && path === "/admin/data/meta-data/manage") {
     // 상세 조회 페이지에서 메타 데이터 통합 관리 페이지로 이동 시, 상세 페이지 이동 직전 사용자가 세팅한 검색조건으로 목록 조회
     onFetchPageDataByPrevCondition();
   } else {
@@ -500,14 +499,18 @@ onUnmounted(() => {
   // 좌측 메뉴 목록에서 카테고리 선택하여 조회 시 선택된 카테고리 정보 저장
   const category = selectedId.value ? selectedCategory.value : null;
 
+  // 검색창 오른쪽 공개설정 필터 정보 저장
+  const release = currentRelease.value ? currentRelease.value : null;
+
   // 검색에 사용된 파라미터 중 default 값과 상이한 값이 없으면 path를 empty string으로 저장하여 저장된 파라미터 초기화
-  const path = paging || condition || category ? "/admin/data/meta-data/manage" : "";
+  const path = paging || condition || category || release ? "/admin/data/meta-data/manage" : "";
 
   const params = {
     path,
     paging,
     condition,
-    category
+    category,
+    release
   };
 
   setParams(params);
@@ -609,9 +612,11 @@ const onFetchPageData = (): void => {
 };
 
 const onFetchPageDataByPrevCondition = () => {
-  const paging = ObjectUtils.getDeepCopiedPropertyValue(params.value, "paging", null);
-  const condition = ObjectUtils.getDeepCopiedPropertyValue(params.value, "condition", null);
-  const category = ObjectUtils.getDeepCopiedPropertyValue(params.value, "category", null);
+  const userParams = userStore.getParams
+  const paging = ObjectUtils.getDeepCopiedPropertyValue(userParams, "paging", null);
+  const condition = ObjectUtils.getDeepCopiedPropertyValue(userParams, "condition", null);
+  const category = ObjectUtils.getDeepCopiedPropertyValue(userParams, "category", null);
+  const release = ObjectUtils.getDeepCopiedPropertyValue(userParams, "release", "");
 
   let offset = 0;
   const item: any = {};
@@ -629,6 +634,10 @@ const onFetchPageDataByPrevCondition = () => {
 
   if (paging) {
     offset = paging.currentPage - 1;
+  }
+
+  if (release) {
+    currentRelease.value = release
   }
 
   onSearchDataList(offset, item);
@@ -895,7 +904,6 @@ const onSubmitCategory = async (params: any) => {
               body: syncParams
             }).then((res) => {
               if (res && res.data) {
-                console.log(res.data)
               }
             }).catch((err) => {
               const msg = "ES SYNC 요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
