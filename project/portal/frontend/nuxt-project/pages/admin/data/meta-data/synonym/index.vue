@@ -278,7 +278,7 @@ const onClickSynonymDelete = async () => {
         body: selectedData.value
       })
         .then((res) => {
-          getSynonym(pagingObj.value.currentPage)
+          getSynonym()
           selectedData.value = []
         })
     }
