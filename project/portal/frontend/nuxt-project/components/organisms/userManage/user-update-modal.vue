@@ -91,30 +91,30 @@ const props = defineProps(['visibleUpdateModal', 'updateFlag', 'modalParam'])
 const toggleDeptModal = ref(false);
 const selectRoleList = ref();
 
-// 
+//
 const reg_username_valid: ComputedRef<boolean> = computed(() => {
   return props.modalParam.userObject.user_nm.length > 0 ? true : false;
 });
 
-// 
+//
 const reg_userid_valid: ComputedRef<boolean> = computed(() => {
   return props.modalParam.userObject.user_id.length > 0 ? true : false;
 });
 
-// 
+//
 onMounted(() => getRoleList());
 
-// 
+//
 watch(() => props.visibleUpdateModal, (newVal) => {
   getRoleList();
 })
 
-// 
+//
 const close = () => {
   emit('update:visibleUpdateModal', false)
 }
 
-// 
+//
 const onClickSaveButton = async () => {
   if (!reg_username_valid.value
   || !reg_userid_valid.value) return;
@@ -142,7 +142,7 @@ const onClickSaveButton = async () => {
     })
 }
 
-// 
+//
 const getRoleList = async () => {
   await $ofetch(`/api/roleList?role_type=`)
       .then((res) => {
@@ -159,14 +159,7 @@ const getRoleList = async () => {
       });
 }
 
-// 
-// const getKrName = (auth) => {
-//   if (auth == 'Super-Admin') return '시스템 관리자'
-//   if (auth == 'Manager') return '데이터 엔지니어'
-//   if (auth == 'User') return '사용자'
-// }
-
-// 
+//
 const onToggleDeptModal = () => {
   if (toggleDeptModal.value) {
     toggleDeptModal.value = false;
@@ -175,7 +168,7 @@ const onToggleDeptModal = () => {
   }
 };
 
-// 
+//
 const onSelectDept = (info) => {
   props.modalParam.userObject.dept_nm = info.dept_nm;
   props.modalParam.userObject.dept_cd = info.dept_cd;

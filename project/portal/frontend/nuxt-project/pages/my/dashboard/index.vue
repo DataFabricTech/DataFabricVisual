@@ -242,13 +242,7 @@ const getMySynonymDeleteRequestDataList = async (): Promise<void> => {
   mySynonymDeleteRequestList.value = result.data;
 };
 
-const getKrName = (auth) => {
-  if (auth == 'Super-Admin') return '시스템 관리자'
-  if (auth == 'Manager') return '데이터 엔지니어'
-  if (auth == 'User') return '사용자'
-}
-
-// 
+//
 const visibleUpdateModal = ref(false)
 const modalParam = ref({})
 const onPasswordInitModalCall = async () => {

@@ -20,6 +20,4 @@ public interface PostMapper {
     Integer deletePost(Integer id, String post_type) throws Exception;
     List<Map<String, Object>> getPostFileInfoList(int id) throws Exception;
     Map<String, Object> getFileInfo(int file_id) throws Exception;
-
-    List getMailUserList() throws Exception;
 }
