@@ -272,12 +272,21 @@ const startCollecton = async (item) => {
 }
 
 // 수집대상 수정 버튼 클릭
-const popupCollectorUpdateModal = (item) => {
-  isDetail.value = false
-  isUpdate.value = true
-  collector.value = item
-  collector.value.flag = 'update'
-  toggleCollectorModal.value = true
+const popupCollectorUpdateModal = async (item) => {
+  await $ofetch(`/api/admin/system/collector/collectorOne?system_id=${item.system_id}`).then(async (res) => {
+    if (res && res.data) {
+      isDetail.value = false
+      isUpdate.value = true
+      collector.value = res.data.collector
+      collector.value.flag = 'update'
+      toggleCollectorModal.value = true
+    } else {
+      await errorAlert("조회에 실패하였습니다.")
+    }
+  }).catch((err) => {
+    errorAlert("조회에 실패하였습니다.")
+  })
+
 }
 
 // 수집대상 삭제 버튼 클릭
