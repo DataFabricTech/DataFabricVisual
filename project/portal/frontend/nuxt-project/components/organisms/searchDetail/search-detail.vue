@@ -545,7 +545,7 @@ const getDetailDataByGuid = async (newGuid) => {
     // 조회된 데이터가 없는 경우 뒤로가기
     if (entity.value == null || isEmptyObject(entity.value)) {
       await errorAlert("조회된 데이터가 없습니다.")
-      router.push('/search/keyword')
+      history.go(-1)
     }
 
     // 탭 유무 처리
@@ -923,7 +923,7 @@ const onAddCategoryMapping = (params) => {
           const msg = "ES SYNC 요청을 처리하는 중 에러가 발생하였습니다.<br />관리자에게 문의하세요.";
           console.log(msg);
         })
-        
+
         onToggleCategoryModal();
         getAllDataByGuid();
       }
