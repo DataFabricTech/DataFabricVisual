@@ -371,7 +371,11 @@
   //
   const changeTab = (index: number) => {
     activeTab.value = index;
-    searchObj.value.searchRoleType = index.toString();
+    searchObj.value = {
+      searchType: "all",
+      searchWord: "",
+      searchRoleType: index.toString()
+    }
 
     if(index === 0) {
       getDataAuthList();
