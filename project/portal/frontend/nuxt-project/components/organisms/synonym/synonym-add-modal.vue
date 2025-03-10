@@ -123,7 +123,7 @@ const onClickAddSynonym = () => {
 
     let duplicated = false
     // 동의어 목록에 존재하면 중복 메세지
-    for (let index in props.synonymOneList.value) { // 동의어
+    for (let index in props.synonymOneList) { // 동의어
       if (props.synonymOneList[index].synonym.toUpperCase() == inputSynonym.value.toUpperCase()) {
         synonym_add_error.value = true
         synonym_error_msg.value = "이미 등록된 동의어입니다."

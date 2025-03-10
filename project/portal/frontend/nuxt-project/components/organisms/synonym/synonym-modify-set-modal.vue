@@ -21,22 +21,22 @@
                 <input type="text" :class="synonym_add_error ? 'mu-input error' : 'mu-input'" placeholder="대표어를 입력하세요.(최대50자)" title="대표어 입력" v-model="inputTerm"/>
                 <button type="button" class="mu-btn mu-btn-delete" @click="clearInputTerm"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
               </div>
-              <p v-if="synonym_add_error" class="complete-msg error bul-refer">{{ synonym_error_msg }}</p>
+              <p v-if="synonym_add_error" class="complete-msg error">{{ synonym_error_msg }}</p>
             </td>
           </tr>
           <tr>
-            <th scope="row"> 동의어 </th>
+            <th scope="row"> 동의어<strong class="required">필수</strong> </th>
             <td>
               <div class="mu-item-group">
                 <div class="mu-input-icon">
-                  <input type="text" placeholder="동의어를 입력하세요.(최대50자)" :class="synonym_add_error2 ? 'mu-input error' : 'mu-input'" v-model="inputSynonym"/>
+                  <input type="text" placeholder="동의어를 입력하세요.(최대50자)" :class="synonym_add_error2 ? 'mu-input error' : 'mu-input'" v-model="inputSynonym" @keypress.enter.prevent="onClickAddSynonym" />
                   <button type="button" class="mu-btn mu-btn-delete" @click="clearInputSynonym"><i class="mu-icon-svg item-delete"></i><span>삭제</span></button>
                 </div>
-                <button type="button" class="mu-btn" @click="onClickAddSynonym" @keypress.enter.prevent="onClickAddSynonym">
+                <button type="button" class="mu-btn" @click="onClickAddSynonym">
                   <span>추가</span>
                 </button>
               </div>
-              <p v-if="synonym_add_error2" class="complete-msg error bul-refer">{{ synonym_error_msg2 }}</p>
+              <p v-if="synonym_add_error2" class="complete-msg error">{{ synonym_error_msg2 }}</p>
             </td>
           </tr>
           <tr>
@@ -154,6 +154,18 @@ const onClickAddSynonym = async () => {
     if (addedSynonymList.value.length > 0) { // 최근 추가한 데이터인 경우
       for (let index in addedSynonymList.value) {
         if (addedSynonymList.value[index].synonym.toUpperCase() == inputSynonym.value.toUpperCase()) {
+          synonym_add_error2.value = true
+          synonym_error_msg2.value = "이미 입력된 동의어입니다."
+          synonymDuplicated = true;
+          return
+        }
+      }
+    }
+
+    // 기존 등록된 동의어 중복 여부
+    if (props.synonymOneList.length > 0) {
+      for (let index in props.synonymOneList) {
+        if (props.synonymOneList[index].synonym.toUpperCase() == inputSynonym.value.toUpperCase()) {
           synonym_add_error2.value = true
           synonym_error_msg2.value = "이미 입력된 동의어입니다."
           synonymDuplicated = true;
