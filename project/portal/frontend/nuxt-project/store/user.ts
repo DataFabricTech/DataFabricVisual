@@ -230,6 +230,20 @@ export const useUserStore = defineStore('userStore', () => {
       targetMenu.currentPathDepth2 = "상세 조회";
     }
 
+    // 활용사례의 경우 ? 쿼리스트링 없는 값 추가
+    if (targetMenu.currentPath.includes('/share/board/detail')) {
+      targetMenu.currentPath = targetMenu.currentPath.split('?')[0]
+      targetMenu.currentPathDepth1 = "활용 사례";
+      targetMenu.currentPathDepth2 = "활용 사례";
+    }
+
+    // 활용사례 관리의 경우 ? 쿼리스트링 없는 값 추가
+    if (targetMenu.currentPath.includes('/admin/manager/share/board/detail')) {
+      targetMenu.currentPath = targetMenu.currentPath.split('?')[0]
+      targetMenu.currentPathDepth1 = "활용 사례 관리";
+      targetMenu.currentPathDepth2 = "활용 사례 관리";
+    }
+
     return { targetMenu, menuId };
   };
 
