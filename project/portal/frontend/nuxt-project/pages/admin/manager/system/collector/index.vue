@@ -362,8 +362,8 @@ const onClickReloadOneButton = async (collector, index) => {
   await $ofetch(`/api/admin/system/collector/collectorOne?system_id=${collector.system_id}`).then((res) => {
     if (res && res.data && res.data.result) {
       collectorList.value[index] = {
-        rownum: collector.rownum,
-        ...res.data.collector
+        ...res.data.collector,
+        rownum: index + 1
       }
     } else {
       errorAlert("수집 항목 새로고침 실패");
